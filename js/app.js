@@ -603,18 +603,18 @@
     // Build-out across the shown projects (planning applications with unit counts).
     const bo = { planned: 0, permitted: 0, completed: 0, remaining: 0, n: 0 };
     for (const p of set) if (p.buildout) { bo.n++; for (const k of ['planned', 'permitted', 'completed', 'remaining']) bo[k] += p.buildout[k]; }
-    const tile = (label, value, unit, sub) =>
-      `<div class="tile"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
+    const tile = (label, value, unit, sub, info) =>
+      `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     $('#d-tiles').innerHTML = [
       tile(basis === 'all' ? 'Dwelling units' : 'Dwelling units counted', fmtNum(Math.round(e.totalUnits)), '',
         bo.n ? `Planned ${fmtNum(bo.planned)} · permitted ${fmtNum(bo.permitted)} · <strong>${fmtNum(bo.remaining)} left to build</strong>`
-          : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`),
-      tile('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit'),
-      `<div class="tile group"><div class="tl">Water demand</div><div class="trow">
+          : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`, 'demand-units'),
+      tile('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
+      `<div class="tile group" data-info="demand-water"><div class="tl">Water demand</div><div class="trow">
         <div><div class="tv">${fmt1(e.water.avg)}<span class="tu">L/s</span></div><div class="ts">Average day · ${fmt1(D.toMLd(e.water.avg))} ML/d</div></div>
         <div><div class="tv">${fmt1(e.water.maxDay)}<span class="tu">L/s</span></div><div class="ts">Max day ×${c.water.maxDay}</div></div>
         <div><div class="tv">${fmt1(e.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Peak hour ×${c.water.peakHour}</div></div></div></div>`,
-      `<div class="tile group"><div class="tl">Wastewater flow</div><div class="trow">
+      `<div class="tile group" data-info="demand-wastewater"><div class="tl">Wastewater flow</div><div class="trow">
         <div><div class="tv">${fmt1(e.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Avg dry weather · ${fmt1(D.toMLd(e.wastewater.avg))} ML/d</div></div>
         <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div></div></div>`,
     ].join('');
@@ -793,7 +793,7 @@
       `<li class="${cls}">${mark}<span class="lbl">${label}${sub ? `<span class="desc">${sub}</span>` : ''}</span><span class="when">${value}</span></li>`;
     const reached = v => v > 0 ? 'done' : 'todo';
     const units = v => `${fmtNum(v)} units`;
-    return `<h2 class="section-title">Build-out</h2>
+    return `<h2 class="section-title" data-info="buildout">Build-out</h2>
       <ol class="stepper bo-steps">
         ${step('done', dot('approved'), 'Planned', 'Planning applications', units(b.planned))}
         ${step(reached(b.permitted), dot('permit'), 'Permitted', `${fmtNum(b.permits)} building permits${pct(b.permitted)}`, units(b.permitted))}
@@ -815,7 +815,7 @@
     if (!(es[0].totalUnits > 0)) return '';
     const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
     const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
-    return `<h2 class="section-title">Servicing demand</h2>${intro}
+    return `<h2 class="section-title" data-info="project-demand">Servicing demand</h2>${intro}
       <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
         ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
         ${row('Population', e => fmtNum(Math.round(e.population)))}
@@ -877,16 +877,16 @@
         ${p.last ? `<dt>Latest activity</dt><dd>${fmtDate(p.last)}</dd>` : ''}
         <dt>Files</dt><dd>${p.records.length} (${p.kinds.map(k => k === 'permit' ? 'permits' : 'applications').join(' + ')})</dd>
       </dl>
-      <h2 class="section-title">Aerial check</h2>
+      <h2 class="section-title" data-info="aerial">Aerial check</h2>
       <div class="aerial" id="aerial-check"></div>
       ${buildoutHTML(p)}
       ${demandHTML(p)}
-      <h2 class="section-title">Phase progress</h2>
+      <h2 class="section-title" data-info="phase-progress">Phase progress</h2>
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
       <ol class="stepper">${steps}</ol>
       ${phaseHistoryHTML(p)}
-      <h2 class="section-title">Timeline</h2>${timeline}
-      <h2 class="section-title">Source records <span class="muted small">(oldest first, by date received)</span></h2>${recs}`;
+      <h2 class="section-title" data-info="project-timeline">Timeline</h2>${timeline}
+      <h2 class="section-title" data-info="source-records">Source records <span class="muted small">(oldest first, by date received)</span></h2>${recs}`;
     $('#detail').hidden = false;
     $('#detail').scrollTop = 0;
     runAerial(p);
@@ -960,7 +960,7 @@
         ${r.units ? `<dt>Units</dt><dd>${fmtNum(r.units)}</dd>` : ''}
         ${r.events.map(e => `<dt>${esc(P.humanizeField(e.label))}</dt><dd>${fmtDate(e.date)}</dd>`).join('')}
       </dl>
-      ${r.kind === 'permit' ? `<h2 class="section-title">Part of planning application</h2>${parentHTML}` : ''}
+      ${r.kind === 'permit' ? `<h2 class="section-title" data-info="parent-app">Part of planning application</h2>${parentHTML}` : ''}
       ${r.kind === 'application' && p.records.length > 1 ? `<p class="small muted">This application is part of a larger development with ${fmtNum(p.records.length - 1)} other files.</p>` : ''}
       <button type="button" class="btn open-project" id="open-project">
         Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
@@ -1150,14 +1150,14 @@
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
     const allPop = futPop + gr.proposed.population, allDw = futDw + gr.proposed.units;
-    const tile = (label, pop, dw, sub) => `<div class="tile"><div class="tl">${label}</div>
+    const tile = (label, pop, dw, sub, info) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div>
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
     $('#c-tiles').innerHTML = [
-      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`),
-      tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`),
-      tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`),
-      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs 2021`),
+      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
+      tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built'),
+      tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`, 'census-approved'),
+      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs 2021`, 'census-proposed'),
     ].join('');
     renderGrowthChart(base, gr);
     $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;

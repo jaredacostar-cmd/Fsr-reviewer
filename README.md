@@ -54,6 +54,10 @@ the phase names. **Hide** collapses the timeline and demand panel to give the ma
 
 The sidebar has three tabs.
 
+**What is this?** Rest the pointer on a heading, figure or control for 3 seconds (on a phone,
+press and hold) for a card explaining what it represents and where the data comes from
+(`js/info.js`).
+
 **Explore**
 - **Quick views by phase:** All, Active pipeline (not completed or withdrawn), or one phase
   (Inception, Under review, Approved, Permit issued, Under construction, Completed, Withdrawn),

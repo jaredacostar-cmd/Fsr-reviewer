@@ -44,13 +44,13 @@
       <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
         <section class="panel">
           <div class="panel-head">
-            <h2 class="label">Quick views</h2>
+            <h2 class="label" data-info="quick-views">Quick views</h2>
             <span class="muted small" id="total-count">—</span>
           </div>
           <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
-          <div class="chips views phase-chips" id="phase-chips" role="group" aria-label="Phase"></div>
+          <div class="chips views phase-chips" id="phase-chips" data-info="phases" role="group" aria-label="Phase"></div>
           <h3 class="label sub-label">Focus <span class="muted small">— combine with a phase</span></h3>
-          <div class="chips views" id="focus-chips" role="group" aria-label="Focus"></div>
+          <div class="chips views" id="focus-chips" data-info="focus" role="group" aria-label="Focus"></div>
         </section>
 
         <section class="panel filters">
@@ -58,11 +58,11 @@
             <input type="search" id="f-search" placeholder="Search address, file number, description…">
           </label>
           <div class="field">
-            <span class="label">Municipality</span>
+            <span class="label" data-info="municipality">Municipality</span>
             <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
           </div>
           <div class="row two">
-            <div class="field"><span class="label" id="f-sp-label">Secondary plans</span>
+            <div class="field" data-info="secondary-plans"><span class="label" id="f-sp-label">Secondary plans</span>
               <details class="multi" id="f-sp">
                 <summary aria-labelledby="f-sp-label f-sp-summary"><span id="f-sp-summary">All areas</span></summary>
                 <div class="multi-panel">
@@ -74,13 +74,13 @@
                 </div>
               </details>
             </div>
-            <label class="field"><span class="label">MTSA</span>
+            <label class="field" data-info="mtsa"><span class="label">MTSA</span>
               <select id="f-mtsa"><option value="">All MTSAs</option></select>
             </label>
           </div>
           <p class="small muted" id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</p>
           <div class="row two">
-            <label class="field"><span class="label">Record type</span>
+            <label class="field" data-info="record-type"><span class="label">Record type</span>
               <select id="f-kind">
                 <option value="application" selected>Planning applications + their permits</option>
                 <option value="">All records (incl. permits with no application)</option>
@@ -88,7 +88,7 @@
                 <option value="both">Application + permits</option>
               </select>
             </label>
-            <label class="field"><span class="label">Units</span>
+            <label class="field" data-info="units"><span class="label">Units</span>
               <select id="f-units">
                 <option value="0">Any</option>
                 <option value="1">Growth (adds units)</option>
@@ -99,14 +99,14 @@
               </select>
             </label>
           </div>
-          <label class="switch"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
+          <label class="switch" data-info="new-only"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
             <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
           <div class="active-filters" id="active-filters" aria-live="polite"></div>
         </section>
 
         <section class="panel list-panel">
           <div class="panel-head">
-            <h2 class="label">Projects</h2>
+            <h2 class="label" data-info="projects-list">Projects</h2>
             <div class="btns">
               <button type="button" id="btn-csv" class="btn small">CSV</button>
               <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
@@ -129,7 +129,7 @@
       <!-- ===== Data ===== -->
       <div class="tab-panel" id="tab-data" role="tabpanel" aria-labelledby="tab-btn-data" hidden>
         <section class="panel sources" id="sources-panel">
-          <div class="panel-head"><h2 class="label">Data sources</h2><span class="muted small" id="sources-summary"></span></div>
+          <div class="panel-head"><h2 class="label" data-info="data-sources">Data sources</h2><span class="muted small" id="sources-summary"></span></div>
           <ul class="source-list" id="source-list"></ul>
           <p class="small muted" id="app-version"></p>
           <div class="row btns">
@@ -137,7 +137,7 @@
           </div>
         </section>
         <section class="panel audit" id="audit-panel">
-          <div class="panel-head"><h2 class="label">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
+          <div class="panel-head"><h2 class="label" data-info="duplicate-check">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
           <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
         </section>
         <details class="panel advanced">
@@ -173,7 +173,7 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
-      <div class="legend" id="legend" aria-label="Legend"></div>
+      <div class="legend" id="legend" data-info="legend" aria-label="Legend"></div>
       <div class="loading" id="loading" hidden></div>
       <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
     </main>
@@ -182,7 +182,7 @@
       <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       <section class="timebar" aria-label="Timeline">
         <div class="tb-head">
-          <h2>Timeline</h2>
+          <h2 data-info="timeline">Timeline</h2>
           <label class="inline"><span class="sr">Milestone</span>
             <select id="t-mode" aria-label="Which milestone falls in the year range">
               <option value="any">Any milestone</option>
@@ -205,16 +205,16 @@
 
       <section class="census" id="census" aria-label="Growth since the 2021 Census" hidden>
         <div class="tb-head">
-          <h2>Growth since the 2021 Census</h2>
+          <h2 data-info="census">Growth since the 2021 Census</h2>
           <span class="muted small" id="c-note"></span>
         </div>
         <div class="tiles" id="c-tiles"></div>
-        <div class="growth-chart" id="c-chart"></div>
+        <div class="growth-chart" id="c-chart" data-info="growth-bars"></div>
       </section>
 
       <section class="demand" aria-label="Population and servicing demand">
         <div class="tb-head">
-          <h2>Population &amp; servicing demand</h2>
+          <h2 data-info="demand">Population &amp; servicing demand</h2>
           <select id="d-basis" aria-label="Which projects to include">
             <option value="all">All units</option>
             <option value="committed">Committed capacity (approved, not yet built)</option>
@@ -249,6 +249,7 @@
   <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/aerial.js?v=__BUILD__"></script>
   <script src="js/areas.js?v=__BUILD__"></script>
+  <script src="js/info.js?v=__BUILD__"></script>
   <script src="js/arcgis.js?v=__BUILD__"></script>
   <script src="js/loader.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
