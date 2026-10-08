@@ -517,3 +517,12 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .grow-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: 12px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; z-index: 5; }
 
 .rec-date { font-variant-numeric: tabular-nums; color: var(--text-secondary); font-size: 12px; }
+
+/* "What is this?" cards (hover 3 s, or press and hold on touch) */
+.info-card { position: fixed; z-index: 3000; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+  border-radius: 10px; box-shadow: 0 8px 28px rgba(0,0,0,.22); padding: 10px 12px; font-size: 13px; line-height: 1.4; pointer-events: none; }
+.info-card strong { display: block; margin-bottom: 4px; }
+.info-card p { margin: 0 0 6px; }
+.info-card .info-src { margin: 0; color: var(--text-secondary); font-size: 12px; }
+.info-card .info-src span { font-weight: 600; }
+[data-info] { -webkit-touch-callout: none; }

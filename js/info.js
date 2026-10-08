@@ -1,0 +1,117 @@
+/*
+ * "What is this?" explanations. Any element with data-info="<key>" shows a card after the
+ * pointer rests on it for 3 seconds (or a long press on touch screens), saying what the
+ * figure or control represents and where the data comes from.
+ */
+(function (root) {
+  'use strict';
+
+  const APPS = 'Planning applications: City of Mississauga development applications (monthly layer, Growth Management active applications, site plan applications); City of Brampton Planning – Land Use – Development (OPA / ZBA / subdivision, site plan, condominium, draft plan of subdivision, pre-consultation); Town of Caledon development applications.';
+  const PERMITS = 'Building permits: City of Mississauga issued building permits and Growth Management permits; City of Brampton building permits; Town of Caledon building permits (AMANDA). New-build permits only unless “New buildings only” is off.';
+  const SNAPSHOT = 'Refreshed every Monday from the municipalities’ open-data ArcGIS services.';
+  const PPU = 'Persons per unit: Region of Peel design criteria (single / semi 4.2, townhouse 3.4, apartment 2.7; editable under Breakdown & design criteria).';
+  const CENSUS = 'Statistics Canada, 2021 Census of Population: population and private dwellings by dissemination area (DA). For a secondary plan or MTSA, each DA counts by the share of its land inside the area.';
+
+  const INFO = {
+    'quick-views': { title: 'Quick views', body: 'One tap shows a single phase (or every phase not yet completed or withdrawn). The bar shows how the projects listed split across phases.', source: `${APPS} ${PERMITS}` },
+    'phases': { title: 'Phases', body: 'Each project’s phase is the furthest stage reached by any of its files, read from the status text and milestone dates in the municipal data: inception (pre-consultation or submitted), under review, approved, permit issued, under construction (inspections), completed (occupancy, final inspection or permit closed), or withdrawn / refused.', source: `${APPS} ${PERMITS}` },
+    'focus': { title: 'Focus', body: 'Narrows the projects further and combines with a phase. Growth: applications proposing new homes. Committed capacity: growth approved or permitted but not yet completed. Left to build: planned units with no building permit yet. Stalled: still in planning with no activity for 2 years.', source: `${APPS} ${PERMITS}` },
+    'municipality': { title: 'Municipality', body: 'Shows projects in one local municipality of Peel Region.', source: 'Municipality of the source dataset each record comes from.' },
+    'secondary-plans': { title: 'Secondary plans', body: 'Tick one or several plans to keep only projects whose location falls inside them. Mississauga plans by character area rather than secondary plans, so its Official Plan character areas are listed.', source: 'City of Brampton – Brampton Plan Schedule 10 Secondary Planning Areas; Town of Caledon – in-effect Secondary Plan Areas; City of Mississauga – Official Plan Character Areas. Rebuilt weekly.' },
+    'mtsa': { title: 'Major Transit Station Areas', body: 'Keeps projects inside the chosen MTSA: the area around a transit station planned for higher density.', source: 'Region of Peel MTSA delineation as published by the City of Mississauga (2024); City of Brampton – Brampton Plan Schedules 1A / 1B primary and planned MTSAs. Rebuilt weekly.' },
+    'record-type': { title: 'Record type', body: 'By default only projects with a planning application are shown, with the building permits that belong to them. “All records” adds permits with no planning application (infill houses, additions).', source: `${APPS} ${PERMITS}` },
+    'units': { title: 'Units', body: 'Filters by dwelling units: growth (adds units) or a minimum number of units. Units on a project are counted once: the larger of the units planned on its applications and the units on its building permits.', source: `${APPS} ${PERMITS}` },
+    'new-only': { title: 'New buildings only', body: 'Hides permits for alterations, signs, pools, decks, demolitions and similar work, keeping new buildings and permits that add units.', source: PERMITS },
+    'timeline': { title: 'Timeline', body: 'Keeps projects with activity in the chosen years. The drop-down picks which milestone must fall in the range (submitted, approved, permit issued, completed, or any). Bars: projects per year.', source: 'Milestone dates in the municipal application and permit records.' },
+    'projects-list': { title: 'Projects', body: 'Developments matching the filters. Files at the same address or on the same land (an application’s boundary) are combined into one project, so each is counted once.', source: `${APPS} ${PERMITS}` },
+    'census': { title: 'Growth since the 2021 Census', body: 'Starts from the 2021 Census and adds, in turn, homes completed since census day, homes approved but not yet built, and homes proposed on applications still in review — the full build-out of the planning applications. Applies to Peel or the selected municipality, secondary plans or MTSA; other filters are ignored.', source: `${CENSUS} ${PPU}` },
+    'census-base': { title: '2021 Census', body: 'Population and private dwellings counted on census day, 11 May 2021.', source: CENSUS },
+    'census-built': { title: '+ Built since', body: 'Adds units on building permits completed since 11 May 2021, converted to people at Peel persons-per-unit. Brampton and Caledon publish no completion date, so it is estimated as the issue date + 12 months (houses) or + 30 months (20+ units).', source: `${PERMITS} ${PPU}` },
+    'census-approved': { title: '+ Approved, not yet built', body: 'Adds committed growth: units planned on planning applications that are approved or have a building permit, not yet completed.', source: `${APPS} ${PPU}` },
+    'census-proposed': { title: '+ Proposed (full build-out)', body: 'Adds units on applications still in pre-consultation or review. With the layers before it, this is the full build-out of every planning application in the area.', source: `${APPS} ${PPU}` },
+    'growth-bars': { title: 'Growth bars', body: 'Each bar runs from the 2021 baseline (grey) through built since (green), approved (blue) and proposed (hatched) to full build-out. Hover or tap a segment for its value.', source: `${CENSUS} ${APPS} ${PERMITS}` },
+    'demand': { title: 'Population & servicing demand', body: 'Population, water and wastewater demand for the projects shown, using Region of Peel design criteria. The drop-down picks which units count: all, committed, left to build, not yet completed, or completed.', source: `${PPU} Water: 280 L/cap/d, max day ×2.0, peak hour ×3.0 (Peel Watermain Design Criteria). Wastewater: 290 L/cap/d with Harmon peaking (Peel Linear Wastewater Standards).` },
+    'demand-units': { title: 'Dwelling units', body: 'Units counted for the projects shown, each project once (the larger of planned and permitted units).', source: `${APPS} ${PERMITS}` },
+    'demand-pop': { title: 'Population', body: 'Units × persons per unit by dwelling type (from the unit mix where published, otherwise read from the project description).', source: PPU },
+    'demand-water': { title: 'Water demand', body: 'Average day = population × 280 L/cap/d; maximum day ×2.0; peak hour ×3.0. Litres per second.', source: 'Region of Peel Watermain Design Criteria.' },
+    'demand-wastewater': { title: 'Wastewater flow', body: 'Average dry weather = population × 290 L/cap/d; peak = average × Harmon factor M = 1 + 14 / (4 + √P), P in thousands. Infiltration and employment flows are not included.', source: 'Region of Peel Linear Wastewater Standards.' },
+    'aerial': { title: 'Aerial check', body: 'Compares the site on the aerial photo from before the application with the latest photo, and building footprints traced from the photos, to estimate the chance the development is complete. An estimate for screening, not a site inspection.', source: 'City of Mississauga aerial imagery 2013–2024 and building footprints 2020–2024; City of Brampton orthophotos 2004–2025 and building footprints; Town of Caledon orthophotos 2014–2025.' },
+    'buildout': { title: 'Build-out', body: 'Planned: units on the planning applications (resubmissions counted once; separate site plan or condo phases added up). Permitted: units on building permits on the land. Completed: units on closed or occupied permits. Left to build: planned minus permitted.', source: `${APPS} ${PERMITS}` },
+    'project-demand': { title: 'Servicing demand (this project)', body: 'Population, water and wastewater for this project: total, already completed, and remaining. Peaks are for this site alone.', source: `${PPU} Peel water and wastewater design criteria.` },
+    'phase-progress': { title: 'Phase progress', body: 'Earliest date each phase was reached by any file on this project.', source: 'Milestone dates in the municipal records.' },
+    'project-timeline': { title: 'Timeline', body: 'Every dated event on the project’s files, oldest first.', source: 'Milestone dates in the municipal records.' },
+    'source-records': { title: 'Source records', body: 'Each municipal file combined into this project, oldest first by date received (its earliest date), with every field as published.', source: `${APPS} ${PERMITS} ${SNAPSHOT}` },
+    'parent-app': { title: 'Part of planning application', body: 'The planning application(s) whose land contains this permit; the permit’s units count toward that application’s build-out, not on top of it.', source: APPS },
+    'data-sources': { title: 'Data sources', body: 'Each layer read, its record count and when it was last refreshed. Untick a layer to leave it out.', source: SNAPSHOT },
+    'duplicate-check': { title: 'Duplicate check', body: 'Evidence that each file and each unit is counted once: copies of the same file merged, integrity checks that must be zero, and a reconciliation from units on every record to units counted.', source: `${APPS} ${PERMITS}` },
+    'legend': { title: 'Map legend', body: 'Marker colour and number show the project’s phase. Clusters show how many projects are grouped and their mix of phases.', source: `${APPS} ${PERMITS}` },
+  };
+
+  const DELAY = 3000, TOUCH_DELAY = 650;
+  let timer = null, current = null, pending = null, card = null, suppressClick = false;
+
+  function ensureCard() {
+    if (card) return card;
+    card = document.createElement('div');
+    card.className = 'info-card';
+    card.setAttribute('role', 'tooltip');
+    card.hidden = true;
+    document.body.appendChild(card);
+    return card;
+  }
+  const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  function show(el) {
+    const info = INFO[el.dataset.info];
+    if (!info) return;
+    const c = ensureCard();
+    c.innerHTML = `<strong>${esc(info.title)}</strong><p>${esc(info.body)}</p>${info.source ? `<p class="info-src"><span>Source:</span> ${esc(info.source)}</p>` : ''}`;
+    c.hidden = false;
+    const r = el.getBoundingClientRect(), w = Math.min(340, innerWidth - 24);
+    c.style.width = `${w}px`;
+    const left = Math.max(12, Math.min(innerWidth - w - 12, r.left));
+    const h = c.offsetHeight;
+    const below = r.bottom + 8 + h < innerHeight;
+    c.style.left = `${left}px`;
+    c.style.top = `${below ? r.bottom + 8 : Math.max(12, r.top - h - 8)}px`;
+    current = el;
+  }
+  function hide() { clearTimeout(timer); timer = null; current = null; pending = null; if (card) card.hidden = true; }
+
+  function attach() {
+    document.addEventListener('pointerover', e => {
+      if (e.pointerType === 'touch') return;
+      const el = e.target.closest('[data-info]');
+      if (!el || el === current || el === pending) return;
+      hide();
+      pending = el;
+      timer = setTimeout(() => show(el), DELAY);
+    });
+    document.addEventListener('pointerout', e => {
+      if (e.pointerType === 'touch') return;
+      const el = e.target.closest('[data-info]');
+      if (el && !el.contains(e.relatedTarget)) hide();
+    });
+    // Touch: press and hold.
+    let startXY = null;
+    document.addEventListener('pointerdown', e => {
+      if (card && !card.hidden && !card.contains(e.target)) hide();
+      if (e.pointerType !== 'touch') return;
+      const el = e.target.closest('[data-info]');
+      if (!el) return;
+      startXY = [e.clientX, e.clientY];
+      clearTimeout(timer);
+      timer = setTimeout(() => { show(el); suppressClick = true; }, TOUCH_DELAY);
+    });
+    // A long press shows the card; don't let its release also tap the control underneath.
+    document.addEventListener('click', e => { if (suppressClick) { suppressClick = false; e.preventDefault(); e.stopPropagation(); } }, true);
+    document.addEventListener('pointermove', e => {
+      if (e.pointerType === 'touch' && startXY && Math.hypot(e.clientX - startXY[0], e.clientY - startXY[1]) > 10) { clearTimeout(timer); startXY = null; }
+    });
+    document.addEventListener('pointerup', e => { if (e.pointerType === 'touch') { clearTimeout(timer); startXY = null; } });
+    addEventListener('scroll', hide, true);
+    addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+  }
+  if (typeof document !== 'undefined') attach();
+
+  root.PeelInfo = { INFO, show, hide };
+})(typeof window !== 'undefined' ? window : globalThis);
