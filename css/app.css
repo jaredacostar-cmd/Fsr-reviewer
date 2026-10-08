@@ -553,3 +553,17 @@ details.rec-group > summary { cursor: pointer; padding: 8px 0; display: flex; ga
 details.rec-group > summary .n { font-size: 12px; background: var(--surface-2); border-radius: 999px; padding: 0 7px; font-variant-numeric: tabular-nums; }
 details.rec-group[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 4px; }
 @media (max-width: 380px) { .sum-tiles { grid-template-columns: 1fr 1fr; } }
+
+/* Sidebar: search on top, compact collapsible filter sections, list of projects on the map */
+.search-bar { position: sticky; top: 0; z-index: 5; background: var(--surface-1); padding: 10px 16px 6px; border-bottom: 1px solid var(--border); }
+.search-bar .field { margin: 0; }
+.search-bar .active-filters:not(:empty) { margin-top: 8px; }
+details.side-sect { border-top: 0; margin-top: 0; }
+details.side-sect > summary { display: flex; align-items: baseline; gap: 8px; }
+details.side-sect > summary .label { margin: 0; }
+details.side-sect > summary .sect-sum { margin-left: auto; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
+details.side-sect > summary::after { margin-left: 6px; }
+details.side-sect[open] > summary { margin-bottom: 10px; }
+details.side-sect.active > summary .sect-sum { color: var(--accent); font-weight: 600; }
+.export-row { align-items: center; gap: 8px; margin-top: 10px; }
+#list-sort { padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
