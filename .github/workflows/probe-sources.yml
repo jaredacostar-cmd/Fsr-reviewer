@@ -1,7 +1,7 @@
 name: Probe data sources
 
-# Diagnostic only: lists the development / permit datasets each municipality
-# publishes, with fields and record counts. Run manually from the Actions tab.
+# Diagnostic only: lists the datasets each municipality publishes and dry-runs the
+# weekly snapshot without committing. Run manually from the Actions tab.
 on:
   workflow_dispatch: {}
   push:
@@ -13,10 +13,17 @@ permissions:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node scripts/probe-sources.js $(cat scripts/probe-targets.txt 2>/dev/null)
+      - name: Unit tests
+        run: npm test
+      - name: Describe specific layers
+        run: node scripts/probe-sources.js $(cat scripts/probe-targets.txt 2>/dev/null)
+      - name: Dry-run snapshot (not committed)
+        run: |
+          node scripts/build-snapshot.js --out /tmp/data
+          node scripts/snapshot-summary.js /tmp/data/snapshot.json

@@ -46,7 +46,7 @@ test('unit mix columns are detected and carried to the project', () => {
   const fields = [{ name: 'FILE_NO' }, { name: 'ADDRESS' }, { name: 'SINGLES', type: 'esriFieldTypeInteger' }, { name: 'SEMIS', type: 'esriFieldTypeInteger' },
     { name: 'TOWNS', type: 'esriFieldTypeInteger' }, { name: 'APTS', type: 'esriFieldTypeInteger' }];
   const m = P.detectFields(fields);
-  assert.deepEqual(m.unitMix, { single: 'SINGLES', semi: 'SEMIS', town: 'TOWNS', apartment: 'APTS' });
+  assert.deepEqual(m.unitMix, { single: ['SINGLES'], semi: ['SEMIS'], town: ['TOWNS'], apartment: ['APTS'] });
   assert.equal(m.units, null);
   const r = P.normalizeRecord({ type: 'Feature', id: 1, geometry: { type: 'Point', coordinates: [-79.7, 43.6] },
     properties: { FILE_NO: 'OZ 1', ADDRESS: '1 A St', SINGLES: 4, SEMIS: 0, TOWNS: 6, APTS: 200 } }, m, { id: 'a', municipality: 'Brampton', kind: 'application' });

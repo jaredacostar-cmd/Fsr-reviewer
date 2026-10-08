@@ -18,7 +18,6 @@
 const fs = require('fs');
 const path = require('path');
 const CFG = require('../js/config.js');
-const A = require('../js/arcgis.js');
 const P = require('../js/phases.js');
 const L = require('../js/loader.js');
 
@@ -57,21 +56,9 @@ function decodeRecord(o, sourceName) {
 async function buildSnapshot({ cfg = CFG, previous = null, history = null, now = new Date(), log = console.log } = {}) {
   const today = day(now);
 
-  // 1. Sources: configured + discovered on the hubs.
+  // 1. Sources: the curated list in js/config.js. (Hub discovery is not used here: it also
+  //    matches election "subdivisions", staging copies and unrelated "development" layers.)
   const sources = cfg.services.map(s => ({ ...s }));
-  const known = new Set(sources.map(s => s.url.replace(/\/+$/, '').toLowerCase()));
-  for (const hub of cfg.hubs) {
-    try {
-      for (const s of await A.discoverHub(hub, cfg)) {
-        const k = s.url.replace(/\/+$/, '').toLowerCase();
-        if (known.has(k)) continue;
-        known.add(k); sources.push(s);
-      }
-      log(`discover ${hub.host}: ok`);
-    } catch (e) {
-      log(`discover ${hub.host}: ${e.message}`);
-    }
-  }
 
   // 2. Load each source; carry last week's records forward if it fails.
   const prevSources = new Map(((previous && previous.sources) || []).map(s => [s.id, s]));
@@ -90,7 +77,7 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
       // Applications always; permits only when they create new buildings / units.
       const kept = res.records.filter(r => r.kind === 'application' || r.newBuild);
       for (const r of kept) encoded.push(encodeRecord(r));
-      outSources.push({ ...meta, status: 'ok', updated: today, count: kept.length, loaded: res.records.length, truncated: res.truncated });
+      outSources.push({ ...meta, url: res.url || meta.url, status: 'ok', updated: today, count: kept.length, loaded: res.records.length, truncated: res.truncated });
       okCount++;
       log(`load ${src.id}: ${res.records.length} records, kept ${kept.length}`);
     } catch (e) {

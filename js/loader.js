@@ -39,15 +39,29 @@
     throw lastErr;
   }
 
+  // For sources republished under a new name each month, find the newest copy.
+  async function latestUrl(latest, fallback) {
+    try {
+      const r = await A.fetchJSON('https://www.arcgis.com/sharing/rest/search', {
+        q: `orgid:${latest.orgId} AND type:"Feature Service"`, num: 100, sortField: 'modified', sortOrder: 'desc', f: 'json',
+      });
+      const hit = (r.results || []).find(it => it.url && latest.title.test(it.title));
+      return hit ? hit.url : fallback;
+    } catch (e) {
+      return fallback;
+    }
+  }
+
   /**
    * @param {object} src  { id, name, municipality, kind, url }
    * @param {object} opts { bbox, sinceYear, maxPerLayer, pageSize, onProgress }
-   * @returns {Promise<{records: object[], layers: object[], truncated: boolean}>}
+   * @returns {Promise<{records: object[], layers: object[], truncated: boolean, url: string}>}
    */
   async function loadSource(src, opts) {
     const records = [], layers = [];
     let truncated = false;
-    for (const layer of await A.resolveLayers(src.url)) {
+    const url = src.latest ? await latestUrl(src.latest, src.url) : src.url;
+    for (const layer of await A.resolveLayers(url)) {
       const info = await A.layerInfo(layer.url);
       if (!info.geometryType) continue; // table without geometry
       const fmap = P.detectFields(info.fields || []);
@@ -60,7 +74,7 @@
       }
       layers.push({ name: info.name || layer.name, url: layer.url, count: res.features.length });
     }
-    return { records, layers, truncated };
+    return { records, layers, truncated, url };
   }
 
   const api = { loadSource, sinceFieldFor };

@@ -26,15 +26,19 @@
   // Order matters: the first matching rule wins, so the more specific phrases
   // ("complete application", "incomplete") are tested before generic ones.
   const STATUS_RULES = [
-    ['review',       /\b(in)?complete (application|submission)|deemed complete|incomplete\b/i],
-    ['cancelled',    /withdr[ae]wn?|cancel|refus|denied|reject|revok|expired|abandon|void|dismiss|lapsed|not approved|closed[- ]+(incomplete|no work|without)/i],
+    // "Complete" here describes the application, not the building.
+    ['review',       /\b(in)?complete (application|submission)|deemed complete|application complete|review complete|(mtg|meeting) complete|incomplete\b/i],
+    ['cancelled',    /withdr[ae]wn?|cancel|refus|denied|reject|revok|expired|abandon|void|dismiss|lapsed|not approved|closed[- ]+(incomplete|no work|without)|\binactive\b|\binvalid\b/i],
     ['completed',    /final(ed|led)?\b|complete[d]?\b|occupan|occupied|certif(icate|ied) of completion|\bclosed\b|finish|built\b|done\b/i],
     ['construction', /inspect|under ?construct|construct(ion)? (start|underway|in progress)|framing|foundation|footing|excavat|work (start|in progress|underway)|partial occupancy/i],
     ['permit',       /permit (issued|active|open)|\bissued\b|^active permit|\bopen permit/i],
-    ['approved',     /approv|registered|registration|endorse|in effect|by-?law (passed|enacted)|council adopted|adopted|\bfinal and binding|agreement (signed|executed)|conditions (cleared|met)|tribunal (allowed|approved)/i],
+    ['approved',     /approv|registered|registration|endorse|in effect|by-?law (passed|enacted)|adopt(ed|ion)|\bfinal and binding|finali[sz]e|agreement|conditions? (cleared|met|clearance)|clearance|tribunal (allowed|approved)|transferred/i],
     ['review',       /review|circulat|process|pending|hearing|public meeting|appeal|deferred|in progress|under consideration|recommend|report|resubmi|revision|on hold|\bactive\b|\bopen\b/i],
     ['inception',    /pre[- ]?(consult|app)|pre[- ]?submission|inquiry|enquiry|intake|received|submitted|\bnew\b|applied|application filed|filed/i],
   ];
+
+  // Building-permit statuses that mean the permit is still being applied for or reviewed.
+  const PERMIT_PENDING = /registered|applied|zoning certified|ready to issue|under review|pending|pre[- ]?screen|intake|received|submitted/i;
 
   function phaseFromStatus(text) {
     if (text == null) return null;
@@ -46,19 +50,21 @@
 
   // ---- Field detection --------------------------------------------------------
   const FIELD_PATTERNS = {
-    id:          [/^(application|app|file|permit|folder|bp|case|project)[_ ]?(no|num|number|id|rsn|name)$/i, /^(file|permit|application)(no|num|number)$/i, /(permit|file|application|app)_?(no|num|number)/i, /^folder_?rsn$/i],
+    id:          [/^(app_?|application_?|planning_?)?file_?(no|num|number)$/i, /^(permit|bp|file|application|app)_?(no|num|number)$/i, /^folder_?name$/i, /^(application|app|file|permit|folder|bp|case|project)[_ ]?(no|num|number|id|rsn|name)$/i, /^(file|permit|application)(no|num|number)$/i, /(permit|file|application|app)_?(no|num|number)/i, /^folder_?rsn$/i],
     address:     [/^(full_?)?(civic_?)?address$/i, /^(site_?|street_?|location_?)?address(_?\d)?$/i, /addr/i, /^location$/i],
     status:      [/^(app(lication)?_?|permit_?|folder_?|file_?)?status(_?desc(ription)?)?$/i, /status/i, /^stage$/i, /stage/i, /^state$/i],
-    type:        [/^(app(lication)?_?|permit_?|folder_?|work_?|file_?)?type(_?desc(ription)?)?$/i, /type/i, /^class/i, /category/i],
+    type:        [/^(app(lication)?_?|permit_?|folder_?|work_?|file_?)?type(_?desc(ription)?)?$/i, /^sub_?desc$/i, /type/i, /^class/i, /category/i],
     description: [/^(project_?|work_?|app(lication)?_?|permit_?|folder_?)?desc(ription)?$/i, /desc/i, /scope/i, /proposal/i, /purpose/i],
-    units:       [/^(new_?|proposed_?|total_?|res(idential)?_?|net_?)?(dwelling_?)?units?(_?(count|proposed|new|total))?$/i, /units/i, /dwelling/i],
+    units:       [/^units?_?created$|^created_?units$|^new_?units$|^net_?new_?units$/i, /^(new_?|proposed_?|total_?|res(idential)?_?|net_?)?(res_?)?(dwelling_?)?units?(_?(count|proposed|new|total))?$/i, /^dwellings?$/i, /units/i, /dwelling/i],
+    proposal:    [/proposal/i, /^project_?desc/i, /^folder_?desc/i, /purpose/i],
+    scope:       [/^scope/i, /^work_?type$/i, /^construction_?type$/i],
     gfa:         [/gfa/i, /floor_?area/i],
     ward:        [/^ward/i],
   };
 
   // Date fields -> which lifecycle event they record.
   const DATE_RULES = [
-    ['cancelled',  /withdr|cancel|refus|expir|revok|denied/i],
+    ['cancelled',  /withdr|cancel|refus|revok|denied/i],
     ['completed',  /final|complet|occup|closed?|clos(e|ing)_?d|finish/i],
     ['construction', /inspect|construct(ion)?_?start|start_?construct/i],
     ['permit',     /issu/i],
@@ -67,11 +73,16 @@
     ['inception',  /appl(y|ied|ication)|receiv|submi|intake|open(ed)?|creat|filed|in_?date|start/i],
   ];
   // Housekeeping timestamps that say nothing about the project lifecycle.
-  const IGNORE_DATE = /edit|update|modif|load|extract|refresh|etl|globalid|sync|last_?change|creationdate|created_?date|snapshot|as_?of/i;
+  const IGNORE_DATE = /edit|update|modif|load|extract|refresh|etl|globalid|sync|last_?change|creationdate|created_?date|snapshot|as_?of|expir|process_?date/i;
 
-  function pickField(names, patterns) {
+  // Joined layers prefix fields with their table ("DB.OWNER.Table.STATUSDESC"): match on the last part.
+  const shortName = n => String(n).split('.').pop();
+  // Never take a count of existing or lost units as growth.
+  const NOT_GROWTH_UNITS = /existing|lost|removed|demol/i;
+
+  function pickField(names, patterns, key) {
     for (const re of patterns) {
-      const hit = names.find(n => re.test(n));
+      const hit = names.find(n => re.test(shortName(n)) && !(key === 'units' && NOT_GROWTH_UNITS.test(n)));
       if (hit) return hit;
     }
     return null;
@@ -87,7 +98,9 @@
       .filter(f => !/^(objectid|fid|shape|shape__|globalid)/i.test(f.name));
     const names = list.map(f => f.name);
     const map = {};
-    for (const key of Object.keys(FIELD_PATTERNS)) map[key] = pickField(names, FIELD_PATTERNS[key]);
+    for (const key of Object.keys(FIELD_PATTERNS)) map[key] = pickField(names, FIELD_PATTERNS[key], key);
+    if (map.proposal && (map.proposal === map.description || map.proposal === map.type)) map.proposal = null;
+    if (map.scope && (map.scope === map.description || map.scope === map.type)) map.scope = null;
     // Don't let "status" double as "type" etc.
     if (map.type && map.type === map.status) map.type = null;
     if (map.description && (map.description === map.status || map.description === map.type)) map.description = null;
@@ -97,18 +110,18 @@
     const NUMERIC = /Integer|Double|Single|SmallInteger|BigInteger/;
     const numeric = list.filter(f => !f.type || NUMERIC.test(f.type)).map(f => f.name);
     const UNIT_MIX = {
-      single:    /^(sing(le)?s?|sfd|sdd|detached)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
-      semi:      /^semi(s|_?detached)?(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
-      town:      /^(town(house)?s?|th|rows?|row_?house?s?|street_?towns?|stacked_?towns?)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
-      apartment: /^(apt|apts|apartments?|condos?|aprt\w*)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      single:    /^(res_?)?(sing(le)?s?|sfd|sdd|det|detached|single_?detached)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      semi:      /^(res_?)?semi(s|_?detached)?(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      town:      /^(res_?)?(town(house)?s?|th|rows?|row_?house?s?|street_?towns?|stacked_?towns?)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      apartment: /^(res_?)?(oth(er)?_?)?(apt|apts|apartments?|condos?|aprt\w*)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
     };
     map.unitMix = {};
     for (const [k, re] of Object.entries(UNIT_MIX)) {
-      const hit = numeric.find(n => re.test(n));
-      if (hit) map.unitMix[k] = hit;
+      const hits = numeric.filter(n => re.test(shortName(n)));
+      if (hits.length) map.unitMix[k] = hits;
     }
     if (!Object.keys(map.unitMix).length) map.unitMix = null;
-    else if (map.units && Object.values(map.unitMix).includes(map.units)) map.units = null;
+    else if (map.units && Object.values(map.unitMix).some(fs => fs.includes(map.units))) map.units = null;
 
     map.dates = [];
     for (const f of list) {
@@ -170,16 +183,43 @@
 
   // Keywords that mark a building permit as creating something new rather than
   // an alteration / sign / deck / demolition. Used by the "new builds only" filter.
-  const NEW_BUILD = /\bnew\b|erect|construct|dwelling|townhouse|apartment|condo|subdivision|residential|commercial|industrial|institutional|mixed[- ]use|addition|storey|units?\b|warehouse|plaza|tower|building/i;
-  const NOT_NEW_BUILD = /\bsign\b|deck|demoli|plumbing only|hvac|fire alarm|sprinkler|tent|pool|shed|interior alteration|second unit|basement|porch|fence|solar|backflow|change of use/i;
+  // A permit counts as a new build when it creates units, or its scope / description says it
+  // erects a new building. A permit type alone ("COMMERCIAL", "RESI") is never enough.
+  const NEW_BUILD = /\bnew (bldg|building|construction|dwelling|house|home|structure|townhouse|apartment|condo|warehouse|tower|plaza)|\bnew\b.*\b(dwelling|building|bldg|storey|units?)\b|erect|construct(ion)? of (a )?new|new construction|\bnew\s*$|^new\b/i;
+  const NOT_NEW_BUILD = /alter|renovat|repair|modif|replace|interior|tenant|fit[- ]?up|fit[- ]?out|fire (alarm|suppression|protection)|suppression|sprinkler|hvac|mechanical|electrical|plumbing|demoli|\bsign\b|deck|porch|pool|shed|fence|\btent\b|solar|backflow|change of use|basement|accessory|garage|balcony|retaining wall|canopy|patio|kitchen|washroom|\bpool\b|\bsign\b/i;
 
   function isNewBuild(rec) {
     if (rec.kind !== 'permit') return true;
-    if (rec.units > 0 || rec.gfa > 0) return true;
+    if (rec.units > 0) return true;
+    const scope = rec.scope || '';
+    if (scope) {
+      if (NOT_NEW_BUILD.test(scope)) return false;
+      if (/\bnew\b|erect/i.test(scope)) return true;
+    }
     const text = `${rec.type} ${rec.description}`;
     if (NOT_NEW_BUILD.test(text)) return false;
     return NEW_BUILD.test(text);
   }
+
+  // Units mentioned in free text: "a 25-storey building with 312 residential units".
+  function unitsFromText(text) {
+    const s = String(text || '').replace(/,(?=\d{3})/g, '');
+    let best = 0;
+    for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+)*(?:dwelling\s+)?units?\b/gi)) {
+      const n = Number(m[1]);
+      if (n > best && n < 20000) best = n;
+    }
+    return best || null;
+  }
+
+  // Common AMANDA planning folder codes (Caledon, Brampton).
+  const TYPE_CODES = {
+    SPA: 'Site plan', SP: 'Site plan', RZ: 'Zoning by-law amendment', ZBA: 'Zoning by-law amendment',
+    SBD: 'Plan of subdivision', SUB: 'Plan of subdivision', OP: 'Official plan amendment', OPA: 'Official plan amendment',
+    CD: 'Plan of condominium', CDM: 'Plan of condominium', SB: 'Consent', SC: 'Site plan (minor)',
+    RESI: 'Residential', COMM: 'Commercial', INDU: 'Industrial', INST: 'Institutional', AGRI: 'Agricultural',
+    ASSM: 'Assembly', POOL: 'Pool', SIGN: 'Sign', TENT: 'Tent', DEST: 'Demolition', BPER: 'Building permit',
+  };
 
   function num(v) {
     if (v == null || v === '') return null;
@@ -240,9 +280,12 @@
     let phase = phaseFromStatus(statusRaw);
     // Ambiguous words mean different things for permits vs applications.
     if (src.kind === 'permit') {
-      if (phase === 'approved' || (phase === 'review' && /\b(active|open)\b/i.test(statusRaw))) phase = 'permit';
-    } else if (phase === 'permit') {
-      phase = 'approved'; // "issued" on a planning file means approval issued
+      if (PERMIT_PENDING.test(statusRaw) && phase !== 'cancelled') phase = 'review';
+      else if (phase === 'approved' || (phase === 'review' && /\b(active|open)\b/i.test(statusRaw))) phase = 'permit';
+    } else if (phase === 'permit' || phase === 'construction' || phase === 'completed') {
+      // A planning file that is "issued", "closed" or "final" is approved and done;
+      // only building permits can show construction or completion.
+      phase = 'approved';
     }
 
     // Dates can only move the phase forward (a completion date beats a stale status).
@@ -260,6 +303,9 @@
       }
     }
 
+    // Some layers are early-stage by nature (e.g. pre-consultation): cap their phase.
+    if (src.maxPhase && phase !== 'cancelled' && PHASE_BY_KEY[phase].rank > PHASE_BY_KEY[src.maxPhase].rank) phase = src.maxPhase;
+
     const point = representativePoint(feature.geometry);
     const rec = {
       uid: `${src.id}:${feature.id != null ? feature.id : (p.OBJECTID ?? p.objectid ?? p.FID ?? Math.random().toString(36).slice(2))}`,
@@ -269,8 +315,10 @@
       kind: src.kind,
       ref: fmap.id ? str(p[fmap.id]) : '',
       address: fmap.address ? str(p[fmap.address]) : '',
-      type: fmap.type ? str(p[fmap.type]) : '',
-      description: fmap.description ? str(p[fmap.description]) : '',
+      type: fmap.type ? (TYPE_CODES[str(p[fmap.type]).toUpperCase()] || str(p[fmap.type])) : '',
+      description: [fmap.description, fmap.proposal].filter(Boolean).map(f => str(p[f])).filter(Boolean)
+        .filter((v, i, a) => a.indexOf(v) === i).join(' — '),
+      scope: fmap.scope ? str(p[fmap.scope]) : '',
       ward: fmap.ward ? str(p[fmap.ward]) : '',
       units: fmap.units ? num(p[fmap.units]) : null,
       gfa: fmap.gfa ? num(p[fmap.gfa]) : null,
@@ -284,11 +332,19 @@
     if (fmap.unitMix) {
       const mix = {};
       let total = 0;
-      for (const [k, f] of Object.entries(fmap.unitMix)) { mix[k] = Math.max(0, num(p[f]) || 0); total += mix[k]; }
+      for (const [k, fs] of Object.entries(fmap.unitMix)) {
+        mix[k] = fs.reduce((t, f) => t + Math.max(0, num(p[f]) || 0), 0);
+        total += mix[k];
+      }
       if (total > 0) {
         rec.unitMix = mix;
         if (!(rec.units > 0)) rec.units = total;
       }
+    }
+    // No unit column (e.g. Brampton planning files): read the count from the description.
+    if (!(rec.units > 0) && !rec.unitMix) {
+      const t = unitsFromText(rec.description);
+      if (t) { rec.units = t; rec.unitsFromText = true; }
     }
     rec.newBuild = isNewBuild(rec);
     return rec;
@@ -406,7 +462,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, humanizeField, mergeProject, projectKey, isNewBuild,
+    representativePoint, buildProjects, humanizeField, unitsFromText, mergeProject, projectKey, isNewBuild,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

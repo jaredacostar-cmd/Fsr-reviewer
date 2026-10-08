@@ -1,7 +1,3 @@
-https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer
-https://maps1.brampton.ca/arcgis/rest/services/BuildingPermit/Building_Permits/MapServer/0
-https://maps1.brampton.ca/arcgis/rest/services/BuildingPermit/Building_Permits/MapServer/1
-https://utility.arcgis.com/usrsvcs/servers/9ed3043721984296886c28f5ef4fb164/rest/services/AGOL/Dev_Apps_New/MapServer/0
-https://utility.arcgis.com/usrsvcs/servers/51b993780db441b083808ed0bd59a554/rest/services/AGOL/MiscLayers/MapServer/0
-https://services3.arcgis.com/AbUjpCl3KckkXVBh/arcgis/rest/services/Dev_Update_Online_Dynamic/FeatureServer
-https://services3.arcgis.com/AbUjpCl3KckkXVBh/arcgis/rest/services/Caledon_Population_Data_Enrich/FeatureServer
+https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer
+https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Growth_Management_%E2%80%93_Active_Development_Applications/FeatureServer
+https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Growth_Management_%E2%80%93_Issued_Building_Permits/FeatureServer
