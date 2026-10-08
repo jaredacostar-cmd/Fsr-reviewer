@@ -85,7 +85,34 @@ function insidePoint(rings) {
   return best ? [(best[0] + best[1]) / 2, cy] : rings[0][0];
 }
 
-async function census() {
+// Share of each DA's land inside each area, by sampling a grid of points over the DA
+// (about 400 per DA). Population is assumed even across a DA's land, so a small MTSA gets the
+// share of the DAs it covers rather than all or nothing.
+function bboxOf(rings) {
+  let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (const r of rings) for (const [x, y] of r) { if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
+  return [x0, y0, x1, y1];
+}
+function shares(rings, areaList) {
+  const b = bboxOf(rings);
+  const cand = areaList.filter(a => !(a.bbox[0] > b[2] || a.bbox[2] < b[0] || a.bbox[1] > b[3] || a.bbox[3] < b[1]));
+  if (!cand.length) return {};
+  const steps = 24, dx = (b[2] - b[0]) / steps, dy = (b[3] - b[1]) / steps;
+  const hits = new Map(); let n = 0;
+  for (let i = 0; i < steps; i++) for (let j = 0; j < steps; j++) {
+    const x = b[0] + (i + 0.5) * dx, y = b[1] + (j + 0.5) * dy;
+    if (!P.pointInRings(x, y, rings)) continue;
+    n++;
+    for (const a of cand) if (P.pointInRings(x, y, a.rings)) hits.set(a.id, (hits.get(a.id) || 0) + 1);
+  }
+  const out = {};
+  if (!n) { const [x, y] = insidePoint(rings); for (const a of cand) if (P.pointInRings(x, y, a.rings)) out[a.id] = 1; return out; }
+  for (const [id, k] of hits) out[id] = Math.round(k / n * 1000) / 1000;
+  return out;
+}
+
+async function census(areaList) {
+  for (const a of areaList) a.bbox = bboxOf(a.rings);
   const info = await A.layerInfo(CENSUS.url);
   const { features: feats } = await A.queryAll(CENSUS.url, info, { where: "DAUID LIKE '3521%'", max: 5000 });
   const das = [];
@@ -96,13 +123,14 @@ async function census() {
     if (!rings.length) continue;
     const [x, y] = insidePoint(rings);
     const csd = CSD[Number(a.CSDUID_SDR)] || CSD[Number(String(a.CSDUID_SDR || '').slice(0, 7))] || '';
-    das.push([round(x), round(y), a.POP_COUNT_ || 0, a.Private_dw || 0, a.Tpw || 0, csd]);
+    das.push([round(x), round(y), a.POP_COUNT_ || 0, a.Private_dw || 0, a.Tpw || 0, csd, shares(rings, areaList)]);
     pop += a.POP_COUNT_ || 0;
   }
+  for (const a of areaList) delete a.bbox;
   const byMuni = {};
   for (const d of das) byMuni[d[5] || '?'] = (byMuni[d[5] || '?'] || 0) + d[2];
   console.log(`census: ${das.length} dissemination areas, population ${pop.toLocaleString('en-CA')} ${JSON.stringify(byMuni)}`);
-  return { date: '2021-05-11', source: CENSUS.source, fields: ['lng', 'lat', 'population', 'privateDwellings', 'occupiedDwellings', 'municipality'], das };
+  return { date: '2021-05-11', source: CENSUS.source, fields: ['lng', 'lat', 'population', 'privateDwellings', 'occupiedDwellings', 'municipality', 'areaShares'], das };
 }
 
 async function main() {
@@ -117,10 +145,10 @@ async function main() {
       mtsas: LAYERS.mtsas.map(d => ({ municipality: d.municipality, source: d.source, url: d.url })),
       census: { source: CENSUS.source, url: CENSUS.url },
     },
-    secondaryPlans: await areas(LAYERS.secondaryPlans, 'sp'),
-    mtsas: await areas(LAYERS.mtsas, 'mtsa'),
-    census: await census(),
   };
+  data.secondaryPlans = await areas(LAYERS.secondaryPlans, 'sp');
+  data.mtsas = await areas(LAYERS.mtsas, 'mtsa');
+  data.census = await census([...data.secondaryPlans, ...data.mtsas]);
   const file = path.join(outDir, 'areas.json');
   fs.writeFileSync(file, JSON.stringify(data));
   console.log(`areas.json: ${data.secondaryPlans.length} secondary plans / character areas, ${data.mtsas.length} MTSAs, ${data.census.das.length} DAs, ${(fs.statSync(file).size / 1e6).toFixed(2)} MB`);

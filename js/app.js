@@ -1067,7 +1067,7 @@
       const a = await res.json();
       state.areas = { secondaryPlans: PeelAreas.prepare(a.secondaryPlans), mtsas: PeelAreas.prepare(a.mtsas), census: a.census, sources: a.sources, generatedAt: a.generatedAt };
       for (const x of [...state.areas.secondaryPlans, ...state.areas.mtsas]) areaById.set(x.id, x);
-      state.censusDas = PeelAreas.tagCensus(a.census, state.areas.secondaryPlans, state.areas.mtsas);
+      state.censusDas = PeelAreas.tagCensus(a.census);
       tagProjects();
       renderAreaSelects();
       applyFilters();
@@ -1125,11 +1125,11 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
     $('#c-tiles').innerHTML = [
-      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination areas`),
+      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp || state.mtsa ? ', share by land area' : ''}`),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`),
       tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`),
     ].join('');
-    $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021); approved = committed growth; people at Peel persons-per-unit · other filters ignored`;
+    $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; people at Peel persons-per-unit · other filters ignored`;
   }
 
   // Quick views: a phase (or phase group) plus an optional focus.
