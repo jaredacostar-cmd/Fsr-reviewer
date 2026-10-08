@@ -165,7 +165,9 @@ straight across. Switch to **North up** in the map options (top right). Rotation
 [leaflet-rotate](https://github.com/Raruto/leaflet-rotate) plugin.
 
 **2021 census areas:** the 2021 Census dissemination areas show as a light border by default
-(untick **2021 census areas** in the map options to hide them) (white over aerial photos, grey over the street
+(untick **2021 census areas** in the map options to hide them; the swatch beside the toggle shows
+the line). The border gets thicker as you zoom in so it stays visible at street scale, and over
+aerial photos it is a white line with a faint dark halo so it reads on bright roofs and pavement (white over aerial photos, grey over the street
 map); hover or tap one for its 2021 population and dwellings. The outlines (`data/das.json`,
 simplified to ~4 m, about 0.8 MB) load after the map opens, and are built by
 `scripts/build-areas.js` with `data/areas.json` (Probe data sources, mode `areas`).

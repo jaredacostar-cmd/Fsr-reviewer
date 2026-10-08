@@ -253,21 +253,49 @@
   let daLayer = null, daLoading = null;
   map.createPane('daPane').style.zIndex = 350;
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
+  // Two passes over aerial photos: a faint dark halo under a light line, so the border reads
+  // on bright roofs and pavement as well as on trees and fields.
   function loadDaLayer() {
     if (daLoading) return daLoading;
     daLoading = fetch('data/das.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
-      daLayer = L.featureGroup(d.das.map(([id, pop, dw, muni, rings]) => L.polygon(rings.map(r => r.map(([x, y]) => [y, x])), {
-        renderer: daRenderer, pane: 'daPane', ...daStyle(), fill: true, fillOpacity: 0, smoothFactor: 0.5,
-      }).bindTooltip(`<strong>DA ${esc(id)}</strong>${muni ? ` · ${esc(muni)}` : ''}<br>${fmtNum(pop)} people · ${fmtNum(dw)} dwellings (2021)`, { sticky: true, className: 'pt' })));
+      const st = daStyle();
+      const halo = L.featureGroup(), line = L.featureGroup();
+      for (const [id, pop, dw, muni, rings] of d.das) {
+        const ll = rings.map(r => r.map(([x, y]) => [y, x]));
+        halo.addLayer(L.polygon(ll, { renderer: daRenderer, pane: 'daPane', ...st.halo, fill: false, interactive: false, smoothFactor: 0.5 }));
+        line.addLayer(L.polygon(ll, { renderer: daRenderer, pane: 'daPane', ...st.line, fill: true, fillOpacity: 0, smoothFactor: 0.5 })
+          .bindTooltip(`<strong>DA ${esc(id)}</strong>${muni ? ` · ${esc(muni)}` : ''}<br>${fmtNum(pop)} people · ${fmtNum(dw)} dwellings (2021)`, { sticky: true, className: 'pt' }));
+      }
+      daLayer = L.layerGroup([halo, line]);
+      daLayer.halo = halo; daLayer.line = line;
       return daLayer;
     });
     return daLoading;
   }
-  // A light border: white over aerial photos, grey over the street map; seen, not loud.
+  // A light border, thicker as you zoom in so it stays visible at street scale: white with a
+  // faint dark halo over aerial photos, grey over the street map.
   function daStyle() {
-    if (BASEMAPS[basemap].imagery) return { color: '#ffffff', weight: 1, opacity: 0.55 };
-    return { color: (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim(), weight: 1, opacity: 0.35 };
+    const z = map.getZoom();
+    const w = z >= 18 ? 2.2 : z >= 16 ? 1.6 : z >= 13 ? 1.1 : 0.8;
+    if (BASEMAPS[basemap].imagery) return {
+      line: { color: '#ffffff', weight: w, opacity: z >= 16 ? 0.8 : 0.6 },
+      halo: { color: '#000000', weight: w + 2, opacity: z >= 16 ? 0.3 : 0.18 },
+    };
+    const grey = (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim();
+    return { line: { color: grey, weight: w, opacity: z >= 16 ? 0.6 : 0.4 }, halo: { opacity: 0, weight: 0 } };
   }
+  function restyleDa() {
+    if (daLayer) { const st = daStyle(); daLayer.halo.setStyle(st.halo); daLayer.line.setStyle(st.line); }
+    const sw = $('#da-swatch'); if (sw) sw.outerHTML = daSwatch();
+  }
+  // Legend swatch beside the toggle, drawn with the current style.
+  function daSwatch() {
+    const st = daStyle(), img = BASEMAPS[basemap].imagery;
+    return `<svg id="da-swatch" class="da-swatch${img ? ' img' : ''}" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">
+      ${img ? `<rect x="3" y="2" width="16" height="10" rx="1" fill="none" stroke="#000" stroke-opacity="${st.halo.opacity + 0.15}" stroke-width="3.5"/>` : ''}
+      <rect x="3" y="2" width="16" height="10" rx="1" fill="none" stroke="${st.line.color}" stroke-opacity="${Math.min(1, st.line.opacity + 0.2)}" stroke-width="1.5"/></svg>`;
+  }
+  map.on('zoomend', () => restyleDa());
   function setDaLayer(on) {
     daOn = on; store.set('censusAreas', on);
     if (!on) { if (daLayer) map.removeLayer(daLayer); return; }
@@ -287,11 +315,11 @@
         <label><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
         <label><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
         ${canRotate ? `<label><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
-        <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}><span>2021 census areas</span></label>
+        <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span>2021 census areas</span></label>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
-      el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); if (daLayer) daLayer.setStyle(daStyle()); };
+      el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');

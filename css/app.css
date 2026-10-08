@@ -674,3 +674,5 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 @media (max-width: 760px) { .map-wrap .map-opts label.chk span { display: inline; font-size: 11px; } }
 
 @media (hover: none) { .lasso-hint .mouse-only { display: none; } }
+.da-swatch { flex: none; border-radius: 3px; background: var(--surface-2); }
+.da-swatch.img { background: #6b7a5e; }   /* stands in for an aerial photo behind the white line */
