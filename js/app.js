@@ -1038,6 +1038,24 @@
       <ol class="timeline">${h.map(([d, ph], i) => `<li><span class="d">${esc(d)}</span>${dot(ph)}<span>${i ? 'Moved to' : 'First seen as'} ${esc(P.PHASE_BY_KEY[ph].label)}</span></li>`).join('')}</ol>`;
   }
 
+  // Dated events grouped by day, then by event: "Permit issued · Issue date — 20-287761, 20-287981
+  // +2 more" instead of one line per file.
+  function timelineHTML(events) {
+    const days = new Map();
+    for (const t of events) {
+      const d = fmtDate(t.date);
+      if (!days.has(d)) days.set(d, new Map());
+      const g = days.get(d), k = `${t.phase}|${t.text}`;
+      if (!g.has(k)) g.set(k, { phase: t.phase, text: t.text, tags: [] });
+      if (!g.get(k).tags.includes(t.tag)) g.get(k).tags.push(t.tag);
+    }
+    const tags = list => list.length <= 3 ? esc(list.join(', '))
+      : `${esc(list.slice(0, 2).join(', '))} <details class="tl-more"><summary>+${list.length - 2} more</summary>${esc(list.slice(2).join(', '))}</details>`;
+    const rows = [...days].map(([d, g]) => `<li><span class="d">${d}</span><div class="tl-day">${[...g.values()].map(e =>
+      `<div class="tl-ev">${dot(e.phase)}<span>${esc(e.text)}${e.tags.length > 1 ? ` <span class="tl-n">×${e.tags.length}</span>` : ''} <span class="muted">— ${tags(e.tags)}</span></span></div>`).join('')}</div></li>`).join('');
+    return `<p class="small muted tl-sum">${fmtNum(events.length)} event${events.length === 1 ? '' : 's'} on ${fmtNum(days.size)} date${days.size === 1 ? '' : 's'}</p><ol class="timeline grouped">${rows}</ol>`;
+  }
+
   let currentProject = null;
   function showDetail(p) {
     currentProject = p;
@@ -1050,8 +1068,7 @@
       const cls = s.key === p.phase ? 'current done' : reached ? 'done' : 'todo';
       return `<li class="${cls}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
     }).join('');
-    const timeline = p.timeline.length
-      ? `<ol class="timeline">${p.timeline.map(t => `<li><span class="d">${fmtDate(t.date)}</span>${dot(t.phase)}<span>${esc(t.text)} <span class="muted">— ${esc(t.tag)}</span></span></li>`).join('')}</ol>`
+    const timeline = p.timeline.length ? timelineHTML(p.timeline)
       : '<p class="muted small">No dated milestones in the source data.</p>';
     const RECORD_LIMIT = 40;
     // Oldest first by date received (the record's earliest date); undated records last.
