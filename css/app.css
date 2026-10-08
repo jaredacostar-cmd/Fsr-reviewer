@@ -439,3 +439,8 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 
 .error-banner { position: fixed; top: 0; left: 0; right: 0; z-index: 3000; background: #d03b3b; color: #fff; padding: 10px 16px; font-size: 14px; display: flex; gap: 10px; align-items: center; justify-content: center; }
 .error-banner .btn { background: #fff; color: #0b0b0b; border-color: #fff; }
+
+/* Per-project servicing demand table */
+.demand-table td { white-space: nowrap; }
+.demand-table tr.sub td { text-align: left; font-weight: 600; color: var(--text-secondary); padding-top: 8px; }
+.demand-table .muted { font-size: 11px; }

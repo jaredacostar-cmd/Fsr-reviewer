@@ -48,6 +48,7 @@
             <button type="button" class="chip" data-view="all">All developments</button>
             <button type="button" class="chip" data-view="growth">Applications adding units</button>
             <button type="button" class="chip" data-view="left">Units left to build</button>
+            <button type="button" class="chip" data-view="committed">Committed capacity</button>
             <button type="button" class="chip" data-view="building">Being built</button>
             <button type="button" class="chip" data-view="done">Completed</button>
           </div>
@@ -79,6 +80,7 @@
                 <option value="100">100+ units</option>
                 <option value="500">500+ units</option>
                 <option value="left">Units left to build</option>
+                <option value="committed">Committed capacity</option>
               </select>
             </label>
           </div>
@@ -196,6 +198,7 @@
           <h2>Population &amp; servicing demand</h2>
           <select id="d-basis" aria-label="Which projects to include">
             <option value="all">All units</option>
+            <option value="committed">Committed capacity (approved, not yet built)</option>
             <option value="remaining">Left to build (no permit yet)</option>
             <option value="unbuilt">Not yet completed</option>
             <option value="completed">Completed</option>
