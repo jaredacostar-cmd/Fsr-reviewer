@@ -255,14 +255,17 @@
   function loadDaLayer() {
     if (daLoading) return daLoading;
     daLoading = fetch('data/das.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
-      const css = getComputedStyle(document.documentElement);
-      const color = (css.getPropertyValue('--text-muted') || '#888').trim();
-      daLayer = L.layerGroup(d.das.map(([id, pop, dw, muni, rings]) => L.polygon(rings.map(r => r.map(([x, y]) => [y, x])), {
-        renderer: daRenderer, pane: 'daPane', color, weight: 0.7, opacity: 0.45, fill: true, fillOpacity: 0, smoothFactor: 0.5,
+      daLayer = L.featureGroup(d.das.map(([id, pop, dw, muni, rings]) => L.polygon(rings.map(r => r.map(([x, y]) => [y, x])), {
+        renderer: daRenderer, pane: 'daPane', ...daStyle(), fill: true, fillOpacity: 0, smoothFactor: 0.5,
       }).bindTooltip(`<strong>DA ${esc(id)}</strong>${muni ? ` · ${esc(muni)}` : ''}<br>${fmtNum(pop)} people · ${fmtNum(dw)} dwellings (2021)`, { sticky: true, className: 'pt' })));
       return daLayer;
     });
     return daLoading;
+  }
+  // White hairlines over aerial photos, grey over the street map: visible but faint.
+  function daStyle() {
+    if (BASEMAPS[basemap].imagery) return { color: '#ffffff', weight: 0.8, opacity: 0.4 };
+    return { color: (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim(), weight: 0.7, opacity: 0.4 };
   }
   function setDaLayer(on) {
     daOn = on; store.set('daLayer', on);
@@ -287,7 +290,7 @@
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
-      el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); };
+      el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); if (daLayer) daLayer.setStyle(daStyle()); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
