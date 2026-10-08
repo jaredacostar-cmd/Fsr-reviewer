@@ -182,6 +182,24 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
    - A site plan inside a subdivision rolls up into the subdivision.
    - Withdrawn applications and area-wide plans larger than 4 km² don't absorb permits.
 
+## Build-out by dwelling type
+
+Under the Planned / Permitted / Completed / Left to build tiles, each project shows the same
+four columns by type (single / semi, townhouse, apartment, type not stated), and an
+**Employment** row with the non-residential floor area and estimated jobs. The bottom panel's
+**Breakdown & criteria** tab totals them for the projects shown.
+
+- **Planned** by type: the unit mix published with the application; else counts in the
+  application description (“299 single detached, 217 street townhouse and 52 back-to-back
+  townhouse dwelling units”); else the type read from the description. When only that guess is
+  available, building permits with a stated type set the type of the units they cover.
+- **Permitted / completed** by type: each building permit's own description (one figure per
+  building, as in the build-out). Permits that don't say (e.g. foundation-only conditional
+  permits) go to the types with room left in the plan.
+- **Left** = planned − permitted per type. Every column adds up to the tiles above.
+- Stacked and back-to-back towns count as apartments, as in Peel's persons-per-unit.
+- Employment floor space has no unit-level permits, so it moves with the project's phase.
+
 ## Employment uses (`js/employment.js`)
 
 Applications are scanned for non-residential uses — industrial / logistics, office, retail /

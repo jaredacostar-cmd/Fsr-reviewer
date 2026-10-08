@@ -114,3 +114,37 @@ test('employment counted by phase and added to residential', () => {
   assert.ok(Math.abs(mix.combined.water.peakHour - (mix.water.peakHour + mix.employment.water.peakHour)) < 1e-9);
   assert.ok(Math.abs(mix.combined.wastewater.wetPeak - (mix.wastewater.wetPeak + mix.employment.wastewater.wetPeak)) < 1e-9);
 });
+
+test('unit mix read from application text', () => {
+  const D = require('../js/demand.js');
+  assert.deepEqual(D.mixFromText('a maximum of 299 single detached, 217 street townhouse, and 52 back-to-back townhouse dwelling units'), { single: 299, town: 217, apartment: 52 });
+  assert.deepEqual(D.mixFromText('A twenty-five storey residential apartment building (559 apartment units) and 16 townhouses'), { single: 0, town: 16, apartment: 559 });
+  // Heights and lots are not dwellings.
+  assert.deepEqual(D.mixFromText('12 storey apartment building with 19 reserve lots'), { single: 0, town: 0, apartment: 0 });
+  // A summary figure equal to the total, followed by its parts, is not counted twice.
+  assert.deepEqual(D.mixFromText('287 townhouse units consisting of 104 standard townhouses, 164 back-to-back townhouses & 19 rear-lane townhouses', 287), { single: 0, town: 123, apartment: 164 });
+});
+
+test('build-out by type adds up to the build-out totals', () => {
+  const D = require('../js/demand.js');
+  const permit = (ref, units, desc, phase) => ({ kind: 'permit', ref, fileKey: ref, units, description: desc, type: 'RESIDENTIAL', phase });
+  const p = {
+    types: ['Subdivision'], description: '40 single detached and 60 townhouses',
+    buildout: { planned: 100, permitted: 30, completed: 10, remaining: 70, unbuilt: 90 },
+    records: [
+      { kind: 'application', phase: 'approved', units: 100, description: '40 single detached and 60 townhouses' },
+      permit('A1', 10, 'New single detached dwelling', 'completed'),
+      permit('A2', 12, 'New townhouse block', 'permit'),
+      permit('A3', 8, 'Conditional permit - foundation only', 'permit'),
+    ],
+  };
+  const t = D.typeBuildout(p);
+  assert.equal(t.source, 'text');
+  const sum = col => Object.values(t.rows).reduce((a, r) => a + r[col], 0);
+  assert.equal(sum('planned'), 100); assert.equal(sum('permitted'), 30); assert.equal(sum('completed'), 10); assert.equal(sum('left'), 70);
+  assert.equal(t.rows.single.planned, 40); assert.equal(t.rows.town.planned, 60);
+  assert.equal(t.rows.single.completed, 10);
+  // The untyped foundation permit goes to the types with room left in the plan.
+  assert.equal(t.rows.unknown.permitted, 0);
+  assert.equal(t.rows.single.left + t.rows.town.left, 70);
+});

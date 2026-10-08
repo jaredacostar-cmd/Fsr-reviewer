@@ -47,6 +47,8 @@
   }
   // Employment parsed once per project (the focus chip counts call it for every project).
   const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p) : null));
+  // Employment space moves with the project phase (no per-unit permits for it).
+  const EMP_DONE = { permitted: new Set(['permit', 'construction', 'completed']), completed: new Set(['completed']) };
   const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
   const removed = new Set(store.get('removed', []));
   const disabled = store.get('disabled', {});
@@ -649,12 +651,28 @@
 
     // Breakdown by dwelling type and by phase.
     const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
+    // Build-out by type across the shown projects, plus employment floor space by phase.
+    const bt = {}; for (const t of D.UNIT_TYPES) bt[t.key] = { planned: 0, permitted: 0, completed: 0, left: 0 };
+    const emp = { planned: 0, permitted: 0, completed: 0, left: 0, jobs: 0 };
+    for (const p of set) {
+      const tb = p.buildout ? D.typeBuildout(p) : null;
+      if (tb) for (const k in bt) for (const col in bt[k]) bt[k][col] += tb.rows[k][col];
+      const em = empOf(p);
+      if (em && em.totalM2 > 0) {
+        emp.planned += em.totalM2; emp.jobs += em.jobs;
+        if (EMP_DONE.permitted.has(p.phase)) emp.permitted += em.totalM2; else emp.left += em.totalM2;
+        if (EMP_DONE.completed.has(p.phase)) emp.completed += em.totalM2;
+      }
+    }
+    const boRows = D.UNIT_TYPES.filter(t => bt[t.key].planned || bt[t.key].permitted).map(t => `<tr><td>${esc(t.label)}</td>${['planned', 'permitted', 'completed', 'left'].map(col => `<td>${fmtNum(bt[t.key][col])}</td>`).join('')}</tr>`).join('')
+      + (emp.planned ? `<tr class="tot"><td>Employment m² <span class="muted">(~${fmtNum(emp.jobs)} jobs)</span></td>${['planned', 'permitted', 'completed', 'left'].map(col => `<td>${fmtNum(emp[col])}</td>`).join('')}</tr>` : '');
     const phaseRows = P.PHASES.map(ph => {
       const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
       return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
     }).join('');
     $('#d-breakdown').innerHTML = `
-      <table class="dt"><caption>By dwelling type</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
+      <table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table>
+      <table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
       <table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
   }
 
@@ -884,7 +902,7 @@
         </div>
         <div class="sum-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(Math.max(0, b.permitted - b.completed))} permitted not completed, ${fmtNum(b.remaining)} left to build">
           <span class="bo-done" style="width:${w(b.completed)}%"></span><span class="bo-perm" style="width:${w(Math.max(0, b.permitted - b.completed))}%"></span><span class="bo-left" style="width:${w(b.remaining)}%"></span>
-        </div></div>`;
+        </div>${typeTableHTML(p)}</div>`;
     }
     const done = permits.filter(r => r.phase === 'completed').length;
     return `<div class="summary"><div class="sum-tiles">
@@ -892,7 +910,39 @@
       ${tile('s-perm', 'Permits', fmtNum(permits.length), '')}
       ${tile('s-done', 'Completed', fmtNum(done), done ? 'permits' : '')}
       ${tile('s-left', 'Applications', fmtNum(p.records.length - permits.length), '')}
-    </div></div>`;
+    </div>${typeTableHTML(p)}</div>`;
+  }
+
+  // Under the headline tiles: the same four columns by dwelling type, plus employment floor
+  // space (which moves with the project's phase: there are no per-unit permits for it).
+  const TYPE_SOURCE = {
+    mix: 'Types from the unit mix published with the application.',
+    text: 'Types from the counts in the application description.',
+    permits: 'Types from the building permits; the rest of the plan from the application description.',
+    guess: 'Type read from the application description.',
+  };
+  function typeTableHTML(p) {
+    const t = p.buildout ? D.typeBuildout(p) : null;
+    const e = empOf(p);
+    const rows = [];
+    if (t) {
+      for (const ut of D.UNIT_TYPES) {
+        const r = t.rows[ut.key];
+        if (!(r.planned || r.permitted || r.completed || r.left)) continue;
+        const c = v => v ? fmtNum(v) : '<span class="muted">–</span>';
+        rows.push(`<tr><td>${esc(ut.label)}</td><td>${c(r.planned)}</td><td>${c(r.permitted)}</td><td>${c(r.completed)}</td><td>${c(r.left)}</td></tr>`);
+      }
+    }
+    if (e && e.totalM2 > 0) {
+      const ph = p.phase;
+      const v = on => on ? `${fmtNum(e.totalM2)}` : '<span class="muted">–</span>';
+      rows.push(`<tr class="emp-row" data-info="employment"><td>Employment <span class="muted">m²</span><div class="muted small">~${fmtNum(e.jobs)} jobs · ${esc(e.uses.filter(u => u.m2).map(u => u.label.split(' /')[0].toLowerCase()).join(', '))}</div></td>
+        <td>${fmtNum(e.totalM2)}</td><td>${v(EMP_DONE.permitted.has(ph))}</td><td>${v(EMP_DONE.completed.has(ph))}</td><td>${v(!EMP_DONE.permitted.has(ph) && ph !== 'cancelled')}</td></tr>`);
+    }
+    if (!rows.length) return '';
+    const notes = [t ? TYPE_SOURCE[t.source] : '', e && e.totalM2 > 0 ? 'Employment floor space follows the project phase.' : ''].filter(Boolean).join(' ');
+    return `<table class="dt type-table" data-info="unit-types"><thead><tr><th></th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead>
+      <tbody>${rows.join('')}</tbody></table><p class="small muted type-note">${notes}</p>`;
   }
 
   // Source records grouped by type (zoning / subdivision, site plan, condominium,
