@@ -187,6 +187,8 @@ application.
 straight across. Switch to **North up** in the map options (top right). Rotation uses the
 [leaflet-rotate](https://github.com/Raruto/leaflet-rotate) plugin.
 
+**Aerial photos** are drawn 40% transparent (60% opacity, as one layer) so project dots, boundaries and census lines stand out; road and place labels stay fully opaque.
+
 **2021 census areas:** the 2021 Census dissemination areas show as a light border by default
 (untick **2021 census areas** in the map options to hide them; the swatch beside the toggle shows
 the line). The border gets thicker as you zoom in so it stays visible at street scale, and over
