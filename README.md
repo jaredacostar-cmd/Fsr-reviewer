@@ -37,8 +37,18 @@ disk. The data is fetched by your browser, so you need internet access.
 - **Phase filter:** click a phase to toggle it. Alt-click a phase, or click a segment of the
   pipeline bar, to show only that phase.
 - **Filters:** search by address, file number or description. You can also filter by
-  municipality, record type (applications, permits, or sites with both), and last-activity
-  year. "New builds only" hides alteration-type permits such as decks, signs and HVAC.
+  municipality and record type (applications, permits, or sites with both). "New builds only"
+  hides alteration-type permits such as decks, signs and HVAC.
+- **Timeline (bottom left):** drag the two handles to keep only projects with activity in that
+  range of years, for example 2022–2024. The dropdown picks which milestone must fall in the
+  range: any milestone, application submitted, approved, permit issued, or completed. The bars
+  show projects per year. Click a bar to isolate that year, and shift-click another bar to
+  extend the range.
+- **Population & servicing demand (bottom right):** estimates the population and the water and
+  wastewater demand of the dwelling units in the projects currently shown. It responds to every
+  filter and to the timeline. You can include all shown projects, only those not yet completed,
+  or only completed ones. Withdrawn projects are always excluded. Open "Breakdown & design
+  criteria" to see totals by dwelling type and by phase, and to edit the criteria.
 - **Export:** download the filtered projects as CSV or GeoJSON, one column per phase date.
 - **Data sources:** turn any source on or off and set how far back to load. **Discover
   datasets** searches the Mississauga, Brampton, Caledon and Peel ArcGIS Hub sites for every
@@ -62,6 +72,34 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
 4. **Duplicates:** a permit that shows up in more than one layer is merged by permit number.
 
 Run the tests with `npm test`.
+
+## Population and demand criteria (`js/demand.js`)
+
+| Parameter | Default | Source |
+|---|---|---|
+| Persons per unit: single / semi | 4.2 | Peel Linear Wastewater Standards R1.0, Table 2-2 (from the Region's DC Background Study) |
+| Persons per unit: townhouse | 3.4 | same |
+| Persons per unit: apartment | 2.7 | same standard's rate for apartments above 475 persons/ha (3.1 for large apartments at lower density) |
+| Persons per unit: type not stated | 2.7 | assumption: most unit-bearing projects in Peel's pipeline are apartments |
+| Water, average day | 280 L/cap/day | Peel Watermain Design Criteria (rev. June 2010), long-term residential rate |
+| Water, max day / peak hour | ×2.0 / ×3.0 | same |
+| Wastewater, residential | 290 L/cap/day | Peel Linear Wastewater Standards R1.0 |
+| Wastewater peaking | Harmon, M = 1 + 14 / (4 + √P), P in thousands | Peel Sanitary Sewer Design Criteria |
+
+How the estimate works:
+
+- **Dwelling type:** taken from a published unit-mix column (singles, semis, towns,
+  apartments) when the dataset has one. Otherwise it is guessed from the project's type and
+  description text.
+- **Peaking:** the Harmon factor is applied to the combined population of everything shown.
+  That gives a system-level peak, which is lower than adding up each site's own peak flow.
+- **Not included:** infiltration (0.26 L/s/ha) and ICI (employment) demand, because they need
+  site area and employment data that the source datasets don't provide.
+
+Every value can be edited in the app, and your edits are kept in your browser. These numbers
+are planning-level estimates, not a substitute for a functional servicing report. Check the
+values against the current Region of Peel standards; a 2025 edition of the Linear Wastewater
+Standards is listed on the Region's site.
 
 ## Data sources (`js/config.js`)
 

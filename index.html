@@ -46,9 +46,6 @@
           </label>
         </div>
         <div class="row">
-          <label class="field grow"><span>Active since</span>
-            <input type="number" id="f-active" min="1990" max="2100" step="1" placeholder="any year">
-          </label>
           <label class="check"><input type="checkbox" id="f-new" checked> New builds only</label>
         </div>
       </section>
@@ -104,6 +101,51 @@
       <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
     </main>
 
+    <footer class="footer" id="footer">
+      <section class="timebar" aria-label="Timeline">
+        <div class="tb-head">
+          <h2>Timeline</h2>
+          <label class="inline"><span class="sr">Milestone</span>
+            <select id="t-mode" aria-label="Which milestone falls in the year range">
+              <option value="any">Any milestone</option>
+              <option value="inception">Application submitted</option>
+              <option value="approved">Approved</option>
+              <option value="permit">Permit issued</option>
+              <option value="completed">Completed</option>
+            </select>
+          </label>
+          <strong class="t-label" id="t-label">All years</strong>
+          <button type="button" class="btn small" id="t-reset" hidden>Reset</button>
+        </div>
+        <div class="hist" id="t-hist" role="group" aria-label="Projects per year"></div>
+        <div class="range" id="t-range">
+          <input type="range" id="t-from" aria-label="From year">
+          <input type="range" id="t-to" aria-label="To year">
+        </div>
+        <div class="ticks" id="t-ticks" aria-hidden="true"></div>
+      </section>
+
+      <section class="demand" aria-label="Population and servicing demand">
+        <div class="tb-head">
+          <h2>Population &amp; servicing demand</h2>
+          <select id="d-basis" aria-label="Which projects to include">
+            <option value="all">All shown projects</option>
+            <option value="pipeline">Not yet completed</option>
+            <option value="completed">Completed only</option>
+          </select>
+          <span class="muted small" id="d-note"></span>
+        </div>
+        <div class="tiles" id="d-tiles"></div>
+        <details class="d-more">
+          <summary>Breakdown &amp; design criteria</summary>
+          <div class="d-grid">
+            <div id="d-breakdown"></div>
+            <form id="d-criteria" class="criteria"></form>
+          </div>
+        </details>
+      </section>
+    </footer>
+
     <aside class="detail" id="detail" hidden aria-live="polite">
       <button type="button" class="close" id="detail-close" aria-label="Close">×</button>
       <div id="detail-body"></div>
@@ -114,6 +156,7 @@
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
   <script src="js/config.js"></script>
   <script src="js/phases.js"></script>
+  <script src="js/demand.js"></script>
   <script src="js/arcgis.js"></script>
   <script src="js/app.js"></script>
 </body>

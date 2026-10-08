@@ -5,6 +5,7 @@
   const CFG = window.PEEL_CONFIG;
   const P = window.PeelPhases;
   const A = window.PeelArcGIS;
+  const D = window.PeelDemand;
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const fmtDate = d => d ? d.toISOString().slice(0, 10) : '';
@@ -22,10 +23,23 @@
     projects: [],
     filtered: [],
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
-    muni: '', kind: '', search: '', activeSince: null, newOnly: true,
+    muni: '', kind: '', search: '', newOnly: true,
+    // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
+    yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
+    demandBasis: 'all',
+    criteria: mergeCriteria(store.get('criteria', null)),
     sinceYear: store.get('sinceYear', CFG.sinceYear),
     maxPerLayer: store.get('maxPerLayer', CFG.maxPerLayer),
   };
+  function mergeCriteria(saved) {
+    const d = JSON.parse(JSON.stringify(D.DEFAULT_CRITERIA));
+    if (!saved) return d;
+    for (const g of Object.keys(d)) for (const k of Object.keys(d[g])) {
+      const v = saved[g] && Number(saved[g][k]);
+      if (v > 0) d[g][k] = v;
+    }
+    return d;
+  }
   const removed = new Set(store.get('removed', []));
   const disabled = store.get('disabled', {});
   for (const s of CFG.services.concat(store.get('extraSources', []))) {
@@ -227,16 +241,30 @@
     const munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     const sel = $('#f-muni'), cur = sel.value;
     sel.innerHTML = '<option value="">All</option>' + munis.map(m => `<option${m === cur ? ' selected' : ''}>${esc(m)}</option>`).join('');
+    updateYearBounds();
     applyFilters();
   }
 
-  function matches(p, ignorePhase) {
+  // Years in which the project hit the selected milestone (or any milestone).
+  function yearsOf(p, mode) {
+    const cache = p._years || (p._years = {});
+    return cache[mode] || (cache[mode] = Array.from(new Set(
+      p.timeline.filter(t => mode === 'any' || t.phase === mode).map(t => t.date.getFullYear()))));
+  }
+  const timeActive = () => state.yearFrom != null || state.yearTo != null;
+  function inYears(p) {
+    if (!timeActive()) return true;
+    const lo = state.yearFrom ?? -Infinity, hi = state.yearTo ?? Infinity;
+    return yearsOf(p, state.yearMode).some(y => y >= lo && y <= hi);
+  }
+
+  function matches(p, ignorePhase, ignoreTime) {
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
+    if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
-    if (state.activeSince && !(p.last && p.last.getFullYear() >= state.activeSince)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
@@ -251,7 +279,147 @@
     renderPipeline(base);
     renderMarkers();
     renderList();
+    renderTimeline();
+    renderDemand();
   }
+
+  // ---- Timeline slider -------------------------------------------------------------
+  const tFrom = $('#t-from'), tTo = $('#t-to');
+  function updateYearBounds() {
+    let lo = Infinity, hi = -Infinity;
+    for (const p of state.projects) for (const t of p.timeline) {
+      const y = t.date.getFullYear();
+      if (y < lo) lo = y; if (y > hi) hi = y;
+    }
+    const now = new Date().getFullYear();
+    if (!isFinite(lo)) { lo = Number(state.sinceYear) || now - 10; hi = now; }
+    lo = Math.max(lo, 1980); hi = Math.min(Math.max(hi, lo + 1), now + 5);
+    state.yearMin = lo; state.yearMax = hi;
+    for (const el of [tFrom, tTo]) { el.min = lo; el.max = hi; el.step = 1; }
+    tFrom.value = state.yearFrom ?? lo;
+    tTo.value = state.yearTo ?? hi;
+  }
+  function setYears(from, to) {
+    const lo = state.yearMin, hi = state.yearMax;
+    if (from > to) [from, to] = [to, from];
+    state.yearFrom = from <= lo ? null : from;
+    state.yearTo = to >= hi ? null : to;
+    tFrom.value = from; tTo.value = to;
+    applyFilters();
+  }
+  function renderTimeline() {
+    const lo = state.yearMin, hi = state.yearMax;
+    if (lo == null) return;
+    const from = state.yearFrom ?? lo, to = state.yearTo ?? hi;
+    $('#t-label').textContent = timeActive() ? (from === to ? `${from}` : `${from} – ${to}`) : 'All years';
+    $('#t-reset').hidden = !timeActive();
+    // Histogram ignores the year filter itself so you can see where to drag.
+    const counts = new Map();
+    for (const p of state.projects) {
+      if (!matches(p, false, true)) continue;
+      for (const y of yearsOf(p, state.yearMode)) if (y >= lo && y <= hi) counts.set(y, (counts.get(y) || 0) + 1);
+    }
+    const max = Math.max(1, ...counts.values());
+    const mode = $('#t-mode').selectedOptions[0].textContent.toLowerCase();
+    let bars = '';
+    for (let y = lo; y <= hi; y++) {
+      const n = counts.get(y) || 0;
+      const on = y >= from && y <= to;
+      bars += `<button type="button" class="bar${on ? ' on' : ''}" data-y="${y}" title="${y}: ${fmtNum(n)} project${n === 1 ? '' : 's'} (${esc(mode)})"
+        aria-label="${y}: ${n} projects"><i style="height:${n ? Math.max(2, n / max * 100) : 0}%"></i></button>`;
+    }
+    $('#t-hist').innerHTML = bars;
+    const span = hi - lo, step = span > 24 ? 5 : span > 10 ? 2 : 1;
+    let ticks = '';
+    for (let y = lo; y <= hi; y++) if ((y - lo) % step === 0 || y === hi) ticks += `<span style="left:${(y - lo + 0.5) / (span + 1) * 100}%">${y}</span>`;
+    $('#t-ticks').innerHTML = ticks;
+    // Keep slider thumbs centred on their year's bar.
+    const pad = `(${50 / (span + 1)}% - 8px)`;
+    for (const el of [tFrom, tTo]) { el.style.left = `calc${pad}`; el.style.width = `calc(100% - 2 * ${pad})`; }
+  }
+  tFrom.oninput = () => { if (+tFrom.value > +tTo.value) tTo.value = tFrom.value; setYears(+tFrom.value, +tTo.value); };
+  tTo.oninput = () => { if (+tTo.value < +tFrom.value) tFrom.value = tTo.value; setYears(+tFrom.value, +tTo.value); };
+  $('#t-reset').onclick = () => setYears(state.yearMin, state.yearMax);
+  $('#t-mode').onchange = e => { state.yearMode = e.target.value; applyFilters(); };
+  // Click a year bar to isolate it; shift-click to extend the range.
+  let anchorYear = null;
+  $('#t-hist').onclick = e => {
+    const b = e.target.closest('[data-y]'); if (!b) return;
+    const y = +b.dataset.y;
+    if (e.shiftKey && anchorYear != null) setYears(Math.min(anchorYear, y), Math.max(anchorYear, y));
+    else { anchorYear = y; setYears(y, y); }
+  };
+
+  // ---- Population & servicing demand -------------------------------------------------
+  const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
+  function demandSet() {
+    const live = state.filtered.filter(p => p.phase !== 'cancelled');
+    if (state.demandBasis === 'pipeline') return live.filter(p => p.phase !== 'completed');
+    if (state.demandBasis === 'completed') return live.filter(p => p.phase === 'completed');
+    return live;
+  }
+  function renderDemand() {
+    const set = demandSet();
+    const c = state.criteria;
+    const e = D.estimate(set, c);
+    const tile = (label, value, unit, sub) =>
+      `<div class="tile"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
+    $('#d-tiles').innerHTML = [
+      tile('Dwelling units', fmtNum(Math.round(e.totalUnits)), '', `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`),
+      tile('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit'),
+      `<div class="tile group"><div class="tl">Water demand</div><div class="trow">
+        <div><div class="tv">${fmt1(e.water.avg)}<span class="tu">L/s</span></div><div class="ts">Average day · ${fmt1(D.toMLd(e.water.avg))} ML/d</div></div>
+        <div><div class="tv">${fmt1(e.water.maxDay)}<span class="tu">L/s</span></div><div class="ts">Max day ×${c.water.maxDay}</div></div>
+        <div><div class="tv">${fmt1(e.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Peak hour ×${c.water.peakHour}</div></div></div></div>`,
+      `<div class="tile group"><div class="tl">Wastewater flow</div><div class="trow">
+        <div><div class="tv">${fmt1(e.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Avg dry weather · ${fmt1(D.toMLd(e.wastewater.avg))} ML/d</div></div>
+        <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div></div></div>`,
+    ].join('');
+    const range = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'all years';
+    $('#d-note').textContent = `${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
+
+    // Breakdown by dwelling type and by phase.
+    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
+    const phaseRows = P.PHASES.map(ph => {
+      const pe = D.estimate(set.filter(p => p.phase === ph.key), c);
+      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmt1(pe.water.avg)}</td><td>${fmt1(pe.wastewater.avg)}</td></tr>`;
+    }).join('');
+    $('#d-breakdown').innerHTML = `
+      <table class="dt"><caption>By dwelling type</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
+      <table class="dt"><caption>By phase (average day, L/s)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
+  }
+
+  function renderCriteria() {
+    const c = state.criteria;
+    const inp = (g, k, label, step) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-g="${g}" data-k="${k}" value="${c[g][k]}"></label>`;
+    $('#d-criteria').innerHTML = `
+      <fieldset><legend>Persons per unit</legend>
+        ${inp('ppu', 'single', 'Single / semi', 0.1)}${inp('ppu', 'town', 'Townhouse', 0.1)}${inp('ppu', 'apartment', 'Apartment', 0.1)}${inp('ppu', 'unknown', 'Type not stated', 0.1)}
+      </fieldset>
+      <fieldset><legend>Water</legend>
+        ${inp('water', 'avg', 'Average day (L/cap/d)', 1)}${inp('water', 'maxDay', 'Max day factor', 0.1)}${inp('water', 'peakHour', 'Peak hour factor', 0.1)}
+      </fieldset>
+      <fieldset><legend>Wastewater</legend>
+        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}
+        <p class="small muted">Peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population. Infiltration (0.26 L/s/ha) and ICI flows are not included: they need site area and employment data.</p>
+      </fieldset>
+      <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
+      <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
+  }
+  $('#d-criteria').oninput = e => {
+    const el = e.target; if (!el.dataset.g) return;
+    const v = Number(el.value);
+    if (!(v >= 0)) return;
+    state.criteria[el.dataset.g][el.dataset.k] = v;
+    store.set('criteria', state.criteria);
+    renderDemand();
+  };
+  $('#d-criteria').onclick = e => {
+    if (e.target.id !== 'd-reset') return;
+    state.criteria = mergeCriteria(null); store.set('criteria', null);
+    renderCriteria(); renderDemand();
+  };
+  $('#d-basis').onchange = e => { state.demandBasis = e.target.value; renderDemand(); };
 
   // ---- Rendering -----------------------------------------------------------------
   function renderPipeline(base) {
@@ -370,7 +538,8 @@
     return state.filtered.map(p => ({
       address: p.title, municipality: p.municipality, phase: P.PHASE_BY_KEY[p.phase].label,
       ...Object.fromEntries(P.PHASES.map(s => [`${s.key}_date`, fmtDate(p.milestones[s.key])])),
-      units: p.units ?? '', gfa: p.gfa ?? '', types: p.types.join('; '),
+      units: p.units ?? '', est_population: p.units ? Math.round(D.estimate([p], state.criteria).population) : '',
+      gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
     }));
@@ -410,7 +579,6 @@
   $('#f-muni').onchange = e => { state.muni = e.target.value; applyFilters(); };
   $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
   $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
-  $('#f-active').onchange = e => { state.activeSince = Number(e.target.value) || null; applyFilters(); };
 
   $('#s-since').value = state.sinceYear;
   $('#s-max').value = state.maxPerLayer;
@@ -455,11 +623,19 @@
     readColors(); for (const k in iconCache) delete iconCache[k]; setTiles(); renderLegend(); applyFilters();
   });
 
+  // Keep the map and the detail drawer sized around the footer.
+  new ResizeObserver(() => {
+    document.documentElement.style.setProperty('--footer-h', `${$('#footer').offsetHeight}px`);
+    map.invalidateSize();
+  }).observe($('#footer'));
+
   // ---- Boot ------------------------------------------------------------------------
   readColors();
   setTiles();
   renderLegend();
   renderSources();
+  renderCriteria();
+  updateYearBounds();
   applyFilters();
   loadAll();
 

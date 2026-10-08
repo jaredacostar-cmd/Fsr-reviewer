@@ -93,6 +93,23 @@
     if (map.description && (map.description === map.status || map.description === map.type)) map.description = null;
     if (map.id && /desc/i.test(map.id)) map.id = null;
 
+    // Unit mix by dwelling type, when a dataset publishes it (e.g. SINGLES, SEMIS, TOWNS, APTS).
+    const NUMERIC = /Integer|Double|Single|SmallInteger|BigInteger/;
+    const numeric = list.filter(f => !f.type || NUMERIC.test(f.type)).map(f => f.name);
+    const UNIT_MIX = {
+      single:    /^(sing(le)?s?|sfd|sdd|detached)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      semi:      /^semi(s|_?detached)?(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      town:      /^(town(house)?s?|th|rows?|row_?house?s?|street_?towns?|stacked_?towns?)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+      apartment: /^(apt|apts|apartments?|condos?|aprt\w*)(_?(units?|dwell\w*|count|prop\w*|new))?$/i,
+    };
+    map.unitMix = {};
+    for (const [k, re] of Object.entries(UNIT_MIX)) {
+      const hit = numeric.find(n => re.test(n));
+      if (hit) map.unitMix[k] = hit;
+    }
+    if (!Object.keys(map.unitMix).length) map.unitMix = null;
+    else if (map.units && Object.values(map.unitMix).includes(map.units)) map.units = null;
+
     map.dates = [];
     for (const f of list) {
       const isDateType = f.type === 'esriFieldTypeDate' || f.type === 'esriFieldTypeDateOnly' || f.type === 'esriFieldTypeTimestampOffset';
@@ -264,6 +281,15 @@
       lng: point ? point[1] : null,
       props: p,
     };
+    if (fmap.unitMix) {
+      const mix = {};
+      let total = 0;
+      for (const [k, f] of Object.entries(fmap.unitMix)) { mix[k] = Math.max(0, num(p[f]) || 0); total += mix[k]; }
+      if (total > 0) {
+        rec.unitMix = mix;
+        if (!(rec.units > 0)) rec.units = total;
+      }
+    }
     rec.newBuild = isNewBuild(rec);
     return rec;
   }
@@ -344,6 +370,8 @@
       last: dates.length ? dates[dates.length - 1] : null,
       units: sumOf('units'),
       gfa: sumOf('gfa'),
+      // Unit mix of the record reporting the most units (files on one site repeat the same proposal).
+      unitMix: (recs.filter(r => r.unitMix).sort((a, b) => (b.units || 0) - (a.units || 0))[0] || {}).unitMix || null,
       newBuild: recs.some(r => r.newBuild),
       types: Array.from(new Set(recs.map(r => r.type).filter(Boolean))),
       description: (recs.find(r => r.description) || {}).description || '',
