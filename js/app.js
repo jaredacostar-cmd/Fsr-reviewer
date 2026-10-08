@@ -18,12 +18,14 @@
   };
 
   // ---- State -------------------------------------------------------------------
+  const DEFAULT_KIND = 'application';
   const state = {
     sources: [],                         // {id,name,municipality,kind,url,enabled,status,msg,records}
     projects: [],
     filtered: [],
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
-    muni: '', kind: '', search: '', newOnly: true,
+    // Default: projects with a planning application (and the permits that belong to them).
+    muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     focus: '',     // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
@@ -1072,8 +1074,8 @@
   };
   // Each focus narrows the projects; `basis` switches the demand panel to the matching units.
   const FOCUS = {
-    growth:    { label: 'Adds units', title: 'Planning applications proposing new dwelling units', test: p => appUnits(p) > 0 },
-    committed: { label: 'Committed capacity', basis: 'committed', title: 'Approved or permitted units not yet completed', test: p => D.unitsFor(p, 'committed') > 0 },
+    growth:    { label: 'Growth', title: 'Planning applications proposing new dwelling units', test: p => appUnits(p) > 0 },
+    committed: { label: 'Committed capacity', basis: 'committed', title: 'Growth that is approved or permitted and not yet completed', test: p => D.unitsFor(p, 'committed') > 0 },
     left:      { label: 'Left to build', basis: 'remaining', title: 'Planned units with no building permit yet', test: p => !!(p.buildout && p.buildout.remaining > 0) },
     major:     { label: 'Major (100+ units)', title: 'Projects with 100 or more units', test: p => (p.units || 0) >= 100 },
     newapps:   { label: 'New in last 12 months', title: 'First filed in the last 12 months', test: p => !!p.first && Date.now() - p.first < YEAR_MS },
@@ -1101,10 +1103,10 @@
   function activeFilters() {
     const out = [];
     const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
-    const unitsLabel = { 1: 'Adds units', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build', committed: 'Committed capacity' };
+    const unitsLabel = { 1: 'Growth', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build', committed: 'Committed capacity' };
     if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; $('#f-search').value = ''; } });
     if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); } });
-    if (state.kind) out.push({ label: kindLabel[state.kind], clear: () => { state.kind = ''; $('#f-kind').value = ''; } });
+    if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; $('#f-kind').value = DEFAULT_KIND; } });
     if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
     if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
     if (state.phases.size < P.ALL_PHASES.length) {
@@ -1128,9 +1130,9 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', kind: '', search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
+      Object.assign(state, { muni: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
       $('#d-basis').value = 'all';
-      $('#f-search').value = ''; $('#f-kind').value = ''; $('#f-units').value = '0'; $('#f-new').checked = true;
+      $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
       setDefaultYears();
       applyFilters();

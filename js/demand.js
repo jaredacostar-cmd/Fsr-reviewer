@@ -38,17 +38,18 @@
     return 'unknown';
   }
 
-  // Committed capacity: units with planning approval (or a building permit) that are not
-  // yet built and occupied. Applications still in pre-consultation or review are proposed,
-  // not committed; completed units already draw on the system.
+  // Committed capacity: growth only (units planned on a planning application) that has
+  // approval or a building permit and is not yet built and occupied. Applications still in
+  // pre-consultation or review are proposed, not committed; completed units already draw on
+  // the system; permits with no planning application (infill houses) are not growth.
   const COMMITTED_PHASES = new Set(['approved', 'permit', 'construction']);
 
   /** How many of a project's units count, by basis. */
   function unitsFor(project, basis = 'all') {
     const b = project.buildout;
     if (basis === 'committed') {
-      if (!COMMITTED_PHASES.has(project.phase)) return 0;
-      return b ? b.unbuilt : project.units || 0;
+      if (!b || !COMMITTED_PHASES.has(project.phase)) return 0;
+      return b.unbuilt;
     }
     if (basis === 'remaining') return b ? b.remaining : 0;   // planned, no building permit yet
     if (basis === 'unbuilt') return b ? b.unbuilt : (project.phase === 'completed' ? 0 : project.units || 0);
