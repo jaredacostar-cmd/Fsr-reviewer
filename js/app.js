@@ -251,7 +251,9 @@
   // On by default as a faint border; the map options can turn it off.
   let daOn = store.get('censusAreas', true) !== false;
   let daLayer = null, daLoading = null;
-  map.createPane('daPane').style.zIndex = 350;
+  // Inside the rotating pane (leaflet-rotate) with the tiles and overlays: a pane made directly
+  // in the map pane would sit under the whole rotating stack, i.e. under the background.
+  map.createPane('daPane', map.getPane('rotatePane') || undefined).style.zIndex = 350;
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
   // Two passes over aerial photos: a faint dark halo under a light line, so the border reads
   // on bright roofs and pavement as well as on trees and fields.
