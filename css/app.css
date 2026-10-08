@@ -526,3 +526,30 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .info-card .info-src { margin: 0; color: var(--text-secondary); font-size: 12px; }
 .info-card .info-src span { font-weight: 600; }
 [data-info] { -webkit-touch-callout: none; }
+
+/* Project panel: headline numbers, then collapsible sections */
+.summary { margin: 12px 0 6px; }
+.sum-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.sum-tile { border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px; background: var(--surface-1); min-width: 0; }
+.sum-tile .sl { font-size: 11px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sum-tile .sv { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sum-tile .ss { font-size: 11px; color: var(--text-muted); line-height: 1.25; }
+.sum-tile.s-left { border-color: var(--text-muted); }
+.sum-tile.s-left .sv { color: var(--text-primary); }
+.sum-bar { display: flex; gap: 2px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-2); margin-top: 6px; }
+.sum-bar span { display: block; }
+.facts { color: var(--text-secondary); margin: 6px 0; }
+.desc-clamp { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin: 6px 0; }
+.desc-clamp:hover { -webkit-line-clamp: unset; }
+details.sect { border-top: 1px solid var(--border); margin-top: 8px; }
+details.sect > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+details.sect > summary::-webkit-details-marker { display: none; }
+details.sect > summary::after { content: '▸'; margin-left: auto; color: var(--text-muted); transition: transform .15s; }
+details.sect[open] > summary::after { transform: rotate(90deg); }
+details.sect > summary .section-title { margin: 12px 0 8px; }
+.sub-title { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-secondary); margin: 14px 0 6px; }
+details.rec-group { border: 1px solid var(--border); border-radius: 8px; margin: 6px 0; padding: 0 8px; }
+details.rec-group > summary { cursor: pointer; padding: 8px 0; display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+details.rec-group > summary .n { font-size: 12px; background: var(--surface-2); border-radius: 999px; padding: 0 7px; font-variant-numeric: tabular-nums; }
+details.rec-group[open] > summary { border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+@media (max-width: 380px) { .sum-tiles { grid-template-columns: 1fr 1fr; } }

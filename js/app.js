@@ -795,7 +795,7 @@
       `<li class="${cls}">${mark}<span class="lbl">${label}${sub ? `<span class="desc">${sub}</span>` : ''}</span><span class="when">${value}</span></li>`;
     const reached = v => v > 0 ? 'done' : 'todo';
     const units = v => `${fmtNum(v)} units`;
-    return `<h2 class="section-title" data-info="buildout">Build-out</h2>
+    return `<details class="sect"><summary><h2 class="section-title" data-info="buildout">Build-out details</h2></summary>
       <ol class="stepper bo-steps">
         ${step('done', dot('approved'), 'Planned', 'Planning applications', units(b.planned))}
         ${step(reached(b.permitted), dot('permit'), 'Permitted', `${fmtNum(b.permits)} building permits${pct(b.permitted)}`, units(b.permitted))}
@@ -804,7 +804,47 @@
       </ol>
       ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the project total.</p>` : ''}
       ${b.basis ? `<p class="small muted">Planned units: ${esc(BASIS_TEXT[b.basis] || '')}</p>` : ''}
-      ${phasesHTML(b)}`;
+      ${phasesHTML(b)}</details>`;
+  }
+
+  // The headline numbers, first thing in the panel: planned, permitted, completed, left to build.
+  function summaryHTML(p) {
+    const b = p.buildout;
+    const permits = p.records.filter(r => r.kind === 'permit');
+    const tile = (cls, label, value, sub) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">${value}</div>${sub ? `<div class="ss">${sub}</div>` : ''}</div>`;
+    if (b) {
+      const total = Math.max(b.planned, b.permitted);
+      const pc = v => total ? `${Math.round(v / total * 100)}%` : '';
+      const w = v => total ? (v / total * 100).toFixed(2) : 0;
+      return `<div class="summary" data-info="buildout">
+        <div class="sum-tiles">
+          ${tile('s-plan', 'Planned', fmtNum(b.planned), 'units')}
+          ${tile('s-perm', 'Permitted', fmtNum(b.permitted), `${pc(b.permitted)} · ${fmtNum(b.permits)} permits`)}
+          ${tile('s-done', 'Completed', fmtNum(b.completed), pc(b.completed))}
+          ${tile('s-left', 'Left to build', fmtNum(b.remaining), 'no permit yet')}
+        </div>
+        <div class="sum-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(Math.max(0, b.permitted - b.completed))} permitted not completed, ${fmtNum(b.remaining)} left to build">
+          <span class="bo-done" style="width:${w(b.completed)}%"></span><span class="bo-perm" style="width:${w(Math.max(0, b.permitted - b.completed))}%"></span><span class="bo-left" style="width:${w(b.remaining)}%"></span>
+        </div></div>`;
+    }
+    const done = permits.filter(r => r.phase === 'completed').length;
+    return `<div class="summary"><div class="sum-tiles">
+      ${tile('s-plan', 'Units', p.units ? fmtNum(p.units) : '–', p.units ? 'on the files' : 'not stated')}
+      ${tile('s-perm', 'Permits', fmtNum(permits.length), '')}
+      ${tile('s-done', 'Completed', fmtNum(done), done ? 'permits' : '')}
+      ${tile('s-left', 'Applications', fmtNum(p.records.length - permits.length), '')}
+    </div></div>`;
+  }
+
+  // Source records grouped by type (zoning / subdivision, site plan, condominium,
+  // pre-consultation, building permits), each group oldest first and opening to its files.
+  const REC_GROUPS = [
+    ['master', 'Official plan / zoning / subdivision'], ['siteplan', 'Site plan'], ['condo', 'Condominium'],
+    ['precon', 'Pre-consultation'], ['other', 'Other applications'], ['permit-new', 'Building permits – new units'], ['permit', 'Building permits – other'],
+  ];
+  function recGroup(r) {
+    if (r.kind === 'permit') return P.permitAddsUnits(r) && r.units > 0 ? 'permit-new' : 'permit';
+    return r.stage || P.stageOf(r);
   }
 
   // Servicing demand for one project. Peaking uses the project's own population (local
@@ -817,7 +857,7 @@
     if (!(es[0].totalUnits > 0)) return '';
     const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
     const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
-    return `<h2 class="section-title" data-info="project-demand">Servicing demand</h2>${intro}
+    return `<details class="sect"><summary><h2 class="section-title" data-info="project-demand">Servicing demand</h2></summary>${intro}
       <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
         ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
         ${row('Population', e => fmtNum(Math.round(e.population)))}
@@ -832,7 +872,7 @@
         ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}
       </tbody></table>
       <p class="small muted">${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.
-        Completed = units on finished permits; remaining = the rest, permitted or not. Peaks are for each column alone (Harmon is not additive); edit the criteria in the bottom panel.</p>`;
+        Completed = units on finished permits; remaining = the rest, permitted or not. Peaks are for each column alone (Harmon is not additive); edit the criteria in the bottom panel.</p></details>`;
   }
 
   function phaseHistoryHTML(p) {
@@ -861,36 +901,43 @@
     // Oldest first by date received (the record's earliest date); undated records last.
     const received = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
     const ordered = p.records.slice().sort((a, b) => received(a) - received(b));
-    const recs = ordered.slice(0, RECORD_LIMIT).map(r => `
+    const recHTML = r => `
       <details class="rec"><summary>${dot(r.phase)} ${isFinite(received(r)) ? `<span class="rec-date">${fmtDate(new Date(received(r)))}</span> ` : ''}<strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
         ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
         ${r.description ? `<p>${esc(r.description)}</p>` : ''}
         <p class="small muted">Source: ${esc(r.sourceName)}${r.alsoIn ? ` (also in ${esc(r.alsoIn.join(', '))})` : ''}
           ${r.lat != null ? ` · <button type="button" class="btn small link" data-rec="${esc(r.uid)}">${r.kind === 'permit' ? 'Show on map & parent application' : 'Show on map'}</button>` : ''}</p>
         <table>${recordRows(r)}</table>
-      </details>`).join('') + (ordered.length > RECORD_LIMIT
-        ? `<p class="small muted">+ ${fmtNum(ordered.length - RECORD_LIMIT)} more records (export CSV for the full list)</p>` : '');
+      </details>`;
+    const recs = REC_GROUPS.map(([key, label]) => {
+      const list = ordered.filter(r => recGroup(r) === key);
+      if (!list.length) return '';
+      const dates = list.map(received).filter(isFinite);
+      const span = dates.length ? ` · ${fmtDate(new Date(Math.min(...dates))).slice(0, 4)}${Math.max(...dates) - Math.min(...dates) > 365 * 864e5 ? `–${fmtDate(new Date(Math.max(...dates))).slice(0, 4)}` : ''}` : '';
+      const units = key === 'permit-new' ? P.permitUnits(list) : 0;
+      return `<details class="rec-group"><summary><strong>${esc(label)}</strong> <span class="n">${fmtNum(list.length)}</span><span class="muted small">${span}${units ? ` · ${fmtNum(units)} units` : ''}</span></summary>
+        ${list.slice(0, RECORD_LIMIT).map(recHTML).join('')}
+        ${list.length > RECORD_LIMIT ? `<p class="small muted">+ ${fmtNum(list.length - RECORD_LIMIT)} more (export CSV for the full list)</p>` : ''}
+      </details>`;
+    }).join('');
     $('#detail-body').innerHTML = `
       <div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
         <span class="badge">${dot(p.phase)}${esc(ph.label)}</span></div>
-      ${p.description ? `<p>${esc(p.description)}</p>` : ''}
-      <dl class="kv">
-        ${p.units && !p.buildout ? `<dt>Units</dt><dd>${fmtNum(p.units)}</dd>` : ''}
-        ${p.gfa ? `<dt>Floor area</dt><dd>${fmtNum(p.gfa)}</dd>` : ''}
-        ${p.first ? `<dt>First record</dt><dd>${fmtDate(p.first)}</dd>` : ''}
-        ${p.last ? `<dt>Latest activity</dt><dd>${fmtDate(p.last)}</dd>` : ''}
-        <dt>Files</dt><dd>${p.records.length} (${p.kinds.map(k => k === 'permit' ? 'permits' : 'applications').join(' + ')})</dd>
-      </dl>
-      <h2 class="section-title" data-info="aerial">Aerial check</h2>
-      <div class="aerial" id="aerial-check"></div>
+      ${summaryHTML(p)}
+      <p class="facts small">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
+        `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p>
+      ${p.description ? `<p class="desc-clamp">${esc(p.description)}</p>` : ''}
+      ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
+      <details class="sect" open><summary><h2 class="section-title" data-info="aerial">Aerial check</h2></summary>
+        <div class="aerial" id="aerial-check"></div></details>
       ${buildoutHTML(p)}
       ${demandHTML(p)}
-      <h2 class="section-title" data-info="phase-progress">Phase progress</h2>
-      ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
-      <ol class="stepper">${steps}</ol>
-      ${phaseHistoryHTML(p)}
-      <h2 class="section-title" data-info="project-timeline">Timeline</h2>${timeline}
-      <h2 class="section-title" data-info="source-records">Source records <span class="muted small">(oldest first, by date received)</span></h2>${recs}`;
+      <details class="sect"><summary><h2 class="section-title" data-info="phase-progress">Progress &amp; timeline</h2></summary>
+        <ol class="stepper">${steps}</ol>
+        ${phaseHistoryHTML(p)}
+        <h3 class="sub-title" data-info="project-timeline">All dated events</h3>${timeline}</details>
+      <details class="sect" open><summary><h2 class="section-title" data-info="source-records">Source records <span class="muted small">by type · ${fmtNum(p.records.length)}</span></h2></summary>
+        ${recs}</details>`;
     $('#detail').hidden = false;
     $('#detail').scrollTop = 0;
     runAerial(p);
