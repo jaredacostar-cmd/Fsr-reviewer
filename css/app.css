@@ -286,6 +286,9 @@ button, input, select { font: inherit; color: inherit; }
 .tile .ts { font-size: 11px; color: var(--text-muted); }
 .tile .trow { display: flex; gap: 16px; flex-wrap: wrap; }
 .tile .trow > div { flex: 1 1 0; min-width: 84px; }
+.tile.emp-tile { grid-column: 1 / 4; }
+.tile.total { grid-column: 4; background: var(--surface-1); }
+.emp-demand { margin: 4px 0 8px; }
 .d-more { margin-top: 8px; font-size: 13px; }
 .d-more summary { cursor: pointer; color: var(--text-secondary); }
 .d-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 8px; }
@@ -304,6 +307,7 @@ button, input, select { font: inherit; color: inherit; }
   .footer { grid-template-columns: 1fr; }
   .demand { border-left: 0; border-top: 1px solid var(--border); }
   .tiles { grid-template-columns: 1fr 1fr; }
+  .tile.emp-tile, .tile.total { grid-column: 1 / -1; }
   .d-grid { grid-template-columns: 1fr; }
 }
 

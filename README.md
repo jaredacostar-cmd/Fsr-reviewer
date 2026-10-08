@@ -287,6 +287,8 @@ Run the tests with `npm test`.
 | Water, max day / peak hour | ×2.0 / ×3.0 | same |
 | Wastewater, residential | 290 L/cap/day | Peel Linear Wastewater Standards R1.0 |
 | Wastewater peaking | Harmon, M = 1 + 14 / (4 + √P), P in thousands | Peel Sanitary Sewer Design Criteria |
+| Employment water | 300 L/employee/day, max day ×1.4, peak hour ×3.0 | Peel Functional Servicing Report requirements (2009) / Watermain Design Criteria, ICI |
+| Employment wastewater | 270 L/employee/day; Harmon on employees, bounded 2–4; I&I 0.26 L/s/ha | Peel Water & Wastewater Modelling Demand Table, site plan applications (Aug 2024), non-residential |
 
 How the estimate works:
 
@@ -302,7 +304,18 @@ How the estimate works:
   figures the site area is split by share of units. **Peak wet weather = Harmon dry-weather
   peak + I&I.** Shown on the wastewater tile, in each project's servicing table, and for growth
   since 2021 in the census panel.
-- **Not included:** ICI (employment) demand, because the source datasets have no employment data.
+- **Employment demand:** jobs estimated from the floor areas on the applications (see
+  Employment uses) × 300 L/employee/day water and 270 L/employee/day wastewater. Wastewater is
+  peaked with Harmon on the employee count, kept between 2 and 4; I&I is added on the boundary
+  of purely non-residential sites (mixed-use sites already count theirs with the dwellings).
+  Employment space has no unit-level build-out, so a project's jobs count by its phase
+  (committed = approved to under construction; completed once the project is completed).
+  Shown as an **Employment** tile and a **Total (residential + employment)** tile in the bottom
+  panel, as Employment rows and a combined total in each project's servicing table, as a
+  one-line summary in the project's Employment section, in the by-phase breakdown, and in the
+  CSV (`emp_water_avg_lps`, `emp_wastewater_peak_lps`). Residential and employment peaks are
+  computed separately and added, as in a servicing report. Projects whose descriptions state no
+  floor area have no jobs and so no employment demand.
 
 Every value can be edited in the app, and your edits are kept in your browser. These numbers
 are planning-level estimates, not a substitute for a functional servicing report. Check the

@@ -45,6 +45,9 @@
     }
     return d;
   }
+  // Employment parsed once per project (the focus chip counts call it for every project).
+  const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p) : null));
+  const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
   const removed = new Set(store.get('removed', []));
   const disabled = store.get('disabled', {});
   for (const s of CFG.services.concat(store.get('extraSources', []))) {
@@ -599,7 +602,8 @@
     const set = demandSet();
     const c = state.criteria;
     const basis = state.demandBasis;
-    const e = D.estimate(set, c, basis);
+    const e = D.estimate(set, c, basis, jobsOf);
+    const em = e.employment, cb = e.combined;
     // Build-out across the shown projects (planning applications with unit counts).
     const bo = { planned: 0, permitted: 0, completed: 0, remaining: 0, n: 0 };
     for (const p of set) if (p.buildout) { bo.n++; for (const k of ['planned', 'permitted', 'completed', 'remaining']) bo[k] += p.buildout[k]; }
@@ -619,6 +623,16 @@
         <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak dry · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div>
         <div><div class="tv">${fmt1(e.wastewater.infiltration)}<span class="tu">L/s</span></div><div class="ts">I&amp;I · ${fmtNum(Math.round(e.area.ha))} ha × ${c.wastewater.infiltration}${e.area.estimatedHa > 0 ? ` (${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of area estimated)` : ''}</div></div>
         <div><div class="tv">${fmt1(e.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Peak wet weather</div></div></div></div>`,
+      `<div class="tile group emp-tile" data-info="demand-employment"><div class="tl">Employment · ${fmtNum(Math.round(em.jobs))} jobs <span class="muted">(${fmtNum(em.projects)} projects)</span></div><div class="trow">
+        <div><div class="tv">${fmt1(em.water.avg)}<span class="tu">L/s</span></div><div class="ts">Water avg · ${c.employment.water} L/emp/d</div></div>
+        <div><div class="tv">${fmt1(em.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Water peak hour ×${c.employment.peakHour} · max day ${fmt1(em.water.maxDay)}</div></div>
+        <div><div class="tv">${fmt1(em.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Wastewater avg · ${c.employment.wastewater} L/emp/d</div></div>
+        <div><div class="tv">${fmt1(em.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Wastewater peak wet · dry ${fmt1(em.wastewater.peak)} (M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}) + I&amp;I ${fmt1(em.wastewater.infiltration)} on ${fmtNum(Math.round(em.area.ha))} ha</div></div></div></div>`,
+      `<div class="tile group total" data-info="demand-combined"><div class="tl">Total · residential + employment</div><div class="trow">
+        <div><div class="tv">${fmt1(cb.water.maxDay)}<span class="tu">L/s</span></div><div class="ts">Water max day</div></div>
+        <div><div class="tv">${fmt1(cb.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Water peak hour</div></div>
+        <div><div class="tv">${fmt1(cb.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Wastewater avg · ${fmt1(D.toMLd(cb.wastewater.avg))} ML/d</div></div>
+        <div><div class="tv">${fmt1(cb.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Wastewater peak wet weather</div></div></div></div>`,
     ].join('');
     const range = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'all years';
     $('#d-note').textContent = `${BASIS_LABEL[basis] || ''} · ${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
@@ -626,12 +640,12 @@
     // Breakdown by dwelling type and by phase.
     const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
     const phaseRows = P.PHASES.map(ph => {
-      const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis);
-      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmt1(pe.water.avg)}</td><td>${fmt1(pe.wastewater.avg)}</td></tr>`;
+      const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
+      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
     }).join('');
     $('#d-breakdown').innerHTML = `
       <table class="dt"><caption>By dwelling type</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
-      <table class="dt"><caption>By phase (average day, L/s)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
+      <table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
   }
 
   function renderCriteria() {
@@ -646,9 +660,14 @@
       </fieldset>
       <fieldset><legend>Wastewater</legend>
         ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01)}
-        <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population. I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I. ICI (employment) flows are not included.</p>
+        <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population. I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I.</p>
       </fieldset>
-      <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
+      <fieldset><legend>Employment</legend>
+        ${inp('employment', 'water', 'Water (L/emp/d)', 1)}${inp('employment', 'maxDay', 'Max day factor', 0.1)}${inp('employment', 'peakHour', 'Peak hour factor', 0.1)}
+        ${inp('employment', 'wastewater', 'Wastewater (L/emp/d)', 1)}${inp('employment', 'peakMin', 'Peaking min', 0.1)}${inp('employment', 'peakMax', 'Peaking max', 0.1)}
+        <p class="small muted">Jobs are estimated from the floor areas on the applications (${Object.entries(window.PeelEmployment ? PeelEmployment.M2_PER_JOB : {}).map(([k, v]) => `${k} ${v} m²/job`).join(', ')}). Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A project's jobs count by its phase (committed = approved to under construction).</p>
+      </fieldset>
+      <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour); employment water 300 L/emp/d ×1.4 / ×3.0 (Peel FSR requirements, ICI) and wastewater 270 L/emp/d, peaking 2–4 (Peel Water &amp; Wastewater Modelling Demand Table, Aug 2024). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
       <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
   }
   $('#d-criteria').oninput = e => {
@@ -823,8 +842,6 @@
       ${phasesHTML(b)}</details>`;
   }
 
-  // Parsed once per project (the focus chip counts call it for every project).
-  const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p) : null));
   // Employment uses parsed from the applications (industrial, office, retail, hotel, institutional).
   function employmentHTML(p) {
     const e = empOf(p);
@@ -834,6 +851,7 @@
     return `<details class="sect emp" open><summary><h2 class="section-title" data-info="employment">Employment${e.mixed ? ' <span class="muted small">(mixed use)</span>' : ''}</h2>
         <span class="muted small sect-sum">${e.totalM2 ? `${fmtNum(e.totalM2)} m² · ~${fmtNum(e.jobs)} jobs` : 'floor area not stated'}</span></summary>
       <table class="dt"><thead><tr><th>Use</th><th>Floor area</th><th>Est. jobs</th></tr></thead><tbody>${rows}</tbody></table>
+      ${e.jobs > 0 ? (d => `<p class="small emp-demand"><strong>Servicing:</strong> water ${fmt1(d.water.avg)} L/s average, ${fmt1(d.water.peakHour)} L/s peak hour · wastewater ${fmt1(d.wastewater.avg)} L/s average, ${fmt1(d.wastewater.peak)} L/s peak (M ${d.wastewater.peakingFactor.toFixed(2)}). Details under Servicing demand.</p>`)(D.employmentDemand(e.jobs, state.criteria)) : ''}
       <p class="small muted">Read from the application descriptions${anyField ? '; † floor area field published with the application' : ''}. Jobs at ${Object.entries(PeelEmployment.M2_PER_JOB).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (typical planning assumptions).</p>
     </details>`;
   }
@@ -884,26 +902,49 @@
     const c = state.criteria;
     // Total = completed (finished permits) + remaining (everything not yet completed).
     const cols = [['all', 'Total'], ['completed', 'Completed'], ['unbuilt', 'Remaining']];
-    const es = cols.map(([k]) => D.estimate([p], c, k));
-    if (!(es[0].totalUnits > 0)) return '';
+    const es = cols.map(([k]) => D.estimate([p], c, k, jobsOf));
+    const res = es[0].totalUnits > 0, emp = es[0].employment.jobs > 0;
+    if (!res && !emp) return '';
     const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
+    const sub = t => `<tr class="sub"><td colspan="${cols.length + 1}">${t}</td></tr>`;
     const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
-    return `<details class="sect"><summary><h2 class="section-title" data-info="project-demand">Servicing demand</h2></summary>${intro}
-      <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
+    const resRows = !res ? '' : `
         ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
         ${row('Population', e => fmtNum(Math.round(e.population)))}
-        <tr class="sub"><td colspan="${cols.length + 1}">Water (L/s)</td></tr>
+        ${sub(`Water (L/s)${emp ? ' · residential' : ''}`)}
         ${row('Average day', e => fmt1(e.water.avg))}
         ${row(`Max day ×${c.water.maxDay}`, e => fmt1(e.water.maxDay))}
         ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}
-        <tr class="sub"><td colspan="${cols.length + 1}">Wastewater (L/s)</td></tr>
+        ${sub(`Wastewater (L/s)${emp ? ' · residential' : ''}`)}
         ${row('Average dry weather', e => fmt1(e.wastewater.avg))}
         ${row('Peak dry (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
         ${row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => e.area.ha > 0 ? `${fmt1(e.wastewater.infiltration)} <span class="muted">${fmt1(e.area.ha)} ha${e.area.estimatedHa > 0 ? ' est.' : ''}</span>` : '–')}
-        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}
+        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}`;
+    const m = e => e.employment;
+    const empRows = !emp ? '' : `
+        ${sub('Employment (L/s)')}
+        ${row('Jobs', e => m(e).jobs > 0 ? fmtNum(Math.round(m(e).jobs)) : '–')}
+        ${row(`Water average · ${c.employment.water} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).water.avg) : '–')}
+        ${row(`Water max day ×${c.employment.maxDay}`, e => m(e).jobs > 0 ? fmt1(m(e).water.maxDay) : '–')}
+        ${row(`Water peak hour ×${c.employment.peakHour}`, e => m(e).jobs > 0 ? fmt1(m(e).water.peakHour) : '–')}
+        ${row(`Wastewater average · ${c.employment.wastewater} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).wastewater.avg) : '–')}
+        ${row('Wastewater peak', e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.peak)} <span class="muted">M ${m(e).wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
+        ${m(es[0]).area.ha > 0 ? row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.infiltration)} <span class="muted">${fmt1(m(e).area.ha)} ha</span>` : '–') : ''}
+        ${row('Peak wet weather', e => m(e).jobs > 0 ? fmt1(m(e).wastewater.wetPeak) : '–')}`;
+    const totRows = !(res && emp) ? '' : `
+        ${sub('Total · residential + employment (L/s)')}
+        ${row('Water max day', e => fmt1(e.combined.water.maxDay))}
+        ${row('Water peak hour', e => fmt1(e.combined.water.peakHour))}
+        ${row('Wastewater peak wet weather', e => fmt1(e.combined.wastewater.wetPeak))}`;
+    const notes = [];
+    if (res) notes.push(`${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.`);
+    if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the project is completed.`);
+    return `<details class="sect"><summary><h2 class="section-title" data-info="project-demand">Servicing demand</h2>${emp ? `<span class="muted small sect-sum">${res ? 'residential + ' : ''}${fmtNum(Math.round(m(es[0]).jobs))} jobs</span>` : ''}</summary>${intro}
+      <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
+        ${resRows}${empRows}${totRows}
       </tbody></table>
-      <p class="small muted">${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.
-        Completed = units on finished permits; remaining = the rest, permitted or not. Peaks are for each column alone (Harmon is not additive); edit the criteria in the bottom panel.</p></details>`;
+      <p class="small muted">${notes.join(' ')}
+        ${res ? 'Completed = units on finished permits; remaining = the rest, permitted or not. ' : ''}Peaks are for each column alone (peaking is not additive); edit the criteria in the bottom panel.</p></details>`;
   }
 
   function phaseHistoryHTML(p) {
@@ -1086,7 +1127,7 @@
       completed_units: p.buildout ? p.buildout.completed : '', left_to_build: p.buildout ? p.buildout.remaining : '',
       building_permits: p.records.filter(r => r.kind === 'permit').length,
       est_population: p.units ? Math.round(D.estimate([p], state.criteria).population) : '',
-      ...(e => ({ employment_uses: e ? e.uses.map(u => u.label).join('; ') : '', nonres_floor_area_m2: e && e.totalM2 ? e.totalM2 : '', est_jobs: e && e.jobs ? e.jobs : '' }))(empOf(p)),
+      ...(e => ({ employment_uses: e ? e.uses.map(u => u.label).join('; ') : '', nonres_floor_area_m2: e && e.totalM2 ? e.totalM2 : '', est_jobs: e && e.jobs ? e.jobs : '', ...(d => ({ emp_water_avg_lps: d ? +d.water.avg.toFixed(2) : '', emp_wastewater_peak_lps: d ? +d.wastewater.peak.toFixed(2) : '' }))(e && e.jobs ? D.employmentDemand(e.jobs, state.criteria) : null) }))(empOf(p)),
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
