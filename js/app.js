@@ -234,6 +234,77 @@
     },
   });
   map.addLayer(cluster);
+
+  // ---- Sites on the map: application boundaries and the individual permits inside them
+  const SITE_ZOOM = 15, SITE_MAX_POINTS = 3000;
+  const canvas = L.canvas({ padding: 0.3 });
+  // The selected project draws in its own pane, above the street-zoom dots.
+  map.createPane('focus').style.zIndex = 450;
+  const focusCanvas = L.canvas({ padding: 0.3, pane: 'focus' });
+  const siteLayer = L.layerGroup().addTo(map);   // every visible site, from street zoom
+  const focusLayer = L.layerGroup().addTo(map);  // the selected project, at any zoom
+  const sitePermits = p => p.records.filter(r => r.kind === 'permit' && r.lat != null);
+  const siteApps = p => p.records.filter(r => r.kind === 'application' && r.poly && r.phase !== 'cancelled');
+  const toLatLngs = rings => rings.map(ring => ring.map(([x, y]) => [y, x]));
+  function projectBounds(p) {
+    if (p._bounds) return p._bounds;
+    const pts = [];
+    for (const a of siteApps(p)) for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
+    for (const r of sitePermits(p)) pts.push([r.lat, r.lng]);
+    if (p.lat != null) pts.push([p.lat, p.lng]);
+    return (p._bounds = pts.length ? L.latLngBounds(pts) : null);
+  }
+  // Applications a permit sits inside, smallest first (fallback: all of the project's applications).
+  function parentApps(r, p) {
+    const apps = p.records.filter(a => a.kind === 'application' && a.phase !== 'cancelled');
+    const inside = apps.filter(a => a.poly && P.pointInRings(r.lng, r.lat, a.poly))
+      .sort((a, b) => P.ringsArea(a.poly) - P.ringsArea(b.poly));
+    return inside.length ? inside : apps;
+  }
+  function outline(p, strong) {
+    return siteApps(p).map(a => L.polygon(toLatLngs(a.poly), {
+      renderer: strong ? focusCanvas : canvas, interactive: false, color: strong ? colors.approved : '#ffffff', weight: strong ? 2.5 : 1.2,
+      opacity: strong ? 1 : 0.8, dashArray: strong ? null : '5 4', fill: strong, fillColor: colors.approved, fillOpacity: 0.08,
+    }));
+  }
+  function permitDot(r, p, emph, focus) {
+    const m = L.circleMarker([r.lat, r.lng], {
+      renderer: focus ? focusCanvas : canvas, radius: emph ? 9 : 5, weight: emph ? 4 : 1.5,
+      color: emph ? colors.approved : '#ffffff', fillColor: colors[r.phase], fillOpacity: 1,
+    });
+    const parent = parentApps(r, p)[0];
+    m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
+      (parent ? `<br><span class="muted">Part of ${esc(parent.ref || parent.type || 'application')}</span>` : ''), { className: 'pt', direction: 'top', offset: [0, -6] });
+    m.on('click', ev => { L.DomEvent.stop(ev); showRecordDetail(r, p); });
+    return m;
+  }
+  let siteTimer;
+  const scheduleSites = () => { clearTimeout(siteTimer); siteTimer = setTimeout(renderSiteLayer, 80); };
+  function renderSiteLayer() {
+    siteLayer.clearLayers();
+    if (map.getZoom() < SITE_ZOOM) return;
+    const view = map.getBounds().pad(0.2);
+    let n = 0;
+    for (const p of state.filtered) {
+      if (n >= SITE_MAX_POINTS) break;
+      if (!siteApps(p).length) continue;
+      const b = projectBounds(p);
+      if (!b || !view.intersects(b)) continue;
+      for (const o of outline(p, false)) siteLayer.addLayer(o);
+      for (const r of sitePermits(p)) {
+        if (n++ >= SITE_MAX_POINTS) break;
+        if (view.contains([r.lat, r.lng])) siteLayer.addLayer(permitDot(r, p, false));
+      }
+    }
+  }
+  map.on('moveend zoomend', scheduleSites);
+  function highlight(p, record) {
+    focusLayer.clearLayers();
+    if (!p) return;
+    for (const o of outline(p, true)) focusLayer.addLayer(o);
+    for (const r of sitePermits(p)) if (r !== record) focusLayer.addLayer(permitDot(r, p, false, true));
+    if (record && record.lat != null) focusLayer.addLayer(permitDot(record, p, true, true));
+  }
   cluster.on('animationend spiderfied unspiderfied', () => scheduleLabels());
   const iconCache = {};
   const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm', iconSize: [16, 16], html: dot(phase) }));
@@ -305,9 +376,8 @@
   function rebuild() {
     const records = P.dedupeRecords(state.sources.filter(s => s.enabled).flatMap(s => s.records));
     state.projects = P.buildProjects(records);
-    const munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
-    const sel = $('#f-muni'), cur = sel.value;
-    sel.innerHTML = '<option value="">All</option>' + munis.map(m => `<option${m === cur ? ' selected' : ''}>${esc(m)}</option>`).join('');
+    state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
+    renderMuniChips();
     updateYearBounds();
     applyFilters();
   }
@@ -358,6 +428,8 @@
     renderList();
     renderTimeline();
     renderDemand();
+    renderFilterUI();
+    renderSiteLayer();
   }
 
   // ---- Timeline slider -------------------------------------------------------------
@@ -375,6 +447,10 @@
     for (const el of [tFrom, tTo]) { el.min = lo; el.max = hi; el.step = 1; }
     tFrom.value = state.yearFrom ?? lo;
     tTo.value = state.yearTo ?? hi;
+  }
+  function setYearsSilently(from, to) {
+    state.yearFrom = null; state.yearTo = null;
+    tFrom.value = from; tTo.value = to;
   }
   function setYears(from, to) {
     const lo = state.yearMin, hi = state.yearMax;
@@ -614,7 +690,10 @@
       <ol class="timeline">${h.map(([d, ph], i) => `<li><span class="d">${esc(d)}</span>${dot(ph)}<span>${i ? 'Moved to' : 'First seen as'} ${esc(P.PHASE_BY_KEY[ph].label)}</span></li>`).join('')}</ol>`;
   }
 
+  let currentProject = null;
   function showDetail(p) {
+    currentProject = p;
+    highlight(p);
     const ph = P.PHASE_BY_KEY[p.phase];
     const cancelled = p.phase === 'cancelled';
     const steps = P.PHASES.map(s => {
@@ -632,7 +711,8 @@
       <details class="rec"><summary>${dot(r.phase)} <strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
         ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
         ${r.description ? `<p>${esc(r.description)}</p>` : ''}
-        <p class="small muted">Source: ${esc(r.sourceName)}${r.alsoIn ? ` (also in ${esc(r.alsoIn.join(', '))})` : ''}</p>
+        <p class="small muted">Source: ${esc(r.sourceName)}${r.alsoIn ? ` (also in ${esc(r.alsoIn.join(', '))})` : ''}
+          ${r.lat != null ? ` · <button type="button" class="btn small link" data-rec="${esc(r.uid)}">${r.kind === 'permit' ? 'Show on map & parent application' : 'Show on map'}</button>` : ''}</p>
         <table>${recordRows(r)}</table>
       </details>`).join('') + (ordered.length > RECORD_LIMIT
         ? `<p class="small muted">+ ${fmtNum(ordered.length - RECORD_LIMIT)} more records (export CSV for the full list)</p>` : '');
@@ -655,9 +735,66 @@
       <h2 class="section-title">Timeline</h2>${timeline}
       <h2 class="section-title">Source records</h2>${recs}`;
     $('#detail').hidden = false;
+    $('#detail').scrollTop = 0;
   }
-  $('#detail-close').onclick = () => { $('#detail').hidden = true; };
-  addEventListener('keydown', e => { if (e.key === 'Escape') $('#detail').hidden = true; });
+  function closeDetail() { $('#detail').hidden = true; highlight(null); }
+  $('#detail-close').onclick = closeDetail;
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+
+  // A single record (usually one building permit inside a subdivision) and the planning
+  // application(s) it belongs to.
+  function showRecordDetail(r, p) {
+    const ph = P.PHASE_BY_KEY[r.phase];
+    const parents = r.kind === 'permit' ? parentApps(r, p) : [];
+    const parentHTML = r.kind !== 'permit' ? '' : parents.length
+      ? parents.slice(0, 5).map(a => `
+        <div class="parent-app">${dot(a.phase)}<div>
+          <strong>${esc(a.ref || 'Application')}</strong> ${a.type ? `· ${esc(a.type)}` : ''}
+          <div class="m">${esc(a.address || '')}${a.statusRaw ? ` · ${esc(a.statusRaw)}` : ''}${a.units ? ` · ${fmtNum(a.units)} units planned` : ''}</div>
+          ${a.description ? `<div class="m">${esc(a.description.slice(0, 240))}${a.description.length > 240 ? '…' : ''}</div>` : ''}
+        </div></div>`).join('')
+      : '<p class="small muted">This permit is not inside any planning application in the data.</p>';
+    const b = p.buildout;
+    const others = sitePermits(p).length - 1;
+    $('#detail-body').innerHTML = `
+      <div class="head"><h3>${esc(r.address || r.ref || 'Record')}</h3>
+        <div class="m">${esc(r.kind === 'permit' ? 'Building permit' : 'Planning application')} ${esc(r.ref)}${r.type ? ' · ' + esc(r.type) : ''} · ${esc(r.municipality)}</div>
+        <span class="badge">${dot(r.phase)}${esc(ph.label)}</span></div>
+      ${r.description ? `<p>${esc(r.description)}</p>` : ''}
+      <dl class="kv">
+        ${r.statusRaw ? `<dt>Status</dt><dd>${esc(r.statusRaw)}</dd>` : ''}
+        ${r.units ? `<dt>Units</dt><dd>${fmtNum(r.units)}</dd>` : ''}
+        ${r.events.map(e => `<dt>${esc(P.humanizeField(e.label))}</dt><dd>${fmtDate(e.date)}</dd>`).join('')}
+      </dl>
+      ${r.kind === 'permit' ? `<h2 class="section-title">Part of planning application</h2>${parentHTML}` : ''}
+      <button type="button" class="btn open-project" id="open-project">
+        Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
+      </button>
+      <h2 class="section-title">Source record</h2>
+      <table class="rec-table">${recordRows(r)}</table>`;
+    $('#open-project').onclick = () => showDetail(p);
+    $('#detail').hidden = false;
+    $('#detail').scrollTop = 0;
+    highlight(p, r);
+    if (r.lat != null) {
+      map.setView([r.lat, r.lng], Math.max(map.getZoom(), 17), { animate: false });
+      // Phones: centre the point in the part of the map left visible above the bottom sheet.
+      if (innerWidth <= 760) {
+        const m = map.getContainer().getBoundingClientRect();
+        const visibleBottom = Math.min(m.bottom, $('#detail').getBoundingClientRect().top);
+        const target = (visibleBottom - m.top) / 2;
+        const now = map.latLngToContainerPoint([r.lat, r.lng]).y;
+        map.panBy([0, now - target], { animate: false });
+      }
+    }
+  }
+
+  // "Show on map" from a project's record list.
+  $('#detail-body').addEventListener('click', e => {
+    const b = e.target.closest('[data-rec]'); if (!b || !currentProject) return;
+    const r = currentProject.records.find(x => x.uid === b.dataset.rec);
+    if (r) showRecordDetail(r, currentProject);
+  });
 
   // ---- Export ----------------------------------------------------------------------
   function exportRows() {
@@ -705,32 +842,107 @@
   $('#phase-list').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase, e.altKey || e.metaKey); };
 
   let searchTimer;
-  $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); filtersChanged(); }, 200); };
-  $('#f-muni').onchange = e => { state.muni = e.target.value; filtersChanged(); };
-  $('#f-kind').onchange = e => { state.kind = e.target.value; filtersChanged(); };
-  $('#f-new').onchange = e => { state.newOnly = e.target.checked; filtersChanged(); };
-  $('#f-units').onchange = e => { state.minUnits = e.target.value === 'left' ? 'left' : Number(e.target.value) || 0; filtersChanged(); };
-  // One-tap preset: planning applications that propose new dwelling units.
-  $('#f-preset-growth').onclick = () => {
-    const on = !(state.kind === 'application' && state.minUnits);
-    state.kind = on ? 'application' : '';
-    state.minUnits = on ? 1 : 0;
+  $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); }, 200); };
+  $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
+  $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
+  $('#f-units').onchange = e => { state.minUnits = e.target.value === 'left' ? 'left' : Number(e.target.value) || 0; applyFilters(); };
+
+  // Municipality chips (built from the data).
+  function renderMuniChips() {
+    const list = [''].concat(state.munis || []);
+    $('#f-muni-chips').innerHTML = list.map(m =>
+      `<button type="button" class="chip${state.muni === m ? ' on' : ''}" data-muni="${esc(m)}" aria-pressed="${state.muni === m}">${esc(m || 'All')}</button>`).join('');
+  }
+  $('#f-muni-chips').onclick = e => {
+    const b = e.target.closest('[data-muni]'); if (!b) return;
+    state.muni = b.dataset.muni;
+    renderMuniChips();
+    applyFilters();
+  };
+
+  // Quick views set several filters at once.
+  const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
+  const VIEWS = {
+    all:      { kind: '', minUnits: 0, phases: ALL_PHASE_KEYS },
+    growth:   { kind: 'application', minUnits: 1, phases: ALL_PHASE_KEYS },
+    left:     { kind: '', minUnits: 'left', phases: ALL_PHASE_KEYS },
+    building: { kind: '', minUnits: 0, phases: () => new Set(['permit', 'construction']) },
+    done:     { kind: '', minUnits: 0, phases: () => new Set(['completed']) },
+  };
+  const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+  function currentView() {
+    for (const [k, v] of Object.entries(VIEWS)) {
+      if (state.kind === v.kind && String(state.minUnits) === String(v.minUnits) && sameSet(state.phases, v.phases())) return k;
+    }
+    return null;
+  }
+  $('#views').onclick = e => {
+    const b = e.target.closest('[data-view]'); if (!b) return;
+    const v = VIEWS[b.dataset.view];
+    state.kind = v.kind; state.minUnits = v.minUnits; state.phases = v.phases();
     $('#f-kind').value = state.kind;
     $('#f-units').value = String(state.minUnits);
-    filtersChanged();
-  };
-  $('#f-clear').onclick = () => {
-    Object.assign(state, { muni: '', kind: '', search: '', minUnits: 0 });
-    $('#f-muni').value = ''; $('#f-kind').value = ''; $('#f-units').value = '0'; $('#f-search').value = '';
-    filtersChanged();
-  };
-  function filtersChanged() {
-    const preset = state.kind === 'application' && !!state.minUnits;
-    $('#f-preset-growth').setAttribute('aria-pressed', String(preset));
-    $('#f-preset-growth').classList.toggle('on', preset);
-    $('#f-clear').hidden = !(state.muni || state.kind || state.search || state.minUnits);
     applyFilters();
+  };
+
+  // Active-filter chips: everything that narrows the view, each removable.
+  function activeFilters() {
+    const out = [];
+    const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
+    const unitsLabel = { 1: 'Adds units', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build' };
+    if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; $('#f-search').value = ''; } });
+    if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); } });
+    if (state.kind) out.push({ label: kindLabel[state.kind], clear: () => { state.kind = ''; $('#f-kind').value = ''; } });
+    if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
+    if (state.phases.size < P.ALL_PHASES.length) {
+      const names = P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label);
+      out.push({ label: names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { state.phases = ALL_PHASE_KEYS(); } });
+    }
+    if (timeActive()) {
+      const from = state.yearFrom ?? state.yearMin, to = state.yearTo ?? state.yearMax;
+      out.push({ label: from === to ? `${from}` : `${from}–${to}`, clear: () => setYearsSilently(state.yearMin, state.yearMax) });
+    }
+    if (!state.newOnly) out.push({ label: 'Including alterations', clear: () => { state.newOnly = true; $('#f-new').checked = true; } });
+    return out;
   }
+  let activeList = [];
+  function renderFilterUI() {
+    activeList = activeFilters();
+    $('#active-filters').innerHTML = activeList.length
+      ? activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('') +
+        `<button type="button" class="btn small link" id="f-reset">Reset all</button>`
+      : '';
+    const v = currentView();
+    for (const b of document.querySelectorAll('#views [data-view]')) {
+      const on = b.dataset.view === v;
+      b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
+    }
+  }
+  $('#active-filters').onclick = e => {
+    if (e.target.closest('#f-reset')) {
+      Object.assign(state, { muni: '', kind: '', search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS() });
+      $('#f-search').value = ''; $('#f-kind').value = ''; $('#f-units').value = '0'; $('#f-new').checked = true;
+      renderMuniChips();
+      setYearsSilently(state.yearMin, state.yearMax);
+      applyFilters();
+      return;
+    }
+    const b = e.target.closest('[data-i]'); if (!b) return;
+    activeList[+b.dataset.i].clear();
+    applyFilters();
+  };
+
+  // Sidebar tabs.
+  function showTab(name) {
+    for (const b of document.querySelectorAll('.tabs [data-tab]')) {
+      const on = b.dataset.tab === name;
+      b.setAttribute('aria-selected', String(on));
+      $('#tab-' + b.dataset.tab).hidden = !on;
+    }
+    store.set('tab', name);
+  }
+  document.querySelector('.tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) showTab(b.dataset.tab); };
+  showTab(store.get('tab', 'explore'));
 
   $('#s-since').value = state.sinceYear;
   $('#s-max').value = state.maxPerLayer;
@@ -848,10 +1060,12 @@
 
   // "This week" panel: projects that appeared or changed phase since the previous snapshot.
   function renderChanges() {
-    const el = $('#changes'), c = state.snapshot && state.snapshot.changes;
-    if (!c || c.baseline) { el.hidden = true; return; }
-    el.hidden = false;
+    const c = state.snapshot && state.snapshot.changes;
+    if (!c || c.baseline) return;
     $('#changes-head').textContent = `${c.since} → ${c.until}`;
+    const n = (c.movedCount || 0) + (c.addedCount || 0);
+    $('#week-count').hidden = !n;
+    $('#week-count').textContent = n > 99 ? '99+' : String(n);
     const items = [
       ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
       ...c.added.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
@@ -867,5 +1081,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover };
+  window.PeelApp = { state, rebuild, loadAll, discover, map };
 })();
