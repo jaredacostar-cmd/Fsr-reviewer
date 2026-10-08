@@ -122,7 +122,7 @@
       if (!src) continue;
       const year = Math.max(...Object.keys(src.years).map(Number));
       const [x0, y0, x1, y1] = src.bbox;
-      const opts = { bounds: L.latLngBounds([[y0, x0], [y1, x1]]), minZoom: 12, maxZoom: 20 };
+      const opts = { pane: 'imageryPane', bounds: L.latLngBounds([[y0, x0], [y1, x1]]), minZoom: 12, maxZoom: 20 };
       out.push(src.tiles ? L.tileLayer(src.tiles, { ...opts, maxNativeZoom: 20 })
         : new CityImagery(src.years[year].url, { ...opts, tileSize: 512, zoomOffset: -1 }));
       credits.push(`${src.owner} ${src.years[year].label}`);
@@ -132,6 +132,12 @@
   let basemap = BASEMAPS[store.get('basemap', 'aerial-labels')] ? store.get('basemap', 'aerial-labels') : 'aerial-labels';
   let baseLayers = [];
   const bboxOutline = L.rectangle([[CFG.bbox.ymin, CFG.bbox.xmin], [CFG.bbox.ymax, CFG.bbox.xmax]], { weight: 1, dashArray: '4 4', fill: false, interactive: false });
+  // Aerial photos sit in their own pane, 40% transparent as a whole (one blend, so the city
+  // aerial and the Esri imagery under it don't show through each other); road and place labels
+  // stay opaque in the tile pane above.
+  const AERIAL_OPACITY = 0.6;
+  const imageryPane = map.createPane('imageryPane', map.getPane('rotatePane') || undefined);
+  imageryPane.style.zIndex = 150; imageryPane.style.opacity = AERIAL_OPACITY;
   function setTiles() {
     for (const l of baseLayers) map.removeLayer(l);
     const imageryAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics';
@@ -142,12 +148,12 @@
       })];
     } else if (BASEMAPS[basemap].city) {
       const city = cityImageryLayers();
-      baseLayers = [esriLayer('World_Imagery', { attribution: `${city.attribution} · ${DATA_ATTR}` }), ...city.layers];
+      baseLayers = [esriLayer('World_Imagery', { pane: 'imageryPane', attribution: `${city.attribution} · ${DATA_ATTR}` }), ...city.layers];
       if (basemap === 'aerial-labels') baseLayers.push(
         esriLayer('Reference/World_Transportation', { opacity: 0.9 }),
         esriLayer('Reference/World_Boundaries_and_Places'));
     } else {
-      baseLayers = [esriLayer('World_Imagery', { attribution: `${imageryAttr} · ${DATA_ATTR}` })];
+      baseLayers = [esriLayer('World_Imagery', { pane: 'imageryPane', attribution: `${imageryAttr} · ${DATA_ATTR}` })];
       if (basemap === 'aerial-labels') baseLayers.push(
         esriLayer('Reference/World_Transportation', { opacity: 0.9 }),
         esriLayer('Reference/World_Boundaries_and_Places'));
