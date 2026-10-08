@@ -175,16 +175,35 @@ Standards is listed on the Region's site.
 
 ## Data sources (`js/config.js`)
 
-Built-in (City of Mississauga):
+| Municipality | Source | Kind |
+|---|---|---|
+| Mississauga | Development applications (newest monthly `DevApps_*` layer, found automatically) | Applications |
+| Mississauga | Growth Management – active development applications | Applications |
+| Mississauga | Site plan applications (with units by dwelling type) | Applications |
+| Mississauga | Issued building permits (since 2018, with status and completion date) | Permits |
+| Mississauga | Growth Management – issued permits adding units or floor area | Permits |
+| Brampton | OPA / ZBA / plans of subdivision | Applications |
+| Brampton | Site plan approval | Applications |
+| Brampton | Draft plans of condominium | Applications |
+| Brampton | Development permit system | Applications |
+| Brampton | Pre-consultation (always shown as Inception; units not counted) | Applications |
+| Brampton | Building permits (`maps1.brampton.ca`, with dwelling counts) | Permits |
+| Caledon | Development applications (with units by dwelling type) | Applications |
+| Caledon | AMANDA building permits (units created) | Permits |
 
-- Growth Management – active development applications
-- Site plan applications
-- Growth Management – issued building permits that add units or floor area
-- All issued building permits (since 2018, with status)
+Brampton's planning files don't include a unit count. The app reads the count from the
+proposal text when it states one, such as "312 residential units". Brampton minor variances
+and consents are left out. Every query is clipped to the Peel bounding box. In live mode, each
+layer loads up to the "Max per layer" limit (20,000 by default), newest first.
 
-Discovered at runtime from the hubs: `geohub.brampton.ca`, `data-caledon.opendata.arcgis.com`,
-`data.peelregion.ca` and `data.mississauga.ca`. Every query is clipped to the Peel bounding box.
-Each layer loads up to the "Max per layer" limit (20,000 by default), newest first.
+**Discover datasets** in the app searches the four open-data hubs for more layers. Its results
+include unrelated layers, such as election "subdivisions", so it is a manual exploration tool
+only; the weekly job uses just the list above.
+
+**Checking the sources:** the **Probe data sources** workflow, run manually from the Actions
+tab, does two things. It lists what each municipality publishes, with fields, counts and status
+values. It also does a dry run of the snapshot that reports per-source counts and how each raw
+status maps to a phase.
 
 ### Caveats
 
