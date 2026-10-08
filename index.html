@@ -43,15 +43,14 @@
       <!-- ===== Explore ===== -->
       <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
         <section class="panel">
-          <h2 class="label">Quick views</h2>
-          <div class="chips views" id="views" role="group" aria-label="Quick views">
-            <button type="button" class="chip" data-view="all">All developments</button>
-            <button type="button" class="chip" data-view="growth">Applications adding units</button>
-            <button type="button" class="chip" data-view="left">Units left to build</button>
-            <button type="button" class="chip" data-view="committed">Committed capacity</button>
-            <button type="button" class="chip" data-view="building">Being built</button>
-            <button type="button" class="chip" data-view="done">Completed</button>
+          <div class="panel-head">
+            <h2 class="label">Quick views</h2>
+            <span class="muted small" id="total-count">—</span>
           </div>
+          <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
+          <div class="chips views phase-chips" id="phase-chips" role="group" aria-label="Phase"></div>
+          <h3 class="label sub-label">Focus <span class="muted small">— combine with a phase</span></h3>
+          <div class="chips views" id="focus-chips" role="group" aria-label="Focus"></div>
         </section>
 
         <section class="panel filters">
@@ -79,23 +78,12 @@
                 <option value="50">50+ units</option>
                 <option value="100">100+ units</option>
                 <option value="500">500+ units</option>
-                <option value="left">Units left to build</option>
-                <option value="committed">Committed capacity</option>
               </select>
             </label>
           </div>
           <label class="switch"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
             <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
           <div class="active-filters" id="active-filters" aria-live="polite"></div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-head">
-            <h2 class="label">Phases <span class="muted small">— tap to show / hide</span></h2>
-            <span class="muted small" id="total-count">—</span>
-          </div>
-          <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
-          <ul class="phase-list" id="phase-list"></ul>
         </section>
 
         <section class="panel list-panel">
