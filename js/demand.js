@@ -13,6 +13,13 @@
  *  - Infiltration & inflow (I&I): 0.26 L/s per hectare of gross site area (Linear
  *    Wastewater Standards); peak wet weather flow = Harmon peak + I&I. Site area comes from
  *    the application boundary; where there is none it is estimated from the units by type.
+ *  - Employment (industrial, office, retail, hotel, institutional jobs estimated from the
+ *    floor areas on the applications): water 300 L/employee/day, max day ×1.4, peak hour ×3.0
+ *    (Peel Functional Servicing Report requirements / Watermain Design Criteria, ICI);
+ *    wastewater 270 L/employee/day peaked with Harmon on the employee count, bounded 2–4
+ *    (Peel Water & Wastewater Modelling Demand Table, Aug 2024, non-residential). Employment
+ *    I&I is counted on the boundary of non-residential sites (mixed-use sites already count
+ *    theirs with the dwellings).
  */
 (function (root) {
   'use strict';
@@ -28,6 +35,7 @@
     ppu: { single: 4.2, town: 3.4, apartment: 2.7, unknown: 2.7 },
     water: { avg: 280, maxDay: 2.0, peakHour: 3.0 },
     wastewater: { avg: 290, infiltration: 0.26 },
+    employment: { water: 300, maxDay: 1.4, peakHour: 3.0, wastewater: 270, peakMin: 2, peakMax: 4 },
   };
 
   const SECONDS_PER_DAY = 86400;
@@ -109,15 +117,54 @@
     return { ha, estimated: true };
   }
 
+  // Jobs a project counts for a basis. Employment space has no unit-level build-out, so the
+  // project's phase decides: committed = approved / permitted / under construction, left to
+  // build = not yet permitted, completed = completed.
+  const NOT_PERMITTED = new Set(['inception', 'review', 'approved']);
+  function jobsFor(project, jobs, basis = 'all') {
+    if (!(jobs > 0)) return 0;
+    const ph = project.phase;
+    if (ph === 'cancelled') return 0;
+    if (basis === 'committed') return COMMITTED_PHASES.has(ph) ? jobs : 0;
+    if (basis === 'remaining') return NOT_PERMITTED.has(ph) ? jobs : 0;
+    if (basis === 'unbuilt') return ph !== 'completed' ? jobs : 0;
+    if (basis === 'completed') return ph === 'completed' ? jobs : 0;
+    return jobs;
+  }
+
+  /** Employment peaking factor: Harmon on the employee count, bounded by the Peel min / max. */
+  function employmentPeaking(jobs, ec = DEFAULT_CRITERIA.employment) {
+    if (!(jobs > 0)) return 0;
+    return Math.min(ec.peakMax ?? 4, Math.max(ec.peakMin ?? 2, harmon(jobs)));
+  }
+
+  /** Water and wastewater for a number of jobs (L/s), plus I&I on a non-residential site area. */
+  function employmentDemand(jobs, criteria = DEFAULT_CRITERIA, ha = 0) {
+    const ec = { ...DEFAULT_CRITERIA.employment, ...(criteria.employment || {}) };
+    const w = jobs * ec.water / SECONDS_PER_DAY, s = jobs * ec.wastewater / SECONDS_PER_DAY;
+    const M = employmentPeaking(jobs, ec);
+    const ii = ha * (criteria.wastewater && criteria.wastewater.infiltration != null ? criteria.wastewater.infiltration : DEFAULT_CRITERIA.wastewater.infiltration);
+    return {
+      jobs, area: { ha },
+      water: { avg: w, maxDay: w * ec.maxDay, peakHour: w * ec.peakHour },
+      wastewater: { avg: s, peakingFactor: M, peak: s * M, infiltration: ii, wetPeak: s * M + ii },
+    };
+  }
+
   /**
    * Aggregate estimate for a set of projects.
    * Harmon peaking is applied to the combined population (system-level peak),
    * which is lower than summing each site's individually peaked flow.
    */
-  function estimate(projects, criteria = DEFAULT_CRITERIA, basis = 'all') {
+  function estimate(projects, criteria = DEFAULT_CRITERIA, basis = 'all', jobsOf = null) {
     const units = { single: 0, town: 0, apartment: 0, unknown: 0 };
-    let withUnits = 0, ha = 0, haEstimated = 0;
+    let withUnits = 0, ha = 0, haEstimated = 0, jobs = 0, empHa = 0, withJobs = 0;
     for (const p of projects) {
+      const j = jobsOf ? jobsFor(p, jobsOf(p), basis) : 0;
+      if (j > 0) {
+        jobs += j; withJobs++;
+        if (!(p.units > 0) && p.siteAreaHa > 0) empHa += p.siteAreaHa;
+      }
       const a = areaFor(p, basis);
       ha += a.ha; if (a.estimated) haEstimated += a.ha;
       const s = unitSplit(p, basis);
@@ -134,6 +181,13 @@
     const sAvg = population * criteria.wastewater.avg / SECONDS_PER_DAY;      // L/s
     const M = harmon(population);
     const ii = ha * (criteria.wastewater.infiltration ?? DEFAULT_CRITERIA.wastewater.infiltration);
+    const emp = { ...employmentDemand(jobs, criteria, empHa), projects: withJobs };
+    // Residential and employment flows are peaked separately and added (as in a servicing
+    // report), with I&I on both site areas.
+    const combined = {
+      water: { avg: wAvg + emp.water.avg, maxDay: wAvg * criteria.water.maxDay + emp.water.maxDay, peakHour: wAvg * criteria.water.peakHour + emp.water.peakHour },
+      wastewater: { avg: sAvg + emp.wastewater.avg, peak: sAvg * M + emp.wastewater.peak, infiltration: ii + emp.wastewater.infiltration, wetPeak: sAvg * M + ii + emp.wastewater.wetPeak },
+    };
     return {
       projects: projects.length,
       withUnits,
@@ -142,13 +196,15 @@
       water: { avg: wAvg, maxDay: wAvg * criteria.water.maxDay, peakHour: wAvg * criteria.water.peakHour },
       area: { ha, estimatedHa: haEstimated },
       wastewater: { avg: sAvg, peakingFactor: M, peak: sAvg * M, infiltration: ii, wetPeak: sAvg * M + ii },
+      employment: emp,
+      combined,
     };
   }
 
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, estimate, toMLd };
+  const api = { UNIT_TYPES, DEFAULT_CRITERIA, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

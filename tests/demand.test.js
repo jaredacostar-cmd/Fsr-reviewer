@@ -79,3 +79,38 @@ test('I&I: 0.26 L/s/ha on the site area, prorated by units; estimated from units
   assert.ok(Math.abs(noBoundary.area.ha - 2) < 1e-9, '50 singles x 0.04 ha');
   assert.equal(noBoundary.area.estimatedHa, noBoundary.area.ha);
 });
+
+test('employment demand: Peel ICI water and non-residential wastewater rates', () => {
+  const D = require('../js/demand.js');
+  const d = D.employmentDemand(1000);
+  assert.ok(Math.abs(d.water.avg - 1000 * 300 / 86400) < 1e-9);
+  assert.ok(Math.abs(d.water.maxDay - d.water.avg * 1.4) < 1e-9);
+  assert.ok(Math.abs(d.water.peakHour - d.water.avg * 3.0) < 1e-9);
+  assert.ok(Math.abs(d.wastewater.avg - 1000 * 270 / 86400) < 1e-9);
+  // Harmon on employees, bounded 2–4.
+  assert.equal(D.employmentPeaking(5), 4);
+  assert.equal(D.employmentPeaking(5e6), 2);
+  assert.ok(Math.abs(D.employmentPeaking(1000) - D.harmon(1000)) < 1e-9);
+  assert.equal(D.employmentDemand(0).wastewater.peak, 0);
+});
+
+test('employment counted by phase and added to residential', () => {
+  const D = require('../js/demand.js');
+  const ind = { units: 0, phase: 'approved', siteAreaHa: 10, types: [], description: '', records: [] };
+  const done = { units: 0, phase: 'completed', types: [], description: '', records: [] };
+  const jobs = new Map([[ind, 500], [done, 200]]);
+  const jobsOf = p => jobs.get(p) || 0;
+  const all = D.estimate([ind, done], D.DEFAULT_CRITERIA, 'all', jobsOf);
+  assert.equal(all.employment.jobs, 700);
+  assert.equal(all.employment.area.ha, 10);
+  assert.ok(Math.abs(all.employment.wastewater.infiltration - 2.6) < 1e-9);
+  assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'committed', jobsOf).employment.jobs, 500);
+  assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'completed', jobsOf).employment.jobs, 200);
+  assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'remaining', jobsOf).employment.jobs, 500);
+  // Without jobsOf, residential only (backwards compatible).
+  assert.equal(D.estimate([ind]).employment.jobs, 0);
+  const res = { units: 100, phase: 'review', types: ['Townhouses'], description: '', records: [] };
+  const mix = D.estimate([res, ind], D.DEFAULT_CRITERIA, 'all', jobsOf);
+  assert.ok(Math.abs(mix.combined.water.peakHour - (mix.water.peakHour + mix.employment.water.peakHour)) < 1e-9);
+  assert.ok(Math.abs(mix.combined.wastewater.wetPeak - (mix.wastewater.wetPeak + mix.employment.wastewater.wetPeak)) < 1e-9);
+});
