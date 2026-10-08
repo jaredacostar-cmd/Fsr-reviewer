@@ -1815,6 +1815,8 @@
     return kids;
   }
   const upstreamOf = (id, kids) => { const out = []; const walk = i => { for (const c of kids.get(i) || []) { out.push(c); walk(c.id); } }; walk(id); return out; };
+  // Wastewater table view: 'flow' = local + upstream = total; 'layers' = census / built / approved / proposed.
+  let wwView = store.get('wwView', 'flow');
   function renderSvcTab() {
     const bc = baselineCensus();
     const has = !!(state.servicing && bc);
@@ -1822,69 +1824,97 @@
     if (!has) return;
     const c = state.criteria, Y = bc.year, idx = svcCensusIndex(bc);
     const total = l => l.census + l.built + l.approved + l.proposed;
-    const L = v => v * 1 / 86400;                      // people × L/cap/d → L/s
-    const cell = (lps, people, cls = '') => `<td class="${cls}">${fmt1(lps)}<small>${fmtNum(Math.round(people))}</small></td>`;
-    const head = (first, last) => `<thead><tr><th>${first}</th><th class="bar-h">Build-out mix</th><th>Developments</th><th>${Y} Census</th><th>+ Built since</th><th>+ Approved</th><th>+ Proposed (in review)</th><th>Build-out</th>${last}</tr></thead>`;
+    const ML = (people, rate) => people * rate / 1e6;   // people × L/cap/d → ML/d
+    const cell = (mld, people, cls = '') => `<td class="${cls}">${fmt1(mld)}${people != null ? `<small>${fmtNum(Math.round(people))}</small>` : ''}</td>`;
     const focus = svcFocus.id;
     const rowAttrs = (id, cls) => id ? ` class="${cls} svc-row${id === focus ? ' on' : ''}" data-svc="${esc(id)}" tabindex="0"` : ` class="${cls}"`;
-    // Water: maximum day by layer, peak hour at build-out.
-    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td><td>${fmtNum(l.devs)}</td>${LAYER_KEYS.map(k => cell(L(l[k] * c.water.avg) * c.water.maxDay, l[k])).join('')}
-      ${cell(L(total(l) * c.water.avg) * c.water.maxDay, total(l), 'bo')}<td class="bo">${fmt1(L(total(l) * c.water.avg) * c.water.peakHour)}</td></tr>`;
+    const layerHead = `<th>${Y} Census</th><th>+ Built since</th><th>+ Approved</th><th>+ Proposed (in review)</th><th>Build-out</th>`;
+
+    // Water: maximum day (ML/d) by layer, peak hour at build-out.
+    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td><td>${fmtNum(l.devs)}</td>${LAYER_KEYS.map(k => cell(ML(l[k], c.water.avg) * c.water.maxDay, l[k])).join('')}
+      ${cell(ML(total(l), c.water.avg) * c.water.maxDay, total(l), 'bo')}<td class="bo">${fmt1(ML(total(l), c.water.avg) * c.water.peakHour)}</td></tr>`;
     const zones = state.servicing.zones.slice().sort(byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc, idx) })).filter(r => total(r.l) > 0 || r.l.devs);
     const zsum = addLayers(zr.map(r => r.l));
-    $('#water-body').innerHTML = `${svcLegend(Y)}<table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (L/s), people below</caption>
-      ${head('Pressure zone', '<th>Peak hour<br>build-out</th>')}
+    $('#water-body').innerHTML = `${svcLegend(Y)}<table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (ML/d), people below</caption>
+      <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
-      <p class="small muted">Residential demand at ${c.water.avg} L/cap/d (max day ×${c.water.maxDay}, peak hour ×${c.water.peakHour}). ${Y} Census by dissemination areas whose centre falls in the zone; growth from every development located in it (other filters ignored), as in the Growth tab. Employment demand is in Servicing demand.</p>`;
+      <p class="small muted">ML/d = megalitres per day. Residential demand at ${c.water.avg} L/cap/d (max day ×${c.water.maxDay}, peak hour ×${c.water.peakHour}). ${Y} Census by dissemination areas whose centre falls in the zone; growth from every development located in it (other filters ignored), as in the Growth tab. Employment demand is in Servicing demand.</p>`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
-    // Wastewater: each catchment carries everything upstream of it along the traced flow path,
-    // so the flow builds up pumping station by trunk until it reaches the plant. Average dry
-    // weather by layer; peak wet = Harmon on the accumulated build-out population + I&I.
-    const peakWet = l => { const avg = L(total(l) * c.wastewater.avg); return avg * D.harmon(total(l)) + l.ii; };
+    // Wastewater: each catchment's own (local) flow plus everything upstream of it along the
+    // traced flow path = the total passing its outlet, building up to the plant on the lake.
+    // Peak dry weather = average × Harmon M on the total population; peak wet = peak dry + I&I
+    // on the whole drainage area upstream of the outlet.
     const kids = svcFlowTree();
-    const local = new Map(state.servicing.drainage.map(d => [d.id, svcLayerTotals('dr', d, bc, idx)]));
+    const local = new Map(state.servicing.drainage.map(d => [d.id, { ...svcLayerTotals('dr', d, bc, idx), ha: d.areaHa || 0 }]));
+    const sum = list => { const t = addLayers(list); t.ha = list.reduce((a, x) => a + (x.ha || 0), 0); return t; };
     const cum = new Map();
-    const cumOf = d => { if (cum.has(d.id)) return cum.get(d.id); const v = addLayers([local.get(d.id), ...(kids.get(d.id) || []).map(cumOf)]); cum.set(d.id, v); return v; };
-    const sRow = (name, sub, l, id, cls = '', depth = 0) => `<tr${rowAttrs(id, cls)}><td style="padding-left:${6 + depth * 12}px">${depth ? '<span class="flow-arrow" aria-hidden="true">↳</span>' : ''}${name}${sub ? `<small>${sub}</small>` : ''}</td><td class="bar">${svcBar(l)}</td><td>${fmtNum(l.devs)}</td>${LAYER_KEYS.map(k => cell(L(l[k] * c.wastewater.avg), l[k])).join('')}
-      ${cell(L(total(l) * c.wastewater.avg), total(l), 'bo')}<td class="bo">${fmt1(peakWet(l))}</td></tr>`;
+    const cumOf = d => { if (cum.has(d.id)) return cum.get(d.id); const v = sum([local.get(d.id), ...(kids.get(d.id) || []).map(cumOf)]); cum.set(d.id, v); return v; };
+    const upOf = d => sum((kids.get(d.id) || []).map(cumOf));
+    const adwf = l => ML(total(l), c.wastewater.avg);
+    const pdwf = l => adwf(l) * D.harmon(total(l));
+    const ii = l => l.ha * c.wastewater.infiltration * 86400 / 1e6;
+    const peakCells = l => `<td>${fmt1(pdwf(l))}<small>M ${total(l) > 0 ? D.harmon(total(l)).toFixed(2) : '–'}</small></td><td>${fmt1(ii(l))}<small>${fmtNum(Math.round(l.ha))} ha</small></td><td class="bo">${fmt1(pdwf(l) + ii(l))}</td>`;
+    const nameCell = (name, sub, depth) => `<td style="padding-left:${6 + depth * 12}px">${depth ? '<span class="flow-arrow" aria-hidden="true">↳</span>' : ''}${name}${sub ? `<small>${sub}</small>` : ''}</td>`;
+    const sRow = (name, sub, d, l, id, cls = '', depth = 0) => {
+      const lo = d ? local.get(d.id) : null, up = d ? upOf(d) : null;
+      const mid = wwView === 'layers'
+        ? LAYER_KEYS.map(k => cell(ML(l[k], c.wastewater.avg), l[k])).join('') + cell(adwf(l), total(l), 'bo')
+        : (d ? cell(adwf(lo), total(lo)) + (total(up) > 0 || up.ha ? cell(adwf(up), total(up)) : '<td class="muted">–</td>') : '<td></td><td></td>') + cell(adwf(l), total(l), 'bo');
+      return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td><td>${fmtNum(d ? lo.devs : l.devs)}</td>${mid}${peakCells(l)}</tr>`;
+    };
     const short = (d, pl) => d.name.replace(`${pl} · `, '');
+    // Rows run from the top of each sewershed down to the lake: a branch's furthest catchment
+    // first (by distance of its outlet from the plant), each catchment after everything that
+    // drains into it, the plant's total inflow last.
+    const plantAt = Object.fromEntries((state.servicing.meta.plants || []).map(p => [p.name, p.lnglat]));
+    const far = (d, pl) => { const o = d.outletAt, p = plantAt[pl]; return o && p ? Math.hypot((o[0] - p[0]) * 0.72, o[1] - p[1]) : 0; };
+    const reach = new Map();   // furthest outlet distance in a branch
+    const reachOf = (d, pl) => reach.has(d.id) ? reach.get(d.id) : reach.set(d.id, Math.max(far(d, pl), ...(kids.get(d.id) || []).map(k => reachOf(k, pl)))).get(d.id);
+    const shown = l => total(l) > 0 || l.devs;
     const plants = ['Lakeview', 'Clarkson', 'Inglewood'];
     const sec = pl => {
       const list = state.servicing.drainage.filter(d => d.plant === pl);
       const roots = list.filter(d => !d.downstream || !list.some(x => x.id === d.downstream));
-      const sum = addLayers(roots.map(cumOf));
-      // Upstream first (deepest catchments), each followed by the catchment it drains into,
-      // ending at the plant: the last row of a plant carries all its flow.
+      const tot = sum(roots.map(cumOf));
       const rows = [];
       const walk = (d, depth) => {
-        for (const k of (kids.get(d.id) || []).slice().sort((x, y) => total(cumOf(x)) - total(cumOf(y)))) walk(k, depth + 1);
-        const l = cumOf(d), lo = local.get(d.id);
-        if (!(total(l) > 0 || l.devs)) return;
+        for (const k of (kids.get(d.id) || []).slice().sort((x, y) => reachOf(y, pl) - reachOf(x, pl))) walk(k, depth + 1);
+        const l = cumOf(d);
+        if (!shown(l)) return;
         const to = d.downstream ? svcById.get(d.downstream) : null;
-        const n = (kids.get(d.id) || []).filter(k => total(cumOf(k)) > 0 || cumOf(k).devs).length;   // shown upstream rows
-        const atPlant = d.kind === 'plant' || d.kind === 'untraced';
-        const subTxt = atPlant
-          ? [`${d.kind === 'plant' ? 'direct-to-plant area' : 'local'} ${fmtNum(Math.round(total(lo)))} people`, n ? `+ ${n} catchment${n > 1 ? 's' : ''} upstream` : null].filter(Boolean).join(' ')
-          : [`to ${esc(to ? short(to, pl) : plantLabel(pl))}`, n ? `local ${fmtNum(Math.round(total(lo)))} + ${n} upstream` : null].filter(Boolean).join(' · ');
+        const n = (kids.get(d.id) || []).filter(k => shown(cumOf(k))).length;
+        const sub = d.kind === 'plant' ? `direct-to-plant area${n ? ` + ${n} catchment${n > 1 ? 's' : ''} upstream` : ''}`
+          : d.kind === 'untraced' ? 'drains to the City of Toronto system'
+          : `→ ${esc(to ? short(to, pl) : plantLabel(pl))}${n ? ` · ${n} upstream` : ''}`;
         const label = d.kind === 'plant' ? `${esc(plantLabel(pl))} · total inflow` : esc(short(d, pl));
-        rows.push(sRow(label, subTxt, l, d.id, roots.length === 1 && d === roots[0] ? 'sub' : '', depth));
+        rows.push(sRow(label, sub, d, l, d.id, roots.length === 1 && d === roots[0] ? 'sub' : '', depth));
       };
-      for (const r of roots.sort((x, y) => total(cumOf(x)) - total(cumOf(y)))) walk(r, 0);
-      if (roots.length > 1) rows.push(sRow(`${esc(pl)} total`, '', sum, null, 'sub'));
-      return { pl, rows, sum };
+      for (const r of roots.sort((x, y) => reachOf(y, pl) - reachOf(x, pl))) walk(r, 0);
+      if (roots.length > 1) rows.push(sRow(`${esc(pl)} total`, '', null, tot, null, 'sub'));
+      return { pl, rows, sum: tot };
     };
     const secs = plants.map(sec).filter(x => x.rows.length);
     const tor = sec('Toronto');
-    $('#ww-body').innerHTML = `${svcLegend(Y)}<table class="dt svc-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, accumulated along the flow path · average dry weather (L/s), people below</caption>
-      ${head('Catchment (flows down to the plant)', '<th>Peak wet<br>build-out</th>')}
-      <tbody>${secs.map(x => `<tr class="grp"><td colspan="10">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
-        ${sRow(`Peel total (${secs.map(x => x.pl).join(' + ')})`, '', addLayers(secs.map(x => x.sum)), null, 'tot')}
-        ${tor.rows.length ? `<tr class="grp"><td colspan="10">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
-      <p class="small muted">Each catchment includes every catchment upstream of it (indented above it), following the traced sewers and pumping stations down to the plant; the last row of each plant is its total inflow. Residential demand at ${c.wastewater.avg} L/cap/d; peak wet = Harmon on the accumulated build-out population + I&amp;I (${c.wastewater.infiltration} L/s/ha) on the growth sites, so peaks are not additive. ${Y} Census by dissemination areas whose centre falls in the catchment; growth from every development located in it (other filters ignored). Employment demand is in Servicing demand.</p>`;
-    $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows accumulate downstream to Lakeview, Clarkson and Inglewood`;
+    const cols = 3 + (wwView === 'layers' ? 5 : 3) + 3;
+    const midHead = wwView === 'layers' ? layerHead.replace('Build-out', 'Build-out<br>average') : '<th>Local<br>average</th><th>+ Upstream<br>average</th><th>= Total<br>average</th>';
+    const peel = sum(secs.map(x => x.sum));
+    $('#ww-body').innerHTML = `<div class="ww-head">${svcLegend(Y)}<div class="seg ww-view" role="group" aria-label="Wastewater columns">
+        <button type="button" class="btn small${wwView === 'flow' ? ' on' : ''}" data-wwview="flow" aria-pressed="${wwView === 'flow'}">Local + upstream</button>
+        <button type="button" class="btn small${wwView === 'layers' ? ' on' : ''}" data-wwview="layers" aria-pressed="${wwView === 'layers'}">Growth layers</button></div></div>
+      <table class="dt svc-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · ML/d, people below</caption>
+      <thead><tr><th>Catchment (top of the sewershed → plant)</th><th class="bar-h">Build-out mix</th><th>Developments</th>${midHead}<th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th></tr></thead>
+      <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
+        ${sRow(`Peel total (${secs.map(x => x.pl).join(' + ')})`, '', null, peel, null, 'tot')}
+        ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
+      <p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow. Average ${c.wastewater.avg} L/cap/d; <strong>peak dry weather</strong> = total average × Harmon M = 1 + 14 / (4 + √P) on the total population; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census by dissemination areas whose centre falls in the catchment; growth from every development located in it (other filters ignored). Employment flow is in Servicing demand. Click a catchment to see its flow path to the lake on the map.</p>`;
+    $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to Lakeview, Clarkson and Inglewood on the lake`;
   }
+  $('#ww-body').addEventListener('click', e => {
+    const b = e.target.closest('[data-wwview]'); if (!b) return;
+    wwView = b.dataset.wwview; store.set('wwView', wwView); renderSvcTab();
+  });
   // Click a zone / catchment row: outline it on the map and zoom to it (a catchment also shades
   // everything upstream that drains through it). Click it again to clear.
   const svcFocus = { id: null, layer: L.layerGroup().addTo(map) };
@@ -1898,9 +1928,36 @@
     const up = a.zone ? [] : upstreamOf(a.id, svcFlowTree());
     for (const u of up) poly(u, 'svc-focus-up').addTo(svcFocus.layer);
     const main = poly(a, 'svc-focus').addTo(svcFocus.layer);
+    if (!a.zone) drawFlowPath(a, up);
     const b = main.getBounds();
     for (const u of up) b.extend(L.latLngBounds(u.rings.flat().map(([lng, lat]) => [lat, lng])));
+    // …and the next outlet downstream, so the first flow arrow out of it is in view.
+    const nx = !a.zone && a.downstream && svcById.get(a.downstream);
+    const pl = !a.zone && (state.servicing.meta.plants || []).find(p => p.name === a.plant);
+    const nxAt = nx ? nx.outletAt || (pl && pl.lnglat) : pl && pl.lnglat;
+    if (nxAt) b.extend([nxAt[1], nxAt[0]]);
     map.fitBounds(b, { padding: [30, 30] });
+  }
+  // Flow arrows (schematic, outlet to outlet): from each upstream outlet into the next
+  // catchment, then from this catchment's outlet down the chain to the plant on the lake.
+  function drawFlowPath(a, up) {
+    const plant = (state.servicing.meta.plants || []).find(p => p.name === a.plant);
+    const ll = p => [p[1], p[0]];
+    const arrow = (from, to, cls) => { if (from && to && (from[0] !== to[0] || from[1] !== to[1])) L.polyline([ll(from), ll(to)], { className: cls, interactive: false }).addTo(svcFocus.layer); };
+    const endOf = d => { const nx = d.downstream && svcById.get(d.downstream); return nx ? (nx.outletAt || (plant && plant.lnglat)) : plant && plant.lnglat; };
+    for (const u of up) arrow(u.outletAt, endOf(u), 'svc-flow-up');
+    for (let d = a, n = 0; d && n < 30; d = d.downstream && svcById.get(d.downstream), n++) arrow(d.outletAt, endOf(d), 'svc-flow');
+    if (plant) L.circleMarker(ll(plant.lnglat), { radius: 6, className: 'svc-plant', interactive: true }).bindTooltip(esc(plantLabel(a.plant)), { className: 'pt' }).addTo(svcFocus.layer);
+    addFlowMarker();
+  }
+  // SVG arrowheads for the flow lines (one <marker> per map renderer).
+  function addFlowMarker() {
+    const svg = map.getPanes().overlayPane.querySelector('svg');
+    if (!svg || svg.querySelector('#flow-head')) return;
+    const ns = 'http://www.w3.org/2000/svg';
+    const defs = document.createElementNS(ns, 'defs');
+    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>';
+    svg.insertBefore(defs, svg.firstChild);
   }
   for (const id of ['#water-body', '#ww-body']) {
     $(id).addEventListener('click', e => { const r = e.target.closest('[data-svc]'); if (r) focusSvc(r.dataset.svc); });

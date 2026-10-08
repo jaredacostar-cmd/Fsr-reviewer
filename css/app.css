@@ -708,5 +708,12 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .svc-table td:first-child { text-align: left; }
 .svc-table .flow-arrow { color: var(--text-muted); margin-right: 4px; }
 .svc-legend { margin: 0 0 6px; }
+.ww-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.ww-view { display: inline-flex; gap: 4px; }
+.ww-view .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.svc-flow, .svc-flow-up { color: #c2410c; stroke: #c2410c; fill: none; marker-end: url(#flow-head); }
+.svc-flow { stroke-width: 3; }
+.svc-flow-up { stroke-width: 1.8; stroke-dasharray: 5 4; }
+.svc-plant { stroke: #fff; stroke-width: 2; fill: #c2410c; fill-opacity: 1; }
 .svc-focus { stroke: var(--accent); stroke-width: 3; fill: var(--accent); fill-opacity: 0.12; }
 .svc-focus-up { stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 4 3; fill: var(--accent); fill-opacity: 0.06; }

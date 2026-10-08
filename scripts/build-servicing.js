@@ -258,6 +258,8 @@ async function main() {
     drainage.push({
       id: `dr:${id}`, plant: plant || TORONTO, kind: a.kind,
       downstream: below && below !== id && rings.has(below) ? `dr:${below}` : null,
+      // Where it discharges (the outlet manhole / pumping station; for the area at a plant, the plant).
+      outletAt: xy.has(id) ? toLL(xy.get(id)).map(v => +v.toFixed(5)) : null,
       outlet: a.kind === 'ps' ? nameOf(id) : null, municipality: muni, manholes: members.length,
       trunkMm: diam.get(id) || null, areaHa: Math.round(areaHa),
       rings: ringsM.map(r => r.map(([x, y]) => toLL([x, y]))),
