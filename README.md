@@ -28,6 +28,28 @@ npm start            # serves on http://localhost:8080
 Any static host works, for example GitHub Pages. You can also open `index.html` straight from
 disk. The data is fetched by your browser, so you need internet access.
 
+## On iPhone / iPad
+
+The app runs in Safari. It needs to be served from a web address, because opening the file
+from the iPhone's Files app won't work. Any one of these options does it:
+
+1. **Netlify Drop (easiest, free, about 2 minutes).** On a computer, download this branch as a
+   ZIP and unzip it. Go to <https://app.netlify.com/drop> and drag the folder onto the page.
+   You get an `https://….netlify.app` link; open it in Safari on the iPhone.
+2. **GitHub Pages.** This works for public repositories; private repositories need a paid
+   GitHub plan. In the repository, go to Settings → Pages, choose "Deploy from a branch", and
+   pick the branch and the `/ (root)` folder. The site appears at
+   `https://<user>.github.io/<repo>/`.
+3. **Same Wi-Fi, no hosting.** On a computer, run `npm start`, then open
+   `http://<computer's IP address>:8080` on the iPhone. This works only while the computer is
+   on and on the same network.
+
+To use it like an app, tap **Share → Add to Home Screen** in Safari. It opens full screen with
+its own icon.
+
+On a phone, the **List** button opens the filters and project list. Tap the legend to show
+the phase names. **Hide** collapses the timeline and demand panel to give the map more room.
+
 ## Using it
 
 - **Background:** aerial imagery is the default (Esri World Imagery), with road and place-name

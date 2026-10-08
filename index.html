@@ -2,7 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Peel Dev">
+  <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a19" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
   <title>Peel Development Tracker</title>
   <meta name="description" content="Every development in Peel Region (Mississauga, Brampton, Caledon) from application to completion, on a map.">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -102,6 +111,7 @@
     </main>
 
     <footer class="footer" id="footer">
+      <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       <section class="timebar" aria-label="Timeline">
         <div class="tb-head">
           <h2>Timeline</h2>

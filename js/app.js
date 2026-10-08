@@ -748,6 +748,13 @@
     $('#toggle-sidebar').textContent = o ? 'Map' : 'List';
   }
   $('#toggle-sidebar').onclick = () => toggleSidebar();
+  $('#legend').onclick = () => $('#legend').classList.toggle('expanded');
+  // Phones: collapse the timeline / demand footer to give the map room.
+  $('#footer-toggle').onclick = () => {
+    const f = $('#footer'), collapsed = f.classList.toggle('collapsed');
+    $('#footer-toggle').textContent = collapsed ? 'Show' : 'Hide';
+    $('#footer-toggle').setAttribute('aria-expanded', String(!collapsed));
+  };
 
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     readColors(); for (const k in iconCache) delete iconCache[k]; setTiles(); renderLegend(); applyFilters();
