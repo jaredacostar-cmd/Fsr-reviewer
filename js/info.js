@@ -10,7 +10,7 @@
   const PERMITS = 'Building permits: City of Mississauga issued building permits and Growth Management permits; City of Brampton building permits; Town of Caledon building permits (AMANDA). New-build permits only unless “New buildings only” is off.';
   const SNAPSHOT = 'Refreshed every Monday from the municipalities’ open-data ArcGIS services.';
   const PPU = 'Persons per unit: Region of Peel design criteria (single / semi 4.2, townhouse 3.4, apartment 2.7; editable under Breakdown & design criteria).';
-  const CENSUS = 'Statistics Canada, 2021 Census of Population: population and private dwellings by dissemination area (DA). For a secondary plan or MTSA, each DA counts by the share of its land inside the area.';
+  const CENSUS = 'Statistics Canada, 2021 and 2016 Censuses of Population: population and private dwellings by dissemination area (DA). For a secondary plan or MTSA, each DA counts by the share of its land inside the area.';
 
   const INFO = {
     'quick-views': { title: 'Quick views', body: 'One tap shows a single phase (or every phase not yet completed or withdrawn). The bar shows how the projects listed split across phases.', source: `${APPS} ${PERMITS}` },
