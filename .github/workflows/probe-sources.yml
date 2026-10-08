@@ -35,8 +35,8 @@ jobs:
           node scripts/build-areas.js --out data
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/areas.json data/das.json
-          git diff --cached --quiet || { git commit -m "Areas and 2021 census baseline"; git push; }
+          git add data/areas.json data/das*.json
+          git diff --cached --quiet || { git commit -m "Areas and census baselines (2021, 2016)"; git push; }
       - name: Earlier census by dissemination area
         if: inputs.mode == 'census'
         run: |
