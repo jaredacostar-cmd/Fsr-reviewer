@@ -58,7 +58,50 @@ async function orgOf(host) {
   return r.body && r.body.orgId;
 }
 
+async function targeted() {
+  const M = 20037508.34;
+  const merc = (lng, lat) => [lng * M / 180, Math.log(Math.tan((90 + lat) * Math.PI / 360)) * M / Math.PI];
+  const box = (lng, lat, d = 120) => { const [x, y] = merc(lng, lat); return `${x - d},${y - d},${x + d},${y + d}`; };
+  const IMG = {
+    'MIS 2024': ['https://exwai.maps.mississauga.ca/img/rest/services/Imagery/2024_Aerial_Imagery/ImageServer', PTS['Square One (Mississauga)']],
+    'MIS 2016': ['https://exwai.maps.mississauga.ca/img/rest/services/Imagery/2016_Aerial_Imagery/ImageServer', PTS['Square One (Mississauga)']],
+    'BRA 2025F': ['https://maps1.brampton.ca/image/rest/services/Imagery/BRAM2025F_SID_MOSAIC/ImageServer', PTS['Mount Pleasant (Brampton)']],
+    'BRA 2018F': ['https://maps1.brampton.ca/image/rest/services/Imagery/BRAM2018F_SID_MOSAIC/ImageServer', PTS['Mount Pleasant (Brampton)']],
+    'BRA 2025F outside': ['https://maps1.brampton.ca/image/rest/services/Imagery/BRAM2025F_SID_MOSAIC/ImageServer', PTS['Square One (Mississauga)']],
+    'PEEL 2021': ['https://utility.arcgis.com/usrsvcs/servers/bad127f01c3f4e0a9d574bb158c4153f/rest/services/PeelImageryv2/PeelImagery_Ortho2021/ImageServer', PTS['Bolton (Caledon)']],
+    'CAL 2025 export': ['https://utility.arcgis.com/usrsvcs/servers/4a5dde0fe97b4efe9d5a658284466e40/rest/services/Basemaps/Ortho2025Cache/MapServer', PTS['Bolton (Caledon)']],
+    'CAL current WM export': ['https://utility.arcgis.com/usrsvcs/servers/dc046e30f8924e2990b233c8c5749b7c/rest/services/Basemaps/OrthoCurrent_WebMercatorCache/MapServer', PTS['Bolton (Caledon)']],
+    'CAL 2016 export': ['https://utility.arcgis.com/usrsvcs/servers/2a70dc8d866a4416bc565e649c4b7437/rest/services/Basemaps/Ortho2016Cache/MapServer', PTS['Bolton (Caledon)']],
+  };
+  for (const [name, [url, [lng, lat]]] of Object.entries(IMG)) {
+    const image = /ImageServer/.test(url);
+    const t0 = Date.now();
+    const r = await req(`${url}/${image ? 'exportImage' : 'export'}?${q({ bbox: box(lng, lat), bboxSR: 3857, imageSR: 3857, size: '256,256', format: 'jpgpng', transparent: true, f: 'image' })}`, { json: false });
+    console.log(`  ${name}: status=${r.status} cors=${r.cors} type=${r.type} bytes=${r.body ? r.body.length : 0} ms=${Date.now() - t0}`);
+    if (!image) {
+      const t = tileOf(lng, lat, 17);
+      const tr = await req(`${url}/tile/${t.z}/${t.y}/${t.x}`, { json: false });
+      console.log(`    tile z17 status=${tr.status} type=${tr.type} bytes=${tr.body ? tr.body.length : 0}`);
+    }
+  }
+  // Footprint statistics inside a 120 m box.
+  const FP = {
+    'MIS BldgRoof': ['https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/BldgRoof/FeatureServer/0', PTS['Square One (Mississauga)']],
+    'MIS 2020': ['https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Building_Footprints_2020/FeatureServer/0', PTS['Square One (Mississauga)']],
+    'BRA footprints': ['https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Building_Footprints/FeatureServer/0', PTS['Mount Pleasant (Brampton)']],
+  };
+  for (const [name, [url, [lng, lat]]] of Object.entries(FP)) {
+    const st = await req(`${url}/query?${q({ geometry: box(lng, lat), geometryType: 'esriGeometryEnvelope', inSR: 3857, spatialRel: 'esriSpatialRelIntersects',
+      outStatistics: JSON.stringify([{ statisticType: 'sum', onStatisticField: 'Shape__Area', outStatisticFieldName: 'a' }, { statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'n' }]), f: 'json' })}`);
+    const yr = await req(`${url}/query?${q({ where: '1=1', geometry: box(lng, lat), geometryType: 'esriGeometryEnvelope', inSR: 3857, outFields: '*', returnGeometry: false, resultRecordCount: 3, f: 'json' })}`);
+    console.log(`  ${name}: stats=${JSON.stringify(st.body && (st.body.features || st.body.error)).slice(0, 200)} sample=${JSON.stringify(yr.body && yr.body.features && yr.body.features.map(f => f.attributes)).slice(0, 300)}`);
+  }
+  const info = await req('https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/BldgRoof/FeatureServer/0/query?' + q({ where: '1=1', outStatistics: JSON.stringify([{ statisticType: 'min', onStatisticField: 'ImgYr', outStatisticFieldName: 'lo' }, { statisticType: 'max', onStatisticField: 'ImgYr', outStatisticFieldName: 'hi' }, { statisticType: 'count', onStatisticField: 'ImgYr', outStatisticFieldName: 'n' }]), f: 'json' }));
+  console.log(`  MIS BldgRoof ImgYr range: ${JSON.stringify(info.body && (info.body.features || info.body.error))}`);
+}
+
 (async () => {
+  if (process.argv[2] === 'targeted') return targeted();
   console.log('=== Esri Wayback releases');
   const wb = await req('https://s3-us-west-2.amazonaws.com/config.maptiles.arcgis.com/waybackconfig.json');
   const rel = Object.entries(wb.body).map(([id, v]) => ({ id, date: v.itemTitle.match(/\d{4}-\d{2}-\d{2}/)[0], meta: v.metadataLayerUrl })).sort((a, b) => b.date.localeCompare(a.date));

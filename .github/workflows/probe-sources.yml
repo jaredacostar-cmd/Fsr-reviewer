@@ -28,7 +28,7 @@ jobs:
         run: npm test
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
-        run: node scripts/probe-imagery.js
+        run: node scripts/probe-imagery.js targeted
       - name: List what each municipality publishes
         if: inputs.mode == 'all' || inputs.mode == ''
         run: node scripts/probe-sources.js
