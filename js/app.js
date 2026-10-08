@@ -47,7 +47,9 @@
     return d;
   }
   // Employment parsed once per project (the focus chip counts call it for every project).
-  const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p) : null));
+  // m²/job comes from the editable criteria; clearEmp() drops the cache when it changes.
+  const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p, state.criteria.m2PerJob) : null));
+  const clearEmp = () => { for (const p of state.projects) delete p._emp; };
   // Employment space moves with the project phase (no per-unit permits for it).
   const EMP_DONE = { permitted: new Set(['permit', 'construction', 'completed']), completed: new Set(['completed']) };
   const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
@@ -805,7 +807,7 @@
       stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), '',
         bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} developments report units`, 'demand-units'),
       stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
-      stat('Jobs', fmtNum(Math.round(em.jobs)), '', `${fmtNum(em.projects)} employment projects`, 'demand-employment'),
+      stat('Jobs', fmtNum(Math.round(em.jobs)), '', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
     ].join('');
     $('#d-tiles').innerHTML = flowTablesHTML(e);
     renderSelection(set, basis);
@@ -882,7 +884,13 @@
       <fieldset><legend>Employment</legend>
         ${inp('employment', 'water', 'Water (L/emp/d)', 1)}${inp('employment', 'maxDay', 'Max day factor', 0.1)}${inp('employment', 'peakHour', 'Peak hour factor', 0.1)}
         ${inp('employment', 'wastewater', 'Wastewater (L/emp/d)', 1)}${inp('employment', 'peakMin', 'Peaking min', 0.1)}${inp('employment', 'peakMax', 'Peaking max', 0.1)}
-        <p class="small muted">Jobs are estimated from the floor areas on the applications (${Object.entries(window.PeelEmployment ? PeelEmployment.M2_PER_JOB : {}).map(([k, v]) => `${k} ${v} m²/job`).join(', ')}). Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A development's jobs count by its phase (committed = approved to under construction).</p>
+      </fieldset>
+      <fieldset><legend>Employment floor space (m²/job)</legend>
+        ${inp('m2PerJob', 'industrial', 'Industrial', 1)}${inp('m2PerJob', 'office', 'Office', 1)}${inp('m2PerJob', 'retail', 'Retail', 1)}${inp('m2PerJob', 'hotel', 'Hotel', 1)}${inp('m2PerJob', 'institutional', 'Institutional', 1)}
+        <p class="small muted">Jobs = floor area on the applications ÷ m²/job for each use. Defaults are typical planning assumptions; change them to match an FSR or employment study.</p>
+      </fieldset>
+      <fieldset><legend>Employment notes</legend>
+        <p class="small muted">Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A development's jobs count by its phase (committed = approved to under construction).</p>
       </fieldset>
       <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour); employment water 300 L/emp/d ×1.4 / ×3.0 (Peel FSR requirements, ICI) and wastewater 270 L/emp/d, peaking 2–4 (Peel Water &amp; Wastewater Modelling Demand Table, Aug 2024). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
       <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
@@ -893,12 +901,24 @@
     if (!(v >= 0)) return;
     state.criteria[el.dataset.g][el.dataset.k] = v;
     store.set('criteria', state.criteria);
-    renderDemand();
+    refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
   };
+  // Criteria changed: redraw everything that uses them (jobs also feed the summaries and the open development).
+  function refreshCriteria(jobs) {
+    if (jobs) { clearEmp(); renderPipeline(state.projects.filter(p => matches(p, true))); }
+    renderDemand(); renderCensus();
+    // Redraw the open panel where it shows demand or jobs, keeping its scroll position.
+    const det = $('#detail'), view = det.dataset.view, top = det.scrollTop;
+    if (det.hidden) return;
+    if (view === 'dev' && currentProject) showDetail(currentProject);
+    else if (view === 'sel' && selection.size) showSelection();
+    else return;
+    det.scrollTop = top;
+  }
   $('#d-criteria').onclick = e => {
     if (e.target.id !== 'd-reset') return;
     state.criteria = mergeCriteria(null); store.set('criteria', null);
-    renderCriteria(); renderDemand();
+    renderCriteria(); refreshCriteria(true);
   };
 
   // ---- Rendering -----------------------------------------------------------------
@@ -906,7 +926,7 @@
     const counts = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, 0]));
     for (const p of base) counts[p.phase]++;
     const total = base.length;
-    $('#total-count').textContent = `${fmtNum(state.filtered.length)} of ${fmtNum(state.projects.length)} projects`;
+    $('#total-count').textContent = `${fmtNum(state.filtered.length)} of ${fmtNum(state.projects.length)} developments`;
     $('#pipeline').innerHTML = P.ALL_PHASES.filter(p => counts[p.key]).map(p =>
       `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${colors[p.key]}"
         title="${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%)" aria-label="${esc(p.label)} ${counts[p.key]}"></button>`).join('');
@@ -1068,7 +1088,7 @@
         <span class="muted small sect-sum">${e.totalM2 ? `${fmtNum(e.totalM2)} m² · ~${fmtNum(e.jobs)} jobs` : 'floor area not stated'}</span></summary>
       <table class="dt"><thead><tr><th>Use</th><th>Floor area</th><th>Est. jobs</th></tr></thead><tbody>${rows}</tbody></table>
       ${e.jobs > 0 ? (d => `<p class="small emp-demand"><strong>Servicing:</strong> water ${fmt1(d.water.avg)} L/s average, ${fmt1(d.water.peakHour)} L/s peak hour · wastewater ${fmt1(d.wastewater.avg)} L/s average, ${fmt1(d.wastewater.peak)} L/s peak (M ${d.wastewater.peakingFactor.toFixed(2)}). Details under Servicing demand.</p>`)(D.employmentDemand(e.jobs, state.criteria)) : ''}
-      <p class="small muted">Read from the application descriptions${anyField ? '; † floor area field published with the application' : ''}. Jobs at ${Object.entries(PeelEmployment.M2_PER_JOB).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (typical planning assumptions).</p>
+      <p class="small muted">Read from the application descriptions${anyField ? '; † floor area field published with the application' : ''}. Jobs at ${Object.entries(state.criteria.m2PerJob).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (editable under Breakdown &amp; criteria).</p>
     </details>`;
   }
 
@@ -1279,7 +1299,7 @@
         <h3 class="sub-title" data-info="project-timeline">All dated events</h3>${timeline}</details>
       <details class="sect" open><summary><h2 class="section-title" data-info="source-records">Source records <span class="muted small">by type · ${fmtNum(p.records.length)}</span></h2></summary>
         ${recs}</details>`;
-    $('#detail').hidden = false;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'dev';
     $('#detail').scrollTop = 0;
     runAerial(p);
   }
@@ -1363,7 +1383,7 @@
       <h2 class="section-title">Source record</h2>
       <table class="rec-table">${recordRows(r)}</table>`;
     $('#open-project').onclick = () => showDetail(p);
-    $('#detail').hidden = false;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'record';
     $('#detail').scrollTop = 0;
     highlight(p, r);
     if (r.lat != null) {
@@ -1617,7 +1637,7 @@
       ${growth}
       <details class="sect"><summary><h2 class="section-title">Developments</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>
         <ul class="sel-list">${list}</ul></details>`;
-    $('#detail').hidden = false;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'sel';
     $('#detail').scrollTop = 0;
   }
   $('#detail-body').addEventListener('click', e => {

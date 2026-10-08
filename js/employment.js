@@ -56,8 +56,10 @@
   /**
    * Employment summary for a project: uses found on its live applications, floor area per use
    * (largest figure per use across files, since files repeat one proposal) and estimated jobs.
+   * perJob: m²/job by use (defaults to M2_PER_JOB; missing or non-positive entries fall back).
    */
-  function employmentOf(project) {
+  function employmentOf(project, perJob = M2_PER_JOB) {
+    const rate = k => (perJob && perJob[k] > 0 ? perJob[k] : M2_PER_JOB[k]);
     // Minor / limited files (doors, revisions) carry the existing building's area: skip them.
     const apps = project.records.filter(r => r.kind === 'application' && r.phase !== 'cancelled' && !r.minor);
     const uses = new Set(), m2 = {}, fromField = new Set();
@@ -77,7 +79,7 @@
     for (const k in m2) uses.add(k);
     const rows = USES.filter(u => uses.has(u.key)).map(u => ({
       key: u.key, label: u.label, m2: m2[u.key] || null, fromField: fromField.has(u.key),
-      jobs: m2[u.key] ? Math.round(m2[u.key] / M2_PER_JOB[u.key]) : null,
+      jobs: m2[u.key] ? Math.round(m2[u.key] / rate(u.key)) : null,
     }));
     const totalM2 = rows.reduce((t, r) => t + (r.m2 || 0), 0);
     const jobs = rows.reduce((t, r) => t + (r.jobs || 0), 0);

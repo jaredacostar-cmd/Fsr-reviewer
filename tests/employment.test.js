@@ -35,3 +35,11 @@ test('project summary: largest figure per use across files, jobs from floor spac
   assert.equal(ind.jobs, 200);
   assert.equal(E.employmentOf({ units: 40, records: [app('40 townhouses')] }), null);
 });
+
+test('jobs follow edited m²/job; missing or zero rates fall back to the defaults', () => {
+  const app = (description, extra = {}) => ({ kind: 'application', phase: 'review', type: 'Site Plan', description, ...extra });
+  const p = { units: 0, records: [app('Two industrial buildings', { gfa: 22000 })] };
+  assert.equal(E.employmentOf(p, { industrial: 200 }).jobs, 110);
+  assert.equal(E.employmentOf(p, { industrial: 0 }).jobs, 200);
+  assert.equal(E.employmentOf(p, { office: 10 }).jobs, 200);
+});
