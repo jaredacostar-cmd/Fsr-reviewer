@@ -182,6 +182,21 @@ tapping it switches between road grid and north up. From street zoom (14) every 
 planning application boundaries are drawn in its phase colour with a light fill; tap one for its
 application.
 
+**Water pressure zones and wastewater drainage areas** (`data/servicing.json`, built by
+`scripts/build-servicing.js`; Probe data sources mode `servicing-build` rebuilds it):
+- **Pressure zones:** the Region of Peel's 24 published water pressure zones.
+- **Drainage areas:** traced from the Region's sanitary sewer network, since the 2020 Water and
+  Wastewater Master Plan polygons are not published as data. Every pipe (manhole to manhole,
+  through pumping stations) is followed downstream to Lakeview (G.E. Booth), Clarkson or
+  Inglewood WRRF; at a split the larger pipe is followed; small gaps in the published network
+  are bridged to the nearest pipe. The Malton area by Pearson airport drains to the City of
+  Toronto. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
+  larger trunk (36 areas; 96.9% of 57,512 manholes reach a Peel plant). Plant split reviewed.
+- Each project is tagged by its location point. Map options toggle both layers; **Where** has
+  Pressure zone and Drainage area filters; **Breakdown & criteria** shows water demand by
+  pressure zone and wastewater demand by drainage area for the shown projects; the project
+  panel shows its zone and drainage area.
+
 **Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
 (Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run
 straight across. Switch to **North up** in the map options (top right). Rotation uses the

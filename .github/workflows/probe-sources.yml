@@ -7,11 +7,14 @@ name: Probe data sources
 #  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 #  mode=areas:   secondary plan, MTSA, 2021 census and SGU layers covering Peel
 #  mode=census:  earlier census (2016) population by dissemination area
+#  mode=servicing: Peel water pressure zones and wastewater drainage areas
+#  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
+#  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas or census'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw or servicing-build'
         default: 'all'
         required: false
 
@@ -41,6 +44,27 @@ jobs:
         if: inputs.mode == 'census'
         run: |
           node scripts/probe-census.js
+      - name: Water pressure zones and wastewater drainage areas
+        if: inputs.mode == 'servicing'
+        run: node scripts/probe-servicing.js
+      - name: Download water / wastewater layers (pushed to the servicing-raw branch)
+        if: inputs.mode == 'servicing-raw'
+        run: |
+          node scripts/fetch-servicing-raw.js --out data-raw
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B servicing-raw
+          git add -f data-raw
+          git commit -m "Raw Peel water / wastewater layers"
+          git push -f origin servicing-raw
+      - name: Rebuild pressure zones and drainage areas (committed to this branch)
+        if: inputs.mode == 'servicing-build'
+        run: |
+          node scripts/build-servicing.js --out data
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/servicing.json
+          git diff --cached --quiet || { git commit -m "Pressure zones and drainage areas"; git push; }
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted
