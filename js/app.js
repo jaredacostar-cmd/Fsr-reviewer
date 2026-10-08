@@ -238,9 +238,9 @@
   // ---- Sites on the map: application boundaries and the individual permits inside them
   const SITE_ZOOM = 15, SITE_MAX_POINTS = 3000;
   const canvas = L.canvas({ padding: 0.3 });
-  // The selected project draws in its own pane, above the street-zoom dots.
-  map.createPane('focus').style.zIndex = 450;
-  const focusCanvas = L.canvas({ padding: 0.3, pane: 'focus' });
+  // The selected project shares the same canvas (a second, empty canvas stacked on top
+  // would swallow taps meant for the dots below it); it is kept on top by draw order.
+  const focusCanvas = canvas;
   const siteLayer = L.layerGroup().addTo(map);   // every visible site, from street zoom
   const focusLayer = L.layerGroup().addTo(map);  // the selected project, at any zoom
   const sitePermits = p => p.records.filter(r => r.kind === 'permit' && r.lat != null);
@@ -296,6 +296,8 @@
         if (view.contains([r.lat, r.lng])) siteLayer.addLayer(permitDot(r, p, false));
       }
     }
+    // Keep the selected project's outline and dots drawn above the others.
+    focusLayer.eachLayer(l => l.bringToFront && l.bringToFront());
   }
   map.on('moveend zoomend', scheduleSites);
   function highlight(p, record) {
