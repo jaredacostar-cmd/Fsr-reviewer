@@ -37,9 +37,9 @@ from the iPhone's Files app won't work. Any one of these options does it:
    ZIP and unzip it. Go to <https://app.netlify.com/drop> and drag the folder onto the page.
    You get an `https://….netlify.app` link; open it in Safari on the iPhone.
 2. **GitHub Pages.** This works for public repositories; private repositories need a paid
-   GitHub plan. In the repository, go to Settings → Pages, choose "Deploy from a branch", and
-   pick the branch and the `/ (root)` folder. The site appears at
-   `https://<user>.github.io/<repo>/`.
+   GitHub plan. In the repository, go to Settings → Pages and set Source to **GitHub Actions**.
+   The included workflow then deploys the site and keeps it updated weekly (see "Weekly
+   automatic update" below). The site appears at `https://<user>.github.io/<repo>/`.
 3. **Same Wi-Fi, no hosting.** On a computer, run `npm start`, then open
    `http://<computer's IP address>:8080` on the iPhone. This works only while the computer is
    on and on the same network.
