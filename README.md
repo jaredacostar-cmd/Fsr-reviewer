@@ -159,6 +159,12 @@ is no separate selector in the panel. Each project counts all its units, except 
 build** focus (planned units with no permit yet). Open **Breakdown & criteria** to edit the
 criteria.
 
+**Scale, north arrow and boundaries:** a metric scale bar and a north arrow sit under the zoom
+and select tools; the arrow always points to true north (turned 44° on the road grid), and
+tapping it switches between road grid and north up. From street zoom (14) every shown project's
+planning application boundaries are drawn in its phase colour with a light fill; tap one for its
+application.
+
 **Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
 (Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run
 straight across. Switch to **North up** in the map options (top right). Rotation uses the

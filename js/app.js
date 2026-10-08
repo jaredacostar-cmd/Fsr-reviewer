@@ -305,6 +305,14 @@
     });
   }
 
+  function setOrientation(o) {
+    if (!canRotate) return;
+    orientation = o; store.set('orientation', o);
+    map.setBearing(o === 'grid' ? GRID_BEARING : 0);
+    const sel = $('#opt-orient'); if (sel) sel.value = o;
+    scheduleLabels(); updateNorth();
+  }
+
   // Map control: basemap + label pickers.
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
@@ -323,10 +331,7 @@
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
-      if (orient) orient.onchange = e => {
-        orientation = e.target.value; store.set('orientation', orientation);
-        map.setBearing(orientation === 'grid' ? GRID_BEARING : 0); scheduleLabels();
-      };
+      if (orient) orient.onchange = e => setOrientation(e.target.value);
       return el;
     },
   });
@@ -360,7 +365,7 @@
   map.addLayer(cluster);
 
   // ---- Sites on the map: application boundaries and the individual permits inside them
-  const SITE_ZOOM = 15, SITE_MAX_POINTS = 3000;
+  const SITE_ZOOM = 14, SITE_MAX_POINTS = 3000;
   const canvas = L.canvas({ padding: 0.3 });
   // The selected project shares the same canvas (a second, empty canvas stacked on top
   // would swallow taps meant for the dots below it); it is kept on top by draw order.
@@ -392,9 +397,12 @@
     const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
     return apps.map(a => {
       const area = P.ringsArea(a.poly);
+      // Application boundaries in the project's phase colour with a light fill (the census
+      // areas are the white lines); the selected project is outlined more strongly.
+      const ph = colors[p.phase] || colors.approved;
       const poly = L.polygon(toLatLngs(a.poly), {
-        renderer: strong ? focusCanvas : canvas, color: strong ? colors.approved : '#ffffff', weight: strong ? 2.5 : 1.2,
-        opacity: strong ? 1 : 0.8, dashArray: strong ? null : '5 4', fill: true, fillColor: colors.approved, fillOpacity: strong ? 0.08 : 0.04,
+        renderer: strong ? focusCanvas : canvas, color: strong ? colors.approved : ph, weight: strong ? 2.5 : 1.6,
+        opacity: strong ? 1 : 0.9, fill: true, fillColor: strong ? colors.approved : ph, fillOpacity: strong ? 0.08 : 0.12,
       });
       poly._area = area;
       const nested = apps.length > 1 && area < biggest * 0.6;
@@ -1374,6 +1382,29 @@
     },
   });
   new SelectControl().addTo(map);
+
+  // North arrow (points to true north whatever the orientation; tap to switch between the road
+  // grid and north up) and a metric scale bar.
+  const NorthControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar north-ctl');
+      el.innerHTML = `<button type="button" id="north-btn" title="North. Tap to switch between road grid and north up" aria-label="North arrow: switch orientation">
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><g id="north-rot"><path d="M12 2.5l4.5 11h-9z" fill="currentColor"/><path d="M12 21.5l-4.5-8h9z" fill="none" stroke="currentColor" stroke-width="1.2"/>
+        <text x="12" y="12.2" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--surface-1)">N</text></g></svg></button>`;
+      L.DomEvent.disableClickPropagation(el);
+      el.querySelector('button').onclick = () => setOrientation(orientation === 'grid' ? 'north' : 'grid');
+      return el;
+    },
+  });
+  new NorthControl().addTo(map);
+  L.control.scale({ position: 'topleft', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
+  function updateNorth() {
+    const g = document.getElementById('north-rot');
+    if (g) g.setAttribute('transform', `rotate(${canRotate ? map.getBearing() : 0} 12 12)`);
+  }
+  map.on('rotate', updateNorth);
+  updateNorth();
 
   let pts = null;
   const rel = e => { const b = map.getContainer().getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };

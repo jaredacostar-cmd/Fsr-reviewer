@@ -676,3 +676,8 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 @media (hover: none) { .lasso-hint .mouse-only { display: none; } }
 .da-swatch { flex: none; border-radius: 3px; background: var(--surface-2); }
 .da-swatch.img { background: #6b7a5e; }   /* stands in for an aerial photo behind the white line */
+
+/* North arrow and scale bar (top left, under the zoom and select tools) */
+.north-ctl button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: var(--surface-1); color: var(--text-primary); cursor: pointer; border-radius: 4px; }
+.north-ctl svg g { transition: transform .2s; }
+.leaflet-control-scale-line { background: color-mix(in srgb, var(--surface-1) 85%, transparent); color: var(--text-primary); border-color: var(--text-primary); font-size: 11px; }
