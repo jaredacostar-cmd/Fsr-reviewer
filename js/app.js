@@ -215,6 +215,9 @@
   // Cluster icon: ring segments show the phase mix of the projects inside.
   const cluster = L.markerClusterGroup({
     chunkedLoading: true, showCoverageOnHover: false, maxClusterRadius: 50, spiderfyOnMaxZoom: true,
+    // At street zoom every project gets its own tappable marker (neighbouring houses
+    // otherwise stay grouped and a tap only zooms in).
+    disableClusteringAtZoom: 17,
     iconCreateFunction(c) {
       const kids = c.getAllChildMarkers();
       const counts = {};
