@@ -823,6 +823,21 @@
       ${phasesHTML(b)}</details>`;
   }
 
+  // Parsed once per project (the focus chip counts call it for every project).
+  const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p) : null));
+  // Employment uses parsed from the applications (industrial, office, retail, hotel, institutional).
+  function employmentHTML(p) {
+    const e = empOf(p);
+    if (!e) return '';
+    const rows = e.uses.map(u => `<tr><td>${esc(u.label)}</td><td>${u.m2 ? `${fmtNum(u.m2)} m²${u.fromField ? ' <span class="muted">†</span>' : ''}` : '<span class="muted">not stated</span>'}</td><td>${u.jobs ? fmtNum(u.jobs) : '–'}</td></tr>`).join('');
+    const anyField = e.uses.some(u => u.fromField);
+    return `<details class="sect emp" open><summary><h2 class="section-title" data-info="employment">Employment${e.mixed ? ' <span class="muted small">(mixed use)</span>' : ''}</h2>
+        <span class="muted small sect-sum">${e.totalM2 ? `${fmtNum(e.totalM2)} m² · ~${fmtNum(e.jobs)} jobs` : 'floor area not stated'}</span></summary>
+      <table class="dt"><thead><tr><th>Use</th><th>Floor area</th><th>Est. jobs</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="small muted">Read from the application descriptions${anyField ? '; † floor area field published with the application' : ''}. Jobs at ${Object.entries(PeelEmployment.M2_PER_JOB).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (typical planning assumptions).</p>
+    </details>`;
+  }
+
   // The headline numbers, first thing in the panel: planned, permitted, completed, left to build.
   function summaryHTML(p) {
     const b = p.buildout;
@@ -943,6 +958,7 @@
       <p class="facts small">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
         `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p>
       ${p.description ? `<p class="desc-clamp">${esc(p.description)}</p>` : ''}
+      ${employmentHTML(p)}
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
       <details class="sect" open><summary><h2 class="section-title" data-info="aerial">Aerial check</h2></summary>
         <div class="aerial" id="aerial-check"></div></details>
@@ -1070,6 +1086,7 @@
       completed_units: p.buildout ? p.buildout.completed : '', left_to_build: p.buildout ? p.buildout.remaining : '',
       building_permits: p.records.filter(r => r.kind === 'permit').length,
       est_population: p.units ? Math.round(D.estimate([p], state.criteria).population) : '',
+      ...(e => ({ employment_uses: e ? e.uses.map(u => u.label).join('; ') : '', nonres_floor_area_m2: e && e.totalM2 ? e.totalM2 : '', est_jobs: e && e.jobs ? e.jobs : '' }))(empOf(p)),
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
@@ -1308,6 +1325,7 @@
     growth:    { label: 'Growth', title: 'Planning applications proposing new dwelling units', test: p => appUnits(p) > 0 },
     committed: { label: 'Committed capacity', basis: 'committed', title: 'Growth that is approved or permitted and not yet completed', test: p => D.unitsFor(p, 'committed') > 0 },
     left:      { label: 'Left to build', basis: 'remaining', title: 'Planned units with no building permit yet', test: p => !!(p.buildout && p.buildout.remaining > 0) },
+    employment: { label: 'Employment', title: 'Applications for industrial, office, retail / commercial, hotel or institutional uses', test: p => !!(empOf(p)) },
     major:     { label: 'Major (100+ units)', title: 'Projects with 100 or more units', test: p => (p.units || 0) >= 100 },
     newapps:   { label: 'New in last 12 months', title: 'First filed in the last 12 months', test: p => !!p.first && Date.now() - p.first < YEAR_MS },
     // Planning stage only: many open permits have no inspection dates in the source data.

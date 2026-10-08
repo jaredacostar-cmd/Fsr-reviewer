@@ -174,6 +174,18 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
    - A site plan inside a subdivision rolls up into the subdivision.
    - Withdrawn applications and area-wide plans larger than 4 km² don't absorb permits.
 
+## Employment uses (`js/employment.js`)
+
+Applications are scanned for non-residential uses — industrial / logistics, office, retail /
+commercial, hotel, institutional — and for floor areas stated in the description (“2,506 sq m
+of retail GFA”, “a place of worship (1,445 m²)”, “45,000 sq ft warehouse”, converted to m²),
+each assigned to the nearest use. A purely non-residential file's floor-area field is used when
+the text gives none (marked †). Files on one site repeat the proposal, so the largest figure per
+use counts; minor / limited files are skipped. Estimated jobs use typical floor space per
+worker: industrial 110 m², office 25, retail 45, hotel 60, institutional 50. Shown as an
+**Employment** section in the project panel, an **Employment** focus chip, and in the CSV export
+(`employment_uses`, `nonres_floor_area_m2`, `est_jobs`).
+
 ## Aerial check (is it built?)
 
 At the bottom of each project's panel, the app compares the site on the aerial photo from
