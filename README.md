@@ -1,1 +1,85 @@
-# Fsr-reviewer
+# Peel Development Tracker
+
+A map of every development in Peel Region (Mississauga, Brampton, Caledon), following each
+site from application to completion.
+
+It pulls planning applications and building permits live from the municipalities' public ArcGIS
+open-data services. Files on the same site are linked into one **project**, and each project is
+placed in a construction phase:
+
+| # | Phase | What it means |
+|---|-------|---------------|
+| 1 | Inception | Pre-consultation or application submitted |
+| 2 | Under review | Circulation, public meeting, appeal |
+| 3 | Approved | Planning approval (OPA, ZBA, subdivision, site plan) |
+| 4 | Permit issued | Building permit issued |
+| 5 | Under construction | Inspections underway |
+| ✓ | Completed | Occupancy, final inspection or permit closed |
+| × | Withdrawn / refused | Every file on the site was withdrawn, refused, cancelled or expired |
+
+## Run it
+
+It's a static site with no build step:
+
+```sh
+npm start            # serves on http://localhost:8080
+```
+
+Any static host works, for example GitHub Pages. You can also open `index.html` straight from
+disk. The data is fetched by your browser, so you need internet access.
+
+## Using it
+
+- **Map:** clusters show how many projects they hold. The ring around each cluster shows the
+  mix of phases. Click a marker to open the project.
+- **Project panel:** shows a phase stepper with the date each phase was reached, a dated
+  timeline of every milestone, and every underlying record with all of its source fields.
+- **Phase filter:** click a phase to toggle it. Alt-click a phase, or click a segment of the
+  pipeline bar, to show only that phase.
+- **Filters:** search by address, file number or description. You can also filter by
+  municipality, record type (applications, permits, or sites with both), and last-activity
+  year. "New builds only" hides alteration-type permits such as decks, signs and HVAC.
+- **Export:** download the filtered projects as CSV or GeoJSON, one column per phase date.
+- **Data sources:** turn any source on or off and set how far back to load. **Discover
+  datasets** searches the Mississauga, Brampton, Caledon and Peel ArcGIS Hub sites for every
+  development, planning and permit feature service they publish. You can also paste in any
+  FeatureServer or MapServer URL.
+
+## How classification works (`js/phases.js`)
+
+Each municipality uses its own schema, so nothing is hard-coded per dataset:
+
+1. **Field detection:** file number, address, status, type, description, units, GFA and
+   date fields are matched by name. Each date field is assigned to the lifecycle event it
+   records: received, approved, issued, inspected, finaled or cancelled.
+2. **Record phase:** the status text gives the phase. Dates can only move a record forward;
+   for example, a final-inspection date beats a stale "Issued" status. With no status, a
+   permit counts as issued and an open application counts as under review.
+3. **Projects:** records are grouped by normalised civic address, or by location when there
+   is no address. The project takes the furthest live phase. If new files start after an
+   earlier building on the site was completed, they count as a redevelopment, and the
+   project's phase comes from the new files.
+4. **Duplicates:** a permit that shows up in more than one layer is merged by permit number.
+
+Run the tests with `npm test`.
+
+## Data sources (`js/config.js`)
+
+Built-in (City of Mississauga):
+
+- Growth Management – active development applications
+- Site plan applications
+- Growth Management – issued building permits that add units or floor area
+- All issued building permits (since 2018, with status)
+
+Discovered at runtime from the hubs: `geohub.brampton.ca`, `data-caledon.opendata.arcgis.com`,
+`data.peelregion.ca` and `data.mississauga.ca`. Every query is clipped to the Peel bounding box.
+Each layer loads up to the "Max per layer" limit (20,000 by default), newest first.
+
+### Caveats
+
+- Coverage depends on what each municipality publishes. Mississauga publishes the most.
+  Caledon's development applications layer is described as possibly incomplete. Some
+  Brampton datasets are updated irregularly.
+- Phases are inferred from status wording and dates, which differ between municipalities.
+  Open the source record in the project panel to check a specific project.

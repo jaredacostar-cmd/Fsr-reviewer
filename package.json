@@ -1,0 +1,10 @@
+{
+  "name": "peel-development-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Map every development in Peel Region from application to completion",
+  "scripts": {
+    "start": "npx --yes serve@14.2.4 -l 8080 .",
+    "test": "node --test tests/*.test.js"
+  }
+}
