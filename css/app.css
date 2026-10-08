@@ -681,3 +681,10 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .north-ctl button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: var(--surface-1); color: var(--text-primary); cursor: pointer; border-radius: 4px; }
 .north-ctl svg g { transition: transform .2s; }
 .leaflet-control-scale-line { background: color-mix(in srgb, var(--surface-1) 85%, transparent); color: var(--text-primary); border-color: var(--text-primary); font-size: 11px; }
+
+/* Selected project's census dissemination area (Growth / Servicing demand context) */
+.d-pill.da { background: color-mix(in srgb, var(--accent) 12%, var(--surface-0)); border-color: var(--accent); color: var(--text-primary); cursor: pointer; font: inherit; font-weight: 600; font-size: 12px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.d-pill.da span { color: var(--text-muted); margin-left: 4px; }
+.c-ctx { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; margin-bottom: 8px; }
+.c-ctx:empty { display: none; }
+.da-focus { fill: var(--accent); fill-opacity: .06; stroke: var(--accent); stroke-width: 2.5; stroke-dasharray: 8 5; }

@@ -139,6 +139,13 @@ and private dwellings) and match the published totals (Peel 1,381,739; Mississau
 Brampton 593,638; Caledon 66,502). Statistics Canada's own download site blocks automated
 access, so it can't be used directly.
 
+**Selected project → its census area:** opening a project narrows the bottom panel to the
+census dissemination area (DA) its point falls in, for the baseline census year (outlined on the
+map). **Growth** shows that DA's census population and dwellings, then built / approved /
+proposed growth from every development application located in the same DA. **Servicing
+demand** adds up the shown projects (phase, focus and filters) in that DA. The DA pill (×), or
+closing the project, goes back to all of Peel (or the selected municipality / plan / MTSA).
+
 **Growth since the census (bottom panel, Growth since 2021 / 2016 tab):** for Peel, the selected municipality,
 secondary plan or MTSA:
 
