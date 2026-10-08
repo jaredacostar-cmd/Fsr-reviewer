@@ -113,6 +113,10 @@
   let typeFilter = 'all';
   let draft = null;          // project being edited in the dialog
   let drawState = null;      // { type, points: [[lat,lng]] }
+  let detailTab = 'schedule';
+  let impact = null;         // { projectId, geomKey, buffer, source, status, items, error, controller }
+  let parcels = null;        // { name, list } loaded parcel layer
+  const bufferDefault = { linear: 50, vertical: 120 };
 
   // ---------- map ----------
   const map = L.map('map', { zoomControl: true }).setView(PEEL_CENTER, PEEL_ZOOM);
@@ -124,6 +128,9 @@
   const projectLayer = L.layerGroup().addTo(map);
   const drawLayer = L.layerGroup().addTo(map);
   const layers = new Map(); // project id -> leaflet layer
+  const parcelOutlineLayer = L.layerGroup().addTo(map);
+  const impactLayer = L.layerGroup().addTo(map);
+  let bufferLine = null;     // linear buffer drawn as a thick line, rescaled on zoom
 
   function statusColor(p) { return (STATUS_BY_ID[p.status] || STATUS_BY_ID.planning).color; }
 
@@ -265,8 +272,11 @@
         </div>
       </div>
       <div class="gantt-wrap">
-        <h3>Schedule</h3>
-        <div class="gantt">${ganttHTML(p, st.color)}</div>
+        <div class="tabs" role="tablist">
+          <button role="tab" data-tab="schedule" aria-selected="${detailTab === 'schedule'}">Schedule</button>
+          <button role="tab" data-tab="props" aria-selected="${detailTab === 'props'}">Impacted properties${impactFor(p)?.status === 'done' ? ` (${impactFor(p).items.length})` : ''}</button>
+        </div>
+        ${detailTab === 'schedule' ? `<div class="gantt">${ganttHTML(p, st.color)}</div>` : propsHTML(p)}
       </div>`;
     panel.hidden = false;
     map.invalidateSize();
@@ -359,8 +369,198 @@
     </div>`;
   }
 
+  // ---------- impacted properties ----------
+  const geomKey = (p) => JSON.stringify(p.geometry);
+
+  function impactFor(p) {
+    return impact && impact.projectId === p.id && impact.geomKey === geomKey(p) ? impact : null;
+  }
+
+  function ensureImpact(p) {
+    if (!impactFor(p)) {
+      clearImpact();
+      impact = { projectId: p.id, geomKey: geomKey(p), buffer: bufferDefault[p.type], source: parcels ? 'parcels' : 'osm', status: 'idle', items: [] };
+    }
+    return impact;
+  }
+
+  function clearImpact() {
+    if (impact && impact.controller) impact.controller.abort();
+    impact = null;
+    impactLayer.clearLayers();
+    bufferLine = null;
+  }
+
+  const CATEGORY_ORDER = ['Residential', 'Commercial', 'Industrial', 'Institutional', 'Parcel', 'Building', 'Address', 'Accessory'];
+  const MAX_ROWS = 500;
+
+  function propsHTML(p) {
+    if (!hasGeometry(p)) return '<div class="g-empty">Draw this project on the map first (Edit → Draw on map).</div>';
+    const im = ensureImpact(p);
+    const parcelInfo = parcels
+      ? `<span>Parcel layer: <strong>${esc(parcels.name)}</strong> (${parcels.list.length.toLocaleString()} parcels)</span>
+         <button class="btn sm ghost" data-action="parcels-remove">Remove</button>`
+      : `<span class="muted">No parcel layer loaded.</span>`;
+    let body = '';
+    if (im.status === 'loading') body = '<p class="muted">Searching…</p>';
+    else if (im.status === 'error') body = `<p class="error">${esc(im.error)}</p>`;
+    else if (im.status === 'done') {
+      const counts = {};
+      for (const it of im.items) counts[it.category] = (counts[it.category] || 0) + 1;
+      const chips = CATEGORY_ORDER.filter((c) => counts[c]).map((c) => `<span class="badge">${c}: ${counts[c]}</span>`).join('');
+      const withAddr = im.items.filter((it) => it.address).length;
+      body = im.items.length ? `
+        <div class="impact-summary">
+          <strong>${im.items.length} ${im.source === 'parcels' ? (im.items.length === 1 ? 'parcel' : 'parcels') : (im.items.length === 1 ? 'property' : 'properties')}</strong> within ${im.buffer} m
+          <span class="muted">· ${withAddr} with an address</span>
+          <button class="btn sm" data-action="impact-csv">Export CSV</button>
+          <button class="btn sm ghost" data-action="impact-clear">Clear</button>
+        </div>
+        <div class="badges">${chips}</div>
+        <div class="impact-table-wrap"><table class="impact-table">
+          <thead><tr><th>Address</th><th>Type</th><th class="num">Distance</th></tr></thead>
+          <tbody>${im.items.slice(0, MAX_ROWS).map((it, i) => `
+            <tr data-idx="${i}" tabindex="0">
+              <td>${it.address ? esc(it.address) : '<span class="muted">No address on record</span>'}${it.name ? `<br><small class="muted">${esc(it.name)}</small>` : ''}</td>
+              <td>${esc(it.category)}${it.detail ? `<br><small class="muted">${esc(it.detail)}</small>` : ''}</td>
+              <td class="num">${Math.round(it.distance)} m</td>
+            </tr>`).join('')}</tbody>
+        </table></div>
+        ${im.items.length > MAX_ROWS ? `<p class="muted">Showing the closest ${MAX_ROWS}. Export CSV for all ${im.items.length}.</p>` : ''}`
+        : `<p class="muted">Nothing found within ${im.buffer} m. Try a larger distance${im.source === 'osm' ? ' or load a parcel layer' : ''}.</p>`;
+    }
+    return `<div class="impact">
+      <div class="impact-controls">
+        <label>Within
+          <input type="number" name="impact-buffer" min="5" max="1000" step="5" value="${im.buffer}"> m of the ${p.type === 'linear' ? 'line' : 'site'}
+        </label>
+        <label>Using
+          <select name="impact-source">
+            <option value="osm" ${im.source === 'osm' ? 'selected' : ''}>OpenStreetMap buildings &amp; addresses</option>
+            <option value="parcels" ${im.source === 'parcels' ? 'selected' : ''} ${parcels ? '' : 'disabled'}>Loaded parcel layer</option>
+          </select>
+        </label>
+        <button class="btn sm primary" data-action="impact-run" ${im.status === 'loading' ? 'disabled' : ''}>Find properties</button>
+      </div>
+      <div class="impact-parcels">${parcelInfo}
+        <button class="btn sm" data-action="parcels-load">Load parcel GeoJSON…</button>
+      </div>
+      ${body}
+      <p class="muted fine">${im.source === 'parcels'
+        ? 'Distances are measured from the project to the parcel boundary.'
+        : 'Building footprints and addresses come from OpenStreetMap and may be incomplete; distances are measured to the building footprint. Sheds and garages without an address are left out.'}
+        Owner names are not included. Use MPAC or municipal assessment records for those.</p>
+    </div>`;
+  }
+
+  async function runImpact(p) {
+    const im = ensureImpact(p);
+    if (im.controller) im.controller.abort();
+    im.status = 'loading';
+    im.error = '';
+    renderDetail();
+    try {
+      if (im.source === 'parcels') {
+        if (!parcels) throw new Error('Load a parcel GeoJSON file first.');
+        im.items = PeelProperties.findParcels(p, im.buffer, parcels.list);
+      } else {
+        im.controller = new AbortController();
+        im.items = await PeelProperties.findOSM(p, im.buffer, im.controller.signal);
+      }
+      if (impact !== im) return; // project changed while waiting
+      im.status = 'done';
+    } catch (e) {
+      if (e.name === 'AbortError' || impact !== im) return;
+      im.status = 'error';
+      im.error = `Could not get properties: ${e.message}`;
+    } finally {
+      im.controller = null;
+    }
+    renderDetail();
+    renderImpactLayer(p);
+  }
+
+  function metresPerPixel(lat) {
+    return (40075016.686 * Math.cos((lat * Math.PI) / 180)) / Math.pow(2, map.getZoom() + 8);
+  }
+
+  function updateBufferWeight() {
+    if (!bufferLine || !impact) return;
+    const lat = bufferLine.getBounds().getCenter().lat;
+    bufferLine.setStyle({ weight: Math.max(2, (2 * impact.buffer) / metresPerPixel(lat)) });
+  }
+
+  function renderImpactLayer(p) {
+    impactLayer.clearLayers();
+    bufferLine = null;
+    const im = impactFor(p);
+    if (!im || im.status !== 'done') return;
+    const zone = { color: '#d92d20', opacity: 0.12, fillColor: '#d92d20', fillOpacity: 0.08, interactive: false };
+    if (p.type === 'linear') {
+      bufferLine = L.polyline(p.geometry, { ...zone, lineCap: 'round', lineJoin: 'round' }).addTo(impactLayer);
+      updateBufferWeight();
+    } else {
+      L.circle(p.geometry, { ...zone, radius: im.buffer, weight: 1, opacity: 0.5 }).addTo(impactLayer);
+    }
+    const style = { color: '#c2410c', weight: 1.5, fillColor: '#f97316', fillOpacity: 0.55 };
+    im.items.forEach((it) => {
+      const layer = it.point
+        ? L.circleMarker(it.point, { ...style, radius: 5 })
+        : L.polygon(it.rings, style);
+      layer.bindTooltip(`${esc(it.address || it.name || it.category)} · ${Math.round(it.distance)} m`);
+      it.layer = layer;
+      layer.addTo(impactLayer);
+    });
+  }
+
+  function focusImpactItem(idx) {
+    const it = impact && impact.items[idx];
+    if (!it || !it.layer) return;
+    if (it.point) map.setView(it.point, Math.max(map.getZoom(), 18));
+    else map.fitBounds(it.layer.getBounds(), { maxZoom: 19, padding: [80, 80] });
+    it.layer.openTooltip();
+  }
+
+  // Parcel outlines are only drawn when zoomed in, and only those in view.
+  function renderParcelOutlines() {
+    parcelOutlineLayer.clearLayers();
+    if (!parcels || map.getZoom() < 16) return;
+    const b = map.getBounds();
+    const view = [b.getSouth(), b.getWest(), b.getNorth(), b.getEast()];
+    for (const pc of PeelProperties.parcelsInView(parcels.list, view, 3000)) {
+      L.polygon(pc.rings, { color: '#667085', weight: 1, fill: false, interactive: false }).addTo(parcelOutlineLayer);
+    }
+  }
+
+  map.on('zoomend', updateBufferWeight);
+  map.on('moveend', renderParcelOutlines);
+
+  async function loadParcelFile(file) {
+    try {
+      const list = PeelProperties.parseParcels(JSON.parse(await file.text()));
+      parcels = { name: file.name, list };
+      try { await PeelProperties.saveParcels(parcels); } catch (e) { /* too large or storage blocked: keep for this session */ }
+      if (impact) { impact.source = 'parcels'; impact.status = 'idle'; impactLayer.clearLayers(); }
+      renderParcelOutlines();
+      renderDetail();
+    } catch (e) {
+      alert(`Could not load parcel file: ${e.message}`);
+    }
+  }
+
+  $('#file-parcels').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    if (file) loadParcelFile(file);
+  });
+
+  PeelProperties.loadParcels().then((saved) => {
+    if (saved && Array.isArray(saved.list)) { parcels = saved; renderParcelOutlines(); renderDetail(); }
+  }).catch(() => { /* IndexedDB unavailable */ });
+
   // ---------- selection ----------
   function select(id, zoom = true) {
+    if (id !== selectedId) clearImpact();
     selectedId = id;
     renderAll();
     const p = projects.find((x) => x.id === id);
@@ -504,6 +704,7 @@
     const project = { ...draft, ...data, budget: data.budget === '' ? '' : Number(data.budget), sources, tasks };
     const idx = projects.findIndex((p) => p.id === project.id);
     if (idx >= 0) projects[idx] = project; else projects.push(project);
+    if (impact && impact.projectId === project.id && impact.geomKey !== geomKey(project)) clearImpact();
     save();
     editor.close();
     draft = null;
@@ -584,9 +785,27 @@
   });
 
   $('#detail').addEventListener('click', (e) => {
+    const tab = e.target.closest('[data-tab]')?.dataset.tab;
+    if (tab) { detailTab = tab; renderDetail(); return; }
+    const row = e.target.closest('tr[data-idx]');
+    if (row) { focusImpactItem(Number(row.dataset.idx)); return; }
     const action = e.target.closest('[data-action]')?.dataset.action;
     const p = projects.find((x) => x.id === selectedId);
     if (!action || !p) return;
+    if (action === 'impact-run') runImpact(p);
+    if (action === 'impact-clear') { clearImpact(); renderDetail(); }
+    if (action === 'impact-csv' && impact) {
+      const name = p.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
+      download(`${name}-impacted-properties.csv`, PeelProperties.toCSV(impact.items), 'text/csv');
+    }
+    if (action === 'parcels-load') $('#file-parcels').click();
+    if (action === 'parcels-remove' && confirm('Remove the loaded parcel layer?')) {
+      parcels = null;
+      PeelProperties.clearParcels().catch(() => {});
+      if (impact && impact.source === 'parcels') clearImpact();
+      renderParcelOutlines();
+      renderDetail();
+    }
     if (action === 'close') select(null, false);
     if (action === 'zoom') zoomTo(p);
     if (action === 'edit') openEditor(p);
@@ -595,6 +814,22 @@
       save();
       select(null, false);
     }
+  });
+
+  $('#detail').addEventListener('change', (e) => {
+    const p = projects.find((x) => x.id === selectedId);
+    if (!p || !impact) return;
+    if (e.target.name === 'impact-buffer') {
+      const v = Math.round(Number(e.target.value));
+      impact.buffer = Math.max(5, Math.min(1000, Number.isFinite(v) && v > 0 ? v : bufferDefault[p.type]));
+      bufferDefault[p.type] = impact.buffer;
+      e.target.value = impact.buffer;
+    }
+    if (e.target.name === 'impact-source') impact.source = e.target.value;
+  });
+  $('#detail').addEventListener('keydown', (e) => {
+    const row = e.target.closest('tr[data-idx]');
+    if (row && e.key === 'Enter') focusImpactItem(Number(row.dataset.idx));
   });
 
   $('#btn-new').addEventListener('click', () => openEditor(null));
@@ -607,15 +842,18 @@
     renderMap();
   }));
 
-  $('#btn-export').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(projects, null, 2)], { type: 'application/json' });
+  function download(filename, text, type) {
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `peel-projects-${todayISO()}.json`;
+    a.href = URL.createObjectURL(new Blob([text], { type }));
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
+  $('#btn-export').addEventListener('click', () => {
+    download(`peel-projects-${todayISO()}.json`, JSON.stringify(projects, null, 2), 'application/json');
   });
 
   $('#file-import').addEventListener('change', async (e) => {

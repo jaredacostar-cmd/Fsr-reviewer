@@ -31,6 +31,24 @@ Leaflet is bundled in `vendor/leaflet/`.
 
 Select a project to **Edit**, **Zoom to** or **Delete** it.
 
+## Impacted properties
+
+Select a project and open the **Impacted properties** tab to see who is near it:
+
+1. Set the distance. The default is 50 m from a linear project's centreline, or 120 m around a vertical site,
+   which matches the Ontario Planning Act notice radius.
+2. Choose a source:
+   - **OpenStreetMap buildings & addresses**: queried live, so it needs internet access. Peel's buildings and addresses
+     were imported into OpenStreetMap, but coverage can be incomplete or out of date. Sheds and garages without an address are left out.
+   - **Loaded parcel layer**: click **Load parcel GeoJSON…** and choose a property-parcel file, for example from
+     Mississauga's or Brampton's open data portals. The file must be a GeoJSON FeatureCollection of polygons in
+     WGS84 (EPSG:4326). Address, roll number and PIN columns are detected automatically. The layer is kept in the
+     browser (IndexedDB), and parcel outlines show on the map when you zoom in closely. Check the parcel data's licence terms before sharing results.
+3. Click **Find properties**. Matches are highlighted on the map with the buffer zone shaded. Click a row to zoom to it,
+   and use **Export CSV** to get a list for notice mailings.
+
+Owner names are not public data and aren't included. Get them from MPAC or municipal assessment records.
+
 ## Data
 
 - Projects are saved in your browser (`localStorage`), so they stay on that browser and device only.

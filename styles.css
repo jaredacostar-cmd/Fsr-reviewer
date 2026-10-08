@@ -265,6 +265,43 @@ h1, h2, h3 { margin: 0; }
 .gantt-wrap { padding: 14px 16px; min-width: 0; }
 .gantt-wrap h3 { font-size: 14px; margin-bottom: 8px; }
 
+/* ---------- tabs / impacted properties ---------- */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+.tabs button {
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 600;
+  padding: 6px 10px;
+  cursor: pointer;
+  margin-bottom: -1px;
+}
+.tabs button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--accent); }
+.impact { display: grid; gap: 10px; }
+.impact-controls, .impact-parcels, .impact-summary { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.impact-controls label { display: flex; align-items: center; gap: 6px; }
+.impact-controls input, .impact-controls select {
+  font: inherit;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 7px;
+}
+.impact-controls input { width: 72px; }
+.impact-parcels { font-size: 13px; }
+.impact .badges { margin: 0; }
+.impact-table-wrap { max-height: 260px; overflow: auto; border: 1px solid var(--border); border-radius: 6px; }
+.impact-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.impact-table th { position: sticky; top: 0; background: var(--bg); text-align: left; font-weight: 500; color: var(--muted); font-size: 12px; padding: 6px 10px; }
+.impact-table td { padding: 6px 10px; border-top: 1px solid var(--border); vertical-align: top; }
+.impact-table tbody tr { cursor: pointer; }
+.impact-table tbody tr:hover, .impact-table tbody tr:focus { background: var(--hover); outline: none; }
+.impact-table .num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.fine { font-size: 12px; margin: 0; }
+
 /* ---------- gantt ---------- */
 .gantt { overflow-x: auto; border: 1px solid var(--border); border-radius: 6px; }
 .gantt-inner { min-width: 100%; }
