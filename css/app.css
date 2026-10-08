@@ -620,3 +620,11 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .type-table tr.emp-row td { border-top: 1px solid var(--text-muted); vertical-align: top; }
 .type-table tr.emp-row .small { font-size: 11px; font-weight: 400; }
 .type-note { margin: 2px 0 0; font-size: 11px; }
+
+/* Servicing demand: what the numbers cover (the sidebar's phase, focus and filters) */
+.d-sel { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; }
+.d-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-0); color: var(--text-primary); font-weight: 600; white-space: nowrap; }
+.d-pill.ph { border-color: var(--accent); }
+.d-pill.fo { background: var(--accent); border-color: var(--accent); color: #fff; }
+.d-pill.off { color: var(--text-muted); font-weight: 400; }
+.d-sel .btn.link { padding: 0 4px; }

@@ -33,7 +33,6 @@
     focus: DEFAULT_FOCUS,   // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
-    demandBasis: 'all',
     criteria: mergeCriteria(store.get('criteria', null)),
     sinceYear: store.get('sinceYear', CFG.sinceYear),
     maxPerLayer: store.get('maxPerLayer', CFG.maxPerLayer),
@@ -613,11 +612,35 @@
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
   // Withdrawn projects never count; the basis picks which of each project's units count.
   const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled');
-  const BASIS_LABEL = { all: 'all units', committed: 'committed capacity: approved, not yet built', remaining: 'units left to build (no permit yet)', unbuilt: 'units not yet completed', completed: 'completed units' };
+  const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
+  const demandBasis = () => (state.focus && FOCUS[state.focus].basis) || 'all';
+  // What the demand covers: the phase and focus picked in the sidebar, then any other filters.
+  function renderSelection(set, basis) {
+    const view = currentPhaseView();
+    const phase = view === 'all' ? 'All phases' : view === 'active' ? 'Active pipeline'
+      : P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label).join(' + ') || 'No phase';
+    const focus = state.focus ? FOCUS[state.focus].label : 'No focus';
+    const others = activeFilters().map(f => f.label).filter(l => l !== focus && !(state.focus && l === FOCUS[state.focus].label))
+      .filter(l => !/phases?$/.test(l) && !/^\d{4}(–\d{4})?$/.test(l) && !P.ALL_PHASES.some(p => l.split(' + ').includes(p.label)));
+    const years = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'All years';
+    const pill = (label, cls = '') => `<span class="d-pill ${cls}">${esc(label)}</span>`;
+    $('#d-sel').innerHTML = `<span class="muted">Showing</span> ${pill(phase, 'ph')} ${pill(focus, state.focus ? 'fo' : 'off')} ${pill(years)}
+      ${others.map(l => pill(l)).join(' ')}
+      <span class="muted small">${fmtNum(set.length)} projects${basis !== 'all' ? ` · ${BASIS_LABEL[basis]}` : ''} · excludes withdrawn</span>
+      <button type="button" class="btn small link" id="d-change">Change</button>`;
+  }
+  $('#d-sel').addEventListener('click', e => {
+    if (!e.target.closest('#d-change')) return;
+    if (matchMedia('(max-width: 760px)').matches) toggleSidebar(true);
+    const sf = $('#sect-focus'); if (sf) sf.open = true;
+    $('#phase-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
   function renderDemand() {
     const set = demandSet();
     const c = state.criteria;
-    const basis = state.demandBasis;
+    // The demand follows the sidebar selection: the projects shown by phase, focus and the
+    // other filters; the committed / left-to-build focuses count only those units.
+    const basis = demandBasis();
     const e = D.estimate(set, c, basis, jobsOf);
     const em = e.employment, cb = e.combined;
     // Build-out across the shown projects (planning applications with unit counts).
@@ -649,8 +672,7 @@
         ['Employment', '', 'demand-employment', [n(em.wastewater.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
         ['Total', 'tot', 'demand-combined', [n(cb.wastewater.avg), n(cb.wastewater.peak), n(cb.wastewater.infiltration), n(cb.wastewater.wetPeak)]],
       ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average · I&amp;I on ${iiNote}</p></div>`;
-    const range = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'all years';
-    $('#d-note').textContent = `${BASIS_LABEL[basis] || ''} · ${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
+    renderSelection(set, basis);
 
     // Breakdown by dwelling type and by phase.
     const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
@@ -714,7 +736,6 @@
     state.criteria = mergeCriteria(null); store.set('criteria', null);
     renderCriteria(); renderDemand();
   };
-  $('#d-basis').onchange = e => { state.demandBasis = e.target.value; renderDemand(); };
 
   // ---- Rendering -----------------------------------------------------------------
   function renderPipeline(base) {
@@ -1447,8 +1468,6 @@
   }
   function setFocus(k) {
     state.focus = state.focus === k ? '' : k;
-    const basis = (state.focus && FOCUS[state.focus].basis) || 'all';
-    state.demandBasis = basis; $('#d-basis').value = basis;
     applyFilters();
   }
   $('#focus-chips').onclick = e => { const b = e.target.closest('[data-focus]'); if (b) setFocus(b.dataset.focus); };
@@ -1500,8 +1519,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: DEFAULT_FOCUS, demandBasis: 'all' });
-      $('#d-basis').value = 'all';
+      Object.assign(state, { muni: '', sp: [], mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: DEFAULT_FOCUS });
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
       setDefaultYears();
