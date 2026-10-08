@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'peel-projects-v1';
+  const STORAGE_KEY = 'peel-projects-v2';
   const PEEL_CENTER = [43.73, -79.78];
   const PEEL_ZOOM = 10;
 
@@ -100,8 +100,8 @@
         const data = JSON.parse(raw);
         if (Array.isArray(data)) return data;
       }
-    } catch (e) { /* storage unavailable or corrupt — fall back to examples */ }
-    return exampleProjects();
+    } catch (e) { /* storage unavailable or corrupt — fall back to the bundled data */ }
+    return seedProjects();
   }
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); } catch (e) { /* ignore */ }
@@ -257,6 +257,7 @@
           <div class="progress"><div style="width:${pct}%"></div></div>
         </div>
         ${p.description ? `<p class="desc">${esc(p.description)}</p>` : ''}
+        ${sourcesHTML(p)}
         <div class="info-actions">
           <button class="btn sm" data-action="edit">Edit</button>
           <button class="btn sm" data-action="zoom">Zoom to</button>
@@ -280,6 +281,13 @@
         gantt.scrollLeft = (yearLabel ? left(yearLabel) : left(todayLine) - gantt.clientWidth / 2) - labelCol;
       }
     }
+  }
+
+  function sourcesHTML(p) {
+    const links = (p.sources || []).filter((u) => /^https?:\/\//i.test(u));
+    if (!links.length) return '';
+    return `<div class="sources"><span class="muted">Sources</span><ul>${links.map((u) =>
+      `<li><a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u.replace(/^https?:\/\/(www\.)?/i, ''))}</a></li>`).join('')}</ul></div>`;
   }
 
   function polylineKm(points) {
@@ -382,6 +390,7 @@
     for (const k of ['name', 'ref', 'type', 'category', 'municipality', 'status', 'lead', 'budget', 'contractor', 'description']) {
       form[k].value = draft[k] ?? '';
     }
+    form.sources.value = (draft.sources || []).join('\n');
     updateCategoryOptions();
     renderTaskRows();
     updateGeoStatus();
@@ -491,7 +500,8 @@
       err.hidden = false;
       return;
     }
-    const project = { ...draft, ...data, budget: data.budget === '' ? '' : Number(data.budget), tasks };
+    const sources = form.sources.value.split(/\s+/).filter(Boolean);
+    const project = { ...draft, ...data, budget: data.budget === '' ? '' : Number(data.budget), sources, tasks };
     const idx = projects.findIndex((p) => p.id === project.id);
     if (idx >= 0) projects[idx] = project; else projects.push(project);
     save();
@@ -506,6 +516,7 @@
     for (const k of ['name', 'ref', 'type', 'category', 'municipality', 'status', 'lead', 'budget', 'contractor', 'description']) {
       draft[k] = form[k].value;
     }
+    draft.sources = form.sources.value.split(/\s+/).filter(Boolean);
     startDrawing(form.type.value);
   });
 
@@ -634,8 +645,8 @@
   });
 
   $('#btn-reset').addEventListener('click', () => {
-    if (projects.length && !confirm('Replace all current projects with the example set?')) return;
-    projects = exampleProjects();
+    if (projects.length && !confirm('Replace all current projects with the bundled Peel Region project list?')) return;
+    projects = seedProjects();
     save();
     select(null, false);
     map.setView(PEEL_CENTER, PEEL_ZOOM);
@@ -644,65 +655,14 @@
   renderLegend();
   renderAll();
 
-  // ---------- example data ----------
-  // Illustrative only — not real Region of Peel project data.
-  function exampleProjects() {
-    const t = (name, start, end, progress = 0) => ({ id: uid(), name, start, end, progress });
-    const note = 'EXAMPLE DATA — replace with real project information.';
-    return [
-      {
-        id: uid(), name: 'Example – Watermain replacement, Hurontario St', ref: 'EX-101', type: 'linear',
-        category: 'Watermain', municipality: 'Mississauga', status: 'construction', lead: 'Water & Wastewater',
-        budget: 18500000, contractor: 'TBD', description: `${note}\nReplace aging 400 mm watermain between Dundas St and Eglinton Ave.`,
-        geometry: [[43.5853, -79.6158], [43.5925, -79.6263], [43.5985, -79.6372], [43.6040, -79.6470], [43.6086, -79.6553]],
-        tasks: [t('Detailed design', '2024-09-01', '2025-04-30', 100), t('Utility relocation', '2025-05-01', '2025-08-31', 100),
-          t('Tender & award', '2025-09-01', '2025-11-30', 100), t('Construction – Stage 1', '2026-03-01', '2026-11-30', 70),
-          t('Construction – Stage 2', '2027-03-01', '2027-10-31', 0), t('Restoration & close-out', '2027-11-01', '2027-12-15', 0)],
-      },
-      {
-        id: uid(), name: 'Example – Road widening, Mayfield Rd', ref: 'EX-102', type: 'linear',
-        category: 'Road widening', municipality: 'Caledon', status: 'design', lead: 'Transportation',
-        budget: 64000000, contractor: '', description: `${note}\nWiden from 4 to 6 lanes with multi-use paths and intersection improvements.`,
-        geometry: [[43.7700, -79.8200], [43.7790, -79.7980], [43.7880, -79.7750], [43.7965, -79.7540]],
-        tasks: [t('Environmental assessment', '2024-01-15', '2025-06-30', 100), t('Property acquisition', '2025-07-01', '2026-12-31', 55),
-          t('Detailed design', '2025-07-01', '2027-03-31', 45), t('Tender & award', '2027-04-01', '2027-06-30', 0),
-          t('Construction', '2027-07-01', '2029-11-30', 0), t('Substantial completion', '2029-11-30', '2029-11-30', 0)],
-      },
-      {
-        id: uid(), name: 'Example – Trunk sewer, Queen St E', ref: 'EX-103', type: 'linear',
-        category: 'Wastewater / sewer', municipality: 'Brampton', status: 'tendering', lead: 'Water & Wastewater',
-        budget: 32000000, contractor: '', description: `${note}\nNew 1200 mm trunk sewer to add capacity for intensification along the corridor.`,
-        geometry: [[43.6862, -79.7590], [43.6930, -79.7480], [43.7005, -79.7370], [43.7078, -79.7265]],
-        tasks: [t('Class EA', '2023-06-01', '2024-08-31', 100), t('Detailed design', '2024-09-01', '2026-06-30', 100),
-          t('Tender & award', '2026-07-01', '2026-12-15', 60), t('Tunnel construction', '2027-01-15', '2028-09-30', 0),
-          t('Commissioning', '2028-10-01', '2028-12-31', 0)],
-      },
-      {
-        id: uid(), name: 'Example – Community recreation centre', ref: 'EX-201', type: 'vertical',
-        category: 'Community facility', municipality: 'Caledon', status: 'planning', lead: 'Facilities',
-        budget: 45000000, contractor: '', description: `${note}\nNew multi-use recreation centre with pool, gymnasium and library branch.`,
-        geometry: [43.8755, -79.7330],
-        tasks: [t('Feasibility study', '2026-02-01', '2026-12-31', 60), t('Architect procurement', '2027-01-01', '2027-04-30', 0),
-          t('Design development', '2027-05-01', '2028-04-30', 0), t('Site plan approval', '2028-02-01', '2028-06-30', 0),
-          t('Construction', '2028-08-01', '2030-06-30', 0), t('Opening', '2030-09-01', '2030-09-01', 0)],
-      },
-      {
-        id: uid(), name: 'Example – Paramedic reporting station', ref: 'EX-202', type: 'vertical',
-        category: 'Paramedic station', municipality: 'Brampton', status: 'construction', lead: 'Paramedic Services',
-        budget: 21000000, contractor: 'TBD', description: `${note}\nNew 24-bay ambulance reporting station.`,
-        geometry: [43.7300, -79.7700],
-        tasks: [t('Design', '2024-03-01', '2025-02-28', 100), t('Tender & award', '2025-03-01', '2025-05-31', 100),
-          t('Site works', '2025-06-15', '2025-10-31', 100), t('Building construction', '2025-11-01', '2026-12-31', 65),
-          t('Fit-out & commissioning', '2027-01-01', '2027-03-31', 0)],
-      },
-      {
-        id: uid(), name: 'Example – Affordable housing building', ref: 'EX-203', type: 'vertical',
-        category: 'Housing', municipality: 'Mississauga', status: 'complete', lead: 'Housing Services',
-        budget: 78000000, contractor: 'TBD', description: `${note}\n12-storey mixed-income residential building.`,
-        geometry: [43.5925, -79.6470],
-        tasks: [t('Design & approvals', '2021-05-01', '2022-08-31', 100), t('Construction', '2022-10-01', '2025-06-30', 100),
-          t('Occupancy', '2025-08-01', '2025-08-01', 100)],
-      },
-    ];
+  // ---------- bundled data ----------
+  // Peel Region projects compiled from public sources (data/peel-projects.js).
+  function seedProjects() {
+    const data = Array.isArray(window.PEEL_PROJECTS) ? window.PEEL_PROJECTS : [];
+    return JSON.parse(JSON.stringify(data)).map((p) => ({
+      ...p,
+      id: uid(),
+      tasks: (p.tasks || []).map((t) => ({ ...t, id: uid() })),
+    }));
   }
 })();

@@ -253,6 +253,10 @@ h1, h2, h3 { margin: 0; }
 .info dt { color: var(--muted); }
 .info dd { margin: 0; font-variant-numeric: tabular-nums; }
 .info .desc { margin: 10px 0 0; line-height: 1.45; white-space: pre-wrap; }
+.sources { margin-top: 10px; font-size: 12px; }
+.sources ul { margin: 4px 0 0; padding-left: 18px; }
+.sources li { margin: 2px 0; word-break: break-all; }
+.sources a { color: var(--accent); }
 .info-actions { display: flex; gap: 8px; margin-top: 12px; }
 .progress-wrap { margin-top: 10px; }
 .progress { height: 6px; background: var(--hover); border-radius: 3px; overflow: hidden; margin-top: 4px; }

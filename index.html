@@ -18,7 +18,7 @@
       <button id="btn-export" class="btn">Export</button>
       <label class="btn" for="file-import">Import</label>
       <input id="file-import" type="file" accept="application/json,.json" hidden>
-      <button id="btn-reset" class="btn ghost" title="Replace all projects with the example set">Load examples</button>
+      <button id="btn-reset" class="btn ghost" title="Replace all projects with the bundled Peel Region project list">Reload Peel projects</button>
     </div>
   </header>
 
@@ -106,6 +106,9 @@
           <label class="span2">Description
             <textarea name="description" rows="3" placeholder="Scope, limits, notes…"></textarea>
           </label>
+          <label class="span2">Source links (one per line)
+            <textarea name="sources" rows="2" placeholder="https://peelregion.ca/construction/…"></textarea>
+          </label>
         </div>
 
         <fieldset class="geo">
@@ -137,6 +140,7 @@
   </dialog>
 
   <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="data/peel-projects.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
