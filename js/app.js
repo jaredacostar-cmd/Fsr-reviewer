@@ -250,27 +250,51 @@
   // under the site outlines, with the DA's population on hover / tap.
   // On by default as a faint border; the map options can turn it off.
   let daOn = store.get('censusAreas', true) !== false;
-  let daLayer = null, daLoading = null;
+  let daLayer = null, daLoading = null, daYear = null;
+  const daCache = new Map();   // census year -> Promise of its outline layer
   map.createPane('daPane').style.zIndex = 350;
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
+  // The outlines follow the census used as the baseline (2021, or 2016 for an earlier timeline).
+  const daBaseline = () => (typeof baselineCensus === 'function' && state.censuses ? baselineCensus() : null);
   // Two passes over aerial photos: a faint dark halo under a light line, so the border reads
   // on bright roofs and pavement as well as on trees and fields.
-  function loadDaLayer() {
-    if (daLoading) return daLoading;
-    daLoading = fetch('data/das.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
+  function loadDaLayer(year, url) {
+    if (daCache.has(year)) return daCache.get(year);
+    const p = fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
       const st = daStyle();
       const halo = L.featureGroup(), line = L.featureGroup();
       for (const [id, pop, dw, muni, rings] of d.das) {
         const ll = rings.map(r => r.map(([x, y]) => [y, x]));
         halo.addLayer(L.polygon(ll, { renderer: daRenderer, pane: 'daPane', ...st.halo, fill: false, interactive: false, smoothFactor: 0.5 }));
         line.addLayer(L.polygon(ll, { renderer: daRenderer, pane: 'daPane', ...st.line, fill: true, fillOpacity: 0, smoothFactor: 0.5 })
-          .bindTooltip(`<strong>DA ${esc(id)}</strong>${muni ? ` · ${esc(muni)}` : ''}<br>${fmtNum(pop)} people · ${fmtNum(dw)} dwellings (2021)`, { sticky: true, className: 'pt' }));
+          .bindTooltip(`<strong>DA ${esc(id)}</strong>${muni ? ` · ${esc(muni)}` : ''}<br>${fmtNum(pop)} people · ${fmtNum(dw)} dwellings (${year})`, { sticky: true, className: 'pt' }));
       }
-      daLayer = L.layerGroup([halo, line]);
-      daLayer.halo = halo; daLayer.line = line;
-      return daLayer;
+      const l = L.layerGroup([halo, line]);
+      l.halo = halo; l.line = line;
+      return l;
     });
-    return daLoading;
+    daCache.set(year, p);
+    p.catch(() => daCache.delete(year));
+    return p;
+  }
+  // Show the outlines of the baseline census year (when the layer is on).
+  function syncDaYear() {
+    const bc = daBaseline();
+    const year = bc ? bc.year : 2021, url = bc ? bc.outlines : 'data/das.json';
+    const lab = $('#da-label'); if (lab) lab.textContent = `${year} census areas`;
+    if (!daOn) { if (daLayer) { map.removeLayer(daLayer); daLayer = null; } daYear = null; return; }
+    if (daYear === year && daLayer) return;
+    daYear = year;
+    loadDaLayer(year, url).then(l => {
+      if (!daOn || daYear !== year) return;
+      if (daLayer && daLayer !== l) map.removeLayer(daLayer);
+      daLayer = l; restyleDa(); l.addTo(map);
+    }).catch(() => {
+      // Outlines for that year not published: fall back to 2021's.
+      if (year !== 2021) { daYear = 2021; loadDaLayer(2021, 'data/das.json').then(l => { if (daOn && daYear === 2021) { if (daLayer && daLayer !== l) map.removeLayer(daLayer); daLayer = l; restyleDa(); l.addTo(map); } }); return; }
+      daOn = false; daYear = null;
+      const cb = $('#opt-da'); if (cb) { cb.checked = false; cb.disabled = true; cb.closest('label').title = 'Census area outlines are not published yet'; }
+    });
   }
   // A light border, thicker as you zoom in so it stays visible at street scale: white with a
   // faint dark halo over aerial photos, grey over the street map.
@@ -298,12 +322,9 @@
   map.on('zoomend', () => restyleDa());
   function setDaLayer(on) {
     daOn = on; store.set('censusAreas', on);
-    if (!on) { if (daLayer) map.removeLayer(daLayer); return; }
-    loadDaLayer().then(l => { if (daOn) l.addTo(map); }).catch(() => {
-      daLoading = null; daOn = false;
-      const cb = $('#opt-da'); if (cb) { cb.checked = false; cb.disabled = true; cb.closest('label').title = 'Census area outlines are not published yet'; }
-    });
+    syncDaYear();
   }
+
 
   function setOrientation(o) {
     if (!canRotate) return;
@@ -323,7 +344,7 @@
         <label><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
         <label><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
         ${canRotate ? `<label><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
-        <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span>2021 census areas</span></label>
+        <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span id="da-label">2021 census areas</span></label>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
@@ -1482,19 +1503,20 @@
     const pc = v => total ? `${Math.round(v / total * 100)}%` : '';
     // Growth since the census, and the census population whose DA centre is inside the areas.
     let growth = '';
-    if (state.areas && state.areas.census) {
-      const gr = PeelAreas.growthSince(sel, {}, state.areas.census.date, c);
+    const bc = baselineCensus();
+    if (bc) {
+      const gr = PeelAreas.growthSince(sel, {}, bc.date, c);
       let pop = 0, dw = 0, nDa = 0;
-      if (state.censusDas) for (const d of state.censusDas) {
+      for (const d of bc.das) {
         if (selAreas.some(g => P.pointInRings(d.lng, d.lat, [g]))) { pop += d.pop; dw += d.dw; nDa++; }
       }
       const g = (label, cls, units, people, note) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">+${fmtNum(Math.round(people))}</div><div class="ss">people · +${fmtNum(units)} units${note ? ` · ${note}` : ''}</div></div>`;
       const layers = [['base', pop], ['built', gr.built.population], ['approved', gr.approved.population], ['proposed', gr.proposed.population]];
       const sum = layers.reduce((t, l) => t + l[1], 0);
-      growth = `<details class="sect" open><summary><h2 class="section-title" data-info="census">Growth since 2021</h2>
+      growth = `<details class="sect" open><summary><h2 class="section-title" data-info="census">Growth since ${bc.year}</h2>
           <span class="muted small sect-sum">${nDa ? `${fmtNum(Math.round(pop))} → ${fmtNum(Math.round(sum))} people` : ''}</span></summary>
         <div class="sum-tiles">
-          ${nDa ? `<div class="sum-tile"><div class="sl">2021 Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
+          ${nDa ? `<div class="sum-tile"><div class="sl">${bc.year} Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
           ${g('Built since', 's-done', gr.built.units, gr.built.population)}
           ${g('Approved', 's-perm', gr.approved.units, gr.approved.population, 'not yet built')}
           ${g('Proposed', 's-left', gr.proposed.units, gr.proposed.population, 'in review')}
@@ -1611,7 +1633,13 @@
       const a = await res.json();
       state.areas = { secondaryPlans: PeelAreas.prepare(a.secondaryPlans), mtsas: PeelAreas.prepare(a.mtsas), census: a.census, sources: a.sources, generatedAt: a.generatedAt };
       for (const x of [...state.areas.secondaryPlans, ...state.areas.mtsas]) areaById.set(x.id, x);
-      state.censusDas = PeelAreas.tagCensus(a.census);
+      // Census years (newest first): 2021 always; earlier ones (2016) when published.
+      const list = a.censuses || (a.census ? [{ year: 2021, ...a.census }] : []);
+      state.censuses = list.map(c => {
+        const year = c.year || Number(String(c.date).slice(0, 4));
+        return { year, date: c.date, source: c.source, das: PeelAreas.tagCensus(c), outlines: year === 2021 ? 'data/das.json' : `data/das-${year}.json` };
+      }).sort((x, y) => y.year - x.year);
+      state.censusDas = state.censuses.length ? state.censuses[0].das : null;
       tagProjects();
       renderAreaSelects();
       applyFilters();
@@ -1679,15 +1707,29 @@
   document.addEventListener('click', e => { const d = $('#f-sp'); if (d.open && !d.contains(e.target)) d.open = false; });
   $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); applyFilters(); };
 
-  // ---- Growth since the 2021 Census (selected geography) ----------------------------------
+  // ---- Growth since the census (selected geography) ---------------------------------------
+  // The baseline follows the timeline: the latest census held in or before its first year
+  // (2021–2026 → 2021 Census; 2018–2026 → 2016 Census). Before the earliest census with data,
+  // or with all years, the earliest one.
+  function baselineCensus() {
+    const cs = state.censuses || [];
+    if (!cs.length) return null;
+    const start = timeActive() ? (state.yearFrom ?? state.yearMin) : -Infinity;
+    return cs.find(c => c.year <= start) || cs[cs.length - 1];
+  }
+  const censusDay = d => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-CA', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   function renderCensus() {
-    const has = !!(state.censusDas && state.censusDas.length && state.projects.length);
+    const bc = baselineCensus();
+    const has = !!(bc && bc.das.length && state.projects.length);
     $('#ftab-growth').hidden = !has;
+    if (bc) $('#ftab-growth').textContent = `Growth since ${bc.year}`;
     showFootTab(footPref);
+    syncDaYear();
     if (!has) return;
+    const Y = bc.year;
     const g = { muni: state.muni, sp: state.sp, mtsa: state.mtsa };
-    const base = PeelAreas.censusTotals(state.censusDas, g);
-    const gr = PeelAreas.growthSince(state.projects, g, state.areas.census.date, state.criteria);
+    const base = PeelAreas.censusTotals(bc.das, g);
+    const gr = PeelAreas.growthSince(state.projects, g, bc.date, state.criteria);
     const name = [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
@@ -1697,24 +1739,27 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
     $('#c-tiles').innerHTML = [
-      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
+      tile(`${Y} Census`, base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built'),
-      tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`, 'census-approved'),
-      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs 2021`, 'census-proposed'),
+      tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved'),
+      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed'),
     ].join('');
-    renderGrowthChart(base, gr);
+    renderGrowthChart(base, gr, Y);
     const ha = gr.built.ha + gr.approved.ha + gr.proposed.ha, ii = gr.built.ii + gr.approved.ii + gr.proposed.ii;
-    $('#c-ii').textContent = ha > 0 ? `Wastewater I&I from growth since 2021: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites (built ${fmt1(gr.built.ii)} · approved ${fmt1(gr.approved.ii)} · proposed ${fmt1(gr.proposed.ii)} L/s; ${state.criteria.wastewater.infiltration} L/s/ha).` : '';
-    $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;
+    $('#c-ii').textContent = ha > 0 ? `Wastewater I&I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites (built ${fmt1(gr.built.ii)} · approved ${fmt1(gr.approved.ii)} · proposed ${fmt1(gr.proposed.ii)} L/s; ${state.criteria.wastewater.infiltration} L/s/ha).` : '';
+    const start = timeActive() ? (state.yearFrom ?? state.yearMin) : null;
+    const earliest = state.censuses[state.censuses.length - 1].year;
+    const why = start == null ? `all years: earliest census with data (${earliest})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
+    $('#c-note').textContent = `${name} · ${Y} Census baseline (${why}) · built = permits completed since census day (${censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;
   }
 
   // Stacked bar: 2021 baseline, then each layer of growth up to full build-out of the
   // planning applications. One bar per measure (people, dwellings), sharing nothing but the
   // layer order, so there is no second axis. Values are direct-labelled in the legend.
-  function renderGrowthChart(base, gr) {
+  function renderGrowthChart(base, gr, Y = 2021) {
     const layers = [
-      { key: 'base', label: '2021 Census', people: base.population, dwellings: base.dwellings },
-      { key: 'built', label: 'Built since', people: gr.built.population, dwellings: gr.built.units },
+      { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings },
+      { key: 'built', label: `Built since ${Y}`, people: gr.built.population, dwellings: gr.built.units },
       { key: 'approved', label: 'Approved', people: gr.approved.population, dwellings: gr.approved.units },
       { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units },
     ];
