@@ -36,10 +36,26 @@ const LAYERS = {
       name: a => `${a.STATION_NA} (${a.STATION_TY}, planned)`, source: 'Brampton Plan Schedule 1A – Planned MTSAs' },
   ],
 };
-const CENSUS = {
-  url: 'https://services.arcgis.com/txWDfZ2LIgzmw5Ts/arcgis/rest/services/Census_2021_Population_by_Dissemination_Area/FeatureServer/0',
-  source: 'Statistics Canada, 2021 Census of Population – population and dwelling counts by dissemination area',
-};
+// Census years, newest first. The app uses the latest one held in or before the timeline's
+// first year as the baseline. Application data starts in 2016, so 2016 is as far back as needed.
+const CENSUSES = [
+  {
+    year: 2021, date: '2021-05-11', outlines: 'das.json',
+    url: 'https://services.arcgis.com/txWDfZ2LIgzmw5Ts/arcgis/rest/services/Census_2021_Population_by_Dissemination_Area/FeatureServer/0',
+    source: 'Statistics Canada, 2021 Census of Population – population and dwelling counts by dissemination area',
+    pop: a => a.POP_COUNT_, dw: a => a.Private_dw, occ: a => a.Tpw, csd: a => a.CSDUID_SDR,
+    // Published Peel total, to check the download.
+    expect: 1451022,
+  },
+  {
+    year: 2016, date: '2016-05-10', outlines: 'das-2016.json',
+    url: 'https://services.arcgis.com/4TKcmj8FHh5Vtobt/arcgis/rest/services/Immigration_in_Peel_by_DA_as_of_2016/FeatureServer/0',
+    source: 'Statistics Canada, 2016 Census of Population – population and private dwellings by dissemination area (2016 boundaries, via the "Immigration in Peel by DA as of 2016" layer)',
+    pop: a => a.Total_Popu, dw: a => a.Total_priv, occ: () => 0, csd: a => a.CSDUID || a.CSD_UID || a.CSDUID16,
+    expect: 1381739,
+  },
+];
+const CENSUS = CENSUSES[0];
 const CSD = { 3521005: 'Mississauga', 3521010: 'Brampton', 3521024: 'Caledon' };
 
 const round = v => Math.round(v * 1e5) / 1e5;
@@ -141,29 +157,39 @@ function simplifyLine(ring, tol) {
   return ring.filter((_, i) => keep[i]);
 }
 
-async function census(areaList) {
+// One census year: DA points with area shares, and simplified outlines. Municipality from the
+// layer's CSD code, else from the 2021 DA the point falls in (refDas).
+async function census(def, areaList, refDas = null) {
   for (const a of areaList) a.bbox = bboxOf(a.rings);
-  const info = await A.layerInfo(CENSUS.url);
-  const { features: feats } = await A.queryAll(CENSUS.url, info, { where: "DAUID LIKE '3521%'", max: 5000 });
+  const info = await A.layerInfo(def.url);
+  const daField = (info.fields || []).map(f => f.name).find(n => /^DAUID/i.test(n)) || 'DAUID';
+  const { features: feats } = await A.queryAll(def.url, info, { where: `${daField} LIKE '3521%'`, max: 5000 });
   const das = [], outlines = [];
   let pop = 0;
+  const num = v => (Number(v) > 0 ? Number(v) : 0);
   for (const f of feats) {
     const a = f.properties || {};
     const rings = ringsOf(f.geometry);
     if (!rings.length) continue;
     const [x, y] = insidePoint(rings);
-    const csd = CSD[Number(a.CSDUID_SDR)] || CSD[Number(String(a.CSDUID_SDR || '').slice(0, 7))] || '';
-    das.push([round(x), round(y), a.POP_COUNT_ || 0, a.Private_dw || 0, a.Tpw || 0, csd, shares(rings, areaList)]);
-    outlines.push([String(a.DAUID || ''), a.POP_COUNT_ || 0, a.Private_dw || 0, csd, rings.map(r => simplify(r).map(([lx, ly]) => [round(lx), round(ly)]))]);
-    pop += a.POP_COUNT_ || 0;
+    const code = def.csd(a);
+    let csd = CSD[Number(code)] || CSD[Number(String(code || '').slice(0, 7))] || '';
+    if (!csd && refDas) { const hit = refDas.find(d => P.pointInRings(x, y, d.rings)); if (hit) csd = hit.csd; }
+    const p = num(def.pop(a)), dw = num(def.dw(a));
+    das.push([round(x), round(y), p, dw, num(def.occ(a)), csd, shares(rings, areaList)]);
+    outlines.push([String(a[daField] || ''), p, dw, csd, rings.map(r => simplify(r).map(([lx, ly]) => [round(lx), round(ly)]))]);
+    pop += p;
   }
   for (const a of areaList) delete a.bbox;
   const byMuni = {};
   for (const d of das) byMuni[d[5] || '?'] = (byMuni[d[5] || '?'] || 0) + d[2];
-  console.log(`census: ${das.length} dissemination areas, population ${pop.toLocaleString('en-CA')} ${JSON.stringify(byMuni)}`);
+  const off = def.expect ? (pop - def.expect) / def.expect : 0;
+  console.log(`census ${def.year}: ${das.length} dissemination areas, population ${pop.toLocaleString('en-CA')} ${JSON.stringify(byMuni)}${def.expect ? ` (published ${def.expect.toLocaleString('en-CA')}, ${(off * 100).toFixed(2)}%)` : ''}`);
+  if (def.expect && Math.abs(off) > 0.02) throw new Error(`census ${def.year}: Peel total ${pop} is more than 2% off the published ${def.expect}`);
   return {
-    census: { date: '2021-05-11', source: CENSUS.source, fields: ['lng', 'lat', 'population', 'privateDwellings', 'occupiedDwellings', 'municipality', 'areaShares'], das },
-    outlines: { date: '2021-05-11', source: CENSUS.source, fields: ['dauid', 'population', 'privateDwellings', 'municipality', 'rings'], das: outlines },
+    census: { year: def.year, date: def.date, source: def.source, outlines: def.outlines, fields: ['lng', 'lat', 'population', 'privateDwellings', 'occupiedDwellings', 'municipality', 'areaShares'], das },
+    outlines: { year: def.year, date: def.date, source: def.source, fields: ['dauid', 'population', 'privateDwellings', 'municipality', 'rings'], das: outlines },
+    refDas: outlines.map(([, , , csd, rings]) => ({ csd, rings })),
   };
 }
 
@@ -178,18 +204,27 @@ async function main() {
       secondaryPlans: LAYERS.secondaryPlans.map(d => ({ municipality: d.municipality, source: d.source, url: d.url })),
       mtsas: LAYERS.mtsas.map(d => ({ municipality: d.municipality, source: d.source, url: d.url })),
       census: { source: CENSUS.source, url: CENSUS.url },
+      censuses: CENSUSES.map(c => ({ year: c.year, source: c.source, url: c.url })),
     },
   };
   data.secondaryPlans = await areas(LAYERS.secondaryPlans, 'sp');
   data.mtsas = await areas(LAYERS.mtsas, 'mtsa');
-  const c = await census([...data.secondaryPlans, ...data.mtsas]);
-  data.census = c.census;
+  const areaList = [...data.secondaryPlans, ...data.mtsas];
+  data.censuses = [];
+  let ref = null;
+  for (const def of CENSUSES) {
+    const c = await census(def, areaList, ref);
+    if (!ref) ref = c.refDas;
+    data.censuses.push(c.census);
+    // Dissemination area outlines for the map layer (one file per census year).
+    const daFile = path.join(outDir, def.outlines);
+    fs.writeFileSync(daFile, JSON.stringify(c.outlines));
+    console.log(`${def.outlines}: ${c.outlines.das.length} DA outlines, ${(fs.statSync(daFile).size / 1e6).toFixed(2)} MB`);
+  }
+  // Older app versions read `census` (2021).
+  data.census = data.censuses[0];
   const file = path.join(outDir, 'areas.json');
   fs.writeFileSync(file, JSON.stringify(data));
-  // Dissemination area outlines, loaded only when the map layer is turned on.
-  const daFile = path.join(outDir, 'das.json');
-  fs.writeFileSync(daFile, JSON.stringify(c.outlines));
-  console.log(`das.json: ${c.outlines.das.length} DA outlines, ${(fs.statSync(daFile).size / 1e6).toFixed(2)} MB`);
   console.log(`areas.json: ${data.secondaryPlans.length} secondary plans / character areas, ${data.mtsas.length} MTSAs, ${data.census.das.length} DAs, ${(fs.statSync(file).size / 1e6).toFixed(2)} MB`);
 }
 

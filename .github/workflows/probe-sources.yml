@@ -6,11 +6,12 @@ name: Probe data sources
 #  mode=imagery: aerial imagery / building footprints covering Peel, dates and CORS
 #  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 #  mode=areas:   secondary plan, MTSA, 2021 census and SGU layers covering Peel
+#  mode=census:  earlier census (2016) population by dissemination area
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial or areas'
+        description: 'all, phases, imagery, aerial, areas or census'
         default: 'all'
         required: false
 
@@ -34,8 +35,12 @@ jobs:
           node scripts/build-areas.js --out data
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/areas.json data/das.json
-          git diff --cached --quiet || { git commit -m "Areas and 2021 census baseline"; git push; }
+          git add data/areas.json data/das*.json
+          git diff --cached --quiet || { git commit -m "Areas and census baselines (2021, 2016)"; git push; }
+      - name: Earlier census by dissemination area
+        if: inputs.mode == 'census'
+        run: |
+          node scripts/probe-census.js
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted

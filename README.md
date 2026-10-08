@@ -129,7 +129,17 @@ activity in those years; the button next to the range switches between **All yea
 The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
 shift-click to extend the range.
 
-**Growth since the 2021 Census (bottom panel, Growth since 2021 tab):** for Peel, the selected municipality,
+**Census baseline follows the timeline:** the Growth tab, an area selection and the census-area
+outlines use the latest census held in or before the timeline's first year: **2021–2026 → 2021
+Census** (11 May 2021), **2016–2020 starts → 2016 Census** (10 May 2016). Planning application
+data starts in 2016, so 2016 is the earliest baseline; an earlier start (or All years) also uses
+2016. "Built since" then counts permits completed since that census day. The 2016 counts come
+from the *Immigration in Peel by DA as of 2016* layer (2016 dissemination areas, total population
+and private dwellings) and match the published totals (Peel 1,381,739; Mississauga 721,599;
+Brampton 593,638; Caledon 66,502). Statistics Canada's own download site blocks automated
+access, so it can't be used directly.
+
+**Growth since the census (bottom panel, Growth since 2021 / 2016 tab):** for Peel, the selected municipality,
 secondary plan or MTSA:
 
 | Tile | Meaning |
