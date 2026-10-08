@@ -437,6 +437,7 @@
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
     if (state.minUnits === 'left') { if (!(p.buildout && p.buildout.remaining > 0)) return false; }
+    else if (state.minUnits === 'committed') { if (!(D.unitsFor(p, 'committed') > 0)) return false; }
     else if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
     if (state.search) {
       const q = state.search;
@@ -533,7 +534,7 @@
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
   // Withdrawn projects never count; the basis picks which of each project's units count.
   const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled');
-  const BASIS_LABEL = { all: 'all units', remaining: 'units left to build (no permit yet)', unbuilt: 'units not yet completed', completed: 'completed units' };
+  const BASIS_LABEL = { all: 'all units', committed: 'committed capacity: approved, not yet built', remaining: 'units left to build (no permit yet)', unbuilt: 'units not yet completed', completed: 'completed units' };
   function renderDemand() {
     const set = demandSet();
     const c = state.criteria;
@@ -731,6 +732,33 @@
       ${phasesHTML(b)}`;
   }
 
+  // Servicing demand for one project. Peaking uses the project's own population (local
+  // sewer / watermain sizing), so it is higher than its share of the regional total.
+  function demandHTML(p, intro = '') {
+    const c = state.criteria;
+    const cols = [['all', 'Total']];
+    if (D.unitsFor(p, 'committed') > 0) cols.push(['committed', 'Committed']);
+    if (p.buildout && p.buildout.remaining > 0) cols.push(['remaining', 'Left to build']);
+    const es = cols.map(([k]) => D.estimate([p], c, k));
+    if (!(es[0].totalUnits > 0)) return '';
+    const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
+    const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
+    return `<h2 class="section-title">Servicing demand</h2>${intro}
+      <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
+        ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
+        ${row('Population', e => fmtNum(Math.round(e.population)))}
+        <tr class="sub"><td colspan="${cols.length + 1}">Water (L/s)</td></tr>
+        ${row('Average day', e => fmt1(e.water.avg))}
+        ${row(`Max day ×${c.water.maxDay}`, e => fmt1(e.water.maxDay))}
+        ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}
+        <tr class="sub"><td colspan="${cols.length + 1}">Wastewater (L/s)</td></tr>
+        ${row('Average dry weather', e => fmt1(e.wastewater.avg))}
+        ${row('Peak (Harmon)', e => `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>`)}
+      </tbody></table>
+      <p class="small muted">${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater.
+        ${cols.some(([k]) => k === 'committed') ? 'Committed = approved or permitted units not yet completed. ' : ''}Peaks are for this site alone; edit the criteria in the bottom panel.</p>`;
+  }
+
   function phaseHistoryHTML(p) {
     const h = state.history && state.history.projects && state.history.projects[p.key];
     if (!h || !h.length) return '';
@@ -776,6 +804,7 @@
         <dt>Files</dt><dd>${p.records.length} (${p.kinds.map(k => k === 'permit' ? 'permits' : 'applications').join(' + ')})</dd>
       </dl>
       ${buildoutHTML(p)}
+      ${demandHTML(p)}
       <h2 class="section-title">Phase progress</h2>
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
       <ol class="stepper">${steps}</ol>
@@ -819,6 +848,8 @@
       <button type="button" class="btn open-project" id="open-project">
         Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
       </button>
+      ${r.units > 0 ? demandHTML({ units: r.units, phase: r.phase, types: r.type ? [r.type] : [], description: r.description || '', unitMix: r.unitMix || null },
+        r.kind === 'permit' ? '<p class="small muted">For the units on this permit only; open the whole project for the full site.</p>' : '') : ''}
       <h2 class="section-title">Source record</h2>
       <table class="rec-table">${recordRows(r)}</table>`;
     $('#open-project').onclick = () => showDetail(p);
@@ -894,7 +925,7 @@
   $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); }, 200); };
   $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
   $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
-  $('#f-units').onchange = e => { state.minUnits = e.target.value === 'left' ? 'left' : Number(e.target.value) || 0; applyFilters(); };
+  $('#f-units').onchange = e => { const v = e.target.value; state.minUnits = v === 'left' || v === 'committed' ? v : Number(v) || 0; applyFilters(); };
 
   // Municipality chips (built from the data).
   function renderMuniChips() {
@@ -911,12 +942,14 @@
 
   // Quick views set several filters at once.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
+  // `basis` also switches the demand panel to the matching units.
   const VIEWS = {
-    all:      { kind: '', minUnits: 0, phases: ALL_PHASE_KEYS },
-    growth:   { kind: 'application', minUnits: 1, phases: ALL_PHASE_KEYS },
-    left:     { kind: '', minUnits: 'left', phases: ALL_PHASE_KEYS },
-    building: { kind: '', minUnits: 0, phases: () => new Set(['permit', 'construction']) },
-    done:     { kind: '', minUnits: 0, phases: () => new Set(['completed']) },
+    all:       { kind: '', minUnits: 0, phases: ALL_PHASE_KEYS, basis: 'all' },
+    growth:    { kind: 'application', minUnits: 1, phases: ALL_PHASE_KEYS, basis: 'all' },
+    left:      { kind: '', minUnits: 'left', phases: ALL_PHASE_KEYS, basis: 'remaining' },
+    committed: { kind: '', minUnits: 'committed', phases: ALL_PHASE_KEYS, basis: 'committed' },
+    building:  { kind: '', minUnits: 0, phases: () => new Set(['permit', 'construction']), basis: 'unbuilt' },
+    done:      { kind: '', minUnits: 0, phases: () => new Set(['completed']), basis: 'completed' },
   };
   const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
   function currentView() {
@@ -929,6 +962,7 @@
     const b = e.target.closest('[data-view]'); if (!b) return;
     const v = VIEWS[b.dataset.view];
     state.kind = v.kind; state.minUnits = v.minUnits; state.phases = v.phases();
+    state.demandBasis = v.basis; $('#d-basis').value = v.basis;
     $('#f-kind').value = state.kind;
     $('#f-units').value = String(state.minUnits);
     applyFilters();
@@ -938,7 +972,7 @@
   function activeFilters() {
     const out = [];
     const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
-    const unitsLabel = { 1: 'Adds units', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build' };
+    const unitsLabel = { 1: 'Adds units', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build', committed: 'Committed capacity' };
     if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; $('#f-search').value = ''; } });
     if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); } });
     if (state.kind) out.push({ label: kindLabel[state.kind], clear: () => { state.kind = ''; $('#f-kind').value = ''; } });

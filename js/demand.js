@@ -38,9 +38,18 @@
     return 'unknown';
   }
 
+  // Committed capacity: units with planning approval (or a building permit) that are not
+  // yet built and occupied. Applications still in pre-consultation or review are proposed,
+  // not committed; completed units already draw on the system.
+  const COMMITTED_PHASES = new Set(['approved', 'permit', 'construction']);
+
   /** How many of a project's units count, by basis. */
   function unitsFor(project, basis = 'all') {
     const b = project.buildout;
+    if (basis === 'committed') {
+      if (!COMMITTED_PHASES.has(project.phase)) return 0;
+      return b ? b.unbuilt : project.units || 0;
+    }
     if (basis === 'remaining') return b ? b.remaining : 0;   // planned, no building permit yet
     if (basis === 'unbuilt') return b ? b.unbuilt : (project.phase === 'completed' ? 0 : project.units || 0);
     if (basis === 'completed') return b ? b.completed : (project.phase === 'completed' ? project.units || 0 : 0);
@@ -109,7 +118,7 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, unitTypeOf, unitSplit, unitsFor, harmon, estimate, toMLd };
+  const api = { UNIT_TYPES, DEFAULT_CRITERIA, COMMITTED_PHASES, unitTypeOf, unitSplit, unitsFor, harmon, estimate, toMLd };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

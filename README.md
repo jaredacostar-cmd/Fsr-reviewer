@@ -84,7 +84,9 @@ The sidebar has three tabs.
   its own, with a link to the whole project). Tap a dot to see that
   permit and the **planning application it belongs to** (file number, type, status, planned
   units). **Open whole project** shows the build-out for the whole subdivision.
-- **Project panel:** shows the build-out (planned, permitted, completed, left to build), a phase
+- **Project panel:** shows the build-out (planned, permitted, completed, left to build), the
+  project's **servicing demand** (population, water average / max day / peak hour, wastewater
+  average / Harmon peak, for the total, committed and left-to-build units), a phase
   stepper, the weekly phase history and the dated timeline. Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
@@ -93,8 +95,9 @@ The dropdown picks which milestone must fall in the range. Click a bar to isolat
 shift-click to extend the range.
 
 **Population & servicing demand (bottom right):** population, water and wastewater estimated
-from the units in the projects shown. It can be based on all units, units left to build, units
-not yet completed, or completed units. Open **Breakdown & design criteria** to edit the criteria.
+from the units in the projects shown. It can be based on all units, **committed capacity**,
+units left to build, units not yet completed, or completed units. The **Committed capacity**
+quick view shows only projects with committed units and switches the panel to that basis. Open **Breakdown & design criteria** to edit the criteria.
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 
@@ -134,6 +137,7 @@ For each project with a unit count on its planning applications:
 | Completed | Units on permits marked closed, finaled or occupied. |
 | **Left to build** | Planned − permitted: units with no building permit yet. |
 | Not yet completed | Planned − completed. |
+| **Committed capacity** | Not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed. |
 
 ### Multi-phase developments (towers, blocks, condo phases)
 
