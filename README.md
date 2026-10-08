@@ -52,8 +52,8 @@ the phase names. **Hide** folds the bottom panel to its tabs (tap a tab to open 
 the ▾ on the timeline folds it to just the year range (it starts folded on phones).
 
 **Bottom panel:** three tabs, so only one thing shows at a time (the last one picked is
-remembered; **Growth since 2021** opens by default): **Growth since 2021**, **Servicing
-demand**, and **Breakdown & criteria** (by
+remembered; **Servicing demand** opens by default): **Servicing demand**, **Growth since
+2021**, and **Breakdown & criteria** (by
 dwelling type and phase, plus the editable design criteria).
 
 ## Using it
@@ -69,7 +69,7 @@ press and hold) for a card explaining what it represents and where the data come
   (Inception, Under review, Approved, Permit issued, Under construction, Completed, Withdrawn),
   each with its count. Tap a selected phase again to go back to All. The bar above shows the
   mix of phases; tap a segment to isolate it.
-- **Focus** (combines with the phase, tap again to turn off):
+- **Focus** (combines with the phase, tap again to turn off; **Growth** is on by default, and **Reset all** returns to it):
 
   | Focus | Shows |
   |---|---|

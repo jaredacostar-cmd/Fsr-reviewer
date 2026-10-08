@@ -19,6 +19,8 @@
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';
+  // Default focus: growth (planning applications proposing new dwelling units).
+  const DEFAULT_FOCUS = 'growth';
   const state = {
     sources: [],                         // {id,name,municipality,kind,url,enabled,status,msg,records}
     projects: [],
@@ -28,7 +30,7 @@
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: '',   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
-    focus: '',     // quick-view focus (see FOCUS), combined with the phase
+    focus: DEFAULT_FOCUS,   // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
     demandBasis: 'all',
@@ -596,9 +598,9 @@
   };
 
   // ---- Bottom panel tabs: servicing demand / growth since 2021 / breakdown & criteria ----
-  // footPref: the tab last picked (kept), Growth since 2021 by default; that tab only appears
-  // once the census loads, so servicing demand shows until then.
-  let footPref = store.get('footTab2', 'growth'), footTab = 'demand';
+  // footPref: the tab last picked (kept), servicing demand by default. The growth tab only
+  // appears once the census loads.
+  let footPref = store.get('footTab3', 'demand'), footTab = 'demand';
   function showFootTab(key) {
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'demand';
     footTab = key;
@@ -1498,7 +1500,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
+      Object.assign(state, { muni: '', sp: [], mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: DEFAULT_FOCUS, demandBasis: 'all' });
       $('#d-basis').value = 'all';
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
@@ -1622,7 +1624,7 @@
   $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
   $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
-    footPref = t.dataset.tab; store.set('footTab2', footPref);
+    footPref = t.dataset.tab; store.set('footTab3', footPref);
     showFootTab(footPref); setFooterCollapsed(false);
   });
   // Floating timeline: folds to its header (collapsed by default on phones).
