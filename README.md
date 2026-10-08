@@ -120,7 +120,7 @@ press and hold) for a card explaining what it represents and where the data come
 - **Project panel:** shows the build-out as steps (planned → permitted → completed, then
   left to build), the project's **servicing demand** (population, water average / max day /
   peak hour, wastewater average / Harmon peak, for the total, completed and remaining units), a phase
-  stepper, the weekly phase history and the dated timeline. Every source record has **Show on
+  stepper, the weekly phase history and the dated timeline, grouped by date (same-day events on several files show once, with a count and the file numbers). Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
 **Timeline (floating, bottom left of the map):** opens on **2021–2026**. Drag the handles to keep only projects with
