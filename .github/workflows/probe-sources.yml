@@ -39,7 +39,31 @@ jobs:
           git diff --cached --quiet || { git commit -m "Areas and 2021 census baseline"; git push; }
       - name: Earlier census by dissemination area
         if: inputs.mode == 'census'
-        run: node scripts/probe-census.js
+        run: |
+          node scripts/probe-census.js || true
+          UA='Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36'
+          for T in 98100015 98100016 98100002 98100001; do
+            echo "=== StatCan table $T"
+            curl -sSL -A "$UA" -o /tmp/t.zip "https://www150.statcan.gc.ca/n1/tbl/csv/${T}-eng.zip" -w "HTTP %{http_code} %{size_download} bytes\n" || continue
+            rm -rf /tmp/t && mkdir -p /tmp/t && (unzip -q -o /tmp/t.zip -d /tmp/t || continue)
+            ls -la /tmp/t
+            F=$(ls /tmp/t/*.csv | grep -v -i metadata | head -1)
+            head -c 1500 "$F"; echo
+            echo "--- Peel rows (DA 3521...):"; grep -m 12 'S0512352100' "$F" || grep -m 12 '3521' "$F" | head -12
+            echo "--- distinct characteristics:"; python3 - "$F" <<'PY'
+          import csv,sys,collections
+          r=csv.reader(open(sys.argv[1],encoding='utf-8-sig'))
+          h=next(r); print(h)
+          c=collections.Counter(); n=0
+          for row in r:
+              n+=1
+              for i,k in enumerate(h):
+                  if 'Population and dwelling' in k or 'Characteristic' in k or k.startswith('Statistics') or 'Coordinate' in k: c[(k,row[i])]+=1
+              if n>3000000: break
+          print('rows',n)
+          for (k,v),m in c.most_common(25): print(k,'|',v,'|',m)
+          PY
+          done
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted
