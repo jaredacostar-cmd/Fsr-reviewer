@@ -1637,7 +1637,7 @@
       const list = a.censuses || (a.census ? [{ year: 2021, ...a.census }] : []);
       state.censuses = list.map(c => {
         const year = c.year || Number(String(c.date).slice(0, 4));
-        return { year, date: c.date, source: c.source, das: PeelAreas.tagCensus(c), outlines: year === 2021 ? 'data/das.json' : `data/das-${year}.json` };
+        return { year, date: c.date, source: c.source, das: PeelAreas.tagCensus(c), outlines: c.outlines ? `data/${c.outlines}` : year === 2021 ? 'data/das.json' : `data/das-${year}.json` };
       }).sort((x, y) => y.year - x.year);
       state.censusDas = state.censuses.length ? state.censuses[0].das : null;
       tagProjects();
