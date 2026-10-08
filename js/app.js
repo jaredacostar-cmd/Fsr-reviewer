@@ -954,6 +954,9 @@
       <div class="head"><h3>${esc(r.address || r.ref || 'Record')}</h3>
         <div class="m">${esc(r.kind === 'permit' ? 'Building permit' : 'Planning application')} ${esc(r.ref)}${r.type ? ' · ' + esc(r.type) : ''} · ${esc(r.municipality)}</div>
         <span class="badge">${dot(r.phase)}${esc(ph.label)}</span></div>
+      <button type="button" class="btn open-project" id="open-project">
+        Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
+      </button>
       ${r.description ? `<p>${esc(r.description)}</p>` : ''}
       <dl class="kv">
         ${r.statusRaw ? `<dt>Status</dt><dd>${esc(r.statusRaw)}</dd>` : ''}
@@ -962,9 +965,6 @@
       </dl>
       ${r.kind === 'permit' ? `<h2 class="section-title" data-info="parent-app">Part of planning application</h2>${parentHTML}` : ''}
       ${r.kind === 'application' && p.records.length > 1 ? `<p class="small muted">This application is part of a larger development with ${fmtNum(p.records.length - 1)} other files.</p>` : ''}
-      <button type="button" class="btn open-project" id="open-project">
-        Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
-      </button>
       ${r.units > 0 ? demandHTML({ units: r.units, phase: r.phase, types: r.type ? [r.type] : [], description: r.description || '', unitMix: r.unitMix || null },
         r.kind === 'permit' ? '<p class="small muted">For the units on this permit only; open the whole project for the full site.</p>' : '') : ''}
       <h2 class="section-title">Source record</h2>
