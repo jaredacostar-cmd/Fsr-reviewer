@@ -7,11 +7,12 @@ name: Probe data sources
 #  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 #  mode=areas:   secondary plan, MTSA, 2021 census and SGU layers covering Peel
 #  mode=census:  earlier census (2016) population by dissemination area
+#  mode=servicing: Peel water pressure zones and wastewater drainage areas
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas or census'
+        description: 'all, phases, imagery, aerial, areas, census or servicing'
         default: 'all'
         required: false
 
@@ -41,6 +42,9 @@ jobs:
         if: inputs.mode == 'census'
         run: |
           node scripts/probe-census.js
+      - name: Water pressure zones and wastewater drainage areas
+        if: inputs.mode == 'servicing'
+        run: node scripts/probe-servicing.js
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted
