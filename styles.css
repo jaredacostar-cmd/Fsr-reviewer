@@ -170,8 +170,9 @@ h1, h2, h3 { margin: 0; }
 .project-list .empty { display: block; color: var(--muted); cursor: default; text-align: center; padding: 24px 8px; }
 .project-list .empty:hover { background: none; }
 
-.swatch { width: 12px; height: 12px; border-radius: 50%; }
+.swatch { width: 12px; height: 12px; border-radius: 50%; background: var(--c, var(--muted)); }
 .swatch.linear { height: 4px; border-radius: 2px; }
+.swatch.ea { border-radius: 2px; background: color-mix(in srgb, var(--c) 15%, transparent); border: 2px dashed var(--c); }
 
 .legend {
   border-top: 1px solid var(--border);
@@ -184,6 +185,7 @@ h1, h2, h3 { margin: 0; }
 .legend-row { display: flex; align-items: center; gap: 8px; }
 #legend-items { display: flex; flex-wrap: wrap; gap: 4px 12px; }
 .lg-line { width: 18px; height: 4px; border-radius: 2px; background: var(--muted); }
+.lg-area { width: 16px; height: 12px; border: 2px dashed var(--muted); border-radius: 2px; margin: 0 1px; }
 .lg-dot { width: 12px; height: 12px; border-radius: 3px; background: var(--muted); margin: 0 3px; }
 
 /* ---------- main / map ---------- */
@@ -253,6 +255,11 @@ h1, h2, h3 { margin: 0; }
 .info dt { color: var(--muted); }
 .info dd { margin: 0; font-variant-numeric: tabular-nums; }
 .info .desc { margin: 10px 0 0; line-height: 1.45; white-space: pre-wrap; }
+.related { margin-top: 10px; font-size: 13px; }
+.related ul { margin: 4px 0 0; padding-left: 18px; }
+.related li { margin: 2px 0; }
+.link { border: 0; background: none; padding: 0; font: inherit; color: var(--accent); cursor: pointer; text-align: left; }
+.link:hover { text-decoration: underline; }
 .sources { margin-top: 10px; font-size: 12px; }
 .sources ul { margin: 4px 0 0; padding-left: 18px; }
 .sources li { margin: 2px 0; word-break: break-all; }

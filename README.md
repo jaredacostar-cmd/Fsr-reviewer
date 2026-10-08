@@ -4,6 +4,7 @@ A browser app for tracking Peel Region capital projects on a map:
 
 - **Linear projects** (roads, watermains, sewers, transit) are drawn as lines.
 - **Vertical projects** (buildings, stations, facilities) are placed as site markers.
+- **EA studies** (Municipal Class Environmental Assessments) are drawn as dashed study-area boundaries.
 - Click a project on the map or in the list to see its details and a **Gantt chart** of its schedule.
 
 ## Running it
@@ -30,6 +31,20 @@ Leaflet is bundled in `vendor/leaflet/`.
 4. Click **Save project**.
 
 Select a project to **Edit**, **Zoom to** or **Delete** it.
+
+## EA studies
+
+Choose **EA study** as the type in the project editor to add a Class EA. EA studies have:
+
+- **A study-area boundary.** Under **Draw on map**, click around the boundary (3+ corners), then press **Done**.
+- **An EA schedule** (A, A+, B, C, Exempt or Individual EA) and an EA status: underway, public review or complete.
+- **Class EA phases.** Click **Use Class EA phases** for a template: Notice of Commencement, Phases 1–4, PICs, the 30-day review and the Notice of Completion.
+  Notices and PICs are one-day milestones (◆) on the Gantt chart.
+- **Automatic links to projects.** An EA lists the projects that fall inside its study area, and each project lists the EA studies it falls in.
+- **Impacted properties for the whole study area.** The default distance is 0 m, meaning only properties inside the boundary. Raise it to include properties near the boundary,
+  for example when building an EA notice mailing list.
+
+Use the **EAs** filter in the sidebar to show only EA studies.
 
 ## Impacted properties
 
@@ -58,8 +73,8 @@ Owner names are not public data and aren't included. Get them from MPAC or munic
 
 ### Bundled Peel Region projects
 
-`data/peel-projects.js` holds 20 Peel Region capital projects compiled from public Peel Region notices,
-construction timelines and press releases (searched October 2026). Each project lists its sources.
+`data/peel-projects.js` holds 20 Peel Region capital projects and 10 Class EA studies, compiled from public Peel Region notices,
+construction timelines, EA notices and press releases (searched October 2026). Each one lists its sources.
 
 - Mayfield Rd widening: 8 segments, Chinguacousy Rd to Hwy 50, per the July 2026 timeline
 - Mississauga Rd widening: Bovaird Dr to Wanless Dr (10-4040) and Financial Dr to Bovaird Dr
@@ -70,9 +85,14 @@ construction timelines and press releases (searched October 2026). Each project 
 - Docksteader Paramedic Reporting Station
 - Housing: Byngmount Shores, Chelsea Gardens, Basswood Senior Residences, Creekside Apartments
 - G.E. Booth Water Resource Recovery Facility expansion
+- EA studies:
+  - Underway: Downtown Brampton Water & Wastewater Capacity (B), Castlemore Trunk Sewer Diversion (B), Inglewood groundwater supply (C)
+  - Complete: West Caledon Storage Facility & Transmission Main (C), Lakelands WWPS offline storage (B), Burnhamthorpe Rd E trunk sewer (B),
+    Elia Ave sanitary sewer (B), and the completed road EAs for Mayfield Rd (Chinguacousy to Heart Lake), Hwy 50/Mayfield and Steeles Ave (C)
 
 Caveats:
 
+- **EA study-area boundaries are approximate.** They were built from the limits named in the notices. Replace them with the official study-area figures where you have them.
 - **Map locations are approximate.** They were placed from the street limits, not taken from Peel's GIS data. Redraw them if you need exact alignments.
 - **Dates come from published wording.** Phrases like "early 2026" or "mid 2027" were converted to dates.
   Phases that ended before October 2026 are marked 100%. Everything else is 0%, because Peel doesn't publish percent complete.
@@ -100,6 +120,9 @@ Caveats:
 }
 ```
 
-- `type` is `linear` or `vertical`.
-- `geometry` is a list of `[lat, lng]` points for linear projects, or a single `[lat, lng]` for vertical ones.
-- `status` is one of `planning`, `design`, `tendering`, `construction`, `complete` or `hold`.
+- `type` is `linear`, `vertical` or `ea`.
+- `geometry` is a list of `[lat, lng]` points for linear projects, a single `[lat, lng]` for vertical ones,
+  or the corners of the study-area polygon (not closed) for EA studies.
+- `status` is one of `planning`, `design`, `tendering`, `construction`, `complete` or `hold`;
+  EA studies use `ea-underway`, `ea-review`, `ea-complete` or `hold`.
+- `eaSchedule` (EA studies only) is `A`, `A+`, `B`, `C`, `Exempt` or `Individual EA`.

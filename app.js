@@ -4,7 +4,7 @@
 (function () {
   'use strict';
 
-  const STORAGE_KEY = 'peel-projects-v2';
+  const STORAGE_KEY = 'peel-projects-v3';
   const PEEL_CENTER = [43.73, -79.78];
   const PEEL_ZOOM = 10;
 
@@ -15,12 +15,23 @@
     { id: 'construction', label: 'Construction', color: '#1570ef' },
     { id: 'complete', label: 'Complete', color: '#12b76a' },
     { id: 'hold', label: 'On hold', color: '#98a2b3' },
+    { id: 'ea-underway', label: 'EA underway', color: '#0891b2', ea: true },
+    { id: 'ea-review', label: 'EA public review', color: '#c026d3', ea: true },
+    { id: 'ea-complete', label: 'EA complete', color: '#65a30d', ea: true },
   ];
+  const TYPE_LABEL = { linear: 'Linear', vertical: 'Vertical', ea: 'EA study' };
+  const EA_SCHEDULES = ['A', 'A+', 'B', 'C', 'Exempt', 'Individual EA'];
+  // Types whose geometry is a list of points (a line, or an EA study-area polygon).
+  const multiPoint = (type) => type === 'linear' || type === 'ea';
+  const statusesFor = (type) => (type === 'ea'
+    ? STATUSES.filter((s) => s.ea).concat(STATUS_BY_ID.hold)
+    : STATUSES.filter((s) => !s.ea));
   const STATUS_BY_ID = Object.fromEntries(STATUSES.map((s) => [s.id, s]));
 
   const CATEGORIES = {
     linear: ['Road widening', 'Road resurfacing', 'Watermain', 'Wastewater / sewer', 'Stormwater', 'Transit', 'Active transportation', 'Bridge / culvert'],
     vertical: ['Community facility', 'Housing', 'Paramedic station', 'Water treatment', 'Wastewater treatment', 'Pumping station', 'Reservoir', 'Office / admin', 'Long-term care'],
+    ea: ['Road / transportation', 'Water', 'Wastewater', 'Stormwater', 'Facility'],
   };
 
   const STANDARD_PHASES = [
@@ -30,6 +41,19 @@
     ['Tender & award', 16, 3],
     ['Construction', 19, 18],
     ['Commissioning & close-out', 37, 2],
+  ];
+
+  // Municipal Class EA phases; a duration of 0 makes a milestone.
+  const EA_PHASES = [
+    ['Notice of Study Commencement', 0, 0],
+    ['Phase 1 – Problem / opportunity', 0, 3],
+    ['Phase 2 – Alternative solutions', 3, 6],
+    ['Public Information Centre 1', 7, 0],
+    ['Phase 3 – Design concepts', 9, 6],
+    ['Public Information Centre 2', 13, 0],
+    ['Phase 4 – Environmental Study Report', 15, 3],
+    ['30-day public review', 18, 1],
+    ['Notice of Study Completion', 18, 0],
   ];
 
   // ---------- utilities ----------
@@ -100,6 +124,9 @@
         const data = JSON.parse(raw);
         if (Array.isArray(data)) return data;
       }
+      // Saved before EA studies existed: keep the user's projects and add the bundled EAs.
+      const old = JSON.parse(localStorage.getItem('peel-projects-v2') || 'null');
+      if (Array.isArray(old)) return old.concat(seedProjects().filter((p) => p.type === 'ea'));
     } catch (e) { /* storage unavailable or corrupt — fall back to the bundled data */ }
     return seedProjects();
   }
@@ -116,7 +143,7 @@
   let detailTab = 'schedule';
   let impact = null;         // { projectId, geomKey, buffer, source, status, items, error, controller }
   let parcels = null;        // { name, list } loaded parcel layer
-  const bufferDefault = { linear: 50, vertical: 120 };
+  const bufferDefault = { linear: 50, vertical: 120, ea: 0 };
 
   // ---------- map ----------
   const map = L.map('map', { zoomControl: true }).setView(PEEL_CENTER, PEEL_ZOOM);
@@ -125,6 +152,8 @@
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
 
+  map.createPane('eaPane').style.zIndex = 350; // EA study areas sit under project lines and sites
+  const eaLayer = L.layerGroup().addTo(map);
   const projectLayer = L.layerGroup().addTo(map);
   const drawLayer = L.layerGroup().addTo(map);
   const layers = new Map(); // project id -> leaflet layer
@@ -145,12 +174,18 @@
 
   function renderMap() {
     projectLayer.clearLayers();
+    eaLayer.clearLayers();
     layers.clear();
     for (const p of visibleProjects()) {
       if (!hasGeometry(p)) continue;
       const selected = p.id === selectedId;
       let layer;
-      if (p.type === 'linear') {
+      if (p.type === 'ea') {
+        layer = L.polygon(p.geometry, {
+          pane: 'eaPane', color: statusColor(p), weight: selected ? 3 : 2, dashArray: '8 6',
+          fillColor: statusColor(p), fillOpacity: selected ? 0.18 : 0.07,
+        });
+      } else if (p.type === 'linear') {
         const group = L.featureGroup();
         // wide transparent line underneath makes thin lines easy to click
         L.polyline(p.geometry, { weight: 16, opacity: 0 }).addTo(group);
@@ -160,25 +195,31 @@
       } else {
         layer = L.marker(p.geometry, { icon: vertIcon(p, selected), zIndexOffset: selected ? 1000 : 0 });
       }
-      layer.bindTooltip(esc(p.name), { sticky: p.type === 'linear' });
+      layer.bindTooltip(esc(p.type === 'ea' ? `EA: ${p.name}` : p.name), { sticky: p.type !== 'vertical' });
       layer.on('click', (e) => {
         if (drawState) return;
         L.DomEvent.stopPropagation(e);
         select(p.id, false);
       });
-      layer.addTo(projectLayer);
+      layer.addTo(p.type === 'ea' ? eaLayer : projectLayer);
       layers.set(p.id, layer);
     }
   }
 
   function hasGeometry(p) {
     if (p.type === 'linear') return Array.isArray(p.geometry) && p.geometry.length >= 2;
+    if (p.type === 'ea') return Array.isArray(p.geometry) && p.geometry.length >= 3 && Array.isArray(p.geometry[0]);
     return Array.isArray(p.geometry) && p.geometry.length === 2 && typeof p.geometry[0] === 'number';
   }
 
   function zoomTo(p) {
     if (!hasGeometry(p)) return;
-    if (p.type === 'linear') map.fitBounds(L.latLngBounds(p.geometry), { padding: [60, 60], maxZoom: 15 });
+    // Leaflet ignores a new zoom while one is animating, so retry once it ends.
+    if (map._animatingZoom) {
+      map.once('zoomend', () => { if (selectedId === p.id) zoomTo(p); });
+      return;
+    }
+    if (multiPoint(p.type)) map.fitBounds(L.latLngBounds(p.geometry), { padding: [60, 60], maxZoom: 15 });
     else map.setView(p.geometry, Math.max(map.getZoom(), 14));
   }
 
@@ -207,7 +248,7 @@
       const yrs = span ? `${span.start.slice(0, 4)}–${span.end.slice(0, 4)}` : 'No schedule';
       const noGeo = hasGeometry(p) ? '' : ' · <em>not mapped</em>';
       return `<li data-id="${esc(p.id)}" class="${p.id === selectedId ? 'selected' : ''}">
-        <span class="swatch ${p.type === 'linear' ? 'linear' : ''}" style="background:${st.color}"></span>
+        <span class="swatch ${p.type === 'vertical' ? '' : p.type}" style="--c:${st.color}"></span>
         <span class="pl-name">${esc(p.name)}</span>
         <span class="pl-meta">${esc(p.municipality || '')} · ${esc(st.label)} · ${yrs}${noGeo}</span>
       </li>`;
@@ -216,7 +257,7 @@
 
   function renderLegend() {
     $('#legend-items').innerHTML = STATUSES.map((s) =>
-      `<span class="legend-row"><span class="swatch" style="background:${s.color}"></span>${s.label}</span>`).join('');
+      `<span class="legend-row"><span class="swatch" style="--c:${s.color}"></span>${s.label}</span>`).join('');
   }
 
   function renderMuniFilter() {
@@ -236,6 +277,7 @@
     const span = projectSpan(p);
     const pct = projectProgress(p);
     const lengthKm = p.type === 'linear' && hasGeometry(p) ? polylineKm(p.geometry) : null;
+    const areaKm2 = p.type === 'ea' && hasGeometry(p) ? PeelProperties.areaKm2(p.geometry) : null;
 
     panel.innerHTML = `
       <div class="info">
@@ -245,7 +287,8 @@
         </div>
         <div class="badges">
           <span class="badge status" style="background:${st.color}">${esc(st.label)}</span>
-          <span class="badge">${p.type === 'linear' ? 'Linear' : 'Vertical'}</span>
+          <span class="badge">${TYPE_LABEL[p.type] || p.type}</span>
+          ${p.type === 'ea' && p.eaSchedule ? `<span class="badge">Schedule ${esc(p.eaSchedule)}</span>` : ''}
           ${p.category ? `<span class="badge">${esc(p.category)}</span>` : ''}
         </div>
         <dl>
@@ -257,6 +300,7 @@
           <dt>Start</dt><dd>${span ? fmtDate(span.start) : '—'}</dd>
           <dt>Finish</dt><dd>${span ? fmtDate(span.end) : '—'}</dd>
           ${lengthKm != null ? `<dt>Length</dt><dd>${lengthKm.toFixed(2)} km</dd>` : ''}
+          ${areaKm2 != null ? `<dt>Study area</dt><dd>${areaKm2 < 1 ? `${Math.round(areaKm2 * 100)} ha` : `${areaKm2.toFixed(1)} km²`}</dd>` : ''}
           ${!hasGeometry(p) ? '<dt>Location</dt><dd><em>Not drawn on map</em></dd>' : ''}
         </dl>
         <div class="progress-wrap">
@@ -264,6 +308,7 @@
           <div class="progress"><div style="width:${pct}%"></div></div>
         </div>
         ${p.description ? `<p class="desc">${esc(p.description)}</p>` : ''}
+        ${relatedHTML(p)}
         ${sourcesHTML(p)}
         <div class="info-actions">
           <button class="btn sm" data-action="edit">Edit</button>
@@ -291,6 +336,23 @@
         gantt.scrollLeft = (yearLabel ? left(yearLabel) : left(todayLine) - gantt.clientWidth / 2) - labelCol;
       }
     }
+  }
+
+  // EA <-> project links, worked out from whether a project touches the study area.
+  function relatedTo(p) {
+    if (!hasGeometry(p)) return [];
+    if (p.type === 'ea') {
+      return projects.filter((x) => x.type !== 'ea' && hasGeometry(x) && PeelProperties.touchesArea(x, p.geometry));
+    }
+    return projects.filter((x) => x.type === 'ea' && hasGeometry(x) && PeelProperties.touchesArea(p, x.geometry));
+  }
+
+  function relatedHTML(p) {
+    const rel = relatedTo(p).sort((a, b) => a.name.localeCompare(b.name));
+    if (!rel.length) return '';
+    const title = p.type === 'ea' ? 'Projects in this study area' : 'Within EA study area';
+    return `<div class="related"><span class="muted">${title}</span><ul>${rel.map((x) =>
+      `<li><button class="link" data-goto="${esc(x.id)}">${esc(x.name)}</button></li>`).join('')}</ul></div>`;
   }
 
   function sourcesHTML(p) {
@@ -411,7 +473,7 @@
       const withAddr = im.items.filter((it) => it.address).length;
       body = im.items.length ? `
         <div class="impact-summary">
-          <strong>${im.items.length} ${im.source === 'parcels' ? (im.items.length === 1 ? 'parcel' : 'parcels') : (im.items.length === 1 ? 'property' : 'properties')}</strong> within ${im.buffer} m
+          <strong>${im.items.length} ${im.source === 'parcels' ? (im.items.length === 1 ? 'parcel' : 'parcels') : (im.items.length === 1 ? 'property' : 'properties')}</strong> ${p.type === 'ea' ? (im.buffer ? `in or within ${im.buffer} m of the study area` : 'in the study area') : `within ${im.buffer} m`}
           <span class="muted">· ${withAddr} with an address</span>
           <button class="btn sm" data-action="impact-csv">Export CSV</button>
           <button class="btn sm ghost" data-action="impact-clear">Clear</button>
@@ -423,16 +485,16 @@
             <tr data-idx="${i}" tabindex="0">
               <td>${it.address ? esc(it.address) : '<span class="muted">No address on record</span>'}${it.name ? `<br><small class="muted">${esc(it.name)}</small>` : ''}</td>
               <td>${esc(it.category)}${it.detail ? `<br><small class="muted">${esc(it.detail)}</small>` : ''}</td>
-              <td class="num">${Math.round(it.distance)} m</td>
+              <td class="num">${it.inside ? 'Inside' : `${Math.round(it.distance)} m`}</td>
             </tr>`).join('')}</tbody>
         </table></div>
         ${im.items.length > MAX_ROWS ? `<p class="muted">Showing the closest ${MAX_ROWS}. Export CSV for all ${im.items.length}.</p>` : ''}`
-        : `<p class="muted">Nothing found within ${im.buffer} m. Try a larger distance${im.source === 'osm' ? ' or load a parcel layer' : ''}.</p>`;
+        : `<p class="muted">Nothing found${p.type === 'ea' && !im.buffer ? ' in the study area' : ` within ${im.buffer} m`}. Try a larger distance${im.source === 'osm' ? ' or load a parcel layer' : ''}.</p>`;
     }
     return `<div class="impact">
       <div class="impact-controls">
         <label>Within
-          <input type="number" name="impact-buffer" min="5" max="1000" step="5" value="${im.buffer}"> m of the ${p.type === 'linear' ? 'line' : 'site'}
+          <input type="number" name="impact-buffer" min="0" max="1000" step="5" value="${im.buffer}"> m of the ${p.type === 'linear' ? 'line' : p.type === 'ea' ? 'study area' : 'site'}
         </label>
         <label>Using
           <select name="impact-source">
@@ -496,7 +558,13 @@
     const im = impactFor(p);
     if (!im || im.status !== 'done') return;
     const zone = { color: '#d92d20', opacity: 0.12, fillColor: '#d92d20', fillOpacity: 0.08, interactive: false };
-    if (p.type === 'linear') {
+    if (p.type === 'ea') {
+      L.polygon(p.geometry, { ...zone, fillOpacity: 0.1, weight: 0 }).addTo(impactLayer);
+      if (im.buffer > 0) {
+        bufferLine = L.polyline(p.geometry.concat([p.geometry[0]]), { ...zone, lineCap: 'round', lineJoin: 'round' }).addTo(impactLayer);
+        updateBufferWeight();
+      }
+    } else if (p.type === 'linear') {
       bufferLine = L.polyline(p.geometry, { ...zone, lineCap: 'round', lineJoin: 'round' }).addTo(impactLayer);
       updateBufferWeight();
     } else {
@@ -507,7 +575,7 @@
       const layer = it.point
         ? L.circleMarker(it.point, { ...style, radius: 5 })
         : L.polygon(it.rings, style);
-      layer.bindTooltip(`${esc(it.address || it.name || it.category)} · ${Math.round(it.distance)} m`);
+      layer.bindTooltip(`${esc(it.address || it.name || it.category)} · ${it.inside ? 'inside study area' : `${Math.round(it.distance)} m`}`);
       it.layer = layer;
       layer.addTo(impactLayer);
     });
@@ -560,9 +628,11 @@
 
   // ---------- selection ----------
   function select(id, zoom = true) {
-    if (id !== selectedId) clearImpact();
+    const changed = id !== selectedId;
+    if (changed) clearImpact();
     selectedId = id;
     renderAll();
+    if (changed) $('#detail').scrollTop = 0;
     const p = projects.find((x) => x.id === id);
     if (p && zoom) zoomTo(p);
     const li = $(`#project-list li[data-id="${CSS.escape(id || '')}"]`);
@@ -578,6 +648,7 @@
 
   // ---------- editor ----------
   const editor = $('#editor');
+  const FIELDS = ['name', 'ref', 'type', 'category', 'municipality', 'status', 'lead', 'budget', 'contractor', 'eaSchedule', 'description'];
   const form = $('#editor-form');
 
   function openEditor(p) {
@@ -586,10 +657,10 @@
       status: 'planning', lead: '', budget: '', contractor: '', description: '', geometry: null, tasks: [],
     };
     $('#editor-title').textContent = p ? 'Edit project' : 'New project';
-    form.status.innerHTML = STATUSES.map((s) => `<option value="${s.id}">${s.label}</option>`).join('');
-    for (const k of ['name', 'ref', 'type', 'category', 'municipality', 'status', 'lead', 'budget', 'contractor', 'description']) {
-      form[k].value = draft[k] ?? '';
-    }
+    form.type.value = draft.type;
+    updateStatusOptions();
+    for (const k of FIELDS) form[k].value = draft[k] ?? '';
+    updateTypeFields();
     form.sources.value = (draft.sources || []).join('\n');
     updateCategoryOptions();
     renderTaskRows();
@@ -597,6 +668,19 @@
     $('#editor-error').hidden = true;
     if (!editor.open) editor.showModal();
     form.name.focus();
+  }
+
+  function updateStatusOptions() {
+    const opts = statusesFor(form.type.value);
+    const current = form.status.value;
+    form.status.innerHTML = opts.map((s) => `<option value="${s.id}">${s.label}</option>`).join('');
+    form.status.value = opts.some((s) => s.id === current) ? current : opts[0].id;
+  }
+
+  function updateTypeFields() {
+    const ea = form.type.value === 'ea';
+    $('#ea-schedule-field').hidden = !ea;
+    $('#btn-template').textContent = ea ? 'Use Class EA phases' : 'Use standard phases';
   }
 
   function updateCategoryOptions() {
@@ -607,7 +691,11 @@
     const type = form.type.value;
     const g = draft.geometry;
     let msg;
-    if (type === 'linear') {
+    if (type === 'ea') {
+      msg = Array.isArray(g) && g.length >= 3 && Array.isArray(g[0])
+        ? `Study area with ${g.length} corners (${PeelProperties.areaKm2(g).toFixed(2)} km²).`
+        : 'No study area drawn yet. Click “Draw on map” and click around the boundary.';
+    } else if (type === 'linear') {
       msg = Array.isArray(g) && g.length >= 2 && Array.isArray(g[0])
         ? `Line with ${g.length} points (${polylineKm(g).toFixed(2)} km).`
         : 'No line drawn yet. Click “Draw on map” and click along the alignment.';
@@ -649,6 +737,8 @@
   form.type.addEventListener('change', () => {
     // geometry shape differs between types, so drop it on switch
     draft.geometry = null;
+    updateStatusOptions();
+    updateTypeFields();
     updateCategoryOptions();
     updateGeoStatus();
   });
@@ -663,11 +753,13 @@
 
   $('#btn-template').addEventListener('click', () => {
     draft.tasks = readTaskRows();
-    if (draft.tasks.length && !confirm('Replace the current tasks with the standard phases?')) return;
+    const ea = form.type.value === 'ea';
+    if (draft.tasks.length && !confirm(`Replace the current tasks with the ${ea ? 'Class EA' : 'standard'} phases?`)) return;
     const base = todayISO().slice(0, 8) + '01';
-    draft.tasks = STANDARD_PHASES.map(([name, offset, dur]) => ({
-      id: uid(), name, start: addMonths(base, offset), end: isoDate(toUTC(addMonths(base, offset + dur)) - DAY), progress: 0,
-    }));
+    draft.tasks = (ea ? EA_PHASES : STANDARD_PHASES).map(([name, offset, dur]) => {
+      const start = addMonths(base, offset);
+      return { id: uid(), name, start, end: dur ? isoDate(toUTC(addMonths(base, offset + dur)) - DAY) : start, progress: 0 };
+    });
     renderTaskRows();
   });
 
@@ -685,8 +777,8 @@
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const err = $('#editor-error');
-    const data = Object.fromEntries(['name', 'ref', 'type', 'category', 'municipality', 'status', 'lead', 'budget', 'contractor', 'description']
-      .map((k) => [k, form[k].value.trim()]));
+    const data = Object.fromEntries(FIELDS.map((k) => [k, form[k].value.trim()]));
+    if (data.type !== 'ea') data.eaSchedule = '';
     const tasks = readTaskRows();
     const problems = [];
     if (!data.name) problems.push('Project name is required.');
@@ -714,9 +806,7 @@
   // ---------- drawing ----------
   $('#btn-draw').addEventListener('click', () => {
     draft.tasks = readTaskRows();
-    for (const k of ['name', 'ref', 'type', 'category', 'municipality', 'status', 'lead', 'budget', 'contractor', 'description']) {
-      draft[k] = form[k].value;
-    }
+    for (const k of FIELDS) draft[k] = form[k].value;
     draft.sources = form.sources.value.split(/\s+/).filter(Boolean);
     startDrawing(form.type.value);
   });
@@ -727,7 +817,7 @@
     document.body.classList.add('placing');
     $('.map-wrap').classList.add('drawing');
     $('#draw-bar').hidden = false;
-    $('#draw-undo').hidden = type !== 'linear';
+    $('#draw-undo').hidden = !multiPoint(type);
     updateDrawBar();
     if (hasGeometry(draft) && draft.type === type) zoomTo(draft);
     setTimeout(() => map.invalidateSize(), 0);
@@ -735,13 +825,19 @@
 
   function updateDrawBar() {
     const n = drawState.points.length;
-    $('#draw-msg').textContent = drawState.type === 'linear'
-      ? (n < 2 ? `Click along the alignment to add points (${n} so far, need 2+).` : `${n} points · ${polylineKm(drawState.points).toFixed(2)} km. Keep clicking or press Done.`)
-      : (n ? 'Site placed. Click elsewhere to move it, or press Done.' : 'Click the map to place the site.');
-    $('#draw-done').disabled = drawState.type === 'linear' ? n < 2 : n < 1;
+    const t = drawState.type;
+    $('#draw-msg').textContent = t === 'ea'
+      ? (n < 3 ? `Click around the study-area boundary (${n} corners so far, need 3+).` : `${n} corners · ${PeelProperties.areaKm2(drawState.points).toFixed(2)} km². Keep clicking or press Done.`)
+      : t === 'linear'
+        ? (n < 2 ? `Click along the alignment to add points (${n} so far, need 2+).` : `${n} points · ${polylineKm(drawState.points).toFixed(2)} km. Keep clicking or press Done.`)
+        : (n ? 'Site placed. Click elsewhere to move it, or press Done.' : 'Click the map to place the site.');
+    $('#draw-done').disabled = n < (t === 'ea' ? 3 : t === 'linear' ? 2 : 1);
     drawLayer.clearLayers();
     if (!n) return;
-    if (drawState.type === 'linear') {
+    if (t === 'ea') {
+      L.polygon(drawState.points, { color: '#d92d20', weight: 3, dashArray: '6 6', fillOpacity: 0.1 }).addTo(drawLayer);
+      drawState.points.forEach((pt) => L.circleMarker(pt, { radius: 5, color: '#d92d20', fillColor: '#fff', fillOpacity: 1, weight: 2 }).addTo(drawLayer));
+    } else if (t === 'linear') {
       L.polyline(drawState.points, { color: '#d92d20', weight: 4, dashArray: '6 6' }).addTo(drawLayer);
       drawState.points.forEach((pt) => L.circleMarker(pt, { radius: 5, color: '#d92d20', fillColor: '#fff', fillOpacity: 1, weight: 2 }).addTo(drawLayer));
     } else {
@@ -752,7 +848,7 @@
   function endDrawing(commit) {
     if (commit) {
       const pts = drawState.points.map(([a, b]) => [+a.toFixed(6), +b.toFixed(6)]);
-      draft.geometry = drawState.type === 'linear' ? pts : pts[0];
+      draft.geometry = multiPoint(drawState.type) ? pts : pts[0];
     }
     drawState = null;
     drawLayer.clearLayers();
@@ -766,7 +862,7 @@
   map.on('click', (e) => {
     if (!drawState) return;
     const pt = [e.latlng.lat, e.latlng.lng];
-    if (drawState.type === 'linear') drawState.points.push(pt); else drawState.points = [pt];
+    if (multiPoint(drawState.type)) drawState.points.push(pt); else drawState.points = [pt];
     updateDrawBar();
   });
   $('#draw-undo').addEventListener('click', () => { drawState.points.pop(); updateDrawBar(); });
@@ -789,6 +885,8 @@
     if (tab) { detailTab = tab; renderDetail(); return; }
     const row = e.target.closest('tr[data-idx]');
     if (row) { focusImpactItem(Number(row.dataset.idx)); return; }
+    const goto = e.target.closest('[data-goto]')?.dataset.goto;
+    if (goto) { select(goto); return; }
     const action = e.target.closest('[data-action]')?.dataset.action;
     const p = projects.find((x) => x.id === selectedId);
     if (!action || !p) return;
@@ -821,7 +919,7 @@
     if (!p || !impact) return;
     if (e.target.name === 'impact-buffer') {
       const v = Math.round(Number(e.target.value));
-      impact.buffer = Math.max(5, Math.min(1000, Number.isFinite(v) && v > 0 ? v : bufferDefault[p.type]));
+      impact.buffer = Math.max(0, Math.min(1000, Number.isFinite(v) && v >= 0 ? v : bufferDefault[p.type]));
       bufferDefault[p.type] = impact.buffer;
       e.target.value = impact.buffer;
     }
@@ -866,7 +964,7 @@
       const cleaned = data.filter((p) => p && typeof p === 'object' && p.name).map((p) => ({
         ...p,
         id: String(p.id || uid()),
-        type: p.type === 'vertical' ? 'vertical' : 'linear',
+        type: ['vertical', 'ea'].includes(p.type) ? p.type : 'linear',
         tasks: Array.isArray(p.tasks) ? p.tasks.map((t) => ({ ...t, id: String(t.id || uid()) })) : [],
       }));
       const replace = projects.length && confirm(`Import ${cleaned.length} projects.\n\nOK = replace existing projects\nCancel = add to existing projects`);

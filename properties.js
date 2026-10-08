@@ -69,10 +69,13 @@
     return d;
   }
 
-  // Normalise a project's geometry to a list of [lat, lon] points.
+  // Normalise a project's geometry to a list of [lat, lon] points. An EA study
+  // area becomes its closed boundary, so distances are measured to the edge.
   function projectPath(project) {
+    if (project.type === 'ea') return project.geometry.concat([project.geometry[0]]);
     return project.type === 'linear' ? project.geometry : [project.geometry];
   }
+  const projectArea = (project) => (project.type === 'ea' ? project.geometry : null);
 
   function bboxOf(points) {
     let s = Infinity, w = Infinity, n = -Infinity, e = -Infinity;
@@ -135,10 +138,16 @@
     return `${unit}${hn} ${tags['addr:street'] || ''}`.trim() + city;
   }
 
-  function overpassQuery(path, buffer) {
-    const coords = path.map(([lat, lon]) => `${lat.toFixed(6)},${lon.toFixed(6)}`).join(',');
-    const around = `(around:${Math.round(buffer)},${coords})`;
-    return `[out:json][timeout:90];(way["building"]${around};way["addr:housenumber"]${around};node["addr:housenumber"]${around};);out geom tags;`;
+  // For an EA study area, matches everything inside the polygon plus anything
+  // within the buffer of its boundary.
+  function overpassQuery(path, buffer, area) {
+    const filters = [];
+    if (area) filters.push(`(poly:"${area.map(([lat, lon]) => `${lat.toFixed(6)} ${lon.toFixed(6)}`).join(' ')}")`);
+    if (!area || buffer > 0) {
+      filters.push(`(around:${Math.round(buffer)},${path.map(([lat, lon]) => `${lat.toFixed(6)},${lon.toFixed(6)}`).join(',')})`);
+    }
+    const parts = filters.map((f) => `way["building"]${f};way["addr:housenumber"]${f};node["addr:housenumber"]${f};`).join('');
+    return `[out:json][timeout:120];(${parts});out geom tags;`;
   }
 
   async function fetchOverpass(query, signal) {
@@ -207,8 +216,9 @@
 
   async function findOSM(project, buffer, signal) {
     const path = projectPath(project);
-    const json = await fetchOverpass(overpassQuery(path, buffer), signal);
-    return measure(parseOverpass(json), path, buffer);
+    const area = projectArea(project);
+    const json = await fetchOverpass(overpassQuery(path, buffer, area), signal);
+    return measure(parseOverpass(json), path, buffer, area);
   }
 
   // ---------- parcels (user GeoJSON) ----------
@@ -258,12 +268,13 @@
   function findParcels(project, buffer, parcels) {
     const path = projectPath(project);
     const box = bboxPad(bboxOf(path), buffer);
+    const area = projectArea(project);
     const candidates = parcels.filter((p) => bboxHit(p.bbox, box)).map((p) => ({
       id: p.id, source: 'Parcel layer', rings: p.rings, address: p.address, name: '',
       category: 'Parcel', detail: [p.roll && `Roll ${p.roll}`, p.pin && `PIN ${p.pin}`].filter(Boolean).join(' · '),
       roll: p.roll, pin: p.pin,
     }));
-    return measure(candidates, path, buffer);
+    return measure(candidates, path, buffer, area);
   }
 
   function parcelsInView(parcels, viewBox, limit) {
@@ -274,12 +285,18 @@
     return out;
   }
 
-  function measure(items, path, buffer) {
+  // Distance is 0 for anything inside an EA study area (judged by its centre).
+  function measure(items, path, buffer, area) {
     const [s, w, n, e] = bboxOf(path);
     const proj = projector((s + n) / 2, (w + e) / 2);
     const pPath = path.map(proj);
+    const pArea = area ? area.map(proj) : null;
     return items
-      .map((it) => ({ ...it, distance: featureDistance(it, pPath, proj), center: centroid(it) }))
+      .map((it) => {
+        const center = centroid(it);
+        const inside = pArea && pointInRing(proj(center), pArea);
+        return { ...it, center, distance: inside ? 0 : featureDistance(it, pPath, proj), inside: !!inside };
+      })
       .filter((it) => it.distance <= buffer)
       .sort((a, b) => a.distance - b.distance || a.address.localeCompare(b.address));
   }
@@ -321,7 +338,25 @@
     return rows.map((r) => r.map(cell).join(',')).join('\r\n');
   }
 
+  // True when a line or site touches or lies inside an EA study area polygon.
+  function touchesArea(project, ring) {
+    const [s, w, n, e] = bboxOf(ring);
+    const proj = projector((s + n) / 2, (w + e) / 2);
+    return distRingPath(ring.map(proj), projectPath(project).map(proj)) === 0;
+  }
+
+  // Area of a polygon in square kilometres.
+  function areaKm2(ring) {
+    const [s, w, n, e] = bboxOf(ring);
+    const proj = projector((s + n) / 2, (w + e) / 2);
+    const pts = ring.map(proj);
+    let a = 0;
+    for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) a += (pts[j][0] + pts[i][0]) * (pts[j][1] - pts[i][1]);
+    return Math.abs(a / 2) / 1e6;
+  }
+
   window.PeelProperties = {
+    touchesArea, areaKm2,
     findOSM, findParcels, parseParcels, parcelsInView, toCSV,
     saveParcels, loadParcels, clearParcels,
     // exposed for tests
