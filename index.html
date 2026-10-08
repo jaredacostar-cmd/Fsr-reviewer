@@ -26,102 +26,128 @@
         <p class="sub">Mississauga · Brampton · Caledon — from application to completion</p>
       </header>
 
-      <section class="panel">
-        <div class="panel-head">
-          <h2>Construction phases</h2>
-          <span class="muted" id="total-count">—</span>
-        </div>
-        <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
-        <ul class="phase-list" id="phase-list"></ul>
-      </section>
+      <nav class="tabs" role="tablist" aria-label="Sidebar">
+        <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Explore</button>
+        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span></button>
+        <button type="button" role="tab" id="tab-btn-data" aria-controls="tab-data" aria-selected="false" data-tab="data">Data</button>
+      </nav>
 
-      <section class="panel filters">
-        <div class="row">
-          <label class="field grow"><span>Search</span>
-            <input type="search" id="f-search" placeholder="Address, file number, description…">
-          </label>
-        </div>
-        <div class="row">
-          <label class="field grow"><span>Municipality</span>
-            <select id="f-muni"><option value="">All</option></select>
-          </label>
-          <label class="field grow"><span>Record type</span>
-            <select id="f-kind">
-              <option value="">All</option>
-              <option value="application">Planning applications</option>
-              <option value="permit">Building permits</option>
-              <option value="both">Linked app + permit</option>
-            </select>
-          </label>
-        </div>
-        <div class="row">
-          <label class="field grow"><span>Unit growth</span>
-            <select id="f-units">
-              <option value="0">Any</option>
-              <option value="1">Adds units</option>
-              <option value="10">10+ units</option>
-              <option value="50">50+ units</option>
-              <option value="100">100+ units</option>
-              <option value="500">500+ units</option>
-              <option value="left">Units left to build</option>
-            </select>
-          </label>
-          <label class="check"><input type="checkbox" id="f-new" checked> New builds only</label>
-        </div>
-        <div class="row">
-          <button type="button" class="btn small" id="f-preset-growth" aria-pressed="false">Applications adding units</button>
-          <button type="button" class="btn small" id="f-clear" hidden>Clear filters</button>
-        </div>
-      </section>
-
-      <details class="panel changes" id="changes" hidden open>
-        <summary><h2>This week</h2><span class="muted small" id="changes-head"></span></summary>
-        <p class="small" id="changes-summary"></p>
-        <ol class="project-list" id="changes-list"></ol>
-      </details>
-
-      <section class="panel list-panel">
-        <div class="panel-head">
-          <h2>Projects</h2>
-          <div class="btns">
-            <button type="button" id="btn-csv" class="btn small">CSV</button>
-            <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
+      <!-- ===== Explore ===== -->
+      <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
+        <section class="panel">
+          <h2 class="label">Quick views</h2>
+          <div class="chips views" id="views" role="group" aria-label="Quick views">
+            <button type="button" class="chip" data-view="all">All developments</button>
+            <button type="button" class="chip" data-view="growth">Applications adding units</button>
+            <button type="button" class="chip" data-view="left">Units left to build</button>
+            <button type="button" class="chip" data-view="building">Being built</button>
+            <button type="button" class="chip" data-view="done">Completed</button>
           </div>
-        </div>
-        <p class="muted small" id="list-note"></p>
-        <ol class="project-list" id="project-list"></ol>
-      </section>
+        </section>
 
-      <details class="panel sources" id="sources-panel" open>
-        <summary><h2>Data sources</h2><span class="muted" id="sources-summary"></span></summary>
-        <ul class="source-list" id="source-list"></ul>
-        <div class="row">
-          <label class="field"><span>Records since</span>
-            <input type="number" id="s-since" min="1990" max="2100" step="1">
+        <section class="panel filters">
+          <label class="field"><span class="sr">Search</span>
+            <input type="search" id="f-search" placeholder="Search address, file number, description…">
           </label>
-          <label class="field"><span>Max per layer</span>
-            <input type="number" id="s-max" min="500" max="200000" step="500">
-          </label>
-        </div>
-        <div class="row btns">
-          <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
-          <button type="button" class="btn" id="btn-discover" title="Search the Mississauga, Brampton, Caledon and Peel open-data hubs for more development and permit datasets">Discover datasets</button>
-        </div>
-        <form class="add-source" id="add-source">
-          <p class="small muted">Add any ArcGIS FeatureServer / MapServer URL:</p>
-          <input type="url" id="a-url" required placeholder="https://…/FeatureServer">
+          <div class="field">
+            <span class="label">Municipality</span>
+            <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
+          </div>
+          <div class="row two">
+            <label class="field"><span class="label">Record type</span>
+              <select id="f-kind">
+                <option value="">All records</option>
+                <option value="application">Planning applications</option>
+                <option value="permit">Building permits</option>
+                <option value="both">Application + permits</option>
+              </select>
+            </label>
+            <label class="field"><span class="label">Units</span>
+              <select id="f-units">
+                <option value="0">Any</option>
+                <option value="1">Adds units</option>
+                <option value="10">10+ units</option>
+                <option value="50">50+ units</option>
+                <option value="100">100+ units</option>
+                <option value="500">500+ units</option>
+                <option value="left">Units left to build</option>
+              </select>
+            </label>
+          </div>
+          <label class="switch"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
+            <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
+          <div class="active-filters" id="active-filters" aria-live="polite"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2 class="label">Phases <span class="muted small">— tap to show / hide</span></h2>
+            <span class="muted small" id="total-count">—</span>
+          </div>
+          <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
+          <ul class="phase-list" id="phase-list"></ul>
+        </section>
+
+        <section class="panel list-panel">
+          <div class="panel-head">
+            <h2 class="label">Projects</h2>
+            <div class="btns">
+              <button type="button" id="btn-csv" class="btn small">CSV</button>
+              <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
+            </div>
+          </div>
+          <p class="muted small" id="list-note"></p>
+          <ol class="project-list" id="project-list"></ol>
+        </section>
+      </div>
+
+      <!-- ===== This week ===== -->
+      <div class="tab-panel" id="tab-week" role="tabpanel" aria-labelledby="tab-btn-week" hidden>
+        <section class="panel changes" id="changes">
+          <div class="panel-head"><h2 class="label">Changes since last update</h2><span class="muted small" id="changes-head"></span></div>
+          <p class="small" id="changes-summary">Changes appear after the next weekly update (Mondays).</p>
+          <ol class="project-list" id="changes-list"></ol>
+        </section>
+      </div>
+
+      <!-- ===== Data ===== -->
+      <div class="tab-panel" id="tab-data" role="tabpanel" aria-labelledby="tab-btn-data" hidden>
+        <section class="panel sources" id="sources-panel">
+          <div class="panel-head"><h2 class="label">Data sources</h2><span class="muted small" id="sources-summary"></span></div>
+          <ul class="source-list" id="source-list"></ul>
+          <div class="row btns">
+            <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
+          </div>
+        </section>
+        <details class="panel advanced">
+          <summary><h2 class="label">Advanced</h2></summary>
           <div class="row">
-            <select id="a-muni" aria-label="Municipality">
-              <option>Mississauga</option><option>Brampton</option><option>Caledon</option><option>Peel Region</option>
-            </select>
-            <select id="a-kind" aria-label="Kind">
-              <option value="application">Applications</option>
-              <option value="permit">Permits</option>
-            </select>
-            <button type="submit" class="btn">Add</button>
+            <label class="field"><span class="label">Records since</span>
+              <input type="number" id="s-since" min="1990" max="2100" step="1">
+            </label>
+            <label class="field"><span class="label">Max per layer</span>
+              <input type="number" id="s-max" min="500" max="200000" step="500">
+            </label>
           </div>
-        </form>
-      </details>
+          <div class="row btns">
+            <button type="button" class="btn" id="btn-discover" title="Search the Mississauga, Brampton, Caledon and Peel open-data hubs for more development and permit datasets">Discover datasets</button>
+          </div>
+          <form class="add-source" id="add-source">
+            <p class="small muted">Add any ArcGIS FeatureServer / MapServer URL:</p>
+            <input type="url" id="a-url" required placeholder="https://…/FeatureServer">
+            <div class="row">
+              <select id="a-muni" aria-label="Municipality">
+                <option>Mississauga</option><option>Brampton</option><option>Caledon</option><option>Peel Region</option>
+              </select>
+              <select id="a-kind" aria-label="Kind">
+                <option value="application">Applications</option>
+                <option value="permit">Permits</option>
+              </select>
+              <button type="submit" class="btn">Add</button>
+            </div>
+          </form>
+        </details>
+      </div>
     </aside>
 
     <main class="map-wrap">

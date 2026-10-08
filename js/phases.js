@@ -422,7 +422,8 @@
 
   /** "ISSUE_DATE" -> "Issue date" for display. */
   function humanizeField(name) {
-    const s = String(name || '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_]+/g, ' ').trim().toLowerCase();
+    const s = String(name || '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_]+/g, ' ').trim().toLowerCase()
+      .replace(/([a-z])(date|number|desc)$/, '$1 $2').replace(/^in date$/, 'received date').replace(/^final date$/, 'final inspection date');
     return s.charAt(0).toUpperCase() + s.slice(1);
   }
 

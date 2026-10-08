@@ -52,80 +52,49 @@ the phase names. **Hide** collapses the timeline and demand panel to give the ma
 
 ## Using it
 
+The sidebar has three tabs.
+
+**Explore**
+- **Quick views:** one tap for All developments, Applications adding units, Units left to
+  build, Being built (permit issued or under construction), or Completed.
+- **Search** by address, file number or description.
+- **Municipality** buttons: All, Brampton, Caledon, Mississauga.
+- **Record type** (planning applications, building permits, or sites with both) and **Units**
+  (adds units, 10+ … 500+, or units left to build).
+- **New buildings only** hides alterations, signs, pools and similar permits.
+- **Active filters** appear as chips. Tap a chip's × to remove that filter, or use **Reset
+  all**.
+- **Phases:** tap a phase to show or hide it. The list below shows the matching projects.
+
+**This week:** projects that are new, or that changed phase, since the previous weekly update.
+
+**Data:** the source list, **Refresh live**, and an **Advanced** section for adding sources.
+
+**Map**
 - **Background:** aerial imagery is the default (Esri World Imagery), with road and place-name
-  overlays. Switch to plain aerial or a street map with the picker at the top right of the map.
+  overlays. Switch to plain aerial or a street map with the picker at the top right.
 - **Labels:** from zoom level 14, every point not inside a cluster gets a label. Choose what it
   shows: address and phase, address only, file or permit number, units, or off. The largest
-  projects are labelled first. A label moves to the left side when the right side is blocked,
-  and it is left out if it would cover another label or point.
-- **Map:** clusters show how many projects they hold. The ring around each cluster shows the
-  mix of phases. Click a marker to open the project.
-- **Project panel:** shows a phase stepper with the date each phase was reached, a dated
-  timeline of every milestone, and every underlying record with all of its source fields.
-- **Phase filter:** click a phase to toggle it. Alt-click a phase, or click a segment of the
-  pipeline bar, to show only that phase.
-- **Filters:** search by address, file number or description. You can also filter by
-  municipality and record type (applications, permits, or sites with both). "New builds only"
-  hides alteration-type permits such as decks, signs and HVAC. **Unit growth** keeps only
-  projects that add dwelling units (any, 10+, 50+, 100+ or 500+). With "Planning applications"
-  selected, only units proposed on the applications count. **Applications adding units** sets
-  both filters in one tap; tap it again to turn it off.
-- **Timeline (bottom left):** drag the two handles to keep only projects with activity in that
-  range of years, for example 2022–2024. The dropdown picks which milestone must fall in the
-  range: any milestone, application submitted, approved, permit issued, or completed. The bars
-  show projects per year. Click a bar to isolate that year, and shift-click another bar to
-  extend the range.
-- **Population & servicing demand (bottom right):** estimates the population and the water and
-  wastewater demand of the dwelling units in the projects currently shown. It responds to every
-  filter and to the timeline. You can include all shown projects, only those not yet completed,
-  or only completed ones. Withdrawn projects are always excluded. Open "Breakdown & design
-  criteria" to see totals by dwelling type and by phase, and to edit the criteria.
-- **Export:** download the filtered projects as CSV or GeoJSON, one column per phase date.
-- **Data sources:** turn any source on or off and set how far back to load. **Discover
-  datasets** searches the Mississauga, Brampton, Caledon and Peel ArcGIS Hub sites for every
-  development, planning and permit feature service they publish. You can also paste in any
-  FeatureServer or MapServer URL.
+  projects are labelled first, and a label is left out if it would overlap another.
+- **Clusters** show how many projects they hold. The ring around each cluster shows the mix of
+  phases.
+- **Subdivisions up close:** at street zoom, or when you select a project, its application
+  boundary appears with every building permit inside it as its own dot. Tap a dot to see that
+  permit and the **planning application it belongs to** (file number, type, status, planned
+  units). **Open whole project** shows the build-out for the whole subdivision.
+- **Project panel:** shows the build-out (planned, permitted, completed, left to build), a phase
+  stepper, the weekly phase history and the dated timeline. Every source record has **Show on
+  map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
-## Weekly automatic update
+**Timeline (bottom left):** drag the handles to keep only projects with activity in those years.
+The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
+shift-click to extend the range.
 
-A GitHub Action (`.github/workflows/site.yml`) runs every Monday at 10:17 UTC, which
-is early morning in Toronto. You can also start it by hand from the Actions tab with **Run
-workflow**. Each run does the following:
+**Population & servicing demand (bottom right):** population, water and wastewater estimated
+from the units in the projects shown. It can be based on all units, units left to build, units
+not yet completed, or completed units. Open **Breakdown & design criteria** to edit the criteria.
 
-1. It loads every configured source, plus every development or permit dataset it finds on the
-   Mississauga, Brampton, Caledon and Peel open-data hubs. This means new datasets are picked
-   up without anyone editing the config.
-2. It writes `data/snapshot.json`, which holds planning applications and new-build permits.
-3. It adds this week's phase for every project to `data/history.json`. The sources only
-   publish current status, so this file builds a record of when each project moved from one
-   phase to the next.
-4. It commits both files if anything changed, then redeploys the site to GitHub Pages.
-
-The same workflow also redeploys the site on every push to `main`.
-
-If a source is down that week, its records from the previous week are kept and marked as
-stale. Nothing is written if every source fails.
-
-When the page opens, it loads the snapshot first, which is fast and doesn't depend on the city
-servers being up. The app then shows:
-
-- **This week:** projects that are new, or that changed phase, since the previous run.
-- **Phase history:** in each project panel, the date each phase change was detected.
-- **Data sources:** the date of the snapshot. **Refresh live** re-queries every source right
-  away and also includes alteration-type permits.
-
-**Setup:**
-
-- Scheduled workflows only run from the repository's **default branch** (`main`), so this
-  branch needs to be merged first.
-- **GitHub Pages (used here):** the repository must be public, or on a paid plan. Go to
-  Settings → Pages and set Source to **GitHub Actions**. Then start **Update data and deploy
-  site** from the Actions tab. The site is published at
-  `https://<user>.github.io/<repo>/`.
-- **Netlify (alternative):** use **Add new site → Import an existing project → GitHub**
-  instead of Netlify Drop. This works with private repositories on the free plan, and every
-  weekly commit then deploys itself.
-- Run it locally with `npm run snapshot`.
+**Export:** download the filtered projects as CSV or GeoJSON.
 
 ## How classification works (`js/phases.js`)
 
