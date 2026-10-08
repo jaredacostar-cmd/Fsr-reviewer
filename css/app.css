@@ -699,3 +699,14 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .svc-table tr.sub td { font-weight: 700; border-top: 1px solid var(--text-muted); }
 .svc-table tr.tot td { font-weight: 800; border-top: 2px solid var(--text-primary); }
 .svc-table th { white-space: normal; vertical-align: bottom; }
+.svc-table td.bar, .svc-table th.bar-h { width: 130px; min-width: 110px; }
+.svc-bar { display: flex; gap: 1px; height: 12px; border-radius: 3px; overflow: hidden; background: var(--surface-1); }
+.svc-table tr.svc-row { cursor: pointer; }
+.svc-table tr.svc-row:hover td { background: var(--surface-2); }
+.svc-table tr.svc-row.on td { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.svc-table tr.svc-row:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.svc-table td:first-child { text-align: left; }
+.svc-table .flow-arrow { color: var(--text-muted); margin-right: 4px; }
+.svc-legend { margin: 0 0 6px; }
+.svc-focus { stroke: var(--accent); stroke-width: 3; fill: var(--accent); fill-opacity: 0.12; }
+.svc-focus-up { stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 4 3; fill: var(--accent); fill-opacity: 0.06; }

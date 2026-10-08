@@ -195,13 +195,20 @@ application.
 - Each development is tagged by its location point. Map options toggle both layers; **Where**
   has Pressure zone and Drainage area filters; the development panel shows its zone and
   drainage area.
-- **Servicing areas tab** (bottom panel): water by pressure zone in numerical order (maximum
-  day, people below each figure; peak hour at build-out) and wastewater by sanitary catchment in
-  sections for Lakeview, Clarkson and Inglewood, each with a subtotal, then a Peel total (the
-  Malton / Toronto catchment listed separately). Like the Growth tab, each row is split into the
-  census baseline (year from the timeline), + built since census day, + approved and + proposed
-  (in review), then build-out; growth from every development in the zone / catchment, other
-  filters ignored. Census population by dissemination areas whose centre falls inside.
+- **Water** and **Wastewater** tabs (bottom panel). Like the Growth tab, each row is split into
+  the census baseline (year from the timeline), + built since census day, + approved and +
+  proposed (in review), adding up to build-out, with a stacked bar of that split; growth from
+  every development in the zone / catchment, other filters ignored. Census population by
+  dissemination areas whose centre falls inside. Click a row to outline and zoom to it on the map
+  (click again to clear).
+  - **Water:** pressure zones in numerical order; maximum day (people below each figure) and peak
+    hour at build-out.
+  - **Wastewater:** catchments accumulate along the traced flow path. Each drainage area records
+    the area it discharges into (`downstream` in `data/servicing.json`), so a catchment's row
+    includes everything upstream of it (listed, indented, above it) and the last row of each of
+    Lakeview, Clarkson and Inglewood is the plant's total inflow; then a Peel total. Peak wet is
+    Harmon on the accumulated population + I&I. Malton (City of Toronto) is listed separately.
+    Clicking a catchment also shades every catchment upstream of it.
 
 **Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
 (Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run

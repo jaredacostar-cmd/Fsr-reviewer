@@ -253,8 +253,11 @@ async function main() {
     const ringsM = rs.map(r => simplifyRing(r.map(([i, j]) => [i * CELL, j * CELL]), 35)).filter(r => r.length >= 4);
     const areaHa = ringsM.reduce((t, r) => { let s = 0; for (let i = 0, j = r.length - 1; i < r.length; j = i++) s += (r[j][0] + r[i][0]) * (r[j][1] - r[i][1]); return t + Math.abs(s) / 2; }, 0) / 1e4;
     byPlant[plant || TORONTO] = (byPlant[plant || TORONTO] || 0) + 1;
+    // The area this one discharges into (the area of the node just below its outlet); null at a plant.
+    const below = a.kind === 'ps' || a.kind === 'trunk' ? outlet.get(down.get(id)) : null;
     drainage.push({
       id: `dr:${id}`, plant: plant || TORONTO, kind: a.kind,
+      downstream: below && below !== id && rings.has(below) ? `dr:${below}` : null,
       outlet: a.kind === 'ps' ? nameOf(id) : null, municipality: muni, manholes: members.length,
       trunkMm: diam.get(id) || null, areaHa: Math.round(areaHa),
       rings: ringsM.map(r => r.map(([x, y]) => toLL([x, y]))),
