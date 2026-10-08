@@ -166,13 +166,16 @@
         .find(b => !placed.some(o => hit(o, b)) && !dots.some(d => d.m !== m && hit(d, b)));
       if (!spot) { skipped++; continue; }
       placed.push(spot);
-      labelLayer.addLayer(L.marker(m.getLatLng(), {
-        interactive: false, keyboard: false,
+      // Labels are tappable too: on a phone the text is what people aim for.
+      const label = L.marker(m.getLatLng(), {
+        keyboard: false, zIndexOffset: -1000,
         icon: L.divIcon({
           className: `plabel${spot.side === 'l' ? ' left' : ''}`, html: `<div>${html}</div>`, iconSize: null,
           iconAnchor: spot.side === 'l' ? [Math.ceil(size.w) + 11, 9] : [-11, 9],
         }),
-      }));
+      });
+      label.on('click', () => showDetail(p));
+      labelLayer.addLayer(label);
       n++;
     }
     if (note) note.textContent = n >= LABEL_MAX || skipped ? `${fmtNum(n)} labels shown; zoom in for more` : '';
@@ -329,7 +332,8 @@
   }
   cluster.on('animationend spiderfied unspiderfied', () => scheduleLabels());
   const iconCache = {};
-  const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm', iconSize: [16, 16], html: dot(phase) }));
+  // 32 px tap target around a 16 px dot.
+  const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm pm-hit', iconSize: [32, 32], html: dot(phase) }));
   let markerByKey = new Map();
 
   // ---- Loading -------------------------------------------------------------------

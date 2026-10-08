@@ -188,6 +188,7 @@ button, input, select { font: inherit; color: inherit; }
 /* Map markers */
 .pm { background: none; border: 0; }
 .pm .dot { width: 16px; height: 16px; font-size: 9px; }
+.pm-hit { display: grid !important; place-items: center; }
 .pc {
   display: grid; place-items: center; border-radius: 50%;
   box-shadow: 0 0 0 2px var(--ring), var(--shadow);
@@ -364,7 +365,8 @@ button, input, select { font: inherit; color: inherit; }
 .map-opts small:empty { display: none; }
 
 /* Point labels: text with a halo so it reads on both imagery and the street map */
-.plabel { pointer-events: none; }
+.plabel { cursor: pointer; }
+.plabel div { display: inline-block; }
 .plabel div {
   white-space: nowrap; line-height: 1.2; font-size: 12px; color: var(--text-primary);
   text-shadow: 0 0 2px var(--surface-1), 0 0 3px var(--surface-1), 0 0 4px var(--surface-1);
