@@ -1025,11 +1025,19 @@
     map.invalidateSize();
   }).observe($('#footer'));
 
+  // Version stamped at deploy time (index.html meta + ?v= on every script).
+  const APP_VERSION = (document.querySelector('meta[name="app-version"]') || {}).content || 'dev';
+  function renderVersion() {
+    const d = state.snapshot ? ` · data ${state.snapshot.generatedAt.slice(0, 10)}` : '';
+    $('#app-version').textContent = `App version ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION}${d}`;
+  }
+
   // ---- Boot ------------------------------------------------------------------------
   readColors();
   setTiles();
   renderLegend();
   renderSources();
+  renderVersion();
   renderCriteria();
   updateYearBounds();
   applyFilters();
@@ -1078,6 +1086,7 @@
       else { src.status = 'error'; src.msg = meta.error || 'failed in last snapshot'; }
     }
     renderSources();
+    renderVersion();
     renderChanges();
     scheduleRebuild();
   }
