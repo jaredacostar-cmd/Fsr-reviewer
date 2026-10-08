@@ -183,9 +183,10 @@
       else if (ev.fpNow >= 0.15) { L += 0.6; add(`Mapped buildings cover ${pct(ev.fpNow)} of the site${typeof ev.fpYearNow === 'number' ? ` (${ev.fpYearNow})` : ''}; age unknown`, 0.5); }
     }
 
-    const probability = Math.min(0.98, Math.max(0.02, sigmoid(L)));
+    const probability = Math.round(Math.min(0.98, Math.max(0.02, sigmoid(L))) * 100) / 100;
     let status;
     if (probability >= 0.7) status = 'Likely completed';
+    else if (p.phase === 'completed') status = 'Completed in the records; not confirmed on the aerial';
     else if (signals.some(x => x.effect < 0 && /cleared or graded/.test(x.text)) || ['permit', 'construction'].includes(p.phase) ||
       (ev.fpNow != null && ev.fpBefore != null && ev.fpNow - ev.fpBefore >= 0.05)) status = 'Likely under construction';
     else status = 'Not visibly started';

@@ -88,3 +88,11 @@ test('score: undated footprints never count against a site; a completed infill s
   assert.ok(s.probability >= 0.85, s.probability);
   assert.ok(!s.signals.some(x => x.effect < 0));
 });
+
+test('score: a completed record the aerial does not confirm says so', () => {
+  const s = A.score({ phase: 'completed', buildout: null }, {
+    latestYear: 2024, beforeYear: 2022, now: photo(2.2), before: photo(2.2), change: { site: 0.6, around: 0.6, ratio: 1.0 },
+    fpNow: 0.01, fpBefore: 0.01, fpYearNow: 2024, fpYearBefore: 2022, siteArea: 900 });
+  assert.ok(s.probability < 0.7, s.probability);
+  assert.equal(s.status, 'Completed in the records; not confirmed on the aerial');
+});
