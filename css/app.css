@@ -666,3 +666,8 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .sel-split > summary { cursor: pointer; color: var(--text-secondary); }
 .sel-flows { display: grid; gap: 8px; margin-top: 6px; }
 .back-sel { margin-bottom: 6px; padding-left: 0; }
+
+/* Map options: checkbox rows */
+.map-opts label.chk { display: flex; gap: 6px; align-items: center; color: var(--text-primary); cursor: pointer; }
+.map-opts label.chk input { margin: 0; width: 14px; height: 14px; accent-color: var(--accent); }
+@media (max-width: 760px) { .map-wrap .map-opts label.chk span { display: inline; font-size: 11px; } }

@@ -111,11 +111,41 @@ function shares(rings, areaList) {
   return out;
 }
 
+// Douglas–Peucker on a ring in lng/lat degrees (tolerance ~4 m), for the light DA outlines.
+function simplify(ring, tol = 0.00004) {
+  if (ring.length <= 4) return ring;
+  // A closed ring starts and ends on the same point: simplify its two halves.
+  const [fx, fy] = ring[0], [lx, ly] = ring[ring.length - 1];
+  if (fx === lx && fy === ly) {
+    const mid = Math.floor(ring.length / 2);
+    const out = [...simplifyLine(ring.slice(0, mid + 1), tol).slice(0, -1), ...simplifyLine(ring.slice(mid), tol)];
+    return out.length >= 4 ? out : ring;
+  }
+  return simplifyLine(ring, tol);
+}
+function simplifyLine(ring, tol) {
+  if (ring.length <= 2) return ring;
+  const keep = new Uint8Array(ring.length); keep[0] = keep[ring.length - 1] = 1;
+  const stack = [[0, ring.length - 1]];
+  while (stack.length) {
+    const [a, b] = stack.pop();
+    const [x1, y1] = ring[a], [x2, y2] = ring[b];
+    const dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1e-12;
+    let best = -1, far = 0;
+    for (let i = a + 1; i < b; i++) {
+      const d = Math.abs(dy * ring[i][0] - dx * ring[i][1] + x2 * y1 - y2 * x1) / len;
+      if (d > far) { far = d; best = i; }
+    }
+    if (far > tol) { keep[best] = 1; stack.push([a, best], [best, b]); }
+  }
+  return ring.filter((_, i) => keep[i]);
+}
+
 async function census(areaList) {
   for (const a of areaList) a.bbox = bboxOf(a.rings);
   const info = await A.layerInfo(CENSUS.url);
   const { features: feats } = await A.queryAll(CENSUS.url, info, { where: "DAUID LIKE '3521%'", max: 5000 });
-  const das = [];
+  const das = [], outlines = [];
   let pop = 0;
   for (const f of feats) {
     const a = f.properties || {};
@@ -124,13 +154,17 @@ async function census(areaList) {
     const [x, y] = insidePoint(rings);
     const csd = CSD[Number(a.CSDUID_SDR)] || CSD[Number(String(a.CSDUID_SDR || '').slice(0, 7))] || '';
     das.push([round(x), round(y), a.POP_COUNT_ || 0, a.Private_dw || 0, a.Tpw || 0, csd, shares(rings, areaList)]);
+    outlines.push([String(a.DAUID || ''), a.POP_COUNT_ || 0, a.Private_dw || 0, csd, rings.map(r => simplify(r).map(([lx, ly]) => [round(lx), round(ly)]))]);
     pop += a.POP_COUNT_ || 0;
   }
   for (const a of areaList) delete a.bbox;
   const byMuni = {};
   for (const d of das) byMuni[d[5] || '?'] = (byMuni[d[5] || '?'] || 0) + d[2];
   console.log(`census: ${das.length} dissemination areas, population ${pop.toLocaleString('en-CA')} ${JSON.stringify(byMuni)}`);
-  return { date: '2021-05-11', source: CENSUS.source, fields: ['lng', 'lat', 'population', 'privateDwellings', 'occupiedDwellings', 'municipality', 'areaShares'], das };
+  return {
+    census: { date: '2021-05-11', source: CENSUS.source, fields: ['lng', 'lat', 'population', 'privateDwellings', 'occupiedDwellings', 'municipality', 'areaShares'], das },
+    outlines: { date: '2021-05-11', source: CENSUS.source, fields: ['dauid', 'population', 'privateDwellings', 'municipality', 'rings'], das: outlines },
+  };
 }
 
 async function main() {
@@ -148,11 +182,16 @@ async function main() {
   };
   data.secondaryPlans = await areas(LAYERS.secondaryPlans, 'sp');
   data.mtsas = await areas(LAYERS.mtsas, 'mtsa');
-  data.census = await census([...data.secondaryPlans, ...data.mtsas]);
+  const c = await census([...data.secondaryPlans, ...data.mtsas]);
+  data.census = c.census;
   const file = path.join(outDir, 'areas.json');
   fs.writeFileSync(file, JSON.stringify(data));
+  // Dissemination area outlines, loaded only when the map layer is turned on.
+  const daFile = path.join(outDir, 'das.json');
+  fs.writeFileSync(daFile, JSON.stringify(c.outlines));
+  console.log(`das.json: ${c.outlines.das.length} DA outlines, ${(fs.statSync(daFile).size / 1e6).toFixed(2)} MB`);
   console.log(`areas.json: ${data.secondaryPlans.length} secondary plans / character areas, ${data.mtsas.length} MTSAs, ${data.census.das.length} DAs, ${(fs.statSync(file).size / 1e6).toFixed(2)} MB`);
 }
 
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { insidePoint };
+module.exports = { insidePoint, simplify };

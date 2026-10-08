@@ -245,6 +245,34 @@
   const scheduleLabels = () => { clearTimeout(labelTimer); labelTimer = setTimeout(updateLabels, 60); };
   map.on('moveend zoomend', scheduleLabels);
 
+  // ---- 2021 Census dissemination areas: very light outlines, toggled in the map options ----
+  // Loaded on first use (data/das.json, built with data/areas.json); drawn on a canvas in a pane
+  // under the site outlines, with the DA's population on hover / tap.
+  let daOn = !!store.get('daLayer', false);
+  let daLayer = null, daLoading = null;
+  map.createPane('daPane').style.zIndex = 350;
+  const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
+  function loadDaLayer() {
+    if (daLoading) return daLoading;
+    daLoading = fetch('data/das.json', { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
+      const css = getComputedStyle(document.documentElement);
+      const color = (css.getPropertyValue('--text-muted') || '#888').trim();
+      daLayer = L.layerGroup(d.das.map(([id, pop, dw, muni, rings]) => L.polygon(rings.map(r => r.map(([x, y]) => [y, x])), {
+        renderer: daRenderer, pane: 'daPane', color, weight: 0.7, opacity: 0.45, fill: true, fillOpacity: 0, smoothFactor: 0.5,
+      }).bindTooltip(`<strong>DA ${esc(id)}</strong>${muni ? ` · ${esc(muni)}` : ''}<br>${fmtNum(pop)} people · ${fmtNum(dw)} dwellings (2021)`, { sticky: true, className: 'pt' })));
+      return daLayer;
+    });
+    return daLoading;
+  }
+  function setDaLayer(on) {
+    daOn = on; store.set('daLayer', on);
+    if (!on) { if (daLayer) map.removeLayer(daLayer); return; }
+    loadDaLayer().then(l => { if (daOn) l.addTo(map); }).catch(() => {
+      daLoading = null; daOn = false;
+      const cb = $('#opt-da'); if (cb) { cb.checked = false; cb.disabled = true; cb.closest('label').title = 'Census area outlines are not published yet'; }
+    });
+  }
+
   // Map control: basemap + label pickers.
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
@@ -255,11 +283,13 @@
         <label><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
         <label><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
         ${canRotate ? `<label><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
+        <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}><span>2021 census areas</span></label>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
+      el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => {
         orientation = e.target.value; store.set('orientation', orientation);
@@ -269,6 +299,7 @@
     },
   });
   new MapOptions().addTo(map);
+  if (daOn) setDaLayer(true);
 
   // Cluster icon: ring segments show the phase mix of the projects inside.
   const cluster = L.markerClusterGroup({
