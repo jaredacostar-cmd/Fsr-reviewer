@@ -32,36 +32,6 @@ fs.mkdirSync(OUT, { recursive: true });
   }
   console.log('attribution:', await page.evaluate(() => document.querySelector('.leaflet-control-attribution').textContent));
 
-  // 1b. Raw colour of each imagery source at a rural and an urban point.
-  const colour = await page.evaluate(async () => {
-    const out = [];
-    const pts = { 'Brampton farmland': [-79.83, 43.735], 'Brampton suburb': [-79.80, 43.70], 'Mississauga park': [-79.66, 43.565], 'Mississauga core': [-79.6411, 43.5931], 'Caledon farmland': [-79.85, 43.85] };
-    const srcs = [];
-    for (const [muni, src] of Object.entries(PEEL_CONFIG.imagery)) {
-      const ys = Object.keys(src.years).map(Number).sort((a, b) => b - a);
-      for (const y of [ys[0], ys[4], ys[ys.length - 1]]) srcs.push([muni, y, src.years[y].url]);
-    }
-    for (const [muni, y, url] of srcs) {
-      let info = {};
-      try { info = await (await fetch(`${url}?f=json`)).json(); } catch (e) {}
-      for (const [pname, [lng, lat]] of Object.entries(pts)) {
-        if (!pname.startsWith(muni)) continue;
-        const [x, yy] = PeelAerial.merc(lng, lat);
-        const img = new Image(); img.crossOrigin = 'anonymous';
-        const u = PeelAerial.exportUrl(url, [x - 150, yy - 150, x + 150, yy + 150], 100, 100);
-        const ok = await new Promise(r => { img.onload = () => r(true); img.onerror = () => r(false); img.src = u; });
-        if (!ok) { out.push(`${muni} ${y} ${pname}: load failed`); continue; }
-        const c = document.createElement('canvas'); c.width = 100; c.height = 100; const ctx = c.getContext('2d'); ctx.drawImage(img, 0, 0);
-        const d = ctx.getImageData(0, 0, 100, 100).data;
-        let r = 0, g = 0, b = 0, sat = 0, n = 0; const cls = {};
-        for (let i = 0; i < d.length; i += 4) { if (d[i + 3] < 128) continue; n++; r += d[i]; g += d[i + 1]; b += d[i + 2]; sat += Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]); const k = PeelAerial.classify(d[i], d[i + 1], d[i + 2]); cls[k] = (cls[k] || 0) + 1; }
-        out.push(`${muni} ${y} ${pname}: bands=${info.bandCount} type=${info.pixelType} n=${n} meanRGB=${Math.round(r / n)},${Math.round(g / n)},${Math.round(b / n)} sat=${Math.round(sat / n)} classes=${JSON.stringify(cls)}`);
-      }
-    }
-    return out;
-  });
-  console.log('\n' + colour.join('\n'));
-
   // 2. Aerial check on sample projects.
   const picks = await page.evaluate(() => {
     const ps = PeelApp.state.projects.filter(p => p.lat != null);
@@ -76,7 +46,10 @@ fs.mkdirSync(OUT, { recursive: true });
       ...take(by(p => p.municipality === 'Brampton' && p.phase === 'review' && p.units >= 50), 1),
       ...take(by(p => p.municipality === 'Brampton' && p.phase === 'completed' && p.units === 1), 2),
       ...take(by(p => p.municipality === 'Caledon' && p.units >= 100), 2),
-      ...take(by(p => p.municipality === 'Caledon' && p.phase === 'completed' && p.units === 1), 1),
+      ...take(by(p => p.municipality === 'Caledon' && p.phase === 'completed' && p.units === 1), 2),
+      ...take(by(p => p.municipality === 'Mississauga' && p.phase === 'completed' && p.units === 1 && p.first && p.first.getFullYear() >= 2021), 3),
+      ...take(by(p => p.municipality === 'Brampton' && p.phase === 'completed' && p.units >= 20 && p.first && p.first.getFullYear() >= 2017), 3),
+      ...take(by(p => p.municipality === 'Mississauga' && p.phase === 'approved' && p.units >= 100), 2),
     ];
   });
   const rows = [];
@@ -86,10 +59,10 @@ fs.mkdirSync(OUT, { recursive: true });
       const p = PeelApp.state.projects.find(x => x.key === key);
       try {
         const a = await PeelAerial.check(p, PEEL_CONFIG, { phaseLabel: p.phase });
-        const st = s => s && `built ${Math.round(s.built * 100)} veg ${Math.round(s.veg * 100)} soil ${Math.round(s.soil * 100)} cov ${Math.round(s.coverage * 100)}`;
+        const st = s => s && `structure ${s.structure.toFixed(2)} (around ${s.structureAround.toFixed(2)}) cov ${Math.round(s.coverage * 100)}`;
         return { title: p.title, muni: p.municipality, phase: p.phase, units: p.units, first: p.first && p.first.toISOString().slice(0, 10),
           prob: Math.round(a.result.probability * 100), status: a.result.status, years: `${a.years.before}->${a.years.latest}`,
-          before: st(a.before && a.before.stats), now: st(a.latest.stats), change: a.change != null ? Math.round(a.change * 100) : null,
+          before: st(a.before && a.before.stats), now: st(a.latest.stats), change: a.change ? `site ${a.change.site.toFixed(2)} around ${a.change.around.toFixed(2)} ratio ${a.change.ratio.toFixed(2)}` : null,
           fp: a.fp.now != null ? `${a.fp.before != null ? Math.round(a.fp.before * 100) : '?'}->${Math.round(a.fp.now * 100)}` : '-', site: a.geom.source,
           signals: a.result.signals.map(s => `${s.effect > 0 ? '+' : s.effect < 0 ? '-' : '='} ${s.text}`) };
       } catch (e) { return { title: p.title, muni: p.municipality, phase: p.phase, error: e.message }; }
@@ -98,7 +71,7 @@ fs.mkdirSync(OUT, { recursive: true });
     rows.push(r);
     console.log(`\n${r.title} [${r.muni}, ${r.phase}, ${r.units} units, first ${r.first}] ${r.ms} ms`);
     if (r.error) { console.log(`  ERROR ${r.error}`); continue; }
-    console.log(`  => ${r.prob}% ${r.status} | years ${r.years} | before: ${r.before} | now: ${r.now} | class change ${r.change}% | footprints ${r.fp} | site: ${r.site}`);
+    console.log(`  => ${r.prob}% ${r.status} | years ${r.years} | before: ${r.before} | now: ${r.now} | change ${r.change} | footprints ${r.fp} | site: ${r.site}`);
     for (const s of r.signals) console.log(`     ${s}`);
   }
 

@@ -1,12 +1,13 @@
 /*
  * Aerial check: compares a development's site on the aerial photo from before the
- * application with the latest aerial photo, plus building footprints traced from those
+ * application with the latest aerial photo (change relative to the surroundings, and
+ * building-edge structure), plus building footprints traced from those
  * photos, and estimates the probability the development has been completed.
  *
  * Pure parts (geometry, pixel classification, scoring) run in Node for tests; check()
  * fetches imagery in the browser (the image services allow cross-origin pixel reads).
  *
- * This is an estimate from colour and footprint evidence, not a site inspection.
+ * This is an estimate from image and footprint evidence, not a site inspection.
  */
 (function (root) {
   'use strict';
@@ -66,43 +67,51 @@
   }
 
   // ---- Pixels -------------------------------------------------------------------------------
-  /** Rough land-cover class of one pixel. */
-  function classify(r, g, b) {
-    const max = Math.max(r, g, b), min = Math.min(r, g, b), sat = max - min, br = (r + g + b) / 3;
-    if (br < 45) return 'shadow';
-    if (g >= r + 6 && g >= b + 4 && br < 200) return 'veg';
-    if (r >= g && g >= b && r - b >= 22 && br >= 70 && br <= 210 && sat < 90) return 'soil';
-    if (sat < 28 || (br > 200 && sat < 45)) return 'built';
-    return 'other';
-  }
+  // The city photos are leaf-off spring / fall flights with muted, source-specific colour, so
+  // nothing here relies on absolute colour. Each photo is normalised (luminance z-scores over
+  // the whole frame) and compared with itself and with the surroundings of the site:
+  //  - structure: edge strength (Sobel) inside the site, relative to the frame's contrast;
+  //    roofs, roads and building edges raise it, fields and graded earth lower it;
+  //  - change: how much the normalised photo differs between years inside the site, relative
+  //    to the ring around it (which absorbs registration and exposure differences).
   /**
-   * Share of each class inside the site. `rgba` is canvas pixel data; `mask[i]` is non-zero
-   * for pixels inside the site. Transparent pixels (outside the imagery) are skipped.
+   * `rgba` is canvas pixel data (w x h); `mask[i]` is non-zero inside the site. Transparent
+   * pixels (outside the imagery) are skipped.
    */
-  function analyse(rgba, mask) {
-    const n = { veg: 0, soil: 0, built: 0, shadow: 0, other: 0 };
-    let inside = 0, covered = 0;
-    const classes = new Uint8Array(mask.length);
-    const code = { veg: 1, soil: 2, built: 3, shadow: 4, other: 5 };
-    for (let i = 0; i < mask.length; i++) {
-      if (!mask[i]) continue;
-      inside++;
+  function analyse(rgba, mask, w, h) {
+    const n = w * h, z = new Float32Array(n), ok = new Uint8Array(n);
+    let sum = 0, sum2 = 0, cnt = 0, inside = 0, covered = 0;
+    for (let i = 0; i < n; i++) {
+      if (mask[i]) inside++;
       if (rgba[i * 4 + 3] < 128) continue;
-      covered++;
-      const c = classify(rgba[i * 4], rgba[i * 4 + 1], rgba[i * 4 + 2]);
-      n[c]++; classes[i] = code[c];
+      ok[i] = 1; if (mask[i]) covered++;
+      const l = 0.299 * rgba[i * 4] + 0.587 * rgba[i * 4 + 1] + 0.114 * rgba[i * 4 + 2];
+      z[i] = l; sum += l; sum2 += l * l; cnt++;
     }
-    const f = k => (covered ? n[k] / covered : 0);
-    return { veg: f('veg'), soil: f('soil'), built: f('built') + f('shadow') / 2, shadow: f('shadow'), coverage: inside ? covered / inside : 0, pixels: covered, classes };
+    const mean = cnt ? sum / cnt : 0, sd = cnt ? Math.sqrt(Math.max(1, sum2 / cnt - mean * mean)) : 1;
+    for (let i = 0; i < n; i++) z[i] = ok[i] ? (z[i] - mean) / sd : 0;
+    let eIn = 0, nIn = 0, eOut = 0, nOut = 0;
+    for (let y = 1; y < h - 1; y++) for (let x = 1; x < w - 1; x++) {
+      const i = y * w + x;
+      if (!ok[i] || !ok[i - 1] || !ok[i + 1] || !ok[i - w] || !ok[i + w]) continue;
+      const gx = z[i - w + 1] + 2 * z[i + 1] + z[i + w + 1] - z[i - w - 1] - 2 * z[i - 1] - z[i + w - 1];
+      const gy = z[i + w - 1] + 2 * z[i + w] + z[i + w + 1] - z[i - w - 1] - 2 * z[i - w] - z[i - w + 1];
+      const g = Math.hypot(gx, gy);
+      if (mask[i]) { eIn += g; nIn++; } else { eOut += g; nOut++; }
+    }
+    return { structure: nIn ? eIn / nIn : 0, structureAround: nOut ? eOut / nOut : 0, coverage: inside ? covered / inside : 0, z, ok };
   }
-  /** Share of site pixels whose class changed between two images of the same size. */
-  function classChange(a, b, mask) {
-    let n = 0, d = 0;
+  /** Mean normalised difference inside the site, and its ratio to the ring around it. */
+  function change(a, b, mask) {
+    let dIn = 0, nIn = 0, dOut = 0, nOut = 0;
     for (let i = 0; i < mask.length; i++) {
-      if (!mask[i] || !a[i] || !b[i]) continue;
-      n++; if (a[i] !== b[i]) d++;
+      if (!a.ok[i] || !b.ok[i]) continue;
+      const d = Math.abs(a.z[i] - b.z[i]);
+      if (mask[i]) { dIn += d; nIn++; } else { dOut += d; nOut++; }
     }
-    return n ? d / n : null;
+    if (!nIn || !nOut) return null;
+    const site = dIn / nIn, around = dOut / nOut;
+    return { site, around, ratio: around > 0 ? site / around : null };
   }
 
   // ---- Probability ------------------------------------------------------------------------
@@ -114,7 +123,7 @@
   /**
    * Probability the development is complete, from the records (phase, permits) and the
    * aerial evidence. Returns { probability, status, signals: [{ text, effect }] }.
-   * ev = { latestYear, beforeYear, preStart, now, before, change, fpNow, fpBefore, fpYearNow, fpYearBefore, permitYear, now: Date }
+   * ev = { latestYear, beforeYear, preStart, now, before, change: { site, around, ratio }, fpNow, fpBefore, fpYearNow, fpYearBefore, permitYear }
    */
   function score(p, ev, today = new Date()) {
     const signals = [];
@@ -140,26 +149,23 @@
       w = 0.3;
       add(`Latest aerial (${ev.latestYear}) is older than the building permit (${ev.permitYear}), so it can't show the building`, 0);
     }
-    const now = ev.now, before = ev.before;
-    if (now && now.coverage >= 0.3) {
-      if (now.soil >= 0.2) { L -= 1.2 * w; add(`Bare ground on ${pct(now.soil)} of the site in ${ev.latestYear}: earthworks or construction`, -1); }
-      if (before && before.coverage >= 0.3) {
-        const dBuilt = now.built - before.built, dVeg = now.veg - before.veg;
-        if (dBuilt >= 0.15 || (dVeg <= -0.2 && now.built >= 0.4)) {
-          L += 1.2 * w; add(`Built-up area ${pct(before.built)} (${ev.beforeYear}) → ${pct(now.built)} (${ev.latestYear})`, 1);
-        } else if (Math.abs(dBuilt) < 0.05 && Math.abs(dVeg) < 0.05 && now.soil < 0.1 && (ev.change == null || ev.change < 0.3)) {
-          L -= 0.6 * w; add(`Little visible change between ${ev.beforeYear} and ${ev.latestYear}`, -1);
-        } else {
-          add(`Built-up area ${pct(before.built)} (${ev.beforeYear}) → ${pct(now.built)} (${ev.latestYear})`, 0);
-        }
-        if (ev.change != null && ev.change >= 0.35 && now.built >= 0.4 && dBuilt > -0.05) {
-          L += 0.6 * w; add(`${pct(ev.change)} of the site looks different: redeveloped`, 0.5);
-        }
+    const now = ev.now, before = ev.before, ch = ev.change;
+    const x = v => `×${v.toFixed(1)}`;
+    if (now && now.coverage >= 0.3 && before && before.coverage >= 0.3 && ch && ch.ratio != null) {
+      const r = before.structure > 0 ? now.structure / before.structure : 1;
+      if (ch.ratio >= 1.4 && ch.site >= 0.5) {
+        if (r >= 1.2) { L += 1.4 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings between ${ev.beforeYear} and ${ev.latestYear}, with more building edges (structure ${x(r)})`, 1); }
+        else if (r <= 0.8) { L -= 1.0 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings but lost structure (${x(r)}): cleared or graded, construction under way`, -1); }
+        else { L += 0.4 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings between ${ev.beforeYear} and ${ev.latestYear}`, 0.5); }
+      } else if (ch.ratio < 1.15) {
+        L -= 0.7 * w; add(`No more change on the site than around it between ${ev.beforeYear} and ${ev.latestYear}`, -1);
       } else {
-        add(`Built-up area ${pct(now.built)} in ${ev.latestYear}`, 0);
+        add(`Some change on the site between ${ev.beforeYear} and ${ev.latestYear} (${x(ch.ratio)} its surroundings)`, 0);
       }
-    } else if (now) {
+    } else if (now && now.coverage < 0.3) {
       add('The latest aerial does not cover this site', 0);
+    } else if (now && !before) {
+      add(`No earlier aerial to compare with`, 0);
     }
 
     // Building footprints traced from the aerials.
@@ -177,7 +183,7 @@
     const probability = Math.min(0.98, Math.max(0.02, sigmoid(L)));
     let status;
     if (probability >= 0.7) status = 'Likely completed';
-    else if ((now && now.soil >= 0.2) || ['permit', 'construction'].includes(p.phase) ||
+    else if ((ch && ch.ratio >= 1.4 && ch.site >= 0.5) || ['permit', 'construction'].includes(p.phase) ||
       (ev.fpNow != null && ev.fpBefore != null && ev.fpNow - ev.fpBefore >= 0.05)) status = 'Likely under construction';
     else status = 'Not visibly started';
     return { probability, status, signals };
@@ -227,7 +233,7 @@
     const c = document.createElement('canvas'); c.width = fr.w; c.height = fr.h;
     const ctx = c.getContext('2d');
     ctx.drawImage(img, 0, 0, fr.w, fr.h);
-    const stats = analyse(ctx.getImageData(0, 0, fr.w, fr.h).data, mask);
+    const stats = analyse(ctx.getImageData(0, 0, fr.w, fr.h).data, mask, fr.w, fr.h);
     ctx.lineWidth = 2; ctx.strokeStyle = '#ffd400'; ctx.setLineDash([6, 4]);
     tracePath(ctx, geom, fr); ctx.stroke();
     return { canvas: c, stats };
@@ -262,7 +268,7 @@
       photo(src.years[years.latest].url, geom, fr, mask),
       years.before ? photo(src.years[years.before].url, geom, fr, mask).catch(() => null) : null,
     ]);
-    const change = before ? classChange(before.stats.classes, latest.stats.classes, mask) : null;
+    const diff = before ? change(before.stats, latest.stats, mask) : null;
 
     // Footprints: Mississauga by year (before the application, and latest); Brampton current.
     const fpSrc = cfg.footprints && cfg.footprints[p.municipality];
@@ -283,15 +289,15 @@
     const permitDates = p.records.filter(r => r.kind === 'permit').flatMap(r => r.events.filter(e => e.phase === 'permit').map(e => e.date.getFullYear()));
     const ev = {
       latestYear: years.latest, beforeYear: years.before, preStart: years.preStart,
-      now: latest.stats, before: before && before.stats, change,
+      now: latest.stats, before: before && before.stats, change: diff,
       fpNow: fp.now ?? null, fpBefore: fp.before ?? null, fpYearNow: fp.yearNow, fpYearBefore: fp.yearBefore,
       permitYear: permitDates.length ? Math.min(...permitDates) : null,
     };
     const result = score({ ...p, phaseLabel }, ev);
-    return { geom, years, src, before, latest, change, fp, ev, result };
+    return { geom, years, src, before, latest, change: diff, fp, ev, result };
   }
 
-  const api = { merc, circle, ringArea, siteGeometry, pickYears, classify, analyse, classChange, score, exportUrl, frame, check, PRIOR };
+  const api = { merc, circle, ringArea, siteGeometry, pickYears, analyse, change, score, exportUrl, frame, check, PRIOR };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAerial = api;
 })(typeof window !== 'undefined' ? window : globalThis);

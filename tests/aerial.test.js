@@ -4,22 +4,37 @@ const assert = require('node:assert/strict');
 const A = require('../js/aerial.js');
 const CFG = require('../js/config.js');
 
-test('pixel classes: grass, soil, roof/pavement, shadow', () => {
-  assert.equal(A.classify(70, 110, 60), 'veg');
-  assert.equal(A.classify(160, 130, 95), 'soil');
-  assert.equal(A.classify(150, 150, 155), 'built');
-  assert.equal(A.classify(235, 235, 230), 'built');
-  assert.equal(A.classify(20, 22, 25), 'shadow');
-});
+// w x h test image: fill(x, y) -> [r, g, b]; mask = centre square.
+function img(w, h, fill) {
+  const rgba = new Uint8ClampedArray(w * h * 4), mask = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const i = y * w + x, [r, g, b] = fill(x, y);
+    rgba.set([r, g, b, 255], i * 4);
+    mask[i] = x >= w / 4 && x < 3 * w / 4 && y >= h / 4 && y < 3 * h / 4 ? 1 : 0;
+  }
+  return { rgba, mask };
+}
+const noise = (x, y) => ((x * 73856093) ^ (y * 19349663)) % 7;
+const field = (x, y) => [120 + noise(x, y), 125 + noise(x, y), 110];
+// Houses: a grid of bright roofs with dark edges inside the centre square.
+const houses = (x, y) => {
+  const inside = x >= 10 && x < 30 && y >= 10 && y < 30;
+  if (inside && x % 5 < 3 && y % 5 < 3) return [220, 215, 210];
+  if (inside && (x % 5 === 3 || y % 5 === 3)) return [40, 40, 45];
+  return field(x, y);
+};
 
-test('analyse counts only pixels inside the site and covered by imagery', () => {
-  const px = (r, g, b, a = 255) => [r, g, b, a];
-  const rgba = Uint8ClampedArray.from([...px(70, 110, 60), ...px(150, 150, 150), ...px(160, 130, 95), ...px(0, 0, 0, 0), ...px(70, 110, 60)]);
-  const mask = Uint8Array.from([1, 1, 1, 1, 0]);
-  const s = A.analyse(rgba, mask);
-  assert.equal(s.pixels, 3);
-  assert.ok(Math.abs(s.veg - 1 / 3) < 1e-9 && Math.abs(s.built - 1 / 3) < 1e-9 && Math.abs(s.soil - 1 / 3) < 1e-9);
-  assert.equal(s.coverage, 0.75);
+test('structure rises when buildings appear, and change is measured against the surroundings', () => {
+  const a = img(40, 40, field), b = img(40, 40, houses);
+  const before = A.analyse(a.rgba, a.mask, 40, 40), after = A.analyse(b.rgba, b.mask, 40, 40);
+  assert.ok(after.structure > 2 * before.structure, `${before.structure} -> ${after.structure}`);
+  const ch = A.change(before, after, a.mask);
+  assert.ok(ch.ratio > 2, `ratio ${ch.ratio}`);
+  // Same photo with a global exposure / colour shift: no change.
+  const c = img(40, 40, (x, y) => field(x, y).map(v => v * 0.7 + 30));
+  const shifted = A.analyse(c.rgba, c.mask, 40, 40);
+  const none = A.change(before, shifted, a.mask);
+  assert.ok(none.site < 0.2, `site ${none.site}`);
 });
 
 test('imagery years: latest, and the newest before the application', () => {
@@ -39,28 +54,28 @@ test('site geometry: application boundary, else a circle sized for the building'
   assert.ok(Math.abs(h.area - Math.PI * 225) < 15);
 });
 
-const land = (built, veg, soil) => ({ built, veg, soil, coverage: 1 });
+const photo = (structure, coverage = 1) => ({ structure, structureAround: 1, coverage });
 test('score: built-up site with new footprints is likely complete; unchanged field is not started', () => {
   const done = A.score({ phase: 'construction', buildout: null }, {
-    latestYear: 2024, beforeYear: 2018, now: land(0.7, 0.1, 0.02), before: land(0.1, 0.8, 0.05), change: 0.6,
+    latestYear: 2024, beforeYear: 2018, now: photo(1.6), before: photo(0.6), change: { site: 1.1, around: 0.4, ratio: 2.7 },
     fpNow: 0.4, fpBefore: 0.0, fpYearNow: 2024, fpYearBefore: 2020, permitYear: 2021 }, new Date('2026-10-01'));
   assert.ok(done.probability >= 0.9, done.probability);
   assert.equal(done.status, 'Likely completed');
 
   const field = A.score({ phase: 'review', buildout: null }, {
-    latestYear: 2024, beforeYear: 2021, now: land(0.05, 0.85, 0.05), before: land(0.05, 0.86, 0.04), change: 0.1,
+    latestYear: 2024, beforeYear: 2021, now: photo(0.5), before: photo(0.5), change: { site: 0.3, around: 0.3, ratio: 1.0 },
     fpNow: 0, fpBefore: 0, fpYearNow: 2024, fpYearBefore: 2020 });
   assert.ok(field.probability < 0.05, field.probability);
   assert.equal(field.status, 'Not visibly started');
 
-  const digging = A.score({ phase: 'permit', buildout: null }, {
-    latestYear: 2025, beforeYear: 2020, now: land(0.2, 0.1, 0.5), before: land(0.1, 0.8, 0.05), change: 0.7, permitYear: 2024 }, new Date('2026-10-01'));
-  assert.ok(digging.probability < 0.2, digging.probability);
-  assert.equal(digging.status, 'Likely under construction');
+  const graded = A.score({ phase: 'permit', buildout: null }, {
+    latestYear: 2025, beforeYear: 2020, now: photo(0.4), before: photo(1.0), change: { site: 0.9, around: 0.3, ratio: 3 }, permitYear: 2024 }, new Date('2026-10-01'));
+  assert.ok(graded.probability < 0.2, graded.probability);
+  assert.equal(graded.status, 'Likely under construction');
 });
 
 test('score: an aerial older than the permit carries little weight', () => {
-  const ev = { latestYear: 2024, beforeYear: 2020, now: land(0.05, 0.85, 0.05), before: land(0.05, 0.85, 0.05), change: 0.05, permitYear: 2025 };
+  const ev = { latestYear: 2024, beforeYear: 2020, now: photo(0.5), before: photo(0.5), change: { site: 0.3, around: 0.3, ratio: 1 }, permitYear: 2025 };
   const s = A.score({ phase: 'completed', buildout: null }, ev);
   assert.ok(s.probability > 0.7, s.probability);
   assert.ok(s.signals.some(x => /older than the building permit/.test(x.text)));

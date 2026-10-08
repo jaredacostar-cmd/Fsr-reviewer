@@ -917,7 +917,7 @@
         ${fig(a.latest, a.years.latest, '· latest')}
       </div>
       <ul class="aerial-signals">${r.signals.map(s => `<li>${arrow(s.effect)}<span>${esc(s.text)}</span></li>`).join('')}</ul>
-      <p class="small muted">${esc(a.src.owner)} aerial photos. Site: ${esc(a.geom.source)} (yellow outline). Estimate from land-cover colours${a.fp.now != null ? ' and building footprints traced from the photos' : ''}; not a site inspection.</p>`;
+      <p class="small muted">${esc(a.src.owner)} aerial photos. Site: ${esc(a.geom.source)} (yellow outline). Estimate from how much the site changed compared with its surroundings and how much building structure it shows${a.fp.now != null ? ', plus building footprints traced from the photos' : ''}; not a site inspection.</p>`;
     const slots = box.querySelectorAll('.aerial-img');
     const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
     canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
