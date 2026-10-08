@@ -28,7 +28,7 @@ const rootId = sourceId => String(sourceId).split('/')[0];
 
 // ---- Compact (de)serialisation ------------------------------------------------
 const KEEP = ['uid', 'sourceId', 'municipality', 'kind', 'ref', 'address', 'type', 'description',
-  'ward', 'units', 'gfa', 'statusRaw', 'phase', 'newBuild', 'unitMix'];
+  'ward', 'units', 'gfa', 'statusRaw', 'phase', 'newBuild', 'unitMix', 'unitsFromText', 'poly'];
 
 function encodeRecord(r) {
   const o = {};

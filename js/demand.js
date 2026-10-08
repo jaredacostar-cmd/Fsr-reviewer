@@ -38,17 +38,34 @@
     return 'unknown';
   }
 
-  /** Units of a project split by type: uses a published unit mix when present. */
-  function unitSplit(project) {
-    if (project.unitMix) {
-      const m = project.unitMix;
-      return { single: (m.single || 0) + (m.semi || 0), town: m.town || 0, apartment: m.apartment || 0, unknown: 0 };
-    }
+  /** How many of a project's units count, by basis. */
+  function unitsFor(project, basis = 'all') {
+    const b = project.buildout;
+    if (basis === 'remaining') return b ? b.remaining : 0;   // planned, no building permit yet
+    if (basis === 'unbuilt') return b ? b.unbuilt : (project.phase === 'completed' ? 0 : project.units || 0);
+    if (basis === 'completed') return b ? b.completed : (project.phase === 'completed' ? project.units || 0 : 0);
+    return project.units || 0;
+  }
+
+  /**
+   * Units of a project split by type: uses a published unit mix when present
+   * (scaled to the counted units), else the dwelling type read from its text.
+   */
+  function unitSplit(project, basis = 'all') {
+    const n = unitsFor(project, basis);
     const split = { single: 0, town: 0, apartment: 0, unknown: 0 };
-    if (project.units > 0) {
-      const text = [project.types.join(' '), project.description].join(' ');
-      split[unitTypeOf(text)] += project.units;
+    if (!(n > 0)) return split;
+    const m = project.unitMix;
+    if (m) {
+      const mix = { single: (m.single || 0) + (m.semi || 0), town: m.town || 0, apartment: m.apartment || 0 };
+      const total = mix.single + mix.town + mix.apartment;
+      if (total > 0) {
+        for (const k in mix) split[k] = n * mix[k] / total;
+        return split;
+      }
     }
+    const text = [project.types.join(' '), project.description].join(' ');
+    split[unitTypeOf(text)] += n;
     return split;
   }
 
@@ -62,11 +79,11 @@
    * Harmon peaking is applied to the combined population (system-level peak),
    * which is lower than summing each site's individually peaked flow.
    */
-  function estimate(projects, criteria = DEFAULT_CRITERIA) {
+  function estimate(projects, criteria = DEFAULT_CRITERIA, basis = 'all') {
     const units = { single: 0, town: 0, apartment: 0, unknown: 0 };
     let withUnits = 0;
     for (const p of projects) {
-      const s = unitSplit(p);
+      const s = unitSplit(p, basis);
       const total = s.single + s.town + s.apartment + s.unknown;
       if (total > 0) withUnits++;
       for (const k in units) units[k] += s[k];
@@ -92,7 +109,7 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, unitTypeOf, unitSplit, harmon, estimate, toMLd };
+  const api = { UNIT_TYPES, DEFAULT_CRITERIA, unitTypeOf, unitSplit, unitsFor, harmon, estimate, toMLd };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

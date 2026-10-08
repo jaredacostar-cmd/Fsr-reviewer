@@ -63,6 +63,7 @@
               <option value="50">50+ units</option>
               <option value="100">100+ units</option>
               <option value="500">500+ units</option>
+              <option value="left">Units left to build</option>
             </select>
           </label>
           <label class="check"><input type="checkbox" id="f-new" checked> New builds only</label>
@@ -159,9 +160,10 @@
         <div class="tb-head">
           <h2>Population &amp; servicing demand</h2>
           <select id="d-basis" aria-label="Which projects to include">
-            <option value="all">All shown projects</option>
-            <option value="pipeline">Not yet completed</option>
-            <option value="completed">Completed only</option>
+            <option value="all">All units</option>
+            <option value="remaining">Left to build (no permit yet)</option>
+            <option value="unbuilt">Not yet completed</option>
+            <option value="completed">Completed</option>
           </select>
           <span class="muted small" id="d-note"></span>
         </div>

@@ -349,7 +349,75 @@
       if (t) { rec.units = t; rec.unitsFromText = true; }
     }
     rec.newBuild = isNewBuild(rec);
+    // Planning applications keep their land polygon so permits on that land can be linked.
+    if (src.kind === 'application') {
+      const poly = simplifyPolygon(feature.geometry);
+      if (poly) rec.poly = poly;
+    }
     return rec;
+  }
+
+  // ---- Geometry helpers (lng/lat rings) ---------------------------------------
+  const MAX_RING_POINTS = 80;
+  function simplifyPolygon(g) {
+    if (!g || !g.coordinates) return null;
+    const outers = g.type === 'Polygon' ? [g.coordinates[0]] : g.type === 'MultiPolygon' ? g.coordinates.map(p => p[0]) : [];
+    const rings = outers.filter(r => r && r.length >= 4).map(r => {
+      const step = Math.max(1, Math.ceil(r.length / MAX_RING_POINTS));
+      const out = r.filter((_, i) => i % step === 0).map(([x, y]) => [+x.toFixed(5), +y.toFixed(5)]);
+      if (out.length < 3) return null;
+      return out;
+    }).filter(Boolean);
+    return rings.length ? rings : null;
+  }
+  function ringsBBox(rings) {
+    const b = [Infinity, Infinity, -Infinity, -Infinity];
+    for (const r of rings) for (const [x, y] of r) {
+      if (x < b[0]) b[0] = x; if (y < b[1]) b[1] = y; if (x > b[2]) b[2] = x; if (y > b[3]) b[3] = y;
+    }
+    return b;
+  }
+  function pointInRing(x, y, ring) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+  const pointInRings = (x, y, rings) => rings.some(r => pointInRing(x, y, r));
+  // Area in m² (equirectangular approximation; fine at site scale).
+  function ringsArea(rings) {
+    let total = 0;
+    for (const r of rings) {
+      const lat0 = r[0][1] * Math.PI / 180, kx = 111320 * Math.cos(lat0), ky = 110540;
+      let a = 0;
+      for (let i = 0, j = r.length - 1; i < r.length; j = i++) a += (r[j][0] * kx) * (r[i][1] * ky) - (r[i][0] * kx) * (r[j][1] * ky);
+      total += Math.abs(a) / 2;
+    }
+    return total;
+  }
+  function ringsCentroid(rings) {
+    const largest = rings.slice().sort((a, b) => ringsArea([b]) - ringsArea([a]))[0];
+    const pt = representativePoint({ type: 'Polygon', coordinates: [largest] });
+    return pt ? [pt[1], pt[0]] : largest[0];
+  }
+
+  // Simple grid index over bounding boxes.
+  function makeGrid(cell = 0.01) {
+    const cells = new Map();
+    const keyOf = (i, j) => `${i}:${j}`;
+    return {
+      add(item, b) {
+        for (let i = Math.floor(b[0] / cell); i <= Math.floor(b[2] / cell); i++)
+          for (let j = Math.floor(b[1] / cell); j <= Math.floor(b[3] / cell); j++) {
+            const k = keyOf(i, j);
+            if (!cells.has(k)) cells.set(k, []);
+            cells.get(k).push(item);
+          }
+      },
+      at(x, y) { return cells.get(keyOf(Math.floor(x / cell), Math.floor(y / cell))) || []; },
+    };
   }
 
   /** "ISSUE_DATE" -> "Issue date" for display. */
@@ -366,6 +434,30 @@
     return `${rec.municipality}|#${rec.uid}`;
   }
 
+  // Applications larger than this are area-wide (secondary plans, large OPAs) and
+  // don't absorb the permits inside them.
+  const MAX_SITE_AREA_M2 = 4e6;
+  // A permit dated more than this before the application belongs to an earlier building.
+  const DATE_SLACK_MS = 365 * 24 * 3600 * 1000;
+
+  const firstDate = recs => {
+    let d = Infinity;
+    for (const r of recs) for (const e of r.events) if (+e.date < d) d = +e.date;
+    return isFinite(d) ? d : null;
+  };
+  const after = (a, b) => a == null || b == null || a >= b - DATE_SLACK_MS;
+
+  /**
+   * Group records into projects.
+   *  1. Records at the same civic address form a group.
+   *  2. Groups whose planning applications cover the same land (each one's centre lies
+   *     inside the other's polygon) are the same site.
+   *  3. A site whose centre lies inside a larger site's polygon is part of it, so a
+   *     subdivision encompasses the site plans and condos within it.
+   *  4. Every other group (house and building permits at their own street addresses) joins
+   *     the smallest site whose polygon contains it.
+   * Units are then counted once per project (see mergeProject).
+   */
   function buildProjects(records) {
     const groups = new Map();
     for (const r of records) {
@@ -374,12 +466,127 @@
       if (!g) groups.set(k, g = []);
       g.push(r);
     }
+
+    // Sites: groups with a live planning application polygon of site scale.
+    const sites = [];
+    for (const [key, recs] of groups) {
+      const apps = recs.filter(r => r.kind === 'application' && r.poly && r.phase !== 'cancelled');
+      if (!apps.length) continue;
+      const rings = apps.flatMap(r => r.poly);
+      const area = ringsArea(rings);
+      if (!(area > 0) || area > MAX_SITE_AREA_M2) continue;
+      sites.push({ key, recs, rings, area, bbox: ringsBBox(rings), centre: ringsCentroid(rings),
+        muni: recs[0].municipality, start: firstDate(apps), parent: null, same: null });
+    }
+    const grid = makeGrid();
+    for (const s of sites) grid.add(s, s.bbox);
+    const inBBox = (b, x, y) => x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3];
+    const containing = (x, y, muni) => grid.at(x, y).filter(s => s.muni === muni && inBBox(s.bbox, x, y) && pointInRings(x, y, s.rings));
+
+    // 2. Same land: union of mutually containing sites.
+    const find = s => (s.same && s.same !== s ? (s.same = find(s.same)) : s);
+    for (const s of sites) s.same = s;
+    for (const a of sites) {
+      for (const b of containing(a.centre[0], a.centre[1], a.muni)) {
+        if (b === a) continue;
+        if (pointInRings(b.centre[0], b.centre[1], a.rings)) {
+          const ra = find(a), rb = find(b);
+          if (ra !== rb) rb.same = ra;
+        }
+      }
+    }
+    // A "land" is one set of same-land sites.
+    const lands = new Map();
+    for (const s of sites) {
+      const r = find(s);
+      let land = lands.get(r);
+      if (!land) lands.set(r, land = { sites: [], area: 0, children: [], parent: null });
+      land.sites.push(s);
+      if (s.area > land.area) { land.area = s.area; land.rep = s; }
+    }
+    for (const s of sites) s.land = lands.get(find(s));
+    for (const land of lands.values()) land.start = Math.min(...land.sites.map(s => s.start ?? Infinity));
+
+    // 3. Nesting: each land's parent is the smallest larger land containing its centre.
+    for (const land of lands.values()) {
+      const [x, y] = land.rep.centre;
+      let best = null;
+      for (const s of containing(x, y, land.rep.muni)) {
+        const other = s.land;
+        if (other === land || other.area <= land.area) continue;
+        if (!after(isFinite(land.start) ? land.start : null, isFinite(other.start) ? other.start : null)) continue;
+        if (!best || other.area < best.area) best = other;
+      }
+      if (best) { land.parent = best; best.children.push(land); }
+    }
+    const rootOf = land => { while (land.parent) land = land.parent; return land; };
+
+    // 4. Remaining groups join the smallest containing land (then its root).
+    const siteKeys = new Set(sites.map(s => s.key));
+    const extra = new Map(); // root land -> extra records
+    const loose = [];
+    for (const [key, recs] of groups) {
+      if (siteKeys.has(key)) continue;
+      const pt = recs.find(r => r.lat != null);
+      let home = null;
+      if (pt) {
+        const start = firstDate(recs);
+        for (const s of containing(pt.lng, pt.lat, pt.municipality)) {
+          if (!after(start, isFinite(s.land.start) ? s.land.start : null)) continue;
+          if (!home || s.land.area < home.area) home = s.land;
+        }
+      }
+      if (home) {
+        const root = rootOf(home);
+        if (!extra.has(root)) extra.set(root, []);
+        extra.get(root).push(...recs);
+      } else {
+        loose.push([key, recs]);
+      }
+    }
+
     const projects = [];
-    for (const [key, recs] of groups) projects.push(mergeProject(key, recs));
+    const roots = new Set([...lands.values()].map(rootOf));
+    for (const root of roots) {
+      const all = [];
+      const collect = land => { for (const s of land.sites) all.push(...s.recs); land.children.forEach(collect); };
+      collect(root);
+      all.push(...(extra.get(root) || []));
+      projects.push(mergeProject(root.rep.key, all, { planned: plannedUnits(root), site: root.rep }));
+    }
+    for (const [key, recs] of loose) projects.push(mergeProject(key, recs));
     return projects;
   }
 
-  function mergeProject(key, recs) {
+  // Planned units of a land and everything nested in it: files on the same land repeat
+  // one proposal (take the largest); nested sites are parts of the parent (sum them,
+  // unless the parent's own figure is larger).
+  function plannedUnits(land) {
+    let own = null;
+    for (const s of land.sites) for (const r of s.recs) {
+      if (r.kind === 'application' && r.phase !== 'cancelled' && r.units > 0) own = Math.max(own || 0, r.units);
+    }
+    const kids = land.children.map(plannedUnits).filter(v => v > 0);
+    const sum = kids.reduce((t, v) => t + v, 0);
+    if (own == null && !kids.length) return null;
+    return Math.max(own || 0, sum);
+  }
+
+  // Units on building permits, counted once per building: permits at the same address
+  // (foundation, full, revisions) usually repeat the building's unit count.
+  function permitUnits(permits) {
+    const byAddr = new Map();
+    for (const r of permits) {
+      if (!(r.units > 0)) continue;
+      const k = normalizeAddress(r.address) || r.uid;
+      byAddr.set(k, Math.max(byAddr.get(k) || 0, r.units));
+    }
+    let t = 0;
+    for (const v of byAddr.values()) t += v;
+    return t;
+  }
+
+  function mergeProject(key, recs, site = {}) {
     let live = recs.filter(r => r.phase !== 'cancelled');
     // Redevelopment: files that start after an earlier build on the site was
     // completed are a new cycle, and the site's phase is that cycle's phase.
@@ -388,9 +595,29 @@
       const newer = live.filter(r => r.events.length && +r.events[0].date > doneAt);
       if (newer.length) live = newer;
     }
-    const phase = live.length
-      ? PHASES[Math.max(...live.map(r => PHASE_BY_KEY[r.phase].rank))].key
+    let phase = live.length
+      ? PHASES[live.reduce((m, r) => Math.max(m, PHASE_BY_KEY[r.phase].rank), 0)].key
       : 'cancelled';
+
+    // Build-out: planned units on the planning applications vs units on building permits.
+    const liveApps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
+    const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled');
+    let planned = site.planned !== undefined ? site.planned
+      : liveApps.reduce((m, r) => (r.units > 0 ? Math.max(m || 0, r.units) : m), null);
+    const permitted = permitUnits(livePermits);
+    const completed = permitUnits(livePermits.filter(r => r.phase === 'completed'));
+    const buildout = planned > 0 ? {
+      planned,
+      permitted,
+      completed,
+      // Planned units with no building permit yet.
+      remaining: Math.max(0, planned - permitted),
+      // Planned units not yet finished (no permit, or permit not completed).
+      unbuilt: Math.max(0, planned - completed),
+      permits: livePermits.length,
+    } : null;
+    // A plan with units still to permit isn't finished even if every permit so far is.
+    if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
 
     // Milestones: earliest date at which each phase was reached, across all records.
     const milestones = {};
@@ -403,11 +630,15 @@
       }
     }
     timeline.sort((a, b) => a.date - b.date);
-    // Applications with no recorded date still prove inception happened.
-    const pts = recs.filter(r => r.lat != null);
-    const lat = pts.length ? pts.reduce((s, r) => s + r.lat, 0) / pts.length : null;
-    const lng = pts.length ? pts.reduce((s, r) => s + r.lng, 0) / pts.length : null;
-    const best = recs.find(r => r.address) || recs[0];
+    // Map position: the site's application, else the average of its records.
+    let lat = null, lng = null;
+    if (site.site) { lng = site.site.centre[0]; lat = site.site.centre[1]; }
+    else {
+      const pts = recs.filter(r => r.lat != null);
+      lat = pts.length ? pts.reduce((s, r) => s + r.lat, 0) / pts.length : null;
+      lng = pts.length ? pts.reduce((s, r) => s + r.lng, 0) / pts.length : null;
+    }
+    const best = recs.find(r => r.kind === 'application' && r.address) || recs.find(r => r.address) || recs[0];
     const dates = timeline.map(t => t.date);
     const sumOf = f => {
       // Units/GFA are repeated across the files of one project; take the max, not the sum.
@@ -426,10 +657,13 @@
       timeline,
       first: dates.length ? dates[0] : null,
       last: dates.length ? dates[dates.length - 1] : null,
-      units: sumOf('units'),
+      // Units counted once: the larger of planned (applications) and permitted (permits).
+      units: buildout ? Math.max(buildout.planned, buildout.permitted) : (permitted || sumOf('units')),
+      buildout,
       gfa: sumOf('gfa'),
       // Unit mix of the record reporting the most units (files on one site repeat the same proposal).
-      unitMix: (recs.filter(r => r.unitMix).sort((a, b) => (b.units || 0) - (a.units || 0))[0] || {}).unitMix || null,
+      unitMix: (recs.filter(r => r.unitMix && r.kind === 'application').sort((a, b) => (b.units || 0) - (a.units || 0))[0]
+        || recs.filter(r => r.unitMix).sort((a, b) => (b.units || 0) - (a.units || 0))[0] || {}).unitMix || null,
       newBuild: recs.some(r => r.newBuild),
       types: Array.from(new Set(recs.map(r => r.type).filter(Boolean))),
       description: (recs.find(r => r.description) || {}).description || '',
@@ -464,7 +698,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, humanizeField, unitsFromText, mergeProject, projectKey, isNewBuild,
+    representativePoint, buildProjects, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, mergeProject, projectKey, isNewBuild,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;
