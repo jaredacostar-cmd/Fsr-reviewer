@@ -662,6 +662,26 @@
     return rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('');
   }
 
+  const BASIS_TEXT = {
+    master: 'from the rezoning / official plan / subdivision application (largest figure across resubmissions).',
+    siteplan: 'site plan phases added up (each tower or block has its own site plan).',
+    condo: 'condominium phases added up (each building registered separately).',
+    other: 'from the planning applications.',
+  };
+  // Phases (separate site plan / condo files on one development).
+  function phasesHTML(b) {
+    if (!b.phases || b.phases.length < 2) return '';
+    const rows = b.phases.map(f => {
+      const left = f.permitted != null ? Math.max(0, f.units - f.permitted) : null;
+      return `<tr><td>${dot(f.phase)} <strong>${esc(f.ref)}</strong><div class="m">${esc(f.status || '')}${f.date ? ` · ${fmtDate(f.date)}` : ''}</div></td>
+        <td>${fmtNum(f.units)}</td><td>${f.permitted != null ? fmtNum(f.permitted) : '–'}</td><td>${left != null ? fmtNum(left) : '–'}</td></tr>`;
+    }).join('');
+    const matched = b.phases.some(f => f.permitted != null);
+    return `<table class="dt phases-table"><caption>Phases (${b.phases.length})</caption>
+      <thead><tr><th>File</th><th>Planned</th><th>Permitted</th><th>Left</th></tr></thead><tbody>${rows}</tbody></table>
+      ${matched ? '' : '<p class="small muted">Permits can\'t be matched to individual phases here (the phases share one lot boundary); the totals above cover all phases.</p>'}`;
+  }
+
   // Planned units (planning applications) vs units on building permits inside the site.
   function buildoutHTML(p) {
     const b = p.buildout;
@@ -680,7 +700,9 @@
         <dt><i class="sw bo-left"></i>Left to build (no permit yet)</dt><dd><strong>${fmtNum(b.remaining)} units</strong></dd>
         <dt>Not yet completed</dt><dd>${fmtNum(b.unbuilt)} units</dd>
       </dl>
-      ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the project total.</p>` : ''}`;
+      ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the project total.</p>` : ''}
+      ${b.basis ? `<p class="small muted">Planned units: ${esc(BASIS_TEXT[b.basis] || '')}</p>` : ''}
+      ${phasesHTML(b)}`;
   }
 
   function phaseHistoryHTML(p) {
