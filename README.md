@@ -55,16 +55,28 @@ the phase names. **Hide** collapses the timeline and demand panel to give the ma
 The sidebar has three tabs.
 
 **Explore**
-- **Quick views:** one tap for All developments, Applications adding units, Units left to
-  build, Being built (permit issued or under construction), or Completed.
+- **Quick views by phase:** All, Active pipeline (not completed or withdrawn), or one phase
+  (Inception, Under review, Approved, Permit issued, Under construction, Completed, Withdrawn),
+  each with its count. Tap a selected phase again to go back to All. The bar above shows the
+  mix of phases; tap a segment to isolate it.
+- **Focus** (combines with the phase, tap again to turn off):
+
+  | Focus | Shows |
+  |---|---|
+  | Adds units | Planning applications proposing new dwelling units |
+  | Committed capacity | Approved or permitted units not yet completed (switches the demand panel to committed) |
+  | Left to build | Planned units with no building permit yet (switches the demand panel to left to build) |
+  | Major (100+ units) | Projects with 100 or more units |
+  | New in last 12 months | First filed in the last year |
+  | Stalled 2+ years | In planning (no building permit) with no activity for 2 years |
+  | Changed this week | New, or moved phase, in the latest weekly update |
 - **Search** by address, file number or description.
 - **Municipality** buttons: All, Brampton, Caledon, Mississauga.
 - **Record type** (planning applications, building permits, or sites with both) and **Units**
-  (adds units, 10+ … 500+, or units left to build).
+  (adds units, 10+ … 500+).
 - **New buildings only** hides alterations, signs, pools and similar permits.
 - **Active filters** appear as chips. Tap a chip's × to remove that filter, or use **Reset
   all**.
-- **Phases:** tap a phase to show or hide it. The list below shows the matching projects.
 
 **This week:** projects that are new, or that changed phase, since the previous weekly update.
 
@@ -97,7 +109,7 @@ shift-click to extend the range.
 **Population & servicing demand (bottom right):** population, water and wastewater estimated
 from the units in the projects shown. It can be based on all units, **committed capacity**,
 units left to build, units not yet completed, or completed units. The **Committed capacity**
-quick view shows only projects with committed units and switches the panel to that basis. Open **Breakdown & design criteria** to edit the criteria.
+focus shows only projects with committed units and switches the panel to that basis. Open **Breakdown & design criteria** to edit the criteria.
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 

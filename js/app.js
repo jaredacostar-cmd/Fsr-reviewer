@@ -25,6 +25,7 @@
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
     muni: '', kind: '', search: '', newOnly: true,
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
+    focus: '',     // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
     demandBasis: 'all',
@@ -429,7 +430,7 @@
     return p._appUnits;
   }
 
-  function matches(p, ignorePhase, ignoreTime) {
+  function matches(p, ignorePhase, ignoreTime, ignoreFocus) {
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
@@ -439,6 +440,7 @@
     if (state.minUnits === 'left') { if (!(p.buildout && p.buildout.remaining > 0)) return false; }
     else if (state.minUnits === 'committed') { if (!(D.unitsFor(p, 'committed') > 0)) return false; }
     else if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
+    if (!ignoreFocus && state.focus && !FOCUS[state.focus].test(p)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
@@ -613,9 +615,17 @@
     $('#pipeline').innerHTML = P.ALL_PHASES.filter(p => counts[p.key]).map(p =>
       `<button type="button" data-phase="${p.key}" class="${state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${colors[p.key]}"
         title="${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%)" aria-label="${esc(p.label)} ${counts[p.key]}"></button>`).join('');
-    $('#phase-list').innerHTML = P.ALL_PHASES.map(p =>
-      `<li><button type="button" data-phase="${p.key}" class="${state.phases.has(p.key) ? '' : 'off'}" aria-pressed="${state.phases.has(p.key)}">
-        ${dot(p.key)}<span>${esc(p.label)}<span class="desc">${esc(p.desc)}</span></span><span class="count">${fmtNum(counts[p.key])}</span></button></li>`).join('');
+    // Phase quick views: one tap shows that phase only.
+    const cur = currentPhaseView();
+    const n = keys => keys.reduce((a, k) => a + counts[k], 0);
+    const chip = (key, label, count, title, lead = '') =>
+      `<button type="button" class="chip${cur === key ? ' on' : ''}" data-pv="${key}" aria-pressed="${cur === key}" title="${esc(title)}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
+    $('#phase-chips').innerHTML = [
+      chip('all', 'All', total, 'Every phase'),
+      chip('active', 'Active pipeline', n(ACTIVE_PHASES), 'Not yet completed, not withdrawn'),
+      ...P.ALL_PHASES.map(p => chip(p.key, p.label, counts[p.key], p.desc, dot(p.key))),
+    ].join('');
+    renderFocusChips();
   }
 
   function renderMarkers() {
@@ -910,16 +920,12 @@
   };
 
   // ---- Events ----------------------------------------------------------------------
-  function togglePhase(key, solo) {
-    if (solo) {
-      const only = state.phases.size === 1 && state.phases.has(key);
-      state.phases = new Set(only ? P.ALL_PHASES.map(p => p.key) : [key]);
-    } else if (state.phases.has(key)) state.phases.delete(key);
-    else state.phases.add(key);
+  function togglePhase(key) {
+    const only = state.phases.size === 1 && state.phases.has(key);
+    state.phases = new Set(only ? P.ALL_PHASES.map(p => p.key) : [key]);
     applyFilters();
   }
-  $('#pipeline').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase, true); };
-  $('#phase-list').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase, e.altKey || e.metaKey); };
+  $('#pipeline').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase); };
 
   let searchTimer;
   $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); }, 200); };
@@ -940,33 +946,58 @@
     applyFilters();
   };
 
-  // Quick views set several filters at once.
+  // Quick views: a phase (or phase group) plus an optional focus.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
-  // `basis` also switches the demand panel to the matching units.
-  const VIEWS = {
-    all:       { kind: '', minUnits: 0, phases: ALL_PHASE_KEYS, basis: 'all' },
-    growth:    { kind: 'application', minUnits: 1, phases: ALL_PHASE_KEYS, basis: 'all' },
-    left:      { kind: '', minUnits: 'left', phases: ALL_PHASE_KEYS, basis: 'remaining' },
-    committed: { kind: '', minUnits: 'committed', phases: ALL_PHASE_KEYS, basis: 'committed' },
-    building:  { kind: '', minUnits: 0, phases: () => new Set(['permit', 'construction']), basis: 'unbuilt' },
-    done:      { kind: '', minUnits: 0, phases: () => new Set(['completed']), basis: 'completed' },
-  };
+  const ACTIVE_PHASES = ['inception', 'review', 'approved', 'permit', 'construction'];
+  const PLANNING_PHASES = ['inception', 'review', 'approved'];
   const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
-  function currentView() {
-    for (const [k, v] of Object.entries(VIEWS)) {
-      if (state.kind === v.kind && String(state.minUnits) === String(v.minUnits) && sameSet(state.phases, v.phases())) return k;
-    }
-    return null;
+  function currentPhaseView() {
+    if (state.phases.size === P.ALL_PHASES.length) return 'all';
+    if (sameSet(state.phases, new Set(ACTIVE_PHASES))) return 'active';
+    return state.phases.size === 1 ? [...state.phases][0] : null;
   }
-  $('#views').onclick = e => {
-    const b = e.target.closest('[data-view]'); if (!b) return;
-    const v = VIEWS[b.dataset.view];
-    state.kind = v.kind; state.minUnits = v.minUnits; state.phases = v.phases();
-    state.demandBasis = v.basis; $('#d-basis').value = v.basis;
-    $('#f-kind').value = state.kind;
-    $('#f-units').value = String(state.minUnits);
+  $('#phase-chips').onclick = e => {
+    const b = e.target.closest('[data-pv]'); if (!b) return;
+    const k = b.dataset.pv;
+    if (k === 'all') state.phases = ALL_PHASE_KEYS();
+    else if (k === 'active') state.phases = currentPhaseView() === 'active' ? ALL_PHASE_KEYS() : new Set(ACTIVE_PHASES);
+    else return togglePhase(k);
     applyFilters();
   };
+
+  const YEAR_MS = 365.25 * 864e5;
+  const appUnits = p => p._appUnits ?? (p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0)));
+  const weekKeys = () => {
+    const c = state.snapshot && state.snapshot.changes;
+    if (!c || c.baseline) return null;
+    return state._weekKeys || (state._weekKeys = new Set([...(c.moved || []), ...(c.added || [])].map(x => x.key)));
+  };
+  // Each focus narrows the projects; `basis` switches the demand panel to the matching units.
+  const FOCUS = {
+    growth:    { label: 'Adds units', title: 'Planning applications proposing new dwelling units', test: p => appUnits(p) > 0 },
+    committed: { label: 'Committed capacity', basis: 'committed', title: 'Approved or permitted units not yet completed', test: p => D.unitsFor(p, 'committed') > 0 },
+    left:      { label: 'Left to build', basis: 'remaining', title: 'Planned units with no building permit yet', test: p => !!(p.buildout && p.buildout.remaining > 0) },
+    major:     { label: 'Major (100+ units)', title: 'Projects with 100 or more units', test: p => (p.units || 0) >= 100 },
+    newapps:   { label: 'New in last 12 months', title: 'First filed in the last 12 months', test: p => !!p.first && Date.now() - p.first < YEAR_MS },
+    // Planning stage only: many open permits have no inspection dates in the source data.
+    stalled:   { label: 'Stalled 2+ years', title: 'Applications in planning (no building permit) with no activity for 2 years', test: p => PLANNING_PHASES.includes(p.phase) && !!p.last && Date.now() - p.last > 2 * YEAR_MS },
+    week:      { label: 'Changed this week', title: 'New, or moved to another phase, in the latest weekly update', test: p => { const k = weekKeys(); return !!k && k.has(p.key); }, hidden: () => !weekKeys() },
+  };
+  function renderFocusChips() {
+    const base = state.projects.filter(p => matches(p, false, false, true));
+    $('#focus-chips').innerHTML = Object.entries(FOCUS).filter(([, f]) => !(f.hidden && f.hidden())).map(([k, f]) => {
+      const on = state.focus === k;
+      const count = base.reduce((a, p) => a + (f.test(p) ? 1 : 0), 0);
+      return `<button type="button" class="chip${on ? ' on' : ''}" data-focus="${k}" aria-pressed="${on}" title="${esc(f.title)}">${esc(f.label)} <span class="n">${fmtNum(count)}</span></button>`;
+    }).join('');
+  }
+  function setFocus(k) {
+    state.focus = state.focus === k ? '' : k;
+    const basis = (state.focus && FOCUS[state.focus].basis) || 'all';
+    state.demandBasis = basis; $('#d-basis').value = basis;
+    applyFilters();
+  }
+  $('#focus-chips').onclick = e => { const b = e.target.closest('[data-focus]'); if (b) setFocus(b.dataset.focus); };
 
   // Active-filter chips: everything that narrows the view, each removable.
   function activeFilters() {
@@ -977,6 +1008,7 @@
     if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); } });
     if (state.kind) out.push({ label: kindLabel[state.kind], clear: () => { state.kind = ''; $('#f-kind').value = ''; } });
     if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
+    if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
     if (state.phases.size < P.ALL_PHASES.length) {
       const names = P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label);
       out.push({ label: names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { state.phases = ALL_PHASE_KEYS(); } });
@@ -995,15 +1027,11 @@
       ? activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('') +
         `<button type="button" class="btn small link" id="f-reset">Reset all</button>`
       : '';
-    const v = currentView();
-    for (const b of document.querySelectorAll('#views [data-view]')) {
-      const on = b.dataset.view === v;
-      b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on));
-    }
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', kind: '', search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS() });
+      Object.assign(state, { muni: '', kind: '', search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
+      $('#d-basis').value = 'all';
       $('#f-search').value = ''; $('#f-kind').value = ''; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
       setYearsSilently(state.yearMin, state.yearMax);
