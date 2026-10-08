@@ -66,6 +66,12 @@ jobs:
           # The branch tip, so a snapshot committed by the job above is included.
           ref: ${{ github.ref_name }}
 
+      # Evidence of no double counting, in the run's summary page. A failed
+      # integrity check marks the step red but does not block the deploy.
+      - name: Duplicate audit
+        continue-on-error: true
+        run: node scripts/audit-snapshot.js data/snapshot.json
+
       - name: Stamp version (cache-busting for scripts and styles)
         run: |
           v="$(git rev-parse --short HEAD)"

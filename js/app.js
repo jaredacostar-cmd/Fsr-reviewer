@@ -401,8 +401,12 @@
   function scheduleRebuild() { clearTimeout(rebuildTimer); rebuildTimer = setTimeout(rebuild, 150); }
 
   function rebuild() {
-    const records = P.dedupeRecords(state.sources.filter(s => s.enabled).flatMap(s => s.records));
+    const raw = state.sources.filter(s => s.enabled).flatMap(s => s.records);
+    const records = P.dedupeRecords(raw);
     state.projects = P.buildProjects(records);
+    state.auditInput = { raw, records };
+    state.audit = null;
+    if (!$('#tab-data').hidden) renderAudit();
     state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     renderMuniChips();
     updateYearBounds();
@@ -1064,6 +1068,55 @@
     applyFilters();
   };
 
+  // ---- Duplicate check (Data tab) ------------------------------------------------------
+  // Evidence that every file and unit is counted once; computed on demand (all records,
+  // ignoring the filters).
+  function renderAudit() {
+    if (!state.auditInput || !state.projects.length || !window.PeelAudit) return;
+    const a = state.audit || (state.audit = PeelAudit.audit(state.auditInput.raw, state.auditInput.records, state.projects));
+    const u = a.units, r = a.records;
+    const ok = a.checks.every(c => c.value === 0);
+    $('#audit-status').textContent = ok ? 'All checks pass' : 'Check failed';
+    const line = (label, v, sign = '−') => `<tr><td>${sign} ${esc(label)}</td><td>${fmtNum(Math.round(v))}</td></tr>`;
+    const pairs = a.possible.slice(0, 12).map((x, i) => `<li>
+        <button type="button" class="btn small link" data-ap="${i}|0">${esc(x.projects[0].title)}</button> (${fmtNum(x.projects[0].units)})
+        ↔ <button type="button" class="btn small link" data-ap="${i}|1">${esc(x.projects[1].title)}</button> (${fmtNum(x.projects[1].units)})
+        <span class="muted">· ${Math.round(x.metres)} m${x.sameUnits ? ' · same units' : ''}</span></li>`).join('');
+    $('#audit-body').innerHTML = `
+      <p class="small">${fmtNum(r.raw)} records from ${fmtNum(r.bySource.length)} layers → <strong>${fmtNum(r.copiesMerged)}</strong> copies of the same file merged
+        (${fmtNum(r.mergedGroups)} files listed in more than one layer or spelling) → ${fmtNum(r.unique)} unique files → ${fmtNum(r.projects)} projects.</p>
+      <ul class="audit-checks">${a.checks.map(c => `<li class="${c.value ? 'bad' : 'good'}"><span aria-hidden="true">${c.value ? '✕' : '✓'}</span> ${esc(c.label)}: <strong>${fmtNum(c.value)}</strong></li>`).join('')}</ul>
+      <table class="dt audit-units"><caption>Units: every record → counted once</caption><tbody>
+        <tr><td>Units on every record</td><td>${fmtNum(u.raw)}</td></tr>
+        ${line('copies of the same file', u.duplicateCopies)}
+        ${line('withdrawn / refused files', u.withdrawn)}
+        ${line('repeat applications for one proposal', u.repeatApps)}
+        ${line('repeat permits for one building', u.repeatPermits)}
+        ${line('permits already in their planning application', u.permitsInApps)}
+        ${line('sites with no plan: largest figure on any file', Math.abs(u.other), u.other < 0 ? '+' : '−')}
+        <tr class="total"><td>= Units counted</td><td>${fmtNum(u.counted)}</td></tr>
+      </tbody></table>
+      <p class="small muted">Units counted equals the demand panel's “All units” with every filter off (all years, all phases).</p>
+      <h3 class="label sub-label">Possible duplicates left: ${fmtNum(a.possible.length)}</h3>
+      <p class="small muted">Separate projects of 20+ units within 60 m of each other${a.possibleSameUnits ? `, ${fmtNum(a.possibleSameUnits)} with the same unit count` : ' (none with the same unit count)'}. Usually neighbouring buildings; tap to check.</p>
+      ${pairs ? `<ol class="audit-pairs small">${pairs}</ol>` : ''}
+      <div class="row btns"><button type="button" class="btn small" id="audit-csv" title="Every file, the project it is counted in, and its units">Download audit CSV</button></div>`;
+  }
+  $('#audit-body').addEventListener('click', e => {
+    const b = e.target.closest('[data-ap]');
+    if (b) { const [i, j] = b.dataset.ap.split('|').map(Number); focusProject(state.audit.possible[i].projects[j]); return; }
+    if (e.target.closest('#audit-csv')) {
+      const cell = v => /[",\n]/.test(String(v ?? '')) ? `"${String(v).replace(/"/g, '""')}"` : String(v ?? '');
+      const cols = ['project', 'project_address', 'municipality', 'project_units_counted', 'planned', 'permitted', 'file', 'kind', 'file_address', 'file_units', 'file_status', 'phase', 'source', 'also_in'];
+      const rows = [cols.join(',')];
+      for (const p of state.projects) for (const r of p.records) {
+        rows.push([p.key, p.title, p.municipality, p.phase === 'cancelled' ? 0 : p.units || 0, p.buildout ? p.buildout.planned : '', p.buildout ? p.buildout.permitted : '',
+          r.ref, r.kind, r.address, r.units ?? '', r.statusRaw, r.phase, r.sourceName, (r.alsoIn || []).join('; ')].map(cell).join(','));
+      }
+      download('peel-duplicate-audit.csv', rows.join('\n'), 'text/csv');
+    }
+  });
+
   // Sidebar tabs.
   function showTab(name) {
     for (const b of document.querySelectorAll('.tabs [data-tab]')) {
@@ -1072,6 +1125,7 @@
       $('#tab-' + b.dataset.tab).hidden = !on;
     }
     store.set('tab', name);
+    if (name === 'data') renderAudit();
   }
   document.querySelector('.tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) showTab(b.dataset.tab); };
   showTab(store.get('tab', 'explore'));

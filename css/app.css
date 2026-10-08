@@ -442,3 +442,11 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .demand-table td { white-space: nowrap; }
 .demand-table tr.sub td { text-align: left; font-weight: 600; color: var(--text-secondary); padding-top: 8px; }
 .demand-table .muted { font-size: 11px; }
+
+/* Duplicate check */
+.audit-checks { list-style: none; padding: 0; margin: 8px 0; font-size: 13px; display: grid; gap: 2px; }
+.audit-checks .good span { color: var(--ph-completed); font-weight: 700; }
+.audit-checks .bad span, .audit-checks .bad { color: #c0392b; font-weight: 700; }
+.audit-units tr.total td { font-weight: 700; border-top: 2px solid var(--border); }
+.audit-pairs { padding-left: 18px; margin: 6px 0; display: grid; gap: 4px; }
+.audit-pairs .btn.link { padding: 0; text-align: left; }
