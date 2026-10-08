@@ -5,11 +5,12 @@ name: Probe data sources
 #  mode=phases: report how multi-phase developments appear in the data
 #  mode=imagery: aerial imagery / building footprints covering Peel, dates and CORS
 #  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
+#  mode=areas:   secondary plan, MTSA, 2021 census and SGU layers covering Peel
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery or aerial'
+        description: 'all, phases, imagery, aerial or areas'
         default: 'all'
         required: false
 
@@ -27,6 +28,9 @@ jobs:
           node-version: 22
       - name: Unit tests
         run: npm test
+      - name: Areas and census
+        if: inputs.mode == 'areas'
+        run: node scripts/probe-areas.js
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted
