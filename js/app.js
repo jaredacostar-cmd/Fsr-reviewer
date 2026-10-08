@@ -261,11 +261,24 @@
       .sort((a, b) => P.ringsArea(a.poly) - P.ringsArea(b.poly));
     return inside.length ? inside : apps;
   }
+  // Application boundaries are tappable: anywhere inside opens the project, or, for a site
+  // plan nested in a larger development, that application (with a link to the whole project).
   function outline(p, strong) {
-    return siteApps(p).map(a => L.polygon(toLatLngs(a.poly), {
-      renderer: strong ? focusCanvas : canvas, interactive: false, color: strong ? colors.approved : '#ffffff', weight: strong ? 2.5 : 1.2,
-      opacity: strong ? 1 : 0.8, dashArray: strong ? null : '5 4', fill: strong, fillColor: colors.approved, fillOpacity: 0.08,
-    }));
+    const apps = siteApps(p);
+    const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
+    return apps.map(a => {
+      const area = P.ringsArea(a.poly);
+      const poly = L.polygon(toLatLngs(a.poly), {
+        renderer: strong ? focusCanvas : canvas, color: strong ? colors.approved : '#ffffff', weight: strong ? 2.5 : 1.2,
+        opacity: strong ? 1 : 0.8, dashArray: strong ? null : '5 4', fill: true, fillColor: colors.approved, fillOpacity: strong ? 0.08 : 0.04,
+      });
+      poly._area = area;
+      const nested = apps.length > 1 && area < biggest * 0.6;
+      poly.bindTooltip(`<strong>${esc(a.ref || a.type || 'Application')}</strong>${a.type ? ` · ${esc(a.type)}` : ''}<br>${esc(a.address || p.title)}` +
+        `${a.units ? ` · ${fmtNum(a.units)} units` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
+      poly.on('click', ev => { L.DomEvent.stop(ev); if (nested) showRecordDetail(a, p); else showDetail(p); });
+      return poly;
+    });
   }
   function permitDot(r, p, emph, focus) {
     const m = L.circleMarker([r.lat, r.lng], {
@@ -285,17 +298,21 @@
     if (map.getZoom() < SITE_ZOOM) return;
     const view = map.getBounds().pad(0.2);
     let n = 0;
+    const polys = [], dots = [];
     for (const p of state.filtered) {
       if (n >= SITE_MAX_POINTS) break;
       if (!siteApps(p).length) continue;
       const b = projectBounds(p);
       if (!b || !view.intersects(b)) continue;
-      for (const o of outline(p, false)) siteLayer.addLayer(o);
+      polys.push(...outline(p, false));
       for (const r of sitePermits(p)) {
         if (n++ >= SITE_MAX_POINTS) break;
-        if (view.contains([r.lat, r.lng])) siteLayer.addLayer(permitDot(r, p, false));
+        if (view.contains([r.lat, r.lng])) dots.push(permitDot(r, p, false));
       }
     }
+    // Largest boundaries first so smaller ones (and then permit dots) sit on top and get the tap.
+    polys.sort((a, b) => b._area - a._area).forEach(l => siteLayer.addLayer(l));
+    dots.forEach(l => siteLayer.addLayer(l));
     // Keep the selected project's outline and dots drawn above the others.
     focusLayer.eachLayer(l => l.bringToFront && l.bringToFront());
   }
@@ -303,7 +320,7 @@
   function highlight(p, record) {
     focusLayer.clearLayers();
     if (!p) return;
-    for (const o of outline(p, true)) focusLayer.addLayer(o);
+    for (const o of outline(p, true).sort((a, b) => b._area - a._area)) focusLayer.addLayer(o);
     for (const r of sitePermits(p)) if (r !== record) focusLayer.addLayer(permitDot(r, p, false, true));
     if (record && record.lat != null) focusLayer.addLayer(permitDot(record, p, true, true));
   }
@@ -791,6 +808,7 @@
         ${r.events.map(e => `<dt>${esc(P.humanizeField(e.label))}</dt><dd>${fmtDate(e.date)}</dd>`).join('')}
       </dl>
       ${r.kind === 'permit' ? `<h2 class="section-title">Part of planning application</h2>${parentHTML}` : ''}
+      ${r.kind === 'application' && p.records.length > 1 ? `<p class="small muted">This application is part of a larger development with ${fmtNum(p.records.length - 1)} other files.</p>` : ''}
       <button type="button" class="btn open-project" id="open-project">
         Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
       </button>

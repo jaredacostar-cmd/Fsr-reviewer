@@ -79,7 +79,9 @@ The sidebar has three tabs.
 - **Clusters** show how many projects they hold. The ring around each cluster shows the mix of
   phases.
 - **Subdivisions up close:** at street zoom, or when you select a project, its application
-  boundary appears with every building permit inside it as its own dot. Tap a dot to see that
+  boundary appears with every building permit inside it as its own dot. Tap anywhere inside a
+  boundary to open that application (a site plan or condo nested in a larger development opens on
+  its own, with a link to the whole project). Tap a dot to see that
   permit and the **planning application it belongs to** (file number, type, status, planned
   units). **Open whole project** shows the build-out for the whole subdivision.
 - **Project panel:** shows the build-out (planned, permitted, completed, left to build), a phase
