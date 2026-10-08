@@ -20,12 +20,23 @@ const PEEL_CONFIG = {
   zoom: 10,
 
   services: [
+    // ---- Mississauga (services6.arcgis.com, org hM5ymMLbxIyWTjn2)
     {
       id: 'mis-devapps',
-      name: 'Mississauga – active development applications',
+      name: 'Mississauga – development applications (latest monthly)',
       municipality: 'Mississauga',
       kind: 'application',
-      url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/ArcGIS/rest/services/GrowthManagementActiveDevelopmentApplications/FeatureServer',
+      // Republished monthly as DevApps_<Month><Year>; use the newest one.
+      latest: { orgId: 'hM5ymMLbxIyWTjn2', title: /^dev_?apps/i },
+      url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer',
+      enabled: true,
+    },
+    {
+      id: 'mis-gm-devapps',
+      name: 'Mississauga – growth management active applications',
+      municipality: 'Mississauga',
+      kind: 'application',
+      url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Growth_Management_%E2%80%93_Active_Development_Applications/FeatureServer',
       enabled: true,
     },
     {
@@ -37,19 +48,89 @@ const PEEL_CONFIG = {
       enabled: true,
     },
     {
-      id: 'mis-permits-growth',
-      name: 'Mississauga – permits adding units / floor area',
-      municipality: 'Mississauga',
-      kind: 'permit',
-      url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/ArcGIS/rest/services/GrowthManagement_IssuedBuildingPermits/FeatureServer',
-      enabled: true,
-    },
-    {
       id: 'mis-permits',
-      name: 'Mississauga – all issued building permits (status)',
+      name: 'Mississauga – issued building permits',
       municipality: 'Mississauga',
       kind: 'permit',
       url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/ArcGIS/rest/services/Issued_Building_Permits/FeatureServer',
+      enabled: true,
+    },
+    {
+      id: 'mis-gm-permits',
+      name: 'Mississauga – growth management permits (new units / floor area)',
+      municipality: 'Mississauga',
+      kind: 'permit',
+      url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Growth_Management_%E2%80%93_Issued_Building_Permits/FeatureServer',
+      enabled: true,
+    },
+
+    // ---- Brampton (services3.arcgis.com, org rl7ACuZkiFsmDA2g; permits on maps1.brampton.ca)
+    {
+      id: 'bra-opa-zba-sub',
+      name: 'Brampton – official plan / zoning amendments & subdivisions',
+      municipality: 'Brampton',
+      kind: 'application',
+      url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/9',
+      enabled: true,
+    },
+    {
+      id: 'bra-siteplan',
+      name: 'Brampton – site plan approval',
+      municipality: 'Brampton',
+      kind: 'application',
+      url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/11',
+      enabled: true,
+    },
+    {
+      id: 'bra-condo',
+      name: 'Brampton – draft plans of condominium',
+      municipality: 'Brampton',
+      kind: 'application',
+      url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/7',
+      enabled: true,
+    },
+    {
+      id: 'bra-dps',
+      name: 'Brampton – development permit system',
+      municipality: 'Brampton',
+      kind: 'application',
+      url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/6',
+      enabled: true,
+    },
+    {
+      id: 'bra-precon',
+      name: 'Brampton – pre-consultation',
+      municipality: 'Brampton',
+      kind: 'application',
+      maxPhase: 'inception', // a closed pre-consultation has moved on to a formal application
+      countUnits: false,     // its proposal repeats in the formal application; don't count units twice
+      url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/10',
+      enabled: true,
+    },
+    {
+      id: 'bra-permits',
+      name: 'Brampton – building permits',
+      municipality: 'Brampton',
+      kind: 'permit',
+      url: 'https://maps1.brampton.ca/arcgis/rest/services/BuildingPermit/Building_Permits/MapServer/0',
+      enabled: true,
+    },
+
+    // ---- Caledon (services3.arcgis.com, org AbUjpCl3KckkXVBh; permits via utility.arcgis.com proxy)
+    {
+      id: 'cal-devapps',
+      name: 'Caledon – development applications',
+      municipality: 'Caledon',
+      kind: 'application',
+      url: 'https://services3.arcgis.com/AbUjpCl3KckkXVBh/arcgis/rest/services/Dev_Update_Online_Dynamic/FeatureServer/0',
+      enabled: true,
+    },
+    {
+      id: 'cal-permits',
+      name: 'Caledon – building permits',
+      municipality: 'Caledon',
+      kind: 'permit',
+      url: 'https://utility.arcgis.com/usrsvcs/servers/51b993780db441b083808ed0bd59a554/rest/services/AGOL/MiscLayers/MapServer/0',
       enabled: true,
     },
   ],
