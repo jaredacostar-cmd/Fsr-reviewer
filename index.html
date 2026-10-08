@@ -234,7 +234,8 @@
       <div class="f-tabs" role="tablist" aria-label="Bottom panel">
         <button type="button" role="tab" class="f-tab" id="ftab-demand" data-tab="demand" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Servicing demand</button>
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth since 2021</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-svc" data-tab="svc" data-info="tab-svc" aria-controls="pane-svc" aria-selected="false" hidden>Servicing areas</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Breakdown &amp; criteria</button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
@@ -266,9 +267,13 @@
         </div>
       </section>
 
-      <section class="f-pane svc-pane" id="pane-svc" data-pane="svc" role="tabpanel" aria-labelledby="ftab-svc" hidden>
-        <div class="tb-head"><h2 class="sr">Pressure zones and sanitary catchments</h2><span class="muted small" id="svc-note"></span></div>
-        <div id="svc-body"></div>
+      <section class="f-pane svc-pane" id="pane-water" data-pane="water" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
+        <div id="water-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
+        <div id="ww-body"></div>
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
