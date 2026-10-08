@@ -83,7 +83,16 @@
   }
 
   // ---- Map -----------------------------------------------------------------------
-  const map = L.map('map', { zoomControl: true, maxZoom: 20 }).setView(CFG.center, CFG.zoom);
+  // Orientation: Peel's concession grid (Hurontario, Dixie, Steeles…) runs about 44° off true
+  // north, so "Road grid" turns the map by that much and east–west streets run straight across.
+  const GRID_BEARING = 44;
+  const ORIENTATIONS = { grid: 'Road grid', north: 'North up' };
+  let orientation = ORIENTATIONS[store.get('orientation', 'grid')] ? store.get('orientation', 'grid') : 'grid';
+  const canRotate = !!(L.Map.prototype.setBearing);
+  const map = L.map('map', {
+    zoomControl: true, maxZoom: 20,
+    ...(canRotate ? { rotate: true, bearing: orientation === 'grid' ? GRID_BEARING : 0, rotateControl: false, touchRotate: false, shiftKeyRotate: false } : {}),
+  }).setView(CFG.center, CFG.zoom);
   const dark = () => document.documentElement.dataset.theme === 'dark' ||
     (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
   // Basemaps: Esri World Imagery (aerial), optionally with Esri reference
@@ -245,11 +254,17 @@
       el.innerHTML = `
         <label><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
         <label><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
+        ${canRotate ? `<label><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
+      const orient = el.querySelector('#opt-orient');
+      if (orient) orient.onchange = e => {
+        orientation = e.target.value; store.set('orientation', orientation);
+        map.setBearing(orientation === 'grid' ? GRID_BEARING : 0); scheduleLabels();
+      };
       return el;
     },
   });
@@ -656,13 +671,31 @@
       stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
       stat('Jobs', fmtNum(Math.round(em.jobs)), '', `${fmtNum(em.projects)} employment projects`, 'demand-employment'),
     ].join('');
-    const n = v => fmt1(v);
+    $('#d-tiles').innerHTML = flowTablesHTML(e);
+    renderSelection(set, basis);
+
+    // Breakdown by dwelling type and by phase.
+    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
+    const boRows = aggTypeRowsHTML(aggregateTypes(set));
+    const phaseRows = P.PHASES.map(ph => {
+      const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
+      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
+    }).join('');
+    $('#d-breakdown').innerHTML = `
+      <table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table>
+      <table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
+      <table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
+  }
+
+  // Water and wastewater tables (residential / employment / total rows, L/s) for an estimate.
+  function flowTablesHTML(e) {
+    const c = state.criteria, em = e.employment, cb = e.combined, n = v => fmt1(v);
     const flowTable = (title, info, cols, rows) => `<table class="dt flow" data-info="${info}">
       <caption>${title} <span class="muted">L/s</span></caption>
-      <thead><tr><th></th>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+      <thead><tr><th></th>${cols.map(x => `<th>${x}</th>`).join('')}</tr></thead>
       <tbody>${rows.map(([label, cls, info2, vals]) => `<tr class="${cls}"${info2 ? ` data-info="${info2}"` : ''}><td>${label}</td>${vals.map(v => `<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
     const iiNote = `${fmtNum(Math.round(e.area.ha + em.area.ha))} ha × ${c.wastewater.infiltration} L/s/ha${e.area.estimatedHa > 0 ? ` · ${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of residential area estimated` : ''}`;
-    $('#d-tiles').innerHTML = '<div class="flow-card">' + flowTable('Water', 'demand-water', ['Avg day', 'Max day', 'Peak hour'], [
+    return '<div class="flow-card">' + flowTable('Water', 'demand-water', ['Avg day', 'Max day', 'Peak hour'], [
         ['Residential', '', 'demand-water', [n(e.water.avg), n(e.water.maxDay), n(e.water.peakHour)]],
         ['Employment', '', 'demand-employment', [n(em.water.avg), n(em.water.maxDay), n(em.water.peakHour)]],
         ['Total', 'tot', 'demand-combined', [n(cb.water.avg), n(cb.water.maxDay), n(cb.water.peakHour)]],
@@ -672,33 +705,28 @@
         ['Employment', '', 'demand-employment', [n(em.wastewater.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
         ['Total', 'tot', 'demand-combined', [n(cb.wastewater.avg), n(cb.wastewater.peak), n(cb.wastewater.infiltration), n(cb.wastewater.wetPeak)]],
       ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average · I&amp;I on ${iiNote}</p></div>`;
-    renderSelection(set, basis);
+  }
 
-    // Breakdown by dwelling type and by phase.
-    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
-    // Build-out by type across the shown projects, plus employment floor space by phase.
+  // Build-out by dwelling type and employment floor space, summed over projects.
+  function aggregateTypes(projects) {
     const bt = {}; for (const t of D.UNIT_TYPES) bt[t.key] = { planned: 0, permitted: 0, completed: 0, left: 0 };
     const emp = { planned: 0, permitted: 0, completed: 0, left: 0, jobs: 0 };
-    for (const p of set) {
+    for (const p of projects) {
       const tb = p.buildout ? D.typeBuildout(p) : null;
       if (tb) for (const k in bt) for (const col in bt[k]) bt[k][col] += tb.rows[k][col];
       const em = empOf(p);
       if (em && em.totalM2 > 0) {
         emp.planned += em.totalM2; emp.jobs += em.jobs;
-        if (EMP_DONE.permitted.has(p.phase)) emp.permitted += em.totalM2; else emp.left += em.totalM2;
+        if (EMP_DONE.permitted.has(p.phase)) emp.permitted += em.totalM2; else if (p.phase !== 'cancelled') emp.left += em.totalM2;
         if (EMP_DONE.completed.has(p.phase)) emp.completed += em.totalM2;
       }
     }
-    const boRows = D.UNIT_TYPES.filter(t => bt[t.key].planned || bt[t.key].permitted).map(t => `<tr><td>${esc(t.label)}</td>${['planned', 'permitted', 'completed', 'left'].map(col => `<td>${fmtNum(bt[t.key][col])}</td>`).join('')}</tr>`).join('')
-      + (emp.planned ? `<tr class="tot"><td>Employment m² <span class="muted">(~${fmtNum(emp.jobs)} jobs)</span></td>${['planned', 'permitted', 'completed', 'left'].map(col => `<td>${fmtNum(emp[col])}</td>`).join('')}</tr>` : '');
-    const phaseRows = P.PHASES.map(ph => {
-      const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
-      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
-    }).join('');
-    $('#d-breakdown').innerHTML = `
-      <table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table>
-      <table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
-      <table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
+    return { bt, emp };
+  }
+  function aggTypeRowsHTML({ bt, emp }) {
+    const cols = ['planned', 'permitted', 'completed', 'left'];
+    return D.UNIT_TYPES.filter(t => bt[t.key].planned || bt[t.key].permitted).map(t => `<tr><td>${esc(t.label)}</td>${cols.map(col => `<td>${fmtNum(bt[t.key][col])}</td>`).join('')}</tr>`).join('')
+      + (emp.planned ? `<tr class="tot"><td>Employment m² <span class="muted">(~${fmtNum(emp.jobs)} jobs)</span></td>${cols.map(col => `<td>${fmtNum(emp[col])}</td>`).join('')}</tr>` : '');
   }
 
   function renderCriteria() {
@@ -1094,6 +1122,7 @@
       </details>`;
     }).join('');
     $('#detail-body').innerHTML = `
+      ${selection.has(p.key) ? `<button type="button" class="btn small link back-sel" data-sel="back">← Selection (${fmtNum(selection.size)} projects)</button>` : ''}
       <div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
         <span class="badge">${dot(p.phase)}${esc(ph.label)}</span></div>
       ${summaryHTML(p)}
@@ -1219,8 +1248,8 @@
   });
 
   // ---- Export ----------------------------------------------------------------------
-  function exportRows() {
-    return state.filtered.map(p => ({
+  function exportRows(list = state.filtered) {
+    return list.map(p => ({
       address: p.title, municipality: p.municipality, phase: P.PHASE_BY_KEY[p.phase].label,
       ...Object.fromEntries(P.PHASES.map(s => [`${s.key}_date`, fmtDate(p.milestones[s.key])])),
       units: p.units ?? '',
@@ -1251,6 +1280,185 @@
     const fc = { type: 'FeatureCollection', features: rows.filter(r => r.lat).map(r => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+r.lng, +r.lat] }, properties: r })) };
     download('peel-developments.geojson', JSON.stringify(fc), 'application/geo+json');
   };
+
+  // ---- Area selection: draw around projects, summarize demand and growth -----------------
+  // A lasso drawn on the map (finger or mouse) selects the shown projects inside it; more
+  // areas add to the selection. The summary opens in the side panel.
+  const selection = new Map();          // project key -> project
+  let selAreas = [];                    // drawn areas as [[lng, lat], ...] rings
+  const selLayer = L.layerGroup().addTo(map);
+  let lassoOn = false;
+  const lassoSvg = L.DomUtil.create('div', 'lasso-layer', map.getContainer());
+  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the projects to select · Esc to cancel</div>';
+  L.DomEvent.disableClickPropagation(lassoSvg);
+  function setLasso(on) {
+    lassoOn = on;
+    lassoSvg.classList.toggle('on', on);
+    $('#sel-btn') && $('#sel-btn').classList.toggle('on', on);
+    if (on) { map.dragging.disable(); if (innerWidth <= 760) closeDetail(); }
+    else map.dragging.enable();
+    lassoSvg.querySelector('path').setAttribute('d', '');
+  }
+  const SelectControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar sel-ctl');
+      el.innerHTML = `<button type="button" id="sel-btn" title="Select an area: draw around projects to add up their servicing demand and growth" aria-label="Select an area">
+        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/></svg></button>`;
+      L.DomEvent.disableClickPropagation(el);
+      el.querySelector('button').onclick = () => setLasso(!lassoOn);
+      return el;
+    },
+  });
+  new SelectControl().addTo(map);
+
+  let pts = null;
+  const rel = e => { const b = map.getContainer().getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  lassoSvg.addEventListener('pointerdown', e => {
+    if (!lassoOn) return;
+    pts = [rel(e)]; lassoSvg.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  lassoSvg.addEventListener('pointermove', e => {
+    if (!pts) return;
+    const q = rel(e), l = pts[pts.length - 1];
+    if (Math.hypot(q[0] - l[0], q[1] - l[1]) < 4) return;
+    pts.push(q);
+    lassoSvg.querySelector('path').setAttribute('d', `M${pts.map(p => p.join(',')).join('L')}Z`);
+  });
+  lassoSvg.addEventListener('pointerup', () => {
+    const ring = pts; pts = null;
+    setLasso(false);
+    if (!ring || ring.length < 3) return;
+    const closed = [...ring, ring[0]];
+    let added = 0;
+    for (const p of state.filtered) {
+      if (p.lat == null || selection.has(p.key)) continue;
+      const c = map.latLngToContainerPoint([p.lat, p.lng]);
+      if (P.pointInRings(c.x, c.y, [closed])) { selection.set(p.key, p); added++; }
+    }
+    const geo = closed.map(([x, y]) => { const ll = map.containerPointToLatLng([x, y]); return [ll.lng, ll.lat]; });
+    selAreas.push(geo);
+    drawSelection();
+    showSelection(added);
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && lassoOn) { pts = null; setLasso(false); } });
+
+  function drawSelection() {
+    selLayer.clearLayers();
+    for (const g of selAreas) L.polygon(g.map(([x, y]) => [y, x]), { className: 'sel-area', interactive: false }).addTo(selLayer);
+    for (const p of selection.values()) L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
+  }
+  function clearSelection() { selection.clear(); selAreas = []; drawSelection(); }
+
+  function showSelection(added) {
+    const sel = [...selection.values()];
+    currentProject = null;
+    highlight(null);
+    if (!sel.length) {
+      $('#detail-body').innerHTML = `<div class="head"><h3>No projects in that area</h3></div>
+        <p class="small muted">Only the projects shown on the map (current phase, focus and filters) can be selected. Draw a larger area, or change the filters.</p>
+        <div class="sel-actions"><button type="button" class="btn" data-sel="add">Draw again</button></div>`;
+      $('#detail').hidden = false;
+      return;
+    }
+    const c = state.criteria;
+    const cols = [['all', 'Total'], ['completed', 'Completed'], ['unbuilt', 'Remaining']];
+    const es = cols.map(([k]) => D.estimate(sel, c, k, jobsOf));
+    const row = (label, f) => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}</td>`).join('')}</tr>`;
+    const sub = t => `<tr class="sub"><td colspan="4">${t}</td></tr>`;
+    // Build-out
+    const bo = { planned: 0, permitted: 0, completed: 0, remaining: 0 };
+    for (const p of sel) if (p.buildout) for (const k in bo) bo[k] += p.buildout[k];
+    const tile = (cls, label, value, subTxt) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">${value}</div>${subTxt ? `<div class="ss">${subTxt}</div>` : ''}</div>`;
+    const total = Math.max(bo.planned, bo.permitted);
+    const pc = v => total ? `${Math.round(v / total * 100)}%` : '';
+    // Growth since the census, and the census population whose DA centre is inside the areas.
+    let growth = '';
+    if (state.areas && state.areas.census) {
+      const gr = PeelAreas.growthSince(sel, {}, state.areas.census.date, c);
+      let pop = 0, dw = 0, nDa = 0;
+      if (state.censusDas) for (const d of state.censusDas) {
+        if (selAreas.some(g => P.pointInRings(d.lng, d.lat, [g]))) { pop += d.pop; dw += d.dw; nDa++; }
+      }
+      const g = (label, cls, units, people, note) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">+${fmtNum(Math.round(people))}</div><div class="ss">people · +${fmtNum(units)} units${note ? ` · ${note}` : ''}</div></div>`;
+      const layers = [['base', pop], ['built', gr.built.population], ['approved', gr.approved.population], ['proposed', gr.proposed.population]];
+      const sum = layers.reduce((t, l) => t + l[1], 0);
+      growth = `<details class="sect" open><summary><h2 class="section-title" data-info="census">Growth since 2021</h2>
+          <span class="muted small sect-sum">${nDa ? `${fmtNum(Math.round(pop))} → ${fmtNum(Math.round(sum))} people` : ''}</span></summary>
+        <div class="sum-tiles">
+          ${nDa ? `<div class="sum-tile"><div class="sl">2021 Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
+          ${g('Built since', 's-done', gr.built.units, gr.built.population)}
+          ${g('Approved', 's-perm', gr.approved.units, gr.approved.population, 'not yet built')}
+          ${g('Proposed', 's-left', gr.proposed.units, gr.proposed.population, 'in review')}
+        </div>
+        ${sum > 0 ? `<div class="grow-bar sel-grow" role="img" aria-label="Growth layers">${layers.filter(l => l[1] > 0).map(([k, v]) => `<span class="gseg g-${k}" style="flex:${v}" title="${fmtNum(Math.round(v))} people"></span>`).join('')}</div>` : ''}
+        <p class="small muted">${nDa ? 'Census: dissemination areas whose centre falls inside the drawn area(s). ' : ''}Built = units on permits completed since census day; approved = committed growth; proposed = applications in pre-consultation or review. People at Peel persons-per-unit.</p>
+      </details>`;
+    }
+    const byUnits = sel.slice().sort((a, b) => (b.units || 0) - (a.units || 0));
+    const list = byUnits.map(p => `<li><button type="button" class="sel-item" data-open="${esc(p.key)}">${dot(p.phase)}<span class="t">${esc(p.title)}</span>
+        <span class="u">${p.buildout ? `${fmtNum(p.buildout.planned)} planned` : p.units ? `${fmtNum(p.units)} units` : empOf(p) && empOf(p).totalM2 ? `${fmtNum(empOf(p).totalM2)} m²` : ''}</span></button>
+        <button type="button" class="sel-x" data-drop="${esc(p.key)}" aria-label="Remove ${esc(p.title)} from the selection">×</button></li>`).join('');
+    $('#detail-body').innerHTML = `
+      <div class="head"><h3 data-info="selection">${fmtNum(sel.length)} selected project${sel.length === 1 ? '' : 's'}</h3>
+        <div class="m">${fmtNum(selAreas.length)} drawn area${selAreas.length === 1 ? '' : 's'}${added != null ? ` · ${fmtNum(added)} added` : ''} · ${esc([...new Set(sel.map(p => p.municipality))].join(', '))}</div></div>
+      <div class="sel-actions">
+        <button type="button" class="btn" data-sel="add">+ Add area</button>
+        <button type="button" class="btn" data-sel="csv">Export CSV</button>
+        <button type="button" class="btn" data-sel="clear">Clear</button>
+      </div>
+      <div class="summary" data-info="buildout"><div class="sum-tiles">
+        ${tile('s-plan', 'Planned', fmtNum(bo.planned), 'units')}
+        ${tile('s-perm', 'Permitted', fmtNum(bo.permitted), pc(bo.permitted))}
+        ${tile('s-done', 'Completed', fmtNum(bo.completed), pc(bo.completed))}
+        ${tile('s-left', 'Left to build', fmtNum(bo.remaining), 'no permit yet')}
+      </div>
+      <table class="dt type-table" data-info="unit-types"><thead><tr><th></th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead>
+        <tbody>${aggTypeRowsHTML(aggregateTypes(sel))}</tbody></table></div>
+      <details class="sect" open><summary><h2 class="section-title" data-info="project-demand">Servicing demand</h2>
+          <span class="muted small sect-sum">residential + employment</span></summary>
+        <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
+          ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
+          ${row('Population', e => fmtNum(Math.round(e.population)))}
+          ${row('Jobs', e => fmtNum(Math.round(e.employment.jobs)))}
+          ${sub('Water (L/s)')}
+          ${row('Average day', e => fmt1(e.combined.water.avg))}
+          ${row('Max day', e => fmt1(e.combined.water.maxDay))}
+          ${row('Peak hour', e => fmt1(e.combined.water.peakHour))}
+          ${sub('Wastewater (L/s)')}
+          ${row('Average dry weather', e => fmt1(e.combined.wastewater.avg))}
+          ${row('Peak dry', e => fmt1(e.combined.wastewater.peak))}
+          ${row('I&amp;I', e => fmt1(e.combined.wastewater.infiltration))}
+          ${row('Peak wet weather', e => fmt1(e.combined.wastewater.wetPeak))}
+        </tbody></table>
+        <details class="sel-split"><summary>Residential / employment split (total)</summary><div class="sel-flows">${flowTablesHTML(es[0])}</div></details>
+        <p class="small muted">Peaks for the selection as one area (Harmon on its combined population). Completed = units on finished permits; remaining = the rest. Criteria as in the bottom panel.</p>
+      </details>
+      ${growth}
+      <details class="sect"><summary><h2 class="section-title">Projects</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>
+        <ul class="sel-list">${list}</ul></details>`;
+    $('#detail').hidden = false;
+    $('#detail').scrollTop = 0;
+  }
+  $('#detail-body').addEventListener('click', e => {
+    const a = e.target.closest('[data-sel]');
+    if (a) {
+      const k = a.dataset.sel;
+      if (k === 'add') setLasso(true);
+      else if (k === 'clear') { clearSelection(); closeDetail(); }
+      else if (k === 'csv') {
+        const rows = exportRows([...selection.values()]); if (!rows.length) return;
+        const cols = Object.keys(rows[0]);
+        const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+        download('peel-selection.csv', [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
+      } else if (k === 'back') showSelection();
+      return;
+    }
+    const o = e.target.closest('[data-open]');
+    if (o && selection.has(o.dataset.open)) { showDetail(selection.get(o.dataset.open)); return; }
+    const d = e.target.closest('[data-drop]');
+    if (d) { selection.delete(d.dataset.drop); drawSelection(); showSelection(); }
+  });
 
   // ---- Events ----------------------------------------------------------------------
   function togglePhase(key) {
