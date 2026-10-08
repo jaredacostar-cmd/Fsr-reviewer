@@ -55,13 +55,13 @@ test('unit mix columns are detected and carried to the project', () => {
   assert.deepEqual(D.unitSplit(p), { single: 4, town: 6, apartment: 200, unknown: 0 });
 });
 
-test('committed capacity: approved or permitted units not yet completed', () => {
+test('committed capacity: growth (planned on an application) that is approved or permitted, not yet completed', () => {
   const bo = (planned, permitted, completed) => ({ planned, permitted, completed, remaining: Math.max(0, planned - permitted), unbuilt: Math.max(planned, permitted) - completed });
   const p = (phase, units, buildout) => ({ phase, units, buildout, types: ['Townhouse'], description: '' });
   assert.equal(D.unitsFor(p('review', 300, bo(300, 0, 0)), 'committed'), 0, 'under review is proposed, not committed');
   assert.equal(D.unitsFor(p('approved', 300, bo(300, 0, 0)), 'committed'), 300);
   assert.equal(D.unitsFor(p('construction', 300, bo(300, 120, 50)), 'committed'), 250);
-  assert.equal(D.unitsFor(p('permit', 4, null), 'committed'), 4, 'single permit, not finished');
+  assert.equal(D.unitsFor(p('permit', 4, null), 'committed'), 0, 'a permit with no planning application is not growth');
   assert.equal(D.unitsFor(p('completed', 4, null), 'committed'), 0);
   assert.equal(D.unitsFor(p('cancelled', 40, null), 'committed'), 0);
 });

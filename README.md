@@ -63,8 +63,8 @@ The sidebar has three tabs.
 
   | Focus | Shows |
   |---|---|
-  | Adds units | Planning applications proposing new dwelling units |
-  | Committed capacity | Approved or permitted units not yet completed (switches the demand panel to committed) |
+  | Growth | Planning applications proposing new dwelling units |
+  | Committed capacity | Growth that is approved or permitted and not yet completed (switches the demand panel to committed) |
   | Left to build | Planned units with no building permit yet (switches the demand panel to left to build) |
   | Major (100+ units) | Projects with 100 or more units |
   | New in last 12 months | First filed in the last year |
@@ -72,7 +72,9 @@ The sidebar has three tabs.
   | Changed this week | New, or moved phase, in the latest weekly update |
 - **Search** by address, file number or description.
 - **Municipality** buttons: All, Brampton, Caledon, Mississauga.
-- **Record type** (planning applications, building permits, or sites with both) and **Units**
+- **Record type:** by default only **planning applications and the building permits that belong
+  to them** (permits with no application, such as infill houses, are hidden; choose *All records*
+  to see them). Also building permits only, or sites with both. **Units**
   (adds units, 10+ … 500+).
 - **New buildings only** hides alterations, signs, pools and similar permits.
 - **Active filters** appear as chips. Tap a chip's × to remove that filter, or use **Reset
@@ -202,7 +204,7 @@ For each project with a unit count on its planning applications:
 | Completed | Units on permits marked closed, finaled or occupied. |
 | **Left to build** | Planned − permitted: units with no building permit yet. |
 | Not yet completed | Planned − completed. |
-| **Committed capacity** | Not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed. |
+| **Committed capacity** | Growth only (units planned on a planning application), not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed; permits with no planning application are not growth. |
 
 ### Multi-phase developments (towers, blocks, condo phases)
 

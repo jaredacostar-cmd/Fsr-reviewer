@@ -64,8 +64,8 @@
           <div class="row two">
             <label class="field"><span class="label">Record type</span>
               <select id="f-kind">
-                <option value="">All records</option>
-                <option value="application">Planning applications</option>
+                <option value="application" selected>Planning applications + their permits</option>
+                <option value="">All records (incl. permits with no application)</option>
                 <option value="permit">Building permits</option>
                 <option value="both">Application + permits</option>
               </select>
@@ -73,7 +73,7 @@
             <label class="field"><span class="label">Units</span>
               <select id="f-units">
                 <option value="0">Any</option>
-                <option value="1">Adds units</option>
+                <option value="1">Growth (adds units)</option>
                 <option value="10">10+ units</option>
                 <option value="50">50+ units</option>
                 <option value="100">100+ units</option>
