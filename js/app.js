@@ -340,7 +340,8 @@
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
-    if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
+    if (state.minUnits === 'left') { if (!(p.buildout && p.buildout.remaining > 0)) return false; }
+    else if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
@@ -428,20 +429,23 @@
 
   // ---- Population & servicing demand -------------------------------------------------
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
-  function demandSet() {
-    const live = state.filtered.filter(p => p.phase !== 'cancelled');
-    if (state.demandBasis === 'pipeline') return live.filter(p => p.phase !== 'completed');
-    if (state.demandBasis === 'completed') return live.filter(p => p.phase === 'completed');
-    return live;
-  }
+  // Withdrawn projects never count; the basis picks which of each project's units count.
+  const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled');
+  const BASIS_LABEL = { all: 'all units', remaining: 'units left to build (no permit yet)', unbuilt: 'units not yet completed', completed: 'completed units' };
   function renderDemand() {
     const set = demandSet();
     const c = state.criteria;
-    const e = D.estimate(set, c);
+    const basis = state.demandBasis;
+    const e = D.estimate(set, c, basis);
+    // Build-out across the shown projects (planning applications with unit counts).
+    const bo = { planned: 0, permitted: 0, completed: 0, remaining: 0, n: 0 };
+    for (const p of set) if (p.buildout) { bo.n++; for (const k of ['planned', 'permitted', 'completed', 'remaining']) bo[k] += p.buildout[k]; }
     const tile = (label, value, unit, sub) =>
       `<div class="tile"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     $('#d-tiles').innerHTML = [
-      tile('Dwelling units', fmtNum(Math.round(e.totalUnits)), '', `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`),
+      tile(basis === 'all' ? 'Dwelling units' : 'Dwelling units counted', fmtNum(Math.round(e.totalUnits)), '',
+        bo.n ? `Planned ${fmtNum(bo.planned)} · permitted ${fmtNum(bo.permitted)} · <strong>${fmtNum(bo.remaining)} left to build</strong>`
+          : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`),
       tile('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit'),
       `<div class="tile group"><div class="tl">Water demand</div><div class="trow">
         <div><div class="tv">${fmt1(e.water.avg)}<span class="tu">L/s</span></div><div class="ts">Average day · ${fmt1(D.toMLd(e.water.avg))} ML/d</div></div>
@@ -452,12 +456,12 @@
         <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div></div></div>`,
     ].join('');
     const range = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'all years';
-    $('#d-note').textContent = `${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
+    $('#d-note').textContent = `${BASIS_LABEL[basis] || ''} · ${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
 
     // Breakdown by dwelling type and by phase.
     const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
     const phaseRows = P.PHASES.map(ph => {
-      const pe = D.estimate(set.filter(p => p.phase === ph.key), c);
+      const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis);
       return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmt1(pe.water.avg)}</td><td>${fmt1(pe.wastewater.avg)}</td></tr>`;
     }).join('');
     $('#d-breakdown').innerHTML = `
@@ -535,7 +539,7 @@
     $('#list-note').textContent = sorted.length > LIST_LIMIT ? `Showing the ${LIST_LIMIT} most recently active of ${fmtNum(sorted.length)} — zoom the map or search to narrow.` : '';
     $('#project-list').innerHTML = sorted.slice(0, LIST_LIMIT).map((p, i) =>
       `<li><button type="button" data-i="${i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
-        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
+        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(p.buildout.remaining)} left` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
     $('#project-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
       const p = sorted[+b.dataset.i];
@@ -582,6 +586,27 @@
     return rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('');
   }
 
+  // Planned units (planning applications) vs units on building permits inside the site.
+  function buildoutHTML(p) {
+    const b = p.buildout;
+    const permits = p.records.filter(r => r.kind === 'permit').length;
+    if (!b) return permits > 1 ? `<p class="small muted">${fmtNum(permits)} building permits on this site.</p>` : '';
+    const pct = v => `${Math.min(100, v / Math.max(b.planned, b.permitted) * 100).toFixed(1)}%`;
+    const inProgress = Math.max(0, b.permitted - b.completed);
+    return `<h2 class="section-title">Build-out</h2>
+      <div class="bo-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(inProgress)} permitted, ${fmtNum(b.remaining)} left to build of ${fmtNum(b.planned)} planned">
+        <span class="bo-done" style="width:${pct(b.completed)}"></span><span class="bo-perm" style="width:${pct(inProgress)}"></span><span class="bo-left" style="width:${pct(b.remaining)}"></span>
+      </div>
+      <dl class="kv bo-kv">
+        <dt>Planned (applications)</dt><dd>${fmtNum(b.planned)} units</dd>
+        <dt><i class="sw bo-perm"></i>Permitted (building permits)</dt><dd>${fmtNum(b.permitted)} units · ${fmtNum(b.permits)} permits</dd>
+        <dt><i class="sw bo-done"></i>Completed</dt><dd>${fmtNum(b.completed)} units</dd>
+        <dt><i class="sw bo-left"></i>Left to build (no permit yet)</dt><dd><strong>${fmtNum(b.remaining)} units</strong></dd>
+        <dt>Not yet completed</dt><dd>${fmtNum(b.unbuilt)} units</dd>
+      </dl>
+      ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the project total.</p>` : ''}`;
+  }
+
   function phaseHistoryHTML(p) {
     const h = state.history && state.history.projects && state.history.projects[p.key];
     if (!h || !h.length) return '';
@@ -601,13 +626,16 @@
     const timeline = p.timeline.length
       ? `<ol class="timeline">${p.timeline.map(t => `<li><span class="d">${fmtDate(t.date)}</span>${dot(t.phase)}<span>${esc(t.text)} <span class="muted">— ${esc(t.tag)}</span></span></li>`).join('')}</ol>`
       : '<p class="muted small">No dated milestones in the source data.</p>';
-    const recs = p.records.map(r => `
+    const RECORD_LIMIT = 40;
+    const ordered = p.records.slice().sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'application' ? -1 : 1));
+    const recs = ordered.slice(0, RECORD_LIMIT).map(r => `
       <details class="rec"><summary>${dot(r.phase)} <strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
         ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
         ${r.description ? `<p>${esc(r.description)}</p>` : ''}
         <p class="small muted">Source: ${esc(r.sourceName)}${r.alsoIn ? ` (also in ${esc(r.alsoIn.join(', '))})` : ''}</p>
         <table>${recordRows(r)}</table>
-      </details>`).join('');
+      </details>`).join('') + (ordered.length > RECORD_LIMIT
+        ? `<p class="small muted">+ ${fmtNum(ordered.length - RECORD_LIMIT)} more records (export CSV for the full list)</p>` : '');
     $('#detail-body').innerHTML = `
       <div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
         <span class="badge">${dot(p.phase)}${esc(ph.label)}</span></div>
@@ -619,6 +647,7 @@
         ${p.last ? `<dt>Latest activity</dt><dd>${fmtDate(p.last)}</dd>` : ''}
         <dt>Files</dt><dd>${p.records.length} (${p.kinds.map(k => k === 'permit' ? 'permits' : 'applications').join(' + ')})</dd>
       </dl>
+      ${buildoutHTML(p)}
       <h2 class="section-title">Phase progress</h2>
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
       <ol class="stepper">${steps}</ol>
@@ -635,7 +664,11 @@
     return state.filtered.map(p => ({
       address: p.title, municipality: p.municipality, phase: P.PHASE_BY_KEY[p.phase].label,
       ...Object.fromEntries(P.PHASES.map(s => [`${s.key}_date`, fmtDate(p.milestones[s.key])])),
-      units: p.units ?? '', est_population: p.units ? Math.round(D.estimate([p], state.criteria).population) : '',
+      units: p.units ?? '',
+      planned_units: p.buildout ? p.buildout.planned : '', permitted_units: p.buildout ? p.buildout.permitted : '',
+      completed_units: p.buildout ? p.buildout.completed : '', left_to_build: p.buildout ? p.buildout.remaining : '',
+      building_permits: p.records.filter(r => r.kind === 'permit').length,
+      est_population: p.units ? Math.round(D.estimate([p], state.criteria).population) : '',
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
@@ -676,10 +709,10 @@
   $('#f-muni').onchange = e => { state.muni = e.target.value; filtersChanged(); };
   $('#f-kind').onchange = e => { state.kind = e.target.value; filtersChanged(); };
   $('#f-new').onchange = e => { state.newOnly = e.target.checked; filtersChanged(); };
-  $('#f-units').onchange = e => { state.minUnits = Number(e.target.value) || 0; filtersChanged(); };
+  $('#f-units').onchange = e => { state.minUnits = e.target.value === 'left' ? 'left' : Number(e.target.value) || 0; filtersChanged(); };
   // One-tap preset: planning applications that propose new dwelling units.
   $('#f-preset-growth').onclick = () => {
-    const on = !(state.kind === 'application' && state.minUnits > 0);
+    const on = !(state.kind === 'application' && state.minUnits);
     state.kind = on ? 'application' : '';
     state.minUnits = on ? 1 : 0;
     $('#f-kind').value = state.kind;
@@ -692,7 +725,7 @@
     filtersChanged();
   };
   function filtersChanged() {
-    const preset = state.kind === 'application' && state.minUnits > 0;
+    const preset = state.kind === 'application' && !!state.minUnits;
     $('#f-preset-growth').setAttribute('aria-pressed', String(preset));
     $('#f-preset-growth').classList.toggle('on', preset);
     $('#f-clear').hidden = !(state.muni || state.kind || state.search || state.minUnits);

@@ -142,6 +142,36 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
    earlier building on the site was completed, they count as a redevelopment, and the
    project's phase comes from the new files.
 4. **Duplicates:** a permit that shows up in more than one layer is merged by permit number.
+5. **Permits on application land:** subdivisions are filed as one polygon, often under an
+   address like "0 Heritage Rd", but their houses get permits at new street addresses. The app
+   links them by location:
+   - Each permit joins the smallest planning-application polygon it falls inside, as long as
+     it's in the same municipality and isn't dated more than a year before the application.
+   - Applications that cover the same land (official plan amendment, zoning, subdivision,
+     condo) merge into one project.
+   - A site plan inside a subdivision rolls up into the subdivision.
+   - Withdrawn applications and area-wide plans larger than 4 km² don't absorb permits.
+
+## Build-out: planned vs permitted vs left to build
+
+For each project with a unit count on its planning applications:
+
+| Figure | Meaning |
+|---|---|
+| Planned | Units on the planning applications. Files on the same land repeat one proposal, so the largest figure is used. Parts nested inside a larger application are summed, unless the parent's own figure is larger. |
+| Permitted | Units on building permits on the land. Permits at one address (foundation, full, revisions) count once. |
+| Completed | Units on permits marked closed, finaled or occupied. |
+| **Left to build** | Planned − permitted: units with no building permit yet. |
+| Not yet completed | Planned − completed. |
+
+A project's units are counted once, as the larger of planned and permitted, never both added
+together. A plan with units still left to permit shows as "Under construction", not
+"Completed", even if every permit issued so far is finished.
+
+In the app, the project panel shows a build-out bar, and the project list shows "planned / left"
+on each row. The **Unit growth** filter has an option for **Units left to build**. The demand
+panel can be based on all units, units left to build, units not yet completed, or completed
+units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
