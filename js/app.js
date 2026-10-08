@@ -366,9 +366,9 @@
       const el = L.DomUtil.create('div', 'map-opts');
       const opts = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(typeof v === 'string' ? v : v.label)}</option>`).join('');
       el.innerHTML = `
-        <label><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
-        <label><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
-        ${canRotate ? `<label><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
+        <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
+        <label data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
+        ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
         <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span id="da-label">2021 census areas</span></label>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
@@ -893,13 +893,13 @@
     const total = base.length;
     $('#total-count').textContent = `${fmtNum(state.filtered.length)} of ${fmtNum(state.projects.length)} projects`;
     $('#pipeline').innerHTML = P.ALL_PHASES.filter(p => counts[p.key]).map(p =>
-      `<button type="button" data-phase="${p.key}" class="${state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${colors[p.key]}"
+      `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${colors[p.key]}"
         title="${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%)" aria-label="${esc(p.label)} ${counts[p.key]}"></button>`).join('');
     // Phase quick views: one tap shows that phase only.
     const cur = currentPhaseView();
     const n = keys => keys.reduce((a, k) => a + counts[k], 0);
     const chip = (key, label, count, title, lead = '') =>
-      `<button type="button" class="chip${cur === key ? ' on' : ''}" data-pv="${key}" aria-pressed="${cur === key}" title="${esc(title)}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
+      `<button type="button" class="chip${cur === key ? ' on' : ''}" data-pv="${key}" data-info="phase-${key}" aria-pressed="${cur === key}" title="${esc(title)}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
     $('#phase-chips').innerHTML = [
       chip('all', 'All', total, 'Every phase'),
       chip('active', 'Active pipeline', n(ACTIVE_PHASES), 'Not yet completed, not withdrawn'),
@@ -966,7 +966,7 @@
   }
 
   function renderLegend() {
-    $('#legend').innerHTML = P.ALL_PHASES.map(p => `<div class="li">${dot(p.key)}<span>${esc(p.label)}</span></div>`).join('');
+    $('#legend').innerHTML = P.ALL_PHASES.map(p => `<div class="li" data-info="phase-${p.key}">${dot(p.key)}<span>${esc(p.label)}</span></div>`).join('');
   }
 
   function renderSources() {
@@ -1426,6 +1426,7 @@
     options: { position: 'topleft' },
     onAdd() {
       const el = L.DomUtil.create('div', 'leaflet-bar sel-ctl');
+      el.dataset.info = 'select-tool';
       el.innerHTML = `<button type="button" id="sel-btn" title="Select an area: draw around projects to add up their servicing demand and growth" aria-label="Select an area">
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/></svg></button>`;
       L.DomEvent.disableClickPropagation(el);
@@ -1441,6 +1442,7 @@
     options: { position: 'topleft' },
     onAdd() {
       const el = L.DomUtil.create('div', 'leaflet-bar north-ctl');
+      el.dataset.info = 'north';
       el.innerHTML = `<button type="button" id="north-btn" title="North. Tap to switch between road grid and north up" aria-label="North arrow: switch orientation">
         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><g id="north-rot"><path d="M12 2.5l4.5 11h-9z" fill="currentColor"/><path d="M12 21.5l-4.5-8h9z" fill="none" stroke="currentColor" stroke-width="1.2"/>
         <text x="12" y="12.2" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--surface-1)">N</text></g></svg></button>`;
@@ -1640,7 +1642,7 @@
   function renderMuniChips() {
     const list = [''].concat(state.munis || []);
     $('#f-muni-chips').innerHTML = list.map(m =>
-      `<button type="button" class="chip${state.muni === m ? ' on' : ''}" data-muni="${esc(m)}" aria-pressed="${state.muni === m}">${esc(m || 'All')}</button>`).join('');
+      `<button type="button" class="chip${state.muni === m ? ' on' : ''}" data-muni="${esc(m)}" data-info="muni-${esc(m || 'all')}" aria-pressed="${state.muni === m}">${esc(m || 'All')}</button>`).join('');
   }
   $('#f-muni-chips').onclick = e => {
     const b = e.target.closest('[data-muni]'); if (!b) return;
@@ -1909,7 +1911,7 @@
     $('#focus-chips').innerHTML = Object.entries(FOCUS).filter(([, f]) => !(f.hidden && f.hidden())).map(([k, f]) => {
       const on = state.focus === k;
       const count = base.reduce((a, p) => a + (f.test(p) ? 1 : 0), 0);
-      return `<button type="button" class="chip${on ? ' on' : ''}" data-focus="${k}" aria-pressed="${on}" title="${esc(f.title)}">${esc(f.label)} <span class="n">${fmtNum(count)}</span></button>`;
+      return `<button type="button" class="chip${on ? ' on' : ''}" data-focus="${k}" data-info="focus-${k}" aria-pressed="${on}" title="${esc(f.title)}">${esc(f.label)} <span class="n">${fmtNum(count)}</span></button>`;
     }).join('');
   }
   function setFocus(k) {
