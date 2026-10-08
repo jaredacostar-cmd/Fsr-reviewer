@@ -54,7 +54,7 @@
             <h2 class="label" data-info="phases">Phase</h2>
             <span class="muted small" id="total-count">—</span>
           </div>
-          <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
+          <div class="pipeline" id="pipeline" role="group" aria-label="Developments by phase"></div>
           <div class="chips views phase-chips" id="phase-chips" role="group" aria-label="Phase"></div>
         </section>
 
@@ -126,7 +126,7 @@
           <div class="panel-head">
             <h2 class="label" data-info="projects-list">On the map <span class="muted small" id="list-count"></span></h2>
             <div class="btns">
-              <select id="list-sort" aria-label="Sort projects">
+              <select id="list-sort" aria-label="Sort developments">
                 <option value="recent">Latest activity</option>
                 <option value="units">Most units</option>
                 <option value="left">Most left to build</option>
@@ -220,7 +220,7 @@
           <button type="button" class="t-toggle" id="t-toggle" aria-expanded="true" aria-controls="t-body" title="Show or hide the timeline">▾</button>
         </div>
         <div class="t-body" id="t-body">
-          <div class="hist" id="t-hist" role="group" aria-label="Projects per year"></div>
+          <div class="hist" id="t-hist" role="group" aria-label="Developments per year"></div>
           <div class="range" id="t-range">
             <input type="range" id="t-from" aria-label="From year">
             <input type="range" id="t-to" aria-label="To year">
@@ -234,6 +234,7 @@
       <div class="f-tabs" role="tablist" aria-label="Bottom panel">
         <button type="button" role="tab" class="f-tab" id="ftab-demand" data-tab="demand" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Servicing demand</button>
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth since 2021</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-svc" data-tab="svc" data-info="tab-svc" aria-controls="pane-svc" aria-selected="false" hidden>Servicing areas</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Breakdown &amp; criteria</button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
@@ -263,6 +264,11 @@
             <p class="small muted" id="c-ii" data-info="ii"></p>
           </div>
         </div>
+      </section>
+
+      <section class="f-pane svc-pane" id="pane-svc" data-pane="svc" role="tabpanel" aria-labelledby="ftab-svc" hidden>
+        <div class="tb-head"><h2 class="sr">Pressure zones and sanitary catchments</h2><span class="muted small" id="svc-note"></span></div>
+        <div id="svc-body"></div>
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
