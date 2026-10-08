@@ -133,6 +133,22 @@ For each project with a unit count on its planning applications:
 | **Left to build** | Planned − permitted: units with no building permit yet. |
 | Not yet completed | Planned − completed. |
 
+### Multi-phase developments (towers, blocks, condo phases)
+
+| Rule | Why |
+|---|---|
+| Each file is counted once: `SP 22-60`, `SP 22 60` and `SP 22/060 W9` are the same file, and so are permits `BP 3NEW 17-9012`, `… CON`, `… CR1` and `… FTR`. | Mississauga publishes a file in up to three layers, each with different formatting. |
+| Rezoning, official plan amendment and subdivision files describe the whole proposal, so the **largest** figure across them (and any resubmissions) is used. | A resubmitted rezoning is the same proposal. |
+| Separate **site plan** files on a development are **added up**, and so are separate **condominium** files. | Each tower or block usually has its own site plan and its own condo registration. |
+| Planned = the largest of: the rezoning figure, the site plans added up, or the condos added up. | Each stage of approval covers the same homes. |
+| Minor, express and limited site plans (`SPM`, `SPAX`, "Limited Site Plan") and pre-consultations add no units. | They revise or precede an earlier plan. |
+| Permitted units are counted once per base permit number, and different base numbers are added up. | A tower's conditional, foundation, full and revised permits share one base number. |
+| Drain, site-servicing and "revision to permit" permits add no units. Basement second suites, filed as alteration permits, do count. | |
+
+When a development has two or more phases, the project panel lists them, each with its file
+number, status, planned units, and (where the phases have their own land) permitted units and
+units left to build.
+
 A project's units are counted once, as the larger of planned and permitted, never both added
 together. A plan with units still left to permit shows as "Under construction", not
 "Completed", even if every permit issued so far is finished.
