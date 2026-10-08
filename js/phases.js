@@ -860,6 +860,8 @@
       buildout,
       // The site's land boundary (largest same-land application polygon), for the aerial check.
       siteRings: site.site ? site.site.rings : null,
+      // Gross land area of the site (hectares) from the application boundary, for I&I.
+      siteAreaHa: site.site && site.site.area > 0 ? site.site.area / 1e4 : null,
       gfa: sumOf('gfa'),
       // Unit mix of the record reporting the most units (files on one site repeat the same proposal).
       unitMix: (recs.filter(r => r.unitMix && r.kind === 'application').sort((a, b) => (b.units || 0) - (a.units || 0))[0]

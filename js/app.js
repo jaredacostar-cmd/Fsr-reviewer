@@ -616,7 +616,9 @@
         <div><div class="tv">${fmt1(e.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Peak hour ×${c.water.peakHour}</div></div></div></div>`,
       `<div class="tile group" data-info="demand-wastewater"><div class="tl">Wastewater flow</div><div class="trow">
         <div><div class="tv">${fmt1(e.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Avg dry weather · ${fmt1(D.toMLd(e.wastewater.avg))} ML/d</div></div>
-        <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div></div></div>`,
+        <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak dry · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div>
+        <div><div class="tv">${fmt1(e.wastewater.infiltration)}<span class="tu">L/s</span></div><div class="ts">I&amp;I · ${fmtNum(Math.round(e.area.ha))} ha × ${c.wastewater.infiltration}${e.area.estimatedHa > 0 ? ` (${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of area estimated)` : ''}</div></div>
+        <div><div class="tv">${fmt1(e.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Peak wet weather</div></div></div></div>`,
     ].join('');
     const range = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'all years';
     $('#d-note').textContent = `${BASIS_LABEL[basis] || ''} · ${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
@@ -643,8 +645,8 @@
         ${inp('water', 'avg', 'Average day (L/cap/d)', 1)}${inp('water', 'maxDay', 'Max day factor', 0.1)}${inp('water', 'peakHour', 'Peak hour factor', 0.1)}
       </fieldset>
       <fieldset><legend>Wastewater</legend>
-        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}
-        <p class="small muted">Peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population. Infiltration (0.26 L/s/ha) and ICI flows are not included: they need site area and employment data.</p>
+        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01)}
+        <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population. I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I. ICI (employment) flows are not included.</p>
       </fieldset>
       <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
       <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
@@ -825,9 +827,11 @@
         ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}
         <tr class="sub"><td colspan="${cols.length + 1}">Wastewater (L/s)</td></tr>
         ${row('Average dry weather', e => fmt1(e.wastewater.avg))}
-        ${row('Peak (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
+        ${row('Peak dry (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
+        ${row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => e.area.ha > 0 ? `${fmt1(e.wastewater.infiltration)} <span class="muted">${fmt1(e.area.ha)} ha${e.area.estimatedHa > 0 ? ' est.' : ''}</span>` : '–')}
+        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}
       </tbody></table>
-      <p class="small muted">${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater.
+      <p class="small muted">${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.
         Completed = units on finished permits; remaining = the rest, permitted or not. Peaks are for each column alone (Harmon is not additive); edit the criteria in the bottom panel.</p>`;
   }
 
@@ -1160,6 +1164,8 @@
       tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs 2021`, 'census-proposed'),
     ].join('');
     renderGrowthChart(base, gr);
+    const ha = gr.built.ha + gr.approved.ha + gr.proposed.ha, ii = gr.built.ii + gr.approved.ii + gr.proposed.ii;
+    $('#c-ii').textContent = ha > 0 ? `Wastewater I&I from growth since 2021: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites (built ${fmt1(gr.built.ii)} · approved ${fmt1(gr.approved.ii)} · proposed ${fmt1(gr.proposed.ii)} L/s; ${state.criteria.wastewater.infiltration} L/s/ha).` : '';
     $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;
   }
 

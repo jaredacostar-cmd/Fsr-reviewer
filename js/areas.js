@@ -97,17 +97,21 @@
         return c && c.date >= since;
       });
       const n = done.length ? P.permitUnits(done) : 0;
-      if (n > 0) { built.push({ ...p, units: n, buildout: null }); builtUnits += n; builtProjects++; }
+      const part = k => ({ ...p, units: k, buildout: null, siteAreaHa: p.siteAreaHa > 0 && p.units > 0 ? p.siteAreaHa * Math.min(1, k / p.units) : null });
+      if (n > 0) { built.push(part(n)); builtUnits += n; builtProjects++; }
       const c = D.unitsFor(p, 'committed');
-      if (c > 0) { approved.push({ ...p, units: c, buildout: null }); approvedUnits += c; approvedProjects++; }
+      if (c > 0) { approved.push(part(c)); approvedUnits += c; approvedProjects++; }
       const q = PROPOSED_PHASES.has(p.phase) && p.buildout ? p.buildout.unbuilt : 0;
-      if (q > 0) { proposed.push({ ...p, units: q, buildout: null }); proposedUnits += q; proposedProjects++; }
+      if (q > 0) { proposed.push(part(q)); proposedUnits += q; proposedProjects++; }
     }
-    const pop = list => D.estimate(list, criteria, 'all').population;
+    const layer = (list, units, projects) => {
+      const e = D.estimate(list, criteria, 'all');
+      return { units, projects, population: e.population, ha: e.area.ha, ii: e.wastewater.infiltration };
+    };
     return {
-      built: { units: builtUnits, projects: builtProjects, population: pop(built), estimatedDates: estimated > 0 },
-      approved: { units: approvedUnits, projects: approvedProjects, population: pop(approved) },
-      proposed: { units: proposedUnits, projects: proposedProjects, population: pop(proposed) },
+      built: { ...layer(built, builtUnits, builtProjects), estimatedDates: estimated > 0 },
+      approved: layer(approved, approvedUnits, approvedProjects),
+      proposed: layer(proposed, proposedUnits, proposedProjects),
     };
   }
 

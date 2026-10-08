@@ -65,3 +65,17 @@ test('committed capacity: growth (planned on an application) that is approved or
   assert.equal(D.unitsFor(p('completed', 4, null), 'committed'), 0);
   assert.equal(D.unitsFor(p('cancelled', 40, null), 'committed'), 0);
 });
+
+test('I&I: 0.26 L/s/ha on the site area, prorated by units; estimated from units without a boundary', () => {
+  const bo = { planned: 100, permitted: 40, completed: 40, remaining: 60, unbuilt: 60 };
+  const site = { phase: 'construction', units: 100, siteAreaHa: 10, buildout: bo, types: ['Townhouse'], description: '' };
+  const all = D.estimate([site]);
+  assert.equal(all.area.ha, 10);
+  assert.ok(Math.abs(all.wastewater.infiltration - 2.6) < 1e-9);
+  assert.ok(Math.abs(all.wastewater.wetPeak - (all.wastewater.peak + 2.6)) < 1e-9);
+  const rest = D.estimate([site], D.DEFAULT_CRITERIA, 'unbuilt');
+  assert.ok(Math.abs(rest.area.ha - 6) < 1e-9, 'remaining 60 of 100 units -> 60% of the site');
+  const noBoundary = D.estimate([{ phase: 'approved', units: 50, types: ['Single detached'], description: '', buildout: null }]);
+  assert.ok(Math.abs(noBoundary.area.ha - 2) < 1e-9, '50 singles x 0.04 ha');
+  assert.equal(noBoundary.area.estimatedHa, noBoundary.area.ha);
+});
