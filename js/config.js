@@ -103,6 +103,7 @@ const PEEL_CONFIG = {
       municipality: 'Brampton',
       kind: 'application',
       maxPhase: 'inception', // a closed pre-consultation has moved on to a formal application
+      countUnits: false,     // its proposal repeats in the formal application; don't count units twice
       url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/10',
       enabled: true,
     },

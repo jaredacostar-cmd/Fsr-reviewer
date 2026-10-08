@@ -35,7 +35,9 @@ function encodeRecord(r) {
   for (const k of KEEP) {
     const v = r[k];
     if (v == null || v === '' || v === false) continue;
-    o[k] = typeof v === 'string' && v.length > 400 ? v.slice(0, 400) + '…' : v;
+    // Permit descriptions are only shown in the detail panel; keep them short to keep the file small.
+    const max = r.kind === 'permit' ? 160 : 600;
+    o[k] = typeof v === 'string' && v.length > max ? v.slice(0, max) + '…' : v;
   }
   o.lat = +r.lat.toFixed(6);
   o.lng = +r.lng.toFixed(6);

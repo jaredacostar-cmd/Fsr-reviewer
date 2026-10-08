@@ -1,3 +1,0 @@
-https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer
-https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Growth_Management_%E2%80%93_Active_Development_Applications/FeatureServer
-https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/Growth_Management_%E2%80%93_Issued_Building_Permits/FeatureServer

@@ -29,8 +29,9 @@ test('Brampton planning files: status vocabulary and units from the description'
   assert.equal(r.units, 1250);
   assert.ok(r.description.includes('two 30-storey towers'));
 
-  const pre = rec(fields, { FILE_NUMBER: 'PRE-1', STATUS: 'PRE - Closed' }, { ...src, maxPhase: 'inception' });
+  const pre = rec(fields, { FILE_NUMBER: 'PRE-1', STATUS: 'PRE - Closed', PROPOSAL_DESCRIPTION: '400 townhouse units' }, { ...src, maxPhase: 'inception', countUnits: false });
   assert.equal(pre.phase, 'inception');
+  assert.equal(pre.units, null, 'pre-consultation units are not counted');
 });
 
 test('Brampton building permits: pending vs issued vs done; expiry is not cancellation', () => {

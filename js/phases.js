@@ -341,8 +341,10 @@
         if (!(rec.units > 0)) rec.units = total;
       }
     }
+    // Sources whose unit counts duplicate a later file (pre-consultation) don't count units.
+    if (src.countUnits === false) { rec.units = null; rec.unitMix = null; }
     // No unit column (e.g. Brampton planning files): read the count from the description.
-    if (!(rec.units > 0) && !rec.unitMix) {
+    else if (!(rec.units > 0) && !rec.unitMix) {
       const t = unitsFromText(rec.description);
       if (t) { rec.units = t; rec.unitsFromText = true; }
     }
