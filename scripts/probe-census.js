@@ -41,24 +41,40 @@ async function show(items, label) {
     if (/Feature Service|Map Service/.test(it.type)) await layer(it.url.replace(/\/$/, ''));
   }
 }
+// Compact: only layers with 2016-style DAUIDs in Peel, and their population / dwelling fields.
+async function peelLayer(url, title) {
+  const info = await get(`${url}?f=json`);
+  if (info.error || info.status) return;
+  if (info.layers && !info.fields) { for (const l of info.layers.slice(0, 12)) await peelLayer(`${url}/${l.id}`, title); return; }
+  const daField = (info.fields || []).map(f => f.name).find(n => /^DAUID/i.test(n));
+  if (!daField) return;
+  const peel = await get(`${url}/query?${q({ where: `${daField} LIKE '3521%'`, returnCountOnly: true, f: 'json' })}`);
+  if (!(peel.count > 0)) return;
+  const popish = (info.fields || []).map(f => f.name).filter(n => /pop|dwel|dw_|priv|tdw|hh|household/i.test(n));
+  const smp = await get(`${url}/query?${q({ where: `${daField} LIKE '3521%'`, outFields: [daField, ...popish.slice(0, 12)].join(','), returnGeometry: false, resultRecordCount: 1, f: 'json' })}`);
+  console.log(`  PEEL ${peel.count} "${title}" / "${info.name}" ${url}\n     pop/dwelling fields: ${popish.join(',').slice(0, 400)}\n     sample: ${JSON.stringify((smp.features || [])[0] && smp.features[0].attributes).slice(0, 400)}`);
+}
 (async () => {
-  // 1) The 2021 layer the app already uses: does it carry 2016 counts (on 2021 DAs)?
-  const C21 = 'https://services.arcgis.com/txWDfZ2LIgzmw5Ts/arcgis/rest/services/Census_2021_Population_by_Dissemination_Area/FeatureServer/0';
-  const info = await get(`${C21}?f=json`);
-  console.log('=== 2021 layer fields (all)');
-  for (const f of info.fields || []) console.log(`    ${f.name} (${f.type}) "${f.alias}"`);
-  const smp = await get(`${C21}/query?${q({ where: "DAUID LIKE '3521%'", outFields: '*', returnGeometry: false, resultRecordCount: 2, f: 'json' })}`);
-  for (const f of (smp.features || [])) console.log(`    sample: ${JSON.stringify(f.attributes)}`);
-  // 2) York Region's GTA 2016 DA layers (the income one covers Peel).
-  await show(await search(`orgid:GzvOwaQBbX7KLiuG AND (title:"Greater Toronto Area" OR title:GTA) AND 2016`, 40), 'York GTA 2016 layers');
-  await show(await search(`(title:"population and dwelling" OR title:"population and dwellings") AND (2016) AND ("dissemination area")`, 30), '2016 population and dwelling by DA');
-  // 3) Statistics Canada files with a browser user-agent.
-  console.log('\n=== Statistics Canada files (browser UA)');
-  const files = {
-    'DA boundaries 2016 (cartographic, shp)': 'https://www12.statcan.gc.ca/census-recensement/2011/geo/bound-limit/files-fichiers/2016/lda_000b16a_e.zip',
-    'Pop & dwelling counts 2016, DA (CSV)': 'https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Tables/CompFile.cfm?Lang=Eng&T=1901&OFT=FULLCSV',
-    '2021 pop & dwelling, DA incl. 2016 (CSV)': 'https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/hlt-fst/pd-pl/Tables/CompFile.cfm?Lang=Eng&T=1901&OFT=FULLCSV',
-    'StatCan table 98-10-0015 (2021, DA, with 2016)': 'https://www150.statcan.gc.ca/t1/tbl1/en/dtl!downloadDbLoadingData-nonTraduit.action?pid=9810001501&latestN=5&startDate=&endDate=&csvLocale=en&selectedMembers=%5B%5B1%5D%2C%5B1%5D%5D&checkedLevels=',
-  };
-  for (const [k, u] of Object.entries(files)) console.log(`  ${k}: ${await head(u)}  ${u}`);
+  const FS = '(type:"Feature Service" OR type:"Map Service")';
+  const queries = [
+    `${FS} AND 2016 AND ("dissemination area" OR "dissemination areas") AND population`,
+    `${FS} AND ("Census 2016" OR "2016 Census") AND (DA OR "dissemination")`,
+    `${FS} AND title:2016 AND (title:DA OR title:"dissemination")`,
+    `${FS} AND ("population and dwelling" OR "population & dwelling") AND 2016`,
+    `${FS} AND 2016 AND census AND (Peel OR Brampton OR Mississauga OR Toronto OR GTA OR "Greater Toronto")`,
+    `${FS} AND 2016 AND census AND Ontario AND (dissemination OR DA)`,
+  ];
+  for (const query of queries) {
+    for (const start of [1, 101]) {
+      const r = await get(`${SHARING}/search?${q({ q: query, num: 100, start, f: 'json' })}`);
+      const items = r.results || [];
+      console.log(`=== ${query.slice(0, 120)} (start ${start}): ${items.length}`);
+      for (const it of items) {
+        if (!it.url || seen.has(it.url) || !/Feature Service|Map Service/.test(it.type)) continue;
+        seen.add(it.url);
+        await peelLayer(it.url.replace(/\/$/, ''), it.title);
+      }
+      if (items.length < 100) break;
+    }
+  }
 })().catch(e => { console.error(e); process.exit(1); });
