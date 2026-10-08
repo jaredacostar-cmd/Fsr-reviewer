@@ -5,6 +5,10 @@
   "description": "Map every development in Peel Region from application to completion",
   "scripts": {
     "start": "npx --yes serve@14.2.4 -l 8080 .",
-    "test": "node --test tests/*.test.js"
+    "test": "node --test tests/*.test.js",
+    "snapshot": "node scripts/build-snapshot.js --out data"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

@@ -379,7 +379,31 @@
     };
   }
 
+  // The same file can come from two layers (e.g. "all permits" and "growth" permits):
+  // merge by municipality + kind + file number, keeping the furthest phase.
+  function dedupeRecords(records) {
+    const byRef = new Map(); const out = [];
+    for (const r of records) {
+      if (!r.ref) { out.push(r); continue; }
+      const k = `${r.municipality}|${r.kind}|${r.ref}`;
+      const prev = byRef.get(k);
+      if (!prev) { byRef.set(k, r); out.push(r); continue; }
+      const seen = new Set(prev.events.map(e => `${e.phase}|${+e.date}`));
+      for (const e of r.events) if (!seen.has(`${e.phase}|${+e.date}`)) prev.events.push(e);
+      prev.events.sort((a, b) => a.date - b.date);
+      if (prev.phase === 'cancelled' || (r.phase !== 'cancelled' && PHASE_BY_KEY[r.phase].rank > PHASE_BY_KEY[prev.phase].rank)) {
+        if (r.phase !== 'cancelled' || prev.phase === 'cancelled') { prev.phase = r.phase; prev.statusRaw = r.statusRaw || prev.statusRaw; }
+      }
+      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix']) if (!prev[f] && r[f]) prev[f] = r[f];
+      prev.props = { ...(r.props || {}), ...(prev.props || {}) };
+      prev.newBuild = prev.newBuild || r.newBuild;
+      prev.alsoIn = (prev.alsoIn || []).concat(r.sourceName);
+    }
+    return out;
+  }
+
   const api = {
+    dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, humanizeField, mergeProject, projectKey, isNewBuild,

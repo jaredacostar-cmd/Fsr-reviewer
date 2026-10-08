@@ -11,7 +11,9 @@
  * kind: 'application' (planning files: OPA, ZBA, subdivision, site plan, ...)
  *       'permit'      (building permits: issuance, inspections, closure)
  */
-window.PEEL_CONFIG = {
+(function (root) {
+'use strict';
+const PEEL_CONFIG = {
   // Peel Region bounding box (WGS84). Every query is clipped to it.
   bbox: { xmin: -80.16, ymin: 43.47, xmax: -79.48, ymax: 44.00 },
   center: [43.70, -79.80],
@@ -69,3 +71,6 @@ window.PEEL_CONFIG = {
   maxPerLayer: 20000,
   pageSize: 2000,
 };
+if (typeof module !== 'undefined' && module.exports) module.exports = PEEL_CONFIG;
+else root.PEEL_CONFIG = PEEL_CONFIG;
+})(typeof window !== 'undefined' ? window : globalThis);

@@ -83,6 +83,42 @@ the phase names. **Hide** collapses the timeline and demand panel to give the ma
   development, planning and permit feature service they publish. You can also paste in any
   FeatureServer or MapServer URL.
 
+## Weekly automatic update
+
+A GitHub Action (`.github/workflows/weekly-snapshot.yml`) runs every Monday at 10:17 UTC, which
+is early morning in Toronto. You can also start it by hand from the Actions tab with **Run
+workflow**. Each run does the following:
+
+1. It loads every configured source, plus every development or permit dataset it finds on the
+   Mississauga, Brampton, Caledon and Peel open-data hubs. This means new datasets are picked
+   up without anyone editing the config.
+2. It writes `data/snapshot.json`, which holds planning applications and new-build permits.
+3. It adds this week's phase for every project to `data/history.json`. The sources only
+   publish current status, so this file builds a record of when each project moved from one
+   phase to the next.
+4. It commits both files if anything changed.
+
+If a source is down that week, its records from the previous week are kept and marked as
+stale. Nothing is written if every source fails.
+
+When the page opens, it loads the snapshot first, which is fast and doesn't depend on the city
+servers being up. The app then shows:
+
+- **This week:** projects that are new, or that changed phase, since the previous run.
+- **Phase history:** in each project panel, the date each phase change was detected.
+- **Data sources:** the date of the snapshot. **Refresh live** re-queries every source right
+  away and also includes alteration-type permits.
+
+**Setup:**
+
+- Scheduled workflows only run from the repository's **default branch** (`main`), so this
+  branch needs to be merged first.
+- The site must be redeployed after each weekly commit. GitHub Pages does this automatically.
+  On Netlify, use **Add new site → Import an existing project → GitHub** instead of Netlify
+  Drop; this works with private repositories on the free plan, and every weekly commit then
+  deploys itself.
+- Run it locally with `npm run snapshot`.
+
 ## How classification works (`js/phases.js`)
 
 Each municipality uses its own schema, so nothing is hard-coded per dataset:

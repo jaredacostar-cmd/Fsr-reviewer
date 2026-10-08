@@ -239,54 +239,16 @@
   let markerByKey = new Map();
 
   // ---- Loading -------------------------------------------------------------------
-  function sinceFieldFor(fmap, kind) {
-    const order = kind === 'permit' ? ['permit', 'inception', 'approved'] : ['inception', 'review', 'approved'];
-    for (const ev of order) { const d = fmap.dates.find(x => x.event === ev); if (d) return d.field; }
-    return null;
-  }
-
-  async function queryWithFallback(url, info, fmap, src) {
-    const f = sinceFieldFor(fmap, src.kind);
-    const y = Number(state.sinceYear);
-    const wheres = [];
-    if (f && y) {
-      wheres.push(`(${f} >= DATE '${y}-01-01' OR ${f} IS NULL)`);
-      wheres.push(`(${f} >= timestamp '${y}-01-01 00:00:00' OR ${f} IS NULL)`);
-    }
-    wheres.push('1=1');
-    let lastErr;
-    for (const where of wheres) {
-      try {
-        return await A.queryAll(url, info, {
-          where, bbox: CFG.bbox, max: state.maxPerLayer, pageSize: CFG.pageSize,
-          orderBy: f ? `${f} DESC` : undefined,
-          onProgress: n => setSourceStatus(src, 'loading', `loading… ${fmtNum(n)}`),
-        });
-      } catch (e) { lastErr = e; }
-    }
-    throw lastErr;
-  }
-
   async function loadSource(src) {
     src.records = []; src.layers = [];
     setSourceStatus(src, 'loading', 'connecting…');
     try {
-      const layers = await A.resolveLayers(src.url);
-      let truncated = false;
-      for (const layer of layers) {
-        const info = await A.layerInfo(layer.url);
-        if (!info.geometryType) continue; // table without geometry
-        const fmap = P.detectFields(info.fields || []);
-        const res = await queryWithFallback(layer.url, info, fmap, src);
-        truncated = truncated || res.truncated;
-        const lsrc = { ...src, id: `${src.id}/${layer.url.split('/').pop()}` };
-        for (const f of res.features) {
-          const r = P.normalizeRecord(f, fmap, lsrc);
-          if (r.lat != null) src.records.push(r);
-        }
-        src.layers.push({ name: info.name || layer.name, url: layer.url, count: res.features.length, fields: fmap });
-      }
-      setSourceStatus(src, 'ok', `${fmtNum(src.records.length)} records${truncated ? ` (capped at ${fmtNum(state.maxPerLayer)}/layer)` : ''}`);
+      const res = await PeelLoader.loadSource(src, {
+        bbox: CFG.bbox, sinceYear: state.sinceYear, maxPerLayer: state.maxPerLayer, pageSize: CFG.pageSize,
+        onProgress: n => setSourceStatus(src, 'loading', `loading… ${fmtNum(n)}`),
+      });
+      src.records = res.records; src.layers = res.layers; src.live = true;
+      setSourceStatus(src, 'ok', `${fmtNum(src.records.length)} records · live${res.truncated ? ` (capped at ${fmtNum(state.maxPerLayer)}/layer)` : ''}`);
     } catch (e) {
       const msg = /Failed to fetch|NetworkError|Load failed/i.test(e.message) ? 'unreachable (network / CORS)' : e.message;
       setSourceStatus(src, 'error', msg);
@@ -339,31 +301,8 @@
   let rebuildTimer;
   function scheduleRebuild() { clearTimeout(rebuildTimer); rebuildTimer = setTimeout(rebuild, 150); }
 
-  // The same permit can come from two layers (e.g. "all permits" and "growth" permits).
-  function dedupe(records) {
-    const byRef = new Map(); const out = [];
-    for (const r of records) {
-      if (!r.ref) { out.push(r); continue; }
-      const k = `${r.municipality}|${r.kind}|${r.ref}`;
-      const prev = byRef.get(k);
-      if (!prev) { byRef.set(k, r); out.push(r); continue; }
-      // merge into the first: union of events, furthest phase, fill blanks
-      const seen = new Set(prev.events.map(e => `${e.phase}|${+e.date}`));
-      for (const e of r.events) if (!seen.has(`${e.phase}|${+e.date}`)) prev.events.push(e);
-      prev.events.sort((a, b) => a.date - b.date);
-      if (prev.phase === 'cancelled' || (r.phase !== 'cancelled' && P.PHASE_BY_KEY[r.phase].rank > P.PHASE_BY_KEY[prev.phase].rank)) {
-        if (r.phase !== 'cancelled' || prev.phase === 'cancelled') { prev.phase = r.phase; prev.statusRaw = r.statusRaw || prev.statusRaw; }
-      }
-      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw']) if (!prev[f] && r[f]) prev[f] = r[f];
-      prev.props = { ...r.props, ...prev.props };
-      prev.newBuild = prev.newBuild || r.newBuild;
-      prev.alsoIn = (prev.alsoIn || []).concat(r.sourceName);
-    }
-    return out;
-  }
-
   function rebuild() {
-    const records = dedupe(state.sources.filter(s => s.enabled).flatMap(s => s.records));
+    const records = P.dedupeRecords(state.sources.filter(s => s.enabled).flatMap(s => s.records));
     state.projects = P.buildProjects(records);
     const munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     const sel = $('#f-muni'), cur = sel.value;
@@ -610,7 +549,9 @@
   function renderSources() {
     const ok = state.sources.filter(s => s.enabled && s.status === 'ok').length;
     const en = state.sources.filter(s => s.enabled).length;
-    $('#sources-summary').textContent = `${ok}/${en} loaded`;
+    $('#sources-summary').textContent = state.snapshot
+      ? `Weekly snapshot · ${state.snapshot.generatedAt.slice(0, 10)}${state.sources.some(s => s.live) ? ' + live' : ''}`
+      : `${ok}/${en} loaded · live`;
     $('#source-list').innerHTML = state.sources.map((s, i) =>
       `<li><input type="checkbox" data-i="${i}" ${s.enabled ? 'checked' : ''} aria-label="Enable ${esc(s.name)}">
         <a class="name" href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.name)}</a>
@@ -620,6 +561,24 @@
   function setSourceStatus(src, status, msg) { src.status = status; src.msg = msg; renderSources(); }
 
   // ---- Detail panel --------------------------------------------------------------
+  function recordRows(r) {
+    const props = r.props && Object.keys(r.props).length ? r.props : null;
+    const rows = props
+      ? Object.entries(props).filter(([k, v]) => v != null && v !== '' && !/^(shape|globalid)/i.test(k)).map(([k, v]) =>
+          [k, typeof v === 'number' && v > 1e11 && v < 5e12 && /date|_dt|time/i.test(k) ? fmtDate(new Date(v)) : v])
+      : [['File', r.ref], ['Address', r.address], ['Type', r.type], ['Status', r.statusRaw], ['Ward', r.ward],
+         ['Units', r.units != null ? fmtNum(r.units) : ''], ['Floor area', r.gfa != null ? fmtNum(r.gfa) : ''],
+         ...r.events.map(e => [P.humanizeField(e.label), fmtDate(e.date)])].filter(([, v]) => v !== '' && v != null);
+    return rows.map(([k, v]) => `<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('');
+  }
+
+  function phaseHistoryHTML(p) {
+    const h = state.history && state.history.projects && state.history.projects[p.key];
+    if (!h || !h.length) return '';
+    return `<h2 class="section-title">Phase history <span class="muted small">(checked weekly)</span></h2>
+      <ol class="timeline">${h.map(([d, ph], i) => `<li><span class="d">${esc(d)}</span>${dot(ph)}<span>${i ? 'Moved to' : 'First seen as'} ${esc(P.PHASE_BY_KEY[ph].label)}</span></li>`).join('')}</ol>`;
+  }
+
   function showDetail(p) {
     const ph = P.PHASE_BY_KEY[p.phase];
     const cancelled = p.phase === 'cancelled';
@@ -637,10 +596,7 @@
         ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
         ${r.description ? `<p>${esc(r.description)}</p>` : ''}
         <p class="small muted">Source: ${esc(r.sourceName)}${r.alsoIn ? ` (also in ${esc(r.alsoIn.join(', '))})` : ''}</p>
-        <table>${Object.entries(r.props).filter(([k, v]) => v != null && v !== '' && !/^(shape|globalid)/i.test(k)).map(([k, v]) => {
-          const d = typeof v === 'number' && v > 1e11 && v < 5e12 && /date|_dt|time/i.test(k) ? fmtDate(new Date(v)) : v;
-          return `<tr><td>${esc(k)}</td><td>${esc(d)}</td></tr>`;
-        }).join('')}</table>
+        <table>${recordRows(r)}</table>
       </details>`).join('');
     $('#detail-body').innerHTML = `
       <div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
@@ -656,6 +612,7 @@
       <h2 class="section-title">Phase progress</h2>
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
       <ol class="stepper">${steps}</ol>
+      ${phaseHistoryHTML(p)}
       <h2 class="section-title">Timeline</h2>${timeline}
       <h2 class="section-title">Source records</h2>${recs}`;
     $('#detail').hidden = false;
@@ -714,6 +671,7 @@
   $('#s-max').value = state.maxPerLayer;
   $('#s-since').onchange = e => { state.sinceYear = Number(e.target.value) || 0; store.set('sinceYear', state.sinceYear); };
   $('#s-max').onchange = e => { state.maxPerLayer = Math.max(500, Number(e.target.value) || CFG.maxPerLayer); store.set('maxPerLayer', state.maxPerLayer); };
+  // Refresh live: re-query every enabled source now instead of using the weekly snapshot.
   $('#btn-reload').onclick = () => { for (const s of state.sources) { s.records = []; s.status = 'idle'; s.msg = ''; } scheduleRebuild(); loadAll(); };
   $('#btn-discover').onclick = discover;
 
@@ -774,7 +732,75 @@
   renderCriteria();
   updateYearBounds();
   applyFilters();
-  loadAll();
+  boot();
+
+  // Start from the weekly snapshot (fast, survives source outages); fall back to live.
+  async function boot() {
+    let snap = null;
+    try {
+      const res = await fetch('data/snapshot.json', { cache: 'no-cache' });
+      if (res.ok) snap = await res.json();
+    } catch (e) { /* no snapshot published, or opened from disk */ }
+    if (!snap || !Array.isArray(snap.records)) { loadAll(); return; }
+    applySnapshot(snap);
+    // User-added sources aren't in the snapshot: load those live.
+    const missing = state.sources.filter(s => s.enabled && !s.fromSnapshot);
+    inflight += missing.length; showLoading();
+    for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
+    fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => { state.history = h; }).catch(() => {});
+  }
+
+  function applySnapshot(snap) {
+    state.snapshot = { generatedAt: snap.generatedAt, changes: snap.changes, note: snap.note };
+    const byRoot = new Map();
+    for (const o of snap.records) {
+      const id = String(o.sourceId).split('/')[0];
+      if (!byRoot.has(id)) byRoot.set(id, []);
+      byRoot.get(id).push(o);
+    }
+    for (const meta of snap.sources) {
+      if (removed.has(meta.id)) continue;
+      let src = state.sources.find(s => s.id === meta.id);
+      if (!src) {
+        src = { ...meta, enabled: disabled[meta.id] != null ? !disabled[meta.id] : true, records: [] };
+        state.sources.push(src);
+      }
+      src.fromSnapshot = true;
+      src.records = (byRoot.get(meta.id) || []).map(o => ({
+        sourceName: meta.name, ref: '', address: '', type: '', description: '', ward: '', statusRaw: '',
+        units: null, gfa: null, newBuild: false, unitMix: null, props: {}, ...o,
+        events: (o.events || []).map(([d, phase, label]) => ({ date: new Date(`${d}T00:00:00Z`), phase, label })),
+      }));
+      const n = fmtNum(src.records.length);
+      if (meta.status === 'ok') { src.status = 'ok'; src.msg = `${n} records · ${meta.updated}`; }
+      else if (meta.status === 'stale') { src.status = 'error'; src.msg = `${n} records from ${meta.updated} (source unreachable this week)`; }
+      else { src.status = 'error'; src.msg = meta.error || 'failed in last snapshot'; }
+    }
+    renderSources();
+    renderChanges();
+    scheduleRebuild();
+  }
+
+  // "This week" panel: projects that appeared or changed phase since the previous snapshot.
+  function renderChanges() {
+    const el = $('#changes'), c = state.snapshot && state.snapshot.changes;
+    if (!c || c.baseline) { el.hidden = true; return; }
+    el.hidden = false;
+    $('#changes-head').textContent = `${c.since} → ${c.until}`;
+    const items = [
+      ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
+      ...c.added.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
+    ];
+    $('#changes-summary').textContent = `${fmtNum(c.movedCount)} changed phase · ${fmtNum(c.addedCount)} new`;
+    const SHOW = 25;
+    $('#changes-list').innerHTML = items.slice(0, SHOW).map((it, i) => `<li><button type="button" data-i="${i}">${it.html}</button></li>`).join('') +
+      (items.length > SHOW ? `<li class="muted small">+ ${fmtNum(items.length - SHOW)} more</li>` : '');
+    $('#changes-list').onclick = e => {
+      const b = e.target.closest('button[data-i]'); if (!b) return;
+      const p = state.projects.find(x => x.key === items[+b.dataset.i].key);
+      if (p) focusProject(p);
+    };
+  }
 
   window.PeelApp = { state, rebuild, loadAll, discover };
 })();

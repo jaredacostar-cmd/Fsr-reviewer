@@ -175,5 +175,7 @@
       }));
   }
 
-  root.PeelArcGIS = { fetchJSON, resolveLayers, layerInfo, queryAll, discoverHub, esriToGeoJSON };
-})(window);
+  const api = { fetchJSON, resolveLayers, layerInfo, queryAll, discoverHub, esriToGeoJSON };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  else root.PeelArcGIS = api;
+})(typeof window !== 'undefined' ? window : globalThis);

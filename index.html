@@ -59,6 +59,12 @@
         </div>
       </section>
 
+      <details class="panel changes" id="changes" hidden open>
+        <summary><h2>This week</h2><span class="muted small" id="changes-head"></span></summary>
+        <p class="small" id="changes-summary"></p>
+        <ol class="project-list" id="changes-list"></ol>
+      </details>
+
       <section class="panel list-panel">
         <div class="panel-head">
           <h2>Projects</h2>
@@ -83,7 +89,7 @@
           </label>
         </div>
         <div class="row btns">
-          <button type="button" class="btn" id="btn-reload">Reload</button>
+          <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
           <button type="button" class="btn" id="btn-discover" title="Search the Mississauga, Brampton, Caledon and Peel open-data hubs for more development and permit datasets">Discover datasets</button>
         </div>
         <form class="add-source" id="add-source">
@@ -168,6 +174,7 @@
   <script src="js/phases.js"></script>
   <script src="js/demand.js"></script>
   <script src="js/arcgis.js"></script>
+  <script src="js/loader.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>

@@ -144,6 +144,12 @@ button, input, select { font: inherit; color: inherit; }
 .project-list .t { display: block; font-weight: 600; overflow-wrap: anywhere; }
 .project-list .m { font-size: 12px; color: var(--text-secondary); }
 
+.changes summary { display: flex; justify-content: space-between; align-items: baseline; cursor: pointer; list-style: none; margin-bottom: 4px; }
+.changes summary::-webkit-details-marker { display: none; }
+.changes summary h2::before { content: '▸ '; }
+.changes[open] summary h2::before { content: '▾ '; }
+.changes p { margin: 0 0 4px; }
+.changes .project-list { max-height: 260px; overflow-y: auto; }
 .sources summary { display: flex; justify-content: space-between; align-items: baseline; cursor: pointer; list-style: none; margin-bottom: 8px; }
 .sources summary::-webkit-details-marker { display: none; }
 .sources summary h2::before { content: '▸ '; }
