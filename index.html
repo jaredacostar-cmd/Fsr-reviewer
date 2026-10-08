@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Peel Dev">
+  <meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#1a1a19" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>Peel Development Tracker</title>
+  <meta name="description" content="Every development in Peel Region (Mississauga, Brampton, Caledon) from application to completion, on a map.">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <header class="brand">
+        <h1>Peel Development Tracker</h1>
+        <p class="sub">Mississauga · Brampton · Caledon — from application to completion</p>
+      </header>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>Construction phases</h2>
+          <span class="muted" id="total-count">—</span>
+        </div>
+        <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
+        <ul class="phase-list" id="phase-list"></ul>
+      </section>
+
+      <section class="panel filters">
+        <div class="row">
+          <label class="field grow"><span>Search</span>
+            <input type="search" id="f-search" placeholder="Address, file number, description…">
+          </label>
+        </div>
+        <div class="row">
+          <label class="field grow"><span>Municipality</span>
+            <select id="f-muni"><option value="">All</option></select>
+          </label>
+          <label class="field grow"><span>Record type</span>
+            <select id="f-kind">
+              <option value="">All</option>
+              <option value="application">Planning applications</option>
+              <option value="permit">Building permits</option>
+              <option value="both">Linked app + permit</option>
+            </select>
+          </label>
+        </div>
+        <div class="row">
+          <label class="check"><input type="checkbox" id="f-new" checked> New builds only</label>
+        </div>
+      </section>
+
+      <details class="panel changes" id="changes" hidden open>
+        <summary><h2>This week</h2><span class="muted small" id="changes-head"></span></summary>
+        <p class="small" id="changes-summary"></p>
+        <ol class="project-list" id="changes-list"></ol>
+      </details>
+
+      <section class="panel list-panel">
+        <div class="panel-head">
+          <h2>Projects</h2>
+          <div class="btns">
+            <button type="button" id="btn-csv" class="btn small">CSV</button>
+            <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
+          </div>
+        </div>
+        <p class="muted small" id="list-note"></p>
+        <ol class="project-list" id="project-list"></ol>
+      </section>
+
+      <details class="panel sources" id="sources-panel" open>
+        <summary><h2>Data sources</h2><span class="muted" id="sources-summary"></span></summary>
+        <ul class="source-list" id="source-list"></ul>
+        <div class="row">
+          <label class="field"><span>Records since</span>
+            <input type="number" id="s-since" min="1990" max="2100" step="1">
+          </label>
+          <label class="field"><span>Max per layer</span>
+            <input type="number" id="s-max" min="500" max="200000" step="500">
+          </label>
+        </div>
+        <div class="row btns">
+          <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
+          <button type="button" class="btn" id="btn-discover" title="Search the Mississauga, Brampton, Caledon and Peel open-data hubs for more development and permit datasets">Discover datasets</button>
+        </div>
+        <form class="add-source" id="add-source">
+          <p class="small muted">Add any ArcGIS FeatureServer / MapServer URL:</p>
+          <input type="url" id="a-url" required placeholder="https://…/FeatureServer">
+          <div class="row">
+            <select id="a-muni" aria-label="Municipality">
+              <option>Mississauga</option><option>Brampton</option><option>Caledon</option><option>Peel Region</option>
+            </select>
+            <select id="a-kind" aria-label="Kind">
+              <option value="application">Applications</option>
+              <option value="permit">Permits</option>
+            </select>
+            <button type="submit" class="btn">Add</button>
+          </div>
+        </form>
+      </details>
+    </aside>
+
+    <main class="map-wrap">
+      <div id="map" aria-label="Map of developments"></div>
+      <div class="legend" id="legend" aria-label="Legend"></div>
+      <div class="loading" id="loading" hidden></div>
+      <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
+    </main>
+
+    <footer class="footer" id="footer">
+      <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
+      <section class="timebar" aria-label="Timeline">
+        <div class="tb-head">
+          <h2>Timeline</h2>
+          <label class="inline"><span class="sr">Milestone</span>
+            <select id="t-mode" aria-label="Which milestone falls in the year range">
+              <option value="any">Any milestone</option>
+              <option value="inception">Application submitted</option>
+              <option value="approved">Approved</option>
+              <option value="permit">Permit issued</option>
+              <option value="completed">Completed</option>
+            </select>
+          </label>
+          <strong class="t-label" id="t-label">All years</strong>
+          <button type="button" class="btn small" id="t-reset" hidden>Reset</button>
+        </div>
+        <div class="hist" id="t-hist" role="group" aria-label="Projects per year"></div>
+        <div class="range" id="t-range">
+          <input type="range" id="t-from" aria-label="From year">
+          <input type="range" id="t-to" aria-label="To year">
+        </div>
+        <div class="ticks" id="t-ticks" aria-hidden="true"></div>
+      </section>
+
+      <section class="demand" aria-label="Population and servicing demand">
+        <div class="tb-head">
+          <h2>Population &amp; servicing demand</h2>
+          <select id="d-basis" aria-label="Which projects to include">
+            <option value="all">All shown projects</option>
+            <option value="pipeline">Not yet completed</option>
+            <option value="completed">Completed only</option>
+          </select>
+          <span class="muted small" id="d-note"></span>
+        </div>
+        <div class="tiles" id="d-tiles"></div>
+        <details class="d-more">
+          <summary>Breakdown &amp; design criteria</summary>
+          <div class="d-grid">
+            <div id="d-breakdown"></div>
+            <form id="d-criteria" class="criteria"></form>
+          </div>
+        </details>
+      </section>
+    </footer>
+
+    <aside class="detail" id="detail" hidden aria-live="polite">
+      <button type="button" class="close" id="detail-close" aria-label="Close">×</button>
+      <div id="detail-body"></div>
+    </aside>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/phases.js"></script>
+  <script src="js/demand.js"></script>
+  <script src="js/arcgis.js"></script>
+  <script src="js/loader.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
