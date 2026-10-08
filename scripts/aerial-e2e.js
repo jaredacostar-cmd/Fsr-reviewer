@@ -58,7 +58,7 @@ fs.mkdirSync(OUT, { recursive: true });
     const r = await page.evaluate(async key => {
       const p = PeelApp.state.projects.find(x => x.key === key);
       try {
-        const a = await PeelAerial.check(p, PEEL_CONFIG, { phaseLabel: p.phase });
+        const a = await Promise.race([PeelAerial.check(p, PEEL_CONFIG, { phaseLabel: p.phase }), new Promise((_, rej) => setTimeout(() => rej(new Error('timed out after 60 s')), 60000))]);
         const st = s => s && `structure ${s.structure.toFixed(2)} (around ${s.structureAround.toFixed(2)}) cov ${Math.round(s.coverage * 100)}`;
         return { title: p.title, muni: p.municipality, phase: p.phase, units: p.units, first: p.first && p.first.toISOString().slice(0, 10),
           prob: Math.round(a.result.probability * 100), status: a.result.status, years: `${a.years.before}->${a.years.latest}`,

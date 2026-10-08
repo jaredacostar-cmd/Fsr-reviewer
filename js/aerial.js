@@ -247,8 +247,10 @@
       spatialRel: 'esriSpatialRelIntersects', where: '1=1',
       outStatistics: JSON.stringify([{ statisticType: 'sum', onStatisticField: 'Shape__Area', outStatisticFieldName: 'a' }]), f: 'json',
     });
-    const r = await fetch(`${url}/query`, { method: 'POST', body });
-    const j = await r.json();
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 20000);
+    let j;
+    try { j = await (await fetch(`${url}/query`, { method: 'POST', body, signal: ctl.signal })).json(); }
+    finally { clearTimeout(t); }
     if (j.error) throw new Error(j.error.message || 'footprint query failed');
     const a = (j.features && j.features[0] && j.features[0].attributes.a) || 0;
     // Shape__Area is in Web Mercator square metres; scale to ground area.
