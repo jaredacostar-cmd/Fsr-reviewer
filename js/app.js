@@ -26,6 +26,7 @@
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
+    sp: '', mtsa: '',   // secondary plan / character area and MTSA ids (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     focus: '',     // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
@@ -436,6 +437,7 @@
     const raw = state.sources.filter(s => s.enabled).flatMap(s => s.records);
     const records = P.dedupeRecords(raw);
     state.projects = P.buildProjects(records);
+    tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
     if (!$('#tab-data').hidden) renderAudit();
@@ -470,6 +472,8 @@
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
+    if (state.sp && !(p.sp || []).includes(state.sp)) return false;
+    if (state.mtsa && !(p.mtsa || []).includes(state.mtsa)) return false;
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
@@ -493,6 +497,7 @@
     renderList();
     renderTimeline();
     renderDemand();
+    renderCensus();
     renderFilterUI();
     renderSiteLayer();
   }
@@ -1042,9 +1047,90 @@
   $('#f-muni-chips').onclick = e => {
     const b = e.target.closest('[data-muni]'); if (!b) return;
     state.muni = b.dataset.muni;
+    // An area in another municipality no longer applies.
+    const keep = id => !id || !state.muni || (areaById.get(id) || {}).municipality === state.muni;
+    if (!keep(state.sp)) state.sp = '';
+    if (!keep(state.mtsa)) state.mtsa = '';
     renderMuniChips();
+    renderAreaSelects();
+    showArea();
     applyFilters();
   };
+
+  // ---- Planning areas: secondary plans / character areas and MTSAs ------------------------
+  const areaById = new Map();
+  const areaLayer = L.layerGroup().addTo(map);
+  async function loadAreas() {
+    try {
+      const res = await fetch('data/areas.json', { cache: 'no-cache' });
+      if (!res.ok) return;
+      const a = await res.json();
+      state.areas = { secondaryPlans: PeelAreas.prepare(a.secondaryPlans), mtsas: PeelAreas.prepare(a.mtsas), census: a.census, sources: a.sources, generatedAt: a.generatedAt };
+      for (const x of [...state.areas.secondaryPlans, ...state.areas.mtsas]) areaById.set(x.id, x);
+      state.censusDas = PeelAreas.tagCensus(a.census);
+      tagProjects();
+      renderAreaSelects();
+      applyFilters();
+    } catch (e) { /* areas are optional */ }
+  }
+  function tagProjects() {
+    if (!state.areas) return;
+    for (const p of state.projects) {
+      p.sp = PeelAreas.locate(state.areas.secondaryPlans, p.lng, p.lat, p.municipality);
+      p.mtsa = PeelAreas.locate(state.areas.mtsas, p.lng, p.lat, p.municipality);
+    }
+  }
+  function renderAreaSelects() {
+    if (!state.areas) return;
+    const fill = (sel, list, all, cur) => {
+      const munis = [...new Set(list.map(a => a.municipality))].filter(m => !state.muni || m === state.muni);
+      sel.innerHTML = `<option value="">${all}</option>` + munis.map(m =>
+        `<optgroup label="${esc(m)}">${list.filter(a => a.municipality === m).map(a => `<option value="${esc(a.id)}"${a.id === cur ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}</optgroup>`).join('');
+    };
+    fill($('#f-sp'), state.areas.secondaryPlans, 'All areas', state.sp);
+    fill($('#f-mtsa'), state.areas.mtsas, 'All MTSAs', state.mtsa);
+    $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || (areaById.get(state.sp) || {}).municipality === 'Mississauga');
+  }
+  // Outline the chosen areas on the map and zoom to them.
+  function showArea(zoom) {
+    areaLayer.clearLayers();
+    const shown = [state.sp, state.mtsa].filter(Boolean).map(id => areaById.get(id)).filter(Boolean);
+    let bounds = null;
+    for (const a of shown) {
+      const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
+        renderer: canvas, interactive: false, fill: true, fillOpacity: 0.06, weight: 2.5, dashArray: '8 6',
+        color: a.id.startsWith('mtsa') ? '#d4a017' : '#e8590c',
+      });
+      areaLayer.addLayer(l);
+      bounds = bounds ? bounds.extend(l.getBounds()) : l.getBounds();
+    }
+    if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
+  }
+  $('#f-sp').onchange = e => { state.sp = e.target.value; renderAreaSelects(); showArea(true); applyFilters(); };
+  $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); applyFilters(); };
+
+  // ---- Growth since the 2021 Census (selected geography) ----------------------------------
+  function renderCensus() {
+    const box = $('#census');
+    if (!state.censusDas || !state.censusDas.length || !state.projects.length) { box.hidden = true; return; }
+    box.hidden = false;
+    const g = { muni: state.muni, sp: state.sp, mtsa: state.mtsa };
+    const base = PeelAreas.censusTotals(state.censusDas, g);
+    const gr = PeelAreas.growthSince(state.projects, g, state.areas.census.date, state.criteria);
+    const name = [state.mtsa && areaById.get(state.mtsa).name, state.sp && areaById.get(state.sp).name, state.muni].filter(Boolean)[0] || 'Peel Region';
+    const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
+    const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
+    const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
+    const tile = (label, pop, dw, sub) => `<div class="tile"><div class="tl">${label}</div>
+      <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
+      <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
+    $('#c-tiles').innerHTML = [
+      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp || state.mtsa ? ', share by land area' : ''}`),
+      tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`),
+      tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`),
+    ].join('');
+    $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; people at Peel persons-per-unit · other filters ignored`;
+  }
 
   // Quick views: a phase (or phase group) plus an optional focus.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
@@ -1105,7 +1191,9 @@
     const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
     const unitsLabel = { 1: 'Growth', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build', committed: 'Committed capacity' };
     if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; $('#f-search').value = ''; } });
-    if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); } });
+    if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); renderAreaSelects(); } });
+    if (state.sp) out.push({ label: (areaById.get(state.sp) || {}).name || 'Secondary plan', clear: () => { state.sp = ''; renderAreaSelects(); showArea(); } });
+    if (state.mtsa) out.push({ label: `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}`, clear: () => { state.mtsa = ''; renderAreaSelects(); showArea(); } });
     if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; $('#f-kind').value = DEFAULT_KIND; } });
     if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
     if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
@@ -1130,7 +1218,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
+      Object.assign(state, { muni: '', sp: '', mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
       $('#d-basis').value = 'all';
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
@@ -1295,6 +1383,7 @@
     for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
     fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => { state.history = h; }).catch(() => {});
   }
+  loadAreas();
 
   function applySnapshot(snap) {
     state.snapshot = { generatedAt: snap.generatedAt, changes: snap.changes, note: snap.note };

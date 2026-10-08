@@ -72,6 +72,12 @@ The sidebar has three tabs.
   | Changed this week | New, or moved phase, in the latest weekly update |
 - **Search** by address, file number or description.
 - **Municipality** buttons: All, Brampton, Caledon, Mississauga.
+- **Secondary plan** and **MTSA** drop-downs (right after Municipality) keep only projects inside
+  the chosen area and outline it on the map. Secondary plans: Brampton Plan Schedule 10 and
+  Caledon's in-effect Secondary Plan Areas; Mississauga has no secondary plans, so its Official
+  Plan Character Areas are listed. MTSAs: the Region of Peel delineation (published by
+  Mississauga) and Brampton Plan Schedule 1A/1B primary and planned MTSAs. A project is in an
+  area when its location falls inside it.
 - **Record type:** by default only **planning applications and the building permits that belong
   to them** (permits with no application, such as infill houses, are hidden; choose *All records*
   to see them). Also building permits only, or sites with both. **Units**
@@ -111,6 +117,19 @@ activity in those years; the button next to the range switches between **All yea
 2021–2026 default (**Reset all** also returns to 2021–2026).
 The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
 shift-click to extend the range.
+
+**Growth since the 2021 Census (bottom, top row):** for Peel, the selected municipality,
+secondary plan or MTSA:
+
+| Tile | Meaning |
+|---|---|
+| 2021 Census | Population and private dwellings (Statistics Canada, by dissemination area). For a secondary plan or MTSA, each DA counts by the share of its land inside the area. |
+| + Built since | Plus units on building permits completed since census day (11 May 2021), at Peel persons-per-unit. Brampton and Caledon publish no completion date, so it is estimated as issue date + 12 months (houses) or + 30 months (20+ units). |
+| + Approved, not yet built | Plus committed growth (approved or permitted, not yet completed). |
+
+Peel's small geographic unit (SGU) forecasts are not published as open data (only Caledon's are),
+so the census baseline uses dissemination areas. `data/areas.json` is rebuilt weekly
+(`scripts/build-areas.js`).
 
 **Population & servicing demand (bottom right):** population, water and wastewater estimated
 from the units in the projects shown. It can be based on all units, **committed capacity**,

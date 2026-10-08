@@ -36,11 +36,17 @@ jobs:
       - name: Build snapshot
         run: node scripts/build-snapshot.js --out data
 
+      # Secondary plans, MTSAs and the 2021 Census baseline change rarely; a failure keeps
+      # last week's file.
+      - name: Build areas and census baseline
+        continue-on-error: true
+        run: node scripts/build-areas.js --out data
+
       - name: Commit if changed
         run: |
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json
+          git add data/snapshot.json data/history.json data/areas.json
           if git diff --cached --quiet; then
             echo "No changes."
           else

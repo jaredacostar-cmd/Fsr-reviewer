@@ -62,6 +62,15 @@
             <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
           </div>
           <div class="row two">
+            <label class="field"><span class="label">Secondary plan</span>
+              <select id="f-sp" aria-describedby="f-sp-note"><option value="">All areas</option></select>
+            </label>
+            <label class="field"><span class="label">MTSA</span>
+              <select id="f-mtsa"><option value="">All MTSAs</option></select>
+            </label>
+          </div>
+          <p class="small muted" id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</p>
+          <div class="row two">
             <label class="field"><span class="label">Record type</span>
               <select id="f-kind">
                 <option value="application" selected>Planning applications + their permits</option>
@@ -185,6 +194,14 @@
         <div class="ticks" id="t-ticks" aria-hidden="true"></div>
       </section>
 
+      <section class="census" id="census" aria-label="Growth since the 2021 Census" hidden>
+        <div class="tb-head">
+          <h2>Growth since the 2021 Census</h2>
+          <span class="muted small" id="c-note"></span>
+        </div>
+        <div class="tiles" id="c-tiles"></div>
+      </section>
+
       <section class="demand" aria-label="Population and servicing demand">
         <div class="tb-head">
           <h2>Population &amp; servicing demand</h2>
@@ -221,6 +238,7 @@
   <script src="js/demand.js?v=__BUILD__"></script>
   <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/aerial.js?v=__BUILD__"></script>
+  <script src="js/areas.js?v=__BUILD__"></script>
   <script src="js/arcgis.js?v=__BUILD__"></script>
   <script src="js/loader.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
