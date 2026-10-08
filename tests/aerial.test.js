@@ -58,13 +58,13 @@ const photo = (structure, coverage = 1) => ({ structure, structureAround: 1, cov
 test('score: built-up site with new footprints is likely complete; unchanged field is not started', () => {
   const done = A.score({ phase: 'construction', buildout: null }, {
     latestYear: 2024, beforeYear: 2018, now: photo(1.6), before: photo(0.6), change: { site: 1.1, around: 0.4, ratio: 2.7 },
-    fpNow: 0.4, fpBefore: 0.0, fpYearNow: 2024, fpYearBefore: 2020, permitYear: 2021 }, new Date('2026-10-01'));
+    fpNow: 0.4, fpBefore: 0.0, fpYearNow: 2024, fpYearBefore: 2020, permitYear: 2021, siteArea: 8000 }, new Date('2026-10-01'));
   assert.ok(done.probability >= 0.9, done.probability);
   assert.equal(done.status, 'Likely completed');
 
   const field = A.score({ phase: 'review', buildout: null }, {
     latestYear: 2024, beforeYear: 2021, now: photo(0.5), before: photo(0.5), change: { site: 0.3, around: 0.3, ratio: 1.0 },
-    fpNow: 0, fpBefore: 0, fpYearNow: 2024, fpYearBefore: 2020 });
+    fpNow: 0, fpBefore: 0, fpYearNow: 2024, fpYearBefore: 2020, siteArea: 8000 });
   assert.ok(field.probability < 0.05, field.probability);
   assert.equal(field.status, 'Not visibly started');
 
@@ -79,4 +79,12 @@ test('score: an aerial older than the permit carries little weight', () => {
   const s = A.score({ phase: 'completed', buildout: null }, ev);
   assert.ok(s.probability > 0.7, s.probability);
   assert.ok(s.signals.some(x => /older than the building permit/.test(x.text)));
+});
+
+test('score: undated footprints never count against a site; a completed infill site is not penalised for no change', () => {
+  const s = A.score({ phase: 'completed', buildout: null }, {
+    latestYear: 2025, beforeYear: 2015, now: photo(2.3), before: photo(2.6), change: { site: 0.8, around: 0.9, ratio: 0.9 },
+    fpNow: 0, fpYearNow: 'current', siteArea: 600 });
+  assert.ok(s.probability >= 0.85, s.probability);
+  assert.ok(!s.signals.some(x => x.effect < 0));
 });

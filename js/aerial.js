@@ -149,41 +149,44 @@
       w = 0.3;
       add(`Latest aerial (${ev.latestYear}) is older than the building permit (${ev.permitYear}), so it can't show the building`, 0);
     }
+    // Structure (building edges) is the main photo signal: it rises when buildings and
+    // roads appear and falls when a site is cleared or graded. Change relative to the
+    // surroundings only adds weight, since whole neighbourhoods often redevelop together.
     const now = ev.now, before = ev.before, ch = ev.change;
     const x = v => `×${v.toFixed(1)}`;
-    if (now && now.coverage >= 0.3 && before && before.coverage >= 0.3 && ch && ch.ratio != null) {
+    const building = !['completed', 'cancelled'].includes(p.phase);
+    if (now && now.coverage >= 0.3 && before && before.coverage >= 0.3) {
       const r = before.structure > 0 ? now.structure / before.structure : 1;
-      if (ch.ratio >= 1.4 && ch.site >= 0.5) {
-        if (r >= 1.2) { L += 1.4 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings between ${ev.beforeYear} and ${ev.latestYear}, with more building edges (structure ${x(r)})`, 1); }
-        else if (r <= 0.8) { L -= 1.0 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings but lost structure (${x(r)}): cleared or graded, construction under way`, -1); }
-        else { L += 0.4 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings between ${ev.beforeYear} and ${ev.latestYear}`, 0.5); }
-      } else if (ch.ratio < 1.15) {
-        L -= 0.7 * w; add(`No more change on the site than around it between ${ev.beforeYear} and ${ev.latestYear}`, -1);
-      } else {
-        add(`Some change on the site between ${ev.beforeYear} and ${ev.latestYear} (${x(ch.ratio)} its surroundings)`, 0);
-      }
+      const moved = ch && ch.ratio != null && ch.ratio >= 1.4 && ch.site >= 0.5;
+      const span = `${ev.beforeYear} → ${ev.latestYear}`;
+      if (r >= 1.4) { L += (moved ? 1.6 : 1.2) * w; add(`More building edges on the site ${span} (structure ${x(r)})${moved ? `, changed ${x(ch.ratio)} more than its surroundings` : ''}`, 1); }
+      else if (r <= 0.75) { L -= 0.9 * w; add(`Fewer building edges ${span} (structure ${x(r)}): cleared or graded, construction under way`, -1); }
+      else if (moved) { L += 0.3 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings ${span}`, 0.5); }
+      else if (building) { L -= 0.6 * w; add(`No visible change on the site ${span}`, -1); }
+      else add(`No clear change on the site ${span} (small or infill sites may not show)`, 0);
     } else if (now && now.coverage < 0.3) {
       add('The latest aerial does not cover this site', 0);
     } else if (now && !before) {
-      add(`No earlier aerial to compare with`, 0);
+      add('No earlier aerial to compare with', 0);
     }
 
-    // Building footprints traced from the aerials.
+    // Building footprints traced from the aerials. Dated footprints (Mississauga, by year)
+    // can show absence; undated ones (Brampton) are not kept current, so only count for.
     if (ev.fpNow != null) {
+      const small = !(ev.siteArea > 50000);
       if (ev.fpBefore != null) {
         const d = ev.fpNow - ev.fpBefore;
-        if (d >= 0.1) { L += 2.2; add(`Mapped buildings cover ${pct(ev.fpBefore)} (${ev.fpYearBefore}) → ${pct(ev.fpNow)} (${ev.fpYearNow}) of the site`, 1); }
-        else if (ev.fpNow < 0.03) { L -= 1.8; add(`No mapped buildings on the site in ${ev.fpYearNow}`, -1); }
+        if (d >= 0.05) { L += d >= 0.1 ? 2.2 : 1.2; add(`Mapped buildings cover ${pct(ev.fpBefore)} (${ev.fpYearBefore}) → ${pct(ev.fpNow)} (${ev.fpYearNow}) of the site`, 1); }
+        else if (ev.fpNow < 0.03 && small) { L -= 1.2; add(`No mapped buildings on the site in ${ev.fpYearNow}`, -1); }
         else add(`Mapped buildings cover ${pct(ev.fpBefore)} (${ev.fpYearBefore}) → ${pct(ev.fpNow)} (${ev.fpYearNow}) of the site`, 0);
-      } else if (ev.fpNow < 0.03) { L -= 1.5; add(`No mapped buildings on the site (${ev.fpYearNow})`, -1); }
-      else if (ev.fpNow >= 0.15) { L += 0.8; add(`Mapped buildings cover ${pct(ev.fpNow)} of the site (${ev.fpYearNow}); age unknown`, 0.5); }
-      else add(`Mapped buildings cover ${pct(ev.fpNow)} of the site (${ev.fpYearNow})`, 0);
+      } else if (typeof ev.fpYearNow === 'number' && ev.fpNow < 0.03 && small) { L -= 1.2; add(`No mapped buildings on the site in ${ev.fpYearNow}`, -1); }
+      else if (ev.fpNow >= 0.15) { L += 0.6; add(`Mapped buildings cover ${pct(ev.fpNow)} of the site${typeof ev.fpYearNow === 'number' ? ` (${ev.fpYearNow})` : ''}; age unknown`, 0.5); }
     }
 
     const probability = Math.min(0.98, Math.max(0.02, sigmoid(L)));
     let status;
     if (probability >= 0.7) status = 'Likely completed';
-    else if ((ch && ch.ratio >= 1.4 && ch.site >= 0.5) || ['permit', 'construction'].includes(p.phase) ||
+    else if (signals.some(x => x.effect < 0 && /cleared or graded/.test(x.text)) || ['permit', 'construction'].includes(p.phase) ||
       (ev.fpNow != null && ev.fpBefore != null && ev.fpNow - ev.fpBefore >= 0.05)) status = 'Likely under construction';
     else status = 'Not visibly started';
     return { probability, status, signals };
@@ -290,7 +293,7 @@
     const ev = {
       latestYear: years.latest, beforeYear: years.before, preStart: years.preStart,
       now: latest.stats, before: before && before.stats, change: diff,
-      fpNow: fp.now ?? null, fpBefore: fp.before ?? null, fpYearNow: fp.yearNow, fpYearBefore: fp.yearBefore,
+      fpNow: fp.now ?? null, fpBefore: fp.before ?? null, fpYearNow: fp.yearNow, fpYearBefore: fp.yearBefore, siteArea: geom.area,
       permitYear: permitDates.length ? Math.min(...permitDates) : null,
     };
     const result = score({ ...p, phaseLabel }, ev);
