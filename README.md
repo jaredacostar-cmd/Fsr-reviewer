@@ -85,7 +85,7 @@ the phase names. **Hide** collapses the timeline and demand panel to give the ma
 
 ## Weekly automatic update
 
-A GitHub Action (`.github/workflows/weekly-snapshot.yml`) runs every Monday at 10:17 UTC, which
+A GitHub Action (`.github/workflows/site.yml`) runs every Monday at 10:17 UTC, which
 is early morning in Toronto. You can also start it by hand from the Actions tab with **Run
 workflow**. Each run does the following:
 
@@ -96,7 +96,9 @@ workflow**. Each run does the following:
 3. It adds this week's phase for every project to `data/history.json`. The sources only
    publish current status, so this file builds a record of when each project moved from one
    phase to the next.
-4. It commits both files if anything changed.
+4. It commits both files if anything changed, then redeploys the site to GitHub Pages.
+
+The same workflow also redeploys the site on every push to `main`.
 
 If a source is down that week, its records from the previous week are kept and marked as
 stale. Nothing is written if every source fails.
@@ -113,10 +115,13 @@ servers being up. The app then shows:
 
 - Scheduled workflows only run from the repository's **default branch** (`main`), so this
   branch needs to be merged first.
-- The site must be redeployed after each weekly commit. GitHub Pages does this automatically.
-  On Netlify, use **Add new site → Import an existing project → GitHub** instead of Netlify
-  Drop; this works with private repositories on the free plan, and every weekly commit then
-  deploys itself.
+- **GitHub Pages (used here):** the repository must be public, or on a paid plan. Go to
+  Settings → Pages and set Source to **GitHub Actions**. Then start **Update data and deploy
+  site** from the Actions tab. The site is published at
+  `https://<user>.github.io/<repo>/`.
+- **Netlify (alternative):** use **Add new site → Import an existing project → GitHub**
+  instead of Netlify Drop. This works with private repositories on the free plan, and every
+  weekly commit then deploys itself.
 - Run it locally with `npm run snapshot`.
 
 ## How classification works (`js/phases.js`)
