@@ -66,6 +66,7 @@
   // Completion date of a permit: the recorded one, else estimated from the issue date (Brampton
   // and Caledon publish no completion date): 12 months for houses, 30 for buildings of 20+ units.
   const MONTH = 30.44 * 864e5;
+  const PROPOSED_PHASES = new Set(['inception', 'review']);
   function completedAt(r) {
     const done = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
     if (done.length) return { date: Math.max(...done), estimated: false };
@@ -78,12 +79,15 @@
    * Growth since the census in a geography:
    *  - built: units on building permits completed on or after census day;
    *  - approved: growth that is approved or permitted and not yet completed (committed);
+   *  - proposed: growth on applications still in pre-consultation or review, not yet built
+   *    (with approved, the full build-out of the planning applications);
    * each with the population they add at the design persons-per-unit.
    */
   function growthSince(projects, g, censusDate, criteria = D.DEFAULT_CRITERIA) {
     const since = +new Date(`${censusDate}T00:00:00Z`);
     const built = [], approved = [];
-    let builtUnits = 0, approvedUnits = 0, builtProjects = 0, approvedProjects = 0, estimated = 0;
+    const proposed = [];
+    let builtUnits = 0, approvedUnits = 0, builtProjects = 0, approvedProjects = 0, estimated = 0, proposedUnits = 0, proposedProjects = 0;
     for (const p of projects) {
       if (p.phase === 'cancelled' || !inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa })) continue;
       const done = p.records.filter(r => {
@@ -96,11 +100,14 @@
       if (n > 0) { built.push({ ...p, units: n, buildout: null }); builtUnits += n; builtProjects++; }
       const c = D.unitsFor(p, 'committed');
       if (c > 0) { approved.push({ ...p, units: c, buildout: null }); approvedUnits += c; approvedProjects++; }
+      const q = PROPOSED_PHASES.has(p.phase) && p.buildout ? p.buildout.unbuilt : 0;
+      if (q > 0) { proposed.push({ ...p, units: q, buildout: null }); proposedUnits += q; proposedProjects++; }
     }
     const pop = list => D.estimate(list, criteria, 'all').population;
     return {
       built: { units: builtUnits, projects: builtProjects, population: pop(built), estimatedDates: estimated > 0 },
       approved: { units: approvedUnits, projects: approvedProjects, population: pop(approved) },
+      proposed: { units: proposedUnits, projects: proposedProjects, population: pop(proposed) },
     };
   }
 

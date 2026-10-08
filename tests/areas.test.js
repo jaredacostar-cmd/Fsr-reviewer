@@ -57,3 +57,11 @@ test('a point inside a concave DA', () => {
   const [x, y] = insidePoint(c);
   assert.ok(require('../js/phases.js').pointInRings(x, y, c));
 });
+
+test('proposed growth: applications in pre-consultation or review, not yet built', () => {
+  const bo = (planned, completed = 0) => ({ planned, permitted: 0, completed, remaining: planned, unbuilt: planned - completed });
+  const p = (phase, b) => ({ phase, municipality: 'Mississauga', records: [], types: [], description: '', buildout: b });
+  const g = AR.growthSince([p('review', bo(300)), p('inception', bo(40)), p('approved', bo(100)), p('review', null)], {}, '2021-05-11');
+  assert.equal(g.proposed.units, 340);
+  assert.equal(g.approved.units, 100);
+});

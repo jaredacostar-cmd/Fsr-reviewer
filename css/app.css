@@ -494,3 +494,24 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .multi-item { display: flex; gap: 8px; align-items: center; padding: 6px 4px; border-radius: 6px; font-size: 14px; cursor: pointer; }
 .multi-item:hover { background: var(--surface-2); }
 .multi-item input { width: 18px; height: 18px; flex: none; accent-color: var(--accent); }
+
+/* Growth stacked bars: baseline (neutral context), built (completed green), approved (blue),
+   proposed (same blue, hatched = not yet approved). 2px surface gaps between segments. */
+.census .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+@media (max-width: 760px) { .census .tiles { grid-template-columns: 1fr 1fr; } }
+.growth-chart { position: relative; margin-top: 10px; }
+.grow-row { display: grid; grid-template-columns: 76px 1fr auto; gap: 10px; align-items: center; margin: 6px 0; font-size: 12px; }
+.grow-label { color: var(--text-secondary); }
+.grow-total { color: var(--text-primary); font-variant-numeric: tabular-nums; font-weight: 600; }
+.grow-bar { display: flex; gap: 2px; height: 18px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
+.gseg { display: block; min-width: 2px; outline-offset: 2px; }
+.gseg:focus-visible { outline: 2px solid var(--focus); }
+.g-base { background: var(--ph-cancelled); }
+.g-built { background: var(--ph-completed); }
+.g-approved { background: var(--ph-approved); }
+.g-proposed { background: repeating-linear-gradient(45deg, var(--ph-approved) 0 3px, transparent 3px 6px), color-mix(in srgb, var(--ph-approved) 25%, var(--surface-1)); }
+.grow-legend { list-style: none; padding: 0; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 12px; color: var(--text-secondary); }
+.grow-legend li { display: flex; align-items: center; gap: 6px; }
+.grow-legend .gv { color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.gsw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
+.grow-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: 12px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; z-index: 5; }
