@@ -30,6 +30,12 @@ disk. The data is fetched by your browser, so you need internet access.
 
 ## Using it
 
+- **Background:** aerial imagery is the default (Esri World Imagery), with road and place-name
+  overlays. Switch to plain aerial or a street map with the picker at the top right of the map.
+- **Labels:** from zoom level 14, every point not inside a cluster gets a label. Choose what it
+  shows: address and phase, address only, file or permit number, units, or off. The largest
+  projects are labelled first. A label moves to the left side when the right side is blocked,
+  and it is left out if it would cover another label or point.
 - **Map:** clusters show how many projects they hold. The ring around each cluster shows the
   mix of phases. Click a marker to open the project.
 - **Project panel:** shows a phase stepper with the date each phase was reached, a dated

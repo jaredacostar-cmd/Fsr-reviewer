@@ -75,15 +75,141 @@
   const map = L.map('map', { zoomControl: true, maxZoom: 20 }).setView(CFG.center, CFG.zoom);
   const dark = () => document.documentElement.dataset.theme === 'dark' ||
     (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
-  let tiles;
+  // Basemaps: Esri World Imagery (aerial), optionally with Esri reference
+  // overlays for roads and place names, or a plain CARTO street map.
+  const DATA_ATTR = 'Data: Mississauga, Brampton, Caledon, Peel open data';
+  const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
+  const esriLayer = (svc, opts) => L.tileLayer(`${ESRI}/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxZoom: 20, maxNativeZoom: 19, ...opts });
+  const BASEMAPS = {
+    'aerial-labels': { label: 'Aerial + roads', imagery: true },
+    'aerial':        { label: 'Aerial', imagery: true },
+    'streets':       { label: 'Street map', imagery: false },
+  };
+  let basemap = BASEMAPS[store.get('basemap', 'aerial-labels')] ? store.get('basemap', 'aerial-labels') : 'aerial-labels';
+  let baseLayers = [];
+  const bboxOutline = L.rectangle([[CFG.bbox.ymin, CFG.bbox.xmin], [CFG.bbox.ymax, CFG.bbox.xmax]], { weight: 1, dashArray: '4 4', fill: false, interactive: false });
   function setTiles() {
-    if (tiles) map.removeLayer(tiles);
-    tiles = L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark() ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`, {
-      maxZoom: 20, subdomains: 'abcd',
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · Data: City of Mississauga, City of Brampton, Town of Caledon, Region of Peel open data',
-    }).addTo(map);
+    for (const l of baseLayers) map.removeLayer(l);
+    const imageryAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics';
+    if (basemap === 'streets') {
+      baseLayers = [L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark() ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`, {
+        maxZoom: 20, subdomains: 'abcd',
+        attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · ${DATA_ATTR}`,
+      })];
+    } else {
+      baseLayers = [esriLayer('World_Imagery', { attribution: `${imageryAttr} · ${DATA_ATTR}` })];
+      if (basemap === 'aerial-labels') baseLayers.push(
+        esriLayer('Reference/World_Transportation', { opacity: 0.9 }),
+        esriLayer('Reference/World_Boundaries_and_Places'));
+    }
+    baseLayers.forEach((l, i) => { l.addTo(map); l.setZIndex(i); });
+    const imagery = BASEMAPS[basemap].imagery;
+    map.getContainer().classList.toggle('on-imagery', imagery);
+    bboxOutline.setStyle({ color: imagery ? '#ffffff' : '#77756f', opacity: imagery ? 0.8 : 1 });
   }
-  L.rectangle([[CFG.bbox.ymin, CFG.bbox.xmin], [CFG.bbox.ymax, CFG.bbox.xmax]], { color: '#77756f', weight: 1, dashArray: '4 4', fill: false, interactive: false }).addTo(map);
+  bboxOutline.addTo(map);
+
+  // ---- Point labels ------------------------------------------------------------------
+  // Drawn only for markers that are individually visible (not inside a cluster) in view,
+  // from LABEL_ZOOM up, so they never pile up at regional scale.
+  const LABEL_ZOOM = 14, LABEL_MAX = 400;
+  const LABEL_MODES = {
+    'address-phase': 'Address + phase',
+    'address':       'Address',
+    'ref':           'File / permit no.',
+    'units':         'Units',
+    'off':           'Off',
+  };
+  let labelMode = LABEL_MODES[store.get('labelMode', 'address-phase')] ? store.get('labelMode', 'address-phase') : 'address-phase';
+  const labelLayer = L.layerGroup().addTo(map);
+  let projectByMarker = new Map();
+  function labelText(p) {
+    const ph = P.PHASE_BY_KEY[p.phase].label;
+    switch (labelMode) {
+      case 'address': return `<b>${esc(p.title)}</b>`;
+      case 'ref': {
+        const refs = Array.from(new Set(p.records.map(r => r.ref).filter(Boolean)));
+        return `<b>${esc(refs.slice(0, 2).join(', ') || p.title)}</b>${refs.length > 2 ? `<small>+${refs.length - 2} more</small>` : ''}`;
+      }
+      case 'units': return p.units ? `<b>${fmtNum(p.units)} units</b><small>${esc(p.title)}</small>` : '';
+      default: return `<b>${esc(p.title)}</b><small>${esc(ph)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</small>`;
+    }
+  }
+  function updateLabels() {
+    labelLayer.clearLayers();
+    const note = $('#label-note');
+    if (labelMode === 'off') { if (note) note.textContent = ''; return; }
+    if (map.getZoom() < LABEL_ZOOM) { if (note) note.textContent = `Zoom in to show labels`; return; }
+    const view = map.getBounds().pad(0.1);
+    const candidates = [];
+    for (const [m, p] of projectByMarker) {
+      const ll = m.getLatLng();
+      if (view.contains(ll) && cluster.getVisibleParent(m) === m) candidates.push([m, p]);
+    }
+    // Biggest projects get first claim on space; labels that would collide are skipped.
+    candidates.sort((a, b) => (b[1].units || 0) - (a[1].units || 0) || b[1].rank - a[1].rank);
+    // Every visible dot is an obstacle, so a label never hides another point.
+    const pts = new Map(candidates.map(([m]) => [m, map.latLngToContainerPoint(m.getLatLng())]));
+    const dots = candidates.map(([m]) => { const q = pts.get(m); return { m, x: q.x - 9, y: q.y - 9, w: 18, h: 18 }; });
+    const hit = (a, b) => a.x < b.x + b.w && b.x < a.x + a.w && a.y < b.y + b.h && b.y < a.y + a.h;
+    const placed = [];
+    let n = 0, skipped = 0;
+    for (const [m, p] of candidates) {
+      if (n >= LABEL_MAX) break;
+      const html = labelText(p);
+      if (!html) continue;
+      const q = pts.get(m), size = labelSize(html);
+      // Try right of the dot, then left.
+      const sides = [{ side: 'r', x: q.x + 11 }, { side: 'l', x: q.x - 11 - size.w }];
+      const spot = sides.map(o => ({ ...o, y: q.y - 9, w: size.w, h: size.h }))
+        .find(b => !placed.some(o => hit(o, b)) && !dots.some(d => d.m !== m && hit(d, b)));
+      if (!spot) { skipped++; continue; }
+      placed.push(spot);
+      labelLayer.addLayer(L.marker(m.getLatLng(), {
+        interactive: false, keyboard: false,
+        icon: L.divIcon({
+          className: `plabel${spot.side === 'l' ? ' left' : ''}`, html: `<div>${html}</div>`, iconSize: null,
+          iconAnchor: spot.side === 'l' ? [Math.ceil(size.w) + 11, 9] : [-11, 9],
+        }),
+      }));
+      n++;
+    }
+    if (note) note.textContent = n >= LABEL_MAX || skipped ? `${fmtNum(n)} labels shown; zoom in for more` : '';
+  }
+  // On-screen size of a label's text, for collision tests.
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  function labelSize(html) {
+    const tmp = document.createElement('div'); tmp.innerHTML = html;
+    const lines = Array.from(tmp.children).map(c => c.textContent);
+    let w = 0;
+    lines.forEach((t, i) => {
+      measureCtx.font = i === 0 ? '600 12px system-ui, sans-serif' : '11px system-ui, sans-serif';
+      w = Math.max(w, measureCtx.measureText(t).width);
+    });
+    return { w: Math.ceil(w) + 4, h: lines.length * 14 + 2 };
+  }
+  let labelTimer;
+  const scheduleLabels = () => { clearTimeout(labelTimer); labelTimer = setTimeout(updateLabels, 60); };
+  map.on('moveend zoomend', scheduleLabels);
+
+  // Map control: basemap + label pickers.
+  const MapOptions = L.Control.extend({
+    options: { position: 'topright' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'map-opts');
+      const opts = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(typeof v === 'string' ? v : v.label)}</option>`).join('');
+      el.innerHTML = `
+        <label><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
+        <label><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
+        <small id="label-note"></small>`;
+      L.DomEvent.disableClickPropagation(el);
+      L.DomEvent.disableScrollPropagation(el);
+      el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); };
+      el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
+      return el;
+    },
+  });
+  new MapOptions().addTo(map);
 
   // Cluster icon: ring segments show the phase mix of the projects inside.
   const cluster = L.markerClusterGroup({
@@ -107,6 +233,7 @@
     },
   });
   map.addLayer(cluster);
+  cluster.on('animationend spiderfied unspiderfied', () => scheduleLabels());
   const iconCache = {};
   const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm', iconSize: [16, 16], html: dot(phase) }));
   let markerByKey = new Map();
@@ -438,6 +565,7 @@
   function renderMarkers() {
     cluster.clearLayers();
     markerByKey = new Map();
+    projectByMarker = new Map();
     const markers = [];
     for (const p of state.filtered) {
       if (p.lat == null) continue;
@@ -445,9 +573,11 @@
       m.bindTooltip(`<strong>${esc(p.title)}</strong><br>${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}`, { className: 'pt', direction: 'top', offset: [0, -8] });
       m.on('click', () => showDetail(p));
       markerByKey.set(p.key, m);
+      projectByMarker.set(m, p);
       markers.push(m);
     }
     cluster.addLayers(markers);
+    scheduleLabels();
   }
 
   const LIST_LIMIT = 300;
