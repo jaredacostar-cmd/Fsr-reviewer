@@ -474,6 +474,6 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* Growth since the 2021 Census (footer, full width above timeline + demand) */
-.census { grid-column: 1 / -1; padding: 10px 16px 12px; border-bottom: 1px solid var(--border); }
+.census { grid-column: 1 / -1; order: -1; padding: 10px 16px 12px; border-bottom: 1px solid var(--border); }
 .census .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 @media (max-width: 760px) { .census .tiles { grid-template-columns: 1fr; } }
