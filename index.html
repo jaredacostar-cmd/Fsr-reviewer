@@ -55,12 +55,12 @@
             <span class="muted small" id="total-count">—</span>
           </div>
           <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
-          <div class="chips views phase-chips" id="phase-chips" data-info="phases" role="group" aria-label="Phase"></div>
+          <div class="chips views phase-chips" id="phase-chips" role="group" aria-label="Phase"></div>
         </section>
 
         <details class="panel sect side-sect" id="sect-focus">
           <summary><h2 class="label" data-info="focus">Focus</h2><span class="muted small sect-sum" id="sum-focus">None</span></summary>
-          <div class="chips views" id="focus-chips" data-info="focus" role="group" aria-label="Focus"></div>
+          <div class="chips views" id="focus-chips" role="group" aria-label="Focus"></div>
         </details>
 
         <details class="panel sect side-sect" id="sect-where" open>
@@ -192,7 +192,7 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
-      <div class="legend" id="legend" data-info="legend" aria-label="Legend"></div>
+      <div class="legend" id="legend" aria-label="Legend"></div>
       <div class="loading" id="loading" hidden></div>
       <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
       <section class="timebar" id="timebar" aria-label="Timeline">
@@ -224,9 +224,9 @@
 
     <footer class="footer" id="footer">
       <div class="f-tabs" role="tablist" aria-label="Bottom panel">
-        <button type="button" role="tab" class="f-tab" id="ftab-demand" data-tab="demand" aria-controls="pane-demand" aria-selected="true">Servicing demand</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" aria-controls="census" aria-selected="false" hidden>Growth since 2021</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" aria-controls="pane-criteria" aria-selected="false">Breakdown &amp; criteria</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-demand" data-tab="demand" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Servicing demand</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth since 2021</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Breakdown &amp; criteria</button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       </div>
