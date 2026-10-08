@@ -49,7 +49,7 @@ async function areas(defs, kind) {
   const out = [];
   for (const d of defs) {
     const info = await A.layerInfo(d.url);
-    const feats = await A.queryAll(d.url, info, { max: 5000 });
+    const { features: feats } = await A.queryAll(d.url, info, { max: 5000 });
     for (const f of feats) {
       const name = String(d.name(f.properties || {}) || '').replace(/\s+/g, ' ').trim();
       const rings = ringsOf(f.geometry).map(r => r.map(([x, y]) => [round(x), round(y)]));
@@ -87,7 +87,7 @@ function insidePoint(rings) {
 
 async function census() {
   const info = await A.layerInfo(CENSUS.url);
-  const feats = await A.queryAll(CENSUS.url, info, { where: "DAUID LIKE '3521%'", max: 5000 });
+  const { features: feats } = await A.queryAll(CENSUS.url, info, { where: "DAUID LIKE '3521%'", max: 5000 });
   const das = [];
   let pop = 0;
   for (const f of feats) {
