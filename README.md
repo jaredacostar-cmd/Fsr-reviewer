@@ -66,7 +66,10 @@ the phase names. **Hide** collapses the timeline and demand panel to give the ma
   pipeline bar, to show only that phase.
 - **Filters:** search by address, file number or description. You can also filter by
   municipality and record type (applications, permits, or sites with both). "New builds only"
-  hides alteration-type permits such as decks, signs and HVAC.
+  hides alteration-type permits such as decks, signs and HVAC. **Unit growth** keeps only
+  projects that add dwelling units (any, 10+, 50+, 100+ or 500+). With "Planning applications"
+  selected, only units proposed on the applications count. **Applications adding units** sets
+  both filters in one tap; tap it again to turn it off.
 - **Timeline (bottom left):** drag the two handles to keep only projects with activity in that
   range of years, for example 2022–2024. The dropdown picks which milestone must fall in the
   range: any milestone, application submitted, approved, permit issued, or completed. The bars

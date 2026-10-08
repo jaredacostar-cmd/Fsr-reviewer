@@ -24,6 +24,7 @@
     filtered: [],
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
     muni: '', kind: '', search: '', newOnly: true,
+    minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
     demandBasis: 'all',
@@ -324,6 +325,14 @@
     return yearsOf(p, state.yearMode).some(y => y >= lo && y <= hi);
   }
 
+  // Units counted by the unit-growth filter. With "Planning applications" selected,
+  // only the units proposed on the applications themselves count.
+  function unitsFor(p) {
+    if (state.kind !== 'application') return p.units || 0;
+    if (p._appUnits == null) p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0));
+    return p._appUnits;
+  }
+
   function matches(p, ignorePhase, ignoreTime) {
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
@@ -331,6 +340,7 @@
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
+    if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
@@ -662,10 +672,32 @@
   $('#phase-list').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase, e.altKey || e.metaKey); };
 
   let searchTimer;
-  $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); }, 200); };
-  $('#f-muni').onchange = e => { state.muni = e.target.value; applyFilters(); };
-  $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
-  $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
+  $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); filtersChanged(); }, 200); };
+  $('#f-muni').onchange = e => { state.muni = e.target.value; filtersChanged(); };
+  $('#f-kind').onchange = e => { state.kind = e.target.value; filtersChanged(); };
+  $('#f-new').onchange = e => { state.newOnly = e.target.checked; filtersChanged(); };
+  $('#f-units').onchange = e => { state.minUnits = Number(e.target.value) || 0; filtersChanged(); };
+  // One-tap preset: planning applications that propose new dwelling units.
+  $('#f-preset-growth').onclick = () => {
+    const on = !(state.kind === 'application' && state.minUnits > 0);
+    state.kind = on ? 'application' : '';
+    state.minUnits = on ? 1 : 0;
+    $('#f-kind').value = state.kind;
+    $('#f-units').value = String(state.minUnits);
+    filtersChanged();
+  };
+  $('#f-clear').onclick = () => {
+    Object.assign(state, { muni: '', kind: '', search: '', minUnits: 0 });
+    $('#f-muni').value = ''; $('#f-kind').value = ''; $('#f-units').value = '0'; $('#f-search').value = '';
+    filtersChanged();
+  };
+  function filtersChanged() {
+    const preset = state.kind === 'application' && state.minUnits > 0;
+    $('#f-preset-growth').setAttribute('aria-pressed', String(preset));
+    $('#f-preset-growth').classList.toggle('on', preset);
+    $('#f-clear').hidden = !(state.muni || state.kind || state.search || state.minUnits);
+    applyFilters();
+  }
 
   $('#s-since').value = state.sinceYear;
   $('#s-max').value = state.maxPerLayer;
