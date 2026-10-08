@@ -4,11 +4,12 @@ name: Probe data sources
 #  mode=all:    list what each municipality publishes + dry-run the snapshot (not committed)
 #  mode=phases: report how multi-phase developments appear in the data
 #  mode=imagery: aerial imagery / building footprints covering Peel, dates and CORS
+#  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases or imagery'
+        description: 'all, phases, imagery or aerial'
         default: 'all'
         required: false
 
@@ -29,6 +30,20 @@ jobs:
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted
+      - name: Aerial check end-to-end
+        if: inputs.mode == 'aerial'
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          (python3 -m http.server 8000 >/dev/null 2>&1 &)
+          sleep 2
+          APP=http://localhost:8000/ OUT=/tmp/aerial node scripts/aerial-e2e.js
+      - name: Upload aerial screenshots
+        if: inputs.mode == 'aerial' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aerial-check
+          path: /tmp/aerial
       - name: List what each municipality publishes
         if: inputs.mode == 'all' || inputs.mode == ''
         run: node scripts/probe-sources.js
