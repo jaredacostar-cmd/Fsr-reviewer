@@ -38,16 +38,19 @@
     if (!census) return [];
     return census.das.map(([lng, lat, pop, dw, occ, muni, shares]) => ({ lng, lat, pop, dw, occ, muni, shares: shares || {} }));
   }
-  // Share of a DA inside a geography: municipality is whole DAs; with both a secondary plan
-  // and an MTSA, the smaller share (the MTSA usually sits inside the plan).
+  // Share of a DA inside a geography: municipality is whole DAs; several secondary plans add
+  // up (they don't overlap); with both plans and an MTSA, the smaller share (the MTSA usually
+  // sits inside a plan). g.sp is a list of ids (or one id).
+  const ids = v => (Array.isArray(v) ? v : v ? [v] : []);
   function shareOf(g, d) {
     if (g.muni && d.muni !== g.muni) return 0;
     let s = 1;
-    if (g.sp) s = Math.min(s, d.shares[g.sp] || 0);
+    const sps = ids(g.sp);
+    if (sps.length) s = Math.min(s, sps.reduce((t, id) => t + (d.shares[id] || 0), 0));
     if (g.mtsa) s = Math.min(s, d.shares[g.mtsa] || 0);
     return s;
   }
-  const inGeo = (g, x) => (!g.muni || x.muni === g.muni) && (!g.sp || (x.sp || []).includes(g.sp)) && (!g.mtsa || (x.mtsa || []).includes(g.mtsa));
+  const inGeo = (g, x) => (!g.muni || x.muni === g.muni) && (!ids(g.sp).length || ids(g.sp).some(id => (x.sp || []).includes(id))) && (!g.mtsa || (x.mtsa || []).includes(g.mtsa));
 
   /** 2021 Census population and dwellings inside a geography { muni, sp, mtsa } (area-weighted). */
   function censusTotals(das, g) {

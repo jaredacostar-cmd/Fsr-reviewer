@@ -62,9 +62,18 @@
             <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
           </div>
           <div class="row two">
-            <label class="field"><span class="label">Secondary plan</span>
-              <select id="f-sp" aria-describedby="f-sp-note"><option value="">All areas</option></select>
-            </label>
+            <div class="field"><span class="label" id="f-sp-label">Secondary plans</span>
+              <details class="multi" id="f-sp">
+                <summary aria-labelledby="f-sp-label f-sp-summary"><span id="f-sp-summary">All areas</span></summary>
+                <div class="multi-panel">
+                  <div class="multi-tools">
+                    <input type="search" id="f-sp-q" placeholder="Find a plan…" aria-label="Find a secondary plan">
+                    <button type="button" class="btn small link" id="f-sp-clear">Clear</button>
+                  </div>
+                  <div class="multi-list" id="f-sp-list" role="group" aria-label="Secondary plans"></div>
+                </div>
+              </details>
+            </div>
             <label class="field"><span class="label">MTSA</span>
               <select id="f-mtsa"><option value="">All MTSAs</option></select>
             </label>

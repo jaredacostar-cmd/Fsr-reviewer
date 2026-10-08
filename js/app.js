@@ -26,7 +26,7 @@
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
-    sp: '', mtsa: '',   // secondary plan / character area and MTSA ids (data/areas.json)
+    sp: [], mtsa: '',   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     focus: '',     // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
@@ -472,7 +472,7 @@
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
-    if (state.sp && !(p.sp || []).includes(state.sp)) return false;
+    if (state.sp.length && !state.sp.some(id => (p.sp || []).includes(id))) return false;
     if (state.mtsa && !(p.mtsa || []).includes(state.mtsa)) return false;
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
@@ -1049,7 +1049,7 @@
     state.muni = b.dataset.muni;
     // An area in another municipality no longer applies.
     const keep = id => !id || !state.muni || (areaById.get(id) || {}).municipality === state.muni;
-    if (!keep(state.sp)) state.sp = '';
+    state.sp = state.sp.filter(keep);
     if (!keep(state.mtsa)) state.mtsa = '';
     renderMuniChips();
     renderAreaSelects();
@@ -1087,14 +1087,29 @@
       sel.innerHTML = `<option value="">${all}</option>` + munis.map(m =>
         `<optgroup label="${esc(m)}">${list.filter(a => a.municipality === m).map(a => `<option value="${esc(a.id)}"${a.id === cur ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}</optgroup>`).join('');
     };
-    fill($('#f-sp'), state.areas.secondaryPlans, 'All areas', state.sp);
     fill($('#f-mtsa'), state.areas.mtsas, 'All MTSAs', state.mtsa);
-    $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || (areaById.get(state.sp) || {}).municipality === 'Mississauga');
+    renderSpList();
+    $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
+  }
+  // Secondary plans: a checkbox list (several can be chosen), grouped by municipality.
+  function spSummary() {
+    const n = state.sp.length;
+    return !n ? 'All areas' : n === 1 ? (areaById.get(state.sp[0]) || {}).name || '1 area' : `${n} areas`;
+  }
+  function renderSpList() {
+    const q = ($('#f-sp-q').value || '').trim().toLowerCase();
+    const list = state.areas.secondaryPlans.filter(a => (!state.muni || a.municipality === state.muni) && (!q || a.name.toLowerCase().includes(q)));
+    const munis = [...new Set(list.map(a => a.municipality))];
+    $('#f-sp-list').innerHTML = munis.map(m => `<div class="multi-group">${esc(m)}</div>` + list.filter(a => a.municipality === m).map(a =>
+      `<label class="multi-item"><input type="checkbox" value="${esc(a.id)}"${state.sp.includes(a.id) ? ' checked' : ''}><span>${esc(a.name)}</span></label>`).join('')).join('')
+      || '<p class="small muted">No match.</p>';
+    $('#f-sp-summary').textContent = spSummary();
+    $('#f-sp').classList.toggle('on', state.sp.length > 0);
   }
   // Outline the chosen areas on the map and zoom to them.
   function showArea(zoom) {
     areaLayer.clearLayers();
-    const shown = [state.sp, state.mtsa].filter(Boolean).map(id => areaById.get(id)).filter(Boolean);
+    const shown = [...state.sp, state.mtsa].filter(Boolean).map(id => areaById.get(id)).filter(Boolean);
     let bounds = null;
     for (const a of shown) {
       const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
@@ -1106,7 +1121,18 @@
     }
     if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
   }
-  $('#f-sp').onchange = e => { state.sp = e.target.value; renderAreaSelects(); showArea(true); applyFilters(); };
+  $('#f-sp-list').onchange = e => {
+    const cb = e.target.closest('input[type=checkbox]'); if (!cb) return;
+    state.sp = cb.checked ? [...new Set([...state.sp, cb.value])] : state.sp.filter(id => id !== cb.value);
+    $('#f-sp-summary').textContent = spSummary();
+    $('#f-sp').classList.toggle('on', state.sp.length > 0);
+    $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
+    showArea(true); applyFilters();
+  };
+  $('#f-sp-q').oninput = () => renderSpList();
+  $('#f-sp-clear').onclick = () => { state.sp = []; $('#f-sp-q').value = ''; renderSpList(); showArea(); applyFilters(); };
+  // Close the list when tapping elsewhere.
+  document.addEventListener('click', e => { const d = $('#f-sp'); if (d.open && !d.contains(e.target)) d.open = false; });
   $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); applyFilters(); };
 
   // ---- Growth since the 2021 Census (selected geography) ----------------------------------
@@ -1117,7 +1143,7 @@
     const g = { muni: state.muni, sp: state.sp, mtsa: state.mtsa };
     const base = PeelAreas.censusTotals(state.censusDas, g);
     const gr = PeelAreas.growthSince(state.projects, g, state.areas.census.date, state.criteria);
-    const name = [state.mtsa && areaById.get(state.mtsa).name, state.sp && areaById.get(state.sp).name, state.muni].filter(Boolean)[0] || 'Peel Region';
+    const name = [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
@@ -1125,7 +1151,7 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
     $('#c-tiles').innerHTML = [
-      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp || state.mtsa ? ', share by land area' : ''}`),
+      tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`),
       tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`),
     ].join('');
@@ -1192,7 +1218,8 @@
     const unitsLabel = { 1: 'Growth', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build', committed: 'Committed capacity' };
     if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; $('#f-search').value = ''; } });
     if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); renderAreaSelects(); } });
-    if (state.sp) out.push({ label: (areaById.get(state.sp) || {}).name || 'Secondary plan', clear: () => { state.sp = ''; renderAreaSelects(); showArea(); } });
+    if (state.sp.length <= 3) for (const id of state.sp) out.push({ label: (areaById.get(id) || {}).name || 'Secondary plan', clear: () => { state.sp = state.sp.filter(x => x !== id); renderAreaSelects(); showArea(); } });
+    else out.push({ label: `${state.sp.length} secondary plans`, clear: () => { state.sp = []; renderAreaSelects(); showArea(); } });
     if (state.mtsa) out.push({ label: `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}`, clear: () => { state.mtsa = ''; renderAreaSelects(); showArea(); } });
     if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; $('#f-kind').value = DEFAULT_KIND; } });
     if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
@@ -1218,7 +1245,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: '', mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
+      Object.assign(state, { muni: '', sp: [], mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: '', demandBasis: 'all' });
       $('#d-basis').value = 'all';
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();

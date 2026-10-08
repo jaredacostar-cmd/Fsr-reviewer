@@ -72,8 +72,9 @@ The sidebar has three tabs.
   | Changed this week | New, or moved phase, in the latest weekly update |
 - **Search** by address, file number or description.
 - **Municipality** buttons: All, Brampton, Caledon, Mississauga.
-- **Secondary plan** and **MTSA** drop-downs (right after Municipality) keep only projects inside
-  the chosen area and outline it on the map. Secondary plans: Brampton Plan Schedule 10 and
+- **Secondary plans** (tick one or several; type to find a plan) and **MTSA** (one) drop-downs,
+  right after Municipality, keep only projects inside the chosen areas and outline them on the map;
+  the census panel adds the chosen plans together. Secondary plans: Brampton Plan Schedule 10 and
   Caledon's in-effect Secondary Plan Areas; Mississauga has no secondary plans, so its Official
   Plan Character Areas are listed. MTSAs: the Region of Peel delineation (published by
   Mississauga) and Brampton Plan Schedule 1A/1B primary and planned MTSAs. A project is in an

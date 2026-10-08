@@ -28,6 +28,10 @@ test('census totals are weighted by the share of each DA inside the area', () =>
   assert.equal(AR.censusTotals(das, { sp: 'sp:a' }).population, 1300);
   assert.equal(AR.censusTotals(das, { mtsa: 'mtsa:x' }).population, 250);
   assert.equal(AR.censusTotals(das, { sp: 'sp:a', mtsa: 'mtsa:x' }).dwellings, 100);
+  // Several plans add up.
+  const two = AR.tagCensus({ das: [[1, 1, 1000, 400, 390, 'Brampton', { 'sp:a': 0.5, 'sp:b': 0.5 }]] });
+  assert.equal(AR.censusTotals(two, { sp: ['sp:a', 'sp:b'] }).population, 1000);
+  assert.equal(AR.censusTotals(two, { sp: ['sp:a'] }).population, 500);
 });
 
 test('growth since the census: completed permits after census day, estimated when no completion date', () => {
