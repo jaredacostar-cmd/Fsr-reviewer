@@ -8,8 +8,8 @@
  *  2. Gaps in the network (renamed manholes, missing segments, force mains) are bridged by
  *     joining a dead end to the nearest pipe of another piece: within 25 m, then up to 500 m
  *     for pieces of 50+ manholes. Dead ends near a treatment plant are the plant outlets.
- *  3. Every manhole is followed downstream to its plant: Lakeview, Clarkson or Inglewood
- *     (or "not traced" when it reaches none, e.g. areas draining to Toronto).
+ *  3. Every manhole is followed downstream to its plant: Lakeview, Clarkson or Inglewood.
+ *     Sewers that reach none of them are the Malton area, which drains to Toronto.
  *  4. Sub-areas: each pumping station's catchment, and each tributary of 2,500+ manholes where
  *     it joins a larger trunk. A manhole belongs to the first sub-area outlet downstream of it.
  *  5. Outlines: a 100 m grid; each cell within 250 m of a pipe takes the area of the nearest
@@ -27,6 +27,8 @@ const KX = 80500, KY = 111000;               // metres per degree at ~43.7° N
 const toM = ([x, y]) => [x * KX, y * KY];
 const toLL = ([x, y]) => [Math.round(x / KX * 1e5) / 1e5, Math.round(y / KY * 1e5) / 1e5];
 const SUB_MIN = 2500, CELL = 100, REACH = 250;
+// Sewers with no path to a Peel plant (Malton, by Pearson airport) drain to the City of Toronto.
+const TORONTO = 'Toronto';
 
 function splitId(id) {
   if (id.startsWith('FACSCADA-')) { const p = id.split('-'); return ['FACSCADA-' + p[1], p.slice(2).join('-')]; }
@@ -250,9 +252,9 @@ async function main() {
     const muni = muniAt(cx, cy);
     const ringsM = rs.map(r => simplifyRing(r.map(([i, j]) => [i * CELL, j * CELL]), 35)).filter(r => r.length >= 4);
     const areaHa = ringsM.reduce((t, r) => { let s = 0; for (let i = 0, j = r.length - 1; i < r.length; j = i++) s += (r[j][0] + r[i][0]) * (r[j][1] - r[i][1]); return t + Math.abs(s) / 2; }, 0) / 1e4;
-    byPlant[plant || 'Not traced'] = (byPlant[plant || 'Not traced'] || 0) + 1;
+    byPlant[plant || TORONTO] = (byPlant[plant || TORONTO] || 0) + 1;
     drainage.push({
-      id: `dr:${id}`, plant: plant || 'Not traced to a Peel plant', kind: a.kind,
+      id: `dr:${id}`, plant: plant || TORONTO, kind: a.kind,
       outlet: a.kind === 'ps' ? nameOf(id) : null, municipality: muni, manholes: members.length,
       trunkMm: diam.get(id) || null, areaHa: Math.round(areaHa),
       rings: ringsM.map(r => r.map(([x, y]) => toLL([x, y]))),
@@ -262,8 +264,8 @@ async function main() {
   drainage.sort((a, b) => a.plant.localeCompare(b.plant) || b.manholes - a.manholes);
   const seq = {};
   for (const d of drainage) {
-    if (d.kind === 'ps') d.name = `${d.plant.replace(' to a Peel plant', '')} · ${d.outlet.replace(/ SEWAGE PUMPING (STN|STATION|ST)| SEW\. PUMP(ING)? STN| PUMPING STATION| SPS| PUMPING STN| PUMPING$/i, '').replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase())} PS`;
-    else if (d.kind === 'untraced') d.name = 'Not traced to a Peel plant';
+    if (d.kind === 'ps') d.name = `${d.plant} · ${d.outlet.replace(/ SEWAGE PUMPING (STN|STATION|ST)| SEW\. PUMP(ING)? STN| PUMPING STATION| SPS| PUMPING STN| PUMPING$/i, '').replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase())} PS`;
+    else if (d.kind === 'untraced') d.name = 'Toronto · Malton (drains to City of Toronto)';
     else if (d.kind === 'plant') d.name = `${d.plant} · direct to plant`;
     else { const k = `${d.plant}|${d.municipality}`; seq[k] = (seq[k] || 0) + 1; d.name = `${d.plant} · ${d.municipality || 'Peel'} trunk ${seq[k]}`; }
   }

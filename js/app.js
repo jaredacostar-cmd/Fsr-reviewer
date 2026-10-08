@@ -360,7 +360,9 @@
   }
 
   // Pressure-zone / drainage-area layer state (layers are built in the servicing section).
-  const PLANT_COLOR = { Lakeview: '#2f7ed8', Clarkson: '#d9822b', Inglewood: '#7a5cc4' };
+  const PLANT_COLOR = { Lakeview: '#2f7ed8', Clarkson: '#d9822b', Inglewood: '#7a5cc4', Toronto: '#868e96' };
+  // Where an area's sewage is treated: a Peel WRRF, or the City of Toronto (Malton).
+  const plantLabel = pl => (pl === 'Toronto' ? 'City of Toronto system' : `${pl} WRRF`);
   const svcLayers = { pz: null, dr: null };
   let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false) };
   const svcSwatch = k => `<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">${k === 'pz'
@@ -1705,7 +1707,7 @@
     const { zones, drainage } = state.servicing;
     $('#f-pz').innerHTML = `<option value="">All pressure zones</option>` + zones.map(z => `<option value="${esc(z.id)}"${z.id === state.pz ? ' selected' : ''}>${esc(z.name)}</option>`).join('');
     const plants = [...new Set(drainage.map(d => d.plant))];
-    $('#f-dr').innerHTML = `<option value="">All drainage areas</option>` + plants.map(pl => `<optgroup label="${esc(pl === 'Not traced to a Peel plant' ? pl : `${pl} WRRF`)}">${drainage.filter(d => d.plant === pl)
+    $('#f-dr').innerHTML = `<option value="">All drainage areas</option>` + plants.map(pl => `<optgroup label="${esc(plantLabel(pl))}">${drainage.filter(d => d.plant === pl)
       .map(d => `<option value="${esc(d.id)}"${d.id === state.dr ? ' selected' : ''}>${esc(d.name)}</option>`).join('')}</optgroup>`).join('');
   }
   $('#f-pz').onchange = e => { state.pz = e.target.value; showSvcArea(true); applyFilters(); };
@@ -1724,7 +1726,7 @@
   const svcColor = a => a.zone ? '#0b7285' : PLANT_COLOR[a.plant] || '#868e96';
   function svcTooltip(a) {
     if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone</span>`;
-    return `<strong>${esc(a.name)}</strong><br>${esc(a.plant === 'Not traced to a Peel plant' ? a.plant : `Drains to ${a.plant} WRRF`)}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
+    return `<strong>${esc(a.name)}</strong><br>Drains to ${esc(plantLabel(a.plant))}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
       <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network</span>`;
   }
   function setSvcLayer(k, on) {
@@ -1746,7 +1748,7 @@
     const z = (p.pz || []).map(id => svcById.get(id)).filter(Boolean), d = (p.dr || []).map(id => svcById.get(id)).filter(Boolean);
     if (!z.length && !d.length) return '<p class="small muted svc-line" data-info="drainage-area">Outside the mapped pressure zones and traced drainage areas.</p>';
     return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) : 'no pressure zone'} · ${d.length
-      ? esc(d.map(a => `${a.name}${a.plant !== 'Not traced to a Peel plant' ? ` → ${a.plant} WRRF` : ''}`).join(', ')) : 'no traced drainage area'}</p>`;
+      ? esc(d.map(a => `${a.name} → ${plantLabel(a.plant)}`).join(', ')) : 'no traced drainage area'}</p>`;
   }
   // Breakdown tab: demand of the shown projects by pressure zone and by drainage area.
   function svcBreakdownHTML(set) {
@@ -1765,7 +1767,7 @@
       <table class="dt" data-info="drainage-area"><caption>Wastewater by drainage area (shown projects, L/s)</caption>
         <thead><tr><th>Drainage area</th><th>Projects</th><th>Units</th><th>People</th><th>Jobs</th><th>Avg dry</th><th>Peak dry</th><th>Peak wet</th></tr></thead>
         <tbody>${dr.map(r => row(r, e => `<td>${fmt1(e.combined.wastewater.avg)}</td><td>${fmt1(e.combined.wastewater.peak)}</td><td>${fmt1(e.combined.wastewater.wetPeak)}</td>`)).join('') || '<tr><td colspan="8" class="muted">No shown projects in a drainage area.</td></tr>'}</tbody></table>
-      <p class="small muted">Each zone / area is peaked on its own. Pressure zones: Region of Peel. Drainage areas: traced from the Region's sanitary sewer network to Lakeview, Clarkson or Inglewood WRRF (sub-areas at pumping stations and major trunk junctions); not the Master Plan's own polygons.</p>`;
+      <p class="small muted">Each zone / area is peaked on its own. Pressure zones: Region of Peel. Drainage areas: traced from the Region's sanitary sewer network to Lakeview, Clarkson or Inglewood WRRF, or to the City of Toronto (Malton); sub-areas at pumping stations and major trunk junctions. Traced, not the Master Plan's own polygons; plant split reviewed.</p>`;
   }
 
   // ---- Planning areas: secondary plans / character areas and MTSAs ------------------------
