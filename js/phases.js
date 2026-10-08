@@ -223,6 +223,8 @@
     while (t.length > 2 && REF_SUFFIX.test(t[t.length - 1])) t.pop();
     // Brampton AMANDA permits "00-100302-000-00": the last two parts are revision numbers.
     if (t.length >= 4 && t.every(x => /^\d+$/.test(x))) t = t.slice(0, 2);
+    // Letter O typed for zero ("SP 25/O14") is the same file as "SP 25-14".
+    t = t.map(x => (/^O\d+$/.test(x) ? '0' + x.slice(1) : x));
     return t.map(x => (/^\d+$/.test(x) ? String(Number(x)) : x)).join('|');
   }
 
@@ -251,8 +253,9 @@
   function permitAddsUnits(r) {
     if (r.kind !== 'permit') return false;
     const ref = String(r.ref || '').toUpperCase();
-    if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS)\b|\b\d?ALT\b/.test(ref)) return false;
-    if (/alteration to existing|^other$/i.test(r.scope || '')) return false;
+    if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS)\b/.test(ref)) return false;
+    // Alterations can add units (basement second suites), so scope alone doesn't exclude them;
+    // revisions to an earlier permit and site servicing repeat that permit's count.
     if (/^revision to (bp|permit)|site servicing/i.test(r.description || '')) return false;
     return r.units > 0;
   }

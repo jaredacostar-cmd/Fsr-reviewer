@@ -25,8 +25,16 @@ test('canonical file numbers merge spellings and drop stage suffixes', () => {
   same('BP 3NEW 17-9012', 'BP 3NEW 17-9012 CON', 'BP 3NEW 17-9012 CR1', 'BP 3NEW 17-9012 CR2', 'BP 3NEW 17 9012');
   same('BP 3NEW 18-187 COM', 'BP 3NEW 18-187 FTR', 'BP 3NEW 18 187');
   same('00-100302-000-00', '00-100302-001-00');
+  same('SP 25-14', 'SP 25/O14');
   assert.notEqual(P.canonRef('SP 17/162'), P.canonRef('SP 17/050'));
   assert.notEqual(P.canonRef('SPM 19/091'), P.canonRef('SP 19/091'));
+});
+
+test('a basement second suite (alteration) adds a unit; a revision permit does not', () => {
+  const suite = bp(pt(-79.6, 43.6), { BP_NO: 'BP 9ALT 23-1001', STATUS: 'COMPLETED -ALL INSP SIGNED OFF', ADDRESS: '12 Oak St', SCOPE: 'ALTERATION TO EXISTING BLDG', DESCRIPTION: 'NEW SECOND UNIT IN BASEMENT', RES_UNITS: 1, ISSUE_DATE: D(2023) });
+  assert.equal(P.permitAddsUnits(suite), true);
+  const rev = bp(pt(-79.6, 43.6), { BP_NO: 'BP 9ALT 24-3057', SCOPE: 'ALTERATION TO EXISTING BLDG', DESCRIPTION: 'REVISION TO BP 24-1664 - CHANGE TO DETAIL D15', RES_UNITS: 12, ISSUE_DATE: D(2024) });
+  assert.equal(P.permitAddsUnits(rev), false);
 });
 
 test('stages and minor files', () => {
