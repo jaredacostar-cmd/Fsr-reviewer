@@ -283,8 +283,14 @@ How the estimate works:
   description text.
 - **Peaking:** the Harmon factor is applied to the combined population of everything shown.
   That gives a system-level peak, which is lower than adding up each site's own peak flow.
-- **Not included:** infiltration (0.26 L/s/ha) and ICI (employment) demand, because they need
-  site area and employment data that the source datasets don't provide.
+- **I&I (infiltration and inflow):** 0.26 L/s per hectare of gross site area (editable). Site
+  area is the planning application boundary (about 87% of planned units have one); where there
+  is none it is estimated from the units: 0.04 ha per single / semi, 0.02 per townhouse, 0.003
+  per apartment or unstated unit, and marked “est.”. For completed / remaining / left-to-build
+  figures the site area is split by share of units. **Peak wet weather = Harmon dry-weather
+  peak + I&I.** Shown on the wastewater tile, in each project's servicing table, and for growth
+  since 2021 in the census panel.
+- **Not included:** ICI (employment) demand, because the source datasets have no employment data.
 
 Every value can be edited in the app, and your edits are kept in your browser. These numbers
 are planning-level estimates, not a substitute for a functional servicing report. Check the
