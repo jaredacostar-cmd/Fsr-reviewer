@@ -707,9 +707,21 @@
   }
 
   const LIST_LIMIT = 300;
+  // The list shows the matching projects inside the current map view; it follows the map
+  // as you pan and zoom.
+  const SORTS = {
+    recent: (a, b) => (b.last || 0) - (a.last || 0) || b.rank - a.rank,
+    units: (a, b) => (b.units || 0) - (a.units || 0),
+    left: (a, b) => ((b.buildout && b.buildout.remaining) || 0) - ((a.buildout && a.buildout.remaining) || 0) || (b.units || 0) - (a.units || 0),
+    name: (a, b) => String(a.title).localeCompare(String(b.title), 'en', { numeric: true }),
+  };
   function renderList() {
-    const sorted = state.filtered.slice().sort((a, b) => (b.last || 0) - (a.last || 0) || b.rank - a.rank);
-    $('#list-note').textContent = sorted.length > LIST_LIMIT ? `Showing the ${LIST_LIMIT} most recently active of ${fmtNum(sorted.length)} — zoom the map or search to narrow.` : '';
+    const bounds = map.getBounds();
+    const inView = state.filtered.filter(p => p.lat != null && bounds.contains([p.lat, p.lng]));
+    const sorted = inView.sort(SORTS[$('#list-sort').value] || SORTS.recent);
+    $('#list-count').textContent = `· ${fmtNum(inView.length)} of ${fmtNum(state.filtered.length)}`;
+    $('#list-note').textContent = !inView.length ? (state.filtered.length ? 'No matching projects in this part of the map — zoom out or pan.' : 'No projects match the filters.')
+      : sorted.length > LIST_LIMIT ? `Showing ${LIST_LIMIT} of ${fmtNum(sorted.length)} — zoom in to narrow.` : '';
     $('#project-list').innerHTML = sorted.slice(0, LIST_LIMIT).map((p, i) =>
       `<li><button type="button" data-i="${i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
         <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(p.buildout.remaining)} left` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
@@ -719,6 +731,10 @@
       focusProject(p);
     };
   }
+
+  let listTimer;
+  map.on('moveend', () => { clearTimeout(listTimer); listTimer = setTimeout(renderList, 120); });
+  $('#list-sort').onchange = renderList;
 
   function focusProject(p) {
     showDetail(p);
@@ -1339,7 +1355,20 @@
     return out;
   }
   let activeList = [];
+  // One-line summaries on the collapsed sidebar sections.
+  function renderSectionSummaries() {
+    $('#sum-focus').textContent = state.focus ? FOCUS[state.focus].label : 'None';
+    $('#sect-focus').classList.toggle('active', !!state.focus);
+    const where = [state.muni || 'All of Peel', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : ''].filter(Boolean);
+    $('#sum-where').textContent = where.join(' · ');
+    $('#sect-where').classList.toggle('active', !!(state.muni || state.sp.length || state.mtsa));
+    const kindLabel = { application: 'Applications + their permits', '': 'All records', permit: 'Building permits', both: 'Application + permits' };
+    const more = [kindLabel[state.kind], state.minUnits ? $('#f-units').selectedOptions[0].textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
+    $('#sum-more').textContent = more.join(' · ');
+    $('#sect-more').classList.toggle('active', state.kind !== DEFAULT_KIND || !!state.minUnits || !state.newOnly);
+  }
   function renderFilterUI() {
+    renderSectionSummaries();
     activeList = activeFilters();
     $('#active-filters').innerHTML = activeList.length
       ? activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('') +

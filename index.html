@@ -42,23 +42,30 @@
 
       <!-- ===== Explore ===== -->
       <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
+        <div class="search-bar">
+          <label class="field"><span class="sr">Search</span>
+            <input type="search" id="f-search" placeholder="Search address, file number, description…">
+          </label>
+          <div class="active-filters" id="active-filters" aria-live="polite"></div>
+        </div>
+
         <section class="panel">
           <div class="panel-head">
-            <h2 class="label" data-info="quick-views">Quick views</h2>
+            <h2 class="label" data-info="phases">Phase</h2>
             <span class="muted small" id="total-count">—</span>
           </div>
           <div class="pipeline" id="pipeline" role="group" aria-label="Projects by phase"></div>
           <div class="chips views phase-chips" id="phase-chips" data-info="phases" role="group" aria-label="Phase"></div>
-          <h3 class="label sub-label">Focus <span class="muted small">— combine with a phase</span></h3>
-          <div class="chips views" id="focus-chips" data-info="focus" role="group" aria-label="Focus"></div>
         </section>
 
-        <section class="panel filters">
-          <label class="field"><span class="sr">Search</span>
-            <input type="search" id="f-search" placeholder="Search address, file number, description…">
-          </label>
+        <details class="panel sect side-sect" id="sect-focus">
+          <summary><h2 class="label" data-info="focus">Focus</h2><span class="muted small sect-sum" id="sum-focus">None</span></summary>
+          <div class="chips views" id="focus-chips" data-info="focus" role="group" aria-label="Focus"></div>
+        </details>
+
+        <details class="panel sect side-sect" id="sect-where" open>
+          <summary><h2 class="label" data-info="municipality">Where</h2><span class="muted small sect-sum" id="sum-where">All of Peel</span></summary>
           <div class="field">
-            <span class="label" data-info="municipality">Municipality</span>
             <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
           </div>
           <div class="row two">
@@ -74,11 +81,15 @@
                 </div>
               </details>
             </div>
-            <label class="field" data-info="mtsa"><span class="label">MTSA</span>
-              <select id="f-mtsa"><option value="">All MTSAs</option></select>
-            </label>
+            <div class="field" data-info="mtsa"><span class="label" id="f-mtsa-label">MTSA</span>
+              <select id="f-mtsa" aria-labelledby="f-mtsa-label"><option value="">All MTSAs</option></select>
+            </div>
           </div>
           <p class="small muted" id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</p>
+        </details>
+
+        <details class="panel sect side-sect" id="sect-more">
+          <summary><h2 class="label" data-info="record-type">More filters</h2><span class="muted small sect-sum" id="sum-more">Applications + their permits</span></summary>
           <div class="row two">
             <label class="field" data-info="record-type"><span class="label">Record type</span>
               <select id="f-kind">
@@ -101,19 +112,27 @@
           </div>
           <label class="switch" data-info="new-only"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
             <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
-          <div class="active-filters" id="active-filters" aria-live="polite"></div>
-        </section>
+        </details>
 
         <section class="panel list-panel">
           <div class="panel-head">
-            <h2 class="label" data-info="projects-list">Projects</h2>
+            <h2 class="label" data-info="projects-list">On the map <span class="muted small" id="list-count"></span></h2>
             <div class="btns">
-              <button type="button" id="btn-csv" class="btn small">CSV</button>
-              <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
+              <select id="list-sort" aria-label="Sort projects">
+                <option value="recent">Latest activity</option>
+                <option value="units">Most units</option>
+                <option value="left">Most left to build</option>
+                <option value="name">Address A–Z</option>
+              </select>
             </div>
           </div>
           <p class="muted small" id="list-note"></p>
           <ol class="project-list" id="project-list"></ol>
+          <div class="row btns export-row">
+            <span class="muted small">Export all matching:</span>
+            <button type="button" id="btn-csv" class="btn small">CSV</button>
+            <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
+          </div>
         </section>
       </div>
 
