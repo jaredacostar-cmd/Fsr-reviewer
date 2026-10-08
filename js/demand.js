@@ -36,6 +36,8 @@
     water: { avg: 280, maxDay: 2.0, peakHour: 3.0 },
     wastewater: { avg: 290, infiltration: 0.26 },
     employment: { water: 300, maxDay: 1.4, peakHour: 3.0, wastewater: 270, peakMin: 2, peakMax: 4 },
+    // Floor space per job (m²/job) by use, used to estimate jobs from application floor areas.
+    m2PerJob: { industrial: 110, office: 25, retail: 45, hotel: 60, institutional: 50 },
   };
 
   const SECONDS_PER_DAY = 86400;

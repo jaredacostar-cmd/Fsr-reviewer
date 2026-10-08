@@ -280,8 +280,10 @@ of retail GFA”, “a place of worship (1,445 m²)”, “45,000 sq ft warehous
 each assigned to the nearest use. A purely non-residential file's floor-area field is used when
 the text gives none (marked †). Files on one site repeat the proposal, so the largest figure per
 use counts; minor / limited files are skipped. Estimated jobs use typical floor space per
-worker: industrial 110 m², office 25, retail 45, hotel 60, institutional 50. Shown as an
-**Employment** section in the project panel, an **Employment** focus chip, and in the CSV export
+worker: industrial 110 m², office 25, retail 45, hotel 60, institutional 50 by default. These
+are editable under **Breakdown & criteria → Employment floor space (m²/job)** (saved in the
+browser; *Reset to Peel defaults* restores them) and every job count, employment demand and
+summary updates. Shown as an **Employment** section in the development panel, an **Employment** focus chip, and in the CSV export
 (`employment_uses`, `nonres_floor_area_m2`, `est_jobs`).
 
 ## Aerial check (is it built?)
