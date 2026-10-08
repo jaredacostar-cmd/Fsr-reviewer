@@ -1147,6 +1147,7 @@
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
+    const allPop = futPop + gr.proposed.population, allDw = futDw + gr.proposed.units;
     const tile = (label, pop, dw, sub) => `<div class="tile"><div class="tl">${label}</div>
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
@@ -1154,9 +1155,56 @@
       tile('2021 Census', base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`),
       tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs 2021`),
+      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs 2021`),
     ].join('');
-    $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; people at Peel persons-per-unit · other filters ignored`;
+    renderGrowthChart(base, gr);
+    $('#c-note').textContent = `${name} · built = permits completed since census day (11 May 2021)${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;
   }
+
+  // Stacked bar: 2021 baseline, then each layer of growth up to full build-out of the
+  // planning applications. One bar per measure (people, dwellings), sharing nothing but the
+  // layer order, so there is no second axis. Values are direct-labelled in the legend.
+  function renderGrowthChart(base, gr) {
+    const layers = [
+      { key: 'base', label: '2021 Census', people: base.population, dwellings: base.dwellings },
+      { key: 'built', label: 'Built since', people: gr.built.population, dwellings: gr.built.units },
+      { key: 'approved', label: 'Approved', people: gr.approved.population, dwellings: gr.approved.units },
+      { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units },
+    ];
+    const bar = (measure, unit) => {
+      const total = layers.reduce((t, l) => t + l[measure], 0);
+      if (!(total > 0)) return '';
+      const segs = layers.filter(l => l[measure] > 0).map(l => {
+        const w = l[measure] / total * 100;
+        const tip = `${l.label}: ${fmtNum(Math.round(l[measure]))} ${unit} (${w.toFixed(1)}% of build-out)`;
+        return `<span class="gseg g-${l.key}" style="flex:${l[measure]}" tabindex="0" data-tip="${esc(tip)}" aria-label="${esc(tip)}"></span>`;
+      }).join('');
+      return `<div class="grow-row"><div class="grow-label">${unit[0].toUpperCase() + unit.slice(1)}</div>
+        <div class="grow-bar" role="img" aria-label="${esc(layers.map(l => `${l.label} ${fmtNum(Math.round(l[measure]))}`).join(', '))} ${unit}">${segs}</div>
+        <div class="grow-total">${fmtNum(Math.round(total))}</div></div>`;
+    };
+    const legend = layers.map(l => `<li><i class="gsw g-${l.key}" aria-hidden="true"></i><span>${esc(l.label)}</span>
+      <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings</span></li>`).join('');
+    $('#c-chart').innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}
+      <ul class="grow-legend">${legend}</ul><div class="grow-tip" id="grow-tip" hidden></div>`;
+  }
+  // Hover / tap tooltip for the growth bars.
+  const growTip = e => {
+    const s = e.target.closest('[data-tip]'), tip = $('#grow-tip');
+    if (!tip) return;
+    if (!s) { tip.hidden = true; return; }
+    tip.textContent = s.dataset.tip; tip.hidden = false;
+    const box = $('#c-chart').getBoundingClientRect();
+    tip.style.left = `${Math.min(box.width - 220, Math.max(0, e.clientX - box.left + 12))}px`;
+    tip.style.top = `${e.clientY - box.top - 34}px`;
+  };
+  $('#c-chart').addEventListener('pointermove', growTip);
+  $('#c-chart').addEventListener('pointerdown', growTip);   // tap on phones
+  $('#c-chart').addEventListener('pointerleave', () => { const t = $('#grow-tip'); if (t) t.hidden = true; });
+  $('#c-chart').addEventListener('focusin', e => {
+    const s = e.target.closest('[data-tip]'), tip = $('#grow-tip'); if (!s || !tip) return;
+    tip.textContent = s.dataset.tip; tip.hidden = false; tip.style.left = '0px'; tip.style.top = '-28px';
+  });
 
   // Quick views: a phase (or phase group) plus an optional focus.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));

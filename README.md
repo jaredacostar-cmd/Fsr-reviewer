@@ -128,6 +128,12 @@ secondary plan or MTSA:
 | + Built since | Plus units on building permits completed since census day (11 May 2021), at Peel persons-per-unit. Brampton and Caledon publish no completion date, so it is estimated as issue date + 12 months (houses) or + 30 months (20+ units). |
 | + Approved, not yet built | Plus committed growth (approved or permitted, not yet completed). |
 
+| + Proposed (full build-out) | Plus growth on applications still in pre-consultation or review: the full build-out of the planning applications. |
+
+Two stacked bars (people, dwellings) show the 2021 baseline (grey), built since (green),
+approved (blue) and proposed (hatched blue) up to full build-out; hover or tap a segment for
+its value.
+
 Peel's small geographic unit (SGU) forecasts are not published as open data (only Caledon's are),
 so the census baseline uses dissemination areas. `data/areas.json` is rebuilt weekly
 (`scripts/build-areas.js`).
