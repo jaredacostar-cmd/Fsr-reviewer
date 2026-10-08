@@ -248,7 +248,8 @@
   // ---- 2021 Census dissemination areas: very light outlines, toggled in the map options ----
   // Loaded on first use (data/das.json, built with data/areas.json); drawn on a canvas in a pane
   // under the site outlines, with the DA's population on hover / tap.
-  let daOn = !!store.get('daLayer', false);
+  // On by default as a faint border; the map options can turn it off.
+  let daOn = store.get('censusAreas', true) !== false;
   let daLayer = null, daLoading = null;
   map.createPane('daPane').style.zIndex = 350;
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
@@ -262,13 +263,13 @@
     });
     return daLoading;
   }
-  // White hairlines over aerial photos, grey over the street map: visible but faint.
+  // A light border: white over aerial photos, grey over the street map; seen, not loud.
   function daStyle() {
-    if (BASEMAPS[basemap].imagery) return { color: '#ffffff', weight: 0.8, opacity: 0.4 };
-    return { color: (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim(), weight: 0.7, opacity: 0.4 };
+    if (BASEMAPS[basemap].imagery) return { color: '#ffffff', weight: 1, opacity: 0.55 };
+    return { color: (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim(), weight: 1, opacity: 0.35 };
   }
   function setDaLayer(on) {
-    daOn = on; store.set('daLayer', on);
+    daOn = on; store.set('censusAreas', on);
     if (!on) { if (daLayer) map.removeLayer(daLayer); return; }
     loadDaLayer().then(l => { if (daOn) l.addTo(map); }).catch(() => {
       daLoading = null; daOn = false;
