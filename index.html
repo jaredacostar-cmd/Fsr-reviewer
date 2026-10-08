@@ -55,7 +55,21 @@
           </label>
         </div>
         <div class="row">
+          <label class="field grow"><span>Unit growth</span>
+            <select id="f-units">
+              <option value="0">Any</option>
+              <option value="1">Adds units</option>
+              <option value="10">10+ units</option>
+              <option value="50">50+ units</option>
+              <option value="100">100+ units</option>
+              <option value="500">500+ units</option>
+            </select>
+          </label>
           <label class="check"><input type="checkbox" id="f-new" checked> New builds only</label>
+        </div>
+        <div class="row">
+          <button type="button" class="btn small" id="f-preset-growth" aria-pressed="false">Applications adding units</button>
+          <button type="button" class="btn small" id="f-clear" hidden>Clear filters</button>
         </div>
       </section>
 

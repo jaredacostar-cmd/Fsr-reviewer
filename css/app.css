@@ -132,6 +132,7 @@ button, input, select { font: inherit; color: inherit; }
 }
 .btn:hover { border-color: var(--text-muted); }
 .btn.small { padding: 2px 8px; font-size: 12px; }
+.btn.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 .btns { display: flex; gap: 6px; }
 
 .list-panel { flex: 1 0 auto; }
