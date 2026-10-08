@@ -118,6 +118,10 @@
             <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
           </div>
         </section>
+        <section class="panel audit" id="audit-panel">
+          <div class="panel-head"><h2 class="label">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
+          <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
+        </section>
         <details class="panel advanced">
           <summary><h2 class="label">Advanced</h2></summary>
           <div class="row">
@@ -215,6 +219,7 @@
   <script src="js/config.js?v=__BUILD__"></script>
   <script src="js/phases.js?v=__BUILD__"></script>
   <script src="js/demand.js?v=__BUILD__"></script>
+  <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/arcgis.js?v=__BUILD__"></script>
   <script src="js/loader.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>

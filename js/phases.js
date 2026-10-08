@@ -485,6 +485,24 @@
     return `${rec.municipality}|#${rec.uid}`;
   }
 
+  // Every civic address named in a multi-address application:
+  // "202 and 204 Burnhamthorpe Rd E", "65-71 Agnes St", "8 Ann St, 77 & 81 High St E",
+  // "28 Ann St (formerly 78 Park St E and 22-28 Ann St)". Ranges give both ends.
+  const MULTI_ADDR = /(\d+[A-Z]?(?:\s*(?:-|&|\bAND\b|,)\s*\d+[A-Z]?)*)\s+([A-Z][A-Z .']*?)(?=\s*(?:,|&|\bAND\b|\(|\)|$))/g;
+  function addressAliases(addr) {
+    const s = str(addr).toUpperCase().replace(/\bFORMERLY\b/g, ',');
+    const out = new Set();
+    for (const m of s.matchAll(MULTI_ADDR)) {
+      const street = m[2].trim();
+      if (!/[A-Z]{2}/.test(street) || /^(ON|ONTARIO|CANADA)$/.test(street)) continue;
+      for (const n of m[1].split(/\s*(?:-|&|\bAND\b|,)\s*/)) {
+        const a = normalizeAddress(`${n} ${street}`);
+        if (a) out.add(a);
+      }
+    }
+    return out;
+  }
+
   // Applications larger than this are area-wide (secondary plans, large OPAs) and
   // don't absorb the permits inside them.
   const MAX_SITE_AREA_M2 = 4e6;
@@ -510,13 +528,14 @@
    * Units are then counted once per project (see mergeProject).
    */
   function buildProjects(records) {
-    const groups = new Map();
+    let groups = new Map();
     for (const r of records) {
       const k = projectKey(r);
       let g = groups.get(k);
       if (!g) groups.set(k, g = []);
       g.push(r);
     }
+    groups = joinMultiAddress(groups);
 
     // Sites: groups with a live planning application polygon of site scale.
     const sites = [];
@@ -596,17 +615,87 @@
       }
     }
 
-    const projects = [];
+    const parts = [];
     const roots = new Set([...lands.values()].map(rootOf));
     for (const root of roots) {
       const all = [];
       const collect = land => { for (const s of land.sites) all.push(...s.recs); land.children.forEach(collect); };
       collect(root);
       all.push(...(extra.get(root) || []));
-      projects.push(mergeProject(root.rep.key, all, { planned: plannedUnits(root), site: root.rep }));
+      parts.push({ key: root.rep.key, recs: all, site: { planned: plannedUnits(root), site: root.rep } });
     }
-    for (const [key, recs] of loose) projects.push(mergeProject(key, recs));
-    return projects;
+    for (const [key, recs] of loose) parts.push({ key, recs, site: {} });
+    return joinNearbyPermits(parts);
+  }
+
+  // 1b. A multi-address application ("202 and 204 Main St", "65-71 Agnes St") joins the
+  // groups at each address it names, so a permit at "202 Main St" lands in the same project.
+  function joinMultiAddress(groups) {
+    const parent = new Map();
+    const find = k => { let r = k; while (parent.has(r)) r = parent.get(r); return r; };
+    for (const [key, recs] of groups) {
+      const muni = key.split('|')[0];
+      for (const r of recs) {
+        if (r.kind !== 'application') continue;
+        for (const a of addressAliases(r.address)) {
+          const other = `${muni}|${a}`;
+          if (other === key || !groups.has(other)) continue;
+          const ra = find(key), rb = find(other);
+          if (ra !== rb) parent.set(rb, ra);
+        }
+      }
+    }
+    if (!parent.size) return groups;
+    const out = new Map();
+    for (const [key, recs] of groups) {
+      const root = find(key);
+      if (!out.has(root)) out.set(root, []);
+      out.get(root).push(...recs);
+    }
+    return out;
+  }
+
+  // 5. A project with only building permits joins a nearby planning application whose
+  // unit count it matches exactly: the permit is for that application's building, mapped
+  // to a neighbouring civic number or outside the application's polygon.
+  const NEAR_PERMIT_M = 60, NEAR_PERMIT_MIN_UNITS = 20;
+  function joinNearbyPermits(parts) {
+    const projects = parts.map(pt => mergeProject(pt.key, pt.recs, pt.site));
+    const M = 111320, cell = NEAR_PERMIT_M / M;
+    const grid = new Map();
+    projects.forEach((p, i) => {
+      if (p.phase === 'cancelled' || !(p.units >= NEAR_PERMIT_MIN_UNITS) || p.lat == null || !p.kinds.includes('application')) return;
+      const k = `${Math.floor(p.lng / cell)}|${Math.floor(p.lat / cell)}`;
+      if (!grid.has(k)) grid.set(k, []);
+      grid.get(k).push(i);
+    });
+    const into = new Map();   // target index -> permit-only indexes
+    const gone = new Set();
+    projects.forEach((p, i) => {
+      if (p.kinds.length !== 1 || p.kinds[0] !== 'permit' || !(p.units >= NEAR_PERMIT_MIN_UNITS) || p.lat == null) return;
+      const gx = Math.floor(p.lng / cell), gy = Math.floor(p.lat / cell);
+      let best = null, bestD = Infinity;
+      for (let dx = -2; dx <= 2; dx++) for (let dy = -1; dy <= 1; dy++) {
+        for (const j of grid.get(`${gx + dx}|${gy + dy}`) || []) {
+          const q = projects[j];
+          if (q.municipality !== p.municipality) continue;
+          const planned = q.buildout ? q.buildout.planned : q.units;
+          if (planned !== p.units || (q.buildout && q.buildout.permitted > 0)) continue;
+          if (!after(firstDate(p.records), firstDate(q.records.filter(r => r.kind === 'application')))) continue;
+          const d = Math.hypot((p.lng - q.lng) * M * Math.cos(p.lat * Math.PI / 180), (p.lat - q.lat) * M);
+          if (d <= NEAR_PERMIT_M && d < bestD) { best = j; bestD = d; }
+        }
+      }
+      if (best == null || into.has(best)) return;   // one permit project per application
+      into.set(best, i); gone.add(i);
+    });
+    if (!into.size) return projects;
+    return projects.flatMap((p, i) => {
+      if (gone.has(i)) return [];
+      if (!into.has(i)) return [p];
+      const pt = parts[i];
+      return [mergeProject(pt.key, pt.recs.concat(parts[into.get(i)].recs), pt.site)];
+    });
   }
 
   // Planned units of a land and everything nested in it: files on the same land repeat
@@ -789,7 +878,8 @@
       if (!fk) { out.push(r); continue; }
       const k = `${r.municipality}|${r.kind}|${fk}`;
       const prev = byRef.get(k);
-      if (!prev) { byRef.set(k, r); out.push(r); continue; }
+      // Copy the first record so repeated rebuilds don't merge into the source data again.
+      if (!prev) { const c = { ...r, events: r.events.slice() }; byRef.set(k, c); out.push(c); continue; }
       const seen = new Set(prev.events.map(e => `${e.phase}|${+e.date}`));
       for (const e of r.events) if (!seen.has(`${e.phase}|${+e.date}`)) prev.events.push(e);
       prev.events.sort((a, b) => a.date - b.date);
@@ -811,7 +901,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
+    representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -140,6 +140,30 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
    - A site plan inside a subdivision rolls up into the subdivision.
    - Withdrawn applications and area-wide plans larger than 4 km² don't absorb permits.
 
+## Duplicate check (proof of counting once)
+
+The **Data** tab has a **Duplicate check**, recomputed from every record (filters ignored):
+
+1. **Records:** raw records → copies of the same file merged (same file number across layers
+   or spellings) → unique files → projects.
+2. **Integrity checks** that must be 0: a file still listed twice, a file counted in more than
+   one project, a file in no project.
+3. **Unit reconciliation:** units on every record, minus each rule that removes a repeat
+   (copies of a file, withdrawn files, repeat applications for one proposal, repeat permits for
+   one building, permits already inside their planning application) = **units counted**, which
+   equals the demand panel's “All units” with every filter off.
+4. **Possible duplicates left:** separate projects of 20+ units within 60 m, for review (tap to
+   open).
+5. **Download audit CSV:** every file with the project it is counted in, so anyone can check.
+
+Every deploy (including the weekly update) runs the same audit on the snapshot
+(`node scripts/audit-snapshot.js`) and writes it to the Actions run summary.
+
+Two linking rules close gaps the audit found: a multi-address application (“202 and 204 Main
+St”, “65-71 Agnes St”, “… (formerly …)”) joins the records at each address it names, and a
+permit-only project of 20+ units within 60 m of an application with exactly the same unit count
+joins that application.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:
