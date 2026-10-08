@@ -164,6 +164,12 @@ criteria.
 straight across. Switch to **North up** in the map options (top right). Rotation uses the
 [leaflet-rotate](https://github.com/Raruto/leaflet-rotate) plugin.
 
+**2021 census areas:** tick **2021 census areas** in the map options to draw very light
+outlines of the 2021 Census dissemination areas (white over aerial photos, grey over the street
+map); hover or tap one for its 2021 population and dwellings. The outlines (`data/das.json`,
+simplified to ~4 m, about 0.8 MB) load only when the layer is first turned on, and are built by
+`scripts/build-areas.js` with `data/areas.json` (Probe data sources, mode `areas`).
+
 **Select an area:** the select tool under the zoom buttons turns the next drag into a lasso. The
 projects shown on the map inside it are added up in the side panel: planned / permitted /
 completed / left by unit type plus employment, servicing demand (residential + employment, for

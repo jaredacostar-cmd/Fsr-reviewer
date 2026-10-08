@@ -15,7 +15,7 @@ on:
         required: false
 
 permissions:
-  contents: write   # mode=areas commits data/areas.json to the branch it runs on
+  contents: write   # mode=areas commits data/areas.json and data/das.json to the branch it runs on
 
 jobs:
   probe:
@@ -34,7 +34,7 @@ jobs:
           node scripts/build-areas.js --out data
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/areas.json
+          git add data/areas.json data/das.json
           git diff --cached --quiet || { git commit -m "Areas and 2021 census baseline"; git push; }
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
