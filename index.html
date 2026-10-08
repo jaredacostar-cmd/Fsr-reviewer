@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peel Projects Map</title>
+  <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Peel Region Projects</h1>
+      <span class="sub">Linear &amp; vertical capital projects</span>
+    </div>
+    <div class="top-actions">
+      <button id="btn-new" class="btn primary">+ New project</button>
+      <button id="btn-export" class="btn">Export</button>
+      <label class="btn" for="file-import">Import</label>
+      <input id="file-import" type="file" accept="application/json,.json" hidden>
+      <button id="btn-reset" class="btn ghost" title="Replace all projects with the example set">Load examples</button>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="filters">
+        <input id="search" type="search" placeholder="Search projects…" aria-label="Search projects">
+        <div class="seg" role="group" aria-label="Project type">
+          <button data-type="all" class="active">All</button>
+          <button data-type="linear">Linear</button>
+          <button data-type="vertical">Vertical</button>
+        </div>
+        <select id="filter-muni" aria-label="Municipality">
+          <option value="">All municipalities</option>
+        </select>
+      </div>
+      <ul id="project-list" class="project-list"></ul>
+      <div class="legend">
+        <div class="legend-title">Status</div>
+        <div id="legend-items"></div>
+        <div class="legend-title">Type</div>
+        <div class="legend-row"><span class="lg-line"></span>Linear (road, pipe, transit)</div>
+        <div class="legend-row"><span class="lg-dot"></span>Vertical (building, facility)</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="map-wrap">
+        <div id="map"></div>
+        <div id="draw-bar" class="draw-bar" hidden>
+          <span id="draw-msg"></span>
+          <button id="draw-undo" class="btn sm">Undo point</button>
+          <button id="draw-done" class="btn sm primary">Done</button>
+          <button id="draw-cancel" class="btn sm ghost">Cancel</button>
+        </div>
+      </div>
+      <section id="detail" class="detail" hidden></section>
+    </main>
+  </div>
+
+  <dialog id="editor" class="editor">
+    <form id="editor-form" method="dialog" novalidate>
+      <header class="editor-head">
+        <h2 id="editor-title">New project</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Close">✕</button>
+      </header>
+      <div class="editor-body">
+        <div class="grid2">
+          <label class="span2">Project name
+            <input name="name" required placeholder="e.g. Watermain replacement – Queen St E">
+          </label>
+          <label>Project ID / number
+            <input name="ref" placeholder="e.g. 24-1234">
+          </label>
+          <label>Type
+            <select name="type">
+              <option value="linear">Linear</option>
+              <option value="vertical">Vertical</option>
+            </select>
+          </label>
+          <label>Category
+            <input name="category" list="category-options" placeholder="e.g. Watermain">
+            <datalist id="category-options"></datalist>
+          </label>
+          <label>Municipality
+            <select name="municipality">
+              <option>Mississauga</option>
+              <option>Brampton</option>
+              <option>Caledon</option>
+              <option>Region-wide</option>
+            </select>
+          </label>
+          <label>Status
+            <select name="status"></select>
+          </label>
+          <label>Project lead
+            <input name="lead" placeholder="Name or department">
+          </label>
+          <label>Budget ($)
+            <input name="budget" type="number" min="0" step="1000" placeholder="0">
+          </label>
+          <label>Contractor
+            <input name="contractor" placeholder="Optional">
+          </label>
+          <label class="span2">Description
+            <textarea name="description" rows="3" placeholder="Scope, limits, notes…"></textarea>
+          </label>
+        </div>
+
+        <fieldset class="geo">
+          <legend>Location</legend>
+          <p id="geo-status" class="muted"></p>
+          <button type="button" id="btn-draw" class="btn">Draw on map</button>
+        </fieldset>
+
+        <fieldset>
+          <legend>Schedule (Gantt tasks)</legend>
+          <table class="task-table">
+            <thead>
+              <tr><th>Task / phase</th><th>Start</th><th>End</th><th>% done</th><th></th></tr>
+            </thead>
+            <tbody id="task-rows"></tbody>
+          </table>
+          <div class="task-actions">
+            <button type="button" id="btn-add-task" class="btn sm">+ Add task</button>
+            <button type="button" id="btn-template" class="btn sm ghost">Use standard phases</button>
+          </div>
+        </fieldset>
+        <p id="editor-error" class="error" hidden></p>
+      </div>
+      <footer class="editor-foot">
+        <button type="button" class="btn ghost" data-close>Cancel</button>
+        <button type="submit" class="btn primary">Save project</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="vendor/leaflet/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
