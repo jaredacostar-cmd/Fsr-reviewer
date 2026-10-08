@@ -596,8 +596,9 @@
   };
 
   // ---- Bottom panel tabs: servicing demand / growth since 2021 / breakdown & criteria ----
-  // footPref: the tab last picked (kept); the growth tab only appears once the census loads.
-  let footPref = store.get('footTab', 'demand'), footTab = 'demand';
+  // footPref: the tab last picked (kept), Growth since 2021 by default; that tab only appears
+  // once the census loads, so servicing demand shows until then.
+  let footPref = store.get('footTab2', 'growth'), footTab = 'demand';
   function showFootTab(key) {
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'demand';
     footTab = key;
@@ -1621,7 +1622,7 @@
   $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
   $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
-    footPref = t.dataset.tab; store.set('footTab', footPref);
+    footPref = t.dataset.tab; store.set('footTab2', footPref);
     showFootTab(footPref); setFooterCollapsed(false);
   });
   // Floating timeline: folds to its header (collapsed by default on phones).

@@ -52,7 +52,8 @@ the phase names. **Hide** folds the bottom panel to its tabs (tap a tab to open 
 the ▾ on the timeline folds it to just the year range (it starts folded on phones).
 
 **Bottom panel:** three tabs, so only one thing shows at a time (the last one picked is
-remembered): **Servicing demand**, **Growth since 2021**, and **Breakdown & criteria** (by
+remembered; **Growth since 2021** opens by default): **Growth since 2021**, **Servicing
+demand**, and **Breakdown & criteria** (by
 dwelling type and phase, plus the editable design criteria).
 
 ## Using it
