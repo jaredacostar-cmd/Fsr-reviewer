@@ -30,9 +30,9 @@ test('subdivision encompasses the house permits on its land; units are counted o
     permit(-79.799, 43.701, { BP_NO: 'BP1', ADDRESS: '1 Maple Cres', STATUS: 'Closed', DWELLINGS: 1, ISSUE_DATE: Y(2022) }),
     permit(-79.798, 43.702, { BP_NO: 'BP2', ADDRESS: '3 Maple Cres', STATUS: 'Closed', DWELLINGS: 1, ISSUE_DATE: Y(2022) }),
     permit(-79.797, 43.703, { BP_NO: 'BP3', ADDRESS: '5 Maple Cres', STATUS: 'Issued', DWELLINGS: 1, ISSUE_DATE: Y(2024) }),
-    // Two permits for one building (foundation + full) repeat its 2 units: count once.
-    permit(-79.796, 43.704, { BP_NO: 'BP4', ADDRESS: '7 Maple Cres', STATUS: 'Issued', DWELLINGS: 2, ISSUE_DATE: Y(2024) }),
-    permit(-79.796, 43.704, { BP_NO: 'BP5', ADDRESS: '7 Maple Cres', STATUS: 'Issued', DWELLINGS: 2, ISSUE_DATE: Y(2024, 6) }),
+    // Conditional (foundation) + full permit for one building share a base number: count once.
+    permit(-79.796, 43.704, { BP_NO: 'BP 21-4 CON', ADDRESS: '7 Maple Cres', STATUS: 'Issued', DWELLINGS: 2, ISSUE_DATE: Y(2024) }),
+    permit(-79.796, 43.704, { BP_NO: 'BP 21-4', ADDRESS: '7 Maple Cres', STATUS: 'Issued', DWELLINGS: 2, ISSUE_DATE: Y(2024, 6) }),
   ];
   const outside = permit(-79.70, 43.70, { BP_NO: 'BP9', ADDRESS: '99 Far Rd', STATUS: 'Issued', DWELLINGS: 1, ISSUE_DATE: Y(2024) });
 
@@ -42,7 +42,9 @@ test('subdivision encompasses the house permits on its land; units are counted o
   assert.ok(p.records.includes(zba), 'same-land applications merge');
   assert.equal(p.records.filter(r => r.kind === 'permit').length, 5);
   assert.equal(p.title, '0 Heritage Rd');
-  assert.deepEqual(p.buildout, { planned: 10, permitted: 5, completed: 2, remaining: 5, unbuilt: 8, permits: 5 });
+  const { basis, phases, ...b } = p.buildout;
+  assert.deepEqual(b, { planned: 10, permitted: 5, completed: 2, remaining: 5, unbuilt: 8, permits: 5 });
+  assert.equal(basis, 'master');
   assert.equal(p.units, 10, 'not 10 + 5');
   assert.equal(p.phase, 'construction', 'some houses finished, units still to permit');
   // Population is based on the project's units, so nothing is double counted.

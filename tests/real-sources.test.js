@@ -86,10 +86,10 @@ test('Mississauga site plans: unit mix across RES_* columns', () => {
 test('Caledon: development applications (codes, unit mix) and AMANDA permits (units created)', () => {
   const apps = F('OBJECTID:OID, INDATE:Date, STATUSDESC:String, FOLDERDESCRIPTION:String, FOLDERNAME:String, REFERENCEFILE:String, SUBDESC:String, FOLDERTYPE:String, FOLDERRSN:Double, FULLADDRESS:String, WardNum:String, Single_Detached:Double, Semi_Detached:Double, Townhouses:Double, Apartment:Double, Total_Units:Double, Non_Res_GFA:Double');
   const ma = P.detectFields(apps);
-  assert.equal(ma.id, 'FOLDERNAME');
+  assert.equal(ma.id, 'REFERENCEFILE', 'FOLDERNAME is the applicant / consultant, not a file number');
   assert.deepEqual(ma.unitMix, { single: ['Single_Detached'], semi: ['Semi_Detached'], town: ['Townhouses'], apartment: ['Apartment'] });
   const src = { id: 'c', municipality: 'Caledon', kind: 'application' };
-  const r = rec(apps, { FOLDERNAME: 'RZ 2024-0001', STATUSDESC: 'Circulation', FOLDERTYPE: 'RZ', Single_Detached: 120, Townhouses: 80, Total_Units: 200, FULLADDRESS: '1 Main St, Bolton' }, src);
+  const r = rec(apps, { REFERENCEFILE: 'RZ 2024-0001', FOLDERNAME: 'Glen Schnarr & Associates', STATUSDESC: 'Circulation', FOLDERTYPE: 'RZ', Single_Detached: 120, Townhouses: 80, Total_Units: 200, FULLADDRESS: '1 Main St, Bolton' }, src);
   assert.equal(r.type, 'Zoning by-law amendment');
   assert.equal(r.phase, 'review');
   assert.equal(r.units, 200);

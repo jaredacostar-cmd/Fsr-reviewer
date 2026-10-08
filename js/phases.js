@@ -50,7 +50,7 @@
 
   // ---- Field detection --------------------------------------------------------
   const FIELD_PATTERNS = {
-    id:          [/^(app_?|application_?|planning_?)?file_?(no|num|number)$/i, /^(permit|bp|file|application|app)_?(no|num|number)$/i, /^folder_?name$/i, /^(application|app|file|permit|folder|bp|case|project)[_ ]?(no|num|number|id|rsn|name)$/i, /^(file|permit|application)(no|num|number)$/i, /(permit|file|application|app)_?(no|num|number)/i, /^folder_?rsn$/i],
+    id:          [/^reference_?file$/i, /^custom_?folder_?number$/i, /^(app_?|application_?|planning_?)?file_?(no|num|number)$/i, /^(permit|bp|file|application|app)_?(no|num|number)$/i, /^folder_?name$/i, /^(application|app|file|permit|folder|bp|case|project)[_ ]?(no|num|number|id|rsn|name)$/i, /^(file|permit|application)(no|num|number)$/i, /(permit|file|application|app)_?(no|num|number)/i, /^folder_?rsn$/i],
     address:     [/^(full_?)?(civic_?)?address$/i, /^(site_?|street_?|location_?)?address(_?\d)?$/i, /addr/i, /^location$/i],
     status:      [/^(app(lication)?_?|permit_?|folder_?|file_?)?status(_?desc(ription)?)?$/i, /status/i, /^stage$/i, /stage/i, /^state$/i],
     type:        [/^(app(lication)?_?|permit_?|folder_?|work_?|file_?)?type(_?desc(ription)?)?$/i, /^sub_?desc$/i, /type/i, /^class/i, /category/i],
@@ -190,7 +190,7 @@
 
   function isNewBuild(rec) {
     if (rec.kind !== 'permit') return true;
-    if (rec.units > 0) return true;
+    if (permitAddsUnits(rec)) return true;
     const scope = rec.scope || '';
     if (scope) {
       if (NOT_NEW_BUILD.test(scope)) return false;
@@ -210,6 +210,54 @@
       if (n > best && n < 20000) best = n;
     }
     return best || null;
+  }
+
+  // ---- File numbers -----------------------------------------------------------
+  // One file appears under several spellings: "SP 22-60", "SP 22 60", "SP 22/060 W9";
+  // permits carry stage suffixes: "BP 3NEW 17-9012 CON / CR1 / FTR / COM".
+  // The canonical key drops separators, leading zeros, ward and stage suffixes.
+  const REF_SUFFIX = /^(CON|COM|FTR|FDN|CR\d*|R\d+|REV\d*|SS|W\d{1,2})$/;
+  function canonRef(ref) {
+    let t = String(ref || '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
+    if (!t.length) return '';
+    while (t.length > 2 && REF_SUFFIX.test(t[t.length - 1])) t.pop();
+    // Brampton AMANDA permits "00-100302-000-00": the last two parts are revision numbers.
+    if (t.length >= 4 && t.every(x => /^\d+$/.test(x))) t = t.slice(0, 2);
+    // Letter O typed for zero ("SP 25/O14") is the same file as "SP 25-14".
+    t = t.map(x => (/^O\d+$/.test(x) ? '0' + x.slice(1) : x));
+    return t.map(x => (/^\d+$/.test(x) ? String(Number(x)) : x)).join('|');
+  }
+
+  // Approval stage of a planning file. Files of different stages on one site describe the
+  // same proposal; separate files of the same stage (site plan / condo) are separate phases.
+  function stageOf(r) {
+    const ref = String(r.ref || '').toUpperCase().trim();
+    const t = `${r.type || ''} ${r.description || ''}`.toLowerCase();
+    if (/^PRE\b|^PRE-/.test(ref) || /pre[- ]?consult/i.test(r.type || '')) return 'precon';
+    if (/^(21CDM|CDM|DPC)\b|^DPC-/.test(ref) || /condo/i.test(r.type || '')) return 'condo';
+    if (/^(SP|SPA|SPI|SPM|SPR|SPAX|DPS)\b|^(SPA|DPS)-|^SP\d/.test(ref) || /site plan|development permit/i.test(r.type || '')) return 'siteplan';
+    if (/^(OZ|OZS|21T|OPA|RZ|OP|SBD|ZBA)\b|^OZS-|^21T-/.test(ref) || /rezon|zoning|official plan|subdivision|opa|zba/i.test(r.type || '')) return 'master';
+    if (/site plan/.test(t)) return 'siteplan';
+    return 'other';
+  }
+  // Minor / express / revision files repeat or tweak an earlier plan: they add no units.
+  function isMinorFile(r) {
+    const ref = String(r.ref || '').toUpperCase();
+    return /^(SPM|SPR|SPAX)\b/.test(ref) || /express|minor/i.test(r.type || '') ||
+      /^limited site plan|site plan minor|revisions? to (the )?site plan|minor (changes?|revisions?)/i.test(r.description || '');
+  }
+  // City-initiated, area-wide by-laws are not development sites.
+  const isCityInitiated = r => /^CI\d/i.test(r.ref || '') || /city[- ](of \w+ )?initiated/i.test(`${r.type} ${r.description}`);
+
+  // Permits whose unit count doesn't represent new homes (servicing, alterations, revisions).
+  function permitAddsUnits(r) {
+    if (r.kind !== 'permit') return false;
+    const ref = String(r.ref || '').toUpperCase();
+    if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS)\b/.test(ref)) return false;
+    // Alterations can add units (basement second suites), so scope alone doesn't exclude them;
+    // revisions to an earlier permit and site servicing repeat that permit's count.
+    if (/^revision to (bp|permit)|site servicing/i.test(r.description || '')) return false;
+    return r.units > 0;
   }
 
   // Common AMANDA planning folder codes (Caledon, Brampton).
@@ -348,6 +396,8 @@
       const t = unitsFromText(rec.description);
       if (t) { rec.units = t; rec.unitsFromText = true; }
     }
+    rec.fileKey = canonRef(rec.ref);
+    if (src.kind === 'application') { rec.stage = stageOf(rec); if (isMinorFile(rec)) rec.minor = true; }
     rec.newBuild = isNewBuild(rec);
     // Planning applications keep their land polygon so permits on that land can be linked.
     if (src.kind === 'application') {
@@ -471,7 +521,7 @@
     // Sites: groups with a live planning application polygon of site scale.
     const sites = [];
     for (const [key, recs] of groups) {
-      const apps = recs.filter(r => r.kind === 'application' && r.poly && r.phase !== 'cancelled');
+      const apps = recs.filter(r => r.kind === 'application' && r.poly && r.phase !== 'cancelled' && !isCityInitiated(r));
       if (!apps.length) continue;
       const rings = apps.flatMap(r => r.poly);
       const area = ringsArea(rings);
@@ -563,28 +613,84 @@
   // one proposal (take the largest); nested sites are parts of the parent (sum them,
   // unless the parent's own figure is larger).
   function plannedUnits(land) {
-    let own = null;
-    for (const s of land.sites) for (const r of s.recs) {
-      if (r.kind === 'application' && r.phase !== 'cancelled' && r.units > 0) own = Math.max(own || 0, r.units);
-    }
+    const own = plannedFromApps(land.sites.flatMap(s => s.recs)).planned;
     const kids = land.children.map(plannedUnits).filter(v => v > 0);
     const sum = kids.reduce((t, v) => t + v, 0);
     if (own == null && !kids.length) return null;
     return Math.max(own || 0, sum);
   }
 
-  // Units on building permits, counted once per building: permits at the same address
-  // (foundation, full, revisions) usually repeat the building's unit count.
+  // Units on building permits, counted once per building: the conditional, foundation,
+  // full and revised permits of one building share a base permit number. Different base
+  // numbers (towers, houses) add up. Permits without a number fall back to the address.
   function permitUnits(permits) {
-    const byAddr = new Map();
+    const byKey = new Map();
     for (const r of permits) {
-      if (!(r.units > 0)) continue;
-      const k = normalizeAddress(r.address) || r.uid;
-      byAddr.set(k, Math.max(byAddr.get(k) || 0, r.units));
+      if (!permitAddsUnits(r)) continue;
+      const k = r.fileKey || canonRef(r.ref) || normalizeAddress(r.address) || r.uid;
+      byKey.set(k, Math.max(byKey.get(k) || 0, r.units));
     }
     let t = 0;
-    for (const v of byAddr.values()) t += v;
+    for (const v of byKey.values()) t += v;
     return t;
+  }
+
+  /**
+   * Planned units from a set of planning applications.
+   *  - each file counts once (duplicate spellings merge on the canonical file number);
+   *  - minor / express / revision files and pre-consultations add nothing;
+   *  - rezoning / OPA / subdivision files describe the whole proposal: take the largest;
+   *  - separate site plan files are phases (towers, blocks): add them up; same for condos;
+   *  - planned = the largest of those three figures.
+   * Returns { planned, basis, phases } where phases lists the counted site plan / condo files.
+   */
+  function plannedFromApps(recs) {
+    const files = new Map();
+    for (const r of recs) {
+      if (r.kind !== 'application' || r.phase === 'cancelled' || r.minor || !(r.units > 0)) continue;
+      const stage = r.stage || stageOf(r);
+      if (stage === 'precon') continue;
+      const k = `${stage}|${r.fileKey || canonRef(r.ref) || r.uid}`;
+      const prev = files.get(k);
+      if (!prev || r.units > prev.units) files.set(k, { rec: r, stage, units: r.units });
+    }
+    const by = { master: 0, siteplan: 0, condo: 0, other: 0 };
+    const phases = [];
+    for (const f of files.values()) {
+      if (f.stage === 'siteplan' || f.stage === 'condo') { by[f.stage] += f.units; phases.push(f); }
+      else by[f.stage] = Math.max(by[f.stage], f.units);
+    }
+    const planned = Math.max(by.master, by.siteplan, by.condo, by.other);
+    if (!(planned > 0)) return { planned: null, basis: null, phases: [] };
+    const basis = Object.keys(by).find(k => by[k] === planned);
+    return { planned, basis, phases };
+  }
+
+  // Per-phase build-out: permits are matched to a phase when they fall inside exactly one
+  // phase's land polygon (phases filed on the same lot can't be told apart this way).
+  function phaseBreakdown(all, permits, basis) {
+    if (all.length < 2) return null;
+    // List the phases of the stage that sets the planned total (site plans, else condos).
+    const stage = basis === 'condo' ? 'condo' : all.some(f => f.stage === 'siteplan') ? 'siteplan' : 'condo';
+    const phases = all.filter(f => f.stage === stage);
+    if (phases.length < 2) return null;
+    const out = phases.map(f => ({ ref: f.rec.ref, stage: f.stage, type: f.rec.type, status: f.rec.statusRaw, phase: f.rec.phase,
+      units: f.units, address: f.rec.address, date: f.rec.events[0] ? f.rec.events[0].date : null, permitted: null, completed: null }));
+    const polys = phases.map(f => f.rec.poly || null);
+    if (polys.every(Boolean)) {
+      const match = phases.map(() => []);
+      for (const r of permits) {
+        if (r.lat == null) continue;
+        const hits = polys.map((pl, i) => (pointInRings(r.lng, r.lat, pl) ? i : -1)).filter(i => i >= 0);
+        if (hits.length === 1) match[hits[0]].push(r);
+      }
+      out.forEach((o, i) => {
+        if (!match[i].length) return;
+        o.permitted = permitUnits(match[i]);
+        o.completed = permitUnits(match[i].filter(r => r.phase === 'completed'));
+      });
+    }
+    return out.sort((a, b) => (a.date || 0) - (b.date || 0));
   }
 
   function mergeProject(key, recs, site = {}) {
@@ -603,8 +709,8 @@
     // Build-out: planned units on the planning applications vs units on building permits.
     const liveApps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
     const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled');
-    let planned = site.planned !== undefined ? site.planned
-      : liveApps.reduce((m, r) => (r.units > 0 ? Math.max(m || 0, r.units) : m), null);
+    const plan = plannedFromApps(liveApps);
+    let planned = site.planned !== undefined ? site.planned : plan.planned;
     const permitted = permitUnits(livePermits);
     const completed = permitUnits(livePermits.filter(r => r.phase === 'completed'));
     const buildout = planned > 0 ? {
@@ -616,6 +722,8 @@
       // Planned units not yet finished (no permit, or permit not completed).
       unbuilt: Math.max(0, planned - completed),
       permits: livePermits.length,
+      basis: plan.basis,
+      phases: phaseBreakdown(plan.phases, livePermits, plan.basis),
     } : null;
     // A plan with units still to permit isn't finished even if every permit so far is.
     if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
@@ -677,8 +785,9 @@
   function dedupeRecords(records) {
     const byRef = new Map(); const out = [];
     for (const r of records) {
-      if (!r.ref) { out.push(r); continue; }
-      const k = `${r.municipality}|${r.kind}|${r.ref}`;
+      const fk = r.fileKey || canonRef(r.ref);
+      if (!fk) { out.push(r); continue; }
+      const k = `${r.municipality}|${r.kind}|${fk}`;
       const prev = byRef.get(k);
       if (!prev) { byRef.set(k, r); out.push(r); continue; }
       const seen = new Set(prev.events.map(e => `${e.phase}|${+e.date}`));
@@ -687,7 +796,10 @@
       if (prev.phase === 'cancelled' || (r.phase !== 'cancelled' && PHASE_BY_KEY[r.phase].rank > PHASE_BY_KEY[prev.phase].rank)) {
         if (r.phase !== 'cancelled' || prev.phase === 'cancelled') { prev.phase = r.phase; prev.statusRaw = r.statusRaw || prev.statusRaw; }
       }
-      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix']) if (!prev[f] && r[f]) prev[f] = r[f];
+      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) prev[f] = r[f];
+      // A unit count from a data field beats one read from text.
+      if (prev.unitsFromText && r.units > 0 && !r.unitsFromText) { prev.units = r.units; prev.unitsFromText = false; }
+      if (prev.minor && !r.minor) prev.minor = false;
       prev.props = { ...(r.props || {}), ...(prev.props || {}) };
       prev.newBuild = prev.newBuild || r.newBuild;
       prev.alsoIn = (prev.alsoIn || []).concat(r.sourceName);
@@ -699,7 +811,8 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, mergeProject, projectKey, isNewBuild,
+    representativePoint, buildProjects, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
+    canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;
