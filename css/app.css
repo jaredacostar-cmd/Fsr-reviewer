@@ -228,6 +228,9 @@ button, input, select { font: inherit; color: inherit; }
 .rec td:first-child { color: var(--text-muted); width: 40%; }
 .section-title { margin: 18px 0 6px; }
 /* Build-out bar: completed / permitted / left, 2px surface gaps between segments */
+.stepper .lbl .desc { display: block; font-size: 11px; font-weight: 400; color: var(--text-muted); }
+.bo-steps li.left::before { background: var(--border); }
+.bo-left-dot { background: var(--surface-2); box-shadow: inset 0 0 0 1.5px var(--text-muted); }
 .bo-bar { display: flex; gap: 2px; height: 12px; border-radius: 4px; overflow: hidden; background: var(--surface-1); margin: 4px 0 8px; }
 .bo-bar span { display: block; min-width: 0; }
 .bo-done { background: var(--ph-completed); }

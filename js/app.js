@@ -719,24 +719,29 @@
       ${matched ? '' : '<p class="small muted">Permits can\'t be matched to individual phases here (the phases share one lot boundary); the totals above cover all phases.</p>'}`;
   }
 
-  // Planned units (planning applications) vs units on building permits inside the site.
+  // Planned units (planning applications) vs units on building permits inside the site,
+  // laid out like the phase stepper: planned -> permitted -> completed, then what is left.
   function buildoutHTML(p) {
     const b = p.buildout;
     const permits = p.records.filter(r => r.kind === 'permit').length;
     if (!b) return permits > 1 ? `<p class="small muted">${fmtNum(permits)} building permits on this site.</p>` : '';
-    const pct = v => `${Math.min(100, v / Math.max(b.planned, b.permitted) * 100).toFixed(1)}%`;
-    const inProgress = Math.max(0, b.permitted - b.completed);
+    const total = Math.max(b.planned, b.permitted);
+    const pct = v => {
+      if (!total) return '';
+      const x = v / total * 100, r = Math.round(x);
+      return ` · ${r === 0 && v > 0 ? '<1' : r === 100 && v < total ? '>99' : r}%`;
+    };
+    const step = (cls, mark, label, sub, value) =>
+      `<li class="${cls}">${mark}<span class="lbl">${label}${sub ? `<span class="desc">${sub}</span>` : ''}</span><span class="when">${value}</span></li>`;
+    const reached = v => v > 0 ? 'done' : 'todo';
+    const units = v => `${fmtNum(v)} units`;
     return `<h2 class="section-title">Build-out</h2>
-      <div class="bo-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(inProgress)} permitted, ${fmtNum(b.remaining)} left to build of ${fmtNum(b.planned)} planned">
-        <span class="bo-done" style="width:${pct(b.completed)}"></span><span class="bo-perm" style="width:${pct(inProgress)}"></span><span class="bo-left" style="width:${pct(b.remaining)}"></span>
-      </div>
-      <dl class="kv bo-kv">
-        <dt>Planned (applications)</dt><dd>${fmtNum(b.planned)} units</dd>
-        <dt><i class="sw bo-perm"></i>Permitted (building permits)</dt><dd>${fmtNum(b.permitted)} units · ${fmtNum(b.permits)} permits</dd>
-        <dt><i class="sw bo-done"></i>Completed</dt><dd>${fmtNum(b.completed)} units</dd>
-        <dt><i class="sw bo-left"></i>Left to build (no permit yet)</dt><dd><strong>${fmtNum(b.remaining)} units</strong></dd>
-        <dt>Not yet completed</dt><dd>${fmtNum(b.unbuilt)} units</dd>
-      </dl>
+      <ol class="stepper bo-steps">
+        ${step('done', dot('approved'), 'Planned', 'Planning applications', units(b.planned))}
+        ${step(reached(b.permitted), dot('permit'), 'Permitted', `${fmtNum(b.permits)} building permits${pct(b.permitted)}`, units(b.permitted))}
+        ${step(reached(b.completed), dot('completed'), 'Completed', `Permits closed or occupied${pct(b.completed)}`, units(b.completed))}
+        ${step('current left', '<span class="dot bo-left-dot" aria-hidden="true"></span>', 'Left to build', `No building permit yet${pct(b.remaining)}`, `<strong>${units(b.remaining)}</strong>`)}
+      </ol>
       ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the project total.</p>` : ''}
       ${b.basis ? `<p class="small muted">Planned units: ${esc(BASIS_TEXT[b.basis] || '')}</p>` : ''}
       ${phasesHTML(b)}`;
@@ -746,9 +751,8 @@
   // sewer / watermain sizing), so it is higher than its share of the regional total.
   function demandHTML(p, intro = '') {
     const c = state.criteria;
-    const cols = [['all', 'Total']];
-    if (D.unitsFor(p, 'committed') > 0) cols.push(['committed', 'Committed']);
-    if (p.buildout && p.buildout.remaining > 0) cols.push(['remaining', 'Left to build']);
+    // Total = completed (finished permits) + remaining (everything not yet completed).
+    const cols = [['all', 'Total'], ['completed', 'Completed'], ['unbuilt', 'Remaining']];
     const es = cols.map(([k]) => D.estimate([p], c, k));
     if (!(es[0].totalUnits > 0)) return '';
     const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
@@ -763,10 +767,10 @@
         ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}
         <tr class="sub"><td colspan="${cols.length + 1}">Wastewater (L/s)</td></tr>
         ${row('Average dry weather', e => fmt1(e.wastewater.avg))}
-        ${row('Peak (Harmon)', e => `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>`)}
+        ${row('Peak (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
       </tbody></table>
       <p class="small muted">${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater.
-        ${cols.some(([k]) => k === 'committed') ? 'Committed = approved or permitted units not yet completed. ' : ''}Peaks are for this site alone; edit the criteria in the bottom panel.</p>`;
+        Completed = units on finished permits; remaining = the rest, permitted or not. Peaks are for each column alone (Harmon is not additive); edit the criteria in the bottom panel.</p>`;
   }
 
   function phaseHistoryHTML(p) {
@@ -807,7 +811,7 @@
         <span class="badge">${dot(p.phase)}${esc(ph.label)}</span></div>
       ${p.description ? `<p>${esc(p.description)}</p>` : ''}
       <dl class="kv">
-        ${p.units ? `<dt>Units</dt><dd>${fmtNum(p.units)}</dd>` : ''}
+        ${p.units && !p.buildout ? `<dt>Units</dt><dd>${fmtNum(p.units)}</dd>` : ''}
         ${p.gfa ? `<dt>Floor area</dt><dd>${fmtNum(p.gfa)}</dd>` : ''}
         ${p.first ? `<dt>First record</dt><dd>${fmtDate(p.first)}</dd>` : ''}
         ${p.last ? `<dt>Latest activity</dt><dd>${fmtDate(p.last)}</dd>` : ''}

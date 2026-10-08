@@ -96,9 +96,9 @@ The sidebar has three tabs.
   its own, with a link to the whole project). Tap a dot to see that
   permit and the **planning application it belongs to** (file number, type, status, planned
   units). **Open whole project** shows the build-out for the whole subdivision.
-- **Project panel:** shows the build-out (planned, permitted, completed, left to build), the
-  project's **servicing demand** (population, water average / max day / peak hour, wastewater
-  average / Harmon peak, for the total, committed and left-to-build units), a phase
+- **Project panel:** shows the build-out as steps (planned → permitted → completed, then
+  left to build), the project's **servicing demand** (population, water average / max day /
+  peak hour, wastewater average / Harmon peak, for the total, completed and remaining units), a phase
   stepper, the weekly phase history and the dated timeline. Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
