@@ -19,4 +19,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: node scripts/probe-sources.js
+      - run: node scripts/probe-sources.js $(cat scripts/probe-targets.txt 2>/dev/null)

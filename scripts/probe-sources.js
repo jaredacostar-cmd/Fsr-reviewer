@@ -53,13 +53,22 @@ async function describeLayer(url) {
     } catch (e) { /* stats unsupported */ }
   }
   try {
-    const r = await get(`${url}/query`, { where: '1=1', outFields: '*', resultRecordCount: 1, returnGeometry: false, f: 'json' });
-    const a = (r.features || [])[0]?.attributes;
-    if (a) console.log(`      sample: ${JSON.stringify(a).slice(0, 900)}`);
+    const r = await get(`${url}/query`, { where: '1=1', outFields: '*', resultRecordCount: 2, returnGeometry: false, f: 'json' });
+    for (const x of (r.features || [])) console.log(`      sample: ${JSON.stringify(x.attributes).slice(0, 1200)}`);
   } catch (e) { console.log(`      sample: err ${e.message}`); }
 }
 
 async function main() {
+  // With URLs as arguments, describe just those layers / services.
+  const targets = process.argv.slice(2).filter(a => /^https?:/.test(a));
+  if (targets.length) {
+    for (const t of targets) {
+      console.log(`\n  --- ${t}`);
+      try { for (const l of (await A.resolveLayers(t)).slice(0, 12)) await describeLayer(l.url); }
+      catch (e) { console.log(`    error: ${e.message}`); }
+    }
+    return;
+  }
   for (const hub of CFG.hubs) {
     console.log(`\n===== ${hub.municipality} (${hub.host})`);
     const org = await orgOf(hub.host);
