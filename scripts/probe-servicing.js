@@ -42,10 +42,19 @@ async function show(query, label, num = 50) {
   await show(`("Water and Wastewater Master Plan" OR "Water & Wastewater Master Plan") AND Peel`, 'Master plan items');
   for (const org of ['hM5ymMLbxIyWTjn2', 'rl7ACuZkiFsmDA2g', 'AbUjpCl3KckkXVBh'])
     await show(`orgid:${org} AND ${FS} AND ("pressure zone" OR sewershed OR "drainage area" OR "sanitary" OR watermain)`, `Municipal org ${org}: servicing layers`, 50);
-  // Peel's open data hub and public ArcGIS servers (guesses).
-  for (const u of ['https://data.peelregion.ca/api/v3/datasets?q=pressure%20zone', 'https://data.peelregion.ca/api/v3/datasets?q=sewershed', 'https://data.peelregion.ca/api/v3/datasets?q=wastewater',
-                   'https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services?f=json', 'https://maps.peelregion.ca/arcgis/rest/services?f=json', 'https://gisservices.peelregion.ca/arcgis/rest/services?f=json']) {
-    const r = await get(u);
-    console.log(`\n=== ${u}\n  ${JSON.stringify(r).slice(0, 1500)}`);
+  // Peel's open data hub: dataset names and their layer URLs.
+  for (const term of ['pressure zone', 'sewershed', 'wastewater', 'drainage area', 'catchment', 'servicing', 'master plan', 'water']) {
+    const r = await get(`https://data.peelregion.ca/api/v3/datasets?${q({ q: term, 'page[size]': 30 })}`);
+    console.log(`\n=== Peel hub "${term}": ${(r.data || []).length}`);
+    for (const d of r.data || []) {
+      const a = d.attributes || {};
+      console.log(`  HUB "${a.name}" type=${a.type} url=${a.url || ''} records=${a.recordCount ?? ''} geom=${a.geometryType || ''}`);
+      if (a.url && /FeatureServer\/\d+$|MapServer\/\d+$/.test(a.url) && /pressure|sewer|wastewater|drain|catch|servic|zone/i.test(a.name || '')) await layer(a.url);
+    }
   }
+  // Every service Peel publishes on ArcGIS Online.
+  const svc = await get('https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services?f=json');
+  console.log(`\n=== Peel org services: ${(svc.services || []).length}`);
+  console.log((svc.services || []).map(x => x.name).join(' | '));
+  for (const x of svc.services || []) if (/sewer|wastewater|sanit|drain|catch|pressure|servic|master|trunk|ww_|w_ww/i.test(x.name)) await layer(x.url);
 })().catch(e => { console.error(e); process.exit(1); });
