@@ -593,6 +593,17 @@
     else { anchorYear = y; setYears(y, y); }
   };
 
+  // ---- Bottom panel tabs: servicing demand / growth since 2021 / breakdown & criteria ----
+  // footPref: the tab last picked (kept); the growth tab only appears once the census loads.
+  let footPref = store.get('footTab', 'demand'), footTab = 'demand';
+  function showFootTab(key) {
+    if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'demand';
+    footTab = key;
+    for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
+    for (const p of document.querySelectorAll('.f-pane')) p.hidden = p.dataset.pane !== key;
+  }
+  showFootTab(footPref);
+
   // ---- Population & servicing demand -------------------------------------------------
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
   // Withdrawn projects never count; the basis picks which of each project's units count.
@@ -607,33 +618,32 @@
     // Build-out across the shown projects (planning applications with unit counts).
     const bo = { planned: 0, permitted: 0, completed: 0, remaining: 0, n: 0 };
     for (const p of set) if (p.buildout) { bo.n++; for (const k of ['planned', 'permitted', 'completed', 'remaining']) bo[k] += p.buildout[k]; }
-    const tile = (label, value, unit, sub, info) =>
+    // Headline numbers, then water and wastewater as two small tables:
+    // residential / employment / total rows, flows in L/s.
+    const stat = (label, value, unit, sub, info) =>
       `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
-    $('#d-tiles').innerHTML = [
-      tile(basis === 'all' ? 'Dwelling units' : 'Dwelling units counted', fmtNum(Math.round(e.totalUnits)), '',
-        bo.n ? `Planned ${fmtNum(bo.planned)} · permitted ${fmtNum(bo.permitted)} · <strong>${fmtNum(bo.remaining)} left to build</strong>`
-          : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`, 'demand-units'),
-      tile('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
-      `<div class="tile group" data-info="demand-water"><div class="tl">Water demand</div><div class="trow">
-        <div><div class="tv">${fmt1(e.water.avg)}<span class="tu">L/s</span></div><div class="ts">Average day · ${fmt1(D.toMLd(e.water.avg))} ML/d</div></div>
-        <div><div class="tv">${fmt1(e.water.maxDay)}<span class="tu">L/s</span></div><div class="ts">Max day ×${c.water.maxDay}</div></div>
-        <div><div class="tv">${fmt1(e.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Peak hour ×${c.water.peakHour}</div></div></div></div>`,
-      `<div class="tile group" data-info="demand-wastewater"><div class="tl">Wastewater flow</div><div class="trow">
-        <div><div class="tv">${fmt1(e.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Avg dry weather · ${fmt1(D.toMLd(e.wastewater.avg))} ML/d</div></div>
-        <div><div class="tv">${fmt1(e.wastewater.peak)}<span class="tu">L/s</span></div><div class="ts">Peak dry · Harmon M = ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</div></div>
-        <div><div class="tv">${fmt1(e.wastewater.infiltration)}<span class="tu">L/s</span></div><div class="ts">I&amp;I · ${fmtNum(Math.round(e.area.ha))} ha × ${c.wastewater.infiltration}${e.area.estimatedHa > 0 ? ` (${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of area estimated)` : ''}</div></div>
-        <div><div class="tv">${fmt1(e.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Peak wet weather</div></div></div></div>`,
-      `<div class="tile group emp-tile" data-info="demand-employment"><div class="tl">Employment · ${fmtNum(Math.round(em.jobs))} jobs <span class="muted">(${fmtNum(em.projects)} projects)</span></div><div class="trow">
-        <div><div class="tv">${fmt1(em.water.avg)}<span class="tu">L/s</span></div><div class="ts">Water avg · ${c.employment.water} L/emp/d</div></div>
-        <div><div class="tv">${fmt1(em.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Water peak hour ×${c.employment.peakHour} · max day ${fmt1(em.water.maxDay)}</div></div>
-        <div><div class="tv">${fmt1(em.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Wastewater avg · ${c.employment.wastewater} L/emp/d</div></div>
-        <div><div class="tv">${fmt1(em.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Wastewater peak wet · dry ${fmt1(em.wastewater.peak)} (M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}) + I&amp;I ${fmt1(em.wastewater.infiltration)} on ${fmtNum(Math.round(em.area.ha))} ha</div></div></div></div>`,
-      `<div class="tile group total" data-info="demand-combined"><div class="tl">Total · residential + employment</div><div class="trow">
-        <div><div class="tv">${fmt1(cb.water.maxDay)}<span class="tu">L/s</span></div><div class="ts">Water max day</div></div>
-        <div><div class="tv">${fmt1(cb.water.peakHour)}<span class="tu">L/s</span></div><div class="ts">Water peak hour</div></div>
-        <div><div class="tv">${fmt1(cb.wastewater.avg)}<span class="tu">L/s</span></div><div class="ts">Wastewater avg · ${fmt1(D.toMLd(cb.wastewater.avg))} ML/d</div></div>
-        <div><div class="tv">${fmt1(cb.wastewater.wetPeak)}<span class="tu">L/s</span></div><div class="ts">Wastewater peak wet weather</div></div></div></div>`,
+    $('#d-stats').innerHTML = [
+      stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), '',
+        bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`, 'demand-units'),
+      stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
+      stat('Jobs', fmtNum(Math.round(em.jobs)), '', `${fmtNum(em.projects)} employment projects`, 'demand-employment'),
     ].join('');
+    const n = v => fmt1(v);
+    const flowTable = (title, info, cols, rows) => `<table class="dt flow" data-info="${info}">
+      <caption>${title} <span class="muted">L/s</span></caption>
+      <thead><tr><th></th>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(([label, cls, info2, vals]) => `<tr class="${cls}"${info2 ? ` data-info="${info2}"` : ''}><td>${label}</td>${vals.map(v => `<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    const iiNote = `${fmtNum(Math.round(e.area.ha + em.area.ha))} ha × ${c.wastewater.infiltration} L/s/ha${e.area.estimatedHa > 0 ? ` · ${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of residential area estimated` : ''}`;
+    $('#d-tiles').innerHTML = '<div class="flow-card">' + flowTable('Water', 'demand-water', ['Avg day', 'Max day', 'Peak hour'], [
+        ['Residential', '', 'demand-water', [n(e.water.avg), n(e.water.maxDay), n(e.water.peakHour)]],
+        ['Employment', '', 'demand-employment', [n(em.water.avg), n(em.water.maxDay), n(em.water.peakHour)]],
+        ['Total', 'tot', 'demand-combined', [n(cb.water.avg), n(cb.water.maxDay), n(cb.water.peakHour)]],
+      ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.water.avg))} ML/d average · residential ${c.water.avg} L/cap/d ×${c.water.maxDay} / ×${c.water.peakHour}; employment ${c.employment.water} L/emp/d ×${c.employment.maxDay} / ×${c.employment.peakHour}</p></div>`
+      + '<div class="flow-card">' + flowTable('Wastewater', 'demand-wastewater', ['Avg dry', 'Peak dry', 'I&amp;I', 'Peak wet'], [
+        ['Residential', '', 'demand-wastewater', [n(e.wastewater.avg), `${n(e.wastewater.peak)}<span class="muted m"> M ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(e.wastewater.infiltration), n(e.wastewater.wetPeak)]],
+        ['Employment', '', 'demand-employment', [n(em.wastewater.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
+        ['Total', 'tot', 'demand-combined', [n(cb.wastewater.avg), n(cb.wastewater.peak), n(cb.wastewater.infiltration), n(cb.wastewater.wetPeak)]],
+      ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average · I&amp;I on ${iiNote}</p></div>`;
     const range = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'all years';
     $('#d-note').textContent = `${BASIS_LABEL[basis] || ''} · ${fmtNum(set.length)} projects · ${range} · excludes withdrawn`;
 
@@ -1264,9 +1274,10 @@
 
   // ---- Growth since the 2021 Census (selected geography) ----------------------------------
   function renderCensus() {
-    const box = $('#census');
-    if (!state.censusDas || !state.censusDas.length || !state.projects.length) { box.hidden = true; return; }
-    box.hidden = false;
+    const has = !!(state.censusDas && state.censusDas.length && state.projects.length);
+    $('#ftab-growth').hidden = !has;
+    showFootTab(footPref);
+    if (!has) return;
     const g = { muni: state.muni, sp: state.sp, mtsa: state.mtsa };
     const base = PeelAreas.censusTotals(state.censusDas, g);
     const gr = PeelAreas.growthSince(state.projects, g, state.areas.census.date, state.criteria);
@@ -1551,12 +1562,26 @@
   }
   $('#toggle-sidebar').onclick = () => toggleSidebar();
   $('#legend').onclick = () => $('#legend').classList.toggle('expanded');
-  // Phones: collapse the timeline / demand footer to give the map room.
-  $('#footer-toggle').onclick = () => {
-    const f = $('#footer'), collapsed = f.classList.toggle('collapsed');
+  // Bottom panel: collapse to just its tabs to give the map room; tapping a tab opens it again.
+  function setFooterCollapsed(collapsed) {
+    $('#footer').classList.toggle('collapsed', collapsed);
     $('#footer-toggle').textContent = collapsed ? 'Show' : 'Hide';
     $('#footer-toggle').setAttribute('aria-expanded', String(!collapsed));
-  };
+  }
+  $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
+  $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
+    const t = e.target.closest('[data-tab]'); if (!t) return;
+    footPref = t.dataset.tab; store.set('footTab', footPref);
+    showFootTab(footPref); setFooterCollapsed(false);
+  });
+  // Floating timeline: folds to its header (collapsed by default on phones).
+  function setTimelineOpen(open) {
+    $('#timebar').classList.toggle('folded', !open);
+    $('#t-toggle').setAttribute('aria-expanded', String(open));
+    $('#t-toggle').textContent = open ? '▾' : '▴';
+  }
+  $('#t-toggle').onclick = () => { const open = $('#timebar').classList.contains('folded'); setTimelineOpen(open); store.set('timelineOpen', open); };
+  setTimelineOpen(store.get('timelineOpen', !matchMedia('(max-width: 760px)').matches));
 
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     readColors(); for (const k in iconCache) delete iconCache[k]; setTiles(); renderLegend(); applyFilters();
