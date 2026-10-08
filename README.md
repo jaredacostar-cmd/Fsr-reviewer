@@ -102,7 +102,9 @@ The sidebar has three tabs.
   stepper, the weekly phase history and the dated timeline. Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
-**Timeline (bottom left):** drag the handles to keep only projects with activity in those years.
+**Timeline (bottom left):** opens on **2021–2026**. Drag the handles to keep only projects with
+activity in those years; the button next to the range switches between **All years** and the
+2021–2026 default (**Reset all** also returns to 2021–2026).
 The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
 shift-click to extend the range.
 

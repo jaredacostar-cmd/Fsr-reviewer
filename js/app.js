@@ -463,6 +463,9 @@
 
   // ---- Timeline slider -------------------------------------------------------------
   const tFrom = $('#t-from'), tTo = $('#t-to');
+  // Default year range on load and after "Reset all".
+  const DEFAULT_YEARS = [2021, 2026];
+  let yearsInit = false;
   function updateYearBounds() {
     let lo = Infinity, hi = -Infinity;
     for (const p of state.projects) for (const t of p.timeline) {
@@ -474,9 +477,20 @@
     lo = Math.max(lo, 1980); hi = Math.min(Math.max(hi, lo + 1), now + 5);
     state.yearMin = lo; state.yearMax = hi;
     for (const el of [tFrom, tTo]) { el.min = lo; el.max = hi; el.step = 1; }
+    if (!yearsInit && state.projects.length) { yearsInit = true; setDefaultYears(); }
     tFrom.value = state.yearFrom ?? lo;
     tTo.value = state.yearTo ?? hi;
   }
+  function setDefaultYears() {
+    const lo = state.yearMin, hi = state.yearMax;
+    state.yearFrom = DEFAULT_YEARS[0] <= lo ? null : DEFAULT_YEARS[0];
+    state.yearTo = DEFAULT_YEARS[1] >= hi ? null : DEFAULT_YEARS[1];
+    tFrom.value = state.yearFrom ?? lo; tTo.value = state.yearTo ?? hi;
+  }
+  const atDefaultYears = () => {
+    const lo = state.yearMin, hi = state.yearMax;
+    return (state.yearFrom ?? lo) === Math.max(lo, DEFAULT_YEARS[0]) && (state.yearTo ?? hi) === Math.min(hi, DEFAULT_YEARS[1]);
+  };
   function setYearsSilently(from, to) {
     state.yearFrom = null; state.yearTo = null;
     tFrom.value = from; tTo.value = to;
@@ -494,7 +508,10 @@
     if (lo == null) return;
     const from = state.yearFrom ?? lo, to = state.yearTo ?? hi;
     $('#t-label').textContent = timeActive() ? (from === to ? `${from}` : `${from} – ${to}`) : 'All years';
-    $('#t-reset').hidden = !timeActive();
+    // One button: back to the default range, or from the default to all years.
+    const atDefault = atDefaultYears();
+    $('#t-reset').hidden = atDefault && !timeActive();
+    $('#t-reset').textContent = atDefault ? 'All years' : `${DEFAULT_YEARS[0]}–${DEFAULT_YEARS[1]}`;
     // Histogram ignores the year filter itself so you can see where to drag.
     const counts = new Map();
     for (const p of state.projects) {
@@ -521,7 +538,7 @@
   }
   tFrom.oninput = () => { if (+tFrom.value > +tTo.value) tTo.value = tFrom.value; setYears(+tFrom.value, +tTo.value); };
   tTo.oninput = () => { if (+tTo.value < +tFrom.value) tFrom.value = tTo.value; setYears(+tFrom.value, +tTo.value); };
-  $('#t-reset').onclick = () => setYears(state.yearMin, state.yearMax);
+  $('#t-reset').onclick = () => { if (atDefaultYears()) setYears(state.yearMin, state.yearMax); else { setDefaultYears(); applyFilters(); } };
   $('#t-mode').onchange = e => { state.yearMode = e.target.value; applyFilters(); };
   // Click a year bar to isolate it; shift-click to extend the range.
   let anchorYear = null;
@@ -1038,7 +1055,7 @@
       $('#d-basis').value = 'all';
       $('#f-search').value = ''; $('#f-kind').value = ''; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
-      setYearsSilently(state.yearMin, state.yearMax);
+      setDefaultYears();
       applyFilters();
       return;
     }
