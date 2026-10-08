@@ -854,9 +854,11 @@
       ? `<ol class="timeline">${p.timeline.map(t => `<li><span class="d">${fmtDate(t.date)}</span>${dot(t.phase)}<span>${esc(t.text)} <span class="muted">— ${esc(t.tag)}</span></span></li>`).join('')}</ol>`
       : '<p class="muted small">No dated milestones in the source data.</p>';
     const RECORD_LIMIT = 40;
-    const ordered = p.records.slice().sort((a, b) => (a.kind === b.kind ? 0 : a.kind === 'application' ? -1 : 1));
+    // Oldest first by date received (the record's earliest date); undated records last.
+    const received = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
+    const ordered = p.records.slice().sort((a, b) => received(a) - received(b));
     const recs = ordered.slice(0, RECORD_LIMIT).map(r => `
-      <details class="rec"><summary>${dot(r.phase)} <strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
+      <details class="rec"><summary>${dot(r.phase)} ${isFinite(received(r)) ? `<span class="rec-date">${fmtDate(new Date(received(r)))}</span> ` : ''}<strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
         ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
         ${r.description ? `<p>${esc(r.description)}</p>` : ''}
         <p class="small muted">Source: ${esc(r.sourceName)}${r.alsoIn ? ` (also in ${esc(r.alsoIn.join(', '))})` : ''}
@@ -875,6 +877,8 @@
         ${p.last ? `<dt>Latest activity</dt><dd>${fmtDate(p.last)}</dd>` : ''}
         <dt>Files</dt><dd>${p.records.length} (${p.kinds.map(k => k === 'permit' ? 'permits' : 'applications').join(' + ')})</dd>
       </dl>
+      <h2 class="section-title">Aerial check</h2>
+      <div class="aerial" id="aerial-check"></div>
       ${buildoutHTML(p)}
       ${demandHTML(p)}
       <h2 class="section-title">Phase progress</h2>
@@ -882,9 +886,7 @@
       <ol class="stepper">${steps}</ol>
       ${phaseHistoryHTML(p)}
       <h2 class="section-title">Timeline</h2>${timeline}
-      <h2 class="section-title">Source records</h2>${recs}
-      <h2 class="section-title">Aerial check</h2>
-      <div class="aerial" id="aerial-check"></div>`;
+      <h2 class="section-title">Source records <span class="muted small">(oldest first, by date received)</span></h2>${recs}`;
     $('#detail').hidden = false;
     $('#detail').scrollTop = 0;
     runAerial(p);

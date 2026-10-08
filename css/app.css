@@ -515,3 +515,5 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .grow-legend .gv { color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .gsw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
 .grow-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: 12px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; z-index: 5; }
+
+.rec-date { font-variant-numeric: tabular-nums; color: var(--text-secondary); font-size: 12px; }
