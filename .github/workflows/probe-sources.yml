@@ -1,0 +1,22 @@
+name: Probe data sources
+
+# Diagnostic only: lists the development / permit datasets each municipality
+# publishes, with fields and record counts. Run manually from the Actions tab.
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [probe-sources]
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/probe-sources.js
