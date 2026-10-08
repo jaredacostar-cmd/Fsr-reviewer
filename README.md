@@ -83,8 +83,10 @@ The sidebar has three tabs.
 **Data:** the source list, **Refresh live**, and an **Advanced** section for adding sources.
 
 **Map**
-- **Background:** aerial imagery is the default (Esri World Imagery), with road and place-name
-  overlays. Switch to plain aerial or a street map with the picker at the top right.
+- **Background:** the latest city aerials are the default: City of Mississauga 2024, City of
+  Brampton fall 2025 and Town of Caledon 2025 (from zoom 12), over Esri World Imagery, with road
+  and place-name overlays. The picker at the top right switches to plain aerial, Esri World
+  Imagery or a street map.
 - **Labels:** from zoom level 14, every point not inside a cluster gets a label. Choose what it
   shows: address and phase, address only, file or permit number, units, or off. The largest
   projects are labelled first, and a label is left out if it would overlap another.
@@ -139,6 +141,31 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
      condo) merge into one project.
    - A site plan inside a subdivision rolls up into the subdivision.
    - Withdrawn applications and area-wide plans larger than 4 km² don't absorb permits.
+
+## Aerial check (is it built?)
+
+At the bottom of each project's panel, the app compares the site on the aerial photo from
+**before the application** with the **latest** aerial (same city source, so colours and
+alignment match) and gives a **probability that the development is completed**, with the
+before / latest photos (site outlined in yellow) and the reasons:
+
+| Evidence | Effect |
+|---|---|
+| Records: phase, share of units on completed permits, permit age, units with no permit yet | starting estimate |
+| More building edges on the site (roofs, roads) between the two photos | raises |
+| Fewer edges (site cleared or graded) | lowers; marks construction under way |
+| No visible change while records say it is in progress | lowers |
+| Mississauga building footprints traced from each year's photo: new footprints since the application | raises strongly |
+| No footprints on a small site in the latest year (Mississauga) | lowers |
+| Brampton footprints (undated) covering the site | raises a little |
+| Latest photo older than the building permit | photo evidence counts less |
+
+Imagery: Mississauga 2013–2024, Brampton 2004–2025 (spring / fall), Caledon 2014–2025, read
+directly from the cities' image services. The photos are leaf-off spring / fall flights with
+muted colour, so the check measures structure and change rather than colour. It is an estimate
+for screening, not a site inspection; small infill sites and redevelopments of already built
+land show the least. `node scripts/aerial-e2e.js` (Actions: *Probe data sources*, mode
+`aerial`) runs it against the live imagery for sample projects.
 
 ## Duplicate check (proof of counting once)
 

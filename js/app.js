@@ -83,10 +83,34 @@
   const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
   const esriLayer = (svc, opts) => L.tileLayer(`${ESRI}/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxZoom: 20, maxNativeZoom: 19, ...opts });
   const BASEMAPS = {
-    'aerial-labels': { label: 'Aerial + roads', imagery: true },
-    'aerial':        { label: 'Aerial', imagery: true },
+    'aerial-labels': { label: 'Latest aerial + roads', imagery: true, city: true },
+    'aerial':        { label: 'Latest aerial', imagery: true, city: true },
+    'esri':          { label: 'Esri World Imagery', imagery: true },
     'streets':       { label: 'Street map', imagery: false },
   };
+  // Latest city aerials (Mississauga, Brampton, Caledon) over Esri World Imagery. Image
+  // services are drawn as 512 px Web Mercator tiles from exportImage / export.
+  const CityImagery = L.TileLayer.extend({
+    getTileUrl(c) {
+      const size = 2 * 20037508.342789244 / 2 ** c.z;
+      const x0 = -20037508.342789244 + c.x * size, y1 = 20037508.342789244 - c.y * size;
+      return PeelAerial.exportUrl(this._url, [x0, y1 - size, x0 + size, y1], 512, 512);
+    },
+  });
+  function cityImageryLayers() {
+    const out = [], credits = [];
+    for (const muni of ['Caledon', 'Brampton', 'Mississauga']) {
+      const src = CFG.imagery && CFG.imagery[muni];
+      if (!src) continue;
+      const year = Math.max(...Object.keys(src.years).map(Number));
+      const [x0, y0, x1, y1] = src.bbox;
+      const opts = { bounds: L.latLngBounds([[y0, x0], [y1, x1]]), minZoom: 12, maxZoom: 20 };
+      out.push(src.tiles ? L.tileLayer(src.tiles, { ...opts, maxNativeZoom: 20 })
+        : new CityImagery(src.years[year].url, { ...opts, tileSize: 512, zoomOffset: -1 }));
+      credits.push(`${src.owner} ${src.years[year].label}`);
+    }
+    return { layers: out, attribution: `Imagery: ${credits.join(', ')}; Esri elsewhere` };
+  }
   let basemap = BASEMAPS[store.get('basemap', 'aerial-labels')] ? store.get('basemap', 'aerial-labels') : 'aerial-labels';
   let baseLayers = [];
   const bboxOutline = L.rectangle([[CFG.bbox.ymin, CFG.bbox.xmin], [CFG.bbox.ymax, CFG.bbox.xmax]], { weight: 1, dashArray: '4 4', fill: false, interactive: false });
@@ -98,6 +122,12 @@
         maxZoom: 20, subdomains: 'abcd',
         attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · ${DATA_ATTR}`,
       })];
+    } else if (BASEMAPS[basemap].city) {
+      const city = cityImageryLayers();
+      baseLayers = [esriLayer('World_Imagery', { attribution: `${city.attribution} · ${DATA_ATTR}` }), ...city.layers];
+      if (basemap === 'aerial-labels') baseLayers.push(
+        esriLayer('Reference/World_Transportation', { opacity: 0.9 }),
+        esriLayer('Reference/World_Boundaries_and_Places'));
     } else {
       baseLayers = [esriLayer('World_Imagery', { attribution: `${imageryAttr} · ${DATA_ATTR}` })];
       if (basemap === 'aerial-labels') baseLayers.push(
@@ -845,9 +875,52 @@
       <ol class="stepper">${steps}</ol>
       ${phaseHistoryHTML(p)}
       <h2 class="section-title">Timeline</h2>${timeline}
-      <h2 class="section-title">Source records</h2>${recs}`;
+      <h2 class="section-title">Source records</h2>${recs}
+      <h2 class="section-title">Aerial check</h2>
+      <div class="aerial" id="aerial-check"></div>`;
     $('#detail').hidden = false;
     $('#detail').scrollTop = 0;
+    runAerial(p);
+  }
+
+  // ---- Aerial check -------------------------------------------------------------------
+  const aerialCache = new Map();
+  function runAerial(p) {
+    const box = $('#aerial-check');
+    if (!box) return;
+    if (!window.PeelAerial || !CFG.imagery || !CFG.imagery[p.municipality] || p.lat == null) {
+      box.innerHTML = '<p class="small muted">No aerial imagery is set up for this location.</p>';
+      return;
+    }
+    const show = r => { if (currentProject === p && $('#aerial-check')) renderAerial(r); };
+    if (aerialCache.has(p.key)) return show(aerialCache.get(p.key));
+    box.innerHTML = '<p class="small muted aerial-loading">Comparing aerial photos…</p>';
+    PeelAerial.check(p, CFG, { phaseLabel: P.PHASE_BY_KEY[p.phase].label })
+      .then(r => { aerialCache.set(p.key, r); show(r); })
+      .catch(e => { if (currentProject === p && $('#aerial-check')) $('#aerial-check').innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; });
+  }
+  function renderAerial(a) {
+    const box = $('#aerial-check');
+    const r = a.result, pctv = Math.round(r.probability * 100);
+    const cls = r.probability >= 0.7 ? 'hi' : r.probability >= 0.35 ? 'mid' : 'lo';
+    const label = y => a.src.years[y].label;
+    const fig = (ph, y, note) => ph ? `<figure><div class="aerial-img"></div><figcaption><strong>${esc(label(y))}</strong> ${note}</figcaption></figure>` : '';
+    const arrow = e => e > 0 ? '<span class="sig up" aria-label="raises">▲</span>' : e < 0 ? '<span class="sig down" aria-label="lowers">▼</span>' : '<span class="sig" aria-hidden="true">•</span>';
+    box.innerHTML = `
+      <div class="aerial-head ${cls}">
+        <div class="aerial-pct"><strong>${pctv}%</strong><span>likely completed</span></div>
+        <div class="aerial-status">${esc(r.status)}</div>
+      </div>
+      <div class="aerial-meter" role="img" aria-label="${pctv}% likely completed"><span style="width:${pctv}%"></span></div>
+      <div class="aerial-pair">
+        ${fig(a.before, a.years.before, a.years.preStart ? '· before the application' : '· earliest available')}
+        ${fig(a.latest, a.years.latest, '· latest')}
+      </div>
+      <ul class="aerial-signals">${r.signals.map(s => `<li>${arrow(s.effect)}<span>${esc(s.text)}</span></li>`).join('')}</ul>
+      <p class="small muted">${esc(a.src.owner)} aerial photos. Site: ${esc(a.geom.source)} (yellow outline). Estimate from how much the site changed compared with its surroundings and how much building structure it shows${a.fp.now != null ? ', plus building footprints traced from the photos' : ''}; not a site inspection.</p>`;
+    const slots = box.querySelectorAll('.aerial-img');
+    const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
+    canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
   }
   function closeDetail() { $('#detail').hidden = true; highlight(null); }
   $('#detail-close').onclick = closeDetail;
@@ -1276,5 +1349,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail };
 })();

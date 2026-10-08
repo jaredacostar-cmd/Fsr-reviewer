@@ -450,3 +450,25 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .audit-units tr.total td { font-weight: 700; border-top: 2px solid var(--border); }
 .audit-pairs { padding-left: 18px; margin: 6px 0; display: grid; gap: 4px; }
 .audit-pairs .btn.link { padding: 0; text-align: left; }
+
+/* Aerial check */
+.aerial-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-top: 6px; }
+.aerial-pct strong { font-size: 28px; font-variant-numeric: tabular-nums; margin-right: 6px; }
+.aerial-pct span { color: var(--text-secondary); font-size: 13px; }
+.aerial-status { font-weight: 600; font-size: 13px; }
+.aerial-meter { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; margin: 6px 0 10px; }
+.aerial-meter span { display: block; height: 100%; background: var(--ph-permit); }
+.aerial-head.hi + .aerial-meter span { background: var(--ph-completed); }
+.aerial-head.lo + .aerial-meter span { background: var(--ph-inception); }
+.aerial-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.aerial-pair figure { margin: 0; }
+.aerial-pair canvas { width: 100%; height: auto; display: block; border-radius: 6px; background: var(--surface-2); }
+.aerial-pair figcaption { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+.aerial-signals { list-style: none; padding: 0; margin: 10px 0; display: grid; gap: 4px; font-size: 13px; }
+.aerial-signals li { display: grid; grid-template-columns: 14px 1fr; gap: 6px; }
+.aerial-signals .sig { color: var(--text-muted); font-size: 11px; line-height: 1.6; }
+.aerial-signals .sig.up { color: var(--ph-completed); }
+.aerial-signals .sig.down { color: #c0392b; }
+.aerial-loading::before { content: ''; display: inline-block; width: 10px; height: 10px; margin-right: 6px; border-radius: 50%;
+  border: 2px solid var(--text-muted); border-top-color: transparent; animation: spin 0.8s linear infinite; vertical-align: -1px; }
+@keyframes spin { to { transform: rotate(360deg); } }

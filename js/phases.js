@@ -858,6 +858,8 @@
       // Units counted once: the larger of planned (applications) and permitted (permits).
       units: buildout ? Math.max(buildout.planned, buildout.permitted) : (permitted || sumOf('units')),
       buildout,
+      // The site's land boundary (largest same-land application polygon), for the aerial check.
+      siteRings: site.site ? site.site.rings : null,
       gfa: sumOf('gfa'),
       // Unit mix of the record reporting the most units (files on one site repeat the same proposal).
       unitMix: (recs.filter(r => r.unitMix && r.kind === 'application').sort((a, b) => (b.units || 0) - (a.units || 0))[0]

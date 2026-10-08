@@ -3,11 +3,13 @@ name: Probe data sources
 # Diagnostic only. Run manually from the Actions tab.
 #  mode=all:    list what each municipality publishes + dry-run the snapshot (not committed)
 #  mode=phases: report how multi-phase developments appear in the data
+#  mode=imagery: aerial imagery / building footprints covering Peel, dates and CORS
+#  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all or phases'
+        description: 'all, phases, imagery or aerial'
         default: 'all'
         required: false
 
@@ -25,14 +27,32 @@ jobs:
           node-version: 22
       - name: Unit tests
         run: npm test
+      - name: Imagery and footprints
+        if: inputs.mode == 'imagery'
+        run: node scripts/probe-imagery.js targeted
+      - name: Aerial check end-to-end
+        if: inputs.mode == 'aerial'
+        timeout-minutes: 15
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+          (python3 -m http.server 8000 >/dev/null 2>&1 &)
+          sleep 2
+          APP=http://localhost:8000/ OUT=/tmp/aerial node scripts/aerial-e2e.js
+      - name: Upload aerial screenshots
+        if: inputs.mode == 'aerial' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: aerial-check
+          path: /tmp/aerial
       - name: List what each municipality publishes
-        if: inputs.mode != 'phases'
+        if: inputs.mode == 'all' || inputs.mode == ''
         run: node scripts/probe-sources.js
       - name: Multi-phase developments
         if: inputs.mode == 'phases'
         run: node scripts/phase-probe.js
       - name: Dry-run snapshot (not committed)
-        if: inputs.mode != 'phases'
+        if: inputs.mode == 'all' || inputs.mode == ''
         run: |
           node scripts/build-snapshot.js --out /tmp/data
           node scripts/snapshot-summary.js /tmp/data/snapshot.json
