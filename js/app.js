@@ -1323,7 +1323,7 @@
   const selLayer = L.layerGroup().addTo(map);
   let lassoOn = false;
   const lassoSvg = L.DomUtil.create('div', 'lasso-layer', map.getContainer());
-  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the projects to select · Esc to cancel</div>';
+  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the projects to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span></div>';
   L.DomEvent.disableClickPropagation(lassoSvg);
   function setLasso(on) {
     lassoOn = on;
@@ -1348,18 +1348,32 @@
 
   let pts = null;
   const rel = e => { const b = map.getContainer().getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  // While the lasso is on, the middle mouse button drags the map (left button draws).
+  let pan = null;
   lassoSvg.addEventListener('pointerdown', e => {
     if (!lassoOn) return;
-    pts = [rel(e)]; lassoSvg.setPointerCapture(e.pointerId); e.preventDefault();
+    lassoSvg.setPointerCapture(e.pointerId); e.preventDefault();
+    if (e.pointerType === 'mouse' && e.button === 1) { pan = [e.clientX, e.clientY]; lassoSvg.classList.add('panning'); return; }
+    if (pan || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    pts = [rel(e)];
   });
+  // No middle-click autoscroll / paste over the map while drawing.
+  lassoSvg.addEventListener('mousedown', e => { if (e.button === 1) e.preventDefault(); });
+  lassoSvg.addEventListener('auxclick', e => { if (e.button === 1) e.preventDefault(); });
   lassoSvg.addEventListener('pointermove', e => {
+    if (pan) {
+      const dx = e.clientX - pan[0], dy = e.clientY - pan[1];
+      if (dx || dy) { map.panBy([-dx, -dy], { animate: false }); pan = [e.clientX, e.clientY]; }
+      return;
+    }
     if (!pts) return;
     const q = rel(e), l = pts[pts.length - 1];
     if (Math.hypot(q[0] - l[0], q[1] - l[1]) < 4) return;
     pts.push(q);
     lassoSvg.querySelector('path').setAttribute('d', `M${pts.map(p => p.join(',')).join('L')}Z`);
   });
-  lassoSvg.addEventListener('pointerup', () => {
+  lassoSvg.addEventListener('pointerup', e => {
+    if (pan) { if (e.button === 1 || !(e.buttons & 4)) { pan = null; lassoSvg.classList.remove('panning'); } return; }
     const ring = pts; pts = null;
     setLasso(false);
     if (!ring || ring.length < 3) return;

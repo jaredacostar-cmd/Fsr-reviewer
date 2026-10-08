@@ -170,7 +170,8 @@ map); hover or tap one for its 2021 population and dwellings. The outlines (`dat
 simplified to ~4 m, about 0.8 MB) load only when the layer is first turned on, and are built by
 `scripts/build-areas.js` with `data/areas.json` (Probe data sources, mode `areas`).
 
-**Select an area:** the select tool under the zoom buttons turns the next drag into a lasso. The
+**Select an area:** the select tool under the zoom buttons turns the next drag into a lasso (with a mouse, the
+middle button still drags the map while the lasso is on; Esc cancels). The
 projects shown on the map inside it are added up in the side panel: planned / permitted /
 completed / left by unit type plus employment, servicing demand (residential + employment, for
 the total, completed and remaining units, peaked as one area), and growth since the 2021 Census
