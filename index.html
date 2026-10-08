@@ -195,11 +195,7 @@
       <div class="legend" id="legend" data-info="legend" aria-label="Legend"></div>
       <div class="loading" id="loading" hidden></div>
       <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
-    </main>
-
-    <footer class="footer" id="footer">
-      <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
-      <section class="timebar" aria-label="Timeline">
+      <section class="timebar" id="timebar" aria-label="Timeline">
         <div class="tb-head">
           <h2 data-info="timeline">Timeline</h2>
           <label class="inline"><span class="sr">Milestone</span>
@@ -213,28 +209,31 @@
           </label>
           <strong class="t-label" id="t-label">All years</strong>
           <button type="button" class="btn small" id="t-reset" hidden>Reset</button>
+          <button type="button" class="t-toggle" id="t-toggle" aria-expanded="true" aria-controls="t-body" title="Show or hide the timeline">▾</button>
         </div>
-        <div class="hist" id="t-hist" role="group" aria-label="Projects per year"></div>
-        <div class="range" id="t-range">
-          <input type="range" id="t-from" aria-label="From year">
-          <input type="range" id="t-to" aria-label="To year">
+        <div class="t-body" id="t-body">
+          <div class="hist" id="t-hist" role="group" aria-label="Projects per year"></div>
+          <div class="range" id="t-range">
+            <input type="range" id="t-from" aria-label="From year">
+            <input type="range" id="t-to" aria-label="To year">
+          </div>
+          <div class="ticks" id="t-ticks" aria-hidden="true"></div>
         </div>
-        <div class="ticks" id="t-ticks" aria-hidden="true"></div>
       </section>
+    </main>
 
-      <section class="census" id="census" aria-label="Growth since the 2021 Census" hidden>
-        <div class="tb-head">
-          <h2 data-info="census">Growth since the 2021 Census</h2>
-          <span class="muted small" id="c-note"></span>
-        </div>
-        <div class="tiles" id="c-tiles"></div>
-        <div class="growth-chart" id="c-chart" data-info="growth-bars"></div>
-        <p class="small muted" id="c-ii" data-info="ii"></p>
-      </section>
+    <footer class="footer" id="footer">
+      <div class="f-tabs" role="tablist" aria-label="Bottom panel">
+        <button type="button" role="tab" class="f-tab" id="ftab-demand" data-tab="demand" aria-controls="pane-demand" aria-selected="true">Servicing demand</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" aria-controls="census" aria-selected="false" hidden>Growth since 2021</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" aria-controls="pane-criteria" aria-selected="false">Breakdown &amp; criteria</button>
+        <span class="f-spacer"></span>
+        <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
+      </div>
 
-      <section class="demand" aria-label="Population and servicing demand">
+      <section class="f-pane demand" id="pane-demand" data-pane="demand" role="tabpanel" aria-labelledby="ftab-demand">
         <div class="tb-head">
-          <h2 data-info="demand">Population &amp; servicing demand</h2>
+          <h2 class="sr">Population &amp; servicing demand</h2>
           <select id="d-basis" aria-label="Which projects to include">
             <option value="all">All units</option>
             <option value="committed">Committed capacity (approved, not yet built)</option>
@@ -242,16 +241,33 @@
             <option value="unbuilt">Not yet completed</option>
             <option value="completed">Completed</option>
           </select>
-          <span class="muted small" id="d-note"></span>
+          <span class="muted small" id="d-note" data-info="demand"></span>
         </div>
-        <div class="tiles" id="d-tiles"></div>
-        <details class="d-more">
-          <summary>Breakdown &amp; design criteria</summary>
-          <div class="d-grid">
-            <div id="d-breakdown"></div>
-            <form id="d-criteria" class="criteria"></form>
+        <div class="d-layout">
+          <div class="d-stats" id="d-stats"></div>
+          <div class="d-flows" id="d-tiles"></div>
+        </div>
+      </section>
+
+      <section class="f-pane census" id="census" data-pane="growth" role="tabpanel" aria-labelledby="ftab-growth" hidden>
+        <div class="tb-head">
+          <h2 class="sr">Growth since the 2021 Census</h2>
+          <span class="muted small" id="c-note" data-info="census"></span>
+        </div>
+        <div class="c-layout">
+          <div class="tiles" id="c-tiles"></div>
+          <div class="c-right">
+            <div class="growth-chart" id="c-chart" data-info="growth-bars"></div>
+            <p class="small muted" id="c-ii" data-info="ii"></p>
           </div>
-        </details>
+        </div>
+      </section>
+
+      <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
+        <div class="d-grid">
+          <div id="d-breakdown"></div>
+          <form id="d-criteria" class="criteria"></form>
+        </div>
       </section>
     </footer>
 

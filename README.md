@@ -48,7 +48,12 @@ To use it like an app, tap **Share → Add to Home Screen** in Safari. It opens 
 its own icon.
 
 On a phone, the **List** button opens the filters and project list. Tap the legend to show
-the phase names. **Hide** collapses the timeline and demand panel to give the map more room.
+the phase names. **Hide** folds the bottom panel to its tabs (tap a tab to open it again), and
+the ▾ on the timeline folds it to just the year range (it starts folded on phones).
+
+**Bottom panel:** three tabs, so only one thing shows at a time (the last one picked is
+remembered): **Servicing demand**, **Growth since 2021**, and **Breakdown & criteria** (by
+dwelling type and phase, plus the editable design criteria).
 
 ## Using it
 
@@ -117,13 +122,13 @@ press and hold) for a card explaining what it represents and where the data come
   stepper, the weekly phase history and the dated timeline. Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
-**Timeline (bottom left):** opens on **2021–2026**. Drag the handles to keep only projects with
+**Timeline (floating, bottom left of the map):** opens on **2021–2026**. Drag the handles to keep only projects with
 activity in those years; the button next to the range switches between **All years** and the
 2021–2026 default (**Reset all** also returns to 2021–2026).
 The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
 shift-click to extend the range.
 
-**Growth since the 2021 Census (bottom, top row):** for Peel, the selected municipality,
+**Growth since the 2021 Census (bottom panel, Growth since 2021 tab):** for Peel, the selected municipality,
 secondary plan or MTSA:
 
 | Tile | Meaning |
@@ -142,7 +147,10 @@ Peel's small geographic unit (SGU) forecasts are not published as open data (onl
 so the census baseline uses dissemination areas. `data/areas.json` is rebuilt weekly
 (`scripts/build-areas.js`).
 
-**Population & servicing demand (bottom right):** population, water and wastewater estimated
+**Population & servicing demand (bottom panel, Servicing demand tab):** dwelling units,
+population and jobs, then a **Water** table and a **Wastewater** table with residential,
+employment and total rows (L/s: average / max day / peak hour; average dry / peak dry / I&I /
+peak wet). Population, water and wastewater are estimated
 from the units in the projects shown. It can be based on all units, **committed capacity**,
 units left to build, units not yet completed, or completed units. The **Committed capacity**
 focus shows only projects with committed units and switches the panel to that basis. Open **Breakdown & design criteria** to edit the criteria.
@@ -310,7 +318,7 @@ How the estimate works:
   of purely non-residential sites (mixed-use sites already count theirs with the dwellings).
   Employment space has no unit-level build-out, so a project's jobs count by its phase
   (committed = approved to under construction; completed once the project is completed).
-  Shown as an **Employment** tile and a **Total (residential + employment)** tile in the bottom
+  Shown as the Employment and Total rows of the water and wastewater tables in the bottom
   panel, as Employment rows and a combined total in each project's servicing table, as a
   one-line summary in the project's Employment section, in the by-phase breakdown, and in the
   CSV (`emp_water_avg_lps`, `emp_wastewater_peak_lps`). Residential and employment peaks are
