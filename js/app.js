@@ -28,7 +28,7 @@
     phases: new Set(P.ALL_PHASES.map(p => p.key)),
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
-    sp: [], mtsa: '',   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
+    sp: [], mtsa: '', pz: '', dr: '',   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     focus: DEFAULT_FOCUS,   // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
@@ -359,6 +359,13 @@
     scheduleLabels(); updateNorth();
   }
 
+  // Pressure-zone / drainage-area layer state (layers are built in the servicing section).
+  const PLANT_COLOR = { Lakeview: '#2f7ed8', Clarkson: '#d9822b', Inglewood: '#7a5cc4' };
+  const svcLayers = { pz: null, dr: null };
+  let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false) };
+  const svcSwatch = k => `<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">${k === 'pz'
+    ? '<rect x="3" y="2" width="16" height="10" rx="1" fill="#0b7285" fill-opacity=".1" stroke="#0b7285" stroke-width="1.6" stroke-dasharray="3 2"/>'
+    : '<rect x="3" y="2" width="8" height="10" fill="#2f7ed8" fill-opacity=".25" stroke="#2f7ed8"/><rect x="11" y="2" width="8" height="10" fill="#d9822b" fill-opacity=".25" stroke="#d9822b"/>'}</svg>`;
   // Map control: basemap + label pickers.
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
@@ -369,6 +376,8 @@
         <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
         <label data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
         ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
+        <label class="chk" data-info="pressure-zone"><input type="checkbox" id="opt-pz"${svcOn.pz ? ' checked' : ''}>${svcSwatch('pz')}<span>Pressure zones</span></label>
+        <label class="chk" data-info="drainage-area"><input type="checkbox" id="opt-dr"${svcOn.dr ? ' checked' : ''}>${svcSwatch('dr')}<span>Drainage areas</span></label>
         <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span id="da-label">2021 census areas</span></label>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
@@ -376,6 +385,8 @@
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
+      el.querySelector('#opt-pz').onchange = e => setSvcLayer('pz', e.target.checked);
+      el.querySelector('#opt-dr').onchange = e => setSvcLayer('dr', e.target.checked);
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => setOrientation(e.target.value);
       return el;
@@ -612,6 +623,8 @@
     if (state.muni && p.municipality !== state.muni) return false;
     if (state.sp.length && !state.sp.some(id => (p.sp || []).includes(id))) return false;
     if (state.mtsa && !(p.mtsa || []).includes(state.mtsa)) return false;
+    if (state.pz && !(p.pz || []).includes(state.pz)) return false;
+    if (state.dr && !(p.dr || []).includes(state.dr)) return false;
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
@@ -802,7 +815,7 @@
       const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
       return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
     }).join('');
-    $('#d-breakdown').innerHTML = `
+    $('#d-breakdown').innerHTML = svcBreakdownHTML(set) + `
       <table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table>
       <table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
       <table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
@@ -1250,6 +1263,7 @@
       ${summaryHTML(p)}
       <p class="facts small">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
         `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p>
+      ${servicingLineHTML(p)}
       ${p.description ? `<p class="desc-clamp">${esc(p.description)}</p>` : ''}
       ${employmentHTML(p)}
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
@@ -1657,6 +1671,103 @@
     applyFilters();
   };
 
+  // ---- Water pressure zones and wastewater drainage areas (data/servicing.json) -----------
+  // Pressure zones are the Region's published polygons; drainage areas are traced from the
+  // Region's sanitary sewer network (scripts/build-servicing.js). Both tag every project (by its
+  // location point), filter the map, group the demand and show in the project panel.
+  const svcById = new Map();
+  map.createPane('svcPane', map.getPane('rotatePane') || undefined).style.zIndex = 360;
+  const svcRenderer = L.canvas({ pane: 'svcPane', padding: 0.3 });
+  const svcSelLayer = L.layerGroup().addTo(map);
+  async function loadServicing() {
+    try {
+      const res = await fetch('data/servicing.json', { cache: 'no-cache' });
+      if (!res.ok) return;
+      const d = await res.json();
+      state.servicing = { zones: PeelAreas.prepare(d.pressureZones), drainage: PeelAreas.prepare(d.drainageAreas), meta: d };
+      for (const a of [...state.servicing.zones, ...state.servicing.drainage]) svcById.set(a.id, a);
+      $('#f-svc-row').hidden = false;
+      tagServicing();
+      renderSvcSelects();
+      for (const k of ['pz', 'dr']) if (svcOn[k]) setSvcLayer(k, true);
+      applyFilters();
+    } catch (e) { /* optional */ }
+  }
+  function tagServicing() {
+    if (!state.servicing) return;
+    for (const p of state.projects) {
+      p.pz = PeelAreas.locate(state.servicing.zones, p.lng, p.lat);
+      p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
+    }
+  }
+  function renderSvcSelects() {
+    if (!state.servicing) return;
+    const { zones, drainage } = state.servicing;
+    $('#f-pz').innerHTML = `<option value="">All pressure zones</option>` + zones.map(z => `<option value="${esc(z.id)}"${z.id === state.pz ? ' selected' : ''}>${esc(z.name)}</option>`).join('');
+    const plants = [...new Set(drainage.map(d => d.plant))];
+    $('#f-dr').innerHTML = `<option value="">All drainage areas</option>` + plants.map(pl => `<optgroup label="${esc(pl === 'Not traced to a Peel plant' ? pl : `${pl} WRRF`)}">${drainage.filter(d => d.plant === pl)
+      .map(d => `<option value="${esc(d.id)}"${d.id === state.dr ? ' selected' : ''}>${esc(d.name)}</option>`).join('')}</optgroup>`).join('');
+  }
+  $('#f-pz').onchange = e => { state.pz = e.target.value; showSvcArea(true); applyFilters(); };
+  $('#f-dr').onchange = e => { state.dr = e.target.value; showSvcArea(true); applyFilters(); };
+  // Outline the chosen zone / area and zoom to it.
+  function showSvcArea(zoom) {
+    svcSelLayer.clearLayers();
+    let bounds = null;
+    for (const id of [state.pz, state.dr].filter(Boolean)) {
+      const a = svcById.get(id); if (!a) continue;
+      const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { className: 'area-outline', interactive: false }).addTo(svcSelLayer);
+      bounds = bounds ? bounds.extend(l.getBounds()) : l.getBounds();
+    }
+    if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30] });
+  }
+  const svcColor = a => a.zone ? '#0b7285' : PLANT_COLOR[a.plant] || '#868e96';
+  function svcTooltip(a) {
+    if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone</span>`;
+    return `<strong>${esc(a.name)}</strong><br>${esc(a.plant === 'Not traced to a Peel plant' ? a.plant : `Drains to ${a.plant} WRRF`)}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
+      <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network</span>`;
+  }
+  function setSvcLayer(k, on) {
+    svcOn[k] = on; store.set(`svc-${k}`, on);
+    if (!on) { if (svcLayers[k]) map.removeLayer(svcLayers[k]); return; }
+    if (!state.servicing) return;
+    if (!svcLayers[k]) {
+      const list = k === 'pz' ? state.servicing.zones : state.servicing.drainage;
+      svcLayers[k] = L.featureGroup(list.map(a => L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
+        renderer: svcRenderer, pane: 'svcPane', color: svcColor(a), weight: k === 'pz' ? 1.6 : 1.3, opacity: 0.85,
+        dashArray: k === 'pz' ? '6 4' : null, fill: true, fillColor: svcColor(a), fillOpacity: k === 'pz' ? 0.03 : 0.07,
+      }).bindTooltip(svcTooltip(a), { sticky: true, className: 'pt' })));
+    }
+    svcLayers[k].addTo(map);
+  }
+  // Project panel line: its pressure zone and drainage area.
+  function servicingLineHTML(p) {
+    if (!state.servicing) return '';
+    const z = (p.pz || []).map(id => svcById.get(id)).filter(Boolean), d = (p.dr || []).map(id => svcById.get(id)).filter(Boolean);
+    if (!z.length && !d.length) return '<p class="small muted svc-line" data-info="drainage-area">Outside the mapped pressure zones and traced drainage areas.</p>';
+    return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) : 'no pressure zone'} · ${d.length
+      ? esc(d.map(a => `${a.name}${a.plant !== 'Not traced to a Peel plant' ? ` → ${a.plant} WRRF` : ''}`).join(', ')) : 'no traced drainage area'}</p>`;
+  }
+  // Breakdown tab: demand of the shown projects by pressure zone and by drainage area.
+  function svcBreakdownHTML(set) {
+    if (!state.servicing) return '';
+    const c = state.criteria;
+    const group = (key, list) => list.map(a => {
+      const ps = set.filter(p => (p[key] || []).includes(a.id));
+      if (!ps.length) return null;
+      return { a, n: ps.length, e: D.estimate(ps, c, demandBasis(), jobsOf) };
+    }).filter(Boolean).sort((x, y) => y.e.population - x.e.population);
+    const zr = group('pz', state.servicing.zones), dr = group('dr', state.servicing.drainage);
+    const row = (r, cols) => `<tr><td>${esc(r.a.name)}</td><td>${fmtNum(r.n)}</td><td>${fmtNum(Math.round(r.e.totalUnits))}</td><td>${fmtNum(Math.round(r.e.population))}</td><td>${fmtNum(Math.round(r.e.employment.jobs))}</td>${cols(r.e)}</tr>`;
+    return `<table class="dt" data-info="pressure-zone"><caption>Water by pressure zone (shown projects, L/s)</caption>
+        <thead><tr><th>Zone</th><th>Projects</th><th>Units</th><th>People</th><th>Jobs</th><th>Avg day</th><th>Max day</th><th>Peak hour</th></tr></thead>
+        <tbody>${zr.map(r => row(r, e => `<td>${fmt1(e.combined.water.avg)}</td><td>${fmt1(e.combined.water.maxDay)}</td><td>${fmt1(e.combined.water.peakHour)}</td>`)).join('') || '<tr><td colspan="8" class="muted">No shown projects in a pressure zone.</td></tr>'}</tbody></table>
+      <table class="dt" data-info="drainage-area"><caption>Wastewater by drainage area (shown projects, L/s)</caption>
+        <thead><tr><th>Drainage area</th><th>Projects</th><th>Units</th><th>People</th><th>Jobs</th><th>Avg dry</th><th>Peak dry</th><th>Peak wet</th></tr></thead>
+        <tbody>${dr.map(r => row(r, e => `<td>${fmt1(e.combined.wastewater.avg)}</td><td>${fmt1(e.combined.wastewater.peak)}</td><td>${fmt1(e.combined.wastewater.wetPeak)}</td>`)).join('') || '<tr><td colspan="8" class="muted">No shown projects in a drainage area.</td></tr>'}</tbody></table>
+      <p class="small muted">Each zone / area is peaked on its own. Pressure zones: Region of Peel. Drainage areas: traced from the Region's sanitary sewer network to Lakeview, Clarkson or Inglewood WRRF (sub-areas at pumping stations and major trunk junctions); not the Master Plan's own polygons.</p>`;
+  }
+
   // ---- Planning areas: secondary plans / character areas and MTSAs ------------------------
   const areaById = new Map();
   const areaLayer = L.layerGroup().addTo(map);
@@ -1680,6 +1791,7 @@
     } catch (e) { /* areas are optional */ }
   }
   function tagProjects() {
+    tagServicing();
     if (!state.areas) return;
     for (const p of state.projects) {
       p.sp = PeelAreas.locate(state.areas.secondaryPlans, p.lng, p.lat, p.municipality);
@@ -1930,6 +2042,8 @@
     if (state.sp.length <= 3) for (const id of state.sp) out.push({ label: (areaById.get(id) || {}).name || 'Secondary plan', clear: () => { state.sp = state.sp.filter(x => x !== id); renderAreaSelects(); showArea(); } });
     else out.push({ label: `${state.sp.length} secondary plans`, clear: () => { state.sp = []; renderAreaSelects(); showArea(); } });
     if (state.mtsa) out.push({ label: `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}`, clear: () => { state.mtsa = ''; renderAreaSelects(); showArea(); } });
+    if (state.pz) out.push({ label: (svcById.get(state.pz) || {}).name || 'Pressure zone', clear: () => { state.pz = ''; renderSvcSelects(); showSvcArea(); } });
+    if (state.dr) out.push({ label: `Drainage: ${(svcById.get(state.dr) || {}).name || ''}`, clear: () => { state.dr = ''; renderSvcSelects(); showSvcArea(); } });
     if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; $('#f-kind').value = DEFAULT_KIND; } });
     if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
     if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
@@ -1949,9 +2063,10 @@
   function renderSectionSummaries() {
     $('#sum-focus').textContent = state.focus ? FOCUS[state.focus].label : 'None';
     $('#sect-focus').classList.toggle('active', !!state.focus);
-    const where = [state.muni || 'All of Peel', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : ''].filter(Boolean);
+    const where = [state.muni || 'All of Peel', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
+      state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? `Drainage: ${(svcById.get(state.dr) || {}).name || ''}` : ''].filter(Boolean);
     $('#sum-where').textContent = where.join(' · ');
-    $('#sect-where').classList.toggle('active', !!(state.muni || state.sp.length || state.mtsa));
+    $('#sect-where').classList.toggle('active', !!(state.muni || state.sp.length || state.mtsa || state.pz || state.dr));
     const kindLabel = { application: 'Applications + their permits', '': 'All records', permit: 'Building permits', both: 'Application + permits' };
     const more = [kindLabel[state.kind], state.minUnits ? $('#f-units').selectedOptions[0].textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
     $('#sum-more').textContent = more.join(' · ');
@@ -1967,7 +2082,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: DEFAULT_FOCUS });
+      Object.assign(state, { muni: '', sp: [], mtsa: '', pz: '', dr: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: DEFAULT_FOCUS });
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
       setDefaultYears();
@@ -2146,6 +2261,7 @@
     fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => { state.history = h; }).catch(() => {});
   }
   loadAreas();
+  loadServicing();
 
   function applySnapshot(snap) {
     state.snapshot = { generatedAt: snap.generatedAt, changes: snap.changes, note: snap.note };
