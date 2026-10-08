@@ -192,10 +192,16 @@ application.
   are bridged to the nearest pipe. The Malton area by Pearson airport drains to the City of
   Toronto. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
   larger trunk (36 areas; 96.9% of 57,512 manholes reach a Peel plant). Plant split reviewed.
-- Each project is tagged by its location point. Map options toggle both layers; **Where** has
-  Pressure zone and Drainage area filters; **Breakdown & criteria** shows water demand by
-  pressure zone and wastewater demand by drainage area for the shown projects; the project
-  panel shows its zone and drainage area.
+- Each development is tagged by its location point. Map options toggle both layers; **Where**
+  has Pressure zone and Drainage area filters; the development panel shows its zone and
+  drainage area.
+- **Servicing areas tab** (bottom panel): water by pressure zone in numerical order (maximum
+  day, people below each figure; peak hour at build-out) and wastewater by sanitary catchment in
+  sections for Lakeview, Clarkson and Inglewood, each with a subtotal, then a Peel total (the
+  Malton / Toronto catchment listed separately). Like the Growth tab, each row is split into the
+  census baseline (year from the timeline), + built since census day, + approved and + proposed
+  (in review), then build-out; growth from every development in the zone / catchment, other
+  filters ignored. Census population by dissemination areas whose centre falls inside.
 
 **Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
 (Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run

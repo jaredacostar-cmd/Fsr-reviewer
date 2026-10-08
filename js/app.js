@@ -718,8 +718,8 @@
     for (let y = lo; y <= hi; y++) {
       const n = counts.get(y) || 0;
       const on = y >= from && y <= to;
-      bars += `<button type="button" class="bar${on ? ' on' : ''}" data-y="${y}" title="${y}: ${fmtNum(n)} project${n === 1 ? '' : 's'} (${esc(mode)})"
-        aria-label="${y}: ${n} projects"><i style="height:${n ? Math.max(2, n / max * 100) : 0}%"></i></button>`;
+      bars += `<button type="button" class="bar${on ? ' on' : ''}" data-y="${y}" title="${y}: ${fmtNum(n)} development${n === 1 ? '' : 's'} (${esc(mode)})"
+        aria-label="${y}: ${n} developments"><i style="height:${n ? Math.max(2, n / max * 100) : 0}%"></i></button>`;
     }
     $('#t-hist').innerHTML = bars;
     const span = hi - lo, step = span > 24 ? 5 : span > 10 ? 2 : 1;
@@ -776,7 +776,7 @@
     $('#d-sel').innerHTML = `<span class="muted">Showing</span> ${da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>` : ''}
       ${pill(phase, 'ph')} ${pill(focus, state.focus ? 'fo' : 'off')} ${pill(years)}
       ${others.map(l => pill(l)).join(' ')}
-      <span class="muted small">${fmtNum(set.length)} projects${basis !== 'all' ? ` · ${BASIS_LABEL[basis]}` : ''} · excludes withdrawn</span>
+      <span class="muted small">${fmtNum(set.length)} developments${basis !== 'all' ? ` · ${BASIS_LABEL[basis]}` : ''} · excludes withdrawn</span>
       <button type="button" class="btn small link" id="d-change">Change</button>`;
   }
   $('#d-sel').addEventListener('click', e => {
@@ -803,7 +803,7 @@
       `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     $('#d-stats').innerHTML = [
       stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), '',
-        bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} projects report units`, 'demand-units'),
+        bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} developments report units`, 'demand-units'),
       stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
       stat('Jobs', fmtNum(Math.round(em.jobs)), '', `${fmtNum(em.projects)} employment projects`, 'demand-employment'),
     ].join('');
@@ -817,7 +817,7 @@
       const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
       return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
     }).join('');
-    $('#d-breakdown').innerHTML = svcBreakdownHTML(set) + `
+    $('#d-breakdown').innerHTML = `
       <table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table>
       <table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table>
       <table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}</tbody></table>`;
@@ -882,7 +882,7 @@
       <fieldset><legend>Employment</legend>
         ${inp('employment', 'water', 'Water (L/emp/d)', 1)}${inp('employment', 'maxDay', 'Max day factor', 0.1)}${inp('employment', 'peakHour', 'Peak hour factor', 0.1)}
         ${inp('employment', 'wastewater', 'Wastewater (L/emp/d)', 1)}${inp('employment', 'peakMin', 'Peaking min', 0.1)}${inp('employment', 'peakMax', 'Peaking max', 0.1)}
-        <p class="small muted">Jobs are estimated from the floor areas on the applications (${Object.entries(window.PeelEmployment ? PeelEmployment.M2_PER_JOB : {}).map(([k, v]) => `${k} ${v} m²/job`).join(', ')}). Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A project's jobs count by its phase (committed = approved to under construction).</p>
+        <p class="small muted">Jobs are estimated from the floor areas on the applications (${Object.entries(window.PeelEmployment ? PeelEmployment.M2_PER_JOB : {}).map(([k, v]) => `${k} ${v} m²/job`).join(', ')}). Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A development's jobs count by its phase (committed = approved to under construction).</p>
       </fieldset>
       <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour); employment water 300 L/emp/d ×1.4 / ×3.0 (Peel FSR requirements, ICI) and wastewater 270 L/emp/d, peaking 2–4 (Peel Water &amp; Wastewater Modelling Demand Table, Aug 2024). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
       <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
@@ -955,7 +955,7 @@
     const inView = state.filtered.filter(p => p.lat != null && bounds.contains([p.lat, p.lng]));
     const sorted = inView.sort(SORTS[$('#list-sort').value] || SORTS.recent);
     $('#list-count').textContent = `· ${fmtNum(inView.length)} of ${fmtNum(state.filtered.length)}`;
-    $('#list-note').textContent = !inView.length ? (state.filtered.length ? 'No matching projects in this part of the map — zoom out or pan.' : 'No projects match the filters.')
+    $('#list-note').textContent = !inView.length ? (state.filtered.length ? 'No matching developments in this part of the map — zoom out or pan.' : 'No developments match the filters.')
       : sorted.length > LIST_LIMIT ? `Showing ${LIST_LIMIT} of ${fmtNum(sorted.length)} — zoom in to narrow.` : '';
     $('#project-list').innerHTML = sorted.slice(0, LIST_LIMIT).map((p, i) =>
       `<li><button type="button" data-i="${i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
@@ -1053,7 +1053,7 @@
         ${step(reached(b.completed), dot('completed'), 'Completed', `Permits closed or occupied${pct(b.completed)}`, units(b.completed))}
         ${step('current left', '<span class="dot bo-left-dot" aria-hidden="true"></span>', 'Left to build', `No building permit yet${pct(b.remaining)}`, `<strong>${units(b.remaining)}</strong>`)}
       </ol>
-      ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the project total.</p>` : ''}
+      ${b.permitted > b.planned ? `<p class="small muted">More units are permitted than the applications state, so the permits are used as the development total.</p>` : ''}
       ${b.basis ? `<p class="small muted">Planned units: ${esc(BASIS_TEXT[b.basis] || '')}</p>` : ''}
       ${phasesHTML(b)}</details>`;
   }
@@ -1128,7 +1128,7 @@
         <td>${fmtNum(e.totalM2)}</td><td>${v(EMP_DONE.permitted.has(ph))}</td><td>${v(EMP_DONE.completed.has(ph))}</td><td>${v(!EMP_DONE.permitted.has(ph) && ph !== 'cancelled')}</td></tr>`);
     }
     if (!rows.length) return '';
-    const notes = [t ? TYPE_SOURCE[t.source] : '', e && e.totalM2 > 0 ? 'Employment floor space follows the project phase.' : ''].filter(Boolean).join(' ');
+    const notes = [t ? TYPE_SOURCE[t.source] : '', e && e.totalM2 > 0 ? 'Employment floor space follows the development phase.' : ''].filter(Boolean).join(' ');
     return `<table class="dt type-table" data-info="unit-types"><thead><tr><th></th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead>
       <tbody>${rows.join('')}</tbody></table><p class="small muted type-note">${notes}</p>`;
   }
@@ -1186,7 +1186,7 @@
         ${row('Wastewater peak wet weather', e => fmt1(e.combined.wastewater.wetPeak))}`;
     const notes = [];
     if (res) notes.push(`${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.`);
-    if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the project is completed.`);
+    if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the development is completed.`);
     return `<details class="sect"><summary><h2 class="section-title" data-info="project-demand">Servicing demand</h2>${emp ? `<span class="muted small sect-sum">${res ? 'residential + ' : ''}${fmtNum(Math.round(m(es[0]).jobs))} jobs</span>` : ''}</summary>${intro}
       <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
         ${resRows}${empRows}${totRows}
@@ -1348,7 +1348,7 @@
         <div class="m">${esc(r.kind === 'permit' ? 'Building permit' : 'Planning application')} ${esc(r.ref)}${r.type ? ' · ' + esc(r.type) : ''} · ${esc(r.municipality)}</div>
         <span class="badge">${dot(r.phase)}${esc(ph.label)}</span></div>
       <button type="button" class="btn open-project" id="open-project">
-        Open whole project: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
+        Open whole development: ${esc(p.title)}${b ? ` — ${fmtNum(b.planned)} planned, ${fmtNum(b.remaining)} left to build` : ''}${others > 0 ? ` · ${fmtNum(others)} other permits` : ''}
       </button>
       ${r.description ? `<p>${esc(r.description)}</p>` : ''}
       <dl class="kv">
@@ -1359,7 +1359,7 @@
       ${r.kind === 'permit' ? `<h2 class="section-title" data-info="parent-app">Part of planning application</h2>${parentHTML}` : ''}
       ${r.kind === 'application' && p.records.length > 1 ? `<p class="small muted">This application is part of a larger development with ${fmtNum(p.records.length - 1)} other files.</p>` : ''}
       ${r.units > 0 ? demandHTML({ units: r.units, phase: r.phase, types: r.type ? [r.type] : [], description: r.description || '', unitMix: r.unitMix || null },
-        r.kind === 'permit' ? '<p class="small muted">For the units on this permit only; open the whole project for the full site.</p>' : '') : ''}
+        r.kind === 'permit' ? '<p class="small muted">For the units on this permit only; open the whole development for the full site.</p>' : '') : ''}
       <h2 class="section-title">Source record</h2>
       <table class="rec-table">${recordRows(r)}</table>`;
     $('#open-project').onclick = () => showDetail(p);
@@ -1428,7 +1428,7 @@
   const selLayer = L.layerGroup().addTo(map);
   let lassoOn = false;
   const lassoSvg = L.DomUtil.create('div', 'lasso-layer', map.getContainer());
-  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the projects to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span></div>';
+  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the developments to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span></div>';
   L.DomEvent.disableClickPropagation(lassoSvg);
   function setLasso(on) {
     lassoOn = on;
@@ -1443,7 +1443,7 @@
     onAdd() {
       const el = L.DomUtil.create('div', 'leaflet-bar sel-ctl');
       el.dataset.info = 'select-tool';
-      el.innerHTML = `<button type="button" id="sel-btn" title="Select an area: draw around projects to add up their servicing demand and growth" aria-label="Select an area">
+      el.innerHTML = `<button type="button" id="sel-btn" title="Select an area: draw around developments to add up their servicing demand and growth" aria-label="Select an area">
         <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/></svg></button>`;
       L.DomEvent.disableClickPropagation(el);
       el.querySelector('button').onclick = () => setLasso(!lassoOn);
@@ -1534,8 +1534,8 @@
     currentProject = null;
     highlight(null);
     if (!sel.length) {
-      $('#detail-body').innerHTML = `<div class="head"><h3>No projects in that area</h3></div>
-        <p class="small muted">Only the projects shown on the map (current phase, focus and filters) can be selected. Draw a larger area, or change the filters.</p>
+      $('#detail-body').innerHTML = `<div class="head"><h3>No developments in that area</h3></div>
+        <p class="small muted">Only the developments shown on the map (current phase, focus and filters) can be selected. Draw a larger area, or change the filters.</p>
         <div class="sel-actions"><button type="button" class="btn" data-sel="add">Draw again</button></div>`;
       $('#detail').hidden = false;
       return;
@@ -1580,7 +1580,7 @@
         <span class="u">${p.buildout ? `${fmtNum(p.buildout.planned)} planned` : p.units ? `${fmtNum(p.units)} units` : empOf(p) && empOf(p).totalM2 ? `${fmtNum(empOf(p).totalM2)} m²` : ''}</span></button>
         <button type="button" class="sel-x" data-drop="${esc(p.key)}" aria-label="Remove ${esc(p.title)} from the selection">×</button></li>`).join('');
     $('#detail-body').innerHTML = `
-      <div class="head"><h3 data-info="selection">${fmtNum(sel.length)} selected project${sel.length === 1 ? '' : 's'}</h3>
+      <div class="head"><h3 data-info="selection">${fmtNum(sel.length)} selected development${sel.length === 1 ? '' : 's'}</h3>
         <div class="m">${fmtNum(selAreas.length)} drawn area${selAreas.length === 1 ? '' : 's'}${added != null ? ` · ${fmtNum(added)} added` : ''} · ${esc([...new Set(sel.map(p => p.municipality))].join(', '))}</div></div>
       <div class="sel-actions">
         <button type="button" class="btn" data-sel="add">+ Add area</button>
@@ -1615,7 +1615,7 @@
         <p class="small muted">Peaks for the selection as one area (Harmon on its combined population). Completed = units on finished permits; remaining = the rest. Criteria as in the bottom panel.</p>
       </details>
       ${growth}
-      <details class="sect"><summary><h2 class="section-title">Projects</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>
+      <details class="sect"><summary><h2 class="section-title">Developments</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>
         <ul class="sel-list">${list}</ul></details>`;
     $('#detail').hidden = false;
     $('#detail').scrollTop = 0;
@@ -1705,7 +1705,7 @@
   function renderSvcSelects() {
     if (!state.servicing) return;
     const { zones, drainage } = state.servicing;
-    $('#f-pz').innerHTML = `<option value="">All pressure zones</option>` + zones.map(z => `<option value="${esc(z.id)}"${z.id === state.pz ? ' selected' : ''}>${esc(z.name)}</option>`).join('');
+    $('#f-pz').innerHTML = `<option value="">All pressure zones</option>` + zones.slice().sort(byZone).map(z => `<option value="${esc(z.id)}"${z.id === state.pz ? ' selected' : ''}>${esc(z.name)}</option>`).join('');
     const plants = [...new Set(drainage.map(d => d.plant))];
     $('#f-dr').innerHTML = `<option value="">All drainage areas</option>` + plants.map(pl => `<optgroup label="${esc(plantLabel(pl))}">${drainage.filter(d => d.plant === pl)
       .map(d => `<option value="${esc(d.id)}"${d.id === state.dr ? ' selected' : ''}>${esc(d.name)}</option>`).join('')}</optgroup>`).join('');
@@ -1750,24 +1750,70 @@
     return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) : 'no pressure zone'} · ${d.length
       ? esc(d.map(a => `${a.name} → ${plantLabel(a.plant)}`).join(', ')) : 'no traced drainage area'}</p>`;
   }
-  // Breakdown tab: demand of the shown projects by pressure zone and by drainage area.
-  function svcBreakdownHTML(set) {
-    if (!state.servicing) return '';
-    const c = state.criteria;
-    const group = (key, list) => list.map(a => {
-      const ps = set.filter(p => (p[key] || []).includes(a.id));
-      if (!ps.length) return null;
-      return { a, n: ps.length, e: D.estimate(ps, c, demandBasis(), jobsOf) };
-    }).filter(Boolean).sort((x, y) => y.e.population - x.e.population);
-    const zr = group('pz', state.servicing.zones), dr = group('dr', state.servicing.drainage);
-    const row = (r, cols) => `<tr><td>${esc(r.a.name)}</td><td>${fmtNum(r.n)}</td><td>${fmtNum(Math.round(r.e.totalUnits))}</td><td>${fmtNum(Math.round(r.e.population))}</td><td>${fmtNum(Math.round(r.e.employment.jobs))}</td>${cols(r.e)}</tr>`;
-    return `<table class="dt" data-info="pressure-zone"><caption>Water by pressure zone (shown projects, L/s)</caption>
-        <thead><tr><th>Zone</th><th>Projects</th><th>Units</th><th>People</th><th>Jobs</th><th>Avg day</th><th>Max day</th><th>Peak hour</th></tr></thead>
-        <tbody>${zr.map(r => row(r, e => `<td>${fmt1(e.combined.water.avg)}</td><td>${fmt1(e.combined.water.maxDay)}</td><td>${fmt1(e.combined.water.peakHour)}</td>`)).join('') || '<tr><td colspan="8" class="muted">No shown projects in a pressure zone.</td></tr>'}</tbody></table>
-      <table class="dt" data-info="drainage-area"><caption>Wastewater by drainage area (shown projects, L/s)</caption>
-        <thead><tr><th>Drainage area</th><th>Projects</th><th>Units</th><th>People</th><th>Jobs</th><th>Avg dry</th><th>Peak dry</th><th>Peak wet</th></tr></thead>
-        <tbody>${dr.map(r => row(r, e => `<td>${fmt1(e.combined.wastewater.avg)}</td><td>${fmt1(e.combined.wastewater.peak)}</td><td>${fmt1(e.combined.wastewater.wetPeak)}</td>`)).join('') || '<tr><td colspan="8" class="muted">No shown projects in a drainage area.</td></tr>'}</tbody></table>
-      <p class="small muted">Each zone / area is peaked on its own. Pressure zones: Region of Peel. Drainage areas: traced from the Region's sanitary sewer network to Lakeview, Clarkson or Inglewood WRRF, or to the City of Toronto (Malton); sub-areas at pumping stations and major trunk junctions. Traced, not the Master Plan's own polygons; plant split reviewed.</p>`;
+  // Pressure zones in numerical order (1, 2, 2A, 3 … 9, CE9, 12A, 13B, AV13).
+  const zoneKey = z => { const m = String(z.zone || '').match(/^([A-Z]*)(\d+)(.*)$/i); return m ? [Number(m[2]), m[1] ? 1 : 0, m[1] + m[3]] : [999, 0, String(z.zone)]; };
+  const byZone = (a, b) => { const x = zoneKey(a), y = zoneKey(b); return x[0] - y[0] || x[1] - y[1] || x[2].localeCompare(y[2]); };
+
+  // ---- Servicing areas tab: demand by pressure zone and by sanitary catchment, in layers ----
+  // Like the Growth tab: the baseline census (year from the timeline) plus growth built since
+  // census day, approved and proposed (in review), from every development located in the zone /
+  // catchment; other filters are ignored. Census population is counted by the dissemination
+  // areas whose centre falls in the zone / catchment. Residential demand at Peel per-capita rates.
+  function svcCensusIndex(bc) {
+    if (bc._svcIdx) return bc._svcIdx;
+    const { zones, drainage } = state.servicing;
+    return (bc._svcIdx = bc.das.map(d => ({ pz: PeelAreas.locate(zones, d.lng, d.lat), dr: PeelAreas.locate(drainage, d.lng, d.lat) })));
+  }
+  function svcLayerTotals(key, a, bc, idx) {
+    let pop = 0;
+    bc.das.forEach((d, i) => { if (idx[i][key].includes(a.id)) pop += d.pop; });
+    const devs = state.projects.filter(p => p.phase !== 'cancelled' && (p[key] || []).includes(a.id));
+    const gr = PeelAreas.growthSince(devs, {}, bc.date, state.criteria);
+    return { census: pop, built: gr.built.population, approved: gr.approved.population, proposed: gr.proposed.population,
+      // Developments = sites with a planning application (stand-alone permits still count in Built since).
+      units: gr.built.units + gr.approved.units + gr.proposed.units, ii: gr.built.ii + gr.approved.ii + gr.proposed.ii, devs: devs.filter(p => p.kinds.includes('application')).length };
+  }
+  const addLayers = (rows) => rows.reduce((t, r) => { for (const k of ['census', 'built', 'approved', 'proposed', 'units', 'ii', 'devs']) t[k] = (t[k] || 0) + r[k]; return t; }, {});
+  const LAYER_KEYS = ['census', 'built', 'approved', 'proposed'];
+  function renderSvcTab() {
+    const tab = $('#ftab-svc'), bc = baselineCensus();
+    const has = !!(state.servicing && bc);
+    tab.hidden = !has;
+    if (!has) return;
+    const c = state.criteria, Y = bc.year, idx = svcCensusIndex(bc);
+    const total = l => l.census + l.built + l.approved + l.proposed;
+    const L = v => v * 1 / 86400;                      // people × L/cap/d → L/s
+    const cell = (lps, people, cls = '') => `<td class="${cls}">${fmt1(lps)}<small>${fmtNum(Math.round(people))}</small></td>`;
+    const head = (first, last) => `<thead><tr><th>${first}</th><th>Developments</th><th>${Y} Census</th><th>+ Built since</th><th>+ Approved</th><th>+ Proposed (in review)</th><th>Build-out</th>${last}</tr></thead>`;
+    // Water: maximum day by layer, peak hour at build-out.
+    const wRow = (name, l, cls = '') => `<tr class="${cls}"><td>${name}</td><td>${fmtNum(l.devs)}</td>${LAYER_KEYS.map(k => cell(L(l[k] * c.water.avg) * c.water.maxDay, l[k])).join('')}
+      ${cell(L(total(l) * c.water.avg) * c.water.maxDay, total(l), 'bo')}<td class="bo">${fmt1(L(total(l) * c.water.avg) * c.water.peakHour)}</td></tr>`;
+    const zones = state.servicing.zones.slice().sort(byZone);
+    const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc, idx) })).filter(r => total(r.l) > 0 || r.l.devs);
+    const water = `<table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (L/s), people below</caption>
+      ${head('Pressure zone', '<th>Peak hour<br>build-out</th>')}
+      <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l)).join('')}${wRow('All pressure zones', addLayers(zr.map(r => r.l)), 'tot')}</tbody></table>`;
+    // Wastewater: average dry weather by layer; build-out peak wet = Harmon on the area's
+    // build-out population + I&I on the growth sites.
+    const peakWet = l => { const avg = L(total(l) * c.wastewater.avg); return avg * D.harmon(total(l)) + l.ii; };
+    const sRow = (name, l, cls = '') => `<tr class="${cls}"><td>${name}</td><td>${fmtNum(l.devs)}</td>${LAYER_KEYS.map(k => cell(L(l[k] * c.wastewater.avg), l[k])).join('')}
+      ${cell(L(total(l) * c.wastewater.avg), total(l), 'bo')}<td class="bo">${fmt1(peakWet(l))}</td></tr>`;
+    const plants = ['Lakeview', 'Clarkson', 'Inglewood'];
+    const sec = pl => {
+      const rows = state.servicing.drainage.filter(d => d.plant === pl).map(d => ({ a: d, l: svcLayerTotals('dr', d, bc, idx) })).filter(r => total(r.l) > 0 || r.l.devs)
+        .sort((x, y) => total(y.l) - total(x.l));
+      return { pl, rows, sum: addLayers(rows.map(r => r.l)) };
+    };
+    const secs = plants.map(sec).filter(x => x.rows.length);
+    const tor = sec('Toronto');
+    const sewer = `<table class="dt svc-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment · average dry weather (L/s), people below</caption>
+      ${head('Catchment', '<th>Peak wet<br>build-out</th>')}
+      <tbody>${secs.map(x => `<tr class="grp"><td colspan="8">${esc(plantLabel(x.pl))}</td></tr>${x.rows.map(r => sRow(esc(r.a.name.replace(`${x.pl} · `, '')), r.l)).join('')}${sRow(`${esc(x.pl)} total`, x.sum, 'sub')}`).join('')}
+        ${sRow(`Peel total (${secs.map(x => x.pl).join(' + ')})`, addLayers(secs.map(x => x.sum)), 'tot')}
+        ${tor.rows.length ? `<tr class="grp"><td colspan="8">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.map(r => sRow(esc(r.a.name.replace('Toronto · ', '')), r.l)).join('')}` : ''}</tbody></table>`;
+    $('#svc-body').innerHTML = `<div class="svc-grid">${water}${sewer}</div>
+      <p class="small muted">Residential demand at ${c.water.avg} L/cap/d water (max day ×${c.water.maxDay}, peak hour ×${c.water.peakHour}) and ${c.wastewater.avg} L/cap/d wastewater; peak wet = Harmon on the build-out population + I&amp;I (${c.wastewater.infiltration} L/s/ha) on the growth sites. Subtotals and totals are peaked on their own population. ${Y} Census by dissemination areas whose centre falls in the zone / catchment; growth from every development located in it (other filters ignored), as in the Growth tab. Employment demand is in Servicing demand.</p>`;
+    $('#svc-note').textContent = `${Y} Census baseline (follows the timeline) · built = permits completed since census day · approved = committed growth · proposed = applications in pre-consultation or review`;
   }
 
   // ---- Planning areas: secondary plans / character areas and MTSAs ------------------------
@@ -1897,6 +1943,7 @@
   }
   const censusDay = d => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-CA', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   function renderCensus() {
+    renderSvcTab();
     const bc = baselineCensus();
     const has = !!(bc && bc.das.length && state.projects.length);
     $('#ftab-growth').hidden = !has;
@@ -1914,7 +1961,7 @@
     const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title} · ${fmtNum(da.projects.length)} development site${da.projects.length === 1 ? '' : 's'} in this DA`
       : [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
     $('#c-ctx').innerHTML = da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
-      <span class="muted small">Census dissemination area of the selected project; growth from every development application located in it.</span>` : '';
+      <span class="muted small">Census dissemination area of the selected development; growth from every development application located in it.</span>` : '';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
@@ -1923,7 +1970,7 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
     $('#c-tiles').innerHTML = [
-      tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected project’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
+      tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built'),
       tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved'),
       tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed'),
@@ -2126,9 +2173,9 @@
       </tbody></table>
       <p class="small muted">Units counted equals the demand panel's “All units” with every filter off (all years, all phases).</p>
       <h3 class="label sub-label">Possible duplicates left: ${fmtNum(a.possible.length)}</h3>
-      <p class="small muted">Separate projects of 20+ units within 60 m of each other${a.possibleSameUnits ? `, ${fmtNum(a.possibleSameUnits)} with the same unit count` : ' (none with the same unit count)'}. Usually neighbouring buildings; tap to check.</p>
+      <p class="small muted">Separate developments of 20+ units within 60 m of each other${a.possibleSameUnits ? `, ${fmtNum(a.possibleSameUnits)} with the same unit count` : ' (none with the same unit count)'}. Usually neighbouring buildings; tap to check.</p>
       ${pairs ? `<ol class="audit-pairs small">${pairs}</ol>` : ''}
-      <div class="row btns"><button type="button" class="btn small" id="audit-csv" title="Every file, the project it is counted in, and its units">Download audit CSV</button></div>`;
+      <div class="row btns"><button type="button" class="btn small" id="audit-csv" title="Every file, the development it is counted in, and its units">Download audit CSV</button></div>`;
   }
   $('#audit-body').addEventListener('click', e => {
     const b = e.target.closest('[data-ap]');
