@@ -260,9 +260,26 @@
   const daBaseline = () => (typeof baselineCensus === 'function' && state.censuses ? baselineCensus() : null);
   // Two passes over aerial photos: a faint dark halo under a light line, so the border reads
   // on bright roofs and pavement as well as on trees and fields.
+  // DA outlines (JSON) per census year, shared by the map layer and the selected-project context.
+  const daDataCache = new Map();
+  function loadDaData(year, url) {
+    if (daDataCache.has(year)) return daDataCache.get(year);
+    const p = fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
+      // Bounding boxes for quick point lookups.
+      for (const da of d.das) {
+        let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+        for (const r of da[4]) for (const [x, y] of r) { if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; }
+        da.bbox = [x0, y0, x1, y1];
+      }
+      return d;
+    });
+    daDataCache.set(year, p);
+    p.catch(() => daDataCache.delete(year));
+    return p;
+  }
   function loadDaLayer(year, url) {
     if (daCache.has(year)) return daCache.get(year);
-    const p = fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); }).then(d => {
+    const p = loadDaData(year, url).then(d => {
       const st = daStyle();
       const halo = L.featureGroup(), line = L.featureGroup();
       for (const [id, pop, dw, muni, rings] of d.das) {
@@ -720,7 +737,8 @@
   // ---- Population & servicing demand -------------------------------------------------
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
   // Withdrawn projects never count; the basis picks which of each project's units count.
-  const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled');
+  // With a project selected, the shown projects in its census DA; otherwise all shown projects.
+  const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled' && (!state.daCtx || state.daCtx.keys.has(p.key)));
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
   const demandBasis = () => (state.focus && FOCUS[state.focus].basis) || 'all';
   // What the demand covers: the phase and focus picked in the sidebar, then any other filters.
@@ -733,12 +751,15 @@
       .filter(l => !/phases?$/.test(l) && !/^\d{4}(–\d{4})?$/.test(l) && !P.ALL_PHASES.some(p => l.split(' + ').includes(p.label)));
     const years = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'All years';
     const pill = (label, cls = '') => `<span class="d-pill ${cls}">${esc(label)}</span>`;
-    $('#d-sel').innerHTML = `<span class="muted">Showing</span> ${pill(phase, 'ph')} ${pill(focus, state.focus ? 'fo' : 'off')} ${pill(years)}
+    const da = state.daCtx;
+    $('#d-sel').innerHTML = `<span class="muted">Showing</span> ${da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>` : ''}
+      ${pill(phase, 'ph')} ${pill(focus, state.focus ? 'fo' : 'off')} ${pill(years)}
       ${others.map(l => pill(l)).join(' ')}
       <span class="muted small">${fmtNum(set.length)} projects${basis !== 'all' ? ` · ${BASIS_LABEL[basis]}` : ''} · excludes withdrawn</span>
       <button type="button" class="btn small link" id="d-change">Change</button>`;
   }
   $('#d-sel').addEventListener('click', e => {
+    if (e.target.closest('[data-clear-da]')) { setDaContext(null); return; }
     if (!e.target.closest('#d-change')) return;
     if (matchMedia('(max-width: 760px)').matches) toggleSidebar(true);
     const sf = $('#sect-focus'); if (sf) sf.open = true;
@@ -1181,6 +1202,7 @@
   let currentProject = null;
   function showDetail(p) {
     currentProject = p;
+    setDaContext(p);
     highlight(p);
     const ph = P.PHASE_BY_KEY[p.phase];
     const cancelled = p.phase === 'cancelled';
@@ -1279,13 +1301,14 @@
     const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
     canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
   }
-  function closeDetail() { $('#detail').hidden = true; highlight(null); }
+  function closeDetail() { $('#detail').hidden = true; highlight(null); setDaContext(null); }
   $('#detail-close').onclick = closeDetail;
   addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
 
   // A single record (usually one building permit inside a subdivision) and the planning
   // application(s) it belongs to.
   function showRecordDetail(r, p) {
+    setDaContext(p);
     const ph = P.PHASE_BY_KEY[r.phase];
     const parents = r.kind === 'permit' ? parentApps(r, p) : [];
     const parentHTML = r.kind !== 'permit' ? '' : parents.length
@@ -1482,6 +1505,7 @@
   function clearSelection() { selection.clear(); selAreas = []; drawSelection(); }
 
   function showSelection(added) {
+    setDaContext(null);
     const sel = [...selection.values()];
     currentProject = null;
     highlight(null);
@@ -1709,6 +1733,36 @@
   document.addEventListener('click', e => { const d = $('#f-sp'); if (d.open && !d.contains(e.target)) d.open = false; });
   $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); applyFilters(); };
 
+  // ---- Selected project's census dissemination area ----------------------------------------
+  // Opening a project narrows the Growth and Servicing demand tabs to the census DA its point
+  // falls in (for the baseline census year): the DA's census count, and the development
+  // applications located in the same DA. Closing the project goes back to Peel.
+  const daFocusLayer = L.layerGroup().addTo(map);
+  const daScopeName = () => [state.mtsa && areaById.get(state.mtsa) && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel';
+  let daCtxToken = 0;
+  function setDaContext(p) {
+    const token = ++daCtxToken;
+    const bc = baselineCensus();
+    if (!p || p.lat == null || !bc) {
+      if (state.daCtx) { state.daCtx = null; daFocusLayer.clearLayers(); renderDemand(); renderCensus(); }
+      return;
+    }
+    loadDaData(bc.year, bc.outlines).then(d => {
+      if (token !== daCtxToken) return;
+      const x = p.lng, y = p.lat;
+      const hit = d.das.find(da => x >= da.bbox[0] && x <= da.bbox[2] && y >= da.bbox[1] && y <= da.bbox[3] && P.pointInRings(x, y, da[4]));
+      daFocusLayer.clearLayers();
+      if (!hit) { state.daCtx = null; renderDemand(); renderCensus(); return; }
+      const [id, pop, dw, muni, rings] = hit;
+      const inside = state.projects.filter(q => q.lat != null && q.lng >= hit.bbox[0] && q.lng <= hit.bbox[2] && q.lat >= hit.bbox[1] && q.lat <= hit.bbox[3] && P.pointInRings(q.lng, q.lat, rings));
+      state.daCtx = { key: p.key, project: p, title: p.title, year: bc.year, id, pop, dw, muni, rings, projects: inside, keys: new Set(inside.map(q => q.key)) };
+      L.polygon(rings.map(r => r.map(([lx, ly]) => [ly, lx])), { className: 'da-focus', interactive: false }).addTo(daFocusLayer);
+      renderDemand(); renderCensus();
+    }).catch(() => { if (token === daCtxToken && state.daCtx) { state.daCtx = null; daFocusLayer.clearLayers(); renderDemand(); renderCensus(); } });
+  }
+
+  $('#census').addEventListener('click', e => { if (e.target.closest('[data-clear-da]')) setDaContext(null); });
+
   // ---- Growth since the census (selected geography) ---------------------------------------
   // The baseline follows the timeline: the latest census held in or before its first year
   // (2021–2026 → 2021 Census; 2018–2026 → 2016 Census). Before the earliest census with data,
@@ -1729,10 +1783,16 @@
     syncDaYear();
     if (!has) return;
     const Y = bc.year;
+    const da = state.daCtx;
+    // The baseline year changed under a selected project: find its DA for the new year.
+    if (da && da.year !== Y) { setDaContext(da.project); return; }
     const g = { muni: state.muni, sp: state.sp, mtsa: state.mtsa };
-    const base = PeelAreas.censusTotals(bc.das, g);
-    const gr = PeelAreas.growthSince(state.projects, g, bc.date, state.criteria);
-    const name = [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
+    const base = da ? { population: da.pop, dwellings: da.dw, das: 1 } : PeelAreas.censusTotals(bc.das, g);
+    const gr = PeelAreas.growthSince(da ? da.projects : state.projects, da ? {} : g, bc.date, state.criteria);
+    const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title} · ${fmtNum(da.projects.length)} development site${da.projects.length === 1 ? '' : 's'} in this DA`
+      : [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
+    $('#c-ctx').innerHTML = da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
+      <span class="muted small">Census dissemination area of the selected project; growth from every development application located in it.</span>` : '';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
@@ -1741,7 +1801,7 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
     $('#c-tiles').innerHTML = [
-      tile(`${Y} Census`, base.population, base.dwellings, `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
+      tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected project’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built'),
       tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved'),
       tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed'),
