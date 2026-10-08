@@ -152,9 +152,12 @@ so the census baseline uses dissemination areas. `data/areas.json` is rebuilt we
 population and jobs, then a **Water** table and a **Wastewater** table with residential,
 employment and total rows (L/s: average / max day / peak hour; average dry / peak dry / I&I /
 peak wet). Population, water and wastewater are estimated
-from the units in the projects shown. It can be based on all units, **committed capacity**,
-units left to build, units not yet completed, or completed units. The **Committed capacity**
-focus shows only projects with committed units and switches the panel to that basis. Open **Breakdown & design criteria** to edit the criteria.
+from the units in the projects shown. **The selection is the sidebar's:** the header shows the
+phase, the focus, the years and any other filter, with **Change** jumping to the selectors; there
+is no separate selector in the panel. Each project counts all its units, except under the
+**Committed capacity** focus (approved or permitted units not yet completed) and the **Left to
+build** focus (planned units with no permit yet). Open **Breakdown & criteria** to edit the
+criteria.
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 
