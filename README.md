@@ -159,6 +159,19 @@ is no separate selector in the panel. Each project counts all its units, except 
 build** focus (planned units with no permit yet). Open **Breakdown & criteria** to edit the
 criteria.
 
+**Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
+(Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run
+straight across. Switch to **North up** in the map options (top right). Rotation uses the
+[leaflet-rotate](https://github.com/Raruto/leaflet-rotate) plugin.
+
+**Select an area:** the select tool under the zoom buttons turns the next drag into a lasso. The
+projects shown on the map inside it are added up in the side panel: planned / permitted /
+completed / left by unit type plus employment, servicing demand (residential + employment, for
+the total, completed and remaining units, peaked as one area), and growth since the 2021 Census
+(census population of the dissemination areas whose centre is inside, plus built, approved and
+proposed growth). **+ Add area** draws another area into the selection, × removes a project,
+**Export CSV** downloads the selection, and opening a project gives a link back to it.
+
 **Export:** download the filtered projects as CSV or GeoJSON.
 
 ## How classification works (`js/phases.js`)

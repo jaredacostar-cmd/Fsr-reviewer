@@ -640,3 +640,29 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .tl-more > summary::-webkit-details-marker { display: none; }
 .tl-more[open] > summary { display: none; }
 .tl-sum { margin: 0 0 4px; }
+
+/* Area selection (lasso) */
+.sel-ctl button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: var(--surface-1); color: var(--text-primary); cursor: pointer; border-radius: 4px; }
+.sel-ctl button.on { background: var(--accent); color: #fff; }
+.lasso-layer { position: absolute; inset: 0; z-index: 650; display: none; cursor: crosshair; touch-action: none; }
+.lasso-layer.on { display: block; }
+.lasso-layer svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lasso-layer path { fill: color-mix(in srgb, var(--accent) 15%, transparent); stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 4; }
+.lasso-hint { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); background: var(--surface-1); color: var(--text-primary);
+  border: 1px solid var(--border); border-radius: 999px; padding: 6px 12px; font-size: 12px; box-shadow: var(--shadow); white-space: nowrap; pointer-events: none; }
+.sel-area { fill: var(--accent); fill-opacity: .08; stroke: var(--accent); stroke-width: 2; stroke-dasharray: 6 4; }
+.sel-ring { fill: none; stroke: var(--accent); stroke-width: 2; stroke-opacity: .8; }
+.sel-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 10px; }
+.sel-list { list-style: none; margin: 0; padding: 0; }
+.sel-list li { display: flex; align-items: center; border-top: 1px solid var(--border); }
+.sel-item { flex: 1; display: grid; grid-template-columns: 14px 1fr auto; gap: 8px; align-items: center; text-align: left; padding: 7px 2px; border: 0; background: none; cursor: pointer; font-size: 13px; color: var(--text-primary); min-width: 0; }
+.sel-item .dot { width: 12px; height: 12px; font-size: 0; }
+.sel-item .t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sel-item .u { color: var(--text-secondary); font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sel-x { border: 0; background: none; color: var(--text-muted); font-size: 18px; padding: 4px 8px; cursor: pointer; }
+.sel-x:hover { color: var(--text-primary); }
+.sel-grow { margin: 8px 0 4px; }
+.sel-split { margin: 6px 0; font-size: 13px; }
+.sel-split > summary { cursor: pointer; color: var(--text-secondary); }
+.sel-flows { display: grid; gap: 8px; margin-top: 6px; }
+.back-sel { margin-bottom: 6px; padding-left: 0; }
