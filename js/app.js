@@ -252,7 +252,9 @@
   let daOn = store.get('censusAreas', true) !== false;
   let daLayer = null, daLoading = null, daYear = null;
   const daCache = new Map();   // census year -> Promise of its outline layer
-  map.createPane('daPane').style.zIndex = 350;
+  // Inside the rotating pane (leaflet-rotate) with the tiles and overlays: a pane made directly
+  // in the map pane would sit under the whole rotating stack, i.e. under the background.
+  map.createPane('daPane', map.getPane('rotatePane') || undefined).style.zIndex = 350;
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
   // The outlines follow the census used as the baseline (2021, or 2016 for an earlier timeline).
   const daBaseline = () => (typeof baselineCensus === 'function' && state.censuses ? baselineCensus() : null);
