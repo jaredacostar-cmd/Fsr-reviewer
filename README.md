@@ -392,6 +392,15 @@ application.
   plant coloured by its capacity state with flow arrows, the pumping stations passed and the plant;
   the panel gives the length and number of pipes, the wastewater blocks passed and the tightest pipe
   (each a link). Also for test sites.
+- **Developments on / off** (map panel, every view): hides or shows all development markers, labels and
+  site outlines (remembered).
+- **Wastewater loads** (map panel, Wastewater view): *Census (existing) · Built since · Site plan
+  approved · Proposed (in review)*; each controls both the developments shown and the load put on the
+  sewers (capacity colours, a pipe's flow table, the trace's tightest pipe). All on = full build-out
+  conditions; the legend lists the loads when some are off.
+- **Resizable bottom panels**: drag the analysis panel's top edge (or focus it and use the arrow keys)
+  to give the map more or less room; on a phone, drag the info sheet's grip, or tap it to step
+  30% → 50% → 62% → 92%. Heights are remembered.
 - **Paths over developments**: flow paths (a development trace, a catchment's or block's route) draw
   above the development markers, and the markers fade while a path is shown; *Developments: Show ·
   Faded · Hidden* in the bottom bar picks how (remembered). The map fits the path into the part not

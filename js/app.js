@@ -384,6 +384,12 @@
   // Drainage area names carry the plant ("Lakeview · Bolton PS"); show the plant's report name.
   const drName = a => String(a.name || '').replace(/^Lakeview · /, 'G.E. Booth · ');
   const svcLayers = { pz: null, dr: null };
+  // Developments on / off (every view), and in the Wastewater view the growth layers shown on the
+  // map and loaded onto the sewers: census (existing), built since, site plan approved, proposed.
+  let devsOn = store.get('devsOn', true) !== false;
+  let wwLay = { existing: true, built: true, approved: true, proposed: true, ...(store.get('wwLay', {}) || {}) };
+  const isWW = () => store.get('mapView', 'planning') === 'wastewater';
+  const wwOn = k => !isWW() || wwLay[k] !== false;
   let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false), bk: !!store.get('svc-bk', false) };
   const blockSwatch = '<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><rect x="3" y="2" width="16" height="10" fill="#7048e8" fill-opacity=".14" stroke="#7048e8" stroke-width="1.8"/></svg>';
   const svcSwatch = k => `<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">${k === 'pz'
@@ -424,6 +430,8 @@
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
         <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
+        <div class="mo-quick">${chip('id="opt-devs"', devsOn, '<i class="dev-sw" aria-hidden="true"></i>Developments', 'devs-toggle')}</div>
+        <div class="mo-ww" data-info="ww-layers"><div class="mo-h">Wastewater loads <span class="muted">(map and sewers)</span></div><div class="mo-chips">${[['existing', 'Census (existing)'], ['built', 'Built since'], ['approved', 'Site plan approved'], ['proposed', 'Proposed (in review)']].map(([k, t]) => chip(`data-wwlay="${k}"`, wwLay[k] !== false, `<span class="lg-sw" data-wwsw="${k}"></span>${t}`)).join('')}</div><div class="mo-ww-note muted"></div></div>
         <details class="mo-more"${store.get('moOpen', false) ? ' open' : ''}><summary>Layers &amp; style</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
           <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
@@ -475,6 +483,8 @@
       el.querySelector('.mo-view').onclick = e => { const b = e.target.closest('[data-mview]'); if (b) setMapView(b.dataset.mview); };
       el.querySelector('#opt-pz').onchange = e => setSvcLayer('pz', e.target.checked);
       el.querySelector('#opt-dr').onchange = e => setSvcLayer('dr', e.target.checked);
+      el.querySelector('#opt-devs').onchange = e => setDevsOn(e.target.checked);
+      el.querySelectorAll('[data-wwlay]').forEach(c => { c.onchange = () => setWwLay(c.dataset.wwlay, c.checked); });
       el.querySelector('#opt-bk').onchange = e => setBlocksLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => setOrientation(e.target.value);
@@ -615,7 +625,7 @@
     const polys = [], dots = [];
     for (const p of state.filtered) {
       if (n >= SITE_MAX_POINTS) break;
-      if (!siteApps(p).length) continue;
+      if (!siteApps(p).length || !devShown(p)) continue;
       const b = projectBounds(p);
       if (!b || !view.intersects(b)) continue;
       polys.push(...outline(p, false));
@@ -1213,13 +1223,13 @@
 
   function renderMarkers() {
     cluster.clearLayers();
-    heat.setData(mstyle.show === 'heat' ? state.filtered.filter(p => p.lat != null).map(p => [p.lat, p.lng, popOf(p)]) : null);
+    heat.setData(mstyle.show === 'heat' ? state.filtered.filter(p => p.lat != null && devShown(p)).map(p => [p.lat, p.lng, popOf(p)]) : null);
     if (mstyle.show === 'heat') { markerByKey = new Map(); projectByMarker = new Map(); scheduleLabels(); return; }
     markerByKey = new Map();
     projectByMarker = new Map();
     const markers = [];
     for (const p of state.filtered) {
-      if (p.lat == null) continue;
+      if (p.lat == null || !devShown(p)) continue;
       const [cat, col] = markerCat(p), pop = mstyle.size === 'pop' ? popOf(p) : 0;
       const m = L.marker([p.lat, p.lng], { icon: markerIcon(p), phase: p.phase, cat, col, pop, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : 0 });
       const near = state.servicing && (nearOf(p, 'dr') || nearOf(p, 'pz'));
@@ -2640,6 +2650,18 @@
     return `<strong>${esc(drName(a))}</strong><br>Drains to ${esc(plantLabel(a.plant))}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
       <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network · tap: what loads it</span>`;
   }
+  function setDevsOn(on) {
+    devsOn = on; store.set('devsOn', on);
+    map.getContainer().classList.toggle('devs-off', !on);
+    renderMarkers(); scheduleSites(); syncMapOpts();
+  }
+  function setWwLay(k, on) {
+    wwLay = { ...wwLay, [k]: on }; store.set('wwLay', wwLay);
+    renderMarkers(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts();
+    if (!$('#detail').hidden && $('#detail').dataset.view === 'loads' && loadsOf && loadsOf.pipe != null) showPipeLoads(loadsOf.pipe);
+  }
+  // A development shown on the map: developments on, and (Wastewater view) its growth layer on.
+  const devShown = p => devsOn && (!isWW() || p.phase === 'cancelled' || wwOn(svcLayerOf(p)));
   function setSvcLayer(k, on) {
     svcOn[k] = on; store.set(`svc-${k}`, on);
     if (!on) { if (svcLayers[k]) map.removeLayer(svcLayers[k]); return; }
@@ -3690,6 +3712,10 @@
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
+    set('#opt-devs', devsOn);
+    document.querySelectorAll('[data-wwlay]').forEach(c => { c.checked = wwLay[c.dataset.wwlay] !== false; });
+    document.querySelectorAll('[data-wwsw]').forEach(e => e.style.setProperty('--mk', layerColors()[e.dataset.wwsw]));
+    const mw = document.querySelector('.mo-ww'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); mw.querySelector('.mo-ww-note').textContent = all ? 'All on: full build-out conditions.' : `Loads on the sewers: ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'}.`; }
     set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-bk', svcOn.bk); set('#opt-da', daOn);
     for (const k of ['water', 'sanitary', 'storm']) set(`[data-exist="${k}"]`, !!existOn[k]);
     for (const k of ['water', 'wastewater']) set(`[data-dcsys="${k}"]`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k));
@@ -3852,7 +3878,7 @@
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
     if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
-    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
+    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>${isWW() && !Object.values(wwLay).every(v => v !== false) ? `<p class="lg-s"><strong>Loads:</strong> ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'} (Wastewater loads in Layers)</p>` : ''}`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
@@ -4509,10 +4535,11 @@
   // existing + built + all approved.
   function pipeFlow(i, y) {
     const p = SEW.data.pipes[i], G = sewerGrowth(), c = state.criteria, E = c.employment;
-    const fb = y === 'none' ? 0 : 1;
-    const { fa, fp } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    const fb = (y === 'none' ? 0 : 1) * (wwOn('built') ? 1 : 0);
+    let { fa, fp } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    if (!wwOn('approved')) fa = 0; if (!wwOn('proposed')) fp = 0;
     const M = state.svcModel, f = M && M.fOf ? M.fOf(SEW.data.plants[p[6]]) || 1 : 1;
-    const exist = p[4] * c.wastewater.avg / 86400 * f * D.residentialPeaking(p[4], c.wastewater);
+    const exist = wwOn('existing') ? p[4] * c.wastewater.avg / 86400 * f * D.residentialPeaking(p[4], c.wastewater) : 0;
     const gp = fb * G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
     const gj = fb * G.built.jobs[i] + fa * G.approved.jobs[i] + fp * G.proposed.jobs[i];
     const gh = fb * G.built.ha[i] + fa * G.approved.ha[i] + fp * G.proposed.ha[i];
@@ -4585,12 +4612,14 @@
   // Parts of the flow in pipe i for a year (as pipeFlow): existing and each growth component.
   function pipeParts(i, y) {
     const p = SEW.data.pipes[i], G = sewerGrowth(), c = state.criteria, W = c.wastewater, E = c.employment;
-    const { fa, fp } = y === 'today' ? { fa: 0, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    let { fa, fp } = y === 'today' ? { fa: 0, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    if (!wwOn('approved')) fa = 0; if (!wwOn('proposed')) fp = 0;
+    const fb = wwOn('built') ? 1 : 0;
     const M = state.svcModel, f = M && M.fOf ? M.fOf(SEW.data.plants[p[6]]) || 1 : 1;
-    const P0 = p[4], avg0 = P0 * W.avg / 86400, M0 = D.residentialPeaking(P0, W), exist = avg0 * f * M0;
-    const gp = G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
-    const gj = G.built.jobs[i] + fa * G.approved.jobs[i] + fp * G.proposed.jobs[i];
-    const gh = G.built.ha[i] + fa * G.approved.ha[i] + fp * G.proposed.ha[i];
+    const P0 = p[4], avg0 = P0 * W.avg / 86400, M0 = D.residentialPeaking(P0, W), exist = wwOn('existing') ? avg0 * f * M0 : 0;
+    const gp = fb * G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
+    const gj = fb * G.built.jobs[i] + fa * G.approved.jobs[i] + fp * G.proposed.jobs[i];
+    const gh = fb * G.built.ha[i] + fa * G.approved.ha[i] + fp * G.proposed.ha[i];
     const Mg = D.residentialPeaking(gp, W), Me = D.employmentPeaking(gj, E);
     const qr = gp * W.avg / 86400 * Mg, qe = gj * E.wastewater / 86400 * Me, qi = gh * W.infiltration;
     return { fa, fp, f, P0, avg0, M0, exist, gp, gj, gh, Mg, Me, qr, qe, qi, growth: qr + qe + qi, q: exist + qr + qe + qi };
@@ -5954,6 +5983,51 @@
     store.set('footOpen', !collapsed);
   }
   $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
+  // Resizable bottom panels: drag the analysis panel's top edge (any screen) or the phone sheet's
+  // grip to show more map; tap the grip to step through heights. Heights are remembered.
+  function dragResize(grip, { get, set, done }) {
+    let y0 = 0, h0 = 0, moved = false;
+    grip.addEventListener('pointerdown', e => {
+      if (e.button > 0) return;
+      y0 = e.clientY; h0 = get(); moved = false; grip.setPointerCapture(e.pointerId); grip.classList.add('dragging'); e.preventDefault();
+    });
+    grip.addEventListener('pointermove', e => {
+      if (!grip.hasPointerCapture(e.pointerId)) return;
+      const dy = y0 - e.clientY; if (Math.abs(dy) > 3) moved = true;
+      if (moved) set(h0 + dy);
+    });
+    const end = e => { if (!grip.hasPointerCapture(e.pointerId)) return; grip.releasePointerCapture(e.pointerId); grip.classList.remove('dragging'); done(moved); };
+    grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
+  }
+  const footer = $('#footer');
+  let mapFix = 0; const fixMap = () => { cancelAnimationFrame(mapFix); mapFix = requestAnimationFrame(() => map.invalidateSize({ pan: false })); };
+  const setFootH = h => {
+    const max = Math.round(innerHeight * 0.8), v = Math.max(90, Math.min(max, Math.round(h)));
+    footer.style.setProperty('--foot-h', `${v}px`); fixMap(); return v;
+  };
+  if (store.get('footH', null)) setFootH(store.get('footH'));
+  dragResize($('#footer-grip'), {
+    get: () => footer.getBoundingClientRect().height,
+    set: h => { if (footer.classList.contains('collapsed')) setFooterCollapsed(false); setFootH(h); },
+    done: moved => { if (moved) store.set('footH', parseInt(footer.style.getPropertyValue('--foot-h'), 10)); else if (footer.classList.contains('collapsed')) setFooterCollapsed(false); fixMap(); },
+  });
+  $('#footer-grip').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return; e.preventDefault();
+    store.set('footH', setFootH(footer.getBoundingClientRect().height + (e.key === 'ArrowUp' ? 40 : -40)));
+  });
+  // Phone bottom sheet (the info panel): drag the grip, or tap it to step 30% → 50% → 62% → 92%.
+  const SHEET_STEPS = [30, 50, 62, 92], detailEl = $('#detail');
+  const setSheetH = vh => { const v = Math.max(18, Math.min(94, vh)); detailEl.style.setProperty('--sheet-h', `${v}dvh`); detailEl.style.setProperty('--sheet-hv', `${v}vh`); return v; };
+  if (store.get('sheetH', null)) setSheetH(store.get('sheetH'));
+  dragResize($('#detail-grip'), {
+    get: () => detailEl.getBoundingClientRect().height,
+    set: h => setSheetH(h / innerHeight * 100),
+    done: moved => {
+      const cur = detailEl.getBoundingClientRect().height / innerHeight * 100;
+      if (moved) store.set('sheetH', Math.round(setSheetH(cur)));
+      else { const nx = SHEET_STEPS.find(s => s > cur + 2) || SHEET_STEPS[0]; store.set('sheetH', setSheetH(nx)); }
+    },
+  });
   $('#f-sum').onclick = () => setFooterCollapsed(false);
   setFooterCollapsed(!store.get('footOpen', false));
   $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
