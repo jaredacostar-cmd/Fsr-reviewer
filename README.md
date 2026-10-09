@@ -286,6 +286,13 @@ application.
   total is unchanged. On the 2021 baseline, calibrated build-out moves from about 107% to 94% of
   G.E. Booth's rated capacity and from about 70% to 90% of Clarkson's.
 
+**Applications against the 2051 forecast** (Growth & demand tab, below the growth chart): for each
+municipality, the 2051 population, unit and job growth allocated by the Region (Land Needs
+Assessment Report Update, draft municipal allocation, appendix pp. 5.2-109 / 5.2-119; Peel 2.28
+million people and 1.07 million jobs by 2051) beside the growth already in the pipeline since the
+census — built, approved, proposed — and what is still to be planned for. Units are the fairer
+comparison (design persons per unit are higher than average household size).
+
 **References** (Criteria & references tab, `data/peel-reports.json` → `standards`): the Peel Linear
 Wastewater Standards, the Water and Wastewater Modelling Demand Table (Aug 2024), the Watermain
 Design Criteria (2010), the FSR requirements, the 2020 Master Plan, the 2020 DC Background Study,

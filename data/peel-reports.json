@@ -317,5 +317,37 @@
       "url": "https://fireunderwriters.ca/",
       "used": "Fire flow for water storage and distribution checks."
     }
-  ]
+  ],
+  "forecast2051": {
+    "title": "Region of Peel – Land Needs Assessment Report Update, appendices: draft municipal allocation to 2051",
+    "url": "https://peelregion.ca/sites/default/files/2024-08/land-needs-assessment-report-update-appendices.pdf",
+    "pages": "pp. 5.2-109 (population, units) and 5.2-119 (employment)",
+    "note": "Growth Plan Schedule 3 forecast for Peel (2.28 million people, 1.07 million jobs by 2051) allocated to the local municipalities. 2021 values are Peel's estimates (they include the census undercount), so growth is compared, not totals.",
+    "municipalities": {
+      "Caledon": {
+        "pop2021": 81000,
+        "pop2051": 300000,
+        "units2021": 24000,
+        "units2051": 92000,
+        "jobs2021": 27000,
+        "jobs2051": 125000
+      },
+      "Brampton": {
+        "pop2021": 698000,
+        "pop2051": 985000,
+        "units2021": 186000,
+        "units2051": 292000,
+        "jobs2021": 209000,
+        "jobs2051": 355000
+      },
+      "Mississauga": {
+        "pop2021": 799000,
+        "pop2051": 995000,
+        "units2021": 246000,
+        "units2051": 344000,
+        "jobs2021": 500000,
+        "jobs2051": 590000
+      }
+    }
+  }
 }

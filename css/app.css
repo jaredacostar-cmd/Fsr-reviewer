@@ -806,3 +806,6 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 @media (max-width: 640px) { .share-btn { position: static; margin-top: 6px; } }
 .ref-h { font-size: 12.5px; margin: 10px 0 2px; }
 .ref-list li .small { margin: 1px 0 4px; }
+.fc-bar { height: 12px; }
+.fc-left { display: block; border: 1.5px dashed var(--text-secondary); border-left: none; box-sizing: border-box; border-radius: 0 3px 3px 0; }
+#c-forecast { margin-top: 8px; }
