@@ -3455,10 +3455,11 @@
   // SVG arrowheads for the flow lines (one <marker> per map renderer).
   function addFlowMarker() {
     const svg = map.getPanes().overlayPane.querySelector('svg');
-    if (!svg || svg.querySelector('#flow-head')) return;
+    if (!svg || svg.querySelector('#flow-head-s')) return;
     const ns = 'http://www.w3.org/2000/svg';
     const defs = document.createElementNS(ns, 'defs');
-    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>';
+    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>'
+      + '<marker id="flow-head-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f2937" stroke="#fff" stroke-width="1"/></marker>';
     svg.insertBefore(defs, svg.firstChild);
   }
 
@@ -3509,7 +3510,7 @@
       L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 7 : P[i][0] >= 600 ? 6 : 5, opacity: 0.9, lineCap: 'round' })
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(TRACE.layer);
     }
-    drawPipeRoute(route, 'trace-flow', TRACE.layer, 900);
+    drawPipeRoute(route, 'trace-flow', TRACE.layer, Math.max(900, km * 1000 / 14));
     // Pumping stations within 80 m of the route, and the plant at its end.
     const stations = ((state.servicing && state.servicing.meta.pumpingStations) || []).filter(ps => route.some(i => dcDist(ps.lnglat, pipeCoords(P[i])) <= 80));
     for (const ps of stations) L.circleMarker([ps.lnglat[1], ps.lnglat[0]], { radius: 6, className: 'trace-ps' }).bindTooltip(`<strong>${esc(ps.name.replace(/SEWAGE PUMPING( STN| STATION)?/i, 'pumping station'))}</strong>`, { className: 'pt' }).addTo(TRACE.layer);
