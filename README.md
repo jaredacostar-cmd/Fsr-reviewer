@@ -25,7 +25,16 @@ plan pending*); a site plan approved before a newer rezoning that is still in re
 earlier proposal and does not count; Brampton's legacy site plans (status "Transferred", carried
 over from its old system, mostly 1980s–1990s, no dates) don't count for a current proposal, and a
 site with only legacy files is shown as completed. Demolition permits (HOUSDEMO / DEMO) clear a site
-and don't set its phase or start a redevelopment cycle. A change to these rules is recorded in
+and don't set its phase or start a redevelopment cycle.
+
+**Building permits must be for the site's buildings.** A permit sets the site's phase only when it
+adds units, is a new dwelling building whose unit count isn't published, or is a new
+non-residential building. Site servicing and shoring permits stay on the site (useful for
+servicing) but don't set its phase; signs, below-grade entrances, doors, windows, equipment, sales
+pavilions, temporary structures and additions don't count, and a site made only of those is not
+shown as a development (the audit reports them as set aside). Minor / limited / express site plans
+(a patio, a revision) don't approve the building, and a Brampton site plan that only reads
+"Closed" (no approval date) counts as approved only when a building permit was issued after it. A change to these rules is recorded in
 `data/history.json` as a re-read (marked `rules`), not as a phase change on the ground.
 
 ## Run it

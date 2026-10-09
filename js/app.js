@@ -1562,7 +1562,9 @@
       if (recGroup(r) !== 'precon') seen.get(text).main = true;
       break;
     }
-    const ev = p.timeline.filter(t => t.phase === p.phase).sort((a, b) => b.date - a.date)[0];
+    // The latest event of the phase on a file that set it (not a sign or servicing permit, say).
+    const setBy = p.phaseRecs && p.phaseRecs.length ? new Set(p.phaseRecs.map(r => r.uid)) : null;
+    const ev = p.timeline.filter(t => t.phase === p.phase && (!setBy || setBy.has(t.record))).sort((a, b) => b.date - a.date)[0];
     const label = P.PHASE_BY_KEY[p.phase].label;
     const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
     const pa = planApprovedNote(p);
@@ -1770,7 +1772,11 @@
   const phaseAt = (r, ph) => { const e = r.events.filter(x => x.phase === ph); return e.length ? +e[e.length - 1].date : null; };
   const siteNote = r => P.sitePhaseOf(r) === r.phase ? '' : r.superseded ? '; approved before a newer rezoning that is still in review, so it no longer counts as the site’s approval'
     : '; not a site plan approval, so it keeps the site under review';
+  const ROLE_NOTE = { servicing: 'site servicing / shoring permit: not the building itself, so it does not set the phase', none: 'not a permit for the site’s building (a sign, entrance, door, equipment, sales office, temporary structure, addition…): does not set the phase' };
   function phaseBasis(r) {
+    if (r.kind === 'permit' && ROLE_NOTE[P.permitRole(r)] && !P.isDemolition(r)) return ROLE_NOTE[P.permitRole(r)];
+    if (r.closedUnconfirmed) return 'status just “Closed”, with no approval date and no building permit issued since: outcome not published, so not counted as approved';
+    if (r.kind === 'application' && r.stage === 'siteplan' && P.isMinorFile(r) && r.phase === 'approved') return 'minor / limited / express site plan (a revision, patio, small change): does not approve the site’s building';
     if (P.isDemolition(r)) return 'demolition permit: clears the site, so it does not set the phase (unless the site has nothing else)';
     if (P.isRegistered(r) && !r.superseded) return 'registered plan of subdivision: counts as the site’s approval (houses can go to building permits without a site plan)';
     if (P.isLegacy(r)) return 'Brampton legacy site plan (“Transferred” from the old system, no dates): an old approval, not counted for the current proposal';
@@ -1778,19 +1784,15 @@
     let sp = P.phaseFromStatus(r.statusRaw);
     if (r.kind === 'application' && ['permit', 'construction', 'completed'].includes(sp)) sp = 'approved';
     if (r.stage === 'precon' && r.phase === 'inception' && sp !== 'inception' && sp !== 'cancelled') return 'pre-consultation: counted as inception whatever its status';
-    if (sp === r.phase || (r.kind === 'permit' && ['review', 'permit'].includes(r.phase))) return (/\bclosed\b/i.test(r.statusRaw) && r.kind === 'application' && r.phase === 'approved' ? 'status “Closed” read as approved' : 'from its status') + siteNote(r);
+    if (sp === r.phase || (r.kind === 'permit' && ['review', 'permit'].includes(r.phase))) return (/^\s*closed\s*$/i.test(r.statusRaw) && r.kind === 'application' && r.phase === 'approved' ? 'status “Closed” read as approved' : 'from its status') + siteNote(r);
     const e = r.events.filter(x => x.phase === r.phase).pop();
     if (e) return `from its ${P.humanizeField(e.label).toLowerCase()} date (${fmtDate(e.date)}); the status says ${sp ? P.PHASE_BY_KEY[sp].label.toLowerCase() : 'nothing usable'}${siteNote(r)}`;
     return sp ? `status read as ${P.PHASE_BY_KEY[sp].label.toLowerCase()}` : 'status not recognised; counted as an open file';
   }
   function phaseBasisHTML(p) {
     const recs = p.records, rank = r => P.PHASE_BY_KEY[r.phase].rank;
-    // Same rule as mergeProject: after a completed build, only the files submitted since count.
-    const doneAt = Math.max(-Infinity, ...recs.filter(r => !P.isDemolition(r)).flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
-    let live = recs.filter(r => r.phase !== 'cancelled' && (p.legacyOnly || !P.isLegacy(r)));
-    if (live.some(r => !P.isDemolition(r))) live = live.filter(r => !P.isDemolition(r));
-    const cyc = isFinite(doneAt) && live.some(r => firstAt(r) > doneAt);
-    if (cyc) live = live.filter(r => firstAt(r) > doneAt);
+    // The files mergeProject used for the phase (after legacy, minor, non-building and pre-cycle files are set aside).
+    const live = p.phaseRecs || recs.filter(r => r.phase !== 'cancelled'), cyc = !!p.cycleFrom, doneAt = cyc ? +p.cycleFrom : null;
     // mergeProject sets a 'completed' site with planned units still unpermitted back to construction.
     const heldBack = p.phase === 'construction' && !live.some(r => r.phase === 'construction') && live.some(r => r.phase === 'completed');
     const setter = live.filter(r => P.sitePhaseOf(r) === (heldBack ? 'completed' : p.phase)).sort((a, b) => (lastAt(b) || 0) - (lastAt(a) || 0))[0] || null;
@@ -1817,7 +1819,7 @@
     const masterLive = live.filter(r => stageKey(r) === 'master'), spLive = live.filter(r => stageKey(r) === 'siteplan');
     if (planApprovedNote(p)) flags.push(['info', `${planApprovedNote(p)}. Only a site plan approval${spLive.length ? '' : ' or a registered plan of subdivision'} makes the site Approved, so it stays under review.`]);
     if (masterLive.some(r => /draft/i.test(r.statusRaw) && r.phase === 'approved')) flags.push(['info', 'Draft plan approval: the subdivision still has to meet its conditions and be registered.']);
-    if (live.some(r => r.kind === 'application' && r.phase === 'approved' && /\bclosed\b/i.test(r.statusRaw) && !phaseAt(r, 'approved'))) flags.push(['warn', 'A planning file’s status is just “Closed”, read as approved (a closed file usually follows approval, but it can also be a file closed without a decision). Check the file.']);
+    if (live.some(r => r.kind === 'application' && r.phase === 'approved' && /^\s*closed\s*$/i.test(r.statusRaw) && !r.closedUnconfirmed && !phaseAt(r, 'approved'))) flags.push(['warn', 'A planning file’s status is just “Closed”, read as approved (a closed file usually follows approval, but it can also be a file closed without a decision). Check the file.']);
     if (live.some(r => r.kind === 'permit' && rank(r) >= P.PHASE_BY_KEY.permit.rank) && live.some(r => r.kind === 'application' && r.stage !== 'precon' && rank(r) <= P.PHASE_BY_KEY.review.rank)) flags.push(['warn', 'Building permits are issued while a planning file on the site is still in review: the permits may be for an earlier phase or another building on the site.']);
     if (setter && /date/.test(phaseBasis(setter)) && setter.statusRaw) flags.push(['info', `The phase comes from a date on ${setter.ref || 'a file'} rather than its published status (“${setter.statusRaw}”).`]);
     if (live.length && live.every(r => stageKey(r) === 'precon')) flags.push(['info', 'Only a pre-consultation so far: not yet a formal application.']);
@@ -1825,6 +1827,12 @@
     if (sup.length) flags.push(['warn', `${sup.map(r => r.ref || 'A site plan').join(', ')} ${sup.length === 1 ? 'was' : 'were'} approved before a newer rezoning / official plan / subdivision file that is still in review: ${sup.length === 1 ? 'that approval was' : 'those approvals were'} for an earlier proposal, so the site is under review.`]);
     const leg = recs.filter(r => P.isLegacy(r));
     if (leg.length && !p.legacyOnly) flags.push(['info', `${leg.length} Brampton legacy site plan file${leg.length === 1 ? '' : 's'} (“Transferred”, ${leg.slice(0, 3).map(r => r.ref).join(', ')}${leg.length > 3 ? '…' : ''}) ${leg.length === 1 ? 'is an old approval and does' : 'are old approvals and do'} not count for the current proposal.`]);
+    const notB = recs.filter(r => r.kind === 'permit' && ['none', 'servicing'].includes(P.permitRole(r)) && !P.isDemolition(r) && r.phase !== 'cancelled');
+    if (notB.length) flags.push(['info', `${notB.length} permit${notB.length === 1 ? '' : 's'} on the site ${notB.length === 1 ? 'is' : 'are'} not for its building (${[...new Set(notB.map(r => (r.type || r.description || 'other').split(' — ')[0].toLowerCase()))].slice(0, 3).join(', ')}): only permits that build the site’s units, or a new non-residential building, set the phase.`]);
+    const minorSp = recs.filter(r => r.kind === 'application' && r.stage === 'siteplan' && P.isMinorFile(r) && r.phase === 'approved');
+    if (minorSp.length && !live.every(r => minorSp.includes(r))) flags.push(['info', `${minorSp.length} minor / limited site plan${minorSp.length === 1 ? '' : 's'} (${minorSp.slice(0, 2).map(r => r.ref).join(', ')}) ${minorSp.length === 1 ? 'is' : 'are'} for small changes and ${minorSp.length === 1 ? 'does' : 'do'} not approve the site’s building.`]);
+    const cu = recs.filter(r => r.closedUnconfirmed);
+    if (cu.length) flags.push(['warn', `${cu.map(r => r.ref).join(', ')} only ${cu.length === 1 ? 'reads' : 'read'} “Closed”, with no approval date and no building permit since: the outcome isn’t published, so ${cu.length === 1 ? 'it is' : 'they are'} not counted as an approval.`]);
     if (heldBack) flags.push(['info', `${setter && setter.ref ? setter.ref : 'A permit'} reads completed, but ${p.buildout ? fmtNum(p.buildout.remaining) : 'some'} planned unit${p.buildout && p.buildout.remaining === 1 ? '' : 's'} have no building permit yet, so the site is shown as under construction rather than completed.`]);
     const appeal = live.filter(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
     if (appeal.length) flags.push(['warn', `Under appeal at the Ontario Land Tribunal (${appeal.map(r => `${r.ref || 'no number'}: “${r.statusRaw}”`).join('; ')}): ${appeal.some(r => r.phase === 'approved') ? 'the status is read as approved, but the decision is not final until the Tribunal rules' : 'the Tribunal, not council, will decide'}.`]);

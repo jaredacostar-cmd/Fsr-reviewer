@@ -188,8 +188,35 @@
   const NEW_BUILD = /\bnew (bldg|building|construction|dwelling|house|home|structure|townhouse|apartment|condo|warehouse|tower|plaza)|\bnew\b.*\b(dwelling|building|bldg|storey|units?)\b|erect|construct(ion)? of (a )?new|new construction|\bnew\s*$|^new\b/i;
   const NOT_NEW_BUILD = /alter|renovat|repair|modif|replace|interior|tenant|fit[- ]?up|fit[- ]?out|fire (alarm|suppression|protection)|suppression|sprinkler|hvac|mechanical|electrical|plumbing|demoli|\bsign\b|deck|porch|pool|shed|fence|\btent\b|solar|backflow|change of use|basement|accessory|garage|balcony|retaining wall|canopy|patio|kitchen|washroom|\bpool\b|\bsign\b/i;
 
+  // What a building permit builds, for the site's phase: 'units' (adds dwelling units), 'res' (a
+  // dwelling building whose unit count isn't published), 'nonres' (a non-residential building),
+  // 'servicing' (site servicing, shoring: kept on the site but not its phase) or 'none'
+  // (signs, entrances, doors, windows, equipment, sales offices, demolition…).
+  const ROLE_NONE = /^permanent\b|class a-mobile|\bsign\b|temporary|sales (office|centre|center|pavilion|trailer)|model home|below grade|\bdoor|window|electromagnetic|\blocks?\b|cooking|garden suite|\btent\b|agricultur|retaining|\bpool\b|deck|porch|\bshed\b|garage|carport|cabana|septic|canop|addition|alter|renovat|interior|tenant|demising|spray booth|dust collector|exhaust|make-up air|unit heater|emergency (lighting|power)|satellite|crane|a-frame|\btanks?\b|class 4|relocat/i;
+  const MAIN_BUILD = /\bnew\b[^—]*\b(building|bldg|facility|tower|warehouse|plant|school|hospital|station|hotel|centre|center|store|restaurant)\b|\berect\b[^—]*\b(building|bldg|facility)\b/i;
+  const DWELLING = /dwelling|town ?house|apartment|stacked|semi|single family|\bsfd\b|\bsdd\b|quatro|condominium|residences|dormitor|residential (building|tower)/i;
+  const ROLE_RES = /single|semi|detached|town|apartment|condominium|dwelling|residential|multi|stacked|quatro|dormitor|residences|\bsfd\b|\bsdd\b/i;
+  const ROLE_NONRES = /commercial|industrial|public|institution|governmental|office|retail|business|assembly|warehouse|\b[ABDEF]\d?:|hotel|motel|convalescent|care\b|hospital|school|classroom|fire station|car wash|church|storage|plant\b|facility|building/i;
+  function permitRole(r) {
+    if (r.kind !== 'permit') return null;
+    if (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || ''))) return 'none';
+    if (permitAddsUnits(r)) return 'units';
+    const t = `${r.type || ''} ${r.description || ''}`;
+    if (!t.trim()) return 'res';   // nothing published about the work: give it the benefit of the doubt
+    if (/^(DRAIN|SH)\b|\bSS\b/i.test(String(r.ref || '')) || /site servic|servicing|shoring|excavat/i.test(t)) return 'servicing';
+    // The type names the work (Brampton) or is generic (RESIDENTIAL): an accessory word in the
+    // description rules the permit out only when it names no dwelling.
+    const d = r.description || '';
+    if (ROLE_NONE.test(r.type || '') || (ROLE_NONE.test(d) && !DWELLING.test(d) && !MAIN_BUILD.test(d))) return 'none';
+    if (ROLE_RES.test(t) && !/\b[ABDEF]\d?:/.test(r.type || '')) return 'res';
+    if (ROLE_NONRES.test(t)) return 'nonres';
+    return 'none';
+  }
+
   function isNewBuild(rec) {
     if (rec.kind !== 'permit') return true;
+    // Signs, entrances, equipment… filed as "new" in Brampton's permits are not new buildings.
+    if (permitRole(rec) === 'none' && !/DEMO/i.test(String(rec.ref || ''))) return false;
     if (permitAddsUnits(rec)) return true;
     const scope = rec.scope || '';
     if (scope) {
@@ -625,7 +652,8 @@
       parts.push({ key: root.rep.key, recs: all, site: { planned: plannedUnits(root), site: root.rep } });
     }
     for (const [key, recs] of loose) parts.push({ key, recs, site: {} });
-    return joinNearbyPermits(parts);
+    // Sites made only of permits that build nothing (signs, entrances, demolitions…) aren't developments.
+    return joinNearbyPermits(parts).filter(p => !p.records.every(r => r.kind === 'permit' && permitRole(r) === 'none'));
   }
 
   // 1b. A multi-address application ("202 and 204 Main St", "65-71 Agnes St") joins the
@@ -786,7 +814,7 @@
   // official plan, subdivision, condominium and other planning approvals leave the site under
   // review until its site plan is approved (or a building permit is issued). Each file keeps
   // its own phase; this is how far it moves the site.
-  const PHASE_RULES = 3;
+  const PHASE_RULES = 4;
   // Brampton's legacy site plans (1980s–2000s), carried into its current system as "Transferred"
   // with no dates: approvals of buildings long since built, not of the current proposal.
   const isLegacy = r => r.kind === 'application' && /^transferred$/i.test(String(r.statusRaw || '').trim());
@@ -797,7 +825,7 @@
   // Demolition permits clear a site; they don't say how far the new development has got.
   const isDemolition = r => r.kind === 'permit' && (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || '')));
   function sitePhaseOf(r) {
-    if (r.kind === 'application' && r.phase === 'approved' && (r.superseded || isLegacy(r) || ((r.stage || stageOf(r)) !== 'siteplan' && !isRegistered(r)))) return 'review';
+    if (r.kind === 'application' && r.phase === 'approved' && (r.superseded || r.closedUnconfirmed || isLegacy(r) || ((r.stage || stageOf(r)) !== 'siteplan' && !isRegistered(r)))) return 'review';
     return r.phase;
   }
   const recStart = r => r.events.length ? +r.events[0].date : null;
@@ -812,8 +840,27 @@
     const current = live.filter(r => !isLegacy(r));
     const legacyOnly = live.length > 0 && !current.length;
     live = current;
-    // Demolition permits don't set the phase while the site has other files.
-    if (live.some(r => !isDemolition(r))) live = live.filter(r => !isDemolition(r));
+    // Only files for the site's buildings set its phase: permits that build units or a new
+    // non-residential building, and planning files other than minor site plans. Servicing,
+    // shoring, signs, demolitions, alterations… don't, while the site has anything else.
+    // Minor / limited / express site plans (a patio, awnings, a revision) don't approve the building either.
+    // On a residential site (its planning files describe homes) only permits that build homes
+    // count; a non-residential building counts where the plans aren't for homes (offices,
+    // industry, a hospice or long-term care home).
+    const homes = live.some(r => r.kind === 'application' && r.units > 0 && /residential|dwelling|apartment|town ?house|condominium|stacked|semi|single|detached|mixed[- ]use/i.test(`${r.type} ${r.description}`)) ||
+      live.some(r => ['units', 'res'].includes(permitRole(r)));
+    const builds = r => r.kind === 'permit' ? ['units', 'res'].includes(permitRole(r)) || (!homes && permitRole(r) === 'nonres') : !((r.stage || stageOf(r)) === 'siteplan' && isMinorFile(r));
+    const main = live.filter(builds);
+    if (main.some(r => r.kind === 'permit' || (r.stage || stageOf(r)) !== 'precon')) live = main;
+    else if (live.some(r => r.kind !== 'permit' || ['units', 'res', 'nonres'].includes(permitRole(r))))
+      live = live.filter(r => r.kind !== 'permit' || ['units', 'res', 'nonres'].includes(permitRole(r)));
+    // A site plan that only reads "Closed" (no approval date) is taken as approved only when a
+    // building permit for the site's building was issued after it.
+    for (const r of live) {
+      if (r.kind !== 'application' || r.phase !== 'approved' || (r.stage || stageOf(r)) !== 'siteplan' || !/^\s*closed\s*$/i.test(String(r.statusRaw || ''))) continue;
+      const from = recStart(r);
+      r.closedUnconfirmed = !live.some(x => x.kind === 'permit' && x.events.some(e => ['permit', 'construction', 'completed'].includes(e.phase) && (from == null || +e.date >= from))) || undefined;
+    }
     // A site plan approved before a newer zoning / official plan / subdivision file that is still
     // pending was for an earlier proposal: the site is back under review for the new one.
     const masters = live.filter(r => r.kind === 'application' && (r.stage || stageOf(r)) === 'master' && recStart(r) != null && PHASE_BY_KEY[r.phase].rank <= PHASE_BY_KEY.review.rank);
@@ -824,10 +871,11 @@
     }
     // Redevelopment: files that start after an earlier build on the site was
     // completed are a new cycle, and the site's phase is that cycle's phase.
-    const doneAt = Math.max(-Infinity, ...recs.filter(r => !isDemolition(r)).flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
+    const doneAt = Math.max(-Infinity, ...live.filter(r => r.kind === 'permit').flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
+    let cycleFrom = null;
     if (isFinite(doneAt)) {
       const newer = live.filter(r => r.events.length && +r.events[0].date > doneAt);
-      if (newer.length) live = newer;
+      if (newer.length) { live = newer; cycleFrom = new Date(doneAt); }
     }
     let phase = legacyOnly ? 'completed' : live.length
       ? PHASES[live.reduce((m, r) => Math.max(m, PHASE_BY_KEY[sitePhaseOf(r)].rank), 0)].key
@@ -865,6 +913,8 @@
     // Milestones: earliest date at which each phase was reached, across all records.
     const milestones = {};
     const timeline = [];
+    const anyBuilding = recs.some(x => x.kind === 'application' || ['units', 'res', 'nonres'].includes(permitRole(x)));
+    const isBuilding = r => !anyBuilding || r.kind !== 'permit' || ['units', 'res', 'nonres'].includes(permitRole(r));
     for (const r of recs) {
       const tag = r.ref || r.type || (r.kind === 'permit' ? 'Permit' : 'Application');
       for (const e of r.events) {
@@ -872,7 +922,8 @@
         const planStep = e.phase === 'approved' && !countsAsApproval(r);
         const ph = planStep ? 'review' : e.phase;
         timeline.push({ date: e.date, phase: ph, text: `${planStep ? `${r.stage === 'condo' ? 'Condominium' : 'Zoning / official plan / subdivision'} approved` : PHASE_BY_KEY[e.phase].label} · ${humanizeField(e.label)}`, record: r.uid, tag });
-        if (!milestones[ph] || e.date < milestones[ph]) milestones[ph] = e.date;
+        // Milestones come from the site's own buildings: not signs, servicing or demolition permits.
+        if (isBuilding(r) && (!milestones[ph] || e.date < milestones[ph])) milestones[ph] = e.date;
       }
     }
     timeline.sort((a, b) => a.date - b.date);
@@ -902,6 +953,9 @@
       milestones,
       planApproved,
       legacyOnly: legacyOnly || undefined,
+      // The files that set the phase, and the completion that started a new cycle (if any).
+      phaseRecs: live,
+      cycleFrom,
       timeline,
       first: dates.length ? dates[0] : null,
       last: dates.length ? dates[dates.length - 1] : null,
@@ -957,7 +1011,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

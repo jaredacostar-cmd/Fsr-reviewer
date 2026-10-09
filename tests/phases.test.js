@@ -175,3 +175,22 @@ test('a registered plan of subdivision is Approved; demolition permits do not se
   const demo = bp(2, 'HOUSDEMO 22-1', 'Completed', 2022, 2022);
   assert.equal(P.buildProjects([app(3, 'SP 22/9', 'Under Review'), demo])[0].phase, 'review', 'a finished demolition is not the new building');
 });
+
+test('only permits for the site\'s building set its phase; a bare "Closed" site plan needs a permit after it', () => {
+  const pt = { type: 'Point', coordinates: [-79.7, 43.6] };
+  const am = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }, { name: 'APPROVAL_DATE', type: 'esriFieldTypeDate' }]);
+  const app = (id, ref, status, sub, appr) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { FILE_NO: ref, STATUS: status, ADDRESS: '4 Pine St', SUBMITTED_DATE: Date.UTC(sub, 0, 1), APPROVAL_DATE: appr ? Date.UTC(appr, 0, 1) : null } }, am, appSrc);
+  const bp = (ref, type, description, units, issued) => ({ kind: 'permit', ref, type, description, units, uid: ref, municipality: 'Mississauga', statusRaw: 'Issued', phase: 'permit', address: '4 PINE ST', lat: 43.6, lng: -79.7,
+    events: [{ date: new Date(Date.UTC(issued, 0, 1)), phase: 'permit', label: 'Issue Date' }] });
+  assert.equal(P.permitRole(bp('25-1', 'Permanent', 'New', null, 2025)), 'none', 'a sign');
+  assert.equal(P.permitRole(bp('25-2', 'Below Grade Entrance', 'New', null, 2025)), 'none');
+  assert.equal(P.permitRole(bp('DRAIN 25-3 SS', 'RESIDENTIAL', 'SITE SERVICING FOR NEW APARTMENT', null, 2025)), 'servicing');
+  assert.equal(P.permitRole(bp('BP 3NEW 25-4', 'RESIDENTIAL', 'NEW (20) STOREY APARTMENT', 200, 2025)), 'units');
+  assert.equal(P.permitRole(bp('BP 3NEW 25-5', 'INDUSTRIAL', 'NEW SHELL INDUSTRIAL BUILDING INCL (2) DEMISING WALLS', null, 2025)), 'nonres');
+  const sp = app(1, 'SP 22/1', 'Approved', 2022, 2023);
+  assert.equal(P.buildProjects([sp, bp('25-1', 'Permanent', 'New', null, 2025)])[0].phase, 'approved', 'a sign permit is not the building');
+  assert.equal(P.buildProjects([app(1, 'SP 22/1', 'Approved', 2022, 2023), bp('BP 3NEW 25-4', 'RESIDENTIAL', 'NEW (20) STOREY APARTMENT', 200, 2025)])[0].phase, 'permit');
+  assert.equal(P.buildProjects([app(2, 'SPA-2021-0001', 'Closed', 2021)])[0].phase, 'review', 'bare Closed, no permit since');
+  assert.equal(P.buildProjects([app(2, 'SPA-2021-0001', 'Closed', 2021), bp('BP 3NEW 22-9', 'RESIDENTIAL', 'NEW DWELLING', 1, 2022)])[0].phase, 'permit');
+  assert.equal(P.buildProjects([bp('25-1', 'Permanent', 'New', null, 2025)]).length, 0, 'a site with only a sign permit is not a development');
+});
