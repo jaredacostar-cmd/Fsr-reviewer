@@ -830,7 +830,7 @@
       state.muni = q.get('mu') || ''; state.kind = q.get('k') || DEFAULT_KIND; state.search = q.get('q') || '';
       state.sp = q.get('sp') ? q.get('sp').split(',') : []; state.mtsa = q.get('mt') || ''; state.pz = q.get('pz') || ''; state.dr = q.get('dr') || '';
       state.minUnits = Number(q.get('u')) || 0; state.newOnly = q.get('nn') !== '0';
-      if (q.get('ym')) { state.yearMode = q.get('ym'); $('#t-mode').value = state.yearMode; }
+      if (q.get('ym') && [...$('#t-mode').options].some(o => o.value === q.get('ym'))) { state.yearMode = q.get('ym'); $('#t-mode').value = state.yearMode; }
       $('#f-search').value = state.search; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits); $('#f-new').checked = state.newOnly;
       for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) svcOpt[o] = q.get(k);
       if (q.get('ms')) { const [color, size, cap] = q.get('ms').split('.'); for (const [k, v] of [['color', color], ['size', size], ['cap', cap]]) if (MSTYLE[k][v]) mstyle[k] = v; }
@@ -913,7 +913,7 @@
       for (const y of yearsOf(p, state.yearMode)) if (y >= lo && y <= hi) counts.set(y, (counts.get(y) || 0) + 1);
     }
     const max = Math.max(1, ...counts.values());
-    const mode = $('#t-mode').selectedOptions[0].textContent.toLowerCase();
+    const mode = (($('#t-mode').selectedOptions || [])[0] || { textContent: 'any milestone' }).textContent.toLowerCase();
     let bars = '';
     for (let y = lo; y <= hi; y++) {
       const n = counts.get(y) || 0;
@@ -4917,7 +4917,7 @@
     const kindLabel = { '': 'All records', permit: 'Building permits', both: 'Application + permits' };
     const more = [state.focus ? FOCUS[state.focus].label : '', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
       state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? `Drainage: ${(svcById.get(state.dr) || {}).name || ''}` : '',
-      state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? $('#f-units').selectedOptions[0].textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
+      state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? (($('#f-units').selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
     $('#sum-more').textContent = more.length ? more.join(' · ') : 'Focus, areas, record type';
     $('#sect-more').classList.toggle('active', more.length > 0);
   }
@@ -5096,6 +5096,11 @@
   }
 
   // ---- Boot ------------------------------------------------------------------------
+  // Browsers (iOS especially) restore form controls when a tab is reopened; after a layout change the
+  // restored values can land on the wrong control or match no option. Start from the app's state.
+  $('#t-mode').value = state.yearMode; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits);
+  $('#f-new').checked = state.newOnly; $('#f-search').value = state.search;
+  for (const sel of document.querySelectorAll('select')) if (sel.selectedIndex < 0 && sel.options.length) sel.selectedIndex = 0;
   readColors();
   setTiles();
   renderLegend();
