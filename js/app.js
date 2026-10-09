@@ -568,17 +568,19 @@
   }
   // Application boundaries are tappable: anywhere inside opens the project, or, for a site
   // plan nested in a larger development, that application (with a link to the whole project).
+  // Selected developments are outlined in orange (no phase uses it).
+  const SEL_COLOR = '#f76707';
   function outline(p, strong) {
     const apps = siteApps(p);
     const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
     return apps.map(a => {
       const area = P.ringsArea(a.poly);
       // Application boundaries in the project's phase colour with a light fill (the census
-      // areas are the white lines); the selected project is outlined more strongly.
+      // areas are the white lines); the selected project is outlined in orange.
       const ph = colors[p.phase] || colors.approved;
       const poly = L.polygon(toLatLngs(a.poly), {
-        renderer: strong ? focusCanvas : canvas, color: strong ? colors.approved : ph, weight: strong ? 2.5 : 1.6,
-        opacity: strong ? 1 : 0.9, fill: true, fillColor: strong ? colors.approved : ph, fillOpacity: strong ? 0.08 : 0.12,
+        renderer: strong ? focusCanvas : canvas, color: strong ? SEL_COLOR : ph, weight: strong ? 3 : 1.6,
+        opacity: strong ? 1 : 0.9, fill: true, fillColor: strong ? SEL_COLOR : ph, fillOpacity: strong ? 0.2 : 0.12,
       });
       poly._area = area;
       const nested = apps.length > 1 && area < biggest * 0.6;
@@ -591,7 +593,7 @@
   function permitDot(r, p, emph, focus) {
     const m = L.circleMarker([r.lat, r.lng], {
       renderer: focus ? focusCanvas : canvas, radius: emph ? 9 : 5, weight: emph ? 4 : 1.5,
-      color: emph ? colors.approved : '#ffffff', fillColor: colors[r.phase], fillOpacity: 1,
+      color: emph ? SEL_COLOR : '#ffffff', fillColor: colors[r.phase], fillOpacity: 1,
     });
     const parent = parentApps(r, p)[0];
     m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
@@ -2129,7 +2131,7 @@
   // areas add to the selection. The summary opens in the side panel.
   const selection = new Map();          // project key -> project
   let selAreas = [];                    // drawn areas as [[lng, lat], ...] rings
-  const selLayer = L.layerGroup().addTo(map);
+  const selLayer = L.layerGroup().addTo(map), selCanvas = L.canvas({ padding: 0.3 });
   let lassoOn = false;
   const lassoSvg = L.DomUtil.create('div', 'lasso-layer', map.getContainer());
   lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the developments to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span> <button type="button" class="btn small lasso-cancel">Cancel</button></div>';
@@ -2262,7 +2264,11 @@
   function drawSelection() {
     selLayer.clearLayers();
     for (const g of selAreas) L.polygon(g.map(([x, y]) => [y, x]), { className: 'sel-area', interactive: false }).addTo(selLayer);
-    for (const p of selection.values()) L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
+    for (const p of selection.values()) {
+      // Each selected development's application boundaries in orange, and a ring for zoomed-out views.
+      for (const a of siteApps(p)) L.polygon(toLatLngs(a.poly), { renderer: selCanvas, color: SEL_COLOR, weight: 2.5, fillColor: SEL_COLOR, fillOpacity: 0.2, interactive: false }).addTo(selLayer);
+      L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
+    }
   }
   function clearSelection() { selection.clear(); selAreas = []; drawSelection(); if (typeof syncClearBtn === 'function') syncClearBtn(); }
 

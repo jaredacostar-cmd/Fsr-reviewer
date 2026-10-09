@@ -254,6 +254,8 @@ application.
 - **Ground elevation** (AWS Terrain Tiles, Terrarium; CDEM / SRTM, no key): Tools → *Measure &
   ground profile* gives the ground at a point and a profile with fall / grade along a line; the
   development's Servicing tab shows the site's ground and the fall to its catchment outlet.
+- **Selection colour**: the open development's application boundaries, and every development in a
+  lasso selection, are outlined and filled in orange (a colour no phase uses).
 - **Unselect**: tap an empty part of the map, press Esc, or use *Clear selection* (bottom of the map)
   to close the open panel (closing the drawn-area summary also removes the drawn areas; the lasso
   hint has a Cancel button) and clear the highlighted development, catchment / zone, drawn selection,
