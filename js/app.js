@@ -111,7 +111,8 @@
     'aerial-labels': { label: 'Latest aerial + roads', imagery: true, city: true },
     'aerial':        { label: 'Latest aerial', imagery: true, city: true },
     'esri':          { label: 'Esri World Imagery', imagery: true },
-    'streets':       { label: 'Street map', imagery: false },
+    'streets':       { label: 'Street map (light)', imagery: false },
+    'streets-color': { label: 'Street map (colour)', imagery: false },
   };
   // Latest city aerials (Mississauga, Brampton, Caledon) over Esri World Imagery. Image
   // services are drawn as 512 px Web Mercator tiles from exportImage / export.
@@ -148,11 +149,13 @@
   function setTiles() {
     for (const l of baseLayers) map.removeLayer(l);
     const imageryAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics';
+    // Street maps: Esri basemaps (no key needed), like the aerial layers.
     if (basemap === 'streets') {
-      baseLayers = [L.tileLayer(`https://{s}.basemaps.cartocdn.com/${dark() ? 'dark_all' : 'light_all'}/{z}/{x}/{y}{r}.png`, {
-        maxZoom: 20, subdomains: 'abcd',
-        attribution: `&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> · ${DATA_ATTR}`,
-      })];
+      const g = dark() ? 'Dark' : 'Light';
+      baseLayers = [esriLayer(`Canvas/World_${g}_Gray_Base`, { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
+        esriLayer(`Canvas/World_${g}_Gray_Reference`, { maxNativeZoom: 16 })];
+    } else if (basemap === 'streets-color') {
+      baseLayers = [esriLayer('World_Street_Map', { attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` })];
     } else if (BASEMAPS[basemap].city) {
       const city = cityImageryLayers();
       baseLayers = [esriLayer('World_Imagery', { pane: 'imageryPane', attribution: `${city.attribution} · ${DATA_ATTR}` }), ...city.layers];
@@ -1595,9 +1598,11 @@
       const g = groups.get(k); if (!g.tags.includes(t.tag)) g.tags.push(t.tag);
     }
     const h = (state.history && state.history.projects && state.history.projects[p.key]) || [];
+    // Only actual moves: the first weekly check ("first seen as") is when tracking began, not an event.
     h.forEach(([d, ph], i) => {
+      if (!i) return;
       const at = new Date(`${d}T23:59:59`), why = p.timeline.filter(e => e.phase === ph && e.date <= at).sort((a, b) => b.date - a.date)[0];
-      ev.push({ date: new Date(`${d}T12:00:00`), seq: i + 1, type: 'phase', phase: ph, text: `${i ? 'Moved to' : 'First seen as'} ${P.PHASE_BY_KEY[ph].label}`, why });
+      ev.push({ date: new Date(`${d}T12:00:00`), seq: i + 1, type: 'phase', phase: ph, text: `Moved to ${P.PHASE_BY_KEY[ph].label}`, why });
     });
     if (state.council) for (const c of councilBriefs(p)) ev.push({ date: new Date(`${c.m.date}T12:00:00`), type: 'council', c });
     return ev.sort((a, b) => b.date - a.date || (b.seq || 0) - (a.seq || 0));
@@ -2154,6 +2159,80 @@
 
   let searchTimer;
   $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); }, 200); };
+  // Address search: as you type, developments whose address matches and street addresses from a
+  // geocoder (Esri World Geocoder, else OpenStreetMap Nominatim), limited to Peel; picking one pans
+  // and zooms the map there (a development also opens). Enter takes the first suggestion.
+  const sugEl = $('#search-sug'), geoCache = new Map();
+  let sugItems = [], sugSel = -1, sugTimer, sugSeq = 0;
+  const PEEL_EXT = `${CFG.bbox.xmin},${CFG.bbox.ymin},${CFG.bbox.xmax},${CFG.bbox.ymax}`;
+  async function geocode(q) {
+    if (geoCache.has(q)) return geoCache.get(q);
+    let out = [];
+    try {
+      const u = `https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&singleLine=${encodeURIComponent(q)}&searchExtent=${PEEL_EXT}&countryCode=CAN&maxLocations=5&outFields=Match_addr`;
+      const r = await fetch(u); const j = r.ok ? await r.json() : null;
+      out = (j && j.candidates || []).filter(c => c.score >= 75).map(c => ({ label: c.address, lat: c.location.y, lng: c.location.x }));
+    } catch (e) { /* try the next geocoder */ }
+    if (!out.length) try {
+      const b = CFG.bbox, u = `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&countrycodes=ca&bounded=1&viewbox=${b.xmin},${b.ymax},${b.xmax},${b.ymin}&q=${encodeURIComponent(q)}`;
+      const r = await fetch(u, { headers: { 'Accept-Language': 'en' } }); const j = r.ok ? await r.json() : [];
+      out = j.map(x => ({ label: x.display_name.split(', ').slice(0, 4).join(', '), lat: +x.lat, lng: +x.lon }));
+    } catch (e) { /* offline */ }
+    const inPeel = x => x.lng >= CFG.bbox.xmin && x.lng <= CFG.bbox.xmax && x.lat >= CFG.bbox.ymin && x.lat <= CFG.bbox.ymax;
+    out = out.filter(inPeel);
+    geoCache.set(q, out);
+    return out;
+  }
+  function renderSug() {
+    sugEl.hidden = !sugItems.length;
+    sugEl.innerHTML = sugItems.map((x, i) => `<li role="option" data-i="${i}" class="${i === sugSel ? 'on' : ''}" aria-selected="${i === sugSel}">${x.p ? dot(x.p.phase) : '<span class="sug-pin" aria-hidden="true"></span>'}<span>${esc(x.label)}<small>${x.p ? `${esc(x.p.municipality)} · ${esc(P.PHASE_BY_KEY[x.p.phase].label)}` : x.loading ? 'searching addresses…' : 'Go to address'}</small></span></li>`).join('');
+  }
+  async function updateSug(q) {
+    const seq = ++sugSeq;
+    if (q.length < 3) { sugItems = []; renderSug(); return; }
+    const ql = q.toLowerCase();
+    const devs = state.projects.filter(p => p.lat != null && (p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql) || (r.ref || '').toLowerCase() === ql)))
+      .sort((a, b) => (b.title.toLowerCase().startsWith(ql) - a.title.toLowerCase().startsWith(ql)) || (b.units || 0) - (a.units || 0)).slice(0, 4);
+    sugItems = [...devs.map(p => ({ label: p.title, p })), ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : [])];
+    sugSel = -1; renderSug();
+    if (!sugItems.some(x => x.loading)) return;
+    const geo = await geocode(q);
+    if (seq !== sugSeq) return;
+    sugItems = [...devs.map(p => ({ label: p.title, p })), ...geo.map(g => ({ label: g.label, g }))];
+    renderSug();
+  }
+  const pinLayer = L.layerGroup().addTo(map);
+  function goSug(x) {
+    if (!x || x.loading) return;
+    sugItems = []; renderSug();
+    // On a phone the search sits in the list view: switch to the map to show the place.
+    if (innerWidth <= 760 && $('#sidebar').classList.contains('open')) { toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
+    if (x.p) { map.setView([x.p.lat, x.p.lng], Math.max(map.getZoom(), 17)); showDetail(x.p); return; }
+    // An address: pan and zoom there with a pin; the text filter is cleared so nothing is hidden.
+    $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); }
+    pinLayer.clearLayers();
+    L.marker([x.g.lat, x.g.lng], { icon: L.divIcon({ className: 'addr-pin', html: '<span></span>', iconSize: [22, 22], iconAnchor: [11, 22] }), keyboard: false })
+      .bindTooltip(`<strong>${esc(x.g.label)}</strong><br><span class="muted">Tap to remove</span>`, { className: 'pt', direction: 'top', offset: [0, -20], permanent: true })
+      .on('click', () => pinLayer.clearLayers()).addTo(pinLayer);
+    map.setView([x.g.lat, x.g.lng], 17);
+    if (innerWidth <= 760) closeDetail();
+  }
+  $('#f-search').addEventListener('input', e => { clearTimeout(sugTimer); const q = e.target.value.trim(); sugTimer = setTimeout(() => updateSug(q), 300); });
+  $('#f-search').addEventListener('keydown', async e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      if (!sugItems.length) return; e.preventDefault();
+      sugSel = (sugSel + (e.key === 'ArrowDown' ? 1 : -1) + sugItems.length) % sugItems.length; renderSug();
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      const q = e.target.value.trim(); if (q.length < 3) return;
+      if (sugSel >= 0) return goSug(sugItems[sugSel]);
+      const ready = sugItems.find(x => !x.loading);
+      if (ready) return goSug(ready);
+      const geo = await geocode(q); if (geo.length) goSug({ label: geo[0].label, g: geo[0] });
+    } else if (e.key === 'Escape') { sugItems = []; renderSug(); }
+  });
+  sugEl.addEventListener('mousedown', e => { const li = e.target.closest('[data-i]'); if (li) { e.preventDefault(); goSug(sugItems[+li.dataset.i]); } });
+  $('#f-search').addEventListener('blur', () => setTimeout(() => { sugItems = []; renderSug(); }, 150));
   $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
   $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
   $('#f-units').onchange = e => { const v = e.target.value; state.minUnits = v === 'left' || v === 'committed' ? v : Number(v) || 0; applyFilters(); };

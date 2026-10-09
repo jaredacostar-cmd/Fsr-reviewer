@@ -45,8 +45,9 @@
       <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
         <div class="search-bar">
           <label class="field"><span class="sr">Search</span>
-            <input type="search" id="f-search" placeholder="Search address, file number, description…">
+            <input type="search" id="f-search" placeholder="Search address, file number, description…" autocomplete="off" aria-autocomplete="list" aria-controls="search-sug">
           </label>
+          <ul class="search-sug" id="search-sug" role="listbox" hidden></ul>
           <div class="active-filters" id="active-filters" aria-live="polite"></div>
         </div>
 
