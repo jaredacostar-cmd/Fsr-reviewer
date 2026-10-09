@@ -125,6 +125,14 @@ jobs:
             gzip -9 -f dc/$k.svg dc/$k.bbox.html || true
             rm -f dc/$k.pdf
           done
+          for d in "dcbs2024 https://peelregion.ca/sites/default/files/2024-05/peel_development-charges-background-study.pdf" "dcbs2024may https://peelregion.ca/sites/default/files/2024-05/peel-dc-background-study-may-13.pdf"; do
+            set -- $d; curl -sSL -A "Mozilla/5.0 (peel-dev-tracker)" -o dc/$1.pdf "$2" || true
+            pdfinfo dc/$1.pdf | grep -E "Pages|Title" || true
+            pdftotext -layout dc/$1.pdf dc/$1.txt || true; gzip -9 -f dc/$1.txt || true; rm -f dc/$1.pdf
+          done
+          for d in "news-link2build https://www.link2build.ca/news/posts/peel-region-allocates-130-million-to-expand-wastewater-capacity/" "news-ocn https://ontarioconstructionnews.com/peel-region-pours-130-million-into-expansion-plan-at-water-treatment-plant" "dc-page https://peelregion.ca/about/finance/development-charges"; do
+            set -- $d; curl -sSL -A "Mozilla/5.0 (peel-dev-tracker)" -o dc/$1.html "$2" || true
+          done
           du -sh dc; ls -laR dc | head -120
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
