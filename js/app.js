@@ -5983,6 +5983,51 @@
     store.set('footOpen', !collapsed);
   }
   $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
+  // Resizable bottom panels: drag the analysis panel's top edge (any screen) or the phone sheet's
+  // grip to show more map; tap the grip to step through heights. Heights are remembered.
+  function dragResize(grip, { get, set, done }) {
+    let y0 = 0, h0 = 0, moved = false;
+    grip.addEventListener('pointerdown', e => {
+      if (e.button > 0) return;
+      y0 = e.clientY; h0 = get(); moved = false; grip.setPointerCapture(e.pointerId); grip.classList.add('dragging'); e.preventDefault();
+    });
+    grip.addEventListener('pointermove', e => {
+      if (!grip.hasPointerCapture(e.pointerId)) return;
+      const dy = y0 - e.clientY; if (Math.abs(dy) > 3) moved = true;
+      if (moved) set(h0 + dy);
+    });
+    const end = e => { if (!grip.hasPointerCapture(e.pointerId)) return; grip.releasePointerCapture(e.pointerId); grip.classList.remove('dragging'); done(moved); };
+    grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
+  }
+  const footer = $('#footer');
+  let mapFix = 0; const fixMap = () => { cancelAnimationFrame(mapFix); mapFix = requestAnimationFrame(() => map.invalidateSize({ pan: false })); };
+  const setFootH = h => {
+    const max = Math.round(innerHeight * 0.8), v = Math.max(90, Math.min(max, Math.round(h)));
+    footer.style.setProperty('--foot-h', `${v}px`); fixMap(); return v;
+  };
+  if (store.get('footH', null)) setFootH(store.get('footH'));
+  dragResize($('#footer-grip'), {
+    get: () => footer.getBoundingClientRect().height,
+    set: h => { if (footer.classList.contains('collapsed')) setFooterCollapsed(false); setFootH(h); },
+    done: moved => { if (moved) store.set('footH', parseInt(footer.style.getPropertyValue('--foot-h'), 10)); else if (footer.classList.contains('collapsed')) setFooterCollapsed(false); fixMap(); },
+  });
+  $('#footer-grip').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return; e.preventDefault();
+    store.set('footH', setFootH(footer.getBoundingClientRect().height + (e.key === 'ArrowUp' ? 40 : -40)));
+  });
+  // Phone bottom sheet (the info panel): drag the grip, or tap it to step 30% → 50% → 62% → 92%.
+  const SHEET_STEPS = [30, 50, 62, 92], detailEl = $('#detail');
+  const setSheetH = vh => { const v = Math.max(18, Math.min(94, vh)); detailEl.style.setProperty('--sheet-h', `${v}dvh`); detailEl.style.setProperty('--sheet-hv', `${v}vh`); return v; };
+  if (store.get('sheetH', null)) setSheetH(store.get('sheetH'));
+  dragResize($('#detail-grip'), {
+    get: () => detailEl.getBoundingClientRect().height,
+    set: h => setSheetH(h / innerHeight * 100),
+    done: moved => {
+      const cur = detailEl.getBoundingClientRect().height / innerHeight * 100;
+      if (moved) store.set('sheetH', Math.round(setSheetH(cur)));
+      else { const nx = SHEET_STEPS.find(s => s > cur + 2) || SHEET_STEPS[0]; store.set('sheetH', setSheetH(nx)); }
+    },
+  });
   $('#f-sum').onclick = () => setFooterCollapsed(false);
   setFooterCollapsed(!store.get('footOpen', false));
   $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
