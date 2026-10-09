@@ -208,6 +208,12 @@ application.
   drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
   WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
   above 1,000.
+- **Servicing check** (development panel): the whole development's flows at Peel design criteria
+  (L/s as in an FSR, ML/d below), its pressure zone and share of the zone's build-out max day, the
+  traced sewer path from its catchment to the plant with its share of the flow at each outlet, and
+  what it means for the plant's uncommitted reserve (built / approved are already counted,
+  proposed would draw on the reserve). Pumping station and trunk capacities aren't published by
+  the Region, so only the plant is checked against capacity.
 - **Water** and **Wastewater** tabs (bottom panel). Like the Growth tab, each row is split into
   the census baseline (year from the timeline), + built since census day, + approved and +
   proposed (in review), adding up to build-out, with a stacked bar of that split; growth from
