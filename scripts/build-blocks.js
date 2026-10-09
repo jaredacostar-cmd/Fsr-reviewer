@@ -107,6 +107,17 @@ function areaHa(rings) {
     }
     const pop = {};
     for (const d of DA) { const r = d[4] && d[4][0]; if (!r) continue; let x = 0, y = 0; for (const [a, bb] of r) { x += a; y += bb; } x /= r.length; y /= r.length; if (inB(b, x, y)) pop[d[3]] = (pop[d[3]] || 0) + d[1]; }
+    // Label point: inside the block, as far from its edges as a 24 × 24 search of its largest part finds.
+    const big = b.parts.slice().sort((x, y) => areaHa(y) - areaHa(x))[0], ring = big[0];
+    const kxL = 111320 * Math.cos(ring[0][1] * Math.PI / 180), xs = ring.map(q => q[0]), ys = ring.map(q => q[1]);
+    const segD = (x, y) => { let m = Infinity; for (const r of big) for (let i = 1; i < r.length; i++) { const ax = (r[i - 1][0] - x) * kxL, ay = (r[i - 1][1] - y) * 111320, bx = (r[i][0] - x) * kxL, by = (r[i][1] - y) * 111320, dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy, t = L2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L2)) : 0; m = Math.min(m, Math.hypot(ax + t * dx, ay + t * dy)); } return m; };
+    let best = null, bd = -1;
+    for (let i = 0; i <= 24; i++) for (let k = 0; k <= 24; k++) {
+      const x = Math.min(...xs) + (Math.max(...xs) - Math.min(...xs)) * i / 24, y = Math.min(...ys) + (Math.max(...ys) - Math.min(...ys)) * k / 24;
+      if (!inRing(x, y, ring) || big.slice(1).some(h => inRing(x, y, h))) continue;
+      const d = segD(x, y); if (d > bd) { bd = d; best = [+x.toFixed(5), +y.toFixed(5)]; }
+    }
+    b.lp = best || b.c;
     b.muni = Object.keys(pop).sort((a, c) => pop[c] - pop[a])[0] || null;
     let sp = 0, sh = 0; for (const i of own) { sp += Math.max(0, P[i][4] - upPop[i]); sh += Math.max(0, P[i][5] - upHa[i]); }
     const daPop = Object.values(pop).reduce((t, v) => t + v, 0);
