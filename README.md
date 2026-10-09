@@ -252,6 +252,26 @@ application.
 - **Capacity by year**: the year slider in the legend phases approved and proposed growth in as set
   in Horizon years, so catchments and pumping stations change colour as growth arrives.
 - Census area outlines are now off by default (turn on under Layers & style).
+- **Planned works (2026 DC capital maps, draft)**: `data/dc-infra.json`, built by
+  `scripts/build-dc-infra.py` from the Region's water and wastewater Development Charges capital
+  maps (geospatial PDFs fetched by the probe workflow, `mode=dc-maps`). Proposed (2027–2051) and
+  approved (2026) mains with construction year, component and project numbers and diameter, inset
+  maps placed through their extent boxes and georeferenced from the PDF (a few metres); facility
+  schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
+  route descriptions joined from the 2020 DC Background Study by component number. Used for:
+  - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
+    works after the legend year are faded);
+  - the development brief: the planned main it would connect to, trunks and facilities on its sewer
+    path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
+    development outside the existing network relies on a main not built until later; a marker
+    colour *Servicing timing (2026 DC)*;
+  - **greenfield connection**: a development outside the traced network takes the catchment / zone
+    of the planned main it would connect to (within 1 km) before the nearest-area rule;
+  - **plant expansions** in Horizon years: G.E. Booth +40 ML/d by 2028 (council-approved February
+    2024) and 600 ML/d after the 2036 construction, Clarkson 500 ML/d after the 2026–2028
+    construction; the years are editable and the expansions can be switched off;
+  - *What loads this?* lists the planned works for the catchment / zone / plant; *Planned works
+    (GeoJSON)* exports them.
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater

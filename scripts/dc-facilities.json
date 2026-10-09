@@ -1,0 +1,1610 @@
+{
+ "note": "Transcribed from the facility boxes of the Region of Peel 2026 DC capital maps (draft v2, March 2026); the box text is outlined in the PDF. Phases: EA = environmental assessment, P = property, D = design, C = construction, each with its year and component number.",
+ "wastewater": [
+  {
+   "name": "G.E. Booth Water Resource Recovery Facility",
+   "plant": "Lakeview",
+   "kind": "plant",
+   "items": [
+    {
+     "what": "New Outfall",
+     "proj": "22-2944",
+     "phases": [
+      [
+       "D",
+       2026,
+       "58180"
+      ],
+      [
+       "D",
+       2027,
+       "58442"
+      ]
+     ]
+    },
+    {
+     "what": "Site Security Improvements",
+     "proj": "24-2917",
+     "phases": [
+      [
+       "C",
+       2026,
+       "56811"
+      ]
+     ]
+    },
+    {
+     "what": "Ash Management Facility",
+     "proj": "24-2942",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58443"
+      ],
+      [
+       "C",
+       2027,
+       "52834"
+      ]
+     ]
+    },
+    {
+     "what": "Ash Removal",
+     "proj": "25-2925",
+     "phases": [
+      [
+       "C",
+       2026,
+       "30585"
+      ],
+      [
+       "C",
+       2027,
+       "30586"
+      ],
+      [
+       "C",
+       2028,
+       "58613"
+      ]
+     ]
+    },
+    {
+     "what": "Treatment Expansion (518 to 600 ML/d)",
+     "proj": "25-2945",
+     "capacity": {
+      "to": 600
+     },
+     "phases": [
+      [
+       "D",
+       2033,
+       "38620"
+      ],
+      [
+       "D",
+       2033,
+       "38621"
+      ],
+      [
+       "C",
+       2036,
+       "51944"
+      ],
+      [
+       "C",
+       2036,
+       "51945"
+      ],
+      [
+       "C",
+       2036,
+       "52838"
+      ]
+     ]
+    },
+    {
+     "what": "Treatment Expansion",
+     "proj": "26-2563",
+     "phases": [
+      [
+       "EA",
+       2026,
+       "57067"
+      ]
+     ]
+    },
+    {
+     "what": "Digesters and Beneficial Gas Reuse",
+     "proj": "27-2941",
+     "phases": [
+      [
+       "D",
+       2027,
+       "56886"
+      ],
+      [
+       "C",
+       2029,
+       "56887"
+      ]
+     ]
+    },
+    {
+     "what": "Ultraviolet Disinfection",
+     "proj": "26-2949",
+     "phases": [
+      [
+       "D",
+       2026,
+       "56888"
+      ],
+      [
+       "D",
+       2027,
+       "58608"
+      ],
+      [
+       "C",
+       2028,
+       "56889"
+      ]
+     ]
+    },
+    {
+     "what": "Administration Building",
+     "proj": "26-2943",
+     "phases": [
+      [
+       "D",
+       2026,
+       "51946"
+      ],
+      [
+       "C",
+       2028,
+       "51947"
+      ]
+     ]
+    },
+    {
+     "what": "Biosolids Expansion",
+     "proj": "31-2599",
+     "phases": [
+      [
+       "EA",
+       2031,
+       "38619"
+      ]
+     ]
+    },
+    {
+     "what": "Biosolids Expansion",
+     "proj": "31-2999",
+     "phases": [
+      [
+       "D",
+       2032,
+       "51950"
+      ],
+      [
+       "D",
+       2032,
+       "51952"
+      ],
+      [
+       "C",
+       2036,
+       "51951"
+      ],
+      [
+       "C",
+       2034,
+       "51953"
+      ],
+      [
+       "C",
+       2036,
+       "35964"
+      ]
+     ]
+    },
+    {
+     "what": "Standby Power Expansion",
+     "proj": "31-2999",
+     "phases": [
+      [
+       "D",
+       2030,
+       "52214"
+      ],
+      [
+       "C",
+       2032,
+       "52215"
+      ]
+     ]
+    },
+    {
+     "what": "Ash Management Facility",
+     "proj": "31-2999",
+     "phases": [
+      [
+       "D",
+       2032,
+       "37812"
+      ],
+      [
+       "C",
+       2034,
+       "37813"
+      ]
+     ]
+    },
+    {
+     "what": "Odour Control Improvements",
+     "proj": "20-2961",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58706"
+      ],
+      [
+       "C",
+       2028,
+       "58614"
+      ]
+     ]
+    },
+    {
+     "what": "Plant 2 Blower Replacement",
+     "proj": "22-2923",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58709"
+      ],
+      [
+       "C",
+       2028,
+       "58615"
+      ]
+     ]
+    },
+    {
+     "what": "SCADA Improvements",
+     "proj": "19-2981",
+     "phases": [
+      [
+       "C",
+       2027,
+       "57514"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Clarkson Water Resource Recovery Facility",
+   "plant": "Clarkson",
+   "kind": "plant",
+   "items": [
+    {
+     "what": "Treatment Expansion (350 to 500 ML/d)",
+     "proj": "22-2950",
+     "capacity": {
+      "to": 500
+     },
+     "phases": [
+      [
+       "C",
+       2026,
+       "53368"
+      ],
+      [
+       "C",
+       2027,
+       "58710"
+      ],
+      [
+       "C",
+       2028,
+       "58711"
+      ]
+     ]
+    },
+    {
+     "what": "Biosolids Expansion",
+     "proj": "23-2952",
+     "phases": [
+      [
+       "C",
+       2026,
+       "54572"
+      ],
+      [
+       "C",
+       2027,
+       "58712"
+      ],
+      [
+       "C",
+       2028,
+       "56236"
+      ],
+      [
+       "C",
+       2029,
+       "56237"
+      ]
+     ]
+    },
+    {
+     "what": "Treatment Expansion",
+     "proj": "26-2564",
+     "phases": [
+      [
+       "EA",
+       2026,
+       "57068"
+      ]
+     ]
+    },
+    {
+     "what": "New Operations Building",
+     "proj": "26-2959",
+     "phases": [
+      [
+       "C",
+       2028,
+       "56885"
+      ]
+     ]
+    },
+    {
+     "what": "Standby Power Expansion",
+     "proj": "31-2999",
+     "phases": [
+      [
+       "D",
+       2030,
+       "52214"
+      ],
+      [
+       "C",
+       2032,
+       "52215"
+      ]
+     ]
+    },
+    {
+     "what": "SCADA Improvements",
+     "proj": "19-2981",
+     "phases": [
+      [
+       "C",
+       2027,
+       "57514"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "McLaughlin",
+   "label": "McLaughlin",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "New Sewage Pumping Station",
+     "proj": "24-2985",
+     "phases": [
+      [
+       "C",
+       2026,
+       "57360"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "North Hill",
+   "label": "North Hill",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "New Sewage Pumping Station",
+     "proj": "24-2984",
+     "phases": [
+      [
+       "C",
+       2027,
+       "56678"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Church Street",
+   "label": "Church Street",
+   "kind": "odour_control",
+   "items": [
+    {
+     "what": "Odour Control Facility",
+     "proj": "31-2960",
+     "phases": [
+      [
+       "D",
+       2031,
+       "35358"
+      ],
+      [
+       "P",
+       2031,
+       "35223"
+      ],
+      [
+       "C",
+       2033,
+       "34286"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Streetsville",
+   "label": "Streetsville",
+   "kind": "odour_control",
+   "items": [
+    {
+     "what": "New Facility",
+     "proj": "31-2960",
+     "phases": [
+      [
+       "D",
+       2031,
+       "35364"
+      ],
+      [
+       "P",
+       2031,
+       "35221"
+      ],
+      [
+       "C",
+       2033,
+       "34285"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Jack Darling 3 Sewer Pumping Station",
+   "label": "Jack Darling 3",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "New Pumping Station",
+     "proj": "24-2980",
+     "phases": [
+      [
+       "C",
+       2027,
+       "53012"
+      ],
+      [
+       "C",
+       2027,
+       "58347"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Rosemere",
+   "label": "Rosemere",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Facility Replacement",
+     "proj": "27-2972",
+     "phases": [
+      [
+       "D",
+       2027,
+       "56806"
+      ],
+      [
+       "C",
+       2028,
+       "56807"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Beach Street Sanitary Pumping Station",
+   "label": "Beach Street",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Upgrades",
+     "proj": "24-2971",
+     "phases": [
+      [
+       "C",
+       2027,
+       "52755"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Lakeview Village",
+   "label": "Lakeview Village",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "New Sewage Pumping Station",
+     "proj": "26-2982",
+     "phases": [
+      [
+       "D",
+       2026,
+       "27417"
+      ],
+      [
+       "C",
+       2026,
+       "27418"
+      ]
+     ]
+    }
+   ],
+   "at": [
+    -79.5655,
+    43.5785
+   ],
+   "approx": true
+  },
+  {
+   "name": "Sanitary Pumping Stations",
+   "kind": "program",
+   "items": [
+    {
+     "what": "Decommissioning",
+     "proj": "27-2978",
+     "phases": [
+      [
+       "D",
+       2027,
+       "52841"
+      ],
+      [
+       "C",
+       2029,
+       "52842"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Various Dosing Stations",
+   "kind": "program",
+   "items": [
+    {
+     "what": "New Dosing Stations",
+     "proj": "31-2960",
+     "phases": [
+      [
+       "D",
+       2031,
+       "35383"
+      ],
+      [
+       "P",
+       2031,
+       "35224"
+      ],
+      [
+       "C",
+       2033,
+       "34287"
+      ]
+     ]
+    }
+   ]
+  }
+ ],
+ "water": [
+  {
+   "name": "Arthur P. Kennedy Water Treatment Plant",
+   "label": "Aurthur P. Kennedy",
+   "kind": "plant",
+   "items": [
+    {
+     "what": "Reservoir Expansion",
+     "proj": "21-1923",
+     "phases": [
+      [
+       "C",
+       2028,
+       "23396"
+      ]
+     ]
+    },
+    {
+     "what": "Lake Ontario Monitoring System",
+     "proj": "22-1924",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58654"
+      ]
+     ]
+    },
+    {
+     "what": "Standby Power Expansion",
+     "proj": "27-1982",
+     "phases": [
+      [
+       "D",
+       2027,
+       "53560"
+      ],
+      [
+       "C",
+       2028,
+       "53561"
+      ],
+      [
+       "C",
+       2029,
+       "53562"
+      ]
+     ]
+    },
+    {
+     "what": "Treatment Expansion",
+     "proj": "29-1925",
+     "phases": [
+      [
+       "EA",
+       2025,
+       "50380"
+      ],
+      [
+       "D",
+       2029,
+       "32975"
+      ],
+      [
+       "P",
+       2029,
+       "32976"
+      ],
+      [
+       "C",
+       2031,
+       "32977"
+      ]
+     ]
+    },
+    {
+     "what": "Waste Building Expansion",
+     "proj": "31-1997",
+     "phases": [
+      [
+       "D",
+       2031,
+       "23404"
+      ],
+      [
+       "C",
+       2033,
+       "23405"
+      ]
+     ]
+    },
+    {
+     "what": "New Intake",
+     "proj": "30-1997",
+     "phases": [
+      [
+       "EA",
+       2029,
+       "23451"
+      ],
+      [
+       "D",
+       2037,
+       "23452"
+      ],
+      [
+       "C",
+       2039,
+       "23453"
+      ]
+     ]
+    },
+    {
+     "what": "Baseball Diamond Restoration",
+     "proj": "26-1927",
+     "phases": [
+      [
+       "C",
+       2026,
+       "59291"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Lorne Park Water Treatment Plant",
+   "label": "Lorne Park",
+   "kind": "plant",
+   "items": [
+    {
+     "what": "Lake Ontario Monitoring System",
+     "proj": "22-1934",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58655"
+      ]
+     ]
+    },
+    {
+     "what": "Transient Upgrades",
+     "proj": "23-1990",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58693"
+      ],
+      [
+       "C",
+       2028,
+       "58694"
+      ]
+     ]
+    },
+    {
+     "what": "Transients / Protection Expansion",
+     "proj": "28-1995",
+     "phases": [
+      [
+       "D",
+       2028,
+       "54304"
+      ],
+      [
+       "C",
+       2030,
+       "54305"
+      ]
+     ]
+    },
+    {
+     "what": "Treatment Expansion",
+     "proj": "31-1997",
+     "phases": [
+      [
+       "EA",
+       2026,
+       "51085"
+      ],
+      [
+       "D",
+       2032,
+       "32978"
+      ],
+      [
+       "P",
+       2032,
+       "32979"
+      ],
+      [
+       "C",
+       2034,
+       "32980"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Inglewood",
+   "label": "Inglewood",
+   "kind": "well",
+   "items": [
+    {
+     "what": "New Groundwater Well",
+     "proj": "25-1831",
+     "phases": [
+      [
+       "C",
+       2028,
+       "52302"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Caledon East",
+   "label": "Caledon East",
+   "kind": "well",
+   "items": [
+    {
+     "what": "New Groundwater Well",
+     "proj": "23-1830",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58651"
+      ]
+     ]
+    }
+   ],
+   "at": [
+    -79.8655,
+    43.8745
+   ],
+   "approx": true
+  },
+  {
+   "name": "South Albion",
+   "label": "South Albion",
+   "kind": "reservoir",
+   "items": [
+    {
+     "what": "New Reservoir and Pumping Station",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "EA",
+       2032,
+       "22574"
+      ],
+      [
+       "D",
+       2034,
+       "35752"
+      ],
+      [
+       "P",
+       2034,
+       "35753"
+      ],
+      [
+       "C",
+       2036,
+       "35754"
+      ],
+      [
+       "C",
+       2036,
+       "35755"
+      ]
+     ]
+    },
+    {
+     "what": "New Elevated Tank",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "EA",
+       2033,
+       "38092"
+      ],
+      [
+       "D",
+       2037,
+       "35756"
+      ],
+      [
+       "P",
+       2037,
+       "35757"
+      ],
+      [
+       "C",
+       2039,
+       "35758"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Victoria",
+   "label": "Victoria",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "New Pumping Station",
+     "proj": "30-1963",
+     "phases": [
+      [
+       "EA",
+       2028,
+       "22350"
+      ],
+      [
+       "D",
+       2030,
+       "23447"
+      ],
+      [
+       "C",
+       2032,
+       "23448"
+      ]
+     ]
+    },
+    {
+     "what": "Reservoir",
+     "proj": "10-1966",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58652"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Macville",
+   "label": "Macville",
+   "kind": "elevated_tank",
+   "items": [
+    {
+     "what": "New Elevated Tank",
+     "proj": "26-1943",
+     "phases": [
+      [
+       "EA",
+       2026,
+       "22514"
+      ],
+      [
+       "D",
+       2026,
+       "30682"
+      ],
+      [
+       "P",
+       2026,
+       "32702"
+      ],
+      [
+       "C",
+       2028,
+       "32010"
+      ]
+     ]
+    },
+    {
+     "what": "Booster Pumping Station",
+     "proj": "24-1969",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58372"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Castlederg",
+   "label": "Castlederg",
+   "kind": "elevated_tank",
+   "items": [
+    {
+     "what": "New Elevated Tank",
+     "proj": "26-1944",
+     "phases": [
+      [
+       "EA",
+       2026,
+       "22677"
+      ],
+      [
+       "D",
+       2026,
+       "35614"
+      ],
+      [
+       "P",
+       2026,
+       "35615"
+      ],
+      [
+       "C",
+       2028,
+       "35616"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Heritage Road",
+   "label": "Heritage Road",
+   "kind": "elevated_tank",
+   "items": [
+    {
+     "what": "New Elevated Tank",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "EA",
+       2034,
+       "34474"
+      ],
+      [
+       "D",
+       2035,
+       "32972"
+      ],
+      [
+       "P",
+       2035,
+       "32973"
+      ],
+      [
+       "C",
+       2037,
+       "32974"
+      ]
+     ]
+    }
+   ],
+   "near": [
+    -79.918,
+    43.7124
+   ]
+  },
+  {
+   "name": "Snelgrove",
+   "label": "Snelgrove",
+   "kind": "elevated_tank",
+   "items": [
+    {
+     "what": "New Elevated Tank",
+     "proj": "30-1946",
+     "phases": [
+      [
+       "EA",
+       2028,
+       "22428"
+      ],
+      [
+       "D",
+       2030,
+       "37130"
+      ],
+      [
+       "P",
+       2030,
+       "37131"
+      ],
+      [
+       "C",
+       2032,
+       "37132"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "West Caledon",
+   "label": "West Caledon",
+   "kind": "elevated_tank",
+   "items": [
+    {
+     "what": "New Elevated Tank",
+     "proj": "23-1941",
+     "phases": [
+      [
+       "D",
+       2026,
+       "58668"
+      ],
+      [
+       "C",
+       2028,
+       "20685"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Sandhill",
+   "label": "Sandhill",
+   "kind": "reservoir",
+   "items": [
+    {
+     "what": "New Reservoir and Pumping Station",
+     "proj": "28-1945",
+     "phases": [
+      [
+       "EA",
+       2026,
+       "35850"
+      ],
+      [
+       "D",
+       2028,
+       "38087"
+      ],
+      [
+       "P",
+       2028,
+       "38088"
+      ],
+      [
+       "C",
+       2030,
+       "38089"
+      ],
+      [
+       "C",
+       2030,
+       "38090"
+      ]
+     ]
+    }
+   ],
+   "near": [
+    -79.8003,
+    43.8386
+   ]
+  },
+  {
+   "name": "North Brampton",
+   "label": "North Brampton",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Transient Protection Expansion",
+     "proj": "22-1987",
+     "phases": [
+      [
+       "D",
+       2026,
+       "58680"
+      ],
+      [
+       "C",
+       2028,
+       "54337"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "East Brampton",
+   "label": "East Brampton",
+   "kind": "reservoir",
+   "items": [
+    {
+     "what": "Reservoir Improvements and Upgrades",
+     "proj": "26-1954",
+     "phases": [
+      [
+       "C",
+       2027,
+       "32269"
+      ],
+      [
+       "C",
+       2027,
+       "58345"
+      ]
+     ]
+    },
+    {
+     "what": "Transients Protection Expansion",
+     "proj": "24-1985",
+     "phases": [
+      [
+       "D",
+       2026,
+       "54303"
+      ],
+      [
+       "C",
+       2027,
+       "54303"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Tullamore",
+   "label": "Tullamore",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "29-1964",
+     "phases": [
+      [
+       "D",
+       2029,
+       "56932"
+      ],
+      [
+       "C",
+       2031,
+       "56933"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Airport Road",
+   "label": "Airport Road",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Transient Protection Expansion",
+     "proj": "28-1995",
+     "phases": [
+      [
+       "D",
+       2028,
+       "54294"
+      ],
+      [
+       "C",
+       2030,
+       "54295"
+      ]
+     ]
+    },
+    {
+     "what": "Hydro-Pneumatic Air Chamber",
+     "proj": "22-1988",
+     "phases": [
+      [
+       "D",
+       2026,
+       "58681"
+      ],
+      [
+       "C",
+       2028,
+       "54339"
+      ]
+     ]
+    },
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "29-1965",
+     "phases": [
+      [
+       "P",
+       2026,
+       "59300"
+      ],
+      [
+       "D",
+       2029,
+       "56934"
+      ],
+      [
+       "C",
+       2031,
+       "56937"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "West Brampton",
+   "label": "West Brampton",
+   "kind": "reservoir",
+   "items": [
+    {
+     "what": "Reservoir Expansion",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "D",
+       2031,
+       "25259"
+      ],
+      [
+       "C",
+       2033,
+       "26196"
+      ]
+     ]
+    },
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "26-1962",
+     "phases": [
+      [
+       "D",
+       2026,
+       "23391"
+      ],
+      [
+       "C",
+       2027,
+       "23392"
+      ]
+     ]
+    },
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "D",
+       2030,
+       "34485"
+      ],
+      [
+       "C",
+       2031,
+       "16350"
+      ]
+     ]
+    },
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "D",
+       2034,
+       "23389"
+      ],
+      [
+       "C",
+       2035,
+       "23390"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Beckett Sproule",
+   "label": "Beckett Sproule",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Improvements and Upgrades",
+     "proj": "21-1978",
+     "phases": [
+      [
+       "C",
+       2026,
+       "58653"
+      ]
+     ]
+    },
+    {
+     "what": "Transient Protection Expansion",
+     "proj": "28-1995",
+     "phases": [
+      [
+       "D",
+       2028,
+       "54296"
+      ],
+      [
+       "C",
+       2030,
+       "54297"
+      ]
+     ]
+    },
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "D",
+       2031,
+       "52045"
+      ],
+      [
+       "C",
+       2033,
+       "52046"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Meadowvale North",
+   "label": "Meadowvale",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Transient Protection Expansion",
+     "proj": "22-1986",
+     "phases": [
+      [
+       "D",
+       2026,
+       "58679"
+      ],
+      [
+       "C",
+       2028,
+       "54335"
+      ]
+     ]
+    },
+    {
+     "what": "Transient Protection Expansion",
+     "proj": "28-1995",
+     "phases": [
+      [
+       "D",
+       2028,
+       "54300"
+      ],
+      [
+       "C",
+       2030,
+       "54301"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Hanlan",
+   "label": "Hanlan",
+   "kind": "pumping_station",
+   "items": [
+    {
+     "what": "Transient Protection Expansion",
+     "proj": "28-1995",
+     "phases": [
+      [
+       "D",
+       2028,
+       "54298"
+      ],
+      [
+       "C",
+       2030,
+       "54299"
+      ]
+     ]
+    },
+    {
+     "what": "Pumping Station Expansion",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "D",
+       2031,
+       "23582"
+      ],
+      [
+       "C",
+       2033,
+       "23585"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Hanlan West",
+   "label": "Hanlan West",
+   "kind": "reservoir",
+   "items": [
+    {
+     "what": "New Reservoir",
+     "proj": "31-1999",
+     "phases": [
+      [
+       "EA",
+       2031,
+       "22673"
+      ],
+      [
+       "D",
+       2037,
+       "58297"
+      ],
+      [
+       "C",
+       2039,
+       "35618"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Silverthorn",
+   "label": "Silverthorn",
+   "kind": "reservoir",
+   "items": [
+    {
+     "what": "Reservoir Expansion",
+     "proj": "26-1941",
+     "phases": [
+      [
+       "D",
+       2026,
+       "54120"
+      ],
+      [
+       "C",
+       2028,
+       "54121"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Various Water Facilities",
+   "kind": "program",
+   "items": [
+    {
+     "what": "Transmission System Standby Power",
+     "proj": "27-1984",
+     "phases": [
+      [
+       "C",
+       2027,
+       "32567"
+      ],
+      [
+       "C",
+       2028,
+       "32568"
+      ],
+      [
+       "C",
+       2029,
+       "32569"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

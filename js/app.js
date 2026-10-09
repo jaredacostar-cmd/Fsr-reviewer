@@ -380,12 +380,15 @@
     ? '<rect x="3" y="2" width="16" height="10" rx="1" fill="#0b7285" fill-opacity=".1" stroke="#0b7285" stroke-width="1.6" stroke-dasharray="3 2"/>'
     : '<rect x="3" y="2" width="8" height="10" fill="#2f7ed8" fill-opacity=".25" stroke="#2f7ed8"/><rect x="11" y="2" width="8" height="10" fill="#d9822b" fill-opacity=".25" stroke="#d9822b"/>'}</svg>`;
   const MSTYLE = {
-    color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality' },
+    color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', zone: 'Pressure zone growth' },
   };
   let mstyle = Object.assign({ color: 'phase', size: 'fixed', cap: 'off' }, store.get('mapStyle', null) || {});
   for (const k of Object.keys(MSTYLE)) if (!MSTYLE[k][mstyle[k]]) mstyle[k] = Object.keys(MSTYLE[k])[0];
+  const THIS_YEAR = new Date().getFullYear();
+  // Planned works layer (2026 DC capital maps): on / off and which system.
+  let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
   // Map control: basemap + label pickers.
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
@@ -404,6 +407,7 @@
         ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
         <label class="chk" data-info="pressure-zone"><input type="checkbox" id="opt-pz"${svcOn.pz ? ' checked' : ''}>${svcSwatch('pz')}<span>Pressure zones</span></label>
         <label class="chk" data-info="drainage-area"><input type="checkbox" id="opt-dr"${svcOn.dr ? ' checked' : ''}>${svcSwatch('dr')}<span>Drainage areas</span></label>
+        <label class="chk" data-info="dc-works"><input type="checkbox" id="opt-dc"${dcOn.on ? ' checked' : ''}><svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><path d="M2 10 L20 4" stroke="#d6336c" stroke-width="3"/><path d="M2 13 L20 7" stroke="#1c7ed6" stroke-width="2"/></svg><span>Planned works <select id="opt-dcsys" aria-label="Planned works system"><option value="both"${dcOn.sys === 'both' ? ' selected' : ''}>water + wastewater</option><option value="wastewater"${dcOn.sys === 'wastewater' ? ' selected' : ''}>wastewater</option><option value="water"${dcOn.sys === 'water' ? ' selected' : ''}>water</option></select></span></label>
         <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span id="da-label">2021 census areas</span></label>
         </details>
         <small id="label-note"></small>`;
@@ -412,6 +416,8 @@
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
+      el.querySelector('#opt-dc').onchange = e => { dcOn.on = e.target.checked; store.set('dcOn', dcOn.on); renderDcLayer(); renderLegend(); viewLink.write(); };
+      el.querySelector('#opt-dcsys').onchange = e => { dcOn.sys = e.target.value; store.set('dcSys', dcOn.sys); if (!dcOn.on) { dcOn.on = true; store.set('dcOn', true); el.querySelector('#opt-dc').checked = true; } renderDcLayer(); renderLegend(); };
       el.querySelector('#opt-mcolor').onchange = e => setMapStyle({ color: e.target.value });
       el.querySelector('#opt-msize').onchange = e => setMapStyle({ size: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => setMapStyle({ cap: e.target.value });
@@ -440,7 +446,7 @@
       const w = new Map(), col = new Map();
       let tot = 0;
       for (const m of kids) { const v = sized ? m.options.pop || 0 : 1; tot += v; w.set(m.options.cat, (w.get(m.options.cat) || 0) + v); col.set(m.options.cat, m.options.col); }
-      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : mstyle.color === 'quality' ? Object.keys(QUALITY) : [...w.keys()].sort();
+      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : mstyle.color === 'quality' ? Object.keys(QUALITY) : mstyle.color === 'timing' ? Object.keys(TIMING) : [...w.keys()].sort();
       let acc = 0; const stops = [];
       for (const k of order) {
         const n = w.get(k); if (!n) continue;
@@ -578,7 +584,21 @@
     if (!(p.siteAreaHa > 0)) return 'estarea';
     return 'ok';
   }
+  // Servicing timing: construction year of the planned main (wastewater or water, within 400 m)
+  // a development would connect to, from the 2026 DC maps; none = the existing network.
+  const TIMING = { none: ['#2f9e44', 'On the existing network'], far: ['#868e96', 'Outside the network, no planned main within 1 km'], y27: ['#94d82d', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['#fab005', 'Planned main 2028–2030'], y35: ['#f76707', 'Planned main 2031–2035'], y36: ['#c92a2a', 'Planned main 2036 or later'] };
+  function timingOf(p) {
+    if (p._dcT !== undefined) return p._dcT;
+    const pt = p.lat == null ? null : [p.lng, p.lat];
+    const outs = [!(p.dr && p.dr.length) && 'wastewater', !(p.pz && p.pz.length) && 'water'].filter(Boolean);
+    if (!outs.length || !pt) return (p._dcT = 'none');
+    const ns = outs.map(sys => dcNearest(sys, pt, DC_CONNECT_M));
+    if (!ns.some(Boolean)) return (p._dcT = 'far');
+    const y = Math.max(0, ...ns.filter(Boolean).map(n => n.ln.y || 0));
+    return (p._dcT = y <= THIS_YEAR + 1 ? 'y27' : y <= 2030 ? 'y30' : y <= 2035 ? 'y35' : 'y36');
+  }
   function markerCat(p) {
+    if (mstyle.color === 'timing') { const k = state.dcInfra ? timingOf(p) : 'none'; return [k, TIMING[k][0]]; }
     if (mstyle.color === 'quality') { const k = qualityOf(p); return [k, QUALITY[k][0]]; }
     if (mstyle.color === 'layer') { const k = svcLayerOf(p); return [k, layerColors()[k]]; }
     if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, PLANT_COLOR[k] || '#b8b8b8']; }
@@ -1109,7 +1129,7 @@
       const [cat, col] = markerCat(p), pop = mstyle.size === 'pop' ? popOf(p) : 0;
       const m = L.marker([p.lat, p.lng], { icon: markerIcon(p), phase: p.phase, cat, col, pop, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : 0 });
       const near = state.servicing && (nearOf(p, 'dr') || nearOf(p, 'pz'));
-      m.bindTooltip(`<strong>${esc(p.title)}</strong><br>${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${mstyle.color === 'layer' ? `<br>${esc(LAYER_NAME[cat])}` : mstyle.color === 'quality' ? `<br>${esc(QUALITY[cat][1])}` : mstyle.color === 'plant' ? `<br>→ ${esc(cat === 'none' ? 'no traced catchment' : PLANT_SHORT[cat])}` : ''}${pop ? `<br>${fmtNum(Math.round(pop))} people + jobs at build-out` : ''}${near ? '<br><span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`, { className: 'pt', direction: 'top', offset: [0, -8] });
+      m.bindTooltip(`<strong>${esc(p.title)}</strong><br>${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${mstyle.color === 'layer' ? `<br>${esc(LAYER_NAME[cat])}` : mstyle.color === 'quality' ? `<br>${esc(QUALITY[cat][1])}` : mstyle.color === 'timing' ? `<br>${esc(TIMING[cat][1])}` : mstyle.color === 'plant' ? `<br>→ ${esc(cat === 'none' ? 'no traced catchment' : PLANT_SHORT[cat])}` : ''}${pop ? `<br>${fmtNum(Math.round(pop))} people + jobs at build-out` : ''}${near ? '<br><span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`, { className: 'pt', direction: 'top', offset: [0, -8] });
       m.on('click', () => showDetail(p));
       markerByKey.set(p.key, m);
       projectByMarker.set(m, p);
@@ -1473,6 +1493,7 @@
     const out = [];
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
     if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
+    if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
     if (f) {
       for (const s of f.sps) if (s.wet >= s.firm) out.push(chip(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn'));
       if (f.cap) {
@@ -1525,7 +1546,7 @@
     const cb = f.cb, lines = [];
     lines.push(`<strong>Water</strong> ${uLs(cb.water.maxDay)} max day, ${uLs(cb.water.peakHour)} peak hour${f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zMax ? ` (${pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of its build-out max day)` : ''}` : ' · no pressure zone'}`);
     const ps = f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0];
-    if (f.zNear || f.dNear) lines.push(`<span class="est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'traced catchments'].filter(Boolean).join(' and ')} — assigned to the nearest: ${[f.zNear && `${esc(f.z.name.replace('Pressure zone ', 'Zone '))} (${kmText(f.zNear.m)})`, f.dNear && f.path[0] && `${esc(drName(f.path[0]))} (${kmText(f.dNear.m)})`].filter(Boolean).join(', ')}. A screening estimate: the connection point comes from the FSR / master plan.</span>`);
+    if (f.zNear || f.dNear) lines.push(`<span class="est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'traced catchments'].filter(Boolean).join(' and ')} — assigned to: ${[f.zNear && `${esc(f.z.name.replace('Pressure zone ', 'Zone '))} (${esc(nearText(f.zNear))})`, f.dNear && f.path[0] && `${esc(drName(f.path[0]))} (${esc(nearText(f.dNear))})`].filter(Boolean).join(', ')}. A screening estimate: the connection point comes from the FSR / master plan.</span>`);
     lines.push(`<strong>Wastewater</strong> ${uLs(cb.wastewater.peak)} peak dry, ${uLs(cb.wastewater.wetPeak)} peak wet${ps ? ` · via ${esc(psName(ps.a))} (build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm, peak wet)` : ''}`);
     if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant is over-committed'}`);
     else if (f.pl === 'Toronto') lines.push('Drains to the City of Toronto system (Malton).');
@@ -1555,6 +1576,7 @@
       ${row('Status', status)}
       ${row('Latest decision', latestDecisionHTML(p, st))}
       ${row('Servicing', servicingBriefHTML(p, f))}
+      ${st.works ? row('Planned works', devWorksHTML(st.works)) : ''}
       ${row('Build-out', buildoutBriefHTML(p))}
       ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
       ${exportBar('dev')}
@@ -1673,6 +1695,7 @@
     highlight(p);
     loadCouncil();
     const st = statusOf(p), f = svcFacts(p);
+    st.works = devWorks(p, f);
     const RECORD_LIMIT = 40;
     // Oldest first by date received (the record's earliest date); undated records last.
     const received = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
@@ -1860,7 +1883,8 @@
       water_avg_lps: r2(cb.water.avg), water_maxday_lps: r2(cb.water.maxDay), water_peakhour_lps: r2(cb.water.peakHour),
       ww_avg_dry_lps: r2(cb.wastewater.avg), ww_peak_dry_lps: r2(cb.wastewater.peak), ww_peak_wet_lps: r2(cb.wastewater.wetPeak),
       pressure_zone: z ? z.name : '', pressure_zone_nearest_m: zn ? Math.round(zn.m) : '',
-      catchment: d ? drName(d) : '', catchment_nearest_m: dn ? Math.round(dn.m) : '', plant: d ? plantLabel(d.plant) : '',
+      catchment: d ? drName(d) : '', catchment_nearest_m: dn ? Math.round(dn.m) : '', catchment_via_planned_main: dn && dn.via ? `${dn.via.p || ''} (${dn.via.y || ''})` : '', plant: d ? plantLabel(d.plant) : '',
+      ...(w => ({ dc_ww_main: w && w.ww ? `${w.ww.ln.y || ''} ${w.ww.ln.d || ''}mm ${w.ww.ln.p || ''}`.trim() : '', dc_water_main: w && w.wa ? `${w.wa.ln.y || ''} ${w.wa.ln.d || ''}mm ${w.wa.ln.p || ''}`.trim() : '', dc_servicing_year: w && w.needBy ? w.needBy : '', dc_timing_gap: w && w.gap ? 'yes' : '' }))(state.dcInfra ? devWorks(p, svcFacts(p)) : null),
     };
   }
   // Pressure zones and catchments as polygons with their census / build-out figures (GIS).
@@ -2169,13 +2193,16 @@
       state.servicing = { zones: PeelAreas.prepare(d.pressureZones), drainage: PeelAreas.prepare(d.drainageAreas), meta: d };
       // Optional: census shares by area overlap and the Region's 2025 annual report figures.
       const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? r.json() : null; } catch (e) { return null; } };
-      [state.svcCensus, state.reports] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json')]);
+      let dc;
+      [state.svcCensus, state.reports, dc] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json')]);
+      state.dcInfra = prepDc(dc);
       renderRefs();
       for (const a of [...state.servicing.zones, ...state.servicing.drainage]) svcById.set(a.id, a);
       $('#f-svc-row').hidden = false;
       tagServicing();
       renderSvcSelects();
       for (const k of ['pz', 'dr']) if (svcOn[k]) setSvcLayer(k, true);
+      renderDcLayer(); renderLegend();
       applyFilters();
     } catch (e) { /* optional */ }
   }
@@ -2186,8 +2213,8 @@
       p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
       // Outside the mapped zones / traced catchments: the nearest one within NEAR_M of its edge,
       // the area it would most likely connect to (greenfield lands, gaps in the traced network).
-      p.pzNear = p.pz.length ? null : PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
-      p.drNear = p.dr.length ? null : PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
+      p.pzNear = p.pz.length ? null : dcVia(p, 'pz') || PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
+      p.drNear = p.dr.length ? null : dcVia(p, 'dr') || PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
     }
     state.whatifs = whatIfs.filter(w => w.include).map(whatIfProject);
   }
@@ -2196,6 +2223,8 @@
   const svcIds = (p, key) => (p[key] && p[key].length) ? p[key] : svcOpt.nr === 'on' && p[`${key}Near`] ? [p[`${key}Near`].id] : [];
   const nearOf = (p, key) => !(p[key] && p[key].length) && svcOpt.nr === 'on' ? p[`${key}Near`] : null;
   const kmText = m => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
+  // How an outside development was assigned: through the planned main it would connect to, or by distance.
+  const nearText = n => n.via ? `via planned ${n.via.y || ''} ${n.via.d ? `${n.via.d} mm ` : ''}main ${n.via.p || ''}, ${kmText(n.m)}`.replace(/\s+/g, ' ') : `nearest, ${kmText(n.m)}`;
   function renderSvcSelects() {
     if (!state.servicing) return;
     const { zones, drainage } = state.servicing;
@@ -2278,11 +2307,11 @@
     const { M, e, cb, layer, z, zl, zMax, path, pl, cap, devAvg } = F;
     const mld = D.toMLd, ls = uLs, pct = pctOf;
     const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
-    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}${F.zNear ? `<small>nearest zone, ${kmText(F.zNear.m)} away</small>` : ''}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
+    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}${F.zNear ? `<small>${esc(nearText(F.zNear))}</small>` : ''}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
     const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
     const pathRows = path.map((a, i) => {
       const l = M.cum.get(a.id), f = M.fOf(a.plant), out = l ? M.adwf(l, f) : 0;
-      return `<tr><td>${i ? '↳ ' : F.dNear ? `<span class="est">nearest, ${kmText(F.dNear.m)}</span> ` : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
+      return `<tr><td>${i ? '↳ ' : F.dNear ? `<span class="est">${esc(nearText(F.dNear))}</span> ` : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
     }).join('');
     let plant = '';
     if (cap) {
@@ -2301,8 +2330,8 @@
     const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean), d = svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean);
     const zn = nearOf(p, 'pz'), dn = nearOf(p, 'dr');
     if (!z.length && !d.length) return `<p class="small muted svc-line" data-info="drainage-area">Outside the mapped pressure zones and traced drainage areas${svcOpt.nr === 'on' ? ` (none within ${kmText(NEAR_M)} — likely private well / septic or not yet planned for servicing)` : ''}.</p>`;
-    return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) + (zn ? ` <span class="est">nearest, ${kmText(zn.m)}</span>` : '') : 'no pressure zone'} · ${d.length
-      ? esc(d.map(a => `${drName(a)} → ${plantLabel(a.plant)}`).join(', ')) + (dn ? ` <span class="est">nearest, ${kmText(dn.m)}</span>` : '') : 'no traced drainage area'}</p>`;
+    return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) + (zn ? ` <span class="est">${esc(nearText(zn))}</span>` : '') : 'no pressure zone'} · ${d.length
+      ? esc(d.map(a => `${drName(a)} → ${plantLabel(a.plant)}`).join(', ')) + (dn ? ` <span class="est">${esc(nearText(dn))}</span>` : '') : 'no traced drainage area'}</p>`;
   }
   // Pressure zones in numerical order (1, 2, 2A, 3 … 9, CE9, 12A, 13B, AV13).
   const zoneKey = z => { const m = String(z.zone || '').match(/^([A-Z]*)(\d+)(.*)$/i); return m ? [Number(m[2]), m[1] ? 1 : 0, m[1] + m[3]] : [999, 0, String(z.zone)]; };
@@ -2363,7 +2392,7 @@
   function scenarioText() {
     const R = state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
-      dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, n ? `${n} criteria modified` : 'Peel criteria'].filter(Boolean).join(' · ');
+      dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, state.dcInfra ? `plant expansions ${hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria'].filter(Boolean).join(' · ');
   }
   // Scenario A: a pinned set of results to compare the current scenario with.
   function scenarioMetrics() {
@@ -2621,7 +2650,7 @@
   // capacity by year, with approved growth phased in over a set number of years, proposed growth
   // after it, optional further growth beyond today's applications, and the diversion from its
   // start year. Assumptions are editable and kept in the browser.
-  const HZ_DEFAULT = { year0: 2025, aStart: 2026, aYears: 5, pStart: 2028, pYears: 10, extra: 0, divYear: 2028, end: 2051 };
+  const HZ_DEFAULT = { year0: 2025, aStart: 2026, aYears: 5, pStart: 2028, pYears: 10, extra: 0, divYear: 2028, end: 2051, exp: 1 };
   const hz = { ...HZ_DEFAULT, ...(store.get('horizon', {}) || {}) };
   function capHorizonHTML(plants, dv) {
     if (!plants.length) return '';
@@ -2629,10 +2658,14 @@
     const popAll = plants.reduce((t, p) => t + p.popShare, 0) || 1;
     const years = []; for (let y = hz.year0; y <= hz.end; y++) years.push(y);
     const divOn = svcOpt.div === 'on';
-    const series = plants.map(p => ({ ...p, v: years.map(y => {
+    // Planned treatment expansions (2026 DC maps): rated capacity steps up from the given years.
+    const PL = { booth: 'Lakeview', clarkson: 'Clarkson', inglewood: 'Inglewood' };
+    const steps = k => (hz.exp && state.dcInfra && state.dcInfra.plantCapacity[PL[k]] || []).map((x, i) => ({ ...x, year: hz[`ex_${PL[k]}_${i}`] || x.year }));
+    const ratedAt = (p, y) => steps(p.key).reduce((r, x) => y >= x.year ? Math.max(r, x.mld) : r, p.rated);
+    const series = plants.map(p => ({ ...p, steps: steps(p.key), r: years.map(y => ratedAt(p, y)), v: years.map(y => {
       const extraPeople = hz.extra * Math.max(0, y - hz.year0) * p.popShare / popAll;
       const f = p.existing + p.A * frac(y, hz.aStart, hz.aYears) + p.P * frac(y, hz.pStart, hz.pYears) + (divOn && y >= hz.divYear ? p.div : 0) + extraPeople * p.perPerson / 1e6;
-      return f / p.rated * 100;
+      return f / ratedAt(p, y) * 100;
     }) }));
     const narrow = innerWidth < 640, W = narrow ? 420 : 760, H = narrow ? 230 : 250, L = 36, Rr = narrow ? 100 : 120, T = 10, B = 26;
     const yMax = Math.max(110, Math.ceil(Math.max(...series.flatMap(s => s.v)) / 10) * 10 + 5);
@@ -2650,6 +2683,7 @@
       <g class="grid">${ticksY.map(v => `<line x1="${L}" x2="${W - Rr}" y1="${Yp(v)}" y2="${Yp(v)}"/>`).join('')}</g>
       <g class="axis">${ticksY.map(v => `<text x="${L - 6}" y="${Yp(v) + 4}" text-anchor="end">${v}%</text>`).join('')}${ticksX.map(y => `<text x="${X(y)}" y="${H - 8}" text-anchor="middle">${y}</text>`).join('')}</g>
       ${[80, 90, 100].map(t => `<g class="ref r${t}"><line x1="${L}" x2="${W - Rr}" y1="${Yp(t)}" y2="${Yp(t)}"/><text x="${W - Rr - 4}" y="${Yp(t) + (t === 100 ? -4 : 12)}" text-anchor="end">${t}%${t === 100 ? ' rated' : t === 90 ? ' expansion trigger' : ''}</text></g>`).join('')}
+      ${series.flatMap(s => s.steps.filter(x => x.year >= hz.year0 && x.year <= hz.end).map(x => `<g class="hz-exp"><line x1="${X(x.year)}" x2="${X(x.year)}" y1="${T}" y2="${H - B}" class="s-${s.key}"/><text x="${X(x.year) + 3}" y="${T + 10}">${esc(s.name)} ${x.mld}</text></g>`)).join('')}
       ${series.map(s => `<polyline class="line s-${s.key}" points="${s.v.map((v, i) => `${X(years[i]).toFixed(1)},${Yp(v).toFixed(1)}`).join(' ')}"/>`).join('')}
       ${ends.map(e => `<text class="lbl end" x="${W - Rr + 6}" y="${e.y + 4}">${esc(e.s.name)} ${Math.round(e.s.v[e.s.v.length - 1])}%</text>`).join('')}
       <line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>
@@ -2664,22 +2698,24 @@
       <div class="hz-form">${inp('aStart', 'Approved built from', 'min="2020" max="2060" step="1"')}${inp('aYears', 'over', 'min="1" max="40" step="1"')} years ·
         ${inp('pStart', 'Proposed built from', 'min="2020" max="2060" step="1"')}${inp('pYears', 'over', 'min="1" max="40" step="1"')} years ·
         ${inp('extra', 'Further growth beyond applications', 'min="0" step="1000" style="width:84px"')} people / year${dv ? ` · ${inp('divYear', `${fmt1(dv.mld)} ML/d diversion from`, 'min="2020" max="2060" step="1"')}${divOn ? '' : ' <span class="muted">(switch the diversion on to use it)</span>'}` : ''}
+        ${state.dcInfra ? `<br><label class="chk"><input type="checkbox" data-hz="exp"${hz.exp ? ' checked' : ''}> Planned expansions (2026 DC draft):</label> ${Object.entries(state.dcInfra.plantCapacity).map(([pl, st]) => st.map((x, i) => `${esc(PLANT_SHORT[pl])} ${x.mld} ML/d from <input type="number" data-hz="ex_${pl}_${i}" value="${hz[`ex_${pl}_${i}`] || x.year}" min="2020" max="2060" step="1" title="${esc(x.note)}">`).join(', ')).join(' · ')}` : ''}
         <button type="button" class="btn small" data-hz-reset>Reset</button></div>
       <div class="hz-wrap">${svg}<div class="hz-tip" hidden></div></div>
       <ul class="grow-legend">${series.map(s => `<li><span class="hz-key f-${s.key}" style="background:var(--pl-${s.key})"></span>${esc(s.full)}</li>`).join('')}<li class="muted">dashed: 80% warning and 90% expansion trigger (2020 Master Plan); solid: rated capacity</li></ul>
       <table class="dt svc-table rep-table"><thead><tr><th>Plant</th>${pick.map(y => `<th>${y}</th>`).join('')}<th>Reaches 80%</th><th>Reaches 90%</th><th>Reaches 100%</th></tr></thead>
-        <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uML(s.rated)}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uML(s.v[at(y)] * s.rated / 100)}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. 90% is the Region's own trigger: in the 2020 Master Plan an expansion is required when 90% of a plant's rated capacity is projected to be reached; 80% is shown as an earlier warning. Ontario's Procedure D-5-1 notes that plant expansions typically take at least 3 to 5 years to deliver. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
+        <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uML(s.rated)}${s.steps.length ? ` → ${s.steps.map(x => `${x.mld} (${x.year})`).join(' → ')}` : ''}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uML(s.v[at(y)] * s.r[at(y)] / 100)}${s.r[at(y)] !== s.rated ? ` of ${fmtNum(s.r[at(y)])}` : ''}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. With planned expansions on, each % is of the rated capacity in that year: G.E. Booth +40 ML/d (council-approved February 2024, by 2028) and 518 to 600 ML/d after the 2036 construction, Clarkson 350 to 500 ML/d after the 2026–2028 construction (2026 DC capital map, draft; capacities from the 2020 DC Background Study); in service the year after construction, editable. 90% is the Region's own trigger: in the 2020 Master Plan an expansion is required when 90% of a plant's rated capacity is projected to be reached; 80% is shown as an earlier warning. Ontario's Procedure D-5-1 notes that plant expansions typically take at least 3 to 5 years to deliver. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
     </section>`;
   }
   $('#plants-body').addEventListener('input', e => {
     const el = e.target.closest('[data-hz]'); if (!el) return;
-    const v = Number(el.value); if (!isFinite(v)) return;
+    const v = el.type === 'checkbox' ? (el.checked ? 1 : 0) : Number(el.value); if (!isFinite(v)) return;
     hz[el.dataset.hz] = v; store.set('horizon', hz);
     clearTimeout(capHorizonHTML.t); capHorizonHTML.t = setTimeout(() => { const y = $('#plants-body').parentElement.scrollTop; renderSvcTab(); const f = $(`#plants-body [data-hz="${el.dataset.hz}"]`); if (f) { f.focus(); const n = f.value.length; try { f.setSelectionRange(n, n); } catch (er) { /* number inputs */ } } $('#plants-body').parentElement.scrollTop = y; }, 350);
   });
   $('#plants-body').addEventListener('click', e => {
     if (!e.target.closest('[data-hz-reset]')) return;
+    for (const k of Object.keys(hz)) if (k.startsWith('ex_')) delete hz[k];
     Object.assign(hz, HZ_DEFAULT); store.set('horizon', null); renderSvcTab();
   });
   // Hover layer: crosshair at the nearest year with each plant's value.
@@ -3092,6 +3128,7 @@
   }
   function renderCapLayer() {
     capLayer.clearLayers();
+    if (dcOn.on) renderDcLayer();
     if (mstyle.cap === 'off' || !state.servicing || !state.svcModel) return;
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
     const list = mstyle.cap === 'zone' ? state.servicing.zones : state.servicing.drainage;
@@ -3131,10 +3168,10 @@
   }
 
   // Legend (bottom left): marker colours and sizes, and the capacity layer's classes.
-  // Top left on wide screens (the timeline sits bottom left), bottom left on phones; collapsed on
+  // Bottom right on wide screens (the timeline sits bottom left), bottom left on phones; collapsed on
   // phones until opened (remembered).
   const phoneMap = matchMedia('(max-width: 700px)').matches;
-  const Legend = L.Control.extend({ options: { position: phoneMap ? 'bottomleft' : 'topleft' }, onAdd() {
+  const Legend = L.Control.extend({ options: { position: phoneMap ? 'bottomleft' : 'bottomright' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
     el.addEventListener('input', e => {
@@ -3150,12 +3187,14 @@
     const el = legend.getContainer(), parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
     if (mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(layerColors()[k], t)).join('')}</ul>`);
+    if (mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(PLANT_COLOR[k], PLANT_SHORT[k])).join('')}${sw('#b8b8b8', 'No traced catchment')}</ul>`);
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
-    if (state.servicing && mstyle.color !== 'quality' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
+    if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
+    if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     if (mstyle.cap !== 'off') parts.push(`<label class="lg-year"><span>${capYear == null ? 'Build-out' : `Year ${capYear}`}</span><input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" data-capyear="1" aria-label="Capacity year"></label>
       <p class="lg-s">Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
     el.innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
@@ -3210,6 +3249,7 @@
         <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[r.lay]}"></span>${esc(LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.via && !a?.zone && r.via.id !== id ? ` · via ${esc(drName(r.via).replace(/^[^·]+· /, ''))}` : ''}${r.near ? ' · nearest assigned' : ''}</small></td>
           <td>${fmtNum(Math.round(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments (Excel export has the top ${LIMIT}).</p>` : ''}
+      ${dcAreaWorksHTML(ids, key, plantName)}
       <p class="small muted">Developments built since the census, approved and proposed (existing development is in the census flow). Flows are each development's own at Peel design criteria; peaks are not additive. ${esc(scenarioText())}.</p>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
     viewLink.write();
@@ -3357,8 +3397,8 @@
     };
     if (state.servicing) {
       p.pz = PeelAreas.locate(state.servicing.zones, p.lng, p.lat); p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
-      p.pzNear = p.pz.length ? null : PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
-      p.drNear = p.dr.length ? null : PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
+      p.pzNear = p.pz.length ? null : dcVia(p, 'pz') || PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
+      p.drNear = p.dr.length ? null : dcVia(p, 'dr') || PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
     }
     return p;
   }
@@ -3414,6 +3454,185 @@
     whatIfs = whatIfs.filter(x => x.id !== $('#detail-body').dataset.wf); syncWhatIfs(); closeDetail();
   });
   syncWhatIfs();
+
+  // ---- Planned infrastructure: Region of Peel 2026 DC capital maps (draft) ------------------
+  // data/dc-infra.json (scripts/build-dc-infra.py): proposed and approved water / wastewater mains
+  // with construction year, component and project numbers and diameter; facilities (plants,
+  // stations, reservoirs, tanks) with their EA / design / property / construction years; and
+  // plant treatment capacity steps.
+  const DC_KIND = {
+    primary: ['Primary wastewater main (trunk)', '#d6336c', 4], local: ['Local wastewater main', '#2b8a3e', 2.5], force: ['Force main', '#9c36b5', 2.5],
+    transmission: ['Water transmission main', '#1c3d8f', 4], feeder: ['Water distribution feeder main', '#1c7ed6', 2.5],
+  };
+  const DC_FAC = { plant: 'Treatment plant', pumping_station: 'Pumping station', odour_control: 'Odour control facility', reservoir: 'Reservoir', elevated_tank: 'Elevated tank', well: 'Well', program: 'Program' };
+  const PHASE_NAME = { EA: 'environmental assessment', P: 'property', D: 'design', C: 'construction' };
+  const dcM = (a, b) => Math.hypot((a[0] - b[0]) * 111320 * Math.cos(a[1] * Math.PI / 180), (a[1] - b[1]) * 111320);
+  // Distance (m) from a point to a polyline, on a local flat projection.
+  function dcDist(pt, g) {
+    const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320;
+    let best = Infinity;
+    for (let i = 1; i < g.length; i++) {
+      const ax = (g[i - 1][0] - pt[0]) * kx, ay = (g[i - 1][1] - pt[1]) * ky, bx = (g[i][0] - pt[0]) * kx, by = (g[i][1] - pt[1]) * ky;
+      const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy, t = L ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L)) : 0;
+      best = Math.min(best, Math.hypot(ax + t * dx, ay + t * dy));
+    }
+    return best;
+  }
+  const lastYear = f => Math.max(0, ...f.items.flatMap(i => i.phases.filter(ph => ph[0] === 'C').map(ph => ph[1])));
+  function prepDc(d) {
+    if (!d) return null;
+    for (const sys of ['wastewater', 'water']) {
+      for (const ln of d[sys].lines) {
+        ln.sys = sys;
+        let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+        for (const [x, y] of ln.g) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+        ln.bbox = [x0, y0, x1, y1]; ln.mid = ln.g[Math.floor(ln.g.length / 2)];
+      }
+      for (const f of d[sys].facilities) f.sys = sys;
+    }
+    return d;
+  }
+  // Which traced catchment / pressure zone a planned main serves: the one containing it, else the
+  // one nearest its ends (a main beyond the network connects at its end nearest the network).
+  function dcTarget(ln) {
+    if (ln._target !== undefined) return ln._target;
+    const list = ln.sys === 'wastewater' ? state.servicing.drainage : state.servicing.zones;
+    let id = PeelAreas.locate(list, ln.mid[0], ln.mid[1])[0];
+    if (!id) { const n = [ln.g[0], ln.g[ln.g.length - 1]].map(e => PeelAreas.nearest(list, e[0], e[1], 3000)).filter(Boolean).sort((a, b) => a.m - b.m)[0]; id = n ? n.id : null; }
+    return (ln._target = id || null);
+  }
+  // Nearest planned main of a system within r metres of a point.
+  function dcNearest(sys, pt, r, filter = () => true) {
+    if (!state.dcInfra || !pt || pt[0] == null) return null;
+    const dLng = r / (111320 * Math.cos(pt[1] * Math.PI / 180)), dLat = r / 111320;
+    let best = null;
+    for (const ln of state.dcInfra[sys].lines) {
+      const b = ln.bbox;
+      if (pt[0] < b[0] - dLng || pt[0] > b[2] + dLng || pt[1] < b[1] - dLat || pt[1] > b[3] + dLat || !filter(ln)) continue;
+      const m = dcDist(pt, ln.g);
+      if (m <= r && (!best || m < best.m)) best = { ln, m };
+    }
+    return best;
+  }
+  // Greenfield connection: a development outside the traced network takes the catchment / zone
+  // of the planned main it would connect to (within 1 km), before the distance-only nearest area.
+  const DC_CONNECT_M = 1000;
+  function dcVia(p, key) {
+    if (!state.dcInfra || p.lat == null) return null;
+    const n = dcNearest(key === 'dr' ? 'wastewater' : 'water', [p.lng, p.lat], DC_CONNECT_M);
+    const id = n && dcTarget(n.ln);
+    return id ? { id, m: n.m, via: { p: n.ln.p, y: n.ln.y, d: n.ln.d, k: n.ln.k } } : null;
+  }
+  const dcLineText = ln => `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` (project ${ln.p}${ln.c ? `, component ${ln.c}` : ''})` : ''}${ln.s === 'approved' ? ', approved 2026' : ''}`;
+  // Planned works a development relies on: the planned mains it would connect to (wastewater and
+  // water, within 400 m), primary mains and facilities in the catchments on its sewer path, water
+  // facilities in its pressure zone, and the receiving plant's capacity steps.
+  function devWorks(p, f) {
+    if (!state.dcInfra || p.lat == null) return null;
+    const pt = [p.lng, p.lat];
+    const ww = dcNearest('wastewater', pt, 400), wa = dcNearest('water', pt, 400);
+    const pathIds = new Set(f && f.path ? f.path.slice(0, 5).map(a => a.id) : []);
+    const trunks = !pathIds.size ? [] : state.dcInfra.wastewater.lines.filter(ln => ln.k !== 'local' && ln.y && ln.y >= THIS_YEAR && pathIds.has(dcTarget(ln)) && ln !== (ww && ww.ln));
+    const byProj = new Map(); for (const t of trunks) { const k = t.p || t.c; if (!byProj.has(k) || (t.d || 0) > (byProj.get(k).d || 0)) byProj.set(k, t); }
+    const inArea = (fac, list) => fac.g && list.some(a => P.pointInRings(fac.g[0], fac.g[1], a.rings));
+    const facs = [
+      ...state.dcInfra.wastewater.facilities.filter(x => x.kind !== 'plant' && f && f.path && inArea(x, f.path.slice(0, 5))),
+      ...state.dcInfra.water.facilities.filter(x => f && f.z && inArea(x, [f.z])),
+    ].filter(x => lastYear(x) >= THIS_YEAR);
+    const plant = f && f.pl && state.dcInfra.plantCapacity[f.pl] || [];
+    // Timing applies where the site is outside the existing network (no traced catchment / mapped
+    // pressure zone) and relies on a planned main to connect; elsewhere nearby works are context.
+    const outWw = !(p.dr && p.dr.length), outWa = !(p.pz && p.pz.length);
+    const conn = [outWw && (dcNearest('wastewater', pt, DC_CONNECT_M) || null), outWa && (dcNearest('water', pt, DC_CONNECT_M) || null)].filter(Boolean);
+    const needBy = Math.max(0, ...conn.filter(n => n.ln.y && n.ln.y >= THIS_YEAR).map(n => n.ln.y));
+    const committed = D.COMMITTED_PHASES.has(p.phase);
+    return { ww: outWw ? conn.find(n => n.ln.sys === 'wastewater') || ww : ww, wa: outWa ? conn.find(n => n.ln.sys === 'water') || wa : wa, outWw, outWa,
+      trunks: [...byProj.values()].sort((a, b) => a.y - b.y), facs, plant, needBy, gap: committed && needBy > THIS_YEAR };
+  }
+  function devWorksHTML(w) {
+    if (!w) return '';
+    const li = [];
+    for (const [n, what, out] of [[w.ww, 'Wastewater', w.outWw], [w.wa, 'Water', w.outWa]]) if (n) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ' <span class="muted">(site is on the existing network)</span>'}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
+    if (w.trunks.length) li.push(`<li><strong>Downstream trunks:</strong> ${w.trunks.slice(0, 4).map(t => esc(`${t.y} ${t.d ? `${t.d} mm` : ''} ${t.p || ''}`.trim())).join(' · ')}${w.trunks.length > 4 ? ` +${w.trunks.length - 4}` : ''}</li>`);
+    if (w.facs.length) li.push(`<li><strong>Facilities:</strong> ${w.facs.slice().sort((a, b) => lastYear(a) - lastYear(b)).slice(0, 4).map(x => `<button type="button" class="btn small link" data-dcfac="${esc(x.sys)}|${esc(x.name)}">${esc(x.name)}</button> ${lastYear(x)}`).join(' · ')}${w.facs.length > 4 ? ` +${w.facs.length - 4} more (What loads this)` : ''}</li>`);
+    if (w.plant.length) li.push(`<li><strong>Plant capacity:</strong> ${w.plant.map(s => `${s.mld} ML/d from ${s.year}`).join(' → ')}</li>`);
+    if (!li.length) return '<p class="small muted">No planned works on the 2026 DC maps near this site or on its sewer path (served by the existing network).</p>';
+    return `<ul class="b-lines small dc-works">${li.join('')}</ul>
+      ${w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing network, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing network: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
+  }
+
+  // Map layer: planned mains (dashed when approved in 2026) and facilities.
+  const dcLayer = L.layerGroup();
+  function renderDcLayer() {
+    dcLayer.clearLayers();
+    if (!dcOn.on || !state.dcInfra) { map.removeLayer(dcLayer); return; }
+    dcLayer.addTo(map);
+    const yr = capYear;
+    for (const sys of ['wastewater', 'water']) {
+      if (dcOn.sys !== 'both' && dcOn.sys !== sys) continue;
+      for (const ln of state.dcInfra[sys].lines) {
+        const [label, col, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
+        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: col, weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
+          .bindTooltip(`<strong>${esc(label)}</strong><br>${ln.y ? `Construction ${ln.y}` : 'Year not labelled'}${ln.d ? ` · ${ln.d} mm` : ''}${ln.s === 'approved' ? ' · approved 2026' : ' · proposed'}${ln.p ? `<br>Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft)</span>`, { sticky: true, className: 'pt' })
+          .addTo(dcLayer);
+      }
+      for (const fc of state.dcInfra[sys].facilities) {
+        if (!fc.g) continue;
+        const y = lastYear(fc), later = yr != null && y > yr;
+        L.marker([fc.g[1], fc.g[0]], { icon: L.divIcon({ className: `dc-fac dc-${sys}${later ? ' later' : ''}`, html: `<span>${{ plant: 'P', pumping_station: 'S', odour_control: 'O', reservoir: 'R', elevated_tank: 'T', well: 'W' }[fc.kind] || '•'}</span>`, iconSize: [20, 20] }) })
+          .bindTooltip(`<strong>${esc(fc.name)}</strong><br>${esc(DC_FAC[fc.kind] || fc.kind)} · ${fc.items.length} project${fc.items.length === 1 ? '' : 's'}, last construction ${y || '–'}${fc.approx ? '<br><span class="muted">approximate location</span>' : ''}<br><span class="muted">Tap for the schedule</span>`, { className: 'pt' })
+          .on('click', () => showFacility(fc)).addTo(dcLayer);
+      }
+    }
+  }
+  function showFacility(fc) {
+    $('#detail-body').innerHTML = `
+      <div class="head"><h3>${esc(fc.name)}</h3><div class="m">${esc(DC_FAC[fc.kind] || fc.kind)} · ${fc.sys === 'water' ? 'water' : 'wastewater'} · 2026 DC capital map (draft, not approved by Council)</div></div>
+      <table class="dt dc-sched"><thead><tr><th>Project</th><th>Schedule</th></tr></thead><tbody>
+        ${fc.items.map(i => `<tr><td>${esc(i.what)}<small>${esc(i.proj)}</small></td><td>${i.phases.map(ph => `<span class="dc-ph dc-${ph[0]}" title="${esc(PHASE_NAME[ph[0]] || ph[0])} · component ${esc(ph[2])}">${esc(ph[0])} ${ph[1]}</span>`).join(' ')}</td></tr>`).join('')}
+      </tbody></table>
+      <p class="small muted">EA = environmental assessment, P = property, D = design, C = construction (year and component number from the map). Schedules are subject to annual review and approval by Regional Council.</p>
+      ${exportBar('loads')}`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'facility'; $('#detail').scrollTop = 0;
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-dcfac]'); if (!b || !state.dcInfra) return;
+    const [sys, name] = b.dataset.dcfac.split('|'); const fc = state.dcInfra[sys].facilities.find(x => x.name === name);
+    if (fc) { showFacility(fc); if (fc.g) map.setView([fc.g[1], fc.g[0]], Math.max(map.getZoom(), 14)); }
+  });
+  // Planned works serving a catchment (and everything upstream), a pressure zone or a plant.
+  function dcAreaWorksHTML(ids, key, plantName) {
+    if (!state.dcInfra || !ids) return '';
+    const sys = key === 'pz' ? 'water' : 'wastewater';
+    const byProj = new Map();
+    for (const ln of state.dcInfra[sys].lines) {
+      if (!ids.has(dcTarget(ln))) continue;
+      const k = ln.p || ln.c || `${ln.k}${ln.y}`;
+      const g = byProj.get(k) || { p: ln.p, k: ln.k, y0: Infinity, y1: 0, d: 0, n: ln.n || '', s: ln.s, len: 0 };
+      if (ln.y) { g.y0 = Math.min(g.y0, ln.y); g.y1 = Math.max(g.y1, ln.y); }
+      g.d = Math.max(g.d, ln.d || 0); for (let i = 1; i < ln.g.length; i++) g.len += dcM(ln.g[i - 1], ln.g[i]);
+      byProj.set(k, g);
+    }
+    const areas = [...ids].map(id => svcById.get(id)).filter(Boolean);
+    const facs = state.dcInfra[sys].facilities.filter(f => f.g && (plantName ? f.plant === plantName : areas.some(a => P.pointInRings(f.g[0], f.g[1], a.rings))));
+    const steps = plantName ? state.dcInfra.plantCapacity[plantName] || [] : [];
+    const rows = [...byProj.values()].sort((a, b) => (a.y0 - b.y0) || (b.d - a.d));
+    if (!rows.length && !facs.length && !steps.length) return '<p class="small muted">No planned works on the 2026 DC maps in this area.</p>';
+    return `<h3 class="sub-title" data-info="dc-works">Planned works (2026 DC capital map, draft)</h3>
+      ${steps.length ? `<p class="small"><strong>Treatment capacity:</strong> ${steps.map(x => `${x.mld} ML/d from ${x.year}`).join(' → ')} <span class="muted">(${esc(steps.map(x => x.note).join('; '))})</span></p>` : ''}
+      ${facs.length ? `<p class="small"><strong>Facilities:</strong> ${facs.map(f => `<button type="button" class="btn small link" data-dcfac="${esc(f.sys)}|${esc(f.name)}">${esc(f.name)}</button> (last construction ${lastYear(f)})`).join(' · ')}</p>` : ''}
+      ${rows.length ? `<table class="dt dc-sched"><thead><tr><th>Construction</th><th>Main</th><th>Length</th></tr></thead><tbody>${rows.slice(0, 40).map(g => `<tr><td>${isFinite(g.y0) ? (g.y0 === g.y1 ? g.y0 : `${g.y0}–${g.y1}`) : '–'}</td><td>${esc(DC_KIND[g.k][0])}${g.d ? ` · ${g.d} mm` : ''}${g.s === 'approved' ? ' · approved 2026' : ''}<small>${esc(g.p || 'no project label')}${g.n ? ` · ${esc(g.n)}` : ''}</small></td><td>${unit(fmtNum(Math.round(g.len / 10) * 10), 'm')}</td></tr>`).join('')}</tbody></table>` : ''}`;
+  }
+  // Planned works as GeoJSON (GIS).
+  function dcGeoJSON() {
+    const feats = [];
+    for (const sys of ['wastewater', 'water']) {
+      for (const ln of state.dcInfra[sys].lines) feats.push({ type: 'Feature', geometry: { type: 'LineString', coordinates: ln.g }, properties: { system: sys, kind: ln.k, status: ln.s, construction_year: ln.y, component: ln.c, project: ln.p, diameter_mm: ln.d, study_name: ln.n || '', study_description: ln.t || '' } });
+      for (const fc of state.dcInfra[sys].facilities) if (fc.g) feats.push({ type: 'Feature', geometry: { type: 'Point', coordinates: fc.g }, properties: { system: sys, kind: fc.kind, name: fc.name, approximate: !!fc.approx, last_construction_year: lastYear(fc), projects: fc.items.map(i => `${i.what} ${i.proj}: ${i.phases.map(ph => `${ph[0]}-${ph[1]} (${ph[2]})`).join(', ')}`).join(' | ') } });
+    }
+    return { type: 'FeatureCollection', properties: { source: state.dcInfra.source }, features: feats };
+  }
+  $('#btn-dc-geojson').onclick = () => { if (state.dcInfra) download('peel-2026-dc-planned-works.geojson', JSON.stringify(dcGeoJSON()), 'application/geo+json'); };
 
 
   for (const id of ['#water-body', '#ww-body']) {

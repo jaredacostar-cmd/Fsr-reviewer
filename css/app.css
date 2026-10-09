@@ -963,3 +963,22 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .lg-year input { width: 100%; }
 @media (max-width: 700px) { .tool-panel { top: auto; bottom: 10px; max-width: calc(100% - 20px); } }
 .tool-on .leaflet-pane canvas, .tool-on .leaflet-marker-icon, .tool-on .leaflet-interactive { pointer-events: none !important; }
+/* Planned works (2026 DC maps). */
+.dc-fac span { display: grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; color: #fff; font: 700 10px/1 system-ui, sans-serif; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.45); }
+.dc-fac.dc-wastewater span { background: #2b8a3e; }
+.dc-fac.dc-water span { background: #1c3d8f; }
+.dc-fac.later span { opacity: .45; }
+.dc-fac.lg { display: inline-block; vertical-align: middle; margin-right: 4px; }
+.dc-fac.lg span { width: 14px; height: 14px; background: #555; font-size: 8px; }
+.lg-line { display: inline-block; width: 18px; height: 4px; border-radius: 2px; flex: none; margin-right: 3px; }
+.lg-line.dash { background: repeating-linear-gradient(90deg, #888 0 5px, transparent 5px 9px); }
+.dc-sched td small { display: block; color: var(--text-muted); font-size: 10.5px; white-space: normal; }
+.dc-sched td:first-child { white-space: normal; }
+.dc-ph { display: inline-block; font-size: 10.5px; padding: 0 5px; border-radius: 8px; background: var(--surface-2); margin: 1px 0; white-space: nowrap; }
+.dc-ph.dc-C { background: color-mix(in srgb, #2b8a3e 22%, transparent); font-weight: 600; }
+.dc-ph.dc-D { background: color-mix(in srgb, #1c7ed6 18%, transparent); }
+.dc-works small { display: block; color: var(--text-muted); font-size: 10.5px; }
+.hz-exp line { stroke-dasharray: 2 3; stroke-width: 1.5; stroke: var(--text-muted); }
+.hz-exp text { font-size: 10px; fill: var(--text-secondary); }
+.hz-form input[data-hz^="ex_"] { width: 62px; }
+#opt-dcsys { font-size: 11px; padding: 0 2px; margin-left: 4px; max-width: 120px; }
