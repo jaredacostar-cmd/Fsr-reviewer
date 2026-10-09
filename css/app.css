@@ -1099,3 +1099,15 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tp-elev { display: block; width: 100%; }
 .elev-svg { display: block; margin: 4px 0 2px; }
 .leaflet-top.leaflet-left { z-index: 1001; }   /* the Tools menu opens over the options panel */
+
+/* Existing mains around the site, pipe size labels */
+.ex-r { display: flex; align-items: center; gap: 4px; margin-bottom: 4px; }
+.ex-r .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.ex-kind { margin: 4px 0 6px; }
+.ex-k { display: flex; align-items: center; gap: 6px; font-size: 12.5px; }
+.ex-k .lg-line { display: inline-block; width: 16px; height: 3px; border-radius: 2px; }
+.ex-kind .b-lines { margin: 2px 0 0; }
+.ex-more > summary { cursor: pointer; color: var(--accent); margin: 2px 0 0 18px; }
+.pipe-lbl { background: none; border: 0; }
+.pipe-lbl span { display: inline-block; transform: translate(-50%, -50%); padding: 0 4px; border-radius: 4px; font: 600 10.5px/1.5 system-ui, sans-serif; color: #fff; background: var(--c); box-shadow: 0 0 0 1.5px #fff; white-space: nowrap; }
+.pl-sw { font: 600 9.5px/1.4 system-ui, sans-serif; color: #fff; background: #1971c2; border-radius: 3px; padding: 0 3px; }
