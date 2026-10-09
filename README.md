@@ -286,6 +286,10 @@ application.
   peak wet weather. Capacity layer *Sewer pipe capacity* (year slider aware), the development
   brief's local and downstream tightest pipe, and *What loads this* for a pipe. A screen, not a
   hydraulic model.
+- **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
+  Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
+  for diameter, material, year, slope. The development brief lists the nearest existing main of
+  each type within 200 m.
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater

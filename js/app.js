@@ -390,6 +390,8 @@
   let mstyle = Object.assign({ color: 'phase', size: 'fixed', cap: 'off' }, store.get('mapStyle', null) || {});
   for (const k of Object.keys(MSTYLE)) if (!MSTYLE[k][mstyle[k]]) mstyle[k] = Object.keys(MSTYLE[k])[0];
   const THIS_YEAR = new Date().getFullYear();
+  // Existing pipes layer (live): which kinds are shown.
+  let existOn = Object.assign({ water: false, sanitary: false, storm: false }, store.get('existOn', {}) || {});
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
   // Map control: basemap + label pickers.
@@ -410,6 +412,7 @@
         ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
         <label class="chk" data-info="pressure-zone"><input type="checkbox" id="opt-pz"${svcOn.pz ? ' checked' : ''}>${svcSwatch('pz')}<span>Pressure zones</span></label>
         <label class="chk" data-info="drainage-area"><input type="checkbox" id="opt-dr"${svcOn.dr ? ' checked' : ''}>${svcSwatch('dr')}<span>Drainage areas</span></label>
+        <div class="mo-exist" data-info="existing-pipes"><span>Existing pipes</span>${['water', 'sanitary', 'storm'].map(k => `<label class="chk"><input type="checkbox" data-exist="${k}"${existOn[k] ? ' checked' : ''}><span class="lg-line" style="background:${{ water: '#1971c2', sanitary: '#a0522d', storm: '#2b8a3e' }[k]}"></span>${k}</label>`).join('')}<small id="exist-note"></small></div>
         <label class="chk" data-info="dc-works"><input type="checkbox" id="opt-dc"${dcOn.on ? ' checked' : ''}><svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><path d="M2 10 L20 4" stroke="#d6336c" stroke-width="3"/><path d="M2 13 L20 7" stroke="#1c7ed6" stroke-width="2"/></svg><span>Planned works <select id="opt-dcsys" aria-label="Planned works system"><option value="both"${dcOn.sys === 'both' ? ' selected' : ''}>water + wastewater</option><option value="wastewater"${dcOn.sys === 'wastewater' ? ' selected' : ''}>wastewater</option><option value="water"${dcOn.sys === 'water' ? ' selected' : ''}>water</option></select></span></label>
         <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span id="da-label">2021 census areas</span></label>
         </details>
@@ -419,6 +422,7 @@
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
+      el.querySelectorAll('[data-exist]').forEach(c => { c.onchange = e => { existOn[e.target.dataset.exist] = e.target.checked; store.set('existOn', existOn); renderExisting(); renderLegend(); }; });
       el.querySelector('#opt-dc').onchange = e => { dcOn.on = e.target.checked; store.set('dcOn', dcOn.on); renderDcLayer(); renderLegend(); viewLink.write(); };
       el.querySelector('#opt-dcsys').onchange = e => { dcOn.sys = e.target.value; store.set('dcSys', dcOn.sys); if (!dcOn.on) { dcOn.on = true; store.set('dcOn', true); el.querySelector('#opt-dc').checked = true; } renderDcLayer(); renderLegend(); };
       el.querySelector('#opt-mcolor').onchange = e => setMapStyle({ color: e.target.value });
@@ -1582,6 +1586,7 @@
       ${row('Status', status)}
       ${row('Latest decision', latestDecisionHTML(p, st))}
       ${row('Servicing', servicingBriefHTML(p, f))}
+      ${p.lat != null ? row('Existing mains', '<div id="dev-exist"><p class="small muted">Looking up the nearest existing mains…</p></div>') : ''}
       ${st.works ? row('Planned works', devWorksHTML(st.works)) : ''}
       ${row('Build-out', buildoutBriefHTML(p))}
       ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
@@ -1745,6 +1750,7 @@
     $('#detail').hidden = false; $('#detail').dataset.view = 'dev';
     if (!keep) $('#detail').scrollTop = 0;
     if ($('#dev-aerial').open) runAerial(p);
+    fillExisting(p);
     viewLink.write();
   }
   function showTl(v) {
@@ -3280,6 +3286,7 @@
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
     if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${['under 50%', '50–80%', '80–100%', 'over 100%'][i]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
+    if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     if (mstyle.cap !== 'off') parts.push(`<label class="lg-year"><span>${capYear == null ? 'Build-out' : `Year ${capYear}`}</span><input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" data-capyear="1" aria-label="Capacity year"></label>
       <p class="lg-s">Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
@@ -3866,6 +3873,111 @@
       <p class="small muted">Existing: ${fmtNum(p[4])} people upstream (2021 Census) at peak dry weather, ${s.today.f !== 1 ? `scaled ×${s.today.f.toFixed(2)} to the plant's 2025 measured flow (capacity check)` : 'at design rates'}; growth since the census at Peel design peak wet weather (Harmon, employment rates, I&amp;I ${state.criteria.wastewater.infiltration} L/s/ha on its site area). Full-pipe capacity by Manning (n 0.013) on the published slope. A screen for where to look, not a hydraulic model: existing wet-weather inflow and infiltration, surcharge, storage and relief sewers are not modelled. Developments join the nearest sewer of 300 mm or more.</p>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
     loadsOf = { pipe: i };
+  }
+
+
+  // ---- Existing pipes (live from the Region / municipal GIS, by map area) ----------------------
+  // Region of Peel watermains and sanitary sewers; Mississauga and Brampton storm sewers and the
+  // Region's storm mains. Drawn from street zoom, fetched by ~1 km tile and cached; tap a pipe for
+  // its size, material and year. Development panel: the nearest existing mains to the site.
+  const PEEL_FS = 'https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services';
+  const EXIST = {
+    water: [{ url: `${PEEL_FS}/waterwastWater/FeatureServer/5`, f: 'Diameter,Material', src: 'Region of Peel' }, { url: `${PEEL_FS}/waterwastWater/FeatureServer/6`, f: 'Diameter,Material', src: 'Region of Peel' }],
+    sanitary: [{ url: `${PEEL_FS}/waterwastWater/FeatureServer/10`, f: 'Diameter,Material,InstallationDate,Slope,MainType', src: 'Region of Peel' }],
+    storm: [
+      { url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/StormSegment/FeatureServer/0', f: 'DIAMETER,MATERIAL,INSTALLDAT', src: 'City of Mississauga' },
+      { url: 'https://maps1.brampton.ca/arcgis/rest/services/Stormwater/Stormwater_Asset_PRD/MapServer/2', f: 'HEIGHT,WIDTH,MATERIAL,SLOPE,SHAPE_PIPE', src: 'City of Brampton' },
+      { url: `${PEEL_FS}/storm_infrastructure/FeatureServer/4`, f: 'Diameter,Material,MainType', src: 'Region of Peel' },
+    ],
+  };
+  const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
+  const EXIST_ZOOM = 15;
+  const existLayer = L.layerGroup().addTo(map);
+  const existCache = new Map();      // `${kind}|${i}|${tile}` -> Promise<features>
+  const existRenderer = L.canvas({ padding: 0.3 });
+  // Attributes common to all sources.
+  function pipeAttrs(kind, src, p) {
+    const g = k => p[k] ?? p[k.toUpperCase()] ?? p[k.toLowerCase()];
+    let d = g('Diameter') || g('DIAMETER') || 0;
+    if (!d && (p.HEIGHT || p.WIDTH)) d = Math.max(p.HEIGHT || 0, p.WIDTH || 0);
+    const yRaw = p.InstallationDate || p.INSTALLDAT;
+    const year = yRaw && yRaw > -1e12 && yRaw < 4e12 ? new Date(yRaw).getUTCFullYear() : null;
+    const slope = p.Slope || p.SLOPE;
+    return { d: Math.round(d), mat: String(p.Material || p.MATERIAL || '').trim(), year, slope: slope > 0 && slope < 0.5 ? slope : (slope > 0.5 && slope < 50 ? slope / 100 : null), type: p.MainType || '', src };
+  }
+  const existText = (kind, a) => `${EXIST_STYLE[kind].label}${a.d ? ` ${a.d} mm` : ''}${a.mat ? ` ${a.mat}` : ''}${a.year ? `, ${a.year}` : ''}${a.slope ? `, slope ${(a.slope * 100).toFixed(2)}%` : ''}${/FM/.test(a.type) ? ' (force main)' : ''}`;
+  async function existTile(kind, i, tx, ty) {
+    const key = `${kind}|${i}|${tx},${ty}`;
+    if (existCache.has(key)) return existCache.get(key);
+    const S = EXIST[kind][i];
+    const pr = (async () => {
+      const info = await A.layerInfo(S.url);
+      const bbox = { xmin: tx * 0.01, ymin: ty * 0.01, xmax: (tx + 1) * 0.01, ymax: (ty + 1) * 0.01 };
+      const { features } = await A.queryAll(S.url, info, { bbox, max: 4000, outFields: S.f });
+      return features;
+    })().catch(() => []);
+    existCache.set(key, pr);
+    return pr;
+  }
+  let existSeq = 0;
+  async function renderExisting() {
+    const seq = ++existSeq;
+    existLayer.clearLayers();
+    const kinds = Object.keys(existOn).filter(k => existOn[k]);
+    const note = $('#exist-note');
+    if (!kinds.length) { if (note) note.textContent = ''; return; }
+    if (map.getZoom() < EXIST_ZOOM) { if (note) note.textContent = 'Zoom in to see existing pipes'; return; }
+    if (note) note.textContent = 'Loading existing pipes…';
+    const b = map.getBounds();
+    const tiles = [];
+    for (let tx = Math.floor(b.getWest() / 0.01); tx <= Math.floor(b.getEast() / 0.01); tx++) for (let ty = Math.floor(b.getSouth() / 0.01); ty <= Math.floor(b.getNorth() / 0.01); ty++) tiles.push([tx, ty]);
+    if (tiles.length > 30) { if (note) note.textContent = 'Zoom in further to see existing pipes'; return; }
+    const seen = new Set();
+    await Promise.all(kinds.flatMap(kind => EXIST[kind].flatMap((S, i) => tiles.map(async ([tx, ty]) => {
+      const feats = await existTile(kind, i, tx, ty);
+      if (seq !== existSeq) return;
+      for (const f of feats) {
+        const id = `${kind}|${i}|${f.id ?? JSON.stringify(f.geometry.coordinates[0])}`;
+        if (seen.has(id) || !f.geometry) continue; seen.add(id);
+        const a = pipeAttrs(kind, S.src, f.properties || {});
+        const lines = f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates];
+        L.polyline(lines.map(l => l.map(([x, y]) => [y, x])), { renderer: existRenderer, color: EXIST_STYLE[kind].color, weight: a.d >= 900 ? 6 : a.d >= 600 ? 5 : a.d >= 375 ? 3.5 : 2, opacity: 0.85, dashArray: /FM/.test(a.type) ? '6 4' : null })
+          .bindTooltip(`<strong>${esc(existText(kind, a))}</strong><br><span class="muted">${esc(S.src)} (live)</span>`, { sticky: true, className: 'pt' }).addTo(existLayer);
+      }
+    }))));
+    if (seq === existSeq && note) note.textContent = '';
+  }
+  map.on('moveend', () => { if (Object.values(existOn).some(Boolean)) renderExisting(); });
+  // Nearest existing main of each kind to a point, within r metres (live query, cached per site).
+  const nearCache = new Map();
+  function nearestExisting(lng, lat, r = 200) {
+    const key = `${lng.toFixed(5)},${lat.toFixed(5)}`;
+    if (nearCache.has(key)) return nearCache.get(key);
+    const pr = Promise.all(Object.entries(EXIST).map(async ([kind, srcs]) => {
+      let best = null;
+      for (const S of srcs) {
+        try {
+          const j = await A.fetchJSON(`${S.url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields: S.f, outSR: 4326, returnGeometry: true, resultRecordCount: 50, f: 'json' });
+          for (const f of j.features || []) {
+            const paths = (f.geometry && f.geometry.paths) || [];
+            const m = Math.min(...paths.map(pth => dcDist([lng, lat], pth)));
+            if (isFinite(m) && (!best || m < best.m)) best = { m, a: pipeAttrs(kind, S.src, f.attributes || {}) };
+          }
+        } catch (e) { /* source unavailable */ }
+      }
+      return [kind, best];
+    })).then(Object.fromEntries);
+    nearCache.set(key, pr);
+    return pr;
+  }
+  if (Object.values(existOn).some(Boolean)) setTimeout(renderExisting, 1500);
+  function fillExisting(p) {
+    const el = $('#dev-exist'); if (!el || p.lat == null) return;
+    nearestExisting(p.lng, p.lat).then(r => {
+      if (currentProject !== p || !$('#dev-exist')) return;
+      const parts = Object.entries(r).map(([k, v]) => v ? `<li><strong>${EXIST_STYLE[k].label}:</strong> ${esc(existText(k, v.a).replace(EXIST_STYLE[k].label, '').trim() || 'size not recorded')}, ${fmtNum(Math.round(v.m))} m <span class="muted">(${esc(v.a.src)})</span></li>` : `<li class="muted"><strong>${EXIST_STYLE[k].label}:</strong> none within 200 m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}</li>`);
+      $('#dev-exist').innerHTML = `<ul class="b-lines small">${parts.join('')}</ul><p class="small muted">Nearest to the development's point, live from the Region / municipal GIS — not the connection point.</p>`;
+    });
   }
 
   $('#btn-dc-geojson').onclick = () => { if (state.dcInfra) download('peel-2026-dc-planned-works.geojson', JSON.stringify(dcGeoJSON()), 'application/geo+json'); };
