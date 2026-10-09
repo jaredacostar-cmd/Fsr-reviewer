@@ -394,6 +394,11 @@
   let existOn = Object.assign({ water: false, sanitary: false, storm: false }, store.get('existOn', {}) || {});
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
+  // Sewer pipe screen state and classes (used by the legend from the first render).
+  const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
+  const PIPE_CLS = [[50, '#2f9e44', '< 50% of full capacity'], [80, '#fab005', '50–80%'], [100, '#f76707', '80–100%'], [Infinity, '#e03131', 'over 100%']];
+  const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
+  const EXIST_ZOOM = 15;
   // Map control: basemap + label pickers.
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
@@ -3739,7 +3744,6 @@
   // slope), the 2021 Census population and land (ha) draining through it, and the next pipe down.
   // Growth since the census is added here: each development joins the nearest of these pipes and
   // its people, jobs and site area are carried down the chain. Flows at Peel design criteria.
-  const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
   function loadSewers() {
     if (SEW.data || SEW.loading) return SEW.loading;
     SEW.loading = fetch('data/sewers.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
@@ -3812,7 +3816,6 @@
     const growth = gp * c.wastewater.avg / 86400 * D.residentialPeaking(gp, c.wastewater) + gj * E.wastewater / 86400 * D.employmentPeaking(gj, E) + gh * c.wastewater.infiltration;
     return { pop: p[4] + gp, jobs: gj, ha: p[5] + gh, exist, growth, q: exist + growth, f };
   }
-  const PIPE_CLS = [[50, '#2f9e44', '< 50% of full capacity'], [80, '#fab005', '50–80%'], [100, '#f76707', '80–100%'], [Infinity, '#e03131', 'over 100%']];
   // Pipes by class at the legend year (all pipes, for the legend summary).
   function pipeSummary() {
     if (!SEW.data) return null;
@@ -3900,8 +3903,6 @@
       { url: `${PEEL_FS}/storm_infrastructure/FeatureServer/4`, f: 'Diameter,Material,MainType', src: 'Region of Peel' },
     ],
   };
-  const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
-  const EXIST_ZOOM = 15;
   const existLayer = L.layerGroup().addTo(map);
   const existCache = new Map();      // `${kind}|${i}|${tile}` -> Promise<features>
   const existRenderer = L.canvas({ padding: 0.3 });
