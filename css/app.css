@@ -801,3 +801,6 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .hz .s-inglewood { stroke: var(--pl-inglewood); } .hz .f-inglewood { fill: var(--pl-inglewood); }
 .hz-key { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
 .hz-tip { position: absolute; pointer-events: none; background: var(--text-primary); color: var(--surface-1); font-size: 12px; padding: 4px 8px; border-radius: 6px; white-space: nowrap; z-index: 5; }
+.brand { position: relative; }
+.share-btn { position: absolute; top: 14px; right: 12px; }
+@media (max-width: 640px) { .share-btn { position: static; margin-top: 6px; } }

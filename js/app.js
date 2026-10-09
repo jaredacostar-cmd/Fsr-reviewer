@@ -659,7 +659,62 @@
     renderCensus();
     renderFilterUI();
     renderSiteLayer();
+    viewLink.ready();
   }
+
+  // ---- Shareable links: filters, tab, switches, map view and the open development in the URL ----
+  // #ph=…&fo=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
+  const viewLink = (() => {
+    let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
+    const encode = () => {
+      const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
+      if (state.phases.size !== ALL_PHASE_KEYS().size) set('ph', [...state.phases].join(','));
+      if (state.focus !== DEFAULT_FOCUS) set('fo', state.focus || 'none');
+      set('mu', state.muni); if (state.kind !== DEFAULT_KIND) set('k', state.kind); set('q', state.search);
+      if (state.sp.length) set('sp', state.sp.join(',')); set('mt', state.mtsa); set('pz', state.pz); set('dr', state.dr);
+      if (state.minUnits) set('u', state.minUnits); if (!state.newOnly) set('nn', '0');
+      if (state.yearMode !== 'any') set('ym', state.yearMode);
+      if (!atDefaultYears()) { set('yf', tFrom.value); set('yt', tTo.value); }
+      set('t', footPref); if (footPref === 'ww') set('ws', wwSub);
+      if (svcOpt.ww !== 'calibrated') set('wm', svcOpt.ww); if (svcOpt.md !== 'design') set('md', svcOpt.md); if (svcOpt.div !== 'off') set('dv', svcOpt.div);
+      const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
+      if (!$('#detail').hidden && currentProject && $('#detail').dataset.view === 'dev') set('d', currentProject.key);
+      return q.toString();
+    };
+    const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };
+    // Apply a link once the developments (and the areas / servicing layers it names) have loaded.
+    const ready = () => {
+      if (applied) { write(); return; }
+      const q = pending;
+      if (!state.projects.length || ((q.get('sp') || q.get('mt')) && !state.areas) || ((q.get('pz') || q.get('dr')) && !state.servicing)) return;
+      applied = true;
+      if (q.get('ph')) state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
+      if (q.has('fo')) state.focus = q.get('fo') === 'none' ? '' : q.get('fo');
+      state.muni = q.get('mu') || ''; state.kind = q.get('k') || DEFAULT_KIND; state.search = q.get('q') || '';
+      state.sp = q.get('sp') ? q.get('sp').split(',') : []; state.mtsa = q.get('mt') || ''; state.pz = q.get('pz') || ''; state.dr = q.get('dr') || '';
+      state.minUnits = Number(q.get('u')) || 0; state.newOnly = q.get('nn') !== '0';
+      if (q.get('ym')) { state.yearMode = q.get('ym'); $('#t-mode').value = state.yearMode; }
+      $('#f-search').value = state.search; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits); $('#f-new').checked = state.newOnly;
+      for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div']]) if (q.get(k)) svcOpt[o] = q.get(k);
+      if (q.get('t')) { footPref = q.get('t'); if (q.get('ws')) wwSub = q.get('ws'); }
+      renderMuniChips(); if (state.areas) renderAreaSelects(); renderSvcSelects(); showSvcArea(false);
+      if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }
+      if (q.get('yf') && q.get('yt')) setYears(Number(q.get('yf')), Number(q.get('yt'))); else applyFilters();
+      showFootTab(footPref);
+      const d = q.get('d') && state.projects.find(p => p.key === q.get('d'));
+      if (d) showDetail(d);
+      write();
+    };
+    map.on('moveend', write);
+    return { ready, write, url: () => `${location.origin}${location.pathname}#${encode()}` };
+  })();
+  async function copyViewLink(btn) {
+    const url = viewLink.url();
+    try { await navigator.clipboard.writeText(url); btn.textContent = 'Link copied'; }
+    catch (e) { prompt('Copy this link:', url); }
+    setTimeout(() => { btn.textContent = 'Share link'; }, 1800);
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-share]'); if (b) copyViewLink(b); });
 
   // ---- Timeline slider -------------------------------------------------------------
   const tFrom = $('#t-from'), tTo = $('#t-to');
@@ -766,7 +821,7 @@
   }
   document.querySelector('.f-subtabs').addEventListener('click', e => {
     const b = e.target.closest('[data-wwsub]'); if (!b) return;
-    wwSub = b.dataset.wwsub; store.set('wwSub', wwSub); showFootTab('ww');
+    wwSub = b.dataset.wwsub; store.set('wwSub', wwSub); showFootTab('ww'); viewLink.write();
   });
   showFootTab(footPref);
 
@@ -1322,6 +1377,7 @@
     $('#detail').hidden = false; $('#detail').dataset.view = 'dev';
     $('#detail').scrollTop = 0;
     runAerial(p);
+    viewLink.write();
   }
 
   // ---- Aerial check -------------------------------------------------------------------
@@ -1363,7 +1419,7 @@
     const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
     canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
   }
-  function closeDetail() { $('#detail').hidden = true; highlight(null); setDaContext(null); }
+  function closeDetail() { $('#detail').hidden = true; highlight(null); setDaContext(null); viewLink.write(); }
   $('#detail-close').onclick = closeDetail;
   addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
 
@@ -2451,7 +2507,7 @@
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
     svcOpt[b.dataset.svcopt] = b.dataset.v;
     store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert', tech: 'svcTech' }[b.dataset.svcopt], b.dataset.v);
-    renderSvcTab();
+    renderSvcTab(); viewLink.write();
   });
   // Click a zone / catchment row: outline it on the map and zoom to it (a catchment also shades
   // everything upstream that drains through it). Click it again to clear.
@@ -2941,7 +2997,7 @@
   $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
     footPref = t.dataset.tab; store.set('footTab3', footPref);
-    showFootTab(footPref); setFooterCollapsed(false);
+    showFootTab(footPref); setFooterCollapsed(false); viewLink.write();
   });
   // Floating timeline: folds to its header (collapsed by default on phones).
   function setTimelineOpen(open) {

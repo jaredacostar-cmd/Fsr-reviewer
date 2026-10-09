@@ -208,6 +208,10 @@ application.
   drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
   WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
   above 1,000.
+- **Share link** (top of the sidebar): copies a link to the exact view — phases, focus, filters
+  (municipality, plans, MTSA, pressure zone, drainage area, units, years), the bottom-panel tab
+  and wastewater view, the mode / max-day / diversion switches, the map position and the open
+  development. The address bar keeps the same link as you work (`#…` parameters).
 - **Export** (*PDF / print* and *Excel* buttons on the Growth & demand, Water, Plants and
   Catchments views, the development panel and a lasso selection): the PDF option opens a printable
   report of what is on screen (with the mode, switches, filters, data dates, the criteria table
