@@ -21,11 +21,16 @@
 </head>
 <body>
   <div class="error-banner" id="error-banner" role="alert" hidden>
-    Something went wrong loading the app. <button type="button" class="btn small" onclick="location.reload()">Reload</button>
+    <span>Something went wrong loading the app. <small id="error-detail"></small></span> <button type="button" class="btn small" onclick="location.reload()">Reload</button>
   </div>
   <script>
-    // If any script fails (e.g. a stale cached copy), show a reload prompt instead of a page that silently ignores taps.
-    window.addEventListener('error', function () { var b = document.getElementById('error-banner'); if (b) b.hidden = false; });
+    // If any script fails (e.g. a stale cached copy), show a reload prompt instead of a page that silently ignores taps,
+    // with the error and the build so a screenshot says what failed.
+    window.addEventListener('error', function (e) {
+      var b = document.getElementById('error-banner'); if (!b) return; b.hidden = false;
+      var d = document.getElementById('error-detail'), v = document.querySelector('meta[name="app-version"]');
+      if (d && !d.textContent) d.textContent = (e && e.message ? e.message : 'script error') + (e && e.filename ? ' (' + e.filename.split('/').pop().split('?')[0] + ':' + e.lineno + ')' : '') + ' · build ' + (v ? v.content : '?');
+    });
   </script>
   <div class="app">
     <aside class="sidebar" id="sidebar">
