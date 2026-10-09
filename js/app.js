@@ -2199,7 +2199,7 @@
       <ul class="grow-legend">${series.map(s => `<li><span class="hz-key f-${s.key}" style="background:var(--pl-${s.key})"></span>${esc(s.full)}</li>`).join('')}<li class="muted">dashed: 80% and 90% thresholds; solid: rated capacity</li></ul>
       <table class="dt svc-table rep-table"><thead><tr><th>Plant</th>${pick.map(y => `<th>${y}</th>`).join('')}<th>Reaches 80%</th><th>Reaches 90%</th><th>Reaches 100%</th></tr></thead>
         <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uML(s.rated)}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uML(s.v[at(y)] * s.rated / 100)}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. 80% and 90% of rated capacity are thresholds commonly used to start planning and building an expansion; they are shown for reference. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. 80% and 90% are reference thresholds; Ontario's Procedure D-5-1 notes that plant expansions typically take at least 3 to 5 years to deliver, so the year a plant crosses them is the latest sensible time to start. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
     </section>`;
   }
   $('#plants-body').addEventListener('input', e => {
@@ -2371,23 +2371,12 @@
     const R = state.reports, box = $('#d-refs');
     if (!R || !box) return;
     box.hidden = false;
-    box.innerHTML = `<h3 class="svc-sub">References <span class="muted small">Region of Peel ${R.year} annual reports, used in the Water, Wastewater and Plants tabs</span></h3>
+    box.innerHTML = `<h3 class="svc-sub">References <span class="muted small">standards, guidelines and reports behind the criteria and comparisons</span></h3>
+      ${R.standards ? `<h4 class="ref-h">Design criteria and guidelines</h4><ul class="ref-list">${R.standards.map(r => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a><div class="small muted">${esc(r.used)}</div></li>`).join('')}</ul>` : ''}
+      <h4 class="ref-h">Region of Peel ${R.year} annual reports <span class="muted small">(Water, Wastewater and Plants comparisons)</span></h4>
       <ul class="ref-list">${Object.values(R.reports).map(r => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></li>`).join('')}</ul>
       <p class="small muted">Index pages: <a href="${esc(R.indexPages.wastewater)}" target="_blank" rel="noopener">wastewater annual reports</a> · <a href="${esc(R.indexPages.water)}" target="_blank" rel="noopener">water quality reports</a>. ${esc(R.note)}</p>`;
   }
-  // Hover / tap tooltip for the plant capacity chart.
-  const capTip = e => {
-    const tip = $('#cap-tip'); if (!tip) return;
-    const t = e.target.closest && e.target.closest('.cap-chart [data-tip]');
-    if (!t) { tip.hidden = true; return; }
-    const box = tip.parentElement.getBoundingClientRect(), x = (e.clientX ?? t.getBoundingClientRect().left) - box.left, y = (e.clientY ?? t.getBoundingClientRect().top) - box.top;
-    tip.textContent = t.dataset.tip; tip.hidden = false;
-    tip.style.left = `${Math.min(box.width - tip.offsetWidth - 4, Math.max(0, x + 12))}px`; tip.style.top = `${Math.max(0, y - 34)}px`;
-  };
-  $('#plants-body').addEventListener('mousemove', capTip);
-  $('#plants-body').addEventListener('mouseleave', () => { const t = $('#cap-tip'); if (t) t.hidden = true; });
-  $('#plants-body').addEventListener('focusin', capTip);
-  $('#plants-body').addEventListener('click', capTip);
   // ---- Export: a printable report (save as PDF) and an Excel workbook of what is on screen ----
   // Scopes: water, plants, catchments, growth (bottom panel) and dev / selection (side panel).
   const exportBar = scope => `<div class="export-bar" role="group" aria-label="Export"><button type="button" class="btn small" data-export="pdf" data-scope="${scope}">PDF / print</button><button type="button" class="btn small" data-export="xlsx" data-scope="${scope}">Excel</button></div>`;

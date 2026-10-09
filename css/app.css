@@ -804,3 +804,5 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .brand { position: relative; }
 .share-btn { position: absolute; top: 14px; right: 12px; }
 @media (max-width: 640px) { .share-btn { position: static; margin-top: 6px; } }
+.ref-h { font-size: 12.5px; margin: 10px 0 2px; }
+.ref-list li .small { margin: 1px 0 4px; }

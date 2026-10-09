@@ -286,6 +286,13 @@ application.
   total is unchanged. On the 2021 baseline, calibrated build-out moves from about 107% to 94% of
   G.E. Booth's rated capacity and from about 70% to 90% of Clarkson's.
 
+**References** (Criteria & references tab, `data/peel-reports.json` → `standards`): the Peel Linear
+Wastewater Standards, the Water and Wastewater Modelling Demand Table (Aug 2024), the Watermain
+Design Criteria (2010), the FSR requirements, the 2020 Master Plan, the 2020 DC Background Study,
+MECP Procedure D-5-1 and the MECP design guidelines, and the Fire Underwriters Survey — each with
+what is used from it, checked against the documents (Probe data sources mode `refs-council`
+downloads them to the `ref-docs` branch).
+
 **Region of Peel 2025 annual reports** (`data/peel-reports.json`, listed under References in
 Breakdown & criteria): the [wastewater annual reports](https://peelregion.ca/water/wastewater/wastewater-annual-reports)
 (G.E. Booth, Clarkson, Inglewood, Collection System) and [water quality reports](https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports)
