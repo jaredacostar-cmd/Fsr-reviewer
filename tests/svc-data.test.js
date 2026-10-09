@@ -49,3 +49,18 @@ test('nearest area: distance to the closest edge, within the limit', () => {
   assert.equal(A.nearest(list, -79.785, 43.705, 300), null, 'beyond the limit');
   assert.equal(A.nearest(list, null, 43.7), null);
 });
+
+test('2026 DC planned works: lines and facilities inside Peel, labelled, plant capacity steps', () => {
+  const d = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'dc-infra.json'), 'utf8'));
+  const inPeel = ([x, y]) => x > -80.3 && x < -79.4 && y > 43.4 && y < 44.1;
+  for (const sys of ['wastewater', 'water']) {
+    const L = d[sys].lines;
+    assert.ok(L.length > 150, `${sys} lines ${L.length}`);
+    assert.ok(L.every(l => l.g.length > 1 && l.g.every(inPeel)), `${sys} lines inside Peel`);
+    assert.ok(L.filter(l => l.y && l.p).length / L.length > 0.8, `${sys} mostly labelled`);
+    assert.ok(d[sys].facilities.filter(f => f.g).every(f => inPeel(f.g)));
+  }
+  assert.ok(d.source.status.includes('Draft'));
+  assert.deepEqual(d.plantCapacity.Clarkson.map(s => s.mld), [500]);
+  assert.ok(d.plantCapacity.Lakeview.some(s => s.mld === 600));
+});
