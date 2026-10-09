@@ -289,7 +289,13 @@ application.
 - **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
   Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
   for diameter, material, year, slope. The development brief lists the nearest existing main of
-  each type within 200 m.
+  each type within 200 m, and the oldest / moderate-risk sanitary sewer on the site's path (first
+  3 km, from `data/sewers.json`).
+- **Fire flow and stormwater** (development brief, live): Region hydrants within 150 m (count,
+  nearest, recorded pressure zone, flagged against the mapped zone) and the nearest large
+  (750 mm+) watermain within 1.5 km — hydrant flow tests are not published; the nearest
+  stormwater pond within 1 km (Brampton with design controls and risk grade, Caledon with
+  assumption status; Mississauga publishes none) and the watershed / subwatershed.
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
