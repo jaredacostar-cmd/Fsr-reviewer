@@ -11,12 +11,13 @@ name: Probe data sources
 #  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
 #  mode=peel-reports: download Peel wastewater annual reports and water quality reports to the peel-reports branch
 #  mode=refs-council: download reference documents and probe council meeting portals (pushed to the ref-docs branch)
+#  mode=masterplan: download the 2020 Water and Wastewater Master Plan volumes as text (pushed to the ref-docs-mp branch)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports or refs-council'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council or masterplan'
         default: 'all'
         required: false
 
@@ -81,6 +82,24 @@ jobs:
           git add -f ref-docs
           git commit -m "Reference documents and council probe"
           git push -f origin ref-docs
+      - name: Master plan volumes as text (pushed to the ref-docs-mp branch)
+        if: inputs.mode == 'masterplan'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
+          mkdir -p mp
+          for v in 1 2 3 4; do
+            curl -sSL -A "Mozilla/5.0 (peel-dev-tracker)" -o mp/vol$v.pdf "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-$v.pdf" || true
+            pdfinfo mp/vol$v.pdf | grep -E "Pages|Title" || true
+            pdftotext -layout mp/vol$v.pdf mp/vol$v.txt && gzip -9 mp/vol$v.txt
+            rm -f mp/vol$v.pdf
+          done
+          ls -la mp
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B ref-docs-mp
+          git add -f mp
+          git commit -m "2020 Master Plan volumes as text"
+          git push -f origin ref-docs-mp
       - name: Rebuild pressure zones and drainage areas (committed to this branch)
         if: inputs.mode == 'servicing-build'
         run: |

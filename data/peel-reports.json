@@ -285,7 +285,7 @@
       "id": "master-plan",
       "title": "Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems (Vol. 1–5)",
       "url": "https://peelregion.ca/construction/environmental-assessments/2020-water-wastewater-master-plan-lake-based-systems",
-      "used": "Pressure zones, trunk and plant projects to 2041; Volume 3 water, Volume 4 wastewater."
+      "used": "Plant expansion trigger at 90% of rated capacity; pumping station firm capacities (Vol. 4, Table 6) and the rule that peak wet weather flow must stay within firm capacity; storage criteria and assessment (Vol. 3, Table 12); named station and trunk constraints."
     },
     {
       "id": "dc-study",
@@ -349,5 +349,390 @@
         "jobs2051": 590000
       }
     }
+  },
+  "masterPlan": {
+    "title": "Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems",
+    "url": "https://peelregion.ca/construction/environmental-assessments/2020-water-wastewater-master-plan-lake-based-systems",
+    "vol3": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf",
+    "vol4": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-4.pdf",
+    "plantTriggerPct": 90,
+    "plantTriggerText": "When 90 per cent of the plant rated capacity is projected to be reached, an expansion to the treatment plant is required (Vol. 4, s. 2.3.1).",
+    "spsCriteria": "Sewage pumping stations are rated on firm capacity (largest pump out of service) and sized for the catchment's peak wet weather flow; when peak wet weather flows reach firm capacity, an expansion is required (Vol. 4, s. 2.3.2).",
+    "sps": [
+      {
+        "name": "Clarkson",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 38,
+        "system": "West",
+        "key": "clarkson"
+      },
+      {
+        "name": "Fifeshire",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 27.5,
+        "system": "West",
+        "key": "fifeshire"
+      },
+      {
+        "name": "Indian Road",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 72.5,
+        "system": "West",
+        "key": "indian"
+      },
+      {
+        "name": "Jack Darling 1",
+        "muni": "Mississauga",
+        "type": "Trunk",
+        "pumps": 4,
+        "firmLs": 800,
+        "system": "West",
+        "key": "jack darling 1"
+      },
+      {
+        "name": "Jack Darling 2",
+        "muni": "Mississauga",
+        "type": "Trunk",
+        "pumps": 3,
+        "firmLs": 107,
+        "system": "West",
+        "key": "jack darling 2"
+      },
+      {
+        "name": "Meadowvale",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 11,
+        "system": "West",
+        "key": "meadowvale"
+      },
+      {
+        "name": "Mullet Creek",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 4,
+        "firmLs": 232,
+        "system": "West",
+        "key": "mullet creek"
+      },
+      {
+        "name": "O'Neil Court",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 1.5,
+        "system": "West",
+        "key": "oneil"
+      },
+      {
+        "name": "Richard's Memorial",
+        "muni": "Mississauga",
+        "type": "Trunk",
+        "pumps": 3,
+        "firmLs": 195,
+        "system": "West",
+        "key": "richards memorial"
+      },
+      {
+        "name": "Silverbirch Trail",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 48,
+        "system": "West",
+        "key": "silver birch"
+      },
+      {
+        "name": "Stonehaven Drive",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 6,
+        "system": "West",
+        "key": "stonehaven"
+      },
+      {
+        "name": "Watersedge",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 14,
+        "system": "West",
+        "key": "watersedge"
+      },
+      {
+        "name": "Beach Street",
+        "muni": "Mississauga",
+        "type": "Trunk",
+        "pumps": 3,
+        "firmLs": 756,
+        "system": "East",
+        "key": "beach street"
+      },
+      {
+        "name": "Beechwood",
+        "muni": "Mississauga",
+        "type": "Trunk",
+        "pumps": 4,
+        "firmLs": 1500,
+        "system": "East",
+        "key": "beechwood"
+      },
+      {
+        "name": "Ben Machree",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 30,
+        "system": "East",
+        "key": "ben machree"
+      },
+      {
+        "name": "Caledon East",
+        "muni": "Caledon",
+        "type": "Local",
+        "pumps": 3,
+        "firmLs": 101,
+        "system": "East",
+        "key": "caledon east"
+      },
+      {
+        "name": "Castlemore",
+        "muni": "Brampton",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 20,
+        "system": "East",
+        "key": "castlemore"
+      },
+      {
+        "name": "Elmwood Avenue",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 3,
+        "firmLs": 195,
+        "system": "East",
+        "key": "elmwood"
+      },
+      {
+        "name": "Front Street",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 4,
+        "firmLs": 276,
+        "system": "East",
+        "key": "front street"
+      },
+      {
+        "name": "Hiawatha Parkway",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 16.5,
+        "system": "East",
+        "key": "hiawatha"
+      },
+      {
+        "name": "Intermodal Drive",
+        "muni": "Brampton",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 160,
+        "system": "East",
+        "key": "intermodal"
+      },
+      {
+        "name": "Lakelands",
+        "muni": "Brampton",
+        "type": "Local",
+        "pumps": 3,
+        "firmLs": 64,
+        "system": "East",
+        "key": "lakelands"
+      },
+      {
+        "name": "Mayfield",
+        "muni": "Caledon",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 16,
+        "system": "East",
+        "key": "mayfield"
+      },
+      {
+        "name": "Pinetree Crescent",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 7,
+        "system": "East",
+        "key": "pinetree"
+      },
+      {
+        "name": "Rosemere Road",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 25,
+        "system": "East",
+        "key": "rosemere"
+      },
+      {
+        "name": "Shardawn Mews",
+        "muni": "Mississauga",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 3,
+        "system": "East",
+        "key": "shardawn"
+      },
+      {
+        "name": "Bolton",
+        "muni": "Caledon",
+        "type": "Trunk",
+        "pumps": 3,
+        "firmLs": 380,
+        "system": "McVean",
+        "key": "bolton"
+      },
+      {
+        "name": "Bolton North Hill",
+        "muni": "Caledon",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 22.5,
+        "system": "McVean",
+        "key": "bolton north hill"
+      },
+      {
+        "name": "Gore Road",
+        "muni": "Brampton",
+        "type": "Local",
+        "pumps": 3,
+        "firmLs": 81,
+        "system": "McVean",
+        "key": "gore"
+      },
+      {
+        "name": "Harvestview",
+        "muni": "Caledon",
+        "type": "Local",
+        "pumps": 2,
+        "firmLs": 7,
+        "system": "McVean",
+        "key": "harvestview"
+      },
+      {
+        "name": "McVean Drive",
+        "muni": "Brampton",
+        "type": "Trunk",
+        "pumps": 3,
+        "firmLs": 1400,
+        "system": "McVean",
+        "key": "mcvean"
+      }
+    ],
+    "spsSource": "Vol. 4, Table 6 – Lake-based sewage pumping stations",
+    "spsNotes": {
+      "mcvean": "Peak flows projected to exceed firm capacity before 2026; an additional 700 L/s of pumping and forcemain upgrades are required (Vol. 4, s. 4.3.2).",
+      "elmwood": "Condition, maintenance and performance issues; additional capacity needed for growth (Class EA with Hiawatha SPS) (Vol. 4, s. 4.3.2).",
+      "front street": "Equipment at end of life; Class EA proposes decommissioning it and a new gravity sewer to Richard's Memorial SPS (Vol. 4, s. 4.3.2).",
+      "richards memorial": "To be reconstructed with expanded capacity for Port Credit growth (Vol. 4, s. 4.3.2)."
+    },
+    "storageCriteria": "Equalization 25% of the maximum day demand of the upper zones served; fire storage per MECP guidelines up to 378 L/s for 6 hours where the zone's equivalent population exceeds 40,000; emergency 25% of equalization plus 25% of fire storage (Vol. 3, s. 3).",
+    "storage": [
+      {
+        "facility": "Silverthorn Reservoir",
+        "required": [
+          31,
+          31,
+          43,
+          44,
+          46,
+          49
+        ],
+        "available": [
+          46,
+          46,
+          46,
+          46,
+          46,
+          46
+        ]
+      },
+      {
+        "facility": "West Brampton Reservoir",
+        "required": [
+          31,
+          32,
+          34,
+          44,
+          46,
+          49
+        ],
+        "available": [
+          40,
+          40,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      {
+        "facility": "Victoria Reservoir (future, Zone 6 Central)",
+        "required": [
+          0,
+          0,
+          18,
+          19,
+          19,
+          19
+        ],
+        "available": [
+          0,
+          0,
+          40,
+          40,
+          40,
+          40
+        ]
+      },
+      {
+        "facility": "West Caledon Elevated Tank (future, Zone 7 West)",
+        "required": [
+          0,
+          0,
+          0,
+          5,
+          6,
+          8
+        ],
+        "available": [
+          0,
+          0,
+          0,
+          10,
+          10,
+          10
+        ]
+      }
+    ],
+    "storageYears": [
+      2019,
+      2021,
+      2026,
+      2031,
+      2036,
+      2041
+    ],
+    "storageSource": "Vol. 3, Table 12 – Water storage assessment (ML); Silverthorn and West Brampton need new 25 ML and 20 ML cells by 2041"
   }
 }
