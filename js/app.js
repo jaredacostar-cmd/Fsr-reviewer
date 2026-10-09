@@ -2073,7 +2073,7 @@
     ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
     ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
     ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
-    ['tips', 'Tips', 'A quick tour of the map, filters, development panel and analysis', '<circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="14.3" r="1" fill="currentColor"/>'],
+    ['tips', 'Help & tips', 'Guides for common tasks and a quick tour', '<circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="14.3" r="1" fill="currentColor"/>'],
   ];
   const ToolsControl = L.Control.extend({
     options: { position: 'topleft' },
@@ -2089,7 +2089,7 @@
       menu.onclick = e => {
         const b = e.target.closest('[data-tool]'); if (!b) return;
         open(false);
-        if (b.dataset.tool === 'tips') { startTour(); return; }
+        if (b.dataset.tool === 'tips') { showHelp(); return; }
         if (b.dataset.tool === 'lasso') { if (tool.mode) setTool(null); setLasso(!lassoOn); }
         else { if (lassoOn) setLasso(false); setTool(b.dataset.tool); }
       };
@@ -5562,14 +5562,86 @@
   });
 
   // ---- Tips: a short tour, shown once (Tools → Tips to see it again) ----------------------------
+  const phoneUI = () => innerWidth <= 760;
   const TOUR = [
-    { el: () => $('#map'), t: 'The map', b: 'Active development applications over the map background. Tap a cluster to zoom in, or a marker to open the development.' },
-    { el: () => innerWidth <= 760 ? $('#toggle-sidebar') : $('#tab-explore'), t: 'Find and filter', b: 'Search an address, file number, plan or DC project; pick phases and a municipality. More filters holds focus, planning and servicing areas.' },
-    { el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning, Water, Wastewater or DC. Layers & style below turns layers on and off and saves named views.' },
-    { el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area, measure distance with a ground profile, or test a proposed site.' },
-    { el: () => $('#footer'), t: 'Analysis', b: 'Totals for what is shown. Open it for growth & demand, water and wastewater by area, and the criteria used.' },
-    { el: () => $('#map'), t: 'A development', b: 'Its panel has Overview, Servicing (flows, existing mains, fire flow, stormwater, DC needs) and History. ☆ Watch adds it to your watchlist; Memo prints a one-page servicing memo.' },
+    { el: () => $('#map'), t: 'Welcome', b: 'The map opens on the active development applications in Mississauga, Brampton and Caledon — from application to construction — over the map background. Tap a cluster to zoom in; tap a marker to open the development.' },
+    { el: () => phoneUI() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search anything', b: 'An address, intersection or file number — and also a secondary plan, MTSA, pressure zone, catchment, pumping station or DC project number (e.g. 25-2269). Picking a plan filters the map to it.' },
+    { el: () => phoneUI() ? $('#toggle-sidebar') : $('#phase-panel'), t: 'Phases and filters', b: 'Pick phases (in review, approved, permit issued…) and a municipality. More filters adds a focus (growth, committed capacity, stalled, employment…) and planning or servicing areas. The Showing line always says what is on the map.' },
+    { el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning (aerial, addresses), Water (pressure zones, watermains), Wastewater (catchments, sewer capacity) and DC (servicing timing against the 2026 DC program). Each view remembers your changes.' },
+    { el: () => document.querySelector('.mo-more > summary'), t: 'Layers & style', b: 'Colour and size markers, shade capacity, show existing pipes with size labels, planned DC works, census areas or a heatmap — and save the whole setup as a named view.' },
+    { el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area to add up its demand (then Area report), measure a distance with its ground profile, or test a proposed site before an application exists.' },
+    { el: () => $('#north-btn'), t: 'Orientation', b: 'The north arrow switches the map between Peel’s road grid and north up.' },
+    { el: () => $('#footer'), t: 'Analysis', b: 'Totals for what is shown. Open it for growth & demand, water by pressure zone, wastewater by catchment and plant (with Horizon years), and the design criteria used.' },
+    { el: () => phoneUI() ? $('#toggle-sidebar') : $('#tab-btn-week'), t: 'This week', b: 'What changed in the weekly update (Mondays): new files and phase changes, with your watchlist first. ☆ Watch on a development to follow it.' },
+    { el: () => $('#map'), t: 'A development', b: 'Overview (status, latest council decision, build-out), Servicing (flows, sewer path, plant reserve, existing mains, fire flow, stormwater, ground, DC needs) and History. Memo prints a one-page servicing memo.' },
+    { el: () => document.querySelector('.tools-btn'), t: 'Unselect and get help', b: 'Tap an empty part of the map, press Esc or use Clear selection to unselect. Tools → Help & tips has step-by-step guides for common tasks; press and hold (or hover) any label for what it means.' },
   ];
+  // Help & tips: task guides with a "Show me" that sets the app up for the task.
+  const pickDev = () => state.filtered.filter(p => p.lat != null && p.units >= 100 && (p.phase === 'review' || p.phase === 'approved')).sort((a, b) => b.units - a.units)[0] || state.filtered.find(p => p.lat != null);
+  const toMap = () => { if (phoneUI() && $('#sidebar').classList.contains('open')) toggleSidebar(false); };
+  const openAnalysis = (tab, sub) => { if (sub) { wwSub = sub; store.set('wwSub', sub); } footPref = tab; store.set('footTab3', tab); setFooterCollapsed(false); showFootTab(tab); };
+  const HELP = [
+    { t: 'Check servicing for a development', w: 'Reviewing an application, an FSR or a pre-consultation.',
+      s: ['Tap its marker, or search its address or file number.', 'Servicing tab: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow, stormwater and ground.', 'Memo (top of the panel) prints a one-page servicing memo.'],
+      go: () => { const p = pickDev(); if (!p) return; store.set('dvTab', 'servicing'); toMap(); focusProject(p); setTimeout(() => showDvTab('servicing'), 50); } },
+    { t: 'Find when DC projects are needed', w: 'DC background study, capital timing, or explaining why a site waits for a trunk sewer.',
+      s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'Layers & style → DC timing: every existing constraint, filtered to "Needed before the DC project".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Excel (all rows) exports the table for a memo or spreadsheet.'],
+      go: () => { setMapView('dc'); loadSewers(); showDcTiming(); } },
+    { t: 'Report on an area or secondary plan', w: 'A block plan, MTSA or secondary plan review; council or committee questions.',
+      s: ['Search the plan or MTSA name and pick it — the map filters to it.', 'Tap Report on the Showing line for a printable area report: demand, the capacity it relies on with DC timing, largest developments.', 'Or Tools → Select an area and draw around any group; the summary has Area report, Excel and CSV.'],
+      go: () => { toMap(); closeDetail(); setLasso(true); } },
+    { t: 'Test a site before an application exists', w: 'A pre-consultation, an inquiry, or a land use scenario.',
+      s: ['Tools → Test a site, then tap the map where the site is.', 'Enter units by type, jobs and site area; drag the pin to move it.', 'The panel shows its flows, pressure zone, sewer path, pumping stations and plant reserve; tick "Count it" to add it to the totals and capacity.'],
+      go: () => { toMap(); closeDetail(); setTool('whatif'); } },
+    { t: 'Keep up with weekly changes', w: 'Monday check-ins and tracking the files you are working on.',
+      s: ['This week tab: new files and phase changes from the latest weekly update.', '☆ Watch on any development adds it to Your watchlist (top of This week).', 'More filters → ★ Watched or Changed this week shows just those on the map.', 'Save the setup with Saved views (Layers & style).'],
+      go: () => { if (phoneUI()) toggleSidebar(true); showTab('week'); } },
+    { t: 'Plant and pumping station capacity over time', w: 'Allocation, servicing capacity reports, staging.',
+      s: ['Analysis → Wastewater → Plants & capacity: each plant\'s flow as a share of rated capacity by year (Horizon years), the 90% expansion trigger and the DC expansions.', 'Capacity layer (Layers & style → Shade): pumping station load or sewer pipe capacity, with a year slider in the legend.', 'The Scenario line switches design flows vs the 2025 measured flows, the Booth → Clarkson diversion and more.'],
+      go: () => { setMapView('wastewater'); openAnalysis('ww', 'plants'); } },
+    { t: 'Water demand by pressure zone', w: 'Zone growth, storage and supply checks.',
+      s: ['Water view: pressure zones shaded by max day growth.', 'Analysis → Water: census, built, approved and proposed max day by zone, reported plant production and the master plan storage assessment.', 'Tap a zone row or a zone on the map for What loads this — every development adding demand.'],
+      go: () => { setMapView('water'); openAnalysis('water'); } },
+    { t: 'Existing mains and ground near a site', w: 'Connection options, a site visit, or a quick constraint check.',
+      s: ['Layers & style → Existing: water, sanitary, storm (from street zoom); Size labels shows diameters.', 'A development\'s Servicing tab lists every main around it with street and distance.', 'Tools → Measure & ground profile: tap points for the distance and the ground profile with fall and grade.'],
+      go: () => { toMap(); closeDetail(); setTool('measure'); } },
+    { t: 'Save, share and export', w: 'Sending a view to a colleague, or attaching numbers to a report.',
+      s: ['Layers & style → Saved views keeps a named setup in this browser.', 'Share link copies a link to the exact filters, map position and open development.', 'PDF / print and Excel on every table; Memo and Area report for one-page summaries; CSV / GeoJSON of the developments in the List.'],
+      go: () => { toMap(); const d = document.querySelector('.mo-more'); if (d) { d.open = true; d.scrollTop = 0; } } },
+    { t: 'How far to trust the numbers', w: 'Before quoting a figure.',
+      s: ['Flows use Peel design criteria (Criteria & references tab); the Scenario line says which switches are on.', 'Capacity checks are screens, not hydraulic models: sewer capacity is full-pipe Manning on the published slope; "Check the data" flags likely slope errors.', 'The 2026 DC capital maps are a draft; schedules change annually.', 'Data tab: sources, dates and the weekly snapshot.'],
+      go: () => openAnalysis('criteria') },
+  ];
+  const QUICK_TIPS = [
+    'Tap an empty part of the map, press Esc, or use Clear selection to unselect.',
+    'Press and hold (or hover) a heading or label for what it means and where the data comes from.',
+    'The north arrow switches between Peel’s road grid and north up.',
+    'Search a DC project number (e.g. 25-2269) or a pumping station to jump to it.',
+    'Hover a cluster for its phase counts; Layers & style → Show as → Heatmap shows where people and jobs concentrate.',
+    'The bottom bar always shows the totals for what is on the map; tap Analysis for the tables.',
+    'Tables in the Water and Wastewater tabs keep their headers while you scroll.',
+    'Memo and Area report open a print-ready page: use Print / Save as PDF.',
+    'On a phone, List opens the search, filters and the developments on the map; Map goes back.',
+  ];
+  function showHelp() {
+    closeDetail({ keepSelection: true });
+    $('#detail-body').innerHTML = `<div class="head"><h3>Help &amp; tips</h3><div class="m">Guides for common tasks — each one can set the map up for you</div></div>
+      <p><button type="button" class="btn" data-help-tour>Take the tour again</button></p>
+      ${HELP.map((h, i) => `<details class="help-card"${i === 0 ? ' open' : ''}><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
+        <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me</button></details>`).join('')}
+      <h3 class="sub-title">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'help'; $('#detail').scrollTop = 0;
+    if (phoneUI()) toggleSidebar(false);
+  }
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-help-open]')) return showHelp();
+    if (e.target.closest('[data-help-tour]')) { closeDetail(); return startTour(); }
+    const g = e.target.closest('[data-help-go]'); if (!g) return;
+    const h = HELP[+g.dataset.helpGo]; if (!h) return;
+    h.go();
+    // On a phone the guide would cover what it just set up: close it (Tools → Help & tips reopens it).
+    if (phoneUI() && $('#detail').dataset.view === 'help' && !$('#detail').hidden) closeDetail({ keepSelection: true });
+  });
   let tourEl = null, tourI = 0, tourChecked = false;
   function maybeTour() {
     if (tourChecked || !state.projects.length) return;
@@ -5580,9 +5652,10 @@
   function endTour() { store.set('tourDone', true); if (tourEl) { tourEl.remove(); tourEl = null; } }
   function showTourStep() {
     const st = TOUR[tourI]; if (!st) return endTour();
-    if (!tourEl) { tourEl = document.createElement('div'); tourEl.className = 'tour'; document.body.appendChild(tourEl); tourEl.addEventListener('click', e => { if (e.target.closest('[data-tour-next]')) { tourI++; showTourStep(); } else if (e.target.closest('[data-tour-skip]') || e.target === tourEl) endTour(); }); }
+    if (!tourEl) { tourEl = document.createElement('div'); tourEl.className = 'tour'; document.body.appendChild(tourEl); tourEl.addEventListener('click', e => { if (e.target.closest('[data-tour-next]')) { tourI++; showTourStep(); } else if (e.target.closest('[data-tour-back]')) { tourI = Math.max(0, tourI - 1); showTourStep(); } else if (e.target.closest('[data-tour-help]')) { endTour(); showHelp(); } else if (e.target.closest('[data-tour-skip]') || e.target === tourEl) endTour(); }); }
     const el = st.el(), r = el && el.getBoundingClientRect();
-    const box = r && r.width ? { x: Math.max(4, r.left - 4), y: Math.max(4, r.top - 4), w: Math.min(innerWidth - 8, r.width + 8), h: Math.min(innerHeight - 8, r.height + 8) } : null;
+    const onScreen = r && r.width && r.height && r.right > 0 && r.bottom > 0 && r.left < innerWidth && r.top < innerHeight;
+    const box = onScreen ? { x: Math.max(4, r.left - 4), y: Math.max(4, r.top - 4), w: Math.min(innerWidth - 8, r.width + 8), h: Math.min(innerHeight - 8, r.height + 8) } : null;
     const big = box && box.w * box.h > innerWidth * innerHeight * 0.3;
     const cw = Math.min(320, innerWidth - 24);
     let cx = 12, cy = 12;
@@ -5591,7 +5664,7 @@
     tourEl.innerHTML = `${box && !big ? `<div class="tour-hole" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : ''}
       <div class="tour-card" role="dialog" aria-label="Tip ${tourI + 1} of ${TOUR.length}" style="left:${cx}px;top:${cy}px;width:${cw}px">
         <div class="tour-n">${tourI + 1} / ${TOUR.length}</div><strong>${esc(st.t)}</strong><p>${esc(st.b)}</p>
-        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>Skip</button><button type="button" class="btn small" data-tour-next>${tourI === TOUR.length - 1 ? 'Done' : 'Next'}</button></div></div>`;
+        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>${tourI === TOUR.length - 1 ? 'Close' : 'Skip'}</button><span>${tourI ? '<button type="button" class="btn small link" data-tour-back>Back</button> ' : ''}${tourI === TOUR.length - 1 ? '<button type="button" class="btn small" data-tour-help>Open Help &amp; tips</button>' : '<button type="button" class="btn small" data-tour-next>Next</button>'}</span></div></div>`;
   }
 
   // ---- Boot ------------------------------------------------------------------------
