@@ -1286,3 +1286,14 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 }
 .map-opts .mo-seg .chip { min-width: 0; max-width: none; padding: 3px 3px; }
 .map-opts details.mo-panel > summary.mo-panel-h > span:first-child { white-space: nowrap; flex: none; }
+/* Area filter notice (above Map options), the secondary plan list inside the panel, and heights so
+   the panel and the legend box never overlap. */
+.mo-area-on { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 14%, var(--surface-1)); color: var(--text-primary); font-size: 11.5px; }
+.mo-area-on[hidden] { display: none; }
+.map-opts label.multi-item { display: flex; grid-template-columns: none; gap: 6px; align-items: center; padding: 3px 4px; font-size: 12px; color: var(--text-primary); }
+.map-opts label.multi-item input { width: 15px; height: 15px; }
+.map-opts .multi-group { font-size: 10.5px; }
+.map-opts .multi-tools input { font-size: 12px; padding: 4px 6px; }
+.map-opts details.mo-panel[open] { max-height: calc(var(--map-h, 640px) * .56); overflow-y: auto; overscroll-behavior: contain; }
+.map-opts details.mo-panel details.mo-more[open] { max-height: none; overflow: visible; }
+.map-legend { overflow-y: auto; overscroll-behavior: contain; }
