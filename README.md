@@ -326,6 +326,19 @@ application.
   and can count it in the totals (kept in this browser, draggable). While any exist, a bar at the
   bottom of the map shows *N test sites* (tap for the list, each with *Remove*) and *Remove all*,
   with *Undo* for a few seconds after; each test site's panel has *Remove this test site* at the top.
+- **Wastewater blocks** (Layers & style → Infrastructure): the Region of Peel's 40 sewersheds for its
+  inflow & infiltration program (`data/blocks.json`, from its *Block_view* feature service; the blocks
+  of "Dragonfly: An Integrated Approach to Resiliency", F. Salehzadeh, WEFTEC 2024), with the blocks
+  prioritised for a block study highlighted. Tap a block for its outlets on the existing sewers (main
+  outlet with capacity and people upstream), the blocks it drains into down to the plant and the
+  distance along the pipes, the blocks upstream and the growth inside it; arrows on the map follow the
+  sewers to the plant. Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).
+- **Flow arrows follow the pipes**: a selected catchment's (and block's) arrows to the treatment plant
+  run along the Region's sanitary mains (`data/sewers.json`), not straight outlet-to-outlet lines.
+- **Pipe depths in the ground profile** (Measure): the Region's sanitary sewer inverts along the line
+  (nearest main within 12 m), with depth to invert = ground − invert (approximate: terrain tiles are
+  ±1–2 m); watermains within 8 m are drawn at Peel's 1.7 m minimum cover, labelled assumed, since the
+  Region publishes no watermain depth.
 - **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
   site area estimated, complete.
 - **Capacity by year**: the year slider in the legend phases approved and proposed growth in as set
