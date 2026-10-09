@@ -757,3 +757,18 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .svc-plant { stroke: #fff; stroke-width: 2; fill: #c2410c; fill-opacity: 1; }
 .svc-focus { stroke: var(--accent); stroke-width: 3; fill: var(--accent); fill-opacity: 0.12; }
 .svc-focus-up { stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 4 3; fill: var(--accent); fill-opacity: 0.06; }
+
+/* Merged bottom-panel tabs: section headings and the wastewater view switch */
+.pane-h { font-size: 13px; font-weight: 700; margin: 0; color: var(--text-primary); }
+.f-subtabs:not([hidden]) { display: flex; gap: 4px; padding: 8px 16px 0; }
+.f-subtabs .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+#census:not([hidden]) { border-top: 1px solid var(--border, rgba(0,0,0,.08)); }
+/* Criteria / data stamp, modified badge, collapsible method notes, engineering details */
+.stamp { margin: 0 0 6px; color: var(--text-secondary); display: flex; flex-wrap: wrap; gap: 2px 10px; align-items: baseline; }
+.d-flows .stamp { grid-column: 1 / -1; margin-top: 4px; }
+.badge-mod { display: inline-block; padding: 1px 8px; border-radius: 10px; font-weight: 700; font-size: 11px; color: var(--text-primary); background: color-mix(in srgb, #e8a33d 35%, transparent); border: 1px solid #c98a2a; }
+.svc-notes { margin: 6px 0 10px; }
+.svc-notes > summary { cursor: pointer; font-size: 12px; color: var(--text-secondary); }
+.svc-notes > summary:hover { color: var(--text-primary); }
+.svc-table small.tech { display: none; }
+.show-tech .svc-table small.tech { display: block; }
