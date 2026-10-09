@@ -636,8 +636,8 @@
     if (state.muni && p.municipality !== state.muni) return false;
     if (state.sp.length && !state.sp.some(id => (p.sp || []).includes(id))) return false;
     if (state.mtsa && !(p.mtsa || []).includes(state.mtsa)) return false;
-    if (state.pz && !(p.pz || []).includes(state.pz)) return false;
-    if (state.dr && !(p.dr || []).includes(state.dr)) return false;
+    if (state.pz && !svcIds(p, 'pz').includes(state.pz)) return false;
+    if (state.dr && !svcIds(p, 'dr').includes(state.dr)) return false;
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
@@ -681,7 +681,7 @@
       if (state.yearMode !== 'any') set('ym', state.yearMode);
       if (!atDefaultYears()) { set('yf', tFrom.value); set('yt', tTo.value); }
       set('t', footPref); if (footPref === 'ww') set('ws', wwSub);
-      if (svcOpt.ww !== 'calibrated') set('wm', svcOpt.ww); if (svcOpt.md !== 'design') set('md', svcOpt.md); if (svcOpt.div !== 'off') set('dv', svcOpt.div);
+      if (svcOpt.ww !== 'calibrated') set('wm', svcOpt.ww); if (svcOpt.md !== 'design') set('md', svcOpt.md); if (svcOpt.div !== 'off') set('dv', svcOpt.div); if (svcOpt.nr !== 'on') set('nr', svcOpt.nr);
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
       if (!$('#detail').hidden && currentProject && $('#detail').dataset.view === 'dev') set('d', currentProject.key);
       return q.toString();
@@ -700,7 +700,7 @@
       state.minUnits = Number(q.get('u')) || 0; state.newOnly = q.get('nn') !== '0';
       if (q.get('ym')) { state.yearMode = q.get('ym'); $('#t-mode').value = state.yearMode; }
       $('#f-search').value = state.search; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits); $('#f-new').checked = state.newOnly;
-      for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div']]) if (q.get(k)) svcOpt[o] = q.get(k);
+      for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) svcOpt[o] = q.get(k);
       if (q.get('t')) { footPref = q.get('t'); if (q.get('ws')) wwSub = q.get('ws'); }
       renderMuniChips(); if (state.areas) renderAreaSelects(); renderSvcSelects(); showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }
@@ -1410,8 +1410,8 @@
     const facts = [];
     if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}`));
     if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(Math.round(e.employment.jobs)), 'jobs')));
-    if (f && f.z) facts.push(chip(esc(f.z.name.replace('Pressure zone ', 'Zone '))));
-    if (f && f.pl) facts.push(chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}`));
+    if (f && f.z) facts.push(chip(`${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zNear ? ' (nearest)' : ''}`));
+    if (f && f.pl) facts.push(chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
     if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
     const flags = devFlags(p, st, f);
     return `<div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
@@ -1447,6 +1447,7 @@
     const cb = f.cb, lines = [];
     lines.push(`<strong>Water</strong> ${uLs(cb.water.maxDay)} max day, ${uLs(cb.water.peakHour)} peak hour${f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zMax ? ` (${pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of its build-out max day)` : ''}` : ' · no pressure zone'}`);
     const ps = f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0];
+    if (f.zNear || f.dNear) lines.push(`<span class="est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'traced catchments'].filter(Boolean).join(' and ')} — assigned to the nearest: ${[f.zNear && `${esc(f.z.name.replace('Pressure zone ', 'Zone '))} (${kmText(f.zNear.m)})`, f.dNear && f.path[0] && `${esc(drName(f.path[0]))} (${kmText(f.dNear.m)})`].filter(Boolean).join(', ')}. A screening estimate: the connection point comes from the FSR / master plan.</span>`);
     lines.push(`<strong>Wastewater</strong> ${uLs(cb.wastewater.peak)} peak dry, ${uLs(cb.wastewater.wetPeak)} peak wet${ps ? ` · via ${esc(psName(ps.a))} (build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm, peak wet)` : ''}`);
     if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant is over-committed'}`);
     else if (f.pl === 'Toronto') lines.push('Drains to the City of Toronto system (Malton).');
@@ -2069,8 +2070,17 @@
     for (const p of state.projects) {
       p.pz = PeelAreas.locate(state.servicing.zones, p.lng, p.lat);
       p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
+      // Outside the mapped zones / traced catchments: the nearest one within NEAR_M of its edge,
+      // the area it would most likely connect to (greenfield lands, gaps in the traced network).
+      p.pzNear = p.pz.length ? null : PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
+      p.drNear = p.dr.length ? null : PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
     }
   }
+  const NEAR_M = 5000;
+  // The development's pressure zone / drainage area ids: mapped, else (switch on) the nearest.
+  const svcIds = (p, key) => (p[key] && p[key].length) ? p[key] : svcOpt.nr === 'on' && p[`${key}Near`] ? [p[`${key}Near`].id] : [];
+  const nearOf = (p, key) => !(p[key] && p[key].length) && svcOpt.nr === 'on' ? p[`${key}Near`] : null;
+  const kmText = m => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
   function renderSvcSelects() {
     if (!state.servicing) return;
     const { zones, drainage } = state.servicing;
@@ -2130,10 +2140,10 @@
     const e = D.estimate([p], state.criteria, 'all', jobsOf), cb = e.combined;
     if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return null;
     const layer = p.phase === 'completed' ? 'built' : D.COMMITTED_PHASES.has(p.phase) ? 'approved' : (p.phase === 'inception' || p.phase === 'review') ? 'proposed' : null;
-    const z = (p.pz || []).map(id => svcById.get(id)).filter(Boolean)[0];
+    const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean)[0];
     const zl = z && M.zones.get(z.id);
     const zMax = zl ? M.wMax(M.total(zl), M.jobs(zl)) : 0;
-    let d = (p.dr || []).map(id => svcById.get(id)).filter(Boolean)[0];
+    let d = svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0];
     const path = []; const seen = new Set();
     while (d && !seen.has(d.id)) { seen.add(d.id); path.push(d); d = d.downstream ? svcById.get(d.downstream) : null; }
     // Pumping stations on the path: build-out peak dry and ≈ peak wet (design flows) vs firm capacity.
@@ -2143,7 +2153,7 @@
     });
     const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
     const devAvg = D.toMLd(cb.wastewater.avg);
-    return { M, e, cb, layer, z, zl, zMax, path, sps, pl, cap, devAvg, reserve: cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0 };
+    return { M, e, cb, layer, z, zNear: nearOf(p, 'pz'), dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0 };
   }
   // Servicing check (inside the Servicing section): the development's flows at Peel design
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
@@ -2153,11 +2163,11 @@
     const { M, e, cb, layer, z, zl, zMax, path, pl, cap, devAvg } = F;
     const mld = D.toMLd, ls = uLs, pct = pctOf;
     const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
-    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
+    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}${F.zNear ? `<small>nearest zone, ${kmText(F.zNear.m)} away</small>` : ''}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
     const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
     const pathRows = path.map((a, i) => {
       const l = M.cum.get(a.id), f = M.fOf(a.plant), out = l ? M.adwf(l, f) : 0;
-      return `<tr><td>${i ? '↳ ' : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
+      return `<tr><td>${i ? '↳ ' : F.dNear ? `<span class="est">nearest, ${kmText(F.dNear.m)}</span> ` : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
     }).join('');
     let plant = '';
     if (cap) {
@@ -2173,10 +2183,11 @@
   // Project panel line: its pressure zone and drainage area.
   function servicingLineHTML(p) {
     if (!state.servicing) return '';
-    const z = (p.pz || []).map(id => svcById.get(id)).filter(Boolean), d = (p.dr || []).map(id => svcById.get(id)).filter(Boolean);
-    if (!z.length && !d.length) return '<p class="small muted svc-line" data-info="drainage-area">Outside the mapped pressure zones and traced drainage areas.</p>';
-    return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) : 'no pressure zone'} · ${d.length
-      ? esc(d.map(a => `${drName(a)} → ${plantLabel(a.plant)}`).join(', ')) : 'no traced drainage area'}</p>`;
+    const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean), d = svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean);
+    const zn = nearOf(p, 'pz'), dn = nearOf(p, 'dr');
+    if (!z.length && !d.length) return `<p class="small muted svc-line" data-info="drainage-area">Outside the mapped pressure zones and traced drainage areas${svcOpt.nr === 'on' ? ` (none within ${kmText(NEAR_M)} — likely private well / septic or not yet planned for servicing)` : ''}.</p>`;
+    return `<p class="small svc-line" data-info="drainage-area"><strong>Servicing:</strong> ${z.length ? esc(z.map(a => a.name).join(', ')) + (zn ? ` <span class="est">nearest, ${kmText(zn.m)}</span>` : '') : 'no pressure zone'} · ${d.length
+      ? esc(d.map(a => `${drName(a)} → ${plantLabel(a.plant)}`).join(', ')) + (dn ? ` <span class="est">nearest, ${kmText(dn.m)}</span>` : '') : 'no traced drainage area'}</p>`;
   }
   // Pressure zones in numerical order (1, 2, 2A, 3 … 9, CE9, 12A, 13B, AV13).
   const zoneKey = z => { const m = String(z.zone || '').match(/^([A-Z]*)(\d+)(.*)$/i); return m ? [Number(m[2]), m[1] ? 1 : 0, m[1] + m[3]] : [999, 0, String(z.zone)]; };
@@ -2218,14 +2229,21 @@
     return j;
   }
   function svcLayerTotals(key, a, bc) {
-    const devs = state.projects.filter(p => p.phase !== 'cancelled' && (p[key] || []).includes(a.id));
+    const devs = state.projects.filter(p => p.phase !== 'cancelled' && svcIds(p, key).includes(a.id));
     const gr = PeelAreas.growthSince(devs, {}, bc.date, state.criteria);
     return { census: svcCensusPop(bc).get(a.id) || 0, built: gr.built.population, approved: gr.approved.population, proposed: gr.proposed.population,
       ...svcJobs(devs, bc.date),
       // Developments = sites with a planning application (stand-alone permits still count in Built since).
-      units: gr.built.units + gr.approved.units + gr.proposed.units, devs: devs.filter(p => p.kinds.includes('application')).length };
+      units: gr.built.units + gr.approved.units + gr.proposed.units, devs: devs.filter(p => p.kinds.includes('application')).length,
+      near: devs.filter(p => p.kinds.includes('application') && nearOf(p, key)).length };
   }
-  const SUM_KEYS = ['census', 'built', 'approved', 'proposed', 'jbuilt', 'japproved', 'jproposed', 'units', 'devs'];
+  const SUM_KEYS = ['census', 'built', 'approved', 'proposed', 'jbuilt', 'japproved', 'jproposed', 'units', 'devs', 'near'];
+  // Developments cell: count, and how many are outside the area and assigned to it as the nearest.
+  const devCell = l => `<td>${uDev(l.devs)}${l.near ? `<small>${fmtNum(l.near)} nearest</small>` : ''}</td>`;
+  const nearNote = (n, what) => `<p class="small muted">${svcOpt.nr === 'on'
+    ? `<strong>Outside mapped areas:</strong> ${fmtNum(n)} developments outside every ${what} are counted in the nearest one within ${kmText(NEAR_M)} of its edge (“nearest” under Developments) — mostly greenfield lands beyond the existing network, which would most likely connect there. A screening assumption: the actual connection comes from the functional servicing report or master plan. Farther away, a development is left out (likely private well / septic).`
+    : `<strong>Outside mapped areas:</strong> developments outside every ${what} are left out; switch “Assign to nearest” to count them in the nearest ${what}.`}</p>`;
+  const nearSwitch = () => optSwitch('nr', 'Outside mapped areas', [['on', `Assign to nearest (≤${kmText(NEAR_M)})`], ['off', 'Leave out']]);
   const addLayers = (rows) => rows.reduce((t, r) => { for (const k of SUM_KEYS) t[k] = (t[k] || 0) + (r[k] || 0); return t; }, {});
   const LAYER_KEYS = ['census', 'built', 'approved', 'proposed'];
   const JOB_KEY = { census: null, built: 'jbuilt', approved: 'japproved', proposed: 'jproposed' };
@@ -2250,7 +2268,7 @@
   const upstreamOf = (id, kids) => { const out = []; const walk = i => { for (const c of kids.get(i) || []) { out.push(c); walk(c.id); } }; walk(id); return out; };
   // View options: wastewater 'design' (Peel criteria) or 'calibrated' (each plant scaled to its
   // 2025 reported average flow); water max day factor 'design' or 'observed' (2025 South Peel).
-  const svcOpt = { ww: store.get('svcWwMode', 'calibrated'), md: store.get('svcMdMode', 'design'), div: store.get('svcDivert', 'off'), tech: store.get('svcTech', 'off') };
+  const svcOpt = { ww: store.get('svcWwMode', 'calibrated'), md: store.get('svcMdMode', 'design'), div: store.get('svcDivert', 'off'), tech: store.get('svcTech', 'off'), nr: store.get('svcNear', 'on') };
   const optSwitch = (key, label, opts) => `<div class="svc-switch" role="group" aria-label="${esc(label)}"><span class="muted small">${label}</span>${opts.map(([v, t]) =>
     `<button type="button" class="btn small${svcOpt[key] === v ? ' on' : ''}" data-svcopt="${key}" data-v="${v}" aria-pressed="${svcOpt[key] === v}">${t}</button>`).join('')}</div>`;
   const refLink = (r, pages) => { const rep = state.reports && state.reports.reports[r]; return rep ? `<a href="${esc(rep.url)}" target="_blank" rel="noopener">${esc(rep.title)}</a>${pages ? ` (${esc(pages)})` : ''}` : ''; };
@@ -2298,16 +2316,16 @@
     const wAvg = (p, j) => (p * c.water.avg + j * E.water) / 1e6;
     const wMax = (p, j) => (p * c.water.avg * mdR + j * E.water * mdE) / 1e6;
     const wPH = (p, j) => (p * c.water.avg * c.water.peakHour + j * E.water * E.peakHour) / 1e6;
-    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td><td>${uDev(l.devs)}</td>${LAYER_KEYS.map(k => cell(wMax(l[k], jobsK(l, k)), l[k], jobsK(l, k))).join('')}
+    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td>${devCell(l)}${LAYER_KEYS.map(k => cell(wMax(l[k], jobsK(l, k)), l[k], jobsK(l, k))).join('')}
       ${cell(wMax(total(l), jobs(l)), total(l), jobs(l), 'bo')}<td class="bo">${uML(wPH(total(l), jobs(l)))}</td></tr>`;
     const zones = state.servicing.zones.slice().sort(byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc) })).filter(r => total(r.l) > 0 || r.l.devs);
     const zsum = addLayers(zr.map(r => r.l));
-    $('#water-body').innerHTML = `${exportBar('water')}${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}${sp ? optSwitch('md', 'Max day factor', [['design', `Design ×${c.water.maxDay}`], ['observed', `Observed 2025 ×${sp.maxDayFactor.toFixed(2)}`]]) : ''}</div>
+    $('#water-body').innerHTML = `${exportBar('water')}${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${sp ? optSwitch('md', 'Max day factor', [['design', `Design ×${c.water.maxDay}`], ['observed', `Observed 2025 ×${sp.maxDayFactor.toFixed(2)}`]]) : ''}${nearSwitch()}</div></div>
       <table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (ML/d) at ${observed ? `the observed 2025 factor ×${mdR.toFixed(2)}` : `design ×${mdR} residential, ×${mdE} employment`}; people and jobs below</caption>
       <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHow}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
+      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHow}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
       ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
@@ -2349,7 +2367,7 @@
       // layers); both add up to the total average dry weather flow at the outlet.
       const mid = (d ? cell(adwf(lo, f), total(lo), jobs(lo)) + (total(up) > 0 || up.ha ? cell(adwf(up, f), total(up), jobs(up)) : '<td class="muted">–</td>') : '<td></td><td></td>')
         + LAYER_KEYS.map((k, i) => cell(lay(l, k, f), l[k], jobsK(l, k), i ? '' : 'sep')).join('') + cell(adwf(l, f), total(l), jobs(l), 'bo');
-      return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td><td>${uDev(d ? lo.devs : l.devs)}</td>${mid}${peakCells(l, f)}</tr>`;
+      return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td>${devCell(d ? lo : l)}${mid}${peakCells(l, f)}</tr>`;
     };
     const short = (d, pl) => d.name.replace(`${pl} · `, '');
     // Rows run from the top of each sewershed down to the lake: a branch's furthest catchment
@@ -2386,7 +2404,7 @@
     // The Peel total under calibration: each plant at its own factor (flows add; Harmon on the total).
     const peelF = peel.census + peel.built + peel.approved + peel.proposed > 0 ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     const calNote = svcOpt.ww === 'calibrated' ? `<p class="small cal-note"><strong>Capacity check (calibrated to 2025 flows):</strong> ${secs.filter(x => x.f !== 1).map(x => `${esc(PLANT_SHORT[x.pl])} ×${x.f.toFixed(2)}`).join(' · ')}. Each plant's population and employment flow is scaled so that today (census + built since${R && R.wastewater.inflows.some(x => x.plant) ? ', plus the York Region inflow at G.E. Booth' : ''}) matches its 2025 reported annual average; the factor absorbs existing employment, institutional and commercial flow, infiltration in dry weather and any flows not modelled. I&amp;I is not scaled.</p>` : '';
-    $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>${calNote}
+    $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${nearSwitch()}</div></div>${calNote}
       <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
       <thead><tr><th rowspan="2">Catchment (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
         <th colspan="2" class="grp-h">Where it comes from</th><th colspan="4" class="grp-h sep">What it is made of</th><th rowspan="2">= Total<br>average dry</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
@@ -2394,7 +2412,7 @@
       <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
         ${sRow(`Peel total (${secs.map(x => PLANT_SHORT[x.pl]).join(' + ')})`, '', null, peel, null, peelF, 'tot')}
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve. Click a catchment to see its flow path to the lake on the map.</p></details>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote([...local.values()].reduce((a, l) => a + (l.near || 0), 0), 'traced catchment')}<p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve. Click a catchment to see its flow path to the lake on the map.</p></details>`;
     renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     // Kept for the development panel's servicing check and the export.
     const dvR = R && R.wastewater.diversion, divMldOf = pl => !(dvR && svcOpt.div === 'on') ? 0 : pl === dvR.from ? -dvR.mld : pl === dvR.to ? dvR.mld : 0;
@@ -2642,7 +2660,7 @@
     }
     const peelExt = inflows;
     const peelF = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
-    $('#plants-body').innerHTML = `${exportBar('plants')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}</div></div>
+    $('#plants-body').innerHTML = `${exportBar('plants')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}${nearSwitch()}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(plantLabel(dv.from))} to ${esc(plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       ${chart}
       ${cmp}
@@ -2694,7 +2712,7 @@
     return { title, lines: [
       `Prepared ${new Date().toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' })} with the Peel Development Tracker`,
       `Data: ${state.snapshot ? `applications and permits ${state.snapshot.generatedAt.slice(0, 10)}` : 'live applications'} · ${bc ? `${bc.year} Census` : ''}${R ? ` · Region of Peel ${R.year} annual reports` : ''}`,
-      `Wastewater mode: ${svcOpt.ww === 'calibrated' ? 'Capacity check (calibrated to 2025 reported flows)' : 'Design flows (Peel criteria)'} · water max day factor: ${svcOpt.md === 'observed' ? 'observed 2025' : 'design'} · 70 ML/d G.E. Booth → Clarkson diversion: ${svcOpt.div === 'on' ? 'on' : 'off'}`,
+      `Wastewater mode: ${svcOpt.ww === 'calibrated' ? 'Capacity check (calibrated to 2025 reported flows)' : 'Design flows (Peel criteria)'} · water max day factor: ${svcOpt.md === 'observed' ? 'observed 2025' : 'design'} · 70 ML/d G.E. Booth → Clarkson diversion: ${svcOpt.div === 'on' ? 'on' : 'off'} · developments outside mapped areas: ${svcOpt.nr === 'on' ? `assigned to the nearest within ${kmText(NEAR_M)}` : 'left out'}`,
       `Filters: ${activeFilters().map(f => f.label).join(', ') || 'none'}`,
       criteriaChanges().length ? `Modified criteria: ${criteriaChanges().join('; ')}` : 'Criteria: Peel defaults',
     ] };
@@ -2784,7 +2802,8 @@
   for (const id of ['#water-body', '#ww-body', '#plants-body']) $(id).addEventListener('click', e => {
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
     svcOpt[b.dataset.svcopt] = b.dataset.v;
-    store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert', tech: 'svcTech' }[b.dataset.svcopt], b.dataset.v);
+    store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert', tech: 'svcTech', nr: 'svcNear' }[b.dataset.svcopt], b.dataset.v);
+    if (b.dataset.svcopt === 'nr') { applyFilters(); if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject); }
     renderSvcTab(); viewLink.write();
   });
   // Click a zone / catchment row: outline it on the map and zoom to it (a catchment also shades
