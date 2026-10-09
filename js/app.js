@@ -2565,6 +2565,9 @@
   // location point), filter the map, group the demand and show in the project panel.
   const svcById = new Map();
   map.createPane('svcPane', map.getPane('rotatePane') || undefined).style.zIndex = 360;
+  // Flow paths (development trace, catchment / block routes) draw above the development markers.
+  map.createPane('flowPane', map.getPane('rotatePane') || undefined).style.zIndex = 640;
+  const flowRenderer = L.svg({ pane: 'flowPane', padding: 0.3 });
   const svcRenderer = L.canvas({ pane: 'svcPane', padding: 0.3 });
   const svcSelLayer = L.layerGroup().addTo(map);
   async function loadServicing() {
@@ -3410,6 +3413,7 @@
     if (typeof syncClearBtn === 'function') setTimeout(syncClearBtn, 0);
     for (const r of document.querySelectorAll('.svc-row')) r.classList.toggle('on', r.dataset.svc === svcFocus.id);
     const a = svcFocus.id && svcById.get(svcFocus.id);
+    syncPathMode();
     if (!a) return;
     const poly = (x, cls) => L.polygon(x.rings.map(r => r.map(([lng, lat]) => [lat, lng])), { className: cls, interactive: false });
     const up = a.zone ? [] : upstreamOf(a.id, svcFlowTree());
@@ -3454,7 +3458,25 @@
   }
   // SVG arrowheads for the flow lines (one <marker> per map renderer).
   function addFlowMarker() {
-    const svg = map.getPanes().overlayPane.querySelector('svg');
+    for (const svg of map.getContainer().querySelectorAll('.leaflet-overlay-pane svg, .leaflet-flowPane-pane svg')) addFlowDefs(svg);
+    syncPathMode();
+  }
+  // While a flow path is shown (development trace, catchment or block), the development markers
+  // fade (or hide) so the path reads clearly; a switch in the bottom bar picks Show / Faded / Hidden.
+  let devMode = store.get('devFade', 'faded'), devChip = null;
+  function syncPathMode() {
+    const on = !!(TRACE.key || svcFocus.id || BLK.id), el = map.getContainer();
+    el.classList.toggle('paths-on', on); el.dataset.devmode = devMode;
+    if (!devChip && on) {
+      devChip = L.DomUtil.create('div', 'dev-mode', mapBottom); L.DomEvent.disableClickPropagation(devChip);
+      devChip.addEventListener('click', e => { const b = e.target.closest('[data-devmode]'); if (!b) return; setTimeout(() => { devMode = b.dataset.devmode; store.set('devFade', devMode); syncPathMode(); }); });
+    }
+    if (devChip) {
+      devChip.hidden = !on;
+      devChip.innerHTML = `<span>Developments</span>${[['show', 'Show'], ['faded', 'Faded'], ['hidden', 'Hidden']].map(([k, t]) => `<button type="button" class="btn small${devMode === k ? ' on' : ''}" data-devmode="${k}" aria-pressed="${devMode === k}">${t}</button>`).join('')}`;
+    }
+  }
+  function addFlowDefs(svg) {
     if (!svg || svg.querySelector('#flow-head-s')) return;
     const ns = 'http://www.w3.org/2000/svg';
     const defs = document.createElementNS(ns, 'defs');
@@ -3474,7 +3496,7 @@
   // Drawn as pieces of ~1.2 km, each ending in an arrowhead, so the direction shows all along.
   function drawPipeRoute(route, cls, layer, every = 1200) {
     let seg = [], run = 0;
-    const flush = () => { if (seg.length > 1) L.polyline(seg.map(([x, y]) => [y, x]), { className: cls, interactive: false }).addTo(layer); };
+    const flush = () => { if (seg.length > 1) L.polyline(seg.map(([x, y]) => [y, x]), { className: cls, interactive: false, renderer: flowRenderer }).addTo(layer); };
     for (const k of route) for (const c of pipeCoords(SEW.data.pipes[k])) {
       if (seg.length) { const last = seg[seg.length - 1]; if (last[0] === c[0] && last[1] === c[1]) continue; run += dcM(last, c); }
       seg.push(c);
@@ -3488,7 +3510,7 @@
   // coloured by its capacity state at the legend year, arrows along the route, the pumping stations
   // it passes and the plant. Summary: length, pipes, blocks passed, tightest pipe.
   const TRACE = { layer: L.layerGroup().addTo(map), key: null };
-  function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; }
+  function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; syncPathMode(); }
   async function traceDev(p) {
     await Promise.all([loadSewers(), loadBlocks()]);
     if (!SEW.data || p.lat == null) return null;
@@ -3499,24 +3521,24 @@
     // Connection from the site to the first pipe.
     const first = pipeCoords(P[k]); let jn = first[0], jd = Infinity;
     for (const c of first) { const d = dcM([p.lng, p.lat], c); if (d < jd) { jd = d; jn = c; } }
-    L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false }).addTo(TRACE.layer);
-    L.circleMarker([p.lat, p.lng], { radius: 7, className: 'trace-site', interactive: false }).addTo(TRACE.layer);
+    L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
+    L.circleMarker([p.lat, p.lng], { radius: 7, className: 'trace-site', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
     // Pipes coloured by state, with a tooltip each (tap: what loads it).
     let worst = null, km = 0;
     for (const i of route) {
       const st = pipeStats(i), c = pipeCoords(P[i]);
       for (let q = 1; q < c.length; q++) km += dcM(c[q - 1], c[q]) / 1000;
       if (st.r1 != null && (!worst || st.r1 > worst.r1)) worst = { i, r1: st.r1 };
-      L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 7 : P[i][0] >= 600 ? 6 : 5, opacity: 0.9, lineCap: 'round' })
+      L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 7 : P[i][0] >= 600 ? 6 : 5, opacity: 0.9, lineCap: 'round', renderer: flowRenderer })
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(TRACE.layer);
     }
     drawPipeRoute(route, 'trace-flow', TRACE.layer, Math.max(900, km * 1000 / 14));
     // Pumping stations within 80 m of the route, and the plant at its end.
     const stations = ((state.servicing && state.servicing.meta.pumpingStations) || []).filter(ps => route.some(i => dcDist(ps.lnglat, pipeCoords(P[i])) <= 80));
-    for (const ps of stations) L.circleMarker([ps.lnglat[1], ps.lnglat[0]], { radius: 6, className: 'trace-ps' }).bindTooltip(`<strong>${esc(ps.name.replace(/SEWAGE PUMPING( STN| STATION)?/i, 'pumping station'))}</strong>`, { className: 'pt' }).addTo(TRACE.layer);
+    for (const ps of stations) L.circleMarker([ps.lnglat[1], ps.lnglat[0]], { radius: 6, className: 'trace-ps', renderer: flowRenderer }).bindTooltip(`<strong>${esc(ps.name.replace(/SEWAGE PUMPING( STN| STATION)?/i, 'pumping station'))}</strong>`, { className: 'pt' }).addTo(TRACE.layer);
     const plantName = SEW.data.plants[P[route[route.length - 1]][6]] || '';
     const end = pipeCoords(P[route[route.length - 1]]).pop();
-    L.circleMarker([end[1], end[0]], { radius: 8, className: 'svc-plant' }).bindTooltip(esc(plantName === 'Toronto' ? 'City of Toronto system' : plantLabel(plantName)), { className: 'pt' }).addTo(TRACE.layer);
+    L.circleMarker([end[1], end[0]], { radius: 8, className: 'svc-plant', renderer: flowRenderer }).bindTooltip(esc(plantName === 'Toronto' ? 'City of Toronto system' : plantLabel(plantName)), { className: 'pt' }).addTo(TRACE.layer);
     addFlowMarker();
     // Blocks passed, in order.
     const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && !blocks.includes(b.id)) blocks.push(b.id); }
@@ -3596,7 +3618,7 @@
     if (svcOn.bk) BLK.layer.addTo(map);
     renderLegend();
   }
-  function clearBlockFocus() { BLK.focus.clearLayers(); BLK.id = null; }
+  function clearBlockFocus() { BLK.focus.clearLayers(); BLK.id = null; syncPathMode(); }
   async function showBlock(id, opt = {}) {
     await Promise.all([loadBlocks(), loadSewers()]);
     const net = blockNet(); const x = net && net.byId.get(String(id)); if (!x) return;
