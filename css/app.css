@@ -644,8 +644,8 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .tl-sum { margin: 0 0 4px; }
 
 /* Area selection (lasso) */
-.sel-ctl button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: var(--surface-1); color: var(--text-primary); cursor: pointer; border-radius: 4px; }
-.sel-ctl button.on { background: var(--accent); color: #fff; }
+.sel-ctl button, .tools-btn { width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: var(--surface-1); color: var(--text-primary); cursor: pointer; border-radius: 4px; }
+.sel-ctl button.on, .tools-btn.on { background: var(--accent); color: #fff; }
 .lasso-layer { position: absolute; inset: 0; z-index: 650; display: none; cursor: crosshair; touch-action: none; }
 .lasso-layer.on { display: block; }
 .lasso-layer.panning { cursor: grabbing; }
@@ -938,7 +938,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
   body.print-map .map-wrap { position: fixed; inset: 0; width: 100%; height: 100%; }
   body.print-map #map { width: 100% !important; height: 100% !important; }
   body.print-map .timebar, body.print-map .toggle-sidebar, body.print-map .map-opts, body.print-map .leaflet-control-zoom,
-  body.print-map .loading, body.print-map .leaflet-control-container .sel-ctl, body.print-map .lasso-layer { display: none !important; }
+  body.print-map .loading, body.print-map .leaflet-control-container .sel-ctl, body.print-map .leaflet-control-container .tools-ctl, body.print-map .lasso-layer { display: none !important; }
   body.print-map .print-head { display: flex; flex-direction: column; gap: 2px; position: absolute; top: 8px; right: 8px; z-index: 2000; background: #fff; color: #111; border: 1px solid #999; border-radius: 6px; padding: 6px 10px; font-size: 11px; max-width: 45%; }
   body.print-map .print-head strong { font-size: 14px; }
   body.print-map .map-legend { background: #fff; color: #111; max-height: none; }
@@ -1038,3 +1038,39 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 /* The options panel (top right) and the legend (bottom right) share the map's height. */
 .map-opts details.mo-more[open] { max-height: calc(var(--map-h, 640px) * .55 - 44px); overflow-y: auto; overscroll-behavior: contain; padding-right: 2px; }
 .map-legend { max-height: calc(var(--map-h, 640px) * .34); }
+
+/* Bottom panel closed: one slim bar with the headline numbers */
+.footer.collapsed { max-height: none; overflow: hidden; }
+.footer.collapsed .f-pane, .footer.collapsed .scen-bar, .footer.collapsed .f-tab { display: none !important; }
+.f-sum { display: none; border: 0; background: none; padding: 9px 4px; font-size: 13px; color: var(--text-secondary); cursor: pointer; text-align: left; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.f-sum strong { color: var(--text-primary); }
+.footer.collapsed .f-sum { display: block; }
+.footer.collapsed .f-tabs { border-bottom: 0; }
+.footer-toggle { white-space: nowrap; }
+@media (max-width: 480px) { .f-sum-pop { display: none; } }
+
+/* Map tools: one button, a small menu beside it */
+.leaflet-control[hidden] { display: none !important; }
+.tools-ctl { position: relative; }
+.tools-menu { position: absolute; left: calc(100% + 6px); top: 0; display: grid; gap: 2px; padding: 4px; min-width: 170px;
+  background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); }
+.tools-menu[hidden] { display: none; }
+.tools-menu button { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 0; border-radius: 6px; background: none; color: var(--text-primary); font-size: 13px; text-align: left; cursor: pointer; white-space: nowrap; }
+.tools-menu button:hover { background: var(--surface-2); }
+.tools-menu button.on { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); font-weight: 600; }
+.map-legend li .dot { width: 12px; height: 12px; font-size: 7px; margin-right: 6px; vertical-align: -2px; box-shadow: none; }
+
+/* Sidebar: Where (municipality), More filters grouped, the Showing line */
+.side-where .chips { margin-top: 2px; }
+.more-group { display: grid; gap: 6px; padding: 10px 0; border-top: 1px solid var(--border); }
+.more-group:first-of-type { border-top: 0; padding-top: 2px; }
+.more-group > .label { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); }
+.more-group .row { margin: 0; }
+.showing { margin: 6px 0 0; color: var(--text-secondary); }
+.showing strong { color: var(--text-primary); }
+
+/* Development panel tabs */
+.dv-tabs { display: flex; gap: 2px; margin: 10px 0 8px; border-bottom: 1px solid var(--border); position: sticky; top: -16px; background: var(--surface-1); z-index: 3; }
+.dv-tabs button { flex: 1 1 auto; border: 0; background: none; padding: 9px 8px 7px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
+.dv-tabs button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--accent); }
+.dv-pane[hidden] { display: none; }

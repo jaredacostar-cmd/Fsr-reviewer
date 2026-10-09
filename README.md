@@ -219,6 +219,15 @@ application.
   with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
   lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
   Excel is clicked. Per-file record tables are left to *Export CSV*.
+- **Default view**: the map opens on the active development applications (application to
+  construction, any year) over the background. Layers & style, the timeline and the analysis panel
+  start folded (each remembers being opened); the bottom bar shows the shown developments, units
+  and people, and *Analysis* opens the Growth & demand, Water, Wastewater and Criteria tabs. Map
+  tools (select an area, measure, test a site) sit under one Tools button; the north arrow shows
+  while the map is rotated. The sidebar has search, a "Showing …" line, Phase, Where and one *More
+  filters* fold (focus, planning and servicing areas, record type). The development panel has
+  three tabs: Overview, Servicing (summary, existing mains, fire flow, stormwater, planned works,
+  DC needs, servicing check) and History & records.
 - **Map views**: *Planning* (aerial, addresses, markers by phase), *Water* (street map, pressure
   zones shaded by max day growth, markers by servicing layer sized by people + jobs, existing
   watermains, DC water works), *Wastewater* (drainage areas, sewer pipe capacity, existing sanitary
