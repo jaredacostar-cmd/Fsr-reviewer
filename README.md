@@ -377,7 +377,13 @@ application.
   peak dry weather (scaled to the plant's measured flow in the capacity check), growth at design
   peak wet weather. Capacity layer *Sewer pipe capacity* (year slider aware), the development
   brief's local and downstream tightest pipe, and *What loads this* for a pipe. A screen, not a
-  hydraulic model.
+  hydraulic model. Colours give the flow state: **green** under 85% of full-pipe capacity (free
+  flowing), **orange** 85–100% (near full), **red** over 100% (surcharged). Tapping a pipe shows
+  *How the flow is calculated* with its numbers: existing people × rate ÷ 86,400 × Harmon × the
+  plant calibration; growth residential + employment + I&I at design rates (phased to the slider
+  year); Q; Manning capacity from diameter and slope; Q / Q<sub>full</sub>; and, when surcharged, the
+  hydraulic gradient needed (S<sub>f</sub> = S × (Q / Q<sub>full</sub>)²) and how far the water level rises
+  above the crown over that pipe.
 - **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
   Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
   for diameter, material, year, slope; *Size labels* labels each pipe (and the sewer capacity
