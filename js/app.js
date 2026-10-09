@@ -19,6 +19,8 @@
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';
+  // Watchlist: developments the user starred (kept in this browser).
+  const watch = new Set(store.get('watch', []) || []);
   // Default view: development applications in progress (application to construction), any year, no
   // focus — the map opens on the active applications and the background.
   const DEFAULT_FOCUS = '';
@@ -389,9 +391,10 @@
   const MSTYLE = {
     color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
+    show: { markers: 'Markers', heat: 'Heatmap (people + jobs)' },
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', pipes: 'Sewer pipe capacity', zone: 'Pressure zone growth' },
   };
-  let mstyle = Object.assign({ color: 'phase', size: 'fixed', cap: 'off' }, store.get('mapStyle', null) || {});
+  let mstyle = Object.assign({ color: 'phase', size: 'fixed', cap: 'off', show: 'markers' }, store.get('mapStyle', null) || {});
   for (const k of Object.keys(MSTYLE)) if (!MSTYLE[k][mstyle[k]]) mstyle[k] = Object.keys(MSTYLE[k])[0];
   const THIS_YEAR = new Date().getFullYear();
   // Existing pipes layer (live): which kinds are shown.
@@ -417,8 +420,12 @@
       el.innerHTML = `
         <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
         <details class="mo-more"${store.get('moOpen', false) ? ' open' : ''}><summary>Layers &amp; style</summary>
+        <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
+          <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
+        </div>
         <div class="mo-sec"><div class="mo-h">Developments</div>
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
+          <label data-info="map-show"><span>Show as</span><select id="opt-mshow">${opts(MSTYLE.show, mstyle.show)}</select></label>
           <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
           <label data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
         </div>
@@ -442,6 +449,9 @@
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
       el.querySelector('.mo-more').addEventListener('toggle', e => store.set('moOpen', e.target.open));
+      el.querySelector('#opt-save').onclick = () => saveCurrentView();
+      el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') openSavedView(+i); };
+      el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); renderSavedViews(); };
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
@@ -453,6 +463,7 @@
       }; });
       el.querySelector('#opt-mcolor').onchange = e => setMapStyle({ color: e.target.value });
       el.querySelector('#opt-msize').onchange = e => setMapStyle({ size: e.target.value });
+      el.querySelector('#opt-mshow').onchange = e => setMapStyle({ show: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => setMapStyle({ cap: e.target.value });
       el.querySelector('.mo-view').onclick = e => { const b = e.target.closest('[data-mview]'); if (b) setMapView(b.dataset.mview); };
       el.querySelector('#opt-pz').onchange = e => setSvcLayer('pz', e.target.checked);
@@ -495,11 +506,35 @@
       return L.divIcon({
         className: 'pm',
         iconSize: [size, size],
-        html: `<div class="pc" style="width:${size}px;height:${size}px;background:conic-gradient(${stops.join(',')})" title="${fmtNum(n)} developments${sized ? ` · ${fmtNum(Math.round(tot))} people + jobs at build-out` : ''}"><span style="width:${size - 10}px;height:${size - 10}px">${sized ? shortNum(tot) : n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : n}</span></div>`,
+        html: `<div class="pc" style="width:${size}px;height:${size}px;background:conic-gradient(${stops.join(',')})" title="${fmtNum(n)} developments${sized ? ` · ${fmtNum(Math.round(tot))} people + jobs at build-out` : ''}${mstyle.color === 'phase' ? `\n${P.ALL_PHASES.map(ph => [ph, kids.filter(m => m.options.phase === ph.key).length]).filter(x => x[1]).map(([ph, k]) => `${k} ${ph.label.toLowerCase()}`).join(' · ')}` : ''}"><span style="width:${size - 14}px;height:${size - 14}px">${sized ? shortNum(tot) : n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : n}</span></div>`,
       });
     },
   });
   map.addLayer(cluster);
+  // Heatmap of people + jobs at build-out (Layers & style → Show as): a canvas over the map,
+  // drawn in screen coordinates so it follows rotation; markers are hidden while it shows.
+  const heat = (() => {
+    const cv = L.DomUtil.create('canvas', 'heat-canvas', map.getContainer());
+    let pts = null, raf = 0;
+    const pal = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 1; const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 256, 0);
+      [[0, 'rgba(43,131,186,0)'], [0.2, '#2b83ba'], [0.45, '#abdda4'], [0.65, '#ffffbf'], [0.85, '#fdae61'], [1, '#d7191c']].forEach(([o, col]) => gr.addColorStop(o, col)); g.fillStyle = gr; g.fillRect(0, 0, 256, 1); return g.getImageData(0, 0, 256, 1).data; })();
+    function draw() {
+      raf = 0; const sz = map.getSize(); cv.width = sz.x; cv.height = sz.y; cv.hidden = !pts;
+      if (!pts) return;
+      const g = cv.getContext('2d'), z = map.getZoom(), r = Math.max(10, Math.min(70, 14 * Math.pow(2, (z - 11) * 0.8)));
+      for (const [la, ln, w] of pts) {
+        const p = map.latLngToContainerPoint([la, ln]); if (p.x < -r || p.y < -r || p.x > sz.x + r || p.y > sz.y + r) continue;
+        const a = Math.min(1, 0.08 + Math.sqrt((w || 1) / 4000)), grd = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+        grd.addColorStop(0, `rgba(0,0,0,${a})`); grd.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = grd; g.fillRect(p.x - r, p.y - r, 2 * r, 2 * r);
+      }
+      const img = g.getImageData(0, 0, sz.x, sz.y), d = img.data;
+      for (let i = 3; i < d.length; i += 4) { const v = d[i]; if (!v) continue; const k = v * 4; d[i - 3] = pal[k]; d[i - 2] = pal[k + 1]; d[i - 1] = pal[k + 2]; d[i] = Math.min(230, pal[k + 3] + 40); }
+      g.putImageData(img, 0, 0);
+    }
+    const sched = () => { if (!raf) raf = requestAnimationFrame(draw); };
+    map.on('move zoom resize rotate viewreset', sched);
+    return { setData(p) { pts = p; sched(); } };
+  })();
 
   // ---- Sites on the map: application boundaries and the individual permits inside them
   const SITE_ZOOM = 14, SITE_MAX_POINTS = 3000;
@@ -795,6 +830,8 @@
     renderFilterUI();
     renderSiteLayer();
     if (mstyle.color === 'phase') renderLegend();   // the phase legend lists the shown phases
+    renderWatch();
+    maybeTour();
     viewLink.ready();
   }
 
@@ -844,7 +881,13 @@
       write();
     };
     map.on('moveend', write);
-    return { ready, write, url: () => `${location.origin}${location.pathname}#${encode()}` };
+    // Apply a saved view's link: back to the defaults, then its filters.
+    const apply = h => {
+      state.phases = DEFAULT_PHASES(); state.focus = DEFAULT_FOCUS; state.yearMode = 'any'; $('#t-mode').value = 'any';
+      if (state.yearMin != null) setYearsSilently(state.yearMin, state.yearMax);
+      pending = new URLSearchParams(h); applied = false; ready();
+    };
+    return { ready, write, apply, hash: () => encode(), url: () => `${location.origin}${location.pathname}#${encode()}` };
   })();
   async function copyViewLink(btn) {
     const url = viewLink.url();
@@ -1160,6 +1203,8 @@
 
   function renderMarkers() {
     cluster.clearLayers();
+    heat.setData(mstyle.show === 'heat' ? state.filtered.filter(p => p.lat != null).map(p => [p.lat, p.lng, popOf(p)]) : null);
+    if (mstyle.show === 'heat') { markerByKey = new Map(); projectByMarker = new Map(); scheduleLabels(); return; }
     markerByKey = new Map();
     projectByMarker = new Map();
     const markers = [];
@@ -1548,7 +1593,8 @@
     if (f && f.pl) facts.push(chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
     if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
     const flags = devFlags(p, st, f);
-    return `<div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
+    const w = watch.has(p.key);
+    return `<div class="head"><button type="button" class="watch-btn${w ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${w}" title="${w ? 'Remove from your watchlist' : 'Add to your watchlist (This week tab, Watched focus)'}">${w ? '★ Watching' : '☆ Watch'}</button><button type="button" class="watch-btn memo-btn" data-memo title="One-page servicing memo to print or save as PDF">Memo</button><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
         <span class="badge">${dot(p.phase)}${esc(P.PHASE_BY_KEY[p.phase].label)}</span></div>
       <div class="chips dev-chips">${facts.join('')}${flags.join('')}</div>`;
   }
@@ -1622,6 +1668,7 @@
     return `<section class="brief" data-info="dev-brief">
       ${row('Summary', servicingBriefHTML(p, f))}
       ${p.lat != null ? row('Existing mains', '<div id="dev-exist"><p class="small muted">Looking up the nearest existing mains…</p></div>') : ''}
+      ${p.lat != null ? row('Ground', '<div id="dev-ground" data-info="ground"><p class="small muted">Looking up ground elevation…</p></div>') : ''}
       ${p.lat != null ? row('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>') : ''}
       ${p.lat != null ? row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>') : ''}
       ${st.works ? row('Planned works', devWorksHTML(st.works)) : ''}
@@ -2012,8 +2059,9 @@
   // radius, test a site.
   const TOOL_ITEMS = [
     ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
-    ['measure', 'Measure', 'Measure a distance, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
+    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
     ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
+    ['tips', 'Tips', 'A quick tour of the map, filters, development panel and analysis', '<circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="14.3" r="1" fill="currentColor"/>'],
   ];
   const ToolsControl = L.Control.extend({
     options: { position: 'topleft' },
@@ -2029,6 +2077,7 @@
       menu.onclick = e => {
         const b = e.target.closest('[data-tool]'); if (!b) return;
         open(false);
+        if (b.dataset.tool === 'tips') { startTour(); return; }
         if (b.dataset.tool === 'lasso') { if (tool.mode) setTool(null); setLasso(!lassoOn); }
         else { if (lassoOn) setLasso(false); setTool(b.dataset.tool); }
       };
@@ -2174,6 +2223,7 @@
         <div class="m">${fmtNum(selAreas.length)} drawn area${selAreas.length === 1 ? '' : 's'}${added != null ? ` · ${fmtNum(added)} added` : ''} · ${esc([...new Set(sel.map(p => p.municipality))].join(', '))}</div></div>
       <div class="sel-actions">
         <button type="button" class="btn" data-sel="add">+ Add area</button>
+        <button type="button" class="btn" data-area-report="sel">Area report</button>
         <button type="button" class="btn" data-sel="csv">Export CSV</button>
         <button type="button" class="btn" data-export="pdf" data-scope="dev">PDF / print</button>
         <button type="button" class="btn" data-export="xlsx" data-scope="dev">Excel</button>
@@ -2268,21 +2318,45 @@
   }
   function renderSug() {
     sugEl.hidden = !sugItems.length;
-    sugEl.innerHTML = sugItems.map((x, i) => `<li role="option" data-i="${i}" class="${i === sugSel ? 'on' : ''}" aria-selected="${i === sugSel}">${x.p ? dot(x.p.phase) : '<span class="sug-pin" aria-hidden="true"></span>'}<span>${esc(x.label)}<small>${x.p ? `${esc(x.p.municipality)} · ${esc(P.PHASE_BY_KEY[x.p.phase].label)}` : x.loading ? 'searching addresses…' : 'Go to address'}</small></span></li>`).join('');
+    sugEl.innerHTML = sugItems.map((x, i) => `<li role="option" data-i="${i}" class="${i === sugSel ? 'on' : ''}" aria-selected="${i === sugSel}">${x.p ? dot(x.p.phase) : '<span class="sug-pin" aria-hidden="true"></span>'}<span>${esc(x.label)}<small>${x.p ? `${esc(x.p.municipality)} · ${esc(P.PHASE_BY_KEY[x.p.phase].label)}` : x.place ? esc(x.place.kind) : x.loading ? 'searching addresses…' : x.kind || 'Go to address'}</small></span></li>`).join('');
   }
   async function updateSug(q) {
     const seq = ++sugSeq;
     if (q.length < 3) { sugItems = []; renderSug(); return; }
     const ql = q.toLowerCase();
-    const devs = state.projects.filter(p => p.lat != null && (p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql) || (r.ref || '').toLowerCase() === ql)))
+    const devs = state.projects.filter(p => p.lat != null && (p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql) || (ql.length >= 5 && /\d/.test(ql) && (r.ref || '').toLowerCase().startsWith(ql)))))
       .sort((a, b) => (b.title.toLowerCase().startsWith(ql) - a.title.toLowerCase().startsWith(ql)) || (b.units || 0) - (a.units || 0)).slice(0, 4);
-    sugItems = [...devs.map(p => ({ label: p.title, p })), ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : [])];
+    const places = placeMatches(ql);
+    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : [])];
     sugSel = -1; renderSug();
     if (!sugItems.some(x => x.loading)) return;
     const geo = await geocode(q);
     if (seq !== sugSeq) return;
-    sugItems = [...devs.map(p => ({ label: p.title, p })), ...geo.map(g => ({ label: g.label, g }))];
+    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...geo.map(g => ({ label: g.label, g, kind: /&| and /i.test(q) ? 'Go to intersection' : null }))];
     renderSug();
+  }
+  // Places in the search: secondary plans / character areas, MTSAs, pressure zones, catchments and
+  // pumping stations, DC projects (by number or name) and DC facilities.
+  function placeMatches(ql) {
+    const out = [], has = t => String(t || '').toLowerCase().includes(ql);
+    const area = (kind, a, go) => out.push({ label: a.name, place: { kind, go } });
+    if (state.areas) {
+      for (const a of state.areas.secondaryPlans) if (has(a.name)) area(`${a.municipality || ''} ${a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}`.trim(), a, () => { state.sp = [a.id]; renderAreaSelects(); showArea(true); applyFilters(); });
+      for (const a of state.areas.mtsas) if (has(a.name)) area('MTSA (major transit station area)', a, () => { state.mtsa = a.id; renderAreaSelects(); showArea(true); applyFilters(); });
+    }
+    if (state.servicing) {
+      for (const a of state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => { state.pz = a.id; renderSvcSelects(); showSvcArea(true); applyFilters(); });
+      for (const a of state.servicing.drainage) if (has(drName(a))) out.push({ label: drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : 'Sanitary catchment', go: () => { state.dr = a.id; renderSvcSelects(); showSvcArea(true); applyFilters(); } } });
+    }
+    if (state.dcInfra && ql.length >= 3) {
+      const seen = new Set();
+      for (const sys of ['wastewater', 'water']) for (const ln of state.dcInfra[sys].lines) {
+        const k = ln.p || ln.c; if (!k || seen.has(k) || !(has(ln.p) || has(ln.n))) continue; seen.add(k);
+        out.push({ label: `DC project ${ln.p || ln.c}${ln.n ? ` – ${ln.n}` : ''}`, place: { kind: `${DC_KIND[ln.k][0]}${ln.y ? ` · ${ln.y}` : ''}`, go: () => { if (!dcOn.on) setDcOn({ on: true, sys: 'both' }); showDcLine(ln); map.fitBounds(L.latLngBounds(ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); } } });
+      }
+      for (const sys of ['wastewater', 'water']) for (const fc of state.dcInfra[sys].facilities) if (has(fc.name) || fc.items.some(i => has(i.proj))) out.push({ label: fc.name, place: { kind: `${DC_FAC[fc.kind] || fc.kind} · DC ${sys}`, go: () => { if (!dcOn.on) setDcOn({ on: true, sys: 'both' }); showFacility(fc); if (fc.g) map.setView([fc.g[1], fc.g[0]], Math.max(map.getZoom(), 14)); } } });
+    }
+    return out.slice(0, 5);
   }
   const pinLayer = L.layerGroup().addTo(map);
   function goSug(x) {
@@ -2291,8 +2365,9 @@
     // On a phone the search sits in the list view: switch to the map to show the place.
     if (innerWidth <= 760 && $('#sidebar').classList.contains('open')) { toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
     if (x.p) { map.setView([x.p.lat, x.p.lng], Math.max(map.getZoom(), 17)); showDetail(x.p); return; }
+    if (x.place) { clearTimeout(searchTimer); $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); } return x.place.go(); }
     // An address: pan and zoom there with a pin; the text filter is cleared so nothing is hidden.
-    $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); }
+    clearTimeout(searchTimer); $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); }
     pinLayer.clearLayers();
     L.marker([x.g.lat, x.g.lng], { icon: L.divIcon({ className: 'addr-pin', html: '<span></span>', iconSize: [22, 22], iconAnchor: [11, 22] }), keyboard: false })
       .bindTooltip(`<strong>${esc(x.g.label)}</strong><br><span class="muted">Tap to remove</span>`, { className: 'pt', direction: 'top', offset: [0, -20], permanent: true })
@@ -3229,7 +3304,7 @@
   function setMapStyle(ch) {
     Object.assign(mstyle, ch); store.set('mapStyle', mstyle);
     syncMapOpts();
-    if ('color' in ch || 'size' in ch) renderMarkers();
+    if ('color' in ch || 'size' in ch || 'show' in ch) renderMarkers();
     if ('cap' in ch) renderCapLayer();
     renderLegend(); viewLink.write();
   }
@@ -3241,7 +3316,7 @@
   const currentView = () => { const v = store.get('mapView', 'planning'); return v === 'servicing' ? 'water' : MAP_VIEWS.some(([k]) => k === v) ? v : 'planning'; };
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
-    set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap);
+    set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
     set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-da', daOn);
     for (const k of ['water', 'sanitary', 'storm']) set(`[data-exist="${k}"]`, !!existOn[k]);
     for (const k of ['water', 'wastewater']) set(`[data-dcsys="${k}"]`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k));
@@ -3262,8 +3337,12 @@
     const cur = currentView();
     if (cur === v) return;
     store.set(`mapView-${cur}`, currentMapSettings());
+    applyViewSettings(v, store.get(`mapView-${v}`, null));
+  }
+  // Apply a view's layers and style (its saved settings over its preset).
+  function applyViewSettings(v, saved) {
     const p = VIEW_PRESETS[v] || VIEW_PRESETS.planning;
-    const s = { ...p, ...(store.get(`mapView-${v}`, null) || {}) };
+    const s = { ...p, ...(saved || {}) };
     store.set('mapView', v);
     if (BASEMAPS[s.basemap]) { basemap = s.basemap; store.set('basemap', basemap); setTiles(); restyleDa(); }
     if (LABEL_MODES[s.labelMode]) { labelMode = s.labelMode; store.set('labelMode', labelMode); }
@@ -3274,6 +3353,27 @@
     dcOn = { ...p.dc, ...(s.dc || {}) }; store.set('dcOn', dcOn.on); store.set('dcSys', dcOn.sys); renderDcLayer();
     applyFilters();
     renderCapLayer(); renderLegend(); syncMapOpts(); updateLabels(); viewLink.write();
+  }
+
+  // Saved views: a name for the filters, map position, view and layers (kept in this browser).
+  const savedViews = () => store.get('savedViews', []) || [];
+  function renderSavedViews() {
+    const sel = $('#opt-saved'); if (!sel) return;
+    const list = savedViews();
+    sel.innerHTML = `<option value="">${list.length ? 'Open a saved view…' : 'No saved views yet'}</option>${list.map((x, i) => `<option value="${i}">${esc(x.name)}</option>`).join('')}`;
+    $('#opt-saved-del').hidden = true;
+  }
+  function saveCurrentView() {
+    const name = (prompt('Name this view (filters, map position, view and layers):', '') || '').trim(); if (!name) return;
+    const list = savedViews().filter(x => x.name !== name);
+    list.push({ name, hash: viewLink.hash(), view: currentView(), settings: currentMapSettings(), saved: new Date().toISOString().slice(0, 10) });
+    store.set('savedViews', list); renderSavedViews();
+  }
+  function openSavedView(i) {
+    const x = savedViews()[i]; if (!x) return;
+    store.set(`mapView-${currentView()}`, currentMapSettings());
+    applyViewSettings(x.view, x.settings);
+    viewLink.apply(x.hash);
   }
 
   // Capacity layer: catchments coloured by their local flow growth over the census, pumping
@@ -3370,7 +3470,8 @@
   function renderLegend() {
     const el = legend.getContainer(), parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
-    if (mstyle.color === 'phase') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
+    if (mstyle.show === 'heat') parts.push(`<div class="lg-t">Heatmap: people + jobs at build-out</div><div class="lg-heat"></div><p class="lg-s">Low → high density of the shown developments; markers are hidden (Layers &amp; style → Show as).</p>`);
+    if (mstyle.color === 'phase' && mstyle.show !== 'heat') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(layerColors()[k], t)).join('')}</ul>`);
     if (mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
@@ -3501,6 +3602,49 @@
   }
   $('#btn-print-map').onclick = printMap;
 
+  // ---- Ground elevation: Mapzen / AWS Terrain Tiles (Terrarium PNG, open data, no key) ----------
+  // Elevation (m) = R × 256 + G + B / 256 − 32768, at zoom 14 (~7 m pixels here). Sources: Canada's
+  // CDEM and SRTM; good for grades over hundreds of metres, not for invert design.
+  const ELEV_Z = 14, elevTiles = new Map();
+  function elevTile(x, y) {
+    const k = `${x}/${y}`; if (elevTiles.has(k)) return elevTiles.get(k);
+    const pr = new Promise((ok, fail) => {
+      const img = new Image(); img.crossOrigin = 'anonymous';
+      img.onload = () => { try { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.drawImage(img, 0, 0); ok(g.getImageData(0, 0, 256, 256).data); } catch (e) { fail(e); } };
+      img.onerror = () => fail(new Error('elevation tile unavailable'));
+      img.src = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${ELEV_Z}/${x}/${y}.png`;
+    });
+    elevTiles.set(k, pr); pr.catch(() => elevTiles.delete(k));
+    return pr;
+  }
+  async function elevAt(lat, lng) {
+    const n = 2 ** ELEV_Z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
+    const x = Math.floor(xf), y = Math.floor(yf), px = Math.min(255, Math.floor((xf - x) * 256)), py = Math.min(255, Math.floor((yf - y) * 256));
+    const d = await elevTile(x, y), i = (py * 256 + px) * 4;
+    return d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768;
+  }
+  // Elevations along a polyline ([lat, lng] points), sampled about every 25 m (up to 120 samples).
+  async function elevProfile(pts) {
+    const segs = []; let tot = 0;
+    for (let i = 1; i < pts.length; i++) { const d = map.distance(pts[i - 1], pts[i]); segs.push(d); tot += d; }
+    const n = Math.max(2, Math.min(120, Math.round(tot / 25) + 1)), out = [];
+    for (let k = 0; k < n; k++) {
+      let t = tot * k / (n - 1), i = 0; while (i < segs.length - 1 && t > segs[i]) { t -= segs[i]; i++; }
+      const f = segs[i] ? Math.min(1, t / segs[i]) : 0, a = pts[i], b = pts[i + 1] || pts[i];
+      out.push({ d: tot * k / (n - 1), lat: a.lat + (b.lat - a.lat) * f, lng: a.lng + (b.lng - a.lng) * f });
+    }
+    const z = await Promise.all(out.map(p => elevAt(p.lat, p.lng)));
+    return out.map((p, i) => ({ ...p, z: z[i] }));
+  }
+  function profileSVG(prof, W = 300, H = 90) {
+    const zs = prof.map(p => p.z), lo = Math.floor(Math.min(...zs) - 1), hi = Math.ceil(Math.max(...zs) + 1), D = prof[prof.length - 1].d || 1;
+    const X = d => 28 + d / D * (W - 34), Y = z => 6 + (1 - (z - lo) / (hi - lo || 1)) * (H - 22);
+    const line = prof.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(p.z).toFixed(1)}`).join('');
+    return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile">
+      <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+      <g font-size="9" fill="var(--text-muted)"><text x="2" y="${Y(hi) + 4}">${hi} m</text><text x="2" y="${Y(lo)}">${lo} m</text><text x="${X(0)}" y="${H - 4}">0</text><text x="${X(D) - 2}" y="${H - 4}" text-anchor="end">${fmtDist(D)}</text></g></svg>`;
+  }
+
   // ---- Measure, buffer select and test-site tools -------------------------------------------
   // Measure: tap points on the map for the distance along them; Buffer: select the shown
   // developments within a radius of the last point (adds to the selection, like the lasso).
@@ -3526,10 +3670,22 @@
       const d = tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0);
       toolPanel.innerHTML = `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(d)}</span>`}
         ${tool.pts.length ? `<span class="tp-row">Select within <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small" data-buffer="${r}">${fmtDist(r)}</button>`).join('')}</span> of the last point</span>` : ''}
+        ${tool.pts.length ? '<span class="tp-row tp-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
         <span class="tp-row"><button type="button" class="btn small link" data-tool-clear="1">Clear</button> <button type="button" class="btn small link" data-tool-done="1">Done</button></span>`;
+      if (tool.pts.length) fillElev(tool.pts.slice());
     } else if (tool.mode === 'whatif') {
       toolPanel.innerHTML = `<strong>Test a site</strong> <span class="muted">tap the map where the site is</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
     }
+  }
+  let elevSeq = 0;
+  async function fillElev(pts) {
+    const seq = ++elevSeq;
+    try {
+      if (pts.length === 1) { const z = await elevAt(pts[0].lat, pts[0].lng); if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${z.toFixed(1)} m</strong> <span class="muted">above sea level · tap another point for a profile</span>`; return; }
+      const prof = await elevProfile(pts); if (seq !== elevSeq || !$('#tp-elev')) return;
+      const a = prof[0].z, b = prof[prof.length - 1].z, D = prof[prof.length - 1].d, zs = prof.map(p => p.z);
+      $('#tp-elev').innerHTML = `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m</span>${profileSVG(prof)}<span class="muted small">Terrain tiles (CDEM / SRTM): ground surface, not pipe inverts.</span>`;
+    } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (terrain tiles did not load).</span>'; }
   }
   toolPanel.addEventListener('click', e => {
     if (e.target.closest('[data-tool-done]')) return setTool(null);
@@ -4080,7 +4236,21 @@
       }
       $('#dev-exist').innerHTML = `<ul class="b-lines small">${parts.join('')}</ul><p class="small muted">Nearest to the development's point, live from the Region / municipal GIS — not the connection point.${ar ? ' Age and risk rating from the Region\'s sanitary sewer records.' : ''}</p>`;
     });
-    fillFire(p); fillStorm(p);
+    fillFire(p); fillStorm(p); fillGround(p);
+  }
+
+  // Ground at the site, and the fall to its catchment's outlet (gravity hint for the sewer path).
+  async function fillGround(p) {
+    if (!$('#dev-ground')) return;
+    try {
+      const z = await elevAt(p.lat, p.lng), f = svcFacts(p), out = f && f.path.find(a => a.outletAt && a.kind !== 'plant');
+      let line = `Site <strong>${z.toFixed(1)} m</strong> above sea level`;
+      if (out) {
+        const zo = await elevAt(out.outletAt[1], out.outletAt[0]), dist = map.distance([p.lat, p.lng], [out.outletAt[1], out.outletAt[0]]);
+        line += ` · ${esc(drName(out).replace(/^[^·]+· /, ''))} outlet ${zo.toFixed(1)} m: ${zo < z ? `falls ${(z - zo).toFixed(1)} m` : `<strong>rises ${(zo - z).toFixed(1)} m</strong>`} over ${fmtDist(dist)} (${(Math.abs(z - zo) / Math.max(1, dist) * 100).toFixed(2)}% straight line)`;
+      }
+      if (currentProject === p && $('#dev-ground')) $('#dev-ground').innerHTML = `<p class="small">${line}</p><p class="small muted">Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts. Measure & ground profile (Tools) draws a profile along any line.</p>`;
+    } catch (e) { if (currentProject === p && $('#dev-ground')) $('#dev-ground').innerHTML = '<p class="small muted">Ground elevation unavailable (terrain tiles did not load).</p>'; }
   }
 
   // ---- Fire flow context: hydrants near the site, their pressure zone, nearest large watermain ----
@@ -4558,7 +4728,7 @@
       <div class="head"><h3 data-info="dc-needs">DC timing</h3><div class="m">Existing capacity against the 2026 DC capital program (draft) · ${esc(scenarioText())}</div></div>
       <div class="chips">${[['gap', `Needed before the DC project ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
         <span class="seg">${[['all', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']].map(([k, t]) => `<button type="button" class="btn small${sysF === k ? ' on' : ''}" data-dcn-filter="${stF}:${k}">${t}</button>`).join('')}</span></div>
-      ${exportBar('loads')}
+      <div class="export-bar"><button type="button" class="btn small" data-dct-xlsx>Excel (all ${fmtNum(list.length)} rows)</button><button type="button" class="btn small" data-export="pdf" data-scope="loads">PDF / print</button></div>
       ${list.length ? needsTable(list.slice(0, 150), ppu) : '<p class="small muted">Nothing in this group.</p>'}
       ${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more.</p>` : ''}
       <p class="small"><span class="muted">Tap a name for what loads it; tap a DC project for what it relieves and who relies on it.</span></p>
@@ -4869,6 +5039,7 @@
     newapps:   { label: 'New in last 12 months', title: 'First filed in the last 12 months', test: p => !!p.first && Date.now() - p.first < YEAR_MS },
     // Planning stage only: many open permits have no inspection dates in the source data.
     stalled:   { label: 'Stalled 2+ years', title: 'Applications in planning (no building permit) with no activity for 2 years', test: p => PLANNING_PHASES.includes(p.phase) && !!p.last && Date.now() - p.last > 2 * YEAR_MS },
+    watched:   { label: '★ Watched', title: 'Developments on your watchlist', test: p => watch.has(p.key), hidden: () => !watch.size },
     week:      { label: 'Changed this week', title: 'New, or moved to another phase, in the latest weekly update', test: p => { const k = weekKeys(); return !!k && k.has(p.key); }, hidden: () => !weekKeys() },
   };
   function renderFocusChips() {
@@ -4927,7 +5098,7 @@
     const what = v === 'all' ? 'developments (all phases)' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
     const years = timeActive() ? (() => { const a = state.yearFrom ?? state.yearMin, b = state.yearTo ?? state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
     const extra = activeFilters().length - (v === 'all' ? 0 : 1) - (timeActive() ? 1 : 0) - (state.muni ? 1 : 0) - (state.search ? 1 : 0);
-    $('#f-showing').innerHTML = `Showing <strong>${fmtNum(state.filtered.length)}</strong> ${esc(what)} · ${esc(years)} · ${esc(state.muni || 'all of Peel')}${state.search ? ` · matching “${esc(state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}`;
+    $('#f-showing').innerHTML = `Showing <strong>${fmtNum(state.filtered.length)}</strong> ${esc(what)} · ${esc(years)} · ${esc(state.muni || 'all of Peel')}${state.search ? ` · matching “${esc(state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''} · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
   }
   function renderFilterUI() {
     renderSectionSummaries();
@@ -5095,6 +5266,179 @@
     $('#app-version').textContent = `App version ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION}${d}`;
   }
 
+  // ---- Reports: one-page development memo, area report, DC timing workbook ------------------
+  const textOf = html => { const d = document.createElement('div'); d.innerHTML = html || ''; return d.textContent.replace(/\s+/g, ' ').trim(); };
+  const REPORT_CSS = `td:first-child{white-space:nowrap}body{font:11px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#111;background:#fff;max-width:780px;margin:0 auto;padding:18px}
+    h1{font-size:18px;margin:0 0 2px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#555;margin:14px 0 4px;border-bottom:1px solid #ccc;padding-bottom:2px}
+    .sub{color:#444;margin:0 0 6px}.meta{color:#666;font-size:10px;margin:0}.grid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
+    table{border-collapse:collapse;width:100%;margin:2px 0 6px}td,th{border-bottom:1px solid #e3e3e3;padding:2px 4px;text-align:left;vertical-align:top}th{color:#555;font-weight:600;font-size:10px}
+    td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.gap{color:#b42318;font-weight:600}.ok{color:#2b8a3e}.chk{color:#b35c00}.muted{color:#666}
+    ul{margin:2px 0 6px;padding-left:16px}li{margin:1px 0}.sk{border:1px solid #ccc;border-radius:6px}.note{font-size:9.5px;color:#666;margin-top:10px}
+    .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}@page{margin:12mm}}`;
+  function openReport(title, body) {
+    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${REPORT_CSS}</style></head>
+      <body><p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>${body}<script>addEventListener('load', () => setTimeout(() => print(), 500));<\/script></body></html>`;
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    const w = window.open(url, '_blank');
+    if (!w) { const a = document.createElement('a'); a.href = url; a.download = `${title.replace(/[^\w\s.–-]+/g, '').slice(0, 80)}.html`; a.click(); }
+  }
+  // A small map sketch (no basemap): sewers coloured by load, DC works, the site or developments.
+  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250 }) {
+    const kx = 111320 * Math.cos(center[1] * Math.PI / 180), ky = 111320, s = Math.min(W, H) / (2 * halfM);
+    const X = lng => W / 2 + (lng - center[0]) * kx * s, Y = lat => H / 2 - (lat - center[1]) * ky * s;
+    const inBox = (lng, lat) => Math.abs((lng - center[0]) * kx) < halfM * 1.3 && Math.abs((lat - center[1]) * ky) < halfM * 1.3;
+    const path = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(y).toFixed(1)}`).join('');
+    const out = [];
+    if (SEW.data) SEW.data.pipes.forEach((p, i) => {
+      const c = p[10]; if (p[0] < (halfM > 4000 ? 900 : halfM > 2000 ? 600 : 0) || (!inBox(c[0], c[1]) && !inBox(c[c.length - 2], c[c.length - 1]))) return;
+      const pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
+      const r = p[2] ? pipeFlow(i, null).q / p[2] : null;
+      out.push(`<path d="${path(pts)}" stroke="${pipeColour(r)}" stroke-width="${Math.max(1, Math.min(4, p[0] / 400))}" fill="none" opacity=".85"/>`);
+    });
+    if (state.dcInfra) for (const sys of ['wastewater', 'water']) for (const ln of state.dcInfra[sys].lines) {
+      if (!ln.g.some(([x, y]) => inBox(x, y))) continue;
+      out.push(`<path d="${path(ln.g)}" stroke="${DC_KIND[ln.k][1]}" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
+    }
+    for (const r of rings) out.push(`<path d="${path(r)}Z" fill="rgba(25,113,194,.08)" stroke="#1971c2" stroke-width="1.2"/>`);
+    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" fill="${(PHASE_COLORS[p.phase] || '#1971c2')}" stroke="#fff" stroke-width=".8"/>`);
+    if (site) out.push(`<circle cx="${X(site[0])}" cy="${Y(site[1])}" r="7" fill="#e03131" stroke="#fff" stroke-width="2"/>`);
+    const bar = halfM > 2500 ? 1000 : 500, bw = bar * s;
+    return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#fafafa">${out.join('')}
+      <g font-size="9" fill="#333"><rect x="8" y="${H - 14}" width="${bw}" height="3" fill="#333"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
+      <path d="M${W - 14} 10l5 12h-10z" fill="#333"/><text x="${W - 17}" y="32">N</text></g></svg>
+      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green &lt; 50%, yellow 50–80, orange 80–100, red &gt; 100); dashed: 2026 DC works (draft).</div>`;
+  }
+  const PHASE_COLORS = { inception: '#74a9e8', review: '#4c8fdc', approved: '#2f6fc6', permit: '#1f55a3', construction: '#173a73', completed: '#2f9e44', cancelled: '#9aa0a6' };
+  const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Before DC', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
+    <td>${esc(c.name)}<br><span class="muted">${esc(c.sub)}</span></td><td class="n">${c.room == null ? 'new' : c.room <= 0 ? `over ${Math.round((c.util.com - 1) * 100)}%` : `${fmtNum(roundPop(c.people))} people<br><span class="muted">≈${fmtNum(Math.round(c.people / ppu))} units</span>`}</td>
+    <td>${c.out === 'today' ? 'already' : c.out == null ? `after ${hz.end}` : `≈${c.out}`}</td><td>${c.relief.length ? esc(c.relief.slice(0, 2).map(r => r.text).join('; ')) : '<span class="muted">none on the DC map</span>'}</td>${extra}</tr>`;
+  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room after approved</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
+  function reportFooter() {
+    const m = reportMeta('growth');
+    return `<p class="note">${esc(m.lines.slice(0, 3).join(' · '))}. ${esc(scenarioText())}. Peel design criteria; a screening estimate, not a hydraulic model or a functional servicing report. 2026 DC capital maps are a draft, not approved by Council.</p>`;
+  }
+  function devMemo(p) {
+    const st = statusOf(p), f = svcFacts(p), e = f ? f.e : D.estimate([p], state.criteria, 'all', jobsOf);
+    const ppu = ppuOf(p), b = p.buildout;
+    const files = [...new Set(p.records.filter(r => r.kind === 'application').map(r => r.ref))].slice(0, 6).join(', ');
+    const domText = id => { const el = currentProject === p && document.getElementById(id); return el ? [...el.querySelectorAll('li')].map(li => li.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean).join(' · ') : ''; };
+    const needs = f && state.svcModel ? (devNeeds(p) || []) : [];
+    const shown = needs.filter(c => c.status !== 'ok').slice(0, 7), okN = needs.filter(c => c.status === 'ok').length;
+    const cb = f && f.cb;
+    const svc = f ? `<table><tr><th></th><th class="n">Average</th><th class="n">Max day / peak dry</th><th class="n">Peak hour / wet</th></tr>
+      <tr><td>Water${f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'Zone '))}` : ''}</td><td class="n">${fmt1(cb.water.avg)} L/s</td><td class="n">${fmt1(cb.water.maxDay)} L/s</td><td class="n">${fmt1(cb.water.peakHour)} L/s</td></tr>
+      <tr><td>Wastewater${f.pl ? ` → ${esc(PLANT_SHORT[f.pl] || f.pl)}` : ''}</td><td class="n">${fmt1(cb.wastewater.avg)} L/s</td><td class="n">${fmt1(cb.wastewater.peak)} L/s</td><td class="n">${fmt1(cb.wastewater.wetPeak)} L/s</td></tr></table>
+      <ul>${f.path.length ? `<li>Sewer path: ${esc(f.path.slice(0, 6).map(a => a.kind === 'plant' ? plantLabel(a.plant) : drName(a).replace(/^[^·]+· /, '')).join(' → '))}${f.path.length > 6 ? ' …' : ''}</li>` : ''}
+      ${f.sps.length ? `<li>Pumping stations: ${esc(f.sps.map(x => `${drName(x.a).replace(/^[^·]+· /, '')} ${Math.round(x.wet / x.firm * 100)}% of firm at build-out`).join('; '))}</li>` : ''}
+      ${f.cap ? `<li>${esc(f.cap.name)}: uncommitted reserve ${fmt1(f.reserve)} ML/d; this development ${fmt1(f.use)} ML/d${f.reserve > 0 ? ` (${pctOf(f.use, f.reserve)} of the reserve)` : ' — plant over-committed'}</li>` : ''}</ul>` : '<p class="muted">No units or jobs stated — flows not estimated.</p>';
+    const ctx = [['Existing mains', domText('dev-exist')], ['Fire flow', domText('dev-fire')], ['Stormwater', domText('dev-storm')]].filter(([, t]) => t && !/^Looking up/.test(t));
+    const body = `<h1>${esc(p.title)}</h1><p class="sub">${esc(p.municipality)} · ${esc(P.PHASE_BY_KEY[p.phase].label)}${files ? ` · ${esc(files)}` : ''}</p>
+      <p class="meta">Servicing memo · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Development Tracker</p>
+      <div class="grid"><div>
+        <h2>Proposal</h2><table>
+          <tr><td>Units</td><td class="n">${fmtNum(Math.round(e.totalUnits))}</td><td>${D.UNIT_TYPES.filter(t => e.units[t.key] > 0).map(t => `${fmtNum(Math.round(e.units[t.key]))} ${t.label.toLowerCase()}`).join(' · ')}</td></tr>
+          <tr><td>People</td><td class="n">${fmtNum(roundPop(e.population))}</td><td class="muted">${ppu.toFixed(1)} persons per unit (Peel)</td></tr>
+          ${e.employment.jobs > 0 ? `<tr><td>Jobs</td><td class="n">${fmtNum(Math.round(e.employment.jobs))}</td><td></td></tr>` : ''}
+          ${b ? `<tr><td>Build-out</td><td class="n">${fmtNum(b.remaining)} left</td><td>${fmtNum(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed</td></tr>` : ''}</table>
+        <h2>Status</h2><p>${esc(textOf(st.why))}</p><p>${esc(textOf(latestDecisionHTML(p, st)))}</p>
+      </div><div>${p.lat != null ? sketchSVG({ center: [p.lng, p.lat], site: [p.lng, p.lat] }) : ''}</div></div>
+      <h2>Servicing (Peel design criteria)</h2>${svc}
+      ${needs.length ? `<h2>DC needs: existing capacity vs the 2026 DC program</h2><table>${needHead()}${shown.map(c => needRow(c, ppu)).join('')}</table>${okN ? `<p class="muted">${okN} more with room to build-out.</p>` : ''}` : ''}
+      ${st.works ? `<h2>Planned works nearby</h2><p>${esc(textOf(devWorksHTML(st.works)))}</p>` : ''}
+      ${ctx.length ? `<h2>Site context (live GIS)</h2><ul>${ctx.map(([k, t]) => `<li><strong>${esc(k)}:</strong> ${esc(t)}</li>`).join('')}</ul>` : ''}
+      ${reportFooter()}`;
+    openReport(`Servicing memo – ${p.title}`, body);
+  }
+  // Area report: a drawn selection or what is shown on the map.
+  function areaReport(devs, title, rings = []) {
+    devs = devs.filter(p => p.phase !== 'cancelled');
+    if (!devs.length) return alert('No developments to report on.');
+    const c = state.criteria, e = D.estimate(devs, c, 'all', jobsOf), cb = e.combined, ppu = (c.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
+    const pts = devs.filter(p => p.lat != null);
+    const lo = [Math.min(...pts.map(p => p.lng)), Math.min(...pts.map(p => p.lat))], hi = [Math.max(...pts.map(p => p.lng)), Math.max(...pts.map(p => p.lat))];
+    const center = [(lo[0] + hi[0]) / 2, (lo[1] + hi[1]) / 2], halfM = Math.max(600, Math.max((hi[0] - lo[0]) * 111320 * Math.cos(center[1] * Math.PI / 180), (hi[1] - lo[1]) * 111320) / 2 * 1.1);
+    // Constraints relied on (the largest 150 developments by people + jobs).
+    const agg = new Map(), order = { gap: 0, planned: 1, check: 2, ok: 3 };
+    if (state.svcModel) for (const p of pts.slice().sort((a, b) => (b.units || 0) - (a.units || 0)).slice(0, 150)) {
+      for (const k of devNeeds(p) || []) {
+        const key = k.kind === 'pipe' ? (k.relief[0] && k.relief[0].ln ? `ln:${k.relief[0].ln.p || k.relief[0].ln.c}` : `pipe:${k.i}`) : k.id;
+        const a = agg.get(key); if (!a) agg.set(key, { c: k, n: 1 }); else { a.n++; if (order[k.status] < order[a.c.status]) a.c = k; }
+      }
+    }
+    const rows = [...agg.values()].filter(a => a.c.status !== 'ok').sort((a, b) => order[a.c.status] - order[b.c.status] || b.n - a.n).slice(0, 14);
+    const byPhase = P.ALL_PHASES.map(ph => { const s = devs.filter(p => p.phase === ph.key); return s.length ? `<tr><td>${esc(ph.label)}</td><td class="n">${fmtNum(s.length)}</td><td class="n">${fmtNum(Math.round(D.estimate(s, c, 'all', jobsOf).totalUnits))}</td></tr>` : ''; }).join('');
+    const top = devs.slice().sort((a, b) => (b.units || 0) - (a.units || 0)).slice(0, 20);
+    const count = (key, name) => { const m = new Map(); for (const p of devs) for (const id of svcIds(p, key)) m.set(id, (m.get(id) || 0) + 1); return [...m].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([id, n]) => `${name(id)} (${n})`).join(', '); };
+    const body = `<h1>${esc(title)}</h1><p class="sub">${fmtNum(devs.length)} developments · ${fmtNum(Math.round(e.totalUnits))} units · ${fmtNum(roundPop(e.population))} people · ${fmtNum(Math.round(e.employment.jobs))} jobs</p>
+      <p class="meta">Area report · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Development Tracker · filters: ${esc(activeFilters().map(f => f.label).join(', ') || 'none')}</p>
+      <div class="grid"><div>
+        <h2>By phase</h2><table><tr><th>Phase</th><th class="n">Developments</th><th class="n">Units</th></tr>${byPhase}</table>
+        <h2>Servicing demand (combined, Peel design criteria)</h2><table><tr><th></th><th class="n">Average</th><th class="n">Max day / peak dry</th><th class="n">Peak hour / wet</th></tr>
+          <tr><td>Water</td><td class="n">${fmt1(cb.water.avg)} L/s</td><td class="n">${fmt1(cb.water.maxDay)} L/s</td><td class="n">${fmt1(cb.water.peakHour)} L/s</td></tr>
+          <tr><td>Wastewater</td><td class="n">${fmt1(cb.wastewater.avg)} L/s</td><td class="n">${fmt1(cb.wastewater.peak)} L/s</td><td class="n">${fmt1(cb.wastewater.wetPeak)} L/s</td></tr></table>
+        <p class="muted">${fmt1(D.toMLd(cb.water.avg))} ML/d water average · ${fmt1(D.toMLd(cb.wastewater.avg))} ML/d wastewater average. Pressure zones: ${esc(count('pz', id => (svcById.get(id) || {}).name || id).replace(/Pressure zone /g, 'Zone '))}.</p>
+      </div><div>${pts.length ? sketchSVG({ center, halfM, points: pts, rings }) : ''}</div></div>
+      ${rows.length ? `<h2>Capacity it relies on (needs a DC project or a check)</h2><table>${needHead('<th class="n">Developments</th>')}${rows.map(a => needRow(a.c, ppu, `<td class="n">${fmtNum(a.n)}</td>`)).join('')}</table><p class="muted">From the ${fmtNum(Math.min(150, pts.length))} largest developments; room in units at ${ppu} persons per unit (apartment).</p>` : ''}
+      <h2>Largest developments</h2><table><tr><th>Development</th><th>Municipality</th><th>Phase</th><th class="n">Units</th></tr>${top.map(p => `<tr><td>${esc(p.title)}</td><td>${esc(p.municipality)}</td><td>${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(p.units || 0)}</td></tr>`).join('')}</table>
+      ${reportFooter()}`;
+    openReport(title, body);
+  }
+  // DC timing as a workbook: every constraint in the current filter.
+  async function exportDcTiming() {
+    try { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'); } catch (e) { alert('Could not load the Excel library.'); return; }
+    const sysF = dcnFilter.split(':')[1] || 'all', stF = dcnFilter.split(':')[0], ppu = (state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
+    const list = allNeeds().filter(c => (stF === 'all' || c.status === stF) && (sysF === 'all' || c.sys === sysF));
+    const ST = { gap: 'Needed before the DC project', planned: 'DC project in time', check: 'Check the data', ok: 'Room to build-out' };
+    const rows = [['Status', 'System', 'Type', 'Existing capacity', 'Detail', 'Pipes in group', 'Capacity', 'Unit', 'Today %', 'Committed %', 'Build-out %', 'Room after approved', 'Room (people)', `Room (units at ${ppu})`, 'Runs out', 'Runs out again with expansions', 'DC relief', 'DC relief construction year']];
+    for (const c of list) rows.push([ST[c.status], c.sys === 'water' ? 'Water' : 'Wastewater', { pipe: 'Sewer', ps: 'Pumping station', plant: 'Treatment plant', wplant: 'Water treatment', storage: 'Storage', supply: 'Supply mains (rough)' }[c.kind] || c.kind, c.name, c.sub, c.n || 1,
+      Math.round(c.cap * 10) / 10, c.unit, Math.round(c.util.today * 100), Math.round(c.util.com * 100), Math.round(c.util.bo * 100), c.room == null ? '' : Math.round(c.room * 10) / 10, c.room == null || c.room <= 0 ? '' : Math.round(c.people), c.room == null || c.room <= 0 ? '' : Math.round(c.people / ppu),
+      c.out === 'today' ? 'already' : c.out == null ? `after ${hz.end}` : c.out, c.outAfter == null ? '' : c.outAfter === 'today' ? 'already' : c.outAfter, c.relief.map(r => r.text).join('; '), Math.min(...c.relief.map(r => r.y).filter(Boolean).concat([Infinity])) === Infinity ? '' : Math.min(...c.relief.map(r => r.y).filter(Boolean))]);
+    const wb = XLSX.utils.book_new(), m = reportMeta('growth');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['DC timing: existing capacity against the 2026 DC program (draft)'], ...m.lines.map(l => [l]), [scenarioText()], ['A screen, not a hydraulic model.']]), 'Summary');
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(rows), 'DC timing');
+    XLSX.writeFile(wb, 'peel-dc-timing.xlsx');
+  }
+  document.addEventListener('click', e => {
+    if (e.target.closest('[data-memo]') && currentProject) return devMemo(currentProject);
+    if (e.target.closest('[data-dct-xlsx]')) return exportDcTiming();
+    const a = e.target.closest('[data-area-report]'); if (!a) return;
+    if (a.dataset.areaReport === 'sel') areaReport([...selection.values()], `Area report – ${fmtNum(selection.size)} selected developments`, selAreas);
+    else { const where = [state.muni, state.sp.length ? spSummary() : '', state.mtsa ? `MTSA ${(areaById.get(state.mtsa) || {}).name || ''}` : '', state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? drName(svcById.get(state.dr) || {}) : ''].filter(Boolean).join(', ') || 'All of Peel'; areaReport(state.filtered, `Area report – ${where}`); }
+  });
+
+  // ---- Tips: a short tour, shown once (Tools → Tips to see it again) ----------------------------
+  const TOUR = [
+    { el: () => $('#map'), t: 'The map', b: 'Active development applications over the map background. Tap a cluster to zoom in, or a marker to open the development.' },
+    { el: () => innerWidth <= 760 ? $('#toggle-sidebar') : $('#tab-explore'), t: 'Find and filter', b: 'Search an address, file number, plan or DC project; pick phases and a municipality. More filters holds focus, planning and servicing areas.' },
+    { el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning, Water, Wastewater or DC. Layers & style below turns layers on and off and saves named views.' },
+    { el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area, measure distance with a ground profile, or test a proposed site.' },
+    { el: () => $('#footer'), t: 'Analysis', b: 'Totals for what is shown. Open it for growth & demand, water and wastewater by area, and the criteria used.' },
+    { el: () => $('#map'), t: 'A development', b: 'Its panel has Overview, Servicing (flows, existing mains, fire flow, stormwater, DC needs) and History. ☆ Watch adds it to your watchlist; Memo prints a one-page servicing memo.' },
+  ];
+  let tourEl = null, tourI = 0, tourChecked = false;
+  function maybeTour() {
+    if (tourChecked || !state.projects.length) return;
+    tourChecked = true;
+    if (!store.get('tourDone', false)) setTimeout(startTour, 1200);
+  }
+  function startTour() { tourI = 0; showTourStep(); }
+  function endTour() { store.set('tourDone', true); if (tourEl) { tourEl.remove(); tourEl = null; } }
+  function showTourStep() {
+    const st = TOUR[tourI]; if (!st) return endTour();
+    if (!tourEl) { tourEl = document.createElement('div'); tourEl.className = 'tour'; document.body.appendChild(tourEl); tourEl.addEventListener('click', e => { if (e.target.closest('[data-tour-next]')) { tourI++; showTourStep(); } else if (e.target.closest('[data-tour-skip]') || e.target === tourEl) endTour(); }); }
+    const el = st.el(), r = el && el.getBoundingClientRect();
+    const box = r && r.width ? { x: Math.max(4, r.left - 4), y: Math.max(4, r.top - 4), w: Math.min(innerWidth - 8, r.width + 8), h: Math.min(innerHeight - 8, r.height + 8) } : null;
+    const big = box && box.w * box.h > innerWidth * innerHeight * 0.3;
+    const cw = Math.min(320, innerWidth - 24);
+    let cx = 12, cy = 12;
+    if (box && !big) { cx = Math.min(innerWidth - cw - 12, Math.max(12, box.x)); cy = box.y + box.h + 10; if (cy + 170 > innerHeight) cy = Math.max(12, box.y - 180); }
+    else { cx = (innerWidth - cw) / 2; cy = innerHeight * 0.3; }
+    tourEl.innerHTML = `${box && !big ? `<div class="tour-hole" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : ''}
+      <div class="tour-card" role="dialog" aria-label="Tip ${tourI + 1} of ${TOUR.length}" style="left:${cx}px;top:${cy}px;width:${cw}px">
+        <div class="tour-n">${tourI + 1} / ${TOUR.length}</div><strong>${esc(st.t)}</strong><p>${esc(st.b)}</p>
+        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>Skip</button><button type="button" class="btn small" data-tour-next>${tourI === TOUR.length - 1 ? 'Done' : 'Next'}</button></div></div>`;
+  }
+
   // ---- Boot ------------------------------------------------------------------------
   // Browsers (iOS especially) restore form controls when a tab is reopened; after a layout change the
   // restored values can land on the wrong control or match no option. Start from the app's state.
@@ -5104,6 +5448,7 @@
   readColors();
   setTiles();
   renderLegend();
+  renderSavedViews();
   renderSources();
   renderVersion();
   renderCriteria();
@@ -5161,6 +5506,33 @@
     scheduleRebuild();
   }
 
+  // Watchlist (This week tab): starred developments, those changed this week first.
+  function weekChangeOf(key) {
+    const c = state.snapshot && state.snapshot.changes; if (!c || c.baseline) return null;
+    const m = (c.moved || []).find(x => x.key === key); if (m) return `${P.PHASE_BY_KEY[m.from].label} → ${P.PHASE_BY_KEY[m.to].label}`;
+    return (c.added || []).some(x => x.key === key) ? 'New this week' : null;
+  }
+  function renderWatch() {
+    const box = $('#watch-list'); if (!box) return;
+    const list = state.projects.filter(p => watch.has(p.key)).map(p => ({ p, ch: weekChangeOf(p.key) })).sort((a, b) => (!!b.ch - !!a.ch) || a.p.title.localeCompare(b.p.title));
+    const nCh = list.filter(x => x.ch).length;
+    $('#watch-head').textContent = watch.size ? `${fmtNum(watch.size)} watched${nCh ? ` · ${nCh} changed this week` : ''}` : '';
+    box.innerHTML = list.length ? list.map(({ p, ch }) => `<li><button type="button" data-watch-open="${esc(p.key)}">${dot(p.phase)}<span><span class="t">★ ${esc(p.title)}</span><span class="m">${ch ? `<strong class="watch-ch">${esc(ch)}</strong> · ` : ''}${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</span></span></button></li>`).join('')
+      : '<li class="muted small">Tap ☆ Watch on a development to follow it here.</li>';
+    const wk = $('#week-watch-n'); if (wk) { wk.hidden = !nCh; wk.textContent = `★${nCh}`; }
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-watch]');
+    if (b) {
+      const k = b.dataset.watch; if (watch.has(k)) watch.delete(k); else watch.add(k);
+      store.set('watch', [...watch]);
+      const on = watch.has(k); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '★ Watching' : '☆ Watch';
+      renderWatch(); renderFocusChips(); return;
+    }
+    const o = e.target.closest('[data-watch-open]');
+    if (o) { const p = state.projects.find(x => x.key === o.dataset.watchOpen); if (p) focusProject(p); }
+  });
+
   // "This week" panel: projects that appeared or changed phase since the previous snapshot.
   function renderChanges() {
     const c = state.snapshot && state.snapshot.changes;
@@ -5170,8 +5542,8 @@
     $('#week-count').hidden = !n;
     $('#week-count').textContent = n > 99 ? '99+' : String(n);
     const items = [
-      ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
-      ...c.added.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
+      ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${watch.has(m.key) ? '★ ' : ''}${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
+      ...c.added.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${watch.has(a.key) ? '★ ' : ''}${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
     ];
     $('#changes-summary').textContent = `${fmtNum(c.movedCount)} changed phase · ${fmtNum(c.addedCount)} new`;
     const SHOW = 25;

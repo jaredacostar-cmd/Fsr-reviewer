@@ -228,6 +228,23 @@ application.
   filters* fold (focus, planning and servicing areas, record type). The development panel has
   three tabs: Overview, Servicing (summary, existing mains, fire flow, stormwater, planned works,
   DC needs, servicing check) and History & records.
+- **Watchlist, saved views, tips**: ☆ Watch on a development adds it to *Your watchlist* (This
+  week tab, changed-this-week first) and the ★ Watched focus. *Saved views* (Layers & style) keeps
+  named filters + map position + view + layers in the browser. A short tour shows once; Tools →
+  Tips shows it again.
+- **Reports**: *Memo* on a development opens a one-page servicing memo (proposal, status, flows,
+  sewer path, plant reserve, DC needs, planned works, live site context, a map sketch of sewers by
+  load and DC works) to print or save as PDF. *Area report* (a drawn selection, or *Report* on the
+  Showing line for what is shown) gives combined demand, the capacity relied on with the DC timing,
+  and the largest developments. DC timing → *Excel (all rows)* exports every constraint.
+- **Search places**: the search also finds secondary plans / character areas, MTSAs, pressure zones,
+  catchments and pumping stations, DC projects (by number or name) and DC facilities, file numbers
+  by prefix, and intersections ("Main St & Queen St").
+- **Heatmap**: Layers & style → Show as → Heatmap (people + jobs at build-out of the shown
+  developments). Clusters show their phase counts on hover.
+- **Ground elevation** (AWS Terrain Tiles, Terrarium; CDEM / SRTM, no key): Tools → *Measure &
+  ground profile* gives the ground at a point and a profile with fall / grade along a line; the
+  development's Servicing tab shows the site's ground and the fall to its catchment outlet.
 - **Map views**: *Planning* (aerial, addresses, markers by phase), *Water* (street map, pressure
   zones shaded by max day growth, markers by servicing layer sized by people + jobs, existing
   watermains, DC water works), *Wastewater* (drainage areas, sewer pipe capacity, existing sanitary
