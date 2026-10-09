@@ -238,6 +238,11 @@ application.
   employment flow so the model today matches its 2025 reported average (G.E. Booth ×1.63,
   Clarkson ×1.19 on the 2021 baseline); the factor absorbs existing employment and institutional
   flow, dry-weather infiltration and anything not modelled. I&I is not scaled.
+- **70 ML/d diversion** switch (Plants tab): models the planned east-to-west diversion from
+  G.E. Booth to Clarkson (operational 2027–2028 per the 2025 reports) as a fixed transfer, taken
+  off G.E. Booth's average and peaks and added to Clarkson's at every growth layer; the Peel
+  total is unchanged. On the 2021 baseline, calibrated build-out moves from about 107% to 94% of
+  G.E. Booth's rated capacity and from about 70% to 90% of Clarkson's.
 
 **Region of Peel 2025 annual reports** (`data/peel-reports.json`, listed under References in
 Breakdown & criteria): the [wastewater annual reports](https://peelregion.ca/water/wastewater/wastewater-annual-reports)
