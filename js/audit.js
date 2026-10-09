@@ -35,7 +35,9 @@
     const seen = new Map();
     for (const p of projects) for (const r of p.records) seen.set(r.uid, (seen.get(r.uid) || 0) + 1);
     const inSeveralProjects = [...seen.values()].filter(n => n > 1).length;
-    const inNoProject = deduped.filter(r => !seen.has(r.uid)).length;
+    // Sites made only of permits that build nothing (signs, entrances, demolitions…) are set aside on purpose.
+    const setAside = deduped.filter(r => !seen.has(r.uid) && r.kind === 'permit' && P.permitRole(r) === 'none').length;
+    const inNoProject = deduped.filter(r => !seen.has(r.uid)).length - setAside;
 
     // ---- 3. Units -----------------------------------------------------------------------
     const u = {
@@ -84,7 +86,7 @@
     return {
       records: {
         raw: raw.length, unique: deduped.length, copiesMerged: raw.length - deduped.length, mergedGroups,
-        projects: projects.length, bySource: [...bySource].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n),
+        projects: projects.length, setAside, bySource: [...bySource].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n),
       },
       checks: [
         { key: 'filesListedTwice', label: 'Files still listed twice after merging', value: filesListedTwice },
@@ -104,7 +106,7 @@
     const ok = a.checks.every(c => c.value === 0);
     return [
       `## ${title}`, '',
-      `${n(a.records.raw)} raw records → ${n(a.records.copiesMerged)} copies of the same file merged (${n(a.records.mergedGroups)} files) → ${n(a.records.unique)} unique files → ${n(a.records.projects)} projects.`, '',
+      `${n(a.records.raw)} raw records → ${n(a.records.copiesMerged)} copies of the same file merged (${n(a.records.mergedGroups)} files) → ${n(a.records.unique)} unique files → ${n(a.records.projects)} projects${a.records.setAside ? ` (${n(a.records.setAside)} permits that build nothing — signs, entrances, demolitions… — set aside)` : ''}.`, '',
       '| Check | Result |', '|---|---|',
       ...a.checks.map(c => `| ${c.label} | ${c.value === 0 ? '✅ 0' : `❌ ${n(c.value)}`} |`), '',
       '| Units | |', '|---|---:|',
