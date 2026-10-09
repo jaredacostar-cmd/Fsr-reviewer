@@ -1815,12 +1815,10 @@
     return kids;
   }
   const upstreamOf = (id, kids) => { const out = []; const walk = i => { for (const c of kids.get(i) || []) { out.push(c); walk(c.id); } }; walk(id); return out; };
-  // Wastewater table view: 'flow' = local + upstream = total; 'layers' = census / built / approved / proposed.
-  let wwView = store.get('wwView', 'flow');
   function renderSvcTab() {
     const bc = baselineCensus();
     const has = !!(state.servicing && bc);
-    $('#ftab-water').hidden = $('#ftab-ww').hidden = !has;
+    $('#ftab-water').hidden = $('#ftab-ww').hidden = $('#ftab-plants').hidden = !has;
     if (!has) return;
     const c = state.criteria, Y = bc.year, idx = svcCensusIndex(bc);
     const total = l => l.census + l.built + l.approved + l.proposed;
@@ -1859,9 +1857,10 @@
     const nameCell = (name, sub, depth) => `<td style="padding-left:${6 + depth * 12}px">${depth ? '<span class="flow-arrow" aria-hidden="true">↳</span>' : ''}${name}${sub ? `<small>${sub}</small>` : ''}</td>`;
     const sRow = (name, sub, d, l, id, cls = '', depth = 0) => {
       const lo = d ? local.get(d.id) : null, up = d ? upOf(d) : null;
-      const mid = wwView === 'layers'
-        ? LAYER_KEYS.map(k => cell(ML(l[k], c.wastewater.avg), l[k])).join('') + cell(adwf(l), total(l), 'bo')
-        : (d ? cell(adwf(lo), total(lo)) + (total(up) > 0 || up.ha ? cell(adwf(up), total(up)) : '<td class="muted">–</td>') : '<td></td><td></td>') + cell(adwf(l), total(l), 'bo');
+      // Where the flow comes from (local + upstream) and what it is made of (census + growth
+      // layers); both add up to the total average dry weather flow at the outlet.
+      const mid = (d ? cell(adwf(lo), total(lo)) + (total(up) > 0 || up.ha ? cell(adwf(up), total(up)) : '<td class="muted">–</td>') : '<td></td><td></td>')
+        + LAYER_KEYS.map((k, i) => cell(ML(l[k], c.wastewater.avg), l[k], i ? '' : 'sep')).join('') + cell(adwf(l), total(l), 'bo');
       return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td><td>${fmtNum(d ? lo.devs : l.devs)}</td>${mid}${peakCells(l)}</tr>`;
     };
     const short = (d, pl) => d.name.replace(`${pl} · `, '');
@@ -1897,24 +1896,52 @@
     };
     const secs = plants.map(sec).filter(x => x.rows.length);
     const tor = sec('Toronto');
-    const cols = 3 + (wwView === 'layers' ? 5 : 3) + 3;
-    const midHead = wwView === 'layers' ? layerHead.replace('Build-out', 'Build-out<br>average') : '<th>Local<br>average</th><th>+ Upstream<br>average</th><th>= Total<br>average</th>';
+    const cols = 13;
     const peel = sum(secs.map(x => x.sum));
-    $('#ww-body').innerHTML = `<div class="ww-head">${svcLegend(Y)}<div class="seg ww-view" role="group" aria-label="Wastewater columns">
-        <button type="button" class="btn small${wwView === 'flow' ? ' on' : ''}" data-wwview="flow" aria-pressed="${wwView === 'flow'}">Local + upstream</button>
-        <button type="button" class="btn small${wwView === 'layers' ? ' on' : ''}" data-wwview="layers" aria-pressed="${wwView === 'layers'}">Growth layers</button></div></div>
-      <table class="dt svc-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · ML/d, people below</caption>
-      <thead><tr><th>Catchment (top of the sewershed → plant)</th><th class="bar-h">Build-out mix</th><th>Developments</th>${midHead}<th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th></tr></thead>
+    $('#ww-body').innerHTML = `${svcLegend(Y)}
+      <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · average dry weather (ML/d), people below</caption>
+      <thead><tr><th rowspan="2">Catchment (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
+        <th colspan="2" class="grp-h">Where it comes from</th><th colspan="4" class="grp-h sep">What it is made of</th><th rowspan="2">= Total<br>average dry</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
+        <tr><th>Local</th><th>+ Upstream</th><th class="sep">${Y} Census</th><th>+ Built since ${Y}</th><th>+ Approved</th><th>+ Proposed (in review)</th></tr></thead>
       <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
         ${sRow(`Peel total (${secs.map(x => x.pl).join(' + ')})`, '', null, peel, null, 'tot')}
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
-      <p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow. Average ${c.wastewater.avg} L/cap/d; <strong>peak dry weather</strong> = total average × Harmon M = 1 + 14 / (4 + √P) on the total population; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census by dissemination areas whose centre falls in the catchment; growth from every development located in it (other filters ignored). Employment flow is in Servicing demand. Click a catchment to see its flow path to the lake on the map.</p>`;
+      <p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow. Average ${c.wastewater.avg} L/cap/d; <strong>peak dry weather</strong> = total average × Harmon M = 1 + 14 / (4 + √P) on the total population; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census by dissemination areas whose centre falls in the catchment; growth from every development located in it (other filters ignored). Employment flow is in Servicing demand. Click a catchment to see its flow path to the lake on the map.</p>`;
+    renderPlantsTab(secs, peel, tor, { Y, c, total, adwf, pdwf, ii, ML });
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to Lakeview, Clarkson and Inglewood on the lake`;
   }
-  $('#ww-body').addEventListener('click', e => {
-    const b = e.target.closest('[data-wwview]'); if (!b) return;
-    wwView = b.dataset.wwview; store.set('wwView', wwView); renderSvcTab();
-  });
+  // Plants tab: each plant's total inflow, built up layer by layer like the Growth tab:
+  // census + built since + approved + proposed = build-out. Peaks are not additive, so a growth
+  // layer's peak is what it adds to the peak (the running total, peaked on its population, is
+  // shown below). I&I is on the whole drainage area, so it all sits with the existing system.
+  function renderPlantsTab(secs, peel, tor, k) {
+    const { Y, c, total, adwf, pdwf, ii } = k;
+    const stages = [['census', `${Y} Census`], ['built', `+ Built since ${Y}`], ['approved', '+ Approved'], ['proposed', '+ Proposed (in review)']];
+    const upTo = (l, n) => { const o = { census: 0, built: 0, approved: 0, proposed: 0, ha: l.ha }; stages.slice(0, n + 1).forEach(([s]) => { o[s] = l[s]; }); return o; };
+    const run = (x, show) => show ? `<small>→ ${fmt1(x)}</small>` : '';
+    const block = (title, l, note = '') => {
+      let prev = { pop: 0, a: 0, d: 0, ii: 0, w: 0 };
+      const rows = stages.map(([key, label], n) => {
+        const o = upTo(l, n), r = { pop: total(o), a: adwf(o), d: pdwf(o), ii: ii(o), w: pdwf(o) + ii(o) };
+        const inc = f => r[f] - prev[f];
+        const html = `<tr><td>${esc(label)}</td><td>${fmtNum(Math.round(inc('pop')))}${n ? `<small>→ ${fmtNum(Math.round(r.pop))}</small>` : ''}</td>
+          <td>${fmt1(inc('a'))}${run(r.a, n)}</td><td>${fmt1(inc('d'))}${run(r.d, n)}</td><td>${fmt1(inc('ii'))}${n ? '' : `<small>${fmtNum(Math.round(l.ha))} ha</small>`}</td><td class="bo">${fmt1(inc('w'))}${run(r.w, n)}</td></tr>`;
+        prev = r; return html;
+      });
+      const r = prev;
+      return `<tr class="grp"><td colspan="6">${title}${note ? ` <span class="muted small">${note}</span>` : ''}</td></tr>${rows.join('')}
+        <tr class="tot"><td>= Build-out</td><td>${fmtNum(Math.round(r.pop))}</td><td>${fmt1(r.a)}</td><td>${fmt1(r.d)}<small>M ${r.pop > 0 ? D.harmon(r.pop).toFixed(2) : '–'}</small></td><td>${fmt1(r.ii)}</td><td class="bo">${fmt1(r.w)}</td></tr>
+        <tr class="plant-bar"><td colspan="6">${svcBar(l)}</td></tr>`;
+    };
+    $('#plants-body').innerHTML = `${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}
+      <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each growth layer is what it adds, the running total below</caption>
+      <thead><tr><th>Layer</th><th>Population</th><th>Average dry<br>weather</th><th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th></tr></thead>
+      <tbody>${secs.map(x => block(esc(plantLabel(x.pl)), x.sum)).join('')}
+        ${block(`Peel total (${secs.map(x => x.pl).join(' + ')})`, peel)}
+        ${tor.rows.length ? block(esc(plantLabel('Toronto')), tor.sum, 'Malton · not in the Peel total') : ''}</tbody></table>
+      <p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + built since census day + approved + proposed (in review) = build-out. Average dry weather at ${c.wastewater.avg} L/cap/d. Peak dry weather = average × Harmon M on the population; because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Census population by dissemination areas whose centre falls in the sewershed (small rural plants such as Inglewood can show none). Residential only; employment flow is in Servicing demand.</p>`;
+    $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant`;
+  }
   // Click a zone / catchment row: outline it on the map and zoom to it (a catchment also shades
   // everything upstream that drains through it). Click it again to clear.
   const svcFocus = { id: null, layer: L.layerGroup().addTo(map) };

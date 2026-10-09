@@ -208,12 +208,19 @@ application.
     point (`outletAt`) in `data/servicing.json`; outlets get closer to the plant at every step.
     Rows run from the top of each sewershed (furthest outlet first) down to the plant, whose last
     row is its total inflow; then a Peel total, with Malton (City of Toronto) listed separately.
-    The default view shows **local** (the catchment's own build-out population and average flow)
-    **+ upstream** (everything draining into it) **= total**; *Growth layers* swaps in census /
-    built / approved / proposed. Both show **peak dry weather** (total average × Harmon M on the
-    total population), **I&I** (0.26 L/s/ha on the whole traced drainage area to the outlet) and
-    **peak wet weather** (peak dry + I&I). Clicking a catchment shades everything upstream and
+    Each row shows where the flow comes from — **local** (the catchment's own build-out population
+    and average flow) **+ upstream** (everything draining into it) — and what it is made of —
+    census **+ built since + approved + proposed** — both adding up to the **total** average dry
+    weather flow at its outlet; then **peak dry weather** (total average × Harmon M on the total
+    population), **I&I** (0.26 L/s/ha on the whole traced drainage area to the outlet) and **peak
+    wet weather** (peak dry + I&I). Clicking a catchment shades everything upstream and
     draws schematic flow arrows, outlet to outlet, down to the plant.
+
+- **Plants** tab: each plant's total inflow (Lakeview, Clarkson, Inglewood, the Peel total, and
+  Malton / City of Toronto separately) as census + built since + approved + proposed = build-out:
+  population, average dry, peak dry, I&I and peak wet weather in ML/d. A growth layer's peak is the
+  increase in the plant's peak when it is added (peaking is not additive), with the running total
+  below; I&I sits with the existing system.
 
 **Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
 (Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run
