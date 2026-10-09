@@ -3264,6 +3264,7 @@
     const { zoom = true, loads = true } = opt;
     svcFocus.layer.clearLayers();
     svcFocus.id = svcFocus.id === id ? null : id;
+    if (typeof syncClearBtn === 'function') setTimeout(syncClearBtn, 0);
     for (const r of document.querySelectorAll('.svc-row')) r.classList.toggle('on', r.dataset.svc === svcFocus.id);
     const a = svcFocus.id && svcById.get(svcFocus.id);
     if (!a) return;
@@ -4356,6 +4357,34 @@
     if (innerWidth <= 760) $('#detail').scrollTop = 0;
   });
   map.on('click', () => exHL.clearLayers());
+
+  // ---- Unselect: tap empty map, Esc, or the Clear selection button ----------------------------
+  // Clears the open panel (development, area, DC item…), the highlighted catchment / zone, a drawn
+  // selection, the address pin and highlighted mains. Filters stay as they are.
+  let panelAt = 0;
+  new MutationObserver(() => { panelAt = Date.now(); syncClearBtn(); }).observe($('#detail-body'), { childList: true });
+  new MutationObserver(() => syncClearBtn()).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
+  const clearBtn = L.DomUtil.create('button', 'btn clear-sel', map.getContainer());
+  clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
+  L.DomEvent.disableClickPropagation(clearBtn);
+  const somethingSelected = () => !$('#detail').hidden || !!svcFocus.id || selection.size > 0 || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
+  function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
+  function clearSelected() {
+    if (!$('#detail').hidden) closeDetail();
+    highlight(null);
+    if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
+    if (selection.size) clearSelection();
+    exHL.clearLayers(); pinLayer.clearLayers();
+    syncClearBtn();
+  }
+  clearBtn.onclick = clearSelected;
+  // A tap on the map itself (not a marker, area or line that opened something in the same tap).
+  map.on('click', () => {
+    if (tool.mode || lassoOn) return;
+    const t0 = Date.now();
+    setTimeout(() => { if (panelAt < t0 - 5) clearSelected(); }, 30);
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !tool.mode && !lassoOn && !document.querySelector('.tour') && !(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName))) clearSelected(); });
 
   // Ground at the site, and the fall to its catchment's outlet (gravity hint for the sewer path).
   async function fillGround(p) {

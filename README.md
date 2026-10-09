@@ -245,6 +245,10 @@ application.
 - **Ground elevation** (AWS Terrain Tiles, Terrarium; CDEM / SRTM, no key): Tools → *Measure &
   ground profile* gives the ground at a point and a profile with fall / grade along a line; the
   development's Servicing tab shows the site's ground and the fall to its catchment outlet.
+- **Unselect**: tap an empty part of the map, press Esc, or use *Clear selection* (bottom of the map)
+  to close the open panel and clear the highlighted development, catchment / zone, drawn selection,
+  address pin and highlighted mains; filters stay. In the Water and Wastewater tabs the tables scroll
+  inside the panel with their column headers kept in view.
 - **Map views**: *Planning* (aerial, addresses, markers by phase), *Water* (street map, pressure
   zones shaded by max day growth, markers by servicing layer sized by people + jobs, existing
   watermains, DC water works), *Wastewater* (drainage areas, sewer pipe capacity, existing sanitary
