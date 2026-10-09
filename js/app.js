@@ -2712,7 +2712,34 @@
     const start = timeActive() ? (state.yearFrom ?? state.yearMin) : null;
     const earliest = state.censuses[state.censuses.length - 1].year;
     const why = start == null ? `all years: earliest census with data (${earliest})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
+    renderForecast(bc);
     $('#c-note').textContent = `${name} · ${Y} Census baseline (${why}) · built = permits completed since census day (${censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;
+  }
+
+  // Growth in the application pipeline against the 2051 growth allocated to each municipality
+  // (Peel Land Needs Assessment, draft municipal allocation): how much of the forecast growth
+  // is already built, approved or proposed, and how much is still to be planned for.
+  function renderForecast(bc) {
+    const box = $('#c-forecast'), F = state.reports && state.reports.forecast2051;
+    if (!box) return;
+    if (!F || state.daCtx) { box.innerHTML = ''; return; }
+    const munis = Object.keys(F.municipalities).filter(m => !state.muni || m === state.muni);
+    const pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
+    const rows = munis.map(m => {
+      const f = F.municipalities[m], projects = state.projects.filter(p => p.municipality === m && p.phase !== 'cancelled');
+      const gr = PeelAreas.growthSince(projects, { muni: m }, bc.date, state.criteria), j = svcJobs(projects, bc.date);
+      return { m, fp: f.pop2051 - f.pop2021, fu: f.units2051 - f.units2021, fj: f.jobs2051 - f.jobs2021,
+        p: [gr.built.population, gr.approved.population, gr.proposed.population], u: [gr.built.units, gr.approved.units, gr.proposed.units], j: [j.jbuilt, j.japproved, j.jproposed] };
+    });
+    if (munis.length > 1) rows.push(rows.reduce((t, r) => ({ m: 'Peel', fp: t.fp + r.fp, fu: t.fu + r.fu, fj: t.fj + r.fj, p: t.p.map((v, i) => v + r.p[i]), u: t.u.map((v, i) => v + r.u[i]), j: t.j.map((v, i) => v + r.j[i]) }), { fp: 0, fu: 0, fj: 0, p: [0, 0, 0], u: [0, 0, 0], j: [0, 0, 0] }));
+    const sum = a => a[0] + a[1] + a[2];
+    const cell = (a, f, unit) => `<td>${unit(sum(a))}<small>${pct(sum(a), f)} of 2051 growth</small></td>`;
+    const bar = (a, f) => { const mx = Math.max(f, sum(a)) || 1; return `<div class="svc-bar fc-bar" role="img" aria-label="${pct(sum(a), f)} of the 2051 growth">${['g-built', 'g-approved', 'g-proposed'].map((c, i) => a[i] > 0 ? `<span class="gseg ${c}" style="width:${(a[i] / mx * 100).toFixed(2)}%"></span>` : '').join('')}${f > sum(a) ? `<span class="fc-left" style="width:${((f - sum(a)) / mx * 100).toFixed(2)}%"></span>` : ''}</div>`; };
+    const uU = n => unit(fmtNum(Math.round(n)), 'units'), uJ = n => unit(fmtNum(Math.round(n)), 'jobs');
+    box.innerHTML = `<h3 class="svc-sub">Applications against the 2051 forecast <span class="muted small">growth since the ${bc.year} Census vs. growth allocated to 2051</span></h3>
+      <table class="dt svc-table rep-table"><thead><tr><th>Municipality</th><th class="bar-h">Pipeline vs. 2051 growth (people)</th><th>2051 growth allocated</th><th>Built + approved + proposed</th><th>Units</th><th>Jobs on development sites</th><th>Still to plan for</th></tr></thead>
+      <tbody>${rows.map(r => `<tr class="${r.m === 'Peel' ? 'tot' : ''}"><td>${esc(r.m)}</td><td class="bar">${bar(r.p, r.fp)}</td><td>${uPop(r.fp)}<small>${uU(r.fu)} · ${uJ(r.fj)}</small></td>${cell(r.p, r.fp, uPop)}${cell(r.u, r.fu, uU)}${cell(r.j, r.fj, uJ)}<td class="bo">${r.fp > sum(r.p) ? uPop(r.fp - sum(r.p)) : `<span class="over">exceeds by ${uPop(sum(r.p) - r.fp)}</span>`}</td></tr>`).join('')}</tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">${esc(F.note)} Pipeline = growth since census day from every development in the municipality (built = permits completed since census day; approved; proposed = in pre-consultation or review), at Peel's design persons per unit; jobs only where the applications state floor area. Design persons per unit (2.7 per apartment) are higher than the average household size behind the forecast, so the units column is the fairer comparison; the pipeline also includes applications that may not be built by 2051. The bar shows built (green), approved (blue) and proposed (hatched) against the 2051 growth (grey outline = still to plan for). Source: <a href="${esc(F.url)}" target="_blank" rel="noopener">${esc(F.title)}</a>, ${esc(F.pages)}.</p></details>`;
   }
 
   // Stacked bar: 2021 baseline, then each layer of growth up to full build-out of the
