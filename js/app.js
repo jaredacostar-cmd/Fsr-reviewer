@@ -463,9 +463,13 @@
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
         <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
-        <div class="mo-quick">${chip('id="opt-devs"', devsOn, '<i class="dev-sw" aria-hidden="true"></i>Developments', 'devs-toggle')}</div>
-        <div class="mo-ww" data-info="ww-layers"><div class="mo-h">Wastewater loads <span class="muted">(map and sewers)</span></div><div class="mo-chips">${[['existing', 'Census (existing)'], ['built', 'Built since'], ['approved', 'Site plan approved'], ['proposed', 'Proposed (in review)']].map(([k, t]) => chip(`data-wwlay="${k}"`, wwLay[k] !== false, `<span class="lg-sw" data-wwsw="${k}"></span>${t}`)).join('')}</div><div class="mo-ww-note muted"></div></div>
-        <div class="mo-where" data-info="municipality"><div class="mo-chips" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>
+        <div class="mo-devs-off" id="mo-devs-off" hidden></div>
+        <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Map options</span><span class="mo-psum" id="mo-psum"></span></summary>
+        <div class="mo-grp">
+          <div class="mo-quick">${chip('id="opt-devs"', devsOn, '<i class="dev-sw" aria-hidden="true"></i>Developments', 'devs-toggle')}</div>
+          <div class="mo-where" data-info="municipality"><div class="mo-seg" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>
+        </div>
+        <details class="mo-more mo-ww" data-info="ww-layers"${store.get('moWwOpen', false) ? ' open' : ''}><summary>Wastewater loads <span class="mo-sum mo-ww-note"></span></summary><div class="mo-chips">${[['existing', 'Census (existing)'], ['built', 'Built since'], ['approved', 'Site plan approved'], ['proposed', 'Proposed (in review)']].map(([k, t]) => chip(`data-wwlay="${k}"`, wwLay[k] !== false, `<span class="lg-sw" data-wwsw="${k}"></span>${t}`)).join('')}</div><small>Loads on the map and on the sewers; all on = full build-out.</small></details>
         <details class="mo-more mo-areas" data-info="map-areas"${store.get('moAreasOpen', false) ? ' open' : ''}><summary>Areas <span class="mo-sum" id="mo-area-sum"></span></summary>
         <div class="mo-sec"><div class="mo-h">Planning areas</div>
           <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:#e8590c"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:#d4a017"></i>MTSAs', 'mtsa')}</div>
@@ -517,10 +521,14 @@
           <div class="mo-chips">${chip('id="opt-da"', daOn, `${daSwatch()}<span id="da-label">2021 census areas</span>`, 'da-layer')}</div>
         </div>
         </details>
+        </details>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
-      el.querySelector('.mo-more:not(.mo-areas)').addEventListener('toggle', e => store.set('moOpen', e.target.open));
+      el.querySelector('.mo-more:not(.mo-areas):not(.mo-ww)').addEventListener('toggle', e => { if (e.target.matches('.mo-more:not(.mo-areas):not(.mo-ww)')) store.set('moOpen', e.target.open); });
+      el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
+      el.querySelector('.mo-ww').addEventListener('toggle', e => { if (e.target.classList.contains('mo-ww')) store.set('moWwOpen', e.target.open); });
+      el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) showAllDevs(); });
       el.querySelector('.mo-areas').addEventListener('toggle', e => { if (e.target.classList.contains('mo-areas')) store.set('moAreasOpen', e.target.open); });
       el.querySelector('#opt-spl').onchange = e => setAreaOn({ sp: e.target.checked });
       el.querySelector('#opt-mtl').onchange = e => setAreaOn({ mtsa: e.target.checked });
@@ -2797,6 +2805,30 @@
     renderMarkers(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts();
     if (!$('#detail').hidden && $('#detail').dataset.view === 'loads' && loadsOf && loadsOf.pipe != null) showPipeLoads(loadsOf.pipe);
   }
+  // Map panel notice when a setting hides the developments, with one tap to bring them back.
+  function devsOffReason() {
+    if (!devsOn) return 'Developments are switched off';
+    if (isWW() && ['built', 'approved', 'proposed'].every(k => wwLay[k] === false)) return 'Wastewater loads: no growth layer on';
+    try { if (devMode === 'hidden' && (TRACE.key || svcFocus.id || BLK.id)) return 'Hidden while a path is shown'; } catch (e) { /* during start-up */ }
+    return '';
+  }
+  // The collapsed Map options line: what is on.
+  function syncPanelSum() {
+    const el = document.getElementById('mo-psum'); if (!el) return;
+    el.textContent = [devsOn ? '' : 'developments off', state.muni || 'all of Peel', state.sp.length || state.mtsa || state.pz || state.dr ? 'area filter' : ''].filter(Boolean).join(' · ');
+  }
+  function syncDevsOff() {
+    const el = document.getElementById('mo-devs-off'); if (!el) return;
+    const why = devsOffReason();
+    el.hidden = !why;
+    if (why) el.innerHTML = `<span>${esc(why)}</span><button type="button" class="btn small" data-devs-show="1">Show developments</button>`;
+  }
+  function showAllDevs() {
+    if (!devsOn) setDevsOn(true);
+    if (isWW() && ['built', 'approved', 'proposed'].every(k => wwLay[k] === false)) { wwLay = { existing: wwLay.existing, built: true, approved: true, proposed: true }; store.set('wwLay', wwLay); renderMarkers(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts(); }
+    if (devMode === 'hidden') { devMode = 'faded'; store.set('devFade', devMode); syncPathMode(); }
+    syncDevsOff();
+  }
   // A development shown on the map: developments on, and (Wastewater view) its growth layer on.
   const devShown = p => devsOn && (!isWW() || p.phase === 'cancelled' || wwOn(svcLayerOf(p)));
   function setSvcLayer(k, on) {
@@ -3650,6 +3682,7 @@
   function syncPathMode() {
     const on = !!(TRACE.key || svcFocus.id || BLK.id), el = map.getContainer();
     el.classList.toggle('paths-on', on); el.dataset.devmode = devMode;
+    syncDevsOff();
     if (!devChip && on) {
       devChip = L.DomUtil.create('div', 'dev-mode', mapBottom); L.DomEvent.disableClickPropagation(devChip);
       devChip.addEventListener('click', e => { const b = e.target.closest('[data-devmode]'); if (!b) return; setTimeout(() => { devMode = b.dataset.devmode; store.set('devFade', devMode); syncPathMode(); }); });
@@ -3877,7 +3910,8 @@
     set('#opt-devs', devsOn);
     document.querySelectorAll('[data-wwlay]').forEach(c => { c.checked = wwLay[c.dataset.wwlay] !== false; });
     document.querySelectorAll('[data-wwsw]').forEach(e => e.style.setProperty('--mk', layerColors()[e.dataset.wwsw]));
-    const mw = document.querySelector('.mo-ww'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); mw.querySelector('.mo-ww-note').textContent = all ? 'All on: full build-out conditions.' : `Loads on the sewers: ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'}.`; }
+    const mw = document.querySelector('.mo-ww'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); const n = mw.querySelector('.mo-ww-note'); n.textContent = all ? 'all (build-out)' : [['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
+    syncDevsOff(); syncPanelSum();
     set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-bk', svcOn.bk); set('#opt-da', daOn);
     for (const k of ['water', 'sanitary', 'storm']) set(`[data-exist="${k}"]`, !!existOn[k]);
     for (const k of ['water', 'wastewater']) set(`[data-dcsys="${k}"]`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k));
@@ -4046,25 +4080,23 @@
   const phoneMap = matchMedia('(max-width: 700px)').matches;
   const Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+    el.innerHTML = '<div class="map-year" data-info="map-year" hidden></div><div class="lg-body"></div>';
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
+    const yr = el.querySelector('.map-year');
+    yr.addEventListener('input', e => {
+      const v = +e.target.value; capYear = v > hz.end ? null : v;
+      yr.querySelector('.my-v').textContent = yearText();
+      clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); }, 120);
+    });
+    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); });
     return el;
   } });
   const legend = new Legend().addTo(map);
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
   const yearText = () => capYear == null ? 'Build-out' : String(capYear);
-  const YearCtl = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
-    const el = L.DomUtil.create('div', 'map-year'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    el.setAttribute('data-info', 'map-year');
-    el.addEventListener('input', e => {
-      const v = +e.target.value; capYear = v > hz.end ? null : v;
-      el.querySelector('.my-v').textContent = yearText();
-      clearTimeout(el._t); el._t = setTimeout(() => { renderCapLayer(); renderLegend(); }, 120);
-    });
-    el.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); });
-    return el;
-  } });
-  const yearCtl = new YearCtl().addTo(map);
+  // Demand year: the top of the legend box, shown whenever a capacity layer is on.
+  const yearCtl = { getContainer: () => legend.getContainer().querySelector('.map-year') };
   function syncYearCtl() {
     const el = yearCtl.getContainer();
     el.hidden = mstyle.cap === 'off';
@@ -4092,8 +4124,8 @@
     if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     syncYearCtl();
     if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Demand year on the map). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
-    el.innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
-    el.hidden = !parts.length;
+    el.querySelector('.lg-body').innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
+    el.hidden = !parts.length && yearCtl.getContainer().hidden;
   }
 
   // "What loads this?": a catchment (with everything upstream), a pressure zone or a plant —
@@ -6132,6 +6164,7 @@
     // Where & areas (map panel): municipality, planning and service areas.
     const areas = [state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
       state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? (svcById.get(state.dr) || {}).name : ''].filter(Boolean);
+    syncPanelSum();
     const as = $('#mo-area-sum'); if (as) { as.textContent = areas.length ? areas.join(' · ') : 'planning, service'; as.classList.toggle('on', areas.length > 0); }
     const more = [state.focus ? FOCUS[state.focus].label : '',
       state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? (($('#f-units').selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
@@ -6504,7 +6537,7 @@
     { el: () => phoneUI() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search anything', b: 'An address, intersection or file number — and also a secondary plan, MTSA, pressure zone, catchment, pumping station or DC project number (e.g. 25-2269). Picking a plan filters the map to it.' },
     { el: () => phoneUI() ? $('#toggle-sidebar') : $('#phase-panel'), t: 'Phases and filters', b: 'Pick phases (in review, approved, permit issued…) and a municipality. More filters adds a focus (growth, committed capacity, stalled, employment…) and planning or servicing areas. The Showing line always says what is on the map.' },
     { el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning (aerial, addresses), Water (pressure zones, watermains), Wastewater (catchments, sewer capacity) and DC (servicing timing against the 2026 DC program). Each view remembers your changes.' },
-    { el: () => document.querySelector('.mo-more > summary'), t: 'Layers & style', b: 'Colour and size markers, shade capacity, show existing pipes with size labels, planned DC works, census areas or a heatmap — and save the whole setup as a named view.' },
+    { el: () => document.querySelector('.mo-panel > summary'), t: 'Map options', b: 'Developments on / off, the municipality, Areas (secondary plans, MTSAs, pressure zones, wastewater blocks: tap one to filter), and Layers & style: colour and size markers, shade capacity, existing pipes, planned DC works, census areas or a heatmap — and save the whole setup as a named view.' },
     { el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area to add up its demand (then Area report), measure a distance with its ground profile, or test a proposed site before an application exists.' },
     { el: () => $('#north-btn'), t: 'Orientation', b: 'The north arrow switches the map between Peel’s road grid and north up.' },
     { el: () => $('#footer'), t: 'Analysis', b: 'Totals for what is shown. Open it for growth & demand, water by pressure zone, wastewater by catchment and plant (with Horizon years), and the design criteria used.' },
