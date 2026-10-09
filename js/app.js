@@ -2585,17 +2585,36 @@
       const res = await fetch('data/servicing.json', { cache: 'no-cache' });
       if (!res.ok) return;
       const d = await res.json();
-      state.servicing = { zones: PeelAreas.prepare(d.pressureZones), drainage: PeelAreas.prepare(d.drainageAreas), meta: d };
+      // Assigned once the blocks are in, so nothing caches census people on the old catchments.
+      const sv = { zones: PeelAreas.prepare(d.pressureZones), drainage: PeelAreas.prepare(d.drainageAreas), meta: d };
+      // The wastewater catchments are the Region's 40 blocks (data/blocks.json), each with its
+      // place in the flow from the sewer network: the block it drains into, down to its plant.
+      // The traced pumping-station sewersheds are kept for the stations' firm-capacity checks.
+      sv.psAreas = sv.drainage.filter(a => a.kind === 'ps');
+      const bj = await loadBlocks();
+      if (bj && bj.version >= 2) {
+        const areas = bj.blocks.filter(b => b.plant).map(b => ({
+          id: `dr:B${b.id}`, block: b.id, name: `Block ${b.id}`, kind: 'block', planning: b.planning, plant: b.plant,
+          downstream: b.into ? `dr:B${b.into}` : null, outletAt: b.outletAt, outlet: null, municipality: b.muni,
+          manholes: b.pipes, trunkMm: b.trunkMm, blockHa: b.ha, areaHa: b.servedHa ?? b.ha, served: b.served ?? 1, rings: b.parts.map(p => p[0]),
+        }));
+        sv.drainage = PeelAreas.prepare(areas);
+        sv.blocks = true;
+      }
+      state.servicing = sv;
       // Optional: census shares by area overlap and the Region's 2025 annual report figures.
       const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? r.json() : null; } catch (e) { return null; } };
       let dc;
       [state.svcCensus, state.reports, dc] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json')]);
       state.dcInfra = prepDc(dc);
       renderRefs();
-      for (const a of [...state.servicing.zones, ...state.servicing.drainage]) svcById.set(a.id, a);
+      for (const a of [...state.servicing.zones, ...state.servicing.drainage, ...state.servicing.psAreas]) svcById.set(a.id, a);
+      for (const c of Object.values(state.censuses || {})) delete c._svcPop;
       $('#f-svc-group').hidden = false;
       tagServicing();
       renderSvcSelects();
+      // Blocks are the catchments: one map chip for them (Wastewater blocks), not two.
+      if (state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; $('#f-dr-label').textContent = 'Wastewater block'; if (svcOn.dr) { svcOn.dr = false; svcOn.bk = true; } }
       for (const k of ['pz', 'dr']) if (svcOn[k]) setSvcLayer(k, true);
       if (svcOn.bk) setBlocksLayer(true);
       renderDcLayer(); renderLegend();
@@ -2604,16 +2623,24 @@
       loadWaterSupply().then(() => { if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject); });
     } catch (e) { /* optional */ }
   }
+  // A development's pressure zone and wastewater block. Outside the mapped zones / blocks: the
+  // nearest one within NEAR_M of its edge, the area it would most likely connect to (greenfield
+  // lands, gaps in the network). A block the sewers barely serve (Block 40, rural Caledon on
+  // septic) keeps only the sites near its own sewer; the rest go to the nearest sewered block.
+  const lowServed = a => !!a && a.served != null && a.served < 0.5;
+  function tagAreas(p) {
+    const { zones, drainage } = state.servicing;
+    p.pz = PeelAreas.locate(zones, p.lng, p.lat);
+    p.dr = PeelAreas.locate(drainage, p.lng, p.lat);
+    const off = id => { const a = svcById.get(id); return lowServed(a) && !(a.outletAt && p.lat != null && Math.hypot((a.outletAt[0] - p.lng) * 80600, (a.outletAt[1] - p.lat) * 111320) < 1500); };
+    if (p.dr.length && off(p.dr[0])) p.dr = [];
+    p.pzNear = p.pz.length ? null : dcVia(p, 'pz') || PeelAreas.nearest(zones, p.lng, p.lat, NEAR_M);
+    const via = p.dr.length ? null : dcVia(p, 'dr');
+    p.drNear = p.dr.length ? null : (via && !lowServed(svcById.get(via.id)) ? via : null) || PeelAreas.nearest(drainage.filter(a => !lowServed(a)), p.lng, p.lat, NEAR_M);
+  }
   function tagServicing() {
     if (!state.servicing) return;
-    for (const p of state.projects) {
-      p.pz = PeelAreas.locate(state.servicing.zones, p.lng, p.lat);
-      p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
-      // Outside the mapped zones / traced catchments: the nearest one within NEAR_M of its edge,
-      // the area it would most likely connect to (greenfield lands, gaps in the traced network).
-      p.pzNear = p.pz.length ? null : dcVia(p, 'pz') || PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
-      p.drNear = p.dr.length ? null : dcVia(p, 'dr') || PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
-    }
+    for (const p of state.projects) tagAreas(p);
     state.whatifs = whatIfs.filter(w => w.include).map(whatIfProject);
   }
   const NEAR_M = 5000;
@@ -2628,7 +2655,7 @@
     const { zones, drainage } = state.servicing;
     $('#f-pz').innerHTML = `<option value="">All pressure zones</option>` + zones.slice().sort(byZone).map(z => `<option value="${esc(z.id)}"${z.id === state.pz ? ' selected' : ''}>${esc(z.name)}</option>`).join('');
     const plants = [...new Set(drainage.map(d => d.plant))];
-    $('#f-dr').innerHTML = `<option value="">All drainage areas</option>` + plants.map(pl => `<optgroup label="${esc(plantLabel(pl))}">${drainage.filter(d => d.plant === pl)
+    $('#f-dr').innerHTML = `<option value="">${state.servicing.blocks ? 'All wastewater blocks' : 'All drainage areas'}</option>` + plants.map(pl => `<optgroup label="${esc(plantLabel(pl))}">${drainage.filter(d => d.plant === pl)
       .map(d => `<option value="${esc(d.id)}"${d.id === state.dr ? ' selected' : ''}>${esc(drName(d))}</option>`).join('')}</optgroup>`).join('');
   }
   $('#f-pz').onchange = e => { state.pz = e.target.value; showSvcArea(true); applyFilters(); };
@@ -2647,6 +2674,8 @@
   const svcColor = a => a.zone ? '#0b7285' : PLANT_COLOR[a.plant] || '#868e96';
   function svcTooltip(a) {
     if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone · tap: what loads it</span>`;
+    if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return `<strong>Wastewater ${esc(a.name)}</strong>${a.planning ? ' · prioritised (block study)' : ''}<br>Drains to ${to ? `${esc(to.name)} → ` : ''}${esc(plantLabel(a.plant))}<br>
+      <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} sewers of 300 mm+${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · Region I&amp;I block · tap: what loads it</span>`; }
     return `<strong>${esc(drName(a))}</strong><br>Drains to ${esc(plantLabel(a.plant))}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
       <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network · tap: what loads it</span>`;
   }
@@ -2701,8 +2730,14 @@
     const path = []; const seen = new Set();
     while (d && !seen.has(d.id)) { seen.add(d.id); path.push(d); d = d.downstream ? svcById.get(d.downstream) : null; }
     // Pumping stations on the path: build-out peak dry and ≈ peak wet (design flows) vs firm capacity.
-    const sps = path.filter(a => spsOf(a)).map(a => {
-      const l = M.cum.get(a.id);
+    // (With blocks as the catchments: the stations on the development's own pipe route.)
+    let onPath = path.filter(a => spsOf(a));
+    if (state.servicing.blocks && SEW.data && p.lat != null) {
+      const G = sewerGrowth(), k0 = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat), route = k0 >= 0 ? new Set(pipeRoute(k0)) : new Set();
+      onPath = (state.servicing.psAreas || []).filter(a => spsOf(a) && route.has(stationPipe(a)));
+    }
+    const sps = onPath.map(a => {
+      const l = psLoads(a);
       return { a, firm: spsOf(a).firmLs, dry: l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, wet: l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0 };
     });
     const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
@@ -2721,7 +2756,7 @@
     const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
     const pathRows = path.map((a, i) => {
       const l = M.cum.get(a.id), f = M.fOf(a.plant), out = l ? M.adwf(l, f) : 0;
-      return `<tr><td>${i ? '↳ ' : F.dNear ? `<span class="est">${esc(nearText(F.dNear))}</span> ` : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
+      return `<tr><td>${i ? '↳ ' : F.dNear ? `<span class="est">${esc(nearText(F.dNear))}</span> ` : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : a.kind === 'block' ? `wastewater block · ${a.trunkMm ? `${a.trunkMm} mm ` : ''}outlet → ${esc(a.downstream ? (svcById.get(a.downstream) || {}).name || '' : plantLabel(a.plant))}` : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
     }).join('');
     let plant = '';
     if (cap) {
@@ -2759,10 +2794,15 @@
     if (bc._svcPop) return bc._svcPop;
     const pop = new Map(), add = (id, v) => pop.set(id, (pop.get(id) || 0) + v);
     const ov = state.svcCensus && state.svcCensus.years[bc.year];
+    const drIds = new Set(state.servicing.drainage.map(a => a.id));
+    const drMatch = state.svcCensus && state.svcCensus.drainage.every(id => drIds.has(id));
     if (ov && ov.length === bc.das.length) {
       const z = state.svcCensus.zones, w = state.svcCensus.drainage;
-      bc.das.forEach((d, i) => { for (const [k, s] of ov[i][0]) add(z[k], d.pop * s); for (const [k, s] of ov[i][1]) add(w[k], d.pop * s); });
-      bc._svcMethod = 'overlap';
+      bc.das.forEach((d, i) => { for (const [k, s] of ov[i][0]) add(z[k], d.pop * s); if (drMatch) for (const [k, s] of ov[i][1]) add(w[k], d.pop * s); });
+      // Blocks (not in the overlap file): census people by dissemination-area centre, less the
+      // share the sewers don't serve (rural land on septic).
+      if (!drMatch) for (const d of bc.das) for (const id of PeelAreas.locate(state.servicing.drainage, d.lng, d.lat)) add(id, d.pop * (svcById.get(id)?.served ?? 1));
+      bc._svcMethod = drMatch ? 'overlap' : 'overlap-zones';
     } else {
       const { zones, drainage } = state.servicing;
       for (const d of bc.das) for (const id of [...PeelAreas.locate(zones, d.lng, d.lat), ...PeelAreas.locate(drainage, d.lng, d.lat)]) add(id, d.pop);
@@ -2810,7 +2850,7 @@
     const M = state.svcModel; if (!M || !state.servicing) return null;
     const plants = {}, ps = {}, zones = {};
     for (const pl of ['Lakeview', 'Clarkson', 'Inglewood']) { const c = M.plantCap(pl); if (c) plants[pl] = { committed: c.committed, buildout: c.buildout, rated: c.rated }; }
-    for (const d of state.servicing.drainage) { const x = psLoad(d); if (x) ps[d.id] = Math.round(x.pct); }
+    for (const d of state.servicing.psAreas || []) { const x = psLoad(d); if (x) ps[d.id] = Math.round(x.pct); }
     for (const z of state.servicing.zones) { const l = M.zones.get(z.id); if (l) zones[z.id] = M.wMax(M.total(l), M.jobs(l)); }
     return { text: scenarioText(), at: new Date().toISOString().slice(0, 16).replace('T', ' '), plants, ps, zones };
   }
@@ -2901,6 +2941,7 @@
     const c = state.criteria, E = c.employment, Y = bc.year, R = state.reports;
     $('#footer').classList.toggle('show-tech', svcOpt.tech === 'on');
     svcCensusPop(bc);
+    const censusHowW = bc._svcMethod === 'centre' ? 'by dissemination areas whose centre falls inside' : 'shared out by the area of each dissemination area inside it';
     const censusHow = bc._svcMethod === 'overlap' ? 'shared out by the area of each dissemination area inside it' : 'by dissemination areas whose centre falls inside';
     const total = l => l.census + l.built + l.approved + l.proposed;
     const jobs = l => (l.jbuilt || 0) + (l.japproved || 0) + (l.jproposed || 0);
@@ -2927,7 +2968,7 @@
       <table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (ML/d) at ${observed ? `the observed 2025 factor ×${mdR.toFixed(2)}` : `design ×${mdR} residential, ×${mdE} employment`}; people and jobs below</caption>
       <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHow}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
+      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
       ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
@@ -3007,14 +3048,26 @@
     const peelF = peel.census + peel.built + peel.approved + peel.proposed > 0 ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     const calNote = svcOpt.ww === 'calibrated' ? `<p class="small cal-note"><strong>Capacity check (calibrated to 2025 flows):</strong> ${secs.filter(x => x.f !== 1).map(x => `${esc(PLANT_SHORT[x.pl])} ×${x.f.toFixed(2)}`).join(' · ')}. Each plant's population and employment flow is scaled so that today (census + built since${R && R.wastewater.inflows.some(x => x.plant) ? ', plus the York Region inflow at G.E. Booth' : ''}) matches its 2025 reported annual average; the factor absorbs existing employment, institutional and commercial flow, infiltration in dry weather and any flows not modelled. I&amp;I is not scaled.</p>` : '';
     $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${scenarioChip()}${inViewBox()}</div></div>${calNote}
-      <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
-      <thead><tr><th rowspan="2">Catchment (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
+      <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by ${state.servicing.blocks ? 'block (the Region\'s 40 I&amp;I sewersheds)' : 'sanitary catchment'}, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
+      <thead><tr><th rowspan="2">${state.servicing.blocks ? 'Block' : 'Catchment'} (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
         <th colspan="2" class="grp-h">Where it comes from</th><th colspan="4" class="grp-h sep">What it is made of</th><th rowspan="2">= Total<br>average dry</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
         <tr><th>Local</th><th>+ Upstream</th><th class="sep">${Y} Census</th><th>+ Built since ${Y}</th><th>+ Approved</th><th>+ Proposed (in review)</th></tr></thead>
       <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
         ${sRow(`Peel total (${secs.map(x => PLANT_SHORT[x.pl]).join(' + ')})`, '', null, peel, null, peelF, 'tot')}
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote([...local.values()].reduce((a, l) => a + (l.near || 0), 0), 'traced catchment')}<p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve. Click a catchment to see its flow path to the lake on the map.</p></details>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote([...local.values()].reduce((a, l) => a + (l.near || 0), 0), 'traced catchment')}<p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). ${state.servicing.blocks ? `<strong>Blocks</strong> are the Region of Peel's 40 wastewater sewersheds (its inflow &amp; infiltration program; the blocks of "Dragonfly"); each drains into the next block along the sewers (data/sewers.json: the pipe leaving the block that carries the most people) down to its plant. Pumping stations are checked on the sewer arriving at each (table below). ` : ''}<strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: ${state.servicing.blocks ? 'I&amp;I at a station uses the land draining through its arriving sewer (published network, 300 mm and up), so peak wet is approximate (≈). Click a block to see its flow path along the sewers to the lake on the map.' : 'I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve. Click a catchment to see its flow path to the lake on the map.'}</p></details>`;
+    // Blocks: the pumping stations sit inside them, each loaded by what its arriving pipe carries.
+    if (state.servicing.blocks) {
+      const ls = v => v * 1e6 / 86400;
+      const st = state.servicing.psAreas.map(a => ({ a, sp: spsOf(a), l: psCum(a) })).filter(x => x.sp && x.l)
+        .map(x => ({ ...x, dry: ls(pdwf(x.l)) / x.sp.firmLs * 100, wet: ls(pdwf(x.l) + ii(x.l)) / x.sp.firmLs * 100 })).sort((x, y) => y.dry - x.dry);
+      const blk = a => { const b = a.outletAt && PeelAreas.locate(state.servicing.drainage, a.outletAt[0], a.outletAt[1]); return b ? svcById.get(b) : null; };
+      $('#ww-body').insertAdjacentHTML('beforeend', `<table class="dt svc-table ps-table" data-info="drainage-area"><caption>Pumping stations · firm capacity (2020 Master Plan) against the build-out flow in the sewer arriving at each, Peel design criteria</caption>
+        <thead><tr><th>Pumping station</th><th>Block → plant</th><th>People + jobs upstream</th><th>Firm</th><th>Peak dry</th><th>Peak wet ≈</th></tr></thead>
+        <tbody>${st.length ? st.map(x => { const b = blk(x.a); return `<tr${rowAttrs(x.a.id, '')}><td title="${esc(spsNote(x.sp))}">${esc(x.sp.name)}</td><td>${b ? esc(b.name) : '–'} → ${esc(PLANT_SHORT[x.a.plant] || x.a.plant || '')}</td>
+          <td>${who(total(x.l), jobs(x.l))}</td><td>${fmtNum(x.sp.firmLs)} L/s</td><td class="${x.dry >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l)))}<small>${Math.round(x.dry)}%</small></td><td class="${x.wet >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l) + ii(x.l)))}<small>${Math.round(x.wet)}%</small></td></tr>`; }).join('')
+          : `<tr><td colspan="6" class="muted">${SEW.data ? 'No master plan stations matched' : 'Loading the sewer network…'}</td></tr>`}</tbody></table>`);
+    }
     renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     // Kept for the development panel's servicing check and the export.
     const dvR = R && R.wastewater.diversion, divMldOf = pl => !(dvR && svcOpt.div === 'on') ? 0 : pl === dvR.from ? -dvR.mld : pl === dvR.to ? dvR.mld : 0;
@@ -3791,8 +3844,28 @@
   const atYear = (l, y) => { if (y == null || !l) return l; const { fa, fp } = hzFrac(y); return { ...l, approved: l.approved * fa, proposed: l.proposed * fp, japproved: (l.japproved || 0) * fa, jproposed: (l.jproposed || 0) * fp }; };
   const censusOnly = l => ({ census: l.census, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, ha: l.ha });
   // Build-out flows of a drainage area (design flows, as for pumping station firm capacity).
+  // A pumping station's load when its sewershed isn't one of the catchments (blocks): what the
+  // pipe arriving at it carries, from the sewer network: census people upstream, growth by layer
+  // and the land draining through it (for I&I).
+  function stationPipe(a) {
+    if (a._pipe != null) return a._pipe;
+    if (!SEW.data || !a.outletAt) return -1;
+    let best = -1, bp = -1;
+    const gx = Math.floor(a.outletAt[0] / 0.004), gy = Math.floor(a.outletAt[1] / 0.003);
+    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (const k of SEW.grid.get(`${gx + i},${gy + j}`) || []) {
+      const p = SEW.data.pipes[k]; if (dcDist(a.outletAt, pipeCoords(p)) > 120) continue;
+      if (p[4] > bp) { bp = p[4]; best = k; }
+    }
+    return (a._pipe = best);
+  }
+  function psCum(a) {
+    const k = stationPipe(a); if (k < 0) return null;
+    const p = SEW.data.pipes[k], G = sewerGrowth();
+    return { census: p[4], built: G.built.pop[k], approved: G.approved.pop[k], proposed: G.proposed.pop[k], jbuilt: G.built.jobs[k], japproved: G.approved.jobs[k], jproposed: G.proposed.jobs[k], ha: p[5] + G.built.ha[k] + G.approved.ha[k] + G.proposed.ha[k], pipe: k };
+  }
+  const psLoads = a => (state.svcModel && state.svcModel.cum.get(a.id)) || psCum(a);
   function psLoad(a, y = null) {
-    const M = state.svcModel, sp = spsOf(a), l = M && atYear(M.cum.get(a.id), y);
+    const M = state.svcModel, sp = spsOf(a), l = M && atYear(psLoads(a), y);
     if (!sp || !l) return null;
     const dry = M.pdwf(l, 1) * 1e6 / 86400, wet = (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400;
     return { firm: sp.firmLs, dry, wet, pct: wet / sp.firmLs * 100 };
@@ -3814,7 +3887,7 @@
     if (mstyle.cap === 'off' || !state.servicing || !state.svcModel) return;
     if (mstyle.cap === 'pipes') { renderPipes(capLayer); return; }
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
-    const list = mstyle.cap === 'zone' ? state.servicing.zones : state.servicing.drainage;
+    const list = mstyle.cap === 'zone' ? state.servicing.zones : mstyle.cap === 'ps' && state.servicing.blocks ? state.servicing.psAreas : state.servicing.drainage;
     for (const a of list) {
       let fill = null, tip = `<strong>${esc(a.zone ? a.name : drName(a))}</strong>`;
       if (mstyle.cap === 'ps') {
@@ -3835,11 +3908,18 @@
   // pumping stations as dots in their load colour, plants as squares.
   function drawNetwork(layer) {
     const ll = p => [p[1], p[0]], plants = state.servicing.meta.plants || [];
+    // With the sewers loaded: each catchment's outlet down the pipes, drawn once as a tree (a
+    // route stops where it joins one already drawn). Otherwise outlet to outlet, schematic.
+    const drawn = SEW.data ? new Set() : null;
     for (const d of state.servicing.drainage) {
+      const k = drawn && d.outletAt ? nearestPipe(d.outletAt[0], d.outletAt[1], 300) : -1;
+      if (k >= 0) { const r = pipeRoute(k, drawn); drawPipeRoute(r, 'svc-flow-net', layer, 3000); r.forEach(i => drawn.add(i)); continue; }
       const nx = d.downstream && svcById.get(d.downstream), pl = plants.find(p => p.name === d.plant);
       const to = nx ? nx.outletAt || (pl && pl.lnglat) : pl && pl.lnglat;
       if (d.outletAt && to && (d.outletAt[0] !== to[0] || d.outletAt[1] !== to[1])) L.polyline([ll(d.outletAt), ll(to)], { className: 'svc-flow-net', interactive: false }).addTo(layer);
-      const ps = d.kind === 'ps' && d.outletAt && psLoad(d, capYear);
+    }
+    for (const d of state.servicing.psAreas || []) {
+      const ps = d.outletAt && psLoad(d, capYear);
       if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: '#fff', fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
         .bindTooltip(`<strong>${esc(drName(d).replace(/^[^·]+· /, ''))}</strong><br>${Math.round(ps.pct)}% of firm at build-out (peak wet)`, { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); showLoads(d.id); }).addTo(layer);
@@ -3895,11 +3975,13 @@
   function showLoads(id, plantName) {
     if (!state.servicing || !state.svcModel) return;
     const M = state.svcModel, a = id && svcById.get(id), c = state.criteria;
+    // A pumping station beside the blocks: what passes through the pipe arriving at it.
+    if (a && a.kind === 'ps' && state.servicing.blocks) { const k = stationPipe(a); if (k >= 0) { if (svcFocus.id !== id) focusSvc(id, { zoom: false, loads: false }); showPipeLoads(k); } return; }
     loadsOf = { id, plantName };
     let ids, title, sub = '', key = 'dr';
     if (plantName) {
       ids = new Set(state.servicing.drainage.filter(d => d.plant === plantName).map(d => d.id));
-      title = plantLabel(plantName); sub = `${fmtNum(ids.size)} catchments`;
+      title = plantLabel(plantName); sub = `${fmtNum(ids.size)} ${state.servicing.blocks ? 'blocks' : 'catchments'}`;
       const cap = M.plantCap(plantName);
       if (cap) sub += ` · rated ${fmt1(cap.rated)} ML/d · existing + approved ${Math.round(cap.committed / cap.rated * 100)}% · uncommitted reserve ${fmt1(cap.rated - cap.committed)} ML/d`;
     } else if (a && a.zone) {
@@ -3909,7 +3991,8 @@
       const up = upstreamOf(a.id, svcFlowTree());
       ids = new Set([a.id, ...up.map(u => u.id)]); title = drName(a);
       const l = M.cum.get(a.id), ps = psLoad(a);
-      sub = `${up.length ? `with ${fmtNum(up.length)} upstream catchment${up.length === 1 ? '' : 's'} · ` : ''}${l ? `${fmt1(M.adwf(censusOnly(l)))} ML/d at the census → ${fmt1(M.adwf(l))} ML/d at build-out (average dry, design)` : ''}${ps ? ` · pumping station ${Math.round(ps.pct)}% of firm ${fmtNum(ps.firm)} L/s at build-out peak wet` : ''}`;
+      const unitW = a.kind === 'block' ? 'block' : 'catchment';
+      sub = `${up.length ? `with ${fmtNum(up.length)} upstream ${unitW}${up.length === 1 ? '' : 's'} · ` : ''}${l ? `${fmt1(M.adwf(censusOnly(l)))} ML/d at the census → ${fmt1(M.adwf(l))} ML/d at build-out (average dry, design)` : ''}${ps ? ` · pumping station ${Math.round(ps.pct)}% of firm ${fmtNum(ps.firm)} L/s at build-out peak wet` : ''}`;
     } else return;
     const rows = [];
     for (const p of state.projects) {
@@ -3928,7 +4011,7 @@
     const LIMIT = 60;
     const what = key === 'pz' ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
     $('#detail-body').innerHTML = `
-      <div class="head"><h3>What loads ${esc(title)}</h3><div class="m">${key === 'pz' ? 'Water pressure zone' : plantName ? 'Wastewater treatment plant' : 'Sanitary catchment and everything upstream'}</div></div>
+      <div class="head"><h3>What loads ${esc(title)}</h3><div class="m">${key === 'pz' ? 'Water pressure zone' : plantName ? 'Wastewater treatment plant' : `${a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment'} and everything upstream`}</div></div>
       <p class="small">${esc(sub)}</p>
       <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${layerColors()[k]}"></span>${esc(LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
       ${exportBar('loads')}
@@ -4185,9 +4268,7 @@
       _emp: w.jobs > 0 ? { jobs: w.jobs, uses: [], totalM2: 0 } : null,
     };
     if (state.servicing) {
-      p.pz = PeelAreas.locate(state.servicing.zones, p.lng, p.lat); p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
-      p.pzNear = p.pz.length ? null : dcVia(p, 'pz') || PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
-      p.drNear = p.dr.length ? null : dcVia(p, 'dr') || PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
+      tagAreas(p);
     }
     return p;
   }
@@ -4484,7 +4565,8 @@
         for (let k = 0; k < c.length; k += 2) { const key = `${Math.floor(c[k] / 0.004)},${Math.floor(c[k + 1] / 0.003)}`; (grid.get(key) || grid.set(key, []).get(key)).push(i); }
       });
       SEW.grid = grid;
-      if (mstyle.cap === 'pipes') renderCapLayer();
+      // Blocks: the pumping stations' loads come from the pipes, so redo the tables and layers.
+      if (state.servicing && state.servicing.blocks) renderSvcTab(); else if (mstyle.cap === 'pipes') renderCapLayer();
       if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject);
       if (!$('#detail').hidden && $('#detail').dataset.view === 'dctiming') showDcTiming();
       return d;
@@ -5163,7 +5245,7 @@
   }
   // Pumping station on a traced catchment's outlet.
   function psCons(a) {
-    const M = state.svcModel, sp = spsOf(a), l = M && M.cum.get(a.id); if (!sp || !l) return null;
+    const M = state.svcModel, sp = spsOf(a), l = M && psLoads(a); if (!sp || !l) return null;
     const flow = ll => (M.pdwf(ll, 1) + M.ii(ll)) * 1e6 / 86400;
     const at = y => y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? { ...l, proposed: 0, jproposed: 0 } : atYear(l, y);
     const q = y => flow(at(y)), cap = sp.firmLs, com = at('committed'), room = cap - flow(com);
@@ -5283,7 +5365,7 @@
       }
       for (const g of groups.values()) { const ok = g.list.filter(x => !x.check), c = (ok.length ? ok : g.list).slice().sort((a, b) => a.people - b.people)[0]; out.push({ ...c, id: `dgrp:${c.i}`, n: g.list.length, members: g.list.map(x => x.i) }); }
     }
-    for (const a of f.path) { const c = a.kind === 'ps' && cached(`ps:${a.id}`, () => psCons(a)); if (c) out.push(c); }
+    for (const a of new Set([...f.path.filter(x => x.kind === 'ps'), ...f.sps.map(x => x.a)])) { const c = cached(`ps:${a.id}`, () => psCons(a)); if (c) out.push(c); }
     if (f.pl && f.pl !== 'Toronto') { const c = cached(`plant:${f.pl}`, () => plantCons(f.pl)); if (c) out.push(c); }
     if (f.z) {
       const c = cached(wellSystem[f.z.zone] ? `wsys:${f.z.zone}` : 'wsys:lake', () => waterPlantCons(f.z)); if (c) out.push(c);
@@ -5378,7 +5460,7 @@
     } else if (it.fc) {
       const fc = it.fc;
       if (fc.sys === 'wastewater' && fc.kind === 'plant' && fc.plant) { const c = cached(`plant:${fc.plant}`, () => plantCons(fc.plant)); if (c) out.push(reg(c)); }
-      if (fc.sys === 'wastewater' && fc.kind === 'pumping_station') for (const a of state.servicing.drainage) { if (a.kind !== 'ps') continue; const c = cached(`ps:${a.id}`, () => psCons(a)); if (c && c.relief.some(r => r.fc === fc)) out.push(reg(c)); }
+      if (fc.sys === 'wastewater' && fc.kind === 'pumping_station') for (const a of state.servicing.psAreas || []) { const c = cached(`ps:${a.id}`, () => psCons(a)); if (c && c.relief.some(r => r.fc === fc)) out.push(reg(c)); }
       if (fc.sys === 'water') {
         if (fc.kind === 'plant') { const c = cached('wsys:lake', () => waterPlantCons({ zone: '1' })); if (c) out.push(reg(c)); }
         for (const z of ['AV13', 'CE9']) { const zz = state.servicing.zones.find(x => x.zone === z); const c = zz && cached(`wsys:${z}`, () => waterPlantCons(zz)); if (c && c.relief.some(r => r.fc === fc)) out.push(reg(c)); }
@@ -5452,7 +5534,7 @@
           out.push(reg({ ...c, id: `grp:${k}`, n: members.length, members }));
         }
       }
-      for (const a of state.servicing.drainage) { const c = a.kind === 'ps' && cached(`ps:${a.id}`, () => psCons(a)); if (c) out.push(reg(c)); }
+      for (const a of state.servicing.psAreas || []) { const c = cached(`ps:${a.id}`, () => psCons(a)); if (c) out.push(reg(c)); }
       for (const pl of ['Lakeview', 'Clarkson', 'Inglewood']) { const c = cached(`plant:${pl}`, () => plantCons(pl)); if (c) out.push(reg(c)); }
       { const c = cached('wsys:lake', () => waterPlantCons({ zone: '1' })); if (c) out.push(reg(c)); }
       for (const z of ['AV13', 'CE9']) { const zz = state.servicing.zones.find(x => x.zone === z); const c = zz && cached(`wsys:${z}`, () => waterPlantCons(zz)); if (c) out.push(reg(c)); }
@@ -6424,5 +6506,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id) };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch) };
 })();
