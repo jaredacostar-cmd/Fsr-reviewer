@@ -1052,7 +1052,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 /* Map tools: one button, a small menu beside it */
 .leaflet-control[hidden] { display: none !important; }
 .tools-ctl { position: relative; }
-.tools-menu { position: absolute; left: calc(100% + 6px); top: 0; display: grid; gap: 2px; padding: 4px; min-width: 170px;
+.tools-menu { position: absolute; left: 0; top: calc(100% + 6px); z-index: 5; display: grid; gap: 2px; padding: 4px; min-width: 170px;
   background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); }
 .tools-menu[hidden] { display: none; }
 .tools-menu button { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border: 0; border-radius: 6px; background: none; color: var(--text-primary); font-size: 13px; text-align: left; cursor: pointer; white-space: nowrap; }
@@ -1074,3 +1074,28 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dv-tabs button { flex: 1 1 auto; border: 0; background: none; padding: 9px 8px 7px; font-size: 13px; font-weight: 600; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
 .dv-tabs button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--accent); }
 .dv-pane[hidden] { display: none; }
+
+/* Watchlist */
+.head .watch-btn { float: right; margin: 0 28px 4px 8px; border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); border-radius: 999px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+.head .watch-btn.on { border-color: #e8a33d; color: #a35f00; background: color-mix(in srgb, #e8a33d 14%, var(--surface-1)); font-weight: 600; }
+.watch-ch { color: var(--accent); }
+.badge-n.watch-n { background: #e8a33d; margin-left: 2px; }
+/* Saved views */
+.mo-saved { display: flex; gap: 4px; align-items: center; }
+.mo-saved select { flex: 1; min-width: 0; }
+/* Tips tour */
+.tour { position: fixed; inset: 0; z-index: 4000; background: rgba(0,0,0,.35); }
+.tour-hole { position: fixed; border-radius: 10px; box-shadow: 0 0 0 3px var(--accent), 0 0 0 9999px rgba(0,0,0,.25); pointer-events: none; }
+.tour-card { position: fixed; background: var(--surface-1); color: var(--text-primary); border-radius: 12px; padding: 12px 14px; box-shadow: 0 8px 30px rgba(0,0,0,.3); font-size: 13px; }
+.tour-card p { margin: 6px 0 10px; color: var(--text-secondary); line-height: 1.45; }
+.tour-n { font-size: 11px; color: var(--text-muted); margin-bottom: 2px; }
+.tour-btns { display: flex; justify-content: space-between; }
+.head .watch-btn.memo-btn { margin-right: 6px; }
+
+/* Heatmap and ground profile */
+.heat-canvas { position: absolute; inset: 0; z-index: 450; pointer-events: none; }
+.heat-canvas[hidden] { display: none; }
+.lg-heat { height: 8px; border-radius: 4px; margin: 4px 0; background: linear-gradient(90deg, #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c); }
+.tp-elev { display: block; width: 100%; }
+.elev-svg { display: block; margin: 4px 0 2px; }
+.leaflet-top.leaflet-left { z-index: 1001; }   /* the Tools menu opens over the options panel */

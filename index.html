@@ -42,7 +42,7 @@
 
       <nav class="tabs" role="tablist" aria-label="Sidebar">
         <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Explore</button>
-        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span></button>
+        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span></button>
         <button type="button" role="tab" id="tab-btn-data" aria-controls="tab-data" aria-selected="false" data-tab="data">Data</button>
       </nav>
 
@@ -159,6 +159,10 @@
 
       <!-- ===== This week ===== -->
       <div class="tab-panel" id="tab-week" role="tabpanel" aria-labelledby="tab-btn-week" hidden>
+        <section class="panel" id="watch-panel">
+          <div class="panel-head"><h2 class="label" data-info="watchlist">Your watchlist</h2><span class="muted small" id="watch-head"></span></div>
+          <ol class="project-list" id="watch-list"></ol>
+        </section>
         <section class="panel changes" id="changes">
           <div class="panel-head"><h2 class="label">Changes since last update</h2><span class="muted small" id="changes-head"></span></div>
           <p class="small" id="changes-summary">Changes appear after the next weekly update (Mondays).</p>
