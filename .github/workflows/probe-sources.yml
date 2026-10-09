@@ -15,7 +15,7 @@ name: Probe data sources
 #  mode=dc-maps: download the 2026 DC capital maps (water, wastewater) as text, images, SVG and any GeoPDF layers (ref-docs-dc branch)
 #  mode=linework: existing watermains, sanitary mains, storm sewers and ponds published for Peel (log only)
 #  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
-#  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen) from the Region's sanitary mains, committed to this branch
+#  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen) and data/water-supply.json (large mains across zone boundaries) from the Region's mains, committed to this branch
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
@@ -69,10 +69,11 @@ jobs:
         run: |
           node scripts/fetch-linework-raw.js --out /tmp/linework-raw
           node scripts/build-sewer-capacity.js --raw /tmp/linework-raw --out data
+          node scripts/build-water-supply.js --raw /tmp/linework-raw --out data
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/sewers.json
-          git diff --cached --quiet || { git commit -m "Sewer pipe capacity data"; git push; }
+          git add data/sewers.json data/water-supply.json
+          git diff --cached --quiet || { git commit -m "Sewer pipe capacity and water supply data"; git push; }
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
