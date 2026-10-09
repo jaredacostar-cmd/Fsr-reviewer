@@ -82,5 +82,11 @@ test('info texts load (no syntax errors) and every entry has a title and body', 
   const vm = require('vm');
   const ctx = { window: {}, self: {} }; ctx.globalThis = ctx;
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'info.js'), 'utf8'), ctx);
-  new vm.Script(fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8'));
+  const app = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+  new vm.Script(app);
+  const info = fs.readFileSync(path.join(__dirname, '..', 'js', 'info.js'), 'utf8');
+  for (const k of ['fire-storm', 'existing-pipes', 'dev-brief']) {
+    assert.ok(app.includes(`data-info="${k}"`), `app uses ${k}`);
+    assert.ok(info.includes(`'${k}': {`), `info has ${k}`);
+  }
 });
