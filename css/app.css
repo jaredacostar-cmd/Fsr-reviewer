@@ -772,3 +772,7 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .svc-notes > summary:hover { color: var(--text-primary); }
 .svc-table small.tech { display: none; }
 .show-tech .svc-table small.tech { display: block; }
+.chk-table { font-size: 12px; margin: 4px 0 8px; }
+.chk-table td small { display: block; color: var(--text-muted); font-size: 10.5px; }
+.chk-table td:first-child { text-align: left; }
+.svc-verdict { margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 7%, transparent); }

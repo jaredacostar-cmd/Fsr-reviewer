@@ -1311,6 +1311,7 @@
       <details class="sect" open><summary><h2 class="section-title" data-info="aerial">Aerial check</h2></summary>
         <div class="aerial" id="aerial-check"></div></details>
       ${buildoutHTML(p)}
+      ${servicingCheckHTML(p)}
       ${demandHTML(p)}
       <details class="sect"><summary><h2 class="section-title" data-info="phase-progress">Progress &amp; timeline</h2></summary>
         <ol class="stepper">${steps}</ol>
@@ -1785,6 +1786,46 @@
     }
     svcLayers[k].addTo(map);
   }
+  // Servicing check for one development (development panel): its own flows at Peel design
+  // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
+  // with its share of the flow at each outlet, and what it means for the plant's uncommitted
+  // reserve capacity.
+  function servicingCheckHTML(p) {
+    const M = state.svcModel;
+    if (!state.servicing || !M) return servicingLineHTML(p);
+    const c = state.criteria, e = D.estimate([p], c, 'all', jobsOf), cb = e.combined;
+    if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return servicingLineHTML(p);
+    const mld = D.toMLd, ls = uLs, pct = (a, b) => b > 0 ? `${(a / b * 100) < 1 ? (a / b * 100).toFixed(2) : Math.round(a / b * 100)}%` : '–';
+    const layer = p.phase === 'completed' ? 'built' : D.COMMITTED_PHASES.has(p.phase) ? 'approved' : (p.phase === 'inception' || p.phase === 'review') ? 'proposed' : null;
+    const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
+    // Water: its pressure zone.
+    const z = (p.pz || []).map(id => svcById.get(id)).filter(Boolean)[0];
+    const zl = z && M.zones.get(z.id);
+    const zMax = zl ? M.wMax(M.total(zl), M.jobs(zl)) : 0;
+    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
+    const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
+    // Sewer path to the plant.
+    let d = (p.dr || []).map(id => svcById.get(id)).filter(Boolean)[0];
+    const path = []; const seen = new Set();
+    while (d && !seen.has(d.id)) { seen.add(d.id); path.push(d); d = d.downstream ? svcById.get(d.downstream) : null; }
+    const devAvg = mld(cb.wastewater.avg);
+    const pathRows = path.map((a, i) => {
+      const l = M.cum.get(a.id), f = M.fOf(a.plant), out = l ? M.adwf(l, f) : 0;
+      return `<tr><td>${i ? '↳ ' : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? 'pumping station — capacity not published' : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
+    }).join('');
+    const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
+    let plant = '';
+    if (cap) {
+      const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
+      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + approved ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
+        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}.</p>`;
+    } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
+    return `<details class="sect" open><summary><h2 class="section-title" data-info="servicing-check">Servicing check</h2><span class="muted small sect-sum">${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : ''}${pl ? ` · ${esc(plantLabel(pl))}` : ''}</span></summary>
+      <table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
+      ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
+      ${plant}
+      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Downstream pumping station and trunk capacities are not published by the Region, so only the plant is checked against capacity.</p></details>`;
+  }
   // Project panel line: its pressure zone and drainage area.
   function servicingLineHTML(p) {
     if (!state.servicing) return '';
@@ -2011,6 +2052,17 @@
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Click a catchment to see its flow path to the lake on the map.</p></details>`;
     renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
+    // Kept for the development panel's servicing check and the export.
+    const dvR = R && R.wastewater.diversion, divMldOf = pl => !(dvR && svcOpt.div === 'on') ? 0 : pl === dvR.from ? -dvR.mld : pl === dvR.to ? dvR.mld : 0;
+    const plantCap = pl => {
+      const rep = R && R.wastewater.plants[pl]; if (!rep) return null;
+      const s = plantSum(pl), f = fOf(pl), ext = inflowsTo(pl) + divMldOf(pl);
+      const up = n => { const o = { census: s.census, built: n > 0 ? s.built : 0, approved: n > 1 ? s.approved : 0, proposed: n > 2 ? s.proposed : 0, jbuilt: n > 0 ? s.jbuilt : 0, japproved: n > 1 ? s.japproved : 0, jproposed: n > 2 ? s.jproposed : 0 }; return adwf(o, f) + ext; };
+      const today = { census: s.census, built: s.built, approved: 0, proposed: 0, jbuilt: s.jbuilt }, popToday = total(today);
+      return { rated: rep.ratedMLd, name: rep.name, existing: up(1), committed: up(2), buildout: up(3), f, perPerson: popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0 };
+    };
+    for (const d of state.servicing.drainage) cumOf(d);
+    state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg };
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
   }
   // Reported 2025 water production next to the model (Water tab).
