@@ -9,7 +9,7 @@ name: Probe data sources
 #  mode=census:  earlier census (2016) population by dissemination area
 #  mode=servicing: Peel water pressure zones and wastewater drainage areas
 #  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
-#  mode=peel-reports: download Peel wastewater annual reports and water quality reports (+ text)  to the peel-reports branch
+#  mode=peel-reports: download Peel wastewater annual reports and water quality reports to the peel-reports branch
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
