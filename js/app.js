@@ -261,8 +261,8 @@
   // ---- 2021 Census dissemination areas: very light outlines, toggled in the map options ----
   // Loaded on first use (data/das.json, built with data/areas.json); drawn on a canvas in a pane
   // under the site outlines, with the DA's population on hover / tap.
-  // On by default as a faint border; the map options can turn it off.
-  let daOn = store.get('censusAreas', true) !== false;
+  // Off by default (needed for the Growth tab's context); the map options turn it on.
+  let daOn = store.get('censusAreas', false) === true;
   let daLayer = null, daLoading = null, daYear = null;
   const daCache = new Map();   // census year -> Promise of its outline layer
   // Inside the rotating pane (leaflet-rotate) with the tiles and overlays: a pane made directly
@@ -380,7 +380,7 @@
     ? '<rect x="3" y="2" width="16" height="10" rx="1" fill="#0b7285" fill-opacity=".1" stroke="#0b7285" stroke-width="1.6" stroke-dasharray="3 2"/>'
     : '<rect x="3" y="2" width="8" height="10" fill="#2f7ed8" fill-opacity=".25" stroke="#2f7ed8"/><rect x="11" y="2" width="8" height="10" fill="#d9822b" fill-opacity=".25" stroke="#d9822b"/>'}</svg>`;
   const MSTYLE = {
-    color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant' },
+    color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', zone: 'Pressure zone growth' },
   };
@@ -440,7 +440,7 @@
       const w = new Map(), col = new Map();
       let tot = 0;
       for (const m of kids) { const v = sized ? m.options.pop || 0 : 1; tot += v; w.set(m.options.cat, (w.get(m.options.cat) || 0) + v); col.set(m.options.cat, m.options.col); }
-      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : [...w.keys()].sort();
+      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : mstyle.color === 'quality' ? Object.keys(QUALITY) : [...w.keys()].sort();
       let acc = 0; const stops = [];
       for (const k of order) {
         const n = w.get(k); if (!n) continue;
@@ -566,7 +566,20 @@
     return D.COMMITTED_PHASES.has(p.phase) ? 'approved' : 'proposed';
   }
   const plantOfDev = p => { const a = state.servicing && svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0]; return a ? a.plant : 'none'; };
+  // Data quality: what to check before relying on a development's numbers.
+  const QUALITY = {
+    far: ['#e03131', 'No zone / catchment within 5 km'], near: ['#f08c00', 'Assigned to the nearest area'],
+    nounits: ['#9c36b5', 'No units or floor area stated'], estarea: ['#4dabf7', 'Site area estimated (no boundary)'], ok: ['#2f9e44', 'Complete'],
+  };
+  function qualityOf(p) {
+    if (state.servicing && p.lat != null && !svcIds(p, 'dr').length && !svcIds(p, 'pz').length) return 'far';
+    if (state.servicing && (nearOf(p, 'dr') || nearOf(p, 'pz'))) return 'near';
+    if (!(p.units > 0) && !(jobsOf(p) > 0)) return 'nounits';
+    if (!(p.siteAreaHa > 0)) return 'estarea';
+    return 'ok';
+  }
   function markerCat(p) {
+    if (mstyle.color === 'quality') { const k = qualityOf(p); return [k, QUALITY[k][0]]; }
     if (mstyle.color === 'layer') { const k = svcLayerOf(p); return [k, layerColors()[k]]; }
     if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, PLANT_COLOR[k] || '#b8b8b8']; }
     return [p.phase, colors[p.phase]];
@@ -1096,7 +1109,7 @@
       const [cat, col] = markerCat(p), pop = mstyle.size === 'pop' ? popOf(p) : 0;
       const m = L.marker([p.lat, p.lng], { icon: markerIcon(p), phase: p.phase, cat, col, pop, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : 0 });
       const near = state.servicing && (nearOf(p, 'dr') || nearOf(p, 'pz'));
-      m.bindTooltip(`<strong>${esc(p.title)}</strong><br>${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${mstyle.color === 'layer' ? `<br>${esc(LAYER_NAME[cat])}` : mstyle.color === 'plant' ? `<br>→ ${esc(cat === 'none' ? 'no traced catchment' : PLANT_SHORT[cat])}` : ''}${pop ? `<br>${fmtNum(Math.round(pop))} people + jobs at build-out` : ''}${near ? '<br><span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`, { className: 'pt', direction: 'top', offset: [0, -8] });
+      m.bindTooltip(`<strong>${esc(p.title)}</strong><br>${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${mstyle.color === 'layer' ? `<br>${esc(LAYER_NAME[cat])}` : mstyle.color === 'quality' ? `<br>${esc(QUALITY[cat][1])}` : mstyle.color === 'plant' ? `<br>→ ${esc(cat === 'none' ? 'no traced catchment' : PLANT_SHORT[cat])}` : ''}${pop ? `<br>${fmtNum(Math.round(pop))} people + jobs at build-out` : ''}${near ? '<br><span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`, { className: 'pt', direction: 'top', offset: [0, -8] });
       m.on('click', () => showDetail(p));
       markerByKey.set(p.key, m);
       projectByMarker.set(m, p);
@@ -2176,6 +2189,7 @@
       p.pzNear = p.pz.length ? null : PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
       p.drNear = p.dr.length ? null : PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
     }
+    state.whatifs = whatIfs.filter(w => w.include).map(whatIfProject);
   }
   const NEAR_M = 5000;
   // The development's pressure zone / drainage area ids: mapped, else (switch on) the nearest.
@@ -2330,7 +2344,7 @@
     return j;
   }
   function svcLayerTotals(key, a, bc) {
-    const devs = state.projects.filter(p => p.phase !== 'cancelled' && svcIds(p, key).includes(a.id));
+    const devs = state.projects.concat(state.whatifs || []).filter(p => p.phase !== 'cancelled' && svcIds(p, key).includes(a.id));
     const gr = PeelAreas.growthSince(devs, {}, bc.date, state.criteria);
     return { census: svcCensusPop(bc).get(a.id) || 0, built: gr.built.population, approved: gr.approved.population, proposed: gr.proposed.population,
       ...svcJobs(devs, bc.date),
@@ -2843,6 +2857,7 @@
     growth: { title: 'Growth and demand', els: () => [$('#pane-demand'), $('#census')].filter(e => e && !e.hidden) },
     dev: { title: 'Development servicing summary', els: () => [$('#detail-body')] },
     loads: { title: 'What loads it', els: () => [$('#detail-body')] },
+    whatif: { title: 'Test site servicing check', els: () => [$('#detail-body')] },
   };
   function cleanClone(el) {
     const c = el.cloneNode(true);
@@ -3051,10 +3066,15 @@
   const bucket = (v, scale) => scale.find(([t]) => v < t)[1];
   const fmtPct = v => !isFinite(v) ? 'new (no census flow)' : `${v >= 0 ? '+' : ''}${Math.round(v)}%`;
   const capLayer = L.layerGroup().addTo(map);
+  // Capacity by year: built since the census in full, approved and proposed growth phased in as in
+  // Horizon years (approved over aYears from aStart, proposed over pYears from pStart).
+  let capYear = null;
+  const hzFrac = y => { const f = (start, n) => Math.min(1, Math.max(0, (y - start + 1) / Math.max(1, n))); return { fa: f(hz.aStart, hz.aYears), fp: f(hz.pStart, hz.pYears) }; };
+  const atYear = (l, y) => { if (y == null || !l) return l; const { fa, fp } = hzFrac(y); return { ...l, approved: l.approved * fa, proposed: l.proposed * fp, japproved: (l.japproved || 0) * fa, jproposed: (l.jproposed || 0) * fp }; };
   const censusOnly = l => ({ census: l.census, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, ha: l.ha });
   // Build-out flows of a drainage area (design flows, as for pumping station firm capacity).
-  function psLoad(a) {
-    const M = state.svcModel, sp = spsOf(a), l = M && M.cum.get(a.id);
+  function psLoad(a, y = null) {
+    const M = state.svcModel, sp = spsOf(a), l = M && atYear(M.cum.get(a.id), y);
     if (!sp || !l) return null;
     const dry = M.pdwf(l, 1) * 1e6 / 86400, wet = (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400;
     return { firm: sp.firmLs, dry, wet, pct: wet / sp.firmLs * 100 };
@@ -3062,11 +3082,11 @@
   function capValue(a) {
     const M = state.svcModel;
     if (mstyle.cap === 'zone') {
-      const l = M.zones.get(a.id); if (!l) return null;
+      const l = atYear(M.zones.get(a.id), capYear); if (!l) return null;
       const now = M.wMax(l.census, 0), bo = M.wMax(M.total(l), M.jobs(l));
       return { v: now > 0 ? (bo - now) / now * 100 : bo > 0 ? Infinity : 0, now, bo };
     }
-    const l = M.local.get(a.id); if (!l) return null;
+    const l = atYear(M.local.get(a.id), capYear); if (!l) return null;
     const now = M.adwf(censusOnly(l)), bo = M.adwf(l);
     return { v: now > 0 ? (bo - now) / now * 100 : bo > 0 ? Infinity : 0, now, bo, l };
   }
@@ -3078,12 +3098,12 @@
     for (const a of list) {
       let fill = null, tip = `<strong>${esc(a.zone ? a.name : drName(a))}</strong>`;
       if (mstyle.cap === 'ps') {
-        const pl = psLoad(a);
-        if (pl) { fill = bucket(pl.pct, CAP_PS); tip += `<br>Pumping station firm ${fmtNum(pl.firm)} L/s · build-out peak dry ${fmtNum(Math.round(pl.dry))} L/s, peak wet ≈${fmtNum(Math.round(pl.wet))} L/s (<strong>${Math.round(pl.pct)}%</strong> of firm)`; }
+        const pl = psLoad(a, capYear);
+        if (pl) { fill = bucket(pl.pct, CAP_PS); tip += `<br>Pumping station firm ${fmtNum(pl.firm)} L/s · ${capYear == null ? 'build-out' : capYear} peak dry ${fmtNum(Math.round(pl.dry))} L/s, peak wet ≈${fmtNum(Math.round(pl.wet))} L/s (<strong>${Math.round(pl.pct)}%</strong> of firm)`; }
         else tip += `<br><span class="muted">${a.kind === 'ps' ? 'Pumping station not in the master plan table' : 'Gravity catchment (no pumping station)'}</span>`;
       } else {
         const c = capValue(a);
-        if (c) { fill = bucket(c.v, CAP_GROWTH); tip += `<br>${mstyle.cap === 'zone' ? 'Max day' : 'Local average dry weather'} ${uML(c.now)} today → ${uML(c.bo)} at build-out (<strong>${fmtPct(c.v)}</strong>)`; }
+        if (c) { fill = bucket(c.v, CAP_GROWTH); tip += `<br>${mstyle.cap === 'zone' ? 'Max day' : 'Local average dry weather'} ${uML(c.now)} today → ${uML(c.bo)} ${capYear == null ? 'at build-out' : `by ${capYear}`} (<strong>${fmtPct(c.v)}</strong>)`; }
       }
       tip += '<br><span class="muted">Tap: what loads it</span>';
       L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: fill || '#9aa0a6', weight: 1, opacity: 0.9, fill: true, fillColor: fill || '#9aa0a6', fillOpacity: fill ? 0.5 : 0.05 })
@@ -3099,7 +3119,7 @@
       const nx = d.downstream && svcById.get(d.downstream), pl = plants.find(p => p.name === d.plant);
       const to = nx ? nx.outletAt || (pl && pl.lnglat) : pl && pl.lnglat;
       if (d.outletAt && to && (d.outletAt[0] !== to[0] || d.outletAt[1] !== to[1])) L.polyline([ll(d.outletAt), ll(to)], { className: 'svc-flow-net', interactive: false }).addTo(layer);
-      const ps = d.kind === 'ps' && d.outletAt && psLoad(d);
+      const ps = d.kind === 'ps' && d.outletAt && psLoad(d, capYear);
       if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: '#fff', fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
         .bindTooltip(`<strong>${esc(drName(d).replace(/^[^·]+· /, ''))}</strong><br>${Math.round(ps.pct)}% of firm at build-out (peak wet)`, { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); showLoads(d.id); }).addTo(layer);
@@ -3117,6 +3137,12 @@
   const Legend = L.Control.extend({ options: { position: phoneMap ? 'bottomleft' : 'topleft' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
+    el.addEventListener('input', e => {
+      if (!e.target.dataset.capyear) return;
+      const v = +e.target.value; capYear = v > hz.end ? null : v;
+      e.target.previousElementSibling.textContent = capYear == null ? 'Build-out' : `Year ${capYear}`;
+      clearTimeout(el._t); el._t = setTimeout(renderCapLayer, 120);
+    });
     return el;
   } });
   const legend = new Legend().addTo(map);
@@ -3124,12 +3150,14 @@
     const el = legend.getContainer(), parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
     if (mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(layerColors()[k], t)).join('')}</ul>`);
+    if (mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(PLANT_COLOR[k], PLANT_SHORT[k])).join('')}${sw('#b8b8b8', 'No traced catchment')}</ul>`);
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
-    if (state.servicing && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
+    if (state.servicing && mstyle.color !== 'quality' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
-    if (mstyle.cap !== 'off') parts.push(`<p class="lg-s">${esc(scenarioText())}</p>`);
+    if (mstyle.cap !== 'off') parts.push(`<label class="lg-year"><span>${capYear == null ? 'Build-out' : `Year ${capYear}`}</span><input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" data-capyear="1" aria-label="Capacity year"></label>
+      <p class="lg-s">Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
     el.innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
     el.hidden = !parts.length;
   }
@@ -3245,6 +3273,148 @@
     setTimeout(() => window.print(), 1200);
   }
   $('#btn-print-map').onclick = printMap;
+
+  // ---- Measure, buffer select and test-site tools -------------------------------------------
+  // Measure: tap points on the map for the distance along them; Buffer: select the shown
+  // developments within a radius of the last point (adds to the selection, like the lasso).
+  const toolLayer = L.layerGroup().addTo(map);
+  const tool = { mode: null, pts: [] };
+  const toolPanel = L.DomUtil.create('div', 'tool-panel', map.getContainer());
+  L.DomEvent.disableClickPropagation(toolPanel); L.DomEvent.disableScrollPropagation(toolPanel);
+  toolPanel.hidden = true;
+  const metres = (a, b) => map.distance(a, b);
+  const fmtDist = m => m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(2)} km`;
+  function setTool(mode) {
+    tool.mode = tool.mode === mode ? null : mode;
+    tool.pts = []; toolLayer.clearLayers();
+    document.querySelectorAll('.tool-ctl [data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === tool.mode));
+    map.getContainer().classList.toggle('tool-on', !!tool.mode);
+    if (tool.mode && lassoOn) setLasso(false);
+    if (tool.mode && innerWidth <= 760) closeDetail();
+    renderToolPanel();
+  }
+  function renderToolPanel() {
+    toolPanel.hidden = !tool.mode;
+    if (tool.mode === 'measure') {
+      const d = tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0);
+      toolPanel.innerHTML = `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(d)}</span>`}
+        ${tool.pts.length ? `<span class="tp-row">Select within <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small" data-buffer="${r}">${fmtDist(r)}</button>`).join('')}</span> of the last point</span>` : ''}
+        <span class="tp-row"><button type="button" class="btn small link" data-tool-clear="1">Clear</button> <button type="button" class="btn small link" data-tool-done="1">Done</button></span>`;
+    } else if (tool.mode === 'whatif') {
+      toolPanel.innerHTML = `<strong>Test a site</strong> <span class="muted">tap the map where the site is</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
+    }
+  }
+  toolPanel.addEventListener('click', e => {
+    if (e.target.closest('[data-tool-done]')) return setTool(null);
+    if (e.target.closest('[data-tool-clear]')) { tool.pts = []; toolLayer.clearLayers(); return renderToolPanel(); }
+    const b = e.target.closest('[data-buffer]'); if (!b || !tool.pts.length) return;
+    const c = tool.pts[tool.pts.length - 1], r = +b.dataset.buffer;
+    let added = 0;
+    for (const p of state.filtered) if (p.lat != null && !selection.has(p.key) && metres(c, [p.lat, p.lng]) <= r) { selection.set(p.key, p); added++; }
+    // The circle as a ring, so it draws and exports like a lasso area.
+    const ring = []; for (let i = 0; i <= 48; i++) { const t = i / 48 * 2 * Math.PI, dy = r * Math.cos(t) / 111320, dx = r * Math.sin(t) / (111320 * Math.cos(c.lat * Math.PI / 180)); ring.push([c.lng + dx, c.lat + dy]); }
+    selAreas.push(ring); drawSelection(); showSelection(added);
+  });
+  map.on('click', e => {
+    if (tool.mode === 'measure') {
+      tool.pts.push(e.latlng);
+      toolLayer.clearLayers();
+      if (tool.pts.length > 1) L.polyline(tool.pts, { className: 'measure-line', interactive: false }).addTo(toolLayer);
+      tool.pts.forEach((p, i) => L.circleMarker(p, { radius: 4, className: 'measure-pt', interactive: false }).bindTooltip(i ? fmtDist(tool.pts.slice(0, i + 1).reduce((t, q, j) => j ? t + metres(tool.pts[j - 1], q) : 0, 0)) : 'start', { permanent: i === tool.pts.length - 1 && i > 0, className: 'pt', direction: 'right' }).addTo(toolLayer));
+      renderToolPanel();
+    } else if (tool.mode === 'whatif') {
+      setTool(null);
+      showWhatIf(e.latlng);
+    }
+  });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && tool.mode) setTool(null); });
+  const ToolControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar tool-ctl');
+      el.innerHTML = `<a href="#" role="button" data-tool="measure" title="Measure distance / select within a radius" aria-label="Measure"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2" stroke="currentColor" stroke-width="1.6"/></svg></a>
+        <a href="#" role="button" data-tool="whatif" title="Test a site: servicing check for a proposed development" aria-label="Test a site"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 22s7-7.2 7-12a7 7 0 0 0-14 0c0 4.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v6M9 10h6" stroke="currentColor" stroke-width="1.8"/></svg></a>`;
+      L.DomEvent.disableClickPropagation(el);
+      el.addEventListener('click', e => { const b = e.target.closest('[data-tool]'); if (b) { e.preventDefault(); setTool(b.dataset.tool); } });
+      return el;
+    },
+  });
+  new ToolControl().addTo(map);
+
+  // Test a site: a proposed development placed on the map, with its servicing check — pressure
+  // zone, sewer path, pumping station and plant reserve — before an application exists. It can be
+  // counted in the Water / Wastewater totals as a proposed development (kept in this browser).
+  state.whatifs = [];
+  const whatIfLayer = L.layerGroup().addTo(map);
+  function whatIfProject(w) {
+    const units = w.single + w.town + w.apartment;
+    const p = {
+      key: `whatif:${w.id}`, whatif: true, title: w.name || 'Test site', municipality: w.municipality || '', lat: w.lat, lng: w.lng,
+      phase: w.phase, rank: P.PHASE_BY_KEY[w.phase].rank, units, unitMix: { single: w.single, semi: 0, town: w.town, apartment: w.apartment },
+      types: [], description: '', records: [], kinds: ['application'], milestones: {}, timeline: [], sp: [], mtsa: [], siteAreaHa: w.ha > 0 ? w.ha : null,
+      buildout: units ? { planned: units, permitted: 0, completed: 0, remaining: units, unbuilt: units, permits: 0 } : null,
+      _emp: w.jobs > 0 ? { jobs: w.jobs, uses: [], totalM2: 0 } : null,
+    };
+    if (state.servicing) {
+      p.pz = PeelAreas.locate(state.servicing.zones, p.lng, p.lat); p.dr = PeelAreas.locate(state.servicing.drainage, p.lng, p.lat);
+      p.pzNear = p.pz.length ? null : PeelAreas.nearest(state.servicing.zones, p.lng, p.lat, NEAR_M);
+      p.drNear = p.dr.length ? null : PeelAreas.nearest(state.servicing.drainage, p.lng, p.lat, NEAR_M);
+    }
+    return p;
+  }
+  let whatIfs = (store.get('whatifs', []) || []).filter(w => w && w.lat != null);
+  function syncWhatIfs() {
+    store.set('whatifs', whatIfs);
+    state.whatifs = whatIfs.filter(w => w.include).map(whatIfProject);
+    whatIfLayer.clearLayers();
+    for (const w of whatIfs) {
+      L.marker([w.lat, w.lng], { draggable: true, icon: L.divIcon({ className: 'whatif-mk', html: '<span>?</span>', iconSize: [24, 24] }) })
+        .bindTooltip(`<strong>${esc(w.name || 'Test site')}</strong><br>${fmtNum(w.single + w.town + w.apartment)} units${w.jobs ? ` · ${fmtNum(w.jobs)} jobs` : ''}${w.include ? '<br>Counted in the totals' : ''}`, { className: 'pt' })
+        .on('click', () => showWhatIf(null, w.id))
+        .on('dragend', e => { const ll = e.target.getLatLng(); w.lat = ll.lat; w.lng = ll.lng; syncWhatIfs(); showWhatIf(null, w.id); })
+        .addTo(whatIfLayer);
+    }
+    if (state.svcModel) renderSvcTab();
+  }
+  function showWhatIf(latlng, id) {
+    let w = id ? whatIfs.find(x => x.id === id) : null;
+    if (!w) {
+      const muni = (state.areas && state.censusDas) ? '' : '';
+      w = { id: Date.now().toString(36), name: `Test site ${whatIfs.length + 1}`, lat: latlng.lat, lng: latlng.lng, single: 0, town: 0, apartment: 200, jobs: 0, ha: 0, phase: 'review', include: false, municipality: muni };
+      whatIfs.push(w); syncWhatIfs();
+    }
+    const num = (k, label, step = 1) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-wf="${k}" value="${w[k]}"></label>`;
+    $('#detail-body').innerHTML = `
+      <div class="head"><h3><input class="wf-name" data-wf="name" value="${esc(w.name)}" aria-label="Name"></h3><div class="m">Test site · drag the pin to move it · not a real application</div></div>
+      <div class="wf-form">${num('single', 'Single / semi')}${num('town', 'Townhouses')}${num('apartment', 'Apartments')}${num('jobs', 'Jobs')}${num('ha', 'Site area (ha)', 0.1)}
+        <label class="field"><span>Layer</span><select data-wf="phase"><option value="review"${w.phase === 'review' ? ' selected' : ''}>Proposed</option><option value="approved"${w.phase === 'approved' ? ' selected' : ''}>Approved</option></select></label></div>
+      <label class="chk small"><input type="checkbox" data-wf="include"${w.include ? ' checked' : ''}> Count it in the Water / Wastewater totals and plant capacity</label>
+      <div id="wf-out"></div>
+      <p class="small"><button type="button" class="btn small link" data-wf-del="1">Remove this test site</button></p>`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'whatif';
+    $('#detail-body').dataset.wf = w.id;
+    renderWhatIfOut(w);
+  }
+  function renderWhatIfOut(w) {
+    const p = whatIfProject(w), f = svcFacts(p), out = $('#wf-out'); if (!out) return;
+    const e = D.estimate([p], state.criteria, 'all', jobsOf);
+    out.innerHTML = `<p class="small">${fmtNum(Math.round(e.population))} people${e.employment.jobs ? ` + ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at Peel persons per unit${p.siteAreaHa ? '' : ' · site area estimated from units for I&amp;I'}.</p>
+      <section class="brief"><div class="b-row"><div class="b-k">Servicing</div><div class="b-v">${servicingBriefHTML(p, f).replace(/<p class="small"><button[^]*?<\/p>/, '')}</div></div></section>
+      ${f ? servicingCheckHTML(p, f) : ''}${exportBar('whatif')}`;
+  }
+  $('#detail-body').addEventListener('input', e => {
+    const k = e.target.dataset && e.target.dataset.wf; if (!k) return;
+    const w = whatIfs.find(x => x.id === $('#detail-body').dataset.wf); if (!w) return;
+    w[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'number' ? Math.max(0, +e.target.value || 0) : e.target.value;
+    clearTimeout(w._t); w._t = setTimeout(() => { delete w._t; syncWhatIfs(); renderWhatIfOut(w); }, 250);
+  });
+  $('#detail-body').addEventListener('change', e => { if (e.target.dataset && (e.target.dataset.wf === 'include' || e.target.dataset.wf === 'phase')) e.target.dispatchEvent(new Event('input', { bubbles: true })); });
+  $('#detail-body').addEventListener('click', e => {
+    if (!e.target.closest('[data-wf-del]')) return;
+    whatIfs = whatIfs.filter(x => x.id !== $('#detail-body').dataset.wf); syncWhatIfs(); closeDetail();
+  });
+  syncWhatIfs();
+
 
   for (const id of ['#water-body', '#ww-body']) {
     $(id).addEventListener('click', e => { const r = e.target.closest('[data-svc]'); if (r) focusSvc(r.dataset.svc); });

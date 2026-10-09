@@ -243,6 +243,15 @@ application.
   when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
   and build-out flows and pumping station load. *Print map* prints the map landscape with a title
   block, scenario, legend, north arrow and scale.
+- **Map tools** (left of the map): *Measure* distances and select every shown development within
+  250 m – 2 km of a point; *Test a site* drops a proposed development (units by type, jobs, site
+  area) and gives its servicing check — zone, sewer path and pumping station load, plant reserve —
+  and can count it in the totals (kept in this browser, draggable).
+- **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
+  site area estimated, complete.
+- **Capacity by year**: the year slider in the legend phases approved and proposed growth in as set
+  in Horizon years, so catchments and pumping stations change colour as growth arrives.
+- Census area outlines are now off by default (turn on under Layers & style).
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
