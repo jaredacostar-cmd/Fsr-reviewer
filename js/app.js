@@ -828,7 +828,7 @@
       stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
       stat('Jobs', fmtNum(Math.round(em.jobs)), 'jobs', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
     ].join('');
-    $('#d-tiles').innerHTML = flowTablesHTML(e) + stampHTML('demand');
+    $('#d-tiles').innerHTML = flowTablesHTML(e) + stampHTML('demand') + exportBar('growth');
     renderSelection(set, basis);
 
     // Breakdown by dwelling type and by phase.
@@ -1625,6 +1625,8 @@
       <div class="sel-actions">
         <button type="button" class="btn" data-sel="add">+ Add area</button>
         <button type="button" class="btn" data-sel="csv">Export CSV</button>
+        <button type="button" class="btn" data-export="pdf" data-scope="dev">PDF / print</button>
+        <button type="button" class="btn" data-export="xlsx" data-scope="dev">Excel</button>
         <button type="button" class="btn" data-sel="clear">Clear</button>
       </div>
       <div class="summary" data-info="buildout"><div class="sum-tiles">
@@ -1821,6 +1823,7 @@
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}.</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `<details class="sect" open><summary><h2 class="section-title" data-info="servicing-check">Servicing check</h2><span class="muted small sect-sum">${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : ''}${pl ? ` · ${esc(plantLabel(pl))}` : ''}</span></summary>
+      ${exportBar('dev')}
       <table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
@@ -1959,7 +1962,7 @@
     const zones = state.servicing.zones.slice().sort(byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc) })).filter(r => total(r.l) > 0 || r.l.devs);
     const zsum = addLayers(zr.map(r => r.l));
-    $('#water-body').innerHTML = `${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}${sp ? optSwitch('md', 'Max day factor', [['design', `Design ×${c.water.maxDay}`], ['observed', `Observed 2025 ×${sp.maxDayFactor.toFixed(2)}`]]) : ''}</div>
+    $('#water-body').innerHTML = `${exportBar('water')}${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}${sp ? optSwitch('md', 'Max day factor', [['design', `Design ×${c.water.maxDay}`], ['observed', `Observed 2025 ×${sp.maxDayFactor.toFixed(2)}`]]) : ''}</div>
       <table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (ML/d) at ${observed ? `the observed 2025 factor ×${mdR.toFixed(2)}` : `design ×${mdR} residential, ×${mdE} employment`}; people and jobs below</caption>
       <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
@@ -2042,7 +2045,7 @@
     // The Peel total under calibration: each plant at its own factor (flows add; Harmon on the total).
     const peelF = peel.census + peel.built + peel.approved + peel.proposed > 0 ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     const calNote = svcOpt.ww === 'calibrated' ? `<p class="small cal-note"><strong>Capacity check (calibrated to 2025 flows):</strong> ${secs.filter(x => x.f !== 1).map(x => `${esc(PLANT_SHORT[x.pl])} ×${x.f.toFixed(2)}`).join(' · ')}. Each plant's population and employment flow is scaled so that today (census + built since${R && R.wastewater.inflows.some(x => x.plant) ? ', plus the York Region inflow at G.E. Booth' : ''}) matches its 2025 reported annual average; the factor absorbs existing employment, institutional and commercial flow, infiltration in dry weather and any flows not modelled. I&amp;I is not scaled.</p>` : '';
-    $('#ww-body').innerHTML = `${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>${calNote}
+    $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>${calNote}
       <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
       <thead><tr><th rowspan="2">Catchment (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
         <th colspan="2" class="grp-h">Where it comes from</th><th colspan="4" class="grp-h sep">What it is made of</th><th rowspan="2">= Total<br>average dry</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
@@ -2208,7 +2211,7 @@
     }
     const peelExt = inflows;
     const peelF = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
-    $('#plants-body').innerHTML = `${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}</div></div>
+    $('#plants-body').innerHTML = `${exportBar('plants')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${R ? optSwitch('ww', 'Mode', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(plantLabel(dv.from))} to ${esc(plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       ${chart}
       ${cmp}
@@ -2243,6 +2246,120 @@
   $('#plants-body').addEventListener('mouseleave', () => { const t = $('#cap-tip'); if (t) t.hidden = true; });
   $('#plants-body').addEventListener('focusin', capTip);
   $('#plants-body').addEventListener('click', capTip);
+  // ---- Export: a printable report (save as PDF) and an Excel workbook of what is on screen ----
+  // Scopes: water, plants, catchments, growth (bottom panel) and dev / selection (side panel).
+  const exportBar = scope => `<div class="export-bar" role="group" aria-label="Export"><button type="button" class="btn small" data-export="pdf" data-scope="${scope}">PDF / print</button><button type="button" class="btn small" data-export="xlsx" data-scope="${scope}">Excel</button></div>`;
+  const SCOPES = {
+    water: { title: 'Water by pressure zone', els: () => [$('#water-body')] },
+    plants: { title: 'Wastewater treatment plants and capacity', els: () => [$('#plants-body')] },
+    catchments: { title: 'Wastewater by sanitary catchment', els: () => [$('#ww-body')] },
+    growth: { title: 'Growth and demand', els: () => [$('#pane-demand'), $('#census')].filter(e => e && !e.hidden) },
+    dev: { title: 'Development servicing summary', els: () => [$('#detail-body')] },
+  };
+  function cleanClone(el) {
+    const c = el.cloneNode(true);
+    c.querySelectorAll('.export-bar, .svc-switch, .svc-switches, button, .grow-tip, #aerial-check, .sel-actions, .d-sel').forEach(x => x.remove());
+    c.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
+    c.querySelectorAll('[hidden]').forEach(x => x.remove());
+    return c;
+  }
+  function criteriaTableHTML() {
+    const c = state.criteria, d = D.DEFAULT_CRITERIA;
+    const rows = Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => `<tr${+c[g][k] !== +d[g][k] ? ' class="mod"' : ''}><td>${esc(CRIT_LABEL[g] || g)}</td><td>${esc(k)}</td><td>${esc(String(c[g][k]))}</td><td>${esc(String(d[g][k]))}</td></tr>`));
+    return `<table class="dt"><thead><tr><th>Group</th><th>Item</th><th>Used</th><th>Peel default</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
+  }
+  function reportMeta(scope) {
+    const bc = baselineCensus(), R = state.reports;
+    const title = scope === 'dev' && currentProject ? `${SCOPES.dev.title} – ${currentProject.title}` : scope === 'dev' && selection.size ? `Selection servicing summary – ${fmtNum(selection.size)} developments` : SCOPES[scope].title;
+    return { title, lines: [
+      `Prepared ${new Date().toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' })} with the Peel Development Tracker`,
+      `Data: ${state.snapshot ? `applications and permits ${state.snapshot.generatedAt.slice(0, 10)}` : 'live applications'} · ${bc ? `${bc.year} Census` : ''}${R ? ` · Region of Peel ${R.year} annual reports` : ''}`,
+      `Wastewater mode: ${svcOpt.ww === 'calibrated' ? 'Capacity check (calibrated to 2025 reported flows)' : 'Design flows (Peel criteria)'} · water max day factor: ${svcOpt.md === 'observed' ? 'observed 2025' : 'design'} · 70 ML/d G.E. Booth → Clarkson diversion: ${svcOpt.div === 'on' ? 'on' : 'off'}`,
+      `Filters: ${activeFilters().map(f => f.label).join(', ') || 'none'}`,
+      criteriaChanges().length ? `Modified criteria: ${criteriaChanges().join('; ')}` : 'Criteria: Peel defaults',
+    ] };
+  }
+  function exportPDF(scope) {
+    const S = SCOPES[scope], m = reportMeta(scope), R = state.reports;
+    const base = location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, '');
+    const body = S.els().map(e => cleanClone(e).innerHTML).join('<hr>');
+    const refs = R ? `<ul>${Object.values(R.reports).map(r => `<li>${esc(r.title)} — ${esc(r.url)}</li>`).join('')}</ul>` : '';
+    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(m.title)}</title>
+      <link rel="stylesheet" href="${base}css/app.css"><style>body.report{background:#fff;color:#111;max-width:1100px;margin:0 auto;padding:16px;font:13px/1.4 system-ui,sans-serif}
+      .report h1{font-size:20px;margin:0 0 4px}.report .meta{color:#444;margin:0 0 2px}.report .noprint{margin:10px 0}.report section{margin-top:18px}
+      .report .svc-table,.report .rep-table,.report .ww-table{min-width:0}.report .svc-table small.tech{display:block}.report tr.mod td{background:#fff3d6}
+      .report .cap-chart{max-width:100%}@media print{.noprint{display:none}body.report{padding:0}.report details>summary{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid}}</style></head>
+      <body class="report"><h1>${esc(m.title)}</h1>${m.lines.map(l => `<p class="meta small">${esc(l)}</p>`).join('')}
+      <p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>
+      <main>${body}</main>
+      <section><h2>Criteria used</h2>${criteriaTableHTML()}</section>
+      <section><h2>References</h2>${refs}<p class="small">Peel Linear Wastewater Standards (2023); Peel Water and Wastewater Modelling Demand Table (Aug 2024); Peel Watermain Design Criteria; Peel Development Charges Background Study (persons per unit); Ontario MECP Procedure D-5-1 (uncommitted reserve capacity). Catchments traced from the Region of Peel sewer network; Statistics Canada census.</p></section>
+      <script>addEventListener('load', () => setTimeout(() => print(), 400));<\/script></body></html>`;
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    const w = window.open(url, '_blank');
+    if (!w) { const a = document.createElement('a'); a.href = url; a.download = `${m.title}.html`; a.click(); }
+  }
+  // Table → rows for Excel: header labels from (possibly two-row) headers; each cell's main value
+  // as a number where it is one, and its sub-lines with a unit (people, jobs, ha) as extra columns.
+  function tableRows(t) {
+    const grid = [];
+    [...(t.tHead ? t.tHead.rows : [])].forEach((tr, r) => {
+      grid[r] = grid[r] || []; let col = 0;
+      for (const th of tr.cells) {
+        while (grid[r][col] !== undefined) col++;
+        for (let i = 0; i < th.rowSpan; i++) for (let j = 0; j < th.colSpan; j++) { (grid[r + i] = grid[r + i] || [])[col + j] = th.innerText.replace(/\s+/g, ' ').trim(); }
+        col += th.colSpan;
+      }
+    });
+    const ncol = Math.max(0, ...grid.map(g => g.length));
+    const heads = Array.from({ length: ncol }, (_, i) => [...new Set(grid.map(g => g[i]).filter(Boolean))].join(' – '));
+    const val = el => {
+      const c = el.cloneNode(true); c.querySelectorAll('small, .u').forEach(x => x.remove());
+      const txt = c.innerText.replace(/\s+/g, ' ').trim(), n = txt.replace(/[,\s]/g, '').replace(/^−/, '-').replace(/^×/, '');
+      return /^-?\d+(\.\d+)?%?$/.test(n) ? Number(n.replace('%', '')) : txt;
+    };
+    const unitOf = el => { const u = el.querySelector(':scope > .u'); if (u) return u.textContent.trim(); const c = el.cloneNode(true); c.querySelectorAll('small').forEach(x => x.remove()); return /^\s*[−-]?[\d,.]+%\s*$/.test(c.textContent) ? '%' : /^\s*×[\d.]+\s*$/.test(c.textContent) ? '×' : ''; };
+    const extraKeys = []; const rows = [];
+    for (const tr of t.tBodies[0] ? t.tBodies[0].rows : []) {
+      const row = { main: [], extra: {} }; let col = 0;
+      for (const td of tr.cells) {
+        row.main[col] = val(td);
+        td.querySelectorAll('small').forEach(sm => sm.querySelectorAll('.u').forEach(u => {
+          const prev = u.previousSibling, num = prev && prev.textContent.match(/[−-]?[\d,]+(\.\d+)?\s*$/);
+          if (!num) return; const k = `${heads[col] || ''} · ${u.textContent.trim()} (second line)`;
+          if (!extraKeys.includes(k)) extraKeys.push(k); row.extra[k] = Number(num[0].replace(/[,\s]/g, '').replace('−', '-'));
+        }));
+        col += td.colSpan;
+      }
+      rows.push(row);
+    }
+    const unitHead = heads.map((h, i) => { const r = t.tBodies[0] && [...t.tBodies[0].rows].find(tr => tr.cells[i] && unitOf(tr.cells[i])); return r ? `${h} (${unitOf(r.cells[i])})` : h; });
+    return [[...unitHead, ...extraKeys], ...rows.map(r => [...Array.from({ length: ncol }, (_, i) => r.main[i] ?? ''), ...extraKeys.map(k => r.extra[k] ?? '')])];
+  }
+  const loadScript = src => new Promise((ok, fail) => { if (window.XLSX) return ok(); const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = fail; document.head.appendChild(s); });
+  async function exportXLSX(scope) {
+    const S = SCOPES[scope], m = reportMeta(scope);
+    try { await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js'); } catch (e) { alert('Could not load the Excel library; use PDF / print instead.'); return; }
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([[m.title], ...m.lines.map(l => [l])]), 'Summary');
+    const used = new Set();
+    S.els().forEach(el => el.querySelectorAll('table').forEach((t, i) => {
+      if (t.closest('[hidden]')) return;
+      if (t.closest('details.sect') && t.closest('details.sect').querySelector('[data-info="source-records"]')) return;   // per-file tables: use Export CSV
+      const sect = t.closest('details.sect'), h = sect && sect.querySelector('summary h2, summary h3');
+      let name = (t.caption ? t.caption.innerText : h ? h.innerText : t.dataset.info || (t.closest('[data-info]') ? t.closest('[data-info]').dataset.info : `Table ${i + 1}`)).replace(/[\\/?*[\]:]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 28) || `Table ${i + 1}`;
+      while (used.has(name)) name = `${name.slice(0, 25)} ${used.size}`;
+      used.add(name);
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(tableRows(t)), name);
+    }));
+    const crit = state.criteria, d = D.DEFAULT_CRITERIA;
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Group', 'Item', 'Used', 'Peel default'], ...Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => [CRIT_LABEL[g] || g, k, +crit[g][k], +d[g][k]]))]), 'Criteria');
+    XLSX.writeFile(wb, `${m.title.replace(/[^\w\s.–-]+/g, '').slice(0, 80)}.xlsx`);
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-export]'); if (!b) return;
+    (b.dataset.export === 'pdf' ? exportPDF : exportXLSX)(b.dataset.scope);
+  });
   // Switches in the Water / Wastewater / Plants tabs.
   for (const id of ['#water-body', '#ww-body', '#plants-body']) $(id).addEventListener('click', e => {
     const b = e.target.closest('[data-svcopt]'); if (!b) return;

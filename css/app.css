@@ -776,3 +776,5 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .chk-table td small { display: block; color: var(--text-muted); font-size: 10.5px; }
 .chk-table td:first-child { text-align: left; }
 .svc-verdict { margin: 6px 0; padding: 6px 10px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.export-bar { display: flex; gap: 4px; justify-content: flex-end; margin: 0 0 4px; }
+.d-flows .export-bar { grid-column: 1 / -1; }

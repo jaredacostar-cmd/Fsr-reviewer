@@ -208,6 +208,13 @@ application.
   drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
   WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
   above 1,000.
+- **Export** (*PDF / print* and *Excel* buttons on the Growth & demand, Water, Plants and
+  Catchments views, the development panel and a lasso selection): the PDF option opens a printable
+  report of what is on screen (with the mode, switches, filters, data dates, the criteria table
+  with edits highlighted, and references) and starts the print dialog; Excel writes a workbook
+  with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
+  lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
+  Excel is clicked. Per-file record tables are left to *Export CSV*.
 - **Servicing check** (development panel): the whole development's flows at Peel design criteria
   (L/s as in an FSR, ML/d below), its pressure zone and share of the zone's build-out max day, the
   traced sewer path from its catchment to the plant with its share of the flow at each outlet, and
