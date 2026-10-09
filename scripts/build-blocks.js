@@ -6,8 +6,13 @@
  * Resiliency", F. Salehzadeh, WEFTEC 2024). `planning` = 1 marks the blocks prioritised for a
  * block study (e.g. Block 26).
  *
- * Outlines are simplified to ~8 m. Which pipes leave each block, and the route to the plant, are
- * worked out in the app from data/sewers.json (so they follow that file when it is rebuilt).
+ * Outlines are simplified to ~8 m. The blocks are the app's wastewater catchments, so each also
+ * gets its place in the flow from data/sewers.json (Region sanitary mains of 300 mm+, each with
+ * its next pipe downstream): the pipes inside it, its main outlet (the pipe leaving the block that
+ * carries the most people), the block that outlet drains into (or none: it reaches the plant),
+ * the plant, the outlet size; its municipality (most 2021 Census people, data/das.json); and the
+ * share of its people and land the sewers serve (served, servedHa).
+ * Rebuild after sewers.json changes.
  *
  *   node scripts/build-blocks.js [--raw blocks.geojson] [--out data]
  */
@@ -73,8 +78,44 @@ function areaHa(rings) {
     let cx = 0, cy = 0, n = 0; for (const r of outer) for (const [x, y] of r) { cx += x; cy += y; n++; }
     return { id: String(f.properties.Block).trim(), planning: +f.properties.Planning === 1 ? 1 : 0, ha: Math.round(ha), c: [+(cx / n).toFixed(5), +(cy / n).toFixed(5)], parts, pts: all.reduce((t, r) => t + r.length, 0) };
   }).sort((a, b) => +a.id - +b.id);
+  // Place in the flow, from the sewer network.
+  const S = JSON.parse(fs.readFileSync(path.join(outDir, 'sewers.json'), 'utf8')), P = S.pipes;
+  const inRing = (x, y, r) => { let c = false; for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+  const inB = (b, x, y) => b.parts.some(p => inRing(x, y, p[0]) && !p.slice(1).some(h => inRing(x, y, h)));
+  const of = P.map(p => { const c = p[10], k = Math.floor(c.length / 4) * 2; return blocks.findIndex(b => inB(b, c[k], c[k + 1])); });
+  const DA = JSON.parse(fs.readFileSync(path.join(outDir, 'das.json'), 'utf8')).das;
+  // Each pipe's own share of the people and land draining through it (its total less what the
+  // pipes feeding it carry). Summed over a block it shows how much of the block the sewers serve:
+  // rural land on septic (most of Block 40) is not. Unreliable where trunks join in parallel, so
+  // it only ever lowers the block's figures (served <= 1, servedHa <= ha).
+  const upPop = new Float64Array(P.length), upHa = new Float64Array(P.length);
+  P.forEach(p => { if (p[3] >= 0) { upPop[p[3]] += p[4]; upHa[p[3]] += p[5]; } });
+  blocks.forEach((b, j) => {
+    const outs = [], own = [];
+    P.forEach((p, i) => { if (of[i] !== j) return; own.push(i); if (p[3] < 0 || of[p[3]] !== j) outs.push(i); });
+    outs.sort((x, y) => P[y][4] - P[x][4]);
+    const m = outs[0];
+    b.pipes = own.length;
+    if (m != null) {
+      const c = P[m][10], nx = P[m][3];
+      b.outletAt = [c[c.length - 2], c[c.length - 1]];
+      b.trunkMm = P[m][0];
+      b.plant = S.plants[P[m][6]] || null;
+      // Downstream: the first block the outlet's pipes reach (past any pipes outside every block).
+      let k = nx, hop = 0; while (k >= 0 && of[k] < 0 && hop++ < 5000) k = P[k][3];
+      b.into = k >= 0 && of[k] >= 0 && of[k] !== j ? blocks[of[k]].id : null;
+    }
+    const pop = {};
+    for (const d of DA) { const r = d[4] && d[4][0]; if (!r) continue; let x = 0, y = 0; for (const [a, bb] of r) { x += a; y += bb; } x /= r.length; y /= r.length; if (inB(b, x, y)) pop[d[3]] = (pop[d[3]] || 0) + d[1]; }
+    b.muni = Object.keys(pop).sort((a, c) => pop[c] - pop[a])[0] || null;
+    let sp = 0, sh = 0; for (const i of own) { sp += Math.max(0, P[i][4] - upPop[i]); sh += Math.max(0, P[i][5] - upHa[i]); }
+    const daPop = Object.values(pop).reduce((t, v) => t + v, 0);
+    b.served = daPop > 0 ? Math.min(1, +(sp / daPop).toFixed(2)) : 1;
+    b.servedHa = Math.round(Math.min(b.ha, sh));
+  });
+  for (const b of blocks) console.log(`block ${b.id}: ${b.pipes} pipes, served ${Math.round(b.served * 100)}% / ${b.servedHa} of ${b.ha} ha, outlet ${b.trunkMm || '-'} mm → ${b.into ? `block ${b.into}` : b.plant || '?'} · ${b.muni}`);
   const out = {
-    version: 1, generatedAt: new Date().toISOString(),
+    version: 2, generatedAt: new Date().toISOString(),
     source: 'Region of Peel, Block_view feature service (Block_CombinedInformation): the 40 wastewater blocks of its inflow & infiltration program',
     url: URL,
     blocks: blocks.map(({ pts, ...b }) => b),

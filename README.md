@@ -459,9 +459,18 @@ application.
     and the factor observed at the South Peel plants in 2025 (×1.40). Below the table: 2025
     production reported by the Region (Arthur P. Kennedy and Lorne Park plants, the five Caledon
     groundwater systems) beside the model.
-  - **Wastewater (ML/d):** catchments build up along the traced flow path to the plants on the
-    lake. Each drainage area records the area it discharges into (`downstream`) and its outlet
-    point (`outletAt`) in `data/servicing.json`; outlets get closer to the plant at every step.
+  - **Wastewater (ML/d):** the catchments are the Region's **40 wastewater blocks**
+    (`data/blocks.json`, the sewersheds of its I&I program), building up block by block along the
+    sewers to the plants on the lake. `scripts/build-blocks.js` gives each block its place in the
+    flow from `data/sewers.json`: its main outlet (the pipe leaving it that carries the most
+    people, `outletAt`, `trunkMm`), the block that outlet's pipes reach next (`into`, walking past
+    pipes outside every block) and its plant; e.g. 26 → 25 → 24 → 22 → 16 → G.E. Booth. It also
+    records how much of each block the sewers serve (`served`, `servedHa`: each pipe's own share
+    of the people and land draining through it, summed): census people are by dissemination-area
+    centre less the unserved share, I&I uses the sewered land, and developments in rural Block 40
+    (mostly on septic) go to the nearest sewered block unless they sit by its own sewer. Without
+    `data/blocks.json` the app falls back to the traced drainage areas of `data/servicing.json`
+    (`downstream`, `outletAt`).
     Rows run from the top of each sewershed (furthest outlet first) down to the plant, whose last
     row is its total inflow; then a Peel total, with Malton (City of Toronto) listed separately.
     Each row shows where the flow comes from — **local** (the catchment's own build-out population
@@ -469,8 +478,11 @@ application.
     census **+ built since + approved + proposed** — both adding up to the **total** average dry
     weather flow at its outlet; then **peak dry weather** (total average × Harmon M on the total
     population), **I&I** (0.26 L/s/ha on the whole traced drainage area to the outlet) and **peak
-    wet weather** (peak dry + I&I). Clicking a catchment shades everything upstream and
-    draws schematic flow arrows, outlet to outlet, down to the plant.
+    wet weather** (peak dry + I&I). Clicking a block shades everything upstream and draws flow
+    arrows along the pipes down to the plant. Below the table, **pumping stations**: each master
+    plan station's firm capacity against the build-out flow in the sewer arriving at it (people,
+    growth and land upstream from the pipe network); tap one for the developments draining
+    through it.
 
 - **Plants** tab: first each plant beside its 2025 annual report — rated capacity, reported
   average and highest day, the model today (census + built since + external inflows) and a
@@ -509,10 +521,12 @@ application.
 **2020 Master Plan** (`data/peel-reports.json` → `masterPlan`; Probe data sources mode
 `masterplan` downloads Volumes 1–4 as text to the `ref-docs-mp` branch):
 - Pumping stations: firm capacities of the 31 lake-based stations (Vol. 4, Table 6) are matched to
-  the traced pumping-station catchments. The Catchments table and the development servicing check
-  show the build-out peak dry and peak wet weather flow (design criteria) as a % of firm capacity;
-  the Region expands a station when peak wet weather reaches firm capacity. Peak wet is approximate
-  (I&I on the traced outline, which overstates small catchments). Hover a station for the master
+  the traced pumping-station areas, and each station is loaded by the sewer arriving at it (the
+  pipe within 120 m carrying the most people). The Catchments table, the development servicing
+  check (the stations on the development's own pipe route) and the capacity layer show the
+  build-out peak dry and peak wet weather flow (design criteria) as a % of firm capacity; the
+  Region expands a station when peak wet weather reaches firm capacity. Peak wet is approximate
+  (I&I on the land draining through the published 300 mm+ network). Hover a station for the master
   plan's note (e.g. McVean: exceeds firm capacity before 2026, +700 L/s needed).
 - Plants: the 90% line in Horizon years is the Region's expansion trigger (Vol. 4, s. 2.3.1).
 - Water storage: the Region's storage assessment (Vol. 3, Table 12; required vs available, 2019–2041)
