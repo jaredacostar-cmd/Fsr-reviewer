@@ -399,6 +399,8 @@
   const THIS_YEAR = new Date().getFullYear();
   // Existing pipes layer (live): which kinds are shown.
   let existOn = Object.assign({ water: false, sanitary: false, storm: false }, store.get('existOn', {}) || {});
+  // Pipe size labels on the existing pipes and the sewer capacity layer.
+  let pipeLbl = store.get('pipeLabels', false) === true;
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
   // Map views: presets of the layers and style, each remembering its last settings.
@@ -435,6 +437,7 @@
         <div class="mo-sec"><div class="mo-h">Infrastructure</div>
           <div class="mo-chips">${chip('id="opt-pz"', svcOn.pz, `${svcSwatch('pz')}Pressure zones`, 'pressure-zone')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
           <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
+          <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <small id="exist-note"></small>
           <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '#1c7ed6'], ['wastewater', 'Wastewater', '#d6336c']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:${c}"></i>${t}`)).join('')}</div></div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
@@ -455,6 +458,7 @@
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
+      el.querySelector('#opt-pipelbl').onchange = e => { pipeLbl = e.target.checked; store.set('pipeLabels', pipeLbl); renderExisting(); if (mstyle.cap === 'pipes') renderCapLayer(); };
       el.querySelectorAll('[data-exist]').forEach(c => { c.onchange = e => setExistOn({ [e.target.dataset.exist]: e.target.checked }); });
       el.querySelector('#opt-dctiming').onclick = () => { if (typeof showDcTiming === 'function') { loadSewers(); showDcTiming(); } };
       el.querySelectorAll('[data-dcsys]').forEach(c => { c.onchange = () => {
@@ -4068,7 +4072,7 @@
   }
   function renderPipes(layer) {
     if (!SEW.data) { loadSewers(); return; }
-    const z = map.getZoom(), minD = z < 12 ? 900 : z < 13 ? 600 : z < 14 ? 375 : 300;
+    const z = map.getZoom(), minD = z < 12 ? 900 : z < 13 ? 600 : z < 14 ? 375 : 300, lbls = [];
     const b = map.getBounds().pad(0.2);
     const ren = svcRenderer;
     SEW.data.pipes.forEach((p, i) => {
@@ -4077,7 +4081,9 @@
       const s = pipeStats(i);
       L.polyline(pipeCoords(p).map(([x, y]) => [y, x]), { renderer: ren, pane: 'svcPane', color: pipeColour(s.r1), weight: Math.max(2, Math.min(7, p[0] / 300)), opacity: 0.9 })
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(layer);
+      if (pipeLbl && z >= 14) { const q = [], cc = p[10]; for (let k = 0; k < cc.length; k += 2) q.push([cc[k], cc[k + 1]]); lbls.push({ d: p[0], color: pipeColour(s.r1), lines: [q] }); }
     });
+    if (lbls.length) placePipeLabels(lbls, layer);
   }
   map.on('moveend', () => { if (mstyle.cap === 'pipes') renderCapLayer(); });
   // Tightest pipe on a development's path to the plant (build-out or the legend year).
@@ -4158,6 +4164,28 @@
     return pr;
   }
   let existSeq = 0;
+  // Pipe size labels: one per ~70 px of screen at the middle of each pipe, largest pipes first.
+  function placePipeLabels(items, layer) {
+    const taken = new Set(), b = map.getBounds();
+    items.sort((x, y) => y.d - x.d);
+    for (const it of items) {
+      // The on-screen point nearest the middle of the pipe: each segment's midpoint and, for long
+      // segments, points along it (long mains run past the edge of the view).
+      let ll = null, best = Infinity;
+      for (const ln of it.lines) for (let i = 1; i < ln.length; i++) {
+        const mid = (ln.length - 1) / 2;
+        for (const t of [0.5, 0.25, 0.75, 0.1, 0.9]) {
+          const c = L.latLng(ln[i - 1][1] + (ln[i][1] - ln[i - 1][1]) * t, ln[i - 1][0] + (ln[i][0] - ln[i - 1][0]) * t);
+          const score = Math.abs(i - 0.5 - mid) + Math.abs(t - 0.5);
+          if (score < best && b.contains(c)) { best = score; ll = c; }
+        }
+      }
+      if (!ll) continue;
+      const pt = map.latLngToContainerPoint(ll), key = `${Math.round(pt.x / 70)},${Math.round(pt.y / 28)}`;
+      if (taken.has(key)) continue; taken.add(key);
+      L.marker(ll, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'pipe-lbl', html: `<span style="--c:${it.color}">${it.d}</span>`, iconSize: null }) }).addTo(layer);
+    }
+  }
   async function renderExisting() {
     const seq = ++existSeq;
     existLayer.clearLayers();
@@ -4170,7 +4198,7 @@
     const tiles = [];
     for (let tx = Math.floor(b.getWest() / 0.01); tx <= Math.floor(b.getEast() / 0.01); tx++) for (let ty = Math.floor(b.getSouth() / 0.01); ty <= Math.floor(b.getNorth() / 0.01); ty++) tiles.push([tx, ty]);
     if (tiles.length > 30) { if (note) note.textContent = 'Zoom in further to see existing pipes'; return; }
-    const seen = new Set();
+    const seen = new Set(), lbls = [];
     await Promise.all(kinds.flatMap(kind => EXIST[kind].flatMap((S, i) => tiles.map(async ([tx, ty]) => {
       const feats = await existTile(kind, i, tx, ty);
       if (seq !== existSeq) return;
@@ -4181,8 +4209,10 @@
         const lines = f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates];
         L.polyline(lines.map(l => l.map(([x, y]) => [y, x])), { renderer: existRenderer, color: EXIST_STYLE[kind].color, weight: a.d >= 900 ? 6 : a.d >= 600 ? 5 : a.d >= 375 ? 3.5 : 2, opacity: 0.85, dashArray: /FM/.test(a.type) ? '6 4' : null })
           .bindTooltip(`<strong>${esc(existText(kind, a))}</strong><br><span class="muted">${esc(S.src)} (live)</span>`, { sticky: true, className: 'pt' }).addTo(existLayer);
+        if (pipeLbl && a.d) lbls.push({ d: a.d, color: EXIST_STYLE[kind].color, lines });
       }
     }))));
+    if (seq === existSeq && pipeLbl) placePipeLabels(lbls, existLayer);
     if (seq === existSeq && note) note.textContent = '';
   }
   map.on('moveend', () => { if (Object.values(existOn).some(Boolean)) renderExisting(); });
@@ -4224,20 +4254,108 @@
     return { oldest, risky, n };
   }
   const MAT_NOTE = { AC: 'asbestos cement', ACP: 'asbestos cement', VIT: 'vitrified clay', CONC: 'concrete', CONP: 'concrete', RCOP: 'reinforced concrete', PVC: 'PVC', DI: 'ductile iron', ST: 'steel', HDPE: 'HDPE', PE: 'polyethylene' };
+  // Street names for points on pipes: reverse geocoding (ArcGIS World, then OpenStreetMap), cached.
+  const streetCache = new Map();
+  function streetAt(lat, lng) {
+    const k = `${lat.toFixed(4)},${lng.toFixed(4)}`; if (streetCache.has(k)) return streetCache.get(k);
+    const pr = (async () => {
+      try {
+        const j = await (await fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
+        const a = j && j.address, st = a && String(a.Address || a.ShortLabel || '').replace(/^[\d\s-]+[A-Za-z]?\s+(?=\D)/, '').trim();
+        if (st) return st;
+      } catch (e) { /* next */ }
+      try {
+        const j = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
+        if (j && j.address && j.address.road) return j.address.road;
+      } catch (e) { /* offline */ }
+      return '';
+    })();
+    streetCache.set(k, pr); return pr;
+  }
+  // Closest point on a path ([[lng, lat], …]) to a point, with its distance in metres.
+  function closestOn(pt, g) {
+    const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320; let best = { m: Infinity, at: g[0] };
+    for (let i = 1; i < g.length; i++) {
+      const ax = (g[i - 1][0] - pt[0]) * kx, ay = (g[i - 1][1] - pt[1]) * ky, bx = (g[i][0] - pt[0]) * kx, by = (g[i][1] - pt[1]) * ky;
+      const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy, t = L2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L2)) : 0, m = Math.hypot(ax + t * dx, ay + t * dy);
+      if (m < best.m) best = { m, at: [pt[0] + (ax + t * dx) / kx, pt[1] + (ay + t * dy) / ky] };
+    }
+    return best;
+  }
+  // Every existing main of each kind within r metres: nearest pieces first, named by street, and
+  // pieces of the same main (same street, size, material) merged.
+  const aroundCache = new Map();
+  function existingAround(lng, lat, r) {
+    const key = `${lng.toFixed(5)},${lat.toFixed(5)},${r}`; if (aroundCache.has(key)) return aroundCache.get(key);
+    const pr = Promise.all(Object.entries(EXIST).map(async ([kind, srcs]) => {
+      const items = [];
+      for (const S of srcs) {
+        try {
+          const j = await A.fetchJSON(`${S.url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields: S.f, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' });
+          for (const f of j.features || []) {
+            const paths = (f.geometry && f.geometry.paths) || []; if (!paths.length) continue;
+            const c = paths.map(pth => closestOn([lng, lat], pth)).sort((a, b) => a.m - b.m)[0];
+            if (c.m <= r) items.push({ m: c.m, at: c.at, paths, a: pipeAttrs(kind, S.src, f.attributes || {}) });
+          }
+        } catch (e) { /* source unavailable */ }
+      }
+      items.sort((a, b) => a.m - b.m);
+      const near = items.slice(0, 16);
+      await Promise.all(near.map(async it => { it.street = await streetAt(it.at[1], it.at[0]); }));
+      const groups = new Map();
+      for (const it of near) {
+        const g = `${it.street}|${it.a.d}|${it.a.mat}|${/FM/.test(it.a.type)}`;
+        const x = groups.get(g); if (!x) groups.set(g, { ...it, n: 1, paths: [...it.paths] }); else { x.n++; x.paths.push(...it.paths); }
+      }
+      return [kind, { list: [...groups.values()].sort((a, b) => a.m - b.m), more: Math.max(0, items.length - near.length) }];
+    })).then(Object.fromEntries);
+    aroundCache.set(key, pr); pr.catch(() => aroundCache.delete(key));
+    return pr;
+  }
+  const exHL = L.layerGroup().addTo(map);
+  let exGroups = {};
   function fillExisting(p) {
     const el = $('#dev-exist'); if (!el || p.lat == null) return;
-    nearestExisting(p.lng, p.lat).then(r => {
+    const r = store.get('exR', 200);
+    el.innerHTML = `<div class="ex-r"><span class="muted small">Within</span> ${[100, 200, 400].map(x => `<button type="button" class="btn small${x === r ? ' on' : ''}" data-exr="${x}">${x} m</button>`).join('')}</div><p class="small muted">Looking up the mains around the site…</p>`;
+    existingAround(p.lng, p.lat, r).then(res => {
       if (currentProject !== p || !$('#dev-exist')) return;
-      const parts = Object.entries(r).map(([k, v]) => v ? `<li><strong>${EXIST_STYLE[k].label}:</strong> ${esc(existText(k, v.a).replace(EXIST_STYLE[k].label, '').trim() || 'size not recorded')}, ${fmtNum(Math.round(v.m))} m <span class="muted">(${esc(v.a.src)})</span></li>` : `<li class="muted"><strong>${EXIST_STYLE[k].label}:</strong> none within 200 m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}</li>`);
+      exGroups = res;
+      const SHOW = 4, parts = [];
+      const row = (k, g, i) => `<li><button type="button" class="btn small link" data-exhl="${k}|${i}" title="Show it on the map">${esc(existText(k, g.a).replace(EXIST_STYLE[k].label, '').trim() || 'size not recorded')}</button>${g.street ? ` on <strong>${esc(g.street)}</strong>` : ''} · ${fmtNum(Math.round(g.m))} m <span class="muted">(${g.n > 1 ? `${g.n} pieces · ` : ''}${esc(g.a.src)})</span></li>`;
+      for (const [k, v] of Object.entries(res)) {
+        const L0 = v.list;
+        parts.push(`<div class="ex-kind"><div class="ex-k"><i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i><strong>${EXIST_STYLE[k].label}s</strong> <span class="muted small">${L0.length ? `${L0.length} within ${r} m${v.more ? ` · ${v.more} more pieces farther out` : ''}` : `none within ${r} m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}`}</span></div>
+          ${L0.length ? `<ul class="b-lines small">${L0.slice(0, SHOW).map((g, i) => row(k, g, i)).join('')}</ul>${L0.length > SHOW ? `<details class="ex-more"><summary class="small">${L0.length - SHOW} more</summary><ul class="b-lines small">${L0.slice(SHOW).map((g, i) => row(k, g, i + SHOW)).join('')}</ul></details>` : ''}` : ''}</div>`);
+      }
       const ar = pathAgeRisk(p);
       if (ar && (ar.oldest || ar.risky.length)) {
         const o = ar.oldest, age = o ? THIS_YEAR - o.y : 0;
+        // (kept as the last part; shown under the mains lists)
         parts.push(`<li${age >= 50 || ar.risky.length ? ' class="why-warn-t"' : ''}><strong>Sewer path age / risk</strong> <span class="muted">(first 3 km, ${fmtNum(ar.n)} pipes)</span>: ${o ? `oldest <button type="button" class="btn small link" data-pipe="${o.i}">${o.d} mm, ${o.y}</button>${o.mat ? ` ${esc(MAT_NOTE[o.mat] || o.mat)}` : ''} (${age} years)` : 'install years not recorded'}${ar.risky.length ? ` · ${ar.risky.length} rated moderate risk by the Region <button type="button" class="btn small link" data-pipe="${ar.risky[0]}">show</button>` : ' · none rated above low risk'}</li>`);
       }
-      $('#dev-exist').innerHTML = `<ul class="b-lines small">${parts.join('')}</ul><p class="small muted">Nearest to the development's point, live from the Region / municipal GIS — not the connection point.${ar ? ' Age and risk rating from the Region\'s sanitary sewer records.' : ''}</p>`;
+      const age = ar && (ar.oldest || ar.risky.length) ? parts.pop() : '';
+      $('#dev-exist').innerHTML = `<div class="ex-r"><span class="muted small">Within</span> ${[100, 200, 400].map(x => `<button type="button" class="btn small${x === r ? ' on' : ''}" data-exr="${x}">${x} m</button>`).join('')}</div>
+        ${parts.join('')}${age ? `<ul class="b-lines small">${age}</ul>` : ''}
+        <p class="small muted">Live from the Region / municipal GIS, measured from the development's point; street from reverse geocoding the nearest point of each main. Tap a main to see it on the map. Not the connection point.${ar ? ' Age and risk rating from the Region\'s sanitary sewer records.' : ''}</p>`;
     });
     fillFire(p); fillStorm(p); fillGround(p);
   }
+
+  document.addEventListener('click', e => {
+    const rb = e.target.closest('[data-exr]');
+    if (rb && currentProject) { store.set('exR', +rb.dataset.exr); return fillExisting(currentProject); }
+    const h = e.target.closest('[data-exhl]'); if (!h) return;
+    const [k, i] = h.dataset.exhl.split('|'), g = exGroups[k] && exGroups[k].list[+i]; if (!g) return;
+    exHL.clearLayers();
+    const ll = g.paths.map(pth => pth.map(([x, y]) => [y, x]));
+    L.polyline(ll, { color: '#ffd43b', weight: 12, opacity: 0.7, interactive: false }).addTo(exHL);
+    L.polyline(ll, { color: EXIST_STYLE[k].color, weight: 4, opacity: 1, interactive: false }).addTo(exHL);
+    if (currentProject) L.polyline([[currentProject.lat, currentProject.lng], [g.at[1], g.at[0]]], { color: '#333', weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
+    map.fitBounds(L.latLngBounds(ll.flat().concat(currentProject ? [[currentProject.lat, currentProject.lng]] : [])), { maxZoom: 18, padding: [40, 40] });
+    if (innerWidth <= 760) $('#detail').scrollTop = 0;
+  });
+  map.on('click', () => exHL.clearLayers());
 
   // Ground at the site, and the fall to its catchment's outlet (gravity hint for the sewer path).
   async function fillGround(p) {

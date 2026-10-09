@@ -317,8 +317,11 @@ application.
   hydraulic model.
 - **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
   Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
-  for diameter, material, year, slope. The development brief lists the nearest existing main of
-  each type within 200 m, and the oldest / moderate-risk sanitary sewer on the site's path (first
+  for diameter, material, year, slope; *Size labels* labels each pipe (and the sewer capacity
+  layer) with its diameter. The development's Servicing tab reports every existing main of each type
+  within 100 / 200 / 400 m — size, material, year, the street it runs along (reverse geocoded:
+  ArcGIS World, then OpenStreetMap) and distance, pieces of the same main merged; tap one to see it
+  on the map — and the oldest / moderate-risk sanitary sewer on the site's path (first
   3 km, from `data/sewers.json`).
 - **DC needs** (development brief, DC main / facility panels, *DC timing* in Layers & style):
   existing capacity against the 2026 DC capital program. For each constraint a development relies
