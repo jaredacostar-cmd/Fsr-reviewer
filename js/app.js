@@ -3458,7 +3458,7 @@
   }
   // SVG arrowheads for the flow lines (one <marker> per map renderer).
   function addFlowMarker() {
-    for (const svg of map.getContainer().querySelectorAll('.leaflet-overlay-pane svg, .leaflet-flowPane-pane svg')) addFlowDefs(svg);
+    for (const svg of map.getContainer().querySelectorAll('.leaflet-overlay-pane svg, .leaflet-flow-pane svg')) addFlowDefs(svg);
     syncPathMode();
   }
   // While a flow path is shown (development trace, catchment or block), the development markers
@@ -3510,6 +3510,18 @@
   // coloured by its capacity state at the legend year, arrows along the route, the pumping stations
   // it passes and the plant. Summary: length, pipes, blocks passed, tightest pipe.
   const TRACE = { layer: L.layerGroup().addTo(map), key: null };
+  // Fit bounds into the part of the map the open panel doesn't cover (beside it on a wide screen,
+  // above the bottom sheet on a phone).
+  function fitClear(bd) {
+    const d = $('#detail'), m = map.getContainer().getBoundingClientRect();
+    let br = [30, 30];
+    if (d && !d.hidden) {
+      const r = d.getBoundingClientRect();
+      if (r.top > m.top + m.height * 0.25 && r.width >= m.width * 0.9) br = [30, Math.min(m.height * 0.75, Math.max(30, m.bottom - r.top + 20))];
+      else if (r.left > m.left + m.width * 0.3) br = [Math.min(m.width * 0.6, Math.max(30, m.right - r.left + 20)), 30];
+    }
+    map.fitBounds(bd, { paddingTopLeft: [30, 30], paddingBottomRight: br });
+  }
   function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; syncPathMode(); }
   async function traceDev(p) {
     await Promise.all([loadSewers(), loadBlocks()]);
@@ -3543,7 +3555,7 @@
     // Blocks passed, in order.
     const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && !blocks.includes(b.id)) blocks.push(b.id); }
     const bd = L.latLngBounds([[p.lat, p.lng], [end[1], end[0]]]); for (const i of route) for (const [x, y] of pipeCoords(P[i])) bd.extend([y, x]);
-    map.fitBounds(bd, { padding: [30, 30] });
+    fitClear(bd);
     const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k };
     TRACE.last = res;
     return res;
@@ -3638,7 +3650,8 @@
     const endC = route.length ? pipeCoords(P[route[route.length - 1]]).pop() : null;
     if (endC) L.circleMarker([endC[1], endC[0]], { radius: 7, className: 'svc-plant', interactive: true }).bindTooltip(esc(plant ? plantLabel(plant.name) : x.plant || 'Plant'), { className: 'pt' }).addTo(BLK.focus);
     addFlowMarker();
-    if (opt.zoom !== false) { const bd = main.getBounds(); if (endC && route.length && routeKm(route) < 30) bd.extend([endC[1], endC[0]]); map.fitBounds(bd, { padding: [30, 30] }); }
+    $('#detail').hidden = false;
+    if (opt.zoom !== false) { const bd = main.getBounds(); if (endC && route.length && routeKm(route) < 30) bd.extend([endC[1], endC[0]]); fitClear(bd); }
     // Panel
     const chain = []; for (let z = x.into, n = 0; z && n < 40; z = net.byId.get(z) && net.byId.get(z).into, n++) chain.push(z);
     const devs = state.projects.filter(p => p.lat != null && p.phase !== 'cancelled' && inBlock(b, p.lng, p.lat));

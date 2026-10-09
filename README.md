@@ -392,6 +392,10 @@ application.
   plant coloured by its capacity state with flow arrows, the pumping stations passed and the plant;
   the panel gives the length and number of pipes, the wastewater blocks passed and the tightest pipe
   (each a link). Also for test sites.
+- **Paths over developments**: flow paths (a development trace, a catchment's or block's route) draw
+  above the development markers, and the markers fade while a path is shown; *Developments: Show ·
+  Faded · Hidden* in the bottom bar picks how (remembered). The map fits the path into the part not
+  covered by the panel.
 - **Tap an existing sanitary sewer** (Existing → Sanitary): a 300 mm+ sewer opens the same pipe in the
   network screen, with every development draining through it and how its flow is calculated; a
   smaller local sewer (not traced) lists the developments within 100 m that likely connect to it and
