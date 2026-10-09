@@ -1,0 +1,973 @@
+{
+ "operationalLayers": [
+  {
+   "id": "StreetConnectivity_867",
+   "layerType": "ArcGISFeatureLayer",
+   "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/StreetConnectivity/FeatureServer/0",
+   "visibility": true,
+   "opacity": 0.75,
+   "title": "Intersection Density (ha)",
+   "itemId": "a65e7bdfb5ca4561acfb2ebdb87520ad",
+   "layerDefinition": {
+    "drawingInfo": {
+     "renderer": {
+      "visualVariables": [
+       {
+        "type": "sizeInfo",
+        "target": "outline",
+        "expression": "view.scale",
+        "valueExpression": "$view.scale",
+        "stops": [
+         {
+          "size": 1.5,
+          "value": 17899
+         },
+         {
+          "size": 0.75,
+          "value": 55936
+         },
+         {
+          "size": 0.375,
+          "value": 223744
+         },
+         {
+          "size": 0,
+          "value": 447487
+         }
+        ]
+       }
+      ],
+      "type": "classBreaks",
+      "field": "SC_14",
+      "minValue": 0,
+      "classBreakInfos": [
+       {
+        "symbol": {
+         "color": [
+          255,
+          255,
+          242,
+          255
+         ],
+         "outline": {
+          "color": [
+           26,
+           26,
+           26,
+           191
+          ],
+          "width": 0.75,
+          "type": "esriSLS",
+          "style": "esriSLSSolid"
+         },
+         "type": "esriSFS",
+         "style": "esriSFSSolid"
+        },
+        "label": "< 0.25",
+        "classMaxValue": 0.25
+       },
+       {
+        "symbol": {
+         "color": [
+          242,
+          212,
+          182,
+          255
+         ],
+         "outline": {
+          "color": [
+           26,
+           26,
+           26,
+           191
+          ],
+          "width": 0.75,
+          "type": "esriSLS",
+          "style": "esriSLSSolid"
+         },
+         "type": "esriSFS",
+         "style": "esriSFSSolid"
+        },
+        "label": "> 0.25 To 0.50",
+        "classMaxValue": 0.5
+       },
+       {
+        "symbol": {
+         "color": [
+          230,
+          175,
+          131,
+          255
+         ],
+         "outline": {
+          "color": [
+           26,
+           26,
+           26,
+           191
+          ],
+          "width": 0.75,
+          "type": "esriSLS",
+          "style": "esriSLSSolid"
+         },
+         "type": "esriSFS",
+         "style": "esriSFSSolid"
+        },
+        "label": "> 0.50 To 0.75",
+        "classMaxValue": 0.75
+       },
+       {
+        "symbol": {
+         "color": [
+          209,
+          135,
+          82,
+          255
+         ],
+         "outline": {
+          "color": [
+           26,
+           26,
+           26,
+           191
+          ],
+          "width": 0.75,
+          "type": "esriSLS",
+          "style": "esriSLSSolid"
+         },
+         "type": "esriSFS",
+         "style": "esriSFSSolid"
+        },
+        "label": "> 0.75 To 1.00",
+        "classMaxValue": 1
+       },
+       {
+        "symbol": {
+         "color": [
+          189,
+          103,
+          42,
+          255
+         ],
+         "outline": {
+          "color": [
+           26,
+           26,
+           26,
+           191
+          ],
+          "width": 0.75,
+          "type": "esriSLS",
+          "style": "esriSLSSolid"
+         },
+         "type": "esriSFS",
+         "style": "esriSFSSolid"
+        },
+        "label": "> 1.00",
+        "classMaxValue": 2.9
+       }
+      ]
+     }
+    },
+    "minScale": 1500000,
+    "maxScale": 0
+   },
+   "popupInfo": {
+    "title": "",
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "label": "OBJECTID",
+      "isEditable": false,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "DAUID",
+      "label": "DAUID",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "CSDUID",
+      "label": "CSDUID",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "CSDNAME",
+      "label": "CSDNAME",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "CTUID",
+      "label": "CTUID",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "CTNAME",
+      "label": "CTNAME",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "DACODE",
+      "label": "DACODE",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "PDZ",
+      "label": "PDZ",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "Population",
+      "label": "Population",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Dwellings",
+      "label": "Dwellings",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Employees",
+      "label": "Employees",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "TotalArea_ha",
+      "label": "Area (ha)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 1,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "SC_14",
+      "label": "Number of Intersections/Hectare",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "SC_15",
+      "label": "Pedestrian Infrastructure Ratio",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Intersections",
+      "label": "Intersections",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "CrossIntersections",
+      "label": "Cross Intersections",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "TIntersections",
+      "label": "T-Intersections",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "CuldeSacs",
+      "label": "Cul-de-Sacs",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "IntersectionWeight",
+      "label": "Intersection Weight",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "WeigthedIntersectionDensity_ha",
+      "label": "Weighted Intersection Density (ha)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Sidewalks_m",
+      "label": "Sidewalk (m)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 1,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Sidewalks_km",
+      "label": "Sidewalk Length (km)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 3,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Trails_m",
+      "label": "Trail Length (m)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 1,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Trails_km",
+      "label": "Trail Length (km)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 3,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "PedestrianInfra_m",
+      "label": "Pedestrian Infrastructure Length (m)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 1,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "PedestrianInfra_km",
+      "label": "Pedestrian Infrastructure Length (km)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 3,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Roads_m",
+      "label": "Road Length (m)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 1,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Roads_km",
+      "label": "Road Length (km)",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 3,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "PedestrianRatio",
+      "label": "Ratio",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Shape__Area",
+      "label": "Shape__Area",
+      "isEditable": false,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Shape__Length",
+      "label": "Shape__Length",
+      "isEditable": false,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "expression/expr0",
+      "visible": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     }
+    ],
+    "description": "<font size='2'><b>Intersection Density</b><br /> <br /><b>{SC_14}</b> intersections per hectare.<br /> <br /><b>{expression/expr0}</b> intersections with a weighted score of <b>{IntersectionWeight}</b> distributed across <b>{TotalArea_ha}</b> <b>ha</b> of land.</font><br /><font size='2'><br />Intersection Type (Weight) : Count<br /><br />Cross Intersections (1.00) :<b> {CrossIntersections}</b><br />T-Intersections (0.67) : <b>{TIntersections}</b><br /> <br /><b>Location Information</b><br /><br />Municipality: {CSDNAME}<br />Census Tract: {CTUID}<br />Dissemination Area: {DAUID} </font>",
+    "showAttachments": true,
+    "expressionInfos": [
+     {
+      "name": "expr0",
+      "title": "Intersections (Four + Three Way)",
+      "expression": "$feature.CrossIntersections+$feature.TIntersections",
+      "returnType": "number"
+     }
+    ],
+    "mediaInfos": []
+   }
+  },
+  {
+   "id": "Bnd_HDABoundaries_3785",
+   "layerType": "ArcGISFeatureLayer",
+   "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Bnd_HDABoundaries/FeatureServer/2",
+   "visibility": false,
+   "opacity": 1,
+   "title": "Municipal Ward",
+   "itemId": "e39ac7a8bc974097a77d7780828f70f8",
+   "layerDefinition": {
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "label": "",
+      "description": "",
+      "symbol": {
+       "color": null,
+       "outline": {
+        "color": [
+         168,
+         112,
+         0,
+         255
+        ],
+        "width": 1.125,
+        "type": "esriSLS",
+        "style": "esriSLSDashDot"
+       },
+       "type": "esriSFS",
+       "style": "esriSFSSolid"
+      }
+     },
+     "labelingInfo": [
+      {
+       "labelExpression": null,
+       "labelExpressionInfo": {
+        "expression": "$feature[\"WardName\"]",
+        "value": "{WardName}"
+       },
+       "useCodedValues": true,
+       "maxScale": 20000,
+       "minScale": 1500000,
+       "where": null,
+       "labelPlacement": "esriServerPolygonPlacementAlwaysHorizontal",
+       "symbol": {
+        "color": [
+         255,
+         255,
+         255,
+         255
+        ],
+        "type": "esriTS",
+        "backgroundColor": null,
+        "borderLineColor": null,
+        "haloSize": 0.75,
+        "haloColor": [
+         210,
+         105,
+         30,
+         255
+        ],
+        "horizontalAlignment": "center",
+        "rightToLeft": false,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0,
+        "text": "",
+        "rotated": false,
+        "kerning": true,
+        "font": {
+         "size": 7.5,
+         "style": "normal",
+         "decoration": "none",
+         "weight": "bold",
+         "family": "Arial Unicode MS"
+        }
+       }
+      }
+     ]
+    },
+    "minScale": 1500000,
+    "maxScale": 20000
+   },
+   "showLabels": true,
+   "popupInfo": {
+    "title": "",
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID_1",
+      "label": "OBJECTID_1",
+      "isEditable": false,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "OBJECTID",
+      "label": "OBJECTID",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 0,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "WARDNUM",
+      "label": "WARDNUM",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "MUNIC",
+      "label": "MUNIC",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "Mayor",
+      "label": "Mayor",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "FirstName0",
+      "label": "FirstName0",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "LastName0",
+      "label": "LastName0",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "Phone0",
+      "label": "Phone0",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "email0",
+      "label": "email0",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "FirstName1",
+      "label": "FirstName1",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "LastName1",
+      "label": "LastName1",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "Phone1",
+      "label": "Phone1",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "email1",
+      "label": "email1",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "RC_Name",
+      "label": "RC_Name",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "Shape_Leng",
+      "label": "Shape_Leng",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "WardName",
+      "label": "Ward Name",
+      "isEditable": true,
+      "tooltip": "",
+      "visible": true,
+      "stringFieldOption": "textbox"
+     },
+     {
+      "fieldName": "Shape__Area",
+      "label": "Shape__Area",
+      "isEditable": false,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     },
+     {
+      "fieldName": "Shape__Length",
+      "label": "Shape__Length",
+      "isEditable": false,
+      "tooltip": "",
+      "visible": false,
+      "stringFieldOption": "textbox",
+      "format": {
+       "places": 2,
+       "digitSeparator": true
+      }
+     }
+    ],
+    "description": "<div><font size='2'><b>{MUNIC} {WardName}</b></font></div><div><font size='2'><br /></font></div><div><font size='2'>Councilor(s): {FirstName0} {LastName0}</font></div><div><font size='2'>                        {FirstName1} {LastName1}</font></div><div><br /></div>",
+    "showAttachments": true,
+    "mediaInfos": []
+   }
+  },
+  {
+   "id": "Bnd_HDABoundaries_9785",
+   "layerType": "ArcGISFeatureLayer",
+   "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Bnd_HDABoundaries/FeatureServer/0",
+   "visibility": true,
+   "opacity": 1,
+   "title": "Municipal Boundary",
+   "itemId": "e39ac7a8bc974097a77d7780828f70f8",
+   "layerDefinition": {
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "label": "",
+      "description": "",
+      "symbol": {
+       "color": [
+        0,
+        0,
+        0,
+        0
+       ],
+       "outline": {
+        "color": [
+         0,
+         0,
+         0,
+         255
+        ],
+        "width": 1.5,
+        "type": "esriSLS",
+        "style": "esriSLSSolid"
+       },
+       "type": "esriSFS",
+       "style": "esriSFSSolid"
+      }
+     },
+     "labelingInfo": [
+      {
+       "labelExpression": null,
+       "labelExpressionInfo": {
+        "expression": "$feature[\"CSDNAME\"]",
+        "value": "{CSDNAME}"
+       },
+       "useCodedValues": true,
+       "maxScale": 20000,
+       "minScale": 1500000,
+       "where": null,
+       "labelPlacement": "esriServerPolygonPlacementAlwaysHorizontal",
+       "symbol": {
+        "color": [
+         255,
+         255,
+         255,
+         255
+        ],
+        "type": "esriTS",
+        "backgroundColor": null,
+        "borderLineColor": null,
+        "haloSize": 0.75,
+        "haloColor": [
+         47,
+         79,
+         79,
+         255
+        ],
+        "horizontalAlignment": "center",
+        "rightToLeft": false,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 0,
+        "text": "",
+        "rotated": false,
+        "kerning": true,
+        "font": {
+         "size": 9,
+         "style": "normal",
+         "decoration": "none",
+         "weight": "bold",
+         "family": "Arial Unicode MS"
+        }
+       }
+      }
+     ]
+    },
+    "minScale": 1500000,
+    "maxScale": 20000
+   },
+   "showLabels": true,
+   "disablePopup": true
+  }
+ ],
+ "baseMap": {
+  "baseMapLayers": [
+   {
+    "id": "VectorTile_8133",
+    "type": "VectorTileLayer",
+    "layerType": "VectorTileLayer",
+    "title": "Light Grey Canvas Background",
+    "styleUrl": "https://www.arcgis.com/sharing/rest/content/items/7f88bc720bf945b490c2bd5bd3b83752/resources/styles/root.json",
+    "itemId": "7f88bc720bf945b490c2bd5bd3b83752",
+    "visibility": true,
+    "opacity": 1
+   },
+   {
+    "id": "VectorTile_9227",
+    "type": "VectorTileLayer",
+    "layerType": "VectorTileLayer",
+    "title": "Light Grey Community Map",
+    "styleUrl": "https://www.arcgis.com/sharing/rest/content/items/0baf45ff172d4917b12f3a691bc87553/resources/styles/root.json",
+    "itemId": "0baf45ff172d4917b12f3a691bc87553",
+    "visibility": true,
+    "opacity": 1
+   }
+  ],
+  "title": "Light Grey Community Map"
+ },
+ "spatialReference": {
+  "wkid": 102100,
+  "latestWkid": 3857
+ },
+ "authoringApp": "WebMapViewer",
+ "authoringAppVersion": "10.1",
+ "version": "2.24",
+ "bookmarks": [
+  {
+   "extent": {
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "xmax": -8865013.810499348,
+    "xmin": -8921462.555887874,
+    "ymax": 5457910.290917805,
+    "ymin": 5425844.957552218
+   },
+   "name": "Caledon"
+  },
+  {
+   "extent": {
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "xmax": -8850835.175235376,
+    "xmin": -8907283.920623902,
+    "ymax": 5439121.70238611,
+    "ymin": 5407056.369020523
+   },
+   "name": "Brampton"
+  },
+  {
+   "extent": {
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "xmax": -8839675.369105754,
+    "xmin": -8896124.11449428,
+    "ymax": 5421541.185880544,
+    "ymin": 5389475.852514956
+   },
+   "name": "Mississauga"
+  },
+  {
+   "extent": {
+    "spatialReference": {
+     "wkid": 102100,
+     "latestWkid": 3857
+    },
+    "xmax": -8825266.98927402,
+    "xmin": -8938164.480051072,
+    "ymax": 5458116.303914951,
+    "ymin": 5393985.637183774
+   },
+   "name": "Peel"
+  }
+ ]
+}

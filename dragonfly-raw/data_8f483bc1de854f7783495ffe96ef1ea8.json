@@ -1,0 +1,258 @@
+{
+ "map": {
+  "conditions": [
+   "popupDisabled"
+  ]
+ },
+ "about": {
+  "title": {
+   "express": true,
+   "defaultValue": ""
+  },
+  "titleLink": {
+   "express": false,
+   "defaultValue": ""
+  },
+  "introductionTitle": {
+   "express": true,
+   "defaultValue": "Welcome!"
+  },
+  "introductionContent": {
+   "express": true,
+   "defaultValue": "Search for an address to learn more about the location and its surrounding area.</br>If you don't know the address, use one of these search methods: <ul><li>Click the search box and type in an address or choose <b>Use current location </b><img alt src='./assets/search-tip.png'/></li><li>Click within the map <div><img alt src='./assets/map-tip.png'/></div></li></ul></br> Results will include information about features of interest."
+  },
+  "legend": {
+   "defaultValue": false,
+   "express": false,
+   "legendConfig": {
+    "express": false
+   },
+   "legendPosition": {
+    "defaultValue": {
+     "position": "top-right",
+     "index": 0
+    }
+   },
+   "legendOpenAtStart": {
+    "defaultValue": false
+   }
+  }
+ },
+ "interactivity": {
+  "exploreNavigate": {
+   "explore": {
+    "scalebar": {
+     "defaultValue": false,
+     "express": false,
+     "scalebarPosition": {
+      "defaultValue": {
+       "position": "bottom-right",
+       "index": 0
+      }
+     }
+    },
+    "mapZoom": {
+     "defaultValue": true,
+     "express": false,
+     "mapZoomPosition": {
+      "defaultValue": {
+       "position": "top-right",
+       "index": 1
+      }
+     }
+    },
+    "home": {
+     "defaultValue": true,
+     "express": false,
+     "homePosition": {
+      "defaultValue": {
+       "position": "top-right",
+       "index": 2
+      }
+     }
+    },
+    "bookmarks": {
+     "defaultValue": false,
+     "express": false,
+     "bookmarksPosition": {
+      "defaultValue": {
+       "position": "top-right",
+       "index": 1
+      }
+     }
+    }
+   },
+   "navigate": {
+    "extentSelector": {
+     "defaultValue": false,
+     "extentSelectorConfig": {
+      "express": false
+     }
+    }
+   }
+  },
+  "modify": {
+   "modify": {
+    "mapPin": {
+     "defaultValue": true,
+     "express": "false",
+     "mapPinColor": {
+      "express": false
+     }
+    },
+    "mapPinLabel": {
+     "express": false,
+     "defaultValue": false,
+     "mapPinLabelColor": {
+      "express": false
+     }
+    },
+    "hideLayers": {
+     "defaultValue": false,
+     "express": false
+    },
+    "displayUnmatchedResults": {
+     "express": false
+    },
+    "basemapToggle": {
+     "defaultValue": false,
+     "express": false,
+     "basemapTogglePosition": {
+      "defaultValue": {
+       "position": "bottom-left",
+       "index": 0
+      }
+     },
+     "basemapSelector": {
+      "express": false,
+      "defaultValue": "streets"
+     }
+    }
+   }
+  },
+  "share": {
+   "screenshot": {
+    "screenshot": {
+     "express": false,
+     "defaultValue": false,
+     "screenshotPosition": {
+      "defaultValue": {
+       "position": "top-left",
+       "index": 0
+      }
+     }
+    }
+   },
+   "share": {
+    "share": {
+     "defaultValue": true,
+     "express": false
+    }
+   }
+  },
+  "results": {
+   "results": {
+    "lookupLayers": {
+     "express": true,
+     "config": {
+      "layerSelectionMode": "multiple",
+      "supportedLayerTypes": [
+       "map-image",
+       "feature",
+       "group"
+      ],
+      "supportedGeometryTypes": "*",
+      "supportsFieldSelection": false
+     }
+    },
+    "enableSearchLayer": {
+     "express": false,
+     "searchLayer": {
+      "express": false,
+      "config": {
+       "layerSelectionMode": "single",
+       "supportedLayerTypes": [
+        "map-image",
+        "feature",
+        "group"
+       ],
+       "supportedGeometryTypes": [
+        "esriGeometryPolygon"
+       ],
+       "supportsFieldSelection": false
+      }
+     }
+    },
+    "groupResultsByLayer": {
+     "defaultValue": true,
+     "express": false
+    }
+   }
+  },
+  "search": {
+   "searchConfiguration": {
+    "express": true,
+    "config": {
+     "includeDefaultLocators": false
+    }
+   }
+  },
+  "resultsText": {
+   "resultsText": {
+    "noResultsMessage": {
+     "express": true
+    },
+    "resultsPanelPreText": {
+     "express": false
+    },
+    "resultsPanelPostText": {
+     "express": false
+    }
+   }
+  }
+ },
+ "themeLayout": {
+  "theme": {
+   "theme": {
+    "applySharedTheme": {
+     "defaultValue": true,
+     "express": true
+    },
+    "theme": {
+     "defaultValue": "light",
+     "express": true
+    },
+    "enableHeaderColor": {
+     "defaultValue": false,
+     "express": false,
+     "headerColor": {
+      "express": false,
+      "defaultValue": null
+     }
+    },
+    "enableHeaderBackground": {
+     "defaultValue": false,
+     "express": false,
+     "headerBackground": {
+      "express": false,
+      "defaultValue": null
+     }
+    },
+    "customCSS": {
+     "defaultValue": ""
+    }
+   },
+   "layoutType": {
+    "hideMap": {
+     "defaultValue": false,
+     "express": true
+    }
+   }
+  },
+  "positionManager": {
+   "positionManager": {
+    "express": true
+   }
+  }
+ }
+}

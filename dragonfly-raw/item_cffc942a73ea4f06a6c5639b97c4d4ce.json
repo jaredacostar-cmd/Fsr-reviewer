@@ -1,0 +1,73 @@
+{
+ "id": "cffc942a73ea4f06a6c5639b97c4d4ce",
+ "owner": "integrated.planning",
+ "ownerId": "4e85bb047a5f4d697f8b6d0ae11e60ef",
+ "created": 1331921444000,
+ "modified": 1335972879000,
+ "guid": null,
+ "name": null,
+ "title": "Credit River Watershed and Region of Peel Natural Areas Inventory - with all NAI",
+ "type": "Web Map",
+ "typeKeywords": [
+  "ArcGIS Online",
+  "Explorer Web Map",
+  "Map",
+  "Online Map",
+  "Web Map"
+ ],
+ "description": "<b><font color='#008000'>Natural Areas Inventories</font></b> are designed to provide biological and ecological information that can be used to establish baseline conditions on natural heritage features and functions present at varying geographic scales, including at a project site, for an area or over a municipality or a watershed.<br /><br />A link to the <b>Credit River Watershed and Region of Peel NAI Report – Volume 1</b> can be found <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report.pdf' target='_blank'>Here</a>.<br /><br /><b><u>INSTRUCTIONS</u></b><br /><br /><div>Use the Zoom + or Zoom - buttons (or hold shift and drag a box) to navigate to a Natural Area with Site Summary outlined in red. If multiple selections occur, press the white Next feature arrow in the top right of the pop-up window until Link to Site Summary (PDF) is found. Click on <u><font color='#6495ed'>More info</font></u> from the pop-up window to view the Site Summary.</div><div><br /></div><div>For a list of all plants growing naturally in the study area, click <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Appendix-B.pdf' target='_blank'>Here</a>.</div><div><br /></div><div>For a list of the animals (birds, fish, butterflies, dragonflies/damselflies, reptiles, amphibians and mammals) of the study area, click <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Appendix-C.pdf' target='_blank'>Here</a>.</div><div><br /></div><div>For descriptions of dominant plants in all of the plant communities of the study area, click <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Appendix-A.pdf' target='_blank'>Here</a>.</div><div><br /></div><div>For background information on the project and on the study area (geology, physiography, soils, hydrology, human history, natural heritage and environmental management) and a description of the sections of the site summaries, click <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Introduction.pdf' target='_blank'>Here</a>.</div><div><br /></div><div>Additional details are available on a need-to-know basis by submitting a Data Request to the appropriate Conservation Authority. Email contact details are available for each Natural Area with Site Summary on the interactive map.</div><div><br /></div><div>Requests f<font color='#000000'>or data on other natural areas in the Credit River watershed should be directed to CVC (<b>Jacquelyn Kiers:</b></font></div><div><a href='mailto:jkiers@creditvalleyca.ca&amp;subject=NAI Data Request' target='_blank'>jkiers@creditvalleyca.ca</a>)<font color='#000000'>. Requests for data on other natural areas in the Etobicoke Creek watershed, Mimico Creek watershed and Humber River watershed portions of the Region of Peel should be directed to TRCA (<b>Susan Hayes: </b></font><a href='mailto:SHayes@trca.on.ca&amp;subject=NAI Data Request' target='_blank'>SHayes@trca.on.ca</a><font color='#000000'>).</font></div><div><font color='#000000'><br /></font></div><div><font color='#000000'>This map is intended for illustration purposes only. The information shown should not be interpreted to represent the most up-to-date or accurate surveyed information.</font></div>",
+ "tags": [
+  "Natural",
+  "Area",
+  "Inventory",
+  "Plant",
+  "Animal"
+ ],
+ "snippet": "A Natural Areas Inventory (NAI) is an inventory of the biological resources of a natural area – it documents the species and ecological features that are present in an area.",
+ "thumbnail": "thumbnail/ago_downloaded.png",
+ "documentation": null,
+ "extent": [
+  [
+   -80.9166,
+   43.2249
+  ],
+  [
+   -78.6177,
+   44.2045
+  ]
+ ],
+ "categories": [],
+ "spatialReference": null,
+ "accessInformation": "CVC, TRCA, Region of Peel",
+ "classification": null,
+ "licenseInfo": "<br />",
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 10968974,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 988,
+ "scoreCompleteness": 100,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1782486000000,
+ "robots": [
+  "noindex",
+  "nofollow"
+ ]
+}

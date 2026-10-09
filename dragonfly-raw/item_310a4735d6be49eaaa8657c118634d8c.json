@@ -1,0 +1,73 @@
+{
+ "id": "310a4735d6be49eaaa8657c118634d8c",
+ "owner": "integrated.planning",
+ "ownerId": "4e85bb047a5f4d697f8b6d0ae11e60ef",
+ "created": 1332357365000,
+ "modified": 1350499873000,
+ "guid": null,
+ "name": null,
+ "title": "CVC / Peel Natural Areas Inventory",
+ "type": "Web Map",
+ "typeKeywords": [
+  "ArcGIS Online",
+  "Explorer Web Map",
+  "Map",
+  "Online Map",
+  "Web Map"
+ ],
+ "description": "<b><font color='#008000'>Natural Areas Inventories</font></b> are designed to provide biological and ecological information that can be used to establish baseline conditions on natural heritage features and functions present at varying geographic scales, including at a project site, for an area or over a municipality or a watershed.<br /><br /><b><u>INSTRUCTIONS</u></b><br /><br /><div>Natural Area with Site Summaries are not visible when the map is first opened. To view, use the Zoom + button (or hold shift and drag a box) to bring up and navigate to Natural Areas which will be outlined in red. Click on a red Natural Area to bring up information in a pop-up window.<br /><br />To view the Site Summary, Click on <u><font color='#6495ed'>More info</font></u> beside Link to Site Summary (PDF) in the pop-up window. The white Next feature arrow in the top right of the pop-up window will scroll through information pages for other related features. Additional navigation tools are located at the top of the map.<br /></div><br /><b><u>REPORTS</u></b><br /><br /><a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report.pdf' target='_blank'>Credit River Watershed and Region of Peel NAI Report – Volume 1</a> (without Site Summaries)<br /><br /><div><div>A list of all <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Appendix-B.pdf' target='_blank'>Plants</a> growing naturally in the study area.</div><div><br /></div><div>A list of the <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Appendix-C.pdf' target='_blank'>Animals</a> (birds, fish, butterflies, dragonflies/damselflies, reptiles, amphibians and mammals) in the study area.</div><div><br /></div><div>Descriptions of <a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Appendix-A.pdf' target='_blank'>Plant Communities</a> in the study area.</div><div><br /></div><div><a href='http://www.peelregion.ca/planning-maps/NAI/report/NAI-Volume1-Report-Introduction.pdf' target='_blank'>Background Information</a> on the project and on the study area (geology, physiography, soils, hydrology, human history, natural heritage and environmental management) and a description of the sections of the site summaries.</div></div><div><br /></div><div><div>Additional details are available on a need-to-know basis by submitting a Data Request to the appropriate Conservation Authority. Email contact details are available for each Natural Area with Site Summary on the interactive map.</div><div><br /></div><div>Requests f<font color='#000000'>or data on other natural areas in the Credit River watershed should be directed to CVC (<b>Jacquelyn Kiers:</b></font></div><div><a href='mailto:jkiers@creditvalleyca.ca&amp;subject=NAI%20Data%20Request' target='_self'>jkiers@creditvalleyca.ca</a>)<font color='#000000'>. Requests for data on other natural areas in the Etobicoke Creek watershed, Mimico Creek watershed and Humber River watershed portions of the Region of Peel should be directed to TRCA (<b>Susan Hayes:</b></font></div><div><a href='mailto:SHayes@trca.on.ca&amp;subject=NAI%20Data%20Request' target='_self'>SHayes@trca.on.ca</a><font color='#000000'>).</font></div></div><div><font color='#000000'><br /></font></div><div><span style='color: rgb(0, 0, 0); '>This map is intended for illustration purposes only. The information shown should not be interpreted to represent the most up-to-date or accurate surveyed information.</span></div>",
+ "tags": [
+  "Natural",
+  "Area",
+  "Inventory",
+  "Plant",
+  "Animal"
+ ],
+ "snippet": "A Natural Areas Inventory (NAI) is an inventory of the biological resources of a natural area – it documents the species and ecological features that are present in an area.",
+ "thumbnail": "thumbnail/ago_downloaded.png",
+ "documentation": null,
+ "extent": [
+  [
+   -80.404,
+   43.4997
+  ],
+  [
+   -79.2546,
+   43.9621
+  ]
+ ],
+ "categories": [],
+ "spatialReference": null,
+ "accessInformation": "CVC, TRCA, Region of Peel",
+ "classification": null,
+ "licenseInfo": "<br />",
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 5959765,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 1180,
+ "scoreCompleteness": 100,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1774620000000,
+ "robots": [
+  "noindex",
+  "nofollow"
+ ]
+}

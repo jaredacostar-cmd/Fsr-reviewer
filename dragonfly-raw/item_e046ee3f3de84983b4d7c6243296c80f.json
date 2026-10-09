@@ -1,0 +1,72 @@
+{
+ "id": "e046ee3f3de84983b4d7c6243296c80f",
+ "owner": "david.guillette@peelregion.ca_RegionofPeel",
+ "ownerId": "8c649545c335c9b3b30dcc4c6c4946c8",
+ "orgId": "ONZht79c8QWuX759",
+ "created": 1531159623000,
+ "modified": 1649085091000,
+ "guid": null,
+ "name": null,
+ "title": "Healthy Development Assessment - Intersection Density",
+ "type": "Web Map",
+ "typeKeywords": [
+  "ArcGIS Online",
+  "Explorer Web Map",
+  "Map",
+  "Online Map",
+  "Web Map"
+ ],
+ "description": null,
+ "tags": [
+  "HDA",
+  "Peel",
+  "Caledon",
+  "Brampton",
+  "Mississauga",
+  "Street Connectivity",
+  "Intersection Density"
+ ],
+ "snippet": "Web map displaying intersection density of the dissemination area level of geography for the Region of Peel",
+ "thumbnail": "thumbnail/ago_downloaded.png",
+ "documentation": null,
+ "extent": [
+  [
+   -80.2929,
+   43.5315
+  ],
+  [
+   -79.2787,
+   43.9576
+  ]
+ ],
+ "categories": [],
+ "spatialReference": null,
+ "accessInformation": null,
+ "classification": null,
+ "licenseInfo": null,
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": null,
+ "proxyFilter": null,
+ "access": "public",
+ "size": 14493,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 801,
+ "scoreCompleteness": 66,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1791316800000
+}

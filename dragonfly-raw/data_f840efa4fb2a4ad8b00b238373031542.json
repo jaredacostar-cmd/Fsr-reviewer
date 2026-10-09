@@ -1,0 +1,466 @@
+{
+ "layers": [
+  {
+   "id": 0,
+   "popupInfo": {
+    "title": "{city_name}",
+    "mediaInfos": [],
+    "popupElements": [
+     {
+      "fieldInfos": [
+       {
+        "fieldName": "OBJECTID",
+        "isEditable": false,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "OBJECTID"
+       },
+       {
+        "fieldName": "city_id",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "city_id"
+       },
+       {
+        "fieldName": "city_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "name"
+       },
+       {
+        "fieldName": "city_slug",
+        "isEditable": true,
+        "visible": true,
+        "label": "slug"
+       },
+       {
+        "fieldName": "country_id",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "country_id"
+       },
+       {
+        "fieldName": "country_code",
+        "isEditable": true,
+        "visible": true,
+        "label": "country_code"
+       },
+       {
+        "fieldName": "country_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "country_name"
+       },
+       {
+        "fieldName": "region_id",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "region_id"
+       },
+       {
+        "fieldName": "region_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "region_name"
+       }
+      ],
+      "type": "fields"
+     }
+    ],
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "isEditable": false,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "OBJECTID"
+     },
+     {
+      "fieldName": "city_id",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "city_id"
+     },
+     {
+      "fieldName": "city_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "name"
+     },
+     {
+      "fieldName": "city_slug",
+      "isEditable": true,
+      "visible": true,
+      "label": "slug"
+     },
+     {
+      "fieldName": "country_id",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "country_id"
+     },
+     {
+      "fieldName": "country_code",
+      "isEditable": true,
+      "visible": true,
+      "label": "country_code"
+     },
+     {
+      "fieldName": "country_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "country_name"
+     },
+     {
+      "fieldName": "region_id",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "region_id"
+     },
+     {
+      "fieldName": "region_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "region_name"
+     }
+    ],
+    "expressionInfos": []
+   }
+  },
+  {
+   "id": 4,
+   "popupInfo": {
+    "title": "{country_name}",
+    "mediaInfos": [],
+    "popupElements": [
+     {
+      "fieldInfos": [
+       {
+        "fieldName": "OBJECTID",
+        "isEditable": false,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "OBJECTID"
+       },
+       {
+        "fieldName": "country_code",
+        "isEditable": true,
+        "visible": true,
+        "label": "country_code"
+       },
+       {
+        "fieldName": "country_id",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "country_id"
+       },
+       {
+        "fieldName": "country_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "country_name"
+       },
+       {
+        "fieldName": "region_id",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "region_id"
+       },
+       {
+        "fieldName": "region_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "region_name"
+       },
+       {
+        "fieldName": "country_slug",
+        "isEditable": true,
+        "visible": true,
+        "label": "country_slug"
+       },
+       {
+        "fieldName": "Shape__Area",
+        "isEditable": false,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape__Area"
+       },
+       {
+        "fieldName": "Shape__Length",
+        "isEditable": false,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape__Length"
+       }
+      ],
+      "type": "fields"
+     }
+    ],
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "isEditable": false,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "OBJECTID"
+     },
+     {
+      "fieldName": "country_code",
+      "isEditable": true,
+      "visible": true,
+      "label": "country_code"
+     },
+     {
+      "fieldName": "country_id",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "country_id"
+     },
+     {
+      "fieldName": "country_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "country_name"
+     },
+     {
+      "fieldName": "region_id",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "region_id"
+     },
+     {
+      "fieldName": "region_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "region_name"
+     },
+     {
+      "fieldName": "country_slug",
+      "isEditable": true,
+      "visible": true,
+      "label": "country_slug"
+     },
+     {
+      "fieldName": "Shape__Area",
+      "isEditable": false,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape__Area"
+     },
+     {
+      "fieldName": "Shape__Length",
+      "isEditable": false,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape__Length"
+     }
+    ],
+    "expressionInfos": []
+   }
+  }
+ ],
+ "tables": [
+  {
+   "id": 3,
+   "popupInfo": {
+    "title": "{city_name}",
+    "mediaInfos": [],
+    "popupElements": [
+     {
+      "fieldInfos": [
+       {
+        "fieldName": "OBJECTID",
+        "isEditable": false,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "OBJECTID"
+       },
+       {
+        "fieldName": "city_id",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "city_id"
+       },
+       {
+        "fieldName": "city_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "city_name"
+       }
+      ],
+      "type": "fields"
+     }
+    ],
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "isEditable": false,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "OBJECTID"
+     },
+     {
+      "fieldName": "city_id",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "city_id"
+     },
+     {
+      "fieldName": "city_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "city_name"
+     }
+    ],
+    "expressionInfos": []
+   }
+  },
+  {
+   "id": 5,
+   "popupInfo": {
+    "title": "{country_name}",
+    "mediaInfos": [],
+    "popupElements": [
+     {
+      "fieldInfos": [
+       {
+        "fieldName": "OBJECTID",
+        "isEditable": false,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "OBJECTID"
+       },
+       {
+        "fieldName": "country_id",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "country_id"
+       },
+       {
+        "fieldName": "country_name",
+        "isEditable": true,
+        "visible": true,
+        "label": "country_name"
+       }
+      ],
+      "type": "fields"
+     }
+    ],
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "isEditable": false,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "OBJECTID"
+     },
+     {
+      "fieldName": "country_id",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "country_id"
+     },
+     {
+      "fieldName": "country_name",
+      "isEditable": true,
+      "visible": true,
+      "label": "country_name"
+     }
+    ],
+    "expressionInfos": []
+   }
+  }
+ ]
+}

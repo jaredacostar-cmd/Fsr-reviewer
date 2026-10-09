@@ -1,0 +1,6 @@
+{
+ "type": "FeatureCollection",
+ "name": "Light_Gray_Canvas_Reference",
+ "source": "http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Reference/MapServer/0",
+ "features": []
+}

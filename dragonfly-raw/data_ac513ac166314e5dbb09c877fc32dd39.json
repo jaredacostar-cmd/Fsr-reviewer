@@ -1,0 +1,4443 @@
+{
+ "layers": [
+  {
+   "id": 0,
+   "blendMode": "normal",
+   "layerDefinition": {
+    "drawingInfo": {
+     "renderer": {
+      "type": "simple",
+      "symbol": {
+       "type": "CIMSymbolReference",
+       "symbol": {
+        "type": "CIMPolygonSymbol",
+        "symbolLayers": [
+         {
+          "type": "CIMSolidStroke",
+          "enable": true,
+          "capStyle": "Round",
+          "joinStyle": "Round",
+          "lineStyle3D": "Strip",
+          "miterLimit": 10,
+          "width": 0.7,
+          "height3D": 1,
+          "anchor3D": "Center",
+          "color": [
+           110,
+           110,
+           110,
+           255
+          ]
+         },
+         {
+          "type": "CIMSolidFill",
+          "enable": true,
+          "color": [
+           219,
+           252,
+           210,
+           255
+          ]
+         }
+        ],
+        "angleAlignment": "Map"
+       }
+      }
+     },
+     "scaleSymbols": true
+    }
+   },
+   "disablePopup": false,
+   "popupInfo": {
+    "title": "{Landuse_Count_Unknown}",
+    "mediaInfos": [],
+    "popupElements": [
+     {
+      "fieldInfos": [
+       {
+        "fieldName": "OBJECTID",
+        "isEditable": false,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "OBJECTID"
+       },
+       {
+        "fieldName": "Block",
+        "isEditable": true,
+        "visible": true,
+        "label": "Block"
+       },
+       {
+        "fieldName": "Planning",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Planning"
+       },
+       {
+        "fieldName": "Landuse_Count_Unknown",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Unknown"
+       },
+       {
+        "fieldName": "Landuse_Count_Agricultural",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Agricultural"
+       },
+       {
+        "fieldName": "Landuse_Count_Airport",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Airport"
+       },
+       {
+        "fieldName": "Landuse_Count_ComSVCS",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_ComSVCS"
+       },
+       {
+        "fieldName": "Landuse_Count_Gov",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Gov"
+       },
+       {
+        "fieldName": "Landuse_Count_GreenSpace",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_GreenSpace"
+       },
+       {
+        "fieldName": "Landuse_Count_IndEXTR",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_IndEXTR"
+       },
+       {
+        "fieldName": "Landuse_Count_Ind",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Ind"
+       },
+       {
+        "fieldName": "Landuse_Count_Instit",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Instit"
+       },
+       {
+        "fieldName": "Landuse_Count_Office",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Office"
+       },
+       {
+        "fieldName": "Landuse_Count_ResHigh",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_ResHigh"
+       },
+       {
+        "fieldName": "Landuse_Count_ResLow",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_ResLow"
+       },
+       {
+        "fieldName": "Landuse_Count_ResMed",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_ResMed"
+       },
+       {
+        "fieldName": "Landuse_Count_ROW",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_ROW"
+       },
+       {
+        "fieldName": "Landuse_Count_Vacant",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Count_Vacant"
+       },
+       {
+        "fieldName": "Landuse_Area_Agriculture_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Agriculture_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_CommSVCS_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_CommSVCS_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Airport_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Airport_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_GreenSpace_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_GreenSpace_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Gov_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Gov_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Ind_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Ind_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_IndEXTR_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_IndEXTR_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Office_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Office_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Instit_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Instit_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_ResLow_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_ResLow_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_ResHigh_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_ResHigh_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_ROW_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_ROW_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_ResMed_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_ResMed_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Road_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Road_ha"
+       },
+       {
+        "fieldName": "Landuse_Area_Vacant_ha",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Landuse_Area_Vacant_ha"
+       },
+       {
+        "fieldName": "Percent_Area_Unknown",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_Unknown"
+       },
+       {
+        "fieldName": "Percent_Area_1800to1899",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1800to1899"
+       },
+       {
+        "fieldName": "Percent_Area_1900s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1900s"
+       },
+       {
+        "fieldName": "Percent_Area_1910s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1910s"
+       },
+       {
+        "fieldName": "Percent_Area_1920s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1920s"
+       },
+       {
+        "fieldName": "Percent_Area_1930s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1930s"
+       },
+       {
+        "fieldName": "Percent_Area_1940s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1940s"
+       },
+       {
+        "fieldName": "Percent_Area_1950s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1950s"
+       },
+       {
+        "fieldName": "Percent_Area_1960s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1960s"
+       },
+       {
+        "fieldName": "Percent_Area_1970s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1970s"
+       },
+       {
+        "fieldName": "Percent_Area_1980s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1980s"
+       },
+       {
+        "fieldName": "Percent_Area_1990s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_1990s"
+       },
+       {
+        "fieldName": "Percent_Area_2000s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_2000s"
+       },
+       {
+        "fieldName": "Percent_Area_2010s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_2010s"
+       },
+       {
+        "fieldName": "Percent_Area_2020s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_Area_2020s"
+       },
+       {
+        "fieldName": "AgeDev_Count_Unknown",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_Unknown"
+       },
+       {
+        "fieldName": "AgeDev_Count_1800to1899",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1800to1899"
+       },
+       {
+        "fieldName": "AgeDev_Count_1900s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1900s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1910s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1910s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1920s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1920s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1930s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1930s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1940s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1940s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1950s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1950s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1960s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1960s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1970s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1970s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1980s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1980s"
+       },
+       {
+        "fieldName": "AgeDev_Count_1990s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_1990s"
+       },
+       {
+        "fieldName": "AgeDev_Count_2000s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_2000s"
+       },
+       {
+        "fieldName": "AgeDev_Count_2010s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_2010s"
+       },
+       {
+        "fieldName": "AgeDev_Count_2020s",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "AgeDev_Count_2020s"
+       },
+       {
+        "fieldName": "Buildings_Constructed_Between_1",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Buildings_Constructed_Between_1960_And_1989"
+       },
+       {
+        "fieldName": "wwMainLength_km",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainLength_km"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_Unknown",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_Unknown"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2009",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2009"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2010",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2010"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2011",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2011"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2012",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2012"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2013",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2013"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2014",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2014"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2015",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2015"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2016",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2016"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2017",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2017"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2018",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2018"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2019",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2019"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2020",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2020"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2021",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2021"
+       },
+       {
+        "fieldName": "wwMHInspection_Count_2022",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Count_2022"
+       },
+       {
+        "fieldName": "MH_since_2018_count",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "MH_since_2018_count"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_Unknown",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_Unknown"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2009",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2009"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2010",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2010"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2011",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2011"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2012",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2012"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2013",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2013"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2014",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2014"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2015",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2015"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2016",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2016"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2017",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2017"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2018",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2018"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2019",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2019"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2020",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2020"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2021",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2021"
+       },
+       {
+        "fieldName": "wwMHInspection_Percent_2022",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMHInspection_Percent_2022"
+       },
+       {
+        "fieldName": "MH_Inspection_Percent_Since_201",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "MH_Inspection_Percent_Since_2018"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_Unkno",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_Unknown"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2009",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2009"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2010",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2010"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2011",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2011"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2012",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2012"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2013",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2013"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2014",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2014"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2015",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2015"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2016",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2016"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2017",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2017"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2018",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2018"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2019",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2019"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2020",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2020"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2021",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2021"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Count_2022",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Count_2022"
+       },
+       {
+        "fieldName": "Total_CCTV_Inspection_Count",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Total_CCTV_Inspection_Count"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_Unk",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_Unknown"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_200",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2009"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_201",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2010"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_202",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2011"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_203",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2012"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_204",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2013"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_205",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2014"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_206",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2015"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_207",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2016"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_208",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2017"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_209",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2018"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_210",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2019"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_211",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2020"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_212",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2021"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Percent_213",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Percent_2022"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_U",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_Unknown"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_2",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2009"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_3",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2010"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_4",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2011"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_5",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2012"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_6",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2013"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_7",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2014"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_8",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2015"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_km_9",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2016"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_k_10",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2017"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_k_11",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2018"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_k_12",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2019"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_k_13",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2020"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_k_14",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2021"
+       },
+       {
+        "fieldName": "CCTVPerformedwwMain_Length_k_15",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "CCTVPerformedwwMain_Length_km_2022"
+       },
+       {
+        "fieldName": "TotalSum_CCTV_InspectionLength",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "TotalSum_CCTV_InspectionLength"
+       },
+       {
+        "fieldName": "Percent_of_inspected_CCTV_pipes",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Percent_of_inspected_CCTV_pipes_since_2012"
+       },
+       {
+        "fieldName": "SGUPopulation_P2016",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2016"
+       },
+       {
+        "fieldName": "SGUPopulation_P2021",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2021"
+       },
+       {
+        "fieldName": "SGUPopulation_P2026",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2026"
+       },
+       {
+        "fieldName": "SGUPopulation_P2031",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2031"
+       },
+       {
+        "fieldName": "SGUPopulation_P2036",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2036"
+       },
+       {
+        "fieldName": "SGUPopulation_P2041",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2041"
+       },
+       {
+        "fieldName": "SGUPopulation_P2046",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2046"
+       },
+       {
+        "fieldName": "SGUPopulation_P2051",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_P2051"
+       },
+       {
+        "fieldName": "SGUPopulation_E2016",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2016"
+       },
+       {
+        "fieldName": "SGUPopulation_E2021",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2021"
+       },
+       {
+        "fieldName": "SGUPopulation_E2026",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2026"
+       },
+       {
+        "fieldName": "SGUPopulation_E2031",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2031"
+       },
+       {
+        "fieldName": "SGUPopulation_E2036",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2036"
+       },
+       {
+        "fieldName": "SGUPopulation_E2041",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2041"
+       },
+       {
+        "fieldName": "SGUPopulation_E2046",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2046"
+       },
+       {
+        "fieldName": "SGUPopulation_E2051",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SGUPopulation_E2051"
+       },
+       {
+        "fieldName": "wwMainSmkTesting_Lengthkm_Teste",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainSmkTesting_Lengthkm_Tested"
+       },
+       {
+        "fieldName": "wwMainSmkTesting_Lengthkm_WillB",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainSmkTesting_Lengthkm_WillBeTested"
+       },
+       {
+        "fieldName": "wwMainSmkTesting_Lengthkm_NotTe",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainSmkTesting_Lengthkm_NotTestedandWont"
+       },
+       {
+        "fieldName": "wwMainSmkTesting_Lengthkm_Not_1",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainSmkTesting_Lengthkm_NotTested"
+       },
+       {
+        "fieldName": "wwMainSmkTesting_Lengthkm_Pendi",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainSmkTesting_Lengthkm_Pending"
+       },
+       {
+        "fieldName": "wwMainSmkTesting_Lengthkm_Tes_1",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "wwMainSmkTesting_Lengthkm_TestedButResultsNotAsExpected"
+       },
+       {
+        "fieldName": "SmkTestingwwMain_Lengthkm_Perce",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "SmkTestingwwMain_Lengthkm_PercentComplete"
+       },
+       {
+        "fieldName": "LotsNonStandardInspection_Count",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "LotsNonStandardInspection_Count"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2009",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2009"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2010",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2010"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2011",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2011"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2012",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2012"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2013",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2013"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2014",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2014"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2015",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2015"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2016",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2016"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2017",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2017"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2018",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2018"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2019",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2019"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2020",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2020"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2021",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2021"
+       },
+       {
+        "fieldName": "FloodHistory_Count_2022",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "FloodHistory_Count_2022"
+       },
+       {
+        "fieldName": "Flooding_since_2009",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Flooding_since_2009"
+       },
+       {
+        "fieldName": "Block_1",
+        "isEditable": true,
+        "visible": true,
+        "label": "Block"
+       },
+       {
+        "fieldName": "Planning_1",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Planning"
+       },
+       {
+        "fieldName": "Shape__Length_1",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape_Length"
+       },
+       {
+        "fieldName": "Shape__Area_1",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape_Area"
+       },
+       {
+        "fieldName": "WaterMainBreakCount",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "WaterMainBreakCount"
+       },
+       {
+        "fieldName": "Block_12",
+        "isEditable": true,
+        "visible": true,
+        "label": "Block"
+       },
+       {
+        "fieldName": "Planning_12",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Planning"
+       },
+       {
+        "fieldName": "TotalParcel_Count",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Total Parcel Count"
+       },
+       {
+        "fieldName": "DownSpout_ParcelSurvey_Count",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Downspout Count of Parcels Surveyed"
+       },
+       {
+        "fieldName": "DownSpout_PercentSurveyed",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Downspout Percent Surveyed"
+       },
+       {
+        "fieldName": "Total_Count_Downspout",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Total count of downspout verified"
+       },
+       {
+        "fieldName": "BlockDS_Downspout_Pipe_is_missi",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Downspout Pipe is missing"
+       },
+       {
+        "fieldName": "BlockDS_Into_the_Ground",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Into the Ground"
+       },
+       {
+        "fieldName": "BlockDS_To_Surface___Close_to_F",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "To Surface - Close to Foundation"
+       },
+       {
+        "fieldName": "BlockDS_To_Surface___Away_from_",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "To Surface - Away from Foundation"
+       },
+       {
+        "fieldName": "BlockDS_Downspout___Outlet_Not_",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Downspout - Outlet Not visible"
+       },
+       {
+        "fieldName": "BlockDS_Other",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Other"
+       },
+       {
+        "fieldName": "BlockDS_Downspout_Pipe_is_mis_1",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Downspout Pipe is missing Percent"
+       },
+       {
+        "fieldName": "BlockDS_Into_the_Ground_Percent",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Into the Ground Percent"
+       },
+       {
+        "fieldName": "BlockDS_To_Surface_Close_to_Fou",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "To Surface - Close to Foundation Percent"
+       },
+       {
+        "fieldName": "BlockDS_To_Surface_Away_from_Fo",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "To Surface - Away from Foundation Percent"
+       },
+       {
+        "fieldName": "BlockDS_Downspout_Outlet_Not_vi",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Downspout - Outlet Not visible Percent"
+       },
+       {
+        "fieldName": "BlockDS_Other_Percent",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Other Percent"
+       },
+       {
+        "fieldName": "Shape__Length_12",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape_Length"
+       },
+       {
+        "fieldName": "Shape__Area_12",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape_Area"
+       },
+       {
+        "fieldName": "BlockDS_TotalKnownConnections",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Total Known Connections (Inlet Count)"
+       },
+       {
+        "fieldName": "Total_Known_DS_Connections_Inle",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Total Known Downspout Connections (Inlet Count)"
+       },
+       {
+        "fieldName": "BlockDS_TotalDSDisconnected",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Total DS Disconnected"
+       },
+       {
+        "fieldName": "BlockDS_PrecentDSWrkComplete",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Step 9 - Construction Complete (DS Percent)"
+       },
+       {
+        "fieldName": "BlockDS_ToBeDisconnected_Count",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Step 4 - Design Report (Property Count)"
+       },
+       {
+        "fieldName": "Step4_DesignReport_DSCount",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Step 4  - Design Report (DS Count)"
+       },
+       {
+        "fieldName": "BlockDS_RemNotProc_Count",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Remediation Not Proceeding (DS Count)"
+       },
+       {
+        "fieldName": "BlockDS_DSInProgress",
+        "isEditable": true,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Step 7 - RAL Sign off (Property Count)"
+       },
+       {
+        "fieldName": "Step7_RALSignoff_DSCount",
+        "isEditable": true,
+        "format": {
+         "places": 0,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Step 7 - RAL Sign-off (DS Count)"
+       },
+       {
+        "fieldName": "Shape__Area",
+        "isEditable": false,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape__Area"
+       },
+       {
+        "fieldName": "Shape__Length",
+        "isEditable": false,
+        "format": {
+         "places": 6,
+         "digitSeparator": false
+        },
+        "visible": true,
+        "label": "Shape__Length"
+       }
+      ],
+      "type": "fields"
+     }
+    ],
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "isEditable": false,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "OBJECTID"
+     },
+     {
+      "fieldName": "Block",
+      "isEditable": true,
+      "visible": true,
+      "label": "Block"
+     },
+     {
+      "fieldName": "Planning",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Planning"
+     },
+     {
+      "fieldName": "Landuse_Count_Unknown",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Unknown"
+     },
+     {
+      "fieldName": "Landuse_Count_Agricultural",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Agricultural"
+     },
+     {
+      "fieldName": "Landuse_Count_Airport",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Airport"
+     },
+     {
+      "fieldName": "Landuse_Count_ComSVCS",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_ComSVCS"
+     },
+     {
+      "fieldName": "Landuse_Count_Gov",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Gov"
+     },
+     {
+      "fieldName": "Landuse_Count_GreenSpace",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_GreenSpace"
+     },
+     {
+      "fieldName": "Landuse_Count_IndEXTR",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_IndEXTR"
+     },
+     {
+      "fieldName": "Landuse_Count_Ind",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Ind"
+     },
+     {
+      "fieldName": "Landuse_Count_Instit",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Instit"
+     },
+     {
+      "fieldName": "Landuse_Count_Office",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Office"
+     },
+     {
+      "fieldName": "Landuse_Count_ResHigh",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_ResHigh"
+     },
+     {
+      "fieldName": "Landuse_Count_ResLow",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_ResLow"
+     },
+     {
+      "fieldName": "Landuse_Count_ResMed",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_ResMed"
+     },
+     {
+      "fieldName": "Landuse_Count_ROW",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_ROW"
+     },
+     {
+      "fieldName": "Landuse_Count_Vacant",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Count_Vacant"
+     },
+     {
+      "fieldName": "Landuse_Area_Agriculture_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Agriculture_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_CommSVCS_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_CommSVCS_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Airport_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Airport_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_GreenSpace_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_GreenSpace_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Gov_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Gov_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Ind_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Ind_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_IndEXTR_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_IndEXTR_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Office_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Office_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Instit_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Instit_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_ResLow_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_ResLow_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_ResHigh_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_ResHigh_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_ROW_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_ROW_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_ResMed_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_ResMed_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Road_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Road_ha"
+     },
+     {
+      "fieldName": "Landuse_Area_Vacant_ha",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Landuse_Area_Vacant_ha"
+     },
+     {
+      "fieldName": "Percent_Area_Unknown",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_Unknown"
+     },
+     {
+      "fieldName": "Percent_Area_1800to1899",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1800to1899"
+     },
+     {
+      "fieldName": "Percent_Area_1900s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1900s"
+     },
+     {
+      "fieldName": "Percent_Area_1910s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1910s"
+     },
+     {
+      "fieldName": "Percent_Area_1920s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1920s"
+     },
+     {
+      "fieldName": "Percent_Area_1930s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1930s"
+     },
+     {
+      "fieldName": "Percent_Area_1940s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1940s"
+     },
+     {
+      "fieldName": "Percent_Area_1950s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1950s"
+     },
+     {
+      "fieldName": "Percent_Area_1960s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1960s"
+     },
+     {
+      "fieldName": "Percent_Area_1970s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1970s"
+     },
+     {
+      "fieldName": "Percent_Area_1980s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1980s"
+     },
+     {
+      "fieldName": "Percent_Area_1990s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_1990s"
+     },
+     {
+      "fieldName": "Percent_Area_2000s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_2000s"
+     },
+     {
+      "fieldName": "Percent_Area_2010s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_2010s"
+     },
+     {
+      "fieldName": "Percent_Area_2020s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_Area_2020s"
+     },
+     {
+      "fieldName": "AgeDev_Count_Unknown",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_Unknown"
+     },
+     {
+      "fieldName": "AgeDev_Count_1800to1899",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1800to1899"
+     },
+     {
+      "fieldName": "AgeDev_Count_1900s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1900s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1910s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1910s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1920s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1920s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1930s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1930s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1940s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1940s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1950s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1950s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1960s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1960s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1970s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1970s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1980s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1980s"
+     },
+     {
+      "fieldName": "AgeDev_Count_1990s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_1990s"
+     },
+     {
+      "fieldName": "AgeDev_Count_2000s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_2000s"
+     },
+     {
+      "fieldName": "AgeDev_Count_2010s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_2010s"
+     },
+     {
+      "fieldName": "AgeDev_Count_2020s",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "AgeDev_Count_2020s"
+     },
+     {
+      "fieldName": "Buildings_Constructed_Between_1",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Buildings_Constructed_Between_1960_And_1989"
+     },
+     {
+      "fieldName": "wwMainLength_km",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainLength_km"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_Unknown",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_Unknown"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2009",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2009"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2010",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2010"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2011",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2011"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2012",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2012"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2013",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2013"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2014",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2014"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2015",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2015"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2016",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2016"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2017",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2017"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2018",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2018"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2019",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2019"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2020",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2020"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2021",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2021"
+     },
+     {
+      "fieldName": "wwMHInspection_Count_2022",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Count_2022"
+     },
+     {
+      "fieldName": "MH_since_2018_count",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "MH_since_2018_count"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_Unknown",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_Unknown"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2009",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2009"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2010",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2010"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2011",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2011"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2012",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2012"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2013",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2013"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2014",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2014"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2015",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2015"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2016",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2016"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2017",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2017"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2018",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2018"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2019",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2019"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2020",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2020"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2021",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2021"
+     },
+     {
+      "fieldName": "wwMHInspection_Percent_2022",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMHInspection_Percent_2022"
+     },
+     {
+      "fieldName": "MH_Inspection_Percent_Since_201",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "MH_Inspection_Percent_Since_2018"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_Unkno",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_Unknown"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2009",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2009"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2010",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2010"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2011",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2011"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2012",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2012"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2013",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2013"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2014",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2014"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2015",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2015"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2016",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2016"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2017",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2017"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2018",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2018"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2019",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2019"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2020",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2020"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2021",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2021"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Count_2022",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Count_2022"
+     },
+     {
+      "fieldName": "Total_CCTV_Inspection_Count",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Total_CCTV_Inspection_Count"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_Unk",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_Unknown"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_200",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2009"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_201",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2010"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_202",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2011"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_203",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2012"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_204",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2013"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_205",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2014"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_206",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2015"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_207",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2016"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_208",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2017"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_209",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2018"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_210",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2019"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_211",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2020"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_212",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2021"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Percent_213",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Percent_2022"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_U",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_Unknown"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_2",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2009"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_3",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2010"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_4",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2011"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_5",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2012"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_6",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2013"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_7",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2014"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_8",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2015"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_km_9",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2016"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_k_10",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2017"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_k_11",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2018"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_k_12",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2019"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_k_13",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2020"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_k_14",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2021"
+     },
+     {
+      "fieldName": "CCTVPerformedwwMain_Length_k_15",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "CCTVPerformedwwMain_Length_km_2022"
+     },
+     {
+      "fieldName": "TotalSum_CCTV_InspectionLength",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "TotalSum_CCTV_InspectionLength"
+     },
+     {
+      "fieldName": "Percent_of_inspected_CCTV_pipes",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Percent_of_inspected_CCTV_pipes_since_2012"
+     },
+     {
+      "fieldName": "SGUPopulation_P2016",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2016"
+     },
+     {
+      "fieldName": "SGUPopulation_P2021",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2021"
+     },
+     {
+      "fieldName": "SGUPopulation_P2026",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2026"
+     },
+     {
+      "fieldName": "SGUPopulation_P2031",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2031"
+     },
+     {
+      "fieldName": "SGUPopulation_P2036",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2036"
+     },
+     {
+      "fieldName": "SGUPopulation_P2041",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2041"
+     },
+     {
+      "fieldName": "SGUPopulation_P2046",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2046"
+     },
+     {
+      "fieldName": "SGUPopulation_P2051",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_P2051"
+     },
+     {
+      "fieldName": "SGUPopulation_E2016",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2016"
+     },
+     {
+      "fieldName": "SGUPopulation_E2021",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2021"
+     },
+     {
+      "fieldName": "SGUPopulation_E2026",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2026"
+     },
+     {
+      "fieldName": "SGUPopulation_E2031",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2031"
+     },
+     {
+      "fieldName": "SGUPopulation_E2036",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2036"
+     },
+     {
+      "fieldName": "SGUPopulation_E2041",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2041"
+     },
+     {
+      "fieldName": "SGUPopulation_E2046",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2046"
+     },
+     {
+      "fieldName": "SGUPopulation_E2051",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SGUPopulation_E2051"
+     },
+     {
+      "fieldName": "wwMainSmkTesting_Lengthkm_Teste",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainSmkTesting_Lengthkm_Tested"
+     },
+     {
+      "fieldName": "wwMainSmkTesting_Lengthkm_WillB",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainSmkTesting_Lengthkm_WillBeTested"
+     },
+     {
+      "fieldName": "wwMainSmkTesting_Lengthkm_NotTe",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainSmkTesting_Lengthkm_NotTestedandWont"
+     },
+     {
+      "fieldName": "wwMainSmkTesting_Lengthkm_Not_1",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainSmkTesting_Lengthkm_NotTested"
+     },
+     {
+      "fieldName": "wwMainSmkTesting_Lengthkm_Pendi",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainSmkTesting_Lengthkm_Pending"
+     },
+     {
+      "fieldName": "wwMainSmkTesting_Lengthkm_Tes_1",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "wwMainSmkTesting_Lengthkm_TestedButResultsNotAsExpected"
+     },
+     {
+      "fieldName": "SmkTestingwwMain_Lengthkm_Perce",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "SmkTestingwwMain_Lengthkm_PercentComplete"
+     },
+     {
+      "fieldName": "LotsNonStandardInspection_Count",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "LotsNonStandardInspection_Count"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2009",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2009"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2010",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2010"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2011",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2011"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2012",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2012"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2013",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2013"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2014",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2014"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2015",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2015"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2016",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2016"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2017",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2017"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2018",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2018"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2019",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2019"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2020",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2020"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2021",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2021"
+     },
+     {
+      "fieldName": "FloodHistory_Count_2022",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "FloodHistory_Count_2022"
+     },
+     {
+      "fieldName": "Flooding_since_2009",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Flooding_since_2009"
+     },
+     {
+      "fieldName": "Block_1",
+      "isEditable": true,
+      "visible": true,
+      "label": "Block"
+     },
+     {
+      "fieldName": "Planning_1",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Planning"
+     },
+     {
+      "fieldName": "Shape__Length_1",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape_Length"
+     },
+     {
+      "fieldName": "Shape__Area_1",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape_Area"
+     },
+     {
+      "fieldName": "WaterMainBreakCount",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "WaterMainBreakCount"
+     },
+     {
+      "fieldName": "Block_12",
+      "isEditable": true,
+      "visible": true,
+      "label": "Block"
+     },
+     {
+      "fieldName": "Planning_12",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Planning"
+     },
+     {
+      "fieldName": "TotalParcel_Count",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Total Parcel Count"
+     },
+     {
+      "fieldName": "DownSpout_ParcelSurvey_Count",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Downspout Count of Parcels Surveyed"
+     },
+     {
+      "fieldName": "DownSpout_PercentSurveyed",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Downspout Percent Surveyed"
+     },
+     {
+      "fieldName": "Total_Count_Downspout",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Total count of downspout verified"
+     },
+     {
+      "fieldName": "BlockDS_Downspout_Pipe_is_missi",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Downspout Pipe is missing"
+     },
+     {
+      "fieldName": "BlockDS_Into_the_Ground",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Into the Ground"
+     },
+     {
+      "fieldName": "BlockDS_To_Surface___Close_to_F",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "To Surface - Close to Foundation"
+     },
+     {
+      "fieldName": "BlockDS_To_Surface___Away_from_",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "To Surface - Away from Foundation"
+     },
+     {
+      "fieldName": "BlockDS_Downspout___Outlet_Not_",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Downspout - Outlet Not visible"
+     },
+     {
+      "fieldName": "BlockDS_Other",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Other"
+     },
+     {
+      "fieldName": "BlockDS_Downspout_Pipe_is_mis_1",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Downspout Pipe is missing Percent"
+     },
+     {
+      "fieldName": "BlockDS_Into_the_Ground_Percent",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Into the Ground Percent"
+     },
+     {
+      "fieldName": "BlockDS_To_Surface_Close_to_Fou",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "To Surface - Close to Foundation Percent"
+     },
+     {
+      "fieldName": "BlockDS_To_Surface_Away_from_Fo",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "To Surface - Away from Foundation Percent"
+     },
+     {
+      "fieldName": "BlockDS_Downspout_Outlet_Not_vi",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Downspout - Outlet Not visible Percent"
+     },
+     {
+      "fieldName": "BlockDS_Other_Percent",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Other Percent"
+     },
+     {
+      "fieldName": "Shape__Length_12",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape_Length"
+     },
+     {
+      "fieldName": "Shape__Area_12",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape_Area"
+     },
+     {
+      "fieldName": "BlockDS_TotalKnownConnections",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Total Known Connections (Inlet Count)"
+     },
+     {
+      "fieldName": "Total_Known_DS_Connections_Inle",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Total Known Downspout Connections (Inlet Count)"
+     },
+     {
+      "fieldName": "BlockDS_TotalDSDisconnected",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Total DS Disconnected"
+     },
+     {
+      "fieldName": "BlockDS_PrecentDSWrkComplete",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Step 9 - Construction Complete (DS Percent)"
+     },
+     {
+      "fieldName": "BlockDS_ToBeDisconnected_Count",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Step 4 - Design Report (Property Count)"
+     },
+     {
+      "fieldName": "Step4_DesignReport_DSCount",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Step 4  - Design Report (DS Count)"
+     },
+     {
+      "fieldName": "BlockDS_RemNotProc_Count",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Remediation Not Proceeding (DS Count)"
+     },
+     {
+      "fieldName": "BlockDS_DSInProgress",
+      "isEditable": true,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Step 7 - RAL Sign off (Property Count)"
+     },
+     {
+      "fieldName": "Step7_RALSignoff_DSCount",
+      "isEditable": true,
+      "format": {
+       "places": 0,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Step 7 - RAL Sign-off (DS Count)"
+     },
+     {
+      "fieldName": "Shape__Area",
+      "isEditable": false,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape__Area"
+     },
+     {
+      "fieldName": "Shape__Length",
+      "isEditable": false,
+      "format": {
+       "places": 6,
+       "digitSeparator": false
+      },
+      "visible": true,
+      "label": "Shape__Length"
+     }
+    ],
+    "expressionInfos": []
+   }
+  }
+ ]
+}

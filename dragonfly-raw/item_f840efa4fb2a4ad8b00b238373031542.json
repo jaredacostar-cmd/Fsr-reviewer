@@ -1,0 +1,69 @@
+{
+ "id": "f840efa4fb2a4ad8b00b238373031542",
+ "owner": "Dragonflyadmin",
+ "ownerId": "4d6f3f1a0e1c441db5ad6796339d0cc5",
+ "created": 1662558754000,
+ "modified": 1692272593000,
+ "guid": null,
+ "name": "Sample_-_Dragonfly_Global_Threat_and_Risk_Ratings",
+ "title": "Sample View - Dragonfly_Global_Threat_and_Risk_Ratings",
+ "type": "Feature Service",
+ "typeKeywords": [
+  "ArcGIS Server",
+  "Data",
+  "Feature Access",
+  "Feature Service",
+  "Service",
+  "Hosted Service",
+  "View Service"
+ ],
+ "description": null,
+ "tags": [
+  "RiskRatings",
+  "sour",
+  "ce"
+ ],
+ "snippet": "Sample - Dragonfly Global Threat and Risk Ratings",
+ "thumbnail": "thumbnail/ago_downloaded.png",
+ "documentation": null,
+ "extent": [
+  [
+   -180,
+   -55.91850422299996
+  ],
+  [
+   180.0000000000001,
+   83.6341006530001
+  ]
+ ],
+ "categories": [],
+ "spatialReference": "4326",
+ "accessInformation": null,
+ "classification": null,
+ "licenseInfo": null,
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "https://services3.arcgis.com/8TcmRTHeUhQaHWvB/arcgis/rest/services/Sample_-_Dragonfly_Global_Threat_and_Risk_Ratings/FeatureServer",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 0,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 1375,
+ "scoreCompleteness": 63,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1791547200000
+}

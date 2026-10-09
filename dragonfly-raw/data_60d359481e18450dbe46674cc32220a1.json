@@ -1,0 +1,1779 @@
+{
+ "settings": {
+  "maxPaginationRecords": 50000,
+  "allowElementResizing": true
+ },
+ "version": 27,
+ "headerPanel": {
+  "titleTextColor": "#ffffff",
+  "type": "headerPanel",
+  "title": "Street Connectivity",
+  "subtitle": "The Healthy Development Monitoring and Mapping Project",
+  "size": "medium",
+  "showMargin": true,
+  "backgroundImageSizing": "fit-height",
+  "normalBackgroundImagePlacement": "left",
+  "horizontalBackgroundImagePlacement": "top",
+  "showSignOutMenu": true,
+  "menuLinks": [],
+  "backgroundColor": "#bd672a",
+  "selectors": []
+ },
+ "leftPanel": {
+  "type": "leftPanel",
+  "title": "<p><span style=\"font-size:16px\"><strong>Municipal Filter</strong></span></p>\n",
+  "description": "<p>The municipal filter is applied across the linked content (map, summaries and graphs) for&nbsp;each indicator based on the current selection(s). Sliders update the linked content for the associated indicator tab only.</p>\n\n<p>&nbsp;</p>\n\n<p>Slider&nbsp;ranges represent weighted intersection density&nbsp;per hectare (1).&nbsp; The ratio of pededestrian infrastructure (trails &amp; sidewalks) to automobile infrastructure (roads) measured as x meters of pedestrian infrastructure for each meter of automobile infrastructure (2).</p>\n",
+  "textColor": "#ffffff",
+  "backgroundColor": "#bd672a",
+  "selectors": [
+   {
+    "name": "Municipal Filter (Checkboxes)",
+    "type": "categorySelectorWidget",
+    "selection": {
+     "type": "multiple",
+     "operator": "is_in",
+     "noneLabelPlacement": "first"
+    },
+    "preferredDisplayType": "checkboxes",
+    "displayThreshold": 10,
+    "datasets": [
+     {
+      "statisticDefinitions": [
+       {
+        "onStatisticField": "CSDNAME",
+        "outStatisticFieldName": "count_result",
+        "statisticType": "count"
+       }
+      ],
+      "type": "serviceDataset",
+      "outFields": [
+       "*"
+      ],
+      "groupByFields": [
+       "CSDNAME"
+      ],
+      "orderByFields": [
+       "CSDNAME asc"
+      ],
+      "dataSource": {
+       "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+      },
+      "maxFeatures": 50,
+      "querySpatialRelationship": "esriSpatialRelIntersects",
+      "returnGeometry": false,
+      "clientSideStatistics": false,
+      "name": "main"
+     }
+    ],
+    "events": [
+     {
+      "type": "selectionChanged",
+      "actions": [
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#Bnd_HDABoundaries_9785"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#Bnd_HDABoundaries_7242"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "MUNIC"
+         }
+        ],
+        "targetId": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#Bnd_HDABoundaries_3785"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "aa91ba19-737b-4f79-aaa6-55e6a059a03d#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "bb80f7be-0006-486a-95e9-68b9d2f1ad3e#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "d51f2fac-c5e9-44d5-be9c-7380dc875e46#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "84f67717-37b1-4b09-bc7d-d7866ed38ce8#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "f5c4b753-c385-4f9a-8947-9e09ddcf9c56#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "7fabe05f-e122-4b80-bd91-efdebd07f239#Bnd_HDABoundaries_6100"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "7fabe05f-e122-4b80-bd91-efdebd07f239#Bnd_HDABoundaries_8385"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "MUNIC"
+         }
+        ],
+        "targetId": "7fabe05f-e122-4b80-bd91-efdebd07f239#Bnd_HDABoundaries_7049"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "b4355cd5-2c06-417f-8441-f214e3aac0a7#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "844ca95a-cc14-47fa-bca2-140791111e80#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "a77fa6f3-84ba-4e55-bbc7-e7568ad80fb4#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "6c2ad796-3ca4-4ccd-845c-b3319bbe9cac#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "CSDNAME",
+          "targetName": "CSDNAME"
+         }
+        ],
+        "targetId": "2c900428-5f75-4617-8d6d-b2999bccaa0f#main"
+       }
+      ]
+     }
+    ],
+    "id": "3cc08305-a852-45b0-8c3a-cb606a50ba1e",
+    "category": {
+     "type": "groupByValues",
+     "nullLabel": "Null",
+     "blankLabel": "Blank",
+     "labelOverrides": []
+    },
+    "showLastUpdate": true,
+    "noDataVerticalAlignment": "middle",
+    "showCaptionWhenNoData": true,
+    "showDescriptionWhenNoData": true
+   },
+   {
+    "id": "4b57e8a7-3395-4a9b-a30c-5a8e6d72fb25",
+    "type": "numericSelectorWidget",
+    "increment": 0.1,
+    "valueLabelFormat": {
+     "name": "value",
+     "type": "decimal",
+     "prefix": false,
+     "pattern": "0.0"
+    },
+    "constraint": {
+     "type": "fixed",
+     "lowerLimit": "0.0",
+     "upperLimit": "3.0",
+     "firstDefault": 0,
+     "secondDefault": "3.0"
+    },
+    "selection": {
+     "type": "range"
+    },
+    "datasets": [],
+    "events": [
+     {
+      "type": "selectionChanged",
+      "actions": [
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "filterField",
+          "targetName": "SC_14"
+         }
+        ],
+        "targetId": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "filterField",
+          "targetName": "SC_14"
+         }
+        ],
+        "targetId": "aa91ba19-737b-4f79-aaa6-55e6a059a03d#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "filterField",
+          "targetName": "SC_14"
+         }
+        ],
+        "targetId": "bb80f7be-0006-486a-95e9-68b9d2f1ad3e#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "filterField",
+          "targetName": "SC_14"
+         }
+        ],
+        "targetId": "84f67717-37b1-4b09-bc7d-d7866ed38ce8#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "filterField",
+          "targetName": "SC_14"
+         }
+        ],
+        "targetId": "d51f2fac-c5e9-44d5-be9c-7380dc875e46#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "fieldMap": [
+         {
+          "sourceName": "filterField",
+          "targetName": "SC_14"
+         }
+        ],
+        "targetId": "f5c4b753-c385-4f9a-8947-9e09ddcf9c56#main"
+       }
+      ]
+     }
+    ],
+    "displayType": "slider",
+    "name": "Intersection Density (Slider)",
+    "caption": "1. Intersection Density",
+    "showLastUpdate": true,
+    "noDataVerticalAlignment": "middle",
+    "showCaptionWhenNoData": true,
+    "showDescriptionWhenNoData": true
+   },
+   {
+    "id": "7edd95ae-7b94-41c7-a55c-f25ff329786c",
+    "type": "numericSelectorWidget",
+    "increment": 0.01,
+    "valueLabelFormat": {
+     "name": "value",
+     "type": "decimal",
+     "prefix": false,
+     "pattern": "0.00"
+    },
+    "constraint": {
+     "type": "statistic",
+     "defaultStatistic": "min"
+    },
+    "selection": {
+     "type": "range"
+    },
+    "datasets": [
+     {
+      "statisticDefinitions": [
+       {
+        "onStatisticField": "SC_15",
+        "outStatisticFieldName": "lowerLimit",
+        "statisticType": "min"
+       },
+       {
+        "onStatisticField": "SC_15",
+        "outStatisticFieldName": "upperLimit",
+        "statisticType": "max"
+       },
+       {
+        "onStatisticField": "SC_15",
+        "outStatisticFieldName": "averageStatisticValue",
+        "statisticType": "avg"
+       }
+      ],
+      "type": "serviceDataset",
+      "outFields": [
+       "*"
+      ],
+      "groupByFields": [],
+      "orderByFields": [],
+      "dataSource": {
+       "id": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+      },
+      "maxFeatures": 50,
+      "querySpatialRelationship": "esriSpatialRelIntersects",
+      "returnGeometry": false,
+      "clientSideStatistics": false,
+      "name": "main"
+     }
+    ],
+    "events": [
+     {
+      "type": "selectionChanged",
+      "actions": [
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "b4355cd5-2c06-417f-8441-f214e3aac0a7#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "844ca95a-cc14-47fa-bca2-140791111e80#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "a77fa6f3-84ba-4e55-bbc7-e7568ad80fb4#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "6c2ad796-3ca4-4ccd-845c-b3319bbe9cac#main"
+       },
+       {
+        "type": "filter",
+        "by": "whereClause",
+        "targetId": "2c900428-5f75-4617-8d6d-b2999bccaa0f#main"
+       }
+      ]
+     }
+    ],
+    "displayType": "slider",
+    "name": "Pedestrian Infrastructure (Slider)",
+    "caption": "2. Pedestrian Infrastructure Ratio",
+    "showLastUpdate": true,
+    "noDataVerticalAlignment": "middle",
+    "showCaptionWhenNoData": true,
+    "showDescriptionWhenNoData": true
+   }
+  ]
+ },
+ "widgets": [
+  {
+   "type": "richTextWidget",
+   "id": "78c398fe-9313-4a29-abf0-23e89b3abaf0",
+   "name": "Rich Text (11)",
+   "text": "<div style=\"height:100px; width:100%\">\n<h3><span style=\"font-size:16px\"><strong><span style=\"color:#bd672a\">Intersection Density</span></strong></span></h3>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">Intersection density measures the number of three- and four-point intersections per hectare.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong><span style=\"color:#bd672a\">Why is this important? </span></strong></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">Intersection density is a common measure of street connectivity. A higher density of street intersections creates pedestrian-friendly and transit supportive communities. As connectivity increases, travel distances decrease. This creates a more accessible network that supports complete community principles. </span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong><span style=\"color:#bd672a\">How is it being measured? </span></strong></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">This indicator is calculated by adding the count of&nbsp; T-Intersections (three nodes)&nbsp;within a dissemination area (DA)&nbsp;multiplied&nbsp;by 0.67 to the count&nbsp;of Cross Intersection (four nodes) within a DA multiplied by 1.00 and dividing the result by the total area of the DA.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><span style=\"color:#bd672a\"><strong>Data Source</strong></span></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong>Intersections:</strong> Single-Line Street Network* (non-boulevard), Region of Peel, 2016</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><span style=\"color:#bd672a\"><strong>Notes</strong></span></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">A weighted intersection density calculation was created to account for the reduced connectivity associated with t-intersections (three nodes) compared to&nbsp;cross intersections (four nodes). Three-point intersections are weighted as 0.67 and four-point intersections were weighted as 1.00.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">*Private roads, highways, freeways and ramps were excluded.</span></p>\n\n<p>&nbsp;</p>\n</div>\n",
+   "showLastUpdate": true,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": true,
+   "showDescriptionWhenNoData": true
+  },
+  {
+   "events": [
+    {
+     "type": "extentChanged",
+     "actions": [
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "aa91ba19-737b-4f79-aaa6-55e6a059a03d#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "bb80f7be-0006-486a-95e9-68b9d2f1ad3e#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "84f67717-37b1-4b09-bc7d-d7866ed38ce8#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "d51f2fac-c5e9-44d5-be9c-7380dc875e46#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "f5c4b753-c385-4f9a-8947-9e09ddcf9c56#main"
+      }
+     ]
+    }
+   ],
+   "flashRepeats": 3,
+   "itemId": "e046ee3f3de84983b4d7c6243296c80f",
+   "mapTools": [
+    {
+     "type": "bookmarksTool"
+    },
+    {
+     "type": "mapContentsTool"
+    },
+    {
+     "type": "basemapGalleryTool"
+    },
+    {
+     "type": "searchTool"
+    },
+    {
+     "type": "legendTool"
+    }
+   ],
+   "showNavigation": true,
+   "showPopup": true,
+   "scalebarStyle": "none",
+   "type": "mapWidget",
+   "layers": [
+    {
+     "events": [
+      {
+       "type": "selectionChanged",
+       "actions": [
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "aa91ba19-737b-4f79-aaa6-55e6a059a03d#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "bb80f7be-0006-486a-95e9-68b9d2f1ad3e#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "84f67717-37b1-4b09-bc7d-d7866ed38ce8#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "d51f2fac-c5e9-44d5-be9c-7380dc875e46#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "f5c4b753-c385-4f9a-8947-9e09ddcf9c56#main"
+        }
+       ]
+      }
+     ],
+     "type": "featureLayerDataSource",
+     "layerId": "StreetConnectivity_867"
+    },
+    {
+     "type": "featureLayerDataSource",
+     "layerId": "Bnd_HDABoundaries_3785"
+    },
+    {
+     "type": "featureLayerDataSource",
+     "layerId": "Bnd_HDABoundaries_7242"
+    },
+    {
+     "type": "featureLayerDataSource",
+     "layerId": "Bnd_HDABoundaries_9785"
+    }
+   ],
+   "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e",
+   "name": "Healthy Development Assessment - Intersection Density",
+   "showLastUpdate": true,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": true,
+   "showDescriptionWhenNoData": true
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Intersection Weight</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": "(Cross Intersections x Weight) + (T-Intersections x Weight)",
+      "fillColor": "#bd672a"
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "IntersectionWeight",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "aa91ba19-737b-4f79-aaa6-55e6a059a03d",
+   "name": "Intersection Weight",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Cross Intersections</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": "Weighted @ 1.00",
+      "fillColor": "#bd672a"
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "CrossIntersections",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "bb80f7be-0006-486a-95e9-68b9d2f1ad3e",
+   "name": "Cross Intersections",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">T-Intersections</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": "Weighted @ 0.67",
+      "fillColor": "#bd672a"
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "TIntersections",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "84f67717-37b1-4b09-bc7d-d7866ed38ce8",
+   "name": "T-Intersection",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Land (ha)</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 80,
+     "textInfo": {}
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "TotalArea_ha",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "d51f2fac-c5e9-44d5-be9c-7380dc875e46",
+   "name": "Land (ha)",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "type": "pieChartWidget",
+   "pie": {
+    "labelTickAlpha": 0.5,
+    "type": "pie",
+    "fontSize": 12,
+    "titleField": "category",
+    "valueField": "absoluteValue",
+    "alpha": 0.5,
+    "outlineAlpha": 1,
+    "outlineColor": "#bd672a",
+    "outlineThickness": 1,
+    "innerRadius": "60%",
+    "labelsEnabled": true,
+    "labelsFormat": "percentage",
+    "color": "#bd672a",
+    "labelTickColor": "",
+    "labelRadius": 15,
+    "maxLabelWidth": 100,
+    "startAngle": 0,
+    "autoMargins": false,
+    "marginTop": 0,
+    "marginBottom": 0,
+    "marginLeft": 0,
+    "marginRight": 0,
+    "groupedColor": "#d6d6d6"
+   },
+   "legend": {
+    "enabled": false,
+    "format": "percentage",
+    "position": "bottom",
+    "markerSize": 15,
+    "markerType": "circle",
+    "align": "center",
+    "labelWidth": 100,
+    "valueWidth": 50
+   },
+   "showBalloon": false,
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": true,
+    "pattern": "#,###.#"
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "#.0"
+   },
+   "selectionMode": "single",
+   "categoryType": "fields",
+   "category": {
+    "sliceProperties": [
+     {
+      "key": "CrossIntersections",
+      "label": "Cross Intersections",
+      "color": "#fffff2"
+     },
+     {
+      "key": "TIntersections",
+      "label": "T-Intersections",
+      "color": "#bd672a"
+     }
+    ],
+    "fieldName": "category",
+    "nullLabel": "Null",
+    "blankLabel": "Blank",
+    "defaultColor": "#d6d6d6",
+    "nullColor": "#d6d6d6",
+    "blankColor": "#d6d6d6"
+   },
+   "textColor": "#bd672a",
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "CrossIntersections",
+       "outStatisticFieldName": "CrossIntersections",
+       "statisticType": "sum"
+      },
+      {
+       "onStatisticField": "TIntersections",
+       "outStatisticFieldName": "TIntersections",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e#StreetConnectivity_867"
+     },
+     "maxFeatures": null,
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "f5c4b753-c385-4f9a-8947-9e09ddcf9c56",
+   "name": "% Intersection Type",
+   "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Percent of Intersections by Type</span></span></h3>\n",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "events": [
+    {
+     "type": "extentChanged",
+     "actions": [
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "b4355cd5-2c06-417f-8441-f214e3aac0a7#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "844ca95a-cc14-47fa-bca2-140791111e80#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "a77fa6f3-84ba-4e55-bbc7-e7568ad80fb4#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "6c2ad796-3ca4-4ccd-845c-b3319bbe9cac#main"
+      },
+      {
+       "type": "filter",
+       "by": "geometries",
+       "targetId": "2c900428-5f75-4617-8d6d-b2999bccaa0f#main"
+      }
+     ]
+    }
+   ],
+   "flashRepeats": 3,
+   "itemId": "8a22d7d61c5a4dc0ace12479b0f85177",
+   "mapTools": [
+    {
+     "type": "bookmarksTool"
+    },
+    {
+     "type": "mapContentsTool"
+    },
+    {
+     "type": "basemapGalleryTool"
+    },
+    {
+     "type": "searchTool"
+    },
+    {
+     "type": "legendTool"
+    }
+   ],
+   "showNavigation": true,
+   "showPopup": true,
+   "scalebarStyle": "none",
+   "type": "mapWidget",
+   "layers": [
+    {
+     "events": [
+      {
+       "type": "selectionChanged",
+       "actions": [
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "b4355cd5-2c06-417f-8441-f214e3aac0a7#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "844ca95a-cc14-47fa-bca2-140791111e80#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "a77fa6f3-84ba-4e55-bbc7-e7568ad80fb4#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "6c2ad796-3ca4-4ccd-845c-b3319bbe9cac#main"
+        },
+        {
+         "type": "filter",
+         "by": "whereClause",
+         "targetId": "2c900428-5f75-4617-8d6d-b2999bccaa0f#main"
+        }
+       ]
+      }
+     ],
+     "type": "featureLayerDataSource",
+     "layerId": "StreetConnectivity_867"
+    },
+    {
+     "type": "featureLayerDataSource",
+     "layerId": "Bnd_HDABoundaries_7049"
+    },
+    {
+     "type": "featureLayerDataSource",
+     "layerId": "Bnd_HDABoundaries_8385"
+    },
+    {
+     "type": "featureLayerDataSource",
+     "layerId": "Bnd_HDABoundaries_6100"
+    }
+   ],
+   "id": "7fabe05f-e122-4b80-bd91-efdebd07f239",
+   "name": "Healthy Development Assessment - Pedestrian Infrastructure Ratio",
+   "showLastUpdate": true,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": true,
+   "showDescriptionWhenNoData": true
+  },
+  {
+   "type": "richTextWidget",
+   "id": "e0a3c4ab-74da-4e6e-aa02-176549a7f616",
+   "name": "Rich Text (12)",
+   "text": "<div style=\"height:100px; width:100%\">\n<h3><span style=\"font-size:16px\"><strong><span style=\"color:#bd672a\">Pedestrian Infrastructure Ratio</span></strong></span></h3>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">Pedestrian Infrastructure Ratio measures the ratio of pedestrian infrastructure to auto-oriented infrastructure.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong><span style=\"color:#bd672a\">Why is this important?</span></strong></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">The provision of pedestrian infrastructure, including sidewalks and pedestrian paths or trails, is a key element in the choice to walk to destinations, including transit stops. The presence of pedestrian infrastructure is associated with increased walking and cycling. Sidewalks provide safety to pedestrians from traffic.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong><span style=\"color:#bd672a\">How is it being measured?</span></strong></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">This indicator is calculated by dividing the total length of pedestrian infrastructure (sidewalks and trails) in a dissemination area (DA) by the total length of auto-oriented infrastructure (roads) in the DA.</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><span style=\"color:#bd672a\"><strong>Data Source</strong></span></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong>Intersections:</strong> Single-Line Street Network* (non-boulevard), Region of Peel, 2016</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong>Roads:</strong> Single-Line Street Network* (non-boulevard), Region of Peel, 2016</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong>Sidewalks:</strong>&nbsp;City of Mississauga, City of Brampton, Town of Caledon, 2016</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><strong>Trails:</strong> Region of Peel, 2016</span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\"><span style=\"color:#bd672a\"><strong>Notes</strong></span></span></p>\n\n<p>&nbsp;</p>\n\n<p><span style=\"font-size:14px\">*Private roads, highways, freeways and ramps are excluded from this calculation.</span></p>\n</div>\n",
+   "showLastUpdate": true,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": true,
+   "showDescriptionWhenNoData": true
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Sidewalk Length (m)</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": ""
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "Sidewalks_m",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "b4355cd5-2c06-417f-8441-f214e3aac0a7",
+   "name": "Length of Sidewalks (m)",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Trail Length (m)</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": ""
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "Trails_m",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "844ca95a-cc14-47fa-bca2-140791111e80",
+   "name": "Length of Trails (m)",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Pedestrian Infrastructure Length (m)</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": ""
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "PedestrianInfra_m",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "a77fa6f3-84ba-4e55-bbc7-e7568ad80fb4",
+   "name": "Pedestrian Infrastructure (m)",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "noValueVerticalAlignment": "middle",
+   "type": "indicatorWidget",
+   "comparison": "none",
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "###,###."
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false
+   },
+   "ratioFormat": {
+    "name": "ratio",
+    "type": "decimal",
+    "prefix": false
+   },
+   "valueType": "statistic",
+   "defaultSettings": {
+    "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Road Length (m)</span></span></h3>\n",
+    "topSection": {
+     "fontSize": 40,
+     "textInfo": {
+      "text": ""
+     }
+    },
+    "middleSection": {
+     "fontSize": 160,
+     "textInfo": {
+      "text": "{value}",
+      "fillColor": "#f2d4b6",
+      "strokeColor": "#bd672a"
+     }
+    },
+    "bottomSection": {
+     "fontSize": 20,
+     "textInfo": {
+      "text": ""
+     }
+    }
+   },
+   "showCaptionWhenNoValue": true,
+   "showDescriptionWhenNoValue": true,
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "Roads_m",
+       "outStatisticFieldName": "value",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+     },
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "6c2ad796-3ca4-4ccd-845c-b3319bbe9cac",
+   "name": "Length of Roads",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  },
+  {
+   "type": "pieChartWidget",
+   "pie": {
+    "labelTickAlpha": 0.5,
+    "type": "pie",
+    "fontSize": 12,
+    "titleField": "category",
+    "valueField": "absoluteValue",
+    "alpha": 0.5,
+    "outlineAlpha": 0.5,
+    "outlineColor": "#bd672a",
+    "outlineThickness": 1,
+    "innerRadius": "60%",
+    "labelsEnabled": true,
+    "labelsFormat": "percentage",
+    "color": "#bd672a",
+    "labelTickColor": "",
+    "labelRadius": 15,
+    "maxLabelWidth": 100,
+    "startAngle": 0,
+    "autoMargins": false,
+    "marginTop": 0,
+    "marginBottom": 0,
+    "marginLeft": 0,
+    "marginRight": 0,
+    "groupedColor": "#d6d6d6"
+   },
+   "legend": {
+    "enabled": false,
+    "format": "percentage",
+    "position": "bottom",
+    "markerSize": 15,
+    "markerType": "circle",
+    "align": "center",
+    "labelWidth": 100,
+    "valueWidth": 50
+   },
+   "showBalloon": true,
+   "valueFormat": {
+    "name": "value",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "#,###.#"
+   },
+   "percentageFormat": {
+    "name": "percentage",
+    "type": "decimal",
+    "prefix": false,
+    "pattern": "#.0"
+   },
+   "selectionMode": "single",
+   "categoryType": "fields",
+   "category": {
+    "sliceProperties": [
+     {
+      "key": "Sidewalks_m",
+      "label": "Sidewalks",
+      "color": "#fffff2"
+     },
+     {
+      "key": "Trails_m",
+      "label": "Trails",
+      "color": "#e6af83"
+     },
+     {
+      "key": "Roads_m",
+      "label": "Roads",
+      "color": "#bd672a"
+     }
+    ],
+    "fieldName": "category",
+    "nullLabel": "Null",
+    "blankLabel": "Blank",
+    "defaultColor": "#d6d6d6",
+    "nullColor": "#d6d6d6",
+    "blankColor": "#d6d6d6"
+   },
+   "textColor": "#bd672a",
+   "datasets": [
+    {
+     "statisticDefinitions": [
+      {
+       "onStatisticField": "Sidewalks_m",
+       "outStatisticFieldName": "Sidewalks_m",
+       "statisticType": "sum"
+      },
+      {
+       "onStatisticField": "Trails_m",
+       "outStatisticFieldName": "Trails_m",
+       "statisticType": "sum"
+      },
+      {
+       "onStatisticField": "Roads_m",
+       "outStatisticFieldName": "Roads_m",
+       "statisticType": "sum"
+      }
+     ],
+     "type": "serviceDataset",
+     "outFields": [
+      "*"
+     ],
+     "groupByFields": [],
+     "orderByFields": [],
+     "dataSource": {
+      "id": "7fabe05f-e122-4b80-bd91-efdebd07f239#StreetConnectivity_867"
+     },
+     "maxFeatures": null,
+     "querySpatialRelationship": "esriSpatialRelIntersects",
+     "returnGeometry": false,
+     "clientSideStatistics": false,
+     "name": "main"
+    }
+   ],
+   "id": "2c900428-5f75-4617-8d6d-b2999bccaa0f",
+   "name": "Distribution of Infrastructure",
+   "caption": "<h3 style=\"text-align:center\"><span style=\"font-size:18px\"><span style=\"color:#bd672a\">Percent of Infrastructure by Type</span></span></h3>\n",
+   "showLastUpdate": false,
+   "noDataVerticalAlignment": "middle",
+   "showCaptionWhenNoData": false,
+   "showDescriptionWhenNoData": false
+  }
+ ],
+ "numberPrefixOverrides": [
+  {
+   "key": "yotta",
+   "symbol": "Y",
+   "enabled": true
+  },
+  {
+   "key": "zeta",
+   "symbol": "Z",
+   "enabled": true
+  },
+  {
+   "key": "exa",
+   "symbol": "E",
+   "enabled": true
+  },
+  {
+   "key": "peta",
+   "symbol": "P",
+   "enabled": true
+  },
+  {
+   "key": "tera",
+   "symbol": "T",
+   "enabled": true
+  },
+  {
+   "key": "giga",
+   "symbol": "G",
+   "enabled": true
+  },
+  {
+   "key": "mega",
+   "symbol": "M",
+   "enabled": true
+  },
+  {
+   "key": "kilo",
+   "symbol": "k",
+   "enabled": true
+  },
+  {
+   "key": "base",
+   "symbol": "",
+   "enabled": true
+  },
+  {
+   "key": "deci",
+   "symbol": "d",
+   "enabled": false
+  },
+  {
+   "key": "centi",
+   "symbol": "c",
+   "enabled": false
+  },
+  {
+   "key": "milli",
+   "symbol": "m",
+   "enabled": false
+  },
+  {
+   "key": "micro",
+   "symbol": "µ",
+   "enabled": false
+  },
+  {
+   "key": "nano",
+   "symbol": "n",
+   "enabled": false
+  }
+ ],
+ "mapOverrides": {
+  "selectionColor": "#df73ff",
+  "trackedFeatureColor": "#8400a8",
+  "trackedFeatureRadius": 60
+ },
+ "theme": "light",
+ "themeOverrides": {
+  "dashboardBackgroundColor": "#ffffff",
+  "elementBackgroundColor": "#ffffff",
+  "elementOutlineColor": "#bd672a",
+  "textColor": "#474747",
+  "tabBorderColor": "#bd672a",
+  "activeTabBorderColor": "#bd672a",
+  "inactiveTabBorderColor": "#bd672a",
+  "inactiveTabTextColor": "#bd672a"
+ },
+ "layout": {
+  "rootElement": {
+   "type": "tabsLayoutElement",
+   "elements": [
+    {
+     "type": "groupLayoutElement",
+     "orientation": "col",
+     "elements": [
+      {
+       "type": "itemLayoutElement",
+       "id": "aebf831a-00e1-4f21-8021-0c8a9fd9860e",
+       "width": 0.4363947640501567,
+       "height": 1
+      },
+      {
+       "type": "itemLayoutElement",
+       "id": "78c398fe-9313-4a29-abf0-23e89b3abaf0",
+       "width": 0.23175407606992857,
+       "height": 1
+      },
+      {
+       "type": "groupLayoutElement",
+       "orientation": "row",
+       "elements": [
+        {
+         "type": "itemLayoutElement",
+         "id": "d51f2fac-c5e9-44d5-be9c-7380dc875e46",
+         "width": 1,
+         "height": 0.19266442895391864
+        },
+        {
+         "type": "itemLayoutElement",
+         "id": "aa91ba19-737b-4f79-aaa6-55e6a059a03d",
+         "width": 1,
+         "height": 0.18859811368364185
+        },
+        {
+         "type": "groupLayoutElement",
+         "orientation": "col",
+         "elements": [
+          {
+           "type": "itemLayoutElement",
+           "id": "bb80f7be-0006-486a-95e9-68b9d2f1ad3e",
+           "width": 0.5,
+           "height": 1
+          },
+          {
+           "type": "itemLayoutElement",
+           "id": "84f67717-37b1-4b09-bc7d-d7866ed38ce8",
+           "width": 0.5,
+           "height": 1
+          }
+         ],
+         "width": 1,
+         "height": 0.19138400786951823
+        },
+        {
+         "type": "itemLayoutElement",
+         "id": "f5c4b753-c385-4f9a-8947-9e09ddcf9c56",
+         "width": 1,
+         "height": 0.4273534494929213
+        }
+       ],
+       "width": 0.33185115987991476,
+       "height": 1
+      }
+     ],
+     "width": 1,
+     "height": 1,
+     "tabName": "1. Intersection Density"
+    },
+    {
+     "type": "groupLayoutElement",
+     "orientation": "col",
+     "elements": [
+      {
+       "type": "itemLayoutElement",
+       "id": "7fabe05f-e122-4b80-bd91-efdebd07f239",
+       "width": 0.43608091655274395,
+       "height": 1,
+       "tabName": "Pedestrian Infrastructure"
+      },
+      {
+       "type": "itemLayoutElement",
+       "id": "e0a3c4ab-74da-4e6e-aa02-176549a7f616",
+       "width": 0.2323849264592192,
+       "height": 1
+      },
+      {
+       "type": "groupLayoutElement",
+       "orientation": "row",
+       "elements": [
+        {
+         "type": "itemLayoutElement",
+         "id": "a77fa6f3-84ba-4e55-bbc7-e7568ad80fb4",
+         "width": 1,
+         "height": 0.17900210252119506
+        },
+        {
+         "type": "groupLayoutElement",
+         "orientation": "col",
+         "elements": [
+          {
+           "type": "itemLayoutElement",
+           "id": "b4355cd5-2c06-417f-8441-f214e3aac0a7",
+           "width": 0.5,
+           "height": 1
+          },
+          {
+           "type": "itemLayoutElement",
+           "id": "844ca95a-cc14-47fa-bca2-140791111e80",
+           "width": 0.5,
+           "height": 1
+          }
+         ],
+         "width": 1,
+         "height": 0.18073602130166283
+        },
+        {
+         "type": "itemLayoutElement",
+         "id": "6c2ad796-3ca4-4ccd-845c-b3319bbe9cac",
+         "width": 1,
+         "height": 0.15804511966273166
+        },
+        {
+         "type": "itemLayoutElement",
+         "id": "2c900428-5f75-4617-8d6d-b2999bccaa0f",
+         "width": 1,
+         "height": 0.48221675651441054
+        }
+       ],
+       "width": 0.33153415698803707,
+       "height": 1
+      }
+     ],
+     "width": 1,
+     "height": 1,
+     "tabName": "2. Pedestrian Infrastructure"
+    }
+   ],
+   "width": 1,
+   "height": 1
+  }
+ }
+}

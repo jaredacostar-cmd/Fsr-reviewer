@@ -1,0 +1,169 @@
+{
+ "authoringApp": "InstantAppsHomePage",
+ "source": "8f483bc1de854f7783495ffe96ef1ea8",
+ "folderId": "root",
+ "values": {
+  "webmap": "4c2e4db542b248d4b37c003e53bfd593",
+  "type": "webmap",
+  "fullAppSettings": true,
+  "splashButtonText": "I Accept",
+  "title": "Downspout Surveys in Peel Region",
+  "searchConfiguration": {
+   "allPlaceholder": "Find address or place",
+   "sources": [
+    {
+     "_uid": "df3238e8aaa",
+     "url": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+     "singleLineFieldName": "SingleLine",
+     "name": "ArcGIS World Geocoding Service",
+     "placeholder": "Find address or place",
+     "maxResults": null,
+     "maxSuggestions": null,
+     "suggestionsEnabled": null,
+     "minSuggestCharacters": null,
+     "withinViewEnabled": false,
+     "countryCode": null,
+     "zoomScale": null
+    }
+   ],
+   "activeSourceIndex": 0
+  },
+  "keyboardShortcutsPosition": {
+   "position": "top-left",
+   "index": 2
+  },
+  "compassWidgetPosition": {
+   "position": "top-left",
+   "index": 0
+  },
+  "measurePosition": {
+   "position": "top-right",
+   "index": 0
+  },
+  "sharePosition": {
+   "position": "top-right",
+   "index": 6
+  },
+  "bookmarksPosition": {
+   "position": "top-right",
+   "index": 4
+  },
+  "locateWidgetPosition": {
+   "position": "top-left",
+   "index": 1
+  },
+  "legendPosition": {
+   "position": "top-right",
+   "index": 2
+  },
+  "mapZoomPosition": {
+   "position": "top-right",
+   "index": 3
+  },
+  "homePosition": {
+   "position": "top-right",
+   "index": 5
+  },
+  "languageSwitcherPosition": {
+   "position": "top-right",
+   "index": 1
+  },
+  "basemapTogglePosition": {
+   "position": "bottom-left",
+   "index": 0
+  },
+  "layerListPosition": {
+   "position": "bottom-right",
+   "index": 0
+  },
+  "fullScreenPosition": {
+   "position": "bottom-right",
+   "index": 2
+  },
+  "scalebarPosition": {
+   "position": "bottom-right",
+   "index": 1
+  },
+  "legend": true,
+  "keyboardShortcuts": true,
+  "mapA11yDesc": "This interactive map shows where downspout surveys are upcoming (orange) and completed (blue) in Peel  Region. You can search your address using the tool bar to find out when surveys will happen in your neighbourhood.",
+  "datePublished": 1790952172924,
+  "introductionTitle": "",
+  "infoIncludeLocation": false,
+  "introductionContent": "<p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\"><strong>Using the map</strong>&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">You can search the map in three ways:</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">&nbsp; &nbsp; &nbsp;1. Select the search bar and type in an address</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">&nbsp; &nbsp; &nbsp;2. Choose <strong>Use current location </strong>in the search bar</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">&nbsp; &nbsp; &nbsp;3. Click anywhere on the map to explore a neighbourhood</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">Your search results will show if downspout surveys are scheduled for your area.</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">To start a new search, use the tab at the top of the map named <strong>Clear search location</strong> or the <strong>X</strong> next to your address search&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\"><strong>Contact us</strong></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">We encourage you to check back regularly for updates.&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">If you have further questions or feedback about the map, please contact Peel Region.</span></p><p><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">For more information on downspout surveys call <strong>Peel Region at 905-791-7800, ext. 4409</strong> or visit </span><a href=\"https://peelregion.ca/water/pipes-downspouts/downspouts/downspout-surveys\" target=\"_blank\"><span style=\"color:blue;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">Downspout surveys</span></span></a><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">. For more information on downspout disconnection visit&nbsp;</span><a href=\"https://peelregion.ca/water/pipes-downspouts/downspouts/disconnecting-downspout\"><span style=\"color:blue;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">Disconnecting a downspout</span></span></a><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">.</span></p>",
+  "landingPage": true,
+  "landingPageConfig": {
+   "titleText": "Peel Region's Downspout Surveys Map Off-Season",
+   "subtitleText": "Downspout Surveys are suspended from October 2026 through April 2027. Operations will resume in May 2027.",
+   "descriptionText": "<p class=\"paragraph\" style=\"margin:0in;\">&nbsp;</p><p class=\"paragraph\" style=\"margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>Terms of Use</strong></span></p><p class=\"paragraph\" style=\"margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">These terms of use constitute the agreement (“Agreement”) between The Regional Municipality of Peel (“Peel Region”) and the user (“User” or “you”) with respect to the use of the Peel Region's Downspout Surveys Map (\"Site\").</span><span class=\"textrun\" style=\"font-variant-ligatures:none !important;\"> </span><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">By using the Site, you agree to these terms of use. If you do not agree, do not use the Site. The terms of this Agreement are subject to change. Please read carefully.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LICENCE</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>1.1 Licence Grant</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">Peel region grants to the User a revocable, non-exclusive, non-transferable, non-sublicensable, licence to use the Site in accordance with the terms of this Agreement.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>1.2 Restrictions</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">User will not, and will not permit any other party to, (a) copy, modify, create a derivative work of, reverse engineer, decompile, translate, disassemble, or otherwise attempt to extract any of the source code, (b) distribute or sell, or attempt to distribute or sell, any part of the Site or any of the Site’s contents, (c) create or attempt to create a new product or service based on the Site or any of the Site’s contents, (d) copy the Site, any part of the Site, or any of the Site’s contents, or (e) create a derivative work of the Site or any of the Site’s contents.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; USE OF SITE</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">Peel region provides the User with access to the Site for convenience only. The User acknowledges that the Site’s contents may not be accurate or complete and is not to be relied upon by the User for any purpose other than obtaining general information for the User’s convenience. Peel Region makes no representations or warranties with respect to the Site’s contents. The Site does not constitute a legal land survey. Use of the Site does not replace the need for the User to exercise independent judgement and comply with all applicable laws. The Site and the Site’s contents are subject to change without prior notice.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INTELLECTUAL PROPERTY</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>3.1 Intellectual Property Rights</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">Except as expressly set out in this Agreement, the User is not granted any rights, implied or otherwise, in or to the Site, the Site’s contents, or any intellectual property of Peel Region or its contractors.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>3.2 User Feedback</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">If the User provides Peel Region with any feedback or suggestions about the Site and/or the Site’s contents, Peel Region may use such feedback and/or suggestions without any obligation or compensation to the User. The User irrevocably assigns to Peel Region all right, title, and interest in and to any feedback and suggestions, and waives and forever releases Peel Region from any claims for compensation with respect to such feedback and suggestions.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>4.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INDEMNIFICATION AND WAVER OF LIABILITY</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>4.1 Indemnification</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">The User will indemnify and hold harmless Peel Region from and against all charges, liabilities, losses, damages, costs, and expenses (including reasonable legal fees and disbursements) incurred in connection with any claims, demands, suits, causes of action, actions, or other proceedings resulting from or related to this Agreement and/or the User’s use of the Site or any of the Site’s contents.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>4.2 No Liability</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">The User uses the Site at the User’s own risk. The User agrees that Peel Region will not be liable to the User for any charges, liabilities, losses, damages, costs, or expenses incurred by the User or any employee, agent, representative, or contractor of the User arising from or related to this Agreement, the Site, and/or the Site’s contents. The User hereby releases and forever discharges Peel Region from any and all claims, demands causes or action, and actions it may not or in the future have with respect to this Agreement, the Site, and/or the Site's contents.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GENERAL</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>5.1 Governing Law</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">This Agreement will be governed by and construed in accordance with the laws of Ontario.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>5.2 Severability</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">If any provision of this Agreement is held to be invalid, illegal, or unenforceable, such provision will be severed from this Agreement to the extent it is held to be invalid, illegal, or unenforceable, and the remainder of this Agreement will continue in effect.</span></p>",
+   "entryButtonText": "I Accept",
+   "alignment": "center",
+   "backgroundType": "color",
+   "textColor": "#FFFFFF",
+   "entryButtonColor": "#2366b3",
+   "backgroundColor": "#2366b3",
+   "iconImage": null,
+   "iconImageScale": "m",
+   "backgroundImageSrc": null
+  },
+  "zoneLookupLayers": {
+   "layers": [
+    {
+     "id": "Smoke_Test_Areas_Planning_7923",
+     "fields": [],
+     "fieldOrder": []
+    }
+   ]
+  },
+  "showNonResultPopups": false,
+  "openRelatedRecords": true,
+  "mapPinColor": "#000000ff",
+  "mapPinLabel": false,
+  "resultsPanelPreText": "<p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">Search Results:</span></p>",
+  "noResultsMessage": "<p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\"><strong>No results found.</strong></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\"><strong>&nbsp;</strong></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">Please make sure your address is entered correctly. If it is correct, your address is not within the</span><span style=\"color:#4A4A4A;\"><span style=\"background:white; font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\"> </span></span><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\"><strong>Current Work Neighbourhood</strong></span><span style=\"color:#4A4A4A;\"><span style=\"background:white; font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">. Properties included in the work area will receive a notice by mail.&nbsp;</span></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"color:#141414;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">To start a new search, use the tab at the top of the map named <strong>Clear search location</strong> or the <strong>X</strong> next to your address search.</span></span></p>",
+  "scalebar": true,
+  "fullScreen": true,
+  "compassWidget": true,
+  "locateWidget": true,
+  "bookmarks": false,
+  "enableHighlightHaloColor": true,
+  "highlightHaloColor": "#000000ff",
+  "customTheme": {
+   "applySharedTheme": false,
+   "applyPresetTheme": true,
+   "font": "Avenir Next",
+   "appFont": "Avenir Next",
+   "logo": "https://regionofpeel.maps.arcgis.com/sharing/rest/content/items/1b03dc092f754f7ba17b41e4a064c3f1/resources/media/instantAppsConfigPanel_1773258066798_P-Peel-Region_horiz-notag-white.png",
+   "logoAltText": "Peel Region",
+   "logoLink": "",
+   "logoScale": "m",
+   "logoUrl": "",
+   "logoSource": "upload",
+   "preset": null,
+   "themes": {
+    "primary": {
+     "type": "primary",
+     "background": "#2366B3",
+     "text": "#FFFFFF"
+    },
+    "secondary": {
+     "type": "secondary",
+     "background": "#7906B8",
+     "text": "#FFFFFF"
+    },
+    "accent": {
+     "type": "accent",
+     "background": "#2366B3",
+     "text": "#FFFFFF"
+    }
+   }
+  },
+  "enableHighlightColor": false,
+  "highlightColor": "rgba(35, 102, 179, 0.1)",
+  "share": false,
+  "panelSize": "m",
+  "legendOpenAtStart": false,
+  "infoAsModal": false,
+  "closeBehavior": "confirmation"
+ }
+}

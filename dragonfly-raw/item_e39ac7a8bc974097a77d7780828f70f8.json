@@ -1,0 +1,71 @@
+{
+ "id": "e39ac7a8bc974097a77d7780828f70f8",
+ "owner": "david.guillette@peelregion.ca_RegionofPeel",
+ "ownerId": "8c649545c335c9b3b30dcc4c6c4946c8",
+ "orgId": "ONZht79c8QWuX759",
+ "created": 1550153382000,
+ "modified": 1550153412000,
+ "guid": null,
+ "name": "Bnd_HDABoundaries",
+ "title": "Bnd_HDABoundaries",
+ "type": "Feature Service",
+ "typeKeywords": [
+  "ArcGIS Server",
+  "Data",
+  "Feature Access",
+  "Feature Service",
+  "Metadata",
+  "Multilayer",
+  "Service",
+  "Hosted Service"
+ ],
+ "description": "Administrative and census boundaries relevant to work related to the Healthy Development Mapping and Monitoring Project.",
+ "tags": [
+  "HDMM",
+  " Peel",
+  " boundary"
+ ],
+ "snippet": "Administrative and census boundaries relevant to work related to the Healthy Development Mapping and Monitoring Project.",
+ "thumbnail": "thumbnail/thumbnail.png",
+ "documentation": null,
+ "extent": [
+  [
+   -80.14948599449889,
+   43.48625801579075
+  ],
+  [
+   -79.53064441372355,
+   43.986883604492135
+  ]
+ ],
+ "categories": [],
+ "spatialReference": "NAD_1983_UTM_Zone_17N",
+ "accessInformation": null,
+ "classification": null,
+ "licenseInfo": null,
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Bnd_HDABoundaries/FeatureServer",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 3203072,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 46506,
+ "scoreCompleteness": 76,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1791568800000
+}

@@ -1,0 +1,6 @@
+{
+ "type": "FeatureCollection",
+ "name": "World_Street_Map",
+ "source": "http://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/0",
+ "features": []
+}

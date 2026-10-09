@@ -1,0 +1,72 @@
+{
+ "id": "91070c8285c04ed1a0832e96f3affba5",
+ "owner": "dennis.naumann@peelregion.ca_RegionofPeel",
+ "ownerId": "d64fb4fed82daf9a7ac3b03fd2e76446",
+ "orgId": "ONZht79c8QWuX759",
+ "created": 1775568888000,
+ "modified": 1775569240000,
+ "guid": null,
+ "name": "Smoke_Test_Areas_View",
+ "title": "Smoke Test Areas View",
+ "type": "Feature Service",
+ "typeKeywords": [
+  "ArcGIS Server",
+  "Data",
+  "Feature Access",
+  "Feature Service",
+  "Service",
+  "Singlelayer",
+  "Hosted Service",
+  "View Service"
+ ],
+ "description": null,
+ "tags": [
+  "smoketesting",
+  "planning",
+  "instant app",
+  "public"
+ ],
+ "snippet": "View created for Instant App (Smoke Testing in Peel Region) - https://regionofpeel.maps.arcgis.com/home/item.html?id=067e9590cd21498f9bd3cda52b114af2",
+ "thumbnail": "thumbnail/ago_downloaded.png",
+ "documentation": null,
+ "extent": [
+  [
+   -79.85130472171647,
+   43.49481217643842
+  ],
+  [
+   -79.51288525237928,
+   43.900089575590066
+  ]
+ ],
+ "categories": [],
+ "spatialReference": "102100",
+ "accessInformation": null,
+ "classification": null,
+ "licenseInfo": null,
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Smoke_Test_Areas_View/FeatureServer",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 0,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 864,
+ "scoreCompleteness": 66,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1791568800000
+}

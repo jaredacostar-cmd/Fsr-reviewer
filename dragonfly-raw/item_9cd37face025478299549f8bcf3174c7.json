@@ -1,0 +1,74 @@
+{
+ "id": "9cd37face025478299549f8bcf3174c7",
+ "owner": "PeelPlanning",
+ "ownerId": "bd5c6712542bfd1cff5edd51d68885cb",
+ "created": 1331653759000,
+ "modified": 1394145877000,
+ "guid": null,
+ "name": null,
+ "title": "(Schedule F) Regional Road Right-Of-Way Requirements in Peel Region (2008)",
+ "type": "Web Map",
+ "typeKeywords": [
+  "ArcGIS Online",
+  "Explorer Web Map",
+  "Map",
+  "Online Map",
+  "Web Map"
+ ],
+ "description": "Map of Regional Road Mid-Block Right-Of-Way Requirements in the Regional Municipality of Peel.<div><a href='http://www.peelregion.ca/planning-maps/ROP_Maps_March2012/Schedule_F_May2011_300dpi.pdf' target='_blank'>pdf version</a></div>",
+ "tags": [
+  "policy",
+  "Peel",
+  "Ontario",
+  "right of way",
+  "regional",
+  "roads"
+ ],
+ "snippet": "Map of Regional Road Mid-Block Right-Of-Way Requirements in the Regional Municipality of Peel.",
+ "thumbnail": "thumbnail/ROW.jpg",
+ "documentation": null,
+ "extent": [
+  [
+   -79.878,
+   43.6877
+  ],
+  [
+   -79.8463,
+   43.7035
+  ]
+ ],
+ "categories": [],
+ "spatialReference": null,
+ "accessInformation": "",
+ "classification": null,
+ "licenseInfo": "",
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 342271,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 229,
+ "scoreCompleteness": 76,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1786561200000,
+ "robots": [
+  "noindex",
+  "nofollow"
+ ]
+}

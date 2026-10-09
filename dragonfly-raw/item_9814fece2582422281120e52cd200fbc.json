@@ -1,0 +1,70 @@
+{
+ "id": "9814fece2582422281120e52cd200fbc",
+ "owner": "paudelk_euc",
+ "ownerId": "bfcec67fcfaf4e2fa8e4edcc61c8acfb",
+ "orgId": "4TKcmj8FHh5Vtobt",
+ "created": 1663643447000,
+ "modified": 1663709169000,
+ "guid": null,
+ "name": null,
+ "title": "Immigration in Peel by DA as of 2016",
+ "type": "Feature Service",
+ "typeKeywords": [
+  "ArcGIS Server",
+  "Data",
+  "Feature Access",
+  "Feature Service",
+  "Metadata",
+  "Service",
+  "Singlelayer",
+  "Hosted Service"
+ ],
+ "description": null,
+ "tags": [
+  "Demographics",
+  "Peel"
+ ],
+ "snippet": "The Dissemination Area Boundary Files portray the dissemination area boundaries for which census data are\ndisseminated. A dissemination area is a small area composed of one or more neighboring blocks.",
+ "thumbnail": "thumbnail/ago_downloaded.png",
+ "documentation": null,
+ "extent": [
+  [
+   -80.14412203221364,
+   43.481154787868505
+  ],
+  [
+   -79.54085174754523,
+   43.9897661375533
+  ]
+ ],
+ "categories": [],
+ "spatialReference": "102100",
+ "accessInformation": null,
+ "classification": null,
+ "licenseInfo": null,
+ "culture": "en-us",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "https://services.arcgis.com/4TKcmj8FHh5Vtobt/arcgis/rest/services/Immigration_in_Peel_by_DA_as_of_2016/FeatureServer",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 4874240,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 2806,
+ "scoreCompleteness": 58,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1791558000000
+}

@@ -1,0 +1,370 @@
+{
+ "layers": [
+  {
+   "id": 0,
+   "popupInfo": {
+    "popupElements": [
+     {
+      "type": "text",
+      "text": "<font color='#808080'>Type:</font> <b>{Type}</b><br /><font color='#808080'>Tag:</font> <b>{Tag}</b><span style='text-align: center;'><br /></span><font color='#808080'>Planning Status:</font> <span style='text-align: center;'><b>{Planning_Status}</b><br /></span><div><font color='#808080'>Planning Notes:</font> <span style='text-align: center;'><b>{Planning_Notes}</b></span></div><font color='#808080' style='text-align: center;'></font><font color='#808080'>Scheduled Date:</font> <span style='text-align: center;'><b><font color='#ff0000'>{Scheduled_Date}<br /></font></b></span><font color='#808080' style='color: rgb(128, 128, 128);'>Landuse:</font> <b>{Landuse} </b>"
+     },
+     {
+      "type": "attachments",
+      "displayType": "auto"
+     }
+    ],
+    "description": "<font color='#808080'>Type:</font> <b>{Type}</b><br /><font color='#808080'>Tag:</font> <b>{Tag}</b><span style='text-align: center;'><br /></span><font color='#808080'>Planning Status:</font> <span style='text-align: center;'><b>{Planning_Status}</b><br /></span><div><font color='#808080'>Planning Notes:</font> <span style='text-align: center;'><b>{Planning_Notes}</b></span></div><font color='#808080' style='text-align: center;'></font><font color='#808080'>Scheduled Date:</font> <span style='text-align: center;'><b><font color='#ff0000'>{Scheduled_Date}<br /></font></b></span><font color='#808080' style='color: rgb(128, 128, 128);'>Landuse:</font> <b>{Landuse} </b>",
+    "showAttachments": true,
+    "fieldInfos": [
+     {
+      "fieldName": "OBJECTID",
+      "isEditable": false,
+      "label": "OBJECTID",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "GlobalID",
+      "isEditable": false,
+      "label": "GlobalID",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "GUID",
+      "isEditable": false,
+      "label": "GUID",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "CreationDate",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": true,
+      "label": "CreationDate",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Creator",
+      "isEditable": true,
+      "label": "Creator",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "EditDate",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": true,
+      "label": "EditDate",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Editor",
+      "isEditable": true,
+      "label": "Editor",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "SHAPE__Area",
+      "format": {
+       "digitSeparator": true,
+       "places": 2
+      },
+      "isEditable": true,
+      "label": "SHAPE__Area",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "SHAPE__Length",
+      "format": {
+       "digitSeparator": true,
+       "places": 2
+      },
+      "isEditable": true,
+      "label": "SHAPE__Length",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "Report",
+      "isEditable": true,
+      "label": "Report",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Date_Year",
+      "isEditable": true,
+      "label": "Smoke Testing Year",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Link",
+      "isEditable": true,
+      "label": "Link",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Area_Name",
+      "isEditable": true,
+      "label": "Area_Name",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Reference",
+      "isEditable": true,
+      "label": "Reference",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Comments",
+      "isEditable": true,
+      "label": "Comments",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Attachment",
+      "isEditable": true,
+      "label": "Attachment",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Schedule",
+      "isEditable": true,
+      "label": "Schedule",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Notes",
+      "isEditable": true,
+      "label": "Notes",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Landuse",
+      "isEditable": true,
+      "label": "Landuse",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Work_Plan_Reference",
+      "isEditable": true,
+      "label": "Work Plan Reference",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "PO_Reference",
+      "isEditable": true,
+      "label": "PO Reference",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Last_Notification_Date",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": true,
+      "label": "Last Notification Date ",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Type",
+      "isEditable": true,
+      "label": "Type",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Tag",
+      "isEditable": true,
+      "label": "Tag",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Planning_Status",
+      "isEditable": true,
+      "label": "Planning Status",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Contractor_Name",
+      "isEditable": true,
+      "label": "Contractor Name",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Scheduled_Date",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": true,
+      "label": "Scheduled Date",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "Planning_Notes",
+      "isEditable": true,
+      "label": "Planning Notes",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "GUID0",
+      "isEditable": false,
+      "label": "GUID0",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "BlockID",
+      "isEditable": true,
+      "label": "BlockID",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "CreationDate_1",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": false,
+      "label": "CreationDate",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "Creator_1",
+      "isEditable": false,
+      "label": "Creator",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "EditDate_1",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": false,
+      "label": "EditDate",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "Editor_1",
+      "isEditable": false,
+      "label": "Editor",
+      "tooltip": "",
+      "visible": false
+     },
+     {
+      "fieldName": "CreationDate_12",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": false,
+      "label": "CreationDate",
+      "visible": false
+     },
+     {
+      "fieldName": "Creator_12",
+      "isEditable": false,
+      "label": "Creator",
+      "visible": false
+     },
+     {
+      "fieldName": "EditDate_12",
+      "format": {
+       "dateFormat": "shortDateShortTime",
+       "digitSeparator": false
+      },
+      "isEditable": false,
+      "label": "EditDate",
+      "visible": false
+     },
+     {
+      "fieldName": "Editor_12",
+      "isEditable": false,
+      "label": "Editor",
+      "visible": false
+     },
+     {
+      "fieldName": "SHAPE__Area_2",
+      "format": {
+       "digitSeparator": true,
+       "places": 2
+      },
+      "isEditable": false,
+      "label": "SHAPE__Area_2",
+      "visible": false
+     },
+     {
+      "fieldName": "SHAPE__Length_2",
+      "format": {
+       "digitSeparator": true,
+       "places": 2
+      },
+      "isEditable": false,
+      "label": "SHAPE__Length_2",
+      "visible": false
+     },
+     {
+      "fieldName": "Start_Work_Date",
+      "format": {
+       "dateFormat": "shortDate",
+       "digitSeparator": false
+      },
+      "isEditable": true,
+      "label": "Start_Work",
+      "tooltip": "",
+      "visible": true
+     },
+     {
+      "fieldName": "End_Work_Date",
+      "format": {
+       "dateFormat": "shortDate"
+      },
+      "isEditable": true,
+      "label": "End_Work",
+      "tooltip": "",
+      "visible": true
+     }
+    ],
+    "title": "PLANNING Downspout Survey Testing Boundary: {Planning_Status}"
+   },
+   "layerDefinition": {
+    "defaultVisibility": false
+   }
+  }
+ ]
+}

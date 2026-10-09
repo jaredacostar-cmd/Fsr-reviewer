@@ -1,0 +1,295 @@
+{
+ "authoringApp": "InstantAppsHomePage",
+ "source": "8f483bc1de854f7783495ffe96ef1ea8",
+ "folderId": "root",
+ "values": {
+  "webmap": "02a24c10464e4a1192381758affacf41",
+  "type": "webmap",
+  "fullAppSettings": true,
+  "splashButtonText": "I Accept",
+  "title": "Smoke Testing in Peel Region",
+  "searchConfiguration": {
+   "allPlaceholder": "Find address or place",
+   "sources": [
+    {
+     "_uid": "555732d5989",
+     "url": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+     "singleLineFieldName": "SingleLine",
+     "name": "ArcGIS World Geocoding Service",
+     "placeholder": "Find address or place",
+     "maxResults": null,
+     "maxSuggestions": null,
+     "suggestionsEnabled": null,
+     "minSuggestCharacters": null,
+     "withinViewEnabled": false,
+     "countryCode": null,
+     "zoomScale": null
+    }
+   ],
+   "activeSourceIndex": 0
+  },
+  "keyboardShortcutsPosition": {
+   "position": "top-left",
+   "index": 2
+  },
+  "compassWidgetPosition": {
+   "position": "top-left",
+   "index": 0
+  },
+  "measurePosition": {
+   "position": "top-right",
+   "index": 0
+  },
+  "sharePosition": {
+   "position": "top-right",
+   "index": 5
+  },
+  "bookmarksPosition": {
+   "position": "top-right",
+   "index": 3
+  },
+  "locateWidgetPosition": {
+   "position": "top-left",
+   "index": 1
+  },
+  "legendPosition": {
+   "position": "top-right",
+   "index": 2
+  },
+  "mapZoomPosition": {
+   "position": "top-right",
+   "index": 4
+  },
+  "homePosition": {
+   "position": "top-right",
+   "index": 6
+  },
+  "languageSwitcherPosition": {
+   "position": "top-right",
+   "index": 1
+  },
+  "basemapTogglePosition": {
+   "position": "bottom-left",
+   "index": 0
+  },
+  "layerListPosition": {
+   "position": "bottom-right",
+   "index": 0
+  },
+  "fullScreenPosition": {
+   "position": "bottom-right",
+   "index": 2
+  },
+  "scalebarPosition": {
+   "position": "bottom-right",
+   "index": 1
+  },
+  "legend": true,
+  "keyboardShortcuts": true,
+  "mapA11yDesc": "This interactive map shows where smoke testing is upcoming (orange) and completed (blue) in Peel Region. You can search your address using the tool bar to find out when testing will happen in your neighbourhood.  ",
+  "introductionTitle": "",
+  "infoIncludeLocation": false,
+  "introductionContent": "<p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\"><strong>Using the map</strong>&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">You can search the map in three ways:</span></p><p class=\"MsoNormal\" style=\"line-height:normal; margin-bottom:0in;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">&nbsp; &nbsp; &nbsp;1. Select the search bar and type in an address</span></p><p class=\"MsoNormal\" style=\"line-height:normal; margin-bottom:0in;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">&nbsp; &nbsp; &nbsp;2. Choose <strong>Use current location </strong>in the search bar</span></p><p class=\"MsoNormal\" style=\"line-height:normal; margin-bottom:0in;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">&nbsp; &nbsp; &nbsp;3. Click anywhere on the map to explore a neighbourhood</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">Your search results will show if smoke testing is scheduled for your area.</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">To start a new search, use the tab at the top of the map named <strong>Clear search location</strong> or the <strong>X</strong> next to your address search. &nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\"><strong>Contact us</strong></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">We encourage you to check back regularly for updates.&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">If you have further questions or feedback about the map, please contact Peel Region.&nbsp;</span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">For more information or to report smoke in your home during testing, call <strong>Peel Region at 905-791-7800, ext. 4409</strong> or visit </span><a href=\"https://peelregion.ca/water/wastewater/sanitary-sewer-smoke-testing\" target=\"_blank\"><span style=\"color:blue;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">Sanitary sewer smoke testing</span></span></a><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">.</span></p>",
+  "landingPage": true,
+  "landingPageConfig": {
+   "titleText": "Peel Region's Smoke Testing Map Off-Season",
+   "subtitleText": "Smoke Testing is suspended from September 2026 through April 2027. Operations will resume in May 2027.",
+   "descriptionText": "<p class=\"paragraph\" style=\"margin:0in;\">&nbsp;</p><p class=\"paragraph\" style=\"margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>Terms of Use</strong></span></p><p class=\"paragraph\" style=\"margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt;\">These terms of use constitute the agreement (“Agreement”) between The Regional Municipality of Peel (“Peel Region”) and the user (“User” or “you”) with respect to the use of the Peel Region's Smoke Testing Map (\"Site\").</span><span class=\"textrun\" style=\"font-variant-ligatures:none !important;\"> </span><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; line-height:115%;\">By using the Site, you agree to these terms of use. If you do not agree, do not use the Site. The terms of this Agreement are subject to change. Please read carefully.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LICENCE</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>1.1 Licence Grant</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">Peel region grants to the User a revocable, non-exclusive, non-transferable, non-sublicensable, licence to use the Site in accordance with the terms of this Agreement.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>1.2 Restrictions</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">User will not, and will not permit any other party to, (a) copy, modify, create a derivative work of, reverse engineer, decompile, translate, disassemble, or otherwise attempt to extract any of the source code, (b) distribute or sell, or attempt to distribute or sell, any part of the Site or any of the Site’s contents, (c) create or attempt to create a new product or service based on the Site or any of the Site’s contents, (d) copy the Site, any part of the Site, or any of the Site’s contents, or (e) create a derivative work of the Site or any of the Site’s contents.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; USE OF SITE</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">Peel region provides the User with access to the Site for convenience only. The User acknowledges that the Site’s contents may not be accurate or complete and is not to be relied upon by the User for any purpose other than obtaining general information for the User’s convenience. Peel Region makes no representations or warranties with respect to the Site’s contents. The Site does not constitute a legal land survey. Use of the Site does not replace the need for the User to exercise independent judgement and comply with all applicable laws. The Site and the Site’s contents are subject to change without prior notice.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INTELLECTUAL PROPERTY</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>3.1 Intellectual Property Rights</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">Except as expressly set out in this Agreement, the User is not granted any rights, implied or otherwise, in or to the Site, the Site’s contents, or any intellectual property of Peel Region or its contractors.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>3.2 User Feedback</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">If the User provides Peel Region with any feedback or suggestions about the Site and/or the Site’s contents, Peel Region may use such feedback and/or suggestions without any obligation or compensation to the User. The User irrevocably assigns to Peel Region all right, title, and interest in and to any feedback and suggestions, and waives and forever releases Peel Region from any claims for compensation with respect to such feedback and suggestions.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>4.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; INDEMNIFICATION AND WAVER OF LIABILITY</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>4.1 Indemnification</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">The User will indemnify and hold harmless Peel Region from and against all charges, liabilities, losses, damages, costs, and expenses (including reasonable legal fees and disbursements) incurred in connection with any claims, demands, suits, causes of action, actions, or other proceedings resulting from or related to this Agreement and/or the User’s use of the Site or any of the Site’s contents.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>4.2 No Liability</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">The User uses the Site at the User’s own risk. The User agrees that Peel Region will not be liable to the User for any charges, liabilities, losses, damages, costs, or expenses incurred by the User or any employee, agent, representative, or contractor of the User arising from or related to this Agreement, the Site, and/or the Site’s contents. The User hereby releases and forever discharges Peel Region from any and all claims, demands, causes or action, and actions it may now or in the future have with respect to this Agreement, the Site, and/or the Site's contents.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:16.0pt; font-variant-ligatures:none !important;\"><strong>5.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; GENERAL</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>5.1 Governing Law</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">This Agreement will be governed by and construed in accordance with the laws of Ontario.</span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; font-variant-ligatures:none !important;\"><strong>5.2 Severability</strong></span></p><p class=\"paragraph\" style=\"font-kerning:none; margin:0in;\"><span class=\"textrun\" style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:13.0pt; font-variant-ligatures:none !important;\">If any provision of this Agreement is held to be invalid, illegal, or unenforceable, such provision will be severed from this Agreement to the extent it is held to be invalid, illegal, or unenforceable, and the remainder of this Agreement will continue in effect.</span></p><p class=\"MsoNormal\"><span style=\"font-size:13.0pt; line-height:115%;\">&nbsp;</span></p>",
+   "entryButtonText": "I Accept",
+   "alignment": "center",
+   "backgroundType": "color",
+   "textColor": "#FFFFFF",
+   "entryButtonColor": "#2366b3",
+   "backgroundColor": "#2366b3",
+   "iconImage": null,
+   "iconImageScale": "m",
+   "backgroundImageSrc": null
+  },
+  "datePublished": 1789046982874,
+  "zoneLookupLayers": {
+   "layers": [
+    {
+     "id": "Smoke_Test_Areas_Planning_7923",
+     "fields": [],
+     "fieldOrder": []
+    }
+   ]
+  },
+  "openRelatedRecords": true,
+  "showNonResultPopups": false,
+  "mapPinColor": "#000000ff",
+  "noResultsMessage": "<p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\"><strong>No results found.</strong></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\"><strong>&nbsp;</strong></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">Please make sure your address is entered correctly. If it is correct, your address is not within the <strong>Current Work Neighbourhood</strong></span><span style=\"color:#4A4A4A;\"><span style=\"background:white; font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">. Properties included in the work area will receive a notice by mail.</span></span></p><p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">&nbsp;</span></p><p><span style=\"color:#141414;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt; line-height:115%;\">To start a new search, use the tab at the top of the map named <strong>Clear search location</strong> or the <strong>X</strong> next to your address search.</span></span></p>",
+  "resultsPanelPreText": "<p class=\"MsoNormal\" style=\"line-height:normal;\"><span style=\"font-family:&quot;Open Sans&quot;,sans-serif; font-size:14.0pt;\">Search Results:</span></p>",
+  "resultsPanelPostText": "",
+  "mapZoom": true,
+  "scalebar": true,
+  "fullScreen": true,
+  "compassWidget": true,
+  "locateWidget": true,
+  "bookmarks": false,
+  "enableHighlightColor": false,
+  "highlightColor": "rgba(35, 102, 179, 0.10196078431372549)",
+  "enableHighlightHaloColor": true,
+  "highlightHaloColor": "#000000ff",
+  "customTheme": {
+   "applySharedTheme": false,
+   "applyPresetTheme": true,
+   "font": "Avenir Next",
+   "appFont": "Avenir Next",
+   "logo": "https://regionofpeel.maps.arcgis.com/sharing/rest/content/items/067e9590cd21498f9bd3cda52b114af2/resources/media/instantAppsConfigPanel_1773336838407_P-Peel-Region_horiz-notag-white.png",
+   "logoAltText": "Peel Region",
+   "logoLink": "",
+   "logoScale": "m",
+   "logoUrl": "",
+   "logoSource": "upload",
+   "preset": null,
+   "themes": {
+    "primary": {
+     "type": "primary",
+     "background": "#2366B3",
+     "text": "#FFFFFF"
+    },
+    "secondary": {
+     "type": "secondary",
+     "background": "#F7E707",
+     "text": "#000000"
+    },
+    "accent": {
+     "type": "accent",
+     "background": "#2366B3",
+     "text": "#FFFFFF"
+    }
+   }
+  },
+  "panelSize": "m",
+  "hideMap": false,
+  "uploads": [
+   "https://regionofpeel.maps.arcgis.com/sharing/rest/content/items/067e9590cd21498f9bd3cda52b114af2/resources/media/instantAppsConfigPanel_1774381592020_introductionContent_textEditor_1774381591949.png"
+  ],
+  "share": false,
+  "infoAsModal": false,
+  "legendOpenAtStart": false,
+  "showIntroduction": true,
+  "closeBehavior": "confirmation",
+  "draft": {
+   "splashButtonText": "I Accept",
+   "title": "Smoke Testing in Peel Region",
+   "searchConfiguration": {
+    "allPlaceholder": "Find address or place",
+    "sources": [
+     {
+      "_uid": "555732d5989",
+      "url": "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer",
+      "singleLineFieldName": "SingleLine",
+      "name": "ArcGIS World Geocoding Service",
+      "placeholder": "Find address or place",
+      "maxResults": null,
+      "maxSuggestions": null,
+      "suggestionsEnabled": null,
+      "minSuggestCharacters": null,
+      "withinViewEnabled": false,
+      "countryCode": null,
+      "zoomScale": null
+     }
+    ],
+    "activeSourceIndex": 0
+   },
+   "customTheme": {
+    "applySharedTheme": false,
+    "applyPresetTheme": true,
+    "font": "Avenir Next",
+    "appFont": "Avenir Next",
+    "logo": "https://regionofpeel.maps.arcgis.com/sharing/rest/content/items/067e9590cd21498f9bd3cda52b114af2/resources/media/instantAppsConfigPanel_1773336838407_P-Peel-Region_horiz-notag-white.png",
+    "logoAltText": "Peel Region",
+    "logoLink": "",
+    "logoScale": "m",
+    "logoUrl": "",
+    "logoSource": "upload",
+    "preset": null,
+    "themes": {
+     "primary": {
+      "type": "primary",
+      "background": "#2366B3",
+      "text": "#FFFFFF"
+     },
+     "secondary": {
+      "type": "secondary",
+      "background": "#F7E707",
+      "text": "#000000"
+     },
+     "accent": {
+      "type": "accent",
+      "background": "#2366B3",
+      "text": "#FFFFFF"
+     }
+    }
+   },
+   "zoneLookupLayers": {
+    "layers": [
+     {
+      "id": "Smoke_Test_Areas_Planning_7923",
+      "fields": [],
+      "fieldOrder": []
+     }
+    ]
+   },
+   "compassWidgetPosition": {
+    "position": "top-left",
+    "index": 0
+   },
+   "locateWidgetPosition": {
+    "position": "top-left",
+    "index": 1
+   },
+   "keyboardShortcutsPosition": {
+    "position": "top-left",
+    "index": 2
+   },
+   "measurePosition": {
+    "position": "top-right",
+    "index": 0
+   },
+   "languageSwitcherPosition": {
+    "position": "top-right",
+    "index": 1
+   },
+   "legendPosition": {
+    "position": "top-right",
+    "index": 2
+   },
+   "bookmarksPosition": {
+    "position": "top-right",
+    "index": 3
+   },
+   "mapZoomPosition": {
+    "position": "top-right",
+    "index": 4
+   },
+   "sharePosition": {
+    "position": "top-right",
+    "index": 5
+   },
+   "homePosition": {
+    "position": "top-right",
+    "index": 6
+   },
+   "basemapTogglePosition": {
+    "position": "bottom-left",
+    "index": 0
+   },
+   "layerListPosition": {
+    "position": "bottom-right",
+    "index": 0
+   },
+   "scalebarPosition": {
+    "position": "bottom-right",
+    "index": 1
+   },
+   "fullScreenPosition": {
+    "position": "bottom-right",
+    "index": 2
+   },
+   "lastSavedDraftDate": 1790952047823
+  }
+ }
+}

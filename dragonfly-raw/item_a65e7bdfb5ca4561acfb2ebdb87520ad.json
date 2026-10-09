@@ -1,0 +1,72 @@
+{
+ "id": "a65e7bdfb5ca4561acfb2ebdb87520ad",
+ "owner": "david.guillette@peelregion.ca_RegionofPeel",
+ "ownerId": "8c649545c335c9b3b30dcc4c6c4946c8",
+ "orgId": "ONZht79c8QWuX759",
+ "created": 1531154755000,
+ "modified": 1531154771000,
+ "guid": null,
+ "name": "StreetConnectivity",
+ "title": "StreetConnectivity",
+ "type": "Feature Service",
+ "typeKeywords": [
+  "ArcGIS Server",
+  "Data",
+  "Feature Access",
+  "Feature Service",
+  "Metadata",
+  "Service",
+  "Singlelayer",
+  "Hosted Service"
+ ],
+ "description": null,
+ "tags": [
+  "Brampton",
+  " Caledon",
+  " HDA",
+  " Street Connectivity"
+ ],
+ "snippet": "Street Connectivity",
+ "thumbnail": "thumbnail/thumbnail.png",
+ "documentation": null,
+ "extent": [
+  [
+   -80.14948599449889,
+   43.48625801579075
+  ],
+  [
+   -79.53064452222817,
+   43.98687920681544
+  ]
+ ],
+ "categories": [],
+ "spatialReference": "NAD_1983_UTM_Zone_17N",
+ "accessInformation": null,
+ "classification": null,
+ "licenseInfo": null,
+ "culture": "en-ca",
+ "properties": null,
+ "advancedSettings": null,
+ "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/StreetConnectivity/FeatureServer",
+ "proxyFilter": null,
+ "access": "public",
+ "size": 3121152,
+ "subInfo": 0,
+ "appCategories": [],
+ "industries": [],
+ "languages": [],
+ "largeThumbnail": null,
+ "banner": null,
+ "screenshots": [],
+ "listed": false,
+ "commentsEnabled": true,
+ "numComments": 0,
+ "numRatings": 0,
+ "avgRating": 0,
+ "numViews": 1922,
+ "scoreCompleteness": 53,
+ "groupDesignations": null,
+ "apiToken1ExpirationDate": -1,
+ "apiToken2ExpirationDate": -1,
+ "lastViewed": 1791565200000
+}
