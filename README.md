@@ -270,6 +270,12 @@ application.
   inflows) ÷ flow per person. It follows the Flows and diversion switches; D-5-1 uses measured
   flows, so *Calibrated to 2025 flows* is the matching basis. Population equivalents are skipped
   where too few census people map to the sewershed (Inglewood).
+- **Horizon years** (Plants & capacity): each plant's average dry weather flow as a % of rated
+  capacity from 2025 to 2051, with approved growth phased in over a set number of years (default
+  2026, 5 years), then proposed growth (default 2028, 10 years), optional further growth beyond
+  today's applications (people per year, shared by today's population) and the diversion from its
+  start year. A table gives 2025 / 2031 / 2041 / 2051 and the year each plant reaches 80%, 90% and
+  100%. Assumptions are editable and kept in the browser; hover shows each year's values.
 - **70 ML/d diversion** switch (Plants tab): models the planned east-to-west diversion from
   G.E. Booth to Clarkson (operational 2027–2028 per the 2025 reports) as a fixed transfer, taken
   off G.E. Booth's average and peaks and added to Clarkson's at every growth layer; the Peel
