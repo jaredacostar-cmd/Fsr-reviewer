@@ -713,6 +713,26 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .ref-list { margin: 4px 0; padding-left: 18px; font-size: 12.5px; }
 .ref-list li { margin: 2px 0; }
 .svc-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.cap-chart { position: relative; max-width: 1000px; margin: 4px 0 6px; }
+.cap-axis, .cap-row { display: grid; grid-template-columns: minmax(130px, 200px) minmax(0, 1fr); column-gap: 12px; }
+.cap-ticks { position: relative; height: 16px; font-size: 11px; color: var(--text-muted); }
+.cap-ticks span { position: absolute; transform: translateX(-50%); }
+.cap-ticks span.hundred { color: var(--text-primary); font-weight: 600; }
+.cap-row { align-items: center; margin: 4px 0 10px; }
+.cap-name { font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
+.cap-name small { display: block; font-weight: 400; color: var(--text-muted); font-size: 11px; }
+.cap-track { position: relative; height: 22px; background: linear-gradient(to right, var(--surface-2) 0 0) no-repeat; border-radius: 4px; }
+.cap-bar { display: flex; gap: 2px; height: 100%; border-radius: 0 4px 4px 0; overflow: hidden; }
+.cap-bar .gseg { min-width: 2px; }
+.cap-reserve { position: absolute; top: 2px; bottom: 2px; border: 1.5px dashed var(--text-secondary); border-left: none; border-radius: 0 4px 4px 0; box-sizing: border-box; }
+.cap-line { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--text-primary); }
+.cap-end { position: absolute; top: 50%; transform: translate(6px, -50%); font-size: 11.5px; font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+.cap-end.near { transform: translate(8px, -50%); }
+.cap-text { grid-column: 2; display: flex; flex-wrap: wrap; gap: 2px 14px; margin-top: 4px; color: var(--text-secondary); }
+.cap-text .over { color: var(--text-primary); font-weight: 700; }
+.gsw.cap-reserve-sw { background: transparent; border: 1.5px dashed var(--text-secondary); box-sizing: border-box; }
+.cap-line-sw { display: inline-block; width: 2px; height: 12px; background: var(--text-primary); }
+@media (max-width: 640px) { .cap-axis, .cap-row { grid-template-columns: minmax(0, 1fr); } .cap-axis > div:first-child { display: none; } .cap-text { grid-column: 1; } }
 .svc-switches { display: flex; flex-wrap: wrap; gap: 6px 14px; }
 .plants-table tr.ext.neg td { color: var(--text-secondary); }
 .svc-switch { display: inline-flex; align-items: center; gap: 4px; }
