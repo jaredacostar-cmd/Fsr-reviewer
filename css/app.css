@@ -1113,9 +1113,20 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .pl-sw { font: 600 9.5px/1.4 system-ui, sans-serif; color: #fff; background: #1971c2; border-radius: 3px; padding: 0 3px; }
 
 /* Clear selection button (bottom centre of the map) */
-.clear-sel { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 1000; box-shadow: var(--shadow); background: var(--surface-1); border-radius: 999px; padding: 6px 14px; font-size: 13px; white-space: nowrap; }
-.clear-sel[hidden] { display: none; }
-@media (max-width: 760px) { .clear-sel { bottom: 64px; } }
+.map-bottom { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); z-index: 1000; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: calc(100% - 24px); pointer-events: none; }
+.map-bottom > * { pointer-events: auto; }
+.clear-sel { box-shadow: var(--shadow); background: var(--surface-1); border-radius: 999px; padding: 6px 14px; font-size: 13px; white-space: nowrap; }
+.clear-sel[hidden], .wf-bar[hidden] { display: none; }
+.wf-bar { display: flex; align-items: center; gap: 6px; background: var(--surface-1); border: 1px solid #e8590c; border-radius: 999px; box-shadow: var(--shadow); padding: 3px 4px 3px 12px; font-size: 13px; white-space: nowrap; }
+.wf-bar .btn.small { border-radius: 999px; }
+.wf-bar-n { background: none; border: 0; padding: 4px 0; font: inherit; color: var(--text-primary); cursor: pointer; text-decoration: underline dotted; }
+.wf-bar-n::before { content: ''; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #e8590c; margin-right: 6px; }
+.wf-list { list-style: none; padding: 0; margin: 8px 0; }
+.wf-list li { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+.wf-open { flex: 1; text-align: left; background: none; border: 0; padding: 4px 0; font: inherit; color: inherit; cursor: pointer; }
+.wf-open small { display: block; color: var(--text-secondary); }
+.wf-head-act { margin-top: 6px; }
+@media (max-width: 760px) { .map-bottom { bottom: 64px; } }
 /* Water and Wastewater tabs: the tab content scrolls (both ways) under the tab bar, with each
    table's column headers kept in view. */
 .footer:has(> .svc-pane:not([hidden])) { display: flex; flex-direction: column; overflow: hidden; }

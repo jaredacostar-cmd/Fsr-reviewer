@@ -3875,7 +3875,51 @@
     return p;
   }
   let whatIfs = (store.get('whatifs', []) || []).filter(w => w && w.lat != null);
+  // Bottom-of-map bar: Clear selection, and the test sites with Remove all (and Undo after).
+  const mapBottom = L.DomUtil.create('div', 'map-bottom', map.getContainer());
+  const wfBar = L.DomUtil.create('div', 'wf-bar', mapBottom);
+  L.DomEvent.disableClickPropagation(wfBar);
+  let wfUndo = null, wfUndoT = 0;
+  function removeWhatIfs(ids) {
+    const gone = whatIfs.filter(w => ids.includes(w.id)); if (!gone.length) return;
+    whatIfs = whatIfs.filter(w => !ids.includes(w.id));
+    if ($('#detail-body').dataset.wf && ids.includes($('#detail-body').dataset.wf) && $('#detail').dataset.view === 'whatif') closeDetail();
+    wfUndo = gone; clearTimeout(wfUndoT); wfUndoT = setTimeout(() => { wfUndo = null; renderWfBar(); }, 8000);
+    syncWhatIfs();
+    if ($('#detail').dataset.view === 'whatifs' && !$('#detail').hidden) showWhatIfList();
+  }
+  function renderWfBar() {
+    const n = whatIfs.length;
+    wfBar.hidden = !n && !wfUndo;
+    wfBar.innerHTML = wfUndo ? `<span>Removed ${wfUndo.length === 1 ? esc(wfUndo[0].name || 'test site') : `${wfUndo.length} test sites`}</span><button type="button" class="btn small" data-wf-undo>Undo</button>`
+      : `<button type="button" class="wf-bar-n" data-wf-list title="List the test sites">${n} test site${n === 1 ? '' : 's'}</button><button type="button" class="btn small" data-wf-all title="Remove every test site from the map and the totals">Remove ${n === 1 ? '' : 'all '}<span aria-hidden="true">×</span></button>`;
+  }
+  // Acted on after the click finishes: redrawing the bar mid-click detaches the button, and Leaflet
+  // would then take the click for a tap on the empty map (which unselects).
+  wfBar.addEventListener('click', e => {
+    const act = e.target.closest('[data-wf-undo]') ? 'undo' : e.target.closest('[data-wf-all]') ? 'all' : e.target.closest('[data-wf-list]') ? 'list' : '';
+    setTimeout(() => {
+      if (act === 'undo' && wfUndo) { whatIfs = whatIfs.concat(wfUndo); wfUndo = null; clearTimeout(wfUndoT); syncWhatIfs(); if ($('#detail').dataset.view === 'whatifs' && !$('#detail').hidden) showWhatIfList(); }
+      else if (act === 'all') removeWhatIfs(whatIfs.map(w => w.id));
+      else if (act === 'list') showWhatIfList();
+    });
+  });
+  // Every test site, each with its own remove.
+  function showWhatIfList() {
+    if (!whatIfs.length) { closeDetail(); return; }
+    $('#detail-body').innerHTML = `<div class="head"><h3>Test sites</h3><div class="m">${whatIfs.length} on the map · kept in this browser · not real applications</div></div>
+      <ul class="wf-list">${whatIfs.map(w => `<li><button type="button" class="wf-open" data-wf-open="${esc(w.id)}"><strong>${esc(w.name || 'Test site')}</strong><small>${fmtNum(w.single + w.town + w.apartment)} units${w.jobs ? ` · ${fmtNum(w.jobs)} jobs` : ''}${w.include ? ' · counted in totals' : ''}</small></button><button type="button" class="btn small" data-wf-rm="${esc(w.id)}" aria-label="Remove ${esc(w.name || 'test site')}">Remove <span aria-hidden="true">×</span></button></li>`).join('')}</ul>
+      <p><button type="button" class="btn small" data-wf-rmall>Remove all test sites</button></p>`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'whatifs';
+  }
+  $('#detail-body').addEventListener('click', e => {
+    const rm = e.target.closest('[data-wf-rm]'); if (rm) { removeWhatIfs([rm.dataset.wfRm]); return; }
+    if (e.target.closest('[data-wf-rmall]')) { removeWhatIfs(whatIfs.map(w => w.id)); return; }
+    const op = e.target.closest('[data-wf-open]'); if (op) { const w = whatIfs.find(x => x.id === op.dataset.wfOpen); if (w) { map.setView([w.lat, w.lng], Math.max(map.getZoom(), 15)); showWhatIf(null, w.id); } return; }
+    if (e.target.closest('[data-wf-showall]')) showWhatIfList();
+  });
   function syncWhatIfs() {
+    renderWfBar();
     store.set('whatifs', whatIfs);
     state.whatifs = whatIfs.filter(w => w.include).map(whatIfProject);
     whatIfLayer.clearLayers();
@@ -3897,12 +3941,12 @@
     }
     const num = (k, label, step = 1) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-wf="${k}" value="${w[k]}"></label>`;
     $('#detail-body').innerHTML = `
-      <div class="head"><h3><input class="wf-name" data-wf="name" value="${esc(w.name)}" aria-label="Name"></h3><div class="m">Test site · drag the pin to move it · not a real application</div></div>
+      <div class="head"><h3><input class="wf-name" data-wf="name" value="${esc(w.name)}" aria-label="Name"></h3><div class="m">Test site · drag the pin to move it · not a real application${whatIfs.length > 1 ? ` · <button type="button" class="btn small link" data-wf-showall>all ${whatIfs.length} test sites</button>` : ''}</div>
+        <div class="wf-head-act"><button type="button" class="btn small" data-wf-del="1">Remove this test site <span aria-hidden="true">×</span></button></div></div>
       <div class="wf-form">${num('single', 'Single / semi')}${num('town', 'Townhouses')}${num('apartment', 'Apartments')}${num('jobs', 'Jobs')}${num('ha', 'Site area (ha)', 0.1)}
         <label class="field"><span>Layer</span><select data-wf="phase"><option value="review"${w.phase === 'review' ? ' selected' : ''}>Proposed</option><option value="approved"${w.phase === 'approved' ? ' selected' : ''}>Approved</option></select></label></div>
       <label class="chk small"><input type="checkbox" data-wf="include"${w.include ? ' checked' : ''}> Count it in the Water / Wastewater totals and plant capacity</label>
-      <div id="wf-out"></div>
-      <p class="small"><button type="button" class="btn small link" data-wf-del="1">Remove this test site</button></p>`;
+      <div id="wf-out"></div>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'whatif';
     $('#detail-body').dataset.wf = w.id;
     renderWhatIfOut(w);
@@ -3923,7 +3967,7 @@
   $('#detail-body').addEventListener('change', e => { if (e.target.dataset && (e.target.dataset.wf === 'include' || e.target.dataset.wf === 'phase')) e.target.dispatchEvent(new Event('input', { bubbles: true })); });
   $('#detail-body').addEventListener('click', e => {
     if (!e.target.closest('[data-wf-del]')) return;
-    whatIfs = whatIfs.filter(x => x.id !== $('#detail-body').dataset.wf); syncWhatIfs(); closeDetail();
+    removeWhatIfs([$('#detail-body').dataset.wf]);
   });
   syncWhatIfs();
 
@@ -4500,7 +4544,7 @@
   let panelAt = 0;
   new MutationObserver(() => { panelAt = Date.now(); syncClearBtn(); }).observe($('#detail-body'), { childList: true });
   new MutationObserver(() => syncClearBtn()).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
-  const clearBtn = L.DomUtil.create('button', 'btn clear-sel', map.getContainer());
+  const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
   const somethingSelected = () => !$('#detail').hidden || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;

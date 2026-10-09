@@ -323,7 +323,9 @@ application.
 - **Map tools** (left of the map): *Measure* distances and select every shown development within
   250 m – 2 km of a point; *Test a site* drops a proposed development (units by type, jobs, site
   area) and gives its servicing check — zone, sewer path and pumping station load, plant reserve —
-  and can count it in the totals (kept in this browser, draggable).
+  and can count it in the totals (kept in this browser, draggable). While any exist, a bar at the
+  bottom of the map shows *N test sites* (tap for the list, each with *Remove*) and *Remove all*,
+  with *Undo* for a few seconds after; each test site's panel has *Remove this test site* at the top.
 - **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
   site area estimated, complete.
 - **Capacity by year**: the year slider in the legend phases approved and proposed growth in as set
