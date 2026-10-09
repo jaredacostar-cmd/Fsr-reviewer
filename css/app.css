@@ -713,6 +713,8 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .ref-list { margin: 4px 0; padding-left: 18px; font-size: 12.5px; }
 .ref-list li { margin: 2px 0; }
 .svc-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.svc-switches { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.plants-table tr.ext.neg td { color: var(--text-secondary); }
 .svc-switch { display: inline-flex; align-items: center; gap: 4px; }
 .svc-switch .muted { margin-right: 4px; }
 .svc-switch .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
@@ -722,6 +724,7 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .rep-table td small a { color: inherit; }
 .plants-table tr.ext td { color: var(--text-secondary); font-style: italic; }
 .plants-table tr.ext td small { font-style: normal; }
+.plants-table td:first-child { max-width: 380px; white-space: normal; }
 .svc-table th.grp-h { text-align: center; border-bottom: 1px solid var(--text-muted); }
 .svc-table .sep { border-left: 1px solid var(--text-muted); }
 .ww-table { min-width: 1080px; }

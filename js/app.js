@@ -1851,7 +1851,7 @@
   const upstreamOf = (id, kids) => { const out = []; const walk = i => { for (const c of kids.get(i) || []) { out.push(c); walk(c.id); } }; walk(id); return out; };
   // View options: wastewater 'design' (Peel criteria) or 'calibrated' (each plant scaled to its
   // 2025 reported average flow); water max day factor 'design' or 'observed' (2025 South Peel).
-  const svcOpt = { ww: store.get('svcWwMode', 'design'), md: store.get('svcMdMode', 'design') };
+  const svcOpt = { ww: store.get('svcWwMode', 'design'), md: store.get('svcMdMode', 'design'), div: store.get('svcDivert', 'off') };
   const optSwitch = (key, label, opts) => `<div class="svc-switch" role="group" aria-label="${esc(label)}"><span class="muted small">${label}</span>${opts.map(([v, t]) =>
     `<button type="button" class="btn small${svcOpt[key] === v ? ' on' : ''}" data-svcopt="${key}" data-v="${v}" aria-pressed="${svcOpt[key] === v}">${t}</button>`).join('')}</div>`;
   const refLink = (r, pages) => { const rep = state.reports && state.reports.reports[r]; return rep ? `<a href="${esc(rep.url)}" target="_blank" rel="noopener">${esc(rep.title)}</a>${pages ? ` (${esc(pages)})` : ''}` : ''; };
@@ -2025,7 +2025,7 @@
         const mk = () => ({ pop: total(o), j: jobs(o), a: adwf(o, f) + extSoFar, d: pdwf(o, f) + extSoFar, ii: ii(o), w: pdwf(o, f) + extSoFar + ii(o) });
         row(esc(label), mk(), n++);
         // External inflows come in with the existing system, after the census row.
-        if (key === 'census') for (const x of ext) { extSoFar += x.mld; row(`+ ${esc(x.name)}<small>${esc(x.detail)} · ${refLink(x.ref, x.pages)}</small>`, mk(), n++, 'ext'); }
+        if (key === 'census') for (const x of ext) { extSoFar += x.mld; row(`${x.mld < 0 ? '−' : '+'} ${esc(x.name)}<small>${esc(x.detail)} · ${x.refs || refLink(x.ref, x.pages)}</small>`, mk(), n++, x.mld < 0 ? 'ext neg' : 'ext'); }
       });
       const r = prev;
       return `<tr class="grp"><td colspan="7">${title}${note ? ` <span class="muted small">${note}</span>` : ''}</td></tr>${rows.join('')}
@@ -2033,13 +2033,20 @@
         <tr class="plant-bar"><td colspan="7">${svcBar(l)}</td></tr>`;
     };
     // Comparison with the 2025 reports.
+    // Planned east-to-west diversion: a fixed transfer of average flow (and the same amount off
+    // the peaks) from G.E. Booth to Clarkson, when switched on; the Peel total is unchanged.
+    const dv = R && R.wastewater.diversion, divOn = !!(dv && svcOpt.div === 'on');
+    const dvRefs = dv ? dv.refs.map(([r, pg]) => refLink(r, pg)).join('; ') : '';
+    const divTo = pl => !divOn ? [] : pl === dv.from ? [{ name: `Diversion to ${plantLabel(dv.to)} (planned ${dv.when})`, detail: dv.detail, mld: -dv.mld, refs: dvRefs }]
+      : pl === dv.to ? [{ name: `Diversion from ${plantLabel(dv.from)} (planned ${dv.when})`, detail: dv.detail, mld: dv.mld, refs: dvRefs }] : [];
+    const divMld = pl => divTo(pl).reduce((t, x) => t + x.mld, 0);
     let cmp = '';
     if (R) {
       const rows = secs.map(x => {
         const p = rep(x.pl); if (!p) return '';
-        const cb = calib[x.pl], todayDesign = cb.today + inflowsTo(x.pl), bo = adwf(x.sum, x.f) + inflowsTo(x.pl);
+        const cb = calib[x.pl], todayDesign = cb.today + inflowsTo(x.pl), bo = adwf(x.sum, x.f) + inflowsTo(x.pl) + divMld(x.pl);
         return `<tr><td>${esc(p.name)}<small>${refLink(p.ref, p.pages)}</small></td><td>${uML(p.ratedMLd)}</td><td>${uML(p.avgMLd)}<small>${p.pctOfCapacity}% of capacity</small></td><td>${uML(p.maxDayMLd)}<small>${esc(p.maxDayMonth)}${p.bypasses ? ` · ${p.bypasses} bypasses, ${fmtNum(p.bypassML)} ML` : ''}</small></td>
-          <td>${uML(todayDesign)}<small>${pct(todayDesign, p.avgMLd)} of reported</small></td><td>${cb.f ? `×${cb.f.toFixed(2)}` : '–'}</td><td class="bo">${uML(bo)}<small>${pct(bo, p.ratedMLd)} of capacity${svcOpt.ww === 'calibrated' ? ', calibrated' : ''}</small></td></tr>`;
+          <td>${uML(todayDesign)}<small>${pct(todayDesign, p.avgMLd)} of reported</small></td><td>${cb.f ? `×${cb.f.toFixed(2)}` : '–'}</td><td class="bo">${uML(bo)}<small>${pct(bo, p.ratedMLd)} of capacity${svcOpt.ww === 'calibrated' ? ', calibrated' : ''}${divMld(x.pl) ? `, ${divMld(x.pl) > 0 ? '+' : '−'}${fmt1(Math.abs(divMld(x.pl)))} ML/d diversion` : ''}</small></td></tr>`;
       }).join('');
       const tor = inflows.find(x => !x.plant);
       const sumRep = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).avgMLd : 0), 0), sumRated = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).ratedMLd : 0), 0);
@@ -2053,12 +2060,13 @@
     const ratedOf = pl => rep(pl) ? rep(pl).ratedMLd : 0;
     const peelExt = inflows;
     const peelF = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
-    $('#plants-body').innerHTML = `<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}${R ? optSwitch('ww', 'Flows', [['design', 'Peel design criteria'], ['calibrated', 'Calibrated to 2025 flows']]) : ''}</div>
+    $('#plants-body').innerHTML = `<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${R ? optSwitch('ww', 'Flows', [['design', 'Peel design criteria'], ['calibrated', 'Calibrated to 2025 flows']]) : ''}${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${dv.to}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}</div></div>
+      ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(plantLabel(dv.from))} to ${esc(plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       ${cmp}
       <h3 class="svc-sub">Plant inflow by growth layer</h3>
       <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each layer is what it adds, the running total below${svcOpt.ww === 'calibrated' ? ' · calibrated to 2025 flows' : ''}</caption>
       <thead><tr><th>Layer</th><th>Population</th><th>Average dry<br>weather</th><th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th><th>Average<br>% of rated</th></tr></thead>
-      <tbody>${secs.map(x => block(esc(plantLabel(x.pl)), x.sum, x.f, peelExt.filter(e => e.plant === x.pl), ratedOf(x.pl), x.f !== 1 ? `calibrated ×${x.f.toFixed(2)}` : '')).join('')}
+      <tbody>${secs.map(x => block(esc(plantLabel(x.pl)), x.sum, x.f, [...peelExt.filter(e => e.plant === x.pl), ...divTo(x.pl)], ratedOf(x.pl), x.f !== 1 ? `calibrated ×${x.f.toFixed(2)}` : '')).join('')}
         ${block(`Peel total (${secs.map(x => x.pl).join(' + ')})`, peel, peelF, peelExt, secs.reduce((t, x) => t + ratedOf(x.pl), 0))}
         ${tor.rows.length ? block(esc(plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table>
       <p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p>`;
@@ -2077,7 +2085,7 @@
   for (const id of ['#water-body', '#ww-body', '#plants-body']) $(id).addEventListener('click', e => {
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
     svcOpt[b.dataset.svcopt] = b.dataset.v;
-    store.set(b.dataset.svcopt === 'ww' ? 'svcWwMode' : 'svcMdMode', b.dataset.v);
+    store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert' }[b.dataset.svcopt], b.dataset.v);
     renderSvcTab();
   });
   // Click a zone / catchment row: outline it on the map and zoom to it (a catchment also shades
