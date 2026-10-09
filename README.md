@@ -227,9 +227,9 @@ application.
   lists where untraced sewers end). Pumping stations take the names in the Region's 2025
   Wastewater Collection System report. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
   larger trunk (36 areas; 96.9% of 57,512 manholes reach a Peel plant). Plant split reviewed.
-- Each development is tagged by its location point. Map options toggle both layers; **Where**
-  has Pressure zone and Drainage area filters; the development panel shows its zone and
-  drainage area.
+- Each development is tagged by its location point. The map panel's **Areas** fold toggles both
+  layers and has the Pressure zone and Wastewater block filters; the development panel shows its
+  zone and block.
 - **Bottom panel tabs:** **Growth & demand** (demand of the shown developments, then growth
   since the census), **Water**, **Wastewater** (two views: *Plants & capacity* and *Catchments*)
   and **Criteria & references**. Every servicing table opens with a stamp of the criteria it uses
@@ -255,11 +255,21 @@ application.
   construction, any year) over the background. Layers & style, the timeline and the analysis panel
   start folded (each remembers being opened); the bottom bar shows the shown developments, units
   and people, and *Analysis* opens the Growth & demand, Water, Wastewater and Criteria tabs. Map
-  tools (select an area, measure, test a site) sit under one Tools button; the north arrow stays on
-  the map (tap it to switch between road grid and north up). The sidebar has search, a "Showing …" line, Phase, Where and one *More
-  filters* fold (focus, planning and servicing areas, record type). The development panel has
-  three tabs: Overview, Servicing (summary, existing mains, fire flow, stormwater, planned works,
-  DC needs, servicing check) and History & records. History & records opens with *How the phase
+  tools (trace a sewer path, select an area, measure, test a site) sit under one Tools button; the
+  north arrow stays on the map (tap it to switch between road grid and north up). The sidebar has
+  search, a "Showing …" line, Phase and one *More filters* fold (focus, record type). **Where and
+  areas are on the map panel**: municipality chips, then an *Areas* fold with Secondary plans and
+  MTSAs outline toggles (tap an outlined area on the map to filter to it, tap again to clear), the
+  secondary plan / MTSA filters, and the Pressure zones / Wastewater blocks layers and filters; its
+  heading shows what is applied. The development panel has three tabs: Overview, Servicing and
+  History & records. **Servicing** opens with *Trace the sewer path to the plant*, then a **Water**
+  section (demand and pressure zone, watermains nearby, fire flow, planned water works, water DC
+  needs), a **Wastewater** section (flows; the blocks to the plant, the tightest pipes with their
+  freeboard and pumping stations; plant reserve; sanitary sewers nearby with the path's age / risk;
+  planned wastewater works; wastewater DC needs) and **Site** (ground, storm sewers, stormwater
+  ponds), with *Flows by stage and sewer path* below. The trace is also under Tools → *Trace sewer
+  path* (tap a development, or any point on the map) and on the → plant chip at the top of a
+  development. History & records opens with *How the phase
   was set*: the file behind the phase, approvals by stage with the latest submission in each, and
   flags where the status and the submissions disagree (a newer submission in review after an
   earlier approval, permits issued while planning is in review, a bare "Closed" read as approved,
@@ -341,8 +351,21 @@ application.
   Region publishes no watermain depth.
 - **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
   site area estimated, complete.
-- **Capacity by year**: the year slider in the legend phases approved and proposed growth in as set
-  in Horizon years, so catchments and pumping stations change colour as growth arrives.
+- **Demand year** (on the map, above the legend, whenever a capacity layer is on): the year the
+  map's results are worked out for. It opens on the current year (the census + built since, with
+  approved and proposed growth phased in as set in Horizon years) and slides to build-out, so
+  catchments, pumping stations and pipes change colour as growth arrives; the pipe and station
+  panels and a development's tightest pipes follow it.
+- **Results stay visible zoomed in**: the live existing pipes (from zoom 15) draw under the sewer
+  screen's capacity colours, and from zoom 16 each pipe is labelled with its capacity used (with
+  its size when Size labels is on).
+- **Tapping a pipe works with nothing selected**: the canvas the development dots are drawn on no
+  longer swallows taps meant for the pipes and areas below it; a tap or hover it doesn't hit is
+  handed to the canvases underneath (pipes, catchments, census areas).
+- **Freeboard**: each pipe's flow depth and freeboard (D − y) from Manning part-full flow in a
+  circular pipe, y / D from Q / Q_full (e.g. 85% of capacity ≈ 0.71 D deep); in the pipe tooltip,
+  the pipe panel and its *How the flow is calculated* table, and on a development's tightest pipes.
+  Over 100% the pipe runs full: no freeboard, with the rise above the crown shown instead.
 - Census area outlines are now off by default (turn on under Layers & style).
 - **Planned works (2026 DC capital maps, draft)**: `data/dc-infra.json`, built by
   `scripts/build-dc-infra.py` from the Region's water and wastewater Development Charges capital
@@ -352,7 +375,7 @@ application.
   schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
   route descriptions joined from the 2020 DC Background Study by component number. Used for:
   - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
-    works after the legend year are faded);
+    works after the Demand year are faded);
   - the development brief: the planned main it would connect to, trunks and facilities on its sewer
     path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
     development outside the existing network relies on a main not built until later; a marker
