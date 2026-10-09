@@ -4618,7 +4618,9 @@
         const a = pipeAttrs(kind, S.src, f.properties || {});
         const lines = f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates];
         L.polyline(lines.map(l => l.map(([x, y]) => [y, x])), { renderer: existRenderer, color: EXIST_STYLE[kind].color, weight: a.d >= 900 ? 6 : a.d >= 600 ? 5 : a.d >= 375 ? 3.5 : 2, opacity: 0.85, dashArray: /FM/.test(a.type) ? '6 4' : null })
-          .bindTooltip(`<strong>${esc(existText(kind, a))}</strong><br><span class="muted">${esc(S.src)} (live)</span>`, { sticky: true, className: 'pt' }).addTo(existLayer);
+          .bindTooltip(`<strong>${esc(existText(kind, a))}</strong><br><span class="muted">${esc(S.src)} (live)${kind === 'sanitary' ? ' · tap: what flows into it' : ''}</span>`, { sticky: true, className: 'pt' })
+          .on('click', ev => { if (kind !== 'sanitary') return; L.DomEvent.stop(ev); existSewerLoads(lines, a); })
+          .addTo(existLayer);
         if (pipeLbl && a.d) lbls.push({ d: a.d, color: EXIST_STYLE[kind].color, lines });
       }
     }))));
@@ -4626,6 +4628,33 @@
     if (seq === existSeq && note) note.textContent = '';
   }
   map.on('moveend', () => { if (Object.values(existOn).some(Boolean)) renderExisting(); });
+  // Tap an existing sanitary sewer: the same pipe in the network screen (300 mm+) with every
+  // development draining through it; a smaller local sewer isn't in that network, so the
+  // developments beside it and the 300 mm+ sewer nearest to it are given instead.
+  async function existSewerLoads(lines, a) {
+    await loadSewers(); if (!SEW.data) return;
+    const pts = lines.flat(), mid = pts[Math.floor(pts.length / 2)];
+    // Same pipe: a network pipe of the same diameter within 12 m of the segment's middle.
+    let best = -1, bd = Infinity;
+    const gx = Math.floor(mid[0] / 0.004), gy = Math.floor(mid[1] / 0.003);
+    for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (const k of SEW.grid.get(`${gx + i},${gy + j}`) || []) {
+      const p = SEW.data.pipes[k]; if (a.d && Math.abs(p[0] - a.d) > 1) continue;
+      const d = dcDist(mid, pipeCoords(p)); if (d < bd) { bd = d; best = k; }
+    }
+    if (best >= 0 && bd <= 12) { showPipeLoads(best); return; }
+    // Local sewer: developments within 100 m of it, and the nearest 300 mm+ sewer.
+    const near = state.projects.filter(p => p.lat != null && p.phase !== 'cancelled' && svcLayerOf(p) !== 'existing' && lines.some(l => dcDist([p.lng, p.lat], l) <= 100))
+      .map(p => ({ p, e: D.estimate([p], state.criteria, 'all', jobsOf) })).filter(x => x.e.population > 0 || x.e.employment.jobs > 0)
+      .sort((x, y) => y.e.combined.wastewater.wetPeak - x.e.combined.wastewater.wetPeak);
+    const trunk = nearestPipe(mid[0], mid[1], 600);
+    $('#detail-body').innerHTML = `<div class="head"><h3>${a.d ? `${a.d} mm` : ''} local sanitary sewer</h3><div class="m">${esc(existText('sanitary', a))} · Region of Peel (live)</div></div>
+      <p class="small">Pipes under 300 mm are not in the network screen (where flow is traced pipe to pipe), so what drains into this one can't be traced exactly. ${trunk >= 0 ? `It feeds the sewer network nearby: the closest 300 mm+ sewer is a <button type="button" class="btn small link" data-pipe="${trunk}">${SEW.data.pipes[trunk][0]} mm sewer</button> ${fmtNum(Math.round(dcDist(mid, pipeCoords(SEW.data.pipes[trunk]))))} m away (what loads it, and how its flow is calculated).` : 'No 300 mm+ sewer within 600 m.'}</p>
+      <table class="dt loads-table"><caption>${fmtNum(near.length)} development${near.length === 1 ? '' : 's'} since the census within 100 m of this sewer (likely to connect to it), largest peak wet first</caption>
+        <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
+        <tbody>${near.slice(0, 40).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.p)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.p)])} · ${esc(r.p.municipality)}</small></td><td>${fmtNum(Math.round(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.e.combined.wastewater.wetPeak)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None within 100 m.</td></tr>'}</tbody></table>
+      <p class="small muted">Peak wet weather at Peel design criteria for each development. Existing (2021 Census) flow in a local sewer isn't estimated: its catchment isn't traced.</p>`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
+  }
   // Nearest existing main of each kind to a point, within r metres (live query, cached per site).
   const nearCache = new Map();
   function nearestExisting(lng, lat, r = 200) {
