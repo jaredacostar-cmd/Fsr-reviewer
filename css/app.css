@@ -991,3 +991,4 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .search-sug .dot { flex: none; margin-top: 2px; }
 .sug-pin { flex: none; width: 12px; height: 12px; margin-top: 3px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #e8590c; }
 .addr-pin span { display: block; width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #e8590c; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.5); }
+.map-legend { max-height: 36vh; }

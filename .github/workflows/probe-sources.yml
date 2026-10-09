@@ -13,12 +13,15 @@ name: Probe data sources
 #  mode=refs-council: download reference documents and probe council meeting portals (pushed to the ref-docs branch)
 #  mode=masterplan: download the 2020 Water and Wastewater Master Plan volumes as text (pushed to the ref-docs-mp branch)
 #  mode=dc-maps: download the 2026 DC capital maps (water, wastewater) as text, images, SVG and any GeoPDF layers (ref-docs-dc branch)
+#  mode=linework: existing watermains, sanitary mains, storm sewers and ponds published for Peel (log only)
+#  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
+#  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen) from the Region's sanitary mains, committed to this branch
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan or dc-maps'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
         default: 'all'
         required: false
 
@@ -48,6 +51,28 @@ jobs:
         if: inputs.mode == 'census'
         run: |
           node scripts/probe-census.js
+      - name: Existing water / wastewater / storm linework (log only)
+        if: inputs.mode == 'linework'
+        run: node scripts/probe-linework.js
+      - name: Existing linework download and completeness (pushed to the linework-raw branch)
+        if: inputs.mode == 'linework-raw'
+        run: |
+          node scripts/fetch-linework-raw.js --out linework-raw
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B linework-raw
+          git add -f linework-raw
+          git commit -m "Existing water / wastewater linework (raw)"
+          git push -f origin linework-raw
+      - name: Rebuild the sewer pipe capacity data (committed to this branch)
+        if: inputs.mode == 'sewer-build'
+        run: |
+          node scripts/fetch-linework-raw.js --out /tmp/linework-raw
+          node scripts/build-sewer-capacity.js --raw /tmp/linework-raw --out data
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/sewers.json
+          git diff --cached --quiet || { git commit -m "Sewer pipe capacity data"; git push; }
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js

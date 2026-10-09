@@ -64,3 +64,23 @@ test('2026 DC planned works: lines and facilities inside Peel, labelled, plant c
   assert.deepEqual(d.plantCapacity.Clarkson.map(s => s.mld), [500]);
   assert.ok(d.plantCapacity.Lakeview.some(s => s.mld === 600));
 });
+
+test('sewer pipe capacity data: Manning capacities, downstream links, census load conserved', () => {
+  const d = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'sewers.json'), 'utf8'));
+  const P = d.pipes;
+  assert.ok(P.length > 10000);
+  assert.ok(P.every(p => p[0] >= 300 && p[3] < P.length && p[10].length >= 4));
+  assert.ok(P.filter(p => p[2] > 0).length / P.length > 0.95, 'most pipes have a capacity');
+  // 600 mm at 0.5 % ≈ 435 L/s full (Manning n 0.013).
+  const m = (dmm, s) => { const D = dmm / 1000; return 1000 * Math.PI * D * D / 4 * Math.pow(D / 4, 2 / 3) * Math.sqrt(s) / 0.013; };
+  assert.ok(Math.abs(m(600, 0.005) - 435) < 5);
+  const ends = P.filter(p => p[3] === -1).reduce((t, p) => t + p[4], 0);
+  assert.ok(ends > 1.3e6 && ends < 1.5e6, `census reaching the outlets ${ends}`);
+});
+
+test('info texts load (no syntax errors) and every entry has a title and body', () => {
+  const vm = require('vm');
+  const ctx = { window: {}, self: {} }; ctx.globalThis = ctx;
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'info.js'), 'utf8'), ctx);
+  new vm.Script(fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8'));
+});
