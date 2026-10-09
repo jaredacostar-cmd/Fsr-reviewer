@@ -1188,3 +1188,12 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .trace-site { stroke: #fff; stroke-width: 2.5; fill: #c2410c; fill-opacity: 1; }
 .trace-flow { stroke: #1f2937; stroke-width: 1.2; stroke-opacity: .5; fill: none; marker-end: url(#flow-head-s); }
 .trace-ps { stroke: #fff; stroke-width: 2; fill: #7048e8; fill-opacity: 1; }
+
+/* Flow paths over development markers: fade or hide the markers while a path is shown */
+.paths-on[data-devmode="faded"] .leaflet-marker-pane > *, .paths-on[data-devmode="faded"] .leaflet-shadow-pane > * { opacity: .22 !important; }
+.paths-on[data-devmode="hidden"] .leaflet-marker-pane > *:not(.whatif-mk), .paths-on[data-devmode="hidden"] .leaflet-shadow-pane > * { visibility: hidden; }
+.paths-on[data-devmode="faded"] .leaflet-marker-pane > *:hover { opacity: 1 !important; }
+.dev-mode { display: flex; align-items: center; gap: 4px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow); padding: 3px 4px 3px 12px; font-size: 13px; white-space: nowrap; }
+.dev-mode[hidden] { display: none; }
+.dev-mode .btn.small { border-radius: 999px; padding: 3px 10px; }
+.dev-mode .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
