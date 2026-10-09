@@ -5318,7 +5318,8 @@
   };
   // Each focus narrows the projects; `basis` switches the demand panel to the matching units.
   const FOCUS = {
-    growth:    { label: 'Growth', title: 'Planning applications proposing new dwelling units', test: p => appUnits(p) > 0 },
+    // Homes or jobs: employment-only applications (industrial, office, retail…) are growth too.
+    growth:    { label: 'Growth', title: 'Planning applications proposing new homes or new jobs (floor area)', test: p => appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0) },
     committed: { label: 'Committed capacity', basis: 'committed', title: 'Growth that is approved or permitted and not yet completed', test: p => D.unitsFor(p, 'committed') > 0 },
     left:      { label: 'Left to build', basis: 'remaining', title: 'Planned units with no building permit yet', test: p => !!(p.buildout && p.buildout.remaining > 0) },
     employment: { label: 'Employment', title: 'Applications for industrial, office, retail / commercial, hotel or institutional uses', test: p => !!(empOf(p)) },
