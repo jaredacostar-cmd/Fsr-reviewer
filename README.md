@@ -384,6 +384,10 @@ application.
   year); Q; Manning capacity from diameter and slope; Q / Q<sub>full</sub>; and, when surcharged, the
   hydraulic gradient needed (S<sub>f</sub> = S × (Q / Q<sub>full</sub>)²) and how far the water level rises
   above the crown over that pipe.
+- **Tap an existing sanitary sewer** (Existing → Sanitary): a 300 mm+ sewer opens the same pipe in the
+  network screen, with every development draining through it and how its flow is calculated; a
+  smaller local sewer (not traced) lists the developments within 100 m that likely connect to it and
+  links to the nearest 300 mm+ sewer.
 - **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
   Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
   for diameter, material, year, slope; *Size labels* labels each pipe (and the sewer capacity
