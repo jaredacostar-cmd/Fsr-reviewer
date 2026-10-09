@@ -1940,6 +1940,13 @@
     }
     svcLayers[k].addTo(map);
   }
+  // Master plan pumping station for a traced drainage area (by name): firm capacity in L/s.
+  const spsKey = n => String(n || '').toLowerCase().replace(/^[^·]+·\s*/, '').replace(/\s+ps$/, '').replace(/'/g, '').replace(/ memorial park/, '').replace(/ (drive|avenue|road|trail|parkway|crescent|court|mews)$/, '').trim();
+  function spsOf(a) {
+    const mp = state.reports && state.reports.masterPlan; if (!mp || !a || a.kind !== 'ps') return null;
+    const k = spsKey(a.name); return mp.sps.find(x => x.key === k) || null;
+  }
+  const spsNote = sp => { const n = state.reports.masterPlan.spsNotes || {}; const k = Object.keys(n).find(x => sp.key.startsWith(x)); return k ? n[k] : ''; };
   // Servicing check for one development (development panel): its own flows at Peel design
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
   // with its share of the flow at each outlet, and what it means for the plant's uncommitted
@@ -1965,7 +1972,7 @@
     const devAvg = mld(cb.wastewater.avg);
     const pathRows = path.map((a, i) => {
       const l = M.cum.get(a.id), f = M.fOf(a.plant), out = l ? M.adwf(l, f) : 0;
-      return `<tr><td>${i ? '↳ ' : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? 'pumping station — capacity not published' : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
+      return `<tr><td>${i ? '↳ ' : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
     }).join('');
     const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
     let plant = '';
@@ -1979,7 +1986,7 @@
       <table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
-      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Downstream pumping station and trunk capacities are not published by the Region, so only the plant is checked against capacity.</p></details>`;
+      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p></details>`;
   }
   // Project panel line: its pressure zone and drainage area.
   function servicingLineHTML(p) {
@@ -2182,7 +2189,7 @@
         const n = (kids.get(d.id) || []).filter(k => shown(cumOf(k))).length;
         const sub = d.kind === 'plant' ? `direct-to-plant area${n ? ` + ${n} catchment${n > 1 ? 's' : ''} upstream` : ''}`
           : d.kind === 'untraced' ? 'drains to the City of Toronto system'
-          : `→ ${esc(to ? short(to, pl) : plantLabel(pl))}${n ? ` · ${n} upstream` : ''}`;
+          : `→ ${esc(to ? short(to, pl) : plantLabel(pl))}${n ? ` · ${n} upstream` : ''}${(sp => { if (!sp) return ''; const ls = v => v * 1e6 / 86400, dry = ls(pdwf(l, 1)) / sp.firmLs * 100, wet = ls(pdwf(l, 1) + ii(l)) / sp.firmLs * 100; return ` · <span class="${dry >= 100 ? 'over' : ''}" title="${esc(spsNote(sp))}">firm ${fmtNum(sp.firmLs)} L/s: peak dry ${Math.round(dry)}%, wet ≈${Math.round(wet)}%</span>`; })(spsOf(d))}`;
         const label = d.kind === 'plant' ? `${esc(plantLabel(pl))} · total inflow` : esc(short(d, pl));
         rows.push(sRow(label, sub, d, l, d.id, f, roots.length === 1 && d === roots[0] ? 'sub' : '', depth));
       };
@@ -2205,7 +2212,7 @@
       <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
         ${sRow(`Peel total (${secs.map(x => PLANT_SHORT[x.pl]).join(' + ')})`, '', null, peel, null, peelF, 'tot')}
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Click a catchment to see its flow path to the lake on the map.</p></details>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). <strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve. Click a catchment to see its flow path to the lake on the map.</p></details>`;
     renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     // Kept for the development panel's servicing check and the export.
     const dvR = R && R.wastewater.diversion, divMldOf = pl => !(dvR && svcOpt.div === 'on') ? 0 : pl === dvR.from ? -dvR.mld : pl === dvR.to ? dvR.mld : 0;
@@ -2235,7 +2242,11 @@
       <h3 class="svc-sub">Caledon groundwater systems <span class="muted small">2025</span></h3>
       <table class="dt svc-table rep-table" data-info="water-reports"><thead><tr><th>System</th><th>Population served</th><th>Rated capacity</th><th>2025 average day</th><th>2025 maximum day</th><th>Per person</th><th>Max day ÷ average</th></tr></thead>
       <tbody>${cal.map(s => `<tr><td>${esc(s.name)}<small>${esc(s.communities)}</small></td><td>${uPop(s.population)}<small>${unit(fmtNum(s.connections), 'connections')}</small></td><td>${m3(s.ratedM3d)}</td><td>${m3(s.avgM3d)}<small>${pct(s.avgM3d, s.ratedM3d)} of capacity</small></td><td>${m3(s.maxDayM3d)}<small>${esc(s.maxDayNote)} · ${pct(s.maxDayM3d, s.ratedM3d)}</small></td><td>${unit(fmtNum(Math.round(s.avgM3d * 1000 / s.population)), 'L/cap/d')}</td><td>×${(s.maxDayM3d / s.avgM3d).toFixed(2)}</td></tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Treated water. Populations are as stated in each system's report ("close to", "just over"); rated capacity is the wells' combined rated capacity. Sources: ${cal.map(s => refLink(s.ref, s.pages)).join('; ')}.</p></details>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Treated water. Populations are as stated in each system's report ("close to", "just over"); rated capacity is the wells' combined rated capacity. Sources: ${cal.map(s => refLink(s.ref, s.pages)).join('; ')}.</p></details>${(mp => !mp ? '' : `
+      <h3 class="svc-sub">Water storage <span class="muted small">2020 Master Plan assessment, ML</span></h3>
+      <table class="dt svc-table rep-table"><thead><tr><th>Facility</th>${mp.storageYears.map(y => `<th>${y}</th>`).join('')}</tr></thead>
+        <tbody>${mp.storage.map(r => `<tr><td>${esc(r.facility)}</td>${r.required.map((v, i) => `<td class="${v > r.available[i] ? 'over' : ''}">${unit(fmtNum(v), 'ML')}<small>of ${fmtNum(r.available[i])} available</small></td>`).join('')}</tr>`).join('')}</tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Required storage = equalization + fire + emergency. ${esc(mp.storageCriteria)} Source: <a href="${esc(mp.vol3)}" target="_blank" rel="noopener">${esc(mp.title)}, Volume 3</a> — ${esc(mp.storageSource)}. Reported from the Region's assessment, not recomputed here.</p></details>`)(R.masterPlan)}`;
   }
   // Plants tab: a comparison of the model with each plant's 2025 annual report, then each
   // plant's total inflow built up layer by layer like the Growth tab: census + built since +
@@ -2275,7 +2286,7 @@
     const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plant flow as a percentage of rated capacity, ${hz.year0} to ${hz.end}">
       <g class="grid">${ticksY.map(v => `<line x1="${L}" x2="${W - Rr}" y1="${Yp(v)}" y2="${Yp(v)}"/>`).join('')}</g>
       <g class="axis">${ticksY.map(v => `<text x="${L - 6}" y="${Yp(v) + 4}" text-anchor="end">${v}%</text>`).join('')}${ticksX.map(y => `<text x="${X(y)}" y="${H - 8}" text-anchor="middle">${y}</text>`).join('')}</g>
-      ${[80, 90, 100].map(t => `<g class="ref r${t}"><line x1="${L}" x2="${W - Rr}" y1="${Yp(t)}" y2="${Yp(t)}"/><text x="${W - Rr - 4}" y="${Yp(t) + (t === 100 ? -4 : 12)}" text-anchor="end">${t}%${t === 100 ? ' rated' : ''}</text></g>`).join('')}
+      ${[80, 90, 100].map(t => `<g class="ref r${t}"><line x1="${L}" x2="${W - Rr}" y1="${Yp(t)}" y2="${Yp(t)}"/><text x="${W - Rr - 4}" y="${Yp(t) + (t === 100 ? -4 : 12)}" text-anchor="end">${t}%${t === 100 ? ' rated' : t === 90 ? ' expansion trigger' : ''}</text></g>`).join('')}
       ${series.map(s => `<polyline class="line s-${s.key}" points="${s.v.map((v, i) => `${X(years[i]).toFixed(1)},${Yp(v).toFixed(1)}`).join(' ')}"/>`).join('')}
       ${ends.map(e => `<text class="lbl end" x="${W - Rr + 6}" y="${e.y + 4}">${esc(e.s.name)} ${Math.round(e.s.v[e.s.v.length - 1])}%</text>`).join('')}
       <line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>
@@ -2292,10 +2303,10 @@
         ${inp('extra', 'Further growth beyond applications', 'min="0" step="1000" style="width:84px"')} people / year${dv ? ` · ${inp('divYear', `${fmt1(dv.mld)} ML/d diversion from`, 'min="2020" max="2060" step="1"')}${divOn ? '' : ' <span class="muted">(switch the diversion on to use it)</span>'}` : ''}
         <button type="button" class="btn small" data-hz-reset>Reset</button></div>
       <div class="hz-wrap">${svg}<div class="hz-tip" hidden></div></div>
-      <ul class="grow-legend">${series.map(s => `<li><span class="hz-key f-${s.key}" style="background:var(--pl-${s.key})"></span>${esc(s.full)}</li>`).join('')}<li class="muted">dashed: 80% and 90% thresholds; solid: rated capacity</li></ul>
+      <ul class="grow-legend">${series.map(s => `<li><span class="hz-key f-${s.key}" style="background:var(--pl-${s.key})"></span>${esc(s.full)}</li>`).join('')}<li class="muted">dashed: 80% warning and 90% expansion trigger (2020 Master Plan); solid: rated capacity</li></ul>
       <table class="dt svc-table rep-table"><thead><tr><th>Plant</th>${pick.map(y => `<th>${y}</th>`).join('')}<th>Reaches 80%</th><th>Reaches 90%</th><th>Reaches 100%</th></tr></thead>
         <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uML(s.rated)}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uML(s.v[at(y)] * s.rated / 100)}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. 80% and 90% are reference thresholds; Ontario's Procedure D-5-1 notes that plant expansions typically take at least 3 to 5 years to deliver, so the year a plant crosses them is the latest sensible time to start. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. 90% is the Region's own trigger: in the 2020 Master Plan an expansion is required when 90% of a plant's rated capacity is projected to be reached; 80% is shown as an earlier warning. Ontario's Procedure D-5-1 notes that plant expansions typically take at least 3 to 5 years to deliver. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
     </section>`;
   }
   $('#plants-body').addEventListener('input', e => {

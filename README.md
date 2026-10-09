@@ -286,6 +286,18 @@ application.
   total is unchanged. On the 2021 baseline, calibrated build-out moves from about 107% to 94% of
   G.E. Booth's rated capacity and from about 70% to 90% of Clarkson's.
 
+**2020 Master Plan** (`data/peel-reports.json` → `masterPlan`; Probe data sources mode
+`masterplan` downloads Volumes 1–4 as text to the `ref-docs-mp` branch):
+- Pumping stations: firm capacities of the 31 lake-based stations (Vol. 4, Table 6) are matched to
+  the traced pumping-station catchments. The Catchments table and the development servicing check
+  show the build-out peak dry and peak wet weather flow (design criteria) as a % of firm capacity;
+  the Region expands a station when peak wet weather reaches firm capacity. Peak wet is approximate
+  (I&I on the traced outline, which overstates small catchments). Hover a station for the master
+  plan's note (e.g. McVean: exceeds firm capacity before 2026, +700 L/s needed).
+- Plants: the 90% line in Horizon years is the Region's expansion trigger (Vol. 4, s. 2.3.1).
+- Water storage: the Region's storage assessment (Vol. 3, Table 12; required vs available, 2019–2041)
+  and storage criteria in the Water tab.
+
 **Why this status** (development panel): the dated event behind the current phase, signals in
 the municipal status text (appeal to the Ontario Land Tribunal, inactive, lapsed, withdrawn,
 recirculated, public meeting held, endorsed by council, draft approved, registered), a stall flag
