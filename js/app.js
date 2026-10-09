@@ -2705,6 +2705,7 @@
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}.</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
+      <div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
       <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
@@ -3480,6 +3481,71 @@
     }
     flush();
   }
+
+  // ---- Trace a development's sewer path to the treatment plant -----------------------------------
+  // From the site to the 300 mm+ sewer it joins (dashed), then pipe by pipe to the plant: each pipe
+  // coloured by its capacity state at the legend year, arrows along the route, the pumping stations
+  // it passes and the plant. Summary: length, pipes, blocks passed, tightest pipe.
+  const TRACE = { layer: L.layerGroup().addTo(map), key: null };
+  function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; }
+  async function traceDev(p) {
+    await Promise.all([loadSewers(), loadBlocks()]);
+    if (!SEW.data || p.lat == null) return null;
+    clearTrace(); TRACE.key = p.key;
+    const G = sewerGrowth(), k = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
+    if (k < 0) return null;
+    const route = pipeRoute(k), P = SEW.data.pipes;
+    // Connection from the site to the first pipe.
+    const first = pipeCoords(P[k]); let jn = first[0], jd = Infinity;
+    for (const c of first) { const d = dcM([p.lng, p.lat], c); if (d < jd) { jd = d; jn = c; } }
+    L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false }).addTo(TRACE.layer);
+    L.circleMarker([p.lat, p.lng], { radius: 7, className: 'trace-site', interactive: false }).addTo(TRACE.layer);
+    // Pipes coloured by state, with a tooltip each (tap: what loads it).
+    let worst = null, km = 0;
+    for (const i of route) {
+      const st = pipeStats(i), c = pipeCoords(P[i]);
+      for (let q = 1; q < c.length; q++) km += dcM(c[q - 1], c[q]) / 1000;
+      if (st.r1 != null && (!worst || st.r1 > worst.r1)) worst = { i, r1: st.r1 };
+      L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 7 : P[i][0] >= 600 ? 6 : 5, opacity: 0.9, lineCap: 'round' })
+        .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(TRACE.layer);
+    }
+    drawPipeRoute(route, 'trace-flow', TRACE.layer, 900);
+    // Pumping stations within 80 m of the route, and the plant at its end.
+    const stations = ((state.servicing && state.servicing.meta.pumpingStations) || []).filter(ps => route.some(i => dcDist(ps.lnglat, pipeCoords(P[i])) <= 80));
+    for (const ps of stations) L.circleMarker([ps.lnglat[1], ps.lnglat[0]], { radius: 6, className: 'trace-ps' }).bindTooltip(`<strong>${esc(ps.name.replace(/SEWAGE PUMPING( STN| STATION)?/i, 'pumping station'))}</strong>`, { className: 'pt' }).addTo(TRACE.layer);
+    const plantName = SEW.data.plants[P[route[route.length - 1]][6]] || '';
+    const end = pipeCoords(P[route[route.length - 1]]).pop();
+    L.circleMarker([end[1], end[0]], { radius: 8, className: 'svc-plant' }).bindTooltip(esc(plantName === 'Toronto' ? 'City of Toronto system' : plantLabel(plantName)), { className: 'pt' }).addTo(TRACE.layer);
+    addFlowMarker();
+    // Blocks passed, in order.
+    const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && blocks[blocks.length - 1] !== b.id) blocks.push(b.id); }
+    const bd = L.latLngBounds([[p.lat, p.lng], [end[1], end[0]]]); for (const i of route) for (const [x, y] of pipeCoords(P[i])) bd.extend([y, x]);
+    map.fitBounds(bd, { padding: [30, 30] });
+    const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k };
+    TRACE.last = res;
+    return res;
+  }
+  function traceSummaryHTML(t) {
+    if (!t) return '<p class="small muted">No sewer of 300 mm+ within 400 m of the site to trace from.</p>';
+    const P = SEW.data.pipes, w = t.worst, st = w && pipeState(w.r1);
+    return `<ul class="why-list trace-sum">
+      <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from the site, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(t.plantName))}</strong>.</span></li>
+      ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}
+      ${t.stations.length ? `<li class="why-ok"><span>Pumping station${t.stations.length === 1 ? '' : 's'} on the way: ${t.stations.map(ps => esc(ps.name.replace(/\s*SEWAGE PUMPING( STN| STATION)?/i, '').replace(/\b\w+/g, x => x[0] + x.slice(1).toLowerCase()))).join(', ')}.</span></li>` : ''}
+      ${w ? `<li class="${w.r1 > 1 ? 'why-stall' : 'why-ok'}"><span>Tightest pipe on the way: <button type="button" class="btn small link" data-pipe="${w.i}">${P[w.i][0]} mm</button> at <strong>${Math.round(w.r1 * 100)}%</strong> of full capacity (${esc(st[3].toLowerCase())}, ${capYear == null ? 'build-out' : capYear}).</span></li>` : ''}
+    </ul><p class="small muted">On the map: the dashed line joins the site to the sewer; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
+  }
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-trace]'); if (!b) return;
+    const wf = b.dataset.trace.startsWith('whatif:') && whatIfs.find(w => `whatif:${w.id}` === b.dataset.trace);
+    const p = wf ? whatIfProject(wf) : state.projects.find(x => x.key === b.dataset.trace); if (!p) return;
+    const box = b.closest('.trace-box');
+    if (TRACE.key === p.key && b.dataset.on) { clearTrace(); b.dataset.on = ''; b.textContent = 'Trace the path to the plant on the map'; if (box) box.querySelector('.trace-out').innerHTML = ''; return; }
+    b.textContent = 'Tracing…';
+    const t = await traceDev(p);
+    b.dataset.on = '1'; b.textContent = 'Hide the path';
+    if (box) box.querySelector('.trace-out').innerHTML = traceSummaryHTML(t);
+  });
 
   // ---- Wastewater blocks: the Region of Peel's 40 sewersheds for its inflow & infiltration
   // program (data/blocks.json; the blocks of "Dragonfly: An Integrated Approach to Resiliency",
@@ -4830,7 +4896,7 @@
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
+  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!TRACE.key || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
     if (lassoOn) setLasso(false);
@@ -4838,7 +4904,7 @@
     highlight(null);
     if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
     if (selection.size || selAreas.length) clearSelection();
-    clearBlockFocus();
+    clearBlockFocus(); clearTrace();
     exHL.clearLayers(); pinLayer.clearLayers();
     syncClearBtn();
   }
