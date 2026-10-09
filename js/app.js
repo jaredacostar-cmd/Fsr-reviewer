@@ -3841,7 +3841,9 @@
           .bindTooltip(`<strong>Block ${esc(b.id)}</strong>${b.planning ? ' · prioritised (block study)' : ''}<br>${fmtNum(b.ha)} ha · wastewater I&amp;I program<br><span class="muted">Tap for its outlets and route to the plant</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); showBlock(b.id); });
         BLK.layer.addLayer(pl);
-        BLK.layer.addLayer(L.marker([b.c[1], b.c[0]], { interactive: false, pane: 'svcPane', icon: L.divIcon({ className: `blk-lbl${b.planning ? ' pri' : ''}`, html: `<span>${esc(b.id)}</span>`, iconSize: [26, 16] }) }));
+        // In the marker pane: leaflet-rotate places markers there on the turned map (in another pane
+        // a label lands off its block when the map is turned to the road grid).
+        BLK.layer.addLayer(L.marker([(b.lp || b.c)[1], (b.lp || b.c)[0]], { interactive: false, keyboard: false, icon: L.divIcon({ className: `blk-lbl${b.planning ? ' pri' : ''}`, html: `<span>${esc(b.id)}</span>`, iconSize: [26, 16] }) }));
       }
     }
     if (svcOn.bk) BLK.layer.addTo(map);
@@ -6753,5 +6755,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), sewerPipes: () => SEW.data && SEW.data.pipes };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), blockAt: (x, y) => blockAt(x, y), sewerPipes: () => SEW.data && SEW.data.pipes };
 })();

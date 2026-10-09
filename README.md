@@ -345,7 +345,8 @@ application.
 - **Wastewater blocks** (Layers & style → Infrastructure): the Region of Peel's 40 sewersheds for its
   inflow & infiltration program (`data/blocks.json`, from its *Block_view* feature service; the blocks
   of "Dragonfly: An Integrated Approach to Resiliency", F. Salehzadeh, WEFTEC 2024), with the blocks
-  prioritised for a block study highlighted. Tap a block for its outlets on the existing sewers (main
+  prioritised for a block study highlighted; each block's number sits at a point inside it (`lp`), in
+  the marker pane so it stays on its block when the map is turned to the road grid. Tap a block for its outlets on the existing sewers (main
   outlet with capacity and people upstream), the blocks it drains into down to the plant and the
   distance along the pipes, the blocks upstream and the growth inside it; arrows on the map follow the
   sewers to the plant. Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).

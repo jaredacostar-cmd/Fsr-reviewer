@@ -1285,3 +1285,4 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
   .map-opts details.mo-panel[open] { max-height: calc(var(--map-h, 640px) * .6); overflow-y: auto; overscroll-behavior: contain; }
 }
 .map-opts .mo-seg .chip { min-width: 0; max-width: none; padding: 3px 3px; }
+.map-opts details.mo-panel > summary.mo-panel-h > span:first-child { white-space: nowrap; flex: none; }
