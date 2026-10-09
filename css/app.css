@@ -809,3 +809,21 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .fc-bar { height: 12px; }
 .fc-left { display: block; border: 1.5px dashed var(--text-secondary); border-left: none; box-sizing: border-box; border-radius: 0 3px 3px 0; }
 #c-forecast { margin-top: 8px; }
+.why-line { margin: 4px 0; }
+.why-list { list-style: none; padding: 0; margin: 4px 0; font-size: 12.5px; }
+.why-list li { padding: 3px 0 3px 10px; border-left: 3px solid var(--text-muted); margin: 3px 0; }
+.why-list li small { display: block; color: var(--text-muted); font-size: 11px; }
+.why-list .why-appeal { border-color: #c98a2a; } .why-list .why-stop { border-color: var(--ph-cancelled); }
+.why-list .why-stall { border-color: #c98a2a; } .why-list .why-ok { border-color: var(--ph-completed); }
+.why-stall { padding: 4px 8px; border-radius: 6px; background: color-mix(in srgb, #e8a33d 18%, transparent); }
+.council-list { list-style: none; padding: 0; margin: 4px 0; font-size: 12.5px; }
+.council-list li { padding: 6px 0; border-top: 1px solid var(--border, rgba(127,127,127,.2)); }
+.council-list .d { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.council-list .c-title { margin: 2px 0; color: var(--text-primary); }
+.council-list .c-kind { font-size: 11px; color: var(--text-muted); }
+.council-list .c-out { font-size: 11px; font-weight: 700; padding: 0 6px; border-radius: 8px; background: var(--surface-2); }
+.council-list .c-carried, .council-list .c-approved, .council-list .c-adopted { background: color-mix(in srgb, var(--ph-completed) 18%, transparent); }
+.council-list .c-deferred, .council-list .c-referred { background: color-mix(in srgb, #e8a33d 25%, transparent); }
+.council-list .c-defeated, .council-list .c-lost { background: color-mix(in srgb, #d9534f 22%, transparent); }
+.council-list .c-docs a { margin-right: 2px; }
+.council-list .c-text > summary { cursor: pointer; font-size: 11.5px; color: var(--text-secondary); }

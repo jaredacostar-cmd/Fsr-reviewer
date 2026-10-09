@@ -1293,7 +1293,102 @@
     const h = state.history && state.history.projects && state.history.projects[p.key];
     if (!h || !h.length) return '';
     return `<h2 class="section-title">Phase history <span class="muted small">(checked weekly)</span></h2>
-      <ol class="timeline">${h.map(([d, ph], i) => `<li><span class="d">${esc(d)}</span>${dot(ph)}<span>${i ? 'Moved to' : 'First seen as'} ${esc(P.PHASE_BY_KEY[ph].label)}</span></li>`).join('')}</ol>`;
+      <ol class="timeline">${h.map(([d, ph], i) => {
+        // The latest event of that phase on or before the weekly check: what moved it.
+        const t = new Date(`${d}T23:59:59`), ev = p.timeline.filter(e => e.phase === ph && e.date <= t).sort((a, b) => b.date - a.date)[0];
+        return `<li><span class="d">${esc(d)}</span>${dot(ph)}<span>${i ? 'Moved to' : 'First seen as'} ${esc(P.PHASE_BY_KEY[ph].label)}${ev ? ` <span class="muted">— ${esc(ev.text)} (${esc(ev.tag)}, ${fmtDate(ev.date)})</span>` : ''}</span></li>`;
+      }).join('')}</ol>`;
+  }
+
+  // Why a development is where it is: the file and status behind its phase, signals in the
+  // municipal status text (appeals, inactivity, lapses, withdrawals, resubmissions, council
+  // endorsement, draft approval), and whether it has stalled. Council and committee items that
+  // name its file numbers are added when data/council.json is published.
+  const STATUS_SIGNALS = [
+    [/\b(OMB|OLT|LPAT)\b|appeal/i, 'appeal', 'Under appeal to the Ontario Land Tribunal (formerly the OMB / LPAT) — the decision rests with the Tribunal'],
+    [/withdrawn/i, 'stop', 'Withdrawn by the applicant'],
+    [/refused/i, 'stop', 'Refused'],
+    [/cancel|revoked/i, 'stop', 'Cancelled or revoked'],
+    [/deemed abandoned|lapsed|expired/i, 'stop', 'Lapsed, expired or deemed abandoned'],
+    [/inactive/i, 'stall', 'Marked inactive by the municipality (no activity on the file)'],
+    [/recirculation|resubmi/i, 'info', 'Resubmission being recirculated for comments (revisions after the first review)'],
+    [/initial submission rejected|incomplete|invalid/i, 'info', 'Submission rejected, incomplete or invalid — waiting on the applicant'],
+    [/public mtg complete|public meeting/i, 'info', 'Statutory public meeting held; recommendation report to follow'],
+    [/pre.?public mtg|pre public/i, 'info', 'Awaiting the statutory public meeting'],
+    [/comments released/i, 'info', 'Pre-consultation comments released to the applicant'],
+    [/staff review complete|satisfactory/i, 'info', 'Staff review complete'],
+    [/endorsed by council|adoption|adopted/i, 'ok', 'Endorsed or adopted by council'],
+    [/draft approv/i, 'ok', 'Draft approved — conditions to clear before registration'],
+    [/registered|registration|m-plan/i, 'ok', 'Plan registered or being registered'],
+    [/agreement/i, 'ok', 'Agreement being prepared or executed'],
+    [/\bmzo\b/i, 'ok', "Approved by Minister's Zoning Order"],
+    [/withheld/i, 'info', 'Status withheld in the municipal data'],
+  ];
+  // Council and committee items naming the development's files (data/council.json, loaded on
+  // first use): date, meeting, item, outcome, the reports and correspondence attached, and the
+  // minutes text (discussion, motion and vote) — the reasons behind decisions.
+  let councilLoading = null;
+  function loadCouncil() {
+    if (state.council || councilLoading) return;
+    councilLoading = fetch('data/council.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
+      state.council = d || { meetings: {}, files: {} };
+      if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') { const y = $('#detail').scrollTop; showDetail(currentProject); $('#detail').scrollTop = y; }
+    }).catch(() => { state.council = { meetings: {}, files: {} }; });
+  }
+  function councilItems(p) {
+    const C = state.council; if (!C || !C.files) return [];
+    const keys = new Set();
+    for (const r of p.records) if (r.kind === 'application' && r.ref) {
+      const k = r.fileKey || P.canonRef(r.ref); if (!k) continue;
+      keys.add(`${p.municipality}|${k}`);
+      if (/^OZ\|OPA\|/.test(k)) { keys.add(`${p.municipality}|${k.replace(/^OZ\|OPA\|/, 'OZ|')}`); }
+      if (/^OZ\|\d/.test(k)) keys.add(`${p.municipality}|${k.replace(/^OZ\|/, 'OZ|OPA|')}`);
+    }
+    const seen = new Set(), out = [];
+    for (const k of keys) for (const [mid, i] of C.files[k] || []) {
+      const id = `${mid}#${i}`; if (seen.has(id)) continue; seen.add(id);
+      const m = C.meetings[mid]; if (m && m.items[i]) out.push({ m, it: m.items[i] });
+    }
+    return out.sort((a, b) => b.m.date.localeCompare(a.m.date));
+  }
+  const OUTCOME_LABEL = { CARRIED: 'Carried', 'CARRIED AS AMENDED': 'Carried as amended', DEFEATED: 'Defeated', LOST: 'Lost', DEFERRED: 'Deferred', REFERRED: 'Referred', RECEIVED: 'Received', WITHDRAWN: 'Withdrawn', APPROVED: 'Approved', ADOPTED: 'Adopted' };
+  function councilItemsHTML(p) {
+    const list = councilItems(p);
+    if (!list.length) return '<p class="small muted">No council or committee items name this development’s files since 2019.</p>';
+    const kind = it => /public meeting/i.test(it.title) ? 'Public meeting' : /recommendation/i.test(it.title + it.docs.map(d => d[1]).join(' ')) ? 'Recommendation report' : /information report/i.test(it.title + it.docs.map(d => d[1]).join(' ')) ? 'Information report' : /by-?law/i.test(it.title) ? 'By-law' : /correspondence|petition|letter|delegation/i.test(it.title) ? 'Correspondence' : 'Item';
+    return `<h3 class="sub-title" data-info="council-items">Council and committee <span class="muted small">${fmtNum(list.length)} item${list.length === 1 ? '' : 's'} naming its files</span></h3>
+      <ol class="council-list">${list.slice(0, 25).map(({ m, it }) => `<li>
+        <div class="c-head"><span class="d">${esc(m.date)}</span> <a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.name)}</a>${it.n ? ` · item ${esc(it.n)}` : ''} <span class="c-kind">${kind(it)}</span>${it.outcome ? ` <span class="c-out c-${it.outcome.toLowerCase().replace(/\s.*$/, '')}">${esc(OUTCOME_LABEL[it.outcome] || it.outcome)}</span>` : ''}</div>
+        <div class="c-title">${esc(it.title)}</div>
+        ${it.docs.length ? `<div class="c-docs small">${it.docs.map(([id, name]) => `<a href="https://${esc(m.host)}/filestream.ashx?DocumentId=${esc(id)}" target="_blank" rel="noopener">${esc(name.replace(/\.pdf$/i, ''))}</a>`).join(' · ')}</div>` : ''}
+        ${it.text ? `<details class="c-text"><summary>${m.passed ? 'Minutes: discussion, motion and vote' : 'Agenda text'}</summary><p class="small">${esc(it.text)}</p></details>` : ''}
+      </li>`).join('')}</ol>${list.length > 25 ? `<p class="small muted">+ ${fmtNum(list.length - 25)} earlier items</p>` : ''}`;
+  }
+  function statusWhyHTML(p) {
+    const apps = p.records.filter(r => r.kind === 'application');
+    const seen = new Map();
+    for (const r of apps) for (const [re, kind, text] of STATUS_SIGNALS) if (re.test(r.statusRaw || '')) {
+      const k = text; if (!seen.has(k)) seen.set(k, { kind, text, files: [] });
+      seen.get(k).files.push(`${r.ref || 'file'} (“${r.statusRaw}”)`);
+      break;
+    }
+    // The event that set the current phase.
+    const ev = p.timeline.filter(t => t.phase === p.phase).sort((a, b) => b.date - a.date)[0];
+    const why = ev ? `${esc(P.PHASE_BY_KEY[p.phase].label)} since ${fmtDate(ev.date)}: ${esc(ev.text)} — ${esc(ev.tag)}` : `${esc(P.PHASE_BY_KEY[p.phase].label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
+    const stalled = PLANNING_PHASES.includes(p.phase) && p.last && Date.now() - p.last > 2 * YEAR_MS;
+    const years = p.last ? (Date.now() - p.last) / YEAR_MS : 0;
+    const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
+    const sig = [...seen.values()].sort((a, b) => RANK[a.kind] - RANK[b.kind]);
+    const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check council and committee records') : '';
+    loadCouncil();
+    const council = state.council && Object.keys(state.council.files || {}).length ? councilItemsHTML(p) : '';
+    if (!sig.length && !stalled && !council) return `<p class="small why-line"><strong>Why this phase:</strong> ${why}</p>`;
+    return `<details class="sect" open><summary><h2 class="section-title" data-info="status-why">Why this status</h2><span class="muted small sect-sum">${stalled ? `stalled ${years.toFixed(1)} years` : esc(sig[0] ? sig[0].text.split(' —')[0] : '')}</span></summary>
+      <p class="small"><strong>Phase:</strong> ${why}</p>
+      ${stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no recorded activity since ${fmtDate(new Date(p.last))} (${years.toFixed(1)} years), ${cause}.</p>` : ''}
+      ${sig.length ? `<ul class="why-list">${sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
+      ${council || ''}
+      <p class="small muted">From the status text in the municipal application data${state.council ? ' and council / committee agendas and minutes that name the file numbers' : ''}. The status says what happened, not always why; staff reports and minutes carry the reasons.</p></details>`;
   }
 
   // Dated events grouped by day, then by event: "Permit issued · Issue date — 20-287761, 20-287981
@@ -1360,6 +1455,7 @@
       <p class="facts small">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
         `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p>
       ${servicingLineHTML(p)}
+      ${statusWhyHTML(p)}
       ${p.description ? `<p class="desc-clamp">${esc(p.description)}</p>` : ''}
       ${employmentHTML(p)}
       ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}

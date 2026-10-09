@@ -286,6 +286,18 @@ application.
   total is unchanged. On the 2021 baseline, calibrated build-out moves from about 107% to 94% of
   G.E. Booth's rated capacity and from about 70% to 90% of Clarkson's.
 
+**Why this status** (development panel): the dated event behind the current phase, signals in
+the municipal status text (appeal to the Ontario Land Tribunal, inactive, lapsed, withdrawn,
+recirculated, public meeting held, endorsed by council, draft approved, registered), a stall flag
+for developments still in planning with no activity for 2+ years (with the likely cause), and
+**council and committee items** that name its file numbers: date and meeting, kind of item
+(public meeting, recommendation / information report, by-law, correspondence), outcome (carried,
+deferred, referred…), links to the reports and correspondence, and the minutes text with the
+discussion, motion and vote. Phase history lines show the event behind each move.
+`data/council.json` is built weekly by `scripts/build-council.js` from the Mississauga, Brampton
+and Caledon eSCRIBE portals (planning committees, council, general committee, since 2019; only
+meetings in the last 120 days are fetched again), and loaded only when a development is opened.
+
 **Applications against the 2051 forecast** (Growth & demand tab, below the growth chart): for each
 municipality, the 2051 population, unit and job growth allocated by the Region (Land Needs
 Assessment Report Update, draft municipal allocation, appendix pp. 5.2-109 / 5.2-119; Peel 2.28
