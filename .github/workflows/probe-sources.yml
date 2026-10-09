@@ -75,6 +75,7 @@ jobs:
         run: |
           node scripts/fetch-docs.js --out ref-docs
           node scripts/probe-council.js --out ref-docs/council
+          node scripts/probe-council2.js ref-docs/council2
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B ref-docs

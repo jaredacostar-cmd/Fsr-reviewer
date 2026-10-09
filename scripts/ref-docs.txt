@@ -1,7 +1,4 @@
 # id url — reference documents for the servicing tabs
-mp-vol1 https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-1.pdf
-mp-vol3-water https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf
-mp-vol4-wastewater https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-4.pdf
 linear-ww-standards https://peelregion.ca/sites/default/files/2024-08/peel-linear-wastewater-standards.pdf
 sanitary-design-criteria https://peelregion.ca/sites/default/files/2024-08/sanitary-sewer-design-criteria.pdf
 modelling-demand-table https://peelregion.ca/sites/default/files/2024-09/Water%20and%20Wastewater%20Modelling%20Demand%20Table%20-%20Site%20Plan%20applications%20%28August%202024%29.pdf
@@ -9,8 +6,6 @@ fsr-requirements-2009 https://peelregion.ca/sites/default/files/2024-08/function
 water-design https://peelregion.ca/sites/default/files/2024-08/water-design.pdf
 design-standards-page https://www.peelregion.ca/public-works/design-standards/
 dc-study-2020 https://www.peelregion.ca/finance/_media/Peel%20Development-Charges-Background-Study.pdf
-growth-mgmt-presentation https://peelregion.ca/sites/default/files/2024-08/growth-management-presentation.pdf
-lna-appendices https://peelregion.ca/sites/default/files/2024-08/land-needs-assessment-report-update-appendices.pdf
 mecp-d-5-1 https://www.ontario.ca/page/d-5-1-calculating-and-reporting-uncommitted-reserve-capacity-sewage-and-water-treatment-plants
 mecp-sewage-guidelines https://www.ontario.ca/document/design-guidelines-sewage-works-0
 mecp-water-guidelines https://www.ontario.ca/document/design-guidelines-drinking-water-systems-0
