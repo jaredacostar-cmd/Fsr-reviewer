@@ -13,12 +13,13 @@ name: Probe data sources
 #  mode=refs-council: download reference documents and probe council meeting portals (pushed to the ref-docs branch)
 #  mode=masterplan: download the 2020 Water and Wastewater Master Plan volumes as text (pushed to the ref-docs-mp branch)
 #  mode=dc-maps: download the 2026 DC capital maps (water, wastewater) as text, images, SVG and any GeoPDF layers (ref-docs-dc branch)
+#  mode=linework: existing watermains, sanitary mains, storm sewers and ponds published for Peel (log only)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan or dc-maps'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps or linework'
         default: 'all'
         required: false
 
@@ -48,6 +49,9 @@ jobs:
         if: inputs.mode == 'census'
         run: |
           node scripts/probe-census.js
+      - name: Existing water / wastewater / storm linework (log only)
+        if: inputs.mode == 'linework'
+        run: node scripts/probe-linework.js
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
