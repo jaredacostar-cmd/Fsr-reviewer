@@ -91,7 +91,7 @@
               </details>
             </div>
             <div class="field" data-info="mtsa"><span class="label" id="f-mtsa-label">MTSA</span>
-              <select id="f-mtsa" aria-labelledby="f-mtsa-label"><option value="">All MTSAs</option></select>
+              <select autocomplete="off" id="f-mtsa" aria-labelledby="f-mtsa-label"><option value="">All MTSAs</option></select>
             </div>
           </div>
           <p class="small muted" id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</p>
@@ -99,17 +99,17 @@
           <div class="more-group" id="f-svc-group" hidden><span class="label">Servicing areas</span>
           <div class="row two" id="f-svc-row">
             <div class="field" data-info="pressure-zone"><span class="label" id="f-pz-label">Pressure zone</span>
-              <select id="f-pz" aria-labelledby="f-pz-label"><option value="">All pressure zones</option></select>
+              <select autocomplete="off" id="f-pz" aria-labelledby="f-pz-label"><option value="">All pressure zones</option></select>
             </div>
             <div class="field" data-info="drainage-area"><span class="label" id="f-dr-label">Drainage area</span>
-              <select id="f-dr" aria-labelledby="f-dr-label"><option value="">All drainage areas</option></select>
+              <select autocomplete="off" id="f-dr" aria-labelledby="f-dr-label"><option value="">All drainage areas</option></select>
             </div>
           </div>
           </div>
           <div class="more-group"><span class="label">Records</span>
           <div class="row two">
             <label class="field" data-info="record-type"><span class="label">Record type</span>
-              <select id="f-kind">
+              <select autocomplete="off" id="f-kind">
                 <option value="application" selected>Planning applications + their permits</option>
                 <option value="">All records (incl. permits with no application)</option>
                 <option value="permit">Building permits</option>
@@ -117,7 +117,7 @@
               </select>
             </label>
             <label class="field" data-info="units"><span class="label">Units</span>
-              <select id="f-units">
+              <select autocomplete="off" id="f-units">
                 <option value="0">Any</option>
                 <option value="1">Growth (adds units)</option>
                 <option value="10">10+ units</option>
@@ -127,7 +127,7 @@
               </select>
             </label>
           </div>
-          <label class="switch" data-info="new-only"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
+          <label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span>
             <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
           </div>
         </details>
@@ -136,7 +136,7 @@
           <div class="panel-head">
             <h2 class="label" data-info="projects-list">On the map <span class="muted small" id="list-count"></span></h2>
             <div class="btns">
-              <select id="list-sort" aria-label="Sort developments">
+              <select autocomplete="off" id="list-sort" aria-label="Sort developments">
                 <option value="recent">Latest activity</option>
                 <option value="units">Most units</option>
                 <option value="left">Most left to build</option>
@@ -184,10 +184,10 @@
           <summary><h2 class="label">Advanced</h2></summary>
           <div class="row">
             <label class="field"><span class="label">Records since</span>
-              <input type="number" id="s-since" min="1990" max="2100" step="1">
+              <input type="number" autocomplete="off" id="s-since" min="1990" max="2100" step="1">
             </label>
             <label class="field"><span class="label">Max per layer</span>
-              <input type="number" id="s-max" min="500" max="200000" step="500">
+              <input type="number" autocomplete="off" id="s-max" min="500" max="200000" step="500">
             </label>
           </div>
           <div class="row btns">
@@ -197,10 +197,10 @@
             <p class="small muted">Add any ArcGIS FeatureServer / MapServer URL:</p>
             <input type="url" id="a-url" required placeholder="https://…/FeatureServer">
             <div class="row">
-              <select id="a-muni" aria-label="Municipality">
+              <select autocomplete="off" id="a-muni" aria-label="Municipality">
                 <option>Mississauga</option><option>Brampton</option><option>Caledon</option><option>Peel Region</option>
               </select>
-              <select id="a-kind" aria-label="Kind">
+              <select autocomplete="off" id="a-kind" aria-label="Kind">
                 <option value="application">Applications</option>
                 <option value="permit">Permits</option>
               </select>
@@ -219,7 +219,7 @@
         <div class="tb-head">
           <h2 data-info="timeline">Timeline</h2>
           <label class="inline"><span class="sr">Milestone</span>
-            <select id="t-mode" aria-label="Which milestone falls in the year range">
+            <select autocomplete="off" id="t-mode" aria-label="Which milestone falls in the year range">
               <option value="any">Any milestone</option>
               <option value="inception">Application submitted</option>
               <option value="approved">Approved</option>
@@ -234,8 +234,8 @@
         <div class="t-body" id="t-body">
           <div class="hist" id="t-hist" role="group" aria-label="Developments per year"></div>
           <div class="range" id="t-range">
-            <input type="range" id="t-from" aria-label="From year">
-            <input type="range" id="t-to" aria-label="To year">
+            <input type="range" autocomplete="off" id="t-from" aria-label="From year">
+            <input type="range" autocomplete="off" id="t-to" aria-label="To year">
           </div>
           <div class="ticks" id="t-ticks" aria-hidden="true"></div>
         </div>
