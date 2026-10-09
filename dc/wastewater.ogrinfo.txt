@@ -1,0 +1,2 @@
+ERROR 4: `dc/wastewater.pdf' not recognized as a supported file format.
+ogrinfo failed - unable to open 'dc/wastewater.pdf'.

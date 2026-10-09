@@ -1,0 +1,62 @@
+Driver: PDF/Geospatial PDF
+Files: dc/wastewater.pdf
+Size is 1728, 2592
+Coordinate System is:
+PROJCRS["NAD83 / UTM zone 17N",
+    BASEGEOGCRS["NAD83",
+        DATUM["North American Datum 1983",
+            ELLIPSOID["GRS 1980",6378137,298.257222101,
+                LENGTHUNIT["metre",1]],
+            ID["EPSG",6269]],
+        PRIMEM["Greenwich",0,
+            ANGLEUNIT["Degree",0.0174532925199433]]],
+    CONVERSION["UTM zone 17N",
+        METHOD["Transverse Mercator",
+            ID["EPSG",9807]],
+        PARAMETER["Latitude of natural origin",0,
+            ANGLEUNIT["Degree",0.0174532925199433],
+            ID["EPSG",8801]],
+        PARAMETER["Longitude of natural origin",-81,
+            ANGLEUNIT["Degree",0.0174532925199433],
+            ID["EPSG",8802]],
+        PARAMETER["Scale factor at natural origin",0.9996,
+            SCALEUNIT["unity",1],
+            ID["EPSG",8805]],
+        PARAMETER["False easting",500000,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8806]],
+        PARAMETER["False northing",0,
+            LENGTHUNIT["metre",1],
+            ID["EPSG",8807]],
+        ID["EPSG",16017]],
+    CS[Cartesian,2],
+        AXIS["(E)",east,
+            ORDER[1],
+            LENGTHUNIT["metre",1,
+                ID["EPSG",9001]]],
+        AXIS["(N)",north,
+            ORDER[2],
+            LENGTHUNIT["metre",1,
+                ID["EPSG",9001]]]]
+Data axis to CRS axis mapping: 1,2
+GeoTransform =
+  563069.2432320548, 16.81412829208231, 17.11026746519833
+  4853300.377748786, 17.11044280080926, -16.81397986631089
+Metadata:
+  CREATION_DATE=D:20251106122650
+  CREATOR=Esri ArcGISPro 3.2.1.49743
+  DPI=72
+  NEATLINE=POLYGON ((564003.641807326 4853319.50714419,607374.77274606 4810699.5183514,635461.485615232 4839281.03041437,592090.295106685 4881901.30156129,564003.641807326 4853319.50714419))
+  TITLE=
+Corner Coordinates:
+Upper Left  (  563069.243, 4853300.378) ( 80d12'56.10"W, 43d49'48.32"N)
+Lower Left  (  607419.057, 4809718.542) ( 79d40'21.96"W, 43d25'57.59"N)
+Upper Right (  592124.057, 4882867.223) ( 79d50'56.94"W, 44d 5'35.49"N)
+Lower Right (  636473.870, 4839285.387) ( 79d18'23.30"W, 43d41'38.56"N)
+Center      (  599771.557, 4846292.882) ( 79d45'37.77"W, 43d45'46.67"N)
+Band 1 Block=1728x1 Type=Byte, ColorInterp=Red
+  Overviews: 864x1296, 432x648, 216x324, 108x162
+Band 2 Block=1728x1 Type=Byte, ColorInterp=Green
+  Overviews: 864x1296, 432x648, 216x324, 108x162
+Band 3 Block=1728x1 Type=Byte, ColorInterp=Blue
+  Overviews: 864x1296, 432x648, 216x324, 108x162
