@@ -394,6 +394,8 @@
   let existOn = Object.assign({ water: false, sanitary: false, storm: false }, store.get('existOn', {}) || {});
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
+  // Map views: presets of the layers and style, each remembering its last settings.
+  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
   const PIPE_CLS = [[50, '#2f9e44', '< 50% of full capacity'], [80, '#fab005', '50–80%'], [100, '#f76707', '80–100%'], [Infinity, '#e03131', 'over 100%']];
@@ -406,21 +408,31 @@
       const el = L.DomUtil.create('div', 'map-opts');
       const opts = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(typeof v === 'string' ? v : v.label)}</option>`).join('');
       const small = matchMedia('(max-width: 700px)').matches;
+      // An on / off chip (a checkbox styled as a pill).
+      const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
-        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view"><button type="button" class="btn small" data-mview="planning">Planning</button><button type="button" class="btn small" data-mview="servicing">Servicing</button></div>
+        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
         <details class="mo-more"${small ? '' : ' open'}><summary>Layers &amp; style</summary>
-        <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
-        <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
-        <label data-info="map-capacity"><span>Capacity</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
-        <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
-        <label data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
-        ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
-        <label class="chk" data-info="pressure-zone"><input type="checkbox" id="opt-pz"${svcOn.pz ? ' checked' : ''}>${svcSwatch('pz')}<span>Pressure zones</span></label>
-        <label class="chk" data-info="drainage-area"><input type="checkbox" id="opt-dr"${svcOn.dr ? ' checked' : ''}>${svcSwatch('dr')}<span>Drainage areas</span></label>
-        <div class="mo-exist" data-info="existing-pipes"><span>Existing pipes</span>${['water', 'sanitary', 'storm'].map(k => `<label class="chk"><input type="checkbox" data-exist="${k}"${existOn[k] ? ' checked' : ''}><span class="lg-line" style="background:${{ water: '#1971c2', sanitary: '#a0522d', storm: '#2b8a3e' }[k]}"></span>${k}</label>`).join('')}<small id="exist-note"></small></div>
-        <label class="chk" data-info="dc-works"><input type="checkbox" id="opt-dc"${dcOn.on ? ' checked' : ''}><svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><path d="M2 10 L20 4" stroke="#d6336c" stroke-width="3"/><path d="M2 13 L20 7" stroke="#1c7ed6" stroke-width="2"/></svg><span>Planned works <select id="opt-dcsys" aria-label="Planned works system"><option value="both"${dcOn.sys === 'both' ? ' selected' : ''}>water + wastewater</option><option value="wastewater"${dcOn.sys === 'wastewater' ? ' selected' : ''}>wastewater</option><option value="water"${dcOn.sys === 'water' ? ' selected' : ''}>water</option></select></span></label>
-        <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
-        <label class="chk" data-info="da-layer"><input type="checkbox" id="opt-da"${daOn ? ' checked' : ''}>${daSwatch()}<span id="da-label">2021 census areas</span></label>
+        <div class="mo-sec"><div class="mo-h">Developments</div>
+          <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
+          <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
+          <label data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(LABEL_MODES, labelMode)}</select></label>
+        </div>
+        <div class="mo-sec"><div class="mo-h">Capacity</div>
+          <label data-info="map-capacity"><span>Shade</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
+        </div>
+        <div class="mo-sec"><div class="mo-h">Infrastructure</div>
+          <div class="mo-chips">${chip('id="opt-pz"', svcOn.pz, `${svcSwatch('pz')}Pressure zones`, 'pressure-zone')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
+          <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
+          <small id="exist-note"></small>
+          <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '#1c7ed6'], ['wastewater', 'Wastewater', '#d6336c']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:${c}"></i>${t}`)).join('')}</div></div>
+          <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
+        </div>
+        <div class="mo-sec"><div class="mo-h">Base map</div>
+          <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
+          ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
+          <div class="mo-chips">${chip('id="opt-da"', daOn, `${daSwatch()}<span id="da-label">2021 census areas</span>`, 'da-layer')}</div>
+        </div>
         </details>
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
@@ -428,10 +440,12 @@
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
-      el.querySelectorAll('[data-exist]').forEach(c => { c.onchange = e => { existOn[e.target.dataset.exist] = e.target.checked; store.set('existOn', existOn); renderExisting(); renderLegend(); }; });
+      el.querySelectorAll('[data-exist]').forEach(c => { c.onchange = e => setExistOn({ [e.target.dataset.exist]: e.target.checked }); });
       el.querySelector('#opt-dctiming').onclick = () => { if (typeof showDcTiming === 'function') { loadSewers(); showDcTiming(); } };
-      el.querySelector('#opt-dc').onchange = e => { dcOn.on = e.target.checked; store.set('dcOn', dcOn.on); renderDcLayer(); renderLegend(); viewLink.write(); };
-      el.querySelector('#opt-dcsys').onchange = e => { dcOn.sys = e.target.value; store.set('dcSys', dcOn.sys); if (!dcOn.on) { dcOn.on = true; store.set('dcOn', true); el.querySelector('#opt-dc').checked = true; } renderDcLayer(); renderLegend(); };
+      el.querySelectorAll('[data-dcsys]').forEach(c => { c.onchange = () => {
+        const on = k => el.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
+        setDcOn({ on: w || ww, sys: w && ww ? 'both' : w ? 'water' : ww ? 'wastewater' : dcOn.sys });
+      }; });
       el.querySelector('#opt-mcolor').onchange = e => setMapStyle({ color: e.target.value });
       el.querySelector('#opt-msize').onchange = e => setMapStyle({ size: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => setMapStyle({ cap: e.target.value });
@@ -444,6 +458,9 @@
     },
   });
   new MapOptions().addTo(map);
+  // Map height for the CSS that splits it between the options panel and the legend.
+  const setMapH = () => map.getContainer().style.setProperty('--map-h', `${map.getSize().y}px`);
+  setMapH(); map.on('resize', setMapH);
   if (daOn) setDaLayer(true);
 
   // Cluster icon: ring segments show the phase mix of the projects inside.
@@ -3169,28 +3186,45 @@
     if ('cap' in ch) renderCapLayer();
     renderLegend(); viewLink.write();
   }
+  function setDcOn(d) {
+    dcOn = { ...dcOn, ...d }; store.set('dcOn', dcOn.on); store.set('dcSys', dcOn.sys);
+    renderDcLayer(); renderLegend(); syncMapOpts(); viewLink.write();
+  }
+  function setExistOn(e) { existOn = { ...existOn, ...e }; store.set('existOn', existOn); renderExisting(); renderLegend(); syncMapOpts(); }
+  const currentView = () => { const v = store.get('mapView', 'planning'); return v === 'servicing' ? 'water' : MAP_VIEWS.some(([k]) => k === v) ? v : 'planning'; };
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap);
     set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-da', daOn);
-    const v = store.get('mapView', 'planning');
+    for (const k of ['water', 'sanitary', 'storm']) set(`[data-exist="${k}"]`, !!existOn[k]);
+    for (const k of ['water', 'wastewater']) set(`[data-dcsys="${k}"]`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k));
+    const v = currentView();
     document.querySelectorAll('[data-mview]').forEach(b => b.classList.toggle('on', b.dataset.mview === v));
   }
-  // Two views: Planning (how it was) and Servicing (for infrastructure review). Switching saves
-  // the current settings under the view being left, and restores the other view's last settings.
-  const SERVICING_VIEW = { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'growth' }, focus: 'growth' };
-  function currentMapSettings() { return { basemap, labelMode, da: daOn, pz: svcOn.pz, dr: svcOn.dr, mstyle: { ...mstyle }, focus: state.focus }; }
+  // Map views: Planning (how it was), Water and Wastewater (servicing review, one system each) and
+  // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
+  // view being left and restores the other view's last settings (its preset the first time).
+  const VIEW_PRESETS = {
+    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: true, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: false, sys: 'both' } },
+    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: 'growth', exist: { water: true, sanitary: false, storm: false }, dc: { on: true, sys: 'water' } },
+    wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: 'growth', exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
+    dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: 'growth', exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
+  };
+  function currentMapSettings() { return { basemap, labelMode, da: daOn, pz: svcOn.pz, dr: svcOn.dr, mstyle: { ...mstyle }, focus: state.focus, exist: { ...existOn }, dc: { ...dcOn } }; }
   function setMapView(v) {
-    const cur = store.get('mapView', 'planning');
+    const cur = currentView();
     if (cur === v) return;
     store.set(`mapView-${cur}`, currentMapSettings());
-    const s = store.get(`mapView-${v}`, null) || (v === 'servicing' ? SERVICING_VIEW : { basemap: 'aerial-labels', labelMode: 'address-phase', da: true, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: DEFAULT_FOCUS });
+    const p = VIEW_PRESETS[v] || VIEW_PRESETS.planning;
+    const s = { ...p, ...(store.get(`mapView-${v}`, null) || {}) };
     store.set('mapView', v);
     if (BASEMAPS[s.basemap]) { basemap = s.basemap; store.set('basemap', basemap); setTiles(); restyleDa(); }
     if (LABEL_MODES[s.labelMode]) { labelMode = s.labelMode; store.set('labelMode', labelMode); }
     setDaLayer(!!s.da); setSvcLayer('pz', !!s.pz); setSvcLayer('dr', !!s.dr);
     Object.assign(mstyle, s.mstyle); store.set('mapStyle', mstyle);
-    state.focus = s.focus || '';
+    state.focus = s.focus == null ? DEFAULT_FOCUS : s.focus || '';
+    existOn = { ...p.exist, ...(s.exist || {}) }; store.set('existOn', existOn); renderExisting();
+    dcOn = { ...p.dc, ...(s.dc || {}) }; store.set('dcOn', dcOn.on); store.set('dcSys', dcOn.sys); renderDcLayer();
     applyFilters();
     renderCapLayer(); renderLegend(); syncMapOpts(); updateLabels(); viewLink.write();
   }
@@ -3404,7 +3438,7 @@
     const head = document.createElement('div');
     head.className = 'print-head';
     const filt = activeFilters().map(f => f.label).join(', ');
-    head.innerHTML = `<strong>Peel Development Tracker — ${esc(store.get('mapView', 'planning') === 'servicing' ? 'servicing map' : 'development map')}</strong>
+    head.innerHTML = `<strong>Peel Development Tracker — ${esc(({ water: 'water servicing map', wastewater: 'wastewater servicing map', dc: 'development charges map' })[currentView()] || 'development map')}</strong>
       <span>${fmtNum(state.filtered.length)} developments${filt ? ` · ${esc(filt)}` : ''}</span>
       ${state.svcModel ? `<span>Scenario: ${esc(scenarioText())}</span>` : ''}
       <span>Map style: ${esc(MSTYLE.color[mstyle.color])} colour · ${esc(MSTYLE.size[mstyle.size])}${mstyle.cap !== 'off' ? ` · ${esc(MSTYLE.cap[mstyle.cap])}` : ''} · prepared ${new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' })}</span>`;
@@ -4511,7 +4545,7 @@
     const cn = e.target.closest('[data-dcn-cons]'); if (cn && DCN.reg && DCN.reg.get(cn.dataset.dcnCons)) return showConsDevs(DCN.reg.get(cn.dataset.dcnCons));
     const r = e.target.closest('[data-dcn-relief]'); if (!r) return;
     const [id, k] = r.dataset.dcnRelief.split('|'), c = DCN.reg && DCN.reg.get(id), rl = c && c.relief[+k]; if (!rl) return;
-    if (rl.ln) { showDcLine(rl.ln); map.fitBounds(L.latLngBounds(rl.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); if (!dcOn.on) { dcOn.on = true; store.set('dcOn', true); const cb = $('#opt-dc'); if (cb) cb.checked = true; renderDcLayer(); renderLegend(); } }
+    if (rl.ln) { showDcLine(rl.ln); map.fitBounds(L.latLngBounds(rl.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); if (!dcOn.on) setDcOn({ on: true, sys: 'both' }); }
     else if (rl.fc) { showFacility(rl.fc); if (rl.fc.g) map.setView([rl.fc.g[1], rl.fc.g[0]], Math.max(map.getZoom(), 14)); }
   });
 
