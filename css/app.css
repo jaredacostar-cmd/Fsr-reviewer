@@ -923,3 +923,24 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .scen-chip { cursor: pointer; }
 .map-legend { max-height: 48vh; overflow: auto; }
 @media (max-width: 480px) { .loads-table .ld-share { display: none; } .loads-table th, .loads-table td { padding: 3px 3px; } }
+/* Linked hover, in-view filter, scenario compare. */
+.svc-hover { stroke: #f59f00; stroke-width: 3.5; fill: #f59f00; fill-opacity: .12; }
+.svc-row.hl td { background: color-mix(in srgb, #f59f00 18%, transparent); }
+.inview { font-size: 11.5px; color: var(--text-secondary); display: inline-flex; gap: 4px; align-items: center; }
+.scen-cmp { margin: 6px 0; }
+.scen-cmp .dt { max-width: 640px; }
+.scen-cmp .up { color: #b4232b; } .scen-cmp .down { color: #2b8a3e; }
+/* Map print. */
+.print-head { display: none; }
+@media print {
+  @page { size: landscape; margin: 8mm; }
+  body.print-map * { visibility: hidden; }
+  body.print-map .map-wrap, body.print-map .map-wrap * { visibility: visible; }
+  body.print-map .map-wrap { position: fixed; inset: 0; width: 100%; height: 100%; }
+  body.print-map #map { width: 100% !important; height: 100% !important; }
+  body.print-map .timebar, body.print-map .toggle-sidebar, body.print-map .map-opts, body.print-map .leaflet-control-zoom,
+  body.print-map .loading, body.print-map .leaflet-control-container .sel-ctl, body.print-map .lasso-layer { display: none !important; }
+  body.print-map .print-head { display: flex; flex-direction: column; gap: 2px; position: absolute; top: 8px; right: 8px; z-index: 2000; background: #fff; color: #111; border: 1px solid #999; border-radius: 6px; padding: 6px 10px; font-size: 11px; max-width: 45%; }
+  body.print-map .print-head strong { font-size: 14px; }
+  body.print-map .map-legend { background: #fff; color: #111; max-height: none; }
+}

@@ -1832,7 +1832,38 @@
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
+      ...svcExportFields(p),
     }));
+  }
+  // Servicing fields for GIS / spreadsheet: layer, build-out people + jobs, flows at Peel design
+  // criteria (L/s), pressure zone, catchment and plant (with the distance when assigned to the nearest).
+  function svcExportFields(p) {
+    const e = D.estimate([p], state.criteria, 'all', jobsOf), cb = e.combined, r2 = v => +v.toFixed(2);
+    const z = state.servicing ? svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean)[0] : null;
+    const d = state.servicing ? svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0] : null;
+    const zn = state.servicing && nearOf(p, 'pz'), dn = state.servicing && nearOf(p, 'dr');
+    return {
+      servicing_layer: svcLayerOf(p), buildout_population: Math.round(e.population), buildout_jobs: Math.round(e.employment.jobs),
+      water_avg_lps: r2(cb.water.avg), water_maxday_lps: r2(cb.water.maxDay), water_peakhour_lps: r2(cb.water.peakHour),
+      ww_avg_dry_lps: r2(cb.wastewater.avg), ww_peak_dry_lps: r2(cb.wastewater.peak), ww_peak_wet_lps: r2(cb.wastewater.wetPeak),
+      pressure_zone: z ? z.name : '', pressure_zone_nearest_m: zn ? Math.round(zn.m) : '',
+      catchment: d ? drName(d) : '', catchment_nearest_m: dn ? Math.round(dn.m) : '', plant: d ? plantLabel(d.plant) : '',
+    };
+  }
+  // Pressure zones and catchments as polygons with their census / build-out figures (GIS).
+  function areasGeoJSON() {
+    const M = state.svcModel; if (!state.servicing || !M) return null;
+    const r2 = v => +(+v).toFixed(3);
+    const feat = (a, props) => ({ type: 'Feature', geometry: { type: 'Polygon', coordinates: a.rings }, properties: { id: a.id, name: a.zone ? a.name : drName(a), ...props } });
+    const zones = state.servicing.zones.map(a => { const l = M.zones.get(a.id); return feat(a, { kind: 'pressure_zone', ...(l ? { census_pop: Math.round(l.census), buildout_pop: Math.round(M.total(l)), buildout_jobs: Math.round(M.jobs(l)), maxday_census_mld: r2(M.wMax(l.census, 0)), maxday_buildout_mld: r2(M.wMax(M.total(l), M.jobs(l))) } : {}) }); });
+    const dr = state.servicing.drainage.map(a => {
+      const l = M.local.get(a.id), c = M.cum.get(a.id), ps = psLoad(a);
+      return feat(a, { kind: a.kind, plant: plantLabel(a.plant), downstream: a.downstream || '', area_ha: a.areaHa,
+        ...(l ? { local_census_pop: Math.round(l.census), local_buildout_pop: Math.round(M.total(l)), local_adwf_census_mld: r2(M.adwf(censusOnly(l))), local_adwf_buildout_mld: r2(M.adwf(l)) } : {}),
+        ...(c ? { outlet_adwf_buildout_mld: r2(M.adwf(c)), outlet_pdwf_buildout_mld: r2(M.pdwf(c, 1)), outlet_pwwf_buildout_mld: r2(M.pdwf(c, 1) + M.ii(c)) } : {}),
+        ...(ps ? { ps_firm_lps: ps.firm, ps_peak_wet_lps: Math.round(ps.wet), ps_pct_firm: Math.round(ps.pct) } : {}) });
+    });
+    return { type: 'FeatureCollection', properties: { scenario: scenarioText(), criteria: 'Peel design criteria', generated: new Date().toISOString() }, features: [...zones, ...dr] };
   }
   function download(name, text, type) {
     const a = document.createElement('a');
@@ -1849,8 +1880,10 @@
   $('#btn-geojson').onclick = () => {
     const rows = exportRows();
     const fc = { type: 'FeatureCollection', features: rows.filter(r => r.lat).map(r => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+r.lng, +r.lat] }, properties: r })) };
+    fc.properties = { scenario: state.svcModel ? scenarioText() : '', generated: new Date().toISOString() };
     download('peel-developments.geojson', JSON.stringify(fc), 'application/geo+json');
   };
+  $('#btn-areas-geojson').onclick = () => { const fc = areasGeoJSON(); if (fc) download('peel-servicing-areas.geojson', JSON.stringify(fc), 'application/geo+json'); };
 
   // ---- Area selection: draw around projects, summarize demand and growth -----------------
   // A lasso drawn on the map (finger or mouse) selects the shown projects inside it; more
@@ -2183,7 +2216,7 @@
     if (!svcLayers[k]) {
       const list = k === 'pz' ? state.servicing.zones : state.servicing.drainage;
       svcLayers[k] = L.featureGroup(list.map(a => L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
-        renderer: svcRenderer, pane: 'svcPane', color: svcColor(a), weight: k === 'pz' ? 1.6 : 1.3, opacity: 0.85,
+        renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: svcColor(a), weight: k === 'pz' ? 1.6 : 1.3, opacity: 0.85,
         dashArray: k === 'pz' ? '6 4' : null, fill: true, fillColor: svcColor(a), fillOpacity: k === 'pz' ? 0.03 : 0.07,
       }).bindTooltip(svcTooltip(a), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showLoads(a.id); })));
     }
@@ -2318,18 +2351,44 @@
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, n ? `${n} criteria modified` : 'Peel criteria'].filter(Boolean).join(' · ');
   }
+  // Scenario A: a pinned set of results to compare the current scenario with.
+  function scenarioMetrics() {
+    const M = state.svcModel; if (!M || !state.servicing) return null;
+    const plants = {}, ps = {}, zones = {};
+    for (const pl of ['Lakeview', 'Clarkson', 'Inglewood']) { const c = M.plantCap(pl); if (c) plants[pl] = { committed: c.committed, buildout: c.buildout, rated: c.rated }; }
+    for (const d of state.servicing.drainage) { const x = psLoad(d); if (x) ps[d.id] = Math.round(x.pct); }
+    for (const z of state.servicing.zones) { const l = M.zones.get(z.id); if (l) zones[z.id] = M.wMax(M.total(l), M.jobs(l)); }
+    return { text: scenarioText(), at: new Date().toISOString().slice(0, 16).replace('T', ' '), plants, ps, zones };
+  }
+  function compareHTML() {
+    const A = store.get('scenA', null), B = scenarioMetrics();
+    if (!B) return '';
+    if (!A) return `<p class="small"><button type="button" class="btn small" data-scen-pin="1">Pin this scenario as A</button> <span class="muted">then change the switches to compare plants, pumping stations and zones with it.</span></p>`;
+    const pc = (v, r) => r ? Math.round(v / r * 100) : 0, d = (a, b) => { const x = b - a; return x === 0 ? '<span class="muted">0</span>' : `<strong class="${x > 0 ? 'up' : 'down'}">${x > 0 ? '+' : ''}${x}</strong>`; };
+    const rows = Object.keys(B.plants).filter(pl => A.plants[pl]).map(pl => {
+      const a = A.plants[pl], b = B.plants[pl];
+      return `<tr><td>${esc(PLANT_SHORT[pl])}</td><td>${pc(a.committed, a.rated)}%</td><td>${pc(b.committed, b.rated)}%</td><td>${d(pc(a.committed, a.rated), pc(b.committed, b.rated))}</td><td>${pc(a.buildout, a.rated)}%</td><td>${pc(b.buildout, b.rated)}%</td><td>${d(pc(a.buildout, a.rated), pc(b.buildout, b.rated))}</td></tr>`;
+    }).join('');
+    const over = m => Object.values(m.ps).filter(v => v > 100).length;
+    const changed = Object.keys(B.ps).filter(id => A.ps[id] != null && (A.ps[id] > 100) !== (B.ps[id] > 100)).map(id => svcById.get(id)).filter(Boolean);
+    const zA = Object.values(A.zones).reduce((t, v) => t + v, 0), zB = Object.values(B.zones).reduce((t, v) => t + v, 0);
+    return `<div class="scen-cmp"><p class="small"><strong>A</strong> (pinned ${esc(A.at)}): ${esc(A.text)}<br><strong>Now</strong>: ${esc(B.text)} <button type="button" class="btn small link" data-scen-pin="1">Re-pin as A</button> <button type="button" class="btn small link" data-scen-clear="1">Clear A</button></p>
+      <table class="dt"><thead><tr><th>Plant</th><th>Existing + approved A</th><th>Now</th><th>Δ pts</th><th>Build-out A</th><th>Now</th><th>Δ pts</th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="small">Pumping stations over firm capacity at build-out: A ${over(A)} → now ${over(B)}${changed.length ? ` (changed: ${changed.map(a => esc(drName(a).replace(/^[^·]+· /, ''))).join(', ')})` : ''}. Water max day at build-out, all zones: A ${fmt1(zA)} → now ${fmt1(zB)} ML/d.</p></div>`;
+  }
   const scenarioChip = () => `<button type="button" class="chip scen-chip" data-open-scen="1" title="Change the scenario">Scenario: ${esc(scenarioText())}</button>`;
   function renderScenario() {
     const el = $('#scen-bar'); if (!el) return;
     const R = state.reports, c = state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
     const open = el.querySelector('details') && el.querySelector('details').open;
-    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t">${esc(scenarioText())}</span></summary>
+    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t">${esc(scenarioText())}</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
       <div class="svc-switches">
         ${R ? optSwitch('ww', 'Wastewater', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}
         ${sp ? optSwitch('md', 'Water max day', [['design', `Design ×${c.water.maxDay}`], ['observed', `Observed 2025 ×${sp.maxDayFactor.toFixed(2)}`]]) : ''}
         ${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}
         ${nearSwitch()}
       </div>
+      ${compareHTML()}
       <p class="small muted">Horizon years: Wastewater → Plants & capacity. Criteria: ${n ? `<strong>${n} modified</strong>` : 'Peel defaults'} — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p></details>`;
   }
   const nearSwitch = () => optSwitch('nr', 'Outside mapped areas', [['on', `Assign to nearest (≤${kmText(NEAR_M)})`], ['off', 'Leave out']]);
@@ -2410,7 +2469,7 @@
     const zones = state.servicing.zones.slice().sort(byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc) })).filter(r => total(r.l) > 0 || r.l.devs);
     const zsum = addLayers(zr.map(r => r.l));
-    $('#water-body').innerHTML = `${exportBar('water')}${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${scenarioChip()}</div></div>
+    $('#water-body').innerHTML = `${exportBar('water')}${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${scenarioChip()}${inViewBox()}</div></div>
       <table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (ML/d) at ${observed ? `the observed 2025 factor ×${mdR.toFixed(2)}` : `design ×${mdR} residential, ×${mdE} employment`}; people and jobs below</caption>
       <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
@@ -2493,7 +2552,7 @@
     // The Peel total under calibration: each plant at its own factor (flows add; Harmon on the total).
     const peelF = peel.census + peel.built + peel.approved + peel.proposed > 0 ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     const calNote = svcOpt.ww === 'calibrated' ? `<p class="small cal-note"><strong>Capacity check (calibrated to 2025 flows):</strong> ${secs.filter(x => x.f !== 1).map(x => `${esc(PLANT_SHORT[x.pl])} ×${x.f.toFixed(2)}`).join(' · ')}. Each plant's population and employment flow is scaled so that today (census + built since${R && R.wastewater.inflows.some(x => x.plant) ? ', plus the York Region inflow at G.E. Booth' : ''}) matches its 2025 reported annual average; the factor absorbs existing employment, institutional and commercial flow, infiltration in dry weather and any flows not modelled. I&amp;I is not scaled.</p>` : '';
-    $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${scenarioChip()}</div></div>${calNote}
+    $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Details', [['off', 'Simple'], ['on', 'Engineering']])}${scenarioChip()}${inViewBox()}</div></div>${calNote}
       <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by sanitary catchment, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
       <thead><tr><th rowspan="2">Catchment (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
         <th colspan="2" class="grp-h">Where it comes from</th><th colspan="4" class="grp-h sep">What it is made of</th><th rowspan="2">= Total<br>average dry</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
@@ -2514,7 +2573,7 @@
     };
     for (const d of state.servicing.drainage) cumOf(d);
     state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg };
-    renderScenario(); renderCapLayer(); renderLegend();
+    renderScenario(); renderCapLayer(); renderLegend(); filterInView();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
   }
   // Reported 2025 water production next to the model (Water tab).
@@ -2893,6 +2952,9 @@
   for (const id of ['#water-body', '#ww-body', '#plants-body', '#scen-bar']) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
     if (e.target.closest('[data-goto-tab]')) return showFootTab(e.target.closest('[data-goto-tab]').dataset.gotoTab);
+    if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }
+    if (e.target.closest('[data-scen-clear]')) { store.set('scenA', null); return renderScenario(); }
+    if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return filterInView(); }
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
     svcOpt[b.dataset.svcopt] = b.dataset.v;
     store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert', tech: 'svcTech', nr: 'svcNear' }[b.dataset.svcopt], b.dataset.v);
@@ -3024,7 +3086,7 @@
         if (c) { fill = bucket(c.v, CAP_GROWTH); tip += `<br>${mstyle.cap === 'zone' ? 'Max day' : 'Local average dry weather'} ${uML(c.now)} today → ${uML(c.bo)} at build-out (<strong>${fmtPct(c.v)}</strong>)`; }
       }
       tip += '<br><span class="muted">Tap: what loads it</span>';
-      L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', color: fill || '#9aa0a6', weight: 1, opacity: 0.9, fill: true, fillColor: fill || '#9aa0a6', fillOpacity: fill ? 0.5 : 0.05 })
+      L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: fill || '#9aa0a6', weight: 1, opacity: 0.9, fill: true, fillColor: fill || '#9aa0a6', fillOpacity: fill ? 0.5 : 0.05 })
         .bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showLoads(a.id); }).addTo(capLayer);
     }
     if (mstyle.cap !== 'zone') drawNetwork(capLayer);
@@ -3133,6 +3195,56 @@
   });
   $('#detail-body').addEventListener('keydown', e => { const r = e.target.closest('.ld-row'); if (r && e.key === 'Enter') r.click(); });
   renderLegend(); syncMapOpts();
+
+  // Linked map and tables: hovering a zone / catchment row outlines it on the map; hovering an
+  // area on the map highlights its row. "Only areas in map view" limits the rows to the view.
+  const hoverLayer = L.layerGroup().addTo(map);
+  function hoverArea(id) {
+    hoverLayer.clearLayers();
+    const a = id && svcById.get(id); if (!a) return;
+    L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { className: 'svc-hover', interactive: false }).addTo(hoverLayer);
+  }
+  const hoverRow = (id, on) => document.querySelectorAll(`.svc-row[data-svc="${CSS.escape(id)}"]`).forEach(r => r.classList.toggle('hl', on));
+  for (const id of ['#water-body', '#ww-body']) {
+    $(id).addEventListener('mouseover', e => { const r = e.target.closest('.svc-row'); if (r) hoverArea(r.dataset.svc); });
+    $(id).addEventListener('mouseleave', () => hoverArea(null));
+  }
+  // Polygons on the map (overlays and capacity layer) report hover through their layer's id.
+  map.on('layeradd', e => {
+    const l = e.layer; if (!(l instanceof L.Polygon) || l._svcHover) return;
+    const a = l.options.svcId && svcById.get(l.options.svcId); if (!a) return;
+    l._svcHover = true;
+    l.on('mouseover', () => hoverRow(a.id, true)).on('mouseout', () => hoverRow(a.id, false));
+  });
+  const inViewBox = () => `<label class="chk small inview" title="Show only the zones / catchments in the current map view"><input type="checkbox" data-inview="1"${store.get('svcInView', false) ? ' checked' : ''}> Only areas in map view</label>`;
+  function filterInView() {
+    const on = store.get('svcInView', false), b = map.getBounds();
+    document.querySelectorAll('#water-body .svc-row, #ww-body .svc-row').forEach(r => {
+      const a = svcById.get(r.dataset.svc);
+      r.hidden = !!(on && a && a.bbox && !b.intersects([[a.bbox[1], a.bbox[0]], [a.bbox[3], a.bbox[2]]]));
+    });
+  }
+  map.on('moveend', () => { if (store.get('svcInView', false)) filterInView(); });
+
+  // Map print: the map full page (landscape) with a title block, the scenario, legend, north
+  // arrow and scale; the rest of the page is hidden while printing.
+  function printMap() {
+    const head = document.createElement('div');
+    head.className = 'print-head';
+    const filt = activeFilters().map(f => f.label).join(', ');
+    head.innerHTML = `<strong>Peel Development Tracker — ${esc(store.get('mapView', 'planning') === 'servicing' ? 'servicing map' : 'development map')}</strong>
+      <span>${fmtNum(state.filtered.length)} developments${filt ? ` · ${esc(filt)}` : ''}</span>
+      ${state.svcModel ? `<span>Scenario: ${esc(scenarioText())}</span>` : ''}
+      <span>Map style: ${esc(MSTYLE.color[mstyle.color])} colour · ${esc(MSTYLE.size[mstyle.size])}${mstyle.cap !== 'off' ? ` · ${esc(MSTYLE.cap[mstyle.cap])}` : ''} · prepared ${new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' })}</span>`;
+    $('.map-wrap').appendChild(head);
+    const lg = legend.getContainer().querySelector('details'); const lgOpen = lg && lg.open; if (lg) lg.open = true;
+    document.body.classList.add('print-map');
+    map.invalidateSize();
+    const done = () => { document.body.classList.remove('print-map'); head.remove(); if (lg) lg.open = lgOpen; map.invalidateSize(); removeEventListener('afterprint', done); };
+    addEventListener('afterprint', done);
+    setTimeout(() => window.print(), 1200);
+  }
+  $('#btn-print-map').onclick = printMap;
 
   for (const id of ['#water-body', '#ww-body']) {
     $(id).addEventListener('click', e => { const r = e.target.closest('[data-svc]'); if (r) focusSvc(r.dataset.svc); });

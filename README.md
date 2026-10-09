@@ -233,6 +233,16 @@ application.
 - **Scenario bar** (bottom panel): wastewater mode, water max day factor, the diversion,
   outside-area assignment and modified criteria in one place, summarised on every tab, the map
   legend, exports and share links (map style is in the link too).
+- **Compare scenarios**: in the Scenario bar, *Pin this scenario as A*, change the switches, and
+  see plant existing + approved and build-out % (A, now, Δ), pumping stations over firm capacity
+  and total water max day side by side.
+- **Linked map and tables**: hovering a zone / catchment row outlines it on the map, hovering an
+  area highlights its row; *Only areas in map view* limits the rows to what is on screen.
+- **GIS export** (Explore → Export): developments as CSV / GeoJSON now carry servicing layer,
+  build-out people and jobs, flows in L/s, pressure zone, catchment and plant (with the distance
+  when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
+  and build-out flows and pumping station load. *Print map* prints the map landscape with a title
+  block, scenario, legend, north arrow and scale.
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
