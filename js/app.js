@@ -2091,6 +2091,84 @@
   // Peaks are not additive, so a growth layer's peak is what it adds to the peak (the running
   // total, peaked on its population, is shown below). I&I is on the whole drainage area, so it
   // all sits with the existing system.
+  // Horizon years (Plants & capacity): each plant's average dry weather flow as a % of its rated
+  // capacity by year, with approved growth phased in over a set number of years, proposed growth
+  // after it, optional further growth beyond today's applications, and the diversion from its
+  // start year. Assumptions are editable and kept in the browser.
+  const HZ_DEFAULT = { year0: 2025, aStart: 2026, aYears: 5, pStart: 2028, pYears: 10, extra: 0, divYear: 2028, end: 2051 };
+  const hz = { ...HZ_DEFAULT, ...(store.get('horizon', {}) || {}) };
+  function capHorizonHTML(plants, dv) {
+    if (!plants.length) return '';
+    const frac = (y, start, n) => Math.min(1, Math.max(0, (y - start + 1) / Math.max(1, n)));
+    const popAll = plants.reduce((t, p) => t + p.popShare, 0) || 1;
+    const years = []; for (let y = hz.year0; y <= hz.end; y++) years.push(y);
+    const divOn = svcOpt.div === 'on';
+    const series = plants.map(p => ({ ...p, v: years.map(y => {
+      const extraPeople = hz.extra * Math.max(0, y - hz.year0) * p.popShare / popAll;
+      const f = p.existing + p.A * frac(y, hz.aStart, hz.aYears) + p.P * frac(y, hz.pStart, hz.pYears) + (divOn && y >= hz.divYear ? p.div : 0) + extraPeople * p.perPerson / 1e6;
+      return f / p.rated * 100;
+    }) }));
+    const narrow = innerWidth < 640, W = narrow ? 420 : 760, H = narrow ? 230 : 250, L = 36, Rr = narrow ? 100 : 120, T = 10, B = 26;
+    const yMax = Math.max(110, Math.ceil(Math.max(...series.flatMap(s => s.v)) / 10) * 10 + 5);
+    const X = y => L + (y - hz.year0) / (hz.end - hz.year0) * (W - L - Rr), Yp = v => T + (1 - v / yMax) * (H - T - B);
+    const ticksY = []; for (let v = 0; v <= yMax; v += 20) ticksY.push(v);
+    const ticksX = years.filter(y => y % (narrow ? 10 : 5) === 0 || y === hz.year0);
+    const cross = t => { const r = {}; for (const s of series) { const i = s.v.findIndex(v => v >= t); r[s.key] = i < 0 ? `after ${hz.end}` : i === 0 ? `by ${years[0]}` : String(years[i]); } return r; };
+    const c80 = cross(80), c90 = cross(90), c100 = cross(100);
+    const at = y => years.indexOf(y);
+    const pick = [hz.year0, 2031, 2041, hz.end].filter((y, i, a) => at(y) >= 0 && a.indexOf(y) === i);
+    // End labels: nudge apart when close.
+    const ends = series.map(s => ({ s, y: Yp(s.v[s.v.length - 1]) })).sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 13) ends[i].y = ends[i - 1].y + 13;
+    const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plant flow as a percentage of rated capacity, ${hz.year0} to ${hz.end}">
+      <g class="grid">${ticksY.map(v => `<line x1="${L}" x2="${W - Rr}" y1="${Yp(v)}" y2="${Yp(v)}"/>`).join('')}</g>
+      <g class="axis">${ticksY.map(v => `<text x="${L - 6}" y="${Yp(v) + 4}" text-anchor="end">${v}%</text>`).join('')}${ticksX.map(y => `<text x="${X(y)}" y="${H - 8}" text-anchor="middle">${y}</text>`).join('')}</g>
+      ${[80, 90, 100].map(t => `<g class="ref r${t}"><line x1="${L}" x2="${W - Rr}" y1="${Yp(t)}" y2="${Yp(t)}"/><text x="${W - Rr - 4}" y="${Yp(t) + (t === 100 ? -4 : 12)}" text-anchor="end">${t}%${t === 100 ? ' rated' : ''}</text></g>`).join('')}
+      ${series.map(s => `<polyline class="line s-${s.key}" points="${s.v.map((v, i) => `${X(years[i]).toFixed(1)},${Yp(v).toFixed(1)}`).join(' ')}"/>`).join('')}
+      ${ends.map(e => `<text class="lbl end" x="${W - Rr + 6}" y="${e.y + 4}">${esc(e.s.name)} ${Math.round(e.s.v[e.s.v.length - 1])}%</text>`).join('')}
+      <line class="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>
+      ${series.map(s => `<circle class="pt f-${s.key}" r="4" cx="0" cy="0" visibility="hidden" data-k="${s.key}"/>`).join('')}
+      <rect class="hz-hit" x="${L}" y="${T}" width="${W - L - Rr}" height="${H - T - B}" fill="transparent"/>
+    </svg>`;
+    const inp = (k, label, w = '') => `<label>${label} <input type="number" data-hz="${k}" value="${hz[k]}" ${w}></label>`;
+    // Keep the data for the hover layer.
+    capHorizonHTML.data = { years, series, X, Yp, W, H, T, B };
+    return `<section class="hz" data-info="horizon">
+      <h3 class="svc-sub">Horizon years <span class="muted small">average dry weather as a % of rated capacity, ${hz.year0}–${hz.end} · ${svcOpt.ww === 'calibrated' ? 'capacity check' : 'design flows'}</span></h3>
+      <div class="hz-form">${inp('aStart', 'Approved built from', 'min="2020" max="2060" step="1"')}${inp('aYears', 'over', 'min="1" max="40" step="1"')} years ·
+        ${inp('pStart', 'Proposed built from', 'min="2020" max="2060" step="1"')}${inp('pYears', 'over', 'min="1" max="40" step="1"')} years ·
+        ${inp('extra', 'Further growth beyond applications', 'min="0" step="1000" style="width:84px"')} people / year${dv ? ` · ${inp('divYear', `${fmt1(dv.mld)} ML/d diversion from`, 'min="2020" max="2060" step="1"')}${divOn ? '' : ' <span class="muted">(switch the diversion on to use it)</span>'}` : ''}
+        <button type="button" class="btn small" data-hz-reset>Reset</button></div>
+      <div class="hz-wrap">${svg}<div class="hz-tip" hidden></div></div>
+      <ul class="grow-legend">${series.map(s => `<li><span class="hz-key f-${s.key}" style="background:var(--pl-${s.key})"></span>${esc(s.full)}</li>`).join('')}<li class="muted">dashed: 80% and 90% thresholds; solid: rated capacity</li></ul>
+      <table class="dt svc-table rep-table"><thead><tr><th>Plant</th>${pick.map(y => `<th>${y}</th>`).join('')}<th>Reaches 80%</th><th>Reaches 90%</th><th>Reaches 100%</th></tr></thead>
+        <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uML(s.rated)}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uML(s.v[at(y)] * s.rated / 100)}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. 80% and 90% of rated capacity are thresholds commonly used to start planning and building an expansion; they are shown for reference. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
+    </section>`;
+  }
+  $('#plants-body').addEventListener('input', e => {
+    const el = e.target.closest('[data-hz]'); if (!el) return;
+    const v = Number(el.value); if (!isFinite(v)) return;
+    hz[el.dataset.hz] = v; store.set('horizon', hz);
+    clearTimeout(capHorizonHTML.t); capHorizonHTML.t = setTimeout(() => { const y = $('#plants-body').parentElement.scrollTop; renderSvcTab(); const f = $(`#plants-body [data-hz="${el.dataset.hz}"]`); if (f) { f.focus(); const n = f.value.length; try { f.setSelectionRange(n, n); } catch (er) { /* number inputs */ } } $('#plants-body').parentElement.scrollTop = y; }, 350);
+  });
+  $('#plants-body').addEventListener('click', e => {
+    if (!e.target.closest('[data-hz-reset]')) return;
+    Object.assign(hz, HZ_DEFAULT); store.set('horizon', null); renderSvcTab();
+  });
+  // Hover layer: crosshair at the nearest year with each plant's value.
+  $('#plants-body').addEventListener('mousemove', e => {
+    const svg = e.target.closest('.hz svg'); const D0 = capHorizonHTML.data;
+    const wrap = svg && svg.parentElement, tip = wrap && wrap.querySelector('.hz-tip');
+    if (!svg || !D0) { document.querySelectorAll('.hz-tip').forEach(t => { t.hidden = true; }); return; }
+    const r = svg.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * D0.W;
+    let i = 0, best = Infinity; D0.years.forEach((y, k) => { const d = Math.abs(D0.X(y) - x); if (d < best) { best = d; i = k; } });
+    const cx = D0.X(D0.years[i]);
+    const cross = svg.querySelector('.cross'); cross.setAttribute('x1', cx); cross.setAttribute('x2', cx); cross.setAttribute('visibility', 'visible');
+    for (const c of svg.querySelectorAll('.pt')) { const s = D0.series.find(q => q.key === c.dataset.k); c.setAttribute('cx', cx); c.setAttribute('cy', D0.Yp(s.v[i])); c.setAttribute('visibility', 'visible'); }
+    tip.textContent = `${D0.years[i]}: ${D0.series.map(s => `${s.name} ${Math.round(s.v[i])}%`).join(' · ')}`;
+    tip.hidden = false; tip.style.left = `${Math.min(r.width - tip.offsetWidth, Math.max(0, cx / D0.W * r.width + 10))}px`; tip.style.top = '0px';
+  });
   // Plant capacity chart (Plants tab). One bar per plant on a % of rated capacity axis; the
   // 100% line is the rated capacity. Segment colours follow the Growth tab (census grey, built
   // green, approved blue, proposed hatched), every value is also written out below the bar.
@@ -2191,6 +2269,14 @@
       for (const x of secs) mkRow(esc(rep(x.pl) ? rep(x.pl).name : plantLabel(x.pl)), x.sum, x.f, inflowsTo(x.pl) + divMld(x.pl), ratedOf(x.pl));
       if (secs.length > 1) mkRow('All Peel plants', peel, peelFc, inflows.reduce((t, e) => t + e.mld, 0), secs.reduce((t, x) => t + ratedOf(x.pl), 0), 'incl. the City of Toronto inflow');
       chart = capChartHTML(rows, Y);
+      // Horizon years: existing today, approved and proposed phased in over the set years.
+      const hzPlants = secs.filter(x => ratedOf(x.pl) > 0).map(x => {
+        const a = n => adwf(upTo(x.sum, n), x.f);
+        const today = upTo(x.sum, 1), popToday = total(today);
+        return { key: { Lakeview: 'booth', Clarkson: 'clarkson', Inglewood: 'inglewood' }[x.pl] || 'booth', name: PLANT_SHORT[x.pl], full: rep(x.pl) ? rep(x.pl).name : plantLabel(x.pl), rated: ratedOf(x.pl),
+          existing: a(1) + inflowsTo(x.pl), A: a(2) - a(1), P: a(3) - a(2), div: divMld(x.pl), perPerson: popToday > 0 ? adwf(today, x.f) * 1e6 / popToday : 0, popShare: popToday };
+      });
+      chart += capHorizonHTML(hzPlants, dv);
     }
     let cmp = '';
     if (R) {
