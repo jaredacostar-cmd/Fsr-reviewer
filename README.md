@@ -372,6 +372,22 @@ application.
 - **Tapping a pipe works with nothing selected**: the canvas the development dots are drawn on no
   longer swallows taps meant for the pipes and areas below it; a tap or hover it doesn't hit is
   handed to the canvases underneath (pipes, catchments, census areas).
+- **DC Analysis** (bottom panel tab): every 2026 DC project that relieves a capacity constraint
+  (sanitary sewer groups, pumping stations, the plants, water treatment and supply into the upper
+  zones) or serves developments outside the existing network, replayed year by year with growth
+  phased as in Horizon years. **Diversion:** from each project's construction year, flow above
+  the existing capacity goes to the project, up to the capacity it adds (a main along an existing
+  sewer at Manning full-pipe capacity for its diameter on the existing slope, a twin when the size
+  isn't mapped; a plant expansion at its published step; other facilities taken as sized for
+  build-out). **Cancelled:** the same without that one project; the growth held back is given in
+  people (each constraint's own rate) and units (the approved and proposed developments' average
+  persons per unit) at the chosen year and at build-out; developments that would connect to a new
+  main count in full. **Recommendations:** Keep · advance (online after the capacity runs out),
+  Keep, Keep · could defer (nothing held back until 5+ years after it is due), Review (nothing
+  held back by build-out in this screen); the five largest impacts are listed first. Tap a row
+  for each constraint's timeline (demand, capacity with and without, flow diverted to it) and
+  *Show on the map*; CSV export with the impact by year. A screen to rank and question projects:
+  condition, I&I reduction, servicing beyond today's applications and cost are not in it.
 - **Freeboard**: each pipe's flow depth and freeboard (D − y) from Manning part-full flow in a
   circular pipe, y / D from Q / Q_full (e.g. 85% of capacity ≈ 0.71 D deep); in the pipe tooltip,
   the pipe panel and its *How the flow is calculated* table, and on a development's tightest pipes.
