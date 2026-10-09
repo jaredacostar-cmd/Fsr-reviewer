@@ -1216,3 +1216,42 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .sheet-grip { display: none; width: 100%; justify-content: center; border: 0; background: none; padding: 2px 0 12px; margin: -10px 0 0; cursor: ns-resize; touch-action: none; }
 .sheet-grip span { width: 44px; height: 5px; border-radius: 3px; background: var(--border); }
 .sheet-grip.dragging span { background: var(--accent); }
+/* Demand year slider on the map (above the legend). */
+.map-year { background: color-mix(in srgb, var(--surface-1) 94%, transparent); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px 2px; font-size: 12px; width: 230px; box-shadow: var(--shadow); color: var(--text-primary); }
+.map-year[hidden] { display: none; }
+.map-year .my-h { display: flex; justify-content: space-between; align-items: baseline; font-weight: 600; color: var(--text-secondary); }
+.map-year .my-v { color: var(--text-primary); font-size: 14px; }
+.map-year input { width: 100%; margin: 4px 0 0; }
+.map-year .my-ends { display: flex; justify-content: space-between; }
+.map-year .my-ends .btn { padding: 2px 0; min-height: 0; font-size: 11px; }
+@media (max-width: 700px) { .map-year { width: 170px; font-size: 11px; padding: 4px 8px 0; } .map-year input { height: 28px; } }
+/* Development Servicing tab: trace tool first, then Water / Wastewater / Site sections. */
+.svc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 10px 0 4px; }
+.svc-actions .trace-out { flex-basis: 100%; }
+.trace-btn { font-weight: 600; background: var(--accent); border-color: var(--accent); color: #fff; padding: 7px 14px; }
+.trace-btn span { font-size: 15px; }
+.trace-btn.on { background: var(--surface-2); color: var(--text-primary); border-color: var(--border); }
+.svc-sys { margin: 14px 0 4px; }
+.svc-sys .brief { margin-top: 4px; }
+.svc-sys-h { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin: 0; padding-bottom: 4px; border-bottom: 3px solid var(--sys); color: var(--text-primary); }
+.svc-sys-h i { width: 10px; height: 10px; border-radius: 50%; background: var(--sys); }
+.svc-sys-water { --sys: #1971c2; }
+.svc-sys-ww { --sys: #a0522d; }
+.svc-sys-site { --sys: #2b8a3e; }
+.chip-btn { cursor: pointer; font: inherit; font-size: 11.5px; color: var(--accent); border-color: currentColor; }
+.chip-btn:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); }
+/* Where & areas (map panel): municipality, planning area and service area filters and outlines. */
+.map-opts .mo-areas > summary .mo-sum { color: var(--text-muted); font-weight: 400; margin-left: 4px; }
+.map-opts .mo-areas > summary .mo-sum.on { color: var(--accent); font-weight: 600; }
+.map-opts .mo-field { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: 6px; color: var(--text-secondary); }
+.map-opts .multi > summary { padding: 3px 24px 3px 6px; border-radius: 6px; font-size: 12px; }
+.map-opts .multi > summary::after { right: 7px; }
+.map-opts .multi-panel { position: static; width: auto; max-width: none; margin-top: 4px; box-shadow: none; }
+.map-opts .multi-list { max-height: 180px; }
+.map-opts #f-muni-chips .chip { font-size: 12px; padding: 2px 9px; cursor: pointer; }
+.map-opts .mo-tip { font-size: 11px; }
+.map-opts { max-width: 272px; }
+.map-opts .mo-where { padding-top: 2px; }
+.map-opts .mo-where .chip { font-size: 11.5px; padding: 1px 8px; }
+.map-opts .mo-areas > summary .mo-sum { display: inline-block; max-width: 170px; vertical-align: bottom; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 700px) { .map-opts { max-width: 236px; } }

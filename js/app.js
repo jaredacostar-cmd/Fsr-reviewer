@@ -102,10 +102,41 @@
   const ORIENTATIONS = { grid: 'Road grid', north: 'North up' };
   let orientation = ORIENTATIONS[store.get('orientation', 'grid')] ? store.get('orientation', 'grid') : 'grid';
   const canRotate = !!(L.Map.prototype.setBearing);
+  // Stacked canvases: only the top canvas gets taps and hovers, so one the development dots are
+  // drawn on would swallow those meant for the sewer pipes or catchments drawn below it. The top
+  // canvas hands what it doesn't hit itself to the canvases below, topmost first.
+  (() => {
+    const C = L.Canvas.prototype, add = C.onAdd, rem = C.onRemove;
+    C.onAdd = function (m) { add.call(this, m); (m._cvs || (m._cvs = new Set())).add(this); };
+    C.onRemove = function () { if (this._map && this._map._cvs) this._map._cvs.delete(this); rem.call(this); };
+    const zOf = r => { const pane = r._container && r._container.parentNode; return pane ? (+getComputedStyle(pane).zIndex || 0) * 1000 + [...pane.children].indexOf(r._container) : -1; };
+    const stack = r => [...(r._map._cvs || [r])].filter(x => x._map && x._container).sort((a, b) => zOf(b) - zOf(a));
+    const hitOf = (r, e, click) => {
+      const pt = r._map.mouseEventToLayerPoint(e); let hit = null;
+      for (let o = r._drawFirst; o; o = o.next) { const l = o.layer; if (l.options.interactive && l._containsPoint(pt) && !(click && r._map._draggableMoved(l))) hit = l; }
+      return hit;
+    };
+    C._onClick = function (e) {
+      const click = e.type === 'click' || e.type === 'preclick';
+      for (const r of stack(this)) { const h = hitOf(r, e, click); if (h) return r._fireEvent([h], e); }
+      this._fireEvent(false, e);
+    };
+    C._onMouseMove = function (e) {
+      const m = this._map; if (!m || m.dragging.moving() || m._animatingZoom || this._mouseHoverThrottled) return;
+      const all = stack(this); let owner = null, hit = null;
+      for (const r of all) { hit = hitOf(r, e, false); if (hit) { owner = r; break; } }
+      for (const r of all) if (r !== owner || r._hoveredLayer !== hit) r._handleMouseOut(e);
+      if (owner && owner._hoveredLayer !== hit) { owner._fireEvent([hit], e, 'mouseover'); owner._hoveredLayer = hit; }
+      L.DomUtil[owner ? 'addClass' : 'removeClass'](this._container, 'leaflet-interactive');
+      this._fireEvent(owner ? [hit] : false, e);
+      this._mouseHoverThrottled = true; setTimeout(() => { this._mouseHoverThrottled = false; }, 32);
+    };
+  })();
   const map = L.map('map', {
     zoomControl: true, maxZoom: 20,
     ...(canRotate ? { rotate: true, bearing: orientation === 'grid' ? GRID_BEARING : 0, rotateControl: false, touchRotate: false, shiftKeyRotate: false } : {}),
   }).setView(CFG.center, CFG.zoom);
+  map.getContainer().addEventListener('mouseleave', e => { for (const r of map._cvs || []) r._handleMouseOut(e); });
   const dark = () => document.documentElement.dataset.theme === 'dark' ||
     (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
   // Basemaps: Esri World Imagery (aerial), optionally with Esri reference
@@ -420,6 +451,8 @@
   const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
   const EXIST_ZOOM = 15;
   // Map control: basemap + label pickers.
+  // Planning area outlines on the map (secondary plans / character areas, MTSAs): tap one to filter.
+  const areaOn = { sp: store.get('areaSp', false) === true, mtsa: store.get('areaMtsa', false) === true };
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
     onAdd() {
@@ -432,6 +465,32 @@
         <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
         <div class="mo-quick">${chip('id="opt-devs"', devsOn, '<i class="dev-sw" aria-hidden="true"></i>Developments', 'devs-toggle')}</div>
         <div class="mo-ww" data-info="ww-layers"><div class="mo-h">Wastewater loads <span class="muted">(map and sewers)</span></div><div class="mo-chips">${[['existing', 'Census (existing)'], ['built', 'Built since'], ['approved', 'Site plan approved'], ['proposed', 'Proposed (in review)']].map(([k, t]) => chip(`data-wwlay="${k}"`, wwLay[k] !== false, `<span class="lg-sw" data-wwsw="${k}"></span>${t}`)).join('')}</div><div class="mo-ww-note muted"></div></div>
+        <div class="mo-where" data-info="municipality"><div class="mo-chips" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>
+        <details class="mo-more mo-areas" data-info="map-areas"${store.get('moAreasOpen', false) ? ' open' : ''}><summary>Areas <span class="mo-sum" id="mo-area-sum"></span></summary>
+        <div class="mo-sec"><div class="mo-h">Planning areas</div>
+          <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:#e8590c"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:#d4a017"></i>MTSAs', 'mtsa')}</div>
+          <div class="mo-field" data-info="secondary-plans"><span id="f-sp-label">Filter</span>
+            <details class="multi" id="f-sp">
+              <summary aria-labelledby="f-sp-label f-sp-summary"><span id="f-sp-summary">All areas</span></summary>
+              <div class="multi-panel">
+                <div class="multi-tools">
+                  <input type="search" id="f-sp-q" placeholder="Find a plan…" aria-label="Find a secondary plan">
+                  <button type="button" class="btn small link" id="f-sp-clear">Clear</button>
+                </div>
+                <div class="multi-list" id="f-sp-list" role="group" aria-label="Secondary plans"></div>
+              </div>
+            </details>
+          </div>
+          <label data-info="mtsa"><span id="f-mtsa-label">MTSA</span><select autocomplete="off" id="f-mtsa" aria-labelledby="f-mtsa-label"><option value="">All MTSAs</option></select></label>
+          <small id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</small>
+          <small class="mo-tip">Turn on the outlines, then tap an area on the map to filter to it (tap again to clear).</small>
+        </div>
+        <div class="mo-sec" id="f-svc-group" hidden><div class="mo-h">Service areas</div>
+          <div class="mo-chips">${chip('id="opt-pz"', svcOn.pz, `${svcSwatch('pz')}Pressure zones`, 'pressure-zone')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}${chip('id="opt-bk"', svcOn.bk, `${blockSwatch}Wastewater blocks`, 'blocks')}</div>
+          <label data-info="pressure-zone"><span id="f-pz-label">Pressure zone</span><select autocomplete="off" id="f-pz" aria-labelledby="f-pz-label"><option value="">All pressure zones</option></select></label>
+          <label data-info="drainage-area"><span id="f-dr-label">Drainage area</span><select autocomplete="off" id="f-dr" aria-labelledby="f-dr-label"><option value="">All drainage areas</option></select></label>
+        </div>
+        </details>
         <details class="mo-more"${store.get('moOpen', false) ? ' open' : ''}><summary>Layers &amp; style</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
           <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
@@ -446,7 +505,6 @@
           <label data-info="map-capacity"><span>Shade</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
         </div>
         <div class="mo-sec"><div class="mo-h">Infrastructure</div>
-          <div class="mo-chips">${chip('id="opt-pz"', svcOn.pz, `${svcSwatch('pz')}Pressure zones`, 'pressure-zone')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}${chip('id="opt-bk"', svcOn.bk, `${blockSwatch}Wastewater blocks`, 'blocks')}</div>
           <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <small id="exist-note"></small>
@@ -462,7 +520,10 @@
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
-      el.querySelector('.mo-more').addEventListener('toggle', e => store.set('moOpen', e.target.open));
+      el.querySelector('.mo-more:not(.mo-areas)').addEventListener('toggle', e => store.set('moOpen', e.target.open));
+      el.querySelector('.mo-areas').addEventListener('toggle', e => { if (e.target.classList.contains('mo-areas')) store.set('moAreasOpen', e.target.open); });
+      el.querySelector('#opt-spl').onchange = e => setAreaOn({ sp: e.target.checked });
+      el.querySelector('#opt-mtl').onchange = e => setAreaOn({ mtsa: e.target.checked });
       el.querySelector('#opt-save').onclick = () => saveCurrentView();
       el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') openSavedView(+i); };
       el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); renderSavedViews(); };
@@ -1623,7 +1684,7 @@
     if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}`));
     if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(Math.round(e.employment.jobs)), 'jobs')));
     if (f && f.z) facts.push(chip(`${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zNear ? ' (nearest)' : ''}`));
-    if (f && f.pl) facts.push(chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
+    if (f && f.pl) facts.push(p.lat != null ? `<button type="button" class="chip chip-btn" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest)' : ''} <span aria-hidden="true">⤳</span></button>` : chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
     if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
     const flags = devFlags(p, st, f);
     const w = watch.has(p.key);
@@ -1698,15 +1759,55 @@
       ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
       ${exportBar('dev')}
     </section>`;
-    return `<section class="brief" data-info="dev-brief">
-      ${row('Summary', servicingBriefHTML(p, f))}
-      ${p.lat != null ? row('Existing mains', '<div id="dev-exist"><p class="small muted">Looking up the nearest existing mains…</p></div>') : ''}
-      ${p.lat != null ? row('Ground', '<div id="dev-ground" data-info="ground"><p class="small muted">Looking up ground elevation…</p></div>') : ''}
-      ${p.lat != null ? row('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>') : ''}
-      ${p.lat != null ? row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>') : ''}
-      ${st.works ? row('Planned works', devWorksHTML(st.works)) : ''}
-      ${state.dcInfra && f ? row('DC needs', `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p)}</div>`) : ''}
-    </section>`;
+    return devServicingBriefHTML(p, st, f);
+  }
+  // Servicing tab: the trace tool first, then Water and Wastewater in their own sections, then the
+  // site (ground, stormwater).
+  function devServicingBriefHTML(p, st, f) {
+    const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
+    const has = p.lat != null, cb = f && f.cb, zn = s => esc(s.replace('Pressure zone ', 'Zone '));
+    const trace = has ? `<div class="svc-actions trace-box" data-info="trace">
+        <button type="button" class="btn trace-btn" data-trace="${esc(p.key)}"><span aria-hidden="true">⤳</span> Trace the sewer path to the plant</button>
+        <span class="muted small">On the map, pipe by pipe to the plant, coloured by capacity used</span><div class="trace-out"></div></div>` : '';
+    const near = f && (f.zNear || f.dNear) ? `<p class="small est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'sewered blocks'].filter(Boolean).join(' and ')}: assigned to the nearest (${[f.zNear && `${zn(f.z.name)}, ${esc(nearText(f.zNear))}`, f.dNear && f.path[0] && `${esc(drName(f.path[0]))}, ${esc(nearText(f.dNear))}`].filter(Boolean).join('; ')}). The connection point comes from the FSR / master plan.</p>` : '';
+    // Water
+    const wDemand = cb ? `<p class="small"><strong>${uLs(cb.water.maxDay)}</strong> max day · ${uLs(cb.water.peakHour)} peak hour · ${uLs(cb.water.avg)} average</p>
+      <p class="small">${f.z ? `${zn(f.z.name)}${f.zMax ? ` · ${pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of the zone's build-out max day` : ''}` : 'No pressure zone'}</p>` : (servicingLineHTML(p) || '<p class="small muted">No units or jobs stated: flows not estimated.</p>');
+    const water = `<section class="svc-sys svc-sys-water"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Water</h3><div class="brief">
+      ${row('Demand', wDemand)}
+      ${has ? row('Watermains', '<div id="dev-exist-water"><p class="small muted">Looking up the nearest watermains…</p></div>') : ''}
+      ${has ? row('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>') : ''}
+      ${st.works ? row('Planned works', devWorksHTML(st.works, 'water')) : ''}
+      ${state.dcInfra && f ? row('DC needs', `<div data-info="dc-needs">${dcNeedsHTML(p, 'water')}</div>`) : ''}
+    </div></section>`;
+    // Wastewater
+    let wwRows = '';
+    if (cb) {
+      const ps = f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0];
+      wwRows += row('Flows', `<p class="small"><strong>${uLs(cb.wastewater.wetPeak)}</strong> peak wet · ${uLs(cb.wastewater.peak)} peak dry · ${uLs(cb.wastewater.avg)} average</p>`);
+      const chain = f.path.map(a => esc(a.kind === 'plant' ? plantLabel(a.plant) : drName(a).replace(/^[^·]+· /, ''))).join(' → ');
+      const pp = pathPipes(p);
+      const pipeTxt = x => `<button type="button" class="btn small link" data-pipe="${x.i}">${x.p[0]} mm</button> at <strong>${Math.round(x.r1 * 100)}%</strong> (${esc(pipeState(x.r1)[3].toLowerCase())}${x.r1 < 1 ? `, freeboard ${fbText(x.p[0], x.r1)}` : ''})`;
+      const lines = [];
+      if (chain) lines.push(`${chain}${f.path.length && f.path[f.path.length - 1].kind !== 'plant' && f.pl ? ` → ${esc(plantLabel(f.pl))}` : ''}`);
+      if (pp && pp.worst) lines.push(`Tightest pipe ${capYear == null ? 'at build-out' : `in ${capYear}`}: ${pp.local ? `local ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? '; ' : ''}${pp.trunk ? `downstream ${pipeTxt(pp.trunk)}` : ''}`);
+      if (ps) lines.push(`Via ${esc(psName(ps.a))}: build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm capacity (peak wet)`);
+      wwRows += row('To the plant', `<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>`);
+      if (f.cap) wwRows += row('Plant', `<p class="small"><strong>${esc(f.cap.name)}</strong>: uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` · this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' · the plant is over-committed'}</p>`);
+      else if (f.pl === 'Toronto') wwRows += row('Plant', '<p class="small">Drains to the City of Toronto system (Malton).</p>');
+    }
+    const ww = `<section class="svc-sys svc-sys-ww"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Wastewater</h3><div class="brief">
+      ${wwRows}
+      ${has ? row('Sanitary sewers', '<div id="dev-exist-sanitary"><p class="small muted">Looking up the nearest sanitary sewers…</p></div>') : ''}
+      ${st.works ? row('Planned works', devWorksHTML(st.works, 'wastewater')) : ''}
+      ${state.dcInfra && f ? row('DC needs', `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p, 'ww')}</div>`) : ''}
+    </div></section>`;
+    const site = has ? `<section class="svc-sys svc-sys-site"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Site</h3><div class="brief">
+      ${row('Ground', '<div id="dev-ground" data-info="ground"><p class="small muted">Looking up ground elevation…</p></div>')}
+      ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
+      ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
+    </div></section>` : '';
+    return `${trace}${near}${water}${ww}${site}`;
   }
 
   // One dated history: phase changes (weekly check), council and committee items, file events
@@ -1894,8 +1995,8 @@
   function devServicingHTML(p, f) {
     const dem = demandHTML(p, '', true);
     const sum = f ? `${fmt1(f.cb.water.maxDay)} L/s max day · ${fmt1(f.cb.wastewater.wetPeak)} L/s peak wet` : '';
-    return `<details class="sect" id="dev-svc"><summary><h2 class="section-title" data-info="servicing-check">Servicing check</h2><span class="muted small sect-sum">${sum}</span></summary>
-      ${f ? servicingCheckHTML(p, f) : servicingLineHTML(p)}
+    return `<details class="sect" id="dev-svc"><summary><h2 class="section-title" data-info="servicing-check">Flows by stage and sewer path</h2><span class="muted small sect-sum">${sum}</span></summary>
+      ${f ? servicingCheckHTML(p, f, { trace: false }) : servicingLineHTML(p)}
       ${dem}</details>`;
   }
   function devUnitsHTML(p) {
@@ -1981,6 +2082,11 @@
     if (!keep) $('#detail').scrollTop = 0;
     if ($('#dev-aerial').open) runAerial(p);
     fillExisting(p);
+    // A trace already on the map for this development stays shown in its panel.
+    const tb = $('#detail-body .trace-btn');
+    if (tb && TRACE.key === p.key && TRACE.last) { tb._label = tb.innerHTML; tb.dataset.on = '1'; tb.textContent = 'Hide the path'; tb.classList.add('on'); tb.closest('.trace-box').querySelector('.trace-out').innerHTML = traceSummaryHTML(TRACE.last); }
+    // Trace tool on: tapping a development traces it.
+    if (tool.mode === 'trace') { setTool(null); showDvTab('servicing'); if (tb && TRACE.key !== p.key) tb.click(); }
     viewLink.write();
   }
   function showTl(v) {
@@ -2199,6 +2305,7 @@
   // Tools: one button under the zoom with the map tools — select an area, measure / select within a
   // radius, test a site.
   const TOOL_ITEMS = [
+    ['trace', 'Trace sewer path', 'Tap a development or any point on the map: its route along the sewers to the treatment plant, pipe by pipe, coloured by capacity used', '<path d="M3 4.5h5.5v5H13v6h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.5 13l2.8 2.5-2.8 2.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="3.5" cy="4.5" r="1.8" fill="currentColor"/>'],
     ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
     ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
     ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
@@ -2566,6 +2673,7 @@
     renderMuniChips();
     renderAreaSelects();
     showArea();
+    renderPlanAreas();
     applyFilters();
   };
 
@@ -2748,7 +2856,7 @@
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
   // with its share of the flow at each outlet, and what it means for the plant's uncommitted
   // reserve capacity.
-  function servicingCheckHTML(p, F) {
+  function servicingCheckHTML(p, F, opt = {}) {
     const { M, e, cb, layer, z, zl, zMax, path, pl, cap, devAvg } = F;
     const mld = D.toMLd, ls = uLs, pct = pctOf;
     const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
@@ -2765,7 +2873,7 @@
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}.</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
-      <div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>
+      ${opt.trace === false ? '' : `<div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>`}
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
       <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
@@ -3650,10 +3758,11 @@
     const wf = b.dataset.trace.startsWith('whatif:') && whatIfs.find(w => `whatif:${w.id}` === b.dataset.trace);
     const p = wf ? whatIfProject(wf) : state.projects.find(x => x.key === b.dataset.trace); if (!p) return;
     const box = b.closest('.trace-box');
-    if (TRACE.key === p.key && b.dataset.on) { clearTrace(); b.dataset.on = ''; b.textContent = 'Trace the path to the plant on the map'; if (box) box.querySelector('.trace-out').innerHTML = ''; return; }
+    const label = b._label || (b._label = b.innerHTML);
+    if (TRACE.key === p.key && b.dataset.on) { clearTrace(); b.dataset.on = ''; b.innerHTML = label; b.classList.remove('on'); if (box) box.querySelector('.trace-out').innerHTML = ''; return; }
     b.textContent = 'Tracing…';
     const t = await traceDev(p);
-    b.dataset.on = '1'; b.textContent = 'Hide the path';
+    b.dataset.on = '1'; b.textContent = 'Hide the path'; b.classList.add('on');
     if (box) box.querySelector('.trace-out').innerHTML = traceSummaryHTML(t);
   });
 
@@ -3839,7 +3948,8 @@
   const capLayer = L.layerGroup().addTo(map);
   // Capacity by year: built since the census in full, approved and proposed growth phased in as in
   // Horizon years (approved over aYears from aStart, proposed over pYears from pStart).
-  let capYear = null;
+  // Year the map's results are worked out for (map control); opens on this year.
+  let capYear = THIS_YEAR;
   const hzFrac = y => { const f = (start, n) => Math.min(1, Math.max(0, (y - start + 1) / Math.max(1, n))); return { fa: f(hz.aStart, hz.aYears), fp: f(hz.pStart, hz.pYears) }; };
   const atYear = (l, y) => { if (y == null || !l) return l; const { fa, fp } = hzFrac(y); return { ...l, approved: l.approved * fa, proposed: l.proposed * fp, japproved: (l.japproved || 0) * fa, jproposed: (l.jproposed || 0) * fp }; };
   const censusOnly = l => ({ census: l.census, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, ha: l.ha });
@@ -3937,15 +4047,32 @@
   const Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
-    el.addEventListener('input', e => {
-      if (!e.target.dataset.capyear) return;
-      const v = +e.target.value; capYear = v > hz.end ? null : v;
-      e.target.previousElementSibling.textContent = capYear == null ? 'Build-out' : `Year ${capYear}`;
-      clearTimeout(el._t); el._t = setTimeout(renderCapLayer, 120);
-    });
     return el;
   } });
   const legend = new Legend().addTo(map);
+  // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
+  // station loads are worked out for, from the census to build-out; opens on this year.
+  const yearText = () => capYear == null ? 'Build-out' : String(capYear);
+  const YearCtl = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
+    const el = L.DomUtil.create('div', 'map-year'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+    el.setAttribute('data-info', 'map-year');
+    el.addEventListener('input', e => {
+      const v = +e.target.value; capYear = v > hz.end ? null : v;
+      el.querySelector('.my-v').textContent = yearText();
+      clearTimeout(el._t); el._t = setTimeout(() => { renderCapLayer(); renderLegend(); }, 120);
+    });
+    el.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); });
+    return el;
+  } });
+  const yearCtl = new YearCtl().addTo(map);
+  function syncYearCtl() {
+    const el = yearCtl.getContainer();
+    el.hidden = mstyle.cap === 'off';
+    if (el.hidden) return;
+    el.innerHTML = `<div class="my-h"><span>Demand year</span><b class="my-v">${yearText()}</b></div>
+      <input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" aria-label="Demand year: the year the map's results are worked out for">
+      <div class="my-ends"><button type="button" class="btn small link" data-yr="now">${THIS_YEAR}</button><button type="button" class="btn small link" data-yr="bo">Build-out</button></div>`;
+  }
   function renderLegend() {
     const el = legend.getContainer(), parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
@@ -3963,8 +4090,8 @@
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
-    if (mstyle.cap !== 'off') parts.push(`<label class="lg-year"><span>${capYear == null ? 'Build-out' : `Year ${capYear}`}</span><input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" data-capyear="1" aria-label="Capacity year"></label>
-      <p class="lg-s">Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
+    syncYearCtl();
+    if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Demand year on the map). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
     el.innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
     el.hidden = !parts.length;
   }
@@ -4164,6 +4291,8 @@
         ${tool.pts.length ? '<span class="tp-row tp-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
         <span class="tp-row"><button type="button" class="btn small link" data-tool-clear="1">Clear</button> <button type="button" class="btn small link" data-tool-done="1">Done</button></span>`;
       if (tool.pts.length) fillElev(tool.pts.slice());
+    } else if (tool.mode === 'trace') {
+      toolPanel.innerHTML = `<strong>Trace sewer path</strong> <span class="muted">tap a development, or any point on the map, to trace its route to the plant</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
     } else if (tool.mode === 'whatif') {
       toolPanel.innerHTML = `<strong>Test a site</strong> <span class="muted">tap the map where the site is</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
     }
@@ -4249,8 +4378,22 @@
     } else if (tool.mode === 'whatif') {
       setTool(null);
       showWhatIf(e.latlng);
+    } else if (tool.mode === 'trace') {
+      setTool(null);
+      tracePoint(e.latlng);
     }
   });
+  // Trace from any point on the map: the nearest 300 mm+ sewer down to the plant.
+  async function tracePoint(ll) {
+    const pt = { key: `pt:${ll.lat.toFixed(5)},${ll.lng.toFixed(5)}`, lat: ll.lat, lng: ll.lng, title: 'Point on the map' };
+    $('#detail-body').innerHTML = '<div class="head"><h3>Sewer path from this point</h3><div class="m">Tracing…</div></div>';
+    $('#detail').hidden = false; $('#detail').dataset.view = 'trace'; $('#detail').scrollTop = 0;
+    const t = await traceDev(pt);
+    $('#detail-body').innerHTML = `<div class="head"><h3>Sewer path from this point</h3><div class="m">${ll.lat.toFixed(5)}, ${ll.lng.toFixed(5)} · ${t ? `${t.km.toFixed(1)} km to ${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(t.plantName))}` : 'no sewer found'}</div></div>
+      ${traceSummaryHTML(t)}
+      <p class="small"><button type="button" class="btn small" data-tool-again="trace">Trace another point</button></p>`;
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-tool-again]'); if (b) setTool(b.dataset.toolAgain); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && tool.mode) setTool(null); });
 
   // Test a site: a proposed development placed on the map, with its servicing check — pressure
@@ -4463,16 +4606,19 @@
     return { ww: outWw ? conn.find(n => n.ln.sys === 'wastewater') || ww : ww, wa: outWa ? conn.find(n => n.ln.sys === 'water') || wa : wa, outWw, outWa,
       trunks: [...byProj.values()].sort((a, b) => a.y - b.y), facs, plant, needBy, gap: committed && needBy > THIS_YEAR };
   }
-  function devWorksHTML(w) {
+  function devWorksHTML(w, sys = null) {
     if (!w) return '';
-    const li = [];
-    for (const [n, what, out] of [[w.ww, 'Wastewater', w.outWw], [w.wa, 'Water', w.outWa]]) if (n) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ' <span class="muted">(site is on the existing network)</span>'}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
-    if (w.trunks.length) li.push(`<li><strong>Downstream trunks:</strong> ${w.trunks.slice(0, 4).map(t => esc(`${t.y} ${t.d ? `${t.d} mm` : ''} ${t.p || ''}`.trim())).join(' · ')}${w.trunks.length > 4 ? ` +${w.trunks.length - 4}` : ''}</li>`);
-    if (w.facs.length) li.push(`<li><strong>Facilities:</strong> ${w.facs.slice().sort((a, b) => lastYear(a) - lastYear(b)).slice(0, 4).map(x => `<button type="button" class="btn small link" data-dcfac="${esc(x.sys)}|${esc(x.name)}">${esc(x.name)}</button> ${lastYear(x)}`).join(' · ')}${w.facs.length > 4 ? ` +${w.facs.length - 4} more (What loads this)` : ''}</li>`);
-    if (w.plant.length) li.push(`<li><strong>Plant capacity:</strong> ${w.plant.map(s => `${s.mld} ML/d from ${s.year}`).join(' → ')}</li>`);
-    if (!li.length) return '<p class="small muted">No planned works on the 2026 DC maps near this site or on its sewer path (served by the existing network).</p>';
+    const li = [], on = k => !sys || sys === k;
+    for (const [n, what, out, k] of [[w.ww, 'Wastewater', w.outWw, 'wastewater'], [w.wa, 'Water', w.outWa, 'water']]) if (n && on(k)) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ' <span class="muted">(site is on the existing network)</span>'}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
+    const facs = w.facs.filter(x => on(x.sys));
+    if (w.trunks.length && on('wastewater')) li.push(`<li><strong>Downstream trunks:</strong> ${w.trunks.slice(0, 4).map(t => esc(`${t.y} ${t.d ? `${t.d} mm` : ''} ${t.p || ''}`.trim())).join(' · ')}${w.trunks.length > 4 ? ` +${w.trunks.length - 4}` : ''}</li>`);
+    if (facs.length) li.push(`<li><strong>Facilities:</strong> ${facs.slice().sort((a, b) => lastYear(a) - lastYear(b)).slice(0, 4).map(x => `<button type="button" class="btn small link" data-dcfac="${esc(x.sys)}|${esc(x.name)}">${esc(x.name)}</button> ${lastYear(x)}`).join(' · ')}${facs.length > 4 ? ` +${facs.length - 4} more (What loads this)` : ''}</li>`);
+    if (w.plant.length && on('wastewater')) li.push(`<li><strong>Plant capacity:</strong> ${w.plant.map(s => `${s.mld} ML/d from ${s.year}`).join(' → ')}</li>`);
+    if (!li.length) return `<p class="small muted">No planned ${sys === 'water' ? 'water works on the 2026 DC maps near this site or in its pressure zone' : sys ? 'wastewater works on the 2026 DC maps near this site or on its sewer path' : 'works on the 2026 DC maps near this site or on its sewer path'} (served by the existing network).</p>`;
+    // The timing note goes with the system the site would connect through.
+    const timing = !sys || (sys === 'wastewater' ? w.outWw : w.outWa && !w.outWw);
     return `<ul class="b-lines small dc-works">${li.join('')}</ul>
-      ${w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing network, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing network: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
+      ${!timing ? '' : w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing network, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing network: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
   }
 
   // Map layer: planned mains (dashed when approved in 2026) and facilities.
@@ -4644,6 +4790,22 @@
     const ok = cap && p[1] >= 0.0001;
     return { p, cap: ok ? cap : 0, badSlope: !!cap && !ok, today, then, r0: ok ? today.q / cap : null, r1: ok ? then.q / cap : null, growthShare: ok ? then.growth / cap : null };
   }
+  // Flow depth in a part-full circular pipe (Manning, constant n): the depth ratio y/D at which
+  // Q / Q_full = (A / A_full) · (R / R_full)^(2/3), A = D²(θ − sin θ)/8, R = D(θ − sin θ)/(4θ),
+  // y/D = (1 − cos(θ/2)) / 2; 1 when the pipe runs full (Q ≥ Q_full: surcharged, no freeboard).
+  function depthRatio(r) {
+    if (r == null || isNaN(r)) return null;
+    if (r <= 0) return 0;
+    if (r >= 1) return 1;
+    const f = th => { const w = th - Math.sin(th); return w / (2 * Math.PI) * Math.pow(w / th, 2 / 3); };
+    // f rises to its peak (≈1.076) at y/D ≈ 0.94; search below it.
+    let lo = 0, hi = 5.278;
+    for (let k = 0; k < 50; k++) { const m = (lo + hi) / 2; if (f(m) < r) lo = m; else hi = m; }
+    return (1 - Math.cos(lo / 2)) / 2;
+  }
+  // Freeboard in a sewer: the room left between the water surface and the crown (mm, % of D).
+  const freeboard = (dMm, r) => { const y = depthRatio(r); return y == null ? null : { y, mm: dMm * (1 - y), pct: (1 - y) * 100 }; };
+  const fbText = (dMm, r) => { const f = freeboard(dMm, r); return !f ? 'n/a' : r >= 1 ? 'none (surcharged)' : `${fmtNum(Math.round(f.mm))} mm (${Math.round(f.pct)}% of D)`; };
   function pipeTip(i) {
     const s = pipeStats(i), p = s.p, D0 = SEW.data;
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
@@ -4651,7 +4813,7 @@
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(Math.round(s.then.jobs))} jobs` : ''}
       <br>Existing peak dry ${fmtNum(Math.round(s.then.exist))} L/s${s.then.f !== 1 ? ` (×${s.then.f.toFixed(2)} measured)` : ''} + growth peak wet ${fmtNum(Math.round(s.then.growth))} L/s
       <br>Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` (${Math.round(s.r0 * 100)}%, ${pipeState(s.r0)[3].toLowerCase()})` : ''} → ${capYear == null ? 'build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` (<strong>${Math.round(s.r1 * 100)}%, ${pipeState(s.r1)[3].toLowerCase()}</strong>)` : ''}
-      ${s.growthShare != null ? `<br>Growth since the census uses ${Math.round(s.growthShare * 100)}% of its capacity` : ''}${p[11] < 1 ? `<br><span class="muted">carries ${Math.round(p[11] * 100)}% of the flow at a split</span>` : ''}
+      ${s.r1 != null ? `<br>Freeboard ${capYear == null ? 'at build-out' : `in ${capYear}`}: ${fbText(p[0], s.r1)}` : ''}${s.growthShare != null ? `<br>Growth since the census uses ${Math.round(s.growthShare * 100)}% of its capacity` : ''}${p[11] < 1 ? `<br><span class="muted">carries ${Math.round(p[11] * 100)}% of the flow at a split</span>` : ''}
       <br><span class="muted">Screening only; tap for how it is calculated and what loads it</span>`;
   }
   function renderPipes(layer) {
@@ -4665,7 +4827,10 @@
       const s = pipeStats(i);
       L.polyline(pipeCoords(p).map(([x, y]) => [y, x]), { renderer: ren, pane: 'svcPane', color: pipeColour(s.r1), weight: Math.max(2, Math.min(7, p[0] / 300)), opacity: 0.9 })
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(layer);
-      if (pipeLbl && z >= 14) { const q = [], cc = p[10]; for (let k = 0; k < cc.length; k += 2) q.push([cc[k], cc[k + 1]]); lbls.push({ d: p[0], color: pipeColour(s.r1), lines: [q] }); }
+      // Zoomed in: each pipe's result (capacity used, the slider year) on it; with size labels on,
+      // its size too.
+      const pct = z >= 16 && s.r1 != null ? `${Math.round(s.r1 * 100)}%` : '';
+      if ((pipeLbl && z >= 14) || pct) { const q = [], cc = p[10]; for (let k = 0; k < cc.length; k += 2) q.push([cc[k], cc[k + 1]]); lbls.push({ d: p[0], text: [pipeLbl ? p[0] : '', pct].filter(Boolean).join(' · '), color: pipeColour(s.r1), lines: [q] }); }
     });
     if (lbls.length) placePipeLabels(lbls, layer);
   }
@@ -4737,6 +4902,13 @@
       ['state', 'State', stCell(s.r0), stCell(s.r1),
         `<span class="pipe-st-dot" style="--st:${PIPE_CLS[0][1]}"></span>Free flowing under 85% of full-pipe capacity (open-channel flow, water below the crown) · <span class="pipe-st-dot" style="--st:${PIPE_CLS[1][1]}"></span>Near full 85–100% (little room for peaks or more growth) · <span class="pipe-st-dot" style="--st:${PIPE_CLS[2][1]}"></span>Surcharged over 100%: the pipe runs full under pressure.`],
     ];
+    if (Qf) {
+      const f0 = freeboard(p[0], s.r0), f1 = freeboard(p[0], s.r1), dep = (f, r) => !f ? 'n/a' : r >= 1 ? 'full' : `${fmtNum(Math.round(f.y * p[0]))} mm (${Math.round(f.y * 100)}%)`;
+      rows.push(['depth', 'Flow depth', dep(f0, s.r0), dep(f1, s.r1),
+        `Part-full flow in a circular pipe (Manning, n constant): the depth y at which Q / Q<sub>full</sub> = (A / A<sub>full</sub>) · (R / R<sub>full</sub>)<sup>2/3</sup>, with A = D²(θ − sin θ) / 8, R = D(θ − sin θ) / (4θ) and y / D = (1 − cos(θ/2)) / 2 (θ = angle the water surface subtends at the centre).<br>Today Q / Q<sub>full</sub> = ${pct(s.r0)} → y / D = ${f0 ? f0.y.toFixed(2) : '–'}; ${esc(yr)} ${pct(s.r1)} → y / D = <strong>${f1 ? f1.y.toFixed(2) : '–'}</strong> (D = ${p[0]} mm). Peak flow fills a pipe faster than its share of capacity: at 50% of Q<sub>full</sub> the water is already 50% deep, at 85% it is ≈ 70% deep.`]);
+      rows.push(['fb', '<strong>Freeboard</strong>', fbText(p[0], s.r0), `<strong>${fbText(p[0], s.r1)}</strong>`,
+        `Freeboard = D − y, the room between the water surface and the crown at peak wet weather.<br>Today ${p[0]} − ${f0 ? Math.round(f0.y * p[0]) : '–'} = ${fbText(p[0], s.r0)}; ${esc(yr)} ${p[0]} − ${f1 ? Math.round(f1.y * p[0]) : '–'} = <strong>${fbText(p[0], s.r1)}</strong>. Over 100% of Q<sub>full</sub> the pipe runs full: no freeboard, and the water rises above the crown (next row). A screen: the published network's slopes and Peel design flows, not a hydraulic model.`]);
+    }
     if (sb || st0) rows.push(['sur', 'Surcharge · rise above crown', st0 ? `≈${st0.dh.toFixed(2)} m` : '–', sb ? `<strong>≈${sb.dh.toFixed(2)} m</strong>` : '–',
       `A surcharged pipe needs a hydraulic grade line steeper than its slope: S<sub>f</sub> = S × (Q / Q<sub>full</sub>)².${sb ? `<br>${esc(yr)}: ${(S * 100).toFixed(2)}% × ${s.r1.toFixed(2)}² = ${(sb.Sf * 100).toFixed(2)}%. Over this ${fmtNum(Math.round(Lm))} m pipe the water level rises (S<sub>f</sub> − S) × L = (${(sb.Sf * 100).toFixed(2)}% − ${(S * 100).toFixed(2)}%) × ${fmtNum(Math.round(Lm))} m ≈ <strong>${sb.dh.toFixed(2)} m</strong> more than the pipe falls, above its crown, and backs up into the pipes upstream.` : ''}${st0 ? `<br>Today: S<sub>f</sub> = ${(st0.Sf * 100).toFixed(2)}% → ≈${st0.dh.toFixed(2)} m.` : ''}`]);
     return `<details class="sect calc" open><summary><h2 class="section-title">How the flow is calculated</h2><span class="muted small sect-sum">${ls(s.then.q)} of ${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'} · ${pipeState(s.r1) ? esc(pipeState(s.r1)[3]) : ''}</span></summary>
@@ -4744,7 +4916,7 @@
         ${rows.map(([k, label, a, z, how]) => `<tr class="calc-row"><td><button type="button" class="calc-i" data-calc="${k}" aria-expanded="false" aria-label="How: ${esc(label.replace(/<[^>]+>/g, ''))}">ⓘ</button>${label}</td><td>${a}</td><td>${z}</td></tr>
         <tr class="calc-how" data-calc-how="${k}" hidden><td colspan="3">${how}</td></tr>`).join('')}
       </tbody></table>
-      <p class="small muted">Tap ⓘ for how each result is worked out. Today = existing + growth built since the census; ${esc(yr)} follows the capacity slider (Horizon years). A screen, not a hydraulic model: wet-weather I&amp;I on existing areas, downstream backwater, storage and relief sewers are not modelled.</p></details>`;
+      <p class="small muted">Tap ⓘ for how each result is worked out. Today = existing + growth built since the census; ${esc(yr)} follows the Demand year on the map (Horizon years). A screen, not a hydraulic model: wet-weather I&amp;I on existing areas, downstream backwater, storage and relief sewers are not modelled.</p></details>`;
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('.calc-i'); if (!b) return;
@@ -4761,7 +4933,7 @@
     up.sort((a, b) => b.q - a.q);
     $('#detail-body').innerHTML = `
       <div class="head"><h3>${p[0]} mm sanitary sewer</h3><div class="m">${esc(SEW.data.plants[p[6]] === 'Toronto' ? 'City of Toronto system' : plantLabel(SEW.data.plants[p[6]]))} sewershed · slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a'}${p[7] ? ` · installed ${p[7]}` : ''}</div></div>
-      <div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(capYear == null ? 'Build-out' : capYear, s.then.q, s.r1)}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
+      <div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(capYear == null ? 'Build-out' : capYear, s.then.q, s.r1)}${s.r1 != null ? `<span class="chip">Freeboard ${fbText(p[0], s.r1)}</span>` : ''}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
       ${pipeCalcHTML(i, s)}
       ${exportBar('loads')}
       <table class="dt loads-table"><caption>${fmtNum(up.length)} developments since the census draining through this pipe, largest peak wet first</caption>
@@ -4789,7 +4961,10 @@
   };
   const existLayer = L.layerGroup().addTo(map);
   const existCache = new Map();      // `${kind}|${i}|${tile}` -> Promise<features>
-  const existRenderer = L.canvas({ padding: 0.3 });
+  // Under the model's results (svcPane, 360): zoomed in, the live pipes are context and the
+  // sewer screen's capacity colours stay on top of them.
+  map.createPane('existPane', map.getPane('rotatePane') || undefined).style.zIndex = 355;
+  const existRenderer = L.canvas({ pane: 'existPane', padding: 0.3 });
   // Attributes common to all sources.
   function pipeAttrs(kind, src, p) {
     const g = k => p[k] ?? p[k.toUpperCase()] ?? p[k.toLowerCase()];
@@ -4832,9 +5007,9 @@
         }
       }
       if (!ll) continue;
-      const pt = map.latLngToContainerPoint(ll), key = `${Math.round(pt.x / 70)},${Math.round(pt.y / 28)}`;
+      const pt = map.latLngToContainerPoint(ll), key = `${Math.round(pt.x / (it.text && it.text.length > 4 ? 110 : 70))},${Math.round(pt.y / 28)}`;
       if (taken.has(key)) continue; taken.add(key);
-      L.marker(ll, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'pipe-lbl', html: `<span style="--c:${it.color}">${it.d}</span>`, iconSize: null }) }).addTo(layer);
+      L.marker(ll, { interactive: false, keyboard: false, icon: L.divIcon({ className: 'pipe-lbl', html: `<span style="--c:${it.color}">${it.text || it.d}</span>`, iconSize: null }) }).addTo(layer);
     }
   }
   async function renderExisting() {
@@ -4994,30 +5169,34 @@
   }
   const exHL = L.layerGroup().addTo(map);
   let exGroups = {};
+  // The mains around a development, each kind in its own section of the Servicing tab
+  // (#dev-exist-water / -sanitary / -storm); the search radius buttons sit with the watermains.
   function fillExisting(p) {
-    const el = $('#dev-exist'); if (!el || p.lat == null) return;
+    const box = k => $(`#dev-exist-${k}`);
+    if (!box('water') || p.lat == null) return;
     const r = store.get('exR', 200);
-    el.innerHTML = `<div class="ex-r"><span class="muted small">Within</span> ${[100, 200, 400].map(x => `<button type="button" class="btn small${x === r ? ' on' : ''}" data-exr="${x}">${x} m</button>`).join('')}</div><p class="small muted">Looking up the mains around the site…</p>`;
+    const rBtns = `<div class="ex-r"><span class="muted small">Within</span> ${[100, 200, 400].map(x => `<button type="button" class="btn small${x === r ? ' on' : ''}" data-exr="${x}">${x} m</button>`).join('')}</div>`;
+    for (const k of ['water', 'sanitary', 'storm']) if (box(k)) box(k).innerHTML = `${k === 'water' ? rBtns : ''}<p class="small muted">Looking up the mains around the site…</p>`;
     existingAround(p.lng, p.lat, r).then(res => {
-      if (currentProject !== p || !$('#dev-exist')) return;
+      if (currentProject !== p || !box('water')) return;
       exGroups = res;
-      const SHOW = 4, parts = [];
+      const SHOW = 4, parts = {};
       const row = (k, g, i) => `<li><button type="button" class="btn small link" data-exhl="${k}|${i}" title="Show it on the map">${esc(existText(k, g.a).replace(EXIST_STYLE[k].label, '').trim() || 'size not recorded')}</button>${g.street ? ` on <strong>${esc(g.street)}</strong>` : ''} · ${fmtNum(Math.round(g.m))} m <span class="muted">(${g.n > 1 ? `${g.n} pieces · ` : ''}${esc(g.a.src)})</span></li>`;
       for (const [k, v] of Object.entries(res)) {
         const L0 = v.list;
-        parts.push(`<div class="ex-kind"><div class="ex-k"><i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i><strong>${EXIST_STYLE[k].label}s</strong> <span class="muted small">${L0.length ? `${L0.length} within ${r} m${v.more ? ` · ${v.more} more pieces farther out` : ''}` : `none within ${r} m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}`}</span></div>
+        parts[k] = (`<div class="ex-kind"><div class="ex-k"><i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i><strong>${EXIST_STYLE[k].label}s</strong> <span class="muted small">${L0.length ? `${L0.length} within ${r} m${v.more ? ` · ${v.more} more pieces farther out` : ''}` : `none within ${r} m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}`}</span></div>
           ${L0.length ? `<ul class="b-lines small">${L0.slice(0, SHOW).map((g, i) => row(k, g, i)).join('')}</ul>${L0.length > SHOW ? `<details class="ex-more"><summary class="small">${L0.length - SHOW} more</summary><ul class="b-lines small">${L0.slice(SHOW).map((g, i) => row(k, g, i + SHOW)).join('')}</ul></details>` : ''}` : ''}</div>`);
       }
       const ar = pathAgeRisk(p);
+      let age = '';
       if (ar && (ar.oldest || ar.risky.length)) {
-        const o = ar.oldest, age = o ? THIS_YEAR - o.y : 0;
-        // (kept as the last part; shown under the mains lists)
-        parts.push(`<li${age >= 50 || ar.risky.length ? ' class="why-warn-t"' : ''}><strong>Sewer path age / risk</strong> <span class="muted">(first 3 km, ${fmtNum(ar.n)} pipes)</span>: ${o ? `oldest <button type="button" class="btn small link" data-pipe="${o.i}">${o.d} mm, ${o.y}</button>${o.mat ? ` ${esc(MAT_NOTE[o.mat] || o.mat)}` : ''} (${age} years)` : 'install years not recorded'}${ar.risky.length ? ` · ${ar.risky.length} rated moderate risk by the Region <button type="button" class="btn small link" data-pipe="${ar.risky[0]}">show</button>` : ' · none rated above low risk'}</li>`);
+        const o = ar.oldest, yrs = o ? THIS_YEAR - o.y : 0;
+        age = (`<li${yrs >= 50 || ar.risky.length ? ' class="why-warn-t"' : ''}><strong>Sewer path age / risk</strong> <span class="muted">(first 3 km, ${fmtNum(ar.n)} pipes)</span>: ${o ? `oldest <button type="button" class="btn small link" data-pipe="${o.i}">${o.d} mm, ${o.y}</button>${o.mat ? ` ${esc(MAT_NOTE[o.mat] || o.mat)}` : ''} (${yrs} years)` : 'install years not recorded'}${ar.risky.length ? ` · ${ar.risky.length} rated moderate risk by the Region <button type="button" class="btn small link" data-pipe="${ar.risky[0]}">show</button>` : ' · none rated above low risk'}</li>`);
       }
-      const age = ar && (ar.oldest || ar.risky.length) ? parts.pop() : '';
-      $('#dev-exist').innerHTML = `<div class="ex-r"><span class="muted small">Within</span> ${[100, 200, 400].map(x => `<button type="button" class="btn small${x === r ? ' on' : ''}" data-exr="${x}">${x} m</button>`).join('')}</div>
-        ${parts.join('')}${age ? `<ul class="b-lines small">${age}</ul>` : ''}
-        <p class="small muted">Live from the Region / municipal GIS, measured from the development's point; street from reverse geocoding the nearest point of each main. Tap a main to see it on the map. Not the connection point.${ar ? ' Age and risk rating from the Region\'s sanitary sewer records.' : ''}</p>`;
+      const note = '<p class="small muted">Live from the Region / municipal GIS, measured from the development\'s point (not the connection point). Tap a main to see it on the map.</p>';
+      if (box('water')) box('water').innerHTML = `${rBtns}${parts.water || ''}${note}`;
+      if (box('sanitary')) box('sanitary').innerHTML = `${parts.sanitary || ''}${age ? `<ul class="b-lines small">${age}</ul><p class="small muted">Age and risk rating from the Region's sanitary sewer records.</p>` : ''}`;
+      if (box('storm')) box('storm').innerHTML = parts.storm || '';
     });
     fillFire(p); fillStorm(p); fillGround(p);
   }
@@ -5394,17 +5573,18 @@
     return `<table class="dt dcn-table"><thead><tr><th>${opts.first || 'Existing capacity'}</th><th>Room after approved</th><th>Runs out</th><th>DC relief (construction)</th></tr></thead><tbody>
       ${list.map(reg).map(c => `<tr class="${STATUS[c.status][0]}"><td>${c.sys === 'water' ? '💧 ' : ''}${consName(c)}</td><td data-l="Room after approved">${roomText(c, ppu)}</td><td data-l="Runs out">${outText(c)}${c.outAfter != null ? `<small>again ${c.outAfter === 'today' ? 'now' : `≈${c.outAfter}`} with the expansions</small>` : ''}<small>${esc(STATUS[c.status][1])}</small></td><td data-l="DC relief">${reliefHTML(c)}</td></tr>`).join('')}</tbody></table>`;
   }
-  function dcNeedsHTML(p) {
+  function dcNeedsHTML(p, sys = null) {
     if (!state.svcModel) return '';
-    const list = devNeeds(p); if (!list) return '<p class="small muted">No servicing demand to compare.</p>';
-    if (!list.length) return '<p class="small muted">No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.</p>';
+    const all = devNeeds(p); if (!all) return '<p class="small muted">No servicing demand to compare.</p>';
+    const list = sys ? all.filter(c => c.sys === sys) : all;
+    if (!list.length) return `<p class="small muted">${sys === 'water' ? 'No water supply or storage constraint applies.' : 'No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.'}</p>`;
     const ppu = ppuOf(p), gaps = list.filter(c => c.status === 'gap').length, main = list.filter(c => c.status !== 'ok'), rest = list.filter(c => c.status === 'ok');
     const nChk = list.filter(c => c.status === 'check').length;
     return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} Room in units at this development's ${ppu.toFixed(1)} persons per unit.${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
       ${main.length ? needsTable(main, ppu) : ''}
       ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.round(Math.max(...rest.map(c => c.util.bo)) * 100)}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
       <p class="small"><button type="button" class="btn small link" data-dcn-all="1">All DC timing →</button></p>
-      <p class="small muted">Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (${esc(scenarioText())}). Sewers: full-pipe capacity at peak wet (pipe screen); pumping stations: firm capacity; plants: ${Math.round(PLANT_TRIGGER * 100)}% of rated. Water supply is a rough conveyance estimate: water pumping station capacities are not published. A screen, not a hydraulic model.</p>`;
+      <p class="small muted">Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (${esc(scenarioText())}). ${sys === 'water' ? 'Water supply is a rough conveyance estimate: water pumping station capacities are not published.' : `Sewers: full-pipe capacity at peak wet (pipe screen); pumping stations: firm capacity; plants: ${Math.round(PLANT_TRIGGER * 100)}% of rated.${sys ? '' : ' Water supply is a rough conveyance estimate: water pumping station capacities are not published.'}`} A screen, not a hydraulic model.</p>`;
   }
   // Developments relying on a constraint (growth since the census: built, approved, proposed).
   function consDevs(c) {
@@ -5611,6 +5791,7 @@
       state.censusDas = state.censuses.length ? state.censuses[0].das : null;
       tagProjects();
       renderAreaSelects();
+      renderPlanAreas();
       applyFilters();
     } catch (e) { /* areas are optional */ }
   }
@@ -5663,19 +5844,49 @@
     }
     if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
   }
+  // Outlines of every secondary plan / character area and MTSA (map toggles), under the results
+  // and developments; tapping one filters to it, tapping it again clears that filter.
+  map.createPane('planPane', map.getPane('rotatePane') || undefined).style.zIndex = 352;
+  const planRenderer = L.canvas({ pane: 'planPane', padding: 0.3 });
+  const planLayer = L.layerGroup().addTo(map);
+  function setAreaOn(ch) {
+    Object.assign(areaOn, ch); store.set('areaSp', areaOn.sp); store.set('areaMtsa', areaOn.mtsa);
+    const set = (id, v) => { const c = document.getElementById(id); if (c) c.checked = v; };
+    set('opt-spl', areaOn.sp); set('opt-mtl', areaOn.mtsa);
+    renderPlanAreas();
+  }
+  function renderPlanAreas() {
+    planLayer.clearLayers();
+    if (!state.areas) return;
+    for (const [on, list, color, kind] of [[areaOn.sp, state.areas.secondaryPlans, '#e8590c', 'sp'], [areaOn.mtsa, state.areas.mtsas, '#d4a017', 'mtsa']]) {
+      if (!on) continue;
+      for (const a of list) {
+        if (state.muni && a.municipality !== state.muni) continue;
+        const sel = kind === 'sp' ? state.sp.includes(a.id) : state.mtsa === a.id;
+        L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color, weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: color, fillOpacity: sel ? 0.12 : 0.03 })
+          .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
+          .on('click', ev => { L.DomEvent.stop(ev); togglePlanArea(kind, a.id); }).addTo(planLayer);
+      }
+    }
+  }
+  function togglePlanArea(kind, id) {
+    if (kind === 'sp') state.sp = state.sp.includes(id) ? state.sp.filter(x => x !== id) : [...state.sp, id];
+    else state.mtsa = state.mtsa === id ? '' : id;
+    renderAreaSelects(); showArea(); renderPlanAreas(); applyFilters();
+  }
   $('#f-sp-list').onchange = e => {
     const cb = e.target.closest('input[type=checkbox]'); if (!cb) return;
     state.sp = cb.checked ? [...new Set([...state.sp, cb.value])] : state.sp.filter(id => id !== cb.value);
     $('#f-sp-summary').textContent = spSummary();
     $('#f-sp').classList.toggle('on', state.sp.length > 0);
     $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
-    showArea(true); applyFilters();
+    showArea(true); renderPlanAreas(); applyFilters();
   };
   $('#f-sp-q').oninput = () => renderSpList();
-  $('#f-sp-clear').onclick = () => { state.sp = []; $('#f-sp-q').value = ''; renderSpList(); showArea(); applyFilters(); };
+  $('#f-sp-clear').onclick = () => { state.sp = []; $('#f-sp-q').value = ''; renderSpList(); showArea(); renderPlanAreas(); applyFilters(); };
   // Close the list when tapping elsewhere.
   document.addEventListener('click', e => { const d = $('#f-sp'); if (d.open && !d.contains(e.target)) d.open = false; });
-  $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); applyFilters(); };
+  $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); renderPlanAreas(); applyFilters(); };
 
   // ---- Selected project's census dissemination area ----------------------------------------
   // Opening a project narrows the Growth and Servicing demand tabs to the census DA its point
@@ -5918,10 +6129,13 @@
   // One-line summaries on the collapsed sidebar sections.
   function renderSectionSummaries() {
     const kindLabel = { '': 'All records', permit: 'Building permits', both: 'Application + permits' };
-    const more = [state.focus ? FOCUS[state.focus].label : '', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
-      state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? `Drainage: ${(svcById.get(state.dr) || {}).name || ''}` : '',
+    // Where & areas (map panel): municipality, planning and service areas.
+    const areas = [state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
+      state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? (svcById.get(state.dr) || {}).name : ''].filter(Boolean);
+    const as = $('#mo-area-sum'); if (as) { as.textContent = areas.length ? areas.join(' · ') : 'planning, service'; as.classList.toggle('on', areas.length > 0); }
+    const more = [state.focus ? FOCUS[state.focus].label : '',
       state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? (($('#f-units').selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
-    $('#sum-more').textContent = more.length ? more.join(' · ') : 'Focus, areas, record type';
+    $('#sum-more').textContent = more.length ? more.join(' · ') : 'Focus, record type';
     $('#sect-more').classList.toggle('active', more.length > 0);
   }
   // One line saying what the map shows and why.
@@ -6506,5 +6720,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch) };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), sewerPipes: () => SEW.data && SEW.data.pipes };
 })();
