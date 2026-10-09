@@ -12,8 +12,8 @@
   // Ordered lifecycle, inception -> completion. `rank` drives "furthest phase reached".
   const PHASES = [
     { key: 'inception',    rank: 0, label: 'Inception',          short: '1', desc: 'Pre-consultation or application submitted' },
-    { key: 'review',       rank: 1, label: 'Under review',       short: '2', desc: 'Circulation, public meeting, appeal' },
-    { key: 'approved',     rank: 2, label: 'Approved',           short: '3', desc: 'Planning approval (OPA / ZBA / subdivision / site plan)' },
+    { key: 'review',       rank: 1, label: 'Under review',       short: '2', desc: 'Circulation, public meeting, appeal; includes zoning / official plan / subdivision approved with no site plan approval yet' },
+    { key: 'approved',     rank: 2, label: 'Approved',           short: '3', desc: 'Site plan approved (building permits can follow)' },
     { key: 'permit',       rank: 3, label: 'Permit issued',      short: '4', desc: 'Building permit issued' },
     { key: 'construction', rank: 4, label: 'Under construction', short: '5', desc: 'Inspections underway' },
     { key: 'completed',    rank: 5, label: 'Completed',          short: '✓', desc: 'Occupancy, final inspection or permit closed' },
@@ -782,8 +782,38 @@
     return out.sort((a, b) => (a.date || 0) - (b.date || 0));
   }
 
+  // The site's phase counts a planning approval only when it is a site plan approval: zoning,
+  // official plan, subdivision, condominium and other planning approvals leave the site under
+  // review until its site plan is approved (or a building permit is issued). Each file keeps
+  // its own phase; this is how far it moves the site.
+  const PHASE_RULES = 2;
+  // Brampton's legacy site plans (1980s–2000s), carried into its current system as "Transferred"
+  // with no dates: approvals of buildings long since built, not of the current proposal.
+  const isLegacy = r => r.kind === 'application' && /^transferred$/i.test(String(r.statusRaw || '').trim());
+  function sitePhaseOf(r) {
+    if (r.kind === 'application' && r.phase === 'approved' && ((r.stage || stageOf(r)) !== 'siteplan' || r.superseded || isLegacy(r))) return 'review';
+    return r.phase;
+  }
+  const recStart = r => r.events.length ? +r.events[0].date : null;
+  const approvedDate = r => { const e = r.events.filter(x => x.phase === 'approved'); return e.length ? +e[e.length - 1].date : r.events.length ? +r.events[r.events.length - 1].date : null; };
+  // Approval events that set the site's Approved milestone: site plan files and permits only.
+  const countsAsApproval = r => r.kind !== 'application' || (r.stage || stageOf(r)) === 'siteplan';
+
   function mergeProject(key, recs, site = {}) {
     let live = recs.filter(r => r.phase !== 'cancelled');
+    // Legacy files don't set the phase while the site has current files; a site with legacy
+    // files only is an old approval, taken as built.
+    const current = live.filter(r => !isLegacy(r));
+    const legacyOnly = live.length > 0 && !current.length;
+    live = current;
+    // A site plan approved before a newer zoning / official plan / subdivision file that is still
+    // pending was for an earlier proposal: the site is back under review for the new one.
+    const masters = live.filter(r => r.kind === 'application' && (r.stage || stageOf(r)) === 'master' && recStart(r) != null && PHASE_BY_KEY[r.phase].rank <= PHASE_BY_KEY.review.rank);
+    for (const r of live) {
+      if (r.kind !== 'application' || r.phase !== 'approved' || (r.stage || stageOf(r)) !== 'siteplan') continue;
+      const at = approvedDate(r);
+      r.superseded = at != null && masters.some(m => recStart(m) > at) || undefined;
+    }
     // Redevelopment: files that start after an earlier build on the site was
     // completed are a new cycle, and the site's phase is that cycle's phase.
     const doneAt = Math.max(-Infinity, ...recs.flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
@@ -791,9 +821,16 @@
       const newer = live.filter(r => r.events.length && +r.events[0].date > doneAt);
       if (newer.length) live = newer;
     }
-    let phase = live.length
-      ? PHASES[live.reduce((m, r) => Math.max(m, PHASE_BY_KEY[r.phase].rank), 0)].key
+    let phase = legacyOnly ? 'completed' : live.length
+      ? PHASES[live.reduce((m, r) => Math.max(m, PHASE_BY_KEY[sitePhaseOf(r)].rank), 0)].key
       : 'cancelled';
+    // Planning approval short of a site plan (zoning / official plan / subdivision): shown
+    // alongside the site's phase, with the earliest date it was reached.
+    const planApp = live.filter(r => r.kind === 'application' && r.phase === 'approved' && sitePhaseOf(r) !== 'approved');
+    const planApproved = planApp.length ? {
+      refs: planApp.map(r => r.ref).filter(Boolean),
+      date: planApp.flatMap(r => r.events.filter(e => e.phase === 'approved').map(e => e.date)).sort((a, b) => a - b)[0] || null,
+    } : null;
 
     // Build-out: planned units on the planning applications vs units on building permits.
     const liveApps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
@@ -823,8 +860,11 @@
     for (const r of recs) {
       const tag = r.ref || r.type || (r.kind === 'permit' ? 'Permit' : 'Application');
       for (const e of r.events) {
-        timeline.push({ date: e.date, phase: e.phase, text: `${PHASE_BY_KEY[e.phase].label} · ${humanizeField(e.label)}`, record: r.uid, tag });
-        if (!milestones[e.phase] || e.date < milestones[e.phase]) milestones[e.phase] = e.date;
+        // A zoning / official plan / subdivision approval is a step in review, not the site's approval.
+        const planStep = e.phase === 'approved' && !countsAsApproval(r);
+        const ph = planStep ? 'review' : e.phase;
+        timeline.push({ date: e.date, phase: ph, text: `${planStep ? `${r.stage === 'condo' ? 'Condominium' : 'Zoning / official plan / subdivision'} approved` : PHASE_BY_KEY[e.phase].label} · ${humanizeField(e.label)}`, record: r.uid, tag });
+        if (!milestones[ph] || e.date < milestones[ph]) milestones[ph] = e.date;
       }
     }
     timeline.sort((a, b) => a.date - b.date);
@@ -852,6 +892,8 @@
       records: recs,
       kinds: Array.from(new Set(recs.map(r => r.kind))),
       milestones,
+      planApproved,
+      legacyOnly: legacyOnly || undefined,
       timeline,
       first: dates.length ? dates[0] : null,
       last: dates.length ? dates[dates.length - 1] : null,
@@ -907,6 +949,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
+    PHASE_RULES, sitePhaseOf, isLegacy,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

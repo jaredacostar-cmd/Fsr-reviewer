@@ -10,12 +10,21 @@ placed in a construction phase:
 | # | Phase | What it means |
 |---|-------|---------------|
 | 1 | Inception | Pre-consultation or application submitted |
-| 2 | Under review | Circulation, public meeting, appeal |
-| 3 | Approved | Planning approval (OPA, ZBA, subdivision, site plan) |
+| 2 | Under review | Circulation, public meeting, appeal; also zoning / official plan / subdivision approved with no site plan approval yet |
+| 3 | Approved | Site plan approved (the last planning step before building permits) |
 | 4 | Permit issued | Building permit issued |
 | 5 | Under construction | Inspections underway |
 | ✓ | Completed | Occupancy, final inspection or permit closed |
 | × | Withdrawn / refused | Every file on the site was withdrawn, refused, cancelled or expired |
+
+Each file keeps its own status; the site takes the furthest phase of its files, except that
+**only a site plan approval makes a site Approved**. An approved zoning, official plan,
+subdivision or condominium file keeps the site under review (shown as *Zoning approved · site
+plan pending*); a site plan approved before a newer rezoning that is still in review was for an
+earlier proposal and does not count; Brampton's legacy site plans (status "Transferred", carried
+over from its old system, mostly 1980s–1990s, no dates) don't count for a current proposal, and a
+site with only legacy files is shown as completed. A change to these rules is recorded in
+`data/history.json` as a re-read (marked `rules`), not as a phase change on the ground.
 
 ## Run it
 
@@ -153,9 +162,12 @@ secondary plan or MTSA:
 |---|---|
 | 2021 Census | Population and private dwellings (Statistics Canada, by dissemination area). For a secondary plan or MTSA, each DA counts by the share of its land inside the area. |
 | + Built since | Plus units on building permits completed since census day (11 May 2021), at Peel persons-per-unit. Brampton and Caledon publish no completion date, so it is estimated as issue date + 12 months (houses) or + 30 months (20+ units). |
-| + Approved, not yet built | Plus committed growth (approved or permitted, not yet completed). |
+| + Approved or permitted, not yet built | Plus committed growth (site plan approved, building permit issued or under construction, not yet completed). |
 
 | + Proposed (full build-out) | Plus growth on applications still in pre-consultation or review: the full build-out of the planning applications. |
+
+Each growth tile also gives the jobs added on development sites (from the floor area the
+applications state; existing jobs are not in the census), and a third bar shows jobs.
 
 Two stacked bars (people, dwellings) show the 2021 baseline (grey), built since (green),
 approved (blue) and proposed (hatched blue) up to full build-out; hover or tap a segment for

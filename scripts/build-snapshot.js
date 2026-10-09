@@ -103,6 +103,9 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
   const firstRun = !hist.runs.length;
   const since = hist.runs.length ? hist.runs[hist.runs.length - 1] : null;
   const added = [], moved = [];
+  // A change to the app's phase rules re-reads every site: the new phase is recorded (marked
+  // 'rules') but is not a change on the ground, so it is not counted as this week's moves.
+  const rulesChanged = !firstRun && (hist.rules || 1) !== P.PHASE_RULES;
   for (const p of projects) {
     const h = hist.projects[p.key] || (hist.projects[p.key] = []);
     const last = h[h.length - 1];
@@ -111,10 +114,14 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
       h.push([today, p.phase]);
       if (!firstRun) added.push({ ...info, phase: p.phase });
     } else if (last[1] !== p.phase) {
-      h.push([today, p.phase]);
-      moved.push({ ...info, from: last[1], to: p.phase });
+      if (rulesChanged) h.push([today, p.phase, 'rules']);
+      else {
+        h.push([today, p.phase]);
+        moved.push({ ...info, from: last[1], to: p.phase });
+      }
     }
   }
+  hist.rules = P.PHASE_RULES;
   if (hist.runs[hist.runs.length - 1] !== today) hist.runs.push(today);
   hist.updated = today;
 

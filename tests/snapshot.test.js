@@ -45,7 +45,7 @@ const cfg = {
 test('weekly runs record new projects and phase changes; outages keep last week', async () => {
   const realFetch = global.fetch;
   const state = {
-    apps: [feat(1, { FILE_NO: 'OZ 1', ADDRESS: '1 Main St', STATUS: 'Under Review', RECEIVED_DATE: Date.UTC(2024, 0, 1), UNITS: 300 })],
+    apps: [feat(1, { FILE_NO: 'SP 1', ADDRESS: '1 Main St', STATUS: 'Under Review', RECEIVED_DATE: Date.UTC(2024, 0, 1), UNITS: 300 })],
     permits: [
       feat(1, { BP_NO: 'BP 9', ADDRESS: '9 King St', PERMIT_TYPE: 'New apartment building', STATUS: 'Issued', ISSUE_DATE: Date.UTC(2025, 0, 1) }),
       feat(2, { BP_NO: 'BP 10', ADDRESS: '9 King St', PERMIT_TYPE: 'Deck', STATUS: 'Issued', ISSUE_DATE: Date.UTC(2025, 0, 1) }),
