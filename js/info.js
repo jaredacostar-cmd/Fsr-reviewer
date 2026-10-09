@@ -66,7 +66,7 @@
 
     // ---- One card per toggle ----
     'phase-all': { title: 'All phases', body: 'Every development whatever its phase, including withdrawn or refused files. Tap a single phase to see only that one.', source: `${APPS} ${PERMITS}` },
-    'phase-active': { title: 'Active pipeline', body: 'Projects that are still moving: inception, under review, approved, permit issued or under construction. Leaves out completed and withdrawn / refused developments.', source: `${APPS} ${PERMITS}` },
+    'phase-active': { title: 'Active applications', body: 'The default view. Developments still moving: inception, under review, approved, permit issued or under construction. Leaves out completed and withdrawn / refused developments.', source: `${APPS} ${PERMITS}` },
     'phase-inception': { title: '1 · Inception', body: 'A pre-consultation is filed or an application has been received / submitted, but no review milestone is recorded yet. Read from status text such as “pre-consultation”, “received”, “submitted”, “open”, or a received / intake date on the file.', source: APPS },
     'phase-review': { title: '2 · Under review', body: 'The application is being processed: deemed complete, circulated, at a public meeting, statutory hearing, or under appeal (OLT / OMB). Read from status text and circulation / public-meeting / hearing dates.', source: APPS },
     'phase-approved': { title: '3 · Approved', body: 'Planning approval granted (official plan amendment, zoning by-law, draft plan of subdivision, site plan or condominium): approved, adopted, registered, enacted or a notice of decision, with no building permit issued yet.', source: APPS },

@@ -54,6 +54,7 @@
           </label>
           <ul class="search-sug" id="search-sug" role="listbox" hidden></ul>
           <div class="active-filters" id="active-filters" aria-live="polite"></div>
+          <p class="showing small" id="f-showing" aria-live="polite"></p>
         </div>
 
         <section class="panel" id="phase-panel">
@@ -65,16 +66,17 @@
           <div class="chips views phase-chips" id="phase-chips" role="group" aria-label="Phase"></div>
         </section>
 
-        <details class="panel sect side-sect" id="sect-focus">
-          <summary><h2 class="label" data-info="focus">Focus</h2><span class="muted small sect-sum" id="sum-focus">None</span></summary>
-          <div class="chips views" id="focus-chips" role="group" aria-label="Focus"></div>
-        </details>
+        <section class="panel side-where">
+          <div class="panel-head"><h2 class="label" data-info="municipality">Where</h2></div>
+          <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
+        </section>
 
-        <details class="panel sect side-sect" id="sect-where" open>
-          <summary><h2 class="label" data-info="municipality">Where</h2><span class="muted small sect-sum" id="sum-where">All of Peel</span></summary>
-          <div class="field">
-            <div class="chips" id="f-muni-chips" role="group" aria-label="Municipality"></div>
+        <details class="panel sect side-sect" id="sect-more">
+          <summary><h2 class="label" data-info="record-type">More filters</h2><span class="muted small sect-sum" id="sum-more">None</span></summary>
+          <div class="more-group"><span class="label" data-info="focus">Focus</span>
+            <div class="chips views" id="focus-chips" role="group" aria-label="Focus"></div>
           </div>
+          <div class="more-group"><span class="label">Planning areas</span>
           <div class="row two">
             <div class="field" data-info="secondary-plans"><span class="label" id="f-sp-label">Secondary plans</span>
               <details class="multi" id="f-sp">
@@ -92,7 +94,10 @@
               <select id="f-mtsa" aria-labelledby="f-mtsa-label"><option value="">All MTSAs</option></select>
             </div>
           </div>
-          <div class="row two" id="f-svc-row" hidden>
+          <p class="small muted" id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</p>
+          </div>
+          <div class="more-group" id="f-svc-group" hidden><span class="label">Servicing areas</span>
+          <div class="row two" id="f-svc-row">
             <div class="field" data-info="pressure-zone"><span class="label" id="f-pz-label">Pressure zone</span>
               <select id="f-pz" aria-labelledby="f-pz-label"><option value="">All pressure zones</option></select>
             </div>
@@ -100,11 +105,8 @@
               <select id="f-dr" aria-labelledby="f-dr-label"><option value="">All drainage areas</option></select>
             </div>
           </div>
-          <p class="small muted" id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</p>
-        </details>
-
-        <details class="panel sect side-sect" id="sect-more">
-          <summary><h2 class="label" data-info="record-type">More filters</h2><span class="muted small sect-sum" id="sum-more">Applications + their permits</span></summary>
+          </div>
+          <div class="more-group"><span class="label">Records</span>
           <div class="row two">
             <label class="field" data-info="record-type"><span class="label">Record type</span>
               <select id="f-kind">
@@ -127,6 +129,7 @@
           </div>
           <label class="switch" data-info="new-only"><input type="checkbox" id="f-new" checked><span class="track" aria-hidden="true"></span>
             <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
+          </div>
         </details>
 
         <section class="panel list-panel">
@@ -210,7 +213,6 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
-      <div class="legend" id="legend" aria-label="Legend"></div>
       <div class="loading" id="loading" hidden></div>
       <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
       <section class="timebar" id="timebar" aria-label="Timeline">
@@ -246,6 +248,7 @@
         <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Criteria &amp; references</button>
+        <button type="button" class="f-sum" id="f-sum" title="Open the analysis"></button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       </div>

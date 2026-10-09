@@ -19,13 +19,17 @@
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';
-  // Default focus: growth (planning applications proposing new dwelling units).
-  const DEFAULT_FOCUS = 'growth';
+  // Default view: development applications in progress (application to construction), any year, no
+  // focus — the map opens on the active applications and the background.
+  const DEFAULT_FOCUS = '';
+  const ACTIVE_PHASES = ['inception', 'review', 'approved', 'permit', 'construction'];
+  const DEFAULT_PHASES = () => new Set(ACTIVE_PHASES);
+  const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
   const state = {
     sources: [],                         // {id,name,municipality,kind,url,enabled,status,msg,records}
     projects: [],
     filtered: [],
-    phases: new Set(P.ALL_PHASES.map(p => p.key)),
+    phases: DEFAULT_PHASES(),
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: '', pz: '', dr: '',   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
@@ -412,7 +416,7 @@
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
         <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
-        <details class="mo-more"${small ? '' : ' open'}><summary>Layers &amp; style</summary>
+        <details class="mo-more"${store.get('moOpen', false) ? ' open' : ''}><summary>Layers &amp; style</summary>
         <div class="mo-sec"><div class="mo-h">Developments</div>
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
           <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
@@ -437,6 +441,7 @@
         <small id="label-note"></small>`;
       L.DomEvent.disableClickPropagation(el);
       L.DomEvent.disableScrollPropagation(el);
+      el.querySelector('.mo-more').addEventListener('toggle', e => store.set('moOpen', e.target.open));
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
@@ -789,6 +794,7 @@
     renderCensus();
     renderFilterUI();
     renderSiteLayer();
+    if (mstyle.color === 'phase') renderLegend();   // the phase legend lists the shown phases
     viewLink.ready();
   }
 
@@ -798,7 +804,7 @@
     let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
     const encode = () => {
       const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
-      if (state.phases.size !== ALL_PHASE_KEYS().size) set('ph', [...state.phases].join(','));
+      if (!sameSet(state.phases, DEFAULT_PHASES())) set('ph', [...state.phases].join(','));
       if (state.focus !== DEFAULT_FOCUS) set('fo', state.focus || 'none');
       set('mu', state.muni); if (state.kind !== DEFAULT_KIND) set('k', state.kind); set('q', state.search);
       if (state.sp.length) set('sp', state.sp.join(',')); set('mt', state.mtsa); set('pz', state.pz); set('dr', state.dr);
@@ -851,7 +857,7 @@
   // ---- Timeline slider -------------------------------------------------------------
   const tFrom = $('#t-from'), tTo = $('#t-to');
   // Default year range on load and after "Reset all".
-  const DEFAULT_YEARS = [2021, 2026];
+  const DEFAULT_YEARS = null;   // all years
   let yearsInit = false;
   function updateYearBounds() {
     let lo = Infinity, hi = -Infinity;
@@ -870,12 +876,13 @@
   }
   function setDefaultYears() {
     const lo = state.yearMin, hi = state.yearMax;
-    state.yearFrom = DEFAULT_YEARS[0] <= lo ? null : DEFAULT_YEARS[0];
-    state.yearTo = DEFAULT_YEARS[1] >= hi ? null : DEFAULT_YEARS[1];
+    state.yearFrom = !DEFAULT_YEARS || DEFAULT_YEARS[0] <= lo ? null : DEFAULT_YEARS[0];
+    state.yearTo = !DEFAULT_YEARS || DEFAULT_YEARS[1] >= hi ? null : DEFAULT_YEARS[1];
     tFrom.value = state.yearFrom ?? lo; tTo.value = state.yearTo ?? hi;
   }
   const atDefaultYears = () => {
     const lo = state.yearMin, hi = state.yearMax;
+    if (!DEFAULT_YEARS) return state.yearFrom == null && state.yearTo == null;
     return (state.yearFrom ?? lo) === Math.max(lo, DEFAULT_YEARS[0]) && (state.yearTo ?? hi) === Math.min(hi, DEFAULT_YEARS[1]);
   };
   function setYearsSilently(from, to) {
@@ -898,7 +905,7 @@
     // One button: back to the default range, or from the default to all years.
     const atDefault = atDefaultYears();
     $('#t-reset').hidden = atDefault && !timeActive();
-    $('#t-reset').textContent = atDefault ? 'All years' : `${DEFAULT_YEARS[0]}–${DEFAULT_YEARS[1]}`;
+    $('#t-reset').textContent = atDefault || !DEFAULT_YEARS ? 'All years' : `${DEFAULT_YEARS[0]}–${DEFAULT_YEARS[1]}`;
     // Histogram ignores the year filter itself so you can see where to drag.
     const counts = new Map();
     for (const p of state.projects) {
@@ -973,7 +980,7 @@
   // What the demand covers: the phase and focus picked in the sidebar, then any other filters.
   function renderSelection(set, basis) {
     const view = currentPhaseView();
-    const phase = view === 'all' ? 'All phases' : view === 'active' ? 'Active pipeline'
+    const phase = view === 'all' ? 'All phases' : view === 'active' ? 'Active applications'
       : P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label).join(' + ') || 'No phase';
     const focus = state.focus ? FOCUS[state.focus].label : 'No focus';
     const others = activeFilters().map(f => f.label).filter(l => l !== focus && !(state.focus && l === FOCUS[state.focus].label))
@@ -991,7 +998,7 @@
     if (e.target.closest('[data-clear-da]')) { setDaContext(null); return; }
     if (!e.target.closest('#d-change')) return;
     if (matchMedia('(max-width: 760px)').matches) toggleSidebar(true);
-    const sf = $('#sect-focus'); if (sf) sf.open = true;
+    const sf = $('#sect-more'); if (sf) sf.open = true;
     $('#phase-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
   function renderDemand() {
@@ -1016,6 +1023,7 @@
       stat('Jobs', fmtNum(Math.round(em.jobs)), 'jobs', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
     ].join('');
     $('#d-tiles').innerHTML = flowTablesHTML(e) + stampHTML('demand') + exportBar('growth');
+    $('#f-sum').innerHTML = `${state.daCtx ? `<span class="muted">Around ${esc(state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · ${fmtNum(Math.round(e.totalUnits))} units<span class="f-sum-pop"> · ${fmtNum(roundPop(e.population))} people</span>`;
     renderSelection(set, basis);
 
     // Breakdown by dwelling type and by phase.
@@ -1144,7 +1152,7 @@
       `<button type="button" class="chip${cur === key ? ' on' : ''}" data-pv="${key}" data-info="phase-${key}" aria-pressed="${cur === key}" title="${esc(title)}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
     $('#phase-chips').innerHTML = [
       chip('all', 'All', total, 'Every phase'),
-      chip('active', 'Active pipeline', n(ACTIVE_PHASES), 'Not yet completed, not withdrawn'),
+      chip('active', 'Active applications', n(ACTIVE_PHASES), 'In progress: application to construction (not completed, not withdrawn)'),
       ...P.ALL_PHASES.map(p => chip(p.key, p.label, counts[p.key], p.desc, dot(p.key))),
     ].join('');
     renderFocusChips();
@@ -1207,10 +1215,6 @@
     if (m) cluster.zoomToShowLayer(m, () => m.openTooltip());
     else map.setView([p.lat, p.lng], 17);
     if (innerWidth <= 760) toggleSidebar(false);
-  }
-
-  function renderLegend() {
-    $('#legend').innerHTML = P.ALL_PHASES.map(p => `<div class="li" data-info="phase-${p.key}">${dot(p.key)}<span>${esc(p.label)}</span></div>`).join('');
   }
 
   function renderSources() {
@@ -1600,24 +1604,28 @@
       <p class="small">${uUnits(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed · <strong>${uUnits(b.remaining)} left</strong> <button type="button" class="btn small link" data-open="dev-units">by type and phase</button></p>`;
   }
 
-  function devBriefHTML(p, st, f) {
+  // The brief in two parts: 'overview' (status, decision, build-out, proposal) and 'servicing'
+  // (servicing summary, existing mains, fire flow, stormwater, planned works, DC needs).
+  function devBriefHTML(p, st, f, part = 'overview') {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const status = `<p class="small">${st.why}</p>
       ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
       ${(x => x && x.kind !== 'info' ? `<p class="small why-${x.kind}-t">${esc(x.text)} <span class="muted">· ${esc(x.files[0])}</span></p>` : '')(st.sig.find(x => x.main))}
       ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`;
-    return `<section class="brief" data-info="dev-brief">
+    if (part === 'overview') return `<section class="brief" data-info="dev-brief">
       ${row('Status', status)}
       ${row('Latest decision', latestDecisionHTML(p, st))}
-      ${row('Servicing', servicingBriefHTML(p, f))}
+      ${row('Build-out', buildoutBriefHTML(p))}
+      ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
+      ${exportBar('dev')}
+    </section>`;
+    return `<section class="brief" data-info="dev-brief">
+      ${row('Summary', servicingBriefHTML(p, f))}
       ${p.lat != null ? row('Existing mains', '<div id="dev-exist"><p class="small muted">Looking up the nearest existing mains…</p></div>') : ''}
       ${p.lat != null ? row('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>') : ''}
       ${p.lat != null ? row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>') : ''}
       ${st.works ? row('Planned works', devWorksHTML(st.works)) : ''}
       ${state.dcInfra && f ? row('DC needs', `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p)}</div>`) : ''}
-      ${row('Build-out', buildoutBriefHTML(p))}
-      ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
-      ${exportBar('dev')}
     </section>`;
   }
 
@@ -1708,7 +1716,7 @@
   function devServicingHTML(p, f) {
     const dem = demandHTML(p, '', true);
     const sum = f ? `${fmt1(f.cb.water.maxDay)} L/s max day · ${fmt1(f.cb.wastewater.wetPeak)} L/s peak wet` : '';
-    return `<details class="sect" id="dev-svc"><summary><h2 class="section-title" data-info="servicing-check">Servicing</h2><span class="muted small sect-sum">${sum}</span></summary>
+    return `<details class="sect" id="dev-svc"><summary><h2 class="section-title" data-info="servicing-check">Servicing check</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${f ? servicingCheckHTML(p, f) : servicingLineHTML(p)}
       ${dem}</details>`;
   }
@@ -1724,12 +1732,19 @@
   }
 
   let currentProject = null, backToLoads = null, devBack = null;
+  // Development panel tabs (the last one picked is kept for the next development).
+  const DV_TABS = [['overview', 'Overview'], ['servicing', 'Servicing'], ['history', 'History & records']];
+  function showDvTab(k) {
+    if (!DV_TABS.some(([x]) => x === k)) k = 'overview';
+    document.querySelectorAll('#detail-body [data-dvt]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.dvt === k)));
+    document.querySelectorAll('#detail-body .dv-pane').forEach(p => { p.hidden = p.dataset.dvp !== k; });
+  }
   function showDetail(p) {
     // "← What loads …" when opened from that list (kept while the same development is re-rendered).
     if (backToLoads) { devBack = backToLoads; backToLoads = null; } else if (currentProject !== p) devBack = null;
     // Re-rendering the same development (council items arrived, criteria changed): keep what is open.
     const keep = currentProject === p && $('#detail').dataset.view === 'dev'
-      ? { open: new Map([...document.querySelectorAll('#detail-body details[id]')].map(d => [d.id, d.open])), tl: (document.querySelector('#detail-body [data-tl].on') || {}).dataset } : null;
+      ? { open: new Map([...document.querySelectorAll('#detail-body details[id]')].map(d => [d.id, d.open])), tl: (document.querySelector('#detail-body [data-tl].on') || {}).dataset, dvt: (document.querySelector('#detail-body [data-dvt][aria-selected="true"]') || {}).dataset?.dvt } : null;
     currentProject = p;
     setDaContext(p);
     highlight(p);
@@ -1762,14 +1777,23 @@
     $('#detail-body').innerHTML = `
       ${devBack ? `<button type="button" class="btn small link back-sel" data-loads-back="1">${devBack.dc ? `← ${devBack.dc.ln ? 'DC main' : devBack.dc.fc ? esc(devBack.dc.fc.name) : devBack.dc.cons ? 'Who relies on it' : 'DC timing'}` : `← What loads ${devBack.pipe != null ? `the ${SEW.data.pipes[devBack.pipe][0]} mm sewer` : esc(devBack.plantName ? PLANT_SHORT[devBack.plantName] : (svcById.get(devBack.id) ? (svcById.get(devBack.id).zone ? svcById.get(devBack.id).name : drName(svcById.get(devBack.id))) : 'it'))}`}</button>` : selection.has(p.key) ? `<button type="button" class="btn small link back-sel" data-sel="back">← Selection (${fmtNum(selection.size)} projects)</button>` : ''}
       ${devHeadHTML(p, st, f)}
-      ${devBriefHTML(p, st, f)}
-      ${devHistoryHTML(p, st)}
-      ${devServicingHTML(p, f)}
-      ${devUnitsHTML(p)}
-      <details class="sect" id="dev-aerial"><summary><h2 class="section-title" data-info="aerial">Aerial check</h2><span class="muted small sect-sum">before / latest photo</span></summary>
-        <div class="aerial" id="aerial-check"></div></details>
-      <details class="sect" id="dev-recs"><summary><h2 class="section-title" data-info="source-records">Source records</h2><span class="muted small sect-sum">${fmtNum(p.records.length)} files by type</span></summary>
-        ${recs}</details>`;
+      <div class="dv-tabs" role="tablist" aria-label="Development">${DV_TABS.map(([k, t]) => `<button type="button" role="tab" data-dvt="${k}" aria-selected="false">${t}</button>`).join('')}</div>
+      <div class="dv-pane" data-dvp="overview" role="tabpanel">
+        ${devBriefHTML(p, st, f, 'overview')}
+        ${devUnitsHTML(p)}
+        <details class="sect" id="dev-aerial"><summary><h2 class="section-title" data-info="aerial">Aerial check</h2><span class="muted small sect-sum">before / latest photo</span></summary>
+          <div class="aerial" id="aerial-check"></div></details>
+      </div>
+      <div class="dv-pane" data-dvp="servicing" role="tabpanel">
+        ${devBriefHTML(p, st, f, 'servicing')}
+        ${devServicingHTML(p, f)}
+      </div>
+      <div class="dv-pane" data-dvp="history" role="tabpanel">
+        ${devHistoryHTML(p, st)}
+        <details class="sect" id="dev-recs"><summary><h2 class="section-title" data-info="source-records">Source records</h2><span class="muted small sect-sum">${fmtNum(p.records.length)} files by type</span></summary>
+          ${recs}</details>
+      </div>`;
+    showDvTab(keep && keep.dvt || store.get('dvTab', 'overview'));
     if (keep) {
       for (const [id, open] of keep.open) { const d = document.getElementById(id); if (d) d.open = open; }
       if (keep.tl && keep.tl.tl) showTl(keep.tl.tl);
@@ -1789,8 +1813,10 @@
     const pb = e.target.closest('[data-pipe]'); if (pb && SEW.data) { const i = +pb.dataset.pipe; showPipeLoads(i); const c = SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
     const t = e.target.closest('[data-tl]');
     if (t) return showTl(t.dataset.tl);
+    const dt = e.target.closest('[data-dvt]');
+    if (dt) { store.set('dvTab', dt.dataset.dvt); showDvTab(dt.dataset.dvt); return; }
     const o = e.target.closest('[data-open]');
-    if (o) { const d = document.getElementById(o.dataset.open); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+    if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
   });
   $('#detail-body').addEventListener('toggle', e => { if (e.target.id === 'dev-aerial' && e.target.open && currentProject) runAerial(currentProject); }, true);
 
@@ -1977,24 +2003,42 @@
   function setLasso(on) {
     lassoOn = on;
     lassoSvg.classList.toggle('on', on);
-    $('#sel-btn') && $('#sel-btn').classList.toggle('on', on);
+    syncToolsBtn();
     if (on) { map.dragging.disable(); if (innerWidth <= 760) closeDetail(); }
     else map.dragging.enable();
     lassoSvg.querySelector('path').setAttribute('d', '');
   }
-  const SelectControl = L.Control.extend({
+  // Tools: one button under the zoom with the map tools — select an area, measure / select within a
+  // radius, test a site.
+  const TOOL_ITEMS = [
+    ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
+    ['measure', 'Measure', 'Measure a distance, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
+    ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
+  ];
+  const ToolsControl = L.Control.extend({
     options: { position: 'topleft' },
     onAdd() {
-      const el = L.DomUtil.create('div', 'leaflet-bar sel-ctl');
-      el.dataset.info = 'select-tool';
-      el.innerHTML = `<button type="button" id="sel-btn" title="Select an area: draw around developments to add up their servicing demand and growth" aria-label="Select an area">
-        <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/></svg></button>`;
-      L.DomEvent.disableClickPropagation(el);
-      el.querySelector('button').onclick = () => setLasso(!lassoOn);
+      const el = L.DomUtil.create('div', 'leaflet-bar tools-ctl');
+      el.innerHTML = `<button type="button" class="tools-btn" aria-expanded="false" aria-haspopup="true" title="Map tools: select an area, measure, test a site" aria-label="Map tools">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M12.6 2.6a4 4 0 0 0-4.9 5.2L2.6 12.9a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a4 4 0 0 0 5.2-4.9l-2.4 2.4-2.1-.4-.4-2.1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
+        <div class="tools-menu" role="menu" hidden>${TOOL_ITEMS.map(([k, t, d, svg]) => `<button type="button" role="menuitem" data-tool="${k}" title="${esc(d)}"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">${svg}</svg><span>${esc(t)}</span></button>`).join('')}</div>`;
+      L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+      const menu = el.querySelector('.tools-menu'), btn = el.querySelector('.tools-btn');
+      const open = o => { menu.hidden = !o; btn.setAttribute('aria-expanded', String(o)); };
+      btn.onclick = () => open(menu.hidden);
+      menu.onclick = e => {
+        const b = e.target.closest('[data-tool]'); if (!b) return;
+        open(false);
+        if (b.dataset.tool === 'lasso') { if (tool.mode) setTool(null); setLasso(!lassoOn); }
+        else { if (lassoOn) setLasso(false); setTool(b.dataset.tool); }
+      };
+      document.addEventListener('click', e => { if (!el.contains(e.target)) open(false); });
       return el;
     },
   });
-  new SelectControl().addTo(map);
+  new ToolsControl().addTo(map);
+  // The Tools button shows when a tool is on.
+  const syncToolsBtn = () => { const b = document.querySelector('.tools-btn'); if (b) b.classList.toggle('on', lassoOn || !!tool.mode); document.querySelectorAll('.tools-menu [data-tool]').forEach(x => x.classList.toggle('on', x.dataset.tool === 'lasso' ? lassoOn : tool.mode === x.dataset.tool)); };
 
   // North arrow (points to true north whatever the orientation; tap to switch between the road
   // grid and north up) and a metric scale bar.
@@ -2015,7 +2059,9 @@
   L.control.scale({ position: 'topleft', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
   function updateNorth() {
     const g = document.getElementById('north-rot');
-    if (g) g.setAttribute('transform', `rotate(${canRotate ? map.getBearing() : 0} 12 12)`);
+    const b = canRotate ? map.getBearing() : 0;
+    if (g) g.setAttribute('transform', `rotate(${b} 12 12)`);
+    const c = document.querySelector('.north-ctl'); if (c) c.hidden = Math.abs(((b % 360) + 360) % 360) < 0.5;
   }
   map.on('rotate', updateNorth);
   updateNorth();
@@ -2314,7 +2360,7 @@
       state.dcInfra = prepDc(dc);
       renderRefs();
       for (const a of [...state.servicing.zones, ...state.servicing.drainage]) svcById.set(a.id, a);
-      $('#f-svc-row').hidden = false;
+      $('#f-svc-group').hidden = false;
       tagServicing();
       renderSvcSelects();
       for (const k of ['pz', 'dr']) if (svcOn[k]) setSvcLayer(k, true);
@@ -3017,6 +3063,7 @@
     const c = el.cloneNode(true);
     c.querySelectorAll('.export-bar, .svc-switch, .svc-switches, button, .grow-tip, #aerial-check, .sel-actions, .d-sel').forEach(x => x.remove());
     c.querySelectorAll('details').forEach(d => d.setAttribute('open', ''));
+    c.querySelectorAll('.dv-pane').forEach(x => { x.hidden = false; }); c.querySelectorAll('.dv-tabs').forEach(x => x.remove());   // every development tab in the export
     c.querySelectorAll('[hidden]').forEach(x => x.remove());
     return c;
   }
@@ -3205,7 +3252,7 @@
   // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
   // view being left and restores the other view's last settings (its preset the first time).
   const VIEW_PRESETS = {
-    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: true, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: false, sys: 'both' } },
+    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: false, sys: 'both' } },
     water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: 'growth', exist: { water: true, sanitary: false, storm: false }, dc: { on: true, sys: 'water' } },
     wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: 'growth', exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
     dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: 'growth', exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
@@ -3234,7 +3281,8 @@
   // by maximum day growth; with the sewer network drawn outlet to outlet.
   const CAP_GROWTH = [[10, '#fdf0d5'], [25, '#fbd08a'], [50, '#f6a04d'], [100, '#e3672a'], [Infinity, '#a83a12']];
   const CAP_PS = [[80, '#2f9e44'], [100, '#f08c00'], [Infinity, '#e03131']];
-  const bucket = (v, scale) => scale.find(([t]) => v < t)[1];
+  // Colour for a value: the first class it falls under; Infinity (new, no census flow) takes the last.
+  const bucket = (v, scale) => isNaN(v) ? '#9aa0a6' : (scale.find(([t]) => v < t) || scale[scale.length - 1])[1];
   const fmtPct = v => !isFinite(v) ? 'new (no census flow)' : `${v >= 0 ? '+' : ''}${Math.round(v)}%`;
   const capLayer = L.layerGroup().addTo(map);
   // Capacity by year: built since the census in full, approved and proposed growth phased in as in
@@ -3307,7 +3355,7 @@
   // Bottom right on wide screens (the timeline sits bottom left), bottom left on phones; collapsed on
   // phones until opened (remembered).
   const phoneMap = matchMedia('(max-width: 700px)').matches;
-  const Legend = L.Control.extend({ options: { position: phoneMap ? 'bottomleft' : 'bottomright' }, onAdd() {
+  const Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
     el.addEventListener('input', e => {
@@ -3322,6 +3370,7 @@
   function renderLegend() {
     const el = legend.getContainer(), parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
+    if (mstyle.color === 'phase') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(layerColors()[k], t)).join('')}</ul>`);
     if (mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
@@ -3465,7 +3514,7 @@
   function setTool(mode) {
     tool.mode = tool.mode === mode ? null : mode;
     tool.pts = []; toolLayer.clearLayers();
-    document.querySelectorAll('.tool-ctl [data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === tool.mode));
+    syncToolsBtn();
     map.getContainer().classList.toggle('tool-on', !!tool.mode);
     if (tool.mode && lassoOn) setLasso(false);
     if (tool.mode && innerWidth <= 760) closeDetail();
@@ -3506,18 +3555,6 @@
     }
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && tool.mode) setTool(null); });
-  const ToolControl = L.Control.extend({
-    options: { position: 'topleft' },
-    onAdd() {
-      const el = L.DomUtil.create('div', 'leaflet-bar tool-ctl');
-      el.innerHTML = `<a href="#" role="button" data-tool="measure" title="Measure distance / select within a radius" aria-label="Measure"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2" stroke="currentColor" stroke-width="1.6"/></svg></a>
-        <a href="#" role="button" data-tool="whatif" title="Test a site: servicing check for a proposed development" aria-label="Test a site"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M12 22s7-7.2 7-12a7 7 0 0 0-14 0c0 4.8 7 12 7 12z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v6M9 10h6" stroke="currentColor" stroke-width="1.8"/></svg></a>`;
-      L.DomEvent.disableClickPropagation(el);
-      el.addEventListener('click', e => { const b = e.target.closest('[data-tool]'); if (b) { e.preventDefault(); setTool(b.dataset.tool); } });
-      return el;
-    },
-  });
-  new ToolControl().addTo(map);
 
   // Test a site: a proposed development placed on the map, with its servicing check — pressure
   // zone, sewer path, pumping station and plant reserve — before an application exists. It can be
@@ -3857,7 +3894,7 @@
     SEW.data.pipes.forEach((p, i) => { const s = pipeStats(i); if (s.r1 == null) none++; else n[PIPE_CLS.findIndex(([t]) => s.r1 * 100 < t)]++; });
     return { n, none, total: SEW.data.pipes.length };
   }
-  const pipeColour = r => r == null ? '#adb5bd' : PIPE_CLS.find(([t]) => r * 100 < t)[1];
+  const pipeColour = r => r == null || isNaN(r) ? '#adb5bd' : (PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1])[1];
   function pipeStats(i) {
     const p = SEW.data.pipes[i], cap = p[2];
     const today = pipeFlow(i, 'today'), then = pipeFlow(i, capYear);
@@ -4679,8 +4716,9 @@
   function baselineCensus() {
     const cs = state.censuses || [];
     if (!cs.length) return null;
-    const start = timeActive() ? (state.yearFrom ?? state.yearMin) : -Infinity;
-    return cs.find(c => c.year <= start) || cs[cs.length - 1];
+    // Newest first: the census at or before the timeline's start; with no year range, the latest.
+    if (!timeActive() || state.yearFrom == null) return cs[0];
+    return cs.find(c => c.year <= state.yearFrom) || cs[cs.length - 1];
   }
   const censusDay = d => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-CA', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
   function renderCensus() {
@@ -4799,9 +4837,7 @@
 
   // Quick views: a phase (or phase group) plus an optional focus.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
-  const ACTIVE_PHASES = ['inception', 'review', 'approved', 'permit', 'construction'];
   const PLANNING_PHASES = ['inception', 'review', 'approved'];
-  const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
   function currentPhaseView() {
     if (state.phases.size === P.ALL_PHASES.length) return 'all';
     if (sameSet(state.phases, new Set(ACTIVE_PHASES))) return 'active';
@@ -4866,7 +4902,7 @@
     if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
     if (state.phases.size < P.ALL_PHASES.length) {
       const names = P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label);
-      out.push({ label: names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { state.phases = ALL_PHASE_KEYS(); } });
+      out.push({ label: currentPhaseView() === 'active' ? 'Active applications' : names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { state.phases = ALL_PHASE_KEYS(); } });
     }
     if (timeActive()) {
       const from = state.yearFrom ?? state.yearMin, to = state.yearTo ?? state.yearMax;
@@ -4878,19 +4914,24 @@
   let activeList = [];
   // One-line summaries on the collapsed sidebar sections.
   function renderSectionSummaries() {
-    $('#sum-focus').textContent = state.focus ? FOCUS[state.focus].label : 'None';
-    $('#sect-focus').classList.toggle('active', !!state.focus);
-    const where = [state.muni || 'All of Peel', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
-      state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? `Drainage: ${(svcById.get(state.dr) || {}).name || ''}` : ''].filter(Boolean);
-    $('#sum-where').textContent = where.join(' · ');
-    $('#sect-where').classList.toggle('active', !!(state.muni || state.sp.length || state.mtsa || state.pz || state.dr));
-    const kindLabel = { application: 'Applications + their permits', '': 'All records', permit: 'Building permits', both: 'Application + permits' };
-    const more = [kindLabel[state.kind], state.minUnits ? $('#f-units').selectedOptions[0].textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
-    $('#sum-more').textContent = more.join(' · ');
-    $('#sect-more').classList.toggle('active', state.kind !== DEFAULT_KIND || !!state.minUnits || !state.newOnly);
+    const kindLabel = { '': 'All records', permit: 'Building permits', both: 'Application + permits' };
+    const more = [state.focus ? FOCUS[state.focus].label : '', state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
+      state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? `Drainage: ${(svcById.get(state.dr) || {}).name || ''}` : '',
+      state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? $('#f-units').selectedOptions[0].textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
+    $('#sum-more').textContent = more.length ? more.join(' · ') : 'Focus, areas, record type';
+    $('#sect-more').classList.toggle('active', more.length > 0);
+  }
+  // One line saying what the map shows and why.
+  function renderShowing() {
+    const v = currentPhaseView();
+    const what = v === 'all' ? 'developments (all phases)' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
+    const years = timeActive() ? (() => { const a = state.yearFrom ?? state.yearMin, b = state.yearTo ?? state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
+    const extra = activeFilters().length - (v === 'all' ? 0 : 1) - (timeActive() ? 1 : 0) - (state.muni ? 1 : 0) - (state.search ? 1 : 0);
+    $('#f-showing').innerHTML = `Showing <strong>${fmtNum(state.filtered.length)}</strong> ${esc(what)} · ${esc(years)} · ${esc(state.muni || 'all of Peel')}${state.search ? ` · matching “${esc(state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}`;
   }
   function renderFilterUI() {
     renderSectionSummaries();
+    renderShowing();
     activeList = activeFilters();
     $('#active-filters').innerHTML = activeList.length
       ? activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('') +
@@ -4899,7 +4940,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: '', pz: '', dr: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: ALL_PHASE_KEYS(), focus: DEFAULT_FOCUS });
+      Object.assign(state, { muni: '', sp: [], mtsa: '', pz: '', dr: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), focus: DEFAULT_FOCUS });
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
       setDefaultYears();
@@ -5012,14 +5053,17 @@
     $('#toggle-sidebar').textContent = o ? 'Map' : 'List';
   }
   $('#toggle-sidebar').onclick = () => toggleSidebar();
-  $('#legend').onclick = () => $('#legend').classList.toggle('expanded');
   // Bottom panel: collapse to just its tabs to give the map room; tapping a tab opens it again.
+  // Closed by default: a slim bar with the headline numbers; "Analysis" opens the tabs.
   function setFooterCollapsed(collapsed) {
     $('#footer').classList.toggle('collapsed', collapsed);
-    $('#footer-toggle').textContent = collapsed ? 'Show' : 'Hide';
+    $('#footer-toggle').innerHTML = collapsed ? 'Analysis <span aria-hidden="true">▴</span>' : 'Hide <span aria-hidden="true">▾</span>';
     $('#footer-toggle').setAttribute('aria-expanded', String(!collapsed));
+    store.set('footOpen', !collapsed);
   }
   $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
+  $('#f-sum').onclick = () => setFooterCollapsed(false);
+  setFooterCollapsed(!store.get('footOpen', false));
   $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
     footPref = t.dataset.tab; store.set('footTab3', footPref);
@@ -5032,7 +5076,7 @@
     $('#t-toggle').textContent = open ? '▾' : '▴';
   }
   $('#t-toggle').onclick = () => { const open = $('#timebar').classList.contains('folded'); setTimelineOpen(open); store.set('timelineOpen', open); };
-  setTimelineOpen(store.get('timelineOpen', !matchMedia('(max-width: 760px)').matches));
+  setTimelineOpen(store.get('timelineOpen', false));
 
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     readColors(); for (const k in iconCache) delete iconCache[k]; setTiles(); renderLegend(); applyFilters();
