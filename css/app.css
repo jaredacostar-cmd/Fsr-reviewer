@@ -1142,3 +1142,12 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 @media (min-width: 641px) { .brand .sub { padding-right: 64px; } }
 @media (max-width: 640px) { .help-btn { position: static; margin: 6px 0 0 6px; } }
 .tour-btns span { display: flex; gap: 6px; }
+
+/* Help on the map */
+.help-ctl button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; background: var(--accent); color: #fff; cursor: pointer; border-radius: 4px; font: 700 17px/1 system-ui, sans-serif; }
+.help-ctl button:hover { filter: brightness(1.08); }
+/* How the phase was set */
+.pb-stage td small, .pb-files td small { display: block; color: var(--text-muted); font-size: 10.5px; white-space: normal; }
+.pb-stage td, .pb-files td { white-space: normal; vertical-align: top; text-align: left !important; }
+.pb-files tr.pb-set td { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.pb-flags { margin: 6px 0; }
