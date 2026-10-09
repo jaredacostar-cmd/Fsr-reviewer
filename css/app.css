@@ -693,6 +693,7 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .svc-grid { display: grid; gap: 14px; grid-template-columns: minmax(0, 1fr); }
 .svc-pane { overflow-x: auto; }
 .svc-table { font-size: 12.5px; min-width: 720px; }
+.u { margin-left: 3px; font-size: 0.82em; font-weight: 400; color: var(--text-muted); }
 .svc-table td small { display: block; font-size: 10.5px; color: var(--text-muted); font-weight: 400; }
 .svc-table td.bo { font-weight: 700; background: color-mix(in srgb, var(--accent) 6%, transparent); }
 .svc-table tr.grp td { text-align: left; font-weight: 700; color: var(--text-primary); background: var(--surface-2); padding-top: 6px; }
