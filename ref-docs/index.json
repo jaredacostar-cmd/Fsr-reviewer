@@ -1,0 +1,92 @@
+[
+ {
+  "id": "linear-ww-standards",
+  "url": "https://peelregion.ca/sites/default/files/2024-08/peel-linear-wastewater-standards.pdf",
+  "status": 200,
+  "type": "application/pdf",
+  "bytes": 894522,
+  "file": "linear-ww-standards.pdf",
+  "finalUrl": "https://peelregion.ca/sites/default/files/2024-08/peel-linear-wastewater-standards.pdf"
+ },
+ {
+  "id": "sanitary-design-criteria",
+  "url": "https://peelregion.ca/sites/default/files/2024-08/sanitary-sewer-design-criteria.pdf",
+  "status": 200,
+  "type": "application/pdf",
+  "bytes": 1375082,
+  "file": "sanitary-design-criteria.pdf",
+  "finalUrl": "https://peelregion.ca/sites/default/files/2024-08/sanitary-sewer-design-criteria.pdf"
+ },
+ {
+  "id": "modelling-demand-table",
+  "url": "https://peelregion.ca/sites/default/files/2024-09/Water%20and%20Wastewater%20Modelling%20Demand%20Table%20-%20Site%20Plan%20applications%20%28August%202024%29.pdf",
+  "status": 200,
+  "type": "application/pdf",
+  "bytes": 186031,
+  "file": "modelling-demand-table.pdf",
+  "finalUrl": "https://peelregion.ca/sites/default/files/2024-09/Water%20and%20Wastewater%20Modelling%20Demand%20Table%20-%20Site%20Plan%20applications%20%28August%202024%29.pdf"
+ },
+ {
+  "id": "fsr-requirements-2009",
+  "url": "https://peelregion.ca/sites/default/files/2024-08/functional-servicing-report-requirements-november-2009.pdf",
+  "status": 200,
+  "type": "application/pdf",
+  "bytes": 587675,
+  "file": "fsr-requirements-2009.pdf",
+  "finalUrl": "https://peelregion.ca/sites/default/files/2024-08/functional-servicing-report-requirements-november-2009.pdf"
+ },
+ {
+  "id": "water-design",
+  "url": "https://peelregion.ca/sites/default/files/2024-08/water-design.pdf",
+  "status": 200,
+  "type": "application/pdf",
+  "bytes": 286701,
+  "file": "water-design.pdf",
+  "finalUrl": "https://peelregion.ca/sites/default/files/2024-08/water-design.pdf"
+ },
+ {
+  "id": "design-standards-page",
+  "url": "https://www.peelregion.ca/public-works/design-standards/",
+  "status": 200,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 150195,
+  "file": "design-standards-page.html",
+  "finalUrl": "https://peelregion.ca/construction/resources-contractors/design-standards-specification-procedures"
+ },
+ {
+  "id": "dc-study-2020",
+  "url": "https://www.peelregion.ca/finance/_media/Peel%20Development-Charges-Background-Study.pdf",
+  "status": 404,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 125923,
+  "file": null,
+  "finalUrl": "https://peelregion.ca/finance/_media/Peel%20Development-Charges-Background-Study.pdf"
+ },
+ {
+  "id": "mecp-d-5-1",
+  "url": "https://www.ontario.ca/page/d-5-1-calculating-and-reporting-uncommitted-reserve-capacity-sewage-and-water-treatment-plants",
+  "status": 200,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 113702,
+  "file": "mecp-d-5-1.html",
+  "finalUrl": "https://www.ontario.ca/page/d-5-1-calculating-and-reporting-uncommitted-reserve-capacity-sewage-and-water-treatment-plants"
+ },
+ {
+  "id": "mecp-sewage-guidelines",
+  "url": "https://www.ontario.ca/document/design-guidelines-sewage-works-0",
+  "status": 200,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 191698,
+  "file": "mecp-sewage-guidelines.html",
+  "finalUrl": "https://www.ontario.ca/document/design-guidelines-sewage-works-0"
+ },
+ {
+  "id": "mecp-water-guidelines",
+  "url": "https://www.ontario.ca/document/design-guidelines-drinking-water-systems-0",
+  "status": 200,
+  "type": "text/html; charset=UTF-8",
+  "bytes": 109042,
+  "file": "mecp-water-guidelines.html",
+  "finalUrl": "https://www.ontario.ca/document/design-guidelines-drinking-water-systems-0"
+ }
+]
