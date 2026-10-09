@@ -238,6 +238,15 @@ application.
   employment flow so the model today matches its 2025 reported average (G.E. Booth ×1.63,
   Clarkson ×1.19 on the 2021 baseline); the factor absorbs existing employment and institutional
   flow, dry-weather infiltration and anything not modelled. I&I is not scaled.
+- **Plant capacity chart** (top of the Plants tab): each plant's average dry weather flow as a %
+  of its rated capacity, stacked existing (census + external inflows) → built since → approved →
+  proposed, with a 100% line. The gap from existing + approved up to 100% is the **uncommitted
+  reserve capacity** (Ontario MECP Procedure D-5-1: rated − existing − committed), shown as a
+  dashed box with its population equivalent at the plant's flow per person today, plus what is
+  left (or short) after proposed applications and the **population at 100%** = (rated − external
+  inflows) ÷ flow per person. It follows the Flows and diversion switches; D-5-1 uses measured
+  flows, so *Calibrated to 2025 flows* is the matching basis. Population equivalents are skipped
+  where too few census people map to the sewershed (Inglewood).
 - **70 ML/d diversion** switch (Plants tab): models the planned east-to-west diversion from
   G.E. Booth to Clarkson (operational 2027–2028 per the 2025 reports) as a fixed transfer, taken
   off G.E. Booth's average and peaks and added to Clarkson's at every growth layer; the Peel

@@ -2002,6 +2002,49 @@
   // Peaks are not additive, so a growth layer's peak is what it adds to the peak (the running
   // total, peaked on its population, is shown below). I&I is on the whole drainage area, so it
   // all sits with the existing system.
+  // Plant capacity chart (Plants tab). One bar per plant on a % of rated capacity axis; the
+  // 100% line is the rated capacity. Segment colours follow the Growth tab (census grey, built
+  // green, approved blue, proposed hatched), every value is also written out below the bar.
+  function capChartHTML(rows, Y) {
+    const pct = (x, r) => x / r * 100;
+    const maxPct = Math.max(110, ...rows.map(r => pct(r.v.reduce((a, b) => a + b, 0), r.rated)));
+    const axisMax = Math.ceil(maxPct / 25) * 25;
+    const X = p => `${(p / axisMax * 100).toFixed(2)}%`;
+    const ticks = []; for (let t = 0; t <= axisMax; t += 25) ticks.push(t);
+    const ppl = n => unit(fmtNum(Math.round(n / 100) * 100), 'people');
+    const segs = [['g-base', `${Y} Census (existing)`], ['g-built', `Built since ${Y}`], ['g-approved', 'Approved']
+      , ['g-proposed', 'Proposed (in review)']];
+    const body = rows.map(r => {
+      const tot = r.v.reduce((a, b) => a + b, 0), committed = r.v[0] + r.v[1] + r.v[2];
+      const reserve = r.rated - committed, afterProposed = r.rated - tot;
+      // Too few people mapped to the sewershed (Inglewood: a village inside a large rural census
+      // area) makes the flow per person meaningless; skip the population equivalents then.
+      const okPop = r.popToday >= 1000 && r.perPerson > 0;
+      const people = mld => okPop ? mld * 1e6 / r.perPerson : 0;
+      const eq = mld => okPop ? ` ≈ ${ppl(people(mld))}` : '';
+      const popAt100 = r.perPerson > 0 ? (r.rated - r.extMld) * 1e6 / r.perPerson : 0;
+      const bar = r.v.map((v, i) => v > 0 ? `<span class="gseg ${segs[i][0]}" style="flex:${(v / tot * 1000).toFixed(3)} 1 0" tabindex="0" data-tip="${esc(`${segs[i][1]}: ${fmt1(v)} ML/d · ${pct(v, r.rated).toFixed(1)}% of rated capacity`)}"></span>` : '').join('');
+      const resBox = reserve > 0 ? `<span class="cap-reserve" style="left:${X(pct(committed, r.rated))};width:${X(pct(reserve, r.rated))}" data-tip="${esc(`Uncommitted reserve: ${fmt1(reserve)} ML/d${okPop ? ` ≈ ${fmtNum(Math.round(people(reserve) / 100) * 100)} people` : ''}`)}"></span>` : '';
+      return `<div class="cap-row">
+        <div class="cap-name">${r.name}<small>rated ${uML(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
+        <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${resBox}<span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
+          <span class="cap-end${Math.abs(pct(tot, r.rated) - 100) < 9 ? ' near' : ''}" style="left:${X(Math.max(pct(tot, r.rated), 100))}">${Math.round(pct(tot, r.rated))}%</span></div>
+        <div class="cap-text small">
+          <span>Existing + built + approved <strong>${Math.round(pct(committed, r.rated))}%</strong> (${uML(committed)})</span>
+          <span>${reserve >= 0 ? `Uncommitted reserve <strong>${uML(reserve)}</strong>${okPop ? ` ≈ <strong>${ppl(people(reserve))}</strong>` : ''}` : `<strong class="over">Over-committed by ${uML(-reserve)}</strong>`}</span>
+          <span>${afterProposed >= 0 ? `After proposed: ${uML(afterProposed)}${eq(afterProposed)}` : `<span class="over">After proposed: short ${uML(-afterProposed)}${eq(-afterProposed)}</span>`}</span>
+          <span>${okPop ? `Population at 100%: <strong>${ppl(popAt100)}</strong> <span class="muted">(today ${ppl(r.popToday)}, ${unit(fmtNum(Math.round(r.perPerson)), 'L/person/d')})</span>` : '<span class="muted">Population equivalents not shown: too few census people are mapped to this sewershed</span>'}</span>
+        </div></div>`;
+    }).join('');
+    return `<h3 class="svc-sub">Plant capacity <span class="muted small">average dry weather as a % of rated capacity · ${svcOpt.ww === 'calibrated' ? 'calibrated to 2025 flows' : 'Peel design criteria'}${svcOpt.div === 'on' ? ' · with the 70 ML/d diversion' : ''}</span></h3>
+      <div class="cap-chart" data-info="plant-capacity">
+        <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
+        ${body}
+        <ul class="grow-legend"><li><span class="gsw g-base"></span>${Y} Census (existing) + external inflows</li><li><span class="gsw g-built"></span>Built since ${Y}</li><li><span class="gsw g-approved"></span>Approved</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li><span class="gsw cap-reserve-sw"></span>Uncommitted reserve</li><li><span class="cap-line-sw"></span>Rated capacity (100%)</li></ul>
+        <div class="grow-tip" id="cap-tip" hidden></div>
+      </div>
+      <p class="small muted"><strong>Uncommitted reserve capacity</strong> (Ontario MECP Procedure D-5-1) = rated capacity − existing flow − flow committed to approved development. Here existing = ${Y} Census + built since (plus external inflows), committed = approved; proposed applications then draw on the reserve. Its population equivalent divides by the plant's flow per person today (residential + development jobs${svcOpt.ww === 'calibrated' ? ', calibrated to the 2025 reported flow, so it also carries existing employment and infiltration' : ' at Peel design rates'}). <em>Population at 100%</em> = (rated capacity − external inflows) ÷ that flow per person. ${svcOpt.ww === 'calibrated' ? '' : 'D-5-1 uses measured flows: switch to <em>Calibrated to 2025 flows</em> for that basis.'}</p>`;
+  }
   function renderPlantsTab(secs, peel, tor, k) {
     const { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow } = k;
     const R = state.reports, rep = pl => R && R.wastewater.plants[pl];
@@ -2040,6 +2083,26 @@
     const divTo = pl => !divOn ? [] : pl === dv.from ? [{ name: `Diversion to ${plantLabel(dv.to)} (planned ${dv.when})`, detail: dv.detail, mld: -dv.mld, refs: dvRefs }]
       : pl === dv.to ? [{ name: `Diversion from ${plantLabel(dv.from)} (planned ${dv.when})`, detail: dv.detail, mld: dv.mld, refs: dvRefs }] : [];
     const divMld = pl => divTo(pl).reduce((t, x) => t + x.mld, 0);
+    const ratedOf = pl => rep(pl) ? rep(pl).ratedMLd : 0;
+    const peelFc = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
+    // Capacity chart: each plant's average dry weather flow as a % of its rated (annual average)
+    // capacity, stacked existing → built → approved → proposed, with the uncommitted reserve
+    // (rated − existing − built − approved, MECP Procedure D-5-1) and its population equivalent.
+    let chart = '';
+    if (R) {
+      const rows = [];
+      const mkRow = (name, l, f, extMld, rated, note) => {
+        if (!(rated > 0)) return;
+        const a = n => adwf(upTo(l, n), f) + extMld;
+        const v = [a(0), a(1) - a(0), a(2) - a(1), a(3) - a(2)];
+        const today = upTo(l, 1), popToday = total(today);
+        const perPerson = popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0;   // L/person/d, incl. development jobs
+        rows.push({ name, rated, v, extMld, perPerson, popToday, note });
+      };
+      for (const x of secs) mkRow(esc(rep(x.pl) ? rep(x.pl).name : plantLabel(x.pl)), x.sum, x.f, inflowsTo(x.pl) + divMld(x.pl), ratedOf(x.pl));
+      if (secs.length > 1) mkRow('All Peel plants', peel, peelFc, inflows.reduce((t, e) => t + e.mld, 0), secs.reduce((t, x) => t + ratedOf(x.pl), 0), 'incl. the City of Toronto inflow');
+      chart = capChartHTML(rows, Y);
+    }
     let cmp = '';
     if (R) {
       const rows = secs.map(x => {
@@ -2057,11 +2120,11 @@
         <tbody>${rows}<tr class="tot"><td>Peel plants${tor ? `<small>model includes the City of Toronto inflow (${uML(tor.mld)}, plant not stated)</small>` : ''}</td><td>${uML(sumRated)}</td><td>${uML(sumRep)}<small>${pct(sumRep, sumRated)} of capacity</small></td><td></td><td>${uML(sumToday)}<small>${pct(sumToday, sumRep)} of reported</small></td><td></td><td class="bo">${uML(sumBo)}<small>${pct(sumBo, sumRated)} of capacity</small></td></tr></tbody></table>
         <p class="small muted">Model today = ${Y} Census + built since, residential + development jobs, plus external inflows known to reach the plant. The plants also treat existing employment, institutional and commercial flow, dry-weather infiltration and inflows the model does not hold, so the design-criteria model is expected to run low; the calibration factor is reported ÷ model and is applied when <em>Calibrated to 2025 flows</em> is on. ${R.wastewater.plants.Lakeview ? esc(R.wastewater.plants.Lakeview.notes.slice(1).join(' ')) : ''}</p>`;
     }
-    const ratedOf = pl => rep(pl) ? rep(pl).ratedMLd : 0;
     const peelExt = inflows;
     const peelF = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     $('#plants-body').innerHTML = `<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${R ? optSwitch('ww', 'Flows', [['design', 'Peel design criteria'], ['calibrated', 'Calibrated to 2025 flows']]) : ''}${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${dv.to}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(plantLabel(dv.from))} to ${esc(plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
+      ${chart}
       ${cmp}
       <h3 class="svc-sub">Plant inflow by growth layer</h3>
       <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each layer is what it adds, the running total below${svcOpt.ww === 'calibrated' ? ' · calibrated to 2025 flows' : ''}</caption>
@@ -2081,6 +2144,19 @@
       <ul class="ref-list">${Object.values(R.reports).map(r => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></li>`).join('')}</ul>
       <p class="small muted">Index pages: <a href="${esc(R.indexPages.wastewater)}" target="_blank" rel="noopener">wastewater annual reports</a> · <a href="${esc(R.indexPages.water)}" target="_blank" rel="noopener">water quality reports</a>. ${esc(R.note)}</p>`;
   }
+  // Hover / tap tooltip for the plant capacity chart.
+  const capTip = e => {
+    const tip = $('#cap-tip'); if (!tip) return;
+    const t = e.target.closest && e.target.closest('.cap-chart [data-tip]');
+    if (!t) { tip.hidden = true; return; }
+    const box = tip.parentElement.getBoundingClientRect(), x = (e.clientX ?? t.getBoundingClientRect().left) - box.left, y = (e.clientY ?? t.getBoundingClientRect().top) - box.top;
+    tip.textContent = t.dataset.tip; tip.hidden = false;
+    tip.style.left = `${Math.min(box.width - tip.offsetWidth - 4, Math.max(0, x + 12))}px`; tip.style.top = `${Math.max(0, y - 34)}px`;
+  };
+  $('#plants-body').addEventListener('mousemove', capTip);
+  $('#plants-body').addEventListener('mouseleave', () => { const t = $('#cap-tip'); if (t) t.hidden = true; });
+  $('#plants-body').addEventListener('focusin', capTip);
+  $('#plants-body').addEventListener('click', capTip);
   // Switches in the Water / Wastewater / Plants tabs.
   for (const id of ['#water-body', '#ww-body', '#plants-body']) $(id).addEventListener('click', e => {
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
