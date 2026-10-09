@@ -12,12 +12,13 @@ name: Probe data sources
 #  mode=peel-reports: download Peel wastewater annual reports and water quality reports to the peel-reports branch
 #  mode=refs-council: download reference documents and probe council meeting portals (pushed to the ref-docs branch)
 #  mode=masterplan: download the 2020 Water and Wastewater Master Plan volumes as text (pushed to the ref-docs-mp branch)
+#  mode=dc-maps: download the 2026 DC capital maps (water, wastewater) as text, images, SVG and any GeoPDF layers (ref-docs-dc branch)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council or masterplan'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan or dc-maps'
         default: 'all'
         required: false
 
@@ -100,6 +101,37 @@ jobs:
           git add -f mp
           git commit -m "2020 Master Plan volumes as text"
           git push -f origin ref-docs-mp
+      - name: DC capital maps (pushed to the ref-docs-dc branch)
+        if: inputs.mode == 'dc-maps'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils gdal-bin >/dev/null
+          mkdir -p dc
+          for k in wastewater water; do
+            curl -sSL -A "Mozilla/5.0 (peel-dev-tracker)" -o dc/$k.pdf "https://peelregion.ca/sites/default/files/2026-03/capital-map-$k-development-charges-v2.pdf" || true
+            ls -la dc/$k.pdf; pdfinfo dc/$k.pdf > dc/$k.info.txt 2>&1 || true; cat dc/$k.info.txt
+            pdftotext -layout dc/$k.pdf dc/$k.txt || true
+            pdftotext -bbox-layout dc/$k.pdf dc/$k.bbox.html || true
+            pdftoppm -r 40 -png dc/$k.pdf dc/$k-small || true
+            pdftoppm -r 110 -png dc/$k.pdf dc/$k-med || true
+            pdftocairo -svg dc/$k.pdf dc/$k.svg || true
+            gdalinfo dc/$k.pdf > dc/$k.gdalinfo.txt 2>&1 || true; head -60 dc/$k.gdalinfo.txt
+            ogrinfo -ro -so dc/$k.pdf > dc/$k.ogrinfo.txt 2>&1 || true; head -80 dc/$k.ogrinfo.txt
+            mkdir -p dc/$k-layers
+            ogr2ogr -f GeoJSON -t_srs EPSG:4326 dc/$k-layers/all.geojson dc/$k.pdf 2>/dev/null || true
+            for L in $(ogrinfo -ro -q dc/$k.pdf 2>/dev/null | sed -n 's/^[0-9]*: \(.*\) (.*/\1/p' | tr ' ' '%'); do
+              n=$(echo "$L" | tr '%' ' '); f=$(echo "$L" | tr -c 'A-Za-z0-9\n' '_')
+              ogr2ogr -f GeoJSON -t_srs EPSG:4326 "dc/$k-layers/$f.geojson" dc/$k.pdf "$n" 2>/dev/null || true
+            done
+            gzip -9 -f dc/$k.svg dc/$k.bbox.html || true
+            rm -f dc/$k.pdf
+          done
+          du -sh dc; ls -laR dc | head -120
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B ref-docs-dc
+          git add -f dc
+          git commit -m "2026 DC capital maps"
+          git push -f origin ref-docs-dc
       - name: Rebuild pressure zones and drainage areas (committed to this branch)
         if: inputs.mode == 'servicing-build'
         run: |
