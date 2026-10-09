@@ -1162,3 +1162,11 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .pb-stage td, .pb-files td { white-space: normal; vertical-align: top; text-align: left !important; }
 .pb-files tr.pb-set td { background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .pb-flags { margin: 6px 0; }
+
+/* Wastewater blocks (I&I program) */
+.blk-lbl span { display: inline-block; font: 600 10px/14px system-ui, sans-serif; color: #5f3dc4; background: rgba(255,255,255,.85); border: 1px solid #b197fc; border-radius: 8px; padding: 0 5px; transform: translate(-50%, -50%); white-space: nowrap; }
+.blk-lbl.pri span { background: #7048e8; color: #fff; border-color: #7048e8; }
+.blk-focus { stroke: #7048e8; stroke-width: 3; fill: #7048e8; fill-opacity: 0.12; }
+.blk-focus-up { stroke: #7048e8; stroke-width: 1.2; stroke-dasharray: 4 3; fill: #7048e8; fill-opacity: 0.05; }
+.blk-outlet { stroke: #fff; stroke-width: 2; fill: #7048e8; fill-opacity: 1; }
+.pd-row { display: flex; align-items: baseline; gap: 4px; }
