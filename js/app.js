@@ -1091,6 +1091,7 @@
     for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
     for (const p of document.querySelectorAll('.f-pane')) p.hidden = p.dataset.pane !== key || p.dataset.off === '1' || (p.dataset.sub && p.dataset.sub !== wwSub);
     for (const b of document.querySelectorAll('[data-wwsub]')) { b.classList.toggle('on', b.dataset.wwsub === wwSub); b.setAttribute('aria-pressed', String(b.dataset.wwsub === wwSub)); }
+    if (key === 'dca' && typeof renderDca === 'function') setTimeout(() => renderDca(), 0);
   }
   document.querySelector('.f-subtabs').addEventListener('click', e => {
     const b = e.target.closest('[data-wwsub]'); if (!b) return;
@@ -3095,6 +3096,7 @@
     const bc = baselineCensus();
     const has = !!(state.servicing && bc);
     $('#ftab-water').hidden = $('#ftab-ww').hidden = !has;
+    $('#ftab-dca').hidden = !has || !state.dcInfra;
     if (!has) return;
     const c = state.criteria, E = c.employment, Y = bc.year, R = state.reports;
     $('#footer').classList.toggle('show-tech', svcOpt.tech === 'on');
@@ -3239,6 +3241,7 @@
     for (const d of state.servicing.drainage) cumOf(d);
     state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg };
     renderScenario(); renderCapLayer(); renderLegend(); filterInView();
+    if (footTab === 'dca' && !$('#footer').classList.contains('collapsed')) renderDca();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
   }
   // Reported 2025 water production next to the model (Water tab).
@@ -4106,9 +4109,9 @@
     yr.addEventListener('input', e => {
       const v = +e.target.value; capYear = v > hz.end ? null : v;
       yr.querySelector('.my-v').textContent = yearText();
-      clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); }, 120);
+      clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); }, 120);
     });
-    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); });
+    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); });
     return el;
   } });
   const legend = new Legend().addTo(map);
@@ -5480,7 +5483,7 @@
     const people = peopleFor(room, x => growthLs(gp + x, com.jobs, gh + x * PP_HA) - growthLs(gp, com.jobs, gh));
     const ln = state.dcInfra && pipeReliefOf(i);
     return { id: `pipe:${i}`, sys: 'ww', kind: 'pipe', i, name: `${p[0]} mm sanitary sewer`, sub: `slope ${(p[1] * 100).toFixed(2)}%${p[7] ? ` · ${p[7]}` : ''}`, cap, unit: 'L/s',
-      util: { today: q('today') / cap, com: com.q / cap, bo: bo.q / cap }, room, people, out: runOut(q, () => cap), relief: ln ? [lineRelief(ln)] : [],
+      util: { today: q('today') / cap, com: com.q / cap, bo: bo.q / cap }, room, people, out: runOut(q, () => cap), relief: ln ? [lineRelief(ln)] : [], q,
       // The census flow alone over the full-pipe capacity: most likely the published slope (or a
       // parallel pipe the trace does not follow), not a sewer surcharging in dry weather.
       check: none >= cap };
@@ -5496,7 +5499,7 @@
     const k = words(sp.name);
     const facs = state.dcInfra ? state.dcInfra.wastewater.facilities.filter(f => f.kind === 'pumping_station' && words(f.name) && (k.includes(words(f.name)) || words(f.name).includes(k))) : [];
     return { id: `ps:${a.id}`, sys: 'ww', kind: 'ps', a, name: `${sp.name} pumping station`, sub: `firm ${fmtNum(cap)} L/s (2020 Master Plan) · peak wet`, cap, unit: 'L/s', note: spsNote(sp),
-      util: { today: q('today') / cap, com: flow(com) / cap, bo: q(null) / cap }, room, people, out: runOut(q, () => cap), relief: facs.map(f => facRelief(f)) };
+      util: { today: q('today') / cap, com: flow(com) / cap, bo: q(null) / cap }, room, people, out: runOut(q, () => cap), relief: facs.map(f => facRelief(f)), q };
   }
   // Wastewater treatment plant: average dry weather against 90% of rated capacity.
   function plantCons(pl) {
@@ -5510,7 +5513,7 @@
     const after = runOut(q, y => PLANT_TRIGGER * ratedAt(y === 'today' ? THIS_YEAR : y));
     return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · average dry`, cap: lim, unit: 'ML/d',
       util: { today: cap.existing / lim, com: cap.committed / lim, bo: cap.buildout / lim }, room, people: room * 1e6 / (cap.perPerson || 1), out: runOut(q, () => lim), outAfter: steps.length ? after : undefined,
-      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}` })) };
+      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}` })), q, rated: cap.rated };
   }
   // Water: max day of a set of zones by year (ML/d).
   function zonesMax(ids, y) {
@@ -5533,14 +5536,14 @@
       const room = lim - q('committed');
       const wells = state.dcInfra ? state.dcInfra.water.facilities.filter(f => f.kind === 'well' && s.communities.includes(f.name)) : [];
       return { id: `wsys:${s.name}`, sys: 'water', kind: 'wplant', name: `${s.name} wells`, sub: `rated ${fmt1(rated)} ML/d · 2025 max day ${fmt1(base)} ML/d + growth`, cap: lim, unit: 'ML/d', zones: ids,
-        util: { today: q('today') / lim, com: q('committed') / lim, bo: q(null) / lim }, room, people: room / perPersonMax(), out: runOut(q, () => lim), relief: wells.map(f => facRelief(f)) };
+        util: { today: q('today') / lim, com: q('committed') / lim, bo: q(null) / lim }, room, people: room / perPersonMax(), out: runOut(q, () => lim), relief: wells.map(f => facRelief(f)), q };
     }
     const sp = R.water.southPeel, ids = lakeZones(), rated = sp.plants.reduce((t, p) => t + p.ratedMLd, 0), lim = PLANT_TRIGGER * rated;
     const q = y => sp.maxDayMLd + zonesMax(ids, y) - zonesMax(ids, 'today');
     const room = lim - q('committed');
     const facs = state.dcInfra ? state.dcInfra.water.facilities.filter(f => f.kind === 'plant') : [];
     return { id: 'wsys:southPeel', sys: 'water', kind: 'wplant', name: 'South Peel water treatment (A.P. Kennedy + Lorne Park)', sub: `rated ${fmt1(rated)} ML/d · 2025 max day ≤ ${fmt1(sp.maxDayMLd)} ML/d (incl. York supply) + growth`, cap: lim, unit: 'ML/d', zones: ids,
-      util: { today: q('today') / lim, com: q('committed') / lim, bo: q(null) / lim }, room, people: room / perPersonMax(), out: runOut(q, () => lim), relief: facs.map(f => facRelief(f, /treatment expansion/i)) };
+      util: { today: q('today') / lim, com: q('committed') / lim, bo: q(null) / lim }, room, people: room / perPersonMax(), out: runOut(q, () => lim), relief: facs.map(f => facRelief(f, /treatment expansion/i)), q };
   }
   // Storage: master plan required vs available (interpolated by year), at the facility's zone.
   function storageCons() {
@@ -5571,7 +5574,7 @@
     const pss = state.dcInfra ? state.dcInfra.water.facilities.filter(f => (f.kind === 'pumping_station' || f.kind === 'reservoir') && f.g && (() => { const z = PeelAreas.locate(state.servicing.zones, f.g[0], f.g[1])[0]; const lv = z && zLevel(svcById.get(z).zone); return lv === L - 1 || lv === L; })()) : [];
     return { id: `sup:${b.lower}|${b.upper}`, sys: 'water', kind: 'supply', name: `Supply into zone ${b.upper} and above`, sub: `${b.mains.length} large mains cross from zone ${b.lower} (${b.mains.map(m => m.d).join(', ')} mm) ≈ ${fmtNum(cap)} ML/d at 1.5 m/s · rough`, cap, unit: 'ML/d', zones: ids,
       util: { today: q('today') / cap, com: q('committed') / cap, bo: q(null) / cap }, room, people: room / perPersonMax(), out: runOut(q, () => cap),
-      relief: [...[...byP.values()].sort((a, b) => a.y - b.y).map(lineRelief), ...pss.map(f => facRelief(f, /pumping|expansion/i))].sort((a, b) => (a.y || 9999) - (b.y || 9999)) };
+      relief: [...[...byP.values()].sort((a, b) => a.y - b.y).map(lineRelief), ...pss.map(f => facRelief(f, /pumping|expansion/i))].sort((a, b) => (a.y || 9999) - (b.y || 9999)), q };
   }
   // Status of a constraint: ok (lasts to build-out), planned (relief before it runs out), gap.
   function consStatus(c) {
@@ -5826,6 +5829,220 @@
     if (rl.ln) { showDcLine(rl.ln); map.fitBounds(L.latLngBounds(rl.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); if (!dcOn.on) setDcOn({ on: true, sys: 'both' }); }
     else if (rl.fc) { showFacility(rl.fc); if (rl.fc.g) map.setView([rl.fc.g[1], rl.fc.g[0]], Math.max(map.getZoom(), 14)); }
   });
+
+  // ---- DC Analysis (bottom panel tab): divert flows to each DC project when it comes online, and
+  // what happens if it is cancelled ---------------------------------------------------------------
+  // Each capacity constraint (sewer group, pumping station, plant, water supply) has its demand by
+  // year (approved and proposed growth phased as in Horizon years). From a DC project's in-service
+  // year the flow above the existing capacity is diverted to it, up to the capacity it adds: a main
+  // along an existing sewer adds Manning full-pipe capacity at its diameter on the existing slope; a
+  // plant expansion adds its published step (at the 90% trigger); a facility with no published
+  // capacity is taken as sized for build-out. Cancelling a project removes what it adds; the growth
+  // that no longer fits is held back (people at Peel design criteria, units at the growth's persons
+  // per unit). Developments outside the existing network that would connect to a new main are held
+  // back entirely without it.
+  const DCA = { key: '', res: null, open: new Set(), sort: 'impact' };
+  const manningLs = (dMm, S) => { const d = dMm / 1000; return S > 0 ? 1000 * (1 / 0.013) * (Math.PI * d * d / 4) * Math.pow(d / 4, 2 / 3) * Math.sqrt(S) : 0; };
+  const reliefKey = r => r.ln ? `ln:${r.ln.sys}:${r.ln.p || r.ln.c}` : r.kind === 'step' ? `step:${r.step.proj || r.y}` : r.fc ? `fc:${r.fc.sys}:${r.fc.name}` : null;
+  // Capacity a relief adds to a constraint (same unit as its demand), and whether it is assumed.
+  function reliefAdd(c, r) {
+    if (c.kind === 'pipe' && r.ln) {
+      const p = SEW.data.pipes[c.i], d = r.ln.d || p[0];
+      return { add: manningLs(d, p[1]), assumed: !r.ln.d, how: `${d} mm${r.ln.d ? '' : ' (size not on the map: taken as a twin)'} on the existing ${(p[1] * 100).toFixed(2)}% slope` };
+    }
+    return { add: Math.max(0, c.q(null) - c.cap) * 1.0001 + 1e-9, assumed: true, how: 'capacity not published: taken as sized for build-out' };
+  }
+  // Capacity of a constraint in year y with the given reliefs (keys in `off` cancelled).
+  function capWith(c, y, off) {
+    const yy = y == null ? hz.end : y;
+    if (c.kind === 'plant') {
+      let r = c.rated; for (const rl of c.relief) if (rl.step && !off.has(reliefKey(rl)) && yy >= rl.step.year) r = Math.max(r, rl.step.mld);
+      return PLANT_TRIGGER * r;
+    }
+    let cap = c.cap;
+    for (const rl of c.relief) if (rl.y && yy >= rl.y && !off.has(reliefKey(rl))) cap += reliefAdd(c, rl).add;
+    return cap;
+  }
+  // Flow per added person (the constraint's own rate, from its room in people).
+  const ratePP = c => { const m = c.room / c.people; return isFinite(m) && m > 0 ? m : null; };
+  // Growth people held back in year y: demand above the capacity (and above today's flow, so an
+  // existing overload isn't counted as growth held back).
+  function heldPeople(c, y, off) {
+    const m = ratePP(c); if (!m) return 0;
+    const qy = c.q(y), base = Math.max(capWith(c, y, off), c.q('today'));
+    return Math.max(0, qy - base) / m;
+  }
+  function growthPpu() {
+    let pop = 0, units = 0;
+    for (const p of state.projects) { const lay = svcLayerOf(p); if (lay !== 'approved' && lay !== 'proposed') continue; const e = D.estimate([p], state.criteria, 'all', jobsOf); if (e.totalUnits > 0) { pop += e.population; units += e.totalUnits; } }
+    return units > 0 ? pop / units : (state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
+  }
+  // Developments outside the existing network that would connect to each planned main.
+  function dcaConnectors() {
+    const by = new Map();
+    for (const p of state.projects) {
+      const lay = svcLayerOf(p); if ((lay !== 'approved' && lay !== 'proposed') || p.lat == null) continue;
+      for (const sys of ['wastewater', 'water']) {
+        const out = sys === 'wastewater' ? !(p.dr && p.dr.length) : !(p.pz && p.pz.length); if (!out) continue;
+        const n = dcNearest(sys, [p.lng, p.lat], DC_CONNECT_M); if (!n) continue;
+        const k = `ln:${sys}:${n.ln.p || n.ln.c}`, e = D.estimate([p], state.criteria, 'all', jobsOf); if (!(e.population > 0)) continue;
+        (by.get(k) || by.set(k, []).get(k)).push({ p, lay, e });
+      }
+    }
+    return by;
+  }
+  function dcAnalysis() {
+    const k = scenarioKey(); if (DCA.key === k && DCA.res) return DCA.res;
+    const cons = allNeeds().filter(c => c.q && c.status !== 'check' && c.kind !== 'storage');
+    const years = yearsAhead(), ppu = growthPpu(), conn = state.dcInfra ? dcaConnectors() : new Map();
+    const none = new Set();
+    // Projects: every relief on a constraint, plus the planned mains developments would connect to.
+    const P = new Map();
+    const proj = (key, init) => P.get(key) || P.set(key, { key, cons: [], conn: [], ...init }).get(key);
+    for (const c of cons) for (const r of c.relief) {
+      const key = reliefKey(r); if (!key || !r.y) continue;
+      const pr = proj(key, { r, y: r.y, sys: c.sys, name: r.ln ? `${DC_KIND[r.ln.k][0]}${r.ln.d ? ` ${r.ln.d} mm` : ''} · ${r.ln.p || r.ln.c}` : r.kind === 'step' ? `${c.name}: expansion to ${r.step.mld} ML/d${r.step.proj ? ` · ${r.step.proj}` : ''}` : r.text.replace(/^\S+\s/, ''), status: r.ln ? r.ln.s : '' });
+      pr.y = Math.min(pr.y, r.y); if (!pr.cons.includes(c)) pr.cons.push(c);
+    }
+    for (const [key, rows] of conn) {
+      const [, sys, id] = key.split(':'), ln = state.dcInfra[sys].lines.filter(x => (x.p || x.c) === id).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0]; if (!ln) continue;
+      const pr = proj(key, { r: lineRelief(ln), y: ln.y || null, sys: sys === 'water' ? 'water' : 'ww', name: `${DC_KIND[ln.k][0]}${ln.d ? ` ${ln.d} mm` : ''} · ${id}`, status: ln.s });
+      pr.conn = rows;
+    }
+    // Base (every project as scheduled) and each project cancelled, by year and at build-out.
+    const base = new Map();
+    for (const c of cons) base.set(c.id, { ys: years.map(y => heldPeople(c, y, none)), bo: heldPeople(c, null, none) });
+    const out = [];
+    for (const pr of P.values()) {
+      const off = new Set([pr.key]);
+      const rows = pr.cons.map(c => {
+        const b = base.get(c.id), ys = years.map((y, i) => Math.max(0, heldPeople(c, y, off) - b.ys[i])), bo = Math.max(0, heldPeople(c, null, off) - b.bo);
+        const r = c.relief.find(x => reliefKey(x) === pr.key), ad = r && c.kind !== 'plant' ? reliefAdd(c, r) : null;
+        // Diverted to the project: demand above the capacity without it, up to what it adds.
+        const div = years.map(y => Math.max(0, Math.min(c.q(y), capWith(c, y, none)) - capWith(c, y, off)));
+        return { c, ys, bo, ad, div, divBo: Math.max(0, Math.min(c.q(null), capWith(c, null, none)) - capWith(c, null, off)), gapBase: b.ys.some(v => v > 0) };
+      });
+      // Connectors: their growth phased in by year (approved / proposed horizons).
+      const cy = years.map(y => { const { fa, fp } = hzFrac(y); return pr.conn.reduce((t, x) => t + x.e.population * (x.lay === 'approved' ? fa : fp), 0); });
+      const cbo = pr.conn.reduce((t, x) => t + x.e.population, 0), cu = pr.conn.reduce((t, x) => t + x.e.totalUnits, 0);
+      // Constraints on one project are in series along a path: the largest, not the sum.
+      const ys = years.map((_, i) => Math.max(0, ...rows.map(r => r.ys[i])) + cy[i]);
+      const bo = Math.max(0, ...rows.map(r => r.bo)) + cbo;
+      const outY = pr.cons.length ? Math.min(...pr.cons.map(c => c.out === 'today' ? THIS_YEAR : c.out || 9999)) : 9999;
+      const late = pr.y && outY < pr.y;
+      const firstY = years.find((y, i) => ys[i] > 0) || null;
+      let rec, why;
+      if (bo <= 0 && !cbo) { rec = 'review'; why = pr.cons.length ? `No growth held back by build-out without it: the existing capacity${pr.cons.some(c => c.relief.length > 1) ? ' or the other projects relieving the same constraint' : ''} covers the demand.` : 'No modelled constraint or connecting development relies on it.'; }
+      else if (late) { rec = 'advance'; why = `Capacity runs out ≈${outY === THIS_YEAR ? 'now' : outY}, before it comes online (${pr.y}): bring it forward.`; }
+      else if (firstY && firstY - (pr.y || THIS_YEAR) >= 5) { rec = 'defer'; why = `Growth isn't held back until ≈${firstY} without it: it could follow later (≈${firstY - 1}).`; }
+      else { rec = 'keep'; why = `Without it, growth is held back from ≈${firstY || pr.y}.`; }
+      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why });
+    }
+    const order = { advance: 0, keep: 1, defer: 2, review: 3 };
+    out.sort((a, b) => order[a.rec] - order[b.rec] || b.bo - a.bo);
+    // Held back with every project as scheduled (projects late or too small), the largest constraint.
+    const baseBo = Math.max(0, ...[...base.values()].map(v => v.bo)), baseY = years.map((_, i) => Math.max(0, ...[...base.values()].map(v => v.ys[i])));
+    DCA.key = k; DCA.res = { list: out, years, ppu, baseBo, baseY, nCons: cons.length };
+    return DCA.res;
+  }
+  // Timeline chart for one project's tightest constraint: demand, existing capacity, capacity with
+  // the project; flow diverted to it (blue) and what would be unserved if it is cancelled (red).
+  function dcaChart(row, years) {
+    const c = row.c, W = 560, H = 180, L0 = 46, R0 = 10, T0 = 10, B0 = 26;
+    const none = new Set(), off = new Set([row.key]);
+    const dem = years.map(y => c.q(y)), cw = years.map(y => capWith(c, y, none)), co = years.map(y => capWith(c, y, off));
+    const max = Math.max(...dem, ...cw) * 1.08 || 1;
+    const x = i => L0 + (W - L0 - R0) * i / Math.max(1, years.length - 1), yv = v => T0 + (H - T0 - B0) * (1 - v / max);
+    const line = arr => arr.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${yv(v).toFixed(1)}`).join('');
+    const band = (lo, hi) => `${hi.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${yv(v).toFixed(1)}`).join('')}${lo.map((v, i) => [i, v]).reverse().map(([i, v]) => `L${x(i).toFixed(1)},${yv(v).toFixed(1)}`).join('')}Z`;
+    const divHi = years.map((_, i) => Math.max(co[i], Math.min(dem[i], cw[i]))), unsHi = years.map((_, i) => Math.max(co[i], dem[i]));
+    const ticks = [0, 0.5, 1].map(f => max / 1.08 * f), unitT = c.unit;
+    const yi = capYear == null ? years.length - 1 : Math.max(0, years.indexOf(capYear));
+    return `<svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Demand and capacity by year for ${esc(c.name)}">
+      ${ticks.map(t => `<line x1="${L0}" x2="${W - R0}" y1="${yv(t)}" y2="${yv(t)}" class="dca-grid"/><text x="${L0 - 4}" y="${yv(t) + 3}" class="dca-ax" text-anchor="end">${fmtNum(Math.round(t))}</text>`).join('')}
+      ${years.filter((y, i) => i % 5 === 0 || i === years.length - 1).map(y => `<text x="${x(years.indexOf(y))}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}
+      <path d="${band(co, unsHi)}" class="dca-uns"/>
+      <path d="${band(co, divHi)}" class="dca-div"/>
+      <path d="${line(co)}" class="dca-cap0"/><path d="${line(cw)}" class="dca-cap1"/><path d="${line(dem)}" class="dca-dem"/>
+      <line x1="${x(yi)}" x2="${x(yi)}" y1="${T0}" y2="${H - B0}" class="dca-now"/>
+      <text x="${L0 + 2}" y="${T0 + 9}" class="dca-ax">${esc(unitT)}</text>
+    </svg>
+    <div class="dca-key small"><span><i class="k-dem"></i>Demand</span><span><i class="k-cap0"></i>Capacity without it</span><span><i class="k-cap1"></i>With it (from ${row.y || '–'})</span><span><i class="k-div"></i>Diverted to it</span><span><i class="k-uns"></i>Over capacity without it</span></div>`;
+  }
+  const REC = { advance: ['dca-advance', 'Keep · advance'], keep: ['dca-keep', 'Keep'], defer: ['dca-defer', 'Keep · could defer'], review: ['dca-review', 'Review'] };
+  function renderDca() {
+    const el = $('#dca-body'); if (!el) return;
+    if (!state.svcModel || !state.dcInfra) { el.innerHTML = '<p class="small muted">Loading the servicing model and the 2026 DC program…</p>'; return; }
+    if (!SEW.data) { el.innerHTML = '<p class="small muted">Loading the sewer network…</p>'; loadSewers().then(d => { if (d) renderDca(); }); return; }
+    const R = dcAnalysis(), years = R.years, yi = capYear == null ? -1 : years.indexOf(capYear), atY = r => yi >= 0 ? r.ys[yi] : r.bo;
+    const yrLabel = capYear == null ? 'build-out' : capYear;
+    const n = k => R.list.filter(r => r.rec === k).length;
+    const top = R.list.filter(r => r.rec !== 'review').slice().sort((a, b) => b.bo - a.bo).slice(0, 5);
+    const pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / R.ppu));
+    const list = DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
+    el.innerHTML = `${stampHTML('ww')}
+      <div class="dca-sum">
+        <div class="dca-tile"><b>${fmtNum(R.list.length)}</b><span>DC projects relieve a capacity constraint or serve new development</span></div>
+        <div class="dca-tile ${n('advance') ? 'warn' : ''}"><b>${n('advance')}</b><span>come online after the capacity runs out: advance</span></div>
+        <div class="dca-tile"><b>${n('keep') + n('defer')}</b><span>keep (${n('defer')} could follow later)</span></div>
+        <div class="dca-tile"><b>${n('review')}</b><span>hold back no growth by build-out: review</span></div>
+        <div class="dca-tile ${R.baseBo > 0 ? 'warn' : ''}"><b>${pp(R.baseBo)}</b><span>people (≈${uu(R.baseBo)} units) held back at build-out even with every project as scheduled</span></div>
+      </div>
+      <div class="dca-recs"><h3 class="sub-title">Recommendations</h3><ol class="small">${top.map(r => `<li><strong>Keep ${esc(r.name)}</strong> (${r.y || 'year not labelled'}): cancelling it holds back <strong>${pp(r.bo)} people ≈ ${uu(r.bo)} units</strong> by build-out${r.cu ? `, including ${fmtNum(r.conn.length)} development${r.conn.length === 1 ? '' : 's'} that would connect to it` : ''}. ${esc(r.why)}</li>`).join('')}
+        ${R.list.filter(r => r.rec === 'advance').length ? `<li><strong>Advance:</strong> ${R.list.filter(r => r.rec === 'advance').map(r => `${esc(r.name)} (${r.y} → ≈${r.outY === THIS_YEAR ? 'now' : r.outY})`).join('; ')}.</li>` : ''}
+        ${n('review') ? `<li><strong>Review</strong> ${n('review')} project${n('review') === 1 ? '' : 's'} that hold back no growth by build-out in this screen (others relieve the same constraint, or the existing capacity suffices); check them against the DC study's own drivers (condition, I&amp;I, servicing beyond the applications) before cancelling.</li>` : ''}</ol></div>
+      <div class="dca-tools"><label class="small dca-yr">Year <select data-dca-year aria-label="Year for the impact column (same as the map's Demand year)">${years.map(y => `<option value="${y}"${capYear === y ? ' selected' : ''}>${y}</option>`).join('')}<option value=""${capYear == null ? ' selected' : ''}>Build-out</option></select></label><span class="seg">${[['impact', 'Largest impact'], ['rec', 'By recommendation'], ['year', 'By year']].map(([k, t]) => `<button type="button" class="btn small${DCA.sort === k ? ' on' : ''}" data-dca-sort="${k}">${t}</button>`).join('')}</span>
+        <button type="button" class="btn small" data-dca-csv>CSV</button><span class="muted small">Impact at the Demand year (${esc(String(yrLabel))}) and at build-out · tap a row for its timeline</span></div>
+      <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online</th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Recommendation</th></tr></thead><tbody>
+        ${list.map(r => { const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0]; return `<tr class="dca-row ${REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
+          <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
+          <td>${r.y || '–'}</td>
+          <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
+          <td>${r.outY ? (r.outY === THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${hz.end}` : '–'}</td>
+          <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>
+          <td>${r.bo > 0 ? `<strong>${pp(r.bo)}</strong> people<small>≈${uu(r.bo)} units</small>` : '<span class="muted">none</span>'}</td>
+          <td><span class="dca-rec">${REC[r.rec][1]}</span><small>${esc(r.why)}</small></td></tr>
+          ${DCA.open.has(r.key) ? `<tr class="dca-detail"><td colspan="7">${dcaDetail(r, years)}</td></tr>` : ''}`; }).join('')}
+      </tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${THIS_YEAR}–${hz.end}: approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). <strong>Diversion:</strong> from a project's construction year, flow above the existing capacity goes to the project, up to the capacity it adds — a main along an existing sewer at Manning full-pipe capacity for its diameter on the existing slope (n 0.013; a twin when the size isn't on the map); a plant expansion at its published step; a pumping station, treatment, well or supply project with no published capacity is taken as sized for build-out. <strong>Cancelled:</strong> the same without that one project (the others as scheduled); the growth above the capacity is held back, in people at each constraint's own rate (Peel design criteria) and units at ${R.ppu.toFixed(2)} persons per unit (the approved and proposed developments' average). Constraints a project relieves sit in series along a path, so its impact is the largest of them, not the sum; developments outside the existing network that would connect to a new main (within ${fmtNum(DC_CONNECT_M)} m) count in full. An existing overload isn't counted as growth held back. Storage (master plan forecast already includes the planned facilities) and constraints flagged “check the data” are left out. ${R.nCons} constraints analysed. A screen to rank and question projects, not a replacement for the DC study: condition, I&amp;I reduction, servicing beyond today's applications and cost are not in it.</p></details>`;
+  }
+  function dcaDetail(r, years) {
+    const pp = v => fmtNum(roundPop(v));
+    return `<div class="dca-d">
+      ${r.rows.slice().sort((a, b) => b.bo - a.bo).map(x => `<div class="dca-c"><p class="small"><strong>${esc(x.c.name)}</strong> · ${esc(x.c.sub)} · existing ${x.c.unit === 'L/s' ? fmtNum(Math.round(x.c.cap)) : fmt1(x.c.cap)} ${esc(x.c.unit)}${x.ad ? ` · adds ≈${x.c.unit === 'L/s' ? fmtNum(Math.round(x.ad.add)) : fmt1(x.ad.add)} ${esc(x.c.unit)} (${esc(x.ad.how)})` : ''}</p>
+        <p class="small">Diverted to it at build-out: <strong>${x.c.unit === 'L/s' ? fmtNum(Math.round(x.divBo)) : fmt1(x.divBo)} ${esc(x.c.unit)}</strong>${x.bo > 0 ? ` · if cancelled, <strong>${pp(x.bo)} people</strong> held back here by build-out` : ' · if cancelled, no growth held back here'}${x.gapBase ? ' · <span class="dcn-gap-t">short even with it on schedule</span>' : ''}</p>
+        ${dcaChart({ ...x, key: r.key, y: r.y }, years)}</div>`).join('')}
+      ${r.conn.length ? `<p class="small"><strong>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? '' : 's'}</strong> outside the existing network would connect to it (${pp(r.cbo)} people, ${fmtNum(Math.round(r.cu))} units): without it they have no service. ${r.conn.slice().sort((a, b) => b.e.population - a.e.population).slice(0, 6).map(x => `<button type="button" class="btn small link" data-dca-dev="${esc(x.p.key)}">${esc(x.p.title)}</button>`).join(' · ')}</p>` : ''}
+      <p class="small"><button type="button" class="btn small" data-dca-map="${esc(r.key)}">Show on the map</button></p></div>`;
+  }
+  function dcaCsv() {
+    const R = dcAnalysis(), q = v => `"${String(v).replace(/"/g, '""')}"`;
+    const head = ['Project', 'System', 'Online', 'Status', 'Relieves', 'Capacity runs out', 'Connecting developments', ...R.years.map(y => `Held back if cancelled ${y} (people)`), 'Held back if cancelled build-out (people)', 'Held back build-out (units)', 'Recommendation', 'Why'];
+    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), REC[r.rec][1], r.why]);
+    download(`peel-dc-analysis-${THIS_YEAR}.csv`, [head, ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
+  }
+  $('#dca-body').addEventListener('click', e => {
+    const s0 = e.target.closest('[data-dca-sort]'); if (s0) { DCA.sort = s0.dataset.dcaSort; return renderDca(); }
+    if (e.target.closest('[data-dca-csv]')) return dcaCsv();
+    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = state.projects.find(x => x.key === dv.dataset.dcaDev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+    const mp = e.target.closest('[data-dca-map]');
+    if (mp) {
+      const r = DCA.res && DCA.res.list.find(x => x.key === mp.dataset.dcaMap); if (!r) return;
+      if (!dcOn.on) setDcOn({ on: true, sys: 'both' });
+      if (r.r.ln) { showDcLine(r.r.ln); map.fitBounds(L.latLngBounds(state.dcInfra[r.r.ln.sys].lines.filter(x => (x.p || x.c) === (r.r.ln.p || r.r.ln.c)).flatMap(x => x.g.map(([a, b]) => [b, a]))), { maxZoom: 15, padding: [30, 30] }); }
+      else if (r.r.fc) { showFacility(r.r.fc); if (r.r.fc.g) map.setView([r.r.fc.g[1], r.r.fc.g[0]], Math.max(map.getZoom(), 13)); }
+      return;
+    }
+    if (e.target.closest('button, a')) return;
+    const row = e.target.closest('[data-dca]'); if (!row) return;
+    const k = row.dataset.dca; if (DCA.open.has(k)) DCA.open.delete(k); else DCA.open.add(k);
+    renderDca();
+  });
+  $('#dca-body').addEventListener('change', e => {
+    const s0 = e.target.closest('[data-dca-year]'); if (!s0) return;
+    capYear = s0.value ? +s0.value : null; syncYearCtl(); renderCapLayer(); renderLegend(); renderDca();
+  });
+  $('#dca-body').addEventListener('keydown', e => { const row = e.target.closest('[data-dca]'); if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); row.click(); } });
 
   $('#btn-dc-geojson').onclick = () => { if (state.dcInfra) download('peel-2026-dc-planned-works.geojson', JSON.stringify(dcGeoJSON()), 'application/geo+json'); };
 

@@ -218,6 +218,7 @@
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Growth &amp; demand</button>
         <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Criteria &amp; references</button>
         <button type="button" class="f-sum" id="f-sum" title="Open the analysis"></button>
         <span class="f-spacer"></span>
@@ -267,6 +268,11 @@
       <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-ww" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
         <div id="plants-body"></div>
+      </section>
+
+      <section class="f-pane svc-pane" id="pane-dca" data-pane="dca" role="tabpanel" aria-labelledby="ftab-dca" hidden>
+        <div class="tb-head"><h2 class="pane-h" data-info="tab-dca">DC Analysis: diverting flows to the DC projects, and what if one is cancelled</h2></div>
+        <div id="dca-body"></div>
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
