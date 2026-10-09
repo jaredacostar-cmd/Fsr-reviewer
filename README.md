@@ -34,7 +34,16 @@ servicing) but don't set its phase; signs, below-grade entrances, doors, windows
 pavilions, temporary structures and additions don't count, and a site made only of those is not
 shown as a development (the audit reports them as set aside). Minor / limited / express site plans
 (a patio, a revision) don't approve the building, and a Brampton site plan that only reads
-"Closed" (no approval date) counts as approved only when a building permit was issued after it. A change to these rules is recorded in
+"Closed" (no approval date) counts as approved only when a building permit was issued after it.
+
+**Building permits follow the planning approval.** A permit issued well before the site's first
+site plan / subdivision / zoning file (completed more than a year before it, or issued more than 3
+years before it) was for what stood there before: it doesn't set the phase or count toward the
+build-out. A permit issued shortly before the earliest file in the open data still counts and is
+flagged (an earlier phase whose site plan isn't published; Mississauga's "PDOX TRANSFER FILE"
+site plans are dated by their original file number). Alterations count units only when they
+create one (a second suite); a second suite is new homes, but not a site plan building, so it
+doesn't set a site plan's phase. A change to these rules is recorded in
 `data/history.json` as a re-read (marked `rules`), not as a phase change on the ground.
 
 ## Run it

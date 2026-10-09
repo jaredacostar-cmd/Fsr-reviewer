@@ -200,7 +200,7 @@
   function permitRole(r) {
     if (r.kind !== 'permit') return null;
     if (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || ''))) return 'none';
-    if (permitAddsUnits(r)) return 'units';
+    if (permitAddsUnits(r)) return isAlteration(r) || /^SEC\s*UNIT/i.test(String(r.ref || '')) || (isSuite(r) && !/\dNEW\b/i.test(String(r.ref || '')) && !/\bnew\b[^—]*\b(storey|detached|semi|town ?house|single|apartment|building)\b|\bconstruct|\berect/i.test(r.description || '')) ? 'suite' : 'units';
     const t = `${r.type || ''} ${r.description || ''}`;
     if (!t.trim()) return 'res';   // nothing published about the work: give it the benefit of the doubt
     if (/^(DRAIN|SH)\b|\bSS\b/i.test(String(r.ref || '')) || /site servic|servicing|shoring|excavat/i.test(t)) return 'servicing';
@@ -280,12 +280,17 @@
   function permitAddsUnits(r) {
     if (r.kind !== 'permit') return false;
     const ref = String(r.ref || '').toUpperCase();
-    if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS)\b/.test(ref)) return false;
-    // Alterations can add units (basement second suites), so scope alone doesn't exclude them;
-    // revisions to an earlier permit and site servicing repeat that permit's count.
+    if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS|MECH)\b/.test(ref)) return false;
+    // Revisions to an earlier permit and site servicing repeat that permit's count.
     if (/^revision to (bp|permit)|site servicing/i.test(r.description || '')) return false;
+    // Alterations add units only when they create one (a second suite); otherwise the count is
+    // the existing building's ("balcony repairs (205 units)").
+    if (isAlteration(r) && !isSuite(r)) return false;
     return r.units > 0;
   }
+  const isAlteration = r => /\d?ALT\b|^MECH\b/i.test(String(r.ref || '')) || /alteration to existing|^\s*(interior )?alteration|^\s*(replace|repair)/i.test(`${r.scope || ''} ${r.description || ''}`);
+  // A second (or third) unit in an existing house: real new homes, but not a site plan's building.
+  const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
 
   // Common AMANDA planning folder codes (Caledon, Brampton).
   const TYPE_CODES = {
@@ -814,7 +819,7 @@
   // official plan, subdivision, condominium and other planning approvals leave the site under
   // review until its site plan is approved (or a building permit is issued). Each file keeps
   // its own phase; this is how far it moves the site.
-  const PHASE_RULES = 4;
+  const PHASE_RULES = 5;
   // Brampton's legacy site plans (1980s–2000s), carried into its current system as "Transferred"
   // with no dates: approvals of buildings long since built, not of the current proposal.
   const isLegacy = r => r.kind === 'application' && /^transferred$/i.test(String(r.statusRaw || '').trim());
@@ -850,10 +855,27 @@
     const homes = live.some(r => r.kind === 'application' && r.units > 0 && /residential|dwelling|apartment|town ?house|condominium|stacked|semi|single|detached|mixed[- ]use/i.test(`${r.type} ${r.description}`)) ||
       live.some(r => ['units', 'res'].includes(permitRole(r)));
     const builds = r => r.kind === 'permit' ? ['units', 'res'].includes(permitRole(r)) || (!homes && permitRole(r) === 'nonres') : !((r.stage || stageOf(r)) === 'siteplan' && isMinorFile(r));
+    // Building permits follow the planning approval: a permit issued before the site's first
+    // site plan / subdivision / zoning file was for what stood there before, unless it is still
+    // open and at most 3 years earlier (an earlier phase whose site plan isn't in the open data).
+    // (Published file dates are loose — Mississauga's "PDOX TRANSFER FILE SP 18-149" is dated when
+    // it moved systems — so only clearly earlier permits are set aside: completed more than a year
+    // before the plan, or issued more than 3 years before it.)
+    const YR = 365.25 * 864e5;
+    const planStart = Math.min(Infinity, ...live.filter(r => r.kind === 'application' && ['siteplan', 'master', 'condo'].includes(r.stage || stageOf(r)) && !isMinorFile(r) && recStart(r) != null)
+      .map(r => { const t = /TRANSFER FILE \D*(\d{2})[-/ ]\d/i.exec(r.description || ''); return t ? Math.min(recStart(r), Date.UTC(2000 + +t[1], 0, 1)) : recStart(r); }));
+    for (const r of recs) {
+      if (r.kind !== 'permit') continue;
+      const e = r.events.find(x => x.phase === 'permit'), at = e ? +e.date : recStart(r);
+      const before = isFinite(planStart) && at != null && at < planStart && ['units', 'res', 'nonres'].includes(permitRole(r));
+      r.prePlan = before && ((r.phase === 'completed' && at < planStart - YR) || at < planStart - 3 * YR) || undefined;
+      r.prePlanKept = before && !r.prePlan || undefined;
+    }
+    if (live.some(r => !r.prePlan)) live = live.filter(r => !r.prePlan);
     const main = live.filter(builds);
     if (main.some(r => r.kind === 'permit' || (r.stage || stageOf(r)) !== 'precon')) live = main;
-    else if (live.some(r => r.kind !== 'permit' || ['units', 'res', 'nonres'].includes(permitRole(r))))
-      live = live.filter(r => r.kind !== 'permit' || ['units', 'res', 'nonres'].includes(permitRole(r)));
+    else if (live.some(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r))))
+      live = live.filter(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r)));
     // A site plan that only reads "Closed" (no approval date) is taken as approved only when a
     // building permit for the site's building was issued after it.
     for (const r of live) {
@@ -890,7 +912,7 @@
 
     // Build-out: planned units on the planning applications vs units on building permits.
     const liveApps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
-    const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled');
+    const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan);
     const plan = plannedFromApps(liveApps);
     let planned = site.planned !== undefined ? site.planned : plan.planned;
     const permitted = permitUnits(livePermits);

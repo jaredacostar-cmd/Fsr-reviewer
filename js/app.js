@@ -1774,6 +1774,8 @@
     : '; not a site plan approval, so it keeps the site under review';
   const ROLE_NOTE = { servicing: 'site servicing / shoring permit: not the building itself, so it does not set the phase', none: 'not a permit for the site’s building (a sign, entrance, door, equipment, sales office, temporary structure, addition…): does not set the phase' };
   function phaseBasis(r) {
+    if (r.prePlan) return 'issued well before the site’s planning file (or completed more than a year before it): for what stood there before, so it does not set the phase';
+    if (r.kind === 'permit' && P.permitRole(r) === 'suite') return 'a second unit / alteration in an existing house: counted as new homes, but not a site plan building, so it does not set the phase';
     if (r.kind === 'permit' && ROLE_NOTE[P.permitRole(r)] && !P.isDemolition(r)) return ROLE_NOTE[P.permitRole(r)];
     if (r.closedUnconfirmed) return 'status just “Closed”, with no approval date and no building permit issued since: outcome not published, so not counted as approved';
     if (r.kind === 'application' && r.stage === 'siteplan' && P.isMinorFile(r) && r.phase === 'approved') return 'minor / limited / express site plan (a revision, patio, small change): does not approve the site’s building';
@@ -1831,6 +1833,9 @@
     if (notB.length) flags.push(['info', `${notB.length} permit${notB.length === 1 ? '' : 's'} on the site ${notB.length === 1 ? 'is' : 'are'} not for its building (${[...new Set(notB.map(r => (r.type || r.description || 'other').split(' — ')[0].toLowerCase()))].slice(0, 3).join(', ')}): only permits that build the site’s units, or a new non-residential building, set the phase.`]);
     const minorSp = recs.filter(r => r.kind === 'application' && r.stage === 'siteplan' && P.isMinorFile(r) && r.phase === 'approved');
     if (minorSp.length && !live.every(r => minorSp.includes(r))) flags.push(['info', `${minorSp.length} minor / limited site plan${minorSp.length === 1 ? '' : 's'} (${minorSp.slice(0, 2).map(r => r.ref).join(', ')}) ${minorSp.length === 1 ? 'is' : 'are'} for small changes and ${minorSp.length === 1 ? 'does' : 'do'} not approve the site’s building.`]);
+    const pre = recs.filter(r => r.prePlan), preK = recs.filter(r => r.prePlanKept);
+    if (pre.length) flags.push(['info', `${pre.length} building permit${pre.length === 1 ? ' was' : 's were'} issued well before the site’s planning file (${pre.slice(0, 2).map(r => r.ref).join(', ')}): ${pre.length === 1 ? 'it is' : 'they are'} for what stood there before and ${pre.length === 1 ? 'does' : 'do'} not set the phase or count toward the build-out.`]);
+    if (preK.length) flags.push(['warn', `${preK.slice(0, 2).map(r => r.ref).join(', ')}${preK.length > 2 ? ` +${preK.length - 2}` : ''} ${preK.length === 1 ? 'was' : 'were'} issued shortly before the earliest planning file in the open data: counted as an earlier phase whose site plan isn’t published. Check the file.`]);
     const cu = recs.filter(r => r.closedUnconfirmed);
     if (cu.length) flags.push(['warn', `${cu.map(r => r.ref).join(', ')} only ${cu.length === 1 ? 'reads' : 'read'} “Closed”, with no approval date and no building permit since: the outcome isn’t published, so ${cu.length === 1 ? 'it is' : 'they are'} not counted as an approval.`]);
     if (heldBack) flags.push(['info', `${setter && setter.ref ? setter.ref : 'A permit'} reads completed, but ${p.buildout ? fmtNum(p.buildout.remaining) : 'some'} planned unit${p.buildout && p.buildout.remaining === 1 ? '' : 's'} have no building permit yet, so the site is shown as under construction rather than completed.`]);
