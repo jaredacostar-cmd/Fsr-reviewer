@@ -291,6 +291,18 @@ application.
   for diameter, material, year, slope. The development brief lists the nearest existing main of
   each type within 200 m, and the oldest / moderate-risk sanitary sewer on the site's path (first
   3 km, from `data/sewers.json`).
+- **DC needs** (development brief, DC main / facility panels, *DC timing* in Layers & style):
+  existing capacity against the 2026 DC capital program. For each constraint a development relies
+  on — sanitary sewers on its path at 90%+ of full-pipe capacity by build-out (grouped by the DC
+  main that runs along them, i.e. a twin or replacement), pumping stations (master plan firm
+  capacity), the plant (90% of rated), the water treatment system (South Peel or Caledon wells,
+  90% of rated max day), storage (master plan assessment) and the large mains into its pressure
+  zone level (rough, 1.5 m/s; `data/water-supply.json` from `scripts/build-water-supply.js`) — the
+  room after existing + approved development in people and units, the year approved and proposed
+  growth uses it up (Horizon years phasing), and the relieving DC project. Red when it runs out
+  before the DC project (or none is planned), orange "check the data" when the census flow alone
+  exceeds the full-pipe capacity from the published slope. Tap a DC main or facility for what it
+  relieves and the developments relying on it.
 - **Fire flow and stormwater** (development brief, live): Region hydrants within 150 m (count,
   nearest, recorded pressure zone, flagged against the mapped zone) and the nearest large
   (750 mm+) watermain within 1.5 km — hydrant flow tests are not published; the nearest

@@ -78,6 +78,18 @@ test('sewer pipe capacity data: Manning capacities, downstream links, census loa
   assert.ok(ends > 1.3e6 && ends < 1.5e6, `census reaching the outlets ${ends}`);
 });
 
+test('water-supply.json: large mains across each lake-based zone boundary, capacity at 1.5 m/s', () => {
+  const W = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'water-supply.json'), 'utf8'));
+  assert.equal(W.velocity, 1.5);
+  assert.ok(W.boundaries.length >= 5);
+  for (const b of W.boundaries) {
+    assert.ok(parseInt(b.upper, 10) > parseInt(b.lower, 10), `${b.lower} → ${b.upper} steps up`);
+    assert.ok(b.mains.every(m => m.d >= 750));
+    const cap = b.mains.reduce((t, m) => t + 1.5 * Math.PI * (m.d / 1000) ** 2 / 4 * 86.4, 0);
+    assert.ok(Math.abs(cap - b.capMLd) <= 1, `${b.lower}|${b.upper} ${cap} vs ${b.capMLd}`);
+  }
+});
+
 test('info texts load (no syntax errors) and every entry has a title and body', () => {
   const vm = require('vm');
   const ctx = { window: {}, self: {} }; ctx.globalThis = ctx;
@@ -85,7 +97,7 @@ test('info texts load (no syntax errors) and every entry has a title and body', 
   const app = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
   new vm.Script(app);
   const info = fs.readFileSync(path.join(__dirname, '..', 'js', 'info.js'), 'utf8');
-  for (const k of ['fire-storm', 'existing-pipes', 'dev-brief']) {
+  for (const k of ['fire-storm', 'existing-pipes', 'dev-brief', 'dc-needs']) {
     assert.ok(app.includes(`data-info="${k}"`), `app uses ${k}`);
     assert.ok(info.includes(`'${k}': {`), `info has ${k}`);
   }
