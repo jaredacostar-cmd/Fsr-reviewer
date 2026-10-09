@@ -1910,7 +1910,13 @@
     const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
     canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
   }
-  function closeDetail() { $('#detail').hidden = true; highlight(null); setDaContext(null); viewLink.write(); }
+  // Closing the drawn-area summary also removes the drawn areas (unless drawing another one).
+  function closeDetail(opt = {}) {
+    const wasSel = $('#detail').dataset.view === 'sel';
+    $('#detail').hidden = true; highlight(null); setDaContext(null);
+    if (wasSel && !opt.keepSelection) clearSelection();
+    viewLink.write();
+  }
   $('#detail-close').onclick = closeDetail;
   addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
 
@@ -2049,14 +2055,16 @@
   const selLayer = L.layerGroup().addTo(map);
   let lassoOn = false;
   const lassoSvg = L.DomUtil.create('div', 'lasso-layer', map.getContainer());
-  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the developments to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span></div>';
+  lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the developments to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span> <button type="button" class="btn small lasso-cancel">Cancel</button></div>';
+  lassoSvg.querySelector('.lasso-cancel').addEventListener('click', e => { e.stopPropagation(); setLasso(false); });
   L.DomEvent.disableClickPropagation(lassoSvg);
   function setLasso(on) {
     lassoOn = on;
     lassoSvg.classList.toggle('on', on);
     syncToolsBtn();
-    if (on) { map.dragging.disable(); if (innerWidth <= 760) closeDetail(); }
+    if (on) { map.dragging.disable(); if (innerWidth <= 760) closeDetail({ keepSelection: true }); }
     else map.dragging.enable();
+    if (typeof syncClearBtn === 'function') syncClearBtn();
     lassoSvg.querySelector('path').setAttribute('d', '');
   }
   // Tools: one button under the zoom with the map tools — select an area, measure / select within a
@@ -2114,7 +2122,6 @@
     const g = document.getElementById('north-rot');
     const b = canRotate ? map.getBearing() : 0;
     if (g) g.setAttribute('transform', `rotate(${b} 12 12)`);
-    const c = document.querySelector('.north-ctl'); if (c) c.hidden = Math.abs(((b % 360) + 360) % 360) < 0.5;
   }
   map.on('rotate', updateNorth);
   updateNorth();
@@ -2124,7 +2131,7 @@
   // While the lasso is on, the middle mouse button drags the map (left button draws).
   let pan = null;
   lassoSvg.addEventListener('pointerdown', e => {
-    if (!lassoOn) return;
+    if (!lassoOn || e.target.closest('.lasso-cancel')) return;
     lassoSvg.setPointerCapture(e.pointerId); e.preventDefault();
     if (e.pointerType === 'mouse' && e.button === 1) { pan = [e.clientX, e.clientY]; lassoSvg.classList.add('panning'); return; }
     if (pan || (e.pointerType === 'mouse' && e.button !== 0)) return;
@@ -2169,7 +2176,7 @@
     for (const g of selAreas) L.polygon(g.map(([x, y]) => [y, x]), { className: 'sel-area', interactive: false }).addTo(selLayer);
     for (const p of selection.values()) L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
   }
-  function clearSelection() { selection.clear(); selAreas = []; drawSelection(); }
+  function clearSelection() { selection.clear(); selAreas = []; drawSelection(); if (typeof syncClearBtn === 'function') syncClearBtn(); }
 
   function showSelection(added) {
     setDaContext(null);
@@ -2180,7 +2187,7 @@
       $('#detail-body').innerHTML = `<div class="head"><h3>No developments in that area</h3></div>
         <p class="small muted">Only the developments shown on the map (current phase, focus and filters) can be selected. Draw a larger area, or change the filters.</p>
         <div class="sel-actions"><button type="button" class="btn" data-sel="add">Draw again</button></div>`;
-      $('#detail').hidden = false;
+      $('#detail').hidden = false; $('#detail').dataset.view = 'sel';
       return;
     }
     const c = state.criteria;
@@ -4367,13 +4374,14 @@
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', map.getContainer());
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!svcFocus.id || selection.size > 0 || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
+  const somethingSelected = () => !$('#detail').hidden || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
+    if (lassoOn) setLasso(false);
     if (!$('#detail').hidden) closeDetail();
     highlight(null);
     if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
-    if (selection.size) clearSelection();
+    if (selection.size || selAreas.length) clearSelection();
     exHL.clearLayers(); pinLayer.clearLayers();
     syncClearBtn();
   }
