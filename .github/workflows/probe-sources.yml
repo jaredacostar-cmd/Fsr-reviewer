@@ -62,8 +62,6 @@ jobs:
         if: inputs.mode == 'peel-reports'
         run: |
           node scripts/fetch-peel-reports.js --out peel-reports
-          sudo apt-get install -y -qq poppler-utils >/dev/null
-          for f in peel-reports/*; do case "$f" in *.pdf|*.PDF|*_pdf) pdftotext -layout "$f" "$f.txt" || true;; esac; done
           du -sh peel-reports; ls -la peel-reports | head -200
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
