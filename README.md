@@ -102,7 +102,7 @@ press and hold) for a card explaining what it represents and where the data come
 
   | Focus | Shows |
   |---|---|
-  | Growth | Planning applications proposing new dwelling units |
+  | Growth | Planning applications proposing new dwelling units or new jobs (non-residential floor area); used by the Water, Wastewater and DC views |
   | Committed capacity | Growth that is approved or permitted and not yet completed (switches the demand panel to committed) |
   | Left to build | Planned units with no building permit yet (switches the demand panel to left to build) |
   | Major (100+ units) | Projects with 100 or more units |
