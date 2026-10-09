@@ -1128,3 +1128,17 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 /* Lasso hint at the bottom of the map, clear of the map views panel (top right) */
 .lasso-hint { top: auto; bottom: 72px; max-width: calc(100% - 24px); white-space: normal; text-align: center; }
 @media (max-width: 760px) { .lasso-hint { bottom: 110px; } }
+
+/* Help & tips */
+.help-card { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; margin: 8px 0; background: var(--surface-1); }
+.help-card > summary { cursor: pointer; display: grid; gap: 2px; }
+.help-card > summary small { color: var(--text-muted); font-size: 11.5px; font-weight: 400; }
+.help-card[open] > summary { margin-bottom: 6px; }
+.help-card ol { margin: 0 0 8px; padding-left: 18px; font-size: 13px; line-height: 1.45; }
+.help-card li { margin: 3px 0; }
+.help-tips { font-size: 13px; line-height: 1.45; padding-left: 18px; }
+/* Help sits under Share link (top right of the header); the subtitle wraps clear of it */
+.help-btn { position: absolute; top: 44px; right: 12px; }
+@media (min-width: 641px) { .brand .sub { padding-right: 64px; } }
+@media (max-width: 640px) { .help-btn { position: static; margin: 6px 0 0 6px; } }
+.tour-btns span { display: flex; gap: 6px; }

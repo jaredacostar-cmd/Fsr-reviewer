@@ -230,8 +230,12 @@ application.
   DC needs, servicing check) and History & records.
 - **Watchlist, saved views, tips**: ☆ Watch on a development adds it to *Your watchlist* (This
   week tab, changed-this-week first) and the ★ Watched focus. *Saved views* (Layers & style) keeps
-  named filters + map position + view + layers in the browser. A short tour shows once; Tools →
-  Tips shows it again.
+  named filters + map position + view + layers in the browser. An 11-step tour shows once. *Help*
+  (header) or Tools → *Help & tips* opens task guides — servicing check for a development, when DC
+  projects are needed, area / secondary plan reports, testing a site, weekly changes, plant and
+  pumping station capacity over time, water by pressure zone, existing mains and ground, saving /
+  sharing / exporting, and how far to trust the numbers — each with *Show me*, which sets the map
+  up for the task; plus quick tips and the tour again.
 - **Reports**: *Memo* on a development opens a one-page servicing memo (proposal, status, flows,
   sewer path, plant reserve, DC needs, planned works, live site context, a map sketch of sewers by
   load and DC works) to print or save as PDF. *Area report* (a drawn selection, or *Report* on the
