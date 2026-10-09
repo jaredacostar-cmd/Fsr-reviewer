@@ -464,6 +464,7 @@
       el.innerHTML = `
         <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
+        <div class="mo-area-on" id="mo-area-on" hidden></div>
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Map options</span><span class="mo-psum" id="mo-psum"></span></summary>
         <div class="mo-grp">
           <div class="mo-quick">${chip('id="opt-devs"', devsOn, '<i class="dev-sw" aria-hidden="true"></i>Developments', 'devs-toggle')}</div>
@@ -529,6 +530,7 @@
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       el.querySelector('.mo-ww').addEventListener('toggle', e => { if (e.target.classList.contains('mo-ww')) store.set('moWwOpen', e.target.open); });
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) showAllDevs(); });
+      el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) clearAreaFilters(); });
       el.querySelector('.mo-areas').addEventListener('toggle', e => { if (e.target.classList.contains('mo-areas')) store.set('moAreasOpen', e.target.open); });
       el.querySelector('#opt-spl').onchange = e => setAreaOn({ sp: e.target.checked });
       el.querySelector('#opt-mtl').onchange = e => setAreaOn({ mtsa: e.target.checked });
@@ -2815,7 +2817,23 @@
   // The collapsed Map options line: what is on.
   function syncPanelSum() {
     const el = document.getElementById('mo-psum'); if (!el) return;
-    el.textContent = [devsOn ? '' : 'developments off', state.muni || 'all of Peel', state.sp.length || state.mtsa || state.pz || state.dr ? 'area filter' : ''].filter(Boolean).join(' · ');
+    const loads = isWW() && !Object.values(wwLay).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
+    el.textContent = [devsOn ? '' : 'developments off', state.muni || 'all of Peel', loads].filter(Boolean).join(' · ');
+    syncAreaOn();
+  }
+  // An area filter (secondary plan, MTSA, pressure zone, block) narrows every development on the
+  // map and in the totals: always named above Map options, with Clear, so it can't be missed.
+  function syncAreaOn() {
+    const el = document.getElementById('mo-area-on'); if (!el) return;
+    let names;
+    try { names = [...state.sp.map(id => (areaById.get(id) || {}).name), state.mtsa && `MTSA ${(areaById.get(state.mtsa) || {}).name || ''}`,
+      state.pz && (svcById.get(state.pz) || {}).name, state.dr && (svcById.get(state.dr) || {}).name].filter(Boolean); } catch (e) { return; }   // during start-up
+    el.hidden = !names.length;
+    if (names.length) el.innerHTML = `<span>Only developments in <strong>${esc(names.join(', '))}</strong></span><button type="button" class="btn small" data-areas-clear="1">Clear</button>`;
+  }
+  function clearAreaFilters() {
+    state.sp = []; state.mtsa = ''; state.pz = ''; state.dr = '';
+    renderAreaSelects(); renderSvcSelects(); showArea(); showSvcArea(false); renderPlanAreas(); applyFilters();
   }
   function syncDevsOff() {
     const el = document.getElementById('mo-devs-off'); if (!el) return;
@@ -4097,6 +4115,17 @@
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
   const yearText = () => capYear == null ? 'Build-out' : String(capYear);
+  // The legend box takes the height the map panel leaves free (top right and bottom right never
+  // overlap): re-fitted whenever the panel opens, closes or the map resizes.
+  function fitLegend() {
+    const lg = legend.getContainer(), op = document.querySelector('.map-opts'); if (!lg || !op) return;
+    const m = map.getContainer().getBoundingClientRect(), o = op.getBoundingClientRect();
+    const sameSide = o.right > m.right - lg.offsetWidth - 20;
+    const room = sameSide ? m.bottom - o.bottom - 46 : m.height * 0.6;
+    lg.style.maxHeight = `${Math.max(64, Math.round(room))}px`;
+  }
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); const op = document.querySelector('.map-opts'); if (op) ro.observe(op); }
+  map.on('resize', fitLegend);
   // Demand year: the top of the legend box, shown whenever a capacity layer is on.
   const yearCtl = { getContainer: () => legend.getContainer().querySelector('.map-year') };
   function syncYearCtl() {

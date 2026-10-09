@@ -263,7 +263,10 @@ application.
   the municipality, then *Wastewater loads* (Wastewater view), *Areas* and *Layers & style*, each
   folded with a one-line summary. Bottom right, one box: the Demand year over the legend. When a
   setting hides the developments (switched off, no growth load on in the Wastewater view, or
-  Hidden while a path is shown) a notice above Map options says why, with *Show developments*.
+  Hidden while a path is shown) a notice above Map options says why, with *Show developments*; an
+  area filter (secondary plan, MTSA, pressure zone, block) is always named there too, with *Clear*,
+  and the collapsed Map options line names any Wastewater load that is off. The legend box takes
+  the height the panel leaves free, so the two never overlap.
   **Where and areas are on the map panel**: municipality, then an *Areas* fold with Secondary plans and
   MTSAs outline toggles (tap an outlined area on the map to filter to it, tap again to clear), the
   secondary plan / MTSA filters, and the Pressure zones / Wastewater blocks layers and filters; its
