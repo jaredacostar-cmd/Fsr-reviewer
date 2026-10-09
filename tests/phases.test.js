@@ -194,3 +194,19 @@ test('only permits for the site\'s building set its phase; a bare "Closed" site 
   assert.equal(P.buildProjects([app(2, 'SPA-2021-0001', 'Closed', 2021), bp('BP 3NEW 22-9', 'RESIDENTIAL', 'NEW DWELLING', 1, 2022)])[0].phase, 'permit');
   assert.equal(P.buildProjects([bp('25-1', 'Permanent', 'New', null, 2025)]).length, 0, 'a site with only a sign permit is not a development');
 });
+
+test('building permits follow the planning file; alterations and second suites do not set a site plan\'s phase', () => {
+  const pt = { type: 'Point', coordinates: [-79.7, 43.6] };
+  const am = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }, { name: 'APPROVAL_DATE', type: 'esriFieldTypeDate' }]);
+  const sp = () => P.normalizeRecord({ type: 'Feature', id: 1, geometry: pt, properties: { FILE_NO: 'SP 22/1', STATUS: 'Approved', ADDRESS: '8 Ash St', SUBMITTED_DATE: Date.UTC(2022, 0, 1), APPROVAL_DATE: Date.UTC(2023, 0, 1) } }, am, appSrc);
+  const bp = (ref, description, units, issued, phase = 'permit', scope = '') => ({ kind: 'permit', ref, type: 'RESIDENTIAL', scope, description, units, uid: ref, municipality: 'Mississauga', statusRaw: '', phase, address: '8 ASH ST', lat: 43.6, lng: -79.7,
+    events: [{ date: new Date(Date.UTC(issued, 0, 1)), phase: 'permit', label: 'Issue Date' }].concat(phase === 'completed' ? [{ date: new Date(Date.UTC(issued + 1, 0, 1)), phase: 'completed', label: 'Final' }] : []) });
+  assert.equal(P.permitAddsUnits({ kind: 'permit', ref: 'BP 3ALT 21-1', scope: 'ALTERATION TO EXISTING BLDG', description: 'BALCONY GUARD REPLACEMENT', units: 205 }), false);
+  assert.equal(P.permitRole({ kind: 'permit', ref: 'SEC UNIT 25-1 ARU', type: 'RESIDENTIAL', description: 'RESIDENTIAL SECOND UNIT IN BASEMENT', units: 1 }), 'suite');
+  assert.equal(P.permitRole({ kind: 'permit', ref: 'BP 9NEW 24-5', type: 'RESIDENTIAL', description: '(3) STOREY SEMI-DWELLING WITH SECOND UNIT IN BASEMENT', units: 2 }), 'units');
+  const old = P.buildProjects([sp(), bp('BP 3NEW 15-1', 'NEW (2) STOREY DWELLING', 1, 2015, 'completed')])[0];
+  assert.equal(old.phase, 'approved', 'a house built years before the site plan is what stood there before');
+  assert.ok(old.records.find(r => r.ref === 'BP 3NEW 15-1').prePlan);
+  assert.equal(P.buildProjects([sp(), bp('BP 3NEW 23-1', 'NEW (6) STOREY APARTMENT', 80, 2023)])[0].phase, 'permit');
+  assert.equal(P.buildProjects([sp(), bp('SEC UNIT 24-1 ARU', 'RESIDENTIAL SECOND UNIT IN BASEMENT', 1, 2024, 'completed')])[0].phase, 'approved', 'a basement suite is not the site plan building');
+});
