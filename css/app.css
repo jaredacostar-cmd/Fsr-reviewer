@@ -982,3 +982,12 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .hz-exp text { font-size: 10px; fill: var(--text-secondary); }
 .hz-form input[data-hz^="ex_"] { width: 62px; }
 #opt-dcsys { font-size: 11px; padding: 0 2px; margin-left: 4px; max-width: 120px; }
+/* Address search suggestions and pin. */
+.search-bar { position: sticky; }
+.search-sug { position: absolute; left: 16px; right: 16px; top: 46px; z-index: 30; list-style: none; margin: 0; padding: 4px 0; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); max-height: 320px; overflow: auto; }
+.search-sug li { display: flex; gap: 8px; align-items: flex-start; padding: 6px 10px; cursor: pointer; font-size: 13px; }
+.search-sug li small { display: block; color: var(--text-muted); font-size: 11px; }
+.search-sug li.on, .search-sug li:hover { background: var(--surface-2); }
+.search-sug .dot { flex: none; margin-top: 2px; }
+.sug-pin { flex: none; width: 12px; height: 12px; margin-top: 3px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #e8590c; }
+.addr-pin span { display: block; width: 22px; height: 22px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #e8590c; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.5); }

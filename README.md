@@ -272,6 +272,10 @@ application.
     construction; the years are editable and the expansions can be switched off;
   - *What loads this?* lists the planned works for the catchment / zone / plant; *Planned works
     (GeoJSON)* exports them.
+- **Address search**: the search box suggests matching developments and street addresses (Esri
+  World Geocoder, falling back to OpenStreetMap Nominatim, limited to Peel); picking one, or
+  pressing Enter, pans and zooms the map there (a development also opens; an address gets a pin).
+- Street basemaps are Esri's light grey canvas and World Street Map (no API key).
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
