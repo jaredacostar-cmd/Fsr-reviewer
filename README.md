@@ -298,14 +298,27 @@ application.
 - Water storage: the Region's storage assessment (Vol. 3, Table 12; required vs available, 2019–2041)
   and storage criteria in the Water tab.
 
-**Why this status** (development panel): the dated event behind the current phase, signals in
-the municipal status text (appeal to the Ontario Land Tribunal, inactive, lapsed, withdrawn,
-recirculated, public meeting held, endorsed by council, draft approved, registered), a stall flag
-for developments still in planning with no activity for 2+ years (with the likely cause), and
-**council and committee items** that name its file numbers: date and meeting, kind of item
-(public meeting, recommendation / information report, by-law, correspondence), outcome (carried,
-deferred, referred…), links to the reports and correspondence, and the minutes text with the
-discussion, motion and vote. Phase history lines show the event behind each move.
+**Development panel** — high level first, details on demand:
+1. **Header**: phase, units / people / jobs, pressure zone, receiving plant, last activity, and
+   flags (under appeal, stalled 2+ years, a pumping station at or over firm capacity at build-out,
+   plant over-committed or past the 90% expansion trigger).
+2. **Brief** (always shown): *Status* — the dated event behind the current phase, the main signal
+   in the status text and a stall flag with its likely cause; *Latest decision* — the most recent
+   council / committee item with a decision: verdict, the motion (shortened, and on a consent
+   report the clause naming this file), the vote, the requirements on record across all items
+   (holding provision, servicing / allocation, stormwater, Region of Peel comments, draft plan
+   conditions, agreements, Section 37…; infrastructure items highlighted) and the issues raised;
+   *Servicing* — water max day / peak hour and share of the zone, wastewater peak dry / wet, the
+   most loaded pumping station and the share of the plant's uncommitted reserve; *Build-out*;
+   *Proposal*. Summaries are extractive (`js/brief.js`): every phrase comes from the agenda /
+   minutes text.
+3. **History**: progress bar, status signals, and one dated list, newest first by year — phase
+   changes (weekly check, with the event that moved it), council and committee items (open for
+   motion, requirements, concerns, reports, correspondence and minutes), file events and permits.
+   *Key events* counts permits per year; *All dated events* lists each one.
+4. **Servicing** (flows, sewer path, plant reserve, demand by stage), **Units, jobs & build-out**,
+   **Aerial check** (runs when opened) and **Source records**, collapsed.
+
 `data/council.json` is built weekly by `scripts/build-council.js` from the Mississauga, Brampton
 and Caledon eSCRIBE portals (planning committees, council, general committee, since 2019; only
 meetings in the last 120 days are fetched again), and loaded only when a development is opened.
