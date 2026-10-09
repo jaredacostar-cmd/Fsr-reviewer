@@ -219,6 +219,20 @@ application.
   with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
   lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
   Excel is clicked. Per-file record tables are left to *Export CSV*.
+- **Map views**: *Planning* (aerial, addresses, markers by phase) and *Servicing* (street map,
+  no labels, pressure zone outlines, markers coloured by servicing layer and sized by build-out
+  people + jobs, catchment flow growth). Each view remembers its own settings. Under *Layers &
+  style*: marker colour (phase / servicing layer / receiving plant), size (same / people + jobs;
+  clusters then total people + jobs) and a **capacity layer** — catchment flow growth over the
+  census, pumping station build-out peak wet weather flow as % of firm capacity (green / amber /
+  red), or pressure zone max day growth — with the sewer network drawn outlet to outlet. A legend
+  explains what is shown.
+- **What loads this?**: tap a catchment, pumping station, pressure zone or plant (on the map or in
+  the Water / Wastewater tables) for the developments adding flow since the census through it,
+  largest first, with built / approved / proposed totals; open one and come back to the list.
+- **Scenario bar** (bottom panel): wastewater mode, water max day factor, the diversion,
+  outside-area assignment and modified criteria in one place, summarised on every tab, the map
+  legend, exports and share links (map style is in the link too).
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
