@@ -2705,6 +2705,7 @@
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}.</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
+      <div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
       <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
@@ -3454,10 +3455,11 @@
   // SVG arrowheads for the flow lines (one <marker> per map renderer).
   function addFlowMarker() {
     const svg = map.getPanes().overlayPane.querySelector('svg');
-    if (!svg || svg.querySelector('#flow-head')) return;
+    if (!svg || svg.querySelector('#flow-head-s')) return;
     const ns = 'http://www.w3.org/2000/svg';
     const defs = document.createElementNS(ns, 'defs');
-    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>';
+    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>'
+      + '<marker id="flow-head-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f2937" stroke="#fff" stroke-width="1"/></marker>';
     svg.insertBefore(defs, svg.firstChild);
   }
 
@@ -3480,6 +3482,71 @@
     }
     flush();
   }
+
+  // ---- Trace a development's sewer path to the treatment plant -----------------------------------
+  // From the site to the 300 mm+ sewer it joins (dashed), then pipe by pipe to the plant: each pipe
+  // coloured by its capacity state at the legend year, arrows along the route, the pumping stations
+  // it passes and the plant. Summary: length, pipes, blocks passed, tightest pipe.
+  const TRACE = { layer: L.layerGroup().addTo(map), key: null };
+  function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; }
+  async function traceDev(p) {
+    await Promise.all([loadSewers(), loadBlocks()]);
+    if (!SEW.data || p.lat == null) return null;
+    clearTrace(); TRACE.key = p.key;
+    const G = sewerGrowth(), k = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
+    if (k < 0) return null;
+    const route = pipeRoute(k), P = SEW.data.pipes;
+    // Connection from the site to the first pipe.
+    const first = pipeCoords(P[k]); let jn = first[0], jd = Infinity;
+    for (const c of first) { const d = dcM([p.lng, p.lat], c); if (d < jd) { jd = d; jn = c; } }
+    L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false }).addTo(TRACE.layer);
+    L.circleMarker([p.lat, p.lng], { radius: 7, className: 'trace-site', interactive: false }).addTo(TRACE.layer);
+    // Pipes coloured by state, with a tooltip each (tap: what loads it).
+    let worst = null, km = 0;
+    for (const i of route) {
+      const st = pipeStats(i), c = pipeCoords(P[i]);
+      for (let q = 1; q < c.length; q++) km += dcM(c[q - 1], c[q]) / 1000;
+      if (st.r1 != null && (!worst || st.r1 > worst.r1)) worst = { i, r1: st.r1 };
+      L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 7 : P[i][0] >= 600 ? 6 : 5, opacity: 0.9, lineCap: 'round' })
+        .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(TRACE.layer);
+    }
+    drawPipeRoute(route, 'trace-flow', TRACE.layer, Math.max(900, km * 1000 / 14));
+    // Pumping stations within 80 m of the route, and the plant at its end.
+    const stations = ((state.servicing && state.servicing.meta.pumpingStations) || []).filter(ps => route.some(i => dcDist(ps.lnglat, pipeCoords(P[i])) <= 80));
+    for (const ps of stations) L.circleMarker([ps.lnglat[1], ps.lnglat[0]], { radius: 6, className: 'trace-ps' }).bindTooltip(`<strong>${esc(ps.name.replace(/SEWAGE PUMPING( STN| STATION)?/i, 'pumping station'))}</strong>`, { className: 'pt' }).addTo(TRACE.layer);
+    const plantName = SEW.data.plants[P[route[route.length - 1]][6]] || '';
+    const end = pipeCoords(P[route[route.length - 1]]).pop();
+    L.circleMarker([end[1], end[0]], { radius: 8, className: 'svc-plant' }).bindTooltip(esc(plantName === 'Toronto' ? 'City of Toronto system' : plantLabel(plantName)), { className: 'pt' }).addTo(TRACE.layer);
+    addFlowMarker();
+    // Blocks passed, in order.
+    const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && !blocks.includes(b.id)) blocks.push(b.id); }
+    const bd = L.latLngBounds([[p.lat, p.lng], [end[1], end[0]]]); for (const i of route) for (const [x, y] of pipeCoords(P[i])) bd.extend([y, x]);
+    map.fitBounds(bd, { padding: [30, 30] });
+    const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k };
+    TRACE.last = res;
+    return res;
+  }
+  function traceSummaryHTML(t) {
+    if (!t) return '<p class="small muted">No sewer of 300 mm+ within 400 m of the site to trace from.</p>';
+    const P = SEW.data.pipes, w = t.worst, st = w && pipeState(w.r1);
+    return `<ul class="why-list trace-sum">
+      <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from the site, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(t.plantName))}</strong>.</span></li>
+      ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}
+      ${t.stations.length ? `<li class="why-ok"><span>Pumping station${t.stations.length === 1 ? '' : 's'} on the way: ${t.stations.map(ps => esc(ps.name.replace(/\s*SEWAGE PUMPING( STN| STATION)?/i, '').replace(/\b\w+/g, x => x[0] + x.slice(1).toLowerCase()))).join(', ')}.</span></li>` : ''}
+      ${w ? `<li class="${w.r1 > 1 ? 'why-stall' : 'why-ok'}"><span>Tightest pipe on the way: <button type="button" class="btn small link" data-pipe="${w.i}">${P[w.i][0]} mm</button> at <strong>${Math.round(w.r1 * 100)}%</strong> of full capacity (${esc(st[3].toLowerCase())}, ${capYear == null ? 'build-out' : capYear}).</span></li>` : ''}
+    </ul><p class="small muted">On the map: the dashed line joins the site to the sewer; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
+  }
+  document.addEventListener('click', async e => {
+    const b = e.target.closest('[data-trace]'); if (!b) return;
+    const wf = b.dataset.trace.startsWith('whatif:') && whatIfs.find(w => `whatif:${w.id}` === b.dataset.trace);
+    const p = wf ? whatIfProject(wf) : state.projects.find(x => x.key === b.dataset.trace); if (!p) return;
+    const box = b.closest('.trace-box');
+    if (TRACE.key === p.key && b.dataset.on) { clearTrace(); b.dataset.on = ''; b.textContent = 'Trace the path to the plant on the map'; if (box) box.querySelector('.trace-out').innerHTML = ''; return; }
+    b.textContent = 'Tracing…';
+    const t = await traceDev(p);
+    b.dataset.on = '1'; b.textContent = 'Hide the path';
+    if (box) box.querySelector('.trace-out').innerHTML = traceSummaryHTML(t);
+  });
 
   // ---- Wastewater blocks: the Region of Peel's 40 sewersheds for its inflow & infiltration
   // program (data/blocks.json; the blocks of "Dragonfly: An Integrated Approach to Resiliency",
@@ -3750,7 +3817,7 @@
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
     if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
-    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
+    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
@@ -4428,12 +4495,15 @@
   function pipeStats(i) {
     const p = SEW.data.pipes[i], cap = p[2];
     const today = pipeFlow(i, 'today'), then = pipeFlow(i, capYear);
-    return { p, cap, today, then, r0: cap ? today.q / cap : null, r1: cap ? then.q / cap : null, growthShare: cap ? then.growth / cap : null };
+    // A published slope under 0.01% (6 trunks, e.g. a 3048 mm main at 0.002%) is a data error,
+    // not a flat pipe: its capacity isn't trusted (shown as no reliable slope, like a missing one).
+    const ok = cap && p[1] >= 0.0001;
+    return { p, cap: ok ? cap : 0, badSlope: !!cap && !ok, today, then, r0: ok ? today.q / cap : null, r1: ok ? then.q / cap : null, growthShare: ok ? then.growth / cap : null };
   }
   function pipeTip(i) {
     const s = pipeStats(i), p = s.p, D0 = SEW.data;
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
-      <br>Slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a (no slope)'}
+      <br>Slope ${(p[1] * 100).toFixed(3)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : s.badSlope ? 'n/a (published slope not reliable)' : 'n/a (no slope)'}
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(Math.round(s.then.jobs))} jobs` : ''}
       <br>Existing peak dry ${fmtNum(Math.round(s.then.exist))} L/s${s.then.f !== 1 ? ` (×${s.then.f.toFixed(2)} measured)` : ''} + growth peak wet ${fmtNum(Math.round(s.then.growth))} L/s
       <br>Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` (${Math.round(s.r0 * 100)}%, ${pipeState(s.r0)[3].toLowerCase()})` : ''} → ${capYear == null ? 'build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` (<strong>${Math.round(s.r1 * 100)}%, ${pipeState(s.r1)[3].toLowerCase()}</strong>)` : ''}
@@ -4477,39 +4547,64 @@
   // How the flow in a pipe is worked out, step by step with its numbers, and its capacity and
   // surcharge state (Manning full-pipe capacity; a surcharged pipe needs a steeper hydraulic
   // gradient than its slope, Sf = S0 × (Q / Qfull)², so the water level rises above the crown).
-  function pipeCalcHTML(i, s) {
-    const p = s.p, c = state.criteria, W = c.wastewater, E = c.employment, G = sewerGrowth();
-    const yr = capYear == null ? 'build-out' : capYear;
-    const { fa, fp } = capYear == null ? { fa: 1, fp: 1 } : hzFrac(capYear);
-    const P0 = p[4], f = s.then.f, M0 = D.residentialPeaking(P0, W), avg0 = P0 * W.avg / 86400;
+  // Parts of the flow in pipe i for a year (as pipeFlow): existing and each growth component.
+  function pipeParts(i, y) {
+    const p = SEW.data.pipes[i], G = sewerGrowth(), c = state.criteria, W = c.wastewater, E = c.employment;
+    const { fa, fp } = y === 'today' ? { fa: 0, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    const M = state.svcModel, f = M && M.fOf ? M.fOf(SEW.data.plants[p[6]]) || 1 : 1;
+    const P0 = p[4], avg0 = P0 * W.avg / 86400, M0 = D.residentialPeaking(P0, W), exist = avg0 * f * M0;
     const gp = G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
     const gj = G.built.jobs[i] + fa * G.approved.jobs[i] + fp * G.proposed.jobs[i];
     const gh = G.built.ha[i] + fa * G.approved.ha[i] + fp * G.proposed.ha[i];
     const Mg = D.residentialPeaking(gp, W), Me = D.employmentPeaking(gj, E);
     const qr = gp * W.avg / 86400 * Mg, qe = gj * E.wastewater / 86400 * Me, qi = gh * W.infiltration;
-    const d = p[0] / 1000, S = p[1], A = Math.PI * d * d / 4, R = d / 4, Qf = s.cap;
-    const n1 = v => fmt1(v), L = pipeLenM(i), st = pipeState(s.r1);
-    let sur = '';
-    if (s.r1 != null && s.r1 > 1 && S > 0) {
-      const Sf = S * s.r1 * s.r1, dh = (Sf - S) * L;
-      sur = `<li><strong>Surcharged:</strong> the flow is ${Math.round(s.r1 * 100)}% of what the pipe carries flowing full, so it runs full under pressure. To pass it, the hydraulic grade line needs a slope of S<sub>f</sub> = S × (Q / Q<sub>full</sub>)² = ${(S * 100).toFixed(2)}% × ${s.r1.toFixed(2)}² = <strong>${(Sf * 100).toFixed(2)}%</strong>, steeper than the pipe's ${(S * 100).toFixed(2)}%: over this ${fmtNum(Math.round(L))} m pipe the water level rises about <strong>${dh.toFixed(2)} m</strong> more than the pipe falls, above its crown (and it backs up into the pipes upstream).</li>`;
-    } else if (s.r1 != null && s.r1 >= 0.85) sur = `<li><strong>Near full:</strong> ${Math.round(s.r1 * 100)}% of full-pipe capacity: little room for peaks or more growth; it surcharges past 100%.</li>`;
-    else if (s.r1 != null) sur = `<li><strong>Free flowing:</strong> ${Math.round(s.r1 * 100)}% of full-pipe capacity (open-channel flow, water below the crown).</li>`;
-    return `<details class="sect calc" open><summary><h2 class="section-title">How the flow is calculated (${esc(String(yr))})</h2><span class="muted small sect-sum">${n1(s.then.q)} L/s of ${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}${st ? ` · ${esc(st[3])}` : ''}</span></summary>
-      <ol class="calc-steps">
-        <li><strong>Existing (2021 Census)</strong>: ${fmtNum(P0)} people drain through this pipe.<br>average ${fmtNum(P0)} × ${W.avg} L/cap/d ÷ 86,400 = ${n1(avg0)} L/s × Harmon peaking M = 1 + 14 / (4 + √(P/1000)), kept between ${W.peakMin ?? 2} and ${W.peakMax ?? 4}, = ${M0.toFixed(2)}${f !== 1 ? ` × ${f.toFixed(2)} (scaled to the plant's 2025 measured flow)` : ''} = <strong>${n1(s.then.exist)} L/s</strong> peak dry weather.<br><span class="muted">Existing wet-weather I&amp;I is not added: design I&amp;I on all existing land would overstate today's flow several times.</span></li>
-        <li><strong>Growth since the census</strong> to ${esc(String(yr))} (built${fa ? ` + ${fa === 1 ? '' : `${Math.round(fa * 100)}% of `}approved` : ''}${fp ? ` + ${fp === 1 ? '' : `${Math.round(fp * 100)}% of `}proposed` : ''}), peak wet weather at Peel design criteria:
-          <br>residential ${fmtNum(Math.round(gp))} people × ${W.avg} L/cap/d ÷ 86,400 × M ${gp > 0 ? Mg.toFixed(2) : '–'} = ${n1(qr)} L/s
-          <br>employment ${fmtNum(Math.round(gj))} jobs × ${E.wastewater} L/emp/d ÷ 86,400 × ${gj > 0 ? Me.toFixed(2) : '–'} = ${n1(qe)} L/s
-          <br>I&amp;I ${fmtNum(Math.round(gh))} ha of development sites × ${W.infiltration} L/s/ha = ${n1(qi)} L/s
-          <br>= <strong>${n1(s.then.growth)} L/s</strong></li>
-        <li><strong>Flow</strong> Q = ${n1(s.then.exist)} + ${n1(s.then.growth)} = <strong>${n1(s.then.q)} L/s</strong>${p[11] < 1 ? ` (this pipe takes ${Math.round(p[11] * 100)}% of the flow at a split)` : ''}</li>
-        <li><strong>Full-pipe capacity</strong> (Manning, n 0.013): Q<sub>full</sub> = (1/n) · A · R<sup>2/3</sup> · S<sup>1/2</sup> with D = ${p[0]} mm, A = ${A.toFixed(3)} m², R = D/4 = ${R.toFixed(3)} m, S = ${(S * 100).toFixed(2)}% (published slope) = <strong>${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}</strong></li>
-        <li><strong>Capacity used</strong> Q / Q<sub>full</sub> = ${n1(s.then.q)} / ${Qf ? fmtNum(Qf) : '–'} = <strong>${s.r1 != null ? `${Math.round(s.r1 * 100)}%` : 'n/a'}</strong>${st ? ` <span class="pipe-st-dot" style="--st:${st[1]}"></span>${esc(st[3])} (green under 85%, orange 85–100%, red over 100%)` : ''}</li>
-        ${sur}
-      </ol>
-      <p class="small muted">Today (built since the census only): ${n1(s.today.q)} L/s, ${s.r0 != null ? `${Math.round(s.r0 * 100)}% · ${esc(pipeState(s.r0)[3].toLowerCase())}` : 'n/a'}. A screen, not a hydraulic model: inflow and infiltration in wet weather on existing areas, downstream backwater, storage and relief sewers are not modelled; the year follows the capacity slider (Horizon years).</p></details>`;
+    return { fa, fp, f, P0, avg0, M0, exist, gp, gj, gh, Mg, Me, qr, qe, qi, growth: qr + qe + qi, q: exist + qr + qe + qi };
   }
+  // How the flow in a pipe is worked out: a results table (today and the slider year), each row
+  // with an ⓘ that opens its formula with the numbers. Capacity: Manning full pipe; a surcharged
+  // pipe needs a steeper hydraulic gradient than its slope, Sf = S0 × (Q / Qfull)².
+  function pipeCalcHTML(i, s) {
+    const p = s.p, c = state.criteria, W = c.wastewater, E = c.employment;
+    const yr = capYear == null ? 'Build-out' : String(capYear);
+    const t = pipeParts(i, 'today'), b = pipeParts(i, capYear);
+    const d = p[0] / 1000, S = p[1], A = Math.PI * d * d / 4, R = d / 4, Qf = s.cap, Lm = pipeLenM(i);
+    const n1 = v => fmt1(v), ls = v => `${n1(v)} L/s`, pct = r => r == null ? 'n/a' : `${Math.round(r * 100)}%`;
+    const stCell = r => { const st = pipeState(r); return st ? `<span class="pipe-st-dot" style="--st:${st[1]}"></span>${esc(st[3])}` : 'n/a'; };
+    const phased = x => `built${x.fa ? ` + ${x.fa === 1 ? '' : `${Math.round(x.fa * 100)}% of `}approved` : ''}${x.fp ? ` + ${x.fp === 1 ? '' : `${Math.round(x.fp * 100)}% of `}proposed` : ''}`;
+    const surch = r => { if (r == null || r <= 1 || !(S > 0)) return null; const Sf = S * r * r; return { Sf, dh: (Sf - S) * Lm }; };
+    const sb = surch(s.r1), st0 = surch(s.r0);
+    const rows = [
+      ['exist', 'Existing (2021 Census) · peak dry', ls(t.exist), ls(b.exist),
+        `${fmtNum(t.P0)} people upstream × ${W.avg} L/cap/d ÷ 86,400 = ${n1(t.avg0)} L/s average × Harmon peaking M = 1 + 14 / (4 + √(P/1000)) = ${t.M0.toFixed(2)} (kept between ${W.peakMin ?? 2} and ${W.peakMax ?? 4})${t.f !== 1 ? ` × ${t.f.toFixed(2)}, scaling to the plant's 2025 measured flow` : ''} = <strong>${ls(t.exist)}</strong>. Existing wet-weather I&amp;I isn't added: design I&amp;I on all existing land would overstate today's flow several times.`],
+      ['res', 'Growth · residential', ls(t.qr), ls(b.qr),
+        `Today (${phased(t)}): ${fmtNum(Math.round(t.gp))} people × ${W.avg} L/cap/d ÷ 86,400 × M ${t.gp > 0 ? t.Mg.toFixed(2) : '–'} = ${ls(t.qr)}.<br>${esc(yr)} (${phased(b)}): ${fmtNum(Math.round(b.gp))} people × ${W.avg} ÷ 86,400 × M ${b.gp > 0 ? b.Mg.toFixed(2) : '–'} = <strong>${ls(b.qr)}</strong>. People from units at Peel persons per unit; each development joins the nearest 300 mm+ sewer and its load is carried down the pipes.`],
+      ['emp', 'Growth · employment', ls(t.qe), ls(b.qe),
+        `Today: ${fmtNum(Math.round(t.gj))} jobs × ${E.wastewater} L/emp/d ÷ 86,400 × ${t.gj > 0 ? t.Me.toFixed(2) : '–'} = ${ls(t.qe)}.<br>${esc(yr)}: ${fmtNum(Math.round(b.gj))} jobs × ${E.wastewater} ÷ 86,400 × ${b.gj > 0 ? b.Me.toFixed(2) : '–'} = <strong>${ls(b.qe)}</strong>. Jobs from the floor area the applications state; peaking Harmon on jobs, kept between ${E.peakMin ?? 2} and ${E.peakMax ?? 4}.`],
+      ['ii', 'Growth · I&amp;I', ls(t.qi), ls(b.qi),
+        `Today: ${fmtNum(Math.round(t.gh))} ha × ${W.infiltration} L/s/ha = ${ls(t.qi)}.<br>${esc(yr)}: ${fmtNum(Math.round(b.gh))} ha of development sites × ${W.infiltration} L/s/ha = <strong>${ls(b.qi)}</strong> (Peel design inflow and infiltration on the new sites only).`],
+      ['q', '<strong>Flow Q</strong>', `<strong>${ls(s.today.q)}</strong>`, `<strong>${ls(s.then.q)}</strong>`,
+        `Q = existing + residential + employment + I&amp;I.<br>Today: ${n1(t.exist)} + ${n1(t.qr)} + ${n1(t.qe)} + ${n1(t.qi)} = ${ls(s.today.q)}.<br>${esc(yr)}: ${n1(b.exist)} + ${n1(b.qr)} + ${n1(b.qe)} + ${n1(b.qi)} = <strong>${ls(s.then.q)}</strong>${p[11] < 1 ? `. This pipe takes ${Math.round(p[11] * 100)}% of the flow at a split` : ''}.`],
+      ['cap', 'Full-pipe capacity', Qf ? `${fmtNum(Qf)} L/s` : 'n/a', Qf ? `${fmtNum(Qf)} L/s` : 'n/a',
+        `Manning, flowing full: Q<sub>full</sub> = (1/n) · A · R<sup>2/3</sup> · S<sup>1/2</sup>, n = 0.013.<br>D = ${p[0]} mm → A = π D² / 4 = ${A.toFixed(3)} m², R = D / 4 = ${R.toFixed(3)} m; S = ${(S * 100).toFixed(2)}% (published slope).<br>Q<sub>full</sub> = (1 / 0.013) × ${A.toFixed(3)} × ${R.toFixed(3)}<sup>2/3</sup> × ${S.toFixed(5)}<sup>1/2</sup> = <strong>${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}</strong>.${s.badSlope ? ` The published slope (${(S * 100).toFixed(3)}%) is under 0.01%, far flatter than the pipes either side: taken as a data error, so no capacity is computed and the pipe is left out of the tightest-pipe checks.` : ''}`],
+      ['used', 'Capacity used', pct(s.r0), `<strong>${pct(s.r1)}</strong>`,
+        `Q / Q<sub>full</sub>. Today ${n1(s.today.q)} / ${Qf ? fmtNum(Qf) : '–'} = ${pct(s.r0)}; ${esc(yr)} ${n1(s.then.q)} / ${Qf ? fmtNum(Qf) : '–'} = <strong>${pct(s.r1)}</strong>.`],
+      ['state', 'State', stCell(s.r0), stCell(s.r1),
+        `<span class="pipe-st-dot" style="--st:${PIPE_CLS[0][1]}"></span>Free flowing under 85% of full-pipe capacity (open-channel flow, water below the crown) · <span class="pipe-st-dot" style="--st:${PIPE_CLS[1][1]}"></span>Near full 85–100% (little room for peaks or more growth) · <span class="pipe-st-dot" style="--st:${PIPE_CLS[2][1]}"></span>Surcharged over 100%: the pipe runs full under pressure.`],
+    ];
+    if (sb || st0) rows.push(['sur', 'Surcharge · rise above crown', st0 ? `≈${st0.dh.toFixed(2)} m` : '–', sb ? `<strong>≈${sb.dh.toFixed(2)} m</strong>` : '–',
+      `A surcharged pipe needs a hydraulic grade line steeper than its slope: S<sub>f</sub> = S × (Q / Q<sub>full</sub>)².${sb ? `<br>${esc(yr)}: ${(S * 100).toFixed(2)}% × ${s.r1.toFixed(2)}² = ${(sb.Sf * 100).toFixed(2)}%. Over this ${fmtNum(Math.round(Lm))} m pipe the water level rises (S<sub>f</sub> − S) × L = (${(sb.Sf * 100).toFixed(2)}% − ${(S * 100).toFixed(2)}%) × ${fmtNum(Math.round(Lm))} m ≈ <strong>${sb.dh.toFixed(2)} m</strong> more than the pipe falls, above its crown, and backs up into the pipes upstream.` : ''}${st0 ? `<br>Today: S<sub>f</sub> = ${(st0.Sf * 100).toFixed(2)}% → ≈${st0.dh.toFixed(2)} m.` : ''}`]);
+    return `<details class="sect calc" open><summary><h2 class="section-title">How the flow is calculated</h2><span class="muted small sect-sum">${ls(s.then.q)} of ${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'} · ${pipeState(s.r1) ? esc(pipeState(s.r1)[3]) : ''}</span></summary>
+      <table class="dt calc-table"><thead><tr><th>Result</th><th>Today</th><th>${esc(yr)}</th></tr></thead><tbody>
+        ${rows.map(([k, label, a, z, how]) => `<tr class="calc-row"><td><button type="button" class="calc-i" data-calc="${k}" aria-expanded="false" aria-label="How: ${esc(label.replace(/<[^>]+>/g, ''))}">ⓘ</button>${label}</td><td>${a}</td><td>${z}</td></tr>
+        <tr class="calc-how" data-calc-how="${k}" hidden><td colspan="3">${how}</td></tr>`).join('')}
+      </tbody></table>
+      <p class="small muted">Tap ⓘ for how each result is worked out. Today = existing + growth built since the census; ${esc(yr)} follows the capacity slider (Horizon years). A screen, not a hydraulic model: wet-weather I&amp;I on existing areas, downstream backwater, storage and relief sewers are not modelled.</p></details>`;
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('.calc-i'); if (!b) return;
+    const how = b.closest('table').querySelector(`[data-calc-how="${b.dataset.calc}"]`); if (!how) return;
+    how.hidden = !how.hidden; b.setAttribute('aria-expanded', String(!how.hidden)); b.classList.toggle('on', !how.hidden);
+  });
   function showPipeLoads(i) {
     const G = sewerGrowth(), s = pipeStats(i), p = s.p;
     const up = [];
@@ -4805,7 +4900,7 @@
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
+  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!TRACE.key || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
     if (lassoOn) setLasso(false);
@@ -4813,7 +4908,7 @@
     highlight(null);
     if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
     if (selection.size || selAreas.length) clearSelection();
-    clearBlockFocus();
+    clearBlockFocus(); clearTrace();
     exHL.clearLayers(); pinLayer.clearLayers();
     syncClearBtn();
   }
