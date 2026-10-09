@@ -32,15 +32,21 @@
   ];
 
   const DEFAULT_CRITERIA = {
-    ppu: { single: 4.2, town: 3.4, apartment: 2.7, unknown: 2.7 },
-    water: { avg: 280, maxDay: 2.0, peakHour: 3.0 },
-    wastewater: { avg: 290, infiltration: 0.26 },
-    employment: { water: 300, maxDay: 1.4, peakHour: 3.0, wastewater: 270, peakMin: 2, peakMax: 4 },
+    // Peel Linear Wastewater Standards (2023) Tables 2-1 / 2-2: 4.2 single / semi, 3.4 townhouse,
+    // 3.1 large apartment; apartments above 475 persons/ha use 2.7 (apartmentHigh).
+    ppu: { single: 4.2, town: 3.4, apartment: 3.1, apartmentHigh: 2.7, unknown: 2.7 },
+    // Peel Water and Wastewater Modelling Demand Table (Aug 2024), from the 2020 DC study.
+    water: { avg: 270, maxDay: 1.8, peakHour: 3.0 },
+    // Linear Wastewater Standards: 290 L/cap/d, Harmon limited to 2.0–4.0, I&I 0.26 L/s/ha.
+    wastewater: { avg: 290, infiltration: 0.26, peakMin: 2, peakMax: 4 },
+    employment: { water: 250, maxDay: 1.4, peakHour: 3.0, wastewater: 270, peakMin: 2, peakMax: 4 },
     // Floor space per job (m²/job) by use, used to estimate jobs from application floor areas.
     m2PerJob: { industrial: 110, office: 25, retail: 45, hotel: 60, institutional: 50 },
   };
 
   const SECONDS_PER_DAY = 86400;
+  // Apartment density above which the high-density persons per unit applies (persons/ha).
+  const APT_DENSITY = 475;
 
   /** Guess the dwelling type of a project from its type / description text. */
   function unitTypeOf(text) {
@@ -135,6 +141,11 @@
   }
 
   /** Employment peaking factor: Harmon on the employee count, bounded by the Peel min / max. */
+  /** Residential peaking: Harmon on the population, limited to Peel's minimum and maximum. */
+  function residentialPeaking(pop, wc = DEFAULT_CRITERIA.wastewater) {
+    if (!(pop > 0)) return 0;
+    return Math.min(wc.peakMax ?? 4, Math.max(wc.peakMin ?? 2, harmon(pop)));
+  }
   function employmentPeaking(jobs, ec = DEFAULT_CRITERIA.employment) {
     if (!(jobs > 0)) return 0;
     return Math.min(ec.peakMax ?? 4, Math.max(ec.peakMin ?? 2, harmon(jobs)));
@@ -158,9 +169,19 @@
    * Harmon peaking is applied to the combined population (system-level peak),
    * which is lower than summing each site's individually peaked flow.
    */
+  // A project's apartments are high density when its measured site area holds more than 475
+  // persons/ha at the large-apartment rate (all residential units counted on the site).
+  function aptDense(p, apts, area, ppu) {
+    if (area.estimated || !(area.ha > 0)) return true;
+    const s = unitSplit(p, 'all');
+    const people = s.single * ppu.single + s.town * ppu.town + s.unknown * ppu.unknown + s.apartment * ppu.apartment;
+    const siteHa = p.siteAreaHa || area.ha;
+    return people / siteHa > APT_DENSITY;
+  }
   function estimate(projects, criteria = DEFAULT_CRITERIA, basis = 'all', jobsOf = null) {
     const units = { single: 0, town: 0, apartment: 0, unknown: 0 };
-    let withUnits = 0, ha = 0, haEstimated = 0, jobs = 0, empHa = 0, withJobs = 0;
+    const ppu = { ...DEFAULT_CRITERIA.ppu, ...(criteria.ppu || {}) };
+    let withUnits = 0, ha = 0, haEstimated = 0, jobs = 0, empHa = 0, withJobs = 0, aptPop = 0;
     for (const p of projects) {
       const j = jobsOf ? jobsFor(p, jobsOf(p), basis) : 0;
       if (j > 0) {
@@ -173,15 +194,18 @@
       const total = s.single + s.town + s.apartment + s.unknown;
       if (total > 0) withUnits++;
       for (const k in units) units[k] += s[k];
+      // Apartments: large-apartment persons per unit unless the site is denser than 475
+      // persons/ha at that rate (or its area is unknown), then the high-density rate.
+      if (s.apartment > 0) aptPop += s.apartment * (aptDense(p, s.apartment, a, ppu) ? ppu.apartmentHigh : ppu.apartment);
     }
     const pop = {};
     let population = 0;
-    for (const k in units) { pop[k] = units[k] * (criteria.ppu[k] || 0); population += pop[k]; }
+    for (const k in units) { pop[k] = k === 'apartment' ? aptPop : units[k] * (ppu[k] || 0); population += pop[k]; }
     const totalUnits = units.single + units.town + units.apartment + units.unknown;
 
     const wAvg = population * criteria.water.avg / SECONDS_PER_DAY;          // L/s
     const sAvg = population * criteria.wastewater.avg / SECONDS_PER_DAY;      // L/s
-    const M = harmon(population);
+    const M = residentialPeaking(population, { ...DEFAULT_CRITERIA.wastewater, ...(criteria.wastewater || {}) });
     const ii = ha * (criteria.wastewater.infiltration ?? DEFAULT_CRITERIA.wastewater.infiltration);
     const emp = { ...employmentDemand(jobs, criteria, empHa), projects: withJobs };
     // Residential and employment flows are peaked separately and added (as in a servicing
@@ -337,7 +361,7 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+  const api = { UNIT_TYPES, DEFAULT_CRITERIA, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

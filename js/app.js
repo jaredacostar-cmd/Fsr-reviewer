@@ -37,12 +37,17 @@
     sinceYear: store.get('sinceYear', CFG.sinceYear),
     maxPerLayer: store.get('maxPerLayer', CFG.maxPerLayer),
   };
+  // Defaults before the Peel 2023–2024 criteria were adopted: a saved value equal to one of these
+  // was never edited, so it gives way to the current default.
   function mergeCriteria(saved) {
+    const OLD_DEFAULTS = { water: { avg: 280, maxDay: 2.0 }, employment: { water: 300 }, ppu: { apartment: 2.7 } };
     const d = JSON.parse(JSON.stringify(D.DEFAULT_CRITERIA));
     if (!saved) return d;
     for (const g of Object.keys(d)) for (const k of Object.keys(d[g])) {
       const v = saved[g] && Number(saved[g][k]);
-      if (v > 0) d[g][k] = v;
+      if (!(v > 0)) continue;
+      if (!saved.version && OLD_DEFAULTS[g] && OLD_DEFAULTS[g][k] === v) continue;
+      d[g][k] = v;
     }
     return d;
   }
@@ -887,7 +892,7 @@
     renderSelection(set, basis);
 
     // Breakdown by dwelling type and by phase.
-    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${uUnits(e.units[t.key])}</td><td>${unit(c.ppu[t.key], 'pop/unit')}</td><td>${uPop(e.pop[t.key])}</td></tr>`).join('');
+    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${uUnits(e.units[t.key])}</td><td>${t.key === 'apartment' ? unit(`${c.ppu.apartment} / ${c.ppu.apartmentHigh}`, 'pop/unit') : unit(c.ppu[t.key], 'pop/unit')}</td><td>${uPop(e.pop[t.key])}</td></tr>`).join('');
     const boRows = aggTypeRowsHTML(aggregateTypes(set));
     const phaseRows = P.PHASES.map(ph => {
       const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
@@ -946,14 +951,15 @@
     const inp = (g, k, label, step) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-g="${g}" data-k="${k}" value="${c[g][k]}"></label>`;
     $('#d-criteria').innerHTML = `
       <fieldset><legend>Persons per unit</legend>
-        ${inp('ppu', 'single', 'Single / semi', 0.1)}${inp('ppu', 'town', 'Townhouse', 0.1)}${inp('ppu', 'apartment', 'Apartment', 0.1)}${inp('ppu', 'unknown', 'Type not stated', 0.1)}
+        ${inp('ppu', 'single', 'Single / semi', 0.1)}${inp('ppu', 'town', 'Townhouse', 0.1)}${inp('ppu', 'apartment', 'Apartment', 0.1)}${inp('ppu', 'apartmentHigh', 'Apartment, &gt;475 persons/ha', 0.1)}${inp('ppu', 'unknown', 'Type not stated', 0.1)}
+        <p class="small muted">Apartments use the large-apartment rate unless the site holds more than ${D.APT_DENSITY} persons/ha at that rate, or its area is not known; then the high-density rate (Peel Linear Wastewater Standards, Tables 2-1 / 2-2). Peel's 1.7 for small (≤1 bedroom) apartments needs the bedroom mix, which the applications don't publish.</p>
       </fieldset>
       <fieldset><legend>Water</legend>
         ${inp('water', 'avg', 'Average day (L/cap/d)', 1)}${inp('water', 'maxDay', 'Max day factor', 0.1)}${inp('water', 'peakHour', 'Peak hour factor', 0.1)}
       </fieldset>
       <fieldset><legend>Wastewater</legend>
-        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01)}
-        <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population. I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I.</p>
+        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01)}${inp('wastewater', 'peakMin', 'Peaking min', 0.1)}${inp('wastewater', 'peakMax', 'Peaking max', 0.1)}
+        <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population and kept between the min and max (Peel: 2.0–4.0). I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I.</p>
       </fieldset>
       <fieldset><legend>Employment</legend>
         ${inp('employment', 'water', 'Water (L/emp/d)', 1)}${inp('employment', 'maxDay', 'Max day factor', 0.1)}${inp('employment', 'peakHour', 'Peak hour factor', 0.1)}
@@ -966,7 +972,7 @@
       <fieldset><legend>Employment notes</legend>
         <p class="small muted">Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A development's jobs count by its phase (committed = approved to under construction).</p>
       </fieldset>
-      <p class="small muted">Defaults: Region of Peel Linear Wastewater Standards (Table 2-2 PPU from the DC Background Study; 290 L/cap/d) and Watermain Design Criteria (280 L/cap/d, ×2.0 max day, ×3.0 peak hour); employment water 300 L/emp/d ×1.4 / ×3.0 (Peel FSR requirements, ICI) and wastewater 270 L/emp/d, peaking 2–4 (Peel Water &amp; Wastewater Modelling Demand Table, Aug 2024). Apartments use 2.7 PPU, Peel's rate for high-density sites (&gt;475 persons/ha); use 3.1 for large apartments at lower density.</p>
+      <p class="small muted">Defaults: Region of Peel Water and Wastewater Modelling Demand Table (v2.0, Aug 2024): water 270 L/cap/d ×1.8 max day ×3.0 peak hour, employment 250 L/emp/d ×1.4 / ×3.0 (from the 2020 DC Background Study); wastewater per the Linear Wastewater Standards (2023): 290 L/cap/d and 270 L/emp/d, Harmon limited to 2.0–4.0, I&amp;I 0.26 L/s/ha, persons per unit 4.2 / 3.4 / 3.1 (2.7 above 475 persons/ha). These replace the 2010 Watermain Design Criteria (280 L/cap/d ×2.0, 300 L/emp/d). The 2.0 minimum peaking factor is a sewer design rule, so plant-level peaks are conservative.</p>
       <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
   }
   $('#d-criteria').oninput = e => {
@@ -974,7 +980,7 @@
     const v = Number(el.value);
     if (!(v >= 0)) return;
     state.criteria[el.dataset.g][el.dataset.k] = v;
-    store.set('criteria', state.criteria);
+    store.set('criteria', { ...state.criteria, version: 2 });
     refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
   };
   // Criteria changed: redraw everything that uses them (jobs also feed the summaries and the open development).
@@ -2084,8 +2090,8 @@
     const crit = kind === 'demand'
       ? `water ${c.water.avg} L/cap/d (×${c.water.maxDay} max day, ×${c.water.peakHour} peak hour), wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha; employment ${E.water} / ${E.wastewater} L/emp/d`
       : kind === 'water'
-      ? `residential ${c.water.avg} L/cap/d, max day ×${c.water.maxDay}, peak hour ×${c.water.peakHour} (Peel Watermain Design Criteria / FSR requirements); employment ${E.water} L/emp/d`
-      : `residential ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha (Peel Linear Wastewater Standards 2023); employment ${E.wastewater} L/emp/d (Peel Modelling Demand Table, Aug 2024)`;
+      ? `residential ${c.water.avg} L/cap/d, max day ×${c.water.maxDay}, peak hour ×${c.water.peakHour} (Peel Modelling Demand Table, Aug 2024); employment ${E.water} L/emp/d`
+      : `residential ${c.wastewater.avg} L/cap/d with Harmon peaking (${c.wastewater.peakMin}–${c.wastewater.peakMax}), I&amp;I ${c.wastewater.infiltration} L/s/ha (Peel Linear Wastewater Standards 2023); employment ${E.wastewater} L/emp/d (Peel Modelling Demand Table, Aug 2024)`;
     const mod = criteriaChanges();
     if (Y == null) { const bc = baselineCensus(); Y = bc ? bc.year : 2021; }
     const dates = [state.snapshot ? `applications ${state.snapshot.generatedAt.slice(0, 10)}` : 'applications live', `${Y} Census`, R ? `Peel ${R.year} annual reports` : null].filter(Boolean).join(' · ');
@@ -2141,7 +2147,7 @@
     const upOf = d => sum((kids.get(d.id) || []).map(cumOf));
     const raw = (p, j) => (p * c.wastewater.avg + j * E.wastewater) / 1e6;
     const adwf = (l, f = 1) => f * raw(total(l), jobs(l));
-    const pdwf = (l, f = 1) => f * (total(l) * c.wastewater.avg / 1e6 * D.harmon(total(l)) + jobs(l) * E.wastewater / 1e6 * D.employmentPeaking(jobs(l), E));
+    const pdwf = (l, f = 1) => f * (total(l) * c.wastewater.avg / 1e6 * D.residentialPeaking(total(l), c.wastewater) + jobs(l) * E.wastewater / 1e6 * D.employmentPeaking(jobs(l), E));
     const ii = l => l.ha * c.wastewater.infiltration * 86400 / 1e6;
     const plants = ['Lakeview', 'Clarkson', 'Inglewood'];
     const plantList = pl => state.servicing.drainage.filter(d => d.plant === pl);
@@ -2158,7 +2164,7 @@
       calib[pl] = { today, rep, f: rep && today > 0 ? Math.max(0.1, (rep.avgMLd - inflowsTo(pl)) / today) : null };
     }
     const fOf = pl => (svcOpt.ww === 'calibrated' && calib[pl] && calib[pl].f) || 1;
-    const peakCells = (l, f) => `<td>${uML(pdwf(l, f))}<small class="tech">M ${total(l) > 0 ? D.harmon(total(l)).toFixed(2) : '–'}</small></td><td>${uML(ii(l))}<small class="tech">${uHa(l.ha)}</small></td><td class="bo">${uML(pdwf(l, f) + ii(l))}</td>`;
+    const peakCells = (l, f) => `<td>${uML(pdwf(l, f))}<small class="tech">M ${total(l) > 0 ? D.residentialPeaking(total(l), c.wastewater).toFixed(2) : '–'}</small></td><td>${uML(ii(l))}<small class="tech">${uHa(l.ha)}</small></td><td class="bo">${uML(pdwf(l, f) + ii(l))}</td>`;
     const nameCell = (name, sub, depth) => `<td style="padding-left:${6 + depth * 12}px">${depth ? '<span class="flow-arrow" aria-hidden="true">↳</span>' : ''}${name}${sub ? `<small>${sub}</small>` : ''}</td>`;
     const lay = (l, k, f) => f * raw(l[k], jobsK(l, k));
     const sRow = (name, sub, d, l, id, f, cls = '', depth = 0) => {
@@ -2402,7 +2408,7 @@
       });
       const r = prev;
       return `<tr class="grp"><td colspan="7">${title}${note ? ` <span class="muted small">${note}</span>` : ''}</td></tr>${rows.join('')}
-        <tr class="tot"><td>= Build-out</td><td>${uPop(r.pop)}${r.j > 0 ? ` <small>${unit(fmtNum(Math.round(r.j)), 'jobs')}</small>` : ''}</td><td>${uML(r.a)}</td><td>${uML(r.d)}<small class="tech">M ${r.pop > 0 ? D.harmon(r.pop).toFixed(2) : '–'}</small></td><td>${uML(r.ii)}</td><td class="bo">${uML(r.w)}</td><td>${rated ? pct(r.a, rated) : ''}</td></tr>
+        <tr class="tot"><td>= Build-out</td><td>${uPop(r.pop)}${r.j > 0 ? ` <small>${unit(fmtNum(Math.round(r.j)), 'jobs')}</small>` : ''}</td><td>${uML(r.a)}</td><td>${uML(r.d)}<small class="tech">M ${r.pop > 0 ? D.residentialPeaking(r.pop, c.wastewater).toFixed(2) : '–'}</small></td><td>${uML(r.ii)}</td><td class="bo">${uML(r.w)}</td><td>${rated ? pct(r.a, rated) : ''}</td></tr>
         <tr class="plant-bar"><td colspan="7">${svcBar(l)}</td></tr>`;
     };
     // Comparison with the 2025 reports.
