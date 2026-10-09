@@ -79,14 +79,14 @@
    * Pages with resultOffset when supported, otherwise by objectId batches.
    * @returns {Promise<{features: object[], truncated: boolean}>}
    */
-  async function queryAll(url, info, { where = '1=1', bbox, max = 20000, pageSize = 2000, orderBy, onProgress } = {}) {
+  async function queryAll(url, info, { where = '1=1', bbox, max = 20000, pageSize = 2000, orderBy, onProgress, outFields = '*' } = {}) {
     const oid = oidFieldOf(info);
     const geojsonOK = /geojson/i.test(info.supportedQueryFormats || '');
     const pageable = info.advancedQueryCapabilities ? info.advancedQueryCapabilities.supportsPagination !== false : !!info.supportsPagination;
     const size = Math.min(pageSize, info.maxRecordCount || pageSize);
     const base = {
       where,
-      outFields: '*',
+      outFields,
       outSR: 4326,
       returnGeometry: true,
       f: geojsonOK ? 'geojson' : 'json',

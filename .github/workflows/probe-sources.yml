@@ -14,12 +14,13 @@ name: Probe data sources
 #  mode=masterplan: download the 2020 Water and Wastewater Master Plan volumes as text (pushed to the ref-docs-mp branch)
 #  mode=dc-maps: download the 2026 DC capital maps (water, wastewater) as text, images, SVG and any GeoPDF layers (ref-docs-dc branch)
 #  mode=linework: existing watermains, sanitary mains, storm sewers and ponds published for Peel (log only)
+#  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps or linework'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework or linework-raw'
         default: 'all'
         required: false
 
@@ -52,6 +53,16 @@ jobs:
       - name: Existing water / wastewater / storm linework (log only)
         if: inputs.mode == 'linework'
         run: node scripts/probe-linework.js
+      - name: Existing linework download and completeness (pushed to the linework-raw branch)
+        if: inputs.mode == 'linework-raw'
+        run: |
+          node scripts/fetch-linework-raw.js --out linework-raw
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B linework-raw
+          git add -f linework-raw
+          git commit -m "Existing water / wastewater linework (raw)"
+          git push -f origin linework-raw
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
