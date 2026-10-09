@@ -257,8 +257,14 @@ application.
   and people, and *Analysis* opens the Growth & demand, Water, Wastewater and Criteria tabs. Map
   tools (trace a sewer path, select an area, measure, test a site) sit under one Tools button; the
   north arrow stays on the map (tap it to switch between road grid and north up). The sidebar has
-  search, a "Showing …" line, Phase and one *More filters* fold (focus, record type). **Where and
-  areas are on the map panel**: municipality chips, then an *Areas* fold with Secondary plans and
+  search, a "Showing …" line, Phase and one *More filters* fold (focus, record type). **Map
+  layout**: top right, the view switch (Planning / Water / Wastewater / DC) over one *Map options*
+  fold (open on desktop, closed on phones, its line saying what is on): Developments on / off and
+  the municipality, then *Wastewater loads* (Wastewater view), *Areas* and *Layers & style*, each
+  folded with a one-line summary. Bottom right, one box: the Demand year over the legend. When a
+  setting hides the developments (switched off, no growth load on in the Wastewater view, or
+  Hidden while a path is shown) a notice above Map options says why, with *Show developments*.
+  **Where and areas are on the map panel**: municipality, then an *Areas* fold with Secondary plans and
   MTSAs outline toggles (tap an outlined area on the map to filter to it, tap again to clear), the
   secondary plan / MTSA filters, and the Pressure zones / Wastewater blocks layers and filters; its
   heading shows what is applied. The development panel has three tabs: Overview, Servicing and
@@ -351,7 +357,7 @@ application.
   Region publishes no watermain depth.
 - **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
   site area estimated, complete.
-- **Demand year** (on the map, above the legend, whenever a capacity layer is on): the year the
+- **Demand year** (on the map, at the top of the legend box, whenever a capacity layer is on): the year the
   map's results are worked out for. It opens on the current year (the census + built since, with
   approved and proposed growth phased in as set in Horizon years) and slides to build-out, so
   catchments, pumping stations and pipes change colour as growth arrives; the pipe and station
