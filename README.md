@@ -235,7 +235,7 @@ application.
   people sit in a different area than with the DA centre point). Click a row to outline and zoom to it on the map
   (click again to clear).
   - **Water:** pressure zones in numerical order; maximum day in ML/d (people and jobs below each
-    figure) and peak hour at build-out. The max day factor switches between Peel design (×2.0)
+    figure) and peak hour at build-out. The max day factor switches between Peel design (×1.8)
     and the factor observed at the South Peel plants in 2025 (×1.40). Below the table: 2025
     production reported by the Region (Arthur P. Kennedy and Lorne Park plants, the five Caledon
     groundwater systems) beside the model.
@@ -514,13 +514,13 @@ Run the tests with `npm test`.
 |---|---|---|
 | Persons per unit: single / semi | 4.2 | Peel Linear Wastewater Standards R1.0, Table 2-2 (from the Region's DC Background Study) |
 | Persons per unit: townhouse | 3.4 | same |
-| Persons per unit: apartment | 2.7 | same standard's rate for apartments above 475 persons/ha (3.1 for large apartments at lower density) |
+| Persons per unit: apartment | 3.1, or 2.7 above 475 persons/ha | same standard: large apartments 3.1; where the site holds more than 475 persons/ha at that rate (or its area is unknown) the high-density 2.7 applies. Peel's 1.7 for small (≤1 bedroom) apartments needs a bedroom mix the applications don't publish |
 | Persons per unit: type not stated | 2.7 | assumption: most unit-bearing projects in Peel's pipeline are apartments |
-| Water, average day | 280 L/cap/day | Peel Watermain Design Criteria (rev. June 2010), long-term residential rate |
-| Water, max day / peak hour | ×2.0 / ×3.0 | same |
-| Wastewater, residential | 290 L/cap/day | Peel Linear Wastewater Standards R1.0 |
-| Wastewater peaking | Harmon, M = 1 + 14 / (4 + √P), P in thousands | Peel Sanitary Sewer Design Criteria |
-| Employment water | 300 L/employee/day, max day ×1.4, peak hour ×3.0 | Peel Functional Servicing Report requirements (2009) / Watermain Design Criteria, ICI |
+| Water, average day | 270 L/cap/day | Peel Water and Wastewater Modelling Demand Table (v2.0, Aug 2024), from the 2020 DC Background Study (replaces the 2010 Watermain Design Criteria's 280) |
+| Water, max day / peak hour | ×1.8 / ×3.0 | same (2010 criteria: ×2.0 / ×3.0) |
+| Wastewater, residential | 290 L/cap/day | Peel Linear Wastewater Standards (2023) s. 2.2 |
+| Wastewater peaking | Harmon, M = 1 + 14 / (4 + √P), P in thousands, limited to 2.0–4.0 | Peel Linear Wastewater Standards s. 2.4 (a sewer design rule; at plant scale it makes peaks conservative) |
+| Employment water | 250 L/employee/day, max day ×1.4, peak hour ×3.0 | Peel Modelling Demand Table (Aug 2024), ICI (2010 criteria: 300) |
 | Employment wastewater | 270 L/employee/day; Harmon on employees, bounded 2–4; I&I 0.26 L/s/ha | Peel Water & Wastewater Modelling Demand Table, site plan applications (Aug 2024), non-residential |
 
 How the estimate works:
@@ -528,8 +528,10 @@ How the estimate works:
 - **Dwelling type:** taken from a published unit-mix column (singles, semis, towns,
   apartments) when the dataset has one. Otherwise it is guessed from the project's type and
   description text.
-- **Peaking:** the Harmon factor is applied to the combined population of everything shown.
-  That gives a system-level peak, which is lower than adding up each site's own peak flow.
+- **Peaking:** the Harmon factor is applied to the combined population of everything shown and
+  kept between 2.0 and 4.0. That gives a system-level peak, which is lower than adding up each
+  site's own peak flow. Saved criteria that still hold the 2010 defaults (280 L/cap/d, ×2.0, 300
+  L/emp/d, apartments 2.7) move to the current ones; edited values are kept.
 - **I&I (infiltration and inflow):** 0.26 L/s per hectare of gross site area (editable). Site
   area is the planning application boundary (about 87% of planned units have one); where there
   is none it is estimated from the units: 0.04 ha per single / semi, 0.02 per townhouse, 0.003
@@ -538,7 +540,7 @@ How the estimate works:
   peak + I&I.** Shown on the wastewater tile, in each project's servicing table, and for growth
   since 2021 in the census panel.
 - **Employment demand:** jobs estimated from the floor areas on the applications (see
-  Employment uses) × 300 L/employee/day water and 270 L/employee/day wastewater. Wastewater is
+  Employment uses) × 250 L/employee/day water and 270 L/employee/day wastewater. Wastewater is
   peaked with Harmon on the employee count, kept between 2 and 4; I&I is added on the boundary
   of purely non-residential sites (mixed-use sites already count theirs with the dwellings).
   Employment space has no unit-level build-out, so a project's jobs count by its phase

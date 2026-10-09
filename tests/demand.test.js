@@ -14,9 +14,9 @@ test('dwelling type is read from type / description text', () => {
   assert.equal(D.unitTypeOf('Rezoning'), 'unknown');
 });
 
-test('estimate applies Peel ppu, water peaking and Harmon', () => {
+test('estimate applies Peel ppu, water peaking and Harmon (limited to 2–4)', () => {
   const e = D.estimate([
-    proj(100, ['Apartment']),            // 100 × 2.7 = 270
+    proj(100, ['Apartment']),            // no site area: high-density 100 × 2.7 = 270
     proj(10, ['Townhouse']),             // 10 × 3.4  = 34
     proj(null, ['Plaza']),               // no units: ignored
     proj(5, [], '', { single: 2, semi: 1, town: 0, apartment: 2 }), // 3×4.2 + 2×2.7 = 18
@@ -24,17 +24,26 @@ test('estimate applies Peel ppu, water peaking and Harmon', () => {
   assert.equal(e.withUnits, 3);
   assert.equal(e.totalUnits, 115);
   assert.ok(Math.abs(e.population - 322) < 1e-9);
-  const avgW = 322 * 280 / 86400;
+  const avgW = 322 * 270 / 86400;
   assert.ok(Math.abs(e.water.avg - avgW) < 1e-12);
-  assert.ok(Math.abs(e.water.maxDay - 2 * avgW) < 1e-12);
+  assert.ok(Math.abs(e.water.maxDay - 1.8 * avgW) < 1e-12);
   assert.ok(Math.abs(e.water.peakHour - 3 * avgW) < 1e-12);
-  const M = 1 + 14 / (4 + Math.sqrt(0.322));
-  assert.ok(Math.abs(e.wastewater.peakingFactor - M) < 1e-12);
-  assert.ok(Math.abs(e.wastewater.peak - M * 322 * 290 / 86400) < 1e-12);
+  // Harmon on 322 people is 4.07: limited to the maximum of 4.0.
+  assert.equal(e.wastewater.peakingFactor, 4);
+  assert.ok(Math.abs(e.wastewater.peak - 4 * 322 * 290 / 86400) < 1e-12);
+  assert.equal(D.residentialPeaking(2e6), 2, 'large populations: limited to the minimum of 2.0');
+  assert.ok(Math.abs(D.residentialPeaking(50000) - D.harmon(50000)) < 1e-12);
+});
+
+test('apartments: 3.1 persons per unit up to 475 persons/ha on the site, 2.7 above it', () => {
+  const low = { ...proj(100, ['Apartment']), siteAreaHa: 1 };    // 100 × 3.1 = 310 persons/ha
+  const high = { ...proj(400, ['Apartment']), siteAreaHa: 1 };   // 400 × 3.1 = 1,240 persons/ha
+  assert.ok(Math.abs(D.estimate([low]).population - 310) < 1e-9);
+  assert.ok(Math.abs(D.estimate([high]).population - 1080) < 1e-9);
 });
 
 test('editable criteria are honoured; empty set is zero', () => {
-  const c = { ppu: { single: 4.2, town: 3.4, apartment: 3.1, unknown: 3.1 }, water: { avg: 409, maxDay: 2, peakHour: 3 }, wastewater: { avg: 302.8 } };
+  const c = { ppu: { single: 4.2, town: 3.4, apartment: 3.1, apartmentHigh: 3.1, unknown: 3.1 }, water: { avg: 409, maxDay: 2, peakHour: 3 }, wastewater: { avg: 302.8 } };
   const e = D.estimate([proj(10, ['Condo'])], c);
   assert.ok(Math.abs(e.population - 31) < 1e-9);
   assert.equal(D.estimate([]).population, 0);
@@ -83,7 +92,7 @@ test('I&I: 0.26 L/s/ha on the site area, prorated by units; estimated from units
 test('employment demand: Peel ICI water and non-residential wastewater rates', () => {
   const D = require('../js/demand.js');
   const d = D.employmentDemand(1000);
-  assert.ok(Math.abs(d.water.avg - 1000 * 300 / 86400) < 1e-9);
+  assert.ok(Math.abs(d.water.avg - 1000 * 250 / 86400) < 1e-9);
   assert.ok(Math.abs(d.water.maxDay - d.water.avg * 1.4) < 1e-9);
   assert.ok(Math.abs(d.water.peakHour - d.water.avg * 3.0) < 1e-9);
   assert.ok(Math.abs(d.wastewater.avg - 1000 * 270 / 86400) < 1e-9);
