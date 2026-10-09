@@ -198,6 +198,16 @@ application.
 - Each development is tagged by its location point. Map options toggle both layers; **Where**
   has Pressure zone and Drainage area filters; the development panel shows its zone and
   drainage area.
+- **Bottom panel tabs:** **Growth & demand** (demand of the shown developments, then growth
+  since the census), **Water**, **Wastewater** (two views: *Plants & capacity* and *Catchments*)
+  and **Criteria & references**. Every servicing table opens with a stamp of the criteria it uses
+  and the data dates, with a **Modified criteria** badge when the criteria have been edited; method
+  notes fold under *Method & notes*. Wastewater has two modes: **Capacity check** (default;
+  calibrated to the 2025 reported flows, the basis for capacity statements) and **Design flows**
+  (Peel criteria, for sizing), and a *Details* switch (Engineering shows the Harmon factor and
+  drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
+  WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
+  above 1,000.
 - **Water** and **Wastewater** tabs (bottom panel). Like the Growth tab, each row is split into
   the census baseline (year from the timeline), + built since census day, + approved and +
   proposed (in review), adding up to build-out, with a stacked bar of that split; growth from

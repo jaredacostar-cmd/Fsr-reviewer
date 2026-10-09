@@ -232,19 +232,17 @@
 
     <footer class="footer" id="footer">
       <div class="f-tabs" role="tablist" aria-label="Bottom panel">
-        <button type="button" role="tab" class="f-tab" id="ftab-demand" data-tab="demand" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Servicing demand</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth since 2021</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Growth &amp; demand</button>
         <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-plants" data-tab="plants" data-info="tab-plants" aria-controls="pane-plants" aria-selected="false" hidden>Plants</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Breakdown &amp; criteria</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Criteria &amp; references</button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       </div>
 
-      <section class="f-pane demand" id="pane-demand" data-pane="demand" role="tabpanel" aria-labelledby="ftab-demand">
+      <section class="f-pane demand" id="pane-demand" data-pane="growth" role="tabpanel" aria-labelledby="ftab-growth">
         <div class="tb-head">
-          <h2 class="sr">Population &amp; servicing demand</h2>
+          <h2 class="pane-h" data-info="tab-demand">Demand of the shown developments</h2>
           <div class="d-sel" id="d-sel" data-info="demand-selection"></div>
         </div>
         <div class="d-layout">
@@ -253,9 +251,9 @@
         </div>
       </section>
 
-      <section class="f-pane census" id="census" data-pane="growth" role="tabpanel" aria-labelledby="ftab-growth" hidden>
+      <section class="f-pane census" id="census" data-pane="growth" data-off="1" aria-labelledby="ftab-growth" hidden>
         <div class="tb-head">
-          <h2 class="sr">Growth since the 2021 Census</h2>
+          <h2 class="pane-h" id="c-head" data-info="tab-growth">Growth since the 2021 Census</h2>
           <span class="muted small" id="c-note" data-info="census"></span>
         </div>
         <div class="c-ctx" id="c-ctx"></div>
@@ -272,11 +270,15 @@
         <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
         <div id="water-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+      <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
+        <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
+        <button type="button" class="btn small" data-wwsub="catchments">Catchments</button>
+      </div>
+      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-ww" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
         <div id="ww-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-plants" data-pane="plants" role="tabpanel" aria-labelledby="ftab-plants" hidden>
+      <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-ww" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
         <div id="plants-body"></div>
       </section>
