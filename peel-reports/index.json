@@ -1,0 +1,101 @@
+{
+ "fetchedAt": "2026-10-09T00:55:36.456Z",
+ "pages": [
+  {
+   "url": "https://peelregion.ca/water/wastewater/wastewater-annual-reports",
+   "file": "page_water_wastewater_wastewater-annual-reports.html",
+   "title": "Wastewater annual reports - peelregion.ca",
+   "depth": 0,
+   "links": 247
+  },
+  {
+   "url": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "page_water_drinking-water_water-quality_water-quality-reports.html",
+   "title": "Water quality reports - peelregion.ca",
+   "depth": 0,
+   "links": 250
+  }
+ ],
+ "documents": [
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Wastewater%20Collection%20System.pdf",
+   "text": "Wastewater Collection System",
+   "page": "https://peelregion.ca/water/wastewater/wastewater-annual-reports",
+   "file": "sites_default_files_2026-03_2025_20Wastewater_20Collection_20System.pdf",
+   "bytes": 5354044,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Inglewood%20Report.pdf",
+   "text": "Inglewood Wastewater Treatment Plant",
+   "page": "https://peelregion.ca/water/wastewater/wastewater-annual-reports",
+   "file": "sites_default_files_2026-03_2025_20Inglewood_20Report.pdf",
+   "bytes": 5481813,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Clarkson%20Water%20Resource%20Recovery%20Facility%20Annual%20Performance.pdf",
+   "text": "Clarkson Water Resource Recovery Facility",
+   "page": "https://peelregion.ca/water/wastewater/wastewater-annual-reports",
+   "file": "sites_default_files_2026-03_2025_20Clarkson_20Water_20Resource_20Recovery_20Facility_20Annual_20Performance.pdf",
+   "bytes": 5493944,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20G.E.Booth%20Water%20Resource%20Recovery%20Facility%20Annual%20Performance%20Report.pdf",
+   "text": "G.E. Booth Water Resource Recovery Facility",
+   "page": "https://peelregion.ca/water/wastewater/wastewater-annual-reports",
+   "file": "sites_default_files_2026-03_2025_20G.E.Booth_20Water_20Resource_20Recovery_20Facility_20Annual_20Performance_20Report.pdf",
+   "bytes": 5824135,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-04/drinking-water-peel-summary-report.pdf",
+   "text": "2025 Drinking Water in Peel Summary Report",
+   "page": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "sites_default_files_2026-04_drinking-water-peel-summary-report.pdf",
+   "bytes": 5511943,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/Palgrave-CaledonEast-Centreville-and-Cedar-Mills.pdf",
+   "text": "Palgrave, Caledon East, Centerville, and Cedar Mills",
+   "page": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "sites_default_files_2026-03_Palgrave-CaledonEast-Centreville-and-Cedar-Mills.pdf",
+   "bytes": 7860607,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/Caledon-Village-and-Alton.pdf",
+   "text": "Caledon Village, Alton, Mono Mills, and Skywood",
+   "page": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "sites_default_files_2026-03_Caledon-Village-and-Alton.pdf",
+   "bytes": 4529315,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/Cheltenham-and-Terra-Cotta.pdf",
+   "text": "Cheltenham, Terra Cotta and Poltawa",
+   "page": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "sites_default_files_2026-03_Cheltenham-and-Terra-Cotta.pdf",
+   "bytes": 2709069,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/Inglewood.pdf",
+   "text": "Inglewood",
+   "page": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "sites_default_files_2026-03_Inglewood.pdf",
+   "bytes": 3323462,
+   "type": "application/pdf"
+  },
+  {
+   "url": "https://peelregion.ca/sites/default/files/2026-07/South-Peel-Water-Quality-Report.pdf",
+   "text": "Brampton, Mississauga and South Caledon",
+   "page": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports",
+   "file": "sites_default_files_2026-07_South-Peel-Water-Quality-Report.pdf",
+   "bytes": 7233481,
+   "type": "application/pdf"
+  }
+ ]
+}
