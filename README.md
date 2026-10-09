@@ -276,6 +276,16 @@ application.
   World Geocoder, falling back to OpenStreetMap Nominatim, limited to Peel); picking one, or
   pressing Enter, pans and zooms the map there (a development also opens; an address gets a pin).
 - Street basemaps are Esri's light grey canvas and World Street Map (no API key).
+- **Sewer pipe capacity screen**: `data/sewers.json`, built by `scripts/build-sewer-capacity.js`
+  from the Region's sanitary mains (diameter, slope, inverts, install year, risk rating;
+  `scripts/fetch-linework-raw.js`, probe `mode=sewer-build`): every pipe of 300 mm or more with its
+  Manning full-flow capacity (n 0.013) and the 2021 Census population and land draining through it
+  (flow shared at splits by capacity; loops broken). In the app each development since the census
+  joins the nearest of these pipes and its load is carried down the network: existing load at
+  peak dry weather (scaled to the plant's measured flow in the capacity check), growth at design
+  peak wet weather. Capacity layer *Sewer pipe capacity* (year slider aware), the development
+  brief's local and downstream tightest pipe, and *What loads this* for a pipe. A screen, not a
+  hydraulic model.
 - **Outside the mapped areas**: a development outside every pressure zone or traced drainage
   area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
