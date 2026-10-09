@@ -42,11 +42,18 @@ jobs:
         continue-on-error: true
         run: node scripts/build-areas.js --out data
 
+      # Council and committee items naming application files (eSCRIBE). A failure keeps last
+      # week's file.
+      - name: Council and committee items
+        continue-on-error: true
+        timeout-minutes: 40
+        run: node scripts/build-council.js --out data
+
       - name: Commit if changed
         run: |
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json
+          git add data/snapshot.json data/history.json data/areas.json data/council.json
           if git diff --cached --quiet; then
             echo "No changes."
           else
