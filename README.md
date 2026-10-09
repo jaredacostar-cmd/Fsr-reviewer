@@ -227,11 +227,16 @@ application.
   the map (tap it to switch between road grid and north up). The sidebar has search, a "Showing …" line, Phase, Where and one *More
   filters* fold (focus, planning and servicing areas, record type). The development panel has
   three tabs: Overview, Servicing (summary, existing mains, fire flow, stormwater, planned works,
-  DC needs, servicing check) and History & records.
+  DC needs, servicing check) and History & records. History & records opens with *How the phase
+  was set*: the file behind the phase, approvals by stage with the latest submission in each, and
+  flags where the status and the submissions disagree (a newer submission in review after an
+  earlier approval, permits issued while planning is in review, a bare "Closed" read as approved,
+  an OLT appeal, a demolition permit, a redevelopment cycle), plus each file's status and how it
+  was read.
 - **Watchlist, saved views, tips**: ☆ Watch on a development adds it to *Your watchlist* (This
   week tab, changed-this-week first) and the ★ Watched focus. *Saved views* (Layers & style) keeps
   named filters + map position + view + layers in the browser. An 11-step tour shows once. *Help*
-  (header) or Tools → *Help & tips* opens task guides — servicing check for a development, when DC
+  (header), the **?** button on the map (under the north arrow) or Tools → *Help & tips* opens task guides — servicing check for a development, when DC
   projects are needed, area / secondary plan reports, testing a site, weekly changes, plant and
   pumping station capacity over time, water by pressure zone, existing mains and ground, saving /
   sharing / exporting, and how far to trust the numbers — each with *Show me*, which sets the map

@@ -1748,6 +1748,82 @@
       return `<details class="tl-year"${i < 2 ? ' open' : ''}><summary><strong>${y}</strong> <span class="muted small">${sum}</span></summary><ol class="tl2">${xs.map(evHTML).join('')}</ol></details>`;
     }).join('');
   }
+  // How the site's phase was set: approvals by stage against the latest submission, each file's
+  // published status and how it was read, and flags where the reading is uncertain.
+  const STAGE_NAME = { precon: 'Pre-consultation', master: 'Official plan / zoning / subdivision', siteplan: 'Site plan', condo: 'Condominium', other: 'Other planning file', permit: 'Building permits' };
+  const stageKey = r => r.kind === 'permit' ? 'permit' : (r.stage || 'other');
+  const firstAt = r => r.events.length ? +r.events[0].date : null;
+  const lastAt = r => r.events.length ? +r.events[r.events.length - 1].date : null;
+  const phaseAt = (r, ph) => { const e = r.events.filter(x => x.phase === ph); return e.length ? +e[e.length - 1].date : null; };
+  function phaseBasis(r) {
+    if (!r.statusRaw) return r.events.some(e => e.phase === r.phase) ? `from its ${P.humanizeField(r.events.filter(e => e.phase === r.phase).pop().label).toLowerCase()} date (no status published)` : (r.kind === 'permit' ? 'listed as a permit (no status published)' : 'an open file (no status published)');
+    let sp = P.phaseFromStatus(r.statusRaw);
+    if (r.kind === 'application' && ['permit', 'construction', 'completed'].includes(sp)) sp = 'approved';
+    if (r.stage === 'precon' && r.phase === 'inception' && sp !== 'inception' && sp !== 'cancelled') return 'pre-consultation: counted as inception whatever its status';
+    if (sp === r.phase || (r.kind === 'permit' && ['review', 'permit'].includes(r.phase))) return /\bclosed\b/i.test(r.statusRaw) && r.kind === 'application' && r.phase === 'approved' ? 'status “Closed” read as approved' : 'from its status';
+    const e = r.events.filter(x => x.phase === r.phase).pop();
+    if (e) return `from its ${P.humanizeField(e.label).toLowerCase()} date (${fmtDate(e.date)}); the status says ${sp ? P.PHASE_BY_KEY[sp].label.toLowerCase() : 'nothing usable'}`;
+    return sp ? `status read as ${P.PHASE_BY_KEY[sp].label.toLowerCase()}` : 'status not recognised; counted as an open file';
+  }
+  function phaseBasisHTML(p) {
+    const recs = p.records, rank = r => P.PHASE_BY_KEY[r.phase].rank;
+    // Same rule as mergeProject: after a completed build, only the files submitted since count.
+    const doneAt = Math.max(-Infinity, ...recs.flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
+    let live = recs.filter(r => r.phase !== 'cancelled'); const cyc = isFinite(doneAt) && live.some(r => firstAt(r) > doneAt);
+    if (cyc) live = live.filter(r => firstAt(r) > doneAt);
+    // mergeProject sets a 'completed' site with planned units still unpermitted back to construction.
+    const heldBack = p.phase === 'construction' && !live.some(r => r.phase === 'construction') && live.some(r => r.phase === 'completed');
+    const setter = live.filter(r => r.phase === (heldBack ? 'completed' : p.phase)).sort((a, b) => (lastAt(b) || 0) - (lastAt(a) || 0))[0] || null;
+    // Approvals by stage, with the latest submission in each stage.
+    const order = ['precon', 'master', 'siteplan', 'condo', 'other', 'permit'];
+    const stages = order.map(k => {
+      const rs = recs.filter(r => stageKey(r) === k); if (!rs.length) return null;
+      const lv = rs.filter(r => r.phase !== 'cancelled'), best = lv.slice().sort((a, b) => rank(b) - rank(a) || (lastAt(b) || 0) - (lastAt(a) || 0))[0];
+      const newest = rs.slice().sort((a, b) => (firstAt(b) || 0) - (firstAt(a) || 0))[0];
+      return { k, rs, best, newest };
+    }).filter(Boolean);
+    // Flags.
+    const flags = [];
+    for (const k of ['master', 'siteplan']) {
+      const rs = live.filter(r => stageKey(r) === k);
+      const appr = rs.filter(r => rank(r) >= P.PHASE_BY_KEY.approved.rank);
+      const a = appr.sort((x, y) => (phaseAt(y, 'approved') || lastAt(y) || 0) - (phaseAt(x, 'approved') || lastAt(x) || 0))[0];
+      if (a) {
+        const at = phaseAt(a, 'approved') || lastAt(a) || 0;
+        const newer = rs.filter(r => rank(r) <= P.PHASE_BY_KEY.review.rank && (firstAt(r) || 0) > at);
+        if (newer.length) flags.push(['warn', `A newer ${STAGE_NAME[k].toLowerCase()} file (${newer.map(r => `${r.ref || 'no number'}, submitted ${fmtDate(new Date(firstAt(r)))}`).join('; ')}) is still in review after ${a.ref || 'an earlier file'} was approved${at ? ` (${fmtDate(new Date(at))})` : ''}: the approval may be for an earlier proposal, not the current submission.`]);
+      }
+    }
+    const masterLive = live.filter(r => stageKey(r) === 'master'), spLive = live.filter(r => stageKey(r) === 'siteplan');
+    if (p.phase === 'approved' && masterLive.some(r => rank(r) >= 2) && spLive.length && spLive.every(r => rank(r) < 2)) flags.push(['info', 'Zoning / official plan / subdivision approval is in place; the site plan is not yet approved.']);
+    if (p.phase === 'approved' && masterLive.some(r => rank(r) >= 2) && !spLive.length && !live.some(r => r.kind === 'permit')) flags.push(['info', 'Approved at the zoning / official plan / subdivision stage; no site plan file yet (needed before most building permits).']);
+    if (masterLive.some(r => /draft/i.test(r.statusRaw) && r.phase === 'approved')) flags.push(['info', 'Draft plan approval: the subdivision still has to meet its conditions and be registered.']);
+    if (live.some(r => r.kind === 'application' && r.phase === 'approved' && /\bclosed\b/i.test(r.statusRaw) && !phaseAt(r, 'approved'))) flags.push(['warn', 'A planning file’s status is just “Closed”, read as approved (a closed file usually follows approval, but it can also be a file closed without a decision). Check the file.']);
+    if (live.some(r => r.kind === 'permit' && rank(r) >= P.PHASE_BY_KEY.permit.rank) && live.some(r => r.kind === 'application' && r.stage !== 'precon' && rank(r) <= P.PHASE_BY_KEY.review.rank)) flags.push(['warn', 'Building permits are issued while a planning file on the site is still in review: the permits may be for an earlier phase or another building on the site.']);
+    if (setter && /date/.test(phaseBasis(setter)) && setter.statusRaw) flags.push(['info', `The phase comes from a date on ${setter.ref || 'a file'} rather than its published status (“${setter.statusRaw}”).`]);
+    if (live.length && live.every(r => stageKey(r) === 'precon')) flags.push(['info', 'Only a pre-consultation so far: not yet a formal application.']);
+    if (heldBack) flags.push(['info', `${setter && setter.ref ? setter.ref : 'A permit'} reads completed, but ${p.buildout ? fmtNum(p.buildout.remaining) : 'some'} planned unit${p.buildout && p.buildout.remaining === 1 ? '' : 's'} have no building permit yet, so the site is shown as under construction rather than completed.`]);
+    const appeal = live.filter(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
+    if (appeal.length) flags.push(['warn', `Under appeal at the Ontario Land Tribunal (${appeal.map(r => `${r.ref || 'no number'}: “${r.statusRaw}”`).join('; ')}): ${appeal.some(r => r.phase === 'approved') ? 'the status is read as approved, but the decision is not final until the Tribunal rules' : 'the Tribunal, not council, will decide'}.`]);
+    const demo = r => r.kind === 'permit' && /demo/i.test(`${r.ref} ${r.type || ''}`);
+    if (setter && demo(setter) && rank(setter) >= P.PHASE_BY_KEY.permit.rank) flags.push(['warn', `The furthest file is a demolition permit (${setter.ref || 'no number'}): the phase reflects clearing the site, not the new building.`]);
+    if (cyc) flags.push(['info', `An earlier build on the site was completed (${fmtDate(new Date(doneAt))}); only the ${live.length} file${live.length === 1 ? '' : 's'} submitted after it set the phase — approvals and permits from before are for the earlier build.`]);
+    if (recs.some(r => r.phase === 'cancelled') && live.length) flags.push(['info', `${recs.filter(r => r.phase === 'cancelled').length} withdrawn / refused / expired file${recs.filter(r => r.phase === 'cancelled').length === 1 ? '' : 's'} on the site ${recs.filter(r => r.phase === 'cancelled').length === 1 ? 'does' : 'do'} not count.`]);
+    const row = r => `<tr${r === setter ? ' class="pb-set"' : ''}><td>${r === setter ? '★ ' : ''}${esc(r.ref || '—')}<small>${esc(r.kind === 'permit' ? (r.type || 'Building permit') : STAGE_NAME[r.stage || 'other'])}</small></td>
+      <td>${r.statusRaw ? `“${esc(r.statusRaw)}”` : '<span class="muted">none</span>'}<small>${firstAt(r) ? `submitted ${fmtDate(new Date(firstAt(r)))}` : ''}${lastAt(r) && lastAt(r) !== firstAt(r) ? ` · latest ${fmtDate(new Date(lastAt(r)))}` : ''}</small></td>
+      <td>${dot(r.phase)} ${esc(P.PHASE_BY_KEY[r.phase].label)}<small>${esc(phaseBasis(r))}</small></td></tr>`;
+    const MAX = 14, list = recs.slice().sort((a, b) => order.indexOf(stageKey(a)) - order.indexOf(stageKey(b)) || (firstAt(b) || 0) - (firstAt(a) || 0));
+    return `<details class="sect" id="dev-basis" open><summary><h2 class="section-title" data-info="phase-basis">How the phase was set</h2><span class="muted small sect-sum">${esc(P.PHASE_BY_KEY[p.phase].label)}${setter && setter.ref ? ` · from ${esc(setter.ref)}` : ''}</span></summary>
+      <p class="small">The site shows the furthest phase reached by any of its ${cyc ? 'files submitted since the earlier build was completed' : 'files'} that is not withdrawn${setter ? ` — here <strong>${esc(setter.ref || 'one file')}</strong> (★), ${esc(phaseBasis(setter))}` : ''}.</p>
+      <table class="dt pb-stage"><caption>Approvals by stage</caption><thead><tr><th>Stage</th><th>Furthest</th><th>Latest submission</th></tr></thead><tbody>
+        ${stages.map(x => `<tr><td>${esc(STAGE_NAME[x.k])}<small>${x.rs.length} file${x.rs.length === 1 ? '' : 's'}</small></td><td>${x.best ? `${dot(x.best.phase)} ${esc(P.PHASE_BY_KEY[x.best.phase].label)}<small>${esc(x.best.ref || '')}</small>` : `${dot('cancelled')} withdrawn`}</td><td>${x.newest && firstAt(x.newest) ? `${esc(x.newest.ref || '')}<small>${fmtDate(new Date(firstAt(x.newest)))} · ${esc(P.PHASE_BY_KEY[x.newest.phase].label.toLowerCase())}</small>` : '–'}</td></tr>`).join('')}
+      </tbody></table>
+      ${flags.length ? `<ul class="why-list pb-flags">${flags.map(([k, t]) => `<li class="why-${k === 'warn' ? 'stall' : 'ok'}"><span>${esc(t)}</span></li>`).join('')}</ul>` : '<p class="small muted">No conflicts between the files’ statuses and submissions.</p>'}
+      <details class="sub-sect"><summary class="small">Each file: published status and how it was read (${fmtNum(recs.length)})</summary>
+        <table class="dt pb-files"><thead><tr><th>File</th><th>Published status</th><th>Read as</th></tr></thead><tbody>${list.slice(0, MAX).map(row).join('')}</tbody></table>
+        ${list.length > MAX ? `<p class="small muted">+ ${fmtNum(list.length - MAX)} more in Source records.</p>` : ''}</details>
+      <p class="small muted">Statuses are as each municipality publishes them; phases are this app's reading of them (open the ⓘ for the rules). A screening view — confirm against the file before relying on it.</p></details>`;
+  }
   function devHistoryHTML(p, st) {
     const cancelled = p.phase === 'cancelled';
     const steps = P.PHASES.map(s => {
@@ -1840,6 +1916,7 @@
         ${devServicingHTML(p, f)}
       </div>
       <div class="dv-pane" data-dvp="history" role="tabpanel">
+        ${phaseBasisHTML(p)}
         ${devHistoryHTML(p, st)}
         <details class="sect" id="dev-recs"><summary><h2 class="section-title" data-info="source-records">Source records</h2><span class="muted small sect-sum">${fmtNum(p.records.length)} files by type</span></summary>
           ${recs}</details>
@@ -2098,6 +2175,16 @@
     },
   });
   new ToolsControl().addTo(map);
+  // Help on the map (always visible): opens Help & tips.
+  const HelpControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar help-ctl');
+      el.innerHTML = '<button type="button" data-help-open title="Help & tips: guides for common tasks and the tour" aria-label="Help and tips"><span aria-hidden="true">?</span></button>';
+      L.DomEvent.disableClickPropagation(el);
+      return el;
+    },
+  });
   // The Tools button shows when a tool is on.
   const syncToolsBtn = () => { const b = document.querySelector('.tools-btn'); if (b) b.classList.toggle('on', lassoOn || !!tool.mode); document.querySelectorAll('.tools-menu [data-tool]').forEach(x => x.classList.toggle('on', x.dataset.tool === 'lasso' ? lassoOn : tool.mode === x.dataset.tool)); };
 
@@ -2117,6 +2204,7 @@
     },
   });
   new NorthControl().addTo(map);
+  new HelpControl().addTo(map);
   L.control.scale({ position: 'topleft', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
   function updateNorth() {
     const g = document.getElementById('north-rot');
