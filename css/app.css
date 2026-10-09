@@ -371,10 +371,7 @@ button, input, select { font: inherit; color: inherit; }
   .legend { grid-template-columns: 1fr 1fr; gap: 2px 10px; padding: 6px 8px; font-size: 11px; left: 16px; right: auto; bottom: 28px; max-width: calc(100% - 32px); }
   .legend .dot { width: 18px; height: 18px; font-size: 10px; }
   .leaflet-control-attribution { font-size: 9px; max-width: 100vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .map-wrap .map-opts { min-width: 0; width: 160px; padding: 4px 6px; }
-  .map-wrap .map-opts label { grid-template-columns: 1fr; gap: 0; }
-  .map-wrap .map-opts label span { display: none; }
-  .map-wrap .map-opts select { width: 100%; }
+  .map-wrap .map-opts { min-width: 0; width: 236px; padding: 6px 8px; }
   /* Legend: a compact row of numbered dots; tap to expand */
   .legend { cursor: pointer; }
   .legend:not(.expanded) { grid-template-columns: repeat(7, auto); gap: 6px; }
@@ -403,8 +400,8 @@ button, input, select { font: inherit; color: inherit; }
   background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;
   box-shadow: var(--shadow); padding: 6px 8px; display: grid; gap: 4px; font-size: 12px; min-width: 170px;
 }
-.map-opts label { display: grid; grid-template-columns: 72px 1fr; align-items: center; gap: 6px; color: var(--text-secondary); }
-.map-opts select { padding: 2px 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
+.map-opts label { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: 6px; color: var(--text-secondary); }
+.map-opts select { width: 100%; min-width: 0; padding: 3px 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
 .map-opts small { color: var(--text-muted); }
 .map-opts small:empty { display: none; }
 
@@ -891,8 +888,9 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .mk.out { opacity: .45; }
 
 /* Map options: view presets and collapsible layers. */
-.mo-view { display: flex; gap: 4px; margin-bottom: 4px; }
-.mo-view .btn { flex: 1; }
+.mo-view { display: flex; gap: 2px; margin-bottom: 2px; padding: 2px; border-radius: 8px; background: var(--surface-2); }
+.mo-view .btn { flex: 1 1 auto; padding: 4px 6px; font-size: 11.5px; border: 0; background: transparent; border-radius: 6px; white-space: nowrap; }
+.mo-view .btn.on { background: var(--accent); color: #fff; }
 .map-opts details.mo-more > summary { cursor: pointer; font-size: 12px; color: var(--text-secondary); padding: 2px 0; }
 .map-opts details.mo-more[open] > summary { margin-bottom: 4px; }
 /* Map legend. */
@@ -1019,3 +1017,24 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dcn-more > summary { cursor: pointer; margin: 4px 0; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .dcn-gap-t, :root:not([data-theme="light"]) .dcn-table tr.dcn-gap td[data-l="Runs out"] { color: #ff8787; } }
 :root[data-theme="dark"] .dcn-gap-t, :root[data-theme="dark"] .dcn-table tr.dcn-gap td[data-l="Runs out"] { color: #ff8787; }
+
+/* Layers & style: sections and on / off chips */
+.map-opts { min-width: 240px; }
+.mo-sec { display: grid; gap: 5px; padding-top: 7px; margin-top: 3px; border-top: 1px solid var(--border); }
+.mo-h { font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--text-muted); }
+.mo-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.mo-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; }
+.mo-k { color: var(--text-secondary); }
+.map-opts label.mo-chip { display: inline-flex; position: relative; cursor: pointer; grid-template-columns: none; }
+.mo-chip input { position: absolute; opacity: 0; width: 1px; height: 1px; margin: 0; pointer-events: none; }
+.mo-chip > span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border: 1px solid var(--border); border-radius: 999px; font-size: 11.5px; line-height: 1.3; color: var(--text-secondary); background: var(--surface-1); transition: background .12s, border-color .12s; }
+.mo-chip > span span { display: inline !important; }
+.mo-chip input:checked + span { color: var(--text-primary); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, var(--surface-1)); font-weight: 500; }
+.mo-chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+.mo-chip .lg-line { display: inline-block; width: 14px; height: 3px; border-radius: 2px; }
+.mo-chip .da-swatch { width: 16px; height: 11px; flex: none; }
+.map-opts .mo-dct { justify-self: start; padding: 0; margin: 0; }
+.map-opts details.mo-more > summary { font-weight: 500; }
+/* The options panel (top right) and the legend (bottom right) share the map's height. */
+.map-opts details.mo-more[open] { max-height: calc(var(--map-h, 640px) * .55 - 44px); overflow-y: auto; overscroll-behavior: contain; padding-right: 2px; }
+.map-legend { max-height: calc(var(--map-h, 640px) * .34); }

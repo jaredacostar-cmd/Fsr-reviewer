@@ -219,10 +219,13 @@ application.
   with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
   lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
   Excel is clicked. Per-file record tables are left to *Export CSV*.
-- **Map views**: *Planning* (aerial, addresses, markers by phase) and *Servicing* (street map,
-  no labels, pressure zone outlines, markers coloured by servicing layer and sized by build-out
-  people + jobs, catchment flow growth). Each view remembers its own settings. Under *Layers &
-  style*: marker colour (phase / servicing layer / receiving plant), size (same / people + jobs;
+- **Map views**: *Planning* (aerial, addresses, markers by phase), *Water* (street map, pressure
+  zones shaded by max day growth, markers by servicing layer sized by people + jobs, existing
+  watermains, DC water works), *Wastewater* (drainage areas, sewer pipe capacity, existing sanitary
+  sewers, DC wastewater works) and *DC* (markers by servicing timing, all DC works). Each view
+  remembers its own settings. *Layers & style* is grouped into Developments, Capacity,
+  Infrastructure (on / off chips for zones, catchments, existing pipes, DC works and the DC timing
+  table) and Base map. Under *Layers & style*: marker colour (phase / servicing layer / receiving plant), size (same / people + jobs;
   clusters then total people + jobs) and a **capacity layer** — catchment flow growth over the
   census, pumping station build-out peak wet weather flow as % of firm capacity (green / amber /
   red), or pressure zone max day growth — with the sewer network drawn outlet to outlet. A legend
