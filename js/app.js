@@ -3518,7 +3518,7 @@
     L.circleMarker([end[1], end[0]], { radius: 8, className: 'svc-plant' }).bindTooltip(esc(plantName === 'Toronto' ? 'City of Toronto system' : plantLabel(plantName)), { className: 'pt' }).addTo(TRACE.layer);
     addFlowMarker();
     // Blocks passed, in order.
-    const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && blocks[blocks.length - 1] !== b.id) blocks.push(b.id); }
+    const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && !blocks.includes(b.id)) blocks.push(b.id); }
     const bd = L.latLngBounds([[p.lat, p.lng], [end[1], end[0]]]); for (const i of route) for (const [x, y] of pipeCoords(P[i])) bd.extend([y, x]);
     map.fitBounds(bd, { padding: [30, 30] });
     const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k };
@@ -3816,7 +3816,7 @@
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
     if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
-    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
+    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
@@ -4494,12 +4494,15 @@
   function pipeStats(i) {
     const p = SEW.data.pipes[i], cap = p[2];
     const today = pipeFlow(i, 'today'), then = pipeFlow(i, capYear);
-    return { p, cap, today, then, r0: cap ? today.q / cap : null, r1: cap ? then.q / cap : null, growthShare: cap ? then.growth / cap : null };
+    // A published slope under 0.01% (6 trunks, e.g. a 3048 mm main at 0.002%) is a data error,
+    // not a flat pipe: its capacity isn't trusted (shown as no reliable slope, like a missing one).
+    const ok = cap && p[1] >= 0.0001;
+    return { p, cap: ok ? cap : 0, badSlope: !!cap && !ok, today, then, r0: ok ? today.q / cap : null, r1: ok ? then.q / cap : null, growthShare: ok ? then.growth / cap : null };
   }
   function pipeTip(i) {
     const s = pipeStats(i), p = s.p, D0 = SEW.data;
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
-      <br>Slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a (no slope)'}
+      <br>Slope ${(p[1] * 100).toFixed(3)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : s.badSlope ? 'n/a (published slope not reliable)' : 'n/a (no slope)'}
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(Math.round(s.then.jobs))} jobs` : ''}
       <br>Existing peak dry ${fmtNum(Math.round(s.then.exist))} L/s${s.then.f !== 1 ? ` (×${s.then.f.toFixed(2)} measured)` : ''} + growth peak wet ${fmtNum(Math.round(s.then.growth))} L/s
       <br>Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` (${Math.round(s.r0 * 100)}%, ${pipeState(s.r0)[3].toLowerCase()})` : ''} → ${capYear == null ? 'build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` (<strong>${Math.round(s.r1 * 100)}%, ${pipeState(s.r1)[3].toLowerCase()}</strong>)` : ''}
@@ -4581,7 +4584,7 @@
       ['q', '<strong>Flow Q</strong>', `<strong>${ls(s.today.q)}</strong>`, `<strong>${ls(s.then.q)}</strong>`,
         `Q = existing + residential + employment + I&amp;I.<br>Today: ${n1(t.exist)} + ${n1(t.qr)} + ${n1(t.qe)} + ${n1(t.qi)} = ${ls(s.today.q)}.<br>${esc(yr)}: ${n1(b.exist)} + ${n1(b.qr)} + ${n1(b.qe)} + ${n1(b.qi)} = <strong>${ls(s.then.q)}</strong>${p[11] < 1 ? `. This pipe takes ${Math.round(p[11] * 100)}% of the flow at a split` : ''}.`],
       ['cap', 'Full-pipe capacity', Qf ? `${fmtNum(Qf)} L/s` : 'n/a', Qf ? `${fmtNum(Qf)} L/s` : 'n/a',
-        `Manning, flowing full: Q<sub>full</sub> = (1/n) · A · R<sup>2/3</sup> · S<sup>1/2</sup>, n = 0.013.<br>D = ${p[0]} mm → A = π D² / 4 = ${A.toFixed(3)} m², R = D / 4 = ${R.toFixed(3)} m; S = ${(S * 100).toFixed(2)}% (published slope).<br>Q<sub>full</sub> = (1 / 0.013) × ${A.toFixed(3)} × ${R.toFixed(3)}<sup>2/3</sup> × ${S.toFixed(4)}<sup>1/2</sup> = <strong>${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}</strong>.`],
+        `Manning, flowing full: Q<sub>full</sub> = (1/n) · A · R<sup>2/3</sup> · S<sup>1/2</sup>, n = 0.013.<br>D = ${p[0]} mm → A = π D² / 4 = ${A.toFixed(3)} m², R = D / 4 = ${R.toFixed(3)} m; S = ${(S * 100).toFixed(2)}% (published slope).<br>Q<sub>full</sub> = (1 / 0.013) × ${A.toFixed(3)} × ${R.toFixed(3)}<sup>2/3</sup> × ${S.toFixed(5)}<sup>1/2</sup> = <strong>${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}</strong>.${s.badSlope ? ` The published slope (${(S * 100).toFixed(3)}%) is under 0.01%, far flatter than the pipes either side: taken as a data error, so no capacity is computed and the pipe is left out of the tightest-pipe checks.` : ''}`],
       ['used', 'Capacity used', pct(s.r0), `<strong>${pct(s.r1)}</strong>`,
         `Q / Q<sub>full</sub>. Today ${n1(s.today.q)} / ${Qf ? fmtNum(Qf) : '–'} = ${pct(s.r0)}; ${esc(yr)} ${n1(s.then.q)} / ${Qf ? fmtNum(Qf) : '–'} = <strong>${pct(s.r1)}</strong>.`],
       ['state', 'State', stCell(s.r0), stCell(s.r1),
