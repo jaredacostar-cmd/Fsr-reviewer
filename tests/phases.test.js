@@ -133,3 +133,33 @@ test('date parsing handles epoch ms, ISO and yyyymmdd', () => {
   assert.equal(P.parseDate('not a date'), null);
   assert.equal(P.parseDate(0), null);
 });
+
+test('only a site plan approval makes the site Approved', () => {
+  const pt = { type: 'Point', coordinates: [-79.7, 43.6] };
+  const am = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }, { name: 'APPROVAL_DATE', type: 'esriFieldTypeDate' }]);
+  const rec = (id, ref, status, approved) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { FILE_NO: ref, STATUS: status, ADDRESS: '9 King St', SUBMITTED_DATE: Date.UTC(2020, 0, 1), APPROVAL_DATE: approved ? Date.UTC(2022, 0, 1) : null } }, am, appSrc);
+  const oz = rec(1, 'OZ 20/1', 'Approved', true);
+  assert.equal(oz.phase, 'approved', 'the zoning file itself reads approved');
+  const only = P.buildProjects([oz])[0];
+  assert.equal(only.phase, 'review', 'zoning approval alone keeps the site under review');
+  assert.equal(only.milestones.approved, undefined);
+  assert.equal(only.planApproved.date.toISOString().slice(0, 10), '2022-01-01');
+  const withSp = P.buildProjects([oz, rec(2, 'SP 21/4', 'Under Review', false)])[0];
+  assert.equal(withSp.phase, 'review');
+  const spOk = P.buildProjects([oz, rec(3, 'SP 21/4', 'Approved', true)])[0];
+  assert.equal(spOk.phase, 'approved');
+  assert.equal(spOk.milestones.approved.toISOString().slice(0, 10), '2022-01-01');
+});
+
+test('legacy "Transferred" site plans and approvals before a pending rezoning do not make a site Approved', () => {
+  const pt = { type: 'Point', coordinates: [-79.7, 43.6] };
+  const am = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }, { name: 'APPROVAL_DATE', type: 'esriFieldTypeDate' }]);
+  const rec = (id, ref, status, sub, appr) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { FILE_NO: ref, STATUS: status, ADDRESS: '3 Elm St', SUBMITTED_DATE: sub ? Date.UTC(sub, 0, 1) : null, APPROVAL_DATE: appr ? Date.UTC(appr, 0, 1) : null } }, am, appSrc);
+  const legacy = rec(1, 'SP89-009.000', 'Transferred');
+  assert.equal(P.buildProjects([legacy])[0].phase, 'completed', 'legacy files only: an old, built approval');
+  assert.equal(P.buildProjects([legacy, rec(2, 'OZS-2024-0001', 'In Review', 2024)])[0].phase, 'review');
+  const sp = rec(3, 'SP 18/2', 'Approved', 2017, 2018);
+  assert.equal(P.buildProjects([sp])[0].phase, 'approved');
+  assert.equal(P.buildProjects([rec(3, 'SP 18/2', 'Approved', 2017, 2018), rec(4, 'OZ 23/1', 'Under Review', 2023)])[0].phase, 'review', 'pending rezoning after the approval');
+  assert.equal(P.buildProjects([rec(3, 'SP 18/2', 'Approved', 2017, 2018), rec(5, 'OZ 23/1', 'Approved', 2023, 2024)])[0].phase, 'approved', 'an approved later rezoning does not undo it');
+});

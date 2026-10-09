@@ -1545,6 +1545,14 @@
     return list;
   }
   // Status: the event behind the current phase, signals in the status text, stalled or not.
+  // Zoning / official plan / subdivision approved, but no site plan approval yet: the site stays
+  // under review (only a site plan approval makes it Approved).
+  function planApprovedNote(p) {
+    const a = p.planApproved;
+    if (!a || p.rank >= P.PHASE_BY_KEY.approved.rank) return '';
+    const sp = p.records.some(r => r.kind === 'application' && r.stage === 'siteplan' && r.phase !== 'cancelled');
+    return `Zoning / official plan / subdivision approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no site plan file yet'}`;
+  }
   function statusOf(p) {
     const apps = p.records.filter(r => r.kind === 'application');
     const seen = new Map();
@@ -1557,6 +1565,8 @@
     const ev = p.timeline.filter(t => t.phase === p.phase).sort((a, b) => b.date - a.date)[0];
     const label = P.PHASE_BY_KEY[p.phase].label;
     const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
+    const pa = planApprovedNote(p);
+    const why2 = pa ? `${why}. ${esc(pa)}` : why;
     const stalled = PLANNING_PHASES.includes(p.phase) && p.last && Date.now() - p.last > 2 * YEAR_MS;
     const years = p.last ? (Date.now() - p.last) / YEAR_MS : 0;
     const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
@@ -1565,7 +1575,7 @@
     // The most recently active application and its status text.
     const lastOf = r => r.events.length ? Math.max(...r.events.map(e => +e.date)) : 0;
     const latest = apps.slice().sort((a, b) => lastOf(b) - lastOf(a))[0];
-    return { sig, why, stalled, years, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
+    return { sig, why: why2, stalled, years, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
   }
 
   const psName = a => drName(a).replace(/^[^·]+· /, '');
@@ -1578,6 +1588,7 @@
   function devFlags(p, st, f) {
     const out = [];
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
+    if (planApprovedNote(p)) out.push(chip('Zoning approved · site plan pending'));
     if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
     if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
     if (f) {
@@ -1695,8 +1706,8 @@
     }
     const h = (state.history && state.history.projects && state.history.projects[p.key]) || [];
     // Only actual moves: the first weekly check ("first seen as") is when tracking began, not an event.
-    h.forEach(([d, ph], i) => {
-      if (!i) return;
+    h.forEach(([d, ph, tag], i) => {
+      if (!i || tag === 'rules') return;
       const at = new Date(`${d}T23:59:59`), why = p.timeline.filter(e => e.phase === ph && e.date <= at).sort((a, b) => b.date - a.date)[0];
       ev.push({ date: new Date(`${d}T12:00:00`), seq: i + 1, type: 'phase', phase: ph, text: `Moved to ${P.PHASE_BY_KEY[ph].label}`, why });
     });
@@ -1757,25 +1768,28 @@
   const firstAt = r => r.events.length ? +r.events[0].date : null;
   const lastAt = r => r.events.length ? +r.events[r.events.length - 1].date : null;
   const phaseAt = (r, ph) => { const e = r.events.filter(x => x.phase === ph); return e.length ? +e[e.length - 1].date : null; };
+  const siteNote = r => P.sitePhaseOf(r) === r.phase ? '' : r.superseded ? '; approved before a newer rezoning that is still in review, so it no longer counts as the site’s approval'
+    : '; not a site plan approval, so it keeps the site under review';
   function phaseBasis(r) {
+    if (P.isLegacy(r)) return 'Brampton legacy site plan (“Transferred” from the old system, no dates): an old approval, not counted for the current proposal';
     if (!r.statusRaw) return r.events.some(e => e.phase === r.phase) ? `from its ${P.humanizeField(r.events.filter(e => e.phase === r.phase).pop().label).toLowerCase()} date (no status published)` : (r.kind === 'permit' ? 'listed as a permit (no status published)' : 'an open file (no status published)');
     let sp = P.phaseFromStatus(r.statusRaw);
     if (r.kind === 'application' && ['permit', 'construction', 'completed'].includes(sp)) sp = 'approved';
     if (r.stage === 'precon' && r.phase === 'inception' && sp !== 'inception' && sp !== 'cancelled') return 'pre-consultation: counted as inception whatever its status';
-    if (sp === r.phase || (r.kind === 'permit' && ['review', 'permit'].includes(r.phase))) return /\bclosed\b/i.test(r.statusRaw) && r.kind === 'application' && r.phase === 'approved' ? 'status “Closed” read as approved' : 'from its status';
+    if (sp === r.phase || (r.kind === 'permit' && ['review', 'permit'].includes(r.phase))) return (/\bclosed\b/i.test(r.statusRaw) && r.kind === 'application' && r.phase === 'approved' ? 'status “Closed” read as approved' : 'from its status') + siteNote(r);
     const e = r.events.filter(x => x.phase === r.phase).pop();
-    if (e) return `from its ${P.humanizeField(e.label).toLowerCase()} date (${fmtDate(e.date)}); the status says ${sp ? P.PHASE_BY_KEY[sp].label.toLowerCase() : 'nothing usable'}`;
+    if (e) return `from its ${P.humanizeField(e.label).toLowerCase()} date (${fmtDate(e.date)}); the status says ${sp ? P.PHASE_BY_KEY[sp].label.toLowerCase() : 'nothing usable'}${siteNote(r)}`;
     return sp ? `status read as ${P.PHASE_BY_KEY[sp].label.toLowerCase()}` : 'status not recognised; counted as an open file';
   }
   function phaseBasisHTML(p) {
     const recs = p.records, rank = r => P.PHASE_BY_KEY[r.phase].rank;
     // Same rule as mergeProject: after a completed build, only the files submitted since count.
     const doneAt = Math.max(-Infinity, ...recs.flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
-    let live = recs.filter(r => r.phase !== 'cancelled'); const cyc = isFinite(doneAt) && live.some(r => firstAt(r) > doneAt);
+    let live = recs.filter(r => r.phase !== 'cancelled' && (p.legacyOnly || !P.isLegacy(r))); const cyc = isFinite(doneAt) && live.some(r => firstAt(r) > doneAt);
     if (cyc) live = live.filter(r => firstAt(r) > doneAt);
     // mergeProject sets a 'completed' site with planned units still unpermitted back to construction.
     const heldBack = p.phase === 'construction' && !live.some(r => r.phase === 'construction') && live.some(r => r.phase === 'completed');
-    const setter = live.filter(r => r.phase === (heldBack ? 'completed' : p.phase)).sort((a, b) => (lastAt(b) || 0) - (lastAt(a) || 0))[0] || null;
+    const setter = live.filter(r => P.sitePhaseOf(r) === (heldBack ? 'completed' : p.phase)).sort((a, b) => (lastAt(b) || 0) - (lastAt(a) || 0))[0] || null;
     // Approvals by stage, with the latest submission in each stage.
     const order = ['precon', 'master', 'siteplan', 'condo', 'other', 'permit'];
     const stages = order.map(k => {
@@ -1797,13 +1811,16 @@
       }
     }
     const masterLive = live.filter(r => stageKey(r) === 'master'), spLive = live.filter(r => stageKey(r) === 'siteplan');
-    if (p.phase === 'approved' && masterLive.some(r => rank(r) >= 2) && spLive.length && spLive.every(r => rank(r) < 2)) flags.push(['info', 'Zoning / official plan / subdivision approval is in place; the site plan is not yet approved.']);
-    if (p.phase === 'approved' && masterLive.some(r => rank(r) >= 2) && !spLive.length && !live.some(r => r.kind === 'permit')) flags.push(['info', 'Approved at the zoning / official plan / subdivision stage; no site plan file yet (needed before most building permits).']);
+    if (planApprovedNote(p)) flags.push(['info', `${planApprovedNote(p)}. Only a site plan approval makes the site Approved, so it stays under review${spLive.length ? '' : ' (a subdivision of freehold houses may go straight to building permits without a site plan)'}.`]);
     if (masterLive.some(r => /draft/i.test(r.statusRaw) && r.phase === 'approved')) flags.push(['info', 'Draft plan approval: the subdivision still has to meet its conditions and be registered.']);
     if (live.some(r => r.kind === 'application' && r.phase === 'approved' && /\bclosed\b/i.test(r.statusRaw) && !phaseAt(r, 'approved'))) flags.push(['warn', 'A planning file’s status is just “Closed”, read as approved (a closed file usually follows approval, but it can also be a file closed without a decision). Check the file.']);
     if (live.some(r => r.kind === 'permit' && rank(r) >= P.PHASE_BY_KEY.permit.rank) && live.some(r => r.kind === 'application' && r.stage !== 'precon' && rank(r) <= P.PHASE_BY_KEY.review.rank)) flags.push(['warn', 'Building permits are issued while a planning file on the site is still in review: the permits may be for an earlier phase or another building on the site.']);
     if (setter && /date/.test(phaseBasis(setter)) && setter.statusRaw) flags.push(['info', `The phase comes from a date on ${setter.ref || 'a file'} rather than its published status (“${setter.statusRaw}”).`]);
     if (live.length && live.every(r => stageKey(r) === 'precon')) flags.push(['info', 'Only a pre-consultation so far: not yet a formal application.']);
+    const sup = live.filter(r => r.superseded);
+    if (sup.length) flags.push(['warn', `${sup.map(r => r.ref || 'A site plan').join(', ')} ${sup.length === 1 ? 'was' : 'were'} approved before a newer rezoning / official plan / subdivision file that is still in review: ${sup.length === 1 ? 'that approval was' : 'those approvals were'} for an earlier proposal, so the site is under review.`]);
+    const leg = recs.filter(r => P.isLegacy(r));
+    if (leg.length && !p.legacyOnly) flags.push(['info', `${leg.length} Brampton legacy site plan file${leg.length === 1 ? '' : 's'} (“Transferred”, ${leg.slice(0, 3).map(r => r.ref).join(', ')}${leg.length > 3 ? '…' : ''}) ${leg.length === 1 ? 'is an old approval and does' : 'are old approvals and do'} not count for the current proposal.`]);
     if (heldBack) flags.push(['info', `${setter && setter.ref ? setter.ref : 'A permit'} reads completed, but ${p.buildout ? fmtNum(p.buildout.remaining) : 'some'} planned unit${p.buildout && p.buildout.remaining === 1 ? '' : 's'} have no building permit yet, so the site is shown as under construction rather than completed.`]);
     const appeal = live.filter(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
     if (appeal.length) flags.push(['warn', `Under appeal at the Ontario Land Tribunal (${appeal.map(r => `${r.ref || 'no number'}: “${r.statusRaw}”`).join('; ')}): ${appeal.some(r => r.phase === 'approved') ? 'the status is read as approved, but the decision is not final until the Tribunal rules' : 'the Tribunal, not council, will decide'}.`]);
@@ -1816,7 +1833,8 @@
       <td>${dot(r.phase)} ${esc(P.PHASE_BY_KEY[r.phase].label)}<small>${esc(phaseBasis(r))}</small></td></tr>`;
     const MAX = 14, list = recs.slice().sort((a, b) => order.indexOf(stageKey(a)) - order.indexOf(stageKey(b)) || (firstAt(b) || 0) - (firstAt(a) || 0));
     return `<details class="sect" id="dev-basis" open><summary><h2 class="section-title" data-info="phase-basis">How the phase was set</h2><span class="muted small sect-sum">${esc(P.PHASE_BY_KEY[p.phase].label)}${setter && setter.ref ? ` · from ${esc(setter.ref)}` : ''}</span></summary>
-      <p class="small">The site shows the furthest phase reached by any of its ${cyc ? 'files submitted since the earlier build was completed' : 'files'} that is not withdrawn${setter ? ` — here <strong>${esc(setter.ref || 'one file')}</strong> (★), ${esc(phaseBasis(setter))}` : ''}.</p>
+      ${p.legacyOnly ? '<p class="small">Only Brampton legacy site plan files (“Transferred” from the old system, mostly 1980s–1990s, no dates): an old approval of a building long since built, so the site is shown as completed.</p>' : ''}
+      <p class="small">Approved means a <strong>site plan</strong> is approved: zoning, official plan, subdivision and condominium approvals keep the site under review. Otherwise the site shows the furthest phase reached by any of its ${cyc ? 'files submitted since the earlier build was completed' : 'files'} that is not withdrawn${setter ? ` — here <strong>${esc(setter.ref || 'one file')}</strong> (★), ${esc(phaseBasis(setter))}` : ''}.</p>
       <table class="dt pb-stage"><caption>Approvals by stage</caption><thead><tr><th>Stage</th><th>Furthest</th><th>Latest submission</th></tr></thead><tbody>
         ${stages.map(x => `<tr><td>${esc(STAGE_NAME[x.k])}<small>${x.rs.length} file${x.rs.length === 1 ? '' : 's'}</small></td><td>${x.best ? `${dot(x.best.phase)} ${esc(P.PHASE_BY_KEY[x.best.phase].label)}<small>${esc(x.best.ref || '')}</small>` : `${dot('cancelled')} withdrawn`}</td><td>${x.newest && firstAt(x.newest) ? `${esc(x.newest.ref || '')}<small>${fmtDate(new Date(firstAt(x.newest)))} · ${esc(P.PHASE_BY_KEY[x.newest.phase].label.toLowerCase())}</small>` : '–'}</td></tr>`).join('')}
       </tbody></table>
@@ -2299,24 +2317,24 @@
     let growth = '';
     const bc = baselineCensus();
     if (bc) {
-      const gr = PeelAreas.growthSince(sel, {}, bc.date, c);
+      const gr = PeelAreas.growthSince(sel, {}, bc.date, c), sj = svcJobs(sel.filter(p => p.phase !== 'cancelled'), bc.date);
       let pop = 0, dw = 0, nDa = 0;
       for (const d of bc.das) {
         if (selAreas.some(g => P.pointInRings(d.lng, d.lat, [g]))) { pop += d.pop; dw += d.dw; nDa++; }
       }
-      const g = (label, cls, units, people, note) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">+${fmtNum(Math.round(people))}</div><div class="ss">people · +${fmtNum(units)} units${note ? ` · ${note}` : ''}</div></div>`;
+      const g = (label, cls, units, people, note, jobs) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">+${fmtNum(Math.round(people))}</div><div class="ss">people · +${fmtNum(units)} units${jobs > 0 ? ` · +${fmtNum(Math.round(jobs))} jobs` : ''}${note ? ` · ${note}` : ''}</div></div>`;
       const layers = [['base', pop], ['built', gr.built.population], ['approved', gr.approved.population], ['proposed', gr.proposed.population]];
       const sum = layers.reduce((t, l) => t + l[1], 0);
       growth = `<details class="sect" open><summary><h2 class="section-title" data-info="census">Growth since ${bc.year}</h2>
           <span class="muted small sect-sum">${nDa ? `${fmtNum(Math.round(pop))} → ${fmtNum(Math.round(sum))} people` : ''}</span></summary>
         <div class="sum-tiles">
           ${nDa ? `<div class="sum-tile"><div class="sl">${bc.year} Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
-          ${g('Built since', 's-done', gr.built.units, gr.built.population)}
-          ${g('Approved', 's-perm', gr.approved.units, gr.approved.population, 'not yet built')}
-          ${g('Proposed', 's-left', gr.proposed.units, gr.proposed.population, 'in review')}
+          ${g('Built since', 's-done', gr.built.units, gr.built.population, '', sj.jbuilt)}
+          ${g('Approved', 's-perm', gr.approved.units, gr.approved.population, 'site plan approved, not yet built', sj.japproved)}
+          ${g('Proposed', 's-left', gr.proposed.units, gr.proposed.population, 'in review', sj.jproposed)}
         </div>
         ${sum > 0 ? `<div class="grow-bar sel-grow" role="img" aria-label="Growth layers">${layers.filter(l => l[1] > 0).map(([k, v]) => `<span class="gseg g-${k}" style="flex:${v}" title="${fmtNum(Math.round(v))} people"></span>`).join('')}</div>` : ''}
-        <p class="small muted">${nDa ? 'Census: dissemination areas whose centre falls inside the drawn area(s). ' : ''}Built = units on permits completed since census day; approved = committed growth; proposed = applications in pre-consultation or review. People at Peel persons-per-unit.</p>
+        <p class="small muted">${nDa ? 'Census: dissemination areas whose centre falls inside the drawn area(s). ' : ''}Built = units on permits completed since census day; approved = site plan approved or permit issued, not yet built; proposed = applications in pre-consultation or review (including zoning approved without a site plan approval). People at Peel persons-per-unit; jobs from the floor area the applications state.</p>
       </details>`;
     }
     const byUnits = sel.slice().sort((a, b) => (b.units || 0) - (a.units || 0));
@@ -5156,6 +5174,9 @@
     const g = { muni: state.muni, sp: state.sp, mtsa: state.mtsa };
     const base = da ? { population: da.pop, dwellings: da.dw, das: 1 } : PeelAreas.censusTotals(bc.das, g);
     const gr = PeelAreas.growthSince(da ? da.projects : state.projects, da ? {} : g, bc.date, state.criteria);
+    // Employment growth: jobs on development sites (from the floor area the applications state).
+    const jb = svcJobs((da ? da.projects : state.projects).filter(p => p.phase !== 'cancelled' && (da || PeelAreas.inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa }))), bc.date);
+    gr.built.jobs = jb.jbuilt; gr.approved.jobs = jb.japproved; gr.proposed.jobs = jb.jproposed;
     const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title} · ${fmtNum(da.projects.length)} development site${da.projects.length === 1 ? '' : 's'} in this DA`
       : [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
     $('#c-ctx').innerHTML = da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
@@ -5164,14 +5185,14 @@
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
     const allPop = futPop + gr.proposed.population, allDw = futDw + gr.proposed.units;
-    const tile = (label, pop, dw, sub, info) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div>
+    const tile = (label, pop, dw, sub, info, jobs) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div>
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
-      <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div></div>`;
+      <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(Math.round(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
     $('#c-tiles').innerHTML = [
       tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
-      tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built'),
-      tile('+ Approved, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved'),
-      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed'),
+      tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
+      tile('+ Approved or permitted, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
+      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
     ].join('');
     renderGrowthChart(base, gr, Y);
     const ha = gr.built.ha + gr.approved.ha + gr.proposed.ha, ii = gr.built.ii + gr.approved.ii + gr.proposed.ii;
@@ -5180,7 +5201,7 @@
     const earliest = state.censuses[state.censuses.length - 1].year;
     const why = start == null ? `all years: earliest census with data (${earliest})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
     renderForecast(bc);
-    $('#c-note').textContent = `${name} · ${Y} Census baseline (${why}) · built = permits completed since census day (${censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = committed growth; proposed = applications in pre-consultation or review; people at Peel persons-per-unit · other filters ignored`;
+    $('#c-note').textContent = `${name} · ${Y} Census baseline (${why}) · built = permits completed since census day (${censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review, including zoning / official plan / subdivision approved without a site plan approval; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored`;
   }
 
   // Growth in the application pipeline against the 2051 growth allocated to each municipality
@@ -5214,10 +5235,10 @@
   // layer order, so there is no second axis. Values are direct-labelled in the legend.
   function renderGrowthChart(base, gr, Y = 2021) {
     const layers = [
-      { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings },
-      { key: 'built', label: `Built since ${Y}`, people: gr.built.population, dwellings: gr.built.units },
-      { key: 'approved', label: 'Approved', people: gr.approved.population, dwellings: gr.approved.units },
-      { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units },
+      { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings, jobs: 0 },
+      { key: 'built', label: `Built since ${Y}`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
+      { key: 'approved', label: 'Site plan approved or permit issued', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
+      { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units, jobs: gr.proposed.jobs || 0 },
     ];
     const bar = (measure, unit) => {
       const total = layers.reduce((t, l) => t + l[measure], 0);
@@ -5229,11 +5250,11 @@
       }).join('');
       return `<div class="grow-row"><div class="grow-label">${unit[0].toUpperCase() + unit.slice(1)}</div>
         <div class="grow-bar" role="img" aria-label="${esc(layers.map(l => `${l.label} ${fmtNum(Math.round(l[measure]))}`).join(', '))} ${unit}">${segs}</div>
-        <div class="grow-total">${fmtNum(Math.round(total))}<span class="u">${unit === 'people' ? 'pop' : 'units'}</span></div></div>`;
+        <div class="grow-total">${fmtNum(Math.round(total))}<span class="u">${unit === 'people' ? 'pop' : unit === 'jobs' ? 'jobs' : 'units'}</span></div></div>`;
     };
     const legend = layers.map(l => `<li><i class="gsw g-${l.key}" aria-hidden="true"></i><span>${esc(l.label)}</span>
-      <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings</span></li>`).join('');
-    $('#c-chart').innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}
+      <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings${l.key === 'base' ? '' : ` · +${fmtNum(Math.round(l.jobs))} jobs`}</span></li>`).join('');
+    $('#c-chart').innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
       <ul class="grow-legend">${legend}</ul><div class="grow-tip" id="grow-tip" hidden></div>`;
   }
   // Hover / tap tooltip for the growth bars.
