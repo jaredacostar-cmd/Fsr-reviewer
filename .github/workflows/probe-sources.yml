@@ -10,12 +10,13 @@ name: Probe data sources
 #  mode=servicing: Peel water pressure zones and wastewater drainage areas
 #  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
 #  mode=peel-reports: download Peel wastewater annual reports and water quality reports to the peel-reports branch
+#  mode=refs-council: download reference documents and probe council meeting portals (pushed to the ref-docs branch)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build or peel-reports'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports or refs-council'
         default: 'all'
         required: false
 
@@ -69,6 +70,17 @@ jobs:
           git add -f peel-reports
           git commit -m "Peel wastewater annual reports and water quality reports"
           git push -f origin peel-reports
+      - name: Reference documents and council meeting probe (pushed to the ref-docs branch)
+        if: inputs.mode == 'refs-council'
+        run: |
+          node scripts/fetch-docs.js --out ref-docs
+          node scripts/probe-council.js --out ref-docs/council
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B ref-docs
+          git add -f ref-docs
+          git commit -m "Reference documents and council probe"
+          git push -f origin ref-docs
       - name: Rebuild pressure zones and drainage areas (committed to this branch)
         if: inputs.mode == 'servicing-build'
         run: |
