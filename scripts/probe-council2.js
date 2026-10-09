@@ -18,7 +18,7 @@ const get = async (url, opts = {}) => { try { const r = await fetch(url, { heade
       fs.writeFileSync(path.join(out, `${muni}-${v}.html`), r.text);
       rep[muni].variants[v] = { status: r.status, bytes: r.text.length, items: (r.text.match(/AgendaItemTitle/g) || []).length, files: (r.text.match(/OZS-\d{4}-\d{4}|OZ\/OPA \d\d-\d+|OZ \d\d-\d+|POPA \d{4}-\d{4}|RZ \d{4}-\d{4}|21T-\d+/g) || []).length, carried: (r.text.match(/Carried|CARRIED/g) || []).length };
     }
-    if (m.MeetingDocumentLink) { const r = await get(`https://${host}/${m.MeetingDocumentLink.replace(/^\//, '')}`); rep[muni].docLink = { url: m.MeetingDocumentLink, status: r.status, bytes: r.text.length }; }
+    rep[muni].docLink = m.MeetingDocumentLink;
     rep[muni].meetingCount = ms.length;
   }
   fs.writeFileSync(path.join(out, 'probe2.json'), JSON.stringify(rep, null, 1));
