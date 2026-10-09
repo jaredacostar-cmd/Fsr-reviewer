@@ -249,5 +249,73 @@
         "pages": "pp. 4, 8; Summary report pp. 33, 76"
       }
     ]
-  }
+  },
+  "standards": [
+    {
+      "id": "linear-ww",
+      "title": "Region of Peel – Linear Wastewater Standards (published Nov 2022, R1.0 Mar 2023)",
+      "url": "https://peelregion.ca/sites/default/files/2024-08/peel-linear-wastewater-standards.pdf",
+      "used": "Residential 290 L/cap/d, non-residential 270 L/emp/d (s. 2.2); Harmon peaking, limited to 2.0–4.0 (s. 2.4); I&I 0.26 L/s/ha of gross area (s. 2.5); persons per unit 4.2 single/semi, 3.4 townhouse, 3.1 large apartment, 1.7 small apartment, 2.7 where apartments exceed 475 persons/ha (Tables 2-1, 2-2); design flow = ADWF × PF + I&I (s. 2.6)."
+    },
+    {
+      "id": "modelling-table",
+      "title": "Region of Peel – Water and Wastewater Modelling Demand Table, Site Plan applications (v2.0, Aug 30 2024)",
+      "url": "https://peelregion.ca/sites/default/files/2024-09/Water%20and%20Wastewater%20Modelling%20Demand%20Table%20-%20Site%20Plan%20applications%20%28August%202024%29.pdf",
+      "used": "Water: residential 270 L/cap/d, max day ×1.8, peak hour ×3.0; ICI 250 L/emp/d, ×1.4, ×3.0 (from the 2020 DC Background Study). Wastewater: 290 L/cap/d and 270 L/emp/d, peaking 2–4, I&I 0.26 L/s/ha (+0.28 L/s per flood-prone maintenance hole). Fire flow per the Fire Underwriters Survey."
+    },
+    {
+      "id": "watermain",
+      "title": "Region of Peel – Public Works Watermain Design Criteria (rev. June 2010)",
+      "url": "https://peelregion.ca/sites/default/files/2024-08/water-design.pdf",
+      "used": "Table 1 typical demand: residential 280 L/cap/d, max day ×2.0, peak hour ×3.0; ICI 300 L/emp/d, ×1.4, ×3.0. Table 2 short-term new development: 409 L/cap/d."
+    },
+    {
+      "id": "fsr",
+      "title": "Region of Peel – Functional Servicing Report requirements (Nov 2009, edited Dec 2022)",
+      "url": "https://peelregion.ca/sites/default/files/2024-08/functional-servicing-report-requirements-november-2009.pdf",
+      "used": "What a functional servicing report must contain; water demands per the Watermain Design Criteria."
+    },
+    {
+      "id": "sanitary-criteria",
+      "title": "Region of Peel – Sanitary Sewer Design Criteria (Public Works Design, Specifications & Procedures Manual)",
+      "url": "https://peelregion.ca/sites/default/files/2024-08/sanitary-sewer-design-criteria.pdf",
+      "used": "Earlier sanitary design criteria, superseded for flows by the Linear Wastewater Standards."
+    },
+    {
+      "id": "master-plan",
+      "title": "Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems (Vol. 1–5)",
+      "url": "https://peelregion.ca/construction/environmental-assessments/2020-water-wastewater-master-plan-lake-based-systems",
+      "used": "Pressure zones, trunk and plant projects to 2041; Volume 3 water, Volume 4 wastewater."
+    },
+    {
+      "id": "dc-study",
+      "title": "Region of Peel – 2020 Development Charges Background Study (By-law 77-2020)",
+      "url": "https://peelregion.ca/council/bylaws/bl-77-2020",
+      "used": "Persons per unit and employment density (Schedule 8b) behind the Peel criteria."
+    },
+    {
+      "id": "d-5-1",
+      "title": "Ontario MECP – Procedure D-5-1: Calculating and Reporting Uncommitted Reserve Capacity at Sewage and Water Treatment Plants (Mar 1995)",
+      "url": "https://www.ontario.ca/page/d-5-1-calculating-and-reporting-uncommitted-reserve-capacity-sewage-and-water-treatment-plants",
+      "used": "Cu = Cr − (L × F × P ÷ H): reserve after existing flow and unconnected committed lots, with F the per-capita flow (average day for sewage, maximum day for water) that includes ICI and infiltration. Expansions typically take at least 3–5 years to deliver."
+    },
+    {
+      "id": "mecp-sewage",
+      "title": "Ontario MECP – Design Guidelines for Sewage Works (2008)",
+      "url": "https://www.ontario.ca/document/design-guidelines-sewage-works-0",
+      "used": "Provincial basis for sewage flows and peaking."
+    },
+    {
+      "id": "mecp-water",
+      "title": "Ontario MECP – Design Guidelines for Drinking-Water Systems (2008)",
+      "url": "https://www.ontario.ca/document/design-guidelines-drinking-water-systems-0",
+      "used": "Provincial basis for water demands, peaking and storage."
+    },
+    {
+      "id": "fus",
+      "title": "Fire Underwriters Survey – Water Supply for Public Fire Protection (2020)",
+      "url": "https://fireunderwriters.ca/",
+      "used": "Fire flow for water storage and distribution checks."
+    }
+  ]
 }

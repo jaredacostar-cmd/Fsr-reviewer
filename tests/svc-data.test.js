@@ -31,3 +31,9 @@ test('2025 report figures are internally consistent', () => {
   for (const s of r.water.caledon) assert.ok(s.avgM3d < s.ratedM3d && s.maxDayM3d >= s.avgM3d && r.reports[s.ref], s.name);
   for (const x of r.wastewater.inflows) assert.ok(x.mld > 0 && r.reports[x.ref], x.id);
 });
+
+test('reference standards each name a source link and what is used from it', () => {
+  const r = read('peel-reports.json');
+  assert.ok(r.standards.length >= 8);
+  for (const x of r.standards) assert.ok(/^https:\/\//.test(x.url) && x.title && x.used, x.id);
+});
