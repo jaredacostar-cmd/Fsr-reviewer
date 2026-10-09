@@ -61,9 +61,10 @@ jobs:
         if: inputs.mode == 'servicing-build'
         run: |
           node scripts/build-servicing.js --out data
+          node scripts/build-svc-census.js
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/servicing.json
+          git add data/servicing.json data/svc-census.json
           git diff --cached --quiet || { git commit -m "Pressure zones and drainage areas"; git push; }
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'

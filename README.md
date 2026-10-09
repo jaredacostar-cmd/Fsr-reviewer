@@ -190,7 +190,10 @@ application.
   through pumping stations) is followed downstream to Lakeview (G.E. Booth), Clarkson or
   Inglewood WRRF; at a split the larger pipe is followed; small gaps in the published network
   are bridged to the nearest pipe. The Malton area by Pearson airport drains to the City of
-  Toronto. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
+  Toronto: its 1,200 mm trunk crosses the boundary at Hwy 427 near Derry Road, 3.7 km from the
+  nearest sewer reaching a Peel plant (`UNTRACED=15 node scripts/build-servicing.js --raw …`
+  lists where untraced sewers end). Pumping stations take the names in the Region's 2025
+  Wastewater Collection System report. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
   larger trunk (36 areas; 96.9% of 57,512 manholes reach a Peel plant). Plant split reviewed.
 - Each development is tagged by its location point. Map options toggle both layers; **Where**
   has Pressure zone and Drainage area filters; the development panel shows its zone and
@@ -198,11 +201,17 @@ application.
 - **Water** and **Wastewater** tabs (bottom panel). Like the Growth tab, each row is split into
   the census baseline (year from the timeline), + built since census day, + approved and +
   proposed (in review), adding up to build-out, with a stacked bar of that split; growth from
-  every development in the zone / catchment, other filters ignored. Census population by
-  dissemination areas whose centre falls inside. Click a row to outline and zoom to it on the map
+  every development in the zone / catchment, other filters ignored. Flows are residential plus
+  jobs on development sites (existing employment is not in the census baseline). Census
+  population is shared out by **area overlap** (`data/svc-census.json`, built by
+  `scripts/build-svc-census.js` from ~400 sample points per dissemination area; about 10% of
+  people sit in a different area than with the DA centre point). Click a row to outline and zoom to it on the map
   (click again to clear).
-  - **Water:** pressure zones in numerical order; maximum day in ML/d (people below each
-    figure) and peak hour at build-out.
+  - **Water:** pressure zones in numerical order; maximum day in ML/d (people and jobs below each
+    figure) and peak hour at build-out. The max day factor switches between Peel design (×2.0)
+    and the factor observed at the South Peel plants in 2025 (×1.40). Below the table: 2025
+    production reported by the Region (Arthur P. Kennedy and Lorne Park plants, the five Caledon
+    groundwater systems) beside the model.
   - **Wastewater (ML/d):** catchments build up along the traced flow path to the plants on the
     lake. Each drainage area records the area it discharges into (`downstream`) and its outlet
     point (`outletAt`) in `data/servicing.json`; outlets get closer to the plant at every step.
@@ -216,11 +225,31 @@ application.
     wet weather** (peak dry + I&I). Clicking a catchment shades everything upstream and
     draws schematic flow arrows, outlet to outlet, down to the plant.
 
-- **Plants** tab: each plant's total inflow (Lakeview, Clarkson, Inglewood, the Peel total, and
-  Malton / City of Toronto separately) as census + built since + approved + proposed = build-out:
-  population, average dry, peak dry, I&I and peak wet weather in ML/d. A growth layer's peak is the
-  increase in the plant's peak when it is added (peaking is not additive), with the running total
-  below; I&I sits with the existing system.
+- **Plants** tab: first each plant beside its 2025 annual report — rated capacity, reported
+  average and highest day, the model today (census + built since + external inflows) and a
+  calibration factor (reported ÷ model). Then each plant's total inflow (Lakeview, Clarkson,
+  Inglewood, the Peel total, and Malton / City of Toronto separately) as census + external
+  inflows (York Region 36.1 ML/d to G.E. Booth; City of Toronto 30.2 ML/d, plant not stated, in
+  the Peel total) + built since + approved + proposed = build-out: population and jobs, average
+  dry, peak dry, I&I and peak wet weather in ML/d, and average as a % of rated capacity. A growth
+  layer's peak is the increase in the plant's peak when it is added (peaking is not additive),
+  with the running total below; I&I sits with the existing system.
+- **Calibrated to 2025 flows** (Wastewater and Plants tabs) scales each plant's population and
+  employment flow so the model today matches its 2025 reported average (G.E. Booth ×1.63,
+  Clarkson ×1.19 on the 2021 baseline); the factor absorbs existing employment and institutional
+  flow, dry-weather infiltration and anything not modelled. I&I is not scaled.
+
+**Region of Peel 2025 annual reports** (`data/peel-reports.json`, listed under References in
+Breakdown & criteria): the [wastewater annual reports](https://peelregion.ca/water/wastewater/wastewater-annual-reports)
+(G.E. Booth, Clarkson, Inglewood, Collection System) and [water quality reports](https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports)
+(Drinking Water in Peel Summary, South Peel, four Caledon systems) were read in full; figures
+are kept with their report page numbers. The sandbox can't reach peelregion.ca, so Probe data
+sources mode `peel-reports` (`scripts/fetch-peel-reports.js`) downloads them to the
+`peel-reports` branch. Key points for this tool: G.E. Booth averaged 427.8 ML/d in 2025, 83% of its
+518 ML/d rating, with 7 wet-weather bypasses (725 ML) and a ~70 ML/d diversion to Clarkson planned
+for 2027–2028; Clarkson 211.9 of 350 ML/d (61%); Inglewood 102 of 243 m³/d (42%); South Peel
+water 580 ML/d average against 1,700 ML/d of plant capacity, with a maximum day about 1.4× the
+average.
 
 **Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
 (Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run

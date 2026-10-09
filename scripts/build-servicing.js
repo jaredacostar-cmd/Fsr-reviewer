@@ -100,6 +100,10 @@ function pointInRing(x, y, ring) {
   return inside;
 }
 
+// GIS station descriptions → names used in Peel's 2025 Wastewater Collection System report.
+const PS_NAMES = [[/Jack Darling 1 PS$/, 'Jack Darling Memorial Park 1 PS'], [/Richard Memorial PS$/, 'Richards Memorial PS'],
+  [/Silverbirch PS$/, 'Silver Birch Trail PS'], [/Front St PS$/, 'Front Street PS'], [/Mcvean PS$/, 'McVean PS'], [/Caledon E PS$/, 'Caledon East PS']];
+
 async function loadRaw(dir) {
   if (dir) {
     const L = n => JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(dir, `${n}.json.gz`))));
@@ -168,6 +172,17 @@ async function main() {
   const plantOf = new Map();
   for (const [n, t] of term) { const P = plantAt(t); plantOf.set(n, P ? P.name : null); }
 
+  if (process.env.UNTRACED) {
+    // Debug: where the sewers that never reach a Peel plant end, and the nearest traced sewer.
+    const size = new Map(); for (const [n, t] of term) if (!plantOf.get(n)) size.set(t, (size.get(t) || 0) + 1);
+    const traced = [...xy.keys()].filter(n => plantOf.get(n));
+    for (const [t, k] of [...size].sort((a, b) => b[1] - a[1]).filter(([, k]) => k >= +process.env.UNTRACED)) {
+      const p = xy.get(t); let best = null, bd = Infinity;
+      for (const n of traced) { const q = xy.get(n), d = Math.hypot(q[0] - p[0], q[1] - p[1]); if (d < bd) { bd = d; best = n; } }
+      const inPipe = [...down].filter(([, b]) => b === t).map(([a]) => a);
+      console.log(`untraced end ${t} ${k} manholes at ${toLL(p)} · in ${inPipe.length} pipe(s) ${Math.max(0, ...inPipe.map(a => diam.get(a) || 0))} mm · nearest traced ${best} ${Math.round(bd)} m (${plantOf.get(best)}, ${diam.get(best) || '?'} mm)`);
+    }
+  }
   // ---- 3. Upstream counts (topological) -------------------------------------------------
   const indeg = new Map(); for (const n of xy.keys()) indeg.set(n, 0);
   for (const [a, b] of down) indeg.set(b, (indeg.get(b) || 0) + 1);
@@ -273,6 +288,8 @@ async function main() {
     else if (d.kind === 'untraced') d.name = 'Toronto · Malton (drains to City of Toronto)';
     else if (d.kind === 'plant') d.name = `${d.plant} · direct to plant`;
     else { const k = `${d.plant}|${d.municipality}`; seq[k] = (seq[k] || 0) + 1; d.name = `${d.plant} · ${d.municipality || 'Peel'} trunk ${seq[k]}`; }
+    // Station names as the 2025 Wastewater Collection System report lists them (Appendix A).
+    if (d.kind === 'ps') for (const [from, to] of PS_NAMES) d.name = d.name.replace(from, to);
   }
 
   // ---- Pressure zones --------------------------------------------------------------------

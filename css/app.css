@@ -709,6 +709,19 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .svc-table td:first-child { text-align: left; }
 .svc-table .flow-arrow { color: var(--text-muted); margin-right: 4px; }
 .svc-legend { margin: 0 0 6px; }
+.d-refs { margin-top: 12px; }
+.ref-list { margin: 4px 0; padding-left: 18px; font-size: 12.5px; }
+.ref-list li { margin: 2px 0; }
+.svc-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; }
+.svc-switch { display: inline-flex; align-items: center; gap: 4px; }
+.svc-switch .muted { margin-right: 4px; }
+.svc-switch .btn.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+.svc-sub { font-size: 13px; margin: 14px 0 4px; }
+.cal-note { margin: 4px 0 8px; padding: 6px 10px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.rep-table { min-width: 640px; max-width: 1100px; }
+.rep-table td small a { color: inherit; }
+.plants-table tr.ext td { color: var(--text-secondary); font-style: italic; }
+.plants-table tr.ext td small { font-style: normal; }
 .svc-table th.grp-h { text-align: center; border-bottom: 1px solid var(--text-muted); }
 .svc-table .sep { border-left: 1px solid var(--text-muted); }
 .ww-table { min-width: 1080px; }
