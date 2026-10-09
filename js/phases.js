@@ -786,18 +786,24 @@
   // official plan, subdivision, condominium and other planning approvals leave the site under
   // review until its site plan is approved (or a building permit is issued). Each file keeps
   // its own phase; this is how far it moves the site.
-  const PHASE_RULES = 2;
+  const PHASE_RULES = 3;
   // Brampton's legacy site plans (1980s–2000s), carried into its current system as "Transferred"
   // with no dates: approvals of buildings long since built, not of the current proposal.
   const isLegacy = r => r.kind === 'application' && /^transferred$/i.test(String(r.statusRaw || '').trim());
+  // A registered plan of subdivision: freehold houses go from registration straight to building
+  // permits, with no site plan, so registration counts as the site's approval.
+  const isRegistered = r => r.kind === 'application' && r.phase === 'approved' && (r.stage || stageOf(r)) === 'master' &&
+    /\bregistered\b|^\s*registration\s*$/i.test(String(r.statusRaw || '')) && !/draft/i.test(String(r.statusRaw || ''));
+  // Demolition permits clear a site; they don't say how far the new development has got.
+  const isDemolition = r => r.kind === 'permit' && (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || '')));
   function sitePhaseOf(r) {
-    if (r.kind === 'application' && r.phase === 'approved' && ((r.stage || stageOf(r)) !== 'siteplan' || r.superseded || isLegacy(r))) return 'review';
+    if (r.kind === 'application' && r.phase === 'approved' && (r.superseded || isLegacy(r) || ((r.stage || stageOf(r)) !== 'siteplan' && !isRegistered(r)))) return 'review';
     return r.phase;
   }
   const recStart = r => r.events.length ? +r.events[0].date : null;
   const approvedDate = r => { const e = r.events.filter(x => x.phase === 'approved'); return e.length ? +e[e.length - 1].date : r.events.length ? +r.events[r.events.length - 1].date : null; };
   // Approval events that set the site's Approved milestone: site plan files and permits only.
-  const countsAsApproval = r => r.kind !== 'application' || (r.stage || stageOf(r)) === 'siteplan';
+  const countsAsApproval = r => r.kind !== 'application' || (r.stage || stageOf(r)) === 'siteplan' || isRegistered(r);
 
   function mergeProject(key, recs, site = {}) {
     let live = recs.filter(r => r.phase !== 'cancelled');
@@ -806,17 +812,19 @@
     const current = live.filter(r => !isLegacy(r));
     const legacyOnly = live.length > 0 && !current.length;
     live = current;
+    // Demolition permits don't set the phase while the site has other files.
+    if (live.some(r => !isDemolition(r))) live = live.filter(r => !isDemolition(r));
     // A site plan approved before a newer zoning / official plan / subdivision file that is still
     // pending was for an earlier proposal: the site is back under review for the new one.
     const masters = live.filter(r => r.kind === 'application' && (r.stage || stageOf(r)) === 'master' && recStart(r) != null && PHASE_BY_KEY[r.phase].rank <= PHASE_BY_KEY.review.rank);
     for (const r of live) {
-      if (r.kind !== 'application' || r.phase !== 'approved' || (r.stage || stageOf(r)) !== 'siteplan') continue;
+      if (r.kind !== 'application' || r.phase !== 'approved' || ((r.stage || stageOf(r)) !== 'siteplan' && !isRegistered(r))) continue;
       const at = approvedDate(r);
-      r.superseded = at != null && masters.some(m => recStart(m) > at) || undefined;
+      r.superseded = at != null && masters.some(m => m !== r && recStart(m) > at) || undefined;
     }
     // Redevelopment: files that start after an earlier build on the site was
     // completed are a new cycle, and the site's phase is that cycle's phase.
-    const doneAt = Math.max(-Infinity, ...recs.flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
+    const doneAt = Math.max(-Infinity, ...recs.filter(r => !isDemolition(r)).flatMap(r => r.events.filter(e => e.phase === 'completed').map(e => +e.date)));
     if (isFinite(doneAt)) {
       const newer = live.filter(r => r.events.length && +r.events[0].date > doneAt);
       if (newer.length) live = newer;
@@ -949,7 +957,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

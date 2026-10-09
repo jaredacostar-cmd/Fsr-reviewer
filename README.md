@@ -11,19 +11,21 @@ placed in a construction phase:
 |---|-------|---------------|
 | 1 | Inception | Pre-consultation or application submitted |
 | 2 | Under review | Circulation, public meeting, appeal; also zoning / official plan / subdivision approved with no site plan approval yet |
-| 3 | Approved | Site plan approved (the last planning step before building permits) |
+| 3 | Approved | Site plan approved, or plan of subdivision registered (the last planning step before building permits) |
 | 4 | Permit issued | Building permit issued |
 | 5 | Under construction | Inspections underway |
 | ✓ | Completed | Occupancy, final inspection or permit closed |
 | × | Withdrawn / refused | Every file on the site was withdrawn, refused, cancelled or expired |
 
 Each file keeps its own status; the site takes the furthest phase of its files, except that
-**only a site plan approval makes a site Approved**. An approved zoning, official plan,
-subdivision or condominium file keeps the site under review (shown as *Zoning approved · site
+**only a site plan approval, or a plan of subdivision shown as registered, makes a site
+Approved** (freehold houses go from registration straight to building permits). An approved zoning,
+official plan, draft subdivision or condominium file keeps the site under review (shown as *Zoning approved · site
 plan pending*); a site plan approved before a newer rezoning that is still in review was for an
 earlier proposal and does not count; Brampton's legacy site plans (status "Transferred", carried
 over from its old system, mostly 1980s–1990s, no dates) don't count for a current proposal, and a
-site with only legacy files is shown as completed. A change to these rules is recorded in
+site with only legacy files is shown as completed. Demolition permits (HOUSDEMO / DEMO) clear a site
+and don't set its phase or start a redevelopment cycle. A change to these rules is recorded in
 `data/history.json` as a re-read (marked `rules`), not as a phase change on the ground.
 
 ## Run it

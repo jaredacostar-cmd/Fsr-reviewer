@@ -163,3 +163,15 @@ test('legacy "Transferred" site plans and approvals before a pending rezoning do
   assert.equal(P.buildProjects([rec(3, 'SP 18/2', 'Approved', 2017, 2018), rec(4, 'OZ 23/1', 'Under Review', 2023)])[0].phase, 'review', 'pending rezoning after the approval');
   assert.equal(P.buildProjects([rec(3, 'SP 18/2', 'Approved', 2017, 2018), rec(5, 'OZ 23/1', 'Approved', 2023, 2024)])[0].phase, 'approved', 'an approved later rezoning does not undo it');
 });
+
+test('a registered plan of subdivision is Approved; demolition permits do not set the phase', () => {
+  const pt = { type: 'Point', coordinates: [-79.7, 43.6] };
+  const am = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }]);
+  const pm = P.detectFields(permitFields);
+  const app = (id, ref, status) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { FILE_NO: ref, STATUS: status, ADDRESS: '7 Oak St', SUBMITTED_DATE: Date.UTC(2021, 0, 1) } }, am, appSrc);
+  const bp = (id, ref, status, issued, fin) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { BP_NUMBER: ref, ADDRESS: '7 Oak St', STATUS: status, ISSUE_DATE: Date.UTC(issued, 0, 1), FINAL_DATE: fin ? Date.UTC(fin, 0, 1) : null } }, pm, permitSrc);
+  assert.equal(P.buildProjects([app(1, '21T-M 21-1', 'Draft Approved')])[0].phase, 'review');
+  assert.equal(P.buildProjects([app(1, '21T-M 21-1', 'Registered')])[0].phase, 'approved');
+  const demo = bp(2, 'HOUSDEMO 22-1', 'Completed', 2022, 2022);
+  assert.equal(P.buildProjects([app(3, 'SP 22/9', 'Under Review'), demo])[0].phase, 'review', 'a finished demolition is not the new building');
+});
