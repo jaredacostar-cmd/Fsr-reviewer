@@ -408,7 +408,9 @@
   const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
-  const PIPE_CLS = [[50, '#2f9e44', '< 50% of full capacity'], [80, '#fab005', '50–80%'], [100, '#f76707', '80–100%'], [Infinity, '#e03131', 'over 100%']];
+  // Sewer load as a share of full-pipe capacity, with its flow state: [upper %, colour, legend, short state].
+  const PIPE_CLS = [[85, '#2f9e44', 'under 85%: free flowing', 'Free flowing', 'under 85%'], [100, '#f76707', '85–100%: near full', 'Near full', '85–100%'], [Infinity, '#e03131', 'over 100%: surcharged', 'Surcharged', 'over 100%']];
+  const pipeState = r => r == null || isNaN(r) ? null : PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1];
   const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
   const EXIST_ZOOM = 15;
   // Map control: basemap + label pickers.
@@ -3748,7 +3750,7 @@
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
     if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
-    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${['under 50%', '50–80%', '80–100%', 'over 100%'][i]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
+    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
@@ -4434,9 +4436,9 @@
       <br>Slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a (no slope)'}
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(Math.round(s.then.jobs))} jobs` : ''}
       <br>Existing peak dry ${fmtNum(Math.round(s.then.exist))} L/s${s.then.f !== 1 ? ` (×${s.then.f.toFixed(2)} measured)` : ''} + growth peak wet ${fmtNum(Math.round(s.then.growth))} L/s
-      <br>Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` (${Math.round(s.r0 * 100)}%)` : ''} → ${capYear == null ? 'build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` (<strong>${Math.round(s.r1 * 100)}%</strong>)` : ''}
+      <br>Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` (${Math.round(s.r0 * 100)}%, ${pipeState(s.r0)[3].toLowerCase()})` : ''} → ${capYear == null ? 'build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` (<strong>${Math.round(s.r1 * 100)}%, ${pipeState(s.r1)[3].toLowerCase()}</strong>)` : ''}
       ${s.growthShare != null ? `<br>Growth since the census uses ${Math.round(s.growthShare * 100)}% of its capacity` : ''}${p[11] < 1 ? `<br><span class="muted">carries ${Math.round(p[11] * 100)}% of the flow at a split</span>` : ''}
-      <br><span class="muted">Screening only; tap for what loads it</span>`;
+      <br><span class="muted">Screening only; tap for how it is calculated and what loads it</span>`;
   }
   function renderPipes(layer) {
     if (!SEW.data) { loadSewers(); return; }
@@ -4469,6 +4471,45 @@
     }
     return { first: k, local, trunk, worst: [local, trunk].filter(Boolean).sort((a, b) => b.r1 - a.r1)[0] || null, n };
   }
+  const stateChip = (label, q, r) => { const st = pipeState(r); return `<span class="chip pipe-st" style="--st:${st ? st[1] : '#adb5bd'}"><i aria-hidden="true"></i>${esc(String(label))} ${fmtNum(Math.round(q))} L/s${r != null ? ` · ${Math.round(r * 100)}% · <strong>${esc(st[3])}</strong>` : ' · no slope'}</span>`; };
+  // Pipe length (m) from its drawn coordinates.
+  const pipeLenM = i => { const c = pipeCoords(SEW.data.pipes[i]); let t = 0; for (let k = 1; k < c.length; k++) t += dcM(c[k - 1], c[k]); return t; };
+  // How the flow in a pipe is worked out, step by step with its numbers, and its capacity and
+  // surcharge state (Manning full-pipe capacity; a surcharged pipe needs a steeper hydraulic
+  // gradient than its slope, Sf = S0 × (Q / Qfull)², so the water level rises above the crown).
+  function pipeCalcHTML(i, s) {
+    const p = s.p, c = state.criteria, W = c.wastewater, E = c.employment, G = sewerGrowth();
+    const yr = capYear == null ? 'build-out' : capYear;
+    const { fa, fp } = capYear == null ? { fa: 1, fp: 1 } : hzFrac(capYear);
+    const P0 = p[4], f = s.then.f, M0 = D.residentialPeaking(P0, W), avg0 = P0 * W.avg / 86400;
+    const gp = G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
+    const gj = G.built.jobs[i] + fa * G.approved.jobs[i] + fp * G.proposed.jobs[i];
+    const gh = G.built.ha[i] + fa * G.approved.ha[i] + fp * G.proposed.ha[i];
+    const Mg = D.residentialPeaking(gp, W), Me = D.employmentPeaking(gj, E);
+    const qr = gp * W.avg / 86400 * Mg, qe = gj * E.wastewater / 86400 * Me, qi = gh * W.infiltration;
+    const d = p[0] / 1000, S = p[1], A = Math.PI * d * d / 4, R = d / 4, Qf = s.cap;
+    const n1 = v => fmt1(v), L = pipeLenM(i), st = pipeState(s.r1);
+    let sur = '';
+    if (s.r1 != null && s.r1 > 1 && S > 0) {
+      const Sf = S * s.r1 * s.r1, dh = (Sf - S) * L;
+      sur = `<li><strong>Surcharged:</strong> the flow is ${Math.round(s.r1 * 100)}% of what the pipe carries flowing full, so it runs full under pressure. To pass it, the hydraulic grade line needs a slope of S<sub>f</sub> = S × (Q / Q<sub>full</sub>)² = ${(S * 100).toFixed(2)}% × ${s.r1.toFixed(2)}² = <strong>${(Sf * 100).toFixed(2)}%</strong>, steeper than the pipe's ${(S * 100).toFixed(2)}%: over this ${fmtNum(Math.round(L))} m pipe the water level rises about <strong>${dh.toFixed(2)} m</strong> more than the pipe falls, above its crown (and it backs up into the pipes upstream).</li>`;
+    } else if (s.r1 != null && s.r1 >= 0.85) sur = `<li><strong>Near full:</strong> ${Math.round(s.r1 * 100)}% of full-pipe capacity: little room for peaks or more growth; it surcharges past 100%.</li>`;
+    else if (s.r1 != null) sur = `<li><strong>Free flowing:</strong> ${Math.round(s.r1 * 100)}% of full-pipe capacity (open-channel flow, water below the crown).</li>`;
+    return `<details class="sect calc" open><summary><h2 class="section-title">How the flow is calculated (${esc(String(yr))})</h2><span class="muted small sect-sum">${n1(s.then.q)} L/s of ${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}${st ? ` · ${esc(st[3])}` : ''}</span></summary>
+      <ol class="calc-steps">
+        <li><strong>Existing (2021 Census)</strong>: ${fmtNum(P0)} people drain through this pipe.<br>average ${fmtNum(P0)} × ${W.avg} L/cap/d ÷ 86,400 = ${n1(avg0)} L/s × Harmon peaking M = 1 + 14 / (4 + √(P/1000)), kept between ${W.peakMin ?? 2} and ${W.peakMax ?? 4}, = ${M0.toFixed(2)}${f !== 1 ? ` × ${f.toFixed(2)} (scaled to the plant's 2025 measured flow)` : ''} = <strong>${n1(s.then.exist)} L/s</strong> peak dry weather.<br><span class="muted">Existing wet-weather I&amp;I is not added: design I&amp;I on all existing land would overstate today's flow several times.</span></li>
+        <li><strong>Growth since the census</strong> to ${esc(String(yr))} (built${fa ? ` + ${fa === 1 ? '' : `${Math.round(fa * 100)}% of `}approved` : ''}${fp ? ` + ${fp === 1 ? '' : `${Math.round(fp * 100)}% of `}proposed` : ''}), peak wet weather at Peel design criteria:
+          <br>residential ${fmtNum(Math.round(gp))} people × ${W.avg} L/cap/d ÷ 86,400 × M ${gp > 0 ? Mg.toFixed(2) : '–'} = ${n1(qr)} L/s
+          <br>employment ${fmtNum(Math.round(gj))} jobs × ${E.wastewater} L/emp/d ÷ 86,400 × ${gj > 0 ? Me.toFixed(2) : '–'} = ${n1(qe)} L/s
+          <br>I&amp;I ${fmtNum(Math.round(gh))} ha of development sites × ${W.infiltration} L/s/ha = ${n1(qi)} L/s
+          <br>= <strong>${n1(s.then.growth)} L/s</strong></li>
+        <li><strong>Flow</strong> Q = ${n1(s.then.exist)} + ${n1(s.then.growth)} = <strong>${n1(s.then.q)} L/s</strong>${p[11] < 1 ? ` (this pipe takes ${Math.round(p[11] * 100)}% of the flow at a split)` : ''}</li>
+        <li><strong>Full-pipe capacity</strong> (Manning, n 0.013): Q<sub>full</sub> = (1/n) · A · R<sup>2/3</sup> · S<sup>1/2</sup> with D = ${p[0]} mm, A = ${A.toFixed(3)} m², R = D/4 = ${R.toFixed(3)} m, S = ${(S * 100).toFixed(2)}% (published slope) = <strong>${Qf ? `${fmtNum(Qf)} L/s` : 'n/a'}</strong></li>
+        <li><strong>Capacity used</strong> Q / Q<sub>full</sub> = ${n1(s.then.q)} / ${Qf ? fmtNum(Qf) : '–'} = <strong>${s.r1 != null ? `${Math.round(s.r1 * 100)}%` : 'n/a'}</strong>${st ? ` <span class="pipe-st-dot" style="--st:${st[1]}"></span>${esc(st[3])} (green under 85%, orange 85–100%, red over 100%)` : ''}</li>
+        ${sur}
+      </ol>
+      <p class="small muted">Today (built since the census only): ${n1(s.today.q)} L/s, ${s.r0 != null ? `${Math.round(s.r0 * 100)}% · ${esc(pipeState(s.r0)[3].toLowerCase())}` : 'n/a'}. A screen, not a hydraulic model: inflow and infiltration in wet weather on existing areas, downstream backwater, storage and relief sewers are not modelled; the year follows the capacity slider (Horizon years).</p></details>`;
+  }
   function showPipeLoads(i) {
     const G = sewerGrowth(), s = pipeStats(i), p = s.p;
     const up = [];
@@ -4479,7 +4520,8 @@
     up.sort((a, b) => b.q - a.q);
     $('#detail-body').innerHTML = `
       <div class="head"><h3>${p[0]} mm sanitary sewer</h3><div class="m">${esc(SEW.data.plants[p[6]] === 'Toronto' ? 'City of Toronto system' : plantLabel(SEW.data.plants[p[6]]))} sewershed · slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a'}${p[7] ? ` · installed ${p[7]}` : ''}</div></div>
-      <div class="chips"><span class="chip">Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` · ${Math.round(s.r0 * 100)}%` : ''}</span><span class="chip ${s.r1 > 1 ? 'warn' : ''}">${capYear == null ? 'Build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` · ${Math.round(s.r1 * 100)}%` : ''}</span>${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
+      <div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(capYear == null ? 'Build-out' : capYear, s.then.q, s.r1)}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
+      ${pipeCalcHTML(i, s)}
       ${exportBar('loads')}
       <table class="dt loads-table"><caption>${fmtNum(up.length)} developments since the census draining through this pipe, largest peak wet first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
@@ -6149,5 +6191,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id) };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id) };
 })();
