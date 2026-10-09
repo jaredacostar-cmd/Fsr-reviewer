@@ -760,6 +760,10 @@
 
   // ---- Population & servicing demand -------------------------------------------------
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
+  // Numbers with their unit beside them.
+  const unit = (v, u) => `${v}<span class="u">${u}</span>`;
+  const uML = v => unit(fmt1(v), 'ML/d'), uLs = v => unit(fmt1(v), 'L/s'), uPop = n => unit(fmtNum(Math.round(n)), 'pop');
+  const uHa = n => unit(fmtNum(Math.round(n)), 'ha'), uDev = n => unit(fmtNum(n), n === 1 ? 'dev' : 'devs'), uUnits = n => unit(fmtNum(Math.round(n)), 'units');
   // Withdrawn projects never count; the basis picks which of each project's units count.
   // With a project selected, the shown projects in its census DA; otherwise all shown projects.
   const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled' && (!state.daCtx || state.daCtx.keys.has(p.key)));
@@ -805,20 +809,20 @@
     const stat = (label, value, unit, sub, info) =>
       `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     $('#d-stats').innerHTML = [
-      stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), '',
+      stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), 'units',
         bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} developments report units`, 'demand-units'),
       stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
-      stat('Jobs', fmtNum(Math.round(em.jobs)), '', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
+      stat('Jobs', fmtNum(Math.round(em.jobs)), 'jobs', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
     ].join('');
     $('#d-tiles').innerHTML = flowTablesHTML(e);
     renderSelection(set, basis);
 
     // Breakdown by dwelling type and by phase.
-    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${fmtNum(Math.round(e.units[t.key]))}</td><td>${c.ppu[t.key]}</td><td>${fmtNum(Math.round(e.pop[t.key]))}</td></tr>`).join('');
+    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${uUnits(e.units[t.key])}</td><td>${unit(c.ppu[t.key], 'pop/unit')}</td><td>${uPop(e.pop[t.key])}</td></tr>`).join('');
     const boRows = aggTypeRowsHTML(aggregateTypes(set));
     const phaseRows = P.PHASES.map(ph => {
       const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
-      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(Math.round(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.avg)}</td><td>${fmt1(pe.combined.wastewater.avg)}</td></tr>`;
+      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${uUnits(pe.totalUnits)}</td><td>${uPop(pe.population)}</td><td>${unit(fmtNum(Math.round(pe.employment.jobs)), 'jobs')}</td><td>${uLs(pe.combined.water.avg)}</td><td>${uLs(pe.combined.wastewater.avg)}</td></tr>`;
     }).join('');
     $('#d-breakdown').innerHTML = `
       <table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table>
@@ -828,7 +832,7 @@
 
   // Water and wastewater tables (residential / employment / total rows, L/s) for an estimate.
   function flowTablesHTML(e) {
-    const c = state.criteria, em = e.employment, cb = e.combined, n = v => fmt1(v);
+    const c = state.criteria, em = e.employment, cb = e.combined, n = uLs;
     const flowTable = (title, info, cols, rows) => `<table class="dt flow" data-info="${info}">
       <caption>${title} <span class="muted">L/s</span></caption>
       <thead><tr><th></th>${cols.map(x => `<th>${x}</th>`).join('')}</tr></thead>
@@ -864,8 +868,8 @@
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];
-    return D.UNIT_TYPES.filter(t => bt[t.key].planned || bt[t.key].permitted).map(t => `<tr><td>${esc(t.label)}</td>${cols.map(col => `<td>${fmtNum(bt[t.key][col])}</td>`).join('')}</tr>`).join('')
-      + (emp.planned ? `<tr class="tot"><td>Employment m² <span class="muted">(~${fmtNum(emp.jobs)} jobs)</span></td>${cols.map(col => `<td>${fmtNum(emp[col])}</td>`).join('')}</tr>` : '');
+    return D.UNIT_TYPES.filter(t => bt[t.key].planned || bt[t.key].permitted).map(t => `<tr><td>${esc(t.label)}</td>${cols.map(col => `<td>${uUnits(bt[t.key][col])}</td>`).join('')}</tr>`).join('')
+      + (emp.planned ? `<tr class="tot"><td>Employment floor space <span class="muted">(~${fmtNum(emp.jobs)} jobs)</span></td>${cols.map(col => `<td>${unit(fmtNum(emp[col]), 'm²')}</td>`).join('')}</tr>` : '');
   }
 
   function renderCriteria() {
@@ -1823,14 +1827,14 @@
     const c = state.criteria, Y = bc.year, idx = svcCensusIndex(bc);
     const total = l => l.census + l.built + l.approved + l.proposed;
     const ML = (people, rate) => people * rate / 1e6;   // people × L/cap/d → ML/d
-    const cell = (mld, people, cls = '') => `<td class="${cls}">${fmt1(mld)}${people != null ? `<small>${fmtNum(Math.round(people))}</small>` : ''}</td>`;
+    const cell = (mld, people, cls = '') => `<td class="${cls}">${uML(mld)}${people != null ? `<small>${uPop(people)}</small>` : ''}</td>`;
     const focus = svcFocus.id;
     const rowAttrs = (id, cls) => id ? ` class="${cls} svc-row${id === focus ? ' on' : ''}" data-svc="${esc(id)}" tabindex="0"` : ` class="${cls}"`;
     const layerHead = `<th>${Y} Census</th><th>+ Built since</th><th>+ Approved</th><th>+ Proposed (in review)</th><th>Build-out</th>`;
 
     // Water: maximum day (ML/d) by layer, peak hour at build-out.
-    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td><td>${fmtNum(l.devs)}</td>${LAYER_KEYS.map(k => cell(ML(l[k], c.water.avg) * c.water.maxDay, l[k])).join('')}
-      ${cell(ML(total(l), c.water.avg) * c.water.maxDay, total(l), 'bo')}<td class="bo">${fmt1(ML(total(l), c.water.avg) * c.water.peakHour)}</td></tr>`;
+    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td><td>${uDev(l.devs)}</td>${LAYER_KEYS.map(k => cell(ML(l[k], c.water.avg) * c.water.maxDay, l[k])).join('')}
+      ${cell(ML(total(l), c.water.avg) * c.water.maxDay, total(l), 'bo')}<td class="bo">${uML(ML(total(l), c.water.avg) * c.water.peakHour)}</td></tr>`;
     const zones = state.servicing.zones.slice().sort(byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc, idx) })).filter(r => total(r.l) > 0 || r.l.devs);
     const zsum = addLayers(zr.map(r => r.l));
@@ -1853,7 +1857,7 @@
     const adwf = l => ML(total(l), c.wastewater.avg);
     const pdwf = l => adwf(l) * D.harmon(total(l));
     const ii = l => l.ha * c.wastewater.infiltration * 86400 / 1e6;
-    const peakCells = l => `<td>${fmt1(pdwf(l))}<small>M ${total(l) > 0 ? D.harmon(total(l)).toFixed(2) : '–'}</small></td><td>${fmt1(ii(l))}<small>${fmtNum(Math.round(l.ha))} ha</small></td><td class="bo">${fmt1(pdwf(l) + ii(l))}</td>`;
+    const peakCells = l => `<td>${uML(pdwf(l))}<small>M ${total(l) > 0 ? D.harmon(total(l)).toFixed(2) : '–'}</small></td><td>${uML(ii(l))}<small>${uHa(l.ha)}</small></td><td class="bo">${uML(pdwf(l) + ii(l))}</td>`;
     const nameCell = (name, sub, depth) => `<td style="padding-left:${6 + depth * 12}px">${depth ? '<span class="flow-arrow" aria-hidden="true">↳</span>' : ''}${name}${sub ? `<small>${sub}</small>` : ''}</td>`;
     const sRow = (name, sub, d, l, id, cls = '', depth = 0) => {
       const lo = d ? local.get(d.id) : null, up = d ? upOf(d) : null;
@@ -1861,7 +1865,7 @@
       // layers); both add up to the total average dry weather flow at the outlet.
       const mid = (d ? cell(adwf(lo), total(lo)) + (total(up) > 0 || up.ha ? cell(adwf(up), total(up)) : '<td class="muted">–</td>') : '<td></td><td></td>')
         + LAYER_KEYS.map((k, i) => cell(ML(l[k], c.wastewater.avg), l[k], i ? '' : 'sep')).join('') + cell(adwf(l), total(l), 'bo');
-      return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td><td>${fmtNum(d ? lo.devs : l.devs)}</td>${mid}${peakCells(l)}</tr>`;
+      return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td><td>${uDev(d ? lo.devs : l.devs)}</td>${mid}${peakCells(l)}</tr>`;
     };
     const short = (d, pl) => d.name.replace(`${pl} · `, '');
     // Rows run from the top of each sewershed down to the lake: a branch's furthest catchment
@@ -1918,19 +1922,19 @@
     const { Y, c, total, adwf, pdwf, ii } = k;
     const stages = [['census', `${Y} Census`], ['built', `+ Built since ${Y}`], ['approved', '+ Approved'], ['proposed', '+ Proposed (in review)']];
     const upTo = (l, n) => { const o = { census: 0, built: 0, approved: 0, proposed: 0, ha: l.ha }; stages.slice(0, n + 1).forEach(([s]) => { o[s] = l[s]; }); return o; };
-    const run = (x, show) => show ? `<small>→ ${fmt1(x)}</small>` : '';
+    const run = (x, show) => show ? `<small>→ ${uML(x)}</small>` : '';
     const block = (title, l, note = '') => {
       let prev = { pop: 0, a: 0, d: 0, ii: 0, w: 0 };
       const rows = stages.map(([key, label], n) => {
         const o = upTo(l, n), r = { pop: total(o), a: adwf(o), d: pdwf(o), ii: ii(o), w: pdwf(o) + ii(o) };
         const inc = f => r[f] - prev[f];
-        const html = `<tr><td>${esc(label)}</td><td>${fmtNum(Math.round(inc('pop')))}${n ? `<small>→ ${fmtNum(Math.round(r.pop))}</small>` : ''}</td>
-          <td>${fmt1(inc('a'))}${run(r.a, n)}</td><td>${fmt1(inc('d'))}${run(r.d, n)}</td><td>${fmt1(inc('ii'))}${n ? '' : `<small>${fmtNum(Math.round(l.ha))} ha</small>`}</td><td class="bo">${fmt1(inc('w'))}${run(r.w, n)}</td></tr>`;
+        const html = `<tr><td>${esc(label)}</td><td>${uPop(inc('pop'))}${n ? `<small>→ ${uPop(r.pop)}</small>` : ''}</td>
+          <td>${uML(inc('a'))}${run(r.a, n)}</td><td>${uML(inc('d'))}${run(r.d, n)}</td><td>${uML(inc('ii'))}${n ? '' : `<small>${uHa(l.ha)}</small>`}</td><td class="bo">${uML(inc('w'))}${run(r.w, n)}</td></tr>`;
         prev = r; return html;
       });
       const r = prev;
       return `<tr class="grp"><td colspan="6">${title}${note ? ` <span class="muted small">${note}</span>` : ''}</td></tr>${rows.join('')}
-        <tr class="tot"><td>= Build-out</td><td>${fmtNum(Math.round(r.pop))}</td><td>${fmt1(r.a)}</td><td>${fmt1(r.d)}<small>M ${r.pop > 0 ? D.harmon(r.pop).toFixed(2) : '–'}</small></td><td>${fmt1(r.ii)}</td><td class="bo">${fmt1(r.w)}</td></tr>
+        <tr class="tot"><td>= Build-out</td><td>${uPop(r.pop)}</td><td>${uML(r.a)}</td><td>${uML(r.d)}<small>M ${r.pop > 0 ? D.harmon(r.pop).toFixed(2) : '–'}</small></td><td>${uML(r.ii)}</td><td class="bo">${uML(r.w)}</td></tr>
         <tr class="plant-bar"><td colspan="6">${svcBar(l)}</td></tr>`;
     };
     $('#plants-body').innerHTML = `${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}
@@ -2179,7 +2183,7 @@
       }).join('');
       return `<div class="grow-row"><div class="grow-label">${unit[0].toUpperCase() + unit.slice(1)}</div>
         <div class="grow-bar" role="img" aria-label="${esc(layers.map(l => `${l.label} ${fmtNum(Math.round(l[measure]))}`).join(', '))} ${unit}">${segs}</div>
-        <div class="grow-total">${fmtNum(Math.round(total))}</div></div>`;
+        <div class="grow-total">${fmtNum(Math.round(total))}<span class="u">${unit === 'people' ? 'pop' : 'units'}</span></div></div>`;
     };
     const legend = layers.map(l => `<li><i class="gsw g-${l.key}" aria-hidden="true"></i><span>${esc(l.label)}</span>
       <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings</span></li>`).join('');
