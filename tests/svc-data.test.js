@@ -37,3 +37,15 @@ test('reference standards each name a source link and what is used from it', () 
   assert.ok(r.standards.length >= 8);
   for (const x of r.standards) assert.ok(/^https:\/\//.test(x.url) && x.title && x.used, x.id);
 });
+
+test('nearest area: distance to the closest edge, within the limit', () => {
+  const A = require('../js/areas.js');
+  // Two 0.01° squares near 43.7° N; the point is 0.005° east of the first one (~400 m).
+  const sq = (id, x) => ({ id, rings: [[[x, 43.7], [x + 0.01, 43.7], [x + 0.01, 43.71], [x, 43.71], [x, 43.7]]] });
+  const list = A.prepare([sq('a', -79.8), sq('b', -79.7)]);
+  const n = A.nearest(list, -79.785, 43.705, 5000);
+  assert.equal(n.id, 'a');
+  assert.ok(Math.abs(n.m - 0.005 * 111320 * Math.cos(43.705 * Math.PI / 180)) < 2, `${n.m}`);
+  assert.equal(A.nearest(list, -79.785, 43.705, 300), null, 'beyond the limit');
+  assert.equal(A.nearest(list, null, 43.7), null);
+});

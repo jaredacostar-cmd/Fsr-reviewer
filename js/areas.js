@@ -31,6 +31,29 @@
   }
 
   /**
+   * The nearest area to a point outside all of them, within maxM metres of its edge:
+   * { id, m } or null. Distances on a local flat projection (accurate to well under 1% here).
+   */
+  function nearest(list, lng, lat, maxM = 5000) {
+    if (lng == null || lat == null) return null;
+    const ky = 111320, kx = 111320 * Math.cos(lat * Math.PI / 180);
+    const dLng = maxM / kx, dLat = maxM / ky;
+    let best = null;
+    for (const a of list) {
+      const b = a.bbox;
+      if (lng < b[0] - dLng || lng > b[2] + dLng || lat < b[1] - dLat || lat > b[3] + dLat) continue;
+      for (const r of a.rings) for (let i = 1; i < r.length; i++) {
+        const ax = (r[i - 1][0] - lng) * kx, ay = (r[i - 1][1] - lat) * ky, bx = (r[i][0] - lng) * kx, by = (r[i][1] - lat) * ky;
+        const dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+        const t = L ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L)) : 0;
+        const d = Math.hypot(ax + t * dx, ay + t * dy);
+        if (d <= maxM && (!best || d < best.m)) best = { id: a.id, m: d };
+      }
+    }
+    return best;
+  }
+
+  /**
    * DAs with the share of their land in each area (precomputed in data/areas.json).
    * das: [lng, lat, pop, dwellings, occupied, muni, { areaId: share }].
    */
@@ -115,7 +138,7 @@
     };
   }
 
-  const api = { prepare, locate, tagCensus, censusTotals, growthSince, completedAt, inGeo };
+  const api = { prepare, locate, nearest, tagCensus, censusTotals, growthSince, completedAt, inGeo };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAreas = api;
 })(typeof window !== 'undefined' ? window : globalThis);

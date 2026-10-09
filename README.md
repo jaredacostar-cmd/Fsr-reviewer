@@ -219,6 +219,11 @@ application.
   with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
   lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
   Excel is clicked. Per-file record tables are left to *Export CSV*.
+- **Outside the mapped areas**: a development outside every pressure zone or traced drainage
+  area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
+  network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
+  switch "Outside mapped areas: Leave out" restores the strict boundaries. Farther away it is left
+  out (likely private well / septic).
 - **Servicing check** (development panel): the whole development's flows at Peel design criteria
   (L/s as in an FSR, ML/d below), its pressure zone and share of the zone's build-out max day, the
   traced sewer path from its catchment to the plant with its share of the flow at each outlet, and

@@ -881,3 +881,5 @@ details.sub-sect { border-top: 1px dashed var(--border); margin: 6px 0; }
 details.sub-sect > summary { cursor: pointer; display: flex; align-items: center; gap: 8px; }
 details.sub-sect > summary .sub-title { margin: 10px 0 6px; }
 details.sub-sect > summary .sect-sum { margin-left: auto; }
+.est { font-size: 10.5px; padding: 0 5px; border-radius: 8px; border: 1px dashed #c98a2a; color: var(--text-secondary); white-space: nowrap; }
+.est-line { display: block; padding: 3px 6px; border-radius: 6px; background: color-mix(in srgb, #e8a33d 14%, transparent); }
