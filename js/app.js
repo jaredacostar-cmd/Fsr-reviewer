@@ -1146,7 +1146,7 @@
       `<li class="${cls}">${mark}<span class="lbl">${label}${sub ? `<span class="desc">${sub}</span>` : ''}</span><span class="when">${value}</span></li>`;
     const reached = v => v > 0 ? 'done' : 'todo';
     const units = v => `${fmtNum(v)} units`;
-    return `<details class="sect"><summary><h2 class="section-title" data-info="buildout">Build-out details</h2></summary>
+    return `<details class="sub-sect"><summary><h3 class="sub-title" data-info="buildout">Build-out by stage and phase</h3></summary>
       <ol class="stepper bo-steps">
         ${step('done', dot('approved'), 'Planned', 'Planning applications', units(b.planned))}
         ${step(reached(b.permitted), dot('permit'), 'Permitted', `${fmtNum(b.permits)} building permits${pct(b.permitted)}`, units(b.permitted))}
@@ -1164,10 +1164,9 @@
     if (!e) return '';
     const rows = e.uses.map(u => `<tr><td>${esc(u.label)}</td><td>${u.m2 ? `${fmtNum(u.m2)} m²${u.fromField ? ' <span class="muted">†</span>' : ''}` : '<span class="muted">not stated</span>'}</td><td>${u.jobs ? fmtNum(u.jobs) : '–'}</td></tr>`).join('');
     const anyField = e.uses.some(u => u.fromField);
-    return `<details class="sect emp" open><summary><h2 class="section-title" data-info="employment">Employment${e.mixed ? ' <span class="muted small">(mixed use)</span>' : ''}</h2>
+    return `<details class="sub-sect emp"><summary><h3 class="sub-title" data-info="employment">Employment uses${e.mixed ? ' <span class="muted small">(mixed use)</span>' : ''}</h3>
         <span class="muted small sect-sum">${e.totalM2 ? `${fmtNum(e.totalM2)} m² · ~${fmtNum(e.jobs)} jobs` : 'floor area not stated'}</span></summary>
       <table class="dt"><thead><tr><th>Use</th><th>Floor area</th><th>Est. jobs</th></tr></thead><tbody>${rows}</tbody></table>
-      ${e.jobs > 0 ? (d => `<p class="small emp-demand"><strong>Servicing:</strong> water ${fmt1(d.water.avg)} L/s average, ${fmt1(d.water.peakHour)} L/s peak hour · wastewater ${fmt1(d.wastewater.avg)} L/s average, ${fmt1(d.wastewater.peak)} L/s peak (M ${d.wastewater.peakingFactor.toFixed(2)}). Details under Servicing demand.</p>`)(D.employmentDemand(e.jobs, state.criteria)) : ''}
       <p class="small muted">Read from the application descriptions${anyField ? '; † floor area field published with the application' : ''}. Jobs at ${Object.entries(state.criteria.m2PerJob).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (editable under Breakdown &amp; criteria).</p>
     </details>`;
   }
@@ -1246,7 +1245,7 @@
 
   // Servicing demand for one project. Peaking uses the project's own population (local
   // sewer / watermain sizing), so it is higher than its share of the regional total.
-  function demandHTML(p, intro = '') {
+  function demandHTML(p, intro = '', nested = false) {
     const c = state.criteria;
     // Total = completed (finished permits) + remaining (everything not yet completed).
     const cols = [['all', 'Total'], ['completed', 'Completed'], ['unbuilt', 'Remaining']];
@@ -1287,23 +1286,12 @@
     const notes = [];
     if (res) notes.push(`${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.`);
     if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the development is completed.`);
-    return `<details class="sect"><summary><h2 class="section-title" data-info="project-demand">Servicing demand</h2>${emp ? `<span class="muted small sect-sum">${res ? 'residential + ' : ''}${fmtNum(Math.round(m(es[0]).jobs))} jobs</span>` : ''}</summary>${intro}
+    return `<details class="${nested ? 'sub-sect' : 'sect'}"><summary>${nested ? '<h3 class="sub-title" data-info="project-demand">Demand by stage: total, completed, remaining</h3>' : '<h2 class="section-title" data-info="project-demand">Servicing demand</h2>'}${emp ? `<span class="muted small sect-sum">${res ? 'residential + ' : ''}${fmtNum(Math.round(m(es[0]).jobs))} jobs</span>` : ''}</summary>${intro}
       <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
         ${resRows}${empRows}${totRows}
       </tbody></table>
       <p class="small muted">${notes.join(' ')}
         ${res ? 'Completed = units on finished permits; remaining = the rest, permitted or not. ' : ''}Peaks are for each column alone (peaking is not additive); edit the criteria in the bottom panel.</p></details>`;
-  }
-
-  function phaseHistoryHTML(p) {
-    const h = state.history && state.history.projects && state.history.projects[p.key];
-    if (!h || !h.length) return '';
-    return `<h2 class="section-title">Phase history <span class="muted small">(checked weekly)</span></h2>
-      <ol class="timeline">${h.map(([d, ph], i) => {
-        // The latest event of that phase on or before the weekly check: what moved it.
-        const t = new Date(`${d}T23:59:59`), ev = p.timeline.filter(e => e.phase === ph && e.date <= t).sort((a, b) => b.date - a.date)[0];
-        return `<li><span class="d">${esc(d)}</span>${dot(ph)}<span>${i ? 'Moved to' : 'First seen as'} ${esc(P.PHASE_BY_KEY[ph].label)}${ev ? ` <span class="muted">— ${esc(ev.text)} (${esc(ev.tag)}, ${fmtDate(ev.date)})</span>` : ''}</span></li>`;
-      }).join('')}</ol>`;
   }
 
   // Why a development is where it is: the file and status behind its phase, signals in the
@@ -1358,78 +1346,252 @@
     return out.sort((a, b) => b.m.date.localeCompare(a.m.date));
   }
   const OUTCOME_LABEL = { CARRIED: 'Carried', 'CARRIED AS AMENDED': 'Carried as amended', DEFEATED: 'Defeated', LOST: 'Lost', DEFERRED: 'Deferred', REFERRED: 'Referred', RECEIVED: 'Received', WITHDRAWN: 'Withdrawn', APPROVED: 'Approved', ADOPTED: 'Adopted' };
-  function councilItemsHTML(p) {
-    const list = councilItems(p);
-    if (!list.length) return '<p class="small muted">No council or committee items name this development’s files since 2019.</p>';
-    const kind = it => /public meeting/i.test(it.title) ? 'Public meeting' : /recommendation/i.test(it.title + it.docs.map(d => d[1]).join(' ')) ? 'Recommendation report' : /information report/i.test(it.title + it.docs.map(d => d[1]).join(' ')) ? 'Information report' : /by-?law/i.test(it.title) ? 'By-law' : /correspondence|petition|letter|delegation/i.test(it.title) ? 'Correspondence' : 'Item';
-    return `<h3 class="sub-title" data-info="council-items">Council and committee <span class="muted small">${fmtNum(list.length)} item${list.length === 1 ? '' : 's'} naming its files</span></h3>
-      <ol class="council-list">${list.slice(0, 25).map(({ m, it }) => `<li>
-        <div class="c-head"><span class="d">${esc(m.date)}</span> <a href="${esc(m.url)}" target="_blank" rel="noopener">${esc(m.name)}</a>${it.n ? ` · item ${esc(it.n)}` : ''} <span class="c-kind">${kind(it)}</span>${it.outcome ? ` <span class="c-out c-${it.outcome.toLowerCase().replace(/\s.*$/, '')}">${esc(OUTCOME_LABEL[it.outcome] || it.outcome)}</span>` : ''}</div>
-        <div class="c-title">${esc(it.title)}</div>
-        ${it.docs.length ? `<div class="c-docs small">${it.docs.map(([id, name]) => `<a href="https://${esc(m.host)}/filestream.ashx?DocumentId=${esc(id)}" target="_blank" rel="noopener">${esc(name.replace(/\.pdf$/i, ''))}</a>`).join(' · ')}</div>` : ''}
-        ${it.text ? `<details class="c-text"><summary>${m.passed ? 'Minutes: discussion, motion and vote' : 'Agenda text'}</summary><p class="small">${esc(it.text)}</p></details>` : ''}
-      </li>`).join('')}</ol>${list.length > 25 ? `<p class="small muted">+ ${fmtNum(list.length - 25)} earlier items</p>` : ''}`;
+  // ---- Development panel: a brief first (status, latest decision, servicing, build-out), then
+  // one dated history (phase changes, council and committee items, file and permit events) and
+  // the details (servicing, units, aerial, source records), each opened when needed.
+  const B = window.PeelBrief;
+  // Council items with their brief (verdict, motion, issues raised, requirements), newest first.
+  const briefCache = new WeakMap();
+  function councilBriefs(p) {
+    const c = briefCache.get(p);
+    if (c && c.C === state.council) return c.list;
+    const refs = p.records.filter(r => r.kind === 'application' && r.ref).map(r => r.ref);
+    const list = councilItems(p).map(x => ({ ...x, s: B.summarizeItem(x.it, x.m.passed, refs) }));
+    briefCache.set(p, { C: state.council, list });
+    return list;
   }
-  function statusWhyHTML(p) {
+  // Status: the event behind the current phase, signals in the status text, stalled or not.
+  function statusOf(p) {
     const apps = p.records.filter(r => r.kind === 'application');
     const seen = new Map();
     for (const r of apps) for (const [re, kind, text] of STATUS_SIGNALS) if (re.test(r.statusRaw || '')) {
-      const k = text; if (!seen.has(k)) seen.set(k, { kind, text, files: [] });
-      seen.get(k).files.push(`${r.ref || 'file'} (“${r.statusRaw}”)`);
+      if (!seen.has(text)) seen.set(text, { kind, text, files: [], main: false });
+      seen.get(text).files.push(`${r.ref || 'file'} (“${r.statusRaw}”)`);
+      if (recGroup(r) !== 'precon') seen.get(text).main = true;
       break;
     }
-    // The event that set the current phase.
     const ev = p.timeline.filter(t => t.phase === p.phase).sort((a, b) => b.date - a.date)[0];
-    const why = ev ? `${esc(P.PHASE_BY_KEY[p.phase].label)} since ${fmtDate(ev.date)}: ${esc(ev.text)} — ${esc(ev.tag)}` : `${esc(P.PHASE_BY_KEY[p.phase].label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
+    const label = P.PHASE_BY_KEY[p.phase].label;
+    const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
     const stalled = PLANNING_PHASES.includes(p.phase) && p.last && Date.now() - p.last > 2 * YEAR_MS;
     const years = p.last ? (Date.now() - p.last) / YEAR_MS : 0;
     const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
     const sig = [...seen.values()].sort((a, b) => RANK[a.kind] - RANK[b.kind]);
-    const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check council and committee records') : '';
-    loadCouncil();
-    const council = state.council && Object.keys(state.council.files || {}).length ? councilItemsHTML(p) : '';
-    if (!sig.length && !stalled && !council) return `<p class="small why-line"><strong>Why this phase:</strong> ${why}</p>`;
-    return `<details class="sect" open><summary><h2 class="section-title" data-info="status-why">Why this status</h2><span class="muted small sect-sum">${stalled ? `stalled ${years.toFixed(1)} years` : esc(sig[0] ? sig[0].text.split(' —')[0] : '')}</span></summary>
-      <p class="small"><strong>Phase:</strong> ${why}</p>
-      ${stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no recorded activity since ${fmtDate(new Date(p.last))} (${years.toFixed(1)} years), ${cause}.</p>` : ''}
-      ${sig.length ? `<ul class="why-list">${sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
-      ${council || ''}
-      <p class="small muted">From the status text in the municipal application data${state.council ? ' and council / committee agendas and minutes that name the file numbers' : ''}. The status says what happened, not always why; staff reports and minutes carry the reasons.</p></details>`;
+    const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check the council and committee items') : '';
+    // The most recently active application and its status text.
+    const lastOf = r => r.events.length ? Math.max(...r.events.map(e => +e.date)) : 0;
+    const latest = apps.slice().sort((a, b) => lastOf(b) - lastOf(a))[0];
+    return { sig, why, stalled, years, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
   }
 
-  // Dated events grouped by day, then by event: "Permit issued · Issue date — 20-287761, 20-287981
-  // +2 more" instead of one line per file.
-  function timelineHTML(events) {
-    const days = new Map();
-    for (const t of events) {
-      const d = fmtDate(t.date);
-      if (!days.has(d)) days.set(d, new Map());
-      const g = days.get(d), k = `${t.phase}|${t.text}`;
-      if (!g.has(k)) g.set(k, { phase: t.phase, text: t.text, tags: [] });
-      if (!g.get(k).tags.includes(t.tag)) g.get(k).tags.push(t.tag);
+  const psName = a => drName(a).replace(/^[^·]+· /, '');
+  const trigger = () => (state.reports && state.reports.masterPlan && state.reports.masterPlan.plantTriggerPct) || 90;
+  const chip = (html, cls = '') => `<span class="chip${cls ? ` ${cls}` : ''}">${html}</span>`;
+  const outBadge = (it, s) => it.outcome || s.vote ? `<span class="c-out c-${String(it.outcome || s.vote).toLowerCase().replace(/\s.*$/, '')}">${esc(s.vote || OUTCOME_LABEL[it.outcome] || it.outcome)}</span>` : '';
+  const pctOf = (a, b) => b > 0 ? `${(a / b * 100) < 1 ? (a / b * 100).toFixed(2) : Math.round(a / b * 100)}%` : '–';
+
+  // Flags for the header: what an infrastructure planner should look at first.
+  function devFlags(p, st, f) {
+    const out = [];
+    if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
+    if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
+    if (f) {
+      for (const s of f.sps) if (s.wet >= s.firm) out.push(chip(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn'));
+      if (f.cap) {
+        if (f.reserve <= 0) out.push(chip(`${esc(PLANT_SHORT[f.pl] || f.pl)} over-committed`, 'warn'));
+        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chip(`${esc(PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% committed`, 'warn'));
+      }
     }
+    return out;
+  }
+
+  function devHeadHTML(p, st, f) {
+    const e = f ? f.e : D.estimate([p], state.criteria, 'all', jobsOf);
+    const facts = [];
+    if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}`));
+    if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(Math.round(e.employment.jobs)), 'jobs')));
+    if (f && f.z) facts.push(chip(esc(f.z.name.replace('Pressure zone ', 'Zone '))));
+    if (f && f.pl) facts.push(chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}`));
+    if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
+    const flags = devFlags(p, st, f);
+    return `<div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
+        <span class="badge">${dot(p.phase)}${esc(P.PHASE_BY_KEY[p.phase].label)}</span></div>
+      <div class="chips dev-chips">${facts.join('')}${flags.join('')}</div>`;
+  }
+
+  // The latest council / committee decision in brief, plus what all the items raised.
+  function latestDecisionHTML(p, st) {
+    const loaded = state.council && Object.keys(state.council.files || {}).length;
+    const fileStatus = st.latest ? `Latest file status: <strong>${esc(st.latest.ref || 'file')}</strong> “${esc(st.latest.statusRaw || 'no status')}”${st.latestAt ? ` (${fmtDate(new Date(st.latestAt))})` : ''}.` : '';
+    if (!state.council) return `<p class="small muted">Loading council and committee items…</p>${fileStatus ? `<p class="small">${fileStatus}</p>` : ''}`;
+    const list = loaded ? councilBriefs(p) : [];
+    if (!list.length) return `<p class="small">${fileStatus} <span class="muted">No council or committee items name its files since 2019.</span></p>`;
+    const top = B.latestDecisive(list), { m, it, s } = top;
+    const newer = list[0] !== top ? list[0] : null;
+    const all = B.across(list);
+    const chips = (xs, withN) => xs.map(x => chip(`${esc(x.label)}${withN && x.n > 1 ? ` ×${x.n}` : ''}`, x.infra ? 'infra' : '')).join('');
+    return `<div class="c-brief">
+        <div class="c-head small"><span class="d">${esc(m.date)}</span> · ${esc(m.name)} · <span class="c-kind">${esc(s.kind)}</span> ${outBadge(it, s)}</div>
+        <p class="c-verdict">${s.verdict ? `<strong>${esc(s.verdict)}</strong>` : ''}${s.verdict && s.verdict.startsWith(it.title) ? '' : `${s.verdict ? ' — ' : ''}${esc(it.title)}`}</p>
+        ${s.decision ? `<p class="small c-motion">${esc(s.decision)}</p>` : ''}
+        ${newer ? `<p class="small">Since then: <span class="d">${esc(newer.m.date)}</span> · ${esc(newer.s.kind)}${newer.s.verdict ? ` — ${esc(newer.s.verdict)}` : ''} · <span class="muted">${esc(newer.it.title)}</span></p>` : ''}
+        ${all.requirements.length ? `<div class="chips small"><span class="ck">Requirements on record</span>${chips(all.requirements)}</div>` : ''}
+        ${all.concerns.length ? `<div class="chips small"><span class="ck">Issues raised</span>${chips(all.concerns, true)}</div>` : ''}
+        <p class="small muted">${list.length > 1 ? `${fmtNum(list.length)} council and committee items since ${esc(list[list.length - 1].m.date.slice(0, 4))}` : 'One council or committee item'} — <button type="button" class="btn small link" data-open="dev-hist">all in History</button>. ${fileStatus}</p>
+      </div>`;
+  }
+
+  // Servicing in one or two lines: flows, pressure zone, sewer path constraint, plant reserve.
+  function servicingBriefHTML(p, f) {
+    if (!f) return servicingLineHTML(p) || '<p class="small muted">No units or jobs stated — flows not estimated.</p>';
+    const cb = f.cb, lines = [];
+    lines.push(`<strong>Water</strong> ${uLs(cb.water.maxDay)} max day, ${uLs(cb.water.peakHour)} peak hour${f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zMax ? ` (${pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of its build-out max day)` : ''}` : ' · no pressure zone'}`);
+    const ps = f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0];
+    lines.push(`<strong>Wastewater</strong> ${uLs(cb.wastewater.peak)} peak dry, ${uLs(cb.wastewater.wetPeak)} peak wet${ps ? ` · via ${esc(psName(ps.a))} (build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm, peak wet)` : ''}`);
+    if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant is over-committed'}`);
+    else if (f.pl === 'Toronto') lines.push('Drains to the City of Toronto system (Malton).');
+    return `<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>
+      <p class="small"><button type="button" class="btn small link" data-open="dev-svc">Flows, sewer path and demand by stage</button></p>`;
+  }
+
+  function buildoutBriefHTML(p) {
+    const b = p.buildout;
+    if (!b) {
+      const permits = p.records.filter(r => r.kind === 'permit').length;
+      return `<p class="small">${p.units ? `${uUnits(p.units)} on the files` : 'Units not stated'}${permits ? ` · ${fmtNum(permits)} building permits` : ''}</p>`;
+    }
+    const total = Math.max(b.planned, b.permitted), w = v => total ? (v / total * 100).toFixed(2) : 0;
+    return `<div class="sum-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(Math.max(0, b.permitted - b.completed))} permitted not completed, ${fmtNum(b.remaining)} left to build">
+        <span class="bo-done" style="width:${w(b.completed)}%"></span><span class="bo-perm" style="width:${w(Math.max(0, b.permitted - b.completed))}%"></span><span class="bo-left" style="width:${w(b.remaining)}%"></span></div>
+      <p class="small">${uUnits(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed · <strong>${uUnits(b.remaining)} left</strong> <button type="button" class="btn small link" data-open="dev-units">by type and phase</button></p>`;
+  }
+
+  function devBriefHTML(p, st, f) {
+    const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
+    const status = `<p class="small">${st.why}</p>
+      ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
+      ${(x => x && x.kind !== 'info' ? `<p class="small why-${x.kind}-t">${esc(x.text)} <span class="muted">· ${esc(x.files[0])}</span></p>` : '')(st.sig.find(x => x.main))}
+      ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`;
+    return `<section class="brief" data-info="dev-brief">
+      ${row('Status', status)}
+      ${row('Latest decision', latestDecisionHTML(p, st))}
+      ${row('Servicing', servicingBriefHTML(p, f))}
+      ${row('Build-out', buildoutBriefHTML(p))}
+      ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
+      ${exportBar('dev')}
+    </section>`;
+  }
+
+  // One dated history: phase changes (weekly check), council and committee items, file events
+  // and building permit events; newest first, by year.
+  function devEvents(p) {
+    const byUid = new Map(p.records.map(r => [r.uid, r]));
+    const ev = [], groups = new Map();
+    for (const t of p.timeline) {
+      const r = byUid.get(t.record), type = r && r.kind === 'permit' ? 'permit' : 'file';
+      const k = `${fmtDate(t.date)}|${t.text}|${type}`;
+      if (!groups.has(k)) { const g = { date: t.date, type, phase: t.phase, text: t.text, tags: [] }; groups.set(k, g); ev.push(g); }
+      const g = groups.get(k); if (!g.tags.includes(t.tag)) g.tags.push(t.tag);
+    }
+    const h = (state.history && state.history.projects && state.history.projects[p.key]) || [];
+    h.forEach(([d, ph], i) => {
+      const at = new Date(`${d}T23:59:59`), why = p.timeline.filter(e => e.phase === ph && e.date <= at).sort((a, b) => b.date - a.date)[0];
+      ev.push({ date: new Date(`${d}T12:00:00`), seq: i + 1, type: 'phase', phase: ph, text: `${i ? 'Moved to' : 'First seen as'} ${P.PHASE_BY_KEY[ph].label}`, why });
+    });
+    if (state.council) for (const c of councilBriefs(p)) ev.push({ date: new Date(`${c.m.date}T12:00:00`), type: 'council', c });
+    return ev.sort((a, b) => b.date - a.date || (b.seq || 0) - (a.seq || 0));
+  }
+  // Key events: everything but individual permits, which are counted per year instead.
+  function keyEvents(all) {
+    const out = [], years = new Map();
+    for (const x of all) {
+      if (x.type !== 'permit') { out.push(x); continue; }
+      const y = fmtDate(x.date).slice(0, 4);
+      if (!years.has(y)) { const s = { date: x.date, type: 'permits', byPhase: new Map(), tags: new Set() }; years.set(y, s); out.push(s); }
+      const s = years.get(y);
+      if (!s.byPhase.has(x.phase)) s.byPhase.set(x.phase, new Set());
+      for (const t of x.tags) { s.byPhase.get(x.phase).add(t); s.tags.add(t); }
+    }
+    return out;
+  }
+  const TL_TYPE = { council: 'Council', phase: 'Phase', file: 'File', permit: 'Permit', permits: 'Permits' };
+  function evHTML(x) {
     const tags = list => list.length <= 3 ? esc(list.join(', '))
       : `${esc(list.slice(0, 2).join(', '))} <details class="tl-more"><summary>+${list.length - 2} more</summary>${esc(list.slice(2).join(', '))}</details>`;
-    const rows = [...days].map(([d, g]) => `<li><span class="d">${d}</span><div class="tl-day">${[...g.values()].map(e =>
-      `<div class="tl-ev">${dot(e.phase)}<span>${esc(e.text)}${e.tags.length > 1 ? ` <span class="tl-n">×${e.tags.length}</span>` : ''} <span class="muted">— ${tags(e.tags)}</span></span></div>`).join('')}</div></li>`).join('');
-    return `<p class="small muted tl-sum">${fmtNum(events.length)} event${events.length === 1 ? '' : 's'} on ${fmtNum(days.size)} date${days.size === 1 ? '' : 's'}</p><ol class="timeline grouped">${rows}</ol>`;
+    let body;
+    if (x.type === 'council') {
+      const { m, it, s } = x.c;
+      body = `<details class="c-ev"><summary>${s.verdict ? `<strong>${esc(s.verdict)}</strong> · ` : ''}${esc(m.name)}${it.n ? ` · item ${esc(it.n)}` : ''} <span class="c-kind">${esc(s.kind)}</span> ${outBadge(it, s)}
+          <span class="c-title">${esc(it.title)}</span></summary>
+        ${s.decision ? `<p class="small c-motion">${esc(s.decision)}</p>` : ''}
+        ${s.requirements.length || s.concerns.length ? `<div class="chips small">${s.requirements.map(r => chip(esc(r.label), r.infra ? 'infra' : '')).join('')}${s.concerns.map(c => chip(`Concern: ${esc(c)}`, 'concern')).join('')}</div>` : ''}
+        <p class="small"><a href="${esc(m.url)}" target="_blank" rel="noopener">Meeting page</a>${it.docs.map(([id, name]) => ` · <a href="https://${esc(m.host)}/filestream.ashx?DocumentId=${esc(id)}" target="_blank" rel="noopener">${esc(name.replace(/\.pdf$/i, ''))}</a>`).join('')}</p>
+        ${it.text ? `<details class="c-text"><summary>${m.passed ? 'Minutes: discussion, motion and vote' : 'Agenda text'}</summary><p class="small">${esc(it.text)}</p></details>` : ''}
+      </details>`;
+    } else if (x.type === 'phase') {
+      body = `${dot(x.phase)}<span><strong>${esc(x.text)}</strong>${x.why ? ` <span class="muted">— ${esc(x.why.text.replace(/^[^·]*· /, ''))} on ${esc(x.why.tag)} (${fmtDate(x.why.date)})</span>` : ''}</span>`;
+    } else if (x.type === 'permits') {
+      const ph = P.PHASES.map(q => q.key).concat('cancelled').filter(k => x.byPhase.has(k)).reverse();
+      body = `${dot(ph[0] || 'permit')}<span>${fmtNum(x.tags.size)} building permit${x.tags.size === 1 ? '' : 's'} with dates this year: ${ph.map(k => `${esc(P.PHASE_BY_KEY[k].label.toLowerCase())} ${fmtNum(x.byPhase.get(k).size)}`).join(' · ')} <span class="muted">— each under All dated events</span></span>`;
+    } else {
+      body = `${dot(x.phase)}<span>${esc(x.text)}${x.tags.length > 1 ? ` <span class="tl-n">×${x.tags.length}</span>` : ''} <span class="muted">— ${tags(x.tags)}</span></span>`;
+    }
+    return `<li class="t-${x.type}"><span class="d">${fmtDate(x.date).slice(5)}</span><span class="tl-type">${TL_TYPE[x.type]}</span><div class="tl-body">${body}</div></li>`;
+  }
+  function evListHTML(list) {
+    if (!list.length) return '<p class="muted small">No dated events in the source data.</p>';
+    const years = new Map();
+    for (const x of list) { const y = fmtDate(x.date).slice(0, 4); if (!years.has(y)) years.set(y, []); years.get(y).push(x); }
+    return [...years].map(([y, xs], i) => {
+      const n = t => xs.filter(x => x.type === t).length;
+      const sum = [n('council') && `${n('council')} council`, n('phase') && `${n('phase')} phase`, n('file') && `${n('file')} file`, (n('permit') + n('permits')) && 'permits'].filter(Boolean).join(' · ');
+      return `<details class="tl-year"${i < 2 ? ' open' : ''}><summary><strong>${y}</strong> <span class="muted small">${sum}</span></summary><ol class="tl2">${xs.map(evHTML).join('')}</ol></details>`;
+    }).join('');
+  }
+  function devHistoryHTML(p, st) {
+    const cancelled = p.phase === 'cancelled';
+    const steps = P.PHASES.map(s => {
+      const reached = !cancelled && s.rank <= p.rank, when = p.milestones[s.key];
+      return `<li class="${s.key === p.phase ? 'current done' : reached ? 'done' : 'todo'}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
+    }).join('');
+    const all = devEvents(p), key = keyEvents(all);
+    const nC = all.filter(x => x.type === 'council').length;
+    return `<details class="sect" id="dev-hist" open><summary><h2 class="section-title" data-info="dev-history">History</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${nC ? ` · ${nC} council` : ''}</span></summary>
+      <ol class="stepper compact">${steps}</ol>
+      ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
+      <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-tl="key">Key events</button><button type="button" class="btn small" data-tl="all">All dated events (${fmtNum(all.length)})</button></div>
+      <div data-tlv="key">${evListHTML(key)}</div><div data-tlv="all" hidden>${evListHTML(all)}</div>
+      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${state.council ? 'agendas and minutes since 2019' : 'loading…'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
+  }
+
+  function devServicingHTML(p, f) {
+    const dem = demandHTML(p, '', true);
+    const sum = f ? `${fmt1(f.cb.water.maxDay)} L/s max day · ${fmt1(f.cb.wastewater.wetPeak)} L/s peak wet` : '';
+    return `<details class="sect" id="dev-svc"><summary><h2 class="section-title" data-info="servicing-check">Servicing</h2><span class="muted small sect-sum">${sum}</span></summary>
+      ${f ? servicingCheckHTML(p, f) : servicingLineHTML(p)}
+      ${dem}</details>`;
+  }
+  function devUnitsHTML(p) {
+    const b = p.buildout, e = empOf(p);
+    const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} units` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
+    return `<details class="sect" id="dev-units"><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
+      ${summaryHTML(p)}
+      ${buildoutHTML(p)}
+      ${employmentHTML(p)}
+      <p class="facts small muted">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
+        `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p></details>`;
   }
 
   let currentProject = null;
   function showDetail(p) {
+    // Re-rendering the same development (council items arrived, criteria changed): keep what is open.
+    const keep = currentProject === p && $('#detail').dataset.view === 'dev'
+      ? { open: new Map([...document.querySelectorAll('#detail-body details[id]')].map(d => [d.id, d.open])), tl: (document.querySelector('#detail-body [data-tl].on') || {}).dataset } : null;
     currentProject = p;
     setDaContext(p);
     highlight(p);
-    const ph = P.PHASE_BY_KEY[p.phase];
-    const cancelled = p.phase === 'cancelled';
-    const steps = P.PHASES.map(s => {
-      const reached = !cancelled && s.rank <= p.rank;
-      const when = p.milestones[s.key];
-      const cls = s.key === p.phase ? 'current done' : reached ? 'done' : 'todo';
-      return `<li class="${cls}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
-    }).join('');
-    const timeline = p.timeline.length ? timelineHTML(p.timeline)
-      : '<p class="muted small">No dated milestones in the source data.</p>';
+    loadCouncil();
+    const st = statusOf(p), f = svcFacts(p);
     const RECORD_LIMIT = 40;
     // Oldest first by date received (the record's earliest date); undated records last.
     const received = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
@@ -1455,32 +1617,35 @@
     }).join('');
     $('#detail-body').innerHTML = `
       ${selection.has(p.key) ? `<button type="button" class="btn small link back-sel" data-sel="back">← Selection (${fmtNum(selection.size)} projects)</button>` : ''}
-      <div class="head"><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
-        <span class="badge">${dot(p.phase)}${esc(ph.label)}</span></div>
-      ${summaryHTML(p)}
-      <p class="facts small">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
-        `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p>
-      ${servicingLineHTML(p)}
-      ${statusWhyHTML(p)}
-      ${p.description ? `<p class="desc-clamp">${esc(p.description)}</p>` : ''}
-      ${employmentHTML(p)}
-      ${cancelled ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}
-      <details class="sect" open><summary><h2 class="section-title" data-info="aerial">Aerial check</h2></summary>
+      ${devHeadHTML(p, st, f)}
+      ${devBriefHTML(p, st, f)}
+      ${devHistoryHTML(p, st)}
+      ${devServicingHTML(p, f)}
+      ${devUnitsHTML(p)}
+      <details class="sect" id="dev-aerial"><summary><h2 class="section-title" data-info="aerial">Aerial check</h2><span class="muted small sect-sum">before / latest photo</span></summary>
         <div class="aerial" id="aerial-check"></div></details>
-      ${buildoutHTML(p)}
-      ${servicingCheckHTML(p)}
-      ${demandHTML(p)}
-      <details class="sect"><summary><h2 class="section-title" data-info="phase-progress">Progress &amp; timeline</h2></summary>
-        <ol class="stepper">${steps}</ol>
-        ${phaseHistoryHTML(p)}
-        <h3 class="sub-title" data-info="project-timeline">All dated events</h3>${timeline}</details>
-      <details class="sect" open><summary><h2 class="section-title" data-info="source-records">Source records <span class="muted small">by type · ${fmtNum(p.records.length)}</span></h2></summary>
+      <details class="sect" id="dev-recs"><summary><h2 class="section-title" data-info="source-records">Source records</h2><span class="muted small sect-sum">${fmtNum(p.records.length)} files by type</span></summary>
         ${recs}</details>`;
+    if (keep) {
+      for (const [id, open] of keep.open) { const d = document.getElementById(id); if (d) d.open = open; }
+      if (keep.tl && keep.tl.tl) showTl(keep.tl.tl);
+    }
     $('#detail').hidden = false; $('#detail').dataset.view = 'dev';
-    $('#detail').scrollTop = 0;
-    runAerial(p);
+    if (!keep) $('#detail').scrollTop = 0;
+    if ($('#dev-aerial').open) runAerial(p);
     viewLink.write();
   }
+  function showTl(v) {
+    document.querySelectorAll('#detail-body [data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
+    document.querySelectorAll('#detail-body [data-tlv]').forEach(d => { d.hidden = d.dataset.tlv !== v; });
+  }
+  $('#detail-body').addEventListener('click', e => {
+    const t = e.target.closest('[data-tl]');
+    if (t) return showTl(t.dataset.tl);
+    const o = e.target.closest('[data-open]');
+    if (o) { const d = document.getElementById(o.dataset.open); if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+  });
+  $('#detail-body').addEventListener('toggle', e => { if (e.target.id === 'dev-aerial' && e.target.open && currentProject) runAerial(currentProject); }, true);
 
   // ---- Aerial check -------------------------------------------------------------------
   const aerialCache = new Map();
@@ -1957,42 +2122,53 @@
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
   // with its share of the flow at each outlet, and what it means for the plant's uncommitted
   // reserve capacity.
-  function servicingCheckHTML(p) {
+  // Servicing facts for one development (brief, header flags and the check): flows at design
+  // criteria, pressure zone, sewer path to the plant with pumping stations, plant reserve.
+  function svcFacts(p) {
     const M = state.svcModel;
-    if (!state.servicing || !M) return servicingLineHTML(p);
-    const c = state.criteria, e = D.estimate([p], c, 'all', jobsOf), cb = e.combined;
-    if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return servicingLineHTML(p);
-    const mld = D.toMLd, ls = uLs, pct = (a, b) => b > 0 ? `${(a / b * 100) < 1 ? (a / b * 100).toFixed(2) : Math.round(a / b * 100)}%` : '–';
+    if (!state.servicing || !M) return null;
+    const e = D.estimate([p], state.criteria, 'all', jobsOf), cb = e.combined;
+    if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return null;
     const layer = p.phase === 'completed' ? 'built' : D.COMMITTED_PHASES.has(p.phase) ? 'approved' : (p.phase === 'inception' || p.phase === 'review') ? 'proposed' : null;
-    const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
-    // Water: its pressure zone.
     const z = (p.pz || []).map(id => svcById.get(id)).filter(Boolean)[0];
     const zl = z && M.zones.get(z.id);
     const zMax = zl ? M.wMax(M.total(zl), M.jobs(zl)) : 0;
-    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
-    const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
-    // Sewer path to the plant.
     let d = (p.dr || []).map(id => svcById.get(id)).filter(Boolean)[0];
     const path = []; const seen = new Set();
     while (d && !seen.has(d.id)) { seen.add(d.id); path.push(d); d = d.downstream ? svcById.get(d.downstream) : null; }
-    const devAvg = mld(cb.wastewater.avg);
+    // Pumping stations on the path: build-out peak dry and ≈ peak wet (design flows) vs firm capacity.
+    const sps = path.filter(a => spsOf(a)).map(a => {
+      const l = M.cum.get(a.id);
+      return { a, firm: spsOf(a).firmLs, dry: l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, wet: l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0 };
+    });
+    const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
+    const devAvg = D.toMLd(cb.wastewater.avg);
+    return { M, e, cb, layer, z, zl, zMax, path, sps, pl, cap, devAvg, reserve: cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0 };
+  }
+  // Servicing check (inside the Servicing section): the development's flows at Peel design
+  // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
+  // with its share of the flow at each outlet, and what it means for the plant's uncommitted
+  // reserve capacity.
+  function servicingCheckHTML(p, F) {
+    const { M, e, cb, layer, z, zl, zMax, path, pl, cap, devAvg } = F;
+    const mld = D.toMLd, ls = uLs, pct = pctOf;
+    const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
+    const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)})` : ''}</td></tr>`;
+    const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
     const pathRows = path.map((a, i) => {
       const l = M.cum.get(a.id), f = M.fOf(a.plant), out = l ? M.adwf(l, f) : 0;
       return `<tr><td>${i ? '↳ ' : ''}${a.kind === 'plant' ? `${esc(plantLabel(a.plant))} inflow` : esc(drName(a).replace(/^[^·]+· /, ''))}<small>${a.kind === 'ps' ? (spsOf(a) ? ((dry, wet) => `pumping station — firm ${fmtNum(spsOf(a).firmLs)} L/s; build-out peak dry ${fmtNum(Math.round(dry))} L/s (${Math.round(dry / spsOf(a).firmLs * 100)}%), peak wet ≈${fmtNum(Math.round(wet))} L/s (${Math.round(wet / spsOf(a).firmLs * 100)}%)`)(l ? M.pdwf(l, 1) * 1e6 / 86400 : 0, l ? (M.pdwf(l, 1) + M.ii(l)) * 1e6 / 86400 : 0) : 'pumping station — capacity not in the master plan table') : a.kind === 'trunk' ? `trunk${a.trunkMm ? ` ${a.trunkMm} mm` : ''} outlet` : a.kind === 'plant' ? 'reaches the plant' : 'City of Toronto system'}</small></td><td>${uML(out)}</td><td>${pct(devAvg * f, out)}</td></tr>`;
     }).join('');
-    const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
     let plant = '';
     if (cap) {
       const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
       plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + approved ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}.</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
-    return `<details class="sect" open><summary><h2 class="section-title" data-info="servicing-check">Servicing check</h2><span class="muted small sect-sum">${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : ''}${pl ? ` · ${esc(plantLabel(pl))}` : ''}</span></summary>
-      ${exportBar('dev')}
-      <table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
+    return `<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
-      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p></details>`;
+      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
   }
   // Project panel line: its pressure zone and drainage area.
   function servicingLineHTML(p) {
