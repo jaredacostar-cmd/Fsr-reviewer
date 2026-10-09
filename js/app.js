@@ -384,7 +384,8 @@
   // Drainage area names carry the plant ("Lakeview · Bolton PS"); show the plant's report name.
   const drName = a => String(a.name || '').replace(/^Lakeview · /, 'G.E. Booth · ');
   const svcLayers = { pz: null, dr: null };
-  let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false) };
+  let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false), bk: !!store.get('svc-bk', false) };
+  const blockSwatch = '<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><rect x="3" y="2" width="16" height="10" fill="#7048e8" fill-opacity=".14" stroke="#7048e8" stroke-width="1.8"/></svg>';
   const svcSwatch = k => `<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">${k === 'pz'
     ? '<rect x="3" y="2" width="16" height="10" rx="1" fill="#0b7285" fill-opacity=".1" stroke="#0b7285" stroke-width="1.6" stroke-dasharray="3 2"/>'
     : '<rect x="3" y="2" width="8" height="10" fill="#2f7ed8" fill-opacity=".25" stroke="#2f7ed8"/><rect x="11" y="2" width="8" height="10" fill="#d9822b" fill-opacity=".25" stroke="#d9822b"/>'}</svg>`;
@@ -435,7 +436,7 @@
           <label data-info="map-capacity"><span>Shade</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
         </div>
         <div class="mo-sec"><div class="mo-h">Infrastructure</div>
-          <div class="mo-chips">${chip('id="opt-pz"', svcOn.pz, `${svcSwatch('pz')}Pressure zones`, 'pressure-zone')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
+          <div class="mo-chips">${chip('id="opt-pz"', svcOn.pz, `${svcSwatch('pz')}Pressure zones`, 'pressure-zone')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}${chip('id="opt-bk"', svcOn.bk, `${blockSwatch}Wastewater blocks`, 'blocks')}</div>
           <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <small id="exist-note"></small>
@@ -472,6 +473,7 @@
       el.querySelector('.mo-view').onclick = e => { const b = e.target.closest('[data-mview]'); if (b) setMapView(b.dataset.mview); };
       el.querySelector('#opt-pz').onchange = e => setSvcLayer('pz', e.target.checked);
       el.querySelector('#opt-dr').onchange = e => setSvcLayer('dr', e.target.checked);
+      el.querySelector('#opt-bk').onchange = e => setBlocksLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => setOrientation(e.target.value);
       return el;
@@ -2027,6 +2029,7 @@
   // Closing the drawn-area summary also removes the drawn areas (unless drawing another one).
   function closeDetail(opt = {}) {
     const wasSel = $('#detail').dataset.view === 'sel';
+    if ($('#detail').dataset.view === 'block') clearBlockFocus();
     $('#detail').hidden = true; highlight(null); setDaContext(null);
     if (wasSel && !opt.keepSelection) clearSelection();
     viewLink.write();
@@ -2579,6 +2582,7 @@
       tagServicing();
       renderSvcSelects();
       for (const k of ['pz', 'dr']) if (svcOn[k]) setSvcLayer(k, true);
+      if (svcOn.bk) setBlocksLayer(true);
       renderDcLayer(); renderLegend();
       applyFilters();
       setTimeout(loadSewers, 1500);
@@ -3397,9 +3401,9 @@
   // everything upstream that drains through it). Click it again to clear.
   const svcFocus = { id: null, layer: L.layerGroup().addTo(map) };
   function focusSvc(id, opt = {}) {
-    const { zoom = true, loads = true } = opt;
+    const { zoom = true, loads = true, keep = false } = opt;
     svcFocus.layer.clearLayers();
-    svcFocus.id = svcFocus.id === id ? null : id;
+    svcFocus.id = svcFocus.id === id && !keep ? null : id;
     if (typeof syncClearBtn === 'function') setTimeout(syncClearBtn, 0);
     for (const r of document.querySelectorAll('.svc-row')) r.classList.toggle('on', r.dataset.svc === svcFocus.id);
     const a = svcFocus.id && svcById.get(svcFocus.id);
@@ -3424,6 +3428,20 @@
   function drawFlowPath(a, up) {
     const plant = (state.servicing.meta.plants || []).find(p => p.name === a.plant);
     const ll = p => [p[1], p[0]];
+    // Along the sewers (data/sewers.json) when loaded: from the catchment's outlet down the pipes
+    // to the plant, and from each upstream outlet until it joins that route.
+    if (!SEW.data) { loadSewers().then(d => { if (d && svcFocus.id === a.id) focusSvc(a.id, { zoom: false, loads: false, keep: true }); }); }
+    else {
+      const start = a.outletAt && nearestPipe(a.outletAt[0], a.outletAt[1], 400);
+      if (start >= 0) {
+        const main = pipeRoute(start); drawPipeRoute(main, 'svc-flow', svcFocus.layer);
+        const onMain = new Set(main);
+        for (const u of up) { const k = u.outletAt && nearestPipe(u.outletAt[0], u.outletAt[1], 400); if (k >= 0) drawPipeRoute(pipeRoute(k, onMain), 'svc-flow-up', svcFocus.layer); }
+        if (plant) L.circleMarker(ll(plant.lnglat), { radius: 6, className: 'svc-plant', interactive: true }).bindTooltip(esc(plantLabel(a.plant)), { className: 'pt' }).addTo(svcFocus.layer);
+        addFlowMarker();
+        return;
+      }
+    }
     const arrow = (from, to, cls) => { if (from && to && (from[0] !== to[0] || from[1] !== to[1])) L.polyline([ll(from), ll(to)], { className: cls, interactive: false }).addTo(svcFocus.layer); };
     const endOf = d => { const nx = d.downstream && svcById.get(d.downstream); return nx ? (nx.outletAt || (plant && plant.lnglat)) : plant && plant.lnglat; };
     for (const u of up) arrow(u.outletAt, endOf(u), 'svc-flow-up');
@@ -3440,6 +3458,116 @@
     defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>';
     svg.insertBefore(defs, svg.firstChild);
   }
+
+  // ---- Routes along the sewer network (data/sewers.json: each pipe's next pipe downstream) ----
+  // Pipe indices from `start` down to the plant (or until a pipe in `stopAt`, joining another route).
+  function pipeRoute(start, stopAt) {
+    const out = []; const seen = new Set();
+    for (let k = start; k != null && k >= 0 && !seen.has(k) && out.length < 8000; k = SEW.data.pipes[k][3]) { out.push(k); seen.add(k); if (stopAt && stopAt.has(k)) break; }
+    return out;
+  }
+  const routeKm = route => route.reduce((t, k) => { const c = pipeCoords(SEW.data.pipes[k]); for (let i = 1; i < c.length; i++) t += dcM(c[i - 1], c[i]); return t; }, 0) / 1000;
+  // Drawn as pieces of ~1.2 km, each ending in an arrowhead, so the direction shows all along.
+  function drawPipeRoute(route, cls, layer, every = 1200) {
+    let seg = [], run = 0;
+    const flush = () => { if (seg.length > 1) L.polyline(seg.map(([x, y]) => [y, x]), { className: cls, interactive: false }).addTo(layer); };
+    for (const k of route) for (const c of pipeCoords(SEW.data.pipes[k])) {
+      if (seg.length) { const last = seg[seg.length - 1]; if (last[0] === c[0] && last[1] === c[1]) continue; run += dcM(last, c); }
+      seg.push(c);
+      if (run >= every) { flush(); seg = [c]; run = 0; }
+    }
+    flush();
+  }
+
+  // ---- Wastewater blocks: the Region of Peel's 40 sewersheds for its inflow & infiltration
+  // program (data/blocks.json; the blocks of "Dragonfly: An Integrated Approach to Resiliency",
+  // WEFTEC 2024). Each block is joined to the existing sewers: the pipes inside it, the ones
+  // leaving it (outlets), the block its main outlet drains into, and the route to the plant.
+  const BLK = { data: null, loading: null, layer: null, focus: L.layerGroup().addTo(map), net: null, id: null };
+  const BLK_COLOR = '#7048e8';
+  function loadBlocks() {
+    if (BLK.data || BLK.loading) return BLK.loading;
+    BLK.loading = fetch('data/blocks.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => { BLK.data = d; return d; }).catch(() => null);
+    return BLK.loading;
+  }
+  // (inRing: the even-odd ring test defined with the existing-pipes code below.)
+  const inBlock = (b, x, y) => b.parts.some(p => inRing(x, y, p[0]) && !p.slice(1).some(h => inRing(x, y, h)));
+  function blockAt(x, y) { if (!BLK.data) return null; for (const b of BLK.data.blocks) if (inBlock(b, x, y)) return b; return null; }
+  // Blocks ⇄ pipes, computed once both files are loaded.
+  function blockNet() {
+    if (BLK.net || !BLK.data || !SEW.data) return BLK.net;
+    const P = SEW.data.pipes, B = BLK.data.blocks, of = new Int16Array(P.length).fill(-1);
+    P.forEach((p, i) => { const c = p[10], k = Math.floor(c.length / 4) * 2; of[i] = B.findIndex(b => inBlock(b, c[k], c[k + 1])); });
+    const info = B.map((b, j) => {
+      const pipes = [], outs = [];
+      P.forEach((p, i) => { if (of[i] !== j) return; pipes.push(i); if (p[3] < 0 || of[p[3]] !== j) outs.push(i); });
+      outs.sort((x, y) => P[y][4] - P[x][4]);
+      const main = outs.length ? outs[0] : -1, nx = main >= 0 ? P[main][3] : -1;
+      return { b, pipes, outs, main, into: nx >= 0 && of[nx] >= 0 ? B[of[nx]].id : null, plant: main >= 0 ? (SEW.data.plants[P[main][6]] || '') : '' };
+    });
+    const byId = new Map(info.map(x => [x.b.id, x]));
+    for (const x of info) { x.up = info.filter(y => { const seen = new Set(); for (let z = y.into; z && !seen.has(z); z = byId.get(z) && byId.get(z).into) { if (z === x.b.id) return true; seen.add(z); } return false; }).map(y => y.b.id); x.direct = info.filter(y => y.into === x.b.id).map(y => y.b.id); }
+    BLK.net = { of, info, byId };
+    return BLK.net;
+  }
+  async function setBlocksLayer(on) {
+    svcOn.bk = on; store.set('svc-bk', on);
+    if (!on) { if (BLK.layer) map.removeLayer(BLK.layer); renderLegend(); return; }
+    if (!(await loadBlocks())) return;
+    if (!BLK.layer) {
+      BLK.layer = L.featureGroup();
+      for (const b of BLK.data.blocks) {
+        const pl = L.polygon(b.parts.map(p => p.map(r => r.map(([x, y]) => [y, x]))), { renderer: svcRenderer, pane: 'svcPane', color: BLK_COLOR, weight: b.planning ? 2.4 : 1.3, opacity: 0.9, fill: true, fillColor: BLK_COLOR, fillOpacity: b.planning ? 0.12 : 0.03 })
+          .bindTooltip(`<strong>Block ${esc(b.id)}</strong>${b.planning ? ' · prioritised (block study)' : ''}<br>${fmtNum(b.ha)} ha · wastewater I&amp;I program<br><span class="muted">Tap for its outlets and route to the plant</span>`, { sticky: true, className: 'pt' })
+          .on('click', ev => { L.DomEvent.stop(ev); showBlock(b.id); });
+        BLK.layer.addLayer(pl);
+        BLK.layer.addLayer(L.marker([b.c[1], b.c[0]], { interactive: false, pane: 'svcPane', icon: L.divIcon({ className: `blk-lbl${b.planning ? ' pri' : ''}`, html: `<span>${esc(b.id)}</span>`, iconSize: [26, 16] }) }));
+      }
+    }
+    if (svcOn.bk) BLK.layer.addTo(map);
+    renderLegend();
+  }
+  function clearBlockFocus() { BLK.focus.clearLayers(); BLK.id = null; }
+  async function showBlock(id, opt = {}) {
+    await Promise.all([loadBlocks(), loadSewers()]);
+    const net = blockNet(); const x = net && net.byId.get(String(id)); if (!x) return;
+    const b = x.b, P = SEW.data.pipes;
+    clearBlockFocus(); BLK.id = b.id;
+    if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
+    // Map: the block, the blocks draining through it, and the routes to the plant along the pipes.
+    const poly = (bb, cls) => L.polygon(bb.parts.map(p => p.map(r => r.map(([lx, ly]) => [ly, lx]))), { className: cls, interactive: false }).addTo(BLK.focus);
+    for (const u of x.up) poly(net.byId.get(u).b, 'blk-focus-up');
+    const main = poly(b, 'blk-focus');
+    const route = x.main >= 0 ? pipeRoute(x.main) : [], onRoute = new Set(route);
+    drawPipeRoute(route, 'svc-flow', BLK.focus);
+    const big = x.outs.filter(i => i !== x.main && P[i][4] >= 500).slice(0, 6);
+    for (const i of big) drawPipeRoute(pipeRoute(i, onRoute), 'svc-flow-up', BLK.focus);
+    for (const i of [x.main, ...big]) if (i >= 0) { const c = pipeCoords(P[i]), e = c[c.length - 1]; L.circleMarker([e[1], e[0]], { radius: i === x.main ? 6 : 4, className: 'blk-outlet', interactive: true }).bindTooltip(`Outlet: ${P[i][0]} mm sewer${i === x.main ? ' (main)' : ''}`, { className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(BLK.focus); }
+    const plant = route.length && (state.servicing ? (state.servicing.meta.plants || []).find(p => p.name === x.plant) : null);
+    const endC = route.length ? pipeCoords(P[route[route.length - 1]]).pop() : null;
+    if (endC) L.circleMarker([endC[1], endC[0]], { radius: 7, className: 'svc-plant', interactive: true }).bindTooltip(esc(plant ? plantLabel(plant.name) : x.plant || 'Plant'), { className: 'pt' }).addTo(BLK.focus);
+    addFlowMarker();
+    if (opt.zoom !== false) { const bd = main.getBounds(); if (endC && route.length && routeKm(route) < 30) bd.extend([endC[1], endC[0]]); map.fitBounds(bd, { padding: [30, 30] }); }
+    // Panel
+    const chain = []; for (let z = x.into, n = 0; z && n < 40; z = net.byId.get(z) && net.byId.get(z).into, n++) chain.push(z);
+    const devs = state.projects.filter(p => p.lat != null && p.phase !== 'cancelled' && inBlock(b, p.lng, p.lat));
+    const gr = (() => { const bc = baselineCensus(); return bc ? PeelAreas.growthSince(devs, {}, bc.date, state.criteria) : null; })();
+    const jb = svcJobs(devs, (baselineCensus() || { date: '2021-05-11' }).date);
+    const own = x.pipes.length, km = route.length ? routeKm(route) : 0;
+    const blkBtn = z => `<button type="button" class="btn small link" data-block="${esc(z)}">Block ${esc(z)}${net.byId.get(z) && net.byId.get(z).b.planning ? ' ★' : ''}</button>`;
+    const pipeBtn = i => `<button type="button" class="btn small link" data-pipe="${i}">${P[i][0]} mm</button>`;
+    $('#detail-body').innerHTML = `<div class="head"><h3>Wastewater Block ${esc(b.id)}</h3><div class="m">${b.planning ? '<strong>Prioritised for a block study</strong> · ' : ''}${fmtNum(b.ha)} ha · Region of Peel inflow &amp; infiltration program</div></div>
+      <section class="brief">
+        <div class="b-row"><div class="b-k">Drains to</div><div class="b-v">${x.into ? `${blkBtn(x.into)}${chain.length > 1 ? ` → ${chain.slice(1).map(blkBtn).join(' → ')}` : ''} → ` : ''}<strong>${esc(plant ? plantLabel(plant.name) : x.plant || 'plant')}</strong>${km ? ` · ${km.toFixed(1)} km along the sewers` : ''}</div></div>
+        <div class="b-row"><div class="b-k">Outlets</div><div class="b-v">${x.main >= 0 ? `Main: ${pipeBtn(x.main)} sewer, full-flow capacity ${fmtNum(P[x.main][2])} L/s, ${fmtNum(P[x.main][4])} people upstream (2021)` : 'No mapped sewer of 300 mm+ leaves the block'}${x.outs.length > 1 ? `<br><span class="muted small">${x.outs.length - 1} other pipe${x.outs.length === 2 ? '' : 's'} leave the block: ${x.outs.slice(1, 6).map(pipeBtn).join(', ')}${x.outs.length > 6 ? '…' : ''}</span>` : ''}</div></div>
+        <div class="b-row"><div class="b-k">Upstream</div><div class="b-v">${x.direct.length ? `${x.direct.map(blkBtn).join(', ')} drain${x.direct.length === 1 ? 's' : ''} into it${x.up.length > x.direct.length ? ` (${x.up.length} blocks upstream in all)` : ''}` : 'None: a head-of-system block'}</div></div>
+        <div class="b-row"><div class="b-k">Sewers</div><div class="b-v">${fmtNum(own)} Region sanitary mains of 300 mm+ inside the block</div></div>
+        <div class="b-row"><div class="b-k">Growth</div><div class="b-v">${fmtNum(devs.length)} development site${devs.length === 1 ? '' : 's'}${gr ? ` · since the census: +${fmtNum(gr.built.units)} built, +${fmtNum(gr.approved.units)} approved / permitted, +${fmtNum(gr.proposed.units)} proposed units` : ''}${jb.jbuilt + jb.japproved + jb.jproposed ? ` · +${fmtNum(Math.round(jb.jbuilt + jb.japproved + jb.jproposed))} jobs` : ''}</div></div>
+      </section>
+      <p class="small muted">Blocks: Region of Peel <em>Block_view</em> feature service — the 40 sewersheds of its inflow &amp; infiltration (I&amp;I) program, as used in “Dragonfly: An Integrated Approach to Resiliency” (F. Salehzadeh, WEFTEC 2024); ★ / heavier outline = prioritised for a block study. Outlets and route: Region sanitary mains of 300 mm+ (each pipe's next pipe downstream); the main outlet is the one carrying the most people. Arrows follow the pipes to the plant; dashed = other outlets until they join.</p>`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'block';
+  }
+  document.addEventListener('click', e => { const bb = e.target.closest('[data-block]'); if (bb) showBlock(bb.dataset.block); });
 
   // ---- Map analysis: style, Planning / Servicing views, capacity layer, "What loads this?" ----
   function setMapStyle(ch) {
@@ -3458,7 +3586,7 @@
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
-    set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-da', daOn);
+    set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-bk', svcOn.bk); set('#opt-da', daOn);
     for (const k of ['water', 'sanitary', 'storm']) set(`[data-exist="${k}"]`, !!existOn[k]);
     for (const k of ['water', 'wastewater']) set(`[data-dcsys="${k}"]`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k));
     const v = currentView();
@@ -3622,6 +3750,7 @@
     if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
     if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${['under 50%', '50–80%', '80–100%', 'over 100%'][i]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>`);
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
+    if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     if (mstyle.cap !== 'off') parts.push(`<label class="lg-year"><span>${capYear == null ? 'Build-out' : `Year ${capYear}`}</span><input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" data-capyear="1" aria-label="Capacity year"></label>
@@ -3778,11 +3907,19 @@
     return out.map((p, i) => ({ ...p, z: z[i] }));
   }
   function profileSVG(prof, W = 300, H = 90) {
-    const zs = prof.map(p => p.z), lo = Math.floor(Math.min(...zs) - 1), hi = Math.ceil(Math.max(...zs) + 1), D = prof[prof.length - 1].d || 1;
+    // Pipes along the line (when looked up): sanitary invert (solid) and watermain at an assumed cover (dashed).
+    const zs = prof.flatMap(p => [p.z, p.san ? p.san.inv : p.z, p.wat ? p.z - WM_COVER : p.z]);
+    const lo = Math.floor(Math.min(...zs) - 1), hi = Math.ceil(Math.max(...zs) + 1), D = prof[prof.length - 1].d || 1;
     const X = d => 28 + d / D * (W - 34), Y = z => 6 + (1 - (z - lo) / (hi - lo || 1)) * (H - 22);
     const line = prof.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(p.z).toFixed(1)}`).join('');
-    return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile">
+    // Runs of consecutive samples on a pipe, as separate paths.
+    const runs = (get) => { let d = '', on = false; for (const p of prof) { const z = get(p); if (z == null) { on = false; continue; } d += `${on ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(z).toFixed(1)}`; on = true; } return d; };
+    const san = runs(p => p.san ? p.san.inv : null), wat = runs(p => p.wat ? p.z - WM_COVER : null);
+    const dots = (get, col) => prof.filter((p, i) => get(p) != null && get(prof[i - 1] || {}) == null && get(prof[i + 1] || {}) == null).map(p => `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(get(p)).toFixed(1)}" r="2.6" fill="${col}"/>`).join('');
+    return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile${san ? ' with sanitary sewer inverts' : ''}${wat ? ' and watermains' : ''}">
       <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+      ${san ? `<path d="${san}" fill="none" stroke="${EXIST_STYLE.sanitary.color}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, EXIST_STYLE.sanitary.color)}` : ''}
+      ${wat ? `<path d="${wat}" fill="none" stroke="${EXIST_STYLE.water.color}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, EXIST_STYLE.water.color)}` : ''}
       <g font-size="9" fill="var(--text-muted)"><text x="2" y="${Y(hi) + 4}">${hi} m</text><text x="2" y="${Y(lo)}">${lo} m</text><text x="${X(0)}" y="${H - 4}">0</text><text x="${X(D) - 2}" y="${H - 4}" text-anchor="end">${fmtDist(D)}</text></g></svg>`;
   }
 
@@ -3818,6 +3955,51 @@
       toolPanel.innerHTML = `<strong>Test a site</strong> <span class="muted">tap the map where the site is</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
     }
   }
+  // ---- Pipes along a ground profile: Region of Peel sanitary sewer inverts and watermains ----
+  // Each profile sample takes the nearest sanitary main within 12 m (its invert interpolated along
+  // the pipe, upstream → downstream as digitized) and notes a watermain within 8 m. Watermain depth
+  // is not published, so it is drawn at the Region's minimum cover (an assumption).
+  const WM_COVER = 1.7;
+  function nearOn(pt, g) {   // distance (m) from pt to polyline g and the fraction along it
+    const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320;
+    let best = { m: Infinity, t: 0 }, run = 0; const lens = [];
+    for (let i = 1; i < g.length; i++) lens.push(Math.hypot((g[i][0] - g[i - 1][0]) * kx, (g[i][1] - g[i - 1][1]) * ky));
+    const tot = lens.reduce((x, y) => x + y, 0) || 1;
+    for (let i = 1; i < g.length; i++) {
+      const ax = (g[i - 1][0] - pt[0]) * kx, ay = (g[i - 1][1] - pt[1]) * ky, bx = (g[i][0] - pt[0]) * kx, by = (g[i][1] - pt[1]) * ky;
+      const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy, t = L2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L2)) : 0;
+      const m = Math.hypot(ax + t * dx, ay + t * dy);
+      if (m < best.m) best = { m, t: (run + t * lens[i - 1]) / tot };
+      run += lens[i - 1];
+    }
+    return best;
+  }
+  async function pipesAlong(prof) {
+    const pad = 0.0004, lats = prof.map(p => p.lat), lngs = prof.map(p => p.lng);
+    const bbox = { xmin: Math.min(...lngs) - pad, ymin: Math.min(...lats) - pad, xmax: Math.max(...lngs) + pad, ymax: Math.max(...lats) + pad };
+    const q = async (S, f) => { const info = await A.layerInfo(S.url); return (await A.queryAll(S.url, info, { bbox, max: 3000, outFields: f })).features; };
+    const lines = f => !f.geometry ? [] : f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates];
+    const [sf, ...wf] = await Promise.all([q(EXIST.sanitary[0], 'FacilityID,Diameter,InvertUp,InvertDown,DepthUp,DepthDown,MainType'), ...EXIST.water.map(S => q(S, 'Diameter'))]);
+    const san = sf.flatMap(f => { const p = f.properties || {}; return p.InvertUp > 0 && p.InvertDown > 0 ? lines(f).map(g => ({ g, up: +p.InvertUp, dn: +p.InvertDown, d: +p.Diameter || 0, id: p.FacilityID || '', fm: /FM/.test(p.MainType || ''), dUp: +p.DepthUp || 0, dDn: +p.DepthDown || 0 })) : []; });
+    const wat = wf.flat().flatMap(f => lines(f).map(g => ({ g, d: +(f.properties || {}).Diameter || 0 })));
+    for (const p of prof) {
+      const pt = [p.lng, p.lat];
+      let bs = null; for (const s of san) { const n = nearOn(pt, s.g); if (n.m <= 12 && (!bs || n.m < bs.m)) bs = { ...n, s }; }
+      p.san = bs ? { inv: bs.s.up + (bs.s.dn - bs.s.up) * bs.t, d: bs.s.d, id: bs.s.id, fm: bs.s.fm, m: bs.m } : null;
+      let bw = null; for (const w of wat) { const n = nearOn(pt, w.g); if (n.m <= 8 && (!bw || n.m < bw.m)) bw = { ...n, w }; }
+      p.wat = bw ? { d: bw.w.d, m: bw.m } : null;
+    }
+    return { san: san.length, wat: wat.length };
+  }
+  function pipeDepthHTML(prof) {
+    const s = prof.filter(p => p.san && !p.san.fm), w = prof.filter(p => p.wat);
+    const ids = [...new Set(s.map(p => p.san.id))], dia = [...new Set(s.map(p => p.san.d).filter(Boolean))].sort((a, b) => a - b);
+    const dep = s.map(p => p.z - p.san.inv), wd = [...new Set(w.map(p => p.wat.d).filter(Boolean))].sort((a, b) => a - b);
+    const r = (a, f = 1) => a.length ? (Math.min(...a) === Math.max(...a) ? Math.min(...a).toFixed(f) : `${Math.min(...a).toFixed(f)}–${Math.max(...a).toFixed(f)}`) : '';
+    const sw = col => `<span class="lg-line" style="background:${col}"></span>`;
+    return `<span class="pd-row">${sw(EXIST_STYLE.sanitary.color)}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong>` : 'No sanitary sewer within 12 m of the line'}</span>
+      <span class="pd-row">${sw(EXIST_STYLE.water.color)}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
+  }
   let elevSeq = 0;
   async function fillElev(pts) {
     const seq = ++elevSeq;
@@ -3825,7 +4007,12 @@
       if (pts.length === 1) { const z = await elevAt(pts[0].lat, pts[0].lng); if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${z.toFixed(1)} m</strong> <span class="muted">above sea level · tap another point for a profile</span>`; return; }
       const prof = await elevProfile(pts); if (seq !== elevSeq || !$('#tp-elev')) return;
       const a = prof[0].z, b = prof[prof.length - 1].z, D = prof[prof.length - 1].d, zs = prof.map(p => p.z);
-      $('#tp-elev').innerHTML = `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m</span>${profileSVG(prof)}<span class="muted small">Terrain tiles (CDEM / SRTM): ground surface, not pipe inverts.</span>`;
+      const head = `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m</span>`;
+      $('#tp-elev').innerHTML = `${head}${profileSVG(prof)}<span class="muted small">Looking up sewers and watermains along the line…</span>`;
+      let pipes = null; try { pipes = await pipesAlong(prof); } catch (e) { /* the pipe layers did not load */ }
+      if (seq !== elevSeq || !$('#tp-elev')) return;
+      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, pipes ? 120 : 90)}${pipes ? pipeDepthHTML(prof, pipes) : '<span class="muted small">Sewer and watermain layers did not load.</span>'}
+        <span class="muted small">Ground: terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m), so depths are approximate. Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed).</span>`;
     } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (terrain tiles did not load).</span>'; }
   }
   toolPanel.addEventListener('click', e => {
@@ -4547,7 +4734,7 @@
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
+  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
     if (lassoOn) setLasso(false);
@@ -4555,6 +4742,7 @@
     highlight(null);
     if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
     if (selection.size || selAreas.length) clearSelection();
+    clearBlockFocus();
     exHL.clearLayers(); pinLayer.clearLayers();
     syncClearBtn();
   }
@@ -5961,5 +6149,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id) };
 })();
