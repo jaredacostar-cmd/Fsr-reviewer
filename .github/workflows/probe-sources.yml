@@ -16,6 +16,7 @@ name: Probe data sources
 #  mode=linework: existing watermains, sanitary mains, storm sewers and ponds published for Peel (log only)
 #  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
 #  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen) and data/water-supply.json (large mains across zone boundaries) from the Region's mains, committed to this branch
+#  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
@@ -74,6 +75,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/sewers.json data/water-supply.json
           git diff --cached --quiet || { git commit -m "Sewer pipe capacity and water supply data"; git push; }
+      - name: Dragonfly / Peel I&I blocks (pushed to the dragonfly-raw branch)
+        if: inputs.mode == 'dragonfly'
+        run: |
+          node scripts/probe-dragonfly.js --out dragonfly-raw
+          du -sh dragonfly-raw; ls -la dragonfly-raw | head -100
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B dragonfly-raw
+          git add -f dragonfly-raw
+          git commit -m "Dragonfly / Peel I&I blocks (raw)"
+          git push -f origin dragonfly-raw
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
