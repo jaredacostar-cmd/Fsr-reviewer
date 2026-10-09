@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "year": 2025,
+  "note": "Figures from the Region of Peel 2025 wastewater annual reports and drinking water reports, read in full. Page numbers are the printed report pages. Previous years' reports are available on request from Peel's Water Quality and Compliance team.",
+  "indexPages": {
+    "wastewater": "https://peelregion.ca/water/wastewater/wastewater-annual-reports",
+    "water": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports"
+  },
+  "reports": {
+    "booth": { "title": "2025 G.E. Booth Water Resource Recovery Facility Annual Performance Report", "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20G.E.Booth%20Water%20Resource%20Recovery%20Facility%20Annual%20Performance%20Report.pdf" },
+    "clarkson": { "title": "2025 Clarkson Water Resource Recovery Facility Annual Performance Report", "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Clarkson%20Water%20Resource%20Recovery%20Facility%20Annual%20Performance.pdf" },
+    "inglewoodWw": { "title": "2025 Inglewood Wastewater Treatment Plant Annual Report", "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Inglewood%20Report.pdf" },
+    "collection": { "title": "2025 Wastewater Collection System Annual Report", "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Wastewater%20Collection%20System.pdf" },
+    "summary": { "title": "2025 Drinking Water in Peel Summary Report", "url": "https://peelregion.ca/sites/default/files/2026-04/drinking-water-peel-summary-report.pdf" },
+    "southPeel": { "title": "2025 South Peel Drinking Water System Annual Report (Brampton, Mississauga and South Caledon)", "url": "https://peelregion.ca/sites/default/files/2026-07/South-Peel-Water-Quality-Report.pdf" },
+    "palgrave": { "title": "2025 Palgrave – Caledon East Drinking Water System Annual Report", "url": "https://peelregion.ca/sites/default/files/2026-03/Palgrave-CaledonEast-Centreville-and-Cedar-Mills.pdf" },
+    "caledonVillage": { "title": "2025 Caledon Village – Alton Drinking Water System Annual Report", "url": "https://peelregion.ca/sites/default/files/2026-03/Caledon-Village-and-Alton.pdf" },
+    "cheltenham": { "title": "2025 Cheltenham Drinking Water System Annual Report", "url": "https://peelregion.ca/sites/default/files/2026-03/Cheltenham-and-Terra-Cotta.pdf" },
+    "inglewoodW": { "title": "2025 Inglewood Drinking Water System Annual Report", "url": "https://peelregion.ca/sites/default/files/2026-03/Inglewood.pdf" }
+  },
+  "wastewater": {
+    "plants": {
+      "Lakeview": {
+        "name": "G.E. Booth WRRF (Lakeview)", "ratedMLd": 518, "avgMLd": 427.8, "maxDayMLd": 1536.7, "maxDayMonth": "April",
+        "pctOfCapacity": 83, "history": { "2019": 469.1, "2020": 446.5, "2021": 439.9, "2022": 432.0, "2023": 445.5, "2024": 452.1, "2025": 427.8 },
+        "bypassML": 725, "bypasses": 7,
+        "notes": ["Rated capacity is the annual average daily influent flow; no peak hydraulic capacity is stated.", "Down about 9% from the 2019 peak (91% of capacity), mainly from closing a west-to-east connection on March 12, 2025 (flow redistributed to Clarkson).", "Seven secondary bypasses in wet weather (725 ML), the largest April 2–4 (452 ML).", "Receives York Region and City of Toronto flows.", "About 70 ML/d to be diverted east to west to Clarkson (operational 2027–2028)."],
+        "ref": "booth", "pages": "pp. 2, 14–16, 31, 37"
+      },
+      "Clarkson": {
+        "name": "Clarkson WRRF", "ratedMLd": 350, "avgMLd": 211.9, "maxDayMLd": 480.7, "maxDayMonth": "April",
+        "pctOfCapacity": 61, "history": { "2020": 236, "2021": 218, "2022": 207, "2023": 238, "2024": 215, "2025": 211.9 },
+        "bypassML": 0, "bypasses": 0,
+        "notes": ["Rated capacity is the annual average; no peak capacity is stated.", "No bypasses or overflows in 2025; high flows March 16 and April 3."],
+        "ref": "clarkson", "pages": "pp. 2, 8, 14–15, 31"
+      },
+      "Inglewood": {
+        "name": "Inglewood WWTP", "ratedMLd": 0.243, "avgMLd": 0.102, "maxDayMLd": 0.347, "maxDayMonth": "April",
+        "pctOfCapacity": 42, "history": {},
+        "bypassML": 0, "bypasses": 0,
+        "notes": ["Rated 243 m³/d annual average; 2025 average 102 m³/d, total 37,274 m³."],
+        "ref": "inglewoodWw", "pages": "pp. 2, 15–16"
+      }
+    },
+    "inflows": [
+      { "id": "york", "name": "York Region inflow", "detail": "Humber SPS twin 900 mm forcemains at Hwy 427 and Steeles; 13,180,000 m³/yr annual average", "plant": "Lakeview", "mld": 36.1, "ref": "collection", "pages": "pp. 11–12" },
+      { "id": "toronto", "name": "City of Toronto inflow", "detail": "three connections into Peel's system; 11,016,000 m³/yr annual average; receiving plant not stated", "plant": null, "mld": 30.2, "ref": "collection", "pages": "p. 11" }
+    ],
+    "customers": 1580000,
+    "notes": ["G.E. Booth and Clarkson serve over 1.58 million customers in Peel plus York Region and City of Toronto flows (G.E. Booth report p. 9).", "York and Toronto flows are about 10% of flows in Peel (Collection System report p. 12).", "East trunk system → G.E. Booth: east Mississauga and Brampton, parts of Caledon including Bolton; west trunk system → Clarkson: west Mississauga and Brampton, south Caledon (Collection System report p. 11)."]
+  },
+  "water": {
+    "southPeel": {
+      "plants": [
+        { "name": "Arthur P. Kennedy WTP", "ratedMLd": 1200, "avgMLd": 369, "maxDayMLd": 521, "maxDayMonth": "June", "ref": "summary", "pages": "pp. 79, 83; South Peel report p. 15" },
+        { "name": "Lorne Park WTP", "ratedMLd": 500, "avgMLd": 210, "maxDayMLd": 298, "maxDayMonth": "August", "ref": "summary", "pages": "pp. 80, 84; South Peel report p. 17" }
+      ],
+      "avgMLd": 580.4, "maxDayMLd": 810, "maxDayNote": "upper bound: the plants' largest same-month maximum days added (August); the coincident system maximum day is not reported",
+      "maxDayFactor": 1.40, "treatedML": 211852,
+      "populationServed": 1585000, "populationNote": "Peel-wide population served in 2025 (South Peel report Table 7, p. 34); the South Peel system serves over 1.5 million",
+      "notes": ["Production includes water supplied to York Region (via Airport Road PS) and Halton, ICI use and non-revenue water; transfer volumes are not reported.", "Both plants' maximum day was about 1.4 × their annual average in 2025."],
+      "ref": "summary", "pages": "pp. 77–84"
+    },
+    "caledon": [
+      { "name": "Palgrave – Caledon East", "communities": "Palgrave, Caledon East, Centreville, Cedar Mills", "population": 15000, "connections": 3532, "ratedM3d": 19259, "avgM3d": 4449, "maxDayM3d": 11784, "maxDayNote": "June, sum of facility maximum days (upper bound); Palgrave wells offline Apr 22 – Jun 6", "ref": "palgrave", "pages": "pp. 4, 9; Summary report pp. 27–29, 56, 73–74" },
+      { "name": "Caledon Village – Alton", "communities": "Caledon Village, Alton, Mono Mills, Skywood", "population": 5000, "connections": 1124, "ratedM3d": 7596, "avgM3d": 1645, "maxDayM3d": 3674, "maxDayNote": "June, sum of facility maximum days (upper bound)", "ref": "caledonVillage", "pages": "pp. 4, 9; Summary report pp. 23–25, 49, 70" },
+      { "name": "Cheltenham", "communities": "Cheltenham, Terra Cotta, Poltawa", "population": 960, "connections": 267, "ratedM3d": 1469, "avgM3d": 278, "maxDayM3d": 802, "maxDayNote": "May", "ref": "cheltenham", "pages": "pp. 4, 8; Summary report pp. 31, 75" },
+      { "name": "Inglewood", "communities": "Inglewood", "population": 1500, "connections": 398, "ratedM3d": 1296, "avgM3d": 384, "maxDayM3d": 923, "maxDayNote": "July", "ref": "inglewoodW", "pages": "pp. 4, 8; Summary report pp. 33, 76" }
+    ]
+  }
+}

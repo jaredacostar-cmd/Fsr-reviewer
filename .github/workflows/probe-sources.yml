@@ -9,12 +9,13 @@ name: Probe data sources
 #  mode=census:  earlier census (2016) population by dissemination area
 #  mode=servicing: Peel water pressure zones and wastewater drainage areas
 #  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
+#  mode=peel-reports: download Peel wastewater annual reports and water quality reports to the peel-reports branch
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw or servicing-build'
+        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build or peel-reports'
         default: 'all'
         required: false
 
@@ -57,13 +58,25 @@ jobs:
           git add -f data-raw
           git commit -m "Raw Peel water / wastewater layers"
           git push -f origin servicing-raw
+      - name: Download Peel wastewater / water quality reports (pushed to the peel-reports branch)
+        if: inputs.mode == 'peel-reports'
+        run: |
+          node scripts/fetch-peel-reports.js --out peel-reports
+          du -sh peel-reports; ls -la peel-reports | head -200
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B peel-reports
+          git add -f peel-reports
+          git commit -m "Peel wastewater annual reports and water quality reports"
+          git push -f origin peel-reports
       - name: Rebuild pressure zones and drainage areas (committed to this branch)
         if: inputs.mode == 'servicing-build'
         run: |
           node scripts/build-servicing.js --out data
+          node scripts/build-svc-census.js
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/servicing.json
+          git add data/servicing.json data/svc-census.json
           git diff --cached --quiet || { git commit -m "Pressure zones and drainage areas"; git push; }
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
