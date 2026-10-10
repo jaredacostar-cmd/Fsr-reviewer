@@ -252,25 +252,36 @@ application.
   lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
   Excel is clicked. Per-file record tables are left to *Export CSV*.
 - **Default view**: the map opens on the active development applications (application to
-  construction, any year) over the background. Layers & style, the timeline and the analysis panel
-  start folded (each remembers being opened); the bottom bar shows the shown developments, units
-  and people, and *Analysis* opens the Growth & demand, Water, Wastewater and Criteria tabs. Map
-  tools (trace a sewer path, select an area, measure, test a site) sit under one Tools button; the
-  north arrow stays on the map (tap it to switch between road grid and north up). The sidebar has
-  search, a "Showing …" line, Phase and one *More filters* fold (focus, record type). **Map
-  layout**: top right, the view switch (Planning / Water / Wastewater / DC) over one *Map options*
-  fold (open on desktop, closed on phones, its line saying what is on): Developments on / off and
-  the municipality, then *Wastewater loads* (Wastewater view), *Areas* and *Layers & style*, each
-  folded with a one-line summary. Bottom right, one box: the Demand year over the legend. When a
-  setting hides the developments (switched off, no growth load on in the Wastewater view, or
-  Hidden while a path is shown) a notice above Map options says why, with *Show developments*; an
-  area filter (secondary plan, MTSA, pressure zone, block) is always named there too, with *Clear*,
-  and the collapsed Map options line names any Wastewater load that is off. The legend box takes
-  the height the panel leaves free, so the two never overlap.
-  **Where and areas are on the map panel**: municipality, then an *Areas* fold with Secondary plans and
-  MTSAs outline toggles (tap an outlined area on the map to filter to it, tap again to clear), the
-  secondary plan / MTSA filters, and the Pressure zones / Wastewater blocks layers and filters; its
-  heading shows what is applied. The development panel has three tabs: Overview, Servicing and
+  construction, any year) over the background. On desktop the analysis panel opens on
+  **Overview**; on phones it starts folded (*Analysis* opens it). Map tools (trace a sewer path,
+  select an area, measure, test a site) sit under one Tools button, and are also buttons on the
+  Overview; the north arrow stays on the map (tap it to switch between road grid and north up).
+  The sidebar has search, a "Showing …" line, Phase and one *More filters* fold (focus, record type).
+- **Bottom panel tabs**: **Overview** (the headline numbers on one screen: developments, units,
+  people, jobs, water max day and wastewater peak wet; the plants' and South Peel water treatment's
+  capacity against the 90% expansion trigger, committed and at build-out; the servicing demand by
+  phase; the DC projects that come online too late and those most growth relies on; the tools —
+  each card links to its tab), **Demand** (flows of the shown developments, then the *servicing
+  demand breakdown* by phase, by dwelling type and build-out by type, then growth since the census),
+  **Water**, **Wastewater** (plants / blocks), **DC Analysis** and **Settings & sources** (the
+  editable criteria and the references). Each tab's criteria and data sources fold to one line
+  (ⓘ Criteria & data); the scenario line sits once at the top. Tables open in **Simple** columns
+  (the build-out flows and peaks); **Engineering** adds the layer-by-layer and local / upstream
+  columns.
+- **Map layout**: top right, the view switch (Planning / Water / Wastewater / DC) over **Layers**:
+  one switch per layer — Developments, Wastewater blocks, Pressure zones, Capacity colours,
+  Existing pipes, Planned DC works, Planning areas, Census areas — then the municipality, *Wastewater
+  loads* (Wastewater view), *Filter by area* (secondary plan, MTSA, pressure zone, block) and *More
+  settings* (saved views, development colour / size / labels, capacity shading, existing pipe kinds
+  and size labels, DC works by system, planning area kinds, base map). The views set the switches;
+  changes are remembered per view. With the blocks as the catchments there is one wastewater area
+  layer (Wastewater blocks), so it can always be switched off. Bottom right, one box: the Demand
+  year over the legend. When a setting hides the developments (switched off, no growth load on in
+  the Wastewater view, or Hidden while a path is shown) a notice above Layers says why, with *Show
+  developments*; an area filter is always named there too, with *Clear*. The legend box takes the
+  height the panel leaves free, so the two never overlap. Planning area outlines: tap one on the
+  map to filter to it, tap again to clear.
+  The development panel has three tabs: Overview, Servicing and
   History & records. **Servicing** opens with *Trace the sewer path to the plant*, then a **Water**
   section (demand and pressure zone, watermains nearby, fire flow, planned water works, water DC
   needs), a **Wastewater** section (flows; the blocks to the plant, the tightest pipes with their
