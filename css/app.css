@@ -1461,3 +1461,26 @@ details.stamp { display: block; }
 .hyd-table tr.hyd-first td { border-top: 1px solid var(--border); }
 .hyd-scroll { max-width: 100%; overflow-x: auto; }
 .hyd-scroll .hyd-table { min-width: 520px; }
+/* Change log */
+.f-tab .log-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #e03131; margin-left: 5px; vertical-align: super; }
+.f-tab .log-dot[hidden] { display: none; }
+.log-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 6px 0 10px; }
+.log-tools .log-q { flex: 1 1 220px; min-width: 0; max-width: 360px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: inherit; font: inherit; font-size: 12.5px; }
+.log-day { margin-bottom: 10px; }
+.log-date { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--text-secondary); margin: 10px 0 6px; }
+.log-rel { border: 1px solid var(--border); border-left: 3px solid var(--border); border-radius: 8px; background: var(--surface-1); padding: 8px 10px; margin-bottom: 6px; }
+.log-rel.cur { border-left-color: var(--accent); }
+.log-rel.fresh { border-left-color: #e03131; }
+.log-rel h4 { margin: 3px 0 4px; font-size: 13.5px; }
+.log-rel ul { margin: 2px 0 4px; padding-left: 18px; }
+.log-rel li { margin: 1px 0; }
+.log-h { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.log-v { font-weight: 700; font-variant-numeric: tabular-nums; font-size: 12px; }
+.log-k { font-size: 10.5px; border-radius: 10px; padding: 1px 7px; background: var(--surface-2); color: var(--text-secondary); }
+.log-k.log-new { background: color-mix(in srgb, #2f9e44 15%, transparent); color: #2b8a3e; }
+.log-k.log-fix { background: color-mix(in srgb, #f76707 15%, transparent); color: #d9480f; }
+.log-k.log-data { background: color-mix(in srgb, #1c7ed6 12%, transparent); color: #1971c2; }
+.log-k.log-fresh { background: #e03131; color: #fff; }
+.log-k.log-cur { background: var(--accent); color: #fff; }
+.log-meta { margin: 2px 0 0; }
+.log-dataupd { opacity: .85; }

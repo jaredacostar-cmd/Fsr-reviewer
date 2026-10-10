@@ -221,6 +221,7 @@
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-log" data-tab="log" data-info="tab-log" aria-controls="pane-log" aria-selected="false">Change log<span class="log-dot" hidden aria-label="new changes"></span></button>
         <button type="button" class="f-sum" id="f-sum" title="Open the analysis"></button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
@@ -285,6 +286,10 @@
       <section class="f-pane svc-pane" id="pane-dca" data-pane="dca" role="tabpanel" aria-labelledby="ftab-dca" hidden>
         <div class="tb-head"><h2 class="pane-h" data-info="tab-dca">DC Analysis: diverting flows to the DC projects, and what if one is cancelled</h2></div>
         <div id="dca-body"></div>
+      </section>
+
+      <section class="f-pane log-pane" id="pane-log" data-pane="log" role="tabpanel" aria-labelledby="ftab-log" hidden>
+        <div id="log-body"><p class="small muted">Loading the change log…</p></div>
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>

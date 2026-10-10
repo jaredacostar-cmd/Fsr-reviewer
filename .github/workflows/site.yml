@@ -78,6 +78,17 @@ jobs:
         with:
           # The branch tip, so a snapshot committed by the job above is included.
           ref: ${{ github.ref_name }}
+          # Full history for the change log.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # The change log (Change log tab): one release per merged pull request, from the history.
+      - name: Change log
+        continue-on-error: true
+        run: node scripts/build-changelog.js --out data/changelog.json
 
       # Evidence of no double counting, in the run's summary page. A failed
       # integrity check marks the step red but does not block the deploy.
