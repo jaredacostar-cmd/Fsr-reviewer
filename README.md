@@ -691,6 +691,39 @@ proposed growth). **+ Add area** draws another area into the selection, × remov
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 
+## DC funding scenario
+
+**DC Analysis → Funding scenario** tests a DC budget over the next N years (default 10). There
+are quick buttons for $1 B, $5 B and the whole program.
+
+**What's in the window.** The projects coming online in the window are costed in 2026$, at their
+DC-recoverable share:
+
+- **Priced projects:** the 2020 DC study's costs, indexed ×1.40 (wastewater) and ×1.35 (water).
+  These are the Region's DC rate indexing since 2020.
+- **Mains not in the 2020 study:** a cost per metre fitted by diameter to the study's priced mains,
+  times the main's length on the map.
+- **Facilities:** their 2020 project number where it still matches, else the median priced item
+  of their kind.
+- **G.E. Booth to 558 ML/d:** the $130 M Council approved in February 2024.
+
+**Funding order:**
+
+1. Projects in the 2026 capital program as approved (committed).
+2. Then the growth each project lets through by the window's last year, per dollar.
+3. Then, with money left, projects that no modelled growth needs in the window. They are kept for
+   their other drivers.
+
+Whatever doesn't fit is deferred. Each deferred project shows the people, units and DCs it holds
+back by then. The headline gives the combined effect of all the deferrals as a range: from the
+largest single shortfall to the sum of the projects' own impacts.
+
+**Also shown:**
+
+- a comparison row for $0.5–3 B and the whole program;
+- the projects outside the window that DC Analysis says to bring forward, with their cost;
+- a CSV export.
+
 ## Change log and versions
 
 The **Change log** tab (last tab in the bottom panel) lists every release of the app, newest

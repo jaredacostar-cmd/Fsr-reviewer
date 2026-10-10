@@ -1158,6 +1158,731 @@
    "what": "Pumping Station \u00b7 Street Sewage Pumping Station. Design in"
   }
  },
+ "projects": {
+  "251199": {
+   "gross": 294981600,
+   "dc": 291725600,
+   "what": "Design \u00b7 400-mm Water Main - Bovaird Drive West \u00b7 Bovaird Drive West from Heritage Road to"
+  },
+  "251198": {
+   "gross": 44218100,
+   "dc": 44218100,
+   "what": "Water Main \u00b7 Parkway West"
+  },
+  "221171": {
+   "gross": 2092300,
+   "dc": 2092300,
+   "what": "Design \u00b7 Countryside Drive from Clarkway Drive to"
+  },
+  "231174": {
+   "gross": 3230100,
+   "dc": 3230100,
+   "what": "Design \u00b7 Clarkway Drive from Countryside Drive to"
+  },
+  "221178": {
+   "gross": 2513700,
+   "dc": 2513700,
+   "what": "Water Main \u00b7 future east-west road from The Gore Road to"
+  },
+  "241173": {
+   "gross": 4656100,
+   "dc": 4656100,
+   "what": "Water Main \u00b7 future north-south road from the future east-"
+  },
+  "211112": {
+   "gross": 2794400,
+   "dc": 2794400,
+   "what": "Design \u00b7 (Ninth Line Lands) \u00b7 Derry Road West from Tenth Line West to"
+  },
+  "211113": {
+   "gross": 2473800,
+   "dc": 2473800,
+   "what": "Design \u00b7 Lands) \u00b7 Ninth Line from Derry Road West to"
+  },
+  "201157": {
+   "gross": 886700,
+   "dc": 886700,
+   "what": "Design \u00b7 Boulevard"
+  },
+  "201176": {
+   "gross": 3100200,
+   "dc": 3100200,
+   "what": "Design \u00b7 Coleraine Drive from the future east-west"
+  },
+  "201177": {
+   "gross": 2121900,
+   "dc": 2121900,
+   "what": "Design \u00b7 Coleraine Drive from Countryside Drive to"
+  },
+  "161126": {
+   "gross": 3484942,
+   "dc": 3484942,
+   "what": "Water Main \u00b7 400-mm Water Main - Hurontario Street"
+  },
+  "241130": {
+   "gross": 7274300,
+   "dc": 7274300,
+   "what": "Design \u00b7 Bovaird Drive West from Mississauga Road"
+  },
+  "231133": {
+   "gross": 2772900,
+   "dc": 2772900,
+   "what": "Water Main"
+  },
+  "231138": {
+   "gross": 8306400,
+   "dc": 8306400,
+   "what": "Design"
+  },
+  "211170": {
+   "gross": 6582600,
+   "dc": 6582600,
+   "what": "Design \u00b7 Countryside Drive from The Gore Road to"
+  },
+  "191156": {
+   "gross": 13282200,
+   "dc": 13282200,
+   "what": "Design \u00b7 750-mm Water Main - Centre Street \u00b7 main on Centre Street from Williams"
+  },
+  "181169": {
+   "gross": 6697600,
+   "dc": 6697600,
+   "what": "Water Main \u00b7 (Bram East) \u00b7 Queen Street East and McVean Drive from"
+  },
+  "241134": {
+   "gross": 8557100,
+   "dc": 8557100,
+   "what": "Design"
+  },
+  "231193": {
+   "gross": 3842700,
+   "dc": 3842700,
+   "what": "Design \u00b7 main on Healy Road from Humber Station"
+  },
+  "241194": {
+   "gross": 2074900,
+   "dc": 2074900,
+   "what": "Design \u00b7 (Bolton West) \u00b7 Humber Station Road from Healey Road to a"
+  },
+  "231195": {
+   "gross": 3242500,
+   "dc": 3242500,
+   "what": "Design \u00b7 (Bolton West)"
+  },
+  "211160": {
+   "gross": 4786100,
+   "dc": 4786100,
+   "what": "Design \u00b7 Queen Street East from McVean Drive to the"
+  },
+  "201119": {
+   "gross": 743600,
+   "dc": 743600,
+   "what": "Design"
+  },
+  "191172": {
+   "gross": 3087100,
+   "dc": 3087100,
+   "what": "Water Main"
+  },
+  "211196": {
+   "gross": 6950800,
+   "dc": 6950800,
+   "what": "Design \u00b7 (Bolton West) \u00b7 Humber Station Road from Mayfield Road to"
+  },
+  "191190": {
+   "gross": 4536548,
+   "dc": 4536548,
+   "what": "Design \u00b7 Dixie Road from the future Abbotside Way to"
+  },
+  "231123": {
+   "gross": 12452700,
+   "dc": 12452700,
+   "what": "Design"
+  },
+  "221114": {
+   "gross": 2057600,
+   "dc": 2057600,
+   "what": "Design \u00b7 Lands) \u00b7 Ninth Line from Derry Road West to 620"
+  },
+  "191120": {
+   "gross": 10551800,
+   "dc": 10551800,
+   "what": "Water Main \u00b7 600-mm Water Main - Lakeshore Road West"
+  },
+  "221161": {
+   "gross": 5609500,
+   "dc": 5609500,
+   "what": "Design \u00b7 600-mm Water Main - Goreway Drive \u00b7 Goreway Drive from Intermodal Drive to"
+  },
+  "211830": {
+   "gross": 9775000,
+   "dc": 9775000,
+   "what": "Design \u00b7 Caledon East - New Groundwater Well \u00b7 groundwater well in Caledon East to service"
+  },
+  "201582": {
+   "gross": 750000,
+   "dc": 750000,
+   "what": "Study \u00b7 groundwater well to service future"
+  },
+  "221831": {
+   "gross": 11500000,
+   "dc": 11500000,
+   "what": "Design \u00b7 Inglewood - New Groundwater Well \u00b7 groundwater well in Inglewood to service"
+  },
+  "201583": {
+   "gross": 750000,
+   "dc": 750000,
+   "what": "Study \u00b7 groundwater well to service future"
+  },
+  "221832": {
+   "gross": 750000,
+   "dc": 750000,
+   "what": "Design \u00b7 Palgrave - New Groundwater Well"
+  },
+  "191189": {
+   "gross": 1594441,
+   "dc": 1594441,
+   "what": "Water Main \u00b7 School Road from Heart Lake Road to Dixie"
+  },
+  "221140": {
+   "gross": 697800,
+   "dc": 697800,
+   "what": "Water Main \u00b7 future extension of Lagerfeld Drive from"
+  },
+  "201129": {
+   "gross": 1750600,
+   "dc": 1750600,
+   "what": "Design \u00b7 400-mm Water Main - Eglinton Avenue East \u00b7 Eglinton Avenue East from Hurontario S"
+  },
+  "211151": {
+   "gross": 14147500,
+   "dc": 14147500,
+   "what": "Design \u00b7 600-mm Water Main - Church Street East Church Street East from Centre Street Nort"
+  },
+  "201530": {
+   "gross": 15000000,
+   "dc": 15000000,
+   "what": "Study"
+  },
+  "221504": {
+   "gross": 6000000,
+   "dc": 6000000,
+   "what": "Study \u00b7 Water Master Servicing Plan \u00b7 Master Plan for the lake-based water supply"
+  },
+  "251999": {
+   "gross": 40743900,
+   "dc": 22319900,
+   "what": "Design \u00b7 capacity at the West Brampton Pumping"
+  },
+  "211974": {
+   "gross": 8007500,
+   "dc": 2322175,
+   "what": "Design"
+  },
+  "101966": {
+   "gross": 60000000,
+   "dc": 60000000,
+   "what": "Reservoir \u00b7 Victoria Reservoir \u00b7 vicinity of King Street and Hurontario Street"
+  },
+  "221226": {
+   "gross": 71228700,
+   "dc": 56982700,
+   "what": "Design \u00b7 Cawthra Road from the Silverthorn Pumping"
+  },
+  "251299": {
+   "gross": 516348500,
+   "dc": 467790500,
+   "what": "Design \u00b7 Mayfield Road Sub-Transmission Main"
+  },
+  "141256": {
+   "gross": 85549800,
+   "dc": 76994800,
+   "what": "Water Main \u00b7 main on WIlliams Parkway from Dixie Road"
+  },
+  "141257": {
+   "gross": 8200000,
+   "dc": 7380000,
+   "what": "Water Main \u00b7 Central Brampton Sub-Transmission Main"
+  },
+  "141240": {
+   "gross": 10000000,
+   "dc": 10000000,
+   "what": "Water Main \u00b7 East Brampton Transmission Main Twinning \u00b7 main from the Beckett Sproule Pump"
+  },
+  "211566": {
+   "gross": 1500000,
+   "dc": 1500000,
+   "what": "Study \u00b7 Streetsville Transmission Main \u00b7 the Herridge Pumping Station to the"
+  },
+  "241565": {
+   "gross": 1500000,
+   "dc": 1500000,
+   "what": "Study \u00b7 the Streetsville Pumping Station to the"
+  },
+  "231270": {
+   "gross": 28426300,
+   "dc": 25584300,
+   "what": "Design \u00b7 West Caledon Transmission Main \u00b7 from the Alloa Pumping Station to the West"
+  },
+  "231941": {
+   "gross": 18422900,
+   "dc": 16579900,
+   "what": "Design \u00b7 West Caledon Elevated Tank"
+  },
+  "151940": {
+   "gross": 21735000,
+   "dc": 5434000,
+   "what": "Reservoir \u00b7 upgrades at the Silverthorn Reservoir and"
+  },
+  "251599": {
+   "gross": 2000000,
+   "dc": 200000,
+   "what": "Study \u00b7 structure at the Arthur P. Kennedy Water"
+  },
+  "251997": {
+   "gross": 124450000,
+   "dc": 36250000,
+   "what": "Design \u00b7 structure at the Arthur P. Kennedy Water"
+  },
+  "241983": {
+   "gross": 1010400,
+   "dc": 1010400,
+   "what": "Design \u00b7 capacity at the West Brampton Pumping"
+  },
+  "211923": {
+   "gross": 68275000,
+   "dc": 68275000,
+   "what": "Study"
+  },
+  "241179": {
+   "gross": 1071200,
+   "dc": 1071200,
+   "what": "Water Main \u00b7 future east-west road from Clarkway Drive to"
+  },
+  "241172": {
+   "gross": 1528900,
+   "dc": 1528900,
+   "what": "Design \u00b7 Countryside Drive from Coleraine Drive to"
+  },
+  "201175": {
+   "gross": 1228300,
+   "dc": 1228300,
+   "what": "Water Main \u00b7 future street from Highway 50 to Coleraine"
+  },
+  "201922": {
+   "gross": 8000000,
+   "dc": 1600000,
+   "what": "WTP \u00b7 Arthur P. Kennedy Water Treatment Plant to"
+  },
+  "242176": {
+   "gross": 659400,
+   "dc": 659400,
+   "what": "Design"
+  },
+  "212269": {
+   "gross": 1586500,
+   "dc": 1586500,
+   "what": "Design"
+  },
+  "112104": {
+   "gross": 2200000,
+   "dc": 2200000,
+   "what": "Wastewater Main"
+  },
+  "252198": {
+   "gross": 55145300,
+   "dc": 53177200,
+   "what": "Wastewater Main \u00b7 Winston Churchill Boulevard from"
+  },
+  "252199": {
+   "gross": 48546900,
+   "dc": 46011900,
+   "what": "Design"
+  },
+  "232134": {
+   "gross": 6569000,
+   "dc": 6569000,
+   "what": "Wastewater Main \u00b7 Winston Churchil Boulevard from"
+  },
+  "222132": {
+   "gross": 3306400,
+   "dc": 3306400,
+   "what": "Wastewater Main"
+  },
+  "222135": {
+   "gross": 2755500,
+   "dc": 2755500,
+   "what": "Wastewater Main"
+  },
+  "212133": {
+   "gross": 2928900,
+   "dc": 2928900,
+   "what": "Wastewater Main"
+  },
+  "202512": {
+   "gross": 11000000,
+   "dc": 5500000,
+   "what": "General"
+  },
+  "202301": {
+   "gross": 77000000,
+   "dc": 38500000,
+   "what": "General \u00b7 inflow and infiltration into the"
+  },
+  "152153": {
+   "gross": 8500000,
+   "dc": 8500000,
+   "what": "Wastewater Main \u00b7 sewer on Kennedy Road from"
+  },
+  "222174": {
+   "gross": 719200,
+   "dc": 719200,
+   "what": "Wastewater Main \u00b7 Castlemore Road from The Gore"
+  },
+  "222154": {
+   "gross": 1111000,
+   "dc": 1111000,
+   "what": "Wastewater Main \u00b7 from approx. 900 m northwest of"
+  },
+  "222189": {
+   "gross": 633900,
+   "dc": 633900,
+   "what": "Design \u00b7 McLaughlin Road (Mayfield West \u00b7 350 metres north of the future east-"
+  },
+  "232191": {
+   "gross": 4385300,
+   "dc": 3135200,
+   "what": "Design"
+  },
+  "212270": {
+   "gross": 4756800,
+   "dc": 4756800,
+   "what": "Design"
+  },
+  "232271": {
+   "gross": 4492900,
+   "dc": 4492900,
+   "what": "Design"
+  },
+  "242180": {
+   "gross": 1205900,
+   "dc": 1205900,
+   "what": "Design \u00b7 McLaughlin Road (Mayfield West \u00b7 future McLaughlin Road Sewage"
+  },
+  "242192": {
+   "gross": 1003900,
+   "dc": 1003900,
+   "what": "Wastewater Main"
+  },
+  "202101": {
+   "gross": 984645,
+   "dc": 984645,
+   "what": "Wastewater Main \u00b7 sewer from Lakeshore Road West to"
+  },
+  "202102": {
+   "gross": 457078,
+   "dc": 457078,
+   "what": "Wastewater Main \u00b7 sewer from Front Street South to"
+  },
+  "212103": {
+   "gross": 439204,
+   "dc": 439204,
+   "what": "Wastewater Main \u00b7 sanitary sewer from the west end of"
+  },
+  "202118": {
+   "gross": 422736,
+   "dc": 422736,
+   "what": "Design"
+  },
+  "202119": {
+   "gross": 2460127,
+   "dc": 2460127,
+   "what": "Wastewater Main \u00b7 Road West from City Centre Drive"
+  },
+  "192158": {
+   "gross": 230600,
+   "dc": 230600,
+   "what": "Wastewater Main \u00b7 at Herdmans Road (Steeles and"
+  },
+  "212120": {
+   "gross": 35000000,
+   "dc": 28000000,
+   "what": "Wastewater Main"
+  },
+  "202122": {
+   "gross": 230600,
+   "dc": 230600,
+   "what": "Wastewater Main \u00b7 Thornwood Drive and Future"
+  },
+  "202530": {
+   "gross": 15750000,
+   "dc": 15750000,
+   "what": "Study \u00b7 infrastructure planning and studies"
+  },
+  "222504": {
+   "gross": 6000000,
+   "dc": 6000000,
+   "what": "Study \u00b7 Wastewater Master Servicing Plan"
+  },
+  "202100": {
+   "gross": 3300000,
+   "dc": 3300000,
+   "what": "General \u00b7 the sanitary sewer outlets of new"
+  },
+  "172280": {
+   "gross": 10000000,
+   "dc": 9000000,
+   "what": "Wastewater Main"
+  },
+  "182271": {
+   "gross": 4978000,
+   "dc": 4978000,
+   "what": "Wastewater Main \u00b7 McVean Force Main Twinning \u00b7 Queen Street East from the McVean Sewage"
+  },
+  "252299": {
+   "gross": 468636800,
+   "dc": 290479700,
+   "what": "Design \u00b7 sewer on Wanless Drive from Heritage Road"
+  },
+  "242222": {
+   "gross": 11454000,
+   "dc": 11454000,
+   "what": "Design \u00b7 sewer on Heritage Road from Bovaird Drive"
+  },
+  "232221": {
+   "gross": 11965000,
+   "dc": 11965000,
+   "what": "Design"
+  },
+  "252599": {
+   "gross": 2000000,
+   "dc": 2000000,
+   "what": "Study"
+  },
+  "182976": {
+   "gross": 18000000,
+   "dc": 18000000,
+   "what": "Property \u00b7 McVean Sewage Pumping Station Expansion"
+  },
+  "162291": {
+   "gross": 335000000,
+   "dc": 301500000,
+   "what": "Wastewater Main"
+  },
+  "222255": {
+   "gross": 161253800,
+   "dc": 130615600,
+   "what": "Design \u00b7 Queensway East Sanitary Trunk Sewer"
+  },
+  "182252": {
+   "gross": 2000000,
+   "dc": 1000000,
+   "what": "Wastewater Main \u00b7 Burnhamthorpe Road East to south of"
+  },
+  "212254": {
+   "gross": 28741300,
+   "dc": 23280400,
+   "what": "Design"
+  },
+  "222256": {
+   "gross": 27579000,
+   "dc": 22338900,
+   "what": "Design \u00b7 sewer on Cawthra Road from the CPR to"
+  },
+  "192215": {
+   "gross": 64500000,
+   "dc": 46440000,
+   "what": "Design \u00b7 Lakeshore Road West Sanitary Trunk Sewer"
+  },
+  "242593": {
+   "gross": 1500000,
+   "dc": 1500000,
+   "what": "Study"
+  },
+  "252999": {
+   "gross": 857198200,
+   "dc": 711429300,
+   "what": "Design \u00b7 Inspiration Lakeview Sewage Pump Station station within the future Inspiration La"
+  },
+  "222262": {
+   "gross": 27543300,
+   "dc": 13771600,
+   "what": "Design \u00b7 Kennedy Road Sanitary Trunk Sewer \u00b7 Creek Sanitary Trunk Sewer to the future"
+  },
+  "172926": {
+   "gross": 91000000,
+   "dc": 45500000,
+   "what": "WWTP \u00b7 G.E. Booth WWTP - New Plant 1"
+  },
+  "192940": {
+   "gross": 83000000,
+   "dc": 75281000,
+   "what": "WWTP \u00b7 G.E. Booth WWTP - Capacity Restoration"
+  },
+  "202561": {
+   "gross": 3000000,
+   "dc": 3000000,
+   "what": "Study \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "232943": {
+   "gross": 18000000,
+   "dc": 18000000,
+   "what": "WWTP \u00b7 G.E. Booth WWTP Expansion \u00b7 accommodate the treatment capacity"
+  },
+  "202560": {
+   "gross": 2500000,
+   "dc": 2500000,
+   "what": "Study \u00b7 Clarkson WWTP Expansion"
+  },
+  "222952": {
+   "gross": 76250000,
+   "dc": 19062500,
+   "what": "Design \u00b7 Clarkson WWTP Expansion - Headworks"
+  },
+  "222950": {
+   "gross": 199850000,
+   "dc": 99925000,
+   "what": "WWTP \u00b7 Clarkson WWTP Expansion"
+  },
+  "202240": {
+   "gross": 22566500,
+   "dc": 11283200,
+   "what": "Design \u00b7 Centre View Sanitary Trunk Sewer"
+  },
+  "212261": {
+   "gross": 17128700,
+   "dc": 8564300,
+   "what": "Design \u00b7 Etobicoke Creek Sanitary Trunk Sewer to"
+  },
+  "222980": {
+   "gross": 15000000,
+   "dc": 10800000,
+   "what": "Pumping Station \u00b7 station with an expanded capacity to service"
+  },
+  "202951": {
+   "gross": 30000000,
+   "dc": 30000000,
+   "what": "Design \u00b7 Clarkson WWTP - Biosolids Expansion"
+  },
+  "212923": {
+   "gross": 21000000,
+   "dc": 10500000,
+   "what": "Design \u00b7 Plant 2 with six multi-stage high-efficiency"
+  },
+  "192941": {
+   "gross": 5000000,
+   "dc": 5000000,
+   "what": "WWTP \u00b7 G.E. Booth WWTP - Cake Exportation \u00b7 pumping system to allow the exportation of"
+  },
+  "202961": {
+   "gross": 125000000,
+   "dc": 118750000,
+   "what": "Design \u00b7 additional odour control necessary as"
+  },
+  "242592": {
+   "gross": 1500000,
+   "dc": 1500000,
+   "what": "Study"
+  },
+  "192208": {
+   "gross": 45000000,
+   "dc": 40500000,
+   "what": "Wastewater Main \u00b7 Britannia West Sanitary Trunk Sewer \u00b7 Parkway to Britannia Road West and"
+  },
+  "192210": {
+   "gross": 45000000,
+   "dc": 40500000,
+   "what": "Wastewater Main \u00b7 Eglinton West Sanitary Trunk Sewer \u00b7 Eglinton Avenue West and on Eglinto"
+  },
+  "192205": {
+   "gross": 25000000,
+   "dc": 25000000,
+   "what": "Wastewater Main \u00b7 West Sanitary Trunk Sewer Twinning \u00b7 length of the new West Sanitary Tru"
+  },
+  "182260": {
+   "gross": 57215000,
+   "dc": 28607400,
+   "what": "Design \u00b7 of the Wastewater Treatment Plant (near"
+  },
+  "242942": {
+   "gross": 30000000,
+   "dc": 30000000,
+   "what": "Design \u00b7 facility at the G.E. Booth Wastewater"
+  },
+  "222562": {
+   "gross": 750000,
+   "dc": 375000,
+   "what": "Study"
+  },
+  "242960": {
+   "gross": 14786600,
+   "dc": 3696400,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "222970": {
+   "gross": 4500000,
+   "dc": 3600000,
+   "what": "Design \u00b7 Street Sewage Pumping Station. Design in"
+  },
+  "142429": {
+   "gross": 13000000,
+   "dc": 6500000,
+   "what": "Wastewater Main"
+  },
+  "182441": {
+   "gross": 8000000,
+   "dc": 4000000,
+   "what": "Wastewater Main"
+  },
+  "182442": {
+   "gross": 12000000,
+   "dc": 6000000,
+   "what": "Design \u00b7 Queen Elizabeth Way to Lakeshore Road"
+  },
+  "202421": {
+   "gross": 1150000,
+   "dc": 575000,
+   "what": "Design \u00b7 Queen Street West. In conjunction with the"
+  }
+ },
+ "unitCost": {
+  "wastewater": {
+   "a": 7515,
+   "b": 1.557,
+   "n": 42
+  },
+  "water": {
+   "a": 5729,
+   "b": 1.161,
+   "n": 73
+  }
+ },
+ "dcShare": {
+  "wastewater": 0.72,
+  "water": 0.929
+ },
+ "facilityMedian": {
+  "wastewater:plant": 33000000,
+  "wastewater:odour_control": 3888600,
+  "wastewater:pumping_station": 4098200,
+  "wastewater:program": 7459600,
+  "water:plant": 58500000,
+  "water:well": 10000000,
+  "water:reservoir": 1884200
+ },
+ "stepCosts": {
+  "2028:558": {
+   "gross": 130000000,
+   "year": 2024,
+   "note": "G.E. Booth capacity restoration to 558 ML/d: $130 million approved by Regional Council, February 2024",
+   "ref": "https://www.link2build.ca/news/posts/peel-region-allocates-130-million-to-expand-wastewater-capacity/"
+  }
+ },
+ "index2026": {
+  "water": 1.3478,
+  "wastewater": 1.4024,
+  "note": "DC rates indexed since the 2020 study (Statistics Canada construction price index, as the by-law requires): August 2026 single / semi rate over the 2020 schedule."
+ },
  "rates": {
   "effective": "2026-08-01",
   "until": "2027-01-31",
