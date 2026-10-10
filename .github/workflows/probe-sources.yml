@@ -17,12 +17,13 @@ name: Probe data sources
 #  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
 #  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen) and data/water-supply.json (large mains across zone boundaries) from the Region's mains, committed to this branch
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
+#  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
+        description: 'all, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
         default: 'all'
         required: false
 
@@ -86,6 +87,17 @@ jobs:
           git add -f dragonfly-raw
           git commit -m "Dragonfly / Peel I&I blocks (raw)"
           git push -f origin dragonfly-raw
+      - name: External open data (pushed to the ext-raw branch)
+        if: inputs.mode == 'external'
+        run: |
+          node scripts/fetch-external.js --out ext-raw
+          du -sh ext-raw; find ext-raw -type f | head -200
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B ext-raw
+          git add -f ext-raw
+          git commit -m "External open data (raw)"
+          git push -f origin ext-raw
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
