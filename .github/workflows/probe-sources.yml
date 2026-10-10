@@ -27,7 +27,7 @@ on:
         default: 'all'
         required: false
       only:
-        description: 'mode=external: one part only (mto)'
+        description: 'mode=external: one part only (mto, cmhc)'
         default: ''
         required: false
 

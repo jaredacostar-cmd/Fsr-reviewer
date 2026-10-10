@@ -136,8 +136,29 @@ async function mtoIdf() {
 }
 const out_dir = () => out;
 
+// CMHC Housing Market Information Portal: starts / completions by zone of the Toronto CMA (its
+// zones are the municipalities: Mississauga, Brampton, Caledon). Probes the table and its export.
+async function cmhc() {
+  const T = 'https://www03.cmhc-schl.gc.ca/hmip-pimh/en/TableMapChart';
+  const tables = { '1.1.1.8': 'starts', '1.1.2.8': 'under-construction', '1.1.3.8': 'completions', '1.1.1.9': 'starts-9', '1.1.3.9': 'completions-9' };
+  for (const [id, nm] of Object.entries(tables)) {
+    await save(`${T}/Table?TableId=${id}&GeographyId=2270&GeographyTypeId=3&DisplayAs=Table&GeograghyName=Toronto`, `cmhc/${nm}-table.html`, { asText: true });
+    for (const y of [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]) {
+      const body = new URLSearchParams({ TableId: id, GeographyId: '2270', GeographyTypeId: '3', DisplayAs: 'Table', exportType: 'csv', 'ForTimePeriod.Year': String(y), 'ForTimePeriod.Month': '', 'ForTimePeriod.Quarter': '', Frequency: 'Annual', includeAllPeriods: 'false' });
+      try {
+        const r = await fetch(`${T}/ExportTable`, { method: 'POST', headers: { ...UA, 'content-type': 'application/x-www-form-urlencoded' }, body });
+        const b = Buffer.from(await r.arrayBuffer());
+        fs.mkdirSync(path.join(out, 'cmhc'), { recursive: true }); fs.writeFileSync(path.join(out, 'cmhc', `${nm}-${y}.csv`), b);
+        note(r.ok ? 'ok  ' : 'FAIL', `cmhc ${nm} ${y}`, r.status, b.length);
+      } catch (e) { note('FAIL cmhc', nm, y, e.message); }
+    }
+  }
+}
+
 (async () => {
-  if (process.argv.includes('--only')) { await mtoIdf(); fs.writeFileSync(path.join(out, 'fetch-log-mto.txt'), log.join('\n') + '\n'); return; }
+  const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
+  if (only === 'cmhc') { await cmhc(); fs.writeFileSync(path.join(out, 'fetch-log-cmhc.txt'), log.join('\n') + '\n'); return; }
+  if (only) { await mtoIdf(); fs.writeFileSync(path.join(out, 'fetch-log-mto.txt'), log.join('\n') + '\n'); return; }
   // Ontario Data Catalogue
   for (const host of ['data.ontario.ca']) {
     await ckan(host, 'ontario-s-housing-supply-progress');
