@@ -266,11 +266,16 @@
       </section>
       <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
         <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
-        <button type="button" class="btn small" data-wwsub="catchments">Catchments</button>
+        <button type="button" class="btn small" data-wwsub="catchments">Blocks</button>
+        <button type="button" class="btn small" data-wwsub="alloc">Allocations</button>
       </div>
       <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-ww" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
         <div id="ww-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-alloc" data-pane="ww" data-sub="alloc" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Servicing allocations</h2></div>
+        <div id="alloc-body"></div>
       </section>
       <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-ww" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
@@ -283,6 +288,8 @@
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
+        <div id="d-quality" class="d-quality"></div>
+        <h3 class="sub-title" data-info="tab-criteria">Design criteria</h3>
         <div class="d-grid">
           <form id="d-criteria" class="criteria"></form>
         </div>
