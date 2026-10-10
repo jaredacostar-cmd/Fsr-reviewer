@@ -691,6 +691,22 @@ proposed growth). **+ Add area** draws another area into the selection, × remov
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 
+## Change log and versions
+
+The **Change log** tab (last tab in the bottom panel) lists every release of the app, newest
+first. One release is one pull request merged into `main`, numbered **1.<pull request number>**
+(for example 1.111). Each release shows its title, the bullet points from its description, the
+date, a link to the pull request and the build (commit).
+
+- `scripts/build-changelog.js` builds `data/changelog.json` from the first-parent git history.
+  The deploy job runs it with full history, so the log always includes the release being
+  deployed. The weekly data snapshots are listed as data updates, which you can switch on.
+- **Current version:** the release whose commit matches the app-version stamp. It is marked
+  "You're using this version", and it is also shown under Data → Data sources.
+- **What's new:** releases since this browser last opened the tab are marked New, and a red dot
+  shows on the tab until you open it.
+- You can filter to new features or fixes, search the log, and download it as CSV.
+
 ## Outside data: targets, projections, costs, storms, compliance, hydraulics
 
 These sources are fetched on GitHub Actions, because the sandbox can't reach the hosts. Run

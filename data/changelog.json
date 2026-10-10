@@ -1,0 +1,1343 @@
+{
+ "version": 1,
+ "generatedAt": "2026-10-10T06:05:37.931Z",
+ "repo": "https://github.com/jaredacostar-cmd/Fsr-reviewer",
+ "latest": "1.111",
+ "releases": [
+  {
+   "version": "1.111",
+   "pr": 111,
+   "date": "2026-10-10",
+   "time": "2026-10-10T02:04:25-04:00",
+   "sha": "92afefc",
+   "title": "Outside data: DC costs and rates, housing targets, projections, CMHC, design storms, SWMM/EPANET, compliance",
+   "kind": "feature",
+   "notes": [
+    "DC Analysis: project cost (2020 DC study, matched by component), cost per person, DC revenue held back; DC estimate per development",
+    "Overview and briefing: housing targets to 2031 (Ontario tracker, CMHC starts, pipeline) and population outlook (Ministry of Finance vs Region forecast)",
+    "Model checks against CMHC completions/starts and the July 2025 estimate; freshness rows for the new sources and the 2025 Master Plan",
+    "Wet weather scenario: design storm and climate scaling of I&I from MTO IDF curves",
+    "SWMM .inp export of the 40 blocks (Chicago storm, RTK RDII); EPANET hydraulic check (epanet-js) on zone supply mains",
+    "Effluent compliance (MECP reports) in Wastewater > Plants",
+    "2026 Census hook in build-areas.js; fetch-external.js probe mode"
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/111"
+  },
+  {
+   "version": "1.110",
+   "pr": 110,
+   "date": "2026-10-10",
+   "time": "2026-10-10T01:19:10-04:00",
+   "sha": "a244a5b",
+   "title": "Executive briefing, headlines, allocations, data freshness and model checks",
+   "kind": "feature",
+   "notes": [
+    "Executive briefing (PDF): one Letter page from the Overview with title block, prepared-by, data date, headlines, key numbers, capacity bars, demand by phase, allocations, block map and DC actions; version stamp.",
+    "Plain-language headline sentence at the top of each tab.",
+    "Servicing allocation tracker: record per development; plant room after allocations (Wastewater -> Allocations, Overview); CSV export / import.",
+    "Data freshness table and model checks against published figures (Settings & sources), summarised on the Overview.",
+    "Consistent rounding of people and jobs; pipe colour legend corrected."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/110"
+  },
+  {
+   "version": "1.109",
+   "pr": 109,
+   "date": "2026-10-10",
+   "time": "2026-10-10T01:01:54-04:00",
+   "sha": "361013b",
+   "title": "Simpler layout: Overview tab, one Layers list, concise tables; blocks toggle fixed",
+   "kind": "feature",
+   "notes": [
+    "Overview tab (opens on desktop): growth, demand, plant capacity vs the 90% trigger, servicing demand by phase, DC projects to act on, and the tools.",
+    "Tabs: Overview, Demand (with the servicing demand breakdown), Water, Wastewater, DC Analysis, Settings & sources.",
+    "Map: one switch per layer (developments, blocks, pressure zones, capacity, existing pipes, DC works, planning areas, census areas); fine-tuning under More settings; Filter by area.",
+    "Wastewater blocks can be switched off (the view's drainage layer was the blocks under a hidden switch).",
+    "Criteria fold to one line; tables open in Simple columns."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/109"
+  },
+  {
+   "version": "1.108",
+   "pr": 108,
+   "date": "2026-10-09",
+   "time": "2026-10-09T18:37:45-04:00",
+   "sha": "96fc1eb",
+   "title": "DC Analysis tab: divert flows to DC projects by timeline, impact if cancelled, recommendations",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/108"
+  },
+  {
+   "version": "1.107",
+   "pr": 107,
+   "date": "2026-10-09",
+   "time": "2026-10-09T16:38:28-04:00",
+   "sha": "a12f520",
+   "title": "Name an active area filter on the map; tidy the plan list; no panel / legend overlap",
+   "kind": "feature",
+   "notes": [
+    "Above Map options: 'Only developments in …' with Clear whenever a secondary plan, MTSA, pressure zone or block filter is on; the collapsed Map options line names any Wastewater load that is off.",
+    "The secondary plan list inside the panel lays out as a list again.",
+    "The legend box takes the height the panel leaves free."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/107"
+  },
+  {
+   "version": "1.106",
+   "pr": 106,
+   "date": "2026-10-09",
+   "time": "2026-10-09T16:34:08-04:00",
+   "sha": "7a091e0",
+   "title": "Block labels stay on their blocks on the turned map",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/106"
+  },
+  {
+   "version": "1.105",
+   "pr": 105,
+   "date": "2026-10-09",
+   "time": "2026-10-09T16:31:25-04:00",
+   "sha": "5c610f6",
+   "title": "Organize the map layout; notice when developments are hidden",
+   "kind": "feature",
+   "notes": [
+    "Map panel: view switch over one Map options fold (closed on phones) with Developments and municipality, then Wastewater loads, Areas and Layers & style folds, each with a one-line summary.",
+    "Demand year joins the legend in one box (bottom right).",
+    "A notice says when a setting hides the developments (switched off, no growth load on, hidden while a path is shown) with Show developments."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/105"
+  },
+  {
+   "version": "1.104",
+   "pr": 104,
+   "date": "2026-10-09",
+   "time": "2026-10-09T16:24:59-04:00",
+   "sha": "4cf7f04",
+   "title": "Map tools: trace path, demand year, freeboard, areas on the map, pipe taps",
+   "kind": "feature",
+   "notes": [
+    "Servicing tab: trace button first, then Water / Wastewater / Site sections. Trace is also in Tools (any development or point) and on the plant chip.",
+    "Demand year slider on the map, opening on the current year.",
+    "Freeboard and flow depth for every pipe (Manning part-full flow).",
+    "Zoomed in: live pipes draw under the results; pipes labelled with % used.",
+    "Pipes and areas can be tapped with nothing selected: the top canvas hands taps it doesn't hit to the canvases below.",
+    "Where (municipality) and Areas (secondary plans, MTSAs, pressure zones, blocks) moved from the sidebar to the map panel, with outline toggles; tap an outline to filter to it."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/104"
+  },
+  {
+   "version": "1.103",
+   "pr": 103,
+   "date": "2026-10-09",
+   "time": "2026-10-09T16:09:42-04:00",
+   "sha": "bf4d2bd",
+   "title": "Wastewater blocks replace the catchments, flowing along the sewers",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/103"
+  },
+  {
+   "version": "1.102",
+   "pr": 102,
+   "date": "2026-10-09",
+   "time": "2026-10-09T15:54:07-04:00",
+   "sha": "bd46cb5",
+   "title": "Developments on/off, wastewater load layers, resizable bottom panels",
+   "kind": "feature",
+   "notes": [
+    "Map panel: Developments on/off in every view (markers, labels, sites).",
+    "Wastewater view: Census / Built since / Site plan approved / Proposed chips control the developments shown and the loads on the sewers (capacity colours, flow table, trace); all on = full build-out.",
+    "Analysis panel resizable by its top edge (drag or arrow keys); phone sheet resizable by its grip (drag, or tap to step); remembered."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/102"
+  },
+  {
+   "version": "1.101",
+   "pr": 101,
+   "date": "2026-10-09",
+   "time": "2026-10-09T15:47:51-04:00",
+   "sha": "f184e2b",
+   "title": "Flow paths above development markers; fade or hide markers while a path shows",
+   "kind": "feature",
+   "notes": [
+    "Traces and catchment / block routes draw in a pane above the markers.",
+    "While a path is shown the markers fade (default), or show / hide via a switch in the bottom bar (remembered).",
+    "The map fits a trace or block route into the area the panel leaves free."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/101"
+  },
+  {
+   "version": "1.100",
+   "pr": 100,
+   "date": "2026-10-09",
+   "time": "2026-10-09T15:44:32-04:00",
+   "sha": "26e0b2c",
+   "title": "Flow calculation table, development trace to the plant, unreliable slopes",
+   "kind": "feature",
+   "notes": [
+    "'How the flow is calculated' is a results table (today and the slider year); each row's info button opens its formula with the pipe's numbers.",
+    "Development Servicing tab: trace the path to the plant on the map (site link, pipes coloured by capacity state, flow arrows, pumping stations, plant) with a summary (length, pipes, blocks passed, tightest pipe).",
+    "Published slopes under 0.01% are treated as data errors (no capacity)."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/100"
+  },
+  {
+   "version": "1.99",
+   "pr": 99,
+   "date": "2026-10-09",
+   "time": "2026-10-09T15:35:06-04:00",
+   "sha": "3f168d2",
+   "title": "Tap an existing sanitary sewer to see what flows into it",
+   "kind": "feature",
+   "notes": [
+    "WIP: tap an existing sanitary sewer to see what flows into it"
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/99"
+  },
+  {
+   "version": "1.98",
+   "pr": 98,
+   "date": "2026-10-09",
+   "time": "2026-10-09T15:31:36-04:00",
+   "sha": "9c70cd8",
+   "title": "Sewer capacity states and how each pipe's flow is calculated",
+   "kind": "feature",
+   "notes": [
+    "Capacity colours: green under 85% of full-pipe capacity (free flowing), orange 85-100% (near full), red over 100% (surcharged); the legend counts pipes by state.",
+    "A pipe's panel and tooltip give its state today and at the slider year, and 'How the flow is calculated' step by step with the numbers (existing, growth residential / employment / I&I, Q, Manning capacity, Q/Qfull) and, when surcharged, the hydraulic gradient needed and the rise above the crown over the pipe."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/98"
+  },
+  {
+   "version": "1.97",
+   "pr": 97,
+   "date": "2026-10-09",
+   "time": "2026-10-09T15:17:04-04:00",
+   "sha": "3877981",
+   "title": "Wastewater blocks, flow arrows along the sewers, pipe depths in the ground profile",
+   "kind": "feature",
+   "notes": [
+    "Wastewater blocks layer: the Region's 40 I&I sewersheds (Block_view; Dragonfly, WEFTEC 2024), prioritised blocks highlighted. A block's panel gives its outlets on the existing sewers, the blocks it drains into down to the plant (distance along the pipes), upstream blocks and growth.",
+    "Flow arrows for a block or catchment follow the sanitary mains to the plant (data/sewers.json), with arrowheads about every 1.2 km.",
+    "Ground profile: sanitary sewer inverts and depth to invert along the line; watermains at Peel's 1.7 m minimum cover, labelled assumed.",
+    "Probe mode 'dragonfly' and scripts/build-blocks.js."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/97"
+  },
+  {
+   "version": "1.96",
+   "pr": 96,
+   "date": "2026-10-09",
+   "time": "2026-10-09T14:35:29-04:00",
+   "sha": "c110253",
+   "title": "Easy removal of test sites",
+   "kind": "feature",
+   "notes": [
+    "A bar at the bottom of the map while test sites exist: \"N test sites\" (opens a list, each with Remove) and Remove all, with Undo for 8 s.",
+    "Remove this test site is at the top of a test site's panel, with a link to all test sites.",
+    "Clear selection now sits in the same bottom bar."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/96"
+  },
+  {
+   "version": "1.95",
+   "pr": 95,
+   "date": "2026-10-09",
+   "time": "2026-10-09T14:29:43-04:00",
+   "sha": "175a85d",
+   "title": "Growth focus includes employment applications",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/95"
+  },
+  {
+   "version": "1.94",
+   "pr": 94,
+   "date": "2026-10-09",
+   "time": "2026-10-09T13:32:52-04:00",
+   "sha": "86a978c",
+   "title": "Building permits follow the planning approval; alterations aren't units",
+   "kind": "feature",
+   "notes": [
+    "A permit issued well before the site's first site plan / subdivision / zoning file (completed more than a year before it, or issued more than 3 years before it) was for what stood there before: it no longer sets the phase or counts toward the build-out. Shortly-earlier permits still count and are flagged (an earlier phase whose site plan isn't published); Mississauga \"PDOX TRANSFER FILE\" site plans are dated by their original file number.",
+    "Alteration permits count units only when they create one (a second suite): balcony repairs or fan-coil replacements listing a building's existing units no longer add homes. Second suites are new homes but don't set a site plan's phase.",
+    "Phase rules version 5."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/94"
+  },
+  {
+   "version": "1.93",
+   "pr": 93,
+   "date": "2026-10-09",
+   "time": "2026-10-09T13:27:32-04:00",
+   "sha": "63b4465",
+   "title": "Only permits for the site's buildings set its phase",
+   "kind": "feature",
+   "notes": [
+    "permitRole(): units / res (dwelling building, units not stated) / nonres / servicing / none. Signs (Brampton \"Permanent\", \"Class A-Mobile\"), entrances, doors, windows, equipment, sales pavilions, temporary structures, additions and demolitions don't set a site's phase; servicing and shoring permits stay on the site but don't either. On a residential site only permits that build homes count.",
+    "Sites made only of such permits are not developments (4,136 permits set aside; the audit reports them).",
+    "Minor / limited / express site plans don't approve the building.",
+    "A site plan that only reads \"Closed\" counts as approved only when a building permit was issued after it.",
+    "Milestones and the status line use the site's building files only.",
+    "Phase rules version 4."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/93"
+  },
+  {
+   "version": "1.92",
+   "pr": 92,
+   "date": "2026-10-09",
+   "time": "2026-10-09T13:05:35-04:00",
+   "sha": "0e2b1ff",
+   "title": "Registered subdivisions count as Approved; demolition permits don't set the phase",
+   "kind": "feature",
+   "notes": [
+    "A plan of subdivision shown as registered counts as the site's approval (houses go from registration to permits without a site plan), unless a newer rezoning on the site is still in review.",
+    "Demolition permits (HOUSDEMO / DEMO) no longer set a site's phase or start a redevelopment cycle, unless the site has nothing else.",
+    "Phase rules version 3 (re-read, not counted as weekly moves)."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/92"
+  },
+  {
+   "version": "1.91",
+   "pr": 91,
+   "date": "2026-10-09",
+   "time": "2026-10-09T12:24:04-04:00",
+   "sha": "eb09dfa",
+   "title": "Approved means site plan approved; jobs in growth",
+   "kind": "feature",
+   "notes": [
+    "A site is Approved only when a site plan is approved. Zoning / official plan / subdivision / condominium approval keeps it under review, shown as \"Zoning approved · site plan pending\".",
+    "A site plan approved before a newer rezoning still in review no longer counts (it was for an earlier proposal).",
+    "Brampton legacy site plans (\"Transferred\", 1980s-2000s, no dates) don't count for a current proposal; a site with only legacy files is completed.",
+    "Committed capacity follows: approved unbuilt units drop from ~47,700 to ~5,800; 585 legacy-only sites leave Active applications.",
+    "history.json records a rules change as a re-read, not as phase moves.",
+    "Growth tab and area selection show jobs added on development sites for built, approved and proposed, with a jobs bar."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/91"
+  },
+  {
+   "version": "1.90",
+   "pr": 90,
+   "date": "2026-10-09",
+   "time": "2026-10-09T11:57:44-04:00",
+   "sha": "2a319b6",
+   "title": "Outline selected developments in orange",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/90"
+  },
+  {
+   "version": "1.89",
+   "pr": 89,
+   "date": "2026-10-09",
+   "time": "2026-10-09T11:54:32-04:00",
+   "sha": "f7be92b",
+   "title": "Help button on the map; How the phase was set in History & records",
+   "kind": "feature",
+   "notes": [
+    "? button on the map (under the north arrow) opens Help & tips.",
+    "History & records opens with the file behind the phase, approvals by stage with the latest submission in each, flags where status and submissions disagree (newer submission in review after an approval, permits while planning is in review, bare Closed read as approved, OLT appeal, demolition permit, units without permits, redevelopment cycle), and each file's status and how it was read."
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/89"
+  },
+  {
+   "version": "1.88",
+   "pr": 88,
+   "date": "2026-10-09",
+   "time": "2026-10-09T11:07:27-04:00",
+   "sha": "5d2fdf8",
+   "title": "Help & tips: 11-step tour and task guides with Show me",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/88"
+  },
+  {
+   "version": "1.87",
+   "pr": 87,
+   "date": "2026-10-09",
+   "time": "2026-10-09T10:58:41-04:00",
+   "sha": "feab993",
+   "title": "Remove the lasso area when its panel closes or on Clear selection; Cancel on the lasso hint; keep the orientation button on the map",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/87"
+  },
+  {
+   "version": "1.86",
+   "pr": 86,
+   "date": "2026-10-09",
+   "time": "2026-10-09T10:21:31-04:00",
+   "sha": "93228ba",
+   "title": "Sticky table headers in the Water and Wastewater tabs; unselect by tapping the map, Esc or Clear selection",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/86"
+  },
+  {
+   "version": "1.85",
+   "pr": 85,
+   "date": "2026-10-09",
+   "time": "2026-10-09T10:06:39-04:00",
+   "sha": "714594a",
+   "title": "Existing mains around the site with street names; pipe size labels on the map",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/85"
+  },
+  {
+   "version": "1.84",
+   "pr": 84,
+   "date": "2026-10-09",
+   "time": "2026-10-09T09:27:42-04:00",
+   "sha": "c291e89",
+   "title": "Watchlist, saved views, tips; servicing memo, area report, DC timing workbook; place search, heatmap, ground elevation",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/84"
+  },
+  {
+   "version": "1.83",
+   "pr": 83,
+   "date": "2026-10-09",
+   "time": "2026-10-09T08:46:05-04:00",
+   "sha": "0e54fda",
+   "title": "Fix load crash when the browser restores old form values (iOS)",
+   "kind": "fix",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/83"
+  },
+  {
+   "version": "1.82",
+   "pr": 82,
+   "date": "2026-10-09",
+   "time": "2026-10-09T03:57:30-04:00",
+   "sha": "0e601de",
+   "title": "Clean default layout: active applications, folded panels, Tools button, simpler filters, development tabs",
+   "kind": "feature",
+   "notes": [
+    "Opens on the active development applications (application to construction, any year) over the background; Layers & style, timeline and the analysis panel start folded (remembered), with a slim bottom bar of developments / units / people",
+    "Map tools under one Tools button; north arrow only while rotated; phase legend restored",
+    "Sidebar: search, a Showing line, Phase, Where, and one More filters fold",
+    "Development panel tabs: Overview, Servicing, History & records (all in the PDF export)",
+    "Fixes: census baseline is the latest census when no year range is set; capacity colours for new catchments (no census flow) no longer throw"
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/82"
+  },
+  {
+   "version": "1.81",
+   "pr": 81,
+   "date": "2026-10-09",
+   "time": "2026-10-09T03:12:26-04:00",
+   "sha": "c3fa8ea",
+   "title": "Map views Planning / Water / Wastewater / DC; Layers & style grouped with on/off chips",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/81"
+  },
+  {
+   "version": "1.80",
+   "pr": 80,
+   "date": "2026-10-09",
+   "time": "2026-10-09T02:46:11-04:00",
+   "sha": "0c3e9f3",
+   "title": "Show the error and build in the load-error banner",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/80"
+  },
+  {
+   "version": "1.79",
+   "pr": 79,
+   "date": "2026-10-09",
+   "time": "2026-10-09T02:41:56-04:00",
+   "sha": "9c1d5c2",
+   "title": "Fix startup crash when the saved map style shows sewer pipe capacity or existing pipes",
+   "kind": "fix",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/79"
+  },
+  {
+   "version": "1.78",
+   "pr": 78,
+   "date": "2026-10-09",
+   "time": "2026-10-09T02:26:19-04:00",
+   "sha": "c6c1c2b",
+   "title": "DC needs: existing capacity against the 2026 DC program, development ↔ DC project links",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/78"
+  },
+  {
+   "version": "1.77",
+   "pr": 77,
+   "date": "2026-10-09",
+   "time": "2026-10-09T02:05:22-04:00",
+   "sha": "250ecf5",
+   "title": "Fire flow and stormwater context, sewer path age / risk in the development brief",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/77"
+  },
+  {
+   "version": "1.76",
+   "pr": 76,
+   "date": "2026-10-09",
+   "time": "2026-10-09T01:56:07-04:00",
+   "sha": "b81a49f",
+   "title": "Existing pipes layer (live) and nearest existing mains in the development brief",
+   "kind": "feature",
+   "notes": [
+    "Region of Peel watermains and sanitary sewers, Mississauga / Brampton / Region storm sewers, queried live by ~1 km tile from zoom 15, cached; tooltips with diameter, material, year, slope",
+    "Development brief: nearest existing watermain, sanitary and storm main within 200 m (live point query)",
+    "Map options, legend, info text, README"
+   ],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/76"
+  },
+  {
+   "version": "1.75",
+   "pr": 75,
+   "date": "2026-10-09",
+   "time": "2026-10-09T01:48:36-04:00",
+   "sha": "cfb46de",
+   "title": "Sewer pipe capacity screen from the Region's sanitary mains",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/75"
+  },
+  {
+   "version": "1.74",
+   "pr": 74,
+   "date": "2026-10-09",
+   "time": "2026-10-09T00:56:20-04:00",
+   "sha": "0552b13",
+   "title": "Address search that pans and zooms, keyless street basemaps, no \"first seen\"",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/74"
+  },
+  {
+   "version": "1.73",
+   "pr": 73,
+   "date": "2026-10-09",
+   "time": "2026-10-09T00:51:44-04:00",
+   "sha": "6499cfd",
+   "title": "Planned works from the 2026 DC capital maps: layer, development timing, greenfield connection, plant expansions",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/73"
+  },
+  {
+   "version": "1.72",
+   "pr": 72,
+   "date": "2026-10-09",
+   "time": "2026-10-09T00:07:58-04:00",
+   "sha": "6ff7d0a",
+   "title": "Map tools: measure / buffer, test a site, data quality, capacity by year",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/72"
+  },
+  {
+   "version": "1.71",
+   "pr": 71,
+   "date": "2026-10-09",
+   "time": "2026-10-09T00:01:22-04:00",
+   "sha": "76d38a8",
+   "title": "Compare scenarios, linked map and tables, GIS exports, map print",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/71"
+  },
+  {
+   "version": "1.70",
+   "pr": 70,
+   "date": "2026-10-08",
+   "time": "2026-10-08T23:57:25-04:00",
+   "sha": "f83c2f9",
+   "title": "Map for servicing analysis: views, styled markers, capacity layer, what loads this, scenario bar",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/70"
+  },
+  {
+   "version": "1.69",
+   "pr": 69,
+   "date": "2026-10-08",
+   "time": "2026-10-08T23:35:50-04:00",
+   "sha": "1287027",
+   "title": "Assign developments outside mapped areas to the nearest zone / catchment",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/69"
+  },
+  {
+   "version": "1.68",
+   "pr": 68,
+   "date": "2026-10-08",
+   "time": "2026-10-08T23:31:35-04:00",
+   "sha": "d1ea270",
+   "title": "Development panel: brief first, one dated history, details on demand",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/68"
+  },
+  {
+   "version": "1.67",
+   "pr": 67,
+   "date": "2026-10-08",
+   "time": "2026-10-08T23:01:28-04:00",
+   "sha": "1805ffc",
+   "title": "Adopt current Peel design criteria (2023 Linear Wastewater Standards, 2024 Modelling Demand Table)",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/67"
+  },
+  {
+   "version": "1.66",
+   "pr": 66,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:41:52-04:00",
+   "sha": "39941a6",
+   "title": "2020 Master Plan: pumping station capacities, plant trigger, water storage",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/66"
+  },
+  {
+   "version": "1.65",
+   "pr": 65,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:20:59-04:00",
+   "sha": "c446257",
+   "title": "Why this status: status signals, stall flag and council / committee items",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/65"
+  },
+  {
+   "version": "1.64",
+   "pr": 64,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:13:40-04:00",
+   "sha": "8ac5d2f",
+   "title": "Growth tab: applications against the 2051 forecast",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/64"
+  },
+  {
+   "version": "1.63",
+   "pr": 63,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:11:34-04:00",
+   "sha": "2d888cf",
+   "title": "References panel: verified standards and guidelines",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/63"
+  },
+  {
+   "version": "1.62",
+   "pr": 62,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:05:47-04:00",
+   "sha": "aaa0520",
+   "title": "Shareable links",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/62"
+  },
+  {
+   "version": "1.61",
+   "pr": 61,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:03:26-04:00",
+   "sha": "35f2de5",
+   "title": "Horizon years: when each plant reaches 80 / 90 / 100% of capacity",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/61"
+  },
+  {
+   "version": "1.60",
+   "pr": 60,
+   "date": "2026-10-08",
+   "time": "2026-10-08T22:00:38-04:00",
+   "sha": "7b9dc6b",
+   "title": "Export servicing summaries (PDF / print and Excel)",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/60"
+  },
+  {
+   "version": "1.59",
+   "pr": 59,
+   "date": "2026-10-08",
+   "time": "2026-10-08T21:57:45-04:00",
+   "sha": "ca02d5c",
+   "title": "Development panel: servicing check",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/59"
+  },
+  {
+   "version": "1.58",
+   "pr": 58,
+   "date": "2026-10-08",
+   "time": "2026-10-08T21:55:21-04:00",
+   "sha": "9a8194f",
+   "title": "Standardize and simplify the bottom panel",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/58"
+  },
+  {
+   "version": "1.57",
+   "pr": 57,
+   "date": "2026-10-08",
+   "time": "2026-10-08T21:37:03-04:00",
+   "sha": "296a575",
+   "title": "Plants tab: capacity chart with uncommitted reserve capacity",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/57"
+  },
+  {
+   "version": "1.56",
+   "pr": 56,
+   "date": "2026-10-08",
+   "time": "2026-10-08T21:22:10-04:00",
+   "sha": "402c3f7",
+   "title": "Plants tab: switch for the planned 70 ML/d G.E. Booth → Clarkson diversion",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/56"
+  },
+  {
+   "version": "1.55",
+   "pr": 55,
+   "date": "2026-10-08",
+   "time": "2026-10-08T21:09:25-04:00",
+   "sha": "64d3a96",
+   "title": "Compare servicing with Peel's 2025 annual reports",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/55"
+  },
+  {
+   "version": "1.54",
+   "pr": 54,
+   "date": "2026-10-08",
+   "time": "2026-10-08T20:42:00-04:00",
+   "sha": "1d9785b",
+   "title": "Units beside every number in the bottom-panel tables",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/54"
+  },
+  {
+   "version": "1.53",
+   "pr": 53,
+   "date": "2026-10-08",
+   "time": "2026-10-08T20:36:25-04:00",
+   "sha": "5d5ea96",
+   "title": "Wastewater: local/upstream and growth layers together; new Plants tab",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/53"
+  },
+  {
+   "version": "1.52",
+   "pr": 52,
+   "date": "2026-10-08",
+   "time": "2026-10-08T19:08:42-04:00",
+   "sha": "3235cb7",
+   "title": "ML/d, local + upstream wastewater flows down the flow path, peak dry / wet weather",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/52"
+  },
+  {
+   "version": "1.51",
+   "pr": 51,
+   "date": "2026-10-08",
+   "time": "2026-10-08T18:55:51-04:00",
+   "sha": "c23037b",
+   "title": "Water and Wastewater tabs: stacked bars, click to zoom, flows accumulated along the sewer path",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/51"
+  },
+  {
+   "version": "1.50",
+   "pr": 50,
+   "date": "2026-10-08",
+   "time": "2026-10-08T18:42:54-04:00",
+   "sha": "97fb286",
+   "title": "Editable employment floor space (m²/job)",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/50"
+  },
+  {
+   "version": "1.49",
+   "pr": 49,
+   "date": "2026-10-08",
+   "time": "2026-10-08T18:39:50-04:00",
+   "sha": "ecbbb0a",
+   "title": "Servicing areas tab: pressure zones and sanitary catchments by plant, layered like Growth",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/49"
+  },
+  {
+   "version": "1.48",
+   "pr": 48,
+   "date": "2026-10-08",
+   "time": "2026-10-08T18:19:48-04:00",
+   "sha": "15e0819",
+   "title": "Water pressure zones and traced wastewater drainage areas",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/48"
+  },
+  {
+   "version": "1.47",
+   "pr": 47,
+   "date": "2026-10-08",
+   "time": "2026-10-08T16:23:58-04:00",
+   "sha": "4ad8627",
+   "title": "Hover info per toggle (each phase, focus, municipality, legend entry, tab, map control)",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/47"
+  },
+  {
+   "version": "1.46",
+   "pr": 46,
+   "date": "2026-10-08",
+   "time": "2026-10-08T15:24:55-04:00",
+   "sha": "7381b00",
+   "title": "Aerial photos 40% transparent",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/46"
+  },
+  {
+   "version": "1.45",
+   "pr": 45,
+   "date": "2026-10-08",
+   "time": "2026-10-08T15:13:04-04:00",
+   "sha": "b0e1eee",
+   "title": "Selected project narrows Growth and Servicing demand to its census DA",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/45"
+  },
+  {
+   "version": "1.44",
+   "pr": 44,
+   "date": "2026-10-08",
+   "time": "2026-10-08T15:04:44-04:00",
+   "sha": "f92ce97",
+   "title": "Census baseline follows the timeline (2021 / 2016 Census)",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/44"
+  },
+  {
+   "version": "1.43",
+   "pr": 43,
+   "date": "2026-10-08",
+   "time": "2026-10-08T15:03:08-04:00",
+   "sha": "0f4c316",
+   "title": "Census areas: draw above the background (inside the rotating pane)",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/43"
+  },
+  {
+   "version": "1.42",
+   "pr": 42,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:38:51-04:00",
+   "sha": "e87cf6b",
+   "title": "Scale bar, north arrow, phase-coloured application boundaries from zoom 14",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/42"
+  },
+  {
+   "version": "1.41",
+   "pr": 41,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:36:47-04:00",
+   "sha": "db2ffa8",
+   "title": "Census areas: visible when zoomed in; swatch beside the toggle",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/41"
+  },
+  {
+   "version": "1.40",
+   "pr": 40,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:30:20-04:00",
+   "sha": "52e84e1",
+   "title": "Census areas: light border, on by default",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/40"
+  },
+  {
+   "version": "1.39",
+   "pr": 39,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:27:47-04:00",
+   "sha": "65c76d3",
+   "title": "Lasso: middle mouse button drags the map while selecting",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/39"
+  },
+  {
+   "version": "1.38",
+   "pr": 38,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:23:22-04:00",
+   "sha": "a7a5b61",
+   "title": "Toggleable 2021 census dissemination area outlines",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/38"
+  },
+  {
+   "version": "1.37",
+   "pr": 37,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:17:44-04:00",
+   "sha": "2760fd6",
+   "title": "Map turned to Peel's road grid; lasso selection with demand and growth summary",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/37"
+  },
+  {
+   "version": "1.36",
+   "pr": 36,
+   "date": "2026-10-08",
+   "time": "2026-10-08T14:06:19-04:00",
+   "sha": "8c8c964",
+   "title": "Group the project's dated events by date",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/36"
+  },
+  {
+   "version": "1.35",
+   "pr": 35,
+   "date": "2026-10-08",
+   "time": "2026-10-08T13:56:00-04:00",
+   "sha": "4254aa1",
+   "title": "Servicing demand follows the sidebar's phase and focus",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/35"
+  },
+  {
+   "version": "1.34",
+   "pr": 34,
+   "date": "2026-10-08",
+   "time": "2026-10-08T13:49:57-04:00",
+   "sha": "38937a5",
+   "title": "Growth focus on by default; Servicing demand first tab",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/34"
+  },
+  {
+   "version": "1.33",
+   "pr": 33,
+   "date": "2026-10-08",
+   "time": "2026-10-08T13:36:36-04:00",
+   "sha": "7086ba7",
+   "title": "Bottom panel opens on Growth since 2021",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/33"
+  },
+  {
+   "version": "1.32",
+   "pr": 32,
+   "date": "2026-10-08",
+   "time": "2026-10-08T13:35:31-04:00",
+   "sha": "cf82f5e",
+   "title": "Build-out by dwelling type and employment in the project summary",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/32"
+  },
+  {
+   "version": "1.31",
+   "pr": 31,
+   "date": "2026-10-08",
+   "time": "2026-10-08T13:30:56-04:00",
+   "sha": "97ed0a0",
+   "title": "Floating timeline; tabbed bottom panel",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/31"
+  },
+  {
+   "version": "1.30",
+   "pr": 30,
+   "date": "2026-10-08",
+   "time": "2026-10-08T12:52:41-04:00",
+   "sha": "1c5ff5e",
+   "title": "Employment water and wastewater demand",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/30"
+  },
+  {
+   "version": "1.29",
+   "pr": 29,
+   "date": "2026-10-08",
+   "time": "2026-10-08T12:22:50-04:00",
+   "sha": "9a96d7e",
+   "title": "Employment uses from applications: floor area and estimated jobs",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/29"
+  },
+  {
+   "version": "1.28",
+   "pr": 28,
+   "date": "2026-10-08",
+   "time": "2026-10-08T12:07:29-04:00",
+   "sha": "389028d",
+   "title": "Cleaner sidebar; project list follows the map",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/28"
+  },
+  {
+   "version": "1.27",
+   "pr": 27,
+   "date": "2026-10-08",
+   "time": "2026-10-08T11:55:35-04:00",
+   "sha": "5551d72",
+   "title": "Consolidated project panel: headline numbers on top; source records grouped by type",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/27"
+  },
+  {
+   "version": "1.26",
+   "pr": 26,
+   "date": "2026-10-08",
+   "time": "2026-10-08T11:43:23-04:00",
+   "sha": "ea4ec34",
+   "title": "Wastewater I&I and peak wet weather flow",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/26"
+  },
+  {
+   "version": "1.25",
+   "pr": 25,
+   "date": "2026-10-08",
+   "time": "2026-10-08T11:37:48-04:00",
+   "sha": "185670e",
+   "title": "Pages deploy: per-attempt artifact name so a failed deploy can be re-run",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/25"
+  },
+  {
+   "version": "1.24",
+   "pr": 24,
+   "date": "2026-10-08",
+   "time": "2026-10-08T11:36:43-04:00",
+   "sha": "bc761d5",
+   "title": "Record panel: \"Open whole project\" at the top",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/24"
+  },
+  {
+   "version": "1.23",
+   "pr": 23,
+   "date": "2026-10-08",
+   "time": "2026-10-08T11:33:44-04:00",
+   "sha": "1d1fb49",
+   "title": "\"What is this?\" cards: hover 3 s (or press and hold) for meaning and source",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/23"
+  },
+  {
+   "version": "1.22",
+   "pr": 22,
+   "date": "2026-10-08",
+   "time": "2026-10-08T11:12:26-04:00",
+   "sha": "2dc9696",
+   "title": "Detail panel: aerial check first; source records dated, oldest first",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/22"
+  },
+  {
+   "version": "1.21",
+   "pr": 21,
+   "date": "2026-10-08",
+   "time": "2026-10-08T08:15:31-04:00",
+   "sha": "2cd611f",
+   "title": "Growth stacked bars: 2021 baseline → built → approved → full build-out",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/21"
+  },
+  {
+   "version": "1.20",
+   "pr": 20,
+   "date": "2026-10-08",
+   "time": "2026-10-08T07:59:58-04:00",
+   "sha": "afd53a8",
+   "title": "Choose several secondary plans at once",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/20"
+  },
+  {
+   "version": "1.19",
+   "pr": 19,
+   "date": "2026-10-08",
+   "time": "2026-10-08T07:55:37-04:00",
+   "sha": "5835647",
+   "title": "Secondary plan and MTSA filters; growth since the 2021 Census",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/19"
+  },
+  {
+   "version": "1.18",
+   "pr": 18,
+   "date": "2026-10-08",
+   "time": "2026-10-08T04:46:41-04:00",
+   "sha": "6e9850f",
+   "title": "Growth focus; committed capacity = growth only; default to applications + their permits",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/18"
+  },
+  {
+   "version": "1.17",
+   "pr": 17,
+   "date": "2026-10-08",
+   "time": "2026-10-08T04:44:25-04:00",
+   "sha": "bf6e529",
+   "title": "Latest city aerials and an aerial completion check",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/17"
+  },
+  {
+   "version": "1.16",
+   "pr": 16,
+   "date": "2026-10-08",
+   "time": "2026-10-08T03:51:27-04:00",
+   "sha": "8fc6eba",
+   "title": "Duplicate check: proof of counting once, plus two linking fixes it found",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/16"
+  },
+  {
+   "version": "1.15",
+   "pr": 15,
+   "date": "2026-10-08",
+   "time": "2026-10-08T03:44:11-04:00",
+   "sha": "113c6c0",
+   "title": "Timeline defaults to 2021–2026",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/15"
+  },
+  {
+   "version": "1.14",
+   "pr": 14,
+   "date": "2026-10-08",
+   "time": "2026-10-08T03:41:57-04:00",
+   "sha": "9005859",
+   "title": "Build-out as a stepper; demand table: total, completed, remaining",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/14"
+  },
+  {
+   "version": "1.13",
+   "pr": 13,
+   "date": "2026-10-08",
+   "time": "2026-10-08T03:29:46-04:00",
+   "sha": "9383a1a",
+   "title": "Quick views by phase, plus focus views",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/13"
+  },
+  {
+   "version": "1.12",
+   "pr": 12,
+   "date": "2026-10-08",
+   "time": "2026-10-08T03:17:25-04:00",
+   "sha": "aa0cf4f",
+   "title": "Servicing demand in the info panel; committed capacity view",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/12"
+  },
+  {
+   "version": "1.11",
+   "pr": 11,
+   "date": "2026-10-08",
+   "time": "2026-10-08T03:00:55-04:00",
+   "sha": "af28207",
+   "title": "Bigger tap targets: labels open their project; 32px marker hit area",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/11"
+  },
+  {
+   "version": "1.10",
+   "pr": 10,
+   "date": "2026-10-08",
+   "time": "2026-10-08T02:55:29-04:00",
+   "sha": "f33f001",
+   "title": "Street-zoom markers",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/10"
+  },
+  {
+   "version": "1.9",
+   "pr": 9,
+   "date": "2026-10-08",
+   "time": "2026-10-08T02:50:27-04:00",
+   "sha": "b21c75e",
+   "title": "Tappable application boundaries",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/9"
+  },
+  {
+   "version": "1.8",
+   "pr": 8,
+   "date": "2026-10-08",
+   "time": "2026-10-08T02:32:15-04:00",
+   "sha": "f4612a0",
+   "title": "Stale-cache fix and version label",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/8"
+  },
+  {
+   "version": "1.7",
+   "pr": 7,
+   "date": "2026-10-08",
+   "time": "2026-10-08T02:24:24-04:00",
+   "sha": "9751d05",
+   "title": "Multi-phase developments",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/7"
+  },
+  {
+   "version": "1.6",
+   "pr": 6,
+   "date": "2026-10-08",
+   "time": "2026-10-08T02:16:41-04:00",
+   "sha": "ed0d1ef",
+   "title": "Fix: points stop opening after closing a panel",
+   "kind": "fix",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/6"
+  },
+  {
+   "version": "1.5",
+   "pr": 5,
+   "date": "2026-10-08",
+   "time": "2026-10-08T01:59:25-04:00",
+   "sha": "131d900",
+   "title": "Easier controls and subdivision permit points",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/5"
+  },
+  {
+   "version": "1.4",
+   "pr": 4,
+   "date": "2026-10-08",
+   "time": "2026-10-08T01:36:17-04:00",
+   "sha": "00b876f",
+   "title": "Permit-to-application linking and build-out",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/4"
+  },
+  {
+   "version": "1.3",
+   "pr": 3,
+   "date": "2026-10-08",
+   "time": "2026-10-08T01:01:34-04:00",
+   "sha": "4570061",
+   "title": "Brampton and Caledon data",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/3"
+  },
+  {
+   "version": "1.2",
+   "pr": 2,
+   "date": "2026-10-08",
+   "time": "2026-10-08T00:38:56-04:00",
+   "sha": "d395f11",
+   "title": "Unit-growth filter",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/2"
+  },
+  {
+   "version": "1.1",
+   "pr": 1,
+   "date": "2026-10-08",
+   "time": "2026-10-08T00:20:06-04:00",
+   "sha": "e1637e3",
+   "title": "Peel Development Tracker",
+   "kind": "feature",
+   "notes": [],
+   "url": "https://github.com/jaredacostar-cmd/Fsr-reviewer/pull/1"
+  }
+ ],
+ "dataUpdates": [
+  {
+   "date": "2026-10-09",
+   "sha": "c949743"
+  },
+  {
+   "date": "2026-10-08",
+   "sha": "6e735b3"
+  },
+  {
+   "date": "2026-10-08",
+   "sha": "cf030f3"
+  },
+  {
+   "date": "2026-10-08",
+   "sha": "65745c5"
+  }
+ ]
+}
