@@ -215,16 +215,21 @@
     <footer class="footer" id="footer">
       <div class="f-grip" id="footer-grip" role="separator" aria-orientation="horizontal" aria-label="Resize the analysis panel: drag up or down" tabindex="0"><span></span></div>
       <div class="f-tabs" role="tablist" aria-label="Bottom panel">
-        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="true">Growth &amp; demand</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="false">Demand</button>
         <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Criteria &amp; references</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
         <button type="button" class="f-sum" id="f-sum" title="Open the analysis"></button>
         <span class="f-spacer"></span>
         <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       </div>
       <div class="scen-bar" id="scen-bar" data-info="scenario"></div>
+
+      <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
+        <div id="ov-body"></div>
+      </section>
 
       <section class="f-pane demand" id="pane-demand" data-pane="growth" role="tabpanel" aria-labelledby="ftab-growth">
         <div class="tb-head">
@@ -235,6 +240,8 @@
           <div class="d-stats" id="d-stats"></div>
           <div class="d-flows" id="d-tiles"></div>
         </div>
+        <h3 class="sub-title" data-info="unit-types">Servicing demand breakdown</h3>
+        <div id="d-breakdown" class="d-breakdown"></div>
       </section>
 
       <section class="f-pane census" id="census" data-pane="growth" data-off="1" aria-labelledby="ftab-growth" hidden>
@@ -277,7 +284,6 @@
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
         <div class="d-grid">
-          <div id="d-breakdown"></div>
           <form id="d-criteria" class="criteria"></form>
         </div>
         <div id="d-refs" class="d-refs" data-info="references" hidden></div>
