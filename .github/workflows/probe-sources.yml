@@ -26,6 +26,10 @@ on:
         description: 'all, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
         default: 'all'
         required: false
+      only:
+        description: 'mode=external: one part only (mto)'
+        default: ''
+        required: false
 
 permissions:
   contents: write   # mode=areas commits data/areas.json and data/das.json to the branch it runs on
@@ -90,7 +94,8 @@ jobs:
       - name: External open data (pushed to the ext-raw branch)
         if: inputs.mode == 'external'
         run: |
-          node scripts/fetch-external.js --out ext-raw
+          git fetch origin ext-raw && git checkout origin/ext-raw -- ext-raw || true
+          if [ -n "${{ inputs.only }}" ]; then node scripts/fetch-external.js --out ext-raw --only ${{ inputs.only }}; else node scripts/fetch-external.js --out ext-raw; fi
           du -sh ext-raw; find ext-raw -type f | head -200
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

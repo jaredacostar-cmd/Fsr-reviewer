@@ -8,7 +8,9 @@
  *   - Statistics Canada: CMHC housing starts / completions tables, rows for Peel's municipalities
  *   - Environment and Climate Change Canada: engineering IDF files for stations in and near Peel
  *   - MTO IDF curve lookup: landing page and scripts (to find its lookup endpoint)
- * Usage: node scripts/fetch-external.js --out ext-raw
+ *   - MTO IDF coefficients (i = a·t^b, mm/h, t in hours) at each wastewater block's label point,
+ *     from the lookup's 30-second grid files (data_xml/<lat>.xml)
+ * Usage: node scripts/fetch-external.js --out ext-raw [--only mto]
  */
 'use strict';
 const fs = require('fs');
@@ -100,7 +102,42 @@ async function eccIdf() {
   }
 }
 
+// The MTO lookup's grid: 30-second cells, centred 15 seconds in (toGridCoordinate on the site).
+function toGrid(c) {
+  const neg = c < 0; let x = Math.abs(c);
+  const d = Math.floor(x), m = (x - d) * 60, s = (m - Math.floor(m)) * 60;
+  x = d + Math.floor(m) / 60 + (Math.floor(s) < 30 ? 1 / 240 : 1 / 80);
+  return neg ? -x : x;
+}
+async function mtoIdf() {
+  const blocks = JSON.parse(fs.readFileSync('data/blocks.json', 'utf8')).blocks;
+  const rows = new Map(), out = { source: 'https://idfcurves.mto.gov.on.ca/', fetched: new Date().toISOString(), points: [] };
+  for (const b of blocks) {
+    const [lng, lat] = b.lp || b.c; const gl = toGrid(lat).toFixed(6), gn = toGrid(lng).toFixed(6);
+    if (!rows.has(gl)) {
+      try { rows.set(gl, await get(`https://idfcurves.mto.gov.on.ca/data_xml/${gl}.xml`, { asText: true })); note('ok   mto row', gl); }
+      catch (e) { note('FAIL mto row', gl, e.message); rows.set(gl, ''); }
+    }
+    const xml = rows.get(gl), i = xml.indexOf(`id="${gl},${gn}"`) >= 0 ? xml.indexOf(`id="${gl},${gn}"`) : xml.indexOf(`id='${gl},${gn}'`);
+    if (i < 0) { note('miss', b.id, gl, gn); continue; }
+    const seg = xml.slice(i, xml.indexOf('</coord>', i));
+    const periods = {};
+    for (const m of seg.matchAll(/<period([^>]*)>/g)) {
+      const at = Object.fromEntries([...m[1].matchAll(/(\w+)="([^"]*)"/g)].map(x => [x[1], x[2]]));
+      if (at.id) periods[at.id] = { a: +at.a, b: +at.b };
+    }
+    out.points.push({ block: b.id, lat: +gl, lng: +gn, periods });
+  }
+  fs.writeFileSync(path.join(out_dir(), 'mto-idf.json'), JSON.stringify(out, null, 1));
+  note('mto points', out.points.length);
+  // A sample of the raw format, for the record.
+  const first = [...rows.values()].find(Boolean); if (first) fs.writeFileSync(path.join(out_dir(), 'mto-row-sample.xml'), first.slice(0, 20000));
+  await save('https://idfcurves.mto.gov.on.ca/data_ext_msc/idf_lookup_msc.xml', 'mto/idf_lookup_msc.xml');
+}
+const out_dir = () => out;
+
 (async () => {
+  if (process.argv.includes('--only')) { await mtoIdf(); fs.writeFileSync(path.join(out, 'fetch-log-mto.txt'), log.join('\n') + '\n'); return; }
   // Ontario Data Catalogue
   for (const host of ['data.ontario.ca']) {
     await ckan(host, 'ontario-s-housing-supply-progress');
