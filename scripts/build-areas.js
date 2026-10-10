@@ -55,6 +55,24 @@ const CENSUSES = [
     expect: 1381739,
   },
 ];
+// 2026 Census: first release February 10, 2027 (population and dwelling counts, including by
+// dissemination area). Point the build at it once published and it becomes the baseline (the app
+// takes the newest census year it holds):
+//   CENSUS_2026_URL=<a DA feature layer with the 2026 counts>, or
+//   CENSUS_2026_CSV=<Statistics Canada's DA population and dwelling counts CSV>: joined by DAUID to
+//     the 2021 DA geometry (DAs split or redrawn in 2026 are reported and left out).
+//   CENSUS_2026_PEEL=<published Peel total> checks the download (within 2%).
+const pickNum = (a, re) => { const k = Object.keys(a).find(n => re.test(n)); return k ? Number(String(a[k]).replace(/,/g, '')) : 0; };
+if (process.env.CENSUS_2026_URL || process.env.CENSUS_2026_CSV) {
+  CENSUSES.unshift({
+    year: 2026, date: '2026-05-12', outlines: 'das-2026.json',
+    url: process.env.CENSUS_2026_URL || CENSUSES[0].url, csv: process.env.CENSUS_2026_CSV || null,
+    source: 'Statistics Canada, 2026 Census of Population – population and dwelling counts by dissemination area',
+    pop: a => pickNum(a, /^(POP_COUNT|Population.*2026|POP_2026|C1_COUNT_TOTAL)/i), dw: a => pickNum(a, /^(Private_dw|Total private dwellings|PRIV_DW)/i), occ: a => pickNum(a, /^(Tpw|Private dwellings occupied|OCC_DW)/i),
+    csd: a => a.CSDUID_SDR || a.CSDUID || String(a.DAUID || a.DGUID || '').replace(/^.*?(3521\d{3}).*$/, '$1'),
+    expect: Number(process.env.CENSUS_2026_PEEL) || null,
+  });
+}
 const CENSUS = CENSUSES[0];
 const CSD = { 3521005: 'Mississauga', 3521010: 'Brampton', 3521024: 'Caledon' };
 
@@ -164,11 +182,27 @@ async function census(def, areaList, refDas = null) {
   const info = await A.layerInfo(def.url);
   const daField = (info.fields || []).map(f => f.name).find(n => /^DAUID/i.test(n)) || 'DAUID';
   const { features: feats } = await A.queryAll(def.url, info, { where: `${daField} LIKE '3521%'`, max: 5000 });
+  // 2026 counts from Statistics Canada's CSV onto the DA geometry of the layer (2021 DAs).
+  let csvBy = null;
+  if (def.csv) {
+    const lines = fs.readFileSync(def.csv, 'utf8').split(/\r?\n/).filter(Boolean);
+    const split = l => l.match(/("([^"]|"")*"|[^,]*)(,|$)/g).map(c => c.replace(/,$/, '').replace(/^"|"$/g, '').replace(/""/g, '"'));
+    const head = split(lines[0]);
+    csvBy = new Map();
+    for (const l of lines.slice(1)) {
+      const v = split(l), o = Object.fromEntries(head.map((h, i) => [h, v[i]]));
+      const id = String(o.DAUID || o.DGUID || o['Geographic code'] || '').replace(/^.*(3521\d{4})$/, '$1');
+      if (/^3521\d{4}$/.test(id)) csvBy.set(id, o);
+    }
+    console.log(`census ${def.year}: ${csvBy.size} DAs in ${def.csv}`);
+  }
+  let missing = 0;
   const das = [], outlines = [];
   let pop = 0;
   const num = v => (Number(v) > 0 ? Number(v) : 0);
   for (const f of feats) {
-    const a = f.properties || {};
+    let a = f.properties || {};
+    if (csvBy) { const o = csvBy.get(String(a[daField] || '')); if (!o) { missing++; continue; } a = { ...o, [daField]: a[daField], CSDUID_SDR: def.csd(f.properties || {}) || (f.properties || {}).CSDUID_SDR }; }
     const rings = ringsOf(f.geometry);
     if (!rings.length) continue;
     const [x, y] = insidePoint(rings);
@@ -181,6 +215,7 @@ async function census(def, areaList, refDas = null) {
     pop += p;
   }
   for (const a of areaList) delete a.bbox;
+  if (csvBy) console.log(`census ${def.year}: ${missing} DAs of the layer not in the CSV (split or redrawn); ${csvBy.size - das.length} CSV DAs without geometry`);
   const byMuni = {};
   for (const d of das) byMuni[d[5] || '?'] = (byMuni[d[5] || '?'] || 0) + d[2];
   const off = def.expect ? (pop - def.expect) / def.expect : 0;

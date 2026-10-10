@@ -1423,6 +1423,8 @@ details.stamp { display: block; }
 .d-quality { margin-bottom: 12px; }
 .ov-fresh { margin: 6px 0 0; }
 /* Servicing allocation (development Servicing tab) */
+.dcrev { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin: 8px 0; background: var(--surface-1); display: grid; gap: 6px; }
+.dcrev-t td { padding: 2px 4px; }
 .alloc-box { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; margin: 8px 0; background: var(--surface-1); display: grid; gap: 6px; }
 .alloc-h { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 12.5px; }
 .alloc-f { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: end; font-size: 12px; }
@@ -1435,3 +1437,27 @@ details.stamp { display: block; }
 .ov-top .headline { flex: 1; margin: 6px 0 4px; }
 .ov-brief { align-self: center; white-space: nowrap; font-weight: 600; background: var(--accent); border-color: var(--accent); color: #fff; }
 @media (max-width: 700px) { .ov-top { flex-direction: column; } .ov-brief { align-self: flex-start; } }
+
+.wet-box select { max-width: 100%; }
+.wet-box p { margin: 4px 0; }
+/* Housing targets and population outlook (Overview) */
+.ov-housing { grid-column: span 7; }
+.ov-outlook { grid-column: span 5; }
+.ov-housing .ov-bar i.c { background: #2f9e44; }
+.ov-housing .ov-cap.near .ov-bar i.c { background: #f76707; }
+.ov-housing .ov-cap.over .ov-bar i.c { background: #e03131; }
+.ov-spark { width: 100%; height: auto; max-height: 120px; display: block; }
+.ov-spark .sp-mof { fill: none; stroke: #1c7ed6; stroke-width: 2; }
+.ov-spark .sp-reg { stroke: #868e96; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.ov-spark .sp-reg-d { fill: #868e96; }
+.ov-spark .sp-ax { font-size: 9px; fill: var(--text-muted); }
+.dca-key .k-mof { background: #1c7ed6; }
+.dca-key .k-reg { background: repeating-linear-gradient(90deg, #868e96 0 4px, transparent 4px 7px); }
+@media (max-width: 1100px) { .ov-housing, .ov-outlook { grid-column: span 12; } }
+.cmp-sum { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+.cmp-table td small { display: block; color: var(--text-muted); }
+.hyd-box { margin-top: 10px; }
+.hyd-table td small { display: block; color: var(--text-muted); }
+.hyd-table tr.hyd-first td { border-top: 1px solid var(--border); }
+.hyd-scroll { max-width: 100%; overflow-x: auto; }
+.hyd-scroll .hyd-table { min-width: 520px; }
