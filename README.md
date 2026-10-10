@@ -257,6 +257,28 @@ application.
   select an area, measure, test a site) sit under one Tools button, and are also buttons on the
   Overview; the north arrow stays on the map (tap it to switch between road grid and north up).
   The sidebar has search, a "Showing …" line, Phase and one *More filters* fold (focus, record type).
+- **Executive briefing (PDF)** (Overview, top right): one printable Letter page for management —
+  title block with the date, *Prepared by* (set it in Settings & sources) and the data date; the
+  headline sentences; growth and demand tiles; servicing demand by phase; the plants' and South
+  Peel water treatment's share of the 90% expansion trigger; room after servicing allocations; a
+  map of the wastewater blocks with the larger developments and the plants; the DC projects to
+  bring forward and those most growth relies on; the criteria and the app version in the footer.
+- **Plain-language headlines**: one sentence at the top of each tab, written from the numbers
+  (e.g. which plant reaches its trigger first, which zone adds the most, how many pumping stations
+  exceed firm capacity, which DC projects come too late).
+- **Servicing allocations**: record a development's allocation (units, date, reference) in its
+  Servicing tab; Wastewater → *Allocations* lists them and gives each plant's room at the 90%
+  trigger after existing + approved development and after allocations made ahead of approval (also
+  on the Overview). Kept in the browser; CSV export / import to share one list.
+- **Data freshness and model checks** (Settings & sources): every source with its date, update
+  interval and status (current / due for a refresh / out of date / reference / live), summarised on
+  the Overview; and the model against published figures — 2021 Census population for Peel and each
+  municipality, the share on municipal sewers, population today against the annual report's
+  population served, and the plants' and South Peel water's design-criteria flows against the 2025
+  measured averages (±10% matches, ±25% close; each row explains an expected difference).
+- **Number conventions**: people and jobs are rounded the same way everywhere (whole under 1,000,
+  nearest 10 to 10,000, nearest 100 above); units are exact counts; L/s for pipes, stations and
+  single developments, ML/d for plants, zones and totals; ≈ marks a screening estimate.
 - **Bottom panel tabs**: **Overview** (the headline numbers on one screen: developments, units,
   people, jobs, water max day and wastewater peak wet; the plants' and South Peel water treatment's
   capacity against the 90% expansion trigger, committed and at build-out; the servicing demand by

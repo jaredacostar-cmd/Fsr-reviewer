@@ -1104,6 +1104,8 @@
     for (const b of document.querySelectorAll('[data-wwsub]')) { b.classList.toggle('on', b.dataset.wwsub === wwSub); b.setAttribute('aria-pressed', String(b.dataset.wwsub === wwSub)); }
     if (key === 'dca' && typeof renderDca === 'function') setTimeout(() => renderDca(), 0);
     if (key === 'overview') setTimeout(() => renderOverview(), 0);
+    if (key === 'criteria') setTimeout(() => renderQuality(), 0);
+    if (key === 'ww' && wwSub === 'alloc') setTimeout(() => renderAlloc(), 0);
   }
   document.querySelector('.f-subtabs').addEventListener('click', e => {
     const b = e.target.closest('[data-wwsub]'); if (!b) return;
@@ -1122,6 +1124,8 @@
   // Withdrawn projects never count; the basis picks which of each project's units count.
   // With a project selected, the shown projects in its census DA; otherwise all shown projects.
   const demandSet = () => state.filtered.filter(p => p.phase !== 'cancelled' && (!state.daCtx || state.daCtx.keys.has(p.key)));
+  // Overview and briefing: everything shown on the map (an open development's surroundings don't narrow it).
+  const overviewSet = () => state.filtered.filter(p => p.phase !== 'cancelled');
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
   const demandBasis = () => (state.focus && FOCUS[state.focus].basis) || 'all';
   // What the demand covers: the phase and focus picked in the sidebar, then any other filters.
@@ -1148,29 +1152,166 @@
     const sf = $('#sect-more'); if (sf) sf.open = true;
     $('#phase-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
+  // ---- Servicing allocations: units the Region has allocated servicing capacity to, per
+  // development (kept in this browser; CSV export / import to share one list). An allocation to a
+  // development not yet approved commits capacity ahead of its approval: the plants' room after
+  // allocations is the room after existing + approved, less those allocations.
+  const allocs = () => store.get('allocations', {}) || {};
+  function setAlloc(key, a) { const all = allocs(); if (a) all[key] = a; else delete all[key]; store.set('allocations', all); onAllocChange(); }
+  function onAllocChange() { renderAlloc(); if (footTab === 'overview') renderOverview(); if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') { const b = $('#alloc-box'); if (b) b.outerHTML = allocBoxHTML(currentProject); } }
+  const allocPeople = (p, a) => { const e = D.estimate([p], state.criteria, 'all', jobsOf); return e.totalUnits > 0 ? a.units * e.population / e.totalUnits : a.units * (state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment; };
+  function allocRows() {
+    const out = [];
+    for (const [key, a] of Object.entries(allocs())) {
+      const p = state.projects.find(x => x.key === key);
+      out.push({ key, a, p, pl: p ? plantOfDev(p) : 'none', lay: p ? svcLayerOf(p) : 'out', people: p ? allocPeople(p, a) : 0 });
+    }
+    return out.sort((x, y) => String(y.a.date || '').localeCompare(String(x.a.date || '')));
+  }
+  // Plant room after allocations (average dry at the plant's measured rate, ML/d; at the 90% trigger).
+  function allocPlant(pl) {
+    const M = state.svcModel, cap = M && M.plantCap(pl); if (!cap) return null;
+    const rows = allocRows().filter(r => r.pl === pl), ahead = rows.filter(r => r.lay === 'proposed');
+    const aheadMld = ahead.reduce((t, r) => t + r.people * cap.perPerson / 1e6, 0);
+    const lim = PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
+    return { pl, cap, lim, rows, ahead, aheadMld, room, after: room - aheadMld, peopleAfter: cap.perPerson > 0 ? (room - aheadMld) * 1e6 / cap.perPerson : 0 };
+  }
+  function allocBoxHTML(p) {
+    const a = allocs()[p.key], e = D.estimate([p], state.criteria, 'all', jobsOf), def = Math.round(e.totalUnits) || '';
+    return `<div class="alloc-box" id="alloc-box" data-info="allocations">
+      <div class="alloc-h"><strong>Servicing allocation</strong> ${a ? `<span class="fr-b fr-ok">${fmtNum(a.units)} units allocated${a.date ? ` · ${esc(a.date)}` : ''}</span>` : '<span class="fr-b fr-ref">Not recorded</span>'}</div>
+      <div class="alloc-f"><label>Units <input type="number" min="0" step="1" data-alloc-f="units" value="${a ? a.units : def}"></label><label>Date <input type="date" data-alloc-f="date" value="${esc(a ? a.date || '' : new Date().toISOString().slice(0, 10))}"></label><label>Reference <input type="text" data-alloc-f="ref" value="${esc(a ? a.ref || '' : '')}" placeholder="report / agreement no."></label>
+        <button type="button" class="btn small" data-alloc-save="${esc(p.key)}">${a ? 'Update' : 'Record allocation'}</button>${a ? `<button type="button" class="btn small link" data-alloc-del="${esc(p.key)}">Remove</button>` : ''}</div>
+      <small class="muted">Kept in this browser; share the list from Wastewater → Allocations (CSV).</small></div>`;
+  }
+  document.addEventListener('click', e => {
+    const sv = e.target.closest('[data-alloc-save]');
+    if (sv) { const box = sv.closest('.alloc-box'), v = k => box.querySelector(`[data-alloc-f="${k}"]`).value.trim(), units = Math.max(0, Math.round(+v('units') || 0)); if (!units) return; setAlloc(sv.dataset.allocSave, { units, date: v('date'), ref: v('ref') }); return; }
+    const dl = e.target.closest('[data-alloc-del]'); if (dl) { if (confirm('Remove this allocation?')) setAlloc(dl.dataset.allocDel, null); }
+  });
+  function renderAlloc() {
+    const el = $('#alloc-body'); if (!el) return;
+    const rows = allocRows(), plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(allocPlant).filter(Boolean);
+    const totU = rows.reduce((t, r) => t + r.a.units, 0), ahead = rows.filter(r => r.lay === 'proposed');
+    el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} ahead of approval and commit capacity now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
+      <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + approved, and after allocations (average dry weather at each plant's measured rate)</caption>
+        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + approved</th><th>Room</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
+        <tbody>${plants.map(x => `<tr><td>${esc(PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${fmt1(x.room)} ML/d<small>≈${fmtNum(roundPop(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${fmt1(x.after)} ML/d</strong><small>≈${fmtNum(roundPop(x.peopleAfter))} people</small></td></tr>`).join('')}</tbody></table>
+      <div class="export-bar"><button type="button" class="btn small" data-alloc-csv>Export CSV</button><label class="btn small">Import CSV<input type="file" accept=".csv,text/csv" data-alloc-imp hidden></label></div>
+      ${rows.length ? `<table class="dt"><caption>Allocations recorded</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
+        ${rows.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>` : ''}
+      <p class="small muted">Allocations are kept in this browser. To share one list, export the CSV and import it on the other computer (rows are matched by development key; an import adds to or updates the list). People at each development's persons per unit.</p>`;
+  }
+  $('#alloc-body').addEventListener('click', e => {
+    if (e.target.closest('[data-alloc-csv]')) {
+      const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', PLANT_SHORT[r.pl] || '', r.lay])];
+      download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
+    }
+    const r = e.target.closest('.ld-row'); if (r) { const p = state.projects.find(x => x.key === r.dataset.dev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } }
+  });
+  $('#alloc-body').addEventListener('change', async e => {
+    const f = e.target.closest('[data-alloc-imp]'); if (!f || !f.files[0]) return;
+    const text = await f.files[0].text(), parse = line => { const out = []; let cur = '', q = false; for (let i = 0; i < line.length; i++) { const ch = line[i]; if (q) { if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; } else if (ch === '"') q = false; else cur += ch; } else if (ch === '"') q = true; else if (ch === ',') { out.push(cur); cur = ''; } else cur += ch; } out.push(cur); return out; };
+    const lines = text.split(/\r?\n/).filter(Boolean), head = parse(lines[0]).map(h => h.trim().toLowerCase()), ix = k => head.indexOf(k);
+    if (ix('key') < 0 || ix('units') < 0) { alert('The CSV needs at least "key" and "units" columns (export one to see the format).'); return; }
+    const all = allocs(); let n = 0;
+    for (const l of lines.slice(1)) { const c = parse(l), key = (c[ix('key')] || '').trim(), units = Math.round(+c[ix('units')] || 0); if (!key || !units) continue; all[key] = { units, date: ix('date') >= 0 ? c[ix('date')] : '', ref: ix('reference') >= 0 ? c[ix('reference')] : '' }; n++; }
+    store.set('allocations', all); f.value = ''; onAllocChange(); alert(`${n} allocation${n === 1 ? '' : 's'} imported.`);
+  });
+  // ---- Data quality (Settings & sources): how fresh each source is, and the model checked against
+  // the figures the Region and Statistics Canada publish. -----------------------------------------
+  const DAY = 864e5;
+  function freshness() {
+    const age = d => d ? Math.floor((Date.now() - new Date(d).getTime()) / DAY) : null;
+    const row = (name, date, every, maxDays, note = '', disp = null) => { const a = age(date); return { name, date: disp || (date ? String(date).slice(0, 10) : null), every, a: disp ? null : a, st: date == null ? 'na' : maxDays == null ? 'ref' : a > maxDays * 2 ? 'stale' : a > maxDays ? 'due' : 'ok', note }; };
+    const R = state.reports, bc = state.censuses && state.censuses[0];
+    return [
+      row('Planning applications and building permits', state.snapshot && state.snapshot.generatedAt, 'weekly', 10),
+      row('Phase history', state.history && state.history.updated, 'weekly', 10),
+      row('Council and committee agendas, minutes', state.council && state.council.generatedAt, 'weekly', 10),
+      row('Secondary plans, MTSAs', state.areas && state.areas.generatedAt, 'yearly', 365),
+      row(`${bc ? bc.year : 2021} Census (dissemination areas)`, bc && bc.date, 'every 5 years', null, 'The latest census; the 2026 Census counts come out in 2027.'),
+      row('Pressure zones, pumping stations, plants', state.servicing && state.servicing.meta.generatedAt, 'yearly', 365),
+      row('Sanitary sewer network (300 mm+)', SEW.data && SEW.data.generatedAt, 'yearly', 365),
+      row('Wastewater blocks (I&I program)', BLK.data && BLK.data.generatedAt, 'yearly', 365),
+      row('Water supply mains (zone boundaries)', DCN.supply && DCN.supply.generatedAt, 'yearly', 365),
+      row('2026 DC capital maps (draft)', state.dcInfra && state.dcInfra.generatedAt, 'each DC study', 730, 'Draft program; replace when the by-law is passed.'),
+      row(`Peel ${R ? R.year : ''} annual reports (plants, water)`, R ? `${R.year + 1}-06-30` : null, 'yearly', 365, 'Next year\'s reports come out about mid-year.', R ? `${R.year} data (published mid-${R.year + 1})` : null),
+      row('2020 Water and Wastewater Master Plan', '2020-12-31', 'about every 5 years', null, 'Pumping station firm capacities and storage; the next master plan will replace them.'),
+      { name: 'Existing pipes, hydrants, ponds (live GIS)', date: null, every: 'live', a: null, st: 'live', note: 'Read from the Region and municipal map services when shown.' },
+    ];
+  }
+  const FRESH = { ok: ['fr-ok', 'Current'], due: ['fr-due', 'Due for a refresh'], stale: ['fr-stale', 'Out of date'], ref: ['fr-ref', 'Reference'], live: ['fr-ok', 'Live'], na: ['fr-na', 'Loads when needed'] };
+  // Model against published figures: [what, model, published, unit, why it may differ].
+  function validationRows() {
+    const out = [], bc = state.censuses && state.censuses.find(c => c.year === 2021), M = state.svcModel, R = state.reports;
+    const STATCAN = { Peel: 1451022, Mississauga: 717961, Brampton: 656480, Caledon: 76581 };
+    if (bc) {
+      const by = {}; let t = 0; for (const d of bc.das) { t += d.pop; by[d.muni] = (by[d.muni] || 0) + d.pop; }
+      out.push(['2021 Census population, Peel', t, STATCAN.Peel, 'people', 'Statistics Canada, 2021 Census (Peel Region). The model sums the dissemination areas it maps.']);
+      for (const m of ['Mississauga', 'Brampton', 'Caledon']) if (by[m]) out.push([`2021 Census population, ${m}`, by[m], STATCAN[m], 'people', 'Statistics Canada, 2021 Census.']);
+      if (M && state.servicing) { let sv = 0; for (const d of state.servicing.drainage) { const l = M.local.get(d.id); if (l) sv += l.census; } out.push(['2021 Census people in sewered blocks', sv, t, 'people', 'Share of Peel on municipal sewers in the model; the rest (rural Caledon) is on septic.', 'share']); }
+    }
+    if (M && R) {
+      let built = 0; for (const z of M.zones.values()) built += z.built;
+      const served = R.water.southPeel.populationServed;
+      if (bc && served) { const t = bc.das.reduce((a, d) => a + d.pop, 0); out.push(['Population today (census + built since)', t + built, served, 'people', `Peel ${R.year} annual report: population served. Census counts miss some people (undercount ≈2–3%) and building completions lag.`]); }
+      for (const pl of ['Lakeview', 'Clarkson']) {
+        const c = M.calib && M.calib[pl], rep = R.wastewater.plants[pl]; if (!c || !rep) continue;
+        out.push([`${PLANT_SHORT[pl]}: average flow today, design criteria`, c.today + M.inflowsTo(pl), rep.avgMLd, 'ML/d', `${R.year} measured average. Design rates (${state.criteria.wastewater.avg} L/cap/d) leave out existing employment and institutions and dry-weather inflow; the capacity check scales each plant by ×${c.f ? c.f.toFixed(2) : '–'} to match the measured flow.`]);
+      }
+      if (M.zsum) out.push(['South Peel water: average day today, design criteria', M.wAvg(M.zsum.census + M.zsum.built, M.zsum.jbuilt), R.water.southPeel.avgMLd, 'ML/d', `${R.year} production of A.P. Kennedy + Lorne Park, which also includes water supplied to York Region and Halton, existing employment and non-revenue water: the model is expected to be lower.`]);
+    }
+    return out;
+  }
+  function renderQuality() {
+    const el = $('#d-quality'); if (!el) return;
+    const fr = freshness(), need = fr.filter(r => r.st === 'due' || r.st === 'stale');
+    const vr = validationRows();
+    const st = (m, p) => { const d = (m - p) / p * 100, a = Math.abs(d); return [d, a <= 10 ? 'fr-ok' : a <= 25 ? 'fr-due' : 'fr-stale', a <= 10 ? 'Matches' : a <= 25 ? 'Close' : 'Differs']; };
+    const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : `${fmtNum(roundPop(v))}`;
+    el.innerHTML = `${hlP(need.length ? `<strong>${need.length} data source${need.length === 1 ? '' : 's'}</strong> ${need.length === 1 ? 'is' : 'are'} due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : `All data sources are current; applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong>.`)}
+      <h3 class="sub-title" data-info="data-freshness">Data freshness</h3>
+      <table class="dt fr-table"><thead><tr><th>Source</th><th>As of</th><th>Updated</th><th>Status</th></tr></thead><tbody>
+        ${fr.map(r => `<tr><td>${esc(r.name)}${r.note ? `<small>${esc(r.note)}</small>` : ''}</td><td>${r.date ? esc(r.date) : '–'}${r.a != null && r.st !== 'ref' ? `<small>${r.a === 0 ? 'today' : `${fmtNum(r.a)} day${r.a === 1 ? '' : 's'} ago`}</small>` : ''}</td><td>${esc(r.every)}</td><td><span class="fr-b ${FRESH[r.st][0]}">${FRESH[r.st][1]}</span></td></tr>`).join('')}
+      </tbody></table>
+      <h3 class="sub-title" data-info="validation">Model checks against published figures</h3>
+      ${vr.length ? `<table class="dt fr-table"><thead><tr><th>Check</th><th>Model</th><th>Published</th><th>Difference</th><th>Result</th></tr></thead><tbody>
+        ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
+          const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
+      </tbody></table>
+      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : '<p class="small muted">Loading the servicing model…</p>'}
+      <h3 class="sub-title">Number conventions</h3>
+      <p class="small muted">People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.</p>
+      <h3 class="sub-title">Prepared by</h3>
+      <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
+  }
+  $('#d-quality').addEventListener('change', e => { if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim()); });
   // ---- Overview (bottom panel, first tab): the headline numbers on one screen ----------------
   // Growth of the shown developments, their servicing demand broken down by phase, the capacity
   // status of the plants, the DC projects to act on, and the tools, each with a link to its tab.
   function renderOverview(set, e, basis) {
     const el = $('#ov-body'); if (!el) return;
-    if (!set) { set = demandSet(); basis = demandBasis(); e = D.estimate(set, state.criteria, basis, jobsOf); }
+    if (!set) { set = overviewSet(); basis = demandBasis(); e = D.estimate(set, state.criteria, basis, jobsOf); }
     const cb = e.combined, em = e.employment;
     let left = 0, n = 0; for (const p of set) if (p.buildout) { n++; left += p.buildout.remaining; }
     const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
     // Demand by phase (the servicing demand breakdown).
-    const rows = P.PHASES.map(ph => { const s0 = set.filter(p => p.phase === ph.key); if (!s0.length) return ''; const pe = D.estimate(s0, state.criteria, basis, jobsOf); return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(roundPop(pe.population))}</td><td>${fmtNum(Math.round(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.maxDay)}</td><td>${fmt1(pe.combined.wastewater.wetPeak)}</td></tr>`; }).join('');
+    const rows = P.PHASES.map(ph => { const s0 = set.filter(p => p.phase === ph.key); if (!s0.length) return ''; const pe = D.estimate(s0, state.criteria, basis, jobsOf); return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(roundPop(pe.population))}</td><td>${fmtNum(roundPop(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.maxDay)}</td><td>${fmt1(pe.combined.wastewater.wetPeak)}</td></tr>`; }).join('');
     const phaseT = `<table class="dt ov-t"><thead><tr><th>Phase</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day <small>L/s</small></th><th>Wastewater peak wet <small>L/s</small></th></tr></thead><tbody>${rows}
-      <tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(Math.round(em.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table>`;
+      <tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(em.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table>`;
     // Capacity: plants against the 90% expansion trigger (existing + approved, and at build-out).
-    let cap = '<p class="small muted">Loading the servicing model…</p>';
+    let cap = '<p class="small muted">Loading the servicing model…</p>', tight = null;
     if (state.svcModel && state.servicing) {
       const list = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => cached(`plant:${pl}`, () => plantCons(pl))).filter(Boolean);
       const w = state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null; if (w) list.push(w);
       const bar = c => { const a = Math.min(130, c.util.com * 100), b = Math.min(130, c.util.bo * 100), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
         return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}${esc(c.kind === 'plant' ? PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</span><span><b>${Math.round(c.util.com * 100)}%</b> committed → <b>${Math.round(c.util.bo * 100)}%</b> build-out</span></div>
           <div class="ov-bar" role="img" aria-label="${Math.round(c.util.com * 100)}% committed, ${Math.round(c.util.bo * 100)}% at build-out of the expansion trigger"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(100 / 1.3).toFixed(1)}%"></i></div>
-          <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}</small></div>`; };
+          <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? allocPlant(c.pl) : null)}</small></div>`; };
+      tight = list.filter(c => c.kind === 'plant').sort((a, b) => b.util.bo - a.util.bo)[0] || null;
       cap = list.map(bar).join('') + `<p class="small muted">% of the 90% expansion trigger (plants: average dry weather, calibrated to 2025 flows; water: max day).</p>`;
     }
     // DC projects to act on (from DC Analysis, when it has run for this scenario).
@@ -1182,10 +1323,12 @@
           <p class="small">Most growth relies on: ${top.map(r => `${esc(r.name)} (${fmtNum(roundPop(r.bo))} people ≈ ${fmtNum(Math.round(r.units))} units if cancelled)`).join('; ')}.</p>`; }
       else dc = `<p class="small muted">${SEW.data ? 'Working out the DC projects…' : 'Loading the sewer network…'}</p>`;
     }
-    el.innerHTML = `
+    const Rr = DCA.res && DCA.key === scenarioKey() ? DCA.res : null, nAdv = Rr ? Rr.list.filter(r => r.rec === 'advance').length : 0;
+    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units.${tight ? ` <strong>${esc(PLANT_SHORT[tight.pl])}</strong> ${trigText(tight)} (${Math.round(tight.util.com * 100)}% committed → ${Math.round(tight.util.bo * 100)}% at build-out).` : ''}${nAdv ? ` <strong>${nAdv} DC project${nAdv === 1 ? '' : 's'}</strong> come online after the capacity ${nAdv === 1 ? 'it relieves' : 'they relieve'} runs out.` : ''}` : 'No developments match the current filters.';
+    el.innerHTML = `<div class="ov-top">${hlP(hl)}<button type="button" class="btn ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Demand')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(Math.round(em.jobs)), 'jobs', 'on development sites')}</div>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>
           <div class="ov-tiles ov-flow">${tile(fmt1(cb.water.maxDay), 'L/s', 'water max day', `${fmt1(D.toMLd(cb.water.avg))} ML/d average`)}${tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet', `${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average`)}</div></section>
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
         <section class="ov-card ov-break"><div class="ov-h"><h3>Servicing demand by phase</h3>${go('growth', 'Full breakdown')}</div>${phaseT}</section>
@@ -1197,7 +1340,8 @@
           <button type="button" class="btn small" data-ov-tool="dct">DC timing</button>
           <button type="button" class="btn small" data-area-report="shown">Report on what's shown</button>
           <button type="button" class="btn small" data-ov-tool="help">? Help &amp; tips</button></div>
-          <p class="small muted">Tap a development on the map for its servicing check; tap a sewer, block or plant for what loads it.</p></section>
+          <p class="small muted">Tap a development on the map for its servicing check; tap a sewer, block or plant for what loads it.</p>
+          ${(fr => `<p class="small ov-fresh">Data: applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${(n => n ? `<span class="fr-b fr-due">${n} source${n === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>')(fr.filter(r => r.st === 'due' || r.st === 'stale').length)} <button type="button" class="btn small link" data-ov-tab="criteria">Data &amp; checks →</button></p>`)(freshness())}</section>
       </div>`;
     if (state.dcInfra && SEW.data && !(DCA.res && DCA.key === scenarioKey()) && footTab === 'overview') setTimeout(() => { try { dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
   }
@@ -1210,6 +1354,7 @@
     else if (v === 'lasso') { if (tool.mode) setTool(null); setLasso(true); }
     else if (v === 'dct') { loadSewers(); showDcTiming(); }
     else if (v === 'help') showHelp();
+    else if (v === 'brief') briefingPDF();
   });
   function renderDemand() {
     const set = demandSet();
@@ -1229,8 +1374,8 @@
     $('#d-stats').innerHTML = [
       stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), 'units',
         bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} developments report units`, 'demand-units'),
-      stat('Population', fmtNum(Math.round(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
-      stat('Jobs', fmtNum(Math.round(em.jobs)), 'jobs', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
+      stat('Population', fmtNum(roundPop(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
+      stat('Jobs', fmtNum(roundPop(em.jobs)), 'jobs', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
     ].join('');
     $('#d-tiles').innerHTML = flowTablesHTML(e) + stampHTML('demand') + exportBar('growth');
     $('#f-sum').innerHTML = `${state.daCtx ? `<span class="muted">Around ${esc(state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · ${fmtNum(Math.round(e.totalUnits))} units<span class="f-sum-pop"> · ${fmtNum(roundPop(e.population))} people</span>`;
@@ -1241,14 +1386,16 @@
     const boRows = aggTypeRowsHTML(aggregateTypes(set));
     const phaseRows = P.PHASES.map(ph => {
       const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
-      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${uUnits(pe.totalUnits)}</td><td>${uPop(pe.population)}</td><td>${unit(fmtNum(Math.round(pe.employment.jobs)), 'jobs')}</td><td>${uLs(pe.combined.water.avg)}</td><td>${uLs(pe.combined.wastewater.avg)}</td></tr>`;
+      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${uUnits(pe.totalUnits)}</td><td>${uPop(pe.population)}</td><td>${unit(fmtNum(roundPop(pe.employment.jobs)), 'jobs')}</td><td>${uLs(pe.combined.water.avg)}</td><td>${uLs(pe.combined.wastewater.avg)}</td></tr>`;
     }).join('');
-    const tot = `<tr class="tot"><td>Total</td><td>${uUnits(e.totalUnits)}</td><td>${uPop(e.population)}</td><td>${unit(fmtNum(Math.round(em.jobs)), 'jobs')}</td><td>${uLs(cb.water.avg)}</td><td>${uLs(cb.wastewater.avg)}</td></tr>`;
+    const tot = `<tr class="tot"><td>Total</td><td>${uUnits(e.totalUnits)}</td><td>${uPop(e.population)}</td><td>${unit(fmtNum(roundPop(em.jobs)), 'jobs')}</td><td>${uLs(cb.water.avg)}</td><td>${uLs(cb.wastewater.avg)}</td></tr>`;
     $('#d-breakdown').innerHTML = `
       <div class="bd-w"><table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}${tot}</tbody></table></div>
       <div class="bd-w"><table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table></div>
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table></div>`;
-    renderOverview(set, e, basis);
+    if (state.daCtx) renderOverview(); else renderOverview(set, e, basis);
+    const prop = set.filter(p => p.phase === 'inception' || p.phase === 'review'), pe = prop.length ? D.estimate(prop, c, basis, jobsOf) : null;
+    setHeadline($('#pane-demand'), set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown need <strong>${fmtNum(Math.round(cb.water.maxDay))} L/s</strong> of water at maximum day and <strong>${fmtNum(Math.round(cb.wastewater.wetPeak))} L/s</strong> of wastewater at peak wet weather (${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average)${pe && e.population > 0 ? `; ${Math.round(pe.population / e.population * 100)}% of their people are in applications not yet approved` : ''}.` : '');
   }
 
   // Water and wastewater tables (residential / employment / total rows, L/s) for an estimate.
@@ -1604,7 +1751,7 @@
     const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
     const resRows = !res ? '' : `
         ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
-        ${row('Population', e => fmtNum(Math.round(e.population)))}
+        ${row('Population', e => fmtNum(roundPop(e.population)))}
         ${sub(`Water (L/s)${emp ? ' · residential' : ''}`)}
         ${row('Average day', e => fmt1(e.water.avg))}
         ${row(`Max day ×${c.water.maxDay}`, e => fmt1(e.water.maxDay))}
@@ -1770,7 +1917,7 @@
     const e = f ? f.e : D.estimate([p], state.criteria, 'all', jobsOf);
     const facts = [];
     if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}`));
-    if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(Math.round(e.employment.jobs)), 'jobs')));
+    if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(roundPop(e.employment.jobs)), 'jobs')));
     if (f && f.z) facts.push(chip(`${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zNear ? ' (nearest)' : ''}`));
     if (f && f.pl) facts.push(p.lat != null ? `<button type="button" class="chip chip-btn" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest)' : ''} <span aria-hidden="true">⤳</span></button>` : chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
     if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
@@ -1895,7 +2042,7 @@
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
     </div></section>` : '';
-    return `${trace}${near}${water}${ww}${site}`;
+    return `${trace}${near}${f ? allocBoxHTML(p) : ''}${water}${ww}${site}`;
   }
 
   // One dated history: phase changes (weekly check), council and committee items, file events
@@ -2549,7 +2696,7 @@
       for (const d of bc.das) {
         if (selAreas.some(g => P.pointInRings(d.lng, d.lat, [g]))) { pop += d.pop; dw += d.dw; nDa++; }
       }
-      const g = (label, cls, units, people, note, jobs) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">+${fmtNum(Math.round(people))}</div><div class="ss">people · +${fmtNum(units)} units${jobs > 0 ? ` · +${fmtNum(Math.round(jobs))} jobs` : ''}${note ? ` · ${note}` : ''}</div></div>`;
+      const g = (label, cls, units, people, note, jobs) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">+${fmtNum(Math.round(people))}</div><div class="ss">people · +${fmtNum(units)} units${jobs > 0 ? ` · +${fmtNum(roundPop(jobs))} jobs` : ''}${note ? ` · ${note}` : ''}</div></div>`;
       const layers = [['base', pop], ['built', gr.built.population], ['approved', gr.approved.population], ['proposed', gr.proposed.population]];
       const sum = layers.reduce((t, l) => t + l[1], 0);
       growth = `<details class="sect" open><summary><h2 class="section-title" data-info="census">Growth since ${bc.year}</h2>
@@ -2591,8 +2738,8 @@
           <span class="muted small sect-sum">residential + employment</span></summary>
         <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
           ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
-          ${row('Population', e => fmtNum(Math.round(e.population)))}
-          ${row('Jobs', e => fmtNum(Math.round(e.employment.jobs)))}
+          ${row('Population', e => fmtNum(roundPop(e.population)))}
+          ${row('Jobs', e => fmtNum(roundPop(e.employment.jobs)))}
           ${sub('Water (L/s)')}
           ${row('Average day', e => fmt1(e.combined.water.avg))}
           ${row('Max day', e => fmt1(e.combined.water.maxDay))}
@@ -3011,7 +3158,7 @@
       ${opt.trace === false ? '' : `<div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>`}
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
-      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
+      <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(roundPop(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
   }
   // Project panel line: its pressure zone and drainage area.
   function servicingLineHTML(p) {
@@ -3177,6 +3324,32 @@
     // Folded to one line: the criteria and data sources are a tap away, not in front of the results.
     return `<details class="stamp small"><summary><strong>Criteria &amp; data</strong> <span class="muted">· Peel design criteria · ${esc(dates)}</span>${mod.length ? ` <span class="badge-mod" title="${esc(mod.join('; '))}">Modified criteria (${mod.length})</span>` : ''}</summary><p><strong>Criteria:</strong> ${crit}; persons per unit from Peel's DC Background Study. <span class="muted">Data: ${esc(dates)}. Change them in Settings &amp; sources.</span></p></details>`;
   }
+  // ---- Plain-language headlines: one sentence at the top of each tab, written from the numbers.
+  function hlP(html) { return `<p class="headline" data-hl="1">${html}</p>`; }
+  function setHeadline(el, html) {
+    if (!el) return;
+    const old = el.querySelector(':scope > .headline'); if (old) old.remove();
+    if (html) el.insertAdjacentHTML('afterbegin', hlP(html));
+  }
+  function trigText(c) { return c.out === 'today' ? 'is at its 90% expansion trigger now' : c.out ? `reaches its 90% expansion trigger ≈${c.out}` : `has room to ${hz.end}`; }
+  function plantHeadline() {
+    const list = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => cached(`plant:${pl}`, () => plantCons(pl))).filter(Boolean);
+    if (!list.length) return '';
+    const one = c => `<strong>${esc(PLANT_SHORT[c.pl])}</strong> ${trigText(c)} (${Math.round(c.util.com * 100)}% committed → ${Math.round(c.util.bo * 100)}% at build-out${c.util.bo >= 1 && c.relief.length ? `; next expansion ${esc(c.relief[0].text)}` : ''})`;
+    return list.sort((a, b) => b.util.bo - a.util.bo).map(one).join('; ') + '.';
+  }
+  function renderHeadlines() {
+    const M = state.svcModel; if (!M) return;
+    // Water: the zone adding the most, and South Peel treatment.
+    const zs = [...M.zones.entries()].map(([id, l]) => ({ a: svcById.get(id), add: M.wMax(M.total(l), M.jobs(l)) - M.wMax(l.census, 0) })).filter(x => x.a).sort((a, b) => b.add - a.add);
+    const w = state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null;
+    setHeadline($('#water-body'), `${zs[0] ? `<strong>${esc(zs[0].a.name.replace('Pressure zone ', 'Zone '))}</strong> adds the most water demand: +${fmt1(zs[0].add)} ML/d at maximum day by build-out${zs[1] ? `, then ${esc(zs[1].a.name.replace('Pressure zone ', 'Zone '))} (+${fmt1(zs[1].add)})` : ''}. ` : ''}${w ? `South Peel water treatment ${trigText(w)} (${Math.round(w.util.com * 100)}% committed → ${Math.round(w.util.bo * 100)}% at build-out).` : ''}`);
+    setHeadline($('#plants-body'), plantHeadline());
+    // Blocks: the block carrying the most, and stations over firm capacity.
+    const top = state.servicing.drainage.filter(d => !d.downstream).map(d => ({ d, l: M.cum.get(d.id) })).filter(x => x.l).sort((a, b) => M.adwf(b.l) - M.adwf(a.l))[0];
+    const over = (state.servicing.psAreas || []).map(a => ({ a, x: psLoad(a) })).filter(r => r.x && r.x.pct >= 100).sort((a, b) => b.x.pct - a.x.pct);
+    setHeadline($('#ww-body'), `${top ? `<strong>${esc(drName(top.d))}</strong> delivers the most flow to ${esc(plantLabel(top.d.plant))}: ${fmt1(M.adwf(top.l, M.fOf(top.d.plant)))} ML/d average dry at build-out. ` : ''}${over.length ? `<strong>${over.length} pumping station${over.length === 1 ? '' : 's'}</strong> exceed firm capacity at build-out peak wet: ${over.slice(0, 4).map(r => `${esc(psName(r.a))} ≈${Math.round(r.x.pct)}%`).join(', ')}${over.length > 4 ? ` +${over.length - 4}` : ''}.` : 'No pumping station exceeds its firm capacity at build-out peak wet.'}`);
+  }
   function renderSvcTab() {
     const bc = baselineCensus();
     const has = !!(state.servicing && bc);
@@ -3326,10 +3499,13 @@
       return { rated: rep.ratedMLd, name: rep.name, existing: up(1), committed: up(2), buildout: up(3), f, perPerson: popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0 };
     };
     for (const d of state.servicing.drainage) cumOf(d);
-    state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg };
+    state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg, calib, inflowsTo, zsum, secs, raw };
+    renderHeadlines();
     renderScenario(); renderCapLayer(); renderLegend(); filterInView();
     if (footTab === 'dca' && !$('#footer').classList.contains('collapsed')) renderDca();
     if (footTab === 'overview') renderOverview();
+    if (footTab === 'criteria') renderQuality();
+    if (footTab === 'ww' && wwSub === 'alloc') renderAlloc();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
   }
   // Reported 2025 water production next to the model (Water tab).
@@ -4302,7 +4478,7 @@
       <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments adding flow since the census, largest ${key === 'pz' ? 'max day' : 'peak wet weather'} first · Peel design criteria, each development alone</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>${what[0]}</th><th>${what[1]}</th><th class="ld-share">Share</th></tr></thead>
         <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[r.lay]}"></span>${esc(LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.via && !a?.zone && r.via.id !== id ? ` · via ${esc(drName(r.via).replace(/^[^·]+· /, ''))}` : ''}${r.near ? ' · nearest assigned' : ''}</small></td>
-          <td>${fmtNum(Math.round(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
+          <td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments (Excel export has the top ${LIMIT}).</p>` : ''}
       ${dcAreaWorksHTML(ids, key, plantName)}
       <p class="small muted">Developments built since the census, approved and proposed (existing development is in the census flow). Flows are each development's own at Peel design criteria; peaks are not additive. ${esc(scenarioText())}.</p>`;
@@ -4652,7 +4828,7 @@
   function renderWhatIfOut(w) {
     const p = whatIfProject(w), f = svcFacts(p), out = $('#wf-out'); if (!out) return;
     const e = D.estimate([p], state.criteria, 'all', jobsOf);
-    out.innerHTML = `<p class="small">${fmtNum(Math.round(e.population))} people${e.employment.jobs ? ` + ${fmtNum(Math.round(e.employment.jobs))} jobs` : ''} at Peel persons per unit${p.siteAreaHa ? '' : ' · site area estimated from units for I&amp;I'}.</p>
+    out.innerHTML = `<p class="small">${fmtNum(roundPop(e.population))} people${e.employment.jobs ? ` + ${fmtNum(roundPop(e.employment.jobs))} jobs` : ''} at Peel persons per unit${p.siteAreaHa ? '' : ' · site area estimated from units for I&amp;I'}.</p>
       <section class="brief"><div class="b-row"><div class="b-k">Servicing</div><div class="b-v">${servicingBriefHTML(p, f).replace(/<p class="small"><button[^]*?<\/p>/, '')}</div></div></section>
       ${f ? servicingCheckHTML(p, f) : ''}${exportBar('whatif')}`;
   }
@@ -4967,7 +5143,7 @@
     const s = pipeStats(i), p = s.p, D0 = SEW.data;
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
       <br>Slope ${(p[1] * 100).toFixed(3)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : s.badSlope ? 'n/a (published slope not reliable)' : 'n/a (no slope)'}
-      <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(Math.round(s.then.jobs))} jobs` : ''}
+      <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}
       <br>Existing peak dry ${fmtNum(Math.round(s.then.exist))} L/s${s.then.f !== 1 ? ` (×${s.then.f.toFixed(2)} measured)` : ''} + growth peak wet ${fmtNum(Math.round(s.then.growth))} L/s
       <br>Today ${fmtNum(Math.round(s.today.q))} L/s${s.r0 != null ? ` (${Math.round(s.r0 * 100)}%, ${pipeState(s.r0)[3].toLowerCase()})` : ''} → ${capYear == null ? 'build-out' : capYear} ${fmtNum(Math.round(s.then.q))} L/s${s.r1 != null ? ` (<strong>${Math.round(s.r1 * 100)}%, ${pipeState(s.r1)[3].toLowerCase()}</strong>)` : ''}
       ${s.r1 != null ? `<br>Freeboard ${capYear == null ? 'at build-out' : `in ${capYear}`}: ${fbText(p[0], s.r1)}` : ''}${s.growthShare != null ? `<br>Growth since the census uses ${Math.round(s.growthShare * 100)}% of its capacity` : ''}${p[11] < 1 ? `<br><span class="muted">carries ${Math.round(p[11] * 100)}% of the flow at a split</span>` : ''}
@@ -5095,7 +5271,7 @@
       ${exportBar('loads')}
       <table class="dt loads-table"><caption>${fmtNum(up.length)} developments since the census draining through this pipe, largest peak wet first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
-        <tbody>${up.slice(0, 50).map(r => `<tr class="ld-row" data-dev="${esc(r.dev.key)}" tabindex="0"><td>${dot(r.dev.phase)} ${esc(r.dev.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.dev)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.dev)])} · ${esc(r.dev.municipality)}</small></td><td>${fmtNum(Math.round(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
+        <tbody>${up.slice(0, 50).map(r => `<tr class="ld-row" data-dev="${esc(r.dev.key)}" tabindex="0"><td>${dot(r.dev.phase)} ${esc(r.dev.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.dev)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.dev)])} · ${esc(r.dev.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       <p class="small muted">Existing: ${fmtNum(p[4])} people upstream (2021 Census) at peak dry weather, ${s.today.f !== 1 ? `scaled ×${s.today.f.toFixed(2)} to the plant's 2025 measured flow (capacity check)` : 'at design rates'}; growth since the census at Peel design peak wet weather (Harmon, employment rates, I&amp;I ${state.criteria.wastewater.infiltration} L/s/ha on its site area). Full-pipe capacity by Manning (n 0.013) on the published slope. A screen for where to look, not a hydraulic model: existing wet-weather inflow and infiltration, surcharge, storage and relief sewers are not modelled. Developments join the nearest sewer of 300 mm or more.</p>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
     loadsOf = { pipe: i };
@@ -5224,7 +5400,7 @@
       <p class="small">Pipes under 300 mm are not in the network screen (where flow is traced pipe to pipe), so what drains into this one can't be traced exactly. ${trunk >= 0 ? `It feeds the sewer network nearby: the closest 300 mm+ sewer is a <button type="button" class="btn small link" data-pipe="${trunk}">${SEW.data.pipes[trunk][0]} mm sewer</button> ${fmtNum(Math.round(dcDist(mid, pipeCoords(SEW.data.pipes[trunk]))))} m away (what loads it, and how its flow is calculated).` : 'No 300 mm+ sewer within 600 m.'}</p>
       <table class="dt loads-table"><caption>${fmtNum(near.length)} development${near.length === 1 ? '' : 's'} since the census within 100 m of this sewer (likely to connect to it), largest peak wet first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
-        <tbody>${near.slice(0, 40).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.p)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.p)])} · ${esc(r.p.municipality)}</small></td><td>${fmtNum(Math.round(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.e.combined.wastewater.wetPeak)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None within 100 m.</td></tr>'}</tbody></table>
+        <tbody>${near.slice(0, 40).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.p)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.p)])} · ${esc(r.p.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.e.combined.wastewater.wetPeak)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None within 100 m.</td></tr>'}</tbody></table>
       <p class="small muted">Peak wet weather at Peel design criteria for each development. Existing (2021 Census) flow in a local sewer isn't estimated: its catchment isn't traced.</p>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
   }
@@ -5775,7 +5951,7 @@
     return `<div class="chips">${['built', 'approved', 'proposed'].map(k => `<span class="chip"><span class="lg-sw" style="--mk:${layerColors()[k]}"></span>${esc(LAYER_NAME[k])} ${fmtNum(by(k).length)} · ${fmtNum(roundPop(by(k).reduce((t, r) => t + r.e.population, 0)))} people</span>`).join('')}</div>
       <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments relying on it, largest ${water ? 'max day' : 'peak wet weather'} first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>${water ? 'Max day' : 'Peak wet'}</th></tr></thead>
-        <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[r.lay]}"></span>${esc(LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.conn ? ' · connects to it' : ''}</small></td><td>${fmtNum(Math.round(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
+        <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[r.lay]}"></span>${esc(LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.conn ? ' · connects to it' : ''}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments.</p>` : ''}`;
   }
   const reg = c => { (DCN.reg || (DCN.reg = new Map())).set(c.id, c); return c; };
@@ -6071,7 +6247,9 @@
     const top = R.list.filter(r => r.rec !== 'review').slice().sort((a, b) => b.bo - a.bo).slice(0, 5);
     const pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / R.ppu));
     const list = DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
-    el.innerHTML = `${stampHTML('ww')}
+    const adv = R.list.filter(r => r.rec === 'advance'), big = R.list.slice().sort((a, b) => b.bo - a.bo)[0];
+    const hl = `${adv.length ? `<strong>${adv.length} DC project${adv.length === 1 ? '' : 's'}</strong> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out: bring ${adv.length === 1 ? 'it' : 'them'} forward. ` : 'Every DC project comes online before the capacity it relieves runs out. '}${big && big.bo > 0 ? `Cancelling <strong>${esc(big.name)}</strong> would hold back the most growth: ≈${fmtNum(roundPop(big.bo))} people (≈${fmtNum(Math.round(big.units))} units) by build-out.` : ''}`;
+    el.innerHTML = `${hlP(hl)}${stampHTML('ww')}
       <div class="dca-sum">
         <div class="dca-tile"><b>${fmtNum(R.list.length)}</b><span>DC projects relieve a capacity constraint or serve new development</span></div>
         <div class="dca-tile ${n('advance') ? 'warn' : ''}"><b>${n('advance')}</b><span>come online after the capacity runs out: advance</span></div>
@@ -6330,7 +6508,7 @@
     const allPop = futPop + gr.proposed.population, allDw = futDw + gr.proposed.units;
     const tile = (label, pop, dw, sub, info, jobs) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div>
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
-      <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(Math.round(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
+      <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(roundPop(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
     $('#c-tiles').innerHTML = [
       tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
@@ -6396,7 +6574,7 @@
         <div class="grow-total">${fmtNum(Math.round(total))}<span class="u">${unit === 'people' ? 'pop' : unit === 'jobs' ? 'jobs' : 'units'}</span></div></div>`;
     };
     const legend = layers.map(l => `<li><i class="gsw g-${l.key}" aria-hidden="true"></i><span>${esc(l.label)}</span>
-      <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings${l.key === 'base' ? '' : ` · +${fmtNum(Math.round(l.jobs))} jobs`}</span></li>`).join('');
+      <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings${l.key === 'base' ? '' : ` · +${fmtNum(roundPop(l.jobs))} jobs`}</span></li>`).join('');
     $('#c-chart').innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
       <ul class="grow-legend">${legend}</ul><div class="grow-tip" id="grow-tip" hidden></div>`;
   }
@@ -6769,7 +6947,73 @@
     return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#fafafa">${out.join('')}
       <g font-size="9" fill="#333"><rect x="8" y="${H - 14}" width="${bw}" height="3" fill="#333"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
       <path d="M${W - 14} 10l5 12h-10z" fill="#333"/><text x="${W - 17}" y="32">N</text></g></svg>
-      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green &lt; 50%, yellow 50–80, orange 80–100, red &gt; 100); dashed: 2026 DC works (draft).</div>`;
+      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green under 85%: free flowing; orange 85–100%: near full; red over 100%: surcharged); dashed: 2026 DC works (draft).</div>`;
+  }
+  // ---- Executive briefing: one printable page from the Overview (title block, headlines, key
+  // numbers, plant capacity, demand by phase, DC actions, allocations, a map of the blocks).
+  function appVersion() { const m = document.querySelector('meta[name="app-version"]'); const v = m && m.content; return v && v !== '__BUILD__' ? v : 'dev'; }
+  function briefingMap(set, W = 340, H = 300) {
+    if (!BLK.data) return '';
+    let mnx = 1e9, mny = 1e9, mxx = -1e9, mxy = -1e9;
+    // Extent of the sewered blocks (rural Block 40, mostly on septic, would shrink the rest).
+    for (const b of BLK.data.blocks.filter(x => !(x.served != null && x.served < 0.5))) for (const pt of b.parts.flat(2)) { mnx = Math.min(mnx, pt[0]); mny = Math.min(mny, pt[1]); mxx = Math.max(mxx, pt[0]); mxy = Math.max(mxy, pt[1]); }
+    const kx = Math.cos((mny + mxy) / 2 * Math.PI / 180), s = Math.min((W - 10) / ((mxx - mnx) * kx), (H - 10) / (mxy - mny));
+    const X = x => 5 + (x - mnx) * kx * s, Y = y => 5 + (mxy - y) * s;
+    const path = r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(y).toFixed(1)}`).join('') + 'Z';
+    const out = BLK.data.blocks.map(b => `<path d="${b.parts.map(p => path(p[0])).join('')}" fill="${b.planning ? 'rgba(112,72,232,.14)' : 'rgba(112,72,232,.04)'}" stroke="#7048e8" stroke-width=".6"/>`);
+    for (const p of set) if (p.lat != null && p.units >= 50) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(1.4, Math.min(5, Math.sqrt(p.units) / 8)).toFixed(1)}" fill="${PHASE_COLORS[p.phase] || '#1971c2'}" fill-opacity=".8"/>`);
+    for (const pl of (state.servicing && state.servicing.meta.plants) || []) if (pl.lnglat) out.push(`<rect x="${(X(pl.lnglat[0]) - 4).toFixed(1)}" y="${(Y(pl.lnglat[1]) - 4).toFixed(1)}" width="8" height="8" fill="#212529"/><text x="${(X(pl.lnglat[0]) + 6).toFixed(1)}" y="${(Y(pl.lnglat[1]) + 3).toFixed(1)}" font-size="8" fill="#212529">${esc(PLANT_SHORT[pl.name] || pl.name)}</text>`);
+    return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden">${out.join('')}<path d="M${W - 14} 8l5 12h-10z" fill="#333"/><text x="${W - 17}" y="30" font-size="9">N</text></svg>`;
+  }
+  function briefingPDF() {
+    const set = overviewSet(), basis = demandBasis(), c = state.criteria, e = D.estimate(set, c, basis, jobsOf), cb = e.combined;
+    let left = 0; for (const p of set) if (p.buildout) left += p.buildout.remaining;
+    const fr = freshness(), asOf = (fr[0] && fr[0].date) || '–', need = fr.filter(r => r.st === 'due' || r.st === 'stale');
+    const plants = state.svcModel ? ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => cached(`plant:${pl}`, () => plantCons(pl))).filter(Boolean) : [];
+    const w = state.svcModel && state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null; if (w) plants.push(w);
+    const R = DCA.res && DCA.key === scenarioKey() ? DCA.res : (state.dcInfra && SEW.data && state.svcModel ? dcAnalysis() : null);
+    const adv = R ? R.list.filter(r => r.rec === 'advance') : [], top = R ? R.list.slice().sort((a, b) => b.bo - a.bo).slice(0, 5) : [];
+    const al = state.svcModel ? ['Lakeview', 'Clarkson'].map(allocPlant).filter(x => x && x.rows.length) : [];
+    const ph = P.PHASES.map(q => { const s0 = set.filter(p => p.phase === q.key); if (!s0.length) return ''; const pe = D.estimate(s0, c, basis, jobsOf); return `<tr><td>${esc(q.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(roundPop(pe.population))}</td><td>${fmtNum(roundPop(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.maxDay)}</td><td>${fmt1(pe.combined.wastewater.wetPeak)}</td></tr>`; }).join('');
+    const tight = plants.filter(x => x.kind === 'plant').sort((a, b) => b.util.bo - a.util.bo)[0];
+    const hl = [`The ${fmtNum(set.length)} developments shown (${esc(scopeText())}) would add about <b>${fmtNum(roundPop(e.population))} people</b> and ${fmtNum(roundPop(e.employment.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units, needing ${fmtNum(Math.round(cb.water.maxDay))} L/s of water at maximum day and ${fmtNum(Math.round(cb.wastewater.wetPeak))} L/s of wastewater at peak wet weather.`,
+      tight ? `<b>${esc(PLANT_SHORT[tight.pl])}</b> ${trigText(tight)}: ${Math.round(tight.util.com * 100)}% of its trigger is committed, ${Math.round(tight.util.bo * 100)}% at build-out${tight.relief.length ? `; next expansion ${esc(tight.relief[0].text)}` : ''}.` : '',
+      R ? `${adv.length ? `<b>${adv.length} DC project${adv.length === 1 ? '' : 's'}</b> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out and should be brought forward.` : 'Every DC project comes online before the capacity it relieves runs out.'}` : ''].filter(Boolean);
+    const bar = x => `<div class="cap"><div class="ch"><b>${esc(x.kind === 'plant' ? PLANT_SHORT[x.pl] : 'South Peel water treatment')}</b><span>${Math.round(x.util.com * 100)}% committed → ${Math.round(x.util.bo * 100)}% build-out · ${x.out === 'today' ? 'at trigger now' : x.out ? `trigger ≈${x.out}` : `room to ${hz.end}`}</span></div><div class="bar"><i class="c" style="width:${Math.min(100, x.util.com / 1.3 * 100).toFixed(1)}%"></i><i class="b ${x.util.bo >= 1 ? 'over' : ''}" style="width:${Math.max(0, Math.min(130, x.util.bo * 100) - Math.min(130, x.util.com * 100)) / 1.3}%"></i><i class="tg"></i></div></div>`;
+    const prep = store.get('prepBy', '');
+    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Development and servicing briefing ${esc(new Date().toISOString().slice(0, 10))}</title><style>
+      @page{size:letter;margin:11mm}*{box-sizing:border-box}body{font:10.5px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1a1a1a;margin:0 auto;max-width:200mm;padding:10px}
+      header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1c5cab;padding-bottom:6px;margin-bottom:8px}
+      h1{font-size:18px;margin:0;color:#0d366b}header .sub{color:#555;font-size:10px}header .r{text-align:right;font-size:9.5px;color:#555;white-space:nowrap;padding-left:10px}
+      .hl{border-left:4px solid #1c5cab;background:#eef4fc;padding:6px 9px;margin:0 0 8px}.hl p{margin:2px 0}
+      .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+      .t{background:#f3f5f8;border-radius:5px;padding:5px 7px}.t b{display:block;font-size:15px}.t span{color:#555;font-size:9.5px}
+      h2{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#0d366b;margin:6px 0 4px;border-bottom:1px solid #d0d7e2;padding-bottom:2px}
+      table{border-collapse:collapse;width:100%;font-size:9.5px}th,td{padding:2px 4px;border-bottom:1px solid #e3e7ee;text-align:right}th:first-child,td:first-child{text-align:left}th{color:#555;font-weight:600}tr.tot td{font-weight:700;border-top:1px solid #999}
+      .cap{margin:3px 0 6px}.ch{display:flex;justify-content:space-between;font-size:9.5px}.bar{position:relative;height:8px;background:#eceff3;border-radius:4px;display:flex;overflow:hidden;margin-top:2px}.bar i.c{background:#868e96}.bar i.b{background:#4c8fdc}.bar i.b.over{background:#e03131}.bar i.tg{position:absolute;left:76.9%;top:0;bottom:0;width:2px;background:#111}
+      ul{margin:2px 0;padding-left:15px}li{margin:1px 0}.map{display:grid;gap:3px;justify-items:center;margin-top:4px}.map small{color:#555}.map svg{max-width:100%;height:auto}
+      footer{margin-top:8px;border-top:1px solid #ccc;padding-top:4px;font-size:8.5px;color:#666;display:flex;justify-content:space-between;gap:10px}
+      .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}}</style></head><body>
+      <p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>
+      <header><div><h1>Development and Servicing Briefing</h1><div class="sub">Region of Peel · ${esc(scopeText())} · ${esc(scenarioText())}</div></div>
+        <div class="r">${esc(new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }))}${prep ? `<br>Prepared by ${esc(prep)}` : ''}<br>Data as of ${esc(asOf)}</div></header>
+      <div class="hl">${hl.map(x => `<p>${x}</p>`).join('')}</div>
+      <div class="grid">
+        <section><h2>Growth</h2><div class="tiles">
+          <div class="t"><b>${fmtNum(set.length)}</b><span>developments</span></div><div class="t"><b>${fmtNum(Math.round(e.totalUnits))}</b><span>units (${fmtNum(left)} left to build)</span></div><div class="t"><b>${fmtNum(roundPop(e.population))}</b><span>people at build-out</span></div>
+          <div class="t"><b>${fmtNum(roundPop(e.employment.jobs))}</b><span>jobs</span></div><div class="t"><b>${fmt1(cb.water.maxDay)} L/s</b><span>water max day</span></div><div class="t"><b>${fmt1(cb.wastewater.wetPeak)} L/s</b><span>wastewater peak wet</span></div></div>
+          <h2>Servicing demand by phase</h2><table><thead><tr><th>Phase</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day L/s</th><th>Wastewater peak wet L/s</th></tr></thead><tbody>${ph}<tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(e.employment.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table></section>
+        <section><h2>Capacity (share of the 90% expansion trigger)</h2>${plants.map(bar).join('') || '<p>Servicing model not loaded.</p>'}
+          ${al.length ? `<p><b>After servicing allocations:</b> ${al.map(x => `${esc(PLANT_SHORT[x.pl])} ${fmt1(x.after)} ML/d room (≈${fmtNum(roundPop(x.peopleAfter))} people)`).join('; ')}.</p>` : ''}
+          <div class="map">${briefingMap(set)}<small>Wastewater blocks (shaded: prioritised for a block study), developments of 50+ units by phase, and the treatment plants (■).</small></div></section>
+      </div>
+      ${R ? `<section><h2>DC program (2026 draft)</h2><div class="grid"><div><b>Bring forward</b>${adv.length ? `<ul>${adv.map(r => `<li>${esc(r.name)}: online ${r.y}, capacity runs out ${r.outY === THIS_YEAR ? 'now' : `≈${r.outY}`}</li>`).join('')}</ul>` : '<p>None.</p>'}</div>
+        <div><b>Most growth relies on</b> (held back by build-out if cancelled)<ul>${top.map(r => `<li>${esc(r.name)} (${r.y || '–'}): ≈${fmtNum(roundPop(r.bo))} people, ≈${fmtNum(Math.round(r.units))} units</li>`).join('')}</ul></div></div></section>` : ''}
+      <footer><span>Screening estimates at Peel design criteria (wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha; water ${c.water.avg} L/cap/d ×${c.water.maxDay} max day); plant capacity calibrated to ${state.reports ? state.reports.year : ''} measured flows; not a hydraulic model. People and jobs rounded; ≈ marks an estimate.${need.length ? ` Data due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : ''}</span><span>Peel Development Tracker · v${esc(appVersion())}</span></footer>
+      <script>addEventListener('load', () => setTimeout(() => print(), 400));<\/script></body></html>`;
+    const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    const win = window.open(url, '_blank');
+    if (!win) { const a = document.createElement('a'); a.href = url; a.download = `development-servicing-briefing-${new Date().toISOString().slice(0, 10)}.html`; a.click(); }
   }
   const PHASE_COLORS = { inception: '#74a9e8', review: '#4c8fdc', approved: '#2f6fc6', permit: '#1f55a3', construction: '#173a73', completed: '#2f9e44', cancelled: '#9aa0a6' };
   const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Before DC', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
@@ -6801,7 +7045,7 @@
         <h2>Proposal</h2><table>
           <tr><td>Units</td><td class="n">${fmtNum(Math.round(e.totalUnits))}</td><td>${D.UNIT_TYPES.filter(t => e.units[t.key] > 0).map(t => `${fmtNum(Math.round(e.units[t.key]))} ${t.label.toLowerCase()}`).join(' · ')}</td></tr>
           <tr><td>People</td><td class="n">${fmtNum(roundPop(e.population))}</td><td class="muted">${ppu.toFixed(1)} persons per unit (Peel)</td></tr>
-          ${e.employment.jobs > 0 ? `<tr><td>Jobs</td><td class="n">${fmtNum(Math.round(e.employment.jobs))}</td><td></td></tr>` : ''}
+          ${e.employment.jobs > 0 ? `<tr><td>Jobs</td><td class="n">${fmtNum(roundPop(e.employment.jobs))}</td><td></td></tr>` : ''}
           ${b ? `<tr><td>Build-out</td><td class="n">${fmtNum(b.remaining)} left</td><td>${fmtNum(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed</td></tr>` : ''}</table>
         <h2>Status</h2><p>${esc(textOf(st.why))}</p><p>${esc(textOf(latestDecisionHTML(p, st)))}</p>
       </div><div>${p.lat != null ? sketchSVG({ center: [p.lng, p.lat], site: [p.lng, p.lat] }) : ''}</div></div>
@@ -6832,7 +7076,7 @@
     const byPhase = P.ALL_PHASES.map(ph => { const s = devs.filter(p => p.phase === ph.key); return s.length ? `<tr><td>${esc(ph.label)}</td><td class="n">${fmtNum(s.length)}</td><td class="n">${fmtNum(Math.round(D.estimate(s, c, 'all', jobsOf).totalUnits))}</td></tr>` : ''; }).join('');
     const top = devs.slice().sort((a, b) => (b.units || 0) - (a.units || 0)).slice(0, 20);
     const count = (key, name) => { const m = new Map(); for (const p of devs) for (const id of svcIds(p, key)) m.set(id, (m.get(id) || 0) + 1); return [...m].sort((a, b) => b[1] - a[1]).slice(0, 6).map(([id, n]) => `${name(id)} (${n})`).join(', '); };
-    const body = `<h1>${esc(title)}</h1><p class="sub">${fmtNum(devs.length)} developments · ${fmtNum(Math.round(e.totalUnits))} units · ${fmtNum(roundPop(e.population))} people · ${fmtNum(Math.round(e.employment.jobs))} jobs</p>
+    const body = `<h1>${esc(title)}</h1><p class="sub">${fmtNum(devs.length)} developments · ${fmtNum(Math.round(e.totalUnits))} units · ${fmtNum(roundPop(e.population))} people · ${fmtNum(roundPop(e.employment.jobs))} jobs</p>
       <p class="meta">Area report · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Development Tracker · filters: ${esc(activeFilters().map(f => f.label).join(', ') || 'none')}</p>
       <div class="grid"><div>
         <h2>By phase</h2><table><tr><th>Phase</th><th class="n">Developments</th><th class="n">Units</th></tr>${byPhase}</table>
