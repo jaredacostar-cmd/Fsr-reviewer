@@ -1,0 +1,1178 @@
+{
+ "version": 1,
+ "basis": "2020$",
+ "source": {
+  "study": "2020 DC Background Study, Region of Peel (Watson & Associates, September 18, 2020): water and wastewater capital tables",
+  "url": "https://www.peelregion.ca/finance/_media/Peel%20Development-Charges-Background-Study.pdf",
+  "note": "Gross capital cost estimate and the potential DC-recoverable cost (after post-period benefit, benefit to existing and grants), by component, in 2020 dollars. Matched to the 2026 DC capital maps by component number; components added since 2020 have no published cost."
+ },
+ "componentsIn2020": 554,
+ "componentsOnMaps": 506,
+ "components": {
+  "20735": {
+   "gross": 1402800,
+   "dc": 1402800,
+   "proj2020": "251199",
+   "year": 2029,
+   "what": "Water Main \u00b7 400-mm Water Main - Bovaird Drive West \u00b7 Bovaird Drive West from Heritage Roa"
+  },
+  "20742": {
+   "gross": 3701200,
+   "dc": 3701200,
+   "proj2020": "251198",
+   "year": 2031,
+   "what": "Water Main \u00b7 Parkway West"
+  },
+  "20745": {
+   "gross": 1365000,
+   "dc": 1365000,
+   "proj2020": "251198",
+   "year": 2028,
+   "what": "Water Main \u00b7 future street from Heritage Road to 750"
+  },
+  "20753": {
+   "gross": 2314800,
+   "dc": 2314800,
+   "proj2020": "251199",
+   "year": 2033,
+   "what": "Water Main \u00b7 400-mm Water Main - Wanless Drive \u00b7 Wanless Drive from Mississauga Road to"
+  },
+  "20755": {
+   "gross": 2434200,
+   "dc": 2434200,
+   "proj2020": "251199",
+   "year": 2034,
+   "what": "Water Main \u00b7 400-mm Water Main - Wanless Drive"
+  },
+  "32600": {
+   "gross": 4042000,
+   "dc": 4042000,
+   "proj2020": "251199",
+   "year": 2037,
+   "what": "Water Main \u00b7 400-mm Water Main - Mayfield Road"
+  },
+  "20920": {
+   "gross": 2513700,
+   "dc": 2513700,
+   "proj2020": "221178",
+   "year": 2022,
+   "what": "Water Main \u00b7 future east-west road from The Gore Road to"
+  },
+  "20922": {
+   "gross": 1153800,
+   "dc": 1153800,
+   "proj2020": "251198",
+   "year": 2025,
+   "what": "Water Main \u00b7 future east-west road from Coleraine Drive to"
+  },
+  "21137": {
+   "gross": 2609600,
+   "dc": 2609600,
+   "proj2020": "251198",
+   "year": 2026,
+   "what": "Water Main \u00b7 New Road A (Bram West) from Winston"
+  },
+  "21141": {
+   "gross": 2844300,
+   "dc": 2844300,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main \u00b7 Boulevard"
+  },
+  "52711": {
+   "gross": 4656100,
+   "dc": 4656100,
+   "proj2020": "241173",
+   "year": 2024,
+   "what": "Water Main \u00b7 future north-south road from the future east-"
+  },
+  "37588": {
+   "gross": 2042400,
+   "dc": 2042400,
+   "proj2020": "251199",
+   "year": 2030,
+   "what": "Water Main \u00b7 400-mm Water Main - Queen Street East \u00b7 Queen Street East from Kennedy Road t"
+  },
+  "32142": {
+   "gross": 1550700,
+   "dc": 1550700,
+   "proj2020": "251199",
+   "year": 2035,
+   "what": "Water Main \u00b7 Boulevard \u00b7 Winston Churchill Boulevard from Mayfield"
+  },
+  "30717": {
+   "gross": 2038300,
+   "dc": 2038300,
+   "proj2020": "251198",
+   "year": 2029,
+   "what": "Water Main \u00b7 future street (Heritage Heights) from Bovaird"
+  },
+  "32585": {
+   "gross": 1880200,
+   "dc": 1880200,
+   "proj2020": "251199",
+   "year": 2031,
+   "what": "Water Main \u00b7 Mississauga Road From Mayfield Road"
+  },
+  "32033": {
+   "gross": 4042000,
+   "dc": 4042000,
+   "proj2020": "251199",
+   "year": 2037,
+   "what": "Water Main"
+  },
+  "31996": {
+   "gross": 5591700,
+   "dc": 5591700,
+   "proj2020": "251199",
+   "year": 2037,
+   "what": "Water Main \u00b7 Mayfield Road from Mississauga Road to"
+  },
+  "20749": {
+   "gross": 3063600,
+   "dc": 3063600,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main \u00b7 Heritage Road from Bovaird Drive northerly"
+  },
+  "20751": {
+   "gross": 3323800,
+   "dc": 3323800,
+   "proj2020": "251199",
+   "year": 2033,
+   "what": "Water Main"
+  },
+  "20759": {
+   "gross": 6375200,
+   "dc": 6375200,
+   "proj2020": "251199",
+   "year": 2037,
+   "what": "Water Main \u00b7 Mayfield Road from Heritage Road to"
+  },
+  "20767": {
+   "gross": 3400300,
+   "dc": 3400300,
+   "proj2020": "251199",
+   "year": 2037,
+   "what": "Water Main \u00b7 main on Heritage Road from Wanless Drive"
+  },
+  "21135": {
+   "gross": 2772900,
+   "dc": 2772900,
+   "proj2020": "231133",
+   "year": 2025,
+   "what": "Water Main"
+  },
+  "21136": {
+   "gross": 6862800,
+   "dc": 6862800,
+   "proj2020": "231138",
+   "year": 2025,
+   "what": "Water Main"
+  },
+  "21919": {
+   "gross": 3201400,
+   "dc": 3201400,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main"
+  },
+  "29681": {
+   "gross": 36961100,
+   "dc": 36961100,
+   "proj2020": "251199",
+   "year": 2030,
+   "what": "Water Main \u00b7 600-mm Water Main - Lakeshore Road \u00b7 Water Treatment Plant to Front Street So"
+  },
+  "34224": {
+   "gross": 19708900,
+   "dc": 19708900,
+   "proj2020": "251199",
+   "year": 2030,
+   "what": "Water Main \u00b7 600-mm Water Main - Lakeshore Road \u00b7 Water Treatment Plant to Front Street So"
+  },
+  "32336": {
+   "gross": 7069900,
+   "dc": 7069900,
+   "proj2020": "241134",
+   "year": 2026,
+   "what": "Water Main"
+  },
+  "33582": {
+   "gross": 38840500,
+   "dc": 38840500,
+   "proj2020": "251199",
+   "year": 2032,
+   "what": "Water Main"
+  },
+  "30703": {
+   "gross": 17671400,
+   "dc": 15904300,
+   "proj2020": "251199",
+   "year": 2025,
+   "what": "Water Main \u00b7 Road from the future West Caledon Elevated"
+  },
+  "37594": {
+   "gross": 1731200,
+   "dc": 1731200,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 (Tullamore Industrial)"
+  },
+  "37577": {
+   "gross": 1814900,
+   "dc": 1814900,
+   "proj2020": "251199",
+   "year": 2035,
+   "what": "Water Main \u00b7 Airport Road from Mayfield Road northerly to"
+  },
+  "37596": {
+   "gross": 3235000,
+   "dc": 3235000,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 (Tullamore Industrial) \u00b7 future street north of Mayfield Road from"
+  },
+  "30976": {
+   "gross": 7226000,
+   "dc": 6244500,
+   "proj2020": "251199",
+   "year": 2030,
+   "what": "Water Main \u00b7 750-mm Water Main - Innis Lake Road"
+  },
+  "37579": {
+   "gross": 12811300,
+   "dc": 12811300,
+   "proj2020": "251199",
+   "year": 2029,
+   "what": "Water Main \u00b7 600-mm Water Main - Healey Road \u00b7 main on Healy Road from Innis Lake Road to"
+  },
+  "32590": {
+   "gross": 1070200,
+   "dc": 1070200,
+   "proj2020": "251198",
+   "year": 2025,
+   "what": "Water Main"
+  },
+  "32592": {
+   "gross": 1709800,
+   "dc": 1709800,
+   "proj2020": "241194",
+   "year": 2026,
+   "what": "Water Main \u00b7 (Bolton West) \u00b7 Humber Station Road from Healey Road to a"
+  },
+  "32594": {
+   "gross": 1538400,
+   "dc": 1538400,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main \u00b7 (Bolton West)"
+  },
+  "32596": {
+   "gross": 2086300,
+   "dc": 2086300,
+   "proj2020": "251198",
+   "year": 2025,
+   "what": "Water Main \u00b7 West)"
+  },
+  "35360": {
+   "gross": 519300,
+   "dc": 519300,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main \u00b7 400-mm Water Main - Camilla Road \u00b7 Camilla Road from Dundas Street East to"
+  },
+  "35874": {
+   "gross": 677400,
+   "dc": 677400,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main"
+  },
+  "35875": {
+   "gross": 471300,
+   "dc": 471300,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main"
+  },
+  "35876": {
+   "gross": 979400,
+   "dc": 979400,
+   "proj2020": "251199",
+   "year": 2027,
+   "what": "Water Main"
+  },
+  "51940": {
+   "gross": 2703500,
+   "dc": 2703500,
+   "proj2020": "251198",
+   "year": 2029,
+   "what": "Water Main \u00b7 future street from Wanless Drive"
+  },
+  "51583": {
+   "gross": 3954300,
+   "dc": 3954300,
+   "proj2020": "251199",
+   "year": 2035,
+   "what": "Water Main \u00b7 School Road from Chinguacousy Road to"
+  },
+  "51585": {
+   "gross": 2329100,
+   "dc": 2329100,
+   "proj2020": "251199",
+   "year": 2035,
+   "what": "Water Main \u00b7 School Road from McLaughlin Road to"
+  },
+  "51587": {
+   "gross": 5655900,
+   "dc": 5655900,
+   "proj2020": "251199",
+   "year": 2035,
+   "what": "Water Main \u00b7 School Road from Hurontario Street to Heart"
+  },
+  "51591": {
+   "gross": 1742500,
+   "dc": 1742500,
+   "proj2020": "251198",
+   "year": 2032,
+   "what": "Water Main \u00b7 future street from Dixie Road to Bramalea"
+  },
+  "51593": {
+   "gross": 3041200,
+   "dc": 3041200,
+   "proj2020": "251199",
+   "year": 2030,
+   "what": "Water Main \u00b7 Dixie Road from Mayfield Road to 1,340"
+  },
+  "51595": {
+   "gross": 2122000,
+   "dc": 2122000,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 (Tullamore Industrial) \u00b7 future street from Airport Road to Innis Lake"
+  },
+  "51603": {
+   "gross": 1562900,
+   "dc": 1562900,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 West)"
+  },
+  "51605": {
+   "gross": 913100,
+   "dc": 913100,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 West) \u00b7 future street from Humber Station Road to"
+  },
+  "51607": {
+   "gross": 913100,
+   "dc": 913100,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 West) \u00b7 future street from Humber Station Road to"
+  },
+  "51609": {
+   "gross": 1189500,
+   "dc": 1189500,
+   "proj2020": "251198",
+   "year": 2035,
+   "what": "Water Main \u00b7 West)"
+  },
+  "51611": {
+   "gross": 1162000,
+   "dc": 1162000,
+   "proj2020": "251199",
+   "year": 2032,
+   "what": "Water Main \u00b7 Bramalea Road from north of Mayfield Road"
+  },
+  "51613": {
+   "gross": 2098500,
+   "dc": 2098500,
+   "proj2020": "251198",
+   "year": 2031,
+   "what": "Water Main \u00b7 future street from Dixie Road to Bramalea"
+  },
+  "23444": {
+   "gross": 4660200,
+   "dc": 4660200,
+   "proj2020": "231123",
+   "year": 2025,
+   "what": "Water Main"
+  },
+  "23446": {
+   "gross": 5628400,
+   "dc": 5628400,
+   "proj2020": "231123",
+   "year": 2025,
+   "what": "Water Main"
+  },
+  "51621": {
+   "gross": 2314800,
+   "dc": 2314800,
+   "proj2020": "251199",
+   "year": 2035,
+   "what": "Water Main \u00b7 the south side of the Etobicoke Creek."
+  },
+  "52302": {
+   "gross": 10000000,
+   "dc": 10000000,
+   "proj2020": "221831",
+   "year": 2024,
+   "what": "Wells \u00b7 Inglewood - New Groundwater Well \u00b7 groundwater well in Inglewood to service"
+  },
+  "52648": {
+   "gross": 5146900,
+   "dc": 5146900,
+   "proj2020": "251199",
+   "year": 2038,
+   "what": "Water Main \u00b7 600-mm Water Main - Hurontario Street \u00b7 Hurontario Street from Steeles Avenue"
+  },
+  "52650": {
+   "gross": 6974000,
+   "dc": 6974000,
+   "proj2020": "251199",
+   "year": 2038,
+   "what": "Water Main \u00b7 from Hurontario Street to the future"
+  },
+  "52652": {
+   "gross": 4745900,
+   "dc": 4745900,
+   "proj2020": "251199",
+   "year": 2038,
+   "what": "Water Main"
+  },
+  "52654": {
+   "gross": 8307400,
+   "dc": 8307400,
+   "proj2020": "251199",
+   "year": 2030,
+   "what": "Water Main \u00b7 600-mm Water Main - Dundas Street East \u00b7 Dundas Street East from Cawthra Road"
+  },
+  "52709": {
+   "gross": 12089300,
+   "dc": 12089300,
+   "proj2020": "211151",
+   "year": 2023,
+   "what": "Water Main \u00b7 600-mm Water Main - Church Street East Church Street East from Centre Street "
+  },
+  "34485": {
+   "gross": 388100,
+   "dc": 388100,
+   "proj2020": "251999",
+   "year": 2026,
+   "what": "Design \u00b7 capacity at the West Brampton Pumping"
+  },
+  "16350": {
+   "gross": 1496100,
+   "dc": 1496100,
+   "proj2020": "251999",
+   "year": 2027,
+   "what": "Pumping Station \u00b7 capacity at the West Brampton Pumping"
+  },
+  "25259": {
+   "gross": 5227200,
+   "dc": 2613200,
+   "proj2020": "251999",
+   "year": 2028,
+   "what": "Design \u00b7 West Brampton Reservoir Expansion \u00b7 with the construction of a third 20-ML"
+  },
+  "26196": {
+   "gross": 31619600,
+   "dc": 15809600,
+   "proj2020": "251999",
+   "year": 2030,
+   "what": "Reservoir \u00b7 West Brampton Reservoir Expansion \u00b7 with the construction of a third 20-ML"
+  },
+  "33348": {
+   "gross": 55658400,
+   "dc": 44526400,
+   "proj2020": "221226",
+   "year": 2024,
+   "what": "Water Main \u00b7 Cawthra Road from the Silverthorn Pumping"
+  },
+  "33346": {
+   "gross": 5413650,
+   "dc": 4330650,
+   "proj2020": "221226",
+   "year": 2024,
+   "what": "Water Main \u00b7 Cawthra Road from the Silverthorn Pumping"
+  },
+  "35355": {
+   "gross": 26398500,
+   "dc": 26398500,
+   "proj2020": "251299",
+   "year": 2035,
+   "what": "Water Main \u00b7 Mayfield Road Sub-Transmission Main"
+  },
+  "29885": {
+   "gross": 31000000,
+   "dc": 27900000,
+   "proj2020": "141256",
+   "year": 2022,
+   "what": "Water Main \u00b7 main on WIlliams Parkway from Dixie Road"
+  },
+  "50395": {
+   "gross": 8200000,
+   "dc": 7380000,
+   "proj2020": "141257",
+   "year": 2021,
+   "what": "Water Main \u00b7 Central Brampton Sub-Transmission Main"
+  },
+  "50393": {
+   "gross": 10000000,
+   "dc": 10000000,
+   "proj2020": "141240",
+   "year": 2021,
+   "what": "Water Main \u00b7 East Brampton Transmission Main Twinning \u00b7 main from the Beckett Sproule Pump"
+  },
+  "27414": {
+   "gross": 174242200,
+   "dc": 156818200,
+   "proj2020": "251299",
+   "year": 2030,
+   "what": "Water Main \u00b7 Streetsville Transmission Main"
+  },
+  "32002": {
+   "gross": 253083400,
+   "dc": 227775400,
+   "proj2020": "251299",
+   "year": 2031,
+   "what": "Water Main \u00b7 Meadowvale North Transmission Main"
+  },
+  "20697": {
+   "gross": 24290700,
+   "dc": 21861700,
+   "proj2020": "231270",
+   "year": 2025,
+   "what": "Water Main \u00b7 West Caledon Transmission Main \u00b7 from the Alloa Pumping Station to the West"
+  },
+  "20685": {
+   "gross": 15809300,
+   "dc": 14228300,
+   "proj2020": "231941",
+   "year": 2025,
+   "what": "Reservoir \u00b7 West Caledon Elevated Tank"
+  },
+  "23389": {
+   "gross": 72500,
+   "dc": 72500,
+   "proj2020": "251999",
+   "year": 2034,
+   "what": "Design \u00b7 capacity at the West Brampton Pumping"
+  },
+  "23390": {
+   "gross": 361100,
+   "dc": 361100,
+   "proj2020": "251999",
+   "year": 2035,
+   "what": "Pumping Station \u00b7 capacity at the West Brampton Pumping"
+  },
+  "23451": {
+   "gross": 2000000,
+   "dc": 200000,
+   "proj2020": "251599",
+   "year": 2035,
+   "what": "Study \u00b7 structure at the Arthur P. Kennedy Water"
+  },
+  "23452": {
+   "gross": 13000000,
+   "dc": 1300000,
+   "proj2020": "251997",
+   "year": 2037,
+   "what": "Design \u00b7 structure at the Arthur P. Kennedy Water"
+  },
+  "23453": {
+   "gross": 85000000,
+   "dc": 8500000,
+   "proj2020": "251997",
+   "year": 2039,
+   "what": "Water Main \u00b7 structure at the Arthur P. Kennedy Water"
+  },
+  "23391": {
+   "gross": 177900,
+   "dc": 177900,
+   "proj2020": "241983",
+   "year": 2024,
+   "what": "Design \u00b7 capacity at the West Brampton Pumping"
+  },
+  "23392": {
+   "gross": 832500,
+   "dc": 832500,
+   "proj2020": "241983",
+   "year": 2025,
+   "what": "Pumping Station \u00b7 capacity at the West Brampton Pumping"
+  },
+  "23396": {
+   "gross": 58500000,
+   "dc": 58500000,
+   "proj2020": "211923",
+   "year": 2024,
+   "what": "Reservoir"
+  },
+  "23404": {
+   "gross": 3450000,
+   "dc": 3450000,
+   "proj2020": "251997",
+   "year": 2032,
+   "what": "Design \u00b7 Arthur P. Kennedy Water Treatment Plant."
+  },
+  "23405": {
+   "gross": 23000000,
+   "dc": 23000000,
+   "proj2020": "251997",
+   "year": 2034,
+   "what": "WTP \u00b7 Arthur P. Kennedy Water Treatment Plant."
+  },
+  "52656": {
+   "gross": 1071200,
+   "dc": 1071200,
+   "proj2020": "241179",
+   "year": 2024,
+   "what": "Water Main \u00b7 future east-west road from Clarkway Drive to"
+  },
+  "52660": {
+   "gross": 1228300,
+   "dc": 1228300,
+   "proj2020": "201175",
+   "year": 2022,
+   "what": "Water Main \u00b7 future street from Highway 50 to Coleraine"
+  },
+  "21036": {
+   "gross": 3037100,
+   "dc": 2587200,
+   "proj2020": "252199",
+   "year": 2034,
+   "what": "Wastewater Main"
+  },
+  "21038": {
+   "gross": 3037100,
+   "dc": 2683600,
+   "proj2020": "252199",
+   "year": 2034,
+   "what": "Wastewater Main"
+  },
+  "21051": {
+   "gross": 1831200,
+   "dc": 1831200,
+   "proj2020": "252198",
+   "year": 2028,
+   "what": "Wastewater Main"
+  },
+  "21054": {
+   "gross": 2920800,
+   "dc": 2920800,
+   "proj2020": "252198",
+   "year": 2027,
+   "what": "Wastewater Main"
+  },
+  "21553": {
+   "gross": 2092400,
+   "dc": 2092400,
+   "proj2020": "252198",
+   "year": 2025,
+   "what": "Wastewater Main \u00b7 Embleton from east of Winston"
+  },
+  "21555": {
+   "gross": 2126100,
+   "dc": 2126100,
+   "proj2020": "252198",
+   "year": 2026,
+   "what": "Wastewater Main \u00b7 Embleton from 440 metres west of"
+  },
+  "21556": {
+   "gross": 1732300,
+   "dc": 1732300,
+   "proj2020": "252198",
+   "year": 2025,
+   "what": "Wastewater Main"
+  },
+  "21557": {
+   "gross": 6569000,
+   "dc": 6569000,
+   "proj2020": "232134",
+   "year": 2023,
+   "what": "Wastewater Main \u00b7 Winston Churchil Boulevard from"
+  },
+  "21559": {
+   "gross": 2755500,
+   "dc": 2755500,
+   "proj2020": "222135",
+   "year": 2022,
+   "what": "Wastewater Main"
+  },
+  "36246": {
+   "gross": 3500200,
+   "dc": 3500200,
+   "proj2020": "252199",
+   "year": 2030,
+   "what": "Wastewater Main \u00b7 Chinguacousy Road (Mayfield West the future east-west spine road to"
+  },
+  "34033": {
+   "gross": 3613500,
+   "dc": 2583400,
+   "proj2020": "232191",
+   "year": 2025,
+   "what": "Wastewater Main"
+  },
+  "33725": {
+   "gross": 5298800,
+   "dc": 4839000,
+   "proj2020": "252199",
+   "year": 2030,
+   "what": "Wastewater Main"
+  },
+  "51628": {
+   "gross": 431500,
+   "dc": 431500,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main"
+  },
+  "51630": {
+   "gross": 959000,
+   "dc": 959000,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main"
+  },
+  "51642": {
+   "gross": 962000,
+   "dc": 962000,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main"
+  },
+  "51644": {
+   "gross": 596800,
+   "dc": 596800,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main \u00b7 future street to 570 metres northerly,"
+  },
+  "51648": {
+   "gross": 1057900,
+   "dc": 1057900,
+   "proj2020": "252198",
+   "year": 2031,
+   "what": "Wastewater Main"
+  },
+  "51654": {
+   "gross": 1300700,
+   "dc": 1042800,
+   "proj2020": "252198",
+   "year": 2025,
+   "what": "Wastewater Main"
+  },
+  "51656": {
+   "gross": 747800,
+   "dc": 747800,
+   "proj2020": "252198",
+   "year": 2027,
+   "what": "Wastewater Main"
+  },
+  "51658": {
+   "gross": 725300,
+   "dc": 725300,
+   "proj2020": "252199",
+   "year": 2030,
+   "what": "Wastewater Main"
+  },
+  "51660": {
+   "gross": 1258900,
+   "dc": 908700,
+   "proj2020": "252199",
+   "year": 2027,
+   "what": "Wastewater Main \u00b7 890 metres north of Healey Road to"
+  },
+  "51662": {
+   "gross": 700900,
+   "dc": 700900,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main"
+  },
+  "51664": {
+   "gross": 767200,
+   "dc": 767200,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main \u00b7 future street 890 metres north of"
+  },
+  "51666": {
+   "gross": 2885100,
+   "dc": 2885100,
+   "proj2020": "252198",
+   "year": 2030,
+   "what": "Wastewater Main \u00b7 Mayfield Road to 2160 metres"
+  },
+  "52675": {
+   "gross": 7948200,
+   "dc": 7391800,
+   "proj2020": "252199",
+   "year": 2030,
+   "what": "Wastewater Main"
+  },
+  "52681": {
+   "gross": 4330700,
+   "dc": 4330700,
+   "proj2020": "252198",
+   "year": 2035,
+   "what": "Wastewater Main"
+  },
+  "52679": {
+   "gross": 3658400,
+   "dc": 3658400,
+   "proj2020": "252199",
+   "year": 2030,
+   "what": "Wastewater Main \u00b7 McVean Drive to a future street east"
+  },
+  "52677": {
+   "gross": 6122100,
+   "dc": 6122100,
+   "proj2020": "252199",
+   "year": 2030,
+   "what": "Wastewater Main"
+  },
+  "21030": {
+   "gross": 4864200,
+   "dc": 3971800,
+   "proj2020": "252299",
+   "year": 2034,
+   "what": "Wastewater Main \u00b7 sewer on Wanless Drive from Heritage Road"
+  },
+  "21041": {
+   "gross": 7257600,
+   "dc": 6919800,
+   "proj2020": "252299",
+   "year": 2033,
+   "what": "Wastewater Main"
+  },
+  "21042": {
+   "gross": 11483300,
+   "dc": 10250600,
+   "proj2020": "252299",
+   "year": 2031,
+   "what": "Wastewater Main"
+  },
+  "21055": {
+   "gross": 4412300,
+   "dc": 2836900,
+   "proj2020": "252299",
+   "year": 2032,
+   "what": "Wastewater Main"
+  },
+  "21056": {
+   "gross": 3698200,
+   "dc": 2468800,
+   "proj2020": "252299",
+   "year": 2032,
+   "what": "Wastewater Main"
+  },
+  "21057": {
+   "gross": 2335200,
+   "dc": 1947900,
+   "proj2020": "252299",
+   "year": 2030,
+   "what": "Wastewater Main"
+  },
+  "21062": {
+   "gross": 1550700,
+   "dc": 1550700,
+   "proj2020": "232221",
+   "year": 2025,
+   "what": "Wastewater Main"
+  },
+  "21063": {
+   "gross": 3450300,
+   "dc": 3450300,
+   "proj2020": "232221",
+   "year": 2025,
+   "what": "Wastewater Main"
+  },
+  "15615": {
+   "gross": 71077700,
+   "dc": 56862200,
+   "proj2020": "252299",
+   "year": 2030,
+   "what": "Wastewater Main \u00b7 Lower West Sanitary Trunk Sewer Twinning"
+  },
+  "33590": {
+   "gross": 141906600,
+   "dc": 114944300,
+   "proj2020": "222255",
+   "year": 2024,
+   "what": "Wastewater Main \u00b7 Queensway East Sanitary Trunk Sewer"
+  },
+  "34863": {
+   "gross": 23666500,
+   "dc": 19169800,
+   "proj2020": "222256",
+   "year": 2024,
+   "what": "Wastewater Main \u00b7 sewer on Cawthra Road from the CPR to"
+  },
+  "27417": {
+   "gross": 712200,
+   "dc": 712200,
+   "proj2020": "252999",
+   "year": 2028,
+   "what": "Design \u00b7 Inspiration Lakeview Sewage Pump Station station within the future Inspiration La"
+  },
+  "27418": {
+   "gross": 3386000,
+   "dc": 3386000,
+   "proj2020": "252999",
+   "year": 2030,
+   "what": "Pumping Station \u00b7 Inspiration Lakeview Sewage Pump Station station within the future Inspi"
+  },
+  "38619": {
+   "gross": 3000000,
+   "dc": 3000000,
+   "proj2020": "202561",
+   "year": 2020,
+   "what": "Study \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "38620": {
+   "gross": 2500000,
+   "dc": 2500000,
+   "proj2020": "252999",
+   "year": 2025,
+   "what": "Design \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "38621": {
+   "gross": 23500000,
+   "dc": 23500000,
+   "proj2020": "252999",
+   "year": 2027,
+   "what": "WWTP \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "51944": {
+   "gross": 40000000,
+   "dc": 40000000,
+   "proj2020": "252999",
+   "year": 2025,
+   "what": "Design \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "51945": {
+   "gross": 200000000,
+   "dc": 200000000,
+   "proj2020": "252999",
+   "year": 2027,
+   "what": "WWTP \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "52838": {
+   "gross": 200000000,
+   "dc": 200000000,
+   "proj2020": "252999",
+   "year": 2028,
+   "what": "Construction \u00b7 G.E. Booth WWTP Expansion"
+  },
+  "51946": {
+   "gross": 3000000,
+   "dc": 3000000,
+   "proj2020": "232943",
+   "year": 2033,
+   "what": "WWTP \u00b7 G.E. Booth WWTP Expansion \u00b7 accommodate the treatment capacity"
+  },
+  "51947": {
+   "gross": 15000000,
+   "dc": 15000000,
+   "proj2020": "232943",
+   "year": 2035,
+   "what": "WWTP \u00b7 G.E. Booth WWTP Expansion \u00b7 accommodate the treatment capacity"
+  },
+  "51918": {
+   "gross": 616200,
+   "dc": 616200,
+   "proj2020": "252299",
+   "year": 2027,
+   "what": "Wastewater Main \u00b7 McLaughlin Road Force Main \u00b7 McLaughlin Road Sewage Pumping Station"
+  },
+  "53012": {
+   "gross": 15000000,
+   "dc": 10800000,
+   "proj2020": "222980",
+   "year": 2022,
+   "what": "Pumping Station \u00b7 station with an expanded capacity to service"
+  },
+  "51950": {
+   "gross": 7500000,
+   "dc": 6802500,
+   "proj2020": "252999",
+   "year": 2029,
+   "what": "Design \u00b7 management process at the G.E. Booth"
+  },
+  "51951": {
+   "gross": 85000000,
+   "dc": 77095000,
+   "proj2020": "252999",
+   "year": 2031,
+   "what": "WWTP \u00b7 management process at the G.E. Booth"
+  },
+  "51952": {
+   "gross": 7500000,
+   "dc": 3750000,
+   "proj2020": "252999",
+   "year": 2029,
+   "what": "Design \u00b7 management process at the G.E. Booth"
+  },
+  "51953": {
+   "gross": 96100000,
+   "dc": 48050000,
+   "proj2020": "252999",
+   "year": 2034,
+   "what": "WWTP \u00b7 management process at the G.E. Booth"
+  },
+  "35964": {
+   "gross": 66000000,
+   "dc": 33000000,
+   "proj2020": "252999",
+   "year": 2036,
+   "what": "WWTP \u00b7 management process at the G.E. Booth"
+  },
+  "52386": {
+   "gross": 45000000,
+   "dc": 40500000,
+   "proj2020": "192208",
+   "year": 2021,
+   "what": "Wastewater Main \u00b7 Britannia West Sanitary Trunk Sewer \u00b7 Parkway to Britannia Road West and"
+  },
+  "52388": {
+   "gross": 45000000,
+   "dc": 40500000,
+   "proj2020": "192210",
+   "year": 2021,
+   "what": "Wastewater Main \u00b7 Eglinton West Sanitary Trunk Sewer \u00b7 Eglinton Avenue West and on Eglinto"
+  },
+  "50941": {
+   "gross": 49098300,
+   "dc": 24549100,
+   "proj2020": "182260",
+   "year": 2023,
+   "what": "Wastewater Main \u00b7 of the Wastewater Treatment Plant (near"
+  },
+  "52663": {
+   "gross": 122419400,
+   "dc": 55088800,
+   "proj2020": "252299",
+   "year": 2032,
+   "what": "Wastewater Main \u00b7 Castlemore Road Sanitary Trunk Sewer \u00b7 sewer on Castlemore Road from Hig"
+  },
+  "52666": {
+   "gross": 94975800,
+   "dc": 42739100,
+   "proj2020": "252299",
+   "year": 2032,
+   "what": "Wastewater Main \u00b7 Upper East Sanitary Trunk Sewer (Phase 1) Road to Queen Street and on Qu"
+  },
+  "52834": {
+   "gross": 25000000,
+   "dc": 25000000,
+   "proj2020": "242942",
+   "year": 2026,
+   "what": "WWTP \u00b7 facility at the G.E. Booth Wastewater"
+  },
+  "35221": {
+   "gross": 1606800,
+   "dc": 401700,
+   "proj2020": "242960",
+   "year": 2024,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "35364": {
+   "gross": 330400,
+   "dc": 82600,
+   "proj2020": "242960",
+   "year": 2024,
+   "what": "Design \u00b7 control facilities at various locations in the"
+  },
+  "34285": {
+   "gross": 1951400,
+   "dc": 487800,
+   "proj2020": "242960",
+   "year": 2026,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "35223": {
+   "gross": 1071200,
+   "dc": 267800,
+   "proj2020": "242960",
+   "year": 2024,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "35358": {
+   "gross": 415800,
+   "dc": 103900,
+   "proj2020": "242960",
+   "year": 2024,
+   "what": "Design \u00b7 control facilities at various locations in the"
+  },
+  "34286": {
+   "gross": 1951400,
+   "dc": 487800,
+   "proj2020": "242960",
+   "year": 2026,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "35224": {
+   "gross": 1071200,
+   "dc": 267800,
+   "proj2020": "242960",
+   "year": 2024,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "35383": {
+   "gross": 990200,
+   "dc": 247500,
+   "proj2020": "242960",
+   "year": 2024,
+   "what": "Design \u00b7 control facilities at various locations in the"
+  },
+  "34287": {
+   "gross": 5398200,
+   "dc": 1349500,
+   "proj2020": "242960",
+   "year": 2026,
+   "what": "General \u00b7 control facilities at various locations in the"
+  },
+  "52214": {
+   "gross": 3000000,
+   "dc": 3000000,
+   "proj2020": "252999",
+   "year": 2026,
+   "what": "Design \u00b7 Clarkson includes aerial conversion for the"
+  },
+  "52215": {
+   "gross": 30000000,
+   "dc": 30000000,
+   "proj2020": "252999",
+   "year": 2027,
+   "what": "WWTP \u00b7 Clarkson includes aerial conversion for the"
+  },
+  "52755": {
+   "gross": 3500000,
+   "dc": 2800000,
+   "proj2020": "222970",
+   "year": 2023,
+   "what": "Pumping Station \u00b7 Street Sewage Pumping Station. Design in"
+  }
+ },
+ "rates": {
+  "effective": "2026-08-01",
+  "until": "2027-01-31",
+  "ref": "Region of Peel development charges, residential water and wastewater (single / semi), indexed August 1, 2026; Regional Council report March 26, 2026",
+  "url": "https://peelregion.ca/development-charges",
+  "single": {
+   "water": 30180.96,
+   "wastewater": 32776.33
+  },
+  "ratio2020": {
+   "single": 1,
+   "apartmentLarge": 0.7254,
+   "apartmentSmall": 0.3836,
+   "other": 0.792
+  },
+  "ratioNote": "Apartments (>750 sq ft), small units (\u2264750 sq ft) and other residential (townhouses) scaled from the single / semi rate by the 2020 schedule (Table ES-2)."
+ }
+}

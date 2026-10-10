@@ -43,6 +43,10 @@
     sinceYear: store.get('sinceYear', CFG.sinceYear),
     maxPerLayer: store.get('maxPerLayer', CFG.maxPerLayer),
   };
+  // Wet weather scenario (design storm): the I&I allowance as entered (state.iiBase) is scaled to the
+  // chosen storm; state.criteria carries the scaled value the model uses. See applyWet().
+  state.iiBase = state.criteria.wastewater.infiltration;
+  state.wet = Object.assign({ rp: 0, ref: 25, clim: 'none' }, store.get('wetWx', {}));
   // Defaults before the Peel 2023–2024 criteria were adopted: a saved value equal to one of these
   // was never edited, so it gives way to the current default.
   function mergeCriteria(saved) {
@@ -1222,23 +1226,31 @@
   // ---- Data quality (Settings & sources): how fresh each source is, and the model checked against
   // the figures the Region and Statistics Canada publish. -----------------------------------------
   const DAY = 864e5;
+  const MUNIS = ['Mississauga', 'Brampton', 'Caledon'];
   function freshness() {
     const age = d => d ? Math.floor((Date.now() - new Date(d).getTime()) / DAY) : null;
     const row = (name, date, every, maxDays, note = '', disp = null) => { const a = age(date); return { name, date: disp || (date ? String(date).slice(0, 10) : null), every, a: disp ? null : a, st: date == null ? 'na' : maxDays == null ? 'ref' : a > maxDays * 2 ? 'stale' : a > maxDays ? 'due' : 'ok', note }; };
-    const R = state.reports, bc = state.censuses && state.censuses[0];
+    const R = state.reports, bc = state.censuses && state.censuses[0], H = state.housing;
     return [
       row('Planning applications and building permits', state.snapshot && state.snapshot.generatedAt, 'weekly', 10),
       row('Phase history', state.history && state.history.updated, 'weekly', 10),
       row('Council and committee agendas, minutes', state.council && state.council.generatedAt, 'weekly', 10),
       row('Secondary plans, MTSAs', state.areas && state.areas.generatedAt, 'yearly', 365),
-      row(`${bc ? bc.year : 2021} Census (dissemination areas)`, bc && bc.date, 'every 5 years', null, 'The latest census; the 2026 Census counts come out in 2027.'),
+      row(`${bc ? bc.year : 2021} Census (dissemination areas)`, bc && bc.date, 'every 5 years', null, bc && bc.year >= 2026 ? 'The latest census.' : 'The 2026 Census population and dwelling counts (by dissemination area) are released February 10, 2027; most other topics through 2027. scripts/build-areas.js takes them (CENSUS_2026_CSV) and the 2026 counts become the baseline.'),
+      row('Housing targets and progress (Ontario)', H && H.targets.asOf, 'yearly', 400, 'Ontario Data Catalogue; the next year\'s progress is added about December.'),
+      row('CMHC housing starts by municipality', H && H.cmhc.asOf, 'yearly', 400, 'CMHC Starts and Completions Survey (Housing Market Information Portal).'),
+      row('Ministry of Finance population projections', H && H.mof.asOf, 'yearly', 400, 'Updated each summer.'),
+      row('Water and wastewater DC rates', state.dcCosts && state.dcCosts.rates.effective, 'every 6 months', 190, 'Indexed February 1 and August 1; the 2026 DC by-law may change them.'),
+      row('DC project costs (2020 DC Background Study)', '2020-09-18', 'each DC study', null, 'Components on the 2026 maps that were in the 2020 study; replace with the 2026 study\'s tables when published.'),
+      row('Plant effluent compliance (MECP reports)', state.compliance && `${state.compliance.years[state.compliance.years.length - 1] + 1}-12-31`, 'yearly', 400, 'Environmental Compliance Reports; a year\'s report is published about a year later.', state.compliance ? `${state.compliance.years[0]}–${state.compliance.years[state.compliance.years.length - 1]}` : null),
+      row('IDF curves (MTO IDF Curve Look-up)', IDF.data && IDF.data.fetched, 'reference', null, 'Ministry of Transportation, 2010 data year with its climate trend.'),
       row('Pressure zones, pumping stations, plants', state.servicing && state.servicing.meta.generatedAt, 'yearly', 365),
       row('Sanitary sewer network (300 mm+)', SEW.data && SEW.data.generatedAt, 'yearly', 365),
       row('Wastewater blocks (I&I program)', BLK.data && BLK.data.generatedAt, 'yearly', 365),
       row('Water supply mains (zone boundaries)', DCN.supply && DCN.supply.generatedAt, 'yearly', 365),
       row('2026 DC capital maps (draft)', state.dcInfra && state.dcInfra.generatedAt, 'each DC study', 730, 'Draft program; replace when the by-law is passed.'),
       row(`Peel ${R ? R.year : ''} annual reports (plants, water)`, R ? `${R.year + 1}-06-30` : null, 'yearly', 365, 'Next year\'s reports come out about mid-year.', R ? `${R.year} data (published mid-${R.year + 1})` : null),
-      row('2020 Water and Wastewater Master Plan', '2020-12-31', 'about every 5 years', null, 'Pumping station firm capacities and storage; the next master plan will replace them.'),
+      row('2020 Water and Wastewater Master Plan', '2020-12-31', 'about every 5 years', null, 'Pumping station firm capacities and storage. The 2025 (lake-based) master plan was to be finalized in 2026: replace these figures, the plant capacities and the project list when its report is filed.'),
       { name: 'Existing pipes, hydrants, ponds (live GIS)', date: null, every: 'live', a: null, st: 'live', note: 'Read from the Region and municipal map services when shown.' },
     ];
   }
@@ -1261,7 +1273,26 @@
         const c = M.calib && M.calib[pl], rep = R.wastewater.plants[pl]; if (!c || !rep) continue;
         out.push([`${PLANT_SHORT[pl]}: average flow today, design criteria`, c.today + M.inflowsTo(pl), rep.avgMLd, 'ML/d', `${R.year} measured average. Design rates (${state.criteria.wastewater.avg} L/cap/d) leave out existing employment and institutions and dry-weather inflow; the capacity check scales each plant by ×${c.f ? c.f.toFixed(2) : '–'} to match the measured flow.`]);
       }
+      const H = state.housing;
+      if (bc && H && H.mof.peel[2025]) { let b2 = 0; for (const z of M.zones.values()) b2 += z.built; const t = bc.das.reduce((a, d) => a + d.pop, 0); out.push(['Population today vs. Statistics Canada July 2025 estimate', t + b2, H.mof.peel[2025], 'people', 'The base year of the Ministry of Finance projections (Statistics Canada estimate, includes the census undercount and non-permanent residents, many in existing homes).']); }
       if (M.zsum) out.push(['South Peel water: average day today, design criteria', M.wAvg(M.zsum.census + M.zsum.built, M.zsum.jbuilt), R.water.southPeel.avgMLd, 'ML/d', `${R.year} production of A.P. Kennedy + Lorne Park, which also includes water supplied to York Region and Halton, existing employment and non-revenue water: the model is expected to be lower.`]);
+    }
+    // Built since the census against CMHC: completions from census day (prorated) to the end of 2022.
+    const H = state.housing;
+    if (bc && H) {
+      const since = +new Date(`${bc.date}T00:00:00Z`), until = +new Date('2023-01-01T00:00:00Z'), frac = (until - since) / DAY / 365 - 1;
+      for (const m of MUNIS) {
+        const C = H.cmhc.completions[m]; if (!C || !C[2021] || !C[2022]) continue;
+        let u = 0; for (const p of state.projects) { if (p.municipality !== m || p.phase === 'cancelled') continue; const done = p.records.filter(r => { if (r.kind !== 'permit' || r.phase !== 'completed') return false; const c = PeelAreas.completedAt(r); return c && c.date >= since && c.date < until; }); if (done.length) u += P.permitUnits(done); }
+        out.push([`Units completed since the census to 2022, ${m}`, u, C[2021].all * frac + C[2022].all, 'units', `CMHC completions ${bc.date.slice(5)}–2022 (2021 prorated). The model counts permits closed as completed; ${m === 'Mississauga' ? 'condominium towers close their permits after occupancy, so they lag' : 'completion dates are estimated from the issue date where not published'}.`]);
+      }
+      // Observed pace: CMHC starts per year against the pace the Horizon years assume for approved growth.
+      const S = H.cmhc.starts, ys = Object.keys(S.Mississauga || {}).map(Number).sort().slice(-5);
+      if (ys.length) {
+        const obs = ys.reduce((t, y) => t + MUNIS.reduce((a, m) => a + ((S[m] || {})[y] ? S[m][y].all : 0), 0), 0) / ys.length;
+        let appr = 0; for (const p of state.projects) if (svcLayerOf(p) === 'approved') appr += D.estimate([p], state.criteria, 'all', jobsOf).totalUnits;
+        out.push(['Approved units built per year (Horizon years) vs. CMHC starts', appr / hz.aYears, obs, 'units', `Approved units spread over ${hz.aYears} years from ${hz.aStart} against Peel's average CMHC starts ${ys[0]}–${ys[ys.length - 1]}. A model pace well above the observed one brings demand forward: lengthen the approved horizon (Horizon years) to match.`]);
+      }
     }
     return out;
   }
@@ -1270,7 +1301,7 @@
     const fr = freshness(), need = fr.filter(r => r.st === 'due' || r.st === 'stale');
     const vr = validationRows();
     const st = (m, p) => { const d = (m - p) / p * 100, a = Math.abs(d); return [d, a <= 10 ? 'fr-ok' : a <= 25 ? 'fr-due' : 'fr-stale', a <= 10 ? 'Matches' : a <= 25 ? 'Close' : 'Differs']; };
-    const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : `${fmtNum(roundPop(v))}`;
+    const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : u === 'units' ? `${fmtNum(Math.round(v))} units` : `${fmtNum(roundPop(v))}`;
     el.innerHTML = `${hlP(need.length ? `<strong>${need.length} data source${need.length === 1 ? '' : 's'}</strong> ${need.length === 1 ? 'is' : 'are'} due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : `All data sources are current; applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong>.`)}
       <h3 class="sub-title" data-info="data-freshness">Data freshness</h3>
       <table class="dt fr-table"><thead><tr><th>Source</th><th>As of</th><th>Updated</th><th>Status</th></tr></thead><tbody>
@@ -1288,6 +1319,52 @@
       <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
   }
   $('#d-quality').addEventListener('change', e => { if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim()); });
+  // ---- Housing targets, CMHC starts and the population outlook (data/housing.json) ------------
+  // Ontario's housing targets (2022-2031) and its yearly progress, CMHC starts by municipality, the
+  // units in the application pipeline, and the Ministry of Finance projection against the
+  // Region's 2051 forecast.
+  function housingRows() {
+    const H = state.housing; if (!H) return null;
+    const T = H.targets.muni, S = H.cmhc.starts;
+    return MUNIS.map(m => {
+      const t = T[m], ys = Object.keys(t.years || {}).map(Number).sort(), y = ys[ys.length - 1], last = y ? t.years[y] : null;
+      const sy = Object.keys(S[m] || {}).map(Number).sort(), recent = sy.slice(-5), avg = recent.length ? recent.reduce((a, k) => a + S[m][k].all, 0) / recent.length : null;
+      let appr = 0, prop = 0;
+      for (const p of state.projects) { if (p.municipality !== m) continue; const l = svcLayerOf(p); if (l !== 'approved' && l !== 'proposed') continue; const u = D.estimate([p], state.criteria, 'all', jobsOf).totalUnits; if (l === 'approved') appr += u; else prop += u; }
+      const done = last ? last.sinceStart : 0, elapsed = y ? (y - 2021) / 10 : 0;
+      return { m, target: t.target, y, done, pct: t.target ? done / t.target : 0, elapsed, annual: last, startsY: sy[sy.length - 1], starts: sy.length ? S[m][sy[sy.length - 1]].all : null, avg, avgFrom: recent[0], avgTo: recent[recent.length - 1], appr, prop, left: Math.max(0, t.target - done), yearsLeft: y ? 2031 - y : null };
+    });
+  }
+  function housingCardHTML() {
+    const rows = housingRows(); if (!rows) return '';
+    const pc = v => `${Math.round(v * 100)}%`;
+    return `<section class="ov-card ov-housing" data-info="housing-targets"><div class="ov-h"><h3>Housing targets to 2031</h3></div>
+      ${rows.map(r => { const need = r.yearsLeft ? r.left / r.yearsLeft : null; return `<div class="ov-cap ${r.pct >= r.elapsed ? 'ok' : r.pct >= r.elapsed * 0.6 ? 'near' : 'over'}"><div class="ov-cap-h"><span>${esc(r.m)}</span><span><b>${fmtNum(r.done)}</b> of ${fmtNum(r.target)} (${pc(r.pct)})</span></div>
+        <div class="ov-bar" role="img" aria-label="${pc(r.pct)} of the 2031 target built, ${pc(r.elapsed)} of the time gone"><i class="c" style="width:${Math.min(100, r.pct * 100).toFixed(1)}%"></i><i class="t" style="left:${(r.elapsed * 100).toFixed(1)}%"></i></div>
+        <small>${r.annual ? `${r.y}: ${fmtNum(r.annual.progress)} of ${fmtNum(r.annual.target)} (${pc(r.annual.progress / r.annual.target)})` : ''}${r.avg ? ` · CMHC starts ${r.avgFrom}–${r.avgTo} ≈${fmtNum(Math.round(r.avg))}/yr` : ''}${need ? ` · needs ≈${fmtNum(Math.round(need))}/yr to 2031` : ''} · pipeline ${fmtNum(Math.round(r.appr))} approved + ${fmtNum(Math.round(r.prop))} proposed units = <b>${r.left ? pc((r.appr + r.prop) / r.left) : '–'}</b> of what's left</small></div>`; }).join('')}
+      <p class="small muted">Progress since 2022 from Ontario's housing supply tracker (to ${rows[0].y}); the tick marks the share of the 10 years gone. CMHC starts are new homes only (the tracker also counts additional units and beds).</p></section>`;
+  }
+  // Population outlook: census, the Ministry of Finance projection and the Region's 2051 forecast.
+  function outlookRows() {
+    const H = state.housing, F = state.reports && state.reports.forecast2051; if (!H || !H.mof) return null;
+    const mof = H.mof.peel, region = F ? Object.values(F.municipalities).reduce((t, m) => t + m.pop2051, 0) : null, region21 = F ? Object.values(F.municipalities).reduce((t, m) => t + m.pop2021, 0) : null;
+    return { mof, region, region21, y0: 2025, y1: 2051 };
+  }
+  function outlookCardHTML() {
+    const o = outlookRows(); if (!o) return '';
+    const ys = Object.keys(o.mof).map(Number).sort((a, b) => a - b), v = ys.map(y => o.mof[y]);
+    const W = 300, H = 92, L0 = 4, R0 = 4, T0 = 8, B0 = 16, lo = Math.min(...v, o.region21 || Infinity) * 0.97, hi = Math.max(...v, o.region || 0) * 1.02;
+    const x = y => L0 + (W - L0 - R0) * (y - 2021) / (2051 - 2021), yv = n => T0 + (H - T0 - B0) * (1 - (n - lo) / (hi - lo));
+    const gap = o.region ? o.region - o.mof[2051] : null;
+    return `<section class="ov-card ov-outlook" data-info="outlook"><div class="ov-h"><h3>Population outlook</h3>${'<button type="button" class="btn small link ov-go" data-ov-tab="growth">Demand →</button>'}</div>
+      <svg class="ov-spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="Ministry of Finance projection for Peel against the Region's 2051 forecast">
+        ${o.region ? `<line x1="${x(2021)}" y1="${yv(o.region21)}" x2="${x(2051)}" y2="${yv(o.region)}" class="sp-reg"/><circle cx="${x(2051)}" cy="${yv(o.region)}" r="3" class="sp-reg-d"/>` : ''}
+        <path d="${ys.map((y, i) => `${i ? 'L' : 'M'}${x(y).toFixed(1)},${yv(v[i]).toFixed(1)}`).join('')}" class="sp-mof"/>
+        ${[2021, 2031, 2041, 2051].map(y => `<text x="${x(y)}" y="${H - 3}" class="sp-ax" text-anchor="${y === 2021 ? 'start' : y === 2051 ? 'end' : 'middle'}">${y}</text>`).join('')}
+      </svg>
+      <div class="dca-key small"><span><i class="k-reg"></i>Region forecast (Growth Plan): ${fmtNum(roundPop(o.region))} by 2051</span><span><i class="k-mof"></i>Ministry of Finance: ${fmtNum(roundPop(o.mof[2051]))} by 2051</span></div>
+      <p class="small">${gap > 0 ? `The province's summer 2026 projection has Peel <strong>≈${fmtNum(roundPop(gap))} people (${Math.round(gap / o.region * 100)}%) below</strong> the Region's 2051 forecast, dipping to ${fmtNum(roundPop(o.mof[2031]))} in 2031 (fewer temporary residents) before growing again. Growth-driven DC projects may be needed later than the forecast implies; the Ministry's projection is not a planning target.` : 'The Ministry of Finance projection is in line with the Region\'s 2051 forecast.'}</p></section>`;
+  }
   // ---- Overview (bottom panel, first tab): the headline numbers on one screen ----------------
   // Growth of the shown developments, their servicing demand broken down by phase, the capacity
   // status of the plants, the DC projects to act on, and the tools, each with a link to its tab.
@@ -1331,6 +1408,7 @@
           <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>
           <div class="ov-tiles ov-flow">${tile(fmt1(cb.water.maxDay), 'L/s', 'water max day', `${fmt1(D.toMLd(cb.water.avg))} ML/d average`)}${tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet', `${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average`)}</div></section>
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
+        ${housingCardHTML()}${outlookCardHTML()}
         <section class="ov-card ov-break"><div class="ov-h"><h3>Servicing demand by phase</h3>${go('growth', 'Full breakdown')}</div>${phaseT}</section>
         ${state.dcInfra ? `<section class="ov-card ov-dc"><div class="ov-h"><h3>DC program</h3>${go('dca', 'DC Analysis')}</div>${dc}</section>` : ''}
         <section class="ov-card ov-tools"><div class="ov-h"><h3>Tools</h3></div><div class="ov-btns">
@@ -1452,9 +1530,10 @@
         ${inp('water', 'avg', 'Average day (L/cap/d)', 1)}${inp('water', 'maxDay', 'Max day factor', 0.1)}${inp('water', 'peakHour', 'Peak hour factor', 0.1)}
       </fieldset>
       <fieldset><legend>Wastewater</legend>
-        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01)}${inp('wastewater', 'peakMin', 'Peaking min', 0.1)}${inp('wastewater', 'peakMax', 'Peaking max', 0.1)}
+        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01).replace(/value="[^"]*"/, `value="${state.iiBase}"`)}${inp('wastewater', 'peakMin', 'Peaking min', 0.1)}${inp('wastewater', 'peakMax', 'Peaking max', 0.1)}
         <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population and kept between the min and max (Peel: 2.0–4.0). I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I.</p>
       </fieldset>
+      ${wetBoxHTML()}
       <fieldset><legend>Employment</legend>
         ${inp('employment', 'water', 'Water (L/emp/d)', 1)}${inp('employment', 'maxDay', 'Max day factor', 0.1)}${inp('employment', 'peakHour', 'Peak hour factor', 0.1)}
         ${inp('employment', 'wastewater', 'Wastewater (L/emp/d)', 1)}${inp('employment', 'peakMin', 'Peaking min', 0.1)}${inp('employment', 'peakMax', 'Peaking max', 0.1)}
@@ -1473,10 +1552,61 @@
     const el = e.target; if (!el.dataset.g) return;
     const v = Number(el.value);
     if (!(v >= 0)) return;
-    state.criteria[el.dataset.g][el.dataset.k] = v;
-    store.set('criteria', { ...state.criteria, version: 2 });
+    if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') { state.iiBase = v; applyWet(); }
+    else state.criteria[el.dataset.g][el.dataset.k] = v;
+    saveCriteria();
     refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
+    if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') wetChanged();
   };
+  $('#d-criteria').addEventListener('change', e => {
+    const w = e.target.closest('[data-wet]'); if (!w) return;
+    state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged();
+  });
+  // Saved with the I&I allowance as entered (not scaled by the wet weather scenario).
+  function saveCriteria() { store.set('criteria', { ...state.criteria, wastewater: { ...state.criteria.wastewater, infiltration: state.iiBase }, version: 2 }); }
+  // ---- Wet weather scenario: design storms and climate change (MTO IDF) ------------------------
+  // The I&I allowance (L/s/ha) is taken to carry the peak of a reference storm (the "allowance
+  // represents" setting, 25-year by default). A scenario storm scales it by the ratio of the 1-hour
+  // rainfall intensities from the MTO IDF curves (Peel average of the 40 blocks), optionally with
+  // climate change: the MTO lookup's own trend to a future year, or a percentage uplift (e.g. from
+  // the IDF_CC tool). Every pipe, pumping station and DC result uses the scaled allowance.
+  const IDF = { data: null, dur: 1 };
+  const WET_CLIM = { none: 'today\'s climate', mto2050: 'MTO trend to 2050', mto2080: 'MTO trend to 2080', p10: '+10%', p20: '+20%', p30: '+30%' };
+  function wetIntensity(rp, clim) {
+    const d = IDF.data, p = d && d.peel[String(rp)]; if (!p) return null;
+    let i = p.a * Math.pow(IDF.dur, p.b);
+    const m = d.trend.m[d.trend.dur.indexOf(IDF.dur)] || 0;
+    if (clim === 'mto2050') i += m * (2050 - d.dataYear); else if (clim === 'mto2080') i += m * (2080 - d.dataYear);
+    else if (/^p\d+$/.test(clim || '')) i *= 1 + +clim.slice(1) / 100;
+    return i;
+  }
+  function wetFactor() {
+    const w = state.wet; if (!w.rp || !IDF.data) return 1;
+    const i0 = wetIntensity(w.ref, 'none'), i1 = wetIntensity(w.rp, w.clim);
+    return i0 > 0 && i1 > 0 ? i1 / i0 : 1;
+  }
+  function applyWet() { state.criteria.wastewater.infiltration = +(state.iiBase * wetFactor()).toFixed(4); }
+  const wetText = () => state.wet.rp && IDF.data ? `${state.wet.rp}-year storm${state.wet.clim !== 'none' ? `, ${WET_CLIM[state.wet.clim]}` : ''}` : null;
+  function wetChanged() {
+    store.set('wetWx', state.wet); applyWet();
+    refreshCriteria(false); renderCapLayer(); renderLegend();
+    if (state.svcModel) renderSvcTab();
+    if (footTab === 'dca') renderDca(); if (footTab === 'overview') renderOverview();
+    const f = $('#wet-box'); if (f) f.outerHTML = wetBoxHTML();
+  }
+  function wetBoxHTML() {
+    const w = state.wet, d = IDF.data;
+    if (!d) return '<div id="wet-box"></div>';
+    const opt = (k, v, t) => `<option value="${v}"${String(w[k]) === String(v) ? ' selected' : ''}>${t}</option>`;
+    const rps = [2, 5, 10, 25, 50, 100], f = wetFactor(), i0 = wetIntensity(w.ref, 'none'), i1 = w.rp ? wetIntensity(w.rp, w.clim) : i0;
+    return `<fieldset id="wet-box" class="wet-box" data-info="wet-weather"><legend>Wet weather scenario (design storm)</legend>
+      <label class="field"><span>Storm</span><select data-wet="rp">${opt('rp', 0, 'Design allowance (no scaling)')}${rps.map(r => opt('rp', r, `${r}-year`)).join('')}</select></label>
+      <label class="field"><span>Climate</span><select data-wet="clim"${w.rp ? '' : ' disabled'}>${Object.entries(WET_CLIM).map(([k, t]) => opt('clim', k, t)).join('')}</select></label>
+      <label class="field"><span>Allowance represents</span><select data-wet="ref"${w.rp ? '' : ' disabled'}>${rps.map(r => opt('ref', r, `${r}-year storm`)).join('')}</select></label>
+      <p class="small">${w.rp ? `I&amp;I <strong>${state.iiBase} → ${fmt1(state.criteria.wastewater.infiltration)} L/s/ha</strong> (×${f.toFixed(2)}): 1-hour intensity ${fmt1(i0)} → ${fmt1(i1)} mm/h.` : `I&amp;I at the design allowance, ${state.iiBase} L/s/ha. Pick a storm to scale it (1-hour ${w.ref}-year intensity ${fmt1(i0)} mm/h).`}</p>
+      <p class="small muted">MTO IDF Curve Look-up, average of the 40 blocks (the 1-hour intensity varies ${(() => { const v = Object.values(d.blocks).map(b => b['25']); return `${fmt1(Math.min(...v))}–${fmt1(Math.max(...v))}`; })()} × t^${d.peel['25'].b} across Peel for the 25-year storm). Climate: the MTO lookup's trend (+${(d.trend.m[4] * 40).toFixed(1)} mm/h at 1 hour by 2050) or an uplift from the Western University IDF_CC tool. A screening scale on the allowance, not a calibrated RDII model: the Region's flow monitoring (Dragonfly) would set block-by-block response.</p>
+    </fieldset>`;
+  }
   // Criteria changed: redraw everything that uses them (jobs also feed the summaries and the open development).
   function refreshCriteria(jobs) {
     if (jobs) { clearEmp(); renderPipeline(state.projects.filter(p => matches(p, true))); }
@@ -1492,6 +1622,7 @@
   $('#d-criteria').onclick = e => {
     if (e.target.id !== 'd-reset') return;
     state.criteria = mergeCriteria(null); store.set('criteria', null);
+    state.iiBase = state.criteria.wastewater.infiltration; applyWet();
     renderCriteria(); refreshCriteria(true);
   };
 
@@ -2042,7 +2173,7 @@
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
     </div></section>` : '';
-    return `${trace}${near}${f ? allocBoxHTML(p) : ''}${water}${ww}${site}`;
+    return `${trace}${near}${f ? allocBoxHTML(p) + dcRevenueHTML(p) : ''}${water}${ww}${site}`;
   }
 
   // One dated history: phase changes (weekly check), council and committee items, file events
@@ -2948,7 +3079,9 @@
       // Optional: census shares by area overlap and the Region's 2025 annual report figures.
       const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? r.json() : null; } catch (e) { return null; } };
       let dc;
-      [state.svcCensus, state.reports, dc] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json')]);
+      [state.svcCensus, state.reports, dc, state.dcCosts, IDF.data, state.housing] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json'), opt('data/dc-costs.json'), opt('data/idf.json'), opt('data/housing.json')]);
+      opt('data/compliance.json').then(c => { state.compliance = c; if (c && footTab === 'ww') renderSvcTab(); });
+      if (IDF.data) { applyWet(); const f = $('#wet-box'); if (f) f.outerHTML = wetBoxHTML(); }
       state.dcInfra = prepDc(dc);
       renderRefs();
       for (const a of [...state.servicing.zones, ...state.servicing.drainage, ...state.servicing.psAreas]) svcById.set(a.id, a);
@@ -3233,7 +3366,7 @@
   function scenarioText() {
     const R = state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
-      dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, state.dcInfra ? `plant expansions ${hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria'].filter(Boolean).join(' · ');
+      dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, state.dcInfra ? `plant expansions ${hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria'].filter(Boolean).join(' · ');
   }
   // Scenario A: a pinned set of results to compare the current scenario with.
   function scenarioMetrics() {
@@ -3308,7 +3441,7 @@
   const CRIT_LABEL = { ppu: 'Persons per unit', water: 'Water', wastewater: 'Wastewater', employment: 'Employment', m2PerJob: 'Floor space per job' };
   function criteriaChanges() {
     const out = [], c = state.criteria, d = D.DEFAULT_CRITERIA;
-    for (const g of Object.keys(d)) for (const k of Object.keys(d[g])) if (c[g] && +c[g][k] !== +d[g][k]) out.push(`${CRIT_LABEL[g] || g} ${k} ${c[g][k]} (default ${d[g][k]})`);
+    for (const g of Object.keys(d)) for (const k of Object.keys(d[g])) { const v = g === 'wastewater' && k === 'infiltration' ? state.iiBase : c[g] && c[g][k]; if (c[g] && +v !== +d[g][k]) out.push(`${CRIT_LABEL[g] || g} ${k} ${v} (default ${d[g][k]})`); }
     return out;
   }
   function stampHTML(kind, Y) {
@@ -3389,7 +3522,8 @@
       <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
-      ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}`;
+      ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
+      ${hydroBoxHTML()}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -3752,6 +3886,7 @@
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(plantLabel(dv.from))} to ${esc(plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       ${chart}
       ${cmp}
+      ${complianceHTML()}
       <h3 class="svc-sub">Plant inflow by growth layer</h3>
       <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each layer is what it adds, the running total below${svcOpt.ww === 'calibrated' ? ' · capacity check (calibrated to 2025 flows)' : ''}</caption>
       <thead><tr><th>Layer</th><th>Population</th><th>Average dry<br>weather</th><th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th><th>Average<br>% of rated</th></tr></thead>
@@ -3760,6 +3895,21 @@
         ${tor.rows.length ? block(esc(plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details>`;
     $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant, compared with the 2025 annual reports`;
+  }
+  // Effluent compliance (data/compliance.json): exceedances of the plants' ECA limits reported to
+  // the Ministry (Environmental Compliance Reports), by plant and year.
+  function complianceHTML() {
+    const C = state.compliance; if (!C) return '';
+    const yrs = C.years, first = yrs[0], last = yrs[yrs.length - 1];
+    const plants = ['Lakeview', 'Clarkson', 'Inglewood'];
+    const n = pl => C.rows.filter(r => r.plant === pl).reduce((t, r) => t + r.count, 0);
+    const recent = C.rows.filter(r => r.year >= last - 1);
+    return `<h3 class="svc-sub" data-info="compliance">Effluent compliance <span class="muted small">exceedances of the plants' ECA limits reported to the Ministry, ${first}–${last}</span></h3>
+      <div class="cmp-sum">${plants.map(pl => { const k = n(pl); return `<span class="fr-b ${k === 0 ? 'fr-ok' : recent.some(r => r.plant === pl) ? 'fr-due' : 'fr-ref'}">${esc(PLANT_SHORT[pl])}: ${k === 0 ? 'none' : `${k} exceedance${k === 1 ? '' : 's'}`}</span>`; }).join(' ')}</div>
+      ${C.rows.length ? `<table class="dt svc-table cmp-table"><thead><tr><th>Plant</th><th>When</th><th>Parameter</th><th>Limit</th><th>Measured (max)</th><th>Action</th></tr></thead><tbody>
+        ${C.rows.slice().reverse().map(r => `<tr><td>${esc(PLANT_SHORT[r.plant])}</td><td>${esc(r.from)}${r.to && r.to !== r.from ? ` – ${esc(r.to)}` : ''}</td><td>${esc(r.contaminant)}</td><td>${r.limit ?? '–'} ${esc(r.unit)}<small>${esc(r.freq)}</small></td><td><strong>${r.max ?? '–'}</strong> ${esc(r.unit)}${r.count > 1 ? `<small>${r.count} times</small>` : ''}</td><td>${esc(r.action)}<small>${esc(r.ministry)}</small></td></tr>`).join('')}
+      </tbody></table>` : ''}
+      <p class="small muted">Ontario Environmental Compliance Reports (municipal and private sewage works), ${first}–${last}. Effluent quality, not hydraulic capacity, can also limit how much a plant can take: a plant near its limits for phosphorus or ammonia may need process upgrades before it can be rerated.</p>`;
   }
   // References (Breakdown & criteria tab): the Region's 2025 annual reports used for comparison.
   function renderRefs() {
@@ -3774,7 +3924,7 @@
   }
   // ---- Export: a printable report (save as PDF) and an Excel workbook of what is on screen ----
   // Scopes: water, plants, catchments, growth (bottom panel) and dev / selection (side panel).
-  const exportBar = scope => `<div class="export-bar" role="group" aria-label="Export"><button type="button" class="btn small" data-export="pdf" data-scope="${scope}">PDF / print</button><button type="button" class="btn small" data-export="xlsx" data-scope="${scope}">Excel</button></div>`;
+  const exportBar = scope => `<div class="export-bar" role="group" aria-label="Export"><button type="button" class="btn small" data-export="pdf" data-scope="${scope}">PDF / print</button><button type="button" class="btn small" data-export="xlsx" data-scope="${scope}">Excel</button>${scope === 'catchments' && state.servicing && state.servicing.blocks ? '<button type="button" class="btn small" data-swmm title="The 40 blocks as a SWMM 5 model with the design storm, to run in SWMM or PCSWMM">SWMM model (.inp)</button>' : ''}</div>`;
   const SCOPES = {
     water: { title: 'Water by pressure zone', els: () => [$('#water-body')] },
     plants: { title: 'Wastewater treatment plants and capacity', els: () => [$('#plants-body')] },
@@ -5701,6 +5851,119 @@
     return DCN.supply;
   }
   const zLevel = z => { const m = /^(\d+)/.exec(z || ''); return m ? +m[1] : null; };
+  // ---- SWMM export: the 40 wastewater blocks as a SWMM 5 skeleton -------------------------------
+  // One junction per block outlet, a conduit to the block it drains into (straight line, the
+  // block's largest trunk size, the slope of the trunk sewer nearest its outlet; inverts relative to
+  // the plant end, datum 0 m), dry weather flow by block at the Demand year (census + growth, Peel
+  // criteria) with a diurnal pattern, and rainfall-derived I&I (RTK unit hydrographs on each block's
+  // sewered area) from the design storm: a Chicago hyetograph from the MTO IDF curves (the wet
+  // weather scenario's storm and climate, 25-year otherwise). RTK values are typical starting
+  // values to calibrate against the Region's flow monitoring.
+  function chicago(a, b, hours = 4, r = 0.375, stepMin = 5) {
+    const D = (tau, f) => f * a * Math.pow(tau / f, 1 + b);   // depth within tau hours of the peak, on one side
+    const n = Math.round(hours * 60 / stepMin), tp = hours * r, out = [];
+    for (let k = 0; k < n; k++) {
+      const t0 = k * stepMin / 60, t1 = (k + 1) * stepMin / 60;
+      const depth = t1 <= tp ? D(tp - t0, r) - D(tp - t1, r) : t0 >= tp ? D(t1 - tp, 1 - r) - D(t0 - tp, 1 - r) : D(tp - t0, r) + D(t1 - tp, 1 - r);
+      out.push(depth / (stepMin / 60));   // mm/h over the step
+    }
+    return out;
+  }
+  function swmmInp() {
+    const M = state.svcModel, bl = state.servicing.drainage.filter(d => d.kind === 'block'), c = state.criteria, E = c.employment;
+    const byId = new Map(bl.map(d => [d.block, d]));
+    const y = capYear, f = y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    const rp = state.wet.rp || 25, clim = state.wet.rp ? state.wet.clim : 'none', P = IDF.data ? IDF.data.peel[String(rp)] : { a: 39.17, b: -0.699 };
+    const scale = IDF.data ? wetIntensity(rp, clim) / wetIntensity(rp, 'none') : 1;
+    const storm = chicago(P.a * scale, P.b);
+    const slopeAt = d => { if (!SEW.data || !d.outletAt) return 0.002; const k = nearestPipe(d.outletAt[0], d.outletAt[1], 300); return k >= 0 && SEW.data.pipes[k][1] > 0 ? SEW.data.pipes[k][1] : 0.002; };
+    const hav = ([x1, y1], [x2, y2]) => { const R = 6371000, r = Math.PI / 180, dy = (y2 - y1) * r, dx = (x2 - x1) * r; const h = Math.sin(dy / 2) ** 2 + Math.cos(y1 * r) * Math.cos(y2 * r) * Math.sin(dx / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
+    const len = d => { const n = d.downstream && byId.get(d.downstream.replace(/^dr:B/, '')); return n && d.outletAt && n.outletAt ? Math.max(100, hav(d.outletAt, n.outletAt)) : 200; };
+    // Inverts: 0 m at each plant's last block, rising upstream by slope × length.
+    const inv = new Map(), invOf = d => { if (inv.has(d.id)) return inv.get(d.id); const n = d.downstream && svcById.get(d.downstream); const v = n && n !== d ? invOf(n) + slopeAt(d) * len(d) : 0; inv.set(d.id, v); return v; };
+    const id = d => `B${d.block}`, L = [];
+    const dwf = d => { const l = M && M.local.get(d.id); if (!l) return 0; const pop = l.census + l.built + l.approved * f.fa + l.proposed * f.fp, jobs = (l.jbuilt || 0) + (l.japproved || 0) * f.fa + (l.jproposed || 0) * f.fp; return pop * c.wastewater.avg / 86400 + jobs * E.wastewater / 86400; };
+    L.push('[TITLE]', `Region of Peel wastewater blocks: SWMM skeleton from the Peel Development Tracker (${new Date().toISOString().slice(0, 10)})`, `Dry weather flow at ${y == null ? 'build-out' : y}; design storm ${rp}-year, 4-hour Chicago (MTO IDF${clim !== 'none' ? `, ${WET_CLIM[clim]}` : ''}). Inverts relative (plant end = 0 m). RTK values are placeholders to calibrate.`, '');
+    L.push('[OPTIONS]', 'FLOW_UNITS LPS', 'INFILTRATION HORTON', 'FLOW_ROUTING DYNWAVE', 'START_DATE 01/01/2026', 'START_TIME 00:00:00', 'END_DATE 01/02/2026', 'END_TIME 00:00:00', 'REPORT_STEP 00:05:00', 'WET_STEP 00:05:00', 'DRY_STEP 01:00:00', 'ROUTING_STEP 0:00:10', 'ALLOW_PONDING NO', '');
+    L.push('[RAINGAGES]', ';Name Format Interval SCF Source', 'RG1 INTENSITY 0:05 1.0 TIMESERIES STORM', '');
+    L.push('[JUNCTIONS]', ';Name Elevation MaxDepth InitDepth SurDepth Aponded');
+    for (const d of bl) L.push(`${id(d)} ${invOf(d).toFixed(2)} ${(Math.max(3, (d.trunkMm || 600) / 1000 + 3)).toFixed(1)} 0 0 0`);
+    const outs = bl.filter(d => !d.downstream || !byId.get(d.downstream.replace(/^dr:B/, '')));
+    L.push('', '[OUTFALLS]', ';Name Elevation Type'); for (const d of outs) L.push(`OF_${id(d)} ${(-0.2).toFixed(2)} FREE NO`);
+    L.push('', '[CONDUITS]', ';Name From To Length Roughness InOffset OutOffset');
+    for (const d of bl) { const n = d.downstream && byId.get(d.downstream.replace(/^dr:B/, '')); L.push(`C_${id(d)} ${id(d)} ${n ? id(n) : `OF_${id(d)}`} ${Math.round(len(d))} 0.013 0 0`); }
+    L.push('', '[XSECTIONS]', ';Link Shape Geom1 Geom2 Geom3 Geom4 Barrels');
+    for (const d of bl) L.push(`C_${id(d)} CIRCULAR ${((d.trunkMm || 600) / 1000).toFixed(3)} 0 0 0 1`);
+    L.push('', '[DWF]', ';Node Constituent Baseline Patterns');
+    for (const d of bl) { const q = dwf(d); if (q > 0) L.push(`${id(d)} FLOW ${q.toFixed(2)} "DIURNAL"`); }
+    L.push('', '[PATTERNS]', ';Typical residential diurnal pattern (hourly multipliers, mean 1.0)');
+    const pat = [0.62, 0.52, 0.46, 0.43, 0.45, 0.58, 0.88, 1.24, 1.38, 1.33, 1.25, 1.16, 1.1, 1.04, 0.99, 0.97, 1.0, 1.1, 1.24, 1.3, 1.27, 1.18, 1.0, 0.77];
+    L.push(`DIURNAL HOURLY ${pat.slice(0, 6).join(' ')}`, ...[6, 12, 18].map(k => `DIURNAL ${pat.slice(k, k + 6).join(' ')}`));
+    L.push('', '[HYDROGRAPHS]', ';Name Raingage / Month Response R T K', 'RTK RG1', 'RTK All Short 0.010 1.0 2.0', 'RTK All Medium 0.012 4.0 3.0', 'RTK All Long 0.008 12.0 4.0');
+    L.push('', '[RDII]', ';Node UnitHydrograph SewerArea(ha)'); for (const d of bl) if ((d.areaHa || 0) > 0) L.push(`${id(d)} RTK ${(d.areaHa).toFixed(1)}`);
+    L.push('', '[TIMESERIES]', ';Name Time Value (mm/h)'); storm.forEach((v, k) => L.push(`STORM ${String(Math.floor((k * 5) / 60)).padStart(1, '0')}:${String((k * 5) % 60).padStart(2, '0')} ${v.toFixed(2)}`)); L.push(`STORM 4:00 0`);
+    L.push('', '[COORDINATES]', ';Node X-Coord Y-Coord (longitude, latitude)');
+    for (const d of bl) if (d.outletAt) L.push(`${id(d)} ${d.outletAt[0]} ${d.outletAt[1]}`);
+    for (const d of outs) if (d.outletAt) L.push(`OF_${id(d)} ${(d.outletAt[0] + 0.002).toFixed(5)} ${(d.outletAt[1] - 0.002).toFixed(5)}`);
+    L.push('');
+    return L.join('\n');
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('[data-swmm]')) return;
+    if (!state.svcModel) return;
+    const go = () => download(`peel-blocks-swmm-${capYear == null ? 'buildout' : capYear}.inp`, swmmInp(), 'text/plain');
+    if (!SEW.data) loadSewers().then(go); else go();
+  });
+  // ---- Hydraulic check (beta): EPANET 2.2 in the browser (epanet-js) on the large mains that
+  // carry water up into each pressure zone. Each zone boundary is a reservoir (the lower zone)
+  // feeding the upper zones' maximum day demand through its crossing mains in parallel (1 km each,
+  // Hazen-Williams C 120): EPANET splits the flow between them by size and gives each main's flow,
+  // velocity and head loss per km. A skeleton to check the transfer mains, not a calibrated model:
+  // the Region's InfoWater model holds the full network, pumps, storage and pressures.
+  const HYD = { res: null, inp: '', busy: false, err: '' };
+  const EPANET_URL = 'https://cdn.jsdelivr.net/npm/epanet-js@0.9.0/dist/index.mjs';
+  function hydroInp(rows) {
+    const L = ['[TITLE]', 'Peel pressure zone supply mains: skeleton from the Peel Development Tracker', '', '[JUNCTIONS]', ';ID  Elev  Demand(L/s)'];
+    for (const r of rows) L.push(`U${r.i}  0  ${(r.qLs).toFixed(2)}  ;zone ${r.b.upper} and above`);
+    L.push('', '[RESERVOIRS]', ';ID  Head'); for (const r of rows) L.push(`R${r.i}  100  ;zone ${r.b.lower}`);
+    L.push('', '[PIPES]', ';ID  Node1  Node2  Length(m)  Diameter(mm)  Roughness(C)  MinorLoss  Status');
+    for (const r of rows) r.b.mains.forEach((m, k) => L.push(`P${r.i}_${k + 1}  R${r.i}  U${r.i}  1000  ${m.d}  120  0  Open  ;${m.id}`));
+    L.push('', '[OPTIONS]', 'Units LPS', 'Headloss H-W', '', '[END]', '');
+    return L.join('\n');
+  }
+  async function runHydro() {
+    if (HYD.busy) return; HYD.busy = true; HYD.err = ''; renderHydroBox();
+    try {
+      const sup = await loadWaterSupply(); if (!sup) throw new Error('The supply mains (data/water-supply.json) did not load.');
+      const y = capYear == null ? null : capYear;
+      const rows = sup.boundaries.map((b, i) => { const c = cached(`sup:${b.lower}|${b.upper}`, () => supplyCons(b)); const q = c.q(y); return { i: i + 1, b, c, qMLd: q, qLs: q * 1e6 / 86400 }; });
+      HYD.inp = hydroInp(rows);
+      const E = await import(EPANET_URL);
+      const ws = new E.Workspace(); await ws.loadModule();
+      ws.writeFile('peel.inp', HYD.inp);
+      const m = new E.Project(ws); m.open('peel.inp', 'peel.rpt', 'peel.bin'); m.solveH();
+      for (const r of rows) r.mains = r.b.mains.map((mn, k) => { const ix = m.getLinkIndex(`P${r.i}_${k + 1}`); return { ...mn, q: m.getLinkValue(ix, E.LinkProperty.Flow), v: m.getLinkValue(ix, E.LinkProperty.Velocity), hl: m.getLinkValue(ix, E.LinkProperty.Headloss) }; });
+      m.close();
+      HYD.res = { rows, y, vmax: sup.velocity || 1.5, key: scenarioKey() };
+    } catch (err) { HYD.err = err.message || String(err); }
+    HYD.busy = false; renderHydroBox();
+  }
+  function hydroBoxHTML() {
+    const R = HYD.res && HYD.res.key === scenarioKey() ? HYD.res : null, yr = capYear == null ? 'build-out' : capYear;
+    const body = HYD.busy ? '<p class="small muted">Running EPANET…</p>' : HYD.err ? `<p class="small dcn-gap-t">EPANET could not run: ${esc(HYD.err)}</p>` : !R ? `<p class="small muted">Runs EPANET 2.2 (epanet-js, in this browser) on the large mains crossing into each upper pressure zone at the ${esc(String(yr))} maximum day demand.</p>` :
+      `<div class="hyd-scroll"><table class="dt svc-table hyd-table"><thead><tr><th>Into zone</th><th>Max day</th><th>Main</th><th>Flow</th><th>Velocity</th><th>Head loss</th></tr></thead><tbody>
+        ${R.rows.map(r => r.mains.map((mn, k) => `<tr${k ? '' : ' class="hyd-first"'}>${k ? '<td></td><td></td>' : `<td>${esc(r.b.upper)} and above<small>from zone ${esc(r.b.lower)}</small></td><td>${fmt1(r.qMLd)} ML/d<small>${fmtNum(Math.round(r.qLs))} L/s</small></td>`}<td>${mn.d} mm<small>${esc(mn.id)}</small></td><td>${fmtNum(Math.round(mn.q))} L/s</td><td class="${mn.v > R.vmax ? 'dcn-gap-t' : ''}">${mn.v.toFixed(2)} m/s</td><td>${mn.hl.toFixed(2)} m/km</td></tr>`).join('')).join('')}
+      </tbody></table></div>
+      <p class="small">${(n => n ? `<strong>${n} main${n === 1 ? '' : 's'}</strong> above ${R.vmax} m/s at the ${esc(String(R.y == null ? 'build-out' : R.y))} maximum day: the transfer into ${n === 1 ? 'that zone' : 'those zones'} needs the DC mains or pumping on schedule.` : `Every crossing main stays at or below ${R.vmax} m/s at the ${esc(String(R.y == null ? 'build-out' : R.y))} maximum day.`)(R.rows.reduce((t, r) => t + r.mains.filter(m => m.v > R.vmax).length, 0))}</p>`;
+    return `<section id="hyd-box" class="hyd-box" data-info="hydraulics"><h3 class="svc-sub">Hydraulic check <span class="fr-b fr-ref">beta · EPANET</span></h3>${body}
+      <p class="small"><button type="button" class="btn small" data-hyd="run"${HYD.busy ? ' disabled' : ''}>${R ? 'Run again' : 'Run EPANET check'}</button>${HYD.inp ? ' <button type="button" class="btn small" data-hyd="inp">Download .inp</button>' : ''}</p>
+      <p class="small muted">Skeleton: each zone boundary's crossing mains in parallel, 1 km long, Hazen-Williams C 120, from a fixed-head reservoir to the upper zones' maximum day. Velocity against the ${DCN.supply ? DCN.supply.velocity : 1.5} m/s used for the supply capacity. Open the .inp in EPANET or InfoWater to build on it.</p></section>`;
+  }
+  function renderHydroBox() { const b = $('#hyd-box'); if (b) b.outerHTML = hydroBoxHTML(); }
+  document.addEventListener('click', e => {
+    const h = e.target.closest('[data-hyd]'); if (!h) return;
+    if (h.dataset.hyd === 'run') runHydro(); else if (h.dataset.hyd === 'inp' && HYD.inp) download(`peel-zone-supply-${THIS_YEAR}.inp`, HYD.inp, 'text/plain');
+  });
   const wellSystem = { AV13: 'Caledon Village – Alton', CE9: 'Palgrave – Caledon East' };
   const yearsAhead = () => { const ys = []; for (let y = THIS_YEAR; y <= hz.end; y++) ys.push(y); return ys; };
   // First year the flow reaches the limit: 'today' if already there, null if not by build-out.
@@ -5736,7 +5999,7 @@
     return out;
   }
   const lineRelief = ln => ({ kind: 'line', ln, y: ln.y || null, text: `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` ${ln.p}` : ''}` });
-  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}` }; };
+  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}` }; };
   // Growth (peak wet, L/s) of gp people, gj jobs on gh hectares, as in pipeFlow.
   function growthLs(gp, gj, gh) {
     const c = state.criteria, E = c.employment;
@@ -6144,6 +6407,54 @@
     for (const p of state.projects) { const lay = svcLayerOf(p); if (lay !== 'approved' && lay !== 'proposed') continue; const e = D.estimate([p], state.criteria, 'all', jobsOf); if (e.totalUnits > 0) { pop += e.population; units += e.totalUnits; } }
     return units > 0 ? pop / units : (state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
   }
+  // ---- DC cost and revenue ---------------------------------------------------------------------
+  // data/dc-costs.json (scripts/build-dc-costs.py): the 2020 DC Background Study's gross and
+  // DC-recoverable cost by component (2020$), matched to the 2026 DC maps by component number, and
+  // the Region's water / wastewater DCs per unit.
+  const fmtMoney = v => v == null || !isFinite(v) ? '–' : v >= 1e9 ? `$${(v / 1e9).toFixed(2)} B` : v >= 1e6 ? `$${(v / 1e6).toFixed(v >= 1e8 ? 0 : 1)} M` : `$${fmtNum(Math.round(v))}`;
+  // Components of a relief (the planned main's segments, or the facility items it stands for).
+  function reliefComps(r) {
+    if (!r || !state.dcInfra) return [];
+    if (r.ln) { const id = r.ln.p || r.ln.c; return [...new Set(state.dcInfra[r.ln.sys].lines.filter(x => (x.p || x.c) === id).map(x => x.c).filter(Boolean))]; }
+    const items = r.kind === 'step' ? (r.fc ? r.fc.items.filter(i => r.step.proj && i.proj === r.step.proj) : []) : r.items || (r.fc ? r.fc.items : []);
+    return [...new Set(items.flatMap(i => (i.phases || []).map(ph => ph[2])).filter(Boolean))];
+  }
+  // Cost of a relief: the priced components (2020$) and how many of its components have a price.
+  function dcCost(r) {
+    const C = state.dcCosts && state.dcCosts.components, ids = reliefComps(r);
+    if (!C || !ids.length) return null;
+    let gross = 0, dc = 0, n = 0;
+    for (const id of ids) { const c = C[id]; if (c) { gross += c.gross; dc += c.dc; n++; } }
+    return { gross, dc, n, of: ids.length };
+  }
+  // Water + wastewater DC per unit by dwelling type (single / semi published; other types at the
+  // 2020 schedule's ratios). Apartments above 475 persons/ha count as small units (≤750 sq ft).
+  function dcRates() {
+    const R = state.dcCosts && state.dcCosts.rates; if (!R) return null;
+    const one = R.single.water + R.single.wastewater, k = R.ratio2020;
+    return { single: one, town: one * k.other, aptLarge: one * k.apartmentLarge, aptSmall: one * k.apartmentSmall, water: R.single.water, wastewater: R.single.wastewater, R };
+  }
+  // DC revenue (water and wastewater) from an estimate's units.
+  function dcRevenue(e) {
+    const r = dcRates(); if (!r || !e || !(e.totalUnits > 0)) return null;
+    const ppu = state.criteria.ppu || D.DEFAULT_CRITERIA.ppu, u = e.units, apt = u.apartment || 0;
+    const hi = apt > 0 && e.pop && ppu.apartment > ppu.apartmentHigh ? Math.min(apt, Math.max(0, (ppu.apartment * apt - e.pop.apartment) / (ppu.apartment - ppu.apartmentHigh))) : 0;
+    const rows = [['Single / semi', u.single || 0, r.single], ['Townhouse / other', u.town || 0, r.town], ['Apartment (>750 sq ft)', apt - hi + (u.unknown || 0), r.aptLarge], ['Apartment (≤750 sq ft)', hi, r.aptSmall]].filter(x => x[1] > 0.5);
+    return { total: rows.reduce((t, x) => t + x[1] * x[2], 0), rows, r };
+  }
+  // Average water + wastewater DC per unit for the approved and proposed growth (its unit mix).
+  function growthRate() {
+    const all = state.projects.filter(p => { const l = svcLayerOf(p); return l === 'approved' || l === 'proposed'; });
+    const e = D.estimate(all, state.criteria, 'all', jobsOf), v = dcRevenue(e);
+    return v && e.totalUnits > 0 ? v.total / e.totalUnits : null;
+  }
+  function dcRevenueHTML(p) {
+    const e = D.estimate([p], state.criteria, 'all', jobsOf), v = dcRevenue(e); if (!v) return '';
+    const R = v.r.R;
+    return `<div class="dcrev" data-info="dc-revenue"><div class="alloc-h"><strong>Regional water &amp; wastewater DCs</strong> <span class="fr-b fr-ok">≈${fmtMoney(v.total)}</span></div>
+      <table class="dt dcrev-t"><tbody>${v.rows.map(([t, n, rt]) => `<tr><td>${esc(t)}</td><td class="n">${fmtNum(Math.round(n))} × ${fmtMoney(rt)}</td><td class="n">${fmtMoney(n * rt)}</td></tr>`).join('')}</tbody></table>
+      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>`;
+  }
   // Developments outside the existing network that would connect to each planned main.
   function dcaConnectors() {
     const by = new Map();
@@ -6161,7 +6472,7 @@
   function dcAnalysis() {
     const k = scenarioKey(); if (DCA.key === k && DCA.res) return DCA.res;
     const cons = allNeeds().filter(c => c.q && c.status !== 'check' && c.kind !== 'storage');
-    const years = yearsAhead(), ppu = growthPpu(), conn = state.dcInfra ? dcaConnectors() : new Map();
+    const years = yearsAhead(), ppu = growthPpu(), rate = growthRate(), conn = state.dcInfra ? dcaConnectors() : new Map();
     const none = new Set();
     // Projects: every relief on a constraint, plus the planned mains developments would connect to.
     const P = new Map();
@@ -6203,13 +6514,14 @@
       else if (late) { rec = 'advance'; why = `Capacity runs out ≈${outY === THIS_YEAR ? 'now' : outY}, before it comes online (${pr.y}): bring it forward.`; }
       else if (firstY && firstY - (pr.y || THIS_YEAR) >= 5) { rec = 'defer'; why = `Growth isn't held back until ≈${firstY} without it: it could follow later (≈${firstY - 1}).`; }
       else { rec = 'keep'; why = `Without it, growth is held back from ≈${firstY || pr.y}.`; }
-      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why });
+      const cost = dcCost(pr.r), perP = cost && cost.n && bo > 0 ? cost.dc / bo : null;
+      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why, cost, perP, revRisk: rate ? bo / ppu * rate : null });
     }
     const order = { advance: 0, keep: 1, defer: 2, review: 3 };
     out.sort((a, b) => order[a.rec] - order[b.rec] || b.bo - a.bo);
     // Held back with every project as scheduled (projects late or too small), the largest constraint.
     const baseBo = Math.max(0, ...[...base.values()].map(v => v.bo)), baseY = years.map((_, i) => Math.max(0, ...[...base.values()].map(v => v.ys[i])));
-    DCA.key = k; DCA.res = { list: out, years, ppu, baseBo, baseY, nCons: cons.length };
+    DCA.key = k; DCA.res = { list: out, years, ppu, rate, baseBo, baseY, nCons: cons.length };
     return DCA.res;
   }
   // Timeline chart for one project's tightest constraint: demand, existing capacity, capacity with
@@ -6236,6 +6548,8 @@
     </svg>
     <div class="dca-key small"><span><i class="k-dem"></i>Demand</span><span><i class="k-cap0"></i>Capacity without it</span><span><i class="k-cap1"></i>With it (from ${row.y || '–'})</span><span><i class="k-div"></i>Diverted to it</span><span><i class="k-uns"></i>Over capacity without it</span></div>`;
   }
+  // Cost cell: DC-recoverable cost of the priced components, per person enabled, and coverage.
+  const costCell = r => !r.cost ? '<span class="muted">–</span>' : !r.cost.n ? '<span class="muted">not in the 2020 study</span>' : `${fmtMoney(r.cost.dc)}<small>${r.perP ? `${fmtMoney(r.perP)} / person · ` : ''}${r.cost.n < r.cost.of ? `${r.cost.n} of ${r.cost.of} parts priced` : `gross ${fmtMoney(r.cost.gross)}`}</small>`;
   const REC = { advance: ['dca-advance', 'Keep · advance'], keep: ['dca-keep', 'Keep'], defer: ['dca-defer', 'Keep · could defer'], review: ['dca-review', 'Review'] };
   function renderDca() {
     const el = $('#dca-body'); if (!el) return;
@@ -6246,7 +6560,7 @@
     const n = k => R.list.filter(r => r.rec === k).length;
     const top = R.list.filter(r => r.rec !== 'review').slice().sort((a, b) => b.bo - a.bo).slice(0, 5);
     const pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / R.ppu));
-    const list = DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
+    const list = DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : DCA.sort === 'cost' ? R.list.slice().sort((a, b) => (a.perP ?? Infinity) - (b.perP ?? Infinity)) : DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
     const adv = R.list.filter(r => r.rec === 'advance'), big = R.list.slice().sort((a, b) => b.bo - a.bo)[0];
     const hl = `${adv.length ? `<strong>${adv.length} DC project${adv.length === 1 ? '' : 's'}</strong> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out: bring ${adv.length === 1 ? 'it' : 'them'} forward. ` : 'Every DC project comes online before the capacity it relieves runs out. '}${big && big.bo > 0 ? `Cancelling <strong>${esc(big.name)}</strong> would hold back the most growth: ≈${fmtNum(roundPop(big.bo))} people (≈${fmtNum(Math.round(big.units))} units) by build-out.` : ''}`;
     el.innerHTML = `${hlP(hl)}${stampHTML('ww')}
@@ -6255,25 +6569,27 @@
         <div class="dca-tile ${n('advance') ? 'warn' : ''}"><b>${n('advance')}</b><span>come online after the capacity runs out: advance</span></div>
         <div class="dca-tile"><b>${n('keep') + n('defer')}</b><span>keep (${n('defer')} could follow later)</span></div>
         <div class="dca-tile"><b>${n('review')}</b><span>hold back no growth by build-out: review</span></div>
+        ${(pr => pr.length ? `<div class="dca-tile"><b>${fmtMoney(pr.reduce((t, r) => t + r.cost.dc, 0))}</b><span>DC-recoverable cost of the ${pr.length} project${pr.length === 1 ? '' : 's'} priced in the 2020 DC study (2020$)</span></div>` : '')(R.list.filter(r => r.cost && r.cost.n))}
         <div class="dca-tile ${R.baseBo > 0 ? 'warn' : ''}"><b>${pp(R.baseBo)}</b><span>people (≈${uu(R.baseBo)} units) held back at build-out even with every project as scheduled</span></div>
       </div>
-      <div class="dca-recs"><h3 class="sub-title">Recommendations</h3><ol class="small">${top.map(r => `<li><strong>Keep ${esc(r.name)}</strong> (${r.y || 'year not labelled'}): cancelling it holds back <strong>${pp(r.bo)} people ≈ ${uu(r.bo)} units</strong> by build-out${r.cu ? `, including ${fmtNum(r.conn.length)} development${r.conn.length === 1 ? '' : 's'} that would connect to it` : ''}. ${esc(r.why)}</li>`).join('')}
+      <div class="dca-recs"><h3 class="sub-title">Recommendations</h3><ol class="small">${top.map(r => `<li><strong>Keep ${esc(r.name)}</strong> (${r.y || 'year not labelled'}): cancelling it holds back <strong>${pp(r.bo)} people ≈ ${uu(r.bo)} units</strong> by build-out${r.revRisk ? ` (≈${fmtMoney(r.revRisk)} in water and wastewater DCs)` : ''}${r.perP ? `, at ≈${fmtMoney(r.perP)} of DC-recoverable cost per person` : ''}${r.cu ? `, including ${fmtNum(r.conn.length)} development${r.conn.length === 1 ? '' : 's'} that would connect to it` : ''}. ${esc(r.why)}</li>`).join('')}
         ${R.list.filter(r => r.rec === 'advance').length ? `<li><strong>Advance:</strong> ${R.list.filter(r => r.rec === 'advance').map(r => `${esc(r.name)} (${r.y} → ≈${r.outY === THIS_YEAR ? 'now' : r.outY})`).join('; ')}.</li>` : ''}
         ${n('review') ? `<li><strong>Review</strong> ${n('review')} project${n('review') === 1 ? '' : 's'} that hold back no growth by build-out in this screen (others relieve the same constraint, or the existing capacity suffices); check them against the DC study's own drivers (condition, I&amp;I, servicing beyond the applications) before cancelling.</li>` : ''}</ol></div>
-      <div class="dca-tools"><label class="small dca-yr">Year <select data-dca-year aria-label="Year for the impact column (same as the map's Demand year)">${years.map(y => `<option value="${y}"${capYear === y ? ' selected' : ''}>${y}</option>`).join('')}<option value=""${capYear == null ? ' selected' : ''}>Build-out</option></select></label><span class="seg">${[['impact', 'Largest impact'], ['rec', 'By recommendation'], ['year', 'By year']].map(([k, t]) => `<button type="button" class="btn small${DCA.sort === k ? ' on' : ''}" data-dca-sort="${k}">${t}</button>`).join('')}</span>
+      <div class="dca-tools"><label class="small dca-yr">Year <select data-dca-year aria-label="Year for the impact column (same as the map's Demand year)">${years.map(y => `<option value="${y}"${capYear === y ? ' selected' : ''}>${y}</option>`).join('')}<option value=""${capYear == null ? ' selected' : ''}>Build-out</option></select></label><span class="seg">${[['impact', 'Largest impact'], ['cost', 'Cost per person'], ['rec', 'By recommendation'], ['year', 'By year']].map(([k, t]) => `<button type="button" class="btn small${DCA.sort === k ? ' on' : ''}" data-dca-sort="${k}">${t}</button>`).join('')}</span>
         <button type="button" class="btn small" data-dca-csv>CSV</button><span class="muted small">Impact at the Demand year (${esc(String(yrLabel))}) and at build-out · tap a row for its timeline</span></div>
-      <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online</th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Recommendation</th></tr></thead><tbody>
+      <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online</th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Cost (2020$)</th><th>Recommendation</th></tr></thead><tbody>
         ${list.map(r => { const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0]; return `<tr class="dca-row ${REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
           <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
           <td>${r.y || '–'}</td>
           <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
           <td>${r.outY ? (r.outY === THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${hz.end}` : '–'}</td>
           <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>
-          <td>${r.bo > 0 ? `<strong>${pp(r.bo)}</strong> people<small>≈${uu(r.bo)} units</small>` : '<span class="muted">none</span>'}</td>
+          <td>${r.bo > 0 ? `<strong>${pp(r.bo)}</strong> people<small>≈${uu(r.bo)} units${r.revRisk ? ` · ${fmtMoney(r.revRisk)} DCs` : ''}</small>` : '<span class="muted">none</span>'}</td>
+          <td>${costCell(r)}</td>
           <td><span class="dca-rec">${REC[r.rec][1]}</span><small>${esc(r.why)}</small></td></tr>
-          ${DCA.open.has(r.key) ? `<tr class="dca-detail"><td colspan="7">${dcaDetail(r, years)}</td></tr>` : ''}`; }).join('')}
+          ${DCA.open.has(r.key) ? `<tr class="dca-detail"><td colspan="8">${dcaDetail(r, years)}</td></tr>` : ''}`; }).join('')}
       </tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${THIS_YEAR}–${hz.end}: approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). <strong>Diversion:</strong> from a project's construction year, flow above the existing capacity goes to the project, up to the capacity it adds — a main along an existing sewer at Manning full-pipe capacity for its diameter on the existing slope (n 0.013; a twin when the size isn't on the map); a plant expansion at its published step; a pumping station, treatment, well or supply project with no published capacity is taken as sized for build-out. <strong>Cancelled:</strong> the same without that one project (the others as scheduled); the growth above the capacity is held back, in people at each constraint's own rate (Peel design criteria) and units at ${R.ppu.toFixed(2)} persons per unit (the approved and proposed developments' average). Constraints a project relieves sit in series along a path, so its impact is the largest of them, not the sum; developments outside the existing network that would connect to a new main (within ${fmtNum(DC_CONNECT_M)} m) count in full. An existing overload isn't counted as growth held back. Storage (master plan forecast already includes the planned facilities) and constraints flagged “check the data” are left out. ${R.nCons} constraints analysed. A screen to rank and question projects, not a replacement for the DC study: condition, I&amp;I reduction, servicing beyond today's applications and cost are not in it.</p></details>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${THIS_YEAR}–${hz.end}: approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). <strong>Diversion:</strong> from a project's construction year, flow above the existing capacity goes to the project, up to the capacity it adds — a main along an existing sewer at Manning full-pipe capacity for its diameter on the existing slope (n 0.013; a twin when the size isn't on the map); a plant expansion at its published step; a pumping station, treatment, well or supply project with no published capacity is taken as sized for build-out. <strong>Cancelled:</strong> the same without that one project (the others as scheduled); the growth above the capacity is held back, in people at each constraint's own rate (Peel design criteria) and units at ${R.ppu.toFixed(2)} persons per unit (the approved and proposed developments' average). Constraints a project relieves sit in series along a path, so its impact is the largest of them, not the sum; developments outside the existing network that would connect to a new main (within ${fmtNum(DC_CONNECT_M)} m) count in full. An existing overload isn't counted as growth held back. Storage (master plan forecast already includes the planned facilities) and constraints flagged “check the data” are left out. ${R.nCons} constraints analysed. <strong>Cost:</strong> the 2020 DC Background Study's gross and DC-recoverable cost (2020$) of the project's components that appear in it (matched by component number; components added since 2020 aren't priced until the 2026 study's tables are published), per person held back if cancelled. <strong>DC revenue:</strong> held-back units × the average water + wastewater DC per unit for the approved and proposed unit mix${R.rate ? ` (≈${fmtMoney(R.rate)})` : ''}, before credits and exemptions. A screen to rank and question projects, not a replacement for the DC study: condition, I&amp;I reduction and servicing beyond today's applications are not in it.</p></details>`;
   }
   function dcaDetail(r, years) {
     const pp = v => fmtNum(roundPop(v));
@@ -6286,8 +6602,8 @@
   }
   function dcaCsv() {
     const R = dcAnalysis(), q = v => `"${String(v).replace(/"/g, '""')}"`;
-    const head = ['Project', 'System', 'Online', 'Status', 'Relieves', 'Capacity runs out', 'Connecting developments', ...R.years.map(y => `Held back if cancelled ${y} (people)`), 'Held back if cancelled build-out (people)', 'Held back build-out (units)', 'Recommendation', 'Why'];
-    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), REC[r.rec][1], r.why]);
+    const head = ['Project', 'System', 'Online', 'Status', 'Relieves', 'Capacity runs out', 'Connecting developments', ...R.years.map(y => `Held back if cancelled ${y} (people)`), 'Held back if cancelled build-out (people)', 'Held back build-out (units)', 'DC revenue held back (water + wastewater, $)', 'Gross cost 2020$ (priced parts)', 'DC-recoverable cost 2020$ (priced parts)', 'Parts priced', 'DC-recoverable cost per person ($)', 'Recommendation', 'Why'];
+    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), r.revRisk == null ? '' : Math.round(r.revRisk), r.cost && r.cost.n ? r.cost.gross : '', r.cost && r.cost.n ? r.cost.dc : '', r.cost ? `${r.cost.n} of ${r.cost.of}` : '', r.perP == null ? '' : Math.round(r.perP), REC[r.rec][1], r.why]);
     download(`peel-dc-analysis-${THIS_YEAR}.csv`, [head, ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
   }
   $('#dca-body').addEventListener('click', e => {
@@ -7008,8 +7324,10 @@
           <div class="map">${briefingMap(set)}<small>Wastewater blocks (shaded: prioritised for a block study), developments of 50+ units by phase, and the treatment plants (■).</small></div></section>
       </div>
       ${R ? `<section><h2>DC program (2026 draft)</h2><div class="grid"><div><b>Bring forward</b>${adv.length ? `<ul>${adv.map(r => `<li>${esc(r.name)}: online ${r.y}, capacity runs out ${r.outY === THIS_YEAR ? 'now' : `≈${r.outY}`}</li>`).join('')}</ul>` : '<p>None.</p>'}</div>
-        <div><b>Most growth relies on</b> (held back by build-out if cancelled)<ul>${top.map(r => `<li>${esc(r.name)} (${r.y || '–'}): ≈${fmtNum(roundPop(r.bo))} people, ≈${fmtNum(Math.round(r.units))} units</li>`).join('')}</ul></div></div></section>` : ''}
-      <footer><span>Screening estimates at Peel design criteria (wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha; water ${c.water.avg} L/cap/d ×${c.water.maxDay} max day); plant capacity calibrated to ${state.reports ? state.reports.year : ''} measured flows; not a hydraulic model. People and jobs rounded; ≈ marks an estimate.${need.length ? ` Data due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : ''}</span><span>Peel Development Tracker · v${esc(appVersion())}</span></footer>
+        <div><b>Most growth relies on</b> (held back by build-out if cancelled)<ul>${top.map(r => `<li>${esc(r.name)} (${r.y || '–'}): ≈${fmtNum(roundPop(r.bo))} people, ≈${fmtNum(Math.round(r.units))} units${r.revRisk ? `, ≈${fmtMoney(r.revRisk)} in DCs` : ''}${r.cost && r.cost.n ? `; cost ${fmtMoney(r.cost.dc)} (2020$)` : ''}</li>`).join('')}</ul></div></div></section>` : ''}
+      ${(hr => hr ? `<section><h2>Housing targets to 2031 and population outlook</h2><div class="grid"><div><table><thead><tr><th>Municipality</th><th>Target</th><th>Progress (to ${hr[0].y})</th><th>Approved + proposed units</th></tr></thead><tbody>${hr.map(r => `<tr><td>${esc(r.m)}</td><td>${fmtNum(r.target)}</td><td>${fmtNum(r.done)} (${Math.round(r.pct * 100)}%; ${Math.round(r.elapsed * 100)}% of the time gone)</td><td>${fmtNum(Math.round(r.appr + r.prop))} (${r.left ? Math.round((r.appr + r.prop) / r.left * 100) : 0}% of what's left)</td></tr>`).join('')}</tbody></table></div>
+        <div>${(o => o ? `<p>Ministry of Finance (summer 2026): Peel <b>${fmtNum(roundPop(o.mof[2025]))}</b> in 2025, ${fmtNum(roundPop(o.mof[2031]))} in 2031, <b>${fmtNum(roundPop(o.mof[2051]))}</b> in 2051, against the Region's 2051 forecast of <b>${fmtNum(roundPop(o.region))}</b>${o.region > o.mof[2051] ? ` (≈${fmtNum(roundPop(o.region - o.mof[2051]))} lower)` : ''}. Not a planning target, but a slower path would move growth-driven projects later.</p>` : '')(outlookRows())}</div></div></section>` : '')(housingRows())}
+      <footer><span>Screening estimates at Peel design criteria (wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha${wetText() ? ` (${esc(wetText())})` : ''}; water ${c.water.avg} L/cap/d ×${c.water.maxDay} max day); plant capacity calibrated to ${state.reports ? state.reports.year : ''} measured flows; not a hydraulic model. People and jobs rounded; ≈ marks an estimate.${need.length ? ` Data due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : ''}</span><span>Peel Development Tracker · v${esc(appVersion())}</span></footer>
       <script>addEventListener('load', () => setTimeout(() => print(), 400));<\/script></body></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     const win = window.open(url, '_blank');

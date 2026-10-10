@@ -1,0 +1,469 @@
+{
+ "version": 1,
+ "fetched": "2026-10-10",
+ "targets": {
+  "source": "Ontario's housing supply progress (Ontario Data Catalogue): municipal housing targets to 2031 and annual progress (CMHC starts plus additional residential units, long-term care, retirement and student beds)",
+  "url": "https://data.ontario.ca/dataset/ontario-s-housing-supply-progress",
+  "asOf": "2025-12-15",
+  "by": "2031",
+  "muni": {
+   "Mississauga": {
+    "target": 120000,
+    "years": {
+     "2024": {
+      "sinceStart": 12099,
+      "target": 10000,
+      "progress": 3496
+     },
+     "2023": {
+      "sinceStart": 8603,
+      "target": 8800,
+      "progress": 3470
+     }
+    }
+   },
+   "Brampton": {
+    "target": 113000,
+    "years": {
+     "2024": {
+      "sinceStart": 21005,
+      "target": 9417,
+      "progress": 5791
+     },
+     "2023": {
+      "sinceStart": 15214,
+      "target": 8287,
+      "progress": 7028
+     }
+    }
+   },
+   "Caledon": {
+    "target": 13000,
+    "years": {
+     "2024": {
+      "sinceStart": 2511,
+      "target": 1083,
+      "progress": 715
+     },
+     "2023": {
+      "sinceStart": 1796,
+      "target": 953,
+      "progress": 778
+     }
+    }
+   }
+  }
+ },
+ "cmhc": {
+  "source": "CMHC Starts and Completions Survey, Housing Market Information Portal: starts and completions by dwelling type by census subdivision (Toronto CMA). Completions by census subdivision are archived after 2022.",
+  "url": "https://www03.cmhc-schl.gc.ca/hmip-pimh/en/TableMapChart/Table?TableId=1.1.1.9&GeographyId=2270&GeographyTypeId=3&DisplayAs=Table&GeograghyName=Toronto",
+  "asOf": "2025-12-31",
+  "starts": {
+   "Brampton": {
+    "2016": {
+     "single": 2706,
+     "semi": 300,
+     "row": 861,
+     "apartment": 174,
+     "all": 4041
+    },
+    "2017": {
+     "single": 2268,
+     "semi": 424,
+     "row": 1247,
+     "apartment": 360,
+     "all": 4299
+    },
+    "2018": {
+     "single": 754,
+     "semi": 180,
+     "row": 355,
+     "apartment": 177,
+     "all": 1466
+    },
+    "2019": {
+     "single": 692,
+     "semi": 192,
+     "row": 566,
+     "apartment": 0,
+     "all": 1450
+    },
+    "2020": {
+     "single": 824,
+     "semi": 248,
+     "row": 670,
+     "apartment": 683,
+     "all": 2425
+    },
+    "2021": {
+     "single": 895,
+     "semi": 122,
+     "row": 654,
+     "apartment": 607,
+     "all": 2278
+    },
+    "2022": {
+     "single": 767,
+     "semi": 54,
+     "row": 545,
+     "apartment": 1050,
+     "all": 2416
+    },
+    "2023": {
+     "single": 462,
+     "semi": 30,
+     "row": 600,
+     "apartment": 1811,
+     "all": 2903
+    },
+    "2024": {
+     "single": 305,
+     "semi": 22,
+     "row": 408,
+     "apartment": 1096,
+     "all": 1831
+    },
+    "2025": {
+     "single": 324,
+     "semi": 2,
+     "row": 381,
+     "apartment": 663,
+     "all": 1370
+    }
+   },
+   "Caledon": {
+    "2016": {
+     "single": 293,
+     "semi": 26,
+     "row": 73,
+     "apartment": 0,
+     "all": 392
+    },
+    "2017": {
+     "single": 320,
+     "semi": 20,
+     "row": 320,
+     "apartment": 124,
+     "all": 784
+    },
+    "2018": {
+     "single": 410,
+     "semi": 18,
+     "row": 153,
+     "apartment": 144,
+     "all": 725
+    },
+    "2019": {
+     "single": 166,
+     "semi": 0,
+     "row": 91,
+     "apartment": 0,
+     "all": 257
+    },
+    "2020": {
+     "single": 171,
+     "semi": 0,
+     "row": 123,
+     "apartment": 72,
+     "all": 366
+    },
+    "2021": {
+     "single": 602,
+     "semi": 6,
+     "row": 89,
+     "apartment": 0,
+     "all": 697
+    },
+    "2022": {
+     "single": 499,
+     "semi": 54,
+     "row": 273,
+     "apartment": 0,
+     "all": 826
+    },
+    "2023": {
+     "single": 276,
+     "semi": 2,
+     "row": 190,
+     "apartment": 0,
+     "all": 468
+    },
+    "2024": {
+     "single": 210,
+     "semi": 14,
+     "row": 257,
+     "apartment": 0,
+     "all": 481
+    },
+    "2025": {
+     "single": 197,
+     "semi": 0,
+     "row": 47,
+     "apartment": 4,
+     "all": 248
+    }
+   },
+   "Mississauga": {
+    "2016": {
+     "single": 159,
+     "semi": 38,
+     "row": 176,
+     "apartment": 556,
+     "all": 929
+    },
+    "2017": {
+     "single": 185,
+     "semi": 76,
+     "row": 0,
+     "apartment": 1395,
+     "all": 1656
+    },
+    "2018": {
+     "single": 177,
+     "semi": 26,
+     "row": 0,
+     "apartment": 2584,
+     "all": 2787
+    },
+    "2019": {
+     "single": 143,
+     "semi": 40,
+     "row": 199,
+     "apartment": 2922,
+     "all": 3304
+    },
+    "2020": {
+     "single": 106,
+     "semi": 56,
+     "row": 137,
+     "apartment": 1478,
+     "all": 1777
+    },
+    "2021": {
+     "single": 107,
+     "semi": 14,
+     "row": 220,
+     "apartment": 3761,
+     "all": 4102
+    },
+    "2022": {
+     "single": 120,
+     "semi": 24,
+     "row": 76,
+     "apartment": 4235,
+     "all": 4455
+    },
+    "2023": {
+     "single": 121,
+     "semi": 16,
+     "row": 364,
+     "apartment": 1891,
+     "all": 2392
+    },
+    "2024": {
+     "single": 175,
+     "semi": 26,
+     "row": 148,
+     "apartment": 2687,
+     "all": 3036
+    },
+    "2025": {
+     "single": 109,
+     "semi": 18,
+     "row": 64,
+     "apartment": 1938,
+     "all": 2129
+    }
+   }
+  },
+  "completions": {
+   "Brampton": {
+    "2016": {
+     "single": 2872,
+     "semi": 452,
+     "row": 1152,
+     "apartment": 580,
+     "all": 5056
+    },
+    "2017": {
+     "single": 1336,
+     "semi": 238,
+     "row": 1112,
+     "apartment": 376,
+     "all": 3062
+    },
+    "2018": {
+     "single": 469,
+     "semi": 74,
+     "row": 347,
+     "apartment": 16,
+     "all": 906
+    },
+    "2019": {
+     "single": 383,
+     "semi": 130,
+     "row": 364,
+     "apartment": 0,
+     "all": 877
+    },
+    "2020": {
+     "single": 614,
+     "semi": 62,
+     "row": 344,
+     "apartment": 683,
+     "all": 1703
+    },
+    "2021": {
+     "single": 792,
+     "semi": 110,
+     "row": 623,
+     "apartment": 858,
+     "all": 2383
+    },
+    "2022": {
+     "single": 725,
+     "semi": 54,
+     "row": 563,
+     "apartment": 1204,
+     "all": 2546
+    }
+   },
+   "Caledon": {
+    "2016": {
+     "single": 322,
+     "semi": 26,
+     "row": 177,
+     "apartment": 0,
+     "all": 525
+    },
+    "2017": {
+     "single": 223,
+     "semi": 22,
+     "row": 250,
+     "apartment": 124,
+     "all": 619
+    },
+    "2018": {
+     "single": 423,
+     "semi": 20,
+     "row": 165,
+     "apartment": 144,
+     "all": 752
+    },
+    "2019": {
+     "single": 184,
+     "semi": 2,
+     "row": 128,
+     "apartment": 144,
+     "all": 458
+    },
+    "2020": {
+     "single": 163,
+     "semi": 2,
+     "row": 123,
+     "apartment": 72,
+     "all": 360
+    },
+    "2021": {
+     "single": 549,
+     "semi": 6,
+     "row": 93,
+     "apartment": 0,
+     "all": 648
+    },
+    "2022": {
+     "single": 501,
+     "semi": 30,
+     "row": 303,
+     "apartment": 0,
+     "all": 834
+    }
+   },
+   "Mississauga": {
+    "2016": {
+     "single": 210,
+     "semi": 38,
+     "row": 178,
+     "apartment": 3011,
+     "all": 3437
+    },
+    "2017": {
+     "single": 242,
+     "semi": 78,
+     "row": 38,
+     "apartment": 1750,
+     "all": 2108
+    },
+    "2018": {
+     "single": 259,
+     "semi": 34,
+     "row": 8,
+     "apartment": 4102,
+     "all": 4403
+    },
+    "2019": {
+     "single": 220,
+     "semi": 42,
+     "row": 207,
+     "apartment": 5712,
+     "all": 6181
+    },
+    "2020": {
+     "single": 182,
+     "semi": 54,
+     "row": 344,
+     "apartment": 7136,
+     "all": 7716
+    },
+    "2021": {
+     "single": 167,
+     "semi": 30,
+     "row": 232,
+     "apartment": 8020,
+     "all": 8449
+    },
+    "2022": {
+     "single": 204,
+     "semi": 44,
+     "row": 262,
+     "apartment": 11233,
+     "all": 11743
+    }
+   }
+  }
+ },
+ "mof": {
+  "source": "Ontario Ministry of Finance population projections 2025-2051, Peel census division (summer 2026 update; July 1 population, reference scenario)",
+  "url": "https://data.ontario.ca/dataset/population-projections",
+  "asOf": "2026-06-26",
+  "peel": {
+   "2025": 1632557,
+   "2026": 1578710,
+   "2027": 1560711,
+   "2028": 1560703,
+   "2029": 1564603,
+   "2030": 1571751,
+   "2031": 1579855,
+   "2032": 1588856,
+   "2033": 1598711,
+   "2034": 1609396,
+   "2035": 1620908,
+   "2036": 1633245,
+   "2037": 1646405,
+   "2038": 1660388,
+   "2039": 1675193,
+   "2040": 1690819,
+   "2041": 1707264,
+   "2042": 1724650,
+   "2043": 1742351,
+   "2044": 1760369,
+   "2045": 1778703,
+   "2046": 1797347,
+   "2047": 1816297,
+   "2048": 1835553,
+   "2049": 1855117,
+   "2050": 1875000,
+   "2051": 1895239
+  }
+ }
+}

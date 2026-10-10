@@ -691,6 +691,76 @@ proposed growth). **+ Add area** draws another area into the selection, × remov
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 
+## Outside data: targets, projections, costs, storms, compliance, hydraulics
+
+These sources are fetched on GitHub Actions, because the sandbox can't reach the hosts. Run
+**Probe data sources** with mode `external` (`scripts/fetch-external.js`); raw files go to the
+`ext-raw` branch. Then build the data files locally:
+
+- **DC costs and rates.** `data/dc-costs.json` is built by `scripts/build-dc-costs.py` from the
+  2020 DC Background Study text on the `ref-docs-dc` branch. Its capital tables give each
+  component's gross cost and DC-recoverable cost in 2020$. Components are matched to the 2026 DC
+  maps by component number: 164 of 506 match, and newer components have no published cost yet.
+  - The file also holds the water and wastewater DCs per single / semi from August 1, 2026 to
+    January 31, 2027 (water $30,180.96, wastewater $32,776.33). Other unit types are scaled by the
+    2020 schedule's ratios.
+  - **DC Analysis** uses them to show each project's cost, its cost per person held back if
+    cancelled, and the DC revenue those held-back units would pay. The table can be sorted by
+    cost per person.
+  - A development's **Servicing** tab estimates its Regional water and wastewater DCs.
+- **Housing targets, CMHC and Ministry of Finance projections.** `data/housing.json` is built by
+  `scripts/build-housing.py`. It holds:
+  - Ontario's housing supply progress, from the Ontario Data Catalogue.
+  - CMHC starts and completions by municipality, from the HMIP tables (Toronto CMA by census
+    subdivision).
+  - The Ministry of Finance 2025–2051 projection for the Peel census division.
+
+  These feed:
+  - The Overview's **Housing targets to 2031** card: progress against the share of time gone,
+    CMHC starts, and pipeline units against what's left.
+  - The Overview's **Population outlook** card: the Ministry of Finance projection against the
+    Region's 2.28 M forecast for 2051.
+  - The briefing.
+  - New **Model checks**: units completed against CMHC completions, the approved build pace
+    against CMHC starts, and population today against the July 2025 estimate.
+- **Design storms and climate (wet weather scenario).** `data/idf.json` is built by
+  `scripts/build-idf.js`. It holds the MTO IDF Curve Look-up coefficients at each wastewater block
+  (`--only mto`) and MTO's climate trend.
+  - **Settings & sources → Wet weather scenario** scales the I&I allowance by the 1-hour intensity
+    ratio. The choices are:
+    - the storm (2- to 100-year);
+    - the climate: MTO trend to 2050 or 2080, or a +10, 20 or 30% uplift, for example from IDF_CC;
+    - the storm the allowance represents (25-year by default).
+  - The pipes, capacity colours and DC Analysis follow the scenario, and the Scenario chip shows it.
+- **SWMM model.** **Wastewater → Blocks → SWMM model (.inp)** exports the 40 blocks as a SWMM 5
+  skeleton:
+  - junctions at the block outlets, and conduits to the downstream block (trunk size, nearest
+    trunk slope, relative inverts);
+  - dry weather flow at the Demand year, with a diurnal pattern;
+  - RTK rainfall-derived I&I on each block's sewered area, with placeholder R, T and K to
+    calibrate;
+  - a 4-hour Chicago design storm from the MTO IDF curves.
+
+  It runs in SWMM 5.2: this was checked with pyswmm, with a 0.03% continuity error.
+- **Hydraulic check (beta).** **Water → Hydraulic check** runs EPANET 2.2 in the browser
+  (epanet-js 0.9.0, loaded from jsDelivr on demand).
+  - It works on the large mains crossing into each upper pressure zone, at the maximum day for
+    the Demand year.
+  - It reports each main's flow, velocity (against 1.5 m/s) and head loss per km.
+  - The `.inp` can be downloaded to build on in EPANET or InfoWater.
+- **Effluent compliance.** `data/compliance.json` is built by `scripts/build-compliance.py` from
+  MECP Environmental Compliance Reports (municipal and private sewage, 2020–2024). It lists
+  exceedances at G.E. Booth, Clarkson and Inglewood, shown in **Wastewater → Plants**.
+- **2026 Census.** The first release is February 10, 2027. Run `scripts/build-areas.js` with
+  `CENSUS_2026_CSV` (Statistics Canada's DA counts CSV, joined to the 2021 DA geometry) or
+  `CENSUS_2026_URL`, plus `CENSUS_2026_PEEL` to check the total. 2026 then becomes the baseline
+  automatically.
+- **Building permits** were already live: Mississauga issued and Growth Management permits,
+  Brampton `maps1.brampton.ca` and Caledon AMANDA (see Data sources).
+- **Not public:** the 2025/26 Master Plan report (finalization expected in 2026; Data freshness
+  flags it), the allocation list (use the allocation CSV import), Dragonfly flow monitoring
+  (would calibrate the RTK values) and the 2026 DC study's cost tables.
+
 ## How classification works (`js/phases.js`)
 
 Each municipality uses its own schema, so nothing is hard-coded per dataset:
