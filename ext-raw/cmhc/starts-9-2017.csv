@@ -1,0 +1,31 @@
+ — Starts by Dwelling Type by Census Subdivision
+2017 Intended Markets - All
+,Single,Semi-Detached,Row,Apartment,All,
+Ajax (T),174,70,129,272,645,
+Aurora (T),287,2,103,203,595,
+Bradford West Gwillimbury (T),411,0,22,0,433,
+Brampton (CY),"2,268",424,"1,247",360,"4,299",
+Caledon (T),320,20,320,124,784,
+East Gwillimbury (T),949,70,303,0,"1,322",
+Georgina (T),111,6,24,0,141,
+Halton Hills (T),135,0,0,0,135,
+King (TP),234,16,0,1,251,
+Markham (CY),136,38,419,806,"1,399",
+Milton (T),616,324,983,269,"2,192",
+Mississauga (CY),185,76,0,"1,395","1,656",
+Mono (T),49,0,0,0,49,
+New Tecumseth (T),539,114,88,30,771,
+Newmarket (T),273,10,46,0,329,
+Oakville (T),798,98,744,505,"2,145",
+Orangeville (T),92,0,258,0,350,
+Pickering (CY),196,6,210,446,858,
+Richmond Hill (T),240,42,63,189,534,
+Toronto (C),"1,152",74,756,"13,130","15,112",
+Uxbridge (TP),56,0,0,0,56,
+Vaughan (CY),736,20,"1,169","2,227","4,152",
+Whitchurch-Stouffville (T),215,0,98,217,530,
+,"10,172","1,410","6,982","20,174","38,738",
+
+Notes
+"CMA, CA and CSD definitions are based on 2016 Census Geography Definitions"
+Source,CMHC Starts and Completions Survey

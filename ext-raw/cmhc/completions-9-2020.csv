@@ -1,0 +1,31 @@
+ — Under Construction Inventory by Dwelling Type by Census Subdivision
+2020 Intended Markets - All
+,Single,Semi-Detached,Row,Apartment,All,
+Ajax (T),70,8,6,0,84,
+Aurora (T),125,2,9,110,246,
+Bradford West Gwillimbury (T),243,16,190,0,449,
+Brampton (CY),614,62,344,683,"1,703",
+Caledon (T),163,2,123,72,360,
+East Gwillimbury (T),259,70,103,0,432,
+Georgina (T),164,14,17,0,195,
+Halton Hills (T),126,16,26,185,353,
+King (TP),132,0,32,0,164,
+Markham (CY),214,96,368,"1,938","2,616",
+Milton (T),155,56,444,344,999,
+Mississauga (CY),182,54,344,"7,136","7,716",
+Mono (T),13,0,0,0,13,
+New Tecumseth (T),124,18,90,30,262,
+Newmarket (T),69,0,130,219,418,
+Oakville (T),633,2,414,"1,252","2,301",
+Orangeville (T),1,0,14,231,246,
+Pickering (CY),252,0,248,528,"1,028",
+Richmond Hill (T),444,82,538,804,"1,868",
+Toronto (C),"1,322",139,877,"53,667","56,005",
+Uxbridge (TP),19,0,5,0,24,
+Vaughan (CY),617,4,277,"2,737","3,635",
+Whitchurch-Stouffville (T),156,0,163,506,825,
+,"6,097",641,"4,762","70,442","81,942",
+
+Notes
+"CMA, CA and CSD definitions are based on 2016 Census Geography Definitions"
+Source,CMHC Starts and Completions Survey

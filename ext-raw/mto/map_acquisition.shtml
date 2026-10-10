@@ -1,0 +1,327 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    
+    <link href="scripts/hosted/jquery/css/smoothness/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+    
+    <script src="scripts/hosted/jquery/js/jquery-1.7.2.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-cookies-2.2.0.min.js"></script>
+
+    <link href="styles/idf_curve_lookup_boxed_page.css" rel="stylesheet" type="text/css">
+    <link href="styles/idf_curve_lookup_format_styles.css" rel="stylesheet" type="text/css" media="all">
+    <link href="styles/idf_curve_lookup_print.css" rel="stylesheet" type="text/css" media="print">
+    <link href="styles/idf_curve_lookup_screen.css" rel="stylesheet" type="text/css" media="screen">
+
+    <script src="https://www.webservices.gov.on.ca/metrics.js"></script>
+
+    <script src="scripts/idf_curve_lookup_utility.js"></script>
+
+    <title>IDF Curve Look-up - Ministry of Transportation</title>
+    <link href="styles/idf_curve_lookup_map_acquisition.css" rel="stylesheet" type="text/css">
+    <!--<script src="http://maps.googleapis.com/maps/api/js?client=gme-ontario&channel=mto270402a&sensor=false"></script>-->
+    <script src="//maps.googleapis.com/maps/api/js?key=AIzaSyCp35AWbpoxe8T2PQF1TbToXc6poWBCGZs&language=en-CA&region=CA&callback=Function.prototype"></script>
+    <script src="scripts/map_utilities/js/map_utilities.js"></script>
+    <script src="scripts/map_utilities/js/coordinate_selection.js"></script>
+    <script src="scripts/map_utilities/js/coordinate_selection_markers.js"></script>
+    <script src="scripts/map_utilities/js/coordinate_selection_ui.js"></script>
+    <script src="scripts/hosted/geoxml3/js/geoxml3.js"></script>
+    <script src="scripts/hosted/jquery_zip/js/zip.js"></script>
+    <script src="scripts/map_utilities/js/create_overlay_polymask.js"></script>
+    <script src="scripts/map_utilities/js/create_overlay_gridtiles.js"></script>
+    <script src="scripts/map_utilities/js/create_overlay_kml.js"></script>
+    <script src="scripts/map_utilities/js/create_overlay_kml_file_ui.js"></script>
+    <script src="scripts/idf_curve_lookup_map_acquisition_utility.js"></script>
+    <script>
+
+        $(document).ready(function () {
+
+            // Preserve variables in the window link on site links stored on the page;
+            updateSiteLinks(window.location.href);
+
+            // Check if terms have been accepted;
+            var _terms_accepted = $.cookies.get('mto_site_term_agreement');
+            if (!_terms_accepted)
+                window.location = $("a#mtoSiteTerms").attr("href");
+
+            // Toggle language;
+            toggleModifiedLanguageHeader(null);
+
+            // Apply styles and initialize page;
+            initializePage();
+
+            // Parse the header;
+            parseUrl();
+
+            // Load map;
+            MapService.initializeMap('map_acquisition');
+
+            // This will toggle map instructions if the cookie exists;
+            toggleMapInstructions(null);
+
+            // Toggle advanced options;
+            toggleAdvancedFunctions(getCookie('mto_advanced_options'));
+            $('p#ma_span_hide_advanced_options').show();
+
+            // Toggle the MSC station overlay if the flag is active;
+            if (_msc_active)
+                toggleStationsMSC();
+
+        });
+
+    </script>
+<script>var __uzdbm_1 = "21e2c45b-a839-4161-af27-92611b83e3b6";var __uzdbm_2 = "ZDE0NDM0M2EtZHo4Mi00MDMyLWI4NmItNGMxNTU0NWY1YzE0JDIwLjE2OS4xMDIuMjE3";var __uzdbm_3 = "";var __uzdbm_4 = "false";var __uzdbm_5 = "";var __uzdbm_6 = "";var __uzdbm_7 = "";</script> <script>   (function (w, d, e, u, c, g, a, b) {     w["SSJSConnectorObj"] = w["SSJSConnectorObj"] || {       ss_cid: c,       domain_info: "auto",     };     w[g] = function (i, j) {       w["SSJSConnectorObj"][i] = j;     };     a = d.createElement(e);     a.async = true;     if (       navigator.userAgent.indexOf('MSIE') !== -1 ||       navigator.appVersion.indexOf('Trident/') > -1     ) {       u = u.replace("/advanced/", "/advanced/ie/");     }     a.src = u;     b = d.getElementsByTagName(e)[0];     b.parentNode.insertBefore(a, b);   })(     window, document, "script", "/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js", "dz84", "ssConf"   );   ssConf("c1", "https://idfcurves.mto.gov.on.ca");   ssConf("c3", "c99a4269-161c-4242-a3f0-28d44fa6ce24");   ssConf("au", "idfcurves.mto.gov.on.ca");   ssConf("cu", "validate.perfdrive.com, ssc"); </script> </head>
+
+<body id="full_height_page">
+    <header>
+        <div id="map_acquisition_header">
+            <div class="marginal_map_section">
+                
+    <div id="screen-header" style="text-align: right">
+        <a href="http://www.ontario.ca/">Ontario.ca</a> |
+        <a class="en-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('fr-CA')); window.location = window.location.href; }">Fran&ccedil;ais</a><a class="fr-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('en-CA')); window.location = window.location.href; }" style="display: none">English</a><br>
+        <a class="mto_link" href="http://www.mto.gov.on.ca/english/"><img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario"></a>
+        <div class="inline_block" style="width: 10px"></div>
+        <a class="mto_link" href="index.shtml"><img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup"></a><br>
+        <a href="terms.shtml"><span class="en-CA">Terms and Conditions</span><span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span></a> |
+        <a href="map_acquisition.shtml"><span class="en-CA">Coordinate Selection</span><span class="fr-CA" style="display: none">S&eacute;lection de coordonn&eacute;es</span></a> |
+        <a href="database_status.shtml"><span class="en-CA">About</span><span class="fr-CA" style="display: none">Sur</span></a>
+    </div>
+
+    <div id="print-header" style="text-align: right">
+        <img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario">
+        <div class="inline_block" style="width: 10px"></div>
+        <img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup">
+    </div>
+
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="map_acquisition_options">
+            <div class="marginal_map_section">
+                <div id="body_content">
+                    <div id="max_coordinate_achieved" style="display: none">
+                        <p id="ma_max_coord_warning-en" class="en-CA">
+                            A maximum of 12 coordinates is recommended. More than 12 coordinates 
+                            may slow the retrieval of the IDF curves.
+                        </p>
+                        <p id="ma_max_coord_warning-fr" class="fr-CA" style="display: none">
+                            Un maximum de 12 coordonnées est recommandé. Plus de 12 coordonnées 
+                            peuvent ralentir la récupération des courbes IDF.
+                        </p>
+                    </div>
+                    <div id="ma_coordinate_selection">
+                        <h1 id="ma_page_title-en" class="en-CA">Coordinate Selection</h1>
+                        <h1 id="ma_page_title-fr" class="fr-CA" style="display: none">Sélection de coordonnées</h1>
+                        <div class="inline_block">
+                            <div class="inline_block">
+                                <div class="inline_block">
+                                    <p class="inline_block">
+                                        <span class="en-CA">Current selection</span><span class="fr-CA" style="display: none">Sélection des coordonnées </span>: 
+                                    </p>
+                                </div>
+                                <div id="map_tray" class="inline_block">
+                                </div>
+                                <div class="inline_block">
+                                    <button id="ma_remove_point" onclick="javascript:CoordinateSelection.removeCoordinate()" type="button"><span class="en-CA">Remove</span><span class="fr-CA" style="display: none">Supprimer</span></button>
+                                </div>
+                                <div class="inline_block">
+                                    <button id="ma_add_point" onclick="javascript:CoordinateSelection.createCoordinate()" type="button"><span class="en-CA">Add</span><span class="fr-CA" style="display: none">Ajouter</span></button>
+                                </div>
+                            </div>
+                            <div class="inline_block" style="width: 10px">
+                            </div>
+                            <div class="inline_block">
+                                <button id="submit_coordinates_query" onclick="javascript:queryCoordinateSelection()" type="button"><span class="en-CA">Submit</span><span class="fr-CA" style="display: none">Soumettre</span></button>
+                                <button id="ma_points_reset" type="button" onclick="javascript:CoordinateSelection.resetCoordinateSelection()"><span class="en-CA">Reset</span><span class="fr-CA" style="display: none">Réinitialiser</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inline_block">
+                        <div id="ma_instructions_hidden" class="inline_block">
+                            <p class="inline_block">
+                                <a href="javascript:toggleMapInstructions(true)"><span id="ma_instructions_show_span-en" class="en-CA">Show Instructions</span><span id="ma_instructions_show_span-fr" class="fr-CA" style="display: none">Afficher les instructions</span></a> |
+                            </p>
+                        </div>
+                        <p class="inline_block">
+                            <a href="javascript:toggleStationsMSC()"><span class="en-CA">Show/hide gauging stations</span><span class="fr-CA" style="display: none">Afficher/masquer les stations météos</span></a> |
+                            <a href="javascript:MapService.centerCoordinates()"><span class="en-CA">Re-center selection</span><span class="fr-CA" style="display: none">Recentrer à la sélection</span></a>
+                            <span class="ma_basin_upload" style="display: none"> |
+                                <a href="javascript:new function() { $('div#ma_basin_upload_files_container').toggle(); }"><span class="en-CA">Upload a basin outline</span><span class="fr-CA" style="display: none">Ajouter un contour du bassin</span></a>
+                            </span>
+                            <span id="ma_span_show_advanced_options" class="inline_block" style="display: none"> |
+                                <a href="javascript:toggleAdvancedFunctions('true')"><span class="en-CA">Present and Future IDF Predictions</span><span class="fr-CA" style="display: none">Prévisions actuelles et futures</span></a>
+                            </span>
+                        </p>
+                    </div>
+                    <div id="ma_basin_upload_files_container" style="display: none">
+                        <div class="inline_block">
+                            <label for="ma_basin_upload_files">File: </label>
+                            <input type="file" id="ma_basin_upload_files" name="files[]">
+                            <div id="ma_basin_upload_files_progress" class="inline_block" style="display: none">
+                                <div class="ma_basin_upload_files_progress_percent">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ma_panel_advanced_options" class="page_section_separated">
+                        <div class="inline_block">
+                            <label>
+							    Latitude<span class="en-CA">:</span><span class="fr-CA" style="display: none"> :</span>
+							    <input id="ma_active_latitude" name="active_latitude" onchange="javascript:CoordinateSelection.updateCoordinate()" style="width: 100px" type="text">
+						    </label>
+                            <div class="inline_block" style="width: 10px">
+                            </div>
+						    <label>
+							    Longitude<span class="en-CA">:</span><span class="fr-CA" style="display: none"> :</span>
+							    <input id="ma_active_longitude" name="active_longitude" onchange="javascript:CoordinateSelection.updateCoordinate()" style="width: 100px" type="text">
+						    </label>
+                            <div class="inline_block" style="width: 10px">
+                            </div>
+						    <label>
+							    <span class="en-CA">Return period:</span><span class="fr-CA" style="display: none">Période de retour :</span>
+							    <select id="ma_active_rt" name="active_rt" onchange="javascript:updateActiveRT()">
+								    <option id="ma_active_rt_select_all" value="All" label="all" selected="selected"></option>
+								    <option value="2" label="2"></option>
+								    <option value="5" label="5"></option>
+								    <option value="10" label="10"></option>
+								    <option value="25" label="25"></option>
+								    <option value="50" label="50"></option>
+								    <option value="100" label="100"></option>
+							    </select>
+							    <span class="en-CA">-yr</span><span class="fr-CA" style="display: none">-an</span>
+						    </label>
+                            <div class="inline_block">
+                                <div class="inline_block" style="width: 10px">
+                                </div>
+							    <label>
+								    <span class="en-CA">IDF curve year:</span><span class="fr-CA" style="display: none">Année de courbe IDF :</span>
+								    <input id="ma_results_year" name="results_year" onchange="javascript:updateResultsYear()" style="width: 100px" type="text">
+								    <span id="ma_results_year_at_present"> (<span id="ma_results_year_at_present_year">2010</span> <span class="en-CA">is the reference year for present day IDF curves</span><span class="fr-CA" style="display: none">est l'année de référence pour les courbes IDF actuelles</span>)</span>
+							    </label>
+                            </div>
+                            <p id="ma_span_hide_advanced_options" style="display: none">
+                                <a onclick="javascript:toggleAdvancedFunctions('false')"><span class="en-CA">Hide Options</span><span class="fr-CA" style="display: none">Masquez ces options</span></a>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="ma_instructions_shown" style="display: none">
+                        <div id="ma_instructions-en" class="en-CA">
+                            <h2>Instructions</h2>
+                            <ul>
+                                <li>Click on the map, drag an existing marker on the map, or 
+                                    enter a coordinate into the Latitude and Longitude boxes to 
+                                    move the active coordinate.
+                                </li>
+                                <li>Click markers on the map or the coordinate numbers at the 
+                                    bottom of the screen to switch between coordinates.
+                                </li>
+                                <li>You can remove the active coordinate from the selection.</li>
+                                <li class="ma_basin_upload" style="display: none">Click the folder icon to import an existing basin outline in
+                                    KMZ format to help with coordinate selection.
+                                </li>
+                                <li>Submit the coordinates to find the nearest set of IDF curves. 
+                                    An average set of IDF curves will be returned for a selection 
+                                    of multiple coordinates.
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="ma_instructions-fr" class="fr-CA" style="display: none">
+                            <h2>Instructions</h2>
+                            <ul>
+                                <li>Cliquez sur la carte, faites glisser un marqueur existant 
+                                    sur la carte ou entrez une coordonnée dans les zones de 
+                                    Latitude et de Longitude pour déplacer la coordonnée.
+                                </li>
+                                <li>Cliquez sur les marqueurs sur la carte ou les numéros de 
+                                    coordonnées au bas de l'écran pour basculer entre les 
+                                    coordonnées.
+                                </li>
+                                <li>Vous pouvez supprimer la coordonnée de la sélection.</li>
+                                <li class="ma_basin_upload" style="display: none">Cliquez sur le bouton de dossier pour importer un schéma de 
+                                    bassin existant au format KMZ pour aider à la sélection de 
+                                    coordonnée.
+                                </li>
+                                <li>Soumettre les coordonnées pour trouver l'ensemble des 
+                                    courbes IDF. Une moyenne sera retournée pour une sélection de 
+                                    plusieurs coordonnées.
+                                </li>
+                            </ul>
+                        </div>
+                        <p>
+                            <a href="javascript:toggleMapInstructions(false)"><span id="ma_instructions_hide_span-en" class="en-CA">Hide Instructions</span><span id="ma_instructions_hide_span-fr" class="fr-CA" style="display: none">Masquer les instructions</span></a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="map_acquisition">
+        </div>
+    </main>
+    <footer>
+        <div id="map_acquisition_footer">
+            <div class="marginal_map_section">
+                
+<div class="page_section_separated" style="text-align: left">
+    <div id="site_links">
+
+        <span class="en-CA">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/english/">
+                Ontario Ministry of Transportation
+            </a>
+        </span>
+
+        <span class="fr-CA" style="display: none">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/french/">
+                Ministère des Transports de l&#39;Ontario
+            </a>
+        </span> |
+
+        <a id="mtoSiteTerms" href="terms.shtml">
+            <span class="en-CA">Terms and Conditions</span>
+            <span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span>
+        </a> |
+
+        <a id="mtoSiteMapAquisition" href="map_acquisition.shtml">
+            Map
+        </a>
+
+        <a id="mtoSiteStatus" href="database_status.shtml">
+            <span class="en-CA">About</span>
+            <span class="fr-CA" style="display: none">Sur</span>
+        </a>
+
+        <br>
+
+        <!-- Accessibility statement -->
+        <span class="en-CA">
+            As outlined in the 
+            <a href="https://www.ontario.ca/page/accessible-customer-service-policy">
+                OPS Accessible Customer Service Policy
+            </a>, we are committed to providing accessible customer service. On request, we can arrange for accessible formats and communications supports. Please 
+            <a href="https://www.ontario.ca/feedback/contact-us?id=52785&nid=36275">
+                contact us
+            </a>.
+        </span>
+
+        <br>
+
+        <a id="mtoSiteResultsOut" href="results_out.shtml">Results</a>
+        <a id="mtoSiteExit" href="exit.shtml">Exit</a>
+
+        <span class="en-CA">Last Modified: May 2026</span>
+        <span class="fr-CA" style="display: none">
+            Dernière modification : May 2026
+        </span>
+
+    </div>
+</div>
+
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

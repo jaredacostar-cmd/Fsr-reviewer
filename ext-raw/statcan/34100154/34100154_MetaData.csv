@@ -1,0 +1,86 @@
+﻿"Cube Title","Product Id","CANSIM Id",URL,"Cube Notes","Archive Status",Frequency,"Start Reference Period","End Reference Period","Total number of dimensions"
+"Canada Mortgage and Housing Corporation, housing starts, under construction and completions in selected census metropolitan areas, monthly","34100154","027-0048","https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410015401",1;2;3,"CURRENT - a cube available to the public and that is current","Monthly","1972-01-01","2026-08-01","3",
+
+"Dimension ID","Dimension name","Dimension Notes","Dimension Definitions"
+"1","Geography",,""
+"2","Housing estimates",,""
+"3","Type of unit",,""
+
+"Dimension ID","Member Name","Classification Code","Member ID","Parent Member ID",Terminated,"Member Notes","Member Definitions"
+"1","Census metropolitan areas","","1","","",,
+"1","Abbotsford-Mission, British Columbia","[932]","30","1","",,
+"1","Barrie, Ontario","[568]","32","1","",,
+"1","Brantford, Ontario","[543]","33","1","",,
+"1","Calgary, Alberta","[825]","2","1","",,
+"1","Edmonton, Alberta","[835]","4","1","",,
+"1","Greater Sudbury, Ontario","[580]","21","1","",,
+"1","Guelph, Ontario","[550]","34","1","",,
+"1","Halifax, Nova Scotia","[205]","5","1","",,
+"1","Hamilton, Ontario","[537]","6","1","",,
+"1","Kelowna, British Columbia","[915]","35","1","",,
+"1","Kingston, Ontario","[521]","31","1","",,
+"1","Kitchener-Cambridge-Waterloo, Ontario","[541]","7","1","",,
+"1","London, Ontario","[555]","8","1","",,
+"1","Moncton, New Brunswick","[305]","36","1","",,
+"1","Montréal, Quebec","[462]","29","1","",,
+"1","Montréal excluding Saint-Jérôme, Quebec","","9","1","t",,
+"1","Oshawa, Ontario","[532]","10","1","",,
+"1","Ottawa-Gatineau, Ontario/Quebec","[505]","11","1","",,
+"1","Ottawa-Gatineau, Ontario part, Ontario/Quebec","[35505]","12","11","",,
+"1","Ottawa-Gatineau, Quebec part, Ontario/Quebec","[24505]","13","11","",,
+"1","Peterborough, Ontario","[529]","37","1","",,
+"1","Québec, Quebec","[421]","14","1","",,
+"1","Regina, Saskatchewan","[705]","15","1","",,
+"1","St. Catharines-Niagara, Ontario","[539]","16","1","",,
+"1","St. John's, Newfoundland and Labrador","[001]","18","1","",,
+"1","Saint John, New Brunswick","[310]","17","1","",,
+"1","Saguenay, Quebec","[408]","3","1","",,
+"1","Saskatoon, Saskatchewan","[725]","19","1","",,
+"1","Sherbrooke, Quebec","[433]","20","1","",,
+"1","Thunder Bay, Ontario","[595]","22","1","",,
+"1","Toronto, Ontario","[535]","23","1","",,
+"1","Trois-Rivières, Quebec","[442]","24","1","",,
+"1","Vancouver, British Columbia","[933]","25","1","",,
+"1","Victoria, British Columbia","[935]","26","1","",,
+"1","Windsor, Ontario","[559]","27","1","",,
+"1","Winnipeg, Manitoba","[602]","28","1","",,
+"2","Housing starts","","1","","",,
+"2","Housing under construction","","2","","",,
+"2","Housing completions","","3","","",,
+"3","Total units","","1","","",,
+"3","Single-detached units","","2","1","",,
+"3","Semi-detached units","","3","1","",,
+"3","Row units","","4","1","",,
+"3","Apartment and other unit types","","5","1","",,
+
+Symbol Legend
+Description,Symbol
+"not available for a specific reference period","..",
+"less than the limit of detection","<LOD",
+"value rounded to 0 (zero) where there is a meaningful distinction between true zero and the value that was rounded","0s",
+"data quality: excellent","A",
+"data quality: very good","B",
+"data quality: good","C",
+"data quality: acceptable","D",
+"use with caution","E",
+"too unreliable to be published","F",
+"not applicable","...",
+"preliminary","p",
+"revised","r",
+"suppressed to meet the confidentiality requirements of the Statistics Act","x",
+"terminated","t",
+
+"Survey Code","Survey Name"
+"7505","Canada Mortgage and Housing Corporation"
+
+"Subject Code","Subject Name"
+"34","Construction"
+
+"Note ID",Note
+1,"Geographical areas modified every 5 years to reflect most recent census definitions, therefore, data are not strictly comparable historically."
+2,"These data are obtained from Canada Mortgage and Housing Corporation (CMHC) and are provided subject to <a href="https://www.cmhc-schl.gc.ca/about-us/terms-conditions/hmip-terms-conditions" rel="external noopener noreferrer" target="_blank">CMHC Licence Agreement for the Use of Data (opens new window)</a>."
+3,"For additional information and definitions, refer to <a href="https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-research/surveys/methods/methodology-rental-market-survey" rel="external noopener noreferrer" target="_blank">CMHC Rental Market Survey Methodology and Definitions (opens new window)</a>."
+
+"Correction ID","Correction Date","Correction Note"
+"3720","2023-11-20","Time series groups from CMHC's Starts and Completions Survey and Market Absorption Survey were temporarily removed due to a data error which impacted September 2023 and Q3 2023 series values. Impacted series have been corrected and reissued.",
+

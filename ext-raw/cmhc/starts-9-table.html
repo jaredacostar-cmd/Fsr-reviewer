@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+
+
+<html lang="en"
+      data-other-lang="fr"
+      data-share-url="/hmip-pimh/en/Main/SharedContent?tid=sharedtoken"
+      data-autocomplete-url="/hmip-pimh/en/Main/Search"
+      data-search-result-url="/hmip-pimh/en/Main/SearchResult">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <meta property="og:image" content="http://www.cmhc.ca/imagesCFScripts/floatingShare/shareImage.png" />
+    <meta property="og:site_name" content="CMHC">
+    <meta property="og:title" content="Housing Market Information Portal">
+    <meta property="og:description" content="The housing data you want, the way you want it.">
+
+    <title>Full view</title>
+
+    <link rel="shortcut icon" href="https://www.uatsc10.cmhc-schl.gc.ca/favicon.ico">
+    <link href="https://js.arcgis.com/3.9compact/js/esri/css/esri.css" rel="stylesheet" />
+    <link href="/hmip-pimh/bundle/css-libraries?v=o6H8icNNAue8C8Bk-rQHq4Ym6mqKUZbwtRq1zgKP_V81" rel="stylesheet"/>
+
+    <link href="/hmip-pimh/Content/themes/base/base.css" rel="stylesheet" />
+    <link href="/hmip-pimh/bundle/css?v=TftCI_QtS4dY_3ki6cac1SVp1NMaXB4YsI8M5CVi6cI1" rel="stylesheet"/>
+
+
+    <link href="/hmip-pimh/Content/Sitecore/Site.mobile.css" rel="stylesheet" />
+
+
+    <script>
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+        'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-P3TBKQ');</script>
+    <script type="text/javascript">
+        var dojoConfig = { parseOnLoad: true };
+    </script>
+    <script src="/hmip-pimh/bundle/jquery?v=47IUJGAflE7VDo6j5qn7bh31sLidMvpFGe510wwskdU1"></script>
+
+    <script src="/hmip-pimh/bundle/jquery-plugins?v=SKxoVW95MOvOVHfccjYbTby9v3xoLPuxQ_bateXzssQ1"></script>
+
+    <script src="/hmip-pimh/bundle/kendo?v=jbF2loDdDJZPIs9L1AWuLxt-SuRqjOK83Ra3jfB3Pz01"></script>
+
+    <script src="https://js.arcgis.com/3.9compact/init.js" type="text/javascript"></script>
+    <script src="/hmip-pimh/bundle/js?v=6t2HwoaozFymLFfz1NuzCodWpkoYB-BDjSDSrTUSBLQ1"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/floatthead/1.3.1/jquery.floatThead.min.js" type="text/javascript"></script>
+
+    <script id="csr-template" type="text/x-kendo-template">
+        <div class="keywordResult">
+            <span>#=FullName#</span>
+        </div>
+    </script>
+
+    <script type="text/javascript">
+
+        //Profile
+        var profileSummaryActionUrl = '/hmip-pimh/en/Profile/%24type?geographyId=%24id .body-left-inner-content';
+        var selectAndZoomImgSrc = '/hmip-pimh/images/geoNavZoomSelect.png';
+        var identifyWindowCloseImgSrc = '/hmip-pimh/Images/iconClose.gif';
+        var clickedMarketSymbolSrc = '/hmip-pimh/images/geographyPin.png';
+
+        //Compare
+        var compareActionUrl = '/hmip-pimh/en/Compare .body-left-inner-content';
+        var compareTopicActionUrl = '/hmip-pimh/en/Compare/CompareTopics #compare-topics-content';
+        var compareLogAddUrl = '/hmip-pimh/en/Compare/LogAddToCompare';
+
+        //Share
+        var shareLog = '/hmip-pimh/en/Main/LogSocialMediaShare';
+
+        window.errorTag = "<span class='error'>Data could not be retrieved at this time.</span>";
+        window.currentLanguage = 'en';
+        kendo.culture('en-CA');
+        var otherLanguage = 'fr';
+        var otherLanguageUrl = '/hmip-pimh/fr/TableMapChart/Table';
+        window.mainSite = "https://www.uatsc10.cmhc-schl.gc.ca/";
+        window.serverRoot = "http://10.255.8.11/hmip-pimh";
+
+        if (typeof(window.ReferenceData) === "undefined" || window.ReferenceData === null) {
+            window.ReferenceData = {"MapServiceLayers":[{"GeographyType":1,"LayerId":"5","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/5","UniqueIdColumnName":"province_geographic_layer_id","ParentIdColumnNames":[],"Name":"Province","DisplayColumnName":"province_current_nm_en","NameEnglish":"Province","NameFrench":"Province"},{"GeographyType":2,"LayerId":"5","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/5","UniqueIdColumnName":"province_geographic_layer_id","ParentIdColumnNames":[],"Name":"Province","DisplayColumnName":"province_current_nm_en","NameEnglish":"Province","NameFrench":"Province"},{"GeographyType":3,"LayerId":"4","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/4","UniqueIdColumnName":"metropolitan_major_area_cde","ParentIdColumnNames":[{"Key":2,"Value":"province_geographic_layer_id "}],"Name":"Metropolitan Major Area","DisplayColumnName":"metropolitan_major_area_current_nm","NameEnglish":"Metropolitan Major Area","NameFrench":"Région métropolitaine"},{"GeographyType":4,"LayerId":"3","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/3","UniqueIdColumnName":"census_subdivision_geographic_layer_id","ParentIdColumnNames":[{"Key":3,"Value":"metropolitan_major_area_cde"},{"Key":2,"Value":"PRUID"}],"Name":"Census Subdivision (CSD)","DisplayColumnName":"census_subdivision_current_nm","NameEnglish":"Census Subdivision (CSD)","NameFrench":"Subdivision de recensement (SDR)"},{"GeographyType":5,"LayerId":"2","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/2","UniqueIdColumnName":"survey_zone_geographic_layer_id","ParentIdColumnNames":[{"Key":3,"Value":"metropolitan_major_area_cde"},{"Key":2,"Value":"PRUID"}],"Name":"Zone","DisplayColumnName":"survey_zone_current_nm_en","NameEnglish":"Zone","NameFrench":"Zone"},{"GeographyType":6,"LayerId":"1","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/1","UniqueIdColumnName":"neighbourhood_geographic_layer_id","ParentIdColumnNames":[{"Key":5,"Value":"survey_zone_geographic_layer_id"},{"Key":3,"Value":"metropolitan_major_area_cde"}],"Name":"Neighbourhood","DisplayColumnName":"neighbourhood_current_short_nm_en","NameEnglish":"Neighbourhood","NameFrench":"Quartier"},{"GeographyType":7,"LayerId":"0","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer/0","UniqueIdColumnName":"census_tract_geographic_layer_id","ParentIdColumnNames":[{"Key":6,"Value":"neighbourhood_geographic_layer_id"},{"Key":5,"Value":"survey_zone_geographic_layer_id"},{"Key":3,"Value":"metropolitan_major_area_cde"}],"Name":"Census Tract","DisplayColumnName":"sgc_census_tract_cde","NameEnglish":"Census Tract","NameFrench":"Secteur de recensement"}],"HistoricMapServiceLayers":[{"GeographyType":1,"LayerId":"5","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/5","UniqueIdColumnName":"province_geographic_layer_id","ParentIdColumnNames":[],"Name":"Province","DisplayColumnName":"province_historic_nm_en","NameEnglish":"Province","NameFrench":"Province"},{"GeographyType":2,"LayerId":"5","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/5","UniqueIdColumnName":"province_geographic_layer_id","ParentIdColumnNames":[],"Name":"Province","DisplayColumnName":"province_historic_nm_en","NameEnglish":"Province","NameFrench":"Province"},{"GeographyType":3,"LayerId":"4","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/4","UniqueIdColumnName":"metropolitan_major_area_geographic_layer_id","ParentIdColumnNames":[{"Key":2,"Value":"province_geographic_layer_id "}],"Name":"Metropolitan Major Area","DisplayColumnName":"metropolitan_major_area_historic_nm","NameEnglish":"Metropolitan Major Area","NameFrench":"Région métropolitaine"},{"GeographyType":4,"LayerId":"3","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/3","UniqueIdColumnName":"census_subdivision_geographic_layer_id","ParentIdColumnNames":[{"Key":3,"Value":"metropolitan_major_area_geographic_layer_id"},{"Key":2,"Value":"PRUID"}],"Name":"Census Subdivision (CSD)","DisplayColumnName":"census_subdivision_historic_nm","NameEnglish":"Census Subdivision (CSD)","NameFrench":"Subdivision de recensement (SDR)"},{"GeographyType":5,"LayerId":"2","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/2","UniqueIdColumnName":"survey_zone_geographic_layer_id","ParentIdColumnNames":[{"Key":3,"Value":"metropolitan_major_area_geographic_layer_id"},{"Key":2,"Value":"PRUID"}],"Name":"Zone","DisplayColumnName":"survey_zone_historic_nm_en","NameEnglish":"Zone","NameFrench":"Zone"},{"GeographyType":6,"LayerId":"1","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/1","UniqueIdColumnName":"neighbourhood_geographic_layer_id","ParentIdColumnNames":[{"Key":5,"Value":"survey_zone_geographic_layer_id"},{"Key":3,"Value":"metropolitan_major_area_geographic_layer_id"}],"Name":"Neighbourhood","DisplayColumnName":"neighbourhood_historic_short_nm_en","NameEnglish":"Neighbourhood","NameFrench":"Quartier"},{"GeographyType":7,"LayerId":"0","Url":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer/0","UniqueIdColumnName":"census_tract_geographic_layer_id","ParentIdColumnNames":[{"Key":6,"Value":"neighbourhood_geographic_layer_id"},{"Key":5,"Value":"survey_zone_geographic_layer_id"},{"Key":3,"Value":"metropolitan_major_area_geographic_layer_id"}],"Name":"Census Tract","DisplayColumnName":"sgc_census_tract_cde","NameEnglish":"Census Tract","NameFrench":"Secteurs de recensement"}],"CurrentBoundariesMapServiceUrl":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_CURRENT_CAWD/MapServer","HistoricBoundariesMapServiceUrl":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/CMHC_APPS/HMIP_HISTORIC_CAWD/MapServer","BaseMapServiceUrl":"https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer","PrintTaskUrl":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/Utilities/PrintingTools/GPServer/Export%20Web%20Map%20Task","ProxyUrl":"http://localhost/hmip-pimh/map/proxy","LabelPointsServiceUrl":"https://geospatial.cmhc-schl.gc.ca/server/rest/services/Utilities/Geometry/GeometryServer/labelPoints","UseLocalServerRoot":true};
+            if(window.ReferenceData.UseLocalServerRoot)
+                setServerRoot(window.ReferenceData);
+        }
+
+        if (typeof window.GeographyType == "undefined") {
+            window.GeographyType = {"Country":1,"Province":2,"MetropolitanMajorArea":3,"CensusSubDivision":4,"SurveyZone":5,"Neighbourhood":6,"CensusTract":7};
+        }
+
+        //Tables
+        var defaultTableId = -1;
+            defaultTableId = '1.1.1.9';
+        var tableActionUrl = '/hmip-pimh/en/TableMapChart/%24type .body-left-inner-content';
+
+        // Modal
+        var popupClose = '<a href="#" class="close-popup-overlay">Close</a>';
+
+    </script>
+
+    
+    
+    <!-- Google Analytics 31-Jul-2015-->
+    
+    <!-- End Google Analytics 31-Jul-2015-->
+
+</head>
+<body data-compare-icon="/hmip-pimh/Images/Sitecore/icon-compare-add.svg"
+      data-topics-icon="/hmip-pimh/Images/Sitecore/icon-cog.svg">
+
+    <!-- Google Tag Manager 31-July-2015 -->
+<noscript>
+    <iframe src="//www.googletagmanager.com/ns.html?id=GTM-P3TBKQ"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+
+<!-- End Google Tag Manager 31-July-2015 -->
+
+    
+
+
+<header>
+
+    <div class="content-full clear-fix">
+
+        <div class="site-title float-left">
+            <a href="https://www.uatsc10.cmhc-schl.gc.ca/" class="">
+
+                <img src="/hmip-pimh/Images/SiteCore/logo/CMHC_Logo_En.svg"
+                     alt="CMHC Home" />
+
+                <span>
+                    Canada Mortgage &lt;br /&gt;and Housing Corporation
+                </span>
+            </a>
+        </div>
+
+
+        <div class="site-menu float-right">
+            <ul>
+
+                    <li id="user-profile">
+                            <a href="/hmip-pimh/en/Main/Login">
+                                Sign In
+                            </a>
+or                            <a href="https://www.uatsc10.cmhc-schl.gc.ca/en/cmhc-registration">
+                                Register
+                            </a>
+                    </li>
+
+
+
+                <li id="language-btn-wrapper">
+                    <a href="/hmip-pimh/fr" class="nav-language">
+                        fran&#231;ais
+                    </a>
+                </li>
+
+
+                
+
+            </ul>
+            
+            <div class="search-main">
+                <form method="get" name="search-form" class="content-full" action="https://www.uatsc10.cmhc-schl.gc.ca/en/search">
+                    <div class="global-search-box">
+                        <ul>
+                            <li class="text-box">
+                                <input type="search" placeholder="What can we help you find?" id="keyword" name="keyword" />
+                            </li>
+                            <li class="search-btn">
+                                <input type="image" src="/hmip-pimh/Images/SiteCore/search.svg" alt="submit" />
+                            </li>
+                            <li class="menu-list">
+                                <a id="navigation-btn" href="#">
+                                    <img src="/hmip-pimh/Images/SiteCore/icon-menu.svg" alt="Menu icon" height="18" width="21" />
+                                    <span class="menu-text">MENU</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+
+        <nav>
+            
+                <ul class="primary-nav" role="menubar">
+                            <li class="primary-nav__item has-mega" role="none">
+                                <button class="nav-trigger" type="button" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-controls="mega-housing-finance-solutions">
+                                    Housing Finance Solutions
+
+                                    <img src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmkeyboard_arrow_down.svg" class="downicon" alt="" aria-hidden="true">
+
+                                    <img src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmkeyboard_arrow_up.svg" class="upicon" alt="" aria-hidden="true">
+                                </button>
+
+                                <!-- Mega panel -->
+                                <div class="mega-panel" id="mega-housing-finance-solutions" role="group" aria-label="Mortgage Financing mega menu" aria-hidden="true">
+                                    <div class="mega-panel__inner">
+                                        <button type="button" class="mega-panel__close" aria-label="Close">
+                                            Close
+                                            <img class="nohover" src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmclose.svg" alt="" aria-hidden="true">
+                                            <img class="onhover" src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmclosered.svg" alt="" aria-hidden="true">
+                                        </button>
+                                        <!-- 4-column layout -->
+                                        <div class="mega-panel__columns">
+                                                <section class="mega-column mega-column--split " aria-label="Insurance and Securitization">
+                                                    <h3 class="mega-column__title">
+                                                        Insurance and Securitization
+                                                    </h3>
+                                                    <div class="mega-column__body">
+                                                            <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/securitization" class="mega-link">Securitization</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/default-claims-and-properties-for-sale" class="mega-link">Claims, Defaults and Risk Management</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs" class="mega-link">Homeowner and Small Rental Insurance</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs" class="mega-link">Homeowner and Small Rental Insurance</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs" class="mega-link">Homeowner and Small Rental Insurance</a>                </li>
+    </ul>
+
+    <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/multi-unit-insurance" class="mega-link">Multi-Unit Insurance</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs" class="mega-link">Homeowner and Small Rental Insurance</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs" class="mega-link">Homeowner and Small Rental Insurance</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs" class="mega-link">Homeowner and Small Rental Insurance</a>                </li>
+    </ul>
+                                                    </div>
+                                                </section>
+                                                <hr>
+                                                <section class="mega-column mega-column--split " aria-label="Tools and Comparison">
+                                                    <h3 class="mega-column__title">
+                                                        Tools and Comparison
+                                                    </h3>
+                                                    <div class="mega-column__body">
+                                                            <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/default-claims-and-properties-for-sale/cmhc-default-management-tool-selector" class="mega-link">CMHC default management tool selector</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-fraud" class="mega-link">How to Recognize and Report Mortgage Fraud</a>                </li>
+    </ul>
+
+    <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/nha-approved-lenders" class="mega-link">NHA Approved Lenders</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/calculating-gds-tds" class="mega-link">Calculating GDS/TDS</a>                </li>
+    </ul>
+                                                    </div>
+                                                </section>
+                                                <hr>
+                                                <section class="mega-column mega-column--split " aria-label="Housing Programs">
+                                                    <h3 class="mega-column__title">
+                                                        Housing Programs
+                                                    </h3>
+                                                    <div class="mega-column__body">
+                                                            <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/funding-programs/all-funding-programs/apartment-construction-loan-program" class="mega-link">Apartment Construction Loan Program</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/funding-programs/all-funding-programs/housing-accelerator-fund" class="mega-link">Housing Accelerator Fund</a>                </li>
+    </ul>
+
+    <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/funding-programs/all-funding-programs/federal-lands" class="mega-link">Federal Lands Initiative</a>                </li>
+                <li class="hightlight-list-item">
+                    
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/funding-programs" class="mega-link mega-link--highlight" style="color:#DA291C"><span class="flex">View all housing programs
+  <img src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/keyboard_arrow_right.svg?rev=0cfa6e83-af88-4e64-b322-100338b4a70f" alt="" aria-hidden="true"></span>
+</a>                </li>
+    </ul>
+                                                    </div>
+                                                </section>
+                                                <hr>
+                                        </div>
+                                        <!-- Featured promo row -->
+                                            <div class="mega-panel__promo">
+                                                
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/contact-mortgage-loan-insurance" class="promo-card">
+  <img class="promo-card__icon" src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/icon-email.svg?rev=6ef583c2-1f8a-4a55-a78b-7a3c37dbc2e0" alt="" aria-hidden="true">
+  <div class="promo-card__content">
+    <h3 class="promo-card__title">Contact Us</h3>
+    <p class="promo-card__text">
+      Contact details for mortgage loan insurance, underwriting, business
+      development and real estate.
+    </p>
+    <span class="promo-card__link">
+      Learn More
+      <img src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/keyboard_arrow_right.svg?rev=0cfa6e83-af88-4e64-b322-100338b4a70f" alt="" aria-hidden="true">
+</span>
+  </div>
+</a>
+
+                                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/nha-approved-lenders" class="promo-card">
+  <img class="promo-card__icon" src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/icon-eco_improvement.svg?rev=76c04ddd-ab76-400a-882c-c854afb318a6" alt="" aria-hidden="true">
+  <div class="promo-card__content">
+    <h3 class="promo-card__title">NHA Approved Lenders</h3>
+    <p class="promo-card__text">
+      Institutions approved to lend, underwrite and/or administer CMHC-insured
+      loans.
+    </p>
+    <span class="promo-card__link">
+      Learn More
+      <img src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/keyboard_arrow_right.svg?rev=0cfa6e83-af88-4e64-b322-100338b4a70f" alt="" aria-hidden="true">
+    </span>
+  </div>
+</a>
+
+                                            </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="primary-nav__item has-mega" role="none">
+                                <button class="nav-trigger" type="button" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-controls="mega-housing-expertise">
+                                    Housing Expertise
+
+                                    <img src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmkeyboard_arrow_down.svg" class="downicon" alt="" aria-hidden="true">
+
+                                    <img src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmkeyboard_arrow_up.svg" class="upicon" alt="" aria-hidden="true">
+                                </button>
+
+                                <!-- Mega panel -->
+                                <div class="mega-panel" id="mega-housing-expertise" role="group" aria-label="Mortgage Financing mega menu" aria-hidden="true">
+                                    <div class="mega-panel__inner">
+                                        <button type="button" class="mega-panel__close" aria-label="Close">
+                                            Close
+                                            <img class="nohover" src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmclose.svg" alt="" aria-hidden="true">
+                                            <img class="onhover" src="https://www.uatsc10.cmhc-schl.gc.ca/content/project/cmhc/img/mmclosered.svg" alt="" aria-hidden="true">
+                                        </button>
+                                        <!-- 4-column layout -->
+                                        <div class="mega-panel__columns">
+                                                <section class="mega-column  " aria-label="Housing Themes">
+                                                    <h3 class="mega-column__title">
+                                                        Housing Themes
+                                                    </h3>
+                                                    <div class="mega-column__body">
+                                                            <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Offre et demande de logements#hei-results" class="mega-link">Housing Demand and Supply</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Financement de l’habitation#hei-results" class="mega-link">Housing Finance</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Logement des Autochtones#hei-results" class="mega-link">Indigenous Housing</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Innovation en construction#hei-results" class="mega-link">Building Innovation</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Politiques et r&#232;gles sur le logement#hei-results" class="mega-link">Housing Policies and Rules</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=March&#233;s locatifs et taux d’inoccupation#hei-results" class="mega-link">Rental Markets and Vacancy Rates</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Logements abordables et hors march&#233;#hei-results" class="mega-link">Affordable and Non-Market Housing</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research?category=Besoins et conditions de logement#hei-results" class="mega-link">Housing Needs and Conditions</a>                </li>
+    </ul>
+
+                                                    </div>
+                                                </section>
+                                                <hr>
+                                                <section class="mega-column  " aria-label="Research and Analysis">
+                                                    <h3 class="mega-column__title">
+                                                        Research and Analysis
+                                                    </h3>
+                                                    <div class="mega-column__body">
+                                                            <ul class="mega-column__list">
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-market-outlook" class="mega-link">Housing Market Outlook</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/housing-market/housing-supply-report" class="mega-link">Housing Supply Report</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-research/research-reports/housing-finance/residential-mortgage-industry-report" class="mega-link">Residential Mortgage Industry Report</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/market-reports/rental-market-reports-major-centres" class="mega-link">Rental Market Report</a>                </li>
+                <li>
+<a href="" class="mega-link">Northern Housing Report</a>                </li>
+    </ul>
+
+                                                    </div>
+                                                </section>
+                                                <hr>
+                                                <section class="mega-column  " aria-label="Data and Statistics">
+                                                    <h3 class="mega-column__title">
+                                                        Data and Statistics
+                                                    </h3>
+                                                    <div class="mega-column__body">
+                                                            <ul class="mega-column__list">
+                <li>
+<a href="" class="mega-link">Supply Gaps Dashboard</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/residential-mortgage-industry-data-dashboard" class="mega-link">Residential Mortgage Industry Data Dashboard</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/canadian-housing-survey-2022" class="mega-link">Canadian Housing Survey Data (XLS)</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/household-characteristics" class="mega-link">Household Characteristics Data (XLS)</a>                </li>
+                <li>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-data/data-tables/rental-market" class="mega-link">Rental Market Data (XLS)</a>                </li>
+    </ul>
+
+                                                    </div>
+                                                </section>
+                                                <hr>
+                                        </div>
+                                        <!-- Featured promo row -->
+                                            <div class="mega-panel__promo">
+                                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/news-releases-reports-calendar" class="promo-card">
+  <img class="promo-card__icon" src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/icon-calendar.svg?rev=9b489cda-0c1c-490e-94f1-06812c7c3b85" alt="" aria-hidden="true">
+  <div class="promo-card__content">
+    <h3 class="promo-card__title">Reports Calendar</h3>
+    <p class="promo-card__text">
+      Find out when we’re releasing our latest housing reports.
+    </p>
+    <span class="promo-card__link">
+      Learn More
+      <img src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/keyboard_arrow_right.svg?rev=0cfa6e83-af88-4e64-b322-100338b4a70f" alt="" aria-hidden="true">
+    </span>
+  </div>
+</a>
+
+                                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-research/research-reports/housing-finance/residential-mortgage-industry-report" class="promo-card">
+  <img class="promo-card__icon" src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/icon-document-data.svg?rev=d72e764d-c258-478f-a41a-1b10452e698b" alt="" aria-hidden="true">
+  <div class="promo-card__content">
+    <h3 class="promo-card__title">
+      Residential Mortgage Industry Report Spring 2026
+    </h3>
+    <p class="promo-card__text">
+      Highlighting mortgage trends, lender activity and housing finance insights
+      to support informed decisions for stable, affordable markets.
+    </p>
+    <span class="promo-card__link">
+      Learn More
+      <img src="https://uatsc10-assets.cmhc-schl.gc.ca/sites/cmhc/shared/images/icons/mega-menu/keyboard_arrow_right.svg?rev=0cfa6e83-af88-4e64-b322-100338b4a70f" alt="" aria-hidden="true">
+    </span>
+  </div>
+</a>
+
+                                            </div>
+                                    </div>
+                                </div>
+                            </li>
+                </ul>
+            
+        </nav>
+
+
+
+
+
+
+    </div>
+
+</header>
+
+
+
+
+
+
+
+
+
+
+    
+<div id="header-search-bar" class="clear-fix" role="search">
+    
+    <form method="get" name="search-form" class="content-full" action="https://www.uatsc10.cmhc-schl.gc.ca/en/search">
+        <label class="float-left">
+            Search
+            <input type="search" placeholder="What can we help you find?" id="keyword" name="keyword" />
+        </label>
+        <div class="float-right"><input type="submit" value="Search" /></div>
+    </form>
+
+</div>
+
+   
+
+    <div class="body-wrap">
+
+        <main>
+
+                <section class="banner clear-fix">
+        <h1>Housing Market Information Portal<sup class="h-asterisk">*</sup></h1>
+        <p>This portal offers free, easy-to-use access to the latest housing market data for Canada.</p>
+    </section>
+
+
+
+
+            
+            
+<div class="banner-container">
+    <div class="scrolling-text">
+        <b>Important Notice: </b>
+        <span>CMHC is conducting a methodology review of the unabsorbed inventory data series in the Ontario context. Updates will follow. In the meantime, please use the data with caution. Thank you for your understanding.</span>
+
+    </div>
+</div>
+
+
+            
+
+
+
+
+
+
+
+
+
+
+<nav class="nav-modules clear-fix ">
+
+    <div>
+        <a href="/hmip-pimh/en/Help" class="button secondary help icon-tooltip" title="Not sure where to start?&lt;br/&gt;
+&lt;a href=&quot;#&quot;&gt;Check out our help guide&lt;/a&gt;">
+            Help
+        </a>
+    </div>
+
+    <div>
+        <ul>
+            <li>
+                <a class="nav" data-type="Profile" href="/hmip-pimh/en/Profile" title="Overview">Overview</a>
+            </li>
+            <li>
+                <a class="nav" data-type="TableMapChart" href="/hmip-pimh/en/TableMapChart" title="Full View">Full View</a>
+            </li>
+            <li>
+                <a class="nav" data-type="Compare" href="/hmip-pimh/en/Compare" title="Compare">Compare</a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+
+        <form novalidate="novalidate" method="post" name="searchForm" id="searchForm">
+            <input value="1" name="initialSearch/" type="hidden" />
+
+            <label for="hmip-search">
+                Search for a location
+            </label>
+            <input maxlength="80" name="text" autocomplete="off" id="hmip-search" type="search">
+            <input type="submit" value="Search" />
+        </form>
+
+        <span class="searchOr">or</span>
+
+    </div>
+
+
+</nav>
+
+
+<div class="search-results-container">
+    <div id="autocompleteResults" tabindex="-1" role="dialog" data-overlay-autofocus="false" data-placename-details="/hmip-pimh/en/Main/PlaceNameDetails" data-postal-code-details="/hmip-pimh/en/Main/PostalCodeDetails">
+        <a href="#" id="close-autocompleteResults" class="close-overlay-small">
+            Close 
+        </a>
+        <div class="table-wrap">
+            <div id="autocompleteGeographies">
+                <div>
+                    <div data-for-data-type="Geography">
+                        <h2>Portal Locations</h2>
+                        <ol></ol>
+                    </div>
+                    <div data-for-data-type="PlaceName">
+                        <h2>Other Locations</h2>
+                        <ol></ol>
+                    </div>
+                    <div data-for-data-type="PostalCode">
+                        <h2>Postal Code</h2>
+                        <div class="postal-code-footnote">
+                            Adapted from Statistics Canada Postal Code<sup>OM</sup> Conversion File (June 2013) which is based on data licensed from Canada Post Corporation. This tool does not validate postal codes<sup>OM</sup>
+                            <br />
+                            <br />OM: Postal Code is an official mark of Canada Post.
+                        </div>
+                        <ol></ol>
+                    </div>
+                </div>
+            </div>
+            <div id="searchResult" tabindex="-1"></div>
+        </div>
+    </div>
+</div>
+
+<section class="main-section">
+
+    <div class="body-left">
+        <div class="body-left-inner">
+            
+            <div class="body-left-inner-content">
+                <div class="body-left-inner-content-header">
+
+                    <div class="navSectionHeaderContainer">
+                        <h2 class="navSectionHeader">Full View</h2>
+                    </div>
+
+                    <div id="tableGeographyHeader" class="section-header">
+                        <h2>Toronto</h2>
+                    </div>
+
+                </div>
+                <section id="tableSection">
+                    <section id="predefinedTables">
+                        <div id="predefinedTable">
+                            <div id="predefinedTable-links-area">
+
+    <div class="subsection-header">
+        <h3><a href="#" class="subsection-link">New Housing Construction</a></h3>
+    </div>
+    <div class="fullview-links">
+
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Starts%20%28Actual%29" data-category-link="true">Starts (Actual)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Starts%20%28SAAR%29" data-category-link="true">Starts (SAAR)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Completions" data-category-link="true">Completions</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Under%20Construction%20Inventory" data-category-link="true">Under Construction Inventory</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Length%20of%20Construction%20%28in%20months%29" data-category-link="true">Length of Construction (in months)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Absorbed%20Units%20%28Homeowner%20%2B%20Condo%29" data-category-link="true">Absorbed Units (Homeowner + Condo)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=%25%20of%20Absorbed%20Units%20at%20Completion%20%28Homeowner%20%2B%20Condo%29" data-category-link="true">% of Absorbed Units at Completion (Homeowner + Condo)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Inventory%20of%20Completed%20and%20Unabsorbed%20Units%20%28Homeowner%20%2B%20Condo%29" data-category-link="true">Inventory of Completed and Unabsorbed Units (Homeowner + Condo)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Absorbed%20Unit%20Prices%20%28%24%29" data-category-link="true">Absorbed Unit Prices ($)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=New%20Housing%20Construction&amp;categoryLevel2=Unabsorbed%20Unit%20Prices%20%28%24%29" data-category-link="true">Unabsorbed Unit Prices ($)</a>
+</div>
+                    </div> 
+    <div class="subsection-header">
+        <h3><a href="#" class="subsection-link">Primary Rental Market</a></h3>
+    </div>
+    <div class="fullview-links">
+
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=Vacancy%20Rate%20%28%25%29" data-category-link="true">Vacancy Rate (%)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=Availability%20Rate%20%28%25%29" data-category-link="true">Availability Rate (%)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=Average%20Rent%20%28%24%29" data-category-link="true">Average Rent ($)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=%25%20Change%20of%20Average%20Rent" data-category-link="true">% Change of Average Rent</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=Median%20Rent%20%28%24%29" data-category-link="true">Median Rent ($)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=Rental%20Universe" data-category-link="true">Rental Universe</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Primary%20Rental%20Market&amp;categoryLevel2=Summary%20Statistics" data-category-link="true">Summary Statistics</a>
+</div>
+                    </div> 
+    <div class="subsection-header">
+        <h3><a href="#" class="subsection-link">Secondary Rental Market</a></h3>
+    </div>
+    <div class="fullview-links">
+
+                    <div>Other Secondary Rental Dwellings</div>
+            <div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Other%20Secondary%20Rental%20Dwellings&amp;categoryLevel3=Estimated%20Number%20of%20Households" data-category-link="true">Estimated Number of Households</a>
+</div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Other%20Secondary%20Rental%20Dwellings&amp;categoryLevel3=Average%20Rent%20%28%24%29" data-category-link="true">Average Rent ($)</a>
+</div>
+            </div>
+            <div>Rental Condominium Apartments</div>
+            <div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Rental%20Condominium%20Apartments&amp;categoryLevel3=Vacancy%20Rate%20%28%25%29" data-category-link="true">Vacancy Rate (%)</a>
+</div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Rental%20Condominium%20Apartments&amp;categoryLevel3=Average%20Rent%20%28%24%29" data-category-link="true">Average Rent ($)</a>
+</div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Rental%20Condominium%20Apartments&amp;categoryLevel3=Estimated%20Number%20of%20Condominium%20Units" data-category-link="true">Estimated Number of Condominium Units</a>
+</div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Rental%20Condominium%20Apartments&amp;categoryLevel3=Estimated%20Number%20of%20Condominium%20Units%20used%20for%20Rental" data-category-link="true">Estimated Number of Condominium Units used for Rental</a>
+</div>
+                    <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Secondary%20Rental%20Market&amp;categoryLevel2=Rental%20Condominium%20Apartments&amp;categoryLevel3=Percentage%20%28%25%29%20of%20All%20Condominiums%20used%20for%20Rental" data-category-link="true">Percentage (%) of All Condominiums used for Rental</a>
+</div>
+            </div>
+            </div> 
+    <div class="subsection-header">
+        <h3><a href="#" class="subsection-link">Seniors&#39; Rental Housing</a></h3>
+    </div>
+    <div class="fullview-links">
+
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Rental%20Housing%20Vacancy%20Rates%20%28%25%29" data-category-link="true">Rental Housing Vacancy Rates (%)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Universe%20and%20Number%20of%20Residents%20Living%20in%20Universe" data-category-link="true">Universe and Number of Residents Living in Universe</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Vacancy%20Rate%20%28%25%29%20and%20Average%20Rents%20%28%24%29%20for%20Heavy%20Care%20Spaces" data-category-link="true">Vacancy Rate (%) and Average Rents ($) for Heavy Care Spaces</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Universe%20of%20Standard%20Spaces" data-category-link="true">Universe of Standard Spaces</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Spaces%20by%20Unit%20Type" data-category-link="true">Spaces by Unit Type</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Proportion%20%28%25%29%20of%20Standard%20Spaces" data-category-link="true">Proportion (%) of Standard Spaces</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Number%20of%20Units%20and%20Proportion%20%28%25%29%20of%20Overall%20Universe%20for%20Studio%20Units%20and%20Private%20Rooms" data-category-link="true">Number of Units and Proportion (%) of Overall Universe for Studio Units and Private Rooms</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Seniors%27%20Rental%20Housing&amp;categoryLevel2=Vacancy%20Rate%20%28%25%29%20and%20Average%20Rent%20%28%24%29%20for%20Studio%2FPrivate%20Rooms" data-category-link="true">Vacancy Rate (%) and Average Rent ($) for Studio/Private Rooms</a>
+</div>
+                    </div> 
+    <div class="subsection-header">
+        <h3><a href="#" class="subsection-link">Population, Households and Housing Stock</a></h3>
+    </div>
+    <div class="fullview-links">
+
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Age%20of%20Population" data-category-link="true">Age of Population</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Age%20of%20Primary%20Household%20Maintainer" data-category-link="true">Age of Primary Household Maintainer</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Mobility%20of%20Primary%20Household%20Maintainer" data-category-link="true">Mobility of Primary Household Maintainer</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Household%20Type" data-category-link="true">Household Type</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Household%20Size" data-category-link="true">Household Size</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Immigrant%20Households" data-category-link="true">Immigrant Households</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Households%20with%20Seniors" data-category-link="true">Households with Seniors</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Households%20with%20Children%20Under%2018" data-category-link="true">Households with Children Under 18</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Activity%20Limitations" data-category-link="true">Activity Limitations</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Aboriginal%20Households" data-category-link="true">Aboriginal Households</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Shelter%20Costs" data-category-link="true">Shelter Costs</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Mortgages" data-category-link="true">Mortgages</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Household%20Income" data-category-link="true">Household Income</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Condominiums" data-category-link="true">Condominiums</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Housing%20Suitability" data-category-link="true">Housing Suitability</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Structure%20Type" data-category-link="true">Structure Type</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Value%20of%20Owner-occupied%20Dwellings%20%28%24%29" data-category-link="true">Value of Owner-occupied Dwellings ($)</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Population%2C%20Households%20and%20Housing%20Stock&amp;categoryLevel2=Period%20of%20Construction%20and%20Condition%20of%20Dwelling" data-category-link="true">Period of Construction and Condition of Dwelling</a>
+</div>
+                    </div> 
+    <div class="subsection-header">
+        <h3><a href="#" class="subsection-link">Core Housing Need</a></h3>
+    </div>
+    <div class="fullview-links">
+
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Age%20Of%20Primary%20Household%20Maintainer" data-category-link="true">Age Of Primary Household Maintainer</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Household%20Type" data-category-link="true">Household Type</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Immigrant%20Households" data-category-link="true">Immigrant Households</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Households%20with%20Seniors" data-category-link="true">Households with Seniors</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Households%20with%20Children%20Under%2018" data-category-link="true">Households with Children Under 18</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Activity%20limitations" data-category-link="true">Activity limitations</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Aboriginal%20Households" data-category-link="true">Aboriginal Households</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Income%2C%20Shelter%20Cost%20and%20STIR" data-category-link="true">Income, Shelter Cost and STIR</a>
+</div>
+                <div>    <a href="/hmip-pimh/en/TableMapChart/TableCategory?geographyType=MetropolitanMajorArea&amp;geographyId=2270&amp;categoryLevel1=Core%20Housing%20Need&amp;categoryLevel2=Housing%20Standards" data-category-link="true">Housing Standards</a>
+</div>
+                    </div> 
+
+                            </div>
+                        </div>
+                    </section>
+                </section>
+<div class="table-section-wrapper">
+    <div class="table-wrap">
+            <div class="refine-table-container">
+                <div class="refine-table-wrapper">
+
+                    <div class="overlayHeaders">
+                        <div class="overlayH1">New Housing Construction</div>
+                        <div class="overlayH2">Starts (Actual)</div>
+                    </div>
+
+                    <div class="refine-table-content">
+
+
+
+
+
+
+                            <h4>By:</h4>
+                            <ol>
+                                    <li class="selected"><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=1&amp;RowField=26">Dwelling Types</a></li>
+                                    <li class=""><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=18&amp;RowField=26">Intended Markets</a></li>
+                            </ol>
+
+
+
+
+                            <h4>Display Options:</h4>
+                            <ol class="last-of-type">
+                                    <li class=""><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=1&amp;RowField=27">Survey Zones</a></li>
+                                    <li class="selected"><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=1&amp;RowField=26">Census Subdivisions</a></li>
+                                    <li class=""><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=1&amp;RowField=28">Neighbourhoods</a></li>
+                                    <li class=""><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=1&amp;RowField=29">Census Tracts</a></li>
+                                    <li class=""><a href="/hmip-pimh/en/TableMapChart/TableMatchingCriteria?GeographyType=MetropolitanMajorArea&amp;GeographyId=2270&amp;CategoryLevel1=New%20Housing%20Construction&amp;CategoryLevel2=Starts%20%28Actual%29&amp;ColumnField=1&amp;RowField=TIMESERIES">Historical Time Periods</a></li>
+                            </ol>
+
+
+                        <div class="refine-table-note">
+                            <h4>Note:</h4>
+                            Changes to display settings will reset date settings to most recent data.  Available display settings are subject to change based upon data available.<br />
+                        </div>
+
+                    </div>
+
+
+
+
+                </div>
+            </div>
+        <div id="predefinedTable-data-area">
+            
+
+
+<div id="overlayHeaderDIV">
+        <h1 class="overlayH1 table-title">
+Toronto <span class="productTitle">
+    — Starts by Dwelling Type by Census Subdivision 
+</span>
+
+        <!-- By Dwelling Type By Provinces(In Centres 100, 000+)-->
+    </h1>
+
+    <ul id="overlayInteractOptions">
+
+            <li>
+                <a href="/hmip-pimh/en/TableMapChart/SaveSession" class="button secondary" id="saveSessionDisabledLink">Save</a>
+
+
+                <div id="saveSession" tabindex="-1" role="dialog" class="overlay-small">
+
+                    <h3>Save to My Data Library</h3>
+
+                    <a href="#" id="close-saveSession" class="close-overlay-small">Close</a>
+                    <div id="saveSession-container"></div>
+                </div>
+
+                <div id="saveDisabled" tabindex="-1" role="dialog" class="overlay-small" style="height:auto">
+                    <a href="#" id="close-saveDisabled" class="close-overlay-small">Close</a>
+                    <div id="saveDisabled-container">You must be logged in to save or subscribe.</div>
+                    <div class="saveDisabledOKButtons" id="saveDisabledOK"><p class="introOverlayTutorialButton"><a>OK</a></p></div>
+                </div>
+
+            </li>
+
+
+
+
+        <li>
+            <a href="#" id="shareButton" class="shareButton button secondary">Share</a>
+            <div id="share-section" class="share-section" data-url="/hmip-pimh/en/Main/SharedContent?tid=L2htaXAtcGltaC9lbi9UYWJsZU1hcENoYXJ0L1RhYmxlP1RhYmxlSWQ9MS4xLjEuOSZHZW9ncmFwaHlJZD0yMjcwJkdlb2dyYXBoeVR5cGVJZD0zJkJyZWFrZG93bkdlb2dyYXBoeVR5cGVJZD00JkRpc3BsYXlBcz1UYWJsZSZHZW9ncmFnaHlOYW1lPVRvcm9udG8mWXRkPUZhbHNlJkRlZmF1bHREYXRhRmllbGQ9bWVhc3VyZS0xMiZTdXJ2ZXk9U2NzcyZGb3JUaW1lUGVyaW9kLlllYXI9MjAyNiZGb3JUaW1lUGVyaW9kLlF1YXJ0ZXI9MyZGb3JUaW1lUGVyaW9kLk1vbnRoPTg%253D">
+    <div id="facebook" data-text="The housing data you want, the way you want it." data-title="Like" data-icon-url="/hmip-pimh/Images/social/facebook.png"></div>
+    
+    <div id="linkedin" data-text="The housing data you want, the way you want it." data-title="Share" data-icon-url="/hmip-pimh/Images/social/linkedin.png"></div>
+    <div id="googleplus" data-text="The housing data you want, the way you want it." data-title="+1" data-icon-url="/hmip-pimh/Images/social/google-plus.png"></div>
+    <div id="shareViaEmail" data-action-url="/hmip-pimh/en/Main/ShareByEmail"><img src="/hmip-pimh/Images/social/email.png" alt="Email" title="Email" /></div>
+</div>
+
+<style type="text/css">
+
+    .sharrre, #shareViaEmail
+    {
+        display: inline-block;
+    }
+
+    #shareViaEmail {
+        cursor: pointer;
+        padding: 0 5px;
+    }
+</style>
+
+        </li>
+        <li>
+            <a href="#" id="exportTableLink" class="button secondary">Export</a>
+
+            <div class="table-input" id="exportTableInput">
+                <ul>
+                        <li><a href="#csv-export" data-export-type="csv">Export to Spreadsheet (CSV)</a></li>
+                    <li><a href="#pdf-export" data-export-type="pdf">Export to PDF</a></li>
+                </ul>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
+
+
+
+
+
+<form action="/hmip-pimh/en/TableMapChart/ExportTable" id="exportTableForm" method="post"></form>
+
+
+
+
+<div class="table-options popup-filters section-header">
+    <ul class="filters overlay-data-options">
+            <li><a href="#timeperiod" id="timePeriodLink" class="menu-link table-time-period-config ">August 2026</a></li>
+
+        
+                <li><a href="#" id="filterBydimension-18Link" class="menu-link">Intended Markets - All</a></li>
+    <!--feature #589913 fullview change-->
+
+    </ul>
+    <ul class="display-types overlay-display-options">
+            <li>
+        <a href="#" id="viewAsTable"
+           class="table-display-link  active" title="">
+            Table
+        </a>
+    </li>
+
+            <li>
+        <a href="#" id="viewAsChart"
+           class="table-display-link  " title="">
+            Chart
+        </a>
+    </li>
+
+            <li>
+        <a href="#" id="viewAsMap"
+           class="table-display-link  " title="">
+            Map
+        </a>
+    </li>
+
+    </ul>
+</div>
+
+        <div class="view-by-input table-input" id="filterBydimension-18Input" role="dialog" tabindex="-1">
+            <ul>
+                    <li><a href="#Homeowner" data-key="dimension-18" data-value="Homeowner">Homeowner</a></li>
+                    <li><a href="#Rental" data-key="dimension-18" data-value="Rental">Rental</a></li>
+                    <li><a href="#Condo" data-key="dimension-18" data-value="Condo">Condo</a></li>
+                    <li><a href="#Co-op" data-key="dimension-18" data-value="Co-op">Co-op</a></li>
+                    <li><a href="#All" data-key="dimension-18" data-value="All">All</a></li>
+                            </ul>
+        </div>
+
+    <div class="view-by-input table-input" id="selectDataFieldInput" role="dialog" tabindex="-1">
+        <ul>
+                <li><a href="#Starts" data-key="measure-12" data-value="Starts">Starts</a></li>
+        </ul>
+    </div>
+
+
+
+        <div class="view-by-input table-input" id="filterBydimension-18Input" role="dialog" tabindex="-1">
+            <ul>
+                    <li><a href="#Homeowner" data-key="dimension-18" data-value="Homeowner">Homeowner</a></li>
+                    <li><a href="#Rental" data-key="dimension-18" data-value="Rental">Rental</a></li>
+                    <li><a href="#Condo" data-key="dimension-18" data-value="Condo">Condo</a></li>
+                    <li><a href="#Co-op" data-key="dimension-18" data-value="Co-op">Co-op</a></li>
+                    <li><a href="#All" data-key="dimension-18" data-value="All">All</a></li>
+                            </ul>
+        </div>
+    <div class="view-by-input table-input" id="selectDataFieldInput" role="dialog" tabindex="-1">
+        <ul>
+                <li><a href="#Starts" data-key="measure-12" data-value="Starts">Starts</a></li>
+        </ul>
+    </div>
+<div class="table-input time-period-input " id="timePeriodInput" role="dialog" tabindex="-1">
+    <h4>Reference Period</h4>
+        <div class="time-period-frequency">
+            <div>
+                    <label class="small">
+
+        <input type="radio" value="Annual" name="frequency" data-frequency-id="1" id="toggleAnnual"  />
+        <span class="radio"></span>
+        Annual
+    </label>
+
+                        <label class="small">
+            <input type="radio" value="Quarterly" name="frequency" data-frequency-id="2" id="toggleQuarterly"  />
+            <span class="radio"></span>
+            Quarterly
+        </label>
+
+                        <label class="small">
+            <input type="radio" value="Monthly" name="frequency" data-frequency-id="3" id="toggleMonthly" checked />
+            <span class="radio"></span>
+            Monthly
+        </label>
+
+            </div>
+                    <div class="cumulative">
+            <label style="display:block" class="small">
+                <input type="checkbox" id="toggleYtd"  />
+                <span class="checkmark"></span>
+                Cumulative
+            </label>
+        </div>
+
+        </div>
+    <div class="time-period-captions"></div>
+    <div class="time-period" id="forTimePeriod">
+        <a href="#prev-year" class="prev-year">previous</a>
+        <a href="#next-year" class="next-year">next</a>
+
+        <div class="time-period-caption" data-to="TO">
+                <div data-year="1990" data-has-quarterly="true" data-full-year="true" style="display:none">1990</div>
+                <div data-year="1991" data-has-quarterly="true" data-full-year="true" style="display:none">1991</div>
+                <div data-year="1992" data-has-quarterly="true" data-full-year="true" style="display:none">1992</div>
+                <div data-year="1993" data-has-quarterly="true" data-full-year="true" style="display:none">1993</div>
+                <div data-year="1994" data-has-quarterly="true" data-full-year="true" style="display:none">1994</div>
+                <div data-year="1995" data-has-quarterly="true" data-full-year="true" style="display:none">1995</div>
+                <div data-year="1996" data-has-quarterly="true" data-full-year="true" style="display:none">1996</div>
+                <div data-year="1997" data-has-quarterly="true" data-full-year="true" style="display:none">1997</div>
+                <div data-year="1998" data-has-quarterly="true" data-full-year="true" style="display:none">1998</div>
+                <div data-year="1999" data-has-quarterly="true" data-full-year="true" style="display:none">1999</div>
+                <div data-year="2000" data-has-quarterly="true" data-full-year="true" style="display:none">2000</div>
+                <div data-year="2001" data-has-quarterly="true" data-full-year="true" style="display:none">2001</div>
+                <div data-year="2002" data-has-quarterly="true" data-full-year="true" style="display:none">2002</div>
+                <div data-year="2003" data-has-quarterly="true" data-full-year="true" style="display:none">2003</div>
+                <div data-year="2004" data-has-quarterly="true" data-full-year="true" style="display:none">2004</div>
+                <div data-year="2005" data-has-quarterly="true" data-full-year="true" style="display:none">2005</div>
+                <div data-year="2006" data-has-quarterly="true" data-full-year="true" style="display:none">2006</div>
+                <div data-year="2007" data-has-quarterly="true" data-full-year="true" style="display:none">2007</div>
+                <div data-year="2008" data-has-quarterly="true" data-full-year="true" style="display:none">2008</div>
+                <div data-year="2009" data-has-quarterly="true" data-full-year="true" style="display:none">2009</div>
+                <div data-year="2010" data-has-quarterly="true" data-full-year="true" style="display:none">2010</div>
+                <div data-year="2011" data-has-quarterly="true" data-full-year="true" style="display:none">2011</div>
+                <div data-year="2012" data-has-quarterly="true" data-full-year="true" style="display:none">2012</div>
+                <div data-year="2013" data-has-quarterly="true" data-full-year="true" style="display:none">2013</div>
+                <div data-year="2014" data-has-quarterly="true" data-full-year="true" style="display:none">2014</div>
+                <div data-year="2015" data-has-quarterly="true" data-full-year="true" style="display:none">2015</div>
+                <div data-year="2016" data-has-quarterly="true" data-full-year="true" style="display:none">2016</div>
+                <div data-year="2017" data-has-quarterly="true" data-full-year="true" style="display:none">2017</div>
+                <div data-year="2018" data-has-quarterly="true" data-full-year="true" style="display:none">2018</div>
+                <div data-year="2019" data-has-quarterly="true" data-full-year="true" style="display:none">2019</div>
+                <div data-year="2020" data-has-quarterly="true" data-full-year="true" style="display:none">2020</div>
+                <div data-year="2021" data-has-quarterly="true" data-full-year="true" style="display:none">2021</div>
+                <div data-year="2022" data-has-quarterly="true" data-full-year="true" style="display:none">2022</div>
+                <div data-year="2023" data-has-quarterly="true" data-full-year="true" style="display:none">2023</div>
+                <div data-year="2024" data-has-quarterly="true" data-full-year="true" style="display:none">2024</div>
+                <div data-year="2025" data-has-quarterly="true" data-full-year="true" style="display:none">2025</div>
+                <div data-year="2026" data-has-quarterly="true" data-full-year="false" style="display:inline-block">2026</div>
+        </div>
+
+        <div class="months" data-frequency="Monthly" style="display:block">
+            <div data-month="1">Jan</div>
+            <div data-month="2">Feb</div>
+            <div data-month="3">Mar</div>
+            <div data-month="4">Apr</div>
+            <div data-month="5">May</div>
+            <div data-month="6">Jun</div>
+            <div data-month="7">Jul</div>
+            <div data-month="8">Aug</div>
+            <div data-month="9">Sep</div>
+            <div data-month="10">Oct</div>
+            <div data-month="11">Nov</div>
+            <div data-month="12">Dec</div>
+        </div>
+        <div class="quarters" data-frequency="Quarterly" style="display:none">
+
+            <div data-quarter="1">Q1</div>
+            <div data-quarter="2">Q2</div>
+            <div data-quarter="3">Q3</div>
+            <div data-quarter="4">Q4</div>
+        </div>
+        <div class="seasons" data-frequency="Seasonal" style="display:none">
+            <div data-season="1">Spring</div>
+            <div data-season="2">Fall</div>
+        </div>
+    </div>
+    <div class="refresh-table">
+        <button>Apply</button>
+    </div>
+</div>
+
+
+<div class="data-widget">
+<form action="/hmip-pimh/en/TableMapChart/RenderTable" data-ajax="true" data-ajax-mode="replace" data-ajax-update="#predefinedTable-data-area" id="PredefinedTableForm" method="post"></form>    
+<div class="table-section">
+<form action="/hmip-pimh/en/CustomTable/Export" method="post">            <table class="CawdDataTable">
+                <thead>
+                    <tr>    <td rowspan="1" data-sort-key="dimension-26">&nbsp;</td>
+        <th scope="col" colspan="1" data-sort-key="cell-1"><span>Single</span></th>
+        <th scope="col" colspan="1" data-sort-key="cell-2"><span>Semi-Detached</span></th>
+        <th scope="col" colspan="1" data-sort-key="cell-3"><span>Row</span></th>
+        <th scope="col" colspan="1" data-sort-key="cell-4"><span>Apartment</span></th>
+        <th scope="col" colspan="1" data-sort-key="cell-5"><span>All</span></th>
+</tr>
+                </thead>
+                    <tfoot>
+                        <tr>    <th scope="row">Toronto</th>
+    <td class="numericalData">220</td>
+    <td class="numericalData">38</td>
+    <td class="numericalData">205</td>
+    <td class="numericalData">729</td>
+    <td class="numericalData">1,192</td>
+</tr>
+                    </tfoot>
+                <tbody>
+                    
+                    <tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="0">Ajax (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="0">0</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="1">Aurora (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="9">9</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="9">9</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="2">Bradford West Gwillimbury (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="3">3</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="8">8</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="11">11</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="3">Brampton (CY)</th>
+    <td class="numericalData" data-field="cell-1" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="6">6</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="6">6</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="4">Caledon (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="62">62</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="7">7</td>
+    <td class="numericalData" data-field="cell-4" data-value="80">80</td>
+    <td class="numericalData" data-field="cell-5" data-value="149">149</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="5">East Gwillimbury (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="4">4</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="4">4</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="6">Georgina (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="1">1</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="7">7</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="8">8</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="7">Halton Hills (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="18">18</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="1">1</td>
+    <td class="numericalData" data-field="cell-5" data-value="19">19</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="8">King (TP)</th>
+    <td class="numericalData" data-field="cell-1" data-value="2">2</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="25">25</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="27">27</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="9">Markham (CY)</th>
+    <td class="numericalData" data-field="cell-1" data-value="6">6</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="12">12</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="18">18</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="10">Milton (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="10">10</td>
+    <td class="numericalData" data-field="cell-2" data-value="8">8</td>
+    <td class="numericalData" data-field="cell-3" data-value="7">7</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="25">25</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="11">Mississauga (CY)</th>
+    <td class="numericalData" data-field="cell-1" data-value="6">6</td>
+    <td class="numericalData" data-field="cell-2" data-value="2">2</td>
+    <td class="numericalData" data-field="cell-3" data-value="6">6</td>
+    <td class="numericalData" data-field="cell-4" data-value="7">7</td>
+    <td class="numericalData" data-field="cell-5" data-value="21">21</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="12">Mono (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="0">0</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="13">New Tecumseth (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="0">0</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="14">Newmarket (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="0">0</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="15">Oakville (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="31">31</td>
+    <td class="numericalData" data-field="cell-2" data-value="26">26</td>
+    <td class="numericalData" data-field="cell-3" data-value="99">99</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="156">156</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="16">Orangeville (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="5">5</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="5">5</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="17">Pickering (CY)</th>
+    <td class="numericalData" data-field="cell-1" data-value="14">14</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="28">28</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="42">42</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="18">Richmond Hill (CY)</th>
+    <td class="numericalData" data-field="cell-1" data-value="7">7</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="7">7</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="19">Toronto (C)</th>
+    <td class="numericalData" data-field="cell-1" data-value="35">35</td>
+    <td class="numericalData" data-field="cell-2" data-value="2">2</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="641">641</td>
+    <td class="numericalData" data-field="cell-5" data-value="678">678</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="20">Uxbridge (TP)</th>
+    <td class="numericalData" data-field="cell-1" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="0">0</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="21">Vaughan (CY)</th>
+    <td class="numericalData" data-field="cell-1" data-value="6">6</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="6">6</td>
+</tr><tr>    <th scope="row" class="first-cell" data-field="dimension-26" data-value="22">Whitchurch-Stouffville (T)</th>
+    <td class="numericalData" data-field="cell-1" data-value="1">1</td>
+    <td class="numericalData" data-field="cell-2" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-3" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-4" data-value="0">0</td>
+    <td class="numericalData" data-field="cell-5" data-value="1">1</td>
+</tr>
+                </tbody>
+            </table>
+        <input type="hidden" name="exportType" id="exportType" value="pdf" />
+        <input type="hidden" name="title"  value="Starts by Dwelling Type by Census Subdivision "/>
+</form></div>
+
+
+
+
+            <div class="table-notes">Notes:</div>
+        <ul>
+                <li>CMA, CA and CSD definitions are based on 2021 Census Geography Definitions</li>
+        </ul>
+</div>
+
+<div class="footnotes_1">
+    
+    
+  
+</div>
+
+<div>
+    <div class="table-source">Source: <a href="/hmip-pimh/en/TableMapChart/ScsMasMethodology" target="_blank" class="newWindow">CMHC Starts and Completions Survey <span>(opens in new window)</span></a></div>
+</div>
+
+<input type="hidden" id="serialized-model" data-table-model="{&quot;AvailableTimePeriods&quot;:[{&quot;Year&quot;:1990,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1990&quot;},{&quot;Year&quot;:1990,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1990&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1991&quot;},{&quot;Year&quot;:1991,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1991&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1992&quot;},{&quot;Year&quot;:1992,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1992&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1993&quot;},{&quot;Year&quot;:1993,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1993&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1994&quot;},{&quot;Year&quot;:1994,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1994&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1995&quot;},{&quot;Year&quot;:1995,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1995&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1996&quot;},{&quot;Year&quot;:1996,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1996&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1997&quot;},{&quot;Year&quot;:1997,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1997&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1998&quot;},{&quot;Year&quot;:1998,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1998&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 1999&quot;},{&quot;Year&quot;:1999,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 1999&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2000&quot;},{&quot;Year&quot;:2000,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2000&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2001&quot;},{&quot;Year&quot;:2001,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2001&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2002&quot;},{&quot;Year&quot;:2002,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2002&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2003&quot;},{&quot;Year&quot;:2003,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2003&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2004&quot;},{&quot;Year&quot;:2004,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2004&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2005&quot;},{&quot;Year&quot;:2005,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2005&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2006&quot;},{&quot;Year&quot;:2006,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2006&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2007&quot;},{&quot;Year&quot;:2007,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2007&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2008&quot;},{&quot;Year&quot;:2008,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2008&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2009&quot;},{&quot;Year&quot;:2009,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2009&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2010&quot;},{&quot;Year&quot;:2010,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2010&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2011&quot;},{&quot;Year&quot;:2011,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2011&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2012&quot;},{&quot;Year&quot;:2012,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2012&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2013&quot;},{&quot;Year&quot;:2013,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2013&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2014&quot;},{&quot;Year&quot;:2014,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2014&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2015&quot;},{&quot;Year&quot;:2015,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2015&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2016&quot;},{&quot;Year&quot;:2016,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2016&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2017&quot;},{&quot;Year&quot;:2017,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2017&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2018&quot;},{&quot;Year&quot;:2018,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2018&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2019&quot;},{&quot;Year&quot;:2019,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2019&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2020&quot;},{&quot;Year&quot;:2020,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2020&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2021&quot;},{&quot;Year&quot;:2021,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2021&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2022&quot;},{&quot;Year&quot;:2022,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2022&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2023&quot;},{&quot;Year&quot;:2023,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2023&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2024&quot;},{&quot;Year&quot;:2024,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2024&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:9,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;September 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:10,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;October 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:11,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;November 2025&quot;},{&quot;Year&quot;:2025,&quot;Month&quot;:12,&quot;Quarter&quot;:4,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;December 2025&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:1,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;January 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:2,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;February 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:3,&quot;Quarter&quot;:1,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;March 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:4,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;April 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:5,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;May 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:6,&quot;Quarter&quot;:2,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;June 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:7,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;July 2026&quot;},{&quot;Year&quot;:2026,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2026&quot;}],&quot;AvailableFilters&quot;:[{&quot;Item1&quot;:&quot;dimension-18&quot;,&quot;Item2&quot;:&quot;Intended Markets&quot;,&quot;Item3&quot;:[&quot;Homeowner&quot;,&quot;Rental&quot;,&quot;Condo&quot;,&quot;Co-op&quot;,&quot;All&quot;]}],&quot;Table&quot;:null,&quot;TableId&quot;:&quot;1.1.1.9&quot;,&quot;GeographyId&quot;:&quot;2270&quot;,&quot;GeographyTypeId&quot;:3,&quot;BreakdownGeographyTypeId&quot;:4,&quot;DisplayAs&quot;:0,&quot;GeograghyName&quot;:&quot;Toronto&quot;,&quot;TableName&quot;:&quot;Starts by Dwelling Type by Census Subdivision&quot;,&quot;ForTimePeriod&quot;:{&quot;Year&quot;:2026,&quot;Month&quot;:8,&quot;Quarter&quot;:3,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;August 2026&quot;},&quot;ToTimePeriod&quot;:{&quot;Year&quot;:null,&quot;Month&quot;:null,&quot;Quarter&quot;:null,&quot;Season&quot;:null,&quot;Caption&quot;:&quot;&quot;},&quot;IsTimeSeries&quot;:false,&quot;ChartType&quot;:0,&quot;AppliedFilters&quot;:[{&quot;Key&quot;:&quot;dimension-18&quot;,&quot;Value&quot;:&quot;All&quot;}],&quot;Ytd&quot;:false,&quot;Frequency&quot;:null,&quot;GeographyBreakdownFieldKey&quot;:&quot;dimension-code-26&quot;,&quot;RowSortKey&quot;:null,&quot;ViewByTables&quot;:null,&quot;IsChartDisplayAvailable&quot;:true,&quot;IsMapDisplayAvailable&quot;:true,&quot;IsTableDisplayAvailable&quot;:true,&quot;TimePeriodCaption&quot;:&quot;August 2026&quot;,&quot;HasReportingFrequencies&quot;:true,&quot;DisableCumulative&quot;:false,&quot;DefaultDataField&quot;:&quot;measure-12&quot;,&quot;Footnotes&quot;:[],&quot;Notes&quot;:[&quot;CMA, CA and CSD definitions are based on 2021 Census Geography Definitions&quot;],&quot;Source&quot;:&quot;CMHC Starts and Completions Survey&quot;,&quot;MethodologyAction&quot;:&quot;ScsMasMethodology&quot;,&quot;Survey&quot;:&quot;Scss&quot;,&quot;DataSource&quot;:1,&quot;ShareToken&quot;:&quot;L2htaXAtcGltaC9lbi9UYWJsZU1hcENoYXJ0L1RhYmxlP1RhYmxlSWQ9MS4xLjEuOSZHZW9ncmFwaHlJZD0yMjcwJkdlb2dyYXBoeVR5cGVJZD0zJkJyZWFrZG93bkdlb2dyYXBoeVR5cGVJZD00JkRpc3BsYXlBcz1UYWJsZSZHZW9ncmFnaHlOYW1lPVRvcm9udG8mWXRkPUZhbHNlJkRlZmF1bHREYXRhRmllbGQ9bWVhc3VyZS0xMiZTdXJ2ZXk9U2NzcyZGb3JUaW1lUGVyaW9kLlllYXI9MjAyNiZGb3JUaW1lUGVyaW9kLlF1YXJ0ZXI9MyZGb3JUaW1lUGVyaW9kLk1vbnRoPTg%3D&quot;,&quot;SearchCriteria&quot;:null,&quot;MetId&quot;:null}" data-display="Table" />
+<script type="text/javascript">
+    //$(function () {
+    dojo.ready(function () {
+        window.model = new Function('return ' + $('#serialized-model').attr('data-table-model'))();
+        delete model.Table;
+
+        model.DisplayAs = $('#serialized-model').attr('data-display');
+        onPredefinedTableLoad(model);
+        window.isModelReady = true;
+        if (window.onModelReady) {
+            window.onModelReady();
+        }
+    });
+</script>
+
+
+<style type="text/css">
+    .footnotes {
+        list-style-type: none;
+    }
+</style>
+
+
+
+        </div>
+    </div>
+</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="body-right">
+        <div id="topic-container" class="section-dynamic"></div>
+        <div id="compare-topic-container" class="section-dynamic"></div>
+        <div id="profile-indicator-container" class="section-dynamic"></div>
+        <div id="profile-chart-container" class="section-dynamic"></div>
+        
+
+
+<div id="geographyNavigation">
+    <div id="map" data-select-geography-text="Choose your location of interest" data-select-and-zoom-text="Select and zoom to"
+         data-select-province-text="Select province"
+         data-select-met-text="Select metropolitan major area"
+         data-select-csd-text="Select census subdivision"
+         data-select-surveyzone-text="Select survey zone"
+         data-select-neighbourhood-text="Select neighbourhood"
+         data-select-ct-text="Select census tract"
+         data-province-abbr="Prov:"
+         data-met-abbr="Met:"
+         data-csd-abbr="CSD:"
+         data-zone-abbr="Zone:"
+         data-neighbourhood-abbr="Nbhd:"
+         data-ct-abbr="CT:">
+
+        <div id="geographySearch">
+            <h2>Select location using the dropdown or the interactive map below</h2>
+
+            <div id="geographyBreadcrumb" data-url="/hmip-pimh/en/Navigation/Breadcrumb">
+                
+
+<span class="breadcrumb-separator">
+
+    <a href="#" title="Select this geography" class="Country option" data-type="Country" data-id="1" data-type-code="1">Canada</a>
+
+    <a href="/hmip-pimh/en/Navigation/ProvincesByCountry" class="breadcrumb-expand" data-type-code="1" title="Expand this geography">Expand this geography  Canada</a>
+
+</span>
+    <span class="breadcrumb-separator">
+
+        <a href="#Province" title="Select this geography" class="Province option" data-type="Province" data-id="35" data-type-code="2">Ontario</a><span></span><a href="/hmip-pimh/en/Navigation/MetsByProvince/35" class="breadcrumb-expand" data-type-code="2" title="Expand this geography"><span></span>Expand this geography Ontario</a>
+    </span>
+    <span class="breadcrumb-separator">
+
+        <a href="#MetropolitanMajorArea" title="Select this geography" class="MetropolitanMajorArea option" data-type="MetropolitanMajorArea" data-id="2270" data-type-code="3">Toronto</a><span></span><a href="/hmip-pimh/en/Navigation/SurveyZonesAndCSDsByMet/2270" class="breadcrumb-expand" data-type-code="3" title="Expand this geography"><span></span>Expand this geography Toronto</a>
+    </span>
+
+            </div>
+            <div id="addrSearch">
+                <input id="addrSearchInput" type="search" placeholder="Search Geography" />
+                <button id="addrSearchButton">Zoom</button>
+            </div>
+        </div>
+        <div id="geographyListContainer" class="geography-list" tabindex="-1" role="dialog">
+            <div id="geographyList"></div>
+        </div>
+        <div id="toc" data-title="Change submarket boundary" data-help-icon-url="/hmip-pimh/images/icon_interfacehelp.gif"></div>
+        <div id="geographyPopup" data-compare-hint="Add 0 to Compare"></div>
+        <div class="mapTooltip">
+            <div id="geoName"></div>
+        </div>
+        <div id="mapLoadingIcon" class="map-loading-icon"></div>
+    </div>
+</div>
+
+    </div>
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    $(function () {
+        setCurrentSection('TableMapChart');
+        setCurrentGeography('2270', 3, 'Toronto');        
+        regTableMapChart();
+    });
+</script>
+
+
+        </main>
+
+
+        
+<footer>
+
+  
+
+    <div class="content-full">
+
+        <div class="footer-navigation clear-fix">
+            <!-- First nav section -->
+            
+
+<div>
+
+    <h2>By Topic</h2>
+    <ul>
+
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals" class="footer__header footer_dl_nav" data-gavalue="Professionals">Professionals</a>
+                                    <ul>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing" class="footer_dl_nav" data-gavalue="Project funding and mortgage financing">Project funding and mortgage financing</a></li>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research" class="footer_dl_nav" data-gavalue="Housing markets data and research">Housing markets data and research</a></li>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/industry-innovation-and-leadership" class="footer_dl_nav" data-gavalue="Industry innovation and leadership">Industry innovation and leadership</a></li>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/events-and-speakers" class="footer_dl_nav" data-gavalue="Events and speakers">Events and speakers</a></li>
+                                    </ul>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/consumers" class="footer__header footer__header--margin-top footer_dl_nav" data-gavalue="Consumers">Consumers</a>
+                                    <ul>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/consumers/home-buying" class="footer_dl_nav" data-gavalue="Home buying">Home buying</a></li>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/consumers/owning-a-home" class="footer_dl_nav" data-gavalue="Owning a home">Owning a home</a></li>
+                                                <li><a href="https://www.uatsc10.cmhc-schl.gc.ca/consumers/renting-a-home" class="footer_dl_nav" data-gavalue="Renting a home">Renting a home</a></li>
+                                    </ul>
+                            </li>
+
+    </ul>
+
+
+</div>
+            <!-- second nav section -->
+            
+
+<div>
+
+    <h2>About Us</h2>
+    <ul>
+
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/cmhcs-story" class="footer_dl_nav" data-gavalue="CMHC's Story">CMHC&#39;s Story</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/management-and-governance" class="footer_dl_nav" data-gavalue="Management and Governance">Management and Governance</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/professionals/industry-innovation-and-leadership/our-partners" class="footer_dl_nav" data-gavalue="Our Partners">Our Partners</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/corporate-reporting" class="footer_dl_nav" data-gavalue="Corporate Reporting">Corporate Reporting</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/contact-us" class="footer_dl_nav" data-gavalue="Contact Us">Contact Us</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/working-at-cmhc" class="footer_dl_nav" data-gavalue="Careers">Careers</a>
+                            </li>
+
+    </ul>
+
+
+</div>
+            <!-- third nav section -->
+            
+
+<div>
+
+    <h2>More</h2>
+    <ul>
+
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/cmhc-enewsletters" class="footer_dl_nav" data-gavalue="CMHC Housing Updates">CMHC Housing Updates</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/library" class="footer_dl_nav" data-gavalue="CMHC Library">CMHC Library</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/observer" class="footer_dl_nav" data-gavalue="Housing Observer">Housing Observer</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/media-newsroom" class="footer_dl_nav" data-gavalue="Media Newsroom">Media Newsroom</a>
+                            </li>
+                            <li>
+                                <a href="https://www.uatsc10.cmhc-schl.gc.ca/lp/cmhc-accessible-housing" class="footer_dl_nav" data-gavalue="CMHC and Accessible Housing">CMHC and Accessible Housing</a>
+                            </li>
+
+    </ul>
+
+
+</div>
+            <div class="footer-social">
+                
+
+<ul>
+				<li>
+<a href="https://twitter.com/CMHC_ca" class="footer_dl_nav" data-gavalue="CMHC on Twitter">						<img src="https://uatsc10-assets.cmhc-schl.gc.ca/sf/project/cmhc/socialmediaimgs/social-twitter.svg?rev=6f18b864-4420-4850-b24c-5a961279a565" alt="CMHC on Twitter">
+</a>				</li>	
+				<li>
+<a href="https://www.linkedin.com/company/canada-mortgage-and-housing-corporation" class="footer_dl_nav" data-gavalue="CMHC on LinkedIn">						<img src="https://uatsc10-assets.cmhc-schl.gc.ca/sf/project/cmhc/socialmediaimgs/social-linkedin.svg?rev=516c705b-18c5-474f-8ff8-fc1eb161e805" alt="CMHC on LinkedIn">
+</a>				</li>	
+				<li>
+<a href="https://www.facebook.com/cmhc.schl" class="footer_dl_nav" data-gavalue="CMHC on Facebook">						<img src="https://uatsc10-assets.cmhc-schl.gc.ca/sf/project/cmhc/socialmediaimgs/social-facebook.svg?rev=84caa20a-b961-4e8e-a059-056e34c49e8d" alt="CMHC on Facebook">
+</a>				</li>	
+				<li>
+<a href="https://www.instagram.com/cmhc_schl/" class="footer_dl_nav" data-gavalue="CMHC on Instagram">						<img src="https://uatsc10-assets.cmhc-schl.gc.ca/sf/project/cmhc/socialmediaimgs/social-instagram.svg?rev=95739e01-0c94-433f-8e05-0450c9aaa9e2" alt="CMHC on Instagram">
+</a>				</li>	
+				<li>
+<a href="https://www.youtube.com/user/CMHCca" class="footer_dl_nav" data-gavalue="CMHC on YouTube">						<img src="https://uatsc10-assets.cmhc-schl.gc.ca/sf/project/cmhc/socialmediaimgs/social-youtube.svg?rev=4bd38ce7-c151-4ea4-9888-bf707564ec71" alt="CMHC on YouTube">
+</a>				</li>	
+</ul>
+
+
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            
+
+<div class="footer-smallprint">
+    <small>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/privacy-policy" class="footer_dl_nav" data-gavalue="Privacy Policy">Privacy Policy</a>                            <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/terms-conditions" class="footer_dl_nav" data-gavalue="Terms and Conditions">Terms and Conditions</a>                            <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/corporate-reporting/transparency" class="footer_dl_nav" data-gavalue="Transparency">Transparency</a>                            <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/corporate-reporting/transparency/accessibility-at-cmhc" class="footer_dl_nav" data-gavalue="Accessibility Plan">Accessibility Plan</a>                            <span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;</span>
+<a href="https://www.uatsc10.cmhc-schl.gc.ca/about-us/corporate-reporting/transparency/accessibility-feedback-process" class="footer_dl_nav" data-gavalue="Accessibility Feedback">Accessibility Feedback</a>                            <span>
+                                &nbsp;&nbsp;&nbsp;
+                            </span>
+
+        <span>Canada Mortgage and Housing Corporation (CMHC)&nbsp;&copy;2026&nbsp;</span>
+    </small>
+</div>
+            
+<span id="Canada_logo">
+<img src="https://uatsc10-assets.cmhc-schl.gc.ca/sf/project/cmhc/home/csps_canadawordmark_blackred.png?rev=a1e5ca3e-fb57-4c15-85ca-534bc8054395&amp;la=en&amp;h=58&amp;w=240" title="" alt="Canada"></span>
+        </div>
+
+    </div>
+
+
+
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+
+
+
+    <div class="popup-overlay" tabindex="-1" role="dialog" data-overlay-modal="true" data-overlay-onclose="onTableOverlayClose">
+        <div id="predefinedTable-area"></div>
+    </div>
+
+    <div class="profileDetailsOverlay" tabindex="-1" role="dialog" data-overlay-modal="true">
+        <div id="profileDetails"></div>
+    </div>
+
+    <div class="help-overlay">
+    </div>
+
+
+    
+
+    <div class="helpBlackoutContainer" id="geographyPopupHelp">
+        <div class="helpLocationInnnerContainer">
+            <img src="/hmip-pimh/images/locationofInterest.png" alt="Choose your location of interest — Help" width="296" height="107" />
+            <div class="helpLocationSelect">
+                <p>CMHC’s housing market data is available for multiple levels of geographic aggregation, from national to neighbourhood.</p>
+                <p>Choose from the pop-up list provided to select your location of interest.</p>
+            </div>
+            <div class="helpLocationClose">Close this box.</div>
+            <div class="helpLocationCompare">Add this location to your Compare list.</div>
+            <div class="helpLocationZoom">Zoom to and select your location of interest.</div>
+            <div class="helpLocationLearnMore"><a href="/hmip-pimh/en/Help/Choosing#usingMap">Learn more <span class="offScreen">about using the map</span></a></div>
+            <div class="helpLocationReturn"><a href="#">Return</a></div>
+        </div>
+    </div>
+
+
+    
+
+    <div class="helpBlackoutContainer" id="boundaryPopupHelp">
+        <div class="helpBoundaryInnnerContainer">
+            <img src="/hmip-pimh/images/submarketBoundary.png" alt="Change submarket boundary — Help" width="254" height="165" />
+
+            <div class="helpBoundaryMove"> Click and drag the top of this box to move it anywhere on your screen. </div>
+            <div class="helpBoundaryGhosted"> Options that appear in light grey indicate that they are not available for your current location of interest. </div>
+            <div class="helpBoundarySelect">
+                <p>Within a given city, town, or metropolitan area, CMHC provides statistical reporting for a variety of submarkets. </p>
+                <p>Alter the boundary lines and definitions for your location of interest by changing your submarket boundary display setting. </p>
+            </div>
+            <div class="helpBoundaryLearnMore"><a href="/hmip-pimh/en/Help/Choosing#usingMap">Learn more <span class="offScreen">about using the map</span></a></div>
+            <div class="helpBoundaryReturn"><a href="#">Return</a></div>
+        </div>
+    </div>
+
+
+
+
+
+        
+
+
+<div class="introOverlayBlackoutContainer">
+    <div class="introOverlayInnnerContainer">
+
+        <p class="introOverlayLanguageLink"><a href="/hmip-pimh/fr">Fran&#231;ais</a></p>
+
+        <h2>Housing Market Information Portal</h2>
+
+        <p class="introOverlayText">This portal offers free, easy-to-use access to the latest housing market data for Canada.</p>
+
+        <p class="introOverlayErrorMessage please-accept-tnc">**Please accept the terms and conditions to proceed.**</p>
+        
+        <form id="form1" name="form1" method="post">
+
+            <label class="checkmark-container iAcceptLabel small">
+                <input type="checkbox" name="iAccept" id="iAccept" />
+                <span class="checkmark"></span>
+                I agree to the Terms and Conditions
+            </label>
+            
+            <label class="noShow">
+                <input type="checkbox" name="noShow" id="noShow" class="noShow" checked />
+            </label>
+            
+        </form>
+
+        <div class="introOverlayActionButtons">
+            <p class="introOverlaygetStartedButton">
+                <a href="/hmip-pimh/en/Main/DoNotShowIntro" class="button">Get Started</a>
+            </p>
+        </div>
+
+        <div class="cmhc-accordion">
+            <div>
+                <h3>Terms and Conditions</h3>
+                <div>
+                    <p class="introOverlayTermsPopup">CMHC makes  considerable effort to ensure that the information and analysis on this site is  reliable, but cannot guarantee that it is accurate or complete. The content of  the site is general in nature and is not intended as a substitute for  professional advice when making significant financial decisions. You understand  and agree that your use  of the information available on the <b>Housing Market Information Portal</b> will be  governed by, and, you will be bound by, the <a href="" class="licenceAgreement">CMHC Licence Agreement for the Use of Data</a>, and  in particular, you agree that you may not hold CMHC liable for any consequences  that arise if you choose to rely on this information and analysis to make a  financial decision.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    $(function () {
+        
+        
+        var licenceAgreementUrl = window.mainSite + window.currentLanguage + "/about-us/terms-conditions/hmip-terms-conditions";
+        $(".licenceAgreement").attr("href", licenceAgreementUrl);
+
+        var licenceAgreementUrlFr = window.mainSite + window.currentLanguage + "/info-schl/conditions-dutilisation/entente-de-licence-avec-la-schl-pour-lutilisation-de-donnees";
+        $(".licenceAgreementFr").attr("href", licenceAgreementUrlFr);
+    })
+</script>
+
+
+
+    <noscript>
+        <style>
+            main {
+                display: none;
+            }
+        </style>
+        <div class="noscript">
+            <p>
+                Sorry, this site will not function correctly without javascript.
+            </p>
+            <p>
+                <b>Please enable javascript in your internet browser and reload the page.</b>
+            </p>
+        </div>
+    </noscript>
+
+
+</body>
+</html>

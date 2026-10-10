@@ -1,0 +1,343 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    
+    <link href="scripts/hosted/jquery/css/smoothness/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+    
+    <script src="scripts/hosted/jquery/js/jquery-1.7.2.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-cookies-2.2.0.min.js"></script>
+
+    <link href="styles/idf_curve_lookup_boxed_page.css" rel="stylesheet" type="text/css">
+    <link href="styles/idf_curve_lookup_format_styles.css" rel="stylesheet" type="text/css" media="all">
+    <link href="styles/idf_curve_lookup_print.css" rel="stylesheet" type="text/css" media="print">
+    <link href="styles/idf_curve_lookup_screen.css" rel="stylesheet" type="text/css" media="screen">
+
+    <script src="https://www.webservices.gov.on.ca/metrics.js"></script>
+
+    <script src="scripts/idf_curve_lookup_utility.js"></script>
+
+    <title>IDF Curve Look-up - Ministry of Transportation</title>
+    <script>
+
+        $(document).ready(function () {
+
+            //Preserve variables in the window link on site links stored on the page;
+            updateSiteLinks(window.location.href);
+
+            //Apply styles;
+            $('button').button();
+            $('button#accept').click(function () { updateAgreement(true); });
+            $('button#exit').click(function () { updateAgreement(null); });
+
+            //Toggle language;
+            toggleModifiedLanguageHeader(null);
+
+            //Show that JavaScript is enabled;
+            $('div#javaScriptEnabled').show();
+
+        });
+
+    </script>
+<script>var __uzdbm_1 = "e39cb37c-d8d0-4f0f-8e64-c9ea7059508e";var __uzdbm_2 = "NGVmOGE3NDEtZHo4Mi00NzEwLTg2NWEtNGIxOGZjOTFkZDJjJDIwLjE2OS4xMDIuMjE3";var __uzdbm_3 = "";var __uzdbm_4 = "false";var __uzdbm_5 = "";var __uzdbm_6 = "";var __uzdbm_7 = "";</script> <script>   (function (w, d, e, u, c, g, a, b) {     w["SSJSConnectorObj"] = w["SSJSConnectorObj"] || {       ss_cid: c,       domain_info: "auto",     };     w[g] = function (i, j) {       w["SSJSConnectorObj"][i] = j;     };     a = d.createElement(e);     a.async = true;     if (       navigator.userAgent.indexOf('MSIE') !== -1 ||       navigator.appVersion.indexOf('Trident/') > -1     ) {       u = u.replace("/advanced/", "/advanced/ie/");     }     a.src = u;     b = d.getElementsByTagName(e)[0];     b.parentNode.insertBefore(a, b);   })(     window, document, "script", "/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js", "dz84", "ssConf"   );   ssConf("c1", "https://idfcurves.mto.gov.on.ca");   ssConf("c3", "c99a4269-161c-4242-a3f0-28d44fa6ce24");   ssConf("au", "idfcurves.mto.gov.on.ca");   ssConf("cu", "validate.perfdrive.com, ssc"); </script> </head>
+
+<body id="boxed_page">
+    <header>
+        <div class="section_padding">
+            
+    <div id="screen-header" style="text-align: right">
+        <a href="http://www.ontario.ca/">Ontario.ca</a> |
+        <a class="en-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('fr-CA')); window.location = window.location.href; }">Fran&ccedil;ais</a><a class="fr-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('en-CA')); window.location = window.location.href; }" style="display: none">English</a><br>
+        <a class="mto_link" href="http://www.mto.gov.on.ca/english/"><img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario"></a>
+        <div class="inline_block" style="width: 10px"></div>
+        <a class="mto_link" href="index.shtml"><img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup"></a><br>
+        <a href="terms.shtml"><span class="en-CA">Terms and Conditions</span><span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span></a> |
+        <a href="map_acquisition.shtml"><span class="en-CA">Coordinate Selection</span><span class="fr-CA" style="display: none">S&eacute;lection de coordonn&eacute;es</span></a> |
+        <a href="database_status.shtml"><span class="en-CA">About</span><span class="fr-CA" style="display: none">Sur</span></a>
+    </div>
+
+    <div id="print-header" style="text-align: right">
+        <img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario">
+        <div class="inline_block" style="width: 10px"></div>
+        <img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup">
+    </div>
+
+        </div>
+    </header>
+    <main>
+        <div class="section_padding">
+
+            <!--Welcome-->
+            <div class="page_section">
+                <div class="en-CA">
+                    <h1>Welcome</h1>
+                    <p>
+                        IDF Curve Lookup is a web-based application provided by the
+                        Ontario Ministry of Transportation (MTO) for the purpose of
+                        retrieving Intensity-Duration-Frequency (IDF) curves. You must
+                        agree to the Terms of Use before using IDF Curve Lookup. You
+                        should also be aware of the the Browser Requirements of the
+                        application.
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <h1>Bienvenue</h1>
+                    <p>
+                        L'application Web Recherche de courbes IDF est offerte par le
+                        Ministère des transports de l'Ontario et permet aux utilisateurs
+                        de chercher et d'extraire des courbes intensité-durée-fréquence
+                        (IDF). Pour utiliser l'application, vous devez accepter l'avis de
+                        non-responsabilité et les conditions d'utilisation. Veuillez
+                        également prendre note des exigences du navigateur liées à
+                        l'application.
+                    </p>
+                </div>
+            </div>
+
+            <!--Terms-->
+            <div class="en-CA">
+                <h2>Terms of Use</h2>
+                <p>
+                    The information provided by this website is for the sole purposes
+                    of identification of precipitation information to be used for
+                    drainage management by the Ministry of Transportation (MTO) in respect
+                    of MTO projects.
+                </p>
+                <h3>Disclaimer</h3>
+                <p>
+                    MTO has created the information provided by this website with the
+                    assistance of the University of Waterloo to assist MTO staff and
+                    consultants working on MTO projects, who may wish to use the
+                    information for drainage management purposes. The information provided
+                    by this website was developed for MTO projects by both the University
+                    of Waterloo and MTO and the information employs
+                    Intensity-Duration-Frequency (IDF) curves.
+                </p>
+                <p>
+                    In the event that other persons should choose to make use of the
+                    information provided by this website, they shall do so at their sole
+                    risk. MTO and the University of Waterloo do not claim, warrant or
+                    guarantee that the information provided by this website is complete,
+                    correct or free from errors or fit for any particular purpose and
+                    MTO and the University of Waterloo expressly do not assume any
+                    responsibility or liability and further disclaim any liability for any
+                    costs, expenses, harm or loss suffered by any person for any reason
+                    whatsoever, which may result, directly or indirectly, from any use of
+                    or reliance upon the information provided by this website.
+                </p>
+            </div>
+            <div class="fr-CA" style="display: none">
+                <h2>Avis de non-responsabilité et conditions d'utilisation</h2>
+                <h3>
+                    Avis de non-responsabilité concernant l'utilisation de l'application
+                    Recherche de courbes IDF du MTO
+                </h3>
+                <p>
+                    L'information contenue sur ce site est offerte uniquement pour trouver
+                    de l'information relative aux précipitations qui servira à la gestion
+                    du drainage dans le cadre de projets du Ministère des transports de
+                    l'Ontario (MTO).
+                </p>
+                <p>
+                    Le MTO a compilé l'information contenue sur le site Web avec l'aide de
+                    l'Université de Waterloo pour aider ses employés et ses consultants
+                    qui travaillent sur des projets du Ministère et qui pourraient vouloir
+                    se servir de l'information à des fins de gestion du drainage.
+                    L'information a été compilée pour les projets du MTO, par ce dernier
+                    et par l'Université de Waterloo, et est présentée sous forme de
+                    courbes intensité-durée-fréquence (IDF).
+                </p>
+                <p>
+                    Les autres personnes qui se servent de cette information le font à
+                    leurs propres risques. Le MTO et l'Université de Waterloo ne
+                    prétendent ni ne garantissent que l'information contenue sur ce site
+                    Web soit complète, exacte ou exempte d'erreurs, ou adéquate pour des
+                    fins spécifiques. Le MTO et l'Université de Waterloo déclinent
+                    expressément toute responsabilité, notamment celle liée aux coûts, aux
+                    dépenses, aux préjudices ou aux pertes subis par ces personnes, et ce,
+                    pour quelque raison que ce soit, et qui découlent directement ou
+                    indirectement de l'utilisation de l'information trouvée sur ce site
+                    Web ou de l'importance donnée à celle-ci.
+                </p>
+            </div>
+            <div class="en-CA">
+                <h3>Google™ Maps</h3>
+                <p>
+                    Google Maps information and photographic imagery are used under
+                    license by Google. The map information and photographic imagery
+                    contain trade names, trademarks, service marks, logos, domain names,
+                    and other distinctive brand features. This does not imply an
+                    endorsement of Google, Google Maps, or Google Earth products or
+                    services by the Ministry of Transportation of Ontario.
+                </p>
+            </div>
+            <div class="fr-CA" style="display: none">
+                <h3>Google™ Maps</h3>
+                <p>
+                    L'information et les photos de Google Maps sont utilisées conformément
+                    à une licence obtenue de Google. L'information cartographique et les
+                    photos contiennent des désignations commerciales, des marques de
+                    commerce, des marques de services, des logos, des noms de domaines et
+                    d'autres caractéristiques de marques distinctes. Toutefois, cela ne
+                    signifie pas que le ministère des Transports de l'Ontario fait la
+                    promotion des produits ou des services de Google, de Google Maps ou de
+                    Google Earth.
+                </p>
+            </div>
+
+            <!--User Agreement-->
+            <div class="text_align_center">
+                <div class="inline_block">
+                    <button id="accept" type="button">
+                        <span class="en-CA">I agree</span><span class="fr-CA" style="display: none">J'accepte</span>
+                    </button>
+                    <div class="inline_block" style="width: 10px">
+                    </div>
+                    <button id="exit" type="button">
+                        <span class="en-CA">I do not agree</span><span class="fr-CA" style="display: none">Je refuse</span>
+                    </button>
+                </div>
+                <noscript>
+                    <p class="important">
+                        Warning: You will not be able to accept this agreement while
+                        JavaScript is not enabled.
+                    </p>
+                </noscript>
+            </div>
+
+            <!--Requirements-->
+            <div class="en-CA">
+                <h2>Browser Requirements</h2>
+                <p>JavaScript must be enabled to use the features of this site.</p>
+            </div>
+            <div class="fr-CA" style="display: none">
+                <h2>Exigences de navigateur</h2>
+                <p>
+                    Vous devez activer JavaScript pour utiliser les fonctions avancées de
+                    l'application Recherche de courbes IDF.
+                </p>
+            </div>
+            <div id="javaScriptEnabled" class="text_align_center" style="display: none">
+                <div class="inline_block" style="margin: auto">
+                    <span class="ui-icon ui-icon-check" style="float: left; margin-right: 4px"></span><span class="en-CA">JavaScript is enabled.</span><span class="fr-CA" style="display: none">JavaScript est activé.</span>
+                </div>
+            </div>
+            <noscript>
+                <div class="text_align_center">
+                    <div class="inline_block" style="margin: auto">
+                        <span class="ui-icon ui-icon-close red" style="float: left; margin-right: 4px"></span><span class="important">JavaScript is not enabled.</span>
+                    </div>
+                </div>
+            </noscript>
+
+            <!--Browser Support List-->
+            <div class="en-CA">
+                <p>
+                    IDF Curve Lookup works with most modern browsers, however certain
+                    features require these or more recent versions of these browsers:
+                </p>
+            </div>
+            <div class="fr-CA" style="display: none">
+                <p>
+                    Ce site fonctionne avec la plupart des navigateurs modernes, mais
+                    certaines fonctionnalités requièrent ces ou une version plus récente
+                    de ces navigateurs :
+                </p>
+            </div>
+            <ul>
+                <li>
+                    <a href="http://www.microsoft.com/windows/internet-explorer/default.aspx" target="_blank">Microsoft Internet Explorer/Edge</a> - Version 10/12
+                </li>
+                <li>
+                    <a href="https://www.mozilla.org/en-US/firefox/products/" target="_blank">Mozilla Firefox</a> - Version 13
+                </li>
+                <li>
+                    <a href="http://www.apple.com/safari/" target="_blank">Apple/iOS Safari</a> - Version 6.1/7.1
+                </li>
+                <li>
+                    <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a> - Version 23
+                </li>
+                <li>
+                    <a href="http://www.opera.com/browser/" target="_blank">Opera</a> - Version 15
+                </li>
+            </ul>
+            <div class="en-CA">
+                <p>
+                    Limitations have been observed with older browsers, such as Mozilla
+                    Firefox 1 and Netscape Navigator 8.
+                </p>
+            </div>
+            <div class="fr-CA" style="display: none">
+                <p>
+                    Des problèmes ont été observés avec certains navigateurs moins
+                    récents, comme Mozilla Firefox 1 et Netscape Navigator 8.
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="section_padding">
+            
+<div class="page_section_separated" style="text-align: left">
+    <div id="site_links">
+
+        <span class="en-CA">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/english/">
+                Ontario Ministry of Transportation
+            </a>
+        </span>
+
+        <span class="fr-CA" style="display: none">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/french/">
+                Ministère des Transports de l&#39;Ontario
+            </a>
+        </span> |
+
+        <a id="mtoSiteTerms" href="terms.shtml">
+            <span class="en-CA">Terms and Conditions</span>
+            <span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span>
+        </a> |
+
+        <a id="mtoSiteMapAquisition" href="map_acquisition.shtml">
+            Map
+        </a>
+
+        <a id="mtoSiteStatus" href="database_status.shtml">
+            <span class="en-CA">About</span>
+            <span class="fr-CA" style="display: none">Sur</span>
+        </a>
+
+        <br>
+
+        <!-- Accessibility statement -->
+        <span class="en-CA">
+            As outlined in the 
+            <a href="https://www.ontario.ca/page/accessible-customer-service-policy">
+                OPS Accessible Customer Service Policy
+            </a>, we are committed to providing accessible customer service. On request, we can arrange for accessible formats and communications supports. Please 
+            <a href="https://www.ontario.ca/feedback/contact-us?id=52785&nid=36275">
+                contact us
+            </a>.
+        </span>
+
+        <br>
+
+        <a id="mtoSiteResultsOut" href="results_out.shtml">Results</a>
+        <a id="mtoSiteExit" href="exit.shtml">Exit</a>
+
+        <span class="en-CA">Last Modified: May 2026</span>
+        <span class="fr-CA" style="display: none">
+            Dernière modification : May 2026
+        </span>
+
+    </div>
+</div>
+
+        </div>
+    </footer>
+
+</body>
+
+</html>

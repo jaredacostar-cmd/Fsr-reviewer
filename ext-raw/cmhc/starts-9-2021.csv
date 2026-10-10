@@ -1,0 +1,31 @@
+ — Starts by Dwelling Type by Census Subdivision
+2021 Intended Markets - All
+,Single,Semi-Detached,Row,Apartment,All,
+Ajax (T),50,10,364,0,424,
+Aurora (T),196,0,0,0,196,
+Bradford West Gwillimbury (T),74,34,15,0,123,
+Brampton (CY),895,122,654,607,"2,278",
+Caledon (T),602,6,89,0,697,
+East Gwillimbury (T),448,54,68,0,570,
+Georgina (T),357,0,37,0,394,
+Halton Hills (T),171,48,16,0,235,
+King (TP),41,0,0,0,41,
+Markham (CY),300,156,459,"1,053","1,968",
+Milton (T),522,80,339,132,"1,073",
+Mississauga (CY),107,14,220,"3,761","4,102",
+Mono (T),7,0,0,0,7,
+New Tecumseth (T),84,16,122,0,222,
+Newmarket (T),70,28,175,0,273,
+Oakville (T),863,2,183,"1,701","2,749",
+Orangeville (T),2,0,0,0,2,
+Pickering (CY),273,66,249,324,912,
+Richmond Hill (T),299,62,362,986,"1,709",
+Toronto (C),809,82,156,"16,912","17,959",
+Uxbridge (TP),20,0,56,0,76,
+Vaughan (CY),540,6,257,"4,761","5,564",
+Whitchurch-Stouffville (T),190,0,134,0,324,
+,"6,920",786,"3,955","30,237","41,898",
+
+Notes
+"CMA, CA and CSD definitions are based on 2021 Census Geography Definitions"
+Source,CMHC Starts and Completions Survey

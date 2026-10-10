@@ -1,0 +1,825 @@
+{
+ "access_instructions": {
+  "en": "",
+  "fr": ""
+ },
+ "access_level": "open",
+ "asset_type": "dataset",
+ "author": "",
+ "author_email": "",
+ "creator_user_id": "faba29e3-f7ad-4b37-ad77-3ce832d12630",
+ "current_as_of": "2026-06-26",
+ "exemption": "none",
+ "exemption_rationale": {
+  "en": "",
+  "fr": ""
+ },
+ "geographic_coverage_translated": {
+  "en": "Province of Ontario, 6 regions, 49 census divisions (CDs), 34 public health units, 9 Ministry of Children, Community and Social Services’ (MCCSS) Service Delivery Division (SDD) regions",
+  "fr": "Province de l’Ontario, 6 régions, 49 divisions de recensement (DR), 34 Bureaux de santé, 9 régions de la Division de la prestation des services (DPS) du Ministère des Services à l'enfance et des Services sociaux et communautaires (MSESSC)"
+ },
+ "geographic_granularity": "",
+ "id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+ "isopen": false,
+ "keywords": {
+  "en": [
+   "Government and Finance",
+   "Government",
+   "Population",
+   "Demographics",
+   "Projection",
+   "Forecast",
+   "Age",
+   "Gender",
+   "Sex",
+   "Census Divisions",
+   "CDs",
+   "MCCSS",
+   "Children",
+   "Youth",
+   "SDD",
+   "Regions",
+   "Public Health Units",
+   "PHUs"
+  ],
+  "fr": [
+   "Gouvernement et finances",
+   "Gouvernement",
+   "Population",
+   "Projection",
+   "Prévision",
+   "Âge",
+   "Sexe",
+   "Divisions de recensement",
+   "DR",
+   "Santé",
+   "Enfance",
+   "Jeunesse",
+   "DPS",
+   "MSESSC",
+   "Régions",
+   "Bureaux de santé"
+  ]
+ },
+ "license_id": "OGL-ON-1.0",
+ "license_title": "Open Government Licence – Ontario",
+ "license_url": "https://www.ontario.ca/page/open-government-licence-ontario",
+ "maintainer": null,
+ "maintainer_branch": {
+  "en": "Finance, Office of Economic Policy, Labour Economics Branch",
+  "fr": "Finances, Direction des politiques économiques, Direction de l’économie du travail"
+ },
+ "maintainer_email": "alexandre.munger@ontario.ca",
+ "maintainer_translated": {
+  "en": "Alex Munger",
+  "fr": "Alex Munger"
+ },
+ "metadata_created": "2020-01-11T04:22:16.356753",
+ "metadata_modified": "2026-06-26T17:16:22.524540",
+ "name": "population-projections",
+ "notes": "Annual population projections, from 2025 to 2051.\r\n\r\nThese datasets include population projections by age and gender organized by geography:\r\n\r\n* Projections for Ontario\r\n* Projections for each of the 6 regions\r\n* Projections for each of the 49 census divisions\r\n* Projections for each of the 34 public health units\r\n* Projections for each of the 9 Ministry of Children, Community and Social Services’ Service Delivery Division (SDD) regions\r\n\r\nFor Ontario only, the projected annual components of demographic change are provided for the reference, low- and high-growth scenarios. For all other geographies, only the reference scenario is produced.",
+ "notes_translated": {
+  "en": "Annual population projections, from 2025 to 2051.\r\n\r\nThese datasets include population projections by age and gender organized by geography:\r\n\r\n* Projections for Ontario\r\n* Projections for each of the 6 regions\r\n* Projections for each of the 49 census divisions\r\n* Projections for each of the 34 public health units\r\n* Projections for each of the 9 Ministry of Children, Community and Social Services’ Service Delivery Division (SDD) regions\r\n\r\nFor Ontario only, the projected annual components of demographic change are provided for the reference, low- and high-growth scenarios. For all other geographies, only the reference scenario is produced.",
+  "fr": "Projections démographiques annuelles de 2025 à 2051.\r\n\r\nCes ensembles de données comprennent des projections démographiques selon l’âge et le genre organisées par géographie:\r\n\r\n* Projections pour l’Ontario\r\n* Projections pour les 6 régions\r\n* Projections pour les 49 divisions de recensement\r\n* Projections pour les 34 bureaux de santé\r\n* Projections pour les 9 régions de la Division de la prestation des services du ministère des Services à l'enfance et des Services sociaux et communautaires\r\n\r\nPour l'Ontario uniquement, les composantes annuelles projetées du changement démographique sont fournies pour les scénarios de référence, de croissance faible et de croissance forte. Pour toutes les autres géographies, seul le scénario de référence est produit."
+ },
+ "num_resources": 12,
+ "num_tags": 32,
+ "opened_date": "2015-01-08",
+ "organization": {
+  "id": "a911b57b-79ca-40ec-9cbb-847655c0ba28",
+  "name": "finance",
+  "title": "Finance",
+  "type": "organization",
+  "description": "Leading the province’s fiscal, tax, economic and statistics policy, administering tax and benefit programs and reporting on Ontario’s economic and fiscal plans.",
+  "image_url": "2020-03-19-202939.721705finance.jpg",
+  "created": "2019-12-31T08:54:52.462992",
+  "is_organization": true,
+  "approval_status": "approved",
+  "state": "active"
+ },
+ "owner_org": "a911b57b-79ca-40ec-9cbb-847655c0ba28",
+ "private": false,
+ "state": "active",
+ "title": "Population projections",
+ "title_translated": {
+  "en": "Population projections",
+  "fr": "Projections démographiques"
+ },
+ "type": "dataset",
+ "update_frequency": "yearly",
+ "url": "",
+ "version": null,
+ "resources": [
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2019-12-31T10:27:30.164192",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "31376797-1e4c-4426-ba75-0d93f4bb9f45",
+   "language": "english",
+   "last_modified": "2026-06-26T16:58:16.428957",
+   "metadata_modified": "2026-06-26T17:13:14.071020",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "Ontario MOF Population Projections",
+   "name_translated": {
+    "en": "Ontario MOF Population Projections",
+    "fr": "Ontario Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 0,
+   "resource_type": null,
+   "schema": "",
+   "size": 235991,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/31376797-1e4c-4426-ba75-0d93f4bb9f45/download/ontario_mof_population_projections_2025-2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2019-12-31T10:27:30.164205",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "bf4cc541-5520-4318-b743-713633a8180b",
+   "language": "french",
+   "last_modified": "2026-06-26T16:58:45.759028",
+   "metadata_modified": "2026-06-26T17:13:30.874018",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "Ontario MOF Population Projections",
+   "name_translated": {
+    "en": "Ontario MOF Population Projections",
+    "fr": "Ontario Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 1,
+   "resource_type": null,
+   "schema": "",
+   "size": 233415,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/bf4cc541-5520-4318-b743-713633a8180b/download/ontario_projections_demographiques_du_mdf_2025_a_2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2019-12-31T10:27:30.164199",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "03abe0d5-0995-4ce2-ad9d-e904d50106a5",
+   "language": "english",
+   "last_modified": "2026-06-26T16:59:10.544138",
+   "metadata_modified": "2026-06-26T17:13:52.065863",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "49 Census Divisions MOF Population Projections",
+   "name_translated": {
+    "en": "49 Census Divisions MOF Population Projections",
+    "fr": "49 Divisions de Recensement Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 2,
+   "resource_type": null,
+   "schema": "",
+   "size": 2956226,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/03abe0d5-0995-4ce2-ad9d-e904d50106a5/download/49_census_divisions_mof_population_projections_2025-2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2019-12-31T10:27:30.164207",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "3ae46cc1-1086-4be9-9af5-f103ef05e806",
+   "language": "french",
+   "last_modified": "2026-06-26T16:59:35.932002",
+   "metadata_modified": "2026-06-26T17:14:08.691983",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "49 Census Divisions MOF Population Projections",
+   "name_translated": {
+    "en": "49 Census Divisions MOF Population Projections",
+    "fr": "49 Divisions de Recensement Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 3,
+   "resource_type": null,
+   "schema": "",
+   "size": 2960374,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/3ae46cc1-1086-4be9-9af5-f103ef05e806/download/49_divisions_de_recensement_projections_demographiques_du_mdf_2025_a_2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2019-12-31T10:27:30.164202",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "b1b56945-ac80-4cef-819e-7d0c90bb0324",
+   "language": "english",
+   "last_modified": "2026-06-26T17:00:02.213870",
+   "metadata_modified": "2026-06-26T17:14:30.513609",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "9 MCCSS SDD Regions MOF Population Projections",
+   "name_translated": {
+    "en": "9 MCCSS SDD Regions MOF Population Projections",
+    "fr": "9 Regions de la DPS du MSESSC Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 4,
+   "resource_type": null,
+   "schema": "",
+   "size": 571250,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/b1b56945-ac80-4cef-819e-7d0c90bb0324/download/9_mccss_sdd_regions_mof_population_projections_2025-2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2019-12-31T10:27:30.164210",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "cb9b6fdb-8036-4511-ac99-19571344c652",
+   "language": "french",
+   "last_modified": "2026-06-26T17:00:25.373295",
+   "metadata_modified": "2026-06-26T17:14:55.364052",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "9 MCCSS SDD Regions MOF Population Projections",
+   "name_translated": {
+    "en": "9 MCCSS SDD Regions MOF Population Projections",
+    "fr": "9 Regions de la DPS du MSESSC Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 5,
+   "resource_type": null,
+   "schema": "",
+   "size": 573002,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/cb9b6fdb-8036-4511-ac99-19571344c652/download/9_regions_de_la_dps_du_msessc_projections_demographiques_du_mdf_2025_a_2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2021-06-23T14:16:47.949658",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "2c3a34b5-f172-4d6a-9e15-83f14875cde2",
+   "language": "english",
+   "last_modified": "2026-06-26T17:00:55.842940",
+   "metadata_modified": "2026-06-26T17:15:15.256944",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "6 Regions MOF Population Projections",
+   "name_translated": {
+    "en": "6 Regions MOF Population Projections",
+    "fr": "6 Regions Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 6,
+   "resource_type": null,
+   "schema": "",
+   "size": 411967,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/2c3a34b5-f172-4d6a-9e15-83f14875cde2/download/6_regions_mof_population_projections_2025-2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2021-06-23T14:24:17.150895",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "d3188db9-7773-4319-8fb6-96443bea78b7",
+   "language": "french",
+   "last_modified": "2026-06-26T17:01:18.936195",
+   "metadata_modified": "2026-06-26T17:15:35.857407",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "6 Regions MOF Population Projections",
+   "name_translated": {
+    "en": "6 Regions MOF Population Projections",
+    "fr": "6 Regions Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 7,
+   "resource_type": null,
+   "schema": "",
+   "size": 411304,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/d3188db9-7773-4319-8fb6-96443bea78b7/download/6_regions_projections_demographiques_du_mdf_2025_a_2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2021-06-23T14:19:53.374906",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "d63f2dcb-1ac0-4a47-8488-f2f2a665490e",
+   "language": "english",
+   "last_modified": "2026-06-26T17:01:42.205231",
+   "metadata_modified": "2026-06-26T17:15:49.479831",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "Components of Provincial Demographic Change MOF Population Projections",
+   "name_translated": {
+    "en": "Components of Provincial Demographic Change MOF Population Projections",
+    "fr": "Composantes Provinciales du Changement Demographique Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 8,
+   "resource_type": null,
+   "schema": "",
+   "size": 21347,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/d63f2dcb-1ac0-4a47-8488-f2f2a665490e/download/components_of_provincial_demographic_change_mof_population_projections_2025-2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2021-06-23T14:25:12.986776",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "15566166-81b3-42b1-9b5b-6273f356c971",
+   "language": "french",
+   "last_modified": "2026-06-26T17:02:08.559215",
+   "metadata_modified": "2026-06-26T17:16:03.338865",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "Components of Provincial Demographic Change MOF Population Projections",
+   "name_translated": {
+    "en": "Components of Provincial Demographic Change MOF Population Projections",
+    "fr": "Composantes Provinciales du Changement Demographique Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 9,
+   "resource_type": null,
+   "schema": "",
+   "size": 21309,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/15566166-81b3-42b1-9b5b-6273f356c971/download/composantes_provinciales_du_changement_demographique_projections_demographiques_du_mdf_2025_a_2.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2022-10-18T01:24:15.102157",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "22740a28-420b-4b90-bd45-6bee22b6072c",
+   "language": "english",
+   "last_modified": "2026-06-26T17:02:35.560021",
+   "metadata_modified": "2026-06-26T17:16:22.537785",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "34 Public Health Units MOF Population Projections",
+   "name_translated": {
+    "en": "34 Public Health Units MOF Population Projections",
+    "fr": "34 Bureaux de Sante Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 10,
+   "publically_available_date": "2022-10-17",
+   "resource_type": null,
+   "schema": "",
+   "size": 2057105,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/22740a28-420b-4b90-bd45-6bee22b6072c/download/34_public_health_units_mof_population_projections_2025-2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2022-10-18T01:27:14.543947",
+   "data_last_updated": "2026-06-26",
+   "data_range_end": "2051-07-01",
+   "data_range_start": "2025-07-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "",
+   "description_translated": {
+    "en": "",
+    "fr": ""
+   },
+   "format": "XLSX",
+   "hash": "",
+   "id": "c904a65e-3929-4820-9874-0a310cce0763",
+   "language": "french",
+   "last_modified": "2026-06-26T17:03:04.530257",
+   "metadata_modified": "2026-06-26T17:16:22.537897",
+   "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+   "mimetype_inner": null,
+   "name": "34 Public Health Units MOF Population Projections",
+   "name_translated": {
+    "en": "34 Public Health Units MOF Population Projections",
+    "fr": "34 Bureaux de Sante Projections Demographiques du MDF"
+   },
+   "package_id": "f52a6457-fb37-4267-acde-11a1e57c4dc8",
+   "position": 11,
+   "publically_available_date": "2022-10-17",
+   "resource_type": null,
+   "schema": "",
+   "size": 2063432,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/f52a6457-fb37-4267-acde-11a1e57c4dc8/resource/c904a65e-3929-4820-9874-0a310cce0763/download/34_bureaux_de_sante_projections_demographiques_du_mdf_2025_a_2051.xlsx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  }
+ ],
+ "tags": [
+  {
+   "display_name": "Age",
+   "id": "fc280d41-b823-49da-aa13-d87445ebd5f7",
+   "name": "Age",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Bureaux de santé",
+   "id": "5b1bc115-d8b1-47c2-b352-1a8aeda70d02",
+   "name": "Bureaux de santé",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "CDs",
+   "id": "7e29836b-97aa-411c-b5a7-2ecf31739148",
+   "name": "CDs",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Census Divisions",
+   "id": "262417dd-7237-4068-9291-2498c44d6d23",
+   "name": "Census Divisions",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Children",
+   "id": "7426b769-06c2-4aee-8a80-b8ccff80a09f",
+   "name": "Children",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "DPS",
+   "id": "3fb2b945-2cbf-4872-bdc2-8bd2052039bf",
+   "name": "DPS",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "DR",
+   "id": "3e6638b2-7ae3-4744-9984-45b636d7408c",
+   "name": "DR",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Demographics",
+   "id": "52807111-a4b3-4d7e-96f3-831d0568e1f8",
+   "name": "Demographics",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Divisions de recensement",
+   "id": "608d948b-dad7-4a92-9325-0b6a3841e9c1",
+   "name": "Divisions de recensement",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Enfance",
+   "id": "6631cac6-50d1-4663-8d28-1900faf06584",
+   "name": "Enfance",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Forecast",
+   "id": "3fc4a4b7-fbbd-41aa-8ea9-369f17d2a7cc",
+   "name": "Forecast",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Gender",
+   "id": "010af22e-36eb-4e55-acd6-5a5e2eb36f2e",
+   "name": "Gender",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Gouvernement",
+   "id": "558f82ee-08bb-40b9-93bb-886771750f57",
+   "name": "Gouvernement",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Gouvernement et finances",
+   "id": "9d21c00e-60e9-4c53-8284-6fe8e6c430d8",
+   "name": "Gouvernement et finances",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Government",
+   "id": "f94166a9-337f-4b63-9127-dc9a86f212c8",
+   "name": "Government",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Government and Finance",
+   "id": "6a2925b2-818e-4be1-ac6a-4fee077600b7",
+   "name": "Government and Finance",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Jeunesse",
+   "id": "de0f5315-9cc0-4ccf-8365-8f7177ab3c8f",
+   "name": "Jeunesse",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "MCCSS",
+   "id": "6f618e1f-38cb-400c-baad-f2a5c4e714e0",
+   "name": "MCCSS",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "MSESSC",
+   "id": "824dbc96-3afe-46dd-b5ea-b407ecdff93e",
+   "name": "MSESSC",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "PHUs",
+   "id": "0335a229-af59-45e2-bb5f-e7e81746d0d9",
+   "name": "PHUs",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Population",
+   "id": "a45d1b68-04f5-42b4-b3ab-ce9fd03ccb7d",
+   "name": "Population",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Projection",
+   "id": "e3af80a0-4a38-48a2-8d2d-f08cf9c3008e",
+   "name": "Projection",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Prévision",
+   "id": "e4bfe6af-774c-4661-9f56-921f5a6bf3e1",
+   "name": "Prévision",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Public Health Units",
+   "id": "7e1b707a-f34f-4543-a903-19842653f08f",
+   "name": "Public Health Units",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Regions",
+   "id": "046688fc-e8ea-48d0-b068-1a374eaec537",
+   "name": "Regions",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Régions",
+   "id": "55eead21-0f7a-4743-b7d9-54eb68381adf",
+   "name": "Régions",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "SDD",
+   "id": "ca9fb371-1015-40b5-9db5-e5ab631cb0bb",
+   "name": "SDD",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Santé",
+   "id": "bd5585cf-bccc-4d3e-9299-d7130f543e10",
+   "name": "Santé",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Sex",
+   "id": "9bfa7eb1-8b58-43a2-84dc-40fc730d653c",
+   "name": "Sex",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Sexe",
+   "id": "d44225cf-3577-4bec-a4d5-430b6d6139f3",
+   "name": "Sexe",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Youth",
+   "id": "5ea62531-87cc-4740-ad8a-9bce9ec3a748",
+   "name": "Youth",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Âge",
+   "id": "6c17bc9e-e72f-495b-a0b7-c40f97213f1f",
+   "name": "Âge",
+   "state": "active",
+   "vocabulary_id": null
+  }
+ ],
+ "groups": [],
+ "relationships_as_subject": [],
+ "relationships_as_object": []
+}

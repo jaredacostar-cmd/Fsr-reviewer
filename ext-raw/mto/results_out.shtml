@@ -1,0 +1,1699 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    
+    <link href="scripts/hosted/jquery/css/smoothness/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+    
+    <script src="scripts/hosted/jquery/js/jquery-1.7.2.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-cookies-2.2.0.min.js"></script>
+
+    <link href="styles/idf_curve_lookup_boxed_page.css" rel="stylesheet" type="text/css">
+    <link href="styles/idf_curve_lookup_format_styles.css" rel="stylesheet" type="text/css" media="all">
+    <link href="styles/idf_curve_lookup_print.css" rel="stylesheet" type="text/css" media="print">
+    <link href="styles/idf_curve_lookup_screen.css" rel="stylesheet" type="text/css" media="screen">
+
+    <script src="https://www.webservices.gov.on.ca/metrics.js"></script>
+
+    <script src="scripts/idf_curve_lookup_utility.js"></script>
+
+    <title>IDF Curve Look-up - Ministry of Transportation</title>
+    <link href="styles/idf_curve_lookup_map_acquisition.css" rel="stylesheet" type="text/css">
+    <!-- <script src="http://maps.googleapis.com/maps/api/js?client=gme-ontario&channel=mto270402a&libraries=geometry&sensor=false"></script> -->
+    <script src="//maps.googleapis.com/maps/api/js?key= AIzaSyCp35AWbpoxe8T2PQF1TbToXc6poWBCGZs&libraries=geometry"></script>
+    <script src="https://www.google.com/jsapi"></script>
+    <script src="scripts/hosted/geoxml3/js/geoxml3.js"></script>
+    <script src="scripts/idf_curve_lookup_map_utility.js"></script>
+    <script src="scripts/idf_curve_lookup_results_out_utility.js"></script>
+    <script>
+
+        //Load charting API;
+        var _charting_ready = false;
+        google.load('visualization', '1', {
+            packages: ['corechart']
+        });
+        google.setOnLoadCallback(function () { collectXML(); });
+
+        //Variables;
+        var _coord_lat;
+        var _coord_lng;
+        var _coord_friendly;
+        var _coords = [];
+        var _bound_active = 'can-on';
+        var _coords_bounds = new google.maps.LatLngBounds();
+        var _path = 'data_xml/';
+        var _rt = [];
+        var _rt_index = [ 2, 5, 10, 25, 50, 100 ];
+        var _active_rt;
+        var _active_rt_ext_seek_precision = 2;
+        var _dur = [0.083333, 0.166667, 0.25, 0.5, 1, 2, 6, 12, 24];
+        var _dur_mins = [5, 10, 15, 30, 60, 120, 360, 720, 1440];
+        var _dur_hr = [0.083333, 0.166667, 0.25, 0.5, 1, 2, 6, 12, 24];
+        var _data_index = [];
+        var _data = [];
+        var _data_couplets = ['i', 'd']
+        var _data_seek_precision = 6;
+        var _data_err;
+        var _data_coeff_a_precision = 1;
+        var _data_coeff_b_precision = 3;
+        var _data_val_precision = 1;
+        var _data_tolerance = 1;
+        var _data_val_error = [];
+        var _data_rt = '25';
+        var _err_stat = {
+            primary_nan: 'primary_coefficient_nan',
+            secondary_nan: 'secondary_coefficient_nan'
+        };
+
+        //Variables for extensions;
+        var _ext_list = [];
+        var _ext_attributes = '';
+        var _ext_count = 0;
+
+        //Variables for MSC extraction (comparison);
+        var _msc_active = false;
+        var _msc_src_xml = 'data_ext_msc/idf_lookup_msc.xml';
+        var _msc_src_kml = 'data_ext_msc/idf_lookup_msc.kml';
+        var _msc_data = [];
+
+        //Variables for forecast scenario (projection);
+        var _fcst_active = false;
+        var _fcst_m_dur = [ 0.0951, 0.0676, 0.0553, 0.0393, 0.0279, 0.0198, 0.0115, 0.0082, 0.0058 ];
+        var _fcst_year_couplets = [];
+        var _fcst_compare = false;
+        var _fcst_data = null;
+        var _fcst_year_ds = 2010;
+        var _fcst_t_stat = 1.96;
+        var _fcst_e1_se1_rt = [ 2.27, 3.46, 4.41, 5.66, 6.6, 7.54 ];
+        var _fcst_e1_n1_rt = [ 340, 340, 340, 340, 340, 340 ];
+        var _fcst_e1_p1_rt = [ 8, 8, 8, 8, 8, 8 ];
+        var _fcst_e2_se2_dur = [ 40.9, 28.6, 23.6, 16.1, 10.4, 6.6, 3.0, 1.7, 0.81 ];
+        var _fcst_e2_tbar_dur = [ 1983, 1983, 1983, 1983, 1982, 1982, 1982, 1982, 1982 ];
+        var _fcst_e2_n2_dur = [ 4481, 4481, 4481, 4481, 11041, 11041, 11041, 11041, 11041 ];
+        var _fcst_e2_p2_dur = [ 2, 2, 2, 2, 2, 2, 2, 2, 2 ];
+        var _fcst_e2_nn2_dur = [ 13, 13, 13, 13, 32, 32, 32, 32, 32 ];
+        var _fcst_e2_tvar_dur = [ 135, 135, 135, 135, 176, 176, 176, 176, 176 ];
+
+        //All functions can call this instead of hard-coding file names in case they change; The link to 'index.shtml' by the terms agreement has to remain hard-coded as it will show regardless of whether JavaScript is enabled;
+        function navHeaderLinks_link(link, new_window) {
+            if (!new_window)
+                window.location = link;
+            else
+                window.open(link, '_blank');
+        }
+
+        function navHeaderLinks_terms(new_window) {
+            navHeaderLinks_link($('div#site_links').find('a#mtoSiteTerms').attr('href'), new_window);
+        }
+
+        function navHeaderLinks_mapAquisition(new_window) {
+            navHeaderLinks_link($('div#site_links').find('a#mtoSiteMapAquisition').attr('href'), new_window);
+        }
+
+        function navHeaderLinks_about(new_window) {
+            navHeaderLinks_link($('div#site_links').find('a#mtoSiteStatus').attr('href'), new_window);
+        }
+
+        function navHeaderLinks_resultsOut(new_window) {
+            navHeaderLinks_link($('div#site_links').find('a#mtoSiteResultsOut').attr('href'), new_window);
+        }
+
+        function navHeaderLinks_exit(new_window) {
+            navHeaderLinks_link($('div#site_links').find('a#mtoSiteExit').attr('href'), new_window);
+        }
+
+        function collectXML() {
+
+            //Toggle language;
+            toggleModifiedLanguageHeader(null);
+
+            //Styles;
+            $('button').button();
+            $('span.ro_results_year_at_present_year').text(_fcst_year_ds);
+
+            //Split the header;
+            if (window.location.href.indexOf('?') > -1) {
+                var _args = unescape(window.location.href).substring(window.location.href.indexOf('?') + 1).split('&');
+
+                //Modify links to preserve the coordinate selection;
+                $('a#mtoSiteMapAquisition').attr('href', $('a#mtoSiteMapAquisition').attr('href') + '?' + _args.join('&'));
+                $('a#mtoSiteTerms').attr('href', $('a#mtoSiteTerms').attr('href') + '?' + _args.join('&'));
+                $('a#mtoSiteStatus').attr('href', $('a#mtoSiteStatus').attr('href') + '?' + _args.join('&'));
+
+                //Interpret the arguments;
+                for (_arg = 0; _arg < _args.length; _arg++) {
+                    if (_args[_arg].split('=').length > 0) {
+                        switch (_args[_arg].split('=')[0]) {
+
+                            //Parse the coordinates;
+                            case 'coords':
+
+                                //Coordinate list;
+                                var _active_coords = _args[_arg].split('=')[1].split('+');
+                                for (active_coord = 0; active_coord < _active_coords.length; active_coord++) {
+                                    if (_active_coords[active_coord].split(',').length > 0) {
+                                        _coords.push(new google.maps.LatLng(_active_coords[active_coord].split(',')[0], _active_coords[active_coord].split(',')[1]));
+                                        _coords_bounds.extend(_coords[_coords.length - 1]);
+                                        $('table#ro_active_coord_primary_coord_table').append(
+                                            '<tr>' +
+                                            '<td class=\"border\">' + _coords.length + '</td>' +
+                                            '<td class=\"border\">' + _coords[_coords.length - 1].toUrlValue(6) + '</td>' +
+                                            '</tr>'
+                                        );
+                                    }
+                                }
+
+                                //temp4:coords
+                                coords = _coords;
+                                break;
+
+                                //Return period;
+                            case 'rt':
+                                _active_rt = _args[_arg].split('=')[1];
+                                if (_active_rt != '2' && _active_rt != '5' && _active_rt != '10' && _active_rt != '25' && _active_rt != '50' && _active_rt != '100')
+                                    _active_rt = null;
+                                break;
+
+                                //Comparative data; Only increment _ext_count for recognized extensions;
+                            case 'ext':
+                                _ext_list = _args[_arg].split('=')[1].split('+');
+                                for (ii = 0; ii < _ext_list.length; ii++) {
+                                    switch (_ext_list[ii]) {
+
+                                        //Option for MSC (comparison);
+                                        case 'msc':
+                                            _msc_active = true;
+                                            _ext_count++;
+                                            break;
+
+                                            //Option for forecast (projection);
+                                        case 'fcst':
+                                            _fcst_active = true;
+                                            _ext_count++;
+                                            break;
+
+                                    }
+                                }
+                                if (_ext_list.length > 0) {
+                                    _ext_attributes += '&ext=' + _ext_list.join('+');
+                                }
+                                break;
+
+                                //Override boundary check;
+                            case 'mask':
+                                _bound_active = _args[_arg].split('=')[1];
+                                _ext_attributes += '&mask=' + _bound_active;
+                                break;
+
+                                //Override path to data directory;
+                            case 'dbpath':
+                                _path = unescape(_args[_arg].split('=')[1]);
+                                _ext_attributes += '&dbpath=' + _path;
+                                break;
+
+                                //Forecast input;
+//                            case 'coeff1':
+//                                if ($.isNumeric(_args[_arg].split('=')[1])) {
+//                                    _fcst_coeff1 = _args[_arg].split('=')[1];
+//                                    _ext_attributes += '&coeff1=' + _fcst_coeff1;
+//                                }
+//                                break;
+
+//                            case 'coeff2':
+//                                if ($.isNumeric(_args[_arg].split('=')[1])) {
+//                                    _fcst_coeff2 = _args[_arg].split('=')[1];
+//                                    _ext_attributes += '&coeff2=' + _fcst_coeff2;
+//                                }
+//                                break;
+
+                            case 'year0':
+                                if ($.isNumeric(_args[_arg].split('=')[1])) {
+                                    _fcst_year_ds = _args[_arg].split('=')[1];
+                                    _ext_attributes += '&year0=' + _fcst_year_ds;
+                                }
+                                break;
+
+                            case 'year1':
+                                vars = _args[_arg].split('=')[1].split('+');
+                                for (xx = 0; xx < vars.length; xx++) {
+                                    if ($.isNumeric(vars[xx]) && vars[xx] == _fcst_year_ds)
+                                        _fcst_compare = true;
+                                    else if ($.isNumeric(vars[xx]) && vars[xx] > _fcst_year_ds)
+                                        _fcst_year_couplets.push(vars[xx]);
+                                }
+                                if (_fcst_year_couplets.length > 0) {
+                                    _ext_attributes += '&year1='
+                                    if (_fcst_compare)
+                                        _ext_attributes += _fcst_year_ds + '+';
+                                    _ext_attributes += _fcst_year_couplets.join('+');
+                                    $('span.ro_results_year_at_present_year_idf').text(_fcst_year_couplets.join(', '));
+                                }
+                                break;
+                        }
+                    }
+                }
+            }
+
+            //Polygon about Ontario;
+            var _on_bound_coords = [
+                new google.maps.LatLng(56.980911, -88.901367),
+                new google.maps.LatLng(52.869129, -95.229492),
+                new google.maps.LatLng(49.339440, -95.141601),
+                new google.maps.LatLng(48.618385, -94.614257),
+                new google.maps.LatLng(48.458351, -92.966308),
+                new google.maps.LatLng(47.960502, -91.450195),
+                new google.maps.LatLng(48.034019, -90.834960),
+                new google.maps.LatLng(47.931066, -89.230957),
+                new google.maps.LatLng(48.283192, -88.374023),
+                new google.maps.LatLng(46.604167, -84.836425),
+                new google.maps.LatLng(45.151053, -82.529296),
+                new google.maps.LatLng(43.036775, -82.391967),
+                new google.maps.LatLng(42.524748, -82.688598),
+                new google.maps.LatLng(42.309815, -83.067626),
+                new google.maps.LatLng(42.028894, -83.155517),
+                new google.maps.LatLng(41.681117, -82.683105),
+                new google.maps.LatLng(42.875964, -78.892822),
+                new google.maps.LatLng(43.468867, -79.129028),
+                new google.maps.LatLng(43.897892, -76.580200),
+                new google.maps.LatLng(44.288469, -76.052856),
+                new google.maps.LatLng(44.995882, -74.921264),
+                new google.maps.LatLng(44.999767, -74.520263),
+                new google.maps.LatLng(45.182036, -74.338989),
+                new google.maps.LatLng(45.309665, -74.448852),
+                new google.maps.LatLng(45.571755, -74.360961),
+                new google.maps.LatLng(45.671643, -74.701538),
+                new google.maps.LatLng(45.567909, -75.344238),
+                new google.maps.LatLng(45.456277, -75.712280),
+                new google.maps.LatLng(45.386877, -75.827636),
+                new google.maps.LatLng(45.548678, -76.085815),
+                new google.maps.LatLng(45.479392, -76.322021),
+                new google.maps.LatLng(45.583289, -76.624145),
+                new google.maps.LatLng(45.962606, -76.827392),
+                new google.maps.LatLng(45.840281, -76.992187),
+                new google.maps.LatLng(46.077041, -77.294311),
+                new google.maps.LatLng(46.259644, -78.041381),
+                new google.maps.LatLng(46.343135, -78.689575),
+                new google.maps.LatLng(47.107522, -79.431152),
+                new google.maps.LatLng(47.305309, -79.431152),
+                new google.maps.LatLng(47.424370, -79.519042),
+                new google.maps.LatLng(51.467696, -79.508056),
+                new google.maps.LatLng(52.298401, -81.491088),
+                new google.maps.LatLng(52.489470, -81.480102),
+                new google.maps.LatLng(53.061024, -82.166748),
+                new google.maps.LatLng(53.337433, -81.963500),
+                new google.maps.LatLng(55.191412, -82.100830),
+                new google.maps.LatLng(55.172593, -82.803955),
+                new google.maps.LatLng(56.752722, -88.670654)
+            ];
+            var _on_bound_polygon = new google.maps.Polygon({
+                paths: _on_bound_coords,
+                strokeWeight: 1
+            });
+
+            //Check that coordinates are inside the study area ("bound error");
+            if (_coords.length > 0) {
+
+                //Flag will be used to mark if a bound error exists;
+                var _bound_error_exists = false;
+
+                //Check that coordinates lie within bounds;
+                for (index_coord = 0; index_coord < coords.length; index_coord++) {
+                    if (_bound_active == 'can-on' && !google.maps.geometry.poly.containsLocation(coords[index_coord], _on_bound_polygon)) {
+                        _bound_error_exists = true;
+                        _bound_error_index_coord = Number(index_coord) + 1;
+                        list_of_marker_types[index_coord] = getErroneousPointIcon(Number(index_coord) + 1);
+                        $('table#ro_domain_error_coord').append(
+                            '<tr><td class=\"border\" style=\"color: #FF0033\"><strong><span class=\"en-CA\">Location</span><span class=\"fr-CA\" style=\"display: none\">Emplacement</span> ' + _bound_error_index_coord + '</strong></td>' +
+                            '<td class=\"border\" style=\"color: #FF0033\"><strong>' + _coords[index_coord].toUrlValue(6) + '</strong></td></tr>'
+                        );
+                    }
+                    else
+                        list_of_marker_types[index_coord] = getSiteCoordinatePointIcon(Number(index_coord) + 1);
+                }
+
+                //Display bound error if such an error exists;
+                if (_bound_error_exists) {
+
+                    //Display the error message and erroneous coordinates;
+                    $('div#ro_active_coord_selection_error').show();
+                    $('div#ro_domain_error').show();
+
+                    //Display the coordinate selection summary;
+                    $('div#ro_active_coord_overview').show();
+
+                    //Display list of coordinates if more than one coordinate exists in the selection;
+                    if (_coords.length > 1 || _data_index.length == 0)
+                        $('table#ro_active_coord_primary_coord_table').show();
+
+                    //Show summative map;
+                    map_element = document.getElementById('ro_active_coord_display_map');
+                    showSummativeMap();
+
+                    //Toggle language;
+                    toggleModifiedLanguageHeader(null);
+                }
+
+                    //Load the IDF curve;
+                else {
+
+                    //Preserve center coordinate for summary map;
+                    idf_curve_coord_preserved = _coords_bounds.getCenter();
+
+                    //Coordinates of the IDF curve;
+                    _coord_lat = toGridCoordinate(_coords_bounds.getCenter().lat());
+                    _coord_lng = toGridCoordinate(_coords_bounds.getCenter().lng());
+
+                    //Preserve the negative coordinate;
+                    var _lat_negative = false;
+                    if (_coord_lat < 0) {
+                        _lat_negative = true;
+                        _coord_lat *= -1;
+                    }
+                    var _lng_negative = false;
+                    if (_coord_lng < 0) {
+                        _lng_negative = true;
+                        _coord_lng *= -1;
+                    }
+
+                    //Separate the parts;
+                    var _lat_d = Math.floor(_coord_lat);
+                    var _lat_m = (_coord_lat - _lat_d) * 60;
+                    var _lat_s = Math.floor((_lat_m - Math.floor(_lat_m)) * 60);
+                    _lat_m = Math.floor(_lat_m);
+                    var _lng_d = Math.floor(_coord_lng);
+                    var _lng_m = (_coord_lng - _lng_d) * 60;
+                    var _lng_s = Math.floor((_lng_m - Math.floor(_lng_m)) * 60);
+                    _lng_m = Math.floor(_lng_m);
+
+                    //Restore negative coordinates;
+                    if (_lat_negative)
+                        _coord_lat *= -1;
+                    if (_lng_negative)
+                        _coord_lng *= -1;
+
+                    //Construct the friendly coordinate;
+                    _coord_friendly = _lat_d + '° ' + _lat_m + '\' ' + _lat_s + '\" ';
+                    _coord_friendly += (_lat_negative) ? 'S' : 'N';
+                    _coord_friendly += ', ' + _lng_d + '° ' + _lng_m + '\' ' + _lng_s + '\" ';
+                    _coord_friendly += (_lng_negative) ? 'W' : 'E';
+
+                    //Check if _fcst_active should be active;
+                    if (_fcst_active && _fcst_year_couplets.length == 0) {
+                        _ext_count--;
+                        _fcst_active = false;
+                    }
+
+                    //Setup wait for Ajax (data collection) call;
+                    $('div#ro_active_coord_retrieve_active').ajaxStart(function () {
+                        $(this).show();
+                    }).ajaxStop(function () {
+                        $(this).hide();
+
+                        //Set the markers of the coordinates and update the page;
+                        validateCoordinate();
+                        updatePage();
+                    });
+
+                    //Collect the IDF curve;
+                    $.ajax({
+                        type: 'GET',
+                        url: _path + _coord_lat.toFixed(_data_seek_precision) + '.xml',
+                        dataType: 'xml',
+                        success: function (xml) {
+
+                            //Collect data of the selected coordinates;
+                            for (_index_coord = 0; _index_coord < _coords.length; _index_coord++) {
+                                $.ajax({
+                                    async: false,
+                                    type: 'GET',
+                                    url: _path + toGridCoordinate(_coords[_index_coord].lat()).toFixed(_data_seek_precision) + '.xml',
+                                    dataType: 'xml',
+                                    success: function (xml) {
+                                        parseCoordinateXML(xml, _coords[_index_coord], _data, _index_coord);
+                                    }
+                                });
+                            }
+
+                            //Parse the IDF curve data;
+                            parseCoordinateXML(xml, new google.maps.LatLng(_coord_lat, _coord_lng), _data, 'idf');
+
+                            //Tabulate the coefficient summary (for all-IDF curves when a return period is not selected);
+                            if (_ext_count == 0 && _data['idf'].length > 0 && !_active_rt) {
+                                for (index_dur = 0; index_dur < _dur.length; index_dur++) {
+
+                                    //Duration;
+                                    if (_dur[index_dur] < 1)
+                                        _normal_dur = Math.round(_dur[index_dur] * 60) + '-min';
+                                    else
+                                        _normal_dur = _dur[index_dur] + '-hr';
+
+                                    //Intensity;
+                                    $('table#ro_primary_i').find('tr#ro_primary_i_head').append('<th class=\"border\">' + _normal_dur + '</th>');
+
+                                    //Rainfall depth;
+                                    $('table#ro_primary_d').find('tr#ro_primary_d_head').append('<th class=\"border\">' + _normal_dur + '</th>');
+                                }
+                                for (index_rt = 0; index_rt < _rt.length; index_rt++) {
+                                    $('table#ro_coord_summary_coeff_rt').find('tr#ro_coord_summary_rt_head').append('<th class=\"border\"><div class=\"inline_block\"><a href=\"results_out.shtml?coords=' + (new google.maps.LatLng(_coord_lat, _coord_lng)).toUrlValue(6) + '&rt=' + _rt[index_rt] + _ext_attributes + '\" target=\"_blank\">' + _rt[index_rt] + '-<span class=\"en-CA\">yr</span><span class=\"fr-CA\" style=\"display: none\">an</span><span class=\"ui-icon ui-icon-inline ui-icon-extlink\" style=\"float: right\"></span></a></div></th>');
+                                    $('table#ro_coord_summary_coeff_rt').find('tr#ro_coord_summary_coeff_a_data').append('<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['a'].toFixed(1) + '</td>');
+                                    $('table#ro_coord_summary_coeff_rt').find('tr#ro_coord_summary_coeff_b_data').append('<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['b'].toFixed(3) + '</td>');
+                                    var_row = '<tr><th class=\"border\"><div class=\"inline_block\"><a href=\"results_out.shtml?coords=' + (new google.maps.LatLng(_coord_lat, _coord_lng)).toUrlValue(6) + '&rt=' + _rt[index_rt] + _ext_attributes + '\" target=\"_blank\">' + _rt[index_rt] + '-<span class=\"en-CA\">yr</span><span class=\"fr-CA\" style=\"display: none\">an</span><span class=\"ui-icon ui-icon-inline ui-icon-extlink\" style=\"float: right\"></span></a></div></th>';
+                                    var_row_i = var_row;
+                                    var_row_d = var_row;
+                                    for (index_dur = 0; index_dur < _dur.length; index_dur++) {
+                                        var_row_i += '<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['i' + index_dur].toFixed(_data_val_precision) + '</td>';
+                                        var_row_d += '<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['d' + index_dur].toFixed(_data_val_precision) + '</td>';
+                                    }
+                                    var_row_i += '</tr>';
+                                    $('table#ro_primary_i').append(var_row_i);
+                                    var_row_d += '</tr>';
+                                    $('table#ro_primary_d').append(var_row_d);
+                                }
+                            }
+
+                            //If for a specific return period;
+                            if (_active_rt) {
+
+                                //Parse MSC data;
+                                $.ajax({
+                                    type: 'GET',
+                                    url: _msc_src_xml,
+                                    dataType: 'xml',
+                                    success: function (xml) {
+                                        parseCoordinateXML_msc(xml);
+                                    },
+                                    error: function (handle, status, error) {
+                                        _ext_count--;
+                                        _msc_active = false;
+                                    }
+                                });
+                            }
+
+                            //Calculate forecast data (projection);
+                            if (_fcst_active)
+                                parseCoordinateXML_fcst();
+                        },
+                        error: function (handle, status, error) {
+                            _data_err = _err_stat['primary_nan'];
+                            $('div#ro_active_coord_primary_nan').show();
+                        }
+                    });
+
+                } //if (!_bound_error_exists) {
+
+            } //if (_coords.length > 0) {
+
+        }
+
+        function updatePage() {
+
+            //Show the date the page was retrieved;
+//            $('div#ro_active_coord_overview').find('p#ro_active_coord_retrieved').find('span#ro_active_coord_retrieved_date').text((new Date()).toUTCString());
+            $('.ro_idf_coord_date_retrieved').text((new Date()).toUTCString());
+
+            //Show an error and coordinate summary if the primary coefficients were in error or otherwise not found;
+            if (_data_err == _err_stat['primary_nan']) {
+                $('div#ro_active_coord_primary_nan').show();
+                $('div#ro_active_coord_overview').show();
+                $('table#ro_active_coord_primary_coord_table').show();
+            }
+
+                //Otherwise display information;
+            else {
+
+                //Display the coordinate selection summary;
+                $('div#ro_active_coord_overview').find('span#ro_active_coord_idf').text(_coord_friendly + ' (' + _coord_lat.toFixed(_data_seek_precision) + ',' + _coord_lng.toFixed(_data_seek_precision) + ')');
+                $('.ro_idf_coord_friendly_long').text(_coord_friendly + ' (' + _coord_lat.toFixed(_data_seek_precision) + ',' + _coord_lng.toFixed(_data_seek_precision) + ')');
+                $('div#ro_active_coord_overview').show();
+
+                //Show MSC toggle option;
+                if (_msc_src_kml) {
+                    $('p#ro_ext_msc_toggle_overlay').show();
+                    $('p#ro_ext_msc_toggle_overlay').addClass('inline_block');
+                }
+
+                //Display list of coordinates if more than one coordinate exists in the selection;
+                if (_coords.length > 1 || _data_index.length == 0)
+                    $('table#ro_active_coord_primary_coord_table').show();
+
+                //Proximity warning;
+                if (_data_val_error.length > 0) {
+                    $('div#ro_proximity_error').show();
+                    for (index_rt = 0; index_rt < _rt.length; index_rt++) {
+                        $('tr#ro_proximity_error_rt').append('<th class=\"border\">' + _rt[index_rt] + '-<span class=\"en-CA\">yr</span><span class=\"fr-CA\" style=\"display: none\">an</span></th>');
+                    }
+                    for (index_val_error = 0; index_val_error < _data_val_error.length; index_val_error++) {
+                        var_coord_index = Number(_data_val_error[index_val_error]) + 1;
+                        var_coord_row = '<tr><th class=\"border\"><span class=\"en-CA\">Location</span><span class=\"fr-CA\" style=\"display: none\">Emplacement</span> ' + var_coord_index + '</th>';
+                        for (index_rt = 0; index_rt < _rt.length; index_rt++) {
+                            var_error_value = (_data[_data_val_error[index_val_error]][$.inArray(_rt[index_rt], _data_index)]['a'] - _data['idf'][$.inArray(_rt[index_rt], _data_index)]['a']).toFixed(_data_val_precision);
+                            var_error_style = '';
+                            if (Math.abs(var_error_value) > _data_tolerance) {
+                                var_error_style = ' style=\"color: #FF0033\"';
+                                var_error_value = '<strong>' + var_error_value + '</strong>';
+                            }
+                            var_coord_row += '<td class=\"border\"' + var_error_style + '>' + var_error_value + '</td>';
+                        }
+                        $('table#ro_proximity_error_coord').append(var_coord_row + '</tr>');
+                    }
+                }
+
+                //If coefficients of the return periods were found;
+                if (_data_index.length > 0) {
+
+                    //Set IDF curve coordinate;
+                    idf_curve_coord = new google.maps.LatLng(_coord_lat, _coord_lng);
+                    $('span#ro_coord_summary_idf_curve_coord').text($('div#ro_active_coord_overview').find('span#ro_active_coord_idf').text());
+                    $('p#ro_coord_summary_idf_curve_coord_container').show();
+
+                    //If a return period has been selected;
+                    if (_active_rt) {
+                        $('span#ro_active_rt').text(_active_rt);
+                        $('div#ro_active_rt_selected').show();
+                    }
+
+                    //Show information;
+                    $('div#ro_active_coord_primary').show();
+
+                    //Charting visualization;
+                    $('div#ro_idf_curve_chart_container').show();
+                    $('.ro_coord_idf_lat').text(_coord_lat.toFixed(6));
+                    $('.ro_coord_idf_lng').text(_coord_lng.toFixed(6));
+                    charting_element = document.getElementById('ro_idf_curve_chart');
+                    loadIDFCurveChartingVisualization();
+                    if (!_active_rt)
+                        $('div#ro_idf_curve_chart_vartoggle').show();
+                    if (_active_rt) {
+                        $('.ro_idf_rt').text(_active_rt);
+                        $('.ro_idf_rt_active').show();
+                    }
+
+                    //Statistics for when a specific return period is selected;
+                    if (_active_rt) {
+
+                        //Show a warning if secondary coefficients were not found;
+                        if (_data_err == _err_stat['secondary_nan'])
+                            $('div#ro_active_coord_secondary_nan').show();
+
+                        //Show the panel containing the coefficients and statistics of the curve;
+                        $('div#ro_active_coord_secondary').show();
+
+                        //Index for the index of the series of the extension in the default colors for charting;
+                        index_xx_color_mask = 0;
+
+                        //Coefficients;
+                        _mark_text = _data['idf'][$.inArray(_active_rt, _data_index)]['a'];
+                        if (_data_err != _err_stat['secondary_nan'] && _data['idf'][$.inArray(_active_rt, _data_index)]['aMa'] != _data['idf'][$.inArray(_active_rt, _data_index)]['a'] && _data['idf'][$.inArray(_active_rt, _data_index)]['aMi'] != _data['idf'][$.inArray(_active_rt, _data_index)]['a'])
+                            _mark_text += ' (+' + (_data['idf'][$.inArray(_active_rt, _data_index)]['aMa'] - _data['idf'][$.inArray(_active_rt, _data_index)]['a']).toFixed(_data_coeff_a_precision) + ', -' + (_data['idf'][$.inArray(_active_rt, _data_index)]['a'] - _data['idf'][$.inArray(_active_rt, _data_index)]['aMi']).toFixed(_data_coeff_a_precision) + ')';
+                        $('span#ro_active_secondary_a_coeff').text(_mark_text);
+                        _mark_text = _data['idf'][$.inArray(_active_rt, _data_index)]['b'];
+                        if (_data_err != _err_stat['secondary_nan'] && _data['idf'][$.inArray(_active_rt, _data_index)]['bMa'] != _data['idf'][$.inArray(_active_rt, _data_index)]['b'] && _data['idf'][$.inArray(_active_rt, _data_index)]['bMi'] != _data['idf'][$.inArray(_active_rt, _data_index)]['b'])
+                            _mark_text += ' (+' + (_data['idf'][$.inArray(_active_rt, _data_index)]['bMa'] - _data['idf'][$.inArray(_active_rt, _data_index)]['b']).toFixed(_data_coeff_b_precision) + ', -' + (_data['idf'][$.inArray(_active_rt, _data_index)]['b'] - _data['idf'][$.inArray(_active_rt, _data_index)]['bMi']).toFixed(_data_coeff_b_precision) + ')';
+                        $('span#ro_active_secondary_b_coeff').text(_mark_text);
+
+                        //Prepare the tables for rainfall intensity and depth; The value of the header to the row is tied to the number of active extensions;
+                        if (_ext_count == 0) {
+                            $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_head').append('<th class=\"border\"><span class=\"en-CA\">Duration</span><span class=\"fr-CA\" style=\"display: none\">Durée</span></th>');
+                            $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_upper').append('<th class=\"border\" rowspan=\"2\"><span class=\"en-CA\">Intensity</span><span class=\"fr-CA\" style=\"display: none\">Intensité</span> (mm hr<sup>-1</sup>)</th>');
+                            $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_head').append('<th class=\"border\"><span class=\"en-CA\">Duration</span><span class=\"fr-CA\" style=\"display: none\">Durée</span></th>');
+                            $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_upper').append('<th class=\"border\" rowspan=\"2\"><span class=\"en-CA\">Depth</span><span class=\"fr-CA\" style=\"display: none\">Quantité</span> (mm)</th>');
+                        }
+                        else {
+                            for (jj = 0; jj < _data_couplets.length; jj++) {
+
+                                //Header row;
+                                table_text = '';
+                                if (_ext_count > 0)
+                                    table_text += '<th class=\"border\"><div class=\"inline_block\"><span class=\"ui-icon ui-icon-inline ui-icon-image\" title=\"' + ((languageKey == 'fr-CA') ? 'Couleur de la série du graphique' : 'Colour of the chart series') + '\"></span></div></th>';
+                                table_text += '<th class=\"border\"><span class=\"en-CA\">Data Set</span><span class=\"fr-CA\" style=\"display: none\">Ensemble</span></th>'
+                                $('table#ro_active_coord_secondary_' + _data_couplets[jj]).find('tr#ro_active_coord_secondary_' + _data_couplets[jj] + '_head').append(table_text);
+
+                                //First row (MTO);
+                                table_text = '';
+                                if (_ext_count > 0 && (!_fcst_active || _fcst_compare))
+                                    table_text += '<th class=\"border\" rowspan=\"2\" style=\"background-color: ' + _chart_data_colors[index_xx_color_mask] + '\"></th>';
+                                if (_msc_active && (!_fcst_active || _fcst_compare))
+                                    table_text += '<th class=\"border\" rowspan=\"2\"><span class=\"en-CA\">MTO (at MSC location)</span><span class=\"fr-CA\" style=\"display: none\">MTO (au lieu de MSC)</span></th>';
+                                else if (_fcst_active) {
+                                    if (_fcst_compare)
+                                        table_text += '<th class=\"border\" rowspan=\"2\">MTO (' + _fcst_year_ds + ')</th>';
+                                }
+                                else
+                                    table_text += '<th class=\"border\" rowspan=\"2\">MTO</th>';
+                                if (table_text.length > 0) $('table#ro_active_coord_secondary_' + _data_couplets[jj]).find('tr#ro_active_coord_secondary_' + _data_couplets[jj] + '_upper').append(table_text);
+                            }
+                            index_xx_color_mask++;
+                        }
+
+                        //Populate the table with values and statistics;
+                        for (_index_dur = 0; _index_dur < _dur.length; _index_dur++) {
+
+                            //Duration;
+                            if (_dur[_index_dur] < 1)
+                                _normal_dur = Math.round(_dur[_index_dur] * 60) + '-min';
+                            else
+                                _normal_dur = _dur[_index_dur] + '-hr';
+
+                            //Charting label;
+                            $('div#ro_idf_curve_chart_secondary').show();
+
+                            //Intensity;
+                            $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_head').append('<th class=\"border\" colspan=\"2\">' + _normal_dur + '</th>');
+                            if (!_fcst_active || _fcst_compare) {
+                                $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_upper').append('<td class=\"border\" rowspan=\"2\">' + _data['idf'][$.inArray(_active_rt, _data_index)]['i' + _index_dur].toFixed(_data_val_precision) + '</td>');
+                                if (_data_err != _err_stat['secondary_nan']) {
+                                    $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_upper').append('<td class=\"border\">+' + (_data['idf'][$.inArray(_active_rt, _data_index)]['iMa' + _index_dur] - _data['idf'][$.inArray(_active_rt, _data_index)]['i' + _index_dur]).toFixed(_data_val_precision) + '</td>');
+                                    $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_lower').append('<td class=\"border\">-' + (_data['idf'][$.inArray(_active_rt, _data_index)]['i' + _index_dur] - _data['idf'][$.inArray(_active_rt, _data_index)]['iMi' + _index_dur]).toFixed(_data_val_precision) + '</td>');
+                                }
+                                else {
+                                    $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_upper').append('<td class=\"border\">--</td>');
+                                    $('table#ro_active_coord_secondary_i').find('tr#ro_active_coord_secondary_i_lower').append('<td class=\"border\">--</td>');
+                                }
+                            }
+
+                            //Depth;
+                            $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_head').append('<th class=\"border\" colspan=\"2\">' + _normal_dur + '</th>');
+                            if (!_fcst_active || _fcst_compare) {
+                                $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_upper').append('<td class=\"border\" rowspan=\"2\">' + _data['idf'][$.inArray(_active_rt, _data_index)]['d' + _index_dur].toFixed(_data_val_precision) + '</td>');
+                                if (_data_err != _err_stat['secondary_nan']) {
+                                    $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_upper').append('<td class=\"border\">+' + (_data['idf'][$.inArray(_active_rt, _data_index)]['dMa' + _index_dur] - _data['idf'][$.inArray(_active_rt, _data_index)]['d' + _index_dur]).toFixed(_data_val_precision) + '</td>');
+                                    $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_lower').append('<td class=\"border\">-' + (_data['idf'][$.inArray(_active_rt, _data_index)]['d' + _index_dur] - _data['idf'][$.inArray(_active_rt, _data_index)]['dMi' + _index_dur]).toFixed(_data_val_precision) + '</td>');
+                                }
+                                else {
+                                    $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_upper').append('<td class=\"border\">--</td>');
+                                    $('table#ro_active_coord_secondary_d').find('tr#ro_active_coord_secondary_d_lower').append('<td class=\"border\">--</td>');
+                                }
+                            }
+                        }
+
+                        //Append data to the page for MSC comparison;
+                        if (_msc_active && _msc_data) {
+
+                            //Append data to the table of values;
+                            for (jj = 0; jj < _data_couplets.length; jj++) {
+                                msc_tr_ub = '<tr><th class=\"border\" rowspan=\"2\" style=\"background-color: ' + _chart_data_colors[index_xx_color_mask] + '\"></th><th class=\"border\" rowspan=\"2\">MSC V2.3</th>';
+                                msc_tr_lb = '<tr>';
+                                for (ii = 0; ii < _dur.length; ii++) {
+                                    msc_tr_ub += '<td class=\"border\" rowspan=\"2\">' + _msc_data[_data_couplets[jj] + ii].toFixed(_data_val_precision) + '</td>';
+                                    msc_tr_ub += '<td class=\"border\">+' + (_msc_data[_data_couplets[jj] + 'Ma' + ii] - _msc_data[_data_couplets[jj] + ii]).toFixed(_data_val_precision) + '</td>';
+                                    msc_tr_lb += '<td class=\"border\">-' + (_msc_data[_data_couplets[jj] + ii] - _msc_data[_data_couplets[jj] + 'Mi' + ii]).toFixed(_data_val_precision) + '</td>';
+                                }
+                                msc_tr_ub += '</tr>';
+                                msc_tr_lb += '</tr>';
+                                $('table#ro_active_coord_secondary_' + _data_couplets[jj]).append(msc_tr_ub);
+                                $('table#ro_active_coord_secondary_' + _data_couplets[jj]).append(msc_tr_lb);
+                            }
+                        }
+
+                            //Or else show that comparative data is available;
+                        else if (_msc_active)
+                            $('p#ro_idf_curve_chart_secondary_available').show();
+                        index_xx_color_mask++;
+
+                        //Append data to the page for forecast projection;
+                        if (_fcst_active && !!_fcst_data) {
+
+                            //Append data to the table of values;
+                            for (yy = 0; yy < _fcst_year_couplets.length; yy++) {
+                                for (jj = 0; jj < _data_couplets.length; jj++) {
+                                    msc_tr_ub = '<tr><th class=\"border\" rowspan=\"2\" style=\"background-color: ' + _chart_data_colors[index_xx_color_mask] + '\"></th><th class=\"border\" rowspan=\"2\">MTO (' + _fcst_year_couplets[yy] + ')</th>';
+                                    msc_tr_lb = '<tr>';
+                                    for (ii = 0; ii < _dur.length; ii++) {
+                                        msc_tr_ub += '<td class=\"border\" rowspan=\"2\">' + _fcst_data[_fcst_year_couplets[yy]][_data_couplets[jj] + ii].toFixed(_data_val_precision) + '</td>';
+                                        msc_tr_ub += '<td class=\"border\">+' + (_fcst_data[_fcst_year_couplets[yy]][_data_couplets[jj] + 'Ma' + ii] - _fcst_data[_fcst_year_couplets[yy]][_data_couplets[jj] + ii]).toFixed(_data_val_precision) + '</td>';
+                                        msc_tr_lb += '<td class=\"border\">-' + (_fcst_data[_fcst_year_couplets[yy]][_data_couplets[jj] + ii] - _fcst_data[_fcst_year_couplets[yy]][_data_couplets[jj] + 'Mi' + ii]).toFixed(_data_val_precision) + '</td>';
+                                    }
+                                    msc_tr_ub += '</tr>';
+                                    msc_tr_lb += '</tr>';
+                                    $('table#ro_active_coord_secondary_' + _data_couplets[jj]).append(msc_tr_ub);
+                                    $('table#ro_active_coord_secondary_' + _data_couplets[jj]).append(msc_tr_lb);
+                                }
+                                index_xx_color_mask++;
+                            }
+
+                            if (!_fcst_compare)
+                                $('span#target_fcst_compare').show();
+
+                            //Hide coefficients because the projected curves have none;
+                            $('p.ro_secondary_a').hide();
+                            $('p.ro_secondary_b').hide();
+
+                            //Append information to the section for extensions;
+//                            fcst_div_html = '<div>';
+
+                            //Header and function;
+//                            fcst_div_html += '<h3>Projection</h3>'; //<div><img alt=\"r\'=Ao*tau^{Bo}+(0.020566804*tau^-0.707531378)*(t\'-to)\" src=\"https://chart.googleapis.com/chart?cht=tx&chl=R\'%3DA_%7Bo%7D%5Ctau%5E%7BB_%7Bo%7D%7D%2B0.020566804%5Ctau%5E%7B-0.707531378%7D%5Cleft(t\'-t_%7Bo%7D%5Cright)\"></div>';
+
+                            //Coefficients and terms;
+                            //fcst_div_html += '<p><strong>Coeff. 1: </strong>' + _fcst_coeff1 + '</p><p><strong>Coeff. 2: </strong>' + _fcst_coeff2 + '</p>';
+//                            fcst_div_html += '<p><img alt=\"t\'=\" src=\"https://chart.googleapis.com/chart?cht=tx&chl=t\'\">= [';
+//                            for (yy = 0; yy < _fcst_year_couplets.length; yy++) {
+//                                fcst_div_html += _fcst_year_couplets[yy];
+//                                if (_fcst_year_couplets.length > 1 && yy < (_fcst_year_couplets.length - 1))
+//                                    fcst_div_html += ', ';
+//                            }
+//                            fcst_div_html += ']</p>';
+
+                            //End of section;
+//                            fcst_div_html += '</div>';
+
+                            //Append the HTML of the section to the appropriate element on the page;
+//                            $('div#ro_active_coord_ext').append(fcst_div_html);
+                        }
+
+                        //Show an extra section if extensions are active and have been enabled;
+//                        if (_ext_count > 0)
+//                            $('div#ro_active_coord_ext').show();
+
+                        //Show an extra section if extensions are active and have been enabled;
+//                        if (_ext_count > 0)
+//                            $('div#ro_active_coord_ext').show();
+
+                        //Update charting information;
+                        if (_msc_active && !!_msc_data) {
+                            chart_data_d = activeRtData_msc('d');
+                            chart_data_i = activeRtData_msc('i');
+                            setChartingCandleStickRT(null);
+                        }
+
+                        if (_fcst_active && !!_fcst_data) {
+                            for (yy = 0; yy < _fcst_year_couplets.length; yy++) {
+                                chart_data_d = activeRtData_fcst('d', _fcst_year_couplets[yy]);
+                                chart_data_i = activeRtData_fcst('i', _fcst_year_couplets[yy]);
+                            }
+                            setChartingCandleStickRT(null);
+                        }
+
+                    }
+
+                        //Or else generalized information;
+                    else {
+                        $('div#ro_active_coord_primary_coeff_summary').show();
+
+                        //Hide coefficients because the projected curves have none;
+                        if (_fcst_active) {
+                            $('table#ro_coord_summary_coeff_rt').hide();
+                        }
+
+                        //Show an extra section if extensions are active and have been enabled;
+                        if (_ext_count > 0)
+                            $('div#ro_primary_coord_ext').show();
+                    }
+
+                    //Show terms of use snippet;
+                    $('div#ro_terms').show();
+                }
+                else {
+
+                    //Warn that coefficients were not found;
+                    $('div#ro_active_coord_primary_nan').show();
+                }
+            }
+
+            //Set document elements and properties;
+            map_element = document.getElementById('ro_active_coord_display_map');
+
+            //Show summative map;
+            showSummativeMap();
+
+            //Toggle language;
+            toggleModifiedLanguageHeader(null);
+        }
+
+        function parseCoordinateXML_fcst() {
+
+            //Validate the years for forecast (projection);
+            if (_fcst_year_couplets.length == 0) {
+                _ext_count--;
+                _fcst_active = false;
+                return;
+            }
+
+            //Calculate the intensity and duration values for the forecast years (projection);
+            if (!_active_rt) {
+                yy = 0;
+                for (index_rt = 0; index_rt < _rt.length; index_rt++) {
+                    for (index_dur = 0; index_dur < _dur.length; index_dur++) {
+                        _data['idf'][$.inArray(_rt[index_rt], _data_index)]['i' + index_dur] = Number((_data['idf'][$.inArray(_rt[index_rt], _data_index)]['a'] * Math.pow(_dur[index_dur], _data['idf'][$.inArray(_rt[index_rt], _data_index)]['b']) + _fcst_m_dur[index_dur] * (_fcst_year_couplets[yy] - _fcst_year_ds)).toFixed(1));
+                        _data['idf'][$.inArray(_rt[index_rt], _data_index)]['d' + index_dur] = Number((_data['idf'][$.inArray(_rt[index_rt], _data_index)]['i' + index_dur] * _dur[index_dur]).toFixed(1));
+                    }
+                }
+                for (index_dur = 0; index_dur < _dur.length; index_dur++) {
+
+                    //Duration;
+                    if (_dur[index_dur] < 1)
+                        _normal_dur = Math.round(_dur[index_dur] * 60) + '-min';
+                    else
+                        _normal_dur = _dur[index_dur] + '-hr';
+
+                    //Intensity;
+                    $('table#ro_primary_i').find('tr#ro_primary_i_head').append('<th class=\"border\">' + _normal_dur + '</th>');
+
+                    //Rainfall depth;
+                    $('table#ro_primary_d').find('tr#ro_primary_d_head').append('<th class=\"border\">' + _normal_dur + '</th>');
+                }
+                for (index_rt = 0; index_rt < _rt.length; index_rt++) {
+                    $('table#ro_coord_summary_coeff_rt').find('tr#ro_coord_summary_rt_head').append('<th class=\"border\"><div class=\"inline_block\"><a href=\"results_out.shtml?coords=' + (new google.maps.LatLng(_coord_lat, _coord_lng)).toUrlValue(6) + '&rt=' + _rt[index_rt] + _ext_attributes + '\" target=\"_blank\">' + _rt[index_rt] + '-<span class=\"en-CA\">yr</span><span class=\"fr-CA\" style=\"display: none\">an</span><span class=\"ui-icon ui-icon-inline ui-icon-extlink\" style=\"float: right\"></span></a></div></th>');
+                    $('table#ro_coord_summary_coeff_rt').find('tr#ro_coord_summary_coeff_a_data').append('<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['a'].toFixed(1) + '</td>');
+                    $('table#ro_coord_summary_coeff_rt').find('tr#ro_coord_summary_coeff_b_data').append('<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['b'].toFixed(3) + '</td>');
+                    var_row = '<tr><th class=\"border\"><div class=\"inline_block\"><a href=\"results_out.shtml?coords=' + (new google.maps.LatLng(_coord_lat, _coord_lng)).toUrlValue(6) + '&rt=' + _rt[index_rt] + _ext_attributes + '\" target=\"_blank\">' + _rt[index_rt] + '-<span class=\"en-CA\">yr</span><span class=\"fr-CA\" style=\"display: none\">an</span><span class=\"ui-icon ui-icon-inline ui-icon-extlink\" style=\"float: right\"></span></a></div></th>';
+                    var_row_i = var_row;
+                    var_row_d = var_row;
+                    for (index_dur = 0; index_dur < _dur.length; index_dur++) {
+                        var_row_i += '<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['i' + index_dur].toFixed(_data_val_precision) + '</td>';
+                        var_row_d += '<td class=\"border\">' + _data['idf'][$.inArray(_rt[index_rt], _data_index)]['d' + index_dur].toFixed(_data_val_precision) + '</td>';
+                    }
+                    var_row_i += '</tr>';
+                    $('table#ro_primary_i').append(var_row_i);
+                    var_row_d += '</tr>';
+                    $('table#ro_primary_d').append(var_row_d);
+                }
+
+                //Append information to the section for extensions;
+//                fcst_div_html = '<div>';
+
+                //Header and function;
+//                fcst_div_html += '<h3>Projection</h3>'; //<div><img alt=\"r\'=Ao*tau^{Bo}+(0.020566804*tau^-0.707531378)*(t\'-to)\" src=\"https://chart.googleapis.com/chart?cht=tx&chl=R\'%3DA_%7Bo%7D%5Ctau%5E%7BB_%7Bo%7D%7D%2B0.020566804%5Ctau%5E%7B-0.707531378%7D%5Cleft(t\'-t_%7Bo%7D%5Cright)\"></div>';
+
+                //Coefficients and terms;
+                //fcst_div_html += '<p><strong>Coeff. 1: </strong>' + _fcst_coeff1 + '</p><p><strong>Coeff. 2: </strong>' + _fcst_coeff2 + '</p>';
+//                fcst_div_html += '<p><img alt=\"t\'=\" src=\"https://chart.googleapis.com/chart?cht=tx&chl=t\'\">= [';
+//                for (yy = 0; yy < _fcst_year_couplets.length; yy++) {
+//                    fcst_div_html += _fcst_year_couplets[yy];
+//                    if (_fcst_year_couplets.length > 1 && yy < (_fcst_year_couplets.length - 1))
+//                        fcst_div_html += ', ';
+//                }
+//                fcst_div_html += ']</p>';
+
+                //End of section;
+//                fcst_div_html += '</div>';
+
+                //Append the HTML of the section to the appropriate element on the page;
+//                $('div#ro_primary_coord_ext').append(fcst_div_html);
+            }
+            else {
+                _fcst_data = [];
+                for (yy = 0; yy < _fcst_year_couplets.length; yy++) {
+                    _fcst_data[_fcst_year_couplets[yy]] = {};
+                    for (_dur_index = 0; _dur_index < _dur.length; _dur_index++) {
+
+                        // Calculate intensity for the duration;
+                        _fcst_data[_fcst_year_couplets[yy]]['i' + _dur_index] = Number((_data['idf'][$.inArray(_active_rt, _data_index)]['a'] * Math.pow(_dur_hr[_dur_index], _data['idf'][$.inArray(_active_rt, _data_index)]['b']) + _fcst_m_dur[_dur_index] * (_fcst_year_couplets[yy] - _fcst_year_ds)).toFixed(1));
+
+                        // Calculate the interval for the duration;
+                        _fcst_e = _fcst_t_stat * Math.sqrt(Math.pow((_fcst_e1_se1_rt[$.inArray(Number(_active_rt), _rt_index)] * Math.pow(_dur_hr[_dur_index], _data['idf'][$.inArray(_active_rt, _data_index)]['b']) * Math.sqrt(1.0 + (1.0 / _fcst_e1_n1_rt[$.inArray(Number(_active_rt), _rt_index)]))), 2.0) + Math.pow((_fcst_e2_se2_dur[_dur_index] * Math.sqrt((1.0 / _fcst_e2_n2_dur[_dur_index]) * (1.0 + Math.pow((_fcst_year_ds - _fcst_e2_tbar_dur[_dur_index]), 2.0) / _fcst_e2_tvar_dur[_dur_index]))), 2.0));
+
+                        // Save the interval for the duration;
+                        _fcst_data[_fcst_year_couplets[yy]]['iMa' + _dur_index] = Number((_data['idf'][$.inArray(_active_rt, _data_index)]['a'] * Math.pow(_dur_hr[_dur_index], _data['idf'][$.inArray(_active_rt, _data_index)]['b']) + _fcst_m_dur[_dur_index]*(_fcst_year_couplets[yy] - _fcst_year_ds) + _fcst_e).toFixed(1));
+                        _fcst_data[_fcst_year_couplets[yy]]['iMi' + _dur_index] = Number((Math.max((_data['idf'][$.inArray(_active_rt, _data_index)]['a'] * Math.pow(_dur_hr[_dur_index], _data['idf'][$.inArray(_active_rt, _data_index)]['b']) + _fcst_m_dur[_dur_index]*(_fcst_year_couplets[yy] - _fcst_year_ds) - _fcst_e), 0.1)).toFixed(1));
+
+                        // Convert intensity to depth for the duration;
+                        _fcst_data[_fcst_year_couplets[yy]]['d' + _dur_index] = Number((_fcst_data[_fcst_year_couplets[yy]]['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                        _fcst_data[_fcst_year_couplets[yy]]['dMa' + _dur_index] = Number((_fcst_data[_fcst_year_couplets[yy]]['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                        _fcst_data[_fcst_year_couplets[yy]]['dMi' + _dur_index] = Number((_fcst_data[_fcst_year_couplets[yy]]['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                    }
+                }
+            }
+        }
+
+        function parseCoordinateXML_msc(xml) {
+
+            //If the file does not exist return;
+            if (!xml)
+                return;
+
+            //Seek the coordinates from the file;
+            $(xml).find('stations').find('station[lat=\'' + Number(_coord_lat.toFixed(_active_rt_ext_seek_precision)) + '\'][lng=\'' + Number(_coord_lng.toFixed(_active_rt_ext_seek_precision)) + '\']').find('period[rt=\'' + _active_rt + '\']').each(function () {
+
+                //Declaration of variables;
+                _msc_data = {};
+                _valid = true;
+
+                //Duration: 5-min;
+                _valid = _valid && !isNaN($(this).attr('i05'));
+                _dur_index = 0;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i05')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i05Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i05Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i05Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i05Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 10-min;
+                _valid = _valid && !isNaN($(this).attr('i10'));
+                _dur_index = 1;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i10')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i10Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i10Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i10Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i10Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 15-min;
+                _valid = _valid && !isNaN($(this).attr('i15'));
+                _dur_index = 2;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i15')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i15Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i15Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i15Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i15Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 30-min;
+                _valid = _valid && !isNaN($(this).attr('i30'));
+                _dur_index = 3;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i30')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i30Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i30Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i30Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i30Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 1-hr;
+                _valid = _valid && !isNaN($(this).attr('i01'));
+                _dur_index = 4;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i01')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i01Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i01Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i01Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i01Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 2-hr;
+                _valid = _valid && !isNaN($(this).attr('i02'));
+                _dur_index = 5;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i02')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i02Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i02Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i02Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i02Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 6-hr;
+                _valid = _valid && !isNaN($(this).attr('i06'));
+                _dur_index = 6;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i06')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i06Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i06Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i06Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i06Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 12-hr;
+                _valid = _valid && !isNaN($(this).attr('i12'));
+                _dur_index = 7;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i12')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i12Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i12Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i12Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i12Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Duration: 24-hr;
+                _valid = _valid && !isNaN($(this).attr('i24'));
+                _dur_index = 8;
+                if (_valid) {
+                    _msc_data['i' + _dur_index] = Number(Number($(this).attr('i24')).toFixed(1));
+                    _msc_data['d' + _dur_index] = Number((_msc_data['i' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i24Mi'));
+                if (_valid) {
+                    _msc_data['iMi' + _dur_index] = Number(Number($(this).attr('i24Mi')).toFixed(1));
+                    _msc_data['dMi' + _dur_index] = Number((_msc_data['iMi' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+                _valid = _valid && !isNaN($(this).attr('i24Ma'));
+                if (_valid) {
+                    _msc_data['iMa' + _dur_index] = Number(Number($(this).attr('i24Ma')).toFixed(1));
+                    _msc_data['dMa' + _dur_index] = Number((_msc_data['iMa' + _dur_index] * _dur[_dur_index]).toFixed(1));
+                }
+
+                //Reset the dataset if some part of it was invalid;
+                if (!_valid) {
+                    _msc_data = null;
+                    _ext_count--;
+                    _msc_active = false;
+                }
+
+                    //Or else update the MSC link;
+                else
+                    $('a#ro_secondary_navigate_msc').attr('href', window.location.href + '&ext=msc');
+            });
+        }
+
+        function validateCoordinate() {
+
+            //Check for error;
+            if (_data_err)
+                return;
+
+            //Set return period;
+            if (_active_rt)
+                _data_rt = _active_rt;
+
+            //Check difference of 'A' coefficient of the center to the coordinate;
+            for (index_coord = 0; index_coord < coords.length; index_coord++) {
+                if (_data['idf'][$.inArray(_data_rt, _data_index)]['a'] && _data[index_coord][$.inArray(_data_rt, _data_index)]['a'] && Math.abs(_data[index_coord][$.inArray(_data_rt, _data_index)]['a'] - _data['idf'][$.inArray(_data_rt, _data_index)]['a']) < _data_tolerance)
+                    list_of_marker_types[index_coord] = getSiteCoordinatePointIcon(Number(index_coord) + 1);
+                else {
+                    _data_val_error.push(index_coord);
+                    list_of_marker_types[index_coord] = getWarningPointIcon(Number(index_coord) + 1);
+                }
+            }
+        }
+
+        function parseCoordinateXML(xml, coord, data, index) {
+
+            //Define coordinate variable;
+            _data_coord = [];
+
+            //Seek the coordinate in the XML file;
+            $(xml).find('WATMAPPR_data').find('coord[id=\'' + toGridCoordinate(coord.lat()).toFixed(_data_seek_precision) + ',' + toGridCoordinate(coord.lng()).toFixed(_data_seek_precision) + '\']').find('period').each(function () {
+
+                //Check for error;
+//                if (_data_err)
+//                    return;
+
+                //If a return period has been specified, only collect the data of that return period;
+                if (!_active_rt || $(this).attr('id') == _active_rt) {
+
+                    //Index the return period;
+                    if ($.inArray($(this).attr('id'), _rt) < 0) {
+                        _rt.push($(this).attr('id'));
+                        _data_index.push($(this).attr('id'));
+                    }
+
+                    //Store parsed data;
+                    _var_coord = {};
+
+                    //Validate the primary coefficients;
+                    if (!isNaN($(this).attr('a')) && !isNaN($(this).attr('b'))) {
+
+                        //Parse the primary coefficients;
+                        _var_coord['a'] = Number($(this).attr('a'));
+                        _var_coord['b'] = Number($(this).attr('b'));
+
+                        //Validate the secondary coefficients;
+                        if (_active_rt) {
+
+                            // Version 2.0: Intervals are read from file;
+                            if (!isNaN($(this).attr('aMi')) && !isNaN($(this).attr('bMi')) && !isNaN($(this).attr('aMa')) && !isNaN($(this).attr('bMa'))) {
+
+                                //Parse the econdary coefficients;
+                                _var_coord['aMi'] = Number($(this).attr('aMi'));
+                                _var_coord['bMi'] = Number($(this).attr('bMi'));
+                                _var_coord['aMa'] = Number($(this).attr('aMa'));
+                                _var_coord['bMa'] = Number($(this).attr('bMa'));
+                            }
+
+                            // Version 3.0: Statistics are calculated;
+                            else if (!isNaN($(xml).find('WATMAPPR_data').attr('makeVersion')) && $(xml).find('WATMAPPR_data').attr('makeVersion') == '3.0') {
+
+                            }
+
+                            // Error;
+                            else {
+                                _data_err = _err_stat['secondary_nan'];
+                            }
+                        }
+
+                        //Calculate data for all durations;
+                        for (_active_dur = 0; _active_dur < _dur.length; _active_dur++) {
+
+                            //Primary depth: R [mm] = A [mm]*(t [h]^(B + 1));
+                            _var_coord['d' + _active_dur] = Number((_var_coord['a'] * Math.pow(_dur[_active_dur], (_var_coord['b'] + 1))).toFixed(1));
+
+                            //Primary intensity: I [mm h-1] = A [mm]*(t [h]^B);
+                            _var_coord['i' + _active_dur] = Number((_var_coord['a'] * Math.pow(_dur[_active_dur], _var_coord['b'])).toFixed(1));
+
+                            //Secondary;
+                            if (_active_rt) {
+
+                                // Version 3.0: Intervals are calculated;
+                                if (!isNaN($(xml).find('WATMAPPR_data').attr('makeVersion')) && $(xml).find('WATMAPPR_data').attr('makeVersion') == '3.0') {
+
+                                    // Calculate the interval for the duration;
+                                    _fcst_e = _fcst_t_stat * Math.sqrt(Math.pow((_fcst_e1_se1_rt[$.inArray(Number(_active_rt), _rt_index)] * Math.pow(_dur_hr[_active_dur], _var_coord['b']) * Math.sqrt(1.0 + (1.0 / _fcst_e1_n1_rt[$.inArray(Number(_active_rt), _rt_index)]))), 2.0) + Math.pow((_fcst_e2_se2_dur[_active_dur] * Math.sqrt((1.0 / _fcst_e2_n2_dur[_active_dur]) * (1.0 + Math.pow((_fcst_year_ds - _fcst_e2_tbar_dur[_active_dur]), 2.0) / _fcst_e2_tvar_dur[_active_dur]))), 2.0));
+
+                                    // Save the interval for the duration;
+                                    _var_coord['iMa' + _active_dur] = Number((_var_coord['a'] * Math.pow(_dur_hr[_active_dur], _var_coord['b']) + _fcst_m_dur[_active_dur]*(_fcst_year_ds - _fcst_year_ds) + _fcst_e).toFixed(1));
+                                    _var_coord['iMi' + _active_dur] = Number((Math.max((_var_coord['a'] * Math.pow(_dur_hr[_active_dur], _var_coord['b']) + _fcst_m_dur[_active_dur]*(_fcst_year_ds - _fcst_year_ds) - _fcst_e), 0.1)).toFixed(1));
+                                    _var_coord['dMa' + _active_dur] = Number((_var_coord['iMa' + _active_dur] * _dur[_active_dur]).toFixed(1));
+                                    _var_coord['dMi' + _active_dur] = Number((_var_coord['iMi' + _active_dur] * _dur[_active_dur]).toFixed(1));
+
+                                    // Save the interval for the hour duration to show in the coefficient summary;
+                                    if (_dur[_active_dur] == 1.0) {
+                                        _var_coord['aMi'] = _var_coord['iMi' + _active_dur];
+                                        _var_coord['bMi'] = _var_coord['b'];
+                                        _var_coord['aMa'] = _var_coord['iMa' + _active_dur];
+                                        _var_coord['bMa'] = _var_coord['b'];
+                                    }
+                                }
+
+                                // Version 2.0: Intervals are read from file;
+                                else if (!_data_err || _data_err != _err_stat['secondary_nan']) {
+
+                                    //Max. depth: R [mm] = A [mm]*(t [h]^(B + 1));
+                                    _var_coord['dMa' + _active_dur] = Number((_var_coord['aMa'] * Math.pow(_dur[_active_dur], (_var_coord['bMa'] + 1))).toFixed(1));
+
+                                    //Max. intensity: I [mm h-1] = A [mm]*(t [h]^B);
+                                    _var_coord['iMa' + _active_dur] = Number((_var_coord['aMa'] * Math.pow(_dur[_active_dur], _var_coord['bMa'])).toFixed(1));
+
+                                    //Min. depth: R [mm] = A [mm]*(t [h]^(B + 1));
+                                    _var_coord['dMi' + _active_dur] = Number((_var_coord['aMi'] * Math.pow(_dur[_active_dur], (_var_coord['bMi'] + 1))).toFixed(1));
+
+                                    //Min. intensity: I [mm h-1] = A [mm]*(t [h]^B);
+                                    _var_coord['iMi' + _active_dur] = Number((_var_coord['aMi'] * Math.pow(_dur[_active_dur], _var_coord['bMi'])).toFixed(1));
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        _data_err = _err_stat['primary_nan'];
+                    }
+
+                    //Save data;
+                    _data_coord.push(_var_coord);
+                }
+            });
+
+            //Check active return period;
+            if (_active_rt && $.inArray(_active_rt, _rt) == -1)
+                _active_rt = null;
+
+            //Return data;
+            data[index] = _data_coord;
+        }
+
+        function toGridCoordinate(coord) {
+
+            //Preserve the negative coordinate;
+            var _negative = false;
+            if (coord < 0) {
+                _negative = true;
+                coord *= -1;
+            }
+
+            //Split the coordinate into 'degree', 'minute', and 'second' components;
+            var _coord_d = Math.floor(coord);
+            var _coord_m = (coord - _coord_d) * 60;
+            var _coord_s = (_coord_m - Math.floor(_coord_m)) * 60;
+
+            //Round the components of the coordinate;
+            _coord_m = Math.floor(_coord_m);
+            _coord_s = Math.floor(_coord_s);
+
+            //Calculate rounded coordinate (to 30");
+            if (_coord_s < 30)
+                coord = _coord_d + _coord_m / 60 + 1 / 240;
+            else
+                coord = _coord_d + _coord_m / 60 + 1 / 80;
+
+            //Revert the negative coordinate;
+            if (_negative)
+                coord *= -1;
+
+            //Format the coordinate to 6-decimal places to correspond with the data files;
+            return coord;
+
+        }
+
+/*        function navigateComparative() {
+            $('div#ro_secondary_available').dialog({
+                modal: true,
+                resizable: false,
+                buttons: [
+                    {
+                        text: ((languageKey == 'fr-CA') ? 'Chargez-les' : 'View'),
+                        click: function () {
+                            window.open($('a#ro_secondary_navigate_msc').attr('href'));
+                            $(this).dialog('close');
+                        }
+                    },
+                    {
+                        text: ((languageKey == 'fr-CA') ? 'Fermer' : 'Cancel'),
+                        click: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+*/
+
+    </script>
+<script>var __uzdbm_1 = "1f37c4af-2091-4f6c-86ea-bc2d297ca2e4";var __uzdbm_2 = "ZWI4NzgyOWItZHo4Mi00ZTZjLTk3NTMtZjM0OTgzMTRhNTJmJDIwLjE2OS4xMDIuMjE3";var __uzdbm_3 = "";var __uzdbm_4 = "false";var __uzdbm_5 = "";var __uzdbm_6 = "";var __uzdbm_7 = "";</script> <script>   (function (w, d, e, u, c, g, a, b) {     w["SSJSConnectorObj"] = w["SSJSConnectorObj"] || {       ss_cid: c,       domain_info: "auto",     };     w[g] = function (i, j) {       w["SSJSConnectorObj"][i] = j;     };     a = d.createElement(e);     a.async = true;     if (       navigator.userAgent.indexOf('MSIE') !== -1 ||       navigator.appVersion.indexOf('Trident/') > -1     ) {       u = u.replace("/advanced/", "/advanced/ie/");     }     a.src = u;     b = d.getElementsByTagName(e)[0];     b.parentNode.insertBefore(a, b);   })(     window, document, "script", "/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js", "dz84", "ssConf"   );   ssConf("c1", "https://idfcurves.mto.gov.on.ca");   ssConf("c3", "c99a4269-161c-4242-a3f0-28d44fa6ce24");   ssConf("au", "idfcurves.mto.gov.on.ca");   ssConf("cu", "validate.perfdrive.com, ssc"); </script> </head>
+
+<body id="boxed_page">
+    <header>
+        <div class="section_padding">
+            
+    <div id="screen-header" style="text-align: right">
+        <a href="http://www.ontario.ca/">Ontario.ca</a> |
+        <a class="en-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('fr-CA')); window.location = window.location.href; }">Fran&ccedil;ais</a><a class="fr-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('en-CA')); window.location = window.location.href; }" style="display: none">English</a><br>
+        <a class="mto_link" href="http://www.mto.gov.on.ca/english/"><img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario"></a>
+        <div class="inline_block" style="width: 10px"></div>
+        <a class="mto_link" href="index.shtml"><img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup"></a><br>
+        <a href="terms.shtml"><span class="en-CA">Terms and Conditions</span><span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span></a> |
+        <a href="map_acquisition.shtml"><span class="en-CA">Coordinate Selection</span><span class="fr-CA" style="display: none">S&eacute;lection de coordonn&eacute;es</span></a> |
+        <a href="database_status.shtml"><span class="en-CA">About</span><span class="fr-CA" style="display: none">Sur</span></a>
+    </div>
+
+    <div id="print-header" style="text-align: right">
+        <img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario">
+        <div class="inline_block" style="width: 10px"></div>
+        <img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup">
+    </div>
+
+        </div>
+    </header>
+    <main>
+        <div class="section_padding">
+            <noscript>
+                <div class="ui-state-error ui-corner-all" style="padding: 4px; text-align: center">
+                    <div class="inline_block">
+                        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px"></span>
+                        <strong><span class="en-CA">JavaScript is not enabled.</span><span class="fr-CA" style="display: none">JavaScript n'est pas active.</span></strong>                                                                                      <span class="en-CA">JavaScript must be enabled to view this page</span><span class="fr-CA" style="display: none">JavaScript doit être activé pour voir cette page</span>
+                    </div>
+                </div>
+            </noscript>
+            <div id="ro_active_coord">
+                <h1 id="ro_active_coord_title">
+                    <span class="en-CA">Active coordinate</span><span class="fr-CA" style="display: none">Sélection de coordonnée</span>
+                </h1>
+            </div>
+            <div id="ro_active_coord_retrieve_active" class="ui-state-highlight ui-corner-all" style="padding: 4px; text-align: center; display: none">
+                <div class="inline_block">
+                    <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px"></span>
+                    <span class="en-CA">Retrieving data may take a while</span><span class="fr-CA" style="display: none">Obtention de données peut prendre quelques minutes</span>...
+                </div>
+            </div>
+            <div id="ro_active_coord_overview" class="page_section" style="display: none">
+                <p>
+                    <span id="ro_active_coord_idf"></span>
+                    <a class="screen-only" onclick="javascript:new function() { window.location.href = window.location.href.replace('results_out', 'map_acquisition'); }"><span class="en-CA">Modify selection</span><span class="fr-CA" style="display: none">Modifier la sélection</span></a>
+                </p>
+                <p id="ro_active_coord_retrieved">
+                    <span class="en-CA">Retrieved</span><span class="fr-CA" style="display: none">Obtenu </span>: <span class="ro_idf_coord_date_retrieved"></span>
+                </p>
+                <div id="ro_active_coord_display_map" style="height: 240px">
+                </div>
+                <div class="screen-only">
+                    <p>
+                        <span class="en-CA">Map options</span><span class="fr-CA" style="display: none">Options </span>: 
+                        <a onclick="javascript:new function() { window.location.href = window.location.href.replace('results_out', 'map_acquisition'); }"><span class="en-CA">Modify selection</span><span class="fr-CA" style="display: none">Modifier la sélection</span></a> | 
+                        <a onclick="javascript:new function() { toggleMapOption('enableOverlayStations', null); }"><span class="en-CA">Show/hide gauging stations</span><span class="fr-CA" style="display: none">Afficher/masquer les stations météos</span></a> | 
+                        <a onclick="javascript:new function() { centerCoordinates(); }"><span class="en-CA">Re-center selection</span><span class="fr-CA" style="display: none">Recentrer à la sélection</span></a>
+                    </p>
+                </div>
+                <div id="ro_active_coord_primary_nan" class="ui-state-error ui-corner-all" style="padding: 4px; text-align: center; display: none">
+                    <div class="inline_block">
+                        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px"></span>
+                        <strong><span class="en-CA">An IDF curve was not found for the selected locations.</span><span class="fr-CA" style="display: none">Une courbe IDF n'a pas été obtenue pour les emplacements sélectionnées.</span></strong>
+                        <a onclick="javascript:new function() { window.location.href = window.location.href.replace('results_out', 'map_acquisition'); }"><span class="en-CA">Make a new selection.</span><span class="fr-CA" style="display: none">Modifier la sélection.</span></a>
+                    </div>
+                </div>
+                <div id="ro_proximity_error" class="ui-state-highlight ui-corner-all" style="padding: 4px; text-align: center; display: none">
+                    <div class="inline_block">
+                        <span class="ui-icon ui-icon-info" style="float: left; margin-right: 4px"></span>
+                        <strong><span style="color: #FF0033"><span class="en-CA">This set of IDF curves may not be representative of certain locations in the selection.</span><span class="fr-CA" style="display: none">Certaines lieux dans la sélection peuvent être hors de l'influence de cet ensemble de courbes IDF.</span></span></strong>
+                    </div>
+                    <p>
+                        <span class="en-CA">Green locations are &lt; 1% of the project IDF curve value, within tolerance. Yellow locations are &gt;= 1% of the project IDF curve value.</span><span class="fr-CA" style="display: none">Les points verts sont &lt; 1 % de la valeur de la courbe IDF de projet ; au sein de l'erreur statistique. Les points jaunes sont &gt;= 1 % de cette valeur et peuvent être hors de l'influence de la courbe IDF de projet.</span>
+                    </p>
+                    <div style="margin: 3px auto">
+                        <img alt="" src="https://chart.googleapis.com/chart?cht=tx&chl=A&#39;-A_I_D_F">
+                        <span style="margin: auto 5px; vertical-align: middle">(mm)</span>
+                    </div>
+                    <table id="ro_proximity_error_coord" style="width: 100%">
+                        <thead>
+                            <tr id="ro_proximity_error_rt">
+                                <th class="border">
+                                    <span class="en-CA">Return period</span><span class="fr-CA" style="display: none">Période de retour</span>
+                                </th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div id="ro_active_coord_selection_error" class="ui-state-error ui-corner-all" style="padding: 4px; text-align: center; display: none">
+                    <div class="inline_block">
+                        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px"></span>
+                        <strong><span class="en-CA">Locations were not selected or are outside of the domain.</span><span class="fr-CA" style="display: none">Des emplacements n'étaient pas sélectionnées ou sont hors du domaine.</span></strong>
+                        <span class="en-CA">Site locations should be inside the provincial border of Ontario.</span><span class="fr-CA" style="display: none">La sélection doit être à l'intérieur de la frontière provinciale de l'Ontario.</span>
+                    </div>
+                    <p>
+                        <strong><span style="color: #FF0033"><span class="en-CA">A set of IDF curves does not exist at these locations.</span><span class="fr-CA" style="display: none">Un ensemble de courbes IDF n'existe pas à ces endroits.</span></span></strong>
+                    </p>
+                    <table id="ro_domain_error_coord" style="width: 100%">
+                    </table>
+                    <p>
+                        <button id="ro_active_coord_selection_error_back_button" onclick="javascript:new function() { window.location.href = window.location.href.replace('results_out', 'map_acquisition'); }" type="button">
+                            <span class="en-CA">Return to modify the selection</span><span class="fr-CA" style="display: none">Modifier la sélection</span>
+                        </button>
+                    </p>
+                </div>
+                <h3>
+                    <span class="en-CA">Location summary</span><span class="fr-CA" style="display: none">Liste des emplacements</span>
+                </h3>
+                <p>
+                    <span class="en-CA">These are the locations in the selection.</span><span class="fr-CA" style="display: none">Ce sont les emplacements dans la sélection.</span>
+                </p>
+                <p id="ro_coord_summary_idf_curve_coord_container" style="display: none">
+                    <strong><span class="en-CA">IDF Curve</span><span class="fr-CA" style="display: none">Courbe IDF </span>: </strong>
+                    <span id="ro_coord_summary_idf_curve_coord"></span>
+                </p>
+                <table id="ro_active_coord_primary_coord_table" style="display: none; width: 100%">
+                    <thead>
+                        <tr>
+                            <th class="border">
+                                <span class="en-CA">Location</span><span class="fr-CA" style="display: none">Emplacement</span>
+                            </th>
+                            <th class="border">
+                                <span class="en-CA">Coordinates</span><span class="fr-CA" style="display: none">Coordonnées</span>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="ro_active_coord_primary" class="page_section" style="display: none">
+                <h2>
+                    <span class="en-CA">Results</span><span class="fr-CA" style="display: none">Résultats</span>
+                </h2>
+                <p>
+                    <span class="en-CA">An IDF curve was found.</span><span class="fr-CA" style="display: none">Un ensemble de courbes IDF a été retrouvé.</span>
+                </p>
+                <div id="ro_active_rt_selected" style="display: none">
+                    <strong><span class="en-CA">Return period</span><span class="fr-CA" style="display: none">Période de retour </span>: </strong>
+                    <span id="ro_active_rt"></span>-<span class="en-CA">yr</span><span class="fr-CA" style="display: none">an</span>
+                    <div class="inline_block" class="screen-only">
+                        <a onclick="javascript:new function() { window.location.href = window.location.href.replace('results_out', 'map_acquisition'); }"><span class="en-CA">Modify selection</span><span class="fr-CA" style="display: none">Modifier la sélection</span></a>
+                    </div>
+                </div>
+                <div style="text-align: center">
+                    <h3>
+                        <span id="ro_idf_curve_chart_title"><span class="en-CA">Coordinate</span><span class="fr-CA" style="display: none">Coordonnée </span>: <span class="ro_coord_idf_lat"></span>, <span class="ro_coord_idf_lng"></span><span class="ro_idf_rt_active" style="display: none"> (RT: <span class="ro_idf_rt"></span>-<span class="en-CA">yr</span><span class="fr-CA" style="display: none">an</span>)</span><br>
+                        <span class="en-CA">IDF curve year</span><span class="fr-CA" style="display: none">Année de courbe IDF </span>: <span class="ro_results_year_at_present_year_idf">2010</span></span>
+                    </h3>
+                    <div id="ro_idf_curve_chart_container" style="display: none">
+                        <div id="ro_idf_curve_chart" class="inline_block" style="height: 380px; max-width: 680px; width: 100%">
+                        </div>
+                    </div>
+                    <div id="ro_idf_curve_chart_vartoggle" class="screen-only" style="display: none">
+                        <div class="inline_block">
+                            <span class="ui-icon ui-icon-arrowrefresh-1-e" style="float: left"></span>
+                            <span class="en-CA">Switch variable</span><span class="fr-CA" style="display: none">Faire voir </span>:
+                            <a onclick="javascript:new function() { setChartingScatterIDF('i'); }"><span class="en-CA">Intensity</span><span class="fr-CA" style="display: none">Intensité</span></a>
+                            <span class="en-CA">or</span><span class="fr-CA" style="display: none">ou</span>
+                            <a onclick="javascript:new function() { setChartingScatterIDF('d'); }"><span class="en-CA">Depth</span><span class="fr-CA" style="display: none">Quantité</span></a>
+                        </div>
+                        <!--<div class="inline_block">
+                            <a id="ro_chartint_options"><span class="ui-icon ui-icon-image" style="float: left"></span></a>
+                        </div>-->
+                    </div>
+                    <div id="ro_idf_curve_chart_secondary" class="screen-only" style="display: none">
+                        <div class="inline_block">
+                            <span class="ui-icon ui-icon-arrowrefresh-1-e" style="float: left"></span>
+                            <span class="en-CA">Switch variable</span><span class="fr-CA" style="display: none">Faire voir </span>:
+                            <a onclick="javascript:new function() { setChartingCandleStickRT('i'); }"><span class="en-CA">Intensity</span><span class="fr-CA" style="display: none">Intensité</span></a>
+                            <span class="en-CA">or</span><span class="fr-CA" style="display: none">ou</span>
+                            <a onclick="javascript:new function() { setChartingCandleStickRT('d'); }"><span class="en-CA">Depth</span><span class="fr-CA" style="display: none">Quantité</span></a>
+                        </div>
+                        <!--<div class="inline_block">
+                            <a id="ro_chartint_options_secondary"><span class="ui-icon ui-icon-image" style="float: left"></span></a>
+                        </div>-->
+                        <!--<p id="ro_idf_curve_chart_secondary_available" style="display: none">
+                            <a onclick="javascript:new function() { navigateComparative(); }"><em><span class="en-CA">Comparative data is available</span><span class="fr-CA" style="display: none">Les données comparatives sont disponibles</span>...</em></a>
+                        </p>-->
+                        <!--<div id="ro_secondary_available" style="display: none">
+                            <a id="ro_secondary_navigate_msc" target="_blank"></a>
+                            <p>
+                                <span class="en-CA">Data is available from another source to compare with the MTO IDF curve.</span><span class="fr-CA" style="display: none">Les données d'une autre agence sont disponibles pour comparer avec la courbe IDF du MTO.</span>
+                            </p>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+            <div id="ro_active_coord_primary_coeff_summary" class="page_section" style="display: none">
+                <div>
+                    <h3 class="inline_block">
+                        <span class="en-CA">Coefficient summary</span><span class="fr-CA" style="display: none">Coefficients de la courbe</span>
+                    </h3>
+                    <p class="print-only">
+                        <strong><span class="en-CA">IDF Curve</span><span class="fr-CA" style="display: none">Courbe IDF </span>: </strong>
+                        <span class="ro_idf_coord_friendly_long"></span>
+                    </p>
+                    <p class="print-only">
+                        <span class="en-CA">Retrieved</span><span class="fr-CA" style="display: none">Obtenu </span>: <span class="ro_idf_coord_date_retrieved"></span>
+                    </p>
+                </div>
+                <div class="ro_results_year">
+                    <span class="ro_results_year_at_present"><strong><span class="fr-CA" style="display: none">Année de base des données </span><span class="en-CA">Data year</span>:</strong> <span class="ro_results_year_at_present_year">2010</span></span><br>
+                    <span class="ro_results_year_at_present_idf"><strong><span class="fr-CA" style="display: none">Année de courbe IDF </span><span class="en-CA">IDF curve year</span>:</strong> <span class="ro_results_year_at_present_year_idf">2010</span></span>
+                </div>
+                <p class="screen-only">
+                    <span class="en-CA">Click a return period in the table header for more detail.</span><span class="fr-CA" style="display: none">Cliquez sur une période de retour dans l'en-tête de la table de données pour charger des statistiques supplémentaires.</span>
+                </p>
+                <table id="ro_coord_summary_coeff_rt" style="width: 100%">
+                    <thead>
+                        <tr id="ro_coord_summary_rt_head">
+                            <th class="border">
+                                <span class="en-CA">Return period</span><span class="fr-CA" style="display: none">Période de retour</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr id="ro_coord_summary_coeff_a_data" style="text-align: center">
+                        <th class="border">A</th>
+                    </tr>
+                    <tr id="ro_coord_summary_coeff_b_data" style="text-align: center">
+                        <th class="border">B</th>
+                    </tr>
+                </table>
+                <h3>
+                    <span class="en-CA">Statistics</span><span class="fr-CA" style="display: none">Statistiques</span>
+                </h3>
+                <div id="ro_primary_coord_ext" style="display: none">
+                </div>
+                <h4>
+                    <span class="en-CA">Rainfall intensity</span><span class="fr-CA" style="display: none">Intensité des précipitations</span> (mm hr<sup>-1</sup>)
+                </h4>
+                <table id="ro_primary_i" style="width: 100%">
+                    <thead>
+                        <tr id="ro_primary_i_head">
+                            <th class="border">
+                                <span class="en-CA">Duration</span><span class="fr-CA" style="display: none">Durée</span>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <h4>
+                    <span class="en-CA">Rainfall depth</span><span class="fr-CA" style="display: none">Quantité de précipitations</span> (mm)
+                </h4>
+                <table id="ro_primary_d" style="width: 100%">
+                    <thead>
+                        <tr id="ro_primary_d_head">
+                            <th class="border">
+                                <span class="en-CA">Duration</span><span class="fr-CA" style="display: none">Durée</span>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div id="ro_active_coord_secondary" class="page_section" style="display: none">
+                <div>
+                    <h3 class="inline_block">
+                        <span class="en-CA">Coefficient summary</span><span class="fr-CA" style="display: none">Coefficients de la courbe</span>
+                    </h3>
+                    <p class="print-only">
+                        <strong><span class="en-CA">IDF Curve</span><span class="fr-CA" style="display: none">Courbe IDF </span>: </strong>
+                        <span class="ro_idf_coord_friendly_long"></span>
+                    </p>
+                    <p class="print-only">
+                        <span class="en-CA">Retrieved</span><span class="fr-CA" style="display: none">Obtenu </span>: <span class="ro_idf_coord_date_retrieved"></span>
+                    </p>
+                </div>
+                <div class="ro_results_year">
+                    <span class="ro_results_year_at_present"><strong><span class="fr-CA" style="display: none">Année de base des données </span><span class="en-CA">Data year</span>:</strong> <span class="ro_results_year_at_present_year">2010</span></span><br>
+                    <span class="ro_results_year_at_present_idf"><strong><span class="fr-CA" style="display: none">Année de courbe IDF </span><span class="en-CA">IDF curve year</span>:</strong> <span class="ro_results_year_at_present_year_idf">2010</span><span id="target_fcst_compare" class="screen-only" style="display: none"> <a onclick="javascript:new function() { window.location.href = window.location.href.replace('&year1=', '&year1=' + _fcst_year_ds + '+'); }"><span class="en-CA">Compare with data year</span><span class="fr-CA" style="display: none">Comparer avec année de données</span></a></span></span>
+                </div>
+                <p class="ro_secondary_a">
+                    <strong>A:</strong>
+                    <span id="ro_active_secondary_a_coeff"></span>
+                </p>
+                <p class="ro_secondary_b">
+                    <strong>B:</strong>
+                    <span id="ro_active_secondary_b_coeff"></span>
+                </p>
+                <h3>
+                    <span class="en-CA">Statistics</span><span class="fr-CA" style="display: none">Statistiques</span>
+                </h3>
+                <div id="ro_active_coord_secondary_nan" class="ui-state-error ui-corner-all" style="padding: 4px; text-align: center; display: none">
+                    <div class="inline_block">
+                        <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 4px"></span>
+                        <strong><span class="en-CA">Warning</span><span class="fr-CA" style="display: none">Avis </span>: </strong>
+                        <span class="en-CA">Error statistics are not available for this IDF curve.</span><span class="fr-CA" style="display: none">Statistiques d'erreur ne sont pas disponibles pour cette courbe IDF.</span>
+                        <a onclick="javascript:new function() { window.location = $('a#mtoSiteMapAquisition').attr('href'); }"><span class="en-CA">Make a new selection.</span><span class="fr-CA" style="display: none">Modifier la sélection.</span></a>
+                    </div>
+                </div>
+                <div id="ro_active_coord_ext" style="display: none">
+                </div>
+                <h4>
+                    <span class="en-CA">Rainfall intensity</span><span class="fr-CA" style="display: none">Intensité des précipitations</span> (mm hr<sup>-1</sup>)
+                </h4>
+                <table id="ro_active_coord_secondary_i" style="width: 100%">
+                    <thead>
+                        <tr id="ro_active_coord_secondary_i_head"></tr>
+                    </thead>
+                    <tr id="ro_active_coord_secondary_i_upper"></tr>
+                    <tr id="ro_active_coord_secondary_i_lower"></tr>
+                </table>
+                <h4>
+                    <span class="en-CA">Rainfall depth</span><span class="fr-CA" style="display: none">Quantité de précipitations</span> (mm)
+                </h4>
+                <table id="ro_active_coord_secondary_d" style="width: 100%">
+                    <thead>
+                        <tr id="ro_active_coord_secondary_d_head"></tr>
+                    </thead>
+                    <tr id="ro_active_coord_secondary_d_upper"></tr>
+                    <tr id="ro_active_coord_secondary_d_lower"></tr>
+                </table>
+            </div>
+            <div id="ro_terms" style="display: none">
+                <h3>
+                    <span class="en-CA">Terms of Use</span><span class="fr-CA" style="display: none">Conditions</span>
+                </h3>
+                <p>
+                    <span class="en-CA">You agree to the</span><span class="fr-CA" style="display: none">Vous acceptez les</span>
+                    <a href="terms.shtml"><span class="en-CA">Terms of Use</span><span class="fr-CA" style="display: none">Conditions d'utilisation</span></a>
+                    <span class="en-CA">of this site by reviewing, using, or interpreting these data.</span><span class="fr-CA" style="display: none">en passant en revue, en utilisant et en interprétant ces données.</span>
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="section_padding">
+            
+<div class="page_section_separated" style="text-align: left">
+    <div id="site_links">
+
+        <span class="en-CA">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/english/">
+                Ontario Ministry of Transportation
+            </a>
+        </span>
+
+        <span class="fr-CA" style="display: none">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/french/">
+                Ministère des Transports de l&#39;Ontario
+            </a>
+        </span> |
+
+        <a id="mtoSiteTerms" href="terms.shtml">
+            <span class="en-CA">Terms and Conditions</span>
+            <span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span>
+        </a> |
+
+        <a id="mtoSiteMapAquisition" href="map_acquisition.shtml">
+            Map
+        </a>
+
+        <a id="mtoSiteStatus" href="database_status.shtml">
+            <span class="en-CA">About</span>
+            <span class="fr-CA" style="display: none">Sur</span>
+        </a>
+
+        <br>
+
+        <!-- Accessibility statement -->
+        <span class="en-CA">
+            As outlined in the 
+            <a href="https://www.ontario.ca/page/accessible-customer-service-policy">
+                OPS Accessible Customer Service Policy
+            </a>, we are committed to providing accessible customer service. On request, we can arrange for accessible formats and communications supports. Please 
+            <a href="https://www.ontario.ca/feedback/contact-us?id=52785&nid=36275">
+                contact us
+            </a>.
+        </span>
+
+        <br>
+
+        <a id="mtoSiteResultsOut" href="results_out.shtml">Results</a>
+        <a id="mtoSiteExit" href="exit.shtml">Exit</a>
+
+        <span class="en-CA">Last Modified: May 2026</span>
+        <span class="fr-CA" style="display: none">
+            Dernière modification : May 2026
+        </span>
+
+    </div>
+</div>
+
+        </div>
+    </footer>
+</body>
+
+</html>

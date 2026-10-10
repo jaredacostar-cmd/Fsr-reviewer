@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    
+    <link href="scripts/hosted/jquery/css/smoothness/jquery-ui-1.8.22.custom.css" rel="stylesheet" type="text/css">
+    
+    <script src="scripts/hosted/jquery/js/jquery-1.7.2.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-ui-1.8.22.custom.min.js"></script>
+    <script src="scripts/hosted/jquery/js/jquery-cookies-2.2.0.min.js"></script>
+
+    <link href="styles/idf_curve_lookup_boxed_page.css" rel="stylesheet" type="text/css">
+    <link href="styles/idf_curve_lookup_format_styles.css" rel="stylesheet" type="text/css" media="all">
+    <link href="styles/idf_curve_lookup_print.css" rel="stylesheet" type="text/css" media="print">
+    <link href="styles/idf_curve_lookup_screen.css" rel="stylesheet" type="text/css" media="screen">
+
+    <script src="https://www.webservices.gov.on.ca/metrics.js"></script>
+
+    <script src="scripts/idf_curve_lookup_utility.js"></script>
+
+    <title>IDF Curve Look-up - Ministry of Transportation</title>
+    <script>
+
+        $(document).ready(function () {
+
+            //Preserve variables in the window link on site links stored on the page;
+            updateSiteLinks(window.location.href);
+
+            //Toggle language;
+            toggleModifiedLanguageHeader(null);
+
+        });
+
+    </script>
+<script>var __uzdbm_1 = "fdbad445-cba0-4af2-9ebc-07082bb7f69c";var __uzdbm_2 = "ZmJhYjdlMmQtZHo4Mi00NjIzLTliNmMtMzFhNTgyZjg2ZGFiJDIwLjE2OS4xMDIuMjE3";var __uzdbm_3 = "";var __uzdbm_4 = "false";var __uzdbm_5 = "";var __uzdbm_6 = "";var __uzdbm_7 = "";</script> <script>   (function (w, d, e, u, c, g, a, b) {     w["SSJSConnectorObj"] = w["SSJSConnectorObj"] || {       ss_cid: c,       domain_info: "auto",     };     w[g] = function (i, j) {       w["SSJSConnectorObj"][i] = j;     };     a = d.createElement(e);     a.async = true;     if (       navigator.userAgent.indexOf('MSIE') !== -1 ||       navigator.appVersion.indexOf('Trident/') > -1     ) {       u = u.replace("/advanced/", "/advanced/ie/");     }     a.src = u;     b = d.getElementsByTagName(e)[0];     b.parentNode.insertBefore(a, b);   })(     window, document, "script", "/18f5227b-e27b-445a-a53f-f845fbe69b40/stormcaster.js", "dz84", "ssConf"   );   ssConf("c1", "https://idfcurves.mto.gov.on.ca");   ssConf("c3", "c99a4269-161c-4242-a3f0-28d44fa6ce24");   ssConf("au", "idfcurves.mto.gov.on.ca");   ssConf("cu", "validate.perfdrive.com, ssc"); </script> </head>
+
+<body id="boxed_page">
+    <header>
+        <div class="section_padding">
+            
+    <div id="screen-header" style="text-align: right">
+        <a href="http://www.ontario.ca/">Ontario.ca</a> |
+        <a class="en-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('fr-CA')); window.location = window.location.href; }">Fran&ccedil;ais</a><a class="fr-CA" href="javascript: new function () { setCookie('modifiedLanguageHeader', ('en-CA')); window.location = window.location.href; }" style="display: none">English</a><br>
+        <a class="mto_link" href="http://www.mto.gov.on.ca/english/"><img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario"></a>
+        <div class="inline_block" style="width: 10px"></div>
+        <a class="mto_link" href="index.shtml"><img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup"></a><br>
+        <a href="terms.shtml"><span class="en-CA">Terms and Conditions</span><span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span></a> |
+        <a href="map_acquisition.shtml"><span class="en-CA">Coordinate Selection</span><span class="fr-CA" style="display: none">S&eacute;lection de coordonn&eacute;es</span></a> |
+        <a href="database_status.shtml"><span class="en-CA">About</span><span class="fr-CA" style="display: none">Sur</span></a>
+    </div>
+
+    <div id="print-header" style="text-align: right">
+        <img src="graphics/logoLarge.gif" style="height: 28px; width: 84px; margin-bottom: 1px" alt="Government of Ontario">
+        <div class="inline_block" style="width: 10px"></div>
+        <img src="graphics/title.png" style="height: 35px; width: 217px" alt="IDF Curve Lookup">
+    </div>
+
+        </div>
+    </header>
+    <main>
+        <div class="section_padding" style="max-width: 580px">
+
+            <h1>
+                <span class="en-CA">About</span><span class="fr-CA" style="display: none">Sur</span>
+            </h1>
+
+            <!--Identification-->
+            <div class="page_section">
+                <h2>Identification</h2>
+                <p>
+                    MTO IDF Curves Finder<br>
+                    Dr. R. Soulis, P. Eng.
+                </p>
+                <dl>
+                    <dd class="label_column">
+                        <span class="en-CA">Web Page</span><span class="fr-CA" style="display: none">Site Web </span>:
+                    </dd>
+                    <dt>Version 3.0</dt>
+                    <dd class="label_column">
+                        <span class="en-CA">Release Date</span><span class="fr-CA" style="display: none">Date de publication </span>:
+                    </dd>
+                    <dt><span class="en-CA">September</span><span class="fr-CA" style="display: none">Septembre</span> 2016</dt>
+                </dl>
+            </div>
+
+            <!--Features-->
+            <div class="page_section">
+                <h3>
+                    <span class="en-CA">Features</span><span class="fr-CA" style="display: none">Caractéristiques</span>
+                </h3>
+                <h4>
+                    <span class="en-CA">IDF Station Data Set</span><span class="fr-CA" style="display: none">Ensemble de données</span>
+                </h4>
+                <h5>Source<span class="en-CA">: Environment Canada</span><span class="fr-CA" style="display: none"> : Environnement Canada</span> (MSC)
+                </h5>
+                <dl>
+                    <tr>
+                        <dd class="label_column">&nbsp; <span class="en-CA">Data set</span><span class="fr-CA" style="display: none">Ensemble de données </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">Environment Canada station data for Ontario, Manitoba, and Quebec up to 2013. The Manitoba and Quebec stations used are within 150 km of Ontario.</span><span class="fr-CA" style="display: none">Données de station d'Environnement Canada jusqu'au 2013 pour les provinces de l'Ontario, Manitoba, et Québec. Les stations utilisées de Manitoba et Québec sont à moins de 150 km de l'Ontario.</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">&nbsp; Version<span class="fr-CA" style="display: none"> </span>:
+                        </dd>
+                        <dt>IDF v2.3</dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">&nbsp; Date <span class="en-CA">of publication</span><span class="fr-CA" style="display: none">de publication </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">January 28, 2015</span><span class="fr-CA" style="display: none">28 janvier 2015</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">&nbsp; <span class="en-CA">Number of</span><span class="fr-CA" style="display: none">Nombre de</span> stations<span class="fr-CA" style="display: none"> </span>:
+                        </dd>
+                        <dt>181</dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">&nbsp; <span class="en-CA">Number of station years</span><span class="fr-CA" style="display: none">Nombre d'années-station </span>:
+                        </dd>
+                        <dt>4562</dt>
+                    </tr>
+                </dl>
+                <h5>Source<span class="fr-CA" style="display: none"> </span>: National Oceanic and Atmospheric Administration (NOAA)</h5>
+                <dl>
+                    <tr>
+                        <dd class="label_column">&nbsp; <span class="en-CA">Data set</span><span class="fr-CA" style="display: none">Ensemble de données </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">Precipitation-Frequency Atlas of the United States, NOAA Atlas 14. The NOAA stations used are within 150 km of Ontario.</span><span class="fr-CA" style="display: none">Precipitation-Frequency Atlas des États-Unis de la fréquence des précipitations, NOAA Atlas 14. Les stations utilisées de NOAA sont à moins de 150 km de l'Ontario.</span><br>
+                            &nbsp; Vol. 2 - Ohio River Basin<br>
+                            &nbsp; Vol. 8 - Midwestern States<br>
+                            &nbsp; Vol. 10 - Northeastern States
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">&nbsp; Date <span class="en-CA">of publication</span><span class="fr-CA" style="display: none">de publication </span>:
+                        </dd>
+                        <td>2006 (Vol. 2); 2013 (Vol. 8); 2015 (Vol. 10)</td>
+                    </tr>
+                    <tr>
+                        <td class="label_column">&nbsp; <span class="en-CA">Number of</span><span class="fr-CA" style="display: none">Nombre de</span> stations<span class="fr-CA" style="display: none"> </span>:
+                        </td>
+                        <dt>171</dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">&nbsp; <span class="en-CA">Number of station years</span><span class="fr-CA" style="display: none">Nombre d'années-station </span>:
+                        </dd>
+                        <dt>6061</dt>
+                    </tr>
+                </dl>
+                <h4>
+                    <span class="en-CA">IDF Curve Construction</span><span class="fr-CA" style="display: none">Analyses des courbes IDF</span>
+                </h4>
+                <table>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Extreme value PDF</span><span class="fr-CA" style="display: none">PDF des valeurs extrêmes </span>:
+                        </dd>
+                        <dt>Gumbel</dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">&nbsp; Parameter estimation</span><span class="fr-CA" style="display: none">&nbsp; Estimation des paramètres </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">Method of Moments</span><span class="fr-CA" style="display: none">Méthode des moments</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Interpolation Curve</span><span class="fr-CA" style="display: none">Type de courbe d'interpolation </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">2 parameter (A, B)</span><span class="fr-CA" style="display: none">2-paramètres (A, B)</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">&nbsp; Parameter estimation</span><span class="fr-CA" style="display: none">&nbsp; Estimation des paramètres </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">Least squares fit to quantiles</span><span class="fr-CA" style="display: none">Méthode des moindres carrés apte aux quantiles</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Return periods modelled</span><span class="fr-CA" style="display: none">Périodes de retour modélisés </span>:
+                        </dd>
+                        <dt>2, 5, 10, 25, 50, 100 <span class="en-CA">year</span><span class="fr-CA" style="display: none">an</span></dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Rainfall durations used</span><span class="fr-CA" style="display: none">Durées de précipitations utilisées </span>:
+                        </dd>
+                        <dt>5, 10, 15, 30 min; 1, 2, 6, 12, 24 <span class="en-CA">hr</span><span class="fr-CA" style="display: none">h</span>
+                        </dt>
+                    </tr>
+                </table>
+                <h4>
+                    <span class="en-CA">Spatial Interpolation Procedure</span><span class="fr-CA" style="display: none">Analyse d'interpolation spatiale</span>
+                </h4>
+                <table>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Method</span><span class="fr-CA" style="display: none">Méthode </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">Square Grid</span><span class="fr-CA" style="display: none">Grille carrée</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Transformations applied</span><span class="fr-CA" style="display: none">Transformations appliquées </span>:
+                        </dd>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">&nbsp; Independent variables</span><span class="fr-CA" style="display: none">&nbsp; Variables indépendantes </span>:
+                        </dd>
+                        <dt>
+                            <span class="en-CA">None</span><span class="fr-CA" style="display: none">Aucune</span>
+                        </dt>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">&nbsp; Dependent variables</span><span class="fr-CA" style="display: none">&nbsp; Variables dépendantes </span>:
+                        </dd>
+                        <tdtd>
+                            <span class="en-CA">log</span><span class="fr-CA" style="display: none">logarithme</span>
+                        </tdtd>
+                    </tr>
+                    <tr>
+                        <dd class="label_column">
+                            <span class="en-CA">Digital Elevation Model (DEM)</span><span class="fr-CA" style="display: none">Modèle d'élévation (DEM) </span>:
+                        </dd>
+                        <dt>USGS GTOPO-30</dt>
+                    </tr>
+                </table>
+                <h4>
+                    <span class="en-CA">User Interface</span><span class="fr-CA" style="display: none">Interface utilisateur</span>
+                </h4>
+                <ul>
+                    <li>
+                        <span class="en-CA">Extracts current IDF project values</span><span class="fr-CA" style="display: none">Extraits les valeurs du projet IDF actuelles</span>
+                    </li>
+                    <li>
+                        <span class="en-CA">Estimates end of service life IDF values</span><span class="fr-CA" style="display: none">Estimations des valeurs IDF de fin de service</span>
+                    </li>
+                    <li>
+                        <span class="en-CA">Locates and displays Environment Canada IDF station in the vicinity of a highway project</span><span class="fr-CA" style="display: none">Affiche les stations météorologiques d'Environnement Canada qui sont à proximité de projet d'autoroute</span>
+                    </li>
+                    <li>
+                        <span class="en-CA">Displays 95% confidence limits for project and station values</span><span class="fr-CA" style="display: none">Affiche les limites de confiance à 95 % pour les valeurs de projet et de station météorologique</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!--Contact Info.-->
+            <div class="page_section">
+                <h3>
+                    <span class="en-CA">Contact Information</span><span class="fr-CA" style="display: none">Coordonnées</span>
+                </h3>
+                <p>
+                    <span class="en-CA">Ministry of Transportation Ontario</span><span class="fr-CA" style="display: none">Ministère des Transports de l'Ontario</span><br>
+                    <span class="en-CA">Design and Contracts Standards Office</span><span class="fr-CA" style="display: none">Bureau de la conception des normes de contrats</span><br>
+                    <span class="en-CA">Drainage and Hydrology Group</span><span class="fr-CA" style="display: none">Drainage et hydrologie</span><br>
+                    Tel.: (905) 704-2293
+                </p>
+            </div>
+
+            <!--Purpose-->
+            <a id="dt-notes"></a>
+            <div class="page_section">
+                <div class="en-CA">
+                    <h2>Purpose</h2>
+                    <p>
+                        Intensity-Duration-Frequency (IDF) curves are used in the design
+                        of flood protection infrastructure on small watersheds. They
+                        summarise the annual probability of exceedance,
+                        <img alt="P(R,t)" src="graphics/database_status/image001.png" style="vertical-align: middle">, of a
+                        volume of rainfall,
+                        <img alt="R" src="graphics/database_status/image002.png" style="vertical-align: middle">
+                        (mm), in a single event of duration,
+                        <img alt="tau" src="graphics/database_status/image003.png" style="vertical-align: middle">
+                        (hr).
+                        <img alt="P" src="graphics/database_status/image004.png" style="vertical-align: middle">
+                        is also known as the probability function,
+                        <img alt="(R,tau)" src="graphics/database_status/image005.png" style="vertical-align: middle">, by return
+                        period,
+                        <img alt="T" src="graphics/database_status/image006.png" style="vertical-align: middle">
+                        (yrs), where:
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <h2>But</h2>
+                    <p>
+                        Les courbes Intensité-Durée-Fréquence (IDF) sont utilisées dans
+                        la conception de l'infrastructure de protection contre les
+                        inondations dans les bassins versants. Ils résument la probabilité
+                        annuelle de dépassement,
+                        <img alt="P(R,tau)" src="graphics/database_status/image001.png" style="vertical-align: middle">, d'un volume de précipitations,
+                        <img alt="R" src="graphics/database_status/image002.png" style="vertical-align: middle">
+                        (mm), en un seul événement de durée,
+                        <img alt="tau" src="graphics/database_status/image003.png" style="vertical-align: middle">
+                        (h). Il est de pratique
+                        courante d'exprimer
+                        <img alt="(R,tau)" src="graphics/database_status/image005.png" style="vertical-align: middle">
+                        par une période de retour,
+                        <img alt="T" src="graphics/database_status/image006.png" style="vertical-align: middle">
+                        (ans) :
+                    </p>
+                </div>
+                <p style="text-align: center">
+                    <img alt="T=1/P(R,tau)" src="graphics/database_status/image007.png" style="vertical-align: middle">
+                </p>
+                <p class="en-CA">
+                    In this tool, rainfall intensity,
+                    <img alt="RR" src="graphics/database_status/image008.png" style="vertical-align: middle">
+                    (mm/hr), is expressed by:
+                </p>
+                <p class="fr-CA" style="display: none">
+                    Dans cet outil, l'intensité,
+                    <img alt="RR" src="graphics/database_status/image008.png" style="vertical-align: middle">
+                    (mm/h), est exprimé par :
+                </p>
+                <p style="text-align: center">
+                    <img alt="RR=At^B" src="graphics/database_status/image009.png" style="vertical-align: middle">
+                </p>
+                <p>
+                    <span class="en-CA">where</span><span class="fr-CA" style="display: none">dans laquelle </span>:
+                </p>
+                <p style="text-align: center">
+                    <img alt="RR=R/tau" src="graphics/database_status/image010.png" style="vertical-align: middle">
+                </p>
+                <div class="en-CA">
+                    <p>
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        and
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        vary with location and return period.
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        is the value of the IDF curve at the 1 hr storm duration. Since IDF curves
+                        are portrayed as log-log plots, the curves are always straight
+                        lines.
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        is the slope for each line.
+                    </p>
+                    <p>
+                        Environment Canada (MSC) publishes
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        and
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        parameters at selected
+                        meteorological locations in Ontario and elsewhere in Canada. The
+                        two-parameter form that Environment Canada uses is simpler and
+                        generally more conservative than other forms.
+                    </p>
+                    <p>
+                        The purpose of this project is to provide a convenient method to
+                        interpolate IDF curve parameters between MSC stations
+                        for MTO projects.
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <p>
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        et
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        varient avec la localisation et la période de retour.
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        est la valeur de la courbe IDF pour une durée de tempête de 1 h.
+                        Les courbes IDF sont tracées comme des lignes droites sur
+                        des axes logarithmiques.
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        correspond aux pentes de
+                        ces lignes.
+                    </p>
+                    <p>
+                        L'Environnement Canada (MSC) publie les paramètres
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        et
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        à certains
+                        endroits météorologiques en Ontario et ailleurs au Canada. La
+                        forme à deux paramètres que l'Environnement Canada utilisent est
+                        généralement plus simple, et aussi plus prudents que les autres
+                        formes d'analyse.
+                    </p>
+                    <p>
+                        Le but de ce projet est de fournir une méthode pratique pour
+                        l'interpolation des paramètres de courbe IDF entre les stations
+                        de MSC pour les projets du MTO.
+                    </p>
+                </div>
+            </div>
+
+            <!--Methodology-->
+            <div class="page_section">
+                <div class="en-CA">
+                    <h2>Methodology</h2>
+                    <p>
+                        The method of analysis used is referred to as the Square Grid
+                        Technique because it uses UTM grid squares as elementary
+                        sub-catchments. The original Digital Elevation Model (DEM) is a
+                        set of gridded elevations and drainage fractions coded manually
+                        for each 10 km square of the Natural Resources Canada 1:250,000
+                        topographic map series. The current version uses the 30 arc-second
+                        GTOPO-30 dataset from USGS.
+                    </p>
+                    <p>
+                        The premise is that local climate is strongly influenced by local
+                        and regional topography. Thus, topographic parameters are useful
+                        interpolators of surface fields of interest, such as temperature,
+                        runoff and, in this case, IDF curve parameters
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        and
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">.
+                    </p>
+                    <p>
+                        The digital elevation model is used to derive physiographic characteristics that
+                        become independent variables in a regression analysis with station
+                        statistics. The regression analysis produces a set of generating
+                        equations for the parameters used to produce IDF curves. The
+                        technique also weighs station data by their length of record,
+                        which ensures that data that are more reliable have greater influence on
+                        the interpolation. The database consists of statistics from 352
+                        MSC and NOAA stations with an average record length of 30 years.
+                    </p>
+                    <p>
+                        The result is a gradually varying regional IDF curve. Because the
+                        regional curve and station curves both have uncertainty, the
+                        regional estimates are different from the station records.
+                        However, the 95% confidence intervals overlap and the upper limit
+                        is generally higher than the mean station value. Values from both the
+                        regional curve and station curves are accessible by this tool.
+                    </p>
+                    <h3>Application</h3>
+                    <p>
+                        The minimum recommended design intensities for storms are the
+                        values at the 95% upper confidence limit of the appropriate
+                        extreme rainfall IDF curve.
+                    </p>
+                    <p>
+                        The design IDF curve values are the upper 95% confidence limit
+                        for the regional prediction, which is generally higher than the
+                        station values.
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <h2>Méthodologie</h2>
+                    <p>
+                        La méthode utilisée pour l'analyse est appelée la technique de la
+                        grille carrée, car elle utilise les carrés du quadrillage UTM
+                        comme sous-bassins versants élémentaires. Le modèle d'élévation
+                        (DEM) est un ensemble des élévations maillées et des fractions de
+                        drainage qui ont été codées manuellement pour chaque 10 km carré
+                        de la série de carte topographiques 1/250 000 des Ressources
+                        naturelles du Canada. La version actuelle utilise le GTOPO-30 à 30
+                        secondes d'arc de USGS.
+                    </p>
+                    <p>
+                        Le principe d'analyse est que le climat local est fortement
+                        influencé par la topographie locale et régionale. Ainsi, les
+                        paramètres topographiques sont des interpolateurs utiles dans les
+                        domaines de la surface d'intérêt, comme la température, les eaux
+                        de ruissellement et, dans ce cas, les paramètres
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        et
+                        <img alt="B" src="graphics/database_status/image012.png" style="vertical-align: middle">
+                        de la
+                        courbe IDF.
+                    </p>
+                    <p>
+                        Le modèle d'élévation est utilisé pour dériver les caractéristiques
+                        physiographiques qui deviennent des variables indépendantes dans
+                        une analyse de régression des statistiques des stations
+                        météorologiques. L'analyse produit un ensemble d'équations pour
+                        produire les paramètres utilisés dans la production des courbes
+                        IDF. La technique pèse aussi les données des stations par leur
+                        longueur d'enregistrement, afin que les données les plus fiables
+                        aient une plus grande influence sur l'interpolation. La base de
+                        données se compose des statistiques provenant de 352 stations
+                        de MSC et NOAA avec une longueur d'enregistrements moyenne de 30
+                        ans.
+                    </p>
+                    <p>
+                        Le résultat est une courbe IDF régionale qui se varie
+                        progressivement. Parce que la courbe régionale et les courbes de
+                        station ont tous de l'incertitude, les estimations régionales sont
+                        différentes que les valeurs de station. Toutefois, entre les deux les intervalles
+                        de confiance de 95 % se chevauchent et la limite
+                        supérieure est généralement plus élevée que la valeur moyenne de la
+                        station. Les valeurs régionales, ainsi que les valeurs
+                        de station, sont accessibles par cet outil.
+                    </p>
+                    <h3>L'Application</h3>
+                    <p>
+                        Les intensités minimales de conception recommandées pour les
+                        tempêtes sont les valeurs à la limite supérieure de confiance à
+                        95 % de la courbe IDF des précipitations extrêmes approprié.
+                    </p>
+                    <p>
+                        Les valeurs de la courbe IDF de conception sont la limite
+                        supérieure de confiance à 95 % pour la prévision régionale, qui
+                        est généralement plus élevée que les valeurs de station.
+                    </p>
+                </div>
+            </div>
+
+            <div class="page_section">
+                <div class="en-CA">
+                    <h2>Time-trend Analysis</h2>
+                    <p>
+                        The time trend analysis was done using observations from 1960 to 2014. A
+                        linear trend was observed and extrapolated from this period to 2060.
+                        Significantly less sources were available for data after 2010, so
+                        2010 is the reference year used in this tool. IDF curve
+                        projections are extrapolated from the 2010 base year.
+                    </p>
+                    <p>
+                        With the exception of the 5, 10, and 15 min storm durations, all
+                        t-stats exceed the 95% confidence threshold of 1.96. The lack of
+                        significance in these storms is not surprising, as data are
+                        more difficult to capture for these events, and the events
+                        themselves are less reliable. The t-stats for longer duration
+                        events, which range from 2.421 for the 30 min event to 6.979 for
+                        the 24 hr event, have a stronger statistical significance.
+                    </p>
+                    <p>
+                        This project does not address the spatial variability of time
+                        trends for extreme precipitation in Ontario. The analysis combines
+                        the datasets from all stations and determines their collective
+                        historical trend. The projections are extrapolations based on past
+                        trends and assume that the rate of change, <img alt="m" src="graphics/database_status/image013.png" style="vertical-align: middle">,
+                        will stay constant. This serves two purposes. For now, the extrapolations provide a better
+                        projection of future precipitation extremes than a stationary
+                        model. In the future, the extrapolation will serve as a baseline
+                        for forecasts that incorporate both climatological factors and
+                        local variability.
+                    </p>
+                    <p>
+                        To estimate population parameters of the probability density
+                        function, the analysis used the method-of-moments. For the
+                        validation, this was compared with an analysis of L-moments.
+                        Comparable parameters were generated by both methods.
+                    </p>
+                    <p>
+                        Rainfall intensities from the 2010 base year are within the safety
+                        margin of previous calculations. Future intensities, however, are
+                        projected to exceed current design standards. The formula for future IDF curve intensities,
+                        <img alt="Rt'" src="graphics/database_status/image014.png" style="vertical-align: middle">,
+                        for year
+                        <img alt="t' > 2010" src="graphics/database_status/image015.png" style="vertical-align: middle">
+                        uses the
+                        following equation:
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <h2>L'analyse des tendances historiques</h2>
+                    <p>
+                        L'analyse des tendances historiques a été effectué en utilisant des observations de
+                        1960 à 2014. Une tendance linéaire a été observé et extrapolé à partir de cette période à 2060.
+                        Il y avait beaucoup moins des
+                        données disponible pour la période après 2010, donc 2010 est l'année de référence
+                        pour cet outil. Projections de courbe IDF futures sont extrapolées
+                        à partir de l'année de base 2010.
+                    </p>
+                    <p>
+                        À l'exception des durées de tempête de 5, 10 et 15 min, tous les
+                        t-stats dépassent le seuil de confiance de 95 %. L'absence d'une
+                        signification statistique pour ces tempêtes n'est pas surprenant,
+                        car les mesures sont plus difficiles à capturer pour les
+                        événements de durée plus courtes, et les événements eux-mêmes sont
+                        moins fiables. Les t-stats pour les événements de
+                        durée plus longues, allant de 2.421 pour l'événement de 30 min à
+                        6.979 pour l'événement de 24 h, ont une signification statistique
+                        plus forte.
+                    </p>
+                    <p>
+                        Ce projet n'adresse pas la variabilité spatiale des tendances
+                        temporelles des précipitations extrêmes en Ontario. L'analyse
+                        regroupe les ensembles de données de toutes les stations afin de
+                        déterminer leur tendance historique collective. Les projections
+                        sont des extrapolations fondées sur les dernières tendances et
+                        supposent que le taux de variation, <img alt="m" src="graphics/database_status/image013.png" style="vertical-align: middle">, reste constant. Cela sert à
+                        deux fins. Pour l'instant, les extrapolations fournissent une
+                        meilleure projection des extrêmes de précipitations futures qu'un
+                        modèle stationnaire. À l'avenir, l'extrapolation servira comme
+                        base pour des prévisions qui intègrent les facteurs
+                        climatologiques et variabilité locale.
+                    </p>
+                    <p>
+                        Pour estimer les paramètres de la population de la fonction de
+                        densité de probabilité, l'analyse a utilisé la méthode des
+                        moments. Pour la validation, ceci a été comparée à une analyse par
+                        la méthode des L-moments. Paramètres comparables ont été générés
+                        par les deux méthodes.
+                    </p>
+                    <p>
+                        Les intensités de précipitations pour 2010 sont dans la marge de
+                        sécurité de calculs antérieurs. Il est prévu que les intensités
+                        projetées dépassera les normes de conception actuelles.
+                        La formule pour les intensités pour des courbe IDF futures,
+                        <img alt="Rt'" src="graphics/database_status/image014.png" style="vertical-align: middle">,
+                        pour l'année
+                        <img alt="t' > 2010" src="graphics/database_status/image015.png" style="vertical-align: middle">
+                        utilise l'équation suivante :
+                    </p>
+                </div>
+                <p style="text-align: center">
+                    <img alt="R(t')=A_2010*tau^B+m*(t'-2010)" src="graphics/database_status/image016.png" style="vertical-align: middle">
+                </p>
+            </div>
+            <div class="page_section">
+                <div class="en-CA">
+                    <h2>Prediction Bounds</h2>
+                    <p>
+                        With the introduction of time trends, it is necessary to
+                        incorporate a new margin of safety. With the seven independent
+                        variables, multiple linear regressions can be performed as
+                        shown in the equation below.
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <h2>Limites de prédiction</h2>
+                    <p>
+                        Avec l'introduction des tendances temporelles, il est nécessaire
+                        d'incorporer une nouvelle marge de sécurité. Avec les sept
+                        variables indépendantes, des régressions linéaires peuvent être
+                        effectuées comme indiqué dans l'équation ci-dessous.
+                    </p>
+                </div>
+                <p style="text-align: center">
+                    <img alt="Y=(X)(beta)+e" src="graphics/database_status/image017.png" style="vertical-align: middle">
+                </p>
+                <div class="en-CA">
+                    <p>
+                        in which,
+                        <img alt="Y" src="graphics/database_status/image018.png" style="vertical-align: middle">
+                        is the natural log of
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        parameters generated from the regression analysis,
+                        <img alt="X" src="graphics/database_status/image019.png" style="vertical-align: middle">
+                        is the matrix of the independent physiographic characteristics,
+                        <img alt="beta" src="graphics/database_status/image020.png" style="vertical-align: middle">
+                        is the partial regression coefficient vector, and lastly
+                        <img alt="e" src="graphics/database_status/image021.png" style="vertical-align: middle">
+                        is the error vector from the analysis.
+                    </p>
+                    <p>
+                        With least squares fit,
+                        <img alt="beta" src="graphics/database_status/image020.png" style="vertical-align: middle">
+                        is found with:
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <p>
+                        dans laquelle,
+                        <img alt="Y" src="graphics/database_status/image018.png" style="vertical-align: middle">
+                        est le logarithme naturel des paramètres
+                        <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                        provenant de l'analyse de régression,
+                        <img alt="X" src="graphics/database_status/image019.png" style="vertical-align: middle">
+                        est la matrice des caractéristiques physiographiques indépendants,
+                        <img alt="beta" src="graphics/database_status/image020.png" style="vertical-align: middle">
+                        est le vecteur de coefficient de régression partielle et
+                        <img alt="e" src="graphics/database_status/image021.png" style="vertical-align: middle">
+                        est le vecteur d'erreur de l'analyse.
+                    </p>
+                    <p>
+                        <img alt="beta" src="graphics/database_status/image020.png" style="vertical-align: middle">
+                        est trouvée avec la méthode des moindres carrés :
+                    </p>
+                </div>
+                <p style="text-align: center">
+                    <img alt="beta=((X^T)(X))^-1(X^T)Y" src="graphics/database_status/image022.png" style="vertical-align: middle">
+                </p>
+                <p class="en-CA">
+                    The mean square error is found with:
+                </p>
+                <p class="fr-CA" style="display: none">
+                    L'erreur quadratique moyenne est trouvée par :
+                </p>
+                <p style="text-align: center">
+                    <img alt="MS_RES=(e^T)(e)/(n-p)" src="graphics/database_status/image023.png" style="vertical-align: middle">
+                </p>
+                <p class="en-CA">
+                    in which,
+                    <img alt="n" src="graphics/database_status/image024.png" style="vertical-align: middle">
+                    is the number of observations in the sample and
+                    <img alt="p" src="graphics/database_status/image025.png" style="vertical-align: middle">
+                    is one plus the number of regression coefficients.
+                </p>
+                <p class="fr-CA" style="display: none">
+                    dans laquelle,
+                    <img alt="n" src="graphics/database_status/image024.png" style="vertical-align: middle">
+                    est le nombre d’observations dans l’échantillon et
+                    <img alt="p" src="graphics/database_status/image025.png" style="vertical-align: middle">
+                    est un plus le nombre de coefficients de régression.
+                </p>
+                <p class="en-CA">
+                    The normalized error,
+                    <img alt="e" src="graphics/database_status/image026.png" style="vertical-align: middle">, for the mean response is derived with the following formulas:
+                </p>
+                <p class="fr-CA" style="display: none">
+                    L'erreur normalisée,
+                    <img alt="e" src="graphics/database_status/image026.png" style="vertical-align: middle">, pour la réponse moyenne se calcule avec les formules suivantes :
+                </p>
+                <p style="text-align: center">
+                    <img alt="e1=SE_1*sqrt(1+1/(n_1-p_1))" src="graphics/database_status/image027.png" style="vertical-align: middle">
+                </p>
+                <p style="text-align: center">
+                    <img alt="e2=m*SE_2*sqrt(1+(1/n_2)*(1+(2010-t_bar)^2/t_var))" src="graphics/database_status/image028.png" style="vertical-align: middle">
+                </p>
+                <p style="text-align: center">
+                    <img alt="e=1/A_2010*sqrt((e1^2+e2^2)/2)" src="graphics/database_status/image029.png" style="vertical-align: middle">
+                </p>
+                <p>
+                    <span class="en-CA">in which</span><span class="fr-CA" style="display: none">dans laquelle</span>,
+                    <img alt="SE_1" src="graphics/database_status/image030.png" style="vertical-align: middle">
+                    <span class="en-CA">is the root-mean-square deviation of the residuals from the regression of
+                    <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                    parameters against physiographic characteristics</span><span class="fr-CA" style="display: none">est l'écart quadratique moyenne des résidus de la régression des paramètres
+                    <img alt="A" src="graphics/database_status/image011.png" style="vertical-align: middle">
+                    contre les caractéristiques physiographiques</span>,
+                    <img alt="SE_2" src="graphics/database_status/image031.png" style="vertical-align: middle">
+                    <span class="en-CA">is the rate of change of the rainfall rate per year</span><span class="fr-CA" style="display: none">est le taux de variation des précipitations par année</span>,
+                    <span class="en-CA">and</span><span class="fr-CA" style="display: none">et</span>
+                    <img alt="t-bar" src="graphics/database_status/image032.png" style="vertical-align: middle">
+                    <span class="en-CA">is the mean calendar year in the dataset for each storm duration</span><span class="fr-CA" style="display: none">est l’année de calendrier moyenne d'enregistrements pour chaque durée de tempête</span>.
+                </p>
+                <p class="en-CA">
+                    The formula for the minimum and maximum intensities to
+                    form the confidence interval for the curve uses the following equation:
+                </p>
+                <p class="fr-CA" style="display: none">
+                    La formule pour les intensités minimales et maximales pour former
+                    l’intervalle de confiance pour la courbe utilise l’équation suivante :
+                </p>
+                <p style="text-align: center">
+                    <img alt="R(t)=R(t)*(1[+/-]1.96*e)" src="graphics/database_status/image033.png" style="vertical-align: middle">
+                </p>
+            </div>
+
+            <!--Acknowledgements-->
+            <div class="page_section">
+                <div class="en-CA">
+                    <h2>Acknowledgements</h2>
+                    <h4>Dr. Ric Soulis, P. Eng.<br>
+                        Project Science Manager
+                    </h4>
+                    <p>
+                        The approach used in developing the interpolation technique for
+                        this tool for Ontario was conceived by the late Dr. S.I. Solomon,
+                        a pioneer of distributed hydrologic modelling in Canada, of the
+                        University of Waterloo, Department of Civil and Environmental Engineering.
+                    </p>
+                    <p>
+                        IDF curves from Environment Canada constitute the base data for
+                        the interpolation process. These were prepared by Dr. William Hogg
+                        and his staff, including Robert Norris and Joan Klaassen, of the
+                        Meteorological Service of Canada, who continued the work after
+                        Dr. Hogg's retirement.
+                    </p>
+                </div>
+                <div class="fr-CA" style="display: none">
+                    <h2>Remerciements</h2>
+                    <h4>Dr. Ric Soulis, P. Eng.<br>
+                        Chef de projet scientifique</h4>
+                    <p>
+                        L'approche utilisée dans le développement de la technique
+                        d'interpolation des courbes IDF dans cet outil pour l'Ontario a
+                        été conçu par Dr S.I. Solomon, un pionnier de la modélisation
+                        distribuée hydrologique au Canada, de le département de
+                        génie civil et environnemental à l'Université de Waterloo.
+                    </p>
+                    <p>
+                        Des courbes IDF d'Environnement Canada constituent les données
+                        de base pour le processus d'interpolation. Ceux-ci ont été
+                        préparés par Dr William Hogg et son équipe au Service
+                        météorologique du Canada, y compris Bob Norris et Joan Klaassen,
+                        qui ont continué au projet après la retraite de Dr Hogg.
+                    </p>
+                </div>
+            </div>
+
+            <!--Personnel-->
+            <div class="page_section">
+                <h3>
+                    <span class="en-CA">Project Team</span><span class="fr-CA" style="display: none">Personnel</span>
+                </h3>
+                <h4>
+                    <span class="en-CA">Ministry of Transportation (MTO)</span><span class="fr-CA" style="display: none">Ministère des Transports de l'Ontario (MTO)</span>
+                </h4>
+                <p>
+                    <span class="en-CA">Project Manager</span><span class="fr-CA" style="display: none">Directeur de projet</span> - Dr. Hani Farghaly, P. Eng., <span class="en-CA">Design and Contract Standards, St. Catharines</span><span class="fr-CA" style="display: none">Bureau de la conception des normes de contrats, St. Catharines</span><br>
+                    <span class="en-CA">Project Engineer</span><span class="fr-CA" style="display: none">Ingénieur de projet</span> - Muhammad Naeem, P. Eng., <span class="en-CA">Design and Contract Standards, St. Catharines</span><span class="fr-CA" style="display: none">Bureau de la conception des normes de contrats, St. Catharines</span>
+                </p>
+                <h4>
+                    <span class="en-CA">University of Waterloo</span><span class="fr-CA" style="display: none">L'Université de Waterloo</span>
+                </h4>
+                <p>
+                    <span class="en-CA">Project Science Manager</span><span class="fr-CA" style="display: none">Chef de projet scientifique</span> - Dr. Ric Soulis, P. Eng.<br>
+                    <span class="en-CA">Web Interface Design and Construction</span><span class="fr-CA" style="display: none">Conception du site Web et de la construction</span> - Daniel G. Princz, <span class="en-CA">Graduate Student</span><span class="fr-CA" style="display: none">étudiant diplômé</span><br>
+                    <span class="en-CA">Database Construction</span><span class="fr-CA" style="display: none">Construction de la base de données</span> - Dr. Frank Seglenieks, <span class="en-CA">Environment Canada, Burlington</span><span class="fr-CA" style="display: none">Environnement Canada, Burlington</span><br>
+                    <span class="en-CA">Graduate Student</span><span class="fr-CA" style="display: none">Étudiant diplômé</span> - John (Chon In) Wong<br>
+                    <span class="en-CA">Co-op Students</span><span class="fr-CA" style="display: none">Étudiants coopératives</span> - Jenn Hale, Kaitlyn McIntyre, Setareh Memarian, Daniel Oh, Benjamin Postma, Megh Suthar, Mateusz Tinel, Milos Vojvodic, and Claire Park
+                </p>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="section_padding">
+            
+<div class="page_section_separated" style="text-align: left">
+    <div id="site_links">
+
+        <span class="en-CA">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/english/">
+                Ontario Ministry of Transportation
+            </a>
+        </span>
+
+        <span class="fr-CA" style="display: none">
+            <a class="mto_link" href="http://www.mto.gov.on.ca/french/">
+                Ministère des Transports de l&#39;Ontario
+            </a>
+        </span> |
+
+        <a id="mtoSiteTerms" href="terms.shtml">
+            <span class="en-CA">Terms and Conditions</span>
+            <span class="fr-CA" style="display: none">Conditions d&#39;utilisation</span>
+        </a> |
+
+        <a id="mtoSiteMapAquisition" href="map_acquisition.shtml">
+            Map
+        </a>
+
+        <a id="mtoSiteStatus" href="database_status.shtml">
+            <span class="en-CA">About</span>
+            <span class="fr-CA" style="display: none">Sur</span>
+        </a>
+
+        <br>
+
+        <!-- Accessibility statement -->
+        <span class="en-CA">
+            As outlined in the 
+            <a href="https://www.ontario.ca/page/accessible-customer-service-policy">
+                OPS Accessible Customer Service Policy
+            </a>, we are committed to providing accessible customer service. On request, we can arrange for accessible formats and communications supports. Please 
+            <a href="https://www.ontario.ca/feedback/contact-us?id=52785&nid=36275">
+                contact us
+            </a>.
+        </span>
+
+        <br>
+
+        <a id="mtoSiteResultsOut" href="results_out.shtml">Results</a>
+        <a id="mtoSiteExit" href="exit.shtml">Exit</a>
+
+        <span class="en-CA">Last Modified: May 2026</span>
+        <span class="fr-CA" style="display: none">
+            Dernière modification : May 2026
+        </span>
+
+    </div>
+</div>
+
+        </div>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,534 @@
+{
+ "access_instructions": {
+  "en": "",
+  "fr": ""
+ },
+ "access_level": "open",
+ "asset_type": "dataset",
+ "author": "Planning Policy Branch",
+ "author_email": "",
+ "creator_user_id": "59c3cd38-5181-4750-8184-3c3f13385fb9",
+ "current_as_of": "2025-12-15",
+ "exemption": "none",
+ "exemption_rationale": {
+  "en": "",
+  "fr": ""
+ },
+ "geographic_coverage_translated": {
+  "en": "Ontario",
+  "fr": "Ontario"
+ },
+ "geographic_granularity": "municipality",
+ "id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+ "isopen": false,
+ "keywords": {
+  "en": [
+   "Housing",
+   "Housing supply",
+   "Construction starts",
+   "Housing starts",
+   "Municipal housing targets",
+   "Housing Supply Action Plan"
+  ],
+  "fr": [
+   "Habitations",
+   "Offre de logements",
+   "Statistiques de construction",
+   "Mises en chantier",
+   "Objectifs des municipalités en matière de logement",
+   "Plan d’action pour l’offre de logements"
+  ]
+ },
+ "license_id": "OGL-ON-1.0",
+ "license_title": "Open Government Licence – Ontario",
+ "license_url": "https://www.ontario.ca/page/open-government-licence-ontario",
+ "maintainer": null,
+ "maintainer_branch": {
+  "en": " Municipal Programs & Analytics Branch",
+  "fr": "Direction des programmes et de l’analytique"
+ },
+ "maintainer_email": "mininfo@ontario.ca",
+ "maintainer_translated": {
+  "en": "Planning Policy Branch",
+  "fr": "Direction des politiques d’aménagement"
+ },
+ "metadata_created": "2023-08-15T14:38:53.417392",
+ "metadata_modified": "2025-12-15T16:34:10.968721",
+ "name": "ontario-s-housing-supply-progress",
+ "notes": "This data shows how many new homes have been started towards municipal housing targets. \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions Survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). However, over a two-year period, statistics across both organizations will align. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+ "notes_translated": {
+  "en": "This data shows how many new homes have been started towards municipal housing targets. \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions Survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). However, over a two-year period, statistics across both organizations will align. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+  "fr": "Ces données montrent combien de mises en chantier de logements neufs ont débuté pour atteindre les cibles municipales en matière de logements. \r\n\r\nLes données de 2023 et 2024 ont été examinées en 2024 et en 2025. Les données publiées ici reflètent les rajustements postérieurs à l’examen et elles pourraient ne pas correspondre aux données de la Société canadienne d’hypothèques et de logement publiées dans ses enquêtes de 2023 et 2024 [(enquête sur les mises en chantier et les achèvements)](https://www03.cmhc-schl.gc.ca/hmip-pimh/fr#Profile/1/1/Canada). Toutefois, sur une période de deux ans, les statistiques des deux organisations seront harmonisées. \r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+ },
+ "num_resources": 8,
+ "num_tags": 12,
+ "opened_date": "2023-08-15",
+ "organization": {
+  "id": "f159b631-bfe2-464a-8b4e-802a34dcf243",
+  "name": "municipal-affairs-and-housing",
+  "title": "Municipal Affairs and Housing",
+  "type": "organization",
+  "description": "Working with local governments and partners across Ontario to build safe and strong urban and rural communities with dynamic local economies, a high quality of life and affordable and suitable homes for everyone.",
+  "image_url": "2020-03-19-203416.164996housing.jpg",
+  "created": "2019-12-31T08:54:07.872402",
+  "is_organization": true,
+  "approval_status": "approved",
+  "state": "active"
+ },
+ "owner_org": "f159b631-bfe2-464a-8b4e-802a34dcf243",
+ "private": false,
+ "state": "active",
+ "title": "Ontario’s housing supply progress",
+ "title_translated": {
+  "en": "Ontario’s housing supply progress",
+  "fr": "Progrès réalisés par l’Ontario pour l’offre de logements"
+ },
+ "type": "dataset",
+ "update_frequency": "monthly",
+ "url": "https://www03.cmhc-schl.gc.ca/hmip-pimh/#Profile/35/2/Ontario ",
+ "version": null,
+ "resources": [
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2024-12-02T22:16:25.230520",
+   "data_last_updated": "2025-12-15",
+   "data_range_end": "2024-12-31",
+   "data_range_start": "2024-01-01",
+   "datastore_active": true,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "This data shows how many new homes have been started towards municipal housing targets. \r\n\r\nIncluded:\r\n\r\n* municipality\r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress, comprised of:\r\nhousing starts \r\n    * additional residential units\r\n    * long-term care beds\r\n    * postsecondary student beds (new as of 2024) \r\n    * licensed congregate retirement home suites (new as of 2024)\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This data shows how many new homes have been started towards municipal housing targets. \r\n\r\nIncluded:\r\n\r\n* municipality\r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress, comprised of:\r\nhousing starts \r\n    * additional residential units\r\n    * long-term care beds\r\n    * postsecondary student beds (new as of 2024) \r\n    * licensed congregate retirement home suites (new as of 2024)\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ces données montrent combien de mises en chantier de logements neufs ont débuté pour atteindre les cibles municipales en matière de logements. \r\n\r\nIl s’agit notamment :\r\n\r\n* Municipalité;\r\n* Objectifs décennaux en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2024;\r\n* Progrès totaux en matière de logement en 2024, notamment :\r\n     * mises en chantier; \r\n     * unités d’habitation supplémentaires;\r\n     * lits dans les établissements de soins de longue durée;\r\n     * lits pour étudiants de niveau postsecondaire (nouveaux en 2024); \r\n     * logements collectifs agréés pour retraités (nouveaux en 2024).\r\n* Progression en matière de logement, exprimée en pourcentage de l’objectif annuel;\r\n* État cible en matière de logement.\r\n\r\nExemples de logements qui ne sont pas inclus :\r\n\r\n* foyers de groupe;\r\n* logement de transition/avec services de soutien. \r\n\r\nLes données de 2023 et 2024 ont été examinées en 2024 et en 2025. Les données publiées ici reflètent les rajustements postérieurs à l’examen et elles pourraient ne pas correspondre aux données de la Société canadienne d’hypothèques et de logement publiées dans ses enquêtes de 2023 et 2024 [(enquête sur les mises en chantier et les achèvements)](https://www03.cmhc-schl.gc.ca/hmip-pimh/fr#Profile/1/1/Canada). Toutefois, sur une période de deux ans, les statistiques des deux organisations seront harmonisées.\r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "CSV",
+   "hash": "9a1334b174bd754d0ee7f9303538a1db",
+   "id": "3bb04ba5-2445-44e0-9d2c-8a25dd1b18e6",
+   "language": "english",
+   "last_modified": "2025-12-15T16:10:19.401004",
+   "metadata_modified": "2025-12-15T16:28:50.595441",
+   "mimetype": "text/csv",
+   "mimetype_inner": null,
+   "name": "Ontario’s housing supply: January – December 2024",
+   "name_translated": {
+    "en": "Ontario’s housing supply: January – December 2024",
+    "fr": "Progrès de l’offre de logements en Ontario : Janvier à décembre 2024"
+   },
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 0,
+   "publically_available_date": "2023-08-18",
+   "resource_type": null,
+   "schema": "",
+   "size": 2600,
+   "state": "active",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/3bb04ba5-2445-44e0-9d2c-8a25dd1b18e6/download/ontarios_housing_supply_-_january_december_2024_-_en.csv",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "success",
+   "validation_timestamp": "2025-12-15T16:18:44.712431"
+  },
+  {
+   "_skip_next_validation": [
+    true
+   ],
+   "cache_last_updated": null,
+   "cache_url": null,
+   "ckan_url": "https://data.ontario.ca",
+   "created": "2024-12-02T22:21:07.747483",
+   "data_last_updated": "2025-12-15",
+   "data_range_end": "2024-12-31",
+   "data_range_start": "2024-01-01",
+   "datastore_active": true,
+   "datastore_contains_all_records_of_source_file": true,
+   "description": "This data shows how many new homes have been started towards municipal housing targets. \r\n\r\nIncluded:\r\n\r\n* municipality\r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress, comprised of:\r\nhousing starts \r\n    * additional residential units\r\n    * long-term care beds\r\n    * postsecondary student beds (new as of 2024) \r\n    * licensed congregate retirement home suites (new as of 2024)\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This data shows how many new homes have been started towards municipal housing targets. \r\n\r\nIncluded:\r\n\r\n* municipality\r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress, comprised of:\r\nhousing starts \r\n    * additional residential units\r\n    * long-term care beds\r\n    * postsecondary student beds (new as of 2024) \r\n    * licensed congregate retirement home suites (new as of 2024)\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ces données montrent combien de mises en chantier de logements neufs ont débuté pour atteindre les cibles municipales en matière de logements. \r\n\r\nIl s’agit notamment :\r\n\r\n* Municipalité;\r\n* Objectifs décennaux en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2024;\r\n* Progrès totaux en matière de logement en 2024, notamment :\r\n     * mises en chantier; \r\n     * unités d’habitation supplémentaires;\r\n     * lits dans les établissements de soins de longue durée;\r\n     * lits pour étudiants de niveau postsecondaire (nouveaux en 2024); \r\n     * logements collectifs agréés pour retraités (nouveaux en 2024).\r\n* Progression en matière de logement, exprimée en pourcentage de l’objectif annuel;\r\n* État cible en matière de logement.\r\n\r\nExemples de logements qui ne sont pas inclus :\r\n\r\n* foyers de groupe;\r\n* logement de transition/avec services de soutien. \r\n\r\nLes données de 2023 et 2024 ont été examinées en 2024 et en 2025. Les données publiées ici reflètent les rajustements postérieurs à l’examen et elles pourraient ne pas correspondre aux données de la Société canadienne d’hypothèques et de logement publiées dans ses enquêtes de 2023 et 2024 [(enquête sur les mises en chantier et les achèvements)](https://www03.cmhc-schl.gc.ca/hmip-pimh/fr#Profile/1/1/Canada). Toutefois, sur une période de deux ans, les statistiques des deux organisations seront harmonisées.\r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "CSV",
+   "hash": "d0c79cd29955d515b69c109bd8fb48f9",
+   "id": "fd74c039-f768-4fc1-95a7-69aa9c6ecf02",
+   "ignore_hash": true,
+   "language": "french",
+   "last_modified": "2025-12-15T16:13:29.051489",
+   "metadata_modified": "2025-12-15T16:13:45.376482",
+   "mimetype": "application/csv",
+   "mimetype_inner": null,
+   "name": "Ontario’s housing supply: January – December 2024",
+   "name_translated": {
+    "en": "Ontario’s housing supply: January – December 2024",
+    "fr": "Progrès de l’offre de logements en Ontario : Janvier à décembre 2024"
+   },
+   "original_url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/fd74c039-f768-4fc1-95a7-69aa9c6ecf02/download/ontarios_housing_supply_-_january_december_2024_-_fr.csv",
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 1,
+   "publically_available_date": "2023-08-18",
+   "resource_id": "fd74c039-f768-4fc1-95a7-69aa9c6ecf02",
+   "resource_type": null,
+   "schema": "",
+   "set_url_type": false,
+   "size": 2870,
+   "state": "active",
+   "task_created": "2025-12-15 16:13:46.128857",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/fd74c039-f768-4fc1-95a7-69aa9c6ecf02/download/ontarios_housing_supply_-_january_december_2024_-_fr.csv",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "success",
+   "validation_timestamp": "2025-12-15T16:13:45.260813"
+  },
+  {
+   "_skip_next_validation": [
+    true
+   ],
+   "cache_last_updated": null,
+   "cache_url": null,
+   "ckan_url": "https://data.ontario.ca",
+   "created": "2024-12-10T14:34:12.329712",
+   "data_last_updated": "2025-12-15",
+   "data_range_end": "2023-12-31",
+   "data_range_start": "2023-01-01",
+   "datastore_active": true,
+   "datastore_contains_all_records_of_source_file": true,
+   "description": "This data shows how many new homes have been started towards municipal housing targets.\r\n\r\nIncluded:\r\n\r\n* municipality \r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress, comprised of:\r\n     * housing starts\r\n     * additional residential units \r\n     * long-term care beds\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* postsecondary student beds \r\n* licensed congregate retirement home suites\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in Summer 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This data shows how many new homes have been started towards municipal housing targets.\r\n\r\nIncluded:\r\n\r\n* municipality \r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress, comprised of:\r\n     * housing starts\r\n     * additional residential units \r\n     * long-term care beds\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* postsecondary student beds \r\n* licensed congregate retirement home suites\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in Summer 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ces données montrent combien de mises en chantier de logements neufs ont débuté pour atteindre les cibles municipales en matière de logements. \r\n\r\nIl s’agit notamment :\r\n\r\n* Municipalité; \r\n* Objectifs décennaux en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2023;\r\n* Progrès totaux en matière de logement en 2023, notamment :\r\n     * mises en chantier;\r\n     * unités d’habitation supplémentaires; \r\n     * lits dans les établissements de soins de longue durée;\r\n* Progression en matière de logement, exprimée en pourcentage de l’objectif annuel;\r\n* État cible en matière de logement.\r\n\r\nExemples de logements qui ne sont pas inclus :\r\n\r\n* lits pour étudiants de niveau postsecondaire; \r\n* appartements dans une maison de retraite collective agréée;\r\n* foyers de groupe;\r\n* logement de transition/avec services de soutien. \r\n\r\nLes données de 2023 et 2024 ont été examinées à en 2024 et en 2025. Les données publiées ici reflètent les rajustements postérieurs à l’examen et elles pourraient ne pas correspondre aux données de la Société canadienne d’hypothèques et de logement publiées dans ses enquêtes de 2023 et 2024 [(enquête sur les mises en chantier et les achèvements)](https://www03.cmhc-schl.gc.ca/hmip-pimh/fr#Profile/1/1/Canada). Toutefois, sur une période de deux ans, les statistiques des deux organisations seront harmonisées.\r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "CSV",
+   "hash": "12dd1f1580c428f7eccb37204b234fe7",
+   "id": "c922b5b4-9850-40c8-b905-afc3aaa347c0",
+   "ignore_hash": true,
+   "language": "english",
+   "last_modified": "2025-12-15T16:26:53.511845",
+   "metadata_modified": "2025-12-15T16:28:50.595623",
+   "mimetype": "application/csv",
+   "mimetype_inner": null,
+   "name": "Ontario’s housing supply progress: January – December 2023",
+   "name_translated": {
+    "en": "Ontario’s housing supply progress: January – December 2023",
+    "fr": "Progrès de l’offre de logements en Ontario : Janvier à décembre 2023"
+   },
+   "original_url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/c922b5b4-9850-40c8-b905-afc3aaa347c0/download/ontarios_housing_supply_-_january_december_2023_-_en.csv",
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 2,
+   "resource_id": "c922b5b4-9850-40c8-b905-afc3aaa347c0",
+   "resource_type": null,
+   "schema": "",
+   "set_url_type": false,
+   "size": 2603,
+   "state": "active",
+   "task_created": "2025-12-15 16:28:51.499088",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/c922b5b4-9850-40c8-b905-afc3aaa347c0/download/ontarios_housing_supply_-_january_december_2023_-_en.csv",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "success",
+   "validation_timestamp": "2025-12-15T16:28:50.446611"
+  },
+  {
+   "_skip_next_validation": [
+    true
+   ],
+   "cache_last_updated": null,
+   "cache_url": null,
+   "ckan_url": "https://data.ontario.ca",
+   "created": "2024-12-09T21:36:09.882824",
+   "data_last_updated": "2025-12-15",
+   "data_range_end": "2023-12-31",
+   "data_range_start": "2023-01-01",
+   "datastore_active": true,
+   "datastore_contains_all_records_of_source_file": true,
+   "description": "This data shows how many new homes have been started towards municipal housing targets.\r\n\r\nIncluded:\r\n\r\n* municipality \r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress, comprised of:\r\n     * housing starts\r\n     * additional residential units \r\n     * long-term care beds\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* postsecondary student beds \r\n* licensed congregate retirement home suites\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This data shows how many new homes have been started towards municipal housing targets.\r\n\r\nIncluded:\r\n\r\n* municipality \r\n* 10-year housing targets (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress, comprised of:\r\n     * housing starts\r\n     * additional residential units \r\n     * long-term care beds\r\n* housing progress expressed as a percentage of the annual target\r\n* housing target status\r\n\r\nExamples of housing that is not included:\r\n\r\n* postsecondary student beds \r\n* licensed congregate retirement home suites\r\n* group homes\r\n* transitional/supportive housing \r\n\r\n2023 and 2024 data were reviewed in 2024 and 2025. Data published here reflect post-review adjustments and may not align with Canada Mortgage and Housing Corporation data as published in its 2023 and 2024 surveys [(Starts and Completions survey)](https://www03.cmhc-schl.gc.ca/hmip-pimh/en#TableMapChart/35/2/Ontario). Over a two-year period, however, statistics across both organizations will align.\r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ces données montrent combien de mises en chantier de logements neufs ont débuté pour atteindre les cibles municipales en matière de logements. \r\n\r\nIl s’agit notamment :\r\n\r\n* Municipalité; \r\n* Objectifs décennaux en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2023;\r\n* Progrès totaux en matière de logement en 2023, notamment :\r\n     * mises en chantier;\r\n     * unités d’habitation supplémentaires; \r\n     * lits dans les établissements de soins de longue durée;\r\n* Progression en matière de logement, exprimée en pourcentage de l’objectif annuel;\r\n* État cible en matière de logement.\r\n\r\nExemples de logements qui ne sont pas inclus :\r\n\r\n* lits pour étudiants de niveau postsecondaire; \r\n* appartements dans une maison de retraite collective agréée;\r\n* foyers de groupe;\r\n* logement de transition/avec services de soutien. \r\n\r\nLes données de 2023 et 2024 ont été examinées à en 2024 et en 2025. Les données publiées ici reflètent les rajustements postérieurs à l’examen et elles pourraient ne pas correspondre aux données de la Société canadienne d’hypothèques et de logement publiées dans ses enquêtes de 2023 et 2024 [(enquête sur les mises en chantier et les achèvements)](https://www03.cmhc-schl.gc.ca/hmip-pimh/fr#Profile/1/1/Canada). Toutefois, sur une période de deux ans, les statistiques des deux organisations seront harmonisées.\r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "CSV",
+   "hash": "34c6edae4b67a4811bfb11be0653d726",
+   "id": "8f7163d7-535c-4780-8a12-fb75965fc0d1",
+   "ignore_hash": true,
+   "language": "french",
+   "last_modified": "2025-12-15T16:31:10.587394",
+   "metadata_modified": "2025-12-15T16:31:20.750460",
+   "mimetype": "application/csv",
+   "mimetype_inner": null,
+   "name": "Ontario’s housing supply progress: January – December 2023",
+   "name_translated": {
+    "en": "Ontario’s housing supply progress: January – December 2023",
+    "fr": "Progrès de l’offre de logements en Ontario : Janvier à décembre 2023"
+   },
+   "original_url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/8f7163d7-535c-4780-8a12-fb75965fc0d1/download/ontarios_housing_supply_-_january_december_2023_-_fr.csv",
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 3,
+   "resource_id": "8f7163d7-535c-4780-8a12-fb75965fc0d1",
+   "resource_type": null,
+   "schema": "",
+   "set_url_type": false,
+   "size": 2853,
+   "state": "active",
+   "task_created": "2025-12-15 16:31:21.554540",
+   "type": "data",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/8f7163d7-535c-4780-8a12-fb75965fc0d1/download/ontarios_housing_supply_-_january_december_2023_-_fr.csv",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "success",
+   "validation_timestamp": "2025-12-15T16:31:20.612850"
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2025-08-08T14:46:29.516334",
+   "data_last_updated": "2025-08-08",
+   "data_range_end": "2024-12-31",
+   "data_range_start": "2024-01-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2024 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/3bb04ba5-2445-44e0-9d2c-8a25dd1b18e6). \r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n     * licensed congregate retirement home suites \r\n     * postsecondary student beds\r\n* progress % for 2024\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2024 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/3bb04ba5-2445-44e0-9d2c-8a25dd1b18e6). \r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n     * licensed congregate retirement home suites \r\n     * postsecondary student beds\r\n* progress % for 2024\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ce dictionnaire fournit des renseignements sur le nombre de logements neufs qui ont été mis en chantier pour atteindre les cibles municipales en matière de logement, comme l’indique le rapport [Progrès 2024](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/4bedcbd1-6d14-49e8-a7aa-e7c7b0c387ed). \r\n\r\nLes définitions suivantes sont incluses :\r\n\r\n* Municipalité;\r\n* Objectif décennal en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2024;\r\n* Progrès totaux en matière de logement en 2024 :\r\n    * mises en chantier; \r\n    * unités d’habitation supplémentaires; \r\n    * lits dans les établissements de soins de longue durée;\r\n    * appartements dans une maison de retraite collective agréée; \r\n    * lits pour étudiants de niveau postsecondaire.\r\n* Pourcentage de progrès pour 2024;\r\n* État cible en matière de logement.\r\n\r\nVeuillez noter qu’en raison des changements apportés aux ensembles de données comptabilisés dans les progrès d’une année à l’autre, ce dictionnaire de données peut différer des autres années. \r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "DOCX",
+   "hash": "",
+   "id": "8fd4f685-cc33-4587-90c5-80445a296a93",
+   "language": "english",
+   "last_modified": "2025-08-08T14:46:29.342376",
+   "metadata_modified": "2025-08-08T14:54:14.203626",
+   "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+   "mimetype_inner": null,
+   "name": "2024 Data dictionary",
+   "name_translated": {
+    "en": "2024 Data dictionary",
+    "fr": "Dictionnaire de données 2024"
+   },
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 4,
+   "publically_available_date": "2025-08-08",
+   "resource_type": null,
+   "schema": "",
+   "size": 34223,
+   "state": "active",
+   "type": "data_dictionary",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/8fd4f685-cc33-4587-90c5-80445a296a93/download/10._2024_data_dictionary_clean_3_en.docx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2025-08-08T14:48:14.125280",
+   "data_last_updated": "2025-08-08",
+   "data_range_end": "2024-12-31",
+   "data_range_start": "2024-01-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2024 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/3bb04ba5-2445-44e0-9d2c-8a25dd1b18e6). \r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n     * licensed congregate retirement home suites \r\n     * postsecondary student beds\r\n* progress % for 2024\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2024 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/3bb04ba5-2445-44e0-9d2c-8a25dd1b18e6). \r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2024\r\n* total 2024 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n     * licensed congregate retirement home suites \r\n     * postsecondary student beds\r\n* progress % for 2024\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ce dictionnaire fournit des renseignements sur le nombre de logements neufs qui ont été mis en chantier pour atteindre les cibles municipales en matière de logement, comme l’indique le rapport [Progrès 2024](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/4bedcbd1-6d14-49e8-a7aa-e7c7b0c387ed). \r\n\r\nLes définitions suivantes sont incluses :\r\n\r\n* Municipalité;\r\n* Objectif décennal en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2024;\r\n* Progrès totaux en matière de logement en 2024 :\r\n    * mises en chantier; \r\n    * unités d’habitation supplémentaires; \r\n    * lits dans les établissements de soins de longue durée;\r\n    * appartements dans une maison de retraite collective agréée; \r\n    * lits pour étudiants de niveau postsecondaire.\r\n* Pourcentage de progrès pour 2024;\r\n* État cible en matière de logement.\r\n\r\nVeuillez noter qu’en raison des changements apportés aux ensembles de données comptabilisés dans les progrès d’une année à l’autre, ce dictionnaire de données peut différer des autres années. \r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "DOCX",
+   "hash": "",
+   "id": "4bedcbd1-6d14-49e8-a7aa-e7c7b0c387ed",
+   "language": "french",
+   "last_modified": "2025-08-08T14:48:13.944822",
+   "metadata_modified": "2025-08-08T14:54:52.175937",
+   "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+   "mimetype_inner": null,
+   "name": "2024 Data dictionary",
+   "name_translated": {
+    "en": "2024 Data dictionary",
+    "fr": "Dictionnaire de données 2024"
+   },
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 5,
+   "publically_available_date": "2025-08-08",
+   "resource_type": null,
+   "schema": "",
+   "size": 42013,
+   "state": "active",
+   "type": "data_dictionary",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/4bedcbd1-6d14-49e8-a7aa-e7c7b0c387ed/download/10._2024_data_dictionary_clean_3_final_fr.docx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2025-08-08T14:39:57.666394",
+   "data_last_updated": "2025-08-08",
+   "data_range_end": "2023-12-31",
+   "data_range_start": "2023-01-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2023 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/c922b5b4-9850-40c8-b905-afc3aaa347c0).\r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n* progress % for 2023\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2023 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/c922b5b4-9850-40c8-b905-afc3aaa347c0).\r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n* progress % for 2023\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ce dictionnaire fournit des renseignements sur le nombre de logements neufs qui ont été mis en chantier pour atteindre les cibles municipales en matière de logement, comme l’indique le rapport [Progrès 2023](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/8f7163d7-535c-4780-8a12-fb75965fc0d1).\r\n\r\nLes définitions suivantes sont incluses :\r\n\r\n* Municipalité;\r\n* Objectif décennal en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2023;\r\n* Progrès totaux en matière de logement en 2023 :\r\n     * mises en chantier; \r\n     * unités d’habitation supplémentaires; \r\n     * lits dans les établissements de soins de longue durée;\r\n* Pourcentage de progrès pour 2023;\r\n* État cible en matière de logement.\r\n\r\nVeuillez noter qu’en raison des changements apportés aux ensembles de données comptabilisés dans les progrès d’une année à l’autre, ce dictionnaire de données peut différer des autres années. \r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "DOCX",
+   "hash": "",
+   "id": "17c108b6-71dd-40c2-b748-022b6bad8c2c",
+   "language": "english",
+   "last_modified": "2025-08-08T14:39:57.536010",
+   "metadata_modified": "2025-08-08T14:52:00.026084",
+   "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+   "mimetype_inner": null,
+   "name": "2023 Data dictionary",
+   "name_translated": {
+    "en": "2023 Data dictionary",
+    "fr": "Dictionnaire de données 2023"
+   },
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 6,
+   "publically_available_date": "2025-08-08",
+   "resource_type": null,
+   "schema": "",
+   "size": 34713,
+   "state": "active",
+   "type": "data_dictionary",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/17c108b6-71dd-40c2-b748-022b6bad8c2c/download/8._2023_data_dictionary_clean_3_en.docx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  },
+  {
+   "cache_last_updated": null,
+   "cache_url": null,
+   "created": "2025-08-08T14:41:39.275879",
+   "data_last_updated": "2025-08-08",
+   "data_range_end": "2023-12-31",
+   "data_range_start": "2023-01-01",
+   "datastore_active": false,
+   "datastore_contains_all_records_of_source_file": false,
+   "description": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2023 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/c922b5b4-9850-40c8-b905-afc3aaa347c0).\r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n* progress % for 2023\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+   "description_translated": {
+    "en": "This dictionary provides information on how many new homes have been started towards municipal housing targets, as shown in the [2023 Progress](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/c922b5b4-9850-40c8-b905-afc3aaa347c0).\r\n\r\nThe following definitions are included:\r\n\r\n* municipality\r\n* 10-year housing target (2022-2031)\r\n* total housing progress since 2022\r\n* target for 2023\r\n* total 2023 housing progress\r\n     * housing starts \r\n     * additional residential units \r\n     * long-term care beds\r\n* progress % for 2023\r\n* housing target status\r\n\r\nPlease note that due to changes in datasets counted toward progress from year to year, this data dictionary may differ from other years. \r\n\r\nLearn more about [Ontario’s progress to build more homes faster.](https://www.ontario.ca/page/building-more-homes)",
+    "fr": "Ce dictionnaire fournit des renseignements sur le nombre de logements neufs qui ont été mis en chantier pour atteindre les cibles municipales en matière de logement, comme l’indique le rapport [Progrès 2023](https://data.ontario.ca/en/dataset/ontario-s-housing-supply-progress/resource/8f7163d7-535c-4780-8a12-fb75965fc0d1).\r\n\r\nLes définitions suivantes sont incluses :\r\n\r\n* Municipalité;\r\n* Objectif décennal en matière de logement (2022-2031);\r\n* Progrès totaux en matière de logement depuis 2022;\r\n* Objectif pour 2023;\r\n* Progrès totaux en matière de logement en 2023 :\r\n     * mises en chantier; \r\n     * unités d’habitation supplémentaires; \r\n     * lits dans les établissements de soins de longue durée;\r\n* Pourcentage de progrès pour 2023;\r\n* État cible en matière de logement.\r\n\r\nVeuillez noter qu’en raison des changements apportés aux ensembles de données comptabilisés dans les progrès d’une année à l’autre, ce dictionnaire de données peut différer des autres années. \r\n\r\nApprenez-en davantage sur les [progrès réalisés par l’Ontario pour construire plus de maisons, plus rapidement.](https://www.ontario.ca/fr/page/construction-de-plus-de-logements)"
+   },
+   "format": "DOCX",
+   "hash": "",
+   "id": "f5460fd7-d11f-47f5-9a19-f9d1c05c8aea",
+   "language": "french",
+   "last_modified": "2025-08-08T14:41:39.128808",
+   "metadata_modified": "2025-08-08T14:53:09.033193",
+   "mimetype": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+   "mimetype_inner": null,
+   "name": "2023 Data dictionary",
+   "name_translated": {
+    "en": "2023 Data dictionary",
+    "fr": "Dictionnaire de données 2023"
+   },
+   "package_id": "77ac513f-a65a-4cf0-b889-31be6ddb6f46",
+   "position": 7,
+   "publically_available_date": "2025-08-08",
+   "resource_type": null,
+   "schema": "",
+   "size": 41896,
+   "state": "active",
+   "type": "data_dictionary",
+   "url": "https://data.ontario.ca/dataset/77ac513f-a65a-4cf0-b889-31be6ddb6f46/resource/f5460fd7-d11f-47f5-9a19-f9d1c05c8aea/download/8._2023_data_dictionary_clean_3_final_fr.docx",
+   "url_type": "upload",
+   "validation_options": "",
+   "validation_status": "",
+   "validation_timestamp": ""
+  }
+ ],
+ "tags": [
+  {
+   "display_name": "Construction starts",
+   "id": "25460672-a1ea-40f4-9bae-39c2e1107c50",
+   "name": "Construction starts",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Habitations",
+   "id": "81341015-d3d8-4666-9006-bcf76c5d7fda",
+   "name": "Habitations",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Housing",
+   "id": "1d407666-e009-4c37-a286-2d5823320afd",
+   "name": "Housing",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Housing Supply Action Plan",
+   "id": "df82f7e9-23ac-41b8-814f-e853769c913a",
+   "name": "Housing Supply Action Plan",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Housing starts",
+   "id": "edc9a42b-cd02-41d2-9846-532f6f6c711d",
+   "name": "Housing starts",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Housing supply",
+   "id": "fb9cca4e-e05f-42d2-844d-3ae363a47f28",
+   "name": "Housing supply",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Mises en chantier",
+   "id": "a99eb2e3-a285-4354-a2b5-65c292d5e663",
+   "name": "Mises en chantier",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Municipal housing targets",
+   "id": "4ed78bdf-9953-4086-9b5b-abc1a035626e",
+   "name": "Municipal housing targets",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Objectifs des municipalités en matière de logement",
+   "id": "c6a0b52c-0f00-4612-ba4e-bcbc300a15ef",
+   "name": "Objectifs des municipalités en matière de logement",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Offre de logements",
+   "id": "85f476a1-030f-4571-b444-321a7a34a391",
+   "name": "Offre de logements",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Plan d’action pour l’offre de logements",
+   "id": "862e1dc2-72ec-4c6c-8e5f-9c8c8288a3a5",
+   "name": "Plan d’action pour l’offre de logements",
+   "state": "active",
+   "vocabulary_id": null
+  },
+  {
+   "display_name": "Statistiques de construction",
+   "id": "d6f9deda-d10c-49b1-8d58-e1637a206f9d",
+   "name": "Statistiques de construction",
+   "state": "active",
+   "vocabulary_id": null
+  }
+ ],
+ "groups": [],
+ "relationships_as_subject": [],
+ "relationships_as_object": []
+}

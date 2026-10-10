@@ -1,0 +1,91 @@
+﻿"Cube Title","Product Id","CANSIM Id",URL,"Cube Notes","Archive Status",Frequency,"Start Reference Period","End Reference Period","Total number of dimensions"
+"Canada Mortgage and Housing Corporation, housing starts in all centres 10,000 and over, Canada, provinces, and census metropolitan areas, seasonally adjusted at annual rates, monthly","34100156","027-0051","https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410015601",1;2;3,"CURRENT - a cube available to the public and that is current","Monthly","1990-01-01","2026-08-01","2",
+
+"Dimension ID","Dimension name","Dimension Notes","Dimension Definitions"
+"1","Geography",,""
+"2","Type of unit",,""
+
+"Dimension ID","Member Name","Classification Code","Member ID","Parent Member ID",Terminated,"Member Notes","Member Definitions"
+"1","Canada","[11124]","1","","",,
+"1","Atlantic provinces","[1]","2","1","",,
+"1","Newfoundland and Labrador","[10]","3","2","",,
+"1","St. John's, Newfoundland and Labrador","[001]","17","3","",,
+"1","Prince Edward Island","[11]","4","2","",,
+"1","Nova Scotia","[12]","5","2","",,
+"1","Halifax, Nova Scotia","[205]","18","5","",,
+"1","New Brunswick","[13]","6","2","",,
+"1","Moncton, New Brunswick","[305]","19","6","",,
+"1","Saint John, New Brunswick","[310]","20","6","",,
+"1","Quebec","[24]","7","1","",,
+"1","Montréal, Quebec","[462]","8","7","",,
+"1","Ottawa-Gatineau, Quebec part, Quebec","[24505]","21","7","",,
+"1","Québec, Quebec","[421]","22","7","",,
+"1","Saguenay, Quebec","[408]","23","7","",,
+"1","Sherbrooke, Quebec","[433]","24","7","",,
+"1","Trois-Rivières, Quebec","[442]","25","7","",,
+"1","Ontario","[35]","9","1","",,
+"1","Barrie, Ontario","[568]","26","9","",,
+"1","Brantford, Ontario","[543]","27","9","",,
+"1","Greater Sudbury, Ontario","[580]","28","9","",,
+"1","Guelph, Ontario","[550]","29","9","",,
+"1","Hamilton, Ontario","[537]","30","9","",,
+"1","Kingston, Ontario","[521]","31","9","",,
+"1","Kitchener-Cambridge-Waterloo, Ontario","[541]","32","9","",,
+"1","London, Ontario","[555]","33","9","",,
+"1","Oshawa, Ontario","[532]","34","9","",,
+"1","Ottawa-Gatineau, Ontario part, Ontario","[35505]","35","9","",,
+"1","Peterborough, Ontario","[529]","36","9","",,
+"1","St. Catharines-Niagara, Ontario","[539]","37","9","",,
+"1","Thunder Bay, Ontario","[595]","38","9","",,
+"1","Toronto, Ontario","[535]","10","9","",,
+"1","Windsor, Ontario","[559]","39","9","",,
+"1","Prairie provinces","[4]","11","1","",,
+"1","Manitoba","[46]","12","11","",,
+"1","Winnipeg, Manitoba","[602]","40","12","",,
+"1","Saskatchewan","[47]","13","11","",,
+"1","Regina, Saskatchewan","[705]","41","13","",,
+"1","Saskatoon, Saskatchewan","[725]","42","13","",,
+"1","Alberta","[48]","14","11","",,
+"1","Calgary, Alberta","[825]","43","14","",,
+"1","Edmonton, Alberta","[835]","44","14","",,
+"1","British Columbia","[59]","15","1","",,
+"1","Abbotsford-Mission, British Columbia","[932]","45","15","",,
+"1","Kelowna, British Columbia","[915]","46","15","",,
+"1","Vancouver, British Columbia","[933]","16","15","",,
+"1","Victoria, British Columbia","[935]","47","15","",,
+"2","Total units","","1","","",,
+"2","Single-detached units","","2","1","",,
+"2","Multiples","","3","1","",,
+"2","Semi-detached units","","4","3","",,
+"2","Row units","","5","3","",,
+"2","Apartment and other unit types","","6","3","",,
+
+Symbol Legend
+Description,Symbol
+"not available for a specific reference period","..",
+"less than the limit of detection","<LOD",
+"value rounded to 0 (zero) where there is a meaningful distinction between true zero and the value that was rounded","0s",
+"data quality: excellent","A",
+"data quality: very good","B",
+"data quality: good","C",
+"data quality: acceptable","D",
+"use with caution","E",
+"too unreliable to be published","F",
+"not applicable","...",
+"preliminary","p",
+"revised","r",
+"suppressed to meet the confidentiality requirements of the Statistics Act","x",
+"terminated","t",
+
+"Survey Code","Survey Name"
+"7505","Canada Mortgage and Housing Corporation"
+
+"Subject Code","Subject Name"
+"34","Construction"
+
+"Note ID",Note
+1,"Geographical areas modified every 5 years to reflect most recent census definitions, therefore, data are not strictly comparable historically."
+2,"These data are obtained from Canada Mortgage and Housing Corporation (CMHC) and are provided subject to <a href="https://www.cmhc-schl.gc.ca/about-us/terms-conditions/hmip-terms-conditions" rel="external noopener noreferrer" target="_blank">CMHC Licence Agreement for the Use of Data (opens new window)</a>."
+3,"For additional information and definitions, refer to <a href="https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research/housing-research/surveys/methods/methodology-rental-market-survey" rel="external noopener noreferrer" target="_blank">CMHC Rental Market Survey Methodology and Definitions (opens new window)</a>."
+
+"Correction ID","Correction Date","Correction Note"
