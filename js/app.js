@@ -677,6 +677,7 @@
   })();
 
   // ---- Sites on the map: application boundaries and the individual permits inside them
+  // Site boundaries draw at every zoom; building-permit dots from street zoom (capped).
   const SITE_ZOOM = 14, SITE_MAX_POINTS = 3000;
   const canvas = L.canvas({ padding: 0.3 });
   // The selected project shares the same canvas (a second, empty canvas stacked on top
@@ -743,19 +744,20 @@
   const scheduleSites = () => { clearTimeout(siteTimer); siteTimer = setTimeout(renderSiteLayer, 80); };
   function renderSiteLayer() {
     siteLayer.clearLayers();
-    if (map.getZoom() < SITE_ZOOM) return;
-    const view = map.getBounds().pad(0.2);
+    const view = map.getBounds().pad(0.2), withDots = map.getZoom() >= SITE_ZOOM;
     let n = 0;
     const polys = [], dots = [];
     for (const p of state.filtered) {
-      if (n >= SITE_MAX_POINTS) break;
       // Boundaries show whatever the Wastewater loads switches (those only change what's counted).
       if (!siteApps(p).length || !devsOn) continue;
       const b = projectBounds(p);
       if (!b || !view.intersects(b)) continue;
       const unloaded = !devShown(p);
-      polys.push(...outline(p, false, unloaded));
-      if (unloaded) continue;
+      // Reuse a development's outline while its look is unchanged (thousands draw when zoomed out).
+      const sig = `${unloaded}|${colors[p.phase]}`;
+      if (!p._ol || p._ol.sig !== sig) p._ol = { sig, polys: outline(p, false, unloaded) };
+      polys.push(...p._ol.polys);
+      if (unloaded || !withDots || n >= SITE_MAX_POINTS) continue;
       for (const r of sitePermits(p)) {
         if (n++ >= SITE_MAX_POINTS) break;
         if (view.contains([r.lat, r.lng])) dots.push(permitDot(r, p, false));
