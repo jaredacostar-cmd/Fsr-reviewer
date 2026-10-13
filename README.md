@@ -471,7 +471,13 @@ from street zoom (14), up to 3,000 in view.
   from the Region's sanitary mains (diameter, slope, inverts, install year, risk rating;
   `scripts/fetch-linework-raw.js`, probe `mode=sewer-build`): every pipe of 300 mm or more with its
   Manning full-flow capacity (n 0.013) and the 2021 Census population and land draining through it
-  (flow shared at splits by capacity; loops broken). In the app each development since the census
+  (flow shared at splits by capacity; loops broken). Pipes that only look connected are kept apart:
+  a dead-end stub leaving a manhole whose main pipe carries on (a chamber, siphon or overflow stub;
+  62 of them) takes no flow, and a loose end more than 25 m from the next sewer joins the nearest of
+  the same size or bigger (any size only when none is in reach). Before this, a 1,500 mm trunk stub
+  at Old Derry Rd was joined across the Credit River into a 675 mm local sewer, which showed 231%;
+  it now shows 13%. Twinned trunks that a false join had cut off now share the flow, and 17 fewer
+  pipes screen over capacity. In the app each development since the census
   joins the nearest of these pipes and its load is carried down the network: existing load at
   peak dry weather (scaled to the plant's measured flow in the capacity check), growth at design
   peak wet weather. Capacity layer *Sewer pipe capacity* (year slider aware), the development
