@@ -1,0 +1,1407 @@
+{
+ "version": 1,
+ "sources": {
+  "locations": "Region of Peel open data, water_infrastructure FeatureServer (layers 1 storage, 2 treatment plants, 3 pumping stations)",
+  "capacities": "2020 Water and Wastewater Master Plan for the Lake-Based Systems, Volume 3: Tables 4-7 (pp. 26-29), 9, 11, 12",
+  "mpUrl": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf",
+  "plants": "Region of Peel 2025 drinking water reports (data/peel-reports.json)"
+ },
+ "facilities": [
+  {
+   "id": "wf9",
+   "name": "A.P. Kennedy",
+   "kind": "plant",
+   "kinds": [
+    "plant",
+    "clearwell",
+    "reservoir"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.558143,
+    43.570893
+   ],
+   "parts": [
+    "ARTHUR P. KENNEDY WTP",
+    "ARTHUR P. KENNEDY WTP",
+    "ARTHUR P. KENNEDY WTP"
+   ],
+   "pumps": [
+    {
+     "zone": "LL in plant",
+     "pumps": 11,
+     "installed": 1681,
+     "firm": 1494,
+     "actualFirm": null,
+     "station": "A.P. Kennedy WTP low lift"
+    },
+    {
+     "zone": "HLP1C",
+     "pumps": 5,
+     "installed": 425,
+     "firm": 335,
+     "actualFirm": 282,
+     "station": "A.P. Kennedy"
+    },
+    {
+     "zone": "HLP2C",
+     "pumps": 7,
+     "installed": 950,
+     "firm": 800,
+     "actualFirm": 998,
+     "station": "A.P. Kennedy"
+    }
+   ],
+   "storageML": 25,
+   "storageZone": "CS1",
+   "plant": {
+    "ratedMLd": 1200,
+    "avgMLd": 369,
+    "maxDayMLd": 521,
+    "year": 2025,
+    "ref": "pp. 79, 83; South Peel report p. 15"
+   },
+   "assess": {
+    "what": "Treatment (90% of installed) vs forecast maximum day, ML/d",
+    "years": [
+     2019,
+     2021,
+     2026,
+     2031,
+     2036,
+     2041
+    ],
+    "capacity": [
+     1080,
+     1080,
+     1080,
+     1080,
+     1080,
+     1080
+    ],
+    "demand": [
+     695,
+     734,
+     822,
+     918,
+     960,
+     1003
+    ],
+    "ref": "Table 9, p. 35"
+   }
+  },
+  {
+   "id": "wf2",
+   "name": "Alton",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -80.065806,
+    43.86351
+   ],
+   "parts": [
+    "ALTON WATER TREATMENT PLANT #2"
+   ],
+   "groundwater": {
+    "system": "Caledon Village \u2013 Alton",
+    "ratedM3d": 7596,
+    "avgM3d": 1645,
+    "maxDayM3d": 3674,
+    "population": 5000
+   }
+  },
+  {
+   "id": "wf8",
+   "name": "Alton",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -80.064188,
+    43.858812
+   ],
+   "parts": [
+    "ALTON WATER TREATMENT PLANT #1"
+   ],
+   "groundwater": {
+    "system": "Caledon Village \u2013 Alton",
+    "ratedM3d": 7596,
+    "avgM3d": 1645,
+    "maxDayM3d": 3674,
+    "population": 5000
+   }
+  },
+  {
+   "id": "wf5",
+   "name": "Caledon East",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.886873,
+    43.872361
+   ],
+   "parts": [
+    "CALEDON EAST WATER TREAT.PLT#2"
+   ],
+   "groundwater": {
+    "system": "Caledon Village \u2013 Alton",
+    "ratedM3d": 7596,
+    "avgM3d": 1645,
+    "maxDayM3d": 3674,
+    "population": 5000
+   }
+  },
+  {
+   "id": "wf11",
+   "name": "Caledon East",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.862425,
+    43.871119
+   ],
+   "parts": [
+    "CALEDON EAST WATER TREAT.PLT#1"
+   ],
+   "groundwater": {
+    "system": "Caledon Village \u2013 Alton",
+    "ratedM3d": 7596,
+    "avgM3d": 1645,
+    "maxDayM3d": 3674,
+    "population": 5000
+   }
+  },
+  {
+   "id": "wf4",
+   "name": "Caledon Village",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.982463,
+    43.849741
+   ],
+   "parts": [
+    "CALEDON VILLAGE WT PLANT #1"
+   ],
+   "groundwater": {
+    "system": "Caledon Village \u2013 Alton",
+    "ratedM3d": 7596,
+    "avgM3d": 1645,
+    "maxDayM3d": 3674,
+    "population": 5000
+   }
+  },
+  {
+   "id": "wf6",
+   "name": "Caledon Village",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -80.046085,
+    43.858542
+   ],
+   "parts": [
+    "CALEDON VILLAGE WT PLANT #2"
+   ],
+   "groundwater": {
+    "system": "Caledon Village \u2013 Alton",
+    "ratedM3d": 7596,
+    "avgM3d": 1645,
+    "maxDayM3d": 3674,
+    "population": 5000
+   }
+  },
+  {
+   "id": "wf7",
+   "name": "Cheltenham",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.916063,
+    43.747617
+   ],
+   "parts": [
+    "CHELTENHAM WATER TREATMENT PLT"
+   ],
+   "groundwater": {
+    "system": "Cheltenham",
+    "ratedM3d": 1469,
+    "avgM3d": 278,
+    "maxDayM3d": 802,
+    "population": 960
+   }
+  },
+  {
+   "id": "wf1",
+   "name": "Inglewood",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.930997,
+    43.811616
+   ],
+   "parts": [
+    "INGLEWOOD WATER TREAT. PLT. #2"
+   ],
+   "groundwater": {
+    "system": "Inglewood",
+    "ratedM3d": 1296,
+    "avgM3d": 384,
+    "maxDayM3d": 923,
+    "population": 1500
+   }
+  },
+  {
+   "id": "wf12",
+   "name": "Inglewood",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.931842,
+    43.798792
+   ],
+   "parts": [
+    "INGLEWOOD WATER TREAT. PLT #1"
+   ],
+   "groundwater": {
+    "system": "Inglewood",
+    "ratedM3d": 1296,
+    "avgM3d": 384,
+    "maxDayM3d": 923,
+    "population": 1500
+   }
+  },
+  {
+   "id": "wf10",
+   "name": "Lorne Park",
+   "kind": "plant",
+   "kinds": [
+    "plant",
+    "clearwell",
+    "reservoir"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.606996,
+    43.52726
+   ],
+   "parts": [
+    "LORNEPARK WATER TREATMENT PLT",
+    "LORNE PARK WTP",
+    "LORNE PARK WTP",
+    "LORNE PARK WTP",
+    "LORNE PARK WTP"
+   ],
+   "pumps": [
+    {
+     "zone": "LL in plant",
+     "pumps": 10,
+     "installed": 1041,
+     "firm": 900,
+     "actualFirm": null,
+     "station": "Lorne Park WTP low lift"
+    },
+    {
+     "zone": "HLP1W",
+     "pumps": 7,
+     "installed": 541,
+     "firm": 450,
+     "actualFirm": 336,
+     "station": "Lorne Park"
+    },
+    {
+     "zone": "HLP2W",
+     "pumps": 2,
+     "installed": 300,
+     "firm": 150,
+     "actualFirm": 152,
+     "station": "Lorne Park"
+    }
+   ],
+   "storageML": 23,
+   "storageZone": "WS1",
+   "plant": {
+    "ratedMLd": 500,
+    "avgMLd": 210,
+    "maxDayMLd": 298,
+    "year": 2025,
+    "ref": "pp. 80, 84; South Peel report p. 17"
+   },
+   "assess": {
+    "what": "Treatment (90% of installed) vs forecast maximum day, ML/d",
+    "years": [
+     2019,
+     2021,
+     2026,
+     2031,
+     2036,
+     2041
+    ],
+    "capacity": [
+     450,
+     450,
+     450,
+     450,
+     450,
+     450
+    ],
+    "demand": [
+     294,
+     308,
+     337,
+     367,
+     390,
+     412
+    ],
+    "ref": "Table 9, p. 35"
+   },
+   "assessPumps": [
+    {
+     "what": "Zone 2 high lift",
+     "years": [
+      2019,
+      2021,
+      2026,
+      2031,
+      2036,
+      2041
+     ],
+     "demand": [
+      166,
+      180,
+      210,
+      227,
+      250,
+      274
+     ],
+     "capacity": [
+      152,
+      152,
+      152,
+      152,
+      152,
+      152
+     ],
+     "ref": "Table 11, p. 39"
+    }
+   ]
+  },
+  {
+   "id": "wf3",
+   "name": "Palgrave",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.842195,
+    43.958625
+   ],
+   "parts": [
+    "PALGRAVE WATER TREATMENT PLT#2"
+   ],
+   "groundwater": {
+    "system": "Palgrave \u2013 Caledon East",
+    "ratedM3d": 19259,
+    "avgM3d": 4449,
+    "maxDayM3d": 11784,
+    "population": 15000
+   }
+  },
+  {
+   "id": "wf13",
+   "name": "Palgrave",
+   "kind": "plant",
+   "kinds": [
+    "plant"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.827965,
+    43.962154
+   ],
+   "parts": [
+    "PALGRAVE WATER TREATMENT PLT 1"
+   ],
+   "groundwater": {
+    "system": "Palgrave \u2013 Caledon East",
+    "ratedM3d": 19259,
+    "avgM3d": 4449,
+    "maxDayM3d": 11784,
+    "population": 15000
+   }
+  },
+  {
+   "id": "wf34",
+   "name": "Airport Road",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "East",
+   "lnglat": [
+    -79.711315,
+    43.761695
+   ],
+   "parts": [
+    "AIRPORT ROAD RES"
+   ],
+   "pumps": [
+    {
+     "zone": "York Region",
+     "pumps": 10,
+     "installed": 458,
+     "firm": 402,
+     "actualFirm": null,
+     "station": "Airport Road"
+    },
+    {
+     "zone": "LLP4E",
+     "pumps": 4,
+     "installed": 182,
+     "firm": 126,
+     "actualFirm": 149,
+     "station": "Airport Road"
+    },
+    {
+     "zone": "HLP5E",
+     "pumps": 4,
+     "installed": 180,
+     "firm": 135,
+     "actualFirm": 131,
+     "station": "Airport Road"
+    }
+   ],
+   "storageML": 54,
+   "storageZone": "ES3"
+  },
+  {
+   "id": "wf45",
+   "name": "Alloa",
+   "kind": "pumping",
+   "kinds": [
+    "pumping"
+   ],
+   "system": "West",
+   "lnglat": null,
+   "parts": [],
+   "pumps": [
+    {
+     "zone": "LLP6W",
+     "pumps": 3,
+     "installed": 126,
+     "firm": 84,
+     "actualFirm": 80,
+     "station": "Alloa"
+    },
+    {
+     "zone": "HLP7W",
+     "pumps": 3,
+     "installed": 45,
+     "firm": 30,
+     "actualFirm": 27,
+     "station": "Alloa"
+    }
+   ],
+   "storageML": 35,
+   "storageZone": "WS5",
+   "posFrom": "location not published"
+  },
+  {
+   "id": "wf14",
+   "name": "Battleford",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "booster"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.755138,
+    43.581372
+   ],
+   "parts": [
+    "BATTLEFORD BOOSTER PUMPING STN"
+   ],
+   "pumps": [
+    {
+     "zone": "4A",
+     "pumps": 4,
+     "installed": 189,
+     "firm": 142,
+     "actualFirm": null,
+     "station": "Battleford"
+    }
+   ]
+  },
+  {
+   "id": "wf23",
+   "name": "Beckett Sproule",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.718782,
+    43.689329
+   ],
+   "parts": [
+    "BECKETT SPROULE RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP4C",
+     "pumps": 6,
+     "installed": 390,
+     "firm": 297,
+     "actualFirm": 195,
+     "station": "Beckett Sproule"
+    },
+    {
+     "zone": "HLP5C",
+     "pumps": 6,
+     "installed": 255,
+     "firm": 195,
+     "actualFirm": 176,
+     "station": "Beckett Sproule"
+    },
+    {
+     "zone": "Transfer (east)",
+     "pumps": 4,
+     "installed": 408,
+     "firm": 306,
+     "actualFirm": null,
+     "station": "Beckett Sproule"
+    }
+   ],
+   "storageML": 93,
+   "storageZone": "CS3",
+   "assessPumps": [
+    {
+     "what": "Transfer pumping",
+     "years": [
+      2019,
+      2021,
+      2026,
+      2031,
+      2036,
+      2041
+     ],
+     "demand": [
+      300,
+      325,
+      387,
+      457,
+      469,
+      484
+     ],
+     "capacity": [
+      275,
+      275,
+      275,
+      275,
+      275,
+      275
+     ],
+     "ref": "Table 11, p. 39"
+    }
+   ]
+  },
+  {
+   "id": "wf19",
+   "name": "Bolton North",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "booster"
+   ],
+   "system": "East",
+   "lnglat": [
+    -79.735529,
+    43.88352
+   ],
+   "parts": [
+    "BOLTON NORTH BOOSTER"
+   ],
+   "pumps": [
+    {
+     "zone": "6B",
+     "pumps": 3,
+     "installed": 14,
+     "firm": 9,
+     "actualFirm": null,
+     "station": "Bolton North Hill"
+    }
+   ]
+  },
+  {
+   "id": "wf25",
+   "name": "East Brampton",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.748129,
+    43.726788
+   ],
+   "parts": [
+    "EAST BRAMPTON RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP5C",
+     "pumps": 4,
+     "installed": 177,
+     "firm": 117,
+     "actualFirm": 100,
+     "station": "East Brampton"
+    },
+    {
+     "zone": "HLP6C",
+     "pumps": 4,
+     "installed": 205,
+     "firm": 140,
+     "actualFirm": 109,
+     "station": "East Brampton"
+    }
+   ],
+   "storageML": 39,
+   "storageZone": "CS4"
+  },
+  {
+   "id": "wf28",
+   "name": "Hanlan",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.658293,
+    43.647117
+   ],
+   "parts": [
+    "HANLAN RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP3C",
+     "pumps": 9,
+     "installed": 1150,
+     "firm": 1005,
+     "actualFirm": 1024,
+     "station": "Hanlan"
+    },
+    {
+     "zone": "HLP4C",
+     "pumps": 4,
+     "installed": 160,
+     "firm": 103,
+     "actualFirm": 119,
+     "station": "Hanlan"
+    }
+   ],
+   "storageML": 74,
+   "storageZone": "CS2"
+  },
+  {
+   "id": "wf42",
+   "name": "Herridge",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.659263,
+    43.526648
+   ],
+   "parts": [
+    "HERRIDGE RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP2W",
+     "pumps": 8,
+     "installed": 408,
+     "firm": 340,
+     "actualFirm": 309,
+     "station": "Herridge"
+    },
+    {
+     "zone": "HLP3W",
+     "pumps": 4,
+     "installed": 100,
+     "firm": 68,
+     "actualFirm": 48,
+     "station": "Herridge"
+    }
+   ],
+   "storageML": 47,
+   "storageZone": "WS1"
+  },
+  {
+   "id": "wf35",
+   "name": "Meadowvale North",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.776343,
+    43.608818
+   ],
+   "parts": [
+    "MEADOWVALE NORTH RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP4W",
+     "pumps": 6,
+     "installed": 346,
+     "firm": 276,
+     "actualFirm": 226,
+     "station": "Meadowvale North"
+    },
+    {
+     "zone": "HLP5W",
+     "pumps": 6,
+     "installed": 143,
+     "firm": 116,
+     "actualFirm": 97,
+     "station": "Meadowvale North"
+    }
+   ],
+   "storageML": 55,
+   "storageZone": "WS3"
+  },
+  {
+   "id": "wf29",
+   "name": "North Brampton",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.800899,
+    43.75407
+   ],
+   "parts": [
+    "NORTH BRAMPTON RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP6C",
+     "pumps": 4,
+     "installed": 126,
+     "firm": 90,
+     "actualFirm": 73,
+     "station": "North Brampton"
+    },
+    {
+     "zone": "HLP7C",
+     "pumps": 4,
+     "installed": 36,
+     "firm": 26,
+     "actualFirm": 21,
+     "station": "North Brampton"
+    }
+   ],
+   "storageML": 53,
+   "storageZone": "CS5"
+  },
+  {
+   "id": "wf32",
+   "name": "Silverthorn",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.605645,
+    43.606014
+   ],
+   "parts": [
+    "SILVERTHORN RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP2C",
+     "pumps": 5,
+     "installed": 495,
+     "firm": 387,
+     "actualFirm": 192,
+     "station": "Silverthorn"
+    },
+    {
+     "zone": "HLP3C",
+     "pumps": 3,
+     "installed": 103,
+     "firm": 58,
+     "actualFirm": 58,
+     "station": "Silverthorn"
+    }
+   ],
+   "storageML": 46,
+   "storageZone": "CS1",
+   "assessStorage": {
+    "years": [
+     2019,
+     2021,
+     2026,
+     2031,
+     2036,
+     2041
+    ],
+    "required": [
+     31,
+     31,
+     43,
+     44,
+     46,
+     49
+    ],
+    "available": [
+     46,
+     46,
+     46,
+     46,
+     46,
+     46
+    ],
+    "ref": "Table 12, p. 40"
+   }
+  },
+  {
+   "id": "wf44",
+   "name": "Streetsville",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.715002,
+    43.563985
+   ],
+   "parts": [
+    "STREETSVILLE RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP3W",
+     "pumps": 6,
+     "installed": 379,
+     "firm": 289,
+     "actualFirm": 250,
+     "station": "Streetsville"
+    },
+    {
+     "zone": "HLP4W",
+     "pumps": 5,
+     "installed": 272,
+     "firm": 204,
+     "actualFirm": 179,
+     "station": "Streetsville"
+    }
+   ],
+   "storageML": 48,
+   "storageZone": "WS2"
+  },
+  {
+   "id": "wf40",
+   "name": "Tullamore",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "East",
+   "lnglat": [
+    -79.753079,
+    43.801617
+   ],
+   "parts": [
+    "TULLAMORE RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP5E",
+     "pumps": 3,
+     "installed": 90,
+     "firm": 60,
+     "actualFirm": 48,
+     "station": "Tullamore"
+    },
+    {
+     "zone": "HLP6E",
+     "pumps": 4,
+     "installed": 160,
+     "firm": 120,
+     "actualFirm": 120,
+     "station": "Tullamore"
+    }
+   ],
+   "storageML": 48,
+   "storageZone": "ES4"
+  },
+  {
+   "id": "wf41",
+   "name": "West Brampton",
+   "kind": "pumping",
+   "kinds": [
+    "pumping",
+    "reservoir"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.82254,
+    43.656697
+   ],
+   "parts": [
+    "WEST BRAMPTON RES"
+   ],
+   "pumps": [
+    {
+     "zone": "LLP5W",
+     "pumps": 4,
+     "installed": 90,
+     "firm": 60,
+     "actualFirm": 40,
+     "station": "West Brampton"
+    },
+    {
+     "zone": "HLP6W",
+     "pumps": 4,
+     "installed": 93,
+     "firm": 62,
+     "actualFirm": 93,
+     "station": "West Brampton"
+    }
+   ],
+   "storageML": 40,
+   "storageZone": "WS4",
+   "assessPumps": [
+    {
+     "what": "Zone 5 low lift",
+     "years": [
+      2019,
+      2021,
+      2026,
+      2031,
+      2036,
+      2041
+     ],
+     "demand": [
+      62,
+      62,
+      67,
+      99,
+      108,
+      116
+     ],
+     "capacity": [
+      74,
+      74,
+      74,
+      74,
+      74,
+      74
+     ],
+     "ref": "Table 11, p. 39"
+    },
+    {
+     "what": "Zone 6 high lift",
+     "years": [
+      2019,
+      2021,
+      2026,
+      2031,
+      2036,
+      2041
+     ],
+     "demand": [
+      52,
+      57,
+      77,
+      88,
+      99,
+      110
+     ],
+     "capacity": [
+      87,
+      87,
+      87,
+      87,
+      87,
+      87
+     ],
+     "ref": "Table 11, p. 39"
+    }
+   ],
+   "assessStorage": {
+    "years": [
+     2019,
+     2021,
+     2026,
+     2031,
+     2036,
+     2041
+    ],
+    "required": [
+     31,
+     32,
+     34,
+     44,
+     46,
+     49
+    ],
+    "available": [
+     40,
+     40,
+     40,
+     40,
+     40,
+     40
+    ],
+    "ref": "Table 12, p. 40"
+   }
+  },
+  {
+   "id": "wf20",
+   "name": "Alton",
+   "kind": "booster",
+   "kinds": [
+    "booster"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -80.074486,
+    43.854822
+   ],
+   "parts": [
+    "ALTON BOOSTER"
+   ]
+  },
+  {
+   "id": "wf17",
+   "name": "Dixie Road",
+   "kind": "booster",
+   "kinds": [
+    "booster"
+   ],
+   "system": "Lake-based",
+   "lnglat": [
+    -79.800157,
+    43.768666
+   ],
+   "parts": [
+    "DIXIE ROAD BOOSTER"
+   ]
+  },
+  {
+   "id": "wf16",
+   "name": "Old Church Road",
+   "kind": "booster",
+   "kinds": [
+    "booster"
+   ],
+   "system": "Lake-based",
+   "lnglat": [
+    -79.826384,
+    43.905731
+   ],
+   "parts": [
+    "OLD CHURCH ROAD BOOSTER"
+   ]
+  },
+  {
+   "id": "wf39",
+   "name": "Caledon East",
+   "kind": "reservoir",
+   "kinds": [
+    "reservoir"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.886513,
+    43.883727
+   ],
+   "parts": [
+    "CALEDON EAST RES"
+   ]
+  },
+  {
+   "id": "wf43",
+   "name": "Caledon Village",
+   "kind": "reservoir",
+   "kinds": [
+    "reservoir"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -80.021362,
+    43.880752
+   ],
+   "parts": [
+    "CALEDON VILLAGE RES"
+   ]
+  },
+  {
+   "id": "wf33",
+   "name": "Cheltenham",
+   "kind": "reservoir",
+   "kinds": [
+    "reservoir"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.941827,
+    43.751672
+   ],
+   "parts": [
+    "CHELTENHAM RES"
+   ]
+  },
+  {
+   "id": "wf37",
+   "name": "Inglewood",
+   "kind": "reservoir",
+   "kinds": [
+    "reservoir"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.950111,
+    43.793755
+   ],
+   "parts": [
+    "INGLEWOOD RES"
+   ]
+  },
+  {
+   "id": "wf31",
+   "name": "Palgrave",
+   "kind": "reservoir",
+   "kinds": [
+    "reservoir"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.793389,
+    43.954146
+   ],
+   "parts": [
+    "PALGRAVE RES"
+   ]
+  },
+  {
+   "id": "wf30",
+   "name": "Bolton",
+   "kind": "elevated_tank",
+   "kinds": [
+    "elevated_tank"
+   ],
+   "system": "East",
+   "lnglat": [
+    -79.744189,
+    43.867352
+   ],
+   "parts": [
+    "BOLTON ET"
+   ],
+   "storageML": 19,
+   "storageZone": "BS6"
+  },
+  {
+   "id": "wf22",
+   "name": "Mayfield West",
+   "kind": "elevated_tank",
+   "kinds": [
+    "elevated_tank"
+   ],
+   "system": "Central",
+   "lnglat": [
+    -79.860818,
+    43.780268
+   ],
+   "parts": [
+    "MAYFIELD WEST ET"
+   ],
+   "storageML": 9,
+   "storageZone": "CS7"
+  },
+  {
+   "id": "wf27",
+   "name": "Snelgrove",
+   "kind": "elevated_tank",
+   "kinds": [
+    "elevated_tank"
+   ],
+   "system": "West",
+   "lnglat": [
+    -79.828402,
+    43.729842
+   ],
+   "parts": [
+    "SNELGROVE ET"
+   ],
+   "storageML": 4,
+   "storageZone": "WS6"
+  },
+  {
+   "id": "wf38",
+   "name": "West Bolton",
+   "kind": "elevated_tank",
+   "kinds": [
+    "elevated_tank"
+   ],
+   "system": "East",
+   "lnglat": [
+    -79.747239,
+    43.862206
+   ],
+   "parts": [
+    "WEST BOLTON ET"
+   ]
+  },
+  {
+   "id": "wf24",
+   "name": "Alton",
+   "kind": "standpipe",
+   "kinds": [
+    "standpipe"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -80.080864,
+    43.860921
+   ],
+   "parts": [
+    "ALTON STANDPIPE"
+   ]
+  },
+  {
+   "id": "wf26",
+   "name": "Bolton South",
+   "kind": "standpipe",
+   "kinds": [
+    "standpipe"
+   ],
+   "system": "East",
+   "lnglat": [
+    -79.735754,
+    43.876428
+   ],
+   "parts": [
+    "BOLTON SOUTH BPS"
+   ]
+  },
+  {
+   "id": "wf36",
+   "name": "Mono Mills",
+   "kind": "standpipe",
+   "kinds": [
+    "standpipe"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.972183,
+    43.9418
+   ],
+   "parts": [
+    "MONO MILLS STANDPIPE"
+   ]
+  },
+  {
+   "id": "wf15",
+   "name": "Palgrave",
+   "kind": "well",
+   "kinds": [
+    "well"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.81861,
+    43.954864
+   ],
+   "parts": [
+    "PALGRAVE WELL # 2"
+   ]
+  },
+  {
+   "id": "wf18",
+   "name": "Centreville",
+   "kind": "rechlorination",
+   "kinds": [
+    "rechlorination"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.824042,
+    43.910615
+   ],
+   "parts": [
+    "CENTREVILLE RE-CHLORINATION"
+   ]
+  },
+  {
+   "id": "wf21",
+   "name": "Mono Mills",
+   "kind": "rechlorination",
+   "kinds": [
+    "rechlorination"
+   ],
+   "system": "Caledon groundwater",
+   "lnglat": [
+    -79.970836,
+    43.92721
+   ],
+   "parts": [
+    "MONO MILLS RE-CHLORINATION"
+   ]
+  }
+ ]
+}

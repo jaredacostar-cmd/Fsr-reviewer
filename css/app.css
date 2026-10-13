@@ -1495,3 +1495,20 @@ details.stamp { display: block; }
 .dcb-scroll { max-height: 360px; overflow: auto; }
 .dcb-t tr.dcb-def td:first-child { border-left: 3px solid #f76707; }
 @media (max-width: 700px) { .dcb-lists { grid-template-columns: 1fr; } .dcb-scroll { max-height: none; overflow-x: auto; } .dcb-curve { display: block; overflow-x: auto; } }
+/* Existing water facilities */
+.wf-mk { background: none; border: 0; }
+.wf-ic { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #fff; border: 2px solid #1864ab; color: #1864ab; font-style: normal; font-size: 12px; line-height: 1; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
+.wf-mk .wf-ic { cursor: pointer; }
+.wf-ic.wf-plant { border-radius: 4px; background: #1864ab; color: #fff; }
+.wf-ic.wf-pumping, .wf-ic.wf-booster { color: #0b7285; border-color: #0b7285; }
+.wf-ic.wf-reservoir, .wf-ic.wf-clearwell { color: #1971c2; border-color: #1971c2; }
+.wf-ic.wf-elevated_tank, .wf-ic.wf-standpipe { color: #5f3dc4; border-color: #5f3dc4; }
+.wf-ic.wf-well, .wf-ic.wf-rechlorination { color: #2b8a3e; border-color: #2b8a3e; }
+.wf-ic.wf-sw, .wf-ic.wf-lg { width: 14px; height: 14px; font-size: 9px; border-width: 1.5px; box-shadow: none; margin-right: 6px; vertical-align: middle; }
+.wf-table td small, .wf-t td small { display: block; color: var(--text-muted); }
+.wf-table .wf-ic { width: 16px; height: 16px; font-size: 10px; box-shadow: none; vertical-align: middle; }
+.wf-table tr.wf-grp td { font-weight: 600; background: var(--surface-2); }
+.wf-table tr.wf-row { cursor: pointer; }
+.wf-as { font-size: 11.5px; margin: 6px 0; }
+.wf-as caption { text-align: left; font-weight: 600; font-size: 12px; padding-bottom: 2px; }
+.wf-table .wf-pz { display: block; white-space: nowrap; font-size: 11.5px; }
