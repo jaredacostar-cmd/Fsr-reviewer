@@ -840,6 +840,17 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
     plan within the precinct.
   - Example: on The Gore Rd in Caledon, 21T-22002C (394 units) was hidden under a larger
     subdivision at the same address. Peel's total rises by 394 units.
+- **Unit counts listed by type are added up**: "a maximum of 299 single detached, 217 street
+  townhouse, and 52 back-to-back townhouse dwelling units" is 568 units, not 52. Rules:
+  - A figure followed by "consisting of / comprising / including / of which" is a summary of the
+    parts after it and is counted once.
+  - Not counted: buildings and blocks ("2 apartment buildings"), decimals and measures
+    ("126.5 single", "1181.36 SQM", "11.1m towns"), zone names ("to Residential Semi-Detached"),
+    existing houses, and industrial / commercial condominium units.
+  - Units the description leaves open ("additional units in two future mixed-use blocks") aren't
+    counted. The *Build-out by application* entry can add them.
+  - 86 files read higher, e.g. 10512 Mississauga Rd (OZS-2025-0015) 52 → 568. Peel +4,964 units
+    (+5,508 active). Snapshot records are re-read when the app loads.
 - **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
   2,656 units), including from the weekly snapshot.
 

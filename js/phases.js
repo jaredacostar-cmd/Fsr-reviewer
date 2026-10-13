@@ -229,6 +229,7 @@
   }
 
   // Units mentioned in free text: "a 25-storey building with 312 residential units".
+  const LIST_RE = /(\d{1,5})\s*(?:\(\d+\)\s*)?((?:[a-z][a-z-]*\s+){0,4}?)(single[- ]detached|single family|singles?\b|detached|semi[- ]detached|semis?\b|townhouses?|townhomes?|town ?house|towns?\b|row ?houses?|back[- ]to[- ]back|stacked|apartments?|condominium (?:apartment )?units?|condo units?)/gi;
   function unitsFromText(text) {
     const s = String(text || '').replace(/,(?=\d{3})/g, '');
     let best = 0;
@@ -240,6 +241,30 @@
     for (const m of s.matchAll(/\bunit count\s*(?:of|:|is|=)?\s*(\d{1,5})\b/gi)) {
       const n = Number(m[1]);
       if (n > best && n < 20000) best = n;
+    }
+    // Counts listed by type add up: "299 single detached, 217 street townhouse, and 52
+    // back-to-back townhouse dwelling units" is 568 units, not 52.
+    const parts = []; let summary = 0;
+    for (const m of s.matchAll(LIST_RE)) {
+      const n = Number(m[1]);
+      if (!(n > 0) || n >= 20000 || /stor|sty|floor|level|metre|\bha\b|acre|lot|block|building|tower|phase|parking|space|bed/i.test(m[2] || '')) continue;
+      // Not new homes: decimals and measures ("126.5 single", "1181.36 SQM", "11.1m towns"), zone
+      // names ("to Residential Semi-Detached"), existing houses, industrial / commercial condos.
+      if (/[\d.]/.test(s[m.index - 1] || '') || /^(m|sqm|sq|m2|ft|sf)\b|\b(sqm|sq|square|m2|to|from|zone|zoning|existing|has|retain\w*|industrial|commercial|office|retail|warehouse)\b/i.test(m[2] || '')) continue;
+      if (/^\s*-?\s*(stor|sty)/i.test(s.slice(m.index + m[1].length, m.index + m[1].length + 8))) continue;
+      // "2 apartment buildings", "15 townhouse blocks": buildings, not units.
+      if (/^\s*(buildings?|blocks?|towers?|bldgs?|lots?|storeys?|sites?)\b/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 14))) continue;
+      // A figure followed by "consisting of / comprising / including / of which" sums the parts after it.
+      if (/^[^.;]{0,40}?\b(consist|compris|includ|of which|made up|broken down)/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 60))) { summary = Math.max(summary, n); continue; }
+      parts.push(n);
+    }
+    if (summary) { if (summary > best && summary < 20000) best = summary; }
+    else if (parts.length >= 2) {
+      let total = parts.reduce((t, n) => t + n, 0);
+      // "287 townhouse units consisting of 104 standard, 164 back-to-back and 19 rear-lane": a
+      // summary figure equal to the rest is counted once.
+      const i = parts.findIndex(n => n * 2 === total); if (i >= 0) total -= parts[i];
+      if (total > best && total < 20000) best = total;
     }
     return best || null;
   }
