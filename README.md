@@ -722,6 +722,36 @@ wastewater plants: existing, built since, approved and proposed, with the uncomm
 
 Alloa's location isn't published, so it is listed in the table but not shown on the map.
 
+## Functional Servicing Reports and the water supply route
+
+**FSR link.** A development's **Servicing** tab opens with its latest Functional Servicing Report.
+
+- `scripts/build-fsr.js`, run weekly with the data snapshot, reads the municipalities' application
+  pages. It matches their file numbers to the applications and keeps the newest document named a
+  functional servicing / servicing report or brief.
+- **Mississauga:** its active application pages (official plan / rezoning and subdivision files,
+  about 57 of the 1,006 applications), found through the site's search and the pages' address
+  pattern. The City's pages build their document list in the browser, so the tab links the
+  application page and points to Project documents rather than the PDF itself. Site plans have no
+  public page.
+- **Caledon:** its application pages, with each application type's own numbering (direct PDF links;
+  64 pages carry an FSR).
+- **Brampton:** documents are on BramPlanOnline, which needs a sign-in, so the tab links there
+  instead.
+- A link to all of the application's documents comes with it.
+
+**Supply route.** The Servicing tab's **Water** section shows where the water comes from, like
+the sewer trace.
+
+- From the development's pressure zone, it takes the nearest station whose pumps feed that zone
+  (2020 Master Plan pump groups). It repeats from that station's reservoir zone down to the
+  treatment plant.
+- Each step shows the pump group's firm capacity.
+- Below the route is the pumping into the development's zone as a share of firm capacity.
+- **Show on the map** draws the route.
+- Caledon's groundwater areas show their well system instead.
+- The route is schematic: it doesn't trace the mains between stations.
+
 ## DC funding scenario
 
 **DC Analysis → Funding scenario** tests a DC budget over the next N years (default 10). There
