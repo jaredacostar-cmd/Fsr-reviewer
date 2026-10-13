@@ -594,6 +594,33 @@
       groups.set(k, g.filter(r => !far.includes(r)));
       for (const r of far) { const k2 = `${r.municipality}|@${r.lat.toFixed(4)},${r.lng.toFixed(4)}`; (groups.get(k2) || groups.set(k2, []).get(k2)).push(r); }
     }
+    // One address, different land: official plan / zoning / subdivision files at the same address
+    // whose boundaries don't overlap (a draft plan filed at its precinct plan's address) are
+    // separate proposals. Each gets its own group; the address's other files join the one whose
+    // land holds them (else the largest). Nesting (step 3) then relates them.
+    const shareOf = (a, b) => {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const g of a) for (const [x, y] of g) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+      let n = 0, k = 0;
+      for (let i = 0; i < 10; i++) for (let j = 0; j < 10; j++) { const x = x0 + (x1 - x0) * (i + 0.5) / 10, y = y0 + (y1 - y0) * (j + 0.5) / 10; if (!pointInRings(x, y, a)) continue; n++; if (pointInRings(x, y, b)) k++; }
+      return n ? k / n : 0;
+    };
+    for (const [k, g] of [...groups]) {
+      const masters = g.filter(r => r.kind === 'application' && r.poly && r.phase !== 'cancelled' && (r.stage || stageOf(r)) === 'master' && ringsArea(r.poly) > 2000);
+      if (masters.length < 2) continue;
+      const lands = [];   // [{ recs, rings, area }]
+      for (const m of masters.sort((a, b) => ringsArea(b.poly) - ringsArea(a.poly))) {
+        const same = lands.find(l => shareOf(m.poly, l.rings) >= 0.5 && shareOf(l.rings, m.poly) >= 0.5);
+        if (same) same.recs.push(m); else lands.push({ recs: [m], rings: m.poly, area: ringsArea(m.poly) });
+      }
+      if (lands.length < 2) continue;
+      const rest = g.filter(r => !masters.includes(r));
+      for (const r of rest) {
+        const hold = lands.filter(l => r.poly ? shareOf(r.poly, l.rings) >= 0.5 : r.lat != null && pointInRings(r.lng, r.lat, l.rings)).sort((a, b) => a.area - b.area)[0];
+        (hold || lands[0]).recs.push(r);
+      }
+      lands.forEach((l, i) => groups.set(i ? `${k}#${i}` : k, l.recs));
+    }
     groups = joinMultiAddress(groups);
 
     // Sites: groups with a live planning application polygon of site scale.
@@ -700,7 +727,10 @@
         site.area = { drafts: akids.length, covered, keys: akids.map(k => rootOf(k).rep.key) };
         if (site.planned != null) site.planned = Math.max(0, site.planned - covered);
       }
-      parts.push({ key: root.rep.key, recs: all, site });
+      // Keep the address's own key when a split-off part of it rejoined on the same land.
+      const base = root.rep.key.replace(/#\d+$/, ''), keys = new Set(), walk = land => { land.sites.forEach(x => keys.add(x.key)); land.children.forEach(walk); };
+      walk(root);
+      parts.push({ key: keys.has(base) ? base : root.rep.key, recs: all, site });
     }
     for (const [key, recs] of loose) parts.push({ key, recs, site: {} });
     // Sites made only of permits that build nothing (signs, entrances, demolitions…) aren't developments.
@@ -722,7 +752,8 @@
         if (r.kind !== 'application') continue;
         for (const a of addressAliases(r.address, r.municipality)) {
           const other = `${muni}|${a}`;
-          if (other === key || !groups.has(other) || far(key, other)) continue;
+          // (Parts of one address split by land, "<key>#n", stay apart.)
+          if (other === key || other === key.replace(/#\d+$/, '') || !groups.has(other) || far(key, other)) continue;
           const ra = find(key), rb = find(other);
           if (ra !== rb) parent.set(rb, ra);
         }
