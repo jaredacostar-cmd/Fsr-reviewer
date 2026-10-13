@@ -236,6 +236,11 @@
       const n = Number(m[1]);
       if (n > best && n < 20000) best = n;
     }
+    // "Residential unit count: 2656", "a total unit count of 2,801".
+    for (const m of s.matchAll(/\bunit count\s*(?:of|:|is|=)?\s*(\d{1,5})\b/gi)) {
+      const n = Number(m[1]);
+      if (n > best && n < 20000) best = n;
+    }
     return best || null;
   }
 
@@ -510,9 +515,12 @@
   }
 
   // ---- Projects: link records on the same site -------------------------------
+  // A civic address that names one property. "0 Heritage Rd" (or "0-0 …") is a placeholder for
+  // land with no civic number, used for many unrelated files along the same road: not an address.
+  const civic = a => !!a && /\d/.test(a) && !/^0+(\s*-\s*0+)?\s/.test(a);
   function projectKey(rec) {
     const a = normalizeAddress(rec.address);
-    if (a && /\d/.test(a)) return `${rec.municipality}|${a}`;
+    if (civic(a)) return `${rec.municipality}|${a}`;
     if (rec.lat != null) return `${rec.municipality}|@${rec.lat.toFixed(4)},${rec.lng.toFixed(4)}`;
     return `${rec.municipality}|#${rec.uid}`;
   }
@@ -529,7 +537,7 @@
       if (!/[A-Z]{2}/.test(street) || /^(ON|ONTARIO|CANADA)$/.test(street)) continue;
       for (const n of m[1].split(/\s*(?:-|&|\bAND\b|,)\s*/)) {
         const a = normalizeAddress(`${n} ${street}`);
-        if (a) out.add(a);
+        if (civic(a)) out.add(a);
       }
     }
     return out;

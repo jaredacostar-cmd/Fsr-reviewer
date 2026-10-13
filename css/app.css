@@ -1712,3 +1712,10 @@ body.print-map .area-box { display: none; }
 .wtrace-main { stroke: #1c7ed6; stroke-opacity: 1; }
 .trace-on .leaflet-overlay-pane, .trace-on .leaflet-svc-pane, .trace-on .leaflet-exist-pane, .trace-on .leaflet-plan-pane, .trace-on .leaflet-da-pane { opacity: .4; transition: opacity .2s; }
 .trace-on .leaflet-tile-pane { opacity: .7; transition: opacity .2s; }
+
+/* Applications in a development / related developments */
+.file-tree { list-style: none; margin: 4px 0; padding: 0; display: grid; gap: 6px; }
+.file-tree li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px; align-items: start; }
+.file-tree .btn.link { text-align: left; padding: 0; }
+.sub-head { margin: 2px 0 6px; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.rel-how { color: var(--accent); }

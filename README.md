@@ -762,6 +762,32 @@ Alloa's location isn't published, so it is listed in the table but not shown on 
 
 This is a screening view, not a hydraulic model. It shows normal depth pipe by pipe, so it ignores backwater from downstream, drops and manhole losses.
 
+## Applications in a development, related applications and drilling down
+
+- **Applications in this development** (Overview tab, when a development has several files): each
+  formal application once, with the pre-consultation on its land (same civic address or
+  overlapping boundary) nested under it. Open any one to see it **on its own**, with the same
+  tabs (Overview, Demand, Water, Wastewater, DC Analysis, History): the application, its
+  pre-consultation and the building permits inside its land. *← Whole development* goes back.
+- **Related applications**: other developments with a file on the same land, either overlapping
+  by at least 15% of either boundary or at the same civic address. Neighbours that only share an
+  edge don't count. Each link says how they relate (covers / within / overlaps / same address).
+  For example, the precinct 52-6 pre-consultation PRE-2026-0007 lists the draft plan OZS-2025-0035
+  on its land. That development lists 10869 Heritage Rd, whose OZS-2025-0033 opens on its own with
+  its pre-consultation PRE-2024-0117. *← (development)* goes back across.
+- **No double counting**:
+  - A file opened on its own is a view and is never added to a total.
+  - Pre-consultation units are never counted, because the formal application repeats them.
+  - Each file appears once in a development's list.
+- **"0" addresses**: "0 Heritage Rd" and similar addresses are placeholders for land with no
+  civic number, used for many unrelated files along one road. They no longer group files into one
+  development. Such files group by land (boundaries and location) instead. 334 files at 125
+  placeholder addresses were affected. Previously "0 Heritage Rd" merged a 13-tower site, two
+  precinct draft plans and their pre-consultations, and counted only the largest file's units.
+  Across Peel this adds 50 developments and 1,382 active units that the merging had hidden.
+- **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
+  2,656 units), including from the weekly snapshot.
+
 ## Latest submission on labels and titles
 
 **Latest submission.** The map labels (Address + phase and Address) and the development panel's
