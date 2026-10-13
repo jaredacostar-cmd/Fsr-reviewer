@@ -99,14 +99,17 @@ async function mississauga() {
     console.log('mis sitemap', idx, pages.size);
   }
   console.log('mississauga pages', pages.size);
-  const out = [];
+  process.on('exit', () => {});
+  const out = []; let failed = 0, shown = 0;
   for (const u of pages) {
-    const h = await get(u); await sleep(250); if (!h) continue;
+    const h = await get(u); await sleep(500); if (!h) { failed++; continue; }
     const title = text((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(h) || [])[1] || '');
     const docs = links(h, u).filter(a => isDoc(a.url));
     const keys = fileKeys(`${title} ${mainText(h).slice(0, 3000)}`);
+    if (shown++ < 5) console.log('  mis page', u.split('/').slice(-2).join('/'), '| title:', title.slice(0, 80), '| keys:', keys.join(','), '| docs:', docs.length, '| all links:', links(h, u).length);
     out.push({ muni: 'Mississauga', page: u, title, keys, docs: docs.length, fsr: pick(docs) });
   }
+  console.log('mis fetched', out.length, 'failed', failed);
   return cleanKeys(out);
 }
 async function caledon() {
