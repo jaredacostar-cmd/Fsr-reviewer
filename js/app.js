@@ -4487,7 +4487,7 @@
     // Shift so the centre sits in the middle of the clear area.
     map.panBy([(br[0] - tl[0]) / 2, (br[1] - tl[1]) / 2], { animate: false });
   }
-  function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; syncPathMode(); }
+  function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; profMapOff(); syncPathMode(); }
   // Sites outside the traced catchments: along the planned DC wastewater mains to the existing sewers.
   // The planned mains (2026 DC maps) form a network: each main's ends join another main within 60 m;
   // a main's end within 200 m of an existing sewer of 300 mm+ (or any point within 25 m) is where it
@@ -5400,7 +5400,7 @@
     const P = SEW.data.pipes, seq = ++PROF.seq;
     if (!PROF.el) {
       PROF.el = document.createElement('div'); PROF.el.className = 'prof-dlg'; PROF.el.hidden = true; document.body.appendChild(PROF.el);
-      PROF.el.addEventListener('click', e => { if (e.target === PROF.el || e.target.closest('[data-prof-close]')) PROF.el.hidden = true; const w = e.target.closest('[data-prof-win]'); if (w) drawProfile(+w.dataset.profWin); });
+      PROF.el.addEventListener('click', e => { if (e.target === PROF.el || e.target.closest('[data-prof-close]')) PROF.el.hidden = true; const go = e.target.closest('[data-prof-go]'); if (go) return profPipeOnMap(+go.dataset.profGo); const w = e.target.closest('[data-prof-win]'); if (w) drawProfile(+w.dataset.profWin); });
       addEventListener('keydown', e => { if (e.key === 'Escape' && PROF.el && !PROF.el.hidden) PROF.el.hidden = true; });
     }
     PROF.el.hidden = false;
@@ -5482,21 +5482,48 @@
       <p class="small muted">Flows at Peel criteria for the scenario (${esc(scenarioText())}). Normal depth in each pipe on its own (Manning, n = 0.013), not a backwater model; above capacity the grade line rises upstream at Sf = S0 × (Q / Qfull)². Depth of cover = ground − crown.</p>`;
     // Hover / tap: the pipe under the pointer.
     const svgEl = PROF.el.querySelector('.prof-svg'), tip = PROF.el.querySelector('.prof-tip'), cur = svgEl.querySelector('.pf-cur');
+    const hitAt = ev => { const r = svgEl.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W, xx = win.a + (px - L) / (W - L - R) * (win.b - win.a); return { r, px, xx, hit: inWin.find(({ g }) => xx >= g.x0 && xx <= g.x1) }; };
     const at = ev => {
-      const r = svgEl.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W, xx = win.a + (px - L) / (W - L - R) * (win.b - win.a);
-      const hit = inWin.find(({ g }) => xx >= g.x0 && xx <= g.x1); if (!hit) { tip.hidden = true; cur.setAttribute('visibility', 'hidden'); return; }
+      const { r, px, xx, hit } = hitAt(ev); if (!hit) { tip.hidden = true; cur.setAttribute('visibility', 'hidden'); return; }
       const { g, z } = hit, f = (xx - g.x0) / (g.len || 1), inv = g.up + (g.dn - g.up) * f, gz = z && z[1] != null ? (z[0] != null && f < 0.5 ? z[0] + (z[1] - z[0]) * f * 2 : z[2] != null ? z[1] + (z[2] - z[1]) * (f - 0.5) * 2 : z[1]) : null, wv = water(g);
       cur.setAttribute('x1', px); cur.setAttribute('x2', px); cur.setAttribute('visibility', 'visible');
       tip.hidden = false; tip.style.left = `${Math.min(r.width - 230, Math.max(0, ev.clientX - r.left + 12))}px`;
       tip.innerHTML = `<strong>${P[g.i][0]} mm</strong> · slope ${(P[g.i][1] * 100).toFixed(2)}% · ${fmtNum(Math.round(xx))} m along
         <br>Invert ${inv.toFixed(2)} m${g.est ? ' (est.)' : ''} · ground ${gz != null ? `${gz.toFixed(1)} m` : 'n/a'}${gz != null ? ` · cover ${(gz - inv - g.D).toFixed(1)} m` : ''}
         <br>Flow ${fmtNum(Math.round(g.st.then.q))} L/s of ${g.st.cap ? `${fmtNum(g.st.cap)} L/s` : 'n/a'}${g.st.r1 != null ? ` · <strong>${Math.round(g.st.r1 * 100)}%</strong>` : ''}
-        <br>${wv ? wv.sur ? `<span class="pf-over-t">Surcharged: grade ${(wv.up - g.up - g.D).toFixed(2)} m above the crown at the upper end</span>` : `Sewage depth ${Math.round(depthRatio(g.st.r1) * 100)}% of the pipe · freeboard ${fbText(P[g.i][0], g.st.r1)}` : 'No reliable slope: flow depth not worked out'}`;
+        <br>${wv ? wv.sur ? `<span class="pf-over-t">Surcharged: grade ${(wv.up - g.up - g.D).toFixed(2)} m above the crown at the upper end</span>` : `Sewage depth ${Math.round(depthRatio(g.st.r1) * 100)}% of the pipe · freeboard ${fbText(P[g.i][0], g.st.r1)}` : 'No reliable slope: flow depth not worked out'}
+        ${ev.pointerType === 'touch' ? `<br><button type="button" class="btn small" data-prof-go="${g.i}">Show on the map</button>` : '<br><span class="muted">Click to show it on the map</span>'}`;
     };
-    svgEl.addEventListener('pointermove', at); svgEl.addEventListener('pointerdown', at);
-    svgEl.addEventListener('pointerleave', () => { tip.hidden = true; cur.setAttribute('visibility', 'hidden'); });
+    // Click (mouse / pen) a pipe: show it on the map. On touch a tap shows the details with a button.
+    let ptype = 'mouse';
+    svgEl.addEventListener('pointermove', at); svgEl.addEventListener('pointerdown', e => { ptype = e.pointerType; at(e); });
+    svgEl.addEventListener('click', e => { if (ptype === 'touch') return; const { hit } = hitAt(e); if (hit) profPipeOnMap(hit.g.i); });
+    svgEl.addEventListener('pointerleave', e => { if (e.pointerType === 'touch') return; tip.hidden = true; cur.setAttribute('visibility', 'hidden'); });
+  }
+  // A pipe picked on the profile: close the profile, fit the pipe on the map and mark it (a label on
+  // the pipe; Back to profile and Pipe details in the bar at the top of the map).
+  const PROF_HL = L.layerGroup().addTo(map);
+  let profMapBar = null;
+  function profMapOff() { PROF_HL.clearLayers(); if (profMapBar) profMapBar.hidden = true; }
+  function profPipeOnMap(i) {
+    const c = pipeCoords(SEW.data.pipes[i]).map(([x, y]) => [y, x]), mid = c[Math.floor(c.length / 2)], st = pipeStats(i);
+    PROF.el.hidden = true; PROF_HL.clearLayers();
+    L.polyline(c, { className: 'pipe-hl', interactive: false, renderer: flowRenderer }).addTo(PROF_HL);
+    L.circleMarker(mid, { radius: 1, opacity: 0, fillOpacity: 0, interactive: false })
+      .bindTooltip(`<strong>${SEW.data.pipes[i][0]} mm</strong>${st.r1 != null ? ` · ${Math.round(st.r1 * 100)}% in ${capYear == null ? 'build-out' : capYear}` : ''}`, { permanent: true, direction: 'auto', offset: [0, 0], className: 'pt pipe-hl-t' }).addTo(PROF_HL);
+    if (!profMapBar) { profMapBar = L.DomUtil.create('div', 'prof-map-bar', mapBottom); L.DomEvent.disableClickPropagation(profMapBar); }
+    profMapBar.innerHTML = `<button type="button" class="btn small" data-prof-back>‹ Back to profile</button><button type="button" class="btn small" data-prof-pipe="${i}">Pipe details</button><button type="button" class="btn small link" data-prof-off aria-label="Clear the marked pipe">×</button>`;
+    profMapBar.hidden = false;
+    // On a phone, lower the bottom sheet for now so the pipe has room (back to the profile restores it).
+    const sh = $('#detail'), shH = sh && !sh.hidden && phoneMap ? sh.getBoundingClientRect().height / innerHeight * 100 : 0;
+    if (shH > 32) { PROF.sheetH = shH; setSheetH(30); } else PROF.sheetH = null;
+    layoutMapBoxes(); map.invalidateSize();
+    const bd = L.latLngBounds(c); bd.extend(L.latLng(mid).toBounds(300)); fitClear(bd);
   }
   document.addEventListener('click', e => {
+    if (e.target.closest('[data-prof-back]')) { setTimeout(() => { profMapOff(); if (PROF.sheetH) { setSheetH(PROF.sheetH); PROF.sheetH = null; } if (PROF.el) PROF.el.hidden = false; }); return; }
+    const pp = e.target.closest('[data-prof-pipe]'); if (pp) { const i = +pp.dataset.profPipe; setTimeout(() => { profMapOff(); showPipeLoads(i); }); return; }
+    if (e.target.closest('[data-prof-off]')) { setTimeout(profMapOff); return; }
     const b = e.target.closest('[data-profile]'); if (!b || !SEW.data) return;
     if (b.dataset.profile === 'trace' && TRACE.last) return sewerProfile(TRACE.last.route, `Sewer profile: ${(TRACE.last.km).toFixed(1)} km to ${TRACE.last.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(TRACE.last.plantName)}`);
     const m = /^pipe:(\d+)$/.exec(b.dataset.profile);

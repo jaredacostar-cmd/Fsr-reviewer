@@ -1684,9 +1684,17 @@ body.print-map .area-box { display: none; }
 .pf-hgl { fill: none; stroke: #e03131; stroke-width: 2; }
 .pf-cur { stroke: var(--text-primary); stroke-width: 1; stroke-dasharray: 3 3; }
 .prof-tip { position: absolute; top: 8px; width: 220px; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); padding: 6px 8px; font-size: 11.5px; pointer-events: none; }
+.prof-tip button { pointer-events: auto; margin-top: 4px; }
+.prof-svg { cursor: pointer; }
 .prof-tip[hidden] { display: none; }
 .pf-over-t { color: #c92a2a; }
 .prof-legend .pf-sw { display: inline-block; width: 14px; height: 10px; border-radius: 2px; }
 .pf-sw.ground { height: 0; border-top: 2px solid #8d6e4f; }
 .pf-sw.pipe { border: 1.2px solid #495057; background: color-mix(in srgb, var(--text-primary) 8%, transparent); }
 .pf-sw.water { background: #4dabf7; } .pf-sw.near { background: #f76707; } .pf-sw.over { background: #e03131; }
+
+/* Pipe picked on the sewer profile, marked on the map */
+.pipe-hl { stroke: #fab005; stroke-width: 14; stroke-opacity: .6; stroke-linecap: round; fill: none; animation: pipe-hl 1.2s ease-in-out 3; }
+@keyframes pipe-hl { 50% { stroke-opacity: .15; } }
+.prof-map-bar { display: flex; gap: 6px; align-items: center; background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow); padding: 4px 6px; }
+.prof-map-bar[hidden] { display: none; }
