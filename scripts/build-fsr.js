@@ -92,18 +92,35 @@ async function mississauga() {
     const all = links(h, l); console.log('mis list', l, 'links', all.length, 'matching', all.filter(a => /development-application-/i.test(a.url)).length);
     for (const a of all) if (/\/development-application-[^/]+\/?$/i.test(new URL(a.url).pathname)) pages.add(a.url.split('#')[0]);
   }
-  // The listing is filled in by script on some pages: the sitemap lists every application page.
-  for (const idx of ['https://www.mississauga.ca/sitemap_index.xml', 'https://www.mississauga.ca/sitemap.xml', 'https://www.mississauga.ca/wp-sitemap.xml']) {
-    if (pages.size > 20) break;
-    for (const u of await sitemapUrls(idx, /\/development-application-[^/]+\/?$/i)) pages.add(u);
-    console.log('mis sitemap', idx, pages.size);
+  // The listing is filled in by script: find the pages through the site's WordPress search, and
+  // by their address pattern (development-application-oz-opa-22-32-w1) from the snapshot's files.
+  const BASE = 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/';
+  for (let pg = 1; pg <= 6; pg++) {
+    const j = await get(`https://www.mississauga.ca/wp-json/wp/v2/pages?search=development%20application&per_page=100&page=${pg}&_fields=link`);
+    let arr = []; try { arr = JSON.parse(j || '[]'); } catch { arr = []; }
+    if (!Array.isArray(arr) || !arr.length) break;
+    for (const x of arr) if (x.link && /\/development-application-[^/]+\/?$/i.test(x.link)) pages.add(x.link);
   }
+  console.log('mis wp search', pages.size);
+  try {
+    const snap = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'snapshot.json'), 'utf8'));
+    const ward = new Map();
+    for (const r of snap.records) if (r.municipality === 'Mississauga' && r.ward && r.fileKey) ward.set(r.fileKey, r.ward);
+    for (const r of snap.records) {
+      if (r.municipality !== 'Mississauga' || r.kind !== 'application' || !r.fileKey || !/^(OZ|21T)\|/.test(r.fileKey)) continue;
+      const w = r.ward || ward.get(r.fileKey); if (!w) continue;
+      const slug = r.fileKey.split('|').map(x => x.toLowerCase()).join('-').replace(/^21t-m-/, '21t-m-');
+      pages.add(`${BASE}development-application-${slug}-w${w}/`);
+    }
+  } catch (e) { console.log('snapshot read failed', e.message); }
+  console.log('mis candidate pages', pages.size);
   console.log('mississauga pages', pages.size);
   process.on('exit', () => {});
   const out = []; let failed = 0, shown = 0;
   for (const u of pages) {
-    const h = await get(u); await sleep(500); if (!h) { failed++; continue; }
+    const h = await get(u); await sleep(300); if (!h) { failed++; continue; }
     const title = text((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(h) || [])[1] || '');
+    if (!/development application/i.test(title) || /^active development applications$/i.test(title)) { failed++; continue; }   // moved: redirected to the listing
     const docs = links(h, u).filter(a => isDoc(a.url));
     const keys = fileKeys(`${title} ${mainText(h).slice(0, 3000)}`);
     if (shown++ < 5) console.log('  mis page', u.split('/').slice(-2).join('/'), '| title:', title.slice(0, 80), '| keys:', keys.join(','), '| docs:', docs.length, '| all links:', links(h, u).length);
