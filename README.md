@@ -493,9 +493,11 @@ application.
 - **Developments on / off** (map panel, every view): hides or shows all development markers, labels and
   site outlines (remembered).
 - **Wastewater loads** (own box, bottom right of the map, Wastewater view; always in sight): *Census (existing) · Built since · Site plan
-  approved · Proposed (in review)*; each controls both the developments shown and the load put on the
+  approved · Proposed (in review)*; each controls both the development markers shown and the load put on the
   sewers (capacity colours, a pipe's flow table, the trace's tightest pipe). All on = full build-out
   conditions; the legend lists the loads when some are off.
+  Site boundaries stay on the map whatever these switches say: a development whose layer is off
+  has its boundary dashed and faint, with "Not in the wastewater loads" in its tooltip.
 - **Resizable bottom panels**: drag the analysis panel's top edge (or focus it and use the arrow keys)
   to give the map more or less room; on a phone, drag the info sheet's grip, or tap it to step
   30% → 50% → 62% → 92%. Heights are remembered.

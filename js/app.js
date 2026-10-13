@@ -706,7 +706,7 @@
   // plan nested in a larger development, that application (with a link to the whole project).
   // Selected developments are outlined in orange (no phase uses it).
   const SEL_COLOR = '#f76707';
-  function outline(p, strong) {
+  function outline(p, strong, unloaded) {
     const apps = siteApps(p);
     const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
     return apps.map(a => {
@@ -714,14 +714,16 @@
       // Application boundaries in the project's phase colour with a light fill (the census
       // areas are the white lines); the selected project is outlined in orange.
       const ph = colors[p.phase] || colors.approved;
+      // A development whose layer is off in Wastewater loads: its boundary stays, dashed and faint.
       const poly = L.polygon(toLatLngs(a.poly), {
         renderer: strong ? focusCanvas : canvas, color: strong ? SEL_COLOR : ph, weight: strong ? 3 : 1.6,
-        opacity: strong ? 1 : 0.9, fill: true, fillColor: strong ? SEL_COLOR : ph, fillOpacity: strong ? 0.2 : 0.12,
+        opacity: strong ? 1 : unloaded ? 0.75 : 0.9, fill: true, fillColor: strong ? SEL_COLOR : ph, fillOpacity: strong ? 0.2 : unloaded ? 0.05 : 0.12,
+        dashArray: unloaded && !strong ? '5 4' : null,
       });
       poly._area = area;
       const nested = apps.length > 1 && area < biggest * 0.6;
       poly.bindTooltip(`<strong>${esc(a.ref || a.type || 'Application')}</strong>${a.type ? ` · ${esc(a.type)}` : ''}<br>${esc(a.address || p.title)}` +
-        `${a.units ? ` · ${fmtNum(a.units)} units` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
+        `${a.units ? ` · ${fmtNum(a.units)} units` : ''}${unloaded ? `<br><span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
       poly.on('click', ev => { L.DomEvent.stop(ev); if (nested) showRecordDetail(a, p); else showDetail(p); });
       return poly;
     });
@@ -747,10 +749,13 @@
     const polys = [], dots = [];
     for (const p of state.filtered) {
       if (n >= SITE_MAX_POINTS) break;
-      if (!siteApps(p).length || !devShown(p)) continue;
+      // Boundaries show whatever the Wastewater loads switches (those only change what's counted).
+      if (!siteApps(p).length || !devsOn) continue;
       const b = projectBounds(p);
       if (!b || !view.intersects(b)) continue;
-      polys.push(...outline(p, false));
+      const unloaded = !devShown(p);
+      polys.push(...outline(p, false, unloaded));
+      if (unloaded) continue;
       for (const r of sitePermits(p)) {
         if (n++ >= SITE_MAX_POINTS) break;
         if (view.contains([r.lat, r.lng])) dots.push(permitDot(r, p, false));
