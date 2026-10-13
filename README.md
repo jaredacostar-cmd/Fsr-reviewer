@@ -747,8 +747,11 @@ A development opens on six tabs (the last one picked is kept):
 
 - **Overview** — status, latest decision, build-out, the latest Functional Servicing Report link,
   the proposal, aerial check.
-- **Demand** — units, jobs & build-out; servicing allocation; flows by stage (water max day / peak
-  hour, wastewater peak dry / wet) and the sewer path.
+- **Demand** — units, jobs & build-out, with *Demand by stage* (total, completed, remaining) in
+  place of the build-out stepper: a Water | Wastewater switch shows one system's rows at a time
+  (water average / max day / peak hour, or wastewater average / peak dry / I&I / peak wet; employment
+  and totals likewise; the choice is remembered). Then flows by stage and the sewer path. (Servicing
+  allocation is hidden from the panel.)
 - **Water** — trace the water supply from the plant; demand, supply route, watermains, fire flow.
 - **Wastewater** — trace the sewer path to the plant; flows, path and tightest pipe, plant reserve,
   sanitary sewers; the site (ground, storm sewers, stormwater).

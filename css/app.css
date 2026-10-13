@@ -1647,3 +1647,9 @@ body.print-map .area-box { display: none; }
 .dv-tabs::-webkit-scrollbar { display: none; }
 .dv-tabs button { flex: 1 0 auto; padding: 9px 5px 7px; font-size: 12px; white-space: nowrap; }
 .svc-sys-dc { --sys: #d6336c; }
+
+/* Demand by stage: one system at a time. */
+.dm-stage { margin: 8px 0; }
+.dm-sys { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--surface-2); margin-bottom: 4px; }
+.dm-sys .btn { border: 0; background: transparent; padding: 3px 10px; }
+.dm-sys .btn.on { background: var(--accent); color: #fff; }
