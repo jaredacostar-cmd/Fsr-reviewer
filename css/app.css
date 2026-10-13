@@ -1513,3 +1513,7 @@ details.stamp { display: block; }
 .wf-as { font-size: 11.5px; margin: 6px 0; }
 .wf-as caption { text-align: left; font-weight: 600; font-size: 12px; padding-bottom: 2px; }
 .wf-table .wf-pz { display: block; white-space: nowrap; font-size: 11.5px; }
+.wcap { margin-top: 10px; }
+.wcap .cap-chart { position: relative; }
+.wcap-pump > summary { cursor: pointer; list-style-position: inside; }
+.cap-chart { position: relative; }
