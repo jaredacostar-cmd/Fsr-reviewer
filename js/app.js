@@ -4604,7 +4604,7 @@
       ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}
       ${t.stations.length ? `<li class="why-ok"><span>Pumping station${t.stations.length === 1 ? '' : 's'} on the way: ${t.stations.map(ps => esc(ps.name.replace(/\s*SEWAGE PUMPING( STN| STATION)?/i, '').replace(/\b\w+/g, x => x[0] + x.slice(1).toLowerCase()))).join(', ')}.</span></li>` : ''}
       ${w ? `<li class="${w.r1 > 1 ? 'why-stall' : 'why-ok'}"><span>Tightest pipe on the way: <button type="button" class="btn small link" data-pipe="${w.i}">${P[w.i][0]} mm</button> at <strong>${Math.round(w.r1 * 100)}%</strong> of full capacity (${esc(st[3].toLowerCase())}, ${capYear == null ? 'build-out' : capYear}).</span></li>` : ''}
-    </ul><p class="small muted">On the map: the dashed line joins the site to the sewer${t.pl ? ' (dashed pink: the planned DC mains, flow direction not published)' : ''}; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
+    </ul><p class="small"><button type="button" class="btn small" data-profile="trace"><span aria-hidden="true">⌇</span> Sewer profile along this path</button></p><p class="small muted">On the map: the dashed line joins the site to the sewer${t.pl ? ' (dashed pink: the planned DC mains, flow direction not published)' : ''}; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
   }
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-trace]'); if (!b) return;
@@ -5336,8 +5336,11 @@
     } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (terrain tiles did not load).</span>'; }
   }
   toolPanel.addEventListener('click', e => {
-    if (e.target.closest('[data-tool-done]')) return setTool(null);
-    if (e.target.closest('[data-tool-clear]')) { tool.pts = []; toolLayer.clearLayers(); return renderToolPanel(); }
+    // Redraw after the click has finished: replacing the button under the pointer during the click
+    // detaches it, and Leaflet then takes the same click for a tap on the map (a stray point).
+    e.stopPropagation();
+    if (e.target.closest('[data-tool-done]')) { setTimeout(() => setTool(null)); return; }
+    if (e.target.closest('[data-tool-clear]')) { setTimeout(() => { tool.pts = []; toolLayer.clearLayers(); renderToolPanel(); }); return; }
     const b = e.target.closest('[data-buffer]'); if (!b || !tool.pts.length) return;
     const c = tool.pts[tool.pts.length - 1], r = +b.dataset.buffer;
     let added = 0;
@@ -5361,6 +5364,120 @@
       tracePoint(e.latlng);
     }
   });
+  // ---- Sewer profile: ground, pipe and the modelled flow along a route --------------------------
+  // For a route of 300 mm+ pipes (a trace, or downstream of a pipe): the ground (terrain tiles), the
+  // pipe (Region of Peel inverts; where one isn't published it follows on from the pipe before at the
+  // published slope, drawn dashed), and the sewage at the demand year: the normal depth in a
+  // part-full pipe (Manning), or, over capacity, the hydraulic grade above the crown
+  // (Sf = S0 × (Q / Qfull)², rising upstream from the crown at the pipe's lower end).
+  const PROF = { el: null, seq: 0 };
+  async function sewerProfile(route, title) {
+    const P = SEW.data.pipes, seq = ++PROF.seq;
+    if (!PROF.el) {
+      PROF.el = document.createElement('div'); PROF.el.className = 'prof-dlg'; PROF.el.hidden = true; document.body.appendChild(PROF.el);
+      PROF.el.addEventListener('click', e => { if (e.target === PROF.el || e.target.closest('[data-prof-close]')) PROF.el.hidden = true; const w = e.target.closest('[data-prof-win]'); if (w) drawProfile(+w.dataset.profWin); });
+      addEventListener('keydown', e => { if (e.key === 'Escape' && PROF.el && !PROF.el.hidden) PROF.el.hidden = true; });
+    }
+    PROF.el.hidden = false;
+    PROF.el.innerHTML = `<div class="prof-card" role="dialog" aria-label="Sewer profile"><div class="prof-head"><strong>${esc(title)}</strong><button type="button" class="btn small link" data-prof-close>Close ×</button></div><p class="muted small">Looking up the ground along ${fmtNum(route.length)} pipes…</p></div>`;
+    // Distances, inverts (published, else carried on at the slope) and flows.
+    let x = 0, lastDn = null;
+    const segs = route.map(i => {
+      const p = P[i], c = pipeCoords(p);
+      let len = p[14]; if (!(len > 0)) { len = 0; for (let k = 1; k < c.length; k++) len += dcM(c[k - 1], c[k]); }
+      let up = p[12], dn = p[13], est = false;
+      if (up == null || dn == null) { est = true; up = up ?? lastDn ?? null; dn = dn ?? (up != null ? up - (p[1] || 0.002) * len : null); }
+      const st = pipeStats(i), D = p[0] / 1000;
+      const sg = { i, x0: x, x1: x + len, len, up, dn, est, D, st, a: c[0], b: c[c.length - 1], mid: c[Math.floor(c.length / 2)] };
+      x += len; lastDn = dn; return sg;
+    });
+    // Back-fill pipes before the first published invert, from the one after.
+    for (let k = segs.length - 2; k >= 0; k--) if (segs[k].up == null && segs[k + 1].up != null) { const g = segs[k]; g.dn = segs[k + 1].up; g.up = g.dn + (P[g.i][1] || 0.002) * g.len; g.est = true; }
+    let ground;
+    try {
+      const pts = segs.flatMap(g => [g.a, g.mid, g.b]);
+      const z = await Promise.all(pts.map(([lng, lat]) => elevAt(lat, lng).catch(() => null)));
+      ground = segs.map((g, k) => [z[3 * k], z[3 * k + 1], z[3 * k + 2]]);
+    } catch (e) { ground = segs.map(() => [null, null, null]); }
+    if (seq !== PROF.seq) return;
+    PROF.data = { segs, ground, title };
+    const tight = segs.reduce((b, g, k) => g.st.r1 != null && (!b || g.st.r1 > segs[b.k].st.r1) ? { k } : b, null);
+    PROF.wins = [{ t: `Whole path (${(x / 1000).toFixed(1)} km)`, a: 0, b: x }];
+    if (x > 2500) PROF.wins.push({ t: 'First 2 km', a: 0, b: 2000 });
+    if (tight && x > 2500) { const c = (segs[tight.k].x0 + segs[tight.k].x1) / 2; PROF.wins.push({ t: `Tightest pipe ±1 km (${P[segs[tight.k].i][0]} mm, ${Math.round(segs[tight.k].st.r1 * 100)}%)`, a: Math.max(0, c - 1000), b: Math.min(x, c + 1000) }); }
+    drawProfile(PROF.wins.length > 1 && x > 8000 ? (tight ? 2 : 1) : 0);
+  }
+  function drawProfile(w) {
+    const { segs, ground, title } = PROF.data, win = PROF.wins[w] || PROF.wins[0], P = SEW.data.pipes;
+    const inWin = segs.map((g, k) => ({ g, z: ground[k] })).filter(({ g }) => g.x1 >= win.a && g.x0 <= win.b && g.up != null);
+    const W = Math.min(1100, innerWidth - 40), H = Math.min(420, Math.max(260, innerHeight * 0.45)), L = 52, R = 14, T = 14, B = 34;
+    // Water surface / hydraulic grade at each end of a pipe.
+    const water = g => {
+      const r = g.st.r1; if (r == null) return null;
+      if (r <= 1) { const y = depthRatio(r) * g.D; return { up: g.up + y, dn: g.dn + y, sur: false }; }
+      const S0 = Math.max(0.0001, (g.up - g.dn) / (g.len || 1)), Sf = S0 * r * r;
+      return { up: g.dn + g.D + Sf * g.len, dn: g.dn + g.D, sur: true };
+    };
+    const ys = inWin.flatMap(({ g, z }) => { const wv = water(g); return [g.up, g.dn, g.up + g.D, ...(z || []).filter(v => v != null), ...(wv ? [wv.up] : [])]; });
+    if (!ys.length) { PROF.el.querySelector('.prof-card').innerHTML = `<div class="prof-head"><strong>${esc(title)}</strong><button type="button" class="btn small link" data-prof-close>Close ×</button></div><p class="small muted">No published inverts on this path to draw a profile from.</p>`; return; }
+    const lo = Math.floor(Math.min(...ys) - 1), hi = Math.ceil(Math.max(...ys) + 1);
+    const X = v => L + (Math.min(win.b, Math.max(win.a, v)) - win.a) / ((win.b - win.a) || 1) * (W - L - R), Y = z => T + (1 - (z - lo) / ((hi - lo) || 1)) * (H - T - B);
+    const pt = (xx, z) => `${X(xx).toFixed(1)},${Y(z).toFixed(1)}`;
+    let pipeF = '', pipeE = '', wat = '', sur = '', grd = [], mh = '';
+    for (const { g, z } of inWin) {
+      const poly = `${pt(g.x0, g.up)} ${pt(g.x1, g.dn)} ${pt(g.x1, g.dn + g.D)} ${pt(g.x0, g.up + g.D)}`;
+      if (g.est) pipeE += `<polygon points="${poly}" class="pf-pipe est"/>`; else pipeF += `<polygon points="${poly}" class="pf-pipe"/>`;
+      const wv = water(g);
+      if (wv) {
+        const top = (zz, inv) => Math.min(zz, inv + g.D);
+        wat += `<polygon points="${pt(g.x0, g.up)} ${pt(g.x1, g.dn)} ${pt(g.x1, top(wv.dn, g.dn))} ${pt(g.x0, top(wv.up, g.up))}" class="pf-water${wv.sur ? ' over' : g.st.r1 >= 0.85 ? ' near' : ''}"/>`;
+        if (wv.sur) sur += `<polyline points="${pt(g.x0, wv.up)} ${pt(g.x1, wv.dn)}" class="pf-hgl"/>`;
+      }
+      if (z) { if (z[0] != null) grd.push([g.x0, z[0]]); if (z[1] != null) grd.push([(g.x0 + g.x1) / 2, z[1]]); if (z[2] != null) grd.push([g.x1, z[2]]); }
+      if (X(g.x0) > L + 1) mh += `<line x1="${X(g.x0).toFixed(1)}" x2="${X(g.x0).toFixed(1)}" y1="${Y(g.up + g.D).toFixed(1)}" y2="${(z && z[0] != null ? Y(z[0]) : Y(g.up + g.D)).toFixed(1)}" class="pf-mh"/>`;
+    }
+    grd.sort((a, b) => a[0] - b[0]);
+    const gLine = grd.map(([xx, z]) => pt(xx, z)).join(' ');
+    const gFill = grd.length ? `<polygon points="${pt(grd[0][0], hi)} ${gLine} ${pt(grd[grd.length - 1][0], hi)}" class="pf-gfill"/>` : '';
+    const ticksY = []; const step = Math.max(1, Math.round((hi - lo) / 6)); for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticksY.push(v);
+    const span = win.b - win.a, maxT = Math.max(3, Math.floor((W - L - R) / 62)), kstep = [100, 250, 500, 1000, 2000, 5000, 10000].find(k => span / k <= maxT) || 20000, ticksX = []; for (let v = Math.ceil(win.a / kstep) * kstep; v <= win.b; v += kstep) ticksX.push(v);
+    const svg = `<svg class="prof-svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="Sewer profile: ground, pipe and sewage level along the path">
+      ${ticksY.map(v => `<line x1="${L}" x2="${W - R}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" class="pf-grid"/><text x="${L - 6}" y="${(Y(v) + 3).toFixed(1)}" class="pf-ax" text-anchor="end">${v}</text>`).join('')}
+      ${ticksX.map(v => `<text x="${X(v).toFixed(1)}" y="${H - B + 16}" class="pf-ax" text-anchor="middle">${v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0)} km` : `${v} m`}</text>`).join('')}
+      ${gFill}<polyline points="${gLine}" class="pf-ground"/>${mh}${pipeE}${pipeF}${wat}${sur}
+      <line class="pf-cur" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>
+      <text x="${L}" y="${H - 6}" class="pf-ax">Distance along the path →  (elevation, m)</text></svg>`;
+    const yrT = capYear == null ? 'build-out' : capYear;
+    const nSur = inWin.filter(({ g }) => g.st.r1 > 1).length, nEst = inWin.filter(({ g }) => g.est).length;
+    PROF.el.querySelector('.prof-card').innerHTML = `<div class="prof-head"><strong>${esc(title)}</strong><button type="button" class="btn small link" data-prof-close>Close ×</button></div>
+      <div class="prof-bar"><span class="seg">${PROF.wins.map((o, k) => `<button type="button" class="btn small${k === w ? ' on' : ''}" data-prof-win="${k}">${esc(o.t)}</button>`).join('')}</span>
+        <span class="muted small">Sewage at <strong>${esc(String(yrT))}</strong> (Demand year) · ${fmtNum(inWin.length)} pipes${nSur ? ` · <strong class="pf-over-t">${nSur} surcharged</strong>` : ''}</span></div>
+      <div class="prof-wrap">${svg}<div class="prof-tip" hidden></div></div>
+      <ul class="grow-legend prof-legend"><li><span class="pf-sw ground"></span>Ground (terrain tiles, ±1–2 m)</li><li><span class="pf-sw pipe"></span>Pipe (published inverts${nEst ? '; dashed: estimated from the slope' : ''})</li><li><span class="pf-sw water"></span>Sewage, part full</li><li><span class="pf-sw near"></span>85–100% of capacity</li><li><span class="pf-sw over"></span>Surcharged; red line = hydraulic grade</li></ul>
+      <p class="small muted">Flows at Peel criteria for the scenario (${esc(scenarioText())}). Normal depth in each pipe on its own (Manning, n = 0.013), not a backwater model; above capacity the grade line rises upstream at Sf = S0 × (Q / Qfull)². Depth of cover = ground − crown.</p>`;
+    // Hover / tap: the pipe under the pointer.
+    const svgEl = PROF.el.querySelector('.prof-svg'), tip = PROF.el.querySelector('.prof-tip'), cur = svgEl.querySelector('.pf-cur');
+    const at = ev => {
+      const r = svgEl.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W, xx = win.a + (px - L) / (W - L - R) * (win.b - win.a);
+      const hit = inWin.find(({ g }) => xx >= g.x0 && xx <= g.x1); if (!hit) { tip.hidden = true; cur.setAttribute('visibility', 'hidden'); return; }
+      const { g, z } = hit, f = (xx - g.x0) / (g.len || 1), inv = g.up + (g.dn - g.up) * f, gz = z && z[1] != null ? (z[0] != null && f < 0.5 ? z[0] + (z[1] - z[0]) * f * 2 : z[2] != null ? z[1] + (z[2] - z[1]) * (f - 0.5) * 2 : z[1]) : null, wv = water(g);
+      cur.setAttribute('x1', px); cur.setAttribute('x2', px); cur.setAttribute('visibility', 'visible');
+      tip.hidden = false; tip.style.left = `${Math.min(r.width - 230, Math.max(0, ev.clientX - r.left + 12))}px`;
+      tip.innerHTML = `<strong>${P[g.i][0]} mm</strong> · slope ${(P[g.i][1] * 100).toFixed(2)}% · ${fmtNum(Math.round(xx))} m along
+        <br>Invert ${inv.toFixed(2)} m${g.est ? ' (est.)' : ''} · ground ${gz != null ? `${gz.toFixed(1)} m` : 'n/a'}${gz != null ? ` · cover ${(gz - inv - g.D).toFixed(1)} m` : ''}
+        <br>Flow ${fmtNum(Math.round(g.st.then.q))} L/s of ${g.st.cap ? `${fmtNum(g.st.cap)} L/s` : 'n/a'}${g.st.r1 != null ? ` · <strong>${Math.round(g.st.r1 * 100)}%</strong>` : ''}
+        <br>${wv ? wv.sur ? `<span class="pf-over-t">Surcharged: grade ${(wv.up - g.up - g.D).toFixed(2)} m above the crown at the upper end</span>` : `Sewage depth ${Math.round(depthRatio(g.st.r1) * 100)}% of the pipe · freeboard ${fbText(P[g.i][0], g.st.r1)}` : 'No reliable slope: flow depth not worked out'}`;
+    };
+    svgEl.addEventListener('pointermove', at); svgEl.addEventListener('pointerdown', at);
+    svgEl.addEventListener('pointerleave', () => { tip.hidden = true; cur.setAttribute('visibility', 'hidden'); });
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-profile]'); if (!b || !SEW.data) return;
+    if (b.dataset.profile === 'trace' && TRACE.last) return sewerProfile(TRACE.last.route, `Sewer profile: ${(TRACE.last.km).toFixed(1)} km to ${TRACE.last.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(TRACE.last.plantName)}`);
+    const m = /^pipe:(\d+)$/.exec(b.dataset.profile);
+    if (m) { const i = +m[1], all = pipeRoute(i); let run = 0; const r = []; for (const k of all) { r.push(k); const c = pipeCoords(SEW.data.pipes[k]); for (let q = 1; q < c.length; q++) run += dcM(c[q - 1], c[q]); if (run > 3000) break; } sewerProfile(r, `Sewer profile: ${SEW.data.pipes[i][0]} mm sewer and ${(run / 1000).toFixed(1)} km downstream`); }
+  });
+
   // Trace from any point on the map: the nearest 300 mm+ sewer down to the plant.
   async function tracePoint(ll) {
     const pt = { key: `pt:${ll.lat.toFixed(5)},${ll.lng.toFixed(5)}`, lat: ll.lat, lng: ll.lng, title: 'Point on the map' };
@@ -5913,6 +6030,7 @@
     $('#detail-body').innerHTML = `
       <div class="head"><h3>${p[0]} mm sanitary sewer</h3><div class="m">${esc(SEW.data.plants[p[6]] === 'Toronto' ? 'City of Toronto system' : plantLabel(SEW.data.plants[p[6]]))} sewershed · slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a'}${p[7] ? ` · installed ${p[7]}` : ''}</div></div>
       <div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(capYear == null ? 'Build-out' : capYear, s.then.q, s.r1)}${s.r1 != null ? `<span class="chip">Freeboard ${fbText(p[0], s.r1)}</span>` : ''}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
+      <p class="small"><button type="button" class="btn small" data-profile="pipe:${i}"><span aria-hidden="true">⌇</span> Sewer profile downstream</button></p>
       ${pipeCalcHTML(i, s)}
       ${exportBar('loads')}
       <table class="dt loads-table"><caption>${fmtNum(up.length)} developments since the census draining through this pipe, largest peak wet first</caption>

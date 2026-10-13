@@ -12,7 +12,8 @@
  *     inside it (or the nearest one), and each hectare of land within 150 m of a sewer is given to
  *     its nearest manhole (for infiltration and inflow); both are summed downstream.
  *  4. Output: every gravity pipe of 300 mm or more with its downstream pipe in the output, so the
- *     app can add growth from a development down its path.
+ *     app can add growth from a development down its path; with its upstream / downstream inverts
+ *     (m, where published and plausible) and length, for the sewer profile.
  *
  *   node scripts/build-sewer-capacity.js --raw <dir with wwMains.json.gz from fetch-linework-raw.js> [--out data]
  */
@@ -191,12 +192,13 @@ function main() {
     const yr = P.InstallationDate && P.InstallationDate < 4e12 ? new Date(P.InstallationDate).getUTCFullYear() : 0;
     const g = f.g.length > 6 ? [f.g[0], f.g[Math.floor(f.g.length / 2)], f.g[f.g.length - 1]] : f.g;
     return [P.Diameter, s ? Math.round(s * 1e5) / 1e5 : 0, s ? Math.round(manning(P.Diameter, s)) : 0, nextOf(k), Math.round(edgeP.get(f) || 0), Math.round(edgeA.get(f) || 0),
-      pl ? PLANTS.indexOf(pl.name) : PLANTS.length - 1, yr, idx(MATS, P.Material), idx(RISKS, P.RiskRatingDesc), g.flatMap(([x, y]) => [r5(x), r5(y)]), Math.round(k.share * 100) / 100];
+      pl ? PLANTS.indexOf(pl.name) : PLANTS.length - 1, yr, idx(MATS, P.Material), idx(RISKS, P.RiskRatingDesc), g.flatMap(([x, y]) => [r5(x), r5(y)]), Math.round(k.share * 100) / 100,
+      validInv(P.InvertUp) ? Math.round(P.InvertUp * 100) / 100 : null, validInv(P.InvertDown) ? Math.round(P.InvertDown * 100) / 100 : null, P.PipeLengthGIS > 0 ? Math.round(P.PipeLengthGIS * 10) / 10 : null];
   });
   const out = {
     version: 1, generatedAt: new Date().toISOString().slice(0, 10), n: N, minDiameter: MIN_D,
     source: 'Region of Peel Wastewater Main (waterwastWater/FeatureServer/10): diameter, slope, inverts, install date, risk rating; 2021 Census dissemination areas.',
-    fields: ['diameterMm', 'slope', 'capacityLs', 'next', 'censusPopUp', 'haUp', 'plant', 'installYear', 'material', 'risk', 'coords', 'share'],
+    fields: ['diameterMm', 'slope', 'capacityLs', 'next', 'censusPopUp', 'haUp', 'plant', 'installYear', 'material', 'risk', 'coords', 'share', 'invertUp', 'invertDown', 'lengthM'],
     plants: PLANTS, materials: MATS, risks: RISKS, pipes,
   };
   fs.writeFileSync(path.join(outDir, 'sewers.json'), JSON.stringify(out));
