@@ -1731,3 +1731,9 @@ body.print-map .area-box { display: none; }
 .uu-entry input { width: 70px; padding: 2px 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
 .user-units { color: var(--accent); font-size: 11px; }
 .table-wrap { overflow-x: auto; max-width: 100%; }
+
+/* Application on its own: key to the map colours */
+.sub-key { float: right; display: inline-flex; gap: 4px; align-items: center; margin-left: 8px; color: var(--text-muted); font-size: 11px; }
+.sub-key i { display: inline-block; width: 12px; height: 10px; border-radius: 2px; }
+.sub-key .sk-app { background: color-mix(in srgb, #9c36b5 30%, transparent); border: 2px solid #9c36b5; }
+.sub-key .sk-dev { margin-left: 6px; border: 2px dashed #f76707; }

@@ -769,6 +769,9 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   overlapping boundary) nested under it. Open any one to see it **on its own**, with the same
   tabs (Overview, Demand, Water, Wastewater, DC Analysis, History): the application, its
   pre-consultation and the building permits inside its land. *← Whole development* goes back.
+  On the map the application stands out in purple, with the rest of the development dashed in
+  orange (a key sits at the top of the panel), and the map fits the application. Hovering a file
+  in the lists previews it on the map in purple.
 - **Related applications**: other developments with a file on the same land, either overlapping
   by at least 15% of either boundary or at the same civic address. Neighbours that only share an
   edge don't count. Each link says how they relate (covers / within / overlaps / same address).
