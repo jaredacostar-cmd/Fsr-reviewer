@@ -618,6 +618,14 @@
     for (const land of lands.values()) land.start = Math.min(...land.sites.map(s => s.start ?? Infinity));
 
     // 3. Nesting: each land's parent is the smallest larger land containing its centre.
+    //    A subdivision takes in the site plans and condos within it. But a land whose own files are
+    //    official plan / zoning / subdivision files (a draft plan) inside another such land (a
+    //    precinct or block plan) is its own development: the precinct plan covers several draft
+    //    plans by different owners. It stays linked as part of the area (areaParent), and the area
+    //    counts only the units its draft plans don't already carry.
+    const formalStages = land => land.sites.flatMap(s => s.recs).filter(r => r.kind === 'application' && r.phase !== 'cancelled' && (r.stage || stageOf(r)) !== 'precon').map(r => r.stage || stageOf(r));
+    const draftLike = land => { const st = formalStages(land); return st.length > 0 && st.every(x => x === 'master'); };
+    const hasMaster = land => formalStages(land).includes('master');
     for (const land of lands.values()) {
       const [x, y] = land.rep.centre;
       let best = null;
@@ -627,7 +635,9 @@
         if (!after(isFinite(land.start) ? land.start : null, isFinite(other.start) ? other.start : null)) continue;
         if (!best || other.area < best.area) best = other;
       }
-      if (best) { land.parent = best; best.children.push(land); }
+      if (!best) continue;
+      if (draftLike(land) && hasMaster(best)) { land.areaParent = best; (best.areaKids || (best.areaKids = [])).push(land); }
+      else { land.parent = best; best.children.push(land); }
     }
     const rootOf = land => { while (land.parent) land = land.parent; return land; };
 
@@ -662,7 +672,14 @@
       const collect = land => { for (const s of land.sites) all.push(...s.recs); land.children.forEach(collect); };
       collect(root);
       all.push(...(extra.get(root) || []));
-      parts.push({ key: root.rep.key, recs: all, site: { planned: plannedUnits(root), site: root.rep } });
+      const site = { planned: plannedUnits(root), site: root.rep };
+      // An area plan (precinct / block plan) holding draft plans: only the units they don't carry.
+      const kids = (root.areaKids || []).map(plannedUnits).filter(v => v > 0), covered = kids.reduce((t, v) => t + v, 0);
+      if (root.areaKids && root.areaKids.length) {
+        site.area = { drafts: root.areaKids.length, covered };
+        if (site.planned != null) site.planned = Math.max(0, site.planned - covered);
+      }
+      parts.push({ key: root.rep.key, recs: all, site });
     }
     for (const [key, recs] of loose) parts.push({ key, recs, site: {} });
     // Sites made only of permits that build nothing (signs, entrances, demolitions…) aren't developments.
@@ -990,7 +1007,9 @@
       first: dates.length ? dates[0] : null,
       last: dates.length ? dates[dates.length - 1] : null,
       // Units counted once: the larger of planned (applications) and permitted (permits).
-      units: buildout ? Math.max(buildout.planned, buildout.permitted) : (permitted || sumOf('units')),
+      units: buildout ? Math.max(buildout.planned, buildout.permitted) : (permitted || (site.area && site.planned === 0 ? null : sumOf('units'))),
+      // An area plan holding separate draft-plan developments: how many, and the units they carry.
+      areaPlan: site.area || undefined,
       buildout,
       // The site's land boundary (largest same-land application polygon), for the aerial check.
       siteRings: site.site ? site.site.rings : null,

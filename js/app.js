@@ -2600,12 +2600,12 @@
     if (civicOf(a) && civicOf(a) === civicOf(b)) return 'same address';
     if (a.poly && b.poly) {
       const ab = landShare(a.poly, b.poly), ba = landShare(b.poly, a.poly);
-      if (ab >= 0.9 && ba < 0.9) return 'covers it';
-      if (ba >= 0.9 && ab < 0.9) return 'within it';
+      if (ab >= 0.9 && ba < 0.9) return 'within it';   // a lies inside b
+      if (ba >= 0.9 && ab < 0.9) return 'covers it';    // b lies inside a
       return ab >= 0.15 || ba >= 0.15 ? 'overlapping land' : null;
     }
     const pt = a.poly ? b : a, pl = a.poly ? a : b;
-    return pl.poly && pt.lat != null && P.pointInRings(pt.lng, pt.lat, pl.poly) ? (pl === a ? 'within it' : 'covers it') : null;
+    return pl.poly && pt.lat != null && P.pointInRings(pt.lng, pt.lat, pl.poly) ? (pl === a ? 'covers it' : 'within it') : null;
   }
   const sameLand = (a, b) => !!landRel(a, b);
   // The development's formal applications, each with the pre-consultations on its land; the
@@ -2667,7 +2667,8 @@
           ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}</div></li>`).join('')}</ul>
         <p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`;
     }
-    if (rel.length) html += `<details class="sect" id="dev-related"${p.records.every(isPrecon) ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
+    if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
+    if (rel.length) html += `<details class="sect" id="dev-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
       <ul class="file-tree">${rel.map(({ q, hits }) => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P.PHASE_BY_KEY[q.phase].label)}</span>
         <div class="small muted">${hits.slice(0, 4).map(h => `${fileLine(h.r)} <span class="rel-how">${esc({ 'same address': 'same address as', 'covers it': 'covers', 'within it': 'within', 'overlapping land': 'overlaps' }[h.how])} ${esc(h.m.ref)}</span>`).join('<br>')}${hits.length > 4 ? `<br>+ ${hits.length - 4} more` : ''}</div></div></li>`).join('')}</ul>
       <p class="small muted">Other developments with an application on the same land (overlapping boundaries or the same civic address), each counted in its own development, once.</p></details>`;
