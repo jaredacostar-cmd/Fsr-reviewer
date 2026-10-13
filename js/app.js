@@ -4766,7 +4766,7 @@
     Object.assign(mstyle, ch); store.set('mapStyle', mstyle);
     syncMapOpts();
     if ('color' in ch || 'size' in ch || 'show' in ch) renderMarkers();
-    if ('cap' in ch) renderCapLayer();
+    if ('cap' in ch) { renderCapLayer(); if (pipeLbl && existOn.sanitary) renderExisting(); }
     renderLegend(); viewLink.write();
   }
   function setDcOn(d) {
@@ -6218,7 +6218,9 @@
           .bindTooltip(`<strong>${esc(existText(kind, a))}</strong><br><span class="muted">${esc(S.src)} (live)${kind === 'sanitary' ? ' · tap: what flows into it' : ''}</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { if (kind !== 'sanitary') return; L.DomEvent.stop(ev); existSewerLoads(lines, a); })
           .addTo(existLayer);
-        if (pipeLbl && a.d) lbls.push({ d: a.d, color: EXIST_STYLE[kind].color, lines });
+        // With the sewer capacity colours on, the existing sewers carry no labels: theirs would cover
+        // the capacity labels (the size is in each pipe's tooltip).
+        if (pipeLbl && a.d && !(kind === 'sanitary' && mstyle.cap === 'pipes')) lbls.push({ d: a.d, color: EXIST_STYLE[kind].color, lines });
       }
     }))));
     if (seq === existSeq && pipeLbl) placePipeLabels(lbls, existLayer);

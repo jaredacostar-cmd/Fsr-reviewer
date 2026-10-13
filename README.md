@@ -519,7 +519,9 @@ from street zoom (14), up to 3,000 in view.
 - **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
   Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
   for diameter, material, year, slope; *Size labels* labels each pipe (and the sewer capacity
-  layer) with its diameter. The development's Servicing tab reports every existing main of each type
+  layer) with its diameter. While the sewer capacity colours are on, the existing sanitary sewers
+  carry no labels of their own (they covered the capacity labels, which show size and %); their
+  size stays in each pipe's tooltip. The development's Servicing tab reports every existing main of each type
   within 100 / 200 / 400 m — size, material, year, the street it runs along (reverse geocoded:
   ArcGIS World, then OpenStreetMap) and distance, pieces of the same main merged; tap one to see it
   on the map — and the oldest / moderate-risk sanitary sewer on the site's path (first
