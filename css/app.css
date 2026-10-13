@@ -1634,3 +1634,11 @@ body.print-map .area-box { display: none; }
 .tour-dots button.done { background: color-mix(in srgb, var(--accent) 45%, var(--surface-1)); }
 .tour-dots button.on { background: var(--accent); width: 18px; border-radius: 4px; }
 .tour-btns .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* Site boundary on hover. */
+.hov-site { stroke: #f76707; stroke-width: 2.5; stroke-dasharray: 6 4; fill: #f76707; fill-opacity: .12; }
+.hov-ring { stroke: #f76707; stroke-width: 2; stroke-dasharray: 4 4; fill: none; }
+.leaflet-tooltip.hov-tip { font-size: 12px; padding: 4px 8px; }
+.mo-range { display: grid !important; grid-template-columns: 50px minmax(0, 1fr) 44px !important; align-items: center; gap: 6px; }
+.mo-range input { width: 100%; margin: 0; }
+.mo-range b { font-size: 11px; font-weight: 600; text-align: right; color: var(--text-primary); }

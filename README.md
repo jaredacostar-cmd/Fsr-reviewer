@@ -745,6 +745,10 @@ open data carries each file's first submission date, not resubmissions.
 
 - **More settings** has its own box under Layers (top right). With both open they share the
   height down to the boxes at the bottom right; only open boxes are capped.
+- **Site boundary on hover:** point at a development (mouse / trackpad) and its application site is
+  outlined in dashed orange with its address, phase and units; one without a published boundary
+  gets a dashed ring. More settings → *Site boundary on hover*: Show on / off and Reach (10–120
+  screen pixels, default 40), remembered in this browser.
 - **Demand year** sits on top of the timeline box and runs from the **2021 Census** to build-out
   (buttons: 2021 Census · Today · Build-out). Before today, growth built since the census counts in
   the share of it completed by that year (Peel-wide, by units and completion date); approved and
