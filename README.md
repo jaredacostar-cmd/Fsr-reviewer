@@ -711,6 +711,15 @@ transmission system.
 - **Plant ratings and 2025 flows:** the drinking water reports.
 - **Planned works:** linked from the 2026 DC maps by name.
 
+**Water capacity by growth layer** (in the Water tab, above the facilities) uses the same bars as the
+wastewater plants: existing, built since, approved and proposed, with the uncommitted reserve.
+
+- **Treatment** compares South Peel and the Caledon well systems against their rated capacity.
+  Existing is the 2025 measured maximum day, with growth added at Peel's design criteria, the same
+  basis as the Overview.
+- **Pumping into each pressure zone** compares the firm capacity of the pumps that lift water into
+  zone n or above against the design maximum day of zone n and every zone above it.
+
 Alloa's location isn't published, so it is listed in the table but not shown on the map.
 
 ## DC funding scenario

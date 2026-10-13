@@ -3603,6 +3603,7 @@
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
       ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
+      ${waterCapHTML()}
       ${waterFacilitiesHTML()}
       ${hydroBoxHTML()}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
@@ -3838,7 +3839,7 @@
   // Plant capacity chart (Plants tab). One bar per plant on a % of rated capacity axis; the
   // 100% line is the rated capacity. Segment colours follow the Growth tab (census grey, built
   // green, approved blue, proposed hatched), every value is also written out below the bar.
-  function capChartHTML(rows, Y) {
+  function capChartHTML(rows, Y, opt = {}) {
     const pct = (x, r) => x / r * 100;
     const maxPct = Math.max(110, ...rows.map(r => pct(r.v.reduce((a, b) => a + b, 0), r.rated)));
     const axisMax = Math.ceil(maxPct / 25) * 25;
@@ -3852,23 +3853,30 @@
       const reserve = r.rated - committed, afterProposed = r.rated - tot;
       // Too few people mapped to the sewershed (Inglewood: a village inside a large rural census
       // area) makes the flow per person meaningless; skip the population equivalents then.
-      const okPop = r.popToday >= 1000 && r.perPerson > 0;
+      const okPop = !opt.noPeople && r.popToday >= 1000 && r.perPerson > 0;
       const people = mld => okPop ? mld * 1e6 / r.perPerson : 0;
       const eq = mld => okPop ? ` ≈ ${ppl(people(mld))}` : '';
       const popAt100 = r.perPerson > 0 ? (r.rated - r.extMld) * 1e6 / r.perPerson : 0;
-      const bar = r.v.map((v, i) => v > 0 ? `<span class="gseg ${segs[i][0]}" style="flex:${(v / tot * 1000).toFixed(3)} 1 0" tabindex="0" data-tip="${esc(`${segs[i][1]}: ${fmt1(v)} ML/d · ${pct(v, r.rated).toFixed(1)}% of rated capacity`)}"></span>` : '').join('');
+      const bar = r.v.map((v, i) => v > 0 ? `<span class="gseg ${segs[i][0]}" style="flex:${(v / tot * 1000).toFixed(3)} 1 0" tabindex="0" data-tip="${esc(`${segs[i][1]}: ${fmt1(v)} ML/d · ${pct(v, r.rated).toFixed(1)}% of ${r.capWord || 'rated'} capacity`)}"></span>` : '').join('');
       const resBox = reserve > 0 ? `<span class="cap-reserve" style="left:${X(pct(committed, r.rated))};width:${X(pct(reserve, r.rated))}" data-tip="${esc(`Uncommitted reserve: ${fmt1(reserve)} ML/d${okPop ? ` ≈ ${fmtNum(Math.round(people(reserve) / 100) * 100)} people` : ''}`)}"></span>` : '';
       return `<div class="cap-row">
-        <div class="cap-name">${r.name}<small>rated ${uML(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
+        <div class="cap-name">${r.name}<small>${r.capWord || 'rated'} ${uML(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
         <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${resBox}<span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
           <span class="cap-end${Math.abs(pct(tot, r.rated) - 100) < 9 ? ' near' : ''}" style="left:${X(Math.max(pct(tot, r.rated), 100))}">${Math.round(pct(tot, r.rated))}%</span></div>
         <div class="cap-text small">
           <span>Existing + built + approved <strong>${Math.round(pct(committed, r.rated))}%</strong> (${uML(committed)})</span>
           <span>${reserve >= 0 ? `Uncommitted reserve <strong>${uML(reserve)}</strong>${okPop ? ` ≈ <strong>${ppl(people(reserve))}</strong>` : ''}` : `<strong class="over">Over-committed by ${uML(-reserve)}</strong>`}</span>
           <span>${afterProposed >= 0 ? `After proposed: ${uML(afterProposed)}${eq(afterProposed)}` : `<span class="over">After proposed: short ${uML(-afterProposed)}${eq(-afterProposed)}</span>`}</span>
-          <span>${okPop ? `Population at 100%: <strong>${ppl(popAt100)}</strong> <span class="muted">(today ${ppl(r.popToday)}, ${unit(fmtNum(Math.round(r.perPerson)), 'L/person/d')})</span>` : '<span class="muted">Population equivalents not shown: too few census people are mapped to this sewershed</span>'}</span>
+          ${opt.noPop100 ? '' : `<span>${okPop ? `Population at 100%: <strong>${ppl(popAt100)}</strong> <span class="muted">(today ${ppl(r.popToday)}, ${unit(fmtNum(Math.round(r.perPerson)), 'L/person/d')})</span>` : '<span class="muted">Population equivalents not shown: too few census people are mapped to this sewershed</span>'}</span>`}
         </div></div>`;
     }).join('');
+    if (opt.title) return `${opt.title.trim() ? `<h3 class="svc-sub">${opt.title} <span class="muted small">${opt.sub || ''}</span></h3>` : ''}
+      <div class="cap-chart"${opt.info ? ` data-info="${opt.info}"` : ''}>
+        <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
+        ${body}
+        ${opt.legend === false ? '' : `<ul class="grow-legend"><li><span class="gsw g-base"></span>${esc(opt.baseLabel || `${Y} Census (existing)`)}</li><li><span class="gsw g-built"></span>Built since ${Y}</li><li><span class="gsw g-approved"></span>Approved</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li><span class="gsw cap-reserve-sw"></span>Uncommitted reserve</li><li><span class="cap-line-sw"></span>${esc(opt.capLegend || 'Capacity (100%)')}</li></ul>`}
+        <div class="grow-tip" hidden></div>
+      </div>${opt.notes ? `<details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">${opt.notes}</p></details>` : ''}`;
     return `<h3 class="svc-sub">Plant capacity <span class="muted small">average dry weather as a % of rated capacity · ${svcOpt.ww === 'calibrated' ? 'capacity check, calibrated to 2025 flows' : 'design flows, Peel criteria'}${svcOpt.div === 'on' ? ' · with the 70 ML/d diversion' : ''}</span></h3>
       <div class="cap-chart" data-info="plant-capacity">
         <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
@@ -6050,6 +6058,53 @@
       <p class="small muted">${esc(f.parts.join(' · '))}${f.posFrom ? ` · position: ${esc(f.posFrom)}` : ''}. Sources: Region of Peel open data (locations); <a href="${esc(D.sources.mpUrl)}" target="_blank" rel="noopener">2020 Master Plan, Vol. 3</a> (pumping and storage capacity, Tables 4–7, 9, 11, 12)${f.plant || f.groundwater ? `; Region of Peel ${R ? R.year : 2025} drinking water reports` : ''}. The 2025 Master Plan will update these capacities.</p></div>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'wf'; $('#detail').scrollTop = 0;
   }
+  // Water capacity by growth layer (Water tab), on the same bars as the wastewater plants:
+  // treatment (South Peel; the Caledon well systems) as the Overview counts it (the 2025 measured
+  // maximum day as existing, split census / built since by the model, plus approved and proposed
+  // growth at Peel criteria), and pumping into each lake-based pressure zone: the firm capacity of
+  // the pumps that lift water from below zone n into zone n or higher (2020 Master Plan, actual
+  // firm where modelled) against the design maximum day of zone n and every zone above it.
+  function waterLayers(ids) {
+    const M = state.svcModel, o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0 };
+    for (const id of ids) { const l = M.zones.get(id); if (l) for (const k in o) o[k] += l[k] || 0; }
+    const w = (p, j) => M.wMax(p, j);
+    return { o, v: [w(o.census, 0), w(o.built, o.jbuilt), w(o.approved, o.japproved), w(o.proposed, o.jproposed)] };
+  }
+  function waterCapRow(name, ids, rated, base, note, capWord) {
+    const { o, v } = waterLayers(ids); if (!(rated > 0)) return null;
+    if (base != null) { const today = v[0] + v[1], k = today > 0 ? base / today : 1; v[0] *= k; v[1] *= k; }
+    const popToday = o.census + o.built, perPerson = popToday > 0 ? (v[0] + v[1]) * 1e6 / popToday : 0;
+    return { name: esc(name), rated, v, extMld: 0, perPerson, popToday, note, capWord };
+  }
+  function waterCapHTML() {
+    const M = state.svcModel, R = state.reports; if (!M || !R || !state.servicing) return '';
+    if (!WF.data) { loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
+    const Y = M.Y, sp = R.water.southPeel, lake = lakeZones().filter(id => zLevel(svcById.get(id).zone) <= 7);
+    const treat = [waterCapRow('South Peel (A.P. Kennedy + Lorne Park)', lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
+    for (const z of state.servicing.zones) { const s = wellSystem[z.zone] && R.water.caledon.find(x => x.name === wellSystem[z.zone]); if (s) treat.push(waterCapRow(`${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
+    // Pumps crossing into zone n: source level (the site's reservoir zone, 0 at a plant) below n, target n or above.
+    const pumps = [];
+    for (const f of WF.data.facilities) for (const p of f.pumps || []) {
+      const t = /^[LH]LP(\d)[WCE]$/.exec(p.zone); if (!t) continue;
+      const src = f.kind === 'plant' ? 0 : f.storageZone ? +f.storageZone.replace(/\D/g, '') : null; if (src == null) continue;
+      pumps.push({ src, tgt: +t[1], cap: p.actualFirm ?? p.firm, label: `${f.name} ${p.zone}` });
+    }
+    const pump = [];
+    for (let n = 1; n <= 7; n++) {
+      const into = pumps.filter(p => p.src < n && p.tgt >= n), ids = lake.filter(id => zLevel(svcById.get(id).zone) >= n);
+      const cap = into.reduce((t, p) => t + p.cap, 0); if (!cap || !ids.length) continue;
+      const r = waterCapRow(n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, `${into.length} pump group${into.length === 1 ? '' : 's'}: ${into.map(p => p.label).join(', ')}`, 'firm');
+      if (r) pump.push(r);
+    }
+    const tight = [...treat, ...pump].filter(Boolean).map(r => ({ r, c: (r.v[0] + r.v[1] + r.v[2]) / r.rated, b: r.v.reduce((a, b) => a + b, 0) / r.rated })).sort((a, b) => b.b - a.b)[0];
+    return `<section id="wcap-box" class="wcap" data-info="water-capacity"><h3 class="svc-sub">Water capacity by growth layer</h3>
+      ${tight ? `<p class="small">Tightest: <strong>${tight.r.name}</strong>, ${Math.round(tight.c * 100)}% of its ${tight.r.capWord || 'rated'} capacity with existing + built + approved, ${Math.round(tight.b * 100)}% at build-out.</p>` : ''}
+      ${capChartHTML(treat.filter(Boolean), Y, { title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
+      <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">design maximum day as a % of firm pumping capacity</span></summary>
+      ${capChartHTML(pump, Y, { title: ' ', noPop100: true, noPeople: true, legend: false })}
+      <p class="small muted">Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see the facilities below).</p></details>
+      <p class="small muted">Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region), split between the ${Y} Census and growth built since as the model does; approved and proposed added at Peel's design maximum day (${state.criteria.water.avg} L/cap/d × ${state.criteria.water.maxDay}, employment ${state.criteria.employment.water} L/emp/d). Pumping: for each zone n, the firm capacity (largest pump out of service; the Region's modelled actual firm where the 2020 Master Plan gives it) of every pump group lifting water from a lower zone into zone n or above, against the design maximum day of zone n and all zones above it (the York Region supply, the transfer to the east system and the sub-zone boosters left out). Storage is shown facility by facility (its zones served aren't published).</p></section>`;
+  }
   // Water tab: the facilities by system, with capacity.
   function waterFacilitiesHTML() {
     const D = WF.data; if (!D) { loadWaterFacilities().then(d => { if (d) { const b = $('#wf-box'); if (b) b.outerHTML = waterFacilitiesHTML(); } }); return '<div id="wf-box"></div>'; }
@@ -7157,6 +7212,20 @@
     const s = e.target.closest('[data-tip]'), tip = $('#grow-tip'); if (!s || !tip) return;
     tip.textContent = s.dataset.tip; tip.hidden = false; tip.style.left = '0px'; tip.style.top = '-28px';
   });
+
+  // Hover / tap tooltip for the capacity bars (wastewater plants, water capacity).
+  const capTip = e => {
+    const ch = e.target.closest && e.target.closest('.cap-chart'); if (!ch) return;
+    const tip = ch.querySelector('.grow-tip'), sEl = e.target.closest('[data-tip]'); if (!tip) return;
+    if (!sEl) { tip.hidden = true; return; }
+    tip.textContent = sEl.dataset.tip; tip.hidden = false;
+    const box = ch.getBoundingClientRect();
+    tip.style.left = `${Math.min(box.width - 220, Math.max(0, e.clientX - box.left + 12))}px`;
+    tip.style.top = `${e.clientY - box.top - 34}px`;
+  };
+  document.addEventListener('pointermove', capTip);
+  document.addEventListener('pointerdown', capTip);
+  document.addEventListener('pointerout', e => { const ch = e.target.closest && e.target.closest('.cap-chart'); if (ch && !ch.contains(e.relatedTarget)) { const t = ch.querySelector('.grow-tip'); if (t) t.hidden = true; } });
 
   // Quick views: a phase (or phase group) plus an optional focus.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
