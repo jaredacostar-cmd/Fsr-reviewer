@@ -34,7 +34,7 @@
     phases: DEFAULT_PHASES(),
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
-    sp: [], mtsa: '', pz: '', dr: '',   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
+    sp: [], mtsa: [], pz: [], dr: [],   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     focus: DEFAULT_FOCUS,   // quick-view focus (see FOCUS), combined with the phase
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
@@ -498,27 +498,6 @@
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
         </div>
         <div class="mo-where" data-info="municipality"><div class="mo-seg" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>
-        <details class="mo-more mo-areas" data-info="map-areas"${store.get('moAreasOpen', false) ? ' open' : ''}><summary>Filter by area <span class="mo-sum" id="mo-area-sum"></span></summary>
-          <div class="mo-field" data-info="secondary-plans"><span id="f-sp-label">Secondary plan</span>
-            <details class="multi" id="f-sp">
-              <summary aria-labelledby="f-sp-label f-sp-summary"><span id="f-sp-summary">All areas</span></summary>
-              <div class="multi-panel">
-                <div class="multi-tools">
-                  <input type="search" id="f-sp-q" placeholder="Find a plan…" aria-label="Find a secondary plan">
-                  <button type="button" class="btn small link" id="f-sp-clear">Clear</button>
-                </div>
-                <div class="multi-list" id="f-sp-list" role="group" aria-label="Secondary plans"></div>
-              </div>
-            </details>
-          </div>
-          <label data-info="mtsa"><span id="f-mtsa-label">MTSA</span><select autocomplete="off" id="f-mtsa" aria-labelledby="f-mtsa-label"><option value="">All MTSAs</option></select></label>
-          <small id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</small>
-          <div id="f-svc-group" class="mo-svc-f" hidden>
-            <label data-info="pressure-zone"><span id="f-pz-label">Pressure zone</span><select autocomplete="off" id="f-pz" aria-labelledby="f-pz-label"><option value="">All pressure zones</option></select></label>
-            <label data-info="drainage-area"><span id="f-dr-label">Drainage area</span><select autocomplete="off" id="f-dr" aria-labelledby="f-dr-label"><option value="">All drainage areas</option></select></label>
-          </div>
-          <small class="mo-tip">Or turn on Planning areas and tap an area on the map.</small>
-        </details>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
           <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
@@ -561,7 +540,6 @@
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) showAllDevs(); });
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) clearAreaFilters(); });
-      el.querySelector('.mo-areas').addEventListener('toggle', e => { if (e.target.classList.contains('mo-areas')) store.set('moAreasOpen', e.target.open); });
       el.querySelector('#opt-spl').onchange = e => setAreaOn({ sp: e.target.checked });
       el.querySelector('#opt-mtl').onchange = e => setAreaOn({ mtsa: e.target.checked });
       el.querySelector('#opt-save').onclick = () => saveCurrentView();
@@ -592,6 +570,34 @@
     },
   });
   new MapOptions().addTo(map);
+  // Filter by area (bottom right, its own box): secondary plans / character areas, MTSAs, pressure
+  // zones and drainage areas (or wastewater blocks). Each is a dropdown of checkboxes, so several
+  // can be picked; within a list any match counts, across lists all must match.
+  const AREA_F = {
+    sp: { label: 'Secondary plan', all: 'All areas', find: 'Find a plan…', info: 'secondary-plans', one: 'area' },
+    mtsa: { label: 'MTSA', all: 'All MTSAs', find: 'Find an MTSA…', info: 'mtsa', one: 'MTSA' },
+    pz: { label: 'Pressure zone', all: 'All pressure zones', find: 'Find a zone…', info: 'pressure-zone', one: 'zone', svc: true },
+    dr: { label: 'Drainage area', all: 'All drainage areas', find: 'Find an area…', info: 'drainage-area', one: 'area', svc: true },
+  };
+  const AreaBox = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
+    const el = L.DomUtil.create('details', 'area-box'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+    if (store.get('moAreasOpen', false)) el.open = true;
+    el.innerHTML = `<summary data-info="map-areas"><span>Filter by area</span><span class="mo-sum" id="mo-area-sum"></span></summary>
+      <div class="ab-body">${Object.entries(AREA_F).map(([k, f]) => `<div class="mo-field${f.svc ? ' ab-svc' : ''}"${f.svc ? ' hidden' : ''}><span id="f-${k}-label" data-info="${f.info}">${f.label}</span>
+        <details class="multi" id="f-${k}" data-multi="${k}">
+          <summary aria-labelledby="f-${k}-label f-${k}-summary"><span id="f-${k}-summary">${f.all}</span></summary>
+          <div class="multi-panel">
+            <div class="multi-tools"><input type="search" id="f-${k}-q" placeholder="${f.find}" aria-label="${f.find.replace('…', '')}"><button type="button" class="btn small link" data-multi-clear="${k}">Clear</button></div>
+            <div class="multi-list" id="f-${k}-list" role="group" aria-label="${f.label}"></div>
+          </div>
+        </details></div>`).join('')}
+        <small id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</small>
+        <small class="mo-tip">Pick several in any list. Or turn on Planning areas and tap an area on the map.</small>
+      </div>`;
+    el.addEventListener('toggle', e => { if (e.target === el) { store.set('moAreasOpen', el.open); if (typeof fitLegend === 'function') fitLegend(); } else if (e.target.open) el.querySelectorAll('details.multi[open]').forEach(d => { if (d !== e.target) d.open = false; }); }, true);
+    return el;
+  } });
+  new AreaBox().addTo(map);
   // Map height for the CSS that splits it between the options panel and the legend.
   const setMapH = () => map.getContainer().style.setProperty('--map-h', `${map.getSize().y}px`);
   setMapH(); map.on('resize', setMapH);
@@ -920,9 +926,9 @@
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
     if (state.sp.length && !state.sp.some(id => (p.sp || []).includes(id))) return false;
-    if (state.mtsa && !(p.mtsa || []).includes(state.mtsa)) return false;
-    if (state.pz && !svcIds(p, 'pz').includes(state.pz)) return false;
-    if (state.dr && !svcIds(p, 'dr').includes(state.dr)) return false;
+    if (state.mtsa.length && !state.mtsa.some(id => (p.mtsa || []).includes(id))) return false;
+    if (state.pz.length && !svcIds(p, 'pz').some(id => state.pz.includes(id))) return false;
+    if (state.dr.length && !svcIds(p, 'dr').some(id => state.dr.includes(id))) return false;
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
@@ -964,7 +970,7 @@
       if (!sameSet(state.phases, DEFAULT_PHASES())) set('ph', [...state.phases].join(','));
       if (state.focus !== DEFAULT_FOCUS) set('fo', state.focus || 'none');
       set('mu', state.muni); if (state.kind !== DEFAULT_KIND) set('k', state.kind); set('q', state.search);
-      if (state.sp.length) set('sp', state.sp.join(',')); set('mt', state.mtsa); set('pz', state.pz); set('dr', state.dr);
+      if (state.sp.length) set('sp', state.sp.join(',')); set('mt', state.mtsa.join(',')); set('pz', state.pz.join(',')); set('dr', state.dr.join(','));
       if (state.minUnits) set('u', state.minUnits); if (!state.newOnly) set('nn', '0');
       if (state.yearMode !== 'any') set('ym', state.yearMode);
       if (!atDefaultYears()) { set('yf', tFrom.value); set('yt', tTo.value); }
@@ -985,7 +991,7 @@
       if (q.get('ph')) state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
       if (q.has('fo')) state.focus = q.get('fo') === 'none' ? '' : q.get('fo');
       state.muni = q.get('mu') || ''; state.kind = q.get('k') || DEFAULT_KIND; state.search = q.get('q') || '';
-      state.sp = q.get('sp') ? q.get('sp').split(',') : []; state.mtsa = q.get('mt') || ''; state.pz = q.get('pz') || ''; state.dr = q.get('dr') || '';
+      state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); state.mtsa = list('mt'); state.pz = list('pz'); state.dr = list('dr');
       state.minUnits = Number(q.get('u')) || 0; state.newOnly = q.get('nn') !== '0';
       if (q.get('ym') && [...$('#t-mode').options].some(o => o.value === q.get('ym'))) { state.yearMode = q.get('ym'); $('#t-mode').value = state.yearMode; }
       $('#f-search').value = state.search; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits); $('#f-new').checked = state.newOnly;
@@ -1510,7 +1516,7 @@
       </div>`;
     if (state.dcInfra && SEW.data && !(DCA.res && DCA.key === scenarioKey()) && footTab === 'overview') setTimeout(() => { try { dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
   }
-  function scopeText() { return [state.muni || 'all of Peel', state.sp.length ? spSummary() : '', state.mtsa ? 'MTSA filter' : ''].filter(Boolean).join(' · '); }
+  function scopeText() { return [state.muni || 'all of Peel', state.sp.length ? spSummary() : '', state.mtsa.length ? 'MTSA filter' : ''].filter(Boolean).join(' · '); }
   $('#ov-body').addEventListener('click', e => {
     const t = e.target.closest('[data-ov-tab]'); if (t) { footPref = t.dataset.ovTab; store.set('footTab4', footPref); showFootTab(footPref); return; }
     const k = e.target.closest('[data-ov-tool]'); if (!k) return;
@@ -3093,11 +3099,11 @@
     const area = (kind, a, go) => out.push({ label: a.name, place: { kind, go } });
     if (state.areas) {
       for (const a of state.areas.secondaryPlans) if (has(a.name)) area(`${a.municipality || ''} ${a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}`.trim(), a, () => { state.sp = [a.id]; renderAreaSelects(); showArea(true); applyFilters(); });
-      for (const a of state.areas.mtsas) if (has(a.name)) area('MTSA (major transit station area)', a, () => { state.mtsa = a.id; renderAreaSelects(); showArea(true); applyFilters(); });
+      for (const a of state.areas.mtsas) if (has(a.name)) area('MTSA (major transit station area)', a, () => { state.mtsa = [a.id]; renderAreaSelects(); showArea(true); applyFilters(); });
     }
     if (state.servicing) {
-      for (const a of state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => { state.pz = a.id; renderSvcSelects(); showSvcArea(true); applyFilters(); });
-      for (const a of state.servicing.drainage) if (has(drName(a))) out.push({ label: drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : 'Sanitary catchment', go: () => { state.dr = a.id; renderSvcSelects(); showSvcArea(true); applyFilters(); } } });
+      for (const a of state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => { state.pz = [a.id]; renderSvcSelects(); showSvcArea(true); applyFilters(); });
+      for (const a of state.servicing.drainage) if (has(drName(a))) out.push({ label: drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : 'Sanitary catchment', go: () => { state.dr = [a.id]; renderSvcSelects(); showSvcArea(true); applyFilters(); } } });
     }
     if (state.dcInfra && ql.length >= 3) {
       const seen = new Set();
@@ -3158,7 +3164,7 @@
     // An area in another municipality no longer applies.
     const keep = id => !id || !state.muni || (areaById.get(id) || {}).municipality === state.muni;
     state.sp = state.sp.filter(keep);
-    if (!keep(state.mtsa)) state.mtsa = '';
+    state.mtsa = state.mtsa.filter(keep);
     renderMuniChips();
     renderAreaSelects();
     showArea();
@@ -3209,11 +3215,11 @@
       renderRefs();
       for (const a of [...state.servicing.zones, ...state.servicing.drainage, ...state.servicing.psAreas]) svcById.set(a.id, a);
       for (const c of Object.values(state.censuses || {})) delete c._svcPop;
-      $('#f-svc-group').hidden = false;
+      document.querySelectorAll('.ab-svc').forEach(e => { e.hidden = false; });
       tagServicing();
       renderSvcSelects();
       // Blocks are the catchments: one map chip for them (Wastewater blocks), not two.
-      if (state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; $('#f-dr-label').textContent = 'Wastewater block'; if (svcOn.dr) { svcOn.dr = false; svcOn.bk = true; } }
+      if (state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; $('#f-dr-label').textContent = 'Wastewater block'; Object.assign(AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); $('#f-dr-q').placeholder = 'Find a block…'; renderMulti('dr'); if (svcOn.dr) { svcOn.dr = false; svcOn.bk = true; } }
       for (const k of ['pz', 'dr']) if (svcOn[k]) setSvcLayer(k, true);
       if (svcOn.bk) setBlocksLayer(true);
       renderDcLayer(); renderLegend();
@@ -3251,19 +3257,13 @@
   const nearText = n => n.via ? `via planned ${n.via.y || ''} ${n.via.d ? `${n.via.d} mm ` : ''}main ${n.via.p || ''}, ${kmText(n.m)}`.replace(/\s+/g, ' ') : `nearest, ${kmText(n.m)}`;
   function renderSvcSelects() {
     if (!state.servicing) return;
-    const { zones, drainage } = state.servicing;
-    $('#f-pz').innerHTML = `<option value="">All pressure zones</option>` + zones.slice().sort(byZone).map(z => `<option value="${esc(z.id)}"${z.id === state.pz ? ' selected' : ''}>${esc(z.name)}</option>`).join('');
-    const plants = [...new Set(drainage.map(d => d.plant))];
-    $('#f-dr').innerHTML = `<option value="">${state.servicing.blocks ? 'All wastewater blocks' : 'All drainage areas'}</option>` + plants.map(pl => `<optgroup label="${esc(plantLabel(pl))}">${drainage.filter(d => d.plant === pl)
-      .map(d => `<option value="${esc(d.id)}"${d.id === state.dr ? ' selected' : ''}>${esc(drName(d))}</option>`).join('')}</optgroup>`).join('');
+    renderMulti('pz'); renderMulti('dr');
   }
-  $('#f-pz').onchange = e => { state.pz = e.target.value; showSvcArea(true); applyFilters(); };
-  $('#f-dr').onchange = e => { state.dr = e.target.value; showSvcArea(true); applyFilters(); };
   // Outline the chosen zone / area and zoom to it.
   function showSvcArea(zoom) {
     svcSelLayer.clearLayers();
     let bounds = null;
-    for (const id of [state.pz, state.dr].filter(Boolean)) {
+    for (const id of [...state.pz, ...state.dr]) {
       const a = svcById.get(id); if (!a) continue;
       const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { className: 'area-outline', interactive: false }).addTo(svcSelLayer);
       bounds = bounds ? bounds.extend(l.getBounds()) : l.getBounds();
@@ -3308,13 +3308,12 @@
   function syncAreaOn() {
     const el = document.getElementById('mo-area-on'); if (!el) return;
     let names;
-    try { names = [...state.sp.map(id => (areaById.get(id) || {}).name), state.mtsa && `MTSA ${(areaById.get(state.mtsa) || {}).name || ''}`,
-      state.pz && (svcById.get(state.pz) || {}).name, state.dr && (svcById.get(state.dr) || {}).name].filter(Boolean); } catch (e) { return; }   // during start-up
+    try { names = Object.keys(AREA_F).map(k => multiSummary(k, true)).filter(Boolean); } catch (e) { return; }   // during start-up
     el.hidden = !names.length;
     if (names.length) el.innerHTML = `<span>Only developments in <strong>${esc(names.join(', '))}</strong></span><button type="button" class="btn small" data-areas-clear="1">Clear</button>`;
   }
   function clearAreaFilters() {
-    state.sp = []; state.mtsa = ''; state.pz = ''; state.dr = '';
+    state.sp = []; state.mtsa = []; state.pz = []; state.dr = [];
     renderAreaSelects(); renderSvcSelects(); showArea(); showSvcArea(false); renderPlanAreas(); applyFilters();
   }
   function syncDevsOff() {
@@ -4690,14 +4689,14 @@
   // timeline when they would meet). The legend and the Layers panel take the height left free.
   const timebarEl = document.getElementById('timebar');
   function layoutMapBoxes() {
-    const lg = legend.getContainer(), op = document.querySelector('.map-opts'), wl = wwLoads.getContainer(), tb = timebarEl; if (!lg || !op || !tb) return;
+    const lg = legend.getContainer(), op = document.querySelector('.map-opts'), wl = wwLoads.getContainer(), ab = document.querySelector('.area-box'), tb = timebarEl; if (!lg || !op || !tb || !ab) return;
     const mr = map.getContainer().getBoundingClientRect(); if (!mr.width) return;
     const gap = 8, edge = phoneMap ? 8 : 12, base = phoneMap ? 16 : 12;
     // The development panel (right side, over the map on wide screens): lay out in the part left visible.
     const dt = $('#detail'), dr = dt && !dt.hidden ? dt.getBoundingClientRect() : null;
     const cover = dr && dr.left > mr.left + 300 && dr.left < mr.right ? mr.right - dr.left : 0;
     const m = { left: mr.left, top: mr.top, bottom: mr.bottom, right: mr.right - cover, width: mr.width - cover, height: mr.height };
-    wl.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
+    for (const b of [wl, ab]) b.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
     // Legend height: from the bottom edge up to the controls at the top left.
     const tl = [...map.getContainer().querySelectorAll('.leaflet-top.leaflet-left .leaflet-control')].reduce((b, c) => Math.max(b, c.getBoundingClientRect().bottom), m.top);
     lg.style.maxHeight = `${Math.max(64, Math.round(m.bottom - tl - base - 16))}px`;
@@ -4710,22 +4709,29 @@
     tb.style.left = `${beside ? left : edge}px`;
     tb.style.bottom = `${beside || !lr ? base : Math.round(m.bottom - lr.top + gap)}px`;
     tb.style.width = beside && !tb.classList.contains('folded') ? `${Math.min(460, Math.round(m.width - left - edge))}px` : '';
-    // Wastewater loads: bottom right; lifted above the timeline / legend when it would overlap them.
-    wl.style.marginBottom = '';
-    if (!wl.hidden) {
-      const w = wl.getBoundingClientRect(), t = tb.getBoundingClientRect();
+    // Bottom right (filter by area, wastewater loads above it): lifted above the timeline / legend
+    // when they would overlap; the area box scrolls when open on a short map.
+    ab.style.marginBottom = '';
+    {
+      const w = ab.getBoundingClientRect(), t = tb.getBoundingClientRect();
       const lower = [t, lr].filter(r => r && r.width && r.right + gap > w.left);
-      if (lower.length) wl.style.marginBottom = `${Math.round(parseFloat(getComputedStyle(wl).marginBottom) + w.bottom - Math.min(...lower.map(r => r.top)) + gap)}px`;
+      if (lower.length) ab.style.marginBottom = `${Math.round(parseFloat(getComputedStyle(ab).marginBottom) + w.bottom - Math.min(...lower.map(r => r.top)) + gap)}px`;
     }
-    // Layers panel (top right) stops above the wastewater loads box.
-    const wr = wl.hidden ? null : (r => r.left < op.getBoundingClientRect().right && r.right > op.getBoundingClientRect().left ? r : null)(wl.getBoundingClientRect());
-    op.style.maxHeight = wr ? `${Math.max(120, Math.round(wr.top - op.getBoundingClientRect().top - gap))}px` : ''; op.classList.toggle('mo-capped', !!wr);
+    // Area box height: up to the Layers panel's own header (view switch, notices, Layers line).
+    {
+      const o = op.getBoundingClientRect(), pn = op.querySelector('.mo-panel'), head = pn ? pn.getBoundingClientRect().top - o.top + 30 : o.height;
+      const sameCol = ab.getBoundingClientRect().left < o.right;
+      ab.style.maxHeight = `${Math.max(90, Math.round(ab.getBoundingClientRect().bottom - (sameCol ? o.top + Math.min(o.height, head) + gap : mr.top + edge)))}px`;
+    }
+    // Layers panel (top right) stops above the boxes at the bottom right.
+    const o = op.getBoundingClientRect(), wr = [wl.hidden ? null : wl.getBoundingClientRect(), ab.getBoundingClientRect()].filter(r => r && r.width && r.left < o.right && r.right > o.left).sort((a, b) => a.top - b.top)[0] || null;
+    op.style.maxHeight = wr ? `${Math.max(60, Math.round(wr.top - op.getBoundingClientRect().top - gap))}px` : ''; op.classList.toggle('mo-capped', !!wr);
     // Selection / mode buttons (bottom centre): above the boxes they would sit on.
     const mb = document.querySelector('.map-bottom');
     if (mb) {
       mb.style.bottom = '';
       const b = mb.getBoundingClientRect();
-      const under = b.height ? [tb.getBoundingClientRect(), lr, wl.hidden ? null : wl.getBoundingClientRect()].filter(r => r && r.width && r.left < b.right && r.right > b.left && r.top < b.bottom) : [];
+      const under = b.height ? [tb.getBoundingClientRect(), lr, wl.hidden ? null : wl.getBoundingClientRect(), ab.getBoundingClientRect()].filter(r => r && r.width && r.left < b.right && r.right > b.left && r.top < b.bottom) : [];
       if (under.length) mb.style.bottom = `${Math.round(mr.bottom - Math.min(...under.map(r => r.top)) + gap)}px`;
     }
     // Attribution: one line to the right of the bottom-left boxes.
@@ -4733,7 +4739,7 @@
     if (at && !phoneMap) at.style.maxWidth = `${Math.max(120, Math.round(m.right - Math.max(tr.right, lr ? lr.right : 0) - 24))}px`;
   }
   const fitLegend = () => requestAnimationFrame(layoutMapBoxes);
-  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), legend.getContainer(), wwLoads.getContainer(), timebarEl].forEach(e => e && ro.observe(e)); }
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), legend.getContainer(), wwLoads.getContainer(), document.querySelector('.area-box'), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
   // Demand year: the top of the legend box, shown whenever a capacity layer is on.
   const yearCtl = { getContainer: () => legend.getContainer().querySelector('.map-year') };
@@ -7151,34 +7157,50 @@
   }
   function renderAreaSelects() {
     if (!state.areas) return;
-    const fill = (sel, list, all, cur) => {
-      const munis = [...new Set(list.map(a => a.municipality))].filter(m => !state.muni || m === state.muni);
-      sel.innerHTML = `<option value="">${all}</option>` + munis.map(m =>
-        `<optgroup label="${esc(m)}">${list.filter(a => a.municipality === m).map(a => `<option value="${esc(a.id)}"${a.id === cur ? ' selected' : ''}>${esc(a.name)}</option>`).join('')}</optgroup>`).join('');
-    };
-    fill($('#f-mtsa'), state.areas.mtsas, 'All MTSAs', state.mtsa);
-    renderSpList();
+    renderMulti('sp'); renderMulti('mtsa');
     $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
   }
-  // Secondary plans: a checkbox list (several can be chosen), grouped by municipality.
-  function spSummary() {
-    const n = state.sp.length;
-    return !n ? 'All areas' : n === 1 ? (areaById.get(state.sp[0]) || {}).name || '1 area' : `${n} areas`;
+  // The area dropdowns: grouped checkbox lists. Names of a list's picks (or "MTSA" prefixed in
+  // sentences), and a short summary for the closed dropdown.
+  function areaName(k, id) { return k === 'sp' || k === 'mtsa' ? (areaById.get(id) || {}).name || '' : k === 'dr' ? drName(svcById.get(id) || {}) : (svcById.get(id) || {}).name || ''; }
+  function multiSummary(k, prose) {
+    const ids = state[k], n = ids.length, f = AREA_F[k];
+    if (!n) return prose ? '' : f.all;
+    const name = n === 1 ? areaName(k, ids[0]) : n <= 2 && prose ? ids.map(id => areaName(k, id)).join(' + ') : `${n} ${f.one === 'MTSA' ? 'MTSAs' : `${f.one}s`}`;
+    return prose && k === 'mtsa' && n <= 2 ? `MTSA ${name}` : name;
   }
-  function renderSpList() {
-    const q = ($('#f-sp-q').value || '').trim().toLowerCase();
-    const list = state.areas.secondaryPlans.filter(a => (!state.muni || a.municipality === state.muni) && (!q || a.name.toLowerCase().includes(q)));
-    const munis = [...new Set(list.map(a => a.municipality))];
-    $('#f-sp-list').innerHTML = munis.map(m => `<div class="multi-group">${esc(m)}</div>` + list.filter(a => a.municipality === m).map(a =>
-      `<label class="multi-item"><input type="checkbox" value="${esc(a.id)}"${state.sp.includes(a.id) ? ' checked' : ''}><span>${esc(a.name)}</span></label>`).join('')).join('')
+  function spSummary() { return multiSummary('sp'); }
+  function multiGroups(k) {
+    if (k === 'sp' || k === 'mtsa') {
+      if (!state.areas) return [];
+      const list = (k === 'sp' ? state.areas.secondaryPlans : state.areas.mtsas).filter(a => !state.muni || a.municipality === state.muni);
+      return [...new Set(list.map(a => a.municipality))].map(m => [m, list.filter(a => a.municipality === m).map(a => [a.id, a.name])]);
+    }
+    if (!state.servicing) return [];
+    if (k === 'pz') return [['', state.servicing.zones.slice().sort(byZone).map(z => [z.id, z.name])]];
+    const dr = state.servicing.drainage;
+    return [...new Set(dr.map(d => d.plant))].map(pl => [plantLabel(pl), dr.filter(d => d.plant === pl).map(d => [d.id, drName(d)])]);
+  }
+  function renderMulti(k) {
+    const box = $(`#f-${k}`); if (!box) return;
+    const q = ($(`#f-${k}-q`).value || '').trim().toLowerCase();
+    $(`#f-${k}-list`).innerHTML = multiGroups(k).map(([g, items]) => [g, items.filter(([, n]) => !q || n.toLowerCase().includes(q))]).filter(([, items]) => items.length)
+      .map(([g, items]) => (g ? `<div class="multi-group">${esc(g)}</div>` : '') + items.map(([id, n]) =>
+        `<label class="multi-item"><input type="checkbox" value="${esc(id)}"${state[k].includes(id) ? ' checked' : ''}><span>${esc(n)}</span></label>`).join('')).join('')
       || '<p class="small muted">No match.</p>';
-    $('#f-sp-summary').textContent = spSummary();
-    $('#f-sp').classList.toggle('on', state.sp.length > 0);
+    $(`#f-${k}-summary`).textContent = multiSummary(k);
+    box.classList.toggle('on', state[k].length > 0);
+  }
+  // After a pick: outline and zoom to the chosen areas, then filter.
+  function afterAreaPick(k, zoom) {
+    if (AREA_F[k].svc) showSvcArea(zoom); else { showArea(zoom); renderPlanAreas(); }
+    if (k === 'sp') $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
+    applyFilters();
   }
   // Outline the chosen areas on the map and zoom to them.
   function showArea(zoom) {
     areaLayer.clearLayers();
-    const shown = [...state.sp, state.mtsa].filter(Boolean).map(id => areaById.get(id)).filter(Boolean);
+    const shown = [...state.sp, ...state.mtsa].map(id => areaById.get(id)).filter(Boolean);
     let bounds = null;
     for (const a of shown) {
       const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
@@ -7208,7 +7230,7 @@
       if (!on) continue;
       for (const a of list) {
         if (state.muni && a.municipality !== state.muni) continue;
-        const sel = kind === 'sp' ? state.sp.includes(a.id) : state.mtsa === a.id;
+        const sel = (kind === 'sp' ? state.sp : state.mtsa).includes(a.id);
         L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color, weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: color, fillOpacity: sel ? 0.12 : 0.03 })
           .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); togglePlanArea(kind, a.id); }).addTo(planLayer);
@@ -7216,30 +7238,32 @@
     }
   }
   function togglePlanArea(kind, id) {
-    if (kind === 'sp') state.sp = state.sp.includes(id) ? state.sp.filter(x => x !== id) : [...state.sp, id];
-    else state.mtsa = state.mtsa === id ? '' : id;
+    state[kind] = state[kind].includes(id) ? state[kind].filter(x => x !== id) : [...state[kind], id];
     renderAreaSelects(); showArea(); renderPlanAreas(); applyFilters();
   }
-  $('#f-sp-list').onchange = e => {
-    const cb = e.target.closest('input[type=checkbox]'); if (!cb) return;
-    state.sp = cb.checked ? [...new Set([...state.sp, cb.value])] : state.sp.filter(id => id !== cb.value);
-    $('#f-sp-summary').textContent = spSummary();
-    $('#f-sp').classList.toggle('on', state.sp.length > 0);
-    $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
-    showArea(true); renderPlanAreas(); applyFilters();
-  };
-  $('#f-sp-q').oninput = () => renderSpList();
-  $('#f-sp-clear').onclick = () => { state.sp = []; $('#f-sp-q').value = ''; renderSpList(); showArea(); renderPlanAreas(); applyFilters(); };
-  // Close the list when tapping elsewhere.
-  document.addEventListener('click', e => { const d = $('#f-sp'); if (d.open && !d.contains(e.target)) d.open = false; });
-  $('#f-mtsa').onchange = e => { state.mtsa = e.target.value; showArea(true); renderPlanAreas(); applyFilters(); };
+  for (const k of Object.keys(AREA_F)) {
+    $(`#f-${k}-list`).onchange = e => {
+      const cb = e.target.closest('input[type=checkbox]'); if (!cb) return;
+      state[k] = cb.checked ? [...new Set([...state[k], cb.value])] : state[k].filter(id => id !== cb.value);
+      $(`#f-${k}-summary`).textContent = multiSummary(k);
+      $(`#f-${k}`).classList.toggle('on', state[k].length > 0);
+      afterAreaPick(k, true);
+    };
+    $(`#f-${k}-q`).oninput = () => renderMulti(k);
+  }
+  document.querySelector('.area-box').addEventListener('click', e => {
+    const b = e.target.closest('[data-multi-clear]'); if (!b) return;
+    const k = b.dataset.multiClear; state[k] = []; $(`#f-${k}-q`).value = ''; renderMulti(k); afterAreaPick(k, false);
+  });
+  // Close an open list when tapping elsewhere.
+  document.addEventListener('click', e => { document.querySelectorAll('.area-box details.multi[open]').forEach(d => { if (!d.contains(e.target)) d.open = false; }); });
 
   // ---- Selected project's census dissemination area ----------------------------------------
   // Opening a project narrows the Growth and Servicing demand tabs to the census DA its point
   // falls in (for the baseline census year): the DA's census count, and the development
   // applications located in the same DA. Closing the project goes back to Peel.
   const daFocusLayer = L.layerGroup().addTo(map);
-  const daScopeName = () => [state.mtsa && areaById.get(state.mtsa) && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel';
+  const daScopeName = () => [state.mtsa.length && multiSummary('mtsa'), state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel';
   let daCtxToken = 0;
   function setDaContext(p) {
     const token = ++daCtxToken;
@@ -7296,7 +7320,7 @@
     const jb = svcJobs((da ? da.projects : state.projects).filter(p => p.phase !== 'cancelled' && (da || PeelAreas.inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa }))), bc.date);
     gr.built.jobs = jb.jbuilt; gr.approved.jobs = jb.japproved; gr.proposed.jobs = jb.jproposed;
     const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title} · ${fmtNum(da.projects.length)} development site${da.projects.length === 1 ? '' : 's'} in this DA`
-      : [state.mtsa && areaById.get(state.mtsa).name, state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
+      : [state.mtsa.length && multiSummary('mtsa'), state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
     $('#c-ctx').innerHTML = da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
       <span class="muted small">Census dissemination area of the selected development; growth from every development application located in it.</span>` : '';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
@@ -7307,7 +7331,7 @@
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(roundPop(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
     $('#c-tiles').innerHTML = [
-      tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa ? ', share by land area' : ''}`, 'census-base'),
+      tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa.length ? ', share by land area' : ''}`, 'census-base'),
       tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
       tile('+ Approved or permitted, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
       tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
@@ -7468,9 +7492,7 @@
     if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); renderAreaSelects(); } });
     if (state.sp.length <= 3) for (const id of state.sp) out.push({ label: (areaById.get(id) || {}).name || 'Secondary plan', clear: () => { state.sp = state.sp.filter(x => x !== id); renderAreaSelects(); showArea(); } });
     else out.push({ label: `${state.sp.length} secondary plans`, clear: () => { state.sp = []; renderAreaSelects(); showArea(); } });
-    if (state.mtsa) out.push({ label: `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}`, clear: () => { state.mtsa = ''; renderAreaSelects(); showArea(); } });
-    if (state.pz) out.push({ label: (svcById.get(state.pz) || {}).name || 'Pressure zone', clear: () => { state.pz = ''; renderSvcSelects(); showSvcArea(); } });
-    if (state.dr) out.push({ label: `Drainage: ${(svcById.get(state.dr) || {}).name || ''}`, clear: () => { state.dr = ''; renderSvcSelects(); showSvcArea(); } });
+    for (const k of ['mtsa', 'pz', 'dr']) if (state[k].length) out.push({ label: k === 'mtsa' ? (state[k].length === 1 ? `MTSA: ${multiSummary(k)}` : multiSummary(k)) : k === 'dr' && state[k].length === 1 ? `Drainage: ${multiSummary(k)}` : multiSummary(k), clear: () => { state[k] = []; if (AREA_F[k].svc) { renderSvcSelects(); showSvcArea(); } else { renderAreaSelects(); showArea(); } } });
     if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; $('#f-kind').value = DEFAULT_KIND; } });
     if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
     if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
@@ -7490,8 +7512,7 @@
   function renderSectionSummaries() {
     const kindLabel = { '': 'All records', permit: 'Building permits', both: 'Application + permits' };
     // Where & areas (map panel): municipality, planning and service areas.
-    const areas = [state.sp.length ? spSummary() : '', state.mtsa ? `MTSA: ${(areaById.get(state.mtsa) || {}).name || ''}` : '',
-      state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? (svcById.get(state.dr) || {}).name : ''].filter(Boolean);
+    const areas = Object.keys(AREA_F).map(k => multiSummary(k, true)).filter(Boolean);
     syncPanelSum();
     const as = $('#mo-area-sum'); if (as) { as.textContent = areas.length ? areas.join(' · ') : 'all areas'; as.classList.toggle('on', areas.length > 0); }
     const more = [state.focus ? FOCUS[state.focus].label : '',
@@ -7518,7 +7539,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: '', pz: '', dr: '', kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), focus: DEFAULT_FOCUS });
+      Object.assign(state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), focus: DEFAULT_FOCUS });
       $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
       renderMuniChips();
       setDefaultYears();
@@ -7924,7 +7945,7 @@
     if (e.target.closest('[data-dct-xlsx]')) return exportDcTiming();
     const a = e.target.closest('[data-area-report]'); if (!a) return;
     if (a.dataset.areaReport === 'sel') areaReport([...selection.values()], `Area report – ${fmtNum(selection.size)} selected developments`, selAreas);
-    else { const where = [state.muni, state.sp.length ? spSummary() : '', state.mtsa ? `MTSA ${(areaById.get(state.mtsa) || {}).name || ''}` : '', state.pz ? (svcById.get(state.pz) || {}).name : '', state.dr ? drName(svcById.get(state.dr) || {}) : ''].filter(Boolean).join(', ') || 'All of Peel'; areaReport(state.filtered, `Area report – ${where}`); }
+    else { const where = [state.muni, ...Object.keys(AREA_F).map(k => multiSummary(k, true))].filter(Boolean).join(', ') || 'All of Peel'; areaReport(state.filtered, `Area report – ${where}`); }
   });
 
   // ---- Tips: a short tour, shown once (Tools → Tips to see it again) ----------------------------
