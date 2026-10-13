@@ -804,6 +804,18 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   Site plans and condos inside a subdivision are still part of it. Peel's unit total is
   unchanged (+1 unit), with 17 more developments. Each related link reads *within* / *covers* /
   *overlaps* / *same address as* the file it matches.
+- **Are the files in a development related?** An audit checks every development with several
+  planning files: each pair should share land (at least 15% overlap) or a civic address. 1,167
+  developments have several files, and 7 contain a file that doesn't connect to the rest. Those
+  are phased master-planned communities (e.g. Lakeview Village) and neighbouring parcels that one
+  owner filed together. Two grouping errors are fixed:
+  - Brampton's "unit-civic" addresses ("102-499 Main St S" is unit 102 at 499 Main St S) were
+    read as number ranges. "10-499 Main St S" invented a "10 Main St S" and pulled in a site plan
+    2.5 km away. In Brampton a leading pair is now always unit-civic. Elsewhere it is a range only
+    when ascending, on the same side of the street and within 60 numbers ("65-71 Agnes St").
+  - A file more than 1.5 km from the rest of its address group (a mistyped or mis-geocoded
+    address) groups by its own location, and a multi-address join never links groups more than
+    1.5 km apart. Peel's totals are unchanged.
 - **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
   2,656 units), including from the weekly snapshot.
 

@@ -529,8 +529,13 @@
   // "202 and 204 Burnhamthorpe Rd E", "65-71 Agnes St", "8 Ann St, 77 & 81 High St E",
   // "28 Ann St (formerly 78 Park St E and 22-28 Ann St)". Ranges give both ends.
   const MULTI_ADDR = /(\d+[A-Z]?(?:\s*(?:-|&|\bAND\b|,)\s*\d+[A-Z]?)*)\s+([A-Z][A-Z .']*?)(?=\s*(?:,|&|\bAND\b|\(|\)|$))/g;
-  function addressAliases(addr) {
-    const s = str(addr).toUpperCase().replace(/\bFORMERLY\b/g, ',');
+  // "102-499 Main St S" is unit 102 at 499 Main St S (Brampton writes every address this way), while
+  // "65-71 Agnes St" is a range of civic numbers. A leading pair counts as a range only outside
+  // Brampton and when it reads like one: ascending, same side of the street, a short span.
+  const isRange = (a, b) => b > a && (b - a) % 2 === 0 && b - a <= 60;
+  function addressAliases(addr, muni) {
+    let s = str(addr).toUpperCase().replace(/\bFORMERLY\b/g, ',');
+    s = s.replace(/^(\s*)(\w+)\s*-\s*(\d+)(?=\s)/, (m, sp, u, n) => muni === 'Brampton' || !/^\d+$/.test(u) || !isRange(+u, +n) ? `${sp}${n}` : m);
     const out = new Set();
     for (const m of s.matchAll(MULTI_ADDR)) {
       const street = m[2].trim();
@@ -574,6 +579,20 @@
       let g = groups.get(k);
       if (!g) groups.set(k, g = []);
       g.push(r);
+    }
+    // A file more than 1.5 km from the rest of its address group isn't on that site, whatever
+    // its address says (a mistyped address, or an address the source geocoded far away): it
+    // groups by its own location.
+    const FAR_M = 1500;
+    for (const [k, g] of [...groups]) {
+      const pts = g.filter(r => r.lat != null);
+      if (pts.length < 2) continue;
+      const med = f => { const v = pts.map(f).sort((a, b) => a - b); return v[Math.floor(v.length / 2)]; };
+      const mx = med(r => r.lng), my = med(r => r.lat);
+      const far = g.filter(r => r.lat != null && Math.hypot((r.lng - mx) * 80500, (r.lat - my) * 111320) > FAR_M);
+      if (!far.length || far.length * 2 >= pts.length) continue;
+      groups.set(k, g.filter(r => !far.includes(r)));
+      for (const r of far) { const k2 = `${r.municipality}|@${r.lat.toFixed(4)},${r.lng.toFixed(4)}`; (groups.get(k2) || groups.set(k2, []).get(k2)).push(r); }
     }
     groups = joinMultiAddress(groups);
 
@@ -693,13 +712,17 @@
   function joinMultiAddress(groups) {
     const parent = new Map();
     const find = k => { let r = k; while (parent.has(r)) r = parent.get(r); return r; };
+    // Where a group is (median of its located files), to keep far-apart groups apart.
+    const where = new Map();
+    const at = k => { if (!where.has(k)) { const pts = groups.get(k).filter(r => r.lat != null); const med = f => { const v = pts.map(f).sort((a, b) => a - b); return v[Math.floor(v.length / 2)]; }; where.set(k, pts.length ? [med(r => r.lng), med(r => r.lat)] : null); } return where.get(k); };
+    const far = (a, b) => { const p = at(a), q = at(b); return !!(p && q && Math.hypot((p[0] - q[0]) * 80500, (p[1] - q[1]) * 111320) > 1500); };
     for (const [key, recs] of groups) {
       const muni = key.split('|')[0];
       for (const r of recs) {
         if (r.kind !== 'application') continue;
-        for (const a of addressAliases(r.address)) {
+        for (const a of addressAliases(r.address, r.municipality)) {
           const other = `${muni}|${a}`;
-          if (other === key || !groups.has(other)) continue;
+          if (other === key || !groups.has(other) || far(key, other)) continue;
           const ra = find(key), rb = find(other);
           if (ra !== rb) parent.set(rb, ra);
         }
