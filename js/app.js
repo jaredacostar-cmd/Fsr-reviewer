@@ -909,8 +909,31 @@
   let rebuildTimer;
   function scheduleRebuild() { clearTimeout(rebuildTimer); rebuildTimer = setTimeout(rebuild, 150); }
 
+  // Unit counts entered by the user for files whose count is only in their attachments (cover
+  // letter, planning justification report): kept in this browser, applied before grouping.
+  const unitKey = r => `${r.municipality}|${P.canonRef(r.ref) || r.ref}`;
+  let userUnits = store.get('userUnits', {}) || {};
+  function applyUserUnits(records) {
+    for (const r of records) {
+      if (r.kind !== 'application') continue;
+      if (r._unitsOrig === undefined) r._unitsOrig = r.units ?? null;
+      const u = userUnits[unitKey(r)];
+      if (u > 0) { r.units = u; r.unitsUser = true; } else if (r.unitsUser) { r.units = r._unitsOrig; r.unitsUser = false; }
+    }
+  }
+  function setUserUnits(r, n) {
+    const k = unitKey(r);
+    if (n > 0) userUnits[k] = Math.round(n); else delete userUnits[k];
+    store.set('userUnits', userUnits);
+    const key = currentProject && (currentProject.parent || currentProject).key;
+    rebuild();
+    const p = state.projects.find(x => x.records.some(q => q.ref === r.ref && q.municipality === r.municipality)) || projectByKey(key);
+    if (p) showDetail(p);
+  }
   function rebuild() {
     const raw = state.sources.filter(s => s.enabled).flatMap(s => s.records);
+    applyUserUnits(raw);
+    if (typeof SUBS !== 'undefined') SUBS.clear();
     const records = P.dedupeRecords(raw);
     state.projects = P.buildProjects(records);
     tagProjects();
@@ -2548,11 +2571,49 @@
     box.querySelectorAll('[data-dmsys]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
     box.querySelectorAll('[data-dmp]').forEach(x => { x.hidden = x.dataset.dmp !== dmSys; });
   });
+  // Build-out by application: each formal file's planned units and the building permits inside
+  // its boundary (the smallest file boundary holding the permit). Shows which files set the
+  // development's total so nothing is counted twice, and takes the user's figure for files whose
+  // count is only in their attachments.
+  const ATTACHED_RE = /(see|refer to|as per|in) (the )?(attached|attachment|enclosed|cover letter|proposal|submission|documents?|plans?|pjr)|attached (document|letter|plan|summary|statistics)|please (see|refer)|cover letter/i;
+  function appBuildoutHTML(p) {
+    const files = (p.parent ? [] : fileTree(p)).map(t => t.a).filter(isFormal);
+    const lone = p.records.filter(isFormal);
+    const list = files.length ? files : lone;
+    if (!list.length || (list.length < 2 && list.every(r => r.units > 0 && !r.unitsUser))) return '';
+    const live = p.records.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan);
+    const byFile = new Map(list.map(a => [a, []])), outside = [];
+    for (const r of live) {
+      if (r.lat == null) { outside.push(r); continue; }
+      const home = list.filter(a => a.poly && P.pointInRings(r.lng, r.lat, a.poly)).sort((a, b) => P.ringsArea(a.poly) - P.ringsArea(b.poly))[0];
+      (home ? byFile.get(home) : outside).push(r);
+    }
+    const plan = P.plannedFromApps(p.records.filter(r => r.kind === 'application' && r.phase !== 'cancelled'));
+    const counted = new Set(plan.basis === 'siteplan' || plan.basis === 'condo' ? plan.phases.map(f => f.rec) : []);
+    if (!counted.size && plan.planned) { const top = list.filter(a => a.units === plan.planned)[0]; if (top) counted.add(top); }
+    const role = a => !(a.units > 0) ? '' : counted.has(a) ? 'counted' : plan.basis && (a.stage || P.stageOf(a)) === 'master' && plan.basis !== 'master' ? 'the site plans count instead' : 'within the counted proposal';
+    const row = a => {
+      const ps = byFile.get(a) || [], perm = P.permitUnits(ps), done = P.permitUnits(ps.filter(r => r.phase === 'completed'));
+      const att = !(a.units > 0) && ATTACHED_RE.test(a.description || '');
+      const canAdd = att || !(p.units > 0);
+      const unitsCell = a.units > 0
+        ? `${fmtNum(a.units)}${a.unitsUser ? ` <span class="user-units" title="Your figure, kept in this browser">your figure <button type="button" class="btn small link" data-uu-clear="${esc(a.ref)}" aria-label="Remove your figure">×</button></span>` : ''}`
+        : !canAdd ? '–' : `<span class="uu-entry"><input type="number" min="1" step="1" inputmode="numeric" placeholder="units" data-uu="${esc(a.ref)}" aria-label="Units for ${esc(a.ref)}"><button type="button" class="btn small" data-uu-set="${esc(a.ref)}">Add</button></span>`;
+      return `<tr><td><button type="button" class="btn small link" data-sub="${esc(a.ref)}" title="Open this application on its own">${esc(a.ref)}</button><small>${esc(a.type || '')}${a.statusRaw ? ` · ${esc(a.statusRaw)}` : ''}</small>${att ? `<small class="att-note">Units are in the file's attachments (cover letter / planning justification)${p.municipality === 'Brampton' ? ' on BramPlanOnline (sign-in)' : ''}: enter them here.</small>` : ''}</td>
+        <td class="num">${unitsCell}${role(a) ? `<small>${esc(role(a))}</small>` : ''}</td><td class="num">${ps.length ? fmtNum(perm) : '–'}</td><td class="num">${ps.length ? fmtNum(done) : '–'}</td><td class="num">${a.units > 0 && counted.has(a) ? fmtNum(Math.max(0, a.units - perm)) : '–'}</td></tr>`;
+    };
+    const op = outside.length ? P.permitUnits(outside) : 0;
+    return `<details class="sect" id="dev-appbo"${list.some(a => a.unitsUser || (!(a.units > 0) && (!(p.units > 0) || ATTACHED_RE.test(a.description || '')))) ? ' open' : ''}><summary><h2 class="section-title" data-info="app-buildout">Build-out by application</h2><span class="muted small sect-sum">${fmtNum(list.length)} file${list.length === 1 ? '' : 's'}${list.some(a => !(a.units > 0)) ? ' · some without a unit count' : ''}</span></summary>
+      <div class="table-wrap"><table class="app-bo"><thead><tr><th>Application</th><th class="num">Planned</th><th class="num">Permitted</th><th class="num">Completed</th><th class="num">Left</th></tr></thead>
+      <tbody>${list.map(row).join('')}${outside.length ? `<tr class="muted"><td>Permits not inside any file's boundary<small>${fmtNum(outside.length)} permits</small></td><td class="num">–</td><td class="num">${fmtNum(op)}</td><td class="num">${fmtNum(P.permitUnits(outside.filter(r => r.phase === 'completed')))}</td><td class="num">–</td></tr>` : ''}</tbody></table></div>
+      <p class="small muted">Permits count in the smallest file boundary that holds them. The development total counts each proposal once: ${plan.basis === 'siteplan' || plan.basis === 'condo' ? `its ${plan.basis === 'condo' ? 'condominium' : 'site plan'} files add up (separate phases)` : 'an official plan / zoning / subdivision file describes the whole proposal, so the largest counts'}; files marked “within the counted proposal” are not added. A unit count can be entered where a file's description points to its attachments, or where the development has none: your figures are kept in this browser only and are counted like published ones.</p></details>`;
+  }
   function devUnitsHTML(p, open) {
     const b = p.buildout, e = empOf(p);
     const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} units` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
     return `<details class="sect" id="dev-units"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${summaryHTML(p)}
+      ${appBuildoutHTML(p)}
       ${devStageDemandHTML(p)}
       ${employmentHTML(p)}
       <p class="facts small muted">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
@@ -2764,6 +2825,11 @@
     if (t) return showTl(t.dataset.tl);
     const dt = e.target.closest('[data-dvt]');
     if (dt) { store.set('dvTab', dt.dataset.dvt); showDvTab(dt.dataset.dvt); return; }
+    // The user's unit count for a file.
+    const us = e.target.closest('[data-uu-set]');
+    if (us && currentProject) { const inp = us.parentElement.querySelector('[data-uu]'), n = +inp.value; const r = currentProject.records.find(x => x.ref === us.dataset.uuSet); if (r && n > 0) setUserUnits(r, n); else inp.focus(); return; }
+    const uc = e.target.closest('[data-uu-clear]');
+    if (uc && currentProject) { const r = currentProject.records.find(x => x.ref === uc.dataset.uuClear); if (r) setUserUnits(r, 0); return; }
     // Drill down to one application, across to a related development, and back.
     const sb = e.target.closest('[data-sub]');
     if (sb && currentProject) { const sub = subProject(currentProject.parent || currentProject, sb.dataset.sub); if (sub) showDetail(sub); return; }
@@ -2774,6 +2840,7 @@
     const o = e.target.closest('[data-open]');
     if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
   });
+  $('#detail-body').addEventListener('keydown', e => { const i = e.target.closest && e.target.closest('[data-uu]'); if (i && e.key === 'Enter') { e.preventDefault(); i.parentElement.querySelector('[data-uu-set]').click(); } });
   $('#detail-body').addEventListener('toggle', e => { if (e.target.id === 'dev-aerial' && e.target.open && currentProject) runAerial(currentProject); }, true);
 
   // ---- Aerial check -------------------------------------------------------------------

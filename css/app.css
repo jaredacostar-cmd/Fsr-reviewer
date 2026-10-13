@@ -1720,3 +1720,14 @@ body.print-map .area-box { display: none; }
 .sub-head { margin: 2px 0 6px; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .rel-how { color: var(--accent); }
 .area-note { margin: 8px 0; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 8%, transparent); }
+
+/* Build-out by application */
+.app-bo { width: 100%; border-collapse: collapse; font-size: 12px; }
+.app-bo th, .app-bo td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: top; text-align: left; }
+.app-bo .num { text-align: right; white-space: nowrap; }
+.app-bo small { display: block; color: var(--text-muted); font-size: 11px; }
+.app-bo .att-note { color: #c2410c; }
+.uu-entry { display: inline-flex; gap: 4px; }
+.uu-entry input { width: 70px; padding: 2px 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
+.user-units { color: var(--accent); font-size: 11px; }
+.table-wrap { overflow-x: auto; max-width: 100%; }

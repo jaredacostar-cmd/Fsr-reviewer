@@ -816,6 +816,27 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   - A file more than 1.5 km from the rest of its address group (a mistyped or mis-geocoded
     address) groups by its own location, and a multi-address join never links groups more than
     1.5 km apart. Peel's totals are unchanged.
+- **Build-out by application** (Demand tab, under *Units, jobs & build-out*, where a development
+  has several files or a file without a unit count):
+  - One row per formal file: planned units, plus the permit units inside its boundary (permitted,
+    completed, left). A permit counts in the smallest file boundary that holds it.
+  - Each row says whether it is *counted* or *within the counted proposal*. Site plan or condo
+    phases add up; for an official plan / zoning / subdivision file the largest counts.
+  - Tap a file to open it on its own.
+- **Units only in the attachments**: some descriptions say "refer to the attached cover letter /
+  PJR" and give no unit count. About 76 files, nearly all in Brampton, whose documents are on
+  BramPlanOnline behind a sign-in, so they can't be read automatically.
+  - Those rows are flagged, and the unit count from the cover letter can be entered. Entry is also
+    offered where the development has no count at all.
+  - The figure is kept in this browser, marked *your figure* (× removes it), and counted like a
+    published one in the development and every total.
+- **One address, different land**: official plan / zoning / subdivision files filed at the same
+  address whose boundaries don't overlap are separate proposals. Each is its own development, and
+  the precinct rules above relate them.
+  - Example: OZS-2025-0016, a 9 ha draft plan filed at precinct 52-2's address, is now a draft
+    plan within the precinct.
+  - Example: on The Gore Rd in Caledon, 21T-22002C (394 units) was hidden under a larger
+    subdivision at the same address. Peel's total rises by 394 units.
 - **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
   2,656 units), including from the weekly snapshot.
 
