@@ -1396,6 +1396,7 @@ details.stamp > p { margin: 4px 0 0; }
 .ov-cap.near .ov-bar i.b { background: repeating-linear-gradient(135deg, #f76707 0 3px, color-mix(in srgb, #f76707 40%, transparent) 3px 6px); }
 .ov-cap.over .ov-bar i.b { background: repeating-linear-gradient(135deg, #e03131 0 3px, color-mix(in srgb, #e03131 40%, transparent) 3px 6px); }
 .ov-bar i.t { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--text-primary); }
+.ov-bar i.t.r { background: var(--text-muted); opacity: .6; }
 .ov-t { font-size: 12px; }
 .ov-t th small { font-weight: 400; color: var(--text-muted); }
 .ov-warn { color: #e03131; font-size: 15px; }
