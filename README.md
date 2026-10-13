@@ -152,6 +152,11 @@ press and hold) for a card explaining what it represents and where the data come
   stepper, the weekly phase history and the dated timeline, grouped by date (same-day events on several files show once, with a count and the file numbers). Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
+**Picking several (desktop):** Ctrl-click (⌘-click on a Mac) a phase chip or a pipeline bar segment
+to add or remove that phase; a plain click still shows one phase only. Holding Ctrl / ⌘ over the
+map shows a crosshair: drag a box to add the shown developments inside it to the selection (like
+Tools → Select an area), with the same summary panel. A plain drag still moves the map.
+
 **Timeline (floating, bottom of the map, to the right of the legend):** opens on **2021–2026**. Drag the handles to keep only projects with
 activity in those years; the button next to the range switches between **All years** and the
 2021–2026 default (**Reset all** also returns to 2021–2026).

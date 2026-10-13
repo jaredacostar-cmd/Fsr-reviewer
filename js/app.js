@@ -1730,8 +1730,9 @@
     // Phase quick views: one tap shows that phase only.
     const cur = currentPhaseView();
     const n = keys => keys.reduce((a, k) => a + counts[k], 0);
+    const isOn = key => key === 'all' || key === 'active' ? cur === key : cur !== 'all' && cur !== 'active' && state.phases.has(key);
     const chip = (key, label, count, title, lead = '') =>
-      `<button type="button" class="chip${cur === key ? ' on' : ''}" data-pv="${key}" data-info="phase-${key}" aria-pressed="${cur === key}" title="${esc(title)}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
+      `<button type="button" class="chip${isOn(key) ? ' on' : ''}" data-pv="${key}" data-info="phase-${key}" aria-pressed="${isOn(key)}" title="${esc(title)}${key === 'all' || key === 'active' ? '' : ' · Ctrl-click (⌘ on a Mac) to pick several'}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
     $('#phase-chips').innerHTML = [
       chip('all', 'All', total, 'Every phase'),
       chip('active', 'Active applications', n(ACTIVE_PHASES), 'In progress: application to construction (not completed, not withdrawn)'),
@@ -2802,7 +2803,7 @@
   // radius, test a site.
   const TOOL_ITEMS = [
     ['trace', 'Trace sewer path', 'Tap a development or any point on the map: its route along the sewers to the treatment plant, pipe by pipe, coloured by capacity used', '<path d="M3 4.5h5.5v5H13v6h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.5 13l2.8 2.5-2.8 2.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="3.5" cy="4.5" r="1.8" fill="currentColor"/>'],
-    ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
+    ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth (or hold Ctrl / ⌘ and drag a box on the map)', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
     ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
     ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
     ['tips', 'Help & tips', 'Guides for common tasks and a quick tour', '<circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="14.3" r="1" fill="currentColor"/>'],
@@ -2913,6 +2914,49 @@
     showSelection(added);
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && lassoOn) { pts = null; setLasso(false); } });
+
+  // Ctrl (⌘ on a Mac) + drag on the map: a box that adds the shown developments inside it to the
+  // selection, like the lasso. Holding the key over the map shows a crosshair.
+  const mapEl = map.getContainer(), boxEl = L.DomUtil.create('div', 'sel-box', mapEl);
+  boxEl.hidden = true;
+  let box = null, boxed = false;
+  const ctrlCursor = on => mapEl.classList.toggle('ctrl-select', on);
+  addEventListener('keydown', e => { if ((e.key === 'Control' || e.key === 'Meta') && mapEl.matches(':hover') && !lassoOn) ctrlCursor(true); });
+  addEventListener('keyup', e => { if (e.key === 'Control' || e.key === 'Meta') ctrlCursor(false); });
+  addEventListener('blur', () => ctrlCursor(false));
+  mapEl.addEventListener('mousemove', e => { if (!box) ctrlCursor((e.ctrlKey || e.metaKey) && !lassoOn); });
+  mapEl.addEventListener('mousedown', e => {
+    if (!(e.ctrlKey || e.metaKey) || e.button !== 0 || lassoOn || tool.mode) return;
+    if (e.target.closest('.leaflet-control, .map-bottom, .lasso-layer')) return;
+    e.preventDefault(); e.stopPropagation();
+    box = { a: rel(e), b: rel(e) }; map.dragging.disable();
+  }, true);
+  addEventListener('mousemove', e => {
+    if (!box) return;
+    box.b = rel(e);
+    const [x0, y0] = box.a, [x1, y1] = box.b;
+    Object.assign(boxEl.style, { left: `${Math.min(x0, x1)}px`, top: `${Math.min(y0, y1)}px`, width: `${Math.abs(x1 - x0)}px`, height: `${Math.abs(y1 - y0)}px` });
+    boxEl.hidden = Math.abs(x1 - x0) < 4 && Math.abs(y1 - y0) < 4;
+  });
+  addEventListener('mouseup', e => {
+    if (!box) return;
+    const { a } = box, b = rel(e); box = null; boxEl.hidden = true; map.dragging.enable(); ctrlCursor(e.ctrlKey || e.metaKey);
+    if (Math.abs(b[0] - a[0]) < 6 && Math.abs(b[1] - a[1]) < 6) return;
+    boxed = true; setTimeout(() => { boxed = false; }, 0);
+    const ring = [[a[0], a[1]], [b[0], a[1]], [b[0], b[1]], [a[0], b[1]], [a[0], a[1]]];
+    let added = 0;
+    for (const p of state.filtered) {
+      if (p.lat == null || selection.has(p.key) || !devShown(p)) continue;
+      const c = map.latLngToContainerPoint([p.lat, p.lng]);
+      if (P.pointInRings(c.x, c.y, [ring])) { selection.set(p.key, p); added++; }
+    }
+    selAreas.push(ring.map(([x, y]) => { const ll = map.containerPointToLatLng([x, y]); return [ll.lng, ll.lat]; }));
+    drawSelection();
+    showSelection(added);
+  });
+  // The click that ends a box doesn't also count as a tap on the map (which would unselect).
+  document.addEventListener('click', e => { if (boxed && mapEl.contains(e.target)) { e.stopPropagation(); e.preventDefault(); } }, true);
+  mapEl.addEventListener('contextmenu', e => { if (box) e.preventDefault(); });
 
   function drawSelection() {
     selLayer.clearLayers();
@@ -3041,12 +3085,20 @@
   });
 
   // ---- Events ----------------------------------------------------------------------
-  function togglePhase(key) {
-    const only = state.phases.size === 1 && state.phases.has(key);
-    state.phases = new Set(only ? P.ALL_PHASES.map(p => p.key) : [key]);
+  // A tap shows that phase only (again: all phases). Ctrl / ⌘ + click adds or removes it instead,
+  // so several phases can be picked.
+  function togglePhase(key, add) {
+    if (add) {
+      const all = state.phases.size === P.ALL_PHASES.length, next = new Set(all ? [] : state.phases);
+      if (next.has(key)) next.delete(key); else next.add(key);
+      state.phases = next.size ? next : new Set(P.ALL_PHASES.map(p => p.key));
+    } else {
+      const only = state.phases.size === 1 && state.phases.has(key);
+      state.phases = new Set(only ? P.ALL_PHASES.map(p => p.key) : [key]);
+    }
     applyFilters();
   }
-  $('#pipeline').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase); };
+  $('#pipeline').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase, e.ctrlKey || e.metaKey); };
 
   let searchTimer;
   $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { state.search = e.target.value.trim().toLowerCase(); applyFilters(); }, 200); };
@@ -7720,7 +7772,7 @@
     const k = b.dataset.pv;
     if (k === 'all') state.phases = ALL_PHASE_KEYS();
     else if (k === 'active') state.phases = currentPhaseView() === 'active' ? ALL_PHASE_KEYS() : new Set(ACTIVE_PHASES);
-    else return togglePhase(k);
+    else return togglePhase(k, e.ctrlKey || e.metaKey);
     applyFilters();
   };
 

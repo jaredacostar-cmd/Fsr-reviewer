@@ -1573,3 +1573,8 @@ body.print-map .area-box { display: none; }
 .map-opts .mo-view { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); justify-content: stretch; min-width: 0; }
 .map-opts .mo-view .btn { min-width: 0; padding: 4px 4px; overflow: hidden; text-overflow: ellipsis; letter-spacing: -.01em; }
 @media (max-width: 700px) { .map-opts .mo-view .btn { font-size: 11px; padding: 4px 3px; } }
+
+/* Ctrl / ⌘ + drag box selection on the map. */
+.sel-box { position: absolute; z-index: 650; pointer-events: none; border: 2px dashed var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); border-radius: 2px; }
+.sel-box[hidden] { display: none; }
+.ctrl-select, .ctrl-select .leaflet-interactive, .ctrl-select .leaflet-marker-icon { cursor: crosshair !important; }
