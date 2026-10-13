@@ -4493,7 +4493,10 @@
   // a main's end within 200 m of an existing sewer of 300 mm+ (or any point within 25 m) is where it
   // can hand over. From the planned main nearest the site (within 1 km), the trace takes the shortest
   // path to a hand-over, preferring one in the catchment that main serves. The maps don't give the
-  // flow direction, so the path is indicative.
+  // flow direction, so the path is indicative. A planned main hands over only to an existing sewer at
+  // least half its diameter (the largest planned main on the path so far): a 900 mm trunk doesn't
+  // empty into a 375 mm local sewer, it carries on along the planned trunk to the existing one. A site
+  // whose join point is within 25 m of an existing sewer still connects to that sewer.
   const DCW = { g: null };
   function dcSewerNet() {
     if (DCW.g || !state.dcInfra || !SEW.data) return DCW.g;
@@ -4512,13 +4515,17 @@
     let gi = 0; const cost = E.map((e, k) => e[2] ? len[k] : len[k] * (gap[gi++] ? 2.5 : 1));
     // Hand-overs to the existing sewers: a main's end within 600 m of a 300 mm+ sewer (beyond 200 m
     // costed as a bridged gap), any point within 25 m.
+    // Each node keeps the nearest pipe of each larger size (nearest first), for the size rule.
     const endSet = new Set(ends), exit = new Map();
     for (let i = 0; i < xs.length; i++) {
-      const r = endSet.has(i) ? 600 : 25, k = nearestPipe(xs[i], ys[i], r); if (k < 0) continue;
-      const m = dcDist([xs[i], ys[i]], pipeCoords(SEW.data.pipes[k]));
-      exit.set(i, { k, m, cost: m > 200 ? m * 2.5 : 0 });
+      const r = endSet.has(i) ? 600 : 25, list = [];
+      for (let minD = 0, k; (k = nearestPipe(xs[i], ys[i], r, minD)) >= 0; minD = SEW.data.pipes[k][0] + 1) {
+        const m = dcDist([xs[i], ys[i]], pipeCoords(SEW.data.pipes[k]));
+        list.push({ k, m, d: SEW.data.pipes[k][0], cost: m > 200 ? m * 2.5 : 0 });
+      }
+      if (list.length) exit.set(i, list);
     }
-    DCW.g = { xs, ys, E, adj, len, cost, exit };
+    DCW.g = { xs, ys, E, adj, len, cost, exit, lineOf };
     return DCW.g;
   }
   function dcSewerPath(p) {
@@ -4528,19 +4535,21 @@
     for (let i = a; i <= b; i++) { const m = dcM([p.lng, p.lat], [G.xs[i], G.ys[i]]); if (m < sd) { sd = m; s = i; } }
     const target = dcTarget(n.ln), inTarget = new Map();
     const pipeIn = k => { if (!inTarget.has(k)) { const c = pipeCoords(SEW.data.pipes[k])[0]; inTarget.set(k, !target || PeelAreas.locate(state.servicing.drainage, c[0], c[1]).includes(target)); } return inTarget.get(k); };
-    const dist = new Float64Array(G.xs.length).fill(Infinity), via = new Int32Array(G.xs.length).fill(-1), Q = [[0, s]]; dist[s] = 0;
-    let best = Infinity, bt = -1;
+    const dist = new Float64Array(G.xs.length).fill(Infinity), via = new Int32Array(G.xs.length).fill(-1), dmax = new Float64Array(G.xs.length), Q = [[0, s]]; dist[s] = 0;
+    dmax[s] = G.lineOf[s].d || 0;
+    let best = Infinity, bt = -1, bex = null;
     while (Q.length) {
       let qi = 0; for (let i = 1; i < Q.length; i++) if (Q[i][0] < Q[qi][0]) qi = i;
       const [dd, u] = Q.splice(qi, 1)[0]; if (dd > dist[u]) continue; if (dd >= best) break;
-      if (G.exit.has(u)) { const ex = G.exit.get(u), tot = dd + ex.cost + (pipeIn(ex.k) ? 0 : 3000); if (tot < best) { best = tot; bt = u; } }
-      for (const k of G.adj[u]) { const [x, y] = G.E[k], v = x === u ? y : x, nd = dd + G.cost[k]; if (nd < dist[v]) { dist[v] = nd; via[v] = k; Q.push([nd, v]); } }
+      const ex = (G.exit.get(u) || []).find(c => c.d >= dmax[u] / 2 || (u === s && c.m <= 25));
+      if (ex) { const tot = dd + ex.cost + (pipeIn(ex.k) ? 0 : 3000); if (tot < best) { best = tot; bt = u; bex = ex; } }
+      for (const k of G.adj[u]) { const [x, y] = G.E[k], v = x === u ? y : x, nd = dd + G.cost[k]; if (nd < dist[v]) { dist[v] = nd; via[v] = k; dmax[v] = Math.max(dmax[u], G.lineOf[v].d || 0); Q.push([nd, v]); } }
     }
     if (bt < 0) return null;
     const nodes = [bt], used = new Set(); let km = 0, gaps = 0;
     for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else if (G.len[k] > 60) gaps++; const [x, y] = G.E[k]; v = x === v ? y : x; nodes.push(v); }
     nodes.reverse();
-    const ex = G.exit.get(bt);
+    const ex = bex;
     return { start: s, joinM: sd, coords: nodes.map(i => [G.xs[i], G.ys[i]]), km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target };
   }
   async function traceDev(p) {
@@ -4591,15 +4600,31 @@
     const bd = L.latLngBounds([[p.lat, p.lng], [end[1], end[0]]]); for (const i of route) for (const [x, y] of pipeCoords(P[i])) bd.extend([y, x]);
     if (pl) for (const [x, y] of pl.coords) bd.extend([y, x]);
     fitClear(bd);
-    const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k, pl, outside, far: far >= 0 && k === far };
+    const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k, pl, outside, far: far >= 0 && k === far, built: svcLayerOf(p) === 'built' };
     TRACE.last = res;
     return res;
+  }
+  // The planned projects a DC-routed path relies on, and whether they're in service by the demand
+  // year (the DC map's year for each main); before then the site has no outlet on this route.
+  function dcWaitHTML(pl, built) {
+    const by = new Map();
+    for (const ln of [pl.first, ...pl.lines]) if (ln.p) { const o = by.get(ln.p) || { p: ln.p, y: 0, n: ln.n }; o.y = Math.max(o.y, ln.y || 0); o.n = o.n || ln.n; by.set(ln.p, o); }
+    const list = [...by.values()]; if (!list.length) return '';
+    const due = Math.max(...list.map(o => o.y)), wait = !built && due && capYear != null && capYear < due;
+    const txt = list.map(o => `<strong>${esc(o.p)}</strong>${o.n ? ` ${esc(o.n.replace(/\s+/g, ' '))}` : ''} (${o.y || 'year not labelled'})`).join(', ');
+    return `<li class="${wait ? 'why-stall' : 'why-ok'}"><span>Relies on planned DC project${list.length === 1 ? '' : 's'} ${txt}. ${built ? 'Already built: the route along the planned mains is indicative.' : wait ? `Not in service in ${capYear}: the site has no outlet on this route until ${due} (DC map year). It isn't connected to the smaller local sewers nearby in the meantime.` : capYear == null ? 'In service by build-out.' : `In service by ${capYear}.`}</span></li>`;
+  }
+  // The demand year moved: refresh the open trace's summary (projects in service or not).
+  function syncTraceSum() {
+    const b = document.querySelector('.trace-box [data-trace][data-on="1"]'), o = b && b.closest('.trace-box').querySelector('.trace-out');
+    if (o && TRACE.last && TRACE.last.pl) o.innerHTML = traceSummaryHTML(TRACE.last);
   }
   function traceSummaryHTML(t) {
     if (!t) return '<p class="small muted">No existing sewer of 300 mm+ within 3 km of the site and no planned DC wastewater main reaching one, to trace from.</p>';
     const P = SEW.data.pipes, w = t.worst, st = w && pipeState(w.r1);
     return `<ul class="why-list trace-sum">
       ${t.pl ? `<li class="why-ok"><span>Outside the traced catchments: joins the planned <strong>${esc(dcLineText(t.pl.first))}</strong> ${fmtNum(Math.round(t.pl.joinM / 10) * 10)} m from the site, then <strong>${t.pl.km.toFixed(1)} km along planned DC mains</strong>${t.pl.lines.length > 1 ? ` (${t.pl.lines.length} mains)` : ''} to the existing sewers${t.pl.gaps ? `, bridging ${t.pl.gaps} gap${t.pl.gaps === 1 ? '' : 's'} where the mapped mains stop short (straight)` : ''}${t.pl.inTarget ? '' : ' (outside the catchment that main is mapped to)'}.</span></li>` : t.far ? `<li class="why-stall"><span>No existing sewer within 400 m and no planned DC main that reaches one: joined straight to the nearest existing sewer, ${kmText(t.joinM)} away. Its route will depend on works not yet on the DC maps.</span></li>` : t.outside ? '<li class="why-stall"><span>Outside the traced catchments and no planned DC main within 1 km: joined to the nearest existing sewer.</span></li>' : ''}
+      ${t.pl ? dcWaitHTML(t.pl, t.built) : ''}
       <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from ${t.pl ? 'the planned main' : 'the site'}, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(t.plantName))}</strong>.</span></li>
       ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}
       ${t.stations.length ? `<li class="why-ok"><span>Pumping station${t.stations.length === 1 ? '' : 's'} on the way: ${t.stations.map(ps => esc(ps.name.replace(/\s*SEWAGE PUMPING( STN| STATION)?/i, '').replace(/\b\w+/g, x => x[0] + x.slice(1).toLowerCase()))).join(', ')}.</span></li>` : ''}
@@ -4925,9 +4950,9 @@
     yr.addEventListener('input', e => {
       const v = +e.target.value; capYear = v > hz.end ? null : v;
       yr.querySelector('.my-v').textContent = yearText();
-      clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); }, 120);
+      clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); syncTraceSum(); if (footTab === 'dca') renderDca(); }, 120);
     });
-    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : b.dataset.yr === 'census' ? censusYr() : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); });
+    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : b.dataset.yr === 'census' ? censusYr() : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); syncTraceSum(); if (footTab === 'dca') renderDca(); });
     return el;
   } });
   const legend = new Legend().addTo(map);
@@ -5816,14 +5841,14 @@
     return SEW.loading;
   }
   const pipeCoords = p => { const c = p[10], out = []; for (let k = 0; k < c.length; k += 2) out.push([c[k], c[k + 1]]); return out; };
-  // Nearest pipe (index) to a point within r metres.
-  function nearestPipe(lng, lat, r = 400) {
+  // Nearest pipe (index) to a point within r metres (of at least minD mm).
+  function nearestPipe(lng, lat, r = 400, minD = 0) {
     if (!SEW.grid) return -1;
     const gx = Math.floor(lng / 0.004), gy = Math.floor(lat / 0.003), R = Math.ceil(r / 300);
     let best = -1, bd = Infinity;
     const seen = new Set();
     for (let i = -R; i <= R; i++) for (let j = -R; j <= R; j++) for (const k of SEW.grid.get(`${gx + i},${gy + j}`) || []) {
-      if (seen.has(k)) continue; seen.add(k);
+      if (seen.has(k) || SEW.data.pipes[k][0] < minD) continue; seen.add(k);
       const d = dcDist([lng, lat], pipeCoords(SEW.data.pipes[k]));
       if (d < bd) { bd = d; best = k; }
     }
@@ -7802,7 +7827,7 @@
   });
   $('#dca-body').addEventListener('change', e => {
     const s0 = e.target.closest('[data-dca-year]'); if (!s0) return;
-    capYear = s0.value ? +s0.value : null; syncYearCtl(); renderCapLayer(); renderLegend(); renderDca();
+    capYear = s0.value ? +s0.value : null; syncYearCtl(); renderCapLayer(); renderLegend(); syncTraceSum(); renderDca();
   });
   $('#dca-body').addEventListener('keydown', e => { const row = e.target.closest('[data-dca]'); if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); row.click(); } });
 
@@ -8910,5 +8935,5 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), blockAt: (x, y) => blockAt(x, y), sewerPipes: () => SEW.data && SEW.data.pipes };
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), blockAt: (x, y) => blockAt(x, y), sewerPipes: () => SEW.data && SEW.data.pipes, dcSewerPath: p => dcSewerPath(p) };
 })();

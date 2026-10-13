@@ -884,6 +884,15 @@ water supply from the plant** draws the route on the map like the sewer trace.
   of the one they feed are bridged (up to 600 m, straight, and noted). The planned path is dashed
   pink; the maps don't give flow direction, so it is indicative. With no planned main reaching the
   network, the trace joins the nearest existing sewer within 3 km and says so.
+  - A planned main hands over only to an existing sewer at least half the size of the largest
+    planned main on the path so far. A 900 mm trunk doesn't empty into a 375 mm local sewer; it
+    carries on along the planned trunk to an existing one. For example, 11722 Mississauga Road and
+    0 Creditview Road (21T-25008C) follow the Credit Valley trunk (25-2225 → 25-2224 → 28-2139) to
+    the 600 mm sewer, not the 375 mm sewer near Wanless Drive. A site whose join point is within
+    25 m of an existing sewer still connects to that sewer.
+  - The summary lists the DC projects the path relies on and their DC map years. Before the latest
+    of them (at the demand year) the site has no outlet on this route. The line updates as the
+    demand year moves; already built sites are shown as indicative.
 - Both traces fit the route on the rotated map, clear of the open panel and the boxes along the
   map's edges.
 
