@@ -471,6 +471,8 @@
   const EXIST_ZOOM = 15;
   // Map control: basemap + label pickers.
   // Planning area outlines on the map (secondary plans / character areas, MTSAs): tap one to filter.
+  // Site boundary on hover (More settings): on / off and the reach in screen pixels.
+  const hov = { on: true, r: 40, ...(store.get('hoverPoly', {}) || {}) };
   const areaOn = { sp: store.get('areaSp', false) === true, mtsa: store.get('areaMtsa', false) === true };
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
@@ -520,6 +522,11 @@
         <div class="mo-sec"><div class="mo-h">Planning areas</div>
           <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:#e8590c"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:#d4a017"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
         </div>
+        <div class="mo-sec" data-info="hover-boundary"><div class="mo-h">Site boundary on hover</div>
+          <div class="mo-chips">${chip('id="opt-hov"', hov.on, '<i class="lg-line dash" style="background:#f76707"></i>Show', 'hover-boundary')}</div>
+          <label class="mo-range"><span>Reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
+          <small>Point at a development to outline its application site (mouse or trackpad).</small>
+        </div>
         <div class="mo-sec"><div class="mo-h">Base map</div>
           <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(BASEMAPS, basemap)}</select></label>
           ${canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(ORIENTATIONS, orientation)}</select></label>` : ''}
@@ -544,6 +551,8 @@
       el.querySelector('#opt-save').onclick = () => saveCurrentView();
       el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') openSavedView(+i); };
       el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); renderSavedViews(); };
+      el.querySelector('#opt-hov').onchange = e => setHov({ on: e.target.checked });
+      el.querySelector('#opt-hovr').oninput = e => { setHov({ r: +e.target.value }); document.querySelector('#opt-hovr-v').textContent = `${hov.r} px`; };
       el.querySelector('#opt-basemap').onchange = e => { basemap = e.target.value; store.set('basemap', basemap); setTiles(); restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { labelMode = e.target.value; store.set('labelMode', labelMode); updateLabels(); };
       el.querySelector('#opt-da').onchange = e => setDaLayer(e.target.checked);
@@ -2965,6 +2974,51 @@
   // The click that ends a box doesn't also count as a tap on the map (which would unselect).
   document.addEventListener('click', e => { if (boxed && mapEl.contains(e.target)) { e.stopPropagation(); e.preventDefault(); } }, true);
   mapEl.addEventListener('contextmenu', e => { if (box) e.preventDefault(); });
+
+  // Site boundary on hover: the shown development nearest the pointer, within the reach (More
+  // settings), has its application site outlined; one without a published boundary gets a dashed
+  // ring. Mouse / trackpad only (a phone has no hover). Positions are cached per view.
+  const hovLayer = L.layerGroup().addTo(map);
+  let hovPts = null, hovKey = null, hovRaf = 0;
+  const hovReset = () => { hovPts = null; };
+  map.on('moveend zoomend viewreset rotate', hovReset);
+  function hovCandidates() {
+    const src = `${devsOn}|${isWW()}|${JSON.stringify(wwLay)}`;
+    if (hovPts && hovPts.list === state.filtered && hovPts.src === src) return hovPts;
+    const b = map.getBounds().pad(0.05);
+    hovPts = []; hovPts.list = state.filtered; hovPts.src = src;
+    for (const p of state.filtered) {
+      if (p.lat == null || !devShown(p) || !b.contains([p.lat, p.lng])) continue;
+      const c = map.latLngToContainerPoint([p.lat, p.lng]); hovPts.push([c.x, c.y, p]);
+    }
+    return hovPts;
+  }
+  function hovClear() { if (hovKey) { hovLayer.clearLayers(); hovKey = null; } }
+  function hovShow(p, onMarker) {
+    const k = `${p.key}|${onMarker ? 1 : 0}`; if (hovKey === k) return;
+    hovLayer.clearLayers(); hovKey = k;
+    const apps = siteApps(p);
+    if (apps.length) for (const a of apps) L.polygon(toLatLngs(a.poly), { className: 'hov-site', interactive: false, color: '#f76707', weight: 2.5, dashArray: '6 4', fillColor: '#f76707', fillOpacity: 0.12 }).addTo(hovLayer);
+    else L.circleMarker([p.lat, p.lng], { radius: 16, className: 'hov-ring', interactive: false, color: '#f76707', weight: 2, dashArray: '4 4', fill: false }).addTo(hovLayer);
+    if (onMarker) return;   // the marker's own tooltip shows
+    const t = L.tooltip({ direction: 'top', offset: [0, -14], className: 'hov-tip', opacity: 1 }).setLatLng([p.lat, p.lng])
+      .setContent(`<strong>${esc(p.title)}</strong><br><span class="muted">${esc(P.PHASE_BY_KEY[p.phase].label)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}${apps.length ? '' : ' · no site boundary published'}</span>`);
+    hovLayer.addLayer(t);
+  }
+  function setHov(ch) { Object.assign(hov, ch); store.set('hoverPoly', { on: hov.on, r: hov.r }); if (!hov.on) hovClear(); }
+  mapEl.addEventListener('mousemove', e => {
+    if (!hov.on || box || lassoOn || (tool && tool.mode) || e.buttons) { if (!hov.on) hovClear(); return; }
+    if (e.target.closest && e.target.closest('.leaflet-control, .map-bottom')) { hovClear(); return; }
+    const [x, y] = rel(e);
+    cancelAnimationFrame(hovRaf);
+    hovRaf = requestAnimationFrame(() => {
+      let best = null, bd = hov.r * hov.r;
+      for (const q of hovCandidates()) { const dx = q[0] - x, dy = q[1] - y, d = dx * dx + dy * dy; if (d <= bd) { bd = d; best = q[2]; } }
+      if (best) hovShow(best, bd < 13 * 13); else hovClear();
+    });
+  });
+  mapEl.addEventListener('mouseleave', () => { cancelAnimationFrame(hovRaf); hovClear(); });
+  map.on('movestart zoomstart', hovClear);
 
   function drawSelection() {
     selLayer.clearLayers();
