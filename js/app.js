@@ -725,7 +725,7 @@
       const nested = apps.length > 1 && area < biggest * 0.6;
       poly.bindTooltip(`<strong>${esc(a.ref || a.type || 'Application')}</strong>${a.type ? ` · ${esc(a.type)}` : ''}<br>${esc(a.address || p.title)}` +
         `${a.units ? ` · ${fmtNum(a.units)} units` : ''}${unloaded ? `<br><span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
-      poly.on('click', ev => { L.DomEvent.stop(ev); if (nested) showRecordDetail(a, p); else showDetail(p); });
+      poly.on('click', ev => { L.DomEvent.stop(ev); const sub = nested && isFormal(a) && subProject(p, a.ref); if (sub) showDetail(sub); else if (nested) showRecordDetail(a, p); else showDetail(p); });
       return poly;
     });
   }
@@ -1025,7 +1025,7 @@
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }
       if (q.get('yf') && q.get('yt')) setYears(Number(q.get('yf')), Number(q.get('yt'))); else applyFilters();
       showFootTab(footPref);
-      const d = q.get('d') && state.projects.find(p => p.key === q.get('d'));
+      const d = q.get('d') && projectByKey(q.get('d'));
       if (d) showDetail(d);
       write();
     };
@@ -1283,7 +1283,7 @@
   function allocRows() {
     const out = [];
     for (const [key, a] of Object.entries(allocs())) {
-      const p = state.projects.find(x => x.key === key);
+      const p = projectByKey(key);
       out.push({ key, a, p, pl: p ? plantOfDev(p) : 'none', lay: p ? svcLayerOf(p) : 'out', people: p ? allocPeople(p, a) : 0 });
     }
     return out.sort((x, y) => String(y.a.date || '').localeCompare(String(x.a.date || '')));
@@ -1328,7 +1328,7 @@
       const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', PLANT_SHORT[r.pl] || '', r.lay])];
       download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
     }
-    const r = e.target.closest('.ld-row'); if (r) { const p = state.projects.find(x => x.key === r.dataset.dev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } }
+    const r = e.target.closest('.ld-row'); if (r) { const p = projectByKey(r.dataset.dev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } }
   });
   $('#alloc-body').addEventListener('change', async e => {
     const f = e.target.closest('[data-alloc-imp]'); if (!f || !f.files[0]) return;
@@ -2569,9 +2569,114 @@
     document.querySelectorAll('#detail-body .dv-pane').forEach(p => { p.hidden = p.dataset.dvp !== k; });
     const on = document.querySelector(`#detail-body [data-dvt="${k}"]`); if (on && on.parentElement.scrollWidth > on.parentElement.clientWidth) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
+  // ---- One application on its own, and the developments around it ----------------------------
+  // A development groups every file on its land (a precinct plan, its draft plans, their
+  // pre-consultations). Each formal application can open on its own as a sub-development: the
+  // application, the pre-consultations that led to it and the building permits inside its land,
+  // with the same tabs. Sub-developments are views only: the totals count the whole development
+  // once. Keys are "<development key>#<file>".
+  const SUBS = new Map();
+  let projBack = null, projFrom = null;   // the development to go back to after going across to a related one
+  const isFormal = r => r.kind === 'application' && (r.stage || P.stageOf(r)) !== 'precon';
+  const isPrecon = r => r.kind === 'application' && (r.stage || P.stageOf(r)) === 'precon';
+  const civicOf = r => { const a = P.normalizeAddress(r.address); return a && /\d/.test(a) && !/^0+(\s*-\s*0+)?\s/.test(a) ? a : ''; };
+  // Share of boundary a that lies inside boundary b (a 12 × 12 sample of a's box), cached.
+  const fracCache = new WeakMap();
+  function landShare(a, b) {
+    let m = fracCache.get(a); if (!m) fracCache.set(a, m = new WeakMap());
+    if (m.has(b)) return m.get(b);
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const g of a) for (const [x, y] of g) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+    let n = 0, k = 0;
+    for (let i = 0; i < 12; i++) for (let j = 0; j < 12; j++) {
+      const x = x0 + (x1 - x0) * (i + 0.5) / 12, y = y0 + (y1 - y0) * (j + 0.5) / 12;
+      if (!P.pointInRings(x, y, a)) continue; n++; if (P.pointInRings(x, y, b)) k++;
+    }
+    const f = n ? k / n : 0; m.set(b, f); return f;
+  }
+  // How two files relate on the ground: the same civic address, or overlapping land (at least 15%
+  // of either boundary; neighbours that only share an edge are not related). Null when unrelated.
+  function landRel(a, b) {
+    if (civicOf(a) && civicOf(a) === civicOf(b)) return 'same address';
+    if (a.poly && b.poly) {
+      const ab = landShare(a.poly, b.poly), ba = landShare(b.poly, a.poly);
+      if (ab >= 0.9 && ba < 0.9) return 'covers it';
+      if (ba >= 0.9 && ab < 0.9) return 'within it';
+      return ab >= 0.15 || ba >= 0.15 ? 'overlapping land' : null;
+    }
+    const pt = a.poly ? b : a, pl = a.poly ? a : b;
+    return pl.poly && pt.lat != null && P.pointInRings(pt.lng, pt.lat, pl.poly) ? (pl === a ? 'within it' : 'covers it') : null;
+  }
+  const sameLand = (a, b) => !!landRel(a, b);
+  // The development's formal applications, each with the pre-consultations on its land; the
+  // pre-consultations that match none stand alone. Every file appears once.
+  function fileTree(p) {
+    const formal = p.records.filter(isFormal), pre = p.records.filter(isPrecon), used = new Set();
+    const rows = formal.map(a => ({ a, pre: pre.filter(r => !used.has(r) && sameLand(a, r) && used.add(r)) }));
+    for (const r of pre) if (!used.has(r)) rows.push({ a: r, pre: [] });
+    const start = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
+    return rows.sort((x, y) => start(x.a) - start(y.a));
+  }
+  function subProject(p, ref) {
+    const key = `${p.key}#${ref}`;
+    if (SUBS.has(key)) return SUBS.get(key);
+    const row = fileTree(p).find(t => t.a.ref === ref); if (!row) return null;
+    const a = row.a;
+    const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P.pointInRings(r.lng, r.lat, a.poly)) : [];
+    const sub = P.mergeProject(key, [a, ...row.pre, ...permits], {});
+    sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
+    if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
+    if (state.servicing) tagAreas(sub);
+    if (state.areas) { sub.sp = PeelAreas.locate(state.areas.secondaryPlans, sub.lng, sub.lat, sub.municipality); sub.mtsa = PeelAreas.locate(state.areas.mtsas, sub.lng, sub.lat, sub.municipality); }
+    SUBS.set(key, sub);
+    return sub;
+  }
+  function projectByKey(k) {
+    if (!k) return null;
+    if (SUBS.has(k)) return SUBS.get(k);
+    const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
+    const p = state.projects.find(x => x.key === base);
+    return p && i > 0 ? subProject(p, k.slice(i + 1)) : p || null;
+  }
+  // Other developments on overlapping land (a precinct's draft plans, the precinct a site sits in).
+  function relatedProjects(p) {
+    if (p._rel && p._rel.list === state.projects) return p._rel.out;
+    const mine = p.records.filter(r => r.kind === 'application' && r.phase !== 'cancelled' && (r.poly || r.lat != null));
+    const b = projectBounds(p), out = [];
+    if (b && mine.length) for (const q of state.projects) {
+      if (q === p || q === p.parent || q.phase === 'cancelled') continue;
+      const qb = projectBounds(q); if (!qb || !b.intersects(qb)) continue;
+      const theirs = q.records.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
+      const hits = [];
+      for (const r of theirs) { const m = mine.find(m => landRel(r, m)); if (m) hits.push({ r, how: landRel(r, m), m }); }
+      if (hits.length) out.push({ q, hits });
+    }
+    out.sort((x, y) => (y.q.units || 0) - (x.q.units || 0));
+    p._rel = { list: state.projects, out };
+    return out;
+  }
+  const fileLine = r => `${esc(r.ref || 'File')}${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}`;
+  function filesHTML(p) {
+    const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
+    const rel = relatedProjects(p).slice(0, 12);
+    let html = '';
+    if (formal.length > 1 || (formal.length && tree.length > formal.length)) {
+      const counted = p.buildout && p.buildout.basis;
+      html += `<details class="sect" id="dev-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
+        <ul class="file-tree">${tree.map(t => `<li>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
+          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}</div></li>`).join('')}</ul>
+        <p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`;
+    }
+    if (rel.length) html += `<details class="sect" id="dev-related"${p.records.every(isPrecon) ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
+      <ul class="file-tree">${rel.map(({ q, hits }) => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P.PHASE_BY_KEY[q.phase].label)}</span>
+        <div class="small muted">${hits.slice(0, 4).map(h => `${fileLine(h.r)} <span class="rel-how">${esc({ 'same address': 'same address as', 'covers it': 'covers', 'within it': 'within', 'overlapping land': 'overlaps' }[h.how])} ${esc(h.m.ref)}</span>`).join('<br>')}${hits.length > 4 ? `<br>+ ${hits.length - 4} more` : ''}</div></div></li>`).join('')}</ul>
+      <p class="small muted">Other developments with an application on the same land (overlapping boundaries or the same civic address), each counted in its own development, once.</p></details>`;
+    return html;
+  }
   function showDetail(p) {
     // "← What loads …" when opened from that list (kept while the same development is re-rendered).
     if (backToLoads) { devBack = backToLoads; backToLoads = null; } else if (currentProject !== p) devBack = null;
+    if (projFrom) { projBack = projFrom; projFrom = null; } else if (currentProject !== p) projBack = null;
     // Re-rendering the same development (council items arrived, criteria changed): keep what is open.
     const keep = currentProject === p && $('#detail').dataset.view === 'dev'
       ? { open: new Map([...document.querySelectorAll('#detail-body details[id]')].map(d => [d.id, d.open])), tl: (document.querySelector('#detail-body [data-tl].on') || {}).dataset, dvt: (document.querySelector('#detail-body [data-dvt][aria-selected="true"]') || {}).dataset?.dvt } : null;
@@ -2606,10 +2711,13 @@
     }).join('');
     $('#detail-body').innerHTML = `
       ${devBack ? `<button type="button" class="btn small link back-sel" data-loads-back="1">${devBack.dc ? `← ${devBack.dc.ln ? 'DC main' : devBack.dc.fc ? esc(devBack.dc.fc.name) : devBack.dc.cons ? 'Who relies on it' : 'DC timing'}` : `← What loads ${devBack.pipe != null ? `the ${SEW.data.pipes[devBack.pipe][0]} mm sewer` : esc(devBack.plantName ? PLANT_SHORT[devBack.plantName] : (svcById.get(devBack.id) ? (svcById.get(devBack.id).zone ? svcById.get(devBack.id).name : drName(svcById.get(devBack.id))) : 'it'))}`}</button>` : selection.has(p.key) ? `<button type="button" class="btn small link back-sel" data-sel="back">← Selection (${fmtNum(selection.size)} projects)</button>` : ''}
+      ${p.parent ? `<button type="button" class="btn small link back-sel" data-dev-parent="1">← Whole development: ${esc(p.parent.title)} (${fmtNum(p.parent.records.filter(r => r.kind === 'application').length)} files)</button>` : projBack && projBack !== p ? `<button type="button" class="btn small link back-sel" data-proj-back="1">← ${esc(projBack.title)}</button>` : ''}
+      ${p.parent ? `<div class="sub-head small"><strong>${esc(p.subRef)}</strong> on its own: ${(x => x.length > 1 ? `${x.slice(0, -1).join(', ')} and ${x[x.length - 1]}` : x[0])(['this application', ...(p.records.some(isPrecon) ? ['its pre-consultation'] : []), ...(p.records.some(r => r.kind === 'permit') ? ['the permits inside its land'] : [])])}. Counted in the whole development, not added again.</div>` : ''}
       ${devHeadHTML(p, st, f)}
       <div class="dv-tabs" role="tablist" aria-label="Development">${DV_TABS.map(([k, t]) => `<button type="button" role="tab" data-dvt="${k}" aria-selected="false">${t}</button>`).join('')}</div>
       <div class="dv-pane" data-dvp="overview" role="tabpanel">
         ${devBriefHTML(p, st, f, 'overview')}
+        ${filesHTML(p)}
         <details class="sect" id="dev-aerial"><summary><h2 class="section-title" data-info="aerial">Aerial check</h2><span class="muted small sect-sum">before / latest photo</span></summary>
           <div class="aerial" id="aerial-check"></div></details>
       </div>
@@ -2655,6 +2763,13 @@
     if (t) return showTl(t.dataset.tl);
     const dt = e.target.closest('[data-dvt]');
     if (dt) { store.set('dvTab', dt.dataset.dvt); showDvTab(dt.dataset.dvt); return; }
+    // Drill down to one application, across to a related development, and back.
+    const sb = e.target.closest('[data-sub]');
+    if (sb && currentProject) { const sub = subProject(currentProject.parent || currentProject, sb.dataset.sub); if (sub) showDetail(sub); return; }
+    const rq = e.target.closest('[data-relq]');
+    if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); if (q.lat != null) map.setView([q.lat, q.lng], Math.max(map.getZoom(), 14)); } return; }
+    if (e.target.closest('[data-dev-parent]') && currentProject && currentProject.parent) { showDetail(currentProject.parent); return; }
+    if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
     const o = e.target.closest('[data-open]');
     if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
   });
@@ -4658,7 +4773,7 @@
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-trace]'); if (!b) return;
     const wf = b.dataset.trace.startsWith('whatif:') && whatIfs.find(w => `whatif:${w.id}` === b.dataset.trace);
-    const p = wf ? whatIfProject(wf) : state.projects.find(x => x.key === b.dataset.trace); if (!p) return;
+    const p = wf ? whatIfProject(wf) : projectByKey(b.dataset.trace); if (!p) return;
     const box = b.closest('.trace-box');
     const label = b._label || (b._label = b.innerHTML);
     if (TRACE.key === p.key && b.dataset.on) { clearTrace(); b.dataset.on = ''; b.innerHTML = label; b.classList.remove('on'); if (box) box.querySelector('.trace-out').innerHTML = ''; return; }
@@ -5190,7 +5305,7 @@
   }
   $('#detail-body').addEventListener('click', e => {
     const r = e.target.closest('.ld-row'); if (!r) return;
-    const p = state.projects.find(x => x.key === r.dataset.dev); if (!p) return;
+    const p = projectByKey(r.dataset.dev); if (!p) return;
     backToLoads = { ...loadsOf }; showDetail(p);
     if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15));
   });
@@ -6943,7 +7058,7 @@
   // Trace buttons (top of Servicing, and Trace on the map in the Supply route row): one toggles it.
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-wtrace]'); if (!b) return;
-    const p = state.projects.find(x => x.key === b.dataset.wtrace); if (!p) return;
+    const p = projectByKey(b.dataset.wtrace); if (!p) return;
     const top = document.querySelector(`.trace-box [data-wtrace="${CSS.escape(p.key)}"]`), box = top && top.closest('.trace-box');
     if (top && !top._label) top._label = top.innerHTML;
     const setTop = on => { if (!top) return; top.dataset.on = on ? '1' : ''; top.classList.toggle('on', on); top.innerHTML = on ? 'Hide the water route' : top._label; };
@@ -7873,7 +7988,7 @@
     }
     const s0 = e.target.closest('[data-dca-sort]'); if (s0) { DCA.sort = s0.dataset.dcaSort; return renderDca(); }
     if (e.target.closest('[data-dca-csv]')) return dcaCsv();
-    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = state.projects.find(x => x.key === dv.dataset.dcaDev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = projectByKey(dv.dataset.dcaDev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
     const mp = e.target.closest('[data-dca-map]');
     if (mp) {
       const r = DCA.res && DCA.res.list.find(x => x.key === mp.dataset.dcaMap); if (!r) return;
@@ -8936,6 +9051,11 @@
         units: null, gfa: null, newBuild: false, unitMix: null, props: {}, ...o,
         events: (o.events || []).map(([d, phase, label]) => ({ date: new Date(`${d}T00:00:00Z`), phase, label })),
       }));
+      // Unit counts written in the description since this snapshot was built ("unit count: 2656").
+      if (src.countUnits !== false) for (const r of src.records) {
+        if (r.kind !== 'application' || r.units > 0 || r.unitMix) continue;
+        const t = P.unitsFromText(r.description); if (t) { r.units = t; r.unitsFromText = true; }
+      }
       const n = fmtNum(src.records.length);
       if (meta.status === 'ok') { src.status = 'ok'; src.msg = `${n} records · ${meta.updated}`; }
       else if (meta.status === 'stale') { src.status = 'error'; src.msg = `${n} records from ${meta.updated} (source unreachable this week)`; }
@@ -8971,7 +9091,7 @@
       renderWatch(); renderFocusChips(); return;
     }
     const o = e.target.closest('[data-watch-open]');
-    if (o) { const p = state.projects.find(x => x.key === o.dataset.watchOpen); if (p) focusProject(p); }
+    if (o) { const p = projectByKey(o.dataset.watchOpen); if (p) focusProject(p); }
   });
 
   // "This week" panel: projects that appeared or changed phase since the previous snapshot.
@@ -8992,7 +9112,7 @@
       (items.length > SHOW ? `<li class="muted small">+ ${fmtNum(items.length - SHOW)} more</li>` : '');
     $('#changes-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
-      const p = state.projects.find(x => x.key === items[+b.dataset.i].key);
+      const p = projectByKey(items[+b.dataset.i].key);
       if (p) focusProject(p);
     };
   }
