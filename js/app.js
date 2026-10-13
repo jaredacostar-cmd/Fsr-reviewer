@@ -1980,7 +1980,7 @@
 
   // Servicing demand for one project. Peaking uses the project's own population (local
   // sewer / watermain sizing), so it is higher than its share of the regional total.
-  function demandHTML(p, intro = '', nested = false) {
+  function demandHTML(p, intro = '', nested = false, sys = null) {
     const c = state.criteria;
     // Total = completed (finished permits) + remaining (everything not yet completed).
     const cols = [['all', 'Total'], ['completed', 'Completed'], ['unbuilt', 'Remaining']];
@@ -1990,34 +1990,35 @@
     const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
     const sub = t => `<tr class="sub"><td colspan="${cols.length + 1}">${t}</td></tr>`;
     const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
+    const W = sys !== 'ww', S = sys !== 'water';
     const resRows = !res ? '' : `
         ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
         ${row('Population', e => fmtNum(roundPop(e.population)))}
-        ${sub(`Water (L/s)${emp ? ' · residential' : ''}`)}
+        ${W ? `${sub(`Water (L/s)${emp ? ' · residential' : ''}`)}
         ${row('Average day', e => fmt1(e.water.avg))}
         ${row(`Max day ×${c.water.maxDay}`, e => fmt1(e.water.maxDay))}
-        ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}
-        ${sub(`Wastewater (L/s)${emp ? ' · residential' : ''}`)}
+        ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}` : ''}
+        ${S ? `${sub(`Wastewater (L/s)${emp ? ' · residential' : ''}`)}
         ${row('Average dry weather', e => fmt1(e.wastewater.avg))}
         ${row('Peak dry (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
         ${row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => e.area.ha > 0 ? `${fmt1(e.wastewater.infiltration)} <span class="muted">${fmt1(e.area.ha)} ha${e.area.estimatedHa > 0 ? ' est.' : ''}</span>` : '–')}
-        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}`;
+        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}` : ''}`;
     const m = e => e.employment;
     const empRows = !emp ? '' : `
         ${sub('Employment (L/s)')}
         ${row('Jobs', e => m(e).jobs > 0 ? fmtNum(Math.round(m(e).jobs)) : '–')}
-        ${row(`Water average · ${c.employment.water} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).water.avg) : '–')}
+        ${W ? `${row(`Water average · ${c.employment.water} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).water.avg) : '–')}
         ${row(`Water max day ×${c.employment.maxDay}`, e => m(e).jobs > 0 ? fmt1(m(e).water.maxDay) : '–')}
-        ${row(`Water peak hour ×${c.employment.peakHour}`, e => m(e).jobs > 0 ? fmt1(m(e).water.peakHour) : '–')}
-        ${row(`Wastewater average · ${c.employment.wastewater} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).wastewater.avg) : '–')}
+        ${row(`Water peak hour ×${c.employment.peakHour}`, e => m(e).jobs > 0 ? fmt1(m(e).water.peakHour) : '–')}` : ''}
+        ${S ? `${row(`Wastewater average · ${c.employment.wastewater} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).wastewater.avg) : '–')}
         ${row('Wastewater peak', e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.peak)} <span class="muted">M ${m(e).wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
         ${m(es[0]).area.ha > 0 ? row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.infiltration)} <span class="muted">${fmt1(m(e).area.ha)} ha</span>` : '–') : ''}
-        ${row('Peak wet weather', e => m(e).jobs > 0 ? fmt1(m(e).wastewater.wetPeak) : '–')}`;
+        ${row('Peak wet weather', e => m(e).jobs > 0 ? fmt1(m(e).wastewater.wetPeak) : '–')}` : ''}`;
     const totRows = !(res && emp) ? '' : `
         ${sub('Total · residential + employment (L/s)')}
-        ${row('Water max day', e => fmt1(e.combined.water.maxDay))}
-        ${row('Water peak hour', e => fmt1(e.combined.water.peakHour))}
-        ${row('Wastewater peak wet weather', e => fmt1(e.combined.wastewater.wetPeak))}`;
+        ${W ? row('Water max day', e => fmt1(e.combined.water.maxDay)) : ''}
+        ${W ? row('Water peak hour', e => fmt1(e.combined.water.peakHour)) : ''}
+        ${S ? row('Wastewater peak wet weather', e => fmt1(e.combined.wastewater.wetPeak)) : ''}`;
     const notes = [];
     if (res) notes.push(`${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.`);
     if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the development is completed.`);
@@ -2518,18 +2519,34 @@
   }
 
   function devServicingHTML(p, f, open) {
-    const dem = demandHTML(p, '', true);
+    const dem = '';   // demand by stage is in Units, jobs & build-out
     const sum = f ? `${fmt1(f.cb.water.maxDay)} L/s max day · ${fmt1(f.cb.wastewater.wetPeak)} L/s peak wet` : '';
     return `<details class="sect" id="dev-svc"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="servicing-check">Flows by stage and sewer path</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${f ? servicingCheckHTML(p, f, { trace: false }) : servicingLineHTML(p)}
       ${dem}</details>`;
   }
+  // Demand by stage (total, completed, remaining) for one system at a time: Water | Wastewater.
+  let dmSys = store.get('dmSys', 'water') === 'ww' ? 'ww' : 'water';
+  function devStageDemandHTML(p) {
+    const w = demandHTML(p, '', true, 'water'), ww = demandHTML(p, '', true, 'ww');
+    if (!w && !ww) return buildoutHTML(p);
+    const open = h => h.replace('<details class="sub-sect">', '<details class="sub-sect" open>');
+    return `<div class="dm-stage"><div class="seg dm-sys" role="group" aria-label="System">${[['water', 'Water'], ['ww', 'Wastewater']].map(([k, t]) => `<button type="button" class="btn small${dmSys === k ? ' on' : ''}" data-dmsys="${k}" aria-pressed="${dmSys === k}">${t}</button>`).join('')}</div>
+      <div data-dmp="water"${dmSys === 'water' ? '' : ' hidden'}>${open(w)}</div><div data-dmp="ww"${dmSys === 'ww' ? '' : ' hidden'}>${open(ww)}</div></div>`;
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-dmsys]'); if (!b) return;
+    dmSys = b.dataset.dmsys; store.set('dmSys', dmSys);
+    const box = b.closest('.dm-stage');
+    box.querySelectorAll('[data-dmsys]').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', String(x === b)); });
+    box.querySelectorAll('[data-dmp]').forEach(x => { x.hidden = x.dataset.dmp !== dmSys; });
+  });
   function devUnitsHTML(p, open) {
     const b = p.buildout, e = empOf(p);
     const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} units` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
     return `<details class="sect" id="dev-units"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${summaryHTML(p)}
-      ${buildoutHTML(p)}
+      ${devStageDemandHTML(p)}
       ${employmentHTML(p)}
       <p class="facts small muted">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
         `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p></details>`;
@@ -2591,7 +2608,6 @@
       </div>
       <div class="dv-pane" data-dvp="demand" role="tabpanel">
         ${devUnitsHTML(p, true)}
-        ${f ? allocBoxHTML(p) : ''}
         ${devServicingHTML(p, f, true)}
       </div>
       <div class="dv-pane" data-dvp="water" role="tabpanel">${devBriefHTML(p, st, f, 'water')}</div>
