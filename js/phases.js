@@ -258,6 +258,8 @@
       if (/^[^.;]{0,40}?\b(consist|compris|includ|of which|made up|broken down)/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 60))) { summary = Math.max(summary, n); continue; }
       parts.push(n);
     }
+    // "16 blocks of townhouses (70 units)": the units in brackets are one part of the list.
+    for (const m of s.matchAll(/\b\d{1,4}\s+(?:[a-z-]+\s+){0,2}blocks?\s+(?:of|for)\s+[a-z -]{0,40}?\(\s*(\d{1,5})\s*(?:[a-z-]+\s+){0,2}units?\s*\)/gi)) parts.push(Number(m[1]));
     if (summary) { if (summary > best && summary < 20000) best = summary; }
     else if (parts.length >= 2) {
       let total = parts.reduce((t, n) => t + n, 0);
@@ -623,13 +625,7 @@
     // whose boundaries don't overlap (a draft plan filed at its precinct plan's address) are
     // separate proposals. Each gets its own group; the address's other files join the one whose
     // land holds them (else the largest). Nesting (step 3) then relates them.
-    const shareOf = (a, b) => {
-      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-      for (const g of a) for (const [x, y] of g) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
-      let n = 0, k = 0;
-      for (let i = 0; i < 10; i++) for (let j = 0; j < 10; j++) { const x = x0 + (x1 - x0) * (i + 0.5) / 10, y = y0 + (y1 - y0) * (j + 0.5) / 10; if (!pointInRings(x, y, a)) continue; n++; if (pointInRings(x, y, b)) k++; }
-      return n ? k / n : 0;
-    };
+    const shareOf = landShare;
     for (const [k, g] of [...groups]) {
       const masters = g.filter(r => r.kind === 'application' && r.poly && r.phase !== 'cancelled' && (r.stage || stageOf(r)) === 'master' && ringsArea(r.poly) > 2000);
       if (masters.length < 2) continue;
@@ -676,6 +672,28 @@
         }
       }
     }
+    // The development process on one piece of land is one proposal: pre-consultation → official
+    // plan / zoning / draft plan of subdivision → (registration) → site plan → condominium → permits.
+    // Two more cases are the same proposal, whatever their addresses:
+    //  - a re-filed or revised formal application whose boundary lies (almost) wholly inside
+    //    another of similar size (≥ 90% inside, the other ≥ 60% covered);
+    //  - a pre-consultation on a formal application's land (half of either boundary overlapping):
+    //    the proposal's first step.
+    // (A pre-consultation joins only the one formal application it overlaps most, so it never
+    // bridges two separate proposals.)
+    const formalOf = x => x.recs.some(r => r.kind === 'application' && r.phase !== 'cancelled' && (r.stage || stageOf(r)) !== 'precon');
+    const preCand = [];
+    for (const a of sites) {
+      for (const b of containing(a.centre[0], a.centre[1], a.muni)) {
+        if (b === a || find(a) === find(b)) continue;
+        const fa = formalOf(a), fb = formalOf(b), ab = shareOf(a.rings, b.rings), ba = shareOf(b.rings, a.rings);
+        if (fa === fb && ab >= 0.9 && ba >= 0.6) { const ra = find(a), rb = find(b); rb.same = ra; }
+        else if (fa !== fb && (ab >= 0.5 || ba >= 0.5)) preCand.push({ pre: fa ? b : a, formal: fa ? a : b, score: Math.max(ab, ba) });
+      }
+    }
+    const bestPre = new Map();
+    for (const c of preCand) { const r = find(c.pre); if (sites.some(x => find(x) === r && formalOf(x))) continue; const cur = bestPre.get(r); if (!cur || c.score > cur.score) bestPre.set(r, c); }
+    for (const [r, c] of bestPre) { const rf = find(c.formal); if (rf !== find(r)) find(r).same = rf; }
     // A "land" is one set of same-land sites.
     const lands = new Map();
     for (const s of sites) {
@@ -697,17 +715,27 @@
     const formalStages = land => land.sites.flatMap(s => s.recs).filter(r => r.kind === 'application' && r.phase !== 'cancelled' && (r.stage || stageOf(r)) !== 'precon').map(r => r.stage || stageOf(r));
     const draftLike = land => { const st = formalStages(land); return st.length > 0 && st.every(x => x === 'master'); };
     const hasMaster = land => formalStages(land).includes('master');
+    const ringsOf = land => land._rings || (land._rings = land.sites.flatMap(s => s.rings));
     for (const land of lands.values()) {
       const [x, y] = land.rep.centre;
       let best = null;
       for (const s of containing(x, y, land.rep.muni)) {
         const other = s.land;
         if (other === land || other.area <= land.area) continue;
-        if (!after(isFinite(land.start) ? land.start : null, isFinite(other.start) ? other.start : null)) continue;
-        if (!best || other.area < best.area) best = other;
+        // Its centre inside isn't enough: most of the land must lie within (a cluster of files
+        // straddling the edge of a neighbouring site isn't part of it).
+        if (shareOf(ringsOf(land), ringsOf(other)) < 0.5) continue;
+        // A file that started well before the larger one joins it only when both are planning
+        // files: an older application inside a newer, larger one is that land's earlier proposal
+        // (re-filed, expanded). (Permits keep the date rule, in step 4.)
+        const older = !after(isFinite(land.start) ? land.start : null, isFinite(other.start) ? other.start : null);
+        if (older && !(land.sites.some(formalOf) && other.sites.some(formalOf))) continue;
+        if (!best || other.area < best.area) best = other, best._older = older;
       }
       if (!best) continue;
-      if (draftLike(land) && hasMaster(best)) { land.areaParent = best; (best.areaKids || (best.areaKids = [])).push(land); }
+      // (An area plan holds only official plan / zoning / subdivision files: land that also has
+      // a site plan or condominium is one project moving through its stages, not an area plan.)
+      if (draftLike(land) && hasMaster(best) && draftLike(best) && land.area < 0.6 * best.area && !best._older) { land.areaParent = best; (best.areaKids || (best.areaKids = [])).push(land); }
       else { land.parent = best; best.children.push(land); }
     }
     const rootOf = land => { while (land.parent) land = land.parent; return land; };
@@ -872,6 +900,14 @@
    *  - planned = the largest of those three figures.
    * Returns { planned, basis, phases } where phases lists the counted site plan / condo files.
    */
+  // Share of boundary a lying inside boundary b (a 10 × 10 sample of a's box).
+  function landShare(a, b) {
+    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+    for (const g of a) for (const [x, y] of g) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
+    let n = 0, k = 0;
+    for (let i = 0; i < 10; i++) for (let j = 0; j < 10; j++) { const x = x0 + (x1 - x0) * (i + 0.5) / 10, y = y0 + (y1 - y0) * (j + 0.5) / 10; if (!pointInRings(x, y, a)) continue; n++; if (pointInRings(x, y, b)) k++; }
+    return n ? k / n : 0;
+  }
   function plannedFromApps(recs) {
     const files = new Map();
     for (const r of recs) {
@@ -882,9 +918,21 @@
       const prev = files.get(k);
       if (!prev || r.units > prev.units) files.set(k, { rec: r, stage, units: r.units });
     }
+    // A site plan / condominium file on the same land as another (half of either boundary
+    // overlapping) that revises it is the same phase, counted once: the same unit count, or a
+    // description that says so ("Minor Site Plan Revision for an approved 174 unit…", "increase
+    // apartment count from 72 to 74"). Phases on one lot-wide boundary with their own counts add up.
+    const REVISES = /revis|minor|previously approved|amend\w* (to )?(the )?(approved|existing)|increase\b.{0,40}\bfrom\b|re-?submi|update[sd]? to/i;
+    const kept = [];
+    for (const f of [...files.values()].sort((a, b) => b.units - a.units)) {
+      if ((f.stage === 'siteplan' || f.stage === 'condo') && f.rec.poly && kept.some(k => k.stage === f.stage && k.rec.poly
+        && (k.units === f.units || REVISES.test(f.rec.description || ''))
+        && (landShare(f.rec.poly, k.rec.poly) >= 0.5 || landShare(k.rec.poly, f.rec.poly) >= 0.5))) continue;
+      kept.push(f);
+    }
     const by = { master: 0, siteplan: 0, condo: 0, other: 0 };
     const phases = [];
-    for (const f of files.values()) {
+    for (const f of kept) {
       if (f.stage === 'siteplan' || f.stage === 'condo') { by[f.stage] += f.units; phases.push(f); }
       else by[f.stage] = Math.max(by[f.stage], f.units);
     }
@@ -1063,7 +1111,9 @@
       lat = pts.length ? pts.reduce((s, r) => s + r.lat, 0) / pts.length : null;
       lng = pts.length ? pts.reduce((s, r) => s + r.lng, 0) / pts.length : null;
     }
-    const best = recs.find(r => r.kind === 'application' && r.address) || recs.find(r => r.address) || recs[0];
+    // ("UNASSIGNED" and the like are placeholders, not addresses.)
+    const hasAddr = r => r.address && !/^\s*(unassigned|n\/?a|tbd|none|unknown)\s*$/i.test(r.address);
+    const best = recs.find(r => r.kind === 'application' && hasAddr(r)) || recs.find(hasAddr) || recs.find(r => r.kind === 'application') || recs[0];
     const dates = timeline.map(t => t.date);
     const sumOf = f => {
       // Units/GFA are repeated across the files of one project; take the max, not the sum.
@@ -1072,7 +1122,7 @@
     };
     return {
       key,
-      title: best.address || best.ref || '(no address)',
+      title: (hasAddr(best) && best.address) || best.ref || '(no address)',
       municipality: recs[0].municipality,
       phase,
       rank: PHASE_BY_KEY[phase].rank,
@@ -1139,7 +1189,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea,
+    representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole,
   };

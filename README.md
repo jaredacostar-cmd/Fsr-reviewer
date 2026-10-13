@@ -854,6 +854,51 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
 - **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
   2,656 units), including from the weekly snapshot.
 
+## How applications connect: the development process
+
+In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
+
+1. **Pre-consultation** (PRE-…): the proposal is discussed before a formal application.
+2. **Official plan / zoning amendment, often with a draft plan of subdivision** (OZS / OZ / 21T-…).
+   This sets the use and the unit count. It is refiled or revised as the proposal changes.
+3. **Draft approval, then registration** of the subdivision.
+4. **Site plan** (SPA / SP-…) for each block or building, sometimes revised and resubmitted.
+5. **Draft plan of condominium** (DPC / CD-…), which repeats the site plan's units.
+6. **Building permits, then occupancy.**
+
+Files on the same land are one proposal and count its units once. The audit found places where the
+grouping didn't follow this, and the rules now are:
+
+- **A refiled or revised application** whose boundary lies at least 90% inside another of similar
+  size (the other at least 60% covered) is the same land, whatever its address.
+- **A pre-consultation** joins the one formal application whose land it overlaps most (at least half
+  of either boundary). It never links two separate proposals together. Before, a pre-consultation
+  bridging two neighbouring proposals on Mississauga Rd merged them (10625 Mississauga Rd lost 255
+  units).
+- **An older planning file inside a newer, larger one** is that land's earlier proposal and joins
+  it. A precinct or block plan only takes draft plans as separate developments when its own files
+  are planning files filed before them.
+- **A site plan or condominium revision** (same boundary, at least half overlapping, and either the
+  same unit count or a description saying revised / minor / resubmitted / amended) is counted once,
+  not added as another phase. Example: 1965–1975 Cottrelle Blvd showed 348 units from two
+  submissions of one 174-unit site plan.
+- **Nesting needs real overlap**: a group of files is placed inside a larger development only when
+  at least half its land lies within it. Before, one centre point decided, so a 185-unit stacked
+  townhouse proposal (C05E17.006, at Bramalea Rd and Mayfield Rd) was filed under the neighbouring
+  Walmart at 5085 Mayfield Rd. Likewise OZS-2021-0026 (201 units) was hidden under a separate
+  601-unit subdivision on Torbram Rd that it doesn't overlap.
+- **"16 blocks of townhouses (70 units)"**: the units in brackets are one part of a listed count.
+  OZS-2022-0034 at 5759 Mayfield Rd reads 171 units (101 singles + 70 townhouses), not 70.
+- **"UNASSIGNED"** and similar placeholders aren't used as a development's title.
+
+Peel's total falls by about 1,300 units (239,944 counted, 194,206 active): revisions and same-land
+refilings no longer add up. There are 31 fewer developments and 9 fewer that are only a
+pre-consultation. 66 pairs of developments still share some land, and in 7 of them both count
+units. Six are precinct / block plans with their draft plans, which the area-plan rule counts
+once. The seventh is two neighbouring proposals at Bramalea Rd and Mayfield Rd: 90 apartments
+(C05E17.005) and 185 stacked townhouses (C05E17.006). Their boundaries overlap, but they are
+different buildings, so both count.
+
 ## Latest submission on labels and titles
 
 **Latest submission.** The map labels (Address + phase and Address) and the development panel's
