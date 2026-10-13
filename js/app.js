@@ -770,9 +770,20 @@
     focusLayer.eachLayer(l => l.bringToFront && l.bringToFront());
   }
   map.on('moveend zoomend', scheduleSites);
+  // An application opened on its own from a larger development: the whole development stays
+  // outlined (orange, lighter) and the application stands out in its own colour.
+  const SUB_COLOR = '#9c36b5';
+  const hoverSubLayer = L.layerGroup().addTo(map);
+  const subPoly = (rings, opt = {}) => L.polygon(toLatLngs(rings), { renderer: focusCanvas, color: SUB_COLOR, weight: 4, opacity: 1, fill: true, fillColor: SUB_COLOR, fillOpacity: 0.28, interactive: false, ...opt });
   function highlight(p, record) {
-    focusLayer.clearLayers();
+    focusLayer.clearLayers(); hoverSubLayer.clearLayers();
     if (!p) return;
+    if (p.parent) {
+      for (const o of outline(p.parent, true).sort((a, b) => b._area - a._area)) { o.setStyle({ weight: 2, fillOpacity: 0.06, dashArray: '6 4' }); focusLayer.addLayer(o); }
+      for (const a of siteApps(p)) focusLayer.addLayer(subPoly(a.poly));
+      for (const r of sitePermits(p)) if (r !== record) focusLayer.addLayer(permitDot(r, p, false, true));
+      return;
+    }
     for (const o of outline(p, true).sort((a, b) => b._area - a._area)) focusLayer.addLayer(o);
     for (const r of sitePermits(p)) if (r !== record) focusLayer.addLayer(permitDot(r, p, false, true));
     if (record && record.lat != null) focusLayer.addLayer(permitDot(record, p, true, true));
@@ -2774,7 +2785,7 @@
     $('#detail-body').innerHTML = `
       ${devBack ? `<button type="button" class="btn small link back-sel" data-loads-back="1">${devBack.dc ? `← ${devBack.dc.ln ? 'DC main' : devBack.dc.fc ? esc(devBack.dc.fc.name) : devBack.dc.cons ? 'Who relies on it' : 'DC timing'}` : `← What loads ${devBack.pipe != null ? `the ${SEW.data.pipes[devBack.pipe][0]} mm sewer` : esc(devBack.plantName ? PLANT_SHORT[devBack.plantName] : (svcById.get(devBack.id) ? (svcById.get(devBack.id).zone ? svcById.get(devBack.id).name : drName(svcById.get(devBack.id))) : 'it'))}`}</button>` : selection.has(p.key) ? `<button type="button" class="btn small link back-sel" data-sel="back">← Selection (${fmtNum(selection.size)} projects)</button>` : ''}
       ${p.parent ? `<button type="button" class="btn small link back-sel" data-dev-parent="1">← Whole development: ${esc(p.parent.title)} (${fmtNum(p.parent.records.filter(r => r.kind === 'application').length)} files)</button>` : projBack && projBack !== p ? `<button type="button" class="btn small link back-sel" data-proj-back="1">← ${esc(projBack.title)}</button>` : ''}
-      ${p.parent ? `<div class="sub-head small"><strong>${esc(p.subRef)}</strong> on its own: ${(x => x.length > 1 ? `${x.slice(0, -1).join(', ')} and ${x[x.length - 1]}` : x[0])(['this application', ...(p.records.some(isPrecon) ? ['its pre-consultation'] : []), ...(p.records.some(r => r.kind === 'permit') ? ['the permits inside its land'] : [])])}. Counted in the whole development, not added again.</div>` : ''}
+      ${p.parent ? `<div class="sub-head small"><span class="sub-key"><i class="sk-app"></i>this application <i class="sk-dev"></i>whole development</span><strong>${esc(p.subRef)}</strong> on its own: ${(x => x.length > 1 ? `${x.slice(0, -1).join(', ')} and ${x[x.length - 1]}` : x[0])(['this application', ...(p.records.some(isPrecon) ? ['its pre-consultation'] : []), ...(p.records.some(r => r.kind === 'permit') ? ['the permits inside its land'] : [])])}. Counted in the whole development, not added again.</div>` : ''}
       ${devHeadHTML(p, st, f)}
       <div class="dv-tabs" role="tablist" aria-label="Development">${DV_TABS.map(([k, t]) => `<button type="button" role="tab" data-dvt="${k}" aria-selected="false">${t}</button>`).join('')}</div>
       <div class="dv-pane" data-dvp="overview" role="tabpanel">
@@ -2832,7 +2843,12 @@
     if (uc && currentProject) { const r = currentProject.records.find(x => x.ref === uc.dataset.uuClear); if (r) setUserUnits(r, 0); return; }
     // Drill down to one application, across to a related development, and back.
     const sb = e.target.closest('[data-sub]');
-    if (sb && currentProject) { const sub = subProject(currentProject.parent || currentProject, sb.dataset.sub); if (sub) showDetail(sub); return; }
+    if (sb && currentProject) {
+      const sub = subProject(currentProject.parent || currentProject, sb.dataset.sub); if (!sub) return;
+      hoverSubLayer.clearLayers(); showDetail(sub);
+      const rings = siteApps(sub).flatMap(a => a.poly); if (rings.length) fitClear(L.latLngBounds(toLatLngs(rings).flat()).pad(0.4));
+      return;
+    }
     const rq = e.target.closest('[data-relq]');
     if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); if (q.lat != null) map.setView([q.lat, q.lng], Math.max(map.getZoom(), 14)); } return; }
     if (e.target.closest('[data-dev-parent]') && currentProject && currentProject.parent) { showDetail(currentProject.parent); return; }
@@ -2840,6 +2856,13 @@
     const o = e.target.closest('[data-open]');
     if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
   });
+  // Hovering a file in the lists previews it on the map in the application colour (hoverSubLayer).
+  $('#detail-body').addEventListener('mouseover', e => {
+    const b = e.target.closest('[data-sub]'); if (!b || !currentProject) return;
+    const dev = currentProject.parent || currentProject, a = dev.records.find(r => r.ref === b.dataset.sub && r.poly);
+    hoverSubLayer.clearLayers(); if (a) subPoly(a.poly, { weight: 3, fillOpacity: 0.2, dashArray: '4 3' }).addTo(hoverSubLayer);
+  });
+  $('#detail-body').addEventListener('mouseout', e => { if (e.target.closest('[data-sub]') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-sub]'))) hoverSubLayer.clearLayers(); });
   $('#detail-body').addEventListener('keydown', e => { const i = e.target.closest && e.target.closest('[data-uu]'); if (i && e.key === 'Enter') { e.preventDefault(); i.parentElement.querySelector('[data-uu-set]').click(); } });
   $('#detail-body').addEventListener('toggle', e => { if (e.target.id === 'dev-aerial' && e.target.open && currentProject) runAerial(currentProject); }, true);
 
