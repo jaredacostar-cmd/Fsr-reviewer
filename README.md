@@ -743,6 +743,7 @@ Alloa's location isn't published, so it is listed in the table but not shown on 
 - **Pipe**: drawn from the published upstream and downstream inverts and the diameter (`invertUp`, `invertDown` and `lengthM` in `data/sewers.json`, from the Region's wastewater mains layer). About 200 of 14,057 pipes have no inverts; these are estimated from the next pipe and the slope, and drawn dashed.
 - **Sewage**: the flow in each pipe at the demand year and scenario (the same model as the capacity colours), drawn at its Manning normal depth (n = 0.013). Blue means part full, orange means 85–100% of capacity, and red means surcharged. For a surcharged pipe a red line shows the hydraulic grade, rising upstream from the crown at Sf = S0 × (Q / Qfull)².
 - Hover or tap the profile for a pipe's invert, ground, cover, flow vs capacity, and freeboard or surcharge height.
+- **Click a pipe** on the profile (on a phone, tap it, then *Show on the map*) to close the profile and zoom to that pipe on the map. The pipe is marked with its size and % of capacity, and the bar at the top of the map has *‹ Back to profile*, *Pipe details* and × (clear). On a phone the bottom sheet drops to 30% while you look; going back restores it.
 - Long paths have windows: whole path, the first 2 km, and ±1 km around the tightest pipe (the default above 8 km).
 
 This is a screening view, not a hydraulic model. It shows normal depth pipe by pipe, so it ignores backwater from downstream, drops and manhole losses.
