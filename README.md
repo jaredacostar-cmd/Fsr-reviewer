@@ -385,7 +385,7 @@ application.
   when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
   and build-out flows and pumping station load. *Print map* prints the map landscape with a title
   block, scenario, legend, north arrow and scale.
-- **Map tools** (left of the map): *Measure* distances and select every shown development within
+- **Map tools** (left of the map; the Tools menu opens above the north arrow, help and scale controls): *Measure* distances (*Clear* starts a fresh line without adding a stray point) and select every shown development within
   250 m – 2 km of a point; *Test a site* drops a proposed development (units by type, jobs, site
   area) and gives its servicing check — zone, sewer path and pumping station load, plant reserve —
   and can count it in the totals (kept in this browser, draggable). While any exist, a bar at the
@@ -734,6 +734,18 @@ wastewater plants: existing, built since, approved and proposed, with the uncomm
   zone n or above against the design maximum day of zone n and every zone above it.
 
 Alloa's location isn't published, so it is listed in the table but not shown on the map.
+
+## Sewer profile
+
+**⌇ Sewer profile along this path** (in a sewer trace's summary) and **Sewer profile downstream** (in a pipe's panel, about 3 km) open a long-section of the sanitary sewer:
+
+- **Ground**: from terrain tiles (AWS Terrarium), sampled at each pipe's ends and middle. Accurate to roughly ±1–2 m, and it can miss creek crossings, so the ground can look lower than the pipe where a trunk crosses a valley.
+- **Pipe**: drawn from the published upstream and downstream inverts and the diameter (`invertUp`, `invertDown` and `lengthM` in `data/sewers.json`, from the Region's wastewater mains layer). About 200 of 14,057 pipes have no inverts; these are estimated from the next pipe and the slope, and drawn dashed.
+- **Sewage**: the flow in each pipe at the demand year and scenario (the same model as the capacity colours), drawn at its Manning normal depth (n = 0.013). Blue means part full, orange means 85–100% of capacity, and red means surcharged. For a surcharged pipe a red line shows the hydraulic grade, rising upstream from the crown at Sf = S0 × (Q / Qfull)².
+- Hover or tap the profile for a pipe's invert, ground, cover, flow vs capacity, and freeboard or surcharge height.
+- Long paths have windows: whole path, the first 2 km, and ±1 km around the tightest pipe (the default above 8 km).
+
+This is a screening view, not a hydraulic model. It shows normal depth pipe by pipe, so it ignores backwater from downstream, drops and manhole losses.
 
 ## Latest submission on labels and titles
 
