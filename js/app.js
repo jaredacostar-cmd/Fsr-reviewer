@@ -497,7 +497,6 @@
              ['opt-da', daOn, daSwatch(), '<span id="da-label">2021 census areas</span>', 'da-layer']].map(([id, on, sw, t, info]) =>
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
         </div>
-        <div class="mo-where" data-info="municipality"><div class="mo-seg" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
           <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
@@ -583,7 +582,7 @@
     const el = L.DomUtil.create('details', 'area-box'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     if (store.get('moAreasOpen', false)) el.open = true;
     el.innerHTML = `<summary data-info="map-areas"><span>Filter by area</span><span class="mo-sum" id="mo-area-sum"></span></summary>
-      <div class="ab-body">${Object.entries(AREA_F).map(([k, f]) => `<div class="mo-field${f.svc ? ' ab-svc' : ''}"${f.svc ? ' hidden' : ''}><span id="f-${k}-label" data-info="${f.info}">${f.label}</span>
+      <div class="ab-body"><div class="mo-where" data-info="municipality"><div class="mo-seg" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>${Object.entries(AREA_F).map(([k, f]) => `<div class="mo-field${f.svc ? ' ab-svc' : ''}"${f.svc ? ' hidden' : ''}><span id="f-${k}-label" data-info="${f.info}">${f.label}</span>
         <details class="multi" id="f-${k}" data-multi="${k}">
           <summary aria-labelledby="f-${k}-label f-${k}-summary"><span id="f-${k}-summary">${f.all}</span></summary>
           <div class="multi-panel">
@@ -3302,7 +3301,7 @@
     const el = document.getElementById('mo-psum'); if (!el) return;
     const loads = isWW() && !Object.values(wwLay).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
     const on = [devsOn && 'developments', svcOn.bk && 'blocks', svcOn.pz && 'zones', WF.on && 'water facilities', mstyle.cap !== 'off' && 'capacity', Object.values(existOn).some(Boolean) && 'pipes', dcOn.on && 'DC works', (areaOn.sp || areaOn.mtsa) && 'planning areas', daOn && 'census areas'].filter(Boolean);
-    el.textContent = [on.length ? on.join(', ') : 'none on', state.muni || 'all of Peel', loads].filter(Boolean).join(' · ');
+    el.textContent = [on.length ? on.join(', ') : 'none on', loads].filter(Boolean).join(' · ');
     syncAreaOn();
   }
   // An area filter (secondary plan, MTSA, pressure zone, block) narrows every development on the
@@ -7681,7 +7680,7 @@
     // Where & areas (map panel): municipality, planning and service areas.
     const areas = Object.keys(AREA_F).map(k => multiSummary(k, true)).filter(Boolean);
     syncPanelSum();
-    const as = $('#mo-area-sum'); if (as) { as.textContent = areas.length ? areas.join(' · ') : 'all areas'; as.classList.toggle('on', areas.length > 0); }
+    const as = $('#mo-area-sum'); if (as) { const w = [state.muni, ...areas].filter(Boolean); as.textContent = w.length ? w.join(' · ') : 'all of Peel'; as.classList.toggle('on', w.length > 0); }
     const more = [state.focus ? FOCUS[state.focus].label : '',
       state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? (($('#f-units').selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
     $('#sum-more').textContent = more.length ? more.join(' · ') : 'Focus, record type';
