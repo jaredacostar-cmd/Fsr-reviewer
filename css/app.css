@@ -1578,3 +1578,23 @@ body.print-map .area-box { display: none; }
 .sel-box { position: absolute; z-index: 650; pointer-events: none; border: 2px dashed var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); border-radius: 2px; }
 .sel-box[hidden] { display: none; }
 .ctrl-select, .ctrl-select .leaflet-interactive, .ctrl-select .leaflet-marker-icon { cursor: crosshair !important; }
+
+/* 2020 Master Plan vs tracker (Water → Facilities, Wastewater → Plants). */
+.mpc { margin: 4px 0 14px; }
+.mpc-table td small { display: block; font-size: 11px; color: var(--text-secondary); font-weight: 400; }
+.mpc-table td small.muted { color: var(--text-muted); }
+.mpc-table td.n { text-align: right; white-space: nowrap; }
+.mpc-table td.n small { white-space: normal; }
+.mpc-table .mpc-hi { color: var(--danger, #c92a2a); }
+.mpc-cell { min-width: 170px; width: 24%; }
+.mpc-bar { position: relative; height: 16px; background: var(--surface-2); border-radius: 3px; margin-top: 10px; }
+.mpc-bar i { position: absolute; top: 0; bottom: 0; left: 0; }
+.mpc-t, .gsw.mpc-t { background: var(--ph-cancelled); }
+.mpc-a, .gsw.mpc-a { background: var(--ph-approved); }
+.mpc-p, .gsw.mpc-p { background: repeating-linear-gradient(45deg, var(--ph-approved) 0 3px, transparent 3px 6px), color-mix(in srgb, var(--ph-approved) 25%, var(--surface-1)); }
+.mpc-bar .mpc-mp { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed #e8590c; }
+.mpc-bar .mpc-mp span { position: absolute; top: -12px; left: -7px; font-size: 9px; font-weight: 600; color: #e8590c; }
+.mpc-bar .mpc-cap { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--text-primary); }
+.mpc-mp-sw { display: inline-block; width: 0; height: 12px; border-left: 2px dashed #e8590c; }
+@media (max-width: 700px) { .mpc-cell { min-width: 120px; } }
+@media (max-width: 700px) { .mpc-table .mpc-x { display: none; } .mpc-table .mpc-st { font-size: 11px; } }

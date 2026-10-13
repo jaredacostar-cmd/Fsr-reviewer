@@ -652,7 +652,7 @@ application.
 and Caledon eSCRIBE portals (planning committees, council, general committee, since 2019; only
 meetings in the last 120 days are fetched again), and loaded only when a development is opened.
 
-**Applications against the 2051 forecast** (Growth & demand tab, below the growth chart): for each
+**Applications against the 2051 forecast** (Growth tab, below the growth chart): for each
 municipality, the 2051 population, unit and job growth allocated by the Region (Land Needs
 Assessment Report Update, draft municipal allocation, appendix pp. 5.2-109 / 5.2-119; Peel 2.28
 million people and 1.07 million jobs by 2051) beside the growth already in the pipeline since the
@@ -740,6 +740,28 @@ Alloa's location isn't published, so it is listed in the table but not shown on 
 **Latest submission.** The map labels (Address + phase and Address) and the development panel's
 title show the latest application submitted on the site: its date received and file number. The
 open data carries each file's first submission date, not resubmissions.
+
+## Growth tab and the 2020 Master Plan comparison
+
+**Growth tab.** *Growth since the census* (census population and dwellings, built since, approved,
+proposed, the growth chart and the 2051 forecast check) has its own bottom-panel tab, **Growth**,
+next to **Demand**, which keeps the servicing demand of the shown developments.
+
+**2020 Master Plan vs this tracker.** Water → Facilities and Wastewater → Plants open with a table
+of the facilities the 2020 Water and Wastewater Master Plan assessed: capacity, the Master Plan's
+forecast for 2026 · 2031 · 2041, and the tracker's numbers (today, + approved, + proposed, build-out),
+with a bar per row (Master Plan years as dashed ticks, capacity as a line) and the Master Plan
+year whose forecast matches the tracker's build-out.
+
+- Water (maximum day, Vol. 3 Tables 8, 9, 11): South Peel system, A.P. Kennedy and Lorne Park
+  WTPs (today = 2025 measured maximum day), Lorne Park Zone 2 high lift, Beckett Sproule transfer,
+  West Brampton Zone 5 low lift and Zone 6 high lift (today = Master Plan 2021 + growth built since
+  the census). A development counts at a facility when its supply route (the water trace's station
+  chain) passes it.
+- Storage (Vol. 3 Table 12): Silverthorn and West Brampton reservoirs, Master Plan figures only
+  (fire and emergency storage isn't modelled).
+- Wastewater (average day, Vol. 4 Tables 7–8): G.E. Booth (incl. York and Toronto flows) and
+  Clarkson, using the plant chart's sewershed totals.
 
 ## Functional Servicing Reports and the water supply route
 
