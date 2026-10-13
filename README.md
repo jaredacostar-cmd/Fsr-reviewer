@@ -691,6 +691,28 @@ proposed growth). **+ Add area** draws another area into the selection, × remov
 
 **Export:** download the filtered projects as CSV or GeoJSON.
 
+## Existing water facilities
+
+**Layers → Water facilities** shows the Region's existing water facilities: treatment plants,
+pumping stations, reservoirs, elevated tanks, standpipes, boosters, wells and re-chlorination
+stations. The layer is on by default in the Water view. The **Water** tab lists them by
+transmission system.
+
+`scripts/build-water-facilities.py` builds `data/water-facilities.json` from these sources:
+
+- **Locations:** the Region's open data (`water_infrastructure` layers 1–3), on the
+  `servicing-raw` branch.
+- **Capacities:** the 2020 Master Plan, Volume 3.
+  - Tables 4–6: each pumping station's pumps by the zone they feed, with installed, firm and
+    actual firm capacity.
+  - Table 7: reservoir and tank volumes.
+  - Tables 9, 11 and 12: treatment, pumping and storage against the forecast to 2041, with
+    shortfalls flagged.
+- **Plant ratings and 2025 flows:** the drinking water reports.
+- **Planned works:** linked from the 2026 DC maps by name.
+
+Alloa's location isn't published, so it is listed in the table but not shown on the map.
+
 ## DC funding scenario
 
 **DC Analysis → Funding scenario** tests a DC budget over the next N years (default 10). There

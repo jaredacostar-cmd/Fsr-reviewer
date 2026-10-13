@@ -47,6 +47,9 @@
   // chosen storm; state.criteria carries the scaled value the model uses. See applyWet().
   state.iiBase = state.criteria.wastewater.infiltration;
   state.wet = Object.assign({ rp: 0, ref: 25, clim: 'none' }, store.get('wetWx', {}));
+  // Existing water facilities layer (data/water-facilities.json): on / off, data, map layer.
+  const WF = { on: store.get('wfOn', false), data: null, loading: null, layer: null };
+  const WF_KIND = { plant: ['■', 'Treatment plant'], pumping: ['▲', 'Pumping station'], booster: ['▴', 'Booster / small pumping station'], reservoir: ['●', 'Reservoir'], elevated_tank: ['◆', 'Elevated tank'], standpipe: ['◆', 'Standpipe'], well: ['◉', 'Well'], rechlorination: ['✚', 'Re-chlorination'], clearwell: ['●', 'Clearwell'] };
   // Defaults before the Peel 2023–2024 criteria were adopted: a saved value equal to one of these
   // was never edited, so it gives way to the current default.
   function mergeCriteria(saved) {
@@ -474,6 +477,7 @@
           ${[['opt-devs', devsOn, '<i class="dev-sw" aria-hidden="true"></i>', 'Developments', 'devs-toggle'],
              ['opt-bk', svcOn.bk, blockSwatch, 'Wastewater blocks', 'blocks'],
              ['opt-pz', svcOn.pz, svcSwatch('pz'), 'Pressure zones', 'pressure-zone'],
+             ['opt-wf', WF.on, '<i class="wf-ic wf-pumping wf-sw" aria-hidden="true">▲</i>', 'Water facilities', 'water-facilities'],
              ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,#2f9e44 0 33%,#f76707 33% 66%,#e03131 66%)"></i>', 'Capacity colours', 'map-capacity'],
              ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:${EXIST_STYLE.sanitary.color}"></i>`, 'Existing pipes', 'existing-pipes'],
              ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:#d6336c"></i>', 'Planned DC works', 'dc-works'],
@@ -542,6 +546,7 @@
       el.querySelector('#opt-exist').onchange = e => { const v = currentView(), on = e.target.checked; setExistOn(on ? { water: v !== 'wastewater', sanitary: v !== 'water', storm: false } : { water: false, sanitary: false, storm: false }); };
       el.querySelector('#opt-dcw').onchange = e => setDcOn({ on: e.target.checked, sys: currentView() === 'water' ? 'water' : currentView() === 'wastewater' ? 'wastewater' : (dcOn.sys || 'both') });
       el.querySelector('#opt-plan').onchange = e => setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });
+      el.querySelector('#opt-wf').onchange = e => setWfOn(e.target.checked);
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       el.querySelector('.mo-ww').addEventListener('toggle', e => { if (e.target.classList.contains('mo-ww')) store.set('moWwOpen', e.target.open); });
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) showAllDevs(); });
@@ -1186,6 +1191,7 @@
     LOG.t = setTimeout(() => { const pos = e.target.selectionStart; renderChangelog(); const i = $('#log-body .log-q'); if (i) { i.focus(); i.setSelectionRange(pos, pos); } }, 200);
   });
   setTimeout(loadChangelog, 4000);
+  if (WF.on) setTimeout(() => setWfOn(true), 0);
 
   // ---- Population & servicing demand -------------------------------------------------
   const fmt1 = n => n == null || !isFinite(n) ? '–' : n.toLocaleString('en-CA', { maximumFractionDigits: n < 10 ? 2 : n < 100 ? 1 : 0 });
@@ -3246,7 +3252,7 @@
   function syncPanelSum() {
     const el = document.getElementById('mo-psum'); if (!el) return;
     const loads = isWW() && !Object.values(wwLay).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
-    const on = [devsOn && 'developments', svcOn.bk && 'blocks', svcOn.pz && 'zones', mstyle.cap !== 'off' && 'capacity', Object.values(existOn).some(Boolean) && 'pipes', dcOn.on && 'DC works', (areaOn.sp || areaOn.mtsa) && 'planning areas', daOn && 'census areas'].filter(Boolean);
+    const on = [devsOn && 'developments', svcOn.bk && 'blocks', svcOn.pz && 'zones', WF.on && 'water facilities', mstyle.cap !== 'off' && 'capacity', Object.values(existOn).some(Boolean) && 'pipes', dcOn.on && 'DC works', (areaOn.sp || areaOn.mtsa) && 'planning areas', daOn && 'census areas'].filter(Boolean);
     el.textContent = [on.length ? on.join(', ') : 'none on', state.muni || 'all of Peel', loads].filter(Boolean).join(' · ');
     syncAreaOn();
   }
@@ -3593,6 +3599,7 @@
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
       ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
+      ${waterFacilitiesHTML()}
       ${hydroBoxHTML()}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
@@ -4414,7 +4421,7 @@
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
-    set('#opt-devs', devsOn);
+    set('#opt-devs', devsOn); set('#opt-wf', WF.on);
     document.querySelectorAll('[data-wwlay]').forEach(c => { c.checked = wwLay[c.dataset.wwlay] !== false; });
     document.querySelectorAll('[data-wwsw]').forEach(e => e.style.setProperty('--mk', layerColors()[e.dataset.wwsw]));
     const mw = document.querySelector('.mo-ww'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); const n = mw.querySelector('.mo-ww-note'); n.textContent = all ? 'all (build-out)' : [['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
@@ -4430,12 +4437,12 @@
   // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
   // view being left and restores the other view's last settings (its preset the first time).
   const VIEW_PRESETS = {
-    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: false, sys: 'both' } },
-    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: 'growth', exist: { water: true, sanitary: false, storm: false }, dc: { on: true, sys: 'water' } },
+    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
+    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: 'growth', exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
     wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: 'growth', exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
     dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: 'growth', exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
   };
-  function currentMapSettings() { return { basemap, labelMode, da: daOn, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, focus: state.focus, exist: { ...existOn }, dc: { ...dcOn } }; }
+  function currentMapSettings() { return { basemap, labelMode, da: daOn, wf: WF.on, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, focus: state.focus, exist: { ...existOn }, dc: { ...dcOn } }; }
   function setMapView(v) {
     const cur = currentView();
     if (cur === v) return;
@@ -4449,7 +4456,7 @@
     store.set('mapView', v);
     if (BASEMAPS[s.basemap]) { basemap = s.basemap; store.set('basemap', basemap); setTiles(); restyleDa(); }
     if (LABEL_MODES[s.labelMode]) { labelMode = s.labelMode; store.set('labelMode', labelMode); }
-    setDaLayer(!!s.da); setSvcLayer('pz', !!s.pz); setSvcLayer('dr', !!s.dr);
+    setDaLayer(!!s.da); setSvcLayer('pz', !!s.pz); setSvcLayer('dr', !!s.dr); setWfOn(!!s.wf);
     Object.assign(mstyle, s.mstyle); store.set('mapStyle', mstyle);
     state.focus = s.focus == null ? DEFAULT_FOCUS : s.focus || '';
     existOn = { ...p.exist, ...(s.exist || {}) }; store.set('existOn', existOn); renderExisting();
@@ -4641,6 +4648,7 @@
     if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
+    if (WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
     if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     syncYearCtl();
     if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Demand year on the map). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
@@ -5983,6 +5991,78 @@
     if (!state.svcModel) return;
     const go = () => download(`peel-blocks-swmm-${capYear == null ? 'buildout' : capYear}.inp`, swmmInp(), 'text/plain');
     if (!SEW.data) loadSewers().then(go); else go();
+  });
+  // ---- Existing water facilities ("vertical" infrastructure) -------------------------------------
+  // data/water-facilities.json (scripts/build-water-facilities.py): treatment plants, pumping
+  // stations, reservoirs, elevated tanks, standpipes, boosters, from the Region's open data, with
+  // pumping and storage capacity from the 2020 Master Plan (Vol. 3) and plant ratings and 2025 flows
+  // from the annual reports. Markers in the default marker pane (they turn with the map).
+  function loadWaterFacilities() {
+    if (WF.data || WF.loading) return WF.loading || Promise.resolve(WF.data);
+    WF.loading = fetch('data/water-facilities.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null).then(d => { WF.data = d; WF.loading = null; return d; });
+    return WF.loading;
+  }
+  function setWfOn(on) {
+    WF.on = !!on; store.set('wfOn', WF.on);
+    const cb = $('#opt-wf'); if (cb) cb.checked = WF.on;
+    if (!WF.on) { if (WF.layer) map.removeLayer(WF.layer); renderLegend(); return; }
+    loadWaterFacilities().then(d => {
+      if (!d || !WF.on) return;
+      if (!WF.layer) {
+        WF.layer = L.layerGroup();
+        for (const f of d.facilities) {
+          if (!f.lnglat) continue;
+          const [sym] = WF_KIND[f.kind] || ['●'];
+          const m = L.marker([f.lnglat[1], f.lnglat[0]], { icon: L.divIcon({ className: 'wf-mk', html: `<i class="wf-ic wf-${f.kind}">${sym}</i>`, iconSize: [22, 22], iconAnchor: [11, 11] }), keyboard: true, title: f.name, zIndexOffset: 500 });
+          m.bindTooltip(`${esc(f.name)} · ${esc(wfKinds(f))}`, { direction: 'top', offset: [0, -10] });
+          m.on('click', () => showWaterFacility(f));
+          WF.layer.addLayer(m);
+        }
+      }
+      WF.layer.addTo(map); renderLegend();
+    });
+  }
+  const wfKinds = f => (f.kinds || [f.kind]).map(k => (WF_KIND[k] || [, k])[1].toLowerCase()).filter((v, i, a) => a.indexOf(v) === i).join(', ').replace(/^./, c => c.toUpperCase());
+  // Planned DC works at a facility (2026 DC maps, same name).
+  const wfWorks = f => state.dcInfra ? state.dcInfra.water.facilities.filter(x => x.name.replace(/ Water Treatment Plant$/, '').replace(/^Arthur P\. /, 'A.P. ') === f.name) : [];
+  function wfAssessHTML(title, years, a, aLbl, b, bLbl, unit) {
+    return `<table class="dt wf-as"><caption>${esc(title)}</caption><thead><tr><th></th>${years.map(y => `<th>${y}</th>`).join('')}</tr></thead><tbody>
+      <tr><td>${esc(aLbl)}</td>${a.map(v => `<td>${fmtNum(v)}</td>`).join('')}</tr><tr><td>${esc(bLbl)}</td>${b.map((v, i) => `<td class="${v < a[i] ? 'dcn-gap-t' : ''}">${fmtNum(v)}</td>`).join('')}</tr></tbody></table>`;
+  }
+  function showWaterFacility(f) {
+    const zid = f.lnglat && state.servicing ? PeelAreas.locate(state.servicing.zones, f.lnglat[0], f.lnglat[1])[0] : null, z = zid && svcById.get(zid);
+    const D = WF.data, R = state.reports, works = wfWorks(f);
+    const pumps = f.pumps && f.pumps.length ? `<table class="dt wf-t"><thead><tr><th>Pumps to</th><th class="n">Pumps</th><th class="n">Installed</th><th class="n">Firm</th><th class="n">Actual firm*</th></tr></thead><tbody>${f.pumps.map(p => `<tr><td>${esc(p.zone)}<small>${esc(p.station)}</small></td><td class="n">${p.pumps}</td><td class="n">${fmtNum(p.installed)}</td><td class="n"><strong>${fmtNum(p.firm)}</strong></td><td class="n">${p.actualFirm == null ? 'n/a' : fmtNum(p.actualFirm)}</td></tr>`).join('')}</tbody></table><p class="small muted">ML/d. Firm = largest pump out of service. *Actual firm from the Region's model, with friction losses. LLP / HLP = low- / high-lift pumps; the number is the pressure zone they feed; W / C / E = west / central / east system.</p>` : '';
+    const plant = f.plant ? `<p class="small"><strong>Treatment:</strong> rated ${fmtNum(f.plant.ratedMLd)} ML/d · ${f.plant.year} average ${fmtNum(f.plant.avgMLd)} ML/d (${Math.round(f.plant.avgMLd / f.plant.ratedMLd * 100)}%) · maximum day ${fmtNum(f.plant.maxDayMLd)} ML/d (${Math.round(f.plant.maxDayMLd / f.plant.ratedMLd * 100)}%)</p>` : '';
+    const gw = f.groundwater ? `<p class="small"><strong>${esc(f.groundwater.system)} system</strong> (all its wells and plants): rated ${fmtNum(f.groundwater.ratedM3d)} m³/d · average ${fmtNum(f.groundwater.avgM3d)} · maximum day ${fmtNum(f.groundwater.maxDayM3d)} m³/d (${Math.round(f.groundwater.maxDayM3d / f.groundwater.ratedM3d * 100)}% of rated) · ≈${fmtNum(f.groundwater.population)} people</p>` : '';
+    const stor = f.storageML ? `<p class="small"><strong>Storage:</strong> ${fmtNum(f.storageML)} ML (storage zone ${esc(f.storageZone)})</p>` : '';
+    const as = [f.assess && wfAssessHTML('Master Plan: treatment capacity vs forecast maximum day (ML/d)', f.assess.years, f.assess.demand, 'Forecast demand', f.assess.capacity, 'Capacity (90%)'),
+      ...(f.assessPumps || []).map(a => wfAssessHTML(`Master Plan: ${a.what} (ML/d)`, a.years, a.demand, 'Forecast demand', a.capacity, 'Existing capacity')),
+      f.assessStorage && wfAssessHTML('Master Plan: storage (ML)', f.assessStorage.years, f.assessStorage.required, 'Required', f.assessStorage.available, 'Available')].filter(Boolean).join('');
+    $('#detail-body').innerHTML = `<div class="head"><h3>${esc(f.name)}</h3><div class="m">${esc(wfKinds(f))} · ${esc(f.system)}${z ? ` · ${esc(z.name)}` : ''}</div></div>
+      <div class="brief" data-info="water-facilities">${plant}${gw}${stor}${pumps}
+      ${as ? `<h3 class="sub-title">2020 Master Plan assessment</h3>${as}<p class="small muted">Red: capacity below the forecast (the Master Plan's trigger for the works below).</p>` : ''}
+      ${works.length ? `<h3 class="sub-title">Planned works (2026 DC, draft)</h3><ul class="small">${works.flatMap(w => w.items.map(it => `<li>${esc(it.what)}${it.proj ? ` · ${esc(it.proj)}` : ''}${it.phases && it.phases.length ? ` · ${[...new Set(it.phases.map(p => p[1]))].join(', ')}` : ''}</li>`)).join('')}</ul>` : ''}
+      <p class="small muted">${esc(f.parts.join(' · '))}${f.posFrom ? ` · position: ${esc(f.posFrom)}` : ''}. Sources: Region of Peel open data (locations); <a href="${esc(D.sources.mpUrl)}" target="_blank" rel="noopener">2020 Master Plan, Vol. 3</a> (pumping and storage capacity, Tables 4–7, 9, 11, 12)${f.plant || f.groundwater ? `; Region of Peel ${R ? R.year : 2025} drinking water reports` : ''}. The 2025 Master Plan will update these capacities.</p></div>`;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'wf'; $('#detail').scrollTop = 0;
+  }
+  // Water tab: the facilities by system, with capacity.
+  function waterFacilitiesHTML() {
+    const D = WF.data; if (!D) { loadWaterFacilities().then(d => { if (d) { const b = $('#wf-box'); if (b) b.outerHTML = waterFacilitiesHTML(); } }); return '<div id="wf-box"></div>'; }
+    const SYS = ['West', 'Central', 'East', 'Lake-based', 'Caledon groundwater'], fs = D.facilities;
+    const plantCap = f => f.plant ? `${fmtNum(f.plant.ratedMLd)} ML/d<small>${f.plant.year} max day ${Math.round(f.plant.maxDayMLd / f.plant.ratedMLd * 100)}%</small>` : f.groundwater ? `system ${fmtNum(f.groundwater.ratedM3d)} m³/d<small>max day ${Math.round(f.groundwater.maxDayM3d / f.groundwater.ratedM3d * 100)}%</small>` : '';
+    const short = f => [f.assess && f.assess.capacity.some((v, i) => v < f.assess.demand[i]) && 'treatment', ...(f.assessPumps || []).filter(a => a.capacity.some((v, i) => v < a.demand[i])).map(a => a.what.toLowerCase()), f.assessStorage && f.assessStorage.available.some((v, i) => v < f.assessStorage.required[i]) && 'storage'].filter(Boolean);
+    const tot = { ml: fs.reduce((t, f) => t + (f.storageML || 0), 0) };
+    return `<section id="wf-box" class="wf-box" data-info="water-facilities"><h3 class="svc-sub">Existing water facilities <span class="muted small">${fs.length} sites · ${fmtNum(tot.ml)} ML of storage · pumping and storage from the 2020 Master Plan</span></h3>
+      <div class="hyd-scroll"><table class="dt svc-table wf-table"><thead><tr><th>Facility</th><th>Type</th><th class="n">Firm pumping by zone fed (ML/d)</th><th class="n">Storage (ML)</th><th>Treatment</th><th>Master Plan: short by 2041</th><th>Planned DC works</th></tr></thead><tbody>
+      ${SYS.map(sy => { const list = fs.filter(f => f.system === sy); if (!list.length) return ''; return `<tr class="wf-grp"><td colspan="7">${esc(sy === 'Lake-based' ? 'Lake-based (other)' : sy === 'Caledon groundwater' ? 'Caledon groundwater systems' : `${sy} transmission system`)}</td></tr>${list.map(f => { const sh = short(f), w = wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong></span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; }).join('')}`; }).join('')}
+      </tbody></table></div>
+      <p class="small muted">Tap a row for the facility. Locations: Region of Peel open data (water storage, treatment plants and pumping stations). Pumping (firm = largest pump out of service) and reservoir capacity: 2020 Water and Wastewater Master Plan, Vol. 3, Tables 4–7; shortfalls by 2041: Tables 9, 11, 12; plant ratings and 2025 flows: the Region's drinking water reports. Booster and small stations without a published capacity are listed without one.</p></section>`;
+  }
+  document.addEventListener('click', e => {
+    const r = e.target.closest('[data-wf]'); if (!r || !WF.data) return;
+    const f = WF.data.facilities.find(x => x.id === r.dataset.wf); if (!f) return;
+    showWaterFacility(f); if (f.lnglat) { map.setView([f.lnglat[1], f.lnglat[0]], Math.max(map.getZoom(), 14)); if (!WF.on) setWfOn(true); }
   });
   // ---- Hydraulic check (beta): EPANET 2.2 in the browser (epanet-js) on the large mains that
   // carry water up into each pressure zone. Each zone boundary is a reservoir (the lower zone)
