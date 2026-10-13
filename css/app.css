@@ -1567,3 +1567,4 @@ body.print-map .area-box { display: none; }
 .wtrace-plant { stroke: #fff; stroke-width: 2.5; fill: #1c3d8f; fill-opacity: 1; }
 .wtrace-out:empty, .trace-out:empty { display: none; }
 .area-box .mo-where { margin-bottom: 2px; }
+.trace-plan { stroke: #d6336c; stroke-width: 5; stroke-dasharray: 9 7; stroke-opacity: .95; stroke-linecap: round; fill: none; }

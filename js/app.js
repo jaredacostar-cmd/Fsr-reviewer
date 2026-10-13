@@ -4336,17 +4336,85 @@
     map.panBy([(br[0] - tl[0]) / 2, (br[1] - tl[1]) / 2], { animate: false });
   }
   function clearTrace() { TRACE.layer.clearLayers(); TRACE.key = null; syncPathMode(); }
+  // Sites outside the traced catchments: along the planned DC wastewater mains to the existing sewers.
+  // The planned mains (2026 DC maps) form a network: each main's ends join another main within 60 m;
+  // a main's end within 200 m of an existing sewer of 300 mm+ (or any point within 25 m) is where it
+  // can hand over. From the planned main nearest the site (within 1 km), the trace takes the shortest
+  // path to a hand-over, preferring one in the catchment that main serves. The maps don't give the
+  // flow direction, so the path is indicative.
+  const DCW = { g: null };
+  function dcSewerNet() {
+    if (DCW.g || !state.dcInfra || !SEW.data) return DCW.g;
+    const xs = [], ys = [], E = [], lineOf = [], lines = state.dcInfra.wastewater.lines;
+    for (const ln of lines) { const a = xs.length; ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lineOf.push(ln); if (k) E.push([a + k - 1, a + k, ln]); }); ln._n = [a, xs.length - 1]; }
+    // A main's end joins the nearest point of another main: within 60 m as drawn, up to 600 m as a
+    // bridged gap (the maps often stop a main short of the one it feeds), costed 2.5× its length.
+    const ends = lines.flatMap(ln => ln._n), gap = [];
+    for (const t of ends) {
+      let best = -1, bd = 600;
+      for (let i = 0; i < xs.length; i++) { if (lineOf[i] === lineOf[t]) continue; const m = Math.abs(xs[i] - xs[t]) < 0.008 && Math.abs(ys[i] - ys[t]) < 0.006 ? dcM([xs[t], ys[t]], [xs[i], ys[i]]) : Infinity; if (m < bd) { bd = m; best = i; } }
+      if (best >= 0) { E.push([t, best, null]); gap.push(bd > 60); }
+    }
+    const adj = Array.from({ length: xs.length }, () => []); E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
+    const len = E.map(([a, b]) => dcM([xs[a], ys[a]], [xs[b], ys[b]]));
+    let gi = 0; const cost = E.map((e, k) => e[2] ? len[k] : len[k] * (gap[gi++] ? 2.5 : 1));
+    // Hand-overs to the existing sewers: a main's end within 600 m of a 300 mm+ sewer (beyond 200 m
+    // costed as a bridged gap), any point within 25 m.
+    const endSet = new Set(ends), exit = new Map();
+    for (let i = 0; i < xs.length; i++) {
+      const r = endSet.has(i) ? 600 : 25, k = nearestPipe(xs[i], ys[i], r); if (k < 0) continue;
+      const m = dcDist([xs[i], ys[i]], pipeCoords(SEW.data.pipes[k]));
+      exit.set(i, { k, m, cost: m > 200 ? m * 2.5 : 0 });
+    }
+    DCW.g = { xs, ys, E, adj, len, cost, exit };
+    return DCW.g;
+  }
+  function dcSewerPath(p) {
+    const G = dcSewerNet(); if (!G) return null;
+    const n = dcNearest('wastewater', [p.lng, p.lat], DC_CONNECT_M); if (!n) return null;
+    const [a, b] = n.ln._n; let s = a, sd = Infinity;
+    for (let i = a; i <= b; i++) { const m = dcM([p.lng, p.lat], [G.xs[i], G.ys[i]]); if (m < sd) { sd = m; s = i; } }
+    const target = dcTarget(n.ln), inTarget = new Map();
+    const pipeIn = k => { if (!inTarget.has(k)) { const c = pipeCoords(SEW.data.pipes[k])[0]; inTarget.set(k, !target || PeelAreas.locate(state.servicing.drainage, c[0], c[1]).includes(target)); } return inTarget.get(k); };
+    const dist = new Float64Array(G.xs.length).fill(Infinity), via = new Int32Array(G.xs.length).fill(-1), Q = [[0, s]]; dist[s] = 0;
+    let best = Infinity, bt = -1;
+    while (Q.length) {
+      let qi = 0; for (let i = 1; i < Q.length; i++) if (Q[i][0] < Q[qi][0]) qi = i;
+      const [dd, u] = Q.splice(qi, 1)[0]; if (dd > dist[u]) continue; if (dd >= best) break;
+      if (G.exit.has(u)) { const ex = G.exit.get(u), tot = dd + ex.cost + (pipeIn(ex.k) ? 0 : 3000); if (tot < best) { best = tot; bt = u; } }
+      for (const k of G.adj[u]) { const [x, y] = G.E[k], v = x === u ? y : x, nd = dd + G.cost[k]; if (nd < dist[v]) { dist[v] = nd; via[v] = k; Q.push([nd, v]); } }
+    }
+    if (bt < 0) return null;
+    const nodes = [bt], used = new Set(); let km = 0, gaps = 0;
+    for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else if (G.len[k] > 60) gaps++; const [x, y] = G.E[k]; v = x === v ? y : x; nodes.push(v); }
+    nodes.reverse();
+    const ex = G.exit.get(bt);
+    return { start: s, joinM: sd, coords: nodes.map(i => [G.xs[i], G.ys[i]]), km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target };
+  }
   async function traceDev(p) {
     await Promise.all([loadSewers(), loadBlocks()]);
     if (!SEW.data || p.lat == null) return null;
     clearTrace(); TRACE.key = p.key;
-    const G = sewerGrowth(), k = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
-    if (k < 0) return null;
+    // Outside the traced catchments: along the planned DC mains first, when one is within 1 km.
+    // Also where the site has no existing sewer of 300 mm+ within 400 m (greenfield in a mapped catchment).
+    const G = sewerGrowth(), k0 = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
+    const outside = !(p.dr && p.dr.length) || k0 < 0, pl = outside ? dcSewerPath(p) : null;
+    // No planned path either: the nearest existing sewer within 3 km, joined straight.
+    const far = !pl && k0 < 0 ? nearestPipe(p.lng, p.lat, 3000) : -1;
+    const k = pl ? pl.exit : k0 >= 0 ? k0 : far;
+    if (k == null || k < 0) { TRACE.key = null; syncPathMode(); return null; }
     const route = pipeRoute(k), P = SEW.data.pipes;
-    // Connection from the site to the first pipe.
+    // Connection from the site (or the planned main's hand-over) to the first pipe.
+    const from = pl ? pl.coords[pl.coords.length - 1] : [p.lng, p.lat];
     const first = pipeCoords(P[k]); let jn = first[0], jd = Infinity;
-    for (const c of first) { const d = dcM([p.lng, p.lat], c); if (d < jd) { jd = d; jn = c; } }
-    L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
+    for (const c of first) { const d = dcM(from, c); if (d < jd) { jd = d; jn = c; } }
+    if (pl) {
+      const st = pl.coords[0];
+      if (pl.joinM > 5) L.polyline([[p.lat, p.lng], [st[1], st[0]]], { className: 'trace-link', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
+      L.polyline(pl.coords.map(([x, y]) => [y, x]), { className: 'trace-plan', renderer: flowRenderer })
+        .bindTooltip(`<strong>Planned (2026 DC)</strong><br>${pl.lines.map(ln => esc(dcLineText(ln))).join('<br>') || esc(dcLineText(pl.first))}`, { sticky: true, className: 'pt' }).addTo(TRACE.layer);
+      L.polyline([[from[1], from[0]], [jn[1], jn[0]]], { className: 'trace-link', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
+    } else L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
     L.circleMarker([p.lat, p.lng], { radius: 7, className: 'trace-site', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
     // Pipes coloured by state, with a tooltip each (tap: what loads it).
     let worst = null, km = 0;
@@ -4358,6 +4426,7 @@
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(TRACE.layer);
     }
     drawPipeRoute(route, 'trace-flow', TRACE.layer, Math.max(900, km * 1000 / 14));
+    if (pl && pl.coords.length > 1) L.polyline(pl.coords.map(([x, y]) => [y, x]), { className: 'trace-flow', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
     // Pumping stations within 80 m of the route, and the plant at its end.
     const stations = ((state.servicing && state.servicing.meta.pumpingStations) || []).filter(ps => route.some(i => dcDist(ps.lnglat, pipeCoords(P[i])) <= 80));
     for (const ps of stations) L.circleMarker([ps.lnglat[1], ps.lnglat[0]], { radius: 6, className: 'trace-ps', renderer: flowRenderer }).bindTooltip(`<strong>${esc(ps.name.replace(/SEWAGE PUMPING( STN| STATION)?/i, 'pumping station'))}</strong>`, { className: 'pt' }).addTo(TRACE.layer);
@@ -4368,20 +4437,22 @@
     // Blocks passed, in order.
     const blocks = []; if (BLK.data) for (const i of route) { const c = pipeCoords(P[i])[0], b = blockAt(c[0], c[1]); if (b && !blocks.includes(b.id)) blocks.push(b.id); }
     const bd = L.latLngBounds([[p.lat, p.lng], [end[1], end[0]]]); for (const i of route) for (const [x, y] of pipeCoords(P[i])) bd.extend([y, x]);
+    if (pl) for (const [x, y] of pl.coords) bd.extend([y, x]);
     fitClear(bd);
-    const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k };
+    const res = { route, km, worst, stations, plantName, blocks, joinM: jd, first: k, pl, outside, far: far >= 0 && k === far };
     TRACE.last = res;
     return res;
   }
   function traceSummaryHTML(t) {
-    if (!t) return '<p class="small muted">No sewer of 300 mm+ within 400 m of the site to trace from.</p>';
+    if (!t) return '<p class="small muted">No existing sewer of 300 mm+ within 3 km of the site and no planned DC wastewater main reaching one, to trace from.</p>';
     const P = SEW.data.pipes, w = t.worst, st = w && pipeState(w.r1);
     return `<ul class="why-list trace-sum">
-      <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from the site, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(t.plantName))}</strong>.</span></li>
+      ${t.pl ? `<li class="why-ok"><span>Outside the traced catchments: joins the planned <strong>${esc(dcLineText(t.pl.first))}</strong> ${fmtNum(Math.round(t.pl.joinM / 10) * 10)} m from the site, then <strong>${t.pl.km.toFixed(1)} km along planned DC mains</strong>${t.pl.lines.length > 1 ? ` (${t.pl.lines.length} mains)` : ''} to the existing sewers${t.pl.gaps ? `, bridging ${t.pl.gaps} gap${t.pl.gaps === 1 ? '' : 's'} where the mapped mains stop short (straight)` : ''}${t.pl.inTarget ? '' : ' (outside the catchment that main is mapped to)'}.</span></li>` : t.far ? `<li class="why-stall"><span>No existing sewer within 400 m and no planned DC main that reaches one: joined straight to the nearest existing sewer, ${kmText(t.joinM)} away. Its route will depend on works not yet on the DC maps.</span></li>` : t.outside ? '<li class="why-stall"><span>Outside the traced catchments and no planned DC main within 1 km: joined to the nearest existing sewer.</span></li>' : ''}
+      <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from ${t.pl ? 'the planned main' : 'the site'}, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : plantLabel(t.plantName))}</strong>.</span></li>
       ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}
       ${t.stations.length ? `<li class="why-ok"><span>Pumping station${t.stations.length === 1 ? '' : 's'} on the way: ${t.stations.map(ps => esc(ps.name.replace(/\s*SEWAGE PUMPING( STN| STATION)?/i, '').replace(/\b\w+/g, x => x[0] + x.slice(1).toLowerCase()))).join(', ')}.</span></li>` : ''}
       ${w ? `<li class="${w.r1 > 1 ? 'why-stall' : 'why-ok'}"><span>Tightest pipe on the way: <button type="button" class="btn small link" data-pipe="${w.i}">${P[w.i][0]} mm</button> at <strong>${Math.round(w.r1 * 100)}%</strong> of full capacity (${esc(st[3].toLowerCase())}, ${capYear == null ? 'build-out' : capYear}).</span></li>` : ''}
-    </ul><p class="small muted">On the map: the dashed line joins the site to the sewer; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
+    </ul><p class="small muted">On the map: the dashed line joins the site to the sewer${t.pl ? ' (dashed pink: the planned DC mains, flow direction not published)' : ''}; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
   }
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-trace]'); if (!b) return;
@@ -6220,15 +6291,50 @@
   // lifts water into that zone, then from that station's reservoir zone the nearest group feeding
   // it, and so on down to a treatment plant. Caledon's groundwater areas: the nearest well-system
   // plant. A schematic route through the facilities (the mains between them aren't traced).
+  // Sites outside the mapped pressure zones: the zone estimated from the ground elevation. The 2020
+  // Master Plan (Volume 3, Table 3) gives each lake-based zone's hydraulic grade line and the ground
+  // it serves (zones about 30 m apart, ranges overlapping). Where the ground fits two zones, the zone
+  // a planned DC water main within 1 km feeds decides, then the nearest mapped zone, then the zone
+  // whose grade line gives the site about 55 m of pressure. Above Zone 7's range: the nearest
+  // Caledon groundwater system.
+  const PZ_TABLE = { 1: [152.4, 75.0, 106.7], 2: [182.9, 87.8, 137.2], 3: [213.4, 135.9, 167.6], 4: [243.8, 166.4, 210.6], 5: [274.3, 182.4, 236.2], 6: [304.8, 214.5, 259.1], 7: [335.3, 243.4, 289.6] };
+  const zoneEst = new WeakMap();
+  async function estimateZone(p) {
+    if (zoneEst.has(p)) return zoneEst.get(p);
+    const zones = state.servicing.zones, near = (f, m = 30000) => PeelAreas.nearest(zones.filter(f), p.lng, p.lat, m);
+    let elev = null; try { elev = await elevAt(p.lat, p.lng); } catch (e) { /* tiles unavailable */ }
+    const via = dcVia(p, 'pz'), viaZ = via && svcById.get(via.id), viaL = viaZ && zLevel(viaZ.zone);
+    const nz = near(() => true, 20000), nearZ = nz && svcById.get(nz.id), nearL = nearZ && zLevel(nearZ.zone);
+    const cand = elev == null ? [] : Object.keys(PZ_TABLE).map(Number).filter(n => elev >= PZ_TABLE[n][1] && elev <= PZ_TABLE[n][2]);
+    let level = null, how = '';
+    if (cand.length) {
+      if (viaL && cand.includes(viaL)) { level = viaL; how = 'dc'; }
+      else if (nearL && cand.includes(nearL)) { level = nearL; how = 'near'; }
+      else { level = cand.slice().sort((a, b) => Math.abs(PZ_TABLE[a][0] - elev - 55) - Math.abs(PZ_TABLE[b][0] - elev - 55))[0]; how = 'pressure'; }
+    }
+    let z = null;
+    if (level) z = viaZ && viaL === level ? viaZ : (n => n && svcById.get(n.id))(near(a => zLevel(a.zone) === level));
+    else if (elev != null && elev > PZ_TABLE[7][2]) { z = (n => n && svcById.get(n.id))(near(a => !!wellSystem[a.zone])); how = 'above'; }
+    if (!z) { z = viaZ || nearZ; how = how || (viaZ ? 'dc-only' : 'nearest'); }
+    const est = z ? { z, level: zLevel(z.zone), elev, cand, how, via: how === 'dc' || how === 'dc-only' ? via : null } : null;
+    zoneEst.set(p, est);
+    return est;
+  }
+  function zoneEstHTML(e) {
+    if (!e) return '';
+    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level], g = e.elev != null ? `ground about ${Math.round(e.elev)} m` : 'ground elevation unavailable';
+    const why = { dc: 'the planned DC main within 1 km feeds it', near: 'it is the nearest mapped zone in range', pressure: 'its grade line gives about 55 m of pressure', above: 'above Zone 7\'s range: the nearest groundwater system', 'dc-only': 'the zone the nearest planned DC main feeds', nearest: 'the nearest mapped zone' }[e.how] || '';
+    return `<p class="small est-line">Outside the mapped pressure zones: ${g} → <strong>${zn}</strong>${r && e.how !== 'above' ? ` (serves ${r[1]}–${r[2]} m, grade line ${r[0]} m; 2020 Master Plan, Vol. 3, Table 3)` : ''}${e.cand.length > 1 ? `; the ground is also in Zone ${e.cand.filter(n => n !== e.level).join(' / ')}'s range, ${why}` : why ? `; ${why}` : ''}${e.via ? ` (${esc(dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
+  }
   const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };
   function waterTrace(p) {
     if (!WF.data || p.lat == null || !state.servicing) return null;
-    const pt = [p.lng, p.lat], zid = (p.pz && p.pz[0]) || PeelAreas.locate(state.servicing.zones, p.lng, p.lat)[0], z = zid && svcById.get(zid);
+    const pt = [p.lng, p.lat], zid = (p.pz && p.pz[0]) || PeelAreas.locate(state.servicing.zones, p.lng, p.lat)[0], est = !zid && zoneEst.get(p), z = zid ? svcById.get(zid) : est && est.z;
     if (!z) return null;
     const lvl = zLevel(z.zone);
     if (wellSystem[z.zone] || lvl == null || lvl > 7) {
       const plants = WF.data.facilities.filter(f => f.system === 'Caledon groundwater' && f.kind === 'plant' && f.lnglat).sort((a, b) => dist2(pt, a.lnglat) - dist2(pt, b.lnglat));
-      return plants[0] ? { z, gw: true, steps: [{ f: plants[0], to: z.name }] } : null;
+      return plants[0] ? { z, est, gw: true, steps: [{ f: plants[0], to: z.name }] } : null;
     }
     const pumps = wfPumps(), steps = [];
     let n = lvl, at = pt;
@@ -6241,19 +6347,21 @@
       at = g.f.lnglat; n = g.src;
       if (n === 0) break;
     }
-    return { z, gw: false, steps };
+    return { z, est, gw: false, steps };
   }
   function waterTraceHTML(p) {
     if (!WF.data) { loadWaterFacilities().then(d => { if (d && currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Loading the water facilities…</p>'; }
-    const t = waterTrace(p); if (!t || !t.steps.length) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones.</p>';
+    if (state.servicing && !(p.pz && p.pz.length) && !zoneEst.has(p)) { estimateZone(p).then(() => { if (currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Outside the mapped pressure zones: estimating the zone from the ground elevation…</p>'; }
+    const t = waterTrace(p); if (!t || !t.steps.length) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones and no zone could be estimated.</p>';
+    const estP = t.est ? zoneEstHTML(t.est) : '';
     const zn = s => esc(String(s).replace('Pressure zone ', 'Zone '));
-    if (t.gw) return `<p class="small">${zn(t.z.name)} is on a Caledon groundwater system: supplied by the <strong>${esc(t.steps[0].f.name)}</strong> wells and treatment${t.steps[0].f.groundwater ? ` (${esc(t.steps[0].f.groundwater.system)} system, rated ${fmtNum(t.steps[0].f.groundwater.ratedM3d)} m³/d)` : ''}.</p>
+    if (t.gw) return `${estP}<p class="small">${zn(t.z.name)} is on a Caledon groundwater system: supplied by the <strong>${esc(t.steps[0].f.name)}</strong> wells and treatment${t.steps[0].f.groundwater ? ` (${esc(t.steps[0].f.groundwater.system)} system, rated ${fmtNum(t.steps[0].f.groundwater.ratedM3d)} m³/d)` : ''}.</p>
       <p class="small"><button type="button" class="btn small" data-wtrace="${esc(p.key)}">Trace on the map</button></p>`;
     const rows = t.steps.slice().reverse();
     const plant = rows[0].pump.src === 0;
     const pumpRows = waterCapPumpRows();
     const zr = pumpRows.find(r => r.n === zLevel(t.z.zone));
-    return `<ol class="wtrace small">${plant ? `<li><span class="wf-ic wf-plant">■</span> <strong>${esc(rows[0].f.name)}</strong> treatment plant${rows[0].f.plant ? ` <span class="muted">(rated ${fmtNum(rows[0].f.plant.ratedMLd)} ML/d)</span>` : ''}</li>` : ''}
+    return `${estP}<ol class="wtrace small">${plant ? `<li><span class="wf-ic wf-plant">■</span> <strong>${esc(rows[0].f.name)}</strong> treatment plant${rows[0].f.plant ? ` <span class="muted">(rated ${fmtNum(rows[0].f.plant.ratedMLd)} ML/d)</span>` : ''}</li>` : ''}
       ${rows.map(s => `<li><span class="wf-ic wf-${s.f.kind === 'plant' ? 'plant' : 'pumping'}">${s.f.kind === 'plant' ? '■' : '▲'}</span> ${s.f.kind === 'plant' ? 'High-lift pumps' : `<strong>${esc(s.f.name)}</strong>`} <span class="muted">${esc(s.pump.zone)} · ${fmtNum(s.pump.cap)} ML/d firm</span> → zone ${s.to}</li>`).join('')}
       <li><span class="wf-ic wf-dev">●</span> This development · ${zn(t.z.name)}</li></ol>
       ${zr ? `<p class="small">Pumping into zone ${zr.n} and above: <strong>${Math.round(zr.c * 100)}%</strong> of firm capacity with existing + built + approved, ${Math.round(zr.b * 100)}% at build-out.</p>` : ''}
@@ -6352,7 +6460,7 @@
   }
   function clearWaterTrace() { WTRACE.layer.clearLayers(); WTRACE.key = null; WTRACE.last = null; syncPathMode(); syncClearBtn(); }
   async function traceWater(p) {
-    await Promise.all([loadWaterFacilities(), loadWatermains()]);
+    await Promise.all([loadWaterFacilities(), loadWatermains(), !(p.pz && p.pz.length) && state.servicing ? estimateZone(p) : null]);
     const t = waterTrace(p); if (!t || !t.steps.length) return null;
     clearWaterTrace(); WTRACE.key = p.key;
     const G = WM.data ? wmGraph() : null, L_ = WTRACE.layer;
@@ -6409,11 +6517,11 @@
     return res;
   }
   function waterTraceSummaryHTML(r) {
-    if (!r) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones.</p>';
+    if (!r) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones and no zone could be estimated.</p>';
     const t = r.t, rows = t.steps.slice().reverse(), first = rows[0].f, zn = s => esc(String(s).replace('Pressure zone ', 'Zone '));
     const pumpRows = waterCapPumpRows(), zr = !t.gw && pumpRows.find(x => x.n === zLevel(t.z.zone));
     const yrs = [...new Set(r.dc.map(ln => ln.y).filter(Boolean))].sort();
-    return `<ul class="why-list trace-sum">
+    return `${t.est ? zoneEstHTML(t.est) : ''}<ul class="why-list trace-sum">
       <li class="why-ok"><span>From <strong>${esc(first.name)}</strong> ${t.gw ? 'wells and treatment' : first.kind === 'plant' ? 'treatment plant' : ''}: <strong>${(r.kmE + r.kmP + r.kmS + r.kmL).toFixed(1)} km</strong> to the site${r.kmE >= 0.05 ? `, ${r.kmE.toFixed(1)} km along existing watermains${r.maxD ? ` (up to ${fmtNum(r.maxD)} mm)` : ''}` : ''}${r.kmP >= 0.05 ? `, <strong>${r.kmP.toFixed(1)} km along planned DC mains</strong>${yrs.length ? ` (${yrs.join(', ')})` : ''}` : ''}.</span></li>
       ${rows.filter(s => s.pump && s.f.kind !== 'plant').length ? `<li class="why-ok"><span>Pumping on the way: ${rows.filter(s => s.pump && s.f.kind !== 'plant').map(s => `${esc(s.f.name)} <span class="muted">(${esc(s.pump.zone)}, ${fmtNum(s.pump.cap)} ML/d firm → zone ${s.to})</span>`).join(', ')}.</span></li>` : ''}
       ${r.joinM != null ? `<li class="why-ok"><span>The site is ${fmtNum(Math.round(r.joinM / 10) * 10)} m from the nearest main of 300 mm+ on the route${t.z ? ` · ${zn(t.z.name)}` : ''}.</span></li>` : ''}

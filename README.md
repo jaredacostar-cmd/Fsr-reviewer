@@ -782,6 +782,22 @@ water supply from the plant** draws the route on the map like the sewer trace.
   (linework-raw download), rebuilt by the probe workflow's `sewer-build` mode. It loads only when a
   water trace runs.
 - Indicative only: valves, pressure reducing stations and the hydraulics decide the real flow.
+
+**Sites outside the mapped zones and catchments (both traces).**
+
+- *Water*: the pressure zone is estimated from the ground elevation (terrain tiles) and the 2020
+  Master Plan's zone table (Volume 3, Table 3: grade line and serviceable ground per lake-based
+  zone, e.g. Zone 6 serves 214.5–259.1 m below a 304.8 m grade line). Where the ground fits two
+  zones, the zone a planned DC water main within 1 km feeds decides, then the nearest mapped zone,
+  then the grade line giving about 55 m of pressure. Ground above Zone 7's range goes to the nearest
+  Caledon groundwater system. The Supply route row and the trace say how the zone was chosen.
+- *Wastewater*: a site outside the traced catchments, or with no existing sewer of 300 mm+ within
+  400 m, follows the planned DC wastewater mains. From the planned main nearest the site (within
+  1 km) it takes the shortest path along them to where they reach an existing sewer, preferring the
+  catchment that main serves, then the usual pipe-by-pipe route to the plant. Mains that stop short
+  of the one they feed are bridged (up to 600 m, straight, and noted). The planned path is dashed
+  pink; the maps don't give flow direction, so it is indicative. With no planned main reaching the
+  network, the trace joins the nearest existing sewer within 3 km and says so.
 - Both traces fit the route on the rotated map, clear of the open panel and the boxes along the
   map's edges.
 
