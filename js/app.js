@@ -960,7 +960,7 @@
       if (state.minUnits) set('u', state.minUnits); if (!state.newOnly) set('nn', '0');
       if (state.yearMode !== 'any') set('ym', state.yearMode);
       if (!atDefaultYears()) { set('yf', tFrom.value); set('yt', tTo.value); }
-      set('t', footPref); if (footPref === 'ww') set('ws', wwSub);
+      set('t', footPref); if (footPref === 'ww') set('ws', wwSub); if (footPref === 'water') set('ws', wSub);
       if (svcOpt.ww !== 'calibrated') set('wm', svcOpt.ww); if (svcOpt.md !== 'design') set('md', svcOpt.md); if (svcOpt.div !== 'off') set('dv', svcOpt.div); if (svcOpt.nr !== 'on') set('nr', svcOpt.nr);
       if (mstyle.color !== 'phase' || mstyle.size !== 'fixed' || mstyle.cap !== 'off') set('ms', `${mstyle.color}.${mstyle.size}.${mstyle.cap}`);
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
@@ -983,7 +983,7 @@
       $('#f-search').value = state.search; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits); $('#f-new').checked = state.newOnly;
       for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) svcOpt[o] = q.get(k);
       if (q.get('ms')) { const [color, size, cap] = q.get('ms').split('.'); for (const [k, v] of [['color', color], ['size', size], ['cap', cap]]) if (MSTYLE[k][v]) mstyle[k] = v; }
-      if (q.get('t')) { footPref = q.get('t'); if (q.get('ws')) wwSub = q.get('ws'); }
+      if (q.get('t')) { footPref = q.get('t'); if (q.get('ws')) { if (footPref === 'water') wSub = q.get('ws'); else wwSub = q.get('ws'); } }
       renderMuniChips(); if (state.areas) renderAreaSelects(); renderSvcSelects(); showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }
       if (q.get('yf') && q.get('yt')) setYears(Number(q.get('yf')), Number(q.get('yt'))); else applyFilters();
@@ -1102,7 +1102,7 @@
   // footPref: the tab last picked (kept), Growth & demand by default. Older tab names map onto
   // the merged tabs: demand → growth, plants → wastewater (plants view).
   let footPref = store.get('footTab4', 'overview'), footTab = 'overview';
-  let wwSub = store.get('wwSub', 'plants');
+  let wwSub = store.get('wwSub', 'plants'), wSub = store.get('wSub', 'capacity');
   if (footPref === 'svc') footPref = 'water';
   if (footPref === 'demand') footPref = 'growth';
   if (footPref === 'plants') { footPref = 'ww'; wwSub = 'plants'; }
@@ -1110,8 +1110,9 @@
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';
     footTab = key;
     for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
-    for (const p of document.querySelectorAll('.f-pane')) p.hidden = p.dataset.pane !== key || p.dataset.off === '1' || (p.dataset.sub && p.dataset.sub !== wwSub);
+    for (const p of document.querySelectorAll('.f-pane')) p.hidden = p.dataset.pane !== key || p.dataset.off === '1' || (p.dataset.sub && p.dataset.sub !== (p.dataset.pane === 'water' ? wSub : wwSub));
     for (const b of document.querySelectorAll('[data-wwsub]')) { b.classList.toggle('on', b.dataset.wwsub === wwSub); b.setAttribute('aria-pressed', String(b.dataset.wwsub === wwSub)); }
+    for (const b of document.querySelectorAll('[data-wsub]')) { b.classList.toggle('on', b.dataset.wsub === wSub); b.setAttribute('aria-pressed', String(b.dataset.wsub === wSub)); }
     if (key === 'dca' && typeof renderDca === 'function') setTimeout(() => renderDca(), 0);
     if (key === 'overview') setTimeout(() => renderOverview(), 0);
     if (key === 'criteria') setTimeout(() => renderQuality(), 0);
@@ -1121,9 +1122,10 @@
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;
     if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: Math.max(0, ft.offsetLeft - (strip.clientWidth - ft.offsetWidth) / 2), behavior: 'smooth' });
   }
-  document.querySelector('.f-subtabs').addEventListener('click', e => {
-    const b = e.target.closest('[data-wwsub]'); if (!b) return;
-    wwSub = b.dataset.wwsub; store.set('wwSub', wwSub); showFootTab('ww'); viewLink.write();
+  for (const g of document.querySelectorAll('.f-subtabs')) g.addEventListener('click', e => {
+    const b = e.target.closest('[data-wwsub]'), w = e.target.closest('[data-wsub]');
+    if (b) { wwSub = b.dataset.wwsub; store.set('wwSub', wwSub); showFootTab('ww'); viewLink.write(); }
+    if (w) { wSub = w.dataset.wsub; store.set('wSub', wSub); showFootTab('water'); viewLink.write(); }
   });
   showFootTab(footPref);
 
@@ -3556,7 +3558,8 @@
     // Water: the zone adding the most, and South Peel treatment.
     const zs = [...M.zones.entries()].map(([id, l]) => ({ a: svcById.get(id), add: M.wMax(M.total(l), M.jobs(l)) - M.wMax(l.census, 0) })).filter(x => x.a).sort((a, b) => b.add - a.add);
     const w = state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null;
-    setHeadline($('#water-body'), `${zs[0] ? `<strong>${esc(zs[0].a.name.replace('Pressure zone ', 'Zone '))}</strong> adds the most water demand: +${fmt1(zs[0].add)} ML/d at maximum day by build-out${zs[1] ? `, then ${esc(zs[1].a.name.replace('Pressure zone ', 'Zone '))} (+${fmt1(zs[1].add)})` : ''}. ` : ''}${w ? `South Peel water treatment ${trigText(w)} (${Math.round(w.util.com * 100)}% committed → ${Math.round(w.util.bo * 100)}% at build-out).` : ''}`);
+    setHeadline($('#water-body'), zs[0] ? `<strong>${esc(zs[0].a.name.replace('Pressure zone ', 'Zone '))}</strong> adds the most water demand: +${fmt1(zs[0].add)} ML/d at maximum day by build-out${zs[1] ? `, then ${esc(zs[1].a.name.replace('Pressure zone ', 'Zone '))} (+${fmt1(zs[1].add)})` : ''}.` : '');
+    setHeadline($('#wcap-body'), w ? `South Peel water treatment ${trigText(w)} (${pctRated(w, 'com')}% of rated capacity committed → ${pctRated(w, 'bo')}% at build-out).` : '');
     setHeadline($('#plants-body'), plantHeadline());
     // Blocks: the block carrying the most, and stations over firm capacity.
     const top = state.servicing.drainage.filter(d => !d.downstream).map(d => ({ d, l: M.cum.get(d.id) })).filter(x => x.l).sort((a, b) => M.adwf(b.l) - M.adwf(a.l))[0];
@@ -3602,10 +3605,14 @@
       <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
       <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
-      ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
+`;
+    // Treatment & capacity: capacity by growth layer, the 2025 reports against the model, the
+    // hydraulic check. Facilities: the existing facilities by system.
+    $('#wcap-body').innerHTML = `${exportBar('wcap')}${stampHTML('water', Y)}
       ${waterCapHTML()}
-      ${waterFacilitiesHTML()}
+      ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
       ${hydroBoxHTML()}`;
+    $('#wfac-body').innerHTML = `${exportBar('wfac')}${waterFacilitiesHTML()}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -4016,6 +4023,8 @@
   const exportBar = scope => `<div class="export-bar" role="group" aria-label="Export"><button type="button" class="btn small" data-export="pdf" data-scope="${scope}">PDF / print</button><button type="button" class="btn small" data-export="xlsx" data-scope="${scope}">Excel</button>${scope === 'catchments' && state.servicing && state.servicing.blocks ? '<button type="button" class="btn small" data-swmm title="The 40 blocks as a SWMM 5 model with the design storm, to run in SWMM or PCSWMM">SWMM model (.inp)</button>' : ''}</div>`;
   const SCOPES = {
     water: { title: 'Water by pressure zone', els: () => [$('#water-body')] },
+    wcap: { title: 'Water treatment and capacity', els: () => [$('#wcap-body')] },
+    wfac: { title: 'Existing water facilities', els: () => [$('#wfac-body')] },
     plants: { title: 'Wastewater treatment plants and capacity', els: () => [$('#plants-body')] },
     catchments: { title: 'Wastewater by sanitary catchment', els: () => [$('#ww-body')] },
     growth: { title: 'Growth and demand', els: () => [$('#pane-demand'), $('#census')].filter(e => e && !e.hidden) },
@@ -4129,7 +4138,7 @@
     (b.dataset.export === 'pdf' ? exportPDF : exportXLSX)(b.dataset.scope);
   });
   // Switches in the Water / Wastewater / Plants tabs.
-  for (const id of ['#water-body', '#ww-body', '#plants-body', '#scen-bar']) $(id).addEventListener('click', e => {
+  for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#scen-bar']) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
     if (e.target.closest('[data-goto-tab]')) return showFootTab(e.target.closest('[data-goto-tab]').dataset.gotoTab);
     if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }
@@ -6102,7 +6111,7 @@
       ${capChartHTML(treat.filter(Boolean), Y, { title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
       <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">design maximum day as a % of firm pumping capacity</span></summary>
       ${capChartHTML(pump, Y, { title: ' ', noPop100: true, noPeople: true, legend: false })}
-      <p class="small muted">Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see the facilities below).</p></details>
+      <p class="small muted">Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see Facilities).</p></details>
       <p class="small muted">Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region), split between the ${Y} Census and growth built since as the model does; approved and proposed added at Peel's design maximum day (${state.criteria.water.avg} L/cap/d × ${state.criteria.water.maxDay}, employment ${state.criteria.employment.water} L/emp/d). Pumping: for each zone n, the firm capacity (largest pump out of service; the Region's modelled actual firm where the 2020 Master Plan gives it) of every pump group lifting water from a lower zone into zone n or above, against the design maximum day of zone n and all zones above it (the York Region supply, the transfer to the east system and the sub-zone boosters left out). Storage is shown facility by facility (its zones served aren't published).</p></section>`;
   }
   // Water tab: the facilities by system, with capacity.
@@ -7765,7 +7774,7 @@
   // Help & tips: task guides with a "Show me" that sets the app up for the task.
   const pickDev = () => state.filtered.filter(p => p.lat != null && p.units >= 100 && (p.phase === 'review' || p.phase === 'approved')).sort((a, b) => b.units - a.units)[0] || state.filtered.find(p => p.lat != null);
   const toMap = () => { if (phoneUI() && $('#sidebar').classList.contains('open')) toggleSidebar(false); };
-  const openAnalysis = (tab, sub) => { if (sub) { wwSub = sub; store.set('wwSub', sub); } footPref = tab; store.set('footTab3', tab); setFooterCollapsed(false); showFootTab(tab); };
+  const openAnalysis = (tab, sub) => { if (sub && tab === 'water') { wSub = sub; store.set('wSub', sub); } else if (sub) { wwSub = sub; store.set('wwSub', sub); } footPref = tab; store.set('footTab3', tab); setFooterCollapsed(false); showFootTab(tab); };
   const HELP = [
     { t: 'Check servicing for a development', w: 'Reviewing an application, an FSR or a pre-consultation.',
       s: ['Tap its marker, or search its address or file number.', 'Servicing tab: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow, stormwater and ground.', 'Memo (top of the panel) prints a one-page servicing memo.'],
