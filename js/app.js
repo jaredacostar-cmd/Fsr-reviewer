@@ -48,7 +48,8 @@
   state.iiBase = state.criteria.wastewater.infiltration;
   state.wet = Object.assign({ rp: 0, ref: 25, clim: 'none' }, store.get('wetWx', {}));
   // Existing water facilities layer (data/water-facilities.json): on / off, data, map layer.
-  const WF = { on: store.get('wfOn', false), data: null, loading: null, layer: null };
+  // Off until switched on, except in the Water view (its preset), including when the app opens in it.
+  const WF = { on: store.get('wfOn', null) ?? ['water', 'servicing'].includes(store.get('mapView', 'planning')), data: null, loading: null, layer: null };
   const WF_KIND = { plant: ['■', 'Treatment plant'], pumping: ['▲', 'Pumping station'], booster: ['▴', 'Booster / small pumping station'], reservoir: ['●', 'Reservoir'], elevated_tank: ['◆', 'Elevated tank'], standpipe: ['◆', 'Standpipe'], well: ['◉', 'Well'], rechlorination: ['✚', 'Re-chlorination'], clearwell: ['●', 'Clearwell'] };
   // Defaults before the Peel 2023–2024 criteria were adopted: a saved value equal to one of these
   // was never edited, so it gives way to the current default.
