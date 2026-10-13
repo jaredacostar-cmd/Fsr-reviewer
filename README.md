@@ -770,6 +770,11 @@ The bottom panel's tabs run Overview · Growth · Demand · Water · Wastewater 
   outlined in dashed orange with its address, phase and units; one without a published boundary
   gets a dashed ring. More settings → *Site boundary on hover*: Show on / off and Reach (10–120
   screen pixels, default 40), remembered in this browser.
+- **View switch** (Planning / Water / Wastewater / DC): the full labels always show; on a narrow
+  screen or with a wider system font the buttons wrap onto a second row rather than being cut off.
+- **Clear selection and the Developments Show / Faded / Hidden switch** sit at the top of the map,
+  between the controls on the left and the boxes on the right (stacked when the gap is narrow); on
+  a phone, under the Layers and More settings boxes. Fitting a trace leaves room for them.
 - **Demand year** sits on top of the timeline box and runs from the **2021 Census** to build-out
   (buttons: 2021 Census · Today · Build-out). Before today, growth built since the census counts in
   the share of it completed by that year (Peel-wide, by units and completion date); approved and

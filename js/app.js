@@ -4464,10 +4464,13 @@
       else if (r.left > m.left + m.width * 0.3) br = [Math.min(m.width * 0.6, Math.max(30, m.right - r.left + 20)), 30];
     }
     // Room for the boxes along the bottom edge (timeline, Clear selection and the path switch).
-    const low = [timebarEl, document.querySelector('.map-bottom')].filter(e => e && !e.hidden).map(e => e.getBoundingClientRect()).filter(r => r.height && r.top < m.bottom);
+    const low = [timebarEl].filter(e => e && !e.hidden).map(e => e.getBoundingClientRect()).filter(r => r.height && r.top < m.bottom);
     if (low.length) br[1] = Math.max(br[1], Math.round(m.bottom - Math.min(...low.map(r => r.top)) + 12));
     // On a phone the map panel spans the top: start below it.
     const op = document.querySelector('.map-opts'), tl = [30, phoneMap && op ? Math.max(30, Math.round(op.getBoundingClientRect().bottom - m.top + 8)) : 30];
+    // The selection buttons sit at the top of the map: start below them.
+    const mbr = (e => e && !e.hidden ? e.getBoundingClientRect() : null)(document.querySelector('.map-bottom'));
+    if (mbr && mbr.height) tl[1] = Math.max(tl[1], Math.round(mbr.bottom - m.top + 10));
     const bearing = canRotate ? map.getBearing() : 0;
     if (!bearing) { map.fitBounds(bd, { paddingTopLeft: tl, paddingBottomRight: br }); return; }
     // Rotated map: size the bounds' corners as they appear on screen, then centre them in the clear part.
@@ -5002,20 +5005,30 @@
     else if (moOpen) { if (opH + moH > avail) moMax = Math.max(90, avail - opH - gap); }
     op.style.maxHeight = opMax ? `${Math.round(opMax)}px` : ''; op.classList.toggle('mo-capped', !!opMax);
     if (more) more.style.maxHeight = moMax ? `${Math.round(moMax)}px` : '';
-    // Selection / mode buttons: centred in the visible map, clear of the right-hand column, and
-    // above the timeline / legend when they would sit on them.
+    // Selection / mode buttons (Clear selection, the developments switch): at the top of the map,
+    // between the controls on the left and the boxes on the right; under the right-hand boxes when
+    // there's no room between them (a phone).
     const mb = document.querySelector('.map-bottom');
     if (mb) {
-      mb.style.bottom = coverB ? `${28 + coverB}px` : ''; mb.style.left = '';
+      mb.classList.add('at-top'); mb.style.bottom = 'auto'; mb.style.maxWidth = '';
       let b = mb.getBoundingClientRect();
       if (b.width) {
-        const col = [ab, wl.hidden || wl.classList.contains('sheet-hide') ? null : wl].filter(Boolean).map(e => e.getBoundingClientRect()).filter(r => r.width).reduce((x, r) => Math.min(x, r.left), m.right);
-        const lo = m.left + edge + b.width / 2, hi = col - gap - b.width / 2;
-        const cx = Math.max(lo, Math.min((m.left + col) / 2, hi));
-        mb.style.left = `${Math.round(cx - mr.left)}px`;
-        b = mb.getBoundingClientRect();
-        const under = [tb.getBoundingClientRect(), lr].filter(r => r && r.width && r.left < b.right && r.right > b.left && r.top < b.bottom);
-        if (under.length) mb.style.bottom = `${Math.round(mr.bottom - Math.min(...under.map(r => r.top)) + gap)}px`;
+        const rects = sel => [...document.querySelectorAll(sel)].filter(e => !e.hidden && e.offsetParent !== null).map(e => e.getBoundingClientRect()).filter(r => r.width && r.top < mr.top + 140);
+        const leftR = [...rects('.leaflet-top.leaflet-left .leaflet-control'), ...rects('#toggle-sidebar')].reduce((x, r) => Math.max(x, r.right), mr.left);
+        const right = [op, more].filter(Boolean).map(e => e.getBoundingClientRect()).filter(r => r.width);
+        const rightL = right.reduce((x, r) => Math.min(x, r.left), m.right);
+        const avail = rightL - leftR - 2 * gap, widest = Math.max(0, ...[...mb.children].filter(c => !c.hidden).map(c => c.getBoundingClientRect().width));
+        // Too wide for one row but each fits: stack them in the gap.
+        if (avail < b.width && avail >= widest && widest > 0) { mb.style.maxWidth = `${Math.floor(avail)}px`; b = mb.getBoundingClientRect(); }
+        if (avail >= b.width) {
+          mb.style.top = `${edge}px`;
+          mb.style.left = `${Math.round((leftR + rightL) / 2 - mr.left)}px`;
+        } else {
+          const below = right.reduce((x, r) => Math.max(x, r.bottom), mr.top + edge);
+          mb.style.top = `${Math.round(below - mr.top + gap)}px`;
+          const lo = leftR + gap + b.width / 2, hi = m.right - edge - b.width / 2;
+          mb.style.left = `${Math.round(Math.max(Math.min((leftR + m.right) / 2, hi), Math.min(lo, hi)) - mr.left)}px`;
+        }
       }
     }
     // Attribution: one line to the right of the bottom-left boxes.
