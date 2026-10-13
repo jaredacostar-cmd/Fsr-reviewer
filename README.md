@@ -695,8 +695,8 @@ proposed growth). **+ Add area** draws another area into the selection, × remov
 
 **Layers → Water facilities** shows the Region's existing water facilities: treatment plants,
 pumping stations, reservoirs, elevated tanks, standpipes, boosters, wells and re-chlorination
-stations. The layer is on by default in the Water view. The **Water** tab lists them by
-transmission system.
+stations. The layer is on by default in the Water view. **Water → Facilities** lists them
+by transmission system.
 
 `scripts/build-water-facilities.py` builds `data/water-facilities.json` from these sources:
 
@@ -711,7 +711,7 @@ transmission system.
 - **Plant ratings and 2025 flows:** the drinking water reports.
 - **Planned works:** linked from the 2026 DC maps by name.
 
-**Water capacity by growth layer** (in the Water tab, above the facilities) uses the same bars as the
+**Water capacity by growth layer** (Water → Treatment & capacity) uses the same bars as the
 wastewater plants: existing, built since, approved and proposed, with the uncommitted reserve.
 
 - **Treatment** compares South Peel and the Caledon well systems against their rated capacity.

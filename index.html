@@ -261,9 +261,22 @@
         <div id="c-forecast" data-info="forecast-2051"></div>
       </section>
 
-      <section class="f-pane svc-pane" id="pane-water" data-pane="water" role="tabpanel" aria-labelledby="ftab-water" hidden>
+      <div class="f-pane f-subtabs" data-pane="water" hidden role="group" aria-label="Water view">
+        <button type="button" class="btn small" data-wsub="capacity">Treatment &amp; capacity</button>
+        <button type="button" class="btn small" data-wsub="zones">Pressure zones</button>
+        <button type="button" class="btn small" data-wsub="facilities">Facilities</button>
+      </div>
+      <section class="f-pane svc-pane" id="pane-wcap" data-pane="water" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Water treatment and capacity</h2></div>
+        <div id="wcap-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-water" data-pane="water" data-sub="zones" role="tabpanel" aria-labelledby="ftab-water" hidden>
         <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
         <div id="water-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-wfac" data-pane="water" data-sub="facilities" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Existing water facilities</h2></div>
+        <div id="wfac-body"></div>
       </section>
       <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
         <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
