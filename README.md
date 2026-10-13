@@ -773,9 +773,9 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   by at least 15% of either boundary or at the same civic address. Neighbours that only share an
   edge don't count. Each link says how they relate (covers / within / overlaps / same address).
   For example, the precinct 52-6 pre-consultation PRE-2026-0007 lists the draft plan OZS-2025-0035
-  on its land. That development lists its neighbours, including draft plan OZS-2025-0028. That
-  draft plan lists the block plan around it, OZS-2025-0033 at 10869 Heritage Rd, with its
-  pre-consultation PRE-2024-0117. *← (development)* goes back across.
+  on its land. That development lists the block plan whose land it overlaps, OZS-2025-0033 at
+  10869 Heritage Rd (2,656 units), with its pre-consultation PRE-2024-0117. *← (development)*
+  goes back across.
 - **No double counting**:
   - A file opened on its own is a view and is never added to a total.
   - Pre-consultation units are never counted, because the formal application repeats them.
