@@ -1719,3 +1719,4 @@ body.print-map .area-box { display: none; }
 .file-tree .btn.link { text-align: left; padding: 0; }
 .sub-head { margin: 2px 0 6px; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 10%, transparent); }
 .rel-how { color: var(--accent); }
+.area-note { margin: 8px 0; padding: 6px 8px; border-radius: 6px; background: color-mix(in srgb, var(--accent) 8%, transparent); }

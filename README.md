@@ -785,6 +785,18 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   placeholder addresses were affected. Previously "0 Heritage Rd" merged a 13-tower site, two
   precinct draft plans and their pre-consultations, and counted only the largest file's units.
   Across Peel this adds 50 developments and 1,382 active units that the merging had hidden.
+- **Precinct and block plans**: a draft plan of subdivision inside a precinct or block plan is
+  its own development, linked through *Related applications*. Before this, a 114 ha precinct
+  plan absorbed every draft plan inside its boundary. The precinct plan counts only the units its
+  draft plans don't already carry, and says so. Example: precinct 52-2, OZS-2025-0014 at
+  10344 Mississauga Rd, holds three draft plans as separate developments with 259 units:
+  - OZS-2026-0034 at "0 Mississauga Rd" (207 units);
+  - OZS-2025-0015 at 10512 Mississauga Rd;
+  - OZS-2025-0017 at 10916 Mississauga Rd.
+
+  Site plans and condos inside a subdivision are still part of it. Peel's unit total is
+  unchanged (+1 unit), with 17 more developments. Each related link reads *within* / *covers* /
+  *overlaps* / *same address as* the file it matches.
 - **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
   2,656 units), including from the weekly snapshot.
 
