@@ -87,15 +87,35 @@ function main() {
     return term;
   };
   const plantAt = t => plants.find(pl => { const p = xy.get(t); return Math.hypot(pl.p[0] - p[0], pl.p[1] - p[1]) < 1500; });
+  // Pipes that only look connected (crossing, or a stub ending near another sewer) are not joined:
+  //  - a dead-end stub leaving a manhole whose main pipe carries on (a chamber, siphon or overflow
+  //    stub) takes no flow; the flow stays in the main pipe;
+  //  - a loose end reaching more than 25 m joins the nearest sewer of the same size or bigger (sewers
+  //    flow into the same size or bigger), the nearest of any size only when none is in reach; within
+  //    25 m it is a drawing gap and joins the nearest.
+  const inD = new Map(), inFrom = new Map();
+  for (const [a, list] of outs) for (const e of list) if (e.f) { inD.set(e.b, Math.max(inD.get(e.b) || 0, e.f.p.Diameter || 0)); (inFrom.get(e.b) || inFrom.set(e.b, []).get(e.b)).push(a); }
+  const sizeAt = q => edge.has(q) ? edge.get(q).p.Diameter || 0 : inD.get(q) || 0;
+  let stubs = 0, skipped = 0;
   for (const [R, minSize] of [[25, 0], [60, 0], [150, 0], [500, 50]]) {
     const term = terminals(), size = new Map();
     for (const t of term.values()) size.set(t, (size.get(t) || 0) + 1);
     for (const [t, n] of size) {
       if (n < minSize || plantAt(t) || down.has(t)) continue;
-      const c = near(xy.get(t), R).find(([q]) => term.get(q) !== t);
+      if (R === 25) {
+        const from = inFrom.get(t) || [];
+        if (from.length && from.every(a => (outs.get(a) || []).some(e => e.b !== t && e.f && (e.f.p.Diameter || 0) >= (inD.get(t) || 0)))) {
+          for (const a of from) { outs.set(a, outs.get(a).filter(e => e.b !== t)); if (down.get(a) === t) { const o = outs.get(a).filter(e => e.f).sort((x, y) => (y.f.p.Diameter || 0) - (x.f.p.Diameter || 0))[0]; if (o) { down.set(a, o.b); edge.set(a, o.f); } } }
+          stubs++; continue;
+        }
+      }
+      const cand = near(xy.get(t), R).filter(([q]) => term.get(q) !== t);
+      let c = R === 25 ? cand[0] : cand.find(([q]) => sizeAt(q) >= (inD.get(t) || 0));
+      if (!c && cand.length) { c = cand[0]; skipped++; }   // none big enough in reach: the nearest, as drawn
       if (c) { down.set(t, c[0]); outs.set(t, [{ b: c[0], f: null }]); }
     }
   }
+  console.log(`  dead-end stubs dropped: ${stubs}; loose ends joined to a smaller sewer (none bigger in reach): ${skipped}`);
   const term = terminals();
 
   // ---- 3. Loads per manhole --------------------------------------------------------------
