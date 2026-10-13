@@ -152,7 +152,7 @@ press and hold) for a card explaining what it represents and where the data come
   stepper, the weekly phase history and the dated timeline, grouped by date (same-day events on several files show once, with a count and the file numbers). Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
-**Timeline (floating, bottom left of the map):** opens on **2021–2026**. Drag the handles to keep only projects with
+**Timeline (floating, bottom of the map, to the right of the legend):** opens on **2021–2026**. Drag the handles to keep only projects with
 activity in those years; the button next to the range switches between **All years** and the
 2021–2026 default (**Reset all** also returns to 2021–2026).
 The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
@@ -297,8 +297,11 @@ application.
   settings* (saved views, development colour / size / labels, capacity shading, existing pipe kinds
   and size labels, DC works by system, planning area kinds, base map). The views set the switches;
   changes are remembered per view. With the blocks as the catchments there is one wastewater area
-  layer (Wastewater blocks), so it can always be switched off. Bottom right, one box: the Demand
-  year over the legend. When a setting hides the developments (switched off, no growth load on in
+  layer (Wastewater blocks), so it can always be switched off. Bottom left, one box: the Demand
+  year over the legend, with the timeline beside it (above it when there's no room). The boxes along
+  the bottom never overlap: the timeline, the wastewater loads box and the Clear selection button
+  move clear of each other and of an open development panel, and the Layers panel scrolls rather
+  than run into them. When a setting hides the developments (switched off, no growth load on in
   the Wastewater view, or Hidden while a path is shown) a notice above Layers says why, with *Show
   developments*; an area filter is always named there too, with *Clear*. The legend box takes the
   height the panel leaves free, so the two never overlap. Planning area outlines: tap one on the
@@ -476,7 +479,7 @@ application.
   (each a link). Also for test sites.
 - **Developments on / off** (map panel, every view): hides or shows all development markers, labels and
   site outlines (remembered).
-- **Wastewater loads** (map panel, Wastewater view): *Census (existing) · Built since · Site plan
+- **Wastewater loads** (own box, bottom right of the map, Wastewater view; always in sight): *Census (existing) · Built since · Site plan
   approved · Proposed (in review)*; each controls both the developments shown and the load put on the
   sewers (capacity colours, a pipe's flow table, the trace's tightest pipe). All on = full build-out
   conditions; the legend lists the loads when some are off.
@@ -721,6 +724,12 @@ wastewater plants: existing, built since, approved and proposed, with the uncomm
   zone n or above against the design maximum day of zone n and every zone above it.
 
 Alloa's location isn't published, so it is listed in the table but not shown on the map.
+
+## Latest submission on labels and titles
+
+**Latest submission.** The map labels (Address + phase and Address) and the development panel's
+title show the latest application submitted on the site: its date received and file number. The
+open data carries each file's first submission date, not resubmissions.
 
 ## Functional Servicing Reports and the water supply route
 

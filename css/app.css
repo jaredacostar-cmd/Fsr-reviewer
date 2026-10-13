@@ -1201,10 +1201,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 
 /* Map panel: developments on / off, wastewater growth layers */
 .mo-quick { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
-.mo-ww { margin-top: 6px; }
-.mo-ww[hidden] { display: none; }
-.mo-ww .mo-h { margin: 2px 0 4px; }
-.mo-ww-note { font-size: 11.5px; margin-top: 3px; }
 .dev-sw { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--ph-review, #4dabf7); box-shadow: 0 0 0 2px #fff, 0 0 0 3px #4c6ef5; margin-right: 6px; }
 .devs-off .leaflet-marker-pane .pm, .devs-off .leaflet-marker-pane .marker-cluster { display: none; }
 
@@ -1269,8 +1265,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .map-opts details.mo-more { border-top: 1px solid var(--border); padding-top: 4px; }
 .map-opts details.mo-more > summary .mo-sum { color: var(--text-muted); font-weight: 400; margin-left: 4px; }
 .map-opts details.mo-more > summary .mo-sum.on { color: var(--accent); font-weight: 600; }
-.map-opts .mo-ww { margin-top: 0; }
-.map-opts .mo-ww .mo-chips { margin-bottom: 2px; }
 .mo-devs-off { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; padding: 6px 8px; border-radius: 6px; background: #fff3bf; color: #5c3c00; font-size: 11.5px; }
 .mo-devs-off[hidden] { display: none; }
 .mo-devs-off .btn { background: #fff; }
@@ -1524,3 +1518,20 @@ details.stamp { display: block; }
 .wtrace-tip { font-size: 11px; padding: 2px 6px; }
 .fsr-box { border: 1px solid var(--border); border-left: 3px solid #1971c2; border-radius: 8px; padding: 6px 10px; margin: 6px 0 8px; background: var(--surface-1); }
 .fsr-box small { display: block; color: var(--text-muted); margin-top: 2px; }
+
+/* Bottom edge of the map: legend bottom left, the timeline beside it (placed by layoutMapBoxes),
+   wastewater loads bottom right. */
+.leaflet-bottom.leaflet-left .map-legend { margin: 0 0 12px 12px; }
+.map-opts.mo-capped { overflow-y: auto; overscroll-behavior: contain; }
+.ww-loads { background: color-mix(in srgb, var(--surface-1) 96%, transparent); border: 1px solid var(--border); border-radius: 8px; padding: 6px 8px 7px; box-shadow: var(--shadow); color: var(--text-primary); font-size: 12px; width: 236px; }
+.leaflet-bottom.leaflet-right .ww-loads { margin: 0 12px 6px 0; }
+.ww-loads[hidden] { display: none; }
+.ww-loads .wl-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-weight: 600; margin-bottom: 5px; white-space: nowrap; }
+.ww-loads .wl-sum { font-weight: 400; font-size: 11px; color: var(--text-muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ww-loads .mo-chip .lg-sw { display: inline-block !important; width: 10px; height: 10px; margin-right: 0; }
+.ww-loads .wl-sum.on { color: var(--accent); font-weight: 600; }
+.ww-loads .wl-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+.ww-loads .mo-chip { display: flex; position: relative; cursor: pointer; }
+.ww-loads .mo-chip > span { width: 100%; }
+@media (max-width: 700px) { .leaflet-bottom.leaflet-left .map-legend { margin: 0 0 16px 8px; } .ww-loads { width: 200px; font-size: 11px; } .leaflet-bottom.leaflet-right .ww-loads { margin: 0 8px 6px 0; } .ww-loads .mo-chip > span { padding: 3px 6px; font-size: 11px; } }
+body.print-map .ww-loads { background: #fff; color: #111; }

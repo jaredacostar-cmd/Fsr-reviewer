@@ -234,16 +234,27 @@
   let labelMode = LABEL_MODES[store.get('labelMode', 'address-phase')] ? store.get('labelMode', 'address-phase') : 'address-phase';
   const labelLayer = L.layerGroup().addTo(map);
   let projectByMarker = new Map();
+  // The latest application submitted on the site: the newest application record's received date
+  // (the municipalities publish the first submission's date, not resubmissions).
+  const lsCache = new WeakMap();
+  function latestSub(p) {
+    if (lsCache.has(p)) return lsCache.get(p);
+    let best = null;
+    for (const r of p.records) if (r.kind === 'application') for (const e of r.events) if (e.phase === 'inception' && (!best || e.date > best.date)) best = { date: e.date, ref: (r.ref || '').replace(/\s+/g, ' ').replace(/ -/g, '-') };
+    lsCache.set(p, best); return best;
+  }
+  const monYr = d => d.toLocaleDateString('en-CA', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  const lsLine = p => (ls => ls ? `<small>Latest submission ${esc(monYr(ls.date))}${ls.ref ? ` · ${esc(ls.ref)}` : ''}</small>` : '')(latestSub(p));
   function labelText(p) {
     const ph = P.PHASE_BY_KEY[p.phase].label;
     switch (labelMode) {
-      case 'address': return `<b>${esc(p.title)}</b>`;
+      case 'address': return `<b>${esc(p.title)}</b>${lsLine(p)}`;
       case 'ref': {
         const refs = Array.from(new Set(p.records.map(r => r.ref).filter(Boolean)));
         return `<b>${esc(refs.slice(0, 2).join(', ') || p.title)}</b>${refs.length > 2 ? `<small>+${refs.length - 2} more</small>` : ''}`;
       }
       case 'units': return p.units ? `<b>${fmtNum(p.units)} units</b><small>${esc(p.title)}</small>` : '';
-      default: return `<b>${esc(p.title)}</b><small>${esc(ph)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</small>`;
+      default: return `<b>${esc(p.title)}</b><small>${esc(ph)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</small>${lsLine(p)}`;
     }
   }
   function updateLabels() {
@@ -487,7 +498,6 @@
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
         </div>
         <div class="mo-where" data-info="municipality"><div class="mo-seg" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>
-        <details class="mo-more mo-ww" data-info="ww-layers"${store.get('moWwOpen', false) ? ' open' : ''}><summary>Wastewater loads <span class="mo-sum mo-ww-note"></span></summary><div class="mo-chips">${[['existing', 'Census (existing)'], ['built', 'Built since'], ['approved', 'Site plan approved'], ['proposed', 'Proposed (in review)']].map(([k, t]) => chip(`data-wwlay="${k}"`, wwLay[k] !== false, `<span class="lg-sw" data-wwsw="${k}"></span>${t}`)).join('')}</div><small>Loads on the map and on the sewers; all on = full build-out.</small></details>
         <details class="mo-more mo-areas" data-info="map-areas"${store.get('moAreasOpen', false) ? ' open' : ''}><summary>Filter by area <span class="mo-sum" id="mo-area-sum"></span></summary>
           <div class="mo-field" data-info="secondary-plans"><span id="f-sp-label">Secondary plan</span>
             <details class="multi" id="f-sp">
@@ -549,7 +559,6 @@
       el.querySelector('#opt-plan').onchange = e => setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });
       el.querySelector('#opt-wf').onchange = e => setWfOn(e.target.checked);
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
-      el.querySelector('.mo-ww').addEventListener('toggle', e => { if (e.target.classList.contains('mo-ww')) store.set('moWwOpen', e.target.open); });
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) showAllDevs(); });
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) clearAreaFilters(); });
       el.querySelector('.mo-areas').addEventListener('toggle', e => { if (e.target.classList.contains('mo-areas')) store.set('moAreasOpen', e.target.open); });
@@ -576,7 +585,6 @@
       el.querySelector('#opt-pz').onchange = e => setSvcLayer('pz', e.target.checked);
       el.querySelector('#opt-dr').onchange = e => setSvcLayer('dr', e.target.checked);
       el.querySelector('#opt-devs').onchange = e => setDevsOn(e.target.checked);
-      el.querySelectorAll('[data-wwlay]').forEach(c => { c.onchange = () => setWwLay(c.dataset.wwlay, c.checked); });
       el.querySelector('#opt-bk').onchange = e => setBlocksLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => setOrientation(e.target.value);
@@ -2133,7 +2141,7 @@
     if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
     const flags = devFlags(p, st, f);
     const w = watch.has(p.key);
-    return `<div class="head"><button type="button" class="watch-btn${w ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${w}" title="${w ? 'Remove from your watchlist' : 'Add to your watchlist (This week tab, Watched focus)'}">${w ? '★ Watching' : '☆ Watch'}</button><button type="button" class="watch-btn memo-btn" data-memo title="One-page servicing memo to print or save as PDF">Memo</button><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>
+    return `<div class="head"><button type="button" class="watch-btn${w ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${w}" title="${w ? 'Remove from your watchlist' : 'Add to your watchlist (This week tab, Watched focus)'}">${w ? '★ Watching' : '☆ Watch'}</button><button type="button" class="watch-btn memo-btn" data-memo title="One-page servicing memo to print or save as PDF">Memo</button><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>${(ls => ls ? `<div class="m latest-sub" data-info="latest-submission">Latest submission <strong>${fmtDate(ls.date)}</strong>${ls.ref ? ` · ${esc(ls.ref)}` : ''}</div>` : '')(latestSub(p))}
         <span class="badge">${dot(p.phase)}${esc(P.PHASE_BY_KEY[p.phase].label)}</span></div>
       <div class="chips dev-chips">${facts.join('')}${flags.join('')}</div>`;
   }
@@ -4481,7 +4489,7 @@
     set('#opt-devs', devsOn); set('#opt-wf', WF.on);
     document.querySelectorAll('[data-wwlay]').forEach(c => { c.checked = wwLay[c.dataset.wwlay] !== false; });
     document.querySelectorAll('[data-wwsw]').forEach(e => e.style.setProperty('--mk', layerColors()[e.dataset.wwsw]));
-    const mw = document.querySelector('.mo-ww'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); const n = mw.querySelector('.mo-ww-note'); n.textContent = all ? 'all (build-out)' : [['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
+    const mw = document.querySelector('.ww-loads'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); const n = mw.querySelector('.wl-sum'); n.textContent = all ? 'full build-out' : [['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
     syncDevsOff(); syncPanelSum();
     set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-bk', svcOn.bk); set('#opt-da', daOn);
     set('#opt-cap', mstyle.cap !== 'off'); set('#opt-exist', Object.values(existOn).some(Boolean)); set('#opt-dcw', dcOn.on); set('#opt-plan', areaOn.sp || areaOn.mtsa);
@@ -4646,11 +4654,10 @@
     addFlowMarker();
   }
 
-  // Legend (bottom left): marker colours and sizes, and the capacity layer's classes.
-  // Bottom right on wide screens (the timeline sits bottom left), bottom left on phones; collapsed on
-  // phones until opened (remembered).
+  // Legend (bottom left, with the timeline to its right): marker colours and sizes, and the capacity
+  // layer's classes. Collapsed on phones until opened (remembered).
   const phoneMap = matchMedia('(max-width: 700px)').matches;
-  const Legend = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
+  const Legend = L.Control.extend({ options: { position: 'bottomleft' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.innerHTML = '<div class="map-year" data-info="map-year" hidden></div><div class="lg-body"></div>';
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
@@ -4667,17 +4674,66 @@
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
   const yearText = () => capYear == null ? 'Build-out' : String(capYear);
-  // The legend box takes the height the map panel leaves free (top right and bottom right never
-  // overlap): re-fitted whenever the panel opens, closes or the map resizes.
-  function fitLegend() {
-    const lg = legend.getContainer(), op = document.querySelector('.map-opts'); if (!lg || !op) return;
-    const m = map.getContainer().getBoundingClientRect(), o = op.getBoundingClientRect();
-    const sameSide = o.right > m.right - lg.offsetWidth - 20;
-    const room = sameSide ? m.bottom - o.bottom - 46 : m.height * 0.6;
-    lg.style.maxHeight = `${Math.max(64, Math.round(room))}px`;
-    lg.classList.toggle('lg-squeezed', room < 90);
+  // Wastewater loads (bottom right, Wastewater view): which growth layers load the map and the sewers.
+  // Its own box so it stays in sight whatever the Layers panel shows.
+  const WwLoads = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
+    const el = L.DomUtil.create('div', 'ww-loads'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+    el.innerHTML = `<div class="wl-h"><span data-info="ww-layers">Wastewater loads</span><span class="wl-sum"></span></div>
+      <div class="wl-chips">${[['existing', 'Census'], ['built', 'Built since'], ['approved', 'Approved'], ['proposed', 'Proposed']].map(([k, t]) => `<label class="mo-chip" title="${esc({ existing: 'Census (existing) flows', built: 'Built since the census', approved: 'Site plan approved', proposed: 'Proposed (in review)' }[k])}"><input type="checkbox" data-wwlay="${k}"${wwLay[k] !== false ? ' checked' : ''}><span><span class="lg-sw" data-wwsw="${k}" style="--mk:${layerColors()[k]}"></span>${t}</span></label>`).join('')}</div>`;
+    el.querySelectorAll('[data-wwlay]').forEach(c => { c.onchange = () => setWwLay(c.dataset.wwlay, c.checked); });
+    el.hidden = !isWW();
+    return el;
+  } });
+  const wwLoads = new WwLoads().addTo(map);
+  // Boxes along the map's bottom edge: the legend bottom left, the timeline to its right (above it
+  // when there's no room beside it), the wastewater loads box bottom right (raised over the
+  // timeline when they would meet). The legend and the Layers panel take the height left free.
+  const timebarEl = document.getElementById('timebar');
+  function layoutMapBoxes() {
+    const lg = legend.getContainer(), op = document.querySelector('.map-opts'), wl = wwLoads.getContainer(), tb = timebarEl; if (!lg || !op || !tb) return;
+    const mr = map.getContainer().getBoundingClientRect(); if (!mr.width) return;
+    const gap = 8, edge = phoneMap ? 8 : 12, base = phoneMap ? 16 : 12;
+    // The development panel (right side, over the map on wide screens): lay out in the part left visible.
+    const dt = $('#detail'), dr = dt && !dt.hidden ? dt.getBoundingClientRect() : null;
+    const cover = dr && dr.left > mr.left + 300 && dr.left < mr.right ? mr.right - dr.left : 0;
+    const m = { left: mr.left, top: mr.top, bottom: mr.bottom, right: mr.right - cover, width: mr.width - cover, height: mr.height };
+    wl.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
+    // Legend height: from the bottom edge up to the controls at the top left.
+    const tl = [...map.getContainer().querySelectorAll('.leaflet-top.leaflet-left .leaflet-control')].reduce((b, c) => Math.max(b, c.getBoundingClientRect().bottom), m.top);
+    lg.style.maxHeight = `${Math.max(64, Math.round(m.bottom - tl - base - 16))}px`;
+    lg.classList.toggle('lg-squeezed', m.bottom - tl - base - 16 < 90);
+    // Timeline beside the legend, or above it when the space beside is too narrow.
+    const lr = lg.hidden ? null : lg.getBoundingClientRect();
+    const left = lr && lr.width ? lr.right - m.left + gap : edge;
+    const need = tb.classList.contains('folded') ? tb.scrollWidth : Math.min(460, phoneMap ? 300 : 340);
+    const beside = m.width - left - edge >= need;
+    tb.style.left = `${beside ? left : edge}px`;
+    tb.style.bottom = `${beside || !lr ? base : Math.round(m.bottom - lr.top + gap)}px`;
+    tb.style.width = beside && !tb.classList.contains('folded') ? `${Math.min(460, Math.round(m.width - left - edge))}px` : '';
+    // Wastewater loads: bottom right; lifted above the timeline / legend when it would overlap them.
+    wl.style.marginBottom = '';
+    if (!wl.hidden) {
+      const w = wl.getBoundingClientRect(), t = tb.getBoundingClientRect();
+      const lower = [t, lr].filter(r => r && r.width && r.right + gap > w.left);
+      if (lower.length) wl.style.marginBottom = `${Math.round(parseFloat(getComputedStyle(wl).marginBottom) + w.bottom - Math.min(...lower.map(r => r.top)) + gap)}px`;
+    }
+    // Layers panel (top right) stops above the wastewater loads box.
+    const wr = wl.hidden ? null : (r => r.left < op.getBoundingClientRect().right && r.right > op.getBoundingClientRect().left ? r : null)(wl.getBoundingClientRect());
+    op.style.maxHeight = wr ? `${Math.max(120, Math.round(wr.top - op.getBoundingClientRect().top - gap))}px` : ''; op.classList.toggle('mo-capped', !!wr);
+    // Selection / mode buttons (bottom centre): above the boxes they would sit on.
+    const mb = document.querySelector('.map-bottom');
+    if (mb) {
+      mb.style.bottom = '';
+      const b = mb.getBoundingClientRect();
+      const under = b.height ? [tb.getBoundingClientRect(), lr, wl.hidden ? null : wl.getBoundingClientRect()].filter(r => r && r.width && r.left < b.right && r.right > b.left && r.top < b.bottom) : [];
+      if (under.length) mb.style.bottom = `${Math.round(mr.bottom - Math.min(...under.map(r => r.top)) + gap)}px`;
+    }
+    // Attribution: one line to the right of the bottom-left boxes.
+    const at = map.getContainer().querySelector('.leaflet-control-attribution'), tr = tb.getBoundingClientRect();
+    if (at && !phoneMap) at.style.maxWidth = `${Math.max(120, Math.round(m.right - Math.max(tr.right, lr ? lr.right : 0) - 24))}px`;
   }
-  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); const op = document.querySelector('.map-opts'); if (op) ro.observe(op); }
+  const fitLegend = () => requestAnimationFrame(layoutMapBoxes);
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), legend.getContainer(), wwLoads.getContainer(), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
   // Demand year: the top of the legend box, shown whenever a capacity layer is on.
   const yearCtl = { getContainer: () => legend.getContainer().querySelector('.map-year') };
@@ -5036,6 +5092,7 @@
   let whatIfs = (store.get('whatifs', []) || []).filter(w => w && w.lat != null);
   // Bottom-of-map bar: Clear selection, and the test sites with Remove all (and Undo after).
   const mapBottom = L.DomUtil.create('div', 'map-bottom', map.getContainer());
+  if (window.ResizeObserver) new ResizeObserver(() => fitLegend()).observe(mapBottom);
   const wfBar = L.DomUtil.create('div', 'wf-bar', mapBottom);
   L.DomEvent.disableClickPropagation(wfBar);
   let wfUndo = null, wfUndoT = 0;
@@ -5839,7 +5896,7 @@
   // selection, the address pin and highlighted mains. Filters stay as they are.
   let panelAt = 0;
   new MutationObserver(() => { panelAt = Date.now(); syncClearBtn(); }).observe($('#detail-body'), { childList: true });
-  new MutationObserver(() => syncClearBtn()).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
+  new MutationObserver(() => { syncClearBtn(); fitLegend(); }).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
