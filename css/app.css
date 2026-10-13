@@ -1237,8 +1237,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .chip-btn { cursor: pointer; font: inherit; font-size: 11.5px; color: var(--accent); border-color: currentColor; }
 .chip-btn:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); }
 /* Where & areas (map panel): municipality, planning area and service area filters and outlines. */
-.map-opts .mo-areas > summary .mo-sum { color: var(--text-muted); font-weight: 400; margin-left: 4px; }
-.map-opts .mo-areas > summary .mo-sum.on { color: var(--accent); font-weight: 600; }
 .map-opts .mo-field { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: 6px; color: var(--text-secondary); }
 .map-opts .multi > summary { padding: 3px 24px 3px 6px; border-radius: 6px; font-size: 12px; }
 .map-opts .multi > summary::after { right: 7px; }
@@ -1247,7 +1245,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .map-opts .mo-tip { font-size: 11px; }
 .map-opts { max-width: 272px; }
 .map-opts .mo-where { padding-top: 2px; }
-.map-opts .mo-areas > summary .mo-sum { display: inline-block; max-width: 170px; vertical-align: bottom; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 700px) { .map-opts { max-width: 236px; } }
 /* Map layout: one Map options fold (top right), one legend box with the Demand year (bottom right). */
 .map-opts details.mo-panel > summary.mo-panel-h { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 6px; font-weight: 600; font-size: 12px; padding: 4px 2px 2px; color: var(--text-primary); }
@@ -1346,8 +1343,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .map-opts label.mo-sw input:checked + .mo-sw-t { background: var(--accent); }
 .map-opts label.mo-sw input:checked + .mo-sw-t::after { transform: translateX(13px); }
 .map-opts label.mo-sw input:focus-visible + .mo-sw-t { outline: 2px solid var(--accent); outline-offset: 2px; }
-.map-opts .mo-svc-f { display: grid; gap: 4px; }
-.map-opts details.mo-areas[open] { display: grid; gap: 5px; }
 @media (max-width: 700px) { .map-opts label.mo-sw { padding: 6px 2px; font-size: 13px; } }
 /* Concise tables: detail columns only in the Engineering view. */
 #footer:not(.show-tech) .svc-table .xc { display: none; }
@@ -1535,3 +1530,28 @@ details.stamp { display: block; }
 .ww-loads .mo-chip > span { width: 100%; }
 @media (max-width: 700px) { .leaflet-bottom.leaflet-left .map-legend { margin: 0 0 16px 8px; } .ww-loads { width: 200px; font-size: 11px; } .leaflet-bottom.leaflet-right .ww-loads { margin: 0 8px 6px 0; } .ww-loads .mo-chip > span { padding: 3px 6px; font-size: 11px; } }
 body.print-map .ww-loads { background: #fff; color: #111; }
+
+/* Filter by area (bottom right, above the attribution; the wastewater loads box sits above it). */
+.area-box { background: color-mix(in srgb, var(--surface-1) 96%, transparent); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); color: var(--text-primary); font-size: 12px; width: 236px; overflow-y: auto; overscroll-behavior: contain; }
+.leaflet-bottom.leaflet-right .area-box { margin: 0 12px 6px 0; }
+.area-box > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: 8px; padding: 6px 26px 6px 8px; font-weight: 600; white-space: nowrap; position: relative; }
+.area-box > summary::-webkit-details-marker { display: none; }
+.area-box > summary::after { content: '▴'; position: absolute; right: 9px; top: 6px; color: var(--text-muted); font-weight: 400; }
+.area-box[open] > summary::after { content: '▾'; }
+.area-box .mo-sum { font-weight: 400; font-size: 11px; color: var(--text-muted); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.area-box .mo-sum.on { color: var(--accent); font-weight: 600; }
+.area-box .ab-body { display: grid; gap: 6px; padding: 0 8px 8px; }
+.area-box .mo-field { display: grid; grid-template-columns: 82px minmax(0, 1fr); align-items: center; gap: 6px; color: var(--text-secondary); }
+.area-box .mo-field[hidden] { display: none; }
+.area-box .multi > summary { padding: 3px 22px 3px 6px; border-radius: 6px; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.area-box .multi > summary::after { right: 7px; }
+.area-box .multi-panel { position: static; width: auto; max-width: none; margin-top: 4px; box-shadow: none; }
+.area-box .multi[open] { grid-column: 1 / -1; }
+.area-box .multi-list { max-height: 170px; }
+.area-box .multi-tools input { font-size: 12px; padding: 4px 6px; }
+.area-box label.multi-item { padding: 3px 4px; font-size: 12px; color: var(--text-primary); }
+.area-box label.multi-item input { width: 15px; height: 15px; }
+.area-box .multi-group { font-size: 10.5px; }
+.area-box small { color: var(--text-muted); font-size: 11px; }
+@media (max-width: 700px) { .area-box { width: 200px; font-size: 11px; } .leaflet-bottom.leaflet-right .area-box { margin: 0 8px 6px 0; } .area-box[open] { width: min(300px, calc(100vw - 16px)); } }
+body.print-map .area-box { display: none; }
