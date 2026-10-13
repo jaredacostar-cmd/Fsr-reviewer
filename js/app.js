@@ -1496,7 +1496,7 @@
     const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units.${tight ? ` <strong>${esc(PLANT_SHORT[tight.pl])}</strong> ${trigText(tight)} (${pctRated(tight, 'com')}% of rated capacity committed → ${pctRated(tight, 'bo')}% at build-out).` : ''}${nAdv ? ` <strong>${nAdv} DC project${nAdv === 1 ? '' : 's'}</strong> come online after the capacity ${nAdv === 1 ? 'it relieves' : 'they relieve'} runs out.` : ''}` : 'No developments match the current filters.';
     el.innerHTML = `<div class="ov-top">${hlP(hl)}<button type="button" class="btn ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
-        <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Demand')}</div>
+        <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('census', 'Growth')}</div>
           <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>
           <div class="ov-tiles ov-flow">${tile(fmt1(cb.water.maxDay), 'L/s', 'water max day', `${fmt1(D.toMLd(cb.water.avg))} ML/d average`)}${tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet', `${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average`)}</div></section>
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
@@ -3708,7 +3708,7 @@
       ${waterCapHTML()}
       ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
       ${hydroBoxHTML()}`;
-    $('#wfac-body').innerHTML = `${exportBar('wfac')}${waterFacilitiesHTML()}`;
+    $('#wfac-body').innerHTML = `${exportBar('wfac')}<div id="mp-w"></div>${waterFacilitiesHTML()}`;
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -3819,7 +3819,7 @@
     };
     for (const d of state.servicing.drainage) cumOf(d);
     state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg, calib, inflowsTo, zsum, secs, raw };
-    renderHeadlines();
+    renderHeadlines(); renderMpCompare();
     renderScenario(); renderCapLayer(); renderLegend(); filterInView();
     if (footTab === 'dca' && !$('#footer').classList.contains('collapsed')) renderDca();
     if (footTab === 'overview') renderOverview();
@@ -4085,7 +4085,7 @@
       <tbody>${secs.map(x => block(esc(plantLabel(x.pl)), x.sum, x.f, [...peelExt.filter(e => e.plant === x.pl), ...divTo(x.pl)], ratedOf(x.pl), x.f !== 1 ? `calibrated ×${x.f.toFixed(2)}` : '')).join('')}
         ${block(`Peel total (${secs.map(x => PLANT_SHORT[x.pl]).join(' + ')})`, peel, peelF, peelExt, secs.reduce((t, x) => t + ratedOf(x.pl), 0))}
         ${tor.rows.length ? block(esc(plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details><div id="mp-ww"></div>`;
     $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant, compared with the 2025 annual reports`;
   }
   // Effluent compliance (data/compliance.json): exceedances of the plants' ECA limits reported to
@@ -4123,7 +4123,8 @@
     wfac: { title: 'Existing water facilities', els: () => [$('#wfac-body')] },
     plants: { title: 'Wastewater treatment plants and capacity', els: () => [$('#plants-body')] },
     catchments: { title: 'Wastewater by sanitary catchment', els: () => [$('#ww-body')] },
-    growth: { title: 'Growth and demand', els: () => [$('#pane-demand'), $('#census')].filter(e => e && !e.hidden) },
+    growth: { title: 'Demand', els: () => [$('#pane-demand')].filter(e => e && !e.hidden) },
+    census: { title: 'Growth', els: () => [$('#census')].filter(e => e && !e.hidden) },
     dev: { title: 'Development servicing summary', els: () => [$('#detail-body')] },
     loads: { title: 'What loads it', els: () => [$('#detail-body')] },
     whatif: { title: 'Test site servicing check', els: () => [$('#detail-body')] },
@@ -6381,9 +6382,9 @@
     return `<p class="small est-line">Outside the mapped pressure zones: ${g} → <strong>${zn}</strong>${r && e.how !== 'above' ? ` (serves ${r[1]}–${r[2]} m, grade line ${r[0]} m; 2020 Master Plan, Vol. 3, Table 3)` : ''}${e.cand.length > 1 ? `; the ground is also in Zone ${e.cand.filter(n => n !== e.level).join(' / ')}'s range, ${why}` : why ? `; ${why}` : ''}${e.via ? ` (${esc(dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
   }
   const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };
-  function waterTrace(p) {
+  function waterTrace(p, zidIn) {
     if (!WF.data || p.lat == null || !state.servicing) return null;
-    const pt = [p.lng, p.lat], zid = (p.pz && p.pz[0]) || PeelAreas.locate(state.servicing.zones, p.lng, p.lat)[0], est = !zid && zoneEst.get(p), z = zid ? svcById.get(zid) : est && est.z;
+    const pt = [p.lng, p.lat], zid = zidIn || (p.pz && p.pz[0]) || PeelAreas.locate(state.servicing.zones, p.lng, p.lat)[0], est = !zid && zoneEst.get(p), z = zid ? svcById.get(zid) : est && est.z;
     if (!z) return null;
     const lvl = zLevel(z.zone);
     if (wellSystem[z.zone] || lvl == null || lvl > 7) {
@@ -6620,6 +6621,98 @@
       <p class="small muted">Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region), split between the ${Y} Census and growth built since as the model does; approved and proposed added at Peel's design maximum day (${state.criteria.water.avg} L/cap/d × ${state.criteria.water.maxDay}, employment ${state.criteria.employment.water} L/emp/d). Pumping: for each zone n, the firm capacity (largest pump out of service; the Region's modelled actual firm where the 2020 Master Plan gives it) of every pump group lifting water from a lower zone into zone n or above, against the design maximum day of zone n and all zones above it (the York Region supply, the transfer to the east system and the sub-zone boosters left out). Storage is shown facility by facility (its zones served aren't published).</p></section>`;
   }
   // Water tab: the facilities by system, with capacity.
+  // ---- 2020 Master Plan assessment vs this tracker (Water → Facilities, Wastewater → Plants) ----
+  // The Master Plan's forecasts for the facilities it assessed, next to the tracker's numbers: today
+  // (2025 measured flows for the plants; the Master Plan's 2021 figure + growth built since the
+  // census for the pumping stations), + approved, + proposed (build-out). A development counts at
+  // a water facility when its supply route passes it (the station chain of the water trace).
+  const MP2020 = {
+    years: [2021, 2026, 2031, 2036, 2041],
+    water: [
+      { key: 'sp', name: 'South Peel system, both plants (incl. York supply)', cap: 1530, capNote: '90% of installed', mp: [1042, 1159, 1285, 1350, 1415], ref: 'Vol. 3, Tables 8–9', test: t => !t.gw, today: R => R.water.southPeel.maxDayMLd, todayNote: '2025 measured (upper bound)' },
+      { key: 'apk', name: 'A.P. Kennedy WTP (Central, East, Bolton, York)', cap: 1080, capNote: '90% of installed', mp: [734, 822, 918, 960, 1003], ref: 'Vol. 3, Table 9', test: t => !t.gw && t.plant === 'A.P. Kennedy', today: R => (R.water.southPeel.plants.find(x => /Kennedy/.test(x.name)) || {}).maxDayMLd, todayNote: '2025 measured' },
+      { key: 'lp', name: 'Lorne Park WTP (West)', cap: 450, capNote: '90% of installed', mp: [308, 337, 367, 390, 412], ref: 'Vol. 3, Table 9', test: t => !t.gw && t.plant === 'Lorne Park', today: R => (R.water.southPeel.plants.find(x => /Lorne/.test(x.name)) || {}).maxDayMLd, todayNote: '2025 measured' },
+      { key: 'lpz2', name: 'Lorne Park Zone 2 high lift', cap: 152, capNote: 'actual firm', mp: [180, 210, 227, 250, 274], ref: 'Vol. 3, Table 11', test: t => t.plant === 'Lorne Park' && t.level >= 2 },
+      { key: 'bs', name: 'Beckett Sproule transfer (to the East system)', cap: 275, capNote: 'actual firm', mp: [325, 387, 457, 469, 484], ref: 'Vol. 3, Table 11', test: t => t.sys.has('E') },
+      { key: 'wb5', name: 'West Brampton Zone 5 low lift', cap: 74, capNote: 'actual firm', mp: [62, 67, 99, 108, 116], ref: 'Vol. 3, Table 11', test: t => t.plant === 'Lorne Park' && t.level >= 5 },
+      { key: 'wb6', name: 'West Brampton Zone 6 high lift', cap: 87, capNote: 'actual firm', mp: [57, 77, 88, 99, 110], ref: 'Vol. 3, Table 11', test: t => t.plant === 'Lorne Park' && t.level >= 6 },
+    ],
+    storage: [
+      { name: 'Silverthorn Reservoir', avail: 46, req: [31, 43, 44, 46, 49] },
+      { name: 'West Brampton Reservoir', avail: 40, req: [32, 34, 44, 46, 49] },
+    ],
+    ww: [
+      { pl: 'Lakeview', name: 'G.E. Booth (Lakeview), incl. York and Toronto flows', cap: 518, mp: [481, 514, 545, 581, 608], ref: 'Vol. 4, Tables 7–8' },
+      { pl: 'Clarkson', name: 'Clarkson', cap: 350, mp: [216, 236, 257, 273, 290], ref: 'Vol. 4, Tables 7–8' },
+    ],
+  };
+  // Growth (ML/d, maximum day) through each Master Plan water facility, by layer, from the
+  // developments' supply routes. Cached per scenario.
+  function mpWaterGrowth() {
+    const M = state.svcModel, bc = baselineCensus(); if (!M || !bc || !WF.data || !state.servicing) return null;
+    if (mpWaterGrowth.key === scenarioKey() + state.projects.length) return mpWaterGrowth.v;
+    const groups = Object.fromEntries(MP2020.water.map(r => [r.key, []]));
+    for (const p of state.projects.concat(state.whatifs || [])) {
+      if (p.phase === 'cancelled' || p.lat == null || svcLayerOf(p) === 'existing') continue;
+      const zid = svcIds(p, 'pz')[0]; if (!zid) continue;
+      const t = waterTrace(p, zid); if (!t || !t.steps.length) continue;
+      const last = t.steps[t.steps.length - 1].f, info = { gw: t.gw, plant: last.kind === 'plant' ? last.name : '', level: zLevel(t.z.zone) || 0, sys: new Set(t.steps.map(s => s.pump && s.pump.sys).filter(Boolean)) };
+      for (const r of MP2020.water) if (r.test(info)) groups[r.key].push(p);
+    }
+    const v = {};
+    for (const r of MP2020.water) {
+      const devs = groups[r.key], gr = PeelAreas.growthSince(devs, {}, bc.date, state.criteria), j = svcJobs(devs, bc.date);
+      v[r.key] = { n: devs.filter(p => p.kinds.includes('application')).length, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0) };
+    }
+    mpWaterGrowth.key = scenarioKey() + state.projects.length; mpWaterGrowth.v = v;
+    return v;
+  }
+  // The Master Plan year whose forecast equals a value (linear between its forecast years).
+  function mpYearOf(mp, val) {
+    const Y = MP2020.years;
+    if (val < mp[0]) return { below: true };
+    for (let i = 1; i < Y.length; i++) if (val <= mp[i]) return { year: Math.round(Y[i - 1] + (val - mp[i - 1]) / ((mp[i] - mp[i - 1]) || 1) * (Y[i] - Y[i - 1])) };
+    return { above: Math.round((val / mp[mp.length - 1] - 1) * 100) };
+  }
+  function mpRowHTML(name, sub, cap, capNote, mp, ref, today, approved, proposed, todayNote) {
+    const com = today + approved, bo = com + proposed, at = mpYearOf(mp, bo);
+    const hi = Math.max(cap, mp[mp.length - 1], bo) * 1.05, X = v => `${(v / hi * 100).toFixed(1)}%`;
+    const bar = `<div class="mpc-bar" role="img" aria-label="Today ${Math.round(today)}, committed ${Math.round(com)}, build-out ${Math.round(bo)}; Master Plan ${MP2020.years.slice(1).map((y, i) => `${y} ${mp[i + 1]}`).join(', ')}; capacity ${cap}">
+      <i class="mpc-t" style="width:${X(today)}"></i><i class="mpc-a" style="left:${X(today)};width:${X(approved)}"></i><i class="mpc-p" style="left:${X(com)};width:${X(proposed)}"></i>
+      ${[1, 2, 4].map(i => `<b class="mpc-mp" style="left:${X(mp[i])}" title="Master Plan ${MP2020.years[i]}: ${fmtNum(mp[i])} ML/d"><span>${String(MP2020.years[i]).slice(2)}</span></b>`).join('')}<b class="mpc-cap" style="left:${X(cap)}" title="Capacity ${fmtNum(cap)} ML/d (${esc(capNote)})"></b></div>`;
+    const verdict = at.below ? `below the MP's 2021 forecast` : at.above != null ? `<strong class="mpc-hi">${at.above}% above</strong> the MP's 2041 forecast` : `≈ the MP's <strong>${at.year}</strong> forecast`;
+    return `<tr><td>${esc(name)}${sub ? `<small>${sub}</small>` : ''}<small class="muted">${esc(ref)}</small></td>
+      <td class="n" title="${esc(capNote)}">${fmtNum(cap)}<small>${esc(capNote)}</small></td>
+      <td class="n">${mp.slice(1).filter((_, i) => i !== 2).map(fmtNum).join(' · ')}</td>
+      <td class="n mpc-x">${fmtNum(Math.round(today))}${todayNote ? `<small>${esc(todayNote)}</small>` : ''}</td><td class="n mpc-x">+${fmtNum(Math.round(approved))}</td><td class="n mpc-x">+${fmtNum(Math.round(proposed))}</td>
+      <td class="n"><strong${bo > cap ? ' class="mpc-hi"' : ''}>${fmtNum(Math.round(bo))}</strong><small>${verdict}${bo > cap ? ' · over capacity' : ''}</small></td><td class="mpc-cell">${bar}</td></tr>`;
+  }
+  const mpHead = unitT => `<tr><th>Facility</th><th class="n">Capacity</th><th class="n">Master Plan<br>2026 · 2031 · 2041</th><th class="n mpc-x">Today</th><th class="n mpc-x">+ Approved</th><th class="n mpc-x">+ Proposed</th><th class="n">Build-out</th><th>${unitT}</th></tr>`;
+  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Approved</li><li><span class="gsw mpc-p"></span>+ Proposed (in review)</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
+  function renderMpCompare() {
+    const M = state.svcModel, R = state.reports;
+    const ww = $('#mp-ww');
+    if (ww && M && R) {
+      const rows = MP2020.ww.map(r => { const c = M.plantCap(r.pl); return c ? mpRowHTML(r.name, '', r.cap, 'rated (MP: 90%)', r.mp, r.ref, c.existing, c.committed - c.existing, c.buildout - c.committed, `${M.mode === 'calibrated' ? '2025 flows' : 'design'} + built`) : ''; }).join('');
+      ww.innerHTML = `<section class="mpc" data-info="mp-compare"><h3 class="svc-sub">2020 Master Plan vs this tracker <span class="muted small">average day flow, ML/d</span></h3>${mpLegend}
+        <div class="table-wrap"><table class="dt mpc-table"><thead>${mpHead('Build-out against the Master Plan')}</thead><tbody>${rows}</tbody></table></div>
+        <p class="small muted">Master Plan: forecast average daily flow by plant without east–west transfers (Vol. 4, Tables 7–8; G.E. Booth includes York and Toronto agreement flows). Tracker: the plant's sewershed today (${M.mode === 'calibrated' ? 'calibrated to 2025 flows' : 'design flows'}, with external inflows) + approved + proposed developments, as in the chart above. “≈ the MP's year” reads off when the Master Plan expected that flow.</p></section>`;
+    }
+    const w = $('#mp-w');
+    if (w && M && R) {
+      if (!WF.data) { loadWaterFacilities().then(d => { if (d) renderMpCompare(); }); w.innerHTML = '<p class="small muted">Loading the water facilities…</p>'; return; }
+      const g = mpWaterGrowth(); if (!g) return;
+      const rows = MP2020.water.map(r => {
+        const x = g[r.key], measured = r.today && r.today(R);
+        const today = measured != null ? measured : r.mp[0] + x.built;
+        return mpRowHTML(r.name, `${fmtNum(x.n)} developments`, r.cap, r.capNote, r.mp, r.ref, today, x.approved, x.proposed, measured != null ? r.todayNote : 'MP 2021 + built');
+      }).join('');
+      const st = MP2020.storage.map(s => `<tr><td>${esc(s.name)}<small class="muted">Vol. 3, Table 12</small></td><td class="n">${s.avail} ML</td><td class="n">${[s.req[1], s.req[2], s.req[4]].join(' · ')} ML required</td><td colspan="5" class="muted small mpc-st">${s.req[4] > s.avail ? `Short by ${s.req[4] - s.avail} ML by 2041 in the Master Plan (new cell planned). ` : ''}Not computed by the tracker: storage includes fire and emergency volumes it doesn't model.</td></tr>`).join('');
+      w.innerHTML = `<section class="mpc" data-info="mp-compare"><h3 class="svc-sub">2020 Master Plan vs this tracker <span class="muted small">maximum day, ML/d</span></h3>${mpLegend}
+        <div class="table-wrap"><table class="dt mpc-table"><thead>${mpHead('Build-out against the Master Plan')}</thead><tbody>${rows}${st}</tbody></table></div>
+        <p class="small muted">Master Plan: forecast maximum day demand for the facilities it assessed (Vol. 3, Tables 8, 9, 11, 12). Tracker: today is the 2025 measured maximum day for the plants, and the Master Plan's 2021 figure + growth built since the census for the pumping stations; then + approved and + proposed developments whose supply route (the water trace's station chain) passes the facility, at ${svcOpt.md === 'observed' ? 'the observed 2025 maximum day factor' : 'Peel design maximum day'}. York Region's agreement supply is in the Master Plan figures and the measured plant flows, not in the growth.</p></section>`;
+    }
+  }
   function waterFacilitiesHTML() {
     const D = WF.data; if (!D) { loadWaterFacilities().then(d => { if (d) { const b = $('#wf-box'); if (b) b.outerHTML = waterFacilitiesHTML(); } }); return '<div id="wf-box"></div>'; }
     const SYS = ['West', 'Central', 'East', 'Lake-based', 'Caledon groundwater'], fs = D.facilities;
@@ -7632,7 +7725,7 @@
     renderSvcTab();
     const bc = baselineCensus();
     const has = !!(bc && bc.das.length && state.projects.length);
-    $('#census').dataset.off = has ? '' : '1';
+    $('#census').dataset.off = has ? '' : '1'; $('#ftab-census').hidden = !has;
     if (bc) $('#c-head').textContent = `Growth since the ${bc.year} Census`;
     showFootTab(footPref);
     syncDaYear();
