@@ -551,7 +551,7 @@
       el.querySelectorAll('[data-exist]').forEach(c => { c.onchange = e => setExistOn({ [e.target.dataset.exist]: e.target.checked }); });
       el.querySelector('#opt-dctiming').onclick = () => { if (typeof showDcTiming === 'function') { loadSewers(); showDcTiming(); } };
       el.querySelectorAll('[data-dcsys]').forEach(c => { c.onchange = () => {
-        const on = k => el.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
+        const on = k => document.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
         setDcOn({ on: w || ww, sys: w && ww ? 'both' : w ? 'water' : ww ? 'wastewater' : dcOn.sys });
       }; });
       el.querySelector('#opt-mcolor').onchange = e => setMapStyle({ color: e.target.value });
@@ -569,6 +569,14 @@
     },
   });
   new MapOptions().addTo(map);
+  // More settings: its own box under Layers (the controls keep their handlers when moved).
+  const MoreBox = L.Control.extend({ options: { position: 'topright' }, onAdd() {
+    const el = L.DomUtil.create('div', 'more-box'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+    const adv = document.querySelector('.map-opts .mo-adv'); if (adv) el.appendChild(adv);
+    el.addEventListener('toggle', () => { if (typeof fitLegend === 'function') fitLegend(); }, true);
+    return el;
+  } });
+  new MoreBox().addTo(map);
   // Filter by area (bottom right, its own box): secondary plans / character areas, MTSAs, pressure
   // zones and drainage areas (or wastewater blocks). Each is a dropdown of checkboxes, so several
   // can be picked; within a list any match counts, across lists all must match.
@@ -4708,8 +4716,23 @@
   // Horizon years (approved over aYears from aStart, proposed over pYears from pStart).
   // Year the map's results are worked out for (map control); opens on this year.
   let capYear = THIS_YEAR;
-  const hzFrac = y => { const f = (start, n) => Math.min(1, Math.max(0, (y - start + 1) / Math.max(1, n))); return { fa: f(hz.aStart, hz.aYears), fp: f(hz.pStart, hz.pYears) }; };
-  const atYear = (l, y) => { if (y == null || !l) return l; const { fa, fp } = hzFrac(y); return { ...l, approved: l.approved * fa, proposed: l.proposed * fp, japproved: (l.japproved || 0) * fa, jproposed: (l.jproposed || 0) * fp }; };
+  // Before today (back to the census year): growth built since the census counts in the share of it
+  // completed by the end of that year (Peel-wide, by units and completion date).
+  function builtShare(y) {
+    if (y == null || y >= THIS_YEAR) return 1;
+    const bc = baselineCensus(); if (!bc) return 1;
+    const k = `${bc.date}|${state.projects.length}`;
+    if (builtShare.k !== k) {
+      const by = new Map(); let tot = 0;
+      for (const p of state.projects) if (svcLayerOf(p) === 'built') { const u = p.units || 1, yr = new Date(+p.milestones.completed).getUTCFullYear(); by.set(yr, (by.get(yr) || 0) + u); tot += u; }
+      builtShare.k = k; builtShare.by = by; builtShare.tot = tot;
+    }
+    if (!builtShare.tot) return 1;
+    let n = 0; for (const [yr, u] of builtShare.by) if (yr <= y) n += u;
+    return n / builtShare.tot;
+  }
+  const hzFrac = y => { const f = (start, n) => Math.min(1, Math.max(0, (y - start + 1) / Math.max(1, n))); return { fa: f(hz.aStart, hz.aYears), fp: f(hz.pStart, hz.pYears), fb: builtShare(y) }; };
+  const atYear = (l, y) => { if (y == null || !l) return l; const { fa, fp, fb } = hzFrac(y); return { ...l, built: l.built * fb, jbuilt: (l.jbuilt || 0) * fb, approved: l.approved * fa, proposed: l.proposed * fp, japproved: (l.japproved || 0) * fa, jproposed: (l.jproposed || 0) * fp }; };
   const censusOnly = l => ({ census: l.census, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, ha: l.ha });
   // Build-out flows of a drainage area (design flows, as for pumping station firm capacity).
   // A pumping station's load when its sewershed isn't one of the catchments (blocks): what the
@@ -4803,21 +4826,23 @@
   const phoneMap = matchMedia('(max-width: 700px)').matches;
   const Legend = L.Control.extend({ options: { position: 'bottomleft' }, onAdd() {
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    el.innerHTML = '<div class="map-year" data-info="map-year" hidden></div><div class="lg-body"></div>';
+    el.innerHTML = '<div class="lg-body"></div>';
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
-    const yr = el.querySelector('.map-year');
+    // Demand year: on top of the timeline box.
+    const yr = document.createElement('div'); yr.className = 'map-year'; yr.dataset.info = 'map-year'; yr.hidden = true;
+    document.getElementById('timebar').prepend(yr);
     yr.addEventListener('input', e => {
       const v = +e.target.value; capYear = v > hz.end ? null : v;
       yr.querySelector('.my-v').textContent = yearText();
       clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); }, 120);
     });
-    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); });
+    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : b.dataset.yr === 'census' ? censusYr() : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); if (footTab === 'dca') renderDca(); });
     return el;
   } });
   const legend = new Legend().addTo(map);
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
-  const yearText = () => capYear == null ? 'Build-out' : String(capYear);
+  const yearText = () => capYear == null ? 'Build-out' : capYear <= censusYr() ? `${capYear} (census)` : String(capYear);
   // Wastewater loads (bottom right, Wastewater view): which growth layers load the map and the sewers.
   // Its own box so it stays in sight whatever the Layers panel shows.
   const WwLoads = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
@@ -4840,8 +4865,15 @@
     // The development panel (right side, over the map on wide screens): lay out in the part left visible.
     const dt = $('#detail'), dr = dt && !dt.hidden ? dt.getBoundingClientRect() : null;
     const cover = dr && dr.left > mr.left + 300 && dr.left < mr.right ? mr.right - dr.left : 0;
-    const m = { left: mr.left, top: mr.top, bottom: mr.bottom, right: mr.right - cover, width: mr.width - cover, height: mr.height };
-    for (const b of [wl, ab]) b.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
+    // On a phone the panel is a bottom sheet: the bottom boxes sit above it.
+    const coverB = dr && !cover && dr.width >= mr.width * 0.9 && dr.top > mr.top + mr.height * 0.2 && dr.top < mr.bottom ? Math.round(mr.bottom - dr.top) : 0;
+    const m = { left: mr.left, top: mr.top, bottom: mr.bottom - coverB, right: mr.right - cover, width: mr.width - cover, height: mr.height - coverB };
+    const more = document.querySelector('.more-box');
+    for (const b of [wl, ab, op, more]) if (b) b.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
+    lg.style.marginBottom = coverB ? `${coverB + base}px` : '';
+    // Phone with the panel open: little map is left, so only Layers and Filter by area stay (the
+    // timeline, legend and wastewater loads come back when the panel closes).
+    for (const b of [lg, tb, wl]) b.classList.toggle('sheet-hide', !!coverB);
     // Legend height: from the bottom edge up to the controls at the top left.
     const tl = [...map.getContainer().querySelectorAll('.leaflet-top.leaflet-left .leaflet-control')].reduce((b, c) => Math.max(b, c.getBoundingClientRect().bottom), m.top);
     lg.style.maxHeight = `${Math.max(64, Math.round(m.bottom - tl - base - 16))}px`;
@@ -4852,11 +4884,11 @@
     const need = tb.classList.contains('folded') ? tb.scrollWidth : Math.min(460, phoneMap ? 300 : 340);
     const beside = m.width - left - edge >= need;
     tb.style.left = `${beside ? left : edge}px`;
-    tb.style.bottom = `${beside || !lr ? base : Math.round(m.bottom - lr.top + gap)}px`;
+    tb.style.bottom = `${beside || !lr ? base + coverB : Math.round(mr.bottom - lr.top + gap)}px`;
     tb.style.width = beside && !tb.classList.contains('folded') ? `${Math.min(460, Math.round(m.width - left - edge))}px` : '';
     // Bottom right (filter by area, wastewater loads above it): lifted above the timeline / legend
     // when they would overlap; the area box scrolls when open on a short map.
-    ab.style.marginBottom = '';
+    ab.style.marginBottom = coverB ? `${6 + coverB}px` : '';
     {
       const w = ab.getBoundingClientRect(), t = tb.getBoundingClientRect();
       const lower = [t, lr].filter(r => r && r.width && r.right + gap > w.left);
@@ -4865,38 +4897,56 @@
     // Area box height: up to the Layers panel's own header (view switch, notices, Layers line).
     {
       const o = op.getBoundingClientRect(), pn = op.querySelector('.mo-panel'), head = pn ? pn.getBoundingClientRect().top - o.top + 30 : o.height;
-      const sameCol = ab.getBoundingClientRect().left < o.right;
-      ab.style.maxHeight = `${Math.max(90, Math.round(ab.getBoundingClientRect().bottom - (sameCol ? o.top + Math.min(o.height, head) + gap : mr.top + edge)))}px`;
+      const sameCol = ab.getBoundingClientRect().left < o.right, moreH = more ? (more.querySelector('summary') || more).getBoundingClientRect().height + gap : 0;
+      ab.style.maxHeight = `${Math.max(90, Math.round(ab.getBoundingClientRect().bottom - (sameCol ? o.top + Math.min(o.height, head) + moreH + gap : mr.top + edge)))}px`;
     }
-    // Layers panel (top right) stops above the boxes at the bottom right.
+    // Layers and More settings (top right) stop above the boxes at the bottom right (or the panel's
+    // bottom sheet); with both open they share the room. Only open boxes are capped (folded, the
+    // Layers panel is short and must never clip the view switch).
+    op.style.maxHeight = ''; if (more) more.style.maxHeight = '';
     const o = op.getBoundingClientRect(), wr = [wl.hidden ? null : wl.getBoundingClientRect(), ab.getBoundingClientRect()].filter(r => r && r.width && r.left < o.right && r.right > o.left).sort((a, b) => a.top - b.top)[0] || null;
-    // Only while Layers is open (folded, the panel is short and must never clip the view switch).
-    const pnOpen = !!(op.querySelector('.mo-panel') || {}).open;
-    op.style.maxHeight = wr && pnOpen ? `${Math.max(120, Math.round(wr.top - op.getBoundingClientRect().top - gap))}px` : ''; op.classList.toggle('mo-capped', !!wr && pnOpen);
-    // Selection / mode buttons (bottom centre): above the boxes they would sit on.
+    const limit = wr ? wr.top : m.bottom - edge, avail = limit - o.top - gap;
+    const pnOpen = !!(op.querySelector('.mo-panel') || {}).open, moOpen = !!(more && (more.querySelector('details') || {}).open);
+    const moH = more ? more.getBoundingClientRect().height + gap : 0, opH = o.height + gap;
+    let opMax = null, moMax = null;
+    if (pnOpen && moOpen) { if (opH + moH > avail) { opMax = Math.max(120, avail / 2 - gap); moMax = Math.max(90, avail - Math.min(opH, opMax + gap) - gap); } }
+    else if (pnOpen) { if (opH + moH > avail) opMax = Math.max(120, avail - moH); }
+    else if (moOpen) { if (opH + moH > avail) moMax = Math.max(90, avail - opH - gap); }
+    op.style.maxHeight = opMax ? `${Math.round(opMax)}px` : ''; op.classList.toggle('mo-capped', !!opMax);
+    if (more) more.style.maxHeight = moMax ? `${Math.round(moMax)}px` : '';
+    // Selection / mode buttons: centred in the visible map, clear of the right-hand column, and
+    // above the timeline / legend when they would sit on them.
     const mb = document.querySelector('.map-bottom');
     if (mb) {
-      mb.style.bottom = '';
-      const b = mb.getBoundingClientRect();
-      const under = b.height ? [tb.getBoundingClientRect(), lr, wl.hidden ? null : wl.getBoundingClientRect(), ab.getBoundingClientRect()].filter(r => r && r.width && r.left < b.right && r.right > b.left && r.top < b.bottom) : [];
-      if (under.length) mb.style.bottom = `${Math.round(mr.bottom - Math.min(...under.map(r => r.top)) + gap)}px`;
+      mb.style.bottom = coverB ? `${28 + coverB}px` : ''; mb.style.left = '';
+      let b = mb.getBoundingClientRect();
+      if (b.width) {
+        const col = [ab, wl.hidden || wl.classList.contains('sheet-hide') ? null : wl].filter(Boolean).map(e => e.getBoundingClientRect()).filter(r => r.width).reduce((x, r) => Math.min(x, r.left), m.right);
+        const lo = m.left + edge + b.width / 2, hi = col - gap - b.width / 2;
+        const cx = Math.max(lo, Math.min((m.left + col) / 2, hi));
+        mb.style.left = `${Math.round(cx - mr.left)}px`;
+        b = mb.getBoundingClientRect();
+        const under = [tb.getBoundingClientRect(), lr].filter(r => r && r.width && r.left < b.right && r.right > b.left && r.top < b.bottom);
+        if (under.length) mb.style.bottom = `${Math.round(mr.bottom - Math.min(...under.map(r => r.top)) + gap)}px`;
+      }
     }
     // Attribution: one line to the right of the bottom-left boxes.
     const at = map.getContainer().querySelector('.leaflet-control-attribution'), tr = tb.getBoundingClientRect();
     if (at && !phoneMap) at.style.maxWidth = `${Math.max(120, Math.round(m.right - Math.max(tr.right, lr ? lr.right : 0) - 24))}px`;
   }
   const fitLegend = () => requestAnimationFrame(layoutMapBoxes);
-  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), legend.getContainer(), wwLoads.getContainer(), document.querySelector('.area-box'), timebarEl].forEach(e => e && ro.observe(e)); }
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), document.querySelector('.more-box'), legend.getContainer(), wwLoads.getContainer(), document.querySelector('.area-box'), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
   // Demand year: the top of the legend box, shown whenever a capacity layer is on.
-  const yearCtl = { getContainer: () => legend.getContainer().querySelector('.map-year') };
+  const yearCtl = { getContainer: () => document.querySelector('#timebar .map-year') };
+  const censusYr = () => (baselineCensus() || {}).year || hz.year0;
   function syncYearCtl() {
     const el = yearCtl.getContainer();
     el.hidden = mstyle.cap === 'off';
     if (el.hidden) return;
     el.innerHTML = `<div class="my-h"><span>Demand year</span><b class="my-v">${yearText()}</b></div>
-      <input type="range" min="${hz.year0}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" aria-label="Demand year: the year the map's results are worked out for">
-      <div class="my-ends"><button type="button" class="btn small link" data-yr="now">${THIS_YEAR}</button><button type="button" class="btn small link" data-yr="bo">Build-out</button></div>`;
+      <input type="range" min="${censusYr()}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" aria-label="Demand year: the year the map's results are worked out for">
+      <div class="my-ends"><button type="button" class="btn small link" data-yr="census">${censusYr()} Census</button><button type="button" class="btn small link" data-yr="now">Today (${THIS_YEAR})</button><button type="button" class="btn small link" data-yr="bo">Build-out</button></div>`;
   }
   function renderLegend() {
     const el = legend.getContainer(), parts = [];
@@ -4919,7 +4969,7 @@
     syncYearCtl();
     if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Demand year on the map). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
     el.querySelector('.lg-body').innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
-    el.hidden = !parts.length && yearCtl.getContainer().hidden;
+    el.hidden = !parts.length;
     syncPanelSum(); fitLegend();
   }
 
@@ -5591,8 +5641,8 @@
   // existing + built + all approved.
   function pipeFlow(i, y) {
     const p = SEW.data.pipes[i], G = sewerGrowth(), c = state.criteria, E = c.employment;
-    const fb = (y === 'none' ? 0 : 1) * (wwOn('built') ? 1 : 0);
-    let { fa, fp } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    let { fa, fp, fb: fy = 1 } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    const fb = (y === 'none' ? 0 : fy) * (wwOn('built') ? 1 : 0);
     if (!wwOn('approved')) fa = 0; if (!wwOn('proposed')) fp = 0;
     const M = state.svcModel, f = M && M.fOf ? M.fOf(SEW.data.plants[p[6]]) || 1 : 1;
     const exist = wwOn('existing') ? p[4] * c.wastewater.avg / 86400 * f * D.residentialPeaking(p[4], c.wastewater) : 0;
@@ -5687,9 +5737,9 @@
   // Parts of the flow in pipe i for a year (as pipeFlow): existing and each growth component.
   function pipeParts(i, y) {
     const p = SEW.data.pipes[i], G = sewerGrowth(), c = state.criteria, W = c.wastewater, E = c.employment;
-    let { fa, fp } = y === 'today' ? { fa: 0, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
+    let { fa, fp, fb: fy = 1 } = y === 'today' ? { fa: 0, fp: 0 } : y == null ? { fa: 1, fp: 1 } : hzFrac(y);
     if (!wwOn('approved')) fa = 0; if (!wwOn('proposed')) fp = 0;
-    const fb = wwOn('built') ? 1 : 0;
+    const fb = wwOn('built') ? fy : 0;
     const M = state.svcModel, f = M && M.fOf ? M.fOf(SEW.data.plants[p[6]]) || 1 : 1;
     const P0 = p[4], avg0 = P0 * W.avg / 86400, M0 = D.residentialPeaking(P0, W), exist = wwOn('existing') ? avg0 * f * M0 : 0;
     const gp = fb * G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
@@ -8371,18 +8421,26 @@
 
   // ---- Tips: a short tour, shown once (Tools → Tips to see it again) ----------------------------
   const phoneUI = () => innerWidth <= 760;
+  // Tour: a guided walk through the app in chapters. Steps can set the app up (open a development,
+  // run a trace, open a tab) so each one shows the real thing; the tour tidies up when it ends.
+  const tourDev = () => pickDev();
+  const devTab = t => { if ($('#detail').hidden || $('#detail').dataset.view !== 'dev') { const p = tourDev(); if (!p) return; focusProject(p); } store.set('dvTab', t); showDvTab(t); };
   const TOUR = [
-    { el: () => $('#map'), t: 'Welcome', b: 'The map opens on the active development applications in Mississauga, Brampton and Caledon — from application to construction — over the map background. Tap a cluster to zoom in; tap a marker to open the development.' },
-    { el: () => phoneUI() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search anything', b: 'An address, intersection or file number — and also a secondary plan, MTSA, pressure zone, catchment, pumping station or DC project number (e.g. 25-2269). Picking a plan filters the map to it.' },
-    { el: () => phoneUI() ? $('#toggle-sidebar') : $('#phase-panel'), t: 'Phases and filters', b: 'Pick phases (in review, approved, permit issued…) and a municipality. More filters adds a focus (growth, committed capacity, stalled, employment…) and planning or servicing areas. The Showing line always says what is on the map.' },
-    { el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning (aerial, addresses), Water (pressure zones, watermains), Wastewater (catchments, sewer capacity) and DC (servicing timing against the 2026 DC program). Each view remembers your changes.' },
-    { el: () => document.querySelector('.mo-panel > summary'), t: 'Layers', b: 'One switch per layer: developments, wastewater blocks, pressure zones, capacity colours, existing pipes, planned DC works, planning areas and census areas. Below: the municipality, Filter by area, and More settings for colours, labels, base map and saved views.' },
-    { el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area to add up its demand (then Area report), measure a distance with its ground profile, or test a proposed site before an application exists.' },
-    { el: () => $('#north-btn'), t: 'Orientation', b: 'The north arrow switches the map between Peel’s road grid and north up.' },
-    { el: () => $('#footer'), t: 'Analysis', b: 'Totals for what is shown. Open it for growth & demand, water by pressure zone, wastewater by catchment and plant (with Horizon years), and the design criteria used.' },
-    { el: () => phoneUI() ? $('#toggle-sidebar') : $('#tab-btn-week'), t: 'This week', b: 'What changed in the weekly update (Mondays): new files and phase changes, with your watchlist first. ☆ Watch on a development to follow it.' },
-    { el: () => $('#map'), t: 'A development', b: 'Overview (status, latest council decision, build-out), Servicing (flows, sewer path, plant reserve, existing mains, fire flow, stormwater, ground, DC needs) and History. Memo prints a one-page servicing memo.' },
-    { el: () => document.querySelector('.tools-btn'), t: 'Unselect and get help', b: 'Tap an empty part of the map, press Esc or use Clear selection to unselect. Tools → Help & tips has step-by-step guides for common tasks; press and hold (or hover) any label for what it means.' },
+    { ch: 'Start', el: () => null, t: 'Welcome', b: 'This tracker follows every development application in Mississauga, Brampton and Caledon, and what each one needs from Peel\'s water and wastewater systems. This 2-minute tour sets the app up as it goes. Use Next / Back or the ← → keys; Esc ends it.' },
+    { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search', b: 'Type an address, file number, secondary plan, pressure zone, pumping station or DC project number, then pick a result to jump to it.' },
+    { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#phase-chips'), t: 'Phases', b: 'Tap a phase to show only it. On a computer, Ctrl-click (⌘ on a Mac) to pick several.' },
+    { ch: 'Map', el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning, Water, Wastewater and DC: each view sets the right layers, colours and background, and remembers your changes.' },
+    { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per layer: developments, blocks, pressure zones, water facilities, capacity colours, existing pipes, planned DC works, planning and census areas.' },
+    { ch: 'Map', el: () => document.querySelector('.more-box'), t: 'More settings', b: 'Saved views, how developments are coloured and sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
+    { ch: 'Map', el: () => document.querySelector('.area-box'), t: 'Filter by area', b: 'Municipality, secondary plans, MTSAs, pressure zones and wastewater blocks. Every list takes several picks; the totals follow.' },
+    { ch: 'Map', el: () => $('#timebar'), t: 'Timeline and demand year', b: 'The timeline keeps developments with activity in the chosen years. With capacity colours on, the Demand year on top sets the year the pipe loads and capacity are worked out for: 2021 Census, today or build-out.' },
+    { ch: 'Map', el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area (or hold Ctrl / ⌘ and drag a box), measure with a ground profile, or test a site before an application exists.' },
+    { ch: 'A development', do: () => { closeDetail(); devTab('overview'); }, wait: 700, el: () => $('#detail'), t: 'A development', b: 'Tap any marker. Overview: status, latest decision and build-out. ☆ Watch follows it in This week; Memo prints a one-page servicing memo.' },
+    { ch: 'A development', do: () => devTab('servicing'), wait: 500, el: () => document.querySelector('#detail-body .trace-box') || $('#detail'), t: 'Servicing', b: 'The latest Functional Servicing Report, then the traces: the sewer path to the plant and the water supply from the plant, along existing pipes and planned DC mains.' },
+    { ch: 'A development', do: () => { const b = document.querySelector('#detail-body .trace-box [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'Each pipe is coloured by how full it gets (green, orange, red) with arrows to the plant; the other developments fade. Tap a pipe for what loads it.' },
+    { ch: 'Analysis', do: () => { clearSelected(); openAnalysis('overview'); }, wait: 500, el: () => $('#footer'), t: 'Analysis', b: 'The totals for what is on the map, and the capacity that runs out first, with its DC relief.' },
+    { ch: 'Analysis', el: () => document.querySelector('.f-tabs'), t: 'Tabs', b: 'Demand and Growth for what is shown; Water and Wastewater by zone, catchment, plant and facility (with the 2020 Master Plan comparison); DC Analysis; Settings & sources; Change log.' },
+    { ch: 'Help', el: () => document.querySelector('.help-ctl button'), t: 'Help any time', b: 'Press and hold (or hover) any heading for what it means and where the data comes from. The ? opens task guides, and the tour again.' },
   ];
   // Help & tips: task guides with a "Show me" that sets the app up for the task.
   const pickDev = () => state.filtered.filter(p => p.lat != null && p.units >= 100 && (p.phase === 'review' || p.phase === 'approved')).sort((a, b) => b.units - a.units)[0] || state.filtered.find(p => p.lat != null);
@@ -8393,7 +8451,7 @@
       s: ['Tap its marker, or search its address or file number.', 'Servicing tab: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow, stormwater and ground.', 'Memo (top of the panel) prints a one-page servicing memo.'],
       go: () => { const p = pickDev(); if (!p) return; store.set('dvTab', 'servicing'); toMap(); focusProject(p); setTimeout(() => showDvTab('servicing'), 50); } },
     { t: 'Find when DC projects are needed', w: 'DC background study, capital timing, or explaining why a site waits for a trunk sewer.',
-      s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'Layers → More settings → DC timing: every existing constraint, filtered to "Needed before the DC project".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Excel (all rows) exports the table for a memo or spreadsheet.'],
+      s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'More settings (box under Layers) → DC timing: every existing constraint, filtered to "Needed before the DC project".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Excel (all rows) exports the table for a memo or spreadsheet.'],
       go: () => { setMapView('dc'); loadSewers(); showDcTiming(); } },
     { t: 'Report on an area or secondary plan', w: 'A block plan, MTSA or secondary plan review; council or committee questions.',
       s: ['Search the plan or MTSA name and pick it — the map filters to it.', 'Tap Report on the Showing line for a printable area report: demand, the capacity it relies on with DC timing, largest developments.', 'Or Tools → Select an area and draw around any group; the summary has Area report, Excel and CSV.'],
@@ -8414,7 +8472,7 @@
       s: ['Layers → Existing pipes (from street zoom); More settings → Existing for water, sanitary or storm, and Size labels for diameters.', 'A development\'s Servicing tab lists every main around it with street and distance.', 'Tools → Measure & ground profile: tap points for the distance and the ground profile with fall and grade.'],
       go: () => { toMap(); closeDetail(); setTool('measure'); } },
     { t: 'Save, share and export', w: 'Sending a view to a colleague, or attaching numbers to a report.',
-      s: ['Layers → More settings → Saved views keeps a named setup in this browser.', 'Share link copies a link to the exact filters, map position and open development.', 'PDF / print and Excel on every table; Memo and Area report for one-page summaries; CSV / GeoJSON of the developments in the List.'],
+      s: ['More settings (box under Layers) → Saved views keeps a named setup in this browser.', 'Share link copies a link to the exact filters, map position and open development.', 'PDF / print and Excel on every table; Memo and Area report for one-page summaries; CSV / GeoJSON of the developments in the List.'],
       go: () => { toMap(); const d = document.querySelector('.mo-more'); if (d) { d.open = true; d.scrollTop = 0; } } },
     { t: 'How far to trust the numbers', w: 'Before quoting a figure.',
       s: ['Flows use Peel design criteria (Settings & sources tab); the Scenario line says which switches are on.', 'Capacity checks are screens, not hydraulic models: sewer capacity is full-pipe Manning on the published slope; "Check the data" flags likely slope errors.', 'The 2026 DC capital maps are a draft; schedules change annually.', 'Data tab: sources, dates and the weekly snapshot.'],
@@ -8425,7 +8483,7 @@
     'Press and hold (or hover) a heading or label for what it means and where the data comes from.',
     'The north arrow switches between Peel’s road grid and north up.',
     'Search a DC project number (e.g. 25-2269) or a pumping station to jump to it.',
-    'Hover a cluster for its phase counts; Layers → More settings → Show as → Heatmap shows where people and jobs concentrate.',
+    'Hover a cluster for its phase counts; More settings (box under Layers) → Show as → Heatmap shows where people and jobs concentrate.',
     'The bottom bar always shows the totals for what is on the map; tap Analysis for the tables.',
     'Tables in the Water and Wastewater tabs keep their headers while you scroll.',
     'Memo and Area report open a print-ready page: use Print / Save as PDF.',
@@ -8456,23 +8514,63 @@
     tourChecked = true;
     if (!store.get('tourDone', false)) setTimeout(startTour, 1200);
   }
-  function startTour() { tourI = 0; showTourStep(); }
-  function endTour() { store.set('tourDone', true); if (tourEl) { tourEl.remove(); tourEl = null; } }
-  function showTourStep() {
+  function startTour() { tourI = 0; tourSet = { view: currentView(), foot: $('#footer').classList.contains('collapsed') }; showTourStep(); }
+  let tourSet = null;
+  function endTour() {
+    store.set('tourDone', true);
+    if (tourEl) { tourEl.remove(); tourEl = null; }
+    removeEventListener('keydown', tourKey, true);
+    if (tourSet) { clearSelected(); if (tourSet.foot) setFooterCollapsed(true); tourSet = null; }
+  }
+  function tourKey(e) {
+    if (!tourEl) return;
+    if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); tourGo(tourI + 1); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); tourGo(Math.max(0, tourI - 1)); }
+    else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); endTour(); }
+  }
+  function tourGo(i) { if (i >= TOUR.length) return endTour(); tourI = i; showTourStep(); }
+  async function showTourStep() {
     const st = TOUR[tourI]; if (!st) return endTour();
-    if (!tourEl) { tourEl = document.createElement('div'); tourEl.className = 'tour'; document.body.appendChild(tourEl); tourEl.addEventListener('click', e => { if (e.target.closest('[data-tour-next]')) { tourI++; showTourStep(); } else if (e.target.closest('[data-tour-back]')) { tourI = Math.max(0, tourI - 1); showTourStep(); } else if (e.target.closest('[data-tour-help]')) { endTour(); showHelp(); } else if (e.target.closest('[data-tour-skip]') || e.target === tourEl) endTour(); }); }
+    if (!tourEl) {
+      tourEl = document.createElement('div'); tourEl.className = 'tour'; document.body.appendChild(tourEl);
+      tourEl.addEventListener('click', e => {
+        const d = e.target.closest('[data-tour-dot]');
+        if (e.target.closest('[data-tour-next]')) tourGo(tourI + 1);
+        else if (e.target.closest('[data-tour-back]')) tourGo(Math.max(0, tourI - 1));
+        else if (d) tourGo(+d.dataset.tourDot);
+        else if (e.target.closest('[data-tour-help]')) { endTour(); showHelp(); }
+        else if (e.target.closest('[data-tour-skip]')) endTour();
+      });
+      addEventListener('keydown', tourKey, true);
+    }
+    const my = tourI;
+    if (st.do) { tourEl.classList.add('busy'); try { await st.do(); } catch (e) { /* the step still shows */ } if (st.wait) await new Promise(r => setTimeout(r, st.wait)); if (!tourEl || my !== tourI) return; tourEl.classList.remove('busy'); }
     const el = st.el(), r = el && el.getBoundingClientRect();
     const onScreen = r && r.width && r.height && r.right > 0 && r.bottom > 0 && r.left < innerWidth && r.top < innerHeight;
     const box = onScreen ? { x: Math.max(4, r.left - 4), y: Math.max(4, r.top - 4), w: Math.min(innerWidth - 8, r.width + 8), h: Math.min(innerHeight - 8, r.height + 8) } : null;
     const big = box && box.w * box.h > innerWidth * innerHeight * 0.3;
-    const cw = Math.min(320, innerWidth - 24);
-    let cx = 12, cy = 12;
-    if (box && !big) { cx = Math.min(innerWidth - cw - 12, Math.max(12, box.x)); cy = box.y + box.h + 10; if (cy + 170 > innerHeight) cy = Math.max(12, box.y - 180); }
-    else { cx = (innerWidth - cw) / 2; cy = innerHeight * 0.3; }
-    tourEl.innerHTML = `${box && !big ? `<div class="tour-hole" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : ''}
-      <div class="tour-card" role="dialog" aria-label="Tip ${tourI + 1} of ${TOUR.length}" style="left:${cx}px;top:${cy}px;width:${cw}px">
-        <div class="tour-n">${tourI + 1} / ${TOUR.length}</div><strong>${esc(st.t)}</strong><p>${esc(st.b)}</p>
-        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>${tourI === TOUR.length - 1 ? 'Close' : 'Skip'}</button><span>${tourI ? '<button type="button" class="btn small link" data-tour-back>Back</button> ' : ''}${tourI === TOUR.length - 1 ? '<button type="button" class="btn small" data-tour-help>Open Help &amp; tips</button>' : '<button type="button" class="btn small" data-tour-next>Next</button>'}</span></div></div>`;
+    const cw = Math.min(340, innerWidth - 24);
+    // Card beside the highlight when there's room (right, then left), else below or above it.
+    const place = ch => {
+      if (box && !big) {
+        if (box.x + box.w + 12 + cw < innerWidth) return [box.x + box.w + 12, Math.min(innerHeight - ch - 12, Math.max(12, box.y))];
+        if (box.x - 12 - cw > 0) return [box.x - 12 - cw, Math.min(innerHeight - ch - 12, Math.max(12, box.y))];
+        const below = box.y + box.h + 10, above = box.y - ch - 10;
+        return [Math.min(innerWidth - cw - 12, Math.max(12, box.x)), below + ch <= innerHeight - 8 ? below : above >= 8 ? above : Math.max(8, innerHeight - ch - 8)];
+      }
+      if (box) return [Math.max(12, Math.min(innerWidth - cw - 12, box.x + 16)), Math.max(12, Math.min(innerHeight - ch - 12, box.y + 16))];
+      return [(innerWidth - cw) / 2, Math.max(12, (innerHeight - ch) * 0.35)];
+    };
+    let [cx, cy] = place(200);
+    const chapters = [...new Set(TOUR.map(x => x.ch))], last = tourI === TOUR.length - 1;
+    tourEl.innerHTML = `${box && !big ? `<div class="tour-hole" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : big ? `<div class="tour-hole big" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : ''}
+      <div class="tour-card" role="dialog" aria-live="polite" aria-label="Tour step ${tourI + 1} of ${TOUR.length}: ${esc(st.t)}" style="left:${cx}px;top:${cy}px;width:${cw}px">
+        <div class="tour-ch">${chapters.map(c => `<span class="${c === st.ch ? 'on' : ''}">${esc(c)}</span>`).join('')}</div>
+        <strong>${esc(st.t)}</strong><p>${esc(st.b)}</p>
+        <div class="tour-dots" aria-hidden="true">${TOUR.map((_, i) => `<button type="button" tabindex="-1" class="${i === tourI ? 'on' : i < tourI ? 'done' : ''}" data-tour-dot="${i}" title="Step ${i + 1}"></button>`).join('')}</div>
+        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>${last ? 'Close' : 'Skip tour'}</button><span>${tourI ? '<button type="button" class="btn small" data-tour-back>← Back</button>' : ''}${last ? '<button type="button" class="btn small primary" data-tour-help>Open Help &amp; tips</button>' : `<button type="button" class="btn small primary" data-tour-next>${tourI ? 'Next →' : 'Start →'}</button>`}</span></div></div>`;
+    const card = tourEl.querySelector('.tour-card'), [x2, y2] = place(card.offsetHeight); card.style.left = `${x2}px`; card.style.top = `${y2}px`;
+    const nx = tourEl.querySelector('[data-tour-next], [data-tour-help]'); if (nx) nx.focus({ preventScroll: true });
   }
 
   // ---- Boot ------------------------------------------------------------------------

@@ -1598,3 +1598,39 @@ body.print-map .area-box { display: none; }
 .mpc-mp-sw { display: inline-block; width: 0; height: 12px; border-left: 2px dashed #e8590c; }
 @media (max-width: 700px) { .mpc-cell { min-width: 120px; } }
 @media (max-width: 700px) { .mpc-table .mpc-x { display: none; } .mpc-table .mpc-st { font-size: 11px; } }
+
+/* More settings: its own box under Layers (top right). */
+.more-box { background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; box-shadow: var(--shadow); padding: 4px 8px; font-size: 12px; width: 240px; box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; }
+.leaflet-top.leaflet-right .more-box { margin-top: 6px; }
+.more-box details.mo-more > summary { cursor: pointer; font-weight: 600; font-size: 12px; color: var(--text-primary); padding: 3px 0; }
+.more-box details.mo-more[open] { max-height: none; overflow: visible; display: grid; gap: 4px; }
+.more-box label { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: 6px; color: var(--text-secondary); }
+.more-box select { width: 100%; min-width: 0; padding: 3px 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
+.more-box small { color: var(--text-muted); }
+.more-box small:empty { display: none; }
+.more-box label.mo-chip { display: inline-flex; position: relative; cursor: pointer; grid-template-columns: none; }
+.more-box label.chk { display: flex; gap: 6px; align-items: center; color: var(--text-primary); cursor: pointer; }
+@media (max-width: 700px) { .more-box { width: 236px; } }
+/* Demand year: on top of the timeline box. */
+.timebar .map-year { width: auto; border: 0; border-radius: 0; box-shadow: none; background: none; padding: 0 0 6px; margin: 0 0 6px; border-bottom: 1px solid var(--border); font-size: 12px; }
+.timebar .map-year[hidden] { display: none; }
+.timebar .map-year .my-ends { display: flex; justify-content: space-between; gap: 6px; }
+.timebar.folded .map-year { min-width: 220px; }
+.more-box .mo-dct { justify-self: start; padding: 0; margin: 0; }
+.sheet-hide { display: none !important; }
+
+/* Tour: chapters, progress dots, card beside the highlight. */
+.tour { background: transparent; }
+.tour-hole.big { box-shadow: 0 0 0 3px var(--accent); }
+.tour:not(:has(.tour-hole)) { background: rgba(0,0,0,.35); }
+.tour.busy .tour-card { opacity: .6; }
+.tour-card { transition: left .18s, top .18s; }
+.tour-card strong { font-size: 15px; display: block; margin-top: 4px; }
+.tour-ch { display: flex; flex-wrap: wrap; gap: 4px; }
+.tour-ch span { font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); padding: 2px 6px; border-radius: 999px; background: var(--surface-2); }
+.tour-ch span.on { background: var(--accent); color: #fff; }
+.tour-dots { display: flex; gap: 4px; margin: 0 0 10px; }
+.tour-dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 50%; background: var(--border); cursor: pointer; }
+.tour-dots button.done { background: color-mix(in srgb, var(--accent) 45%, var(--surface-1)); }
+.tour-dots button.on { background: var(--accent); width: 18px; border-radius: 4px; }
+.tour-btns .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
