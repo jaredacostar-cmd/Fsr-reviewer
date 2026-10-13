@@ -1517,3 +1517,10 @@ details.stamp { display: block; }
 .wcap .cap-chart { position: relative; }
 .wcap-pump > summary { cursor: pointer; list-style-position: inside; }
 .cap-chart { position: relative; }
+.wtrace { list-style: none; padding: 0; margin: 2px 0 6px; border-left: 2px dashed #1971c2; margin-left: 9px; }
+.wtrace li { position: relative; padding: 3px 0 3px 18px; }
+.wtrace li .wf-ic { position: absolute; left: -11px; top: 3px; width: 18px; height: 18px; font-size: 9px; box-shadow: none; }
+.wf-ic.wf-dev { border-color: #e8590c; color: #e8590c; }
+.wtrace-tip { font-size: 11px; padding: 2px 6px; }
+.fsr-box { border: 1px solid var(--border); border-left: 3px solid #1971c2; border-radius: 8px; padding: 6px 10px; margin: 6px 0 8px; background: var(--surface-1); }
+.fsr-box small { display: block; color: var(--text-muted); margin-top: 2px; }

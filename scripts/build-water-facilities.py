@@ -116,7 +116,7 @@ for p in R['southPeel']['plants']:
     s = site_for(p['name'].replace(' WTP', '')); s['plant'] = {'ratedMLd': p['ratedMLd'], 'avgMLd': p['avgMLd'], 'maxDayMLd': p['maxDayMLd'], 'year': json.load(open(reports_p)).get('year', 2025), 'ref': p.get('pages')}
 for sysn in R['caledon']:
     for s in sites:
-        if any(w in sysn['name'] for w in s['base'].split()) and any(pp['kind'] == 'plant' for pp in s['parts']):
+        if s['base'] in sysn['name'] and any(pp['kind'] == 'plant' for pp in s['parts']):
             s['groundwater'] = {'system': sysn['name'], 'ratedM3d': sysn['ratedM3d'], 'avgM3d': sysn['avgM3d'], 'maxDayM3d': sysn['maxDayM3d'], 'population': sysn['population']}
             s['system'] = 'Caledon groundwater'
 

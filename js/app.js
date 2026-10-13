@@ -2206,6 +2206,41 @@
     </section>`;
     return devServicingBriefHTML(p, st, f);
   }
+  // ---- Functional Servicing Report links (data/fsr.json, scripts/build-fsr.js) -----------------
+  const FSR = { data: null, loading: null, by: null };
+  function loadFsr() {
+    if (FSR.data || FSR.loading) return FSR.loading || Promise.resolve(FSR.data);
+    FSR.loading = fetch('data/fsr.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).catch(() => null).then(d => {
+      FSR.data = d || { items: [] }; FSR.by = new Map();
+      for (const it of FSR.data.items) for (const k of it.keys) (FSR.by.get(`${it.muni}|${k}`) || FSR.by.set(`${it.muni}|${k}`, []).get(`${it.muni}|${k}`)).push(it);
+      FSR.loading = null; return FSR.data;
+    });
+    return FSR.loading;
+  }
+  // The application pages matching a development's files; the newest FSR among them.
+  function fsrFor(p) {
+    if (!FSR.by) return null;
+    // Caledon numbers each type separately (RZ 2025-0010, SPA 2025-0010): its bare year-number keys
+    // carry the type's prefix, as the application pages write them.
+    const CAL = { 'Zoning by-law amendment': 'RZ', 'Site plan': 'SPA', 'Official plan amendment': 'POPA' };
+    const keys = [...new Set(p.records.filter(r => r.kind === 'application' && r.fileKey).map(r => p.municipality === 'Caledon' && /^\d{4}\|/.test(r.fileKey) ? (CAL[r.type] ? `${CAL[r.type]}|${r.fileKey}` : null) : r.fileKey).filter(Boolean))];
+    const items = [...new Set(keys.flatMap(k => FSR.by.get(`${p.municipality}|${k}`) || []))];
+    const withF = items.filter(i => i.fsr).sort((a, b) => (b.fsr.date || '').localeCompare(a.fsr.date || ''));
+    return { items, best: withF[0] || null };
+  }
+  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://www.brampton.ca/EN/Business/planning-development/Pages/applications.aspx'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
+  function fsrInnerHTML(p) {
+    if (!FSR.by) { loadFsr().then(() => { if (currentProject === p) { const b = $('#dev-fsr'); if (b) b.innerHTML = fsrInnerHTML(p); } }); return '<span class="muted small">Looking for a servicing report…</span>'; }
+    const r = fsrFor(p), home = FSR_HOME[p.municipality];
+    const ext = (u, t) => `<a href="${esc(u)}" target="_blank" rel="noopener">${t} ↗</a>`;
+    if (r && r.best) { const b = r.best; return `<strong>Functional Servicing Report</strong> ${ext(b.fsr.url, esc(b.fsr.title.length > 90 ? b.fsr.title.slice(0, 88) + '…' : b.fsr.title))}<small>${b.fsr.date ? `Latest posted: ${esc(b.fsr.date)}` : 'Latest posted'}${b.fsr.count > 1 ? ` · ${b.fsr.count} versions` : ''} · ${ext(b.page, 'all documents')}</small>`; }
+    const bp = r && r.items.find(i => i.browserPage);
+    if (bp) return `<strong>Servicing documents</strong> ${ext(bp.page, 'City application page')}<small>Look under Project documents for the latest Functional Servicing Report (the City's page builds that list in the browser, so it can't be linked directly).</small>`;
+    if (r && r.items.length) return `<span class="muted">No FSR posted yet</span> · ${ext(r.items[0].page, 'application documents')}`;
+    if (p.municipality === 'Brampton') return `<span class="muted">Brampton's documents are on BramPlanOnline (sign-in)</span> · ${ext(home[1], 'Brampton applications')}`;
+    return `<span class="muted">No public application page found</span>${home ? ` · ${ext(home[1], esc(home[0]))}` : ''}`;
+  }
+  const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="dev-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
   // Servicing tab: the trace tool first, then Water and Wastewater in their own sections, then the
   // site (ground, stormwater).
   function devServicingBriefHTML(p, st, f) {
@@ -2220,6 +2255,7 @@
       <p class="small">${f.z ? `${zn(f.z.name)}${f.zMax ? ` · ${pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of the zone's build-out max day` : ''}` : 'No pressure zone'}</p>` : (servicingLineHTML(p) || '<p class="small muted">No units or jobs stated: flows not estimated.</p>');
     const water = `<section class="svc-sys svc-sys-water"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Water</h3><div class="brief">
       ${row('Demand', wDemand)}
+      ${has ? row('Supply route', `<div id="dev-wtrace" data-info="water-trace">${waterTraceHTML(p)}</div>`) : ''}
       ${has ? row('Watermains', '<div id="dev-exist-water"><p class="small muted">Looking up the nearest watermains…</p></div>') : ''}
       ${has ? row('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>') : ''}
       ${st.works ? row('Planned works', devWorksHTML(st.works, 'water')) : ''}
@@ -2252,7 +2288,7 @@
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
     </div></section>` : '';
-    return `${trace}${near}${f ? allocBoxHTML(p) + dcRevenueHTML(p) : ''}${water}${ww}${site}`;
+    return `${fsrBoxHTML(p)}${trace}${near}${f ? allocBoxHTML(p) + dcRevenueHTML(p) : ''}${water}${ww}${site}`;
   }
 
   // One dated history: phase changes (weekly check), council and committee items, file events
@@ -5807,7 +5843,7 @@
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!TRACE.key || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0;
+  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!TRACE.key || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0 || WTRACE.layer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
     if (lassoOn) setLasso(false);
@@ -5815,7 +5851,7 @@
     highlight(null);
     if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
     if (selection.size || selAreas.length) clearSelection();
-    clearBlockFocus(); clearTrace();
+    clearBlockFocus(); clearTrace(); WTRACE.layer.clearLayers();
     exHL.clearLayers(); pinLayer.clearLayers();
     syncClearBtn();
   }
@@ -6085,19 +6121,97 @@
     const popToday = o.census + o.built, perPerson = popToday > 0 ? (v[0] + v[1]) * 1e6 / popToday : 0;
     return { name: esc(name), rated, v, extMld: 0, perPerson, popToday, note, capWord };
   }
+  // Pump groups between zones: source level (the site's reservoir zone, 0 at a plant), target
+  // level (the zone number in LLPnX / HLPnX), capacity (actual firm where modelled, else firm).
+  function wfPumps() {
+    const out = [];
+    for (const f of (WF.data && WF.data.facilities) || []) for (const p of f.pumps || []) {
+      const t = /^[LH]LP(\d)([WCE])$/.exec(p.zone); if (!t) continue;
+      const src = f.kind === 'plant' ? 0 : f.storageZone ? +f.storageZone.replace(/\D/g, '') : null; if (src == null) continue;
+      out.push({ f, src, tgt: +t[1], sys: t[2], cap: p.actualFirm ?? p.firm, zone: p.zone, label: `${f.name} ${p.zone}` });
+    }
+    return out;
+  }
+  // Where a development's water comes from: from its pressure zone, the nearest pump group that
+  // lifts water into that zone, then from that station's reservoir zone the nearest group feeding
+  // it, and so on down to a treatment plant. Caledon's groundwater areas: the nearest well-system
+  // plant. A schematic route through the facilities (the mains between them aren't traced).
+  const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };
+  function waterTrace(p) {
+    if (!WF.data || p.lat == null || !state.servicing) return null;
+    const pt = [p.lng, p.lat], zid = (p.pz && p.pz[0]) || PeelAreas.locate(state.servicing.zones, p.lng, p.lat)[0], z = zid && svcById.get(zid);
+    if (!z) return null;
+    const lvl = zLevel(z.zone);
+    if (wellSystem[z.zone] || lvl == null || lvl > 7) {
+      const plants = WF.data.facilities.filter(f => f.system === 'Caledon groundwater' && f.kind === 'plant' && f.lnglat).sort((a, b) => dist2(pt, a.lnglat) - dist2(pt, b.lnglat));
+      return plants[0] ? { z, gw: true, steps: [{ f: plants[0], to: z.name }] } : null;
+    }
+    const pumps = wfPumps(), steps = [];
+    let n = lvl, at = pt;
+    for (let guard = 0; n >= 1 && guard < 9; guard++) {
+      let cand = pumps.filter(x => x.tgt === n && x.f.lnglat);
+      if (!cand.length) cand = pumps.filter(x => x.src < n && x.tgt >= n && x.f.lnglat);
+      if (!cand.length) break;
+      const g = cand.sort((a, b) => dist2(at, a.f.lnglat) - dist2(at, b.f.lnglat))[0];
+      steps.push({ f: g.f, pump: g, to: n });
+      at = g.f.lnglat; n = g.src;
+      if (n === 0) break;
+    }
+    return { z, gw: false, steps };
+  }
+  function waterTraceHTML(p) {
+    if (!WF.data) { loadWaterFacilities().then(d => { if (d && currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Loading the water facilities…</p>'; }
+    const t = waterTrace(p); if (!t || !t.steps.length) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones.</p>';
+    const zn = s => esc(String(s).replace('Pressure zone ', 'Zone '));
+    if (t.gw) return `<p class="small">${zn(t.z.name)} is on a Caledon groundwater system: supplied by the <strong>${esc(t.steps[0].f.name)}</strong> wells and treatment${t.steps[0].f.groundwater ? ` (${esc(t.steps[0].f.groundwater.system)} system, rated ${fmtNum(t.steps[0].f.groundwater.ratedM3d)} m³/d)` : ''}.</p>
+      <p class="small"><button type="button" class="btn small" data-wtrace="${esc(p.key)}">Show on the map</button></p>`;
+    const rows = t.steps.slice().reverse();
+    const plant = rows[0].pump.src === 0;
+    const pumpRows = waterCapPumpRows();
+    const zr = pumpRows.find(r => r.n === zLevel(t.z.zone));
+    return `<ol class="wtrace small">${plant ? `<li><span class="wf-ic wf-plant">■</span> <strong>${esc(rows[0].f.name)}</strong> treatment plant${rows[0].f.plant ? ` <span class="muted">(rated ${fmtNum(rows[0].f.plant.ratedMLd)} ML/d)</span>` : ''}</li>` : ''}
+      ${rows.map(s => `<li><span class="wf-ic wf-${s.f.kind === 'plant' ? 'plant' : 'pumping'}">${s.f.kind === 'plant' ? '■' : '▲'}</span> ${s.f.kind === 'plant' ? 'High-lift pumps' : `<strong>${esc(s.f.name)}</strong>`} <span class="muted">${esc(s.pump.zone)} · ${fmtNum(s.pump.cap)} ML/d firm</span> → zone ${s.to}</li>`).join('')}
+      <li><span class="wf-ic wf-dev">●</span> This development · ${zn(t.z.name)}</li></ol>
+      ${zr ? `<p class="small">Pumping into zone ${zr.n} and above: <strong>${Math.round(zr.c * 100)}%</strong> of firm capacity with existing + built + approved, ${Math.round(zr.b * 100)}% at build-out.</p>` : ''}
+      <p class="small"><button type="button" class="btn small" data-wtrace="${esc(p.key)}">Show on the map</button> <span class="muted">Schematic: the nearest station lifting water into each zone (2020 Master Plan pumping), not the mains between them.</span></p>`;
+  }
+  // The pumping rows of the water capacity chart, by zone (shares of firm capacity).
+  function waterCapPumpRows() {
+    const M = state.svcModel; if (!M || !WF.data || !state.servicing) return [];
+    if (waterCapPumpRows.key === scenarioKey()) return waterCapPumpRows.rows;
+    const lake = lakeZones().filter(id => zLevel(svcById.get(id).zone) <= 7), pumps = wfPumps(), rows = [];
+    for (let n = 1; n <= 7; n++) {
+      const cap = pumps.filter(p => p.src < n && p.tgt >= n).reduce((t, p) => t + p.cap, 0), ids = lake.filter(id => zLevel(svcById.get(id).zone) >= n);
+      if (!cap || !ids.length) continue;
+      const { v } = waterLayers(ids), tot = v.reduce((a, b) => a + b, 0);
+      rows.push({ n, cap, c: (v[0] + v[1] + v[2]) / cap, b: tot / cap });
+    }
+    waterCapPumpRows.key = scenarioKey(); waterCapPumpRows.rows = rows;
+    return rows;
+  }
+  const WTRACE = { layer: L.layerGroup().addTo(map) };
+  function showWaterTrace(p) {
+    WTRACE.layer.clearLayers();
+    const t = waterTrace(p); if (!t) return;
+    if (!WF.on) setWfOn(true);
+    const pts = [[p.lat, p.lng], ...t.steps.map(s => [s.f.lnglat[1], s.f.lnglat[0]])];
+    L.polyline(pts, { color: '#1971c2', weight: 4, opacity: 0.85, dashArray: '8 6', interactive: false }).addTo(WTRACE.layer);
+    t.steps.forEach((s, i) => L.circleMarker([s.f.lnglat[1], s.f.lnglat[0]], { radius: 13, color: '#1971c2', weight: 3, fill: false, interactive: false }).addTo(WTRACE.layer)
+      .bindTooltip(`${i + 1}. ${s.f.name}${s.pump ? ` · ${s.pump.zone} → zone ${s.to}` : ''}`, { permanent: true, direction: 'right', className: 'wtrace-tip', offset: [12, 0] }));
+    map.fitBounds(L.latLngBounds(pts), { padding: [40, 40], maxZoom: 14 });
+    syncClearBtn();
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-wtrace]'); if (!b) return;
+    const p = state.projects.find(x => x.key === b.dataset.wtrace); if (p) showWaterTrace(p);
+  });
   function waterCapHTML() {
     const M = state.svcModel, R = state.reports; if (!M || !R || !state.servicing) return '';
     if (!WF.data) { loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
     const Y = M.Y, sp = R.water.southPeel, lake = lakeZones().filter(id => zLevel(svcById.get(id).zone) <= 7);
     const treat = [waterCapRow('South Peel (A.P. Kennedy + Lorne Park)', lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
     for (const z of state.servicing.zones) { const s = wellSystem[z.zone] && R.water.caledon.find(x => x.name === wellSystem[z.zone]); if (s) treat.push(waterCapRow(`${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
-    // Pumps crossing into zone n: source level (the site's reservoir zone, 0 at a plant) below n, target n or above.
-    const pumps = [];
-    for (const f of WF.data.facilities) for (const p of f.pumps || []) {
-      const t = /^[LH]LP(\d)[WCE]$/.exec(p.zone); if (!t) continue;
-      const src = f.kind === 'plant' ? 0 : f.storageZone ? +f.storageZone.replace(/\D/g, '') : null; if (src == null) continue;
-      pumps.push({ src, tgt: +t[1], cap: p.actualFirm ?? p.firm, label: `${f.name} ${p.zone}` });
-    }
+    const pumps = wfPumps();
     const pump = [];
     for (let n = 1; n <= 7; n++) {
       const into = pumps.filter(p => p.src < n && p.tgt >= n), ids = lake.filter(id => zLevel(svcById.get(id).zone) >= n);

@@ -152,11 +152,11 @@
     "CALEDON EAST WATER TREAT.PLT#2"
    ],
    "groundwater": {
-    "system": "Caledon Village \u2013 Alton",
-    "ratedM3d": 7596,
-    "avgM3d": 1645,
-    "maxDayM3d": 3674,
-    "population": 5000
+    "system": "Palgrave \u2013 Caledon East",
+    "ratedM3d": 19259,
+    "avgM3d": 4449,
+    "maxDayM3d": 11784,
+    "population": 15000
    }
   },
   {
@@ -175,11 +175,11 @@
     "CALEDON EAST WATER TREAT.PLT#1"
    ],
    "groundwater": {
-    "system": "Caledon Village \u2013 Alton",
-    "ratedM3d": 7596,
-    "avgM3d": 1645,
-    "maxDayM3d": 3674,
-    "population": 5000
+    "system": "Palgrave \u2013 Caledon East",
+    "ratedM3d": 19259,
+    "avgM3d": 4449,
+    "maxDayM3d": 11784,
+    "population": 15000
    }
   },
   {

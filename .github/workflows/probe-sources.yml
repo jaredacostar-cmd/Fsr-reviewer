@@ -17,13 +17,14 @@ name: Probe data sources
 #  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
 #  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen) and data/water-supply.json (large mains across zone boundaries) from the Region's mains, committed to this branch
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
+#  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
+        description: 'all, fsr, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
         default: 'all'
         required: false
       only:
@@ -91,6 +92,14 @@ jobs:
           git add -f dragonfly-raw
           git commit -m "Dragonfly / Peel I&I blocks (raw)"
           git push -f origin dragonfly-raw
+      - name: Functional servicing reports (committed to this branch)
+        if: inputs.mode == 'fsr'
+        run: |
+          node scripts/build-fsr.js --out data
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/fsr.json
+          git diff --cached --quiet || { git commit -m "Functional servicing report links"; git push; }
       - name: External open data (pushed to the ext-raw branch)
         if: inputs.mode == 'external'
         run: |
