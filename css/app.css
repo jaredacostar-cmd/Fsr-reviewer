@@ -1701,3 +1701,14 @@ body.print-map .area-box { display: none; }
 
 /* Map panel: one column that never outgrows the box (a long Layers summary ellipsizes instead). */
 .map-opts, .map-opts details.mo-panel { grid-template-columns: minmax(0, 1fr); }
+
+/* Traced paths (sewer and water) stand out: casing + halo under the route, white dashes moving
+   downstream, and the other map layers dimmed while a trace is shown. */
+.trace-case { stroke: #000; stroke-opacity: .32; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.trace-halo { stroke: #fff; stroke-opacity: .95; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.trace-ants { stroke: #fff; stroke-opacity: .95; fill: none; stroke-dasharray: 1 13; stroke-linecap: round; animation: trace-ants 1.1s linear infinite; }
+@keyframes trace-ants { to { stroke-dashoffset: -28; } }
+@media (prefers-reduced-motion: reduce) { .trace-ants { animation: none; } }
+.wtrace-main { stroke: #1c7ed6; stroke-opacity: 1; }
+.trace-on .leaflet-overlay-pane, .trace-on .leaflet-svc-pane, .trace-on .leaflet-exist-pane, .trace-on .leaflet-plan-pane, .trace-on .leaflet-da-pane { opacity: .4; transition: opacity .2s; }
+.trace-on .leaflet-tile-pane { opacity: .7; transition: opacity .2s; }

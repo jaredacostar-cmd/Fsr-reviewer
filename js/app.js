@@ -4414,7 +4414,7 @@
   let devMode = store.get('devFade', 'faded'), devChip = null;
   function syncPathMode() {
     const on = !!(TRACE.key || WTRACE.key || svcFocus.id || BLK.id), el = map.getContainer();
-    el.classList.toggle('paths-on', on); el.dataset.devmode = devMode;
+    el.classList.toggle('paths-on', on); el.classList.toggle('trace-on', !!(TRACE.key || WTRACE.key)); el.dataset.devmode = devMode;
     syncDevsOff();
     if (!devChip && on) {
       devChip = L.DomUtil.create('div', 'dev-mode', mapBottom); L.DomEvent.disableClickPropagation(devChip);
@@ -4500,9 +4500,10 @@
   // a main's end within 200 m of an existing sewer of 300 mm+ (or any point within 25 m) is where it
   // can hand over. From the planned main nearest the site (within 1 km), the trace takes the shortest
   // path to a hand-over, preferring one in the catchment that main serves. The maps don't give the
-  // flow direction, so the path is indicative. A planned main hands over only to an existing sewer at
-  // least half its diameter (the largest planned main on the path so far): a 900 mm trunk doesn't
-  // empty into a 375 mm local sewer, it carries on along the planned trunk to the existing one. A site
+  // flow direction, so the path is indicative. Sewers flow into the same size or bigger: a planned
+  // main hands over only to an existing sewer at least its own diameter (a main with no size on the
+  // maps: at least half the largest planned main on the path so far), so a 900 mm trunk doesn't empty
+  // into a 375 mm local sewer, it carries on along the planned trunk to the existing one. A site
   // whose join point is within 25 m of an existing sewer still connects to that sewer.
   const DCW = { g: null };
   function dcSewerNet() {
@@ -4542,22 +4543,37 @@
     for (let i = a; i <= b; i++) { const m = dcM([p.lng, p.lat], [G.xs[i], G.ys[i]]); if (m < sd) { sd = m; s = i; } }
     const target = dcTarget(n.ln), inTarget = new Map();
     const pipeIn = k => { if (!inTarget.has(k)) { const c = pipeCoords(SEW.data.pipes[k])[0]; inTarget.set(k, !target || PeelAreas.locate(state.servicing.drainage, c[0], c[1]).includes(target)); } return inTarget.get(k); };
-    const dist = new Float64Array(G.xs.length).fill(Infinity), via = new Int32Array(G.xs.length).fill(-1), dmax = new Float64Array(G.xs.length), Q = [[0, s]]; dist[s] = 0;
-    dmax[s] = G.lineOf[s].d || 0;
-    let best = Infinity, bt = -1, bex = null;
-    while (Q.length) {
-      let qi = 0; for (let i = 1; i < Q.length; i++) if (Q[i][0] < Q[qi][0]) qi = i;
-      const [dd, u] = Q.splice(qi, 1)[0]; if (dd > dist[u]) continue; if (dd >= best) break;
-      const ex = (G.exit.get(u) || []).find(c => c.d >= dmax[u] / 2 || (u === s && c.m <= 25));
-      if (ex) { const tot = dd + ex.cost + (pipeIn(ex.k) ? 0 : 3000); if (tot < best) { best = tot; bt = u; bex = ex; } }
-      for (const k of G.adj[u]) { const [x, y] = G.E[k], v = x === u ? y : x, nd = dd + G.cost[k]; if (nd < dist[v]) { dist[v] = nd; via[v] = k; dmax[v] = Math.max(dmax[u], G.lineOf[v].d || 0); Q.push([nd, v]); } }
-    }
+    // Same size or bigger first; where no such sewer is in reach, at least half the size.
+    const search = strict => {
+      const dist = new Float64Array(G.xs.length).fill(Infinity), via = new Int32Array(G.xs.length).fill(-1), dmax = new Float64Array(G.xs.length), Q = [[0, s]]; dist[s] = 0;
+      dmax[s] = G.lineOf[s].d || 0;
+      let best = Infinity, bt = -1, bex = null;
+      while (Q.length) {
+        let qi = 0; for (let i = 1; i < Q.length; i++) if (Q[i][0] < Q[qi][0]) qi = i;
+        const [dd, u] = Q.splice(qi, 1)[0]; if (dd > dist[u]) continue; if (dd >= best) break;
+        const need = strict ? G.lineOf[u].d || dmax[u] / 2 : dmax[u] / 2, ex = (G.exit.get(u) || []).find(c => c.d >= need || (u === s && c.m <= 25));
+        if (ex) { const tot = dd + ex.cost + (pipeIn(ex.k) ? 0 : 3000); if (tot < best) { best = tot; bt = u; bex = ex; } }
+        for (const k of G.adj[u]) { const [x, y] = G.E[k], v = x === u ? y : x, nd = dd + G.cost[k]; if (nd < dist[v]) { dist[v] = nd; via[v] = k; dmax[v] = Math.max(dmax[u], G.lineOf[v].d || 0); Q.push([nd, v]); } }
+      }
+      return { bt, bex, via };
+    };
+    let r = search(true); if (r.bt < 0) r = search(false);
+    const { bt, bex, via } = r;
     if (bt < 0) return null;
     const nodes = [bt], used = new Set(); let km = 0, gaps = 0;
     for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else if (G.len[k] > 60) gaps++; const [x, y] = G.E[k]; v = x === v ? y : x; nodes.push(v); }
     nodes.reverse();
     const ex = bex;
     return { start: s, joinM: sd, coords: nodes.map(i => [G.xs[i], G.ys[i]]), km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target };
+  }
+  // Make a traced route stand out: a dark casing and a white halo under it (kept at the back of the
+  // path pane), and white dashes moving along it in the flow direction (still with reduced motion).
+  // coords: [lng, lat] in flow order.
+  function traceGlow(coords, layer, w = 7) {
+    const ll = []; for (const [x, y] of coords) { const q = ll[ll.length - 1]; if (!q || q[0] !== y || q[1] !== x) ll.push([y, x]); }
+    if (ll.length < 2) return;
+    for (const [cls, ww] of [['trace-halo', w + 6], ['trace-case', w + 12]]) L.polyline(ll, { className: cls, weight: ww, interactive: false, renderer: flowRenderer }).addTo(layer).bringToBack();
+    L.polyline(ll, { className: 'trace-ants', weight: 2.5, interactive: false, renderer: flowRenderer }).addTo(layer);
   }
   async function traceDev(p) {
     await Promise.all([loadSewers(), loadBlocks()]);
@@ -4590,9 +4606,10 @@
       const st = pipeStats(i), c = pipeCoords(P[i]);
       for (let q = 1; q < c.length; q++) km += dcM(c[q - 1], c[q]) / 1000;
       if (st.r1 != null && (!worst || st.r1 > worst.r1)) worst = { i, r1: st.r1 };
-      L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 7 : P[i][0] >= 600 ? 6 : 5, opacity: 0.9, lineCap: 'round', renderer: flowRenderer })
+      L.polyline(c.map(([x, y]) => [y, x]), { color: pipeColour(st.r1), weight: P[i][0] >= 1200 ? 8 : P[i][0] >= 600 ? 7 : 6, opacity: 1, lineCap: 'round', lineJoin: 'round', renderer: flowRenderer })
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(TRACE.layer);
     }
+    traceGlow([[p.lng, p.lat], ...(pl ? pl.coords : []), jn, ...route.flatMap(i => pipeCoords(P[i]))], TRACE.layer, 7);
     drawPipeRoute(route, 'trace-flow', TRACE.layer, Math.max(900, km * 1000 / 14));
     if (pl && pl.coords.length > 1) L.polyline(pl.coords.map(([x, y]) => [y, x]), { className: 'trace-flow', interactive: false, renderer: flowRenderer }).addTo(TRACE.layer);
     // Pumping stations within 80 m of the route, and the plant at its end.
@@ -6874,7 +6891,7 @@
       const flush = () => {
         if (run.length < 2) return;
         if (kind && kind.ln) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-plan', renderer: flowRenderer }).bindTooltip(`<strong>Planned ${esc(DC_KIND[kind.ln.k] ? DC_KIND[kind.ln.k][0].toLowerCase() : 'water main')}</strong>${kind.ln.d ? ` · ${kind.ln.d} mm` : ''}<br>2026 DC capital map${kind.ln.y ? ` · ${kind.ln.y}` : ''}${kind.ln.p ? ` · project ${esc(kind.ln.p)}` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
-        else L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-main', weight: dm >= 900 ? 7 : dm >= 600 ? 6 : dm >= 400 ? 5 : 4, renderer: flowRenderer }).bindTooltip(`<strong>Existing watermain</strong>${dm ? ` · ${dm} mm` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
+        else L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-main', weight: dm >= 900 ? 8 : dm >= 600 ? 7 : dm >= 400 ? 6 : 5, renderer: flowRenderer }).bindTooltip(`<strong>Existing watermain</strong>${dm ? ` · ${dm} mm` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
       };
       for (const [k, v] of path) {
         const [, , d, ln] = G.E[k], kk = { ln }, sameKind = kind && !!kind.ln === !!ln && (!ln || kind.ln === ln);
@@ -6887,6 +6904,7 @@
       if (stops[q].site) joinM = nb.m;
       flow.push(B);
     }
+    traceGlow(flow, L_, 6);
     // Arrows along the whole route, about 14 per trace.
     const tot = (kmE + kmP + kmS + kmL) * 1000, every = Math.max(700, tot / 14);
     let seg = [], run = 0;

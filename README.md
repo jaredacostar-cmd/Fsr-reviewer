@@ -891,9 +891,13 @@ water supply from the plant** draws the route on the map like the sewer trace.
   of the one they feed are bridged (up to 600 m, straight, and noted). The planned path is dashed
   pink; the maps don't give flow direction, so it is indicative. With no planned main reaching the
   network, the trace joins the nearest existing sewer within 3 km and says so.
-  - A planned main hands over only to an existing sewer at least half the size of the largest
-    planned main on the path so far. A 900 mm trunk doesn't empty into a 375 mm local sewer; it
-    carries on along the planned trunk to an existing one. For example, 11722 Mississauga Road and
+  - Sewers flow into the same size or bigger. A planned main hands over only to an existing sewer
+    at least its own diameter (a main the DC maps give no size for: at least half the largest
+    planned main on the path so far). Where no such sewer is in reach, the trace falls back to one
+    at least half the size. A 900 mm trunk doesn't empty into a 375 mm local sewer; it carries on
+    along the planned trunk to an existing one. The Region's own network is used as published:
+    about 1.6% of its pipe-to-pipe links step down in size, nearly all at manholes where the
+    published network does. For example, 11722 Mississauga Road and
     0 Creditview Road (21T-25008C) follow the Credit Valley trunk (25-2225 → 25-2224 → 28-2139) to
     the 600 mm sewer, not the 375 mm sewer near Wanless Drive. A site whose join point is within
     25 m of an existing sewer still connects to that sewer.
@@ -901,7 +905,9 @@ water supply from the plant** draws the route on the map like the sewer trace.
     of them (at the demand year) the site has no outlet on this route. The line updates as the
     demand year moves; already built sites are shown as indicative.
 - Both traces fit the route on the rotated map, clear of the open panel and the boxes along the
-  map's edges.
+  map's edges. The route stands out: a white halo with a dark casing under it, white dashes moving
+  in the flow direction (still if the device asks for reduced motion), and the other map layers
+  and the base map dimmed while a trace is shown.
 
 ## DC funding scenario
 
