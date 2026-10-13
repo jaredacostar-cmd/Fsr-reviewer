@@ -1698,3 +1698,6 @@ body.print-map .area-box { display: none; }
 @keyframes pipe-hl { 50% { stroke-opacity: .15; } }
 .prof-map-bar { display: flex; gap: 6px; align-items: center; background: var(--surface-1); border: 1px solid var(--border); border-radius: 999px; box-shadow: var(--shadow); padding: 4px 6px; }
 .prof-map-bar[hidden] { display: none; }
+
+/* Map panel: one column that never outgrows the box (a long Layers summary ellipsizes instead). */
+.map-opts, .map-opts details.mo-panel { grid-template-columns: minmax(0, 1fr); }

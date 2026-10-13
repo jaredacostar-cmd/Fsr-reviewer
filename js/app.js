@@ -1005,7 +1005,7 @@
       if (!state.projects.length || ((q.get('sp') || q.get('mt')) && !state.areas) || ((q.get('pz') || q.get('dr')) && !state.servicing)) return;
       applied = true;
       if (q.get('ph')) state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
-      if (q.has('fo')) state.focus = q.get('fo') === 'none' ? '' : q.get('fo');
+      if (q.has('fo') && !(focusMigNow && q.get('fo') === 'growth' && currentView() !== 'planning')) state.focus = q.get('fo') === 'none' ? '' : q.get('fo');
       state.muni = q.get('mu') || ''; state.kind = q.get('k') || DEFAULT_KIND; state.search = q.get('q') || '';
       state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); state.mtsa = list('mt'); state.pz = list('pz'); state.dr = list('dr');
       state.minUnits = Number(q.get('u')) || 0; state.newOnly = q.get('nn') !== '0';
@@ -4771,10 +4771,18 @@
   // view being left and restores the other view's last settings (its preset the first time).
   const VIEW_PRESETS = {
     planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
-    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: 'growth', exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
-    wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: 'growth', exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
-    dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: 'growth', exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
+    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
+    wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
+    dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
   };
+  // Earlier versions opened the servicing views on the Growth focus, which hid applications with no
+  // unit or job count (their site boundaries too). Once: drop it from the views' saved settings, and
+  // from a link written by them.
+  let focusMigNow = false;
+  if (!store.get('viewFocusMig1', false)) {
+    for (const v of ['water', 'wastewater', 'dc']) { const x = store.get(`mapView-${v}`, null); if (x && x.focus === 'growth') { x.focus = null; store.set(`mapView-${v}`, x); } }
+    store.set('viewFocusMig1', true); focusMigNow = true;
+  }
   function currentMapSettings() { return { basemap, labelMode, da: daOn, wf: WF.on, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, focus: state.focus, exist: { ...existOn }, dc: { ...dcOn } }; }
   function setMapView(v) {
     const cur = currentView();
