@@ -741,6 +741,24 @@ Alloa's location isn't published, so it is listed in the table but not shown on 
 title show the latest application submitted on the site: its date received and file number. The
 open data carries each file's first submission date, not resubmissions.
 
+## Development panel tabs
+
+A development opens on six tabs (the last one picked is kept):
+
+- **Overview** — status, latest decision, build-out, the latest Functional Servicing Report link,
+  the proposal, aerial check.
+- **Demand** — units, jobs & build-out; servicing allocation; flows by stage (water max day / peak
+  hour, wastewater peak dry / wet) and the sewer path.
+- **Water** — trace the water supply from the plant; demand, supply route, watermains, fire flow.
+- **Wastewater** — trace the sewer path to the plant; flows, path and tightest pipe, plant reserve,
+  sanitary sewers; the site (ground, storm sewers, stormwater).
+- **DC Analysis** — the DC projects potentially required: each wastewater and water constraint the
+  development relies on, when it runs out and the DC project that relieves it; the planned works it
+  connects to or sits on the path of (with the year it needs them); and the DCs it would pay.
+- **History** — how the phase was set, the dated history, source records.
+
+The bottom panel's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis.
+
 ## Map boxes, demand year and the tour
 
 - **More settings** has its own box under Layers (top right). With both open they share the
