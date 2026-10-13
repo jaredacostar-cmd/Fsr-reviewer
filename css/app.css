@@ -1256,9 +1256,9 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .map-opts details.mo-panel { display: grid; gap: 4px; }
 .map-opts .mo-grp { display: grid; gap: 6px; padding: 6px 0 4px; border-top: 1px solid var(--border); }
 .map-opts .mo-quick { margin-top: 0; }
-.map-opts .mo-seg { display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--surface-2); }
-.map-opts .mo-seg .chip { flex: 1 1 auto; border: 0; background: transparent; border-radius: 6px; padding: 3px 4px; font-size: 11px; text-align: center; cursor: pointer; color: var(--text-primary); line-height: 1.4; }
-.map-opts .mo-seg .chip.on { background: var(--accent); color: #fff; outline: 0; }
+.map-opts .mo-seg, .area-box .mo-seg { display: flex; gap: 2px; padding: 2px; border-radius: 8px; background: var(--surface-2); }
+.map-opts .mo-seg .chip, .area-box .mo-seg .chip { flex: 1 1 auto; border: 0; background: transparent; border-radius: 6px; padding: 3px 4px; font-size: 11px; text-align: center; cursor: pointer; color: var(--text-primary); line-height: 1.4; }
+.map-opts .mo-seg .chip.on, .area-box .mo-seg .chip.on { background: var(--accent); color: #fff; outline: 0; }
 .map-opts details.mo-more { border-top: 1px solid var(--border); padding-top: 4px; }
 .map-opts details.mo-more > summary .mo-sum { color: var(--text-muted); font-weight: 400; margin-left: 4px; }
 .map-opts details.mo-more > summary .mo-sum.on { color: var(--accent); font-weight: 600; }
@@ -1275,7 +1275,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
   .map-legend .map-year input { height: 24px; }
   .map-opts details.mo-panel[open] { max-height: calc(var(--map-h, 640px) * .6); overflow-y: auto; overscroll-behavior: contain; }
 }
-.map-opts .mo-seg .chip { min-width: 0; max-width: none; padding: 3px 3px; }
+.map-opts .mo-seg .chip, .area-box .mo-seg .chip { min-width: 0; max-width: none; padding: 3px 3px; }
 .map-opts details.mo-panel > summary.mo-panel-h > span:first-child { white-space: nowrap; flex: none; }
 /* Area filter notice (above Map options), the secondary plan list inside the panel, and heights so
    the panel and the legend box never overlap. */
@@ -1566,3 +1566,4 @@ body.print-map .area-box { display: none; }
 .wtrace-ps { stroke: #fff; stroke-width: 2; fill: #0b7285; fill-opacity: 1; }
 .wtrace-plant { stroke: #fff; stroke-width: 2.5; fill: #1c3d8f; fill-opacity: 1; }
 .wtrace-out:empty, .trace-out:empty { display: none; }
+.area-box .mo-where { margin-bottom: 2px; }

@@ -290,15 +290,15 @@ application.
   (ⓘ Criteria & data); the scenario line sits once at the top. Tables open in **Simple** columns
   (the build-out flows and peaks); **Engineering** adds the layer-by-layer and local / upstream
   columns.
-- **Filter by area** (own box, bottom right of the map, under the Wastewater loads box): secondary
-  plan / character area, MTSA, pressure zone and drainage area (wastewater block). Each is a
+- **Filter by area** (own box, bottom right of the map, under the Wastewater loads box): the
+  municipality (All · Brampton · Caledon · Mississauga) on top, then secondary plan / character area, MTSA, pressure zone and drainage area (wastewater block). Each is a
   dropdown of checkboxes with a search and Clear, so several can be picked: a development counts if
   it's in any pick of a list and matches every list used. Picks are outlined on the map, named in
   the filter chips and kept in share links and saved views (comma lists; older one-id links still
   open). The box folds to one line with a summary.
 - **Map layout**: top right, the view switch (Planning / Water / Wastewater / DC) over **Layers**:
   one switch per layer — Developments, Wastewater blocks, Pressure zones, Capacity colours,
-  Existing pipes, Planned DC works, Planning areas, Census areas — then the municipality and *More
+  Existing pipes, Planned DC works, Planning areas, Census areas — then *More
   settings* (saved views, development colour / size / labels, capacity shading, existing pipe kinds
   and size labels, DC works by system, planning area kinds, base map). The views set the switches;
   changes are remembered per view. With the blocks as the catchments there is one wastewater area
