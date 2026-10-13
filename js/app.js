@@ -2232,10 +2232,11 @@
       ${row('Status', status)}
       ${row('Latest decision', latestDecisionHTML(p, st))}
       ${row('Build-out', buildoutBriefHTML(p))}
+      ${p.records.some(r => r.kind === 'application') ? row('Servicing report', fsrBoxHTML(p)) : ''}
       ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
       ${exportBar('dev')}
     </section>`;
-    return devServicingBriefHTML(p, st, f);
+    return devServicingBriefHTML(p, st, f, part);
   }
   // ---- Functional Servicing Report links (data/fsr.json, scripts/build-fsr.js) -----------------
   const FSR = { data: null, loading: null, by: null };
@@ -2274,12 +2275,14 @@
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="dev-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
   // Servicing tab: the trace tool first, then Water and Wastewater in their own sections, then the
   // site (ground, stormwater).
-  function devServicingBriefHTML(p, st, f) {
+  function devServicingBriefHTML(p, st, f, part) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const has = p.lat != null, cb = f && f.cb, zn = s => esc(s.replace('Pressure zone ', 'Zone '));
-    const trace = has ? `<div class="svc-actions trace-box">
-        <div class="trace-btns"><button type="button" class="btn trace-btn" data-trace="${esc(p.key)}" data-info="trace"><span aria-hidden="true">⤳</span> Trace the sewer path to the plant</button><button type="button" class="btn trace-btn wtrace-btn" data-wtrace="${esc(p.key)}" data-info="water-trace"><span aria-hidden="true">⤳</span> Trace the water supply from the plant</button></div>
-        <span class="muted small">On the map, along the existing pipes and the planned DC works</span><div class="trace-out"></div><div class="wtrace-out"></div></div>` : '';
+    // One trace per tab: the sewer path (Wastewater) and the water supply (Water).
+    const traceW = has ? `<div class="svc-actions trace-box"><div class="trace-btns"><button type="button" class="btn trace-btn wtrace-btn" data-wtrace="${esc(p.key)}" data-info="water-trace"><span aria-hidden="true">⤳</span> Trace the water supply from the plant</button></div>
+        <span class="muted small">On the map, along the existing watermains and the planned DC mains</span><div class="wtrace-out"></div></div>` : '';
+    const traceS = has ? `<div class="svc-actions trace-box"><div class="trace-btns"><button type="button" class="btn trace-btn" data-trace="${esc(p.key)}" data-info="trace"><span aria-hidden="true">⤳</span> Trace the sewer path to the plant</button></div>
+        <span class="muted small">On the map, pipe by pipe to the plant, along the existing sewers and the planned DC mains</span><div class="trace-out"></div></div>` : '';
     const near = f && (f.zNear || f.dNear) ? `<p class="small est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'sewered blocks'].filter(Boolean).join(' and ')}: assigned to the nearest (${[f.zNear && `${zn(f.z.name)}, ${esc(nearText(f.zNear))}`, f.dNear && f.path[0] && `${esc(drName(f.path[0]))}, ${esc(nearText(f.dNear))}`].filter(Boolean).join('; ')}). The connection point comes from the FSR / master plan.</p>` : '';
     // Water
     const wDemand = cb ? `<p class="small"><strong>${uLs(cb.water.maxDay)}</strong> max day · ${uLs(cb.water.peakHour)} peak hour · ${uLs(cb.water.avg)} average</p>
@@ -2289,8 +2292,6 @@
       ${has ? row('Supply route', `<div id="dev-wtrace" data-info="water-trace">${waterTraceHTML(p)}</div>`) : ''}
       ${has ? row('Watermains', '<div id="dev-exist-water"><p class="small muted">Looking up the nearest watermains…</p></div>') : ''}
       ${has ? row('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>') : ''}
-      ${st.works ? row('Planned works', devWorksHTML(st.works, 'water')) : ''}
-      ${state.dcInfra && f ? row('DC needs', `<div data-info="dc-needs">${dcNeedsHTML(p, 'water')}</div>`) : ''}
     </div></section>`;
     // Wastewater
     let wwRows = '';
@@ -2311,15 +2312,27 @@
     const ww = `<section class="svc-sys svc-sys-ww"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Wastewater</h3><div class="brief">
       ${wwRows}
       ${has ? row('Sanitary sewers', '<div id="dev-exist-sanitary"><p class="small muted">Looking up the nearest sanitary sewers…</p></div>') : ''}
-      ${st.works ? row('Planned works', devWorksHTML(st.works, 'wastewater')) : ''}
-      ${state.dcInfra && f ? row('DC needs', `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p, 'ww')}</div>`) : ''}
     </div></section>`;
     const site = has ? `<section class="svc-sys svc-sys-site"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Site</h3><div class="brief">
       ${row('Ground', '<div id="dev-ground" data-info="ground"><p class="small muted">Looking up ground elevation…</p></div>')}
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
     </div></section>` : '';
-    return `${fsrBoxHTML(p)}${trace}${near}${f ? allocBoxHTML(p) + dcRevenueHTML(p) : ''}${water}${ww}${site}`;
+    if (part === 'water') return `${traceW}${near}${water}`;
+    if (part === 'ww') return `${traceS}${near}${ww}${site}`;
+    // DC Analysis: the DC works the development may rely on (both systems), the planned works near
+    // it and on its path, and the DCs it would pay.
+    if (part === 'dc') {
+      if (!state.dcInfra) return '<p class="small muted">The 2026 DC capital maps are loading…</p>';
+      const w = st.works;
+      const head = w && w.needBy ? `<p class="small ${w.gap ? 'why-stall' : ''}"><strong>Needs DC works by ${w.needBy}</strong>${w.gap ? ': the development is committed (approved or permitted) before the planned main it connects to is built.' : ': it connects through a planned main.'}</p>` : '';
+      return `${head}<section class="svc-sys svc-sys-dc"><h3 class="svc-sys-h"><i aria-hidden="true"></i>DC projects potentially required</h3><div class="brief">
+        ${f ? row('Wastewater', `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p, 'ww')}</div>`) : ''}
+        ${f ? row('Water', `<div data-info="dc-needs">${dcNeedsHTML(p, 'water')}</div>`) : ''}
+        ${w ? row('Planned works', devWorksHTML(w)) : ''}
+      </div></section>${f ? dcRevenueHTML(p) : ''}`;
+    }
+    return `${traceW}${traceS}${near}${water}${ww}${site}`;
   }
 
   // One dated history: phase changes (weekly check), council and committee items, file events
@@ -2504,17 +2517,17 @@
       <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${state.council ? 'agendas and minutes since 2019' : 'loading…'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
   }
 
-  function devServicingHTML(p, f) {
+  function devServicingHTML(p, f, open) {
     const dem = demandHTML(p, '', true);
     const sum = f ? `${fmt1(f.cb.water.maxDay)} L/s max day · ${fmt1(f.cb.wastewater.wetPeak)} L/s peak wet` : '';
-    return `<details class="sect" id="dev-svc"><summary><h2 class="section-title" data-info="servicing-check">Flows by stage and sewer path</h2><span class="muted small sect-sum">${sum}</span></summary>
+    return `<details class="sect" id="dev-svc"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="servicing-check">Flows by stage and sewer path</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${f ? servicingCheckHTML(p, f, { trace: false }) : servicingLineHTML(p)}
       ${dem}</details>`;
   }
-  function devUnitsHTML(p) {
+  function devUnitsHTML(p, open) {
     const b = p.buildout, e = empOf(p);
     const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} units` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
-    return `<details class="sect" id="dev-units"><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
+    return `<details class="sect" id="dev-units"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${summaryHTML(p)}
       ${buildoutHTML(p)}
       ${employmentHTML(p)}
@@ -2524,11 +2537,13 @@
 
   let currentProject = null, backToLoads = null, devBack = null;
   // Development panel tabs (the last one picked is kept for the next development).
-  const DV_TABS = [['overview', 'Overview'], ['servicing', 'Servicing'], ['history', 'History & records']];
+  const DV_TABS = [['overview', 'Overview'], ['demand', 'Demand'], ['water', 'Water'], ['ww', 'Wastewater'], ['dc', 'DC Analysis'], ['history', 'History']];
   function showDvTab(k) {
+    if (k === 'servicing') k = 'ww';   // the old combined Servicing tab
     if (!DV_TABS.some(([x]) => x === k)) k = 'overview';
     document.querySelectorAll('#detail-body [data-dvt]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.dvt === k)));
     document.querySelectorAll('#detail-body .dv-pane').forEach(p => { p.hidden = p.dataset.dvp !== k; });
+    const on = document.querySelector(`#detail-body [data-dvt="${k}"]`); if (on && on.parentElement.scrollWidth > on.parentElement.clientWidth) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
   function showDetail(p) {
     // "← What loads …" when opened from that list (kept while the same development is re-rendered).
@@ -2571,14 +2586,17 @@
       <div class="dv-tabs" role="tablist" aria-label="Development">${DV_TABS.map(([k, t]) => `<button type="button" role="tab" data-dvt="${k}" aria-selected="false">${t}</button>`).join('')}</div>
       <div class="dv-pane" data-dvp="overview" role="tabpanel">
         ${devBriefHTML(p, st, f, 'overview')}
-        ${devUnitsHTML(p)}
         <details class="sect" id="dev-aerial"><summary><h2 class="section-title" data-info="aerial">Aerial check</h2><span class="muted small sect-sum">before / latest photo</span></summary>
           <div class="aerial" id="aerial-check"></div></details>
       </div>
-      <div class="dv-pane" data-dvp="servicing" role="tabpanel">
-        ${devBriefHTML(p, st, f, 'servicing')}
-        ${devServicingHTML(p, f)}
+      <div class="dv-pane" data-dvp="demand" role="tabpanel">
+        ${devUnitsHTML(p, true)}
+        ${f ? allocBoxHTML(p) : ''}
+        ${devServicingHTML(p, f, true)}
       </div>
+      <div class="dv-pane" data-dvp="water" role="tabpanel">${devBriefHTML(p, st, f, 'water')}</div>
+      <div class="dv-pane" data-dvp="ww" role="tabpanel">${devBriefHTML(p, st, f, 'ww')}</div>
+      <div class="dv-pane" data-dvp="dc" role="tabpanel">${devBriefHTML(p, st, f, 'dc')}</div>
       <div class="dv-pane" data-dvp="history" role="tabpanel">
         ${phaseBasisHTML(p)}
         ${devHistoryHTML(p, st)}
@@ -2595,12 +2613,12 @@
     if ($('#dev-aerial').open) runAerial(p);
     fillExisting(p);
     // A trace already on the map for this development stays shown in its panel.
-    const tb = $('#detail-body .trace-btn');
+    const tb = $('#detail-body [data-trace].trace-btn');
     if (tb && TRACE.key === p.key && TRACE.last) { tb._label = tb.innerHTML; tb.dataset.on = '1'; tb.textContent = 'Hide the path'; tb.classList.add('on'); tb.closest('.trace-box').querySelector('.trace-out').innerHTML = traceSummaryHTML(TRACE.last); }
     const wb = $('#detail-body .wtrace-btn');
     if (wb && WTRACE.key === p.key && WTRACE.last) { wb._label = wb.innerHTML; wb.dataset.on = '1'; wb.textContent = 'Hide the water route'; wb.classList.add('on'); wb.closest('.trace-box').querySelector('.wtrace-out').innerHTML = waterTraceSummaryHTML(WTRACE.last); }
     // Trace tool on: tapping a development traces it.
-    if (tool.mode === 'trace') { setTool(null); showDvTab('servicing'); if (tb && TRACE.key !== p.key) tb.click(); }
+    if (tool.mode === 'trace') { setTool(null); showDvTab('ww'); if (tb && TRACE.key !== p.key) tb.click(); }
     viewLink.write();
   }
   function showTl(v) {
@@ -8490,7 +8508,8 @@
     { ch: 'Map', el: () => $('#timebar'), t: 'Timeline and demand year', b: 'The timeline keeps developments with activity in the chosen years. With capacity colours on, the Demand year on top sets the year the pipe loads and capacity are worked out for: 2021 Census, today or build-out.' },
     { ch: 'Map', el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area (or hold Ctrl / ⌘ and drag a box), measure with a ground profile, or test a site before an application exists.' },
     { ch: 'A development', do: () => { closeDetail(); devTab('overview'); }, wait: 700, el: () => $('#detail'), t: 'A development', b: 'Tap any marker. Overview: status, latest decision and build-out. ☆ Watch follows it in This week; Memo prints a one-page servicing memo.' },
-    { ch: 'A development', do: () => devTab('servicing'), wait: 500, el: () => document.querySelector('#detail-body .trace-box') || $('#detail'), t: 'Servicing', b: 'The latest Functional Servicing Report, then the traces: the sewer path to the plant and the water supply from the plant, along existing pipes and planned DC mains.' },
+    { ch: 'A development', do: () => devTab('demand'), wait: 400, el: () => document.querySelector('#detail-body .dv-tabs') || $('#detail'), t: 'Its tabs', b: 'Demand: units, jobs, build-out and flows by stage. Water and Wastewater: the servicing of each system, with a trace on the map. DC Analysis: the DC projects it may need, and the DCs it would pay.' },
+    { ch: 'A development', do: () => devTab('ww'), wait: 500, el: () => document.querySelector('#detail-body .dv-pane:not([hidden]) .trace-box') || $('#detail'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with the tightest pipe and pumping station, the plant\'s reserve and the nearest sewers. The Water tab has the same for the supply.' },
     { ch: 'A development', do: () => { const b = document.querySelector('#detail-body .trace-box [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'Each pipe is coloured by how full it gets (green, orange, red) with arrows to the plant; the other developments fade. Tap a pipe for what loads it.' },
     { ch: 'Analysis', do: () => { clearSelected(); openAnalysis('overview'); }, wait: 500, el: () => $('#footer'), t: 'Analysis', b: 'The totals for what is on the map, and the capacity that runs out first, with its DC relief.' },
     { ch: 'Analysis', el: () => document.querySelector('.f-tabs'), t: 'Tabs', b: 'Demand and Growth for what is shown; Water and Wastewater by zone, catchment, plant and facility (with the 2020 Master Plan comparison); DC Analysis; Settings & sources; Change log.' },
@@ -8503,7 +8522,7 @@
   const HELP = [
     { t: 'Check servicing for a development', w: 'Reviewing an application, an FSR or a pre-consultation.',
       s: ['Tap its marker, or search its address or file number.', 'Servicing tab: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow, stormwater and ground.', 'Memo (top of the panel) prints a one-page servicing memo.'],
-      go: () => { const p = pickDev(); if (!p) return; store.set('dvTab', 'servicing'); toMap(); focusProject(p); setTimeout(() => showDvTab('servicing'), 50); } },
+      go: () => { const p = pickDev(); if (!p) return; store.set('dvTab', 'ww'); toMap(); focusProject(p); setTimeout(() => showDvTab('ww'), 50); } },
     { t: 'Find when DC projects are needed', w: 'DC background study, capital timing, or explaining why a site waits for a trunk sewer.',
       s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'More settings (box under Layers) → DC timing: every existing constraint, filtered to "Needed before the DC project".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Excel (all rows) exports the table for a memo or spreadsheet.'],
       go: () => { setMapView('dc'); loadSewers(); showDcTiming(); } },
