@@ -9147,8 +9147,8 @@
       }));
       // Unit counts written in the description since this snapshot was built ("unit count: 2656").
       if (src.countUnits !== false) for (const r of src.records) {
-        if (r.kind !== 'application' || r.units > 0 || r.unitMix) continue;
-        const t = P.unitsFromText(r.description); if (t) { r.units = t; r.unitsFromText = true; }
+        if (r.kind !== 'application' || r.unitMix || (r.units > 0 && !r.unitsFromText)) continue;
+        const t = P.unitsFromText(r.description); if (t && !(r.units >= t)) { r.units = t; r.unitsFromText = true; }
       }
       const n = fmtNum(src.records.length);
       if (meta.status === 'ok') { src.status = 'ok'; src.msg = `${n} records · ${meta.updated}`; }
