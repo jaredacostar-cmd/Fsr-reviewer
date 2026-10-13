@@ -741,6 +741,23 @@ Alloa's location isn't published, so it is listed in the table but not shown on 
 title show the latest application submitted on the site: its date received and file number. The
 open data carries each file's first submission date, not resubmissions.
 
+## Map boxes, demand year and the tour
+
+- **More settings** has its own box under Layers (top right). With both open they share the
+  height down to the boxes at the bottom right; only open boxes are capped.
+- **Demand year** sits on top of the timeline box and runs from the **2021 Census** to build-out
+  (buttons: 2021 Census · Today · Build-out). Before today, growth built since the census counts in
+  the share of it completed by that year (Peel-wide, by units and completion date); approved and
+  proposed growth phase in from their horizon years as before.
+- **A development open:** on a wide screen Layers, More settings, the wastewater loads box and
+  Filter by area move left of the panel; the Clear selection button centres in the visible map. On
+  a phone (bottom sheet) Layers and Filter by area stay above the sheet, and the timeline, legend and
+  loads box step aside until it closes.
+- **Tour:** 15 short steps in chapters (Start, Find, Map, A development, Analysis, Help). Steps set
+  the app up as they go: a real development opens, its Servicing tab and sewer trace show, then the
+  Analysis tabs. Progress dots (tap to jump), Back / Next, ← → keys, Esc to end; the tour tidies up
+  after itself. Help (?) → Take the tour again.
+
 ## Growth tab and the 2020 Master Plan comparison
 
 **Growth tab.** *Growth since the census* (census population and dwellings, built since, approved,
