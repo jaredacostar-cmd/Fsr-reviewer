@@ -1568,3 +1568,8 @@ body.print-map .area-box { display: none; }
 .wtrace-out:empty, .trace-out:empty { display: none; }
 .area-box .mo-where { margin-bottom: 2px; }
 .trace-plan { stroke: #d6336c; stroke-width: 5; stroke-dasharray: 9 7; stroke-opacity: .95; stroke-linecap: round; fill: none; }
+
+/* Map view switch: the four buttons always fit the panel (they shrink, never overflow). */
+.map-opts .mo-view { display: grid; grid-template-columns: repeat(4, minmax(0, auto)); justify-content: stretch; min-width: 0; }
+.map-opts .mo-view .btn { min-width: 0; padding: 4px 4px; overflow: hidden; text-overflow: ellipsis; letter-spacing: -.01em; }
+@media (max-width: 700px) { .map-opts .mo-view .btn { font-size: 11px; padding: 4px 3px; } }

@@ -4817,7 +4817,9 @@
     }
     // Layers panel (top right) stops above the boxes at the bottom right.
     const o = op.getBoundingClientRect(), wr = [wl.hidden ? null : wl.getBoundingClientRect(), ab.getBoundingClientRect()].filter(r => r && r.width && r.left < o.right && r.right > o.left).sort((a, b) => a.top - b.top)[0] || null;
-    op.style.maxHeight = wr ? `${Math.max(60, Math.round(wr.top - op.getBoundingClientRect().top - gap))}px` : ''; op.classList.toggle('mo-capped', !!wr);
+    // Only while Layers is open (folded, the panel is short and must never clip the view switch).
+    const pnOpen = !!(op.querySelector('.mo-panel') || {}).open;
+    op.style.maxHeight = wr && pnOpen ? `${Math.max(120, Math.round(wr.top - op.getBoundingClientRect().top - gap))}px` : ''; op.classList.toggle('mo-capped', !!wr && pnOpen);
     // Selection / mode buttons (bottom centre): above the boxes they would sit on.
     const mb = document.querySelector('.map-bottom');
     if (mb) {
