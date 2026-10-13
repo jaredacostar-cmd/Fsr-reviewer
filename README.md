@@ -795,6 +795,12 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   - OZS-2025-0015 at 10512 Mississauga Rd;
   - OZS-2025-0017 at 10916 Mississauga Rd.
 
+  The area plan's servicing tabs (Demand, Water, Wastewater, DC Analysis) show the whole area:
+  its own remaining units plus its draft plans. Its header says "whole area: plan + N draft
+  plans". This is a view; each draft plan still counts once, in its own development. Infiltration
+  is counted on the draft plans' land, not the whole precinct boundary. Example: precinct 52-2
+  shows 41.7 L/s peak wet for its 259 units.
+
   Site plans and condos inside a subdivision are still part of it. Peel's unit total is
   unchanged (+1 unit), with 17 more developments. Each related link reads *within* / *covers* /
   *overlaps* / *same address as* the file it matches.

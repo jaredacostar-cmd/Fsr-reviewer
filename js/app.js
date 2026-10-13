@@ -2165,7 +2165,7 @@
   function devHeadHTML(p, st, f) {
     const e = f ? f.e : D.estimate([p], state.criteria, 'all', jobsOf);
     const facts = [];
-    if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}`));
+    if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}${p.areaPlan ? ` <span class="muted">· whole area: plan + ${p.areaPlan.drafts} draft plan${p.areaPlan.drafts === 1 ? '' : 's'}</span>` : ''}`));
     if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(roundPop(e.employment.jobs)), 'jobs')));
     if (f && f.z) facts.push(chip(`${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zNear ? ' (nearest)' : ''}`));
     if (f && f.pl) facts.push(p.lat != null ? `<button type="button" class="chip chip-btn" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest)' : ''} <span aria-hidden="true">⤳</span></button>` : chip(`→ ${esc(PLANT_SHORT[f.pl] || plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
@@ -3634,10 +3634,13 @@
   // reserve capacity.
   // Servicing facts for one development (brief, header flags and the check): flows at design
   // criteria, pressure zone, sewer path to the plant with pumping stations, plant reserve.
+  // An area plan (precinct / block plan) with its draft plans: its servicing is the whole area's,
+  // its own remaining units plus each draft plan's (a view; each counts once in the totals).
+  const areaMembers = p => p.areaPlan && p.areaPlan.keys ? [p, ...p.areaPlan.keys.map(k => state.projects.find(x => x.key === k)).filter(q => q && q !== p)] : [p];
   function svcFacts(p) {
     const M = state.svcModel;
     if (!state.servicing || !M) return null;
-    const e = D.estimate([p], state.criteria, 'all', jobsOf), cb = e.combined;
+    const e = D.estimate(areaMembers(p), state.criteria, 'all', jobsOf), cb = e.combined;
     if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return null;
     const layer = p.phase === 'completed' ? 'built' : D.COMMITTED_PHASES.has(p.phase) ? 'approved' : (p.phase === 'inception' || p.phase === 'review') ? 'proposed' : null;
     const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean)[0];
