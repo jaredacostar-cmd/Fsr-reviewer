@@ -362,7 +362,10 @@ application.
   zones shaded by max day growth, markers by servicing layer sized by people + jobs, existing
   watermains, DC water works), *Wastewater* (drainage areas, sewer pipe capacity, existing sanitary
   sewers, DC wastewater works) and *DC* (markers by servicing timing, all DC works). Each view
-  remembers its own settings. *Layers & style* is grouped into Developments, Capacity,
+  remembers its own settings. Every view shows the same developments and site boundaries; the
+  servicing views no longer switch on the *Growth* focus, which hid applications with no unit or job
+  count (e.g. 11722 Mississauga Rd). On a phone a long Layers summary is cut short with … rather
+  than widening the box off the screen. *Layers & style* is grouped into Developments, Capacity,
   Infrastructure (on / off chips for zones, catchments, existing pipes, DC works and the DC timing
   table) and Base map. Under *Layers & style*: marker colour (phase / servicing layer / receiving plant), size (same / people + jobs;
   clusters then total people + jobs) and a **capacity layer** — catchment flow growth over the
