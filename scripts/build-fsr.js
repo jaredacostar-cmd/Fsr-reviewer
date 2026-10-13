@@ -57,6 +57,12 @@ function fileKeys(s) {
   for (const m of s.matchAll(/\b(20\d\d)-(\d{4})\b/g)) keys.add(`${m[1]}|${+m[2]}`);   // Caledon 2026-0016
   return [...keys];
 }
+// File numbers in a Mississauga page address: development-application-oz-opa-25-16-w8,
+// …-oz-24-5-w10-and-21t-m-24-2-w10 (the ward left out).
+function slugKeys(u) {
+  const m = /development-application-([a-z0-9-]+?)\/?$/i.exec(u); if (!m) return [];
+  return m[1].split('-and-').map(part => part.split('-').filter(t => !/^w\d+$/i.test(t)).map(t => /^\d+$/.test(t) ? String(+t) : t.toUpperCase()).join('|')).filter(k => /\d/.test(k) && /^[A-Z0-9]/.test(k));
+}
 function pick(docs) {
   const f = docs.filter(d => IS_FSR.test(d.label) || IS_FSR.test(decodeURIComponent(d.url)));
   if (!f.length) return null;
@@ -123,7 +129,10 @@ async function mississauga() {
     const title = text((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(h) || [])[1] || '');
     // The application pages are drawn in the browser: the server answers a real one with the
     // listing's shell (and an unknown one with 404), so a page that exists is linked as it is.
-    if (/^active development applications$/i.test(title) && keyOf.has(u)) { out.push({ muni: 'Mississauga', page: u, title: `Development application ${keyOf.get(u).replace(/\|/g, ' ')}`, keys: [keyOf.get(u)], docs: null, fsr: null, browserPage: true }); continue; }
+    if (/^active development applications$/i.test(title)) {
+      const ks = keyOf.has(u) ? [keyOf.get(u)] : slugKeys(u);
+      if (ks.length) { out.push({ muni: 'Mississauga', page: u, title: `Development application ${ks.map(k => k.replace(/\|/g, ' ')).join(' and ')}`, keys: ks, docs: null, fsr: null, browserPage: true }); continue; }
+    }
     if (!/development application/i.test(title) || /^active development applications$/i.test(title)) { if (failed++ < 4) console.log('  mis skipped', u.split('/').slice(-2).join('/'), '| title:', title.slice(0, 60), '| canonical:', ((/<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(h) || [])[1] || '').slice(-80)); continue; }   // moved: redirected to the listing
     const docs = links(h, u).filter(a => isDoc(a.url));
     const keys = fileKeys(`${title} ${mainText(h).slice(0, 3000)}`);
