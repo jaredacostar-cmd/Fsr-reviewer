@@ -22,7 +22,7 @@ const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-c
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function get(url) {
   for (let k = 0; k < 3; k++) {
-    try { const r = await fetch(url, { headers: UA, redirect: 'follow' }); if (r.ok) return await r.text(); if (r.status === 404) return null; }
+    try { const r = await fetch(url, { headers: UA, redirect: 'follow' }); if (r.ok) return await r.text(); if (r.status === 404) { if (/mississauga/.test(url) && (get.n = (get.n || 0) + 1) <= 3) console.log('  404', url.slice(-90)); return null; } }
     catch (e) { /* retry */ }
     await sleep(1000 * (k + 1));
   }
@@ -120,7 +120,7 @@ async function mississauga() {
   for (const u of pages) {
     const h = await get(u); await sleep(300); if (!h) { failed++; continue; }
     const title = text((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(h) || [])[1] || '');
-    if (!/development application/i.test(title) || /^active development applications$/i.test(title)) { failed++; continue; }   // moved: redirected to the listing
+    if (!/development application/i.test(title) || /^active development applications$/i.test(title)) { if (failed++ < 4) console.log('  mis skipped', u.split('/').slice(-2).join('/'), '| title:', title.slice(0, 60), '| canonical:', ((/<link[^>]+rel="canonical"[^>]+href="([^"]+)"/i.exec(h) || [])[1] || '').slice(-80)); continue; }   // moved: redirected to the listing
     const docs = links(h, u).filter(a => isDoc(a.url));
     const keys = fileKeys(`${title} ${mainText(h).slice(0, 3000)}`);
     if (shown++ < 5) console.log('  mis page', u.split('/').slice(-2).join('/'), '| title:', title.slice(0, 80), '| keys:', keys.join(','), '| docs:', docs.length, '| all links:', links(h, u).length);
