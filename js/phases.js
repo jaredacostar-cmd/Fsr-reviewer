@@ -674,9 +674,11 @@
       all.push(...(extra.get(root) || []));
       const site = { planned: plannedUnits(root), site: root.rep };
       // An area plan (precinct / block plan) holding draft plans: only the units they don't carry.
-      const kids = (root.areaKids || []).map(plannedUnits).filter(v => v > 0), covered = kids.reduce((t, v) => t + v, 0);
-      if (root.areaKids && root.areaKids.length) {
-        site.area = { drafts: root.areaKids.length, covered };
+      const akids = [], collectK = land => { akids.push(...(land.areaKids || [])); land.children.forEach(collectK); };
+      collectK(root);
+      const kids = akids.map(plannedUnits).filter(v => v > 0), covered = kids.reduce((t, v) => t + v, 0);
+      if (akids.length) {
+        site.area = { drafts: akids.length, covered, keys: akids.map(k => rootOf(k).rep.key) };
         if (site.planned != null) site.planned = Math.max(0, site.planned - covered);
       }
       parts.push({ key: root.rep.key, recs: all, site });
