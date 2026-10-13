@@ -1555,3 +1555,14 @@ body.print-map .ww-loads { background: #fff; color: #111; }
 .area-box small { color: var(--text-muted); font-size: 11px; }
 @media (max-width: 700px) { .area-box { width: 200px; font-size: 11px; } .leaflet-bottom.leaflet-right .area-box { margin: 0 8px 6px 0; } .area-box[open] { width: min(300px, calc(100vw - 16px)); } }
 body.print-map .area-box { display: none; }
+
+/* Water supply trace: existing mains solid blue (weight by diameter), planned DC mains dashed. */
+.trace-btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.wtrace-main { stroke: #1971c2; stroke-opacity: .9; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+.wtrace-plan { stroke: #1c7ed6; stroke-width: 5; stroke-dasharray: 9 7; stroke-opacity: .95; stroke-linecap: round; fill: none; }
+.wtrace-link { stroke: #1971c2; stroke-width: 2.5; stroke-dasharray: 5 5; fill: none; }
+.wtrace-gap { stroke: #868e96; stroke-width: 3; stroke-dasharray: 4 7; fill: none; }
+.wtrace-site { stroke: #fff; stroke-width: 2.5; fill: #1971c2; fill-opacity: 1; }
+.wtrace-ps { stroke: #fff; stroke-width: 2; fill: #0b7285; fill-opacity: 1; }
+.wtrace-plant { stroke: #fff; stroke-width: 2.5; fill: #1c3d8f; fill-opacity: 1; }
+.wtrace-out:empty, .trace-out:empty { display: none; }

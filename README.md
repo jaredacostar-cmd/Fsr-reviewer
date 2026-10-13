@@ -762,9 +762,28 @@ the sewer trace.
   treatment plant.
 - Each step shows the pump group's firm capacity.
 - Below the route is the pumping into the development's zone as a share of firm capacity.
-- **Show on the map** draws the route.
 - Caledon's groundwater areas show their well system instead.
-- The route is schematic: it doesn't trace the mains between stations.
+
+**Water supply trace.** At the top of the Servicing tab, beside *Trace the sewer path*, **Trace the
+water supply from the plant** draws the route on the map like the sewer trace.
+
+- Between the stops above (plant → stations → site), it takes the shortest path along the Region's
+  watermains of 300 mm and larger, preferring larger mains, and the planned water mains of the 2026
+  DC capital maps. Planned mains join existing ones at their ends (within 300 m) and wherever they
+  run within 25 m of one.
+- Existing mains are solid blue (thicker = larger), planned DC mains are dashed (tap for size, year
+  and project), and arrows run from the plant to the site. The stations are labelled. A step with no
+  mapped main between its stops is drawn straight (dashed grey).
+- Developments fade while it shows (Show / Faded / Hidden switch), and Clear selection removes it.
+- The summary gives the length on existing and on planned mains (with the DC years), the stations
+  passed with their firm capacity, the distance from the site to the network, and the pumping
+  capacity used.
+- `data/watermains.json` is built by `scripts/build-watermains.js` from the Region's watermains
+  (linework-raw download), rebuilt by the probe workflow's `sewer-build` mode. It loads only when a
+  water trace runs.
+- Indicative only: valves, pressure reducing stations and the hydraulics decide the real flow.
+- Both traces fit the route on the rotated map, clear of the open panel and the boxes along the
+  map's edges.
 
 ## DC funding scenario
 
