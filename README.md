@@ -140,8 +140,8 @@ press and hold) for a card explaining what it represents and where the data come
   projects are labelled first, and a label is left out if it would overlap another.
 - **Clusters** show how many projects they hold. The ring around each cluster shows the mix of
   phases.
-- **Subdivisions up close:** at street zoom, or when you select a project, its application
-  boundary appears with every building permit inside it as its own dot. Tap anywhere inside a
+- **Subdivisions up close:** application boundaries show at every zoom; at street zoom, or when you
+  select a project, every building permit inside one appears as its own dot. Tap anywhere inside a
   boundary to open that application (a site plan or condo nested in a larger development opens on
   its own, with a link to the whole project). Tap a dot to see that
   permit and the **planning application it belongs to** (file number, type, status, planned
@@ -215,9 +215,10 @@ criteria.
 
 **Scale, north arrow and boundaries:** a metric scale bar and a north arrow sit under the zoom
 and select tools; the arrow always points to true north (turned 44° on the road grid), and
-tapping it switches between road grid and north up. From street zoom (14) every shown project's
-planning application boundaries are drawn in its phase colour with a light fill; tap one for its
-application.
+tapping it switches between road grid and north up. At every zoom every shown project's
+planning application boundaries are drawn in its phase colour with a light fill (no cap; each is
+built once and reused as you pan); tap one for its application. Building-permit dots join them
+from street zoom (14), up to 3,000 in view.
 
 **Water pressure zones and wastewater drainage areas** (`data/servicing.json`, built by
 `scripts/build-servicing.js`; Probe data sources mode `servicing-build` rebuilds it):
