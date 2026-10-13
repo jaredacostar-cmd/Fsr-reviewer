@@ -50,7 +50,7 @@ const isDoc = u => /\.pdf(\?|$)|\/file\/|\.ashx|document\.aspx|\/documents?\//i.
 // File numbers on a page, normalised like the snapshot's fileKey.
 function fileKeys(s) {
   const keys = new Set();
-  for (const m of s.matchAll(/\b(OZ\s*\/\s*OPA|OZ|OPA|21T-M|21T|SPM|SP|CD|21CDM|POPA|RZ|SPA|DPC|OZS)[\s-]*(\d{2}[\s/-]+\d{1,4}|\d{4,5}[A-Z]?|20\d\d[\s-]+\d{3,4})\b/gi)) {
+  for (const m of s.matchAll(/\b(OZ\s*\/\s*OPA|OZ|OPA|21T-M|21T|SPM|SP|CD|21CDM|POPA|RZ|SPA|DPC|OZS)[\s-]*(20\d\d[\s-]+\d{3,4}|\d{2}[\s/-]+\d{1,4}|\d{4,5}[A-Z]?)\b/gi)) {
     const parts = `${m[1]} ${m[2]}`.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean).map(x => /^\d+$/.test(x) ? String(+x) : x);
     keys.add(parts.join('|'));
   }
@@ -66,13 +66,37 @@ function pick(docs) {
   return { title: best.label || decodeURIComponent(best.url.split('/').pop()), url: best.url, date: best.date, count: f.length };
 }
 
+// The page's own content: from its title (h1) on, so menus and footers don't add file numbers.
+function mainText(html) { const i = html.search(/<h1[\s>]/i); return text(i >= 0 ? html.slice(i) : html); }
+// File numbers on most pages come from menus and banners: drop them, and listing pages (many files).
+function cleanKeys(items) {
+  const n = new Map(); for (const it of items) for (const k of it.keys) n.set(k, (n.get(k) || 0) + 1);
+  const common = new Set([...n].filter(([, c]) => c > Math.max(3, items.length * 0.25)).map(([k]) => k));
+  return items.map(it => ({ ...it, keys: it.keys.filter(k => !common.has(k)) })).filter(it => it.keys.length && it.keys.length <= 8);
+}
+async function sitemapUrls(index, re) {
+  const out = new Set(), seen = new Set(), queue = [index];
+  while (queue.length && seen.size < 60) {
+    const u = queue.shift(); if (seen.has(u)) continue; seen.add(u);
+    const x = await get(u); if (!x) continue;
+    for (const m of x.matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)) { const v = m[1].replace(/&amp;/g, '&'); if (/\.xml(\?|$)/i.test(v)) queue.push(v); else if (re.test(v)) out.add(v); }
+  }
+  return out;
+}
 async function mississauga() {
   const lists = ['https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/',
     'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/development-applications-in-process/'];
   const pages = new Set();
   for (const l of lists) {
     const h = await get(l); if (!h) { console.log('mis list failed', l); continue; }
-    for (const a of links(h, l)) if (/\/development-application-[^/]+\/?$/i.test(new URL(a.url).pathname)) pages.add(a.url.split('#')[0]);
+    const all = links(h, l); console.log('mis list', l, 'links', all.length, 'matching', all.filter(a => /development-application-/i.test(a.url)).length);
+    for (const a of all) if (/\/development-application-[^/]+\/?$/i.test(new URL(a.url).pathname)) pages.add(a.url.split('#')[0]);
+  }
+  // The listing is filled in by script on some pages: the sitemap lists every application page.
+  for (const idx of ['https://www.mississauga.ca/sitemap_index.xml', 'https://www.mississauga.ca/sitemap.xml', 'https://www.mississauga.ca/wp-sitemap.xml']) {
+    if (pages.size > 20) break;
+    for (const u of await sitemapUrls(idx, /\/development-application-[^/]+\/?$/i)) pages.add(u);
+    console.log('mis sitemap', idx, pages.size);
   }
   console.log('mississauga pages', pages.size);
   const out = [];
@@ -80,27 +104,28 @@ async function mississauga() {
     const h = await get(u); await sleep(250); if (!h) continue;
     const title = text((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(h) || [])[1] || '');
     const docs = links(h, u).filter(a => isDoc(a.url));
-    const keys = fileKeys(`${title} ${text(h).slice(0, 4000)}`);
+    const keys = fileKeys(`${title} ${mainText(h).slice(0, 3000)}`);
     out.push({ muni: 'Mississauga', page: u, title, keys, docs: docs.length, fsr: pick(docs) });
   }
-  return out;
+  return cleanKeys(out);
 }
 async function caledon() {
-  const l = 'https://www.caledon.ca/en/town-services/development-applications.aspx';
-  const h0 = await get(l); if (!h0) { console.log('cal list failed'); return []; }
-  const skip = /resources|development-applications|planning|building|zoning|heritage|committee|bylaw|by-law/i;
-  const pages = new Set(links(h0, l).map(a => a.url.split('#')[0]).filter(u => /caledon\.ca\/en\/town-services\/[^/]+\.aspx$/i.test(u) && !skip.test(u.split('/').pop())));
+  const skip = /resources|development-applications|current-applications|planning|building|zoning|heritage|committee|bylaw|by-law|advertis|moraine|subdivisions/i;
+  const pages = new Set();
+  for (const l of ['https://www.caledon.ca/en/town-services/current-applications.aspx', 'https://www.caledon.ca/en/town-services/development-applications.aspx']) {
+    const h0 = await get(l); if (!h0) { console.log('cal list failed', l); continue; }
+    for (const u of links(h0, l).map(a => a.url.split('#')[0])) if (/caledon\.ca\/en\/town-services\/[^/]+\.aspx$/i.test(u) && !skip.test(u.split('/').pop())) pages.add(u);
+  }
   console.log('caledon pages', pages.size);
   const out = [];
   for (const u of pages) {
     const h = await get(u); await sleep(250); if (!h) continue;
     const title = text((/<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(h) || [])[1] || '');
-    const body = text(h);
-    const keys = fileKeys(body.slice(0, 6000)); if (!keys.length) continue;
+    const keys = fileKeys(`${title} ${mainText(h).slice(0, 2500)}`); if (!keys.length) continue;
     const docs = links(h, u).filter(a => isDoc(a.url));
     out.push({ muni: 'Caledon', page: u, title, keys, docs: docs.length, fsr: pick(docs) });
   }
-  return out;
+  return cleanKeys(out);
 }
 
 (async () => {
