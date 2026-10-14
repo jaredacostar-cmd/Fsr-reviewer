@@ -129,6 +129,17 @@ function status() {
 function register(opts) {
   if (!hasServiceWorker()) return Promise.resolve(null);
   const options = opts && typeof opts === 'object' ? opts : {};
+  // A new deploy's worker takes over (skipWaiting + clients.claim): reload once so the page
+  // that an older worker served from its cache is replaced by the new build.
+  try {
+    const had = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!had || reloaded) return;
+      reloaded = true;
+      try { window.location.reload(); } catch (e) { /* defensive */ }
+    });
+  } catch (e) { /* defensive */ }
   const doRegister = () => {
     try {
       return Promise.resolve(navigator.serviceWorker.register(SW_URL, options))

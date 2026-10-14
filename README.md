@@ -1499,6 +1499,19 @@ and small phases were cut off ("pprove", "Inde truc").
 - The phase colours had stopped showing since the module split: two modules read the colours
   once at load, before they were set. They now read them each time they draw.
 
+## Updates reach the browser (offline service worker)
+
+The offline service worker (`sw.js`) used to serve the page itself cache-first under a fixed
+version, so a browser that had visited kept the first cached build: later fixes didn't show.
+Now:
+- the page is fetched from the network first, with the cached copy used only offline;
+- the deploy stamps the worker with the build, so each deploy installs a new worker, which takes
+  over at once and clears the previous caches;
+- when a new worker takes over, the page reloads once onto the new build.
+
+A browser still holding the old worker needs one or two reloads after this change. After that,
+each deploy shows on the next visit.
+
 ## Wide screens
 
 At 1800 px and wider, the Compare tool gets its own column to the right of the analysis
