@@ -206,6 +206,7 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
+      <div class="tool-banner" id="tool-banner" role="status" hidden></div>
       <div id="presentation-bar" hidden>
         <p class="pres-hl" id="pres-hl"></p>
         <div class="pres-tiles" id="pres-tiles"></div>
@@ -233,6 +234,7 @@
         <button type="button" role="tab" class="f-tab" id="ftab-dev" data-tab="dev" data-info="tab-dev" aria-controls="pane-dev" aria-selected="false" hidden>Development</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
         <button type="button" role="tab" class="f-tab" id="ftab-log" data-tab="log" data-info="tab-log" aria-controls="pane-log" aria-selected="false">Change log<span class="log-dot" hidden aria-label="new changes"></span></button>
+        <button type="button" role="tab" class="f-tab" id="ftab-tool" data-tab="tool" aria-controls="pane-tool" aria-selected="false" hidden>Tool result</button>
       </div>
       <div class="analysis-panes" id="analysis-panes">
 
@@ -315,6 +317,11 @@
         <div id="log-body"><div class="skel-row" role="status" aria-label="Loading the change log"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div></div>
       </section>
 
+      <section class="f-pane" id="pane-tool" data-pane="tool" role="tabpanel" aria-labelledby="ftab-tool" hidden>
+        <div class="tb-head"><h2 class="pane-h" id="tool-title">Tool result</h2><button type="button" class="btn small" id="tool-close" title="Close the tool result">Close ×</button></div>
+        <div id="pane-tool-body"></div>
+      </section>
+
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
         <fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind"><option value="application" selected>Planning applications + their permits</option><option value="">All records (incl. permits with no application)</option><option value="permit">Building permits</option><option value="both">Application + permits</option></select></label></div><label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>
         <div id="d-quality" class="d-quality"></div>
@@ -387,6 +394,15 @@
   <script src="js/design.js?v=__BUILD__"></script>
   <script src="js/devscope.js?v=__BUILD__"></script>
   <script src="js/devtab.js?v=__BUILD__"></script>
+  <script src="js/tools.js?v=__BUILD__"></script>
+  <script src="js/upstream.js?v=__BUILD__"></script>
+  <script src="js/tools-fit.js?v=__BUILD__"></script>
+  <script src="js/tools-inspect.js?v=__BUILD__"></script>
+  <script src="js/tools-corridor.js?v=__BUILD__"></script>
+  <script src="js/tools-compare.js?v=__BUILD__"></script>
+  <script src="js/tools-inquiry.js?v=__BUILD__"></script>
+  <script src="js/tools-upgrade.js?v=__BUILD__"></script>
+  <script src="js/tools-batch.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
 </body>
 </html>

@@ -127,7 +127,12 @@
         if (fsr) {
           const note = bar.querySelector('.site-bar-fsr');
           if (note) { note.hidden = !note.hidden; fsr.setAttribute('aria-expanded', String(!note.hidden)); }
+          return;
         }
+        // Phase 3b: hand the open development to the Compare tool (sibling module;
+        // guarded — the button is inert until that module loads).
+        const cmp = e.target.closest('[data-scope-compare]');
+        if (cmp) { const p = DevScope.current(); if (p && window.PeelToolCompare) window.PeelToolCompare.addDevelopment(p); return; }
       });
     },
 
@@ -197,6 +202,7 @@
           <button type="button" class="btn small" data-memo title="One-page servicing memo to print or save as PDF">Memo</button>
           <button type="button" class="btn small" data-scope-alloc title="Record a servicing allocation for this development">Record allocation</button>
           <button type="button" class="btn small" data-scope-fsr aria-expanded="false" title="Cross-check the consultant's FSR figures">Check FSR</button>
+          <button type="button" class="btn small" data-scope-compare title="Add this development to the comparison (Compare tool)">Compare</button>
         </div>
         <p class="site-bar-fsr small muted" hidden>FSR cross-check ships in Phase 7 — compare the consultant's population and flows against these numbers.</p>`;
       bar.hidden = false;
