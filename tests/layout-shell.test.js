@@ -60,7 +60,7 @@ test('tool rail: one toggle button per tool, no dropdown', () => {
     'rail not added after the north control');
   assert.ok(APP.includes("document.querySelectorAll('.tool-rail [data-tool]')"), 'syncToolsBtn does not target the rail');
   const items = extractConst('TOOL_ITEMS');
-  assert.deepEqual(items.map(i => i[0]), ['trace', 'lasso', 'measure', 'whatif', 'tips']);
+  assert.deepEqual(items.map(i => i[0]), ['select', 'measure', 'trace', 'whatif', 'inspect', 'corridor', 'unitsfit']);
   // Rail renders one button per tool with the same data-tool values.
   assert.ok(/TOOL_ITEMS\.map\(\(\[k, t, d, ic\]\) => `<button[^>]*data-tool="\$\{k\}"/.test(APP),
     'rail does not render a button per TOOL_ITEMS entry');

@@ -208,3 +208,18 @@ test('refresh: re-renders without moving the map or switching tabs', async () =>
   assert.equal(els['#site-bar'].hidden, false);
   assert.match(els['#site-bar'].innerHTML, /123 Main St/);
 });
+
+test('Compare button is guarded: calls PeelToolCompare when present, no-throw when absent', () => {
+  const DevScope = loadModule();
+  DevScope.open(P);
+  const bar = els['#site-bar'];
+  assert.match(bar.innerHTML, /data-scope-compare/, 'site bar has the Compare button');
+  const added = [];
+  global.window.PeelToolCompare = { addDevelopment: p => added.push(p.key) };
+  const btn = { closest: sel => (sel === '[data-scope-compare]' ? btn : null) };
+  bar.dispatchClick(btn);
+  assert.deepEqual(added, ['dev1'], 'open development handed to the Compare tool');
+  delete global.window.PeelToolCompare;
+  bar.dispatchClick(btn); // must not throw without the sibling module
+  assert.deepEqual(added, ['dev1'], 'nothing added when the module is absent');
+});

@@ -63,7 +63,7 @@ test('basemapForView: planning -> aerial, servicing views -> dark canvas', () =>
 test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', () => {
   const names = ['planning', 'water', 'wastewater', 'dc', 'development',
     'trace', 'lasso', 'measure', 'whatif', 'tips', 'present',
-    'export', 'settings'];
+    'export', 'settings', 'select', 'inspect', 'corridor', 'unitsfit'];
   for (const n of names) {
     const s = DG.icon(n);
     assert.ok(s.startsWith('<svg'), `${n}: not an svg`);
@@ -72,12 +72,22 @@ test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', ()
     assert.ok(s.includes('fill="none"'), `${n}: fill`);
     assert.ok(!/#[0-9a-fA-F]{3,6}\b/.test(s), `${n}: hard-coded colour`);
   }
-  // Aliases used by the UI resolve to the tool icons.
-  assert.equal(DG.icon('select'), DG.icon('lasso'));
+  // Aliases used by the UI resolve to the tool icons. 'select' is now its own
+  // cursor icon (Phase 3b rail), no longer an alias of 'lasso'.
+  assert.notEqual(DG.icon('select'), DG.icon('lasso'));
   assert.equal(DG.icon('test-site'), DG.icon('whatif'));
   // Unknown names fall back to the development icon, never an empty string.
   assert.equal(DG.icon('nope'), DG.icon('development'));
   assert.ok(DG.icon('nope').length > 0);
+});
+
+test('rail TOOL_ITEMS: every icon key is a real icon (no silent fallback)', () => {
+  // js/app.js is a browser IIFE; read the rail definition as source.
+  const m = /const TOOL_ITEMS = (\[[\s\S]*?\]);/.exec(APP);
+  assert.ok(m, 'TOOL_ITEMS not found in js/app.js');
+  const items = new Function(`return (${m[1]});`)();
+  assert.deepEqual(items.map(i => i[0]), ['select', 'measure', 'trace', 'whatif', 'inspect', 'corridor', 'unitsfit']);
+  for (const [k, , , ic] of items) assert.ok(DG.iconNames.includes(ic), `rail tool ${k} uses unknown icon ${ic}`);
 });
 
 test('share-link serialization excludes theme and density', () => {
