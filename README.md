@@ -260,16 +260,28 @@ from street zoom (14), up to 3,000 in view.
   (municipality, plans, MTSA, pressure zone, drainage area, size, land use, dwelling type, years), the analysis tab
   and wastewater view, the mode / max-day / diversion switches, the map position and the open
   development. The address bar keeps the same link as you work (`#…` parameters).
-- **Export** (*PDF / print* and *Excel* buttons on the Growth & demand, Water, Plants and
-  Catchments views, the development panel and a lasso selection): the PDF option opens a printable
-  report of what is on screen (with the mode, switches, filters, data dates, the criteria table
-  with edits highlighted, and references) and starts the print dialog; Excel writes a workbook
-  with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
-  lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
-  Excel is clicked. Per-file record tables are left to *Export CSV*. CSV and Excel
-  Developments / Records exports carry provenance columns: `portal`, `source_url`,
-  `retrieved_at` and `source_record_id`; the Excel Summary sheet and the CSV header comments
-  carry the unofficial-prototype line.
+- **Export** (top bar): one menu for everything the tracker can hand off. *CSV — developments
+  shown* and *GeoJSON — developments shown* download the filtered list (with provenance columns
+  `portal`, `source_url`, `retrieved_at`, `source_record_id`); *Servicing areas (GeoJSON)* and
+  *Planned works (GeoJSON)* export the GIS layers. *SWMM model (.inp)* exports the 40
+  wastewater blocks as a SWMM 5 skeleton (disabled until the wastewater servicing data is
+  loaded). *Excel workbook (.xlsx)* writes one workbook with fixed sheets — Summary (filters,
+  scenario, data dates, app version, disclaimer), Developments, Records (with provenance
+  columns), Water, Wastewater, DC, Criteria, Sources — always for the current scope and
+  filters; numbers as numbers, units in the headers, second lines such as population as extra
+  columns. SheetJS (cdnjs) loads only when Excel is clicked. Four print-ready PDFs: the *executive briefing* (pipeline headlines,
+  capacity and the DC program), the *development memo* (a one-page servicing memo for the open
+  development), the *area report* (combined demand and capacity for a drawn selection or what is
+  shown) and the *comparison* (the Compare tool's developments and areas side by side, with a
+  totals row) — each opens a printable report (with the mode, switches, filters, data dates, the
+  criteria table with edits highlighted, and references) and starts the print dialog. *Print map*
+  prints the map landscape with a title block, scenario, legend, north arrow and scale.
+  *Inquiry response draft* starts a servicing inquiry draft from what is shown, and *Copy share
+  link* copies the exact view. The Excel Summary sheet, the PDF footers and the CSV header
+  comments carry the unofficial-prototype line. The list-based exports (CSV, GeoJSON, Excel,
+  executive briefing) reflect the developments currently shown — the active scope and filters;
+  the development memo reports the open development and the comparison PDF reports the Compare
+  tool's items.
 - **Default view**: the map opens on the active development applications (application to
   construction, any year) over the background. On desktop the analysis column opens on
   **Overview**; on phones it starts as a summary sheet (tap the grip to expand). Map tools (trace a sewer path,
@@ -355,11 +367,13 @@ from street zoom (14), up to 3,000 in view.
   pumping station capacity over time, water by pressure zone, existing mains and ground, saving /
   sharing / exporting, and how far to trust the numbers — each with *Show me*, which sets the map
   up for the task; plus quick tips and the tour again.
-- **Reports**: *Memo* on a development opens a one-page servicing memo (proposal, status, flows,
-  sewer path, plant reserve, DC needs, planned works, live site context, a map sketch of sewers by
-  load and DC works) to print or save as PDF. *Area report* (a drawn selection, or *Report* on the
-  Showing line for what is shown) gives combined demand, the capacity relied on with the DC timing,
-  and the largest developments. DC timing → *Excel (all rows)* exports every constraint.
+- **Reports** (top bar → Export): the *development memo* opens a one-page servicing memo for the
+  open development (proposal, status, flows, sewer path, plant reserve, DC needs, planned works,
+  live site context, a map sketch of sewers by load and DC works) to print or save as PDF. The
+  *area report* (a drawn selection, or *Report* on the Showing line for what is shown) gives
+  combined demand, the capacity relied on with the DC timing, and the largest developments. The
+  *comparison* PDF puts the Compare tool's developments and areas side by side with a totals row.
+  The Excel workbook includes the full DC timing table for a memo or spreadsheet.
 - **Search places**: the search also finds secondary plans / character areas, MTSAs, pressure zones,
   catchments and pumping stations, DC projects (by number or name) and DC facilities, file numbers
   by prefix, and intersections ("Main St & Queen St").
@@ -400,7 +414,7 @@ from street zoom (14), up to 3,000 in view.
   and total water max day side by side.
 - **Linked map and tables**: hovering a zone / catchment row outlines it on the map, hovering an
   area highlights its row; *Only areas in map view* limits the rows to what is on screen.
-- **GIS export** (Explore → Export): developments as CSV / GeoJSON now carry servicing layer,
+- **GIS export** (top bar → Export): developments as CSV / GeoJSON now carry servicing layer,
   build-out people and jobs, flows in L/s, pressure zone, catchment and plant (with the distance
   when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
   and build-out flows and pumping station load. *Print map* prints the map landscape with a title
@@ -750,9 +764,10 @@ completed / left by unit type plus employment, servicing demand (residential + e
 the total, completed and remaining units, peaked as one area), and growth since the 2021 Census
 (census population of the dissemination areas whose centre is inside, plus built, approved and
 proposed growth). **+ Add area** draws another area into the selection, × removes a project,
-**Export CSV** downloads the selection, and opening a project gives a link back to it.
+and opening a project gives a link back to it. The selection's area report is on the selection
+summary; the filtered list can be downloaded as CSV or GeoJSON under top bar → Export.
 
-**Export:** download the filtered projects as CSV or GeoJSON.
+**Export** (top bar): download the filtered projects as CSV or GeoJSON, the Excel workbook, or the print-ready PDFs.
 
 ## Existing water facilities
 
@@ -1164,7 +1179,7 @@ date, a link to the pull request and the build (commit).
 - Renamed the app to **Peel Growth Pipeline (unofficial)**; the home-screen install name stays
   **Peel Dev**. A slim banner strip at the very top of every screen reads *Unofficial prototype
   · public data only · not a Region of Peel product*; the same line is printed on the executive
-  briefing, the servicing memo, the area report, the print map, the Excel Summary sheet, the PDF
+  briefing, the servicing memo, the area report, the comparison PDF, the print map, the Excel Summary sheet, the PDF
   footer and the CSV header comments.
 - Every source record (development → Source records, permit pop-ups) now shows the portal name
   (e.g. *City of Brampton Open Data*), a link to the record in its ArcGIS FeatureServer layer
@@ -1310,7 +1325,7 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
     - the climate: MTO trend to 2050 or 2080, or a +10, 20 or 30% uplift, for example from IDF_CC;
     - the storm the allowance represents (25-year by default).
   - The pipes, capacity colours and DC Analysis follow the scenario, and the Scenario chip shows it.
-- **SWMM model.** **Wastewater → Blocks → SWMM model (.inp)** exports the 40 blocks as a SWMM 5
+- **SWMM model.** Top bar → Export → **SWMM model (.inp)** exports the 40 blocks as a SWMM 5
   skeleton:
   - junctions at the block outlets, and conduits to the downstream block (trunk size, nearest
     trunk slope, relative inverts);
