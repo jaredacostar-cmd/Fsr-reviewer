@@ -125,7 +125,7 @@ search bar (save a view from More settings → Saved views).
   no activity for 2 years), Changed this week (new or moved stage in the latest weekly update).
 - **Active filters** appear as chips under the search. Tap a chip's × to remove that filter,
   or use **Reset all** (back to the defaults: all stages, Adds units or jobs).
-- **Records** (record type and **New buildings only**) moved to Settings & sources →
+- **Records** (record type and **New buildings only**) moved to **Settings** (gear menu in the top bar) →
   **Records**. Record type: by default only planning applications and the building permits that
   belong to them (permits with no application, such as infill houses, are hidden; choose *All
   records* to see them); also building permits only, or applications plus permits.
@@ -134,7 +134,7 @@ search bar (save a view from More settings → Saved views).
   chips → **Flags** (Growth is now the default land use; Major 100+ is a size; Employment is a
   land use; Committed capacity and Left to build are the counting basis in the **Scenario** bar;
   New in last 12 months is the Last 12 months button); record type and New buildings only →
-  Settings & sources → **Records**; the demand year → the Scenario bar's **Results for year**.
+  **Settings** (gear menu) → **Records**; the demand year → the Scenario bar's **Results for year**.
 
 **This week:** projects that are new, or that changed phase, since the previous weekly update.
 
@@ -277,7 +277,7 @@ from street zoom (14), up to 3,000 in view.
   and the north arrow (tap it to switch between road grid and north up).
   The sidebar has search, a "Showing …" line, and the unified filter panel (Search · Stage · Where · What · When · Flags).
 - **Executive briefing (PDF)** (Overview, top right): one printable Letter page for management —
-  title block with the date, *Prepared by* (set it in Settings & sources) and the data date; the
+  title block with the date, *Prepared by* (set it in Settings, the gear menu in the top bar) and the data date; the
   headline sentences; growth and demand tiles; servicing demand by phase; the plants' and South
   Peel water treatment's share of the 90% expansion trigger; room after servicing allocations; a
   map of the wastewater blocks with the larger developments and the plants; the DC projects to
@@ -289,7 +289,7 @@ from street zoom (14), up to 3,000 in view.
   Servicing tab; Wastewater → *Allocations* lists them and gives each plant's room at the 90%
   trigger after existing + approved development and after allocations made ahead of approval (also
   on the Overview). Kept in the browser; CSV export / import to share one list.
-- **Data freshness and model checks** (Settings & sources): every source with its date, update
+- **Data freshness and model checks** (Sources & checks, gear menu): every source with its date, update
   interval and status (current / due for a refresh / out of date / reference / live), summarised on
   the Overview; and the model against published figures — 2021 Census population for Peel and each
   municipality, the share on municipal sewers, population today against the annual report's
@@ -299,17 +299,21 @@ from street zoom (14), up to 3,000 in view.
   nearest 10 to 10,000, nearest 100 above); units are exact counts; L/s for pipes, stations and
   single developments, ML/d for plants, zones and totals; ≈ marks a screening estimate.
   Capacity and DC results are labelled **screening estimate** wherever they appear.
-- **Analysis column tabs**: **Overview** (the headline numbers on one screen: developments, units,
-  people, jobs, water max day and wastewater peak wet; the plants' and South Peel water treatment's
-  capacity against the 90% expansion trigger, committed and at build-out; the servicing demand by
-  phase; the DC projects that come online too late and those most growth relies on — each card
-  links to its tab), **Demand** (flows of the shown developments, then the *servicing
-  demand breakdown* by phase, by dwelling type and build-out by type, then growth since the census),
-  **Water**, **Wastewater** (plants / blocks), **DC Analysis**, **Developments** (the project list,
-  25 per page) and **Settings & sources** (the editable criteria and the references). Each tab's criteria and data sources fold to one line
-  (ⓘ Criteria & data); the scenario chip sits in the top bar. Tables open in **Simple** columns
-  (the build-out flows and peaks); **Engineering** adds the layer-by-layer and local / upstream
-  columns.
+- **Analysis tabs**: **Overview** (headline, four tiles, the **Needs attention** card, plant and
+  water treatment capacity bars, the largest developments), **Growth** (Pipeline: by phase and
+  dwelling type, completions per year, median time to approval by municipality; Census & 2051:
+  growth since the census, 2051 allocation, housing targets, population outlook), **Water**
+  (Capacity / Zones / Facilities / Hydraulic check), **Wastewater** (Plants / Blocks / Pumping
+  stations / Allocations), **DC** (Timing / Recommendations / Funding), plus **Development** when a
+  site is open. Each sub-view follows headline → tiles → one chart → one top-N table with "See
+  all" → one ⓘ method line. Tables open in **Simple** columns (the build-out flows and peaks);
+  **Engineering** adds the layer-by-layer and local / upstream columns.
+- **Removed in Phase 4 (moved, not lost):** the **Demand** tab (flows → Water / Wastewater,
+  unit counts → Growth); the **Settings & sources** tab — editable criteria → the **Scenario**
+  control in the top bar (with a Modified criteria badge and Reset to Peel criteria), data
+  freshness / model checks / references → **Sources & checks** (gear menu), number conventions /
+  Prepared by / theme / density → **Settings** (gear menu), record type and New buildings only →
+  Settings → **Records**, change log → the **Help** menu.
 - **Filter by area** (in the filter panel's Where section): the
   municipality (All · Brampton · Caledon · Mississauga) on top, then secondary plan / character area, MTSA, pressure zone and drainage area (wastewater block). Each is a
   dropdown of checkboxes with a search and Clear, so several can be picked: a development counts if
@@ -851,7 +855,7 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
   - A file more than 1.5 km from the rest of its address group (a mistyped or mis-geocoded
     address) groups by its own location, and a multi-address join never links groups more than
     1.5 km apart. Peel's totals are unchanged.
-- **Build-out by application** (Demand tab, under *Units, jobs & build-out*, where a development
+- **Build-out by application** (Growth tab → Pipeline, under *Units, jobs & build-out*, where a development
   has several files or a file without a unit count):
   - One row per formal file: planned units, plus the permit units inside its boundary (permitted,
     completed, left). A permit counts in the smallest file boundary that holds it.
@@ -985,17 +989,36 @@ The analysis column's tabs run Overview · Growth · Demand · Water · Wastewat
   Analysis tabs. Progress dots (tap to jump), Back / Next, ← → keys, Esc to end; the tour tidies up
   after itself. Top-bar Help → Take the tour again, or What's new for the change log.
 
-## Growth tab and the 2020 Master Plan comparison
+## Analysis tabs: Overview, Growth, Water, Wastewater, DC
 
-**Growth tab.** *Growth since the census* (census population and dwellings, built since, approved,
-proposed, the growth chart and the 2051 forecast check) has its own bottom-panel tab, **Growth**,
-next to **Demand**, which keeps the servicing demand of the shown developments.
+Five analysis tabs (plus **Development** when a site is open). Every tab has at most four
+sub-views, picked with buttons, each in the same order: a one-sentence headline, up to four
+tiles, one chart, one top-N table with "See all", and one ⓘ method note.
 
-**2020 Master Plan vs this tracker.** Water → Facilities and Wastewater → Plants open with a table
-of the facilities the 2020 Water and Wastewater Master Plan assessed: capacity, the Master Plan's
-forecast for 2026 · 2031 · 2041, and the tracker's numbers (today, + approved, + proposed, build-out),
-with a bar per row (Master Plan years as dashed ticks, capacity as a line) and the Master Plan
-year whose forecast matches the tracker's build-out.
+- **Overview:** headline → four tiles → the **Needs attention** card (constraints that run out
+  before relief, stalled large sites, sites past the 90% trigger, this week's changes) →
+  plant and water treatment capacity bars → the largest developments.
+- **Growth** (merges the old Growth and Demand tabs; the Demand tab is gone):
+  **Pipeline** — the application pipeline by phase and dwelling type (planned / permitted /
+  completed / left), completions per year, and median time from application to approval by
+  municipality. **Census & 2051** — growth since the census, the 2051 allocation, housing
+  targets to 2031 and the population outlook. Demand's flows moved to Water / Wastewater.
+- **Water:** **Capacity** (treatment, pumping into zones as % of firm capacity, storage, with
+  room left and trigger year per zone and storage facility), **Zones**, **Facilities**, and
+  **Hydraulic check (beta)** — the EPANET check, clearly labelled. The 2025 production
+  reports and Caledon groundwater moved to Sources & checks → Model checks.
+- **Wastewater:** **Plants** (capacity chart, horizon table, plant inflow by growth layer, the
+  tightest pipes — top 10 by % of capacity at build-out), **Blocks**, **Pumping stations**,
+  **Allocations**. The 2025 reports vs model and Master Plan comparisons moved to
+  Sources & checks → Model checks; effluent exceedances moved to the plant's map pop-up.
+- **DC:** **Timing**, **Recommendations** (the Keep and Defer tables merged into one, with a
+  recommendation column and All / Keep / Defer filter chips), **Funding**.
+
+**2020 Master Plan vs this tracker.** Now under Sources & checks (gear menu) → Model checks:
+a table of the facilities the 2020 Water and Wastewater Master Plan assessed: capacity, the
+Master Plan's forecast for 2026 · 2031 · 2041, and the tracker's numbers (today, + approved, +
+proposed, build-out), with a bar per row (Master Plan years as dashed ticks, capacity as a line)
+and the Master Plan year whose forecast matches the tracker's build-out.
 
 - Water (maximum day, Vol. 3 Tables 8, 9, 11): South Peel system, A.P. Kennedy and Lorne Park
   WTPs (today = 2025 measured maximum day), Lorne Park Zone 2 high lift, Beckett Sproule transfer,
@@ -1122,7 +1145,7 @@ largest single shortfall to the sum of the projects' own impacts.
 
 ## Change log and versions
 
-The **Change log** tab (last tab in the analysis column) lists every release of the app, newest
+The **Change log** (Help menu in the top bar) lists every release of the app, newest
 first. One release is one pull request merged into `main`, numbered **1.<pull request number>**
 (for example 1.111). Each release shows its title, the bullet points from its description, the
 date, a link to the pull request and the build (commit).
@@ -1210,6 +1233,42 @@ date, a link to the pull request and the build (commit).
 - **Developments tab:** the project list moved from the sidebar into the analysis column,
   paged 25 per page with the existing sorts.
 
+### Phase 4 — Analysis tab restructure
+
+- **Five tabs** (+ Development when a site is open): Overview · Growth · Water · Wastewater · DC.
+  Every tab has at most four sub-views, picked with buttons, each in the same order: one-sentence
+  headline → up to four tiles → one chart → one top-N table with "See all" → one ⓘ method line.
+- **Overview** rebuilt: headline, four tiles, the new **Needs attention** card (constraints that
+  run out before relief, stalled large sites, sites past the 90% trigger, this week's changes),
+  plant and water treatment capacity bars, the largest developments. Housing targets, population
+  outlook and servicing demand by phase moved to Growth; the Tools card is gone (tools live on the
+  map toolbar); the DC program card is now one line in Needs attention.
+- **Growth** merges the old Growth and Demand tabs (the Demand tab is removed). **Pipeline:**
+  the application pipeline by phase and dwelling type (planned / permitted / completed / left),
+  new stats — completions per year and median time to approval by municipality. **Census & 2051:**
+  growth since the census, the 2051 allocation, housing targets to 2031, population outlook.
+  Demand's flows moved to Water / Wastewater.
+- **Water:** Capacity / Zones / Facilities / Hydraulic check (beta, the EPANET check, clearly
+  labelled). New: room left and trigger year for each zone and storage facility, matching the
+  plant horizon table. The 2025 production reports and Caledon groundwater moved to Sources &
+  checks → Model checks.
+- **Wastewater:** Plants / Blocks / Pumping stations / Allocations. New: **Tightest pipes**, the
+  top 10 by % of capacity at build-out; plant inflow by growth layer merged into Plants. The
+  2025 reports vs model and Master Plan vs tracker moved to Sources & checks → Model checks;
+  effluent exceedances moved to the plant's map pop-up.
+- **DC:** Timing / Recommendations / Funding. The Keep (47) and Defer (26) tables merged into one
+  table with a recommendation column and All / Keep / Defer filter chips.
+- **Settings & sources tab removed** (moved, not lost): editable criteria → the **Scenario**
+  control in the top bar (with a "Modified criteria" badge and "Reset to Peel criteria"); data
+  freshness, model checks and references → **Sources & checks** (gear menu); number conventions,
+  Prepared by, theme, density → **Settings** (gear menu); record type and New buildings only →
+  Settings → **Records**; change log → the **Help** menu.
+- **Demand assumptions:** every demand figure's ⓘ shows its formula with the site's inputs; the
+  criteria stamp on every table names the exact source documents and versions (e.g. "Peel Water
+  and Wastewater Modelling Demand Table, Aug 2024; Watermain Design Criteria, 2010"); the Scenario
+  control shows each edited value beside its Peel default; the Criteria export sheet lists value,
+  default, unit and source document + version for every parameter.
+
 ## Outside data: targets, projections, costs, storms, compliance, hydraulics
 
 These sources are fetched on GitHub Actions, because the sandbox can't reach the hosts. Run
@@ -1245,7 +1304,7 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
 - **Design storms and climate (wet weather scenario).** `data/idf.json` is built by
   `scripts/build-idf.js`. It holds the MTO IDF Curve Look-up coefficients at each wastewater block
   (`--only mto`) and MTO's climate trend.
-  - **Settings & sources → Wet weather scenario** scales the I&I allowance by the 1-hour intensity
+  - The **Scenario** control → Wet weather scenario scales the I&I allowance by the 1-hour intensity
     ratio. The choices are:
     - the storm (2- to 100-year);
     - the climate: MTO trend to 2050 or 2080, or a +10, 20 or 30% uplift, for example from IDF_CC;
