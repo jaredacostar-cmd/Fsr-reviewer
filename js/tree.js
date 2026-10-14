@@ -528,7 +528,7 @@
   const OVERLAY = new Set(['MTSA']);
   function tagAreas(built, areas) {
     const { nodes, trees, parent } = built;
-    const list = areas.filter(a => a.rings).map(a => ({ ...a, bbox: a.bbox || bboxOf(a.rings) }));
+    const list = areas.filter(a => a.rings).map(a => ({ ...a, bbox: a.bbox || bboxOf(a.rings), m2: P.ringsArea(a.rings) }));
     return trees.map(t => {
       const live = t.nodes.filter(i => !nodes[i].cancelled && !nodes[i].policy);
       if (!live.length) return null;
@@ -541,9 +541,12 @@
         let share = 0;
         if (root.rings) share = shareInside(root, a);
         else if (root.lng != null && root.lng >= a.bbox[0] && root.lng <= a.bbox[2] && root.lat >= a.bbox[1] && root.lat <= a.bbox[3] && P.pointInRings(root.lng, root.lat, a.rings)) share = 1;
-        if (share >= T.TAG) tags.push({ kind: a.kind, name: a.name, id: a.id, share: +share.toFixed(2), point: !root.rings });
+        if (share >= T.TAG) tags.push({ kind: a.kind, name: a.name, id: a.id, share: +share.toFixed(2), point: !root.rings, m2: a.m2 });
       }
-      tags.sort((x, y) => y.share - x.share);
+      // Largest overlap first; on a tie the smaller, more specific area (a precinct inside its
+      // secondary plan) comes first.
+      tags.sort((x, y) => y.share - x.share || x.m2 - y.m2);
+      for (const g of tags) delete g.m2;
       const primary = tags.find(x => !OVERLAY.has(x.kind)) || null;
       return { root: root.refs[0], rootRole: root.role, tags, primary };
     });

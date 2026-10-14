@@ -370,3 +370,13 @@ test('a count found online counts for its file even when another file in the tre
   b.lookups = new Map([['Brampton|D-2', { units: 200, source: 'city notice', url: 'https://example.org' }]]);
   assert.equal(T.countTree(b.treeOf('BLK'), b).units, 500);
 });
+
+test('area tags: on an equal overlap the smaller area (a precinct inside its secondary plan) is primary', () => {
+  const b = run([app({ ref: 'SP-N', poly: box(1, 1, 3, 3), units: 20 })]);
+  const tag = T.tagAreas(b, [
+    { kind: 'secondary plan', name: '52: Heritage Heights', municipality: 'Brampton', rings: box(-20, -20, 20, 20) },
+    { kind: 'precinct / block plan area', name: 'Precinct 52-2', municipality: 'Brampton', rings: box(0, 0, 5, 5) },
+  ])[0];
+  assert.equal(tag.primary.name, 'Precinct 52-2');
+  assert.equal(tag.tags.length, 2);
+});
