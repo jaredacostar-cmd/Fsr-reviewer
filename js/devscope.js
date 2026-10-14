@@ -55,14 +55,10 @@
       if (h) h.showFootTab('dev');
       // Worker B's tab body (defensive: devtab.js may not have loaded yet).
       try { if (window.DevTab && typeof window.DevTab.render === 'function') window.DevTab.render(); } catch (e) { /* keep the scope open without the tab body */ }
-      // Map treatment: fold the Layers panel, then draw the sewer path (display-only).
+      // Map treatment: fold the Layers panel. The sewer path is drawn only on request (the site
+      // bar's Trace sewer): tracing on open zoomed the map out to the whole route.
       this._foldLayers();
-      if (h && typeof h.traceDev === 'function') {
-        const token = ++this._traceToken, me = this;
-        Promise.resolve(h.traceDev(p)).then(
-          () => { if (me._current !== p || token !== me._traceToken) { if (h.traceKey() === p.key) h.clearTrace(); } },
-          () => { /* no path to draw; the scope stays open */ });
-      }
+      this._traceToken++;
       return p;
     },
 

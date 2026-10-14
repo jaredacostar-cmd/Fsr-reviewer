@@ -1499,6 +1499,12 @@ and small phases were cut off ("pprove", "Inde truc").
 - The phase colours had stopped showing since the module split: two modules read the colours
   once at load, before they were set. They now read them each time they draw.
 
+## Opening a development doesn't trace or zoom out
+
+Selecting a development moves the map to its site at your current zoom or closer, never further
+out. It no longer traces the sewer path automatically, because the trace zoomed the map out to
+the whole route to the plant. *Trace sewer* in the site bar draws the route when you want it.
+
 ## Employment: jobs from published floor areas and permits
 
 Jobs come from floor area at typical floor space per worker (industrial 110 m², office 25,
