@@ -21,7 +21,7 @@ const out = (() => { const i = process.argv.indexOf('--out'); return i > 0 ? pro
 fs.mkdirSync(out, { recursive: true });
 const log = [];
 const note = (...a) => { const s = a.join(' '); console.log(s); log.push(s); };
-const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/peel-growth-pipeline)' };
+const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/Fsr-reviewer)' };
 
 async function get(url, { asText = false, timeout = 120000 } = {}) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), timeout);

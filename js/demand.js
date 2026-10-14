@@ -48,43 +48,6 @@
   // Apartment density above which the high-density persons per unit applies (persons/ha).
   const APT_DENSITY = 475;
 
-  // Source document + version behind every editable parameter (shown in table stamps,
-  // the Scenario criteria editor and exports). Titles match data/peel-reports.json so the
-  // References list and the stamps name the same documents.
-  const _LWW = { doc: 'Region of Peel – Linear Wastewater Standards', ver: 'published Nov 2022, R1.0 Mar 2023' };
-  const _MDT = { doc: 'Region of Peel – Water and Wastewater Modelling Demand Table (Site Plan applications)', ver: 'v2.0, Aug 30 2024' };
-  const _LWW_PPU = { doc: _LWW.doc, ver: `${_LWW.ver}, Tables 2-1 / 2-2` };
-  const _MDT_ICI = { doc: _MDT.doc, ver: `${_MDT.ver} (non-residential rates)` };
-  const _PLAN = { doc: 'Planning assumptions', ver: 'typical floor space per job; not a Peel standard' };
-  const CRIT_SOURCES = {};
-  {
-    const fill = (group, src) => { CRIT_SOURCES[group] = {}; for (const k of Object.keys(DEFAULT_CRITERIA[group])) CRIT_SOURCES[group][k] = src; };
-    fill('ppu', _LWW_PPU);
-    fill('water', _MDT);
-    fill('wastewater', _LWW);
-    fill('employment', _MDT_ICI);
-    fill('m2PerJob', _PLAN);
-  }
-  // Display units for every editable parameter (exports).
-  const CRIT_UNITS = {
-    ppu: { single: 'persons/unit', town: 'persons/unit', apartment: 'persons/unit', apartmentHigh: 'persons/unit', unknown: 'persons/unit' },
-    water: { avg: 'L/cap/d', maxDay: '×', peakHour: '×' },
-    wastewater: { avg: 'L/cap/d', infiltration: 'L/s/ha', peakMin: '×', peakMax: '×' },
-    employment: { water: 'L/emp/d', maxDay: '×', peakHour: '×', wastewater: 'L/emp/d', peakMin: '×', peakMax: '×' },
-    m2PerJob: { industrial: 'm²/job', office: 'm²/job', retail: 'm²/job', hotel: 'm²/job', institutional: 'm²/job' },
-  };
-  /** Source metadata for one parameter, or null. */
-  function sourceOf(group, key) { return (CRIT_SOURCES[group] || {})[key] || null; }
-  /** "Document, version" strings for parameter groups, deduplicated in order — for stamps and exports. */
-  function sourceText(groups) {
-    const seen = [];
-    for (const g of groups || []) for (const k of Object.keys((CRIT_SOURCES[g] || {}))) {
-      const s = CRIT_SOURCES[g][k], t = `${s.doc}, ${s.ver}`;
-      if (!seen.includes(t)) seen.push(t);
-    }
-    return seen.join('; ');
-  }
-
   /** Guess the dwelling type of a project from its type / description text. */
   function unitTypeOf(text) {
     const s = String(text || '');
@@ -398,7 +361,7 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+  const api = { UNIT_TYPES, DEFAULT_CRITERIA, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);
