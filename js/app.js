@@ -419,24 +419,28 @@
   // restored values can land on the wrong control or match no option. Start from the app's state.
   // Phase 6 (R4): these ran at app.js eval time before the old boot section;
   // PeelSewerProfile.init() preserves that ordering and must run first.
-  window.PeelSewerProfile.init();
-  // Offline support (OFFLINE_WIRING): register the service worker early, before
-  // the first network fetch. Guarded: no-ops on file://, under node, or without SW.
-  if (window.PeelOffline) PeelOffline.register();
-  $('#t-mode').value = state.yearMode;
-  PeelSearchFilter.syncFilterControls();
-  for (const sel of document.querySelectorAll('select')) if (sel.selectedIndex < 0 && sel.options.length) sel.selectedIndex = 0;
-  readColors();
-  PeelMapCore.setTiles();
-  PeelMapAnalysis.renderLegend();
-  PeelMapAnalysis.syncMapOpts();
-  PeelMapAnalysis.renderSavedViews();
-  PeelDevelopmentsTab.renderSources();
-  renderVersion();
-  PeelGrowthUI.renderCriteria();
-  PeelTimeline.updateYearBounds();
-  applyFilters();
-  boot();
+  // (Runs from startApp(), after window.PeelApp is assigned below: every module reaches the
+  // app through it.)
+  function startApp() {
+    window.PeelSewerProfile.init();
+    // Offline support (OFFLINE_WIRING): register the service worker early, before
+    // the first network fetch. Guarded: no-ops on file://, under node, or without SW.
+    if (window.PeelOffline) PeelOffline.register();
+    $('#t-mode').value = state.yearMode;
+    PeelSearchFilter.syncFilterControls();
+    for (const sel of document.querySelectorAll('select')) if (sel.selectedIndex < 0 && sel.options.length) sel.selectedIndex = 0;
+    readColors();
+    PeelMapCore.setTiles();
+    PeelMapAnalysis.renderLegend();
+    PeelMapAnalysis.syncMapOpts();
+    PeelMapAnalysis.renderSavedViews();
+    PeelDevelopmentsTab.renderSources();
+    renderVersion();
+    PeelGrowthUI.renderCriteria();
+    PeelTimeline.updateYearBounds();
+    applyFilters();
+    boot();
+  }
 
   // Phase 6: paint first from the compact per-project index
   // (data/snapshot-index.json, ~43% of the snapshot), then swap in the full
@@ -518,8 +522,6 @@
     }
     await loadFullSnapshot();
   }
-  PeelPlanAreas.loadAreas();
-  PeelSvcData.loadServicing();
 
   function applySnapshot(snap) {
     state.snapshot = { generatedAt: snap.generatedAt, changes: snap.changes, note: snap.note };
@@ -715,6 +717,9 @@
 
   // Phase 6: deferred module inits that need window.PeelApp (assigned above).
   // In the single-file app these ran inline with the bare `state` variable.
+  startApp();
+  PeelPlanAreas.loadAreas();
+  PeelSvcData.loadServicing();
   window.PeelTopbar.initTopbar();
   window.PeelDataTab.initDataTab();
 })();

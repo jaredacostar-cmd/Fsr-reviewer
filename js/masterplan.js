@@ -68,7 +68,7 @@
     for (const p of App().state.projects.concat(App().state.whatifs || [])) {
       if (p.phase === 'cancelled' || p.lat == null || MM().svcLayerOf(p) === 'existing') continue;
       const zid = SD().svcIds(p, 'pz')[0]; if (!zid) continue;
-      const t = waterTrace(p, zid); if (!t || !t.steps.length) continue;
+      const t = WT().waterTrace(p, zid); if (!t || !t.steps.length) continue;
       const last = t.steps[t.steps.length - 1].f, info = { gw: t.gw, plant: last.kind === 'plant' ? last.name : '', level: zLevel(t.z.zone) || 0, sys: new Set(t.steps.map(s => s.pump && s.pump.sys).filter(Boolean)) };
       for (const r of MP2020.water) if (r.test(info)) groups[r.key].push(p);
     }

@@ -45,7 +45,7 @@
     for (const s of Object.values(TABSUBS))
       for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
     if (key === 'dca' && typeof DcaTab().renderDca === 'function') setTimeout(() => DcaTab().renderDca(), 0);
-    if (key === 'overview') setTimeout(() => OT().renderOverview(), 0);
+    if (key === 'overview') setTimeout(() => { if (OT() && window.PeelApp) OT().renderOverview(); }, 0);   // (may fire before the app has loaded; its boot renders the overview)
     if (key === 'ww' && wwSub === 'alloc') setTimeout(() => DUI().renderAlloc(), 0);
     // A narrow screen scrolls the tab strip: keep the open tab in view.
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;

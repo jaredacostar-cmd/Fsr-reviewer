@@ -234,6 +234,7 @@
     get loadsOf() { return loadsOf; },
     set loadsOf(v) { loadsOf = v; },
     get toolScope() { return toolScope; },
+    get existSewerOf() { return existSewerOf; }, set existSewerOf(v) { existSewerOf = v; },
     set toolScope(v) { toolScope = v; },
     toolResult, showLoads, showUpstream, toolScopeBody, ptActions, ptBtn,
     filterInView, inViewBox, printMap,

@@ -15,6 +15,7 @@
   const App = () => window.PeelApp;
   const MC = () => window.PeelMapCore;
   const MM = () => window.PeelMapMarkers;
+  const MA = () => window.PeelMapAnalysis;
   const ST = () => window.PeelSewerTrace;
   const WT = () => window.PeelWaterTrace;
   const AC = () => window.PeelAerialCheck;
@@ -407,7 +408,7 @@
     const rows = Ex().exportRows([...selection.values()]); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
     const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
-    download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
+    Ex().download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   // Phase 3b: the same selection actions, but the summary lives in the Tool result pane.
   $('#pane-tool-body').addEventListener('click', e => {
@@ -415,28 +416,28 @@
     if (a) {
       const k = a.dataset.sel;
       if (k === 'add') setLasso(true);
-      else if (k === 'clear') { clearSelection(); if (hasTools()) PeelTools.closeResult(); }
+      else if (k === 'clear') { clearSelection(); if (Meas().hasTools()) PeelTools.closeResult(); }
       else if (k === 'csv') exportSelectionCSV();
-      else if (k === 'back') openSelectionResult('Selection');
+      else if (k === 'back') Meas().openSelectionResult('Selection');
       return;
     }
     const o = e.target.closest('[data-open]');
-    if (o && selection.has(o.dataset.open)) { showDetail(selection.get(o.dataset.open)); return; }
+    if (o && selection.has(o.dataset.open)) { DN().showDetail(selection.get(o.dataset.open)); return; }
     const d = e.target.closest('[data-drop]');
-    if (d) { selection.delete(d.dataset.drop); drawSelection(); openSelectionResult('Selection'); }
+    if (d) { selection.delete(d.dataset.drop); drawSelection(); Meas().openSelectionResult('Selection'); }
   });
   $('#detail-body').addEventListener('click', e => {
     const a = e.target.closest('[data-sel]');
     if (a) {
       const k = a.dataset.sel;
       if (k === 'add') setLasso(true);
-      else if (k === 'clear') { clearSelection(); closeDetail(); }
+      else if (k === 'clear') { clearSelection(); AC().closeDetail(); }
       else if (k === 'csv') exportSelectionCSV();
       else if (k === 'back') showSelection();
       return;
     }
     const o = e.target.closest('[data-open]');
-    if (o && selection.has(o.dataset.open)) { showDetail(selection.get(o.dataset.open)); return; }
+    if (o && selection.has(o.dataset.open)) { DN().showDetail(selection.get(o.dataset.open)); return; }
     const d = e.target.closest('[data-drop]');
     if (d) { selection.delete(d.dataset.drop); drawSelection(); showSelection(); }
   });
@@ -446,30 +447,30 @@
   // selection, the address pin and highlighted mains. Filters stay as they are.
   let panelAt = 0;
   new MutationObserver(() => { panelAt = Date.now(); syncClearBtn(); }).observe($('#detail-body'), { childList: true });
-  new MutationObserver(() => { syncClearBtn(); fitLegend(); }).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
+  new MutationObserver(() => { syncClearBtn(); MA().fitLegend(); }).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!BLK.id || !!TRACE.key || !!svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || exHL.getLayers().length > 0 || pinLayer.getLayers().length > 0 || WTRACE.layer.getLayers().length > 0;
+  const somethingSelected = () => !$('#detail').hidden || !!ST().BLK.id || !!ST().TRACE.key || !!ST().svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || EP().exHL.getLayers().length > 0 || SF().pinLayer.getLayers().length > 0 || ST().WTRACE.layer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
     if (lassoOn) setLasso(false);
-    if (!$('#detail').hidden) closeDetail();
-    highlight(null);
-    if (svcFocus.id) focusSvc(svcFocus.id, { zoom: false, loads: false });
+    if (!$('#detail').hidden) AC().closeDetail();
+    MM().highlight(null);
+    if (ST().svcFocus.id) ST().focusSvc(ST().svcFocus.id, { zoom: false, loads: false });
     if (selection.size || selAreas.length) clearSelection();
-    clearBlockFocus(); clearTrace(); clearWaterTrace();
-    exHL.clearLayers(); pinLayer.clearLayers();
+    ST().clearBlockFocus(); ST().clearTrace(); WT().clearWaterTrace();
+    EP().exHL.clearLayers(); SF().pinLayer.clearLayers();
     syncClearBtn();
   }
   clearBtn.onclick = clearSelected;
   // A tap on the map itself (not a marker, area or line that opened something in the same tap).
   map.on('click', () => {
-    if (tool.mode || lassoOn) return;
+    if (Meas().tool.mode || lassoOn) return;
     const t0 = Date.now();
     setTimeout(() => { if (panelAt < t0 - 5) clearSelected(); }, 30);
   });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !tool.mode && !lassoOn && !document.querySelector('.tour') && !(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName))) clearSelected(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !Meas().tool.mode && !lassoOn && !document.querySelector('.tour') && !(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName))) clearSelected(); });
 
   const api = {
     selection,

@@ -10,7 +10,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, store } = root.PeelUtil;
+  const { $, esc, fmtNum, store, dot } = root.PeelUtil;
   const P = root.PeelPhases;
   const PD = root.PeelDesign;
   const map = root.PeelMapCore.map;

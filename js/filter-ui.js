@@ -94,7 +94,7 @@
     if (App().state.muni) out.push({ label: App().state.muni, clear: () => { App().state.muni = ''; SF().renderMuniChips(); PA().renderAreaSelects(); } });
     if (App().state.sp.length <= 3) for (const id of App().state.sp) out.push({ label: (PA().areaById.get(id) || {}).name || 'Secondary plan', clear: () => { App().state.sp = App().state.sp.filter(x => x !== id); PA().renderAreaSelects(); PA().showArea(); } });
     else out.push({ label: `${App().state.sp.length} secondary plans`, clear: () => { App().state.sp = []; PA().renderAreaSelects(); PA().showArea(); } });
-    for (const k of ['mtsa', 'pz', 'dr']) if (state[k].length) out.push({ label: k === 'mtsa' ? (state[k].length === 1 ? `MTSA: ${PA().multiSummary(k)}` : PA().multiSummary(k)) : k === 'dr' && state[k].length === 1 ? `Drainage: ${PA().multiSummary(k)}` : PA().multiSummary(k), clear: () => { state[k] = []; if (MM().AREA_F[k].svc) { SD().renderSvcSelects(); SD().showSvcArea(); } else { PA().renderAreaSelects(); PA().showArea(); } } });
+    for (const k of ['mtsa', 'pz', 'dr']) if (App().state[k].length) out.push({ label: k === 'mtsa' ? (App().state[k].length === 1 ? `MTSA: ${PA().multiSummary(k)}` : PA().multiSummary(k)) : k === 'dr' && App().state[k].length === 1 ? `Drainage: ${PA().multiSummary(k)}` : PA().multiSummary(k), clear: () => { App().state[k] = []; if (MM().AREA_F[k].svc) { SD().renderSvcSelects(); SD().showSvcArea(); } else { PA().renderAreaSelects(); PA().showArea(); } } });
     if (App().state.kind !== App().DEFAULT_KIND) out.push({ label: kindLabel[App().state.kind] || 'All records', clear: () => { App().state.kind = App().DEFAULT_KIND; setVal('#f-kind', App().DEFAULT_KIND); } });
     if (App().state.minUnits) out.push({ label: unitsLabel[App().state.minUnits] || `${App().state.minUnits}+ units`, clear: () => { App().state.minUnits = 0; setVal('#f-size', '0'); } });
     if (App().state.plant) out.push({ label: SD().PLANT_SHORT[App().state.plant] || App().state.plant, clear: () => { App().state.plant = ''; setVal('#f-plant', ''); } });
@@ -148,7 +148,7 @@
   // Reset every filter to its default. Shared by the "Reset all" chip and the
   // topbar's Peel trail step.
   function resetAllFilters() {
-    Object.assign(state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
+    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
     MA().setCapYear(MM().THIS_YEAR);
     SF().syncFilterControls();
     SF().renderMuniChips();
@@ -168,7 +168,7 @@
     return { phases: new Set(App().state.phases), muni: App().state.muni, sp: [...App().state.sp], mtsa: [...App().state.mtsa], pz: [...App().state.pz], dr: [...App().state.dr], kind: App().state.kind, search: App().state.search, minUnits: App().state.minUnits, newOnly: App().state.newOnly, flags: { ...App().state.flags }, plant: App().state.plant, dwelling: App().state.dwelling, landuse: App().state.landuse, basis: App().state.basis, yearMode: App().state.yearMode, yearFrom: App().state.yearFrom, yearTo: App().state.yearTo };
   }
   function restoreFilterState(s) {
-    Object.assign(state, { ...s, phases: new Set(s.phases), flags: { ...s.flags }, sp: [...s.sp], mtsa: [...s.mtsa], pz: [...s.pz], dr: [...s.dr] });
+    Object.assign(App().state, { ...s, phases: new Set(s.phases), flags: { ...s.flags }, sp: [...s.sp], mtsa: [...s.mtsa], pz: [...s.pz], dr: [...s.dr] });
   }
   function findBlockingFilter() {
     const saved = snapshotFilterState();

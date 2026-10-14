@@ -10,7 +10,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, fmt1, roundPop, UNOFFICIAL, dot, fmtMoney } = root.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, UNOFFICIAL, dot, fmtMoney, store } = root.PeelUtil;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
   const PV = root.PeelProvenance || null;
@@ -270,7 +270,7 @@
   document.addEventListener('click', e => {
     if (e.target.closest('[data-memo]') && DN().getCurrentProject()) return devMemo(DN().getCurrentProject());
     const a = e.target.closest('[data-area-report]'); if (!a) return;
-    if (a.dataset.areaReport === 'sel') areaReport([...selection.values()], `Area report – ${fmtNum(AS().selection.size)} selected developments`, AS().selAreas);
+    if (a.dataset.areaReport === 'sel') areaReport([...AS().selection.values()], `Area report – ${fmtNum(AS().selection.size)} selected developments`, AS().selAreas);
     else { const where = [App().state.muni, ...Object.keys(MM().AREA_F).map(k => PA().multiSummary(k, true))].filter(Boolean).join(', ') || 'All of Peel'; areaReport(App().state.filtered, `Area report – ${where}`); }
   });
 

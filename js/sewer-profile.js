@@ -182,7 +182,7 @@
     const units = w.single + w.town + w.apartment;
     const p = {
       key: `whatif:${w.id}`, whatif: true, title: w.name || 'Test site', municipality: w.municipality || '', lat: w.lat, lng: w.lng,
-      phase: w.phase, rank: P.PHASE_BY_KEY[w.phase].rank, units, unitMix: { single: w.single, semi: 0, town: w.town, apartment: w.apartment },
+      phase: w.phase, rank: window.PeelPhases.PHASE_BY_KEY[w.phase].rank, units, unitMix: { single: w.single, semi: 0, town: w.town, apartment: w.apartment },
       types: [], description: '', records: [], kinds: ['application'], milestones: {}, timeline: [], sp: [], mtsa: [], siteAreaHa: w.ha > 0 ? w.ha : null,
       buildout: units ? { planned: units, permitted: 0, completed: 0, remaining: units, unbuilt: units, permits: 0 } : null,
       _emp: w.jobs > 0 ? { jobs: w.jobs, uses: [], totalM2: 0 } : null,

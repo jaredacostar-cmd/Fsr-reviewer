@@ -121,7 +121,7 @@
           <small>Point at a development to outline its application site (mouse or trackpad).</small>
         </div>
         <div class="mo-sec"><div class="mo-h">Base map</div>
-          <label data-info="opt-MC().getBasemap()"><span>Background</span><select id="opt-MC().getBasemap()">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
+          <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
           ${MC().canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(MC().ORIENTATIONS, MC().getOrientation())}</select></label>` : ''}
         </div>
         </details>
@@ -412,7 +412,7 @@
   function popOf(p) {
     const k = JSON.stringify(App().state.criteria);
     if (k !== popKey) { popKey = k; popCache = new WeakMap(); }
-    if (!popCache.has(p)) { const e = D.estimate([p], App().state.criteria, 'all', jobsOf); popCache.set(p, e.population + e.employment.jobs); }
+    if (!popCache.has(p)) { const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf); popCache.set(p, e.population + e.employment.jobs); }
     return popCache.get(p);
   }
   const markerPx = pop => Math.min(46, Math.round((8 + 2.2 * Math.sqrt(Math.max(0, pop) / 10)) / 2) * 2);

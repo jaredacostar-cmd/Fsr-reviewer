@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;

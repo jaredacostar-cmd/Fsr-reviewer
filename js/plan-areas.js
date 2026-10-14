@@ -48,7 +48,7 @@
   // sentences), and a short summary for the closed dropdown.
   function areaName(k, id) { return k === 'sp' || k === 'mtsa' ? (areaById.get(id) || {}).name || '' : k === 'dr' ? SD().drName(SD().svcById.get(id) || {}) : (SD().svcById.get(id) || {}).name || ''; }
   function multiSummary(k, prose) {
-    const ids = state[k], n = ids.length, f = MM().AREA_F[k];
+    const ids = App().state[k], n = ids.length, f = MM().AREA_F[k];
     if (!n) return prose ? '' : f.all;
     const name = n === 1 ? areaName(k, ids[0]) : n <= 2 && prose ? ids.map(id => areaName(k, id)).join(' + ') : `${n} ${f.one === 'MTSA' ? 'MTSAs' : `${f.one}s`}`;
     return prose && k === 'mtsa' && n <= 2 ? `MTSA ${name}` : name;
@@ -86,10 +86,10 @@
     const q = ($(`#f-${k}-q`).value || '').trim().toLowerCase();
     $(`#f-${k}-list`).innerHTML = multiGroups(k).map(([g, items]) => [g, items.filter(([, n]) => !q || n.toLowerCase().includes(q))]).filter(([, items]) => items.length)
       .map(([g, items]) => (g ? `<div class="multi-group">${esc(g)}</div>` : '') + items.map(([id, n]) =>
-        `<label class="multi-item"><input type="checkbox" value="${esc(id)}"${state[k].includes(id) ? ' checked' : ''}><span>${esc(n)}</span></label>`).join('')).join('')
+        `<label class="multi-item"><input type="checkbox" value="${esc(id)}"${App().state[k].includes(id) ? ' checked' : ''}><span>${esc(n)}</span></label>`).join('')).join('')
       || '<p class="small muted">No match.</p>';
     $(`#f-${k}-summary`).textContent = multiSummary(k);
-    box.classList.toggle('on', state[k].length > 0);
+    box.classList.toggle('on', App().state[k].length > 0);
   }
   // After a pick: outline and zoom to the chosen areas, then filter.
   function afterAreaPick(k, zoom) {
@@ -138,22 +138,22 @@
     }
   }
   function togglePlanArea(kind, id) {
-    state[kind] = state[kind].includes(id) ? state[kind].filter(x => x !== id) : [...state[kind], id];
+    App().state[kind] = App().state[kind].includes(id) ? App().state[kind].filter(x => x !== id) : [...App().state[kind], id];
     renderAreaSelects(); showArea(); renderPlanAreas(); App().applyFilters();
   }
   for (const k of Object.keys(MM().AREA_F)) {
     const listEl = $(`#f-${k}-list`); if (listEl) listEl.onchange = e => {
       const cb = e.target.closest('input[type=checkbox]'); if (!cb) return;
-      state[k] = cb.checked ? [...new Set([...state[k], cb.value])] : state[k].filter(id => id !== cb.value);
+      App().state[k] = cb.checked ? [...new Set([...App().state[k], cb.value])] : App().state[k].filter(id => id !== cb.value);
       $(`#f-${k}-summary`).textContent = multiSummary(k);
-      $(`#f-${k}`).classList.toggle('on', state[k].length > 0);
+      $(`#f-${k}`).classList.toggle('on', App().state[k].length > 0);
       afterAreaPick(k, true);
     };
     const qEl = $(`#f-${k}-q`); if (qEl) qEl.oninput = () => renderMulti(k);
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-multi-clear]'); if (!b) return;
-    const k = b.dataset.multiClear; state[k] = []; const q = $(`#f-${k}-q`); if (q) q.value = ''; renderMulti(k); afterAreaPick(k, false);
+    const k = b.dataset.multiClear; App().state[k] = []; const q = $(`#f-${k}-q`); if (q) q.value = ''; renderMulti(k); afterAreaPick(k, false);
   });
   // Close an open list when tapping elsewhere.
   document.addEventListener('click', e => { document.querySelectorAll('details.multi[open]').forEach(d => { if (!d.contains(e.target)) d.open = false; }); });

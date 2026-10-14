@@ -138,7 +138,7 @@
       .map(p => ({ p, e: D.estimate([p], App().state.criteria, 'all', App().jobsOf) })).filter(x => x.e.population > 0 || x.e.employment.jobs > 0)
       .sort((x, y) => y.e.combined.wastewater.wetPeak - x.e.combined.wastewater.wetPeak);
     const trunk = SC().nearestPipe(mid[0], mid[1], 600);
-    existSewerOf = { lines, a };
+    TS().existSewerOf = { lines, a };
     const eTitle = `${a.d ? `${a.d} mm` : ''} local sanitary sewer`;
     const html = `<div class="head"><h3>${eTitle}</h3><div class="m">${esc(existText('sanitary', a))} · Region of Peel (live)</div></div>
       ${TS().ptActions([TS().ptBtn('eloads', null, 'What loads this?', 'Re-run this analysis')])}
@@ -147,7 +147,7 @@
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
         <tbody>${near.slice(0, 40).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[MM().svcLayerOf(r.p)]}"></span>${esc(MM().LAYER_NAME[MM().svcLayerOf(r.p)])} · ${esc(r.p.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.e.combined.wastewater.wetPeak)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None within 100 m.</td></tr>'}</tbody></table>
       <p class="small muted">Peak wet weather at Peel design criteria for each development ${estTag}. Existing (2021 Census) flow in a local sewer isn't estimated: its catchment isn't traced.</p>`;
-    TS().toolResult('eloads', eTitle, html, () => existSewerLoads(existSewerOf.lines, existSewerOf.a));
+    TS().toolResult('eloads', eTitle, html, () => existSewerLoads(TS().existSewerOf.lines, TS().existSewerOf.a));
   }
   // Nearest existing main of each kind to a point, within r metres (live query, cached per site).
   const nearCache = new Map();
