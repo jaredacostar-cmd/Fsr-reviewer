@@ -1477,6 +1477,9 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 /* The scenario bar sits above the timeline in the slim footer strip (Worker 1
    moves it into the topbar popover). */
 .footer .scen-bar { padding: var(--space-1) var(--space-3) 0; }
+/* Opened (Design criteria and all), the scenario bar scrolls inside its own height instead of
+   pushing the footer past the bottom of the window. */
+.footer .scen-bar:has(details.scen[open]) { max-height: min(60vh, calc(100dvh - 220px)); overflow-y: auto; overscroll-behavior: contain; }
 @media (max-width: 480px) { .f-sum-pop { display: none; } }
 
 /* Developments tab (Phase 2): the development list moved here from the sidebar, 25 per page. */
