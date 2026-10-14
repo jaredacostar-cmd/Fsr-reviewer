@@ -239,9 +239,14 @@
   }
   $('#tb-export').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-export', '#tb-export-menu'); });
   $('#tb-gear').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-gear', '#tb-gear-menu'); });
+  // Outside a menu closes it. The click's path is read as it was dispatched: a menu item that
+  // opens a page (Settings, Sources & checks) is replaced by the page, so the clicked element
+  // is no longer in the document and e.target.closest() would find no menu.
   document.addEventListener('click', e => {
-    if (!e.target.closest('.tb-wrap')) closeTbMenus();
-    if (!e.target.closest('.tb-scen-wrap')) closeScenPop();
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
+    const inside = sel => path.some(n => n && n.matches && n.matches(sel)) || !!(e.target.closest && e.target.closest(sel));
+    if (!inside('.tb-wrap')) closeTbMenus();
+    if (!inside('.tb-scen-wrap')) closeScenPop();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
 

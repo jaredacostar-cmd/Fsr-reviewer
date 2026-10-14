@@ -277,7 +277,9 @@ body {
 .topbar {
   grid-area: top;
   position: relative;
-  z-index: 60;
+  /* Above the map controls (1000+), the phone sheet (1150) and the map bar (1100): the top
+     bar's menus and pages (Export, Settings, Sources & checks) open over them. */
+  z-index: 1200;
   display: flex;
   align-items: center;
   gap: var(--space-2);
@@ -366,6 +368,11 @@ body {
   box-shadow: var(--shadow);
   padding: var(--space-1);
   z-index: 70;
+  /* Pages (Settings, Sources & checks) are long: they scroll inside the menu. */
+  max-width: calc(100vw - var(--space-4));
+  max-height: calc(100dvh - 120px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 .tb-menu [role="menuitem"] {
   display: block; width: 100%;

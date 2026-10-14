@@ -1499,6 +1499,14 @@ and small phases were cut off ("pprove", "Inde truc").
 - The phase colours had stopped showing since the module split: two modules read the colours
   once at load, before they were set. They now read them each time they draw.
 
+## Settings menu opens
+
+The gear menu's *Settings* and *Sources & checks* pages closed the moment they opened. The page
+replaces the menu item that was clicked, so the outside-click check no longer found the menu
+and closed it. That check now reads the click's path as dispatched. The top bar also sits above
+the map controls and the phone sheet, so its menus open on top, and long pages scroll inside
+the menu.
+
 ## Opening a development doesn't trace or zoom out
 
 Selecting a development moves the map to its site at your current zoom or closer, never further
