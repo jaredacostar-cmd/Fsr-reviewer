@@ -30,12 +30,20 @@
   const DEFAULT_KIND = 'application';
   // Watchlist: developments the user starred (kept in this browser).
   const watch = new Set(store.get('watch', []) || []);
-  // Default view: development applications in progress (application to construction), any year, no
-  // focus — the map opens on the active applications and the background.
-  const DEFAULT_FOCUS = '';
+  // Default view: development applications in progress (application to construction), any year —
+  // the map opens on the active applications and the background.
   const ACTIVE_PHASES = ['inception', 'review', 'approved', 'permit', 'construction'];
   const DEFAULT_PHASES = () => new Set(ACTIVE_PHASES);
   const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
+  // Filter-panel state (Phase 1): flags are multi-select (see FLAG_TESTS and js/filters.js
+  // FLAG_META); the counting basis lives in the Scenario control, not the filters.
+  const DEFAULT_FLAGS = () => ({ stalled: false, appeal: false, dcwait: false, psover: false, week: false, watched: false, est: false });
+  const DEFAULT_BASIS = 'all';        // counting basis: 'all' | 'committed' | 'remaining'
+  const DEFAULT_LANDUSE = 'growth';   // 'growth' | 'residential' | 'mixed' | 'employment'
+  // Phase 1 filter helpers (js/filters.js, loaded before this script): the flag metadata, the
+  // phase -> wastewater-layer map and the old share-link migration. Degrades to no-ops if the
+  // script tag is missing so the app still runs.
+  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'growth', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
   const state = {
     sources: [],                         // {id,name,municipality,kind,url,enabled,status,msg,records}
     projects: [],
@@ -45,7 +53,11 @@
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: [], pz: [], dr: [],   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
-    focus: DEFAULT_FOCUS,   // quick-view focus (see FOCUS), combined with the phase
+    flags: DEFAULT_FLAGS(),   // flag filters, multi-select (see FLAG_TESTS)
+    plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
+    dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
+    landuse: DEFAULT_LANDUSE,
+    basis: ['all', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
     criteria: mergeCriteria(store.get('criteria', null)),
@@ -77,7 +89,7 @@
   // Employment parsed once per project (the focus chip counts call it for every project).
   // m²/job comes from the editable criteria; clearEmp() drops the cache when it changes.
   const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p, state.criteria.m2PerJob) : null));
-  const clearEmp = () => { for (const p of state.projects) delete p._emp; };
+  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } };
   // Employment space moves with the project phase (no per-unit permits for it).
   const EMP_DONE = { permitted: new Set(['permit', 'construction', 'completed']), completed: new Set(['completed']) };
   const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
@@ -607,17 +619,11 @@
   const AreaBox = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
     const el = L.DomUtil.create('details', 'area-box'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     if (store.get('moAreasOpen', false)) el.open = true;
+    // Slimmed to its summary and the tap-on-the-map hint: the municipality chips and the
+    // sp / mtsa / pz / dr dropdowns live in the filter panel now (#f-muni, #f-areas).
     el.innerHTML = `<summary data-info="map-areas"><span>Filter by area</span><span class="mo-sum" id="mo-area-sum"></span></summary>
-      <div class="ab-body"><div class="mo-where" data-info="municipality"><div class="mo-seg" id="f-muni-chips" role="group" aria-label="Municipality"></div></div>${Object.entries(AREA_F).map(([k, f]) => `<div class="mo-field${f.svc ? ' ab-svc' : ''}"${f.svc ? ' hidden' : ''}><span id="f-${k}-label" data-info="${f.info}">${f.label}</span>
-        <details class="multi" id="f-${k}" data-multi="${k}">
-          <summary aria-labelledby="f-${k}-label f-${k}-summary"><span id="f-${k}-summary">${f.all}</span></summary>
-          <div class="multi-panel">
-            <div class="multi-tools"><input type="search" id="f-${k}-q" placeholder="${f.find}" aria-label="${f.find.replace('…', '')}"><button type="button" class="btn small link" data-multi-clear="${k}">Clear</button></div>
-            <div class="multi-list" id="f-${k}-list" role="group" aria-label="${f.label}"></div>
-          </div>
-        </details></div>`).join('')}
-        <small id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</small>
-        <small class="mo-tip">Pick several in any list. Or turn on Planning areas and tap an area on the map.</small>
+      <div class="ab-body">
+        <small class="mo-tip">Pick areas in the filter panel, or turn on Planning areas and tap an area on the map.</small>
       </div>`;
     el.addEventListener('toggle', e => { if (e.target === el) { store.set('moAreasOpen', el.open); if (typeof fitLegend === 'function') fitLegend(); } else if (e.target.open) el.querySelectorAll('details.multi[open]').forEach(d => { if (d !== e.target) d.open = false; }); }, true);
     return el;
@@ -991,7 +997,18 @@
     return p._appUnits;
   }
 
-  function matches(p, ignorePhase, ignoreTime, ignoreFocus) {
+  // Land-use filter: what the development adds. 'growth' (the default) is the old Growth
+  // focus test — planning applications proposing new homes or new jobs.
+  const LANDUSE_TEST = {
+    growth: p => appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0),
+    residential: p => (p.units || 0) > 0 && !empOf(p),
+    mixed: p => (p.units || 0) > 0 && !!empOf(p),
+    employment: p => !!empOf(p),
+  };
+  // Every active flag must pass (multi-select). FLAG_TESTS holds the per-flag tests.
+  const flagMatch = p => { for (const [k] of PF.FLAG_META) if (state.flags[k] && !FLAG_TESTS[k](p)) return false; return true; };
+
+  function matches(p, ignorePhase, ignoreTime, ignoreFlags) {
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
@@ -1002,10 +1019,11 @@
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
-    if (state.minUnits === 'left') { if (!(p.buildout && p.buildout.remaining > 0)) return false; }
-    else if (state.minUnits === 'committed') { if (!(D.unitsFor(p, 'committed') > 0)) return false; }
-    else if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
-    if (!ignoreFocus && state.focus && !FOCUS[state.focus].test(p)) return false;
+    if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
+    if (!ignoreFlags && !flagMatch(p)) return false;
+    if (state.plant && plantOfDev(p) !== state.plant) return false;
+    if (state.dwelling && !(D.unitSplit(p)[state.dwelling] > 0)) return false;
+    if (!LANDUSE_TEST[state.landuse || DEFAULT_LANDUSE](p)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
@@ -1015,6 +1033,7 @@
   }
 
   function applyFilters() {
+    syncWwLayers();   // growth layers follow the selected stages
     const base = state.projects.filter(p => matches(p, true));
     state.filtered = base.filter(p => state.phases.has(p.phase));
     renderPipeline(base);
@@ -1032,13 +1051,19 @@
   }
 
   // ---- Shareable links: filters, tab, switches, map view and the open development in the URL ----
-  // #ph=…&fo=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
+  // #ph=…&fl=…&pl=…&dw=…&lu=…&basis=…&cy=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
+  // (pre-Phase-1 links used fo=… for the quick-view focus; it is migrated on read —
+  // see migrateLegacyFocus in js/filters.js)
   const viewLink = (() => {
     let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
     const encode = () => {
       const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
       if (!sameSet(state.phases, DEFAULT_PHASES())) set('ph', [...state.phases].join(','));
-      if (state.focus !== DEFAULT_FOCUS) set('fo', state.focus || 'none');
+      const fl = PF.encodeFlagParam(state.flags); if (fl) set('fl', fl);
+      set('pl', state.plant); set('dw', state.dwelling);
+      if (state.landuse !== DEFAULT_LANDUSE) set('lu', state.landuse);
+      if (state.basis !== DEFAULT_BASIS) set('basis', state.basis);
+      if (capYear !== THIS_YEAR) set('cy', capYear == null ? 'bo' : String(capYear));
       set('mu', state.muni); if (state.kind !== DEFAULT_KIND) set('k', state.kind); set('q', state.search);
       if (state.sp.length) set('sp', state.sp.join(',')); set('mt', state.mtsa.join(',')); set('pz', state.pz.join(',')); set('dr', state.dr.join(','));
       if (state.minUnits) set('u', state.minUnits); if (!state.newOnly) set('nn', '0');
@@ -1059,16 +1084,36 @@
       if (!state.projects.length || ((q.get('sp') || q.get('mt')) && !state.areas) || ((q.get('pz') || q.get('dr')) && !state.servicing)) return;
       applied = true;
       if (q.get('ph')) state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
-      if (q.has('fo') && !(focusMigNow && q.get('fo') === 'growth' && currentView() !== 'planning')) state.focus = q.get('fo') === 'none' ? '' : q.get('fo');
+      if (q.has('fo')) {
+        // Pre-Phase-1 focus link: migrate onto the new state (growth / none drop to the defaults).
+        const mig = PF.migrateLegacyFocus(q.get('fo'));
+        for (const k of mig.flags) state.flags[k] = true;
+        if (mig.basis !== DEFAULT_BASIS) state.basis = mig.basis;
+        if (mig.minUnits) state.minUnits = mig.minUnits;
+        if (mig.landuse !== DEFAULT_LANDUSE) state.landuse = mig.landuse;
+        if (mig.yearPreset === 'last12m') setLast12Months();
+      } else {
+        state.flags = PF.decodeFlagParam(q.get('fl'));
+      }
+      if (q.get('pl') && PLANT_SHORT[q.get('pl')]) state.plant = q.get('pl');
+      if (q.get('dw') && ['single', 'town', 'apartment'].includes(q.get('dw'))) state.dwelling = q.get('dw');
+      if (q.get('lu') && ['growth', 'residential', 'mixed', 'employment'].includes(q.get('lu'))) state.landuse = q.get('lu');
+      if (q.get('basis') && ['all', 'committed', 'remaining'].includes(q.get('basis'))) state.basis = q.get('basis');
+      if (q.get('cy')) capYear = q.get('cy') === 'bo' ? null : (+q.get('cy') || THIS_YEAR);
       state.muni = q.get('mu') || ''; state.kind = q.get('k') || DEFAULT_KIND; state.search = q.get('q') || '';
       state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); state.mtsa = list('mt'); state.pz = list('pz'); state.dr = list('dr');
-      state.minUnits = Number(q.get('u')) || 0; state.newOnly = q.get('nn') !== '0';
+      // Old links could carry u=left / u=committed (the old size select's basis steps):
+      // they migrate to the counting basis, like the old fo=left / fo=committed.
+      if (q.get('u') === 'left') { state.minUnits = 0; state.basis = 'remaining'; }
+      else if (q.get('u') === 'committed') { state.minUnits = 0; state.basis = 'committed'; }
+      else state.minUnits = Number(q.get('u')) || 0;
+      state.newOnly = q.get('nn') !== '0';
       if (q.get('ym') && [...$('#t-mode').options].some(o => o.value === q.get('ym'))) { state.yearMode = q.get('ym'); $('#t-mode').value = state.yearMode; }
-      $('#f-search').value = state.search; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits); $('#f-new').checked = state.newOnly;
+      syncFilterControls();
       for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) svcOpt[o] = q.get(k);
       if (q.get('ms')) { const [color, size, cap] = q.get('ms').split('.'); for (const [k, v] of [['color', color], ['size', size], ['cap', cap]]) if (MSTYLE[k][v]) mstyle[k] = v; }
       if (q.get('t')) { footPref = q.get('t'); if (q.get('ws')) { if (footPref === 'water') wSub = q.get('ws'); else wwSub = q.get('ws'); } }
-      renderMuniChips(); if (state.areas) renderAreaSelects(); renderSvcSelects(); showSvcArea(false);
+      showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }
       if (q.get('yf') && q.get('yt')) setYears(Number(q.get('yf')), Number(q.get('yt'))); else applyFilters();
       showFootTab(footPref);
@@ -1079,7 +1124,7 @@
     map.on('moveend', write);
     // Apply a saved view's link: back to the defaults, then its filters.
     const apply = h => {
-      state.phases = DEFAULT_PHASES(); state.focus = DEFAULT_FOCUS; state.yearMode = 'any'; $('#t-mode').value = 'any';
+      state.phases = DEFAULT_PHASES(); state.flags = DEFAULT_FLAGS(); state.plant = ''; state.dwelling = ''; state.landuse = DEFAULT_LANDUSE; state.basis = DEFAULT_BASIS; capYear = THIS_YEAR; state.yearMode = 'any'; $('#t-mode').value = 'any';
       if (state.yearMin != null) setYearsSilently(state.yearMin, state.yearMax);
       pending = new URLSearchParams(h); applied = false; ready();
     };
@@ -1136,11 +1181,22 @@
     tFrom.value = from; tTo.value = to;
     applyFilters();
   }
+  // "Last 12 months" as a year range on the 'any' milestone: the When preset and the
+  // migration of the old newapps focus.
+  function setLast12Months() {
+    state.yearMode = 'any';
+    const y = new Date().getFullYear();
+    setYears(y - 1, y);
+  }
   function renderTimeline() {
     const lo = state.yearMin, hi = state.yearMax;
     if (lo == null) return;
     const from = state.yearFrom ?? lo, to = state.yearTo ?? hi;
     $('#t-label').textContent = timeActive() ? (from === to ? `${from}` : `${from} – ${to}`) : 'All years';
+    // The filter panel's When controls mirror the timeline.
+    const fm = $('#f-milestone'); if (fm) fm.value = state.yearMode;
+    const yf = $('#f-yfrom'); if (yf) yf.value = state.yearFrom == null ? '' : state.yearFrom;
+    const yt = $('#f-yto'); if (yt) yt.value = state.yearTo == null ? '' : state.yearTo;
     // One button: back to the default range, or from the default to all years.
     const atDefault = atDefaultYears();
     $('#t-reset').hidden = atDefault && !timeActive();
@@ -1172,7 +1228,7 @@
   tFrom.oninput = () => { if (+tFrom.value > +tTo.value) tTo.value = tFrom.value; setYears(+tFrom.value, +tTo.value); };
   tTo.oninput = () => { if (+tTo.value < +tFrom.value) tFrom.value = tTo.value; setYears(+tFrom.value, +tTo.value); };
   $('#t-reset').onclick = () => { if (atDefaultYears()) setYears(state.yearMin, state.yearMax); else { setDefaultYears(); applyFilters(); } };
-  $('#t-mode').onchange = e => { state.yearMode = e.target.value; applyFilters(); };
+  $('#t-mode').onchange = e => { state.yearMode = e.target.value; const fm = $('#f-milestone'); if (fm) fm.value = state.yearMode; applyFilters(); };
   // Click a year bar to isolate it; shift-click to extend the range.
   let anchorYear = null;
   $('#t-hist').onclick = e => {
@@ -1294,20 +1350,19 @@
   // Overview and briefing: everything shown on the map (an open development's surroundings don't narrow it).
   const overviewSet = () => state.filtered.filter(p => p.phase !== 'cancelled');
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
-  const demandBasis = () => (state.focus && FOCUS[state.focus].basis) || 'all';
-  // What the demand covers: the phase and focus picked in the sidebar, then any other filters.
+  const demandBasis = () => state.basis;
+  // What the demand covers: the phases picked in the filter panel, then any other filters.
   function renderSelection(set, basis) {
     const view = currentPhaseView();
     const phase = view === 'all' ? 'All phases' : view === 'active' ? 'Active applications'
       : P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label).join(' + ') || 'No phase';
-    const focus = state.focus ? FOCUS[state.focus].label : 'No focus';
-    const others = activeFilters().map(f => f.label).filter(l => l !== focus && !(state.focus && l === FOCUS[state.focus].label))
+    const others = activeFilters().map(f => f.label)
       .filter(l => !/phases?$/.test(l) && !/^\d{4}(–\d{4})?$/.test(l) && !P.ALL_PHASES.some(p => l.split(' + ').includes(p.label)));
     const years = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'All years';
     const pill = (label, cls = '') => `<span class="d-pill ${cls}">${esc(label)}</span>`;
     const da = state.daCtx;
     $('#d-sel').innerHTML = `<span class="muted">Showing</span> ${da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>` : ''}
-      ${pill(phase, 'ph')} ${pill(focus, state.focus ? 'fo' : 'off')} ${pill(years)}
+      ${pill(phase, 'ph')} ${pill(years)}
       ${others.map(l => pill(l)).join(' ')}
       <span class="muted small">${fmtNum(set.length)} developments${basis !== 'all' ? ` · ${BASIS_LABEL[basis]}` : ''} · excludes withdrawn</span>
       <button type="button" class="btn small link" id="d-change">Change</button>`;
@@ -1790,26 +1845,19 @@
   };
 
   // ---- Rendering -----------------------------------------------------------------
+  // Stage selector: one segment per phase with its label and count, sized by share.
+  // A tap shows that phase only (again: all phases); Ctrl / ⌘-click adds or removes it.
   function renderPipeline(base) {
     const counts = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, 0]));
     for (const p of base) counts[p.phase]++;
     const total = base.length;
     $('#total-count').textContent = `${fmtNum(state.filtered.length)} of ${fmtNum(state.projects.length)} developments`;
-    $('#pipeline').innerHTML = P.ALL_PHASES.filter(p => counts[p.key]).map(p =>
-      `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${colors[p.key]}"
-        title="${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%)" aria-label="${esc(p.label)} ${counts[p.key]}"></button>`).join('');
-    // Phase quick views: one tap shows that phase only.
-    const cur = currentPhaseView();
-    const n = keys => keys.reduce((a, k) => a + counts[k], 0);
-    const isOn = key => key === 'all' || key === 'active' ? cur === key : cur !== 'all' && cur !== 'active' && state.phases.has(key);
-    const chip = (key, label, count, title, lead = '') =>
-      `<button type="button" class="chip${isOn(key) ? ' on' : ''}" data-pv="${key}" data-info="phase-${key}" aria-pressed="${isOn(key)}" title="${esc(title)}${key === 'all' || key === 'active' ? '' : ' · Ctrl-click (⌘ on a Mac) to pick several'}">${lead}${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
-    $('#phase-chips').innerHTML = [
-      chip('all', 'All', total, 'Every phase'),
-      chip('active', 'Active applications', n(ACTIVE_PHASES), 'In progress: application to construction (not completed, not withdrawn)'),
-      ...P.ALL_PHASES.map(p => chip(p.key, p.label, counts[p.key], p.desc, dot(p.key))),
-    ].join('');
-    renderFocusChips();
+    $('#pipeline').innerHTML = P.ALL_PHASES.filter(p => counts[p.key]).map(p => {
+      const on = state.phases.has(p.key);
+      return `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${on ? '' : 'off'}" aria-pressed="${on}" style="flex:${counts[p.key]};background:${colors[p.key]};color:${glyphColor(colors[p.key])}"
+        title="${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%) — tap: only this phase; Ctrl/⌘-click: add or remove">${esc(p.label)} <span class="n">${fmtNum(counts[p.key])}</span></button>`;
+    }).join('');
+    renderFlagChips();
   }
 
   function renderMarkers() {
@@ -3581,17 +3629,29 @@
   });
   sugEl.addEventListener('mousedown', e => { const li = e.target.closest('[data-i]'); if (li) { e.preventDefault(); goSug(sugItems[+li.dataset.i]); } });
   $('#f-search').addEventListener('blur', () => setTimeout(() => { sugItems = []; renderSug(); }, 150));
+  // Record-type controls (Settings & sources tab): kind and new-build only.
   $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
   $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
-  $('#f-units').onchange = e => { const v = e.target.value; state.minUnits = v === 'left' || v === 'committed' ? v : Number(v) || 0; applyFilters(); };
-
-  // Municipality chips (built from the data).
-  function renderMuniChips() {
-    const list = [''].concat(state.munis || []);
-    $('#f-muni-chips').innerHTML = list.map(m =>
-      `<button type="button" class="chip${state.muni === m ? ' on' : ''}" data-muni="${esc(m)}" data-info="muni-${esc(m || 'all')}" aria-pressed="${state.muni === m}">${esc(m || 'All')}</button>`).join('');
+  // Unified filter panel.
+  const panelChange = (id, fn) => { const el = $(id); if (el) el.onchange = fn; };
+  const panelClick = (id, fn) => { const el = $(id); if (el) el.onclick = fn; };
+  function syncPanelYears() {
+    const lo = state.yearMin, hi = state.yearMax; if (lo == null) return;
+    const yf = $('#f-yfrom'), yt = $('#f-yto');
+    let a = parseInt((yf && yf.value) || '', 10), b = parseInt((yt && yt.value) || '', 10);
+    if (!isFinite(a)) a = state.yearFrom ?? lo; if (!isFinite(b)) b = state.yearTo ?? hi;
+    setYears(a, b);
   }
-  $('#f-muni-chips').onclick = e => {
+  panelChange('#f-size', e => { state.minUnits = Number(e.target.value) || 0; applyFilters(); });
+  panelChange('#f-plant', e => { state.plant = e.target.value; applyFilters(); });
+  panelChange('#f-dwelling', e => { state.dwelling = e.target.value; applyFilters(); });
+  panelChange('#f-landuse', e => { state.landuse = e.target.value || DEFAULT_LANDUSE; applyFilters(); });
+  panelChange('#f-milestone', e => { state.yearMode = e.target.value; const tm = $('#t-mode'); if (tm) tm.value = state.yearMode; applyFilters(); });
+  panelChange('#f-yfrom', syncPanelYears); panelChange('#f-yto', syncPanelYears);
+  panelClick('#f-when-12m', () => setLast12Months());
+  panelClick('#f-when-week', () => { state.flags.week = true; applyFilters(); });
+  panelClick('#flag-chips', e => { const b = e.target.closest('[data-flag]'); if (b) toggleFlag(b.dataset.flag); });
+  panelClick('#f-muni', e => {
     const b = e.target.closest('[data-muni]'); if (!b) return;
     state.muni = b.dataset.muni;
     // An area in another municipality no longer applies.
@@ -3603,7 +3663,32 @@
     showArea();
     renderPlanAreas();
     applyFilters();
-  };
+  });
+  panelClick('#saved-presets', e => { const b = e.target.closest('[data-preset]'); if (b) openSavedView(+b.dataset.preset); });
+  // The sp / mtsa / pz / dr dropdowns live in the filter panel (#f-areas) now.
+  const faBox = $('#f-areas'); if (faBox) faBox.innerHTML = areaMultiHTML();
+  // Push the filter state into every panel control (after a share link, a saved view or Reset).
+  function syncFilterControls() {
+    const setV = (id, v) => { const el = $(id); if (el) el.value = v; };
+    const setC = (id, v) => { const el = $(id); if (el) el.checked = !!v; };
+    setV('#f-search', state.search);
+    setV('#f-kind', state.kind); setC('#f-new', state.newOnly);
+    setV('#f-size', String(state.minUnits));
+    setV('#f-plant', state.plant); setV('#f-dwelling', state.dwelling); setV('#f-landuse', state.landuse);
+    setV('#f-milestone', state.yearMode); setV('#t-mode', state.yearMode);
+    const yf = $('#f-yfrom'); if (yf) yf.value = state.yearFrom == null ? '' : state.yearFrom;
+    const yt = $('#f-yto'); if (yt) yt.value = state.yearTo == null ? '' : state.yearTo;
+    renderMuniChips(); if (state.areas) renderAreaSelects(); renderSvcSelects();
+    renderFlagChips(); renderScenario();
+  }
+
+  // Municipality chips (built from the data) in the filter panel.
+  function renderMuniChips() {
+    const el = $('#f-muni'); if (!el) return;
+    const list = [''].concat(state.munis || []);
+    el.innerHTML = list.map(m =>
+      `<button type="button" class="chip${state.muni === m ? ' on' : ''}" data-muni="${esc(m)}" data-info="muni-${esc(m || 'all')}" aria-pressed="${state.muni === m}">${esc(m || 'All')}</button>`).join('');
+  }
 
   // ---- Water pressure zones and wastewater drainage areas (data/servicing.json) -----------
   // Pressure zones are the Region's published polygons; drainage areas are traced from the
@@ -3717,9 +3802,18 @@
     renderMarkers(); scheduleSites(); syncMapOpts();
   }
   function setWwLay(k, on) {
+    if (k !== 'existing') return;   // the growth layers follow the selected stages (syncWwLayers)
     wwLay = { ...wwLay, [k]: on }; store.set('wwLay', wwLay);
     renderMarkers(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts();
     if (!$('#detail').hidden && $('#detail').dataset.view === 'loads' && loadsOf && loadsOf.pipe != null) showPipeLoads(loadsOf.pipe);
+  }
+  // Wastewater growth layers from the stage selector; recomputed whenever the filters apply.
+  // Keeps the wwLay object shape the rest of the code reads.
+  function syncWwLayers() {
+    const layers = PF.wwLayersFromStages([...state.phases]);
+    if (wwLay.built === layers.built && wwLay.approved === layers.approved && wwLay.proposed === layers.proposed) return;
+    wwLay = { existing: wwLay.existing !== false, ...layers };
+    store.set('wwLay', wwLay);
   }
   // Map panel notice when a setting hides the developments, with one tap to bring them back.
   function devsOffReason() {
@@ -3757,9 +3851,11 @@
   }
   function showAllDevs() {
     if (!devsOn) setDevsOn(true);
-    if (isWW() && ['built', 'approved', 'proposed'].every(k => wwLay[k] === false)) { wwLay = { existing: wwLay.existing, built: true, approved: true, proposed: true }; store.set('wwLay', wwLay); renderMarkers(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts(); }
+    // Growth layers follow the stages now: no growth layer on means no stage is selected.
+    if (isWW() && ['built', 'approved', 'proposed'].every(k => wwLay[k] === false)) state.phases = ALL_PHASE_KEYS();
     if (devMode === 'hidden') { devMode = 'faded'; store.set('devFade', devMode); syncPathMode(); }
     syncDevsOff();
+    applyFilters(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts();
   }
   // A development shown on the map: developments on, and (Wastewater view) its growth layer on.
   const devShown = p => devsOn && (!isWW() || p.phase === 'cancelled' || wwOn(svcLayerOf(p)));
@@ -3923,8 +4019,10 @@
   // on the tabs, the map legend, the exports and share links.
   function scenarioText() {
     const R = state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
+    const basisTxt = { all: 'All units', committed: 'Committed units', remaining: 'Units left to build' }[state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
-      dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, state.dcInfra ? `plant expansions ${hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria'].filter(Boolean).join(' · ');
+      dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, state.dcInfra ? `plant expansions ${hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
+      `counting: ${basisTxt}`, `results: ${yearText()}`].filter(Boolean).join(' · ');
   }
   // Scenario A: a pinned set of results to compare the current scenario with.
   function scenarioMetrics() {
@@ -3952,12 +4050,33 @@
       <p class="small">Pumping stations over firm capacity at build-out: A ${over(A)} → now ${over(B)}${changed.length ? ` (changed: ${changed.map(a => esc(drName(a).replace(/^[^·]+· /, ''))).join(', ')})` : ''}. Water max day at build-out, all zones: A ${fmt1(zA)} → now ${fmt1(zB)} ML/d.</p></div>`;
   }
   const scenarioChip = () => `<button type="button" class="chip scen-chip" data-open-scen="1" title="Change the scenario">Scenario: ${esc(scenarioText())}</button>`;
+  // Counting basis: which of each project's units the demand counts. It changes the math,
+  // so it lives in the Scenario control, not the filter panel.
+  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
+    `<button type="button" class="btn small${state.basis === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${state.basis === v}">${t}</button>`).join('')}</div>`;
+  // Results for year: the year the capacity colours, pipe loads and station loads are worked
+  // out for — the census year, this year through the horizon end, or build-out (null).
+  const yearSelect = () => {
+    const cy = censusYr(), opts = [[String(cy), `${cy} Census`]];
+    for (let y = THIS_YEAR; y <= hz.end; y++) if (y !== cy) opts.push([String(y), String(y)]);
+    opts.push(['bo', 'Build-out']);
+    const cur = capYear == null ? 'bo' : String(capYear);
+    return `<label class="svc-switch"><span class="muted small">Results for year</span><select id="scen-year" autocomplete="off" aria-label="Results for year: the year the map's results are worked out for">${opts.map(([v, t]) =>
+      `<option value="${v}"${v === cur ? ' selected' : ''}>${t}</option>`).join('')}</select></label>`;
+  };
+  function setCapYear(y) {
+    capYear = y;
+    renderScenario(); renderCapLayer(); renderLegend(); syncTraceSum(); if (footTab === 'dca') renderDca();
+    viewLink.write();
+  }
   function renderScenario() {
     const el = $('#scen-bar'); if (!el) return;
     const R = state.reports, c = state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
     const open = el.querySelector('details') && el.querySelector('details').open;
     el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t">${esc(scenarioText())}</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
       <div class="svc-switches">
+        ${basisSwitch()}
+        ${yearSelect()}
         ${R ? optSwitch('ww', 'Wastewater', [['calibrated', 'Capacity check (2025 flows)'], ['design', 'Design flows (Peel criteria)']]) : ''}
         ${sp ? optSwitch('md', 'Water max day', [['design', `Design ×${c.water.maxDay}`], ['observed', `Observed 2025 ×${sp.maxDayFactor.toFixed(2)}`]]) : ''}
         ${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}
@@ -4631,11 +4750,22 @@
     if (e.target.closest('[data-scen-clear]')) { store.set('scenA', null); return renderScenario(); }
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return filterInView(); }
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
+    if (b.dataset.svcopt === 'basis') {
+      if (!['all', 'committed', 'remaining'].includes(b.dataset.v)) return;
+      state.basis = b.dataset.v; store.set('svcBasis', state.basis);
+      renderSvcTab(); applyFilters(); viewLink.write();
+      return;
+    }
     svcOpt[b.dataset.svcopt] = b.dataset.v;
     store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert', tech: 'svcTech', nr: 'svcNear' }[b.dataset.svcopt], b.dataset.v);
     if (b.dataset.svcopt === 'nr') { applyFilters(); if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject); }
     renderSvcTab(); viewLink.write();
     if (b.dataset.svcopt === 'nr') renderMarkers();
+  });
+  // "Results for year" in the Scenario control sets the year the map's capacity results are
+  // worked out for (replaces the old on-map demand-year slider).
+  $('#scen-bar').addEventListener('change', e => {
+    if (e.target.id === 'scen-year') setCapYear(e.target.value === 'bo' ? null : +e.target.value);
   });
   // Click a zone / catchment row: outline it on the map and zoom to it (a catchment also shades
   // everything upstream that drains through it). Click it again to clear.
@@ -5065,8 +5195,7 @@
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
     set('#opt-devs', devsOn); set('#opt-wf', WF.on);
-    document.querySelectorAll('[data-wwlay]').forEach(c => { c.checked = wwLay[c.dataset.wwlay] !== false; });
-    document.querySelectorAll('[data-wwsw]').forEach(e => e.style.setProperty('--mk', layerColors()[e.dataset.wwsw]));
+    const wc = $('#ww-census'); if (wc) wc.checked = wwLay.existing !== false;
     const mw = document.querySelector('.ww-loads'); if (mw) { mw.hidden = !isWW(); const all = Object.values(wwLay).every(v => v !== false); const n = mw.querySelector('.wl-sum'); n.textContent = all ? 'full build-out' : [['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
     syncDevsOff(); syncPanelSum();
     set('#opt-basemap', basemap); set('#opt-labels', labelMode); set('#opt-pz', svcOn.pz); set('#opt-dr', svcOn.dr); set('#opt-bk', svcOn.bk); set('#opt-da', daOn);
@@ -5085,15 +5214,7 @@
     wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
     dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
   };
-  // Earlier versions opened the servicing views on the Growth focus, which hid applications with no
-  // unit or job count (their site boundaries too). Once: drop it from the views' saved settings, and
-  // from a link written by them.
-  let focusMigNow = false;
-  if (!store.get('viewFocusMig1', false)) {
-    for (const v of ['water', 'wastewater', 'dc']) { const x = store.get(`mapView-${v}`, null); if (x && x.focus === 'growth') { x.focus = null; store.set(`mapView-${v}`, x); } }
-    store.set('viewFocusMig1', true); focusMigNow = true;
-  }
-  function currentMapSettings() { return { basemap, labelMode, da: daOn, wf: WF.on, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, focus: state.focus, exist: { ...existOn }, dc: { ...dcOn } }; }
+  function currentMapSettings() { return { basemap, labelMode, da: daOn, wf: WF.on, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, exist: { ...existOn }, dc: { ...dcOn } }; }
   function setMapView(v) {
     const cur = currentView();
     if (cur === v) return;
@@ -5109,7 +5230,6 @@
     if (LABEL_MODES[s.labelMode]) { labelMode = s.labelMode; store.set('labelMode', labelMode); }
     setDaLayer(!!s.da); setSvcLayer('pz', !!s.pz); setSvcLayer('dr', !!s.dr); setWfOn(!!s.wf);
     Object.assign(mstyle, s.mstyle); store.set('mapStyle', mstyle);
-    state.focus = s.focus == null ? DEFAULT_FOCUS : s.focus || '';
     existOn = { ...p.exist, ...(s.exist || {}) }; store.set('existOn', existOn); renderExisting();
     dcOn = { ...p.dc, ...(s.dc || {}) }; store.set('dcOn', dcOn.on); store.set('dcSys', dcOn.sys); renderDcLayer();
     applyFilters();
@@ -5118,7 +5238,15 @@
 
   // Saved views: a name for the filters, map position, view and layers (kept in this browser).
   const savedViews = () => store.get('savedViews', []) || [];
+  // Saved views as one-tap preset chips at the top of the filter panel (the Layers panel
+  // keeps the full saved-views manager; both apply through viewLink.apply).
+  function renderSavedPresets() {
+    const el = $('#saved-presets'); if (!el) return;
+    const list = savedViews();
+    el.innerHTML = list.map((x, i) => `<button type="button" class="chip" data-preset="${i}" title="Apply the saved view “${esc(x.name)}”">${esc(x.name)}</button>`).join('');
+  }
   function renderSavedViews() {
+    renderSavedPresets();
     const sel = $('#opt-saved'); if (!sel) return;
     const list = savedViews();
     sel.innerHTML = `<option value="">${list.length ? 'Open a saved view…' : 'No saved views yet'}</option>${list.map((x, i) => `<option value="${i}">${esc(x.name)}</option>`).join('')}`;
@@ -5262,28 +5390,21 @@
     const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.innerHTML = '<div class="lg-body"></div>';
     el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
-    // Demand year: on top of the timeline box.
-    const yr = document.createElement('div'); yr.className = 'map-year'; yr.dataset.info = 'map-year'; yr.hidden = true;
-    document.getElementById('timebar').prepend(yr);
-    yr.addEventListener('input', e => {
-      const v = +e.target.value; capYear = v > hz.end ? null : v;
-      yr.querySelector('.my-v').textContent = yearText();
-      clearTimeout(yr._t); yr._t = setTimeout(() => { renderCapLayer(); renderLegend(); syncTraceSum(); if (footTab === 'dca') renderDca(); }, 120);
-    });
-    yr.addEventListener('click', e => { const b = e.target.closest('[data-yr]'); if (!b) return; capYear = b.dataset.yr === 'bo' ? null : b.dataset.yr === 'census' ? censusYr() : THIS_YEAR; syncYearCtl(); renderCapLayer(); renderLegend(); syncTraceSum(); if (footTab === 'dca') renderDca(); });
     return el;
   } });
   const legend = new Legend().addTo(map);
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
   const yearText = () => capYear == null ? 'Build-out' : capYear <= censusYr() ? `${capYear} (census)` : String(capYear);
-  // Wastewater loads (bottom right, Wastewater view): which growth layers load the map and the sewers.
-  // Its own box so it stays in sight whatever the Layers panel shows.
+  // Wastewater loads (bottom right, Wastewater view): the growth layers follow the selected
+  // stages now, so the box keeps only the census (existing) switch. Its own box so it stays
+  // in sight whatever the Layers panel shows.
   const WwLoads = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
     const el = L.DomUtil.create('div', 'ww-loads'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.innerHTML = `<div class="wl-h"><span data-info="ww-layers">Wastewater loads</span><span class="wl-sum"></span></div>
-      <div class="wl-chips">${[['existing', 'Census'], ['built', 'Built since'], ['approved', 'Approved'], ['proposed', 'Proposed']].map(([k, t]) => `<label class="mo-chip" title="${esc({ existing: 'Census (existing) flows', built: 'Built since the census', approved: 'Site plan approved', proposed: 'Proposed (in review)' }[k])}"><input type="checkbox" data-wwlay="${k}"${wwLay[k] !== false ? ' checked' : ''}><span><span class="lg-sw" data-wwsw="${k}" style="--mk:${layerColors()[k]}"></span>${t}</span></label>`).join('')}</div>`;
-    el.querySelectorAll('[data-wwlay]').forEach(c => { c.onchange = () => setWwLay(c.dataset.wwlay, c.checked); });
+      <div class="wl-chips"><label class="mo-chip" title="Census (existing) flows"><input type="checkbox" id="ww-census"${wwLay.existing !== false ? ' checked' : ''}><span>Include census (existing)</span></label></div>
+      <p class="wl-note small muted">Growth layers follow the selected stages</p>`;
+    el.querySelector('#ww-census').onchange = e => setWwLay('existing', e.target.checked);
     el.hidden = !isWW();
     return el;
   } });
@@ -5381,17 +5502,9 @@
   const fitLegend = () => requestAnimationFrame(layoutMapBoxes);
   if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), document.querySelector('.more-box'), legend.getContainer(), wwLoads.getContainer(), document.querySelector('.area-box'), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
-  // Demand year: the top of the legend box, shown whenever a capacity layer is on.
-  const yearCtl = { getContainer: () => document.querySelector('#timebar .map-year') };
+  // The year the map's capacity results are worked out for now lives in the Scenario control
+  // ("Results for year"); the legend keeps naming it.
   const censusYr = () => (baselineCensus() || {}).year || hz.year0;
-  function syncYearCtl() {
-    const el = yearCtl.getContainer();
-    el.hidden = mstyle.cap === 'off';
-    if (el.hidden) return;
-    el.innerHTML = `<div class="my-h"><span>Demand year</span><b class="my-v">${yearText()}</b></div>
-      <input type="range" min="${censusYr()}" max="${hz.end + 1}" step="1" value="${capYear == null ? hz.end + 1 : capYear}" aria-label="Demand year: the year the map's results are worked out for">
-      <div class="my-ends"><button type="button" class="btn small link" data-yr="census">${censusYr()} Census</button><button type="button" class="btn small link" data-yr="now">Today (${THIS_YEAR})</button><button type="button" class="btn small link" data-yr="bo">Build-out</button></div>`;
-  }
   function renderLegend() {
     const el = legend.getContainer(), parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
@@ -5410,8 +5523,7 @@
     if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
     if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
-    syncYearCtl();
-    if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Demand year on the map). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
+    if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
     el.querySelector('.lg-body').innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
     el.hidden = !parts.length;
     syncPanelSum(); fitLegend();
@@ -8176,7 +8288,7 @@
   });
   $('#dca-body').addEventListener('change', e => {
     const s0 = e.target.closest('[data-dca-year]'); if (!s0) return;
-    capYear = s0.value ? +s0.value : null; syncYearCtl(); renderCapLayer(); renderLegend(); syncTraceSum(); renderDca();
+    capYear = s0.value ? +s0.value : null; renderScenario(); renderCapLayer(); renderLegend(); syncTraceSum(); renderDca();
   });
   $('#dca-body').addEventListener('keydown', e => { const row = e.target.closest('[data-dca]'); if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); row.click(); } });
 
@@ -8222,7 +8334,7 @@
   function renderAreaSelects() {
     if (!state.areas) return;
     renderMulti('sp'); renderMulti('mtsa');
-    $('#f-sp-note').hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
+    const note = $('#f-sp-note'); if (note) note.hidden = !(state.muni === 'Mississauga' || state.sp.some(id => (areaById.get(id) || {}).municipality === 'Mississauga'));
   }
   // The area dropdowns: grouped checkbox lists. Names of a list's picks (or "MTSA" prefixed in
   // sentences), and a short summary for the closed dropdown.
@@ -8244,6 +8356,18 @@
     if (k === 'pz') return [['', state.servicing.zones.slice().sort(byZone).map(z => [z.id, z.name])]];
     const dr = state.servicing.drainage;
     return [...new Set(dr.map(d => d.plant))].map(pl => [plantLabel(pl), dr.filter(d => d.plant === pl).map(d => [d.id, drName(d)])]);
+  }
+  // The sp / mtsa / pz / dr dropdown markup, rendered into the filter panel (#f-areas).
+  function areaMultiHTML() {
+    return Object.entries(AREA_F).map(([k, f]) => `<div class="mo-field${f.svc ? ' ab-svc' : ''}"${f.svc ? ' hidden' : ''}><span id="f-${k}-label" data-info="${f.info}">${f.label}</span>
+        <details class="multi" id="f-${k}" data-multi="${k}">
+          <summary aria-labelledby="f-${k}-label f-${k}-summary"><span id="f-${k}-summary">${f.all}</span></summary>
+          <div class="multi-panel">
+            <div class="multi-tools"><input type="search" id="f-${k}-q" placeholder="${f.find}" aria-label="${f.find.replace('…', '')}"><button type="button" class="btn small link" data-multi-clear="${k}">Clear</button></div>
+            <div class="multi-list" id="f-${k}-list" role="group" aria-label="${f.label}"></div>
+          </div>
+        </details></div>`).join('') +
+      `<small id="f-sp-note" hidden>Mississauga has no secondary plans; its Official Plan character areas are listed instead.</small>`;
   }
   function renderMulti(k) {
     const box = $(`#f-${k}`); if (!box) return;
@@ -8306,21 +8430,21 @@
     renderAreaSelects(); showArea(); renderPlanAreas(); applyFilters();
   }
   for (const k of Object.keys(AREA_F)) {
-    $(`#f-${k}-list`).onchange = e => {
+    const listEl = $(`#f-${k}-list`); if (listEl) listEl.onchange = e => {
       const cb = e.target.closest('input[type=checkbox]'); if (!cb) return;
       state[k] = cb.checked ? [...new Set([...state[k], cb.value])] : state[k].filter(id => id !== cb.value);
       $(`#f-${k}-summary`).textContent = multiSummary(k);
       $(`#f-${k}`).classList.toggle('on', state[k].length > 0);
       afterAreaPick(k, true);
     };
-    $(`#f-${k}-q`).oninput = () => renderMulti(k);
+    const qEl = $(`#f-${k}-q`); if (qEl) qEl.oninput = () => renderMulti(k);
   }
-  document.querySelector('.area-box').addEventListener('click', e => {
+  document.addEventListener('click', e => {
     const b = e.target.closest('[data-multi-clear]'); if (!b) return;
-    const k = b.dataset.multiClear; state[k] = []; $(`#f-${k}-q`).value = ''; renderMulti(k); afterAreaPick(k, false);
+    const k = b.dataset.multiClear; state[k] = []; const q = $(`#f-${k}-q`); if (q) q.value = ''; renderMulti(k); afterAreaPick(k, false);
   });
   // Close an open list when tapping elsewhere.
-  document.addEventListener('click', e => { document.querySelectorAll('.area-box details.multi[open]').forEach(d => { if (!d.contains(e.target)) d.open = false; }); });
+  document.addEventListener('click', e => { document.querySelectorAll('details.multi[open]').forEach(d => { if (!d.contains(e.target)) d.open = false; }); });
 
   // ---- Selected project's census dissemination area ----------------------------------------
   // Opening a project narrows the Growth and Servicing demand tabs to the census DA its point
@@ -8503,14 +8627,8 @@
     if (sameSet(state.phases, new Set(ACTIVE_PHASES))) return 'active';
     return state.phases.size === 1 ? [...state.phases][0] : null;
   }
-  $('#phase-chips').onclick = e => {
-    const b = e.target.closest('[data-pv]'); if (!b) return;
-    const k = b.dataset.pv;
-    if (k === 'all') state.phases = ALL_PHASE_KEYS();
-    else if (k === 'active') state.phases = currentPhaseView() === 'active' ? ALL_PHASE_KEYS() : new Set(ACTIVE_PHASES);
-    else return togglePhase(k, e.ctrlKey || e.metaKey);
-    applyFilters();
-  };
+  // (The #pipeline segments above are the phase selector; togglePhase keeps the tap /
+  // Ctrl-click behaviour. The old All / Active / per-phase chips are gone.)
 
   const YEAR_MS = 365.25 * 864e5;
   const appUnits = p => p._appUnits ?? (p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0)));
@@ -8519,56 +8637,82 @@
     if (!c || c.baseline) return null;
     return state._weekKeys || (state._weekKeys = new Set([...(c.moved || []), ...(c.added || [])].map(x => x.key)));
   };
-  // Each focus narrows the projects; `basis` switches the demand panel to the matching units.
-  const FOCUS = {
-    // Homes or jobs: employment-only applications (industrial, office, retail…) are growth too.
-    growth:    { label: 'Growth', title: 'Planning applications proposing new homes or new jobs (floor area)', test: p => appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0) },
-    committed: { label: 'Committed capacity', basis: 'committed', title: 'Growth that is approved or permitted and not yet completed', test: p => D.unitsFor(p, 'committed') > 0 },
-    left:      { label: 'Left to build', basis: 'remaining', title: 'Planned units with no building permit yet', test: p => !!(p.buildout && p.buildout.remaining > 0) },
-    employment: { label: 'Employment', title: 'Applications for industrial, office, retail / commercial, hotel or institutional uses', test: p => !!(empOf(p)) },
-    major:     { label: 'Major (100+ units)', title: 'Projects with 100 or more units', test: p => (p.units || 0) >= 100 },
-    newapps:   { label: 'New in last 12 months', title: 'First filed in the last 12 months', test: p => !!p.first && Date.now() - p.first < YEAR_MS },
+  // Flag filters: each flag narrows the projects; several can be on at once. Labels and
+  // tooltips come from js/filters.js FLAG_META so share links and tests share them.
+  // - stalled / week / watched: the old focus tests, unchanged.
+  // - appeal: the first STATUS_SIGNALS regex (OMB / OLT / LPAT) on an application's status text.
+  // - dcwait: the per-project servicing-timing category is a planned 2026 DC main (2027 or later).
+  // - psover: a pumping station on the project's sewer path is over firm capacity at build-out —
+  //   via svcFacts(p).sps (build-out peak wet vs firm capacity, the same >= threshold the
+  //   development panel uses for its warning chip); cached per servicing-model build.
+  // - est: the per-project data-quality category is anything but 'ok'.
+  function psOverFirm(p) {
+    if (p._psoverM !== state.svcModel) {
+      const F = svcFacts(p);
+      p._psover = !!F && F.sps.some(s => s.firm > 0 && s.wet >= s.firm);
+      p._psoverM = state.svcModel;
+    }
+    return !!p._psover;
+  }
+  const FLAG_TESTS = {
     // Planning stage only: many open permits have no inspection dates in the source data.
-    stalled:   { label: 'Stalled 2+ years', title: 'Applications in planning (no building permit) with no activity for 2 years', test: p => PLANNING_PHASES.includes(p.phase) && !!p.last && Date.now() - p.last > 2 * YEAR_MS },
-    watched:   { label: '★ Watched', title: 'Developments on your watchlist', test: p => watch.has(p.key), hidden: () => !watch.size },
-    week:      { label: 'Changed this week', title: 'New, or moved to another phase, in the latest weekly update', test: p => { const k = weekKeys(); return !!k && k.has(p.key); }, hidden: () => !weekKeys() },
+    stalled: p => PLANNING_PHASES.includes(p.phase) && !!p.last && Date.now() - p.last > 2 * YEAR_MS,
+    appeal: p => (p.records || []).some(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || '')),
+    dcwait: p => { const t = timingOf(p); return t === 'y27' || t === 'y30' || t === 'y35' || t === 'y36'; },
+    psover: p => psOverFirm(p),
+    week: p => { const k = weekKeys(); return !!k && k.has(p.key); },
+    watched: p => watch.has(p.key),
+    est: p => qualityOf(p) !== 'ok',
   };
-  function renderFocusChips() {
+  // Flag chips: multi-select; each chip's count is the projects passing every filter but the
+  // flags (so the count shows what turning the flag on would add).
+  function renderFlagChips() {
+    const el = $('#flag-chips'); if (!el) return;
     const base = state.projects.filter(p => matches(p, false, false, true));
-    $('#focus-chips').innerHTML = Object.entries(FOCUS).filter(([, f]) => !(f.hidden && f.hidden())).map(([k, f]) => {
-      const on = state.focus === k;
-      const count = base.reduce((a, p) => a + (f.test(p) ? 1 : 0), 0);
-      return `<button type="button" class="chip${on ? ' on' : ''}" data-focus="${k}" data-info="focus-${k}" aria-pressed="${on}" title="${esc(f.title)}">${esc(f.label)} <span class="n">${fmtNum(count)}</span></button>`;
+    el.innerHTML = PF.FLAG_META.map(([k, label, title]) => {
+      const on = !!state.flags[k];
+      const count = base.reduce((a, p) => a + (FLAG_TESTS[k](p) ? 1 : 0), 0);
+      return `<button type="button" class="chip${on ? ' on' : ''}" data-flag="${k}" data-info="flag-${k}" aria-pressed="${on}" title="${esc(title)}">${esc(label)} <span class="n">${fmtNum(count)}</span></button>`;
     }).join('');
   }
-  function setFocus(k) {
-    state.focus = state.focus === k ? '' : k;
+  function toggleFlag(k) {
+    if (!(k in state.flags)) return;
+    state.flags[k] = !state.flags[k];
     applyFilters();
   }
-  $('#focus-chips').onclick = e => { const b = e.target.closest('[data-focus]'); if (b) setFocus(b.dataset.focus); };
 
-  // Active-filter chips: everything that narrows the view, each removable.
+  // The stage selector narrows the phases when the pick is neither the default active set
+  // nor every phase (a chip then offers one tap back to all phases).
+  const phaseFilterActive = () => state.phases.size < P.ALL_PHASES.length && !sameSet(state.phases, DEFAULT_PHASES());
+  // Active-filter chips: everything that narrows the view, each removable. The counting basis
+  // lives in the Scenario control, so it has no chip here.
   function activeFilters() {
     const out = [];
     const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
-    const unitsLabel = { 1: 'Growth', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units', left: 'Units left to build', committed: 'Committed capacity' };
-    if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; $('#f-search').value = ''; } });
+    const unitsLabel = { 1: 'Adds units or jobs', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units' };
+    const landuseLabel = { growth: 'Adds units or jobs', residential: 'Residential', mixed: 'Mixed use', employment: 'Employment' };
+    const dwellingLabel = { single: 'Single / semi-detached', town: 'Townhouse', apartment: 'Apartment' };
+    const setVal = (id, v) => { const el = $(id); if (el) el.value = v; };
+    if (state.search) out.push({ label: `“${state.search}”`, clear: () => { state.search = ''; setVal('#f-search', ''); } });
     if (state.muni) out.push({ label: state.muni, clear: () => { state.muni = ''; renderMuniChips(); renderAreaSelects(); } });
     if (state.sp.length <= 3) for (const id of state.sp) out.push({ label: (areaById.get(id) || {}).name || 'Secondary plan', clear: () => { state.sp = state.sp.filter(x => x !== id); renderAreaSelects(); showArea(); } });
     else out.push({ label: `${state.sp.length} secondary plans`, clear: () => { state.sp = []; renderAreaSelects(); showArea(); } });
     for (const k of ['mtsa', 'pz', 'dr']) if (state[k].length) out.push({ label: k === 'mtsa' ? (state[k].length === 1 ? `MTSA: ${multiSummary(k)}` : multiSummary(k)) : k === 'dr' && state[k].length === 1 ? `Drainage: ${multiSummary(k)}` : multiSummary(k), clear: () => { state[k] = []; if (AREA_F[k].svc) { renderSvcSelects(); showSvcArea(); } else { renderAreaSelects(); showArea(); } } });
-    if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; $('#f-kind').value = DEFAULT_KIND; } });
-    if (state.minUnits) out.push({ label: unitsLabel[state.minUnits], clear: () => { state.minUnits = 0; $('#f-units').value = '0'; } });
-    if (state.focus) out.push({ label: FOCUS[state.focus].label, clear: () => setFocus(state.focus) });
-    if (state.phases.size < P.ALL_PHASES.length) {
+    if (state.kind !== DEFAULT_KIND) out.push({ label: kindLabel[state.kind] || 'All records', clear: () => { state.kind = DEFAULT_KIND; setVal('#f-kind', DEFAULT_KIND); } });
+    if (state.minUnits) out.push({ label: unitsLabel[state.minUnits] || `${state.minUnits}+ units`, clear: () => { state.minUnits = 0; setVal('#f-size', '0'); } });
+    if (state.plant) out.push({ label: PLANT_SHORT[state.plant] || state.plant, clear: () => { state.plant = ''; setVal('#f-plant', ''); } });
+    if (state.dwelling) out.push({ label: dwellingLabel[state.dwelling] || state.dwelling, clear: () => { state.dwelling = ''; setVal('#f-dwelling', ''); } });
+    if (state.landuse !== DEFAULT_LANDUSE) out.push({ label: landuseLabel[state.landuse] || state.landuse, clear: () => { state.landuse = DEFAULT_LANDUSE; setVal('#f-landuse', DEFAULT_LANDUSE); } });
+    for (const [k, label] of PF.FLAG_META) if (state.flags[k]) out.push({ label, clear: () => { state.flags[k] = false; } });
+    if (phaseFilterActive()) {
       const names = P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label);
-      out.push({ label: currentPhaseView() === 'active' ? 'Active applications' : names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { state.phases = ALL_PHASE_KEYS(); } });
+      out.push({ label: names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { state.phases = ALL_PHASE_KEYS(); } });
     }
     if (timeActive()) {
       const from = state.yearFrom ?? state.yearMin, to = state.yearTo ?? state.yearMax;
       out.push({ label: from === to ? `${from}` : `${from}–${to}`, clear: () => setYearsSilently(state.yearMin, state.yearMax) });
     }
-    if (!state.newOnly) out.push({ label: 'Including alterations', clear: () => { state.newOnly = true; $('#f-new').checked = true; } });
+    if (!state.newOnly) out.push({ label: 'Including alterations', clear: () => { state.newOnly = true; const el = $('#f-new'); if (el) el.checked = true; } });
     return out;
   }
   let activeList = [];
@@ -8579,17 +8723,19 @@
     const areas = Object.keys(AREA_F).map(k => multiSummary(k, true)).filter(Boolean);
     syncPanelSum();
     const as = $('#mo-area-sum'); if (as) { const w = [state.muni, ...areas].filter(Boolean); as.textContent = w.length ? w.join(' · ') : 'all of Peel'; as.classList.toggle('on', w.length > 0); }
-    const more = [state.focus ? FOCUS[state.focus].label : '',
-      state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '', state.minUnits ? (($('#f-units').selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '', state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
-    $('#sum-more').textContent = more.length ? more.join(' · ') : 'Focus, record type';
-    $('#sect-more').classList.toggle('active', more.length > 0);
+    const more = [
+      state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '',
+      state.minUnits ? ((($('#f-size') || {}).selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '',
+      state.newOnly ? '' : 'incl. alterations'].filter(Boolean);
+    const sm = $('#sum-more'); if (sm) sm.textContent = more.length ? more.join(' · ') : 'Record type, size';
+    const sx = $('#sect-more'); if (sx) sx.classList.toggle('active', more.length > 0);
   }
   // One line saying what the map shows and why.
   function renderShowing() {
     const v = currentPhaseView();
     const what = v === 'all' ? 'developments (all phases)' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
     const years = timeActive() ? (() => { const a = state.yearFrom ?? state.yearMin, b = state.yearTo ?? state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
-    const extra = activeFilters().length - (v === 'all' ? 0 : 1) - (timeActive() ? 1 : 0) - (state.muni ? 1 : 0) - (state.search ? 1 : 0);
+    const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (timeActive() ? 1 : 0) - (state.muni ? 1 : 0) - (state.search ? 1 : 0);
     $('#f-showing').innerHTML = `Showing <strong>${fmtNum(state.filtered.length)}</strong> ${esc(what)} · ${esc(years)} · ${esc(state.muni || 'all of Peel')}${state.search ? ` · matching “${esc(state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''} · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
   }
   function renderFilterUI() {
@@ -8600,11 +8746,13 @@
       ? activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('') +
         `<button type="button" class="btn small link" id="f-reset">Reset all</button>`
       : '';
+    renderEmptyMsg();
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), focus: DEFAULT_FOCUS });
-      $('#f-search').value = ''; $('#f-kind').value = DEFAULT_KIND; $('#f-units').value = '0'; $('#f-new').checked = true;
+      Object.assign(state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), flags: DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: DEFAULT_LANDUSE, basis: DEFAULT_BASIS, yearMode: 'any' });
+      capYear = THIS_YEAR;
+      syncFilterControls();
       renderMuniChips();
       setDefaultYears();
       applyFilters();
@@ -8614,6 +8762,43 @@
     activeList[+b.dataset.i].clear();
     applyFilters();
   };
+  // Empty results: name the one filter whose removal alone restores results, with a button
+  // that removes it. Each active filter is tried on its own against a snapshot of the state.
+  let emptyBlocker = null;
+  function snapshotFilterState() {
+    return { phases: new Set(state.phases), muni: state.muni, sp: [...state.sp], mtsa: [...state.mtsa], pz: [...state.pz], dr: [...state.dr], kind: state.kind, search: state.search, minUnits: state.minUnits, newOnly: state.newOnly, flags: { ...state.flags }, plant: state.plant, dwelling: state.dwelling, landuse: state.landuse, basis: state.basis, yearMode: state.yearMode, yearFrom: state.yearFrom, yearTo: state.yearTo };
+  }
+  function restoreFilterState(s) {
+    Object.assign(state, { ...s, phases: new Set(s.phases), flags: { ...s.flags }, sp: [...s.sp], mtsa: [...s.mtsa], pz: [...s.pz], dr: [...s.dr] });
+  }
+  function findBlockingFilter() {
+    const saved = snapshotFilterState();
+    for (const f of activeList) {
+      f.clear();
+      const ok = state.projects.some(p => matches(p, false, false, false));
+      restoreFilterState(saved);
+      if (ok) { emptyBlocker = f; return f; }
+    }
+    emptyBlocker = null;
+    return null;
+  }
+  function renderEmptyMsg() {
+    const em = $('#empty-msg'); if (!em) return;
+    if (state.filtered.length === 0 && activeList.length) {
+      const blocker = findBlockingFilter();
+      if (blocker) {
+        em.innerHTML = `No developments match — try removing <button type="button" class="btn small link" data-empty-clear="1">${esc(blocker.label)}</button>.`;
+        em.hidden = false;
+        return;
+      }
+    }
+    emptyBlocker = null;
+    em.hidden = true; em.innerHTML = '';
+  }
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-empty-clear]'); if (!b || !emptyBlocker) return;
+    const c = emptyBlocker; emptyBlocker = null; c.clear(); applyFilters();
+  });
 
   // ---- Duplicate check (Data tab) ------------------------------------------------------
   // Evidence that every file and unit is counted once; computed on demand (all records,
@@ -9016,7 +9201,7 @@
   const TOUR = [
     { ch: 'Start', el: () => null, t: 'Welcome', b: 'This tracker follows every development application in Mississauga, Brampton and Caledon, and what each one needs from Peel\'s water and wastewater systems. This is an unofficial prototype built from public open data, not a Region of Peel product. This 2-minute tour sets the app up as it goes. Use Next / Back or the ← → keys; Esc ends it.' },
     { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search', b: 'Type an address, file number, secondary plan, pressure zone, pumping station or DC project number, then pick a result to jump to it.' },
-    { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#phase-chips'), t: 'Phases', b: 'Tap a phase to show only it. On a computer, Ctrl-click (⌘ on a Mac) to pick several.' },
+    { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#pipeline'), t: 'Phases', b: 'Tap a phase to show only it. On a computer, Ctrl-click (⌘ on a Mac) to pick several.' },
     { ch: 'Map', el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning, Water, Wastewater and DC: each view sets the right layers, colours and background, and remembers your changes.' },
     { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per layer: developments, blocks, pressure zones, water facilities, capacity colours, existing pipes, planned DC works, planning and census areas.' },
     { ch: 'Map', el: () => document.querySelector('.more-box'), t: 'More settings', b: 'Saved views, how developments are coloured and sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
@@ -9165,8 +9350,8 @@
   // ---- Boot ------------------------------------------------------------------------
   // Browsers (iOS especially) restore form controls when a tab is reopened; after a layout change the
   // restored values can land on the wrong control or match no option. Start from the app's state.
-  $('#t-mode').value = state.yearMode; $('#f-kind').value = state.kind; $('#f-units').value = String(state.minUnits);
-  $('#f-new').checked = state.newOnly; $('#f-search').value = state.search;
+  $('#t-mode').value = state.yearMode;
+  syncFilterControls();
   for (const sel of document.querySelectorAll('select')) if (sel.selectedIndex < 0 && sel.options.length) sel.selectedIndex = 0;
   readColors();
   setTiles();
@@ -9255,7 +9440,7 @@
       const k = b.dataset.watch; if (watch.has(k)) watch.delete(k); else watch.add(k);
       store.set('watch', [...watch]);
       const on = watch.has(k); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '★ Watching' : '☆ Watch';
-      renderWatch(); renderFocusChips(); return;
+      renderWatch(); renderFlagChips(); return;
     }
     const o = e.target.closest('[data-watch-open]');
     if (o) { const p = projectByKey(o.dataset.watchOpen); if (p) focusProject(p); }
