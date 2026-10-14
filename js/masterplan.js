@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS, PIPES_NOT_ASSESSED } = window.PeelUtil;
   // Every planned date carries its capital status after the May 2026 pause (design audit, Group 3).
   const capTag = (y, s, id) => ` · ${CAPITAL_STATUS[capitalStatus(y, s, id)].toLowerCase()}`;
   const D = window.PeelDemand;
@@ -307,7 +307,9 @@
     return t;
   }
   const perPersonMax = () => App().state.svcModel.wMax(1, 0);
-  const lakeZones = () => App().state.servicing.zones.filter(z => zLevel(z.zone) != null && !wellSystem[z.zone]).map(z => z.id);
+  // Only zones already in the servicing lookup (svcById is filled after the optional data loads;
+  // a render in between used to throw on the missing zone and leave a stale model).
+  const lakeZones = () => App().state.servicing.zones.filter(z => zLevel(z.zone) != null && !wellSystem[z.zone] && SD().svcById.has(z.id)).map(z => z.id);
   function waterPlantCons(zone) {
     const R = App().state.reports; if (!R || !App().state.svcModel) return null;
     if (wellSystem[zone.zone]) {
@@ -374,7 +376,7 @@
   let sewUpgKey = '';
   // Every switch that changes a result is in the key (the diversion, counting basis and outside-area
   // rule included), so a cached result never outlives the scenario it was computed for.
-  function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}${sewUpgKey}`; }
+  function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}|g${App().state.svcGen || 0}${sewUpgKey}`; }
   function cached(id, fn) {
     const k = scenarioKey(); if (DCN.key !== k) { DCN.cache.clear(); DCN.key = k; }
     if (!DCN.cache.has(id)) DCN.cache.set(id, fn());
@@ -431,7 +433,7 @@
     if (!App().state.svcModel) return '';
     const all = devNeeds(p); if (!all) return '<p class="small muted">No servicing demand to compare.</p>';
     const list = sys ? all.filter(c => c.sys === sys) : all;
-    if (!list.length) return `<p class="small muted">${sys === 'water' ? 'No water supply or storage constraint applies.' : 'No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.'}</p>`;
+    if (!list.length) return `<p class="small muted">${sys === 'water' ? 'No water supply or storage constraint applies.' : (PIPE_RESULTS ? 'No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.' : `No tabled facility applies. ${PIPES_NOT_ASSESSED}.`)}</p>`;
     const ppu = ppuOf(p), gaps = list.filter(c => c.status === 'gap').length, main = list.filter(c => c.status !== 'ok'), rest = list.filter(c => c.status === 'ok');
     const nChk = list.filter(c => c.status === 'check').length;
     return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} Room in units at this development's ${ppu.toFixed(1)} persons per unit.${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
@@ -553,7 +555,8 @@
   function allNeeds() {
     return cached('all', () => {
       const out = [];
-      if (MM().SEW.data) {
+      // Sewer groups only while pipe results are on: hidden results never drive DC timing or exports.
+      if (PIPE_RESULTS && MM().SEW.data) {
         const flagged = [];
         MM().SEW.data.pipes.forEach((p, i) => { if (p[2] && SC().pipeFlow(i, null).q >= 0.9 * p[2]) flagged.push(i); });
         const fset = new Set(flagged), grp = new Map(), rootOf = new Map();

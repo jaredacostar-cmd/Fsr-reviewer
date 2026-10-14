@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs, PIPE_RESULTS, SCREEN_NOTE } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs, PIPE_RESULTS, SCREEN_NOTE, pipeClass } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -172,12 +172,11 @@
     if (!PIPE_RESULTS || !MM().SEW.data || p.lat == null) return null;
     const G = sewerGrowth(); const k = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
     if (k < 0) return null;
-    // Local: the first 3 km of the path; downstream: the rest to the plant.
-    let local = null, trunk = null, n = 0, dist = 0;
+    // Local vs trunk by pipe size (pipeClass: 750 mm and over is trunk), not by distance.
+    let local = null, trunk = null, n = 0;
     for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) {
       const s = pipeStats(i); n++;
-      const c = MM().SEW.data.pipes[i][10]; dist += DI().dcM([c[0], c[1]], [c[c.length - 2], c[c.length - 1]]);
-      const slot = dist <= 3000 ? 'local' : 'trunk';
+      const slot = pipeClass(MM().SEW.data.pipes[i][0]);
       if (s.r1 != null) { if (slot === 'local' && (!local || s.r1 > local.r1)) local = { i, ...s }; if (slot === 'trunk' && (!trunk || s.r1 > trunk.r1)) trunk = { i, ...s }; }
     }
     return { first: k, local, trunk, worst: [local, trunk].filter(Boolean).sort((a, b) => b.r1 - a.r1)[0] || null, n };

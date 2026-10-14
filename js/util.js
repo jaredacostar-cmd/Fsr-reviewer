@@ -16,6 +16,12 @@
   // Individual-pipe modelling results (capacity, % full, freeboard, sewer profile, tightest pipes,
   // the pipe upgrade tool, the EPANET per-main table) are off for now: true brings them back.
   const PIPE_RESULTS = false;
+  // Pipe class by size (design audit, Group 4), not by distance along the path: the smallest
+  // "primary wastewater main (trunk)" on the Region's 2026 DC capital maps is 750 mm.
+  const TRUNK_MM = 750;
+  const pipeClass = d => (d >= TRUNK_MM ? 'trunk' : 'local');
+  // What a sewer line says while pipe-by-pipe results are off: never a number, never "no constraint".
+  const PIPES_NOT_ASSESSED = 'Sewer pipes: not assessed (pipe-by-pipe capacity is left to the Region\u2019s hydraulic model)';
   // Shown before every trace and servicing demand result: this is one screening method, and the
   // Region's hydraulic models stay the authority.
   const SCREEN_NOTE_SHORT = '<p class="screen-note screen-note-sm" role="note"><strong>Screening estimate, not a model result:</strong> the Region of Peel\u2019s water and wastewater models are the authority.</p>';
@@ -164,7 +170,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

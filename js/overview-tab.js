@@ -58,6 +58,7 @@
     const wwv = noModel ? { tone: 'warn', text: 'The servicing model is still loading' } : DV().verdictWastewater({
       noPath: !f.path.length,
       toronto: f.pl === 'Toronto',
+      pipesOff: !root.PeelUtil.PIPE_RESULTS,
       pipeMm: worst ? worst.p[0] : null,
       pipePct: worst ? Math.round(worst.r1 * 100) : 0,
       psName: sps ? DD().psName(sps.a) : null,
@@ -103,7 +104,7 @@
     const vline = (v, label, btn) => `<li><strong>${label}</strong> <span class="${toneCls[v.tone]}">${vtxt(v)}</span> ${btn}</li>`;
     el.innerHTML = `<div class="ov-top">${hlP(`<strong>${esc(p.title)}</strong> · ${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}`)}</div>
       <div class="ov-grid">
-        <section class="ov-card ov-growth"><div class="ov-h"><h3>Screening summary</h3>${devBtn}</div>
+        <section class="ov-card ov-growth"><div class="ov-h"><h3>At a glance</h3>${devBtn}</div>
           <p class="small">${DV().firstSentence(st.why)}</p>
           <div class="ov-tiles">${tiles}</div>
           <p class="small muted">Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. Below: the proposal, its files and history, and the site.</p>
