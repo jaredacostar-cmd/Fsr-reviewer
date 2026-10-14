@@ -50,6 +50,7 @@
 
       <!-- ===== Explore ===== -->
       <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
+        <div class="presets" id="saved-presets" data-info="saved-presets" aria-label="Saved views"></div>
         <div class="search-bar">
           <label class="field"><span class="sr">Search</span>
             <input type="search" id="f-search" placeholder="Search address, file number, description…" autocomplete="off" aria-autocomplete="list" aria-controls="search-sug">
@@ -57,47 +58,38 @@
           <ul class="search-sug" id="search-sug" role="listbox" hidden></ul>
           <div class="active-filters" id="active-filters" aria-live="polite"></div>
           <p class="showing small" id="f-showing" aria-live="polite"></p>
+          <p class="empty-msg" id="empty-msg" hidden></p>
         </div>
 
-        <section class="panel" id="phase-panel">
-          <div class="panel-head">
-            <h2 class="label" data-info="phases">Phase</h2>
-            <span class="muted small" id="total-count">—</span>
+        <section class="panel filter-panel" id="filter-panel">
+          <div class="fp-sec">
+            <h2 class="label" data-info="filter-stage">Stage</h2>
+            <div class="pipeline" id="pipeline" role="group" aria-label="Developments by phase"></div>
+            <p class="muted small" id="total-count">—</p>
           </div>
-          <div class="pipeline" id="pipeline" role="group" aria-label="Developments by phase"></div>
-          <div class="chips views phase-chips" id="phase-chips" role="group" aria-label="Phase"></div>
+          <div class="fp-sec">
+            <h2 class="label" data-info="filter-where">Where</h2>
+            <div class="chips" id="f-muni" role="group" aria-label="Municipality"></div>
+            <div id="f-areas"></div>
+            <label class="field"><span class="label">Receiving plant</span><select id="f-plant" autocomplete="off"><option value="">Any plant</option><option value="Lakeview">G.E. Booth</option><option value="Clarkson">Clarkson</option><option value="Inglewood">Inglewood</option></select></label>
+            <p class="small muted" id="f-drawn" hidden></p>
+          </div>
+          <div class="fp-sec">
+            <h2 class="label" data-info="filter-what">What</h2>
+            <div class="row two"><label class="field"><span class="label">Size</span><select id="f-size" autocomplete="off"><option value="0">Any size</option><option value="1">Adds units or jobs</option><option value="10">10+ units</option><option value="50">50+ units</option><option value="100">100+ units</option><option value="500">500+ units</option></select></label><label class="field"><span class="label">Dwelling type</span><select id="f-dwelling" autocomplete="off"><option value="">Any dwelling type</option><option value="single">Single / semi-detached</option><option value="town">Townhouse</option><option value="apartment">Apartment</option></select></label></div>
+            <label class="field"><span class="label">Land use</span><select id="f-landuse" autocomplete="off"><option value="growth" selected>Adds units or jobs</option><option value="residential">Residential</option><option value="mixed">Mixed</option><option value="employment">Employment</option></select></label>
+          </div>
+          <div class="fp-sec">
+            <h2 class="label" data-info="filter-when">When</h2>
+            <div class="row two"><label class="field"><span class="label">Milestone</span><select id="f-milestone" autocomplete="off"><option value="any">Any milestone</option><option value="inception">Application submitted</option><option value="approved">Approved</option><option value="permit">Permit issued</option><option value="completed">Completed</option></select></label></div>
+            <div class="row two"><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
+            <div class="row btns"><button type="button" class="btn small" id="f-when-12m">Last 12 months</button><button type="button" class="btn small" id="f-when-week">This week</button></div>
+          </div>
+          <div class="fp-sec">
+            <h2 class="label" data-info="filter-flags">Flags</h2>
+            <div class="chips flag-chips" id="flag-chips" data-info="filter-flags" role="group" aria-label="Flags"></div>
+          </div>
         </section>
-
-        <details class="panel sect side-sect" id="sect-more">
-          <summary><h2 class="label" data-info="record-type">More filters</h2><span class="muted small sect-sum" id="sum-more">None</span></summary>
-          <div class="more-group"><span class="label" data-info="focus">Focus</span>
-            <div class="chips views" id="focus-chips" role="group" aria-label="Focus"></div>
-          </div>
-          <div class="more-group"><span class="label">Records</span>
-          <div class="row two">
-            <label class="field" data-info="record-type"><span class="label">Record type</span>
-              <select autocomplete="off" id="f-kind">
-                <option value="application" selected>Planning applications + their permits</option>
-                <option value="">All records (incl. permits with no application)</option>
-                <option value="permit">Building permits</option>
-                <option value="both">Application + permits</option>
-              </select>
-            </label>
-            <label class="field" data-info="units"><span class="label">Units</span>
-              <select autocomplete="off" id="f-units">
-                <option value="0">Any</option>
-                <option value="1">Growth (adds units)</option>
-                <option value="10">10+ units</option>
-                <option value="50">50+ units</option>
-                <option value="100">100+ units</option>
-                <option value="500">500+ units</option>
-              </select>
-            </label>
-          </div>
-          <label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span>
-            <span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
-          </div>
-        </details>
 
         <section class="panel list-panel">
           <div class="panel-head">
@@ -308,6 +300,7 @@
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
+        <fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind"><option value="application" selected>Planning applications + their permits</option><option value="">All records (incl. permits with no application)</option><option value="permit">Building permits</option><option value="both">Application + permits</option></select></label></div><label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>
         <div id="d-quality" class="d-quality"></div>
         <h3 class="sub-title" data-info="tab-criteria">Design criteria</h3>
         <div class="d-grid">
@@ -339,6 +332,7 @@
   <script src="js/arcgis.js?v=__BUILD__"></script>
   <script src="js/loader.js?v=__BUILD__"></script>
   <script src="js/provenance.js?v=__BUILD__"></script>
+  <script src="js/filters.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
 </body>
 </html>
