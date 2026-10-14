@@ -290,7 +290,7 @@
     col.style.setProperty('--tcmp-n', String(items.length));
     col.innerHTML =
       '<div class="tcmp-head"><h2>Compare</h2>' +
-      '<button type="button" class="btn small" data-tcmp-clear>Clear all</button></div>' +
+      '<button type="button" class="btn small" data-tcmp-clear>Clear all</button></div>' + ((window.PeelUtil || {}).SCREEN_NOTE || '') +
       (note ? '<div class="tcmp-note">' + esc(note) + '</div>' : '') +
       '<div class="tcmp-grid">' + items.map(cardHTML).join('') + '</div>';
   }

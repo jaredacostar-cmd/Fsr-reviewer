@@ -2245,3 +2245,9 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .dev-subtabs::-webkit-scrollbar { display: none; }
 .dev-subtabs button { flex: 1 0 auto; border: 0; background: none; padding: var(--space-2); font-size: var(--fs-2); font-weight: 500; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
 .dev-subtabs button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--accent); }
+
+/* Before every trace and servicing demand result: a screening method, the Region's models govern. */
+.screen-note { margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border-left: 3px solid var(--cap-tight); border-radius: 4px; background: color-mix(in srgb, var(--cap-tight) 10%, transparent); font-size: var(--fs-1); color: var(--text-secondary); }
+.screen-note strong { color: var(--text-primary); font-weight: 500; }
+.screen-note + .screen-note, .screen-note ~ * .screen-note { display: none; }
+.screen-note-sm { margin: var(--space-1) 0; padding: 2px var(--space-2); }

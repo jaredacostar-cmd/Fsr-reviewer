@@ -89,6 +89,7 @@
   }
 
   function open(i) {
+    if (!(window.PeelUtil || {}).PIPE_RESULTS) return;   // pipe-by-pipe results are off for now
     ensureStyle();
     var pt = PT(), app = P();
     if (!pt) return;

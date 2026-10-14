@@ -103,7 +103,8 @@
       const o = opts || {};
       result = { title: o.title || 'Tool result', reopen: typeof o.reopen === 'function' ? o.reopen : null };
       const t = $('#tool-title'); if (t) t.textContent = result.title;
-      const body = $('#pane-tool-body'); if (body) body.innerHTML = o.html || '';
+      // Servicing results (batch, fit, inquiry, traces) open with the screening note.
+      const body = $('#pane-tool-body'); if (body) body.innerHTML = (o.screen && window.PeelUtil ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || '');
       const tab = $('#ftab-tool'); if (tab) tab.hidden = false;
       const h = H();
       if (h && typeof h.showFootTab === 'function') h.showFootTab('tool');

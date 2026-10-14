@@ -1376,6 +1376,8 @@ For each project with a unit count on its planning applications:
 | Minor, express and limited site plans (`SPM`, `SPAX`, "Limited Site Plan") and pre-consultations add no units. | They revise or precede an earlier plan. |
 | Permitted units are counted once per base permit number, and different base numbers are added up. | A tower's conditional, foundation, full and revised permits share one base number. |
 | Drain, site-servicing and "revision to permit" permits add no units. Basement second suites, filed as alteration permits, do count. | |
+| Demolition permits (Mississauga's `HOUSDEMO`, `9DEMO`) add no units: the count on them is the homes they remove. | |
+| Units are **net** of the dwellings the site demolishes. Sources: demolition permits, "demolish existing dwelling" on a new house's permit, Caledon's "Demolish/Construct Detached", "existing dwelling to be demolished" on an application. The largest count stands, since they describe the same house. A tear-down rebuild adds 0; a fourplex replacing a house adds 3. | The house it replaces is already on the system. |
 
 When a development has two or more phases, the project panel lists them, each with its file
 number, status, planned units, and (where the phases have their own land) permitted units and
@@ -1554,6 +1556,45 @@ and retail site plans: the default view dropped from 2,027 developments to 619.
 isn't published yet: official plan, zoning, subdivision or block plan files, and descriptions
 naming a subdivision, precinct, mixed use, apartments or townhouses. Replacement houses,
 additions, temporary uses and day cares stay out.
+
+## Net units, the screening note, and pipe results off
+
+**Net units.** Every development's units are net of the existing dwellings it demolishes:
+- A replacement-house site plan already adds 0 units.
+- Second suites (ARUs) still count.
+- A tear-down rebuild now adds 0 instead of 1.
+
+The development panel shows the gross count, the dwellings removed and the net. Across the 23,824
+sites this removes 1,371 units (974 of them completed), mostly from about 810 infill rebuilds. It
+also stops Mississauga's `HOUSDEMO` demolition permits being counted as new homes. Committed
+capacity is unchanged, because those houses were never counted as growth.
+
+**Screening note.** A note opens every trace and every servicing demand result:
+- the development's Overview, Water and Wastewater tabs, and its demand by stage
+- the sewer and water traces
+- the bottom Water, Wastewater and Plants tabs
+- area selections
+- the batch, compare, fit and inquiry tools
+- the sewer panel
+
+The note says these figures come from one screening method, not a hydraulic model, and that the
+Region of Peel's water and wastewater models are the authority.
+
+**Pipe results off.** Individual-pipe modelling results are hidden for now, behind one switch,
+`PIPE_RESULTS` in `js/util.js`:
+- the *Sewer pipe capacity* map shading: a saved choice falls back to Off, and the Wastewater view
+  uses catchment growth instead
+- pipe % labels and tooltips
+- the % full, freeboard and calculation on a tapped sewer, which now just lists the developments
+  draining through it
+- the tightest pipe on traces and in the development panel
+- the tightest pipes list
+- the sewer profile
+- the pipe upgrade tool
+- pipe constraints in *DC needs*, batch, compare, fit and inquiry
+- the EPANET hydraulic check's main-by-main table
+
+Pumping stations, plants, pressure zones and water facilities stay.
 
 ## Updates reach the browser (offline service worker)
 

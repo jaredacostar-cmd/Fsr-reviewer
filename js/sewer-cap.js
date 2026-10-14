@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs, PIPE_RESULTS, SCREEN_NOTE } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -138,6 +138,7 @@
   const fbText = (dMm, r) => { const f = freeboard(dMm, r); return !f ? 'n/a' : r >= 1 ? 'none (surcharged)' : `${fmtNum(Math.round(f.mm))} mm (${Math.round(f.pct)}% of D)`; };
   function pipeTip(i) {
     const s = pipeStats(i), p = s.p, D0 = MM().SEW.data;
+    if (!PIPE_RESULTS) return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}<br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}<br><span class="muted">Pipe-by-pipe capacity results are hidden: the Region's model is the authority</span>`;
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
       <br>Slope ${(p[1] * 100).toFixed(3)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : s.badSlope ? 'n/a (published slope not reliable)' : 'n/a (no slope)'}
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}
@@ -155,19 +156,20 @@
       if (p[0] < minD) return;
       const c = p[10]; if (!b.contains([c[1], c[0]]) && !b.contains([c[c.length - 1], c[c.length - 2]])) return;
       const s = pipeStats(i);
-      L.polyline(pipeCoords(p).map(([x, y]) => [y, x]), { renderer: ren, pane: 'svcPane', color: pipeColour(s.r1), weight: Math.max(2, Math.min(7, p[0] / 300)), opacity: 0.9 })
+      L.polyline(pipeCoords(p).map(([x, y]) => [y, x]), { renderer: ren, pane: 'svcPane', color: PIPE_RESULTS ? pipeColour(s.r1) : token('--text-muted'), weight: Math.max(2, Math.min(7, p[0] / 300)), opacity: 0.9 })
         .bindTooltip(() => pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showPipeLoads(i); }).addTo(layer);
       // Zoomed in: each pipe's result (capacity used, the slider year) on it; with size labels on,
       // its size too.
-      const pct = z >= 16 && s.r1 != null ? `${Math.round(s.r1 * 100)}%` : '';
-      if ((MM().pipeLbl && z >= 14) || pct) { const q = [], cc = p[10]; for (let k = 0; k < cc.length; k += 2) q.push([cc[k], cc[k + 1]]); lbls.push({ d: p[0], text: [MM().pipeLbl ? p[0] : '', pct].filter(Boolean).join(' · '), color: pipeColour(s.r1), lines: [q] }); }
+      const pct = PIPE_RESULTS && z >= 16 && s.r1 != null ? `${Math.round(s.r1 * 100)}%` : '';
+      if ((MM().pipeLbl && z >= 14) || pct) { const q = [], cc = p[10]; for (let k = 0; k < cc.length; k += 2) q.push([cc[k], cc[k + 1]]); lbls.push({ d: p[0], text: [MM().pipeLbl ? p[0] : '', pct].filter(Boolean).join(' · '), color: PIPE_RESULTS ? pipeColour(s.r1) : token('--text-muted'), lines: [q] }); }
     });
     if (lbls.length) EP().placePipeLabels(lbls, layer);
   }
   map.on('moveend', () => { if (MM().mstyle.cap === 'pipes') MA().renderCapLayer(); });
   // Tightest pipe on a development's path to the plant (build-out or the legend year).
   function pathPipes(p) {
-    if (!MM().SEW.data || p.lat == null) return null;
+    // Pipe-by-pipe results are off for now: no tightest pipe for verdicts, briefs or the FSR check.
+    if (!PIPE_RESULTS || !MM().SEW.data || p.lat == null) return null;
     const G = sewerGrowth(); const k = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
     if (k < 0) return null;
     // Local: the first 3 km of the path; downstream: the rest to the plant.
@@ -263,13 +265,13 @@
     up.sort((a, b) => b.q - a.q);
     // Phase 3b pop-up actions: re-run, and the pipe upgrade tool (sibling module, guarded).
     const pActs = [TS().ptBtn('ploads', i, 'What loads this?', 'Re-run this analysis (picks up scenario changes)'),
-      TS().ptBtn('upgrade', i, 'Upgrade this pipe', 'Open the pipe upgrade tool for this sewer')];
+      PIPE_RESULTS && TS().ptBtn('upgrade', i, 'Upgrade this pipe', 'Open the pipe upgrade tool for this sewer')].filter(Boolean);
     const html = `
       <div class="head"><h3>${p[0]} mm sanitary sewer</h3><div class="m">${esc(MM().SEW.data.plants[p[6]] === 'Toronto' ? 'City of Toronto system' : SD().plantLabel(MM().SEW.data.plants[p[6]]))} sewershed · slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a'}${p[7] ? ` · installed ${p[7]}` : ''}</div></div>
       ${TS().ptActions(pActs)}
-      <div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(MA().getCapYear() == null ? 'Build-out' : MA().getCapYear(), s.then.q, s.r1)}${s.r1 != null ? `<span class="chip">Freeboard ${fbText(p[0], s.r1)}</span>` : ''}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
+      ${PIPE_RESULTS ? `<div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(MA().getCapYear() == null ? 'Build-out' : MA().getCapYear(), s.then.q, s.r1)}${s.r1 != null ? `<span class="chip">Freeboard ${fbText(p[0], s.r1)}</span>` : ''}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
       <p class="small"><button type="button" class="btn small" data-profile="pipe:${i}"><span aria-hidden="true">⌇</span> Sewer profile downstream</button></p>
-      ${pipeCalcHTML(i, s)}
+      ${pipeCalcHTML(i, s)}` : `${SCREEN_NOTE}<p class="small muted">Pipe-by-pipe capacity results (load, % full, freeboard, profile) are hidden for now: the Region's hydraulic model is the authority for individual pipes. Below: the developments draining through this pipe.</p>`}
 
       <table class="dt loads-table"><caption>${fmtNum(up.length)} developments since the census draining through this pipe, largest peak wet first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>

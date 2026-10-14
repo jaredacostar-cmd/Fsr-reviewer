@@ -264,7 +264,7 @@
     var pt = PT();
     if (!pt) return;
     lastResults = null;
-    pt.openResult({ title: 'Batch test sites', html: openHTML(), reopen: open });
+    pt.openResult({ title: 'Batch test sites', html: openHTML(), reopen: open, screen: true });
   }
 
   // Delegated file input / run / export (the pane's innerHTML is rebuilt by openResult).

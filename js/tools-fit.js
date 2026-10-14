@@ -109,7 +109,9 @@
     // 1. Sewer pipe: trace to the plant, take the tightest pipe on the way.
     let trace = null;
     try { trace = await app.tracePoint(latlng); } catch (e) { trace = null; }
-    if (trace && trace.worst) {
+    // Pipe-by-pipe results are off for now: the Region's model decides individual sewers.
+    if (!(window.PeelUtil || {}).PIPE_RESULTS) missing.push({ id: 'pipe', label: 'Sewer pipes — pipe-by-pipe capacity is left to the Region\u2019s hydraulic model (not screened here)' });
+    else if (trace && trace.worst) {
       const cons = app.pipeCons(trace.worst.i);
       push('pipe', `Sanitary sewer — ${cons ? cons.name : 'tightest pipe on the trace (no capacity published)'}`, cons && cons.sub, cons);
     } else {
@@ -220,7 +222,7 @@
     PT.openResult({ title: 'How many more units fit?', html: `<p class="muted">Evaluating constraints at ${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}…</p>` });
     try {
       const res = await evaluate(latlng);
-      PT.openResult({ title: 'How many more units fit?', html: resultHTML(latlng, res) });
+      PT.openResult({ title: 'How many more units fit?', html: resultHTML(latlng, res), screen: true });
     } catch (e) {
       PT.openResult({ title: 'How many more units fit?', html: `<p class="muted">Could not evaluate this point (${esc(e && e.message ? e.message : e)}).</p>` });
     }

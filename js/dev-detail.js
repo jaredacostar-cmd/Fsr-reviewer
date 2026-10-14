@@ -10,7 +10,9 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { esc, fmtNum, fmtDate, fmt1, roundPop, unit, uML, uLs, uPop, uUnits, estTag, dot } = root.PeelUtil;
+  const { esc, fmtNum, fmtDate, fmt1, roundPop, unit, uML, uLs, uPop, uUnits, estTag, dot, PIPE_RESULTS, SCREEN_NOTE } = root.PeelUtil;
+  // Units are net of the dwellings the site demolishes (a tear-down rebuild adds none).
+  const netNote = p => (p.unitsLost ? ` (net: ${fmtNum(p.unitsGross || 0)} new − ${fmtNum(p.unitsLost)} demolished)` : '');
   const P = root.PeelPhases;
   const D = root.PeelDemand;
   const PV = root.PeelProvenance || null;
@@ -161,7 +163,7 @@
     }
     const done = permits.filter(r => r.phase === 'completed').length;
     return `<div class="summary"><div class="sum-tiles">
-      ${tile('s-plan', 'Units', p.units ? fmtNum(p.units) : '–', p.units ? 'on the files' : 'not stated')}
+      ${tile('s-plan', 'Units', p.units ? fmtNum(p.units) : p.unitsLost ? '0' : '–', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : p.units ? 'on the files' : 'not stated')}
       ${tile('s-perm', 'Permits', fmtNum(permits.length), '')}
       ${tile('s-done', 'Completed', fmtNum(done), done ? 'permits' : '')}
       ${tile('s-left', 'Applications', fmtNum(p.records.length - permits.length), '')}
@@ -282,7 +284,7 @@
     if (res) notes.push(`${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.`);
     if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the development is completed.`);
     return `<details class="${nested ? 'sub-sect' : 'sect'}"><summary>${nested ? '<h3 class="sub-title" data-info="project-demand">Demand by stage: total, completed, remaining</h3>' : '<h2 class="section-title" data-info="project-demand">Servicing demand</h2>'}${emp ? `<span class="muted small sect-sum">${res ? 'residential + ' : ''}${fmtNum(Math.round(m(es[0]).jobs))} jobs</span>` : ''}</summary>${intro}
-      <table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
+      ${SCREEN_NOTE}<table class="dt demand-table"><thead><tr><th></th>${cols.map(([, l]) => `<th>${l}</th>`).join('')}</tr></thead><tbody>
         ${resRows}${empRows}${totRows}
       </tbody></table>
       <p class="small muted">${notes.join(' ')}
@@ -474,10 +476,10 @@
     lines.push(`<strong>Wastewater</strong> ${uLs(cb.wastewater.peak)} peak dry, ${uLs(cb.wastewater.wetPeak)} peak wet${ps ? ` · via ${esc(psName(ps.a))} (build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm, peak wet)` : ''} ${estTag}`);
     const pp = SC().pathPipes(p);
     const pipeTxt = x => `${x.p[0]} mm at <strong>${Math.round(x.r1 * 100)}%</strong> <button type="button" class="btn small link" data-pipe="${x.i}">what loads it</button>`;
-    if (pp && pp.worst) lines.push(`<strong>Sewer pipes</strong> (load / full capacity at ${MA().getCapYear() == null ? 'build-out' : MA().getCapYear()}): ${pp.local ? `local tightest ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? ' · ' : ''}${pp.trunk ? `downstream trunk tightest ${pipeTxt(pp.trunk)}` : ''}`);
+    if (PIPE_RESULTS && pp && pp.worst) lines.push(`<strong>Sewer pipes</strong> (load / full capacity at ${MA().getCapYear() == null ? 'build-out' : MA().getCapYear()}): ${pp.local ? `local tightest ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? ' · ' : ''}${pp.trunk ? `downstream trunk tightest ${pipeTxt(pp.trunk)}` : ''}`);
     if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant is over-committed'} ${estTag}`);
     else if (f.pl === 'Toronto') lines.push('Drains to the City of Toronto system (Malton).');
-    return `<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>
+    return `${SCREEN_NOTE}<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>
       <p class="small"><button type="button" class="btn small link" data-open="dev-svc">Flows, sewer path and demand by stage</button></p>`;
   }
 
@@ -485,12 +487,12 @@
     const b = p.buildout;
     if (!b) {
       const permits = p.records.filter(r => r.kind === 'permit').length;
-      return `<p class="small">${p.units ? `${uUnits(p.units)} on the files` : 'Units not stated'}${permits ? ` · ${fmtNum(permits)} building permits` : ''}</p>`;
+      return `<p class="small">${p.units ? `${uUnits(p.units)} on the files` : p.unitsLost ? 'No net new homes' : 'Units not stated'}${netNote(p)}${permits ? ` · ${fmtNum(permits)} building permits` : ''}</p>`;
     }
     const total = Math.max(b.planned, b.permitted), w = v => total ? (v / total * 100).toFixed(2) : 0;
     return `<div class="sum-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(Math.max(0, b.permitted - b.completed))} permitted not completed, ${fmtNum(b.remaining)} left to build">
         <span class="bo-done" style="width:${w(b.completed)}%"></span><span class="bo-perm" style="width:${w(Math.max(0, b.permitted - b.completed))}%"></span><span class="bo-left" style="width:${w(b.remaining)}%"></span></div>
-      <p class="small">${uUnits(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed · <strong>${uUnits(b.remaining)} left</strong> <button type="button" class="btn small link" data-open="dev-units">by type and phase</button></p>`;
+      <p class="small">${uUnits(b.planned)} planned${netNote(p)} · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed · <strong>${uUnits(b.remaining)} left</strong> <button type="button" class="btn small link" data-open="dev-units">by type and phase</button></p>`;
   }
 
   // The brief in two parts: 'overview' (status, decision, build-out, proposal) and 'servicing'

@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, store, roundPop } = window.PeelUtil;
+  const { $, esc, fmtNum, store, roundPop, PIPE_RESULTS } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MA = () => window.PeelMapAnalysis;
@@ -28,6 +28,7 @@
   // (Sf = S0 × (Q / Qfull)², rising upstream from the crown at the pipe's lower end).
   const PROF = { el: null, seq: 0 };
   async function sewerProfile(route, title) {
+    if (!PIPE_RESULTS) return;   // pipe-by-pipe results are off for now
     const P = MM().SEW.data.pipes, seq = ++PROF.seq;
     if (!PROF.el) {
       PROF.el = document.createElement('div'); PROF.el.className = 'prof-dlg'; PROF.el.hidden = true; document.body.appendChild(PROF.el);

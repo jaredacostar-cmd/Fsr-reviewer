@@ -313,6 +313,8 @@
     if (r.kind !== 'permit') return false;
     const ref = String(r.ref || '').toUpperCase();
     if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS|MECH)\b/.test(ref)) return false;
+    // Demolition permits (Mississauga's HOUSDEMO) carry the units they remove, not new ones.
+    if (isDemolition(r)) return false;
     // Revisions to an earlier permit and site servicing repeat that permit's count.
     if (/^revision to (bp|permit)|site servicing/i.test(r.description || '')) return false;
     // Alterations add units only when they create one (a second suite); otherwise the count is
@@ -323,6 +325,56 @@
   const isAlteration = r => /\d?ALT\b|^MECH\b/i.test(String(r.ref || '')) || /alteration to existing|^\s*(interior )?alteration|^\s*(replace|repair)/i.test(`${r.scope || ''} ${r.description || ''}`);
   // A second (or third) unit in an existing house: real new homes, but not a site plan's building.
   const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
+
+  // ---- Dwellings removed on the site (tear-down rebuilds count net) ---------------------------
+  // "NEW (2) STOREY DETACHED DWELLING - DEMOLISH EXISTING DETACHED DWELLING", "Demolish/Construct
+  // Detached", "Existing dwelling on lot to be demolished", a HOUSDEMO permit for 1 unit: the new
+  // house replaces one, so it adds no home. Garages, sheds, commercial and industrial buildings,
+  // retirement and care homes, partial and interior demolitions aren't dwellings.
+  const LOST_HOME = /dwelling|\bhouses?\b|\bhomes?\b|\bsfd\b|\bsdd\b|bungalow|residence|\bsemi\b|semi[- ]detached|detached(?!\s+(garage|shed|carport|structure|accessory|workshop|barn))/i;
+  const NOT_HOME = /retirement|nursing|long[- ]term|care home|funeral|club ?house|garage|shed|barn|carport|cabana|pool|accessory|commercial|industrial|office|retail|plaza|warehouse|church|school|hotel|gas bar|restaurant/i;
+  const WORDS = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+  // Count in "(2) existing dwellings", "two existing houses"; one when no count is given.
+  function homesIn(seg) {
+    const m = /\b(\d{1,3}|one|two|three|four|five|six|seven|eight|nine|ten)\)?\s+(?:\(\d+\)\s+)?(?:existing\s+)?(?:[\w-]+\s+){0,3}?(?:dwellings|houses|homes|units)\b/i.exec(seg);
+    if (!m) return 1;
+    const n = WORDS[m[1].toLowerCase()] || Number(m[1]);
+    return n > 0 && n < 500 ? n : 1;
+  }
+  function lostHomesInText(text, newHouse) {
+    const s = String(text || '');
+    if (!/demoli/i.test(s) || /(partial|interior)\s+demoli|demoli\w*\s+(of\s+)?(a\s+)?(part|portion)\b/i.test(s)) return 0;
+    // "Existing dwelling on lot to be demolished", "the existing 1-storey single detached dwelling is to be demolished".
+    const pass = /existing\s+((?:[\w()-]+\s+){0,5}?)(dwellings?|houses?|homes?|sfds?|bungalows?)\s+(?:on\s+(?:the\s+)?(?:lot|site|property)\s+)?(?:is\s+|are\s+)?(?:to\s+be\s+|will\s+be\s+)?demolished/i.exec(s);
+    if (pass && !NOT_HOME.test(pass[1])) return homesIn(pass[0]);
+    let n = 0;
+    for (const m of s.matchAll(/demoli\w*/gi)) {
+      // What is demolished: up to the next "&", "and", comma, full stop or "to" / "with".
+      const seg = s.slice(m.index + m[0].length, m.index + m[0].length + 80).split(/&|\band\b|,|;|\.(?!\d)|\bto\b|\bwith\b|\bfor\b|—| - /i)[0];
+      if (LOST_HOME.test(seg) && !NOT_HOME.test(seg.replace(/detached\s+(garage|shed|carport)/ig, ''))) n = Math.max(n, homesIn(seg));
+      // "NEW (2) STOREY DETACHED DWELLING … DEMOLISH EXISTING": the house it replaces.
+      else if (newHouse && /^\s*(?:the\s+)?exist\w*\.?\s*$/i.test(seg)) n = Math.max(n, 1);
+    }
+    return n;
+  }
+  // Dwellings the site's live records remove. The demolition permit and the new house's permit
+  // (or its site plan) describe the same house, so the largest count stands for the site.
+  function lostHomes(recs) {
+    const demo = new Map(); let text = 0;
+    for (const r of recs) {
+      if (r.phase === 'cancelled') continue;
+      if (isDemolition(r)) {
+        const t = `${r.type || ''} ${r.description || ''}`;
+        const n = r.units > 0 && !NOT_HOME.test(r.description || '') ? r.units : lostHomesInText(t, false);
+        if (n > 0) { const k = r.fileKey || canonRef(r.ref) || r.uid; demo.set(k, Math.max(demo.get(k) || 0, n)); }
+        continue;
+      }
+      const newHouse = r.kind === 'permit' && permitAddsUnits(r) && r.units <= 2;
+      text = Math.max(text, lostHomesInText(r.description, newHouse));
+    }
+    let fromPermits = 0; for (const v of demo.values()) fromPermits += v;
+    return Math.max(fromPermits, text);
+  }
 
   // Common AMANDA planning folder codes (Caledon, Brampton).
   const TYPE_CODES = {
@@ -1068,9 +1120,14 @@
     const liveApps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
     const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan);
     const plan = plannedFromApps(liveApps);
-    let planned = site.planned !== undefined ? site.planned : plan.planned;
-    const permitted = permitUnits(livePermits);
-    const completed = permitUnits(livePermits.filter(r => r.phase === 'completed'));
+    // Units are net of the dwellings the site removes (a tear-down rebuild adds none).
+    const lost = lostHomes(recs);
+    const net = v => (v > 0 && lost ? Math.max(0, v - lost) : v);
+    const grossPlanned = site.planned !== undefined ? site.planned : plan.planned;
+    let planned = net(grossPlanned);
+    const grossPermitted = permitUnits(livePermits);
+    const permitted = net(grossPermitted);
+    const completed = net(permitUnits(livePermits.filter(r => r.phase === 'completed')));
     const buildout = planned > 0 ? {
       planned,
       permitted,
@@ -1117,7 +1174,7 @@
     const dates = timeline.map(t => t.date);
     const sumOf = f => {
       // Units/GFA are repeated across the files of one project; take the max, not the sum.
-      const v = recs.map(r => r[f]).filter(x => x != null && x > 0);
+      const v = recs.filter(r => !(f === 'units' && isDemolition(r))).map(r => r[f]).filter(x => x != null && x > 0);
       return v.length ? Math.max(...v) : null;
     };
     return {
@@ -1138,7 +1195,10 @@
       first: dates.length ? dates[0] : null,
       last: dates.length ? dates[dates.length - 1] : null,
       // Units counted once: the larger of planned (applications) and permitted (permits).
-      units: buildout ? Math.max(buildout.planned, buildout.permitted) : (permitted || (site.area && site.planned === 0 ? null : sumOf('units'))),
+      units: buildout ? Math.max(buildout.planned, buildout.permitted) : (grossPermitted ? permitted : (site.area && site.planned === 0 ? null : net(sumOf('units')))),
+      // Dwellings demolished on the site (units above are net of them), and the gross count.
+      unitsLost: lost || undefined,
+      unitsGross: lost ? (buildout ? Math.max(grossPlanned || 0, grossPermitted) : (grossPermitted || sumOf('units'))) : undefined,
       // An area plan holding separate draft-plan developments: how many, and the units they carry.
       areaPlan: site.area || undefined,
       buildout,
@@ -1190,7 +1250,7 @@
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
-    canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, mergeProject, projectKey, isNewBuild,
+    canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
