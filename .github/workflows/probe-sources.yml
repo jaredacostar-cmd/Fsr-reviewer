@@ -116,6 +116,7 @@ jobs:
           git push -f origin ext-raw
       - name: Site constraint layers (gas, hydro, watercourses, regulation limits; log only)
         if: inputs.mode == 'constraints'
+        timeout-minutes: 20
         run: node scripts/probe-constraints.js
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'

@@ -12,7 +12,7 @@ const ORIGIN = 'https://jaredacostar-cmd.github.io';
 const PEEL = { xmin: -80.16, ymin: 43.47, xmax: -79.48, ymax: 44.00 };
 const BBOX = `${PEEL.xmin},${PEEL.ymin},${PEEL.xmax},${PEEL.ymax}`;
 const q = o => new URLSearchParams(o).toString();
-async function get(url, timeout = 40000) {
+async function get(url, timeout = 25000) {
   const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), timeout);
   try {
     const r = await fetch(url, { signal: ctl.signal, headers: { Origin: ORIGIN } });
@@ -54,9 +54,9 @@ async function search(query, label, match, num = 30) {
   }
 }
 async function overpass(label, ql) {
-  const body = `[out:json][timeout:120];(${ql});out tags 400;`;
+  const body = `[out:json][timeout:80];(${ql});out tags 400;`;
   try {
-    const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(body), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+    const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(body), headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, signal: AbortSignal.timeout(90000) });
     const j = await r.json(); const els = j.elements || [];
     const tally = {}; for (const e of els) { const t = e.tags || {}; const k = [t.power || '', t.substance || t.type || '', t.voltage || '', t.operator || ''].join('|'); tally[k] = (tally[k] || 0) + 1; }
     console.log(`\n=== OSM ${label}: ${els.length} ways (cors=${r.headers.get('access-control-allow-origin')})`);
