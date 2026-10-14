@@ -79,7 +79,8 @@
   // Outline style, 24x24 viewBox, currentColor. Names: the four map views, the
   // development marker, and each map tool (tool keys as used in js/app.js
   // TOOL_ITEMS, plus the aliases the UI uses: 'select' for the lasso area
-  // select, 'test-site' for the what-if site test).
+  // select, 'test-site' for the what-if site test), plus 'export' and
+  // 'settings' for the top bar.
   var ICONS = {
     planning: '<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2z"/><path d="M9 4v14"/><path d="M15 6v14"/>',
     water: '<path d="M12 3.5s6 6.3 6 10.6a6 6 0 0 1-12 0C6 9.8 12 3.5 12 3.5z"/>',
@@ -92,6 +93,8 @@
     whatif: '<path d="M12 21.5s7-7.4 7-12.3a7 7 0 0 0-14 0c0 4.9 7 12.3 7 12.3z"/><path d="M12 6.8v5.4M9.3 9.5h5.4"/>',
     tips: '<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.6 2.6 0 1 1 3.6 2.4c-.8.35-1.2.9-1.2 1.7v.7"/><circle cx="12" cy="16.8" r="1.1" fill="currentColor" stroke="none"/>',
     present: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M10.5 8.7l4.5 2.8-4.5 2.8z"/><path d="M9 21h6"/>',
+    export: '<path d="M12 3.5v11"/><path d="M7.8 10.5 12 14.7l4.2-4.2"/><path d="M4.5 16.5v3.2a1.3 1.3 0 0 0 1.3 1.3h12.4a1.3 1.3 0 0 0 1.3-1.3v-3.2"/>',
+    settings: '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.65 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.08A1.7 1.7 0 0 0 10.12 3V3a2 2 0 1 1 4 0v.09c0 .68.4 1.3 1.03 1.56.6.26 1.3.11 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.08c.26.6.88 1.03 1.56 1.03H21a2 2 0 1 1 0 4h-.09c-.68 0-1.3.4-1.51 1.03z"/>',
   };
   var ALIAS = { select: 'lasso', 'test-site': 'whatif' };
   var ICON_NAMES = Object.keys(ICONS);

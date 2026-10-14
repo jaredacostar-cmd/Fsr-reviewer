@@ -64,6 +64,7 @@ html[data-mapview="planning"] .leaflet-imagery-pane { filter: brightness(.88); }
    headline sentence and the four key tiles large; everything else hidden.
    Esc (or the Exit button) leaves it. */
 html[data-presentation] .sidebar,
+html[data-presentation] .analysis,
 html[data-presentation] .footer,
 html[data-presentation] .detail,
 html[data-presentation] .map-opts,

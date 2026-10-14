@@ -62,7 +62,8 @@ test('basemapForView: planning -> aerial, servicing views -> dark canvas', () =>
 
 test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', () => {
   const names = ['planning', 'water', 'wastewater', 'dc', 'development',
-    'trace', 'lasso', 'measure', 'whatif', 'tips', 'present'];
+    'trace', 'lasso', 'measure', 'whatif', 'tips', 'present',
+    'export', 'settings'];
   for (const n of names) {
     const s = DG.icon(n);
     assert.ok(s.startsWith('<svg'), `${n}: not an svg`);

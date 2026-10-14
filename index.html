@@ -50,14 +50,28 @@
   </script>
   <div class="unofficial-banner">Unofficial prototype · public data only · not a Region of Peel product</div>
   <div class="app">
+    <header class="topbar" id="topbar">
+      <span class="tb-wordmark">Peel Growth Pipeline</span>
+      <nav class="tb-trail" id="trail" aria-label="Scope"></nav>
+      <div class="tb-views" id="tb-views" role="group" aria-label="Map view"></div>
+      <div class="tb-scen-wrap">
+        <button type="button" class="tb-scen" id="tb-scen" aria-haspopup="dialog" aria-expanded="false" title="Scenario: the assumptions behind the servicing figures"></button>
+        <div class="tb-pop" id="tb-scen-pop" hidden></div>
+      </div>
+      <div class="tb-actions">
+        <div class="tb-wrap">
+          <button type="button" class="btn small tb-btn" id="tb-export" aria-haspopup="menu" aria-expanded="false" title="Export the developments, areas, reports and share link">Export</button>
+          <div class="tb-menu" id="tb-export-menu" role="menu" hidden></div>
+        </div>
+        <button type="button" class="btn small tb-btn" id="tb-present" aria-pressed="false" title="Presentation mode: fill the screen with the map and headline numbers (Esc exits)">Present</button>
+        <button type="button" class="btn small tb-btn" id="tb-help" data-help-open title="Guides for common tasks and a quick tour">Help</button>
+        <div class="tb-wrap">
+          <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="menu" aria-expanded="false" aria-label="Settings menu" title="Settings"></button>
+          <div class="tb-menu" id="tb-gear-menu" role="menu" hidden></div>
+        </div>
+      </div>
+    </header>
     <aside class="sidebar" id="sidebar">
-      <header class="brand">
-        <h1>Peel Growth Pipeline (unofficial)</h1>
-        <p class="sub">Mississauga · Brampton · Caledon — from application to completion</p>
-        <button type="button" class="btn small share-btn" data-share title="Copy a link to this exact view: filters, tab, switches, map position and the open development">Share link</button>
-        <button type="button" class="btn small help-btn" data-help-open title="Guides for common tasks and a quick tour">Help</button>
-      </header>
-
       <nav class="tabs" role="tablist" aria-label="Sidebar">
         <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Explore</button>
         <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span></button>
@@ -198,37 +212,17 @@
         <button type="button" class="btn small" id="pres-exit" title="Exit presentation (Esc)">Exit</button>
       </div>
       <div class="loading" id="loading" hidden></div>
-      <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
-      <section class="timebar" id="timebar" aria-label="Timeline">
-        <div class="tb-head">
-          <h2 data-info="timeline">Timeline</h2>
-          <label class="inline"><span class="sr">Milestone</span>
-            <select autocomplete="off" id="t-mode" aria-label="Which milestone falls in the year range">
-              <option value="any">Any milestone</option>
-              <option value="inception">Application submitted</option>
-              <option value="approved">Approved</option>
-              <option value="permit">Permit issued</option>
-              <option value="completed">Completed</option>
-            </select>
-          </label>
-          <strong class="t-label" id="t-label">All years</strong>
-          <button type="button" class="btn small" id="t-reset" hidden>Reset</button>
-          <button type="button" class="t-toggle" id="t-toggle" aria-expanded="true" aria-controls="t-body" title="Show or hide the timeline">▾</button>
-        </div>
-        <div class="t-body" id="t-body">
-          <div class="hist" id="t-hist" role="group" aria-label="Developments per year"></div>
-          <div class="range" id="t-range">
-            <input type="range" autocomplete="off" id="t-from" aria-label="From year">
-            <input type="range" autocomplete="off" id="t-to" aria-label="To year">
-          </div>
-          <div class="ticks" id="t-ticks" aria-hidden="true"></div>
-        </div>
-      </section>
+      <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar" aria-expanded="false">Filters</button>
     </main>
 
-    <footer class="footer" id="footer">
-      <div class="f-grip" id="footer-grip" role="separator" aria-orientation="horizontal" aria-label="Resize the analysis panel: drag up or down" tabindex="0"><span></span></div>
-      <div class="f-tabs" role="tablist" aria-label="Bottom panel">
+    <!-- Phase 2 shell: the analysis panes live in this right-hand column on desktop
+         (a bottom sheet below 1200px). The tab buttons and panes moved here verbatim
+         from the old bottom footer. Worker 3 appends a "Developments" tab + pane. -->
+    <aside class="analysis" id="analysis" aria-label="Analysis">
+      <div class="analysis-resize" id="analysis-resize" role="separator" aria-orientation="vertical" aria-label="Resize the analysis column: drag left or right" tabindex="0"><span></span></div>
+      <button type="button" class="sheet-grip" id="analysis-grip" aria-label="Resize the analysis panel: drag, or tap to change its height"><span></span></button>
+      <button type="button" class="f-sum" id="f-sum" title="Show the overview totals"></button>
+      <div class="analysis-tabs" role="tablist" aria-label="Analysis">
         <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
         <button type="button" role="tab" class="f-tab" id="ftab-census" data-tab="census" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth</button>
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="false">Demand</button>
@@ -237,11 +231,8 @@
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
         <button type="button" role="tab" class="f-tab" id="ftab-log" data-tab="log" data-info="tab-log" aria-controls="pane-log" aria-selected="false">Change log<span class="log-dot" hidden aria-label="new changes"></span></button>
-        <button type="button" class="f-sum" id="f-sum" title="Open the analysis"></button>
-        <span class="f-spacer"></span>
-        <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
       </div>
-      <div class="scen-bar" id="scen-bar" data-info="scenario"></div>
+      <div class="analysis-panes" id="analysis-panes">
 
       <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
         <div id="ov-body"></div>
@@ -328,6 +319,41 @@
           <form id="d-criteria" class="criteria"></form>
         </div>
         <div id="d-refs" class="d-refs" data-info="references" hidden></div>
+      </section>
+      </div>
+    </aside>
+    <!-- Phase 3b provision: the Compare tool renders its second scenario in this
+         fourth column (visible at ≥1800px once unhidden). Empty until then. -->
+    <aside class="compare-col" id="compare-col" hidden></aside>
+
+    <!-- Phase 2 shell: the footer is a slim timeline strip only. The #scen-bar stays
+         here for now; Worker 1 moves it into the topbar popover. -->
+    <footer class="footer" id="footer">
+      <div class="scen-bar" id="scen-bar" data-info="scenario"></div>
+      <section class="timebar" id="timebar" aria-label="Timeline">
+        <div class="tb-head">
+          <h2 data-info="timeline">Timeline</h2>
+          <label class="inline"><span class="sr">Milestone</span>
+            <select autocomplete="off" id="t-mode" aria-label="Which milestone falls in the year range">
+              <option value="any">Any milestone</option>
+              <option value="inception">Application submitted</option>
+              <option value="approved">Approved</option>
+              <option value="permit">Permit issued</option>
+              <option value="completed">Completed</option>
+            </select>
+          </label>
+          <strong class="t-label" id="t-label">All years</strong>
+          <button type="button" class="btn small" id="t-reset" hidden>Reset</button>
+          <button type="button" class="t-toggle" id="t-toggle" aria-expanded="true" aria-controls="t-body" title="Show or hide the timeline">▾</button>
+        </div>
+        <div class="t-body" id="t-body">
+          <div class="hist" id="t-hist" role="group" aria-label="Developments per year"></div>
+          <div class="range" id="t-range">
+            <input type="range" autocomplete="off" id="t-from" aria-label="From year">
+            <input type="range" autocomplete="off" id="t-to" aria-label="To year">
+          </div>
+          <div class="ticks" id="t-ticks" aria-hidden="true"></div>
+        </div>
       </section>
     </footer>
 
