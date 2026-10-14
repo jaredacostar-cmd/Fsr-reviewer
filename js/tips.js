@@ -24,6 +24,18 @@
   const tourDev = () => pickDev();
   // Phase 3: opening a development sets the analysis scope (no more #detail dev panel).
   const tourScopeDev = sub => { const p = tourDev(); if (!p) return; PDT().focusProject(p); if (sub && window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(sub); };
+  // Show one analysis tab for the tour's development: open it only when it isn't already open
+  // (opening it again resets the tabs), let the scope settle, then pick the tab (and sub-view).
+  const tourShow = async (tab, sub) => {
+    const p = tourDev(); if (!p) return;
+    const cur = typeof DevScope !== 'undefined' && DevScope._current;
+    if (cur !== p) { PDT().focusProject(p); await new Promise(r => setTimeout(r, 500)); }
+    if (tab === 'dev' && sub && window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(sub);
+    if (tab === 'ww') AT().setSub('ww', 'catchments');
+    openAnalysis(tab);
+  };
+  // The first of these that is on screen (phones hide some panels behind a button).
+  const vis = (...sels) => { for (const s of sels) { const e = document.querySelector(s); const r = e && e.getBoundingClientRect(); if (r && r.width && r.height && r.right > 0 && r.bottom > 0 && r.left < innerWidth && r.top < innerHeight) return e; } return null; };
   const TOUR = [
     { ch: 'Start', el: () => null, t: 'Welcome', b: 'This tracker follows every development application in Mississauga, Brampton and Caledon, and what each one needs from Peel\'s water and wastewater systems. This is an unofficial prototype built from public open data, not a Region of Peel product. This 2-minute tour sets the app up as it goes. Use Next / Back or the ← → keys; Esc ends it.' },
     // Phase 2 shell: the tour lives in js/app.js (not js/info.js); the analysis
@@ -35,20 +47,20 @@
     // Phase 2 layout shell: the legend folded into the Layers panel, "More settings" merged back
     // into it, "Filter by area" moved to the filter panel, and the tools dropdown became a rail.
     { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per layer: developments, blocks, pressure zones, water facilities, capacity colours, existing pipes, planned DC works, planning and census areas — the legend for what is shown, and More settings below.' },
-    { ch: 'Map', el: () => document.querySelector('.map-opts .mo-adv'), t: 'More settings', b: 'Saved views, how developments are coloured and sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
-    { ch: 'Map', el: () => document.querySelector('#filter-panel'), t: 'Filter by area', b: 'Municipality, secondary plans, MTSAs, pressure zones and wastewater blocks, in the filter panel. Every list takes several picks; the totals follow.' },
-    { ch: 'Map', el: () => $('#timebar'), t: 'Timeline and demand year', b: 'The timeline keeps developments with activity in the chosen years. With capacity colours on, the Demand year on top sets the year the pipe loads and capacity are worked out for: 2021 Census, today or build-out.' },
+    { ch: 'Map', el: () => vis('.map-opts .mo-adv', '.map-opts'), t: 'More settings', b: 'Saved views, how developments are coloured and sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
+    { ch: 'Map', el: () => vis('#filter-panel', '#toggle-sidebar'), t: 'Filter by area', b: 'Municipality, secondary plans, MTSAs, pressure zones and wastewater blocks, in the filter panel. Every list takes several picks; the totals follow.' },
+    { ch: 'Map', el: () => $('#timebar'), t: 'Timeline and demand year', b: 'The timeline keeps developments with activity in the chosen years. The Demand year sets the year demand and capacity are worked out for: 2021 Census, today or build-out.' },
     // Phase 3b: one home per tool — the rail order is select, measure, trace, test a
     // site, inspect, corridor, units-fit (worker A); results open in the Tool
     // result tab (trail: Peel › …), never as pop-ups.
     { ch: 'Map', el: () => document.querySelector('.tool-rail'), t: 'Tools', b: 'One button per tool on the left edge, in order: select developments (tap one, draw a lasso, or hold Ctrl / ⌘ and drag a box), measure with a ground profile, trace a sewer or water route, test a site before an application exists, inspect a point, select along a corridor, or estimate how many more units fit. One tool runs at a time; the banner says what to do and Esc finishes. Tool results open in the Tool result tab (trail: Peel › …).' },
     { ch: 'Present', el: () => $('#tb-present'), t: 'Present and time-lapse', b: 'Present (top bar, or the screen button under the map tools) fills the screen with the map and the headline numbers — Esc exits. Time-lapse, next to it, replays growth year by year from 2016 in presentation mode: press play, or drag the year scrubber. Marker colours are each development\u2019s phase at the end of that year, read from the dated milestones on its files.' },
     { ch: 'A development', do: () => { if (typeof DevScope !== 'undefined') DevScope.close(); tourScopeDev(); }, wait: 700, el: () => $('#site-bar'), t: 'A development', b: 'Tap any marker. The site bar shows the address, phase, key numbers and zone → plant — and every analysis tab now shows this site. ☆ Watch follows it in This week; Memo prints a one-page servicing memo; Check FSR cross-checks consultant FSR figures against the app numbers; Compare adds it to the Compare tool.' },
-    { ch: 'A development', do: () => tourScopeDev('files'), wait: 400, el: () => $('#pane-dev'), t: 'The Development tab', b: 'About: proposal, status, latest decision and the servicing report. Files & history: every application, how the phase was set, dated history and source records. Site: the aerial check, ground and stormwater.' },
-    { ch: 'A development', do: () => { const p = tourDev(); if (p) { PDT().focusProject(p); AT().showFootTab('ww'); } }, wait: 500, el: () => $('#pane-ww'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with the tightest pipe and pumping station, and the plant\'s reserve. The Water tab has the same for the supply; Growth has the units.' },
-    { ch: 'A development', do: () => { const b = document.querySelector('#site-bar [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'Each pipe is coloured by how full it gets (green, orange, red) with arrows to the plant; the other developments fade. Tap a catchment, zone, plant or pipe for what loads it, in the Tool result tab — with actions for an area report, the upstream catchments, or upgrading a pipe.' },
+    { ch: 'A development', do: () => tourShow('dev', 'files'), wait: 400, el: () => vis('#pane-dev', '#analysis'), t: 'The Development tab', b: 'About: proposal, status, latest decision and the servicing report. Files & history: every application, how the phase was set, dated history and source records. Site: the aerial check, ground and stormwater.' },
+    { ch: 'A development', do: () => tourShow('ww'), wait: 500, el: () => vis('#pane-ww', '#analysis'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with its pumping stations, and the plant\'s reserve: screening estimates, with the Region\u2019s models as the authority. The Water tab has the same for the supply; Growth has the units.' },
+    { ch: 'A development', do: () => { const b = document.querySelector('#site-bar [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'The path to the plant, with arrows showing the flow; the other developments fade. Tap a catchment, zone, plant or sewer for the developments draining through it, in the Tool result tab — with actions for an area report or the upstream catchments.' },
     { ch: 'Analysis', do: () => { AS().clearSelected(); openAnalysis('overview'); }, wait: 500, el: () => $('#analysis'), t: 'Analysis', b: 'The totals for what is on the map, and the capacity that runs out first, with its DC relief.' },
-    { ch: 'This week', do: () => { const b = $('#tab-btn-week'); if (b) b.click(); }, el: () => $('#tab-week'), t: 'This week: watchlist and alerts', b: 'Star developments with \u2606 Watch to follow them here. Every Monday the site compares the new data with the previous week and posts alerts \u2014 phase changes, new or removed developments, big unit-count changes, and capacity thresholds crossed \u2014 matched against your watchlist in the alerts panel, with a count badge on this tab. The full feed is also published as data/alerts.rss.' },
+    { ch: 'This week', do: () => { const b = $('#tab-btn-week'); if (b) b.click(); }, el: () => vis('#tab-week', '#toggle-sidebar'), t: 'This week: watchlist and alerts', b: 'Star developments with \u2606 Watch to follow them here. Every Monday the site compares the new data with the previous week and posts alerts \u2014 phase changes, new or removed developments, big unit-count changes, and capacity thresholds crossed \u2014 matched against your watchlist in the alerts panel, with a count badge on this tab. The full feed is also published as data/alerts.rss.' },
     { ch: 'Analysis', el: () => document.querySelector('.analysis-tabs'), t: 'Tabs', b: 'Overview for the headlines and what needs attention; Growth for the pipeline and the census story; Water and Wastewater for capacity by sub-view (plants, zones, facilities, pumping stations); DC for timing, recommendations and funding. Each tab has sub-views picked with buttons: headline, tiles, chart, top table, method note.' },
     { ch: 'Analysis', do: () => { openAnalysis('growth', 'timing'); }, wait: 600, el: () => $('#pane-growth-timing'), t: 'Timing forecast', b: 'Growth\u2019s Timing sub-view is a statistical screening estimate of WHEN the pipeline builds out: expected completions per year with a low / likely / high band, calibrated from the dated file events since 2016 by municipality and building type \u2014 plus plant and pressure-zone trigger years with a range instead of a single year.' },
     // Phase 3b: Help's only home is the topbar button (the map ? control was removed).
@@ -171,7 +183,10 @@
     const onScreen = r && r.width && r.height && r.right > 0 && r.bottom > 0 && r.left < innerWidth && r.top < innerHeight;
     const box = onScreen ? { x: Math.max(4, r.left - 4), y: Math.max(4, r.top - 4), w: Math.min(innerWidth - 8, r.width + 8), h: Math.min(innerHeight - 8, r.height + 8) } : null;
     const big = box && box.w * box.h > innerWidth * innerHeight * 0.3;
-    const cw = Math.min(340, innerWidth - 24);
+    let cw = Math.min(340, innerWidth - 24);
+    // A narrow highlight on the left edge (the tool rail on a phone): a narrower card beside it.
+    const side = box && !big ? innerWidth - (box.x + box.w + 12) - 12 : 0;
+    if (box && box.w <= 64 && side >= 200 && side < cw && box.x - 12 - cw <= 0) cw = side;
     // Card beside the highlight when there's room (right, then left), else below or above it.
     const place = ch => {
       if (box && !big) {

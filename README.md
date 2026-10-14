@@ -1594,7 +1594,16 @@ Region of Peel's water and wastewater models are the authority.
 - pipe constraints in *DC needs*, batch, compare, fit and inquiry
 - the EPANET hydraulic check's main-by-main table
 
-Pumping stations, plants, pressure zones and water facilities stay.
+Pumping stations, plants, pressure zones and water facilities stay. A traced sewer path is drawn
+in one colour (no capacity colours), and the briefing map's sewers are plain.
+
+**The tour** shows each step's real target again:
+- The Development tab and the Wastewater tab steps open the development only once, then pick the
+  tab. Opening it again had reset the tabs, so those steps pointed at nothing.
+- On a phone, steps whose panel is hidden or off screen (More settings, Filter by area, This week)
+  point at the button that opens it.
+- The card sits beside the tool rail instead of over it.
+- The step text matches the hidden pipe results.
 
 ## Region of Peel open data: housing activity, building permits, watercourses
 
