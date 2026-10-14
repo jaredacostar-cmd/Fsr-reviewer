@@ -63,7 +63,46 @@ async function overpass(label, ql) {
     console.log('  ' + Object.entries(tally).sort((a, b) => b[1] - a[1]).slice(0, 25).map(([k, n]) => `${k}=${n}`).join('\n  '));
   } catch (e) { console.log(`\n=== OSM ${label}: ERROR ${e.message}`); }
 }
+// Response sizes and type lists the app depends on (node scripts/probe-constraints.js quick).
+async function quick() {
+  const size = async (label, url, params) => {
+    const t0 = Date.now(), ctl = AbortSignal.timeout(120000);
+    try { const r = await fetch(`${url}/query?${q(params)}`, { signal: ctl, headers: { Origin: ORIGIN } }); const txt = await r.text(); let n = ''; try { const j = JSON.parse(txt); n = (j.features || []).length; } catch {} console.log(`  SIZE ${label}: ${(txt.length / 1e6).toFixed(2)} MB, ${n} features, ${Date.now() - t0} ms, status ${r.status}`); }
+    catch (e) { console.log(`  SIZE ${label}: ERROR ${e.message}`); }
+  };
+  const tile = (x, y, d = 0.02) => ({ geometry: `${x},${y},${x + d},${y + d}`, geometryType: 'esriGeometryEnvelope', inSR: 4326, spatialRel: 'esriSpatialRelIntersects' });
+  const CVC = 'https://services1.arcgis.com/d0ZCwU7eGKVeNiEE/arcgis/rest/services/Generic_Regulations_Limit_2025/FeatureServer/0';
+  const TRCA = 'https://services1.arcgis.com/d0ZCwU7eGKVeNiEE/ArcGIS/rest/services/TRCA_Regulation_Limit2/FeatureServer/0';
+  const UL = 'https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open05/MapServer/11';
+  const OHN = 'https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open01/MapServer/26';
+  console.log('### Quick: sizes');
+  for (const off of [0.00005, 0.0001, 0.0002]) await size(`CVC regulation limit, whole, offset ${off}`, CVC, { where: '1=1', outFields: 'objectid', returnGeometry: true, outSR: 4326, maxAllowableOffset: off, geometryPrecision: 5, f: 'geojson' });
+  await size('CVC regulation limit, 2 km tile in Brampton', CVC, { where: '1=1', ...tile(-79.78, 43.68), outFields: 'objectid', returnGeometry: true, outSR: 4326, maxAllowableOffset: 0.00005, geometryPrecision: 5, f: 'geojson' });
+  await size('CVC regulation limit, quantized view 2 km tile', CVC, { where: '1=1', ...tile(-79.78, 43.68), outFields: 'objectid', returnGeometry: true, outSR: 4326, f: 'json', quantizationParameters: JSON.stringify({ mode: 'view', originPosition: 'upperLeft', tolerance: 0.00005, extent: { xmin: -79.78, ymin: 43.68, xmax: -79.76, ymax: 43.70, spatialReference: { wkid: 4326 } } }) });
+  await size('TRCA regulation limit, 2 km tile in Brampton east', TRCA, { where: '1=1', ...tile(-79.70, 43.74), outFields: 'OBJECTID', returnGeometry: true, outSR: 4326, maxAllowableOffset: 0.00005, f: 'geojson' });
+  await size('OHN watercourse, 2 km tile', OHN, { where: '1=1', ...tile(-79.74, 43.68), outFields: 'WATERCOURSE_TYPE,OFFICIAL_NAME_LABEL', returnGeometry: true, outSR: 4326, maxAllowableOffset: 0.00005, f: 'geojson' });
+  console.log('### Quick: utility line types in Peel');
+  const st = await get(`${UL}/query?${q({ where: '1=1', ...inPeel, groupByFieldsForStatistics: 'CLASS_SUBTYPE', outStatistics: JSON.stringify([{ statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'n' }]), f: 'json' })}`);
+  console.log('  ' + JSON.stringify((st.features || []).map(f => f.attributes)).slice(0, 1500) + JSON.stringify(st.error || ''));
+  const all = await get(`${UL}/query?${q({ where: '1=1', ...inPeel, outFields: 'CLASS_SUBTYPE,OPERATING_STATUS_IND,LOCATION_DESCR,GENERAL_COMMENTS', returnGeometry: false, f: 'json' })}`);
+  const tally = {}; for (const f of all.features || []) { const a = f.attributes; const k = `${a.CLASS_SUBTYPE} | ${a.LOCATION_DESCR || ''} | ${a.GENERAL_COMMENTS || ''}`; tally[k] = (tally[k] || 0) + 1; }
+  console.log('  ' + Object.entries(tally).map(([k, n]) => `${n} × ${k}`).join('\n  '));
+  const wt = await get(`${OHN}/query?${q({ where: '1=1', ...inPeel, groupByFieldsForStatistics: 'WATERCOURSE_TYPE', outStatistics: JSON.stringify([{ statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'n' }]), f: 'json' })}`);
+  console.log('  OHN types: ' + JSON.stringify((wt.features || []).map(f => f.attributes)));
+  const nm = await get(`${OHN}/query?${q({ where: "OFFICIAL_NAME_LABEL IS NOT NULL", ...inPeel, returnCountOnly: true, f: 'json' })}`);
+  console.log('  OHN named in Peel: ' + JSON.stringify(nm));
+  console.log('### Quick: OpenStreetMap, one 2 km tile');
+  for (const [l, ql] of [['power', 'way["power"~"^(line|minor_line|cable)$"]'], ['pipeline', 'way["man_made"="pipeline"]']]) {
+    const t0 = Date.now();
+    try { const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(`[out:json][timeout:25];${ql}(43.68,-79.78,43.80,-79.60);out tags;`), headers: { 'Content-Type': 'application/x-www-form-urlencoded', Origin: ORIGIN }, signal: AbortSignal.timeout(60000) });
+      const txt = await r.text(); let els = []; try { els = JSON.parse(txt).elements || []; } catch {}
+      const tally = {}; for (const e of els) { const t = e.tags || {}; const k = [t.power || t.man_made, t.substance || '', t.voltage || '', t.operator || ''].join('|'); tally[k] = (tally[k] || 0) + 1; }
+      console.log(`  OSM ${l}: status ${r.status} ${els.length} ways ${Date.now() - t0} ms cors=${r.headers.get('access-control-allow-origin')} ${Object.entries(tally).map(([k, n]) => `${k}=${n}`).join('; ').slice(0, 600)}`); }
+    catch (e) { console.log(`  OSM ${l}: ERROR ${e.message}`); }
+  }
+}
 (async () => {
+  if (process.argv[2] === 'quick') return quick();
   const FS = '(type:"Feature Service" OR type:"Map Service")';
   const LIO = 'https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA';
   console.log('### Province (LIO): utility lines (hydro, gas), watercourses');

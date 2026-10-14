@@ -117,7 +117,7 @@ jobs:
       - name: Site constraint layers (gas, hydro, watercourses, regulation limits; log only)
         if: inputs.mode == 'constraints'
         timeout-minutes: 20
-        run: node scripts/probe-constraints.js
+        run: node scripts/probe-constraints.js ${{ inputs.only }}
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
