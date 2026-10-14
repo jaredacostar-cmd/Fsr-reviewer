@@ -64,7 +64,7 @@
           <div class="tb-menu" id="tb-export-menu" role="menu" hidden></div>
         </div>
         <button type="button" class="btn small tb-btn" id="tb-present" aria-pressed="false" title="Presentation mode: fill the screen with the map and headline numbers (Esc exits)">Present</button>
-        <button type="button" class="btn small tb-btn" id="tb-help" data-help-open title="Guides for common tasks and a quick tour">Help</button>
+        <button type="button" class="btn small tb-btn" id="tb-help" data-help-open title="Guides for common tasks and a quick tour">Help<span class="log-dot" hidden aria-label="new changes"></span></button>
         <div class="tb-wrap">
           <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="menu" aria-expanded="false" aria-label="Settings menu" title="Settings"></button>
           <div class="tb-menu" id="tb-gear-menu" role="menu" hidden></div>
@@ -226,14 +226,11 @@
       <div id="site-bar" hidden></div>
       <div class="analysis-tabs" role="tablist" aria-label="Analysis">
         <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-census" data-tab="census" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="false">Demand</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="pane-growth-pipeline" aria-selected="false">Growth</button>
         <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>DC</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dev" data-tab="dev" data-info="tab-dev" aria-controls="pane-dev" aria-selected="false" hidden>Development</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-log" data-tab="log" data-info="tab-log" aria-controls="pane-log" aria-selected="false">Change log<span class="log-dot" hidden aria-label="new changes"></span></button>
         <button type="button" role="tab" class="f-tab" id="ftab-tool" data-tab="tool" aria-controls="pane-tool" aria-selected="false" hidden>Tool result</button>
       </div>
       <div class="analysis-panes" id="analysis-panes">
@@ -242,39 +239,15 @@
         <div id="ov-body"></div>
       </section>
 
-      <section class="f-pane demand" id="pane-demand" data-pane="growth" role="tabpanel" aria-labelledby="ftab-growth">
-        <div class="tb-head">
-          <h2 class="pane-h" data-info="tab-demand">Demand of the shown developments</h2>
-          <div class="d-sel" id="d-sel" data-info="demand-selection"></div>
-        </div>
-        <div class="d-layout">
-          <div class="d-stats" id="d-stats"></div>
-          <div class="d-flows" id="d-tiles"></div>
-        </div>
-        <h3 class="sub-title" data-info="unit-types">Servicing demand breakdown</h3>
-        <div id="d-breakdown" class="d-breakdown"></div>
-      </section>
-
-      <section class="f-pane census" id="census" data-pane="census" role="tabpanel" data-off="1" aria-labelledby="ftab-census" hidden>
-        <div class="tb-head">
-          <h2 class="pane-h" id="c-head" data-info="tab-growth">Growth since the 2021 Census</h2>
-          <span class="muted small" id="c-note" data-info="census"></span>
-        </div>
-        <div class="c-ctx" id="c-ctx"></div>
-        <div class="c-layout">
-          <div class="tiles" id="c-tiles"></div>
-          <div class="c-right">
-            <div class="growth-chart" id="c-chart" data-info="growth-bars"></div>
-            <p class="small muted" id="c-ii" data-info="ii"></p>
-          </div>
-        </div>
-        <div id="c-forecast" data-info="forecast-2051"></div>
-      </section>
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="census2051">Census &amp; 2051</button></div>
+      <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
+      <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="census2051" role="tabpanel" aria-labelledby="ftab-growth" data-off="1" hidden><div id="growth-census-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="water" hidden role="group" aria-label="Water view">
         <button type="button" class="btn small" data-wsub="capacity">Treatment &amp; capacity</button>
         <button type="button" class="btn small" data-wsub="zones">Pressure zones</button>
         <button type="button" class="btn small" data-wsub="facilities">Facilities</button>
+        <button type="button" class="btn small" data-wsub="hydro">Hydraulic check (beta)</button>
       </div>
       <section class="f-pane svc-pane" id="pane-wcap" data-pane="water" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-water" hidden>
         <div class="tb-head"><h2 class="sr">Water treatment and capacity</h2></div>
@@ -288,10 +261,15 @@
         <div class="tb-head"><h2 class="sr">Existing water facilities</h2></div>
         <div id="wfac-body"></div>
       </section>
+      <section class="f-pane svc-pane" id="pane-hydro" data-pane="water" data-sub="hydro" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Hydraulic check</h2></div>
+        <div id="hyd-box"></div>
+      </section>
       <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
         <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
         <button type="button" class="btn small" data-wwsub="catchments">Blocks</button>
         <button type="button" class="btn small" data-wwsub="alloc">Allocations</button>
+        <button type="button" class="btn small" data-wwsub="pumpstations">Pumping stations</button>
       </div>
       <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-ww" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
@@ -305,31 +283,21 @@
         <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
         <div id="plants-body"></div>
       </section>
-
-      <section class="f-pane svc-pane" id="pane-dca" data-pane="dca" role="tabpanel" aria-labelledby="ftab-dca" hidden>
-        <div class="tb-head"><h2 class="pane-h" data-info="tab-dca">DC Analysis: diverting flows to the DC projects, and what if one is cancelled</h2></div>
-        <div id="dca-body"></div>
+      <section class="f-pane svc-pane" id="pane-pumpstations" data-pane="ww" data-sub="pumpstations" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Pumping stations</h2></div>
+        <div id="pumpstations-body"></div>
       </section>
+
+      <div class="f-pane f-subtabs" data-pane="dc" hidden role="group" aria-label="DC view"><button type="button" class="btn small" data-dcasub="timing">Timing</button><button type="button" class="btn small" data-dcasub="recommendations">Recommendations</button><button type="button" class="btn small" data-dcasub="funding">Funding</button></div>
+      <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
+      <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="recommendations" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
+      <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
       <section class="f-pane" id="pane-dev" data-pane="dev" role="tabpanel" aria-labelledby="ftab-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></section>
-
-      <section class="f-pane log-pane" id="pane-log" data-pane="log" role="tabpanel" aria-labelledby="ftab-log" hidden>
-        <div id="log-body"><div class="skel-row" role="status" aria-label="Loading the change log"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div></div>
-      </section>
 
       <section class="f-pane" id="pane-tool" data-pane="tool" role="tabpanel" aria-labelledby="ftab-tool" hidden>
         <div class="tb-head"><h2 class="pane-h" id="tool-title">Tool result</h2><button type="button" class="btn small" id="tool-close" title="Close the tool result">Close ×</button></div>
         <div id="pane-tool-body"></div>
-      </section>
-
-      <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
-        <fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind"><option value="application" selected>Planning applications + their permits</option><option value="">All records (incl. permits with no application)</option><option value="permit">Building permits</option><option value="both">Application + permits</option></select></label></div><label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>
-        <div id="d-quality" class="d-quality"></div>
-        <h3 class="sub-title" data-info="tab-criteria">Design criteria</h3>
-        <div class="d-grid">
-          <form id="d-criteria" class="criteria"></form>
-        </div>
-        <div id="d-refs" class="d-refs" data-info="references" hidden></div>
       </section>
       </div>
     </aside>
@@ -340,7 +308,7 @@
     <!-- Phase 2 shell: the footer is a slim timeline strip only. The #scen-bar stays
          here for now; Worker 1 moves it into the topbar popover. -->
     <footer class="footer" id="footer">
-      <div class="scen-bar" id="scen-bar" data-info="scenario"></div>
+      <div class="scen-bar" id="scen-bar" data-info="scenario"><div id="scen-criteria-mount"></div></div>
       <section class="timebar" id="timebar" aria-label="Timeline">
         <div class="tb-head">
           <h2 data-info="timeline">Timeline</h2>
@@ -384,6 +352,7 @@
   <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/aerial.js?v=__BUILD__"></script>
   <script src="js/areas.js?v=__BUILD__"></script>
+  <script src="js/growth.js?v=__BUILD__"></script>
   <script src="js/employment.js?v=__BUILD__"></script>
   <script src="js/brief.js?v=__BUILD__"></script>
   <script src="js/info.js?v=__BUILD__"></script>
@@ -396,6 +365,7 @@
   <script src="js/devtab.js?v=__BUILD__"></script>
   <script src="js/tools.js?v=__BUILD__"></script>
   <script src="js/upstream.js?v=__BUILD__"></script>
+  <script src="js/tightpipes.js?v=__BUILD__"></script>
   <script src="js/tools-fit.js?v=__BUILD__"></script>
   <script src="js/tools-inspect.js?v=__BUILD__"></script>
   <script src="js/tools-corridor.js?v=__BUILD__"></script>
