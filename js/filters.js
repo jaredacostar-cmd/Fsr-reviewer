@@ -71,21 +71,22 @@ function wwLayersFromStages(phasesArray) {
  *   'employment', 'newapps', 'stalled', 'week', 'watched', 'none', …)
  * @returns {{flags:string[], basis:string, minUnits:number, landuse:string, yearPreset:string|null}}
  *   flags: flag keys to turn on; basis: 'all' | 'committed' | 'remaining';
- *   minUnits: size step; landuse: 'growth' | 'residential' | 'mixed' | 'employment';
+ *   minUnits: size step; landuse: 'all' | 'growth' | 'residential' | 'mixed' | 'employment';
  *   yearPreset: null or 'last12m' (year mode 'any', last 12 months).
  */
 function migrateLegacyFocus(fo) {
-  const out = { flags: [], basis: 'all', minUnits: 0, landuse: 'growth', yearPreset: null };
+  const out = { flags: [], basis: 'all', minUnits: 0, landuse: 'all', yearPreset: null };
   switch (fo) {
     case 'major': out.minUnits = 100; break;
     case 'committed': out.basis = 'committed'; break;
     case 'left': out.basis = 'remaining'; break;
+    case 'growth': out.landuse = 'growth'; break;
     case 'employment': out.landuse = 'employment'; break;
     case 'newapps': out.yearPreset = 'last12m'; break;
     case 'stalled':
     case 'week':
     case 'watched': out.flags = [fo]; break;
-    // 'growth', 'none' and anything unknown: drop to the defaults.
+    // 'none' and anything unknown: drop to the defaults.
   }
   return out;
 }
