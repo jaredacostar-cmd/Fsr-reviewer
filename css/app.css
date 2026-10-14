@@ -411,11 +411,12 @@ button, input, select { font: inherit; color: inherit; }
 .sidebar { grid-area: side; min-height: 0; min-width: 0; }
 .map-wrap { grid-area: map; min-height: 0; }
 .footer { grid-area: foot; }
-/* Phase 3b provision: the Compare tool's second-scenario column. Empty and hidden
-   until then; becomes the fourth column at ≥1800px. */
+/* Phase 3b provision: the Compare tool's column. At ≥1800px it becomes a fourth column, but
+   only while Compare is open (.app.cmp-open, set by js/tools-compare.js); otherwise the map
+   takes the width, so a wide screen has no empty column on the right. */
 .compare-col { grid-area: cmp; min-height: 0; min-width: 0; background: var(--surface-1); border-left: 1px solid var(--border); }
 @media (min-width: 1800px) {
-  .app {
+  .app.cmp-open {
     grid-template-columns: 300px minmax(0, 1fr) var(--analysis-w, 440px) 440px;
     grid-template-areas: "top top top top" "side map analysis cmp" "foot foot foot foot";
   }
@@ -630,7 +631,9 @@ button, input, select { font: inherit; color: inherit; }
 .analysis .d-grid { grid-template-columns: 1fr; }
 .analysis .tiles { grid-template-columns: 1fr 1fr; }
 .analysis .ov-growth, .analysis .ov-cap-c, .analysis .ov-break, .analysis .ov-dc,
-.analysis .ov-housing, .analysis .ov-outlook { grid-column: span 12; }
+.analysis .ov-housing, .analysis .ov-outlook, .analysis .ov-needs, .analysis .ov-topdevs { grid-column: span 12; }
+.analysis .ov-top { flex-direction: column; }
+.analysis .ov-brief { align-self: flex-start; }
 
 /* Slim timeline strip along the bottom (non-collapsible; the timeline folds via #t-toggle). */
 .footer {

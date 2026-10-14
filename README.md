@@ -1440,6 +1440,13 @@ are planning-level estimates, not a substitute for a functional servicing report
 values against the current Region of Peel standards; a 2025 edition of the Linear Wastewater
 Standards is listed on the Region's site.
 
+## Wide screens
+
+At 1800 px and wider, the Compare tool gets its own column to the right of the analysis
+panel, but only while Compare is open. Otherwise the map takes the full width, so there is no
+empty strip on the right. In the 440 px analysis column, *Needs attention* and *Top
+developments* use the full width, and the *Executive briefing* button sits under the headline.
+
 ## Deploy checks
 
 Every deploy (push to `main` and the weekly data refresh) runs two checks first. A failure stops

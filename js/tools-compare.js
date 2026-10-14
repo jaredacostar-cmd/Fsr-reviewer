@@ -275,6 +275,9 @@
     if (typeof document === 'undefined') return;
     var col = document.getElementById('compare-col');
     if (!col) return;
+    // The layout keeps a column for Compare only while it is open (css/app.css).
+    var app = document.querySelector('.app');
+    if (app) app.classList.toggle('cmp-open', items.length > 0);
     if (!items.length) {
       col.hidden = true;
       col.classList.remove('tcmp-on');
