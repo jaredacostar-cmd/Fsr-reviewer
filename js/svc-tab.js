@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uHa, uPop, uDev, hlP, store } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uHa, uPop, uDev, hlP, store, SCREEN_NOTE } = window.PeelUtil;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
   const SD = () => window.PeelSvcData;
@@ -351,7 +351,7 @@
     const zsum = addLayers(zr.map(r => r.l));
     // ---- Water: Zones sub-view (headline → tiles → chart → top-N table → ⓘ line). ----
     const wcapM = { Y, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wAvg, wPH, total, jobs };
-    $('#water-body').innerHTML = `<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${TS().inViewBox()}</div></div>
+    $('#water-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${TS().inViewBox()}</div></div>
       ${WTab().waterZonesHTML(zr, zsum, { wMax, wPH, total, jobs, wRow, layerHead, Y, c, E, mdR, mdE, observed, censusHowW })}`;
     // ---- Water: Capacity sub-view. The 2025 production / Caledon groundwater reports moved
     // to Sources & checks (window.ModelChecks); the hydraulic check moved to its own sub-view.
@@ -360,6 +360,7 @@
     $('#wfac-body').innerHTML = `${MP().waterFacilitiesHTML()}`;
     // ---- Water: Hydraulic check sub-view (pane + button created by Worker A in index.html).
     const hydPane = $('#hyd-box'); if (hydPane) hydPane.outerHTML = MP().hydroBoxHTML();
+    const hydBtn = document.querySelector('[data-wsub="hydro"]'); if (hydBtn) hydBtn.hidden = !(window.PeelUtil || {}).PIPE_RESULTS;   // EPANET per-main results: off for now
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · top zones by build-out maximum day`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -445,7 +446,7 @@
     }
     rankedC.sort((a, b) => b.bo - a.bo);
     const top8 = rankedC.slice(0, 8), top8Max = Math.max(1e-9, ...top8.map(x => x.bo));
-    $('#ww-body').innerHTML = `<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>${calNote}
+    $('#ww-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>${calNote}
       <div class="tiles">${[
         DUI().wwTile(App().state.servicing.blocks ? 'Wastewater blocks' : 'Catchments', fmtNum(rankedC.length), '', 'traced to the lake', 'drainage-area'),
         DUI().wwTile('Peel build-out', fmt1(adwf(peel, peelF)), 'ML/d', `average dry · ${uPop(total(peel))}`, 'drainage-area'),

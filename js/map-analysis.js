@@ -7,7 +7,7 @@
 
   const P = window.PeelPhases;
   const PD = window.PeelDesign;
-  const { $, esc, fmtNum, token, unit, uML, dot, store } = window.PeelUtil;
+  const { $, esc, fmtNum, token, unit, uML, dot, store, PIPE_RESULTS } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MC = () => window.PeelMapCore;
@@ -65,7 +65,7 @@
   const VIEW_PRESETS = {
     planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
     water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
-    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
+    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: PIPE_RESULTS ? 'pipes' : 'growth' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
     dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
   };
   function currentMapSettings() { return { basemap: MC().getBasemap(), labelMode: ML().getLabelMode(), da: CA().getDaOn(), wf: WT().WF.on, pz: MM().svcOn.pz, dr: App().state.servicing && App().state.servicing.blocks ? MM().svcOn.bk : MM().svcOn.dr, mstyle: { ...MM().mstyle }, exist: { ...MM().getExistOn() }, dc: { ...MM().getDcOn() } }; }
@@ -194,7 +194,7 @@
     capLayer.clearLayers();
     if (MM().getDcOn().on) DI().renderDcLayer();
     if (MM().mstyle.cap === 'off' || !App().state.servicing || !App().state.svcModel) return;
-    if (MM().mstyle.cap === 'pipes') { SC().renderPipes(capLayer); return; }
+    if (MM().mstyle.cap === 'pipes' && PIPE_RESULTS) { SC().renderPipes(capLayer); return; }
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
     const list = MM().mstyle.cap === 'zone' ? App().state.servicing.zones : MM().mstyle.cap === 'ps' && App().state.servicing.blocks ? App().state.servicing.psAreas : App().state.servicing.drainage;
     for (const a of list) {

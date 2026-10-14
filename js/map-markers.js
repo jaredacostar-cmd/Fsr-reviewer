@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   // Reference rewrites per SPLIT_MAP.md §0 rule 4.
-  const { $, esc, fmtNum, store, token, phaseColor, dot, getColors } = window.PeelUtil;
+  const { $, esc, fmtNum, store, token, phaseColor, dot, getColors, PIPE_RESULTS } = window.PeelUtil;
   const P = window.PeelPhases;
   const D = window.PeelDemand;
   const PD = window.PeelDesign;
@@ -41,6 +41,7 @@
     show: { markers: 'Markers', heat: 'Heatmap (people + jobs)' },
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', pipes: 'Sewer pipe capacity', zone: 'Pressure zone growth' },
   };
+  if (!PIPE_RESULTS) delete MSTYLE.cap.pipes;   // pipe-by-pipe capacity is off for now
   let mstyle = Object.assign({ color: 'phase', size: 'fixed', cap: 'off', show: 'markers' }, store.get('mapStyle', null) || {});
   for (const k of Object.keys(MSTYLE)) if (!MSTYLE[k][mstyle[k]]) mstyle[k] = Object.keys(MSTYLE[k])[0];
   const THIS_YEAR = new Date().getFullYear();
@@ -137,7 +138,7 @@
       L.DomEvent.disableScrollPropagation(el);
       el.querySelector('.mo-adv').addEventListener('toggle', e => { if (e.target.classList.contains('mo-adv')) store.set('moOpen', e.target.open); });
       // The Layers switches: one per layer, each with a sensible default for the view.
-      el.querySelector('#opt-cap').onchange = e => MA().setMapStyle({ cap: e.target.checked ? (MA().currentView() === 'water' ? 'zone' : 'pipes') : 'off' });
+      el.querySelector('#opt-cap').onchange = e => MA().setMapStyle({ cap: e.target.checked ? (MA().currentView() === 'water' ? 'zone' : PIPE_RESULTS ? 'pipes' : 'growth') : 'off' });
       el.querySelector('#opt-exist').onchange = e => { const v = MA().currentView(), on = e.target.checked; MA().setExistOn(on ? { water: v !== 'wastewater', sanitary: v !== 'water', storm: false } : { water: false, sanitary: false, storm: false }); };
       el.querySelector('#opt-dcw').onchange = e => MA().setDcOn({ on: e.target.checked, sys: MA().currentView() === 'water' ? 'water' : MA().currentView() === 'wastewater' ? 'wastewater' : (dcOn.sys || 'both') });
       el.querySelector('#opt-plan').onchange = e => PA().setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });

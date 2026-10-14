@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS } = window.PeelUtil;
   const D = window.PeelDemand;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
@@ -192,6 +192,7 @@
   // #hyd-box (inside #pane-hydro, created by Worker A). Clearly labelled beta throughout:
   // a screening skeleton, not the Region's calibrated model.
   function hydroBoxHTML() {
+    if (!PIPE_RESULTS) return '<section class="hyd-box" id="hyd-box"><p class="small muted">The hydraulic check (EPANET, main by main) is hidden for now: pipe-by-pipe results are left to the Region\u2019s water model, which is the authority.</p></section>';
     const R = HYD.res && HYD.res.key === scenarioKey() ? HYD.res : null, yr = MA().getCapYear() == null ? 'build-out' : MA().getCapYear();
     const over = R ? R.rows.reduce((t, r) => t + r.mains.filter(m => m.v > R.vmax).length, 0) : 0;
     const nMains = R ? R.rows.reduce((t, r) => t + r.mains.length, 0) : 0;
@@ -381,7 +382,7 @@
     const out = [];
     // Sewers on its path: pipes at 90%+ of full capacity by build-out, grouped by the DC main that
     // relieves them (or by run when none does); the tightest of each group.
-    if (MM().SEW.data && p.lat != null) {
+    if (PIPE_RESULTS && MM().SEW.data && p.lat != null) {
       SC().sewerGrowth(); const k = MM().SEW.growth.devPipe.get(p) ?? SC().nearestPipe(p.lng, p.lat);
       const groups = new Map(); let run = 0, prevFlag = false;
       for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) {

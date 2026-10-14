@@ -94,12 +94,13 @@
         }
       } else if (!f.noServicing) {
         L.push('');
-        L.push('Constraints: none flagged — no sewer on its path reaches 90% of capacity by build-out and no tabled facility applies (screening estimate).');
+        L.push(((typeof window !== "undefined" && window.PeelUtil) || {}).PIPE_RESULTS ? 'Constraints: none flagged — no sewer on its path reaches 90% of capacity by build-out and no tabled facility applies (screening estimate).'
+          : 'Constraints: none flagged at the pumping stations, plant or water facilities (screening estimate). Individual sewers are not screened: the Region\u2019s hydraulic model decides them.');
       }
     }
     L.push('');
     L.push('Caveats');
-    L.push('  - Screening estimate from public data and Peel design criteria: not a hydraulic model, not a functional servicing report.');
+    L.push('  - Screening estimate from public data and Peel design criteria (one screening method): not a hydraulic model, not a functional servicing report. The Region of Peel\u2019s water and wastewater models are the authority.');
     L.push('  - Sewer capacity is full-pipe Manning on the published slope; "check the data" flags likely slope errors rather than real shortfalls.');
     L.push('  - The 2026 DC capital maps are a draft; project schedules change annually.');
     L.push('  - Confirm servicing with the Region of Peel before relying on these figures.');
@@ -154,7 +155,7 @@
       var k = safe(function () { return app.nearestPipe(p.lng, p.lat); }, -1);
       if (k != null && k >= 0) {
         var st = safe(function () { return app.pipeStats(k); }, null);
-        if (st && st.p) nearest = st.p[0] + ' mm sanitary sewer' + (st.r1 != null ? ', ' + Math.round(st.r1 * 100) + '% of full capacity at build-out (screening estimate)' : '');
+        if (st && st.p) nearest = st.p[0] + ' mm sanitary sewer' + (st.r1 != null && ((typeof window !== "undefined" && window.PeelUtil) || {}).PIPE_RESULTS ? ', ' + Math.round(st.r1 * 100) + '% of full capacity at build-out (screening estimate)' : '');
       }
       wastewater = {
         path: path, nearest: nearest,
@@ -205,6 +206,7 @@
       }
     }
     pt.openResult({
+      screen: true,
       title: title,
       html: '<div class="tinq-wrap"><div class="tinq-actions"><button type="button" class="btn small" data-tinq-copy>Copy</button>' +
         '<span class="tinq-note">Plain text — paste it into the reply.</span></div>' +

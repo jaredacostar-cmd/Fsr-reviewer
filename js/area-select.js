@@ -8,7 +8,7 @@
   const P = window.PeelPhases;
   const PD = window.PeelDesign;
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, store, dot, CSV_DISCLAIMER } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, store, dot, CSV_DISCLAIMER, SCREEN_NOTE } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const canRotate = window.PeelMapCore.canRotate;
   const mapBottom = window.PeelSewerProfile.mapBottom;
@@ -353,9 +353,10 @@
     const list = byUnits.map(p => `<li><button type="button" class="sel-item" data-open="${esc(p.key)}">${dot(p.phase)}<span class="t">${esc(p.title)}</span>
         <span class="u">${p.buildout ? `${fmtNum(p.buildout.planned)} planned` : p.units ? `${fmtNum(p.units)} units` : App().empOf(p) && App().empOf(p).totalM2 ? `${fmtNum(App().empOf(p).totalM2)} m²` : ''}</span></button>
         <button type="button" class="sel-x" data-drop="${esc(p.key)}" aria-label="Remove ${esc(p.title)} from the selection">×</button></li>`).join('');
-    $('#detail-body').innerHTML = `
+    return `
       <div class="head"><h3 data-info="selection">${fmtNum(sel.length)} selected development${sel.length === 1 ? '' : 's'}</h3>
         <div class="m">${fmtNum(selAreas.length)} drawn area${selAreas.length === 1 ? '' : 's'}${added != null ? ` · ${fmtNum(added)} added` : ''} · ${esc([...new Set(sel.map(p => p.municipality))].join(', '))}</div></div>
+      ${SCREEN_NOTE}
       <div class="sel-actions">
         <button type="button" class="btn" data-sel="add">+ Add area</button>
         <button type="button" class="btn" data-area-report="sel">Area report</button>

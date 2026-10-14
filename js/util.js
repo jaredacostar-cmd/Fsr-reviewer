@@ -13,6 +13,13 @@
 
   // ---- Tiny DOM / string / number helpers (source: app.js 17–24) ----------------
   const estTag = '<span class="est-tag">screening estimate</span>';
+  // Individual-pipe modelling results (capacity, % full, freeboard, sewer profile, tightest pipes,
+  // the pipe upgrade tool, the EPANET per-main table) are off for now: true brings them back.
+  const PIPE_RESULTS = false;
+  // Shown before every trace and servicing demand result: this is one screening method, and the
+  // Region's hydraulic models stay the authority.
+  const SCREEN_NOTE_SHORT = '<p class="screen-note screen-note-sm" role="note"><strong>Screening estimate, not a model result:</strong> the Region of Peel\u2019s water and wastewater models are the authority.</p>';
+  const SCREEN_NOTE = '<p class="screen-note" role="note"><strong>Screening estimate, not a model result.</strong> One screening method from public data and Peel design criteria, not a hydraulic model. The Region of Peel\u2019s water and wastewater models are the authority: confirm servicing with the Region.</p>';
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // Skeleton placeholder for loading states (styled in css/modes.css): grey
@@ -107,7 +114,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelUtil = api;

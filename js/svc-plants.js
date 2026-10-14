@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uHa, uLs, uPop, skel, estTag, hlP, store } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uHa, uLs, uPop, skel, estTag, hlP, store, PIPE_RESULTS, SCREEN_NOTE } = window.PeelUtil;
   const App = () => window.PeelApp;
   const DD = () => window.PeelDevDetail;
   const FS = () => window.PeelFsr;
@@ -192,6 +192,7 @@
   // (window.PeelTightPipes, loaded before this script).
   let tightSeeAll = false;
   function tightestPipesHTML() {
+    if (!PIPE_RESULTS) return '';   // pipe-by-pipe results are off for now
     if (!MM().SEW.data) {
       SC().loadSewers();
       return `<h3 class="svc-sub">Tightest pipes <span class="muted small">% of full capacity at build-out</span></h3><p><span class="skel" style="width:45%" role="status" aria-label="Loading the sewer network"></span></p>`;
@@ -366,7 +367,7 @@
     });
     const allRated = tileRows.reduce((t, r) => t + r.rated, 0);
     const allBo = secs.reduce((t, x) => t + adwf(x.sum, x.f) + inflowsTo(x.pl), 0) + inflows.reduce((t, e) => t + e.mld, 0);
-    $('#plants-body').innerHTML = `<div class="svc-head">${SvcTab().svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
+    $('#plants-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${SvcTab().svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(SD().plantLabel(dv.from))} to ${esc(SD().plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       <div class="tiles">${[
         ...tileRows.map(r => DUI().wwTile(esc(r.name), String(Math.round(r.pctBo)), '%', `of rated at build-out · rated ${fmtNum(r.rated)} ML/d`, 'plant-capacity')),

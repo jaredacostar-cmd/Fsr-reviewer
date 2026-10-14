@@ -9,7 +9,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, fmtDate, fmt1, skel, estTag, dot, store, uLs, uML } = root.PeelUtil;
+  const { $, esc, fmtNum, fmtDate, fmt1, skel, estTag, dot, store, uLs, uML, PIPE_RESULTS, SCREEN_NOTE } = root.PeelUtil;
   const MM = () => root.PeelMapMarkers;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
@@ -93,7 +93,7 @@
       const pipeTxt = x => `<button type="button" class="btn small link" data-pipe="${x.i}">${x.p[0]} mm</button> at <strong>${Math.round(x.r1 * 100)}%</strong> (${esc(MM().pipeState(x.r1)[3].toLowerCase())}${x.r1 < 1 ? `, freeboard ${SC().fbText(x.p[0], x.r1)}` : ''})`;
       const lines = [];
       if (chain) lines.push(`${chain}${f.path.length && f.path[f.path.length - 1].kind !== 'plant' && f.pl ? ` → ${esc(SD().plantLabel(f.pl))}` : ''}`);
-      if (pp && pp.worst) lines.push(`Tightest pipe ${MA().getCapYear() == null ? 'at build-out' : `in ${MA().getCapYear()}`}: ${pp.local ? `local ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? '; ' : ''}${pp.trunk ? `downstream ${pipeTxt(pp.trunk)}` : ''}`);
+      if (PIPE_RESULTS && pp && pp.worst) lines.push(`Tightest pipe ${MA().getCapYear() == null ? 'at build-out' : `in ${MA().getCapYear()}`}: ${pp.local ? `local ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? '; ' : ''}${pp.trunk ? `downstream ${pipeTxt(pp.trunk)}` : ''}`);
       if (ps) lines.push(`Via ${esc(DD().psName(ps.a))}: build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm capacity (peak wet) ${estTag}`);
       wwRows += row('To the plant', `<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>`);
       if (f.cap) wwRows += row('Plant', `<p class="small"><strong>${esc(f.cap.name)}</strong>: uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` · this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${DD().pctOf(f.use, f.reserve)} of it` : ' · the plant is over-committed'} ${estTag}</p>`);
@@ -108,8 +108,8 @@
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
     </div></section>` : '';
-    if (part === 'water') return `${traceW}${near}${water}`;
-    if (part === 'ww') return `${traceS}${near}${ww}${site}`;
+    if (part === 'water') return `${SCREEN_NOTE}${traceW}${near}${water}`;
+    if (part === 'ww') return `${SCREEN_NOTE}${traceS}${near}${ww}${site}`;
     // DC Analysis: the DC works the development may rely on (both systems), the planned works near
     // it and on its path, and the DCs it would pay.
     if (part === 'dc') {
@@ -127,7 +127,7 @@
         ${w ? row('Planned works', DI().devWorksHTML(w)) : ''}
       </div></section>${f ? DC().dcRevenueHTML(p) : ''}`;
     }
-    return `${traceW}${traceS}${near}${water}${ww}${site}`;
+    return `${SCREEN_NOTE}${traceW}${traceS}${near}${water}${ww}${site}`;
   }
 
   // One dated history: phase changes (weekly check), council and committee items, file events

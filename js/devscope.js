@@ -191,6 +191,7 @@
           <span class="badge">${F.dot(p.phase)}${esc(ph ? ph.label : p.phase)}</span>
           <button type="button" class="btn small site-bar-x" data-scope-close aria-label="Close the development scope">×</button>
         </div>
+        ${(window.PeelUtil || {}).SCREEN_NOTE_SHORT || ''}
         <div class="site-bar-facts">${facts.length ? facts.join(' <span class="sep" aria-hidden="true">·</span> ') : '<span class="muted">No demand figures</span>'}</div>
         <div class="site-bar-svc">${svcLine}</div>
         ${flags.length ? `<div class="chips site-bar-flags">${flags.join('')}</div>` : ''}

@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, skel, store } = window.PeelUtil;
+  const { $, esc, fmtNum, skel, store, SCREEN_NOTE } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const Areas = () => window.PeelAreas;
@@ -337,7 +337,7 @@
     const t = r.t, rows = t.steps.slice().reverse(), first = rows[0].f, zn = s => esc(String(s).replace('Pressure zone ', 'Zone '));
     const pumpRows = waterCapPumpRows(), zr = !t.gw && pumpRows.find(x => x.n === MP().zLevel(t.z.zone));
     const yrs = [...new Set(r.dc.map(ln => ln.y).filter(Boolean))].sort();
-    return `${t.est ? zoneEstHTML(t.est) : ''}<ul class="why-list trace-sum">
+    return `${SCREEN_NOTE}${t.est ? zoneEstHTML(t.est) : ''}<ul class="why-list trace-sum">
       <li class="why-ok"><span>From <strong>${esc(first.name)}</strong> ${t.gw ? 'wells and treatment' : first.kind === 'plant' ? 'treatment plant' : ''}: <strong>${(r.kmE + r.kmP + r.kmS + r.kmL).toFixed(1)} km</strong> to the site${r.kmE >= 0.05 ? `, ${r.kmE.toFixed(1)} km along existing watermains${r.maxD ? ` (up to ${fmtNum(r.maxD)} mm)` : ''}` : ''}${r.kmP >= 0.05 ? `, <strong>${r.kmP.toFixed(1)} km along planned DC mains</strong>${yrs.length ? ` (${yrs.join(', ')})` : ''}` : ''}.</span></li>
       ${rows.filter(s => s.pump && s.f.kind !== 'plant').length ? `<li class="why-ok"><span>Pumping on the way: ${rows.filter(s => s.pump && s.f.kind !== 'plant').map(s => `${esc(s.f.name)} <span class="muted">(${esc(s.pump.zone)}, ${fmtNum(s.pump.cap)} ML/d firm → zone ${s.to})</span>`).join(', ')}.</span></li>` : ''}
       ${r.joinM != null ? `<li class="why-ok"><span>The site is ${fmtNum(Math.round(r.joinM / 10) * 10)} m from the nearest main of 300 mm+ on the route${t.z ? ` · ${zn(t.z.name)}` : ''}.</span></li>` : ''}

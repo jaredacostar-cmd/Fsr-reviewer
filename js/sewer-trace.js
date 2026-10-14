@@ -5,7 +5,7 @@
 (function (root) {
   'use strict';
 
-  const { $, esc, fmtNum, store, estTag, token } = window.PeelUtil;
+  const { $, esc, fmtNum, store, estTag, token, PIPE_RESULTS, SCREEN_NOTE } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const canRotate = window.PeelMapCore.canRotate;
   const mapBottom = window.PeelSewerProfile.mapBottom;
@@ -320,15 +320,15 @@
   }
   function traceSummaryHTML(t) {
     if (!t) return '<p class="small muted">No existing sewer of 300 mm+ within 3 km of the site and no planned DC wastewater main reaching one, to trace from.</p>';
-    const P = MM().SEW.data.pipes, w = t.worst, st = w && MM().pipeState(w.r1);
-    return `<ul class="why-list trace-sum">
+    const P = MM().SEW.data.pipes, w = PIPE_RESULTS ? t.worst : null, st = w && MM().pipeState(w.r1);
+    return `${SCREEN_NOTE}<ul class="why-list trace-sum">
       ${t.pl ? `<li class="why-ok"><span>Outside the traced catchments: joins the planned <strong>${esc(DI().dcLineText(t.pl.first))}</strong> ${fmtNum(Math.round(t.pl.joinM / 10) * 10)} m from the site, then <strong>${t.pl.km.toFixed(1)} km along planned DC mains</strong>${t.pl.lines.length > 1 ? ` (${t.pl.lines.length} mains)` : ''} to the existing sewers${t.pl.gaps ? `, bridging ${t.pl.gaps} gap${t.pl.gaps === 1 ? '' : 's'} where the mapped mains stop short (straight)` : ''}${t.pl.inTarget ? '' : ' (outside the catchment that main is mapped to)'}.</span></li>` : t.far ? `<li class="why-stall"><span>No existing sewer within 400 m and no planned DC main that reaches one: joined straight to the nearest existing sewer, ${SD().kmText(t.joinM)} away. Its route will depend on works not yet on the DC maps.</span></li>` : t.outside ? '<li class="why-stall"><span>Outside the traced catchments and no planned DC main within 1 km: joined to the nearest existing sewer.</span></li>' : ''}
       ${t.pl ? dcWaitHTML(t.pl, t.built) : ''}
       <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from ${t.pl ? 'the planned main' : 'the site'}, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : SD().plantLabel(t.plantName))}</strong>.</span></li>
       ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}
       ${t.stations.length ? `<li class="why-ok"><span>Pumping station${t.stations.length === 1 ? '' : 's'} on the way: ${t.stations.map(ps => esc(ps.name.replace(/\s*SEWAGE PUMPING( STN| STATION)?/i, '').replace(/\b\w+/g, x => x[0] + x.slice(1).toLowerCase()))).join(', ')}.</span></li>` : ''}
       ${w ? `<li class="${w.r1 > 1 ? 'why-stall' : 'why-ok'}"><span>Tightest pipe on the way: <button type="button" class="btn small link" data-pipe="${w.i}">${P[w.i][0]} mm</button> at <strong>${Math.round(w.r1 * 100)}%</strong> of full capacity (${esc(st[3].toLowerCase())}, ${MA().getCapYear() == null ? 'build-out' : MA().getCapYear()}). ${estTag}</span></li>` : ''}
-    </ul><p class="small"><button type="button" class="btn small" data-profile="trace"><span aria-hidden="true">⌇</span> Sewer profile along this path</button></p><p class="small muted">On the map: the dashed line joins the site to the sewer${t.pl ? ' (dashed pink: the planned DC mains, flow direction not published)' : ''}; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
+    </ul>${PIPE_RESULTS ? '<p class="small"><button type="button" class="btn small" data-profile="trace"><span aria-hidden="true">⌇</span> Sewer profile along this path</button></p>' : ''}<p class="small muted">On the map: the dashed line joins the site to the sewer${t.pl ? ' (dashed pink: the planned DC mains, flow direction not published)' : ''}; each pipe is coloured by its state (green under 85%, orange 85–100%, red over 100%), arrows show the flow, purple dots are pumping stations. Tap a pipe for what loads it and how its flow is calculated.</p>`;
   }
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-trace]'); if (!b) return;
