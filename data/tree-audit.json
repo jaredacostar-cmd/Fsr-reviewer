@@ -1,8 +1,8 @@
 {
- "generatedAt": "2026-10-14T20:46:25.754Z",
+ "generatedAt": "2026-10-14T21:09:23.159Z",
  "records": {
   "from": "live pull",
-  "snapshotAt": "2026-10-14T20:42:48.574Z",
+  "snapshotAt": "2026-10-14T21:05:41.498Z",
   "sources": [
    {
     "id": "mis-devapps",
@@ -57,7 +57,7 @@
    {
     "id": "bra-permits",
     "status": "ok",
-    "count": 49944
+    "count": 49960
    },
    {
     "id": "cal-devapps",
@@ -67,7 +67,7 @@
    {
     "id": "cal-permits",
     "status": "ok",
-    "count": 7344
+    "count": 7367
    }
   ]
  },
@@ -6342,7 +6342,7 @@
     },
     "redevelopment": {
      "pairs": 4,
-     "unitsOnEarlierFile": 3,
+     "unitsOnEarlierFile": 9,
      "unitsOnLaterFile": 0
     },
     "phase": {
@@ -16598,7 +16598,7 @@
      "a": "DPS16-002.000",
      "b": "DPS-2025-0007",
      "units": [
-      3,
+      9,
       0
      ],
      "overlap": 1,
@@ -18422,6 +18422,23 @@
    {
     "municipality": "Brampton",
     "files": [
+     "OZS-2024-0051",
+     "PRE-2023-0067"
+    ],
+    "units": 2929,
+    "latest": {
+     "ref": "OZS-2024-0051",
+     "scope": "site-specific",
+     "filed": "2024-08-14",
+     "status": "review",
+     "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Official Plan/Zoning By-law amendments and a Draft Plan of Subdivision applicati"
+    },
+    "siteSpecific": 1,
+    "areaWide": 1
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
      "OZS-2025-0033",
      "OZS-2025-0028",
      "PRE-2024-0117"
@@ -18519,6 +18536,25 @@
      "filed": "2022-08-17",
      "status": "review",
      "description": "5 residential apartment buildings of 43, 43, 46, 39 and 34 storeys (2224 units) with commercial and community uses"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
+     "OZS-2023-0028",
+     "SP92-016.000",
+     "SP93-018.000",
+     "PRE-2023-0018"
+    ],
+    "units": 1946,
+    "latest": {
+     "ref": "OZS-2023-0028",
+     "scope": "site-specific",
+     "filed": "2023-08-02",
+     "status": "review",
+     "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Five residential towers ranging in heights from 22 to 44 storeys, atop podium el"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -18706,6 +18742,27 @@
     "areaWide": 0
    },
    {
+    "municipality": "Brampton",
+    "files": [
+     "OZS-2022-0046",
+     "OZS-2022-0001",
+     "SP80-027.000",
+     "SP94-019.000",
+     "PRE-2020-0160",
+     "PRE17.056"
+    ],
+    "units": 1122,
+    "latest": {
+     "ref": "OZS-2022-0001",
+     "scope": "site-specific",
+     "filed": "2022-01-07",
+     "status": "approved",
+     "description": "Official Plan Amendment | Zoning By Law Amendment — Multi-building phased residential Master Plan"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
     "municipality": "Mississauga",
     "files": [
      "OZ/OPA 22-26"
@@ -18793,6 +18850,25 @@
    {
     "municipality": "Brampton",
     "files": [
+     "OZS-2022-0040",
+     "SPA-2020-0107",
+     "SP90-052.000",
+     "PRE-2021-0071"
+    ],
+    "units": 982,
+    "latest": {
+     "ref": "OZS-2022-0040",
+     "scope": "site-specific",
+     "filed": "2022-09-16",
+     "status": "review",
+     "description": "Official Plan Amendment | Zoning By Law Amendment — The application proposes to permit the redevelopment for a comprehensive mixed-use development containing tw"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
      "OZS-2025-0043",
      "SPA-2025-0179",
      "PRE-2024-0158",
@@ -18843,6 +18919,23 @@
      "filed": "2022-05-25",
      "status": "approved",
      "description": "Official Plan Amendment | Zoning By Law Amendment — The concept plan proposes to develop the subject site with two high-rise towers of 45 and 35 storeys and 8 l"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
+     "OZS-2024-0033",
+     "PRE-2023-0101"
+    ],
+    "units": 915,
+    "latest": {
+     "ref": "OZS-2024-0033",
+     "scope": "site-specific",
+     "filed": "2024-05-01",
+     "status": "approved",
+     "description": "Official Plan Amendment | Zoning By Law Amendment — Amend the Downtown Brampton Secondary Plan and Zoning By-Law to allow the construction of a 48-storey reside"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -18934,6 +19027,23 @@
     "areaWide": 0
    },
    {
+    "municipality": "Brampton",
+    "files": [
+     "OZS-2023-0008",
+     "PRE-2021-0009"
+    ],
+    "units": 685,
+    "latest": {
+     "ref": "OZS-2023-0008",
+     "scope": "site-specific",
+     "filed": "2023-03-08",
+     "status": "review",
+     "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Applications for Official Plan Amendment, Zoning By-law Amendment, and Draft Pla"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
     "municipality": "Caledon",
     "files": [
      "2026-0010",
@@ -18968,6 +19078,22 @@
      "filed": "2022-08-12",
      "status": "approved",
      "description": "Official Plan Amendment | Zoning By Law Amendment — Two residential towers (16 and 14 storeys in height) on a shared six-storey podium containing 520 suites and"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
+     "OZS-2025-0050"
+    ],
+    "units": 649,
+    "latest": {
+     "ref": "OZS-2025-0050",
+     "scope": "site-specific",
+     "filed": "2025-11-03",
+     "status": "review",
+     "description": "Official Plan Amendment | Zoning By Law Amendment — This application is to facilitate an Official Plan Amendment and Zoning By-law Amendment to change the use o"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -19323,6 +19449,22 @@
    {
     "municipality": "Brampton",
     "files": [
+     "OZS-2023-0016"
+    ],
+    "units": 435,
+    "latest": {
+     "ref": "OZS-2023-0016",
+     "scope": "site-specific",
+     "filed": "2023-05-03",
+     "status": "review",
+     "description": "Official Plan Amendment | Zoning By Law Amendment — The purpose is to facilitate amendments to the Official Plan, Secondary Plan and Zoning by-law for the subje"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
      "OZS-2024-0027",
      "OZS-2020-0029",
      "SPA-2022-0079",
@@ -19673,6 +19815,22 @@
      "filed": "2023-04-05",
      "status": "review",
      "description": "Official Plan Amendment | Zoning By Law Amendment — To permit a 12-storey mixed-used condominium development comprising 300 residential units, 3 commercial unit"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Mississauga",
+    "files": [
+     "OZ/OPA 26-13"
+    ],
+    "units": 288,
+    "latest": {
+     "ref": "OZ/OPA 26-13",
+     "scope": "site-specific",
+     "filed": null,
+     "status": "review",
+     "description": "Residential apartment building (existing building to remain)"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -20564,6 +20722,23 @@
     "areaWide": 0
    },
    {
+    "municipality": "Brampton",
+    "files": [
+     "OZS-2025-0016",
+     "PRE-2024-0096"
+    ],
+    "units": 129,
+    "latest": {
+     "ref": "OZS-2025-0014",
+     "scope": "area-wide",
+     "filed": "2025-03-13",
+     "status": "review",
+     "description": "Official Plan Amendment — Primont and DMHH Partnership (Mattamy & D’Orazio) are seeking Precinct Plan and associated Official Plan Amendment approval for Subpre"
+    },
+    "siteSpecific": 0,
+    "areaWide": 2
+   },
+   {
     "municipality": "Mississauga",
     "files": [
      "OZ/OPA 18-8"
@@ -20880,6 +21055,23 @@
    {
     "municipality": "Brampton",
     "files": [
+     "OZS-2021-0009",
+     "PRE19.036"
+    ],
+    "units": 82,
+    "latest": {
+     "ref": "OZS-2021-0009",
+     "scope": "site-specific",
+     "filed": "2021-03-11",
+     "status": "review",
+     "description": "Official Plan Amendment | Zoning By Law Amendment — Proposed OPA/ZBA to construct an eleven-storey mixed-use building with retail commercial at grade and ten st"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Brampton",
+    "files": [
      "OZS-2019-0006",
      "PRE17.127"
     ],
@@ -21127,6 +21319,23 @@
      "filed": "2023-10-18",
      "status": "review",
      "description": "Official Plan Amendment | Zoning By Law Amendment — The proposed development contemplates two, 4 storey stacked townhouse blocks, including 225 square metres of"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Caledon",
+    "files": [
+     "2026-0004",
+     "2026-0006"
+    ],
+    "units": 49,
+    "latest": {
+     "ref": "2026-0004",
+     "scope": "site-specific",
+     "filed": "2026-03-02",
+     "status": "review",
+     "description": "Rezoning of lands designated New Urban Area 2051 in Future Caledon Official Plan, to the Future Development (FD) Zone."
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -21465,6 +21674,23 @@
    {
     "municipality": "Mississauga",
     "files": [
+     "21T-M 26-2",
+     "OZ/OPA 26-12"
+    ],
+    "units": 10,
+    "latest": {
+     "ref": "OZ/OPA 26-12",
+     "scope": "site-specific",
+     "filed": null,
+     "status": "review",
+     "description": "Townhouse development on CEC road"
+    },
+    "siteSpecific": 1,
+    "areaWide": 0
+   },
+   {
+    "municipality": "Mississauga",
+    "files": [
      "OZ/OPA 25-2",
      "H-OZ 25 5"
     ],
@@ -21773,21 +21999,21 @@
     "areaWide": 0
    },
    {
-    "municipality": "Mississauga",
+    "municipality": "Caledon",
     "files": [
-     "21T-M 26-2",
-     "OZ/OPA 26-12"
+     "2016-0014",
+     "2016-0063"
     ],
-    "units": 0,
+    "units": 1,
     "latest": {
-     "ref": "OZ/OPA 26-12",
-     "scope": "site-specific",
-     "filed": null,
+     "ref": "2025-0015",
+     "scope": "area-wide",
+     "filed": "2025-03-13",
      "status": "review",
-     "description": "Townhouse development on CEC road"
+     "description": ""
     },
-    "siteSpecific": 1,
-    "areaWide": 0
+    "siteSpecific": 0,
+    "areaWide": 1
    },
    {
     "municipality": "Mississauga",
@@ -21802,22 +22028,6 @@
      "filed": "2025-04-15",
      "status": "review",
      "description": "OZ/OPA 15/005 W5 MIGRATE TO EPLANS || 5 buildings with industrial uses"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Mississauga",
-    "files": [
-     "OZ/OPA 26-13"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZ/OPA 26-13",
-     "scope": "site-specific",
-     "filed": null,
-     "status": "review",
-     "description": "Residential apartment building (existing building to remain)"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -21985,22 +22195,6 @@
    {
     "municipality": "Brampton",
     "files": [
-     "OZS-2025-0050"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2025-0050",
-     "scope": "site-specific",
-     "filed": "2025-11-03",
-     "status": "review",
-     "description": "Official Plan Amendment | Zoning By Law Amendment — This application is to facilitate an Official Plan Amendment and Zoning By-law Amendment to change the use o"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
      "OZS-2025-0044",
      "PRE-2023-0066"
     ],
@@ -22014,23 +22208,6 @@
     },
     "siteSpecific": 1,
     "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2025-0016",
-     "PRE-2024-0096"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2025-0014",
-     "scope": "area-wide",
-     "filed": "2025-03-13",
-     "status": "review",
-     "description": "Official Plan Amendment — Primont and DMHH Partnership (Mattamy & D’Orazio) are seeking Precinct Plan and associated Official Plan Amendment approval for Subpre"
-    },
-    "siteSpecific": 0,
-    "areaWide": 2
    },
    {
     "municipality": "Brampton",
@@ -22128,40 +22305,6 @@
    {
     "municipality": "Brampton",
     "files": [
-     "OZS-2024-0051",
-     "PRE-2023-0067"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2024-0051",
-     "scope": "site-specific",
-     "filed": "2024-08-14",
-     "status": "review",
-     "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Official Plan/Zoning By-law amendments and a Draft Plan of Subdivision applicati"
-    },
-    "siteSpecific": 1,
-    "areaWide": 1
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2024-0033",
-     "PRE-2023-0101"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2024-0033",
-     "scope": "site-specific",
-     "filed": "2024-05-01",
-     "status": "approved",
-     "description": "Official Plan Amendment | Zoning By Law Amendment — Amend the Downtown Brampton Secondary Plan and Zoning By-Law to allow the construction of a 48-storey reside"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
      "OZS-2024-0031"
     ],
     "units": 0,
@@ -22171,25 +22314,6 @@
      "filed": "2024-04-30",
      "status": "approved",
      "description": "Block Plan Amendment | Official Plan Amendment | Zoning By Law Amendment — A commercial retail plaza across three block areas. The development proposes eight co"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2023-0028",
-     "SP92-016.000",
-     "SP93-018.000",
-     "PRE-2023-0018"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2023-0028",
-     "scope": "site-specific",
-     "filed": "2023-08-02",
-     "status": "review",
-     "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Five residential towers ranging in heights from 22 to 44 storeys, atop podium el"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -22212,60 +22336,6 @@
      "filed": "2023-05-18",
      "status": "approved",
      "description": "Official Plan Amendment | Zoning By Law Amendment — To amend the Springdale Secondary Plan Area 2 Low Density Residential 1 designation to Institutional and the"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2023-0016"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2023-0016",
-     "scope": "site-specific",
-     "filed": "2023-05-03",
-     "status": "review",
-     "description": "Official Plan Amendment | Zoning By Law Amendment — The purpose is to facilitate amendments to the Official Plan, Secondary Plan and Zoning by-law for the subje"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2023-0008",
-     "PRE-2021-0009"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2023-0008",
-     "scope": "site-specific",
-     "filed": "2023-03-08",
-     "status": "review",
-     "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Applications for Official Plan Amendment, Zoning By-law Amendment, and Draft Pla"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2022-0046",
-     "OZS-2022-0001",
-     "SP80-027.000",
-     "SP94-019.000",
-     "PRE-2020-0160",
-     "PRE17.056"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2022-0001",
-     "scope": "site-specific",
-     "filed": "2022-01-07",
-     "status": "approved",
-     "description": "Official Plan Amendment | Zoning By Law Amendment — Multi-building phased residential Master Plan"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -22306,25 +22376,6 @@
      "filed": "2022-11-29",
      "status": "approved",
      "description": "Official Plan Amendment | Zoning By Law Amendment — Our client is proposing to development the Subject Property with a four-storey, 3,398.1 square metre buildin"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2022-0040",
-     "SPA-2020-0107",
-     "SP90-052.000",
-     "PRE-2021-0071"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2022-0040",
-     "scope": "site-specific",
-     "filed": "2022-09-16",
-     "status": "review",
-     "description": "Official Plan Amendment | Zoning By Law Amendment — The application proposes to permit the redevelopment for a comprehensive mixed-use development containing tw"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -22479,23 +22530,6 @@
      "filed": "2021-05-17",
      "status": "approved",
      "description": "Official Plan Amendment | Zoning By Law Amendment — Redevelopment of subject site for two (2) multi-storey residential apartments having building heights of twe"
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Brampton",
-    "files": [
-     "OZS-2021-0009",
-     "PRE19.036"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "OZS-2021-0009",
-     "scope": "site-specific",
-     "filed": "2021-03-11",
-     "status": "review",
-     "description": "Official Plan Amendment | Zoning By Law Amendment — Proposed OPA/ZBA to construct an eleven-storey mixed-use building with retail commercial at grade and ten st"
     },
     "siteSpecific": 1,
     "areaWide": 0
@@ -22931,23 +22965,6 @@
    {
     "municipality": "Caledon",
     "files": [
-     "2026-0004",
-     "2026-0006"
-    ],
-    "units": 0,
-    "latest": {
-     "ref": "2026-0004",
-     "scope": "site-specific",
-     "filed": "2026-03-02",
-     "status": "review",
-     "description": "Rezoning of lands designated New Urban Area 2051 in Future Caledon Official Plan, to the Future Development (FD) Zone."
-    },
-    "siteSpecific": 1,
-    "areaWide": 0
-   },
-   {
-    "municipality": "Caledon",
-    "files": [
      "2026-0001",
      "2026-0003"
     ],
@@ -23277,23 +23294,1394 @@
     },
     "siteSpecific": 1,
     "areaWide": 0
+   }
+  ]
+ },
+ "growthNoCount": {
+  "note": "Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.",
+  "byKind": {
+   "Mississauga": {
+    "found online": 4,
+    "non-residential": 203,
+    "no homes named": 21,
+    "no new homes": 55,
+    "mixed use, check": 1,
+    "non-residential (approved 5+ years ago)": 145,
+    "no homes named (approved 5+ years ago)": 40,
+    "mixed use, check (approved 5+ years ago)": 1,
+    "count to find (approved 5+ years ago)": 6,
+    "count to find": 1,
+    "one new house": 20,
+    "one new house (approved 5+ years ago)": 56,
+    "no new homes (approved 5+ years ago)": 249
+   },
+   "Peel": {
+    "found online": 39,
+    "non-residential": 886,
+    "no homes named": 152,
+    "no new homes": 89,
+    "mixed use, check": 4,
+    "non-residential (approved 5+ years ago)": 346,
+    "no homes named (approved 5+ years ago)": 116,
+    "mixed use, check (approved 5+ years ago)": 1,
+    "count to find (approved 5+ years ago)": 25,
+    "count to find": 66,
+    "one new house": 40,
+    "one new house (approved 5+ years ago)": 96,
+    "no new homes (approved 5+ years ago)": 300,
+    "no description": 12,
+    "no description (approved 5+ years ago)": 1106
+   },
+   "Brampton": {
+    "non-residential": 616,
+    "no new homes": 32,
+    "count to find": 62,
+    "found online": 31,
+    "one new house": 18,
+    "non-residential (approved 5+ years ago)": 201,
+    "no homes named": 121,
+    "no homes named (approved 5+ years ago)": 76,
+    "count to find (approved 5+ years ago)": 17,
+    "no description": 1,
+    "one new house (approved 5+ years ago)": 40,
+    "no new homes (approved 5+ years ago)": 51,
+    "no description (approved 5+ years ago)": 1106,
+    "mixed use, check": 3
+   },
+   "Caledon": {
+    "non-residential": 67,
+    "no new homes": 2,
+    "no description": 11,
+    "found online": 4,
+    "no homes named": 10,
+    "count to find": 3,
+    "one new house": 2,
+    "count to find (approved 5+ years ago)": 2
+   }
+  },
+  "foundOnline": 39,
+  "toFind": [
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2026-0039"
+    ],
+    "address": [
+     "31 CENTRE ST S"
+    ],
+    "description": "Mixed-use residential redevelopment consisting of a 30-storey mixed-usebuilding, one 4-storey block and one 3-storey block stacked townhouses.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2026-09-25"
    },
    {
     "municipality": "Caledon",
+    "kind": "no description",
     "files": [
-     "2016-0014",
-     "2016-0063"
+     "2026-0007"
     ],
-    "units": 0,
-    "latest": {
-     "ref": "2025-0015",
-     "scope": "area-wide",
-     "filed": "2025-03-13",
-     "status": "review",
-     "description": ""
-    },
-    "siteSpecific": 0,
-    "areaWide": 1
+    "address": [
+     "12351 INNIS LAKE ROAD CALEDON ON L7C 2Z4"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2026-05-08"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2026-0022",
+     "PRE-2022-0159"
+    ],
+    "address": [
+     "11411 CLARKWAY DR"
+    ],
+    "description": "Temporary Outdoor Storage and Landscape Construction Business. / Draft Plan of Subdivision | Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — Proposal to redevelop the portion of lands fronting onto Clarkway Drive for mid-rise residential uses consisting of two ten storey apartment buildings, with terracing at the 8th and 6th floors. With regards to the lands on the east side o",
+    "phase": [
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2026-05-05"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "21CDM-26001C"
+    ],
+    "address": [
+     "12944 ALBION VAUGHAN ROAD CALEDON ON L7E 4C6"
+    ],
+    "description": "",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2026-03-05"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2025-0054",
+     "PRE-2024-0125"
+    ],
+    "address": [
+     "1684 QUEEN ST W"
+    ],
+    "description": "Official Plan Amendment — Official Plan Amendment to change the designations within the Credit Valley Secondary Plan and the Springbrook Tertiary Plan. / Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — The proposed development entails residential uses, generally consisting of Apartment Dwelling Units and Stacked Townhome Dwellings per the enclosed conceptual Architectural Plan",
+    "phase": [
+     "review",
+     "inception"
+    ],
+    "lastEvent": "2025-11-28"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2025-0048"
+    ],
+    "address": [],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — The proposed Draft Plan seeks to subdivide the Subject Lands for the purposes of road widenings, municipal reserves, buffer blocks, valley buffers, compensation areas, medium density residential, and residential/office mixed-use. The Draft Plan consists of 1 block for medium density residential through the form of townhouse dwellings with an ar",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2025-10-27"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2025-0060"
+    ],
+    "address": [
+     "0 THE GORE RD"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — The proposed application is to facilitate a Zoning By-law Amendment and Draft Plan of Subdivision consisting of single detached dwellings, townhouses units, part of a retail commercial block and new public streets. Frontages of the singles will range from 9.0m to 11.6m and townhouses will be along public streets at a minimum of 6m wide. The sub",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2025-09-16"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2025-0015"
+    ],
+    "address": [
+     "Town-Wide CALEDON ON"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2025-08-27"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "DPS-2025-0004",
+     "PRE-2021-0223",
+     "PRE16.118"
+    ],
+    "address": [
+     "249 MAIN ST N",
+     "249 MAIN STREET NORTH"
+    ],
+    "description": "site plan review for proposed day care use which is also in list of permitted use of property which is currently approved as multiplex residential dwelling units / Development Permit System | Site Plan Basic — Extension and new addition extension proposal is to add to the rear of the existing property 5 stories/level high of residential apartments including the basement. / Preconsultation applicat",
+    "phase": [
+     "review",
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2025-08-21"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2025-0035"
+    ],
+    "address": [
+     "10728 CLARKWAY DR"
+    ],
+    "description": "Secondary Plan | Zoning By Law Amendment — To facilitate a Zoning By-law Amendment and Draft Plan of Subdivision application for the development of single detached dwellings ranging from 9.0m to 12.2m frontages and street townhouse dwellings. The existing house on the property will be retained and be accessed from the new interior road. New roads and streets are planned to connect with the develop",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2025-05-26"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2025-0012"
+    ],
+    "address": [
+     "0 AIRPORT ROAD CALEDON ON"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2025-05-16"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2025-0017",
+     "PRE-2024-0097"
+    ],
+    "address": [
+     "10916 MISSISSAUGA RD"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — Applications for a Zoning By-law Amendment and Draft Plan of Subdivision Approval to facilitate a mix of residential land uses in the form of townhouses and apartments. Please refer to the cover letter providing more detailed information. / Draft Plan of Subdivision | Zoning By Law Amendment — Draft Plan of Subdivision and Zoning By-law amendme",
+    "phase": [
+     "review",
+     "inception"
+    ],
+    "lastEvent": "2025-03-14"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2025-0006",
+     "2025-0005"
+    ],
+    "address": [
+     "0 KING STREET CALEDON ON"
+    ],
+    "description": "",
+    "phase": [
+     "review",
+     "review"
+    ],
+    "lastEvent": "2025-02-13"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "count to find",
+    "files": [
+     "2025-0004",
+     "2020-0001"
+    ],
+    "address": [
+     "10795 HIGHWAY 9 CALEDON ON L7E 0G5"
+    ],
+    "description": "Official Plan Amendment to create the Mount Hope West Secondary Plan. The proposed Mount Hope West Secondary Plan has an area of approximately 31 hectares (76.60 acres) and proposes a range of residential units, a commercial block, stormwater management ponds, a park, natural heritage system blocks and a road network. / Proposed Temporary Use By-law to permit contractor's yard, office, and outside",
+    "phase": [
+     "approved",
+     "review"
+    ],
+    "lastEvent": "2025-02-13"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "count to find",
+    "files": [
+     "2024-0010"
+    ],
+    "address": [
+     "12735 CENTREVILLE CREEK ROAD CALEDON ON L7C 3B7"
+    ],
+    "description": "The Official Plan Amendment application seeks to establish a Secondary Plan for Wildfield Village, with associated land use designations (e.g. residential, commercial, institutional, parks and open space uses), along with population, employment, and density targets for the subject lands.",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2025-01-23"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0148"
+    ],
+    "address": [
+     "9208 GOREWAY DR"
+    ],
+    "description": "Secondary Plan | Zoning By Law Amendment — to submit a Pre-consultation request to capture comments and understand the requirements for a Secondary Plan amendment and Site-Specific Zoning By-law amendment from the current policies to Residential Third Density – Mid Rise (R3M-XXXX) and a Special Section to integrate commercial employment uses in support of the Major Transit Station Area overlay to ",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-12-10"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0145"
+    ],
+    "address": [
+     "8212 MCLAUGHLIN RD S"
+    ],
+    "description": "Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — The proposed development entails Apartment Buildings per the enclosed Concept Master Tertiary Plan with a mid-rise and stacked towns identified on lands municipally addressed as 8230 McLaughlin Road South, which are not under the controlling Ownership of our Client.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-11-28"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0140"
+    ],
+    "address": [
+     "44 MILL ST N"
+    ],
+    "description": "Secondary Plan | Zoning By Law Amendment — 50 Storey Mixed Use Apartment Building with below grade and podium parking and retail uses at grade.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-11-18"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2024-0152",
+     "PRE-2022-0155"
+    ],
+    "address": [
+     "32 PARK ST | 34 PARK ST | 41 MILL ST N | 43 MILL ST N | 45 MILL ST N",
+     "34 PARK ST"
+    ],
+    "description": "Limited Site Plan — Greenwin is proposing a 13-storey apartment building that will serve as a student residence for Algoma University. (PLACEKEEPING FILE) / Zoning By Law Amendment — Project Name: Mill-Denison 27 storey multi-residential building with a 6 storey podium",
+    "phase": [
+     "review",
+     "inception"
+    ],
+    "lastEvent": "2024-10-23"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0123",
+     "PRE-2022-0047"
+    ],
+    "address": [
+     "1550 QUEEN ST W"
+    ],
+    "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — Proposes to amend both the Official Plan and zoning from Executive Residential to Mixed Use Commercial/Medium Density Residential The development application will propose two midrise 4 Storey buildings. the first building as depicted on the concept plan will face Queen Street for the purposes of commercial. the second ",
+    "phase": [
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2024-10-15"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SP88-133.000",
+     "PRE-2024-0120"
+    ],
+    "address": [
+     "8525 MISSISSAUGA RD"
+    ],
+    "description": "Application for Site Plan Control / Draft Plan of Subdivision | Secondary Plan | Zoning By Law Amendment — To redevelop the subject lands to permit single detached lots, street townhouse blocks, a park/stormwater management block, and a natural heritage system block.",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2024-09-27"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2024-0076"
+    ],
+    "address": [
+     "0 HIGHWAY 50 CALEDON ON"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2024-09-25"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2024-0073"
+    ],
+    "address": [
+     "12378 COLERAINE DRIVE CALEDON ON L7E 3A9"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2024-09-19"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2024-0006"
+    ],
+    "address": [
+     "0 TORBRAM ROAD CALEDON ON"
+    ],
+    "description": "",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-09-12"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0116"
+    ],
+    "address": [],
+    "description": "Draft Plan of Subdivision | Official Plan Amendment | Secondary Plan | Site Plan Basic | Zoning By Law Amendment — The development proposal includes 3 High-rise residential buildings, ranging in height from 16-storeys to 20-storeys, containing both residential and commercial uses and community green space.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-09-11"
+   },
+   {
+    "municipality": "Mississauga",
+    "kind": "count to find",
+    "files": [
+     "SP 24/11"
+    ],
+    "address": [
+     "3387 Residence Road"
+    ],
+    "description": "New Student Residence Building on the University of Toronto Mississauga Campus W8",
+    "phase": [
+     "approved"
+    ],
+    "lastEvent": "2024-09-03"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0106",
+     "PRE-2021-0206"
+    ],
+    "address": [
+     "53 MCMURCHY AVE N"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — To facilitate partial development on the Site for a high-density residential development / Site Plan Full | Zoning By Law Amendment — To facilitate a high density, 20-storey residential structure on the Site",
+    "phase": [
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2024-08-28"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2024-0051"
+    ],
+    "address": [
+     "18492 HURONTARIO STREET CALEDON ON L7K 0Y2"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2024-08-02"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "mixed use, check",
+    "files": [
+     "SP89-121.000",
+     "PRE-2024-0088"
+    ],
+    "address": [
+     "119 WEST DR"
+    ],
+    "description": "Application for Site Plan Control / Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — A mixed-use development comprised of two tower elements at 32 and 30 storeys on a 6-storey podium",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2024-07-12"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0073"
+    ],
+    "address": [
+     "10691 THE GORE RD"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — The proposed application is to facilitate a Zoning By-law Amendment and Draft Plan of Subdivision consisting of single detached dwellings, townhouse units, a school, a park and natural heritage area. Frontages of the singles will range from 9.0m to 11.6m wide to provide a variety of lot sizes along with the townhouses to provide a diverse typol",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-05-30"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "C05W12.004",
+     "SPA-2024-0055",
+     "PRE-2023-0034"
+    ],
+    "address": [
+     "NW Quadrant Mississauga Road and Bovaird Drive West",
+     "10244 MISSISSAUGA RD",
+     "10124 MISSISSAUGA RD"
+    ],
+    "description": "Official Plan Amendment — Proposed Phase 2 Official Plan Amendment. To amend the Official Plan to designate the land as Residential in the Official Plan and to amend the Mount Pleasant Secondary Plan to designate the land as Low/Medium Density Residential, Natural Heritage System, Trans-Canada Pipeline, Vest Pocket, and Stormwater Management Pond. / Full Site Plan — For M2181 - Medium density resi",
+    "phase": [
+     "approved",
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2024-04-24"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SP93-024.000",
+     "PRE-2024-0053",
+     "PRE-2022-0032"
+    ],
+    "address": [
+     "496 MAIN ST N",
+     "494 MAIN ST N"
+    ],
+    "description": "Application for Site Plan Control / Official Plan Amendment | Zoning By Law Amendment — The proposal is to demolish two existing structures on the Site and replace them with a medium density mixed use development. The Site measures approximately 0.33 hectares (0.82 acres) and is situated on the southeast quadrant of Main Street North / Williams Parkway. The applicant is proposing a six storey buil",
+    "phase": [
+     "approved",
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2024-04-04"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2024-0054"
+    ],
+    "address": [
+     "0 CLARKWAY DR"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — The proposed application is to facilitate a Zoning By-law Amendment and Draft Plan of Subdivision consisting of single detached dwellings and townhouse units. The site is 19.81 hectares in size and is located on the east side of Clarkway Drive north of Castlemore Road in Block Plan 47-1 and 47-2. Frontages of the single detached dwellings range",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2024-04-04"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "count to find",
+    "files": [
+     "2024-0001",
+     "21T-17008C",
+     "2017-0013"
+    ],
+    "address": [
+     "12461 MCLAUGHLIN ROAD CALEDON ON L7C 2A8"
+    ],
+    "description": "Proposal to remove language in OP relating to additional service costs. / Proposed residential plan of subdivision include low, medium and high density uses, stormwater management pond and park / To rezone the property to permit various land uses to implement a residential plan of subdivision",
+    "phase": [
+     "inception",
+     "review",
+     "review"
+    ],
+    "lastEvent": "2024-01-30"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "mixed use, check",
+    "files": [
+     "PRE-2023-0156"
+    ],
+    "address": [
+     "9485 WINSTON CHURCHILL BLVD"
+    ],
+    "description": "Block Plan | Secondary Plan — To implement a Community Block Plan and facilitate a mixed-use community within Sub-Area 40-5 of the Bram West Secondary Plan Area 40A. Please see cover letter for additional detail.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-11-22"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2023-0153"
+    ],
+    "address": [
+     "24 BRAMALEA RD"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — Redevelopment of the subject site for a mixed use, retail/commercial/residential high density building",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-11-21"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2023-0154"
+    ],
+    "address": [
+     "383 ORENDA RD"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — Redevelopment of the subject site for a mixed use retail/commercial/residential high density development",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-11-21"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2023-0155"
+    ],
+    "address": [
+     "26 VICTORIA CRES"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — Redevelopment of the subject site for a mixed use retail/commercial/residential high density development",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-11-21"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "mixed use, check",
+    "files": [
+     "PRE-2023-0134"
+    ],
+    "address": [
+     "0 STEELES AVE W"
+    ],
+    "description": "Zoning By Law Amendment — Hillside is desirous of redeveloping the subject site for a mixed use Master Plan development featuring two (2) new tall buildings; including four (4) towers with heights ranging from 40-60 storeys oriented toward Steeles Avenue West and Lancashire Lane, and one (1) 12-storey mid-rise building oriented toward Lancashire Lane. A 1,967 m2 (21,205 ft2) public park is propose",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-11-01"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2023-0086"
+    ],
+    "address": [
+     "126 CHURCH ST E"
+    ],
+    "description": "Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — Ambria Communities Limited is applying to redevelop 4 adjacent Single Detached Properties into a 16 storey Condominium Building at the corner of Sophia Street and Church Street. Our Project will integrate with an adjacent re-development at Beach and Church Street where 14 storey Condominiums and stacked townhouses are proposed. W",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-07-04"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2023-0072"
+    ],
+    "address": [
+     "443 CENTRE ST N"
+    ],
+    "description": "Zoning By Law Amendment — Application for a pre-consultation meeting to inform a zoning bylaw amendment application that proposes to permit two semi-detacahed residential dwellings.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-06-12"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2023-0068",
+     "SPA-2023-0016",
+     "SPA-2022-0156",
+     "DPC-2022-0008",
+     "PRE-2020-0038"
+    ],
+    "address": [
+     "1-10 KNOTSBERRY CIR",
+     "100 KNOTSBERRY CIR"
+    ],
+    "description": "Limited Site Plan — We are requesting a minor revision to our site plan approved drawings to modestly reduce the extent of plantings throughout the site and to substitute all concrete retaining walls and seatwalls with armour stone. / Limited Site Plan — To eliminate the waste collection area and replace with a sodded amenity area. / Limited Site Plan — To remove secondary retaining wall along Fin",
+    "phase": [
+     "approved",
+     "approved",
+     "approved",
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2023-06-05"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2023-0052"
+    ],
+    "address": [
+     "10947A THE GORE RD"
+    ],
+    "description": "Zoning By Law Amendment — The proposed application is to facilitate a Draft Plan of Subdivision consisting of single detached dwellings, townhouse units, a Secondary School, and Natural Heritage System. The subject lands are part of Block 47-2 and aligns with new streets of proposed adjacent subdivisions to the south and east.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2023-04-04"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SP91-003.000",
+     "PRE-2023-0047",
+     "PRE-2021-0068",
+     "PRE17.015"
+    ],
+    "address": [
+     "9281 GOREWAY DR",
+     "9281 GOREWAY DRIVE"
+    ],
+    "description": "Application for Site Plan Control — NOTE: Site Plan Waiver issued for: The installation of a gazebo / Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — This proposal is to develop the approx. 0.793-hectare property for 2 apartment buildings; one of which is designed as 3 visually separate towers ( Tower 1,2,3), each with Unit Mix designed separately for seniors, families, single",
+    "phase": [
+     "approved",
+     "inception",
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2023-03-29"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2022-0205",
+     "SPA-2022-0143",
+     "SP84-043.000",
+     "PRE-2022-0175"
+    ],
+    "address": [
+     "30 RAMBLER DR",
+     "2-30 RAMBLER DRIVE"
+    ],
+    "description": "Limited Site Plan — as the building examiner required a site plan approval for opening a rear door with stair and 2 new ramp at front of 2 proposed doors / Limited Site Plan — Open a new door for unit 6 at storefront and a new door for downstairs. / Application for Site Plan Control / Secondary Plan | Zoning By Law Amendment — This proposal would result in the demolition of the existing commercial",
+    "phase": [
+     "approved",
+     "approved",
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2022-12-01"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2022-0154"
+    ],
+    "address": [
+     "60 NELSON ST W"
+    ],
+    "description": "Zoning By Law Amendment — Project Name: Park-Nelson 31 storey multi-residential building with a 6 storey podium",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2022-10-17"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "no description",
+    "files": [
+     "SPA-2022-0177"
+    ],
+    "address": [
+     "80 MARY ST"
+    ],
+    "description": "Limited Site Plan",
+    "phase": [
+     "approved"
+    ],
+    "lastEvent": "2022-09-23"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2022-0152",
+     "PRE-2022-0064"
+    ],
+    "address": [],
+    "description": "Full Site Plan — Proposing a transit-oriented development consisting of two (2) residential towers thirty-four (34) and thirty-two (32) storeys in height and on the lands located at the northwest corner of Bovaird Drive West and Ashby Field Road, in the City of Brampton, Regional Municipality of Peel (herein referred to as the “Subject Property”). / Site Plan Full — The concept proposal seeks to d",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2022-08-18"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2022-0039",
+     "SP16-040.000",
+     "PRE17.068",
+     "PRE16.037"
+    ],
+    "address": [
+     "2959 BOVAIRD DR E",
+     "2975 BOVAIRD DRIVE EAST",
+     "9940-9980 AIRPORT ROAD"
+    ],
+    "description": "Official Plan Amendment — Amendment to OP plan policy 4.2.1.16 to allow for residential uses and exempt lands from OP plan policy 4.6.15 to permit residential and noise sensitive land uses such as hospitals, nursing homes, day care centres and public and private schools. No zoning by-law amendment is proposed at this time. / Application for Site Plan Control — SITE BUILDING AMENDMENT FOR 10400 SQF",
+    "phase": [
+     "approved",
+     "approved",
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2022-08-15"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2021-0007",
+     "SPA-2022-0145",
+     "PRE-2022-0039",
+     "PRE-2020-0148"
+    ],
+    "address": [
+     "11687 CHINGUACOUSY RD",
+     "UNASSIGNED"
+    ],
+    "description": "Block Plan Amendment | Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — The proposed development contemplates a re-designation of the existing Neighbourhood Commercial use to a mix of uses on the subject lands, including a variety of residential, a Mixed Use Medium Density Residential/Convenience Commercial (MUMD/CC) block and open space uses. / Full Site Plan — The ",
+    "phase": [
+     "review",
+     "review",
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2022-08-10"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2022-0117"
+    ],
+    "address": [
+     "2014 EMBLETON RD"
+    ],
+    "description": "Zoning By Law Amendment — zoning amendment from convenience store to residential",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2022-07-29"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2022-0071"
+    ],
+    "address": [
+     "9 ROGERS RD"
+    ],
+    "description": "Draft Plan of Common Element Condominium | Official Plan Amendment | Secondary Plan | Site Plan Full | Zoning By Law Amendment — Proposed semi-detached dwelling with a garden suite for each property as well as a second unit. An Official Plan Amendment and Zoning By-law Amendment will be required. Previous pre-con was for a proposed townhouse development on 7 and 9 Rogers Road. Comments were not re",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2022-05-03"
+   },
+   {
+    "municipality": "Mississauga",
+    "kind": "mixed use, check",
+    "files": [
+     "OZ 22-8"
+    ],
+    "address": [
+     "7062 Airport Road"
+    ],
+    "description": "Rezoning for a two-storey mixed Use building",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2022-02-22"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2022-0006"
+    ],
+    "address": [
+     "6443 MAYFIELD RD"
+    ],
+    "description": "Secondary Plan | Zoning By Law Amendment — The redevelopment of the subject property for high-density residential use. Please see submitted application package for further details.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2022-01-07"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2021-0268"
+    ],
+    "address": [],
+    "description": "Full Site Plan — The proposal consists of the demolition of the existing Sears department store portion of the Bramalea City Centre shopping mall and the development of 4 rental apartment buildings, 1 commercial building and an urban plaza. The total unit count will be 1000 units and approximately 650 sq.m. of new commercial space. A 2-storey underground parking structure is also proposed and will",
+    "phase": [
+     "approved"
+    ],
+    "lastEvent": "2021-12-15"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2021-0058",
+     "PRE-2020-0119"
+    ],
+    "address": [
+     "0 CLARKWAY DR"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — Zoning By-law Amendment and Draft Plan of Subdivision applications to facilitate a residential development consisting of condominium townhouses and apartment dwellings. The proposal also consists of a Natural Heritage block and Valleylands associated with the Clarkway Tributary, residential reserve blocks for future residential development, pub",
+    "phase": [
+     "review",
+     "inception"
+    ],
+    "lastEvent": "2021-11-26"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0204"
+    ],
+    "address": [
+     "9893 TORBRAM RD"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — 20 Storey Apartment Building",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-10-22"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0189"
+    ],
+    "address": [
+     "8768 MISSISSAUGA RD"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — Retirement Home The proposed building includes a ten (10) story seniors’ residence building with a footprint of 1,870 square meters, and a total of 16,830 square meters of gross floor area and features a variety of facilities and amenities.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-09-23"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0183"
+    ],
+    "address": [
+     "8270 MCLAUGHLIN RD S"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — The redevelopment of the lands for a 14-storey residential apartment building. Please see attached Cover Letter for further details. Please note that 8250 McLaughlin Road does not have an assigned municipal address, it is just the lot south of 8270 McLaughlin Road.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-09-21"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0179"
+    ],
+    "address": [
+     "10650 THE GORE RD"
+    ],
+    "description": "Site Plan Basic — Senior Homes",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-09-17"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0177"
+    ],
+    "address": [
+     "8212 MCLAUGHLIN RD S"
+    ],
+    "description": "Secondary Plan | Zoning By Law Amendment — The redevelopment of the lands for a 12-storey residential apartment building. Please see attached Cover Letter for further details.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-09-13"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0152"
+    ],
+    "address": [
+     "11 BRUSSELS AVE"
+    ],
+    "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — To facilitate a high-density residential development. See accompanying Submission Letter for further details",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-08-03"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0141"
+    ],
+    "address": [
+     "11467 GOREWAY DR"
+    ],
+    "description": "Development Permit System | Zoning By Law Amendment — To subdivide existing residential lot into two lots",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-07-16"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0137",
+     "PRE17.091"
+    ],
+    "address": [
+     "11730 AIRPORT RD",
+     "11730 Airport Road"
+    ],
+    "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — The purpose of this application is to develop a twelve (12) storey mixed use building primarily containing seniors oriented residential units as well as a commercial uses on the ground level. Resident parking will be accommodated in a two level underground garage as well as some surface parking. Commercial parking is p",
+    "phase": [
+     "inception",
+     "inception"
+    ],
+    "lastEvent": "2021-07-13"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2021-0029",
+     "PRE-2020-0031"
+    ],
+    "address": [
+     "9052 CREDITVIEW RD"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — Draft Plan of subdivision and rezoning to permit 3 whole lots and 5 blocks for single-detached dwellings with extension of Hosta Street for access, and NHS block/buffer. See meeting request letter and preliminary draft plan. Development.",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2021-06-17"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0118"
+    ],
+    "address": [
+     "23 CENTRE ST S"
+    ],
+    "description": "Site Plan Limited — Currently the subject property occupies a 6,869 sq.ft. (638 sq.m.) lot, located in the \"Railway\" Block subdivision of Brampton. The frontage of this parcel of land is approx. 62ft (18.9m). The front portion of the structure is a unique example of the Ontario Gothic Cottage Style dwelling from the nineteenth century in the downtown area. Demolish of non-historic rear wing & crea",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-06-09"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2021-0018",
+     "SP86-004.000",
+     "PRE-2020-0158"
+    ],
+    "address": [
+     "1857 QUEEN ST W"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — Redevelopment of subject site for two (2) multi-storey residential apartments having building heights of twelve (12) and fourteen (14) storeys. / Application for Site Plan Control / Official Plan Amendment | Secondary Plan | Zoning By Law Amendment — Two (2) multi-storey residential apartments.",
+    "phase": [
+     "approved",
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2021-05-17"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0064"
+    ],
+    "address": [
+     "0 FINANCIAL DR"
+    ],
+    "description": "Zoning By Law Amendment — A Zoning By-law Amendment Application in order to permit mixed-use residential buildings",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-03-31"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0058"
+    ],
+    "address": [
+     "5137 COUNTRYSIDE DR"
+    ],
+    "description": "Zoning By Law Amendment — The purpose of the application is to facilitate a draft plan of subdivision specifically consisting of prestige industrial, condominium townhouse block and single detached part lots. The subject proposal is planned in conjunction with the adjacent property. New streets will be added to provide access through the subdivision and a new road 'Collector Road L' is proposed to",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-03-23"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0044"
+    ],
+    "address": [
+     "208 DUSTY LANE"
+    ],
+    "description": "Zoning By Law Amendment — The property is registered as a residential 5-plex. This application is submitted to recognize an existing non-registered sixth residential 1 bedroom unit. The building will remain as existing and the property has parking for 7 cars with room to add more if required. Currently, the basement has two separate units (unit 5 and 5a in the attached concept plan), unit 5a is no",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-03-03"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2021-0011"
+    ],
+    "address": [
+     "133 MAIN ST S"
+    ],
+    "description": "Draft Plan of Subdivision | Official Plan Amendment | Zoning By Law Amendment — We want to combine 133 and 133A into one parcel and build a 20 story residential condo building. We will keep the heritage house and will build on the south side and back of the heritage house.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2021-01-18"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2020-0184",
+     "PRE-2020-0078"
+    ],
+    "address": [
+     "20 CRESCENT HILL DR N"
+    ],
+    "description": "Infill Mature — The existing dwelling is to be demolished and replaced by a 2-storey residential dwelling. The consent application to create this lot was appealed to the Tribunal. A settlement agreement between the landowner and the City was approved by the Tribunal in the order dated October 2, 2019. Detailed site plan and architectural plans are part of the settlement and included with this subm",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2020-12-14"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SPA-2020-0185",
+     "PRE-2020-0077"
+    ],
+    "address": [
+     "20 CRESCENT HILL DR N"
+    ],
+    "description": "Infill Mature — The existing dwelling is to be demolished and replaced by a 2-storey residential dwelling. The consent application to create this lot was appealed to the Tribunal. A settlement agreement between the landowner and the City was approved by the Tribunal in the order dated October 2, 2019. Detailed site plan and architectural plans are part of the settlement and are included within thi",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2020-12-14"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2020-0139"
+    ],
+    "address": [
+     "728 WANLESS DR"
+    ],
+    "description": "Zoning By Law Amendment — Proposed 2 12-storey buildings for a mixed-use (multi-family residential with commercial component) development.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2020-10-21"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "OZS-2020-0011",
+     "PRE17.070"
+    ],
+    "address": [
+     "78 CLIFFSIDE DR",
+     "Cliffside Drive"
+    ],
+    "description": "Official Plan Amendment | Zoning By Law Amendment — Proposal for an Official Plan and Zoning By-law Amendment to facilitate the proposed land use changes that will delete the \"Executive Residential\" designation to replace it with \"Low/Medium Density Residential\" and also \"Medium/High Density Residential\" in order to increase lotting yield on the lands. / Preconsultation application — To permit a l",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2020-06-23"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE-2019-0039"
+    ],
+    "address": [
+     "3142 MAYFIELD RD"
+    ],
+    "description": "Draft Plan of Subdivision | Zoning By Law Amendment — Proposal is to introduce residential land uses (Townhomes) and live-work units with private roadway. Various Concept Plan have been prepared to facilitate the Pre Consultation Meeting. Development",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2019-10-22"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SP19-041.000"
+    ],
+    "address": [
+     "Northeast corner of McVean Drive and Queen St East"
+    ],
+    "description": "Mixed use development consisting of office, hotel, retail, restaurant, supermarket, live/work, senior's retirement, and residential condominium uses within 11 buildings with heights of 1, 8, 14, and 19 storeys. A central park is also proposed.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2019-06-06"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE19.027"
+    ],
+    "address": [],
+    "description": "Amendment to OP plan policy 4.2.1.16 to allow for residential uses and exempt lands from OP plan policy 4.6.15 to permit residential and noise sensitive land uses such as hospitals, nursing homes, day care centres and public and private schools. No zoning by-law amendment is proposed at this time.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2019-05-31"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2019-0015T"
+    ],
+    "address": [
+     "1131 HIGHPOINT SIDEROAD CALEDON ON"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2019-03-01"
+   },
+   {
+    "municipality": "Caledon",
+    "kind": "no description",
+    "files": [
+     "2018-0005"
+    ],
+    "address": [
+     "12435 HIGHWAY 50 CALEDON ON L7E 1M3"
+    ],
+    "description": "",
+    "phase": [
+     "review"
+    ],
+    "lastEvent": "2018-02-15"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "SP16-054.000",
+     "PRE16.058"
+    ],
+    "address": [
+     "0 EBENEZER ROAD",
+     "O EBENEZER ROAD"
+    ],
+    "description": "Application for Site Plan Control — FREEHOLD TOWNHOUSE SUBDIVISION WITH LIVE/WORK COMPONENT. / Preconsultation application — PROPOSAL FOR A FREEHOLD TOWNHOUSE SUBDIVISION WITH LIVE/WORK COMPONENT.",
+    "phase": [
+     "approved",
+     "inception"
+    ],
+    "lastEvent": "2016-09-01"
+   },
+   {
+    "municipality": "Brampton",
+    "kind": "count to find",
+    "files": [
+     "PRE16.032"
+    ],
+    "address": [
+     "15 Alexander Street"
+    ],
+    "description": "Preconsultation application — The purpose of the application is to obtain the comments of staff prior to submitting applications for amendments to the Zoning By-law and the Official Plan for the refurbishment and expansion of a large heritage dwelling on the property for the purpose of accommodating small apartments.",
+    "phase": [
+     "inception"
+    ],
+    "lastEvent": "2016-05-04"
    }
   ]
  },
@@ -24730,36 +26118,36 @@
   "withUnitsTotal": 162
  },
  "permits": {
-  "total": 67141,
-  "placedInATree": 12209
+  "total": 67241,
+  "placedInATree": 12229
  },
  "totals": {
   "Mississauga": {
    "currentPlanned": 89350,
    "currentUnits": 90484,
-   "proposed": 90320,
+   "proposed": 91457,
    "developmentsCurrent": 1007,
    "treesProposed": 1060
   },
   "Brampton": {
-   "currentPlanned": 106869,
-   "currentUnits": 128470,
-   "proposed": 124898,
-   "developmentsCurrent": 2175,
+   "currentPlanned": 106875,
+   "currentUnits": 128485,
+   "proposed": 139051,
+   "developmentsCurrent": 2176,
    "treesProposed": 2711
   },
   "Caledon": {
    "currentPlanned": 28566,
-   "currentUnits": 29359,
-   "proposed": 30071,
+   "currentUnits": 29358,
+   "proposed": 30813,
    "developmentsCurrent": 164,
    "treesProposed": 173
   },
   "Peel": {
-   "currentPlanned": 224785,
-   "currentUnits": 248313,
-   "proposed": 245289,
-   "developmentsCurrent": 3346,
+   "currentPlanned": 224791,
+   "currentUnits": 248327,
+   "proposed": 261321,
+   "developmentsCurrent": 3347,
    "treesProposed": 3944
   }
  },
@@ -24780,6 +26168,21 @@
   {
    "municipality": "Brampton",
    "development": [
+    "9752 MISSISSAUGA RD"
+   ],
+   "current": 0,
+   "proposed": 2929,
+   "change": 2929,
+   "currentBasis": null,
+   "why": [
+    "the app groups 2 separate trees into one development (OZS-2024-0051, PRE-2020-0145): the files don't overlap enough to be one proposal",
+    "OZS-2024-0051 + PRE-2023-0067: 2929 (found online: Brampton PDC agenda / recommendation report, 2025-10-06)",
+    "PRE-2020-0145: 0 (no description)"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
     "10884 Winston Churchill Boulevard"
    ],
    "current": 0,
@@ -24788,8 +26191,21 @@
    "currentBasis": null,
    "why": [
     "the app groups 2 separate trees into one development (SP18-112.000, PRE-2026-0007): the files don't overlap enough to be one proposal",
-    "SP18-112.000: 0 (own count)",
+    "SP18-112.000: 0 (no homes in the proposal)",
     "PRE-2026-0007: 2341 (pre-consultation count (no other file states one))"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
+    "1-200 COUNTY COURT BLVD"
+   ],
+   "current": 0,
+   "proposed": 1946,
+   "change": 1946,
+   "currentBasis": null,
+   "why": [
+    "OZS-2023-0028 + SP92-016.000 + SP93-018.000 + PRE-2023-0018: 1946 (found online: UrbanToronto project database / Skyscraper Center)"
    ]
   },
   {
@@ -24806,10 +26222,51 @@
     "OZS-2021-0002 + SPA-2024-0040 + SPA-2022-0225 + PRE-2022-0166 + PRE-2020-0098: 1055 (pre-consultation count (no other file states one))",
     "SPA-2021-0215 + SPA-2021-0049 + SP17-105.000 + DPC-2021-0007: 245 (same land, counted once (largest of 3))",
     "SP18-009.000 + C04W14.011 + PRE17.111: 75 (own count)",
-    "SP16-088.000: 0 (own count)",
+    "SP16-088.000: 0 (no description)",
     "SP83-006.000 + C04W14.009 + PRE17.035: 195 (condominium count (no site plan or draft plan in the data states one))",
-    "PRE18.046: 0 (own count)",
-    "PRE18.001: 0 (own count)"
+    "PRE18.046: 0 (no description)",
+    "PRE18.001: 0 (no description)"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
+    "241 QUEEN ST E"
+   ],
+   "current": 0,
+   "proposed": 1290,
+   "change": 1290,
+   "currentBasis": null,
+   "why": [
+    "the app groups 2 separate trees into one development (OZS-2025-0039, SP17-035.000): the files don't overlap enough to be one proposal",
+    "OZS-2025-0039 + OZS-2023-0044 + OZS-2023-0021 + SPA-2025-0120 + PRE-2024-0059 + PRE-2022-0078 +1: 1290 (found online: INsauga, May 2026)",
+    "SP17-035.000: 0 (no description)"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
+    "227 VODDEN ST E"
+   ],
+   "current": 0,
+   "proposed": 1122,
+   "change": 1122,
+   "currentBasis": null,
+   "why": [
+    "OZS-2022-0046 + OZS-2022-0001 + SP80-027.000 + SP94-019.000 + PRE-2020-0160 + PRE17.056: 1122 (found online: Brampton planning notice OZS-2022-0001 (Centennial Mall, 2022))"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
+    "253 Queen Street East"
+   ],
+   "current": 0,
+   "proposed": 1026,
+   "change": 1026,
+   "currentBasis": null,
+   "why": [
+    "C02E05.036 + SPA-2025-0197 + SP92-006.000 + PRE-2025-0068 + PRE17.134: 1026 (found online: UrbanToronto project database / forum (U Developments approved scheme))"
    ]
   },
   {
@@ -24828,6 +26285,32 @@
    ]
   },
   {
+   "municipality": "Brampton",
+   "development": [
+    "1-700 BALMORAL DR"
+   ],
+   "current": 0,
+   "proposed": 982,
+   "change": 982,
+   "currentBasis": null,
+   "why": [
+    "OZS-2022-0040 + SPA-2020-0107 + SP90-052.000 + PRE-2021-0071: 982 (found online: SkyriseCities forum post)"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
+    "29 MILL ST N"
+   ],
+   "current": 0,
+   "proposed": 915,
+   "change": 915,
+   "currentBasis": null,
+   "why": [
+    "OZS-2024-0033 + PRE-2023-0101: 915 (found online: Brampton public meeting notice, 2025-01-13)"
+   ]
+  },
+  {
    "municipality": "Caledon",
    "development": [
     "12735 CENTREVILLE CREEK ROAD CALEDON ON L7C 3B7"
@@ -24839,7 +26322,7 @@
    "why": [
     "the app groups 2 separate trees into one development (2026-0016, 2024-0010): the files don't overlap enough to be one proposal",
     "2026-0016 + 21T-25001C: 2472 (same land, counted once (largest of 2))",
-    "2024-0010: 0 (own count)"
+    "2024-0010: 0 (homes proposed, no number given)"
    ]
   },
   {
@@ -24858,6 +26341,19 @@
   {
    "municipality": "Brampton",
    "development": [
+    "4784 CASTLEMORE RD"
+   ],
+   "current": 0,
+   "proposed": 685,
+   "change": 685,
+   "currentBasis": null,
+   "why": [
+    "OZS-2023-0008 + PRE-2021-0009: 685 (found online: Brampton Notice of adoption OP2023-016 (By-laws 211/212-2025))"
+   ]
+  },
+  {
+   "municipality": "Brampton",
+   "development": [
     "7899 MCLAUGHLIN RD"
    ],
    "current": 967,
@@ -24866,11 +26362,24 @@
    "currentBasis": "siteplan",
    "why": [
     "the app groups 5 separate trees into one development (SPA-2025-0088, SPA-2024-0085, SPA-2021-0143, SP17-121.000, DPC-2023-0005): the files don't overlap enough to be one proposal",
-    "SPA-2025-0088 + SP95-045.000 + SP82-021.000 + SP86-030.000 + PRE17.076: 0 (same land, counted once (largest of 4))",
+    "SPA-2025-0088 + SP95-045.000 + SP82-021.000 + SP86-030.000 + PRE17.076: 0 (work on an existing building, no homes named)",
     "SPA-2024-0085: 618 (own count)",
     "SPA-2021-0143 + PRE-2021-0076: 349 (own count)",
-    "SP17-121.000: 0 (own count)",
+    "SP17-121.000: 0 (no description)",
     "DPC-2023-0005 + PRE-2023-0103 + PRE17.131: 669 (pre-consultation count (no other file states one))"
+   ]
+  },
+  {
+   "municipality": "Mississauga",
+   "development": [
+    "630-670 Courtney Valley Road (Previously 732/784 Eglinton Avenue West & 4920 Mavis Road)"
+   ],
+   "current": 0,
+   "proposed": 664,
+   "change": 664,
+   "currentBasis": null,
+   "why": [
+    "SP 13-2: 664 (found online: OMB case PL141343 issues list, 2015)"
    ]
   },
   {
@@ -24886,192 +26395,63 @@
     "the app groups 3 separate trees into one development (OZS-2025-0040, OZS-2020-0032, PRE-2021-0194): the files don't overlap enough to be one proposal",
     "OZS-2025-0040 + OZS-2024-0037 + SPA-2020-0013 + PRE-2023-0080 + PRE-2019-0014: 2452 (same land, counted once (largest of 2))",
     "OZS-2020-0032 + SPA-2024-0174 + SPA-2021-0227 + DPC-2025-0008 + PRE-2025-0005 + PRE-2021-0086 +1: 664 (same land, counted once (largest of 3))",
-    "PRE-2021-0194: 0 (own count)"
+    "PRE-2021-0194: 0 (no description)"
    ]
   },
   {
-   "municipality": "Mississauga",
+   "municipality": "Brampton",
    "development": [
-    "51 & 57 Tannery St and 208 Emby"
+    "9281 GOREWAY DR"
    ],
    "current": 229,
-   "proposed": 633,
-   "change": 404,
-   "currentBasis": "master",
+   "proposed": 775,
+   "change": 546,
+   "currentBasis": "condo",
    "why": [
-    "21T-M 20-4 + SP 26-11 + OZ/OPA 24-7: 633 (same land, counted once (largest of 3))"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "Northeast Corner of Bovaird Drive West and Lagerfeld Drive"
-   ],
-   "current": 845,
-   "proposed": 444,
-   "change": -401,
-   "currentBasis": "siteplan",
-   "why": [
-    "SPA-2021-0074 + SP18-002.000 + DPC-2023-0002 + PRE-2023-0022: 444 (same land, counted once (largest of 2))"
+    "the app groups 4 separate trees into one development (OZS-2025-0050, CI16.002, SPA-2024-0141, SP91-003.000): the files don't overlap enough to be one proposal",
+    "OZS-2025-0050: 649 (found online: Brampton planning notice OZS-2025-0050 (public meeting 2026-03-23))",
+    "CI16.002 + C08E07.013 + C08E07.012: 126 (condominium count (no site plan or draft plan in the data states one))",
+    "SPA-2024-0141 + SP17-078.000 + PRE17.026: 0 (no homes in the proposal)",
+    "SP91-003.000 + PRE-2023-0047 + PRE-2021-0068 + PRE17.015: 0 (homes proposed, no number given)"
    ]
   },
   {
    "municipality": "Caledon",
    "development": [
-    "0 MCLAUGHLIN ROAD CALEDON ON"
+    "14245 HIGHWAY 50 CALEDON ON"
    ],
-   "current": 750,
-   "proposed": 1147,
-   "change": 397,
-   "currentBasis": "master",
+   "current": 0,
+   "proposed": 545,
+   "change": 545,
+   "currentBasis": null,
    "why": [
-    "the app groups 2 separate trees into one development (21CDM-24003C, 2016-0008): the files don't overlap enough to be one proposal",
-    "21CDM-24003C + 21CDM-24002C + 2022-0052 + 2022-0051 + 21T-20005C: 397 (parent count (children cover 1%))",
-    "2016-0008 + 21T-16005C: 750 (same land, counted once (largest of 2))"
-   ]
-  },
-  {
-   "municipality": "Mississauga",
-   "development": [
-    "2475 Eglinton Avenue West"
-   ],
-   "current": 916,
-   "proposed": 1266,
-   "change": 350,
-   "currentBasis": "siteplan",
-   "why": [
-    "the app groups 3 separate trees into one development (21CDM-M 24-9, 21CDM-M 24-8, SP 19/148): the files don't overlap enough to be one proposal",
-    "21CDM-M 24-9 + SP 24/45: 350 (condominium count (no site plan or draft plan in the data states one))",
-    "21CDM-M 24-8 + SP 21/020: 351 (own count)",
-    "SP 19/148: 565 (own count)"
-   ]
-  },
-  {
-   "municipality": "Caledon",
-   "development": [
-    "2068 MAYFIELD ROAD CALEDON ON"
-   ],
-   "current": 551,
-   "proposed": 898,
-   "change": 347,
-   "currentBasis": "master",
-   "why": [
-    "the app groups 2 separate trees into one development (21T-21003C, 21T-16006C): the files don't overlap enough to be one proposal",
-    "21T-21003C: 551 (own count)",
-    "21T-16006C: 347 (own count)"
+    "2022-0001: 545 (found online: Town of Caledon notice of application, 2022-05-17)"
    ]
   },
   {
    "municipality": "Brampton",
    "development": [
-    "209 STEELES AVE W"
+    "9240 GOREWAY DR"
    ],
-   "current": 575,
-   "proposed": 848,
-   "change": 273,
-   "currentBasis": "condo",
+   "current": 0,
+   "proposed": 435,
+   "change": 435,
+   "currentBasis": null,
    "why": [
-    "the app groups 6 separate trees into one development (OZS-2021-0032, OZS-2020-0028, OZS-2019-0005, SP16-091.000, SP19-031.000, SP18-010.000): the files don't overlap enough to be one proposal",
-    "OZS-2021-0032 + SPA-2021-0230 + PRE-2021-0029 + PRE-2021-0026: 449 (parent count (children cover 56%))",
-    "OZS-2020-0028 + SPA-2026-0056 + SPA-2025-0059 + SPA-2025-0026 + SPA-2024-0129 + SPA-2023-0140 +5: 290 (same land, counted once (largest of 5))",
-    "OZS-2019-0005: 0 (own count)",
-    "SP16-091.000 + T01W15.038 + PRE19.026 + PRE16.072: 109 (own count)",
-    "SP19-031.000: 0 (own count)",
-    "SP18-010.000: 0 (own count)"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "58 & 62 SKY HARBOUR DRIVE"
-   ],
-   "current": 134,
-   "proposed": 363,
-   "change": 229,
-   "currentBasis": "condo",
-   "why": [
-    "the app groups 2 separate trees into one development (SPA-2021-0231, SPA-2021-0165): the files don't overlap enough to be one proposal",
-    "SPA-2021-0231 + SP18-019.000 + DPC-2022-0007 + PRE-2021-0111: 134 (condominium count (no site plan or draft plan in the data states one))",
-    "SPA-2021-0165 + PRE-2025-0031: 229 (pre-consultation count (no other file states one))"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "10201 MISSISSAUGA RD"
-   ],
-   "current": 237,
-   "proposed": 445,
-   "change": 208,
-   "currentBasis": "master",
-   "why": [
-    "the app groups 2 separate trees into one development (OZS-2024-0056, PRE-2025-0022): the files don't overlap enough to be one proposal",
-    "OZS-2024-0056 + OZS-2024-0030 + OZS-2020-0004 + SPA-2020-0190 + DPC-2025-0004 + PRE-2023-0093 +4: 237 (same land, counted once (largest of 4))",
-    "PRE-2025-0022: 208 (pre-consultation count (no other file states one))"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "12039 HURONTARIO ST"
-   ],
-   "current": 201,
-   "proposed": 406,
-   "change": 205,
-   "currentBasis": "master",
-   "why": [
-    "the app groups 2 separate trees into one development (OZS-2021-0017, SP07-030.001): the files don't overlap enough to be one proposal",
-    "OZS-2021-0017 + SPA-2022-0106 + PRE-2020-0081: 201 (same land, counted once (largest of 2))",
-    "SP07-030.001 + PRE-2021-0244: 205 (pre-consultation count (no other file states one))"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "10647 THE GORE RD"
-   ],
-   "current": 269,
-   "proposed": 471,
-   "change": 202,
-   "currentBasis": "master",
-   "why": [
-    "the app groups 2 separate trees into one development (OZS-2023-0001, OZS-2021-0048): the files don't overlap enough to be one proposal",
-    "OZS-2023-0001 + PRE-2021-0196 + PRE-2020-0120: 471 (own count)",
-    "OZS-2021-0048: 0 (own count)"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "10194 HEART LAKE RD"
-   ],
-   "current": 200,
-   "proposed": 400,
-   "change": 200,
-   "currentBasis": "siteplan",
-   "why": [
-    "the app groups 2 separate trees into one development (SPA-2026-0045, SPA-2022-0101): the files don't overlap enough to be one proposal",
-    "SPA-2026-0045 + SPA-2024-0144 + DPC-2025-0007: 200 (same land, counted once (largest of 2))",
-    "SPA-2022-0101 + PRE-2021-0193 + PRE17.100: 200 (own count)"
-   ]
-  },
-  {
-   "municipality": "Brampton",
-   "development": [
-    "1-10 HENDERSON AVE"
-   ],
-   "current": 441,
-   "proposed": 250,
-   "change": -191,
-   "currentBasis": "siteplan",
-   "why": [
-    "OZS-2020-0031 + C01W05.044 + SPA-2022-0007 + SPA-2021-0047 + PRE-2020-0104: 250 (same land, counted once (largest of 3))"
+    "the app groups 7 separate trees into one development (OZS-2023-0016, SPA-2025-0181, SPA-2024-0135, SPA-2022-0116, SP17-093.000, PRE-2024-0148, PRE-2022-0136): the files don't overlap enough to be one proposal",
+    "OZS-2023-0016: 435 (found online: Square Yards project listing)",
+    "SPA-2025-0181: 0 (no homes in the proposal)",
+    "SPA-2024-0135: 0 (the wording names no homes)",
+    "SPA-2022-0116 + DPC-2022-0009 + PRE-2025-0010 + PRE-2022-0040 + PRE-2021-0243 + PRE-2021-0070 +1: 0 (no new homes (checked: the file's own wording (application description)))",
+    "SP17-093.000: 0 (no homes in the proposal)",
+    "PRE-2024-0148: 0 (homes proposed, no number given)",
+    "PRE-2022-0136: 0 (work on an existing house)"
    ]
   }
  ],
  "changesCount": {
-  "components": 44,
-  "up": 37,
-  "down": 7
+  "components": 222,
+  "up": 216,
+  "down": 6
  }
 }
