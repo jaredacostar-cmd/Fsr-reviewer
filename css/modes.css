@@ -1,0 +1,100 @@
+/* Modes: density, presentation mode, loading skeletons, site open/close motion,
+   per-view basemap treatment. Loaded after css/app.css; overrides live here so
+   app.css stays the token source of truth. */
+
+/* ---- Density: data-density on <html> (compact default on desktop, comfortable
+   on phones). The app sizes spacing from --space-*, so one override retunes it. */
+:root[data-density="compact"] {
+  --space-1: 3px;
+  --space-2: 6px;
+  --space-3: 12px;
+  --space-4: 18px;
+  --space-5: 26px;
+}
+:root[data-density="comfortable"] {
+  --space-1: 6px;
+  --space-2: 10px;
+  --space-3: 20px;
+  --space-4: 30px;
+  --space-5: 40px;
+}
+
+/* ---- Icons: one set, one size everywhere (map-view buttons, tools menu). */
+.mi { width: 16px; height: 16px; flex: none; vertical-align: -3px; }
+.mo-view .btn .mi { margin-right: 5px; }
+.tools-menu .mi { margin-right: 9px; width: 17px; height: 17px; }
+.present-ctl .mi { width: 17px; height: 17px; }
+
+/* ---- Per-view basemap: the Planning aerial is darkened a touch so the
+   development data stands out against the photo. */
+html[data-mapview="planning"] .leaflet-imagery-pane { filter: brightness(.88); }
+
+/* ---- Site open/close motion: the detail drawer fades (<=200ms); the panel
+   content fades in on a fresh open. The map itself flies via Leaflet flyTo in
+   js/app.js (setView when reduced motion is preferred). */
+#detail { transition: opacity .2s ease; }
+#detail-body { transition: opacity .18s ease; }
+#detail-body.dv-fade { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  /* Fade the drawer out on hide too (progressive enhancement: browsers without
+     allow-discrete/@starting-style just hide it instantly). */
+  #detail { transition-behavior: allow-discrete; }
+  #detail[hidden] { opacity: 0; }
+  @starting-style { #detail { opacity: 0; } }
+}
+
+/* ---- Loading skeletons: grey placeholder blocks shaped like the content they
+   replace (no spinners). Static when reduced motion is preferred. */
+.skel {
+  display: block; height: 12px; border-radius: 6px;
+  background: var(--surface-2); position: relative; overflow: hidden;
+}
+.skel.tall { height: 17px; }
+.skel.tile { height: 66px; border-radius: 8px; }
+.skel-row { display: grid; gap: 8px; padding: 10px 0; }
+.skel-grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 10px 0; }
+.skel::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(100deg, transparent 20%, rgba(140, 140, 140, .22) 50%, transparent 80%);
+  animation: skel-sheen 1.5s infinite;
+}
+@keyframes skel-sheen { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+/* ---- Presentation mode: data-presentation on <html>. Full-screen map, the
+   headline sentence and the four key tiles large; everything else hidden.
+   Esc (or the Exit button) leaves it. */
+html[data-presentation] .sidebar,
+html[data-presentation] .footer,
+html[data-presentation] .detail,
+html[data-presentation] .map-opts,
+html[data-presentation] .tools-ctl,
+html[data-presentation] .help-ctl,
+html[data-presentation] .north-ctl,
+html[data-presentation] .present-ctl,
+html[data-presentation] .leaflet-control-zoom,
+html[data-presentation] .leaflet-control-scale,
+html[data-presentation] .unofficial-banner,
+html[data-presentation] .error-banner { display: none !important; }
+
+#presentation-bar {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  z-index: 2000; width: min(1060px, 94vw);
+  background: color-mix(in srgb, var(--surface-0) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border: 1px solid var(--border); border-radius: 14px;
+  padding: 18px 22px 16px; box-shadow: var(--shadow);
+}
+#presentation-bar[hidden] { display: none; }
+.pres-hl { font-size: 1.4rem; line-height: 1.4; margin: 0 56px 12px 0; }
+.pres-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.pres-tiles .ov-tile b { font-size: 2.1rem; }
+.pres-tiles .ov-tile .ov-u { font-size: 1.05rem; }
+.pres-tiles .ov-tile .ov-l { font-size: 1rem; }
+.pres-tiles .ov-tile small { font-size: .85rem; }
+#pres-exit { position: absolute; top: 10px; right: 10px; }
+
+/* ---- Reduced motion: no transitions, no sheen, no aerial darkening shift. */
+@media (prefers-reduced-motion: reduce) {
+  #detail, #detail-body, #presentation-bar { transition: none; }
+  .skel::after { animation: none; }
+}

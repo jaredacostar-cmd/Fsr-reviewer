@@ -15,6 +15,8 @@
   const R = 6378137, M = Math.PI * R;
   const merc = (lng, lat) => [lng * M / 180, Math.log(Math.tan((90 + lat) * Math.PI / 360)) * R];
   const cos2 = lat => Math.cos(lat * Math.PI / 180) ** 2;
+  // Design tokens (css/app.css) for the few colours drawn onto exported photos.
+  const cssVar = name => (typeof getComputedStyle === 'function' ? getComputedStyle(document.documentElement).getPropertyValue(name).trim() : '');
 
   // ---- Site geometry ------------------------------------------------------------------
   function ringArea(ring, lat0) {   // m², equirectangular around lat0
@@ -227,7 +229,7 @@
   function siteMask(geom, fr) {
     const c = document.createElement('canvas'); c.width = fr.w; c.height = fr.h;
     const ctx = c.getContext('2d');
-    ctx.fillStyle = '#fff'; tracePath(ctx, geom, fr); ctx.fill('evenodd');
+    ctx.fillStyle = 'white'; tracePath(ctx, geom, fr); ctx.fill('evenodd'); // mask: only the alpha channel is read below
     const d = ctx.getImageData(0, 0, fr.w, fr.h).data, m = new Uint8Array(fr.w * fr.h);
     for (let i = 0; i < m.length; i++) m[i] = d[i * 4 + 3] > 127 ? 1 : 0;
     return m;
@@ -238,7 +240,7 @@
     const ctx = c.getContext('2d');
     ctx.drawImage(img, 0, 0, fr.w, fr.h);
     const stats = analyse(ctx.getImageData(0, 0, fr.w, fr.h).data, mask, fr.w, fr.h);
-    ctx.lineWidth = 2; ctx.strokeStyle = '#ffd400'; ctx.setLineDash([6, 4]);
+    ctx.lineWidth = 2; ctx.strokeStyle = cssVar('--hl-find'); ctx.setLineDash([6, 4]);
     tracePath(ctx, geom, fr); ctx.stroke();
     return { canvas: c, stats };
   }
