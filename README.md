@@ -1139,6 +1139,42 @@ date, a link to the pull request and the build (commit).
 - On phones, a plain tap no longer opens the press-and-hold info card: it appears only on a
   genuine ~650 ms press-and-hold with the finger still down (pointercancel handled; `js/info.js`).
 
+### Phase 1.5 — Design system
+
+- **Dark mode is the default.** Settings → Display offers Dark / Light / Follow device, remembered
+  per browser (localStorage `peel-dev:theme`); it is never part of share links. An inline script in
+  `<head>` sets `data-theme` before first paint, so there is no flash of the wrong theme.
+  PDF / print output always renders light (report documents set `<html data-theme="light">`; the
+  main app forces light on `beforeprint` and restores after).
+- **Colour tokens, single source.** Every colour is a CSS variable in `css/app.css`
+  (`:root` = dark, `:root[data-theme="light"]` = light, plus a follow-device media query).
+  No hard-coded colours remain in `js/` — `js/app.js` reads them via `phaseColor()` /
+  `token()` (getComputedStyle, cached; cache reset on theme change).
+- **Phase colours are distinct hues** (no longer a blue ramp): Inception light violet, Under
+  review violet, Approved blue, Permit issued cyan, Under construction teal, Completed grey,
+  Withdrawn/refused grey outline only. Red / amber / green are reserved for capacity state
+  (over / tight / room: `--cap-over` / `--cap-tight` / `--cap-room`); orange (`--select`) is
+  reserved for the current selection. The palette passes WCAG AA (4.5:1 text, 3:1 symbols) and
+  protanopia/deuteranopia pair-distinguishability checks — see `scripts/colorblind-check.js`
+  and `tests/tokens.test.js`. All map symbols carry a thin outline so they read on any
+  background.
+- **Type:** five sizes (11 / 12 / 14 / 16 / 22 px), two weights (regular 400, medium 500),
+  tabular numerals in tables and tiles, tile numbers larger and heavier than their labels,
+  sentence case throughout.
+- **Spacing/shape:** 8 px grid (4 px tight gaps); 8 px radius on panels and cards, fully round
+  chips; decorative borders removed (kept on inputs and tables); floating map panels are
+  280 px wide and corner-anchored.
+- **Modes:** density Compact (desktop default) / Comfortable (phone default, meetings), toggled
+  in Settings → Display. **Present** (top-left map control, under Help): full-screen map +
+  headline sentence + four large tiles (developments shown, units planned, people at build-out,
+  jobs); Esc exits.
+- **Motion/loading:** opening a site flies the map to it and fades the panel (≤250 ms);
+  `prefers-reduced-motion` disables both. Loading spinners are replaced by skeleton
+  placeholder blocks.
+- **Basemaps:** Water, Wastewater and DC views use a dark grey canvas; Planning uses aerial,
+  slightly darkened so data stands out. Zooming to 15+ on the canvas basemap switches to
+  aerial automatically for site checks; a manual pick in Layers is respected otherwise.
+
 ## Outside data: targets, projections, costs, storms, compliance, hydraulics
 
 These sources are fetched on GitHub Actions, because the sandbox can't reach the hosts. Run
