@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /*
- * Diagnostic: secondary plan, MTSA, census (2021) and SGU layers covering Peel.
- *   node scripts/probe-areas.js
+ * Diagnostic: secondary plan, block plan / precinct, MTSA, census (2021) and SGU layers covering Peel.
+ *   node scripts/probe-areas.js [--blocks]   (--blocks: block plan / precinct layers only)
  */
 'use strict';
 const SHARING = 'https://www.arcgis.com/sharing/rest';
@@ -17,11 +17,13 @@ async function layer(url) {
   const info = await get(`${url}?f=json`);
   if (info.error) return console.log(`    ${url} ERROR ${info.error.message}`);
   if (info.layers && !info.fields) { for (const l of info.layers.slice(0, 8)) await layer(`${url}/${l.id}`); return; }
+  if (process.argv.includes('--blocks') && info.geometryType && info.geometryType !== 'esriGeometryPolygon') return;
   const cnt = await get(`${url}/query?${q({ where: '1=1', returnCountOnly: true, f: 'json' })}`);
   const smp = await get(`${url}/query?${q({ where: '1=1', outFields: '*', returnGeometry: false, resultRecordCount: 2, f: 'json' })}`);
   console.log(`    LAYER ${url} "${info.name}" geom=${info.geometryType} count=${cnt.count} wkid=${info.extent && info.extent.spatialReference && (info.extent.spatialReference.latestWkid || info.extent.spatialReference.wkid)}`);
-  console.log(`      fields: ${(info.fields || []).map(f => f.name).join(',').slice(0, 700)}`);
-  for (const f of (smp.features || [])) console.log(`      sample: ${JSON.stringify(f.attributes).slice(0, 500)}`);
+  const brief = process.argv.includes('--blocks');
+  console.log(`      fields: ${(info.fields || []).map(f => f.name).join(',').slice(0, brief ? 240 : 700)}`);
+  for (const f of (smp.features || []).slice(0, brief ? 1 : 2)) console.log(`      sample: ${JSON.stringify(f.attributes).slice(0, brief ? 220 : 500)}`);
 }
 async function search(query, num = 25) {
   const r = await get(`${SHARING}/search?${q({ q: query, num, f: 'json', sortField: 'modified', sortOrder: 'desc' })}`);
@@ -37,12 +39,21 @@ async function show(items, label) {
 }
 (async () => {
   const FS = '(type:"Feature Service" OR type:"Map Service")';
+  const blocksOnly = process.argv.includes('--blocks');
   for (const [muni, org] of Object.entries(ORGS)) {
+    if (blocksOnly) {
+      await show(await search(`orgid:${org} AND ${FS} AND (title:"block plan" OR title:"block plans" OR title:precinct OR title:precincts OR title:"sub-area" OR title:"subarea" OR title:"tertiary plan" OR title:"community block")`), `${muni} block plan / precinct areas`);
+      await show(await search(`orgid:${org} AND ${FS} AND (title:"heritage heights" OR title:"block" OR title:"precinct" OR title:"sub area")`, 40), `${muni} other block / precinct titles`);
+      continue;
+    }
     await show(await search(`orgid:${org} AND ${FS} AND (title:"secondary plan" OR title:"secondary plans" OR title:"character area" OR title:"character areas" OR title:"precinct")`), `${muni} secondary plans`);
+    await show(await search(`orgid:${org} AND ${FS} AND (title:"block plan" OR title:"block plans" OR title:precinct OR title:precincts OR title:"sub-area" OR title:"subarea" OR title:"tertiary plan" OR title:"community block" OR title:"block plan areas")`), `${muni} block plan / precinct areas`);
     await show(await search(`orgid:${org} AND ${FS} AND (title:MTSA OR title:"major transit station" OR title:"protected major transit" OR title:PMTSA)`), `${muni} MTSA`);
     await show(await search(`orgid:${org} AND ${FS} AND (title:census OR title:"dissemination" OR title:SGU OR title:"small geographic" OR title:population OR title:"traffic zone" OR title:TAZ OR title:forecast)`), `${muni} census / SGU / population`);
   }
+  if (blocksOnly) return;
   await show(await search(`${FS} AND ("2021 Census" OR "Census 2021") AND ("dissemination area" OR "dissemination areas") AND (population OR dwellings)`, 30), 'Public 2021 census DA layers');
+  if (blocksOnly) return;
   await show(await search(`${FS} AND ("2021 Census" OR "Census 2021") AND ("dissemination block" OR "dissemination blocks")`, 15), 'Public 2021 census DB layers');
   await show(await search(`${FS} AND (Peel) AND (SGU OR "small geographic unit" OR "small geographic units")`, 15), 'Peel SGU public');
 })().catch(e => { console.error(e); process.exit(1); });

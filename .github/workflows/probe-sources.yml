@@ -6,6 +6,8 @@ name: Probe data sources
 #  mode=imagery: aerial imagery / building footprints covering Peel, dates and CORS
 #  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 #  mode=areas:   secondary plan, MTSA, 2021 census and SGU layers covering Peel
+#  mode=block-areas: block plan / precinct / sub-area layers published by Brampton, Caledon, Mississauga and Peel (log only)
+#  mode=precincts: add Brampton's precinct plan areas to data/areas.json (committed to this branch; nothing else rebuilt)
 #  mode=census:  earlier census (2016) population by dissemination area
 #  mode=servicing: Peel water pressure zones and wastewater drainage areas
 #  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
@@ -22,6 +24,7 @@ name: Probe data sources
 #  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
 #  mode=regulation-build: cut Credit Valley Conservation's regulation limit into map tiles (data/regulation/cvc), committed to this branch
 #  mode=peel-open: Region of Peel housing construction activity and building permit statistics (data/peel-housing.json, committed to this branch); scripts/probe-peel-open.js lists the Region's other layers
+#  mode=tree-audit: how applications nest into developments — a live pull of every source, then scripts/audit-tree.js (data/tree-audit.json, committed to this branch; report only)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
@@ -57,6 +60,17 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/areas.json data/das*.json
           git diff --cached --quiet || { git commit -m "Areas and census baselines (2021, 2016)"; git push; }
+      - name: Block plan / precinct area layers (log only)
+        if: inputs.mode == 'block-areas'
+        run: node scripts/probe-areas.js --blocks
+      - name: Precinct plan areas into data/areas.json (committed to this branch; nothing else rebuilt)
+        if: inputs.mode == 'precincts'
+        run: |
+          node scripts/build-areas.js --out data --precincts-only
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/areas.json
+          git diff --cached --quiet || { git commit -m "Precinct plan areas (Brampton Plan Schedule 11)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Earlier census by dissemination area
         if: inputs.mode == 'census'
         run: |
@@ -129,6 +143,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/peel-housing.json
           git diff --cached --quiet || { git commit -m "Region of Peel housing activity and building permits"; git push; }
+      - name: Application tree audit (report only; data/tree-audit.json committed to this branch)
+        if: inputs.mode == 'tree-audit'
+        timeout-minutes: 40
+        run: |
+          node scripts/audit-tree.js --live
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/tree-audit.json
+          git diff --cached --quiet || { git commit -m "Application tree audit (live pull)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: CVC regulation limit tiles (committed to this branch)
         if: inputs.mode == 'regulation-build'
         run: |

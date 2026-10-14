@@ -878,6 +878,46 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
 
 ## How applications connect: the development process
 
+> **Audit in progress (report only).** `js/tree.js` and `scripts/audit-tree.js` rebuild the grouping
+> as containment trees, following the Ontario process:
+> - pre-consultation → block plan
+> - OPA / ZBA beside a draft plan
+> - draft plan ⊃ site plan ⊃ condominium ⊃ permits
+>
+> Each file gets a role and the reason for it. Each link records its rule, overlap, address match,
+> date order and confidence. The audit writes `data/tree-audit.json`. Run it locally with
+> `node scripts/audit-tree.js`, or from the *Probe data sources* workflow (mode `tree-audit`) for a
+> live pull. The app's grouping and totals below are unchanged until the audit is reviewed.
+>
+> The audit also reports:
+> - Two site plans on the same land with different counts, each judged a phase, a resubmission,
+>   a redevelopment or unclear from the files' evidence.
+> - The latest official plan amendment that applies to each development, site-specific or
+>   area-wide. Amendments are policy and never counted. An area-wide amendment never joins
+>   developments.
+> - Developments where no file states a count, sorted by the growth named in their wording:
+>   - non-residential: not counted
+>   - a new detached house: counts 1
+>   - a replacement house or an addition: 0, since only growth counts
+>   - homes proposed with no number: listed to look up
+>
+>   Counts found online are kept in `data/unit-lookups.json`, each with its source page. They are
+>   used only when the file itself states no count. Secondary-plan targets, counts already carried
+>   by a linked file, and existing homes are left out (listed under `notUsed`).
+> - **Areas around the tree.** Secondary plans, precinct and block-plan areas, Mississauga's
+>   *OP character areas* (never called secondary plans) and MTSAs are area tags, not tree nodes.
+>   - Each tree is tagged, by its root's boundary, with every area it overlaps. The largest
+>     overlap is its primary area, and all tags are shown with their overlap %.
+>   - An MTSA is an overlay tag only, never a primary area.
+>   - A filed block plan or precinct plan, including a pre-consultation for one, is the root of
+>     its tree. A file that only sits within a precinct is not.
+>   - A developer-led official plan amendment that creates or amends a secondary plan stays in its
+>     tree with a "targets: plan" note. Only municipal-wide amendments with no site address
+>     are policy.
+>   - The audit lists trees that straddle two or more plans (no plan holding 90%), and precinct
+>     areas with no matching block plan file once a precinct layer is loaded. Workflow mode
+>     `block-areas` looks for the published layers.
+
 In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
 
 1. **Pre-consultation** (PRE-…): the proposal is discussed before a formal application.
