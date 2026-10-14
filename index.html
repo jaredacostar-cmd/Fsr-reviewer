@@ -222,6 +222,7 @@
       <div class="analysis-resize" id="analysis-resize" role="separator" aria-orientation="vertical" aria-label="Resize the analysis column: drag left or right" tabindex="0"><span></span></div>
       <button type="button" class="sheet-grip" id="analysis-grip" aria-label="Resize the analysis panel: drag, or tap to change its height"><span></span></button>
       <button type="button" class="f-sum" id="f-sum" title="Show the overview totals"></button>
+      <div id="site-bar" hidden></div>
       <div class="analysis-tabs" role="tablist" aria-label="Analysis">
         <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
         <button type="button" role="tab" class="f-tab" id="ftab-census" data-tab="census" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth</button>
@@ -229,6 +230,7 @@
         <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dev" data-tab="dev" data-info="tab-dev" aria-controls="pane-dev" aria-selected="false" hidden>Development</button>
         <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
         <button type="button" role="tab" class="f-tab" id="ftab-log" data-tab="log" data-info="tab-log" aria-controls="pane-log" aria-selected="false">Change log<span class="log-dot" hidden aria-label="new changes"></span></button>
       </div>
@@ -307,6 +309,8 @@
         <div id="dca-body"></div>
       </section>
 
+      <section class="f-pane" id="pane-dev" data-pane="dev" role="tabpanel" aria-labelledby="ftab-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></section>
+
       <section class="f-pane log-pane" id="pane-log" data-pane="log" role="tabpanel" aria-labelledby="ftab-log" hidden>
         <div id="log-body"><div class="skel-row" role="status" aria-label="Loading the change log"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div></div>
       </section>
@@ -381,6 +385,8 @@
   <script src="js/provenance.js?v=__BUILD__"></script>
   <script src="js/filters.js?v=__BUILD__"></script>
   <script src="js/design.js?v=__BUILD__"></script>
+  <script src="js/devscope.js?v=__BUILD__"></script>
+  <script src="js/devtab.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
 </body>
 </html>
