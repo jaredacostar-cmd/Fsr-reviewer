@@ -650,7 +650,7 @@ button, input, select { font: inherit; color: inherit; }
 .analysis .d-grid { grid-template-columns: 1fr; }
 .analysis .tiles { grid-template-columns: 1fr 1fr; }
 .analysis .ov-growth, .analysis .ov-cap-c, .analysis .ov-break, .analysis .ov-dc,
-.analysis .ov-housing, .analysis .ov-outlook, .analysis .ov-needs, .analysis .ov-topdevs { grid-column: span 12; }
+.analysis .ov-outlook, .analysis .ov-needs, .analysis .ov-topdevs { grid-column: span 12; }
 .analysis .ov-top { flex-direction: column; }
 .analysis .ov-brief { align-self: flex-start; }
 
@@ -1855,7 +1855,6 @@ details.stamp { display: block; }
 .wet-box select { max-width: 100%; }
 .wet-box p { margin: var(--space-1) 0; }
 /* Housing targets and population outlook (moved to the Growth tab in Phase 4) */
-.ov-housing { grid-column: span 7; }
 .ov-outlook { grid-column: span 5; }
 /* Overview: Needs-attention card, top-5 developments table, ⓘ line */
 .ov-needs { grid-column: span 5; }
@@ -1869,9 +1868,6 @@ details.stamp { display: block; }
 .ov-topdevs .dt td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
 .ov-info { margin: 0; }
 @media (max-width: 1100px) { .ov-needs, .ov-topdevs { grid-column: span 12; } }
-.ov-housing .ov-bar i.c { background: var(--cap-room); }
-.ov-housing .ov-cap.near .ov-bar i.c { background: var(--select); }
-.ov-housing .ov-cap.over .ov-bar i.c { background: var(--cap-over); }
 .ov-spark { width: 100%; height: auto; max-height: 120px; display: block; }
 .ov-spark .sp-mof { fill: none; stroke: var(--ph-approved); stroke-width: 2; }
 .ov-spark .sp-reg { stroke: var(--text-muted); stroke-width: 1.5; stroke-dasharray: 5 4; }
@@ -1879,7 +1875,7 @@ details.stamp { display: block; }
 .ov-spark .sp-ax { font-size: var(--fs-1); fill: var(--text-muted); }
 .dca-key .k-mof { background: var(--ph-approved); }
 .dca-key .k-reg { background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 7px); }
-@media (max-width: 1100px) { .ov-housing, .ov-outlook { grid-column: span 12; } }
+@media (max-width: 1100px) { .ov-outlook { grid-column: span 12; } }
 .cmp-sum { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-1) 0 var(--space-2); }
 .cmp-table td small { display: block; color: var(--text-muted); }
 .hyd-box { margin-top: var(--space-2); }

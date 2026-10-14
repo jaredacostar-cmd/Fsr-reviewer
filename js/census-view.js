@@ -1,4 +1,4 @@
-/* js/census-view.js — housing targets / CMHC starts / population outlook cards +
+/* js/census-view.js — population outlook card +
  * the Growth tab's Census & 2051 sub-view (Phase 6 extraction).
  * Extracted verbatim from js/app.js (lines 1676-1721, 9702-9858); the only edits
  * are the reference rewrites in SPLIT_MAP.md §0 rule 4.
@@ -20,31 +20,7 @@
   const SvcTab = () => root.PeelSvcTab;
 
 /* ---- app.js lines 1676-1721 ---- */
-  // ---- Housing targets, CMHC starts and the population outlook (data/housing.json) ------------
-  // Ontario's housing targets (2022-2031) and its yearly progress, CMHC starts by municipality, the
-  // units in the application pipeline, and the Ministry of Finance projection against the
-  // Region's 2051 forecast.
-  function housingRows() {
-    const H = App().state.housing; if (!H) return null;
-    const T = H.targets.muni, S = H.cmhc.starts;
-    return DU().MUNIS.map(m => {
-      const t = T[m], ys = Object.keys(t.years || {}).map(Number).sort(), y = ys[ys.length - 1], last = y ? t.years[y] : null;
-      const sy = Object.keys(S[m] || {}).map(Number).sort(), recent = sy.slice(-5), avg = recent.length ? recent.reduce((a, k) => a + S[m][k].all, 0) / recent.length : null;
-      let appr = 0, prop = 0;
-      for (const p of App().state.projects) { if (p.municipality !== m) continue; const l = MM().svcLayerOf(p); if (l !== 'approved' && l !== 'proposed') continue; const u = D.estimate([p], App().state.criteria, 'all', App().jobsOf).totalUnits; if (l === 'approved') appr += u; else prop += u; }
-      const done = last ? last.sinceStart : 0, elapsed = y ? (y - 2021) / 10 : 0;
-      return { m, target: t.target, y, done, pct: t.target ? done / t.target : 0, elapsed, annual: last, startsY: sy[sy.length - 1], starts: sy.length ? S[m][sy[sy.length - 1]].all : null, avg, avgFrom: recent[0], avgTo: recent[recent.length - 1], appr, prop, left: Math.max(0, t.target - done), yearsLeft: y ? 2031 - y : null };
-    });
-  }
-  function housingCardHTML() {
-    const rows = housingRows(); if (!rows) return '';
-    const pc = v => `${Math.round(v * 100)}%`;
-    return `<section class="ov-card ov-housing" data-info="housing-targets"><div class="ov-h"><h3>Housing targets to 2031</h3></div>
-      ${rows.map(r => { const need = r.yearsLeft ? r.left / r.yearsLeft : null; return `<div class="ov-cap ${r.pct >= r.elapsed ? 'ok' : r.pct >= r.elapsed * 0.6 ? 'near' : 'over'}"><div class="ov-cap-h"><span>${esc(r.m)}</span><span><b>${fmtNum(r.done)}</b> of ${fmtNum(r.target)} (${pc(r.pct)})</span></div>
-        <div class="ov-bar" role="img" aria-label="${pc(r.pct)} of the 2031 target built, ${pc(r.elapsed)} of the time gone"><i class="c" style="width:${Math.min(100, r.pct * 100).toFixed(1)}%"></i><i class="t" style="left:${(r.elapsed * 100).toFixed(1)}%"></i></div>
-        <small>${r.annual ? `${r.y}: ${fmtNum(r.annual.progress)} of ${fmtNum(r.annual.target)} (${pc(r.annual.progress / r.annual.target)})` : ''}${r.avg ? ` · CMHC starts ${r.avgFrom}–${r.avgTo} ≈${fmtNum(Math.round(r.avg))}/yr` : ''}${need ? ` · needs ≈${fmtNum(Math.round(need))}/yr to 2031` : ''} · pipeline ${fmtNum(Math.round(r.appr))} approved + ${fmtNum(Math.round(r.prop))} proposed units = <b>${r.left ? pc((r.appr + r.prop) / r.left) : '–'}</b> of what's left</small></div>`; }).join('')}
-      <p class="small muted">Progress since 2022 from Ontario's housing supply tracker (to ${rows[0].y}); the tick marks the share of the 10 years gone. CMHC starts are new homes only (the tracker also counts additional units and beds).</p></section>`;
-  }
+  // ---- Population outlook (data/housing.json) --------------------------------------------------
   // Population outlook: census, the Ministry of Finance projection and the Region's 2051 forecast.
   function outlookRows() {
     const H = App().state.housing, F = App().state.reports && App().state.reports.forecast2051; if (!H || !H.mof) return null;
@@ -68,7 +44,7 @@
   }
 /* ---- app.js lines 9702-9858 ---- */
   // ---- Census & 2051 sub-view ---------------------------------------------------------------
-  // Growth since the census, the 2051 allocation, housing targets and the population
+  // Growth since the census, the 2051 allocation and the population
   // outlook. Fills #growth-census-body (Worker A's pane); the pipeline body is filled
   // by renderGrowthPipeline above.
   function renderGrowthCensus() {
@@ -123,7 +99,7 @@
       ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('ww', 'Wastewater tab')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
       ${forecastTableHTML(bc)}
-      ${da ? '' : housingCardHTML() + outlookCardHTML(true)}
+      ${da ? '' : outlookCardHTML(true)}
       <p class="small muted">ⓘ ${esc(name)} · ${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${CA().censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(asof)}</strong>.</p>`;
     renderGrowthChart(base, gr, Y, $('#gc-chart'));
   }
@@ -225,7 +201,7 @@
   document.addEventListener('pointerout', e => { const ch = e.target.closest && e.target.closest('.cap-chart'); if (ch && !ch.contains(e.relatedTarget)) { const t = ch.querySelector('.grow-tip'); if (t) t.hidden = true; } });
 
   // ---- Public contract ----
-  const api = { housingRows, outlookRows, housingCardHTML, outlookCardHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
+  const api = { outlookRows, outlookCardHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCensusView = api;
 })(typeof window !== 'undefined' ? window : globalThis);

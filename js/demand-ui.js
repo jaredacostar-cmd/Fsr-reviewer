@@ -173,7 +173,6 @@
       row('Council and committee agendas, minutes', App().state.council && App().state.council.generatedAt, 'weekly', 10),
       row('Secondary plans, MTSAs', App().state.areas && App().state.areas.generatedAt, 'yearly', 365),
       row(`${bc ? bc.year : 2021} Census (dissemination areas)`, bc && bc.date, 'every 5 years', null, bc && bc.year >= 2026 ? 'The latest census.' : 'The 2026 Census population and dwelling counts (by dissemination area) are released February 10, 2027; most other topics through 2027. scripts/build-areas.js takes them (CENSUS_2026_CSV) and the 2026 counts become the baseline.'),
-      row('Housing targets and progress (Ontario)', H && H.targets.asOf, 'yearly', 400, 'Ontario Data Catalogue; the next year\'s progress is added about December.'),
       row('CMHC housing starts by municipality', H && H.cmhc.asOf, 'yearly', 400, 'CMHC Starts and Completions Survey (Housing Market Information Portal).'),
       row('Ministry of Finance population projections', H && H.mof.asOf, 'yearly', 400, 'Updated each summer.'),
       row('Water and wastewater DC rates', App().state.dcCosts && App().state.dcCosts.rates.effective, 'every 6 months', 190, 'Indexed February 1 and August 1; the 2026 DC by-law may change them.'),
