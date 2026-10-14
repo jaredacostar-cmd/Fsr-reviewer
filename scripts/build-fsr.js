@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 
 const outDir = (() => { const i = process.argv.indexOf('--out'); return i > 0 ? process.argv[i + 1] : 'data'; })();
-const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/Fsr-reviewer)' };
+const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/peel-growth-pipeline)' };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 async function get(url) {
   for (let k = 0; k < 3; k++) {

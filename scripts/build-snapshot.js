@@ -20,6 +20,7 @@ const path = require('path');
 const CFG = require('../js/config.js');
 const P = require('../js/phases.js');
 const L = require('../js/loader.js');
+const { buildIndex, countUnitsFromText } = require('./build-snapshot-index.js');
 
 const SNAPSHOT_MAX_PER_LAYER = 150000;
 const CHANGE_LIST_MAX = 500;
@@ -98,6 +99,13 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
   const decoded = encoded.map(o => decodeRecord(o, names.get(rootId(o.sourceId))));
   const projects = P.buildProjects(P.dedupeRecords(decoded));
 
+  // 3b. Decoded records for the startup index: the same records, but through the
+  // browser's unit-count-from-description pass (js/app.js applySnapshot) so the
+  // index agrees with the full-load projects. The pass mutates records, so it
+  // runs on copies; the index itself is built once the snapshot exists (3c).
+  const idxDecoded = decoded.map(r => ({ ...r }));
+  countUnitsFromText(idxDecoded);
+
   // 4. Phase history and this run's changes.
   const hist = history && history.projects ? history : { projects: {}, runs: [] };
   const firstRun = !hist.runs.length;
@@ -139,7 +147,10 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
     },
     records: encoded,
   };
-  return { snapshot, history: hist, summary: { sources: outSources.length, ok: okCount, records: encoded.length, projects: projects.length, added: added.length, moved: moved.length } };
+  // 3c. Compact startup index (data/snapshot-index.json): one small object per
+  // project, for first paint; the full snapshot follows right after.
+  const index = buildIndex(P.buildProjects(P.dedupeRecords(idxDecoded)), snapshot);
+  return { snapshot, history: hist, index, summary: { sources: outSources.length, ok: okCount, records: encoded.length, projects: projects.length, added: added.length, moved: moved.length } };
 }
 
 function readJSON(file) {
@@ -152,12 +163,15 @@ async function main() {
   fs.mkdirSync(outDir, { recursive: true });
   const snapFile = path.join(outDir, 'snapshot.json');
   const histFile = path.join(outDir, 'history.json');
-  const { snapshot, history, summary } = await buildSnapshot({ previous: readJSON(snapFile), history: readJSON(histFile) });
+  const idxFile = path.join(outDir, 'snapshot-index.json');
+  const { snapshot, history, index, summary } = await buildSnapshot({ previous: readJSON(snapFile), history: readJSON(histFile) });
   fs.writeFileSync(snapFile, JSON.stringify(snapshot));
   fs.writeFileSync(histFile, JSON.stringify(history));
+  fs.writeFileSync(idxFile, JSON.stringify(index));
   const mb = f => (fs.statSync(f).size / 1e6).toFixed(1);
   console.log(`snapshot: ${summary.ok}/${summary.sources} sources, ${summary.records} records, ${summary.projects} projects, ` +
-    `+${summary.added} new, ${summary.moved} changed phase; snapshot.json ${mb(snapFile)} MB, history.json ${mb(histFile)} MB`);
+    `+${summary.added} new, ${summary.moved} changed phase; snapshot.json ${mb(snapFile)} MB, history.json ${mb(histFile)} MB, ` +
+    `snapshot-index.json ${mb(idxFile)} MB (${Math.round(fs.statSync(idxFile).size / fs.statSync(snapFile).size * 100)}% of snapshot)`);
 }
 
 if (require.main === module) main().catch(e => { console.error(e.message); process.exit(1); });
