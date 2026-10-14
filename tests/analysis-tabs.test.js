@@ -61,7 +61,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing (and the old water/ww defau
 });
 
 test('sub-view valid values cover the new sub-views', () => {
-  assert.ok(APP.includes(`valid: ['pipeline', 'census2051']`), 'growth valid values wrong');
+  assert.ok(APP.includes(`valid: ['pipeline', 'census2051', 'timing']`), 'growth valid values wrong');
   assert.ok(APP.includes(`valid: ['timing', 'recommendations', 'funding']`), 'dca valid values wrong');
   assert.ok(APP.includes(`'hydro'`), 'hydro not a valid water sub-view');
   assert.ok(APP.includes(`'pumpstations'`), 'pumpstations not a valid ww sub-view');
@@ -108,9 +108,12 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
 test('index.html: growth sub-views', () => {
   assert.ok(HTML.includes('data-gsub="pipeline"') && HTML.includes('>Pipeline</button>'), 'pipeline subtab missing');
   assert.ok(HTML.includes('data-gsub="census2051"') && HTML.includes('Census &amp; 2051'), 'census2051 subtab missing');
+  assert.ok(HTML.includes('data-gsub="timing"') && HTML.includes('>Timing</button>'), 'timing subtab missing');
   assert.ok(HTML.includes('id="pane-growth-pipeline"') && HTML.includes('data-sub="pipeline"'), 'pipeline pane missing');
   assert.ok(HTML.includes('id="pane-growth-census"') && HTML.includes('data-sub="census2051"'), 'census pane missing');
-  assert.ok(HTML.includes('id="growth-pipeline-body"') && HTML.includes('id="growth-census-body"'), 'growth body divs missing');
+  assert.ok(HTML.includes('id="pane-growth-timing"') && HTML.includes('data-sub="timing"'), 'timing pane missing');
+  assert.ok(HTML.includes('id="growth-pipeline-body"') && HTML.includes('id="growth-census-body"') && HTML.includes('id="timing-body"'), 'growth body divs missing');
+  assert.ok(HTML.includes('js/timing.js?v=__BUILD__'), 'timing.js script tag missing');
 });
 
 test('index.html: water hydraulic check and ww pumping stations sub-views', () => {
