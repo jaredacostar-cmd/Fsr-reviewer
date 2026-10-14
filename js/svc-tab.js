@@ -492,6 +492,8 @@
       return { rated: rep.ratedMLd, name: rep.name, existing: up(1), committed: up(2), buildout: up(3), f, perPerson: popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0 };
     };
     for (const d of App().state.servicing.drainage) cumOf(d);
+    // A model rebuild (e.g. the 2025 annual reports arriving) is a new scenario for every cache.
+    App().state.svcGen = (App().state.svcGen || 0) + 1;
     App().state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg, calib, inflowsTo, zsum, secs, raw };
     renderHeadlines(); MP().renderMpCompare();
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();

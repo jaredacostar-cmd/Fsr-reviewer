@@ -96,6 +96,8 @@
       for (const k of ['pz', 'dr']) if (MM().svcOn[k]) setSvcLayer(k, true);
       if (MM().svcOn.bk) ST().setBlocksLayer(true);
       DI().renderDcLayer(); MA().renderLegend();
+      // A model built before the 2025 annual reports arrived has no plants: rebuild it now.
+      if (App().state.svcModel && App().state.reports) SvcTab().renderSvcTab();
       App().applyFilters();
       setTimeout(SC().loadSewers, 1500);
       MP().loadWaterSupply().then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });

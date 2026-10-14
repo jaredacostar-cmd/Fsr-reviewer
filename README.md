@@ -1435,6 +1435,32 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Pipe class and "not assessed"
+
+Pipe-by-pipe sewer results are off (`PIPE_RESULTS = false`). Before the design audit's Group 4,
+they were hidden in the interface but still drove the outputs: sewer pipes at 90%+ of full
+capacity formed "sewer groups" that fed DC timing, the funding screen, the workbook and the
+briefing. They no longer do (design audit, Group 4):
+
+- **Not assessed, not "no constraint".** With pipe results off, `allNeeds()` builds no sewer
+  groups. The development's DC needs say "Sewer pipes: not assessed (pipe-by-pipe capacity is
+  left to the Region's hydraulic model)" instead of "No sewer on its path reaches 90%". The
+  Overview's wastewater line says "sewer pipes not assessed". The DC method note says no sewer
+  main is tested.
+- **What it changes (Peel, default scenario).** DC Timing goes from 54 projects (5 screening
+  late) to 33 (0 screening late). The difference is the sewer-group mains and their timing
+  flags. Plants, pumping stations, water treatment, storage and connecting developments are
+  unchanged.
+- **Class by size, not distance.** Local vs trunk was "the first 3 km of the path" vs the rest.
+  It is now the pipe's diameter. **Trunk is 750 mm and over**, the smallest "primary wastewater
+  main (trunk)" on the Region's 2026 DC capital maps (`PeelUtil.TRUNK_MM`, `pipeClass`). The FSR
+  check reads "Local sewers (under 750 mm)" and "Trunk sewers (750 mm and over)".
+- **Stale model fixed.** If the DC tab was opened while data was still loading, a render could
+  run before the servicing lookup was filled. It then threw, and the model stayed one built
+  without the 2025 annual reports, so DC timing had no plant constraints. `lakeZones()` now
+  skips zones not yet loaded. The model is rebuilt once the reports arrive. Every cache keys on
+  the model's generation (`svcGen` in `scenarioKey()`).
+
 ## Capital schedule currency: status, "as of" and one dollar year
 
 Every planned date comes from the 2026 DC capital maps (draft v2, **as of March 2026**). In May

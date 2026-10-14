@@ -127,13 +127,13 @@
 
   /**
    * Pipe capacity along the sewer path, from SC().pathPipes(p): the tightest local
-   * pipe (first 3 km) and the tightest downstream trunk. Bands follow the map legend:
+   * pipe (under 750 mm) and the tightest trunk (750 mm and over). Bands follow the map legend:
    * green under 85% (free flowing), amber 85–100% (near full), red over 100% (surcharged).
    */
   function pipeChecks(pp) {
     if (!pp) return [];
     const out = [];
-    for (const [kind, label] of [['local', 'Local sewers (first 3 km)'], ['trunk', 'Downstream trunk']]) {
+    for (const [kind, label] of [['local', 'Local sewers (under 750 mm)'], ['trunk', 'Trunk sewers (750 mm and over)']]) {
       const x = pp[kind];
       if (!x || x.r1 == null || !isFinite(x.r1)) continue;
       const pct = x.r1 * 100;
