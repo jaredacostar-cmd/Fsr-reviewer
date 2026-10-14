@@ -548,7 +548,7 @@ button, input, select { font: inherit; color: inherit; }
 
 /* Detail drawer */
 .detail {
-  position: fixed; top: 0; right: 0; bottom: var(--footer-h, 0px); width: min(440px, 100vw); z-index: 1000; overflow-y: auto;
+  position: fixed; top: var(--top-h, 0px); right: 0; bottom: var(--footer-h, 0px); width: min(440px, 100vw); z-index: 1000; overflow-y: auto;
   background: var(--surface-1); box-shadow: var(--shadow); padding: var(--space-3);
 }
 .detail .close { position: absolute; top: 8px; right: 10px; font-size: var(--fs-5); border: 0; background: none; cursor: pointer; color: var(--text-secondary); }
@@ -753,6 +753,7 @@ button, input, select { font: inherit; color: inherit; }
   /* Detail as a bottom sheet so the selected point stays visible above it */
   .detail {
     z-index: 1150; top: auto; bottom: 0; left: 0; right: 0; width: 100%; height: var(--sheet-hv, 62vh); height: var(--sheet-h, 62dvh);
+    max-height: calc(100dvh - var(--top-h, 0px));   /* never under the top bar */
     border-left: 0; border-radius: var(--radius-panel) var(--radius-panel) 0 0;
     padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
   }
@@ -772,7 +773,7 @@ button, input, select { font: inherit; color: inherit; }
   }
   /* Sidebar: off-canvas sheet, hidden by default; the Filters button opens it. */
   .sidebar {
-    position: fixed; top: 0; bottom: 0; left: 0; width: min(380px, 92vw); z-index: 1100;
+    position: fixed; top: var(--top-h, 0px); bottom: 0; left: 0; width: min(380px, 92vw); z-index: 1100;
     transform: translateX(-102%); transition: transform .2s ease;
     padding-top: env(safe-area-inset-top); box-shadow: var(--shadow);
   }

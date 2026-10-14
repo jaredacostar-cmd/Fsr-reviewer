@@ -1642,6 +1642,17 @@ workflow, mode `peel-open`). A year is the Region's annual row, or its four quar
 year with fewer quarters is partial and isn't used as a full year. `scripts/probe-peel-open.js`
 lists the Region's other layers.
 
+## Panels start below the top bar
+
+The top bar sits above the map's panels so its menus open over them. The panels that open from
+the side start where the top bar ends (`--top-h`, measured as the top bar resizes), so their
+headings and close buttons aren't hidden under it:
+- the side panel (Help & tips, a selection, a pipe or block)
+- the phone and tablet Filters panel
+- the Compare column
+
+On a phone the bottom sheet never grows up under the top bar.
+
 ## Updates reach the browser (offline service worker)
 
 The offline service worker (`sw.js`) used to serve the page itself cache-first under a fixed

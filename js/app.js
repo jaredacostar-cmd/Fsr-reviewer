@@ -415,6 +415,13 @@
     document.documentElement.style.setProperty('--footer-h', `${$('#footer').offsetHeight}px`);
     window.PeelMapCore.map.invalidateSize();
   }).observe($('#footer'));
+  // And --top-h: where the top bar ends (banner included). The top bar sits above the drawers so
+  // its menus open over them; the detail drawer (Help, a selection…) starts below it.
+  const topEl = document.querySelector('.topbar');
+  if (topEl) {
+    const setTop = () => document.documentElement.style.setProperty('--top-h', `${Math.max(0, Math.round(topEl.getBoundingClientRect().bottom))}px`);
+    new ResizeObserver(setTop).observe(topEl); addEventListener('resize', setTop); setTop();
+  }
 
   // Version stamped at deploy time (index.html meta + ?v= on every script).
   const APP_VERSION = (document.querySelector('meta[name="app-version"]') || {}).content || 'dev';
