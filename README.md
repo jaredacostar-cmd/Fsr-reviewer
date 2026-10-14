@@ -902,8 +902,21 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
 >   - homes proposed with no number: listed to look up
 >
 >   Counts found online are kept in `data/unit-lookups.json`, each with its source page. They are
->   used only when no file in the development states a count. Secondary-plan targets, counts
->   already carried by a linked file, and existing homes are left out (listed under `notUsed`).
+>   used only when the file itself states no count. Secondary-plan targets, counts already carried
+>   by a linked file, and existing homes are left out (listed under `notUsed`).
+> - **Areas around the tree.** Secondary plans, precinct and block-plan areas, Mississauga's
+>   *OP character areas* (never called secondary plans) and MTSAs are area tags, not tree nodes.
+>   - Each tree is tagged, by its root's boundary, with every area it overlaps. The largest
+>     overlap is its primary area, and all tags are shown with their overlap %.
+>   - An MTSA is an overlay tag only, never a primary area.
+>   - A filed block plan or precinct plan, including a pre-consultation for one, is the root of
+>     its tree. A file that only sits within a precinct is not.
+>   - A developer-led official plan amendment that creates or amends a secondary plan stays in its
+>     tree with a "targets: plan" note. Only municipal-wide amendments with no site address
+>     are policy.
+>   - The audit lists trees that straddle two or more plans (no plan holding 90%), and precinct
+>     areas with no matching block plan file once a precinct layer is loaded. Workflow mode
+>     `block-areas` looks for the published layers.
 
 In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
 

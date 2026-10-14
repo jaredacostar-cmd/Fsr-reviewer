@@ -145,7 +145,12 @@
   }
 
   // ---- 4. Links ------------------------------------------------------------------------------------------
-  const T = { CONTAIN: 0.8, SAME: 0.8, PRECON: 0.5, NEVER: 0.15, COVER: 0.9, OVER: 0.1, POLICY_M2: 4e6 };
+  const T = { CONTAIN: 0.8, SAME: 0.8, PRECON: 0.5, NEVER: 0.15, COVER: 0.9, OVER: 0.1, POLICY_M2: 4e6, PRECINCT_M2: 2.5e5, TAG: 0.05, STRADDLE: 0.1 };
+  // A file that proposes a precinct / block plan (not one that only sits "within" or "implements a
+  // phase of" an approved one): its own words, or "Block Plan" among the application types it lists.
+  const PRECINCT = /\b(establish\w*|advanc\w*|seek\w*|propos\w*|scoped|in support of|request for|implement an? (community )?block plan|comprehensive)\W+(?:[\w’'-]+\W+){0,4}?(precinct|block) plan\b|\b(precinct|block) plan (opa|official plan amendment)\b|\bthe precinct plan, zba\b|^(?:[\w ]+\| )*block plan(?! amendment)(?: \|[\w |]+)? —/i;
+  // A file for one site (a civic address) as against a municipal, area-wide one ("Town-Wide").
+  const siteSpecific = n => n.records.some(r => /^\s*\d+[a-z]?\s+[a-z]/i.test(r.address || '') && !/\b(town|city|region)[- ]wide\b/i.test(r.address || ''));
   const FORMAL = new Set(['block_plan', 'use', 'land_division']);
   const LEVEL = { block_plan: 0, land_division: 1, use: 1, site_plan: 2, condo: 3, precon: 9, other: 9 };
   // Same address: the normalised address, or a shared civic number on a shared street word
@@ -186,6 +191,7 @@
   function containRule(c, p, s) {
     if (s == null || s < T.CONTAIN) return null;
     if (p.role === 'block_plan' && c.role === 'land_division') return 'block plan ⊃ draft plan';
+    if (p.role === 'block_plan' && (c.role === 'use' || c.role === 'site_plan' || c.role === 'condo')) return 'block / precinct plan ⊃ rezoning / site plan';
     if (p.roles.includes('land_division') && (c.role === 'site_plan' || c.role === 'condo')) return 'draft plan ⊃ site plan / condo';
     if (p.role === 'site_plan' && c.role === 'condo') return 'site plan ⊃ condo';
     // No draft plan: a rezoning's land holding its site plans (infill). Not in the brief's list —
@@ -240,7 +246,16 @@
     log(`candidate pairs: ${pairs.size}`);
     // Area-wide official plan amendments (no count, larger than any one site) are policy: never a
     // parent, sibling or child; planAmendments() lists them for the developments they cover.
-    for (const n of nodes) n.policy = !process.env.NOPOL && isOpa(n) && !(n.units > 0) && !n.roles.includes('land_division') && n.area > T.POLICY_M2;
+    // Developer-led amendments (a civic address, "0 Torbram Road" included) stay in their tree.
+    for (const n of nodes) n.policy = isOpa(n) && !(n.units > 0) && !n.roles.includes('land_division') && n.area > T.POLICY_M2 && !siteSpecific(n);
+    // A filed block plan or precinct plan (a pre-consultation for one included) is the root of its
+    // tree: it holds the draft plans, rezonings and site plans on its land.
+    for (const n of nodes) {
+      if (n.policy || n.cancelled || n.role === 'block_plan' || !(n.area >= T.PRECINCT_M2)) continue;
+      if (!n.records.some(r => PRECINCT.test(r.description || ''))) continue;
+      n.reason = `${n.reason}; names a precinct / block plan over ${(n.area / 1e6).toFixed(2)} km², so it is the root of its tree`;
+      n.precinctFrom = n.role; n.role = 'block_plan'; if (!n.roles.includes('block_plan')) n.roles = ['block_plan', ...n.roles];
+    }
 
     // Evidence for every pair.
     const ev = [];
@@ -374,17 +389,24 @@
     const flags = [];
     // Siblings: nodes with no parent inside the tree form the top level; same-land groups share it.
     const tops = [...set].filter(i => !(parent[i] >= 0 && set.has(parent[i])));
-    function own(i) { const n = nodes[i]; return n.cancelled || n.superseded || n.role === 'condo' || n.role === 'precon' ? 0 : n.units; }
+    // A file's own count: the one it states, else one found online for it (data/unit-lookups.json).
+    const looked = n => { if (!built.lookups || !built.lookups.size) return null; for (const r of n.refs) { const f = built.lookups.get(`${n.municipality}|${r}`); if (f) return f; } return null; };
+    function own(i) {
+      const n = nodes[i]; if (n.cancelled || n.superseded || n.role === 'condo' || n.role === 'precon') return 0;
+      if (n.units > 0) return n.units;
+      const f = looked(n); return f && f.units > 0 ? f.units : 0;
+    }
     function count(i, depth = 0) {
       if (depth > 12) return { units: own(i), basis: 'depth limit' };
       const n = nodes[i];
       const ch = (kids.get(i) || []).filter(k => nodes[k].role !== 'condo' && nodes[k].role !== 'precon' && !nodes[k].cancelled);
-      if (!ch.length) return { units: own(i), basis: 'own count' };
+      const ownBasis = n.units > 0 || !looked(n) || !(looked(n).units > 0) ? 'own count' : `found online: ${looked(n).source}`;
+      if (!ch.length) return { units: own(i), basis: ownBasis };
       const sub = ch.map(k => ({ k, ...count(k, depth + 1) }));
       const sum = sub.reduce((t, s) => t + s.units, 0);
       // Coverage counts only the children that state a count: land under a file with no count
       // can't stand in for the parent's number.
-      const counted = process.env.OLDCOV ? ch : sub.filter(s => s.units > 0).map(s => s.k);
+      const counted = sub.filter(s => s.units > 0).map(s => s.k);
       let cover = null;
       if (n.rings && n.area > 0 && counted.length && counted.every(k => nodes[k].rings)) cover = Math.min(1, counted.reduce((t, k) => t + nodes[k].area * shareInside(nodes[k], n), 0) / n.area);
       const mine = own(i);
@@ -500,7 +522,48 @@
     });
   }
 
-  const api = { ROLES, T, classifyRole, fileNodes, buildTrees, countTree, growthKind, planAmendments, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
+  // Areas around the tree: secondary plans, precincts / block plan areas, OP character areas and
+  // MTSAs are tags, never nodes. Each tree is tagged, by its root's boundary (or point), with every
+  // area it overlaps; the primary area is the largest overlap (MTSAs are an overlay only).
+  const OVERLAY = new Set(['MTSA']);
+  function tagAreas(built, areas) {
+    const { nodes, trees, parent } = built;
+    const list = areas.filter(a => a.rings).map(a => ({ ...a, bbox: a.bbox || bboxOf(a.rings) }));
+    return trees.map(t => {
+      const live = t.nodes.filter(i => !nodes[i].cancelled && !nodes[i].policy);
+      if (!live.length) return null;
+      const inTree = new Set(t.nodes);
+      const tops = live.filter(i => !(parent[i] >= 0 && inTree.has(parent[i])));
+      const root = nodes[(tops.length ? tops : live).slice().sort((a, b) => (nodes[b].area || 0) - (nodes[a].area || 0))[0]];
+      const tags = [];
+      for (const a of list) {
+        if (a.municipality && a.municipality !== root.municipality) continue;
+        let share = 0;
+        if (root.rings) share = shareInside(root, a);
+        else if (root.lng != null && root.lng >= a.bbox[0] && root.lng <= a.bbox[2] && root.lat >= a.bbox[1] && root.lat <= a.bbox[3] && P.pointInRings(root.lng, root.lat, a.rings)) share = 1;
+        if (share >= T.TAG) tags.push({ kind: a.kind, name: a.name, id: a.id, share: +share.toFixed(2), point: !root.rings });
+      }
+      tags.sort((x, y) => y.share - x.share);
+      const primary = tags.find(x => !OVERLAY.has(x.kind)) || null;
+      return { root: root.refs[0], rootRole: root.role, tags, primary };
+    });
+  }
+  // Developer-led amendments that create or amend a secondary / precinct plan: "targets: <plan>",
+  // the plan named in the file's wording, else the tree's primary area.
+  const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const coreName = a => a.name.replace(/^[\d\s()a-z]*:\s*/i, '').replace(/\s*\(.*\)\s*$/, '').trim();
+  function opaTargets(n, areas, primary) {
+    if (!isOpa(n)) return null;
+    const d = n.records.map(r => r.description || '').join(' ');
+    if (!/\b(secondary|precinct|tertiary|block) plan\b/i.test(d)) return null;
+    const named = areas.filter(a => a.kind !== 'MTSA' && a.municipality === n.municipality && coreName(a).length > 3 && new RegExp(`\\b${esc(coreName(a))}\\b`, 'i').test(d));
+    if (named.length) return named.map(a => a.name);
+    const m = d.match(/\b([A-Z][\w'’-]+(?:\s+[A-Z][\w'’-]+){0,3})\s+(Secondary|Precinct|Tertiary)\s+Plan\b/);
+    if (m && !/^(The|A|An|Official|City|Town)$/.test(m[1])) return [`${m[1]} ${m[2]} Plan`];
+    return primary ? [primary.name] : ['a secondary plan (not named)'];
+  }
+
+  const api = { ROLES, T, classifyRole, fileNodes, buildTrees, countTree, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);

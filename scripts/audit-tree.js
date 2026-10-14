@@ -137,7 +137,45 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     const m = nodes[live[0]].municipality; inc(noCount, m, k); inc(noCount, 'Peel', k);
     if (!built5 && ['count to find', 'mixed use, check', 'no description'].includes(c.growth.kind)) toFind.push({ municipality: m, kind: c.growth.kind, files: live.map(refOf), address: [...new Set(recs.map(r => r.address).filter(Boolean))].slice(0, 3), description: [...new Set(recs.map(r => r.description).filter(Boolean))].join(' / ').slice(0, 400), phase: recs.map(r => r.phase), lastEvent: last ? new Date(last).toISOString().slice(0, 10) : null });
   }
-  const growthNoCount = { note: 'Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.', byKind: noCount, foundOnline: counts.filter(x => x.c.growth && x.c.growth.kind === 'found online').length, toFind: toFind.sort((a, b) => String(b.lastEvent).localeCompare(String(a.lastEvent))) };
+  const growthNoCount = { note: 'Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.', byKind: noCount, foundOnline: nodes.filter(n => !(n.units > 0) && n.refs.some(r => (built.lookups.get(`${n.municipality}|${r}`) || {}).units > 0)).length, toFind: toFind.sort((a, b) => String(b.lastEvent).localeCompare(String(a.lastEvent))) };
+
+  // Areas around the tree: tags, not nodes (secondary plans, precinct / block plan areas, OP
+  // character areas, MTSAs). Each tree is tagged by its root's boundary; primary = largest overlap.
+  const A = readJSON(path.join(DATA, 'areas.json')) || {};
+  const areaList = [
+    ...(A.secondaryPlans || []).map(a => ({ ...a, kind: a.municipality === 'Mississauga' ? 'OP character area' : 'secondary plan' })),
+    ...(A.precincts || []).map(a => ({ ...a, kind: 'precinct / block plan area' })),
+    ...(A.mtsas || []).map(a => ({ ...a, kind: 'MTSA' })),
+  ];
+  const tagsByTree = T.tagAreas(built, areaList);
+  const PLAN_KINDS = new Set(['secondary plan', 'OP character area', 'precinct / block plan area']);
+  const treeRow = k => { const { t, c } = counts[k]; return { municipality: nodes[t.nodes[0]].municipality, root: tagsByTree[k].root, files: t.nodes.map(refOf).slice(0, 8), units: c.units }; };
+  const byPrimary = {}; let tagged = 0;
+  tagsByTree.forEach(x => { if (!x) return; if (x.tags.length) tagged++; inc(byPrimary, x.primary ? x.primary.kind : 'none'); });
+  const straddling = tagsByTree.map((x, k) => {
+    if (!x) return null;
+    const plans = x.tags.filter(g => (g.kind === 'secondary plan' || g.kind === 'OP character area') && g.share >= T.T.STRADDLE);
+    // Straddling: no one plan holds 90% of the root (nested areas, e.g. a community node inside a
+    // neighbourhood, hold all of it twice and are not straddling).
+    return plans.length >= 2 && plans[0].share < T.T.COVER ? { ...treeRow(k), areas: plans.map(g => `${g.kind === 'OP character area' ? 'OP character area ' : ''}${g.name} ${Math.round(g.share * 100)}%`) } : null;
+  }).filter(Boolean).sort((a, b) => b.units - a.units);
+  // Block plan / precinct roots, and precinct areas with no matching file (by block id, e.g. 52-7).
+  const blockId = s => (String(s || '').match(/\b\d{2}-\d{1,2}\b/g) || []);
+  const roots = nodes.map((n, i) => ({ n, i })).filter(({ n }) => n.role === 'block_plan' && !n.cancelled).map(({ n, i }) => ({ file: refOf(i), municipality: n.municipality, from: n.precinctFrom || 'block plan file', km2: +(n.area / 1e6).toFixed(2), units: n.units, ids: [...new Set(n.records.flatMap(r => blockId(r.description)))], area: (tagsByTree[treeOfNode.get(i)] || {}).primary ? tagsByTree[treeOfNode.get(i)].primary.name : null }));
+  const rootIds = new Set(roots.flatMap(r => r.ids));
+  const precinctAreas = (A.precincts || []).map(a => ({ name: a.name, municipality: a.municipality, ids: blockId(a.name) }));
+  const opaNotes = [];
+  nodes.forEach((n, i) => { if (n.cancelled) return; const k = treeOfNode.get(i); const tg = T.opaTargets(n, areaList, tagsByTree[k] && tagsByTree[k].primary); if (tg) opaNotes.push({ file: refOf(i), municipality: n.municipality, targets: tg, inTreeWith: counts[k].t.nodes.length - 1, policy: !!n.policy }); });
+  const areasOut = {
+    note: 'Secondary plans, precinct / block plan areas, OP character areas (Mississauga) and MTSAs tag each tree by its root boundary; they are never tree nodes. MTSA is an overlay tag only.',
+    layers: { secondaryPlans: (A.secondaryPlans || []).filter(a => a.municipality !== 'Mississauga').length, opCharacterAreas: (A.secondaryPlans || []).filter(a => a.municipality === 'Mississauga').length, precinctAreas: (A.precincts || []).length, mtsas: (A.mtsas || []).length },
+    treesTagged: tagged, treesByPrimaryKind: byPrimary,
+    straddlingTwoOrMorePlans: straddling,
+    blockPlanRoots: roots.sort((a, b) => b.km2 - a.km2),
+    precinctAreasWithoutBlockPlan: A.precincts ? precinctAreas.filter(a => !a.ids.some(id => rootIds.has(id))) : 'no precinct / block plan area layer loaded yet (data/areas.json has none)',
+    developerOpasTargetingPlans: opaNotes,
+    byTree: tagsByTree.map((x, k) => x && x.tags.length ? { ...treeRow(k), primary: x.primary && `${x.primary.kind}: ${x.primary.name}`, tags: x.tags.map(g => `${g.kind}: ${g.name} ${Math.round(g.share * 100)}%`) } : null).filter(Boolean),
+  };
 
   // Official plan amendments (policy, never counted): the latest that applies to each development.
   const pa = T.planAmendments(built);
@@ -167,6 +205,7 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     },
     doubleCounts: { currentFileInTwoDevelopments: currentSplit, proposedFileInTwoTrees: flags.twoTrees, sameLandSitePlans: { verdicts, how: 'Scored from the files: phase/tower/block wording, revision wording, approval status, filing gap, description similarity, counts within 25%. A margin of 2 decides; 8+ years after an approved or completed file is a redevelopment. Resubmissions and redevelopments count the later file only; phases count both; unclear pairs count both and are listed for review.', pairs: flags.sameLandSitePlans }, crossMunicipality: flags.crossMuni, preconOverlappingTwo: flags.precon },
     planAmendments: planAmendmentsOut,
+    areas: areasOut,
     growthNoCount,
     dateReversed: flags.dateReversed,
     unitMismatches: mismatches,

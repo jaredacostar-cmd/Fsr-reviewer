@@ -35,6 +35,9 @@ const LAYERS = {
     { municipality: 'Brampton', url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_1A_City_Structure/FeatureServer/3',
       name: a => `${a.STATION_NA} (${a.STATION_TY}, planned)`, source: 'Brampton Plan Schedule 1A – Planned MTSAs' },
   ],
+  // Precinct / block plan areas (tags in the application tree audit). Filled in once
+  // `node scripts/probe-areas.js --blocks` (workflow mode block-areas) finds the published layers.
+  precincts: [],
 };
 // Census years, newest first. The app uses the latest one held in or before the timeline's
 // first year as the baseline. Application data starts in 2016, so 2016 is as far back as needed.
@@ -238,12 +241,14 @@ async function main() {
     sources: {
       secondaryPlans: LAYERS.secondaryPlans.map(d => ({ municipality: d.municipality, source: d.source, url: d.url })),
       mtsas: LAYERS.mtsas.map(d => ({ municipality: d.municipality, source: d.source, url: d.url })),
+      precincts: LAYERS.precincts.map(d => ({ municipality: d.municipality, source: d.source, url: d.url })),
       census: { source: CENSUS.source, url: CENSUS.url },
       censuses: CENSUSES.map(c => ({ year: c.year, source: c.source, url: c.url })),
     },
   };
   data.secondaryPlans = await areas(LAYERS.secondaryPlans, 'sp');
   data.mtsas = await areas(LAYERS.mtsas, 'mtsa');
+  if (LAYERS.precincts.length) data.precincts = await areas(LAYERS.precincts, 'precinct');
   const areaList = [...data.secondaryPlans, ...data.mtsas];
   data.censuses = [];
   let ref = null;

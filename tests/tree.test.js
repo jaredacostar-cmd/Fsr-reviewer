@@ -320,3 +320,53 @@ test('a development with no stated count: a minor file\'s wording, then a count 
   const non = run([app({ ref: 'SP-W', poly: box(0, 0, 1, 1), description: 'New 1-storey industrial warehouse' })]);
   assert.equal(T.countTree(non.treeOf('SP-W'), non).growth.kind, 'non-residential');
 });
+
+test('a precinct / block plan file is the root of its tree; a draft plan "within" a precinct is not', () => {
+  const b = run([
+    app({ ref: 'PRE-P', sourceId: 'bra-precon/1', description: 'Pre-consultation application in support of a scoped Precinct Plan for Block 52-7', poly: box(0, 0, 20, 20), units: 3000, date: '2024-01-01' }),
+    app({ ref: 'D-IN', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — lands within the Precinct Plan Area 52-7, 400 units', poly: box(1, 1, 9, 19), units: 400, date: '2025-01-01' }),
+  ]);
+  assert.equal(b.nodeByRef('PRE-P').role, 'block_plan');
+  assert.equal(b.nodeByRef('D-IN').role, 'land_division');
+  assert.equal(linkOf(b, 'D-IN').rule, 'block plan ⊃ draft plan');
+  const c = T.countTree(b.treeOf('PRE-P'), b);
+  assert.equal(c.units, 3000, 'the draft plan covers under 90%: the precinct count stands, not 3000 + 400');
+});
+
+test('a developer-led plan amendment with a civic address stays in its tree; a town-wide one is policy', () => {
+  const b = run([
+    app({ ref: '2026-0007', municipality: 'Caledon', sourceId: 'cal-devapps/0', type: 'Official plan amendment', address: '12351 INNIS LAKE ROAD CALEDON ON', poly: box(-50, -50, 50, 50), units: null }),
+    app({ ref: '2025-0015', municipality: 'Caledon', sourceId: 'cal-devapps/0', type: 'Official plan amendment', address: 'Town-Wide CALEDON ON', poly: box(-60, -60, 60, 60), units: null }),
+  ]);
+  assert.equal(b.nodeByRef('2026-0007').policy, false);
+  assert.equal(b.nodeByRef('2025-0015').policy, true);
+});
+
+test('area tags: every overlap by the root boundary, the largest is primary, an MTSA is an overlay only', () => {
+  const b = run([app({ ref: 'SP-A', poly: box(0, 0, 10, 10), units: 50 })]);
+  const areas = [
+    { kind: 'MTSA', name: 'Station', municipality: 'Brampton', rings: box(-5, -5, 15, 15) },
+    { kind: 'secondary plan', name: 'West', municipality: 'Brampton', rings: box(-5, -5, 3, 15) },
+    { kind: 'secondary plan', name: 'East', municipality: 'Brampton', rings: box(3, -5, 15, 15) },
+    { kind: 'secondary plan', name: 'Far', municipality: 'Brampton', rings: box(40, 40, 50, 50) },
+  ];
+  const tag = T.tagAreas(b, areas)[b.trees.indexOf(b.treeOf('SP-A'))];
+  assert.deepEqual(tag.tags.map(t => t.name), ['Station', 'East', 'West']);
+  assert.equal(tag.primary.name, 'East');
+  assert.ok(Math.abs(tag.tags.find(t => t.name === 'West').share - 0.3) < 0.05);
+});
+
+test('a developer-led amendment to a secondary plan notes the plan it targets', () => {
+  const n = T.fileNodes([app({ ref: 'OZS-T', sourceId: 'bra-opa-zba-sub/9', description: 'Official Plan Amendment | Zoning By Law Amendment — Amend the Downtown Brampton Secondary Plan to allow a 48-storey tower', poly: box(0, 0, 1, 1) })])[0];
+  assert.deepEqual(T.opaTargets(n, [{ kind: 'secondary plan', name: '7: Downtown Brampton', municipality: 'Brampton' }], null), ['7: Downtown Brampton']);
+});
+
+test('a count found online counts for its file even when another file in the tree states one', () => {
+  const b = run([
+    app({ ref: 'BLK', sourceId: 'bra-opa-zba-sub/9', description: 'Block Plan Amendment — Block 9-1', poly: box(0, 0, 10, 10), units: null }),
+    app({ ref: 'D-1', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — 300 units', poly: box(0, 0, 5, 10), units: 300 }),
+    app({ ref: 'D-2', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — townhouses', poly: box(5, 0, 10, 10), units: null }),
+  ]);
+  b.lookups = new Map([['Brampton|D-2', { units: 200, source: 'city notice', url: 'https://example.org' }]]);
+  assert.equal(T.countTree(b.treeOf('BLK'), b).units, 500);
+});
