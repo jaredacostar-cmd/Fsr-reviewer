@@ -77,6 +77,9 @@
     const have = await tileIndex.get(S.url);
     if (!have.has(`${tx}_${ty}`)) return [];
     const t = await (await fetch(`${S.url}${tx}_${ty}.json`)).json();
+    // Points are 0.00001° steps from the tile's south-west corner.
+    const dec = l => l.map(([dx, dy]) => [tx * TILE + dx / 1e5, ty * TILE + dy / 1e5]);
+    t.f = (t.f || []).map(dec); t.e = (t.e || []).map(dec);
     return [
       ...(t.f && t.f.length ? [{ id: `${i}|${tx}_${ty}|f`, rings: t.f, poly: true, fillOnly: true, name: S.name({}), src: S.src }] : []),
       ...(t.e && t.e.length ? [{ id: `${i}|${tx}_${ty}|e`, rings: t.e, poly: false, name: S.name({}), src: S.src }] : []),

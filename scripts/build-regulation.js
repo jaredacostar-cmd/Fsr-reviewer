@@ -8,7 +8,8 @@
  * Each tile file holds the polygon clipped to the tile (fill) and the limit's own edges inside
  * the tile (outline), so tile borders don't draw as lines.
  *   node scripts/build-regulation.js --out data
- * Writes <out>/regulation/cvc/<tx>_<ty>.json and <out>/regulation/cvc/index.json.
+ * Writes <out>/regulation/cvc/<tx>_<ty>.json and <out>/regulation/cvc/index.json. Points are whole
+ * numbers of 0.00001° (~1 m) from the tile's south-west corner: x = tx × 0.02 + dx / 1e5.
  */
 'use strict';
 const fs = require('fs');
@@ -65,7 +66,7 @@ const dedupe = pts => pts.map(([x, y]) => [R(x), R(y)]).filter((p, i, a) => !i |
 
 async function main() {
   const outDir = path.join(process.argv[process.argv.indexOf('--out') + 1] || 'data', 'regulation', 'cvc');
-  const params = new URLSearchParams({ where: '1=1', outFields: 'objectid', returnGeometry: true, outSR: 4326, maxAllowableOffset: 0.00003, geometryPrecision: 6, f: 'geojson' });
+  const params = new URLSearchParams({ where: '1=1', outFields: 'objectid', returnGeometry: true, outSR: 4326, maxAllowableOffset: 0.00006, geometryPrecision: 6, f: 'geojson' });
   const info = await (await fetch(`${URL_CVC}?f=json`)).json();
   const fc = await (await fetch(`${URL_CVC}/query?${params}`)).json();
   const polys = fc.features.flatMap(f => f.geometry.type === 'MultiPolygon' ? f.geometry.coordinates : [f.geometry.coordinates]);
@@ -86,8 +87,11 @@ async function main() {
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
   let bytes = 0;
-  for (const [k, t] of tiles) { const s = JSON.stringify(t); bytes += s.length; fs.writeFileSync(path.join(outDir, `${k}.json`), s); }
-  const index = { source: 'Credit Valley Conservation – Generic Regulations Limit (2025)', url: URL_CVC, edited: info.editingInfo && info.editingInfo.lastEditDate ? new Date(info.editingInfo.lastEditDate).toISOString().slice(0, 10) : null, built: new Date().toISOString().slice(0, 10), tile: TILE, tiles: [...tiles.keys()].sort() };
+  for (const [k, t] of tiles) {
+    const [tx, ty] = k.split('_').map(Number), enc = l => l.map(([x, y]) => [Math.round((x - tx * TILE) * 1e5), Math.round((y - ty * TILE) * 1e5)]);
+    const s = JSON.stringify({ f: t.f.map(enc), e: t.e.map(enc) }); bytes += s.length; fs.writeFileSync(path.join(outDir, `${k}.json`), s);
+  }
+  const index = { source: 'Credit Valley Conservation – Generic Regulations Limit (2025)', url: URL_CVC, edited: info.editingInfo && info.editingInfo.lastEditDate ? new Date(info.editingInfo.lastEditDate).toISOString().slice(0, 10) : null, built: new Date().toISOString().slice(0, 10), tile: TILE, units: 1e5, tiles: [...tiles.keys()].sort() };
   fs.writeFileSync(path.join(outDir, 'index.json'), JSON.stringify(index));
   console.log(`Wrote ${tiles.size} tiles (${(bytes / 1e6).toFixed(2)} MB) to ${outDir}`);
 }
