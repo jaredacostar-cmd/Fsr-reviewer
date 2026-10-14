@@ -17,6 +17,9 @@
   const estTag = '<span class="est-tag">screening estimate</span>';
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // Skeleton placeholder for loading states (styled in css/modes.css): grey
+  // blocks shaped like the content, pulsing unless reduced motion is preferred.
+  const skel = label => `<div class="skel-row" role="status" aria-label="${esc(label)}"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div>`;
   const fmtDate = d => d ? d.toISOString().slice(0, 10) : '';
   const fmtNum = n => n == null ? '' : Number(n).toLocaleString('en-CA');
 
@@ -25,6 +28,13 @@
     get(k, d) { try { const v = localStorage.getItem(`peel-dev:${k}`); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem(`peel-dev:${k}`, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
   };
+  // Display: theme + density. The inline <head> script already set the theme
+  // pre-paint; re-apply here with validation (garbage -> dark default) and set
+  // the density (compact on desktop, comfortable on phones). Neither is part of
+  // the share-link state: both stay in this browser only.
+  const PD = window.PeelDesign;
+  PD.applyTheme(store.get('theme', 'dark'));
+  PD.applyDensity(store.get('density', PD.densityDefault()));
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';
@@ -107,20 +117,36 @@
   }
 
   // ---- Colours -----------------------------------------------------------------
+  // Every colour comes from the design tokens in css/app.css (:root). token(name)
+  // resolves one to its computed value (cached per theme; readColors() drops the
+  // cache when the theme changes). In HTML/SVG strings prefer `var(--token)` so
+  // the browser resolves it live; use token() where a real value is needed
+  // (canvas 2d, Leaflet options).
   let colors = {};
+  const _tokenCache = {};
+  function token(name) {
+    if (!(name in _tokenCache)) _tokenCache[name] = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return _tokenCache[name];
+  }
   function readColors() {
     const cs = getComputedStyle(document.documentElement);
     colors = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, cs.getPropertyValue(`--ph-${p.key}`).trim()]));
+    for (const k in _tokenCache) delete _tokenCache[k];
+  }
+  // Phase colour for a phase key, read from its --ph-* token (theme-aware);
+  // unknown phases fall back to the approved blue.
+  function phaseColor(name) {
+    return token(`--ph-${name}`) || token('--ph-approved');
   }
   function glyphColor(hex) {
     const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
-    if (!m) return '#fff';
+    if (!m) return token('--swatch-paper');
     const n = parseInt(m[1], 16), ch = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
     const L = 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
-    return L > 0.35 ? '#0b0b0b' : '#ffffff';
+    return L > 0.35 ? token('--swatch-ink') : token('--swatch-paper');
   }
   function dot(phase, extra = '') {
-    const p = P.PHASE_BY_KEY[phase], c = colors[phase];
+    const p = P.PHASE_BY_KEY[phase], c = phaseColor(phase);
     return `<span class="dot ${extra}" style="background:${c};color:${glyphColor(c)}" aria-hidden="true">${esc(p.short)}</span>`;
   }
 
@@ -179,6 +205,7 @@
     'esri':          { label: 'Esri World Imagery', imagery: true },
     'streets':       { label: 'Street map (light)', imagery: false },
     'streets-color': { label: 'Street map (colour)', imagery: false },
+    'canvas-dark':   { label: 'Street map (dark grey)', imagery: false },
   };
   // Latest city aerials (Mississauga, Brampton, Caledon) over Esri World Imagery. Image
   // services are drawn as 512 px Web Mercator tiles from exportImage / export.
@@ -220,6 +247,11 @@
       const g = dark() ? 'Dark' : 'Light';
       baseLayers = [esriLayer(`Canvas/World_${g}_Gray_Base`, { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
         esriLayer(`Canvas/World_${g}_Gray_Reference`, { maxNativeZoom: 16 })];
+    } else if (basemap === 'canvas-dark') {
+      // The servicing views' basemap: always the dark grey canvas, whatever the
+      // theme (the 'streets' entry above follows the theme instead).
+      baseLayers = [esriLayer('Canvas/World_Dark_Gray_Base', { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
+        esriLayer('Canvas/World_Dark_Gray_Reference', { maxNativeZoom: 16 })];
     } else if (basemap === 'streets-color') {
       baseLayers = [esriLayer('World_Street_Map', { attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` })];
     } else if (BASEMAPS[basemap].city) {
@@ -237,9 +269,18 @@
     baseLayers.forEach((l, i) => { l.addTo(map); l.setZIndex(i); });
     const imagery = BASEMAPS[basemap].imagery;
     map.getContainer().classList.toggle('on-imagery', imagery);
-    bboxOutline.setStyle({ color: imagery ? '#ffffff' : '#77756f', opacity: imagery ? 0.8 : 1 });
+    bboxOutline.setStyle({ color: imagery ? token('--map-label') : token('--text-muted'), opacity: imagery ? 0.8 : 1 });
   }
   bboxOutline.addTo(map);
+  // Site check: at street zoom the grey canvas hides what the pipes connect to,
+  // so zooming to 15+ while on the dark canvas drops back to aerial
+  // automatically. Only this rule and view changes switch the basemap on their
+  // own; a manual pick in the Layers control is never overridden.
+  map.on('zoomend', () => {
+    if (map.getZoom() >= 15 && basemap === 'canvas-dark') {
+      basemap = 'aerial-labels'; store.set('basemap', basemap); setTiles(); restyleDa(); syncMapOpts();
+    }
+  });
 
   // ---- Point labels ------------------------------------------------------------------
   // Drawn only for markers that are individually visible (not inside a cluster) in view,
@@ -414,10 +455,10 @@
     const z = map.getZoom();
     const w = z >= 18 ? 2.2 : z >= 16 ? 1.6 : z >= 13 ? 1.1 : 0.8;
     if (BASEMAPS[basemap].imagery) return {
-      line: { color: '#ffffff', weight: w, opacity: z >= 16 ? 0.8 : 0.6 },
-      halo: { color: '#000000', weight: w + 2, opacity: z >= 16 ? 0.3 : 0.18 },
+      line: { color: token('--map-label'), weight: w, opacity: z >= 16 ? 0.8 : 0.6 },
+      halo: { color: token('--map-halo'), weight: w + 2, opacity: z >= 16 ? 0.3 : 0.18 },
     };
-    const grey = (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim();
+    const grey = token('--text-muted');
     return { line: { color: grey, weight: w, opacity: z >= 16 ? 0.6 : 0.4 }, halo: { opacity: 0, weight: 0 } };
   }
   function restyleDa() {
@@ -428,7 +469,7 @@
   function daSwatch() {
     const st = daStyle(), img = BASEMAPS[basemap].imagery;
     return `<svg id="da-swatch" class="da-swatch${img ? ' img' : ''}" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">
-      ${img ? `<rect x="3" y="2" width="16" height="10" rx="1" fill="none" stroke="#000" stroke-opacity="${st.halo.opacity + 0.15}" stroke-width="3.5"/>` : ''}
+      ${img ? `<rect x="3" y="2" width="16" height="10" rx="1" fill="none" style="stroke:var(--map-halo)" stroke-opacity="${st.halo.opacity + 0.15}" stroke-width="3.5"/>` : ''}
       <rect x="3" y="2" width="16" height="10" rx="1" fill="none" stroke="${st.line.color}" stroke-opacity="${Math.min(1, st.line.opacity + 0.2)}" stroke-width="1.5"/></svg>`;
   }
   map.on('zoomend', () => restyleDa());
@@ -447,7 +488,11 @@
   }
 
   // Pressure-zone / drainage-area layer state (layers are built in the servicing section).
-  const PLANT_COLOR = { Lakeview: '#2f7ed8', Clarkson: '#d9822b', Inglewood: '#7a5cc4', Toronto: '#868e96' };
+  // Receiving-plant colours, from the --pl-* tokens (theme-aware). plantToken()
+  // gives the token name for HTML/SVG `var()`; plantColor() the computed value
+  // for Leaflet/canvas.
+  const PLANT_TOKEN = { Lakeview: '--pl-booth', Clarkson: '--pl-clarkson', Inglewood: '--pl-inglewood', Toronto: '--pl-toronto' };
+  const plantColor = name => token(PLANT_TOKEN[name] || '--nodata');
   // Where an area's sewage is treated: a Peel WRRF, or the City of Toronto (Malton).
   const PLANT_SHORT = { Lakeview: 'G.E. Booth', Clarkson: 'Clarkson', Inglewood: 'Inglewood', Toronto: 'Toronto' };
   const PLANT_NAME = { Lakeview: 'G.E. Booth WRRF (Lakeview)', Clarkson: 'Clarkson WRRF', Inglewood: 'Inglewood WWTP', Toronto: 'City of Toronto system' };
@@ -462,10 +507,10 @@
   const isWW = () => store.get('mapView', 'planning') === 'wastewater';
   const wwOn = k => !isWW() || wwLay[k] !== false;
   let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false), bk: !!store.get('svc-bk', false) };
-  const blockSwatch = '<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><rect x="3" y="2" width="16" height="10" fill="#7048e8" fill-opacity=".14" stroke="#7048e8" stroke-width="1.8"/></svg>';
+  const blockSwatch = '<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><rect x="3" y="2" width="16" height="10" style="fill:var(--block);stroke:var(--block)" fill-opacity=".14" stroke-width="1.8"/></svg>';
   const svcSwatch = k => `<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">${k === 'pz'
-    ? '<rect x="3" y="2" width="16" height="10" rx="1" fill="#0b7285" fill-opacity=".1" stroke="#0b7285" stroke-width="1.6" stroke-dasharray="3 2"/>'
-    : '<rect x="3" y="2" width="8" height="10" fill="#2f7ed8" fill-opacity=".25" stroke="#2f7ed8"/><rect x="11" y="2" width="8" height="10" fill="#d9822b" fill-opacity=".25" stroke="#d9822b"/>'}</svg>`;
+    ? '<rect x="3" y="2" width="16" height="10" rx="1" style="fill:var(--svc-drainage);stroke:var(--svc-drainage)" fill-opacity=".1" stroke-width="1.6" stroke-dasharray="3 2"/>'
+    : '<rect x="3" y="2" width="8" height="10" style="fill:var(--pl-booth);stroke:var(--pl-booth)" fill-opacity=".25"/><rect x="11" y="2" width="8" height="10" style="fill:var(--pl-clarkson);stroke:var(--pl-clarkson)" fill-opacity=".25"/>'}</svg>`;
   const MSTYLE = {
     color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
@@ -485,10 +530,12 @@
   const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
-  // Sewer load as a share of full-pipe capacity, with its flow state: [upper %, colour, legend, short state].
-  const PIPE_CLS = [[85, '#2f9e44', 'under 85%: free flowing', 'Free flowing', 'under 85%'], [100, '#f76707', '85–100%: near full', 'Near full', '85–100%'], [Infinity, '#e03131', 'over 100%: surcharged', 'Surcharged', 'over 100%']];
+  // Sewer load as a share of full-pipe capacity, with its flow state: [upper %,
+  // token name, legend, short state]. Token names are resolved to `var(--*)` in
+  // HTML and to computed values via token() for Leaflet/canvas.
+  const PIPE_CLS = [[85, '--cap-room', 'under 85%: free flowing', 'Free flowing', 'under 85%'], [100, '--cap-tight', '85–100%: near full', 'Near full', '85–100%'], [Infinity, '--cap-over', 'over 100%: surcharged', 'Surcharged', 'over 100%']];
   const pipeState = r => r == null || isNaN(r) ? null : PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1];
-  const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
+  const EXIST_STYLE = { water: { color: '--pipe-water', label: 'Watermain' }, sanitary: { color: '--pipe-sanitary', label: 'Sanitary sewer' }, storm: { color: '--pipe-storm', label: 'Storm sewer' } };
   const EXIST_ZOOM = 15;
   // Map control: basemap + label pickers.
   // Planning area outlines on the map (secondary plans / character areas, MTSAs): tap one to filter.
@@ -504,7 +551,7 @@
       // An on / off chip (a checkbox styled as a pill).
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
-        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
+        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${PD.icon(k)}<span>${t}</span></button>`).join('')}</div>
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
         <div class="mo-area-on" id="mo-area-on" hidden></div>
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-psum" id="mo-psum"></span></summary>
@@ -513,10 +560,10 @@
              ['opt-bk', svcOn.bk, blockSwatch, 'Wastewater blocks', 'blocks'],
              ['opt-pz', svcOn.pz, svcSwatch('pz'), 'Pressure zones', 'pressure-zone'],
              ['opt-wf', WF.on, '<i class="wf-ic wf-pumping wf-sw" aria-hidden="true">▲</i>', 'Water facilities', 'water-facilities'],
-             ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,#2f9e44 0 33%,#f76707 33% 66%,#e03131 66%)"></i>', 'Capacity colours', 'map-capacity'],
-             ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:${EXIST_STYLE.sanitary.color}"></i>`, 'Existing pipes', 'existing-pipes'],
-             ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:#d6336c"></i>', 'Planned DC works', 'dc-works'],
-             ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:#e8590c"></i>', 'Planning areas', 'secondary-plans'],
+             ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,var(--cap-room) 0 33%,var(--cap-tight) 33% 66%,var(--cap-over) 66%)"></i>', 'Capacity colours', 'map-capacity'],
+             ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:var(${EXIST_STYLE.sanitary.color})"></i>`, 'Existing pipes', 'existing-pipes'],
+             ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:var(--dc-ww-main)"></i>', 'Planned DC works', 'dc-works'],
+             ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-sp)"></i>', 'Planning areas', 'secondary-plans'],
              ['opt-da', daOn, daSwatch(), '<span id="da-label">2021 census areas</span>', 'da-layer']].map(([id, on, sw, t, info]) =>
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
         </div>
@@ -534,17 +581,17 @@
           <label data-info="map-capacity"><span>Shade</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
         </div>
         <div class="mo-sec"><div class="mo-h">Pipes and works</div>
-          <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
+          <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:var(${EXIST_STYLE[k].color})"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <small id="exist-note"></small>
-          <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '#1c7ed6'], ['wastewater', 'Wastewater', '#d6336c']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:${c}"></i>${t}`)).join('')}</div></div>
+          <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
         </div>
         <div class="mo-sec"><div class="mo-h">Planning areas</div>
-          <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:#e8590c"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:#d4a017"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
+          <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:var(--area-sp)"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-mtsa)"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
         </div>
         <div class="mo-sec" data-info="hover-boundary"><div class="mo-h">Site boundary on hover</div>
-          <div class="mo-chips">${chip('id="opt-hov"', hov.on, '<i class="lg-line dash" style="background:#f76707"></i>Show', 'hover-boundary')}</div>
+          <div class="mo-chips">${chip('id="opt-hov"', hov.on, '<i class="lg-line dash" style="background:var(--select)"></i>Show', 'hover-boundary')}</div>
           <label class="mo-range"><span>Reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
           <small>Point at a development to outline its application site (mouse or trackpad).</small>
         </div>
@@ -655,7 +702,7 @@
         const a0 = acc / (tot || 1) * 360; acc += n; const a1 = acc / (tot || 1) * 360;
         stops.push(`${col.get(k)} ${a0}deg ${a1}deg`);
       }
-      if (!stops.length) stops.push('#b8b8b8 0deg 360deg');
+      if (!stops.length) stops.push('var(--nodata) 0deg 360deg');
       const n = kids.length;
       const size = sized ? (tot < 1000 ? 32 : tot < 10000 ? 40 : tot < 50000 ? 48 : 56) : n < 10 ? 30 : n < 100 ? 36 : n < 1000 ? 42 : 50;
       return L.divIcon({
@@ -672,7 +719,10 @@
     const cv = L.DomUtil.create('canvas', 'heat-canvas', map.getContainer());
     let pts = null, raf = 0;
     const pal = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 1; const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 256, 0);
-      [[0, 'rgba(43,131,186,0)'], [0.2, '#2b83ba'], [0.45, '#abdda4'], [0.65, '#ffffbf'], [0.85, '#fdae61'], [1, '#d7191c']].forEach(([o, col]) => gr.addColorStop(o, col)); g.fillStyle = gr; g.fillRect(0, 0, 256, 1); return g.getImageData(0, 0, 256, 1).data; })();
+      // Heat ramp from the --heat-ramp token (comma-separated stops); stop 0 is
+      // the first stop fully transparent.
+      const ramp = token('--heat-ramp').split(',').map(s => s.trim());
+      [[0, `${ramp[0]}00`], [0.2, ramp[0]], [0.45, ramp[1]], [0.65, ramp[2]], [0.85, ramp[3]], [1, ramp[4]]].forEach(([o, col]) => gr.addColorStop(o, col)); g.fillStyle = gr; g.fillRect(0, 0, 256, 1); return g.getImageData(0, 0, 256, 1).data; })();
     function draw() {
       raf = 0; const sz = map.getSize(); cv.width = sz.x; cv.height = sz.y; cv.hidden = !pts;
       if (!pts) return;
@@ -721,7 +771,7 @@
   // Application boundaries are tappable: anywhere inside opens the project, or, for a site
   // plan nested in a larger development, that application (with a link to the whole project).
   // Selected developments are outlined in orange (no phase uses it).
-  const SEL_COLOR = '#f76707';
+  const selColor = () => token('--select');
   function outline(p, strong, unloaded) {
     const apps = siteApps(p);
     const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
@@ -729,11 +779,11 @@
       const area = P.ringsArea(a.poly);
       // Application boundaries in the project's phase colour with a light fill (the census
       // areas are the white lines); the selected project is outlined in orange.
-      const ph = colors[p.phase] || colors.approved;
+      const ph = phaseColor(p.phase);
       // A development whose layer is off in Wastewater loads: its boundary stays, dashed and faint.
       const poly = L.polygon(toLatLngs(a.poly), {
-        renderer: strong ? focusCanvas : canvas, color: strong ? SEL_COLOR : ph, weight: strong ? 3 : 1.6,
-        opacity: strong ? 1 : unloaded ? 0.75 : 0.9, fill: true, fillColor: strong ? SEL_COLOR : ph, fillOpacity: strong ? 0.2 : unloaded ? 0.05 : 0.12,
+        renderer: strong ? focusCanvas : canvas, color: strong ? selColor() : ph, weight: strong ? 3 : 1.6,
+        opacity: strong ? 1 : unloaded ? 0.75 : 0.9, fill: true, fillColor: strong ? selColor() : ph, fillOpacity: strong ? 0.2 : unloaded ? 0.05 : 0.12,
         dashArray: unloaded && !strong ? '5 4' : null,
       });
       poly._area = area;
@@ -747,7 +797,7 @@
   function permitDot(r, p, emph, focus) {
     const m = L.circleMarker([r.lat, r.lng], {
       renderer: focus ? focusCanvas : canvas, radius: emph ? 9 : 5, weight: emph ? 4 : 1.5,
-      color: emph ? SEL_COLOR : '#ffffff', fillColor: colors[r.phase], fillOpacity: 1,
+      color: emph ? selColor() : token('--sym-outline'), fillColor: phaseColor(r.phase), fillOpacity: 1,
     });
     const parent = parentApps(r, p)[0];
     m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
@@ -787,9 +837,9 @@
   map.on('moveend zoomend', scheduleSites);
   // An application opened on its own from a larger development: the whole development stays
   // outlined (orange, lighter) and the application stands out in its own colour.
-  const SUB_COLOR = '#9c36b5';
+  const subColor = () => token('--hl-sub');
   const hoverSubLayer = L.layerGroup().addTo(map);
-  const subPoly = (rings, opt = {}) => L.polygon(toLatLngs(rings), { renderer: focusCanvas, color: SUB_COLOR, weight: 4, opacity: 1, fill: true, fillColor: SUB_COLOR, fillOpacity: 0.28, interactive: false, ...opt });
+  const subPoly = (rings, opt = {}) => L.polygon(toLatLngs(rings), { renderer: focusCanvas, color: subColor(), weight: 4, opacity: 1, fill: true, fillColor: subColor(), fillOpacity: 0.28, interactive: false, ...opt });
   function highlight(p, record) {
     focusLayer.clearLayers(); hoverSubLayer.clearLayers();
     if (!p) return;
@@ -810,7 +860,7 @@
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
   const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Approved', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
-  const layerColors = () => ({ existing: '#8a8f98', built: colors.completed, approved: colors.approved, proposed: '#8fbbe9', out: '#cfcfcf' });
+  const layerColors = () => ({ existing: 'var(--text-muted)', built: phaseColor('completed'), approved: phaseColor('approved'), proposed: 'var(--layer-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
   function svcLayerOf(p) {
     if (p.phase === 'cancelled') return 'out';
@@ -820,8 +870,8 @@
   const plantOfDev = p => { const a = state.servicing && svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0]; return a ? a.plant : 'none'; };
   // Data quality: what to check before relying on a development's numbers.
   const QUALITY = {
-    far: ['#e03131', 'No zone / catchment within 5 km'], near: ['#f08c00', 'Assigned to the nearest area'],
-    nounits: ['#9c36b5', 'No units or floor area stated'], estarea: ['#4dabf7', 'Site area estimated (no boundary)'], ok: ['#2f9e44', 'Complete'],
+    far: ['var(--cap-over)', 'No zone / catchment within 5 km'], near: ['var(--cap-tight)', 'Assigned to the nearest area'],
+    nounits: ['var(--hl-sub)', 'No units or floor area stated'], estarea: ['var(--q-est)', 'Site area estimated (no boundary)'], ok: ['var(--cap-room)', 'Complete'],
   };
   function qualityOf(p) {
     if (state.servicing && p.lat != null && !svcIds(p, 'dr').length && !svcIds(p, 'pz').length) return 'far';
@@ -832,7 +882,7 @@
   }
   // Servicing timing: construction year of the planned main (wastewater or water, within 400 m)
   // a development would connect to, from the 2026 DC maps; none = the existing network.
-  const TIMING = { none: ['#2f9e44', 'On the existing network'], far: ['#868e96', 'Outside the network, no planned main within 1 km'], y27: ['#94d82d', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['#fab005', 'Planned main 2028–2030'], y35: ['#f76707', 'Planned main 2031–2035'], y36: ['#c92a2a', 'Planned main 2036 or later'] };
+  const TIMING = { none: ['var(--cap-room)', 'On the existing network'], far: ['var(--text-muted)', 'Outside the network, no planned main within 1 km'], y27: ['var(--time-soon)', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['var(--time-mid)', 'Planned main 2028–2030'], y35: ['var(--cap-tight)', 'Planned main 2031–2035'], y36: ['var(--cap-over)', 'Planned main 2036 or later'] };
   function timingOf(p) {
     if (p._dcT !== undefined) return p._dcT;
     const pt = p.lat == null ? null : [p.lng, p.lat];
@@ -847,8 +897,8 @@
     if (mstyle.color === 'timing') { const k = state.dcInfra ? timingOf(p) : 'none'; return [k, TIMING[k][0]]; }
     if (mstyle.color === 'quality') { const k = qualityOf(p); return [k, QUALITY[k][0]]; }
     if (mstyle.color === 'layer') { const k = svcLayerOf(p); return [k, layerColors()[k]]; }
-    if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, PLANT_COLOR[k] || '#b8b8b8']; }
-    return [p.phase, colors[p.phase]];
+    if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, `var(${PLANT_TOKEN[k] || '--nodata'})`]; }
+    return [p.phase, `var(--ph-${p.phase})`];
   }
   // Build-out people + jobs (cached per criteria).
   let popKey = '', popCache = new WeakMap();
@@ -1295,7 +1345,7 @@
   const fmtDay = iso => new Date(`${iso}T12:00:00`).toLocaleDateString('en-CA', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' });
   function renderChangelog() {
     const el = $('#log-body'); if (!el) return;
-    if (!LOG.data) { el.innerHTML = '<p class="small muted">Loading the change log…</p>'; loadChangelog().then(d => { if (d) renderChangelog(); else el.innerHTML = '<p class="small muted">The change log is not available in this copy of the app.</p>'; }); return; }
+    if (!LOG.data) { el.innerHTML = skel('Loading the change log'); loadChangelog().then(d => { if (d) renderChangelog(); else el.innerHTML = '<p class="small muted">The change log is not available in this copy of the app.</p>'; }); return; }
     const d = LOG.data, cur = currentRelease(), seen = LOG.seenShown ?? LOG.seen, q = LOG.q.trim().toLowerCase();
     const fresh = d.releases.filter(r => seen && r.pr > seen);
     let list = d.releases.filter(r => (LOG.kind === 'all' || r.kind === LOG.kind) && (!q || `${r.version} ${r.title} ${r.notes.join(' ')}`.toLowerCase().includes(q)));
@@ -1430,7 +1480,7 @@
       const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', PLANT_SHORT[r.pl] || '', r.lay])];
       download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
     }
-    const r = e.target.closest('.ld-row'); if (r) { const p = projectByKey(r.dataset.dev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } }
+    const r = e.target.closest('.ld-row'); if (r) { const p = projectByKey(r.dataset.dev); if (p) showDetail(p); }
   });
   $('#alloc-body').addEventListener('change', async e => {
     const f = e.target.closest('[data-alloc-imp]'); if (!f || !f.files[0]) return;
@@ -1530,7 +1580,7 @@
         ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
           const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
       </tbody></table>
-      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : '<p class="small muted">Loading the servicing model…</p>'}
+      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}
       <h3 class="sub-title">Number conventions</h3>
       <p class="small muted">People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.</p>
       <h3 class="sub-title">Prepared by</h3>
@@ -1598,7 +1648,7 @@
     const phaseT = `<table class="dt ov-t"><thead><tr><th>Phase</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day <small>L/s</small></th><th>Wastewater peak wet <small>L/s</small></th></tr></thead><tbody>${rows}
       <tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(em.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table>`;
     // Capacity: plants against the 90% expansion trigger (existing + approved, and at build-out).
-    let cap = '<p class="small muted">Loading the servicing model…</p>', tight = null;
+    let cap = skel('Loading the servicing model'), tight = null;
     if (state.svcModel && state.servicing) {
       const list = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => cached(`plant:${pl}`, () => plantCons(pl))).filter(Boolean);
       const w = state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null; if (w) list.push(w);
@@ -1616,7 +1666,7 @@
       if (R) { const adv = R.list.filter(r => r.rec === 'advance'), top = R.list.slice().sort((a, b) => b.bo - a.bo).slice(0, 3);
         dc = `<p class="small"><b class="ov-warn">${adv.length}</b> DC project${adv.length === 1 ? '' : 's'} come online after the capacity runs out${adv.length ? `: ${adv.slice(0, 3).map(r => esc(r.name)).join('; ')}${adv.length > 3 ? ` +${adv.length - 3}` : ''}` : ''}.</p>
           <p class="small">Most growth relies on: ${top.map(r => `${esc(r.name)} (${fmtNum(roundPop(r.bo))} people ≈ ${fmtNum(Math.round(r.units))} units if cancelled)`).join('; ')}.</p>`; }
-      else dc = `<p class="small muted">${SEW.data ? 'Working out the DC projects…' : 'Loading the sewer network…'}</p>`;
+      else dc = skel(SEW.data ? 'Working out the DC projects' : 'Loading the sewer network');
     }
     const Rr = DCA.res && DCA.key === scenarioKey() ? DCA.res : null, nAdv = Rr ? Rr.list.filter(r => r.rec === 'advance').length : 0;
     const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units.${tight ? ` <strong>${esc(PLANT_SHORT[tight.pl])}</strong> ${trigText(tight)} (${pctRated(tight, 'com')}% of rated capacity committed → ${pctRated(tight, 'bo')}% at build-out).` : ''}${nAdv ? ` <strong>${nAdv} DC project${nAdv === 1 ? '' : 's'}</strong> come online after the capacity ${nAdv === 1 ? 'it relieves' : 'they relieve'} runs out.` : ''}` : 'No developments match the current filters.';
@@ -1640,6 +1690,7 @@
           ${(fr => `<p class="small ov-fresh">Data: applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${(n => n ? `<span class="fr-b fr-due">${n} source${n === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>')(fr.filter(r => r.st === 'due' || r.st === 'stale').length)} <button type="button" class="btn small link" data-ov-tab="criteria">Data &amp; checks →</button></p>`)(freshness())}</section>
       </div>`;
     if (state.dcInfra && SEW.data && !(DCA.res && DCA.key === scenarioKey()) && footTab === 'overview') setTimeout(() => { try { dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
+    if (document.documentElement.hasAttribute('data-presentation')) renderPresentation();
   }
   function scopeText() { return [state.muni || 'all of Peel', state.sp.length ? spSummary() : '', state.mtsa.length ? 'MTSA filter' : ''].filter(Boolean).join(' · '); }
   $('#ov-body').addEventListener('click', e => {
@@ -1739,7 +1790,14 @@
   function renderCriteria() {
     const c = state.criteria;
     const inp = (g, k, label, step) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-g="${g}" data-k="${k}" value="${c[g][k]}"></label>`;
+    const theme = store.get('theme', 'dark'), density = store.get('density', PD.densityDefault());
+    const sel = (id, cur, opts) => `<select id="${id}" autocomplete="off">${opts.map(([v, t]) => `<option value="${v}"${v === cur ? ' selected' : ''}>${t}</option>`).join('')}</select>`;
     $('#d-criteria').innerHTML = `
+      <fieldset data-info="display"><legend>Display</legend>
+        <label class="field"><span>Theme</span>${sel('dsp-theme', ['dark', 'light', 'device'].includes(theme) ? theme : 'dark', [['dark', 'Dark'], ['light', 'Light'], ['device', 'Follow device']])}</label>
+        <label class="field"><span>Density</span>${sel('dsp-density', density === 'comfortable' ? 'comfortable' : 'compact', [['compact', 'Compact'], ['comfortable', 'Comfortable']])}</label>
+        <p class="small muted">Dark is the default; “Follow device” tracks the OS setting. Compact suits a computer, Comfortable a phone. Both stay in this browser — they are not part of share links.</p>
+      </fieldset>
       <fieldset><legend>Persons per unit</legend>
         ${inp('ppu', 'single', 'Single / semi', 0.1)}${inp('ppu', 'town', 'Townhouse', 0.1)}${inp('ppu', 'apartment', 'Apartment', 0.1)}${inp('ppu', 'apartmentHigh', 'Apartment, &gt;475 persons/ha', 0.1)}${inp('ppu', 'unknown', 'Type not stated', 0.1)}
         <p class="small muted">Apartments use the large-apartment rate unless the site holds more than ${D.APT_DENSITY} persons/ha at that rate, or its area is not known; then the high-density rate (Peel Linear Wastewater Standards, Tables 2-1 / 2-2). Peel's 1.7 for small (≤1 bedroom) apartments needs the bedroom mix, which the applications don't publish.</p>
@@ -1776,6 +1834,22 @@
     refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
     if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') wetChanged();
   };
+  // ---- Display: theme + density (Settings & sources) ----------------------------------
+  function setTheme(v) {
+    if (!['dark', 'light', 'device'].includes(v)) v = 'dark';
+    store.set('theme', v);
+    PD.applyTheme(v);
+    refreshTheme();
+  }
+  function setDensity(v) {
+    v = v === 'comfortable' ? 'comfortable' : 'compact';
+    store.set('density', v);
+    PD.applyDensity(v);
+  }
+  $('#d-criteria').addEventListener('change', e => {
+    if (e.target.id === 'dsp-theme') setTheme(e.target.value);
+    else if (e.target.id === 'dsp-density') setDensity(e.target.value);
+  });
   $('#d-criteria').addEventListener('change', e => {
     const w = e.target.closest('[data-wet]'); if (!w) return;
     state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged();
@@ -1917,7 +1991,7 @@
     if (p.lat == null) return;
     const m = markerByKey.get(p.key);
     if (m) cluster.zoomToShowLayer(m, () => m.openTooltip());
-    else map.setView([p.lat, p.lng], 17);
+    else flyToSite(p, 17);
     if (innerWidth <= 760) toggleSidebar(false);
   }
 
@@ -2480,7 +2554,7 @@
     // DC Analysis: the DC works the development may rely on (both systems), the planned works near
     // it and on its path, and the DCs it would pay.
     if (part === 'dc') {
-      if (!state.dcInfra) return '<p class="small muted">The 2026 DC capital maps are loading…</p>';
+      if (!state.dcInfra) return skel('Loading the 2026 DC capital maps');
       const w = st.works;
       const head = w && w.needBy ? `<p class="small ${w.gap ? 'why-stall' : ''}"><strong>Needs DC works by ${w.needBy}</strong>${w.gap ? ': the development is committed (approved or permitted) before the planned main it connects to is built.' : ': it connects through a planned main.'}</p>` : '';
       return `${head}<section class="svc-sys svc-sys-dc"><h3 class="svc-sys-h"><i aria-hidden="true"></i>DC projects potentially required</h3><div class="brief">
@@ -2671,7 +2745,7 @@
       ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
       <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-tl="key">Key events</button><button type="button" class="btn small" data-tl="all">All dated events (${fmtNum(all.length)})</button></div>
       <div data-tlv="key">${evListHTML(key)}</div><div data-tlv="all" hidden>${evListHTML(all)}</div>
-      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${state.council ? 'agendas and minutes since 2019' : 'loading…'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
+      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${state.council ? 'agendas and minutes since 2019' : '<span class="skel" style="display:inline-block;width:110px;vertical-align:middle" role="status" aria-label="Loading"></span>'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
   }
 
   function devServicingHTML(p, f, open) {
@@ -2861,7 +2935,20 @@
       <p class="small muted">Other developments with an application on the same land (overlapping boundaries or the same civic address), each counted in its own development, once.</p></details>`;
     return html;
   }
+  // Opening a site flies the map to it (quick); with reduced motion it jumps via
+  // setView instead. Skipped when the map is already there.
+  function flyToSite(p, minZoom) {
+    if (p.lat == null || p.lng == null) return;
+    const z = Math.max(map.getZoom(), minZoom == null ? 15 : minZoom);
+    const t = L.latLng(p.lat, p.lng);
+    if (map.getCenter().distanceTo(t) < 30 && Math.abs(map.getZoom() - z) < 0.01) return;
+    if (PD.prefersReducedMotion()) map.setView(t, z, { animate: false });
+    else map.flyTo(t, z, { duration: 0.55 });
+  }
   function showDetail(p) {
+    // Fresh open (not a re-render of the same site): the panel content fades in.
+    const freshOpen = currentProject !== p || $('#detail').hidden || $('#detail').dataset.view !== 'dev';
+    if (freshOpen && !PD.prefersReducedMotion()) $('#detail-body').classList.add('dv-fade');
     // "← What loads …" when opened from that list (kept while the same development is re-rendered).
     if (backToLoads) { devBack = backToLoads; backToLoads = null; } else if (currentProject !== p) devBack = null;
     if (projFrom) { projBack = projFrom; projFrom = null; } else if (currentProject !== p) projBack = null;
@@ -2928,6 +3015,11 @@
     }
     $('#detail').hidden = false; $('#detail').dataset.view = 'dev';
     if (!keep) $('#detail').scrollTop = 0;
+    if (freshOpen) {
+      // Fade the new content in (forced reflow so the transition runs).
+      if (!PD.prefersReducedMotion()) { const b = $('#detail-body'); void b.offsetWidth; b.classList.remove('dv-fade'); }
+      flyToSite(p);
+    }
     if ($('#dev-aerial').open) runAerial(p);
     fillExisting(p);
     // A trace already on the map for this development stays shown in its panel.
@@ -2964,7 +3056,7 @@
       return;
     }
     const rq = e.target.closest('[data-relq]');
-    if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); if (q.lat != null) map.setView([q.lat, q.lng], Math.max(map.getZoom(), 14)); } return; }
+    if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); } return; }
     if (e.target.closest('[data-dev-parent]') && currentProject && currentProject.parent) { showDetail(currentProject.parent); return; }
     if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
     // "Data as of" in the development header: open the footer panel's Sources & checks
@@ -3183,13 +3275,13 @@
     lassoSvg.querySelector('path').setAttribute('d', '');
   }
   // Tools: one button under the zoom with the map tools — select an area, measure / select within a
-  // radius, test a site.
+  // radius, test a site. Icons come from js/design.js (icon()) so the set stays consistent.
   const TOOL_ITEMS = [
-    ['trace', 'Trace sewer path', 'Tap a development or any point on the map: its route along the sewers to the treatment plant, pipe by pipe, coloured by capacity used', '<path d="M3 4.5h5.5v5H13v6h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.5 13l2.8 2.5-2.8 2.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="3.5" cy="4.5" r="1.8" fill="currentColor"/>'],
-    ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth (or hold Ctrl / ⌘ and drag a box on the map)', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
-    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
-    ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
-    ['tips', 'Help & tips', 'Guides for common tasks and a quick tour', '<circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="14.3" r="1" fill="currentColor"/>'],
+    ['trace', 'Trace sewer path', 'Tap a development or any point on the map: its route along the sewers to the treatment plant, pipe by pipe, coloured by capacity used', 'trace'],
+    ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth (or hold Ctrl / ⌘ and drag a box on the map)', 'select'],
+    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', 'measure'],
+    ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', 'test-site'],
+    ['tips', 'Help & tips', 'Guides for common tasks and a quick tour', 'tips'],
   ];
   const ToolsControl = L.Control.extend({
     options: { position: 'topleft' },
@@ -3197,7 +3289,7 @@
       const el = L.DomUtil.create('div', 'leaflet-bar tools-ctl');
       el.innerHTML = `<button type="button" class="tools-btn" aria-expanded="false" aria-haspopup="true" title="Map tools: select an area, measure, test a site" aria-label="Map tools">
           <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M12.6 2.6a4 4 0 0 0-4.9 5.2L2.6 12.9a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a4 4 0 0 0 5.2-4.9l-2.4 2.4-2.1-.4-.4-2.1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
-        <div class="tools-menu" role="menu" hidden>${TOOL_ITEMS.map(([k, t, d, svg]) => `<button type="button" role="menuitem" data-tool="${k}" title="${esc(d)}"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">${svg}</svg><span>${esc(t)}</span></button>`).join('')}</div>`;
+        <div class="tools-menu" role="menu" hidden>${TOOL_ITEMS.map(([k, t, d, ic]) => `<button type="button" role="menuitem" data-tool="${k}" title="${esc(d)}">${PD.icon(ic)}<span>${esc(t)}</span></button>`).join('')}</div>`;
       L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
       const menu = el.querySelector('.tools-menu'), btn = el.querySelector('.tools-btn');
       const open = o => { menu.hidden = !o; btn.setAttribute('aria-expanded', String(o)); };
@@ -3244,6 +3336,54 @@
   });
   new NorthControl().addTo(map);
   new HelpControl().addTo(map);
+  // Present: full-screen map with the headline sentence and the four key tiles
+  // from the Overview (developments, units, people, jobs). Placed in the map's
+  // top-left control stack, right under the always-visible Help button.
+  const PresentControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar present-ctl');
+      el.innerHTML = `<button type="button" data-present title="Present: full-screen map with the headline numbers (Esc exits)" aria-label="Present">${PD.icon('present')}</button>`;
+      L.DomEvent.disableClickPropagation(el);
+      el.querySelector('button').onclick = () => enterPresentation();
+      return el;
+    },
+  });
+  new PresentControl().addTo(map);
+  // Fill the presentation bar from the Overview: its headline sentence plus the
+  // four key tiles of the Growth card (developments shown, units planned,
+  // people at build-out, jobs).
+  function renderPresentation() {
+    const bar = $('#presentation-bar'); if (!bar) return;
+    const hl = document.querySelector('#pane-overview .ov-top .headline');
+    const tiles = document.querySelectorAll('#pane-overview .ov-growth .ov-tiles:not(.ov-flow) .ov-tile');
+    $('#pres-hl').innerHTML = hl ? hl.innerHTML : '';
+    $('#pres-tiles').innerHTML = [...tiles].slice(0, 4).map(t => t.outerHTML).join('');
+  }
+  function enterPresentation() {
+    renderPresentation();
+    $('#presentation-bar').hidden = false;
+    closeDetail({ keepSelection: true });
+    setLasso(false);
+    if (tool.mode) setTool(null);
+    document.documentElement.setAttribute('data-presentation', '');
+    try {
+      const p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+      if (p && p.catch) p.catch(() => { /* fullscreen unavailable: the layout still presents */ });
+    } catch (e) { /* fullscreen unavailable */ }
+  }
+  function exitPresentation() {
+    document.documentElement.removeAttribute('data-presentation');
+    const bar = $('#presentation-bar'); if (bar) bar.hidden = true;
+    try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); } catch (e) { /* noop */ }
+  }
+  const inPresentation = () => document.documentElement.hasAttribute('data-presentation');
+  // Esc exits fullscreen on its own; this clears the presentation layout (and
+  // covers the case where fullscreen was never entered).
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) exitPresentation(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && inPresentation()) exitPresentation(); });
+  document.addEventListener('click', e => { if (e.target.closest('#pres-exit')) exitPresentation(); });
+  PD.initPrintHandlers({ onAfter: () => refreshTheme() });
   L.control.scale({ position: 'topleft', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
   function updateNorth() {
     const g = document.getElementById('north-rot');
@@ -3364,8 +3504,8 @@
     const k = `${p.key}|${onMarker ? 1 : 0}`; if (hovKey === k) return;
     hovLayer.clearLayers(); hovKey = k;
     const apps = siteApps(p);
-    if (apps.length) for (const a of apps) L.polygon(toLatLngs(a.poly), { className: 'hov-site', interactive: false, color: '#f76707', weight: 2.5, dashArray: '6 4', fillColor: '#f76707', fillOpacity: 0.12 }).addTo(hovLayer);
-    else L.circleMarker([p.lat, p.lng], { radius: 16, className: 'hov-ring', interactive: false, color: '#f76707', weight: 2, dashArray: '4 4', fill: false }).addTo(hovLayer);
+    if (apps.length) for (const a of apps) L.polygon(toLatLngs(a.poly), { className: 'hov-site', interactive: false, color: selColor(), weight: 2.5, dashArray: '6 4', fillColor: selColor(), fillOpacity: 0.12 }).addTo(hovLayer);
+    else L.circleMarker([p.lat, p.lng], { radius: 16, className: 'hov-ring', interactive: false, color: selColor(), weight: 2, dashArray: '4 4', fill: false }).addTo(hovLayer);
     if (onMarker) return;   // the marker's own tooltip shows
     const t = L.tooltip({ direction: 'top', offset: [0, -14], className: 'hov-tip', opacity: 1 }).setLatLng([p.lat, p.lng])
       .setContent(`<strong>${esc(p.title)}</strong><br><span class="muted">${esc(P.PHASE_BY_KEY[p.phase].label)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}${apps.length ? '' : ' · no site boundary published'}</span>`);
@@ -3391,7 +3531,7 @@
     for (const g of selAreas) L.polygon(g.map(([x, y]) => [y, x]), { className: 'sel-area', interactive: false }).addTo(selLayer);
     for (const p of selection.values()) {
       // Each selected development's application boundaries in orange, and a ring for zoomed-out views.
-      for (const a of siteApps(p)) L.polygon(toLatLngs(a.poly), { renderer: selCanvas, color: SEL_COLOR, weight: 2.5, fillColor: SEL_COLOR, fillOpacity: 0.2, interactive: false }).addTo(selLayer);
+      for (const a of siteApps(p)) L.polygon(toLatLngs(a.poly), { renderer: selCanvas, color: selColor(), weight: 2.5, fillColor: selColor(), fillOpacity: 0.2, interactive: false }).addTo(selLayer);
       L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
     }
   }
@@ -3602,7 +3742,7 @@
     sugItems = []; renderSug();
     // On a phone the search sits in the list view: switch to the map to show the place.
     if (innerWidth <= 760 && $('#sidebar').classList.contains('open')) { toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
-    if (x.p) { map.setView([x.p.lat, x.p.lng], Math.max(map.getZoom(), 17)); showDetail(x.p); return; }
+    if (x.p) { showDetail(x.p); return; }
     if (x.place) { clearTimeout(searchTimer); $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); } return x.place.go(); }
     // An address: pan and zoom there with a pin; the text filter is cleared so nothing is hidden.
     clearTimeout(searchTimer); $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); }
@@ -3788,7 +3928,7 @@
     }
     if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30] });
   }
-  const svcColor = a => a.zone ? '#0b7285' : PLANT_COLOR[a.plant] || '#868e96';
+  const svcColor = a => a.zone ? token('--svc-drainage') : plantColor(a.plant);
   function svcTooltip(a) {
     if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone · tap: what loads it</span>`;
     if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return `<strong>Wastewater ${esc(a.name)}</strong>${a.planning ? ' · prioritised (block study)' : ''}<br>Drains to ${to ? `${esc(to.name)} → ` : ''}${esc(plantLabel(a.plant))}<br>
@@ -4307,7 +4447,7 @@
         <thead><tr><th>Pumping station</th><th>Block → plant</th><th>People + jobs upstream</th><th>Firm</th><th>Peak dry</th><th>Peak wet ≈</th></tr></thead>
         <tbody>${st.length ? st.map(x => { const b = blk(x.a); return `<tr${rowAttrs(x.a.id, '')}><td title="${esc(spsNote(x.sp))}">${esc(x.sp.name)}</td><td>${b ? esc(b.name) : '–'} → ${esc(PLANT_SHORT[x.a.plant] || x.a.plant || '')}</td>
           <td>${who(total(x.l), jobs(x.l))}</td><td>${fmtNum(x.sp.firmLs)} L/s</td><td class="${x.dry >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l)))}<small>${Math.round(x.dry)}%</small></td><td class="${x.wet >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l) + ii(x.l)))}<small>${Math.round(x.wet)}%</small></td></tr>`; }).join('')
-          : `<tr><td colspan="6" class="muted">${SEW.data ? 'No master plan stations matched' : 'Loading the sewer network…'}</td></tr>`}</tbody></table>`);
+          : `<tr><td colspan="6">${SEW.data ? '<span class="muted">No master plan stations matched</span>' : '<span class="skel" style="width:45%" role="status" aria-label="Loading the sewer network"></span>'}</td></tr>`}</tbody></table>`);
     }
     renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     // Kept for the development panel's servicing check and the export.
@@ -4661,10 +4801,10 @@
     const base = location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, '');
     const body = S.els().map(e => cleanClone(e).innerHTML).join('<hr>');
     const refs = R ? `<ul>${Object.values(R.reports).map(r => `<li>${esc(r.title)} — ${esc(r.url)}</li>`).join('')}</ul>` : '';
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(m.title)}</title>
-      <link rel="stylesheet" href="${base}css/app.css"><style>body.report{background:#fff;color:#111;max-width:1100px;margin:0 auto;padding:16px;font:13px/1.4 system-ui,sans-serif}
-      .report h1{font-size:20px;margin:0 0 4px}.report .meta{color:#444;margin:0 0 2px}.report .noprint{margin:10px 0}.report section{margin-top:18px}
-      .report .svc-table,.report .rep-table,.report .ww-table{min-width:0}.report .svc-table small.tech{display:block}.report tr.mod td{background:#fff3d6}
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(m.title)}</title>
+      <link rel="stylesheet" href="${base}css/app.css"><style>body.report{background:var(--surface-1);color:var(--text-primary);max-width:1100px;margin:0 auto;padding:16px;font:13px/1.4 system-ui,sans-serif}
+      .report h1{font-size:20px;margin:0 0 4px}.report .meta{color:var(--text-secondary);margin:0 0 2px}.report .noprint{margin:10px 0}.report section{margin-top:18px}
+      .report .svc-table,.report .rep-table,.report .ww-table{min-width:0}.report .svc-table small.tech{display:block}.report tr.mod td{background:color-mix(in srgb, var(--cap-tight) 20%, var(--surface-1))}
       .report .cap-chart{max-width:100%}@media print{.noprint{display:none}body.report{padding:0}.report details>summary{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid}}</style></head>
       <body class="report"><h1>${esc(m.title)}</h1>${m.lines.map(l => `<p class="meta small">${esc(l)}</p>`).join('')}
       <p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>
@@ -4845,8 +4985,8 @@
     if (!svg || svg.querySelector('#flow-head-s')) return;
     const ns = 'http://www.w3.org/2000/svg';
     const defs = document.createElementNS(ns, 'defs');
-    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>'
-      + '<marker id="flow-head-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f2937" stroke="#fff" stroke-width="1"/></marker>';
+    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--flow)"/></marker>'
+      + '<marker id="flow-head-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,1 L10,5 L0,9 z" style="fill:var(--text-primary);stroke:var(--map-label)" stroke-width="1"/></marker>';
     svg.insertBefore(defs, svg.firstChild);
   }
 
@@ -5089,7 +5229,7 @@
   // WEFTEC 2024). Each block is joined to the existing sewers: the pipes inside it, the ones
   // leaving it (outlets), the block its main outlet drains into, and the route to the plant.
   const BLK = { data: null, loading: null, layer: null, focus: L.layerGroup().addTo(map), net: null, id: null };
-  const BLK_COLOR = '#7048e8';
+  const blkColor = () => token('--block');
   function loadBlocks() {
     if (BLK.data || BLK.loading) return BLK.loading;
     BLK.loading = fetch('data/blocks.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => { BLK.data = d; return d; }).catch(() => null);
@@ -5122,7 +5262,7 @@
     if (!BLK.layer) {
       BLK.layer = L.featureGroup();
       for (const b of BLK.data.blocks) {
-        const pl = L.polygon(b.parts.map(p => p.map(r => r.map(([x, y]) => [y, x]))), { renderer: svcRenderer, pane: 'svcPane', color: BLK_COLOR, weight: b.planning ? 2.4 : 1.3, opacity: 0.9, fill: true, fillColor: BLK_COLOR, fillOpacity: b.planning ? 0.12 : 0.03 })
+        const pl = L.polygon(b.parts.map(p => p.map(r => r.map(([x, y]) => [y, x]))), { renderer: svcRenderer, pane: 'svcPane', color: blkColor(), weight: b.planning ? 2.4 : 1.3, opacity: 0.9, fill: true, fillColor: blkColor(), fillOpacity: b.planning ? 0.12 : 0.03 })
           .bindTooltip(`<strong>Block ${esc(b.id)}</strong>${b.planning ? ' · prioritised (block study)' : ''}<br>${fmtNum(b.ha)} ha · wastewater I&amp;I program<br><span class="muted">Tap for its outlets and route to the plant</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); showBlock(b.id); });
         BLK.layer.addLayer(pl);
@@ -5191,6 +5331,8 @@
   }
   function setExistOn(e) { existOn = { ...existOn, ...e }; store.set('existOn', existOn); renderExisting(); renderLegend(); syncMapOpts(); }
   const currentView = () => { const v = store.get('mapView', 'planning'); return v === 'servicing' ? 'water' : MAP_VIEWS.some(([k]) => k === v) ? v : 'planning'; };
+  // Set once at startup too (applyViewSettings only runs on switches).
+  document.documentElement.dataset.mapview = currentView();
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
@@ -5208,11 +5350,13 @@
   // Map views: Planning (how it was), Water and Wastewater (servicing review, one system each) and
   // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
   // view being left and restores the other view's last settings (its preset the first time).
+  // The per-view basemap comes from PeelDesign.basemapForView (single source of
+  // truth, unit-tested): planning -> aerial, the servicing views -> dark canvas.
   const VIEW_PRESETS = {
-    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
-    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
-    wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
-    dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
+    planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
+    water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
+    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
+    dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
   };
   function currentMapSettings() { return { basemap, labelMode, da: daOn, wf: WF.on, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, exist: { ...existOn }, dc: { ...dcOn } }; }
   function setMapView(v) {
@@ -5226,6 +5370,8 @@
     const p = VIEW_PRESETS[v] || VIEW_PRESETS.planning;
     const s = { ...p, ...(saved || {}) };
     store.set('mapView', v);
+    // Exposed for CSS: the Planning aerial is darkened slightly (css/modes.css).
+    document.documentElement.dataset.mapview = v;
     if (BASEMAPS[s.basemap]) { basemap = s.basemap; store.set('basemap', basemap); setTiles(); restyleDa(); }
     if (LABEL_MODES[s.labelMode]) { labelMode = s.labelMode; store.set('labelMode', labelMode); }
     setDaLayer(!!s.da); setSvcLayer('pz', !!s.pz); setSvcLayer('dr', !!s.dr); setWfOn(!!s.wf);
@@ -5268,10 +5414,10 @@
   // Capacity layer: catchments coloured by their local flow growth over the census, pumping
   // station catchments by build-out peak wet weather flow as % of firm capacity, or pressure zones
   // by maximum day growth; with the sewer network drawn outlet to outlet.
-  const CAP_GROWTH = [[10, '#fdf0d5'], [25, '#fbd08a'], [50, '#f6a04d'], [100, '#e3672a'], [Infinity, '#a83a12']];
-  const CAP_PS = [[80, '#2f9e44'], [100, '#f08c00'], [Infinity, '#e03131']];
+  const CAP_GROWTH = [[10, '--growth-1'], [25, '--growth-2'], [50, '--growth-3'], [100, '--growth-4'], [Infinity, '--growth-5']];
+  const CAP_PS = [[80, '--cap-room'], [100, '--cap-tight'], [Infinity, '--cap-over']];
   // Colour for a value: the first class it falls under; Infinity (new, no census flow) takes the last.
-  const bucket = (v, scale) => isNaN(v) ? '#9aa0a6' : (scale.find(([t]) => v < t) || scale[scale.length - 1])[1];
+  const bucket = (v, scale) => token(isNaN(v) ? '--nodata' : (scale.find(([t]) => v < t) || scale[scale.length - 1])[1]);
   const fmtPct = v => !isFinite(v) ? 'new (no census flow)' : `${v >= 0 ? '+' : ''}${Math.round(v)}%`;
   const capLayer = L.layerGroup().addTo(map);
   // Capacity by year: built since the census in full, approved and proposed growth phased in as in
@@ -5352,7 +5498,7 @@
         if (c) { fill = bucket(c.v, CAP_GROWTH); tip += `<br>${mstyle.cap === 'zone' ? 'Max day' : 'Local average dry weather'} ${uML(c.now)} today → ${uML(c.bo)} ${capYear == null ? 'at build-out' : `by ${capYear}`} (<strong>${fmtPct(c.v)}</strong>)`; }
       }
       tip += '<br><span class="muted">Tap: what loads it</span>';
-      L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: fill || '#9aa0a6', weight: 1, opacity: 0.9, fill: true, fillColor: fill || '#9aa0a6', fillOpacity: fill ? 0.5 : 0.05 })
+      L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: fill || token('--nodata'), weight: 1, opacity: 0.9, fill: true, fillColor: fill || token('--nodata'), fillOpacity: fill ? 0.5 : 0.05 })
         .bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showLoads(a.id); }).addTo(capLayer);
     }
     if (mstyle.cap !== 'zone') drawNetwork(capLayer);
@@ -5373,11 +5519,11 @@
     }
     for (const d of state.servicing.psAreas || []) {
       const ps = d.outletAt && psLoad(d, capYear);
-      if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: '#fff', fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
+      if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: token('--sym-outline'), fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
         .bindTooltip(`<strong>${esc(drName(d).replace(/^[^·]+· /, ''))}</strong><br>${Math.round(ps.pct)}% of firm at build-out (peak wet)`, { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); showLoads(d.id); }).addTo(layer);
     }
-    for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:${PLANT_COLOR[p.name] || '#555'}"></span>`, iconSize: [16, 16] }) })
+    for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:var(${PLANT_TOKEN[p.name] || '--nodata'})"></span>`, iconSize: [16, 16] }) })
       .bindTooltip(`<strong>${esc(plantLabel(p.name))}</strong><br><span class="muted">Tap: everything it treats</span>`, { className: 'pt' })
       .on('click', () => showLoads(null, p.name)).addTo(layer);
     addFlowMarker();
@@ -5513,16 +5659,16 @@
     if (mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(layerColors()[k], t)).join('')}</ul>`);
     if (mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
-    if (mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(PLANT_COLOR[k], PLANT_SHORT[k])).join('')}${sw('#b8b8b8', 'No traced catchment')}</ul>`);
+    if (mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(`var(${PLANT_TOKEN[k]})`, PLANT_SHORT[k])).join('')}${sw('var(--nodata)', 'No traced catchment')}</ul>`);
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
-    if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
-    if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
-    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>${isWW() && !Object.values(wwLay).every(v => v !== false) ? `<p class="lg-s"><strong>Loads:</strong> ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'} (Wastewater loads in Layers)</p>` : ''}`);
-    if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
+    if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('var(--text-muted)', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
+    if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(`var(${CAP_PS[0][1]})`, '< 80% of firm')}${sw(`var(${CAP_PS[1][1]})`, '80–100%')}${sw(`var(${CAP_PS[2][1]})`, '> 100%')}${sw('var(--nodata)', 'Gravity / not tabled')}</ul>`);
+    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:var(--nodata)"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>${isWW() && !Object.values(wwLay).every(v => v !== false) ? `<p class="lg-s"><strong>Loads:</strong> ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'} (Wastewater loads in Layers)</p>` : ''}`);
+    if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(`var(${c})`, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
-    if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
+    if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:var(${EXIST_STYLE[k].color})"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
-    if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
+    if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
     el.querySelector('.lg-body').innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
     el.hidden = !parts.length;
@@ -6096,9 +6242,11 @@
   // with construction year, component and project numbers and diameter; facilities (plants,
   // stations, reservoirs, tanks) with their EA / design / property / construction years; and
   // plant treatment capacity steps.
+  // Planned DC line colours: [label, token name, weight]. Token names resolve to
+  // `var(--*)` in HTML/SVG and to computed values via token() for Leaflet.
   const DC_KIND = {
-    primary: ['Primary wastewater main (trunk)', '#d6336c', 4], local: ['Local wastewater main', '#2b8a3e', 2.5], force: ['Force main', '#9c36b5', 2.5],
-    transmission: ['Water transmission main', '#1c3d8f', 4], feeder: ['Water distribution feeder main', '#1c7ed6', 2.5],
+    primary: ['Primary wastewater main (trunk)', '--dc-ww-main', 4], local: ['Local wastewater main', '--dc-ww-local', 2.5], force: ['Force main', '--dc-ww-force', 2.5],
+    transmission: ['Water transmission main', '--dc-w-trans', 4], feeder: ['Water distribution feeder main', '--dc-w-feed', 2.5],
   };
   const DC_FAC = { plant: 'Treatment plant', pumping_station: 'Pumping station', odour_control: 'Odour control facility', reservoir: 'Reservoir', elevated_tank: 'Elevated tank', well: 'Well', program: 'Program' };
   const PHASE_NAME = { EA: 'environmental assessment', P: 'property', D: 'design', C: 'construction' };
@@ -6210,8 +6358,8 @@
     for (const sys of ['wastewater', 'water']) {
       if (dcOn.sys !== 'both' && dcOn.sys !== sys) continue;
       for (const ln of state.dcInfra[sys].lines) {
-        const [label, col, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
-        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: col, weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
+        const [label, colName, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
+        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: token(colName), weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
           .bindTooltip(`<strong>${esc(label)}</strong><br>${ln.y ? `Construction ${ln.y}` : 'Year not labelled'}${ln.d ? ` · ${ln.d} mm` : ''}${ln.s === 'approved' ? ' · approved 2026' : ' · proposed'}${ln.p ? `<br>Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft) · tap: what it relieves</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); showDcLine(ln); }).addTo(dcLayer);
       }
@@ -6360,7 +6508,7 @@
     SEW.data.pipes.forEach((p, i) => { const s = pipeStats(i); if (s.r1 == null) none++; else n[PIPE_CLS.findIndex(([t]) => s.r1 * 100 < t)]++; });
     return { n, none, total: SEW.data.pipes.length };
   }
-  const pipeColour = r => r == null || isNaN(r) ? '#adb5bd' : (PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1])[1];
+  const pipeColour = r => r == null || isNaN(r) ? token('--nodata') : token((PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1])[1]);
   function pipeStats(i) {
     const p = SEW.data.pipes[i], cap = p[2];
     const today = pipeFlow(i, 'today'), then = pipeFlow(i, capYear);
@@ -6429,7 +6577,7 @@
     }
     return { first: k, local, trunk, worst: [local, trunk].filter(Boolean).sort((a, b) => b.r1 - a.r1)[0] || null, n };
   }
-  const stateChip = (label, q, r) => { const st = pipeState(r); return `<span class="chip pipe-st" style="--st:${st ? st[1] : '#adb5bd'}"><i aria-hidden="true"></i>${esc(String(label))} ${fmtNum(Math.round(q))} L/s${r != null ? ` · ${Math.round(r * 100)}% · <strong>${esc(st[3])}</strong>` : ' · no slope'}</span>`; };
+  const stateChip = (label, q, r) => { const st = pipeState(r); return `<span class="chip pipe-st" style="--st:var(${st ? st[1] : '--nodata'})"><i aria-hidden="true"></i>${esc(String(label))} ${fmtNum(Math.round(q))} L/s${r != null ? ` · ${Math.round(r * 100)}% · <strong>${esc(st[3])}</strong>` : ' · no slope'}</span>`; };
   // Pipe length (m) from its drawn coordinates.
   const pipeLenM = i => { const c = pipeCoords(SEW.data.pipes[i]); let t = 0; for (let k = 1; k < c.length; k++) t += dcM(c[k - 1], c[k]); return t; };
   // How the flow in a pipe is worked out, step by step with its numbers, and its capacity and
@@ -6790,9 +6938,9 @@
     const [k, i] = h.dataset.exhl.split('|'), g = exGroups[k] && exGroups[k].list[+i]; if (!g) return;
     exHL.clearLayers();
     const ll = g.paths.map(pth => pth.map(([x, y]) => [y, x]));
-    L.polyline(ll, { color: '#ffd43b', weight: 12, opacity: 0.7, interactive: false }).addTo(exHL);
-    L.polyline(ll, { color: EXIST_STYLE[k].color, weight: 4, opacity: 1, interactive: false }).addTo(exHL);
-    if (currentProject) L.polyline([[currentProject.lat, currentProject.lng], [g.at[1], g.at[0]]], { color: '#333', weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
+    L.polyline(ll, { color: token('--hl-find'), weight: 12, opacity: 0.7, interactive: false }).addTo(exHL);
+    L.polyline(ll, { color: token(EXIST_STYLE[k].color), weight: 4, opacity: 1, interactive: false }).addTo(exHL);
+    if (currentProject) L.polyline([[currentProject.lat, currentProject.lng], [g.at[1], g.at[0]]], { color: token('--text-primary'), weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
     map.fitBounds(L.latLngBounds(ll.flat().concat(currentProject ? [[currentProject.lat, currentProject.lng]] : [])), { maxZoom: 18, padding: [40, 40] });
     if (innerWidth <= 760) $('#detail').scrollTop = 0;
   });
@@ -7159,7 +7307,7 @@
     return { z, est, gw: false, steps };
   }
   function waterTraceHTML(p) {
-    if (!WF.data) { loadWaterFacilities().then(d => { if (d && currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Loading the water facilities…</p>'; }
+    if (!WF.data) { loadWaterFacilities().then(d => { if (d && currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return skel('Loading the water facilities'); }
     if (state.servicing && !(p.pz && p.pz.length) && !zoneEst.has(p)) { estimateZone(p).then(() => { if (currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Outside the mapped pressure zones: estimating the zone from the ground elevation…</p>'; }
     const t = waterTrace(p); if (!t || !t.steps.length) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones and no zone could be estimated.</p>';
     const estP = t.est ? zoneEstHTML(t.est) : '';
@@ -7455,7 +7603,7 @@
     }
     const w = $('#mp-w');
     if (w && M && R) {
-      if (!WF.data) { loadWaterFacilities().then(d => { if (d) renderMpCompare(); }); w.innerHTML = '<p class="small muted">Loading the water facilities…</p>'; return; }
+      if (!WF.data) { loadWaterFacilities().then(d => { if (d) renderMpCompare(); }); w.innerHTML = skel('Loading the water facilities'); return; }
       const g = mpWaterGrowth(); if (!g) return;
       const rows = MP2020.water.map(r => {
         const x = g[r.key], measured = r.today && r.today(R);
@@ -8204,8 +8352,8 @@
   const REC = { advance: ['dca-advance', 'Keep · advance'], keep: ['dca-keep', 'Keep'], defer: ['dca-defer', 'Keep · could defer'], review: ['dca-review', 'Review'] };
   function renderDca() {
     const el = $('#dca-body'); if (!el) return;
-    if (!state.svcModel || !state.dcInfra) { el.innerHTML = '<p class="small muted">Loading the servicing model and the 2026 DC program…</p>'; return; }
-    if (!SEW.data) { el.innerHTML = '<p class="small muted">Loading the sewer network…</p>'; loadSewers().then(d => { if (d) renderDca(); }); return; }
+    if (!state.svcModel || !state.dcInfra) { el.innerHTML = skel('Loading the servicing model and the 2026 DC program'); return; }
+    if (!SEW.data) { el.innerHTML = skel('Loading the sewer network'); loadSewers().then(d => { if (d) renderDca(); }); return; }
     const R = dcAnalysis(), years = R.years, yi = capYear == null ? -1 : years.indexOf(capYear), atY = r => yi >= 0 ? r.ys[yi] : r.bo;
     const yrLabel = capYear == null ? 'build-out' : capYear;
     const n = k => R.list.filter(r => r.rec === k).length;
@@ -8272,7 +8420,7 @@
     }
     const s0 = e.target.closest('[data-dca-sort]'); if (s0) { DCA.sort = s0.dataset.dcaSort; return renderDca(); }
     if (e.target.closest('[data-dca-csv]')) return dcaCsv();
-    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = projectByKey(dv.dataset.dcaDev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = projectByKey(dv.dataset.dcaDev); if (p) showDetail(p); return; }
     const mp = e.target.closest('[data-dca-map]');
     if (mp) {
       const r = DCA.res && DCA.res.list.find(x => x.key === mp.dataset.dcaMap); if (!r) return;
@@ -8393,7 +8541,7 @@
     for (const a of shown) {
       const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
         renderer: canvas, interactive: false, fill: true, fillOpacity: 0.06, weight: 2.5, dashArray: '8 6',
-        color: a.id.startsWith('mtsa') ? '#d4a017' : '#e8590c',
+        color: token(a.id.startsWith('mtsa') ? '--area-mtsa' : '--area-sp'),
       });
       areaLayer.addLayer(l);
       bounds = bounds ? bounds.extend(l.getBounds()) : l.getBounds();
@@ -8414,12 +8562,12 @@
   function renderPlanAreas() {
     planLayer.clearLayers();
     if (!state.areas) return;
-    for (const [on, list, color, kind] of [[areaOn.sp, state.areas.secondaryPlans, '#e8590c', 'sp'], [areaOn.mtsa, state.areas.mtsas, '#d4a017', 'mtsa']]) {
+    for (const [on, list, colorName, kind] of [[areaOn.sp, state.areas.secondaryPlans, '--area-sp', 'sp'], [areaOn.mtsa, state.areas.mtsas, '--area-mtsa', 'mtsa']]) {
       if (!on) continue;
       for (const a of list) {
         if (state.muni && a.municipality !== state.muni) continue;
         const sel = (kind === 'sp' ? state.sp : state.mtsa).includes(a.id);
-        L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color, weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: color, fillOpacity: sel ? 0.12 : 0.03 })
+        L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color: token(colorName), weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 })
           .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); togglePlanArea(kind, a.id); }).addTo(planLayer);
       }
@@ -8966,9 +9114,13 @@
   $('#t-toggle').onclick = () => { const open = $('#timebar').classList.contains('folded'); setTimelineOpen(open); store.set('timelineOpen', open); };
   setTimelineOpen(store.get('timelineOpen', false));
 
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  // A theme change (manual, or OS-level for follow-device): drop the computed-
+  // colour cache, rebuild the marker icons, and re-tile (the grey-canvas
+  // basemap follows the theme).
+  function refreshTheme() {
     readColors(); for (const k in iconCache) delete iconCache[k]; setTiles(); renderLegend(); applyFilters();
-  });
+  }
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTheme);
 
   // Keep the map and the detail drawer sized around the footer.
   new ResizeObserver(() => {
@@ -8986,15 +9138,18 @@
 
   // ---- Reports: one-page development memo, area report, DC timing workbook ------------------
   const textOf = html => { const d = document.createElement('div'); d.innerHTML = html || ''; return d.textContent.replace(/\s+/g, ' ').trim(); };
-  const REPORT_CSS = `td:first-child{white-space:nowrap}body{font:11px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#111;background:#fff;max-width:780px;margin:0 auto;padding:18px}
-    h1{font-size:18px;margin:0 0 2px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#555;margin:14px 0 4px;border-bottom:1px solid #ccc;padding-bottom:2px}
-    .sub{color:#444;margin:0 0 6px}.meta{color:#666;font-size:10px;margin:0}.grid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
-    table{border-collapse:collapse;width:100%;margin:2px 0 6px}td,th{border-bottom:1px solid #e3e3e3;padding:2px 4px;text-align:left;vertical-align:top}th{color:#555;font-weight:600;font-size:10px}
-    td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.gap{color:#b42318;font-weight:600}.ok{color:#2b8a3e}.chk{color:#b35c00}.muted{color:#666}
-    ul{margin:2px 0 6px;padding-left:16px}li{margin:1px 0}.sk{border:1px solid #ccc;border-radius:6px}.note{font-size:9.5px;color:#666;margin-top:10px}
+  // Print/report documents are always light (data-theme="light" + app.css), so
+  // these styles use the light-theme tokens via var().
+  const REPORT_CSS = `td:first-child{white-space:nowrap}body{font:11px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text-primary);background:var(--surface-1);max-width:780px;margin:0 auto;padding:18px}
+    h1{font-size:18px;margin:0 0 2px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);margin:14px 0 4px;border-bottom:1px solid var(--border);padding-bottom:2px}
+    .sub{color:var(--text-secondary);margin:0 0 6px}.meta{color:var(--text-muted);font-size:10px;margin:0}.grid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
+    table{border-collapse:collapse;width:100%;margin:2px 0 6px}td,th{border-bottom:1px solid var(--border);padding:2px 4px;text-align:left;vertical-align:top}th{color:var(--text-secondary);font-weight:600;font-size:10px}
+    td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.gap{color:var(--cap-over);font-weight:600}.ok{color:var(--cap-room)}.chk{color:var(--cap-tight)}.muted{color:var(--text-muted)}
+    ul{margin:2px 0 6px;padding-left:16px}li{margin:1px 0}.sk{border:1px solid var(--border);border-radius:6px}.note{font-size:9.5px;color:var(--text-muted);margin-top:10px}
     .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}@page{margin:12mm}}`;
   function openReport(title, body) {
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${REPORT_CSS}</style></head>
+    const appCss = new URL('css/app.css', location.href).href;
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><link rel="stylesheet" href="${appCss}"><style>${REPORT_CSS}</style></head>
       <body><p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>${body}<script>addEventListener('load', () => setTimeout(() => print(), 500));<\/script></body></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     const w = window.open(url, '_blank');
@@ -9015,16 +9170,16 @@
     });
     if (state.dcInfra) for (const sys of ['wastewater', 'water']) for (const ln of state.dcInfra[sys].lines) {
       if (!ln.g.some(([x, y]) => inBox(x, y))) continue;
-      out.push(`<path d="${path(ln.g)}" stroke="${DC_KIND[ln.k][1]}" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
+      out.push(`<path d="${path(ln.g)}" style="stroke:var(${DC_KIND[ln.k][1]})" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
     }
-    for (const r of rings) out.push(`<path d="${path(r)}Z" fill="rgba(25,113,194,.08)" stroke="#1971c2" stroke-width="1.2"/>`);
-    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" fill="${(PHASE_COLORS[p.phase] || '#1971c2')}" stroke="#fff" stroke-width=".8"/>`);
-    if (site) out.push(`<circle cx="${X(site[0])}" cy="${Y(site[1])}" r="7" fill="#e03131" stroke="#fff" stroke-width="2"/>`);
+    for (const r of rings) out.push(`<path d="${path(r)}Z" style="fill:color-mix(in srgb, var(--accent) 8%, transparent);stroke:var(--accent)" stroke-width="1.2"/>`);
+    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline)" stroke-width=".8"/>`);
+    if (site) out.push(`<circle cx="${X(site[0])}" cy="${Y(site[1])}" r="7" style="fill:var(--select);stroke:var(--sym-outline)" stroke-width="2"/>`);
     const bar = halfM > 2500 ? 1000 : 500, bw = bar * s;
-    return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#fafafa">${out.join('')}
-      <g font-size="9" fill="#333"><rect x="8" y="${H - 14}" width="${bw}" height="3" fill="#333"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
-      <path d="M${W - 14} 10l5 12h-10z" fill="#333"/><text x="${W - 17}" y="32">N</text></g></svg>
-      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green under 85%: free flowing; orange 85–100%: near full; red over 100%: surcharged); dashed: 2026 DC works (draft).</div>`;
+    return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:var(--surface-1)">${out.join('')}
+      <g font-size="9" style="fill:var(--text-primary)"><rect x="8" y="${H - 14}" width="${bw}" height="3"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
+      <path d="M${W - 14} 10l5 12h-10z"/><text x="${W - 17}" y="32">N</text></g></svg>
+      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green under 85%: free flowing; amber 85–100%: near full; red over 100%: surcharged); dashed: 2026 DC works (draft).</div>`;
   }
   // ---- Executive briefing: one printable page from the Overview (title block, headlines, key
   // numbers, plant capacity, demand by phase, DC actions, allocations, a map of the blocks).
@@ -9037,10 +9192,10 @@
     const kx = Math.cos((mny + mxy) / 2 * Math.PI / 180), s = Math.min((W - 10) / ((mxx - mnx) * kx), (H - 10) / (mxy - mny));
     const X = x => 5 + (x - mnx) * kx * s, Y = y => 5 + (mxy - y) * s;
     const path = r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(y).toFixed(1)}`).join('') + 'Z';
-    const out = BLK.data.blocks.map(b => `<path d="${b.parts.map(p => path(p[0])).join('')}" fill="${b.planning ? 'rgba(112,72,232,.14)' : 'rgba(112,72,232,.04)'}" stroke="#7048e8" stroke-width=".6"/>`);
-    for (const p of set) if (p.lat != null && p.units >= 50) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(1.4, Math.min(5, Math.sqrt(p.units) / 8)).toFixed(1)}" fill="${PHASE_COLORS[p.phase] || '#1971c2'}" fill-opacity=".8"/>`);
-    for (const pl of (state.servicing && state.servicing.meta.plants) || []) if (pl.lnglat) out.push(`<rect x="${(X(pl.lnglat[0]) - 4).toFixed(1)}" y="${(Y(pl.lnglat[1]) - 4).toFixed(1)}" width="8" height="8" fill="#212529"/><text x="${(X(pl.lnglat[0]) + 6).toFixed(1)}" y="${(Y(pl.lnglat[1]) + 3).toFixed(1)}" font-size="8" fill="#212529">${esc(PLANT_SHORT[pl.name] || pl.name)}</text>`);
-    return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden">${out.join('')}<path d="M${W - 14} 8l5 12h-10z" fill="#333"/><text x="${W - 17}" y="30" font-size="9">N</text></svg>`;
+    const out = BLK.data.blocks.map(b => `<path d="${b.parts.map(p => path(p[0])).join('')}" style="fill:color-mix(in srgb, var(--block) ${b.planning ? '14' : '4'}%, transparent);stroke:var(--block)" stroke-width=".6"/>`);
+    for (const p of set) if (p.lat != null && p.units >= 50) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(1.4, Math.min(5, Math.sqrt(p.units) / 8)).toFixed(1)}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline);stroke-width:.6" fill-opacity=".8"/>`);
+    for (const pl of (state.servicing && state.servicing.meta.plants) || []) if (pl.lnglat) out.push(`<rect x="${(X(pl.lnglat[0]) - 4).toFixed(1)}" y="${(Y(pl.lnglat[1]) - 4).toFixed(1)}" width="8" height="8" style="fill:var(--text-primary)"/><text x="${(X(pl.lnglat[0]) + 6).toFixed(1)}" y="${(Y(pl.lnglat[1]) + 3).toFixed(1)}" font-size="8" style="fill:var(--text-primary)">${esc(PLANT_SHORT[pl.name] || pl.name)}</text>`);
+    return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden">${out.join('')}<path d="M${W - 14} 8l5 12h-10z" style="fill:var(--text-primary)"/><text x="${W - 17}" y="30" font-size="9" style="fill:var(--text-primary)">N</text></svg>`;
   }
   function briefingPDF() {
     const set = overviewSet(), basis = demandBasis(), c = state.criteria, e = D.estimate(set, c, basis, jobsOf), cb = e.combined;
@@ -9058,18 +9213,19 @@
       R ? `${adv.length ? `<b>${adv.length} DC project${adv.length === 1 ? '' : 's'}</b> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out and should be brought forward.` : 'Every DC project comes online before the capacity it relieves runs out.'}` : ''].filter(Boolean);
     const bar = x => `<div class="cap"><div class="ch"><b>${esc(x.kind === 'plant' ? PLANT_SHORT[x.pl] : 'South Peel water treatment')}</b><span>${pctRated(x, 'com')}% of rated committed → ${pctRated(x, 'bo')}% build-out · ${x.out === 'today' ? 'at trigger now' : x.out ? `trigger ≈${x.out}` : `room to ${hz.end}`}</span></div><div class="bar"><i class="c" style="width:${Math.min(100, pctRated(x, 'com') / 1.3).toFixed(1)}%"></i><i class="b ${x.util.bo >= 1 ? 'over' : ''}" style="width:${(Math.max(0, Math.min(130, pctRated(x, 'bo')) - Math.min(130, pctRated(x, 'com'))) / 1.3).toFixed(1)}%"></i><i class="tg"></i><i class="tg r"></i></div></div>`;
     const prep = store.get('prepBy', '');
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Development and servicing briefing ${esc(new Date().toISOString().slice(0, 10))}</title><style>
-      @page{size:letter;margin:11mm}*{box-sizing:border-box}body{font:10.5px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1a1a1a;margin:0 auto;max-width:200mm;padding:10px}
-      header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1c5cab;padding-bottom:6px;margin-bottom:8px}
-      h1{font-size:18px;margin:0;color:#0d366b}header .sub{color:#555;font-size:10px}header .r{text-align:right;font-size:9.5px;color:#555;white-space:nowrap;padding-left:10px}
-      .hl{border-left:4px solid #1c5cab;background:#eef4fc;padding:6px 9px;margin:0 0 8px}.hl p{margin:2px 0}
+    const appCss = new URL('css/app.css', location.href).href;
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><title>Development and servicing briefing ${esc(new Date().toISOString().slice(0, 10))}</title><link rel="stylesheet" href="${appCss}"><style>
+      @page{size:letter;margin:11mm}*{box-sizing:border-box}body{font:10.5px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text-primary);background:var(--surface-1);margin:0 auto;max-width:200mm;padding:10px}
+      header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--report-brand);padding-bottom:6px;margin-bottom:8px}
+      h1{font-size:18px;margin:0;color:var(--report-brand-deep)}header .sub{color:var(--text-secondary);font-size:10px}header .r{text-align:right;font-size:9.5px;color:var(--text-secondary);white-space:nowrap;padding-left:10px}
+      .hl{border-left:4px solid var(--report-brand);background:var(--surface-2);padding:6px 9px;margin:0 0 8px}.hl p{margin:2px 0}
       .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-      .t{background:#f3f5f8;border-radius:5px;padding:5px 7px}.t b{display:block;font-size:15px}.t span{color:#555;font-size:9.5px}
-      h2{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#0d366b;margin:6px 0 4px;border-bottom:1px solid #d0d7e2;padding-bottom:2px}
-      table{border-collapse:collapse;width:100%;font-size:9.5px}th,td{padding:2px 4px;border-bottom:1px solid #e3e7ee;text-align:right}th:first-child,td:first-child{text-align:left}th{color:#555;font-weight:600}tr.tot td{font-weight:700;border-top:1px solid #999}
-      .cap{margin:3px 0 6px}.ch{display:flex;justify-content:space-between;font-size:9.5px}.bar{position:relative;height:8px;background:#eceff3;border-radius:4px;display:flex;overflow:hidden;margin-top:2px}.bar i.c{background:#868e96}.bar i.b{background:#4c8fdc}.bar i.b.over{background:#e03131}.bar i.tg{position:absolute;left:69.2%;top:0;bottom:0;width:2px;background:#111}.tg.r{left:76.9%;background:#aaa}
-      ul{margin:2px 0;padding-left:15px}li{margin:1px 0}.map{display:grid;gap:3px;justify-items:center;margin-top:4px}.map small{color:#555}.map svg{max-width:100%;height:auto}
-      footer{margin-top:8px;border-top:1px solid #ccc;padding-top:4px;font-size:8.5px;color:#666;display:flex;justify-content:space-between;gap:10px}
+      .t{background:var(--surface-2);border-radius:5px;padding:5px 7px}.t b{display:block;font-size:15px}.t span{color:var(--text-secondary);font-size:9.5px}
+      h2{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--report-brand-deep);margin:6px 0 4px;border-bottom:1px solid var(--border);padding-bottom:2px}
+      table{border-collapse:collapse;width:100%;font-size:9.5px}th,td{padding:2px 4px;border-bottom:1px solid var(--border);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--text-secondary);font-weight:600}tr.tot td{font-weight:700;border-top:1px solid var(--text-muted)}
+      .cap{margin:3px 0 6px}.ch{display:flex;justify-content:space-between;font-size:9.5px}.bar{position:relative;height:8px;background:var(--surface-2);border-radius:4px;display:flex;overflow:hidden;margin-top:2px}.bar i.c{background:var(--text-muted)}.bar i.b{background:var(--accent)}.bar i.b.over{background:var(--cap-over)}.bar i.tg{position:absolute;left:69.2%;top:0;bottom:0;width:2px;background:var(--text-primary)}.tg.r{left:76.9%;background:var(--text-muted)}
+      ul{margin:2px 0;padding-left:15px}li{margin:1px 0}.map{display:grid;gap:3px;justify-items:center;margin-top:4px}.map small{color:var(--text-secondary)}.map svg{max-width:100%;height:auto}
+      footer{margin-top:8px;border-top:1px solid var(--border);padding-top:4px;font-size:8.5px;color:var(--text-muted);display:flex;justify-content:space-between;gap:10px}
       .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}}</style></head><body>
       <p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>
       <header><div><h1>Development and Servicing Briefing</h1><div class="sub">Region of Peel · ${esc(scopeText())} · ${esc(scenarioText())}</div><div class="sub">${UNOFFICIAL}</div></div>
@@ -9094,7 +9250,9 @@
     const win = window.open(url, '_blank');
     if (!win) { const a = document.createElement('a'); a.href = url; a.download = `development-servicing-briefing-${new Date().toISOString().slice(0, 10)}.html`; a.click(); }
   }
-  const PHASE_COLORS = { inception: '#74a9e8', review: '#4c8fdc', approved: '#2f6fc6', permit: '#1f55a3', construction: '#173a73', completed: '#2f9e44', cancelled: '#9aa0a6' };
+  // Phase colours come from the --ph-* design tokens via phaseColor() (defined
+  // near the top of this file); the old hard-coded phase table was removed in
+  // the dark-default token restructure.
   const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Before DC', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
     <td>${esc(c.name)}<br><span class="muted">${esc(c.sub)}</span></td><td class="n">${c.room == null ? 'new' : c.room <= 0 ? (c.kind === 'plant' || c.kind === 'wplant' ? `${pctRated(c, 'com')}% of rated (trigger ${Math.round(PLANT_TRIGGER * 100)}%)` : `over ${Math.round((c.util.com - 1) * 100)}%`) : `${fmtNum(roundPop(c.people))} people<br><span class="muted">≈${fmtNum(Math.round(c.people / ppu))} units</span>`}</td>
     <td>${c.out === 'today' ? 'already' : c.out == null ? `after ${hz.end}` : `≈${c.out}`}</td><td>${c.relief.length ? esc(c.relief.slice(0, 2).map(r => r.text).join('; ')) : '<span class="muted">none on the DC map</span>'}</td>${extra}</tr>`;
