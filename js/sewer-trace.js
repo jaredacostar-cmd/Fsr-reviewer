@@ -275,13 +275,13 @@
       L.polyline([[from[1], from[0]], [jn[1], jn[0]]], { className: 'trace-link', interactive: false, renderer: SD().flowRenderer }).addTo(TRACE.layer);
     } else L.polyline([[p.lat, p.lng], [jn[1], jn[0]]], { className: 'trace-link', interactive: false, renderer: SD().flowRenderer }).addTo(TRACE.layer);
     L.circleMarker([p.lat, p.lng], { radius: 7, className: 'trace-site', interactive: false, renderer: SD().flowRenderer }).addTo(TRACE.layer);
-    // Pipes coloured by state, with a tooltip each (tap: what loads it).
+    // The path in one colour (no capacity colours), with a tooltip each (tap: what drains through it).
     let worst = null, km = 0;
     for (const i of route) {
       const st = SC().pipeStats(i), c = SC().pipeCoords(P[i]);
       for (let q = 1; q < c.length; q++) km += DI().dcM(c[q - 1], c[q]) / 1000;
       if (st.r1 != null && (!worst || st.r1 > worst.r1)) worst = { i, r1: st.r1 };
-      L.polyline(c.map(([x, y]) => [y, x]), { color: SC().pipeColour(st.r1), weight: P[i][0] >= 1200 ? 8 : P[i][0] >= 600 ? 7 : 6, opacity: 1, lineCap: 'round', lineJoin: 'round', renderer: SD().flowRenderer })
+      L.polyline(c.map(([x, y]) => [y, x]), { color: token('--select'), weight: P[i][0] >= 1200 ? 8 : P[i][0] >= 600 ? 7 : 6, opacity: 1, lineCap: 'round', lineJoin: 'round', renderer: SD().flowRenderer })
         .bindTooltip(() => SC().pipeTip(i), { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); SC().showPipeLoads(i); }).addTo(TRACE.layer);
     }
     traceGlow([[p.lng, p.lat], ...(pl ? pl.coords : []), jn, ...route.flatMap(i => SC().pipeCoords(P[i]))], TRACE.layer, 7);

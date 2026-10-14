@@ -66,7 +66,7 @@
       const c = p[10]; if (p[0] < (halfM > 4000 ? 900 : halfM > 2000 ? 600 : 0) || (!inBox(c[0], c[1]) && !inBox(c[c.length - 2], c[c.length - 1]))) return;
       const pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
       const r = p[2] ? SC().pipeFlow(i, null).q / p[2] : null;
-      out.push(`<path d="${path(pts)}" stroke="${SC().pipeColour(r)}" stroke-width="${Math.max(1, Math.min(4, p[0] / 400))}" fill="none" opacity=".85"/>`);
+      out.push(`<path d="${path(pts)}" stroke="${root.PeelUtil.PIPE_RESULTS ? SC().pipeColour(r) : root.PeelUtil.token('--text-muted')}" stroke-width="${Math.max(1, Math.min(4, p[0] / 400))}" fill="none" opacity=".85"/>`);
     });
     if (App().state.dcInfra) for (const sys of ['wastewater', 'water']) for (const ln of App().state.dcInfra[sys].lines) {
       if (!ln.g.some(([x, y]) => inBox(x, y))) continue;
