@@ -148,7 +148,7 @@
   // Reset every filter to its default. Shared by the "Reset all" chip and the
   // topbar's Peel trail step.
   function resetAllFilters() {
-    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
+    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
     MA().setCapYear(MM().THIS_YEAR);
     SF().syncFilterControls();
     SF().renderMuniChips();
