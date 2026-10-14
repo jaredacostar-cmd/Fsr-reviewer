@@ -81,6 +81,7 @@
       const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? r.json() : null; } catch (e) { return null; } };
       let dc;
       [App().state.svcCensus, App().state.reports, dc, App().state.dcCosts, Sett().IDF.data, App().state.housing] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json'), opt('data/dc-costs.json'), opt('data/idf.json'), opt('data/housing.json')]);
+      mergePeelHousing(App().state.housing, await opt('data/peel-housing.json'));
       opt('data/compliance.json').then(c => { App().state.compliance = c; if (c && AT().getFootTab() === 'ww') SvcTab().renderSvcTab(); });
       if (Sett().IDF.data) { Sett().applyWet(); const f = $('#wet-box'); if (f) f.outerHTML = Sett().wetBoxHTML(); }
       App().state.dcInfra = DI().prepDc(dc);
@@ -301,6 +302,20 @@
       ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
       <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(roundPop(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
+  }
+  // The Region's housing activity table is CMHC's survey as Peel publishes it: where it and the
+  // CMHC series both hold a municipality-year, one is kept (the Region's, which also carries the
+  // years CMHC archives and the units absorbed). Building permit statistics are added alongside.
+  function mergePeelHousing(H, P) {
+    if (!H || !P || !P.activity) return;
+    H.peel = P;
+    for (const k of ['starts', 'completions']) for (const [m, ys] of Object.entries(P.activity.muni)) {
+      if (m === 'Peel') continue;
+      const C = (H.cmhc[k][m] = H.cmhc[k][m] || {});
+      for (const [y, v] of Object.entries(ys)) if ((!v.quarters || v.quarters === 4) && v[k] && v[k].all > 0) C[y] = v[k];   // a full year only (or its four quarters)
+    }
+    const last = Math.max(...Object.values(P.activity.muni).flatMap(ys => Object.entries(ys).filter(([, v]) => !v.quarters || v.quarters === 4).map(([y]) => +y)));
+    if (isFinite(last)) H.cmhc.asOf = `${last}-12-31`;
   }
   // Project panel line: its pressure zone and drainage area.
   function servicingLineHTML(p) {

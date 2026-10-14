@@ -1596,6 +1596,43 @@ Region of Peel's water and wastewater models are the authority.
 
 Pumping stations, plants, pressure zones and water facilities stay.
 
+## Region of Peel open data: housing activity, building permits, watercourses
+
+Three of the Region's open datasets, each compared with what the app already held; where both
+cover the same thing, one copy is kept.
+
+- **Housing Construction Activity.**
+  - Starts, completions and units absorbed by dwelling type, per municipality and year. This is
+    the CMHC Starts and Completions Survey as the Region publishes it.
+  - **Starts** match the app's CMHC copy in all 30 overlapping municipality-years.
+  - **Completions** differ in all 21. The app's earlier copy has Mississauga completing 11,743
+    homes in 2022 on 4,455 starts, which isn't plausible. Peel's completions track its absorptions.
+  - The Region's series is kept, year by year. It also continues completions past 2022, where
+    CMHC archives them by municipality.
+  - The comparison is recorded in `data/peel-housing.json` (`compare`).
+- **Building Permits.** Units by type and permit values, per municipality and year. These are
+  statistics, not individual permits, so they sit beside the municipal permit feeds rather than
+  in them.
+- **Watercourses.**
+  - The Region's 892 named streams, each with its watershed and conservation authority, are now
+    the first source of the *Watercourses* layer.
+  - The Ontario Hydro Network fills in where Peel maps nothing.
+  - A provincial line running along a Peel stream is dropped: most of its points within 25 m.
+    Each stream is drawn once, and its tooltip and the measure tool give the authority (CVC,
+    TRCA, Conservation Halton).
+  - Peel's copy of the provincial network (`Watercourse_GTA`) duplicates the Ontario Hydro
+    Network and isn't used.
+
+**Growth → Census & 2051 → Housing activity** shows the latest full year for each municipality and
+Peel: starts and completions (with 5-year averages), units absorbed, and permit units and value.
+A check line sets the units on this app's own permit records issued that year against the
+Region's count.
+
+`data/peel-housing.json` is built by `scripts/build-peel-housing.js` (*Probe data sources*
+workflow, mode `peel-open`). A year is the Region's annual row, or its four quarters added up; a
+year with fewer quarters is partial and isn't used as a full year. `scripts/probe-peel-open.js`
+lists the Region's other layers.
+
 ## Updates reach the browser (offline service worker)
 
 The offline service worker (`sw.js`) used to serve the page itself cache-first under a fixed

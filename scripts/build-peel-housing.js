@@ -68,7 +68,7 @@ async function main() {
     for (const m of ['Mississauga', 'Brampton', 'Caledon']) {
       const C = (cmhc && cmhc[k] && cmhc[k][m]) || {}, R = activity[m] || {};
       for (const y of new Set([...Object.keys(C), ...Object.keys(R)])) {
-        const c = C[y] && C[y].all, r = R[y] && !R[y].quarters ? R[y][k].all : null;
+        const c = C[y] && C[y].all, r = R[y] && (!R[y].quarters || R[y].quarters === 4) ? R[y][k].all : null;
         if (c != null && r != null) (c === r ? same : differ).push(c === r ? `${m} ${y}` : `${m} ${y}: CMHC ${c}, Peel ${r}`);
         else if (r != null) onlyPeel.push(`${m} ${y}`); else if (c != null) onlyCmhc.push(`${m} ${y}`);
       }
