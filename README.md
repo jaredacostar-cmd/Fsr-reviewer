@@ -165,7 +165,7 @@ search bar (save a view from More settings → Saved views).
 **Picking several (desktop):** Ctrl-click (⌘-click on a Mac) a Stage bar segment
 to add or remove that phase; a plain click still shows one phase only. Holding Ctrl / ⌘ over the
 map shows a crosshair: drag a box to add the shown developments inside it to the selection (like
-Tools → Select an area), with the same summary panel. A plain drag still moves the map.
+Tools → Select an area tool), with the same summary panel. A plain drag still moves the map.
 
 **Timeline (floating, bottom of the map, to the right of the legend):** opens on **2021–2026**. Drag the handles to keep only projects with
 activity in those years; the button next to the range switches between **All years** and the
@@ -334,9 +334,9 @@ from street zoom (14), up to 3,000 in view.
   map to filter to it, tap again to clear.
   Opening a development sets the scope: the site bar appears at the top of the analysis column
   (address, phase badge, units · people · water max day · wastewater peak wet, zone → plant;
-  actions: trace sewer / water, watch, memo, record allocation, FSR check) and every analysis tab
+  actions: trace sewer / water, watch, memo, record allocation, FSR check, compare) and every analysis tab
   shows that site. The other developments fade on the map and the Layers panel folds. The trace is
-  on the site bar, under Tools → *Trace sewer path* (tap a development, or any point on the map)
+  on the site bar, the *Trace sewer path* tool (tap a development, or any point on the map)
   and on the → plant chip. The Development tab's Files & history view opens with *How the phase
   was set*: the file behind the phase, approvals by stage with the latest submission in each, and
   flags where the status and the submissions disagree (a newer submission in review after an
@@ -346,7 +346,7 @@ from street zoom (14), up to 3,000 in view.
 - **Watchlist, saved views, tips**: ☆ Watch on a development adds it to *Your watchlist* (This
   week tab, changed-this-week first) and the ★ Watched flag. *Saved views* (Layers & style) keeps
   named filters + map position + view + layers in the browser. An 11-step tour shows once. *Help*
-  (header), the **?** button on the map (under the north arrow) or Tools → *Help & tips* opens task guides — servicing check for a development, when DC
+  (top bar) opens task guides — servicing check for a development, when DC
   projects are needed, area / secondary plan reports, testing a site, weekly changes, plant and
   pumping station capacity over time, water by pressure zone, existing mains and ground, saving /
   sharing / exporting, and how far to trust the numbers — each with *Show me*, which sets the map
@@ -361,8 +361,8 @@ from street zoom (14), up to 3,000 in view.
   by prefix, and intersections ("Main St & Queen St").
 - **Heatmap**: Layers & style → Show as → Heatmap (people + jobs at build-out of the shown
   developments). Clusters show their phase counts on hover.
-- **Ground elevation** (AWS Terrain Tiles, Terrarium; CDEM / SRTM, no key): Tools → *Measure &
-  ground profile* gives the ground at a point and a profile with fall / grade along a line; the
+- **Ground elevation** (AWS Terrain Tiles, Terrarium; CDEM / SRTM, no key): the *Measure &
+  ground profile* tool gives the ground at a point and a profile with fall / grade along a line; the
   development's Servicing tab shows the site's ground and the fall to its catchment outlet.
 - **Selection colour**: the open development's application boundaries, and every development in a
   lasso selection, are outlined and filled in orange (a colour no phase uses).
@@ -401,12 +401,28 @@ from street zoom (14), up to 3,000 in view.
   when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
   and build-out flows and pumping station load. *Print map* prints the map landscape with a title
   block, scenario, legend, north arrow and scale.
-- **Map tools** (left of the map; the Tools menu opens above the north arrow, help and scale controls): *Measure* distances (*Clear* starts a fresh line without adding a stray point) and select every shown development within
-  250 m – 2 km of a point; *Test a site* drops a proposed development (units by type, jobs, site
-  area) and gives its servicing check — zone, sewer path and pumping station load, plant reserve —
-  and can count it in the totals (kept in this browser, draggable). While any exist, a bar at the
-  bottom of the map shows *N test sites* (tap for the list, each with *Remove*) and *Remove all*,
-  with *Undo* for a few seconds after; each test site's panel has *Remove this test site* at the top.
+- **Tools** — one home per tool, one tool active at a time. The rail on the map's left edge
+  holds the map tools, in order: *Select* (developments: tap one, draw a lasso, or hold Ctrl /
+  ⌘ and drag a box), *Measure & ground profile* (tap points for the distance and the
+  ground profile, or select developments within a radius), *Trace* (a sewer path to the plant,
+  or a water route from the plant, from any point), *Test a site* (servicing check for a
+  proposed development: tap where it is, enter units by type, jobs and site area; tick "Count it"
+  to add it to the totals; kept in this browser, draggable — while any exist, a bar at the bottom
+  of the map shows *N test sites* with *Remove all* and *Undo* for a few seconds after),
+  *Inspect point* (what is at a point: sewers, watermains, pressure zones and plants nearby),
+  *Corridor select* (developments along a drawn corridor), *How many more units fit?* (the
+  remaining unit capacity of an area). While a tool runs, a banner says what to do and Esc finishes. Tool
+  results open in the **Tool result tab** (trail: Peel › …), never as pop-ups. Elsewhere:
+  *Compare* lives on the site bar (adds the open development) and in its tool module;
+  *Upgrade this pipe* lives on a tapped sewer pipe; *DC timing* lives in Layers → DC timing and
+  on DC map features; *Area report* lives on feature results and the Showing line; *Memo* lives
+  on the site bar; *Inquiry response draft* lives in Export; *Help & tips* lives in the top bar.
+  - *Moved:* the Overview **Tools** card is gone (its buttons duplicated the rail); the **?**
+    button on the map is gone (Help's home is the top bar button); "What loads this?" for
+    catchments, zones, plants, pipes and DC works moved from the #detail side panel into the
+    Tool result tab, with actions (area report, show upstream, upgrade a pipe) on each result.
+  - *Kept where they were:* the sewer-profile chart dialog (a modal, not a tool result), the
+    block panel (its own view with upstream blocks), Present (a mode, not a tool).
 - **Wastewater blocks** (Layers & style → Infrastructure): the Region of Peel's 40 sewersheds for its
   inflow & infiltration program (`data/blocks.json`, from its *Block_view* feature service; the blocks
   of "Dragonfly: An Integrated Approach to Resiliency", F. Salehzadeh, WEFTEC 2024), with the blocks
@@ -967,7 +983,7 @@ The analysis column's tabs run Overview · Growth · Demand · Water · Wastewat
 - **Tour:** 15 short steps in chapters (Start, Find, Map, A development, Analysis, Help). Steps set
   the app up as they go: a real development opens, its Servicing tab and sewer trace show, then the
   Analysis tabs. Progress dots (tap to jump), Back / Next, ← → keys, Esc to end; the tour tidies up
-  after itself. Help (?) → Take the tour again.
+  after itself. Top-bar Help → Take the tour again, or What's new for the change log.
 
 ## Growth tab and the 2020 Master Plan comparison
 
