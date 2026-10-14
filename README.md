@@ -82,6 +82,8 @@ its own icon, under the home-screen name **Peel Dev**.
 On a phone, the **List** button opens the filters and project list. Tap the legend to show
 the phase names. **Hide** folds the bottom panel to its tabs (tap a tab to open it again), and
 the ▾ on the timeline folds it to just the year range (it starts folded on phones).
+Opened, the scenario bar (with its Design criteria) scrolls inside the bottom strip, which stays
+within the window.
 
 **Bottom panel:** three tabs, so only one thing shows at a time (the last one picked is
 remembered; **Servicing demand** opens by default): **Servicing demand**, **Growth since
