@@ -11,6 +11,9 @@
  *     remove(i),          // drop the item at index i
  *     clear(),            // empty the comparison
  *     render(),           // (re)render #compare-col from the item list
+ *     items(),            // the current compare items (copies: {kind,key,title,sub,p?,members?})
+ *     sumEstimates(list), // shared pure helper: sum demand-estimate objects
+ *     tightestConstraint(list), // shared pure helper: pick the tightest constraint
  *   }
  * Max 3 items: adding a 4th replaces the oldest (noted under the header).
  * Safe to call any time after this script loads, even before js/app.js has
@@ -304,6 +307,10 @@
   ensureWired();
 
   var api = { addDevelopment: addDevelopment, addArea: addArea, remove: remove, clear: clear, render: render,
+    // Phase 5 exports: the comparison PDF reads the current items through items()
+    // and reuses the pure helpers through the api (same inputs as the tool).
+    items: function () { return items.slice(); },
+    sumEstimates: sumEstimates, tightestConstraint: tightestConstraint,
     // exposed for tests / debugging (not part of the contract)
     _items: function () { return items.slice(); } };
 
