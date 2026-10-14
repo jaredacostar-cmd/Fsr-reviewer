@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   // Reference rewrites per SPLIT_MAP.md §0 rule 4.
-  const { $, esc, fmtNum, store, token, phaseColor, dot, colors } = window.PeelUtil;
+  const { $, esc, fmtNum, store, token, phaseColor, dot, getColors } = window.PeelUtil;
   const P = window.PeelPhases;
   const D = window.PeelDemand;
   const PD = window.PeelDesign;
@@ -326,7 +326,7 @@
       if (!b || !view.intersects(b)) continue;
       const unloaded = !SD().devShown(p);
       // Reuse a development's outline while its look is unchanged (thousands draw when zoomed out).
-      const sig = `${unloaded}|${colors[p.phase]}`;
+      const sig = `${unloaded}|${getColors()[p.phase]}`;
       if (!p._ol || p._ol.sig !== sig) p._ol = { sig, polys: outline(p, false, unloaded) };
       polys.push(...p._ol.polys);
       if (unloaded || !withDots || n >= SITE_MAX_POINTS) continue;
