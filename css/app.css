@@ -467,7 +467,6 @@ h2.label, .label { font-size: 12px; text-transform: none; letter-spacing: 0; col
 .views .chip .n { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 12px; }
 .views .chip.on .n { color: inherit; opacity: .85; }
 .views .chip .dot { width: 14px; height: 14px; font-size: 9px; box-shadow: none; }
-.phase-chips { margin-top: 10px; }
 .sub-label { margin: 14px 0 6px; }
 
 .filters { display: grid; gap: 12px; }
@@ -625,13 +624,6 @@ details.rec-group[open] > summary { border-bottom: 1px solid var(--border); marg
 .search-bar { position: sticky; top: 0; z-index: 5; background: var(--surface-1); padding: 10px 16px 6px; border-bottom: 1px solid var(--border); }
 .search-bar .field { margin: 0; }
 .search-bar .active-filters:not(:empty) { margin-top: 8px; }
-details.side-sect { border-top: 0; margin-top: 0; }
-details.side-sect > summary { display: flex; align-items: baseline; gap: 8px; }
-details.side-sect > summary .label { margin: 0; }
-details.side-sect > summary .sect-sum { margin-left: auto; text-align: right; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 60%; }
-details.side-sect > summary::after { margin-left: 6px; }
-details.side-sect[open] > summary { margin-bottom: 10px; }
-details.side-sect.active > summary .sect-sum { color: var(--accent); font-weight: 600; }
 .export-row { align-items: center; gap: 8px; margin-top: 10px; }
 #list-sort { padding: 3px 6px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: var(--text-primary); font-size: 12px; }
 
@@ -1081,12 +1073,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tools-menu button.on { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); font-weight: 600; }
 .map-legend li .dot { width: 12px; height: 12px; font-size: 7px; margin-right: 6px; vertical-align: -2px; box-shadow: none; }
 
-/* Sidebar: Where (municipality), More filters grouped, the Showing line */
-.side-where .chips { margin-top: 2px; }
-.more-group { display: grid; gap: 6px; padding: 10px 0; border-top: 1px solid var(--border); }
-.more-group:first-of-type { border-top: 0; padding-top: 2px; }
-.more-group > .label { font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-muted); }
-.more-group .row { margin: 0; }
+/* Sidebar: the Showing line */
 .showing { margin: 6px 0 0; color: var(--text-secondary); }
 .showing strong { color: var(--text-primary); }
 
@@ -1761,3 +1748,54 @@ body.print-map .area-box { display: none; }
 /* Phase 0 (trust and transparency): inline "screening estimate" label for
    calculated figures. Small muted text only — never a status colour. */
 .est-tag { font-size: 11px; color: var(--text-muted); font-weight: normal; white-space: nowrap; }
+
+/* ---- Phase 1: unified filter panel (Search · Stage · Where · What · When · Flags) ---- */
+.filter-panel { display: grid; gap: 16px; }
+.filter-panel .fp-sec { display: grid; gap: 8px; align-content: start; }
+.filter-panel .fp-sec > .label { margin: 0 0 2px; }
+.filter-panel .fp-sec .field { width: 100%; }
+.filter-panel .fp-sec .row.btns { flex-wrap: wrap; }
+.filter-panel #total-count { margin: 2px 0 0; }
+
+/* Stage: the pipeline segments carry their label + count, keeping the phase colours. */
+.pipeline { height: auto; min-height: 46px; border-radius: 6px; }
+.pipeline button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  padding: 6px 4px; min-width: 3px; overflow: hidden;
+  color: #fff; font-size: 11px; line-height: 1.25; text-align: center;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+.pipeline button .n { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* The lightest segment colour in each theme gets dark ink so its label reads. */
+.pipeline button[data-phase="inception"] { color: #10294f; text-shadow: 0 1px 1px rgba(255,255,255,.45); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .pipeline button[data-phase="inception"] { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+  :root:not([data-theme="light"]) .pipeline button[data-phase="construction"] { color: #10294f; text-shadow: 0 1px 1px rgba(255,255,255,.45); }
+}
+:root[data-theme="dark"] .pipeline button[data-phase="inception"] { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.6); }
+:root[data-theme="dark"] .pipeline button[data-phase="construction"] { color: #10294f; text-shadow: 0 1px 1px rgba(255,255,255,.45); }
+
+/* Flags: same chip look as the rest of the app, with tabular counts. */
+.flag-chips:empty { display: none; }
+.flag-chips .chip .n { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 12px; margin-left: 4px; }
+.flag-chips .chip.on .n { color: inherit; opacity: .85; }
+
+/* Saved-view preset chips, above the search bar. */
+.presets { display: flex; gap: 6px; overflow-x: auto; padding: 10px 16px 2px; }
+.presets:empty { display: none; }
+.presets .chip { flex: none; }
+
+/* Notice line shown when the filters match nothing. */
+.empty-msg {
+  margin: 8px 0 0; padding: 8px 10px;
+  border: 1px dashed var(--border); border-radius: 8px;
+  background: var(--surface-2); color: var(--text-secondary); font-size: 12px;
+}
+
+/* Records fieldset at the top of Settings & sources. */
+.rec-set { border: 1px solid var(--border); border-radius: 10px; margin: 14px 0 0; padding: 12px 14px; display: grid; gap: 10px; min-width: 0; }
+.rec-set legend { padding: 0 6px; }
+.rec-set .field { width: 100%; }
+
+/* Scenario: the Results-for-year select matches the other selects. */
+#scen-year { padding: 6px 8px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface-1); color: inherit; font: inherit; max-width: 100%; }
