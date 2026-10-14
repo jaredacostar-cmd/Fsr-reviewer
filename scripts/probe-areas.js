@@ -17,11 +17,13 @@ async function layer(url) {
   const info = await get(`${url}?f=json`);
   if (info.error) return console.log(`    ${url} ERROR ${info.error.message}`);
   if (info.layers && !info.fields) { for (const l of info.layers.slice(0, 8)) await layer(`${url}/${l.id}`); return; }
+  if (process.argv.includes('--blocks') && info.geometryType && info.geometryType !== 'esriGeometryPolygon') return;
   const cnt = await get(`${url}/query?${q({ where: '1=1', returnCountOnly: true, f: 'json' })}`);
   const smp = await get(`${url}/query?${q({ where: '1=1', outFields: '*', returnGeometry: false, resultRecordCount: 2, f: 'json' })}`);
   console.log(`    LAYER ${url} "${info.name}" geom=${info.geometryType} count=${cnt.count} wkid=${info.extent && info.extent.spatialReference && (info.extent.spatialReference.latestWkid || info.extent.spatialReference.wkid)}`);
-  console.log(`      fields: ${(info.fields || []).map(f => f.name).join(',').slice(0, 700)}`);
-  for (const f of (smp.features || [])) console.log(`      sample: ${JSON.stringify(f.attributes).slice(0, 500)}`);
+  const brief = process.argv.includes('--blocks');
+  console.log(`      fields: ${(info.fields || []).map(f => f.name).join(',').slice(0, brief ? 240 : 700)}`);
+  for (const f of (smp.features || []).slice(0, brief ? 1 : 2)) console.log(`      sample: ${JSON.stringify(f.attributes).slice(0, brief ? 220 : 500)}`);
 }
 async function search(query, num = 25) {
   const r = await get(`${SHARING}/search?${q({ q: query, num, f: 'json', sortField: 'modified', sortOrder: 'desc' })}`);
@@ -41,7 +43,7 @@ async function show(items, label) {
   for (const [muni, org] of Object.entries(ORGS)) {
     if (blocksOnly) {
       await show(await search(`orgid:${org} AND ${FS} AND (title:"block plan" OR title:"block plans" OR title:precinct OR title:precincts OR title:"sub-area" OR title:"subarea" OR title:"tertiary plan" OR title:"community block")`), `${muni} block plan / precinct areas`);
-      await show(await search(`orgid:${org} AND ${FS} AND (title:"heritage heights" OR title:"secondary plan" OR title:"schedule")`, 40), `${muni} plan schedules`);
+      await show(await search(`orgid:${org} AND ${FS} AND (title:"heritage heights" OR title:"block" OR title:"precinct" OR title:"sub area")`, 40), `${muni} other block / precinct titles`);
       continue;
     }
     await show(await search(`orgid:${org} AND ${FS} AND (title:"secondary plan" OR title:"secondary plans" OR title:"character area" OR title:"character areas" OR title:"precinct")`), `${muni} secondary plans`);
