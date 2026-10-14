@@ -91,9 +91,12 @@ test('criteria sources name the exact documents and versions', () => {
   const resolved = D.sourceText(['ppu', 'water', 'wastewater', 'employment']);
   assert.match(resolved, /Region of Peel \u2013 Water and Wastewater Modelling Demand Table \(Site Plan applications\), v2\.0, Aug 30 2024/);
   assert.match(resolved, /Region of Peel \u2013 Linear Wastewater Standards, published Nov 2022, R1\.0 Mar 2023/);
-  // The export references section uses the full-group source text.
-  assert.ok(APP.includes("D.sourceText(['ppu', 'water', 'wastewater', 'employment'])"),
-    'export references use the full source text');
+  // Phase 5: the generic per-panel PDF export (and its references section) was
+  // removed; the surviving Excel export's Criteria sheet still carries the exact
+  // source document + version for every criteria item.
+  assert.ok(APP.includes('function criteriaExportRow('), 'criteria export rows missing');
+  assert.ok(APP.includes("'Criteria'") && APP.includes('Source document') && APP.includes('Source version'),
+    'Excel export lost its per-item source document/version sheet');
   // The scenario bar carries the criteria state (modified/defaults).
   assert.ok(APP.includes('data-scen-crit'), 'scenario bar shows criteria state');
   assert.ok(APP.includes('scenCritLineHTML'), 'criteria line builder exists');
