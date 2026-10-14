@@ -59,7 +59,7 @@
   const verdictDc = (d) => {
     if (d.loading) return { tone: 'warn', text: 'The 2026 DC program is still loading' };
     if (d.gap) return { tone: 'bad', text: `Screens ahead of its main: needs a planned main by ${d.needBy}, before that main is in service` };
-    if (d.needBy) return { tone: 'warn', text: `Outside the existing network: servicing about ${d.needBy} on the 2026 DC draft schedule` };
+    if (d.needBy) return { tone: 'warn', text: `Outside the existing network: servicing about ${d.needBy} on the 2026 DC draft schedule (as of March 2026, before the May 2026 pause)` };
     if (d.nearby) return { tone: 'ok', text: `Served by the existing network · ${d.nearby} planned ${d.nearby === 1 ? 'work' : 'works'} nearby` };
     return { tone: 'ok', text: 'Served by the existing network — no planned works nearby' };
   };

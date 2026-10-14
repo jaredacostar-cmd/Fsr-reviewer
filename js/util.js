@@ -34,6 +34,34 @@
     outside: 'Outside the funding screen',
     over: 'Screens over rated capacity',
   };
+  // Capital schedule currency (design audit, Group 3). Every planned date comes from the 2026 DC
+  // capital maps (draft v2, March 2026). In May 2026 Regional Council paused all new growth-related
+  // water and wastewater capital procurements from June 11, 2026, until upper levels of government
+  // commit funding. Status of a planned work: 'scheduled' (known to be going ahead; set per project
+  // in CAPITAL.overrides), 'paused' (not yet tendered: proposed for 2027 or later), or 'unknown' (in
+  // the 2026 budget: paused only if not tendered or awarded by June 11, 2026).
+  const CAPITAL = {
+    asOf: 'March 2026',
+    source: '2026 DC capital maps (draft v2, March 2026)',
+    pauseFrom: '2026-06-11',
+    pauseText: 'In May 2026 Regional Council paused all new growth-related water and wastewater capital procurements from June 11, 2026, until upper levels of government commit funding. Planned dates are from the draft 2026 DC capital maps (March 2026) and may move.',
+    pauseUrl: 'https://pub-peelregion.escribemeetings.com/filestream.ashx?DocumentId=45699',
+    overrides: {},   // project or component number → 'scheduled' | 'paused' | 'unknown'
+  };
+  const CAPITAL_STATUS = { scheduled: 'Scheduled', paused: 'Paused', unknown: 'Status unknown' };
+  // y: planned year; s: 'approved' (2026 budget) | 'proposed'; id: project / component number.
+  const capitalStatus = (y, s, id) => {
+    if (id && CAPITAL.overrides[id]) return CAPITAL.overrides[id];
+    if (y != null && y < 2026) return 'scheduled';
+    if (s === 'approved' || y === 2026) return 'unknown';
+    return 'paused';
+  };
+  const capitalChip = (st) => `<span class="cap-st cap-st-${st}" title="${st === 'paused' ? 'Not yet tendered: new growth-related procurements are paused from June 11, 2026' : st === 'unknown' ? 'In the 2026 budget: paused if not tendered or awarded by June 11, 2026' : 'Going ahead'}">${CAPITAL_STATUS[st]}</span>`;
+  const pauseNote = () => `<p class="pause-note small" role="note"><strong>Capital schedule as of ${CAPITAL.asOf}.</strong> ${CAPITAL.pauseText} <a href="${CAPITAL.pauseUrl}" target="_blank" rel="noopener">Council report</a></p>`;
+  // Costs in one dollar year (2026$): the DC rate indexing since 2020 (StatCan construction price
+  // index, as the by-law requires), taken at its average annual rate for other base years.
+  const DOLLAR_YEAR = 2026;
+  const toDollarYear = (v, fromYear, ix2020) => v * Math.pow(ix2020, (DOLLAR_YEAR - fromYear) / (DOLLAR_YEAR - 2020));
   // Basis chip on a capacity figure: where its numbers come from. 'mixed' names the parts.
   const BASIS = {
     design: ['Design', 'Peel design criteria (Modelling Demand Table v2.0, Aug 2024; Linear Wastewater Standards R1.0, Mar 2023)'],
@@ -137,6 +165,7 @@
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
     UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelUtil = api;

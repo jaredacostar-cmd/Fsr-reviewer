@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { esc, fmtNum, roundPop, store, fmtMoney } = window.PeelUtil;
+  const { esc, fmtNum, roundPop, store, fmtMoney, capitalStatus, toDollarYear, capitalChip } = window.PeelUtil;
   const D = window.PeelDemand;
   const App = () => window.PeelApp;
   const MP = () => window.PeelMasterPlan;
@@ -20,12 +20,14 @@
     const items = r.kind === 'step' ? (r.fc ? r.fc.items.filter(i => r.step.proj && i.proj === r.step.proj) : []) : r.items || (r.fc ? r.fc.items : []);
     return [...new Set(items.flatMap(i => (i.phases || []).map(ph => ph[2])).filter(Boolean))];
   }
-  // Cost of a relief: the priced components (2020$) and how many of its components have a price.
+  // Cost of a relief: the priced components (2020 study, indexed to 2026$ like every other cost)
+  // and how many of its components have a price.
   function dcCost(r) {
-    const C = App().state.dcCosts && App().state.dcCosts.components, ids = reliefComps(r);
+    const K = App().state.dcCosts, C = K && K.components, ids = reliefComps(r);
     if (!C || !ids.length) return null;
+    const sys = r.ln ? r.ln.sys : r.fc ? r.fc.sys : null, ix = (K.index2026 && sys && K.index2026[sys]) || 1;
     let gross = 0, dc = 0, n = 0;
-    for (const id of ids) { const c = C[id]; if (c) { gross += c.gross; dc += c.dc; n++; } }
+    for (const id of ids) { const c = C[id]; if (c) { gross += c.gross * ix; dc += c.dc * ix; n++; } }
     return { gross, dc, n, of: ids.length };
   }
   // Full cost of a relief in 2026$ (funding scenario): priced components indexed from 2020$ by the
@@ -49,7 +51,7 @@
     } else {
       const items = r.kind === 'step' ? (r.fc ? r.fc.items.filter(i => r.step.proj && i.proj === r.step.proj) : []) : r.items || (r.fc ? r.fc.items : []);
       const sc = r.kind === 'step' && !items.length && K.stepCosts && K.stepCosts[`${r.step.year}:${r.step.mld}`];
-      if (sc) add(sc.gross, sc.gross * K.dcShare[sys], false);
+      if (sc) { const g = toDollarYear(sc.gross, sc.year || 2026, ix); add(g, g * K.dcShare[sys], false); }   // e.g. G.E. Booth's $130 M (2024$)
       for (const it of items) {
         const ph = (it.phases || []).map(x => x[2]).filter(Boolean), pr = ph.filter(c => C[c]);
         if (pr.length) { const g0 = pr.reduce((t, c) => t + C[c].gross, 0), d0 = pr.reduce((t, c) => t + C[c].dc, 0), k = ph.length / pr.length; add(g0 * ix, d0 * ix, false); if (k > 1) add(g0 * ix * (k - 1), d0 * ix * (k - 1), true); continue; }
@@ -95,7 +97,7 @@
   }
   // Funding-screen row cells: project, online, DC cost, growth, $/person, why.
   function dcbCells(r, kept, B, pp, uu) {
-    return `<td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}${r.c && r.c.est > 0.5 ? '<small>estimated</small>' : r.c && r.c.est > 0 ? '<small>part estimated</small>' : ''}</td>
+    return `<td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}${r.c && r.c.est > 0.5 ? '<small>estimated</small>' : r.c && r.c.est > 0 ? '<small>part estimated</small>' : ''}</td>
       <td>${r.v > 0 ? `${pp(r.v)} people<small>≈${uu(r.v)} units by ${B.end}</small>` : `<span class="muted">none by ${B.end}</span>`}</td><td>${r.v > 0 && r.cost ? fmtMoney(r.cost / r.v) : '–'}</td>
       <td>${kept ? (r.committed ? 'Committed in the 2026 capital program' : r.other ? `Funded from what's left: no modelled growth needs it by ${B.end} (other drivers)` : `Lets through ${pp(r.v)} people by ${B.end}`) : r.v > 0 ? `<strong>Outside the screen:</strong> ${pp(r.v)} people screen constrained by ${B.end}${r.firstY ? ` (from ≈${r.firstY})` : ''}${B.rate ? `, ≈${fmtMoney(r.v / B.ppu * B.rate)} DCs later` : ''}` : r.firstY && r.firstY > B.end ? `Not needed until ≈${r.firstY}` : 'No growth relies on it in this screen'}</td>`;
   }
@@ -264,7 +266,10 @@
       else if (firstY && firstY - (pr.y || MM().THIS_YEAR) >= 5) { rec = 'defer'; why = `Without it, the screen shows no growth constrained until ≈${firstY}: well ahead of need.`; }
       else { rec = 'keep'; why = `Without it, the screen shows growth constrained from ≈${firstY || pr.y}.`; }
       const cost = dcCost(pr.r), perP = cost && cost.n && bo > 0 ? cost.dc / bo : null;
-      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why, cost, perP, revRisk: rate ? bo / ppu * rate : null });
+      // Capital status after the May 2026 pause: a plant step Council already funded counts as in the budget.
+      const st = pr.status || (pr.r && pr.r.step && /council.approved/i.test(pr.r.step.note || '') ? 'approved' : '');
+      const cap = capitalStatus(pr.y, st, pr.r && (pr.r.ln ? pr.r.ln.p || pr.r.ln.c : pr.r.step ? pr.r.step.proj : null));
+      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why, cost, perP, cap, revRisk: rate ? bo / ppu * rate : null });
     }
     const order = { advance: 0, keep: 1, defer: 2, review: 3 };
     out.sort((a, b) => order[a.rec] - order[b.rec] || b.bo - a.bo);
