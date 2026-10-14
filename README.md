@@ -1499,6 +1499,34 @@ and small phases were cut off ("pprove", "Inde truc").
 - The phase colours had stopped showing since the module split: two modules read the colours
   once at load, before they were set. They now read them each time they draw.
 
+## Employment: jobs from published floor areas and permits
+
+Jobs come from floor area at typical floor space per worker (industrial 110 m², office 25,
+retail 45, hotel 60, institutional 50 m² per job). Before, only floor areas written in the
+description counted, plus the floor-area field on a single-use, non-residential file. So 442 of
+the 724 active developments with an employment use counted no jobs. The floor area now comes,
+in order, from:
+
+1. **Figures in the description**, e.g. "2,506 sq m of retail".
+2. **The non-residential floor area published with the application** (Mississauga
+   `TOTAL_NON_RES_GFA`, Caledon `Non_Res_GFA`), on mixed-use buildings and multi-use files too.
+   - It goes to the use the file names first. "Commercial/industrial" counts as industrial.
+   - Otherwise it goes to the development's main use. With no use named, it is retail on a
+     residential development (its shops) and industrial on employment lands.
+   - One figure repeated on a subdivision and its site plan counts once. Marked † in the
+     development's *Employment uses*.
+3. **New non-residential buildings on the site's building permits.** Brampton files them under
+   the Building Code's occupancies: F industrial, E retail, D office, A / B institutional, and
+   hotels.
+   - Interior work, alterations and demolitions don't count.
+   - A building's stage permits (same floor area) count once.
+   - Marked ‡.
+
+Active developments with jobs went from 282 to 438. Jobs on the default map went from 60,300
+to 81,600. About 370 developments still name an employment use without any floor area. They
+aren't estimated: a site-area estimate would add about 86,000 jobs, much of it on alterations to
+existing buildings, which add no new space.
+
 ## Land use filter: every application by default
 
 The *Land use* filter (What) defaults to **Any land use**, so the map shows every active

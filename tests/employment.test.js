@@ -43,3 +43,31 @@ test('jobs follow edited m²/job; missing or zero rates fall back to the default
   assert.equal(E.employmentOf(p, { industrial: 0 }).jobs, 200);
   assert.equal(E.employmentOf(p, { office: 10 }).jobs, 200);
 });
+
+test('published non-residential floor area: mixed-use files, main use, repeated figures counted once', () => {
+  const app = (o) => ({ kind: 'application', phase: 'review', ...o });
+  // A residential building's non-residential GFA: its shops.
+  let e = E.employmentOf({ units: 300, records: [app({ description: 'Residential apartment building with amenity space', units: 300, gfa: 1200 })] });
+  assert.deepEqual(e.uses.map(u => [u.key, u.m2]), [['retail', 1200]]);
+  // "commercial/industrial": industrial; the same figure on a subdivision and its site plan counts once.
+  e = E.employmentOf({ units: null, records: [app({ description: 'Proposed commercial/industrial development.', gfa: 50000 }), app({ type: 'Plan of subdivision', description: '', gfa: 50000 })] });
+  assert.deepEqual(e.uses.filter(u => u.m2).map(u => [u.key, u.m2]), [['industrial', 50000]]);
+  // No use named, no homes: employment lands (industrial).
+  e = E.employmentOf({ units: 1, records: [app({ type: 'Plan of subdivision', description: '', gfa: 20000, units: 1 })] });
+  assert.deepEqual(e.uses.map(u => [u.key, u.m2]), [['industrial', 20000]]);
+});
+
+test('new non-residential building permits add floor space; one building\'s stage permits count once', () => {
+  const permit = (type, gfa, extra = {}) => ({ kind: 'permit', type, description: 'New Building', gfa, newBuild: true, ...extra });
+  const e = E.employmentOf({ units: null, records: [
+    { kind: 'application', phase: 'review', description: 'Site plan for a warehouse' },
+    permit('F2: Industrial', 20000), permit('F2: Industrial', 20000), permit('F2: Industrial', 5000),
+    permit('E: Retail', 800), permit('E: Retail', 900, { description: 'Interior Alteration' }),
+  ] });
+  const by = Object.fromEntries(e.uses.map(u => [u.key, u.m2]));
+  assert.strictEqual(by.industrial, 25000);
+  assert.strictEqual(by.retail, 800);
+  assert.strictEqual(E.permitUse({ type: 'D: Business/Services' }), 'office');
+  assert.strictEqual(E.permitUse({ type: 'A2: School' }), 'institutional');
+  assert.strictEqual(E.permitUse({ type: 'Single Family Detached' }), null);
+});
