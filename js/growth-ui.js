@@ -17,6 +17,7 @@
   const OV = () => root.PeelOverviewTab;
   const CA = () => root.PeelCensusAreas;
   const SET = () => root.PeelSettings;
+  const TL = () => root.PeelTiming;
 
 /* ---- app.js lines 2014-2122 ---- */
   // ---- Growth tab (Phase 4): pipeline and census sub-views ---------------------------------
@@ -30,6 +31,7 @@
   });
   function renderGrowth() {
     renderGrowthPipeline();
+    TL().renderTiming();
     CV().renderGrowthCensus();
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).

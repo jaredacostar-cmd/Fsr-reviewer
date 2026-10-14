@@ -53,11 +53,13 @@
   function recordProvHTML(r) {
     const also = r.alsoIn && r.alsoIn.length ? ` (also in ${esc(r.alsoIn.join(', '))})` : '';
     const mapBtn = r.lat != null ? ` · <button type="button" class="btn small link" data-rec="${esc(r.uid)}">${r.kind === 'permit' ? 'Show on map & parent application' : 'Show on map'}</button>` : '';
-    if (!PV) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}</p>`;
-    const portal = esc(PV.portalFor(r.sourceName));
+    const ri = root.PeelReportIssue;
+    if (!PV) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
+    const portal = PV.portalFor(r.sourceName);
     const url = PV.recordSourceUrl(r, sourceUrlFor(r));
     const pulled = PV.retrievedAt(r, App().state.snapshot && { generatedAt: App().state.snapshot.generatedAt });
-    return `<p class="small muted">Source: ${portal}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}</p>`;
+    const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';
+    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}${report}</p>`;
   }
   // Per-file records with provenance columns, shared by the audit CSV and the
   // Excel Records sheet: the same rows the audit CSV has always had, extended.
