@@ -121,6 +121,19 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
   }
   changes.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
 
+  // Official plan amendments (policy, never counted): the latest that applies to each development.
+  const pa = T.planAmendments(built);
+  const opaRows = counts.map(({ t, c }, k) => pa[k] && { municipality: nodes[t.nodes[0]].municipality, files: t.nodes.map(refOf).slice(0, 8), units: c.units, latest: pa[k].latest, siteSpecific: pa[k].all.filter(x => x.scope === 'site-specific').length, areaWide: pa[k].all.filter(x => x.scope === 'area-wide').length }).filter(Boolean);
+  const planAmendmentsOut = {
+    note: 'Policy only, never counted. Site-specific: a file in the development asks for the amendment. Area-wide: an amendment file with no count, larger than 4 km², or larger than and holding a file of the development.',
+    amendmentFiles: nodes.filter(n => !n.cancelled && T.isOpa(n)).length, areaWidePolicyFiles: nodes.filter(n => n.policy).map(n => ({ ref: n.refs[0], municipality: n.municipality, km2: +(n.area / 1e6).toFixed(1) })),
+    developmentsWithOne: opaRows.length, latestSiteSpecific: opaRows.filter(r => r.latest.scope === 'site-specific').length, latestAreaWide: opaRows.filter(r => r.latest.scope === 'area-wide').length,
+    byDevelopment: opaRows.sort((a, b) => b.units - a.units),
+  };
+  // Same-land site plans with different counts: phase / resubmission / redevelopment / unclear.
+  const verdicts = {};
+  for (const f of flags.sameLandSitePlans) { const v = verdicts[f.verdict] = verdicts[f.verdict] || { pairs: 0, unitsOnEarlierFile: 0, unitsOnLaterFile: 0 }; v.pairs++; v.unitsOnEarlierFile += f.units[0] || 0; v.unitsOnLaterFile += f.units[1] || 0; }
+
   // Permits (progress only): how many found a file.
   const permitsPlaced = [...permitOf.values()].reduce((t, l) => t + l.length, 0);
 
@@ -134,7 +147,8 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
       nestedFormalNotLinked: (flags.nestedFormal || []).sort((a, b) => Math.max(b.innerUnits, b.outerUnits) - Math.max(a.innerUnits, a.outerUnits)),
       condoOnlyTrees: counts.filter(x => x.c.condoOnly && x.c.condoOnly.units > 0).map(x => ({ ...x.c.condoOnly, municipality: nodes[x.t.nodes[0]].municipality })).sort((a, b) => b.units - a.units),
     },
-    doubleCounts: { currentFileInTwoDevelopments: currentSplit, proposedFileInTwoTrees: flags.twoTrees, sameLandSitePlansNotMerged: flags.sameLandSitePlans, crossMunicipality: flags.crossMuni, preconOverlappingTwo: flags.precon },
+    doubleCounts: { currentFileInTwoDevelopments: currentSplit, proposedFileInTwoTrees: flags.twoTrees, sameLandSitePlans: { verdicts, how: 'Scored from the files: phase/tower/block wording, revision wording, approval status, filing gap, description similarity, counts within 25%. A margin of 2 decides; 8+ years after an approved or completed file is a redevelopment. Resubmissions and redevelopments count the later file only; phases count both; unclear pairs count both and are listed for review.', pairs: flags.sameLandSitePlans }, crossMunicipality: flags.crossMuni, preconOverlappingTwo: flags.precon },
+    planAmendments: planAmendmentsOut,
     dateReversed: flags.dateReversed,
     unitMismatches: mismatches,
     orphans: { byMunicipalityRole: orphanCount, withUnits: orphans.slice(0, 200), withUnitsTotal: orphans.length },

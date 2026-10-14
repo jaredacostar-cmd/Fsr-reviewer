@@ -888,6 +888,13 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
 > date order and confidence. The audit writes `data/tree-audit.json`. Run it locally with
 > `node scripts/audit-tree.js`, or from the *Probe data sources* workflow (mode `tree-audit`) for a
 > live pull. The app's grouping and totals below are unchanged until the audit is reviewed.
+>
+> The audit also reports:
+> - Two site plans on the same land with different counts, each judged a phase, a resubmission,
+>   a redevelopment or unclear from the files' evidence.
+> - The latest official plan amendment that applies to each development, site-specific or
+>   area-wide. Amendments are policy and never counted. An area-wide amendment never joins
+>   developments.
 
 In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
 

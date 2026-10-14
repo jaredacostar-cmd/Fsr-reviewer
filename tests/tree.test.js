@@ -197,9 +197,99 @@ test('address match: a shared civic number on a shared street word', () => {
   assert.ok(!b.links.some(l => [l.a, l.b, l.child, l.parent].includes(b.nodeByRef('OZ 3').id)), 'same number, different street: no link');
 });
 
-test('a tree of condominium files only counts 0 (condos never add units) and is listed for review', () => {
+test('a tree of condominium files only: the condo count stands (no other file states one) and is listed for review', () => {
   const b = run([app({ ref: 'C05E13.009', sourceId: 'bra-condo/7', poly: box(0, 0, 2, 2), units: 178 })]);
   const c = T.countTree(b.treeOf('C05E13.009'), b);
-  assert.equal(c.units, 0);
+  assert.equal(c.units, 178);
+  assert.match(c.basis, /condominium count/);
   assert.deepEqual(c.condoOnly, { units: 178, files: ['C05E13.009'] });
+});
+
+test('a condo never adds to a site plan that states a count', () => {
+  const b = run([
+    app({ ref: 'SP-9', poly: box(0, 0, 2, 2), units: 120, date: '2021-01-01' }),
+    app({ ref: 'CDM-9', sourceId: 'bra-condo/7', poly: box(0.05, 0.05, 1.95, 1.95), units: 150, date: '2023-01-01' }),
+  ]);
+  assert.equal(T.countTree(b.treeOf('SP-9'), b).units, 120);
+});
+
+test('coverage counts only children that state a count', () => {
+  const b = run([
+    app({ ref: 'D9', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — 400 units', poly: box(0, 0, 10, 10), units: 400, date: '2019-01-01' }),
+    app({ ref: 'S9A', poly: box(0, 0, 5, 10), units: 200, date: '2021-01-01' }),
+    app({ ref: 'S9B', poly: box(5, 0, 10, 10), units: null, description: 'Site plan', date: '2021-06-01' }),
+  ]);
+  const c = T.countTree(b.treeOf('D9'), b);
+  assert.equal(c.units, 400, 'the counted site plan covers half the land: the draft plan count stands');
+  assert.equal(c.tops[0].remainder, 200);
+});
+
+test('same-land site plans: phases stay apart, both counted', () => {
+  const b = run([
+    app({ ref: 'SP-P1', poly: box(0, 0, 2, 2), units: 300, phase: 'approved', description: 'Phase 1 - two residential towers', date: '2018-01-01' }),
+    app({ ref: 'SP-P2', poly: box(0, 0, 2, 2), units: 150, phase: 'approved', description: 'Phase 2 - mid-rise with retail podium', date: '2021-01-01' }),
+  ]);
+  const f = b.flags.sameLandSitePlans.find(x => [x.a, x.b].includes('SP-P1'));
+  assert.equal(f.verdict, 'phase');
+  assert.ok(!b.links.some(l => l.type === 'sibling' && [l.a, l.b].includes(b.nodeByRef('SP-P1').id)));
+  const total = T.countTree(b.treeOf('SP-P1'), b).units + T.countTree(b.treeOf('SP-P2'), b).units;
+  assert.equal(total, 450);
+});
+
+test('same-land site plans: a resubmission replaces the earlier proposal, counted once (the later count)', () => {
+  const b = run([
+    app({ ref: 'SP-R1', poly: box(0, 0, 2, 2), units: 300, phase: 'review', description: 'Site plan for a 12-storey apartment building with ground floor retail', date: '2019-01-01' }),
+    app({ ref: 'SP-R2', poly: box(0, 0, 2, 2), units: 250, phase: 'approved', description: 'Site plan for a 12-storey apartment building with ground floor retail', date: '2021-01-01' }),
+  ]);
+  const f = b.flags.sameLandSitePlans.find(x => [x.a, x.b].includes('SP-R1'));
+  assert.equal(f.verdict, 'resubmission');
+  assert.match(b.links.find(l => l.type === 'sibling').rule, /resubmission/);
+  assert.equal(b.nodeByRef('SP-R1').superseded, 'resubmission');
+  assert.equal(T.countTree(b.treeOf('SP-R1'), b).units, 250);
+});
+
+test('same-land site plans: a rebuild of a site built long ago counts the new proposal only', () => {
+  const b = run([
+    app({ ref: 'SP-OLD', poly: box(0, 0, 2, 2), units: 40, phase: 'completed', description: 'Townhouses', date: '2004-01-01' }),
+    app({ ref: 'SP-NEW', poly: box(0, 0, 2, 2), units: 200, phase: 'review', description: 'Demolish and build a 15-storey building', date: '2022-01-01' }),
+  ]);
+  const f = b.flags.sameLandSitePlans.find(x => [x.a, x.b].includes('SP-OLD'));
+  assert.equal(f.verdict, 'redevelopment');
+  assert.equal(T.countTree(b.treeOf('SP-NEW'), b).units, 200);
+});
+
+test('same-land site plans with mixed evidence stay unlinked and are listed as unclear', () => {
+  const b = run([
+    app({ ref: 'SP-U1', poly: box(0, 0, 2, 2), units: 300, phase: 'approved', description: 'Apartment building', date: '2020-01-01' }),
+    app({ ref: 'SP-U2', poly: box(0, 0, 2, 2), units: 120, phase: 'review', description: 'Apartment building', date: '2020-06-01' }),
+  ]);
+  const f = b.flags.sameLandSitePlans.find(x => [x.a, x.b].includes('SP-U1'));
+  assert.equal(f.verdict, 'unclear');
+  assert.ok(!b.links.some(l => l.type === 'sibling'));
+});
+
+test('official plan amendments: site-specific and area-wide, the latest listed; never counted', () => {
+  const b = run([
+    app({ ref: 'OZS-1', sourceId: 'bra-opa-zba-sub/9', description: 'Official Plan Amendment | Zoning By Law Amendment — a 12-storey building', poly: box(0, 0, 2, 2), units: 150, date: '2022-01-01' }),
+    app({ ref: 'SP-1', poly: box(0.1, 0.1, 1.9, 1.9), units: 150, date: '2023-01-01' }),
+    app({ ref: 'OZS-AREA', sourceId: 'bra-opa-zba-sub/9', description: 'Official Plan Amendment — secondary plan update', poly: box(-50, -50, 50, 50), units: null, date: '2024-05-01' }),
+    app({ ref: 'OZS-ZBA', sourceId: 'bra-opa-zba-sub/9', description: 'Zoning By Law Amendment — OPA ZBA Subdivision', poly: box(-50, -50, 50, 50), units: null, date: '2025-01-01' }),
+  ]);
+  const tree = b.treeOf('SP-1');
+  const k = b.trees.indexOf(tree);
+  const pa = T.planAmendments(b)[k];
+  assert.deepEqual(pa.all.map(x => [x.ref, x.scope]), [['OZS-AREA', 'area-wide'], ['OZS-1', 'site-specific']]);
+  assert.equal(pa.latest.ref, 'OZS-AREA');
+  assert.equal(T.countTree(tree, b).units, 150);
+});
+
+test('an area-wide amendment never joins separate developments into one count', () => {
+  const b = run([
+    app({ ref: 'OPA-WIDE', sourceId: 'bra-opa-zba-sub/9', description: 'Official Plan Amendment — secondary plan', poly: box(-50, -50, 50, 50), units: null, date: '2015-01-01' }),
+    app({ ref: 'D-A', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — 300 units', poly: box(0, 0, 5, 5), units: 300, date: '2020-01-01' }),
+    app({ ref: 'D-B', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — 200 units', poly: box(20, 20, 25, 25), units: 200, date: '2020-01-01' }),
+  ]);
+  assert.equal(b.nodeByRef('OPA-WIDE').policy, true);
+  assert.notEqual(b.treeOf('D-A'), b.treeOf('D-B'));
+  assert.equal(T.countTree(b.treeOf('D-A'), b).units + T.countTree(b.treeOf('D-B'), b).units, 500);
 });

@@ -145,7 +145,7 @@
   }
 
   // ---- 4. Links ------------------------------------------------------------------------------------------
-  const T = { CONTAIN: 0.8, SAME: 0.8, PRECON: 0.5, NEVER: 0.15, COVER: 0.9, OVER: 0.1 };
+  const T = { CONTAIN: 0.8, SAME: 0.8, PRECON: 0.5, NEVER: 0.15, COVER: 0.9, OVER: 0.1, POLICY_M2: 4e6 };
   const FORMAL = new Set(['block_plan', 'use', 'land_division']);
   const LEVEL = { block_plan: 0, land_division: 1, use: 1, site_plan: 2, condo: 3, precon: 9, other: 9 };
   // Same address: the normalised address, or a shared civic number on a shared street word
@@ -193,6 +193,40 @@
     if (p.role === 'use' && !p.roles.includes('land_division') && (c.role === 'site_plan' || c.role === 'condo') && (p.area === 0 || c.area === 0 || c.area < p.area * 0.9)) return 'rezoning ⊃ site plan (no draft plan)';
     return null;
   }
+  // Two site plans on the same land with different counts: phases (both proceed, each with its own
+  // building), a resubmission (the later file replaces the earlier proposal), or a redevelopment
+  // (the earlier site plan was built long ago; its units are already there). Scored from the files.
+  const YEAR = 365.25 * DAY;
+  const APPROVED = new Set(['approved', 'permit', 'construction', 'completed']);
+  const PHASE_ID = /\b(phase|stage|tower|building|bldg|block)\s*(\d+[a-z]?|[ivx]+\b|[a-h]\b|one|two|three|four)/gi;
+  const RESUB = /revis|re-?submi|new application|replac|supersed|amend\w* (to )?(the )?(approved|previous)|previously (approved|submitted)|update[sd]? (site )?plan/i;
+  const words = s => new Set(String(s || '').toLowerCase().match(/[a-z]{4,}/g) || []);
+  const jaccard = (x, y) => { if (!x.size || !y.size) return 0; let k = 0; for (const w of x) if (y.has(w)) k++; return k / (x.size + y.size - k); };
+  const ids = s => new Set([...String(s || '').matchAll(PHASE_ID)].map(m => `${m[1].toLowerCase().replace('bldg', 'building')} ${m[2].toLowerCase()}`));
+  function sameLandVerdict(a, b) {
+    const [E, L] = (a.date0 || 0) <= (b.date0 || 0) ? [a, b] : [b, a];
+    const dE = E.records.map(r => r.description || '').join(' '), dL = L.records.map(r => r.description || '').join(' ');
+    const gap = E.date0 != null && L.date0 != null ? (L.date0 - E.date0) / YEAR : null;
+    const apprE = E.records.some(r => APPROVED.has(r.phase)), apprL = L.records.some(r => APPROVED.has(r.phase));
+    const doneE = E.records.some(r => r.phase === 'completed');
+    const ev = [], counts = { phase: 0, resubmission: 0 };
+    const add = (k, n, why) => { counts[k] += n; ev.push(`${k} +${n}: ${why}`); };
+    // Built long ago: the new file rebuilds the site.
+    if (gap != null && gap >= 8 && (apprE || doneE)) return { verdict: 'redevelopment', earlier: E, later: L, counts, evidence: [`${E.refs[0]} approved ${Math.round(gap)} years before ${L.refs[0]} was filed`] };
+    const iE = ids(dE), iL = ids(dL);
+    if (iE.size && iL.size && ![...iL].some(x => iE.has(x))) add('phase', 2, `different phase / tower / block named (${[...iE].join(', ')} vs ${[...iL].join(', ')})`);
+    else if (/\b(phase|stage)\s*(2|ii|two|3|iii|three)\b/i.test(dL) && !/\b(phase|stage)\s*(2|ii|two|3|iii|three)\b/i.test(dE)) add('phase', 1, `${L.refs[0]} names a later phase`);
+    if (RESUB.test(dL)) add('resubmission', 2, `${L.refs[0]} says it revises, replaces or resubmits`);
+    if (apprE && apprL) add('phase', 1, 'both are approved (two approvals on one land)');
+    if (!apprE && apprL) add('resubmission', 1, `${E.refs[0]} was never approved; ${L.refs[0]} was`);
+    if (!apprE && !apprL && gap != null && gap >= 1) add('resubmission', 1, 'neither approved; the later one was filed a year or more after');
+    const sim = jaccard(words(dE), words(dL));
+    if (sim >= 0.6) add('resubmission', 1, `descriptions ${Math.round(sim * 100)}% alike`);
+    else if (sim <= 0.2 && dE && dL) add('phase', 1, `descriptions only ${Math.round(sim * 100)}% alike (different buildings)`);
+    if (E.units > 0 && L.units > 0 && Math.abs(E.units - L.units) <= 0.25 * Math.max(E.units, L.units)) add('resubmission', 1, `counts within 25% (${E.units} vs ${L.units})`);
+    const verdict = counts.resubmission - counts.phase >= 2 ? 'resubmission' : counts.phase - counts.resubmission >= 2 ? 'phase' : 'unclear';
+    return { verdict, earlier: E, later: L, counts, evidence: ev };
+  }
   function buildTrees(nodes, { permits = [], log = () => {} } = {}) {
     const links = [], flags = { twoTrees: [], precon: [], crossMuni: [], sameLandSitePlans: [], dateReversed: [] };
     // Candidate pairs: boxes that meet, same address, or a point inside a boundary (grid of 0.01°).
@@ -204,12 +238,15 @@
     const byAddr = new Map(); nodes.forEach((n, i) => { for (const a of n.addrs) { if (!byAddr.has(a)) byAddr.set(a, []); byAddr.get(a).push(i); } });
     for (const list of byAddr.values()) if (list.length < 40) for (const i of list) for (const j of list) if (j > i) pairs.add(`${i},${j}`);
     log(`candidate pairs: ${pairs.size}`);
+    // Area-wide official plan amendments (no count, larger than any one site) are policy: never a
+    // parent, sibling or child; planAmendments() lists them for the developments they cover.
+    for (const n of nodes) n.policy = !process.env.NOPOL && isOpa(n) && !(n.units > 0) && !n.roles.includes('land_division') && n.area > T.POLICY_M2;
 
     // Evidence for every pair.
     const ev = [];
     for (const key of pairs) {
       const [i, j] = key.split(',').map(Number), a = nodes[i], b = nodes[j];
-      if (a.cancelled || b.cancelled) continue;
+      if (a.cancelled || b.cancelled || a.policy || b.policy) continue;
       let o = overlap(a, b); const addr = addrMatch(a, b);
       // No boundary to measure on one side and nothing inside the other: the same address stands in
       // (medium confidence at best); with both boundaries, the address never overrides the land.
@@ -236,10 +273,19 @@
       else if (mutual >= T.SAME && a.role === b.role && (a.role === 'use' || a.role === 'land_division')) rule = 'same land: two files of the same kind';
       else if (a.role === 'site_plan' && b.role === 'site_plan' && mutual >= T.SAME) {
         const rev = (a.units && a.units === b.units) || a.minor || b.minor || a.records.concat(b.records).some(r => REVISES.test(r.description || ''));
-        if (rev) rule = 'same land: site plan revision'; else flags.sameLandSitePlans.push({ a: a.refs[0], b: b.refs[0], units: [a.units, b.units], overlap: +mutual.toFixed(2) });
+        if (rev) rule = 'same land: site plan revision';
+        else {
+          // Different counts on the same land: phases, a resubmission, or a rebuild of an old site?
+          const v = sameLandVerdict(a, b);
+          flags.sameLandSitePlans.push({ a: v.earlier.refs[0], b: v.later.refs[0], units: [v.earlier.units, v.later.units], overlap: +mutual.toFixed(2), verdict: v.verdict, evidence: v.evidence, counts: v.counts });
+          if (v.verdict === 'resubmission' || v.verdict === 'redevelopment') {
+            rule = v.verdict === 'resubmission' ? 'same land: resubmission (the later file replaces the earlier)' : 'same land: redevelopment (the earlier site plan was built long ago)';
+            v.earlier.superseded = v.verdict;
+          }
+        }
       }
       if (!rule) continue;
-      const order = 'n/a', conf = rule.startsWith('same proposal re-filed') ? 'medium' : confidence({ share: e.point ? null : mutual, point: e.point, addr: e.addr, order });
+      const order = 'n/a', conf = rule.startsWith('same proposal re-filed') || /resubmission|redevelopment/.test(rule) ? 'medium' : confidence({ share: e.point ? null : mutual, point: e.point, addr: e.addr, order });
       links.push({ type: 'sibling', rule, a: a.id, b: b.id, overlap: e.point ? null : +mutual.toFixed(2), point: e.point, addr: e.addr, order, confidence: conf });
       join(e.i, e.j); same.set(`${e.i},${e.j}`, true);
     }
@@ -303,7 +349,7 @@
     const permitOf = new Map();
     if (permits.length) {
       const appGrid = new Map();
-      nodes.forEach((n, i) => { if (!n.rings || n.cancelled) return; for (const c of cellsOf(n)) { if (!appGrid.has(c)) appGrid.set(c, []); appGrid.get(c).push(i); } });
+      nodes.forEach((n, i) => { if (!n.rings || n.cancelled || n.policy) return; for (const c of cellsOf(n)) { if (!appGrid.has(c)) appGrid.set(c, []); appGrid.get(c).push(i); } });
       for (const r of permits) {
         if (r.lat == null) continue;
         let best = -1;
@@ -328,7 +374,7 @@
     const flags = [];
     // Siblings: nodes with no parent inside the tree form the top level; same-land groups share it.
     const tops = [...set].filter(i => !(parent[i] >= 0 && set.has(parent[i])));
-    function own(i) { const n = nodes[i]; return n.cancelled || n.role === 'condo' || n.role === 'precon' ? 0 : n.units; }
+    function own(i) { const n = nodes[i]; return n.cancelled || n.superseded || n.role === 'condo' || n.role === 'precon' ? 0 : n.units; }
     function count(i, depth = 0) {
       if (depth > 12) return { units: own(i), basis: 'depth limit' };
       const n = nodes[i];
@@ -336,8 +382,11 @@
       if (!ch.length) return { units: own(i), basis: 'own count' };
       const sub = ch.map(k => ({ k, ...count(k, depth + 1) }));
       const sum = sub.reduce((t, s) => t + s.units, 0);
+      // Coverage counts only the children that state a count: land under a file with no count
+      // can't stand in for the parent's number.
+      const counted = process.env.OLDCOV ? ch : sub.filter(s => s.units > 0).map(s => s.k);
       let cover = null;
-      if (n.rings && n.area > 0 && ch.every(k => nodes[k].rings)) cover = Math.min(1, ch.reduce((t, k) => t + nodes[k].area * shareInside(nodes[k], n), 0) / n.area);
+      if (n.rings && n.area > 0 && counted.length && counted.every(k => nodes[k].rings)) cover = Math.min(1, counted.reduce((t, k) => t + nodes[k].area * shareInside(nodes[k], n), 0) / n.area);
       const mine = own(i);
       if (mine > 0 && sum > mine * (1 + T.OVER)) flags.push({ kind: 'children exceed parent', parent: n.refs[0], parentUnits: mine, childUnits: sum });
       const blank = sub.filter(s => !(s.units > 0)).length;
@@ -352,17 +401,60 @@
     // Tops in one tree are joined by same-land sibling links: one proposal, the largest count.
     const topCounts = tops.map(i => ({ i, ...count(i) }));
     let units = topCounts.length ? Math.max(...topCounts.map(t => t.units)) : 0;
+    // Tops joined only through a chain of same-land links (A~B, B~C but not A~C): flagged for review.
+    const counted = topCounts.filter(x => x.units > 0);
+    if (counted.length > 1) {
+      if (!built.direct) { const idx = new Map(nodes.map((n, i) => [n.id, i])); built.direct = new Set(built.links.filter(l => l.type === 'sibling').flatMap(l => [`${idx.get(l.a)},${idx.get(l.b)}`, `${idx.get(l.b)},${idx.get(l.a)}`])); }
+      const direct = built.direct;
+      if (counted.some((x, a) => counted.some((y, b) => b > a && !direct.has(`${x.i},${y.i}`)))) flags.push({ kind: 'same-land chain: counted files not all linked directly', files: counted.map(x => nodes[x.i].refs[0]), units: counted.map(x => x.units), countedOnce: units, ifSummed: counted.reduce((t, x) => t + x.units, 0) });
+    }
     let basis = topCounts.length > 1 ? `same land, counted once (largest of ${topCounts.length})` : (topCounts[0] || {}).basis || 'none';
-    if (!(units > 0)) { const pre = Math.max(0, ...[...set].map(i => nodes[i].precUnits || 0), ...[...set].filter(i => nodes[i].role === 'precon').map(i => nodes[i].units || 0)); if (pre > 0) { units = pre; basis = 'pre-consultation count (no other file states one)'; } }
-    // A tree with only condominium files (no site plan in the data): condos never add units, so it
-    // counts 0 — listed for review (the brief's rule; the current app counts the condo).
+    // A tree whose only count is on a condominium file (no site plan or draft plan in the data
+    // states one): the condo's count stands, so the units aren't lost.
     const live = [...set].filter(i => !nodes[i].cancelled);
+    if (!(units > 0)) { const c = Math.max(0, ...live.filter(i => nodes[i].role === 'condo').map(i => nodes[i].units || 0)); if (c > 0) { units = c; basis = 'condominium count (no site plan or draft plan in the data states one)'; } }
+    if (!(units > 0)) { const pre = Math.max(0, ...[...set].map(i => nodes[i].precUnits || 0), ...[...set].filter(i => nodes[i].role === 'precon').map(i => nodes[i].units || 0)); if (pre > 0) { units = pre; basis = 'pre-consultation count (no other file states one)'; } }
+    // Trees with only condominium files are still listed for review.
     const condoOnly = live.length > 0 && live.every(i => nodes[i].role === 'condo' || nodes[i].role === 'precon') && live.some(i => nodes[i].role === 'condo');
     const condoUnits = condoOnly ? Math.max(0, ...live.map(i => nodes[i].units || 0)) : 0;
     return { units, basis, tops: topCounts, flags, condoOnly: condoOnly ? { units: condoUnits, files: live.map(i => nodes[i].refs[0]) } : null };
   }
 
-  const api = { ROLES, T, classifyRole, fileNodes, buildTrees, countTree, shareInside, bboxOf, dateOrder, confidence };
+  // Official plan amendments: policy, never counted. For each tree, the amendments that apply —
+  // site-specific (a file in the tree asks for one) or area-wide (a larger amendment file whose
+  // boundary holds the tree's land) — and the latest of them by filing date.
+  function isOpa(n) {
+    if (n.role === 'precon') return false;
+    return n.records.some(r => {
+      const src = String(r.sourceId || '');
+      if (src.startsWith('bra-opa-zba-sub')) return /official plan amendment/i.test(String(r.description || '').split(' — ')[0]);
+      if (r.municipality === 'Mississauga') return /\bOPA\b/i.test(r.ref || '');
+      if (r.municipality === 'Caledon') return /official plan amendment/i.test(r.type || '');
+      return false;
+    });
+  }
+  function planAmendments(built) {
+    const { nodes, trees } = built;
+    const opas = nodes.map((n, i) => i).filter(i => !nodes[i].cancelled && isOpa(nodes[i]));
+    const info = (i, scope) => { const n = nodes[i], r = n.records[0]; return { ref: n.refs[0], scope, filed: n.date0 != null ? new Date(n.date0).toISOString().slice(0, 10) : null, status: (n.records.find(x => APPROVED.has(x.phase)) || r).phase, description: String(r.description || '').slice(0, 160) }; };
+    return trees.map(t => {
+      const inTree = new Set(t.nodes), list = [];
+      for (const i of t.nodes) if (opas.includes(i)) list.push(info(i, 'site-specific'));
+      // Area-wide: a larger amendment whose boundary holds any live file of the tree (or its point).
+      const lands = t.nodes.map(i => nodes[i]).filter(n => !n.cancelled);
+      for (const i of opas) {
+        if (inTree.has(i)) continue;
+        const o = nodes[i]; if (!o.rings) continue;
+        const holds = lands.some(land => land.municipality === o.municipality && !(land.bbox && (land.bbox[0] > o.bbox[2] || land.bbox[2] < o.bbox[0] || land.bbox[1] > o.bbox[3] || land.bbox[3] < o.bbox[1])) &&
+          (land.rings ? o.area > land.area * 2 && shareInside(land, o) >= T.CONTAIN : land.lng != null && P.pointInRings(land.lng, land.lat, o.rings)));
+        if (holds) list.push(info(i, 'area-wide'));
+      }
+      list.sort((a, b) => String(b.filed || '').localeCompare(String(a.filed || '')));
+      return list.length ? { latest: list[0], all: list } : null;
+    });
+  }
+
+  const api = { ROLES, T, classifyRole, fileNodes, buildTrees, countTree, planAmendments, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);
