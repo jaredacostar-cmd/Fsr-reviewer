@@ -68,13 +68,16 @@
   // stampHTML scenario line (the scenario bar now carries that once).
   const wwTile = (label, value, unitTxt = '', sub = '', info = '') =>
     `<div class="tile"${info ? ` data-info="${info}"` : ''}><div class="tl">${label}</div><div class="tv">${value}${unitTxt ? `<span class="tu">${unitTxt}</span>` : ''}</div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
-  const miniBar = (name, v, max, unitTxt, neg = false) => `
+  // A labelled bar: the state is in words ("over" / "short"), not only in colour (design audit,
+  // Group 8); a % bar carries a 100% tick.
+  const miniBar = (name, v, max, unitTxt, neg = false, negWord = unitTxt === '%' ? 'over' : 'short') => `
     <div style="display:flex;align-items:center;gap:8px;margin:3px 0">
       <span class="muted small" style="width:92px;flex:none">${name}</span>
-      <span style="flex:1;background:var(--surface-1);border-radius:4px;height:10px;display:block;overflow:hidden">
+      <span style="flex:1;background:var(--surface-1);border-radius:4px;height:10px;display:block;overflow:hidden;position:relative">
         <span style="display:block;height:100%;width:${(Math.max(0, v) / max * 100).toFixed(1)}%;background:var(${neg ? '--cap-over' : '--cap-room'});border-radius:4px"></span>
+        ${unitTxt === '%' && max > 100 ? `<span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:${(100 / max * 100).toFixed(1)}%;border-left:1px solid var(--text-primary)"></span>` : ''}
       </span>
-      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}</span>
+      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}${neg ? ` · ${negWord}` : ''}</span>
     </div>`;
   function wwInfoLine(method) {
     const c = App().state.criteria, E = c.employment, R = App().state.reports, bc = CA().baselineCensus(), Y = bc ? bc.year : 2021;

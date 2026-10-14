@@ -378,7 +378,7 @@
   // line. Theme-aware via CSS vars (dark default, light checked by inspection).
   function timingChartSVG(fc) {
     const years = fc.years;
-    const W = 760, H = 250, L = 46, Rr = 16, T = 12, B = 26;
+    const W = window.PeelUtil.chartW(320, 900), H = 250, L = 46, Rr = 16, T = 12, B = 26;
     const maxV = Math.max(1, ...years.map(r => r.high));
     const yMax = Math.max(500, Math.ceil(maxV / 500) * 500);
     const X = i => L + (years.length > 1 ? i / (years.length - 1) : 0) * (W - L - Rr);
