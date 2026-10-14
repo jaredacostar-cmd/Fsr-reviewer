@@ -30,7 +30,7 @@
   const TABSUBS = {
     water: { attr: 'wsub', store: 'wSub', valid: ['capacity', 'zones', 'facilities', 'hydro'], get: () => wSub, set: v => { wSub = v; } },
     ww: { attr: 'wwsub', store: 'wwSub', valid: ['plants', 'catchments', 'alloc', 'pumpstations'], get: () => wwSub, set: v => { wwSub = v; } },
-    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'census2051'], get: () => gSub, set: v => { gSub = v; } },
+    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'census2051', 'timing'], get: () => gSub, set: v => { gSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'recommendations', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);

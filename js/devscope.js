@@ -125,6 +125,9 @@
         if (al) { const h = H(); if (h && h.showAllocSub) h.showAllocSub(); return; }
         const fsr = e.target.closest('[data-scope-fsr]');
         if (fsr) {
+          // Phase 7: the FSR cross-check panel (sibling module; guarded — the button
+          // only toggles the stub container until that module loads).
+          if (window.PeelFsrCheck && typeof window.PeelFsrCheck.toggleFor === 'function') { window.PeelFsrCheck.toggleFor(DevScope.current(), fsr); return; }
           const note = bar.querySelector('.site-bar-fsr');
           if (note) { note.hidden = !note.hidden; fsr.setAttribute('aria-expanded', String(!note.hidden)); }
           return;
@@ -204,7 +207,7 @@
           <button type="button" class="btn small" data-scope-fsr aria-expanded="false" title="Cross-check the consultant's FSR figures">Check FSR</button>
           <button type="button" class="btn small" data-scope-compare title="Add this development to the comparison (Compare tool)">Compare</button>
         </div>
-        <p class="site-bar-fsr small muted" hidden>FSR cross-check ships in Phase 7 — compare the consultant's population and flows against these numbers.</p>`;
+        <div class="site-bar-fsr" id="site-bar-fsr" hidden></div>`;
       bar.hidden = false;
     },
 
