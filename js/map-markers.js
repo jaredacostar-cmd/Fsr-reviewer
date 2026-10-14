@@ -66,6 +66,9 @@
   // Site boundary on hover (More settings): on / off and the reach in screen pixels.
   const hov = { on: true, r: 40, ...(store.get('hoverPoly', {}) || {}) };
   const areaOn = { sp: store.get('areaSp', false) === true, mtsa: store.get('areaMtsa', false) === true };
+  // Site constraint layers (js/constraints.js owns them; the switches read the saved state).
+  const cxOn = { ...(store.get('cxOn', {}) || {}) };
+  const CN = () => window.PeelConstraints;
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
     onAdd() {
@@ -88,8 +91,11 @@
              ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:var(${EXIST_STYLE.sanitary.color})"></i>`, 'Existing pipes', 'existing-pipes'],
              ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:var(--dc-ww-main)"></i>', 'Planned DC works', 'dc-works'],
              ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-sp)"></i>', 'Planning areas', 'secondary-plans'],
+             ...[['gas', 'Gas pipelines', 'cx-gas', '--cx-gas', true], ['hydro', 'Hydro lines', 'cx-hydro', '--cx-hydro', false], ['water', 'Watercourses', 'cx-water', '--cx-water', false], ['reg', 'Regulation limits', 'cx-reg', '--cx-reg', true]]
+               .map(([k, t, info, c, dash]) => [`opt-cx-${k}`, !!cxOn[k], k === 'reg' ? `<i class="lg-area" style="--c:var(${c})"></i>` : `<i class="lg-line" style="background:${dash ? `repeating-linear-gradient(90deg,var(${c}) 0 6px,transparent 6px 9px)` : `var(${c})`}"></i>`, t, info]),
              ['opt-da', CA().getDaOn(), CA().daSwatch(), '<span id="da-label">2021 census areas</span>', 'da-layer']].map(([id, on, sw, t, info]) =>
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
+        <small class="cx-note" id="cx-note"></small>
         </div>
         <div class="mo-legend" id="mo-legend" hidden><details><summary>Legend</summary><div class="lg-body"></div></details></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
@@ -135,6 +141,7 @@
       el.querySelector('#opt-exist').onchange = e => { const v = MA().currentView(), on = e.target.checked; MA().setExistOn(on ? { water: v !== 'wastewater', sanitary: v !== 'water', storm: false } : { water: false, sanitary: false, storm: false }); };
       el.querySelector('#opt-dcw').onchange = e => MA().setDcOn({ on: e.target.checked, sys: MA().currentView() === 'water' ? 'water' : MA().currentView() === 'wastewater' ? 'wastewater' : (dcOn.sys || 'both') });
       el.querySelector('#opt-plan').onchange = e => PA().setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });
+      for (const k of ['gas', 'hydro', 'water', 'reg']) el.querySelector(`#opt-cx-${k}`).onchange = e => { cxOn[k] = e.target.checked; if (CN()) CN().setOn({ [k]: e.target.checked }); };
       el.querySelector('#opt-wf').onchange = e => WT().setWfOn(e.target.checked);
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       // The legend is a section inside this panel now (not its own map box): remembered open state.

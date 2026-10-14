@@ -181,7 +181,7 @@
   function syncPanelSum() {
     const el = document.getElementById('mo-psum'); if (!el) return;
     const loads = MM().isWW() && !Object.values(MM().getWwLay()).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
-    const on = [MM().getDevsOn() && 'developments', MM().svcOn.bk && 'blocks', MM().svcOn.pz && 'zones', WT().WF.on && 'water facilities', MM().mstyle.cap !== 'off' && 'capacity', Object.values(MM().getExistOn()).some(Boolean) && 'pipes', MM().getDcOn().on && 'DC works', (MM().areaOn.sp || MM().areaOn.mtsa) && 'planning areas', CA().getDaOn() && 'census areas'].filter(Boolean);
+    const on = [MM().getDevsOn() && 'developments', MM().svcOn.bk && 'blocks', MM().svcOn.pz && 'zones', WT().WF.on && 'water facilities', MM().mstyle.cap !== 'off' && 'capacity', Object.values(MM().getExistOn()).some(Boolean) && 'pipes', ...(window.PeelConstraints ? Object.entries(window.PeelConstraints.getOn()).filter(([, v]) => v).map(([k]) => window.PeelConstraints.LAYERS[k].short) : []), MM().getDcOn().on && 'DC works', (MM().areaOn.sp || MM().areaOn.mtsa) && 'planning areas', CA().getDaOn() && 'census areas'].filter(Boolean);
     el.textContent = [on.length ? on.join(', ') : 'none on', loads].filter(Boolean).join(' · ');
     syncAreaOn();
   }
