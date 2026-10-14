@@ -6,7 +6,7 @@
   // ---- Timeline slider -------------------------------------------------------------
   const tFrom = $('#t-from'), tTo = $('#t-to');
   // Default year range on load and after "Reset all".
-  const DEFAULT_YEARS = null;   // all years
+  const DEFAULT_YEARS = [2021, 2026];
   let yearsInit = false;
   function updateYearBounds() {
     let lo = Infinity, hi = -Infinity;
