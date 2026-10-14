@@ -97,12 +97,43 @@ test('verdictMilestone: withdrawn, done, appeal, stalled, next', () => {
   assert.match(verdictMilestone({ withdrawn: false, done: false, appeal: false, stalled: null, next: '—' }).text, /Next milestone: —/);
 });
 
-test('scope wiring: every analysis tab render checks the development scope first', () => {
-  for (const fn of ['renderOverview', 'renderDemand', 'renderSvcTab', 'renderDca']) {
+test('scope wiring: every scoped analysis tab render checks the development scope first', () => {
+  // Phase 4: the Growth tab is scope-free by design (a site's units live on the
+  // Development tab), so renderGrowth is not in this list.
+  for (const fn of ['renderOverview', 'renderSvcTab', 'renderDca']) {
     const m = new RegExp(`function ${fn}\\([\\s\\S]*?\\n  \\}`).exec(APP);
     assert.ok(m, `function ${fn} not found`);
-    assert.match(m[0].slice(0, 600), /scopedDev\(\)/, `${fn} must consult scopedDev()`);
+    const iScope = m[0].indexOf('scopedDev()');
+    assert.ok(iScope !== -1, `${fn} must consult scopedDev()`);
+    // The scope check must come before the region-wide render, not after it.
+    const iWide = m[0].indexOf(fn === 'renderDca' ? 'dcAnalysis()' : 'innerHTML');
+    assert.ok(iScope < iWide, `${fn} must check the scope before rendering region-wide`);
   }
+});
+
+test('growth tab (Phase 4): renderGrowth fills both sub-view bodies, old Demand renders are gone', () => {
+  for (const fn of ['renderGrowth', 'renderGrowthPipeline', 'renderGrowthCensus', 'forecastTableHTML']) {
+    assert.ok(new RegExp(`function ${fn}\\(`).test(APP), `function ${fn} not found`);
+  }
+  const m = /function renderGrowthPipeline\(\) \{[\s\S]*?\n  \}/.exec(APP);
+  assert.ok(m, 'renderGrowthPipeline not found');
+  assert.match(m[0], /\$\('#growth-pipeline-body'\)/, 'pipeline sub-view fills #growth-pipeline-body');
+  assert.match(m[0], /Growth\.pipelineTotals/, 'pipeline buckets come from the growth merge');
+  assert.match(m[0], /Growth\.completionStats/, 'completions per year are computed');
+  assert.match(m[0], /Growth\.medianApprovalByMuni/, 'approval pace is computed');
+  assert.match(m[0], /renderGrowthChart\(/, 'the pipeline chart reuses renderGrowthChart');
+  const c = /function renderGrowthCensus\(\) \{[\s\S]*?\n  \}/.exec(APP);
+  assert.ok(c, 'renderGrowthCensus not found');
+  assert.match(c[0], /\$\('#growth-census-body'\)/, 'census sub-view fills #growth-census-body');
+  assert.match(c[0], /housingCardHTML\(\)/, 'housing targets are reused');
+  assert.match(c[0], /outlookCardHTML\(true\)/, 'the population outlook is reused');
+  assert.match(c[0], /forecastTableHTML\(bc\)/, 'the 2051 allocation table is rendered');
+  for (const gone of ['function renderDemand(', 'function renderDemandScoped(', "stampHTML('demand')"]) {
+    assert.ok(!APP.includes(gone), `still present: ${gone}`);
+  }
+  // flowTablesHTML moved (not deleted): Worker C removed the Demand-tab original and
+  // Worker D re-created it once in the Water tab region.
+  assert.equal(APP.split('function flowTablesHTML(').length - 1, 1, 'flowTablesHTML exists exactly once');
 });
 
 test('scopedDev: prefers DevScope.current(), falls back to currentProject', () => {
@@ -126,13 +157,10 @@ test('verdict card: four key numbers, one status sentence, four tab-linked verdi
   assert.match(src, /data-ov-dev/, 'milestone line must open the development');
 });
 
-test('scoped Demand: units/build-out via devUnitsHTML without flow tables, plus a flow pointer', () => {
-  const m = /function renderDemandScoped\(p\) \{[\s\S]*?\n  \}/.exec(APP);
-  assert.ok(m, 'renderDemandScoped not found');
-  assert.match(m[0], /devUnitsHTML\(p, true, \{ flows: false \}\)/);
-  assert.match(m[0], /homeLine\('water', 'Water tab'\)/);
-  assert.match(m[0], /homeLine\('ww', 'Wastewater tab'\)/);
-  assert.doesNotMatch(m[0], /flowTablesHTML/);
+test('growth chart tooltip: delegated to .growth-chart so both sub-views keep it', () => {
+  assert.match(APP, /document\.addEventListener\('pointermove', growTip\)/);
+  assert.match(APP, /e\.target\.closest\('\.growth-chart'\)/);
+  assert.ok(!APP.includes("$('#c-chart').addEventListener"), 'old #c-chart binding is gone');
 });
 
 test('devUnitsHTML: flows:false drops the demand-by-stage flow tables', () => {
@@ -160,7 +188,7 @@ test('scoped DC: site DC brief without the sewer-path/plant-reserve numbers', ()
 });
 
 test('scoped Growth (census): DA view links I&I flows to the Wastewater tab instead of repeating them', () => {
-  assert.match(APP, /if \(da\) \$\('#c-ii'\)\.innerHTML = `<span class="muted">Wastewater I&amp;I for this area lives on the \$\{homeLine\('ww', 'Wastewater tab'\)\}\.<\/span>`/);
+  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{homeLine\('ww', 'Wastewater tab'\)\}/);
 });
 
 test('scopeBriefIds: prefixes dev-* ids so footer copies do not collide with the detail panel', () => {
@@ -175,8 +203,7 @@ test('scopeBriefIds: prefixes dev-* ids so footer copies do not collide with the
 test('scoped renders: footer copies get prefixed ids (water, ww, demand, dc)', () => {
   for (const re of [
     /function renderSvcScoped\(p\) \{[\s\S]*?scopeBriefIds\(\$\('#water-body'\)\); scopeBriefIds\(\$\('#ww-body'\)\);/,
-    /function renderDemandScoped\(p\) \{[\s\S]*?scopeBriefIds\(\$\('#d-breakdown'\)\);/,
-    /devBriefHTML\(p, st, f, 'dc', \{ noWwNeeds: true \}\);[\s\S]*?scopeBriefIds\(el\);/,
+    /devBriefHTML\(p, st, f, 'dc', \{ noWwNeeds: true \}\);[\s\S]*?scopeBriefIds\(bodies\[0\] \|\| legacy\);/,
   ]) assert.match(APP, re);
 });
 
