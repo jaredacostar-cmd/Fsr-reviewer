@@ -1,7 +1,9 @@
 (function (root) {
 'use strict';
   // Measure / buffer-select / test-site tools + ground elevation (PeelMeasure).
-  const { $, esc } = window.PeelUtil;
+  const { $, esc, token } = window.PeelUtil;
+  // A design token's value, for SVG / Leaflet attributes (which may not resolve var()).
+  const tok = name => token(name) || `var(${name})`;
   const CN = () => root.PeelConstraints;
   const A = window.PeelArcGIS;
   const map = window.PeelMapCore.map;
@@ -52,11 +54,11 @@
   }
   // The measured points: A (start, green) … the end (red), the ones between in distinct colours;
   // the same colour and letter on the map and in the profile.
-  const PT_MID = ['#3b82f6', '#f59e0b', '#a855f7', '#ec4899', '#14b8a6', '#eab308', '#6366f1', '#f97316'];
-  const ptColor = (i, n) => i === 0 ? '#22c55e' : i === n - 1 ? '#ef4444' : PT_MID[(i - 1) % PT_MID.length];
+  const PT_MID = [2, 3, 4, 5, 6, 1].map(k => `--mpt-${k}`);
+  const ptColor = (i, n) => tok(i === 0 ? '--mpt-start' : i === n - 1 ? '--mpt-end' : PT_MID[(i - 1) % PT_MID.length]);
   const ptLetter = i => i < 26 ? String.fromCharCode(65 + i) : `P${i + 1}`;
   // Crossings along the line: streets (grey) and watercourses (blue), numbered in order.
-  const XING = { street: { color: '#9ca3af', label: 'Street' }, water: { color: '#38bdf8', label: 'Watercourse' } };
+  const XING = { street: { get color() { return tok('--xing-street'); }, label: 'Street' }, water: { get color() { return tok('--xing-water'); }, label: 'Watercourse' } };
   function profileSVG(prof, W = 300, H = 90, marks = [], xings = []) {
     // Pipes along the line (when looked up): sanitary invert (solid) and watermain at an assumed cover (dashed).
     const zs = prof.flatMap(p => [p.z, p.san ? p.san.inv : p.z, p.wat ? p.z - WM_COVER : p.z]);
@@ -74,8 +76,8 @@
     const dots = (get, col) => prof.filter((p, i) => get(p) != null && get(prof[i - 1] || {}) == null && get(prof[i + 1] || {}) == null).map(p => `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(get(p)).toFixed(1)}" r="2.6" fill="${col}"/>`).join('');
     return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile${san ? ' with sanitary sewer inverts' : ''}${wat ? ' and watermains' : ''}">
       <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
-      ${san ? `<path d="${san}" fill="none" stroke="${MM().EXIST_STYLE.sanitary.color}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, MM().EXIST_STYLE.sanitary.color)}` : ''}
-      ${wat ? `<path d="${wat}" fill="none" stroke="${MM().EXIST_STYLE.water.color}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, MM().EXIST_STYLE.water.color)}` : ''}
+      ${san ? `<path d="${san}" fill="none" stroke="${tok(MM().EXIST_STYLE.sanitary.color)}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, tok(MM().EXIST_STYLE.sanitary.color))}` : ''}
+      ${wat ? `<path d="${wat}" fill="none" stroke="${tok(MM().EXIST_STYLE.water.color)}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, tok(MM().EXIST_STYLE.water.color))}` : ''}
       ${xingSVG}${markSVG}
       <g font-size="9" fill="var(--text-muted)"><text x="2" y="${Y(hi) + 4}">${hi} m</text><text x="2" y="${Y(lo)}">${lo} m</text><text x="${X(0)}" y="${H - 4}">0</text><text x="${X(D) - 2}" y="${H - 4}" text-anchor="end">${fmtDist(D)}</text></g></svg>`;
   }
@@ -123,7 +125,7 @@
     const n = tool.pts.length;
     tool.pts.forEach((p, i) => {
       const d = i ? fmtDist(tool.pts.slice(0, i + 1).reduce((t, q, j) => j ? t + metres(tool.pts[j - 1], q) : 0, 0)) : 'start';
-      L.circleMarker(p, { radius: 6, className: 'mpt', fillColor: ptColor(i, n), color: '#fff', weight: 2, fillOpacity: 1, interactive: false })
+      L.circleMarker(p, { radius: 6, className: 'mpt', fillColor: ptColor(i, n), color: tok('--sym-outline'), weight: 2, fillOpacity: 1, interactive: false })
         .bindTooltip(`<b style="color:${ptColor(i, n)}">${ptLetter(i)}</b> ${d}`, { permanent: true, direction: 'top', offset: [0, -6], className: 'pt mpt-lbl' }).addTo(toolLayer);
     });
   }
@@ -310,8 +312,8 @@
     const dep = s.map(p => p.z - p.san.inv), wd = [...new Set(w.map(p => p.wat.d).filter(Boolean))].sort((a, b) => a - b);
     const r = (a, f = 1) => a.length ? (Math.min(...a) === Math.max(...a) ? Math.min(...a).toFixed(f) : `${Math.min(...a).toFixed(f)}–${Math.max(...a).toFixed(f)}`) : '';
     const sw = col => `<span class="lg-line" style="background:${col}"></span>`;
-    return `<span class="pd-row">${sw(MM().EXIST_STYLE.sanitary.color)}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong>` : 'No sanitary sewer within 12 m of the line'}</span>
-      <span class="pd-row">${sw(MM().EXIST_STYLE.water.color)}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
+    return `<span class="pd-row">${sw(tok(MM().EXIST_STYLE.sanitary.color))}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong>` : 'No sanitary sewer within 12 m of the line'}</span>
+      <span class="pd-row">${sw(tok(MM().EXIST_STYLE.water.color))}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
   }
   // Streets and watercourses the line crosses (OpenStreetMap, or the provincial watercourses
   // when the constraint layers module has them): where, and their names.

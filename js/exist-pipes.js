@@ -106,13 +106,13 @@
         if (seen.has(id) || !f.geometry) continue; seen.add(id);
         const a = pipeAttrs(kind, S.src, f.properties || {});
         const lines = f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates];
-        L.polyline(lines.map(l => l.map(([x, y]) => [y, x])), { renderer: existRenderer, color: MM().EXIST_STYLE[kind].color, weight: a.d >= 900 ? 6 : a.d >= 600 ? 5 : a.d >= 375 ? 3.5 : 2, opacity: 0.85, dashArray: /FM/.test(a.type) ? '6 4' : null })
+        L.polyline(lines.map(l => l.map(([x, y]) => [y, x])), { renderer: existRenderer, color: token(MM().EXIST_STYLE[kind].color), weight: a.d >= 900 ? 6 : a.d >= 600 ? 5 : a.d >= 375 ? 3.5 : 2, opacity: 0.85, dashArray: /FM/.test(a.type) ? '6 4' : null })
           .bindTooltip(`<strong>${esc(existText(kind, a))}</strong><br><span class="muted">${esc(S.src)} (live)${kind === 'sanitary' ? ' · tap: what flows into it' : ''}</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { if (kind !== 'sanitary') return; L.DomEvent.stop(ev); existSewerLoads(lines, a); })
           .addTo(existLayer);
         // With the sewer capacity colours on, the existing sewers carry no labels: theirs would cover
         // the capacity labels (the size is in each pipe's tooltip).
-        if (MM().pipeLbl && a.d && !(kind === 'sanitary' && MM().mstyle.cap === 'pipes')) lbls.push({ d: a.d, color: MM().EXIST_STYLE[kind].color, lines });
+        if (MM().pipeLbl && a.d && !(kind === 'sanitary' && MM().mstyle.cap === 'pipes')) lbls.push({ d: a.d, color: token(MM().EXIST_STYLE[kind].color), lines });
       }
     }))));
     if (seq === existSeq && MM().pipeLbl) placePipeLabels(lbls, existLayer);
@@ -262,7 +262,7 @@
       const row = (k, g, i) => `<li><button type="button" class="btn small link" data-exhl="${k}|${i}" title="Show it on the map">${esc(existText(k, g.a).replace(MM().EXIST_STYLE[k].label, '').trim() || 'size not recorded')}</button>${g.street ? ` on <strong>${esc(g.street)}</strong>` : ''} · ${fmtNum(Math.round(g.m))} m <span class="muted">(${g.n > 1 ? `${g.n} pieces · ` : ''}${esc(g.a.src)})</span></li>`;
       for (const [k, v] of Object.entries(res)) {
         const L0 = v.list;
-        parts[k] = (`<div class="ex-kind"><div class="ex-k"><i class="lg-line" style="background:${MM().EXIST_STYLE[k].color}"></i><strong>${MM().EXIST_STYLE[k].label}s</strong> <span class="muted small">${L0.length ? `${L0.length} within ${r} m${v.more ? ` · ${v.more} more pieces farther out` : ''}` : `none within ${r} m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}`}</span></div>
+        parts[k] = (`<div class="ex-kind"><div class="ex-k"><i class="lg-line" style="background:var(${MM().EXIST_STYLE[k].color})"></i><strong>${MM().EXIST_STYLE[k].label}s</strong> <span class="muted small">${L0.length ? `${L0.length} within ${r} m${v.more ? ` · ${v.more} more pieces farther out` : ''}` : `none within ${r} m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}`}</span></div>
           ${L0.length ? `<ul class="b-lines small">${L0.slice(0, SHOW).map((g, i) => row(k, g, i)).join('')}</ul>${L0.length > SHOW ? `<details class="ex-more"><summary class="small">${L0.length - SHOW} more</summary><ul class="b-lines small">${L0.slice(SHOW).map((g, i) => row(k, g, i + SHOW)).join('')}</ul></details>` : ''}` : ''}</div>`);
       }
       const ar = pathAgeRisk(p);

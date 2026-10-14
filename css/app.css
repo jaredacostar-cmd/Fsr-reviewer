@@ -53,6 +53,11 @@
   --pipe-water: #5b9bf5;
   --pipe-sanitary: #c98a5e;
   --pipe-storm: #5ec46f;
+  /* Measure points (start / between / end), crossings, and site constraint layers. */
+  --mpt-start: #51cf66; --mpt-end: #f0665f;
+  --mpt-1: #5b9bf5; --mpt-2: #ffa94d; --mpt-3: #c07ae0; --mpt-4: #f06595; --mpt-5: #3fb3c4; --mpt-6: #e8b93e;
+  --xing-street: #b8b7ad; --xing-water: #4fc3f7;
+  --cx-gas: #ffd43b; --cx-hydro: #ff6b6b; --cx-water: #4fc3f7; --cx-reg: #38d9a9;
   --dc-ww-main: #f06595;
   --dc-ww-local: #5ec46f;
   --dc-ww-force: #c07ae0;
@@ -116,6 +121,11 @@
     --pipe-water: #1971c2;
     --pipe-sanitary: #a0522d;
     --pipe-storm: #2b8a3e;
+    /* Measure points (start / between / end), crossings, and site constraint layers. */
+    --mpt-start: #2f9e44; --mpt-end: #e03131;
+    --mpt-1: #1971c2; --mpt-2: #b26a00; --mpt-3: #9c36b5; --mpt-4: #d6336c; --mpt-5: #0b7285; --mpt-6: #946c00;
+    --xing-street: #6b6a62; --xing-water: #0277bd;
+    --cx-gas: #b8860b; --cx-hydro: #c92a2a; --cx-water: #0277bd; --cx-reg: #087f5b;
     --dc-ww-main: #d6336c;
     --dc-ww-local: #2b8a3e;
     --dc-ww-force: #9c36b5;
@@ -179,6 +189,11 @@
   --pipe-water: #1971c2;
   --pipe-sanitary: #a0522d;
   --pipe-storm: #2b8a3e;
+  /* Measure points (start / between / end), crossings, and site constraint layers. */
+  --mpt-start: #2f9e44; --mpt-end: #e03131;
+  --mpt-1: #1971c2; --mpt-2: #b26a00; --mpt-3: #9c36b5; --mpt-4: #d6336c; --mpt-5: #0b7285; --mpt-6: #946c00;
+  --xing-street: #6b6a62; --xing-water: #0277bd;
+  --cx-gas: #b8860b; --cx-hydro: #c92a2a; --cx-water: #0277bd; --cx-reg: #087f5b;
   --dc-ww-main: #d6336c;
   --dc-ww-local: #2b8a3e;
   --dc-ww-force: #9c36b5;
@@ -1587,8 +1602,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .xing b { font-weight: 700; margin-right: 2px; }
 .leaflet-tooltip.mpt-lbl { padding: 1px 5px; font-size: 11px; font-weight: 600; }
 .leaflet-tooltip.xing-lbl { padding: 0 4px; font-size: 10px; background: color-mix(in srgb, var(--surface-1) 85%, transparent); }
-.leaflet-tooltip.xing-water { color: #0284c7; }
-:root:not([data-theme="light"]) .leaflet-tooltip.xing-water { color: #7dd3fc; }
+.leaflet-tooltip.xing-water { color: var(--xing-water); }
 
 /* Sewer capacity state and calculation */
 .pipe-st i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--st); margin-right: var(--space-2); }
