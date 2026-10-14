@@ -36,18 +36,19 @@ test('no per-tab scenario stamp remains in the DC tab', () => {
   assert.ok(!/stampHTML\(/.test(dcRegion()), 'stampHTML call in the DC region');
 });
 
-test('keep/defer merge: one table with a Recommendation column', () => {
+test('funding-screen merge: one table with a Screening result column', () => {
   const R = dcRegion();
   const mfn = R.match(/function dcaMergeRecs\(B\) \{[\s\S]*?\n  \}/);
   assert.ok(mfn, 'dcaMergeRecs exists');
   assert.ok(/dec:\s*'Keep'/.test(mfn[0]), "keep rows carry dec 'Keep'");
   assert.ok(/dec:\s*'Defer'/.test(mfn[0]), "defer rows carry dec 'Defer'");
   assert.ok(mfn[0].indexOf("'Keep'") < mfn[0].indexOf("'Defer'"), 'keep rows come first');
-  // One merged table: a Recommendation column header, and the old split Keep/Defer tables gone.
-  assert.ok(/<th>Recommendation<\/th>/.test(R), 'Recommendation column header');
+  // One merged table: a Screening result column header (not "Recommendation"), and the old split Keep/Defer tables gone.
+  assert.ok(/<th>Screening result<\/th>/.test(R), 'Screening result column header');
+  assert.ok(!/<th>Recommendation<\/th>/.test(R), 'no Recommendation header');
   assert.ok(!/<h4>Keep \(/.test(R) && !/<h4>Defer \(/.test(R), 'split Keep/Defer tables removed');
-  // The recommendation cell renders the decision value.
-  assert.ok(/<span class="dca-rec">\$\{x\.dec\}<\/span>/.test(R), 'decision cell from x.dec');
+  // The result cell shows the screening label for the decision (DEC map), never the raw Keep / Defer.
+  assert.ok(/<span class="dca-rec">\$\{DEC\[x\.dec\]\}<\/span>/.test(R), 'result cell from DEC[x.dec]');
 });
 
 test('dcaMergeRecs: keep rows first (funding order), then defer by impact', () => {
@@ -62,9 +63,9 @@ test('dcaMergeRecs: keep rows first (funding order), then defer by impact', () =
   assert.deepStrictEqual(Array.from(fn({ keep: [], defer: [] })), []);
 });
 
-test('filter chips: All / Keep / Defer narrow the merged table', () => {
+test('filter chips: All / Within / Outside narrow the merged table', () => {
   const R = dcRegion();
-  assert.ok(/\[\['all',\s*'All'\],\s*\['keep',\s*'Keep'\],\s*\['defer',\s*'Defer'\]\]/.test(R), 'All/Keep/Defer chips');
+  assert.ok(/\[\['all',\s*'All'\],\s*\['keep',\s*'Within'\],\s*\['defer',\s*'Outside'\]\]/.test(R), 'All/Within/Outside chips');
   assert.ok(/data-dcarec-filter="\$\{k\}"/.test(R), 'chips carry data-dcarec-filter');
   assert.ok(/MP\(\)\.DCA\.recFilter = rf\.dataset\.dcarecFilter/.test(R), 'click handler stores the filter');
   assert.ok(/MP\(\)\.DCA\.recAll = false/.test(R), 'changing the filter resets See all');

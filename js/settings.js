@@ -32,6 +32,7 @@
     if (e.target.id === 'dsp-theme') setTheme(e.target.value);
     else if (e.target.id === 'dsp-density') setDensity(e.target.value);
     else if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim());
+    else if (e.target.id === 'public-view') { store.set('publicView', !!e.target.checked); root.PeelUtil.applyPublic(); App().refreshTheme(); }
     const w = e.target.closest && e.target.closest('[data-wet]');
     if (w) { App().state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged(); }
   });

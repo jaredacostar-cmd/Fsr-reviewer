@@ -53,12 +53,12 @@
     const bits = [];
     if (d.pipeMm != null) bits.push(`tightest pipe ${d.pipeMm} mm at ${d.pipePct}% of full capacity`);
     if (d.psName) bits.push(`${d.psName} ≈${d.psPct}% of firm capacity`);
-    if (d.plant) bits.push(d.over ? `${d.plant} over-committed` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it`);
+    if (d.plant) bits.push(d.over ? `${d.plant} screens over rated capacity` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it`);
     return { tone: bad ? 'bad' : warn ? 'warn' : 'ok', text: bits.join(' · ') || 'No capacity flags on its path' };
   };
   const verdictDc = (d) => {
     if (d.loading) return { tone: 'warn', text: 'The 2026 DC program is still loading' };
-    if (d.gap) return { tone: 'bad', text: `Needs a planned main by ${d.needBy} — committed before it is built` };
+    if (d.gap) return { tone: 'bad', text: `Screens ahead of its main: needs a planned main by ${d.needBy}, before that main is in service` };
     if (d.needBy) return { tone: 'warn', text: `Outside the existing network: servicing about ${d.needBy} on the 2026 DC draft schedule` };
     if (d.nearby) return { tone: 'ok', text: `Served by the existing network · ${d.nearby} planned ${d.nearby === 1 ? 'work' : 'works'} nearby` };
     return { tone: 'ok', text: 'Served by the existing network — no planned works nearby' };

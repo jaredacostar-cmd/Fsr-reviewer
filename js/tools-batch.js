@@ -140,10 +140,10 @@
     if (!needs) return { row: row, status: 'nodata', note: 'Servicing model not loaded.', units: units, people: people,
       maxDay: e.combined.water.maxDay, wetPeak: e.combined.wastewater.wetPeak };
     var t = needs[0] || null;
-    var status = 'ok', note = 'OK';
+    var status = 'ok', note = 'Screens with room';
     if (t) {
-      if (t.status === 'gap') { status = 'constrained'; note = 'Constrained'; }
-      else if (t.status === 'planned') { status = 'constrained'; note = 'Constrained — DC project in time'; }
+      if (t.status === 'gap') { status = 'constrained'; note = 'Screens constrained'; }
+      else if (t.status === 'planned') { status = 'constrained'; note = 'Screens constrained — DC project in time'; }
       else if (t.status === 'check') { status = 'check'; note = 'Check the data'; }
     }
     return { row: row, status: status, note: note,

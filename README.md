@@ -450,9 +450,10 @@ from street zoom (14), up to 3,000 in view.
   build-out). **Cancelled:** the same without that one project; the growth held back is given in
   people (each constraint's own rate) and units (the approved and proposed developments' average
   persons per unit) at the chosen year and at build-out; developments that would connect to a new
-  main count in full. **Recommendations:** Keep · advance (online after the capacity runs out),
-  Keep, Keep · could defer (nothing held back until 5+ years after it is due), Review (nothing
-  held back by build-out in this screen); the five largest impacts are listed first. Tap a row
+  main count in full. **Screening results** (not Region decisions): Screens late (in service
+  after the capacity runs out), Screens in time, Screens well ahead of need (nothing constrained
+  until 5+ years after it is due), No modelled need (nothing constrained by build-out in this
+  screen); the five largest impacts are listed first. Tap a row
   for each constraint's timeline (demand, capacity with and without, flow diverted to it) and
   *Show on the map*; CSV export with the impact by year. A screen to rank and question projects:
   condition, I&I reduction, servicing beyond today's applications and cost are not in it.
@@ -1433,6 +1434,32 @@ panel can be based on all units, units left to build, units not yet completed, o
 units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
+
+## Screening wording and the public version
+
+Results say what the screen shows, never what the Region should do (design audit, Group 2). One
+set of labels (`PeelUtil.SCREEN`) is used on the DC tab, the briefing, the memo, the workbook and
+the CSVs:
+
+| Was | Now |
+|---|---|
+| Keep · advance / "bring it forward" | **Screens late** (in service after the capacity runs out) |
+| Keep | **Screens in time** |
+| Keep · could defer | **Screens well ahead of need** |
+| Review | **No modelled need** |
+| Keep / Defer (funding) | **Within / Outside the funding screen** |
+| Over-committed | **Screens over rated capacity** |
+| Recommendation / Decision column | **Screening result** |
+| Servicing verdict / Verdict | **Screening summary** |
+
+"Held back" figures read "people the screen shows constrained". A range whose two ends round to
+the same number shows one number (no "65,100–65,100"). The funding screen's within / outside
+colours are neutral (accent / grey): they are not capacity states.
+
+**Public version** (Settings › Number conventions › *Public version*, or add `?public` to the
+link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on Timing), the
+screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
+the screening summary to plain text. Everything else is unchanged.
 
 ## Definitions (one table, used everywhere)
 

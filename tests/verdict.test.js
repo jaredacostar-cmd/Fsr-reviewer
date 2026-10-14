@@ -61,7 +61,7 @@ test('verdictWastewater: over-capacity is bad, 90%+ is warn, clear is ok', () =>
   assert.equal(verdictWastewater({ ...base, pipePct: 100 }).tone, 'bad');
   assert.equal(verdictWastewater({ ...base, psPct: 101 }).tone, 'bad');
   assert.equal(verdictWastewater({ ...base, over: true }).tone, 'bad');
-  assert.match(verdictWastewater({ ...base, over: true }).text, /over-committed/);
+  assert.match(verdictWastewater({ ...base, over: true }).text, /screens over rated capacity/);
   assert.equal(verdictWastewater({ ...base, pipePct: 92 }).tone, 'warn');
   assert.equal(verdictWastewater({ ...base, commitPct: 90 }).tone, 'warn');
   assert.equal(verdictWastewater({ noPath: true }).tone, 'warn');

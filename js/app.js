@@ -19,6 +19,7 @@
   const PD = window.PeelDesign;
   PD.applyTheme(store.get('theme', 'dark'));
   PD.applyDensity(store.get('density', PD.densityDefault()));
+  window.PeelUtil.applyPublic();
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';

@@ -296,7 +296,7 @@
     if (cap) {
       const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
       plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + built + committed ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
-        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}. ${estTag}</p>`;
+        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant already screens over rated capacity'}. ${estTag}</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `${SCREEN_NOTE}<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${opt.trace === false ? '' : `<div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>`}
