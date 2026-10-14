@@ -130,12 +130,12 @@
   function employmentHTML(p) {
     const e = App().empOf(p);
     if (!e) return '';
-    const rows = e.uses.map(u => `<tr><td>${esc(u.label)}</td><td>${u.m2 ? `${fmtNum(u.m2)} m²${u.fromField ? ' <span class="muted">†</span>' : ''}` : '<span class="muted">not stated</span>'}</td><td>${u.jobs ? fmtNum(u.jobs) : '–'}</td></tr>`).join('');
-    const anyField = e.uses.some(u => u.fromField);
+    const rows = e.uses.map(u => `<tr><td>${esc(u.label)}</td><td>${u.m2 ? `${fmtNum(u.m2)} m²${u.fromField ? ' <span class="muted">†</span>' : u.fromPermit ? ' <span class="muted">‡</span>' : ''}` : '<span class="muted">not stated</span>'}</td><td>${u.jobs ? fmtNum(u.jobs) : '–'}</td></tr>`).join('');
+    const anyField = e.uses.some(u => u.fromField), anyPermit = e.uses.some(u => u.fromPermit);
     return `<details class="sub-sect emp"><summary><h3 class="sub-title" data-info="employment">Employment uses${e.mixed ? ' <span class="muted small">(mixed use)</span>' : ''}</h3>
         <span class="muted small sect-sum">${e.totalM2 ? `${fmtNum(e.totalM2)} m² · ~${fmtNum(e.jobs)} jobs` : 'floor area not stated'}</span></summary>
       <table class="dt"><thead><tr><th>Use</th><th>Floor area</th><th>Est. jobs</th></tr></thead><tbody>${rows}</tbody></table>
-      <p class="small muted">Read from the application descriptions${anyField ? '; † floor area field published with the application' : ''}. Jobs at ${Object.entries(App().state.criteria.m2PerJob).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (editable under Breakdown &amp; criteria).</p>
+      <p class="small muted">Read from the application descriptions${anyField ? '; † non-residential floor area published with the application' : ''}${anyPermit ? '; ‡ new non-residential buildings on the building permits' : ''}. Jobs at ${Object.entries(App().state.criteria.m2PerJob).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (editable under Breakdown &amp; criteria).</p>
     </details>`;
   }
 
