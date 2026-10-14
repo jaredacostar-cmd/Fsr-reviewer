@@ -342,7 +342,7 @@
         <div class="sum-tiles">
           ${nDa ? `<div class="sum-tile"><div class="sl">${bc.year} Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
           ${g('Built since', 's-done', gr.built.units, gr.built.population, '', sj.jbuilt)}
-          ${g('Approved', 's-perm', gr.approved.units, gr.approved.population, 'site plan approved, not yet built', sj.japproved)}
+          ${g('Committed', 's-perm', gr.approved.units, gr.approved.population, 'draft plan or site plan approved, not yet built', sj.japproved)}
           ${g('Proposed', 's-left', gr.proposed.units, gr.proposed.population, 'in review', sj.jproposed)}
         </div>
         ${sum > 0 ? `<div class="grow-bar sel-grow" role="img" aria-label="Growth layers">${layers.filter(l => l[1] > 0).map(([k, v]) => `<span class="gseg g-${k}" style="flex:${v}" title="${fmtNum(Math.round(v))} people"></span>`).join('')}</div>` : ''}

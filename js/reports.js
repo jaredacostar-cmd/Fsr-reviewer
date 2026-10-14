@@ -99,7 +99,9 @@
   }
   function briefingPDF() {
     const set = DU().overviewSet(), basis = DU().demandBasis(), c = App().state.criteria, e = D.estimate(set, c, basis, App().jobsOf), cb = e.combined;
-    let left = 0; for (const p of set) if (p.buildout) left += p.buildout.remaining;
+    // Units and left to build from the one pipeline definition (as the Overview and Growth).
+    const pipe = root.Growth ? root.Growth.pipelineTotals(set) : null;
+    const left = pipe ? Math.round(pipe.left) : 0, unitsAll = basis === 'all' && pipe ? pipe.planned : e.totalUnits;
     const fr = DU().freshness(), asOf = (fr[0] && fr[0].date) || '–', need = fr.filter(r => r.st === 'due' || r.st === 'stale');
     const plants = App().state.svcModel ? ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => MP().cached(`plant:${pl}`, () => MP().plantCons(pl))).filter(Boolean) : [];
     const w = App().state.svcModel && App().state.reports ? MP().cached('wsys:lake', () => MP().waterPlantCons({ zone: '1' })) : null; if (w) plants.push(w);
@@ -108,10 +110,10 @@
     const al = App().state.svcModel ? ['Lakeview', 'Clarkson'].map(DU().allocPlant).filter(x => x && x.rows.length) : [];
     const ph = P.PHASES.map(q => { const s0 = set.filter(p => p.phase === q.key); if (!s0.length) return ''; const pe = D.estimate(s0, c, basis, App().jobsOf); return `<tr><td>${esc(q.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(roundPop(pe.population))}</td><td>${fmtNum(roundPop(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.maxDay)}</td><td>${fmt1(pe.combined.wastewater.wetPeak)}</td></tr>`; }).join('');
     const tight = plants.filter(x => x.kind === 'plant').sort((a, b) => b.util.bo - a.util.bo)[0];
-    const hl = [`The ${fmtNum(set.length)} developments shown (${esc(OT().scopeText())}) would add about <b>${fmtNum(roundPop(e.population))} people</b> and ${fmtNum(roundPop(e.employment.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units, needing ${fmtNum(Math.round(cb.water.maxDay))} L/s of water at maximum day and ${fmtNum(Math.round(cb.wastewater.wetPeak))} L/s of wastewater at peak wet weather.`,
-      tight ? `<b>${esc(SD().PLANT_SHORT[tight.pl])}</b> ${ST().trigText(tight)}: ${ST().pctRated(tight, 'com')}% of its rated capacity is committed, ${ST().pctRated(tight, 'bo')}% at build-out (expansion trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)${tight.relief.length ? `; next expansion ${esc(tight.relief[0].text)}` : ''}.` : '',
+    const hl = [`The ${fmtNum(set.length)} developments shown (${esc(OT().scopeText())}) would add about <b>${fmtNum(roundPop(e.population))} people</b> and ${fmtNum(roundPop(e.employment.jobs))} jobs in ${fmtNum(Math.round(unitsAll))} units, needing ${fmtNum(Math.round(cb.water.maxDay))} L/s of water at maximum day and ${fmtNum(Math.round(cb.wastewater.wetPeak))} L/s of wastewater at peak wet weather.`,
+      tight ? `<b>${esc(SD().PLANT_SHORT[tight.pl])}</b> ${ST().trigText(tight)}: existing + built + committed use ${ST().pctRated(tight, 'com')}% of its rated capacity, ${ST().pctRated(tight, 'bo')}% at build-out (expansion trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)${tight.relief.length ? `; next expansion ${esc(tight.relief[0].text)}` : ''}.` : '',
       R ? `${adv.length ? `<b>${adv.length} DC project${adv.length === 1 ? '' : 's'}</b> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out and should be brought forward.` : 'Every DC project comes online before the capacity it relieves runs out.'}` : ''].filter(Boolean);
-    const bar = x => `<div class="cap"><div class="ch"><b>${esc(x.kind === 'plant' ? SD().PLANT_SHORT[x.pl] : 'South Peel water treatment')}</b><span>${ST().pctRated(x, 'com')}% of rated committed → ${ST().pctRated(x, 'bo')}% build-out · ${x.out === 'today' ? 'at trigger now' : x.out ? `trigger ≈${x.out}` : `room to ${SP().hz.end}`}</span></div><div class="bar"><i class="c" style="width:${Math.min(100, ST().pctRated(x, 'com') / 1.3).toFixed(1)}%"></i><i class="b ${x.util.bo >= 1 ? 'over' : ''}" style="width:${(Math.max(0, Math.min(130, ST().pctRated(x, 'bo')) - Math.min(130, ST().pctRated(x, 'com'))) / 1.3).toFixed(1)}%"></i><i class="tg"></i><i class="tg r"></i></div></div>`;
+    const bar = x => `<div class="cap"><div class="ch"><b>${esc(x.kind === 'plant' ? SD().PLANT_SHORT[x.pl] : 'South Peel water treatment')}</b><span>existing + built + committed ${ST().pctRated(x, 'com')}% of rated → ${ST().pctRated(x, 'bo')}% build-out · ${x.out === 'today' ? 'at trigger now' : x.out ? `trigger ≈${x.out}` : `room to ${SP().hz.end}`}</span></div><div class="bar"><i class="c" style="width:${Math.min(100, ST().pctRated(x, 'com') / 1.3).toFixed(1)}%"></i><i class="b ${x.util.bo >= 1 ? 'over' : ''}" style="width:${(Math.max(0, Math.min(130, ST().pctRated(x, 'bo')) - Math.min(130, ST().pctRated(x, 'com'))) / 1.3).toFixed(1)}%"></i><i class="tg"></i><i class="tg r"></i></div></div>`;
     const prep = store.get('prepBy', '');
     const appCss = new URL('css/app.css', location.href).href;
     const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><title>Development and servicing briefing ${esc(new Date().toISOString().slice(0, 10))}</title><link rel="stylesheet" href="${appCss}"><style>
@@ -133,7 +135,7 @@
       <div class="hl">${hl.map(x => `<p>${x}</p>`).join('')}</div>
       <div class="grid">
         <section><h2>Growth</h2><div class="tiles">
-          <div class="t"><b>${fmtNum(set.length)}</b><span>developments</span></div><div class="t"><b>${fmtNum(Math.round(e.totalUnits))}</b><span>units (${fmtNum(left)} left to build)</span></div><div class="t"><b>${fmtNum(roundPop(e.population))}</b><span>people at build-out</span></div>
+          <div class="t"><b>${fmtNum(set.length)}</b><span>developments</span></div><div class="t"><b>${fmtNum(Math.round(unitsAll))}</b><span>units (${fmtNum(left)} left to build)</span></div><div class="t"><b>${fmtNum(roundPop(e.population))}</b><span>people at build-out</span></div>
           <div class="t"><b>${fmtNum(roundPop(e.employment.jobs))}</b><span>jobs</span></div><div class="t"><b>${fmt1(cb.water.maxDay)} L/s</b><span>water max day</span></div><div class="t"><b>${fmt1(cb.wastewater.wetPeak)} L/s</b><span>wastewater peak wet</span></div></div>
           <h2>Servicing demand by phase</h2><table><thead><tr><th>Phase</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day L/s</th><th>Wastewater peak wet L/s</th></tr></thead><tbody>${ph}<tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(e.employment.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table></section>
         <section><h2>Capacity (% of rated capacity; tick = 90% expansion trigger)</h2>${plants.map(bar).join('') || '<p>Servicing model not loaded.</p>'}
@@ -192,7 +194,7 @@
   const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Before DC', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
     <td>${esc(c.name)}<br><span class="muted">${esc(c.sub)}</span></td><td class="n">${c.room == null ? 'new' : c.room <= 0 ? (c.kind === 'plant' || c.kind === 'wplant' ? `${ST().pctRated(c, 'com')}% of rated (trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)` : `over ${Math.round((c.util.com - 1) * 100)}%`) : `${fmtNum(roundPop(c.people))} people<br><span class="muted">≈${fmtNum(Math.round(c.people / ppu))} units</span>`}</td>
     <td>${c.out === 'today' ? 'already' : c.out == null ? `after ${SP().hz.end}` : `≈${c.out}`}</td><td>${c.relief.length ? esc(c.relief.slice(0, 2).map(r => r.text).join('; ')) : '<span class="muted">none on the DC map</span>'}</td>${extra}</tr>`;
-  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room after approved</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
+  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room to the trigger after committed</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
   function reportFooter() {
     const m = EX().reportMeta('growth');
     return `<p class="note">${esc(m.lines.slice(0, 3).join(' · '))}. ${esc(ST().scenarioText())}. Peel design criteria; a screening estimate, not a hydraulic model or a functional servicing report. 2026 DC capital maps are a draft, not approved by Council.</p>`;

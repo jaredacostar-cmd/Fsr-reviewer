@@ -131,9 +131,9 @@
   function capacityBarsHTML(list) {
     const bar = c => { const pc = SvcTab().pctRated(c, 'com'), pb = SvcTab().pctRated(c, 'bo'), a = Math.min(130, pc), b = Math.min(130, pb), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
       return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
-        <div class="ov-bar" role="img" aria-label="${pc}% of rated capacity committed, ${pb}% at build-out; expansion trigger at ${Math.round(MP().PLANT_TRIGGER * 100)}%"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(MP().PLANT_TRIGGER * 100 / 1.3).toFixed(1)}%" title="${Math.round(MP().PLANT_TRIGGER * 100)}% expansion trigger"></i><i class="t r" style="left:${(100 / 1.3).toFixed(1)}%" title="100% rated"></i></div>
+        <div class="ov-bar" role="img" aria-label="existing + built + committed ${pc}% of rated capacity, ${pb}% at build-out; expansion trigger at ${Math.round(MP().PLANT_TRIGGER * 100)}%"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(MP().PLANT_TRIGGER * 100 / 1.3).toFixed(1)}%" title="${Math.round(MP().PLANT_TRIGGER * 100)}% expansion trigger"></i><i class="t r" style="left:${(100 / 1.3).toFixed(1)}%" title="100% rated"></i></div>
         <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${SP().hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? DU().allocPlant(c.pl) : null)}</small></div>`; };
-    return list.map(bar).join('') + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: average dry weather, calibrated to 2025 flows; water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.</p>`;
+    return list.map(bar).join('') + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.</p>`;
   }
   // Plain-data input for the pure needsAttention: reuses the DCA results, the stalled flags,
   // the 90% trigger years and the weekly snapshot change log.
@@ -142,7 +142,7 @@
     const adv = R ? R.list.filter(r => r.rec === 'advance').map(r => ({ name: r.name })) : [];
     const trig = (capList || []).filter(c => c.out).map(c => ({
       sys: c.sys, now: c.out === 'today',
-      text: `${c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment'} ${SvcTab().trigText(c)} (${SvcTab().pctRated(c, 'com')}% committed → ${SvcTab().pctRated(c, 'bo')}% at build-out)`,
+      text: `${c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment'} ${SvcTab().trigText(c)} (existing + built + committed ${SvcTab().pctRated(c, 'com')}% → ${SvcTab().pctRated(c, 'bo')}% at build-out)`,
     }));
     const stalled = [];
     for (const p of set) {
@@ -176,7 +176,10 @@
     if (!set) { set = DU().overviewSet(); basis = DU().demandBasis(); e = D.estimate(set, App().state.criteria, basis, App().jobsOf); }
     if (!basis) basis = DU().demandBasis();
     const em = e.employment;
-    let left = 0, n = 0; for (const p of set) if (p.buildout) { n++; left += p.buildout.remaining; }
+    // Units and left to build from the one pipeline definition (as Growth and the header).
+    const pipe = root.Growth ? root.Growth.pipelineTotals(set) : null;
+    const left = pipe ? Math.round(pipe.left) : 0, n = pipe ? pipe.n : 0;
+    const unitsAll = basis === 'all' && pipe ? pipe.planned : e.totalUnits;
     const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
     // Capacity: plants against the 90% expansion trigger (existing + approved, and at build-out).
@@ -193,17 +196,17 @@
     const na = DV().needsAttention(needsAttentionData(set, capList));
     const needs = `<section class="ov-card ov-needs"><div class="ov-h"><h3>Needs attention</h3></div>
       ${na.length ? `<ul class="na-list small">${na.map(it => `<li class="na-it"><span class="${toneCls[it.tone]}">${esc(it.text)}</span>${it.dev ? `<button type="button" class="btn small link" data-ov-dev="${esc(it.dev)}">Development →</button>` : it.tab ? go(it.tab, TAB_LABEL[it.tab] || it.tab) : ''}</li>`).join('')}</ul>` : '<p class="small muted">Nothing needs attention right now.</p>'}</section>`;
-    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (${SvcTab().pctRated(tight, 'com')}% of rated capacity committed → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
+    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(unitsAll))} units.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
-    const basisTxt = { all: 'approved + proposed', committed: 'committed only', remaining: 'units left to build' }[basis] || 'approved + proposed';
-    const info = `<p class="small muted ov-info">ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: average dry weather, calibrated to 2025 flows; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${App().state.muni ? ` · ${esc(App().state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} ${go('criteria', 'Data & checks')}</p>`;
+    const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'committed only (D-5-1)', remaining: 'units left to build' }[basis] || 'every stage';
+    const info = `<p class="small muted ov-info"><button type="button" class="btn small link" data-info="definitions">Definitions</button> · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: ${SvcTab().wwFlowLabel('long')}; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${App().state.muni ? ` · ${esc(App().state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} ${go('criteria', 'Data & checks')}</p>`;
     el.innerHTML = `<div class="ov-top">${hlP(hl)}<button type="button" class="btn ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div></section>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div></section>
         ${needs}
-        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
+        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity ${root.PeelUtil.basisChip('mixed', SvcTab().svcOpt.ww === 'calibrated' ? 'Mixed basis: existing flows 2025 measured; growth at Peel design criteria (wastewater scaled to each plant\u2019s measured rate); rated capacity from the 2025 reports; 90% trigger from the 2020 Master Plan' : 'Mixed basis: flows at Peel design criteria; rated capacity from the 2025 reports; 90% trigger from the 2020 Master Plan')}</h3>${go('ww', 'Plants')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
         <div class="ov-info-w">${info}</div>
       </div>`;

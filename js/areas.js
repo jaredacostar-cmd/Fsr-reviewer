@@ -125,7 +125,7 @@
       if (n > 0) { built.push(part(n)); builtUnits += n; builtProjects++; }
       const c = D.unitsFor(p, 'committed');
       if (c > 0) { approved.push(part(c)); approvedUnits += c; approvedProjects++; }
-      const q = PROPOSED_PHASES.has(p.phase) && p.buildout ? p.buildout.unbuilt : 0;
+      const q = PROPOSED_PHASES.has(p.phase) && !D.isCommitted(p) && p.buildout ? p.buildout.unbuilt : 0;
       if (q > 0) { proposed.push(part(q)); proposedUnits += q; proposedProjects++; }
     }
     const layer = (list, units, projects) => {

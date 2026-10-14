@@ -93,7 +93,7 @@
       ids = new Set(App().state.servicing.drainage.filter(d => d.plant === plantName).map(d => d.id));
       title = SD().plantLabel(plantName); sub = `${fmtNum(ids.size)} ${App().state.servicing.blocks ? 'blocks' : 'catchments'}`;
       const cap = M.plantCap(plantName);
-      if (cap) sub += ` · rated ${fmt1(cap.rated)} ML/d · existing + approved ${Math.round(cap.committed / cap.rated * 100)}% · uncommitted reserve ${fmt1(cap.rated - cap.committed)} ML/d`;
+      if (cap) sub += ` · rated ${fmt1(cap.rated)} ML/d · existing + built + committed ${Math.round(cap.committed / cap.rated * 100)}% · uncommitted reserve ${fmt1(cap.rated - cap.committed)} ML/d`;
       const ce = SP().plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
       if (ce) sub += ` · ${ce}`;
     } else if (a && a.zone) {
@@ -130,7 +130,7 @@
       <div class="head"><h3>What loads ${esc(title)}</h3><div class="m">${key === 'pz' ? 'Water pressure zone' : plantName ? 'Wastewater treatment plant' : `${a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment'} and everything upstream`}</div></div>
       ${ptActions(acts)}
       <p class="small">${esc(sub)}${plantName ? ` ${estTag}` : ''}</p>
-      <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
+      <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total, ${key === 'pz' ? 'average day' : 'average dry weather (design)'} ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
 
       <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments adding flow since the census, largest ${key === 'pz' ? 'max day' : 'peak wet weather'} first · Peel design criteria, each development alone</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>${what[0]}</th><th>${what[1]}</th><th class="ld-share">Share</th></tr></thead>

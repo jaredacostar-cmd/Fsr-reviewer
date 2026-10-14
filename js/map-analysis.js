@@ -48,7 +48,7 @@
     set('#opt-mcolor', MM().mstyle.color); set('#opt-msize', MM().mstyle.size); set('#opt-mcap', MM().mstyle.cap); set('#opt-mshow', MM().mstyle.show);
     set('#opt-devs', MM().getDevsOn()); set('#opt-wf', WT().WF.on);
     const wc = $('#ww-census'); if (wc) wc.checked = MM().getWwLay().existing !== false;
-    const mw = document.querySelector('.ww-loads'); if (mw) { mw.hidden = !MM().isWW(); const all = Object.values(MM().getWwLay()).every(v => v !== false); const n = mw.querySelector('.wl-sum'); n.textContent = all ? 'full build-out' : [['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
+    const mw = document.querySelector('.ww-loads'); if (mw) { mw.hidden = !MM().isWW(); const all = Object.values(MM().getWwLay()).every(v => v !== false); const n = mw.querySelector('.wl-sum'); n.textContent = all ? 'full build-out' : [['existing', 'census'], ['built', 'built'], ['approved', 'committed'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
     SD().syncDevsOff(); SD().syncPanelSum();
     set('#opt-basemap', MC().getBasemap()); set('#opt-labels', ML().getLabelMode()); set('#opt-pz', MM().svcOn.pz); set('#opt-dr', MM().svcOn.dr); set('#opt-bk', MM().svcOn.bk); set('#opt-da', CA().getDaOn());
     set('#opt-cap', MM().mstyle.cap !== 'off'); set('#opt-exist', Object.values(MM().getExistOn()).some(Boolean)); set('#opt-dcw', MM().getDcOn().on); set('#opt-plan', MM().areaOn.sp || MM().areaOn.mtsa);

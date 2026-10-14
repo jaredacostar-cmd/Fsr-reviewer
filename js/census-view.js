@@ -159,7 +159,7 @@
     const full = rows.map(r => `<tr class="${r.m === 'Peel' ? 'tot' : ''}"><td>${esc(r.m)}</td><td>${uPop(r.p[0])}</td><td>${uPop(r.p[1])}</td><td>${uPop(r.p[2])}</td><td>${uU(sum(r.u))}</td><td>${uJ(sum(r.j))}</td></tr>`).join('');
     return `<table class="dt"><caption>Applications against the 2051 forecast <span class="muted">growth since the ${bc.year} Census vs. growth allocated to 2051</span></caption><thead><tr><th>Municipality</th><th>2051 growth allocated</th><th>Built + approved + proposed</th><th>Still to plan for</th></tr></thead><tbody>${main}</tbody></table>
       <details class="see-all"><summary>See all: built / approved / proposed by municipality</summary>
-      <table class="dt"><thead><tr><th>Municipality</th><th>Built</th><th>Approved</th><th>Proposed</th><th>Units</th><th>Jobs</th></tr></thead><tbody>${full}</tbody></table>
+      <table class="dt"><thead><tr><th>Municipality</th><th>Built</th><th>Committed</th><th>Proposed</th><th>Units</th><th>Jobs</th></tr></thead><tbody>${full}</tbody></table>
       <p class="small muted">${esc(F.note)} Pipeline = growth since census day from every development in the municipality (built = permits completed since census day; approved; proposed = in pre-consultation or review), at Peel's design persons per unit; jobs only where the applications state floor area. Design persons per unit (2.7 per apartment) are higher than the average household size behind the forecast, so the units column is the fairer comparison; the pipeline also includes applications that may not be built by 2051. Source: <a href="${esc(F.url)}" target="_blank" rel="noopener">${esc(F.title)}</a>, ${esc(F.pages)}.</p></details>`;
   }
 
@@ -171,7 +171,7 @@
     const layers = [
       { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings, jobs: 0 },
       { key: 'built', label: `Built since ${Y}`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
-      { key: 'approved', label: 'Site plan approved or permit issued', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
+      { key: 'approved', label: 'Committed (draft plan or site plan approved, permit, construction)', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
       { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units, jobs: gr.proposed.jobs || 0 },
     ].filter(l => l.people + l.dwellings + (l.jobs || 0) > 0);
     const bar = (measure, unit) => {

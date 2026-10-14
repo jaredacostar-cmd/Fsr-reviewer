@@ -1434,6 +1434,38 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Definitions (one table, used everywhere)
+
+The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use
+these definitions. In the app they're in the **Definitions** card (Overview ⓘ line).
+
+| Term | Definition |
+|---|---|
+| Existing | Census population (and jobs) on census day |
+| Built since census | Completed after census day, by the building permit completion date (estimated for Brampton and Caledon) |
+| **Committed** (MECP D-5-1) | Registered or draft-approved plans of subdivision, plus site plan approved where there is no subdivision, through permit and construction. Approved zoning alone is not committed. A development still in review is committed when its most recent subdivision file is draft-approved or registered; a newer subdivision file in review means the land is being re-proposed. The servicing layer is called *Committed*; the phase *Approved* still means site plan approved. |
+| Proposed | Pre-consultation, inception and review, not committed |
+| Allocated | Only the allocations you record. Peel publishes no allocation list. |
+| Planned units | Each development's units counted once (the larger of planned and permitted), net of homes demolished |
+| Permitted / left to build | Units with a building permit / planned units with no permit yet |
+| Uncommitted reserve (D-5-1) | Rated capacity − (existing + built + committed), to **100%** of rated |
+| Room to the trigger | **90%** of rated (2020 Master Plan expansion trigger) − (existing + built + committed) |
+
+**Pairings:**
+- Wastewater plants: rated (annual average) capacity against average flow. The flow is the **annual average** in Capacity check (the plant's 2025 measured rate) and **ADWF** in Design flows. The label follows the mode.
+- Pumping stations: firm capacity against **peak wet weather flow**. Peak dry is shown for reference only.
+- Water treatment: rated capacity against **maximum day** (design ×1.8, or the 2025 observed factor; the label follows the switch).
+- Pumping into zones: firm capacity, or the Master Plan's modelled actual firm where given. Facilities show both.
+- Capacity bars mark the 90% trigger (dashed) and 100% rated (solid).
+
+**Basis chips:**
+- *Design*, *2025 measured*, *Master Plan 2020*, or *Mixed basis* (dashed) on each capacity figure.
+- Hover a chip for its parts.
+
+**Other changes:**
+- The diversion switch, counting basis and outside-area rule are part of the scenario cache, so a result never outlives its scenario.
+- The diversion counts from its start year (Horizon's diversion year, default 2028): not in today's existing flow before then.
+
 ## Population and demand criteria (`js/demand.js`)
 
 | Parameter | Default | Source |

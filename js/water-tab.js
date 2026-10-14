@@ -131,10 +131,10 @@
     const tr = x => `<tr><td>${x.name}<small>${x.sub}</small></td>`
       + `<td class="n${x.room < 0 ? ' over' : ''}">${x.room < 0 ? '−' : ''}${fmt1(Math.abs(x.room))} ${x.unit}<small>${x.roomPct == null ? '' : `${Math.round(x.roomPct)}% left`}</small></td>`
       + `<td class="n">${trigCell(x.rt.c80, x.end)}</td><td class="n">${trigCell(x.rt.c90, x.end)}</td><td class="n bo">${trigCell(x.rt.c100, x.end)}</td></tr>`;
-    const head = `<thead><tr><th>Zone / storage facility</th><th class="n">Room left<br>at build-out</th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead>`;
+    const head = `<thead><tr><th>Zone / storage facility</th><th class="n">Room left<br>at build-out<br><small>ML/d pumping · ML storage</small></th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead>`;
     const table = list => `<div class="hyd-scroll"><table class="dt svc-table" data-info="water-capacity">${head}<tbody>${list.map(tr).join('')}</tbody></table></div>`;
     const top = rows.slice(0, 5), rest = rows.slice(5);
-    return `<h3 class="svc-sub">Room left &amp; trigger years <span class="muted small">zones: % of firm pumping capacity · storage: Master Plan required vs available</span></h3>`
+    return `<h3 class="svc-sub">Room left &amp; trigger years ${window.PeelUtil.basisChip('mixed', 'Mixed basis: pumping = growth at Peel criteria against 2020 Master Plan firm capacity; storage = the 2020 Master Plan required vs available (fire, equalisation and emergency storage)')} <span class="muted small">zones: % of firm pumping capacity · storage: Master Plan required vs available</span></h3>`
       + table(top)
       + (rest.length ? `<details class="dcn-more"><summary class="small">See all ${rows.length} zones &amp; storage facilities</summary>${table(rest)}</details>` : '')
       + `<p class="small muted">Room = capacity − demand at build-out. Trigger years phase approved growth in from ${ph.aStart} over ${ph.aYears} years and proposed from ${ph.pStart} over ${ph.pYears} years, as in the plant Horizon years; storage years interpolate the Master Plan forecast.</p>`;
@@ -205,14 +205,14 @@
     return `<section id="wcap-box" class="wcap" data-info="water-capacity">
       <div class="ov-tiles">${wTile(`${Math.round(boPct(treat[0]))}%`, 'of rated', 'South Peel treatment at build-out', `rated ${fmtNum(treat[0].rated)} ML/d`)}${tightPump ? wTile(`${Math.round(tightPump.b)}%`, 'of firm capacity', 'Tightest pumping at build-out', tightPump.r.name) : ''}${wTile(fmt1(M.wMax(dPop, dJobs)), 'ML/d', 'maximum day demand at build-out', 'all pressure zones')}${wTile(shortMl > 0 ? fmtNum(Math.round(shortMl)) : '0', 'ML', 'storage short by 2041', 'Master Plan assessment')}</div>
       ${waterDemandFlowsHTML(M)}
-      <h3 class="svc-sub">Water capacity by growth layer</h3>
+      <h3 class="svc-sub">Water capacity by growth layer ${window.PeelUtil.basisChip('mixed', 'Mixed basis: existing = the 2025 measured maximum day; growth at ' + SvcTab().wMaxDayLabel() + '; treatment rated capacity from the 2025 drinking water reports; pumping firm capacity from the 2020 Master Plan')}</h3>
       ${tight ? `<p class="small">Tightest: <strong>${tight.r.name}</strong>, ${Math.round(tight.c * 100)}% of its ${tight.r.capWord || 'rated'} capacity with existing + built + approved, ${Math.round(tight.b * 100)}% at build-out.</p>` : ''}
       ${SP().capChartHTML(treat.filter(Boolean), Y, { title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
-      <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">design maximum day as a % of firm pumping capacity</span></summary>
+      <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">${SvcTab().wMaxDayLabel()} as a % of firm pumping capacity (actual firm where the 2020 Master Plan models it)</span></summary>
       ${SP().capChartHTML(pump, Y, { title: ' ', noPop100: true, noPeople: true, legend: false })}
       <p class="small muted">Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see Facilities).</p></details>
       ${waterRoomTriggerHTML(pump, ph)}
-      <p class="small muted">ⓘ Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region). Pumping: firm capacity, largest pump out of service (the Region's modelled actual firm where the 2020 Master Plan gives it). Demand at Peel design maximum day (${c.water.avg} L/cap/d ×${c.water.maxDay}, employment ${c.employment.water} L/emp/d). Storage: required vs available (2020 Master Plan, Vol. 3, Table 12).</p></section>`;
+      <p class="small muted">ⓘ Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region). Pumping: firm capacity, largest pump out of service (the Region's modelled actual firm where the 2020 Master Plan gives it). Demand at ${SvcTab().wMaxDayLabel()} (${c.water.avg} L/cap/d, employment ${c.employment.water} L/emp/d). Storage: required vs available (2020 Master Plan, Vol. 3, Table 12).</p></section>`;
   }
   // Water tab: the facilities by system, with capacity.
 

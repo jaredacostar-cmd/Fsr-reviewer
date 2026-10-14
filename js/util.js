@@ -20,6 +20,14 @@
   // Region's hydraulic models stay the authority.
   const SCREEN_NOTE_SHORT = '<p class="screen-note screen-note-sm" role="note"><strong>Screening estimate, not a model result:</strong> the Region of Peel\u2019s water and wastewater models are the authority.</p>';
   const SCREEN_NOTE = '<p class="screen-note" role="note"><strong>Screening estimate, not a model result.</strong> One screening method from public data and Peel design criteria, not a hydraulic model. The Region of Peel\u2019s water and wastewater models are the authority: confirm servicing with the Region.</p>';
+  // Basis chip on a capacity figure: where its numbers come from. 'mixed' names the parts.
+  const BASIS = {
+    design: ['Design', 'Peel design criteria (Modelling Demand Table v2.0, Aug 2024; Linear Wastewater Standards R1.0, Mar 2023)'],
+    measured: ['2025 measured', 'The Region\u2019s 2025 annual reports (plant flows and capacities)'],
+    mp2020: ['Master Plan 2020', 'The 2020 Water and Wastewater Master Plan (capacities, triggers, storage)'],
+    mixed: ['Mixed basis', ''],
+  };
+  const basisChip = (kind, why = '') => { const b = BASIS[kind] || BASIS.mixed; const t = why || b[1]; return `<span class="basis-chip basis-${kind}" title="${t.replace(/"/g, '&quot;')}">${b[0]}</span>`; };
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // Skeleton placeholder for loading states (styled in css/modes.css): grey
@@ -114,7 +122,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelUtil = api;
