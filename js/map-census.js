@@ -20,7 +20,9 @@
   map.createPane('daPane', map.getPane('rotatePane') || undefined).style.zIndex = 350;
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
   // The outlines follow the census used as the baseline (2021, or 2016 for an earlier timeline).
-  const daBaseline = () => (typeof baselineCensus === 'function' && App().state.censuses ? baselineCensus() : null);
+  // (The layer can be switched on before the app has loaded — a saved setting restored at start-up:
+  // the 2021 outlines until the censuses are in.)
+  const daBaseline = () => (App() && App().state && App().state.censuses ? baselineCensus() : null);
   // Two passes over aerial photos: a faint dark halo under a light line, so the border reads
   // on bright roofs and pavement as well as on trees and fields.
   // DA outlines (JSON) per census year, shared by the map layer and the selected-project context.
@@ -143,6 +145,7 @@
   // (2021–2026 → 2021 Census; 2018–2026 → 2016 Census). Before the earliest census with data,
   // or with all years, the earliest one.
   function baselineCensus() {
+    if (!App() || !App().state) return null;
     const cs = App().state.censuses || [];
     if (!cs.length) return null;
     // Newest first: the census at or before the timeline's start; with no year range, the latest.
