@@ -7,6 +7,7 @@ name: Probe data sources
 #  mode=aerial:  run the app in headless Chromium and test the aerial check on live imagery
 #  mode=areas:   secondary plan, MTSA, 2021 census and SGU layers covering Peel
 #  mode=block-areas: block plan / precinct / sub-area layers published by Brampton, Caledon, Mississauga and Peel (log only)
+#  mode=precincts: add Brampton's precinct plan areas to data/areas.json (committed to this branch; nothing else rebuilt)
 #  mode=census:  earlier census (2016) population by dissemination area
 #  mode=servicing: Peel water pressure zones and wastewater drainage areas
 #  mode=servicing-raw: download Peel water / wastewater layers to the servicing-raw branch
@@ -62,6 +63,14 @@ jobs:
       - name: Block plan / precinct area layers (log only)
         if: inputs.mode == 'block-areas'
         run: node scripts/probe-areas.js --blocks
+      - name: Precinct plan areas into data/areas.json (committed to this branch; nothing else rebuilt)
+        if: inputs.mode == 'precincts'
+        run: |
+          node scripts/build-areas.js --out data --precincts-only
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/areas.json
+          git diff --cached --quiet || { git commit -m "Precinct plan areas (Brampton Plan Schedule 11)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Earlier census by dissemination area
         if: inputs.mode == 'census'
         run: |

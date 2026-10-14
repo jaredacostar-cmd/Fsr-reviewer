@@ -35,9 +35,12 @@ const LAYERS = {
     { municipality: 'Brampton', url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_1A_City_Structure/FeatureServer/3',
       name: a => `${a.STATION_NA} (${a.STATION_TY}, planned)`, source: 'Brampton Plan Schedule 1A – Planned MTSAs' },
   ],
-  // Precinct / block plan areas (tags in the application tree audit). Filled in once
-  // `node scripts/probe-areas.js --blocks` (workflow mode block-areas) finds the published layers.
-  precincts: [],
+  // Precinct / block plan areas (tags in the application tree audit). Caledon and Mississauga
+  // publish none (`node scripts/probe-areas.js --blocks`, workflow mode block-areas).
+  precincts: [
+    { municipality: 'Brampton', url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_11_Precinct_Plan_Areas/FeatureServer/0',
+      name: a => a.SPBLKNO && `Precinct ${String(a.SPBLKNO).trim()}`, source: 'Brampton Plan Schedule 11 – Precinct Plan Areas' },
+  ],
 };
 // Census years, newest first. The app uses the latest one held in or before the timeline's
 // first year as the baseline. Application data starts in 2016, so 2016 is as far back as needed.
@@ -235,6 +238,17 @@ async function main() {
   const i = process.argv.indexOf('--out');
   const outDir = path.resolve(i > 0 ? process.argv[i + 1] : path.join(__dirname, '..', 'data'));
   fs.mkdirSync(outDir, { recursive: true });
+  // --precincts-only: add the precinct / block plan areas to the existing areas.json and leave
+  // everything else (secondary plans, MTSAs, census baselines) as it is.
+  if (process.argv.includes('--precincts-only')) {
+    const file = path.join(outDir, 'areas.json');
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    data.precincts = await areas(LAYERS.precincts, 'precinct');
+    data.sources.precincts = LAYERS.precincts.map(d => ({ municipality: d.municipality, source: d.source, url: d.url }));
+    fs.writeFileSync(file, JSON.stringify(data));
+    console.log(`precincts: ${data.precincts.length} areas written to ${file}`);
+    return;
+  }
   const data = {
     version: 1,
     generatedAt: new Date().toISOString(),

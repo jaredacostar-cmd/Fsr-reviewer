@@ -160,7 +160,9 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     return plans.length >= 2 && plans[0].share < T.T.COVER ? { ...treeRow(k), areas: plans.map(g => `${g.kind === 'OP character area' ? 'OP character area ' : ''}${g.name} ${Math.round(g.share * 100)}%`) } : null;
   }).filter(Boolean).sort((a, b) => b.units - a.units);
   // Block plan / precinct roots, and precinct areas with no matching file (by block id, e.g. 52-7).
-  const blockId = s => (String(s || '').match(/\b\d{2}-\d{1,2}\b/g) || []);
+  // Block / precinct numbers ("Block 52-7", "Precinct Plan Area 52-2", "Sub-Area 40-5"): in a file's
+  // words only after one of those labels; an area's name is "Precinct 41-2".
+  const blockId = s => [...String(s || '').matchAll(/\b(?:block|precinct(?: plan)?(?: area)?|sub-?area)\s+(\d{1,2}-\d{1,2})\b/gi)].map(m => m[1]);
   const roots = nodes.map((n, i) => ({ n, i })).filter(({ n }) => n.role === 'block_plan' && !n.cancelled).map(({ n, i }) => ({ file: refOf(i), municipality: n.municipality, from: n.precinctFrom || 'block plan file', km2: +(n.area / 1e6).toFixed(2), units: n.units, ids: [...new Set(n.records.flatMap(r => blockId(r.description)))], area: (tagsByTree[treeOfNode.get(i)] || {}).primary ? tagsByTree[treeOfNode.get(i)].primary.name : null }));
   const rootIds = new Set(roots.flatMap(r => r.ids));
   const precinctAreas = (A.precincts || []).map(a => ({ name: a.name, municipality: a.municipality, ids: blockId(a.name) }));
