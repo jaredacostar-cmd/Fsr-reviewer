@@ -14,7 +14,7 @@ const { execFileSync } = require('child_process');
 const out = (() => { const i = process.argv.indexOf('--out'); return i > 0 ? process.argv[i + 1] : 'data/changelog.json'; })();
 const SEP = '\u001e', END = '\u001d';
 const raw = execFileSync('git', ['log', '--first-parent', `--format=%H${SEP}%h${SEP}%aI${SEP}%B${END}`, 'HEAD'], { encoding: 'utf8', maxBuffer: 64e6 });
-const REPO = 'https://github.com/jaredacostar-cmd/peel-growth-pipeline';
+const REPO = 'https://github.com/jaredacostar-cmd/Fsr-reviewer';
 const TRAILER = /^(Co-Authored-By|Co-authored-by|Claude-Session|Signed-off-by):/i;
 
 // Bullets from a message body: "- " items (wrapped lines joined), else "* " commit subjects.

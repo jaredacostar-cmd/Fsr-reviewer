@@ -94,9 +94,7 @@ test('info texts load (no syntax errors) and every entry has a title and body', 
   const vm = require('vm');
   const ctx = { window: {}, self: {} }; ctx.globalThis = ctx;
   vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'info.js'), 'utf8'), ctx);
-  const jsDir = path.join(__dirname, '..', 'js');
-  const app = fs.readdirSync(jsDir).filter(f => f.endsWith('.js')).sort()
-    .map(f => fs.readFileSync(path.join(jsDir, f), 'utf8')).join('\n');
+  const app = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
   new vm.Script(app);
   const info = fs.readFileSync(path.join(__dirname, '..', 'js', 'info.js'), 'utf8');
   for (const k of ['fire-storm', 'existing-pipes', 'dev-brief', 'dc-needs']) {

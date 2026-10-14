@@ -9,11 +9,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const DG = require('../js/design.js');
 
-// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
-// assertions read the whole js/ tree (app core + modules) as one source.
-const JS_DIR = path.join(__dirname, '..', 'js');
-const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
-  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
+const APP = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
 const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 
 test('resolveTheme: dark/light/device x prefers-light', () => {
@@ -66,8 +62,7 @@ test('basemapForView: planning -> aerial, servicing views -> dark canvas', () =>
 
 test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', () => {
   const names = ['planning', 'water', 'wastewater', 'dc', 'development',
-    'trace', 'lasso', 'measure', 'whatif', 'tips', 'present',
-    'export', 'settings', 'select', 'inspect', 'corridor', 'unitsfit'];
+    'trace', 'lasso', 'measure', 'whatif', 'tips', 'present'];
   for (const n of names) {
     const s = DG.icon(n);
     assert.ok(s.startsWith('<svg'), `${n}: not an svg`);
@@ -76,22 +71,12 @@ test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', ()
     assert.ok(s.includes('fill="none"'), `${n}: fill`);
     assert.ok(!/#[0-9a-fA-F]{3,6}\b/.test(s), `${n}: hard-coded colour`);
   }
-  // Aliases used by the UI resolve to the tool icons. 'select' is now its own
-  // cursor icon (Phase 3b rail), no longer an alias of 'lasso'.
-  assert.notEqual(DG.icon('select'), DG.icon('lasso'));
+  // Aliases used by the UI resolve to the tool icons.
+  assert.equal(DG.icon('select'), DG.icon('lasso'));
   assert.equal(DG.icon('test-site'), DG.icon('whatif'));
   // Unknown names fall back to the development icon, never an empty string.
   assert.equal(DG.icon('nope'), DG.icon('development'));
   assert.ok(DG.icon('nope').length > 0);
-});
-
-test('rail TOOL_ITEMS: every icon key is a real icon (no silent fallback)', () => {
-  // js/app.js is a browser IIFE; read the rail definition as source.
-  const m = /const TOOL_ITEMS = (\[[\s\S]*?\]);/.exec(APP);
-  assert.ok(m, 'TOOL_ITEMS not found in js/');
-  const items = new Function(`return (${m[1]});`)();
-  assert.deepEqual(items.map(i => i[0]), ['select', 'measure', 'trace', 'whatif', 'inspect', 'corridor', 'unitsfit']);
-  for (const [k, , , ic] of items) assert.ok(DG.iconNames.includes(ic), `rail tool ${k} uses unknown icon ${ic}`);
 });
 
 test('share-link serialization excludes theme and density', () => {
@@ -99,7 +84,7 @@ test('share-link serialization excludes theme and density', () => {
   // js/app.js; theme/density live only in the store (peel-dev:theme,
   // peel-dev:density) and must never become link parameters.
   const m = /const encode = \(\) => \{([\s\S]*?)\n    \};/.exec(APP);
-  assert.ok(m, 'encode() not found in js/');
+  assert.ok(m, 'encode() not found in js/app.js');
   const body = m[1];
   assert.ok(!/['"]theme['"]/.test(body), 'encode() references theme');
   assert.ok(!/['"]density['"]/.test(body), 'encode() references density');

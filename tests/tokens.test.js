@@ -84,10 +84,8 @@ test('no hard-coded hex colours remain in js/', () => {
   assert.deepEqual(hits, []);
 });
 
-test('PHASE_COLORS table no longer exists; phaseColor lives in js/util.js (Phase 6)', () => {
+test('PHASE_COLORS table no longer exists in js/app.js', () => {
   const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
   assert.ok(!/\bPHASE_COLORS\b/.test(src), 'PHASE_COLORS still referenced');
-  const util = fs.readFileSync(path.join(__dirname, '..', 'js', 'util.js'), 'utf8');
-  assert.ok(!/\bPHASE_COLORS\b/.test(util), 'PHASE_COLORS still referenced in js/util.js');
-  assert.ok(/\bfunction phaseColor\(/.test(util), 'phaseColor() not defined in js/util.js');
+  assert.ok(/\bfunction phaseColor\(/.test(src), 'phaseColor() not defined');
 });
