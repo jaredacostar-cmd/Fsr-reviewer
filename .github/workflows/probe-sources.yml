@@ -19,6 +19,8 @@ name: Probe data sources
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
 #  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
+#  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
+#  mode=regulation-build: cut Credit Valley Conservation's regulation limit into map tiles (data/regulation/cvc), committed to this branch
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
@@ -113,6 +115,18 @@ jobs:
           git add -f ext-raw
           git commit -m "External open data (raw)"
           git push -f origin ext-raw
+      - name: Site constraint layers (gas, hydro, watercourses, regulation limits; log only)
+        if: inputs.mode == 'constraints'
+        timeout-minutes: 20
+        run: node scripts/probe-constraints.js ${{ inputs.only }}
+      - name: CVC regulation limit tiles (committed to this branch)
+        if: inputs.mode == 'regulation-build'
+        run: |
+          node scripts/build-regulation.js --out data
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/regulation
+          git diff --cached --quiet || { git commit -m "CVC regulation limit tiles"; git push; }
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js

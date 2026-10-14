@@ -1,7 +1,10 @@
 (function (root) {
 'use strict';
   // Measure / buffer-select / test-site tools + ground elevation (PeelMeasure).
-  const { $ } = window.PeelUtil;
+  const { $, esc, token } = window.PeelUtil;
+  // A design token's value, for SVG / Leaflet attributes (which may not resolve var()).
+  const tok = name => token(name) || `var(${name})`;
+  const CN = () => root.PeelConstraints;
   const A = window.PeelArcGIS;
   const map = window.PeelMapCore.map;
   const App = () => root.PeelApp;
@@ -49,11 +52,23 @@
     const z = await Promise.all(out.map(p => elevAt(p.lat, p.lng)));
     return out.map((p, i) => ({ ...p, z: z[i] }));
   }
-  function profileSVG(prof, W = 300, H = 90) {
+  // The measured points: A (start, green) … the end (red), the ones between in distinct colours;
+  // the same colour and letter on the map and in the profile.
+  const PT_MID = [2, 3, 4, 5, 6, 1].map(k => `--mpt-${k}`);
+  const ptColor = (i, n) => tok(i === 0 ? '--mpt-start' : i === n - 1 ? '--mpt-end' : PT_MID[(i - 1) % PT_MID.length]);
+  const ptLetter = i => i < 26 ? String.fromCharCode(65 + i) : `P${i + 1}`;
+  // Crossings along the line: streets (grey) and watercourses (blue), numbered in order.
+  const XING = { street: { get color() { return tok('--xing-street'); }, label: 'Street' }, water: { get color() { return tok('--xing-water'); }, label: 'Watercourse' } };
+  function profileSVG(prof, W = 300, H = 90, marks = [], xings = []) {
     // Pipes along the line (when looked up): sanitary invert (solid) and watermain at an assumed cover (dashed).
     const zs = prof.flatMap(p => [p.z, p.san ? p.san.inv : p.z, p.wat ? p.z - WM_COVER : p.z]);
     const lo = Math.floor(Math.min(...zs) - 1), hi = Math.ceil(Math.max(...zs) + 1), D = prof[prof.length - 1].d || 1;
-    const X = d => 28 + d / D * (W - 34), Y = z => 6 + (1 - (z - lo) / (hi - lo || 1)) * (H - 22);
+    const top = marks.length ? 16 : 6, X = d => 28 + d / D * (W - 34), Y = z => top + (1 - (z - lo) / (hi - lo || 1)) * (H - 16 - top);
+    const zAt = d => { let i = 1; while (i < prof.length - 1 && prof[i].d < d) i++; const a = prof[i - 1], b = prof[i] || a, f = b.d > a.d ? (d - a.d) / (b.d - a.d) : 0; return a.z + (b.z - a.z) * Math.max(0, Math.min(1, f)); };
+    // Measured points: a dashed drop line, a dot on the ground line and the letter above.
+    const markSVG = marks.map(m => `<g><line x1="${X(m.d).toFixed(1)}" x2="${X(m.d).toFixed(1)}" y1="${top - 2}" y2="${H - 16}" stroke="${m.c}" stroke-width="1" stroke-dasharray="2 2" opacity=".8"/><circle cx="${X(m.d).toFixed(1)}" cy="${Y(zAt(m.d)).toFixed(1)}" r="3.6" fill="${m.c}" stroke="var(--surface-1)" stroke-width="1.2"/><text x="${X(m.d).toFixed(1)}" y="${top - 5}" text-anchor="middle" font-size="9" font-weight="700" fill="${m.c}">${m.l}</text></g>`).join('');
+    // Crossings: a coloured tick on the ground line with its number.
+    const xingSVG = xings.map((x, k) => { const cx = X(x.d).toFixed(1), cy = Y(zAt(x.d)); return `<g><line x1="${cx}" x2="${cx}" y1="${(cy - 5).toFixed(1)}" y2="${(cy + 5).toFixed(1)}" stroke="${XING[x.kind].color}" stroke-width="2.4"/><text x="${cx}" y="${(cy + 14).toFixed(1)}" text-anchor="middle" font-size="8" font-weight="600" fill="${XING[x.kind].color}">${k + 1}</text></g>`; }).join('');
     const line = prof.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(p.z).toFixed(1)}`).join('');
     // Runs of consecutive samples on a pipe, as separate paths.
     const runs = (get) => { let d = '', on = false; for (const p of prof) { const z = get(p); if (z == null) { on = false; continue; } d += `${on ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(z).toFixed(1)}`; on = true; } return d; };
@@ -61,8 +76,9 @@
     const dots = (get, col) => prof.filter((p, i) => get(p) != null && get(prof[i - 1] || {}) == null && get(prof[i + 1] || {}) == null).map(p => `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(get(p)).toFixed(1)}" r="2.6" fill="${col}"/>`).join('');
     return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile${san ? ' with sanitary sewer inverts' : ''}${wat ? ' and watermains' : ''}">
       <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
-      ${san ? `<path d="${san}" fill="none" stroke="${MM().EXIST_STYLE.sanitary.color}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, MM().EXIST_STYLE.sanitary.color)}` : ''}
-      ${wat ? `<path d="${wat}" fill="none" stroke="${MM().EXIST_STYLE.water.color}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, MM().EXIST_STYLE.water.color)}` : ''}
+      ${san ? `<path d="${san}" fill="none" stroke="${tok(MM().EXIST_STYLE.sanitary.color)}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, tok(MM().EXIST_STYLE.sanitary.color))}` : ''}
+      ${wat ? `<path d="${wat}" fill="none" stroke="${tok(MM().EXIST_STYLE.water.color)}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, tok(MM().EXIST_STYLE.water.color))}` : ''}
+      ${xingSVG}${markSVG}
       <g font-size="9" fill="var(--text-muted)"><text x="2" y="${Y(hi) + 4}">${hi} m</text><text x="2" y="${Y(lo)}">${lo} m</text><text x="${X(0)}" y="${H - 4}">0</text><text x="${X(D) - 2}" y="${H - 4}" text-anchor="end">${fmtDist(D)}</text></g></svg>`;
   }
 
@@ -103,6 +119,15 @@
   }
   function refreshMeasureBanner() {
     if (tool.mode === 'measure' && hasTools()) { PeelTools.banner(measureBannerHTML()); if (tool.pts.length) fillElev(tool.pts.slice()); }
+  }
+  // Each point in its colour with its letter (and the distance so far after the first).
+  function drawMeasurePts() {
+    const n = tool.pts.length;
+    tool.pts.forEach((p, i) => {
+      const d = i ? fmtDist(tool.pts.slice(0, i + 1).reduce((t, q, j) => j ? t + metres(tool.pts[j - 1], q) : 0, 0)) : 'start';
+      L.circleMarker(p, { radius: 6, className: 'mpt', fillColor: ptColor(i, n), color: tok('--sym-outline'), weight: 2, fillOpacity: 1, interactive: false })
+        .bindTooltip(`<b style="color:${ptColor(i, n)}">${ptLetter(i)}</b> ${d}`, { permanent: true, direction: 'top', offset: [0, -6], className: 'pt mpt-lbl' }).addTo(toolLayer);
+    });
   }
   function measureDist() { return tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0); }
   function measureBannerHTML() {
@@ -171,15 +196,15 @@
         tool.pts.push(latlng);
         toolLayer.clearLayers();
         if (tool.pts.length > 1) L.polyline(tool.pts, { className: 'measure-line', interactive: false }).addTo(toolLayer);
-        tool.pts.forEach((p, i) => L.circleMarker(p, { radius: 4, className: 'measure-pt', interactive: false }).bindTooltip(i ? fmtDist(tool.pts.slice(0, i + 1).reduce((t, q, j) => j ? t + metres(tool.pts[j - 1], q) : 0, 0)) : 'start', { permanent: i === tool.pts.length - 1 && i > 0, className: 'pt', direction: 'right' }).addTo(toolLayer));
+        drawMeasurePts();
         refreshMeasureBanner();
       },
       onBannerAct(act) {
         if (act === 'done') { setTool(null); return; }
-        if (act === 'clear') { tool.pts = []; toolLayer.clearLayers(); refreshMeasureBanner(); return; }
+        if (act === 'clear') { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); refreshMeasureBanner(); return; }
         if (act.startsWith('buffer:') && tool.pts.length) bufferSelect(tool.pts[tool.pts.length - 1], +act.slice(7));
       },
-      onDeactivate() { tool.pts = []; toolLayer.clearLayers(); },
+      onDeactivate() { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); },
     });
     PeelTools.register('trace', {
       title: 'Trace',
@@ -287,8 +312,57 @@
     const dep = s.map(p => p.z - p.san.inv), wd = [...new Set(w.map(p => p.wat.d).filter(Boolean))].sort((a, b) => a - b);
     const r = (a, f = 1) => a.length ? (Math.min(...a) === Math.max(...a) ? Math.min(...a).toFixed(f) : `${Math.min(...a).toFixed(f)}–${Math.max(...a).toFixed(f)}`) : '';
     const sw = col => `<span class="lg-line" style="background:${col}"></span>`;
-    return `<span class="pd-row">${sw(MM().EXIST_STYLE.sanitary.color)}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong>` : 'No sanitary sewer within 12 m of the line'}</span>
-      <span class="pd-row">${sw(MM().EXIST_STYLE.water.color)}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
+    return `<span class="pd-row">${sw(tok(MM().EXIST_STYLE.sanitary.color))}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong>` : 'No sanitary sewer within 12 m of the line'}</span>
+      <span class="pd-row">${sw(tok(MM().EXIST_STYLE.water.color))}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
+  }
+  // Streets and watercourses the line crosses (OpenStreetMap, or the provincial watercourses
+  // when the constraint layers module has them): where, and their names.
+  const xingCache = new Map();
+  async function crossingsAlong(pts) {
+    const lats = pts.map(p => p.lat), lngs = pts.map(p => p.lng), pad = 0.0005;
+    const b = { s: Math.min(...lats) - pad, w: Math.min(...lngs) - pad, n: Math.max(...lats) + pad, e: Math.max(...lngs) + pad };
+    if ((b.n - b.s) * (b.e - b.w) > 0.02) return null;   // a line longer than ~15 km: too much to fetch
+    const key = [b.s, b.w, b.n, b.e].map(v => v.toFixed(4)).join(',');
+    if (!xingCache.has(key)) xingCache.set(key, (async () => {
+      const bb = `${b.s},${b.w},${b.n},${b.e}`;
+      const ql = `[out:json][timeout:25];(way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|motorway_link|trunk_link|primary_link|secondary_link)$"](${bb});way["waterway"~"^(river|stream|canal|drain|ditch|brook)$"](${bb}););out geom tags;`;
+      const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(ql), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      const j = await r.json();
+      const lines = (j.elements || []).filter(e => e.geometry).map(e => ({ kind: e.tags.waterway ? 'water' : 'street', name: e.tags.name || e.tags.ref || '', g: e.geometry.map(q => [q.lon, q.lat]) }));
+      // The provincial watercourses (Ontario Hydro Network) replace OSM's when they loaded.
+      const ohn = CN() && CN().watercoursesIn ? await CN().watercoursesIn({ xmin: b.w, ymin: b.s, xmax: b.e, ymax: b.n }).catch(() => null) : null;
+      return ohn && ohn.length ? [...lines.filter(l => l.kind !== 'water'), ...ohn.map(w => ({ kind: 'water', name: w.name || '', g: w.g }))] : lines;
+    })().catch(e => { xingCache.delete(key); throw e; }));
+    const lines = await xingCache.get(key);
+    // Segment intersections in a local metric frame; distance along the measured line.
+    const kx = 111320 * Math.cos(pts[0].lat * Math.PI / 180), ky = 111320, P = ([x, y]) => [x * kx, y * ky];
+    const out = []; let run = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const a = P([pts[i - 1].lng, pts[i - 1].lat]), c = P([pts[i].lng, pts[i].lat]), len = Math.hypot(c[0] - a[0], c[1] - a[1]);
+      for (const ln of lines) for (let k = 1; k < ln.g.length; k++) {
+        const p = P(ln.g[k - 1]), q = P(ln.g[k]);
+        const r = [c[0] - a[0], c[1] - a[1]], sv = [q[0] - p[0], q[1] - p[1]], den = r[0] * sv[1] - r[1] * sv[0];
+        if (!den) continue;
+        const t = ((p[0] - a[0]) * sv[1] - (p[1] - a[1]) * sv[0]) / den, u = ((p[0] - a[0]) * r[1] - (p[1] - a[1]) * r[0]) / den;
+        if (t < 0 || t > 1 || u < 0 || u > 1) continue;
+        out.push({ kind: ln.kind, name: ln.name, d: run + t * len, lat: pts[i - 1].lat + (pts[i].lat - pts[i - 1].lat) * t, lng: pts[i - 1].lng + (pts[i].lng - pts[i - 1].lng) * t });
+      }
+      run += len;
+    }
+    // One crossing per street / watercourse within 25 m (a divided road, a road drawn in pieces).
+    out.sort((x, y) => x.d - y.d);
+    return out.filter((x, i) => !out.slice(0, i).some(y => y.kind === x.kind && y.name === x.name && x.d - y.d < 25));
+  }
+  function crossingsHTML(xs) {
+    if (!xs.length) return '<span class="pd-row muted">No streets or watercourses crossed</span>';
+    return `<span class="pd-row xing-list">${xs.map((x, k) => `<span class="xing"><b style="color:${XING[x.kind].color}">${k + 1}</b> ${esc(x.name || (x.kind === 'water' ? 'Unnamed watercourse' : 'Unnamed street'))} <span class="muted">${x.kind === 'water' ? '≈ ' : ''}${fmtDist(x.d)}</span></span>`).join('')}</span>`;
+  }
+  // Crossing labels on the map.
+  const xingLayer = L.layerGroup().addTo(map);
+  function drawCrossings(xs) {
+    xingLayer.clearLayers();
+    xs.forEach((x, k) => L.circleMarker([x.lat, x.lng], { radius: 4, color: XING[x.kind].color, weight: 2, fillColor: XING[x.kind].color, fillOpacity: 0.9, interactive: false })
+      .bindTooltip(`<b>${k + 1}</b> ${esc(x.name || (x.kind === 'water' ? 'Watercourse' : 'Street'))}`, { permanent: true, direction: 'right', offset: [5, 0], className: `pt xing-lbl xing-${x.kind}` }).addTo(xingLayer));
   }
   let elevSeq = 0;
   async function fillElev(pts) {
@@ -296,13 +370,18 @@
     try {
       if (pts.length === 1) { const z = await elevAt(pts[0].lat, pts[0].lng); if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${z.toFixed(1)} m</strong> <span class="muted">above sea level · tap another point for a profile</span>`; return; }
       const prof = await elevProfile(pts); if (seq !== elevSeq || !$('#tp-elev')) return;
+      let cum = 0; const marks = pts.map((p, i) => { if (i) cum += map.distance(pts[i - 1], p); return { d: cum, c: ptColor(i, pts.length), l: ptLetter(i) }; });
       const a = prof[0].z, b = prof[prof.length - 1].z, D = prof[prof.length - 1].d, zs = prof.map(p => p.z);
       const head = `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m</span>`;
-      $('#tp-elev').innerHTML = `${head}${profileSVG(prof)}<span class="muted small">Looking up sewers and watermains along the line…</span>`;
-      let pipes = null; try { pipes = await pipesAlong(prof); } catch (e) { /* the pipe layers did not load */ }
+      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, 96, marks)}<span class="muted small">Looking up sewers, watermains, streets and watercourses along the line…</span>`;
+      const [pipes, xs] = await Promise.all([pipesAlong(prof).catch(() => null), crossingsAlong(pts).catch(() => undefined)]);
       if (seq !== elevSeq || !$('#tp-elev')) return;
-      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, pipes ? 120 : 90)}${pipes ? pipeDepthHTML(prof, pipes) : '<span class="muted small">Sewer and watermain layers did not load.</span>'}
-        <span class="muted small">Ground: terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m), so depths are approximate. Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed).</span>`;
+      drawCrossings(xs || []);
+      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, pipes ? 126 : 100, marks, xs || [])}
+        <span class="pd-row mpt-key">${marks.map(m => `<span><i style="background:${m.c}"></i>${m.l}${m.d ? ` ${fmtDist(m.d)}` : ''}</span>`).join('')}</span>
+        ${xs === null ? '<span class="pd-row muted">Line too long to look up crossings</span>' : xs ? crossingsHTML(xs) : '<span class="pd-row muted">Streets and watercourses did not load.</span>'}
+        ${pipes ? pipeDepthHTML(prof, pipes) : '<span class="muted small">Sewer and watermain layers did not load.</span>'}
+        <span class="muted small">Ground: terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m), so depths are approximate. Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed). Streets: OpenStreetMap. Watercourses: ${CN() && CN().watercourseSource ? CN().watercourseSource() : 'OpenStreetMap'}.</span>`;
     } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (terrain tiles did not load).</span>'; }
   }
   map.on('click', e => {

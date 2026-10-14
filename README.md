@@ -1440,6 +1440,54 @@ are planning-level estimates, not a substitute for a functional servicing report
 values against the current Region of Peel standards; a 2025 edition of the Linear Wastewater
 Standards is listed on the Region's site.
 
+## Site constraints: gas, hydro, watercourses, regulation limits
+
+Four switches in *Layers* draw site constraints, loaded live for the map area. Gas and hydro
+show from zoom 11, watercourses and regulation limits from zoom 12. Hover a line or area for
+its name and source. Each layer has a short note in the legend.
+
+| Layer | Source | Notes |
+|---|---|---|
+| Gas pipelines (dashed yellow) | Land Information Ontario *Utility Line* (gas / oil types) | Major pipelines only. Local gas mains are not published; call Ontario One Call before digging. |
+| Hydro lines (red) | Land Information Ontario *Utility Line* (hydro / electric types) | Transmission and major distribution lines; corridors carry easements. |
+| Watercourses (blue) | Ontario Hydro Network watercourses (LIO, 1:10,000) | Small or piped watercourses may be missing. |
+| Regulation limits (dashed green area) | TRCA regulation limit (2025, live); Credit Valley Conservation generic regulation limit (2025, built into the site) | Screening only: the authority confirms the limit, and a feature need not be mapped to be regulated. |
+
+- **Utility lines:** the province's Utility Line layer records 67 hydro lines, 29 "unknown
+  transmission lines" and 31 "unknown pipelines" in Peel. Transmission lines are shown as hydro.
+  Unknown pipelines are shown as gas pipelines, labelled "gas or oil; product not recorded".
+- **Watercourses:** the Ontario Hydro Network's "virtual" lines through lakes and ponds are not
+  drawn.
+- **CVC regulation limit:** CVC publishes its limit as one polygon of about 12 MB, which the
+  service returns whole for any query. `scripts/build-regulation.js` cuts it into the map's
+  0.02° tiles over Peel (`data/regulation/cvc/`, simplified to about 6 m). Each tile holds the
+  fill and the limit's own edges, so tile borders don't draw. Rebuild it with the *Probe data
+  sources* workflow, `mode=regulation-build`. Tests: `tests/regulation.test.js`.
+- **Not covered:** Nottawasaga Valley (north Caledon) and Conservation Halton (a small part of
+  west Mississauga) don't publish an open regulation limit layer.
+
+If a provincial service does not answer, gas, hydro and watercourses come from OpenStreetMap
+instead, and the Layers panel says so. The data sources were checked with the *Probe data
+sources*
+workflow, `mode=constraints` (`scripts/probe-constraints.js`; `only=quick` for sizes and
+types).
+
+## Measure: coloured points, streets and watercourses crossed
+
+- **Points:** each measured point has its own colour and letter, on the map and in the ground
+  profile. A is green (start), the last point is red, and the points between them are amber,
+  violet, pink, teal, gold and blue. A dashed line in the profile marks each point, and a key
+  under it gives each point's distance along the line.
+- **Crossings:** the streets and watercourses the line crosses are numbered in order along the
+  line, as grey (street) or blue (watercourse) ticks on the ground profile. They are listed by
+  name and distance under the profile and labelled on the map. Nearby pieces of one street or
+  watercourse within 25 m (a divided road, a road drawn in pieces) count once. Streets come
+  from OpenStreetMap. Watercourses come from the Ontario Hydro Network when it loads, otherwise
+  OpenStreetMap. Lines longer than about 15 km skip the lookup.
+- **Pipe colours fixed:** the sanitary and watermain lines in the profile, and the existing
+  pipes on the map, had lost their colours with the design-token change. They now use the pipe
+  colours again.
+
 ## Stage selector
 
 The *Stage* section shows a slim bar with each phase's share, in its phase colour. Under it is a
