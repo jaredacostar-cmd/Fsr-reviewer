@@ -21,6 +21,7 @@ name: Probe data sources
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
 #  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
 #  mode=regulation-build: cut Credit Valley Conservation's regulation limit into map tiles (data/regulation/cvc), committed to this branch
+#  mode=peel-open: Region of Peel housing construction activity and building permit statistics (data/peel-housing.json, committed to this branch); scripts/probe-peel-open.js lists the Region's other layers
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
@@ -119,6 +120,15 @@ jobs:
         if: inputs.mode == 'constraints'
         timeout-minutes: 20
         run: node scripts/probe-constraints.js ${{ inputs.only }}
+      - name: Region of Peel open data (log; housing activity and permits committed to this branch)
+        if: inputs.mode == 'peel-open'
+        timeout-minutes: 30
+        run: |
+          node scripts/build-peel-housing.js --out data
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/peel-housing.json
+          git diff --cached --quiet || { git commit -m "Region of Peel housing activity and building permits"; git push; }
       - name: CVC regulation limit tiles (committed to this branch)
         if: inputs.mode == 'regulation-build'
         run: |

@@ -2251,3 +2251,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .screen-note strong { color: var(--text-primary); font-weight: 500; }
 .screen-note + .screen-note, .screen-note ~ * .screen-note { display: none; }
 .screen-note-sm { margin: var(--space-1) 0; padding: 2px var(--space-2); }
+.ov-activity { grid-column: span 7; }
+.analysis .ov-activity { grid-column: span 12; }
+@media (max-width: 1100px) { .ov-activity { grid-column: span 12; } }
+.ov-activity td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }

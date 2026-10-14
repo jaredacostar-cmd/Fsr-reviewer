@@ -5,7 +5,9 @@
  * cached (like the existing pipes):
  *  - gas, hydro: the province's Utility Line layer (Land Information Ontario); OpenStreetMap
  *    when that service doesn't answer.
- *  - watercourses: the Ontario Hydro Network (LIO); OpenStreetMap as the fallback. The measure
+ *  - watercourses: the Region of Peel's watercourses (named, with watershed and conservation
+ *    authority), then the Ontario Hydro Network (LIO) where Peel has none (a provincial line along
+ *    a Peel one is dropped: one line per stream); OpenStreetMap as the fallback. The measure
  *    tool reads them too, for the watercourses a line crosses.
  *  - regulation limits: each conservation authority covering Peel that publishes its limit
  *    (Ontario Regulation 41/24). Screening only: the authority confirms what is regulated.
@@ -25,6 +27,8 @@
   // The province's Utility Line type (CLASS_SUBTYPE), e.g. "Unknown Pipeline", "Unknown Transmission Line".
   const utilType = p => pick(p, 'CLASS_SUBTYPE', 'UTILITY_LINE_TYPE', 'TYPE');
 
+  // Peel's watercourse layer names the conservation authority by its initials.
+  const CA_NAME = { CVC: 'Credit Valley Conservation', TRCA: 'Toronto and Region Conservation', HRCA: 'Conservation Halton', NVCA: 'Nottawasaga Valley Conservation' };
   const LAYERS = {
     gas: {
       label: 'Gas pipelines', short: 'gas', color: '--cx-gas', minZoom: 11, area: false, dash: '9 5', weight: 2.5,
@@ -43,9 +47,13 @@
     water: {
       label: 'Watercourses', short: 'watercourses', color: '--cx-water', minZoom: 12, area: false, dash: null, weight: 2,
       // "Virtual Flow" / "Virtual Connector" lines carry the network through lakes and ponds: not drawn.
-      sources: [{ url: `${LIO}/LIO_Open01/MapServer/26`, f: 'WATERCOURSE_TYPE,OFFICIAL_NAME_LABEL,PERMANENCY', src: 'Ontario Hydro Network (LIO)', keep: p => !/^virtual/i.test(pick(p, 'WATERCOURSE_TYPE')), name: p => [pick(p, 'OFFICIAL_NAME_LABEL'), /intermittent/i.test(pick(p, 'PERMANENCY')) && 'intermittent'].filter(Boolean).join(' · ') }],
+      sources: [
+        { url: 'https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Watercourses/FeatureServer/0', f: 'RIVER_NAME,WATERSHED,SUBWATSHED,AUTHORITY,Type,Tunnel', src: 'Region of Peel watercourses', peel: true, keep: () => true,
+          name: p => [pick(p, 'RIVER_NAME'), /^y|tunnel|pipe/i.test(pick(p, 'Tunnel')) && 'piped', pick(p, 'WATERSHED') && pick(p, 'WATERSHED') !== pick(p, 'RIVER_NAME') && `${pick(p, 'WATERSHED')} watershed`, CA_NAME[pick(p, 'AUTHORITY')] || pick(p, 'AUTHORITY')].filter(Boolean).join(' · ') },
+        { url: `${LIO}/LIO_Open01/MapServer/26`, f: 'WATERCOURSE_TYPE,OFFICIAL_NAME_LABEL,PERMANENCY', src: 'Ontario Hydro Network (LIO)', keep: p => !/^virtual/i.test(pick(p, 'WATERCOURSE_TYPE')), name: p => [pick(p, 'OFFICIAL_NAME_LABEL'), /intermittent/i.test(pick(p, 'PERMANENCY')) && 'intermittent'].filter(Boolean).join(' · ') },
+      ],
       osm: 'way["waterway"~"^(river|stream|canal|drain|ditch|brook)$"]', osmName: t => t.name || '',
-      note: 'Ontario Hydro Network (1:10,000): small and piped watercourses may be missing.',
+      note: 'Region of Peel watercourses (with their watershed and conservation authority), and the Ontario Hydro Network (1:10,000) where Peel maps none: small and piped watercourses may be missing.',
     },
     reg: {
       label: 'Regulation limits', short: 'regulation limits', color: '--cx-reg', minZoom: 12, area: true, dash: '6 4', weight: 1.6,
@@ -114,10 +122,33 @@
   async function tileFeatures(key, tx, ty) {
     const L0 = LAYERS[key];
     const res = await Promise.all(L0.sources.map((S, i) => failed.has(S.url) ? null : arcTile(key, i, tx, ty).catch(() => null)));
-    const got = res.filter(Boolean).flat();
+    let got = res.filter(Boolean).flat();
+    // Two sources for one stream (Peel's line and the province's): keep Peel's.
+    const peelI = L0.sources.findIndex(S => S.peel);
+    if (peelI >= 0 && res[peelI] && res[peelI].length) got = onePerStream(got, res[peelI]);
     if (res.some(r => r) || !L0.osm) { status[key] = res.some(r => r) ? 'ok' : 'none'; return got; }
     status[key] = 'osm';
     return osmTile(key, tx, ty).catch(() => { status[key] = 'none'; return []; });
+  }
+  // Drop the lines that run along one of the primary (Peel) lines: most of their points within
+  // ~25 m of it. A grid of the primary lines' segments keeps this quick.
+  function onePerStream(all, primary) {
+    const CELL = 0.0005, grid = new Map(), add = (k, s) => { if (!grid.has(k)) grid.set(k, []); grid.get(k).push(s); };
+    for (const f of primary) for (const r of f.rings) for (let i = 1; i < r.length; i++) {
+      const [a, b] = [r[i - 1], r[i]];
+      for (let gx = Math.floor(Math.min(a[0], b[0]) / CELL); gx <= Math.floor(Math.max(a[0], b[0]) / CELL); gx++)
+        for (let gy = Math.floor(Math.min(a[1], b[1]) / CELL); gy <= Math.floor(Math.max(a[1], b[1]) / CELL); gy++) add(`${gx},${gy}`, [a, b]);
+    }
+    const kx = Math.cos(43.7 * Math.PI / 180), near = ([x, y]) => {
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const [a, b] of grid.get(`${Math.floor(x / CELL) + dx},${Math.floor(y / CELL) + dy}`) || []) {
+        const ux = (b[0] - a[0]) * kx, uy = b[1] - a[1], px = (x - a[0]) * kx, py = y - a[1], L2 = ux * ux + uy * uy;
+        const t = L2 ? Math.max(0, Math.min(1, (px * ux + py * uy) / L2)) : 0, ex = px - t * ux, ey = py - t * uy;
+        if ((ex * ex + ey * ey) * 111320 * 111320 < 25 * 25) return true;
+      }
+      return false;
+    };
+    const mine = new Set(primary);
+    return all.filter(f => { if (mine.has(f)) return true; const pts = f.rings.flat(); if (!pts.length) return true; let n = 0; for (const p of pts) if (near(p)) n++; return n / pts.length < 0.6; });
   }
   const tilesOf = b => { const t = []; for (let tx = Math.floor(b.xmin / TILE); tx <= Math.floor(b.xmax / TILE); tx++) for (let ty = Math.floor(b.ymin / TILE); ty <= Math.floor(b.ymax / TILE); ty++) t.push([tx, ty]); return t; };
 
@@ -177,7 +208,7 @@
     const seen = new Set();
     return feats.filter(f => !seen.has(f.id) && seen.add(f.id)).flatMap(f => f.rings.map(g => ({ g, name: f.name })));
   }
-  const watercourseSource = () => status.water === 'ok' ? 'Ontario Hydro Network (LIO)' : 'OpenStreetMap';
+  const watercourseSource = () => status.water === 'ok' ? 'Region of Peel watercourses and the Ontario Hydro Network (LIO)' : 'OpenStreetMap';
   function legendHTML() {
     const keys = Object.keys(LAYERS).filter(k => on[k]);
     if (!keys.length) return '';

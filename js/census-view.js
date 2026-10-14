@@ -18,8 +18,40 @@
   const SV = () => root.PeelSvcData;
   const PA = () => root.PeelPlanAreas;
   const SvcTab = () => root.PeelSvcTab;
+  const P0 = () => root.PeelPhases;
 
 /* ---- app.js lines 1676-1721 ---- */
+  // ---- Housing activity (data/peel-housing.json) -----------------------------------------------
+  // The Region's housing construction activity (CMHC's survey) and building permit statistics for
+  // the latest full year, with each municipality's 5-year average; and, as a check, the units on
+  // this app's building permit records issued that year.
+  function housingActivityRows() {
+    const P = App().state.housing && App().state.housing.peel; if (!P || !P.activity) return null;
+    const A = P.activity.muni, B = (P.permits && P.permits.muni) || {};
+    const full = o => Object.entries(o || {}).filter(([, v]) => !v.quarters || v.quarters === 4).map(([y]) => +y).sort((a, b) => a - b);
+    const y = Math.max(...full(A.Mississauga)); if (!isFinite(y)) return null;
+    const avg = (o, f) => { const ys = full(o).filter(k => k > y - 5 && k <= y); return ys.length ? ys.reduce((t, k) => t + f(o[k]), 0) / ys.length : null; };
+    // Counted the app's way: once per building (its conditional, foundation and full permits share a number).
+    const appPermits = m => P0().permitUnits(App().state.projects.filter(p => p.municipality === m).flatMap(p => p.records.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && r.events.some(e => e.phase === 'permit' && e.date.getFullYear() === y))));
+    const rows = ['Mississauga', 'Brampton', 'Caledon', 'Peel'].filter(m => A[m] && A[m][y]).map(m => ({
+      m, starts: A[m][y].starts.all, completions: A[m][y].completions.all, absorbed: A[m][y].absorbed.all,
+      permits: B[m] && B[m][y] ? B[m][y].units.all : null, value: B[m] && B[m][y] ? B[m][y].value.total : null,
+      avgStarts: avg(A[m], v => v.starts.all), avgCompl: avg(A[m], v => v.completions.all),
+      app: m === 'Peel' ? null : appPermits(m),
+    }));
+    return { y, rows, P };
+  }
+  function housingActivityHTML() {
+    const h = housingActivityRows(); if (!h) return '';
+    const n = v => (v == null ? '–' : fmtNum(Math.round(v))), money = v => (v == null ? '–' : `$${fmtNum(Math.round(v / 1e6))} M`);
+    const pr = h.rows.filter(r => r.app != null && r.permits);
+    return `<section class="ov-card ov-activity" data-info="housing-activity"><div class="ov-h"><h3>Housing activity, ${h.y}</h3></div>
+      <div class="hyd-scroll"><table class="dt"><thead><tr><th></th><th>Starts</th><th>Completions</th><th>Absorbed</th><th>Permit units</th><th>Permit value</th></tr></thead><tbody>
+        ${h.rows.map(r => `<tr${r.m === 'Peel' ? ' class="tot"' : ''}><td>${esc(r.m)}</td><td>${n(r.starts)}<small>avg ${n(r.avgStarts)}</small></td><td>${n(r.completions)}<small>avg ${n(r.avgCompl)}</small></td><td>${n(r.absorbed)}</td><td>${n(r.permits)}</td><td>${money(r.value)}</td></tr>`).join('')}
+      </tbody></table></div>
+      ${pr.length ? `<p class="small">Check: units on this app's building permit records issued in ${h.y}: ${pr.map(r => `${esc(r.m)} ${n(r.app)} (Region ${n(r.permits)})`).join(' · ')}.</p>` : ''}
+      <p class="small muted">Region of Peel open data: housing construction activity (CMHC Starts and Completions Survey; averages over 5 years to ${h.y}) and building permit statistics (all permits, values in current dollars). Starts and completions replace the CMHC copy year by year: one series is kept.</p></section>`;
+  }
   // ---- Population outlook (data/housing.json) --------------------------------------------------
   // Population outlook: census, the Ministry of Finance projection and the Region's 2051 forecast.
   function outlookRows() {
@@ -99,7 +131,7 @@
       ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('ww', 'Wastewater tab')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
       ${forecastTableHTML(bc)}
-      ${da ? '' : outlookCardHTML(true)}
+      ${da ? '' : housingActivityHTML() + outlookCardHTML(true)}
       <p class="small muted">ⓘ ${esc(name)} · ${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${CA().censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(asof)}</strong>.</p>`;
     renderGrowthChart(base, gr, Y, $('#gc-chart'));
   }
@@ -201,7 +233,7 @@
   document.addEventListener('pointerout', e => { const ch = e.target.closest && e.target.closest('.cap-chart'); if (ch && !ch.contains(e.relatedTarget)) { const t = ch.querySelector('.grow-tip'); if (t) t.hidden = true; } });
 
   // ---- Public contract ----
-  const api = { outlookRows, outlookCardHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
+  const api = { outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCensusView = api;
 })(typeof window !== 'undefined' ? window : globalThis);
