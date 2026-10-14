@@ -19,6 +19,7 @@ name: Probe data sources
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
 #  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
+#  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 on:
   workflow_dispatch:
@@ -113,6 +114,9 @@ jobs:
           git add -f ext-raw
           git commit -m "External open data (raw)"
           git push -f origin ext-raw
+      - name: Site constraint layers (gas, hydro, watercourses, regulation limits; log only)
+        if: inputs.mode == 'constraints'
+        run: node scripts/probe-constraints.js
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
