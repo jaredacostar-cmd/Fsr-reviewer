@@ -1,6 +1,8 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS } = window.PeelUtil;
+  // Every planned date carries its capital status after the May 2026 pause (design audit, Group 3).
+  const capTag = (y, s, id) => ` · ${CAPITAL_STATUS[capitalStatus(y, s, id)].toLowerCase()}`;
   const D = window.PeelDemand;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
@@ -247,8 +249,8 @@
     DCN.pipeRelief.set(i, out);
     return out;
   }
-  const lineRelief = ln => ({ kind: 'line', ln, y: ln.y || null, text: `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DI().DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` ${ln.p}` : ''}` });
-  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}` }; };
+  const lineRelief = ln => ({ kind: 'line', ln, y: ln.y || null, text: `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DI().DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` ${ln.p}` : ''}${capTag(ln.y, ln.s, ln.p || ln.c)}` });
+  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}${capTag(y, '', null)}` }; };
   // Growth (peak wet, L/s) of gp people, gj jobs on gh hectares, as in pipeFlow.
   function growthLs(gp, gj, gh) {
     const c = App().state.criteria, E = c.employment;
@@ -292,7 +294,7 @@
     const after = runOut(q, y => PLANT_TRIGGER * ratedAt(y === 'today' ? MM().THIS_YEAR : y));
     return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
       util: { today: cap.existing / lim, com: cap.committed / lim, bo: cap.buildout / lim }, room, people: room * 1e6 / (cap.perPerson || 1), out: runOut(q, () => lim), outAfter: steps.length ? after : undefined,
-      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}` })), q, rated: cap.rated };
+      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}${capTag(s.year, /council.approved/i.test(s.note || '') ? 'approved' : '', s.proj)}` })), q, rated: cap.rated };
   }
   // Water: max day of a set of zones by year (ML/d).
   function zonesMax(ids, y) {

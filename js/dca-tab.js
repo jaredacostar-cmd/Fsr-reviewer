@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, skel, hlP, CSV_DISCLAIMER, store, fmtMoney, SCREEN, isPublic } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, skel, hlP, CSV_DISCLAIMER, store, fmtMoney, SCREEN, isPublic, capitalChip, pauseNote, CAPITAL, CAPITAL_STATUS } = window.PeelUtil;
   // A range: one value when both ends format the same (no "65,100–65,100"). Defaults to people.
   const ppRange = (lo, hi, f = v => fmtNum(roundPop(v))) => { const a = f(lo), b = f(hi); return a === b ? a : `${a}–${b}`; };
   const map = window.PeelMapCore.map;
@@ -49,7 +49,7 @@
     const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0];
     return `<tr class="dca-row ${DC().REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
       <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
-      <td>${r.y || '–'}</td>
+      <td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}</td>
       <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
       <td>${r.outY ? (r.outY === MM().THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${SP().hz.end}` : '–'}</td>
       <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>
@@ -67,7 +67,7 @@
     const hl = `Across <strong>${fmtNum(R.list.length)} DC projects</strong>${adv.length ? `, <strong>${adv.length}</strong> come${adv.length === 1 ? 's' : ''} online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out (they screen late)` : ' — every project comes online before the capacity it relieves runs out'}${big && big.bo > 0 ? `; without <strong>${esc(big.name)}</strong> the screen shows the most growth constrained: ≈${pp(big.bo)} people (≈${uu(big.bo)} units) by build-out` : ''}.`;
     const list = MP().DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : MP().DCA.sort === 'cost' ? R.list.slice().sort((a, b) => (a.perP ?? Infinity) - (b.perP ?? Infinity)) : MP().DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
     const shown = MP().DCA.timingAll ? list : list.slice(0, 10);
-    return `${hlP(hl)}
+    return `${hlP(hl)}${pauseNote()}
       <div class="dca-sum">
         <div class="dca-tile"><b>${fmtNum(R.list.length)}</b><span>DC projects relieve a capacity constraint or serve new development</span></div>
         <div class="dca-tile ${adv.length ? 'warn' : ''}"><b>${adv.length}</b><span>screen late: in service after the capacity runs out</span></div>
@@ -77,11 +77,11 @@
       ${DC().dcaTimingChart(R.list.slice().sort((a, b) => b.bo - a.bo).slice(0, 10))}
       <div class="dca-tools"><label class="small dca-yr">Year <select data-dca-year aria-label="Year for the impact column (same as the map's Demand year)">${years.map(y => `<option value="${y}"${MA().getCapYear() === y ? ' selected' : ''}>${y}</option>`).join('')}<option value=""${MA().getCapYear() == null ? ' selected' : ''}>Build-out</option></select></label><span class="seg">${[['impact', 'Largest impact'], ['cost', 'Cost per person'], ['rec', 'By screening result'], ['year', 'By year']].map(([k, t]) => `<button type="button" class="btn small${MP().DCA.sort === k ? ' on' : ''}" data-dca-sort="${k}">${t}</button>`).join('')}</span>
         <button type="button" class="btn small" data-dca-csv>CSV</button><span class="muted small">Impact at the Demand year (${esc(String(yrLabel))}) and at build-out · tap a row for its timeline</span></div>
-      <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online</th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Cost (2020$)</th><th class="pv-hide">Screening result</th></tr></thead><tbody>
+      <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online <small>draft, as of ${CAPITAL.asOf}</small></th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Cost (2026$)</th><th class="pv-hide">Screening result</th></tr></thead><tbody>
         ${shown.map(r => dcaTimingRow(r, years, atY, pp, uu)).join('')}
       </tbody></table>
       ${list.length > 10 ? `<p><button type="button" class="btn small" data-dcatiming-all>${MP().DCA.timingAll ? 'Show top 10' : `See all ${list.length} projects`}</button></p>` : ''}
-      ${DC().dcaInfo(`Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(MP().PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${MM().THIS_YEAR}–${SP().hz.end}: approved growth over ${SP().hz.aYears} years from ${SP().hz.aStart}, proposed over ${SP().hz.pYears} from ${SP().hz.pStart} (Horizon years). Cancelling one project holds back the growth above the remaining capacity — people at each constraint's own rate (Peel design criteria), units at ${R.ppu.toFixed(2)} persons per unit; an existing overload isn't counted. Constraints in series along a path count the largest, not the sum; developments outside the existing network within ${fmtNum(DI().DC_CONNECT_M)} m of a new main count in full. Data: 2026 DC capital maps · 2020 DC Background Study costs · ${R.nCons} constraints analysed (storage and constraints flagged “check the data” are out).`)}`;
+      ${DC().dcaInfo(`Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(MP().PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${MM().THIS_YEAR}–${SP().hz.end}: approved growth over ${SP().hz.aYears} years from ${SP().hz.aStart}, proposed over ${SP().hz.pYears} from ${SP().hz.pStart} (Horizon years). Cancelling one project holds back the growth above the remaining capacity — people at each constraint's own rate (Peel design criteria), units at ${R.ppu.toFixed(2)} persons per unit; an existing overload isn't counted. Constraints in series along a path count the largest, not the sum; developments outside the existing network within ${fmtNum(DI().DC_CONNECT_M)} m of a new main count in full. Data: 2026 DC capital maps (draft v2, March 2026; dates as of March 2026, before the May 2026 pause) · 2020 DC Background Study costs indexed to 2026$ (×${App().state.dcCosts && App().state.dcCosts.index2026 ? `${App().state.dcCosts.index2026.wastewater.toFixed(2)} wastewater / ×${App().state.dcCosts.index2026.water.toFixed(2)} water` : '–'}; G.E. Booth's $130 M from 2024$ at the same average annual rate) · ${R.nCons} constraints analysed (storage and constraints flagged “check the data” are out).`)}`;
   }
   function renderDcaRec(R) {
     if (!App().state.dcCosts || !App().state.dcCosts.unitCost) return `<p class="small muted">DC cost data is still loading.</p>`;
@@ -92,7 +92,7 @@
     const rows = merged.filter(x => MP().DCA.recFilter === 'all' || x.dec.toLowerCase() === MP().DCA.recFilter);
     const shown = MP().DCA.recAll ? rows : rows.slice(0, 10);
     const hl = `With <strong>${fmtMoney(DC().DCB.budget)}</strong> of DC funding over ${DC().DCB.years} years (${MM().THIS_YEAR}–${B.end}) against a <strong>${fmtMoney(B.total)}</strong> program, <strong>${B.keep.length}</strong> projects fall within the funding screen (${fmtMoney(B.spent)}) and <strong>${B.defer.length}</strong> outside it (${fmtMoney(B.total - B.spent)})${B.upper > 0 ? ` — without them the screen shows ≈<strong>${ppRange(B.lower, B.upper)} people</strong> (≈${ppRange(B.lower, B.upper, uu)} units) of the growth expected by ${B.end} constrained` : B.defer.length ? ` — no growth expected by ${B.end} relies on the projects outside it` : ` — every project in the window is within it`}.`;
-    return `${hlP(hl)}
+    return `${hlP(hl)}${pauseNote()}
       <div class="dca-sum">
         <div class="dca-tile"><b>${B.keep.length}</b><span>within the funding screen (${fmtMoney(B.spent)}${B.committed ? `, ${fmtMoney(B.committed)} already committed` : ''})</span></div>
         <div class="dca-tile"><b>${B.defer.length}</b><span>outside the funding screen (${fmtMoney(B.total - B.spent)})</span></div>
@@ -115,7 +115,7 @@
     const hl = `The <strong>${B.rows.length}-project</strong> DC program coming online ${MM().THIS_YEAR}–${B.end} costs <strong>${fmtMoney(B.total)}</strong> in 2026 DC-recoverable dollars; the <strong>${fmtMoney(DC().DCB.budget)}</strong> funding screen has <strong>${B.keep.length}</strong> within it and <strong>${B.defer.length}</strong> outside it.`;
     const byCost = B.rows.slice().sort((a, b) => b.cost - a.cost);
     const shown = MP().DCA.fundAll ? byCost : byCost.slice(0, 10);
-    return `<section data-info="dca-budget">${hlP(hl)}
+    return `<section data-info="dca-budget">${hlP(hl)}${pauseNote()}
       <div class="dca-sum">
         <div class="dca-tile"><b>${fmtMoney(B.total)}</b><span>DC-recoverable program cost, 2026$ (${B.rows.length} projects, ${MM().THIS_YEAR}–${B.end})</span></div>
         <div class="dca-tile"><b>${fmtMoney(DC().DCB.budget)}</b><span>DC funding over the next ${DC().DCB.years} years</span></div>
@@ -127,7 +127,7 @@
       ${DC().dcaCurveChart(curve, B)}
       <h3 class="sub-title">Most expensive projects (DC cost, 2026$)</h3>
       <div class="dcb-scroll"><table class="dt dcb-t"><thead><tr><th>Project</th><th>Online</th><th>DC cost 2026$</th><th>Estimated</th><th>Growth it carries by ${B.end}</th></tr></thead><tbody>
-        ${shown.map(r => `<tr><td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}</td><td>${r.c ? `${Math.round(r.c.est * 100)}%` : '–'}</td><td>${r.v > 0 ? `${pp(r.v)} people<small>≈${uu(r.v)} units</small>` : '<span class="muted">none</span>'}</td></tr>`).join('')}
+        ${shown.map(r => `<tr><td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}</td><td>${r.c ? `${Math.round(r.c.est * 100)}%` : '–'}</td><td>${r.v > 0 ? `${pp(r.v)} people<small>≈${uu(r.v)} units</small>` : '<span class="muted">none</span>'}</td></tr>`).join('')}
       </tbody></table></div>
       ${byCost.length > 10 ? `<p><button type="button" class="btn small" data-dcafund-all>${MP().DCA.fundAll ? 'Show top 10' : `See all ${byCost.length} projects`}</button></p>` : ''}
       ${B.later.length ? `<p class="small dcn-gap-t"><strong>Outside the window:</strong> ${B.later.map(r => `${esc(r.name)} (online ${r.y}, capacity runs out ≈${r.outY === MM().THIS_YEAR ? 'now' : r.outY}${r.cost ? `, ≈${fmtMoney(r.cost)}` : ''})`).join('; ')} ${B.later.length === 1 ? 'is' : 'are'} scheduled after ${B.end} but needed sooner; bringing ${B.later.length === 1 ? 'it' : 'them'} into the window needs ≈${fmtMoney(B.later.reduce((t, r) => t + r.cost, 0))} more.</p>` : ''}
@@ -145,8 +145,8 @@
   }
   function dcaCsv() {
     const R = DC().dcAnalysis(), q = v => `"${String(v).replace(/"/g, '""')}"`;
-    const head = ['Project', 'System', 'Online', 'Status', 'Relieves', 'Capacity runs out', 'Connecting developments', ...R.years.map(y => `Held back if cancelled ${y} (people)`), 'Held back if cancelled build-out (people)', 'Held back build-out (units)', 'DC revenue held back (water + wastewater, $)', 'Gross cost 2020$ (priced parts)', 'DC-recoverable cost 2020$ (priced parts)', 'Parts priced', 'DC-recoverable cost per person ($)', ...(isPublic() ? [] : ['Screening result', 'Why'])];
-    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), r.revRisk == null ? '' : Math.round(r.revRisk), r.cost && r.cost.n ? r.cost.gross : '', r.cost && r.cost.n ? r.cost.dc : '', r.cost ? `${r.cost.n} of ${r.cost.of}` : '', r.perP == null ? '' : Math.round(r.perP), ...(isPublic() ? [] : [DC().REC[r.rec][1], r.why])]);
+    const head = ['Project', 'System', `Online (draft, as of ${CAPITAL.asOf})`, 'Capital status (May 2026 pause)', 'Status', 'Relieves', 'Capacity runs out', 'Connecting developments', ...R.years.map(y => `Held back if cancelled ${y} (people)`), 'Held back if cancelled build-out (people)', 'Held back build-out (units)', 'DC revenue held back (water + wastewater, $)', 'Gross cost 2026$ (priced parts)', 'DC-recoverable cost 2026$ (priced parts)', 'Parts priced', 'DC-recoverable cost per person ($)', ...(isPublic() ? [] : ['Screening result', 'Why'])];
+    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', CAPITAL_STATUS[r.cap] || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), r.revRisk == null ? '' : Math.round(r.revRisk), r.cost && r.cost.n ? r.cost.gross : '', r.cost && r.cost.n ? r.cost.dc : '', r.cost ? `${r.cost.n} of ${r.cost.of}` : '', r.perP == null ? '' : Math.round(r.perP), ...(isPublic() ? [] : [DC().REC[r.rec][1], r.why])]);
     PE().download(`peel-dc-analysis-${MM().THIS_YEAR}.csv`, CSV_DISCLAIMER + [head, ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
   }
   // DC tab events: delegated from the document so they keep working in the Phase 4 sub-view
@@ -165,8 +165,8 @@
     const bb = e.target.closest('[data-dcb]'); if (bb) { DC().DCB.budget = +bb.dataset.dcb; store.set('dcaBudget', DC().DCB.budget); return renderDca(); }
     if (e.target.closest('[data-dcb-csv]')) {
       const B = DC().dcaBudget(DC().DCB.budget, DC().DCB.years), q = v => `"${String(v).replace(/"/g, '""')}"`;
-      const rows = DC().dcaMergeRecs(B).map(({ dec, r }) => [dec, r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.committed ? 'yes' : '', Math.round(r.cost), r.c ? Math.round(r.c.est * 100) : '', Math.round(r.v), Math.round(r.v / B.ppu), r.firstY || '']);
-      return PE().download(`peel-dc-funding-${(DC().DCB.budget / 1e9).toFixed(1)}B-${B.end}.csv`, CSV_DISCLAIMER + [['Screening result', 'Project', 'System', 'Online', 'Committed', 'DC cost 2026$', '% estimated', `People the screen shows constrained by ${B.end} without it`, 'Units', 'Growth first held back'], ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
+      const rows = DC().dcaMergeRecs(B).map(({ dec, r }) => [dec, r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', CAPITAL_STATUS[r.cap] || '', r.committed ? 'yes' : '', Math.round(r.cost), r.c ? Math.round(r.c.est * 100) : '', Math.round(r.v), Math.round(r.v / B.ppu), r.firstY || '']);
+      return PE().download(`peel-dc-funding-${(DC().DCB.budget / 1e9).toFixed(1)}B-${B.end}.csv`, CSV_DISCLAIMER + [['Screening result', 'Project', 'System', `Online (draft, as of ${CAPITAL.asOf})`, 'Capital status (May 2026 pause)', 'Committed', 'DC cost 2026$', '% estimated', `People the screen shows constrained by ${B.end} without it`, 'Units', 'Growth first held back'], ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
     }
     const rf = e.target.closest('[data-dcarec-filter]'); if (rf) { MP().DCA.recFilter = rf.dataset.dcarecFilter; MP().DCA.recAll = false; return renderDca(); }
     if (e.target.closest('[data-dcarec-all]')) { MP().DCA.recAll = !MP().DCA.recAll; return renderDca(); }

@@ -1435,6 +1435,31 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Capital schedule currency: status, "as of" and one dollar year
+
+Every planned date comes from the 2026 DC capital maps (draft v2, **as of March 2026**). In May
+2026 Regional Council paused all new growth-related water and wastewater capital procurements
+from **June 11, 2026**, until upper levels of government commit funding
+([Council report, May 28, 2026](https://pub-peelregion.escribemeetings.com/filestream.ashx?DocumentId=45699)).
+Each planned work now shows a status (`PeelUtil.capitalStatus`):
+
+| Status | Rule |
+|---|---|
+| **Paused** | Proposed for 2027 or later: not yet tendered, so its procurement is on hold |
+| **Status unknown** | In the 2026 budget (approved 2026, or a plant step Council already funded): paused only if not tendered or awarded by June 11, 2026 |
+| **Scheduled** | Known to be going ahead: set per project number in `CAPITAL.overrides` (none yet) |
+
+Shown on the DC Timing and funding tables (with "Online — draft, as of March 2026"), every DC
+relief text (Water, Wastewater, the briefing, the memo), the planned-works map tooltip and the
+development brief; a pause note heads each DC sub-view, the briefing's DC section and the memo's
+DC needs. The CSVs carry an "Online (draft, as of March 2026)" and a "Capital status" column.
+The analysis itself still replays the draft schedule: the status says how far to trust each date.
+
+**One dollar year (2026$).** The DC Timing cost column was 2020$ and the funding views 2026$; all
+are now 2026$: the 2020 study's costs indexed by the Region's DC rate indexing (×1.40 wastewater,
+×1.35 water, August 2026 over 2020), and G.E. Booth's $130 M (2024$) indexed from 2024 at the same
+average annual rate (≈×1.12).
+
 ## Screening wording and the public version
 
 Results say what the screen shows, never what the Region should do (design audit, Group 2). One
