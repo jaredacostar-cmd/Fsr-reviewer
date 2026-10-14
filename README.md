@@ -1440,6 +1440,19 @@ are planning-level estimates, not a substitute for a functional servicing report
 values against the current Region of Peel standards; a 2025 edition of the Linear Wastewater
 Standards is listed on the Region's site.
 
+## Deploy checks
+
+Every deploy (push to `main` and the weekly data refresh) runs two checks first. A failure stops
+the deploy, so the live site keeps its last good build.
+
+- `npm test`: the unit tests.
+- `npm run lint`: every script `index.html` loads, checked with ESLint's `no-undef` rule
+  (`eslint.config.mjs`). The app is plain scripts sharing `window.Peel*` modules. A name that
+  isn't defined in its own module only fails when that line runs, so the unit tests can pass
+  while the app fails to load. That is what happened when the phases 2–7 module split (#160)
+  first went live. It left 63 such names, ran the app's start-up before `window.PeelApp`
+  existed, and renamed the basemap control's id.
+
 ## Data sources (`js/config.js`)
 
 | Municipality | Source | Kind |

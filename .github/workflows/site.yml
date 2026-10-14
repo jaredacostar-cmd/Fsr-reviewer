@@ -92,6 +92,14 @@ jobs:
         with:
           node-version: 22
 
+      # A broken build never goes live: the unit tests, and every script index.html loads
+      # checked for names that aren't defined in their module (eslint.config.mjs).
+      - name: Unit tests
+        run: npm test
+
+      - name: Script check (undefined names)
+        run: npm run lint
+
       # The change log (Change log tab): one release per merged pull request, from the history.
       - name: Change log
         continue-on-error: true
