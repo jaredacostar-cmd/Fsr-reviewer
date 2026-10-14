@@ -1451,10 +1451,26 @@ its name and source. Each layer has a short note in the legend.
 | Gas pipelines (dashed yellow) | Land Information Ontario *Utility Line* (gas / oil types) | Major pipelines only. Local gas mains are not published; call Ontario One Call before digging. |
 | Hydro lines (red) | Land Information Ontario *Utility Line* (hydro / electric types) | Transmission and major distribution lines; corridors carry easements. |
 | Watercourses (blue) | Ontario Hydro Network watercourses (LIO, 1:10,000) | Small or piped watercourses may be missing. |
-| Regulation limits (dashed green area) | Conservation authority regulation limit layers (O. Reg. 41/24) | Screening only: the authority confirms the limit, and a feature need not be mapped to be regulated. |
+| Regulation limits (dashed green area) | TRCA regulation limit (2025, live); Credit Valley Conservation generic regulation limit (2025, built into the site) | Screening only: the authority confirms the limit, and a feature need not be mapped to be regulated. |
+
+- **Utility lines:** the province's Utility Line layer records 67 hydro lines, 29 "unknown
+  transmission lines" and 31 "unknown pipelines" in Peel. Transmission lines are shown as hydro.
+  Unknown pipelines are shown as gas pipelines, labelled "gas or oil; product not recorded".
+- **Watercourses:** the Ontario Hydro Network's "virtual" lines through lakes and ponds are not
+  drawn.
+- **CVC regulation limit:** CVC publishes its limit as one polygon of about 12 MB, which the
+  service returns whole for any query. `scripts/build-regulation.js` cuts it into the map's
+  0.02° tiles over Peel (`data/regulation/cvc/`, simplified to about 6 m). Each tile holds the
+  fill and the limit's own edges, so tile borders don't draw. Rebuild it with the *Probe data
+  sources* workflow, `mode=regulation-build`. Tests: `tests/regulation.test.js`.
+- **Not covered:** Nottawasaga Valley (north Caledon) and Conservation Halton (a small part of
+  west Mississauga) don't publish an open regulation limit layer.
 
 If a provincial service does not answer, gas, hydro and watercourses come from OpenStreetMap
-instead, and the Layers panel says so.
+instead, and the Layers panel says so. The data sources were checked with the *Probe data
+sources*
+workflow, `mode=constraints` (`scripts/probe-constraints.js`; `only=quick` for sizes and
+types).
 
 ## Measure: coloured points, streets and watercourses crossed
 
