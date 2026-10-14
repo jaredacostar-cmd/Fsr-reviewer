@@ -1642,6 +1642,42 @@ workflow, mode `peel-open`). A year is the Region's annual row, or its four quar
 year with fewer quarters is partial and isn't used as a full year. `scripts/probe-peel-open.js`
 lists the Region's other layers.
 
+## Units read from proposals, the development Overview, Growth layout, wide tables
+
+**Units from proposal text.**
+- Counts written in the description are read more fully:
+  - spelled-out numbers: "sixty (60)", "seven street townhouses"
+  - a single dwelling type: "10 townhouses", "34 semi-detached homes", "15 stacked townhouses",
+    "115 condominium townhomes"
+  - residential lots, one house each: "47 residential lots", "202 single detached lots"
+- Units in a retail plaza, an industrial building, a hotel or a care home are not counted as homes.
+- A pre-consultation's count is used when no later file on the site states one, marked *from the
+  pre-consultation* in the build-out notes. An area-wide precinct or block plan's figure is not
+  used: its subdivisions are separate sites.
+- Counts are re-read when the app builds its developments, so the weekly snapshot doesn't have to
+  be rebuilt first.
+- This adds about 22,000 units across 73 developments. About 14,700 are on sites still in review
+  or pre-consultation (proposed). About 7,300 are on approved or under-construction sites whose
+  later files never stated a count, which raises committed units by about 6,700.
+
+**The development Overview** shows the development, not just its demand:
+- Its homes (or *net of N demolished*), people and jobs, with the employment floor area. An
+  employment site with no homes no longer shows "0 units".
+- Its flows: water max day, wastewater average dry weather, peak dry weather and peak wet weather.
+- The About, Files & history and Site views, below the verdict. The separate Development tab is
+  gone, and links to it open the Overview.
+
+**Growth** shows employment in the same layout as homes: floor area planned, permitted,
+completed and left to build, with jobs. The jobs by stage in the pipeline chart are filled in
+(they read 0 before).
+
+**The panel header** reads *N developments · X homes proposed · Y jobs*. Hover for what "homes
+proposed" counts: the applications' figure, net of demolitions, at every stage.
+
+**Wide tables** in the analysis panel wrap their text to fit. A table still wider than the panel
+scrolls sideways inside itself with its first column pinned, instead of being cut off at the
+panel's edge (Water by pressure zone, 2020 Master Plan vs this tracker, and others).
+
 ## Panels start below the top bar
 
 The top bar sits above the map's panels so its menus open over them. The panels that open from

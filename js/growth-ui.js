@@ -18,6 +18,7 @@
   const CA = () => root.PeelCensusAreas;
   const SET = () => root.PeelSettings;
   const TL = () => root.PeelTiming;
+  const SvcTab = () => root.PeelSvcTab;
 
 /* ---- app.js lines 2014-2122 ---- */
   // ---- Growth tab (Phase 4): pipeline and census sub-views ---------------------------------
@@ -36,7 +37,7 @@
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
     const fs = $('#f-sum');
-    if (fs) fs.innerHTML = `${App().state.daCtx ? `<span class="muted">Around ${esc(App().state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · <strong>${fmtNum(Math.round(Growth.pipelineTotals(set).planned))}</strong> planned units`;
+    if (fs) fs.innerHTML = `${App().state.daCtx ? `<span class="muted">Around ${esc(App().state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · <span title="Homes the applications shown propose: the largest figure across each development's files, net of homes demolished, at every stage from pre-consultation to built. Growth shows how many are permitted, built and left to build."><strong>${fmtNum(Math.round(Growth.pipelineTotals(set).planned))}</strong> homes proposed</span>${(() => { const j = set.reduce((t, p) => t + (p.phase === 'cancelled' ? 0 : App().jobsOf(p) || 0), 0); return j > 0 ? ` · <strong>${fmtNum(Math.round(j / 100) * 100)}</strong> jobs` : ''; })()}`;
     // Keep the Overview pane's numbers in sync (as the old Demand tab did).
     if (App().state.daCtx) OV().renderOverview(); else OV().renderOverview(set, D.estimate(set, App().state.criteria, basis, App().jobsOf), basis);
   }
@@ -55,11 +56,18 @@
     const lags = Growth.approvalLags(set);
     const apprByM = Object.fromEntries(Growth.medianApprovalByMuni(lags).map(r => [r.m, r]));
     const allMedian = Growth.median(lags.map(l => l.months));
-    const tile = (label, v, sub, info) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${v}<span class="tu">units</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     const pc = v => `${Math.round(v * 100)}%`;
+    const tile = (label, v, sub, info, u = 'units') => `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${v}<span class="tu">${u}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
+    // Employment in the same layout as the homes: floor area planned, permitted, completed and
+    // left to build, with the jobs it holds.
+    const jobsOfM2 = m2 => (emp.planned ? emp.jobs * m2 / emp.planned : 0);
+    const empTiles = emp.planned ? `<h3 class="sub-title" data-info="employment">Employment</h3><div class="tiles">${tile('Planned', fmtNum(Math.round(emp.planned)), `≈${fmtNum(Math.round(emp.jobs))} jobs`, 'employment', 'm²')}
+        ${tile('Permitted', fmtNum(Math.round(emp.permitted)), `${pc(emp.permitted / emp.planned)} of planned · ≈${fmtNum(Math.round(jobsOfM2(emp.permitted)))} jobs`, 'employment', 'm²')}
+        ${tile('Completed', fmtNum(Math.round(emp.completed)), `≈${fmtNum(Math.round(jobsOfM2(emp.completed)))} jobs`, 'employment', 'm²')}
+        ${tile('Left to build', fmtNum(Math.round(emp.left)), `${pc(emp.left / emp.planned)} of planned · ≈${fmtNum(Math.round(jobsOfM2(emp.left)))} jobs`, 'employment', 'm²')}</div>` : '';
     const yrs = comp.years, yr0 = yrs.length ? yrs[0].year : null, yr1 = yrs.length ? yrs[yrs.length - 1].year : null;
     const head = set.length
-      ? `The <strong>${fmtNum(set.length)}</strong> developments shown hold <strong>${fmtNum(Math.round(t.planned))}</strong> planned units: <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
+      ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
       : 'No developments match the current filters.';
     // Largest pipelines still to build: top 5, the rest behind "See all".
     const unbuilt = set.filter(p => p.buildout && p.buildout.unbuilt > 0).sort((a, b) => b.buildout.unbuilt - a.buildout.unbuilt);
@@ -79,10 +87,12 @@
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     body.innerHTML = `
       ${hlP(head)}
+      <h3 class="sub-title" data-info="demand-units">Homes</h3>
       <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with a build-out` : '', 'demand-units')}
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
         ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(comp.totalUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
         ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>
+      ${empTiles}
       <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
       ${topTable}
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
@@ -90,7 +100,12 @@
       <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
     // The pipeline by stage reuses the growth chart (no census baseline here).
     const bc = CA().baselineCensus();
-    if (bc) CV().renderGrowthChart({ population: 0, dwellings: 0 }, PeelAreas.growthSince(set, {}, bc.date, App().state.criteria), bc.year, $('#gp-chart'));
+    if (bc) {
+      // Jobs by layer as well (built / approved / proposed), as the census sub-view does.
+      const gr = PeelAreas.growthSince(set, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(set.filter(p => p.phase !== 'cancelled'), bc.date);
+      gr.built.jobs = j.jbuilt; gr.approved.jobs = j.japproved; gr.proposed.jobs = j.jproposed;
+      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'));
+    }
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];

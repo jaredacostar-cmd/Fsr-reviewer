@@ -84,15 +84,29 @@
       stalled: st.stalled ? `${st.years.toFixed(1)} yrs` : null,
       next: nextPh ? nextPh.label : '—',
     });
+    // Homes and jobs (an employment site has no units: its flows come from its floor area), then
+    // the flows: water, wastewater average dry weather, peak dry weather and peak wet weather.
+    const em = App().empOf ? App().empOf(p) : null, jobs = pe.employment.jobs || 0;
+    const useTxt = em && em.uses.length ? em.uses.map(u => u.label.toLowerCase()).slice(0, 2).join(', ') : 'employment';
+    const tiles = [
+      pe.totalUnits > 0 || !jobs ? tile(fmtNum(Math.round(pe.totalUnits)), 'units', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : 'planned') : '',
+      pe.population > 0 ? tile(fmtNum(roundPop(pe.population)), 'people', 'at build-out') : '',
+      jobs > 0 ? tile(fmtNum(roundPop(jobs)), 'jobs', 'on the site') : '',
+      em && em.totalM2 > 0 ? tile(fmtNum(Math.round(em.totalM2)), 'm²', `${esc(useTxt)} floor area`) : '',
+      tile(fmt1(cb.water.maxDay), 'L/s', 'water max day'),
+      tile(fmt1(cb.wastewater.avg), 'L/s', 'average dry weather'),
+      tile(fmt1(cb.wastewater.peak), 'L/s', 'peak dry weather'),
+      tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'peak wet weather'),
+    ].join('');
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
-    const devBtn = `<button type="button" class="btn small link ov-go" data-ov-dev="${esc(p.key)}">Development →</button>`;
+    const devBtn = `<button type="button" class="btn small link ov-go" data-ov-devsec="files">Files &amp; history ↓</button>`;
     const vline = (v, label, btn) => `<li><strong>${label}</strong> <span class="${toneCls[v.tone]}">${vtxt(v)}</span> ${btn}</li>`;
     el.innerHTML = `<div class="ov-top">${hlP(`<strong>${esc(p.title)}</strong> · ${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}`)}</div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Servicing verdict</h3>${devBtn}</div>
           <p class="small">${DV().firstSentence(st.why)}</p>
-          <div class="ov-tiles">${tile(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned')}${tile(fmtNum(roundPop(pe.population)), 'people', 'at build-out')}${tile(fmt1(cb.water.maxDay), 'L/s', 'water max day')}${tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet')}</div>
-          <p class="small muted">Flows at Peel design criteria, as in a functional servicing report. The raw status text lives in Development › Files &amp; history.</p>
+          <div class="ov-tiles">${tiles}</div>
+          <p class="small muted">Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. Below: the proposal, its files and history, and the site.</p>
         </section>
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Verdict</h3></div>
           <ul class="b-lines small">
@@ -102,6 +116,7 @@
             ${vline(mv, '🚩 Next milestone', devBtn)}
           </ul></section>
       </div>`;
+    const sec = $('#ov-dev'); if (sec) sec.hidden = false;
     if (document.documentElement.hasAttribute('data-presentation')) AS().renderPresentation();
   }
   // The capacity constraints behind the Overview bars (wastewater plants + the South Peel
@@ -157,6 +172,7 @@
     const el = $('#ov-body'); if (!el) return;
     const p = DV().scopedDev();
     if (p) { renderVerdictCard(p); return; }
+    const sec = $('#ov-dev'); if (sec) sec.hidden = true;
     if (!set) { set = DU().overviewSet(); basis = DU().demandBasis(); e = D.estimate(set, App().state.criteria, basis, App().jobsOf); }
     if (!basis) basis = DU().demandBasis();
     const em = e.employment;
@@ -202,6 +218,8 @@
       if (t.dataset.ovTab === 'criteria') { TB().openGearPage('sources'); return; }
       AT().setFootPref(t.dataset.ovTab); store.set('footTab4', t.dataset.ovTab); AT().showFootTab(t.dataset.ovTab); return;
     }
+    const ds = e.target.closest('[data-ov-devsec]');
+    if (ds) { if (window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(ds.dataset.ovDevsec); const sec = $('#ov-dev'); if (sec) sec.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
     const dv = e.target.closest('[data-ov-dev]'); if (dv) { const q = DN().projectByKey(dv.dataset.ovDev); if (q) DN().showDetail(q); return; }
     const k = e.target.closest('[data-ov-tool]');
     if (k && k.dataset.ovTool === 'brief') RP().briefingPDF();

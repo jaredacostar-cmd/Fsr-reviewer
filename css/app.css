@@ -2256,3 +2256,16 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .analysis .ov-activity { grid-column: span 12; }
 @media (max-width: 1100px) { .ov-activity { grid-column: span 12; } }
 .ov-activity td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
+/* The development's About / Files & history / Site views live in the Overview (below the verdict);
+   the separate Development tab is retired. */
+#ftab-dev { display: none !important; }
+.ov-dev { margin-top: var(--space-3); border-top: 1px solid var(--border); padding-top: var(--space-2); }
+/* Tables in the analysis panel: text wraps so they fit the panel's width; one that still doesn't
+   fit (js/app.js marks it .dt-wide) scrolls sideways inside itself with its first column pinned,
+   instead of being cut off at the panel's edge. */
+.analysis-panes .dt th, .analysis-panes .dt td { white-space: normal; }
+.analysis-panes .dt td small, .analysis-panes .dt th small { white-space: normal; }
+.dt.dt-wide { display: block; overflow-x: auto; max-width: 100%; overscroll-behavior-x: contain; }
+.dt.dt-wide th:first-child, .dt.dt-wide td:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface-1); box-shadow: inset -1px 0 0 var(--border); }
+.analysis-panes .svc-table { min-width: 0; }
+.analysis-panes .dt th, .analysis-panes .dt td { padding-left: 6px; padding-right: 6px; }

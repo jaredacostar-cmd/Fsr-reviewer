@@ -415,6 +415,15 @@
     document.documentElement.style.setProperty('--footer-h', `${$('#footer').offsetHeight}px`);
     window.PeelMapCore.map.invalidateSize();
   }).observe($('#footer'));
+  // Analysis tables wider than their place even with wrapped text scroll inside themselves (.dt-wide)
+  // rather than being cut off by the panel.
+  const panes = document.getElementById('analysis-panes');
+  if (panes) {
+    let t = null;
+    const markWide = () => { for (const tb of panes.querySelectorAll('table.dt')) { if (!tb.offsetParent) continue; tb.classList.remove('dt-wide'); const room = tb.parentElement.clientWidth; if (room && tb.scrollWidth > room + 2) tb.classList.add('dt-wide'); } };
+    new MutationObserver(() => { clearTimeout(t); t = setTimeout(markWide, 120); }).observe(panes, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+    new ResizeObserver(() => { clearTimeout(t); t = setTimeout(markWide, 120); }).observe(panes);
+  }
   // And --top-h: where the top bar ends (banner included). The top bar sits above the drawers so
   // its menus open over them; the detail drawer (Help, a selection…) starts below it.
   const topEl = document.querySelector('.topbar');

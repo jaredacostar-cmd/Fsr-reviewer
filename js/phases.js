@@ -230,10 +230,28 @@
 
   // Units mentioned in free text: "a 25-storey building with 312 residential units".
   const LIST_RE = /(\d{1,5})\s*(?:\(\d+\)\s*)?((?:[a-z][a-z-]*\s+){0,4}?)(single[- ]detached|single family|singles?\b|detached|semi[- ]detached|semis?\b|townhouses?|townhomes?|town ?house|towns?\b|row ?houses?|back[- ]to[- ]back|stacked|apartments?|condominium (?:apartment )?units?|condo units?)/gi;
+  // Number words: "sixty (60)" keeps the figure, "seven street townhouses" becomes "7 street townhouses".
+  const NUM_WORD = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+  const NUM_WORDS = Object.keys(NUM_WORD).join('|');
+  const HOME_NOUN = '(?:units?|dwellings?|townhouses?|townhomes?|town ?houses?|homes|houses|lots|singles|semis)';
+  function numberWords(s) {
+    s = s.replace(new RegExp(`\\b(?:(?:${NUM_WORDS}|hundred|thousand)(?:[- ]|\\s+and\\s+|\\s+)?)+\\s*\\((\\d{1,5})\\)`, 'gi'), '$1');
+    return s.replace(new RegExp(`\\b(${NUM_WORDS})\\b(?=\\s+(?:[a-z-]+\\s+){0,3}?${HOME_NOUN}\\b)`, 'gi'), w => String(NUM_WORD[w.toLowerCase()]));
+  }
+  // "9 units" in a retail plaza, an industrial building, a hotel or a care home aren't homes.
+  const NOT_HOME_UNITS = /retail|commercial|industrial|plaza|hotel|motel|office|warehouse|storage|employment|nursing|long[- ]term care|retirement|care home|demising/i;
+  const HOME_WORDS = /residential|dwelling|apartment|townho|condo|stacked|single|semi|rental|homes/i;
   function unitsFromText(text) {
-    const s = String(text || '').replace(/,(?=\d{3})/g, '');
+    const s = numberWords(String(text || '').replace(/,(?=\d{3})/g, ''));
     let best = 0;
-    for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+)*(?:dwelling\s+)?units?\b/gi)) {
+    for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+|purpose[- ]built\s+)*(?:dwelling\s+)?(?:units?|suites)\b/gi)) {
+      const n = Number(m[1]);
+      const before = s.slice(Math.max(0, m.index - 90), m.index);
+      if (NOT_HOME_UNITS.test(before) && !HOME_WORDS.test(`${before} ${m[0]}`)) continue;
+      if (n > best && n < 20000) best = n;
+    }
+    // "47 residential lots", "202 single detached lots": one house a lot.
+    for (const m of s.matchAll(/(\d{1,5})\s+(?:new\s+)?(?:(?:single|semi)[- ]detached\s+(?:residential\s+)?|residential\s+)(?:dwelling\s+)?lots\b/gi)) {
       const n = Number(m[1]);
       if (n > best && n < 20000) best = n;
     }
@@ -244,7 +262,7 @@
     }
     // Counts listed by type add up: "299 single detached, 217 street townhouse, and 52
     // back-to-back townhouse dwelling units" is 568 units, not 52.
-    const parts = []; let summary = 0;
+    const parts = []; let summary = 0, strong = 0;
     for (const m of s.matchAll(LIST_RE)) {
       const n = Number(m[1]);
       if (!(n > 0) || n >= 20000 || /stor|sty|floor|level|metre|\bha\b|acre|lot|block|building|tower|phase|parking|space|bed/i.test(m[2] || '')) continue;
@@ -253,10 +271,14 @@
       if (/[\d.]/.test(s[m.index - 1] || '') || /^(m|sqm|sq|m2|ft|sf)\b|\b(sqm|sq|square|m2|to|from|zone|zoning|existing|has|retain\w*|industrial|commercial|office|retail|warehouse)\b/i.test(m[2] || '')) continue;
       if (/^\s*-?\s*(stor|sty)/i.test(s.slice(m.index + m[1].length, m.index + m[1].length + 8))) continue;
       // "2 apartment buildings", "15 townhouse blocks": buildings, not units.
-      if (/^\s*(buildings?|blocks?|towers?|bldgs?|lots?|storeys?|sites?)\b/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 14))) continue;
+      const after = s.slice(m.index + m[0].length, m.index + m[0].length + 24);
+      if (/^\s*(buildings?|blocks?|towers?|bldgs?|storeys?|sites?)\b/i.test(after) || (/^\s*lots?\b/i.test(after) && !/single|semi|detached/i.test(m[3]))) continue;
       // A figure followed by "consisting of / comprising / including / of which" sums the parts after it.
       if (/^[^.;]{0,40}?\b(consist|compris|includ|of which|made up|broken down)/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 60))) { summary = Math.max(summary, n); continue; }
       parts.push(n);
+      // One type on its own counts when the words name homes: "10 townhouses", "34 semi-detached
+      // homes", "15 single detached dwellings" (not "2 apartment" or "6 stacked").
+      if (/(townhouses|townhomes|town ?houses|singles|semis|towns|row ?houses)$/i.test(m[3]) || /^\s*(?:residential\s+|[a-z-]+\s+)?(?:dwellings?|homes|houses|residences|units|lots|townhouses|townhomes)\b/i.test(after)) strong = Math.max(strong, n);
     }
     // "16 blocks of townhouses (70 units)": the units in brackets are one part of the list.
     for (const m of s.matchAll(/\b\d{1,4}\s+(?:[a-z-]+\s+){0,2}blocks?\s+(?:of|for)\s+[a-z -]{0,40}?\(\s*(\d{1,5})\s*(?:[a-z-]+\s+){0,2}units?\s*\)/gi)) parts.push(Number(m[1]));
@@ -267,7 +289,7 @@
       // summary figure equal to the rest is counted once.
       const i = parts.findIndex(n => n * 2 === total); if (i >= 0) total -= parts[i];
       if (total > best && total < 20000) best = total;
-    }
+    } else if (strong > best) best = strong;
     return best || null;
   }
 
@@ -506,7 +528,12 @@
       }
     }
     // Sources whose unit counts duplicate a later file (pre-consultation) don't count units.
-    if (src.countUnits === false) { rec.units = null; rec.unitMix = null; }
+    if (src.countUnits === false) {
+      // Kept aside: used only when no later file on the site states a count (plannedFromApps).
+      const pu = rec.units > 0 ? rec.units : unitsFromText(rec.description);
+      if (pu > 0) rec.precUnits = pu;
+      rec.units = null; rec.unitMix = null;
+    }
     // No unit column (e.g. Brampton planning files): read the count from the description.
     else if (!(rec.units > 0) && !rec.unitMix) {
       const t = unitsFromText(rec.description);
@@ -651,8 +678,22 @@
    *     the smallest site whose polygon contains it.
    * Units are then counted once per project (see mergeProject).
    */
+  // Counts read from the description, for planning files with no count of their own (records from
+  // the weekly snapshot were read with an earlier parser): a pre-consultation's is kept aside.
+  const AREA_PLAN_TEXT = /precinct plan|block plan|secondary plan area|tertiary plan|master plan for the (?:block|precinct)/i;
+  function readTextUnits(r) {
+    if (r.kind !== 'application' || r.units != null && !r.unitsFromText || r.unitMix || !r.description) return;
+    const t = unitsFromText(r.description);
+    if ((r.stage || stageOf(r)) === 'precon') {
+      // An area-wide plan's figure (a precinct or block plan) covers subdivisions filed as sites of their own.
+      if (t > 0 && !(r.precUnits > 0) && !AREA_PLAN_TEXT.test(r.description)) r.precUnits = t;
+      return;
+    }
+    if (t > 0) { r.units = t; r.unitsFromText = true; }
+  }
   function buildProjects(records) {
     let groups = new Map();
+    for (const r of records) readTextUnits(r);
     for (const r of records) {
       const k = projectKey(r);
       let g = groups.get(k);
@@ -962,6 +1003,9 @@
   }
   function plannedFromApps(recs) {
     const files = new Map();
+    // A pre-consultation's count stands only when no other file on the site states one.
+    let precon = 0;
+    for (const r of recs) if (r.kind === 'application' && r.phase !== 'cancelled' && r.precUnits > 0) precon = Math.max(precon, r.precUnits);
     for (const r of recs) {
       if (r.kind !== 'application' || r.phase === 'cancelled' || r.minor || !(r.units > 0)) continue;
       const stage = r.stage || stageOf(r);
@@ -989,7 +1033,7 @@
       else by[f.stage] = Math.max(by[f.stage], f.units);
     }
     const planned = Math.max(by.master, by.siteplan, by.condo, by.other);
-    if (!(planned > 0)) return { planned: null, basis: null, phases: [] };
+    if (!(planned > 0)) return precon > 0 ? { planned: precon, basis: 'precon', phases: [] } : { planned: null, basis: null, phases: [] };
     const basis = Object.keys(by).find(k => by[k] === planned);
     return { planned, basis, phases };
   }
