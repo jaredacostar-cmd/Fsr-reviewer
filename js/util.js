@@ -20,6 +20,20 @@
   // Region's hydraulic models stay the authority.
   const SCREEN_NOTE_SHORT = '<p class="screen-note screen-note-sm" role="note"><strong>Screening estimate, not a model result:</strong> the Region of Peel\u2019s water and wastewater models are the authority.</p>';
   const SCREEN_NOTE = '<p class="screen-note" role="note"><strong>Screening estimate, not a model result.</strong> One screening method from public data and Peel design criteria, not a hydraulic model. The Region of Peel\u2019s water and wastewater models are the authority: confirm servicing with the Region.</p>';
+  // Public version (?public in the address, or Settings): hides the DC timing / funding screens'
+  // results, the verdict colours and the CSV screening column (design audit, Group 2).
+  const isPublic = () => { try { if (typeof location !== 'undefined' && /[?&]public(=|&|$)/.test(location.search)) return true; } catch (e) { /* no location */ } return !!store.get('publicView', false); };
+  const applyPublic = () => { if (typeof document !== 'undefined') document.documentElement.toggleAttribute('data-public', isPublic()); };
+  // Screening wording: results are screening outcomes, never Region decisions or capital advice.
+  const SCREEN = {
+    advance: 'Screens late',
+    keep: 'Screens in time',
+    defer: 'Screens well ahead of need',
+    review: 'No modelled need',
+    within: 'Within the funding screen',
+    outside: 'Outside the funding screen',
+    over: 'Screens over rated capacity',
+  };
   // Basis chip on a capacity figure: where its numbers come from. 'mixed' names the parts.
   const BASIS = {
     design: ['Design', 'Peel design criteria (Modelling Demand Table v2.0, Aug 2024; Linear Wastewater Standards R1.0, Mar 2023)'],
@@ -122,7 +136,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelUtil = api;

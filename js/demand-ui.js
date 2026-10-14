@@ -126,7 +126,7 @@
     const totU = rows.reduce((t, r) => t + r.a.units, 0), ahead = rows.filter(r => r.lay === 'proposed');
     const shown = allocSeeAll ? rows : rows.slice(0, 10);
     const maxRoom = Math.max(1e-9, ...plants.map(x => Math.max(0, x.after)));
-    el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} ahead of approval and commit capacity now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
+    el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} recorded ahead of approval and counted against the reserve now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
       <div class="tiles">${[
         wwTile('Allocations recorded', fmtNum(rows.length), rows.length === 1 ? 'allocation' : 'allocations', `${fmtNum(totU)} units`, 'allocations'),
         ...plants.map(x => wwTile(`${esc(SV().PLANT_SHORT[x.pl])} room`, fmt1(x.after), 'ML/d', `after allocations · ≈${fmtNum(roundPop(x.peopleAfter))} people`, 'allocations')),
@@ -269,6 +269,8 @@
   function numberConventionsHTML() {
     return `<h3 class="sub-title">Number conventions</h3>
       <p class="small muted">People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.</p>
+      <h3 class="sub-title">Public version</h3>
+      <p class="small"><label><input type="checkbox" id="public-view"${root.PeelUtil.isPublic() ? ' checked' : ''}> Public version: hide the DC funding screen and funding levels, the screening-result column (table and CSV) and the screening-summary colours</label><br><span class="muted">Or add <code>?public</code> to the address to share a public link.</span></p>
       <h3 class="sub-title">Prepared by</h3>
       <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
   }

@@ -1738,8 +1738,9 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dca-row:hover td { background: var(--surface-2); }
 .dca-rec { display: inline-block; font-weight: 500; font-size: var(--fs-2); padding: var(--space-1) var(--space-2); border-radius: 999px; white-space: nowrap; }
 .dca-advance .dca-rec { background: color-mix(in srgb, var(--cap-over) 18%, transparent); color: var(--cap-over); }
-.dca-keep .dca-rec { background: color-mix(in srgb, var(--cap-room) 18%, transparent); color: var(--cap-room); }
-.dca-defer .dca-rec { background: color-mix(in srgb, var(--cap-tight) 18%, transparent); color: var(--cap-tight); }
+/* In time / well ahead and the funding screen's within / outside are not capacity states: neutral. */
+.dca-keep .dca-rec { background: color-mix(in srgb, var(--accent) 14%, transparent); color: var(--text-primary); }
+.dca-defer .dca-rec { background: var(--surface-2); color: var(--text-secondary); }
 .dca-review .dca-rec { background: var(--surface-2); color: var(--text-secondary); }
 .dca-detail > td { background: var(--surface-2); }
 .dca-d { display: grid; gap: var(--space-2); }
@@ -2274,3 +2275,9 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 /* Basis chip on a capacity figure (design / 2025 measured / Master Plan 2020 / mixed). */
 .basis-chip { display: inline-block; margin-left: var(--space-1); padding: 0 6px; border: 1px solid var(--border); border-radius: 999px; font-size: var(--fs-1); font-weight: 500; line-height: 1.5; color: var(--text-secondary); vertical-align: middle; white-space: nowrap; cursor: help; }
 .basis-chip.basis-mixed { border-style: dashed; }
+
+/* Public version (Settings › Public version, or ?public): no funding screen, no screening-result
+   column, and the screening results lose their red / amber / green (design audit, Group 2). */
+[data-public] .pv-hide { display: none !important; }
+[data-public] .dca-rec { color: var(--text-primary) !important; background: var(--surface-2) !important; }
+[data-public] .ov-card .why-ok-t, [data-public] .ov-card .why-stall-t, [data-public] .ov-card .why-stop-t { color: var(--text-primary) !important; }

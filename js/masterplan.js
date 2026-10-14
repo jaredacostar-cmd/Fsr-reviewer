@@ -413,7 +413,7 @@
   }
   const ppuOf = p => { const e = p && D.estimate([p], App().state.criteria, 'all', App().jobsOf); return e && e.totalUnits > 0 && e.population > 0 ? e.population / e.totalUnits : (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment; };
   const outText = c => c.out === 'today' ? '<strong>already</strong>' : c.out == null ? `after ${SP().hz.end}` : `≈${c.out}`;
-  const STATUS = { gap: ['dcn-gap', 'Needed before the DC project'], planned: ['dcn-ok', 'DC project in time'], check: ['dcn-check', 'Check the data: the existing flow alone is over the full-pipe capacity from the published slope'], ok: ['dcn-fine', 'Room to build-out'] };
+  const STATUS = { gap: ['dcn-gap', 'Screens late: runs out before the DC project is in service'], planned: ['dcn-ok', 'DC project in time'], check: ['dcn-check', 'Check the data: the existing flow alone is over the full-pipe capacity from the published slope'], ok: ['dcn-fine', 'Room to build-out'] };
   function roomText(c, ppu) {
     if (c.room == null) return '<span class="muted">new facility</span>';
     if (c.room <= 0) return `<strong>none</strong> <small>over by ${c.unit === 'L/s' ? fmtNum(Math.round(-c.room)) : fmt1(-c.room)} ${c.unit} (${c.kind === 'plant' || c.kind === 'wplant' ? `${SvcTab().pctRated(c, 'com')}% of rated; trigger ${Math.round(PLANT_TRIGGER * 100)}%` : `${Math.round((c.util.com - 1) * 100)}%`})</small>`;
@@ -587,7 +587,7 @@
     const n = k => all.filter(c => c.status === k).length;
     const html = `
       <div class="head"><h3 data-info="dc-needs">DC timing</h3><div class="m">Existing capacity against the 2026 DC capital program (draft) · ${esc(SvcTab().scenarioText())}</div></div>
-      <div class="chips">${[['gap', `Needed before the DC project ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
+      <div class="chips">${[['gap', `Screens late ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
         <span class="seg">${[['all', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']].map(([k, t]) => `<button type="button" class="btn small${sysF === k ? ' on' : ''}" data-dcn-filter="${stF}:${k}">${t}</button>`).join('')}</span></div>
       ${list.length ? needsTable(list.slice(0, 150), ppu) : '<p class="small muted">Nothing in this group.</p>'}
       ${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more.</p>` : ''}

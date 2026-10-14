@@ -149,7 +149,7 @@
   function plantCheck(c) {
     const f1 = n => n == null || !isFinite(n) ? '–' : String(Math.round(n * 10) / 10);
     if (!c || c.reserve == null) return { flag: 'na', text: 'No plant figures for this development.' };
-    if (c.reserve <= 0) return { flag: 'bad', text: `${c.name || 'The plant'} is over-committed — no uncommitted reserve.` };
+    if (c.reserve <= 0) return { flag: 'bad', text: `${c.name || 'The plant'} screens over rated capacity — no uncommitted reserve.` };
     const share = c.use != null && c.use > 0 ? `; this development ≈${(c.use / c.reserve * 100).toFixed(1)}% of it` : '';
     return { flag: 'ok', text: `${c.name || 'Plant'}: uncommitted reserve ${f1(c.reserve)} ML/d${share}.` };
   }

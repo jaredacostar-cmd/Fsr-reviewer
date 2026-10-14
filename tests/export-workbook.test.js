@@ -75,7 +75,7 @@ test('dcTimingRows: row values, labels and capacity math', () => {
   const { rows } = WB.dcTimingRows([con()], { filter: 'all:all', ppu: 2.5, hzEnd: 2051, plantTrigger: 0.9 });
   assert.equal(rows.length, 1);
   const r = rows[0];
-  assert.equal(r[0], 'Needed before the DC project');   // status label
+  assert.equal(r[0], 'Screens late: runs out before the DC project');   // status label
   assert.equal(r[1], 'Wastewater');                      // sys label (sys !== 'water')
   assert.equal(r[2], 'Sewer');                           // kind label
   assert.equal(r[3], 'Trunk A');

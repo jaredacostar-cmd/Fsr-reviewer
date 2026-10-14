@@ -124,7 +124,7 @@ test('index.html: water hydraulic check and ww pumping stations sub-views', () =
 });
 
 test('index.html: DC sub-views', () => {
-  for (const [sub, label] of [['timing', 'Timing'], ['recommendations', 'Recommendations'], ['funding', 'Funding']]) {
+  for (const [sub, label] of [['timing', 'Timing'], ['recommendations', 'Funding screen'], ['funding', 'Funding levels']]) {
     assert.ok(HTML.includes(`data-dcasub="${sub}"`) && HTML.includes(`>${label}</button>`), `DC subtab ${sub} missing`);
   }
   assert.ok(HTML.includes('id="pane-dca-timing"') && HTML.includes('id="dca-timing-body"'), 'dca timing pane/body missing');

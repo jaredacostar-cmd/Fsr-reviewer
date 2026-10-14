@@ -166,7 +166,7 @@
           <span class="cap-end${Math.abs(pct(tot, r.rated) - 100) < 9 ? ' near' : ''}" style="left:${X(Math.max(pct(tot, r.rated), 100))}">${Math.round(pct(tot, r.rated))}%</span></div>
         <div class="cap-text small">
           <span>Existing + built + committed <strong>${Math.round(pct(committed, r.rated))}%</strong> (${uML(committed)})</span>
-          <span>${reserve >= 0 ? `Uncommitted reserve (D-5-1) <strong>${uML(reserve)}</strong>${okPop ? ` ≈ <strong>${ppl(people(reserve))}</strong>` : ''}` : `<strong class="over">Over-committed by ${uML(-reserve)}</strong>`} ${estTag}</span>
+          <span>${reserve >= 0 ? `Uncommitted reserve (D-5-1) <strong>${uML(reserve)}</strong>${okPop ? ` ≈ <strong>${ppl(people(reserve))}</strong>` : ''}` : `<strong class="over">Screens over rated capacity by ${uML(-reserve)}</strong>`} ${estTag}</span>
           <span>${afterProposed >= 0 ? `After proposed: ${uML(afterProposed)}${eq(afterProposed)}` : `<span class="over">After proposed: short ${uML(-afterProposed)}${eq(-afterProposed)}</span>`}</span>
           ${opt.noPop100 ? '' : `<span>${okPop ? `Population at 100%: <strong>${ppl(popAt100)}</strong> <span class="muted">(today ${ppl(r.popToday)}, ${unit(fmtNum(Math.round(r.perPerson)), 'L/person/d')})</span>` : '<span class="muted">Population equivalents not shown: too few census people are mapped to this sewershed</span>'}</span>`}
         </div></div>`;

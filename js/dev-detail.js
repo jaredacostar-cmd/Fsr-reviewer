@@ -410,7 +410,7 @@
     if (f) {
       for (const s of f.sps) if (s.wet >= s.firm) out.push(chip(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn'));
       if (f.cap) {
-        if (f.reserve <= 0) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} over-committed`, 'warn'));
+        if (f.reserve <= 0) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} screens over rated capacity`, 'warn'));
         else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% committed`, 'warn'));
       }
     }
@@ -478,7 +478,7 @@
     const pp = SC().pathPipes(p);
     const pipeTxt = x => `${x.p[0]} mm at <strong>${Math.round(x.r1 * 100)}%</strong> <button type="button" class="btn small link" data-pipe="${x.i}">what loads it</button>`;
     if (PIPE_RESULTS && pp && pp.worst) lines.push(`<strong>Sewer pipes</strong> (load / full capacity at ${MA().getCapYear() == null ? 'build-out' : MA().getCapYear()}): ${pp.local ? `local tightest ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? ' · ' : ''}${pp.trunk ? `downstream trunk tightest ${pipeTxt(pp.trunk)}` : ''}`);
-    if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant is over-committed'} ${estTag}`);
+    if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant screens over rated capacity'} ${estTag}`);
     else if (f.pl === 'Toronto') lines.push('Drains to the City of Toronto system (Malton).');
     return `${SCREEN_NOTE}<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>
       <p class="small"><button type="button" class="btn small link" data-open="dev-svc">Flows, sewer path and demand by stage</button></p>`;

@@ -28,7 +28,7 @@
 // The workbook contract: exactly these sheets, in this order.
 var SHEET_NAMES = ['Summary', 'Developments', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources'];
 
-var DC_STATUS_LABEL = { gap: 'Needed before the DC project', planned: 'DC project in time', check: 'Check the data', ok: 'Room to build-out' };
+var DC_STATUS_LABEL = { gap: 'Screens late: runs out before the DC project', planned: 'DC project in time', check: 'Check the data', ok: 'Room to build-out' };
 var DC_KIND_LABEL = { pipe: 'Sewer', ps: 'Pumping station', plant: 'Treatment plant', wplant: 'Water treatment', storage: 'Storage', supply: 'Supply mains (rough)' };
 // Column 13 interpolates the apartment persons-per-unit; built by dcCols().
 var DC_COLS_BASE = ['Status', 'System', 'Type', 'Existing capacity', 'Detail', 'Pipes in group', 'Capacity (plants: rated)', 'Unit', 'Today % of capacity', 'Committed % of capacity', 'Build-out % of capacity', 'Room after approved', 'Room (people)', null, 'Runs out', 'Runs out again with expansions', 'DC relief', 'DC relief construction year'];

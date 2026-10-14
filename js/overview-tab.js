@@ -103,12 +103,12 @@
     const vline = (v, label, btn) => `<li><strong>${label}</strong> <span class="${toneCls[v.tone]}">${vtxt(v)}</span> ${btn}</li>`;
     el.innerHTML = `<div class="ov-top">${hlP(`<strong>${esc(p.title)}</strong> · ${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}`)}</div>
       <div class="ov-grid">
-        <section class="ov-card ov-growth"><div class="ov-h"><h3>Servicing verdict</h3>${devBtn}</div>
+        <section class="ov-card ov-growth"><div class="ov-h"><h3>Screening summary</h3>${devBtn}</div>
           <p class="small">${DV().firstSentence(st.why)}</p>
           <div class="ov-tiles">${tiles}</div>
           <p class="small muted">Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. Below: the proposal, its files and history, and the site.</p>
         </section>
-        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Verdict</h3></div>
+        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Screening summary</h3></div>
           <ul class="b-lines small">
             ${vline(wv, '💧 Water', go('water', 'Water'))}
             ${vline(wwv, '🚰 Wastewater', go('ww', 'Wastewater'))}
