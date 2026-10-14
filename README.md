@@ -97,38 +97,42 @@ a genuine press-and-hold of about two-thirds of a second, finger still down — 
 longer opens it) for a card explaining what it represents and where the data comes from
 (`js/info.js`).
 
-**Explore**
-- **Quick views by phase:** All, Active pipeline (not completed or withdrawn), or one phase
-  (Inception, Under review, Approved, Permit issued, Under construction, Completed, Withdrawn),
-  each with its count. Tap a selected phase again to go back to All. The bar above shows the
-  mix of phases; tap a segment to isolate it.
-- **Focus** (combines with the phase, tap again to turn off; **Growth** is on by default, and **Reset all** returns to it):
-
-  | Focus | Shows |
-  |---|---|
-  | Growth | Planning applications proposing new dwelling units or new jobs (non-residential floor area); used by the Water, Wastewater and DC views |
-  | Committed capacity | Growth that is approved or permitted and not yet completed (switches the demand panel to committed) |
-  | Left to build | Planned units with no building permit yet (switches the demand panel to left to build) |
-  | Major (100+ units) | Projects with 100 or more units |
-  | New in last 12 months | First filed in the last year |
-  | Stalled 2+ years | In planning (no building permit) with no activity for 2 years |
-  | Changed this week | New, or moved phase, in the latest weekly update |
-- **Search** by address, file number or description.
-- **Municipality** buttons: All, Brampton, Caledon, Mississauga.
-- **Secondary plans** (tick one or several; type to find a plan) and **MTSA** (one) drop-downs,
-  right after Municipality, keep only projects inside the chosen areas and outline them on the map;
-  the census panel adds the chosen plans together. Secondary plans: Brampton Plan Schedule 10 and
-  Caledon's in-effect Secondary Plan Areas; Mississauga has no secondary plans, so its Official
-  Plan Character Areas are listed. MTSAs: the Region of Peel delineation (published by
-  Mississauga) and Brampton Plan Schedule 1A/1B primary and planned MTSAs. A project is in an
-  area when its location falls inside it.
-- **Record type:** by default only **planning applications and the building permits that belong
-  to them** (permits with no application, such as infill houses, are hidden; choose *All records*
-  to see them). Also building permits only, or sites with both. **Units**
-  (adds units, 10+ … 500+).
-- **New buildings only** hides alterations, signs, pools and similar permits.
-- **Active filters** appear as chips. Tap a chip's × to remove that filter, or use **Reset
-  all**.
+**Explore** — one filter panel, in order: **Search · Stage · Where · What · When · Flags**,
+then the list of developments on the map. One-tap **saved-view preset chips** sit above the
+search bar (save a view from More settings → Saved views).
+- **Search** by address, file number or description; a notice line says when nothing matches.
+- **Stage:** the bar shows how the listed developments split across the stages — Inception,
+  Under review, Approved, Permit issued, Under construction, Completed, Withdrawn — each with
+  its count. Tap a segment to show only that stage; tap again to go back to all. Ctrl-click
+  (⌘ on a Mac) picks several.
+- **Where:** **municipality** (All, Brampton, Caledon, Mississauga); **secondary plans** (tick
+  one or several; type to find a plan) and **MTSA** drop-downs — a project counts if it is
+  inside any pick, and the picks are outlined on the map; and the **receiving plant** (G.E.
+  Booth, Clarkson or Inglewood — the plant the development's catchment drains to).
+  Secondary plans: Brampton Plan Schedule 10 and Caledon's in-effect Secondary Plan Areas;
+  Mississauga has no secondary plans, so its Official Plan Character Areas are listed. MTSAs:
+  the Region of Peel delineation (published by Mississauga) and Brampton Plan Schedule 1A/1B
+  primary and planned MTSAs. A project is in an area when its location falls inside it.
+- **What:** **Size** (Adds units or jobs, 10+ … 500+ units), **Dwelling type** (single /
+  semi-detached, townhouse, apartment), and **Land use** — Adds units or jobs is the default
+  (growth: applications proposing new dwelling units or new jobs), with Residential, Mixed and
+  Employment.
+- **When:** a **milestone** (any, application submitted, approved, permit issued, completed)
+  with a from/to year; quick buttons **Last 12 months** and **This week**.
+- **Flags:** ★ Watched (developments on your watchlist), Stalled 2+ years (still in planning,
+  no activity for 2 years), Changed this week (new or moved stage in the latest weekly update).
+- **Active filters** appear as chips under the search. Tap a chip's × to remove that filter,
+  or use **Reset all** (back to the defaults: all stages, Adds units or jobs).
+- **Records** (record type and **New buildings only**) moved to Settings & sources →
+  **Records**. Record type: by default only planning applications and the building permits that
+  belong to them (permits with no application, such as infill houses, are hidden; choose *All
+  records* to see them); also building permits only, or applications plus permits.
+  **New buildings only** hides alterations, signs, pools and similar permits.
+- Where the old controls went: the phase quick-view chips → the **Stage** bar; the **Focus**
+  chips → **Flags** (Growth is now the default land use; Major 100+ is a size; Employment is a
+  land use; Committed capacity and Left to build are the counting basis in the **Scenario** bar;
+  New in last 12 months is the Last 12 months button); record type and New buildings only →
+  Settings & sources → **Records**; the demand year → the Scenario bar's **Results for year**.
 
 **This week:** projects that are new, or that changed phase, since the previous weekly update.
 
@@ -156,7 +160,7 @@ longer opens it) for a card explaining what it represents and where the data com
   stepper, the weekly phase history and the dated timeline, grouped by date (same-day events on several files show once, with a count and the file numbers). Every source record has **Show on
   map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
 
-**Picking several (desktop):** Ctrl-click (⌘-click on a Mac) a phase chip or a pipeline bar segment
+**Picking several (desktop):** Ctrl-click (⌘-click on a Mac) a Stage bar segment
 to add or remove that phase; a plain click still shows one phase only. Holding Ctrl / ⌘ over the
 map shows a crosshair: drag a box to add the shown developments inside it to the selection (like
 Tools → Select an area), with the same summary panel. A plain drag still moves the map.
@@ -181,7 +185,7 @@ access, so it can't be used directly.
 census dissemination area (DA) its point falls in, for the baseline census year (outlined on the
 map). **Growth** shows that DA's census population and dwellings, then built / approved /
 proposed growth from every development application located in the same DA. **Servicing
-demand** adds up the shown projects (phase, focus and filters) in that DA. The DA pill (×), or
+demand** adds up the shown projects (stage, flags and filters) in that DA. The DA pill (×), or
 closing the project, goes back to all of Peel (or the selected municipality / plan / MTSA).
 
 **Growth since the census (bottom panel, Growth since 2021 / 2016 tab):** for Peel, the selected municipality,
@@ -211,10 +215,10 @@ population and jobs, then a **Water** table and a **Wastewater** table with resi
 employment and total rows (L/s: average / max day / peak hour; average dry / peak dry / I&I /
 peak wet). Population, water and wastewater are estimated
 from the units in the projects shown. **The selection is the sidebar's:** the header shows the
-phase, the focus, the years and any other filter, with **Change** jumping to the selectors; there
+stage, the counting basis, the years and any other filter, with **Change** jumping to the selectors; there
 is no separate selector in the panel. Each project counts all its units, except under the
-**Committed capacity** focus (approved or permitted units not yet completed) and the **Left to
-build** focus (planned units with no permit yet). Open **Breakdown & criteria** to edit the
+**Committed** counting basis (approved or permitted units not yet completed) and the **Left to
+build** counting basis (planned units with no permit yet). Open **Breakdown & criteria** to edit the
 criteria.
 
 **Scale, north arrow and boundaries:** a metric scale bar and a north arrow sit under the zoom
@@ -250,8 +254,8 @@ from street zoom (14), up to 3,000 in view.
   drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
   WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
   above 1,000.
-- **Share link** (top of the sidebar): copies a link to the exact view — phases, focus, filters
-  (municipality, plans, MTSA, pressure zone, drainage area, units, years), the bottom-panel tab
+- **Share link** (top of the sidebar): copies a link to the exact view — stages, flags, filters
+  (municipality, plans, MTSA, pressure zone, drainage area, size, land use, dwelling type, years), the bottom-panel tab
   and wastewater view, the mode / max-day / diversion switches, the map position and the open
   development. The address bar keeps the same link as you work (`#…` parameters).
 - **Export** (*PDF / print* and *Excel* buttons on the Growth & demand, Water, Plants and
@@ -269,7 +273,7 @@ from street zoom (14), up to 3,000 in view.
   **Overview**; on phones it starts folded (*Analysis* opens it). Map tools (trace a sewer path,
   select an area, measure, test a site) sit under one Tools button, and are also buttons on the
   Overview; the north arrow stays on the map (tap it to switch between road grid and north up).
-  The sidebar has search, a "Showing …" line, Phase and one *More filters* fold (focus, record type).
+  The sidebar has search, a "Showing …" line, and the unified filter panel (Search · Stage · Where · What · When · Flags).
 - **Executive briefing (PDF)** (Overview, top right): one printable Letter page for management —
   title block with the date, *Prepared by* (set it in Settings & sources) and the data date; the
   headline sentences; growth and demand tiles; servicing demand by phase; the plants' and South
@@ -344,7 +348,7 @@ from street zoom (14), up to 3,000 in view.
   an OLT appeal, a demolition permit, a redevelopment cycle), plus each file's status and how it
   was read.
 - **Watchlist, saved views, tips**: ☆ Watch on a development adds it to *Your watchlist* (This
-  week tab, changed-this-week first) and the ★ Watched focus. *Saved views* (Layers & style) keeps
+  week tab, changed-this-week first) and the ★ Watched flag. *Saved views* (Layers & style) keeps
   named filters + map position + view + layers in the browser. An 11-step tour shows once. *Help*
   (header), the **?** button on the map (under the north arrow) or Tools → *Help & tips* opens task guides — servicing check for a development, when DC
   projects are needed, area / secondary plan reports, testing a site, weekly changes, plant and
@@ -423,7 +427,7 @@ from street zoom (14), up to 3,000 in view.
   Region publishes no watermain depth.
 - **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
   site area estimated, complete.
-- **Demand year** (on the map, at the top of the legend box, whenever a capacity layer is on): the year the
+- **Results for year** (Scenario bar): the year the
   map's results are worked out for. It opens on the current year (the census + built since, with
   approved and proposed growth phased in as set in Horizon years) and slides to build-out, so
   catchments, pumping stations and pipes change colour as growth arrives; the pipe and station
@@ -463,7 +467,7 @@ from street zoom (14), up to 3,000 in view.
   schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
   route descriptions joined from the 2020 DC Background Study by component number. Used for:
   - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
-    works after the Demand year are faded);
+    works after the results year are faded);
   - the development brief: the planned main it would connect to, trunks and facilities on its sewer
     path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
     development outside the existing network relies on a main not built until later; a marker
@@ -771,7 +775,7 @@ Alloa's location isn't published, so it is listed in the table but not shown on 
 
 - **Ground**: from terrain tiles (AWS Terrarium), sampled at each pipe's ends and middle. Accurate to roughly ±1–2 m, and it can miss creek crossings, so the ground can look lower than the pipe where a trunk crosses a valley.
 - **Pipe**: drawn from the published upstream and downstream inverts and the diameter (`invertUp`, `invertDown` and `lengthM` in `data/sewers.json`, from the Region's wastewater mains layer). About 200 of 14,057 pipes have no inverts; these are estimated from the next pipe and the slope, and drawn dashed.
-- **Sewage**: the flow in each pipe at the demand year and scenario (the same model as the capacity colours), drawn at its Manning normal depth (n = 0.013). Blue means part full, orange means 85–100% of capacity, and red means surcharged. For a surcharged pipe a red line shows the hydraulic grade, rising upstream from the crown at Sf = S0 × (Q / Qfull)².
+- **Sewage**: the flow in each pipe at the results year and scenario (the same model as the capacity colours), drawn at its Manning normal depth (n = 0.013). Blue means part full, orange means 85–100% of capacity, and red means surcharged. For a surcharged pipe a red line shows the hydraulic grade, rising upstream from the crown at Sf = S0 × (Q / Qfull)².
 - Hover or tap the profile for a pipe's invert, ground, cover, flow vs capacity, and freeboard or surcharge height.
 - **Click a pipe** on the profile (on a phone, tap it, then *Show on the map*) to close the profile and zoom to that pipe on the map. The pipe is marked with its size and % of capacity, and the bar at the top of the map has *‹ Back to profile*, *Pipe details* and × (clear). On a phone the bottom sheet drops to 30% while you look; going back restores it.
 - Long paths have windows: whole path, the first 2 km, and ±1 km around the tightest pipe (the default above 8 km).
@@ -942,7 +946,7 @@ A development opens on six tabs (the last one picked is kept):
 
 The bottom panel's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis.
 
-## Map boxes, demand year and the tour
+## Map boxes, the results year and the tour
 
 - **More settings** has its own box under Layers (top right). With both open they share the
   height down to the boxes at the bottom right; only open boxes are capped.
@@ -955,8 +959,8 @@ The bottom panel's tabs run Overview · Growth · Demand · Water · Wastewater 
 - **Clear selection and the Developments Show / Faded / Hidden switch** sit at the top of the map,
   between the controls on the left and the boxes on the right (stacked when the gap is narrow); on
   a phone, under the Layers and More settings boxes. Fitting a trace leaves room for them.
-- **Demand year** sits on top of the timeline box and runs from the **2021 Census** to build-out
-  (buttons: 2021 Census · Today · Build-out). Before today, growth built since the census counts in
+- **Results for year** (Scenario bar) runs from the **2021 Census** to build-out
+  (2021 Census · Today · Build-out). Before today, growth built since the census counts in
   the share of it completed by that year (Peel-wide, by units and completion date); approved and
   proposed growth phase in from their horizon years as before.
 - **A development open:** on a wide screen Layers, More settings, the wastewater loads box and
@@ -1063,8 +1067,8 @@ water supply from the plant** draws the route on the map like the sewer trace.
     the 600 mm sewer, not the 375 mm sewer near Wanless Drive. A site whose join point is within
     25 m of an existing sewer still connects to that sewer.
   - The summary lists the DC projects the path relies on and their DC map years. Before the latest
-    of them (at the demand year) the site has no outlet on this route. The line updates as the
-    demand year moves; already built sites are shown as indicative.
+    of them (at the results year) the site has no outlet on this route. The line updates as the
+    results year moves; already built sites are shown as indicative.
 - Both traces fit the route on the rotated map, clear of the open panel and the boxes along the
   map's edges. The route stands out: a white halo with a dark casing under it, white dashes moving
   in the flow direction (still if the device asks for reduced motion), and the other map layers
@@ -1180,7 +1184,7 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   skeleton:
   - junctions at the block outlets, and conduits to the downstream block (trunk size, nearest
     trunk slope, relative inverts);
-  - dry weather flow at the Demand year, with a diurnal pattern;
+  - dry weather flow at the results year, with a diurnal pattern;
   - RTK rainfall-derived I&I on each block's sewered area, with placeholder R, T and K to
     calibrate;
   - a 4-hour Chicago design storm from the MTO IDF curves.
@@ -1189,7 +1193,7 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
 - **Hydraulic check (beta).** **Water → Hydraulic check** runs EPANET 2.2 in the browser
   (epanet-js 0.9.0, loaded from jsDelivr on demand).
   - It works on the large mains crossing into each upper pressure zone, at the maximum day for
-    the Demand year.
+    the results year.
   - It reports each main's flow, velocity (against 1.5 m/s) and head loss per km.
   - The `.inp` can be downloaded to build on in EPANET or InfoWater.
 - **Effluent compliance.** `data/compliance.json` is built by `scripts/build-compliance.py` from
