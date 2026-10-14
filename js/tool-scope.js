@@ -84,6 +84,9 @@
   }
   function showLoads(id, plantName) {
     if (!App().state.servicing || !App().state.svcModel) return;
+    // Design audit, Group 5: a plant, station, block or zone is a level, not a tool — it opens as a
+    // servicing scope (its own Overview and trail steps). The tool result below stays as the fallback.
+    if (window.PeelSvcScope && window.PeelSvcScope.open(plantName ? `plant:${plantName}` : id)) return;
     const M = App().state.svcModel, a = id && SD().svcById.get(id), c = App().state.criteria;
     // A pumping station beside the blocks: what passes through the pipe arriving at it.
     if (a && a.kind === 'ps' && App().state.servicing.blocks) { const k = MA().stationPipe(a); if (k >= 0) { if (ST().svcFocus.id !== id) ST().focusSvc(id, { zoom: false, loads: false }); SC().showPipeLoads(k); } return; }

@@ -131,7 +131,7 @@
   }
   function capacityBarsHTML(list) {
     const bar = c => { const pc = SvcTab().pctRated(c, 'com'), pb = SvcTab().pctRated(c, 'bo'), a = Math.min(130, pc), b = Math.min(130, pb), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
-      return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
+      return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}<button type="button" class="btn small link" data-ss="${c.kind === 'plant' ? `plant:${esc(c.pl)}` : 'wsys:lake'}" title="Open this as a scope">${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</button></span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
         <div class="ov-bar" role="img" aria-label="existing + built + committed ${pc}% of rated capacity, ${pb}% at build-out; expansion trigger at ${Math.round(MP().PLANT_TRIGGER * 100)}%"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(MP().PLANT_TRIGGER * 100 / 1.3).toFixed(1)}%" title="${Math.round(MP().PLANT_TRIGGER * 100)}% expansion trigger"></i><i class="t r" style="left:${(100 / 1.3).toFixed(1)}%" title="100% rated"></i></div>
         <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${SP().hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? DU().allocPlant(c.pl) : null)}</small></div>`; };
     return list.map(bar).join('') + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.</p>`;
@@ -174,6 +174,9 @@
     const p = DV().scopedDev();
     if (p) { renderVerdictCard(p); return; }
     const sec = $('#ov-dev'); if (sec) sec.hidden = true;
+    // A servicing scope (plant / station / block / zone / water system) has its own Overview.
+    const ss = root.PeelSvcScope && root.PeelSvcScope.current();
+    if (ss) { el.innerHTML = root.PeelSvcScope.cardHTML(ss, set || DU().overviewSet()); return; }
     if (!set) { set = DU().overviewSet(); basis = DU().demandBasis(); e = D.estimate(set, App().state.criteria, basis, App().jobsOf); }
     if (!basis) basis = DU().demandBasis();
     const em = e.employment;
@@ -214,7 +217,7 @@
     if (App().state.dcInfra && MM().SEW.data && !(MP().DCA.res && MP().DCA.key === MP().scenarioKey()) && AT().getFootTab() === 'overview') setTimeout(() => { try { DC().dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
     if (document.documentElement.hasAttribute('data-presentation')) AS().renderPresentation();
   }
-  function scopeText() { return [App().state.muni || 'all of Peel', App().state.sp.length ? PA().spSummary() : '', App().state.mtsa.length ? 'MTSA filter' : ''].filter(Boolean).join(' · '); }
+  function scopeText() { return [App().state.muni || 'all of Peel', App().state.sp.length ? PA().spSummary() : '', App().state.mtsa.length ? 'MTSA filter' : '', root.PeelSvcScope ? root.PeelSvcScope.label() : ''].filter(Boolean).join(' · '); }
   $('#ov-body').addEventListener('click', e => {
     const t = e.target.closest('[data-ov-tab]');
     if (t) {

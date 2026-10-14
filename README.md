@@ -1435,6 +1435,54 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Servicing scopes: the servicing ladder
+
+Plants, pumping stations, wastewater blocks, pressure zones and the South Peel water system are
+now **scopes**, like a municipality or a secondary plan (design audit, Group 5; `js/svc-scope.js`).
+Before this change, tapping one gave a "What loads this?" tool result.
+
+| Ladder | Trail |
+|---|---|
+| Wastewater | Peel › plant › pumping-station catchment, or block (with everything upstream) |
+| Water | Peel › South Peel water › pressure zone (well-based zones stand alone) |
+
+**Opening a scope.** You can open one by:
+- tapping it on the map ("What loads this?" now opens the scope);
+- tapping a plant or South Peel water in the Peel Overview's capacity bars;
+- searching for its name (plants, stations, blocks and zones are all searchable);
+- following a link in another scope's ladder;
+- following a share link (`ss=`).
+
+**What a scope does.**
+- It filters the developments to those it serves.
+- It adds its rungs to the trail. Each rung opens that level, and "Peel" clears the scope.
+- Its Overview shows:
+  - a headline;
+  - headroom tiles:
+
+    | Scope | Headroom tiles |
+    |---|---|
+    | Plant | rated, % committed, uncommitted reserve and people, 90% trigger year |
+    | Station | firm capacity vs peak wet (the check) and peak dry (reference) |
+    | Block | average dry at the census vs build-out; upstream count; outlet sewer size and class (capacity not assessed) |
+    | Zone, water system | maximum day |
+
+  - the **servicing ladder both ways**:
+
+    | Scope | Ladder links |
+    |---|---|
+    | Plant | its stations ranked by % of firm; the blocks arriving at it |
+    | Block | drains to (up); fed by (down) |
+    | Station | pumps to (up) |
+    | Zone | supplied by (up) |
+    | Water system | its zones (down) |
+
+  - the developments loading it, largest peak first, with *See all* and *Area report*;
+  - the planned DC works in it.
+
+From the Peel Overview, "the most loaded station and the developments driving it" now takes two
+taps: the plant, then the top station.
+
 ## Pipe class and "not assessed"
 
 Pipe-by-pipe sewer results are off (`PIPE_RESULTS = false`). Before the design audit's Group 4,

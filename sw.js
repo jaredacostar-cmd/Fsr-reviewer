@@ -103,6 +103,7 @@ const SHELL_ASSETS = [
   'js/timing.js',
   'js/tips.js',
   'js/tool-scope.js',
+  'js/svc-scope.js',
   'js/tools-batch.js',
   'js/tools-compare.js',
   'js/tools-corridor.js',

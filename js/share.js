@@ -40,6 +40,7 @@
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);
+      set('ss', App().state.ss);   // servicing scope (plant / station / block / zone)
       return q.toString();
     };
     const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };
@@ -47,7 +48,7 @@
     const ready = () => {
       if (applied) { write(); return; }
       const q = pending;
-      if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr')) && !App().state.servicing)) return;
+      if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr') || q.get('ss')) && !App().state.servicing)) return;
       applied = true;
       if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
       if (q.has('fo')) {
@@ -67,7 +68,7 @@
       if (q.get('basis') && ['all', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';
-      App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr');
+      App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr'); App().state.ss = q.get('ss') || null;
       // Old links could carry u=left / u=committed (the old size select's basis steps):
       // they migrate to the counting basis, like the old fo=left / fo=committed.
       if (q.get('u') === 'left') { App().state.minUnits = 0; App().state.basis = 'remaining'; }
@@ -97,7 +98,7 @@
     map.on('moveend', write);
     // Apply a saved view's link: back to the defaults, then its filters.
     const apply = h => {
-      App().state.phases = App().DEFAULT_PHASES(); App().state.flags = App().DEFAULT_FLAGS(); App().state.plant = ''; App().state.dwelling = ''; App().state.landuse = App().DEFAULT_LANDUSE; App().state.basis = App().DEFAULT_BASIS; MA().setCapYear(MM().THIS_YEAR); App().state.yearMode = 'any'; $('#t-mode').value = 'any';
+      App().state.phases = App().DEFAULT_PHASES(); App().state.flags = App().DEFAULT_FLAGS(); App().state.plant = ''; App().state.ss = null; App().state.dwelling = ''; App().state.landuse = App().DEFAULT_LANDUSE; App().state.basis = App().DEFAULT_BASIS; MA().setCapYear(MM().THIS_YEAR); App().state.yearMode = 'any'; $('#t-mode').value = 'any';
       if (App().state.yearMin != null) TL().setYearsSilently(App().state.yearMin, App().state.yearMax);
       pending = new URLSearchParams(h); applied = false; ready();
     };

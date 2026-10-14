@@ -45,7 +45,7 @@
     return { kind, id: App().state[kind][0], label: PA().areaName(kind, App().state[kind][0]) + (total > 1 ? ` +${total - 1}` : '') };
   }
   // Phase 3: the "Peel" trail step also clears the dev scope.
-  function trailGoPeel() { if (typeof DevScope !== 'undefined') DevScope.close(); if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult(); FI().resetAllFilters(); AS().clearSelected(); }
+  function trailGoPeel() { if (window.PeelSvcScope) window.PeelSvcScope.clear(); if (typeof DevScope !== 'undefined') DevScope.close(); if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult(); FI().resetAllFilters(); AS().clearSelected(); }
   function trailGoMuni() {
     if (!App().state.muni) return;
     // Reuse the filter panel's own chip: it also drops areas from other municipalities.
@@ -69,6 +69,8 @@
     if (App().state.muni) steps.push({ label: App().state.muni, go: trailGoMuni, title: `Filter to ${App().state.muni}` });
     const a = trailArea();
     if (a) steps.push({ label: a.label, go: trailGoArea, title: 'Filter to this area only' });
+    // Servicing ladder (plant › block / station; water system › zone): one step per rung.
+    if (window.PeelSvcScope) steps.push(...window.PeelSvcScope.crumbs());
     // Phase 3: the development step follows the dev scope, not the #detail panel.
     const scoped = typeof DevScope !== 'undefined' ? DevScope.current() : null;
     if (scoped) steps.push({ label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
