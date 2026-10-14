@@ -1196,14 +1196,13 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   - A development's **Servicing** tab estimates its Regional water and wastewater DCs.
 - **Housing targets, CMHC and Ministry of Finance projections.** `data/housing.json` is built by
   `scripts/build-housing.py`. It holds:
-  - Ontario's housing supply progress, from the Ontario Data Catalogue.
+  - Ontario's housing supply progress, from the Ontario Data Catalogue (still collected, but no
+    longer shown: the province's 2031 housing targets were removed from the app).
   - CMHC starts and completions by municipality, from the HMIP tables (Toronto CMA by census
     subdivision).
   - The Ministry of Finance 2025–2051 projection for the Peel census division.
 
   These feed:
-  - The Overview's **Housing targets to 2031** card: progress against the share of time gone,
-    CMHC starts, and pipeline units against what's left.
   - The Overview's **Population outlook** card: the Ministry of Finance projection against the
     Region's 2.28 M forecast for 2051.
   - The briefing.
