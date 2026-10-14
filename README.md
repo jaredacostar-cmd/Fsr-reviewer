@@ -244,7 +244,7 @@ from street zoom (14), up to 3,000 in view.
   Wastewater Collection System report. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
   larger trunk (36 areas; 96.9% of 57,512 manholes reach a Peel plant). Plant split reviewed.
 - Each development is tagged by its location point. The map panel's **Areas** fold toggles both
-  layers and has the Pressure zone and Wastewater block filters; the development panel shows its
+  layers and has the Pressure zone and Wastewater block filters; the Development tab shows its
   zone and block.
 - **Analysis column tabs:** **Growth & demand** (demand of the shown developments, then growth
   since the census), **Water**, **Wastewater** (two views: *Plants & capacity* and *Catchments*),
@@ -326,21 +326,18 @@ from street zoom (14), up to 3,000 in view.
   layer swatches, then the remaining settings (saved views, development colour / size / labels, capacity shading, existing pipe kinds
   and size labels, DC works by system, planning area kinds, base map). The view switch (Planning / Water / Wastewater / DC) lives in the top bar and sets the layers; changes are remembered per view. With the blocks as the catchments there is one wastewater area
   layer (Wastewater blocks), so it can always be switched off. The timeline is a slim strip along the bottom of the screen.
-  move clear of each other and of an open development panel, and the Layers panel scrolls rather
+  move clear of each other and of an open development, and the Layers panel scrolls rather
   than run into them. When a setting hides the developments (switched off, no growth load on in
   the Wastewater view, or Hidden while a path is shown) a notice above Layers says why, with *Show
   developments*; an area filter is always named there too, with *Clear*. The legend box takes the
   height the panel leaves free, so the two never overlap. Planning area outlines: tap one on the
   map to filter to it, tap again to clear.
-  The development panel has three tabs: Overview, Servicing and
-  History & records. **Servicing** opens with *Trace the sewer path to the plant*, then a **Water**
-  section (demand and pressure zone, watermains nearby, fire flow, planned water works, water DC
-  needs), a **Wastewater** section (flows; the blocks to the plant, the tightest pipes with their
-  freeboard and pumping stations; plant reserve; sanitary sewers nearby with the path's age / risk;
-  planned wastewater works; wastewater DC needs) and **Site** (ground, storm sewers, stormwater
-  ponds), with *Flows by stage and sewer path* below. The trace is also under Tools → *Trace sewer
-  path* (tap a development, or any point on the map) and on the → plant chip at the top of a
-  development. History & records opens with *How the phase
+  Opening a development sets the scope: the site bar appears at the top of the analysis column
+  (address, phase badge, units · people · water max day · wastewater peak wet, zone → plant;
+  actions: trace sewer / water, watch, memo, record allocation, FSR check) and every analysis tab
+  shows that site. The other developments fade on the map and the Layers panel folds. The trace is
+  on the site bar, under Tools → *Trace sewer path* (tap a development, or any point on the map)
+  and on the → plant chip. The Development tab's Files & history view opens with *How the phase
   was set*: the file behind the phase, approvals by stage with the latest submission in each, and
   flags where the status and the submissions disagree (a newer submission in review after an
   earlier approval, permits issued while planning is in review, a bare "Closed" read as approved,
@@ -563,7 +560,7 @@ from street zoom (14), up to 3,000 in view.
   network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
   switch "Outside mapped areas: Leave out" restores the strict boundaries. Farther away it is left
   out (likely private well / septic).
-- **Servicing check** (development panel): the whole development's flows at Peel design criteria
+- **Servicing check** (Development tab): the whole development's flows at Peel design criteria
   (L/s as in an FSR, ML/d below), its pressure zone and share of the zone's build-out max day, the
   traced sewer path from its catchment to the plant with its share of the flow at each outlet, and
   what it means for the plant's uncommitted reserve (built / approved are already counted,
@@ -728,7 +725,7 @@ simplified to ~4 m, about 0.8 MB) load after the map opens, and are built by
 
 **Select an area:** the select tool under the zoom buttons turns the next drag into a lasso (with a mouse, the
 middle button still drags the map while the lasso is on; Esc cancels). The
-projects shown on the map inside it are added up in the side panel: planned / permitted /
+projects shown on the map inside it are added up in the selection panel: planned / permitted /
 completed / left by unit type plus employment, servicing demand (residential + employment, for
 the total, completed and remaining units, peaked as one area), and growth since the 2021 Census
 (census population of the dissemination areas whose centre is inside, plus built, approved and
@@ -920,30 +917,31 @@ different buildings, so both count.
 
 ## Latest submission on labels and titles
 
-**Latest submission.** The map labels (Address + phase and Address) and the development panel's
+**Latest submission.** The map labels (Address + phase and Address) and the site bar's
 title show the latest application submitted on the site: its date received and file number. The
 open data carries each file's first submission date, not resubmissions.
 
-## Development panel tabs
+## Development tab (open development)
 
-A development opens on six tabs (the last one picked is kept):
+Opening a development sets the scope: a **Development** tab appears after DC Analysis and is
+selected, the site bar shows at the top of the analysis column, and every other tab shows that
+site (Overview becomes a verdict card; Growth shows its units & build-out; Water / Wastewater /
+DC Analysis show its servicing). × on the site bar or Peel in the trail returns to the
+Peel-wide view. Each number has one home: site flows live on Water / Wastewater, units on Growth,
+files and status on the Development tab, the sewer path and plant reserve on Wastewater,
+ground / storm sewers / ponds on the Development tab's Site view.
 
-- **Overview** — status, latest decision, build-out, the latest Functional Servicing Report link,
-  the proposal, aerial check.
-- **Demand** — units, jobs & build-out, with *Demand by stage* (total, completed, remaining) in
-  place of the build-out stepper: a Water | Wastewater switch shows one system's rows at a time
-  (water average / max day / peak hour, or wastewater average / peak dry / I&I / peak wet; employment
-  and totals likewise; the choice is remembered). Then flows by stage and the sewer path. (Servicing
-  allocation is hidden from the panel.)
-- **Water** — trace the water supply from the plant; demand, supply route, watermains, fire flow.
-- **Wastewater** — trace the sewer path to the plant; flows, path and tightest pipe, plant reserve,
-  sanitary sewers; the site (ground, storm sewers, stormwater).
-- **DC Analysis** — the DC projects potentially required: each wastewater and water constraint the
-  development relies on, when it runs out and the DC project that relieves it; the planned works it
-  connects to or sits on the path of (with the year it needs them); and the DCs it would pay.
-- **History** — how the phase was set, the dated history, source records.
+The Development tab has three views (the last one picked is kept):
 
-The analysis column's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis · Developments.
+- **About** — the proposal, a concise status line, the latest council / committee decision and
+  the latest Functional Servicing Report link.
+- **Files & history** — the full raw status block; every planning file on the land and related
+  applications; *How the phase was set*; the dated history; source records with portal, source
+  link and pulled-on date.
+- **Site** — the aerial check (before / latest photo), ground elevation, storm sewers and
+  stormwater ponds.
+
+The analysis column's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis · Development (when a site is open) · Developments.
 
 ## Map boxes, the results year and the tour
 
@@ -1320,7 +1318,7 @@ use counts; minor / limited files are skipped. Estimated jobs use typical floor 
 worker: industrial 110 m², office 25, retail 45, hotel 60, institutional 50 by default. These
 are editable under **Breakdown & criteria → Employment floor space (m²/job)** (saved in the
 browser; *Reset to Peel defaults* restores them) and every job count, employment demand and
-summary updates. Shown as an **Employment** section in the development panel, an **Employment** focus chip, and in the CSV export
+summary updates. Shown as an **Employment** section in the Development tab, an **Employment** flag, and in the CSV export
 (`employment_uses`, `nonres_floor_area_m2`, `est_jobs`).
 
 ## Aerial check (is it built?)
