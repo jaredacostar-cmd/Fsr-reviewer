@@ -17,6 +17,9 @@
   const estTag = '<span class="est-tag">screening estimate</span>';
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  // Skeleton placeholder for loading states (styled in css/modes.css): grey
+  // blocks shaped like the content, pulsing unless reduced motion is preferred.
+  const skel = label => `<div class="skel-row" role="status" aria-label="${esc(label)}"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div>`;
   const fmtDate = d => d ? d.toISOString().slice(0, 10) : '';
   const fmtNum = n => n == null ? '' : Number(n).toLocaleString('en-CA');
 
@@ -25,6 +28,13 @@
     get(k, d) { try { const v = localStorage.getItem(`peel-dev:${k}`); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
     set(k, v) { try { localStorage.setItem(`peel-dev:${k}`, JSON.stringify(v)); } catch (e) { /* storage unavailable */ } },
   };
+  // Display: theme + density. The inline <head> script already set the theme
+  // pre-paint; re-apply here with validation (garbage -> dark default) and set
+  // the density (compact on desktop, comfortable on phones). Neither is part of
+  // the share-link state: both stay in this browser only.
+  const PD = window.PeelDesign;
+  PD.applyTheme(store.get('theme', 'dark'));
+  PD.applyDensity(store.get('density', PD.densityDefault()));
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';
@@ -107,20 +117,36 @@
   }
 
   // ---- Colours -----------------------------------------------------------------
+  // Every colour comes from the design tokens in css/app.css (:root). token(name)
+  // resolves one to its computed value (cached per theme; readColors() drops the
+  // cache when the theme changes). In HTML/SVG strings prefer `var(--token)` so
+  // the browser resolves it live; use token() where a real value is needed
+  // (canvas 2d, Leaflet options).
   let colors = {};
+  const _tokenCache = {};
+  function token(name) {
+    if (!(name in _tokenCache)) _tokenCache[name] = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return _tokenCache[name];
+  }
   function readColors() {
     const cs = getComputedStyle(document.documentElement);
     colors = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, cs.getPropertyValue(`--ph-${p.key}`).trim()]));
+    for (const k in _tokenCache) delete _tokenCache[k];
+  }
+  // Phase colour for a phase key, read from its --ph-* token (theme-aware);
+  // unknown phases fall back to the approved blue.
+  function phaseColor(name) {
+    return token(`--ph-${name}`) || token('--ph-approved');
   }
   function glyphColor(hex) {
     const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
-    if (!m) return '#fff';
+    if (!m) return token('--swatch-paper');
     const n = parseInt(m[1], 16), ch = [n >> 16, (n >> 8) & 255, n & 255].map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; });
     const L = 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
-    return L > 0.35 ? '#0b0b0b' : '#ffffff';
+    return L > 0.35 ? token('--swatch-ink') : token('--swatch-paper');
   }
   function dot(phase, extra = '') {
-    const p = P.PHASE_BY_KEY[phase], c = colors[phase];
+    const p = P.PHASE_BY_KEY[phase], c = phaseColor(phase);
     return `<span class="dot ${extra}" style="background:${c};color:${glyphColor(c)}" aria-hidden="true">${esc(p.short)}</span>`;
   }
 
@@ -179,6 +205,7 @@
     'esri':          { label: 'Esri World Imagery', imagery: true },
     'streets':       { label: 'Street map (light)', imagery: false },
     'streets-color': { label: 'Street map (colour)', imagery: false },
+    'canvas-dark':   { label: 'Street map (dark grey)', imagery: false },
   };
   // Latest city aerials (Mississauga, Brampton, Caledon) over Esri World Imagery. Image
   // services are drawn as 512 px Web Mercator tiles from exportImage / export.
@@ -220,6 +247,11 @@
       const g = dark() ? 'Dark' : 'Light';
       baseLayers = [esriLayer(`Canvas/World_${g}_Gray_Base`, { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
         esriLayer(`Canvas/World_${g}_Gray_Reference`, { maxNativeZoom: 16 })];
+    } else if (basemap === 'canvas-dark') {
+      // The servicing views' basemap: always the dark grey canvas, whatever the
+      // theme (the 'streets' entry above follows the theme instead).
+      baseLayers = [esriLayer('Canvas/World_Dark_Gray_Base', { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
+        esriLayer('Canvas/World_Dark_Gray_Reference', { maxNativeZoom: 16 })];
     } else if (basemap === 'streets-color') {
       baseLayers = [esriLayer('World_Street_Map', { attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` })];
     } else if (BASEMAPS[basemap].city) {
@@ -237,9 +269,18 @@
     baseLayers.forEach((l, i) => { l.addTo(map); l.setZIndex(i); });
     const imagery = BASEMAPS[basemap].imagery;
     map.getContainer().classList.toggle('on-imagery', imagery);
-    bboxOutline.setStyle({ color: imagery ? '#ffffff' : '#77756f', opacity: imagery ? 0.8 : 1 });
+    bboxOutline.setStyle({ color: imagery ? token('--map-label') : token('--text-muted'), opacity: imagery ? 0.8 : 1 });
   }
   bboxOutline.addTo(map);
+  // Site check: at street zoom the grey canvas hides what the pipes connect to,
+  // so zooming to 15+ while on the dark canvas drops back to aerial
+  // automatically. Only this rule and view changes switch the basemap on their
+  // own; a manual pick in the Layers control is never overridden.
+  map.on('zoomend', () => {
+    if (map.getZoom() >= 15 && basemap === 'canvas-dark') {
+      basemap = 'aerial-labels'; store.set('basemap', basemap); setTiles(); restyleDa(); syncMapOpts();
+    }
+  });
 
   // ---- Point labels ------------------------------------------------------------------
   // Drawn only for markers that are individually visible (not inside a cluster) in view,
@@ -414,10 +455,10 @@
     const z = map.getZoom();
     const w = z >= 18 ? 2.2 : z >= 16 ? 1.6 : z >= 13 ? 1.1 : 0.8;
     if (BASEMAPS[basemap].imagery) return {
-      line: { color: '#ffffff', weight: w, opacity: z >= 16 ? 0.8 : 0.6 },
-      halo: { color: '#000000', weight: w + 2, opacity: z >= 16 ? 0.3 : 0.18 },
+      line: { color: token('--map-label'), weight: w, opacity: z >= 16 ? 0.8 : 0.6 },
+      halo: { color: token('--map-halo'), weight: w + 2, opacity: z >= 16 ? 0.3 : 0.18 },
     };
-    const grey = (getComputedStyle(document.documentElement).getPropertyValue('--text-muted') || '#888').trim();
+    const grey = token('--text-muted');
     return { line: { color: grey, weight: w, opacity: z >= 16 ? 0.6 : 0.4 }, halo: { opacity: 0, weight: 0 } };
   }
   function restyleDa() {
@@ -428,7 +469,7 @@
   function daSwatch() {
     const st = daStyle(), img = BASEMAPS[basemap].imagery;
     return `<svg id="da-swatch" class="da-swatch${img ? ' img' : ''}" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">
-      ${img ? `<rect x="3" y="2" width="16" height="10" rx="1" fill="none" stroke="#000" stroke-opacity="${st.halo.opacity + 0.15}" stroke-width="3.5"/>` : ''}
+      ${img ? `<rect x="3" y="2" width="16" height="10" rx="1" fill="none" style="stroke:var(--map-halo)" stroke-opacity="${st.halo.opacity + 0.15}" stroke-width="3.5"/>` : ''}
       <rect x="3" y="2" width="16" height="10" rx="1" fill="none" stroke="${st.line.color}" stroke-opacity="${Math.min(1, st.line.opacity + 0.2)}" stroke-width="1.5"/></svg>`;
   }
   map.on('zoomend', () => restyleDa());
@@ -447,7 +488,11 @@
   }
 
   // Pressure-zone / drainage-area layer state (layers are built in the servicing section).
-  const PLANT_COLOR = { Lakeview: '#2f7ed8', Clarkson: '#d9822b', Inglewood: '#7a5cc4', Toronto: '#868e96' };
+  // Receiving-plant colours, from the --pl-* tokens (theme-aware). plantToken()
+  // gives the token name for HTML/SVG `var()`; plantColor() the computed value
+  // for Leaflet/canvas.
+  const PLANT_TOKEN = { Lakeview: '--pl-booth', Clarkson: '--pl-clarkson', Inglewood: '--pl-inglewood', Toronto: '--pl-toronto' };
+  const plantColor = name => token(PLANT_TOKEN[name] || '--nodata');
   // Where an area's sewage is treated: a Peel WRRF, or the City of Toronto (Malton).
   const PLANT_SHORT = { Lakeview: 'G.E. Booth', Clarkson: 'Clarkson', Inglewood: 'Inglewood', Toronto: 'Toronto' };
   const PLANT_NAME = { Lakeview: 'G.E. Booth WRRF (Lakeview)', Clarkson: 'Clarkson WRRF', Inglewood: 'Inglewood WWTP', Toronto: 'City of Toronto system' };
@@ -462,10 +507,10 @@
   const isWW = () => store.get('mapView', 'planning') === 'wastewater';
   const wwOn = k => !isWW() || wwLay[k] !== false;
   let svcOn = { pz: !!store.get('svc-pz', false), dr: !!store.get('svc-dr', false), bk: !!store.get('svc-bk', false) };
-  const blockSwatch = '<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><rect x="3" y="2" width="16" height="10" fill="#7048e8" fill-opacity=".14" stroke="#7048e8" stroke-width="1.8"/></svg>';
+  const blockSwatch = '<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true"><rect x="3" y="2" width="16" height="10" style="fill:var(--block);stroke:var(--block)" fill-opacity=".14" stroke-width="1.8"/></svg>';
   const svcSwatch = k => `<svg class="da-swatch" viewBox="0 0 22 14" width="22" height="14" aria-hidden="true">${k === 'pz'
-    ? '<rect x="3" y="2" width="16" height="10" rx="1" fill="#0b7285" fill-opacity=".1" stroke="#0b7285" stroke-width="1.6" stroke-dasharray="3 2"/>'
-    : '<rect x="3" y="2" width="8" height="10" fill="#2f7ed8" fill-opacity=".25" stroke="#2f7ed8"/><rect x="11" y="2" width="8" height="10" fill="#d9822b" fill-opacity=".25" stroke="#d9822b"/>'}</svg>`;
+    ? '<rect x="3" y="2" width="16" height="10" rx="1" style="fill:var(--svc-drainage);stroke:var(--svc-drainage)" fill-opacity=".1" stroke-width="1.6" stroke-dasharray="3 2"/>'
+    : '<rect x="3" y="2" width="8" height="10" style="fill:var(--pl-booth);stroke:var(--pl-booth)" fill-opacity=".25"/><rect x="11" y="2" width="8" height="10" style="fill:var(--pl-clarkson);stroke:var(--pl-clarkson)" fill-opacity=".25"/>'}</svg>`;
   const MSTYLE = {
     color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
@@ -485,10 +530,12 @@
   const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
-  // Sewer load as a share of full-pipe capacity, with its flow state: [upper %, colour, legend, short state].
-  const PIPE_CLS = [[85, '#2f9e44', 'under 85%: free flowing', 'Free flowing', 'under 85%'], [100, '#f76707', '85–100%: near full', 'Near full', '85–100%'], [Infinity, '#e03131', 'over 100%: surcharged', 'Surcharged', 'over 100%']];
+  // Sewer load as a share of full-pipe capacity, with its flow state: [upper %,
+  // token name, legend, short state]. Token names are resolved to `var(--*)` in
+  // HTML and to computed values via token() for Leaflet/canvas.
+  const PIPE_CLS = [[85, '--cap-room', 'under 85%: free flowing', 'Free flowing', 'under 85%'], [100, '--cap-tight', '85–100%: near full', 'Near full', '85–100%'], [Infinity, '--cap-over', 'over 100%: surcharged', 'Surcharged', 'over 100%']];
   const pipeState = r => r == null || isNaN(r) ? null : PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1];
-  const EXIST_STYLE = { water: { color: '#1971c2', label: 'Watermain' }, sanitary: { color: '#a0522d', label: 'Sanitary sewer' }, storm: { color: '#2b8a3e', label: 'Storm sewer' } };
+  const EXIST_STYLE = { water: { color: '--pipe-water', label: 'Watermain' }, sanitary: { color: '--pipe-sanitary', label: 'Sanitary sewer' }, storm: { color: '--pipe-storm', label: 'Storm sewer' } };
   const EXIST_ZOOM = 15;
   // Map control: basemap + label pickers.
   // Planning area outlines on the map (secondary plans / character areas, MTSAs): tap one to filter.
@@ -504,7 +551,7 @@
       // An on / off chip (a checkbox styled as a pill).
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
-        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${t}</button>`).join('')}</div>
+        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${PD.icon(k)}<span>${t}</span></button>`).join('')}</div>
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
         <div class="mo-area-on" id="mo-area-on" hidden></div>
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-psum" id="mo-psum"></span></summary>
@@ -513,13 +560,14 @@
              ['opt-bk', svcOn.bk, blockSwatch, 'Wastewater blocks', 'blocks'],
              ['opt-pz', svcOn.pz, svcSwatch('pz'), 'Pressure zones', 'pressure-zone'],
              ['opt-wf', WF.on, '<i class="wf-ic wf-pumping wf-sw" aria-hidden="true">▲</i>', 'Water facilities', 'water-facilities'],
-             ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,#2f9e44 0 33%,#f76707 33% 66%,#e03131 66%)"></i>', 'Capacity colours', 'map-capacity'],
-             ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:${EXIST_STYLE.sanitary.color}"></i>`, 'Existing pipes', 'existing-pipes'],
-             ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:#d6336c"></i>', 'Planned DC works', 'dc-works'],
-             ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:#e8590c"></i>', 'Planning areas', 'secondary-plans'],
+             ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,var(--cap-room) 0 33%,var(--cap-tight) 33% 66%,var(--cap-over) 66%)"></i>', 'Capacity colours', 'map-capacity'],
+             ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:var(${EXIST_STYLE.sanitary.color})"></i>`, 'Existing pipes', 'existing-pipes'],
+             ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:var(--dc-ww-main)"></i>', 'Planned DC works', 'dc-works'],
+             ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-sp)"></i>', 'Planning areas', 'secondary-plans'],
              ['opt-da', daOn, daSwatch(), '<span id="da-label">2021 census areas</span>', 'da-layer']].map(([id, on, sw, t, info]) =>
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
         </div>
+        <div class="mo-legend" id="mo-legend" hidden><details><summary>Legend</summary><div class="lg-body"></div></details></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
           <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
@@ -534,17 +582,17 @@
           <label data-info="map-capacity"><span>Shade</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
         </div>
         <div class="mo-sec"><div class="mo-h">Pipes and works</div>
-          <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:${EXIST_STYLE[k].color}"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
+          <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:var(${EXIST_STYLE[k].color})"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <small id="exist-note"></small>
-          <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '#1c7ed6'], ['wastewater', 'Wastewater', '#d6336c']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:${c}"></i>${t}`)).join('')}</div></div>
+          <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
         </div>
         <div class="mo-sec"><div class="mo-h">Planning areas</div>
-          <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:#e8590c"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:#d4a017"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
+          <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:var(--area-sp)"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-mtsa)"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
         </div>
         <div class="mo-sec" data-info="hover-boundary"><div class="mo-h">Site boundary on hover</div>
-          <div class="mo-chips">${chip('id="opt-hov"', hov.on, '<i class="lg-line dash" style="background:#f76707"></i>Show', 'hover-boundary')}</div>
+          <div class="mo-chips">${chip('id="opt-hov"', hov.on, '<i class="lg-line dash" style="background:var(--select)"></i>Show', 'hover-boundary')}</div>
           <label class="mo-range"><span>Reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
           <small>Point at a development to outline its application site (mouse or trackpad).</small>
         </div>
@@ -565,6 +613,8 @@
       el.querySelector('#opt-plan').onchange = e => setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });
       el.querySelector('#opt-wf').onchange = e => setWfOn(e.target.checked);
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
+      // The legend is a section inside this panel now (not its own map box): remembered open state.
+      const lgd = el.querySelector('.mo-legend details'); if (lgd) { lgd.open = store.get('legendOpen', !small); lgd.addEventListener('toggle', () => store.set('legendOpen', lgd.open)); }
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) showAllDevs(); });
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) clearAreaFilters(); });
       el.querySelector('#opt-spl').onchange = e => setAreaOn({ sp: e.target.checked });
@@ -599,37 +649,17 @@
     },
   });
   new MapOptions().addTo(map);
-  // More settings: its own box under Layers (the controls keep their handlers when moved).
-  const MoreBox = L.Control.extend({ options: { position: 'topright' }, onAdd() {
-    const el = L.DomUtil.create('div', 'more-box'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    const adv = document.querySelector('.map-opts .mo-adv'); if (adv) el.appendChild(adv);
-    el.addEventListener('toggle', () => { if (typeof fitLegend === 'function') fitLegend(); }, true);
-    return el;
-  } });
-  new MoreBox().addTo(map);
-  // Filter by area (bottom right, its own box): secondary plans / character areas, MTSAs, pressure
-  // zones and drainage areas (or wastewater blocks). Each is a dropdown of checkboxes, so several
-  // can be picked; within a list any match counts, across lists all must match.
+  // Phase 2: "More settings" merged back into the Layers panel above (its .mo-adv details never
+  // left .map-opts), and the "Filter by area" map box was removed — the municipality chips and
+  // the sp / mtsa / pz / dr dropdowns live in the filter panel (#f-muni, #f-areas). AREA_F below
+  // still defines those lists for the filter panel and the summaries.
   const AREA_F = {
     sp: { label: 'Secondary plan', all: 'All areas', find: 'Find a plan…', info: 'secondary-plans', one: 'area' },
     mtsa: { label: 'MTSA', all: 'All MTSAs', find: 'Find an MTSA…', info: 'mtsa', one: 'MTSA' },
     pz: { label: 'Pressure zone', all: 'All pressure zones', find: 'Find a zone…', info: 'pressure-zone', one: 'zone', svc: true },
     dr: { label: 'Drainage area', all: 'All drainage areas', find: 'Find an area…', info: 'drainage-area', one: 'area', svc: true },
   };
-  const AreaBox = L.Control.extend({ options: { position: 'bottomright' }, onAdd() {
-    const el = L.DomUtil.create('details', 'area-box'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    if (store.get('moAreasOpen', false)) el.open = true;
-    // Slimmed to its summary and the tap-on-the-map hint: the municipality chips and the
-    // sp / mtsa / pz / dr dropdowns live in the filter panel now (#f-muni, #f-areas).
-    el.innerHTML = `<summary data-info="map-areas"><span>Filter by area</span><span class="mo-sum" id="mo-area-sum"></span></summary>
-      <div class="ab-body">
-        <small class="mo-tip">Pick areas in the filter panel, or turn on Planning areas and tap an area on the map.</small>
-      </div>`;
-    el.addEventListener('toggle', e => { if (e.target === el) { store.set('moAreasOpen', el.open); if (typeof fitLegend === 'function') fitLegend(); } else if (e.target.open) el.querySelectorAll('details.multi[open]').forEach(d => { if (d !== e.target) d.open = false; }); }, true);
-    return el;
-  } });
-  new AreaBox().addTo(map);
-  // Map height for the CSS that splits it between the options panel and the legend.
+  // Map height for the CSS caps on the Layers panel and its legend section.
   const setMapH = () => map.getContainer().style.setProperty('--map-h', `${map.getSize().y}px`);
   setMapH(); map.on('resize', setMapH);
   if (daOn) setDaLayer(true);
@@ -655,7 +685,7 @@
         const a0 = acc / (tot || 1) * 360; acc += n; const a1 = acc / (tot || 1) * 360;
         stops.push(`${col.get(k)} ${a0}deg ${a1}deg`);
       }
-      if (!stops.length) stops.push('#b8b8b8 0deg 360deg');
+      if (!stops.length) stops.push('var(--nodata) 0deg 360deg');
       const n = kids.length;
       const size = sized ? (tot < 1000 ? 32 : tot < 10000 ? 40 : tot < 50000 ? 48 : 56) : n < 10 ? 30 : n < 100 ? 36 : n < 1000 ? 42 : 50;
       return L.divIcon({
@@ -672,7 +702,10 @@
     const cv = L.DomUtil.create('canvas', 'heat-canvas', map.getContainer());
     let pts = null, raf = 0;
     const pal = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 1; const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 256, 0);
-      [[0, 'rgba(43,131,186,0)'], [0.2, '#2b83ba'], [0.45, '#abdda4'], [0.65, '#ffffbf'], [0.85, '#fdae61'], [1, '#d7191c']].forEach(([o, col]) => gr.addColorStop(o, col)); g.fillStyle = gr; g.fillRect(0, 0, 256, 1); return g.getImageData(0, 0, 256, 1).data; })();
+      // Heat ramp from the --heat-ramp token (comma-separated stops); stop 0 is
+      // the first stop fully transparent.
+      const ramp = token('--heat-ramp').split(',').map(s => s.trim());
+      [[0, `${ramp[0]}00`], [0.2, ramp[0]], [0.45, ramp[1]], [0.65, ramp[2]], [0.85, ramp[3]], [1, ramp[4]]].forEach(([o, col]) => gr.addColorStop(o, col)); g.fillStyle = gr; g.fillRect(0, 0, 256, 1); return g.getImageData(0, 0, 256, 1).data; })();
     function draw() {
       raf = 0; const sz = map.getSize(); cv.width = sz.x; cv.height = sz.y; cv.hidden = !pts;
       if (!pts) return;
@@ -721,7 +754,7 @@
   // Application boundaries are tappable: anywhere inside opens the project, or, for a site
   // plan nested in a larger development, that application (with a link to the whole project).
   // Selected developments are outlined in orange (no phase uses it).
-  const SEL_COLOR = '#f76707';
+  const selColor = () => token('--select');
   function outline(p, strong, unloaded) {
     const apps = siteApps(p);
     const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
@@ -729,11 +762,11 @@
       const area = P.ringsArea(a.poly);
       // Application boundaries in the project's phase colour with a light fill (the census
       // areas are the white lines); the selected project is outlined in orange.
-      const ph = colors[p.phase] || colors.approved;
+      const ph = phaseColor(p.phase);
       // A development whose layer is off in Wastewater loads: its boundary stays, dashed and faint.
       const poly = L.polygon(toLatLngs(a.poly), {
-        renderer: strong ? focusCanvas : canvas, color: strong ? SEL_COLOR : ph, weight: strong ? 3 : 1.6,
-        opacity: strong ? 1 : unloaded ? 0.75 : 0.9, fill: true, fillColor: strong ? SEL_COLOR : ph, fillOpacity: strong ? 0.2 : unloaded ? 0.05 : 0.12,
+        renderer: strong ? focusCanvas : canvas, color: strong ? selColor() : ph, weight: strong ? 3 : 1.6,
+        opacity: strong ? 1 : unloaded ? 0.75 : 0.9, fill: true, fillColor: strong ? selColor() : ph, fillOpacity: strong ? 0.2 : unloaded ? 0.05 : 0.12,
         dashArray: unloaded && !strong ? '5 4' : null,
       });
       poly._area = area;
@@ -747,7 +780,7 @@
   function permitDot(r, p, emph, focus) {
     const m = L.circleMarker([r.lat, r.lng], {
       renderer: focus ? focusCanvas : canvas, radius: emph ? 9 : 5, weight: emph ? 4 : 1.5,
-      color: emph ? SEL_COLOR : '#ffffff', fillColor: colors[r.phase], fillOpacity: 1,
+      color: emph ? selColor() : token('--sym-outline'), fillColor: phaseColor(r.phase), fillOpacity: 1,
     });
     const parent = parentApps(r, p)[0];
     m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
@@ -787,9 +820,9 @@
   map.on('moveend zoomend', scheduleSites);
   // An application opened on its own from a larger development: the whole development stays
   // outlined (orange, lighter) and the application stands out in its own colour.
-  const SUB_COLOR = '#9c36b5';
+  const subColor = () => token('--hl-sub');
   const hoverSubLayer = L.layerGroup().addTo(map);
-  const subPoly = (rings, opt = {}) => L.polygon(toLatLngs(rings), { renderer: focusCanvas, color: SUB_COLOR, weight: 4, opacity: 1, fill: true, fillColor: SUB_COLOR, fillOpacity: 0.28, interactive: false, ...opt });
+  const subPoly = (rings, opt = {}) => L.polygon(toLatLngs(rings), { renderer: focusCanvas, color: subColor(), weight: 4, opacity: 1, fill: true, fillColor: subColor(), fillOpacity: 0.28, interactive: false, ...opt });
   function highlight(p, record) {
     focusLayer.clearLayers(); hoverSubLayer.clearLayers();
     if (!p) return;
@@ -810,7 +843,7 @@
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
   const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Approved', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
-  const layerColors = () => ({ existing: '#8a8f98', built: colors.completed, approved: colors.approved, proposed: '#8fbbe9', out: '#cfcfcf' });
+  const layerColors = () => ({ existing: 'var(--text-muted)', built: phaseColor('completed'), approved: phaseColor('approved'), proposed: 'var(--layer-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
   function svcLayerOf(p) {
     if (p.phase === 'cancelled') return 'out';
@@ -820,8 +853,8 @@
   const plantOfDev = p => { const a = state.servicing && svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0]; return a ? a.plant : 'none'; };
   // Data quality: what to check before relying on a development's numbers.
   const QUALITY = {
-    far: ['#e03131', 'No zone / catchment within 5 km'], near: ['#f08c00', 'Assigned to the nearest area'],
-    nounits: ['#9c36b5', 'No units or floor area stated'], estarea: ['#4dabf7', 'Site area estimated (no boundary)'], ok: ['#2f9e44', 'Complete'],
+    far: ['var(--cap-over)', 'No zone / catchment within 5 km'], near: ['var(--cap-tight)', 'Assigned to the nearest area'],
+    nounits: ['var(--hl-sub)', 'No units or floor area stated'], estarea: ['var(--q-est)', 'Site area estimated (no boundary)'], ok: ['var(--cap-room)', 'Complete'],
   };
   function qualityOf(p) {
     if (state.servicing && p.lat != null && !svcIds(p, 'dr').length && !svcIds(p, 'pz').length) return 'far';
@@ -832,7 +865,7 @@
   }
   // Servicing timing: construction year of the planned main (wastewater or water, within 400 m)
   // a development would connect to, from the 2026 DC maps; none = the existing network.
-  const TIMING = { none: ['#2f9e44', 'On the existing network'], far: ['#868e96', 'Outside the network, no planned main within 1 km'], y27: ['#94d82d', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['#fab005', 'Planned main 2028–2030'], y35: ['#f76707', 'Planned main 2031–2035'], y36: ['#c92a2a', 'Planned main 2036 or later'] };
+  const TIMING = { none: ['var(--cap-room)', 'On the existing network'], far: ['var(--text-muted)', 'Outside the network, no planned main within 1 km'], y27: ['var(--time-soon)', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['var(--time-mid)', 'Planned main 2028–2030'], y35: ['var(--cap-tight)', 'Planned main 2031–2035'], y36: ['var(--cap-over)', 'Planned main 2036 or later'] };
   function timingOf(p) {
     if (p._dcT !== undefined) return p._dcT;
     const pt = p.lat == null ? null : [p.lng, p.lat];
@@ -847,8 +880,8 @@
     if (mstyle.color === 'timing') { const k = state.dcInfra ? timingOf(p) : 'none'; return [k, TIMING[k][0]]; }
     if (mstyle.color === 'quality') { const k = qualityOf(p); return [k, QUALITY[k][0]]; }
     if (mstyle.color === 'layer') { const k = svcLayerOf(p); return [k, layerColors()[k]]; }
-    if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, PLANT_COLOR[k] || '#b8b8b8']; }
-    return [p.phase, colors[p.phase]];
+    if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, `var(${PLANT_TOKEN[k] || '--nodata'})`]; }
+    return [p.phase, `var(--ph-${p.phase})`];
   }
   // Build-out people + jobs (cached per criteria).
   let popKey = '', popCache = new WeakMap();
@@ -1038,20 +1071,20 @@
     state.filtered = base.filter(p => state.phases.has(p.phase));
     renderPipeline(base);
     renderMarkers();
-    renderList();
+    listPage = 0; renderList();   // filters changed: back to the first page
     renderTimeline();
-    renderDemand();
-    renderCensus();
+    renderGrowth();
     renderFilterUI();
     renderSiteLayer();
     if (mstyle.color === 'phase') renderLegend();   // the phase legend lists the shown phases
     renderWatch();
     maybeTour();
     viewLink.ready();
+    renderTrail();
   }
 
   // ---- Shareable links: filters, tab, switches, map view and the open development in the URL ----
-  // #ph=…&fl=…&pl=…&dw=…&lu=…&basis=…&cy=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
+  // #ph=…&fl=…&pl=…&dw=…&lu=…&basis=…&cy=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&gs=…&dcs=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
   // (pre-Phase-1 links used fo=… for the quick-view focus; it is migrated on read —
   // see migrateLegacyFocus in js/filters.js)
   const viewLink = (() => {
@@ -1070,10 +1103,13 @@
       if (state.yearMode !== 'any') set('ym', state.yearMode);
       if (!atDefaultYears()) { set('yf', tFrom.value); set('yt', tTo.value); }
       set('t', footPref); if (footPref === 'ww') set('ws', wwSub); if (footPref === 'water') set('ws', wSub);
+      if (footPref === 'growth') set('gs', gSub); if (footPref === 'dca') set('dcs', dcSub);
       if (svcOpt.ww !== 'calibrated') set('wm', svcOpt.ww); if (svcOpt.md !== 'design') set('md', svcOpt.md); if (svcOpt.div !== 'off') set('dv', svcOpt.div); if (svcOpt.nr !== 'on') set('nr', svcOpt.nr);
       if (mstyle.color !== 'phase' || mstyle.size !== 'fixed' || mstyle.cap !== 'off') set('ms', `${mstyle.color}.${mstyle.size}.${mstyle.cap}`);
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
-      if (!$('#detail').hidden && currentProject && $('#detail').dataset.view === 'dev') set('d', currentProject.key);
+      // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
+      const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
+      if (sc) set('d', sc.key);
       return q.toString();
     };
     const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };
@@ -1112,7 +1148,14 @@
       syncFilterControls();
       for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) svcOpt[o] = q.get(k);
       if (q.get('ms')) { const [color, size, cap] = q.get('ms').split('.'); for (const [k, v] of [['color', color], ['size', size], ['cap', cap]]) if (MSTYLE[k][v]) mstyle[k] = v; }
-      if (q.get('t')) { footPref = q.get('t'); if (q.get('ws')) { if (footPref === 'water') wSub = q.get('ws'); else wwSub = q.get('ws'); } }
+      if (q.get('t')) {
+        // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
+        const m = migrateTabKey(q.get('t'));
+        footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.wwSub) wwSub = m.wwSub;
+        if (q.get('ws')) { const v = q.get('ws'); if (footPref === 'water' && TABSUBS.water.valid.includes(v)) wSub = v; else if (footPref === 'ww' && TABSUBS.ww.valid.includes(v)) wwSub = v; }
+        if (q.get('gs') && TABSUBS.growth.valid.includes(q.get('gs'))) gSub = q.get('gs');
+        if (q.get('dcs') && TABSUBS.dca.valid.includes(q.get('dcs'))) dcSub = q.get('dcs');
+      }
       showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }
       if (q.get('yf') && q.get('yt')) setYears(Number(q.get('yf')), Number(q.get('yt'))); else applyFilters();
@@ -1238,41 +1281,65 @@
     else { anchorYear = y; setYears(y, y); }
   };
 
-  // ---- Bottom panel tabs: servicing demand / growth since 2021 / breakdown & criteria ----
-  // footPref: the tab last picked (kept), Growth & demand by default. Older tab names map onto
-  // the merged tabs: demand → growth, plants → wastewater (plants view).
+  // ---- Analysis tabs (Phase 4): Overview · Growth · Water · Wastewater · DC ----
+  // (+ Development when a site is open, + Tool result). footPref: the tab last picked
+  // (kept). Growth / Water / Wastewater / DC each have sub-views (TABSUBS): the sub-view
+  // last picked is kept too. Removed tabs migrate onto the new set (migrateTabKey).
   let footPref = store.get('footTab4', 'overview'), footTab = 'overview';
   let wwSub = store.get('wwSub', 'plants'), wSub = store.get('wSub', 'capacity');
-  if (footPref === 'svc') footPref = 'water';
-  if (footPref === 'demand') footPref = 'growth';
-  if (footPref === 'plants') { footPref = 'ww'; wwSub = 'plants'; }
+  let gSub = store.get('gSub', 'pipeline'), dcSub = store.get('dcSub', 'timing');
+  // Share links and stored prefs may name tabs removed in the restructure; migrate
+  // them onto the new tab set (pure — unit-tested in tests/analysis-tabs.test.js).
+  const migrateTabKey = (t) => {
+    if (t === 'demand') return { tab: 'growth' };
+    if (t === 'census') return { tab: 'growth', gSub: 'census2051' };
+    if (t === 'criteria' || t === 'log') return { tab: 'overview' };
+    if (t === 'svc') return { tab: 'water' };
+    if (t === 'plants') return { tab: 'ww', wwSub: 'plants' };
+    return { tab: t };
+  };
+  { const m = migrateTabKey(footPref); footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.wwSub) wwSub = m.wwSub; }
+  // Sub-view state per tab: the button data-attribute, the store key, the valid
+  // values, and get/set behind showFootTab, the subtab buttons and the share link.
+  const TABSUBS = {
+    water: { attr: 'wsub', store: 'wSub', valid: ['capacity', 'zones', 'facilities', 'hydro'], get: () => wSub, set: v => { wSub = v; } },
+    ww: { attr: 'wwsub', store: 'wwSub', valid: ['plants', 'catchments', 'alloc', 'pumpstations'], get: () => wwSub, set: v => { wwSub = v; } },
+    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'census2051'], get: () => gSub, set: v => { gSub = v; } },
+    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'recommendations', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
+  };
+  for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
   function showFootTab(key) {
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';
     footTab = key;
     for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
-    for (const p of document.querySelectorAll('.f-pane')) p.hidden = p.dataset.pane !== key || p.dataset.off === '1' || (p.dataset.sub && p.dataset.sub !== (p.dataset.pane === 'water' ? wSub : wwSub));
-    for (const b of document.querySelectorAll('[data-wwsub]')) { b.classList.toggle('on', b.dataset.wwsub === wwSub); b.setAttribute('aria-pressed', String(b.dataset.wwsub === wwSub)); }
-    for (const b of document.querySelectorAll('[data-wsub]')) { b.classList.toggle('on', b.dataset.wsub === wSub); b.setAttribute('aria-pressed', String(b.dataset.wsub === wSub)); }
+    for (const p of document.querySelectorAll('.f-pane')) {
+      const pk = p.dataset.pane === 'dc' ? 'dca' : p.dataset.pane;   // the DC subtab row uses data-pane="dc"
+      p.hidden = pk !== key || p.dataset.off === '1' || (p.dataset.sub != null && (!TABSUBS[pk] || p.dataset.sub !== TABSUBS[pk].get()));
+    }
+    for (const s of Object.values(TABSUBS))
+      for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
     if (key === 'dca' && typeof renderDca === 'function') setTimeout(() => renderDca(), 0);
     if (key === 'overview') setTimeout(() => renderOverview(), 0);
-    if (key === 'criteria') setTimeout(() => renderQuality(), 0);
     if (key === 'ww' && wwSub === 'alloc') setTimeout(() => renderAlloc(), 0);
-    if (key === 'log') setTimeout(() => renderChangelog(), 0);
     // A narrow screen scrolls the tab strip: keep the open tab in view.
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;
     if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: Math.max(0, ft.offsetLeft - (strip.clientWidth - ft.offsetWidth) / 2), behavior: 'smooth' });
   }
   for (const g of document.querySelectorAll('.f-subtabs')) g.addEventListener('click', e => {
-    const b = e.target.closest('[data-wwsub]'), w = e.target.closest('[data-wsub]');
-    if (b) { wwSub = b.dataset.wwsub; store.set('wwSub', wwSub); showFootTab('ww'); viewLink.write(); }
-    if (w) { wSub = w.dataset.wsub; store.set('wSub', wSub); showFootTab('water'); viewLink.write(); }
+    const b = e.target.closest('[data-wwsub],[data-wsub],[data-gsub],[data-dcasub]'); if (!b) return;
+    const hit = Object.entries(TABSUBS).find(([, s]) => b.dataset[s.attr] != null); if (!hit) return;
+    const [tab, s] = hit, v = b.dataset[s.attr];
+    s.set(v); store.set(s.store, v); showFootTab(tab); viewLink.write();
   });
+  ensureDevelopmentsTab();   // before showFootTab so a stored 'developments' tab restores
   showFootTab(footPref);
 
-  // ---- Change log (bottom panel tab): one release per merged pull request ------------------
+  // ---- Change log (Help menu): one release per merged pull request ------------------
   // data/changelog.json (scripts/build-changelog.js, rebuilt at each deploy). Version 1.<pull
   // request>; the running build is the release whose commit matches the app-version stamp.
-  // Releases since this browser last opened the tab are marked New, with a dot on the tab.
+  // Releases since this browser last opened the log are marked New, with a dot on the
+  // topbar Help button. The log renders into the Help view (#help-log-body, built by
+  // showHelp); opening it marks everything as seen.
   const LOG = { data: null, loading: null, kind: 'all', q: '', dataUpd: false, seen: store.get('logSeen', 0) };
   function loadChangelog() {
     if (LOG.data || LOG.loading) return LOG.loading || Promise.resolve(LOG.data);
@@ -1286,7 +1353,7 @@
     return d.releases.find(r => v && r.sha && v.startsWith(r.sha.slice(0, 7))) || d.releases[0];
   }
   function syncLogDot() {
-    const d = LOG.data, dot = document.querySelector('#ftab-log .log-dot'); if (!dot) return;
+    const d = LOG.data, dot = document.querySelector('#tb-help .log-dot'); if (!dot) return;
     const top = d && d.releases[0];
     dot.hidden = !(top && LOG.seen && top.pr > LOG.seen);
     if (top && !LOG.seen) { LOG.seen = top.pr; store.set('logSeen', top.pr); }   // first visit: nothing is "new"
@@ -1294,8 +1361,8 @@
   const LOG_KIND = { feature: ['log-new', 'New'], fix: ['log-fix', 'Fix'], data: ['log-data', 'Data'] };
   const fmtDay = iso => new Date(`${iso}T12:00:00`).toLocaleDateString('en-CA', { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' });
   function renderChangelog() {
-    const el = $('#log-body'); if (!el) return;
-    if (!LOG.data) { el.innerHTML = '<p class="small muted">Loading the change log…</p>'; loadChangelog().then(d => { if (d) renderChangelog(); else el.innerHTML = '<p class="small muted">The change log is not available in this copy of the app.</p>'; }); return; }
+    const el = $('#help-log-body'); if (!el) return;
+    if (!LOG.data) { el.innerHTML = skel('Loading the change log'); loadChangelog().then(d => { if (d) renderChangelog(); else el.innerHTML = '<p class="small muted">The change log is not available in this copy of the app.</p>'; }); return; }
     const d = LOG.data, cur = currentRelease(), seen = LOG.seenShown ?? LOG.seen, q = LOG.q.trim().toLowerCase();
     const fresh = d.releases.filter(r => seen && r.pr > seen);
     let list = d.releases.filter(r => (LOG.kind === 'all' || r.kind === LOG.kind) && (!q || `${r.version} ${r.title} ${r.notes.join(' ')}`.toLowerCase().includes(q)));
@@ -1316,22 +1383,26 @@
         <button type="button" class="btn small" data-log-csv>CSV</button></div>
       ${items.length ? [...byDay].map(([day, its]) => `<section class="log-day"><h3 class="log-date">${esc(fmtDay(day))}</h3>${its.map(it => it.t === 'rel' ? rel(it) : `<article class="log-rel log-dataupd"><div class="log-h"><span class="log-k log-data">Data</span></div><h4>Weekly data refresh</h4><p class="small muted">Applications, permits, census baseline and council items re-read from the municipal sources (build ${esc(it.sha)}).</p></article>`).join('')}</section>`).join('') : '<p class="small muted">No changes match.</p>'}
       <p class="small muted">Built from the app's release history: each release is one reviewed change merged into the live site. Versions are 1.&lt;pull request number&gt;; the build is the code commit, also shown under Data sources.</p>`;
-    // Opening the tab marks everything as seen (the New marks stay until the tab is next opened).
+    // Opening the log marks everything as seen (the New marks stay until the log is next opened).
     const top = d.releases[0];
-    if (top && footTab === 'log') { if (LOG.seenShown == null) LOG.seenShown = LOG.seen; LOG.seen = top.pr; store.set('logSeen', top.pr); syncLogDot(); }
+    if (top) { if (LOG.seenShown == null) LOG.seenShown = LOG.seen; LOG.seen = top.pr; store.set('logSeen', top.pr); syncLogDot(); }
   }
-  $('#log-body').addEventListener('click', e => {
+  // The log renders inside the Help view (#help-log-body, built by showHelp), so these
+  // listeners delegate from the document instead of a #log-body node.
+  const inHelpLog = e => e.target.closest('#help-log-body');
+  document.addEventListener('click', e => {
+    if (!inHelpLog(e)) return;
     const k = e.target.closest('[data-log-kind]'); if (k) { LOG.kind = k.dataset.logKind; return renderChangelog(); }
     if (e.target.closest('[data-log-csv]') && LOG.data) {
       const q = v => `"${String(v).replace(/"/g, '""')}"`;
       return download('peel-tracker-change-log.csv', [['Version', 'Date', 'Type', 'Change', 'Details', 'Pull request', 'Build'], ...LOG.data.releases.map(r => [r.version, r.date, LOG_KIND[r.kind][1], r.title, r.notes.join(' | '), r.url, r.sha])].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
     }
   });
-  $('#log-body').addEventListener('change', e => { if (e.target.matches('[data-log-data]')) { LOG.dataUpd = e.target.checked; renderChangelog(); } });
-  $('#log-body').addEventListener('input', e => {
-    if (!e.target.matches('.log-q')) return;
+  document.addEventListener('change', e => { if (inHelpLog(e) && e.target.matches('[data-log-data]')) { LOG.dataUpd = e.target.checked; renderChangelog(); } });
+  document.addEventListener('input', e => {
+    if (!inHelpLog(e) || !e.target.matches('.log-q')) return;
     LOG.q = e.target.value; clearTimeout(LOG.t);
-    LOG.t = setTimeout(() => { const pos = e.target.selectionStart; renderChangelog(); const i = $('#log-body .log-q'); if (i) { i.focus(); i.setSelectionRange(pos, pos); } }, 200);
+    LOG.t = setTimeout(() => { const pos = e.target.selectionStart; renderChangelog(); const i = document.querySelector('#help-log-body .log-q'); if (i) { i.focus(); i.setSelectionRange(pos, pos); } }, 200);
   });
   setTimeout(loadChangelog, 4000);
   if (WF.on) setTimeout(() => setWfOn(true), 0);
@@ -1352,35 +1423,58 @@
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
   const demandBasis = () => state.basis;
   // What the demand covers: the phases picked in the filter panel, then any other filters.
-  function renderSelection(set, basis) {
-    const view = currentPhaseView();
-    const phase = view === 'all' ? 'All phases' : view === 'active' ? 'Active applications'
-      : P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => p.label).join(' + ') || 'No phase';
-    const others = activeFilters().map(f => f.label)
-      .filter(l => !/phases?$/.test(l) && !/^\d{4}(–\d{4})?$/.test(l) && !P.ALL_PHASES.some(p => l.split(' + ').includes(p.label)));
-    const years = timeActive() ? `${state.yearFrom ?? state.yearMin}–${state.yearTo ?? state.yearMax}` : 'All years';
-    const pill = (label, cls = '') => `<span class="d-pill ${cls}">${esc(label)}</span>`;
-    const da = state.daCtx;
-    $('#d-sel').innerHTML = `<span class="muted">Showing</span> ${da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>` : ''}
-      ${pill(phase, 'ph')} ${pill(years)}
-      ${others.map(l => pill(l)).join(' ')}
-      <span class="muted small">${fmtNum(set.length)} developments${basis !== 'all' ? ` · ${BASIS_LABEL[basis]}` : ''} · excludes withdrawn</span>
-      <button type="button" class="btn small link" id="d-change">Change</button>`;
+  // ---- Phase 4: the Wastewater tab's fourth sub-view, Pumping stations. The contract is
+  // that index.html carries a `data-wwsub="pumpstations"` button and a #pane-pumpstations
+  // pane holding #pumpstations-body; create them here too if a merged branch hasn't yet,
+  // so this sub-view renders either way (the generic sub-tab code in showFootTab picks
+  // both up: the button by [data-wwsub], the pane by data-pane="ww" data-sub).
+  function ensurePumpSubTab() {
+    const group = document.querySelector('.f-subtabs[data-pane="ww"]');
+    if (group && !group.querySelector('[data-wwsub="pumpstations"]')) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn small'; b.dataset.wwsub = 'pumpstations';
+      b.textContent = 'Pumping stations';
+      const alloc = group.querySelector('[data-wwsub="alloc"]');
+      if (alloc) group.insertBefore(b, alloc); else group.appendChild(b);
+    }
+    if (!document.getElementById('pane-pumpstations')) {
+      const sec = document.createElement('section');
+      sec.className = 'f-pane svc-pane'; sec.id = 'pane-pumpstations';
+      sec.dataset.pane = 'ww'; sec.dataset.sub = 'pumpstations';
+      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-ww');
+      sec.hidden = true;
+      sec.innerHTML = '<div class="tb-head"><h2 class="sr">Pumping stations</h2></div><div id="pumpstations-body"></div>';
+      const ref = document.getElementById('pane-alloc');
+      if (ref && ref.parentElement) ref.parentElement.insertBefore(sec, ref);
+      else if (group) group.after(sec);
+    }
   }
-  $('#d-sel').addEventListener('click', e => {
-    if (e.target.closest('[data-clear-da]')) { setDaContext(null); return; }
-    if (!e.target.closest('#d-change')) return;
-    if (matchMedia('(max-width: 760px)').matches) toggleSidebar(true);
-    const sf = $('#sect-more'); if (sf) sf.open = true;
-    $('#phase-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
+  ensurePumpSubTab();
+  // ---- Phase 4 shared bits for the Wastewater sub-views: tiles, a compact inline bar,
+  // and the one-line ⓘ footer (method, criteria, data dates) that replaces the per-tab
+  // stampHTML scenario line (the scenario bar now carries that once).
+  const wwTile = (label, value, unitTxt = '', sub = '', info = '') =>
+    `<div class="tile"${info ? ` data-info="${info}"` : ''}><div class="tl">${label}</div><div class="tv">${value}${unitTxt ? `<span class="tu">${unitTxt}</span>` : ''}</div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
+  const miniBar = (name, v, max, unitTxt, neg = false) => `
+    <div style="display:flex;align-items:center;gap:8px;margin:3px 0">
+      <span class="muted small" style="width:92px;flex:none">${name}</span>
+      <span style="flex:1;background:var(--surface-1);border-radius:4px;height:10px;display:block;overflow:hidden">
+        <span style="display:block;height:100%;width:${(Math.max(0, v) / max * 100).toFixed(1)}%;background:var(${neg ? '--cap-over' : '--cap-room'});border-radius:4px"></span>
+      </span>
+      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}</span>
+    </div>`;
+  function wwInfoLine(method) {
+    const c = state.criteria, E = c.employment, R = state.reports, bc = baselineCensus(), Y = bc ? bc.year : 2021;
+    const dates = [state.snapshot ? `applications ${state.snapshot.generatedAt.slice(0, 10)}` : 'applications live', `${Y} Census`, R ? `Peel ${R.year} annual reports` : null].filter(Boolean).join(' · ');
+    return `<p class="small muted">ⓘ ${method} Criteria: wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking (${c.wastewater.peakMin}–${c.wastewater.peakMax}), I&amp;I ${c.wastewater.infiltration} L/s/ha (Peel Linear Wastewater Standards 2023); employment ${E.wastewater} L/emp/d (Peel Modelling Demand Table, Aug 2024). Data: ${esc(dates)}.</p>`;
+  }
   // ---- Servicing allocations: units the Region has allocated servicing capacity to, per
   // development (kept in this browser; CSV export / import to share one list). An allocation to a
   // development not yet approved commits capacity ahead of its approval: the plants' room after
   // allocations is the room after existing + approved, less those allocations.
   const allocs = () => store.get('allocations', {}) || {};
   function setAlloc(key, a) { const all = allocs(); if (a) all[key] = a; else delete all[key]; store.set('allocations', all); onAllocChange(); }
-  function onAllocChange() { renderAlloc(); if (footTab === 'overview') renderOverview(); if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') { const b = $('#alloc-box'); if (b) b.outerHTML = allocBoxHTML(currentProject); } }
+  function onAllocChange() { renderAlloc(); if (footTab === 'overview') renderOverview(); if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh(); }
   const allocPeople = (p, a) => { const e = D.estimate([p], state.criteria, 'all', jobsOf); return e.totalUnits > 0 ? a.units * e.population / e.totalUnits : a.units * (state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment; };
   function allocRows() {
     const out = [];
@@ -1411,26 +1505,38 @@
     if (sv) { const box = sv.closest('.alloc-box'), v = k => box.querySelector(`[data-alloc-f="${k}"]`).value.trim(), units = Math.max(0, Math.round(+v('units') || 0)); if (!units) return; setAlloc(sv.dataset.allocSave, { units, date: v('date'), ref: v('ref') }); return; }
     const dl = e.target.closest('[data-alloc-del]'); if (dl) { if (confirm('Remove this allocation?')) setAlloc(dl.dataset.allocDel, null); }
   });
+  // Phase 4: "See all" for the recorded-allocations table (top 10 by default).
+  let allocSeeAll = false;
   function renderAlloc() {
     const el = $('#alloc-body'); if (!el) return;
     const rows = allocRows(), plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(allocPlant).filter(Boolean);
     const totU = rows.reduce((t, r) => t + r.a.units, 0), ahead = rows.filter(r => r.lay === 'proposed');
+    const shown = allocSeeAll ? rows : rows.slice(0, 10);
+    const maxRoom = Math.max(1e-9, ...plants.map(x => Math.max(0, x.after)));
     el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} ahead of approval and commit capacity now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
+      <div class="tiles">${[
+        wwTile('Allocations recorded', fmtNum(rows.length), rows.length === 1 ? 'allocation' : 'allocations', `${fmtNum(totU)} units`, 'allocations'),
+        ...plants.map(x => wwTile(`${esc(PLANT_SHORT[x.pl])} room`, fmt1(x.after), 'ML/d', `after allocations · ≈${fmtNum(roundPop(x.peopleAfter))} people`, 'allocations')),
+      ].join('')}</div>
+      <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d average dry</span></h3>
+      <div>${plants.map(x => miniBar(esc(PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}</div>
       <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + approved, and after allocations (average dry weather at each plant's measured rate)</caption>
         <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + approved</th><th>Room</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
         <tbody>${plants.map(x => `<tr><td>${esc(PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${fmt1(x.room)} ML/d<small>≈${fmtNum(roundPop(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${fmt1(x.after)} ML/d</strong><small>≈${fmtNum(roundPop(x.peopleAfter))} people</small></td></tr>`).join('')}</tbody></table>
       <div class="export-bar"><button type="button" class="btn small" data-alloc-csv>Export CSV</button><label class="btn small">Import CSV<input type="file" accept=".csv,text/csv" data-alloc-imp hidden></label></div>
-      ${rows.length ? `<table class="dt"><caption>Allocations recorded</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
-        ${rows.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>` : ''}
-      <p class="small muted">Allocations are kept in this browser. To share one list, export the CSV and import it on the other computer (rows are matched by development key; an import adds to or updates the list). People at each development's persons per unit.</p>`;
+      ${rows.length ? `<table class="dt"><caption>Allocations recorded${rows.length > 10 ? ` · showing ${shown.length} of ${fmtNum(rows.length)}` : ''}</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
+        ${shown.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>
+        ${rows.length > 10 ? `<p><button type="button" class="btn small link" data-alloc-all>${allocSeeAll ? 'Show fewer' : `See all ${fmtNum(rows.length)} allocations`}</button></p>` : ''}` : ''}
+      ${wwInfoLine('Room at the 90% expansion trigger after existing + approved, less allocations recorded ahead of approval; average dry weather at each plant\u2019s measured rate.')}`;
   }
   $('#alloc-body').addEventListener('click', e => {
+    if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }
     if (e.target.closest('[data-alloc-csv]')) {
       const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
       const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', PLANT_SHORT[r.pl] || '', r.lay])];
       download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
     }
-    const r = e.target.closest('.ld-row'); if (r) { const p = projectByKey(r.dataset.dev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } }
+    const r = e.target.closest('.ld-row'); if (r) { const p = projectByKey(r.dataset.dev); if (p) showDetail(p); }
   });
   $('#alloc-body').addEventListener('change', async e => {
     const f = e.target.closest('[data-alloc-imp]'); if (!f || !f.files[0]) return;
@@ -1514,29 +1620,59 @@
     }
     return out;
   }
-  function renderQuality() {
-    const el = $('#d-quality'); if (!el) return;
+  // Data freshness table HTML (shared by the Settings tab and the Sources & checks gear page).
+  function freshnessHTML() {
     const fr = freshness(), need = fr.filter(r => r.st === 'due' || r.st === 'stale');
-    const vr = validationRows();
-    const st = (m, p) => { const d = (m - p) / p * 100, a = Math.abs(d); return [d, a <= 10 ? 'fr-ok' : a <= 25 ? 'fr-due' : 'fr-stale', a <= 10 ? 'Matches' : a <= 25 ? 'Close' : 'Differs']; };
-    const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : u === 'units' ? `${fmtNum(Math.round(v))} units` : `${fmtNum(roundPop(v))}`;
-    el.innerHTML = `${hlP(need.length ? `<strong>${need.length} data source${need.length === 1 ? '' : 's'}</strong> ${need.length === 1 ? 'is' : 'are'} due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : `All data sources are current; applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong>.`)}
+    return `${hlP(need.length ? `<strong>${need.length} data source${need.length === 1 ? '' : 's'}</strong> ${need.length === 1 ? 'is' : 'are'} due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : `All data sources are current; applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong>.`)}
       <h3 class="sub-title" data-info="data-freshness">Data freshness</h3>
       <table class="dt fr-table"><thead><tr><th>Source</th><th>As of</th><th>Updated</th><th>Status</th></tr></thead><tbody>
         ${fr.map(r => `<tr><td>${esc(r.name)}${r.note ? `<small>${esc(r.note)}</small>` : ''}</td><td>${r.date ? esc(r.date) : '–'}${r.a != null && r.st !== 'ref' ? `<small>${r.a === 0 ? 'today' : `${fmtNum(r.a)} day${r.a === 1 ? '' : 's'} ago`}</small>` : ''}</td><td>${esc(r.every)}</td><td><span class="fr-b ${FRESH[r.st][0]}">${FRESH[r.st][1]}</span></td></tr>`).join('')}
-      </tbody></table>
-      <h3 class="sub-title" data-info="validation">Model checks against published figures</h3>
+      </tbody></table>`;
+  }
+  // Model checks against published figures (this module's own checks; other workers add
+  // sections via window.ModelChecks).
+  function checksHTML() {
+    const vr = validationRows();
+    const st = (m, p) => { const d = (m - p) / p * 100, a = Math.abs(d); return [d, a <= 10 ? 'fr-ok' : a <= 25 ? 'fr-due' : 'fr-stale', a <= 10 ? 'Matches' : a <= 25 ? 'Close' : 'Differs']; };
+    const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : u === 'units' ? `${fmtNum(Math.round(v))} units` : `${fmtNum(roundPop(v))}`;
+    return `<h3 class="sub-title" data-info="validation">Model checks against published figures</h3>
       ${vr.length ? `<table class="dt fr-table"><thead><tr><th>Check</th><th>Model</th><th>Published</th><th>Difference</th><th>Result</th></tr></thead><tbody>
         ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
           const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
       </tbody></table>
-      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : '<p class="small muted">Loading the servicing model…</p>'}
-      <h3 class="sub-title">Number conventions</h3>
+      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}`;
+  }
+  // Extra model-check sections registered by other modules (Workers D and E).
+  // Convention: window.ModelChecks = { key: htmlString } or { key: { title, html } }.
+  // Rendered defensively: anything unexpected is skipped, never throws.
+  function modelSectionsHTML() {
+    const reg = (typeof window !== 'undefined' && window.ModelChecks) || {};
+    return Object.values(reg).map(s => {
+      if (typeof s === 'string' && s.trim()) return s;
+      if (s && typeof s.html === 'string' && s.html.trim()) return `${s.title ? `<h3 class="sub-title">${esc(String(s.title))}</h3>` : ''}${s.html}`;
+      return '';
+    }).join('');
+  }
+  function numberConventionsHTML() {
+    return `<h3 class="sub-title">Number conventions</h3>
       <p class="small muted">People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.</p>
       <h3 class="sub-title">Prepared by</h3>
       <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
   }
-  $('#d-quality').addEventListener('change', e => { if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim()); });
+  function renderQuality() {
+    const el = $('#d-quality'); if (!el) return;
+    el.innerHTML = `${freshnessHTML()}${checksHTML()}${modelSectionsHTML()}${numberConventionsHTML()}`;
+  }
+  // (prep-by is handled by the document-level change listener above)
+  // Sources & checks gear page (Worker A: openGearPage('sources') renders GearPages.sources()).
+  function sourcesPageHTML() {
+    return `<h2 class="pane-h">Sources &amp; checks</h2>
+      ${freshnessHTML()}
+      ${checksHTML()}${modelSectionsHTML()}
+      ${refsHTML()}`;
+  }
+  window.GearPages = window.GearPages || {};
+  window.GearPages.sources = () => sourcesPageHTML();
   // ---- Housing targets, CMHC starts and the population outlook (data/housing.json) ------------
   // Ontario's housing targets (2022-2031) and its yearly progress, CMHC starts by municipality, the
   // units in the application pipeline, and the Ministry of Finance projection against the
@@ -1568,13 +1704,13 @@
     const mof = H.mof.peel, region = F ? Object.values(F.municipalities).reduce((t, m) => t + m.pop2051, 0) : null, region21 = F ? Object.values(F.municipalities).reduce((t, m) => t + m.pop2021, 0) : null;
     return { mof, region, region21, y0: 2025, y1: 2051 };
   }
-  function outlookCardHTML() {
+  function outlookCardHTML(hideGo) {
     const o = outlookRows(); if (!o) return '';
     const ys = Object.keys(o.mof).map(Number).sort((a, b) => a - b), v = ys.map(y => o.mof[y]);
     const W = 300, H = 92, L0 = 4, R0 = 4, T0 = 8, B0 = 16, lo = Math.min(...v, o.region21 || Infinity) * 0.97, hi = Math.max(...v, o.region || 0) * 1.02;
     const x = y => L0 + (W - L0 - R0) * (y - 2021) / (2051 - 2021), yv = n => T0 + (H - T0 - B0) * (1 - (n - lo) / (hi - lo));
     const gap = o.region ? o.region - o.mof[2051] : null;
-    return `<section class="ov-card ov-outlook" data-info="outlook"><div class="ov-h"><h3>Population outlook</h3>${'<button type="button" class="btn small link ov-go" data-ov-tab="growth">Demand →</button>'}</div>
+    return `<section class="ov-card ov-outlook" data-info="outlook"><div class="ov-h"><h3>Population outlook</h3>${hideGo ? '' : '<button type="button" class="btn small link ov-go" data-ov-tab="growth">Growth →</button>'}</div>
       <svg class="ov-spark" viewBox="0 0 ${W} ${H}" role="img" aria-label="Ministry of Finance projection for Peel against the Region's 2051 forecast">
         ${o.region ? `<line x1="${x(2021)}" y1="${yv(o.region21)}" x2="${x(2051)}" y2="${yv(o.region)}" class="sp-reg"/><circle cx="${x(2051)}" cy="${yv(o.region)}" r="3" class="sp-reg-d"/>` : ''}
         <path d="${ys.map((y, i) => `${i ? 'L' : 'M'}${x(y).toFixed(1)},${yv(v[i]).toFixed(1)}`).join('')}" class="sp-mof"/>
@@ -1583,152 +1719,368 @@
       <div class="dca-key small"><span><i class="k-reg"></i>Region forecast (Growth Plan): ${fmtNum(roundPop(o.region))} by 2051</span><span><i class="k-mof"></i>Ministry of Finance: ${fmtNum(roundPop(o.mof[2051]))} by 2051</span></div>
       <p class="small">${gap > 0 ? `The province's summer 2026 projection has Peel <strong>≈${fmtNum(roundPop(gap))} people (${Math.round(gap / o.region * 100)}%) below</strong> the Region's 2051 forecast, dipping to ${fmtNum(roundPop(o.mof[2031]))} in 2031 (fewer temporary residents) before growing again. Growth-driven DC projects may be needed later than the forecast implies; the Ministry's projection is not a planning target.` : 'The Ministry of Finance projection is in line with the Region\'s 2051 forecast.'}</p></section>`;
   }
+  // ---- Development scope (Phase 3): one home per number --------------------------------
+  // The development open as the analysis scope: Worker A's DevScope when present, otherwise
+  // the development open in the detail panel (the module-level currentProject).
+  function scopedDev() {
+    try {
+      if (typeof DevScope !== 'undefined' && DevScope && typeof DevScope.current === 'function') {
+        const p = DevScope.current();
+        if (p) return p;
+      }
+    } catch (e) { /* DevScope not ready: fall through to the detail panel */ }
+    return currentProject;
+  }
+  // First sentence of a (possibly escaped) status line.
+  const firstSentence = (s) => {
+    const t = String(s || '').trim(), m = /^(.*?\.)\s/.exec(t);
+    return m ? m[1] : t;
+  };
+  // Pure verdict derivation for the scoped Overview card (unit-tested in tests/verdict.test.js
+  // via source extraction). Each takes plain data and returns { tone, text }; the caller
+  // supplies raw strings and escapes the returned text once.
+  const verdictWater = (d) => {
+    if (!d.zone) return { tone: 'warn', text: 'No pressure zone mapped' };
+    if (d.outside) return { tone: 'warn', text: `Outside the mapped pressure zones — counted in ${d.zone} (nearest): a screening estimate` };
+    return { tone: 'ok', text: `${d.zone}: this site is ${d.sharePct}% of the zone's build-out max day` };
+  };
+  const verdictWastewater = (d) => {
+    if (d.noPath) return { tone: 'warn', text: 'Not in a traced drainage area' };
+    if (d.toronto) return { tone: 'ok', text: 'Drains to the City of Toronto system (Malton): capacity is Toronto’s, not Peel’s' };
+    const bad = d.pipePct >= 100 || d.psPct >= 100 || d.over;
+    const warn = d.pipePct >= 90 || d.psPct >= 90 || d.commitPct >= 90;
+    const bits = [];
+    if (d.pipeMm != null) bits.push(`tightest pipe ${d.pipeMm} mm at ${d.pipePct}% of full capacity`);
+    if (d.psName) bits.push(`${d.psName} ≈${d.psPct}% of firm capacity`);
+    if (d.plant) bits.push(d.over ? `${d.plant} over-committed` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it`);
+    return { tone: bad ? 'bad' : warn ? 'warn' : 'ok', text: bits.join(' · ') || 'No capacity flags on its path' };
+  };
+  const verdictDc = (d) => {
+    if (d.loading) return { tone: 'warn', text: 'The 2026 DC program is still loading' };
+    if (d.gap) return { tone: 'bad', text: `Needs a planned main by ${d.needBy} — committed before it is built` };
+    if (d.needBy) return { tone: 'warn', text: `Outside the existing network: servicing about ${d.needBy} on the 2026 DC draft schedule` };
+    if (d.nearby) return { tone: 'ok', text: `Served by the existing network · ${d.nearby} planned ${d.nearby === 1 ? 'work' : 'works'} nearby` };
+    return { tone: 'ok', text: 'Served by the existing network — no planned works nearby' };
+  };
+  const verdictMilestone = (d) => {
+    if (d.withdrawn) return { tone: 'warn', text: 'Withdrawn — no next milestone' };
+    if (d.done) return { tone: 'ok', text: 'Completed — built out' };
+    if (d.appeal) return { tone: 'warn', text: `Under appeal — next: ${d.next}, after the Tribunal decides` };
+    if (d.stalled) return { tone: 'warn', text: `Stalled ${d.stalled} with no activity — next: ${d.next}` };
+    return { tone: 'ok', text: `Next milestone: ${d.next}` };
+  };
+  // Pure Needs-attention derivation for the Overview card (unit-tested in
+  // tests/needs-attention.test.js via source extraction). Takes plain data and returns
+  // items { tone, text, tab, dev } in display order; the caller escapes the text once and
+  // turns tab into a [data-ov-tab] button and dev into a [data-ov-dev] button.
+  //   d.adv:     [{ name }] — DC projects that come online after the capacity they relieve runs out
+  //   d.trig:    [{ sys, now, text }] — capacity constraints at/past the 90% expansion trigger
+  //   d.stalled: [{ key, title, muni, units, unitsTxt, years }] — stalled sites, filtered to 250+ units here
+  //   d.changes: [{ key, text }] — this week's new / phase-changed developments
+  const needsAttention = (d) => {
+    const items = [];
+    const adv = d.adv || [];
+    if (adv.length) {
+      const names = adv.slice(0, 3).map(a => a.name).join('; ');
+      items.push({ tone: 'bad', tab: 'dca', dev: null,
+        text: `${adv.length} DC project${adv.length === 1 ? '' : 's'} come${adv.length === 1 ? 's' : ''} online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out: ${names}${adv.length > 3 ? ` (+${adv.length - 3} more)` : ''}` });
+    }
+    for (const c of d.trig || []) items.push({ tone: c.now ? 'bad' : 'warn', tab: c.sys === 'water' ? 'water' : 'ww', dev: null, text: c.text });
+    const big = (d.stalled || []).filter(s => s.units >= 250).sort((a, b) => b.units - a.units).slice(0, 3);
+    for (const s of big) items.push({ tone: 'warn', tab: null, dev: s.key, text: `Stalled ${s.years} with no activity — ${s.title} (${s.unitsTxt} units, ${s.muni})` });
+    for (const c of (d.changes || []).slice(0, 4)) items.push({ tone: 'ok', tab: null, dev: c.key, text: c.text });
+    return items;
+  };
+  // One-line pointer to a number's home tab, used where a duplicate was removed.
+  const homeLine = (tab, label) => `<button type="button" class="btn small link" data-foot-tab="${tab}">${label} →</button>`;
+  // The brief HTML carries document-wide ids (dev-*); footer copies get prefixed ids so the
+  // detail panel's async fills and toggles keep working on the originals.
+  const scopeBriefIds = (root) => {
+    for (const n of root.querySelectorAll('[id^="dev-"]')) n.id = `f-${n.id}`;
+  };
+  // [data-foot-tab] clicks anywhere, plus the development-brief buttons reused in the footer
+  // tabs whose handlers otherwise live on #detail-body ([data-pipe], [data-dcn-*]): no dead ends.
+  // Clicks inside #detail-body keep their existing handlers (this listener skips them).
+  document.addEventListener('click', e => {
+    if (e.target.closest('#detail-body')) return;
+    const g = e.target.closest('[data-foot-tab]');
+    if (g) { showFootTab(g.dataset.footTab); return; }
+    const pb = e.target.closest('[data-pipe]');
+    if (pb && SEW.data) { const i = +pb.dataset.pipe; showPipeLoads(i); const c = SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
+    if (e.target.closest('[data-dcn-all]')) { loadSewers(); showDcTiming(); return; }
+    const cn = e.target.closest('[data-dcn-cons]');
+    if (cn && DCN.reg && DCN.reg.get(cn.dataset.dcnCons)) { showConsDevs(DCN.reg.get(cn.dataset.dcnCons)); return; }
+    const r = e.target.closest('[data-dcn-relief]');
+    if (r && DCN.reg) {
+      const [id, k] = r.dataset.dcnRelief.split('|'), c = DCN.reg.get(id), rl = c && c.relief[+k];
+      if (rl && rl.ln) { if (!dcOn.on) setDcOn({ on: true, sys: 'both' }); showDcLine(rl.ln); map.fitBounds(L.latLngBounds(rl.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); }
+      else if (rl && rl.fc) { showFacility(rl.fc); if (rl.fc.g) map.setView([rl.fc.g[1], rl.fc.g[0]], Math.max(map.getZoom(), 14)); }
+    }
+    // Controls from the demand-by-application rows reused in the footer Demand tab.
+    const us = e.target.closest('[data-uu-set]');
+    if (us) { const cp = scopedDev(); if (cp) { const inp = us.parentElement.querySelector('[data-uu]'), n = +inp.value; const r0 = cp.records.find(x => x.ref === us.dataset.uuSet); if (r0 && n > 0) setUserUnits(r0, n); else inp.focus(); } return; }
+    const uc = e.target.closest('[data-uu-clear]');
+    if (uc) { const cp = scopedDev(); if (cp) { const r0 = cp.records.find(x => x.ref === uc.dataset.uuClear); if (r0) setUserUnits(r0, 0); } return; }
+    const sb = e.target.closest('[data-sub]');
+    if (sb) {
+      const cp = scopedDev();
+      if (cp) { const sub = subProject(cp.parent || cp, sb.dataset.sub); if (sub) { hoverSubLayer.clearLayers(); showDetail(sub); const rings = siteApps(sub).flatMap(a => a.poly); if (rings.length) fitClear(L.latLngBounds(toLatLngs(rings).flat()).pad(0.4)); } }
+      return;
+    }
+    const dp = e.target.closest('[data-dev-parent]');
+    if (dp) { const cp = scopedDev(); if (cp && cp.parent) showDetail(cp.parent); return; }
+    const o = e.target.closest('[data-open]');
+    if (o) {
+      const scope = o.closest('.f-pane') || document;
+      const d = scope.querySelector(`#f-${CSS.escape(o.dataset.open)}`) || document.getElementById(o.dataset.open);
+      if (d) { d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }
+  });
   // ---- Overview (bottom panel, first tab): the headline numbers on one screen ----------------
-  // Growth of the shown developments, their servicing demand broken down by phase, the capacity
-  // status of the plants, the DC projects to act on, and the tools, each with a link to its tab.
+  // One view: one-sentence headline → up to 4 tiles → the Needs-attention card → one chart
+  // (plant + water treatment capacity bars) → one top-5 developments table with "See all" →
+  // one ⓘ line (method, criteria, data dates). Housing, the population outlook and the
+  // demand-by-phase breakdown live on the Growth tab (Worker C); the DC program card is now
+  // one line inside Needs attention. Scoped Overview: a verdict card for the site instead of
+  // the Peel-wide aggregates.
+  function renderVerdictCard(p) {
+    const el = $('#ov-body'); if (!el) return;
+    const st = statusOf(p), f = svcFacts(p);
+    st.works = st.works || devWorks(p, f);
+    const pe = f ? f.e : D.estimate([p], state.criteria, 'all', jobsOf), cb = pe.combined;
+    const tile = (v, u, l) => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span></div>`;
+    const toneCls = { ok: 'why-ok-t', warn: 'why-stall-t', bad: 'why-stop-t' };
+    const vtxt = v => esc(v.text);
+    // Verdict inputs from the same per-tab brief logic the detail panel uses.
+    const pp = SEW.data && p.lat != null ? pathPipes(p) : null, worst = pp && pp.worst;
+    const sps = f && f.sps.length ? f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0] : null;
+    const noModel = !f;
+    const wv = noModel ? { tone: 'warn', text: 'The servicing model is still loading' } : verdictWater({
+      zone: f.z ? f.z.name.replace('Pressure zone ', 'Zone ') : null,
+      sharePct: f.zMax ? Math.round(D.toMLd(cb.water.maxDay) / f.zMax * 100) : 0,
+      outside: !!f.zNear,
+    });
+    const wwv = noModel ? { tone: 'warn', text: 'The servicing model is still loading' } : verdictWastewater({
+      noPath: !f.path.length,
+      toronto: f.pl === 'Toronto',
+      pipeMm: worst ? worst.p[0] : null,
+      pipePct: worst ? Math.round(worst.r1 * 100) : 0,
+      psName: sps ? psName(sps.a) : null,
+      psPct: sps ? Math.round(sps.wet / sps.firm * 100) : 0,
+      plant: f.cap ? f.cap.name : null,
+      reserve: f.cap ? fmt1(f.reserve) : null,
+      usePct: f.cap && f.reserve > 0 ? Math.round(f.use / f.reserve * 100) : 0,
+      over: !!(f.cap && f.reserve <= 0),
+      commitPct: f.cap ? Math.round(f.cap.committed / f.cap.rated * 100) : 0,
+    });
+    const w = st.works;
+    const dcv = verdictDc({
+      loading: !state.dcInfra,
+      gap: !!(w && w.gap),
+      needBy: w && w.needBy ? w.needBy : 0,
+      nearby: w ? w.trunks.length + w.facs.length : 0,
+    });
+    const idx = P.PHASES.findIndex(s => s.key === p.phase);
+    const nextPh = p.phase === 'cancelled' ? null : P.PHASES[idx + 1] || null;
+    const mv = verdictMilestone({
+      withdrawn: p.phase === 'cancelled',
+      done: p.phase === 'completed',
+      appeal: st.sig.some(x => x.kind === 'appeal'),
+      stalled: st.stalled ? `${st.years.toFixed(1)} yrs` : null,
+      next: nextPh ? nextPh.label : '—',
+    });
+    const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
+    const devBtn = `<button type="button" class="btn small link ov-go" data-ov-dev="${esc(p.key)}">Development →</button>`;
+    const vline = (v, label, btn) => `<li><strong>${label}</strong> <span class="${toneCls[v.tone]}">${vtxt(v)}</span> ${btn}</li>`;
+    el.innerHTML = `<div class="ov-top">${hlP(`<strong>${esc(p.title)}</strong> · ${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}`)}</div>
+      <div class="ov-grid">
+        <section class="ov-card ov-growth"><div class="ov-h"><h3>Servicing verdict</h3>${devBtn}</div>
+          <p class="small">${firstSentence(st.why)}</p>
+          <div class="ov-tiles">${tile(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned')}${tile(fmtNum(roundPop(pe.population)), 'people', 'at build-out')}${tile(fmt1(cb.water.maxDay), 'L/s', 'water max day')}${tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet')}</div>
+          <p class="small muted">Flows at Peel design criteria, as in a functional servicing report. The raw status text lives in Development › Files &amp; history.</p>
+        </section>
+        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Verdict</h3></div>
+          <ul class="b-lines small">
+            ${vline(wv, '💧 Water', go('water', 'Water'))}
+            ${vline(wwv, '🚰 Wastewater', go('ww', 'Wastewater'))}
+            ${vline(dcv, '🏗 DC works', go('dca', 'DC Analysis'))}
+            ${vline(mv, '🚩 Next milestone', devBtn)}
+          </ul></section>
+      </div>`;
+    if (document.documentElement.hasAttribute('data-presentation')) renderPresentation();
+  }
+  // The capacity constraints behind the Overview bars (wastewater plants + the South Peel
+  // water treatment system), shared by the chart and the Needs-attention card. Bar
+  // computations are unchanged from the pre-restructure Overview.
+  function capacityList() {
+    if (!state.svcModel || !state.servicing) return null;
+    const list = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => cached(`plant:${pl}`, () => plantCons(pl))).filter(Boolean);
+    const w = state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null; if (w) list.push(w);
+    return list;
+  }
+  function capacityBarsHTML(list) {
+    const bar = c => { const pc = pctRated(c, 'com'), pb = pctRated(c, 'bo'), a = Math.min(130, pc), b = Math.min(130, pb), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
+      return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}${esc(c.kind === 'plant' ? PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
+        <div class="ov-bar" role="img" aria-label="${pc}% of rated capacity committed, ${pb}% at build-out; expansion trigger at ${Math.round(PLANT_TRIGGER * 100)}%"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(PLANT_TRIGGER * 100 / 1.3).toFixed(1)}%" title="${Math.round(PLANT_TRIGGER * 100)}% expansion trigger"></i><i class="t r" style="left:${(100 / 1.3).toFixed(1)}%" title="100% rated"></i></div>
+        <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? allocPlant(c.pl) : null)}</small></div>`; };
+    return list.map(bar).join('') + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: average dry weather, calibrated to 2025 flows; water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.</p>`;
+  }
+  // Plain-data input for the pure needsAttention: reuses the DCA results, the stalled flags,
+  // the 90% trigger years and the weekly snapshot change log.
+  function needsAttentionData(set, capList) {
+    const R = DCA.res && DCA.key === scenarioKey() ? DCA.res : null;
+    const adv = R ? R.list.filter(r => r.rec === 'advance').map(r => ({ name: r.name })) : [];
+    const trig = (capList || []).filter(c => c.out).map(c => ({
+      sys: c.sys, now: c.out === 'today',
+      text: `${c.kind === 'plant' ? PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment'} ${trigText(c)} (${pctRated(c, 'com')}% committed → ${pctRated(c, 'bo')}% at build-out)`,
+    }));
+    const stalled = [];
+    for (const p of set) {
+      const st = statusOf(p);
+      if (!st.stalled) continue;
+      const u = appUnits(p);
+      stalled.push({ key: p.key, title: p.title, muni: p.municipality, units: u, unitsTxt: fmtNum(Math.round(u)), years: `${st.years.toFixed(1)} yrs` });
+    }
+    const ch = state.snapshot && state.snapshot.changes;
+    const changes = (!ch || ch.baseline) ? [] : [
+      ...(ch.moved || []).map(m => ({ key: m.key, text: `${m.title}: ${P.PHASE_BY_KEY[m.from].label} → ${P.PHASE_BY_KEY[m.to].label}` })),
+      ...(ch.added || []).map(a => ({ key: a.key, text: `New: ${a.title} (${P.PHASE_BY_KEY[a.phase].label}, ${a.municipality})` })),
+    ];
+    return { adv, trig, stalled, changes };
+  }
+  // Top-5 developments by planned units, with a "See all" to the Developments tab.
+  function topDevsHTML(set, basis) {
+    const top = set.slice().sort((a, b) => appUnits(b) - appUnits(a)).slice(0, 5);
+    const rows = top.map(p => {
+      const pe = D.estimate([p], state.criteria, basis, jobsOf);
+      return `<tr><td><button type="button" class="btn small link" data-ov-dev="${esc(p.key)}">${esc(p.title)}</button><small class="muted">${esc(p.municipality)}</small></td><td>${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(Math.round(pe.totalUnits))}</td><td class="n">${fmtNum(roundPop(pe.population))}</td></tr>`;
+    }).join('');
+    return `<section class="ov-card ov-topdevs"><div class="ov-h"><h3>Largest developments</h3><button type="button" class="btn small link ov-go" data-ov-tab="developments">See all →</button></div>
+      <table class="dt ov-t"><thead><tr><th>Development</th><th>Phase</th><th class="n">Units</th><th class="n">People</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+  }
   function renderOverview(set, e, basis) {
     const el = $('#ov-body'); if (!el) return;
+    const p = scopedDev();
+    if (p) { renderVerdictCard(p); return; }
     if (!set) { set = overviewSet(); basis = demandBasis(); e = D.estimate(set, state.criteria, basis, jobsOf); }
-    const cb = e.combined, em = e.employment;
+    if (!basis) basis = demandBasis();
+    const em = e.employment;
     let left = 0, n = 0; for (const p of set) if (p.buildout) { n++; left += p.buildout.remaining; }
     const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
-    // Demand by phase (the servicing demand breakdown).
-    const rows = P.PHASES.map(ph => { const s0 = set.filter(p => p.phase === ph.key); if (!s0.length) return ''; const pe = D.estimate(s0, state.criteria, basis, jobsOf); return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${fmtNum(Math.round(pe.totalUnits))}</td><td>${fmtNum(roundPop(pe.population))}</td><td>${fmtNum(roundPop(pe.employment.jobs))}</td><td>${fmt1(pe.combined.water.maxDay)}</td><td>${fmt1(pe.combined.wastewater.wetPeak)}</td></tr>`; }).join('');
-    const phaseT = `<table class="dt ov-t"><thead><tr><th>Phase</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day <small>L/s</small></th><th>Wastewater peak wet <small>L/s</small></th></tr></thead><tbody>${rows}
-      <tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(em.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table>`;
     // Capacity: plants against the 90% expansion trigger (existing + approved, and at build-out).
-    let cap = '<p class="small muted">Loading the servicing model…</p>', tight = null;
-    if (state.svcModel && state.servicing) {
-      const list = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => cached(`plant:${pl}`, () => plantCons(pl))).filter(Boolean);
-      const w = state.reports ? cached('wsys:lake', () => waterPlantCons({ zone: '1' })) : null; if (w) list.push(w);
-      const bar = c => { const pc = pctRated(c, 'com'), pb = pctRated(c, 'bo'), a = Math.min(130, pc), b = Math.min(130, pb), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
-        return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}${esc(c.kind === 'plant' ? PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
-          <div class="ov-bar" role="img" aria-label="${pc}% of rated capacity committed, ${pb}% at build-out; expansion trigger at ${Math.round(PLANT_TRIGGER * 100)}%"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(PLANT_TRIGGER * 100 / 1.3).toFixed(1)}%" title="${Math.round(PLANT_TRIGGER * 100)}% expansion trigger"></i><i class="t r" style="left:${(100 / 1.3).toFixed(1)}%" title="100% rated"></i></div>
-          <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? allocPlant(c.pl) : null)}</small></div>`; };
-      tight = list.filter(c => c.kind === 'plant').sort((a, b) => b.util.bo - a.util.bo)[0] || null;
-      cap = list.map(bar).join('') + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: average dry weather, calibrated to 2025 flows; water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.</p>`;
+    const capList = capacityList();
+    let cap = skel('Loading the servicing model'), tight = null;
+    if (capList) {
+      tight = capList.filter(c => c.kind === 'plant').sort((a, b) => b.util.bo - a.util.bo)[0] || null;
+      cap = capacityBarsHTML(capList);
     }
-    // DC projects to act on (from DC Analysis, when it has run for this scenario).
-    let dc = '';
-    if (state.dcInfra && state.svcModel) {
-      const R = DCA.res && DCA.key === scenarioKey() ? DCA.res : null;
-      if (R) { const adv = R.list.filter(r => r.rec === 'advance'), top = R.list.slice().sort((a, b) => b.bo - a.bo).slice(0, 3);
-        dc = `<p class="small"><b class="ov-warn">${adv.length}</b> DC project${adv.length === 1 ? '' : 's'} come online after the capacity runs out${adv.length ? `: ${adv.slice(0, 3).map(r => esc(r.name)).join('; ')}${adv.length > 3 ? ` +${adv.length - 3}` : ''}` : ''}.</p>
-          <p class="small">Most growth relies on: ${top.map(r => `${esc(r.name)} (${fmtNum(roundPop(r.bo))} people ≈ ${fmtNum(Math.round(r.units))} units if cancelled)`).join('; ')}.</p>`; }
-      else dc = `<p class="small muted">${SEW.data ? 'Working out the DC projects…' : 'Loading the sewer network…'}</p>`;
-    }
-    const Rr = DCA.res && DCA.key === scenarioKey() ? DCA.res : null, nAdv = Rr ? Rr.list.filter(r => r.rec === 'advance').length : 0;
-    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units.${tight ? ` <strong>${esc(PLANT_SHORT[tight.pl])}</strong> ${trigText(tight)} (${pctRated(tight, 'com')}% of rated capacity committed → ${pctRated(tight, 'bo')}% at build-out).` : ''}${nAdv ? ` <strong>${nAdv} DC project${nAdv === 1 ? '' : 's'}</strong> come online after the capacity ${nAdv === 1 ? 'it relieves' : 'they relieve'} runs out.` : ''}` : 'No developments match the current filters.';
+    // Needs attention: constraints that run out before relief, stalled large sites, sites
+    // past the 90% trigger, and this week's changes — each item links to its tab.
+    const TAB_LABEL = { dca: 'DC Analysis', ww: 'Wastewater', water: 'Water' };
+    const toneCls = { ok: 'why-ok-t', warn: 'why-stall-t', bad: 'why-stop-t' };
+    const na = needsAttention(needsAttentionData(set, capList));
+    const needs = `<section class="ov-card ov-needs"><div class="ov-h"><h3>Needs attention</h3></div>
+      ${na.length ? `<ul class="na-list small">${na.map(it => `<li class="na-it"><span class="${toneCls[it.tone]}">${esc(it.text)}</span>${it.dev ? `<button type="button" class="btn small link" data-ov-dev="${esc(it.dev)}">Development →</button>` : it.tab ? go(it.tab, TAB_LABEL[it.tab] || it.tab) : ''}</li>`).join('')}</ul>` : '<p class="small muted">Nothing needs attention right now.</p>'}</section>`;
+    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(e.totalUnits))} units.${tight ? ` <strong>${esc(PLANT_SHORT[tight.pl])}</strong> ${trigText(tight)} (${pctRated(tight, 'com')}% of rated capacity committed → ${pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
+    // ⓘ line: method, criteria, data dates.
+    const fr = freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
+    const basisTxt = { all: 'approved + proposed', committed: 'committed only', remaining: 'units left to build' }[basis] || 'approved + proposed';
+    const info = `<p class="small muted ov-info">ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: average dry weather, calibrated to 2025 flows; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${state.muni ? ` · ${esc(state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} ${go('criteria', 'Data & checks')}</p>`;
     el.innerHTML = `<div class="ov-top">${hlP(hl)}<button type="button" class="btn ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
-        <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('census', 'Growth')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>
-          <div class="ov-tiles ov-flow">${tile(fmt1(cb.water.maxDay), 'L/s', 'water max day', `${fmt1(D.toMLd(cb.water.avg))} ML/d average`)}${tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet', `${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average`)}</div></section>
+        <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(e.totalUnits)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div></section>
+        ${needs}
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
-        ${housingCardHTML()}${outlookCardHTML()}
-        <section class="ov-card ov-break"><div class="ov-h"><h3>Servicing demand by phase</h3>${go('growth', 'Full breakdown')}</div>${phaseT}</section>
-        ${state.dcInfra ? `<section class="ov-card ov-dc"><div class="ov-h"><h3>DC program</h3>${go('dca', 'DC Analysis')}</div>${dc}</section>` : ''}
-        <section class="ov-card ov-tools"><div class="ov-h"><h3>Tools</h3></div><div class="ov-btns">
-          <button type="button" class="btn small" data-ov-tool="trace">⤳ Trace a sewer path</button>
-          <button type="button" class="btn small" data-ov-tool="whatif">＋ Test a site</button>
-          <button type="button" class="btn small" data-ov-tool="lasso">▭ Select an area</button>
-          <button type="button" class="btn small" data-ov-tool="dct">DC timing</button>
-          <button type="button" class="btn small" data-area-report="shown">Report on what's shown</button>
-          <button type="button" class="btn small" data-ov-tool="help">? Help &amp; tips</button></div>
-          <p class="small muted">Tap a development on the map for its servicing check; tap a sewer, block or plant for what loads it.</p>
-          ${(fr => `<p class="small ov-fresh">Data: applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${(n => n ? `<span class="fr-b fr-due">${n} source${n === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>')(fr.filter(r => r.st === 'due' || r.st === 'stale').length)} <button type="button" class="btn small link" data-ov-tab="criteria">Data &amp; checks →</button></p>`)(freshness())}</section>
+        ${topDevsHTML(set, basis)}
+        <div class="ov-info-w">${info}</div>
       </div>`;
     if (state.dcInfra && SEW.data && !(DCA.res && DCA.key === scenarioKey()) && footTab === 'overview') setTimeout(() => { try { dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
+    if (document.documentElement.hasAttribute('data-presentation')) renderPresentation();
   }
   function scopeText() { return [state.muni || 'all of Peel', state.sp.length ? spSummary() : '', state.mtsa.length ? 'MTSA filter' : ''].filter(Boolean).join(' · '); }
   $('#ov-body').addEventListener('click', e => {
-    const t = e.target.closest('[data-ov-tab]'); if (t) { footPref = t.dataset.ovTab; store.set('footTab4', footPref); showFootTab(footPref); return; }
-    const k = e.target.closest('[data-ov-tool]'); if (!k) return;
-    const v = k.dataset.ovTool;
-    if (v === 'trace' || v === 'whatif') setTool(v);
-    else if (v === 'lasso') { if (tool.mode) setTool(null); setLasso(true); }
-    else if (v === 'dct') { loadSewers(); showDcTiming(); }
-    else if (v === 'help') showHelp();
-    else if (v === 'brief') briefingPDF();
-  });
-  function renderDemand() {
-    const set = demandSet();
-    const c = state.criteria;
-    // The demand follows the sidebar selection: the projects shown by phase, focus and the
-    // other filters; the committed / left-to-build focuses count only those units.
-    const basis = demandBasis();
-    const e = D.estimate(set, c, basis, jobsOf);
-    const em = e.employment, cb = e.combined;
-    // Build-out across the shown projects (planning applications with unit counts).
-    const bo = { planned: 0, permitted: 0, completed: 0, remaining: 0, n: 0 };
-    for (const p of set) if (p.buildout) { bo.n++; for (const k of ['planned', 'permitted', 'completed', 'remaining']) bo[k] += p.buildout[k]; }
-    // Headline numbers, then water and wastewater as two small tables:
-    // residential / employment / total rows, flows in L/s.
-    const stat = (label, value, unit, sub, info) =>
-      `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${value}<span class="tu">${unit}</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
-    $('#d-stats').innerHTML = [
-      stat(basis === 'all' ? 'Dwelling units' : 'Units counted', fmtNum(Math.round(e.totalUnits)), 'units',
-        bo.n ? `<strong>${fmtNum(bo.remaining)}</strong> left to build · ${fmtNum(bo.permitted)} permitted` : `${fmtNum(e.withUnits)} of ${fmtNum(set.length)} developments report units`, 'demand-units'),
-      stat('Population', fmtNum(roundPop(e.population)), 'people', 'Peel persons-per-unit', 'demand-pop'),
-      stat('Jobs', fmtNum(roundPop(em.jobs)), 'jobs', `${fmtNum(em.projects)} employment developments`, 'demand-employment'),
-    ].join('');
-    $('#d-tiles').innerHTML = flowTablesHTML(e) + stampHTML('demand') + exportBar('growth');
-    $('#f-sum').innerHTML = `${state.daCtx ? `<span class="muted">Around ${esc(state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · ${fmtNum(Math.round(e.totalUnits))} units<span class="f-sum-pop"> · ${fmtNum(roundPop(e.population))} people</span>`;
-    renderSelection(set, basis);
-
-    // Breakdown by dwelling type and by phase.
-    const typeRows = D.UNIT_TYPES.map(t => `<tr><td>${esc(t.label)}</td><td>${uUnits(e.units[t.key])}</td><td>${t.key === 'apartment' ? unit(`${c.ppu.apartment} / ${c.ppu.apartmentHigh}`, 'pop/unit') : unit(c.ppu[t.key], 'pop/unit')}</td><td>${uPop(e.pop[t.key])}</td></tr>`).join('');
-    const boRows = aggTypeRowsHTML(aggregateTypes(set));
-    const phaseRows = P.PHASES.map(ph => {
-      const pe = D.estimate(set.filter(p => p.phase === ph.key), c, basis, jobsOf);
-      return `<tr><td>${dot(ph.key)} ${esc(ph.label)}</td><td>${uUnits(pe.totalUnits)}</td><td>${uPop(pe.population)}</td><td>${unit(fmtNum(roundPop(pe.employment.jobs)), 'jobs')}</td><td>${uLs(pe.combined.water.avg)}</td><td>${uLs(pe.combined.wastewater.avg)}</td></tr>`;
-    }).join('');
-    const tot = `<tr class="tot"><td>Total</td><td>${uUnits(e.totalUnits)}</td><td>${uPop(e.population)}</td><td>${unit(fmtNum(roundPop(em.jobs)), 'jobs')}</td><td>${uLs(cb.water.avg)}</td><td>${uLs(cb.wastewater.avg)}</td></tr>`;
-    $('#d-breakdown').innerHTML = `
-      <div class="bd-w"><table class="dt"><caption>By phase (average day, L/s, residential + employment)</caption><thead><tr><th>Phase</th><th>Units</th><th>Population</th><th>Jobs</th><th>Water</th><th>Wastewater</th></tr></thead><tbody>${phaseRows}${tot}</tbody></table></div>
-      <div class="bd-w"><table class="dt"><caption>By dwelling type (demand basis)</caption><thead><tr><th>Type</th><th>Units</th><th>PPU</th><th>Population</th></tr></thead><tbody>${typeRows}</tbody></table></div>
-      <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by type (planning applications)</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${boRows}</tbody></table></div>`;
-    if (state.daCtx) renderOverview(); else renderOverview(set, e, basis);
-    const prop = set.filter(p => p.phase === 'inception' || p.phase === 'review'), pe = prop.length ? D.estimate(prop, c, basis, jobsOf) : null;
-    setHeadline($('#pane-demand'), set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown need <strong>${fmtNum(Math.round(cb.water.maxDay))} L/s</strong> of water at maximum day and <strong>${fmtNum(Math.round(cb.wastewater.wetPeak))} L/s</strong> of wastewater at peak wet weather (${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average)${pe && e.population > 0 ? `; ${Math.round(pe.population / e.population * 100)}% of their people are in applications not yet approved` : ''}.` : '');
-  }
-
-  // Water and wastewater tables (residential / employment / total rows, L/s) for an estimate.
-  function flowTablesHTML(e) {
-    const c = state.criteria, em = e.employment, cb = e.combined, n = uLs;
-    const flowTable = (title, info, cols, rows) => `<table class="dt flow" data-info="${info}">
-      <caption>${title} <span class="muted">L/s</span></caption>
-      <thead><tr><th></th>${cols.map(x => `<th>${x}</th>`).join('')}</tr></thead>
-      <tbody>${rows.map(([label, cls, info2, vals]) => `<tr class="${cls}"${info2 ? ` data-info="${info2}"` : ''}><td>${label}</td>${vals.map(v => `<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-    const iiNote = `${fmtNum(Math.round(e.area.ha + em.area.ha))} ha × ${c.wastewater.infiltration} L/s/ha${e.area.estimatedHa > 0 ? ` · ${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of residential area estimated` : ''}`;
-    return '<div class="flow-card">' + flowTable('Water', 'demand-water', ['Avg day', 'Max day', 'Peak hour'], [
-        ['Residential', '', 'demand-water', [n(e.water.avg), n(e.water.maxDay), n(e.water.peakHour)]],
-        ['Employment', '', 'demand-employment', [n(em.water.avg), n(em.water.maxDay), n(em.water.peakHour)]],
-        ['Total', 'tot', 'demand-combined', [n(cb.water.avg), n(cb.water.maxDay), n(cb.water.peakHour)]],
-      ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.water.avg))} ML/d average · residential ${c.water.avg} L/cap/d ×${c.water.maxDay} / ×${c.water.peakHour}; employment ${c.employment.water} L/emp/d ×${c.employment.maxDay} / ×${c.employment.peakHour}</p></div>`
-      + '<div class="flow-card">' + flowTable('Wastewater', 'demand-wastewater', ['Avg dry', 'Peak dry', 'I&amp;I', 'Peak wet'], [
-        ['Residential', '', 'demand-wastewater', [n(e.wastewater.avg), `${n(e.wastewater.peak)}<span class="muted m"> M ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(e.wastewater.infiltration), n(e.wastewater.wetPeak)]],
-        ['Employment', '', 'demand-employment', [n(em.wastewater.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
-        ['Total', 'tot', 'demand-combined', [n(cb.wastewater.avg), n(cb.wastewater.peak), n(cb.wastewater.infiltration), n(cb.wastewater.wetPeak)]],
-      ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average · I&amp;I on ${iiNote}</p></div>`;
-  }
-
-  // Build-out by dwelling type and employment floor space, summed over projects.
-  function aggregateTypes(projects) {
-    const bt = {}; for (const t of D.UNIT_TYPES) bt[t.key] = { planned: 0, permitted: 0, completed: 0, left: 0 };
-    const emp = { planned: 0, permitted: 0, completed: 0, left: 0, jobs: 0 };
-    for (const p of projects) {
-      const tb = p.buildout ? D.typeBuildout(p) : null;
-      if (tb) for (const k in bt) for (const col in bt[k]) bt[k][col] += tb.rows[k][col];
-      const em = empOf(p);
-      if (em && em.totalM2 > 0) {
-        emp.planned += em.totalM2; emp.jobs += em.jobs;
-        if (EMP_DONE.permitted.has(p.phase)) emp.permitted += em.totalM2; else if (p.phase !== 'cancelled') emp.left += em.totalM2;
-        if (EMP_DONE.completed.has(p.phase)) emp.completed += em.totalM2;
-      }
+    const t = e.target.closest('[data-ov-tab]');
+    if (t) {
+      // Phase 4: the criteria tab is gone — "Data & checks" opens the gear menu's Sources & checks page.
+      if (t.dataset.ovTab === 'criteria') { openGearPage('sources'); return; }
+      footPref = t.dataset.ovTab; store.set('footTab4', footPref); showFootTab(footPref); return;
     }
-    return { bt, emp };
+    const dv = e.target.closest('[data-ov-dev]'); if (dv) { const q = projectByKey(dv.dataset.ovDev); if (q) showDetail(q); return; }
+    const k = e.target.closest('[data-ov-tool]');
+    if (k && k.dataset.ovTool === 'brief') briefingPDF();
+  });
+  // ---- Growth tab (Phase 4): pipeline and census sub-views ---------------------------------
+  // Worker A owns the tab markup: buttons data-gsub, #pane-growth-pipeline >
+  // #growth-pipeline-body and #pane-growth-census > #growth-census-body. These render
+  // functions fill the two body divs. renderGrowth refreshes both when the filters
+  // change; the sub-view buttons only toggle which pane is shown.
+  const growthDeps = () => ({
+    aggregate: { typeBuildout: p => D.typeBuildout(p), unitTypes: D.UNIT_TYPES, empOf, permittedPhases: EMP_DONE.permitted, completedPhases: EMP_DONE.completed },
+    completions: { completedAt: PeelAreas.completedAt, permitUnits: rs => P.permitUnits(rs) },
+  });
+  function renderGrowth() {
+    renderGrowthPipeline();
+    renderGrowthCensus();
+    const set = demandSet(), basis = demandBasis();
+    // The footer summary line (was filled by the old Demand tab).
+    const fs = $('#f-sum');
+    if (fs) fs.innerHTML = `${state.daCtx ? `<span class="muted">Around ${esc(state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · <strong>${fmtNum(Math.round(Growth.pipelineTotals(set).planned))}</strong> planned units`;
+    // Keep the Overview pane's numbers in sync (as the old Demand tab did).
+    if (state.daCtx) renderOverview(); else renderOverview(set, D.estimate(set, state.criteria, basis, jobsOf), basis);
+  }
+  // The selection summary (side panel) aggregates types through here.
+  const aggregateTypes = projects => Growth.aggregateTypes(projects, growthDeps().aggregate);
+
+  // Pipeline sub-view: the application pipeline by stage and dwelling type, completions
+  // per year, and the pace of approvals by municipality.
+  function renderGrowthPipeline() {
+    const body = $('#growth-pipeline-body'); if (!body) return;
+    const set = demandSet();
+    const t = Growth.pipelineTotals(set);
+    const gd = growthDeps();
+    const { bt, emp } = Growth.aggregateTypes(set, gd.aggregate);
+    const comp = Growth.completionStats(set, gd.completions);
+    const lags = Growth.approvalLags(set);
+    const apprByM = Object.fromEntries(Growth.medianApprovalByMuni(lags).map(r => [r.m, r]));
+    const allMedian = Growth.median(lags.map(l => l.months));
+    const tile = (label, v, sub, info) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div><div class="tv">${v}<span class="tu">units</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
+    const pc = v => `${Math.round(v * 100)}%`;
+    const yrs = comp.years, yr0 = yrs.length ? yrs[0].year : null, yr1 = yrs.length ? yrs[yrs.length - 1].year : null;
+    const head = set.length
+      ? `The <strong>${fmtNum(set.length)}</strong> developments shown hold <strong>${fmtNum(Math.round(t.planned))}</strong> planned units: <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
+      : 'No developments match the current filters.';
+    // Largest pipelines still to build: top 5, the rest behind "See all".
+    const unbuilt = set.filter(p => p.buildout && p.buildout.unbuilt > 0).sort((a, b) => b.buildout.unbuilt - a.buildout.unbuilt);
+    const denom = Math.max(1, t.left + t.completed);
+    const lrow = p => `<tr><td>${esc(p.title)}<small>${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}</small></td><td>${uUnits(p.buildout.unbuilt)}</td><td>${pc(p.buildout.unbuilt / denom)}</td></tr>`;
+    const topTable = unbuilt.length ? `<table class="dt"><caption>Largest pipelines still to build <span class="muted">share of the build-out</span></caption><thead><tr><th>Development</th><th>Unbuilt</th><th>Share</th></tr></thead><tbody>${unbuilt.slice(0, 5).map(lrow).join('')}</tbody></table>`
+      + (unbuilt.length > 5 ? `<details class="see-all"><summary>See all ${fmtNum(unbuilt.length)} developments</summary><table class="dt"><thead><tr><th>Development</th><th>Unbuilt</th><th>Share</th></tr></thead><tbody>${unbuilt.map(lrow).join('')}</tbody></table></details>` : '') : '';
+    // Completions per year: a compact strip; the numbers by municipality below it.
+    const cmax = Math.max(1, ...yrs.map(y => y.units));
+    const strip = yrs.length ? `<div class="cc-strip" role="img" aria-label="Units completed per year, ${yr0} to ${yr1}">${yrs.map(y => `<div class="cc-bar" style="--h:${(y.units / cmax * 100).toFixed(1)}" title="${y.year}: ${fmtNum(Math.round(y.units))} units in ${fmtNum(y.projects)} development${y.projects === 1 ? '' : 's'}"><i></i><span>${String(y.year).slice(2)}</span></div>`).join('')}</div>` : '';
+    const mrow = m => {
+      const c = comp.byMuni.find(r => r.m === m), a = apprByM[m];
+      return `<tr><td>${esc(m)}</td><td>${c ? `${fmtNum(Math.round(c.perYear))}<small>/yr · ${fmtNum(c.projects)} devs</small>` : '–'}</td><td>${a && a.medianMonths != null ? `${a.medianMonths.toFixed(0)}<small> mo · n=${a.n}</small>` : '–'}</td></tr>`;
+    };
+    const muniTable = `<table class="dt"><caption>Completions and approval pace by municipality</caption><thead><tr><th>Municipality</th><th>Completions</th><th>Median application → approval</th></tr></thead><tbody>${MUNIS.map(mrow).join('')}
+      <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(comp.totalUnits / yrs.length))}<small>/yr</small>` : '–'}</td><td>${allMedian != null ? `${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small>` : '–'}</td></tr></tbody></table>`;
+    const asof = (freshness()[0] && freshness()[0].date) || '–';
+    body.innerHTML = `
+      ${hlP(head)}
+      <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with a build-out` : '', 'demand-units')}
+        ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
+        ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(comp.totalUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
+        ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>
+      <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
+      ${topTable}
+      <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
+      ${strip}${muniTable}
+      <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
+    // The pipeline by stage reuses the growth chart (no census baseline here).
+    const bc = baselineCensus();
+    if (bc) renderGrowthChart({ population: 0, dwellings: 0 }, PeelAreas.growthSince(set, {}, bc.date, state.criteria), bc.year, $('#gp-chart'));
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];
@@ -1736,49 +2088,57 @@
       + (emp.planned ? `<tr class="tot"><td>Employment floor space <span class="muted">(~${fmtNum(emp.jobs)} jobs)</span></td>${cols.map(col => `<td>${unit(fmtNum(emp[col]), 'm²')}</td>`).join('')}</tr>` : '');
   }
 
-  function renderCriteria() {
-    const c = state.criteria;
-    const inp = (g, k, label, step) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-g="${g}" data-k="${k}" value="${c[g][k]}"></label>`;
-    $('#d-criteria').innerHTML = `
-      <fieldset><legend>Persons per unit</legend>
-        ${inp('ppu', 'single', 'Single / semi', 0.1)}${inp('ppu', 'town', 'Townhouse', 0.1)}${inp('ppu', 'apartment', 'Apartment', 0.1)}${inp('ppu', 'apartmentHigh', 'Apartment, &gt;475 persons/ha', 0.1)}${inp('ppu', 'unknown', 'Type not stated', 0.1)}
-        <p class="small muted">Apartments use the large-apartment rate unless the site holds more than ${D.APT_DENSITY} persons/ha at that rate, or its area is not known; then the high-density rate (Peel Linear Wastewater Standards, Tables 2-1 / 2-2). Peel's 1.7 for small (≤1 bedroom) apartments needs the bedroom mix, which the applications don't publish.</p>
+  // Phase 4: the editable design criteria live in the Scenario control (scenario bar),
+  // rendered by renderScenarioCriteria(). This tab keeps display settings, the wet weather
+  // scenario, number conventions and "prepared by" (see renderQuality).
+  function displaySettingsHTML() {
+    const theme = store.get('theme', 'dark'), density = store.get('density', PD.densityDefault());
+    const sel = (id, cur, opts) => `<select id="${id}" autocomplete="off">${opts.map(([v, t]) => `<option value="${v}"${v === cur ? ' selected' : ''}>${t}</option>`).join('')}</select>`;
+    return `
+      <fieldset data-info="display"><legend>Display</legend>
+        <label class="field"><span>Theme</span>${sel('dsp-theme', ['dark', 'light', 'device'].includes(theme) ? theme : 'dark', [['dark', 'Dark'], ['light', 'Light'], ['device', 'Follow device']])}</label>
+        <label class="field"><span>Density</span>${sel('dsp-density', density === 'comfortable' ? 'comfortable' : 'compact', [['compact', 'Compact'], ['comfortable', 'Comfortable']])}</label>
+        <p class="small muted">Dark is the default; "Follow device" tracks the OS setting. Compact suits a computer, Comfortable a phone. Both stay in this browser — they are not part of share links.</p>
       </fieldset>
-      <fieldset><legend>Water</legend>
-        ${inp('water', 'avg', 'Average day (L/cap/d)', 1)}${inp('water', 'maxDay', 'Max day factor', 0.1)}${inp('water', 'peakHour', 'Peak hour factor', 0.1)}
-      </fieldset>
-      <fieldset><legend>Wastewater</legend>
-        ${inp('wastewater', 'avg', 'Residential (L/cap/d)', 0.1)}${inp('wastewater', 'infiltration', 'I&amp;I (L/s/ha)', 0.01).replace(/value="[^"]*"/, `value="${state.iiBase}"`)}${inp('wastewater', 'peakMin', 'Peaking min', 0.1)}${inp('wastewater', 'peakMax', 'Peaking max', 0.1)}
-        <p class="small muted">Dry weather peak = average × Harmon M = 1 + 14 / (4 + √P), P in thousands, applied to the combined population and kept between the min and max (Peel: 2.0–4.0). I&amp;I = rate × gross site area (application boundary; where there is none, estimated at ${D.AREA_PER_UNIT.single} ha per single, ${D.AREA_PER_UNIT.town} per townhouse, ${D.AREA_PER_UNIT.apartment} per apartment unit). Peak wet weather = dry weather peak + I&amp;I.</p>
-      </fieldset>
-      ${wetBoxHTML()}
-      <fieldset><legend>Employment</legend>
-        ${inp('employment', 'water', 'Water (L/emp/d)', 1)}${inp('employment', 'maxDay', 'Max day factor', 0.1)}${inp('employment', 'peakHour', 'Peak hour factor', 0.1)}
-        ${inp('employment', 'wastewater', 'Wastewater (L/emp/d)', 1)}${inp('employment', 'peakMin', 'Peaking min', 0.1)}${inp('employment', 'peakMax', 'Peaking max', 0.1)}
-      </fieldset>
-      <fieldset><legend>Employment floor space (m²/job)</legend>
-        ${inp('m2PerJob', 'industrial', 'Industrial', 1)}${inp('m2PerJob', 'office', 'Office', 1)}${inp('m2PerJob', 'retail', 'Retail', 1)}${inp('m2PerJob', 'hotel', 'Hotel', 1)}${inp('m2PerJob', 'institutional', 'Institutional', 1)}
-        <p class="small muted">Jobs = floor area on the applications ÷ m²/job for each use. Defaults are typical planning assumptions; change them to match an FSR or employment study.</p>
-      </fieldset>
-      <fieldset><legend>Employment notes</legend>
-        <p class="small muted">Wastewater peak = average × Harmon M on the employee count, kept between the min and max; I&amp;I on the boundary of non-residential sites. Residential and employment peaks are added for the total. A development's jobs count by its phase (committed = approved to under construction).</p>
-      </fieldset>
-      <p class="small muted">Defaults: Region of Peel Water and Wastewater Modelling Demand Table (v2.0, Aug 2024): water 270 L/cap/d ×1.8 max day ×3.0 peak hour, employment 250 L/emp/d ×1.4 / ×3.0 (from the 2020 DC Background Study); wastewater per the Linear Wastewater Standards (2023): 290 L/cap/d and 270 L/emp/d, Harmon limited to 2.0–4.0, I&amp;I 0.26 L/s/ha, persons per unit 4.2 / 3.4 / 3.1 (2.7 above 475 persons/ha). These replace the 2010 Watermain Design Criteria (280 L/cap/d ×2.0, 300 L/emp/d). The 2.0 minimum peaking factor is a sewer design rule, so plant-level peaks are conservative.</p>
-      <button type="button" class="btn small" id="d-reset">Reset to Peel defaults</button>`;
+      <p class="small">Design criteria (persons per unit, water and wastewater rates, employment) are edited in the <strong>Scenario</strong> control in the top bar — open it, then "Design criteria". Edited values are used everywhere and flagged as modified.</p>
+      ${wetBoxHTML()}`;
   }
-  $('#d-criteria').oninput = e => {
-    const el = e.target; if (!el.dataset.g) return;
-    const v = Number(el.value);
-    if (!(v >= 0)) return;
-    if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') { state.iiBase = v; applyWet(); }
-    else state.criteria[el.dataset.g][el.dataset.k] = v;
-    saveCriteria();
-    refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
-    if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') wetChanged();
-  };
-  $('#d-criteria').addEventListener('change', e => {
-    const w = e.target.closest('[data-wet]'); if (!w) return;
-    state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged();
+  function recordSettingsHTML() {
+    const kindOpts = [['application', 'Planning applications + their permits'], ['', 'All records (incl. permits with no application)'], ['permit', 'Building permits'], ['both', 'Application + permits']];
+    const kcur = state.kind == null ? 'application' : state.kind;
+    return `<fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend>`
+      + `<div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind">`
+      + kindOpts.map(([v, t]) => `<option value="${v}"${String(v) === String(kcur) ? ' selected' : ''}>${t}</option>`).join('')
+      + `</select></label></div>`
+      + `<label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new"${state.newOnly ? ' checked' : ''}><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>`;
+  }
+  function settingsPageHTML() {
+    return `<h2 class="pane-h">Settings</h2>${displaySettingsHTML()}${recordSettingsHTML()}${numberConventionsHTML()}`;
+  }
+  window.GearPages = window.GearPages || {};
+  window.GearPages.settings = () => settingsPageHTML();
+  // Phase 4: the old Settings & sources tab is gone; settings live on the gear page.
+  // Kept as a safe no-op for legacy callers (boot, criteria reset).
+  function renderCriteria() {}
+  // ---- Display: theme + density (Settings gear page) ----------------------------------
+  function setTheme(v) {
+    if (!['dark', 'light', 'device'].includes(v)) v = 'dark';
+    store.set('theme', v);
+    PD.applyTheme(v);
+    refreshTheme();
+  }
+  function setDensity(v) {
+    v = v === 'comfortable' ? 'comfortable' : 'compact';
+    store.set('density', v);
+    PD.applyDensity(v);
+  }
+  document.addEventListener('change', e => {
+    if (!e.target || !e.target.id) return;
+    if (e.target.id === 'dsp-theme') setTheme(e.target.value);
+    else if (e.target.id === 'dsp-density') setDensity(e.target.value);
+    else if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim());
+    const w = e.target.closest && e.target.closest('[data-wet]');
+    if (w) { state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged(); }
   });
   // Saved with the I&I allowance as entered (not scaled by the wet weather scenario).
   function saveCriteria() { store.set('criteria', { ...state.criteria, wastewater: { ...state.criteria.wastewater, infiltration: state.iiBase }, version: 2 }); }
@@ -1828,7 +2188,7 @@
   // Criteria changed: redraw everything that uses them (jobs also feed the summaries and the open development).
   function refreshCriteria(jobs) {
     if (jobs) { clearEmp(); renderPipeline(state.projects.filter(p => matches(p, true))); }
-    renderDemand(); renderCensus();
+    renderGrowth();
     // Redraw the open panel where it shows demand or jobs, keeping its scroll position.
     const det = $('#detail'), view = det.dataset.view, top = det.scrollTop;
     if (det.hidden) return;
@@ -1837,12 +2197,13 @@
     else return;
     det.scrollTop = top;
   }
-  $('#d-criteria').onclick = e => {
-    if (e.target.id !== 'd-reset') return;
+  // Reset to Peel defaults now lives in the Scenario control's criteria editor
+  // (renderScenarioCriteria): the #d-reset button it handled was moved there.
+  // Phase 4 (Worker G): editable criteria moved from this tab to the Scenario control.
+  function resetCriteriaToPeel() {
     state.criteria = mergeCriteria(null); store.set('criteria', null);
     state.iiBase = state.criteria.wastewater.infiltration; applyWet();
-    renderCriteria(); refreshCriteria(true);
-  };
+  }
 
   // ---- Rendering -----------------------------------------------------------------
   // Stage selector: one segment per phase with its label and count, sized by share.
@@ -1882,42 +2243,105 @@
     scheduleLabels();
   }
 
-  const LIST_LIMIT = 300;
   // The list shows the matching projects inside the current map view; it follows the map
-  // as you pan and zoom.
+  // as you pan and zoom. Phase 2: the list lives in the Developments analysis tab, 25 per page.
+  const LIST_PAGE = 25;
+  let listPage = 0;
   const SORTS = {
     recent: (a, b) => (b.last || 0) - (a.last || 0) || b.rank - a.rank,
     units: (a, b) => (b.units || 0) - (a.units || 0),
     left: (a, b) => ((b.buildout && b.buildout.remaining) || 0) - ((a.buildout && a.buildout.remaining) || 0) || (b.units || 0) - (a.units || 0),
     name: (a, b) => String(a.title).localeCompare(String(b.title), 'en', { numeric: true }),
   };
+  // Page slice of a sorted list: the items for the page plus the page bookkeeping.
+  const pageOf = (sorted, page, per) => {
+    const pages = Math.max(1, Math.ceil(sorted.length / per));
+    const p = Math.min(Math.max(0, page), pages - 1);
+    return { items: sorted.slice(p * per, p * per + per), page: p, pages, start: p * per };
+  };
   function renderList() {
     const bounds = map.getBounds();
     const inView = state.filtered.filter(p => p.lat != null && bounds.contains([p.lat, p.lng]));
     const sorted = inView.sort(SORTS[$('#list-sort').value] || SORTS.recent);
+    const pg = pageOf(sorted, listPage, LIST_PAGE);
+    listPage = pg.page;
     $('#list-count').textContent = `· ${fmtNum(inView.length)} of ${fmtNum(state.filtered.length)}`;
     $('#list-note').textContent = !inView.length ? (state.filtered.length ? 'No matching developments in this part of the map — zoom out or pan.' : 'No developments match the filters.')
-      : sorted.length > LIST_LIMIT ? `Showing ${LIST_LIMIT} of ${fmtNum(sorted.length)} — zoom in to narrow.` : '';
-    $('#project-list').innerHTML = sorted.slice(0, LIST_LIMIT).map((p, i) =>
-      `<li><button type="button" data-i="${i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
+      : pg.pages > 1 ? `Showing ${pg.start + 1}–${pg.start + pg.items.length} of ${fmtNum(sorted.length)} — page ${pg.page + 1} of ${pg.pages}.` : '';
+    $('#project-list').innerHTML = pg.items.map((p, i) =>
+      `<li><button type="button" data-i="${pg.start + i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
         <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(p.buildout.remaining)} left` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
     $('#project-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
       const p = sorted[+b.dataset.i];
       focusProject(p);
     };
+    const ind = $('#dev-page-ind'), pv = $('#dev-prev'), nx = $('#dev-next');
+    if (ind) ind.textContent = pg.pages > 1 ? `Page ${pg.page + 1} of ${pg.pages}` : '';
+    if (pv) pv.disabled = pg.page === 0;
+    if (nx) nx.disabled = pg.page >= pg.pages - 1;
   }
 
   let listTimer;
-  map.on('moveend', () => { clearTimeout(listTimer); listTimer = setTimeout(renderList, 120); });
-  $('#list-sort').onchange = renderList;
+  map.on('moveend', () => { clearTimeout(listTimer); listTimer = setTimeout(() => { listPage = 0; renderList(); }, 120); });
+  $('#list-sort').onchange = () => { listPage = 0; renderList(); };
+
+  // ---- Developments analysis tab: the development list as a tab ---------------------------
+  // Phase 2 moves the sidebar list into the analysis panel. The tab button and pane are created
+  // here (guarded) so this works with the current #footer markup and with Worker 2's
+  // <aside id="analysis"> markup. The .export-row stays in the sidebar (Worker 1 moves it).
+  function ensureDevelopmentsTab() {
+    if (document.getElementById('ftab-developments')) return;
+    const strip = document.querySelector('.analysis-tabs') || document.querySelector('#footer .f-tabs');
+    const tabs = strip && strip.querySelectorAll('.f-tab');
+    if (!strip || !tabs.length) return;
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'f-tab'; btn.id = 'ftab-developments';
+    btn.setAttribute('role', 'tab');
+    btn.dataset.tab = 'developments'; btn.dataset.atab = 'developments';
+    btn.setAttribute('aria-controls', 'pane-developments');
+    btn.setAttribute('aria-selected', 'false');
+    btn.dataset.info = 'tab-developments';
+    btn.textContent = 'Developments';
+    tabs[tabs.length - 1].after(btn);
+    const pane = document.createElement('section');
+    pane.className = 'f-pane'; pane.id = 'pane-developments';
+    pane.dataset.pane = 'developments';
+    pane.setAttribute('role', 'tabpanel');
+    pane.setAttribute('aria-labelledby', 'ftab-developments');
+    pane.hidden = true;
+    // Move the sidebar list pieces in (the export row stays in the sidebar).
+    const head = document.createElement('div'); head.className = 'dev-head';
+    const h2 = document.querySelector('.list-panel h2');
+    const sort = document.getElementById('list-sort');
+    if (h2) head.appendChild(h2);
+    if (sort) { const sw = document.createElement('div'); sw.className = 'dev-sort'; sw.appendChild(sort); head.appendChild(sw); }
+    const ph = document.querySelector('.list-panel .panel-head');
+    if (ph && !ph.children.length && !ph.textContent.trim()) ph.remove();   // emptied by the move
+    pane.appendChild(head);
+    const note = document.getElementById('list-note'); if (note) pane.appendChild(note);
+    const list = document.getElementById('project-list'); if (list) pane.appendChild(list);
+    const pages = document.createElement('div');
+    pages.className = 'dev-pages'; pages.setAttribute('role', 'group'); pages.setAttribute('aria-label', 'Development list pages');
+    pages.innerHTML = `<button type="button" class="btn small" id="dev-prev" aria-label="Previous page">‹ Prev</button><span class="muted small" id="dev-page-ind"></span><button type="button" class="btn small" id="dev-next" aria-label="Next page">Next ›</button>`;
+    pane.appendChild(pages);
+    const panesBox = document.querySelector('#analysis-panes');
+    if (panesBox) panesBox.appendChild(pane);
+    else {
+      const box = strip.closest('footer, aside') || document.body;
+      const panes = box.querySelectorAll('.f-pane');
+      if (panes.length) panes[panes.length - 1].after(pane); else box.appendChild(pane);
+    }
+    pane.querySelector('#dev-prev').onclick = () => { listPage--; renderList(); };
+    pane.querySelector('#dev-next').onclick = () => { listPage++; renderList(); };
+  }
 
   function focusProject(p) {
     showDetail(p);
     if (p.lat == null) return;
     const m = markerByKey.get(p.key);
     if (m) cluster.zoomToShowLayer(m, () => m.openTooltip());
-    else map.setView([p.lat, p.lng], 17);
+    else flyToSite(p, 17);
     if (innerWidth <= 760) toggleSidebar(false);
   }
 
@@ -2130,38 +2554,64 @@
     const es = cols.map(([k]) => D.estimate([p], c, k, jobsOf));
     const res = es[0].totalUnits > 0, emp = es[0].employment.jobs > 0;
     if (!res && !emp) return '';
-    const row = (label, f, unit = '') => `<tr><td>${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>`;
+    // Each figure's ⓘ opens its formula with this site's inputs (Total column), the same
+    // pattern as the pipe tables: a .calc-i button toggling a hidden .calc-how row.
+    const calcBtn = k => `<button type="button" class="calc-i" data-calc="${k}" aria-expanded="false" aria-label="How this is worked out">ⓘ</button>`;
+    const row = (label, f, unit = '', k = '', how = '') =>
+      `<tr${k ? ' class="calc-row"' : ''}><td>${k ? calcBtn(k) : ''}${label}</td>${es.map(e => `<td>${f(e)}${unit}</td>`).join('')}</tr>` +
+      (k ? `<tr class="calc-how" data-calc-how="${k}" hidden><td colspan="${cols.length + 1}">${how}</td></tr>` : '');
     const sub = t => `<tr class="sub"><td colspan="${cols.length + 1}">${t}</td></tr>`;
     const typeNote = D.UNIT_TYPES.filter(t => es[0].units[t.key] > 0).map(t => `${t.label.toLowerCase()} ${c.ppu[t.key]} ppu`).join(', ');
     const W = sys !== 'ww', S = sys !== 'water';
+    const T = es[0], EC = c.employment, EJ = T.employment, ls = v => `${fmt1(v)} L/s`;
+    const popT = T.population, popTxt = fmtNum(roundPop(popT));
+    const howPop = `People = Σ units × persons per unit (${esc(typeNote)}) = <strong>${popTxt} people</strong>.`;
+    const howWAvg = `${popTxt} people × ${c.water.avg} L/cap/d ÷ 86,400 s/d = <strong>${ls(T.water.avg)}</strong>.`;
+    const howWMax = `${ls(T.water.avg)} average × ${c.water.maxDay} = <strong>${ls(T.water.maxDay)}</strong>.`;
+    const howWPeak = `${ls(T.water.avg)} average × ${c.water.peakHour} = <strong>${ls(T.water.peakHour)}</strong>.`;
+    const howSAvg = `${popTxt} people × ${c.wastewater.avg} L/cap/d ÷ 86,400 = <strong>${ls(T.wastewater.avg)}</strong>.`;
+    const howSPeak = `${ls(T.wastewater.avg)} average × Harmon M = 1 + 14 / (4 + √(P/1000)), P = ${popTxt} people → M ${T.wastewater.peakingFactor.toFixed(2)} (kept ${c.wastewater.peakMin}–${c.wastewater.peakMax}) = <strong>${ls(T.wastewater.peak)}</strong>.`;
+    const howII = `${fmt1(T.area.ha)} ha × ${c.wastewater.infiltration} L/s/ha = <strong>${ls(T.wastewater.infiltration)}</strong>${T.area.estimatedHa > 0 ? ' (site area estimated — no boundary in the data)' : ''}.`;
+    const howSWet = `${ls(T.wastewater.peak)} peak dry + ${ls(T.wastewater.infiltration)} I&amp;I = <strong>${ls(T.wastewater.wetPeak)}</strong>.`;
+    const jobsT = EJ.jobs, jobsTxt = fmtNum(Math.round(jobsT));
+    const howJobs = `Jobs = floor area ÷ m²/job per use (industrial ${c.m2PerJob.industrial}, office ${c.m2PerJob.office}, retail ${c.m2PerJob.retail}, hotel ${c.m2PerJob.hotel}, institutional ${c.m2PerJob.institutional}) = <strong>${jobsTxt} jobs</strong>.`;
+    const howEWAvg = `${jobsTxt} jobs × ${EC.water} L/emp/d ÷ 86,400 = <strong>${ls(EJ.water.avg)}</strong>.`;
+    const howEWMax = `${ls(EJ.water.avg)} × ${EC.maxDay} = <strong>${ls(EJ.water.maxDay)}</strong>.`;
+    const howEWPeak = `${ls(EJ.water.avg)} × ${EC.peakHour} = <strong>${ls(EJ.water.peakHour)}</strong>.`;
+    const howESAvg = `${jobsTxt} jobs × ${EC.wastewater} L/emp/d ÷ 86,400 = <strong>${ls(EJ.wastewater.avg)}</strong>.`;
+    const howESPeak = `${ls(EJ.wastewater.avg)} × Harmon M on ${jobsTxt} jobs (kept ${EC.peakMin}–${EC.peakMax}) = M ${EJ.wastewater.peakingFactor.toFixed(2)} → <strong>${ls(EJ.wastewater.peak)}</strong>.`;
+    const howESWet = `${ls(EJ.wastewater.peak)} + ${ls(EJ.wastewater.infiltration)} I&amp;I = <strong>${ls(EJ.wastewater.wetPeak)}</strong>.`;
+    const howTMax = `${ls(T.water.maxDay)} residential + ${ls(EJ.water.maxDay)} employment = <strong>${ls(T.combined.water.maxDay)}</strong>.`;
+    const howTPeak = `${ls(T.water.peakHour)} residential + ${ls(EJ.water.peakHour)} employment = <strong>${ls(T.combined.water.peakHour)}</strong>.`;
+    const howTSWet = `${ls(T.wastewater.wetPeak)} residential + ${ls(EJ.wastewater.wetPeak)} employment = <strong>${ls(T.combined.wastewater.wetPeak)}</strong>.`;
     const resRows = !res ? '' : `
         ${row('Units', e => fmtNum(Math.round(e.totalUnits)))}
-        ${row('Population', e => fmtNum(roundPop(e.population)))}
+        ${row('Population', e => fmtNum(roundPop(e.population)), '', 'pop', howPop)}
         ${W ? `${sub(`Water (L/s)${emp ? ' · residential' : ''}`)}
-        ${row('Average day', e => fmt1(e.water.avg))}
-        ${row(`Max day ×${c.water.maxDay}`, e => fmt1(e.water.maxDay))}
-        ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour))}` : ''}
+        ${row('Average day', e => fmt1(e.water.avg), '', 'wavg', howWAvg)}
+        ${row(`Max day ×${c.water.maxDay}`, e => fmt1(e.water.maxDay), '', 'wmax', howWMax)}
+        ${row(`Peak hour ×${c.water.peakHour}`, e => fmt1(e.water.peakHour), '', 'wpeak', howWPeak)}` : ''}
         ${S ? `${sub(`Wastewater (L/s)${emp ? ' · residential' : ''}`)}
-        ${row('Average dry weather', e => fmt1(e.wastewater.avg))}
-        ${row('Peak dry (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
-        ${row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => e.area.ha > 0 ? `${fmt1(e.wastewater.infiltration)} <span class="muted">${fmt1(e.area.ha)} ha${e.area.estimatedHa > 0 ? ' est.' : ''}</span>` : '–')}
-        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–')}` : ''}`;
+        ${row('Average dry weather', e => fmt1(e.wastewater.avg), '', 'savg', howSAvg)}
+        ${row('Peak dry (Harmon)', e => e.population > 0 ? `${fmt1(e.wastewater.peak)} <span class="muted">M ${e.wastewater.peakingFactor.toFixed(2)}</span>` : '–', '', 'speak', howSPeak)}
+        ${row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => e.area.ha > 0 ? `${fmt1(e.wastewater.infiltration)} <span class="muted">${fmt1(e.area.ha)} ha${e.area.estimatedHa > 0 ? ' est.' : ''}</span>` : '–', '', 'ii', howII)}
+        ${row('Peak wet weather', e => e.population > 0 ? fmt1(e.wastewater.wetPeak) : '–', '', 'swet', howSWet)}` : ''}`;
     const m = e => e.employment;
     const empRows = !emp ? '' : `
         ${sub('Employment (L/s)')}
-        ${row('Jobs', e => m(e).jobs > 0 ? fmtNum(Math.round(m(e).jobs)) : '–')}
-        ${W ? `${row(`Water average · ${c.employment.water} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).water.avg) : '–')}
-        ${row(`Water max day ×${c.employment.maxDay}`, e => m(e).jobs > 0 ? fmt1(m(e).water.maxDay) : '–')}
-        ${row(`Water peak hour ×${c.employment.peakHour}`, e => m(e).jobs > 0 ? fmt1(m(e).water.peakHour) : '–')}` : ''}
-        ${S ? `${row(`Wastewater average · ${c.employment.wastewater} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).wastewater.avg) : '–')}
-        ${row('Wastewater peak', e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.peak)} <span class="muted">M ${m(e).wastewater.peakingFactor.toFixed(2)}</span>` : '–')}
-        ${m(es[0]).area.ha > 0 ? row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.infiltration)} <span class="muted">${fmt1(m(e).area.ha)} ha</span>` : '–') : ''}
-        ${row('Peak wet weather', e => m(e).jobs > 0 ? fmt1(m(e).wastewater.wetPeak) : '–')}` : ''}`;
+        ${row('Jobs', e => m(e).jobs > 0 ? fmtNum(Math.round(m(e).jobs)) : '–', '', 'jobs', howJobs)}
+        ${W ? `${row(`Water average · ${c.employment.water} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).water.avg) : '–', '', 'ewavg', howEWAvg)}
+        ${row(`Water max day ×${c.employment.maxDay}`, e => m(e).jobs > 0 ? fmt1(m(e).water.maxDay) : '–', '', 'ewmax', howEWMax)}
+        ${row(`Water peak hour ×${c.employment.peakHour}`, e => m(e).jobs > 0 ? fmt1(m(e).water.peakHour) : '–', '', 'ewpeak', howEWPeak)}` : ''}
+        ${S ? `${row(`Wastewater average · ${c.employment.wastewater} L/emp/d`, e => m(e).jobs > 0 ? fmt1(m(e).wastewater.avg) : '–', '', 'esavg', howESAvg)}
+        ${row('Wastewater peak', e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.peak)} <span class="muted">M ${m(e).wastewater.peakingFactor.toFixed(2)}</span>` : '–', '', 'espeak', howESPeak)}
+        ${m(es[0]).area.ha > 0 ? row(`I&amp;I (${c.wastewater.infiltration} L/s/ha)`, e => m(e).jobs > 0 ? `${fmt1(m(e).wastewater.infiltration)} <span class="muted">${fmt1(m(e).area.ha)} ha</span>` : '–', '', 'esii', howESWet) : ''}
+        ${row('Peak wet weather', e => m(e).jobs > 0 ? fmt1(m(e).wastewater.wetPeak) : '–', '', 'eswet', howESWet)}` : ''}`;
     const totRows = !(res && emp) ? '' : `
         ${sub('Total · residential + employment (L/s)')}
-        ${W ? row('Water max day', e => fmt1(e.combined.water.maxDay)) : ''}
-        ${W ? row('Water peak hour', e => fmt1(e.combined.water.peakHour)) : ''}
-        ${S ? row('Wastewater peak wet weather', e => fmt1(e.combined.wastewater.wetPeak)) : ''}`;
+        ${W ? row('Water max day', e => fmt1(e.combined.water.maxDay), '', 'twmax', howTMax) : ''}
+        ${W ? row('Water peak hour', e => fmt1(e.combined.water.peakHour), '', 'twpeak', howTPeak) : ''}
+        ${S ? row('Wastewater peak wet weather', e => fmt1(e.combined.wastewater.wetPeak), '', 'tswet', howTSWet) : ''}`;
     const notes = [];
     if (res) notes.push(`${esc(typeNote)}; ${c.water.avg} L/cap/d water, ${c.wastewater.avg} L/cap/d wastewater; I&amp;I on ${es[0].area.estimatedHa > 0 ? 'an estimated site area (no boundary in the data)' : 'the application boundary area'}, split by share of units.`);
     if (emp) notes.push(`Jobs from the floor areas in the Employment section; ${c.employment.water} L/emp/d water, ${c.employment.wastewater} L/emp/d wastewater, peaking ${c.employment.peakMin}–${c.employment.peakMax}${res ? '' : m(es[0]).area.ha > 0 ? '; I&amp;I on the application boundary' : '; no boundary, so no I&amp;I'}. Jobs count as completed once the development is completed.`);
@@ -2170,7 +2620,7 @@
         ${resRows}${empRows}${totRows}
       </tbody></table>
       <p class="small muted">${notes.join(' ')}
-        ${res ? 'Completed = units on finished permits; remaining = the rest, permitted or not. ' : ''}Peaks are for each column alone (peaking is not additive); edit the criteria in the bottom panel.</p></details>`;
+        ${res ? 'Completed = units on finished permits; remaining = the rest, permitted or not. ' : ''}Peaks are for each column alone (peaking is not additive); edit the criteria in the Scenario control.</p></details>`;
   }
 
   // Why a development is where it is: the file and status behind its phase, signals in the
@@ -2205,7 +2655,7 @@
     if (state.council || councilLoading) return;
     councilLoading = fetch('data/council.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
       state.council = d || { meetings: {}, files: {} };
-      if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') { const y = $('#detail').scrollTop; showDetail(currentProject); $('#detail').scrollTop = y; }
+      if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh();
     }).catch(() => { state.council = { meetings: {}, files: {} }; });
   }
   function councilItems(p) {
@@ -2379,7 +2829,7 @@
 
   // The brief in two parts: 'overview' (status, decision, build-out, proposal) and 'servicing'
   // (servicing summary, existing mains, fire flow, stormwater, planned works, DC needs).
-  function devBriefHTML(p, st, f, part = 'overview') {
+  function devBriefHTML(p, st, f, part = 'overview', opts = {}) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const status = `<p class="small">${st.why}</p>
       ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
@@ -2393,7 +2843,7 @@
       ${p.description ? row('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
       ${exportBar('dev')}
     </section>`;
-    return devServicingBriefHTML(p, st, f, part);
+    return devServicingBriefHTML(p, st, f, part, opts);
   }
   // ---- Functional Servicing Report links (data/fsr.json, scripts/build-fsr.js) -----------------
   const FSR = { data: null, loading: null, by: null };
@@ -2431,8 +2881,10 @@
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="dev-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
   // Servicing tab: the trace tool first, then Water and Wastewater in their own sections, then the
-  // site (ground, stormwater).
-  function devServicingBriefHTML(p, st, f, part) {
+  // site (ground, stormwater). opts.site === false drops the site section (its home is
+  // Development › Site); opts.noWwNeeds replaces the DC wastewater-needs table (sewer-path and
+  // plant numbers, whose home is the Wastewater tab) with a one-line pointer.
+  function devServicingBriefHTML(p, st, f, part, opts = {}) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const has = p.lat != null, cb = f && f.cb, zn = s => esc(s.replace('Pressure zone ', 'Zone '));
     // One trace per tab: the sewer path (Wastewater) and the water supply (Water).
@@ -2470,7 +2922,7 @@
       ${wwRows}
       ${has ? row('Sanitary sewers', '<div id="dev-exist-sanitary"><p class="small muted">Looking up the nearest sanitary sewers…</p></div>') : ''}
     </div></section>`;
-    const site = has ? `<section class="svc-sys svc-sys-site"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Site</h3><div class="brief">
+    const site = has && opts.site !== false ? `<section class="svc-sys svc-sys-site"><h3 class="svc-sys-h"><i aria-hidden="true"></i>Site</h3><div class="brief">
       ${row('Ground', '<div id="dev-ground" data-info="ground"><p class="small muted">Looking up ground elevation…</p></div>')}
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
@@ -2480,11 +2932,16 @@
     // DC Analysis: the DC works the development may rely on (both systems), the planned works near
     // it and on its path, and the DCs it would pay.
     if (part === 'dc') {
-      if (!state.dcInfra) return '<p class="small muted">The 2026 DC capital maps are loading…</p>';
+      if (!state.dcInfra) return skel('Loading the 2026 DC capital maps');
       const w = st.works;
       const head = w && w.needBy ? `<p class="small ${w.gap ? 'why-stall' : ''}"><strong>Needs DC works by ${w.needBy}</strong>${w.gap ? ': the development is committed (approved or permitted) before the planned main it connects to is built.' : ': it connects through a planned main.'}</p>` : '';
+      // Sewer-path and plant-reserve numbers live on the Wastewater tab; the DC tab keeps the
+      // water constraints, the planned works and the DCs the site would pay.
+      const wwNeeds = opts.noWwNeeds
+        ? `<p class="small muted">Sewer path, pumping stations and the plant's reserve live on the ${homeLine('ww', 'Wastewater tab')}.</p>`
+        : `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p, 'ww')}</div>`;
       return `${head}<section class="svc-sys svc-sys-dc"><h3 class="svc-sys-h"><i aria-hidden="true"></i>DC projects potentially required</h3><div class="brief">
-        ${f ? row('Wastewater', `<div id="dev-dcn" data-info="dc-needs">${dcNeedsHTML(p, 'ww')}</div>`) : ''}
+        ${f ? row('Wastewater', wwNeeds) : ''}
         ${f ? row('Water', `<div data-info="dc-needs">${dcNeedsHTML(p, 'water')}</div>`) : ''}
         ${w ? row('Planned works', devWorksHTML(w)) : ''}
       </div></section>${f ? dcRevenueHTML(p) : ''}`;
@@ -2671,7 +3128,7 @@
       ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
       <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-tl="key">Key events</button><button type="button" class="btn small" data-tl="all">All dated events (${fmtNum(all.length)})</button></div>
       <div data-tlv="key">${evListHTML(key)}</div><div data-tlv="all" hidden>${evListHTML(all)}</div>
-      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${state.council ? 'agendas and minutes since 2019' : 'loading…'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
+      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${state.council ? 'agendas and minutes since 2019' : '<span class="skel" style="display:inline-block;width:110px;vertical-align:middle" role="status" aria-label="Loading"></span>'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
   }
 
   function devServicingHTML(p, f, open) {
@@ -2734,13 +3191,13 @@
       <tbody>${list.map(row).join('')}${outside.length ? `<tr class="muted"><td>Permits not inside any file's boundary<small>${fmtNum(outside.length)} permits</small></td><td class="num">–</td><td class="num">${fmtNum(op)}</td><td class="num">${fmtNum(P.permitUnits(outside.filter(r => r.phase === 'completed')))}</td><td class="num">–</td></tr>` : ''}</tbody></table></div>
       <p class="small muted">Permits count in the smallest file boundary that holds them. The development total counts each proposal once: ${plan.basis === 'siteplan' || plan.basis === 'condo' ? `its ${plan.basis === 'condo' ? 'condominium' : 'site plan'} files add up (separate phases)` : 'an official plan / zoning / subdivision file describes the whole proposal, so the largest counts'}; files marked “within the counted proposal” are not added. A unit count can be entered where a file's description points to its attachments, or where the development has none: your figures are kept in this browser only and are counted like published ones.</p></details>`;
   }
-  function devUnitsHTML(p, open) {
+  function devUnitsHTML(p, open, opts = {}) {
     const b = p.buildout, e = empOf(p);
     const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} units` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
     return `<details class="sect" id="dev-units"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${summaryHTML(p)}
       ${appBuildoutHTML(p)}
-      ${devStageDemandHTML(p)}
+      ${opts.flows === false ? '' : devStageDemandHTML(p)}
       ${employmentHTML(p)}
       <p class="facts small muted">${[p.first && `First filed ${fmtDate(p.first)}`, p.last && `latest activity ${fmtDate(p.last)}`,
         `${fmtNum(p.records.length)} files`, p.gfa && `${fmtNum(p.gfa)} floor area`].filter(Boolean).join(' · ')}</p></details>`;
@@ -2861,83 +3318,23 @@
       <p class="small muted">Other developments with an application on the same land (overlapping boundaries or the same civic address), each counted in its own development, once.</p></details>`;
     return html;
   }
+  // Opening a site flies the map to it (quick); with reduced motion it jumps via
+  // setView instead. Skipped when the map is already there.
+  function flyToSite(p, minZoom) {
+    if (p.lat == null || p.lng == null) return;
+    const z = Math.max(map.getZoom(), minZoom == null ? 15 : minZoom);
+    const t = L.latLng(p.lat, p.lng);
+    if (map.getCenter().distanceTo(t) < 30 && Math.abs(map.getZoom() - z) < 0.01) return;
+    if (PD.prefersReducedMotion()) map.setView(t, z, { animate: false });
+    else map.flyTo(t, z, { duration: 0.55 });
+  }
   function showDetail(p) {
-    // "← What loads …" when opened from that list (kept while the same development is re-rendered).
-    if (backToLoads) { devBack = backToLoads; backToLoads = null; } else if (currentProject !== p) devBack = null;
-    if (projFrom) { projBack = projFrom; projFrom = null; } else if (currentProject !== p) projBack = null;
-    // Re-rendering the same development (council items arrived, criteria changed): keep what is open.
-    const keep = currentProject === p && $('#detail').dataset.view === 'dev'
-      ? { open: new Map([...document.querySelectorAll('#detail-body details[id]')].map(d => [d.id, d.open])), tl: (document.querySelector('#detail-body [data-tl].on') || {}).dataset, dvt: (document.querySelector('#detail-body [data-dvt][aria-selected="true"]') || {}).dataset?.dvt } : null;
-    currentProject = p;
-    setDaContext(p);
-    highlight(p);
-    loadCouncil();
-    const st = statusOf(p), f = svcFacts(p);
-    st.works = devWorks(p, f);
-    const RECORD_LIMIT = 40;
-    // Oldest first by date received (the record's earliest date); undated records last.
-    const received = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
-    const ordered = p.records.slice().sort((a, b) => received(a) - received(b));
-    const recHTML = r => `
-      <details class="rec"><summary>${dot(r.phase)} ${isFinite(received(r)) ? `<span class="rec-date">${fmtDate(new Date(received(r)))}</span> ` : ''}<strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
-        ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
-        ${r.description ? `<p>${esc(r.description)}</p>` : ''}
-        ${recordProvHTML(r)}
-        <table>${recordRows(r)}</table>
-      </details>`;
-    const recs = REC_GROUPS.map(([key, label]) => {
-      const list = ordered.filter(r => recGroup(r) === key);
-      if (!list.length) return '';
-      const dates = list.map(received).filter(isFinite);
-      const span = dates.length ? ` · ${fmtDate(new Date(Math.min(...dates))).slice(0, 4)}${Math.max(...dates) - Math.min(...dates) > 365 * 864e5 ? `–${fmtDate(new Date(Math.max(...dates))).slice(0, 4)}` : ''}` : '';
-      const units = key === 'permit-new' ? P.permitUnits(list) : 0;
-      return `<details class="rec-group"><summary><strong>${esc(label)}</strong> <span class="n">${fmtNum(list.length)}</span><span class="muted small">${span}${units ? ` · ${fmtNum(units)} units` : ''}</span></summary>
-        ${list.slice(0, RECORD_LIMIT).map(recHTML).join('')}
-        ${list.length > RECORD_LIMIT ? `<p class="small muted">+ ${fmtNum(list.length - RECORD_LIMIT)} more (export CSV for the full list)</p>` : ''}
-      </details>`;
-    }).join('');
-    $('#detail-body').innerHTML = `
-      ${devBack ? `<button type="button" class="btn small link back-sel" data-loads-back="1">${devBack.dc ? `← ${devBack.dc.ln ? 'DC main' : devBack.dc.fc ? esc(devBack.dc.fc.name) : devBack.dc.cons ? 'Who relies on it' : 'DC timing'}` : `← What loads ${devBack.pipe != null ? `the ${SEW.data.pipes[devBack.pipe][0]} mm sewer` : esc(devBack.plantName ? PLANT_SHORT[devBack.plantName] : (svcById.get(devBack.id) ? (svcById.get(devBack.id).zone ? svcById.get(devBack.id).name : drName(svcById.get(devBack.id))) : 'it'))}`}</button>` : selection.has(p.key) ? `<button type="button" class="btn small link back-sel" data-sel="back">← Selection (${fmtNum(selection.size)} projects)</button>` : ''}
-      ${p.parent ? `<button type="button" class="btn small link back-sel" data-dev-parent="1">← Whole development: ${esc(p.parent.title)} (${fmtNum(p.parent.records.filter(r => r.kind === 'application').length)} files)</button>` : projBack && projBack !== p ? `<button type="button" class="btn small link back-sel" data-proj-back="1">← ${esc(projBack.title)}</button>` : ''}
-      ${p.parent ? `<div class="sub-head small"><span class="sub-key"><i class="sk-app"></i>this application <i class="sk-dev"></i>whole development</span><strong>${esc(p.subRef)}</strong> on its own: ${(x => x.length > 1 ? `${x.slice(0, -1).join(', ')} and ${x[x.length - 1]}` : x[0])(['this application', ...(p.records.some(isPrecon) ? ['its pre-consultation'] : []), ...(p.records.some(r => r.kind === 'permit') ? ['the permits inside its land'] : [])])}. Counted in the whole development, not added again.</div>` : ''}
-      ${devHeadHTML(p, st, f)}
-      <div class="dv-tabs" role="tablist" aria-label="Development">${DV_TABS.map(([k, t]) => `<button type="button" role="tab" data-dvt="${k}" aria-selected="false">${t}</button>`).join('')}</div>
-      <div class="dv-pane" data-dvp="overview" role="tabpanel">
-        ${devBriefHTML(p, st, f, 'overview')}
-        ${filesHTML(p)}
-        <details class="sect" id="dev-aerial"><summary><h2 class="section-title" data-info="aerial">Aerial check</h2><span class="muted small sect-sum">before / latest photo</span></summary>
-          <div class="aerial" id="aerial-check"></div></details>
-      </div>
-      <div class="dv-pane" data-dvp="demand" role="tabpanel">
-        ${devUnitsHTML(p, true)}
-        ${devServicingHTML(p, f, true)}
-      </div>
-      <div class="dv-pane" data-dvp="water" role="tabpanel">${devBriefHTML(p, st, f, 'water')}</div>
-      <div class="dv-pane" data-dvp="ww" role="tabpanel">${devBriefHTML(p, st, f, 'ww')}</div>
-      <div class="dv-pane" data-dvp="dc" role="tabpanel">${devBriefHTML(p, st, f, 'dc')}</div>
-      <div class="dv-pane" data-dvp="history" role="tabpanel">
-        ${phaseBasisHTML(p)}
-        ${devHistoryHTML(p, st)}
-        <details class="sect" id="dev-recs"><summary><h2 class="section-title" data-info="source-records">Source records</h2><span class="muted small sect-sum">${fmtNum(p.records.length)} files by type</span></summary>
-          ${recs}</details>
-      </div>`;
-    showDvTab(keep && keep.dvt || store.get('dvTab', 'overview'));
-    if (keep) {
-      for (const [id, open] of keep.open) { const d = document.getElementById(id); if (d) d.open = open; }
-      if (keep.tl && keep.tl.tl) showTl(keep.tl.tl);
-    }
-    $('#detail').hidden = false; $('#detail').dataset.view = 'dev';
-    if (!keep) $('#detail').scrollTop = 0;
-    if ($('#dev-aerial').open) runAerial(p);
-    fillExisting(p);
-    // A trace already on the map for this development stays shown in its panel.
-    const tb = $('#detail-body [data-trace].trace-btn');
-    if (tb && TRACE.key === p.key && TRACE.last) { tb._label = tb.innerHTML; tb.dataset.on = '1'; tb.textContent = 'Hide the path'; tb.classList.add('on'); tb.closest('.trace-box').querySelector('.trace-out').innerHTML = traceSummaryHTML(TRACE.last); }
-    const wb = $('#detail-body .wtrace-btn');
-    if (wb && WTRACE.key === p.key && WTRACE.last) { wb._label = wb.innerHTML; wb.dataset.on = '1'; wb.textContent = 'Hide the water route'; wb.classList.add('on'); wb.closest('.trace-box').querySelector('.wtrace-out').innerHTML = waterTraceSummaryHTML(WTRACE.last); }
-    // Trace tool on: tapping a development traces it.
-    if (tool.mode === 'trace') { setTool(null); showDvTab('ww'); if (tb && TRACE.key !== p.key) tb.click(); }
-    viewLink.write();
+    // Phase 3: opening a development sets the analysis scope (js/devscope.js) — the
+    // site bar, the Development tab and the map treatment — instead of opening the
+    // #detail side panel. The record, selection and block views of #detail keep
+    // their own functions (showRecordDetail, showSelection, showBlock) and are
+    // untouched.
+    return DevScope.open(p);
   }
   function showTl(v) {
     document.querySelectorAll('#detail-body [data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
@@ -2964,13 +3361,12 @@
       return;
     }
     const rq = e.target.closest('[data-relq]');
-    if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); if (q.lat != null) map.setView([q.lat, q.lng], Math.max(map.getZoom(), 14)); } return; }
+    if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); } return; }
     if (e.target.closest('[data-dev-parent]') && currentProject && currentProject.parent) { showDetail(currentProject.parent); return; }
     if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
-    // "Data as of" in the development header: open the footer panel's Sources & checks
-    // tab and scroll to the data-freshness section (same destination as the
-    // overview's "Data & checks →" button).
-    if (e.target.closest('[data-open="d-quality"]')) { footPref = 'criteria'; store.set('footTab4', 'criteria'); showFootTab('criteria'); setTimeout(() => { const d = document.getElementById('d-quality'); if (d) d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60); return; }
+    // "Data as of" in the development header: open the gear menu's Sources & checks page
+    // (same destination as the overview's "Data & checks →" button).
+    if (e.target.closest('[data-open="d-quality"]')) { openGearPage('sources'); return; }
     const o = e.target.closest('[data-open]');
     if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
   });
@@ -3025,14 +3421,27 @@
   }
   // Closing the drawn-area summary also removes the drawn areas (unless drawing another one).
   function closeDetail(opt = {}) {
+    // Phase 3: with a dev scope open and #detail showing nothing else, closing
+    // clears the scope. Phase 3b: not while a tool result is open — the result is
+    // the user's focus there, and closing the scope is the × button's / Esc's job.
+    // The record / selection / block views keep their close behaviour below.
+    const toolOpen = typeof window !== 'undefined' && window.PeelTools && PeelTools.hasResult();
+    if (typeof DevScope !== 'undefined' && DevScope.current() && $('#detail').hidden && !toolOpen) return DevScope.close();
     const wasSel = $('#detail').dataset.view === 'sel';
     if ($('#detail').dataset.view === 'block') clearBlockFocus();
     $('#detail').hidden = true; highlight(null); setDaContext(null);
     if (wasSel && !opt.keepSelection) clearSelection();
     viewLink.write();
+    renderTrail();
   }
   $('#detail-close').onclick = closeDetail;
-  addEventListener('keydown', e => { if (e.key === 'Escape') closeDetail(); });
+  addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    // Phase 3b: Esc closes the open tool result first (the × button's equivalent),
+    // so it never falls through to closeDetail and drops an unrelated dev scope.
+    if (typeof window !== 'undefined' && window.PeelTools && PeelTools.hasResult()) { PeelTools.closeResult(); return; }
+    closeDetail();
+  });
 
   // A single record (usually one building permit inside a subdivision) and the planning
   // application(s) it belongs to.
@@ -3148,19 +3557,24 @@
     a.download = name; document.body.appendChild(a); a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
   }
-  $('#btn-csv').onclick = () => {
+  // Named so the topbar Export menu calls the same actions as the list panel's
+  // Export row (a sibling worktree is removing that row; the functions stay).
+  function exportDevsCSV() {
     const rows = exportRows(); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
     const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
     download('peel-developments.csv', [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
-  };
-  $('#btn-geojson').onclick = () => {
+  }
+  function exportDevsGeoJSON() {
     const rows = exportRows();
     const fc = { type: 'FeatureCollection', features: rows.filter(r => r.lat).map(r => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+r.lng, +r.lat] }, properties: r })) };
     fc.properties = { scenario: state.svcModel ? scenarioText() : '', generated: new Date().toISOString() };
     download('peel-developments.geojson', JSON.stringify(fc), 'application/geo+json');
-  };
-  $('#btn-areas-geojson').onclick = () => { const fc = areasGeoJSON(); if (fc) download('peel-servicing-areas.geojson', JSON.stringify(fc), 'application/geo+json'); };
+  }
+  function exportAreasGeoJSON() { const fc = areasGeoJSON(); if (fc) download('peel-servicing-areas.geojson', JSON.stringify(fc), 'application/geo+json'); }
+  $('#btn-csv').onclick = exportDevsCSV;
+  $('#btn-geojson').onclick = exportDevsGeoJSON;
+  $('#btn-areas-geojson').onclick = exportAreasGeoJSON;
 
   // ---- Area selection: draw around projects, summarize demand and growth -----------------
   // A lasso drawn on the map (finger or mouse) selects the shown projects inside it; more
@@ -3182,50 +3596,25 @@
     if (typeof syncClearBtn === 'function') syncClearBtn();
     lassoSvg.querySelector('path').setAttribute('d', '');
   }
-  // Tools: one button under the zoom with the map tools — select an area, measure / select within a
-  // radius, test a site.
+  // Tools: a rail of toggle buttons under the zoom (and the north arrow) — select an area,
+  // measure, trace a sewer path or a water route, test a site, and the Phase 3b registered
+  // tools (inspect point, corridor select, how-many-more-units-fit — see the PeelTools
+  // registrations in the tool section below). Icons come from js/design.js (icon()) so
+  // the set stays consistent. Help is no longer on the rail: it lives on the topbar Help button.
   const TOOL_ITEMS = [
-    ['trace', 'Trace sewer path', 'Tap a development or any point on the map: its route along the sewers to the treatment plant, pipe by pipe, coloured by capacity used', '<path d="M3 4.5h5.5v5H13v6h4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.5 13l2.8 2.5-2.8 2.5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="3.5" cy="4.5" r="1.8" fill="currentColor"/>'],
-    ['lasso', 'Select an area', 'Draw around developments to add up their servicing demand and growth (or hold Ctrl / ⌘ and drag a box on the map)', '<rect x="2.5" y="2.5" width="12" height="12" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 2"/><path d="M10 9l7.5 3-3.2 1.2 2.6 2.6-1.3 1.3-2.6-2.6L11.8 17z" fill="currentColor"/>'],
-    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', '<path d="M3 15 15 3l3 3L6 18z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M6 11.5l1.6 1.6M8.5 9l1.6 1.6M11 6.5l1.6 1.6" stroke="currentColor" stroke-width="1.4"/>'],
-    ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', '<path d="M10 18.5s6-6.2 6-10.2a6 6 0 0 0-12 0c0 4 6 10.2 6 10.2z" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M10 5.5v5M7.5 8h5" stroke="currentColor" stroke-width="1.6"/>'],
-    ['tips', 'Help & tips', 'Guides for common tasks and a quick tour', '<circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7.8 7.6a2.3 2.3 0 1 1 3.2 2.1c-.7.3-1 .8-1 1.5v.6" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="14.3" r="1" fill="currentColor"/>'],
+    ['select', 'Select', 'Select developments: tap one, draw a lasso around them, hold Ctrl / ⌘ and drag a box, or tap for a radius', 'select'],
+    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', 'measure'],
+    ['trace', 'Trace', 'Trace a sewer path to the plant, or a water route from the plant, from any point', 'trace'],
+    ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', 'whatif'],
+    ['inspect', 'Inspect point', 'What is at this point: sewers, watermains, pressure zones and plants nearby', 'inspect'],
+    ['corridor', 'Corridor select', 'Select the developments along a drawn corridor', 'corridor'],
+    ['unitsfit', 'How many more units fit?', 'Estimate the remaining unit capacity of an area', 'unitsfit'],
   ];
-  const ToolsControl = L.Control.extend({
-    options: { position: 'topleft' },
-    onAdd() {
-      const el = L.DomUtil.create('div', 'leaflet-bar tools-ctl');
-      el.innerHTML = `<button type="button" class="tools-btn" aria-expanded="false" aria-haspopup="true" title="Map tools: select an area, measure, test a site" aria-label="Map tools">
-          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M12.6 2.6a4 4 0 0 0-4.9 5.2L2.6 12.9a1.6 1.6 0 0 0 2.3 2.3l5.1-5.1a4 4 0 0 0 5.2-4.9l-2.4 2.4-2.1-.4-.4-2.1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></button>
-        <div class="tools-menu" role="menu" hidden>${TOOL_ITEMS.map(([k, t, d, svg]) => `<button type="button" role="menuitem" data-tool="${k}" title="${esc(d)}"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true">${svg}</svg><span>${esc(t)}</span></button>`).join('')}</div>`;
-      L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-      const menu = el.querySelector('.tools-menu'), btn = el.querySelector('.tools-btn');
-      const open = o => { menu.hidden = !o; btn.setAttribute('aria-expanded', String(o)); };
-      btn.onclick = () => open(menu.hidden);
-      menu.onclick = e => {
-        const b = e.target.closest('[data-tool]'); if (!b) return;
-        open(false);
-        if (b.dataset.tool === 'tips') { showHelp(); return; }
-        if (b.dataset.tool === 'lasso') { if (tool.mode) setTool(null); setLasso(!lassoOn); }
-        else { if (lassoOn) setLasso(false); setTool(b.dataset.tool); }
-      };
-      document.addEventListener('click', e => { if (!el.contains(e.target)) open(false); });
-      return el;
-    },
-  });
-  new ToolsControl().addTo(map);
-  // Help on the map (always visible): opens Help & tips.
-  const HelpControl = L.Control.extend({
-    options: { position: 'topleft' },
-    onAdd() {
-      const el = L.DomUtil.create('div', 'leaflet-bar help-ctl');
-      el.innerHTML = '<button type="button" data-help-open title="Help & tips: guides for common tasks and the tour" aria-label="Help and tips"><span aria-hidden="true">?</span></button>';
-      L.DomEvent.disableClickPropagation(el);
-      return el;
-    },
-  });
-  // The Tools button shows when a tool is on.
-  const syncToolsBtn = () => { const b = document.querySelector('.tools-btn'); if (b) b.classList.toggle('on', lassoOn || !!tool.mode); document.querySelectorAll('.tools-menu [data-tool]').forEach(x => x.classList.toggle('on', x.dataset.tool === 'lasso' ? lassoOn : tool.mode === x.dataset.tool)); };
+  // Phase 3b: Help lives in the topbar Help button only — the map ? control is removed
+  // (no tool in two places). The tool rail shows which tool is on (one tool active at a time).
+  // The legacy standalone lasso (started from the selection panel's "+ Add area") lights the
+  // Select button too.
+  const syncToolsBtn = () => { document.querySelectorAll('.tool-rail [data-tool]').forEach(x => { const on = x.dataset.tool === 'select' ? (lassoOn || tool.mode === 'select') : tool.mode === x.dataset.tool; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); }); };
 
   // North arrow (points to true north whatever the orientation; tap to switch between the road
   // grid and north up) and a metric scale bar.
@@ -3243,7 +3632,72 @@
     },
   });
   new NorthControl().addTo(map);
-  new HelpControl().addTo(map);
+  // Tool rail: one toggle button per tool, below the zoom and the north arrow. Same data-tool
+  // values and handlers as the old dropdown; one tool active at a time (existing behaviour).
+  const ToolRail = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar tool-rail');
+      el.setAttribute('role', 'toolbar'); el.setAttribute('aria-label', 'Map tools');
+      el.innerHTML = TOOL_ITEMS.map(([k, t, d, ic]) => `<button type="button" data-tool="${k}" title="${esc(t)} — ${esc(d)}" aria-label="${esc(t)}" aria-pressed="false">${PD.icon(ic)}</button>`).join('');
+      L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+      el.addEventListener('click', e => {
+        const b = e.target.closest('[data-tool]'); if (!b) return;
+        if (lassoOn) setLasso(false);
+        setTool(b.dataset.tool);
+      });
+      return el;
+    },
+  });
+  new ToolRail().addTo(map);
+  // Present: full-screen map with the headline sentence and the four key tiles
+  // from the Overview (developments, units, people, jobs). Placed in the map's
+  // top-left control stack, right under the always-visible Help button.
+  const PresentControl = L.Control.extend({
+    options: { position: 'topleft' },
+    onAdd() {
+      const el = L.DomUtil.create('div', 'leaflet-bar present-ctl');
+      el.innerHTML = `<button type="button" data-present title="Present: full-screen map with the headline numbers (Esc exits)" aria-label="Present">${PD.icon('present')}</button>`;
+      L.DomEvent.disableClickPropagation(el);
+      el.querySelector('button').onclick = () => enterPresentation();
+      return el;
+    },
+  });
+  new PresentControl().addTo(map);
+  // Fill the presentation bar from the Overview: its headline sentence plus the
+  // four key tiles of the Growth card (developments shown, units planned,
+  // people at build-out, jobs).
+  function renderPresentation() {
+    const bar = $('#presentation-bar'); if (!bar) return;
+    const hl = document.querySelector('#pane-overview .ov-top .headline');
+    const tiles = document.querySelectorAll('#pane-overview .ov-growth .ov-tiles:not(.ov-flow) .ov-tile');
+    $('#pres-hl').innerHTML = hl ? hl.innerHTML : '';
+    $('#pres-tiles').innerHTML = [...tiles].slice(0, 4).map(t => t.outerHTML).join('');
+  }
+  function enterPresentation() {
+    renderPresentation();
+    $('#presentation-bar').hidden = false;
+    closeDetail({ keepSelection: true });
+    setLasso(false);
+    if (tool.mode) setTool(null);
+    document.documentElement.setAttribute('data-presentation', '');
+    try {
+      const p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+      if (p && p.catch) p.catch(() => { /* fullscreen unavailable: the layout still presents */ });
+    } catch (e) { /* fullscreen unavailable */ }
+  }
+  function exitPresentation() {
+    document.documentElement.removeAttribute('data-presentation');
+    const bar = $('#presentation-bar'); if (bar) bar.hidden = true;
+    try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); } catch (e) { /* noop */ }
+  }
+  const inPresentation = () => document.documentElement.hasAttribute('data-presentation');
+  // Esc exits fullscreen on its own; this clears the presentation layout (and
+  // covers the case where fullscreen was never entered).
+  document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement) exitPresentation(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && inPresentation()) exitPresentation(); });
+  document.addEventListener('click', e => { if (e.target.closest('#pres-exit')) exitPresentation(); });
+  PD.initPrintHandlers({ onAfter: () => refreshTheme() });
   L.control.scale({ position: 'topleft', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
   function updateNorth() {
     const g = document.getElementById('north-rot');
@@ -3294,7 +3748,8 @@
     const geo = closed.map(([x, y]) => { const ll = map.containerPointToLatLng([x, y]); return [ll.lng, ll.lat]; });
     selAreas.push(geo);
     drawSelection();
-    showSelection(added);
+    openSelectionResult('Lasso selection', added);
+    if (tool.mode === 'select') setSelectSub('tap'); // back to tap mode after the draw
   });
   addEventListener('keydown', e => { if (e.key === 'Escape' && lassoOn) { pts = null; setLasso(false); } });
 
@@ -3309,7 +3764,7 @@
   addEventListener('blur', () => ctrlCursor(false));
   mapEl.addEventListener('mousemove', e => { if (!box) ctrlCursor((e.ctrlKey || e.metaKey) && !lassoOn); });
   mapEl.addEventListener('mousedown', e => {
-    if (!(e.ctrlKey || e.metaKey) || e.button !== 0 || lassoOn || tool.mode) return;
+    if (!(e.ctrlKey || e.metaKey) || e.button !== 0 || lassoOn || (tool.mode && tool.mode !== 'select')) return;
     if (e.target.closest('.leaflet-control, .map-bottom, .lasso-layer')) return;
     e.preventDefault(); e.stopPropagation();
     box = { a: rel(e), b: rel(e) }; map.dragging.disable();
@@ -3335,7 +3790,7 @@
     }
     selAreas.push(ring.map(([x, y]) => { const ll = map.containerPointToLatLng([x, y]); return [ll.lng, ll.lat]; }));
     drawSelection();
-    showSelection(added);
+    openSelectionResult('Selection', added);
   });
   // The click that ends a box doesn't also count as a tap on the map (which would unselect).
   document.addEventListener('click', e => { if (boxed && mapEl.contains(e.target)) { e.stopPropagation(); e.preventDefault(); } }, true);
@@ -3364,8 +3819,8 @@
     const k = `${p.key}|${onMarker ? 1 : 0}`; if (hovKey === k) return;
     hovLayer.clearLayers(); hovKey = k;
     const apps = siteApps(p);
-    if (apps.length) for (const a of apps) L.polygon(toLatLngs(a.poly), { className: 'hov-site', interactive: false, color: '#f76707', weight: 2.5, dashArray: '6 4', fillColor: '#f76707', fillOpacity: 0.12 }).addTo(hovLayer);
-    else L.circleMarker([p.lat, p.lng], { radius: 16, className: 'hov-ring', interactive: false, color: '#f76707', weight: 2, dashArray: '4 4', fill: false }).addTo(hovLayer);
+    if (apps.length) for (const a of apps) L.polygon(toLatLngs(a.poly), { className: 'hov-site', interactive: false, color: selColor(), weight: 2.5, dashArray: '6 4', fillColor: selColor(), fillOpacity: 0.12 }).addTo(hovLayer);
+    else L.circleMarker([p.lat, p.lng], { radius: 16, className: 'hov-ring', interactive: false, color: selColor(), weight: 2, dashArray: '4 4', fill: false }).addTo(hovLayer);
     if (onMarker) return;   // the marker's own tooltip shows
     const t = L.tooltip({ direction: 'top', offset: [0, -14], className: 'hov-tip', opacity: 1 }).setLatLng([p.lat, p.lng])
       .setContent(`<strong>${esc(p.title)}</strong><br><span class="muted">${esc(P.PHASE_BY_KEY[p.phase].label)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}${apps.length ? '' : ' · no site boundary published'}</span>`);
@@ -3391,24 +3846,18 @@
     for (const g of selAreas) L.polygon(g.map(([x, y]) => [y, x]), { className: 'sel-area', interactive: false }).addTo(selLayer);
     for (const p of selection.values()) {
       // Each selected development's application boundaries in orange, and a ring for zoomed-out views.
-      for (const a of siteApps(p)) L.polygon(toLatLngs(a.poly), { renderer: selCanvas, color: SEL_COLOR, weight: 2.5, fillColor: SEL_COLOR, fillOpacity: 0.2, interactive: false }).addTo(selLayer);
+      for (const a of siteApps(p)) L.polygon(toLatLngs(a.poly), { renderer: selCanvas, color: selColor(), weight: 2.5, fillColor: selColor(), fillOpacity: 0.2, interactive: false }).addTo(selLayer);
       L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
     }
   }
   function clearSelection() { selection.clear(); selAreas = []; drawSelection(); if (typeof syncClearBtn === 'function') syncClearBtn(); }
 
-  function showSelection(added) {
-    setDaContext(null);
-    const sel = [...selection.values()];
-    currentProject = null;
-    highlight(null);
-    if (!sel.length) {
-      $('#detail-body').innerHTML = `<div class="head"><h3>No developments in that area</h3></div>
+  // The selection summary as a standalone HTML block: rendered into #detail by the legacy
+  // showSelection(), or into the Tool result pane by openSelectionResult() (Phase 3b).
+  function selectionSummaryHTML(sel, added) {
+    if (!sel.length) return `<div class="head"><h3>No developments in that area</h3></div>
         <p class="small muted">Only the developments shown on the map (current phase, focus and filters) can be selected. Draw a larger area, or change the filters.</p>
         <div class="sel-actions"><button type="button" class="btn" data-sel="add">Draw again</button></div>`;
-      $('#detail').hidden = false; $('#detail').dataset.view = 'sel';
-      return;
-    }
     const c = state.criteria;
     const cols = [['all', 'Total'], ['completed', 'Completed'], ['unbuilt', 'Remaining']];
     const es = cols.map(([k]) => D.estimate(sel, c, k, jobsOf));
@@ -3489,21 +3938,48 @@
       ${growth}
       <details class="sect"><summary><h2 class="section-title">Developments</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>
         <ul class="sel-list">${list}</ul></details>`;
+  }
+  // Legacy entry point: the selection summary in the #detail side panel.
+  function showSelection(added) {
+    setDaContext(null);
+    const sel = [...selection.values()];
+    currentProject = null;
+    renderTrail();
+    highlight(null);
+    $('#detail-body').innerHTML = selectionSummaryHTML(sel, added);
     $('#detail').hidden = false; $('#detail').dataset.view = 'sel';
     $('#detail').scrollTop = 0;
   }
+  function exportSelectionCSV() {
+    const rows = exportRows([...selection.values()]); if (!rows.length) return;
+    const cols = Object.keys(rows[0]);
+    const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+    download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
+  }
+  // Phase 3b: the same selection actions, but the summary lives in the Tool result pane.
+  $('#pane-tool-body').addEventListener('click', e => {
+    const a = e.target.closest('[data-sel]');
+    if (a) {
+      const k = a.dataset.sel;
+      if (k === 'add') setLasso(true);
+      else if (k === 'clear') { clearSelection(); if (hasTools()) PeelTools.closeResult(); }
+      else if (k === 'csv') exportSelectionCSV();
+      else if (k === 'back') openSelectionResult('Selection');
+      return;
+    }
+    const o = e.target.closest('[data-open]');
+    if (o && selection.has(o.dataset.open)) { showDetail(selection.get(o.dataset.open)); return; }
+    const d = e.target.closest('[data-drop]');
+    if (d) { selection.delete(d.dataset.drop); drawSelection(); openSelectionResult('Selection'); }
+  });
   $('#detail-body').addEventListener('click', e => {
     const a = e.target.closest('[data-sel]');
     if (a) {
       const k = a.dataset.sel;
       if (k === 'add') setLasso(true);
       else if (k === 'clear') { clearSelection(); closeDetail(); }
-      else if (k === 'csv') {
-        const rows = exportRows([...selection.values()]); if (!rows.length) return;
-        const cols = Object.keys(rows[0]);
-        const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
-        download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
-      } else if (k === 'back') showSelection();
+      else if (k === 'csv') exportSelectionCSV();
+      else if (k === 'back') showSelection();
       return;
     }
     const o = e.target.closest('[data-open]');
@@ -3602,7 +4078,7 @@
     sugItems = []; renderSug();
     // On a phone the search sits in the list view: switch to the map to show the place.
     if (innerWidth <= 760 && $('#sidebar').classList.contains('open')) { toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
-    if (x.p) { map.setView([x.p.lat, x.p.lng], Math.max(map.getZoom(), 17)); showDetail(x.p); return; }
+    if (x.p) { showDetail(x.p); return; }
     if (x.place) { clearTimeout(searchTimer); $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); } return x.place.go(); }
     // An address: pan and zoom there with a pin; the text filter is cleared so nothing is hidden.
     clearTimeout(searchTimer); $('#f-search').value = ''; if (state.search) { state.search = ''; applyFilters(); }
@@ -3630,8 +4106,10 @@
   sugEl.addEventListener('mousedown', e => { const li = e.target.closest('[data-i]'); if (li) { e.preventDefault(); goSug(sugItems[+li.dataset.i]); } });
   $('#f-search').addEventListener('blur', () => setTimeout(() => { sugItems = []; renderSug(); }, 150));
   // Record-type controls (Settings & sources tab): kind and new-build only.
-  $('#f-kind').onchange = e => { state.kind = e.target.value; applyFilters(); };
-  $('#f-new').onchange = e => { state.newOnly = e.target.checked; applyFilters(); };
+  document.addEventListener('change', e => {
+    if (e.target.id === 'f-kind') { state.kind = e.target.value; applyFilters(); }
+    else if (e.target.id === 'f-new') { state.newOnly = e.target.checked; applyFilters(); }
+  });
   // Unified filter panel.
   const panelChange = (id, fn) => { const el = $(id); if (el) el.onchange = fn; };
   const panelClick = (id, fn) => { const el = $(id); if (el) el.onclick = fn; };
@@ -3743,7 +4221,7 @@
       renderDcLayer(); renderLegend();
       applyFilters();
       setTimeout(loadSewers, 1500);
-      loadWaterSupply().then(() => { if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject); });
+      loadWaterSupply().then(() => { if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh(); });
     } catch (e) { /* optional */ }
   }
   // A development's pressure zone and wastewater block. Outside the mapped zones / blocks: the
@@ -3788,7 +4266,7 @@
     }
     if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30] });
   }
-  const svcColor = a => a.zone ? '#0b7285' : PLANT_COLOR[a.plant] || '#868e96';
+  const svcColor = a => a.zone ? token('--svc-drainage') : plantColor(a.plant);
   function svcTooltip(a) {
     if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone · tap: what loads it</span>`;
     if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return `<strong>Wastewater ${esc(a.name)}</strong>${a.planning ? ' · prioritised (block study)' : ''}<br>Drains to ${to ? `${esc(to.name)} → ` : ''}${esc(plantLabel(a.plant))}<br>
@@ -3805,7 +4283,8 @@
     if (k !== 'existing') return;   // the growth layers follow the selected stages (syncWwLayers)
     wwLay = { ...wwLay, [k]: on }; store.set('wwLay', wwLay);
     renderMarkers(); scheduleSites(); renderCapLayer(); renderLegend(); syncMapOpts();
-    if (!$('#detail').hidden && $('#detail').dataset.view === 'loads' && loadsOf && loadsOf.pipe != null) showPipeLoads(loadsOf.pipe);
+    // Phase 3b: pipe loads live in the Tool result tab now — re-run while that result is open.
+    if (loadsOf && loadsOf.pipe != null && toolScope && toolScope.kind === 'pipe' && typeof window !== 'undefined' && window.PeelTools && PeelTools.hasResult() && PeelTools.resultTitle() === toolScope.title) showPipeLoads(loadsOf.pipe);
   }
   // Wastewater growth layers from the stage selector; recomputed whenever the filters apply.
   // Keeps the wwLay object shape the rest of the code reads.
@@ -4071,9 +4550,9 @@
   }
   function renderScenario() {
     const el = $('#scen-bar'); if (!el) return;
-    const R = state.reports, c = state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
+    const R = state.reports, c = state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion;
     const open = el.querySelector('details') && el.querySelector('details').open;
-    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t">${esc(scenarioText())}</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
+    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t" data-scen-t>${esc(scenarioText())}</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
       <div class="svc-switches">
         ${basisSwitch()}
         ${yearSelect()}
@@ -4083,7 +4562,11 @@
         ${nearSwitch()}
       </div>
       ${compareHTML()}
-      <p class="small muted">Horizon years: Wastewater → Plants & capacity. Criteria: ${n ? `<strong>${n} modified</strong>` : 'Peel defaults'} — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p></details>`;
+      <p class="small muted">Horizon years: Wastewater → Plants & capacity. <span data-scen-crit>${scenCritLineHTML()}</span> — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p>
+      <div id="scen-criteria-mount"></div></details>`;
+    renderTbScen();
+    const critMount = el.querySelector('#scen-criteria-mount');
+    if (critMount) renderScenarioCriteria(critMount);
   }
   const nearSwitch = () => optSwitch('nr', 'Outside mapped areas', [['on', `Assign to nearest (≤${kmText(NEAR_M)})`], ['off', 'Leave out']]);
   const addLayers = (rows) => rows.reduce((t, r) => { for (const k of SUM_KEYS) t[k] = (t[k] || 0) + (r[k] || 0); return t; }, {});
@@ -4121,18 +4604,84 @@
     for (const g of Object.keys(d)) for (const k of Object.keys(d[g])) { const v = g === 'wastewater' && k === 'infiltration' ? state.iiBase : c[g] && c[g][k]; if (c[g] && +v !== +d[g][k]) out.push(`${CRIT_LABEL[g] || g} ${k} ${v} (default ${d[g][k]})`); }
     return out;
   }
-  function stampHTML(kind, Y) {
-    const c = state.criteria, E = c.employment, R = state.reports;
-    const crit = kind === 'demand'
-      ? `water ${c.water.avg} L/cap/d (×${c.water.maxDay} max day, ×${c.water.peakHour} peak hour), wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha; employment ${E.water} / ${E.wastewater} L/emp/d`
-      : kind === 'water'
-      ? `residential ${c.water.avg} L/cap/d, max day ×${c.water.maxDay}, peak hour ×${c.water.peakHour} (Peel Modelling Demand Table, Aug 2024); employment ${E.water} L/emp/d`
-      : `residential ${c.wastewater.avg} L/cap/d with Harmon peaking (${c.wastewater.peakMin}–${c.wastewater.peakMax}), I&amp;I ${c.wastewater.infiltration} L/s/ha (Peel Linear Wastewater Standards 2023); employment ${E.wastewater} L/emp/d (Peel Modelling Demand Table, Aug 2024)`;
-    const mod = criteriaChanges();
-    if (Y == null) { const bc = baselineCensus(); Y = bc ? bc.year : 2021; }
-    const dates = [state.snapshot ? `applications ${state.snapshot.generatedAt.slice(0, 10)}` : 'applications live', `${Y} Census`, R ? `Peel ${R.year} annual reports` : null].filter(Boolean).join(' · ');
-    // Folded to one line: the criteria and data sources are a tap away, not in front of the results.
-    return `<details class="stamp small"><summary><strong>Criteria &amp; data</strong> <span class="muted">· Peel design criteria · ${esc(dates)}</span>${mod.length ? ` <span class="badge-mod" title="${esc(mod.join('; '))}">Modified criteria (${mod.length})</span>` : ''}</summary><p><strong>Criteria:</strong> ${crit}; persons per unit from Peel's DC Background Study. <span class="muted">Data: ${esc(dates)}. Change them in Settings &amp; sources.</span></p></details>`;
+  // Phase 4: the editable design criteria live in the Scenario control (scenario bar),
+  // not in the Settings tab. renderScenarioCriteria renders the editor into the mount
+  // Worker A puts in the scenario bar (<div id="scen-criteria-mount">); exposed globally
+  // so the shell can call it. Every parameter shows its edited value beside its Peel
+  // default and its source document.
+  const CRIT_KEY_LABEL = {
+    ppu: { single: 'Single / semi', town: 'Townhouse', apartment: 'Apartment', apartmentHigh: 'Apartment, >475 persons/ha', unknown: 'Type not stated' },
+    water: { avg: 'Average day', maxDay: 'Max day factor', peakHour: 'Peak hour factor' },
+    wastewater: { avg: 'Residential', infiltration: 'I&I', peakMin: 'Peaking min', peakMax: 'Peaking max' },
+    employment: { water: 'Water', maxDay: 'Max day factor', peakHour: 'Peak hour factor', wastewater: 'Wastewater', peakMin: 'Peaking min', peakMax: 'Peaking max' },
+    m2PerJob: { industrial: 'Industrial', office: 'Office', retail: 'Retail', hotel: 'Hotel', institutional: 'Institutional' },
+  };
+  const CRIT_STEP = { ppu: 0.1, water: { avg: 1, maxDay: 0.1, peakHour: 0.1 }, wastewater: { avg: 1, infiltration: 0.01, peakMin: 0.1, peakMax: 0.1 }, employment: { water: 1, maxDay: 0.1, peakHour: 0.1, wastewater: 1, peakMin: 0.1, peakMax: 0.1 }, m2PerJob: 1 };
+  const critStep = (g, k) => (typeof CRIT_STEP[g] === 'object' ? CRIT_STEP[g][k] : CRIT_STEP[g]) || 0.1;
+  const critVal = (g, k) => g === 'wastewater' && k === 'infiltration' ? state.iiBase : state.criteria[g][k];
+  const critIsMod = (g, k) => +critVal(g, k) !== +D.DEFAULT_CRITERIA[g][k];
+  function renderScenarioCriteria(mountEl) {
+    if (!mountEl) return;
+    const c = state.criteria, d = D.DEFAULT_CRITERIA;
+    const n = criteriaChanges().length;
+    const srcOf = g => { const s = D.sourceOf(g, Object.keys(d[g])[0]); return s ? `${esc(s.doc)}, ${esc(s.ver)}` : ''; };
+    const rows = Object.keys(d).map(g => {
+      const sub = `<tr class="sub"><td colspan="4">${esc(CRIT_LABEL[g] || g)}<div class="muted small">${srcOf(g)}</div></td></tr>`;
+      const rs = Object.keys(d[g]).map(k => {
+        const mod = critIsMod(g, k), v = critVal(g, k);
+        const step = critStep(g, k), unit = (D.CRIT_UNITS[g] || {})[k] || '';
+        return `<tr${mod ? ' class="mod"' : ''}><td>${esc((CRIT_KEY_LABEL[g] || {})[k] || k)}${unit ? ` <span class="muted small">${esc(unit)}</span>` : ''}</td>`
+          + `<td><input type="number" min="0" step="${step}" data-g="${g}" data-k="${k}" value="${v}" aria-label="${esc(`${CRIT_LABEL[g] || g} ${(CRIT_KEY_LABEL[g] || {})[k] || k}`)}"${mod ? ' class="mod"' : ''}></td>`
+          + `<td class="muted">${mod ? `<strong>${esc(String(d[g][k]))}</strong>` : esc(String(d[g][k]))}</td>`
+          + `<td>${mod ? `<span class="badge-mod" title="${esc(`${CRIT_LABEL[g] || g} ${(CRIT_KEY_LABEL[g] || {})[k] || k}: edited ${v}, Peel default ${d[g][k]}`)}">edited</span>` : '<span class="muted small">Peel default</span>'}</td></tr>`;
+      }).join('');
+      return sub + rs;
+    }).join('');
+    mountEl.innerHTML = `<details class="scen-crit"${n ? ' open' : ''}><summary><span class="scen-k">Design criteria</span> <span class="muted small">${n ? `<strong>${n} modified</strong> — edited values are used everywhere` : 'Peel defaults — tap to edit'}</span></details>`;
+    // Rebuild: keep the summary, then the table + reset (details content after summary).
+    mountEl.querySelector('details').insertAdjacentHTML('beforeend',
+      `<table class="dt crit-table"><thead><tr><th>Criterion</th><th>Edited</th><th>Peel default</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+      <p class="small"><button type="button" class="btn small" data-scen-crit-reset>Reset to Peel criteria</button>
+      <span class="muted small">Apartments use the large-apartment rate unless the site holds more than ${D.APT_DENSITY} persons/ha at that rate, or its area is not known.</span></p>`);
+    if (mountEl._scenCritWired) return;
+    mountEl._scenCritWired = true;
+    mountEl.addEventListener('input', e => {
+      const el = e.target; if (!el.dataset.g) return;
+      const v = Number(el.value);
+      if (!(v >= 0)) return;
+      if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') { state.iiBase = v; applyWet(); }
+      else state.criteria[el.dataset.g][el.dataset.k] = v;
+      saveCriteria();
+      refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
+      if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') wetChanged();
+      // Update the row's modified marker without re-rendering (keeps focus in the input).
+      const tr = el.closest('tr');
+      if (tr) {
+        const mod = critIsMod(el.dataset.g, el.dataset.k);
+        tr.classList.toggle('mod', mod);
+        el.classList.toggle('mod', mod);
+        const badge = tr.cells[3];
+        if (badge) badge.innerHTML = mod ? `<span class="badge-mod">edited</span>` : '<span class="muted small">Peel default</span>';
+      }
+      renderTbScen(); syncScenCrit();
+    });
+    mountEl.addEventListener('click', e => {
+      if (!e.target.closest('[data-scen-crit-reset]')) return;
+      resetCriteriaToPeel();
+      renderScenarioCriteria(mountEl);
+      renderCriteria(); refreshCriteria(true);
+      renderTbScen(); syncScenCrit();
+    });
+  }
+  window.renderScenarioCriteria = renderScenarioCriteria;
+  // The scenario bar's one-line criteria note, kept in sync when the mount edits values.
+  const scenCritLineHTML = () => { const n = criteriaChanges().length; return `Criteria: ${n ? `<strong>${n} modified</strong>` : 'Peel defaults'}`; };
+  function syncScenCrit() {
+    const bar = $('#scen-bar'); if (!bar) return;
+    const line = bar.querySelector('[data-scen-crit]');
+    if (line) line.innerHTML = scenCritLineHTML();
+    const sum = bar.querySelector('[data-scen-t]');
+    if (sum) sum.innerHTML = esc(scenarioText());
   }
   // ---- Plain-language headlines: one sentence at the top of each tab, written from the numbers.
   function hlP(html) { return `<p class="headline" data-hl="1">${html}</p>`; }
@@ -4159,10 +4708,9 @@
     setHeadline($('#water-body'), zs[0] ? `<strong>${esc(zs[0].a.name.replace('Pressure zone ', 'Zone '))}</strong> adds the most water demand: +${fmt1(zs[0].add)} ML/d at maximum day by build-out${zs[1] ? `, then ${esc(zs[1].a.name.replace('Pressure zone ', 'Zone '))} (+${fmt1(zs[1].add)})` : ''}.` : '');
     setHeadline($('#wcap-body'), w ? `South Peel water treatment ${trigText(w)} (${pctRated(w, 'com')}% of rated capacity committed → ${pctRated(w, 'bo')}% at build-out).` : '');
     setHeadline($('#plants-body'), plantHeadline());
-    // Blocks: the block carrying the most, and stations over firm capacity.
+    // Blocks: the block carrying the most (pumping stations have their own sub-view now).
     const top = state.servicing.drainage.filter(d => !d.downstream).map(d => ({ d, l: M.cum.get(d.id) })).filter(x => x.l).sort((a, b) => M.adwf(b.l) - M.adwf(a.l))[0];
-    const over = (state.servicing.psAreas || []).map(a => ({ a, x: psLoad(a) })).filter(r => r.x && r.x.pct >= 100).sort((a, b) => b.x.pct - a.x.pct);
-    setHeadline($('#ww-body'), `${top ? `<strong>${esc(drName(top.d))}</strong> delivers the most flow to ${esc(plantLabel(top.d.plant))}: ${fmt1(M.adwf(top.l, M.fOf(top.d.plant)))} ML/d average dry at build-out. ` : ''}${over.length ? `<strong>${over.length} pumping station${over.length === 1 ? '' : 's'}</strong> exceed firm capacity at build-out peak wet: ${over.slice(0, 4).map(r => `${esc(psName(r.a))} ≈${Math.round(r.x.pct)}%`).join(', ')}${over.length > 4 ? ` +${over.length - 4}` : ''}.` : 'No pumping station exceeds its firm capacity at build-out peak wet.'}`);
+    setHeadline($('#ww-body'), top ? `<strong>${esc(drName(top.d))}</strong> delivers the most flow to ${esc(plantLabel(top.d.plant))}: ${fmt1(M.adwf(top.l, M.fOf(top.d.plant)))} ML/d average dry at build-out.` : '');
   }
   function renderSvcTab() {
     const bc = baselineCensus();
@@ -4170,8 +4718,15 @@
     $('#ftab-water').hidden = $('#ftab-ww').hidden = !has;
     $('#ftab-dca').hidden = !has || !state.dcInfra;
     if (!has) return;
+    const p = scopedDev();
+    if (!p && savedSubs) {
+      // Back from a scoped view: restore the sub-tab choices and the full set of panes.
+      ({ wSub, wwSub } = savedSubs); savedSubs = null;
+      for (const id of ['#pane-wcap', '#pane-wfac', '#pane-alloc', '#pane-plants', '#pane-pumpstations']) { const n = $(id); if (n) n.dataset.off = ''; }
+      for (const s of document.querySelectorAll('.f-subtabs[data-pane="water"], .f-subtabs[data-pane="ww"]')) s.dataset.off = '';
+    }
     const c = state.criteria, E = c.employment, Y = bc.year, R = state.reports;
-    $('#footer').classList.toggle('show-tech', svcOpt.tech === 'on');
+    $('#analysis').classList.toggle('show-tech', svcOpt.tech === 'on');
     svcCensusPop(bc);
     const censusHowW = bc._svcMethod === 'centre' ? 'by dissemination areas whose centre falls inside' : 'shared out by the area of each dissemination area inside it';
     const censusHow = bc._svcMethod === 'overlap' ? 'shared out by the area of each dissemination area inside it' : 'by dissemination areas whose centre falls inside';
@@ -4198,20 +4753,18 @@
     const zones = state.servicing.zones.slice().sort(byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc) })).filter(r => total(r.l) > 0 || r.l.devs);
     const zsum = addLayers(zr.map(r => r.l));
-    $('#water-body').innerHTML = `${exportBar('water')}${stampHTML('water', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${inViewBox()}</div></div>
-      <table class="dt svc-table" data-info="pressure-zone"><caption>Water by pressure zone · maximum day (ML/d) at ${observed ? `the observed 2025 factor ×${mdR.toFixed(2)}` : `design ×${mdR} residential, ×${mdE} employment`}; people and jobs below</caption>
-      <thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>
-      <tbody>${zr.map(r => wRow(esc(r.a.name.replace('Pressure zone ', 'Zone ')), r.l, r.a.id)).join('')}${wRow('All pressure zones', zsum, null, 'tot')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote(zsum.near, 'pressure zone')}<p class="small muted">ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.</p></details>
-`;
-    // Treatment & capacity: capacity by growth layer, the 2025 reports against the model, the
-    // hydraulic check. Facilities: the existing facilities by system.
-    $('#wcap-body').innerHTML = `${exportBar('wcap')}${stampHTML('water', Y)}
-      ${waterCapHTML()}
-      ${R ? waterReportsHTML(R, wAvg(zsum.census + zsum.built, zsum.jbuilt), wMax(zsum.census + zsum.built, zsum.jbuilt)) : ''}
-      ${hydroBoxHTML()}`;
-    $('#wfac-body').innerHTML = `${exportBar('wfac')}<div id="mp-w"></div>${waterFacilitiesHTML()}`;
-    $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · pressure zones in numerical order`;
+    // ---- Water: Zones sub-view (headline → tiles → chart → top-N table → ⓘ line). ----
+    const wcapM = { Y, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wAvg, wPH, total, jobs };
+    $('#water-body').innerHTML = `${exportBar('water')}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${inViewBox()}</div></div>
+      ${waterZonesHTML(zr, zsum, { wMax, wPH, total, jobs, wRow, layerHead, Y, c, E, mdR, mdE, observed, censusHowW })}`;
+    // ---- Water: Capacity sub-view. The 2025 production / Caledon groundwater reports moved
+    // to Sources & checks (window.ModelChecks); the hydraulic check moved to its own sub-view.
+    $('#wcap-body').innerHTML = `${exportBar('wcap')}${waterCapHTML(wcapM)}`;
+    // ---- Water: Facilities sub-view (tiles → Master Plan compare → facilities table). ----
+    $('#wfac-body').innerHTML = `${exportBar('wfac')}${waterFacilitiesHTML()}`;
+    // ---- Water: Hydraulic check sub-view (pane + button created by Worker A in index.html).
+    const hydPane = $('#hyd-box'); if (hydPane) hydPane.outerHTML = hydroBoxHTML();
+    $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · top zones by build-out maximum day`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
     // traced flow path = the total passing its outlet, building up to the plant on the lake.
@@ -4288,7 +4841,23 @@
     // The Peel total under calibration: each plant at its own factor (flows add; Harmon on the total).
     const peelF = peel.census + peel.built + peel.approved + peel.proposed > 0 ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     const calNote = svcOpt.ww === 'calibrated' ? `<p class="small cal-note"><strong>Capacity check (calibrated to 2025 flows):</strong> ${secs.filter(x => x.f !== 1).map(x => `${esc(PLANT_SHORT[x.pl])} ×${x.f.toFixed(2)}`).join(' · ')}. Each plant's population and employment flow is scaled so that today (census + built since${R && R.wastewater.inflows.some(x => x.plant) ? ', plus the York Region inflow at G.E. Booth' : ''}) matches its 2025 reported annual average; the factor absorbs existing employment, institutional and commercial flow, infiltration in dry weather and any flows not modelled. I&amp;I is not scaled.</p>` : '';
-    $('#ww-body').innerHTML = `${exportBar('catchments')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${inViewBox()}</div></div>${calNote}
+    // Phase 4: Blocks sub-view tiles + chart — the largest catchments by build-out flow.
+    const rankedC = [];
+    for (const d of state.servicing.drainage) {
+      const l = cum.get(d.id); if (!l || !(total(l) > 0)) continue;
+      rankedC.push({ d, l, bo: adwf(l, fOf(d.plant)) });
+    }
+    rankedC.sort((a, b) => b.bo - a.bo);
+    const top8 = rankedC.slice(0, 8), top8Max = Math.max(1e-9, ...top8.map(x => x.bo));
+    $('#ww-body').innerHTML = `${exportBar('catchments')}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${inViewBox()}</div></div>${calNote}
+      <div class="tiles">${[
+        wwTile(state.servicing.blocks ? 'Wastewater blocks' : 'Catchments', fmtNum(rankedC.length), '', 'traced to the lake', 'drainage-area'),
+        wwTile('Peel build-out', fmt1(adwf(peel, peelF)), 'ML/d', `average dry · ${uPop(total(peel))}`, 'drainage-area'),
+        ...(rankedC[0] ? [wwTile('Largest single catchment', fmt1(rankedC[0].bo), 'ML/d', `${esc(short(rankedC[0].d, rankedC[0].d.plant))} → ${esc(plantLabel(rankedC[0].d.plant))}`, 'drainage-area')] : []),
+        wwTile('Peak wet build-out', fmt1(pdwf(peel, peelF) + ii(peel)), 'ML/d', `of it I&amp;I ${fmt1(ii(peel))} ML/d`, 'drainage-area'),
+      ].join('')}</div>
+      <h3 class="svc-sub">Largest catchments <span class="muted small">build-out average dry weather, ML/d</span></h3>
+      <div>${top8.map(x => miniBar(esc(short(x.d, x.d.plant)), x.bo, top8Max, 'ML/d')).join('')}</div>
       <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by ${state.servicing.blocks ? 'block (the Region\'s 40 I&amp;I sewersheds)' : 'sanitary catchment'}, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
       <thead><tr><th rowspan="2">${state.servicing.blocks ? 'Block' : 'Catchment'} (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
         <th colspan="2" class="grp-h xc">Where it comes from</th><th colspan="4" class="grp-h sep xc">What it is made of</th><th rowspan="2">= Total<br>average dry</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
@@ -4296,19 +4865,10 @@
       <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
         ${sRow(`Peel total (${secs.map(x => PLANT_SHORT[x.pl]).join(' + ')})`, '', null, peel, null, peelF, 'tot')}
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote([...local.values()].reduce((a, l) => a + (l.near || 0), 0), 'traced catchment')}<p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). ${state.servicing.blocks ? `<strong>Blocks</strong> are the Region of Peel's 40 wastewater sewersheds (its inflow &amp; infiltration program; the blocks of "Dragonfly"); each drains into the next block along the sewers (data/sewers.json: the pipe leaving the block that carries the most people) down to its plant. Pumping stations are checked on the sewer arriving at each (table below). ` : ''}<strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored). Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: ${state.servicing.blocks ? 'I&amp;I at a station uses the land draining through its arriving sewer (published network, 300 mm and up), so peak wet is approximate (≈). Click a block to see its flow path along the sewers to the lake on the map.' : 'I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve. Click a catchment to see its flow path to the lake on the map.'}</p></details>`;
-    // Blocks: the pumping stations sit inside them, each loaded by what its arriving pipe carries.
-    if (state.servicing.blocks) {
-      const ls = v => v * 1e6 / 86400;
-      const st = state.servicing.psAreas.map(a => ({ a, sp: spsOf(a), l: psCum(a) })).filter(x => x.sp && x.l)
-        .map(x => ({ ...x, dry: ls(pdwf(x.l)) / x.sp.firmLs * 100, wet: ls(pdwf(x.l) + ii(x.l)) / x.sp.firmLs * 100 })).sort((x, y) => y.dry - x.dry);
-      const blk = a => { const b = a.outletAt && PeelAreas.locate(state.servicing.drainage, a.outletAt[0], a.outletAt[1]); return b ? svcById.get(b) : null; };
-      $('#ww-body').insertAdjacentHTML('beforeend', `<table class="dt svc-table ps-table" data-info="drainage-area"><caption>Pumping stations · firm capacity (2020 Master Plan) against the build-out flow in the sewer arriving at each, Peel design criteria</caption>
-        <thead><tr><th>Pumping station</th><th>Block → plant</th><th>People + jobs upstream</th><th>Firm</th><th>Peak dry</th><th>Peak wet ≈</th></tr></thead>
-        <tbody>${st.length ? st.map(x => { const b = blk(x.a); return `<tr${rowAttrs(x.a.id, '')}><td title="${esc(spsNote(x.sp))}">${esc(x.sp.name)}</td><td>${b ? esc(b.name) : '–'} → ${esc(PLANT_SHORT[x.a.plant] || x.a.plant || '')}</td>
-          <td>${who(total(x.l), jobs(x.l))}</td><td>${fmtNum(x.sp.firmLs)} L/s</td><td class="${x.dry >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l)))}<small>${Math.round(x.dry)}%</small></td><td class="${x.wet >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l) + ii(x.l)))}<small>${Math.round(x.wet)}%</small></td></tr>`; }).join('')
-          : `<tr><td colspan="6" class="muted">${SEW.data ? 'No master plan stations matched' : 'Loading the sewer network…'}</td></tr>`}</tbody></table>`);
-    }
+      <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote([...local.values()].reduce((a, l) => a + (l.near || 0), 0), 'traced catchment')}<p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). ${state.servicing.blocks ? `<strong>Blocks</strong> are the Region of Peel's 40 wastewater sewersheds (its inflow &amp; infiltration program; the blocks of "Dragonfly"); each drains into the next block along the sewers (data/sewers.json: the pipe leaving the block that carries the most people) down to its plant. ` : ''}<strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √P) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored).${state.servicing.blocks ? '' : ' Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve.'} Click a ${state.servicing.blocks ? 'block' : 'catchment'} to see its flow path to the lake on the map.</p></details>
+      ${wwInfoLine('Flows build up along the traced flow path to the lake: each catchment\u2019s own flow plus everything upstream of it.')}`;
+    // Phase 4: pumping stations have their own sub-view now (#pumpstations-body).
+    renderPumpStationsTab({ total, jobs, pdwf, ii });
     renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     // Kept for the development panel's servicing check and the export.
     const dvR = R && R.wastewater.diversion, divMldOf = pl => !(dvR && svcOpt.div === 'on') ? 0 : pl === dvR.from ? -dvR.mld : pl === dvR.to ? dvR.mld : 0;
@@ -4323,32 +4883,33 @@
     state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg, calib, inflowsTo, zsum, secs, raw };
     renderHeadlines(); renderMpCompare();
     renderScenario(); renderCapLayer(); renderLegend(); filterInView();
-    if (footTab === 'dca' && !$('#footer').classList.contains('collapsed')) renderDca();
+    if (footTab === 'dca') renderDca();
     if (footTab === 'overview') renderOverview();
-    if (footTab === 'criteria') renderQuality();
     if (footTab === 'ww' && wwSub === 'alloc') renderAlloc();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
+    if (p) renderSvcScoped(p);
   }
-  // Reported 2025 water production next to the model (Water tab).
-  function waterReportsHTML(R, modelAvg, modelMax) {
-    const sp = R.water.southPeel, cal = R.water.caledon, pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
-    const calAvg = cal.reduce((t, s) => t + s.avgM3d, 0) / 1000;
-    const m3 = v => unit(fmtNum(Math.round(v)), 'm³/d');
-    return `<h3 class="svc-sub">Reported 2025 production <span class="muted small">Region of Peel annual reports</span></h3>
-      <table class="dt svc-table rep-table" data-info="water-reports"><thead><tr><th>Treatment plant</th><th>Rated capacity</th><th>2025 average day</th><th>2025 maximum day</th><th>Max day ÷ average</th></tr></thead>
-      <tbody>${sp.plants.map(p => `<tr><td>${esc(p.name)}<small>${refLink(p.ref, p.pages)}</small></td><td>${uML(p.ratedMLd)}</td><td>${uML(p.avgMLd)}<small>${pct(p.avgMLd, p.ratedMLd)} of capacity</small></td><td>${uML(p.maxDayMLd)}<small>${esc(p.maxDayMonth)} · ${pct(p.maxDayMLd, p.ratedMLd)}</small></td><td>×${(p.maxDayMLd / p.avgMLd).toFixed(2)}</td></tr>`).join('')}
-        <tr class="sub"><td>South Peel system (lake-based)<small>${esc(sp.maxDayNote)}</small></td><td>${uML(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))}</td><td>${uML(sp.avgMLd)}</td><td>≤ ${uML(sp.maxDayMLd)}</td><td>×${sp.maxDayFactor.toFixed(2)}</td></tr>
-        <tr><td>Caledon groundwater systems (5)</td><td></td><td>${uML(calAvg)}</td><td></td><td></td></tr>
-        <tr class="tot"><td>Model today, all pressure zones<small>census + built since; residential + development jobs</small></td><td></td><td>${uML(modelAvg)}<small>${pct(modelAvg, sp.avgMLd + calAvg)} of reported</small></td><td>${uML(modelMax)}<small>${svcOpt.md === 'observed' ? 'observed factor' : 'design factor'}</small></td><td></td></tr></tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Reported production includes water supplied to York Region and Halton, all industrial, commercial and institutional use and non-revenue water; transfer volumes to York are not published, so the model (residential + new development jobs) is expected to be lower. Population served in 2025: ${fmtNum(sp.populationServed)} (${esc(sp.populationNote)}). ${refLink(sp.ref, sp.pages)}.</p></details>
-      <h3 class="svc-sub">Caledon groundwater systems <span class="muted small">2025</span></h3>
-      <table class="dt svc-table rep-table" data-info="water-reports"><thead><tr><th>System</th><th>Population served</th><th>Rated capacity</th><th>2025 average day</th><th>2025 maximum day</th><th>Per person</th><th>Max day ÷ average</th></tr></thead>
-      <tbody>${cal.map(s => `<tr><td>${esc(s.name)}<small>${esc(s.communities)}</small></td><td>${uPop(s.population)}<small>${unit(fmtNum(s.connections), 'connections')}</small></td><td>${m3(s.ratedM3d)}</td><td>${m3(s.avgM3d)}<small>${pct(s.avgM3d, s.ratedM3d)} of capacity</small></td><td>${m3(s.maxDayM3d)}<small>${esc(s.maxDayNote)} · ${pct(s.maxDayM3d, s.ratedM3d)}</small></td><td>${unit(fmtNum(Math.round(s.avgM3d * 1000 / s.population)), 'L/cap/d')}</td><td>×${(s.maxDayM3d / s.avgM3d).toFixed(2)}</td></tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Treated water. Populations are as stated in each system's report ("close to", "just over"); rated capacity is the wells' combined rated capacity. Sources: ${cal.map(s => refLink(s.ref, s.pages)).join('; ')}.</p></details>${(mp => !mp ? '' : `
-      <h3 class="svc-sub">Water storage <span class="muted small">2020 Master Plan assessment, ML</span></h3>
-      <table class="dt svc-table rep-table"><thead><tr><th>Facility</th>${mp.storageYears.map(y => `<th>${y}</th>`).join('')}</tr></thead>
-        <tbody>${mp.storage.map(r => `<tr><td>${esc(r.facility)}</td>${r.required.map((v, i) => `<td class="${v > r.available[i] ? 'over' : ''}">${unit(fmtNum(v), 'ML')}<small>of ${fmtNum(r.available[i])} available</small></td>`).join('')}</tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Required storage = equalization + fire + emergency. ${esc(mp.storageCriteria)} Source: <a href="${esc(mp.vol3)}" target="_blank" rel="noopener">${esc(mp.title)}, Volume 3</a> — ${esc(mp.storageSource)}. Reported from the Region's assessment, not recomputed here.</p></details>`)(R.masterPlan)}`;
+  // Sub-tab choices stashed while a site is the scope (restored when it isn't).
+  let savedSubs = null;
+  // Scoped Water / Wastewater tabs: the site's brief replaces the Peel-wide aggregates; the
+  // ground / storm / pond rows stay out (their home is Development › Site).
+  function renderSvcScoped(p) {
+    if (!savedSubs) savedSubs = { wSub, wwSub };
+    wSub = 'zones'; wwSub = 'catchments';
+    for (const id of ['#pane-wcap', '#pane-wfac', '#pane-alloc', '#pane-plants', '#pane-pumpstations']) { const n = $(id); if (n) n.dataset.off = '1'; }
+    for (const s of document.querySelectorAll('.f-subtabs[data-pane="water"], .f-subtabs[data-pane="ww"]')) s.dataset.off = '1';
+    const st = statusOf(p), f = svcFacts(p);
+    st.works = st.works || devWorks(p, f);
+    $('#water-body').innerHTML = `<div class="tb-head"><h2 class="pane-h">${esc(p.title)} <span class="muted">· Water</span></h2></div>`
+      + devServicingBriefHTML(p, st, f, 'water')
+      + `<p class="small muted">Peel-wide pressure zones return when no site is scoped.</p>`;
+    $('#ww-body').innerHTML = `<div class="tb-head"><h2 class="pane-h">${esc(p.title)} <span class="muted">· Wastewater</span></h2></div>`
+      + devServicingBriefHTML(p, st, f, 'ww', { site: false })
+      + `<p class="small muted">Ground, storm sewers and stormwater ponds live in Development › Site. Peel-wide catchments return when no site is scoped.</p>`;
+    scopeBriefIds($('#water-body')); scopeBriefIds($('#ww-body'));
+    $('#water-note').textContent = `${p.title} · site servicing`;
+    $('#ww-note').textContent = `${p.title} · site servicing`;
+    if (footTab === 'water' || footTab === 'ww') showFootTab(footTab);
   }
   // Plants tab: a comparison of the model with each plant's 2025 annual report, then each
   // plant's total inflow built up layer by layer like the Growth tab: census + built since +
@@ -4424,6 +4985,7 @@
     clearTimeout(capHorizonHTML.t); capHorizonHTML.t = setTimeout(() => { const y = $('#plants-body').parentElement.scrollTop; renderSvcTab(); const f = $(`#plants-body [data-hz="${el.dataset.hz}"]`); if (f) { f.focus(); const n = f.value.length; try { f.setSelectionRange(n, n); } catch (er) { /* number inputs */ } } $('#plants-body').parentElement.scrollTop = y; }, 350);
   });
   $('#plants-body').addEventListener('click', e => {
+    if (e.target.closest('[data-tight-all]')) { tightSeeAll = !tightSeeAll; const box = $('#tight-pipes'); if (box) box.innerHTML = tightestPipesHTML(); return; }
     if (!e.target.closest('[data-hz-reset]')) return;
     for (const k of Object.keys(hz)) if (k.startsWith('ex_')) delete hz[k];
     Object.assign(hz, HZ_DEFAULT); store.set('horizon', null); renderSvcTab();
@@ -4491,6 +5053,91 @@
       </div>
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted"><strong>Uncommitted reserve capacity</strong> (Ontario MECP Procedure D-5-1) = rated capacity − existing flow − flow committed to approved development. Here existing = ${Y} Census + built since (plus external inflows), committed = approved; proposed applications then draw on the reserve. Its population equivalent divides by the plant's flow per person today (residential + development jobs${svcOpt.ww === 'calibrated' ? ', calibrated to the 2025 reported flow, so it also carries existing employment and infiltration' : ' at Peel design rates'}). <em>Population at 100%</em> = (rated capacity − external inflows) ÷ that flow per person. ${svcOpt.ww === 'calibrated' ? '' : 'D-5-1 uses measured flows: switch to <em>Capacity check</em> for that basis.'}</p></details>`;
   }
+  // ---- Phase 4: "Tightest pipes" (Plants sub-view) — the top pipes by % of full capacity
+  // at build-out. The ranking itself is the tested pure helper in js/tightpipes.js
+  // (window.PeelTightPipes, loaded before this script).
+  let tightSeeAll = false;
+  function tightestPipesHTML() {
+    if (!SEW.data) {
+      loadSewers();
+      return `<h3 class="svc-sub">Tightest pipes <span class="muted small">% of full capacity at build-out</span></h3><p><span class="skel" style="width:45%" role="status" aria-label="Loading the sewer network"></span></p>`;
+    }
+    const entries = [];
+    for (let i = 0; i < SEW.data.pipes.length; i++) {
+      const s = pipeStats(i, null);   // build-out, whatever the scenario year
+      if (s.r1 == null) continue;     // no trusted capacity (missing / unreliable slope)
+      entries.push({ i, r1: s.r1, mm: s.p[0], cap: s.cap, q: s.then.q, pop: Math.round(s.then.pop), plant: SEW.data.plants[s.p[6]] || '' });
+    }
+    const top = window.PeelTightPipes.topTightPipes(entries, tightSeeAll ? 25 : 10);
+    const plantOf = x => x.plant === 'Toronto' ? 'City of Toronto system' : plantLabel(x.plant);
+    return `<h3 class="svc-sub">Tightest pipes <span class="muted small">top ${top.length} by % of full capacity at build-out · ${fmtNum(entries.length)} pipes screened</span></h3>
+      <table class="dt svc-table"><thead><tr><th>#</th><th>Pipe</th><th>Plant sewershed</th><th>Upstream people</th><th>Flow at build-out</th><th>Full capacity</th><th>% of capacity</th></tr></thead>
+      <tbody>${top.map((x, k) => `<tr data-pipe="${x.i}" tabindex="0"><td>${k + 1}</td><td>${fmtNum(x.mm)} mm</td><td>${esc(plantOf(x))}</td><td>${fmtNum(x.pop)}</td><td>${uLs(x.q)}</td><td>${fmtNum(x.cap)} L/s</td><td class="${x.r1 >= 1 ? 'over' : ''}"><strong>${Math.round(x.r1 * 100)}%</strong></td></tr>`).join('')}</tbody></table>
+      ${entries.length > 10 ? `<p><button type="button" class="btn small link" data-tight-all>${tightSeeAll ? 'Show top 10' : `See all (top 25 of ${fmtNum(entries.length)})`}</button></p>` : ''}
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Every Peel sanitary pipe of 300 mm+ (data/sewers.json): full-flow capacity by Manning's equation (n 0.013, published slope) against the build-out flow — existing peak dry at the plant's measured rate plus growth peak wet at Peel design criteria. Pipes whose published slope is missing or under 0.01% are excluded (capacity not trusted). A screen, not a hydraulic model. Click a row to see the pipe on the map.</p></details>`;
+  }
+  // ---- Phase 4: Pumping stations have their own sub-view now (#pumpstations-body): firm
+  // capacity (2020 Master Plan, largest pump out of service) against the build-out flow in
+  // the sewer arriving at each, at Peel design criteria (not calibrated).
+  function renderPumpStationsTab(k) {
+    ensurePumpSubTab();
+    const el = $('#pumpstations-body'); if (!el) return;
+    const { total, jobs, pdwf, ii } = k;
+    if (!state.servicing.blocks) {
+      el.innerHTML = `${hlP('Pumping stations are checked on the sewer arriving at each, once the blocks are loaded.')}<p class="small muted">The blocks (the Region\u2019s 40 I&amp;I sewersheds) did not load, so the stations are shown inline in the Blocks table instead.</p>`;
+      return;
+    }
+    if (!SEW.data) {
+      loadSewers();
+      el.innerHTML = `${hlP('Pumping stations are checked on the sewer arriving at each.')}<p><span class="skel" style="width:45%" role="status" aria-label="Loading the sewer network"></span></p>`;
+      return;
+    }
+    const ls = v => v * 1e6 / 86400;
+    const st = state.servicing.psAreas.map(a => ({ a, sp: spsOf(a), l: psCum(a) })).filter(x => x.sp && x.l)
+      .map(x => ({ ...x, dry: ls(pdwf(x.l)) / x.sp.firmLs * 100, wet: ls(pdwf(x.l) + ii(x.l)) / x.sp.firmLs * 100 })).sort((x, y) => y.dry - x.dry);
+    const blk = a => { const b = a.outletAt && PeelAreas.locate(state.servicing.drainage, a.outletAt[0], a.outletAt[1]); return b ? svcById.get(b) : null; };
+    const over = st.filter(x => x.wet >= 100).sort((a, b) => b.wet - a.wet);
+    const rowA = (id, cls) => id ? ` class="${cls} svc-row${id === svcFocus.id ? ' on' : ''}" data-svc="${esc(id)}" tabindex="0"` : ` class="${cls}"`;
+    const who2 = (people, j) => `${uPop(people)}${j > 0 ? ` · ${unit(fmtNum(Math.round(j)), 'jobs')}` : ''}`;
+    const maxWet = Math.max(100, ...st.map(x => x.wet));
+    el.innerHTML = `${hlP(over.length ? `<strong>${over.length} pumping station${over.length === 1 ? '' : 's'}</strong> exceed${over.length === 1 ? 's' : ''} firm capacity at build-out peak wet: ${over.slice(0, 4).map(r => `${esc(psName(r.a))} ≈${Math.round(r.wet)}%`).join(', ')}${over.length > 4 ? ` +${over.length - 4}` : ''}.` : 'No pumping station exceeds its firm capacity at build-out peak wet.')}
+      <div class="tiles">${[
+        wwTile('Pumping stations', fmtNum(st.length), '', '2020 Master Plan, firm capacity', 'drainage-area'),
+        wwTile('Over firm (peak wet)', fmtNum(over.length), '', over.length ? `tightest: ${esc(psName(over[0].a))} ≈${Math.round(over[0].wet)}%` : 'none at build-out', 'drainage-area'),
+        ...(st[0] ? [wwTile('Tightest station', esc(psName(st[0].a)), '', `peak dry ${Math.round(st[0].dry)}% · peak wet ≈${Math.round(st[0].wet)}% of firm`, 'drainage-area')] : []),
+        wwTile('Basis', 'Firm', '', 'largest pump out of service', 'drainage-area'),
+      ].join('')}</div>
+      <h3 class="svc-sub">Build-out peak wet weather as a % of firm capacity</h3>
+      <div>${st.map(x => miniBar(esc(psName(x.a)), x.wet, maxWet, '%', x.wet >= 100)).join('') || '<p class="small muted">No master plan stations matched.</p>'}</div>
+      <table class="dt svc-table ps-table" data-info="drainage-area"><caption>Pumping stations · firm capacity (2020 Master Plan) against the build-out flow in the sewer arriving at each, Peel design criteria</caption>
+        <thead><tr><th>Pumping station</th><th>Block → plant</th><th>People + jobs upstream</th><th>Firm</th><th>Peak dry</th><th>Peak wet ≈</th></tr></thead>
+        <tbody>${st.map(x => { const b = blk(x.a); return `<tr${rowA(x.a.id, '')}><td title="${esc(spsNote(x.sp))}">${esc(x.sp.name)}</td><td>${b ? esc(b.name) : '–'} → ${esc(PLANT_SHORT[x.a.plant] || x.a.plant || '')}</td>
+          <td>${who2(total(x.l), jobs(x.l))}</td><td>${fmtNum(x.sp.firmLs)} L/s</td><td class="${x.dry >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l)))}<small>${Math.round(x.dry)}%</small></td><td class="${x.wet >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l) + ii(x.l)))}<small>${Math.round(x.wet)}%</small></td></tr>`; }).join('')}</tbody></table>
+      ${wwInfoLine('Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the Region expands a station when peak wet weather flow reaches firm capacity. Peak dry is the firmer comparison: I&amp;I at a station uses the land draining through its arriving sewer (published network, 300 mm and up), so peak wet is approximate (≈).')}`;
+  }
+  // ---- Phase 4: these two checks moved out of the Wastewater tab into Sources & checks
+  // (Worker G renders them there); the tab keeps the capacity story. The reports-vs-model
+  // HTML is cached from the last Plants render; the Master Plan comparison is rebuilt from
+  // the current model when called.
+  let wwReportsVsModelHTML = '';
+  window.ModelChecks = window.ModelChecks || {};
+  ModelChecks.wwReportsVsModel = () => wwReportsVsModelHTML;
+  ModelChecks.wwMasterPlanVsTracker = () => {
+    const M = state.svcModel, R = state.reports;
+    if (!M || !R) return '';
+    const rows = MP2020.ww.map(r => { const c = M.plantCap(r.pl); return c ? mpRowHTML(r.name, '', r.cap, 'rated (MP: 90%)', r.mp, r.ref, c.existing, c.committed - c.existing, c.buildout - c.committed, `${M.mode === 'calibrated' ? '2025 flows' : 'design'} + built`) : ''; }).join('');
+    return `<section class="mpc" data-info="mp-compare"><h3 class="svc-sub">2020 Master Plan vs this tracker <span class="muted small">average day flow, ML/d</span></h3>${mpLegend}
+      <div class="table-wrap"><table class="dt mpc-table"><thead>${mpHead('Build-out against the Master Plan')}</thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">Master Plan: forecast average daily flow by plant without east–west transfers (Vol. 4, Tables 7–8; G.E. Booth includes York and Toronto agreement flows). Tracker: the plant's sewershed today (${M.mode === 'calibrated' ? 'calibrated to 2025 flows' : 'design flows'}, with external inflows) + approved + proposed developments, as in the Plants tab chart. “≈ the MP's year” reads off when the Master Plan expected that flow.</p></section>`;
+  };
+  // ---- Phase 4: effluent exceedances moved from the Plants tab into the plant's map pop-up
+  // (showLoads): one line per plant.
+  function plantComplianceNote(pl) {
+    const C = state.compliance; if (!C || !C.rows) return '';
+    const yrs = C.years, span = `${yrs[0]}–${yrs[yrs.length - 1]}`;
+    const k = C.rows.filter(r => r.plant === pl).reduce((t, r) => t + r.count, 0);
+    return k === 0 ? `Effluent compliance: no ECA exceedances reported ${span}` : `Effluent compliance: ${k} ECA exceedance${k === 1 ? '' : 's'} reported ${span}`;
+  }
   function renderPlantsTab(secs, peel, tor, k) {
     const { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow } = k;
     const R = state.reports, rep = pl => R && R.wastewater.plants[pl];
@@ -4557,7 +5204,9 @@
       });
       chart += capHorizonHTML(hzPlants, dv);
     }
-    let cmp = '';
+    // Phase 4: the 2025-reports comparison moved out of the tab into Sources & checks —
+    // cache it here for ModelChecks.wwReportsVsModel (Worker G renders it there).
+    wwReportsVsModelHTML = '';
     if (R) {
       const rows = secs.map(x => {
         const p = rep(x.pl); if (!p) return '';
@@ -4569,52 +5218,56 @@
       const sumRep = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).avgMLd : 0), 0), sumRated = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).ratedMLd : 0), 0);
       const sumToday = secs.reduce((t, x) => t + calib[x.pl].today + inflowsTo(x.pl), 0) + (tor ? tor.mld : 0);
       const sumBo = secs.reduce((t, x) => t + adwf(x.sum, x.f) + inflowsTo(x.pl), 0) + (tor ? tor.mld : 0);
-      cmp = `<h3 class="svc-sub">2025 annual reports vs. the model <span class="muted small">average dry weather, ML/d</span></h3>
+      wwReportsVsModelHTML = `<h3 class="svc-sub">2025 annual reports vs. the model <span class="muted small">average dry weather, ML/d</span></h3>
         <table class="dt svc-table rep-table" data-info="plant-reports"><thead><tr><th>Plant</th><th>Rated capacity<br>(annual average)</th><th>2025 reported<br>average</th><th>2025 highest day</th><th>Model today<br>(design criteria)</th><th>Calibration<br>factor</th><th>Model<br>build-out</th></tr></thead>
         <tbody>${rows}<tr class="tot"><td>Peel plants${tor ? `<small>model includes the City of Toronto inflow (${uML(tor.mld)}, plant not stated)</small>` : ''}</td><td>${uML(sumRated)}</td><td>${uML(sumRep)}<small>${pct(sumRep, sumRated)} of capacity</small></td><td></td><td>${uML(sumToday)}<small>${pct(sumToday, sumRep)} of reported</small></td><td></td><td class="bo">${uML(sumBo)}<small>${pct(sumBo, sumRated)} of capacity</small></td></tr></tbody></table>
         <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Model today = ${Y} Census + built since, residential + development jobs, plus external inflows known to reach the plant. The plants also treat existing employment, institutional and commercial flow, dry-weather infiltration and inflows the model does not hold, so the design-criteria model is expected to run low; the calibration factor is reported ÷ model and is applied in <em>Capacity check</em> mode. ${R.wastewater.plants.Lakeview ? esc(R.wastewater.plants.Lakeview.notes.slice(1).join(' ')) : ''}</p></details>`;
     }
     const peelExt = inflows;
     const peelF = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
-    $('#plants-body').innerHTML = `${exportBar('plants')}${stampHTML('ww', Y)}<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
+    // Phase 4: Plants sub-view tiles — each plant's build-out flow as a % of rated capacity.
+    const tileRows = secs.filter(x => ratedOf(x.pl) > 0).map(x => {
+      const rated = ratedOf(x.pl), bo = adwf(x.sum, x.f) + inflowsTo(x.pl) + divMld(x.pl);
+      return { name: PLANT_SHORT[x.pl], pctBo: rated > 0 ? bo / rated * 100 : 0, rated };
+    });
+    const allRated = tileRows.reduce((t, r) => t + r.rated, 0);
+    const allBo = secs.reduce((t, x) => t + adwf(x.sum, x.f) + inflowsTo(x.pl), 0) + inflows.reduce((t, e) => t + e.mld, 0);
+    $('#plants-body').innerHTML = `${exportBar('plants')}<div class="svc-head">${svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(plantLabel(dv.from))} to ${esc(plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
+      <div class="tiles">${[
+        ...tileRows.map(r => wwTile(esc(r.name), String(Math.round(r.pctBo)), '%', `of rated at build-out · rated ${fmtNum(r.rated)} ML/d`, 'plant-capacity')),
+        ...(tileRows.length > 1 && allRated > 0 ? [wwTile('All Peel plants', String(Math.round(allBo / allRated * 100)), '%', 'of rated at build-out', 'plant-capacity')] : []),
+      ].join('')}</div>
       ${chart}
-      ${cmp}
-      ${complianceHTML()}
+      <div id="tight-pipes">${tightestPipesHTML()}</div>
       <h3 class="svc-sub">Plant inflow by growth layer</h3>
       <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each layer is what it adds, the running total below${svcOpt.ww === 'calibrated' ? ' · capacity check (calibrated to 2025 flows)' : ''}</caption>
       <thead><tr><th>Layer</th><th>Population</th><th>Average dry<br>weather</th><th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th><th>Average<br>% of rated</th></tr></thead>
       <tbody>${secs.map(x => block(esc(plantLabel(x.pl)), x.sum, x.f, [...peelExt.filter(e => e.plant === x.pl), ...divTo(x.pl)], ratedOf(x.pl), x.f !== 1 ? `calibrated ×${x.f.toFixed(2)}` : '')).join('')}
         ${block(`Peel total (${secs.map(x => PLANT_SHORT[x.pl]).join(' + ')})`, peel, peelF, peelExt, secs.reduce((t, x) => t + ratedOf(x.pl), 0))}
         ${tor.rows.length ? block(esc(plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details><div id="mp-ww"></div>`;
-    $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant, compared with the 2025 annual reports`;
-  }
-  // Effluent compliance (data/compliance.json): exceedances of the plants' ECA limits reported to
-  // the Ministry (Environmental Compliance Reports), by plant and year.
-  function complianceHTML() {
-    const C = state.compliance; if (!C) return '';
-    const yrs = C.years, first = yrs[0], last = yrs[yrs.length - 1];
-    const plants = ['Lakeview', 'Clarkson', 'Inglewood'];
-    const n = pl => C.rows.filter(r => r.plant === pl).reduce((t, r) => t + r.count, 0);
-    const recent = C.rows.filter(r => r.year >= last - 1);
-    return `<h3 class="svc-sub" data-info="compliance">Effluent compliance <span class="muted small">exceedances of the plants' ECA limits reported to the Ministry, ${first}–${last}</span></h3>
-      <div class="cmp-sum">${plants.map(pl => { const k = n(pl); return `<span class="fr-b ${k === 0 ? 'fr-ok' : recent.some(r => r.plant === pl) ? 'fr-due' : 'fr-ref'}">${esc(PLANT_SHORT[pl])}: ${k === 0 ? 'none' : `${k} exceedance${k === 1 ? '' : 's'}`}</span>`; }).join(' ')}</div>
-      ${C.rows.length ? `<table class="dt svc-table cmp-table"><thead><tr><th>Plant</th><th>When</th><th>Parameter</th><th>Limit</th><th>Measured (max)</th><th>Action</th></tr></thead><tbody>
-        ${C.rows.slice().reverse().map(r => `<tr><td>${esc(PLANT_SHORT[r.plant])}</td><td>${esc(r.from)}${r.to && r.to !== r.from ? ` – ${esc(r.to)}` : ''}</td><td>${esc(r.contaminant)}</td><td>${r.limit ?? '–'} ${esc(r.unit)}<small>${esc(r.freq)}</small></td><td><strong>${r.max ?? '–'}</strong> ${esc(r.unit)}${r.count > 1 ? `<small>${r.count} times</small>` : ''}</td><td>${esc(r.action)}<small>${esc(r.ministry)}</small></td></tr>`).join('')}
-      </tbody></table>` : ''}
-      <p class="small muted">Ontario Environmental Compliance Reports (municipal and private sewage works), ${first}–${last}. Effluent quality, not hydraulic capacity, can also limit how much a plant can take: a plant near its limits for phosphorus or ammonia may need process upgrades before it can be rerated.</p>`;
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details>
+      ${wwInfoLine('Each plant\u2019s whole sewershed (all catchments traced to it): average dry weather flow against rated capacity; horizon years phase approved then proposed growth in. The 2025-report comparison and the Master Plan comparison moved to Sources &amp; checks.')}`;
+    $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant`;
   }
   // References (Breakdown & criteria tab): the Region's 2025 annual reports used for comparison.
-  function renderRefs() {
-    const R = state.reports, box = $('#d-refs');
-    if (!R || !box) return;
-    box.hidden = false;
-    box.innerHTML = `<h3 class="svc-sub">References <span class="muted small">standards, guidelines and reports behind the criteria and comparisons</span></h3>
+  // References HTML (shared by the Settings tab and the Sources & checks gear page).
+  function refsHTML() {
+    const R = state.reports;
+    if (!R) return '';
+    return `<h3 class="svc-sub">References <span class="muted small">standards, guidelines and reports behind the criteria and comparisons</span></h3>
       ${R.standards ? `<h4 class="ref-h">Design criteria and guidelines</h4><ul class="ref-list">${R.standards.map(r => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a><div class="small muted">${esc(r.used)}</div></li>`).join('')}</ul>` : ''}
       <h4 class="ref-h">Region of Peel ${R.year} annual reports <span class="muted small">(Water, Wastewater and Plants comparisons)</span></h4>
       <ul class="ref-list">${Object.values(R.reports).map(r => `<li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a></li>`).join('')}</ul>
       <p class="small muted">Index pages: <a href="${esc(R.indexPages.wastewater)}" target="_blank" rel="noopener">wastewater annual reports</a> · <a href="${esc(R.indexPages.water)}" target="_blank" rel="noopener">water quality reports</a>. ${esc(R.note)}</p>`;
+  }
+  function renderRefs() {
+    const box = $('#d-refs');
+    if (!box) return;
+    const html = refsHTML();
+    if (!html) return;
+    box.hidden = false;
+    box.innerHTML = html;
   }
   // ---- Export: a printable report (save as PDF) and an Excel workbook of what is on screen ----
   // Scopes: water, plants, catchments, growth (bottom panel) and dev / selection (side panel).
@@ -4625,10 +5278,10 @@
     wfac: { title: 'Existing water facilities', els: () => [$('#wfac-body')] },
     plants: { title: 'Wastewater treatment plants and capacity', els: () => [$('#plants-body')] },
     catchments: { title: 'Wastewater by sanitary catchment', els: () => [$('#ww-body')] },
-    growth: { title: 'Demand', els: () => [$('#pane-demand')].filter(e => e && !e.hidden) },
-    census: { title: 'Growth', els: () => [$('#census')].filter(e => e && !e.hidden) },
+    growth: { title: 'Demand', els: () => [$('#growth-pipeline-body')].filter(e => e && !e.hidden) },
+    census: { title: 'Growth', els: () => [$('#growth-census-body')].filter(e => e && !e.hidden) },
     dev: { title: 'Development servicing summary', els: () => [$('#detail-body')] },
-    loads: { title: 'What loads it', els: () => [$('#detail-body')] },
+    loads: { title: 'What loads it', els: () => [toolScopeBody() || $('#detail-body')] },
     whatif: { title: 'Test site servicing check', els: () => [$('#detail-body')] },
   };
   function cleanClone(el) {
@@ -4639,14 +5292,22 @@
     c.querySelectorAll('[hidden]').forEach(x => x.remove());
     return c;
   }
-  function criteriaTableHTML() {
+  // One criteria row for exports: group, item, used value, Peel default, unit,
+  // and the source document + version behind the default.
+  function criteriaExportRow(g, k) {
     const c = state.criteria, d = D.DEFAULT_CRITERIA;
-    const rows = Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => `<tr${+c[g][k] !== +d[g][k] ? ' class="mod"' : ''}><td>${esc(CRIT_LABEL[g] || g)}</td><td>${esc(k)}</td><td>${esc(String(c[g][k]))}</td><td>${esc(String(d[g][k]))}</td></tr>`));
-    return `<table class="dt"><thead><tr><th>Group</th><th>Item</th><th>Used</th><th>Peel default</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
+    const s = D.sourceOf(g, k) || {};
+    return { group: CRIT_LABEL[g] || g, item: (CRIT_KEY_LABEL[g] || {})[k] || k, used: +c[g][k], def: +d[g][k], unit: (D.CRIT_UNITS[g] || {})[k] || '', doc: s.doc || '', ver: s.ver || '' };
+  }
+  function criteriaTableHTML() {
+    const d = D.DEFAULT_CRITERIA;
+    const rows = Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => { const r = criteriaExportRow(g, k);
+      return `<tr${r.used !== r.def ? ' class="mod"' : ''}><td>${esc(r.group)}</td><td>${esc(r.item)}</td><td>${esc(String(r.used))}</td><td>${esc(String(r.def))}</td><td>${esc(r.unit)}</td><td>${esc(r.doc)}${r.ver ? `, ${esc(r.ver)}` : ''}</td></tr>`; }));
+    return `<table class="dt"><thead><tr><th>Group</th><th>Item</th><th>Used</th><th>Peel default</th><th>Unit</th><th>Source document</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
   }
   function reportMeta(scope) {
     const bc = baselineCensus(), R = state.reports;
-    const title = scope === 'loads' ? ($('#detail-body h3') || {}).textContent || SCOPES.loads.title : scope === 'dev' && currentProject ? `${SCOPES.dev.title} – ${currentProject.title}` : scope === 'dev' && selection.size ? `Selection servicing summary – ${fmtNum(selection.size)} developments` : SCOPES[scope].title;
+    const title = scope === 'loads' ? (((toolScopeBody() || $('#detail-body')).querySelector('h3') || {}).textContent || SCOPES.loads.title) : scope === 'dev' && currentProject ? `${SCOPES.dev.title} – ${currentProject.title}` : scope === 'dev' && selection.size ? `Selection servicing summary – ${fmtNum(selection.size)} developments` : SCOPES[scope].title;
     return { title, lines: [
       `Prepared ${new Date().toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' })} with the Peel Growth Pipeline (unofficial)`,
       UNOFFICIAL,
@@ -4661,16 +5322,16 @@
     const base = location.href.replace(/[#?].*$/, '').replace(/[^/]*$/, '');
     const body = S.els().map(e => cleanClone(e).innerHTML).join('<hr>');
     const refs = R ? `<ul>${Object.values(R.reports).map(r => `<li>${esc(r.title)} — ${esc(r.url)}</li>`).join('')}</ul>` : '';
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(m.title)}</title>
-      <link rel="stylesheet" href="${base}css/app.css"><style>body.report{background:#fff;color:#111;max-width:1100px;margin:0 auto;padding:16px;font:13px/1.4 system-ui,sans-serif}
-      .report h1{font-size:20px;margin:0 0 4px}.report .meta{color:#444;margin:0 0 2px}.report .noprint{margin:10px 0}.report section{margin-top:18px}
-      .report .svc-table,.report .rep-table,.report .ww-table{min-width:0}.report .svc-table small.tech{display:block}.report tr.mod td{background:#fff3d6}
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(m.title)}</title>
+      <link rel="stylesheet" href="${base}css/app.css"><style>body.report{background:var(--surface-1);color:var(--text-primary);max-width:1100px;margin:0 auto;padding:16px;font:13px/1.4 system-ui,sans-serif}
+      .report h1{font-size:20px;margin:0 0 4px}.report .meta{color:var(--text-secondary);margin:0 0 2px}.report .noprint{margin:10px 0}.report section{margin-top:18px}
+      .report .svc-table,.report .rep-table,.report .ww-table{min-width:0}.report .svc-table small.tech{display:block}.report tr.mod td{background:color-mix(in srgb, var(--cap-tight) 20%, var(--surface-1))}
       .report .cap-chart{max-width:100%}@media print{.noprint{display:none}body.report{padding:0}.report details>summary{display:none}table{page-break-inside:auto}tr{page-break-inside:avoid}}</style></head>
       <body class="report"><h1>${esc(m.title)}</h1>${m.lines.map(l => `<p class="meta small">${esc(l)}</p>`).join('')}
       <p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>
       <main>${body}</main>
       <section><h2>Criteria used</h2>${criteriaTableHTML()}</section>
-      <section><h2>References</h2>${refs}<p class="small">Peel Linear Wastewater Standards (2023); Peel Water and Wastewater Modelling Demand Table (Aug 2024); Peel Watermain Design Criteria; Peel Development Charges Background Study (persons per unit); Ontario MECP Procedure D-5-1 (uncommitted reserve capacity). Catchments traced from the Region of Peel sewer network; Statistics Canada census.</p></section>
+      <section><h2>References</h2>${refs}<p class="small">Design criteria sources: ${esc(D.sourceText(['ppu', 'water', 'wastewater', 'employment']))}. Peel Development Charges Background Study (persons per unit origin); Ontario MECP Procedure D-5-1 (uncommitted reserve capacity). Catchments traced from the Region of Peel sewer network; Statistics Canada census.</p></section>
       <footer class="small muted">${UNOFFICIAL}</footer>
       <script>addEventListener('load', () => setTimeout(() => print(), 400));<\/script></body></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
@@ -4734,8 +5395,8 @@
     // the DOM's per-file tables above are skipped, so this sheet carries them instead.
     const rec = recordAuditRows();
     XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([rec.cols, ...rec.rows]), 'Records');
-    const crit = state.criteria, d = D.DEFAULT_CRITERIA;
-    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Group', 'Item', 'Used', 'Peel default'], ...Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => [CRIT_LABEL[g] || g, k, +crit[g][k], +d[g][k]]))]), 'Criteria');
+    const d = D.DEFAULT_CRITERIA;
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['Group', 'Item', 'Used', 'Peel default', 'Unit', 'Source document', 'Source version'], ...Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => { const r = criteriaExportRow(g, k); return [r.group, r.item, r.used, r.def, r.unit, r.doc, r.ver]; }))]), 'Criteria');
     XLSX.writeFile(wb, `${m.title.replace(/[^\w\s.–-]+/g, '').slice(0, 80)}.xlsx`);
   }
   document.addEventListener('click', e => {
@@ -4745,7 +5406,7 @@
   // Switches in the Water / Wastewater / Plants tabs.
   for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#scen-bar']) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
-    if (e.target.closest('[data-goto-tab]')) return showFootTab(e.target.closest('[data-goto-tab]').dataset.gotoTab);
+    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { openScenPop(); return; } return showFootTab(gt); }
     if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }
     if (e.target.closest('[data-scen-clear]')) { store.set('scenA', null); return renderScenario(); }
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return filterInView(); }
@@ -4758,7 +5419,7 @@
     }
     svcOpt[b.dataset.svcopt] = b.dataset.v;
     store.set({ ww: 'svcWwMode', md: 'svcMdMode', div: 'svcDivert', tech: 'svcTech', nr: 'svcNear' }[b.dataset.svcopt], b.dataset.v);
-    if (b.dataset.svcopt === 'nr') { applyFilters(); if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject); }
+    if (b.dataset.svcopt === 'nr') { applyFilters(); if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh(); }
     renderSvcTab(); viewLink.write();
     if (b.dataset.svcopt === 'nr') renderMarkers();
   });
@@ -4845,8 +5506,8 @@
     if (!svg || svg.querySelector('#flow-head-s')) return;
     const ns = 'http://www.w3.org/2000/svg';
     const defs = document.createElementNS(ns, 'defs');
-    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#c2410c"/></marker>'
-      + '<marker id="flow-head-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,1 L10,5 L0,9 z" fill="#1f2937" stroke="#fff" stroke-width="1"/></marker>';
+    defs.innerHTML = '<marker id="flow-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" style="fill:var(--flow)"/></marker>'
+      + '<marker id="flow-head-s" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,1 L10,5 L0,9 z" style="fill:var(--text-primary);stroke:var(--map-label)" stroke-width="1"/></marker>';
     svg.insertBefore(defs, svg.firstChild);
   }
 
@@ -5089,7 +5750,7 @@
   // WEFTEC 2024). Each block is joined to the existing sewers: the pipes inside it, the ones
   // leaving it (outlets), the block its main outlet drains into, and the route to the plant.
   const BLK = { data: null, loading: null, layer: null, focus: L.layerGroup().addTo(map), net: null, id: null };
-  const BLK_COLOR = '#7048e8';
+  const blkColor = () => token('--block');
   function loadBlocks() {
     if (BLK.data || BLK.loading) return BLK.loading;
     BLK.loading = fetch('data/blocks.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => { BLK.data = d; return d; }).catch(() => null);
@@ -5111,7 +5772,10 @@
       return { b, pipes, outs, main, into: nx >= 0 && of[nx] >= 0 ? B[of[nx]].id : null, plant: main >= 0 ? (SEW.data.plants[P[main][6]] || '') : '' };
     });
     const byId = new Map(info.map(x => [x.b.id, x]));
-    for (const x of info) { x.up = info.filter(y => { const seen = new Set(); for (let z = y.into; z && !seen.has(z); z = byId.get(z) && byId.get(z).into) { if (z === x.b.id) return true; seen.add(z); } return false; }).map(y => y.b.id); x.direct = info.filter(y => y.into === x.b.id).map(y => y.b.id); }
+    // Phase 3b: the upstream closure is the tested pure helper in js/upstream.js
+    // (loaded before js/app.js; window.PeelUpstream).
+    const blkIds = info.map(y => y.b.id), intoOf = y => { const n = byId.get(y); return n ? n.into : null; };
+    for (const x of info) { x.up = PeelUpstream.upstreamIdsOf(blkIds, intoOf, x.b.id); x.direct = info.filter(y => y.into === x.b.id).map(y => y.b.id); }
     BLK.net = { of, info, byId };
     return BLK.net;
   }
@@ -5122,7 +5786,7 @@
     if (!BLK.layer) {
       BLK.layer = L.featureGroup();
       for (const b of BLK.data.blocks) {
-        const pl = L.polygon(b.parts.map(p => p.map(r => r.map(([x, y]) => [y, x]))), { renderer: svcRenderer, pane: 'svcPane', color: BLK_COLOR, weight: b.planning ? 2.4 : 1.3, opacity: 0.9, fill: true, fillColor: BLK_COLOR, fillOpacity: b.planning ? 0.12 : 0.03 })
+        const pl = L.polygon(b.parts.map(p => p.map(r => r.map(([x, y]) => [y, x]))), { renderer: svcRenderer, pane: 'svcPane', color: blkColor(), weight: b.planning ? 2.4 : 1.3, opacity: 0.9, fill: true, fillColor: blkColor(), fillOpacity: b.planning ? 0.12 : 0.03 })
           .bindTooltip(`<strong>Block ${esc(b.id)}</strong>${b.planning ? ' · prioritised (block study)' : ''}<br>${fmtNum(b.ha)} ha · wastewater I&amp;I program<br><span class="muted">Tap for its outlets and route to the plant</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); showBlock(b.id); });
         BLK.layer.addLayer(pl);
@@ -5191,6 +5855,8 @@
   }
   function setExistOn(e) { existOn = { ...existOn, ...e }; store.set('existOn', existOn); renderExisting(); renderLegend(); syncMapOpts(); }
   const currentView = () => { const v = store.get('mapView', 'planning'); return v === 'servicing' ? 'water' : MAP_VIEWS.some(([k]) => k === v) ? v : 'planning'; };
+  // Set once at startup too (applyViewSettings only runs on switches).
+  document.documentElement.dataset.mapview = currentView();
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
     set('#opt-mcolor', mstyle.color); set('#opt-msize', mstyle.size); set('#opt-mcap', mstyle.cap); set('#opt-mshow', mstyle.show);
@@ -5208,11 +5874,13 @@
   // Map views: Planning (how it was), Water and Wastewater (servicing review, one system each) and
   // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
   // view being left and restores the other view's last settings (its preset the first time).
+  // The per-view basemap comes from PeelDesign.basemapForView (single source of
+  // truth, unit-tested): planning -> aerial, the servicing views -> dark canvas.
   const VIEW_PRESETS = {
-    planning: { basemap: 'aerial-labels', labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
-    water: { basemap: 'streets', labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
-    wastewater: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
-    dc: { basemap: 'streets', labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
+    planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
+    water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
+    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: 'pipes' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
+    dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
   };
   function currentMapSettings() { return { basemap, labelMode, da: daOn, wf: WF.on, pz: svcOn.pz, dr: state.servicing && state.servicing.blocks ? svcOn.bk : svcOn.dr, mstyle: { ...mstyle }, exist: { ...existOn }, dc: { ...dcOn } }; }
   function setMapView(v) {
@@ -5226,6 +5894,8 @@
     const p = VIEW_PRESETS[v] || VIEW_PRESETS.planning;
     const s = { ...p, ...(saved || {}) };
     store.set('mapView', v);
+    // Exposed for CSS: the Planning aerial is darkened slightly (css/modes.css).
+    document.documentElement.dataset.mapview = v;
     if (BASEMAPS[s.basemap]) { basemap = s.basemap; store.set('basemap', basemap); setTiles(); restyleDa(); }
     if (LABEL_MODES[s.labelMode]) { labelMode = s.labelMode; store.set('labelMode', labelMode); }
     setDaLayer(!!s.da); setSvcLayer('pz', !!s.pz); setSvcLayer('dr', !!s.dr); setWfOn(!!s.wf);
@@ -5268,10 +5938,10 @@
   // Capacity layer: catchments coloured by their local flow growth over the census, pumping
   // station catchments by build-out peak wet weather flow as % of firm capacity, or pressure zones
   // by maximum day growth; with the sewer network drawn outlet to outlet.
-  const CAP_GROWTH = [[10, '#fdf0d5'], [25, '#fbd08a'], [50, '#f6a04d'], [100, '#e3672a'], [Infinity, '#a83a12']];
-  const CAP_PS = [[80, '#2f9e44'], [100, '#f08c00'], [Infinity, '#e03131']];
+  const CAP_GROWTH = [[10, '--growth-1'], [25, '--growth-2'], [50, '--growth-3'], [100, '--growth-4'], [Infinity, '--growth-5']];
+  const CAP_PS = [[80, '--cap-room'], [100, '--cap-tight'], [Infinity, '--cap-over']];
   // Colour for a value: the first class it falls under; Infinity (new, no census flow) takes the last.
-  const bucket = (v, scale) => isNaN(v) ? '#9aa0a6' : (scale.find(([t]) => v < t) || scale[scale.length - 1])[1];
+  const bucket = (v, scale) => token(isNaN(v) ? '--nodata' : (scale.find(([t]) => v < t) || scale[scale.length - 1])[1]);
   const fmtPct = v => !isFinite(v) ? 'new (no census flow)' : `${v >= 0 ? '+' : ''}${Math.round(v)}%`;
   const capLayer = L.layerGroup().addTo(map);
   // Capacity by year: built since the census in full, approved and proposed growth phased in as in
@@ -5352,7 +6022,7 @@
         if (c) { fill = bucket(c.v, CAP_GROWTH); tip += `<br>${mstyle.cap === 'zone' ? 'Max day' : 'Local average dry weather'} ${uML(c.now)} today → ${uML(c.bo)} ${capYear == null ? 'at build-out' : `by ${capYear}`} (<strong>${fmtPct(c.v)}</strong>)`; }
       }
       tip += '<br><span class="muted">Tap: what loads it</span>';
-      L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: fill || '#9aa0a6', weight: 1, opacity: 0.9, fill: true, fillColor: fill || '#9aa0a6', fillOpacity: fill ? 0.5 : 0.05 })
+      L.polygon(ll(a.rings), { renderer: svcRenderer, pane: 'svcPane', svcId: a.id, color: fill || token('--nodata'), weight: 1, opacity: 0.9, fill: true, fillColor: fill || token('--nodata'), fillOpacity: fill ? 0.5 : 0.05 })
         .bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', ev => { L.DomEvent.stop(ev); showLoads(a.id); }).addTo(capLayer);
     }
     if (mstyle.cap !== 'zone') drawNetwork(capLayer);
@@ -5373,26 +6043,20 @@
     }
     for (const d of state.servicing.psAreas || []) {
       const ps = d.outletAt && psLoad(d, capYear);
-      if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: '#fff', fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
+      if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: token('--sym-outline'), fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
         .bindTooltip(`<strong>${esc(drName(d).replace(/^[^·]+· /, ''))}</strong><br>${Math.round(ps.pct)}% of firm at build-out (peak wet)`, { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); showLoads(d.id); }).addTo(layer);
     }
-    for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:${PLANT_COLOR[p.name] || '#555'}"></span>`, iconSize: [16, 16] }) })
+    for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:var(${PLANT_TOKEN[p.name] || '--nodata'})"></span>`, iconSize: [16, 16] }) })
       .bindTooltip(`<strong>${esc(plantLabel(p.name))}</strong><br><span class="muted">Tap: everything it treats</span>`, { className: 'pt' })
       .on('click', () => showLoads(null, p.name)).addTo(layer);
     addFlowMarker();
   }
 
-  // Legend (bottom left, with the timeline to its right): marker colours and sizes, and the capacity
-  // layer's classes. Collapsed on phones until opened (remembered).
+  // Legend: marker colours and sizes, and the capacity layer's classes. Phase 2: folded into the
+  // Layers panel (#mo-legend, rendered by renderLegend below) instead of its own map box.
+  // Collapsed on phones until opened (remembered).
   const phoneMap = matchMedia('(max-width: 700px)').matches;
-  const Legend = L.Control.extend({ options: { position: 'bottomleft' }, onAdd() {
-    const el = L.DomUtil.create('div', 'map-legend'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    el.innerHTML = '<div class="lg-body"></div>';
-    el.addEventListener('toggle', e => store.set('legendOpen', e.target.open), true);
-    return el;
-  } });
-  const legend = new Legend().addTo(map);
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
   const yearText = () => capYear == null ? 'Build-out' : capYear <= censusYr() ? `${capYear} (census)` : String(capYear);
@@ -5409,68 +6073,27 @@
     return el;
   } });
   const wwLoads = new WwLoads().addTo(map);
-  // Boxes along the map's bottom edge: the legend bottom left, the timeline to its right (above it
-  // when there's no room beside it), the wastewater loads box bottom right (raised over the
-  // timeline when they would meet). The legend and the Layers panel take the height left free.
+  // Map box layout (Phase 2): only the Layers panel (top right) and the optional wastewater loads
+  // box (bottom right) sit on the map now, both corner-anchored by CSS. What is left here is the
+  // smart part: the selection bar at the top, and the phone bottom-sheet behaviour.
   const timebarEl = document.getElementById('timebar');
   function layoutMapBoxes() {
-    const lg = legend.getContainer(), op = document.querySelector('.map-opts'), wl = wwLoads.getContainer(), ab = document.querySelector('.area-box'), tb = timebarEl; if (!lg || !op || !tb || !ab) return;
+    const op = document.querySelector('.map-opts'), wl = wwLoads && wwLoads.getContainer(), tb = timebarEl;
+    if (!op || !map) return;
     const mr = map.getContainer().getBoundingClientRect(); if (!mr.width) return;
-    const gap = 8, edge = phoneMap ? 8 : 12, base = phoneMap ? 16 : 12;
+    const gap = 8, edge = phoneMap ? 8 : 12;
     // The development panel (right side, over the map on wide screens): lay out in the part left visible.
     const dt = $('#detail'), dr = dt && !dt.hidden ? dt.getBoundingClientRect() : null;
     const cover = dr && dr.left > mr.left + 300 && dr.left < mr.right ? mr.right - dr.left : 0;
     // On a phone the panel is a bottom sheet: the bottom boxes sit above it.
     const coverB = dr && !cover && dr.width >= mr.width * 0.9 && dr.top > mr.top + mr.height * 0.2 && dr.top < mr.bottom ? Math.round(mr.bottom - dr.top) : 0;
     const m = { left: mr.left, top: mr.top, bottom: mr.bottom - coverB, right: mr.right - cover, width: mr.width - cover, height: mr.height - coverB };
-    const more = document.querySelector('.more-box');
-    for (const b of [wl, ab, op, more]) if (b) b.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
-    lg.style.marginBottom = coverB ? `${coverB + base}px` : '';
-    // Phone with the panel open: little map is left, so only Layers and Filter by area stay (the
-    // timeline, legend and wastewater loads come back when the panel closes).
-    for (const b of [lg, tb, wl]) b.classList.toggle('sheet-hide', !!coverB);
-    // Legend height: from the bottom edge up to the controls at the top left.
-    const tl = [...map.getContainer().querySelectorAll('.leaflet-top.leaflet-left .leaflet-control')].reduce((b, c) => Math.max(b, c.getBoundingClientRect().bottom), m.top);
-    lg.style.maxHeight = `${Math.max(64, Math.round(m.bottom - tl - base - 16))}px`;
-    lg.classList.toggle('lg-squeezed', m.bottom - tl - base - 16 < 90);
-    // Timeline beside the legend, or above it when the space beside is too narrow.
-    const lr = lg.hidden ? null : lg.getBoundingClientRect();
-    const left = lr && lr.width ? lr.right - m.left + gap : edge;
-    const need = tb.classList.contains('folded') ? tb.scrollWidth : Math.min(460, phoneMap ? 300 : 340);
-    const beside = m.width - left - edge >= need;
-    tb.style.left = `${beside ? left : edge}px`;
-    tb.style.bottom = `${beside || !lr ? base + coverB : Math.round(mr.bottom - lr.top + gap)}px`;
-    tb.style.width = beside && !tb.classList.contains('folded') ? `${Math.min(460, Math.round(m.width - left - edge))}px` : '';
-    // Bottom right (filter by area, wastewater loads above it): lifted above the timeline / legend
-    // when they would overlap; the area box scrolls when open on a short map.
-    ab.style.marginBottom = coverB ? `${6 + coverB}px` : '';
-    {
-      const w = ab.getBoundingClientRect(), t = tb.getBoundingClientRect();
-      const lower = [t, lr].filter(r => r && r.width && r.right + gap > w.left);
-      if (lower.length) ab.style.marginBottom = `${Math.round(parseFloat(getComputedStyle(ab).marginBottom) + w.bottom - Math.min(...lower.map(r => r.top)) + gap)}px`;
-    }
-    // Area box height: up to the Layers panel's own header (view switch, notices, Layers line).
-    {
-      const o = op.getBoundingClientRect(), pn = op.querySelector('.mo-panel'), head = pn ? pn.getBoundingClientRect().top - o.top + 30 : o.height;
-      const sameCol = ab.getBoundingClientRect().left < o.right, moreH = more ? (more.querySelector('summary') || more).getBoundingClientRect().height + gap : 0;
-      ab.style.maxHeight = `${Math.max(90, Math.round(ab.getBoundingClientRect().bottom - (sameCol ? o.top + Math.min(o.height, head) + moreH + gap : mr.top + edge)))}px`;
-    }
-    // Layers and More settings (top right) stop above the boxes at the bottom right (or the panel's
-    // bottom sheet); with both open they share the room. Only open boxes are capped (folded, the
-    // Layers panel is short and must never clip the view switch).
-    op.style.maxHeight = ''; if (more) more.style.maxHeight = '';
-    const o = op.getBoundingClientRect(), wr = [wl.hidden ? null : wl.getBoundingClientRect(), ab.getBoundingClientRect()].filter(r => r && r.width && r.left < o.right && r.right > o.left).sort((a, b) => a.top - b.top)[0] || null;
-    const limit = wr ? wr.top : m.bottom - edge, avail = limit - o.top - gap;
-    const pnOpen = !!(op.querySelector('.mo-panel') || {}).open, moOpen = !!(more && (more.querySelector('details') || {}).open);
-    const moH = more ? more.getBoundingClientRect().height + gap : 0, opH = o.height + gap;
-    let opMax = null, moMax = null;
-    if (pnOpen && moOpen) { if (opH + moH > avail) { opMax = Math.max(120, avail / 2 - gap); moMax = Math.max(90, avail - Math.min(opH, opMax + gap) - gap); } }
-    else if (pnOpen) { if (opH + moH > avail) opMax = Math.max(120, avail - moH); }
-    else if (moOpen) { if (opH + moH > avail) moMax = Math.max(90, avail - opH - gap); }
-    op.style.maxHeight = opMax ? `${Math.round(opMax)}px` : ''; op.classList.toggle('mo-capped', !!opMax);
-    if (more) more.style.maxHeight = moMax ? `${Math.round(moMax)}px` : '';
+    if (wl) wl.style.marginRight = cover ? `${Math.round(cover + edge)}px` : '';
+    // Phone with the panel open: little map is left, so the timeline and wastewater loads hide
+    // under the sheet (they come back when the panel closes).
+    for (const b of [tb, wl]) if (b) b.classList.toggle('sheet-hide', !!coverB);
     // Selection / mode buttons (Clear selection, the developments switch): at the top of the map,
-    // between the controls on the left and the boxes on the right; under the right-hand boxes when
+    // between the controls on the left and the Layers panel on the right; under the panel when
     // there's no room between them (a phone).
     const mb = document.querySelector('.map-bottom');
     if (mb) {
@@ -5479,7 +6102,7 @@
       if (b.width) {
         const rects = sel => [...document.querySelectorAll(sel)].filter(e => !e.hidden && e.offsetParent !== null).map(e => e.getBoundingClientRect()).filter(r => r.width && r.top < mr.top + 140);
         const leftR = [...rects('.leaflet-top.leaflet-left .leaflet-control'), ...rects('#toggle-sidebar')].reduce((x, r) => Math.max(x, r.right), mr.left);
-        const right = [op, more].filter(Boolean).map(e => e.getBoundingClientRect()).filter(r => r.width);
+        const right = [op].map(e => e.getBoundingClientRect()).filter(r => r.width);
         const rightL = right.reduce((x, r) => Math.min(x, r.left), m.right);
         const avail = rightL - leftR - 2 * gap, widest = Math.max(0, ...[...mb.children].filter(c => !c.hidden).map(c => c.getBoundingClientRect().width));
         // Too wide for one row but each fits: stack them in the gap.
@@ -5495,36 +6118,41 @@
         }
       }
     }
-    // Attribution: one line to the right of the bottom-left boxes.
-    const at = map.getContainer().querySelector('.leaflet-control-attribution'), tr = tb.getBoundingClientRect();
-    if (at && !phoneMap) at.style.maxWidth = `${Math.max(120, Math.round(m.right - Math.max(tr.right, lr ? lr.right : 0) - 24))}px`;
+    // Attribution: one line to the right of the timeline.
+    const at = map.getContainer().querySelector('.leaflet-control-attribution'), tr = tb && tb.getBoundingClientRect();
+    if (at && !phoneMap && tr) at.style.maxWidth = `${Math.max(120, Math.round(m.right - tr.right - 24))}px`;
   }
-  const fitLegend = () => requestAnimationFrame(layoutMapBoxes);
-  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), document.querySelector('.more-box'), legend.getContainer(), wwLoads.getContainer(), document.querySelector('.area-box'), timebarEl].forEach(e => e && ro.observe(e)); }
+  // fitLegend: the legend now lives in the Layers panel, so this is a cheap no-op-safe refresh
+  // hook (kept for the existing call sites and the resize observer).
+  const fitLegend = () => requestAnimationFrame(() => { try { layoutMapBoxes(); } catch (e) { /* map not ready */ } });
+  if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), document.querySelector('.ww-loads'), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
   // The year the map's capacity results are worked out for now lives in the Scenario control
   // ("Results for year"); the legend keeps naming it.
   const censusYr = () => (baselineCensus() || {}).year || hz.year0;
   function renderLegend() {
-    const el = legend.getContainer(), parts = [];
+    // Phase 2: renders inline in the Layers panel (#mo-legend); the legendOpen state lives on the
+    // panel's own <details>, set once in MapOptions.onAdd.
+    const el = document.getElementById('mo-legend'); if (!el) return;
+    const parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
     if (mstyle.show === 'heat') parts.push(`<div class="lg-t">Heatmap: people + jobs at build-out</div><div class="lg-heat"></div><p class="lg-s">Low → high density of the shown developments; markers are hidden (Layers &amp; style → Show as).</p>`);
     if (mstyle.color === 'phase' && mstyle.show !== 'heat') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(layerColors()[k], t)).join('')}</ul>`);
     if (mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
-    if (mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(PLANT_COLOR[k], PLANT_SHORT[k])).join('')}${sw('#b8b8b8', 'No traced catchment')}</ul>`);
+    if (mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(`var(${PLANT_TOKEN[k]})`, PLANT_SHORT[k])).join('')}${sw('var(--nodata)', 'No traced catchment')}</ul>`);
     if (mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${markerPx(n)}px;height:${markerPx(n)}px"></i>${shortNum(n)}</span>`).join('')}</div>`);
-    if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('#777', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
-    if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(CAP_PS[0][1], '< 80% of firm')}${sw(CAP_PS[1][1], '80–100%')}${sw(CAP_PS[2][1], '> 100%')}${sw('#9aa0a6', 'Gravity / not tabled')}</ul>`);
-    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:#adb5bd"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>${isWW() && !Object.values(wwLay).every(v => v !== false) ? `<p class="lg-s"><strong>Loads:</strong> ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'} (Wastewater loads in Layers)</p>` : ''}`);
-    if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(c, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
+    if (state.servicing && mstyle.color !== 'quality' && mstyle.color !== 'timing' && (mstyle.color !== 'phase' || mstyle.size !== 'fixed') && svcOpt.nr === 'on') parts.push(`<ul>${sw('var(--text-muted)', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
+    if (mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(`var(${CAP_PS[0][1]})`, '< 80% of firm')}${sw(`var(${CAP_PS[1][1]})`, '80–100%')}${sw(`var(${CAP_PS[2][1]})`, '> 100%')}${sw('var(--nodata)', 'Gravity / not tabled')}</ul>`);
+    if (mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:var(--nodata)"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>${isWW() && !Object.values(wwLay).every(v => v !== false) ? `<p class="lg-s"><strong>Loads:</strong> ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => wwLay[k] !== false).map(([, t]) => t).join(' + ') || 'none'} (Wastewater loads in Layers)</p>` : ''}`);
+    if (mstyle.cap === 'growth' || mstyle.cap === 'zone') parts.push(`<div class="lg-t">${mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(`var(${c})`, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
-    if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:${EXIST_STYLE[k].color}"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
+    if (Object.values(existOn).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${EXIST_ZOOM})</div><ul>${Object.keys(existOn).filter(k => existOn[k]).map(k => `<li><span class="lg-line" style="background:var(${EXIST_STYLE[k].color})"></span>${esc(EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
-    if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:${c}"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
+    if (dcOn.on && state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DC_KIND).filter(([k]) => dcOn.sys === 'both' || (dcOn.sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     if (mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). ${esc(scenarioText())}</p>`);
-    el.querySelector('.lg-body').innerHTML = parts.length ? `<details${store.get('legendOpen', !phoneMap) ? ' open' : ''}><summary>Legend</summary>${parts.join('')}</details>` : '';
+    el.querySelector('.lg-body').innerHTML = parts.join('');
     el.hidden = !parts.length;
     syncPanelSum(); fitLegend();
   }
@@ -5532,6 +6160,63 @@
   // "What loads this?": a catchment (with everything upstream), a pressure zone or a plant —
   // the developments adding flow since the census, ranked by their peak flow.
   let loadsOf = null;
+  // ---- Phase 3b: pop-up results as a Tool result scope ----------------------------------
+  // Feature taps (catchment / zone / plant / pipe / DC line / facility) open their
+  // result in the Tool result tab (trail: Peel › title) via PeelTools.openResult,
+  // not the #detail side panel. Each show* builds {title, html} and opens it here;
+  // the #detail fallback keeps the calls working when the framework is absent.
+  let toolScope = null; // {kind, title} of the result currently shown in the Tool tab
+  // Phase 3b: pop-up results live in the Tool result tab — exports from one read
+  // that tab while it holds a result (the #detail fallback keeps toolScope null).
+  const toolScopeBody = () => (toolScope && typeof window !== 'undefined' && window.PeelTools && PeelTools.hasResult()) ? $('#pane-tool-body') : null;
+  function toolResult(kind, title, html, reopen) {
+    toolScope = { kind, title };
+    if (typeof window !== 'undefined' && window.PeelTools && typeof window.PeelTools.openResult === 'function') {
+      window.PeelTools.openResult({ title, html, reopen });
+      return true;
+    }
+    toolScope = null;
+    $('#detail-body').innerHTML = html;
+    $('#detail').hidden = false; $('#detail').dataset.view = 'tool'; $('#detail').scrollTop = 0;
+    return false;
+  }
+  // Pop-up action row shared by the feature result views. Buttons carry data-pt
+  // and are handled by the #pane-tool-body delegation below.
+  const ptActions = btns => btns.length ? `<div class="pt-actions" role="group" aria-label="Actions">${btns.join('')}</div>` : '';
+  const ptBtn = (act, v, label, title, extra = '') => `<button type="button" class="btn small" data-pt="${act}"${v != null ? ` data-pt-v="${esc(v)}"` : ''}${extra} title="${esc(title)}">${esc(label)}</button>`;
+  // The "Area report" action reports on the developments of the most recent
+  // "What loads this?" view; the "What loads this?" action on a local sewer
+  // re-runs with the stashed geometry.
+  let lastLoads = null, existSewerOf = null;
+  // Phase 3b: "Show upstream" — the catchments draining through this one, as a
+  // tool result; the map highlights them through focusSvc (it already shades the
+  // upstream areas and draws their flow path to the plant).
+  function showUpstream(id) {
+    if (!state.servicing || !state.svcModel) return;
+    const a = id && svcById.get(id);
+    if (!a || a.zone) return;
+    const M = state.svcModel;
+    const up = upstreamOf(id, svcFlowTree());
+    const rows = up.map(u => { const l = M.cum.get(u.id); return { u, flow: l ? M.adwf(l) : null }; })
+      .sort((x, y) => (y.flow || 0) - (x.flow || 0));
+    const html = `
+      <div class="head"><h3>Upstream of ${esc(drName(a))}</h3><div class="m">${up.length ? `${fmtNum(up.length)} catchment${up.length === 1 ? '' : 's'} drain${up.length === 1 ? 's' : ''} through it` : 'Nothing drains through it: a head-of-system catchment'} · average dry weather at build-out (design)</div></div>
+      ${up.length ? `<table class="dt"><caption>Tap a catchment for what loads it</caption><thead><tr><th>Catchment</th><th class="n">Build-out avg dry</th></tr></thead>
+        <tbody>${rows.map(r => `<tr class="pt-svc" data-pt="svc" data-pt-v="${esc(r.u.id)}" tabindex="0"><td>${esc(drName(r.u))}</td><td class="n">${r.flow != null ? `${fmt1(r.flow)} ML/d` : '–'}</td></tr>`).join('')}</tbody></table>` : ''}
+      <p class="small muted">The map shades the upstream catchments and draws their flow path to ${esc(plantLabel(a.plant))}.</p>`;
+    focusSvc(id, { zoom: true, loads: false, keep: true });
+    toolResult('upstream', `Upstream of ${drName(a)}`, html, () => showUpstream(id));
+  }
+  // Pop-up actions (Phase 3b): what each data-pt button does.
+  function toolAction(act, v, el) {
+    if (act === 'loads') return showLoads(v || null, el && el.dataset.ptP ? el.dataset.ptP : null);
+    if (act === 'ploads') return showPipeLoads(+v);
+    if (act === 'eloads' && existSewerOf) return existSewerLoads(existSewerOf.lines, existSewerOf.a);
+    if (act === 'upstream') return showUpstream(v);
+    if (act === 'areareport' && lastLoads) return areaReport(lastLoads.devs, `Area report – ${lastLoads.title}`, lastLoads.rings);
+    if (act === 'upgrade' && typeof window !== 'undefined' && window.PeelToolUpgrade) return window.PeelToolUpgrade.open(+v);
+    if (act === 'svc') return showLoads(v, null);
+  }
   function showLoads(id, plantName) {
     if (!state.servicing || !state.svcModel) return;
     const M = state.svcModel, a = id && svcById.get(id), c = state.criteria;
@@ -5544,6 +6229,8 @@
       title = plantLabel(plantName); sub = `${fmtNum(ids.size)} ${state.servicing.blocks ? 'blocks' : 'catchments'}`;
       const cap = M.plantCap(plantName);
       if (cap) sub += ` · rated ${fmt1(cap.rated)} ML/d · existing + approved ${Math.round(cap.committed / cap.rated * 100)}% · uncommitted reserve ${fmt1(cap.rated - cap.committed)} ML/d`;
+      const ce = plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
+      if (ce) sub += ` · ${ce}`;
     } else if (a && a.zone) {
       key = 'pz'; ids = new Set([a.id]); title = a.name;
       const l = M.zones.get(a.id); if (l) sub = `max day ${fmt1(M.wMax(l.census, 0))} ML/d at the census → ${fmt1(M.wMax(M.total(l), M.jobs(l)))} ML/d at build-out`;
@@ -5566,12 +6253,17 @@
       rows.push({ p, lay, e, avg: key === 'pz' ? cb.water.avg : cb.wastewater.avg, peak: key === 'pz' ? cb.water.maxDay : cb.wastewater.wetPeak, via: svcById.get(inIds[0]), near: !!nearOf(p, key) });
     }
     rows.sort((x, y) => y.peak - x.peak);
+    // Phase 3b pop-up actions: re-run, area report, and (catchments) the upstream list.
+    const acts = [ptBtn('loads', plantName ? null : id, 'What loads this?', 'Re-run this analysis (picks up scenario changes)', plantName ? ` data-pt-p="${esc(plantName)}"` : '')];
+    if (!plantName && a && !a.zone) acts.push(ptBtn('upstream', id, 'Show upstream', 'List the catchments draining through this one'));
+    acts.push(ptBtn('areareport', null, 'Area report', 'A printable report on the developments loading this area'));
     const totAvg = rows.reduce((t, r) => t + r.avg, 0);
     const byLayer = ['built', 'approved', 'proposed'].map(k => [k, rows.filter(r => r.lay === k).reduce((t, r) => t + r.avg, 0)]);
     const LIMIT = 60;
     const what = key === 'pz' ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
-    $('#detail-body').innerHTML = `
+    const html = `
       <div class="head"><h3>What loads ${esc(title)}</h3><div class="m">${key === 'pz' ? 'Water pressure zone' : plantName ? 'Wastewater treatment plant' : `${a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment'} and everything upstream`}</div></div>
+      ${ptActions(acts)}
       <p class="small">${esc(sub)}${plantName ? ` ${estTag}` : ''}</p>
       <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${layerColors()[k]}"></span>${esc(LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
       ${exportBar('loads')}
@@ -5582,7 +6274,8 @@
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments (Excel export has the top ${LIMIT}).</p>` : ''}
       ${dcAreaWorksHTML(ids, key, plantName)}
       <p class="small muted">Developments built since the census, approved and proposed (existing development is in the census flow). Flows are each development's own at Peel design criteria; peaks are not additive. ${esc(scenarioText())}.</p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
+    lastLoads = { devs: rows.map(r => r.p), title, rings: a && a.rings ? a.rings : [] };
+    toolResult('loads', `What loads ${title}`, html, () => showLoads(id, plantName));
     viewLink.write();
     if (id && svcFocus.id !== id) focusSvc(id, { zoom: false, loads: false });
   }
@@ -5593,6 +6286,31 @@
     if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15));
   });
   $('#detail-body').addEventListener('keydown', e => { const r = e.target.closest('.ld-row'); if (r && e.key === 'Enter') r.click(); });
+  // Phase 3b: the Tool result tab's own delegation — pop-up actions, development
+  // rows, pipe links and DC links (the #detail-body handlers don't see this container).
+  const toolBody = $('#pane-tool-body');
+  if (toolBody) {
+    toolBody.addEventListener('click', e => {
+      const pa = e.target.closest('[data-pt]');
+      if (pa) { toolAction(pa.dataset.pt, pa.dataset.ptV, pa); return; }
+      const r = e.target.closest('.ld-row');
+      if (r) { const p = projectByKey(r.dataset.dev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+      const pb = e.target.closest('[data-pipe]');
+      if (pb && SEW.data) { const i = +pb.dataset.pipe; showPipeLoads(i); const c = SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
+      const f = e.target.closest('[data-dcn-filter]');
+      if (f) { dcnFilter = f.dataset.dcnFilter; return showDcTiming(); }
+      if (e.target.closest('[data-dcn-all]')) { loadSewers(); return showDcTiming(); }
+      const cn = e.target.closest('[data-dcn-cons]');
+      if (cn && DCN.reg && DCN.reg.get(cn.dataset.dcnCons)) return showConsDevs(DCN.reg.get(cn.dataset.dcnCons));
+      const rl = e.target.closest('[data-dcn-relief]');
+      if (rl) {
+        const [cid, k] = rl.dataset.dcnRelief.split('|'), c = DCN.reg && DCN.reg.get(cid), r2 = c && c.relief[+k];
+        if (r2 && r2.ln) { showDcLine(r2.ln); map.fitBounds(L.latLngBounds(r2.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); if (!dcOn.on) setDcOn({ on: true, sys: 'both' }); }
+        else if (r2 && r2.fc) { showFacility(r2.fc); if (r2.fc.g) map.setView([r2.fc.g[1], r2.fc.g[0]], Math.max(map.getZoom(), 14)); }
+      }
+    });
+    toolBody.addEventListener('keydown', e => { const r = e.target.closest('.ld-row, .pt-svc'); if (r && e.key === 'Enter') r.click(); });
+  }
   renderLegend(); syncMapOpts();
 
   // Linked map and tables: hovering a zone / catchment row outlines it on the map; hovering an
@@ -5637,10 +6355,13 @@
       <span>${UNOFFICIAL}</span>
       <span>Map style: ${esc(MSTYLE.color[mstyle.color])} colour · ${esc(MSTYLE.size[mstyle.size])}${mstyle.cap !== 'off' ? ` · ${esc(MSTYLE.cap[mstyle.cap])}` : ''} · prepared ${new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' })}</span>`;
     $('.map-wrap').appendChild(head);
-    const lg = legend.getContainer().querySelector('details'); const lgOpen = lg && lg.open; if (lg) lg.open = true;
+    // The legend lives in the Layers panel (hidden when printing): print a copy in the title block.
+    const lgBox = document.getElementById('mo-legend'), lgd = lgBox && lgBox.querySelector('details');
+    let lgClone = null;
+    if (lgd && !lgBox.hidden) { lgClone = lgd.cloneNode(true); lgClone.open = true; lgClone.classList.add('print-legend'); lgClone.removeAttribute('id'); head.appendChild(lgClone); }
     document.body.classList.add('print-map');
     map.invalidateSize();
-    const done = () => { document.body.classList.remove('print-map'); head.remove(); if (lg) lg.open = lgOpen; map.invalidateSize(); removeEventListener('afterprint', done); };
+    const done = () => { document.body.classList.remove('print-map'); head.remove(); map.invalidateSize(); removeEventListener('afterprint', done); };
     addEventListener('afterprint', done);
     setTimeout(() => window.print(), 1200);
   }
@@ -5700,11 +6421,11 @@
   // ---- Measure, buffer select and test-site tools -------------------------------------------
   // Measure: tap points on the map for the distance along them; Buffer: select the shown
   // developments within a radius of the last point (adds to the selection, like the lasso).
+  // Phase 3b: the measure / trace / test-a-site / select tools register with PeelTools
+  // (js/tools.js); their prompts and controls live in the tool banner (bannerHTML), and
+  // map clicks route through PeelTools.mapClick. The old .tool-panel is gone.
   const toolLayer = L.layerGroup().addTo(map);
   const tool = { mode: null, pts: [] };
-  const toolPanel = L.DomUtil.create('div', 'tool-panel', map.getContainer());
-  L.DomEvent.disableClickPropagation(toolPanel); L.DomEvent.disableScrollPropagation(toolPanel);
-  toolPanel.hidden = true;
   const metres = (a, b) => map.distance(a, b);
   const fmtDist = m => m < 1000 ? `${Math.round(m)} m` : `${(m / 1000).toFixed(2)} km`;
   function setTool(mode) {
@@ -5712,24 +6433,169 @@
     tool.pts = []; toolLayer.clearLayers();
     syncToolsBtn();
     map.getContainer().classList.toggle('tool-on', !!tool.mode);
+    // The Select tool is the exception to the tool-on rule (markers ignore taps while a
+    // tool is active): its tap mode must not swallow marker taps, which keep opening the
+    // development; tap-select only adds developments near, but not under, the pointer.
+    map.getContainer().classList.toggle('tool-select', tool.mode === 'select');
     if (tool.mode && lassoOn) setLasso(false);
     if (tool.mode && innerWidth <= 760) closeDetail();
-    renderToolPanel();
+    if (typeof PeelTools !== 'undefined') PeelTools.sync(tool.mode);
   }
-  function renderToolPanel() {
-    toolPanel.hidden = !tool.mode;
-    if (tool.mode === 'measure') {
-      const d = tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0);
-      toolPanel.innerHTML = `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(d)}</span>`}
-        ${tool.pts.length ? `<span class="tp-row">Select within <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small" data-buffer="${r}">${fmtDist(r)}</button>`).join('')}</span> of the last point</span>` : ''}
-        ${tool.pts.length ? '<span class="tp-row tp-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
-        <span class="tp-row"><button type="button" class="btn small link" data-tool-clear="1">Clear</button> <button type="button" class="btn small link" data-tool-done="1">Done</button></span>`;
-      if (tool.pts.length) fillElev(tool.pts.slice());
-    } else if (tool.mode === 'trace') {
-      toolPanel.innerHTML = `<strong>Trace sewer path</strong> <span class="muted">tap a development, or any point on the map, to trace its route to the plant</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
-    } else if (tool.mode === 'whatif') {
-      toolPanel.innerHTML = `<strong>Test a site</strong> <span class="muted">tap the map where the site is</span> <button type="button" class="btn small link" data-tool-done="1">Cancel</button>`;
+  const hasTools = () => typeof PeelTools !== 'undefined';
+  // Selection results open in the Tool result pane (Peel › <title> in the trail);
+  // when the framework is absent (tests, old builds) they fall back to #detail.
+  function openSelectionResult(title, added) {
+    setDaContext(null);
+    const sel = [...selection.values()];
+    currentProject = null;
+    highlight(null);
+    if (hasTools()) PeelTools.openResult({ title, html: selectionSummaryHTML(sel, added), reopen: () => openSelectionResult(title, added) });
+    else showSelection(added);
+    renderTrail();
+  }
+  function refreshMeasureBanner() {
+    if (tool.mode === 'measure' && hasTools()) { PeelTools.banner(measureBannerHTML()); if (tool.pts.length) fillElev(tool.pts.slice()); }
+  }
+  function measureDist() { return tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0); }
+  function measureBannerHTML() {
+    return `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(measureDist())}</span>`}
+      ${tool.pts.length ? `<span class="pt-row">Select within <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small" data-ptool-act="buffer:${r}">${fmtDist(r)}</button>`).join('')}</span> of the last point</span>` : ''}
+      ${tool.pts.length ? '<span class="pt-row pt-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
+      <span class="pt-row"><button type="button" class="btn small link" data-ptool-act="clear">Clear</button> <button type="button" class="btn small link" data-ptool-act="done">Done</button></span>`;
+  }
+  // The circle as a ring, so it draws and exports like a lasso area.
+  function bufferSelect(center, r) {
+    let added = 0;
+    for (const p of state.filtered) if (p.lat != null && !selection.has(p.key) && metres(center, [p.lat, p.lng]) <= r) { selection.set(p.key, p); added++; }
+    const ring = []; for (let i = 0; i <= 48; i++) { const t = i / 48 * 2 * Math.PI, dy = r * Math.cos(t) / 111320, dx = r * Math.sin(t) / (111320 * Math.cos(center.lat * Math.PI / 180)); ring.push([center.lng + dx, center.lat + dy]); }
+    selAreas.push(ring); drawSelection();
+    openSelectionResult('Selection', added);
+  }
+  // The Select tool: tap / lasso / box / radius sub-modes in the banner, one tool for
+  // all the ways of picking developments.
+  let selectSub = 'tap';           // tap | lasso | box | radius
+  let selectRadius = null, selectRadiusM = 500;
+  function refreshSelectBanner() { if (tool.mode === 'select' && hasTools()) PeelTools.banner(selectBannerHTML()); }
+  function setSelectSub(sub) {
+    selectSub = sub;
+    if (sub === 'lasso' && !lassoOn) setLasso(true);
+    if (sub !== 'lasso' && lassoOn) setLasso(false);
+    if (sub !== 'radius') { selectRadius = null; toolLayer.clearLayers(); }
+    refreshSelectBanner();
+  }
+  function selectBannerHTML() {
+    const sub = (id, label) => `<button type="button" class="btn small${selectSub === id ? ' on' : ''}" data-ptool-act="sub:${id}" aria-pressed="${selectSub === id}">${label}</button>`;
+    let mid = '';
+    if (selectSub === 'tap') mid = '<span class="muted">tap near a development to add it · a tap on one opens it</span>';
+    else if (selectSub === 'lasso') mid = `<span class="muted">${lassoOn ? 'draw around the developments' : 'starting…'}</span>`;
+    else if (selectSub === 'box') mid = '<span class="muted">hold Ctrl / ⌘ and drag a box on the map</span>';
+    else if (selectSub === 'radius') mid = `<span class="muted">${selectRadius ? 'choose a radius' : 'tap the map to place the centre'}</span> <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small${selectRadiusM === r ? ' on' : ''}" data-ptool-act="radius:${r}">${fmtDist(r)}</button>`).join('')}</span>`;
+    return `<strong>Select</strong> <span class="seg" role="group" aria-label="Select mode">${sub('tap', 'Tap')}${sub('lasso', 'Lasso')}${sub('box', 'Box')}${sub('radius', 'Radius')}</span> ${mid}
+      <span class="pt-row"><button type="button" class="btn small link" data-ptool-act="add">+ Add area</button>${selection.size ? ' <button type="button" class="btn small link" data-ptool-act="clear">Clear</button>' : ''} <button type="button" class="btn small link" data-ptool-act="done">Done</button></span>`;
+  }
+  // Nearest shown development to a tap, with its pixel distance: ≤ 16 px means the tap
+  // hit a development marker (whose own click handler opens it — left intact), so
+  // tap-select only picks developments near, but not under, the pointer.
+  function nearestShownDev(latlng) {
+    const c = map.latLngToContainerPoint(latlng);
+    let best = null, bd = Infinity;
+    for (const p of state.filtered) {
+      if (p.lat == null || !devShown(p)) continue;
+      const d = map.latLngToContainerPoint([p.lat, p.lng]);
+      const px = Math.hypot(d.x - c.x, d.y - c.y);
+      if (px < bd) { bd = px; best = p; }
     }
+    return best ? { p: best, px: bd } : null;
+  }
+  // Trace: sewer to the plant, or water from the plant, from any point.
+  let traceDir = 'sewer';
+  function traceBannerHTML() {
+    return `<strong>Trace</strong> <span class="seg">${['sewer', 'water'].map(d => `<button type="button" class="btn small${traceDir === d ? ' on' : ''}" data-ptool-act="dir:${d}" aria-pressed="${traceDir === d}">${d === 'sewer' ? 'Sewer' : 'Water'}</button>`).join('')}</span>
+      <span class="muted">${traceDir === 'sewer' ? 'tap a development, or any point, to trace its sewer route to the plant' : 'tap a development, or any point, to trace its water supply route from the plant'}</span>
+      <button type="button" class="btn small link" data-ptool-act="done">Cancel</button>`;
+  }
+  if (hasTools()) {
+    PeelTools.register('measure', {
+      title: 'Measure',
+      hint: 'tap points on the map',
+      bannerHTML: measureBannerHTML,
+      onClick(latlng) {
+        tool.pts.push(latlng);
+        toolLayer.clearLayers();
+        if (tool.pts.length > 1) L.polyline(tool.pts, { className: 'measure-line', interactive: false }).addTo(toolLayer);
+        tool.pts.forEach((p, i) => L.circleMarker(p, { radius: 4, className: 'measure-pt', interactive: false }).bindTooltip(i ? fmtDist(tool.pts.slice(0, i + 1).reduce((t, q, j) => j ? t + metres(tool.pts[j - 1], q) : 0, 0)) : 'start', { permanent: i === tool.pts.length - 1 && i > 0, className: 'pt', direction: 'right' }).addTo(toolLayer));
+        refreshMeasureBanner();
+      },
+      onBannerAct(act) {
+        if (act === 'done') { setTool(null); return; }
+        if (act === 'clear') { tool.pts = []; toolLayer.clearLayers(); refreshMeasureBanner(); return; }
+        if (act.startsWith('buffer:') && tool.pts.length) bufferSelect(tool.pts[tool.pts.length - 1], +act.slice(7));
+      },
+      onDeactivate() { tool.pts = []; toolLayer.clearLayers(); },
+    });
+    PeelTools.register('trace', {
+      title: 'Trace',
+      hint: 'tap the map',
+      bannerHTML: traceBannerHTML,
+      onBannerAct(act) {
+        if (act === 'done') { setTool(null); return; }
+        if ((act === 'dir:sewer' || act === 'dir:water') && hasTools()) { traceDir = act.slice(4); PeelTools.banner(traceBannerHTML()); }
+      },
+      onClick(latlng) {
+        if (traceDir === 'water') {
+          setTool(null);
+          const p = { key: `pt:${latlng.lat.toFixed(5)},${latlng.lng.toFixed(5)}`, lat: latlng.lat, lng: latlng.lng, title: 'Point on the map' };
+          const head = ok => `<div class="head"><h3>Water route from this point</h3><div class="m">${latlng.lat.toFixed(5)}, ${latlng.lng.toFixed(5)}${ok ? '' : ' · the trace failed'}</div></div>`;
+          PeelTools.openResult({ title: 'Water route from this point', html: `${head(true)}<p class="small muted">Tracing…</p>` });
+          traceWater(p).then(r => {
+            PeelTools.openResult({ title: 'Water route from this point', html: `${head(!!r)}
+              ${waterTraceSummaryHTML(r)}<p class="small"><button type="button" class="btn small" data-tool-again="trace">Trace another point</button></p>` });
+          }).catch(() => {
+            PeelTools.openResult({ title: 'Water route from this point', html: `${head(false)}<p class="small muted">The water layers did not load — try again in a moment.</p><p class="small"><button type="button" class="btn small" data-tool-again="trace">Trace another point</button></p>` });
+          });
+        } else { setTool(null); tracePoint(latlng); }
+      },
+    });
+    PeelTools.register('whatif', {
+      title: 'Test a site',
+      hint: 'tap the map where the site is',
+      bannerHTML: () => `<strong>Test a site</strong> <span class="muted">tap the map where the site is</span> <button type="button" class="btn small" data-ptool-act="batch">Batch from CSV</button> <button type="button" class="btn small link" data-ptool-act="done">Cancel</button>`,
+      onBannerAct(act) {
+        if (act === 'done') { setTool(null); return; }
+        if (act === 'batch' && window.PeelToolBatch) PeelToolBatch.open();
+      },
+      onClick(latlng) { setTool(null); showWhatIf(latlng); },
+    });
+    PeelTools.register('select', {
+      title: 'Select',
+      hint: 'tap near a development, or draw around them',
+      bannerHTML: selectBannerHTML,
+      onActivate() { setSelectSub('tap'); },
+      onDeactivate() { if (lassoOn) setLasso(false); selectRadius = null; toolLayer.clearLayers(); },
+      onBannerAct(act) {
+        if (act === 'done') { setTool(null); return; }
+        if (act === 'clear') { clearSelection(); if (hasTools()) PeelTools.closeResult(); refreshSelectBanner(); return; }
+        if (act === 'add') { setLasso(true); refreshSelectBanner(); return; }
+        if (act.startsWith('sub:')) { setSelectSub(act.slice(4)); return; }
+        if (act.startsWith('radius:')) { selectRadiusM = +act.slice(7); if (selectRadius) bufferSelect(selectRadius, selectRadiusM); else refreshSelectBanner(); }
+      },
+      onClick(latlng) {
+        if (selectSub === 'radius') {
+          selectRadius = latlng;
+          toolLayer.clearLayers();
+          L.circle(latlng, { radius: selectRadiusM, className: 'sel-radius', interactive: false }).addTo(toolLayer);
+          refreshSelectBanner();
+          return;
+        }
+        if (selectSub !== 'tap') return; // lasso and box have their own machinery
+        const hit = nearestShownDev(latlng);
+        if (!hit || hit.px > 40) return;
+        if (hit.px <= 16) return; // on a marker: its own click opened the development
+        if (selection.has(hit.p.key)) return;
+        selection.set(hit.p.key, hit.p); drawSelection();
+        openSelectionResult('Selection');
+      },
+    });
   }
   // ---- Pipes along a ground profile: Region of Peel sanitary sewer inverts and watermains ----
   // Each profile sample takes the nearest sanitary main within 12 m (its invert interpolated along
@@ -5791,34 +6657,10 @@
         <span class="muted small">Ground: terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m), so depths are approximate. Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed).</span>`;
     } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (terrain tiles did not load).</span>'; }
   }
-  toolPanel.addEventListener('click', e => {
-    // Redraw after the click has finished: replacing the button under the pointer during the click
-    // detaches it, and Leaflet then takes the same click for a tap on the map (a stray point).
-    e.stopPropagation();
-    if (e.target.closest('[data-tool-done]')) { setTimeout(() => setTool(null)); return; }
-    if (e.target.closest('[data-tool-clear]')) { setTimeout(() => { tool.pts = []; toolLayer.clearLayers(); renderToolPanel(); }); return; }
-    const b = e.target.closest('[data-buffer]'); if (!b || !tool.pts.length) return;
-    const c = tool.pts[tool.pts.length - 1], r = +b.dataset.buffer;
-    let added = 0;
-    for (const p of state.filtered) if (p.lat != null && !selection.has(p.key) && metres(c, [p.lat, p.lng]) <= r) { selection.set(p.key, p); added++; }
-    // The circle as a ring, so it draws and exports like a lasso area.
-    const ring = []; for (let i = 0; i <= 48; i++) { const t = i / 48 * 2 * Math.PI, dy = r * Math.cos(t) / 111320, dx = r * Math.sin(t) / (111320 * Math.cos(c.lat * Math.PI / 180)); ring.push([c.lng + dx, c.lat + dy]); }
-    selAreas.push(ring); drawSelection(); showSelection(added);
-  });
   map.on('click', e => {
-    if (tool.mode === 'measure') {
-      tool.pts.push(e.latlng);
-      toolLayer.clearLayers();
-      if (tool.pts.length > 1) L.polyline(tool.pts, { className: 'measure-line', interactive: false }).addTo(toolLayer);
-      tool.pts.forEach((p, i) => L.circleMarker(p, { radius: 4, className: 'measure-pt', interactive: false }).bindTooltip(i ? fmtDist(tool.pts.slice(0, i + 1).reduce((t, q, j) => j ? t + metres(tool.pts[j - 1], q) : 0, 0)) : 'start', { permanent: i === tool.pts.length - 1 && i > 0, className: 'pt', direction: 'right' }).addTo(toolLayer));
-      renderToolPanel();
-    } else if (tool.mode === 'whatif') {
-      setTool(null);
-      showWhatIf(e.latlng);
-    } else if (tool.mode === 'trace') {
-      setTool(null);
-      tracePoint(e.latlng);
-    }
+    // Phase 3b: registered tools (select, measure, trace, test-a-site, inspect point,
+    // corridor select, units-fit) handle their own clicks; nothing else owns the click.
+    if (typeof PeelTools !== 'undefined' && PeelTools.handles(tool.mode)) PeelTools.mapClick(tool.mode, e.latlng);
   });
   // ---- Sewer profile: ground, pipe and the modelled flow along a route --------------------------
   // For a route of 300 mm+ pipes (a trace, or downstream of a pipe): the ground (terrain tiles), the
@@ -6096,9 +6938,11 @@
   // with construction year, component and project numbers and diameter; facilities (plants,
   // stations, reservoirs, tanks) with their EA / design / property / construction years; and
   // plant treatment capacity steps.
+  // Planned DC line colours: [label, token name, weight]. Token names resolve to
+  // `var(--*)` in HTML/SVG and to computed values via token() for Leaflet.
   const DC_KIND = {
-    primary: ['Primary wastewater main (trunk)', '#d6336c', 4], local: ['Local wastewater main', '#2b8a3e', 2.5], force: ['Force main', '#9c36b5', 2.5],
-    transmission: ['Water transmission main', '#1c3d8f', 4], feeder: ['Water distribution feeder main', '#1c7ed6', 2.5],
+    primary: ['Primary wastewater main (trunk)', '--dc-ww-main', 4], local: ['Local wastewater main', '--dc-ww-local', 2.5], force: ['Force main', '--dc-ww-force', 2.5],
+    transmission: ['Water transmission main', '--dc-w-trans', 4], feeder: ['Water distribution feeder main', '--dc-w-feed', 2.5],
   };
   const DC_FAC = { plant: 'Treatment plant', pumping_station: 'Pumping station', odour_control: 'Odour control facility', reservoir: 'Reservoir', elevated_tank: 'Elevated tank', well: 'Well', program: 'Program' };
   const PHASE_NAME = { EA: 'environmental assessment', P: 'property', D: 'design', C: 'construction' };
@@ -6210,8 +7054,8 @@
     for (const sys of ['wastewater', 'water']) {
       if (dcOn.sys !== 'both' && dcOn.sys !== sys) continue;
       for (const ln of state.dcInfra[sys].lines) {
-        const [label, col, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
-        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: col, weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
+        const [label, colName, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
+        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: token(colName), weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
           .bindTooltip(`<strong>${esc(label)}</strong><br>${ln.y ? `Construction ${ln.y}` : 'Year not labelled'}${ln.d ? ` · ${ln.d} mm` : ''}${ln.s === 'approved' ? ' · approved 2026' : ' · proposed'}${ln.p ? `<br>Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft) · tap: what it relieves</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); showDcLine(ln); }).addTo(dcLayer);
       }
@@ -6225,7 +7069,7 @@
     }
   }
   function showFacility(fc) {
-    $('#detail-body').innerHTML = `
+    const html = `
       <div class="head"><h3>${esc(fc.name)}</h3><div class="m">${esc(DC_FAC[fc.kind] || fc.kind)} · ${fc.sys === 'water' ? 'water' : 'wastewater'} · 2026 DC capital map (draft, not approved by Council)</div></div>
       <table class="dt dc-sched"><thead><tr><th>Project</th><th>Schedule</th></tr></thead><tbody>
         ${fc.items.map(i => `<tr><td>${esc(i.what)}<small>${esc(i.proj)}</small></td><td>${i.phases.map(ph => `<span class="dc-ph dc-${ph[0]}" title="${esc(PHASE_NAME[ph[0]] || ph[0])} · component ${esc(ph[2])}">${esc(ph[0])} ${ph[1]}</span>`).join(' ')}</td></tr>`).join('')}
@@ -6233,8 +7077,8 @@
       <p class="small muted">EA = environmental assessment, P = property, D = design, C = construction (year and component number from the map). Schedules are subject to annual review and approval by Regional Council.</p>
       ${dcNeedsSection({ fc })}
       ${exportBar('loads')}`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'facility'; $('#detail').scrollTop = 0;
     loadsOf = { dc: { fc } };
+    toolResult('dc', fc.name, html, () => showFacility(fc));
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-dcfac]'); if (!b || !state.dcInfra) return;
@@ -6292,8 +7136,9 @@
       SEW.grid = grid;
       // Blocks: the pumping stations' loads come from the pipes, so redo the tables and layers.
       if (state.servicing && state.servicing.blocks) renderSvcTab(); else if (mstyle.cap === 'pipes') renderCapLayer();
-      if (currentProject && !$('#detail').hidden && $('#detail').dataset.view === 'dev') showDetail(currentProject);
-      if (!$('#detail').hidden && $('#detail').dataset.view === 'dctiming') showDcTiming();
+      if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh();
+      // Phase 3b: DC timing lives in the Tool result tab now — re-run while that result is open.
+      if (toolScope && toolScope.kind === 'dc' && toolScope.title === 'DC timing' && typeof window !== 'undefined' && window.PeelTools && PeelTools.hasResult()) showDcTiming();
       return d;
     }).catch(() => null);
     return SEW.loading;
@@ -6360,10 +7205,12 @@
     SEW.data.pipes.forEach((p, i) => { const s = pipeStats(i); if (s.r1 == null) none++; else n[PIPE_CLS.findIndex(([t]) => s.r1 * 100 < t)]++; });
     return { n, none, total: SEW.data.pipes.length };
   }
-  const pipeColour = r => r == null || isNaN(r) ? '#adb5bd' : (PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1])[1];
-  function pipeStats(i) {
+  const pipeColour = r => r == null || isNaN(r) ? token('--nodata') : token((PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1])[1]);
+  // Phase 4: an explicit year (null = build-out) lets the "Tightest pipes" section rank
+  // pipes at build-out whatever the scenario year is; existing callers keep capYear.
+  function pipeStats(i, y) {
     const p = SEW.data.pipes[i], cap = p[2];
-    const today = pipeFlow(i, 'today'), then = pipeFlow(i, capYear);
+    const today = pipeFlow(i, 'today'), then = pipeFlow(i, y === undefined ? capYear : y);
     // A published slope under 0.01% (6 trunks, e.g. a 3048 mm main at 0.002%) is a data error,
     // not a flat pipe: its capacity isn't trusted (shown as no reliable slope, like a missing one).
     const ok = cap && p[1] >= 0.0001;
@@ -6429,7 +7276,7 @@
     }
     return { first: k, local, trunk, worst: [local, trunk].filter(Boolean).sort((a, b) => b.r1 - a.r1)[0] || null, n };
   }
-  const stateChip = (label, q, r) => { const st = pipeState(r); return `<span class="chip pipe-st" style="--st:${st ? st[1] : '#adb5bd'}"><i aria-hidden="true"></i>${esc(String(label))} ${fmtNum(Math.round(q))} L/s${r != null ? ` · ${Math.round(r * 100)}% · <strong>${esc(st[3])}</strong>` : ' · no slope'}</span>`; };
+  const stateChip = (label, q, r) => { const st = pipeState(r); return `<span class="chip pipe-st" style="--st:var(${st ? st[1] : '--nodata'})"><i aria-hidden="true"></i>${esc(String(label))} ${fmtNum(Math.round(q))} L/s${r != null ? ` · ${Math.round(r * 100)}% · <strong>${esc(st[3])}</strong>` : ' · no slope'}</span>`; };
   // Pipe length (m) from its drawn coordinates.
   const pipeLenM = i => { const c = pipeCoords(SEW.data.pipes[i]); let t = 0; for (let k = 1; k < c.length; k++) t += dcM(c[k - 1], c[k]); return t; };
   // How the flow in a pipe is worked out, step by step with its numbers, and its capacity and
@@ -6510,8 +7357,12 @@
       if (hit) { const e = D.estimate([dev], state.criteria, 'all', jobsOf); up.push({ dev, e, q: e.combined.wastewater.wetPeak }); }
     }
     up.sort((a, b) => b.q - a.q);
-    $('#detail-body').innerHTML = `
+    // Phase 3b pop-up actions: re-run, and the pipe upgrade tool (sibling module, guarded).
+    const pActs = [ptBtn('ploads', i, 'What loads this?', 'Re-run this analysis (picks up scenario changes)'),
+      ptBtn('upgrade', i, 'Upgrade this pipe', 'Open the pipe upgrade tool for this sewer')];
+    const html = `
       <div class="head"><h3>${p[0]} mm sanitary sewer</h3><div class="m">${esc(SEW.data.plants[p[6]] === 'Toronto' ? 'City of Toronto system' : plantLabel(SEW.data.plants[p[6]]))} sewershed · slope ${(p[1] * 100).toFixed(2)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : 'n/a'}${p[7] ? ` · installed ${p[7]}` : ''}</div></div>
+      ${ptActions(pActs)}
       <div class="chips">${stateChip('Today', s.today.q, s.r0)}${stateChip(capYear == null ? 'Build-out' : capYear, s.then.q, s.r1)}${s.r1 != null ? `<span class="chip">Freeboard ${fbText(p[0], s.r1)}</span>` : ''}${s.growthShare != null ? `<span class="chip">Growth uses ${Math.round(s.growthShare * 100)}%</span>` : ''}</div>
       <p class="small"><button type="button" class="btn small" data-profile="pipe:${i}"><span aria-hidden="true">⌇</span> Sewer profile downstream</button></p>
       ${pipeCalcHTML(i, s)}
@@ -6520,8 +7371,8 @@
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
         <tbody>${up.slice(0, 50).map(r => `<tr class="ld-row" data-dev="${esc(r.dev.key)}" tabindex="0"><td>${dot(r.dev.phase)} ${esc(r.dev.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.dev)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.dev)])} · ${esc(r.dev.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       <p class="small muted">Existing: ${fmtNum(p[4])} people upstream (2021 Census) at peak dry weather, ${s.today.f !== 1 ? `scaled ×${s.today.f.toFixed(2)} to the plant's 2025 measured flow (capacity check)` : 'at design rates'}; growth since the census at Peel design peak wet weather (Harmon, employment rates, I&amp;I ${state.criteria.wastewater.infiltration} L/s/ha on its site area). Full-pipe capacity by Manning (n 0.013) on the published slope. A screen for where to look, not a hydraulic model: existing wet-weather inflow and infiltration, surcharge, storage and relief sewers are not modelled. Developments join the nearest sewer of 300 mm or more.</p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
     loadsOf = { pipe: i };
+    toolResult('pipe', `${p[0]} mm sanitary sewer`, html, () => showPipeLoads(i));
   }
 
 
@@ -6645,13 +7496,16 @@
       .map(p => ({ p, e: D.estimate([p], state.criteria, 'all', jobsOf) })).filter(x => x.e.population > 0 || x.e.employment.jobs > 0)
       .sort((x, y) => y.e.combined.wastewater.wetPeak - x.e.combined.wastewater.wetPeak);
     const trunk = nearestPipe(mid[0], mid[1], 600);
-    $('#detail-body').innerHTML = `<div class="head"><h3>${a.d ? `${a.d} mm` : ''} local sanitary sewer</h3><div class="m">${esc(existText('sanitary', a))} · Region of Peel (live)</div></div>
+    existSewerOf = { lines, a };
+    const eTitle = `${a.d ? `${a.d} mm` : ''} local sanitary sewer`;
+    const html = `<div class="head"><h3>${eTitle}</h3><div class="m">${esc(existText('sanitary', a))} · Region of Peel (live)</div></div>
+      ${ptActions([ptBtn('eloads', null, 'What loads this?', 'Re-run this analysis')])}
       <p class="small">Pipes under 300 mm are not in the network screen (where flow is traced pipe to pipe), so what drains into this one can't be traced exactly. ${trunk >= 0 ? `It feeds the sewer network nearby: the closest 300 mm+ sewer is a <button type="button" class="btn small link" data-pipe="${trunk}">${SEW.data.pipes[trunk][0]} mm sewer</button> ${fmtNum(Math.round(dcDist(mid, pipeCoords(SEW.data.pipes[trunk]))))} m away (what loads it, and how its flow is calculated).` : 'No 300 mm+ sewer within 600 m.'}</p>
       <table class="dt loads-table"><caption>${fmtNum(near.length)} development${near.length === 1 ? '' : 's'} since the census within 100 m of this sewer (likely to connect to it), largest peak wet first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>Peak wet</th></tr></thead>
         <tbody>${near.slice(0, 40).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${layerColors()[svcLayerOf(r.p)]}"></span>${esc(LAYER_NAME[svcLayerOf(r.p)])} · ${esc(r.p.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.e.combined.wastewater.wetPeak)}</td></tr>`).join('') || '<tr><td colspan="3" class="muted">None within 100 m.</td></tr>'}</tbody></table>
       <p class="small muted">Peak wet weather at Peel design criteria for each development ${estTag}. Existing (2021 Census) flow in a local sewer isn't estimated: its catchment isn't traced.</p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'loads'; $('#detail').scrollTop = 0;
+    toolResult('eloads', eTitle, html, () => existSewerLoads(existSewerOf.lines, existSewerOf.a));
   }
   // Nearest existing main of each kind to a point, within r metres (live query, cached per site).
   const nearCache = new Map();
@@ -6790,9 +7644,9 @@
     const [k, i] = h.dataset.exhl.split('|'), g = exGroups[k] && exGroups[k].list[+i]; if (!g) return;
     exHL.clearLayers();
     const ll = g.paths.map(pth => pth.map(([x, y]) => [y, x]));
-    L.polyline(ll, { color: '#ffd43b', weight: 12, opacity: 0.7, interactive: false }).addTo(exHL);
-    L.polyline(ll, { color: EXIST_STYLE[k].color, weight: 4, opacity: 1, interactive: false }).addTo(exHL);
-    if (currentProject) L.polyline([[currentProject.lat, currentProject.lng], [g.at[1], g.at[0]]], { color: '#333', weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
+    L.polyline(ll, { color: token('--hl-find'), weight: 12, opacity: 0.7, interactive: false }).addTo(exHL);
+    L.polyline(ll, { color: token(EXIST_STYLE[k].color), weight: 4, opacity: 1, interactive: false }).addTo(exHL);
+    if (currentProject) L.polyline([[currentProject.lat, currentProject.lng], [g.at[1], g.at[0]]], { color: token('--text-primary'), weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
     map.fitBounds(L.latLngBounds(ll.flat().concat(currentProject ? [[currentProject.lat, currentProject.lng]] : [])), { maxZoom: 18, padding: [40, 40] });
     if (innerWidth <= 760) $('#detail').scrollTop = 0;
   });
@@ -7073,14 +7927,15 @@
   // growth at Peel criteria), and pumping into each lake-based pressure zone: the firm capacity of
   // the pumps that lift water from below zone n into zone n or higher (2020 Master Plan, actual
   // firm where modelled) against the design maximum day of zone n and every zone above it.
-  function waterLayers(ids) {
-    const M = state.svcModel, o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0 };
+  function waterLayers(M, ids) {
+    M = M || state.svcModel;
+    const o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0 };
     for (const id of ids) { const l = M.zones.get(id); if (l) for (const k in o) o[k] += l[k] || 0; }
     const w = (p, j) => M.wMax(p, j);
     return { o, v: [w(o.census, 0), w(o.built, o.jbuilt), w(o.approved, o.japproved), w(o.proposed, o.jproposed)] };
   }
-  function waterCapRow(name, ids, rated, base, note, capWord) {
-    const { o, v } = waterLayers(ids); if (!(rated > 0)) return null;
+  function waterCapRow(M, name, ids, rated, base, note, capWord) {
+    const { o, v } = waterLayers(M, ids); if (!(rated > 0)) return null;
     if (base != null) { const today = v[0] + v[1], k = today > 0 ? base / today : 1; v[0] *= k; v[1] *= k; }
     const popToday = o.census + o.built, perPerson = popToday > 0 ? (v[0] + v[1]) * 1e6 / popToday : 0;
     return { name: esc(name), rated, v, extMld: 0, perPerson, popToday, note, capWord };
@@ -7159,7 +8014,7 @@
     return { z, est, gw: false, steps };
   }
   function waterTraceHTML(p) {
-    if (!WF.data) { loadWaterFacilities().then(d => { if (d && currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Loading the water facilities…</p>'; }
+    if (!WF.data) { loadWaterFacilities().then(d => { if (d && currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return skel('Loading the water facilities'); }
     if (state.servicing && !(p.pz && p.pz.length) && !zoneEst.has(p)) { estimateZone(p).then(() => { if (currentProject === p) { const b = $('#dev-wtrace'); if (b) b.innerHTML = waterTraceHTML(p); } }); return '<p class="small muted">Outside the mapped pressure zones: estimating the zone from the ground elevation…</p>'; }
     const t = waterTrace(p); if (!t || !t.steps.length) return '<p class="small muted">No supply route: the site is outside the mapped pressure zones and no zone could be estimated.</p>';
     const estP = t.est ? zoneEstHTML(t.est) : '';
@@ -7184,7 +8039,7 @@
     for (let n = 1; n <= 7; n++) {
       const cap = pumps.filter(p => p.src < n && p.tgt >= n).reduce((t, p) => t + p.cap, 0), ids = lake.filter(id => zLevel(svcById.get(id).zone) >= n);
       if (!cap || !ids.length) continue;
-      const { v } = waterLayers(ids), tot = v.reduce((a, b) => a + b, 0);
+      const { v } = waterLayers(state.svcModel, ids), tot = v.reduce((a, b) => a + b, 0);
       rows.push({ n, cap, c: (v[0] + v[1] + v[2]) / cap, b: tot / cap });
     }
     waterCapPumpRows.key = scenarioKey(); waterCapPumpRows.rows = rows;
@@ -7343,37 +8198,223 @@
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-wtrace]'); if (!b) return;
     const p = projectByKey(b.dataset.wtrace); if (!p) return;
-    const top = document.querySelector(`.trace-box [data-wtrace="${CSS.escape(p.key)}"]`), box = top && top.closest('.trace-box');
-    if (top && !top._label) top._label = top.innerHTML;
-    const setTop = on => { if (!top) return; top.dataset.on = on ? '1' : ''; top.classList.toggle('on', on); top.innerHTML = on ? 'Hide the water route' : top._label; };
-    if (WTRACE.key === p.key && WTRACE.layer.getLayers().length) { clearWaterTrace(); setTop(false); if (box) box.querySelector('.wtrace-out').innerHTML = ''; return; }
+    // The button can appear twice (detail panel and the footer Water tab): the trace output
+    // goes to the clicked button's container, and every copy's label stays in sync.
+    const scope = b.closest('#detail-body, #water-body') || document;
+    const top = scope.querySelector(`.trace-box [data-wtrace="${CSS.escape(p.key)}"]`), box = top && top.closest('.trace-box');
+    const tops = [...document.querySelectorAll(`[data-wtrace="${CSS.escape(p.key)}"]`)];
+    for (const t of tops) if (t._label == null) t._label = t.innerHTML;
+    const setTops = on => { for (const t of tops) { t.dataset.on = on ? '1' : ''; t.classList.toggle('on', on); t.innerHTML = on ? 'Hide the water route' : t._label; } };
+    if (WTRACE.key === p.key && WTRACE.layer.getLayers().length) { clearWaterTrace(); setTops(false); for (const o of document.querySelectorAll('.wtrace-out')) o.innerHTML = ''; return; }
     if (top) top.textContent = 'Tracing…';
     const r = await traceWater(p);
-    setTop(!!r);
+    setTops(!!r);
     if (box) { box.querySelector('.wtrace-out').innerHTML = waterTraceSummaryHTML(r); if (b !== top) box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }
   });
-  function waterCapHTML() {
-    const M = state.svcModel, R = state.reports; if (!M || !R || !state.servicing) return '';
+  // ---- Water tab: Zones sub-view blocks (Phase 4) -------------------------------------------
+  // Headline (via setHeadline) → tiles → chart → top-N table with "See all" → ⓘ line.
+  // x carries the fresh renderSvcTab closures (wMax etc.) so the blocks use current numbers.
+  function waterZonesHTML(zr, zsum, x) {
+    const { wMax, wPH, total, jobs, wRow, layerHead, Y, c, E, mdR, mdE, observed, censusHowW } = x;
+    const bo = r => wMax(total(r.l), jobs(r.l));
+    const sorted = zr.map(r => ({ r, bo: bo(r) })).sort((a, b) => b.bo - a.bo);
+    const boTot = wMax(total(zsum), jobs(zsum)), phTot = wPH(total(zsum), jobs(zsum));
+    const growth = wMax(zsum.approved + zsum.proposed, (zsum.japproved || 0) + (zsum.jproposed || 0));
+    const tiles = `<div class="ov-tiles">${wTile(fmt1(boTot), 'ML/d', 'maximum day at build-out', 'all pressure zones')}`
+      + `${wTile(fmt1(phTot), 'ML/d', 'peak hour at build-out')}`
+      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + proposed', 'maximum day growth')}`
+      + `${sorted[0] ? wTile(esc(sorted[0].r.a.name.replace('Pressure zone ', 'Zone ')), '', 'adds the most demand', `+${fmt1(Math.max(0, sorted[0].bo - wMax(sorted[0].r.l.census, 0)))} ML/d max day`) : ''}</div>`;
+    const top10 = sorted.slice(0, 10), mx = Math.max(...top10.map(t => t.bo), 1e-9);
+    const chart = `<div data-info="pressure-zone" role="img" aria-label="Maximum day demand by pressure zone at build-out">`
+      + top10.map(t => `<div style="display:flex;align-items:center;gap:8px;margin:3px 0"><span class="small" style="width:92px;flex:none">${esc(t.r.a.name.replace('Pressure zone ', 'Zone '))}</span><span style="flex:1;background:var(--surface-2);border-radius:4px;height:14px"><i style="display:block;height:100%;width:${(t.bo / mx * 100).toFixed(1)}%;background:var(--accent);border-radius:4px"></i></span><span class="small" style="width:84px;flex:none;text-align:right">${fmt1(t.bo)} ML/d</span></div>`).join('') + `</div>`;
+    const head = `<thead><tr><th>Pressure zone</th><th class="bar-h">Build-out mix</th><th>Developments</th>${layerHead}<th>Peak hour<br>build-out</th></tr></thead>`;
+    const cap = n => `Water by pressure zone · maximum day (ML/d) at ${observed ? `the observed 2025 factor ×${mdR.toFixed(2)}` : `design ×${mdR} residential, ×${mdE} employment`}; people and jobs below${n ? ` · top ${n} of ${sorted.length}` : ''}`;
+    const table = (list, n, totals) => `<div class="hyd-scroll"><table class="dt svc-table" data-info="pressure-zone"><caption>${cap(n)}</caption>${head}<tbody>${list.map(t => wRow(esc(t.r.a.name.replace('Pressure zone ', 'Zone ')), t.r.l, t.r.a.id)).join('')}${totals ? wRow('All pressure zones', zsum, null, 'tot') : ''}</tbody></table></div>`;
+    const top8 = sorted.slice(0, 8), rest = sorted.slice(8);
+    return `${tiles}${chart}${table(top8, 8, true)}`
+      + `${rest.length ? `<details class="dcn-more"><summary class="small">See all ${sorted.length} zones</summary>${table(rest, 0, false)}</details>` : ''}`
+      + `<p class="small muted">ⓘ ML/d = megalitres per day. Residential ${c.water.avg} L/cap/d and employment ${E.water} L/emp/d (jobs on development sites; existing employment is not in the census baseline); maximum day ×${mdR} residential, ×${mdE} employment; peak hour ×${c.water.peakHour} residential, ×${E.peakHour} employment. ${Y} Census ${censusHowW}; growth from every development located in the zone (other filters ignored), as in the Growth tab.${zsum.near ? ` ${fmtNum(zsum.near)} developments outside every zone are counted in the nearest one.` : ''}</p>`;
+  }
+  // ---- Water room left & trigger years (Phase 4, Capacity sub-view) ---------------------------
+  // Pure computations (tests/water-room.test.js extracts them from source): room left at
+  // build-out and the years demand reaches 80 / 90 / 100% of capacity, matching the plant
+  // horizon table's "Reaches 80% / 90% / 100%" columns. Approved growth ramps in evenly from
+  // aStart over aYears, proposed from pStart over pYears — the same phasing as the plant
+  // horizon. Each crossing is 'today' when already reached at year0, a year, or null.
+  const roomTrigger = (cap, demand, ph) => {
+    const fr = (y, s, n) => Math.min(1, Math.max(0, (y - s + 1) / Math.max(1, n)));
+    const at = y => demand.today + demand.approved * fr(y, ph.aStart, ph.aYears) + demand.proposed * fr(y, ph.pStart, ph.pYears);
+    const cross = f => {
+      if (!(cap > 0)) return null;
+      if (at(ph.year0) >= cap * f) return 'today';
+      for (let y = ph.year0 + 1; y <= ph.end; y++) if (at(y) >= cap * f) return y;
+      return null;
+    };
+    const bo = at(ph.end), room = cap - bo;
+    return { room, roomPct: cap > 0 ? room / cap * 100 : null, c80: cross(0.8), c90: cross(0.9), c100: cross(1) };
+  };
+  // Storage: the Master Plan's required-vs-available series by year. Room left at the last
+  // year; the crossing years linearly interpolate when required reaches 80 / 90 / 100% of
+  // the available storage.
+  const storageRoomTrigger = (years, required, available) => {
+    const n = years.length, avail = available[n - 1];
+    const cross = f => {
+      const lim = avail * f;
+      if (avail > 0 && required[0] >= lim) return 'today';
+      for (let i = 1; i < n; i++) {
+        if (required[i] >= lim && required[i - 1] < lim) {
+          const t = (lim - required[i - 1]) / ((required[i] - required[i - 1]) || 1);
+          return Math.round(years[i - 1] + t * (years[i] - years[i - 1]));
+        }
+      }
+      return null;
+    };
+    const room = avail - required[n - 1];
+    return { room, roomPct: avail > 0 ? room / avail * 100 : null, c80: cross(0.8), c90: cross(0.9), c100: cross(1) };
+  };
+  // A small tile (the Overview's .ov-tile pattern).
+  const wTile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
+  // Year cell for the room/trigger table: 'today' → now, null → after the horizon end.
+  const trigCell = (y, end) => y === 'today' ? 'now' : y == null ? `after ${end}` : String(y);
+  // Per-project demand flow tables (Water + Wastewater, L/s). Re-created here: the original
+  // at ~1910 is removed in Phase 4 (Worker C) and the Growth tab + selection breakdown call
+  // sites keep working through this copy.
+  function flowTablesHTML(e) {
+    const c = state.criteria, em = e.employment, cb = e.combined, n = uLs;
+    const flowTable = (title, info, cols, rows) => `<table class="dt flow" data-info="${info}">
+      <caption>${title} <span class="muted">L/s</span></caption>
+      <thead><tr><th></th>${cols.map(x => `<th>${x}</th>`).join('')}</tr></thead>
+      <tbody>${rows.map(([label, cls, info2, vals]) => `<tr class="${cls}"${info2 ? ` data-info="${info2}"` : ''}><td>${label}</td>${vals.map(v => `<td>${v}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    const iiNote = `${fmtNum(Math.round(e.area.ha + em.area.ha))} ha × ${c.wastewater.infiltration} L/s/ha${e.area.estimatedHa > 0 ? ` · ${Math.round(e.area.estimatedHa / Math.max(e.area.ha, 1e-9) * 100)}% of residential area estimated` : ''}`;
+    return '<div class="flow-card">' + flowTable('Water', 'demand-water', ['Avg day', 'Max day', 'Peak hour'], [
+        ['Residential', '', 'demand-water', [n(e.water.avg), n(e.water.maxDay), n(e.water.peakHour)]],
+        ['Employment', '', 'demand-employment', [n(em.water.avg), n(em.water.maxDay), n(em.water.peakHour)]],
+        ['Total', 'tot', 'demand-combined', [n(cb.water.avg), n(cb.water.maxDay), n(cb.water.peakHour)]],
+      ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.water.avg))} ML/d average · residential ${c.water.avg} L/cap/d ×${c.water.maxDay} / ×${c.water.peakHour}; employment ${c.employment.water} L/emp/d ×${c.employment.maxDay} / ×${c.employment.peakHour}</p></div>`
+      + '<div class="flow-card">' + flowTable('Wastewater', 'demand-wastewater', ['Avg dry', 'Peak dry', 'I&amp;I', 'Peak wet'], [
+        ['Residential', '', 'demand-wastewater', [n(e.water.avg), `${n(e.wastewater.peak)}<span class="muted m"> M ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(e.wastewater.infiltration), n(e.wastewater.wetPeak)]],
+        ['Employment', '', 'demand-employment', [n(em.water.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
+        ['Total', 'tot', 'demand-combined', [n(cb.wastewater.avg), n(cb.wastewater.peak), n(cb.wastewater.infiltration), n(cb.wastewater.wetPeak)]],
+      ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average · I&amp;I on ${iiNote}</p></div>`;
+  }
+  // Demand flows in the Capacity sub-view (Phase 4): system-wide average day, maximum day
+  // and peak hour at build-out, residential + employment, with the criteria factors inline
+  // (persons per unit by type, × max day, × peak hour).
+  function waterDemandFlowsHTML(M) {
+    const R = state.reports; if (!M || !R) return '';
+    const c = state.criteria, E = c.employment, sp = R.water.southPeel, ppu = c.ppu || {};
+    let pop = 0, jobs = 0;
+    for (const [, l] of M.zones) { pop += M.total(l); jobs += M.jobs(l); }
+    const row = (label, p, j, cls = '') => `<tr class="${cls}"><td>${label}</td><td>${uML(M.wAvg(p, j))}</td><td>${uML(M.wMax(p, j))}</td><td class="bo">${uML(M.wPH(p, j))}</td></tr>`;
+    const mdTxt = v => `×${(+v).toFixed(2).replace(/\.?0+$/, '')}`;
+    const mdR = svcOpt.md === 'observed' && sp ? sp.maxDayFactor : c.water.maxDay;
+    const mdE = svcOpt.md === 'observed' && sp ? sp.maxDayFactor : E.maxDay;
+    return `<h3 class="svc-sub">Demand flows <span class="muted small">build-out, ML/d · all pressure zones</span></h3>
+      <div class="hyd-scroll"><table class="dt svc-table" data-info="water-capacity"><thead><tr><th></th><th>Average day</th><th>Maximum day</th><th>Peak hour</th></tr></thead>
+      <tbody>${row('Residential', pop, 0)}${row('Employment', 0, jobs)}${row('Total', pop, jobs, 'tot')}</tbody></table></div>
+      <p class="small muted">${fmt1(M.wAvg(pop, jobs))} ML/d average · residential ${c.water.avg} L/cap/d (${['single', 'town', 'apartment'].map(t => `${t} ${ppu[t]}`).join(' · ')} persons per unit) ${mdTxt(mdR)} maximum day / ${mdTxt(c.water.peakHour)} peak hour; employment ${E.water} L/emp/d ${mdTxt(mdE)} / ${mdTxt(E.peakHour)}.</p>`;
+  }
+  // Room left and trigger years for each zone (pumping) and storage facility, in the plant
+  // horizon table's shape: room left at build-out, then the years demand reaches 80 / 90 /
+  // 100% of firm pumping capacity (zones) or of available storage (facilities). Top 5
+  // tightest shown, the rest under "See all".
+  function waterRoomTriggerHTML(pump, ph) {
+    const R = state.reports, mp = R && R.masterPlan;
+    const stor = mp && mp.storage ? mp.storage : [], storYears = mp && mp.storageYears ? mp.storageYears : [];
+    const rows = pump.map(r => {
+      const rt = roomTrigger(r.rated, { today: r.v[0] + r.v[1], approved: r.v[2], proposed: r.v[3] }, ph);
+      return { name: r.name, sub: `firm ${uML(r.rated)}`, room: rt.room, roomPct: rt.roomPct, unit: 'ML/d', rt, end: ph.end };
+    });
+    for (const s of stor) {
+      const rt = storageRoomTrigger(storYears, s.required, s.available), av = s.available[s.available.length - 1];
+      rows.push({ name: esc(s.facility), sub: `${fmtNum(av)} ML available · 2020 Master Plan`, room: rt.room, roomPct: rt.roomPct, unit: 'ML', rt, end: storYears[storYears.length - 1] });
+    }
+    rows.sort((a, b) => (a.roomPct == null ? 1e9 : a.roomPct) - (b.roomPct == null ? 1e9 : b.roomPct));
+    const tr = x => `<tr><td>${x.name}<small>${x.sub}</small></td>`
+      + `<td class="n${x.room < 0 ? ' over' : ''}">${x.room < 0 ? '−' : ''}${fmt1(Math.abs(x.room))} ${x.unit}<small>${x.roomPct == null ? '' : `${Math.round(x.roomPct)}% left`}</small></td>`
+      + `<td class="n">${trigCell(x.rt.c80, x.end)}</td><td class="n">${trigCell(x.rt.c90, x.end)}</td><td class="n bo">${trigCell(x.rt.c100, x.end)}</td></tr>`;
+    const head = `<thead><tr><th>Zone / storage facility</th><th class="n">Room left<br>at build-out</th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead>`;
+    const table = list => `<div class="hyd-scroll"><table class="dt svc-table" data-info="water-capacity">${head}<tbody>${list.map(tr).join('')}</tbody></table></div>`;
+    const top = rows.slice(0, 5), rest = rows.slice(5);
+    return `<h3 class="svc-sub">Room left &amp; trigger years <span class="muted small">zones: % of firm pumping capacity · storage: Master Plan required vs available</span></h3>`
+      + table(top)
+      + (rest.length ? `<details class="dcn-more"><summary class="small">See all ${rows.length} zones &amp; storage facilities</summary>${table(rest)}</details>` : '')
+      + `<p class="small muted">Room = capacity − demand at build-out. Trigger years phase approved growth in from ${ph.aStart} over ${ph.aYears} years and proposed from ${ph.pStart} over ${ph.pYears} years, as in the plant Horizon years; storage years interpolate the Master Plan forecast.</p>`;
+  }
+  // ---- 2025 production & Caledon groundwater: moved out of the Water tab (Phase 4) --------
+  // These two sections used to render inside the Water tab's Capacity sub-view
+  // (waterReportsHTML). They now live on the Sources & checks page (Settings & sources tab),
+  // rendered by Worker G through window.ModelChecks.
+  function waterModelToday() {
+    const M = state.svcModel; if (!M) return null;
+    let pop = 0, jobs = 0;
+    for (const [, l] of M.zones) { pop += (l.census || 0) + (l.built || 0); jobs += (l.jbuilt || 0); }
+    return { avg: M.wAvg(pop, jobs), max: M.wMax(pop, jobs) };
+  }
+  function waterProductionHTML(R, modelAvg, modelMax) {
+    const sp = R.water.southPeel, cal = R.water.caledon, pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
+    const calAvg = cal.reduce((t, s) => t + s.avgM3d, 0) / 1000;
+    return `<h3 class="svc-sub">Reported 2025 production <span class="muted small">Region of Peel annual reports</span></h3>
+      <table class="dt svc-table rep-table" data-info="water-reports"><thead><tr><th>Treatment plant</th><th>Rated capacity</th><th>2025 average day</th><th>2025 maximum day</th><th>Max day ÷ average</th></tr></thead>
+      <tbody>${sp.plants.map(p => `<tr><td>${esc(p.name)}<small>${refLink(p.ref, p.pages)}</small></td><td>${uML(p.ratedMLd)}</td><td>${uML(p.avgMLd)}<small>${pct(p.avgMLd, p.ratedMLd)} of capacity</small></td><td>${uML(p.maxDayMLd)}<small>${esc(p.maxDayMonth)} · ${pct(p.maxDayMLd, p.ratedMLd)}</small></td><td>×${(p.maxDayMLd / p.avgMLd).toFixed(2)}</td></tr>`).join('')}
+        <tr class="sub"><td>South Peel system (lake-based)<small>${esc(sp.maxDayNote)}</small></td><td>${uML(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))}</td><td>${uML(sp.avgMLd)}</td><td>≤ ${uML(sp.maxDayMLd)}</td><td>×${sp.maxDayFactor.toFixed(2)}</td></tr>
+        <tr><td>Caledon groundwater systems (5)</td><td></td><td>${uML(calAvg)}</td><td></td><td></td></tr>
+        <tr class="tot"><td>Model today, all pressure zones<small>census + built since; residential + development jobs</small></td><td></td><td>${uML(modelAvg)}<small>${pct(modelAvg, sp.avgMLd + calAvg)} of reported</small></td><td>${uML(modelMax)}<small>${svcOpt.md === 'observed' ? 'observed factor' : 'design factor'}</small></td><td></td></tr></tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Reported production includes water supplied to York Region and Halton, all industrial, commercial and institutional use and non-revenue water; transfer volumes to York are not published, so the model (residential + new development jobs) is expected to be lower. Population served in 2025: ${fmtNum(sp.populationServed)} (${esc(sp.populationNote)}). ${refLink(sp.ref, sp.pages)}.</p></details>`;
+  }
+  function caledonGroundwaterHTML(R) {
+    const cal = R.water.caledon, pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
+    const m3 = v => unit(fmtNum(Math.round(v)), 'm³/d');
+    return `<h3 class="svc-sub">Caledon groundwater systems <span class="muted small">2025</span></h3>
+      <table class="dt svc-table rep-table" data-info="water-reports"><thead><tr><th>System</th><th>Population served</th><th>Rated capacity</th><th>2025 average day</th><th>2025 maximum day</th><th>Per person</th><th>Max day ÷ average</th></tr></thead>
+      <tbody>${cal.map(s => `<tr><td>${esc(s.name)}<small>${esc(s.communities)}</small></td><td>${uPop(s.population)}<small>${unit(fmtNum(s.connections), 'connections')}</small></td><td>${m3(s.ratedM3d)}</td><td>${m3(s.avgM3d)}<small>${pct(s.avgM3d, s.ratedM3d)} of capacity</small></td><td>${m3(s.maxDayM3d)}<small>${esc(s.maxDayNote)} · ${pct(s.maxDayM3d, s.ratedM3d)}</small></td><td>${unit(fmtNum(Math.round(s.avgM3d * 1000 / s.population)), 'L/cap/d')}</td><td>×${(s.maxDayM3d / s.avgM3d).toFixed(2)}</td></tr>`).join('')}</tbody></table>
+      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Treated water. Populations are as stated in each system's report ("close to", "just over"); rated capacity is the wells' combined rated capacity. Sources: ${cal.map(s => refLink(s.ref, s.pages)).join('; ')}.</p></details>`;
+  }
+  window.ModelChecks = window.ModelChecks || {};
+  ModelChecks.waterProduction = () => {
+    const R = state.reports; if (!R) return '';
+    const t = waterModelToday();
+    return waterProductionHTML(R, t ? t.avg : null, t ? t.max : null);
+  };
+  ModelChecks.caledonGroundwater = () => {
+    const R = state.reports; if (!R) return '';
+    return caledonGroundwaterHTML(R);
+  };
+  function waterCapHTML(M) {
+    M = M || state.svcModel;
+    const R = state.reports; if (!M || !R || !state.servicing) return '';
     if (!WF.data) { loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
     const Y = M.Y, sp = R.water.southPeel, lake = lakeZones().filter(id => zLevel(svcById.get(id).zone) <= 7);
-    const treat = [waterCapRow('South Peel (A.P. Kennedy + Lorne Park)', lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
-    for (const z of state.servicing.zones) { const s = wellSystem[z.zone] && R.water.caledon.find(x => x.name === wellSystem[z.zone]); if (s) treat.push(waterCapRow(`${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
+    const treat = [waterCapRow(M, 'South Peel (A.P. Kennedy + Lorne Park)', lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
+    for (const z of state.servicing.zones) { const s = wellSystem[z.zone] && R.water.caledon.find(x => x.name === wellSystem[z.zone]); if (s) treat.push(waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
     const pumps = wfPumps();
     const pump = [];
     for (let n = 1; n <= 7; n++) {
       const into = pumps.filter(p => p.src < n && p.tgt >= n), ids = lake.filter(id => zLevel(svcById.get(id).zone) >= n);
       const cap = into.reduce((t, p) => t + p.cap, 0); if (!cap || !ids.length) continue;
-      const r = waterCapRow(n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, `${into.length} pump group${into.length === 1 ? '' : 's'}: ${into.map(p => p.label).join(', ')}`, 'firm');
+      const r = waterCapRow(M, n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, `${into.length} pump group${into.length === 1 ? '' : 's'}: ${into.map(p => p.label).join(', ')}`, 'firm');
       if (r) pump.push(r);
     }
-    const tight = [...treat, ...pump].filter(Boolean).map(r => ({ r, c: (r.v[0] + r.v[1] + r.v[2]) / r.rated, b: r.v.reduce((a, b) => a + b, 0) / r.rated })).sort((a, b) => b.b - a.b)[0];
-    return `<section id="wcap-box" class="wcap" data-info="water-capacity"><h3 class="svc-sub">Water capacity by growth layer</h3>
+    const boPct = r => r.v.reduce((a, b) => a + b, 0) / r.rated * 100;
+    const tight = [...treat, ...pump].filter(Boolean).map(r => ({ r, c: (r.v[0] + r.v[1] + r.v[2]) / r.rated, b: boPct(r) / 100 })).sort((a, b) => b.b - a.b)[0];
+    const tightPump = pump.map(r => ({ r, b: boPct(r) })).sort((a, b) => b.b - a.b)[0];
+    const mp = R.masterPlan, stor = mp && mp.storage ? mp.storage : [];
+    const shortMl = stor.reduce((t, s) => t + Math.max(0, s.required[s.required.length - 1] - s.available[s.available.length - 1]), 0);
+    let dPop = 0, dJobs = 0;
+    for (const [, l] of M.zones) { dPop += M.total(l); dJobs += M.jobs(l); }
+    const ph = { year0: hz.year0, aStart: hz.aStart, aYears: hz.aYears, pStart: hz.pStart, pYears: hz.pYears, end: hz.end };
+    const c = state.criteria;
+    return `<section id="wcap-box" class="wcap" data-info="water-capacity">
+      <div class="ov-tiles">${wTile(`${Math.round(boPct(treat[0]))}%`, 'of rated', 'South Peel treatment at build-out', `rated ${fmtNum(treat[0].rated)} ML/d`)}${tightPump ? wTile(`${Math.round(tightPump.b)}%`, 'of firm capacity', 'Tightest pumping at build-out', tightPump.r.name) : ''}${wTile(fmt1(M.wMax(dPop, dJobs)), 'ML/d', 'maximum day demand at build-out', 'all pressure zones')}${wTile(shortMl > 0 ? fmtNum(Math.round(shortMl)) : '0', 'ML', 'storage short by 2041', 'Master Plan assessment')}</div>
+      ${waterDemandFlowsHTML(M)}
+      <h3 class="svc-sub">Water capacity by growth layer</h3>
       ${tight ? `<p class="small">Tightest: <strong>${tight.r.name}</strong>, ${Math.round(tight.c * 100)}% of its ${tight.r.capWord || 'rated'} capacity with existing + built + approved, ${Math.round(tight.b * 100)}% at build-out.</p>` : ''}
       ${capChartHTML(treat.filter(Boolean), Y, { title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
       <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">design maximum day as a % of firm pumping capacity</span></summary>
       ${capChartHTML(pump, Y, { title: ' ', noPop100: true, noPeople: true, legend: false })}
       <p class="small muted">Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see Facilities).</p></details>
-      <p class="small muted">Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region), split between the ${Y} Census and growth built since as the model does; approved and proposed added at Peel's design maximum day (${state.criteria.water.avg} L/cap/d × ${state.criteria.water.maxDay}, employment ${state.criteria.employment.water} L/emp/d). Pumping: for each zone n, the firm capacity (largest pump out of service; the Region's modelled actual firm where the 2020 Master Plan gives it) of every pump group lifting water from a lower zone into zone n or above, against the design maximum day of zone n and all zones above it (the York Region supply, the transfer to the east system and the sub-zone boosters left out). Storage is shown facility by facility (its zones served aren't published).</p></section>`;
+      ${waterRoomTriggerHTML(pump, ph)}
+      <p class="small muted">ⓘ Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region). Pumping: firm capacity, largest pump out of service (the Region's modelled actual firm where the 2020 Master Plan gives it). Demand at Peel design maximum day (${c.water.avg} L/cap/d ×${c.water.maxDay}, employment ${c.employment.water} L/emp/d). Storage: required vs available (2020 Master Plan, Vol. 3, Table 12).</p></section>`;
   }
   // Water tab: the facilities by system, with capacity.
   // ---- 2020 Master Plan assessment vs this tracker (Water → Facilities, Wastewater → Plants) ----
@@ -7455,7 +8496,7 @@
     }
     const w = $('#mp-w');
     if (w && M && R) {
-      if (!WF.data) { loadWaterFacilities().then(d => { if (d) renderMpCompare(); }); w.innerHTML = '<p class="small muted">Loading the water facilities…</p>'; return; }
+      if (!WF.data) { loadWaterFacilities().then(d => { if (d) renderMpCompare(); }); w.innerHTML = skel('Loading the water facilities'); return; }
       const g = mpWaterGrowth(); if (!g) return;
       const rows = MP2020.water.map(r => {
         const x = g[r.key], measured = r.today && r.today(R);
@@ -7468,17 +8509,28 @@
         <p class="small muted">Master Plan: forecast maximum day demand for the facilities it assessed (Vol. 3, Tables 8, 9, 11, 12). Tracker: today is the 2025 measured maximum day for the plants, and the Master Plan's 2021 figure + growth built since the census for the pumping stations; then + approved and + proposed developments whose supply route (the water trace's station chain) passes the facility, at ${svcOpt.md === 'observed' ? 'the observed 2025 maximum day factor' : 'Peel design maximum day'}. York Region's agreement supply is in the Master Plan figures and the measured plant flows, not in the growth.</p></section>`;
     }
   }
+  // Water tab: Facilities sub-view (Phase 4: headline → tiles → Master Plan compare →
+  // top-N facilities table with "See all" → ⓘ line). The 2020 Master Plan vs tracker
+  // comparison renders into #mp-w via renderMpCompare.
   function waterFacilitiesHTML() {
-    const D = WF.data; if (!D) { loadWaterFacilities().then(d => { if (d) { const b = $('#wf-box'); if (b) b.outerHTML = waterFacilitiesHTML(); } }); return '<div id="wf-box"></div>'; }
+    const D = WF.data; if (!D) { loadWaterFacilities().then(d => { if (d) { const b = $('#wfac-sec'); if (b) { b.outerHTML = waterFacilitiesHTML(); renderMpCompare(); } } }); return '<div id="wfac-sec"></div>'; }
     const SYS = ['West', 'Central', 'East', 'Lake-based', 'Caledon groundwater'], fs = D.facilities;
     const plantCap = f => f.plant ? `${fmtNum(f.plant.ratedMLd)} ML/d<small>${f.plant.year} max day ${Math.round(f.plant.maxDayMLd / f.plant.ratedMLd * 100)}%</small>` : f.groundwater ? `system ${fmtNum(f.groundwater.ratedM3d)} m³/d<small>max day ${Math.round(f.groundwater.maxDayM3d / f.groundwater.ratedM3d * 100)}%</small>` : '';
     const short = f => [f.assess && f.assess.capacity.some((v, i) => v < f.assess.demand[i]) && 'treatment', ...(f.assessPumps || []).filter(a => a.capacity.some((v, i) => v < a.demand[i])).map(a => a.what.toLowerCase()), f.assessStorage && f.assessStorage.available.some((v, i) => v < f.assessStorage.required[i]) && 'storage'].filter(Boolean);
     const tot = { ml: fs.reduce((t, f) => t + (f.storageML || 0), 0) };
-    return `<section id="wf-box" class="wf-box" data-info="water-facilities"><h3 class="svc-sub">Existing water facilities <span class="muted small">${fs.length} sites · ${fmtNum(tot.ml)} ML of storage · pumping and storage from the 2020 Master Plan</span></h3>
-      <div class="hyd-scroll"><table class="dt svc-table wf-table"><thead><tr><th>Facility</th><th>Type</th><th class="n">Firm pumping by zone fed (ML/d)</th><th class="n">Storage (ML)</th><th>Treatment</th><th>Master Plan: short by 2041</th><th>Planned DC works</th></tr></thead><tbody>
-      ${SYS.map(sy => { const list = fs.filter(f => f.system === sy); if (!list.length) return ''; return `<tr class="wf-grp"><td colspan="7">${esc(sy === 'Lake-based' ? 'Lake-based (other)' : sy === 'Caledon groundwater' ? 'Caledon groundwater systems' : `${sy} transmission system`)}</td></tr>${list.map(f => { const sh = short(f), w = wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong></span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; }).join('')}`; }).join('')}
-      </tbody></table></div>
-      <p class="small muted">Tap a row for the facility. Locations: Region of Peel open data (water storage, treatment plants and pumping stations). Pumping (firm = largest pump out of service) and reservoir capacity: 2020 Water and Wastewater Master Plan, Vol. 3, Tables 4–7; shortfalls by 2041: Tables 9, 11, 12; plant ratings and 2025 flows: the Region's drinking water reports. Booster and small stations without a published capacity are listed without one.</p></section>`;
+    const ratedTreat = fs.filter(f => f.plant && /Kennedy|Lorne/.test(f.name)).reduce((t, f) => t + (f.plant.ratedMLd || 0), 0);
+    const nShort = fs.filter(f => short(f).length).length;
+    const grpName = sy => esc(sy === 'Lake-based' ? 'Lake-based (other)' : sy === 'Caledon groundwater' ? 'Caledon groundwater systems' : `${sy} transmission system`);
+    const rowFor = f => { const sh = short(f), w = wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong></span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; };
+    const tableFor = list => { const rows = SYS.map(sy => { const ls = list.filter(f => f.system === sy); if (!ls.length) return ''; return `<tr class="wf-grp"><td colspan="7">${grpName(sy)}</td></tr>${ls.map(rowFor).join('')}`; }).join(''); return rows ? `<div class="hyd-scroll"><table class="dt svc-table wf-table"><thead><tr><th>Facility</th><th>Type</th><th class="n">Firm pumping by zone fed (ML/d)</th><th class="n">Storage (ML)</th><th>Treatment</th><th>Master Plan: short by 2041</th><th>Planned DC works</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''; };
+    const main = fs.filter(f => short(f).length), rest = fs.filter(f => !short(f).length);
+    return `<div id="wfac-sec"><p class="headline">${fs.length} existing water facilities · ${fmtNum(tot.ml)} ML of storage${nShort ? ` · <strong>${nShort} short by 2041</strong> in the 2020 Master Plan assessment` : ''}.</p>
+      <div class="ov-tiles">${wTile(fs.length, 'sites', 'existing water facilities')}${wTile(fmtNum(tot.ml), 'ML', 'storage', 'reservoirs, tanks & standpipes')}${wTile(fmtNum(ratedTreat), 'ML/d', 'treatment rated', 'A.P. Kennedy + Lorne Park')}${wTile(nShort, 'facilities', 'short by 2041', 'Master Plan assessment')}</div>
+      <div id="mp-w"></div>
+      <section class="wf-box" data-info="water-facilities"><h3 class="svc-sub">Existing water facilities <span class="muted small">short by 2041 first · ${fs.length} sites</span></h3>
+      ${tableFor(main)}
+      ${rest.length ? `<details class="dcn-more"><summary class="small">See all ${fs.length} facilities (${rest.length} with room to 2041)</summary>${tableFor(rest)}</details>` : ''}
+      <p class="small muted">ⓘ Tap a row for the facility. Locations: Region of Peel open data (water storage, treatment plants and pumping stations). Pumping (firm = largest pump out of service) and reservoir capacity: 2020 Water and Wastewater Master Plan, Vol. 3, Tables 4–7; shortfalls by 2041: Tables 9, 11, 12; plant ratings and 2025 flows: the Region's drinking water reports. Booster and small stations without a published capacity are listed without one.</p></section></div>`;
   }
   document.addEventListener('click', e => {
     const r = e.target.closest('[data-wf]'); if (!r || !WF.data) return;
@@ -7519,16 +8571,24 @@
     } catch (err) { HYD.err = err.message || String(err); }
     HYD.busy = false; renderHydroBox();
   }
+  // Water tab: Hydraulic check sub-view (Phase 4). The EPANET beta check renders into
+  // #hyd-box (inside #pane-hydro, created by Worker A). Clearly labelled beta throughout:
+  // a screening skeleton, not the Region's calibrated model.
   function hydroBoxHTML() {
     const R = HYD.res && HYD.res.key === scenarioKey() ? HYD.res : null, yr = capYear == null ? 'build-out' : capYear;
+    const over = R ? R.rows.reduce((t, r) => t + r.mains.filter(m => m.v > R.vmax).length, 0) : 0;
+    const nMains = R ? R.rows.reduce((t, r) => t + r.mains.length, 0) : 0;
+    const vmax = R ? Math.max(0, ...R.rows.flatMap(r => r.mains.map(m => m.v))) : 0;
+    const tiles = R ? `<div class="ov-tiles">${wTile(R.rows.length, 'boundaries', 'zone boundaries checked', `at the ${R.y == null ? 'build-out' : R.y} maximum day`)}${wTile(nMains, 'mains', 'large crossing mains modelled')}${wTile(over, 'mains', `over ${R.vmax} m/s`, over ? 'need DC mains or pumping on schedule' : 'all within the velocity limit')}${wTile(vmax.toFixed(2), 'm/s', 'highest velocity', `limit ${R.vmax} m/s`)}</div>` : '';
     const body = HYD.busy ? '<p class="small muted">Running EPANET…</p>' : HYD.err ? `<p class="small dcn-gap-t">EPANET could not run: ${esc(HYD.err)}</p>` : !R ? `<p class="small muted">Runs EPANET 2.2 (epanet-js, in this browser) on the large mains crossing into each upper pressure zone at the ${esc(String(yr))} maximum day demand.</p>` :
       `<div class="hyd-scroll"><table class="dt svc-table hyd-table"><thead><tr><th>Into zone</th><th>Max day</th><th>Main</th><th>Flow</th><th>Velocity</th><th>Head loss</th></tr></thead><tbody>
         ${R.rows.map(r => r.mains.map((mn, k) => `<tr${k ? '' : ' class="hyd-first"'}>${k ? '<td></td><td></td>' : `<td>${esc(r.b.upper)} and above<small>from zone ${esc(r.b.lower)}</small></td><td>${fmt1(r.qMLd)} ML/d<small>${fmtNum(Math.round(r.qLs))} L/s</small></td>`}<td>${mn.d} mm<small>${esc(mn.id)}</small></td><td>${fmtNum(Math.round(mn.q))} L/s</td><td class="${mn.v > R.vmax ? 'dcn-gap-t' : ''}">${mn.v.toFixed(2)} m/s</td><td>${mn.hl.toFixed(2)} m/km</td></tr>`).join('')).join('')}
       </tbody></table></div>
-      <p class="small">${(n => n ? `<strong>${n} main${n === 1 ? '' : 's'}</strong> above ${R.vmax} m/s at the ${esc(String(R.y == null ? 'build-out' : R.y))} maximum day: the transfer into ${n === 1 ? 'that zone' : 'those zones'} needs the DC mains or pumping on schedule.` : `Every crossing main stays at or below ${R.vmax} m/s at the ${esc(String(R.y == null ? 'build-out' : R.y))} maximum day.`)(R.rows.reduce((t, r) => t + r.mains.filter(m => m.v > R.vmax).length, 0))}</p>`;
-    return `<section id="hyd-box" class="hyd-box" data-info="hydraulics"><h3 class="svc-sub">Hydraulic check <span class="fr-b fr-ref">beta · EPANET</span></h3>${body}
+      <p class="small">${over ? `<strong>${over} main${over === 1 ? '' : 's'}</strong> above ${R.vmax} m/s at the ${esc(String(R.y == null ? 'build-out' : R.y))} maximum day: the transfer into ${over === 1 ? 'that zone' : 'those zones'} needs the DC mains or pumping on schedule.` : `Every crossing main stays at or below ${R.vmax} m/s at the ${esc(String(R.y == null ? 'build-out' : R.y))} maximum day.`}</p>`;
+    return `<section id="hyd-box" class="hyd-box" data-info="hydraulics"><p class="headline"><strong>Beta.</strong> An experimental EPANET 2.2 check of the large mains feeding each upper pressure zone — a screening skeleton, not the Region's calibrated InfoWater model.</p>
+      <h3 class="svc-sub">Hydraulic check <span class="fr-b fr-ref">beta · EPANET</span></h3>${tiles}${body}
       <p class="small"><button type="button" class="btn small" data-hyd="run"${HYD.busy ? ' disabled' : ''}>${R ? 'Run again' : 'Run EPANET check'}</button>${HYD.inp ? ' <button type="button" class="btn small" data-hyd="inp">Download .inp</button>' : ''}</p>
-      <p class="small muted">Skeleton: each zone boundary's crossing mains in parallel, 1 km long, Hazen-Williams C 120, from a fixed-head reservoir to the upper zones' maximum day. Velocity against the ${DCN.supply ? DCN.supply.velocity : 1.5} m/s used for the supply capacity. Open the .inp in EPANET or InfoWater to build on it.</p></section>`;
+      <p class="small muted">ⓘ Beta: skeleton only — each zone boundary's crossing mains in parallel, 1 km long, Hazen-Williams C 120, from a fixed-head reservoir to the upper zones' maximum day. Pumps, storage, elevations and pressures are not in it. Velocity against the ${DCN.supply ? DCN.supply.velocity : 1.5} m/s used for the supply capacity. Open the .inp in EPANET or InfoWater to build on it.</p></section>`;
   }
   function renderHydroBox() { const b = $('#hyd-box'); if (b) b.outerHTML = hydroBoxHTML(); }
   document.addEventListener('click', e => {
@@ -7687,7 +8747,12 @@
     if (!ry.length) return 'gap';
     return Math.min(...ry) <= outY ? 'planned' : 'gap';
   }
-  function scenarioKey() { return `${SEW.key}|${JSON.stringify(hz)}|${capYear}|${state.svcModel && state.svcModel.Y}|${svcOpt.ww}|${svcOpt.md}`; }
+  /* Phase 3b: pipe what-if (js/tools-upgrade.js). While a pipe upgrade is active,
+     tools-upgrade.js sets this suffix via PeelApp.upgBump(); it becomes part of
+     the scenario key so cached() rebuilds the DCN cache with the upgraded
+     pipe's capacity. Empty in normal use: no behaviour change. */
+  let sewUpgKey = '';
+  function scenarioKey() { return `${SEW.key}|${JSON.stringify(hz)}|${capYear}|${state.svcModel && state.svcModel.Y}|${svcOpt.ww}|${svcOpt.md}${sewUpgKey}`; }
   function cached(id, fn) {
     const k = scenarioKey(); if (DCN.key !== k) { DCN.cache.clear(); DCN.key = k; }
     if (!DCN.cache.has(id)) DCN.cache.set(id, fn());
@@ -7853,13 +8918,14 @@
     const proj = ln.p || ln.c, parts = state.dcInfra[ln.sys].lines.filter(x => (x.p || x.c) === proj);
     const len = parts.reduce((t, x) => { for (let i = 1; i < x.g.length; i++) t += dcM(x.g[i - 1], x.g[i]); return t; }, 0);
     const ys = parts.map(x => x.y).filter(Boolean);
-    $('#detail-body').innerHTML = `
+    const dcTitle = `DC ${DC_KIND[ln.k][0]}${ln.d ? ` · ${ln.d} mm` : ''}`;
+    const html = `
       <div class="head"><h3>${esc(DC_KIND[ln.k][0])}${ln.d ? ` · ${ln.d} mm` : ''}</h3><div class="m">${ln.p ? `Project ${esc(ln.p)}` : 'No project label'} · construction ${ys.length ? (Math.min(...ys) === Math.max(...ys) ? ys[0] : `${Math.min(...ys)}–${Math.max(...ys)}`) : 'year not labelled'} · ${unit(fmtNum(Math.round(len / 10) * 10), 'm')} · ${ln.s === 'approved' ? 'approved 2026' : 'proposed'} · 2026 DC capital map (draft)</div></div>
       ${ln.n ? `<p class="small">${esc(ln.n)}</p>` : ''}
       ${dcNeedsSection({ ln })}
       ${exportBar('loads')}`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'dcitem'; $('#detail').scrollTop = 0;
     loadsOf = { dc: { ln } };
+    toolResult('dc', dcTitle, html, () => showDcLine(ln));
   }
   // All constraints in the network, for the DC timing table.
   function allNeeds() {
@@ -7899,7 +8965,7 @@
     const sysF = dcnFilter.split(':')[1] || 'all', stF = dcnFilter.split(':')[0];
     const list = all.filter(c => (stF === 'all' || c.status === stF) && (sysF === 'all' || c.sys === sysF));
     const n = k => all.filter(c => c.status === k).length;
-    $('#detail-body').innerHTML = `
+    const html = `
       <div class="head"><h3 data-info="dc-needs">DC timing</h3><div class="m">Existing capacity against the 2026 DC capital program (draft) · ${esc(scenarioText())}</div></div>
       <div class="chips">${[['gap', `Needed before the DC project ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
         <span class="seg">${[['all', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']].map(([k, t]) => `<button type="button" class="btn small${sysF === k ? ' on' : ''}" data-dcn-filter="${stF}:${k}">${t}</button>`).join('')}</span></div>
@@ -7908,17 +8974,17 @@
       ${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more.</p>` : ''}
       <p class="small"><span class="muted">Tap a name for what loads it; tap a DC project for what it relieves and who relies on it.</span></p>
       <p class="small muted">Sewers: pipes reaching 90% of full capacity by build-out, grouped by the DC main that runs along them (or by run); the tightest pipe of each group is shown. Room in units at ${ppu} persons per unit (apartment). Room = capacity − (existing + built + approved); runs out = the year approved and proposed growth reach it, phased as in Horizon years. Plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated; pumping stations at firm capacity; storage from the 2020 Master Plan forecast; water supply into the upper zones is a rough conveyance estimate (1.5 m/s in the large mains crossing each zone boundary; water pumping station capacities are not published). A screen, not a hydraulic model.</p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'dctiming'; $('#detail').scrollTop = 0;
     loadsOf = { dc: { timing: true } };
+    toolResult('dc', 'DC timing', html, showDcTiming);
   }
   function showConsDevs(c) {
     const ppu = (state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
-    $('#detail-body').innerHTML = `<div class="head"><h3>${esc(c.name)}</h3><div class="m">${esc(c.sub)}</div></div>
+    const html = `<div class="head"><h3>${esc(c.name)}</h3><div class="m">${esc(c.sub)}</div></div>
       ${needsTable([c], ppu)}${c.note ? `<p class="small muted">${esc(c.note)}</p>` : ''}
       <h3 class="sub-title">Developments relying on it</h3>${consDevsHTML([c])}
       <p class="small"><button type="button" class="btn small link" data-dcn-all="1">← DC timing</button></p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'dcitem'; $('#detail').scrollTop = 0;
     loadsOf = { dc: { cons: c.id } };
+    toolResult('dc', c.name, html, () => showConsDevs(c));
   }
   function showDcBack(b) { if (b.ln) showDcLine(b.ln); else if (b.fc) showFacility(b.fc); else if (b.cons && DCN.reg && DCN.reg.get(b.cons)) showConsDevs(DCN.reg.get(b.cons)); else showDcTiming(); }
   $('#detail-body').addEventListener('click', e => {
@@ -7942,7 +9008,7 @@
   // that no longer fits is held back (people at Peel design criteria, units at the growth's persons
   // per unit). Developments outside the existing network that would connect to a new main are held
   // back entirely without it.
-  const DCA = { key: '', res: null, open: new Set(), sort: 'impact' };
+  const DCA = { key: '', res: null, open: new Set(), sort: 'impact', recFilter: 'all', recAll: false, timingAll: false, fundAll: false };
   const manningLs = (dMm, S) => { const d = dMm / 1000; return S > 0 ? 1000 * (1 / 0.013) * (Math.PI * d * d / 4) * Math.pow(d / 4, 2 / 3) * Math.sqrt(S) : 0; };
   const reliefKey = r => r.ln ? `ln:${r.ln.sys}:${r.ln.p || r.ln.c}` : r.kind === 'step' ? `step:${r.step.proj || r.y}` : r.fc ? `fc:${r.fc.sys}:${r.fc.name}` : null;
   // Capacity a relief adds to a constraint (same unit as its demand), and whether it is assumed.
@@ -8058,25 +9124,93 @@
     return { budget, years, end, rows, keep, defer, spent, later, total: rows.reduce((t, r) => t + r.cost, 0), committed: keep.filter(r => r.committed).reduce((t, r) => t + r.cost, 0), lower: Math.min(lower, upper), upper, est: rows.reduce((t, r) => t + (r.c ? r.c.gross * r.c.est : 0), 0) / Math.max(1, rows.reduce((t, r) => t + (r.c ? r.c.gross : 0), 0)), ppu: R.ppu, rate: R.rate };
   }
   const DCB = { budget: store.get('dcaBudget', 1e9), years: 10 };
-  function dcaBudgetHTML() {
-    if (!state.dcCosts || !state.dcCosts.unitCost) return '';
-    const B = dcaBudget(DCB.budget, DCB.years), pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / B.ppu));
-    const curve = [0.5e9, 1e9, 2e9, 3e9, 5e9].filter(b => b < B.total).concat([B.total]).map(b => { const x = b === DCB.budget ? B : dcaBudget(b, DCB.years); return { b, x }; });
-    const row = (r, kept) => `<tr class="${kept ? '' : 'dcb-def'}"><td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}${r.c && r.c.est > 0.5 ? '<small>estimated</small>' : r.c && r.c.est > 0 ? '<small>part estimated</small>' : ''}</td>
+  // Phase 4: the funding scenario's keep/defer lists merged into one recommendations table.
+  // Pure merge: [{ dec: 'Keep' | 'Defer', r }] — kept projects in funding order, deferred by impact.
+  function dcaMergeRecs(B) {
+    return [...B.keep.map(r => ({ dec: 'Keep', r })), ...B.defer.slice().sort((a, b) => b.v - a.v).map(r => ({ dec: 'Defer', r }))];
+  }
+  // Keep/defer row cells: project, online, DC cost, growth, $/person, why.
+  function dcbCells(r, kept, B, pp, uu) {
+    return `<td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}${r.c && r.c.est > 0.5 ? '<small>estimated</small>' : r.c && r.c.est > 0 ? '<small>part estimated</small>' : ''}</td>
       <td>${r.v > 0 ? `${pp(r.v)} people<small>≈${uu(r.v)} units by ${B.end}</small>` : `<span class="muted">none by ${B.end}</span>`}</td><td>${r.v > 0 && r.cost ? fmtMoney(r.cost / r.v) : '–'}</td>
-      <td>${kept ? (r.committed ? 'Committed in the 2026 capital program' : r.other ? `Funded from what's left: no modelled growth needs it by ${B.end} (other drivers)` : `Lets through ${pp(r.v)} people by ${B.end}`) : r.v > 0 ? `<strong>Over budget:</strong> holds back ${pp(r.v)} people by ${B.end}${r.firstY ? ` (from ≈${r.firstY})` : ''}${B.rate ? `, ≈${fmtMoney(r.v / B.ppu * B.rate)} DCs delayed` : ''}` : r.firstY && r.firstY > B.end ? `Not needed until ≈${r.firstY}` : 'No growth relies on it in this screen'}</td></tr>`;
-    return `<section class="dcb" data-info="dca-budget"><h3 class="sub-title">Funding scenario</h3>
-      <div class="dcb-tools"><label class="small">DC funding over the next <input type="number" min="1" max="30" step="1" value="${DCB.years}" data-dcb-years aria-label="Years"> years: $<input type="number" min="0.1" step="0.1" value="${(DCB.budget / 1e9).toFixed(1)}" data-dcb-budget aria-label="Budget in billions"> B</label>
-        <span class="seg">${[1e9, 5e9].map(b => `<button type="button" class="btn small${DCB.budget === b ? ' on' : ''}" data-dcb="${b}">$${b / 1e9} B</button>`).join('')}<button type="button" class="btn small${DCB.budget >= B.total && DCB.budget !== 1e9 && DCB.budget !== 5e9 ? ' on' : ''}" data-dcb="${Math.ceil(B.total / 1e8) * 1e8}">Whole program</button></span>
-        <button type="button" class="btn small" data-dcb-csv>CSV</button></div>
-      ${hlP(`With <strong>${fmtMoney(DCB.budget)}</strong> over ${DCB.years} years (${THIS_YEAR}–${B.end}) against a program of <strong>${fmtMoney(B.total)}</strong>: keep <strong>${B.keep.length}</strong> project${B.keep.length === 1 ? '' : 's'} (${fmtMoney(B.spent)}${B.committed ? `, ${fmtMoney(B.committed)} already committed` : ''}${B.spent > DCB.budget ? ', over the budget on committed work alone' : ''}), defer <strong>${B.defer.length}</strong> (${fmtMoney(B.total - B.spent)})${B.spent < DCB.budget ? `; ${fmtMoney(DCB.budget - B.spent)} of the budget is left over` : ''}. ${B.upper > 0 ? `Deferring them holds back ≈<strong>${pp(B.lower)}–${pp(B.upper)} people</strong> (≈${uu(B.lower)}–${uu(B.upper)} units) of the growth expected by ${B.end}.` : B.defer.length ? `No growth expected by ${B.end} relies on the deferred projects.` : 'Every project in the window is funded.'}`)}
-      ${B.later.length ? `<p class="small dcn-gap-t"><strong>Outside the window:</strong> ${B.later.map(r => `${esc(r.name)} (online ${r.y}, capacity runs out ≈${r.outY === THIS_YEAR ? 'now' : r.outY}${r.cost ? `, ≈${fmtMoney(r.cost)}` : ''})`).join('; ')} ${B.later.length === 1 ? 'is' : 'are'} scheduled after ${B.end} but needed sooner; bringing ${B.later.length === 1 ? 'it' : 'them'} into the window needs ≈${fmtMoney(B.later.reduce((t, r) => t + r.cost, 0))} more.</p>` : ''}
-      <table class="dt dcb-curve"><thead><tr><th>DC funding, ${DCB.years} years</th>${curve.map(({ b }) => `<th${b === DCB.budget ? ' class="on"' : ''}>${b >= B.total ? 'Whole program' : fmtMoney(b)}</th>`).join('')}</tr></thead><tbody>
-        <tr><td>Projects kept / deferred</td>${curve.map(({ x }) => `<td>${x.keep.length} / ${x.defer.length}</td>`).join('')}</tr>
-        <tr><td>Growth held back by ${B.end}</td>${curve.map(({ x }) => `<td>${x.upper > 0 ? `${pp(x.lower)}–${pp(x.upper)}<small>people</small>` : 'none'}</td>`).join('')}</tr></tbody></table>
-      <div class="dcb-lists"><div><h4>Keep (${B.keep.length})</h4><div class="dcb-scroll"><table class="dt dcb-t"><thead><tr><th>Project</th><th>Online</th><th>DC cost 2026$</th><th>Growth it lets through</th><th>$ / person</th><th>Why</th></tr></thead><tbody>${B.keep.map(r => row(r, true)).join('')}</tbody></table></div></div>
-        <div><h4>Defer (${B.defer.length})</h4><div class="dcb-scroll"><table class="dt dcb-t"><thead><tr><th>Project</th><th>Online</th><th>DC cost 2026$</th><th>Held back if deferred</th><th>$ / person</th><th>Consequence</th></tr></thead><tbody>${B.defer.slice().sort((a, b) => b.v - a.v).map(r => row(r, false)).join('')}</tbody></table></div></div></div>
-      <p class="small muted">Projects coming online ${THIS_YEAR}–${B.end} (projects later than that are outside the window). DC cost = DC-recoverable share in 2026 dollars: the 2020 DC study's costs indexed ×${state.dcCosts.index2026.wastewater.toFixed(2)} (wastewater) / ×${state.dcCosts.index2026.water.toFixed(2)} (water) by the Region's DC rate indexing; ${Math.round(B.est * 100)}% of the program cost is estimated (mains not in the 2020 study at a cost per metre fitted to its priced mains by diameter; facilities by their 2020 project or the median of their kind). Order: committed projects, then growth let through by ${B.end} per dollar. Combined impact: from the largest single constraint left short to the sum of the projects' own impacts (they overlap where they relieve the same path). A screen for discussion, not a capital plan: condition, regulatory and I&amp;I drivers, phasing within projects and non-DC funding are not in it.</p></section>`;
+      <td>${kept ? (r.committed ? 'Committed in the 2026 capital program' : r.other ? `Funded from what's left: no modelled growth needs it by ${B.end} (other drivers)` : `Lets through ${pp(r.v)} people by ${B.end}`) : r.v > 0 ? `<strong>Over budget:</strong> holds back ${pp(r.v)} people by ${B.end}${r.firstY ? ` (from ≈${r.firstY})` : ''}${B.rate ? `, ≈${fmtMoney(r.v / B.ppu * B.rate)} DCs delayed` : ''}` : r.firstY && r.firstY > B.end ? `Not needed until ≈${r.firstY}` : 'No growth relies on it in this screen'}</td>`;
+  }
+  // One merged recommendations row: the recommendation first, then the project cells.
+  function dcaRecRow(x, B, pp, uu) {
+    const kept = x.dec === 'Keep';
+    return `<tr class="${kept ? 'dca-keep' : 'dca-defer dcb-def'}"><td><span class="dca-rec">${x.dec}</span></td>${dcbCells(x.r, kept, B, pp, uu)}</tr>`;
+  }
+  // Funding curve data: the keep/defer screen replayed at several budget levels.
+  function dcaCurve(B) {
+    return [0.5e9, 1e9, 2e9, 3e9, 5e9].filter(b => b < B.total).concat([B.total]).map(b => ({ b, x: b === DCB.budget ? B : dcaBudget(b, DCB.years) }));
+  }
+  // One-line method / criteria / data-dates note, collapsed to a single line.
+  const dcaInfo = body => `<details class="svc-notes"><summary>ⓘ Method, criteria &amp; data dates</summary><p class="small muted">${body}</p></details>`;
+  // Timing chart: capacity runs out vs online year for the top projects by build-out impact.
+  function dcaTimingChart(rows) {
+    if (!rows.length) return '';
+    const W = 560, L0 = 200, R0 = 34, T0 = 20, RH = 24, B0 = 24, H = T0 + rows.length * RH + B0;
+    const x0 = THIS_YEAR, x1 = hz.end;
+    const x = y => L0 + (W - L0 - R0) * (Math.min(Math.max(y, x0), x1) - x0) / Math.max(1, x1 - x0);
+    const yOf = i => T0 + i * RH + RH / 2;
+    const ticks = []; for (let y = x0; y <= x1; y += 5) ticks.push(y); if (ticks[ticks.length - 1] !== x1) ticks.push(x1);
+    const short = s => { s = String(s || ''); return s.length > 30 ? `${s.slice(0, 29)}…` : s; };
+    return `<h3 class="sub-title">Project timing: capacity runs out vs online year</h3>
+    <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Capacity run-out year and online year for the top ${rows.length} DC projects by build-out impact">
+      ${ticks.map(y => `<line x1="${x(y).toFixed(1)}" x2="${x(y).toFixed(1)}" y1="${T0 - 8}" y2="${H - B0}" class="dca-grid"/><text x="${x(y).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}
+      ${rows.map((r, i) => {
+        const late = r.outY != null && r.y != null && r.outY < r.y;
+        const col = late ? 'var(--cap-over)' : 'var(--cap-room)';
+        const xo = r.outY == null ? x(x1) : x(r.outY), xn = r.y == null ? null : x(r.y), yc = yOf(i).toFixed(1);
+        return `<text x="${L0 - 8}" y="${(yOf(i) + 3).toFixed(1)}" class="dca-ax" text-anchor="end">${esc(short(r.name))}</text>`
+          + (xn == null ? '' : `<line x1="${Math.min(xo, xn).toFixed(1)}" x2="${Math.max(xo, xn).toFixed(1)}" y1="${yc}" y2="${yc}" style="stroke:${col};stroke-width:3;stroke-linecap:round;opacity:.5"/>`)
+          + `<circle cx="${xo.toFixed(1)}" cy="${yc}" r="4" style="fill:${col}"/>`
+          + (r.outY == null ? `<text x="${(xo + 8).toFixed(1)}" y="${(yOf(i) + 3).toFixed(1)}" class="dca-ax">after ${x1}</text>` : '')
+          + (xn == null ? '' : `<circle cx="${xn.toFixed(1)}" cy="${yc}" r="4.5" fill="none" style="stroke:${col};stroke-width:2"/>`);
+      }).join('')}
+    </svg>
+    <p class="small muted">● capacity runs out ≈year · ○ online year — <span style="color:var(--cap-over)">red</span> runs out before it comes online: advance it.</p>`;
+  }
+  // Recommendations chart: growth relying on each project by the window's last year (top 10).
+  function dcaRecChart(items, end) {
+    const top = items.slice().sort((a, b) => b.r.v - a.r.v).slice(0, 10).filter(x => x.r.v > 0);
+    if (!top.length) return '';
+    const W = 560, L0 = 200, R0 = 110, T0 = 8, RH = 24, B0 = 20, H = T0 + top.length * RH + B0;
+    const max = Math.max(...top.map(x => x.r.v));
+    const bw = v => Math.max(2, (W - L0 - R0) * v / max);
+    const pp = v => fmtNum(roundPop(v));
+    const short = s => { s = String(s || ''); return s.length > 30 ? `${s.slice(0, 29)}…` : s; };
+    return `<h3 class="sub-title">Growth relying on each project by ${end} (top ${top.length})</h3>
+    <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Growth relying on the top ${top.length} projects by ${end}, coloured by recommendation">
+      <line x1="${L0}" x2="${L0}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/>
+      ${[0.5, 1].map(f => `<line x1="${(L0 + (W - L0 - R0) * f).toFixed(1)}" x2="${(L0 + (W - L0 - R0) * f).toFixed(1)}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/><text x="${(L0 + (W - L0 - R0) * f).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${pp(max * f)}</text>`).join('')}
+      ${top.map((x, i) => { const yc = T0 + i * RH + RH / 2; return `<text x="${L0 - 8}" y="${(yc + 3).toFixed(1)}" class="dca-ax" text-anchor="end">${esc(short(x.r.name))}</text>
+        <rect x="${L0}" y="${(yc - 7).toFixed(1)}" width="${bw(x.r.v).toFixed(1)}" height="14" rx="3" style="fill:${x.dec === 'Keep' ? 'var(--cap-room)' : 'var(--cap-tight)'};fill-opacity:.75"/>
+        <text x="${(L0 + bw(x.r.v) + 6).toFixed(1)}" y="${(yc + 3).toFixed(1)}" class="dca-ax">${pp(x.r.v)} · ${x.dec}</text>`; }).join('')}
+    </svg>
+    <p class="small muted">People of growth relying on the project by ${end} — deferring it holds this growth back. <span style="color:var(--cap-room)">■</span> keep · <span style="color:var(--cap-tight)">■</span> defer.</p>`;
+  }
+  // Funding chart: growth held back by the window's last year across funding levels.
+  function dcaCurveChart(curve, B) {
+    if (curve.length < 2) return '';
+    const W = 560, H = 210, L0 = 54, R0 = 14, T0 = 12, B0 = 46;
+    const maxB = Math.max(...curve.map(c => c.b)), maxV = Math.max(...curve.map(c => c.x.upper), 1) * 1.08;
+    const x = b => L0 + (W - L0 - R0) * b / maxB, y = v => T0 + (H - T0 - B0) * (1 - v / maxV);
+    const up = curve.map(c => y(c.x.upper)), lo = curve.map(c => y(c.x.lower));
+    const band = `${curve.map((c, i) => `${i ? 'L' : 'M'}${x(c.b).toFixed(1)},${up[i].toFixed(1)}`).join('')}${curve.map((c, i) => [i, c]).reverse().map(([i, c]) => `L${x(c.b).toFixed(1)},${lo[i].toFixed(1)}`).join('')}Z`;
+    const line = curve.map((c, i) => `${i ? 'L' : 'M'}${x(c.b).toFixed(1)},${y(c.x.upper).toFixed(1)}`).join('');
+    const bl = b => b >= B.total ? 'Whole' : b >= 1e9 ? `$${b / 1e9}B` : `$${Math.round(b / 1e6)}M`;
+    const pp = v => fmtNum(roundPop(v));
+    return `<h3 class="sub-title">Growth held back by ${B.end} vs DC funding</h3>
+    <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Growth held back by ${B.end} at each funding level">
+      ${[0, 0.5, 1].map(f => `<line x1="${L0}" x2="${W - R0}" y1="${y(maxV / 1.08 * f).toFixed(1)}" y2="${y(maxV / 1.08 * f).toFixed(1)}" class="dca-grid"/><text x="${L0 - 5}" y="${(y(maxV / 1.08 * f) + 3).toFixed(1)}" class="dca-ax" text-anchor="end">${pp(maxV / 1.08 * f)}</text>`).join('')}
+      <path d="${band}" class="dca-uns"/><path d="${line}" fill="none" style="stroke:var(--cap-over);stroke-width:2"/>
+      <line x1="${x(DCB.budget).toFixed(1)}" x2="${x(DCB.budget).toFixed(1)}" y1="${T0}" y2="${H - B0}" class="dca-now"/>
+      ${curve.map(c => `<circle cx="${x(c.b).toFixed(1)}" cy="${y(c.x.upper).toFixed(1)}" r="3.5" style="fill:var(--cap-over)"/>
+        <text x="${x(c.b).toFixed(1)}" y="${H - 28}" class="dca-ax" text-anchor="middle"${c.b === DCB.budget ? ' style="fill:var(--accent);font-weight:600"' : ''}>${bl(c.b)}</text>
+        <text x="${x(c.b).toFixed(1)}" y="${H - 13}" class="dca-ax" text-anchor="middle">${c.x.keep.length}/${c.x.defer.length}</text>`).join('')}
+    </svg>
+    <p class="small muted">Kept / deferred under each point. Range: largest single constraint left short → sum of the deferred projects' own impacts. Dashed line: the current ${fmtMoney(DCB.budget)} screen.</p>`;
   }
   // Water + wastewater DC per unit by dwelling type (single / semi published; other types at the
   // 2020 schedule's ratios). Apartments above 475 persons/ha count as small units (≤750 sq ft).
@@ -8202,46 +9336,119 @@
   // Cost cell: DC-recoverable cost of the priced components, per person enabled, and coverage.
   const costCell = r => !r.cost ? '<span class="muted">–</span>' : !r.cost.n ? '<span class="muted">not in the 2020 study</span>' : `${fmtMoney(r.cost.dc)}<small>${r.perP ? `${fmtMoney(r.perP)} / person · ` : ''}${r.cost.n < r.cost.of ? `${r.cost.n} of ${r.cost.of} parts priced` : `gross ${fmtMoney(r.cost.gross)}`}</small>`;
   const REC = { advance: ['dca-advance', 'Keep · advance'], keep: ['dca-keep', 'Keep'], defer: ['dca-defer', 'Keep · could defer'], review: ['dca-review', 'Review'] };
+  // ---- DC tab sub-views (Phase 4): Timing / Recommendations / Funding ---------------------------
+  // Worker A owns the sub-view chrome (dcSub state, data-dcasub buttons, the three panes); the
+  // renderers below fill #dca-timing-body / #dca-rec-body / #dca-funding-body. The single scenario
+  // bar replaces the old per-tab scenario stamp line (no stampHTML call remains in this tab).
   function renderDca() {
-    const el = $('#dca-body'); if (!el) return;
-    if (!state.svcModel || !state.dcInfra) { el.innerHTML = '<p class="small muted">Loading the servicing model and the 2026 DC program…</p>'; return; }
-    if (!SEW.data) { el.innerHTML = '<p class="small muted">Loading the sewer network…</p>'; loadSewers().then(d => { if (d) renderDca(); }); return; }
-    const R = dcAnalysis(), years = R.years, yi = capYear == null ? -1 : years.indexOf(capYear), atY = r => yi >= 0 ? r.ys[yi] : r.bo;
+    const bodies = [$('#dca-timing-body'), $('#dca-rec-body'), $('#dca-funding-body')];
+    const legacy = bodies.every(b => !b) ? $('#dca-body') : null;
+    if (!bodies.some(Boolean) && !legacy) return;
+    const set = (i, html) => { const el = bodies[i] || (i === 0 ? legacy : null); if (el) el.innerHTML = html; };
+    if (!state.svcModel || !state.dcInfra) { for (let i = 0; i < 3; i++) set(i, skel('Loading the servicing model and the 2026 DC program')); return; }
+    if (!SEW.data) { for (let i = 0; i < 3; i++) set(i, skel('Loading the sewer network')); loadSewers().then(d => { if (d) renderDca(); }); return; }
+    const p = scopedDev();
+    if (p) {
+      // The site's DC brief; sewer-path and plant-reserve numbers live on the Wastewater tab.
+      const st = statusOf(p), f = svcFacts(p);
+      st.works = st.works || devWorks(p, f);
+      const brief = `<p class="small muted">DC analysis for <strong>${esc(p.title)}</strong>.</p>` + devBriefHTML(p, st, f, 'dc', { noWwNeeds: true });
+      set(0, brief); scopeBriefIds(bodies[0] || legacy);
+      const note = `<p class="small muted">Region-wide DC recommendations and the funding screen are shown when no site is scoped.</p>`;
+      set(1, note); set(2, note);
+      return;
+    }
+    const R = dcAnalysis();
+    set(0, renderDcaTiming(R)); set(1, renderDcaRec(R)); set(2, renderDcaFunding(R));
+  }
+  function dcaTimingRow(r, years, atY, pp, uu) {
+    const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0];
+    return `<tr class="dca-row ${REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
+      <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
+      <td>${r.y || '–'}</td>
+      <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
+      <td>${r.outY ? (r.outY === THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${hz.end}` : '–'}</td>
+      <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>
+      <td>${r.bo > 0 ? `<strong>${pp(r.bo)}</strong> people<small>≈${uu(r.bo)} units${r.revRisk ? ` · ${fmtMoney(r.revRisk)} DCs` : ''}</small>` : '<span class="muted">none</span>'}</td>
+      <td>${costCell(r)}</td>
+      <td><span class="dca-rec">${REC[r.rec][1]}</span><small>${esc(r.why)}</small></td></tr>
+      ${DCA.open.has(r.key) ? `<tr class="dca-detail"><td colspan="8">${dcaDetail(r, years)}</td></tr>` : ''}`;
+  }
+  function renderDcaTiming(R) {
+    const years = R.years, yi = capYear == null ? -1 : years.indexOf(capYear), atY = r => yi >= 0 ? r.ys[yi] : r.bo;
     const yrLabel = capYear == null ? 'build-out' : capYear;
     const n = k => R.list.filter(r => r.rec === k).length;
-    const top = R.list.filter(r => r.rec !== 'review').slice().sort((a, b) => b.bo - a.bo).slice(0, 5);
     const pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / R.ppu));
-    const list = DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : DCA.sort === 'cost' ? R.list.slice().sort((a, b) => (a.perP ?? Infinity) - (b.perP ?? Infinity)) : DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
     const adv = R.list.filter(r => r.rec === 'advance'), big = R.list.slice().sort((a, b) => b.bo - a.bo)[0];
-    const hl = `${adv.length ? `<strong>${adv.length} DC project${adv.length === 1 ? '' : 's'}</strong> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out: bring ${adv.length === 1 ? 'it' : 'them'} forward. ` : 'Every DC project comes online before the capacity it relieves runs out. '}${big && big.bo > 0 ? `Cancelling <strong>${esc(big.name)}</strong> would hold back the most growth: ≈${fmtNum(roundPop(big.bo))} people (≈${fmtNum(Math.round(big.units))} units) by build-out.` : ''}`;
-    el.innerHTML = `${hlP(hl)}${stampHTML('ww')}
+    const hl = `Across <strong>${fmtNum(R.list.length)} DC projects</strong>${adv.length ? `, <strong>${adv.length}</strong> come${adv.length === 1 ? 's' : ''} online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out — bring ${adv.length === 1 ? 'it' : 'them'} forward` : ' — every project comes online before the capacity it relieves runs out'}${big && big.bo > 0 ? `; cancelling <strong>${esc(big.name)}</strong> would hold back the most growth: ≈${pp(big.bo)} people (≈${uu(big.bo)} units) by build-out` : ''}.`;
+    const list = DCA.sort === 'impact' ? R.list.slice().sort((a, b) => b.bo - a.bo) : DCA.sort === 'cost' ? R.list.slice().sort((a, b) => (a.perP ?? Infinity) - (b.perP ?? Infinity)) : DCA.sort === 'year' ? R.list.slice().sort((a, b) => (a.y || 9999) - (b.y || 9999)) : R.list;
+    const shown = DCA.timingAll ? list : list.slice(0, 10);
+    return `${hlP(hl)}
       <div class="dca-sum">
         <div class="dca-tile"><b>${fmtNum(R.list.length)}</b><span>DC projects relieve a capacity constraint or serve new development</span></div>
-        <div class="dca-tile ${n('advance') ? 'warn' : ''}"><b>${n('advance')}</b><span>come online after the capacity runs out: advance</span></div>
+        <div class="dca-tile ${adv.length ? 'warn' : ''}"><b>${adv.length}</b><span>come online after the capacity runs out: advance</span></div>
         <div class="dca-tile"><b>${n('keep') + n('defer')}</b><span>keep (${n('defer')} could follow later)</span></div>
-        <div class="dca-tile"><b>${n('review')}</b><span>hold back no growth by build-out: review</span></div>
-        ${(pr => pr.length ? `<div class="dca-tile"><b>${fmtMoney(pr.reduce((t, r) => t + r.cost.dc, 0))}</b><span>DC-recoverable cost of the ${pr.length} project${pr.length === 1 ? '' : 's'} priced in the 2020 DC study (2020$)</span></div>` : '')(R.list.filter(r => r.cost && r.cost.n))}
         <div class="dca-tile ${R.baseBo > 0 ? 'warn' : ''}"><b>${pp(R.baseBo)}</b><span>people (≈${uu(R.baseBo)} units) held back at build-out even with every project as scheduled</span></div>
       </div>
-      <div class="dca-recs"><h3 class="sub-title">Recommendations</h3><ol class="small">${top.map(r => `<li><strong>Keep ${esc(r.name)}</strong> (${r.y || 'year not labelled'}): cancelling it holds back <strong>${pp(r.bo)} people ≈ ${uu(r.bo)} units</strong> by build-out${r.revRisk ? ` (≈${fmtMoney(r.revRisk)} in water and wastewater DCs)` : ''}${r.perP ? `, at ≈${fmtMoney(r.perP)} of DC-recoverable cost per person` : ''}${r.cu ? `, including ${fmtNum(r.conn.length)} development${r.conn.length === 1 ? '' : 's'} that would connect to it` : ''}. ${esc(r.why)}</li>`).join('')}
-        ${R.list.filter(r => r.rec === 'advance').length ? `<li><strong>Advance:</strong> ${R.list.filter(r => r.rec === 'advance').map(r => `${esc(r.name)} (${r.y} → ≈${r.outY === THIS_YEAR ? 'now' : r.outY})`).join('; ')}.</li>` : ''}
-        ${n('review') ? `<li><strong>Review</strong> ${n('review')} project${n('review') === 1 ? '' : 's'} that hold back no growth by build-out in this screen (others relieve the same constraint, or the existing capacity suffices); check them against the DC study's own drivers (condition, I&amp;I, servicing beyond the applications) before cancelling.</li>` : ''}</ol></div>
-      ${dcaBudgetHTML()}
+      ${dcaTimingChart(R.list.slice().sort((a, b) => b.bo - a.bo).slice(0, 10))}
       <div class="dca-tools"><label class="small dca-yr">Year <select data-dca-year aria-label="Year for the impact column (same as the map's Demand year)">${years.map(y => `<option value="${y}"${capYear === y ? ' selected' : ''}>${y}</option>`).join('')}<option value=""${capYear == null ? ' selected' : ''}>Build-out</option></select></label><span class="seg">${[['impact', 'Largest impact'], ['cost', 'Cost per person'], ['rec', 'By recommendation'], ['year', 'By year']].map(([k, t]) => `<button type="button" class="btn small${DCA.sort === k ? ' on' : ''}" data-dca-sort="${k}">${t}</button>`).join('')}</span>
         <button type="button" class="btn small" data-dca-csv>CSV</button><span class="muted small">Impact at the Demand year (${esc(String(yrLabel))}) and at build-out · tap a row for its timeline</span></div>
       <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online</th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Cost (2020$)</th><th>Recommendation</th></tr></thead><tbody>
-        ${list.map(r => { const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0]; return `<tr class="dca-row ${REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
-          <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
-          <td>${r.y || '–'}</td>
-          <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
-          <td>${r.outY ? (r.outY === THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${hz.end}` : '–'}</td>
-          <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>
-          <td>${r.bo > 0 ? `<strong>${pp(r.bo)}</strong> people<small>≈${uu(r.bo)} units${r.revRisk ? ` · ${fmtMoney(r.revRisk)} DCs` : ''}</small>` : '<span class="muted">none</span>'}</td>
-          <td>${costCell(r)}</td>
-          <td><span class="dca-rec">${REC[r.rec][1]}</span><small>${esc(r.why)}</small></td></tr>
-          ${DCA.open.has(r.key) ? `<tr class="dca-detail"><td colspan="8">${dcaDetail(r, years)}</td></tr>` : ''}`; }).join('')}
+        ${shown.map(r => dcaTimingRow(r, years, atY, pp, uu)).join('')}
       </tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${THIS_YEAR}–${hz.end}: approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). <strong>Diversion:</strong> from a project's construction year, flow above the existing capacity goes to the project, up to the capacity it adds — a main along an existing sewer at Manning full-pipe capacity for its diameter on the existing slope (n 0.013; a twin when the size isn't on the map); a plant expansion at its published step; a pumping station, treatment, well or supply project with no published capacity is taken as sized for build-out. <strong>Cancelled:</strong> the same without that one project (the others as scheduled); the growth above the capacity is held back, in people at each constraint's own rate (Peel design criteria) and units at ${R.ppu.toFixed(2)} persons per unit (the approved and proposed developments' average). Constraints a project relieves sit in series along a path, so its impact is the largest of them, not the sum; developments outside the existing network that would connect to a new main (within ${fmtNum(DC_CONNECT_M)} m) count in full. An existing overload isn't counted as growth held back. Storage (master plan forecast already includes the planned facilities) and constraints flagged “check the data” are left out. ${R.nCons} constraints analysed. <strong>Cost:</strong> the 2020 DC Background Study's gross and DC-recoverable cost (2020$) of the project's components that appear in it (matched by component number; components added since 2020 aren't priced until the 2026 study's tables are published), per person held back if cancelled. <strong>DC revenue:</strong> held-back units × the average water + wastewater DC per unit for the approved and proposed unit mix${R.rate ? ` (≈${fmtMoney(R.rate)})` : ''}, before credits and exemptions. A screen to rank and question projects, not a replacement for the DC study: condition, I&amp;I reduction and servicing beyond today's applications are not in it.</p></details>`;
+      ${list.length > 10 ? `<p><button type="button" class="btn small" data-dcatiming-all>${DCA.timingAll ? 'Show top 10' : `See all ${list.length} projects`}</button></p>` : ''}
+      ${dcaInfo(`Each capacity constraint from DC timing (sanitary sewer groups at full-pipe capacity, pumping stations at firm capacity, plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated, the water treatment systems and supply into the upper pressure zones) is replayed year by year, ${THIS_YEAR}–${hz.end}: approved growth over ${hz.aYears} years from ${hz.aStart}, proposed over ${hz.pYears} from ${hz.pStart} (Horizon years). Cancelling one project holds back the growth above the remaining capacity — people at each constraint's own rate (Peel design criteria), units at ${R.ppu.toFixed(2)} persons per unit; an existing overload isn't counted. Constraints in series along a path count the largest, not the sum; developments outside the existing network within ${fmtNum(DC_CONNECT_M)} m of a new main count in full. Data: 2026 DC capital maps · 2020 DC Background Study costs · ${R.nCons} constraints analysed (storage and constraints flagged “check the data” are out).`)}`;
+  }
+  function renderDcaRec(R) {
+    if (!state.dcCosts || !state.dcCosts.unitCost) return `<p class="small muted">DC cost data is still loading.</p>`;
+    const B = dcaBudget(DCB.budget, DCB.years), pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / B.ppu));
+    const merged = dcaMergeRecs(B);
+    const counts = { all: merged.length, keep: 0, defer: 0 };
+    for (const x of merged) counts[x.dec === 'Keep' ? 'keep' : 'defer']++;
+    const rows = merged.filter(x => DCA.recFilter === 'all' || x.dec.toLowerCase() === DCA.recFilter);
+    const shown = DCA.recAll ? rows : rows.slice(0, 10);
+    const hl = `With <strong>${fmtMoney(DCB.budget)}</strong> of DC funding over ${DCB.years} years (${THIS_YEAR}–${B.end}) against a <strong>${fmtMoney(B.total)}</strong> program: keep <strong>${B.keep.length}</strong> (${fmtMoney(B.spent)}), defer <strong>${B.defer.length}</strong> (${fmtMoney(B.total - B.spent)})${B.upper > 0 ? ` — deferring them holds back ≈<strong>${pp(B.lower)}–${pp(B.upper)} people</strong> (≈${uu(B.lower)}–${uu(B.upper)} units) of the growth expected by ${B.end}` : B.defer.length ? ` — no growth expected by ${B.end} relies on the deferred projects` : ` — every project in the window is funded`}.`;
+    return `${hlP(hl)}
+      <div class="dca-sum">
+        <div class="dca-tile"><b>${B.keep.length}</b><span>projects kept (${fmtMoney(B.spent)}${B.committed ? `, ${fmtMoney(B.committed)} already committed` : ''})</span></div>
+        <div class="dca-tile"><b>${B.defer.length}</b><span>deferred (${fmtMoney(B.total - B.spent)})</span></div>
+        <div class="dca-tile ${B.upper > 0 ? 'warn' : ''}"><b>${B.upper > 0 ? `${pp(B.lower)}–${pp(B.upper)}` : '0'}</b><span>people of growth held back by ${B.end} if every deferred project is deferred</span></div>
+        <div class="dca-tile"><b>${fmtMoney(DCB.budget)}</b><span>DC funding over ${DCB.years} years (${THIS_YEAR}–${B.end})</span></div>
+      </div>
+      ${dcaRecChart(merged, B.end)}
+      <div class="dca-tools"><span class="seg" role="group" aria-label="Filter by recommendation">${[['all', 'All'], ['keep', 'Keep'], ['defer', 'Defer']].map(([k, t]) => `<button type="button" class="btn small${DCA.recFilter === k ? ' on' : ''}" data-dcarec-filter="${k}">${t} (${counts[k]})</button>`).join('')}</span>
+        <button type="button" class="btn small" data-dcb-csv>CSV</button><span class="muted small">Keep/defer screen for the ${THIS_YEAR}–${B.end} window</span></div>
+      <div class="dcb-scroll"><table class="dt dcb-t"><thead><tr><th>Recommendation</th><th>Project</th><th>Online</th><th>DC cost 2026$</th><th>Growth by ${B.end}</th><th>$ / person</th><th>Why</th></tr></thead><tbody>
+        ${shown.map(x => dcaRecRow(x, B, pp, uu)).join('') || `<tr><td colspan="7" class="muted">No projects in this screen.</td></tr>`}
+      </tbody></table></div>
+      ${rows.length > 10 ? `<p><button type="button" class="btn small" data-dcarec-all>${DCA.recAll ? 'Show top 10' : `See all ${rows.length} projects`}</button></p>` : ''}
+      ${dcaInfo(`A funding screen for discussion, not a capital plan: projects coming online ${THIS_YEAR}–${B.end} (later ones are outside the window). DC cost = DC-recoverable share in 2026$ — the 2020 study's costs indexed ×${state.dcCosts.index2026.wastewater.toFixed(2)} (wastewater) / ×${state.dcCosts.index2026.water.toFixed(2)} (water) by the Region's DC rate indexing; ${Math.round(B.est * 100)}% of the program cost is estimated. Order: committed projects first, then growth let through by ${B.end} per dollar. Combined held-back range: from the largest single constraint left short to the sum of the deferred projects' own impacts (they overlap where they relieve the same path). Condition, regulatory and I&amp;I drivers, phasing within projects and non-DC funding are not in it.`)}`;
+  }
+  function renderDcaFunding(R) {
+    if (!state.dcCosts || !state.dcCosts.unitCost) return `<p class="small muted">DC cost data is still loading.</p>`;
+    const B = dcaBudget(DCB.budget, DCB.years), pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / B.ppu));
+    const curve = dcaCurve(B);
+    const hl = `The <strong>${B.rows.length}-project</strong> DC program coming online ${THIS_YEAR}–${B.end} costs <strong>${fmtMoney(B.total)}</strong> in 2026 DC-recoverable dollars; the <strong>${fmtMoney(DCB.budget)}</strong> funding screen keeps <strong>${B.keep.length}</strong> and defers <strong>${B.defer.length}</strong>.`;
+    const byCost = B.rows.slice().sort((a, b) => b.cost - a.cost);
+    const shown = DCA.fundAll ? byCost : byCost.slice(0, 10);
+    return `<section data-info="dca-budget">${hlP(hl)}
+      <div class="dca-sum">
+        <div class="dca-tile"><b>${fmtMoney(B.total)}</b><span>DC-recoverable program cost, 2026$ (${B.rows.length} projects, ${THIS_YEAR}–${B.end})</span></div>
+        <div class="dca-tile"><b>${fmtMoney(DCB.budget)}</b><span>DC funding over the next ${DCB.years} years</span></div>
+        <div class="dca-tile"><b>${fmtMoney(B.spent)}</b><span>spent on the ${B.keep.length} kept projects${B.committed ? ` (${fmtMoney(B.committed)} already committed)` : ''}</span></div>
+        ${B.spent <= DCB.budget ? `<div class="dca-tile"><b>${fmtMoney(DCB.budget - B.spent)}</b><span>left over</span></div>` : `<div class="dca-tile warn"><b>${fmtMoney(B.spent - DCB.budget)}</b><span>over the budget on committed work alone</span></div>`}
+      </div>
+      <div class="dcb-tools"><label class="small">DC funding over the next <input type="number" min="1" max="30" step="1" value="${DCB.years}" data-dcb-years aria-label="Years"> years: $<input type="number" min="0.1" step="0.1" value="${(DCB.budget / 1e9).toFixed(1)}" data-dcb-budget aria-label="Budget in billions"> B</label>
+        <span class="seg">${[1e9, 5e9].map(b => `<button type="button" class="btn small${DCB.budget === b ? ' on' : ''}" data-dcb="${b}">$${b / 1e9} B</button>`).join('')}<button type="button" class="btn small${DCB.budget >= B.total && DCB.budget !== 1e9 && DCB.budget !== 5e9 ? ' on' : ''}" data-dcb="${Math.ceil(B.total / 1e8) * 1e8}">Whole program</button></span></div>
+      ${dcaCurveChart(curve, B)}
+      <h3 class="sub-title">Most expensive projects (DC cost, 2026$)</h3>
+      <div class="dcb-scroll"><table class="dt dcb-t"><thead><tr><th>Project</th><th>Online</th><th>DC cost 2026$</th><th>Estimated</th><th>Growth it carries by ${B.end}</th></tr></thead><tbody>
+        ${shown.map(r => `<tr><td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}</td><td>${r.c ? `${Math.round(r.c.est * 100)}%` : '–'}</td><td>${r.v > 0 ? `${pp(r.v)} people<small>≈${uu(r.v)} units</small>` : '<span class="muted">none</span>'}</td></tr>`).join('')}
+      </tbody></table></div>
+      ${byCost.length > 10 ? `<p><button type="button" class="btn small" data-dcafund-all>${DCA.fundAll ? 'Show top 10' : `See all ${byCost.length} projects`}</button></p>` : ''}
+      ${B.later.length ? `<p class="small dcn-gap-t"><strong>Outside the window:</strong> ${B.later.map(r => `${esc(r.name)} (online ${r.y}, capacity runs out ≈${r.outY === THIS_YEAR ? 'now' : r.outY}${r.cost ? `, ≈${fmtMoney(r.cost)}` : ''})`).join('; ')} ${B.later.length === 1 ? 'is' : 'are'} scheduled after ${B.end} but needed sooner; bringing ${B.later.length === 1 ? 'it' : 'them'} into the window needs ≈${fmtMoney(B.later.reduce((t, r) => t + r.cost, 0))} more.</p>` : ''}
+      ${dcaInfo(`DC cost = DC-recoverable share in 2026$: the 2020 DC Background Study's costs indexed by the Region's DC rate indexing (×${state.dcCosts.index2026.wastewater.toFixed(2)} wastewater / ×${state.dcCosts.index2026.water.toFixed(2)} water); ${Math.round(B.est * 100)}% of the program cost is estimated — mains not in the 2020 study at a cost per metre fitted to its priced mains by diameter, facilities by their 2020 project or the median of their kind. DC revenue at risk: held-back units × the average water + wastewater DC per unit for the approved and proposed unit mix${B.rate ? ` (≈${fmtMoney(B.rate)})` : ''}, before credits, exemptions and discounts.`)}
+    </section>`;
   }
   function dcaDetail(r, years) {
     const pp = v => fmtNum(roundPop(v));
@@ -8258,21 +9465,32 @@
     const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), r.revRisk == null ? '' : Math.round(r.revRisk), r.cost && r.cost.n ? r.cost.gross : '', r.cost && r.cost.n ? r.cost.dc : '', r.cost ? `${r.cost.n} of ${r.cost.of}` : '', r.perP == null ? '' : Math.round(r.perP), REC[r.rec][1], r.why]);
     download(`peel-dc-analysis-${THIS_YEAR}.csv`, CSV_DISCLAIMER + [head, ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
   }
-  $('#dca-body').addEventListener('change', e => {
+  // DC tab events: delegated from the document so they keep working in the Phase 4 sub-view
+  // panes (#dca-timing-body / #dca-rec-body / #dca-funding-body, or the legacy #dca-body).
+  const dcaBodyOf = e => e.target.closest('#dca-timing-body, #dca-rec-body, #dca-funding-body, #dca-body');
+  document.addEventListener('change', e => {
+    if (!dcaBodyOf(e)) return;
     const b = e.target.closest('[data-dcb-budget]'), y = e.target.closest('[data-dcb-years]');
-    if (b && +b.value > 0) { DCB.budget = Math.round(+b.value * 1e8) * 10; store.set('dcaBudget', DCB.budget); renderDca(); }
-    if (y && +y.value >= 1) { DCB.years = Math.min(30, Math.round(+y.value)); renderDca(); }
+    if (b && +b.value > 0) { DCB.budget = Math.round(+b.value * 1e8) * 10; store.set('dcaBudget', DCB.budget); renderDca(); return; }
+    if (y && +y.value >= 1) { DCB.years = Math.min(30, Math.round(+y.value)); renderDca(); return; }
+    const s0 = e.target.closest('[data-dca-year]'); if (!s0) return;
+    capYear = s0.value ? +s0.value : null; renderScenario(); renderCapLayer(); renderLegend(); syncTraceSum(); renderDca();
   });
-  $('#dca-body').addEventListener('click', e => {
+  document.addEventListener('click', e => {
+    if (!dcaBodyOf(e)) return;
     const bb = e.target.closest('[data-dcb]'); if (bb) { DCB.budget = +bb.dataset.dcb; store.set('dcaBudget', DCB.budget); return renderDca(); }
     if (e.target.closest('[data-dcb-csv]')) {
       const B = dcaBudget(DCB.budget, DCB.years), q = v => `"${String(v).replace(/"/g, '""')}"`;
-      const rows = [...B.keep.map(r => ['Keep', r]), ...B.defer.map(r => ['Defer', r])].map(([d, r]) => [d, r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.committed ? 'yes' : '', Math.round(r.cost), r.c ? Math.round(r.c.est * 100) : '', Math.round(r.v), Math.round(r.v / B.ppu), r.firstY || '']);
+      const rows = dcaMergeRecs(B).map(({ dec, r }) => [dec, r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', r.committed ? 'yes' : '', Math.round(r.cost), r.c ? Math.round(r.c.est * 100) : '', Math.round(r.v), Math.round(r.v / B.ppu), r.firstY || '']);
       return download(`peel-dc-funding-${(DCB.budget / 1e9).toFixed(1)}B-${B.end}.csv`, CSV_DISCLAIMER + [['Decision', 'Project', 'System', 'Online', 'Committed', 'DC cost 2026$', '% estimated', `People held back by ${B.end} if deferred`, 'Units', 'Growth first held back'], ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
     }
+    const rf = e.target.closest('[data-dcarec-filter]'); if (rf) { DCA.recFilter = rf.dataset.dcarecFilter; DCA.recAll = false; return renderDca(); }
+    if (e.target.closest('[data-dcarec-all]')) { DCA.recAll = !DCA.recAll; return renderDca(); }
+    if (e.target.closest('[data-dcatiming-all]')) { DCA.timingAll = !DCA.timingAll; return renderDca(); }
+    if (e.target.closest('[data-dcafund-all]')) { DCA.fundAll = !DCA.fundAll; return renderDca(); }
     const s0 = e.target.closest('[data-dca-sort]'); if (s0) { DCA.sort = s0.dataset.dcaSort; return renderDca(); }
     if (e.target.closest('[data-dca-csv]')) return dcaCsv();
-    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = projectByKey(dv.dataset.dcaDev); if (p) { showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+    const dv = e.target.closest('[data-dca-dev]'); if (dv) { const p = projectByKey(dv.dataset.dcaDev); if (p) showDetail(p); return; }
     const mp = e.target.closest('[data-dca-map]');
     if (mp) {
       const r = DCA.res && DCA.res.list.find(x => x.key === mp.dataset.dcaMap); if (!r) return;
@@ -8286,13 +9504,10 @@
     const k = row.dataset.dca; if (DCA.open.has(k)) DCA.open.delete(k); else DCA.open.add(k);
     renderDca();
   });
-  $('#dca-body').addEventListener('change', e => {
-    const s0 = e.target.closest('[data-dca-year]'); if (!s0) return;
-    capYear = s0.value ? +s0.value : null; renderScenario(); renderCapLayer(); renderLegend(); syncTraceSum(); renderDca();
-  });
-  $('#dca-body').addEventListener('keydown', e => { const row = e.target.closest('[data-dca]'); if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); row.click(); } });
+  document.addEventListener('keydown', e => { if (!dcaBodyOf(e)) return; const row = e.target.closest('[data-dca]'); if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); row.click(); } });
 
-  $('#btn-dc-geojson').onclick = () => { if (state.dcInfra) download('peel-2026-dc-planned-works.geojson', JSON.stringify(dcGeoJSON()), 'application/geo+json'); };
+  function exportDcGeoJSON() { if (state.dcInfra) download('peel-2026-dc-planned-works.geojson', JSON.stringify(dcGeoJSON()), 'application/geo+json'); }
+  $('#btn-dc-geojson').onclick = exportDcGeoJSON;
 
 
   for (const id of ['#water-body', '#ww-body']) {
@@ -8393,7 +9608,7 @@
     for (const a of shown) {
       const l = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), {
         renderer: canvas, interactive: false, fill: true, fillOpacity: 0.06, weight: 2.5, dashArray: '8 6',
-        color: a.id.startsWith('mtsa') ? '#d4a017' : '#e8590c',
+        color: token(a.id.startsWith('mtsa') ? '--area-mtsa' : '--area-sp'),
       });
       areaLayer.addLayer(l);
       bounds = bounds ? bounds.extend(l.getBounds()) : l.getBounds();
@@ -8414,12 +9629,12 @@
   function renderPlanAreas() {
     planLayer.clearLayers();
     if (!state.areas) return;
-    for (const [on, list, color, kind] of [[areaOn.sp, state.areas.secondaryPlans, '#e8590c', 'sp'], [areaOn.mtsa, state.areas.mtsas, '#d4a017', 'mtsa']]) {
+    for (const [on, list, colorName, kind] of [[areaOn.sp, state.areas.secondaryPlans, '--area-sp', 'sp'], [areaOn.mtsa, state.areas.mtsas, '--area-mtsa', 'mtsa']]) {
       if (!on) continue;
       for (const a of list) {
         if (state.muni && a.municipality !== state.muni) continue;
         const sel = (kind === 'sp' ? state.sp : state.mtsa).includes(a.id);
-        L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color, weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: color, fillOpacity: sel ? 0.12 : 0.03 })
+        L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color: token(colorName), weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 })
           .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); togglePlanArea(kind, a.id); }).addTo(planLayer);
       }
@@ -8457,7 +9672,7 @@
     const token = ++daCtxToken;
     const bc = baselineCensus();
     if (!p || p.lat == null || !bc) {
-      if (state.daCtx) { state.daCtx = null; daFocusLayer.clearLayers(); renderDemand(); renderCensus(); }
+      if (state.daCtx) { state.daCtx = null; daFocusLayer.clearLayers(); renderGrowth(); }
       return;
     }
     loadDaData(bc.year, bc.outlines).then(d => {
@@ -8465,16 +9680,18 @@
       const x = p.lng, y = p.lat;
       const hit = d.das.find(da => x >= da.bbox[0] && x <= da.bbox[2] && y >= da.bbox[1] && y <= da.bbox[3] && P.pointInRings(x, y, da[4]));
       daFocusLayer.clearLayers();
-      if (!hit) { state.daCtx = null; renderDemand(); renderCensus(); return; }
+      if (!hit) { state.daCtx = null; renderGrowth(); return; }
       const [id, pop, dw, muni, rings] = hit;
       const inside = state.projects.filter(q => q.lat != null && q.lng >= hit.bbox[0] && q.lng <= hit.bbox[2] && q.lat >= hit.bbox[1] && q.lat <= hit.bbox[3] && P.pointInRings(q.lng, q.lat, rings));
       state.daCtx = { key: p.key, project: p, title: p.title, year: bc.year, id, pop, dw, muni, rings, projects: inside, keys: new Set(inside.map(q => q.key)) };
       L.polygon(rings.map(r => r.map(([lx, ly]) => [ly, lx])), { className: 'da-focus', interactive: false }).addTo(daFocusLayer);
-      renderDemand(); renderCensus();
-    }).catch(() => { if (token === daCtxToken && state.daCtx) { state.daCtx = null; daFocusLayer.clearLayers(); renderDemand(); renderCensus(); } });
+      renderGrowth();
+    }).catch(() => { if (token === daCtxToken && state.daCtx) { state.daCtx = null; daFocusLayer.clearLayers(); renderGrowth(); } });
   }
 
-  $('#census').addEventListener('click', e => { if (e.target.closest('[data-clear-da]')) setDaContext(null); });
+  // The DA pill now lives in the Growth tab's census body (Phase 4); delegate so the
+  // handler survives the tab restructure.
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('#growth-census-body [data-clear-da]')) setDaContext(null); });
 
   // ---- Growth since the census (selected geography) ---------------------------------------
   // The baseline follows the timeline: the latest census held in or before its first year
@@ -8488,15 +9705,24 @@
     return cs.find(c => c.year <= state.yearFrom) || cs[cs.length - 1];
   }
   const censusDay = d => new Date(`${d}T00:00:00Z`).toLocaleDateString('en-CA', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
-  function renderCensus() {
+  // ---- Census & 2051 sub-view ---------------------------------------------------------------
+  // Growth since the census, the 2051 allocation, housing targets and the population
+  // outlook. Fills #growth-census-body (Worker A's pane); the pipeline body is filled
+  // by renderGrowthPipeline above.
+  function renderGrowthCensus() {
+    const body = $('#growth-census-body'); if (!body) return;
     renderSvcTab();
     const bc = baselineCensus();
     const has = !!(bc && bc.das.length && state.projects.length);
-    $('#census').dataset.off = has ? '' : '1'; $('#ftab-census').hidden = !has;
-    if (bc) $('#c-head').textContent = `Growth since the ${bc.year} Census`;
+    // Phase 4: census is a Growth sub-view now — hide its subtab (and leave it) when
+    // there is no census data, mirroring the old tab's show/hide.
+    const gcPane = $('#pane-growth-census'), gcBtn = document.querySelector('[data-gsub="census2051"]');
+    if (gcPane) gcPane.dataset.off = has ? '' : '1';
+    if (gcBtn) gcBtn.hidden = !has;
+    if (!has && gSub === 'census2051') { gSub = 'pipeline'; store.set('gSub', gSub); }
     showFootTab(footPref);
     syncDaYear();
-    if (!has) return;
+    if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
     const Y = bc.year;
     const da = state.daCtx;
     // The baseline year changed under a selected project: find its DA for the new year.
@@ -8507,10 +9733,8 @@
     // Employment growth: jobs on development sites (from the floor area the applications state).
     const jb = svcJobs((da ? da.projects : state.projects).filter(p => p.phase !== 'cancelled' && (da || PeelAreas.inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa }))), bc.date);
     gr.built.jobs = jb.jbuilt; gr.approved.jobs = jb.japproved; gr.proposed.jobs = jb.jproposed;
-    const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title} · ${fmtNum(da.projects.length)} development site${da.projects.length === 1 ? '' : 's'} in this DA`
+    const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title}`
       : [state.mtsa.length && multiSummary('mtsa'), state.sp.length && spSummary(), state.muni].filter(Boolean)[0] || 'Peel Region';
-    $('#c-ctx').innerHTML = da ? `<button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
-      <span class="muted small">Census dissemination area of the selected development; growth from every development application located in it.</span>` : '';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
     const nowPop = base.population + gr.built.population, nowDw = base.dwellings + gr.built.units;
     const futPop = nowPop + gr.approved.population, futDw = nowDw + gr.approved.units;
@@ -8518,29 +9742,38 @@
     const tile = (label, pop, dw, sub, info, jobs) => `<div class="tile" data-info="${info}"><div class="tl">${label}</div>
       <div class="tv">${fmtNum(Math.round(pop))}<span class="tu">people</span></div>
       <div class="ts">${fmtNum(Math.round(dw))} dwellings${sub ? ` · ${sub}` : ''}</div>${jobs != null ? `<div class="ts tj">${jobs > 0 ? `+${fmtNum(roundPop(jobs))} jobs` : 'no added jobs stated'}</div>` : ''}</div>`;
-    $('#c-tiles').innerHTML = [
-      tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa.length ? ', share by land area' : ''}`, 'census-base'),
-      tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
-      tile('+ Approved or permitted, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
-      tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
-    ].join('');
-    renderGrowthChart(base, gr, Y);
     const ha = gr.built.ha + gr.approved.ha + gr.proposed.ha, ii = gr.built.ii + gr.approved.ii + gr.proposed.ii;
-    $('#c-ii').textContent = ha > 0 ? `Wastewater I&I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites (built ${fmt1(gr.built.ii)} · approved ${fmt1(gr.approved.ii)} · proposed ${fmt1(gr.proposed.ii)} L/s; ${state.criteria.wastewater.infiltration} L/s/ha).` : '';
     const start = timeActive() ? (state.yearFrom ?? state.yearMin) : null;
     const earliest = state.censuses[state.censuses.length - 1].year;
     const why = start == null ? `all years: earliest census with data (${earliest})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
-    renderForecast(bc);
-    $('#c-note').textContent = `${name} · ${Y} Census baseline (${why}) · built = permits completed since census day (${censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review, including zoning / official plan / subdivision approved without a site plan approval; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored`;
+    const asof = (freshness()[0] && freshness()[0].date) || '–';
+    body.innerHTML = `
+      ${hlP(`Since the ${Y} Census, ${esc(name)} has added <strong>≈${fmtNum(Math.round(gr.built.population))} people</strong> in ${fmtNum(Math.round(gr.built.units))} dwellings; <strong>${fmtNum(roundPop(gr.approved.population + gr.proposed.population))} more people</strong> are approved or proposed in the application pipeline.`)}
+      ${da ? `<div class="c-ctx"><button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
+        <span class="muted small">Census dissemination area of the selected development; growth from every development application located in it.</span></div>` : ''}
+      <div class="tiles">${[
+        tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${state.sp.length || state.mtsa.length ? ', share by land area' : ''}`, 'census-base'),
+        tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
+        tile('+ Approved or permitted, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
+        tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
+      ].join('')}</div>
+      <div class="growth-chart" id="gc-chart" data-info="growth-bars"></div>
+      ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${homeLine('ww', 'Wastewater tab')}.</p>`
+        : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
+      ${forecastTableHTML(bc)}
+      ${da ? '' : housingCardHTML() + outlookCardHTML(true)}
+      <p class="small muted">ⓘ ${esc(name)} · ${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(asof)}</strong>.</p>`;
+    renderGrowthChart(base, gr, Y, $('#gc-chart'));
   }
 
-  // Growth in the application pipeline against the 2051 growth allocated to each municipality
-  // (Peel Land Needs Assessment, draft municipal allocation): how much of the forecast growth
-  // is already built, approved or proposed, and how much is still to be planned for.
-  function renderForecast(bc) {
-    const box = $('#c-forecast'), F = state.reports && state.reports.forecast2051;
-    if (!box) return;
-    if (!F || state.daCtx) { box.innerHTML = ''; return; }
+  // Growth in the application pipeline against the 2051 growth allocated to each
+  // municipality (Peel Land Needs Assessment, draft municipal allocation): how much of
+  // the forecast growth is already built, approved or proposed, and how much is still
+  // to be planned for. Slimmed for the Census & 2051 sub-view: one compact table with
+  // the full built / approved / proposed split behind "See all".
+  function forecastTableHTML(bc) {
+    const F = state.reports && state.reports.forecast2051;
+    if (!F || state.daCtx) return '';
     const munis = Object.keys(F.municipalities).filter(m => !state.muni || m === state.muni);
     const pct = (a, b) => b > 0 ? `${Math.round(a / b * 100)}%` : '–';
     const rows = munis.map(m => {
@@ -8551,25 +9784,26 @@
     });
     if (munis.length > 1) rows.push(rows.reduce((t, r) => ({ m: 'Peel', fp: t.fp + r.fp, fu: t.fu + r.fu, fj: t.fj + r.fj, p: t.p.map((v, i) => v + r.p[i]), u: t.u.map((v, i) => v + r.u[i]), j: t.j.map((v, i) => v + r.j[i]) }), { fp: 0, fu: 0, fj: 0, p: [0, 0, 0], u: [0, 0, 0], j: [0, 0, 0] }));
     const sum = a => a[0] + a[1] + a[2];
-    const cell = (a, f, unit) => `<td>${unit(sum(a))}<small>${pct(sum(a), f)} of 2051 growth</small></td>`;
-    const bar = (a, f) => { const mx = Math.max(f, sum(a)) || 1; return `<div class="svc-bar fc-bar" role="img" aria-label="${pct(sum(a), f)} of the 2051 growth">${['g-built', 'g-approved', 'g-proposed'].map((c, i) => a[i] > 0 ? `<span class="gseg ${c}" style="width:${(a[i] / mx * 100).toFixed(2)}%"></span>` : '').join('')}${f > sum(a) ? `<span class="fc-left" style="width:${((f - sum(a)) / mx * 100).toFixed(2)}%"></span>` : ''}</div>`; };
     const uU = n => unit(fmtNum(Math.round(n)), 'units'), uJ = n => unit(fmtNum(Math.round(n)), 'jobs');
-    box.innerHTML = `<h3 class="svc-sub">Applications against the 2051 forecast <span class="muted small">growth since the ${bc.year} Census vs. growth allocated to 2051</span></h3>
-      <table class="dt svc-table rep-table"><thead><tr><th>Municipality</th><th class="bar-h">Pipeline vs. 2051 growth (people)</th><th>2051 growth allocated</th><th>Built + approved + proposed</th><th>Units</th><th>Jobs on development sites</th><th>Still to plan for</th></tr></thead>
-      <tbody>${rows.map(r => `<tr class="${r.m === 'Peel' ? 'tot' : ''}"><td>${esc(r.m)}</td><td class="bar">${bar(r.p, r.fp)}</td><td>${uPop(r.fp)}<small>${uU(r.fu)} · ${uJ(r.fj)}</small></td>${cell(r.p, r.fp, uPop)}${cell(r.u, r.fu, uU)}${cell(r.j, r.fj, uJ)}<td class="bo">${r.fp > sum(r.p) ? uPop(r.fp - sum(r.p)) : `<span class="over">exceeds by ${uPop(sum(r.p) - r.fp)}</span>`}</td></tr>`).join('')}</tbody></table>
-      <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">${esc(F.note)} Pipeline = growth since census day from every development in the municipality (built = permits completed since census day; approved; proposed = in pre-consultation or review), at Peel's design persons per unit; jobs only where the applications state floor area. Design persons per unit (2.7 per apartment) are higher than the average household size behind the forecast, so the units column is the fairer comparison; the pipeline also includes applications that may not be built by 2051. The bar shows built (green), approved (blue) and proposed (hatched) against the 2051 growth (grey outline = still to plan for). Source: <a href="${esc(F.url)}" target="_blank" rel="noopener">${esc(F.title)}</a>, ${esc(F.pages)}.</p></details>`;
+    const main = rows.map(r => `<tr class="${r.m === 'Peel' ? 'tot' : ''}"><td>${esc(r.m)}</td><td>${uPop(r.fp)}</td><td>${uPop(sum(r.p))}<small>${pct(sum(r.p), r.fp)} of 2051 growth</small></td><td class="bo">${r.fp > sum(r.p) ? uPop(r.fp - sum(r.p)) : `<span class="over">exceeds by ${uPop(sum(r.p) - r.fp)}</span>`}</td></tr>`).join('');
+    const full = rows.map(r => `<tr class="${r.m === 'Peel' ? 'tot' : ''}"><td>${esc(r.m)}</td><td>${uPop(r.p[0])}</td><td>${uPop(r.p[1])}</td><td>${uPop(r.p[2])}</td><td>${uU(sum(r.u))}</td><td>${uJ(sum(r.j))}</td></tr>`).join('');
+    return `<table class="dt"><caption>Applications against the 2051 forecast <span class="muted">growth since the ${bc.year} Census vs. growth allocated to 2051</span></caption><thead><tr><th>Municipality</th><th>2051 growth allocated</th><th>Built + approved + proposed</th><th>Still to plan for</th></tr></thead><tbody>${main}</tbody></table>
+      <details class="see-all"><summary>See all: built / approved / proposed by municipality</summary>
+      <table class="dt"><thead><tr><th>Municipality</th><th>Built</th><th>Approved</th><th>Proposed</th><th>Units</th><th>Jobs</th></tr></thead><tbody>${full}</tbody></table>
+      <p class="small muted">${esc(F.note)} Pipeline = growth since census day from every development in the municipality (built = permits completed since census day; approved; proposed = in pre-consultation or review), at Peel's design persons per unit; jobs only where the applications state floor area. Design persons per unit (2.7 per apartment) are higher than the average household size behind the forecast, so the units column is the fairer comparison; the pipeline also includes applications that may not be built by 2051. Source: <a href="${esc(F.url)}" target="_blank" rel="noopener">${esc(F.title)}</a>, ${esc(F.pages)}.</p></details>`;
   }
 
   // Stacked bar: 2021 baseline, then each layer of growth up to full build-out of the
   // planning applications. One bar per measure (people, dwellings), sharing nothing but the
   // layer order, so there is no second axis. Values are direct-labelled in the legend.
-  function renderGrowthChart(base, gr, Y = 2021) {
+  // el: the container (the Pipeline sub-view renders a copy with no census baseline).
+  function renderGrowthChart(base, gr, Y = 2021, el) {
     const layers = [
       { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings, jobs: 0 },
       { key: 'built', label: `Built since ${Y}`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
       { key: 'approved', label: 'Site plan approved or permit issued', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
       { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units, jobs: gr.proposed.jobs || 0 },
-    ];
+    ].filter(l => l.people + l.dwellings + (l.jobs || 0) > 0);
     const bar = (measure, unit) => {
       const total = layers.reduce((t, l) => t + l[measure], 0);
       if (!(total > 0)) return '';
@@ -8584,24 +9818,33 @@
     };
     const legend = layers.map(l => `<li><i class="gsw g-${l.key}" aria-hidden="true"></i><span>${esc(l.label)}</span>
       <span class="gv">${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.people))} people · ${l.key === 'base' ? '' : '+'}${fmtNum(Math.round(l.dwellings))} dwellings${l.key === 'base' ? '' : ` · +${fmtNum(roundPop(l.jobs))} jobs`}</span></li>`).join('');
-    $('#c-chart').innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
-      <ul class="grow-legend">${legend}</ul><div class="grow-tip" id="grow-tip" hidden></div>`;
+    const target = el || $('#c-chart');
+    if (target) target.innerHTML = `${bar('people', 'people')}${bar('dwellings', 'dwellings')}${bar('jobs', 'jobs')}
+      <ul class="grow-legend">${legend}</ul><div class="grow-tip" hidden></div>`;
   }
-  // Hover / tap tooltip for the growth bars.
+  // Hover / tap tooltip for the growth bars (delegated: both growth sub-views render a chart).
   const growTip = e => {
-    const s = e.target.closest('[data-tip]'), tip = $('#grow-tip');
+    if (!e.target.closest) return;
+    const chart = e.target.closest('.growth-chart'); if (!chart) return;
+    const s = e.target.closest('[data-tip]'), tip = chart.querySelector('.grow-tip');
     if (!tip) return;
     if (!s) { tip.hidden = true; return; }
     tip.textContent = s.dataset.tip; tip.hidden = false;
-    const box = $('#c-chart').getBoundingClientRect();
+    const box = chart.getBoundingClientRect();
     tip.style.left = `${Math.min(box.width - 220, Math.max(0, e.clientX - box.left + 12))}px`;
     tip.style.top = `${e.clientY - box.top - 34}px`;
   };
-  $('#c-chart').addEventListener('pointermove', growTip);
-  $('#c-chart').addEventListener('pointerdown', growTip);   // tap on phones
-  $('#c-chart').addEventListener('pointerleave', () => { const t = $('#grow-tip'); if (t) t.hidden = true; });
-  $('#c-chart').addEventListener('focusin', e => {
-    const s = e.target.closest('[data-tip]'), tip = $('#grow-tip'); if (!s || !tip) return;
+  document.addEventListener('pointermove', growTip);
+  document.addEventListener('pointerdown', growTip);   // tap on phones
+  document.addEventListener('pointerout', e => {
+    if (!e.target.closest) return;
+    const chart = e.target.closest('.growth-chart');
+    if (chart && !chart.contains(e.relatedTarget)) { const t = chart.querySelector('.grow-tip'); if (t) t.hidden = true; }
+  });
+  document.addEventListener('focusin', e => {
+    if (!e.target.closest) return;
+    const chart = e.target.closest('.growth-chart'); if (!chart) return;
+    const s = e.target.closest('[data-tip]'), tip = chart.querySelector('.grow-tip'); if (!s || !tip) return;
     tip.textContent = s.dataset.tip; tip.hidden = false; tip.style.left = '0px'; tip.style.top = '-28px';
   });
 
@@ -8722,7 +9965,6 @@
     // Where & areas (map panel): municipality, planning and service areas.
     const areas = Object.keys(AREA_F).map(k => multiSummary(k, true)).filter(Boolean);
     syncPanelSum();
-    const as = $('#mo-area-sum'); if (as) { const w = [state.muni, ...areas].filter(Boolean); as.textContent = w.length ? w.join(' · ') : 'all of Peel'; as.classList.toggle('on', w.length > 0); }
     const more = [
       state.kind !== DEFAULT_KIND ? kindLabel[state.kind] : '',
       state.minUnits ? ((($('#f-size') || {}).selectedOptions || [])[0] || { textContent: `${state.minUnits}+ units` }).textContent : '',
@@ -8747,17 +9989,20 @@
         `<button type="button" class="btn small link" id="f-reset">Reset all</button>`
       : '';
     renderEmptyMsg();
+    syncFiltersBtn();   // Phase 2 shell: the compact "Filters (n)" button label
+  }
+  // Reset every filter to its default. Shared by the "Reset all" chip and the
+  // topbar's Peel trail step.
+  function resetAllFilters() {
+    Object.assign(state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), flags: DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: DEFAULT_LANDUSE, basis: DEFAULT_BASIS, yearMode: 'any' });
+    capYear = THIS_YEAR;
+    syncFilterControls();
+    renderMuniChips();
+    setDefaultYears();
+    applyFilters();
   }
   $('#active-filters').onclick = e => {
-    if (e.target.closest('#f-reset')) {
-      Object.assign(state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], kind: DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: DEFAULT_PHASES(), flags: DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: DEFAULT_LANDUSE, basis: DEFAULT_BASIS, yearMode: 'any' });
-      capYear = THIS_YEAR;
-      syncFilterControls();
-      renderMuniChips();
-      setDefaultYears();
-      applyFilters();
-      return;
-    }
+    if (e.target.closest('#f-reset')) { resetAllFilters(); return; }
     const b = e.target.closest('[data-i]'); if (!b) return;
     activeList[+b.dataset.i].clear();
     applyFilters();
@@ -8888,25 +10133,28 @@
     inflight++; showLoading(); loadSource(src).then(() => { inflight--; showLoading(); });
   };
 
+  // Phase 2 shell: the <1200px breakpoint (map-first). A hoisted declaration so the
+  // filter UI and the tour can use it during start-up.
+  function shellNarrow() { return window.innerWidth < 1200; }
+  // The Filters button (compact shell): opens/closes the off-canvas filter sheet;
+  // its label carries the active filter count. Hidden on desktop (sidebar visible).
+  function syncFiltersBtn() {
+    const b = $('#toggle-sidebar'); if (!b) return;
+    const n = activeFilters().length;
+    b.innerHTML = n ? `Filters (<span class="n">${n}</span>)` : 'Filters';
+  }
   function toggleSidebar(open) {
     const sb = $('#sidebar');
     const o = open ?? !sb.classList.contains('open');
     sb.classList.toggle('open', o);
     document.querySelector('.app').classList.toggle('sidebar-open', o);
-    $('#toggle-sidebar').textContent = o ? 'Map' : 'List';
+    $('#toggle-sidebar').setAttribute('aria-expanded', String(o));
+    syncFiltersBtn();
   }
   $('#toggle-sidebar').onclick = () => toggleSidebar();
-  // Bottom panel: collapse to just its tabs to give the map room; tapping a tab opens it again.
-  // Closed by default: a slim bar with the headline numbers; "Analysis" opens the tabs.
-  function setFooterCollapsed(collapsed) {
-    $('#footer').classList.toggle('collapsed', collapsed);
-    $('#footer-toggle').innerHTML = collapsed ? 'Analysis <span aria-hidden="true">▴</span>' : 'Hide <span aria-hidden="true">▾</span>';
-    $('#footer-toggle').setAttribute('aria-expanded', String(!collapsed));
-    store.set('footOpen2', !collapsed);
-  }
-  $('#footer-toggle').onclick = () => setFooterCollapsed(!$('#footer').classList.contains('collapsed'));
-  // Resizable bottom panels: drag the analysis panel's top edge (any screen) or the phone sheet's
-  // grip to show more map; tap the grip to step through heights. Heights are remembered.
+  // Resizable panels: drag a grip to resize; tap a sheet grip to step through its
+  // heights. Sizes are remembered per browser. (Used by the analysis column's
+  // left-edge handle, the analysis bottom sheet and the detail sheet.)
   function dragResize(grip, { get, set, done }) {
     let y0 = 0, h0 = 0, moved = false;
     grip.addEventListener('pointerdown', e => {
@@ -8921,21 +10169,27 @@
     const end = e => { if (!grip.hasPointerCapture(e.pointerId)) return; grip.releasePointerCapture(e.pointerId); grip.classList.remove('dragging'); done(moved); };
     grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
   }
-  const footer = $('#footer');
   let mapFix = 0; const fixMap = () => { cancelAnimationFrame(mapFix); mapFix = requestAnimationFrame(() => map.invalidateSize({ pan: false })); };
-  const setFootH = h => {
-    const max = Math.round(innerHeight * 0.8), v = Math.max(90, Math.min(max, Math.round(h)));
-    footer.style.setProperty('--foot-h', `${v}px`); fixMap(); return v;
-  };
-  if (store.get('footH', null)) setFootH(store.get('footH'));
-  dragResize($('#footer-grip'), {
-    get: () => footer.getBoundingClientRect().height,
-    set: h => { if (footer.classList.contains('collapsed')) setFooterCollapsed(false); setFootH(h); },
-    done: moved => { if (moved) store.set('footH', parseInt(footer.style.getPropertyValue('--foot-h'), 10)); else if (footer.classList.contains('collapsed')) setFooterCollapsed(false); fixMap(); },
+  // ---- Analysis column (Phase 2 shell) --------------------------------------------
+  // Desktop (≥1200px): the right-hand column, resizable by its left-edge handle.
+  const analysisEl = $('#analysis');
+  function setAnalysisW(w) {
+    const v = Math.max(320, Math.min(680, Math.round(w)));
+    document.querySelector('.app').style.setProperty('--analysis-w', `${v}px`);
+    fixMap(); return v;
+  }
+  if (store.get('analysisW', null)) setAnalysisW(store.get('analysisW'));
+  dragResize($('#analysis-resize'), {
+    get: () => analysisEl.getBoundingClientRect().width,
+    set: setAnalysisW,
+    done: moved => {
+      if (moved) store.set('analysisW', parseInt(document.querySelector('.app').style.getPropertyValue('--analysis-w'), 10));
+      fixMap();
+    },
   });
-  $('#footer-grip').addEventListener('keydown', e => {
-    if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return; e.preventDefault();
-    store.set('footH', setFootH(footer.getBoundingClientRect().height + (e.key === 'ArrowUp' ? 40 : -40)));
+  $('#analysis-resize').addEventListener('keydown', e => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault();
+    store.set('analysisW', setAnalysisW(analysisEl.getBoundingClientRect().width + (e.key === 'ArrowRight' ? 40 : -40)));
   });
   // Phone bottom sheet (the info panel): drag the grip, or tap it to step 30% → 50% → 62% → 92%.
   const SHEET_STEPS = [30, 50, 62, 92], detailEl = $('#detail');
@@ -8950,14 +10204,79 @@
       else { const nx = SHEET_STEPS.find(s => s > cur + 2) || SHEET_STEPS[0]; store.set('sheetH', setSheetH(nx)); }
     },
   });
-  $('#f-sum').onclick = () => setFooterCollapsed(false);
-  setFooterCollapsed(!store.get('footOpen2', innerWidth > 900));
-  $('#footer').querySelector('.f-tabs').addEventListener('click', e => {
+  // The summary line: the totals for what is on the map (filled by renderGrowth).
+  // Desktop: jump to the Overview tab. Compact: expand the bottom sheet.
+  $('#f-sum').onclick = () => {
+    showFootTab('overview');
+    if (shellNarrow() && analysisSnap === 'peek') setAnalysisSnap('half');
+  };
+  $('#analysis').querySelector('.analysis-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
     footPref = t.dataset.tab; store.set('footTab4', footPref);
-    showFootTab(footPref); setFooterCollapsed(false); viewLink.write();
+    showFootTab(footPref); viewLink.write();
   });
-  // Floating timeline: folds to its header (collapsed by default on phones).
+  // Bottom-sheet snaps (compact): peek shows the summary + tabs, half and full the
+  // tables. Tap the grip to cycle the snaps; drag to the nearest snap. Remembered.
+  const ANALYSIS_SNAPS = ['peek', 'half', 'full'];
+  let analysisSnap = store.get('analysisSnap', 'peek');
+  if (!ANALYSIS_SNAPS.includes(analysisSnap)) analysisSnap = 'peek';
+  function analysisSnapPx(name) {
+    const vh = window.innerHeight;
+    const footH = $('#footer') ? $('#footer').getBoundingClientRect().height : 0;
+    if (name === 'half') return Math.round(vh * 0.5);
+    if (name === 'full') return Math.max(240, Math.round(vh - footH) - 8);
+    return 96;
+  }
+  function setAnalysisSnap(name, save = true) {
+    if (!ANALYSIS_SNAPS.includes(name)) name = 'peek';
+    analysisSnap = name;
+    analysisEl.style.setProperty('--analysis-h', `${analysisSnapPx(name)}px`);
+    analysisEl.dataset.snap = name;
+    if (save) store.set('analysisSnap', name);
+    fixMap();
+  }
+  setAnalysisSnap(analysisSnap, false);
+  dragResize($('#analysis-grip'), {
+    get: () => analysisEl.getBoundingClientRect().height,
+    set: h => analysisEl.style.setProperty('--analysis-h', `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`),
+    done: moved => {
+      if (!shellNarrow()) return;
+      const cur = analysisEl.getBoundingClientRect().height;
+      const near = ANALYSIS_SNAPS.reduce((a, n) => Math.abs(analysisSnapPx(n) - cur) < Math.abs(analysisSnapPx(a) - cur) ? n : a);
+      setAnalysisSnap(moved ? near : ANALYSIS_SNAPS[(ANALYSIS_SNAPS.indexOf(analysisSnap) + 1) % ANALYSIS_SNAPS.length]);
+    },
+  });
+  // Compact shell: Esc closes the filter sheet first, then folds the analysis sheet
+  // back to its peek — back to the map. (The detail drawer and the tour handle Esc
+  // themselves; form fields keep theirs.)
+  addEventListener('keydown', e => {
+    if (e.key !== 'Escape' || !shellNarrow()) return;
+    if (document.querySelector('.tour') || !$('#detail').hidden) return;
+    if (e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+    if ($('#sidebar').classList.contains('open')) toggleSidebar(false);
+    else if (analysisSnap !== 'peek') setAnalysisSnap('peek');
+  }, true);
+  // Keep the map sized around the analysis column: the column resizes by drag
+  // (desktop) or by sheet snaps (compact); Leaflet only learns its new box on invalidateSize.
+  if (window.ResizeObserver) new ResizeObserver(() => fixMap()).observe(analysisEl);
+  // View ↔ tab linking, reverse direction (Worker 1 wires view-switch → analysis tab): picking an
+  // analysis tab also sets the matching map view. The tabViewLink guard keeps a view-switch event
+  // from re-entering (setMapView is already a no-op when the view is current). Tabs without a
+  // mapped view (growth, dev, developments, tool) leave the map view alone.
+  const TAB_VIEW = { water: 'water', ww: 'wastewater', dca: 'dc', overview: 'planning' };
+  let tabViewLink = false;
+  const wireTabView = strip => {
+    if (!strip || strip.dataset.tabview) return; strip.dataset.tabview = '1';
+    strip.addEventListener('click', e => {
+      const t = e.target.closest('.f-tab[data-tab], .f-tab[data-atab]'); if (!t) return;
+      const v = TAB_VIEW[t.dataset.tab || t.dataset.atab];
+      if (!v || tabViewLink || currentView() === v) return;
+      tabViewLink = true;
+      try { setMapView(v); } finally { tabViewLink = false; }
+    });
+  };
+  wireTabView(document.querySelector('.analysis-tabs'));   // Phase 2 analysis column
+  // Timeline (in the slim footer strip): folds to its header via #t-toggle.
   function setTimelineOpen(open) {
     $('#timebar').classList.toggle('folded', !open);
     $('#t-toggle').setAttribute('aria-expanded', String(open));
@@ -8966,11 +10285,15 @@
   $('#t-toggle').onclick = () => { const open = $('#timebar').classList.contains('folded'); setTimelineOpen(open); store.set('timelineOpen', open); };
   setTimelineOpen(store.get('timelineOpen', false));
 
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  // A theme change (manual, or OS-level for follow-device): drop the computed-
+  // colour cache, rebuild the marker icons, and re-tile (the grey-canvas
+  // basemap follows the theme).
+  function refreshTheme() {
     readColors(); for (const k in iconCache) delete iconCache[k]; setTiles(); renderLegend(); applyFilters();
-  });
+  }
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTheme);
 
-  // Keep the map and the detail drawer sized around the footer.
+  // Keep --footer-h fresh: the slim timeline strip still offsets the detail drawer.
   new ResizeObserver(() => {
     document.documentElement.style.setProperty('--footer-h', `${$('#footer').offsetHeight}px`);
     map.invalidateSize();
@@ -8986,15 +10309,18 @@
 
   // ---- Reports: one-page development memo, area report, DC timing workbook ------------------
   const textOf = html => { const d = document.createElement('div'); d.innerHTML = html || ''; return d.textContent.replace(/\s+/g, ' ').trim(); };
-  const REPORT_CSS = `td:first-child{white-space:nowrap}body{font:11px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:#111;background:#fff;max-width:780px;margin:0 auto;padding:18px}
-    h1{font-size:18px;margin:0 0 2px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#555;margin:14px 0 4px;border-bottom:1px solid #ccc;padding-bottom:2px}
-    .sub{color:#444;margin:0 0 6px}.meta{color:#666;font-size:10px;margin:0}.grid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
-    table{border-collapse:collapse;width:100%;margin:2px 0 6px}td,th{border-bottom:1px solid #e3e3e3;padding:2px 4px;text-align:left;vertical-align:top}th{color:#555;font-weight:600;font-size:10px}
-    td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.gap{color:#b42318;font-weight:600}.ok{color:#2b8a3e}.chk{color:#b35c00}.muted{color:#666}
-    ul{margin:2px 0 6px;padding-left:16px}li{margin:1px 0}.sk{border:1px solid #ccc;border-radius:6px}.note{font-size:9.5px;color:#666;margin-top:10px}
+  // Print/report documents are always light (data-theme="light" + app.css), so
+  // these styles use the light-theme tokens via var().
+  const REPORT_CSS = `td:first-child{white-space:nowrap}body{font:11px/1.4 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text-primary);background:var(--surface-1);max-width:780px;margin:0 auto;padding:18px}
+    h1{font-size:18px;margin:0 0 2px}h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-secondary);margin:14px 0 4px;border-bottom:1px solid var(--border);padding-bottom:2px}
+    .sub{color:var(--text-secondary);margin:0 0 6px}.meta{color:var(--text-muted);font-size:10px;margin:0}.grid{display:grid;grid-template-columns:1fr 330px;gap:14px;align-items:start}
+    table{border-collapse:collapse;width:100%;margin:2px 0 6px}td,th{border-bottom:1px solid var(--border);padding:2px 4px;text-align:left;vertical-align:top}th{color:var(--text-secondary);font-weight:600;font-size:10px}
+    td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.gap{color:var(--cap-over);font-weight:600}.ok{color:var(--cap-room)}.chk{color:var(--cap-tight)}.muted{color:var(--text-muted)}
+    ul{margin:2px 0 6px;padding-left:16px}li{margin:1px 0}.sk{border:1px solid var(--border);border-radius:6px}.note{font-size:9.5px;color:var(--text-muted);margin-top:10px}
     .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}@page{margin:12mm}}`;
   function openReport(title, body) {
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><style>${REPORT_CSS}</style></head>
+    const appCss = new URL('css/app.css', location.href).href;
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><link rel="stylesheet" href="${appCss}"><style>${REPORT_CSS}</style></head>
       <body><p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>${body}<script>addEventListener('load', () => setTimeout(() => print(), 500));<\/script></body></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     const w = window.open(url, '_blank');
@@ -9015,16 +10341,16 @@
     });
     if (state.dcInfra) for (const sys of ['wastewater', 'water']) for (const ln of state.dcInfra[sys].lines) {
       if (!ln.g.some(([x, y]) => inBox(x, y))) continue;
-      out.push(`<path d="${path(ln.g)}" stroke="${DC_KIND[ln.k][1]}" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
+      out.push(`<path d="${path(ln.g)}" style="stroke:var(${DC_KIND[ln.k][1]})" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
     }
-    for (const r of rings) out.push(`<path d="${path(r)}Z" fill="rgba(25,113,194,.08)" stroke="#1971c2" stroke-width="1.2"/>`);
-    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" fill="${(PHASE_COLORS[p.phase] || '#1971c2')}" stroke="#fff" stroke-width=".8"/>`);
-    if (site) out.push(`<circle cx="${X(site[0])}" cy="${Y(site[1])}" r="7" fill="#e03131" stroke="#fff" stroke-width="2"/>`);
+    for (const r of rings) out.push(`<path d="${path(r)}Z" style="fill:color-mix(in srgb, var(--accent) 8%, transparent);stroke:var(--accent)" stroke-width="1.2"/>`);
+    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline)" stroke-width=".8"/>`);
+    if (site) out.push(`<circle cx="${X(site[0])}" cy="${Y(site[1])}" r="7" style="fill:var(--select);stroke:var(--sym-outline)" stroke-width="2"/>`);
     const bar = halfM > 2500 ? 1000 : 500, bw = bar * s;
-    return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:#fafafa">${out.join('')}
-      <g font-size="9" fill="#333"><rect x="8" y="${H - 14}" width="${bw}" height="3" fill="#333"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
-      <path d="M${W - 14} 10l5 12h-10z" fill="#333"/><text x="${W - 17}" y="32">N</text></g></svg>
-      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green under 85%: free flowing; orange 85–100%: near full; red over 100%: surcharged); dashed: 2026 DC works (draft).</div>`;
+    return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:var(--surface-1)">${out.join('')}
+      <g font-size="9" style="fill:var(--text-primary)"><rect x="8" y="${H - 14}" width="${bw}" height="3"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
+      <path d="M${W - 14} 10l5 12h-10z"/><text x="${W - 17}" y="32">N</text></g></svg>
+      <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green under 85%: free flowing; amber 85–100%: near full; red over 100%: surcharged); dashed: 2026 DC works (draft).</div>`;
   }
   // ---- Executive briefing: one printable page from the Overview (title block, headlines, key
   // numbers, plant capacity, demand by phase, DC actions, allocations, a map of the blocks).
@@ -9037,10 +10363,10 @@
     const kx = Math.cos((mny + mxy) / 2 * Math.PI / 180), s = Math.min((W - 10) / ((mxx - mnx) * kx), (H - 10) / (mxy - mny));
     const X = x => 5 + (x - mnx) * kx * s, Y = y => 5 + (mxy - y) * s;
     const path = r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(y).toFixed(1)}`).join('') + 'Z';
-    const out = BLK.data.blocks.map(b => `<path d="${b.parts.map(p => path(p[0])).join('')}" fill="${b.planning ? 'rgba(112,72,232,.14)' : 'rgba(112,72,232,.04)'}" stroke="#7048e8" stroke-width=".6"/>`);
-    for (const p of set) if (p.lat != null && p.units >= 50) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(1.4, Math.min(5, Math.sqrt(p.units) / 8)).toFixed(1)}" fill="${PHASE_COLORS[p.phase] || '#1971c2'}" fill-opacity=".8"/>`);
-    for (const pl of (state.servicing && state.servicing.meta.plants) || []) if (pl.lnglat) out.push(`<rect x="${(X(pl.lnglat[0]) - 4).toFixed(1)}" y="${(Y(pl.lnglat[1]) - 4).toFixed(1)}" width="8" height="8" fill="#212529"/><text x="${(X(pl.lnglat[0]) + 6).toFixed(1)}" y="${(Y(pl.lnglat[1]) + 3).toFixed(1)}" font-size="8" fill="#212529">${esc(PLANT_SHORT[pl.name] || pl.name)}</text>`);
-    return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden">${out.join('')}<path d="M${W - 14} 8l5 12h-10z" fill="#333"/><text x="${W - 17}" y="30" font-size="9">N</text></svg>`;
+    const out = BLK.data.blocks.map(b => `<path d="${b.parts.map(p => path(p[0])).join('')}" style="fill:color-mix(in srgb, var(--block) ${b.planning ? '14' : '4'}%, transparent);stroke:var(--block)" stroke-width=".6"/>`);
+    for (const p of set) if (p.lat != null && p.units >= 50) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(1.4, Math.min(5, Math.sqrt(p.units) / 8)).toFixed(1)}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline);stroke-width:.6" fill-opacity=".8"/>`);
+    for (const pl of (state.servicing && state.servicing.meta.plants) || []) if (pl.lnglat) out.push(`<rect x="${(X(pl.lnglat[0]) - 4).toFixed(1)}" y="${(Y(pl.lnglat[1]) - 4).toFixed(1)}" width="8" height="8" style="fill:var(--text-primary)"/><text x="${(X(pl.lnglat[0]) + 6).toFixed(1)}" y="${(Y(pl.lnglat[1]) + 3).toFixed(1)}" font-size="8" style="fill:var(--text-primary)">${esc(PLANT_SHORT[pl.name] || pl.name)}</text>`);
+    return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="overflow:hidden">${out.join('')}<path d="M${W - 14} 8l5 12h-10z" style="fill:var(--text-primary)"/><text x="${W - 17}" y="30" font-size="9" style="fill:var(--text-primary)">N</text></svg>`;
   }
   function briefingPDF() {
     const set = overviewSet(), basis = demandBasis(), c = state.criteria, e = D.estimate(set, c, basis, jobsOf), cb = e.combined;
@@ -9058,18 +10384,19 @@
       R ? `${adv.length ? `<b>${adv.length} DC project${adv.length === 1 ? '' : 's'}</b> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out and should be brought forward.` : 'Every DC project comes online before the capacity it relieves runs out.'}` : ''].filter(Boolean);
     const bar = x => `<div class="cap"><div class="ch"><b>${esc(x.kind === 'plant' ? PLANT_SHORT[x.pl] : 'South Peel water treatment')}</b><span>${pctRated(x, 'com')}% of rated committed → ${pctRated(x, 'bo')}% build-out · ${x.out === 'today' ? 'at trigger now' : x.out ? `trigger ≈${x.out}` : `room to ${hz.end}`}</span></div><div class="bar"><i class="c" style="width:${Math.min(100, pctRated(x, 'com') / 1.3).toFixed(1)}%"></i><i class="b ${x.util.bo >= 1 ? 'over' : ''}" style="width:${(Math.max(0, Math.min(130, pctRated(x, 'bo')) - Math.min(130, pctRated(x, 'com'))) / 1.3).toFixed(1)}%"></i><i class="tg"></i><i class="tg r"></i></div></div>`;
     const prep = store.get('prepBy', '');
-    const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Development and servicing briefing ${esc(new Date().toISOString().slice(0, 10))}</title><style>
-      @page{size:letter;margin:11mm}*{box-sizing:border-box}body{font:10.5px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:#1a1a1a;margin:0 auto;max-width:200mm;padding:10px}
-      header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #1c5cab;padding-bottom:6px;margin-bottom:8px}
-      h1{font-size:18px;margin:0;color:#0d366b}header .sub{color:#555;font-size:10px}header .r{text-align:right;font-size:9.5px;color:#555;white-space:nowrap;padding-left:10px}
-      .hl{border-left:4px solid #1c5cab;background:#eef4fc;padding:6px 9px;margin:0 0 8px}.hl p{margin:2px 0}
+    const appCss = new URL('css/app.css', location.href).href;
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><title>Development and servicing briefing ${esc(new Date().toISOString().slice(0, 10))}</title><link rel="stylesheet" href="${appCss}"><style>
+      @page{size:letter;margin:11mm}*{box-sizing:border-box}body{font:10.5px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text-primary);background:var(--surface-1);margin:0 auto;max-width:200mm;padding:10px}
+      header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--report-brand);padding-bottom:6px;margin-bottom:8px}
+      h1{font-size:18px;margin:0;color:var(--report-brand-deep)}header .sub{color:var(--text-secondary);font-size:10px}header .r{text-align:right;font-size:9.5px;color:var(--text-secondary);white-space:nowrap;padding-left:10px}
+      .hl{border-left:4px solid var(--report-brand);background:var(--surface-2);padding:6px 9px;margin:0 0 8px}.hl p{margin:2px 0}
       .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px}.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
-      .t{background:#f3f5f8;border-radius:5px;padding:5px 7px}.t b{display:block;font-size:15px}.t span{color:#555;font-size:9.5px}
-      h2{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#0d366b;margin:6px 0 4px;border-bottom:1px solid #d0d7e2;padding-bottom:2px}
-      table{border-collapse:collapse;width:100%;font-size:9.5px}th,td{padding:2px 4px;border-bottom:1px solid #e3e7ee;text-align:right}th:first-child,td:first-child{text-align:left}th{color:#555;font-weight:600}tr.tot td{font-weight:700;border-top:1px solid #999}
-      .cap{margin:3px 0 6px}.ch{display:flex;justify-content:space-between;font-size:9.5px}.bar{position:relative;height:8px;background:#eceff3;border-radius:4px;display:flex;overflow:hidden;margin-top:2px}.bar i.c{background:#868e96}.bar i.b{background:#4c8fdc}.bar i.b.over{background:#e03131}.bar i.tg{position:absolute;left:69.2%;top:0;bottom:0;width:2px;background:#111}.tg.r{left:76.9%;background:#aaa}
-      ul{margin:2px 0;padding-left:15px}li{margin:1px 0}.map{display:grid;gap:3px;justify-items:center;margin-top:4px}.map small{color:#555}.map svg{max-width:100%;height:auto}
-      footer{margin-top:8px;border-top:1px solid #ccc;padding-top:4px;font-size:8.5px;color:#666;display:flex;justify-content:space-between;gap:10px}
+      .t{background:var(--surface-2);border-radius:5px;padding:5px 7px}.t b{display:block;font-size:15px}.t span{color:var(--text-secondary);font-size:9.5px}
+      h2{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--report-brand-deep);margin:6px 0 4px;border-bottom:1px solid var(--border);padding-bottom:2px}
+      table{border-collapse:collapse;width:100%;font-size:9.5px}th,td{padding:2px 4px;border-bottom:1px solid var(--border);text-align:right}th:first-child,td:first-child{text-align:left}th{color:var(--text-secondary);font-weight:600}tr.tot td{font-weight:700;border-top:1px solid var(--text-muted)}
+      .cap{margin:3px 0 6px}.ch{display:flex;justify-content:space-between;font-size:9.5px}.bar{position:relative;height:8px;background:var(--surface-2);border-radius:4px;display:flex;overflow:hidden;margin-top:2px}.bar i.c{background:var(--text-muted)}.bar i.b{background:var(--accent)}.bar i.b.over{background:var(--cap-over)}.bar i.tg{position:absolute;left:69.2%;top:0;bottom:0;width:2px;background:var(--text-primary)}.tg.r{left:76.9%;background:var(--text-muted)}
+      ul{margin:2px 0;padding-left:15px}li{margin:1px 0}.map{display:grid;gap:3px;justify-items:center;margin-top:4px}.map small{color:var(--text-secondary)}.map svg{max-width:100%;height:auto}
+      footer{margin-top:8px;border-top:1px solid var(--border);padding-top:4px;font-size:8.5px;color:var(--text-muted);display:flex;justify-content:space-between;gap:10px}
       .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}}</style></head><body>
       <p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>
       <header><div><h1>Development and Servicing Briefing</h1><div class="sub">Region of Peel · ${esc(scopeText())} · ${esc(scenarioText())}</div><div class="sub">${UNOFFICIAL}</div></div>
@@ -9094,7 +10421,9 @@
     const win = window.open(url, '_blank');
     if (!win) { const a = document.createElement('a'); a.href = url; a.download = `development-servicing-briefing-${new Date().toISOString().slice(0, 10)}.html`; a.click(); }
   }
-  const PHASE_COLORS = { inception: '#74a9e8', review: '#4c8fdc', approved: '#2f6fc6', permit: '#1f55a3', construction: '#173a73', completed: '#2f9e44', cancelled: '#9aa0a6' };
+  // Phase colours come from the --ph-* design tokens via phaseColor() (defined
+  // near the top of this file); the old hard-coded phase table was removed in
+  // the dark-default token restructure.
   const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Before DC', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
     <td>${esc(c.name)}<br><span class="muted">${esc(c.sub)}</span></td><td class="n">${c.room == null ? 'new' : c.room <= 0 ? (c.kind === 'plant' || c.kind === 'wplant' ? `${pctRated(c, 'com')}% of rated (trigger ${Math.round(PLANT_TRIGGER * 100)}%)` : `over ${Math.round((c.util.com - 1) * 100)}%`) : `${fmtNum(roundPop(c.people))} people<br><span class="muted">≈${fmtNum(Math.round(c.people / ppu))} units</span>`}</td>
     <td>${c.out === 'today' ? 'already' : c.out == null ? `after ${hz.end}` : `≈${c.out}`}</td><td>${c.relief.length ? esc(c.relief.slice(0, 2).map(r => r.text).join('; ')) : '<span class="muted">none on the DC map</span>'}</td>${extra}</tr>`;
@@ -9192,50 +10521,60 @@
     else { const where = [state.muni, ...Object.keys(AREA_F).map(k => multiSummary(k, true))].filter(Boolean).join(', ') || 'All of Peel'; areaReport(state.filtered, `Area report – ${where}`); }
   });
 
-  // ---- Tips: a short tour, shown once (Tools → Tips to see it again) ----------------------------
+  // ---- Tips: a short tour, shown once (the topbar Help button shows it again) ----------------------------
   const phoneUI = () => innerWidth <= 760;
   // Tour: a guided walk through the app in chapters. Steps can set the app up (open a development,
   // run a trace, open a tab) so each one shows the real thing; the tour tidies up when it ends.
   const tourDev = () => pickDev();
-  const devTab = t => { if ($('#detail').hidden || $('#detail').dataset.view !== 'dev') { const p = tourDev(); if (!p) return; focusProject(p); } store.set('dvTab', t); showDvTab(t); };
+  // Phase 3: opening a development sets the analysis scope (no more #detail dev panel).
+  const tourScopeDev = sub => { const p = tourDev(); if (!p) return; focusProject(p); if (sub && window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(sub); };
   const TOUR = [
     { ch: 'Start', el: () => null, t: 'Welcome', b: 'This tracker follows every development application in Mississauga, Brampton and Caledon, and what each one needs from Peel\'s water and wastewater systems. This is an unofficial prototype built from public open data, not a Region of Peel product. This 2-minute tour sets the app up as it goes. Use Next / Back or the ← → keys; Esc ends it.' },
-    { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search', b: 'Type an address, file number, secondary plan, pressure zone, pumping station or DC project number, then pick a result to jump to it.' },
-    { ch: 'Find', el: () => phoneUI() ? $('#toggle-sidebar') : $('#pipeline'), t: 'Phases', b: 'Tap a phase to show only it. On a computer, Ctrl-click (⌘ on a Mac) to pick several.' },
+    // Phase 2 shell: the tour lives in js/app.js (not js/info.js); the analysis
+    // container moved from #footer to #analysis and the List/Map button is the
+    // Filters button on the <1200px shell.
+    { ch: 'Find', el: () => shellNarrow() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search', b: 'Type an address, file number, secondary plan, pressure zone, pumping station or DC project number, then pick a result to jump to it.' },
+    { ch: 'Find', el: () => shellNarrow() ? $('#toggle-sidebar') : $('#pipeline'), t: 'Phases', b: 'Tap a phase to show only it. On a computer, Ctrl-click (⌘ on a Mac) to pick several.' },
     { ch: 'Map', el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning, Water, Wastewater and DC: each view sets the right layers, colours and background, and remembers your changes.' },
-    { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per layer: developments, blocks, pressure zones, water facilities, capacity colours, existing pipes, planned DC works, planning and census areas.' },
-    { ch: 'Map', el: () => document.querySelector('.more-box'), t: 'More settings', b: 'Saved views, how developments are coloured and sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
-    { ch: 'Map', el: () => document.querySelector('.area-box'), t: 'Filter by area', b: 'Municipality, secondary plans, MTSAs, pressure zones and wastewater blocks. Every list takes several picks; the totals follow.' },
+    // Phase 2 layout shell: the legend folded into the Layers panel, "More settings" merged back
+    // into it, "Filter by area" moved to the filter panel, and the tools dropdown became a rail.
+    { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per layer: developments, blocks, pressure zones, water facilities, capacity colours, existing pipes, planned DC works, planning and census areas — the legend for what is shown, and More settings below.' },
+    { ch: 'Map', el: () => document.querySelector('.map-opts .mo-adv'), t: 'More settings', b: 'Saved views, how developments are coloured and sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
+    { ch: 'Map', el: () => document.querySelector('#filter-panel'), t: 'Filter by area', b: 'Municipality, secondary plans, MTSAs, pressure zones and wastewater blocks, in the filter panel. Every list takes several picks; the totals follow.' },
     { ch: 'Map', el: () => $('#timebar'), t: 'Timeline and demand year', b: 'The timeline keeps developments with activity in the chosen years. With capacity colours on, the Demand year on top sets the year the pipe loads and capacity are worked out for: 2021 Census, today or build-out.' },
-    { ch: 'Map', el: () => document.querySelector('.tools-btn'), t: 'Tools', b: 'Select an area (or hold Ctrl / ⌘ and drag a box), measure with a ground profile, or test a site before an application exists.' },
-    { ch: 'A development', do: () => { closeDetail(); devTab('overview'); }, wait: 700, el: () => $('#detail'), t: 'A development', b: 'Tap any marker. Overview: status, latest decision and build-out. ☆ Watch follows it in This week; Memo prints a one-page servicing memo.' },
-    { ch: 'A development', do: () => devTab('demand'), wait: 400, el: () => document.querySelector('#detail-body .dv-tabs') || $('#detail'), t: 'Its tabs', b: 'Demand: units, jobs, build-out and flows by stage. Water and Wastewater: the servicing of each system, with a trace on the map. DC Analysis: the DC projects it may need, and the DCs it would pay.' },
-    { ch: 'A development', do: () => devTab('ww'), wait: 500, el: () => document.querySelector('#detail-body .dv-pane:not([hidden]) .trace-box') || $('#detail'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with the tightest pipe and pumping station, the plant\'s reserve and the nearest sewers. The Water tab has the same for the supply.' },
-    { ch: 'A development', do: () => { const b = document.querySelector('#detail-body .trace-box [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'Each pipe is coloured by how full it gets (green, orange, red) with arrows to the plant; the other developments fade. Tap a pipe for what loads it.' },
-    { ch: 'Analysis', do: () => { clearSelected(); openAnalysis('overview'); }, wait: 500, el: () => $('#footer'), t: 'Analysis', b: 'The totals for what is on the map, and the capacity that runs out first, with its DC relief.' },
-    { ch: 'Analysis', el: () => document.querySelector('.f-tabs'), t: 'Tabs', b: 'Demand and Growth for what is shown; Water and Wastewater by zone, catchment, plant and facility (with the 2020 Master Plan comparison); DC Analysis; Settings & sources; Change log.' },
-    { ch: 'Help', el: () => document.querySelector('.help-ctl button'), t: 'Help any time', b: 'Press and hold (or hover) any heading for what it means and where the data comes from. The ? opens task guides, and the tour again.' },
+    // Phase 3b: one home per tool — the rail order is select, measure, trace, test a
+    // site, inspect, corridor, units-fit (worker A); results open in the Tool
+    // result tab (trail: Peel › …), never as pop-ups.
+    { ch: 'Map', el: () => document.querySelector('.tool-rail'), t: 'Tools', b: 'One button per tool on the left edge, in order: select developments (tap one, draw a lasso, or hold Ctrl / ⌘ and drag a box), measure with a ground profile, trace a sewer or water route, test a site before an application exists, inspect a point, select along a corridor, or estimate how many more units fit. One tool runs at a time; the banner says what to do and Esc finishes. Tool results open in the Tool result tab (trail: Peel › …).' },
+    { ch: 'A development', do: () => { if (typeof DevScope !== 'undefined') DevScope.close(); tourScopeDev(); }, wait: 700, el: () => $('#site-bar'), t: 'A development', b: 'Tap any marker. The site bar shows the address, phase, key numbers and zone → plant — and every analysis tab now shows this site. ☆ Watch follows it in This week; Memo prints a one-page servicing memo; Compare adds it to the Compare tool.' },
+    { ch: 'A development', do: () => tourScopeDev('files'), wait: 400, el: () => $('#pane-dev'), t: 'The Development tab', b: 'About: proposal, status, latest decision and the servicing report. Files & history: every application, how the phase was set, dated history and source records. Site: the aerial check, ground and stormwater.' },
+    { ch: 'A development', do: () => { const p = tourDev(); if (p) { focusProject(p); showFootTab('ww'); } }, wait: 500, el: () => $('#pane-ww'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with the tightest pipe and pumping station, and the plant\'s reserve. The Water tab has the same for the supply; Growth has the units.' },
+    { ch: 'A development', do: () => { const b = document.querySelector('#site-bar [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'Each pipe is coloured by how full it gets (green, orange, red) with arrows to the plant; the other developments fade. Tap a catchment, zone, plant or pipe for what loads it, in the Tool result tab — with actions for an area report, the upstream catchments, or upgrading a pipe.' },
+    { ch: 'Analysis', do: () => { clearSelected(); openAnalysis('overview'); }, wait: 500, el: () => $('#analysis'), t: 'Analysis', b: 'The totals for what is on the map, and the capacity that runs out first, with its DC relief.' },
+    { ch: 'Analysis', el: () => document.querySelector('.analysis-tabs'), t: 'Tabs', b: 'Overview for the headlines and what needs attention; Growth for the pipeline and the census story; Water and Wastewater for capacity by sub-view (plants, zones, facilities, pumping stations); DC for timing, recommendations and funding. Each tab has sub-views picked with buttons: headline, tiles, chart, top table, method note.' },
+    // Phase 3b: Help's only home is the topbar button (the map ? control was removed).
+    { ch: 'Help', el: () => $('#tb-help'), t: 'Help any time', b: 'Press and hold (or hover) any heading for what it means and where the data comes from. The Help button in the top bar opens task guides, the tour again, and the change log.' },
   ];
   // Help & tips: task guides with a "Show me" that sets the app up for the task.
   const pickDev = () => state.filtered.filter(p => p.lat != null && p.units >= 100 && (p.phase === 'review' || p.phase === 'approved')).sort((a, b) => b.units - a.units)[0] || state.filtered.find(p => p.lat != null);
-  const toMap = () => { if (phoneUI() && $('#sidebar').classList.contains('open')) toggleSidebar(false); };
-  const openAnalysis = (tab, sub) => { if (sub && tab === 'water') { wSub = sub; store.set('wSub', sub); } else if (sub) { wwSub = sub; store.set('wwSub', sub); } footPref = tab; store.set('footTab3', tab); setFooterCollapsed(false); showFootTab(tab); };
+  const toMap = () => { if (shellNarrow() && $('#sidebar').classList.contains('open')) toggleSidebar(false); };
+  const openAnalysis = (tab, sub) => { if (sub && TABSUBS[tab]) { TABSUBS[tab].set(sub); store.set(TABSUBS[tab].store, sub); } footPref = tab; store.set('footTab4', tab); showFootTab(tab); if (shellNarrow() && analysisSnap === 'peek') setAnalysisSnap('half'); };
   const HELP = [
     { t: 'Check servicing for a development', w: 'Reviewing an application, an FSR or a pre-consultation.',
-      s: ['Tap its marker, or search its address or file number.', 'Servicing tab: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow, stormwater and ground.', 'Memo (top of the panel) prints a one-page servicing memo.'],
-      go: () => { const p = pickDev(); if (!p) return; store.set('dvTab', 'ww'); toMap(); focusProject(p); setTimeout(() => showDvTab('ww'), 50); } },
+      s: ['Tap its marker, or search its address or file number — the site bar appears and every analysis tab now shows this site.', 'Water and Wastewater tabs: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow. The Development tab\u2019s Site view has stormwater and ground.', 'Memo (in the site bar) prints a one-page servicing memo.'],
+      go: () => { const p = pickDev(); if (!p) return; toMap(); focusProject(p); setTimeout(() => showFootTab('ww'), 50); } },
     { t: 'Find when DC projects are needed', w: 'DC background study, capital timing, or explaining why a site waits for a trunk sewer.',
-      s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'More settings (box under Layers) → DC timing: every existing constraint, filtered to "Needed before the DC project".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Excel (all rows) exports the table for a memo or spreadsheet.'],
+      s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'More settings (in the Layers panel) → DC timing: every existing constraint, filtered to "Needed before the DC project".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Excel (all rows) exports the table for a memo or spreadsheet.'],
       go: () => { setMapView('dc'); loadSewers(); showDcTiming(); } },
     { t: 'Report on an area or secondary plan', w: 'A block plan, MTSA or secondary plan review; council or committee questions.',
-      s: ['Search the plan or MTSA name and pick it — the map filters to it.', 'Tap Report on the Showing line for a printable area report: demand, the capacity it relies on with DC timing, largest developments.', 'Or Tools → Select an area and draw around any group; the summary has Area report, Excel and CSV.'],
+      s: ['Search the plan or MTSA name and pick it — the map filters to it.', 'Tap Report on the Showing line for a printable area report: demand, the capacity it relies on with DC timing, largest developments.', 'Or the Select an area tool (map rail): draw around any group; the summary has Area report, Excel and CSV.'],
       go: () => { toMap(); closeDetail(); setLasso(true); } },
     { t: 'Test a site before an application exists', w: 'A pre-consultation, an inquiry, or a land use scenario.',
-      s: ['Tools → Test a site, then tap the map where the site is.', 'Enter units by type, jobs and site area; drag the pin to move it.', 'The panel shows its flows, pressure zone, sewer path, pumping stations and plant reserve; tick "Count it" to add it to the totals and capacity.'],
+      s: ['The Test a site tool (map rail), then tap the map where the site is.', 'Enter units by type, jobs and site area; drag the pin to move it.', 'The panel shows its flows, pressure zone, sewer path, pumping stations and plant reserve; tick "Count it" to add it to the totals and capacity.'],
       go: () => { toMap(); closeDetail(); setTool('whatif'); } },
     { t: 'Keep up with weekly changes', w: 'Monday check-ins and tracking the files you are working on.',
       s: ['This week tab: new files and phase changes from the latest weekly update.', '☆ Watch on any development adds it to Your watchlist (top of This week).', 'More filters → ★ Watched or Changed this week shows just those on the map.', 'Save the setup with Saved views (Layers & style).'],
-      go: () => { if (phoneUI()) toggleSidebar(true); showTab('week'); } },
+      go: () => { if (shellNarrow()) toggleSidebar(true); showTab('week'); } },
     { t: 'Plant and pumping station capacity over time', w: 'Allocation, servicing capacity reports, staging.',
       s: ['Analysis → Wastewater → Plants & capacity: each plant\'s flow as a share of rated capacity by year (Horizon years), the 90% expansion trigger and the DC expansions.', 'Capacity layer (Layers & style → Shade): pumping station load or sewer pipe capacity, with a year slider in the legend.', 'The Scenario line switches design flows vs the 2025 measured flows, the Booth → Clarkson diversion and more.'],
       go: () => { setMapView('wastewater'); openAnalysis('ww', 'plants'); } },
@@ -9243,43 +10582,53 @@
       s: ['Water view: pressure zones shaded by max day growth.', 'Analysis → Water: census, built, approved and proposed max day by zone, reported plant production and the master plan storage assessment.', 'Tap a zone row or a zone on the map for What loads this — every development adding demand.'],
       go: () => { setMapView('water'); openAnalysis('water'); } },
     { t: 'Existing mains and ground near a site', w: 'Connection options, a site visit, or a quick constraint check.',
-      s: ['Layers → Existing pipes (from street zoom); More settings → Existing for water, sanitary or storm, and Size labels for diameters.', 'A development\'s Servicing tab lists every main around it with street and distance.', 'Tools → Measure & ground profile: tap points for the distance and the ground profile with fall and grade.'],
+      s: ['Layers → Existing pipes (from street zoom); More settings → Existing for water, sanitary or storm, and Size labels for diameters.', 'A development\'s Servicing tab lists every main around it with street and distance.', 'The Measure & ground profile tool (map rail): tap points for the distance and the ground profile with fall and grade.'],
       go: () => { toMap(); closeDetail(); setTool('measure'); } },
     { t: 'Save, share and export', w: 'Sending a view to a colleague, or attaching numbers to a report.',
-      s: ['More settings (box under Layers) → Saved views keeps a named setup in this browser.', 'Share link copies a link to the exact filters, map position and open development.', 'PDF / print and Excel on every table; Memo and Area report for one-page summaries; CSV / GeoJSON of the developments in the List.'],
+      s: ['More settings (in the Layers panel) → Saved views keeps a named setup in this browser.', 'Share link copies a link to the exact filters, map position and open development.', 'PDF / print and Excel on every table; Memo and Area report for one-page summaries; CSV / GeoJSON of the developments in the List.', 'Export → Inquiry response draft starts a servicing inquiry draft from what is shown.'],
       go: () => { toMap(); const d = document.querySelector('.mo-more'); if (d) { d.open = true; d.scrollTop = 0; } } },
     { t: 'How far to trust the numbers', w: 'Before quoting a figure.',
-      s: ['Flows use Peel design criteria (Settings & sources tab); the Scenario line says which switches are on.', 'Capacity checks are screens, not hydraulic models: sewer capacity is full-pipe Manning on the published slope; "Check the data" flags likely slope errors.', 'The 2026 DC capital maps are a draft; schedules change annually.', 'Data tab: sources, dates and the weekly snapshot.'],
-      go: () => openAnalysis('criteria') },
+      s: ['Flows use Peel design criteria (editable in the Scenario control); the Scenario bar says which switches are on.', 'Capacity checks are screens, not hydraulic models: sewer capacity is full-pipe Manning on the published slope; "Check the data" flags likely slope errors.', 'The 2026 DC capital maps are a draft; schedules change annually.', 'Data tab: sources, dates and the weekly snapshot.'],
+      go: () => { toMap(); openScenPop(); } },
   ];
   const QUICK_TIPS = [
     'Tap an empty part of the map, press Esc, or use Clear selection to unselect.',
     'Press and hold (or hover) a heading or label for what it means and where the data comes from.',
     'The north arrow switches between Peel’s road grid and north up.',
     'Search a DC project number (e.g. 25-2269) or a pumping station to jump to it.',
-    'Hover a cluster for its phase counts; More settings (box under Layers) → Show as → Heatmap shows where people and jobs concentrate.',
-    'The bottom bar always shows the totals for what is on the map; tap Analysis for the tables.',
+    'Hover a cluster for its phase counts; More settings (in the Layers panel) → Show as → Heatmap shows where people and jobs concentrate.',
+    'The summary line above the Analysis tabs always shows the totals for what is on the map.',
     'Tables in the Water and Wastewater tabs keep their headers while you scroll.',
     'Memo and Area report open a print-ready page: use Print / Save as PDF.',
-    'On a phone, List opens the search, filters and the developments on the map; Map goes back.',
+    'On a phone or tablet, Filters opens the search, filters and the developments on the map; tap it again to go back to the map.',
   ];
   function showHelp() {
     closeDetail({ keepSelection: true });
     $('#detail-body').innerHTML = `<div class="head"><h3>Help &amp; tips</h3><div class="m">Guides for common tasks — each one can set the map up for you</div></div>
-      <p><button type="button" class="btn" data-help-tour>Take the tour again</button></p>
+      <p><button type="button" class="btn" data-help-tour>Take the tour again</button> <button type="button" class="btn" data-help-log>What's new — change log</button></p>
+      <div id="help-log-body" aria-live="polite"></div>
       ${HELP.map((h, i) => `<details class="help-card"${i === 0 ? ' open' : ''}><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
         <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me</button></details>`).join('')}
       <h3 class="sub-title">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
     $('#detail').hidden = false; $('#detail').dataset.view = 'help'; $('#detail').scrollTop = 0;
     if (phoneUI()) toggleSidebar(false);
   }
+  // The Help menu's change log: render into the help view (marks the releases seen,
+  // which clears the "new" dot on the Help button).
+  function showHelpLog() {
+    showHelp();
+    renderChangelog();
+    setTimeout(() => { const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
+  }
   document.addEventListener('click', e => {
     if (e.target.closest('[data-help-open]')) return showHelp();
     if (e.target.closest('[data-help-tour]')) { closeDetail(); return startTour(); }
+    // Phase 3b: Help carries the change log too — same destination as the gear menu's Change log.
+    if (e.target.closest('[data-help-log]')) { renderChangelog(); const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     const g = e.target.closest('[data-help-go]'); if (!g) return;
     const h = HELP[+g.dataset.helpGo]; if (!h) return;
     h.go();
-    // On a phone the guide would cover what it just set up: close it (Tools → Help & tips reopens it).
+    // On a phone the guide would cover what it just set up: close it (the topbar Help button reopens it).
     if (phoneUI() && $('#detail').dataset.view === 'help' && !$('#detail').hidden) closeDetail({ keepSelection: true });
   });
   let tourEl = null, tourI = 0, tourChecked = false;
@@ -9288,13 +10637,13 @@
     tourChecked = true;
     if (!store.get('tourDone', false)) setTimeout(startTour, 1200);
   }
-  function startTour() { tourI = 0; tourSet = { view: currentView(), foot: $('#footer').classList.contains('collapsed') }; showTourStep(); }
+  function startTour() { tourI = 0; tourSet = { view: currentView(), snap: shellNarrow() ? analysisSnap : null }; showTourStep(); }
   let tourSet = null;
   function endTour() {
     store.set('tourDone', true);
     if (tourEl) { tourEl.remove(); tourEl = null; }
     removeEventListener('keydown', tourKey, true);
-    if (tourSet) { clearSelected(); if (tourSet.foot) setFooterCollapsed(true); tourSet = null; }
+    if (tourSet) { clearSelected(); if (tourSet.snap && shellNarrow()) setAnalysisSnap(tourSet.snap); tourSet = null; }
   }
   function tourKey(e) {
     if (!tourEl) return;
@@ -9469,5 +10818,275 @@
     };
   }
 
-  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), blockAt: (x, y) => blockAt(x, y), sewerPipes: () => SEW.data && SEW.data.pipes, dcSewerPath: p => dcSewerPath(p) };
+  // ---- Top bar (Phase 2): scope trail, view switch, scenario chip, menus --------------
+  // View switch: one button per MAP_VIEWS entry; clicking switches the map AND opens
+  // the mapped analysis tab. syncMapOpts() toggles .on on every [data-mview], so this
+  // switch stays in sync with the map control's own switch for free.
+  const VIEW_TAB = { planning: 'overview', water: 'water', wastewater: 'ww', dc: 'dca' };
+  function renderViewSwitch() {
+    const el = $('#tb-views'); if (!el) return;
+    el.innerHTML = MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="Switch to the ${t} map view and its analysis tab">${PD.icon(k)}<span>${t}</span></button>`).join('');
+    syncMapOpts();
+  }
+  $('#tb-views').addEventListener('click', e => {
+    const b = e.target.closest('[data-mview]'); if (!b) return;
+    setMapView(b.dataset.mview);
+    openAnalysis(VIEW_TAB[b.dataset.mview] || 'overview');
+  });
+
+  // Scope trail: Peel › municipality › area › development. Only the active steps show;
+  // the development step is there while its panel is open, and reopens it.
+  function trailArea() {
+    const kinds = ['sp', 'mtsa', 'pz', 'dr'];
+    const total = kinds.reduce((t, k) => t + state[k].length, 0);
+    if (!total) return null;
+    const kind = kinds.find(k => state[k].length);
+    return { kind, id: state[kind][0], label: areaName(kind, state[kind][0]) + (total > 1 ? ` +${total - 1}` : '') };
+  }
+  // Phase 3: the "Peel" trail step also clears the dev scope.
+  function trailGoPeel() { if (typeof DevScope !== 'undefined') DevScope.close(); if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult(); resetAllFilters(); clearSelected(); }
+  function trailGoMuni() {
+    if (!state.muni) return;
+    // Reuse the filter panel's own chip: it also drops areas from other municipalities.
+    const chip = document.querySelector(`#f-muni [data-muni="${CSS.escape(state.muni)}"]`);
+    if (chip) chip.click();
+    clearSelected();
+  }
+  function trailGoArea() {
+    const a = trailArea(); if (!a) return;
+    state.sp = []; state.mtsa = []; state.pz = []; state.dr = [];
+    state[a.kind] = [a.id];
+    renderAreaSelects(); renderSvcSelects();
+    showArea(); showSvcArea(); renderPlanAreas();
+    clearSelected();
+    applyFilters();
+  }
+  function trailGoDev() { if (currentProject) showDetail(currentProject); }
+  function renderTrail() {
+    const el = $('#trail'); if (!el) return;
+    const steps = [{ label: 'Peel', go: trailGoPeel, title: 'Clear all filters and the selection' }];
+    if (state.muni) steps.push({ label: state.muni, go: trailGoMuni, title: `Filter to ${state.muni}` });
+    const a = trailArea();
+    if (a) steps.push({ label: a.label, go: trailGoArea, title: 'Filter to this area only' });
+    // Phase 3: the development step follows the dev scope, not the #detail panel.
+    const scoped = typeof DevScope !== 'undefined' ? DevScope.current() : null;
+    if (scoped) steps.push({ label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
+    // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
+    const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
+    if (tc) steps.push(tc);
+    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('');
+    el._steps = steps;
+  }
+  $('#trail').addEventListener('click', e => {
+    const b = e.target.closest('[data-i]'); if (!b) return;
+    const s = ($('#trail')._steps || [])[+b.dataset.i]; if (s) s.go();
+  });
+
+  // Scenario chip: a one-line summary plus a "modified" badge when criteria differ
+  // from Peel defaults (criteriaChanges() is the existing detection). Clicking opens
+  // a popover that holds the real #scen-bar node (moved, not duplicated); closing
+  // puts the node back where it was. renderScenario() calls renderTbScen(), so the
+  // chip follows every scenario change.
+  const BASIS_SHORT = { all: 'all units', committed: 'committed units', remaining: 'units left to build' };
+  function renderTbScen() {
+    const chip = $('#tb-scen'); if (!chip) return;
+    const n = criteriaChanges().length;
+    const txt = ['Scenario', svcOpt.ww === 'calibrated' ? 'calibrated (2025 flows)' : 'design flows', n ? `${n} criteria modified` : 'Peel criteria', `counting ${BASIS_SHORT[state.basis] || 'all units'}`].join(' · ');
+    chip.innerHTML = `<span class="tb-scen-t">${esc(txt)}</span>${n ? `<span class="tb-mod" title="${esc(criteriaChanges().join('; '))}">${n} modified</span>` : ''}`;
+  }
+  let scenHome = null;
+  function openScenPop() {
+    const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop) return;
+    if (!scenHome) { scenHome = document.createComment('scen-bar home'); bar.replaceWith(scenHome); }
+    if (bar.parentNode !== pop) pop.appendChild(bar);
+    pop.hidden = false;
+    $('#tb-scen').setAttribute('aria-expanded', 'true');
+    renderScenario();
+  }
+  function closeScenPop() {
+    const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop || pop.hidden) return;
+    pop.hidden = true;
+    $('#tb-scen').setAttribute('aria-expanded', 'false');
+    if (scenHome && scenHome.parentNode) { scenHome.parentNode.replaceChild(bar, scenHome); scenHome = null; }
+  }
+  $('#tb-scen').addEventListener('click', () => { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); });
+
+  // Menus. Items carrying data-export / data-share / data-area-report are handled by
+  // the existing document-level handlers; the rest use data-tbx (export) / data-tbg
+  // (gear). The list-panel export actions are named functions, so the menu keeps
+  // working after the Export row itself is removed.
+  // Phase 3b: "Inquiry response draft" export item. Drafts a response for the open
+  // development via js/tools-inquiry.js (sibling worker C); guarded so the menu still
+  // works before that module loads.
+  function draftInquiryResponse() {
+    const I = (typeof window !== 'undefined') ? window.PeelToolInquiry : null;
+    const p = (typeof DevScope !== 'undefined' && DevScope.current) ? DevScope.current() : null;
+    if (!I || typeof I.draftForDevelopment !== 'function') {
+      if (hasTools()) PeelTools.openResult({ title: 'Inquiry response draft', html: '<p class="small muted">The inquiry module has not loaded yet — try again in a moment.</p>' });
+      return;
+    }
+    if (p) {
+      const text = I.draftForDevelopment(p) || '';
+      if (hasTools()) {
+        PeelTools.openResult({ title: `Inquiry response — ${p.title}`, html: `<p><button type="button" class="btn small" id="inq-copy">Copy</button></p><pre class="inq-draft">${esc(text)}</pre>` });
+        const btn = document.getElementById('inq-copy');
+        if (btn) btn.addEventListener('click', async () => {
+          try {
+            if (typeof I.copy === 'function') await I.copy(text);
+            else if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+            btn.textContent = 'Copied ✓';
+          } catch (e) { btn.textContent = 'Copy failed — select the text manually'; }
+        });
+      }
+      return;
+    }
+    if (hasTools()) {
+      PeelTools.openResult({ title: 'Inquiry response draft', html: `<p>Open a development first, then draft its inquiry response.</p>
+        <p><button type="button" class="btn small" id="inq-inspect">Use Inspect point</button> <span class="muted small">— or draft one for any point on the map.</span></p>` });
+      const b = document.getElementById('inq-inspect');
+      if (b) b.addEventListener('click', () => setTool('inspect'));
+    }
+  }
+  function renderExportMenu() {
+    const m = $('#tb-export-menu'); if (!m) return;
+    m.innerHTML =
+      '<button type="button" role="menuitem" data-tbx="csv">CSV \u2014 developments shown</button>' +
+      '<button type="button" role="menuitem" data-tbx="geojson">GeoJSON \u2014 developments shown</button>' +
+      '<button type="button" role="menuitem" data-tbx="areas">Servicing areas (GeoJSON)</button>' +
+      '<button type="button" role="menuitem" data-tbx="dc">Planned works (GeoJSON)</button>' +
+      '<button type="button" role="menuitem" data-export="xlsx" data-scope="growth">Excel \u2014 demand &amp; growth</button>' +
+      '<button type="button" role="menuitem" data-tbx="brief">PDF \u2014 executive briefing</button>' +
+      `<button type="button" role="menuitem" data-tbx="memo"${currentProject ? '' : ' disabled'}>PDF \u2014 development memo</button>` +
+      '<button type="button" role="menuitem" data-area-report="shown">PDF \u2014 area report</button>' +
+      '<button type="button" role="menuitem" data-tbx="print">Print map</button>' +
+      '<hr>' +
+      '<button type="button" role="menuitem" data-tbx="inquiry">Inquiry response draft</button>' +
+      '<button type="button" role="menuitem" data-share>Copy share link</button>';
+  }
+  $('#tb-export-menu').addEventListener('click', e => {
+    const item = e.target.closest('[role="menuitem"]'); if (!item || item.disabled) return;
+    closeTbMenus();
+    const b = e.target.closest('[data-tbx]'); if (!b) return;
+    const fn = { csv: exportDevsCSV, geojson: exportDevsGeoJSON, areas: exportAreasGeoJSON, dc: exportDcGeoJSON, print: printMap, brief: briefingPDF, memo: () => { if (currentProject) devMemo(currentProject); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
+    if (fn) fn();
+  });
+  function renderGearMenu() {
+    const m = $('#tb-gear-menu'); if (!m) return;
+    m.innerHTML =
+      '<button type="button" role="menuitem" data-tbg="settings">Settings</button>' +
+      '<button type="button" role="menuitem" data-tbg="sources">Sources &amp; checks</button>' +
+      '<button type="button" role="menuitem" data-tbg="log">Change log</button>';
+  }
+  // Gear menu pages (Phase 4): workers register page renderers on window.GearPages —
+  // Worker G registers GearPages.sources for the Sources & checks page. openGearPage
+  // renders the page into the gear menu, which stays open on the page. A renderer may
+  // return an HTML string, a Node, or fill the container element itself.
+  window.GearPages = window.GearPages || {};
+  function openGearPage(name) {
+    const m = $('#tb-gear-menu'); if (!m) return;
+    closeTbMenus();
+    const page = window.GearPages[name];
+    let out;
+    try { out = typeof page === 'function' ? page() : undefined; } catch (e) { out = undefined; }
+    m.innerHTML = '';
+    if (typeof out === 'string') m.innerHTML = out;
+    else if (out instanceof Node) m.appendChild(out);
+    else if (typeof page === 'function') page(m);
+    else m.innerHTML = '<p class="small muted">That page is not available yet — try again in a moment.</p>';
+    m.hidden = false;
+    const gb = $('#tb-gear'); if (gb) gb.setAttribute('aria-expanded', 'true');
+  }
+  window.openGearPage = openGearPage;
+  $('#tb-gear-menu').addEventListener('click', e => {
+    const b = e.target.closest('[data-tbg]'); if (!b) return;
+    const k = b.dataset.tbg;
+    // Phase 4: the Settings & sources and Change log tabs are gone — Settings opens the
+    // scenario popover (the criteria editor lives in the scenario bar now), the change
+    // log lives in the Help menu, and Sources & checks is a gear page (Worker G).
+    if (k === 'settings') openGearPage('settings');
+    else if (k === 'log') { closeTbMenus(); showHelpLog(); }
+    else if (k === 'sources') openGearPage('sources');
+  });
+  function closeTbMenus() {
+    for (const id of ['#tb-export-menu', '#tb-gear-menu']) { const m = $(id); if (m) m.hidden = true; }
+    for (const id of ['#tb-export', '#tb-gear']) { const b = $(id); if (b) b.setAttribute('aria-expanded', 'false'); }
+  }
+  function toggleTbMenu(btnId, menuId) {
+    const m = $(menuId); if (!m) return;
+    const willOpen = m.hidden;
+    closeTbMenus(); closeScenPop();
+    if (!willOpen) return;
+    if (btnId === '#tb-export') renderExportMenu(); else renderGearMenu();
+    m.hidden = false;
+    $(btnId).setAttribute('aria-expanded', 'true');
+  }
+  $('#tb-export').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-export', '#tb-export-menu'); });
+  $('#tb-gear').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-gear', '#tb-gear-menu'); });
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.tb-wrap')) closeTbMenus();
+    if (!e.target.closest('.tb-scen-wrap')) closeScenPop();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
+
+  // Present toggles the existing presentation mode; the button follows its state.
+  function syncPresentBtn() {
+    const b = $('#tb-present'); if (!b) return;
+    const on = inPresentation();
+    b.setAttribute('aria-pressed', String(on));
+    b.classList.toggle('on', on);
+  }
+  $('#tb-present').addEventListener('click', () => { if (inPresentation()) exitPresentation(); else enterPresentation(); syncPresentBtn(); });
+  document.addEventListener('fullscreenchange', syncPresentBtn);
+
+  function initTopbar() {
+    if (!$('#topbar')) return;
+    $('#tb-export').insertAdjacentHTML('afterbegin', PD.icon('export'));
+    $('#tb-present').insertAdjacentHTML('afterbegin', PD.icon('present'));
+    $('#tb-help').insertAdjacentHTML('afterbegin', PD.icon('tips'));
+    $('#tb-gear').innerHTML = PD.icon('settings');
+    renderViewSwitch();
+    renderTrail();
+    renderTbScen();
+    syncPresentBtn();
+  }
+  initTopbar();
+
+  window.PeelApp = { state, rebuild, loadAll, discover, map, showDetail, pipeSummary: () => pipeSummary(), devNeeds: p => devNeeds(p), allNeeds: () => allNeeds(), showDcTiming: () => showDcTiming(), showDcLine: ln => showDcLine(ln), sewersReady: () => !!SEW.data, showBlock: id => showBlock(id), showPipeLoads: i => showPipeLoads(i), pipeRatio: i => pipeStats(i).r1, setBlocksLayer: on => setBlocksLayer(on), focusSvc: id => focusSvc(id), setMapStyle: ch => setMapStyle(ch), blockAt: (x, y) => blockAt(x, y), sewerPipes: () => SEW.data && SEW.data.pipes, dcSewerPath: p => dcSewerPath(p),
+    // Phase 3b bridge for js/tools-*.js: constraint objects, lookups and traces.
+    // All are lazy wrappers so tool modules can call them after app.js has run.
+    pipeCons: i => pipeCons(i), psCons: a => psCons(a), plantCons: pl => plantCons(pl),
+    waterPlantCons: z => waterPlantCons(z), supplyCons: b => supplyCons(b), storageCons: () => storageCons(),
+    nearestPipe: (lng, lat, r, minD) => nearestPipe(lng, lat, r, minD), pipeStats: i => pipeStats(i),
+    // Phase 3b: pipe what-if (js/tools-upgrade.js). upgBump sets the scenario-key
+    // suffix so the DCN cache rebuilds with the upgraded capacity; pipeColour is
+    // the app's capacity-colour function for the what-if overlay.
+    upgBump: k => { sewUpgKey = k || ''; }, pipeColour: r => pipeColour(r),
+    peopleFor: (room, add) => peopleFor(room, add), runOut: (q, lim) => runOut(q, lim),
+    tracePoint: ll => tracePoint(ll), traceSummaryHTML: t => traceSummaryHTML(t),
+    waterTrace: (p, zid) => waterTrace(p, zid), waterTraceSummaryHTML: r => waterTraceSummaryHTML(r),
+    existingAround: (lng, lat, r) => existingAround(lng, lat, r),
+    dcNearest: (sys, pt, r, f) => dcNearest(sys, pt, r, f), dcLineText: ln => dcLineText(ln),
+    estimateZone: p => estimateZone(p), tagAreas: p => tagAreas(p),
+    showWhatIf: (ll, id) => showWhatIf(ll, id), whatIfProject: w => whatIfProject(w),
+    // Phase 3 bridge for js/devscope.js: the helpers the dev scope reuses, plus the
+    // module-level currentProject coordination.
+    scope: {
+      setProject: p => { currentProject = p; }, getProject: () => currentProject,
+      renderTrail, showFootTab, highlight, flyToSite, traceDev, clearTrace, traceKey: () => TRACE.key,
+      setTool: m => setTool(m), // Phase 3b: PeelTools.escape() ends the active tool through here.
+      statusOf, svcFacts, devWorks, devFlags, qualityOf, QUALITY, setDaContext,
+      ensureCouncil: () => loadCouncil(),
+      showAllocSub: () => { wwSub = 'alloc'; store.set('wwSub', wwSub); showFootTab('ww'); viewLink.write(); },
+      writeLink: () => viewLink.write(),
+      estimate: p => D.estimate([p], state.criteria, 'all', jobsOf),
+      renderScopeTab: () => {
+        // Re-render the currently selected tab when it is scope-aware (Phase 3).
+        if (footTab === 'overview') renderOverview();
+        else if (footTab === 'growth') renderGrowth();
+        else if (footTab === 'water' || footTab === 'ww') renderSvcTab();
+        else if (footTab === 'dca') renderDca();
+      },
+      isWatched: k => watch.has(k),
+      PLANT_SHORT, fmt: { esc, fmtNum, uUnits, uPop, uLs, roundPop, dot },
+    } };
 })();
