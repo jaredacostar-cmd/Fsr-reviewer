@@ -1435,6 +1435,43 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Chart and table forms
+
+From design audit, Group 8:
+
+- **11 px minimum, measured.** Text sizes were measured in the browser on every analysis view
+  at desk and phone sizes:
+  - **Chart labels** were drawn at 11 units, but the charts scaled down to fit the panel, so
+    they rendered at 5–9 px. This affected the DC charts, the Growth timing band and the plant
+    Horizon chart. Charts are now drawn at the panel's own width (`PeelUtil.chartW`), so 11
+    units render as 11 px. On narrow screens the label column shrinks and names are trimmed
+    to fit.
+  - **Small text** (`<small>` lines and unit suffixes) in the analysis and detail panels was
+    8–10 px. It now never goes below 11 px.
+- **Plant figures in a table.** Each plant bar on Wastewater › Plants used to carry four lines
+  of prose. One table under the bars now holds the same figures:
+
+  | Column | What it shows |
+  |---|---|
+  | Plant | name, with population at 100% under it |
+  | Rated | rated capacity |
+  | Committed | % and ML/d |
+  | Reserve (D-5-1) | uncommitted reserve, ≈ people |
+  | After proposed | room left after proposed growth |
+
+  Water's treatment chart uses the same table, with "Room to rated".
+- **Plants pane shortened.** The stage-by-stage "Plant inflow by growth layer" table folds
+  behind a summary line. The pane drops from 5,177 to 2,539 px at desk (5,678 → 3,018 on a
+  phone).
+- **Colour is never the only signal.** The pumping-station and allocation mini bars say
+  "over" or "short" in words next to the value, and a % bar has a 100% tick. The DC funding
+  screen colours became neutral in Group 2.
+- **No future years.** "≈N/yr completed 2017–2027" was caused by a completion dated in the
+  future. It now stops at the data year.
+- **See all after 10** on the pumping-station table. The DC tables and the Developments list
+  already had it. The Files tree is owned by the tree work and is unchanged.
+- **Ranges** whose two ends round to the same number show one number (Group 2).
+
 ## One home for tool results, and the top bar
 
 From design audit, Group 7:

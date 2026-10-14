@@ -72,7 +72,7 @@
       const f = p.existing + p.A * frac(y, hz.aStart, hz.aYears) + p.P * frac(y, hz.pStart, hz.pYears) + (divOn && y >= hz.divYear ? p.div : 0) + extraPeople * p.perPerson / 1e6;
       return f / ratedAt(p, y) * 100;
     }) }));
-    const narrow = innerWidth < 640, W = narrow ? 420 : 760, H = narrow ? 230 : 250, L = 36, Rr = narrow ? 100 : 120, T = 10, B = 26;
+    const W = window.PeelUtil.chartW(320, 900), narrow = W < 560, H = narrow ? 230 : 250, L = 36, Rr = narrow ? 100 : 120, T = 10, B = 26;
     const yMax = Math.max(110, Math.ceil(Math.max(...series.flatMap(s => s.v)) / 10) * 10 + 5);
     const X = y => L + (y - hz.year0) / (hz.end - hz.year0) * (W - L - Rr), Yp = v => T + (1 - v / yMax) * (H - T - B);
     const ticksY = []; for (let v = 0; v <= yMax; v += 20) ticksY.push(v);
@@ -149,6 +149,9 @@
     const ppl = n => unit(fmtNum(Math.round(n / 100) * 100), 'people');
     const segs = [['g-base', `${Y} Census (existing)`], ['g-built', `Built since ${Y}`], ['g-approved', 'Committed']
       , ['g-proposed', 'Proposed (in review)']];
+    // One table under the bars (design audit, Group 8): the figures that were five lines of prose per bar.
+    const roomWord = opt.title ? 'Room to rated' : 'Reserve (D-5-1)';
+    const trows = [];
     const body = rows.map(r => {
       const tot = r.v.reduce((a, b) => a + b, 0), committed = r.v[0] + r.v[1] + r.v[2];
       const reserve = r.rated - committed, afterProposed = r.rated - tot;
@@ -160,31 +163,31 @@
       const popAt100 = r.perPerson > 0 ? (r.rated - r.extMld) * 1e6 / r.perPerson : 0;
       const bar = r.v.map((v, i) => v > 0 ? `<span class="gseg ${segs[i][0]}" style="flex:${(v / tot * 1000).toFixed(3)} 1 0" tabindex="0" data-tip="${esc(`${segs[i][1]}: ${fmt1(v)} ML/d · ${pct(v, r.rated).toFixed(1)}% of ${r.capWord || 'rated'} capacity`)}"></span>` : '').join('');
       const resBox = reserve > 0 ? `<span class="cap-reserve" style="left:${X(pct(committed, r.rated))};width:${X(pct(reserve, r.rated))}" data-tip="${esc(`Uncommitted reserve: ${fmt1(reserve)} ML/d${okPop ? ` ≈ ${fmtNum(Math.round(people(reserve) / 100) * 100)} people` : ''}`)}"></span>` : '';
+      trows.push(`<tr><td>${r.name}${!opt.noPop100 && okPop ? `<small>100% ≈ ${ppl(popAt100)}</small>` : ''}</td><td class="n">${uML(r.rated)}</td><td class="n"><strong>${Math.round(pct(committed, r.rated))}%</strong><small>${uML(committed)}</small></td>
+        <td class="n">${reserve >= 0 ? `<strong>${uML(reserve)}</strong>${okPop ? `<small>≈ ${ppl(people(reserve))}</small>` : ''}` : `<strong class="over">over by ${uML(-reserve)}</strong>`}</td>
+        <td class="n">${afterProposed >= 0 ? `${uML(afterProposed)}${okPop ? `<small>≈ ${ppl(people(afterProposed))}</small>` : ''}` : `<span class="over">short ${uML(-afterProposed)}</span>`}</td>
+        </tr>`);
       return `<div class="cap-row">
         <div class="cap-name">${r.name}<small>${r.capWord || 'rated'} ${uML(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
         <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${resBox}<span class="cap-line trig" style="left:${X(90)}" aria-hidden="true" title="90% expansion trigger"></span><span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
           <span class="cap-end${Math.abs(pct(tot, r.rated) - 100) < 9 ? ' near' : ''}" style="left:${X(Math.max(pct(tot, r.rated), 100))}">${Math.round(pct(tot, r.rated))}%</span></div>
-        <div class="cap-text small">
-          <span>Existing + built + committed <strong>${Math.round(pct(committed, r.rated))}%</strong> (${uML(committed)})</span>
-          <span>${reserve >= 0 ? `Uncommitted reserve (D-5-1) <strong>${uML(reserve)}</strong>${okPop ? ` ≈ <strong>${ppl(people(reserve))}</strong>` : ''}` : `<strong class="over">Screens over rated capacity by ${uML(-reserve)}</strong>`} ${estTag}</span>
-          <span>${afterProposed >= 0 ? `After proposed: ${uML(afterProposed)}${eq(afterProposed)}` : `<span class="over">After proposed: short ${uML(-afterProposed)}${eq(-afterProposed)}</span>`}</span>
-          ${opt.noPop100 ? '' : `<span>${okPop ? `Population at 100%: <strong>${ppl(popAt100)}</strong> <span class="muted">(today ${ppl(r.popToday)}, ${unit(fmtNum(Math.round(r.perPerson)), 'L/person/d')})</span>` : '<span class="muted">Population equivalents not shown: too few census people are mapped to this sewershed</span>'}</span>`}
-        </div></div>`;
+      </div>`;
     }).join('');
+    const table = trows.length ? `<div class="dcb-scroll"><table class="dt cap-t"><thead><tr><th>${opt.title ? 'Facility' : 'Plant'}</th><th class="n">${opt.capWord || 'Rated'}</th><th class="n" title="Existing + built + committed, % of rated">Committed</th><th class="n">${roomWord}</th><th class="n">After proposed</th></tr></thead><tbody>${trows.join('')}</tbody></table></div>${rows.some(r => !(!opt.noPeople && r.popToday >= 1000 && r.perPerson > 0)) && !opt.noPeople ? '<p class="small muted">– : too few census people in the sewershed for population equivalents (Inglewood).</p>' : ''}<p class="small muted">${estTag}</p>` : '';
     if (opt.title) return `${opt.title.trim() ? `<h3 class="svc-sub">${opt.title} <span class="muted small">${opt.sub || ''}</span></h3>` : ''}
       <div class="cap-chart"${opt.info ? ` data-info="${opt.info}"` : ''}>
         <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
         ${body}
         ${opt.legend === false ? '' : `<ul class="grow-legend"><li><span class="gsw g-base"></span>${esc(opt.baseLabel || `${Y} Census (existing)`)}</li><li><span class="gsw g-built"></span>Built since ${Y}</li><li><span class="gsw g-approved"></span>Committed</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li><span class="gsw cap-reserve-sw"></span>Uncommitted reserve (D-5-1, to 100% of rated)</li><li><span class="cap-line-sw trig"></span>90% expansion trigger</li><li><span class="cap-line-sw"></span>${esc(opt.capLegend || 'Capacity (100%)')}</li></ul>`}
         <div class="grow-tip" hidden></div>
-      </div>${opt.notes ? `<details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">${opt.notes}</p></details>` : ''}`;
+      </div>${table}${opt.notes ? `<details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">${opt.notes}</p></details>` : ''}`;
     return `<h3 class="svc-sub">Plant capacity ${window.PeelUtil.basisChip('mixed', SvcTab().svcOpt.ww === 'calibrated' ? 'Mixed basis: existing flow 2025 measured (annual reports); growth at Peel design criteria scaled to each plant\u2019s measured rate; rated capacity from the 2025 annual reports' : 'Mixed basis: flows at Peel design criteria; rated capacity from the 2025 annual reports')} <span class="muted small">${SvcTab().wwFlowLabel()} as a % of rated (annual average) capacity · ${SvcTab().svcOpt.ww === 'calibrated' ? 'capacity check, calibrated to 2025 flows' : 'design flows, Peel criteria'}${SvcTab().svcOpt.div === 'on' ? ' · with the 70 ML/d diversion' : ''}</span></h3>
       <div class="cap-chart" data-info="plant-capacity">
         <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
         ${body}
         <ul class="grow-legend"><li><span class="gsw g-base"></span>${Y} Census (existing) + external inflows</li><li><span class="gsw g-built"></span>Built since ${Y}</li><li><span class="gsw g-approved"></span>Committed</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li><span class="gsw cap-reserve-sw"></span>Uncommitted reserve (D-5-1, to 100% of rated)</li><li><span class="cap-line-sw trig"></span>90% expansion trigger</li><li><span class="cap-line-sw"></span>Rated capacity (100%)</li></ul>
         <div class="grow-tip" id="cap-tip" hidden></div>
-      </div>
+      </div>${table}
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted"><strong>Uncommitted reserve capacity</strong> (Ontario MECP Procedure D-5-1) = rated capacity − existing flow − flow committed to approved development. Here existing = ${Y} Census + built since (plus external inflows), committed = approved; proposed applications then draw on the reserve. Its population equivalent divides by the plant's flow per person today (residential + development jobs${SvcTab().svcOpt.ww === 'calibrated' ? ', calibrated to the 2025 reported flow, so it also carries existing employment and infiltration' : ' at Peel design rates'}). <em>Population at 100%</em> = (rated capacity − external inflows) ÷ that flow per person. ${SvcTab().svcOpt.ww === 'calibrated' ? '' : 'D-5-1 uses measured flows: switch to <em>Capacity check</em> for that basis.'}</p></details>`;
   }
   // ---- Phase 4: "Tightest pipes" (Plants sub-view) — the top pipes by % of full capacity
@@ -214,6 +217,9 @@
   // ---- Phase 4: Pumping stations have their own sub-view now (#pumpstations-body): firm
   // capacity (2020 Master Plan, largest pump out of service) against the build-out flow in
   // the sewer arriving at each, at Peel design criteria (not calibrated).
+  // The station table shows the 10 tightest; See all lists every station (design audit, Group 8).
+  let psAll = false;
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-ps-all]')) { psAll = !psAll; SvcTab().renderSvcTab(); } });
   function renderPumpStationsTab(k) {
     DUI().ensurePumpSubTab();
     const el = $('#pumpstations-body'); if (!el) return;
@@ -246,8 +252,9 @@
       <div>${st.map(x => DUI().miniBar(esc(DD().psName(x.a)), x.wet, maxWet, '%', x.wet >= 100)).join('') || '<p class="small muted">No master plan stations matched.</p>'}</div>
       <table class="dt svc-table ps-table" data-info="drainage-area"><caption>Pumping stations · firm capacity (2020 Master Plan) against the build-out flow in the sewer arriving at each, Peel design criteria</caption>
         <thead><tr><th>Pumping station</th><th>Block → plant</th><th>People + jobs upstream</th><th>Firm</th><th>Peak wet ≈ (check)</th><th>Peak dry (reference)</th></tr></thead>
-        <tbody>${st.map(x => { const b = blk(x.a); return `<tr${rowA(x.a.id, '')}><td title="${esc(SD().spsNote(x.sp))}">${esc(x.sp.name)}</td><td>${b ? esc(b.name) : '–'} → ${esc(SD().PLANT_SHORT[x.a.plant] || x.a.plant || '')}</td>
+        <tbody>${(psAll ? st : st.slice(0, 10)).map(x => { const b = blk(x.a); return `<tr${rowA(x.a.id, '')}><td title="${esc(SD().spsNote(x.sp))}">${esc(x.sp.name)}</td><td>${b ? esc(b.name) : '–'} → ${esc(SD().PLANT_SHORT[x.a.plant] || x.a.plant || '')}</td>
           <td>${who2(total(x.l), jobs(x.l))}</td><td>${fmtNum(x.sp.firmLs)} L/s</td><td class="${x.wet >= 100 ? 'over' : ''}">${uLs(ls(pdwf(x.l) + ii(x.l)))}<small>${Math.round(x.wet)}%</small></td><td class="muted">${uLs(ls(pdwf(x.l)))}<small>${Math.round(x.dry)}%</small></td></tr>`; }).join('')}</tbody></table>
+      ${st.length > 10 ? `<p><button type="button" class="btn small" data-ps-all>${psAll ? 'Show top 10' : `See all ${st.length} stations`}</button></p>` : ''}
       ${DUI().wwInfoLine('Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the check is peak wet weather flow (PWWF) against firm capacity, the comparison the Region expands a station on. Peak dry is shown for reference only. I&amp;I at a station uses the land draining through its arriving sewer (published network, 300 mm and up), so peak wet is approximate (≈).')}`;
   }
   // ---- Phase 4: these two checks moved out of the Wastewater tab into Sources & checks
@@ -375,12 +382,12 @@
       ].join('')}</div>
       ${chart}
       <div id="tight-pipes">${tightestPipesHTML()}</div>
-      <h3 class="svc-sub">Plant inflow by growth layer</h3>
+      <details class="svc-more"><summary class="svc-sub">Plant inflow by growth layer <span class="muted small">(the build-up behind the bars: table)</span></summary>
       <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each layer is what it adds, the running total below${SvcTab().svcOpt.ww === 'calibrated' ? ' · capacity check (calibrated to 2025 flows)' : ''}</caption>
       <thead><tr><th>Layer</th><th>Population</th><th>Average dry<br>weather</th><th>Peak dry<br>weather</th><th>I&amp;I</th><th>Peak wet<br>weather</th><th>Average<br>% of rated</th></tr></thead>
       <tbody>${secs.map(x => block(esc(SD().plantLabel(x.pl)), x.sum, x.f, [...peelExt.filter(e => e.plant === x.pl), ...divTo(x.pl)], ratedOf(x.pl), x.f !== 1 ? `calibrated ×${x.f.toFixed(2)}` : '')).join('')}
         ${block(`Peel total (${secs.map(x => SD().PLANT_SHORT[x.pl]).join(' + ')})`, peel, peelF, peelExt, secs.reduce((t, x) => t + ratedOf(x.pl), 0))}
-        ${tor.rows.length ? block(esc(SD().plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table>
+        ${tor.rows.length ? block(esc(SD().plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table></details>
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details>
       ${DUI().wwInfoLine('Each plant\u2019s whole sewershed (all catchments traced to it): average dry weather flow against rated capacity; horizon years phase approved then proposed growth in. The 2025-report comparison and the Master Plan comparison moved to Sources &amp; checks.')}`;
     $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant`;

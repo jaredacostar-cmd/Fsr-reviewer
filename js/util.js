@@ -16,6 +16,13 @@
   // Individual-pipe modelling results (capacity, % full, freeboard, sewer profile, tightest pipes,
   // the pipe upgrade tool, the EPANET per-main table) are off for now: true brings them back.
   const PIPE_RESULTS = false;
+  // Chart width in SVG units = the analysis panel's width in pixels (design audit, Group 8): a chart
+  // drawn at its rendered size keeps its 11-unit labels at 11 px instead of scaling them down.
+  const chartW = (min = 320, max = 900) => {
+    let w = 0;
+    try { const el = typeof document !== 'undefined' && document.getElementById('analysis-panes'); w = el && el.clientWidth ? el.clientWidth - (el.clientWidth < 500 ? 44 : 32) : 0; } catch (e) { w = 0; }
+    return Math.round(Math.max(min, Math.min(max, w || 560)));
+  };
   // Growth's pace, census and 2051 views at development scope (design audit, Group 6).
   const AREA_ONLY_NOTE = '<p class="small muted area-only">Pace, the census and the 2051 allocation describe an area, not one development. Use the trail (Peel, or the area) to see them.</p>';
   // Pipe class by size (design audit, Group 4), not by distance along the path: the smallest
@@ -172,7 +179,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

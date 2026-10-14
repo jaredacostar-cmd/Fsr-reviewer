@@ -2322,3 +2322,16 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .topbar .tb-btn, .topbar .tb-step, .topbar .tb-views .btn, .topbar .tb-scen { min-height: 44px; min-width: 44px; }
   .tb-menu [role="menuitem"] { min-height: 44px; }
 }
+
+/* Plant / facility figures as one table under the capacity bars (design audit, Group 8). */
+.cap-t { width: 100%; margin-top: var(--space-1); }
+.cap-t td small { display: block; color: var(--text-muted); }
+.cap-t td:first-child { min-width: 9em; }
+
+/* 11 px minimum for text in the analysis panel and the detail panel (design audit, Group 8):
+   secondary lines (<small>) and unit suffixes keep their relative size but never go below 11 px. */
+#analysis-panes small, #detail small { font-size: max(var(--fs-1), .83em); }
+#analysis-panes .u, #detail .u { font-size: max(var(--fs-1), .82em); }
+.svc-more > summary { cursor: pointer; list-style: revert; margin: var(--space-2) 0 var(--space-1); }
+.cap-t th { white-space: nowrap; }
+.cap-t td.n { white-space: nowrap; }

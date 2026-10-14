@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { esc, fmtNum, roundPop, store, fmtMoney, capitalStatus, toDollarYear, capitalChip } = window.PeelUtil;
+  const { esc, fmtNum, roundPop, store, fmtMoney, capitalStatus, toDollarYear, capitalChip, chartW } = window.PeelUtil;
   const D = window.PeelDemand;
   const App = () => window.PeelApp;
   const MP = () => window.PeelMasterPlan;
@@ -115,12 +115,12 @@
   // Timing chart: capacity runs out vs online year for the top projects by build-out impact.
   function dcaTimingChart(rows) {
     if (!rows.length) return '';
-    const W = 560, L0 = 200, R0 = 34, T0 = 20, RH = 24, B0 = 24, H = T0 + rows.length * RH + B0;
+    const W = chartW(320, 760), L0 = Math.min(200, Math.round(W * 0.38)), R0 = 34, T0 = 20, RH = 24, B0 = 24, H = T0 + rows.length * RH + B0;
     const x0 = MM().THIS_YEAR, x1 = SP().hz.end;
     const x = y => L0 + (W - L0 - R0) * (Math.min(Math.max(y, x0), x1) - x0) / Math.max(1, x1 - x0);
     const yOf = i => T0 + i * RH + RH / 2;
     const ticks = []; for (let y = x0; y <= x1; y += 5) ticks.push(y); if (ticks[ticks.length - 1] !== x1) ticks.push(x1);
-    const short = s => { s = String(s || ''); return s.length > 30 ? `${s.slice(0, 29)}…` : s; };
+    const nMax = Math.max(12, Math.floor((L0 - 10) / 6.2)), short = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
     return `<h3 class="sub-title">Project timing: capacity runs out vs online year</h3>
     <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Capacity run-out year and online year for the top ${rows.length} DC projects by build-out impact">
       ${ticks.map(y => `<line x1="${x(y).toFixed(1)}" x2="${x(y).toFixed(1)}" y1="${T0 - 8}" y2="${H - B0}" class="dca-grid"/><text x="${x(y).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}
@@ -141,11 +141,11 @@
   function dcaRecChart(items, end) {
     const top = items.slice().sort((a, b) => b.r.v - a.r.v).slice(0, 10).filter(x => x.r.v > 0);
     if (!top.length) return '';
-    const W = 560, L0 = 200, R0 = 110, T0 = 8, RH = 24, B0 = 20, H = T0 + top.length * RH + B0;
+    const W = chartW(320, 760), L0 = Math.min(200, Math.round(W * 0.38)), R0 = Math.min(110, Math.round(W * 0.22)), T0 = 8, RH = 24, B0 = 20, H = T0 + top.length * RH + B0;
     const max = Math.max(...top.map(x => x.r.v));
     const bw = v => Math.max(2, (W - L0 - R0) * v / max);
     const pp = v => fmtNum(roundPop(v));
-    const short = s => { s = String(s || ''); return s.length > 30 ? `${s.slice(0, 29)}…` : s; };
+    const nMax = Math.max(12, Math.floor((L0 - 10) / 6.2)), short = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
     return `<h3 class="sub-title">Growth relying on each project by ${end} (top ${top.length})</h3>
     <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Growth relying on the top ${top.length} projects by ${end}, coloured by funding-screen result">
       <line x1="${L0}" x2="${L0}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/>
@@ -159,7 +159,7 @@
   // Funding chart: growth held back by the window's last year across funding levels.
   function dcaCurveChart(curve, B) {
     if (curve.length < 2) return '';
-    const W = 560, H = 210, L0 = 54, R0 = 14, T0 = 12, B0 = 46;
+    const W = chartW(320, 760), H = 210, L0 = 54, R0 = 14, T0 = 12, B0 = 46;
     const maxB = Math.max(...curve.map(c => c.b)), maxV = Math.max(...curve.map(c => c.x.upper), 1) * 1.08;
     const x = b => L0 + (W - L0 - R0) * b / maxB, y = v => T0 + (H - T0 - B0) * (1 - v / maxV);
     const up = curve.map(c => y(c.x.upper)), lo = curve.map(c => y(c.x.lower));
@@ -281,7 +281,7 @@
   // Timeline chart for one project's tightest constraint: demand, existing capacity, capacity with
   // the project; flow diverted to it (blue) and what would be unserved if it is cancelled (red).
   function dcaChart(row, years) {
-    const c = row.c, W = 560, H = 180, L0 = 46, R0 = 10, T0 = 10, B0 = 26;
+    const c = row.c, W = chartW(320, 760), H = 180, L0 = 46, R0 = 10, T0 = 10, B0 = 26;
     const none = new Set(), off = new Set([row.key]);
     const dem = years.map(y => c.q(y)), cw = years.map(y => MP().capWith(c, y, none)), co = years.map(y => MP().capWith(c, y, off));
     const max = Math.max(...dem, ...cw) * 1.08 || 1;

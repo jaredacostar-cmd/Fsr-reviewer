@@ -65,7 +65,10 @@
         ${tile('Permitted', fmtNum(Math.round(emp.permitted)), `${pc(emp.permitted / emp.planned)} of planned · ≈${fmtNum(Math.round(jobsOfM2(emp.permitted)))} jobs`, 'employment', 'm²')}
         ${tile('Completed', fmtNum(Math.round(emp.completed)), `≈${fmtNum(Math.round(jobsOfM2(emp.completed)))} jobs`, 'employment', 'm²')}
         ${tile('Left to build', fmtNum(Math.round(emp.left)), `${pc(emp.left / emp.planned)} of planned · ≈${fmtNum(Math.round(jobsOfM2(emp.left)))} jobs`, 'employment', 'm²')}</div>` : '';
-    const yrs = comp.years, yr0 = yrs.length ? yrs[0].year : null, yr1 = yrs.length ? yrs[yrs.length - 1].year : null;
+    // Completed per year, clipped to the data year: a completion dated in the future is a data error,
+    // not a year of completions (design audit, Group 8: no more "2017–2027").
+    const nowY = (window.PeelMapMarkers && window.PeelMapMarkers.THIS_YEAR) || new Date().getFullYear();
+    const yrs = comp.years.filter(y => y.year <= nowY), yrUnits = yrs.reduce((t, y) => t + y.units, 0), yr0 = yrs.length ? yrs[0].year : null, yr1 = yrs.length ? yrs[yrs.length - 1].year : null;
     const head = set.length
       ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
       : 'No developments match the current filters.';
@@ -83,14 +86,14 @@
       return `<tr><td>${esc(m)}</td><td>${c ? `${fmtNum(Math.round(c.perYear))}<small>/yr · ${fmtNum(c.projects)} devs</small>` : '–'}</td><td>${a && a.medianMonths != null ? `${a.medianMonths.toFixed(0)}<small> mo · n=${a.n}</small>` : '–'}</td></tr>`;
     };
     const muniTable = `<table class="dt"><caption>Completions and approval pace by municipality</caption><thead><tr><th>Municipality</th><th>Completions</th><th>Median application → approval</th></tr></thead><tbody>${DU().MUNIS.map(mrow).join('')}
-      <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(comp.totalUnits / yrs.length))}<small>/yr</small>` : '–'}</td><td>${allMedian != null ? `${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small>` : '–'}</td></tr></tbody></table>`;
+      <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(yrUnits / yrs.length))}<small>/yr</small>` : '–'}</td><td>${allMedian != null ? `${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small>` : '–'}</td></tr></tbody></table>`;
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     body.innerHTML = `
       ${hlP(head)}
       <h3 class="sub-title" data-info="demand-units">Homes</h3>
       <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with units` : '', 'demand-units')}
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
-        ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(comp.totalUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
+        ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
         ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>
       ${empTiles}
       <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
