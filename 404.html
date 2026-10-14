@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peel Growth Pipeline (unofficial)</title>
+<script>
+(function () {
+  // This site moved from /Fsr-reviewer/ to /peel-growth-pipeline/.
+  // Old deep/share links (e.g. /Fsr-reviewer/?p=...#...) keep working via this redirect.
+  // GitHub itself also redirects renamed-repo traffic on github.com URLs.
+  var OLD = '/Fsr-reviewer/';
+  var NEW = '/peel-growth-pipeline/';
+  var path = location.pathname;
+  if (path.toLowerCase().indexOf(OLD.toLowerCase()) === 0) {
+    var rest = path.slice(OLD.length);
+    location.replace(NEW + rest + location.search + location.hash);
+  }
+})();
+</script>
+<style>
+  body { font: 16px/1.5 system-ui, -apple-system, sans-serif; color: #222; background: #fcfcfb; margin: 0; padding: 3rem 1.5rem; text-align: center; }
+  a { color: #2a78d6; }
+</style>
+</head>
+<body>
+  <h1>Page not found</h1>
+  <p>This page doesn't exist. <a href="./">Back to Peel Growth Pipeline</a></p>
+</body>
+</html>

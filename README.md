@@ -6,9 +6,9 @@
 A map of every development in Peel Region (Mississauga, Brampton, Caledon), following each
 site from application to completion.
 
-It pulls planning applications and building permits live from the municipalities' public ArcGIS
-open-data services. Files on the same site are linked into one **project**, and each project is
-placed in a construction phase:
+It pulls planning applications and building permits from the municipalities' public ArcGIS
+open-data services, refreshed weekly into a data snapshot. Files on the same site are linked
+into one **project**, and each project is placed in a construction phase:
 
 | # | Phase | What it means |
 |---|-------|---------------|
@@ -22,32 +22,14 @@ placed in a construction phase:
 
 Each file keeps its own status; the site takes the furthest phase of its files, except that
 **only a site plan approval, or a plan of subdivision shown as registered, makes a site
-Approved** (freehold houses go from registration straight to building permits). An approved zoning,
-official plan, draft subdivision or condominium file keeps the site under review (shown as *Zoning approved · site
-plan pending*); a site plan approved before a newer rezoning that is still in review was for an
-earlier proposal and does not count; Brampton's legacy site plans (status "Transferred", carried
-over from its old system, mostly 1980s–1990s, no dates) don't count for a current proposal, and a
-site with only legacy files is shown as completed. Demolition permits (HOUSDEMO / DEMO) clear a site
-and don't set its phase or start a redevelopment cycle.
-
-**Building permits must be for the site's buildings.** A permit sets the site's phase only when it
-adds units, is a new dwelling building whose unit count isn't published, or is a new
-non-residential building. Site servicing and shoring permits stay on the site (useful for
-servicing) but don't set its phase; signs, below-grade entrances, doors, windows, equipment, sales
-pavilions, temporary structures and additions don't count, and a site made only of those is not
-shown as a development (the audit reports them as set aside). Minor / limited / express site plans
-(a patio, a revision) don't approve the building, and a Brampton site plan that only reads
-"Closed" (no approval date) counts as approved only when a building permit was issued after it.
-
-**Building permits follow the planning approval.** A permit issued well before the site's first
-site plan / subdivision / zoning file (completed more than a year before it, or issued more than 3
-years before it) was for what stood there before: it doesn't set the phase or count toward the
-build-out. A permit issued shortly before the earliest file in the open data still counts and is
-flagged (an earlier phase whose site plan isn't published; Mississauga's "PDOX TRANSFER FILE"
-site plans are dated by their original file number). Alterations count units only when they
-create one (a second suite); a second suite is new homes, but not a site plan building, so it
-doesn't set a site plan's phase. A change to these rules is recorded in
-`data/history.json` as a re-read (marked `rules`), not as a phase change on the ground.
+Approved**. An approved zoning, official plan, draft subdivision or condominium file keeps the
+site under review (shown as *Zoning approved · site plan pending*); a site plan approved before
+a newer rezoning that is still in review was for an earlier proposal and does not count.
+Demolition permits (HOUSDEMO / DEMO) clear a site and don't set its phase. A permit sets the
+site's phase only when it is for the site's buildings (adds units, a new dwelling building, or
+a new non-residential building); site servicing, shoring, signs, sales pavilions and additions
+don't count. A change to these rules is recorded in `data/history.json` as a re-read (marked
+`rules`), not as a phase change on the ground.
 
 ## Run it
 
@@ -57,1534 +39,272 @@ It's a static site with no build step:
 npm start            # serves on http://localhost:8080
 ```
 
-Any static host works, for example GitHub Pages. You can also open `index.html` straight from
-disk. The data is fetched by your browser, so you need internet access.
-
-## On iPhone / iPad
-
-The app runs in Safari. It needs to be served from a web address, because opening the file
-from the iPhone's Files app won't work. Any one of these options does it:
-
-1. **Netlify Drop (easiest, free, about 2 minutes).** On a computer, download this branch as a
-   ZIP and unzip it. Go to <https://app.netlify.com/drop> and drag the folder onto the page.
-   You get an `https://….netlify.app` link; open it in Safari on the iPhone.
-2. **GitHub Pages.** This works for public repositories; private repositories need a paid
-   GitHub plan. In the repository, go to Settings → Pages and set Source to **GitHub Actions**.
-   The included workflow then deploys the site and keeps it updated weekly (see "Weekly
-   automatic update" below). The site appears at `https://<user>.github.io/<repo>/`.
-3. **Same Wi-Fi, no hosting.** On a computer, run `npm start`, then open
-   `http://<computer's IP address>:8080` on the iPhone. This works only while the computer is
-   on and on the same network.
-
-To use it like an app, tap **Share → Add to Home Screen** in Safari. It opens full screen with
-its own icon, under the home-screen name **Peel Dev**.
-
-On a phone, the **Filters (n)** button opens the filter sheet. The analysis column becomes a
-bottom sheet: tap its grip to step through summary → half → full, or drag it. The ▾ on the
-timeline folds it to just the year range (it starts folded on phones).
-
-**Layout:** one screen, no page scroll. A top bar holds the scope trail (Peel › municipality ›
-area › development), the view switch (Planning / Water / Wastewater / DC), the Scenario chip,
-Export, Present, Help and Settings. Below it: the filter column on the left, the full-height
-map in the middle, and the analysis column on the right (resizable by dragging its left edge).
-The footer is a slim timeline strip. On wide screens (≥1800px) a fourth column is reserved for
-side-by-side comparison.
-
-## Using it
-
-The sidebar has three tabs.
-
-**What is this?** Rest the pointer on a heading, figure or control for 3 seconds (on a phone,
-a genuine press-and-hold of about two-thirds of a second, finger still down — a plain tap no
-longer opens it) for a card explaining what it represents and where the data comes from
-(`js/info.js`).
-
-**Explore** — one filter panel, in order: **Search · Stage · Where · What · When · Flags**,
-then the list of developments on the map. One-tap **saved-view preset chips** sit above the
-search bar (save a view from More settings → Saved views).
-- **Search** by address, file number or description; a notice line says when nothing matches.
-- **Stage:** the bar shows how the listed developments split across the stages — Inception,
-  Under review, Approved, Permit issued, Under construction, Completed, Withdrawn — each with
-  its count. Tap a segment to show only that stage; tap again to go back to all. Ctrl-click
-  (⌘ on a Mac) picks several.
-- **Where:** **municipality** (All, Brampton, Caledon, Mississauga); **secondary plans** (tick
-  one or several; type to find a plan) and **MTSA** drop-downs — a project counts if it is
-  inside any pick, and the picks are outlined on the map; and the **receiving plant** (G.E.
-  Booth, Clarkson or Inglewood — the plant the development's catchment drains to).
-  Secondary plans: Brampton Plan Schedule 10 and Caledon's in-effect Secondary Plan Areas;
-  Mississauga has no secondary plans, so its Official Plan Character Areas are listed. MTSAs:
-  the Region of Peel delineation (published by Mississauga) and Brampton Plan Schedule 1A/1B
-  primary and planned MTSAs. A project is in an area when its location falls inside it.
-- **What:** **Size** (Adds units or jobs, 10+ … 500+ units), **Dwelling type** (single /
-  semi-detached, townhouse, apartment), and **Land use** — Adds units or jobs is the default
-  (growth: applications proposing new dwelling units or new jobs), with Residential, Mixed and
-  Employment.
-- **When:** a **milestone** (any, application submitted, approved, permit issued, completed)
-  with a from/to year; quick buttons **Last 12 months** and **This week**.
-- **Flags:** ★ Watched (developments on your watchlist), Stalled 2+ years (still in planning,
-  no activity for 2 years), Changed this week (new or moved stage in the latest weekly update).
-- **Active filters** appear as chips under the search. Tap a chip's × to remove that filter,
-  or use **Reset all** (back to the defaults: all stages, Adds units or jobs).
-- **Records** (record type and **New buildings only**) moved to **Settings** (gear menu in the top bar) →
-  **Records**. Record type: by default only planning applications and the building permits that
-  belong to them (permits with no application, such as infill houses, are hidden; choose *All
-  records* to see them); also building permits only, or applications plus permits.
-  **New buildings only** hides alterations, signs, pools and similar permits.
-- Where the old controls went: the phase quick-view chips → the **Stage** bar; the **Focus**
-  chips → **Flags** (Growth is now the default land use; Major 100+ is a size; Employment is a
-  land use; Committed capacity and Left to build are the counting basis in the **Scenario** bar;
-  New in last 12 months is the Last 12 months button); record type and New buildings only →
-  **Settings** (gear menu) → **Records**; the demand year → the Scenario bar's **Results for year**.
-
-**This week:** projects that are new, or that changed phase, since the previous weekly update.
-
-**Data:** the source list, **Refresh live**, and an **Advanced** section for adding sources.
-
-**Map**
-- **Background:** the latest city aerials are the default: City of Mississauga 2024, City of
-  Brampton fall 2025 and Town of Caledon 2025 (from zoom 12), over Esri World Imagery, with road
-  and place-name overlays. The picker at the top right switches to plain aerial, Esri World
-  Imagery or a street map.
-- **Labels:** from zoom level 14, every point not inside a cluster gets a label. Choose what it
-  shows: address and phase, address only, file or permit number, units, or off. The largest
-  projects are labelled first, and a label is left out if it would overlap another.
-- **Clusters** show how many projects they hold. The ring around each cluster shows the mix of
-  phases.
-- **Subdivisions up close:** application boundaries show at every zoom; at street zoom, or when you
-  select a project, every building permit inside one appears as its own dot. Tap anywhere inside a
-  boundary to open that application (a site plan or condo nested in a larger development opens on
-  its own, with a link to the whole project). Tap a dot to see that
-  permit and the **planning application it belongs to** (file number, type, status, planned
-  units). **Open whole project** shows the build-out for the whole subdivision.
-- **Project panel:** shows the build-out as steps (planned → permitted → completed, then
-  left to build), the project's **servicing demand** (population, water average / max day /
-  peak hour, wastewater average / Harmon peak, for the total, completed and remaining units), a phase
-  stepper, the weekly phase history and the dated timeline, grouped by date (same-day events on several files show once, with a count and the file numbers). Every source record has **Show on
-  map**. On phones, the panel opens as a bottom sheet so the selected point stays visible.
-
-**Picking several (desktop):** Ctrl-click (⌘-click on a Mac) a Stage bar segment
-to add or remove that phase; a plain click still shows one phase only. Holding Ctrl / ⌘ over the
-map shows a crosshair: drag a box to add the shown developments inside it to the selection (like
-Tools → Select an area tool), with the same summary panel. A plain drag still moves the map.
-
-**Timeline (floating, bottom of the map, to the right of the legend):** opens on **2021–2026**. Drag the handles to keep only projects with
-activity in those years; the button next to the range switches between **All years** and the
-2021–2026 default (**Reset all** also returns to 2021–2026).
-The dropdown picks which milestone must fall in the range. Click a bar to isolate one year, and
-shift-click to extend the range.
-
-**Census baseline follows the timeline:** the Growth tab, an area selection and the census-area
-outlines use the latest census held in or before the timeline's first year: **2021–2026 → 2021
-Census** (11 May 2021), **2016–2020 starts → 2016 Census** (10 May 2016). Planning application
-data starts in 2016, so 2016 is the earliest baseline; an earlier start (or All years) also uses
-2016. "Built since" then counts permits completed since that census day. The 2016 counts come
-from the *Immigration in Peel by DA as of 2016* layer (2016 dissemination areas, total population
-and private dwellings) and match the published totals (Peel 1,381,739; Mississauga 721,599;
-Brampton 593,638; Caledon 66,502). Statistics Canada's own download site blocks automated
-access, so it can't be used directly.
-
-**Selected project → its census area:** opening a project narrows the bottom panel to the
-census dissemination area (DA) its point falls in, for the baseline census year (outlined on the
-map). **Growth** shows that DA's census population and dwellings, then built / approved /
-proposed growth from every development application located in the same DA. **Servicing
-demand** adds up the shown projects (stage, flags and filters) in that DA. The DA pill (×), or
-closing the project, goes back to all of Peel (or the selected municipality / plan / MTSA).
-
-**Growth since the census (bottom panel, Growth since 2021 / 2016 tab):** for Peel, the selected municipality,
-secondary plan or MTSA:
-
-| Tile | Meaning |
-|---|---|
-| 2021 Census | Population and private dwellings (Statistics Canada, by dissemination area). For a secondary plan or MTSA, each DA counts by the share of its land inside the area. |
-| + Built since | Plus units on building permits completed since census day (11 May 2021), at Peel persons-per-unit. Brampton and Caledon publish no completion date, so it is estimated as issue date + 12 months (houses) or + 30 months (20+ units). |
-| + Approved or permitted, not yet built | Plus committed growth (site plan approved, building permit issued or under construction, not yet completed). |
-
-| + Proposed (full build-out) | Plus growth on applications still in pre-consultation or review: the full build-out of the planning applications. |
-
-Each growth tile also gives the jobs added on development sites (from the floor area the
-applications state; existing jobs are not in the census), and a third bar shows jobs.
-
-Two stacked bars (people, dwellings) show the 2021 baseline (grey), built since (green),
-approved (blue) and proposed (hatched blue) up to full build-out; hover or tap a segment for
-its value.
-
-Peel's small geographic unit (SGU) forecasts are not published as open data (only Caledon's are),
-so the census baseline uses dissemination areas. `data/areas.json` is rebuilt weekly
-(`scripts/build-areas.js`).
-
-**Population & servicing demand (bottom panel, Servicing demand tab):** dwelling units,
-population and jobs, then a **Water** table and a **Wastewater** table with residential,
-employment and total rows (L/s: average / max day / peak hour; average dry / peak dry / I&I /
-peak wet). Population, water and wastewater are estimated
-from the units in the projects shown. **The selection is the sidebar's:** the header shows the
-stage, the counting basis, the years and any other filter, with **Change** jumping to the selectors; there
-is no separate selector in the panel. Each project counts all its units, except under the
-**Committed** counting basis (approved or permitted units not yet completed) and the **Left to
-build** counting basis (planned units with no permit yet). Open **Breakdown & criteria** to edit the
-criteria.
-
-**Scale, north arrow and boundaries:** a metric scale bar and a north arrow sit under the zoom
-and select tools; the arrow always points to true north (turned 44° on the road grid), and
-tapping it switches between road grid and north up. At every zoom every shown project's
-planning application boundaries are drawn in its phase colour with a light fill (no cap; each is
-built once and reused as you pan); tap one for its application. Building-permit dots join them
-from street zoom (14), up to 3,000 in view.
-
-**Water pressure zones and wastewater drainage areas** (`data/servicing.json`, built by
-`scripts/build-servicing.js`; Probe data sources mode `servicing-build` rebuilds it):
-- **Pressure zones:** the Region of Peel's 24 published water pressure zones.
-- **Drainage areas:** traced from the Region's sanitary sewer network, since the 2020 Water and
-  Wastewater Master Plan polygons are not published as data. Every pipe (manhole to manhole,
-  through pumping stations) is followed downstream to Lakeview (G.E. Booth), Clarkson or
-  Inglewood WRRF; at a split the larger pipe is followed; small gaps in the published network
-  are bridged to the nearest pipe. The Malton area by Pearson airport drains to the City of
-  Toronto: its 1,200 mm trunk crosses the boundary at Hwy 427 near Derry Road, 3.7 km from the
-  nearest sewer reaching a Peel plant (`UNTRACED=15 node scripts/build-servicing.js --raw …`
-  lists where untraced sewers end). Pumping stations take the names in the Region's 2025
-  Wastewater Collection System report. Areas split at pumping stations and where a tributary of 2,500+ manholes joins a
-  larger trunk (36 areas; 96.9% of 57,512 manholes reach a Peel plant). Plant split reviewed.
-- Each development is tagged by its location point. The map panel's **Areas** fold toggles both
-  layers and has the Pressure zone and Wastewater block filters; the Development tab shows its
-  zone and block.
-- **Analysis column tabs:** **Growth & demand** (demand of the shown developments, then growth
-  since the census), **Water**, **Wastewater** (two views: *Plants & capacity* and *Catchments*),
-  **Developments** (the project list, 25 per page) and **Criteria & references**. Every servicing
-  table opens with a stamp of the criteria it uses and the data dates, with a **Modified criteria**
-  badge when the criteria have been edited; method notes fold under *Method & notes*. Wastewater has two modes: **Capacity check** (default;
-  calibrated to the 2025 reported flows, the basis for capacity statements) and **Design flows**
-  (Peel criteria, for sizing), and a *Details* switch (Engineering shows the Harmon factor and
-  drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
-  WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
-  above 1,000.
-- **Share link** (top bar → Export → Copy share link): copies a link to the exact view — stages, flags, filters
-  (municipality, plans, MTSA, pressure zone, drainage area, size, land use, dwelling type, years), the analysis tab
-  and wastewater view, the mode / max-day / diversion switches, the map position and the open
-  development. The address bar keeps the same link as you work (`#…` parameters).
-- **Export** (top bar): one menu for everything the tracker can hand off. *CSV — developments
-  shown* and *GeoJSON — developments shown* download the filtered list (with provenance columns
-  `portal`, `source_url`, `retrieved_at`, `source_record_id`); *Servicing areas (GeoJSON)* and
-  *Planned works (GeoJSON)* export the GIS layers. *SWMM model (.inp)* exports the 40
-  wastewater blocks as a SWMM 5 skeleton (disabled until the wastewater servicing data is
-  loaded). *Excel workbook (.xlsx)* writes one workbook with fixed sheets — Summary (filters,
-  scenario, data dates, app version, disclaimer), Developments, Records (with provenance
-  columns), Water, Wastewater, DC, Criteria, Sources — always for the current scope and
-  filters; numbers as numbers, units in the headers, second lines such as population as extra
-  columns. SheetJS (cdnjs) loads only when Excel is clicked. Four print-ready PDFs: the *executive briefing* (pipeline headlines,
-  capacity and the DC program), the *development memo* (a one-page servicing memo for the open
-  development), the *area report* (combined demand and capacity for a drawn selection or what is
-  shown) and the *comparison* (the Compare tool's developments and areas side by side, with a
-  totals row) — each opens a printable report (with the mode, switches, filters, data dates, the
-  criteria table with edits highlighted, and references) and starts the print dialog. *Print map*
-  prints the map landscape with a title block, scenario, legend, north arrow and scale.
-  *Inquiry response draft* starts a servicing inquiry draft from what is shown, and *Copy share
-  link* copies the exact view. The Excel Summary sheet, the PDF footers and the CSV header
-  comments carry the unofficial-prototype line. The list-based exports (CSV, GeoJSON, Excel,
-  executive briefing) reflect the developments currently shown — the active scope and filters;
-  the development memo reports the open development and the comparison PDF reports the Compare
-  tool's items.
-- **Default view**: the map opens on the active development applications (application to
-  construction, any year) over the background. On desktop the analysis column opens on
-  **Overview**; on phones it starts as a summary sheet (tap the grip to expand). Map tools (trace a sewer path,
-  select an area, measure, test a site) sit in the tool rail on the map's left edge, below zoom
-  and the north arrow (tap it to switch between road grid and north up).
-  The sidebar has search, a "Showing …" line, and the unified filter panel (Search · Stage · Where · What · When · Flags).
-- **Executive briefing (PDF)** (Overview, top right): one printable Letter page for management —
-  title block with the date, *Prepared by* (set it in Settings, the gear menu in the top bar) and the data date; the
-  headline sentences; growth and demand tiles; servicing demand by phase; the plants' and South
-  Peel water treatment's share of the 90% expansion trigger; room after servicing allocations; a
-  map of the wastewater blocks with the larger developments and the plants; the DC projects to
-  bring forward and those most growth relies on; the criteria and the app version in the footer.
-- **Plain-language headlines**: one sentence at the top of each tab, written from the numbers
-  (e.g. which plant reaches its trigger first, which zone adds the most, how many pumping stations
-  exceed firm capacity, which DC projects come too late).
-- **Servicing allocations**: record a development's allocation (units, date, reference) in its
-  Servicing tab; Wastewater → *Allocations* lists them and gives each plant's room at the 90%
-  trigger after existing + approved development and after allocations made ahead of approval (also
-  on the Overview). Kept in the browser; CSV export / import to share one list.
-- **Data freshness and model checks** (Sources & checks, gear menu): every source with its date, update
-  interval and status (current / due for a refresh / out of date / reference / live), summarised on
-  the Overview; and the model against published figures — 2021 Census population for Peel and each
-  municipality, the share on municipal sewers, population today against the annual report's
-  population served, and the plants' and South Peel water's design-criteria flows against the 2025
-  measured averages (±10% matches, ±25% close; each row explains an expected difference).
-- **Number conventions**: people and jobs are rounded the same way everywhere (whole under 1,000,
-  nearest 10 to 10,000, nearest 100 above); units are exact counts; L/s for pipes, stations and
-  single developments, ML/d for plants, zones and totals; ≈ marks a screening estimate.
-  Capacity and DC results are labelled **screening estimate** wherever they appear.
-- **Analysis tabs**: **Overview** (headline, four tiles, the **Needs attention** card, plant and
-  water treatment capacity bars, the largest developments), **Growth** (Pipeline: by phase and
-  dwelling type, completions per year, median time to approval by municipality; Census & 2051:
-  growth since the census, 2051 allocation, housing targets, population outlook), **Water**
-  (Capacity / Zones / Facilities / Hydraulic check), **Wastewater** (Plants / Blocks / Pumping
-  stations / Allocations), **DC** (Timing / Recommendations / Funding), plus **Development** when a
-  site is open. Each sub-view follows headline → tiles → one chart → one top-N table with "See
-  all" → one ⓘ method line. Tables open in **Simple** columns (the build-out flows and peaks);
-  **Engineering** adds the layer-by-layer and local / upstream columns.
-- **Removed in Phase 4 (moved, not lost):** the **Demand** tab (flows → Water / Wastewater,
-  unit counts → Growth); the **Settings & sources** tab — editable criteria → the **Scenario**
-  control in the top bar (with a Modified criteria badge and Reset to Peel criteria), data
-  freshness / model checks / references → **Sources & checks** (gear menu), number conventions /
-  Prepared by / theme / density → **Settings** (gear menu), record type and New buildings only →
-  Settings → **Records**, change log → the **Help** menu.
-- **Filter by area** (in the filter panel's Where section): the
-  municipality (All · Brampton · Caledon · Mississauga) on top, then secondary plan / character area, MTSA, pressure zone and drainage area (wastewater block). Each is a
-  dropdown of checkboxes with a search and Clear, so several can be picked: a development counts if
-  it's in any pick of a list and matches every list used. Picks are outlined on the map, named in
-  the filter chips and kept in share links and saved views (comma lists; older one-id links still
-  open).
-- **Unofficial banner**: a slim strip at the very top of every screen reads *Unofficial
-  prototype · public data only · not a Region of Peel product*. The same line is printed on the
-  executive briefing, the servicing memo, the area report, the print map, the Excel Summary
-  sheet, the PDF footer and the CSV header comments.
-- **Map layout**: two boxes only. Left edge: zoom, the north arrow, then the tool rail (trace a sewer path, select an area, measure, test a site — one active at a time). Right: **Layers**,
-  one switch per layer — Developments, Wastewater blocks, Pressure zones, Capacity colours,
-  Existing pipes, Planned DC works, Planning areas, Census areas — with the legend built into the
-  layer swatches, then the remaining settings (saved views, development colour / size / labels, capacity shading, existing pipe kinds
-  and size labels, DC works by system, planning area kinds, base map). The view switch (Planning / Water / Wastewater / DC) lives in the top bar and sets the layers; changes are remembered per view. With the blocks as the catchments there is one wastewater area
-  layer (Wastewater blocks), so it can always be switched off. The timeline is a slim strip along the bottom of the screen.
-  move clear of each other and of an open development, and the Layers panel scrolls rather
-  than run into them. When a setting hides the developments (switched off, no growth load on in
-  the Wastewater view, or Hidden while a path is shown) a notice above Layers says why, with *Show
-  developments*; an area filter is always named there too, with *Clear*. The legend box takes the
-  height the panel leaves free, so the two never overlap. Planning area outlines: tap one on the
-  map to filter to it, tap again to clear.
-  Opening a development sets the scope: the site bar appears at the top of the analysis column
-  (address, phase badge, units · people · water max day · wastewater peak wet, zone → plant;
-  actions: trace sewer / water, watch, memo, record allocation, FSR check, compare) and every analysis tab
-  shows that site. The other developments fade on the map and the Layers panel folds. The trace is
-  on the site bar, the *Trace sewer path* tool (tap a development, or any point on the map)
-  and on the → plant chip. The Development tab's Files & history view opens with *How the phase
-  was set*: the file behind the phase, approvals by stage with the latest submission in each, and
-  flags where the status and the submissions disagree (a newer submission in review after an
-  earlier approval, permits issued while planning is in review, a bare "Closed" read as approved,
-  an OLT appeal, a demolition permit, a redevelopment cycle), plus each file's status and how it
-  was read.
-- **Watchlist, saved views, tips**: ☆ Watch on a development adds it to *Your watchlist* (This
-  week tab, changed-this-week first) and the ★ Watched flag. *Saved views* (Layers & style) keeps
-  named filters + map position + view + layers in the browser. An 11-step tour shows once. *Help*
-  (top bar) opens task guides — servicing check for a development, when DC
-  projects are needed, area / secondary plan reports, testing a site, weekly changes, plant and
-  pumping station capacity over time, water by pressure zone, existing mains and ground, saving /
-  sharing / exporting, and how far to trust the numbers — each with *Show me*, which sets the map
-  up for the task; plus quick tips and the tour again.
-- **Reports** (top bar → Export): the *development memo* opens a one-page servicing memo for the
-  open development (proposal, status, flows, sewer path, plant reserve, DC needs, planned works,
-  live site context, a map sketch of sewers by load and DC works) to print or save as PDF. The
-  *area report* (a drawn selection, or *Report* on the Showing line for what is shown) gives
-  combined demand, the capacity relied on with the DC timing, and the largest developments. The
-  *comparison* PDF puts the Compare tool's developments and areas side by side with a totals row.
-  The Excel workbook includes the full DC timing table for a memo or spreadsheet.
-- **Search places**: the search also finds secondary plans / character areas, MTSAs, pressure zones,
-  catchments and pumping stations, DC projects (by number or name) and DC facilities, file numbers
-  by prefix, and intersections ("Main St & Queen St").
-- **Heatmap**: Layers & style → Show as → Heatmap (people + jobs at build-out of the shown
-  developments). Clusters show their phase counts on hover.
-- **Ground elevation** (AWS Terrain Tiles, Terrarium; CDEM / SRTM, no key): the *Measure &
-  ground profile* tool gives the ground at a point and a profile with fall / grade along a line; the
-  development's Servicing tab shows the site's ground and the fall to its catchment outlet.
-- **Selection colour**: the open development's application boundaries, and every development in a
-  lasso selection, are outlined and filled in orange (a colour no phase uses).
-- **Unselect**: tap an empty part of the map, press Esc, or use *Clear selection* (bottom of the map)
-  to close the open panel (closing the drawn-area summary also removes the drawn areas; the lasso
-  hint has a Cancel button) and clear the highlighted development, catchment / zone, drawn selection,
-  address pin and highlighted mains; filters stay. In the Water and Wastewater tabs the tables scroll
-  inside the panel with their column headers kept in view.
-- **Map views**: *Planning* (aerial, addresses, markers by phase), *Water* (street map, pressure
-  zones shaded by max day growth, markers by servicing layer sized by people + jobs, existing
-  watermains, DC water works), *Wastewater* (drainage areas, sewer pipe capacity, existing sanitary
-  sewers, DC wastewater works) and *DC* (markers by servicing timing, all DC works). Each view
-  remembers its own settings. Every view shows the same developments and site boundaries; the
-  servicing views no longer switch on the *Growth* focus, which hid applications with no unit or job
-  count (e.g. 11722 Mississauga Rd). On a phone a long Layers summary is cut short with … rather
-  than widening the box off the screen. *Layers & style* is grouped into Developments, Capacity,
-  Infrastructure (on / off chips for zones, catchments, existing pipes, DC works and the DC timing
-  table) and Base map. Under *Layers & style*: marker colour (phase / servicing layer / receiving plant), size (same / people + jobs;
-  clusters then total people + jobs) and a **capacity layer** — catchment flow growth over the
-  census, pumping station build-out peak wet weather flow as % of firm capacity (green / amber /
-  red), or pressure zone max day growth — with the sewer network drawn outlet to outlet. A legend
-  explains what is shown.
-- **What loads this?**: tap a catchment, pumping station, pressure zone or plant (on the map or in
-  the Water / Wastewater tables) for the developments adding flow since the census through it,
-  largest first, with built / approved / proposed totals; open one and come back to the list.
-- **Scenario chip** (top bar): wastewater mode, water max day factor, the diversion,
-  outside-area assignment and modified criteria in one place (click to open the full control),
-  summarised on every tab, the map legend, exports and share links (map style is in the link too).
-- **Compare scenarios**: in the Scenario bar, *Pin this scenario as A*, change the switches, and
-  see plant existing + approved and build-out % (A, now, Δ), pumping stations over firm capacity
-  and total water max day side by side.
-- **Linked map and tables**: hovering a zone / catchment row outlines it on the map, hovering an
-  area highlights its row; *Only areas in map view* limits the rows to what is on screen.
-- **GIS export** (top bar → Export): developments as CSV / GeoJSON now carry servicing layer,
-  build-out people and jobs, flows in L/s, pressure zone, catchment and plant (with the distance
-  when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
-  and build-out flows and pumping station load. *Print map* prints the map landscape with a title
-  block, scenario, legend, north arrow and scale.
-- **Tools** — one home per tool, one tool active at a time. The rail on the map's left edge
-  holds the map tools, in order: *Select* (developments: tap one, draw a lasso, or hold Ctrl /
-  ⌘ and drag a box), *Measure & ground profile* (tap points for the distance and the
-  ground profile, or select developments within a radius), *Trace* (a sewer path to the plant,
-  or a water route from the plant, from any point), *Test a site* (servicing check for a
-  proposed development: tap where it is, enter units by type, jobs and site area; tick "Count it"
-  to add it to the totals; kept in this browser, draggable — while any exist, a bar at the bottom
-  of the map shows *N test sites* with *Remove all* and *Undo* for a few seconds after),
-  *Inspect point* (what is at a point: sewers, watermains, pressure zones and plants nearby),
-  *Corridor select* (developments along a drawn corridor), *How many more units fit?* (the
-  remaining unit capacity of an area). While a tool runs, a banner says what to do and Esc finishes. Tool
-  results open in the **Tool result tab** (trail: Peel › …), never as pop-ups. Elsewhere:
-  *Compare* lives on the site bar (adds the open development) and in its tool module;
-  *Upgrade this pipe* lives on a tapped sewer pipe; *DC timing* lives in Layers → DC timing and
-  on DC map features; *Area report* lives on feature results and the Showing line; *Memo* lives
-  on the site bar; *Inquiry response draft* lives in Export; *Help & tips* lives in the top bar.
-  - *Moved:* the Overview **Tools** card is gone (its buttons duplicated the rail); the **?**
-    button on the map is gone (Help's home is the top bar button); "What loads this?" for
-    catchments, zones, plants, pipes and DC works moved from the #detail side panel into the
-    Tool result tab, with actions (area report, show upstream, upgrade a pipe) on each result.
-  - *Kept where they were:* the sewer-profile chart dialog (a modal, not a tool result), the
-    block panel (its own view with upstream blocks), Present (a mode, not a tool).
-- **Wastewater blocks** (Layers & style → Infrastructure): the Region of Peel's 40 sewersheds for its
-  inflow & infiltration program (`data/blocks.json`, from its *Block_view* feature service; the blocks
-  of "Dragonfly: An Integrated Approach to Resiliency", F. Salehzadeh, WEFTEC 2024), with the blocks
-  prioritised for a block study highlighted; each block's number sits at a point inside it (`lp`), in
-  the marker pane so it stays on its block when the map is turned to the road grid. Tap a block for its outlets on the existing sewers (main
-  outlet with capacity and people upstream), the blocks it drains into down to the plant and the
-  distance along the pipes, the blocks upstream and the growth inside it; arrows on the map follow the
-  sewers to the plant. Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).
-- **Flow arrows follow the pipes**: a selected catchment's (and block's) arrows to the treatment plant
-  run along the Region's sanitary mains (`data/sewers.json`), not straight outlet-to-outlet lines.
-- **Pipe depths in the ground profile** (Measure): the Region's sanitary sewer inverts along the line
-  (nearest main within 12 m), with depth to invert = ground − invert (approximate: terrain tiles are
-  ±1–2 m); watermains within 8 m are drawn at Peel's 1.7 m minimum cover, labelled assumed, since the
-  Region publishes no watermain depth.
-- **Data quality colours**: outside every area, assigned to the nearest, no units / floor area,
-  site area estimated, complete.
-- **Results for year** (Scenario bar): the year the
-  map's results are worked out for. It opens on the current year (the census + built since, with
-  approved and proposed growth phased in as set in Horizon years) and slides to build-out, so
-  catchments, pumping stations and pipes change colour as growth arrives; the pipe and station
-  panels and a development's tightest pipes follow it.
-- **Results stay visible zoomed in**: the live existing pipes (from zoom 15) draw under the sewer
-  screen's capacity colours, and from zoom 16 each pipe is labelled with its capacity used (with
-  its size when Size labels is on).
-- **Tapping a pipe works with nothing selected**: the canvas the development dots are drawn on no
-  longer swallows taps meant for the pipes and areas below it; a tap or hover it doesn't hit is
-  handed to the canvases underneath (pipes, catchments, census areas).
-- **DC Analysis** (analysis tab): every 2026 DC project that relieves a capacity constraint
-  (sanitary sewer groups, pumping stations, the plants, water treatment and supply into the upper
-  zones) or serves developments outside the existing network, replayed year by year with growth
-  phased as in Horizon years. **Diversion:** from each project's construction year, flow above
-  the existing capacity goes to the project, up to the capacity it adds (a main along an existing
-  sewer at Manning full-pipe capacity for its diameter on the existing slope, a twin when the size
-  isn't mapped; a plant expansion at its published step; other facilities taken as sized for
-  build-out). **Cancelled:** the same without that one project; the growth held back is given in
-  people (each constraint's own rate) and units (the approved and proposed developments' average
-  persons per unit) at the chosen year and at build-out; developments that would connect to a new
-  main count in full. **Recommendations:** Keep · advance (online after the capacity runs out),
-  Keep, Keep · could defer (nothing held back until 5+ years after it is due), Review (nothing
-  held back by build-out in this screen); the five largest impacts are listed first. Tap a row
-  for each constraint's timeline (demand, capacity with and without, flow diverted to it) and
-  *Show on the map*; CSV export with the impact by year. A screen to rank and question projects:
-  condition, I&I reduction, servicing beyond today's applications and cost are not in it.
-- **Freeboard**: each pipe's flow depth and freeboard (D − y) from Manning part-full flow in a
-  circular pipe, y / D from Q / Q_full (e.g. 85% of capacity ≈ 0.71 D deep); in the pipe tooltip,
-  the pipe panel and its *How the flow is calculated* table, and on a development's tightest pipes.
-  Over 100% the pipe runs full: no freeboard, with the rise above the crown shown instead.
-- Census area outlines are now off by default (turn on under Layers & style).
-- **Planned works (2026 DC capital maps, draft)**: `data/dc-infra.json`, built by
-  `scripts/build-dc-infra.py` from the Region's water and wastewater Development Charges capital
-  maps (geospatial PDFs fetched by the probe workflow, `mode=dc-maps`). Proposed (2027–2051) and
-  approved (2026) mains with construction year, component and project numbers and diameter, inset
-  maps placed through their extent boxes and georeferenced from the PDF (a few metres); facility
-  schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
-  route descriptions joined from the 2020 DC Background Study by component number. Used for:
-  - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
-    works after the results year are faded);
-  - the development brief: the planned main it would connect to, trunks and facilities on its sewer
-    path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
-    development outside the existing network relies on a main not built until later; a marker
-    colour *Servicing timing (2026 DC)*;
-  - **greenfield connection**: a development outside the traced network takes the catchment / zone
-    of the planned main it would connect to (within 1 km) before the nearest-area rule;
-  - **plant expansions** in Horizon years: G.E. Booth +40 ML/d by 2028 (council-approved February
-    2024) and 600 ML/d after the 2036 construction, Clarkson 500 ML/d after the 2026–2028
-    construction; the years are editable and the expansions can be switched off;
-  - *What loads this?* lists the planned works for the catchment / zone / plant; *Planned works
-    (GeoJSON)* exports them.
-- **Address search**: the search box suggests matching developments and street addresses (Esri
-  World Geocoder, falling back to OpenStreetMap Nominatim, limited to Peel); picking one, or
-  pressing Enter, pans and zooms the map there (a development also opens; an address gets a pin).
-- Street basemaps are Esri's light grey canvas and World Street Map (no API key).
-- **Sewer pipe capacity screen**: `data/sewers.json`, built by `scripts/build-sewer-capacity.js`
-  from the Region's sanitary mains (diameter, slope, inverts, install year, risk rating;
-  `scripts/fetch-linework-raw.js`, probe `mode=sewer-build`): every pipe of 300 mm or more with its
-  Manning full-flow capacity (n 0.013) and the 2021 Census population and land draining through it
-  (flow shared at splits by capacity; loops broken). Pipes that only look connected are kept apart:
-  a dead-end stub leaving a manhole whose main pipe carries on (a chamber, siphon or overflow stub;
-  62 of them) takes no flow, and a loose end more than 25 m from the next sewer joins the nearest of
-  the same size or bigger (any size only when none is in reach). Before this, a 1,500 mm trunk stub
-  at Old Derry Rd was joined across the Credit River into a 675 mm local sewer, which showed 231%;
-  it now shows 13%. Twinned trunks that a false join had cut off now share the flow, and 17 fewer
-  pipes screen over capacity. In the app each development since the census
-  joins the nearest of these pipes and its load is carried down the network: existing load at
-  peak dry weather (scaled to the plant's measured flow in the capacity check), growth at design
-  peak wet weather. Capacity layer *Sewer pipe capacity* (year slider aware), the development
-  brief's local and downstream tightest pipe, and *What loads this* for a pipe. A screen, not a
-  hydraulic model. Slopes published under 0.01% (six trunks, e.g. a 3048 mm main at 0.002%) are taken
-  as data errors: no capacity, grey, left out of tightest-pipe checks. Colours give the flow state: **green** under 85% of full-pipe capacity (free
-  flowing), **orange** 85–100% (near full), **red** over 100% (surcharged). Tapping a pipe shows
-  *How the flow is calculated* with its numbers: existing people × rate ÷ 86,400 × Harmon × the
-  plant calibration; growth residential + employment + I&I at design rates (phased to the slider
-  year); Q; Manning capacity from diameter and slope; Q / Q<sub>full</sub>; and, when surcharged, the
-  hydraulic gradient needed (S<sub>f</sub> = S × (Q / Q<sub>full</sub>)²) and how far the water level rises
-  above the crown over that pipe. The calculation is a results table (today and the slider year:
-  existing, growth residential / employment / I&I, Q, capacity, % used, state, surcharge); each row's
-  ⓘ opens its formula with that pipe's numbers.
-- **Trace a development to the plant** (development → Servicing → *Trace the path to the plant on the
-  map*): a dashed line from the site to the 300 mm+ sewer it joins, then every pipe to the treatment
-  plant coloured by its capacity state with flow arrows, the pumping stations passed and the plant;
-  the panel gives the length and number of pipes, the wastewater blocks passed and the tightest pipe
-  (each a link). Also for test sites.
-- **Developments on / off** (map panel, every view): hides or shows all development markers, labels and
-  site outlines (remembered).
-- **Wastewater loads** (own box, bottom right of the map, Wastewater view; always in sight): *Census (existing) · Built since · Site plan
-  approved · Proposed (in review)*; each controls both the development markers shown and the load put on the
-  sewers (capacity colours, a pipe's flow table, the trace's tightest pipe). All on = full build-out
-  conditions; the legend lists the loads when some are off.
-  Site boundaries stay on the map whatever these switches say: a development whose layer is off
-  has its boundary dashed and faint, with "Not in the wastewater loads" in its tooltip.
-- **Resizable analysis column**: drag its left edge (or focus it and use the arrow keys)
-  to give the map more or less room; on a phone, drag the bottom sheet's grip, or tap it to step
-  summary → half → full. Widths and snaps are remembered.
-- **Paths over developments**: flow paths (a development trace, a catchment's or block's route) draw
-  above the development markers, and the markers fade while a path is shown; *Developments: Show ·
-  Faded · Hidden* in the bottom bar picks how (remembered). The map fits the path into the part not
-  covered by the panel.
-- **Tap an existing sanitary sewer** (Existing → Sanitary): a 300 mm+ sewer opens the same pipe in the
-  network screen, with every development draining through it and how its flow is calculated; a
-  smaller local sewer (not traced) lists the developments within 100 m that likely connect to it and
-  links to the nearest 300 mm+ sewer.
-- **Existing pipes** (Layers & style): Region of Peel watermains and sanitary sewers, Mississauga /
-  Brampton / Region storm sewers, loaded live by map area from zoom 15 (cached by ~1 km tile); tap
-  for diameter, material, year, slope; *Size labels* labels each pipe (and the sewer capacity
-  layer) with its diameter. While the sewer capacity colours are on, the existing sanitary sewers
-  carry no labels of their own (they covered the capacity labels, which show size and %); their
-  size stays in each pipe's tooltip. The development's Servicing tab reports every existing main of each type
-  within 100 / 200 / 400 m — size, material, year, the street it runs along (reverse geocoded:
-  ArcGIS World, then OpenStreetMap) and distance, pieces of the same main merged; tap one to see it
-  on the map — and the oldest / moderate-risk sanitary sewer on the site's path (first
-  3 km, from `data/sewers.json`).
-- **DC needs** (development brief, DC main / facility panels, *DC timing* in Layers & style):
-  existing capacity against the 2026 DC capital program. For each constraint a development relies
-  on — sanitary sewers on its path at 90%+ of full-pipe capacity by build-out (grouped by the DC
-  main that runs along them, i.e. a twin or replacement), pumping stations (master plan firm
-  capacity), the plant (90% of rated), the water treatment system (South Peel or Caledon wells,
-  90% of rated max day), storage (master plan assessment) and the large mains into its pressure
-  zone level (rough, 1.5 m/s; `data/water-supply.json` from `scripts/build-water-supply.js`) — the
-  room after existing + approved development in people and units, the year approved and proposed
-  growth uses it up (Horizon years phasing), and the relieving DC project. Red when it runs out
-  before the DC project (or none is planned), orange "check the data" when the census flow alone
-  exceeds the full-pipe capacity from the published slope. Tap a DC main or facility for what it
-  relieves and the developments relying on it.
-- **Fire flow and stormwater** (development brief, live): Region hydrants within 150 m (count,
-  nearest, recorded pressure zone, flagged against the mapped zone) and the nearest large
-  (750 mm+) watermain within 1.5 km — hydrant flow tests are not published; the nearest
-  stormwater pond within 1 km (Brampton with design controls and risk grade, Caledon with
-  assumption status; Mississauga publishes none) and the watershed / subwatershed.
-- **Outside the mapped areas**: a development outside every pressure zone or traced drainage
-  area is assigned to the nearest one within 5 km of its edge (greenfield lands beyond the existing
-  network, gaps in the trace) and marked "nearest" in the panel and tables; the Water / Wastewater
-  switch "Outside mapped areas: Leave out" restores the strict boundaries. Farther away it is left
-  out (likely private well / septic).
-- **Servicing check** (Development tab): the whole development's flows at Peel design criteria
-  (L/s as in an FSR, ML/d below), its pressure zone and share of the zone's build-out max day, the
-  traced sewer path from its catchment to the plant with its share of the flow at each outlet, and
-  what it means for the plant's uncommitted reserve (built / approved are already counted,
-  proposed would draw on the reserve). Pumping station and trunk capacities aren't published by
-  the Region, so only the plant is checked against capacity.
-- **Water** and **Wastewater** tabs (bottom panel). Like the Growth tab, each row is split into
-  the census baseline (year from the timeline), + built since census day, + approved and +
-  proposed (in review), adding up to build-out, with a stacked bar of that split; growth from
-  every development in the zone / catchment, other filters ignored. Flows are residential plus
-  jobs on development sites (existing employment is not in the census baseline). Census
-  population is shared out by **area overlap** (`data/svc-census.json`, built by
-  `scripts/build-svc-census.js` from ~400 sample points per dissemination area; about 10% of
-  people sit in a different area than with the DA centre point). Click a row to outline and zoom to it on the map
-  (click again to clear).
-  - **Water:** pressure zones in numerical order; maximum day in ML/d (people and jobs below each
-    figure) and peak hour at build-out. The max day factor switches between Peel design (×1.8)
-    and the factor observed at the South Peel plants in 2025 (×1.40). Below the table: 2025
-    production reported by the Region (Arthur P. Kennedy and Lorne Park plants, the five Caledon
-    groundwater systems) beside the model.
-  - **Wastewater (ML/d):** the catchments are the Region's **40 wastewater blocks**
-    (`data/blocks.json`, the sewersheds of its I&I program), building up block by block along the
-    sewers to the plants on the lake. `scripts/build-blocks.js` gives each block its place in the
-    flow from `data/sewers.json`: its main outlet (the pipe leaving it that carries the most
-    people, `outletAt`, `trunkMm`), the block that outlet's pipes reach next (`into`, walking past
-    pipes outside every block) and its plant; e.g. 26 → 25 → 24 → 22 → 16 → G.E. Booth. It also
-    records how much of each block the sewers serve (`served`, `servedHa`: each pipe's own share
-    of the people and land draining through it, summed): census people are by dissemination-area
-    centre less the unserved share, I&I uses the sewered land, and developments in rural Block 40
-    (mostly on septic) go to the nearest sewered block unless they sit by its own sewer. Without
-    `data/blocks.json` the app falls back to the traced drainage areas of `data/servicing.json`
-    (`downstream`, `outletAt`).
-    Rows run from the top of each sewershed (furthest outlet first) down to the plant, whose last
-    row is its total inflow; then a Peel total, with Malton (City of Toronto) listed separately.
-    Each row shows where the flow comes from — **local** (the catchment's own build-out population
-    and average flow) **+ upstream** (everything draining into it) — and what it is made of —
-    census **+ built since + approved + proposed** — both adding up to the **total** average dry
-    weather flow at its outlet; then **peak dry weather** (total average × Harmon M on the total
-    population), **I&I** (0.26 L/s/ha on the whole traced drainage area to the outlet) and **peak
-    wet weather** (peak dry + I&I). Clicking a block shades everything upstream and draws flow
-    arrows along the pipes down to the plant. Below the table, **pumping stations**: each master
-    plan station's firm capacity against the build-out flow in the sewer arriving at it (people,
-    growth and land upstream from the pipe network); tap one for the developments draining
-    through it.
-
-- **Plants** tab: first each plant beside its 2025 annual report — rated capacity, reported
-  average and highest day, the model today (census + built since + external inflows) and a
-  calibration factor (reported ÷ model). Then each plant's total inflow (Lakeview, Clarkson,
-  Inglewood, the Peel total, and Malton / City of Toronto separately) as census + external
-  inflows (York Region 36.1 ML/d to G.E. Booth; City of Toronto 30.2 ML/d, plant not stated, in
-  the Peel total) + built since + approved + proposed = build-out: population and jobs, average
-  dry, peak dry, I&I and peak wet weather in ML/d, and average as a % of rated capacity. A growth
-  layer's peak is the increase in the plant's peak when it is added (peaking is not additive),
-  with the running total below; I&I sits with the existing system.
-- **Calibrated to 2025 flows** (Wastewater and Plants tabs) scales each plant's population and
-  employment flow so the model today matches its 2025 reported average (G.E. Booth ×1.63,
-  Clarkson ×1.19 on the 2021 baseline); the factor absorbs existing employment and institutional
-  flow, dry-weather infiltration and anything not modelled. I&I is not scaled.
-- **Plant capacity chart** (top of the Plants tab): each plant's average dry weather flow as a %
-  of its rated capacity, stacked existing (census + external inflows) → built since → approved →
-  proposed, with a 100% line. The gap from existing + approved up to 100% is the **uncommitted
-  reserve capacity** (Ontario MECP Procedure D-5-1: rated − existing − committed), shown as a
-  dashed box with its population equivalent at the plant's flow per person today, plus what is
-  left (or short) after proposed applications and the **population at 100%** = (rated − external
-  inflows) ÷ flow per person. It follows the Flows and diversion switches; D-5-1 uses measured
-  flows, so *Calibrated to 2025 flows* is the matching basis. Population equivalents are skipped
-  where too few census people map to the sewershed (Inglewood).
-- **Horizon years** (Plants & capacity): each plant's average dry weather flow as a % of rated
-  capacity from 2025 to 2051, with approved growth phased in over a set number of years (default
-  2026, 5 years), then proposed growth (default 2028, 10 years), optional further growth beyond
-  today's applications (people per year, shared by today's population) and the diversion from its
-  start year. A table gives 2025 / 2031 / 2041 / 2051 and the year each plant reaches 80%, 90% and
-  100%. Assumptions are editable and kept in the browser; hover shows each year's values.
-- **70 ML/d diversion** switch (Plants tab): models the planned east-to-west diversion from
-  G.E. Booth to Clarkson (operational 2027–2028 per the 2025 reports) as a fixed transfer, taken
-  off G.E. Booth's average and peaks and added to Clarkson's at every growth layer; the Peel
-  total is unchanged. On the 2021 baseline, calibrated build-out moves from about 107% to 94% of
-  G.E. Booth's rated capacity and from about 70% to 90% of Clarkson's.
-
-**2020 Master Plan** (`data/peel-reports.json` → `masterPlan`; Probe data sources mode
-`masterplan` downloads Volumes 1–4 as text to the `ref-docs-mp` branch):
-- Pumping stations: firm capacities of the 31 lake-based stations (Vol. 4, Table 6) are matched to
-  the traced pumping-station areas, and each station is loaded by the sewer arriving at it (the
-  pipe within 120 m carrying the most people). The Catchments table, the development servicing
-  check (the stations on the development's own pipe route) and the capacity layer show the
-  build-out peak dry and peak wet weather flow (design criteria) as a % of firm capacity; the
-  Region expands a station when peak wet weather reaches firm capacity. Peak wet is approximate
-  (I&I on the land draining through the published 300 mm+ network). Hover a station for the master
-  plan's note (e.g. McVean: exceeds firm capacity before 2026, +700 L/s needed).
-- Plants: the 90% line in Horizon years is the Region's expansion trigger (Vol. 4, s. 2.3.1).
-- Water storage: the Region's storage assessment (Vol. 3, Table 12; required vs available, 2019–2041)
-  and storage criteria in the Water tab.
-
-**Development panel** — high level first, details on demand:
-1. **Header**: phase, units / people / jobs, pressure zone, receiving plant, last activity, and
-   flags (under appeal, stalled 2+ years, a pumping station at or over firm capacity at build-out,
-   plant over-committed or past the 90% expansion trigger).
-2. **Brief** (always shown): *Status* — the dated event behind the current phase, the main signal
-   in the status text and a stall flag with its likely cause; *Latest decision* — the most recent
-   council / committee item with a decision: verdict, the motion (shortened, and on a consent
-   report the clause naming this file), the vote, the requirements on record across all items
-   (holding provision, servicing / allocation, stormwater, Region of Peel comments, draft plan
-   conditions, agreements, Section 37…; infrastructure items highlighted) and the issues raised;
-   *Servicing* — water max day / peak hour and share of the zone, wastewater peak dry / wet, the
-   most loaded pumping station and the share of the plant's uncommitted reserve; *Build-out*;
-   *Proposal*. Summaries are extractive (`js/brief.js`): every phrase comes from the agenda /
-   minutes text.
-3. **History**: progress bar, status signals, and one dated list, newest first by year — phase
-   changes (weekly check, with the event that moved it), council and committee items (open for
-   motion, requirements, concerns, reports, correspondence and minutes), file events and permits.
-   *Key events* counts permits per year; *All dated events* lists each one.
-4. **Servicing** (flows, sewer path, plant reserve, demand by stage), **Units, jobs & build-out**,
-   **Aerial check** (runs when opened) and **Source records**, collapsed. Every source record
-   shows its portal (e.g. *City of Brampton Open Data*), a link to the record in its ArcGIS
-   FeatureServer layer (queried by object ID), and the pulled-on date (the snapshot build date,
-   or the live-load time after Refresh live). The header shows *Data as of \<date\> · \<n\>
-   sources*, linking to the sources list.
-
-`data/council.json` is built weekly by `scripts/build-council.js` from the Mississauga, Brampton
-and Caledon eSCRIBE portals (planning committees, council, general committee, since 2019; only
-meetings in the last 120 days are fetched again), and loaded only when a development is opened.
-
-**Applications against the 2051 forecast** (Growth tab, below the growth chart): for each
-municipality, the 2051 population, unit and job growth allocated by the Region (Land Needs
-Assessment Report Update, draft municipal allocation, appendix pp. 5.2-109 / 5.2-119; Peel 2.28
-million people and 1.07 million jobs by 2051) beside the growth already in the pipeline since the
-census — built, approved, proposed — and what is still to be planned for. Units are the fairer
-comparison (design persons per unit are higher than average household size).
-
-**References** (Criteria & references tab, `data/peel-reports.json` → `standards`): the Peel Linear
-Wastewater Standards, the Water and Wastewater Modelling Demand Table (Aug 2024), the Watermain
-Design Criteria (2010), the FSR requirements, the 2020 Master Plan, the 2020 DC Background Study,
-MECP Procedure D-5-1 and the MECP design guidelines, and the Fire Underwriters Survey — each with
-what is used from it, checked against the documents (Probe data sources mode `refs-council`
-downloads them to the `ref-docs` branch).
-
-**Region of Peel 2025 annual reports** (`data/peel-reports.json`, listed under References in
-Breakdown & criteria): the [wastewater annual reports](https://peelregion.ca/water/wastewater/wastewater-annual-reports)
-(G.E. Booth, Clarkson, Inglewood, Collection System) and [water quality reports](https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports)
-(Drinking Water in Peel Summary, South Peel, four Caledon systems) were read in full; figures
-are kept with their report page numbers. The sandbox can't reach peelregion.ca, so Probe data
-sources mode `peel-reports` (`scripts/fetch-peel-reports.js`) downloads them to the
-`peel-reports` branch. Key points for this tool: G.E. Booth averaged 427.8 ML/d in 2025, 83% of its
-518 ML/d rating, with 7 wet-weather bypasses (725 ML) and a ~70 ML/d diversion to Clarkson planned
-for 2027–2028; Clarkson 211.9 of 350 ML/d (61%); Inglewood 102 of 243 m³/d (42%); South Peel
-water 580 ML/d average against 1,700 ML/d of plant capacity, with a maximum day about 1.4× the
-average.
-
-**Map orientation:** opens on **Road grid**: the map is turned 44° so Peel's concession grid
-(Hurontario, Dixie, Mavis…) runs up the screen and east–west streets (Steeles, Queen, Dundas…) run
-straight across. Switch to **North up** in the map options (top right). Rotation uses the
-[leaflet-rotate](https://github.com/Raruto/leaflet-rotate) plugin.
-
-**Aerial photos** are drawn 40% transparent (60% opacity, as one layer) so project dots, boundaries and census lines stand out; road and place labels stay fully opaque.
-
-**2021 census areas:** the 2021 Census dissemination areas show as a light border by default
-(untick **2021 census areas** in the map options to hide them; the swatch beside the toggle shows
-the line). The border gets thicker as you zoom in so it stays visible at street scale, and over
-aerial photos it is a white line with a faint dark halo so it reads on bright roofs and pavement (white over aerial photos, grey over the street
-map); hover or tap one for its 2021 population and dwellings. The outlines (`data/das.json`,
-simplified to ~4 m, about 0.8 MB) load after the map opens, and are built by
-`scripts/build-areas.js` with `data/areas.json` (Probe data sources, mode `areas`).
-
-**Select an area:** the select tool under the zoom buttons turns the next drag into a lasso (with a mouse, the
-middle button still drags the map while the lasso is on; Esc cancels). The
-projects shown on the map inside it are added up in the selection panel: planned / permitted /
-completed / left by unit type plus employment, servicing demand (residential + employment, for
-the total, completed and remaining units, peaked as one area), and growth since the 2021 Census
-(census population of the dissemination areas whose centre is inside, plus built, approved and
-proposed growth). **+ Add area** draws another area into the selection, × removes a project,
-and opening a project gives a link back to it. The selection's area report is on the selection
-summary; the filtered list can be downloaded as CSV or GeoJSON under top bar → Export.
-
-**Export** (top bar): download the filtered projects as CSV or GeoJSON, the Excel workbook, or the print-ready PDFs.
-
-## Existing water facilities
-
-**Layers → Water facilities** shows the Region's existing water facilities: treatment plants,
-pumping stations, reservoirs, elevated tanks, standpipes, boosters, wells and re-chlorination
-stations. The layer is on by default in the Water view. **Water → Facilities** lists them
-by transmission system.
-
-`scripts/build-water-facilities.py` builds `data/water-facilities.json` from these sources:
-
-- **Locations:** the Region's open data (`water_infrastructure` layers 1–3), on the
-  `servicing-raw` branch.
-- **Capacities:** the 2020 Master Plan, Volume 3.
-  - Tables 4–6: each pumping station's pumps by the zone they feed, with installed, firm and
-    actual firm capacity.
-  - Table 7: reservoir and tank volumes.
-  - Tables 9, 11 and 12: treatment, pumping and storage against the forecast to 2041, with
-    shortfalls flagged.
-- **Plant ratings and 2025 flows:** the drinking water reports.
-- **Planned works:** linked from the 2026 DC maps by name.
-
-**Water capacity by growth layer** (Water → Treatment & capacity) uses the same bars as the
-wastewater plants: existing, built since, approved and proposed, with the uncommitted reserve.
-
-- **Treatment** compares South Peel and the Caledon well systems against their rated capacity.
-  Existing is the 2025 measured maximum day, with growth added at Peel's design criteria, the same
-  basis as the Overview.
-- **Pumping into each pressure zone** compares the firm capacity of the pumps that lift water into
-  zone n or above against the design maximum day of zone n and every zone above it.
-
-Alloa's location isn't published, so it is listed in the table but not shown on the map.
-
-## Sewer profile
-
-**⌇ Sewer profile along this path** (in a sewer trace's summary) and **Sewer profile downstream** (in a pipe's panel, about 3 km) open a long-section of the sanitary sewer:
-
-- **Ground**: from terrain tiles (AWS Terrarium), sampled at each pipe's ends and middle. Accurate to roughly ±1–2 m, and it can miss creek crossings, so the ground can look lower than the pipe where a trunk crosses a valley.
-- **Pipe**: drawn from the published upstream and downstream inverts and the diameter (`invertUp`, `invertDown` and `lengthM` in `data/sewers.json`, from the Region's wastewater mains layer). About 200 of 14,057 pipes have no inverts; these are estimated from the next pipe and the slope, and drawn dashed.
-- **Sewage**: the flow in each pipe at the results year and scenario (the same model as the capacity colours), drawn at its Manning normal depth (n = 0.013). Blue means part full, orange means 85–100% of capacity, and red means surcharged. For a surcharged pipe a red line shows the hydraulic grade, rising upstream from the crown at Sf = S0 × (Q / Qfull)².
-- Hover or tap the profile for a pipe's invert, ground, cover, flow vs capacity, and freeboard or surcharge height.
-- **Click a pipe** on the profile (on a phone, tap it, then *Show on the map*) to close the profile and zoom to that pipe on the map. The pipe is marked with its size and % of capacity, and the bar at the top of the map has *‹ Back to profile*, *Pipe details* and × (clear). On a phone the bottom sheet drops to 30% while you look; going back restores it.
-- Long paths have windows: whole path, the first 2 km, and ±1 km around the tightest pipe (the default above 8 km).
-
-This is a screening view, not a hydraulic model. It shows normal depth pipe by pipe, so it ignores backwater from downstream, drops and manhole losses.
-
-## Applications in a development, related applications and drilling down
-
-- **Applications in this development** (Overview tab, when a development has several files): each
-  formal application once, with the pre-consultation on its land (same civic address or
-  overlapping boundary) nested under it. Open any one to see it **on its own**, with the same
-  tabs (Overview, Demand, Water, Wastewater, DC Analysis, History): the application, its
-  pre-consultation and the building permits inside its land. *← Whole development* goes back.
-  On the map the application stands out in purple, with the rest of the development dashed in
-  orange (a key sits at the top of the panel), and the map fits the application. Hovering a file
-  in the lists previews it on the map in purple.
-- **Related applications**: other developments with a file on the same land, either overlapping
-  by at least 15% of either boundary or at the same civic address. Neighbours that only share an
-  edge don't count. Each link says how they relate (covers / within / overlaps / same address).
-  For example, the precinct 52-6 pre-consultation PRE-2026-0007 lists the draft plan OZS-2025-0035
-  on its land. That development lists the block plan whose land it overlaps, OZS-2025-0033 at
-  10869 Heritage Rd (2,656 units), with its pre-consultation PRE-2024-0117. *← (development)*
-  goes back across.
-- **No double counting**:
-  - A file opened on its own is a view and is never added to a total.
-  - Pre-consultation units are never counted, because the formal application repeats them.
-  - Each file appears once in a development's list.
-- **"0" addresses**: "0 Heritage Rd" and similar addresses are placeholders for land with no
-  civic number, used for many unrelated files along one road. They no longer group files into one
-  development. Such files group by land (boundaries and location) instead. 334 files at 125
-  placeholder addresses were affected. Previously "0 Heritage Rd" merged a 13-tower site, two
-  precinct draft plans and their pre-consultations, and counted only the largest file's units.
-  Across Peel this adds 50 developments and 1,382 active units that the merging had hidden.
-- **Precinct and block plans**: a draft plan of subdivision inside a precinct or block plan is
-  its own development, linked through *Related applications*. Before this, a 114 ha precinct
-  plan absorbed every draft plan inside its boundary. The precinct plan counts only the units its
-  draft plans don't already carry, and says so. Example: precinct 52-2, OZS-2025-0014 at
-  10344 Mississauga Rd, holds three draft plans as separate developments with 259 units:
-  - OZS-2026-0034 at "0 Mississauga Rd" (207 units);
-  - OZS-2025-0015 at 10512 Mississauga Rd;
-  - OZS-2025-0017 at 10916 Mississauga Rd.
-
-  The area plan's servicing tabs (Demand, Water, Wastewater, DC Analysis) show the whole area:
-  its own remaining units plus its draft plans. Its header says "whole area: plan + N draft
-  plans". This is a view; each draft plan still counts once, in its own development. Infiltration
-  is counted on the draft plans' land, not the whole precinct boundary. Example: precinct 52-2
-  shows 41.7 L/s peak wet for its 259 units.
-
-  Site plans and condos inside a subdivision are still part of it. Peel's unit total is
-  unchanged (+1 unit), with 17 more developments. Each related link reads *within* / *covers* /
-  *overlaps* / *same address as* the file it matches.
-- **Are the files in a development related?** An audit checks every development with several
-  planning files: each pair should share land (at least 15% overlap) or a civic address. 1,167
-  developments have several files, and 7 contain a file that doesn't connect to the rest. Those
-  are phased master-planned communities (e.g. Lakeview Village) and neighbouring parcels that one
-  owner filed together. Two grouping errors are fixed:
-  - Brampton's "unit-civic" addresses ("102-499 Main St S" is unit 102 at 499 Main St S) were
-    read as number ranges. "10-499 Main St S" invented a "10 Main St S" and pulled in a site plan
-    2.5 km away. In Brampton a leading pair is now always unit-civic. Elsewhere it is a range only
-    when ascending, on the same side of the street and within 60 numbers ("65-71 Agnes St").
-  - A file more than 1.5 km from the rest of its address group (a mistyped or mis-geocoded
-    address) groups by its own location, and a multi-address join never links groups more than
-    1.5 km apart. Peel's totals are unchanged.
-- **Build-out by application** (Growth tab → Pipeline, under *Units, jobs & build-out*, where a development
-  has several files or a file without a unit count):
-  - One row per formal file: planned units, plus the permit units inside its boundary (permitted,
-    completed, left). A permit counts in the smallest file boundary that holds it.
-  - Each row says whether it is *counted* or *within the counted proposal*. Site plan or condo
-    phases add up; for an official plan / zoning / subdivision file the largest counts.
-  - Tap a file to open it on its own.
-- **Units only in the attachments**: some descriptions say "refer to the attached cover letter /
-  PJR" and give no unit count. About 76 files, nearly all in Brampton, whose documents are on
-  BramPlanOnline behind a sign-in, so they can't be read automatically.
-  - Those rows are flagged, and the unit count from the cover letter can be entered. Entry is also
-    offered where the development has no count at all.
-  - The figure is kept in this browser, marked *your figure* (× removes it), and counted like a
-    published one in the development and every total.
-- **One address, different land**: official plan / zoning / subdivision files filed at the same
-  address whose boundaries don't overlap are separate proposals. Each is its own development, and
-  the precinct rules above relate them.
-  - Example: OZS-2025-0016, a 9 ha draft plan filed at precinct 52-2's address, is now a draft
-    plan within the precinct.
-  - Example: on The Gore Rd in Caledon, 21T-22002C (394 units) was hidden under a larger
-    subdivision at the same address. Peel's total rises by 394 units.
-- **Unit counts listed by type are added up**: "a maximum of 299 single detached, 217 street
-  townhouse, and 52 back-to-back townhouse dwelling units" is 568 units, not 52. Rules:
-  - A figure followed by "consisting of / comprising / including / of which" is a summary of the
-    parts after it and is counted once.
-  - Not counted: buildings and blocks ("2 apartment buildings"), decimals and measures
-    ("126.5 single", "1181.36 SQM", "11.1m towns"), zone names ("to Residential Semi-Detached"),
-    existing houses, and industrial / commercial condominium units.
-  - Units the description leaves open ("additional units in two future mixed-use blocks") aren't
-    counted. The *Build-out by application* entry can add them.
-  - 86 files read higher, e.g. 10512 Mississauga Rd (OZS-2025-0015) 52 → 568. Peel +4,964 units
-    (+5,508 active). Snapshot records are re-read when the app loads.
-- **Unit counts written as "unit count: 2656"** in a description are now read (e.g. OZS-2025-0033:
-  2,656 units), including from the weekly snapshot.
-
-## How applications connect: the development process
-
-In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
-
-1. **Pre-consultation** (PRE-…): the proposal is discussed before a formal application.
-2. **Official plan / zoning amendment, often with a draft plan of subdivision** (OZS / OZ / 21T-…).
-   This sets the use and the unit count. It is refiled or revised as the proposal changes.
-3. **Draft approval, then registration** of the subdivision.
-4. **Site plan** (SPA / SP-…) for each block or building, sometimes revised and resubmitted.
-5. **Draft plan of condominium** (DPC / CD-…), which repeats the site plan's units.
-6. **Building permits, then occupancy.**
-
-Files on the same land are one proposal and count its units once. The audit found places where the
-grouping didn't follow this, and the rules now are:
-
-- **A refiled or revised application** whose boundary lies at least 90% inside another of similar
-  size (the other at least 60% covered) is the same land, whatever its address.
-- **A pre-consultation** joins the one formal application whose land it overlaps most (at least half
-  of either boundary). It never links two separate proposals together. Before, a pre-consultation
-  bridging two neighbouring proposals on Mississauga Rd merged them (10625 Mississauga Rd lost 255
-  units).
-- **An older planning file inside a newer, larger one** is that land's earlier proposal and joins
-  it. A precinct or block plan only takes draft plans as separate developments when its own files
-  are planning files filed before them.
-- **A site plan or condominium revision** (same boundary, at least half overlapping, and either the
-  same unit count or a description saying revised / minor / resubmitted / amended) is counted once,
-  not added as another phase. Example: 1965–1975 Cottrelle Blvd showed 348 units from two
-  submissions of one 174-unit site plan.
-- **Nesting needs real overlap**: a group of files is placed inside a larger development only when
-  at least half its land lies within it. Before, one centre point decided, so a 185-unit stacked
-  townhouse proposal (C05E17.006, at Bramalea Rd and Mayfield Rd) was filed under the neighbouring
-  Walmart at 5085 Mayfield Rd. Likewise OZS-2021-0026 (201 units) was hidden under a separate
-  601-unit subdivision on Torbram Rd that it doesn't overlap.
-- **"16 blocks of townhouses (70 units)"**: the units in brackets are one part of a listed count.
-  OZS-2022-0034 at 5759 Mayfield Rd reads 171 units (101 singles + 70 townhouses), not 70.
-- **"UNASSIGNED"** and similar placeholders aren't used as a development's title.
-
-Peel's total falls by about 1,300 units (239,944 counted, 194,206 active): revisions and same-land
-refilings no longer add up. There are 31 fewer developments and 9 fewer that are only a
-pre-consultation. 66 pairs of developments still share some land, and in 7 of them both count
-units. Six are precinct / block plans with their draft plans, which the area-plan rule counts
-once. The seventh is two neighbouring proposals at Bramalea Rd and Mayfield Rd: 90 apartments
-(C05E17.005) and 185 stacked townhouses (C05E17.006). Their boundaries overlap, but they are
-different buildings, so both count.
-
-## Latest submission on labels and titles
-
-**Latest submission.** The map labels (Address + phase and Address) and the site bar's
-title show the latest application submitted on the site: its date received and file number. The
-open data carries each file's first submission date, not resubmissions.
-
-## Development tab (open development)
-
-Opening a development sets the scope: a **Development** tab appears after DC Analysis and is
-selected, the site bar shows at the top of the analysis column, and every other tab shows that
-site (Overview becomes a verdict card; Growth shows its units & build-out; Water / Wastewater /
-DC Analysis show its servicing). × on the site bar or Peel in the trail returns to the
-Peel-wide view. Each number has one home: site flows live on Water / Wastewater, units on Growth,
-files and status on the Development tab, the sewer path and plant reserve on Wastewater,
-ground / storm sewers / ponds on the Development tab's Site view.
-
-The Development tab has three views (the last one picked is kept):
-
-- **About** — the proposal, a concise status line, the latest council / committee decision and
-  the latest Functional Servicing Report link.
-- **Files & history** — the full raw status block; every planning file on the land and related
-  applications; *How the phase was set*; the dated history; source records with portal, source
-  link and pulled-on date.
-- **Site** — the aerial check (before / latest photo), ground elevation, storm sewers and
-  stormwater ponds.
-
-The analysis column's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis · Development (when a site is open) · Developments.
-
-## Map boxes, the results year and the tour
-
-- **Map boxes:** two only — the tool rail on the left edge, and the Layers panel (top right)
-  with the legend built into its swatches. The panel is height-capped so it never covers the map.
-- **Site boundary on hover:** point at a development (mouse / trackpad) and its application site is
-  outlined in dashed orange with its address, phase and units; one without a published boundary
-  gets a dashed ring. More settings → *Site boundary on hover*: Show on / off and Reach (10–120
-  screen pixels, default 40), remembered in this browser.
-- **View switch** (Planning / Water / Wastewater / DC): the full labels always show; on a narrow
-  screen or with a wider system font the buttons wrap onto a second row rather than being cut off.
-- **Clear selection and the Developments Show / Faded / Hidden switch** sit at the top of the map,
-  between the controls on the left and the boxes on the right (stacked when the gap is narrow); on
-  a phone, under the Layers and More settings boxes. Fitting a trace leaves room for them.
-- **Results for year** (Scenario bar) runs from the **2021 Census** to build-out
-  (2021 Census · Today · Build-out). Before today, growth built since the census counts in
-  the share of it completed by that year (Peel-wide, by units and completion date); approved and
-  proposed growth phase in from their horizon years as before.
-- **A development open:** on a wide screen Layers, More settings, the wastewater loads box and
-  Filter by area move left of the panel; the Clear selection button centres in the visible map. On
-  a phone (bottom sheet) Layers and Filter by area stay above the sheet, and the timeline, legend and
-  loads box step aside until it closes.
-- **Tour:** 15 short steps in chapters (Start, Find, Map, A development, Analysis, Help). Steps set
-  the app up as they go: a real development opens, its Servicing tab and sewer trace show, then the
-  Analysis tabs. Progress dots (tap to jump), Back / Next, ← → keys, Esc to end; the tour tidies up
-  after itself. Top-bar Help → Take the tour again, or What's new for the change log.
-
-## Analysis tabs: Overview, Growth, Water, Wastewater, DC
-
-Five analysis tabs (plus **Development** when a site is open). Every tab has at most four
-sub-views, picked with buttons, each in the same order: a one-sentence headline, up to four
-tiles, one chart, one top-N table with "See all", and one ⓘ method note.
-
-- **Overview:** headline → four tiles → the **Needs attention** card (constraints that run out
-  before relief, stalled large sites, sites past the 90% trigger, this week's changes) →
-  plant and water treatment capacity bars → the largest developments.
-- **Growth** (merges the old Growth and Demand tabs; the Demand tab is gone):
-  **Pipeline** — the application pipeline by phase and dwelling type (planned / permitted /
-  completed / left), completions per year, and median time from application to approval by
-  municipality. **Census & 2051** — growth since the census, the 2051 allocation, housing
-  targets to 2031 and the population outlook. Demand's flows moved to Water / Wastewater.
-- **Water:** **Capacity** (treatment, pumping into zones as % of firm capacity, storage, with
-  room left and trigger year per zone and storage facility), **Zones**, **Facilities**, and
-  **Hydraulic check (beta)** — the EPANET check, clearly labelled. The 2025 production
-  reports and Caledon groundwater moved to Sources & checks → Model checks.
-- **Wastewater:** **Plants** (capacity chart, horizon table, plant inflow by growth layer, the
-  tightest pipes — top 10 by % of capacity at build-out), **Blocks**, **Pumping stations**,
-  **Allocations**. The 2025 reports vs model and Master Plan comparisons moved to
-  Sources & checks → Model checks; effluent exceedances moved to the plant's map pop-up.
-- **DC:** **Timing**, **Recommendations** (the Keep and Defer tables merged into one, with a
-  recommendation column and All / Keep / Defer filter chips), **Funding**.
-
-**2020 Master Plan vs this tracker.** Now under Sources & checks (gear menu) → Model checks:
-a table of the facilities the 2020 Water and Wastewater Master Plan assessed: capacity, the
-Master Plan's forecast for 2026 · 2031 · 2041, and the tracker's numbers (today, + approved, +
-proposed, build-out), with a bar per row (Master Plan years as dashed ticks, capacity as a line)
-and the Master Plan year whose forecast matches the tracker's build-out.
-
-- Water (maximum day, Vol. 3 Tables 8, 9, 11): South Peel system, A.P. Kennedy and Lorne Park
-  WTPs (today = 2025 measured maximum day), Lorne Park Zone 2 high lift, Beckett Sproule transfer,
-  West Brampton Zone 5 low lift and Zone 6 high lift (today = Master Plan 2021 + growth built since
-  the census). A development counts at a facility when its supply route (the water trace's station
-  chain) passes it.
-- Storage (Vol. 3 Table 12): Silverthorn and West Brampton reservoirs, Master Plan figures only
-  (fire and emergency storage isn't modelled).
-- Wastewater (average day, Vol. 4 Tables 7–8): G.E. Booth (incl. York and Toronto flows) and
-  Clarkson, using the plant chart's sewershed totals.
-
-## Functional Servicing Reports and the water supply route
-
-**FSR link.** A development's **Servicing** tab opens with its latest Functional Servicing Report.
-
-- `scripts/build-fsr.js`, run weekly with the data snapshot, reads the municipalities' application
-  pages. It matches their file numbers to the applications and keeps the newest document named a
-  functional servicing / servicing report or brief.
-- **Mississauga:** its active application pages (official plan / rezoning and subdivision files,
-  about 57 of the 1,006 applications), found through the site's search and the pages' address
-  pattern. The City's pages build their document list in the browser, so the tab links the
-  application page and points to Project documents rather than the PDF itself. Site plans have no
-  public page.
-- **Caledon:** its application pages, with each application type's own numbering (direct PDF links;
-  64 pages carry an FSR).
-- **Brampton:** documents are on BramPlanOnline, which needs a sign-in, so the tab links there
-  instead.
-- A link to all of the application's documents comes with it.
-
-**Supply route.** The Servicing tab's **Water** section shows where the water comes from, like
-the sewer trace.
-
-- From the development's pressure zone, it takes the nearest station whose pumps feed that zone
-  (2020 Master Plan pump groups). It repeats from that station's reservoir zone down to the
-  treatment plant.
-- Each step shows the pump group's firm capacity.
-- Below the route is the pumping into the development's zone as a share of firm capacity.
-- Caledon's groundwater areas show their well system instead.
-
-**Water supply trace.** At the top of the Servicing tab, beside *Trace the sewer path*, **Trace the
-water supply from the plant** draws the route on the map like the sewer trace.
-
-- Between the stops above (plant → stations → site), it takes the shortest path along the Region's
-  watermains of 300 mm and larger, preferring larger mains, and the planned water mains of the 2026
-  DC capital maps. Planned mains join existing ones at their ends (within 300 m) and wherever they
-  run within 25 m of one.
-- Existing mains are solid blue (thicker = larger), planned DC mains are dashed (tap for size, year
-  and project), and arrows run from the plant to the site. The stations are labelled. A step with no
-  mapped main between its stops is drawn straight (dashed grey).
-- Developments fade while it shows (Show / Faded / Hidden switch), and Clear selection removes it.
-- The summary gives the length on existing and on planned mains (with the DC years), the stations
-  passed with their firm capacity, the distance from the site to the network, and the pumping
-  capacity used.
-- `data/watermains.json` is built by `scripts/build-watermains.js` from the Region's watermains
-  (linework-raw download), rebuilt by the probe workflow's `sewer-build` mode. It loads only when a
-  water trace runs.
-- Indicative only: valves, pressure reducing stations and the hydraulics decide the real flow.
-
-**Sites outside the mapped zones and catchments (both traces).**
-
-- *Water*: the pressure zone is estimated from the ground elevation (terrain tiles) and the 2020
-  Master Plan's zone table (Volume 3, Table 3: grade line and serviceable ground per lake-based
-  zone, e.g. Zone 6 serves 214.5–259.1 m below a 304.8 m grade line). Where the ground fits two
-  zones, the zone a planned DC water main within 1 km feeds decides, then the nearest mapped zone,
-  then the grade line giving about 55 m of pressure. Ground above Zone 7's range goes to the nearest
-  Caledon groundwater system. The Supply route row and the trace say how the zone was chosen.
-- *Wastewater*: a site outside the traced catchments, or with no existing sewer of 300 mm+ within
-  400 m, follows the planned DC wastewater mains. From the planned main nearest the site (within
-  1 km) it takes the shortest path along them to where they reach an existing sewer, preferring the
-  catchment that main serves, then the usual pipe-by-pipe route to the plant. Mains that stop short
-  of the one they feed are bridged (up to 600 m, straight, and noted). The planned path is dashed
-  pink; the maps don't give flow direction, so it is indicative. With no planned main reaching the
-  network, the trace joins the nearest existing sewer within 3 km and says so.
-  - Sewers flow into the same size or bigger. A planned main hands over only to an existing sewer
-    at least its own diameter (a main the DC maps give no size for: at least half the largest
-    planned main on the path so far). Where no such sewer is in reach, the trace falls back to one
-    at least half the size. A 900 mm trunk doesn't empty into a 375 mm local sewer; it carries on
-    along the planned trunk to an existing one. The Region's own network is used as published:
-    about 1.6% of its pipe-to-pipe links step down in size, nearly all at manholes where the
-    published network does. For example, 11722 Mississauga Road and
-    0 Creditview Road (21T-25008C) follow the Credit Valley trunk (25-2225 → 25-2224 → 28-2139) to
-    the 600 mm sewer, not the 375 mm sewer near Wanless Drive. A site whose join point is within
-    25 m of an existing sewer still connects to that sewer.
-  - The summary lists the DC projects the path relies on and their DC map years. Before the latest
-    of them (at the results year) the site has no outlet on this route. The line updates as the
-    results year moves; already built sites are shown as indicative.
-- Both traces fit the route on the rotated map, clear of the open panel and the boxes along the
-  map's edges. The route stands out: a white halo with a dark casing under it, white dashes moving
-  in the flow direction (still if the device asks for reduced motion), and the other map layers
-  and the base map dimmed while a trace is shown.
-
-## DC funding scenario
-
-**DC Analysis → Funding scenario** tests a DC budget over the next N years (default 10). There
-are quick buttons for $1 B, $5 B and the whole program.
-
-**What's in the window.** The projects coming online in the window are costed in 2026$, at their
-DC-recoverable share:
-
-- **Priced projects:** the 2020 DC study's costs, indexed ×1.40 (wastewater) and ×1.35 (water).
-  These are the Region's DC rate indexing since 2020.
-- **Mains not in the 2020 study:** a cost per metre fitted by diameter to the study's priced mains,
-  times the main's length on the map.
-- **Facilities:** their 2020 project number where it still matches, else the median priced item
-  of their kind.
-- **G.E. Booth to 558 ML/d:** the $130 M Council approved in February 2024.
-
-**Funding order:**
-
-1. Projects in the 2026 capital program as approved (committed).
-2. Then the growth each project lets through by the window's last year, per dollar.
-3. Then, with money left, projects that no modelled growth needs in the window. They are kept for
-   their other drivers.
-
-Whatever doesn't fit is deferred. Each deferred project shows the people, units and DCs it holds
-back by then. The headline gives the combined effect of all the deferrals as a range: from the
-largest single shortfall to the sum of the projects' own impacts.
-
-**Also shown:**
-
-- a comparison row for $0.5–3 B and the whole program;
-- the projects outside the window that DC Analysis says to bring forward, with their cost;
-- a CSV export.
-
-## Change log and versions
-
-The **Change log** (Help menu in the top bar) lists every release of the app, newest
-first. One release is one pull request merged into `main`, numbered **1.<pull request number>**
-(for example 1.111). Each release shows its title, the bullet points from its description, the
-date, a link to the pull request and the build (commit).
-
-- `scripts/build-changelog.js` builds `data/changelog.json` from the first-parent git history.
-  The deploy job runs it with full history, so the log always includes the release being
-  deployed. The weekly data snapshots are listed as data updates, which you can switch on.
-- **Current version:** the release whose commit matches the app-version stamp. It is marked
-  "You're using this version", and it is also shown under Data → Data sources.
-- **What's new:** releases since this browser last opened the tab are marked New, and a red dot
-  shows on the tab until you open it.
-- You can filter to new features or fixes, search the log, and download it as CSV.
-
-### Phase 0 — Trust and transparency
-
-- Renamed the app to **Peel Growth Pipeline (unofficial)**; the home-screen install name stays
-  **Peel Dev**. A slim banner strip at the very top of every screen reads *Unofficial prototype
-  · public data only · not a Region of Peel product*; the same line is printed on the executive
-  briefing, the servicing memo, the area report, the comparison PDF, the print map, the Excel Summary sheet, the PDF
-  footer and the CSV header comments.
-- Every source record (development → Source records, permit pop-ups) now shows the portal name
-  (e.g. *City of Brampton Open Data*), a link to the record in its ArcGIS FeatureServer layer
-  (queried by object ID), and the pulled-on date (the snapshot build date, or the live-load time
-  after Refresh live). CSV and Excel Developments / Records exports gained `portal`,
-  `source_url`, `retrieved_at` and `source_record_id` columns.
-- Capacity and DC results are labelled **screening estimate** wherever they appear.
-- On phones, a plain tap no longer opens the press-and-hold info card: it appears only on a
-  genuine ~650 ms press-and-hold with the finger still down (pointercancel handled; `js/info.js`).
-
-### Phase 1.5 — Design system
-
-- **Dark mode is the default.** Settings → Display offers Dark / Light / Follow device, remembered
-  per browser (localStorage `peel-dev:theme`); it is never part of share links. An inline script in
-  `<head>` sets `data-theme` before first paint, so there is no flash of the wrong theme.
-  PDF / print output always renders light (report documents set `<html data-theme="light">`; the
-  main app forces light on `beforeprint` and restores after).
-- **Colour tokens, single source.** Every colour is a CSS variable in `css/app.css`
-  (`:root` = dark, `:root[data-theme="light"]` = light, plus a follow-device media query).
-  No hard-coded colours remain in `js/` — `js/app.js` reads them via `phaseColor()` /
-  `token()` (getComputedStyle, cached; cache reset on theme change).
-- **Phase colours are distinct hues** (no longer a blue ramp): Inception light violet, Under
-  review violet, Approved blue, Permit issued cyan, Under construction teal, Completed grey,
-  Withdrawn/refused grey outline only. Red / amber / green are reserved for capacity state
-  (over / tight / room: `--cap-over` / `--cap-tight` / `--cap-room`); orange (`--select`) is
-  reserved for the current selection. The palette passes WCAG AA (4.5:1 text, 3:1 symbols) and
-  protanopia/deuteranopia pair-distinguishability checks — see `scripts/colorblind-check.js`
-  and `tests/tokens.test.js`. All map symbols carry a thin outline so they read on any
-  background.
-- **Type:** five sizes (11 / 12 / 14 / 16 / 22 px), two weights (regular 400, medium 500),
-  tabular numerals in tables and tiles, tile numbers larger and heavier than their labels,
-  sentence case throughout.
-- **Spacing/shape:** 8 px grid (4 px tight gaps); 8 px radius on panels and cards, fully round
-  chips; decorative borders removed (kept on inputs and tables); floating map panels are
-  280 px wide and corner-anchored.
-- **Modes:** density Compact (desktop default) / Comfortable (phone default, meetings), toggled
-  in Settings → Display. **Present** (top-left map control, under Help): full-screen map +
-  headline sentence + four large tiles (developments shown, units planned, people at build-out,
-  jobs); Esc exits.
-- **Motion/loading:** opening a site flies the map to it and fades the panel (≤250 ms);
-  `prefers-reduced-motion` disables both. Loading spinners are replaced by skeleton
-  placeholder blocks.
-- **Basemaps:** Water, Wastewater and DC views use a dark grey canvas; Planning uses aerial,
-  slightly darkened so data stands out. Zooming to 15+ on the canvas basemap switches to
-  aerial automatically for site checks; a manual pick in Layers is respected otherwise.
-
-### Phase 2 — Layout shell (one screen)
-
-- **Top bar** (one line): scope trail (Peel › municipality › area › development, each step
-  clickable), the view switch (Planning / Water / Wastewater / DC), the Scenario chip (with a
-  "modified" badge; click to open the full scenario control), Export (every export action plus
-  Copy share link), Present, Help and the gear menu (Settings, Sources & checks, Change log).
-  The old sidebar title block, Share link and Help buttons are gone.
-- **Three-column desktop shell** (≥1200px): filter column (300px) | full-height map | analysis
-  column (440px, resizable by dragging its left edge). The footer is now a slim timeline strip.
-  ≥1800px reserves a fourth column for side-by-side comparison (Phase 3b).
-- **Phone/tablet** (<1200px): map-first; the **Filters (n)** button opens the filter sheet; the
-  analysis column becomes a bottom sheet with summary / half / full snaps (tap the grip to
-  cycle, drag to snap).
-- **Map boxes:** two only. Left edge: zoom, north arrow, then the tool rail (one toggle button
-  per map tool). Right: the Layers panel, with the legend folded into its swatches. Removed:
-  the area-filter box, the separate legend box, the More-settings box and the Tools dropdown —
-  every tool and setting kept its function.
-- **View ↔ tab linking:** the view switch sets the map layers and opens the matching analysis
-  tab, and picking an analysis tab sets the matching map view.
-- **Developments tab:** the project list moved from the sidebar into the analysis column,
-  paged 25 per page with the existing sorts.
-
-### Phase 4 — Analysis tab restructure
-
-- **Five tabs** (+ Development when a site is open): Overview · Growth · Water · Wastewater · DC.
-  Every tab has at most four sub-views, picked with buttons, each in the same order: one-sentence
-  headline → up to four tiles → one chart → one top-N table with "See all" → one ⓘ method line.
-- **Overview** rebuilt: headline, four tiles, the new **Needs attention** card (constraints that
-  run out before relief, stalled large sites, sites past the 90% trigger, this week's changes),
-  plant and water treatment capacity bars, the largest developments. Housing targets, population
-  outlook and servicing demand by phase moved to Growth; the Tools card is gone (tools live on the
-  map toolbar); the DC program card is now one line in Needs attention.
-- **Growth** merges the old Growth and Demand tabs (the Demand tab is removed). **Pipeline:**
-  the application pipeline by phase and dwelling type (planned / permitted / completed / left),
-  new stats — completions per year and median time to approval by municipality. **Census & 2051:**
-  growth since the census, the 2051 allocation, housing targets to 2031, population outlook.
-  Demand's flows moved to Water / Wastewater.
-- **Water:** Capacity / Zones / Facilities / Hydraulic check (beta, the EPANET check, clearly
-  labelled). New: room left and trigger year for each zone and storage facility, matching the
-  plant horizon table. The 2025 production reports and Caledon groundwater moved to Sources &
-  checks → Model checks.
-- **Wastewater:** Plants / Blocks / Pumping stations / Allocations. New: **Tightest pipes**, the
-  top 10 by % of capacity at build-out; plant inflow by growth layer merged into Plants. The
-  2025 reports vs model and Master Plan vs tracker moved to Sources & checks → Model checks;
-  effluent exceedances moved to the plant's map pop-up.
-- **DC:** Timing / Recommendations / Funding. The Keep (47) and Defer (26) tables merged into one
-  table with a recommendation column and All / Keep / Defer filter chips.
-- **Settings & sources tab removed** (moved, not lost): editable criteria → the **Scenario**
-  control in the top bar (with a "Modified criteria" badge and "Reset to Peel criteria"); data
-  freshness, model checks and references → **Sources & checks** (gear menu); number conventions,
-  Prepared by, theme, density → **Settings** (gear menu); record type and New buildings only →
-  Settings → **Records**; change log → the **Help** menu.
-- **Demand assumptions:** every demand figure's ⓘ shows its formula with the site's inputs; the
-  criteria stamp on every table names the exact source documents and versions (e.g. "Peel Water
-  and Wastewater Modelling Demand Table, Aug 2024; Watermain Design Criteria, 2010"); the Scenario
-  control shows each edited value beside its Peel default; the Criteria export sheet lists value,
-  default, unit and source document + version for every parameter.
-
-## Outside data: targets, projections, costs, storms, compliance, hydraulics
-
-These sources are fetched on GitHub Actions, because the sandbox can't reach the hosts. Run
-**Probe data sources** with mode `external` (`scripts/fetch-external.js`); raw files go to the
-`ext-raw` branch. Then build the data files locally:
-
-- **DC costs and rates.** `data/dc-costs.json` is built by `scripts/build-dc-costs.py` from the
-  2020 DC Background Study text on the `ref-docs-dc` branch. Its capital tables give each
-  component's gross cost and DC-recoverable cost in 2020$. Components are matched to the 2026 DC
-  maps by component number: 164 of 506 match, and newer components have no published cost yet.
-  - The file also holds the water and wastewater DCs per single / semi from August 1, 2026 to
-    January 31, 2027 (water $30,180.96, wastewater $32,776.33). Other unit types are scaled by the
-    2020 schedule's ratios.
-  - **DC Analysis** uses them to show each project's cost, its cost per person held back if
-    cancelled, and the DC revenue those held-back units would pay. The table can be sorted by
-    cost per person.
-  - A development's **Servicing** tab estimates its Regional water and wastewater DCs.
-- **Housing targets, CMHC and Ministry of Finance projections.** `data/housing.json` is built by
-  `scripts/build-housing.py`. It holds:
-  - Ontario's housing supply progress, from the Ontario Data Catalogue.
-  - CMHC starts and completions by municipality, from the HMIP tables (Toronto CMA by census
-    subdivision).
-  - The Ministry of Finance 2025–2051 projection for the Peel census division.
-
-  These feed:
-  - The Overview's **Housing targets to 2031** card: progress against the share of time gone,
-    CMHC starts, and pipeline units against what's left.
-  - The Overview's **Population outlook** card: the Ministry of Finance projection against the
-    Region's 2.28 M forecast for 2051.
-  - The briefing.
-  - New **Model checks**: units completed against CMHC completions, the approved build pace
-    against CMHC starts, and population today against the July 2025 estimate.
-- **Design storms and climate (wet weather scenario).** `data/idf.json` is built by
-  `scripts/build-idf.js`. It holds the MTO IDF Curve Look-up coefficients at each wastewater block
-  (`--only mto`) and MTO's climate trend.
-  - The **Scenario** control → Wet weather scenario scales the I&I allowance by the 1-hour intensity
-    ratio. The choices are:
-    - the storm (2- to 100-year);
-    - the climate: MTO trend to 2050 or 2080, or a +10, 20 or 30% uplift, for example from IDF_CC;
-    - the storm the allowance represents (25-year by default).
-  - The pipes, capacity colours and DC Analysis follow the scenario, and the Scenario chip shows it.
-- **SWMM model.** Top bar → Export → **SWMM model (.inp)** exports the 40 blocks as a SWMM 5
-  skeleton:
-  - junctions at the block outlets, and conduits to the downstream block (trunk size, nearest
-    trunk slope, relative inverts);
-  - dry weather flow at the results year, with a diurnal pattern;
-  - RTK rainfall-derived I&I on each block's sewered area, with placeholder R, T and K to
-    calibrate;
-  - a 4-hour Chicago design storm from the MTO IDF curves.
-
-  It runs in SWMM 5.2: this was checked with pyswmm, with a 0.03% continuity error.
-- **Hydraulic check (beta).** **Water → Hydraulic check** runs EPANET 2.2 in the browser
-  (epanet-js 0.9.0, loaded from jsDelivr on demand).
-  - It works on the large mains crossing into each upper pressure zone, at the maximum day for
-    the results year.
-  - It reports each main's flow, velocity (against 1.5 m/s) and head loss per km.
-  - The `.inp` can be downloaded to build on in EPANET or InfoWater.
-- **Effluent compliance.** `data/compliance.json` is built by `scripts/build-compliance.py` from
-  MECP Environmental Compliance Reports (municipal and private sewage, 2020–2024). It lists
-  exceedances at G.E. Booth, Clarkson and Inglewood, shown in **Wastewater → Plants**.
-- **2026 Census.** The first release is February 10, 2027. Run `scripts/build-areas.js` with
-  `CENSUS_2026_CSV` (Statistics Canada's DA counts CSV, joined to the 2021 DA geometry) or
-  `CENSUS_2026_URL`, plus `CENSUS_2026_PEEL` to check the total. 2026 then becomes the baseline
-  automatically.
-- **Building permits** were already live: Mississauga issued and Growth Management permits,
-  Brampton `maps1.brampton.ca` and Caledon AMANDA (see Data sources).
-- **Not public:** the 2025/26 Master Plan report (finalization expected in 2026; Data freshness
-  flags it), the allocation list (use the allocation CSV import), Dragonfly flow monitoring
-  (would calibrate the RTK values) and the 2026 DC study's cost tables.
-
-## How classification works (`js/phases.js`)
-
-Each municipality uses its own schema, so nothing is hard-coded per dataset:
-
-1. **Field detection:** file number, address, status, type, description, units, GFA and
-   date fields are matched by name. Each date field is assigned to the lifecycle event it
-   records: received, approved, issued, inspected, finaled or cancelled.
-2. **Record phase:** the status text gives the phase. Dates can only move a record forward;
-   for example, a final-inspection date beats a stale "Issued" status. With no status, a
-   permit counts as issued and an open application counts as under review.
-3. **Projects:** records are grouped by normalised civic address, or by location when there
-   is no address. The project takes the furthest live phase. If new files start after an
-   earlier building on the site was completed, they count as a redevelopment, and the
-   project's phase comes from the new files.
-4. **Duplicates:** a permit that shows up in more than one layer is merged by permit number.
-5. **Permits on application land:** subdivisions are filed as one polygon, often under an
-   address like "0 Heritage Rd", but their houses get permits at new street addresses. The app
-   links them by location:
-   - Each permit joins the smallest planning-application polygon it falls inside, as long as
-     it's in the same municipality and isn't dated more than a year before the application.
-   - Applications that cover the same land (official plan amendment, zoning, subdivision,
-     condo) merge into one project.
-   - A site plan inside a subdivision rolls up into the subdivision.
-   - Withdrawn applications and area-wide plans larger than 4 km² don't absorb permits.
-
-## Build-out by dwelling type
-
-Under the Planned / Permitted / Completed / Left to build tiles, each project shows the same
-four columns by type (single / semi, townhouse, apartment, type not stated), and an
-**Employment** row with the non-residential floor area and estimated jobs. The bottom panel's
-**Breakdown & criteria** tab totals them for the projects shown.
-
-- **Planned** by type: the unit mix published with the application; else counts in the
-  application description (“299 single detached, 217 street townhouse and 52 back-to-back
-  townhouse dwelling units”); else the type read from the description. When only that guess is
-  available, building permits with a stated type set the type of the units they cover.
-- **Permitted / completed** by type: each building permit's own description (one figure per
-  building, as in the build-out). Permits that don't say (e.g. foundation-only conditional
-  permits) go to the types with room left in the plan.
-- **Left** = planned − permitted per type. Every column adds up to the tiles above.
-- Stacked and back-to-back towns count as apartments, as in Peel's persons-per-unit.
-- Employment floor space has no unit-level permits, so it moves with the project's phase.
-
-## Employment uses (`js/employment.js`)
-
-Applications are scanned for non-residential uses — industrial / logistics, office, retail /
-commercial, hotel, institutional — and for floor areas stated in the description (“2,506 sq m
-of retail GFA”, “a place of worship (1,445 m²)”, “45,000 sq ft warehouse”, converted to m²),
-each assigned to the nearest use. A purely non-residential file's floor-area field is used when
-the text gives none (marked †). Files on one site repeat the proposal, so the largest figure per
-use counts; minor / limited files are skipped. Estimated jobs use typical floor space per
-worker: industrial 110 m², office 25, retail 45, hotel 60, institutional 50 by default. These
-are editable under **Breakdown & criteria → Employment floor space (m²/job)** (saved in the
-browser; *Reset to Peel defaults* restores them) and every job count, employment demand and
-summary updates. Shown as an **Employment** section in the Development tab, an **Employment** flag, and in the CSV export
-(`employment_uses`, `nonres_floor_area_m2`, `est_jobs`).
-
-## Aerial check (is it built?)
-
-At the bottom of each project's panel, the app compares the site on the aerial photo from
-**before the application** with the **latest** aerial (same city source, so colours and
-alignment match) and gives a **probability that the development is completed**, with the
-before / latest photos (site outlined in yellow) and the reasons:
-
-| Evidence | Effect |
-|---|---|
-| Records: phase, share of units on completed permits, permit age, units with no permit yet | starting estimate |
-| More building edges on the site (roofs, roads) between the two photos | raises |
-| Fewer edges (site cleared or graded) | lowers; marks construction under way |
-| No visible change while records say it is in progress | lowers |
-| Mississauga building footprints traced from each year's photo: new footprints since the application | raises strongly |
-| No footprints on a small site in the latest year (Mississauga) | lowers |
-| Brampton footprints (undated) covering the site | raises a little |
-| Latest photo older than the building permit | photo evidence counts less |
-
-Imagery: Mississauga 2013–2024, Brampton 2004–2025 (spring / fall), Caledon 2014–2025, read
-directly from the cities' image services. The photos are leaf-off spring / fall flights with
-muted colour, so the check measures structure and change rather than colour. It is an estimate
-for screening, not a site inspection; small infill sites and redevelopments of already built
-land show the least. `node scripts/aerial-e2e.js` (Actions: *Probe data sources*, mode
-`aerial`) runs it against the live imagery for sample projects.
-
-## Duplicate check (proof of counting once)
-
-The **Data** tab has a **Duplicate check**, recomputed from every record (filters ignored):
-
-1. **Records:** raw records → copies of the same file merged (same file number across layers
-   or spellings) → unique files → projects.
-2. **Integrity checks** that must be 0: a file still listed twice, a file counted in more than
-   one project, a file in no project.
-3. **Unit reconciliation:** units on every record, minus each rule that removes a repeat
-   (copies of a file, withdrawn files, repeat applications for one proposal, repeat permits for
-   one building, permits already inside their planning application) = **units counted**, which
-   equals the demand panel's “All units” with every filter off.
-4. **Possible duplicates left:** separate projects of 20+ units within 60 m, for review (tap to
-   open).
-5. **Download audit CSV:** every file with the project it is counted in, so anyone can check.
-
-Every deploy (including the weekly update) runs the same audit on the snapshot
-(`node scripts/audit-snapshot.js`) and writes it to the Actions run summary.
-
-Two linking rules close gaps the audit found: a multi-address application (“202 and 204 Main
-St”, “65-71 Agnes St”, “… (formerly …)”) joins the records at each address it names, and a
-permit-only project of 20+ units within 60 m of an application with exactly the same unit count
-joins that application.
-
-## Build-out: planned vs permitted vs left to build
-
-For each project with a unit count on its planning applications:
-
-| Figure | Meaning |
-|---|---|
-| Planned | Units on the planning applications. Files on the same land repeat one proposal, so the largest figure is used. Parts nested inside a larger application are summed, unless the parent's own figure is larger. |
-| Permitted | Units on building permits on the land. Permits at one address (foundation, full, revisions) count once. |
-| Completed | Units on permits marked closed, finaled or occupied. |
-| **Left to build** | Planned − permitted: units with no building permit yet. |
-| Not yet completed | Planned − completed. |
-| **Committed capacity** | Growth only (units planned on a planning application), not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed; permits with no planning application are not growth. |
-
-### Multi-phase developments (towers, blocks, condo phases)
-
-| Rule | Why |
-|---|---|
-| Each file is counted once: `SP 22-60`, `SP 22 60` and `SP 22/060 W9` are the same file, and so are permits `BP 3NEW 17-9012`, `… CON`, `… CR1` and `… FTR`. | Mississauga publishes a file in up to three layers, each with different formatting. |
-| Rezoning, official plan amendment and subdivision files describe the whole proposal, so the **largest** figure across them (and any resubmissions) is used. | A resubmitted rezoning is the same proposal. |
-| Separate **site plan** files on a development are **added up**, and so are separate **condominium** files. | Each tower or block usually has its own site plan and its own condo registration. |
-| Planned = the largest of: the rezoning figure, the site plans added up, or the condos added up. | Each stage of approval covers the same homes. |
-| Minor, express and limited site plans (`SPM`, `SPAX`, "Limited Site Plan") and pre-consultations add no units. | They revise or precede an earlier plan. |
-| Permitted units are counted once per base permit number, and different base numbers are added up. | A tower's conditional, foundation, full and revised permits share one base number. |
-| Drain, site-servicing and "revision to permit" permits add no units. Basement second suites, filed as alteration permits, do count. | |
-
-When a development has two or more phases, the project panel lists them, each with its file
-number, status, planned units, and (where the phases have their own land) permitted units and
-units left to build.
-
-A project's units are counted once, as the larger of planned and permitted, never both added
-together. A plan with units still left to permit shows as "Under construction", not
-"Completed", even if every permit issued so far is finished.
-
-In the app, the project panel shows a build-out bar, and the project list shows "planned / left"
-on each row. The **Unit growth** filter has an option for **Units left to build**. The demand
-panel can be based on all units, units left to build, units not yet completed, or completed
-units. The CSV export includes every build-out figure.
-
-Run the tests with `npm test`.
-
-## Population and demand criteria (`js/demand.js`)
-
-| Parameter | Default | Source |
+Live at <https://jaredacostar-cmd.github.io/peel-growth-pipeline/>. After your first visit
+the app shell is cached by the service worker, so it opens offline (see "Developing" below);
+the data files refresh in the background whenever you're online.
+
+**On iPhone / iPad:** it needs to be served from a web address — opening the file from the
+Files app won't work. Use the GitHub Pages link above, Netlify Drop
+(<https://app.netlify.com/drop>), or run `npm start` on a computer and open
+`http://<computer's IP>:8080` on the same Wi-Fi. Tap **Share → Add to Home Screen** to
+install it under the name **Peel Dev**.
+
+## Layout
+
+One screen, no page scroll:
+
+- **Top bar:** the scope trail (Peel › municipality › area › development), the view switch
+  (Planning / Water / Wastewater / DC, which also sets the map layers), the Scenario chip,
+  Export, Present, Help and the Settings gear (Settings, Sources & checks, Change log).
+- **Filter column (left):** three tabs — **Explore** (the filter panel: Search · Stage ·
+  Where · What · When · Flags, plus saved-view preset chips), **This week** (new or
+  phase-changed projects since the last weekly update, with your watchlist), and **Data**
+  (source list, Refresh live, duplicate check, advanced source settings).
+- **Map (middle):** developments over aerial or street basemaps, with a tool rail on the
+  left edge and the Layers panel on the right. A slim timeline strip runs along the bottom.
+- **Analysis column (right):** six tabs — **Overview · Growth · Water · Wastewater · DC ·
+  Developments** — plus **Development** when a site is open and **Tool result** for tool
+  outputs. Resizable by dragging its left edge.
+- **Phones:** the filters open from a **Filters** button (with the active-filter count), and the analysis column
+  becomes a bottom sheet (tap the grip to step summary → half → full).
+
+The same slim banner — *Unofficial prototype · public data only · not a Region of Peel
+product* — sits at the top of every screen, and the same line is printed on every export.
+
+## Features
+
+### Overview
+Headline sentence, four tiles, a **Needs attention** card (constraints that run out before
+relief, stalled large sites, sites past the 90% trigger, this week's changes), plant and
+water-treatment capacity bars, the largest developments — and the **executive briefing** PDF
+(one printable page: headlines, growth and demand tiles, servicing demand by phase, plant
+triggers, DC projects to bring forward).
+
+### Growth
+**Pipeline** — the application pipeline by phase and dwelling type (planned / permitted /
+completed / left to build), completions per year, median time from application to approval by
+municipality. **Census & 2051** — growth since the census (built + approved + proposed),
+the 2051 population / unit / job allocations, housing targets to 2031, the population
+outlook. The census baseline follows the timeline (2021 or 2016 dissemination areas).
+
+### Water
+**Capacity** (treatment, pumping into each pressure zone as % of firm capacity, storage, with
+room left and trigger year), **Zones**, **Facilities** (existing plants, pumping stations,
+reservoirs, tanks, wells), and **Hydraulic check (beta)** — an EPANET 2.2 check running in
+the browser on the large mains into the upper zones at the results-year maximum day.
+
+### Wastewater
+**Plants** (capacity chart with the uncommitted reserve, horizon table 2025–2051, inflow by
+growth layer, the tightest pipes), **Blocks** (the Region's 40 I&I sewersheds, with outlets
+and upstream/downstream block tracing), **Pumping stations** (build-out flow vs firm
+capacity), and **Allocations** (servicing allocations recorded per development, with each
+plant's room at the 90% trigger after allocations). **Trace** a development's sewer path to
+the plant — pipes coloured by capacity state, with flow arrows, stations and the tightest
+pipe — or open a **sewer profile** long-section (ground, pipe, flow depth, freeboard) along
+any path. The pipe model (`data/sewers.json`): every 300 mm+ sanitary main with Manning
+full-flow capacity and the census population draining through it; a screen, not a hydraulic
+model.
+
+### DC
+**Timing** — every 2026 DC project replayed year by year against phased growth, with
+diversion of flow to each project from its construction year; **Recommendations** — Keep /
+advance / defer per project, with what cancelling holds back in people and units;
+**Funding** — a DC budget scenario (default 10 years) ranking projects by growth let through
+per dollar. Planned works come from the Region's 2026 DC capital maps (`data/dc-infra.json`).
+
+### Developments
+The project list for the current scope and filters, paged with sorts (units, phase, last
+activity …); opening one sets the scope for every tab (see Development below).
+
+### Development (open site)
+Opening a project sets the scope for every tab. The Development tab has three views:
+**About** (proposal, status, latest council decision, latest Functional Servicing Report
+link), **Files & history** (*How the phase was set*, dated timeline, source records with
+portal, source link and pulled-on date), and **Site** (aerial before/latest check, ground
+elevation, storm sewers and ponds). The site bar offers trace sewer / water, watch, memo,
+record allocation, FSR check and compare. The **development memo** PDF is a one-page
+servicing memo for the site.
+
+### Map & tools
+- **Views:** Planning, Water, Wastewater and DC — each remembers its own layers. Markers can
+  be coloured by phase, servicing layer or receiving plant; a capacity layer shows catchment
+  flow growth, pumping-station % of firm capacity, or pressure-zone max-day growth.
+- **Tool rail** (left edge, one active at a time): *Select* (tap, lasso, or Ctrl-drag a box),
+  *Measure & ground profile*, *Trace* (sewer path to the plant or water supply from the
+  plant), *Test a site* (proposed development: units by type, jobs, site area), *Inspect
+  point* (sewers, mains, zones nearby), *Corridor select*, *How many more units fit?*.
+  Results open in the **Tool result** tab. Also: Compare, Upgrade this pipe, DC timing, Area
+  report, Inquiry response draft, and Present mode (full-screen map + headline + four tiles).
+- **Search** finds addresses, developments, file numbers, secondary plans / character areas,
+  MTSAs, pressure zones, catchments, pumping stations, DC projects and intersections
+  ("Main St & Queen St").
+- **Filters** — Stage (tap the phase bar; Ctrl-click for several), Where (municipality,
+  secondary plan, MTSA, pressure zone, drainage area), What (size, dwelling type, land use),
+  When (milestone + year range), Flags (Watched, Stalled 2+ years, Changed this week).
+  Filters appear as chips and are kept in share links.
+
+### Exports & sharing
+Top bar → **Export**: CSV and GeoJSON of the shown developments (with provenance columns
+`portal`, `source_url`, `retrieved_at`, `source_record_id`), servicing areas and planned
+works as GeoJSON, a **SWMM 5 skeleton** of the 40 wastewater blocks, an **Excel workbook**
+(fixed sheets: Summary, Developments, Records, Water, Wastewater, DC, Criteria, Sources),
+print-ready PDFs (executive briefing, development memo, area report, comparison), and Print
+map. **Copy share link** captures the exact view — filters, tabs, scenario, map position and
+the open development — and the address bar keeps the same link as you work.
+
+### Data you can trust
+- Every source record shows its **portal** (e.g. *City of Brampton Open Data*), a link to
+  the record in its ArcGIS FeatureServer layer, and the pulled-on date.
+- **Sources & checks** (gear menu): every source with its date, update interval and status,
+  and the model checked against published figures — the 2021 Census, the plants' 2025
+  reported flows (±10% matches, ±25% close), South Peel water production.
+- Capacity and DC results are labelled **screening estimate** wherever they appear; the
+  pipeline's unit totals are reconciled by a weekly **duplicate check** (Data tab).
+
+## Project structure
+
+`index.html` loads ~79 modules from `js/`, each owning one area (no global soup; `js/app.js`
+is a 720-line boot file that wires them together). Every script tag carries
+`?v=__BUILD__`, replaced by the deploy workflow for cache-busting.
+
+| Group | Modules | Owns |
 |---|---|---|
-| Persons per unit: single / semi | 4.2 | Peel Linear Wastewater Standards R1.0, Table 2-2 (from the Region's DC Background Study) |
-| Persons per unit: townhouse | 3.4 | same |
-| Persons per unit: apartment | 3.1, or 2.7 above 475 persons/ha | same standard: large apartments 3.1; where the site holds more than 475 persons/ha at that rate (or its area is unknown) the high-density 2.7 applies. Peel's 1.7 for small (≤1 bedroom) apartments needs a bedroom mix the applications don't publish |
-| Persons per unit: type not stated | 2.7 | assumption: most unit-bearing projects in Peel's pipeline are apartments |
-| Water, average day | 270 L/cap/day | Peel Water and Wastewater Modelling Demand Table (v2.0, Aug 2024), from the 2020 DC Background Study (replaces the 2010 Watermain Design Criteria's 280) |
-| Water, max day / peak hour | ×1.8 / ×3.0 | same (2010 criteria: ×2.0 / ×3.0) |
-| Wastewater, residential | 290 L/cap/day | Peel Linear Wastewater Standards (2023) s. 2.2 |
-| Wastewater peaking | Harmon, M = 1 + 14 / (4 + √P), P in thousands, limited to 2.0–4.0 | Peel Linear Wastewater Standards s. 2.4 (a sewer design rule; at plant scale it makes peaks conservative) |
-| Employment water | 250 L/employee/day, max day ×1.4, peak hour ×3.0 | Peel Modelling Demand Table (Aug 2024), ICI (2010 criteria: 300) |
-| Employment wastewater | 270 L/employee/day; Harmon on employees, bounded 2–4; I&I 0.26 L/s/ha | Peel Water & Wastewater Modelling Demand Table, site plan applications (Aug 2024), non-residential |
+| Boot & shell | `js/app.js`, `index.html`, `css/`, `404.html` | Startup wiring, page, styles, repo-rename redirect |
+| Shared core | `js/util.js`, `js/config.js` (source catalogue), `js/phases.js` (phase model), `js/loader.js`, `js/snapshot-index.js` (startup-index hydration), `js/filters.js`, `js/search-filter.js`, `js/filter-ui.js` | Data loading, phase rules, filter state |
+| Top bar | `js/topbar.js`, `js/share.js`, `js/settings.js`, `js/tips.js`, `js/changelog.js`, `js/info.js`, `js/analysis-tabs.js`, `js/tool-scope.js` | Scope trail, share links, settings, tour, press-and-hold info cards |
+| Map | `js/map-core.js`, `js/map-markers.js`, `js/map-labels.js`, `js/map-census.js`, `js/map-analysis.js`, `js/area-select.js`, `js/measure.js` | Leaflet base, markers, labels, census outlines, capacity layer, lasso select |
+| Analysis tabs | `js/overview-tab.js`, `js/growth-ui.js` + `js/growth.js`, `js/water-tab.js`, `js/svc-tab.js` + `js/svc-data.js` + `js/svc-plants.js`, `js/dca-tab.js` + `js/dc-infra.js` + `js/dc-cost.js`, `js/developments-tab.js` + `js/render-list.js`, `js/data-tab.js`, `js/census-view.js`, `js/demand.js` + `js/demand-ui.js`, `js/employment.js`, `js/masterplan.js`, `js/plan-areas.js` + `js/areas.js` | The six analysis tabs, demand criteria, census growth, DC data |
+| Development drill-down | `js/dev-detail.js`, `js/dev-nav.js`, `js/dev-verdict.js`, `js/devscope.js`, `js/devtab.js`, `js/brief.js`, `js/fsr.js`, `js/aerial.js` + `js/aerial-check.js`, `js/site-context.js` | Open-site views, council-decision summaries, FSR links, aerial build check |
+| Servicing network | `js/sewer-trace.js`, `js/sewer-cap.js`, `js/sewer-profile.js`, `js/water-trace.js`, `js/tightpipes.js`, `js/upstream.js`, `js/exist-pipes.js` | Sewer/water traces, pipe capacity model, profiles, existing-mains layers |
+| Tools | `js/tools.js` + `js/tools-{batch,compare,corridor,fit,inquiry,inspect,upgrade}.js` | The tool rail and tool result views |
+| Exports & reports | `js/exports.js`, `js/export-workbook.js`, `js/export-comparison.js`, `js/reports.js` | CSV/GeoJSON/Excel/PDFs, memos, SWMM |
+| Provenance & audit | `js/provenance.js`, `js/audit.js`, `js/arcgis.js`, `js/design.js` | Source links, duplicate check, ArcGIS queries, design tokens |
+| Offline | `sw.js`, `js/offline.js`, `manifest.webmanifest` | Service worker, install metadata |
 
-How the estimate works:
+`tests/` holds the 350 unit tests (`npm test`). `scripts/` holds the data builders (below).
+`PR_PHASE0.md` … `PR_PHASE5.md` are the build history; the in-app change log lives in
+`data/changelog.json` (built by `scripts/build-changelog.js` from git history).
 
-- **Dwelling type:** taken from a published unit-mix column (singles, semis, towns,
-  apartments) when the dataset has one. Otherwise it is guessed from the project's type and
-  description text.
-- **Peaking:** the Harmon factor is applied to the combined population of everything shown and
-  kept between 2.0 and 4.0. That gives a system-level peak, which is lower than adding up each
-  site's own peak flow. Saved criteria that still hold the 2010 defaults (280 L/cap/d, ×2.0, 300
-  L/emp/d, apartments 2.7) move to the current ones; edited values are kept.
-- **I&I (infiltration and inflow):** 0.26 L/s per hectare of gross site area (editable). Site
-  area is the planning application boundary (about 87% of planned units have one); where there
-  is none it is estimated from the units: 0.04 ha per single / semi, 0.02 per townhouse, 0.003
-  per apartment or unstated unit, and marked “est.”. For completed / remaining / left-to-build
-  figures the site area is split by share of units. **Peak wet weather = Harmon dry-weather
-  peak + I&I.** Shown on the wastewater tile, in each project's servicing table, and for growth
-  since 2021 in the census panel.
-- **Employment demand:** jobs estimated from the floor areas on the applications (see
-  Employment uses) × 250 L/employee/day water and 270 L/employee/day wastewater. Wastewater is
-  peaked with Harmon on the employee count, kept between 2 and 4; I&I is added on the boundary
-  of purely non-residential sites (mixed-use sites already count theirs with the dwellings).
-  Employment space has no unit-level build-out, so a project's jobs count by its phase
-  (committed = approved to under construction; completed once the project is completed).
-  Shown as the Employment and Total rows of the water and wastewater tables in the bottom
-  panel, as Employment rows and a combined total in each project's servicing table, as a
-  one-line summary in the project's Employment section, in the by-phase breakdown, and in the
-  CSV (`emp_water_avg_lps`, `emp_wastewater_peak_lps`). Residential and employment peaks are
-  computed separately and added, as in a servicing report. Projects whose descriptions state no
-  floor area have no jobs and so no employment demand.
+## Data pipeline
 
-Every value can be edited in the app, and your edits are kept in your browser. These numbers
-are planning-level estimates, not a substitute for a functional servicing report. Check the
-values against the current Region of Peel standards; a 2025 edition of the Linear Wastewater
-Standards is listed on the Region's site.
+The weekly snapshot is the only thing the app reads at startup:
 
-## Data sources (`js/config.js`)
+```sh
+npm run snapshot        # node scripts/build-snapshot.js --out data
+```
+
+It pulls every configured source (`js/config.js`) plus the development / permit datasets
+found on the municipalities' open-data hubs, and writes:
+
+- `data/snapshot.json` — every record (applications + new-build permits), compact-encoded.
+- `data/snapshot-index.json` — one compact object per **project** carrying only what first
+  paint needs (position, phase, units, filters, search text). The app fetches this first so
+  the map paints fast, then loads the full snapshot in the background;
+  `js/snapshot-index.js` hydrates the entries back into project objects.
+- `data/history.json` — each project's phase, recorded on every run, so phase changes are
+  kept even though the sources only publish current status.
+
+A source that fails keeps last week's records (marked stale); the run exits non-zero only if
+every source fails.
+
+Topic builders (most run in the weekly job; the rest are one-off or on demand):
+
+| Script | Builds |
+|---|---|
+| `scripts/build-areas.js` | `data/areas.json`, `data/das.json` (secondary plans, census DAs) |
+| `scripts/build-servicing.js` | `data/servicing.json` (pressure zones, traced drainage areas) |
+| `scripts/build-sewer-capacity.js` | `data/sewers.json` (pipe capacity model) |
+| `scripts/build-blocks.js` | `data/blocks.json` (40 wastewater blocks, I&I sewersheds) |
+| `scripts/build-dc-infra.py` | `data/dc-infra.json` (2026 DC capital maps: mains, facilities) |
+| `scripts/build-watermains.js` | `data/watermains.json` (Region watermains, for the water trace) |
+| `scripts/build-svc-census.js` | `data/svc-census.json` (census population by servicing area) |
+| `scripts/build-water-facilities.py` | `data/water-facilities.json` (existing water facilities) |
+| `scripts/build-water-supply.js` | `data/water-supply.json` (large mains into pressure zones) |
+| `scripts/build-council.js` | `data/council.json` (eSCRIBE agendas/minutes, loaded per development) |
+| `scripts/build-fsr.js` | `data/fsr.json` (Functional Servicing Report links) |
+| `scripts/build-changelog.js` | `data/changelog.json` (releases from git history) |
+| `scripts/build-idf.js`, `build-housing.py`, `build-compliance.py`, `build-dc-costs.py` | IDF storms, housing targets / projections, effluent compliance, DC costs |
+| `scripts/audit-snapshot.js` | Audits the snapshot (unit reconciliation, integrity checks) |
+
+`data/peel-reports.json` holds figures read from the Region's 2025 annual reports and the
+2020 Master Plan (with page numbers), used by the model checks. The **Probe data sources**
+workflow (`.github/workflows/probe-sources.yml`, run manually) dry-runs fetches and maps
+statuses before the real build.
+
+## Developing
+
+```sh
+npm start        # serve on http://localhost:8080
+npm test         # 350 tests (node --test tests/*.test.js)
+npm run snapshot # rebuild data/snapshot.json + data/snapshot-index.json
+```
+
+- **Offline:** `js/offline.js` registers `sw.js`. The app shell (HTML, CSS, JS, icons,
+  manifest) is precached under a versioned cache name; `data/*.json` uses
+  stale-while-revalidate — instant from cache, refreshed silently when online. After one
+  visit the app opens fully offline from the last successful load.
+- **Cache-busting:** every script/CSS URL carries `?v=__BUILD__`, which the deploy workflow
+  replaces with the build stamp, so a release never serves stale JS.
+- Dark mode is the default (Settings → Display: Dark / Light / Follow device); report and
+  print output always render light.
+
+## Deployment
+
+GitHub Pages, via `.github/workflows/site.yml`:
+
+- Push to `main` redeploys the site.
+- The Monday scheduled run (and manual runs) refreshes the data snapshot, commits it, runs
+  the audit (`scripts/audit-snapshot.js`) and the changelog build, stamps `__BUILD__`, and
+  redeploys.
+
+The repository was renamed from `Fsr-reviewer` to **`peel-growth-pipeline`**. The live site
+is <https://jaredacostar-cmd.github.io/peel-growth-pipeline/>. Old URLs under
+`/Fsr-reviewer/` (including deep and share links) keep working: `404.html` redirects them to
+the matching path under `/peel-growth-pipeline/`.
+
+## Data sources
 
 | Municipality | Source | Kind |
 |---|---|---|
-| Mississauga | Development applications (newest monthly `DevApps_*` layer, found automatically) | Applications |
+| Mississauga | Development applications (monthly `DevApps_*` layer) | Applications |
 | Mississauga | Growth Management – active development applications | Applications |
 | Mississauga | Site plan applications (with units by dwelling type) | Applications |
 | Mississauga | Issued building permits (since 2018, with status and completion date) | Permits |
 | Mississauga | Growth Management – issued permits adding units or floor area | Permits |
-| Brampton | OPA / ZBA / plans of subdivision | Applications |
-| Brampton | Site plan approval | Applications |
-| Brampton | Draft plans of condominium | Applications |
-| Brampton | Development permit system | Applications |
-| Brampton | Pre-consultation (always shown as Inception; units not counted) | Applications |
+| Brampton | OPA / ZBA / plans of subdivision, site plans, condos, development permits | Applications |
+| Brampton | Pre-consultation (always Inception; units not counted) | Applications |
 | Brampton | Building permits (`maps1.brampton.ca`, with dwelling counts) | Permits |
 | Caledon | Development applications (with units by dwelling type) | Applications |
 | Caledon | AMANDA building permits (units created) | Permits |
 
-Brampton's planning files don't include a unit count. The app reads the count from the
-proposal text when it states one, such as "312 residential units". Brampton minor variances
-and consents are left out. Every query is clipped to the Peel bounding box. In live mode, each
-layer loads up to the "Max per layer" limit (20,000 by default), newest first.
+Brampton's planning files don't publish a unit count; the app reads it from the proposal
+text ("312 residential units"). Every query is clipped to the Peel bounding box. Coverage
+depends on what each municipality publishes — Mississauga publishes the most; Caledon's
+development-applications layer is described as possibly incomplete; some Brampton datasets
+update irregularly. Phases are inferred from status wording and dates, which differ between
+municipalities — open the source record in the project panel to check a specific project.
 
-**Discover datasets** in the app searches the four open-data hubs for more layers. Its results
-include unrelated layers, such as election "subdivisions", so it is a manual exploration tool
-only; the weekly job uses just the list above.
+## Population and demand criteria (`js/demand.js`)
 
-**Checking the sources:** the **Probe data sources** workflow, run manually from the Actions
-tab, does two things. It lists what each municipality publishes, with fields, counts and status
-values. It also does a dry run of the snapshot that reports per-source counts and how each raw
-status maps to a phase.
+Every value is editable in the app (Scenario control in the top bar); edits are kept in the
+browser. Planning-level estimates, not a substitute for a functional servicing report.
 
-### Caveats
+| Parameter | Default | Source |
+|---|---|---|
+| Persons per unit: single / semi | 4.2 | Peel Linear Wastewater Standards, Table 2-2 |
+| Persons per unit: townhouse | 3.4 | same |
+| Persons per unit: apartment | 3.1, or 2.7 above 475 persons/ha | same standard |
+| Persons per unit: type not stated | 2.7 | assumption: most unit-bearing projects are apartments |
+| Water, average day | 270 L/cap/day | Peel Water and Wastewater Modelling Demand Table (v2.0, Aug 2024) |
+| Water, max day / peak hour | ×1.8 / ×3.0 | same |
+| Wastewater, residential | 290 L/cap/day | Peel Linear Wastewater Standards (2023) s. 2.2 |
+| Wastewater peaking | Harmon, M = 1 + 14 / (4 + √P), P in thousands, 2.0–4.0 | Peel Linear Wastewater Standards s. 2.4 |
+| Employment water | 250 L/employee/day, max day ×1.4, peak hour ×3.0 | Peel Modelling Demand Table (Aug 2024), ICI |
+| Employment wastewater | 270 L/employee/day; Harmon on employees, 2–4; I&I 0.26 L/s/ha | same, site-plan applications |
+| I&I (infiltration and inflow) | 0.26 L/s per ha of gross site area | editable; **Peak wet weather = Harmon dry-weather peak + I&I** |
 
-- Coverage depends on what each municipality publishes. Mississauga publishes the most.
-  Caledon's development applications layer is described as possibly incomplete. Some
-  Brampton datasets are updated irregularly.
-- Phases are inferred from status wording and dates, which differ between municipalities.
-  Open the source record in the project panel to check a specific project.
+Dwelling type is taken from a published unit-mix column when the dataset has one, otherwise
+guessed from the project's type and description. Employment jobs are estimated from the floor
+areas stated on applications (industrial 110 m²/job, office 25, retail 45, hotel 60,
+institutional 50) × 250 / 270 L/employee/day water / wastewater; these are editable under
+Breakdown & criteria → Employment floor space.
