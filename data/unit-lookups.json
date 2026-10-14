@@ -777,6 +777,54 @@
    "confidence": "high",
    "note": "31 two/three-storey freehold townhouses (Ashley Oaks)",
    "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2021-0204": {
+   "units": 188,
+   "source": "UrbanToronto forum post (Apr 17 2026), via search snippet",
+   "url": "https://urbantoronto.ca/forum/search/3237878/",
+   "confidence": "medium",
+   "note": "Snippet names 9893 Torbram Rd (just north of North Park Dr, institutionally zoned, beside a temple), 20-storey pre-consultation with 188 residential units; forum, not city doc; page could not be fetched",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2021-0018": {
+   "units": 326,
+   "source": "City of Brampton planning notice, PDC public meeting Sept 13 2021, 1857 Queen St W (OZS-2021-0018), via search-result text",
+   "url": "https://www.brampton.ca/EN/City-Hall/Pages/Public-Meetings-and-Notices-Archive.aspx",
+   "confidence": "medium",
+   "note": "Search summary of the city notice: 14-storey building with 132 units plus 12-storey building with 194 units (326 total), plus about 280 m2 ground-floor commercial. The exact PDF URL could not be isolated (brampton.ca fetch fails), so the archive page is given; the PDF may be '2021/Item 2 - Glen Schnarr and Associates Inc. - 12148048 Canada' (unconfirmed).",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2021-0141": {
+   "units": 1,
+   "source": "squareyards listing (portion of 11467 Goreway Dr, vacant lot, approvals obtained)",
+   "url": "https://www.squareyards.ca/sale/on/peel/brampton/brampton-east/11467-portion-of-11467-goreway-drive",
+   "confidence": "medium",
+   "note": "one lot split into two: 1 new home. Proposal splits one residential lot into two lots (about one new lot). No dwelling-unit count is stated, so left null; caller may treat it as 1 net new lot.",
+   "checked": "2026-10-14"
+  },
+  "Caledon|21T-17008C": {
+   "units": 677,
+   "source": "Town of Caledon Notice of Application 21T-17008C / RZ 17-13 (PMG Planning for Shanontown Developments Inc., 12461 McLaughlin Rd)",
+   "url": "https://www.caledon.ca/en/resources/en/resourcesGeneral/news/21T-17008C_RZ17-13-NoticeofApplication-wMap.pdf",
+   "confidence": "medium",
+   "note": "the subdivision's own count (2018 notice); 2024-0001 is a policy amendment. 2018 notice: 677 units = 104 detached, 164 semi, 100 on-street TH, 137 rear-lane TH, ~172 apartments in a high-density block. POPA 2024-0001 itself only amends Mayfield West Phase 2 SP s.7.14.4.8.4 (cost-sharing wording), with no new units. Later revisions to the subdivision count were not found.",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2021-0007": {
+   "units": 261,
+   "source": "City of Brampton public meeting notice (dated May 3 2021) for June 7 2021 PDC, Item 3 - Glen Schnarr & Associates / TFP Mayching Developments Ltd, Ward 6",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2021/Item%203%20-%20Glen%20Schnarr%20and%20Associates%20Inc%20–%20TFP%20Mayching%20Developments%20Ltd%20-%20Ward%206.pdf",
+   "confidence": "high",
+   "note": "11687 Chinguacousy Rd (SE corner Chinguacousy/Mayfield), 8.06 ha: OPA/ZBA/draft plan to permit 261 residential dwellings plus a mixed-use medium density residential/commercial block (block units apparently not counted separately). Read via search-result text; PDF fetch blocked.",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2025-0017": {
+   "units": 509,
+   "source": "City of Brampton public meeting notice, Apr 22 2025 PDC, Item 10 (Glen Schnarr / Primont Homes Heritage Heights 3 Inc)",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2025/2025-04-22/Item%2010%20-%20Glen%20Schnarr%20and%20Associates%20-%20Primont%20Homes%20Heritage%20Heights%203%20Inc%20OZS-2025-0017%20Ward%206.pdf",
+   "confidence": "high",
+   "note": "lower bound: 117 street + 392 back-to-back townhouses; apartment and mixed-use blocks have no count. Notice (10916 Mississauga Rd, W of Mississauga Rd, S of Wanless): 117 street townhouses + 392 back-to-back townhouses (=509) plus 6 high-density residential blocks and 3 mixed-use blocks with no unit count stated. Total unknown; at least 509. No later staff report found. Note: the insauga 435-unit article (173 singles/200 street/62 B2B, south of Sandalwood) is a different site.",
+   "checked": "2026-10-14"
   }
  },
  "notUsed": [
@@ -839,56 +887,66 @@
    "key": "Brampton|PRE-2021-0044",
    "found": 1,
    "why": "recognizes an existing unit; no new home"
+  },
+  {
+   "key": "Caledon|2025-0004",
+   "found": 900,
+   "why": "secondary plan target for the whole area (second search)"
+  },
+  {
+   "key": "Brampton|SPA-2024-0152",
+   "found": 95,
+   "why": "student residence (suites/beds, not dwelling units)"
   }
  ],
  "notFound": [
   {
    "key": "Brampton|PRE-2024-0148",
-   "note": "Residential mid-rise (R3M) proposed at 9208 Goreway; no unit count found"
+   "note": "Not found; only road-widening by-law references for 9208 Goreway. Do not confuse with 9281 Goreway (OZS-2025-0050, 649 units)."
   },
   {
    "key": "Brampton|SP88-133.000",
-   "note": "Subdivision at 8525 Mississauga Rd (singles + street townhouses); no unit count found for this address"
+   "note": "8525 Mississauga Rd = Lionhead Golf Course (Kaneff). Secondary plan notes site-specific OLT appeal OLT 25-000864 by Kaneff/Havenwood for 0 Queen St W and 8525 Mississauga Rd. No unit count found for the subdivision (PRE-2024-0120)."
   },
   {
    "key": "Brampton|PRE-2024-0116",
-   "note": "3 high-rise buildings 16-20 storeys, no address; no unit count found"
+   "note": "Not found; no address. Not to be confused with 9281 Goreway Dr OZS-2025-0050 (3 towers 17-19s + 15s, 649 units) or 10350 The Gore Rd OZS-2024-0065 (791 units)"
   },
   {
    "key": "Brampton|PRE-2023-0154",
-   "note": "Mixed-use high density at 383 Orenda Rd; not searched fully (search budget exhausted)"
+   "note": "No result mentions 383 Orenda Rd or a mixed-use high-density proposal there (only road by-laws for Orenda Rd)."
   },
   {
    "key": "Brampton|SPA-2022-0205",
-   "note": "30 Rambler Dr: pre-consultation for two 12-storey mixed-use buildings (UrbanToronto forum); no unit count found"
+   "note": "Pre-consultation (PRE-2022-0175) for two 12-storey mixed-use buildings replacing strip plaza at Kennedy Rd S & Rambler Dr; massing only, no unit count found. SPA-2022-0205/0143 are limited site plans (door/ramp changes, no homes)."
   },
   {
    "key": "Brampton|PRE-2022-0117",
-   "note": "Convenience store to residential at 2014 Embleton Rd; no unit count found"
+   "note": "Not found for 2014 Embleton Rd"
   },
   {
    "key": "Brampton|PRE-2022-0006",
-   "note": "High-density residential at 6443 Mayfield Rd; no unit count found"
+   "note": "Not found. A Falco/MRHR 20/16/16-storey pre-consultation exists south side of Mayfield east of Clarkway, but no address or unit count, so it is not linked."
   },
   {
    "key": "Brampton|PRE-2021-0189",
-   "note": "10-storey seniors/retirement residence, 16,830 m2 GFA; no unit count found"
+   "note": "No count found for 10-storey retirement residence at 8768 Mississauga Rd; address returns no results. Nearby 8654 Mississauga Rd (OZS-2022-0017, 243 condo units) is a different site."
   },
   {
    "key": "Brampton|PRE-2021-0137",
-   "note": "12-storey seniors-oriented mixed-use at 11730 Airport Rd; no unit count found"
+   "note": "Nothing found for 11730 Airport Rd (likely within the city-initiated Airport & Mayfield Tertiary Plan area, By-law 167-2024, which gives no site unit count)."
   },
   {
    "key": "Brampton|PRE-2021-0011",
-   "note": "20-storey condo at 133 Main St S; later separate pre-consultation reportedly 16-storey rental at 127-133A Main St S (Amico) per forum; no unit count found"
+   "note": "Later pre-consultation: Amico, 16-storey purpose-built rental at 127-133A Main St S (Teeple). The original was a 20-storey condo. No unit count found for either."
   },
   {
    "key": "Brampton|PRE16.032",
-   "note": "Heritage dwelling conversion to small apartments at 15 Alexander St; no unit count found"
+   "note": "Nothing found for 15 Alexander St heritage conversion to small apartments."
   },
   {
    "key": "Brampton|OZS-2025-0054",
-   "note": "not found; apartments + stacked townhomes, no count located"
+   "note": "Search snippet of notice: OPA only, redesignating Credit Valley SP lands from woodland / low-medium density to low-medium and mid-rise medium density; 'applicant is not proposing a development concept at this time', future ZBA needed. No unit count stated."
   },
   {
    "key": "Caledon|2024-0076",
@@ -900,15 +958,15 @@
   },
   {
    "key": "Brampton|C05W12.004",
-   "note": "Mount Pleasant Heights (Argo/TACC/Fieldgate/Paradise, 10124-10244 Mississauga Rd); forum cites an earlier plan of 212 singles + 546 townhouses for the subdivision, but not confirmed for this Phase 2 OPA / M2181 site plan"
+   "note": "Only whole-project figures found: UrbanToronto DB lists Mount Pleasant Heights (Argo/TACC/Fieldgate/Paradise, west of Mississauga Rd north of Bovaird) at 42 buildings / 1,691 units; forum cites 212 singles + 546 towns + 8.4 ac high density. Not specific to this Phase 2 OPA / M2181 site plan"
   },
   {
    "key": "Brampton|PRE-2023-0086",
-   "note": "16-storey condo (Ambria); no unit count found; UrbanToronto lists project as cancelled"
+   "note": "16-storey Ambria condo, pre-consultation; UrbanToronto marks it Cancelled. No unit count found."
   },
   {
    "key": "Brampton|PRE-2023-0052",
-   "note": "not found (pre-consultation, Block 47-2)"
+   "note": "No count for 10947A The Gore Rd. Block Plans 47-1/47-2 collectively ~10,401 units (area-level, not this file); neighbouring 10877 Gore Rd OZS-2024-0010 is 33 singles + 32 townhouses (different site)."
   },
   {
    "key": "Mississauga|OZ 22-8",
@@ -916,23 +974,23 @@
   },
   {
    "key": "Brampton|PRE-2021-0183",
-   "note": "not found (14-storey apartment pre-consultation)"
+   "note": "Not found (14-storey apartment pre-consultation, 8250-8270 McLaughlin Rd S)."
   },
   {
    "key": "Brampton|PRE-2021-0152",
-   "note": "not found"
+   "note": "No result for 11 Brussels Ave high-density proposal (only townhouse resale listings on the street)."
   },
   {
    "key": "Brampton|OZS-2021-0029",
-   "note": "3 whole lots + 5 part-lot blocks for singles per description; final count not found (adjacent 9058 Creditview OZS-2020-0018 was 5 singles)"
+   "note": "Approved via By-law 45-2023 (single detached), but notice text not readable (brampton.ca blocked) so no lot count; description: 3 whole lots + 5 part-lot blocks for singles"
   },
   {
    "key": "Brampton|PRE-2021-0064",
-   "note": "not found"
+   "note": "Nothing found naming 0 Financial Dr. Possibly related to the Metrus 1735 Steeles Ave W proposal (W of Financial Dr; conceptual 4,697 units, SPA 15 By-law 104-2024) but link unconfirmed, so not used."
   },
   {
    "key": "Brampton|OZS-2020-0011",
-   "note": "not found (Executive Residential to Low/Medium & Medium/High density)"
+   "note": "Not found. The 2018 notice for 27 Cliffside Dr (19 singles, KLM / 2511362 Ontario) is a different address and file, so not used."
   },
   {
    "key": "Caledon|2018-0005",
@@ -940,23 +998,19 @@
   },
   {
    "key": "Brampton|PRE-2026-0022",
-   "note": "no unit count found for 11411 Clarkway Dr; nearby 10484 Clarkway (OZS-2024-0035) is a different site (web search budget exhausted before further searches)"
+   "note": "No count found for 11411 Clarkway Dr (two 10-storey apartment buildings + subdivision). Searches only surfaced other Clarkway files: 10484 Clarkway OZS-2024-0035 (328 units), 9379 Clarkway OZS-2024-0039/OP2023-028 (330 units), 10201 Clarkway OZS-2022-0025 - all different sites."
   },
   {
    "key": "Brampton|PRE-2025-0060",
-   "note": "no matching application found; nearby 10877 The Gore Rd (OZS-2024-0010: 33 singles + 32 towns + retail block) is similar but not confirmed as this site (web search budget exhausted before further searches)"
+   "note": "Not found. Only nearby match is 10877 The Gore Rd OZS-2024-0010 (33 singles + 32 towns + 19 reserve lots + retail block, Aug 2024 notice: https://brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2024/2024-08-12/Item%204%20-%20Candevcon%20Group%20Inc.%20Consulting%20Engineers%20and%20Planners%20-%20Goreland%20Dev%20Inc.%20%20(OZS-2024-0010)%20%20Ward%2010.pdf); a 2025 pre-consultation is unlikely to be the same file, not confirmed"
   },
   {
    "key": "Caledon|2025-0015",
    "note": "town-wide file; no site-specific unit count expected/found"
   },
   {
-   "key": "Brampton|OZS-2025-0017",
-   "note": "Notice lists 117 street townhouses + 392 back-to-back townhouses (509) plus 6 high-density and 3 mixed-use blocks with no unit count given; total unknown, at least 509"
-  },
-  {
    "key": "Brampton|PRE-2024-0145",
-   "note": "no record found for 8212 McLaughlin Rd S"
+   "note": "Nothing found for 8212 or 8230 McLaughlin Rd S (pre-consultation only)."
   },
   {
    "key": "Brampton|SPA-2024-0152",
@@ -968,11 +1022,11 @@
   },
   {
    "key": "Brampton|PRE-2024-0106",
-   "note": "no unit count found for 20-storey proposal at 53 McMurchy Ave N (web search budget exhausted before further searches)"
+   "note": "Not found. A 39-storey, 522/523-unit Syra Group proposal at 123 Railroad St also keeps two 1960s 6-storey rentals near McMurchy, but it is a different address and height, so not linked."
   },
   {
    "key": "Brampton|SP93-024.000",
-   "note": "no unit count found for 6-storey mixed use at 494-496 Main St N (web search budget exhausted before further searches)"
+   "note": "No count found for 6-storey mixed use at 494-496 Main St N (SE of Williams Pkwy). Only nearby 506/510 Main St N (2018 notice) surfaced."
   },
   {
    "key": "Brampton|PRE-2023-0156",
@@ -984,35 +1038,35 @@
   },
   {
    "key": "Brampton|SPA-2022-0152",
-   "note": "no unit count found for 34/32-storey towers at NW corner Bovaird Dr W & Ashby Field Rd (web search budget exhausted before further searches)"
+   "note": "No count found for 34/32-storey towers at NW corner Bovaird Dr W & Ashby Field Rd (Mount Pleasant GO area); file numbers return nothing; only other Bovaird W projects surfaced."
   },
   {
    "key": "Brampton|PRE-2021-0179",
-   "note": "no record found for senior homes at 10650 The Gore Rd"
+   "note": "Nothing found for seniors homes at 10650 The Gore Rd."
   },
   {
    "key": "Brampton|PRE-2021-0118",
-   "note": "heritage house (By-law 11-2022); no unit count found for proposal"
+   "note": "Only heritage designation records (By-law 11-2022) for 23 Centre St S; nothing on the rear addition or units."
   },
   {
    "key": "Brampton|PRE-2021-0058",
-   "note": "no unit count found for 5137 Countryside Dr (industrial + condo townhouse block + singles) (web search budget exhausted before further searches)"
+   "note": "Not found for 5137 Countryside Dr; nearby Countryside/Hwy 50 files found were industrial only"
   },
   {
    "key": "Brampton|SP19-041.000",
-   "note": "2020 forum summary of 11-building Queen/McVean NE corner plan gives no unit count"
+   "note": "2020 forum summary of the 11-building NE-corner plan gives no unit count; OPA By-law 125-2018 covers the site. The 444-unit 34s Bramcon proposal is the NW corner, different site"
   },
   {
    "key": "Brampton|PRE-2026-0039",
-   "note": "not found"
+   "note": "Not found. 31 Centre St S is the WELL/MyHealth diagnostic imaging clinic site opposite Peel Memorial; no proposal coverage found"
   },
   {
    "key": "Brampton|DPS-2025-0004",
-   "note": "not found"
+   "note": "No count found for 249 Main St N (heritage-designated, By-law 57-2012; Main St North DPS area). Latest file DPS-2025-0004 is a day care use; earlier proposal was a 5-level rear residential addition."
   },
   {
    "key": "Brampton|PRE-2025-0035",
-   "note": "not found"
+   "note": "Not found. Adjacent 10742-10786 Clarkway Dr (OZS-2022-0015) is a separate 273-unit file; not confirmed to include 10728."
   },
   {
    "key": "Caledon|2025-0006",
@@ -1020,59 +1074,51 @@
   },
   {
    "key": "Brampton|PRE-2024-0140",
-   "note": "not found"
+   "note": "Not found for 44 Mill St N. Nearby Amdev 17-29 Mill St N (OZS-2024-0033, 48s, 549 units) and Constantine 104-118 Queen St W (OZS-2024-0034, 51s, 551 units) are different addresses"
   },
   {
    "key": "Brampton|PRE-2024-0123",
-   "note": "not found"
+   "note": "Not found for 1550 Queen St W (pre-consultation, two 4-storey buildings)."
   },
   {
    "key": "Brampton|PRE-2024-0073",
-   "note": "not found"
+   "note": "No notice for 10691 The Gore Rd found. Neighbouring Gore Rd files (10635/10647: 471 singles OZS-2023-0001; 10797: 202 singles; 10877: 33 singles + 32 towns) are different sites."
   },
   {
    "key": "Brampton|PRE-2023-0153",
-   "note": "not found"
+   "note": "Nothing found for 24 Bramalea Rd (pre-consultation only)."
   },
   {
    "key": "Brampton|PRE-2023-0072",
-   "note": "not found"
+   "note": "Only source is the application description: 'two semi-detached residential dwellings' (ambiguous: 2 units or two semi buildings = 4 units). No notice/by-law found for 443 Centre St N."
   },
   {
    "key": "Brampton|PRE-2022-0154",
-   "note": "forum mentions earlier massing study of Park-Nelson assembly with 506 units, not confirmed for 31-storey concept"
+   "note": "31-storey 2022 pre-consultation concept (Greenwin/Sweeny); forum mentions an earlier massing of 506 apartment units for the assembly, not confirmed for the 31s concept. May 2024 UrbanToronto news says 60 Nelson St W is now an 11-storey Algoma University student residence (no unit count)"
   },
   {
    "key": "Brampton|OZS-2022-0039",
-   "note": "OPA only to permit residential/noise-sensitive uses; no unit count stated"
+   "note": "OPA only, to permit residential and noise-sensitive uses; no ZBA and no unit count. The site plan files are commercial."
   },
   {
    "key": "Brampton|PRE-2022-0071",
-   "note": "not found"
+   "note": "No city document found. Description itself: semi-detached dwelling with a garden suite and second unit for each property; realtor.ca listing for 9 Rogers Rd mentions approved severance and 'two homes with garden suites'. No explicit total stated."
   },
   {
    "key": "Brampton|OZS-2021-0058",
-   "note": "not found"
+   "note": "Notice found (W side Clarkway Dr, N of Castlemore; condominium townhouses + apartments, valleyland, residential reserve blocks) but search text gave no unit count; PDF could not be fetched. Worth a manual check of that PDF."
   },
   {
    "key": "Brampton|PRE-2021-0177",
-   "note": "not found"
-  },
-  {
-   "key": "Brampton|PRE-2021-0141",
-   "note": "not found"
-  },
-  {
-   "key": "Brampton|OZS-2021-0018",
-   "note": "not found"
+   "note": "Not found for 8212 McLaughlin Rd S"
   },
   {
    "key": "Brampton|PRE19.027",
-   "note": "same proposal as OZS-2022-0039 (OPA only); no unit count"
+   "note": "SmartCentres/Calloway REIT, 2959-2989 Bovaird Dr E & 9960-9990 Airport Rd. OPA-only (adopted 2023-11-22) permitting residential/noise-sensitive uses; no zoning and no unit count stated."
   },
   {
    "key": "Brampton|OZS-2025-0048",
-   "note": "not found"
+   "note": "No notice or report naming OZS-2025-0048 found (adjacent files 0043/0045/0049 found; 0049 = Precinct 52-5 Landowners, Dec 1 2025 PDC, not this file)."
   },
   {
    "key": "Caledon|2025-0012",
@@ -1084,27 +1130,19 @@
   },
   {
    "key": "Brampton|PRE-2023-0155",
-   "note": "not found"
+   "note": "Not found for 26 Victoria Cres"
   },
   {
    "key": "Brampton|SPA-2022-0177",
    "note": "not found"
   },
   {
-   "key": "Brampton|OZS-2021-0007",
-   "note": "not found"
-  },
-  {
-   "key": "Brampton|PRE-2021-0204",
-   "note": "20-storey pre-consultation; a search snippet of an UrbanToronto forum post suggested ~188 units but could not be verified"
-  },
-  {
    "key": "Brampton|PRE-2020-0139",
-   "note": "listing confirms pre-consultation for multi-unit building; no unit count found"
+   "note": "Only a listing for 728 Wanless Dr (~1 acre, pre-consultation done for multi-unit condo/apartment); no unit count."
   },
   {
    "key": "Brampton|PRE-2019-0039",
-   "note": "not found"
+   "note": "Nothing found for 3142 Mayfield Rd townhouses/live-work."
   },
   {
    "key": "Caledon|2019-0015T",
@@ -1112,7 +1150,24 @@
   },
   {
    "key": "Brampton|SP16-054.000",
-   "note": "not found"
+   "note": "Not found. OP policy for SE corner Ebenezer Rd / Nexus Ave allows townhouses plus live-work up to 50 units per net ha, but gives no unit count for this site plan."
+  },
+  {
+   "key": "Caledon|2024-0010",
+   "note": "This file is the Wildfield Village Secondary Plan OPA (~355 ha), so counts are plan-level: application ~7,600 units / 24,500 people; adopted OPA 285 (Council 2025-07-08, under appeal) ~6,800 units / ~22,000 people (https://www.caledon.ca/en/town-services/resources/Business-Planning--Development/Policy/Official-Plan/Amendments/OPA-285-ACCESSIBLE.pdf). Set null per secondary-plan rule; use 6,800 if plan-level figures are acceptable."
+  },
+  {
+   "key": "Brampton|SP91-003.000",
+   "note": "Same site as Brampton|OZS-2025-0050: latest proposal is 649 units (65 affordable), four 15-19 storey buildings. Left null to avoid double counting. Earlier 2-building PRE proposal had no count found. SP91-003 itself is a gazebo site-plan waiver."
+  },
+  {
+   "key": "Brampton|PRE-2021-0141",
+   "note": "Proposal splits one residential lot into two lots (about one new lot). No dwelling-unit count is stated, so left null; caller may treat it as 1 net new lot."
+  },
+  {
+   "key": "Brampton|OZS-2025-0017",
+   "note": "Notice (10916 Mississauga Rd, W of Mississauga Rd, S of Wanless): 117 street townhouses + 392 back-to-back townhouses (=509) plus 6 high-density residential blocks and 3 mixed-use blocks with no unit count stated. Total unknown; at least 509. No later staff report found. Note: the insauga 435-unit article (173 singles/200 street/62 B2B, south of Sandalwood) is a different site."
   }
- ]
+ ],
+ "searches": "Two rounds of web search (2026-10-14). Pages could not be opened from the search environment, so figures were read from search-result text; each has its link."
 }
