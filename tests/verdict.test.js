@@ -147,18 +147,18 @@ test('scopedDev: prefers DevScope.current(), falls back to currentProject', () =
   assert.match(m[0], /return DN\(\)\.getCurrentProject\(\)/);
 });
 
-test('verdict card: four key numbers, one status sentence, four tab-linked verdict lines', () => {
+test('verdict card: key numbers (homes, jobs, flows), one status sentence, four tab-linked verdict lines', () => {
   const m = /function renderVerdictCard\(p\) \{[\s\S]*?\n  \}/.exec(APP);
   assert.ok(m, 'renderVerdictCard not found');
   const src = m[0];
-  for (const label of ['units', 'people', 'water max day', 'wastewater peak wet']) assert.match(src, new RegExp(label), `missing key number: ${label}`);
+  for (const label of ['units', 'people', 'jobs', 'floor area', 'water max day', 'average dry weather', 'peak dry weather', 'peak wet weather']) assert.match(src, new RegExp(label), `missing key number: ${label}`);
   assert.match(src, /firstSentence\(st\.why\)/, 'status sentence must derive from statusOf(p).why');
   assert.match(src, /verdictWater\(/, 'water verdict from per-tab brief logic');
   assert.match(src, /verdictWastewater\(/, 'wastewater verdict from per-tab brief logic');
   assert.match(src, /verdictDc\(/, 'DC verdict from per-tab brief logic');
   assert.match(src, /verdictMilestone\(/, 'milestone verdict');
   for (const tab of ["go('water'", "go('ww'", "go('dca'"]) assert.match(src, new RegExp(tab.replace(/[()']/g, '\\$&')), `missing tab link ${tab}`);
-  assert.match(src, /data-ov-dev/, 'milestone line must open the development');
+  assert.match(src, /data-ov-devsec/, "milestone line must open the development's files (in the Overview)");
 });
 
 test('growth chart tooltip: delegated to .growth-chart so both sub-views keep it', () => {

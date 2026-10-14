@@ -85,6 +85,7 @@
     siteplan: 'site plan phases added up (each tower or block has its own site plan).',
     condo: 'condominium phases added up (each building registered separately).',
     other: 'from the planning applications.',
+    precon: 'from the pre-consultation (no later file states a count yet), an early figure that can change.',
   };
   // Phases (separate site plan / condo files on one development).
   function phasesHTML(b) {

@@ -39,7 +39,7 @@
       + `<p class="small muted">Peel-wide pressure zones return when no site is scoped.</p>`;
     $('#ww-body').innerHTML = `<div class="tb-head"><h2 class="pane-h">${esc(p.title)} <span class="muted">· Wastewater</span></h2></div>`
       + FS().devServicingBriefHTML(p, st, f, 'ww', { site: false })
-      + `<p class="small muted">Ground, storm sewers and stormwater ponds live in Development › Site. Peel-wide catchments return when no site is scoped.</p>`;
+      + `<p class="small muted">Ground, storm sewers and stormwater ponds live in Overview › Site. Peel-wide catchments return when no site is scoped.</p>`;
     DV().scopeBriefIds($('#water-body')); DV().scopeBriefIds($('#ww-body'));
     $('#water-note').textContent = `${p.title} · site servicing`;
     $('#ww-note').textContent = `${p.title} · site servicing`;
