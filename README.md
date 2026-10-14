@@ -895,6 +895,15 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
 > - The latest official plan amendment that applies to each development, site-specific or
 >   area-wide. Amendments are policy and never counted. An area-wide amendment never joins
 >   developments.
+> - Developments where no file states a count, sorted by the growth named in their wording:
+>   - non-residential: not counted
+>   - a new detached house: counts 1
+>   - a replacement house or an addition: 0, since only growth counts
+>   - homes proposed with no number: listed to look up
+>
+>   Counts found online are kept in `data/unit-lookups.json`, each with its source page. They are
+>   used only when no file in the development states a count. Secondary-plan targets, counts
+>   already carried by a linked file, and existing homes are left out (listed under `notUsed`).
 
 In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
 

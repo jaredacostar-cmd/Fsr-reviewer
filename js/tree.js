@@ -422,6 +422,7 @@
       const found = built.lookups && built.lookups.size ? live.map(i => nodes[i].refs.map(r => built.lookups.get(`${nodes[i].municipality}|${r}`)).find(Boolean)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
       if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; }
       else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; }
+      else if (found && found.units === 0) { basis = `no new homes (checked: ${found.source})`; growth = { kind: 'non-residential', units: null, why: found.note || 'checked online: no new homes', url: found.url }; }
       else {
         growth = growthKind(live.map(i => nodes[i].records.map(r => r.description || '').join(' ')));
         if (growth.units > 0) { units = growth.units; basis = growth.why; }

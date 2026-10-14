@@ -1,0 +1,1118 @@
+{
+ "note": "Unit counts for files whose open data states none. Found online (city notices, council reports, news, project databases) or read from the file description; each with its source. Units 0 = confirmed no new homes. Used by the tree audit only when no file in a development states a count.",
+ "updated": "2026-10-14",
+ "files": {
+  "Mississauga|21T-M 26-2": {
+   "units": 10,
+   "source": "insauga news",
+   "url": "https://www.insauga.com/12-townhomes-proposed-to-replace-2-houses-in-mississauga/",
+   "confidence": "high",
+   "note": "12 townhomes replacing 2 houses: 10 net new",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2026-0025": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (telecom tower)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2026-0052": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (car wash / commercial)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2024-0026": {
+   "units": 0,
+   "source": "Brampton public meeting notice, 2025-04-22",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2025/2025-04-22/Item%206%20-%20Weston%20Consulting%20-%20Mayfield%20Commercial%20Centre%20Ltd%20OZS-2024-0026%20Ward%2010.pdf",
+   "confidence": "high",
+   "note": "non-residential (commercial/office)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2025-0026": {
+   "units": 0,
+   "source": "Caledon 12862 & 12668 Dixie Road page",
+   "url": "https://caledon.ca/en/town-services/12862-dixie-road.aspx",
+   "confidence": "medium",
+   "note": "non-residential (industrial park, Amazon); file 2025-0026 assumed to be follow-on to this industrial project",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2025-0154": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential - landscaping/retaining wall at existing apartment building, no new units",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2025-0020": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (truck/trailer parking)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2025-0056": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (self-storage, funeral home/crematorium)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2025-0100": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (warehouse/industrial renovation)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2025-0011": {
+   "units": 0,
+   "source": "Caledon RZ 2025-0011 page",
+   "url": "https://www.caledon.ca/en/town-services/rz-2025-0011-13291-airport-road.aspx",
+   "confidence": "high",
+   "note": "non-residential (temporary truck and trailer parking, 3 years)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2022-0116": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (commercial site plan revision)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2024-0087": {
+   "units": 0,
+   "source": "Caledon 12155 Coleraine Drive page (SPA-2024-0087)",
+   "url": "https://www.caledon.ca/en/town-services/12155-coleraine-drive.aspx",
+   "confidence": "high",
+   "note": "non-residential (transport depot, office/warehouse)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0003": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (160-bed long-term care home)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2024-0033": {
+   "units": 915,
+   "source": "Brampton public meeting notice, 2025-01-13",
+   "url": "https://brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2025/2025-01-13/Item%202%20-%20Amdev%20Property%20Group%20(OZS-2024-0033)%20Ward%201.pdf",
+   "confidence": "high",
+   "note": "Revised: 48- and 45-storey towers on expanded site (17-29 Mill St N), 915 units; original 2024 proposal was 549 units in one 48-storey tower",
+   "checked": "2026-10-14"
+  },
+  "Caledon|DART 2024-0002": {
+   "units": 0,
+   "source": "Caledon 15867 Airport Road page",
+   "url": "https://caledon.ca/en/town-services/15867-airport-road.aspx",
+   "confidence": "medium",
+   "note": "non-residential (convert dwelling to daycare nursery, OPA 2024-0008/RZ 2024-0028)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0026": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (day nursery/private school)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0016": {
+   "units": 435,
+   "source": "Square Yards project listing",
+   "url": "https://www.squareyards.ca/9320-goreway-drive-condos-9320-goreway-drive-2536-nhd",
+   "confidence": "medium",
+   "note": "19- and 18-storey mixed-use (HS4 Investments); 435 units per third-party listing, not city document",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2023-0016": {
+   "units": 1,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "Daycare in existing dwelling plus one detached garden suite (from application description)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0040": {
+   "units": 982,
+   "source": "SkyriseCities forum post",
+   "url": "https://skyrisecities.com/forum/goto/post?id=2112880",
+   "confidence": "medium",
+   "note": "5 buildings 5-20 storeys at 700 Balmoral Dr; forum (unofficial) figure",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0021": {
+   "units": 35,
+   "source": "Insolvency Insider power-of-sale listing",
+   "url": "https://insolvencyinsider.ca/p/8265-churchville-road-brampton-on-power-of-sale",
+   "confidence": "medium",
+   "note": "35 single detached freehold lots, draft plan approved (8265 Churchville Rd)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2021-0037": {
+   "units": 196,
+   "source": "Brampton public meeting notice, 2021",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2021/Item%203%20-%20TACC%20Developments%20(Gore%20Road)%20Inc.%20-%20Candevcon%20Limited%20-%20Ward%2010.pdf",
+   "confidence": "high",
+   "note": "127 singles + 69 street townhouses",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2021-0098": {
+   "units": 2,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "Rezone single detached to triplex: 2 additional dwelling units (from application description)",
+   "checked": "2026-10-14"
+  },
+  "Mississauga|SP 20-99": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "non-residential (19-storey office building with podium); no residential mention found",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2019-0011": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (78 commercial condo units/buildings)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|DPS18-003.000": {
+   "units": 0,
+   "source": "the file's own wording (application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (residential to medical office conversion)",
+   "checked": "2026-10-14"
+  },
+  "Mississauga|SP 13-2": {
+   "units": 664,
+   "source": "OMB case PL141343 issues list, 2015",
+   "url": "https://www.omb.gov.on.ca/e-decisions/pl141343-Apr-02-2015.pdf",
+   "confidence": "high",
+   "note": "650 apartments in two towers (19 & 24 storeys) + 14 horizontal multiple dwellings, per OZ 13/001 appeal; final built count not confirmed",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2026-0038": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (commercial office buildings)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2026-0008": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (house converted to office/learning centre)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2025-0152": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (institutional, Sant Nirankari Mission)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2026-0015": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (telecommunication tower)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2025-0039": {
+   "units": 1290,
+   "source": "INsauga, May 2026",
+   "url": "https://www.insauga.com/work-underway-on-4-high-rise-towers-with-nearly-1300-new-units-in-brampton/",
+   "confidence": "medium",
+   "note": "Latest: Rose Towers, four 26-30 storey rental towers, 1,290 suites; earlier OZS-2023-0021 scheme was four 35-storey towers with 1,500+ units",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2025-0085": {
+   "units": 1,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "one new 1-bedroom unit in existing apartment building storage area (from application description)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2025-0016": {
+   "units": 129,
+   "source": "Brampton public meeting notice, 2025-04-22",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2025/2025-04-22/Item%209%20-%20Glen%20Schnarr%20and%20Associates%20-%20Primont%20Homes%20Heritage%20Heights%201%20Inc%20OZS-2025-0016%20Ward%206.pdf",
+   "confidence": "high",
+   "note": "LOWER BOUND: 49 street townhouses + 80 back-to-back townhouses, plus a high-density residential block with no unit count stated (Primont Homes Heritage Heights 1)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|21CDM-25001": {
+   "units": 0,
+   "source": "LoopNet listing 399 Healey Rd",
+   "url": "https://www.loopnet.ca/Listing/399-Healey-Rd-Caledon-ON/32817099/",
+   "confidence": "medium",
+   "note": "non-residential (industrial condominium units, BOLT campus)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2024-0167": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (industrial building condo conversion)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2024-0027": {
+   "units": 0,
+   "source": "Caledon project page 7904 Mayfield Road",
+   "url": "https://www.caledon.ca/en/town-services/7904-mayfield-road.aspx",
+   "confidence": "high",
+   "note": "non-residential (temporary use extension for nursery/garden centre, RZ 2024-0027)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2023-0157": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (residence converted to place of worship)",
+   "checked": "2026-10-14"
+  },
+  "Mississauga|SP 23/13": {
+   "units": 0,
+   "source": "the file's own wording (Mississauga open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (retail, restaurant, offices)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0004": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (temporary auto sales)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0043": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (office/showroom/badminton)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2022-0158": {
+   "units": 1,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "one new basement apartment (from application description)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SP18-064.000": {
+   "units": 0,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (gas bar, car wash, commercial, office)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2021-0241": {
+   "units": 11,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "1 single detached + 10 duplex units per pre-con description; if duplex = 2 units each count would be 21",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2019-0010": {
+   "units": 74,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "approximately 74.5 single-detached units (part-lots) per application description; plus a future development block",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE16.020": {
+   "units": 14,
+   "source": "the file's own wording (Brampton open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "14 single detached lots plus two blocks for future singles (from pre-con description)",
+   "checked": "2026-10-14"
+  },
+  "Mississauga|OZ/OPA 26-13": {
+   "units": 288,
+   "source": "inSauga news article",
+   "url": "https://www.insauga.com/26-storey-apartment-building-proposed-for-parking-lot-in-mississauga/",
+   "confidence": "high",
+   "note": "26-storey rental tower on surface lot; existing 5- and 7-storey apartments remain; file number not named in article",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2026-0004": {
+   "units": 49,
+   "source": "Town of Caledon notice of application POPA 2026-0004 / RZ 2026-0006 / 21T-26002C; cover letter 2026-03-12",
+   "url": "https://www.caledon.ca/en/news/notice-of-application-popa-2026-0004-rz-2026-0006-and-21t-26002c.aspx",
+   "confidence": "high",
+   "note": "49 three-storey townhouses (30 back-to-back, 19 front-loaded)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2026-0004": {
+   "units": 0,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (256-bed long-term care facility; beds, not dwelling units)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2025-0050": {
+   "units": 649,
+   "source": "Brampton planning notice OZS-2025-0050 (public meeting 2026-03-23)",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2026/Item%207%20-%20Brampton%20New%20Life%20Community%20Church%20-%20Candevcon%20Group%20Inc%20%20(OZS-2025-0050)%20%20Ward%2081772205705413.pdf",
+   "confidence": "high",
+   "note": "4 towers 15-19 storeys; includes 65 affordable units",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2025-0073": {
+   "units": 0,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (commercial plaza)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2025-0045": {
+   "units": 0,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (tennis/padel facility)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2021-0045": {
+   "units": 0,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (commercial plaza)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0023": {
+   "units": 205,
+   "source": "Brampton planning notice OZS-2023-0023 (public meeting 2024-02-12)",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2024/Item%203%20-%20Glen%20Schnarr%20and%20Associates%20Inc%20-%20Royalcliff%20Homes%20Countryside%20Inc%20(OZS-2023-0023)%20%20Ward%2010.pdf",
+   "confidence": "high",
+   "note": "81 singles, 36 semis, 71 street towns, 17 dual-frontage towns",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0046": {
+   "units": 1122,
+   "source": "Brampton planning notice OZS-2022-0001 (Centennial Mall, 2022)",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2022/Item%204%20-%20Gagnon%20Walker%20Domes%20Ltd.%20%E2%80%93%20Centennial%20Mall%20Brampton%20Ltd.%20%20(OZS-2022-0001)%20%20Ward%201.pdf",
+   "confidence": "high",
+   "note": "Phase 1 of master plan: 4 buildings (6, 18, 24, 33 storeys), 1,122 units; OPA/ZBL adopted Oct 2023 (By-laws 172/173-2023, files OZS-2022-0001 & 0046); later phases not counted",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2022-0198": {
+   "units": 0,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (personal service shop and offices)",
+   "checked": "2026-10-14"
+  },
+  "Mississauga|SPI 20/125": {
+   "units": 1,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "one new single detached dwelling on severed lot",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0015": {
+   "units": 273,
+   "source": "Brampton planning notice OZS-2022-0015 (public meeting 2024-05-06)",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Planning%20Notices/2024/2024-05-06/Item%201%20-%20Glen%20Schnarr%20and%20Assoc.%20Inc.%20-%20SCW%202084%20Venture%20Inc.%20CL5R%20Inc.%20CSCW%20740%20Inc.%20and%20CS0006%20Venture%20Inc.%20(OZS-2022-0015)%20Ward%2010.pdf",
+   "confidence": "high",
+   "note": "183 singles, 66 street towns, 24 dual-frontage towns",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2021-0030": {
+   "units": 67,
+   "source": "Peel Region Birch Place project page",
+   "url": "https://peelregion.ca/business/housing-development/birch-place",
+   "confidence": "high",
+   "note": "hotel conversion: 50 affordable rental + 17 youth transitional units; completed March 2024",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2021-0012": {
+   "units": 127,
+   "source": "Town of Caledon, 15728 Airport Road application page / resident meeting 2021-11-29",
+   "url": "https://caledon.ca/en/town-services/15728-airport-road.aspx",
+   "confidence": "high",
+   "note": "3-storey seniors retirement facility: 80 independent-living 1-2 bed units + 26 ambulatory care + 21 memory care units (institutional zone)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2020-0009": {
+   "units": 518,
+   "source": "UrbanToronto project database (Schlegel Village Sandalwood Expansion)",
+   "url": "https://urbantoronto.ca/database/projects/schlegel-village-sandalwood-expansion.51709",
+   "confidence": "medium",
+   "note": "two 12-storey buildings mixing retirement home suites and seniors apartments; third-party tracker figure, likely includes retirement suites",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE17.049": {
+   "units": 1,
+   "source": "the file's own wording (open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "single family dwelling with live/work component",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2026-0068": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (industrial condominium units, office/retail/warehouse)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2025-0006": {
+   "units": 0,
+   "source": "Brampton Notice of Passing By-law 261-2020 / CoA A-2020-0130",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Pub%20Notice%20-%20ZB%20261-2020%20-%20Henry%20Chiu%20Architects.pdf",
+   "confidence": "medium",
+   "note": "non-residential: hotels, banquet hall, office/retail (file T05W15.004 zoning); latest subdivision description truncated at '12-stor', believed office",
+   "checked": "2026-10-14"
+  },
+  "Caledon|21CDM-25002C": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "tenure conversion rental to condominium; no new units",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2025-0016": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (industrial buildings)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2025-0132": {
+   "units": 2,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "two limited site plans each converting a storage/locker room into one apartment unit (1+1)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2024-0011": {
+   "units": 0,
+   "source": "Town of Caledon PARC form / cover letter, 12489 & 12861 Dixie Rd",
+   "url": "https://caledon.ca/en/town-services/resources/Business-Planning--Development/Development-Services/12489--12861-Dixie-Road/12489-PARC-Meeting-Form---Final.pdf",
+   "confidence": "high",
+   "note": "non-residential (QuadReal industrial/warehouse; POPA 2024-0011, RZ 2024-0034)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2024-0024": {
+   "units": 19,
+   "source": "Blackthorn cover letter to Town of Caledon, 2024-10-07",
+   "url": "https://caledon.ca/en/town-services/resources/Business-Planning--Development/Development-Services/15-27-Shore-Street/Cover-Letter---10.07.2024.pdf",
+   "confidence": "high",
+   "note": "4-storey apartment, 19 units at 15, 21, 27 Shore St",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2024-0051": {
+   "units": 2929,
+   "source": "Brampton PDC agenda / recommendation report, 2025-10-06",
+   "url": "https://pub-brampton.escribemeetings.com/Meeting.aspx?Id=0b6f5785-8e3b-452b-86f5-c377be111ff8&Agenda=Merged&lang=English",
+   "confidence": "high",
+   "note": "latest: 2,929 units + ~4,700 m2 commercial; earlier Nov 2024 notice: 665 singles, 751 townhouses, 1,581 apartments (2,997)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|C07E17.010": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "non-residential (commercial buildings + heritage building)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0030": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "non-residential (employment lands, M4 zone)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0008": {
+   "units": 685,
+   "source": "Brampton Notice of adoption OP2023-016 (By-laws 211/212-2025)",
+   "url": "https://www.brampton.ca/EN/City-Hall/Documents/Public%20Notice%20-%20OP2023-016%20(By-law%20211-2025)%20and%20By-law%20212-2025.pdf",
+   "confidence": "high",
+   "note": "111 singles + 48 townhouses + 90 stacked townhouses + 436 apartments (approved Dec 2025)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2022-0045": {
+   "units": 271,
+   "source": "UrbanToronto project database, 4538 Castlemore Road",
+   "url": "https://urbantoronto.ca/database/projects/4538-castlemore-road.51975",
+   "confidence": "medium",
+   "note": "271 total (265 in tower) per third-party database; City docs give no total; a May 2024 PDC agenda mentions 27-storey tower; townhouse count unclear",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2022-0001": {
+   "units": 545,
+   "source": "Town of Caledon notice of application, 2022-05-17",
+   "url": "https://www.caledon.ca/en/news/notice-of-application-14245-highway-50.aspx",
+   "confidence": "high",
+   "note": "142 townhouses + 403 residential units in mixed-use buildings (POPA 2022-0002, RZ 2022-0001)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2021-0009": {
+   "units": 82,
+   "source": "SquareYards listing, 115-123 Queen Street West Condos",
+   "url": "https://www.squareyards.ca/115-123-queen-street-west-condos-115-123-queen-street-west-221-nhd",
+   "confidence": "medium",
+   "note": "82 units (35 1BR, 42 2BR, 5 3BR) on aggregator listing for 115-123 Queen St W; not confirmed by City document",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2020-0116": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (warehouse, telecom tower)",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2019-0066": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential (Tim Hortons restaurant/drive-through)",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SP88-005.000": {
+   "units": 0,
+   "source": "the file's own wording (Open data description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "tenure conversion rental to condominium; no new units",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2026-0029": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: place of worship/assembly in former dwelling",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2026-0013": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: temporary truck/trailer parking",
+   "checked": "2026-10-14"
+  },
+  "Caledon|2026-0001": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: surface parking lot for existing retirement residence",
+   "checked": "2026-10-14"
+  },
+  "Brampton|C02E05.036": {
+   "units": 1026,
+   "source": "UrbanToronto project database / forum (U Developments approved scheme)",
+   "url": "https://urbantoronto.ca/database/projects/253-queen-street-east",
+   "confidence": "medium",
+   "note": "Approved ZBLA 3 towers 32/33/38 storeys: 399+253+374 units (Phase 1 652 + Phase 2 374). 2019 original was 998. Nov 2025 Manga site plan (3x41 storeys) unit count not found",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SP81-041.000": {
+   "units": 300,
+   "source": "UrbanToronto, Nov 2025",
+   "url": "https://urbantoronto.ca/news/2025/11/30-storeys-proposed-queen-east-near-kennedy-brampton.59727",
+   "confidence": "high",
+   "note": "185-187 Queen St E, Atria 30-storey; 300 units stated (unit mix sums to 296); pre-application stage",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2025-0125": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "Latest application (SPA-2025-0125) is 17 parking spaces for medical office use; an earlier OPA/ZBA pre-consultation for a 12-storey apartment had no unit count found",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2023-0019": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: City office building addition",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2024-0154": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: community centre conversion",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2024-0063": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: industrial warehouses",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2024-0059": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: rezoning to Service Commercial, no development",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2024-0069": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: truck dealership",
+   "checked": "2026-10-14"
+  },
+  "Brampton|OZS-2023-0028": {
+   "units": 1946,
+   "source": "UrbanToronto project database / Skyscraper Center",
+   "url": "https://urbantoronto.ca/database/projects/200-county-court-boulevard.51345",
+   "confidence": "medium",
+   "note": "Stanford Homes 5 towers 22-44 storeys; per-building counts total 1,946 (forum says ~1,900)",
+   "checked": "2026-10-14"
+  },
+  "Mississauga|SP 23-8": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: office/restaurant/hotel/banquet",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2022-0184": {
+   "units": 320,
+   "source": "UrbanToronto project database (Boutin Tower)",
+   "url": "https://urbantoronto.ca/database/projects/boutin-tower.50866",
+   "confidence": "medium",
+   "note": "100 Railroad St, 42-storey Everlast rental tower",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2022-0080": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: latest: industrial loading dock/unit subdivision",
+   "checked": "2026-10-14"
+  },
+  "Brampton|C01W12.014": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: commercial/medical office building",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SPA-2021-0193": {
+   "units": 0,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "non-residential: brick plant expansion",
+   "checked": "2026-10-14"
+  },
+  "Brampton|PRE-2021-0148": {
+   "units": 1,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "medium",
+   "note": "consent to create one additional residential lot",
+   "checked": "2026-10-14"
+  },
+  "Brampton|SP18-035.000": {
+   "units": 31,
+   "source": "the file's own wording (Application description)",
+   "url": null,
+   "confidence": "high",
+   "note": "31 two/three-storey freehold townhouses (Ashley Oaks)",
+   "checked": "2026-10-14"
+  }
+ },
+ "notUsed": [
+  {
+   "key": "Caledon|2026-0007",
+   "found": 6680,
+   "why": "secondary plan target for the whole area, not one development"
+  },
+  {
+   "key": "Mississauga|SP 24/11",
+   "found": 226,
+   "why": "student residence (beds, not dwelling units)"
+  },
+  {
+   "key": "Brampton|SPA-2020-0185",
+   "found": 1,
+   "why": "replacement house (growth only)"
+  },
+  {
+   "key": "Caledon|2024-0010",
+   "found": 7600,
+   "why": "secondary plan target for the whole area, not one development"
+  },
+  {
+   "key": "Brampton|SP91-003.000",
+   "found": 649,
+   "why": "same site as OZS-2025-0050, counted there"
+  },
+  {
+   "key": "Brampton|SPA-2020-0184",
+   "found": 1,
+   "why": "replacement house (growth only)"
+  },
+  {
+   "key": "Caledon|21CDM-26001C",
+   "found": 49,
+   "why": "same 49 townhouses as Caledon 2026-0004, counted there"
+  },
+  {
+   "key": "Caledon|2025-0004",
+   "found": 900,
+   "why": "secondary plan target for the whole area, not one development"
+  },
+  {
+   "key": "Caledon|2024-0006",
+   "found": 442,
+   "why": "count already on the linked subdivision file 21T-24012C"
+  },
+  {
+   "key": "Caledon|2024-0001",
+   "found": 677,
+   "why": "2017 count of another file (21T-17008C); this file only amends policy wording"
+  },
+  {
+   "key": "Brampton|SPA-2023-0068",
+   "found": 90,
+   "why": "existing condo completed in 2022; revisions add no homes"
+  },
+  {
+   "key": "Brampton|PRE-2021-0044",
+   "found": 1,
+   "why": "recognizes an existing unit; no new home"
+  }
+ ],
+ "notFound": [
+  {
+   "key": "Brampton|PRE-2024-0148",
+   "note": "Residential mid-rise (R3M) proposed at 9208 Goreway; no unit count found"
+  },
+  {
+   "key": "Brampton|SP88-133.000",
+   "note": "Subdivision at 8525 Mississauga Rd (singles + street townhouses); no unit count found for this address"
+  },
+  {
+   "key": "Brampton|PRE-2024-0116",
+   "note": "3 high-rise buildings 16-20 storeys, no address; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2023-0154",
+   "note": "Mixed-use high density at 383 Orenda Rd; not searched fully (search budget exhausted)"
+  },
+  {
+   "key": "Brampton|SPA-2022-0205",
+   "note": "30 Rambler Dr: pre-consultation for two 12-storey mixed-use buildings (UrbanToronto forum); no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2022-0117",
+   "note": "Convenience store to residential at 2014 Embleton Rd; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2022-0006",
+   "note": "High-density residential at 6443 Mayfield Rd; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2021-0189",
+   "note": "10-storey seniors/retirement residence, 16,830 m2 GFA; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2021-0137",
+   "note": "12-storey seniors-oriented mixed-use at 11730 Airport Rd; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2021-0011",
+   "note": "20-storey condo at 133 Main St S; later separate pre-consultation reportedly 16-storey rental at 127-133A Main St S (Amico) per forum; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE16.032",
+   "note": "Heritage dwelling conversion to small apartments at 15 Alexander St; no unit count found"
+  },
+  {
+   "key": "Brampton|OZS-2025-0054",
+   "note": "not found; apartments + stacked townhomes, no count located"
+  },
+  {
+   "key": "Caledon|2024-0076",
+   "note": "not found (0 Highway 50; no notice located for this file)"
+  },
+  {
+   "key": "Brampton|SP89-121.000",
+   "note": "not found; two towers 32 & 30 storeys on 6-storey podium, no unit count located"
+  },
+  {
+   "key": "Brampton|C05W12.004",
+   "note": "Mount Pleasant Heights (Argo/TACC/Fieldgate/Paradise, 10124-10244 Mississauga Rd); forum cites an earlier plan of 212 singles + 546 townhouses for the subdivision, but not confirmed for this Phase 2 OPA / M2181 site plan"
+  },
+  {
+   "key": "Brampton|PRE-2023-0086",
+   "note": "16-storey condo (Ambria); no unit count found; UrbanToronto lists project as cancelled"
+  },
+  {
+   "key": "Brampton|PRE-2023-0052",
+   "note": "not found (pre-consultation, Block 47-2)"
+  },
+  {
+   "key": "Mississauga|OZ 22-8",
+   "note": "not found; two-storey mixed-use building, unclear if any residential"
+  },
+  {
+   "key": "Brampton|PRE-2021-0183",
+   "note": "not found (14-storey apartment pre-consultation)"
+  },
+  {
+   "key": "Brampton|PRE-2021-0152",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|OZS-2021-0029",
+   "note": "3 whole lots + 5 part-lot blocks for singles per description; final count not found (adjacent 9058 Creditview OZS-2020-0018 was 5 singles)"
+  },
+  {
+   "key": "Brampton|PRE-2021-0064",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|OZS-2020-0011",
+   "note": "not found (Executive Residential to Low/Medium & Medium/High density)"
+  },
+  {
+   "key": "Caledon|2018-0005",
+   "note": "not found (12435 Highway 50)"
+  },
+  {
+   "key": "Brampton|PRE-2026-0022",
+   "note": "no unit count found for 11411 Clarkway Dr; nearby 10484 Clarkway (OZS-2024-0035) is a different site (web search budget exhausted before further searches)"
+  },
+  {
+   "key": "Brampton|PRE-2025-0060",
+   "note": "no matching application found; nearby 10877 The Gore Rd (OZS-2024-0010: 33 singles + 32 towns + retail block) is similar but not confirmed as this site (web search budget exhausted before further searches)"
+  },
+  {
+   "key": "Caledon|2025-0015",
+   "note": "town-wide file; no site-specific unit count expected/found"
+  },
+  {
+   "key": "Brampton|OZS-2025-0017",
+   "note": "Notice lists 117 street townhouses + 392 back-to-back townhouses (509) plus 6 high-density and 3 mixed-use blocks with no unit count given; total unknown, at least 509"
+  },
+  {
+   "key": "Brampton|PRE-2024-0145",
+   "note": "no record found for 8212 McLaughlin Rd S"
+  },
+  {
+   "key": "Brampton|SPA-2024-0152",
+   "note": "Greenwin/Algoma University student residence (NOW Toronto reports 500-600 beds, beds not units); no unit count found for Mill-Denison 27-storey tower"
+  },
+  {
+   "key": "Caledon|2024-0073",
+   "note": "no record found for 12378 Coleraine Dr (area is largely industrial)"
+  },
+  {
+   "key": "Brampton|PRE-2024-0106",
+   "note": "no unit count found for 20-storey proposal at 53 McMurchy Ave N (web search budget exhausted before further searches)"
+  },
+  {
+   "key": "Brampton|SP93-024.000",
+   "note": "no unit count found for 6-storey mixed use at 494-496 Main St N (web search budget exhausted before further searches)"
+  },
+  {
+   "key": "Brampton|PRE-2023-0156",
+   "note": "no unit count found for Block Plan 40-5 / 9485 Winston Churchill Blvd"
+  },
+  {
+   "key": "Brampton|PRE-2023-0134",
+   "note": "Hillside Steeles & Lancashire pre-consultation (4 towers 40-60 storeys + 12-storey midrise); no unit count published"
+  },
+  {
+   "key": "Brampton|SPA-2022-0152",
+   "note": "no unit count found for 34/32-storey towers at NW corner Bovaird Dr W & Ashby Field Rd (web search budget exhausted before further searches)"
+  },
+  {
+   "key": "Brampton|PRE-2021-0179",
+   "note": "no record found for senior homes at 10650 The Gore Rd"
+  },
+  {
+   "key": "Brampton|PRE-2021-0118",
+   "note": "heritage house (By-law 11-2022); no unit count found for proposal"
+  },
+  {
+   "key": "Brampton|PRE-2021-0058",
+   "note": "no unit count found for 5137 Countryside Dr (industrial + condo townhouse block + singles) (web search budget exhausted before further searches)"
+  },
+  {
+   "key": "Brampton|SP19-041.000",
+   "note": "2020 forum summary of 11-building Queen/McVean NE corner plan gives no unit count"
+  },
+  {
+   "key": "Brampton|PRE-2026-0039",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|DPS-2025-0004",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2025-0035",
+   "note": "not found"
+  },
+  {
+   "key": "Caledon|2025-0006",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2024-0140",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2024-0123",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2024-0073",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2023-0153",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2023-0072",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2022-0154",
+   "note": "forum mentions earlier massing study of Park-Nelson assembly with 506 units, not confirmed for 31-storey concept"
+  },
+  {
+   "key": "Brampton|OZS-2022-0039",
+   "note": "OPA only to permit residential/noise-sensitive uses; no unit count stated"
+  },
+  {
+   "key": "Brampton|PRE-2022-0071",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|OZS-2021-0058",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2021-0177",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2021-0141",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|OZS-2021-0018",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE19.027",
+   "note": "same proposal as OZS-2022-0039 (OPA only); no unit count"
+  },
+  {
+   "key": "Brampton|OZS-2025-0048",
+   "note": "not found"
+  },
+  {
+   "key": "Caledon|2025-0012",
+   "note": "not found"
+  },
+  {
+   "key": "Caledon|2024-0051",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2023-0155",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|SPA-2022-0177",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|OZS-2021-0007",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|PRE-2021-0204",
+   "note": "20-storey pre-consultation; a search snippet of an UrbanToronto forum post suggested ~188 units but could not be verified"
+  },
+  {
+   "key": "Brampton|PRE-2020-0139",
+   "note": "listing confirms pre-consultation for multi-unit building; no unit count found"
+  },
+  {
+   "key": "Brampton|PRE-2019-0039",
+   "note": "not found"
+  },
+  {
+   "key": "Caledon|2019-0015T",
+   "note": "not found"
+  },
+  {
+   "key": "Brampton|SP16-054.000",
+   "note": "not found"
+  }
+ ]
+}
