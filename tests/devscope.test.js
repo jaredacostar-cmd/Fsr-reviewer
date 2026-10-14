@@ -84,8 +84,10 @@ test('open: sets scope, shows the Development tab and renders the site bar', asy
   assert.equal(els['#ftab-dev'].hidden, false);
   assert.ok(calls.some(c => c[0] === 'showFootTab' && c[1] === 'dev'), 'Development tab selected');
   assert.ok(calls.includes('renderTrail') || calls.some(c => c[0] === 'renderTrail'), 'trail re-rendered');
-  for (const c of ['setProject', 'setDaContext', 'ensureCouncil', 'highlight', 'flyToSite', 'traceDev', 'writeLink'])
+  for (const c of ['setProject', 'setDaContext', 'ensureCouncil', 'highlight', 'flyToSite', 'writeLink'])
     assert.ok(calls.some(x => x[0] === c), `bridge ${c} called`);
+  // Opening doesn't trace the sewer path (that zoomed the map out); Trace sewer does.
+  assert.ok(!calls.some(x => x[0] === 'traceDev'), 'sewer path not traced on open');
   const bar = els['#site-bar'];
   assert.equal(bar.hidden, false);
   assert.match(bar.innerHTML, /123 Main St/);
@@ -105,8 +107,7 @@ test('open: sets scope, shows the Development tab and renders the site bar', asy
     assert.match(bar.innerHTML, new RegExp(a.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')), `site bar has ${a}`);
   // Layers panel folded.
   assert.equal(els['.map-opts .mo-panel'].open, false);
-  // Trace drew without being cleared (scope still current).
-  assert.ok(!calls.some(c => c[0] === 'clearTrace'), 'own trace not cleared');
+  assert.ok(!calls.some(c => c[0] === 'clearTrace'), 'no trace cleared on open');
 });
 
 test('open is idempotent and the FSR note toggles', () => {
