@@ -76,6 +76,22 @@ body {
   background: var(--surface-0);
   color: var(--text-primary);
   font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* Column layout so the unofficial banner sits above the app without overlaying it. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+/* Unofficial prototype banner: slim always-visible strip at the very top. */
+.unofficial-banner {
+  flex: none;
+  background: var(--surface-2);
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  font-size: 11.5px;
+  line-height: 1.45;
+  text-align: center;
+  padding: 4px 12px;
 }
 h1, h2, h3 { margin: 0; font-weight: 600; }
 h1 { font-size: 18px; }
@@ -88,7 +104,11 @@ button, input, select { font: inherit; color: inherit; }
 
 .app {
   display: grid; grid-template-columns: 380px 1fr; grid-template-rows: minmax(0, 1fr) auto;
-  grid-template-areas: "side map" "foot foot"; height: 100vh; height: 100dvh;
+  grid-template-areas: "side map" "foot foot";
+  /* Fills the viewport below the unofficial banner (body is a flex column). */
+  flex: 1 1 auto;
+  min-height: 0;
+  height: auto;
 }
 .sidebar { grid-area: side; min-height: 0; }
 .map-wrap { grid-area: map; }
@@ -1737,3 +1757,7 @@ body.print-map .area-box { display: none; }
 .sub-key i { display: inline-block; width: 12px; height: 10px; border-radius: 2px; }
 .sub-key .sk-app { background: color-mix(in srgb, #9c36b5 30%, transparent); border: 2px solid #9c36b5; }
 .sub-key .sk-dev { margin-left: 6px; border: 2px dashed #f76707; }
+
+/* Phase 0 (trust and transparency): inline "screening estimate" label for
+   calculated figures. Small muted text only — never a status colour. */
+.est-tag { font-size: 11px; color: var(--text-muted); font-weight: normal; white-space: nowrap; }

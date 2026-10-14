@@ -190,22 +190,27 @@
       if (el && !el.contains(e.relatedTarget)) hide();
     });
     // Touch: press and hold.
-    let startXY = null;
+    let startXY = null, pointerDown = false;
     document.addEventListener('pointerdown', e => {
       if (card && !card.hidden && !card.contains(e.target)) hide();
       if (e.pointerType !== 'touch') return;
       const el = e.target.closest('[data-info]');
       if (!el) return;
       startXY = [e.clientX, e.clientY];
+      pointerDown = true;
       clearTimeout(timer);
-      timer = setTimeout(() => { show(el); suppressClick = true; }, TOUCH_DELAY);
+      // Only show the card when the pointer is still down and unmoved: if the browser
+      // takes over the gesture (scroll/zoom), it fires pointercancel instead of pointerup,
+      // which must not leave the timer armed to pop the card up after the finger lifts.
+      timer = setTimeout(() => { if (pointerDown && startXY) { show(el); suppressClick = true; } }, TOUCH_DELAY);
     });
     // A long press shows the card; don't let its release also tap the control underneath.
     document.addEventListener('click', e => { if (suppressClick) { suppressClick = false; e.preventDefault(); e.stopPropagation(); } }, true);
     document.addEventListener('pointermove', e => {
       if (e.pointerType === 'touch' && startXY && Math.hypot(e.clientX - startXY[0], e.clientY - startXY[1]) > 10) { clearTimeout(timer); startXY = null; }
     });
-    document.addEventListener('pointerup', e => { if (e.pointerType === 'touch') { clearTimeout(timer); startXY = null; } });
+    document.addEventListener('pointerup', e => { if (e.pointerType === 'touch') { clearTimeout(timer); pointerDown = false; startXY = null; } });
+    document.addEventListener('pointercancel', e => { if (e.pointerType === 'touch') { clearTimeout(timer); pointerDown = false; startXY = null; } });
     addEventListener('scroll', hide, true);
     addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
   }

@@ -13,7 +13,7 @@
   <link rel="icon" type="image/png" href="icons/icon-192.png">
   <link rel="manifest" href="manifest.webmanifest?v=__BUILD__">
   <meta name="app-version" content="__BUILD__">
-  <title>Peel Development Tracker</title>
+  <title>Peel Growth Pipeline (unofficial)</title>
   <meta name="description" content="Every development in Peel Region (Mississauga, Brampton, Caledon) from application to completion, on a map.">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
@@ -32,10 +32,11 @@
       if (d && !d.textContent) d.textContent = (e && e.message ? e.message : 'script error') + (e && e.filename ? ' (' + e.filename.split('/').pop().split('?')[0] + ':' + e.lineno + ')' : '') + ' · build ' + (v ? v.content : '?');
     });
   </script>
+  <div class="unofficial-banner">Unofficial prototype · public data only · not a Region of Peel product</div>
   <div class="app">
     <aside class="sidebar" id="sidebar">
       <header class="brand">
-        <h1>Peel Development Tracker</h1>
+        <h1>Peel Growth Pipeline (unofficial)</h1>
         <p class="sub">Mississauga · Brampton · Caledon — from application to completion</p>
         <button type="button" class="btn small share-btn" data-share title="Copy a link to this exact view: filters, tab, switches, map position and the open development">Share link</button>
         <button type="button" class="btn small help-btn" data-help-open title="Guides for common tasks and a quick tour">Help</button>
@@ -337,6 +338,7 @@
   <script src="js/info.js?v=__BUILD__"></script>
   <script src="js/arcgis.js?v=__BUILD__"></script>
   <script src="js/loader.js?v=__BUILD__"></script>
+  <script src="js/provenance.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
 </body>
 </html>
