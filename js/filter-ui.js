@@ -3,7 +3,7 @@
   // Reference rewrites per SPLIT_MAP.md §0 rule 4.
   const { $, esc, fmtNum } = window.PeelUtil;
   const P = window.PeelPhases;
-  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'growth', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
+  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'all', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
   const App = () => window.PeelApp;
   const DD = () => window.PeelDevDetail;
   const SD = () => window.PeelSvcData;
@@ -87,7 +87,7 @@
     const out = [];
     const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
     const unitsLabel = { 1: 'Adds units or jobs', 10: '10+ units', 50: '50+ units', 100: '100+ units', 500: '500+ units' };
-    const landuseLabel = { growth: 'Adds units or jobs', residential: 'Residential', mixed: 'Mixed use', employment: 'Employment' };
+    const landuseLabel = { all: 'Any land use', growth: 'Adds units or jobs', residential: 'Residential', mixed: 'Mixed use', employment: 'Employment' };
     const dwellingLabel = { single: 'Single / semi-detached', town: 'Townhouse', apartment: 'Apartment' };
     const setVal = (id, v) => { const el = $(id); if (el) el.value = v; };
     if (App().state.search) out.push({ label: `“${App().state.search}”`, clear: () => { App().state.search = ''; setVal('#f-search', ''); } });

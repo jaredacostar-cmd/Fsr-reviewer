@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'growth', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
+  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'all', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
   const { $, esc, fmtNum, estTag, roundPop, uML, uLs, token, store } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;

@@ -33,11 +33,13 @@
   // FLAG_META); the counting basis lives in the Scenario control, not the filters.
   const DEFAULT_FLAGS = () => ({ stalled: false, appeal: false, dcwait: false, psover: false, week: false, watched: false, est: false });
   const DEFAULT_BASIS = 'all';        // counting basis: 'all' | 'committed' | 'remaining'
-  const DEFAULT_LANDUSE = 'growth';   // 'growth' | 'residential' | 'mixed' | 'employment'
+  // 'all' (the default: every application, as the municipalities map them) | 'growth' |
+  // 'residential' | 'mixed' | 'employment'.
+  const DEFAULT_LANDUSE = 'all';
   // Phase 1 filter helpers (js/filters.js, loaded before this script): the flag metadata, the
   // phase -> wastewater-layer map and the old share-link migration. Degrades to no-ops if the
   // script tag is missing so the app still runs.
-  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'growth', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
+  const PF = window.PeelFilters || { FLAG_META: [], PHASE_LAYER_MAP: {}, wwLayersFromStages: () => ({ built: false, approved: false, proposed: false }), migrateLegacyFocus: () => ({ flags: [], basis: 'all', minUnits: 0, landuse: 'all', yearPreset: null }), encodeFlagParam: () => '', decodeFlagParam: () => ({}) };
   const state = {
     sources: [],                         // {id,name,municipality,kind,url,enabled,status,msg,records}
     projects: [],
@@ -224,10 +226,18 @@
     return p._appUnits;
   }
 
-  // Land-use filter: what the development adds. 'growth' (the default) is the old Growth
-  // focus test — planning applications proposing new homes or new jobs.
+  // Land-use filter: what the development adds. 'growth' is the old Growth focus test —
+  // planning applications proposing new homes or new jobs — plus growth proposals whose unit
+  // count isn't published yet (precinct and block plans, subdivisions: often "see the
+  // attached"), which would otherwise vanish.
+  const GROWTH_TEXT = /subdivision|block plan|precinct|mixed[- ]use|secondary plan|draft plan|apartment|townhouse|condominium|stacked|residential (development|community|uses|units)|dwelling units/i;
+  const NOT_GROWTH = /replac|existing (dwelling|house|building)|addition to|renovat|accessory|garage|pool|deck|tenant|interior|temporary use|day ?care/i;
+  const growthUnstated = p => !(PeelFilterUI.appUnits(p) > 0) && !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
+    && !NOT_GROWTH.test(r.description || '') && (GROWTH_TEXT.test(`${r.description || ''} ${r.type || ''}`) || /official plan|zoning|subdivision|block plan/i.test(r.type || ''))
+    && (['master', 'precon'].includes(r.stage || P.stageOf(r)) || GROWTH_TEXT.test(r.description || '')));
   const LANDUSE_TEST = {
-    growth: p => PeelFilterUI.appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0),
+    all: () => true,
+    growth: p => PeelFilterUI.appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0) || growthUnstated(p),
     residential: p => (p.units || 0) > 0 && !empOf(p),
     mixed: p => (p.units || 0) > 0 && !!empOf(p),
     employment: p => !!empOf(p),

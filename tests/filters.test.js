@@ -32,8 +32,8 @@ test('wwLayersFromStages: phases imply the wastewater growth layers', () => {
 });
 
 test('migrateLegacyFocus: the old fo values map onto the new state', () => {
-  const dflt = { flags: [], basis: 'all', minUnits: 0, landuse: 'growth', yearPreset: null };
-  assert.deepEqual(F.migrateLegacyFocus('growth'), dflt);
+  const dflt = { flags: [], basis: 'all', minUnits: 0, landuse: 'all', yearPreset: null };
+  assert.deepEqual(F.migrateLegacyFocus('growth'), { ...dflt, landuse: 'growth' });
   assert.deepEqual(F.migrateLegacyFocus('none'), dflt);
   assert.deepEqual(F.migrateLegacyFocus('bogus'), dflt);
   assert.deepEqual(F.migrateLegacyFocus('major'), { ...dflt, minUnits: 100 });

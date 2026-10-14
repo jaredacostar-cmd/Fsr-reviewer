@@ -1499,6 +1499,19 @@ and small phases were cut off ("pprove", "Inde truc").
 - The phase colours had stopped showing since the module split: two modules read the colours
   once at load, before they were set. They now read them each time they draw.
 
+## Land use filter: every application by default
+
+The *Land use* filter (What) defaults to **Any land use**, so the map shows every active
+application, as the municipalities map them. The phase 1 filter redesign (#151) had made *Adds
+units or jobs* the default. That hid any development without a published unit or job count, such
+as most of Brampton's Heritage Heights (Area 52) precinct and block plans and its institutional
+and retail site plans: the default view dropped from 2,027 developments to 619.
+
+*Adds units or jobs* is still an option. It now also keeps growth proposals whose unit count
+isn't published yet: official plan, zoning, subdivision or block plan files, and descriptions
+naming a subdivision, precinct, mixed use, apartments or townhouses. Replacement houses,
+additions, temporary uses and day cares stay out.
+
 ## Updates reach the browser (offline service worker)
 
 The offline service worker (`sw.js`) used to serve the page itself cache-first under a fixed
