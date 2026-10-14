@@ -473,7 +473,7 @@
         if (!wf) { wfLoading = true; WT().loadWaterFacilities().then(d => { if (d && $('#timing-body')) renderTiming(); }); }
       }
     }
-    const plantsTable = trigTable('Wastewater plants: trigger-year ranges <span class="muted">average dry weather flow vs rated capacity</span>', plantFacs());
+    const plantsTable = trigTable('Wastewater plants: trigger-year ranges <span class="muted">${SvcTab().wwFlowLabel()} vs rated (annual average) capacity</span>', plantFacs());
     const waterTable = wf ? trigTable('Water: trigger-year ranges <span class="muted">maximum day vs rated (treatment) / firm (pumping) capacity</span>', wf)
       : wfLoading ? skel('Water facilities') : '';
 

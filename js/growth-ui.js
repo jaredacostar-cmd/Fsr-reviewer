@@ -88,7 +88,7 @@
     body.innerHTML = `
       ${hlP(head)}
       <h3 class="sub-title" data-info="demand-units">Homes</h3>
-      <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with a build-out` : '', 'demand-units')}
+      <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with units` : '', 'demand-units')}
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
         ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(comp.totalUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
         ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>

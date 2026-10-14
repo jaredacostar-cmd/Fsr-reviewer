@@ -21,6 +21,7 @@
   const ST = () => root.PeelSewerTrace;
   const SV = () => root.PeelSvcData;
   const SET = () => root.PeelSettings;
+  const SvcTab = () => root.PeelSvcTab;
   const EX = () => root.PeelExports;
   const OV = () => root.PeelOverviewTab;
 
@@ -130,16 +131,16 @@
         wwTile('Allocations recorded', fmtNum(rows.length), rows.length === 1 ? 'allocation' : 'allocations', `${fmtNum(totU)} units`, 'allocations'),
         ...plants.map(x => wwTile(`${esc(SV().PLANT_SHORT[x.pl])} room`, fmt1(x.after), 'ML/d', `after allocations · ≈${fmtNum(roundPop(x.peopleAfter))} people`, 'allocations')),
       ].join('')}</div>
-      <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d average dry</span></h3>
+      <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d ${SvcTab().wwFlowLabel()}</span></h3>
       <div>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}</div>
-      <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + approved, and after allocations (average dry weather at each plant's measured rate)</caption>
-        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + approved</th><th>Room</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
+      <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + built + committed, and after allocations (${SvcTab().wwFlowLabel('long')})</caption>
+        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + committed</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
         <tbody>${plants.map(x => `<tr><td>${esc(SV().PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${fmt1(x.room)} ML/d<small>≈${fmtNum(roundPop(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${fmt1(x.after)} ML/d</strong><small>≈${fmtNum(roundPop(x.peopleAfter))} people</small></td></tr>`).join('')}</tbody></table>
       <div class="export-bar"><button type="button" class="btn small" data-alloc-csv>Export CSV</button><label class="btn small">Import CSV<input type="file" accept=".csv,text/csv" data-alloc-imp hidden></label></div>
       ${rows.length ? `<table class="dt"><caption>Allocations recorded${rows.length > 10 ? ` · showing ${shown.length} of ${fmtNum(rows.length)}` : ''}</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
         ${shown.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(SV().PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>
         ${rows.length > 10 ? `<p><button type="button" class="btn small link" data-alloc-all>${allocSeeAll ? 'Show fewer' : `See all ${fmtNum(rows.length)} allocations`}</button></p>` : ''}` : ''}
-      ${wwInfoLine('Room at the 90% expansion trigger after existing + approved, less allocations recorded ahead of approval; average dry weather at each plant\u2019s measured rate.')}`;
+      ${wwInfoLine('Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ' + SvcTab().wwFlowLabel('long') + '.')}`;
   }
   $('#alloc-body').addEventListener('click', e => {
     if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }

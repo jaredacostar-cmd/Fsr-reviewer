@@ -1126,12 +1126,14 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .cap-bar .gseg { min-width: 2px; }
 .cap-reserve { position: absolute; top: 2px; bottom: 2px; border: 1.5px dashed var(--text-secondary); border-left: none; border-radius: 0 4px 4px 0; box-sizing: border-box; }
 .cap-line { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--text-primary); }
+.cap-line.trig { width: 0; background: none; border-left: 2px dashed var(--text-secondary); }
 .cap-end { position: absolute; top: 50%; transform: translate(6px, -50%); font-size: var(--fs-2); font-weight: 500; color: var(--text-primary); white-space: nowrap; }
 .cap-end.near { transform: translate(8px, -50%); }
 .cap-text { grid-column: 2; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin-top: var(--space-1); color: var(--text-secondary); }
 .cap-text .over { color: var(--text-primary); font-weight: 500; }
 .gsw.cap-reserve-sw { background: transparent; border: 1.5px dashed var(--text-secondary); box-sizing: border-box; }
 .cap-line-sw { display: inline-block; width: 2px; height: 12px; background: var(--text-primary); }
+.cap-line-sw.trig { width: 0; background: none; border-left: 2px dashed var(--text-secondary); }
 @media (max-width: 640px) { .cap-axis, .cap-row { grid-template-columns: minmax(0, 1fr); } .cap-axis > div:first-child { display: none; } .cap-text { grid-column: 1; } }
 .svc-switches { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); }
 .plants-table tr.ext.neg td { color: var(--text-secondary); }
@@ -2269,3 +2271,6 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .dt.dt-wide th:first-child, .dt.dt-wide td:first-child { position: sticky; left: 0; z-index: 1; background: var(--surface-1); box-shadow: inset -1px 0 0 var(--border); }
 .analysis-panes .svc-table { min-width: 0; }
 .analysis-panes .dt th, .analysis-panes .dt td { padding-left: 6px; padding-right: 6px; }
+/* Basis chip on a capacity figure (design / 2025 measured / Master Plan 2020 / mixed). */
+.basis-chip { display: inline-block; margin-left: var(--space-1); padding: 0 6px; border: 1px solid var(--border); border-radius: 999px; font-size: var(--fs-1); font-weight: 500; line-height: 1.5; color: var(--text-secondary); vertical-align: middle; white-space: nowrap; cursor: help; }
+.basis-chip.basis-mixed { border-style: dashed; }

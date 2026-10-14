@@ -101,7 +101,7 @@
       <td class="n"><strong${bo > cap ? ' class="mpc-hi"' : ''}>${fmtNum(Math.round(bo))}</strong><small>${verdict}${bo > cap ? ' · over capacity' : ''}</small></td><td class="mpc-cell">${bar}</td></tr>`;
   }
   const mpHead = unitT => `<tr><th>Facility</th><th class="n">Capacity</th><th class="n">Master Plan<br>2026 · 2031 · 2041</th><th class="n mpc-x">Today</th><th class="n mpc-x">+ Approved</th><th class="n mpc-x">+ Proposed</th><th class="n">Build-out</th><th>${unitT}</th></tr>`;
-  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Approved</li><li><span class="gsw mpc-p"></span>+ Proposed (in review)</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
+  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Committed</li><li><span class="gsw mpc-p"></span>+ Proposed (in review)</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
   function renderMpCompare() {
     const M = App().state.svcModel, R = App().state.reports;
     const ww = $('#mp-ww');
@@ -138,7 +138,7 @@
     const ratedTreat = fs.filter(f => f.plant && /Kennedy|Lorne/.test(f.name)).reduce((t, f) => t + (f.plant.ratedMLd || 0), 0);
     const nShort = fs.filter(f => short(f).length).length;
     const grpName = sy => esc(sy === 'Lake-based' ? 'Lake-based (other)' : sy === 'Caledon groundwater' ? 'Caledon groundwater systems' : `${sy} transmission system`);
-    const rowFor = f => { const sh = short(f), w = WT().wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WT().WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(WT().wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong></span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; };
+    const rowFor = f => { const sh = short(f), w = WT().wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WT().WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(WT().wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz" title="Firm (largest pump out of service)${p.actualFirm != null && p.actualFirm !== p.firm ? `; the capacity check uses the 2020 Master Plan\u2019s modelled actual firm, ${fmtNum(p.actualFirm)}` : ''}">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong>${p.actualFirm != null && p.actualFirm !== p.firm ? `<small> actual ${fmtNum(p.actualFirm)}</small>` : ''}</span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; };
     const tableFor = list => { const rows = SYS.map(sy => { const ls = list.filter(f => f.system === sy); if (!ls.length) return ''; return `<tr class="wf-grp"><td colspan="7">${grpName(sy)}</td></tr>${ls.map(rowFor).join('')}`; }).join(''); return rows ? `<div class="hyd-scroll"><table class="dt svc-table wf-table"><thead><tr><th>Facility</th><th>Type</th><th class="n">Firm pumping by zone fed (ML/d)</th><th class="n">Storage (ML)</th><th>Treatment</th><th>Master Plan: short by 2041</th><th>Planned DC works</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''; };
     const main = fs.filter(f => short(f).length), rest = fs.filter(f => !short(f).length);
     return `<div id="wfac-sec"><p class="headline">${fs.length} existing water facilities · ${fmtNum(tot.ml)} ML of storage${nShort ? ` · <strong>${nShort} short by 2041</strong> in the 2020 Master Plan assessment` : ''}.</p>
@@ -290,7 +290,7 @@
     const lim = PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
     const fac = App().state.dcInfra && App().state.dcInfra.wastewater.facilities.find(f => f.kind === 'plant' && f.plant === pl);
     const after = runOut(q, y => PLANT_TRIGGER * ratedAt(y === 'today' ? MM().THIS_YEAR : y));
-    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · average dry`, cap: lim, unit: 'ML/d',
+    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
       util: { today: cap.existing / lim, com: cap.committed / lim, bo: cap.buildout / lim }, room, people: room * 1e6 / (cap.perPerson || 1), out: runOut(q, () => lim), outAfter: steps.length ? after : undefined,
       relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}` })), q, rated: cap.rated };
   }
@@ -370,7 +370,9 @@
      the scenario key so cached() rebuilds the DCN cache with the upgraded
      pipe's capacity. Empty in normal use: no behaviour change. */
   let sewUpgKey = '';
-  function scenarioKey() { return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${SvcTab().svcOpt.ww}|${SvcTab().svcOpt.md}${sewUpgKey}`; }
+  // Every switch that changes a result is in the key (the diversion, counting basis and outside-area
+  // rule included), so a cached result never outlives the scenario it was computed for.
+  function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}${sewUpgKey}`; }
   function cached(id, fn) {
     const k = scenarioKey(); if (DCN.key !== k) { DCN.cache.clear(); DCN.key = k; }
     if (!DCN.cache.has(id)) DCN.cache.set(id, fn());

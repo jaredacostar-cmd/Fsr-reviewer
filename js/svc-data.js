@@ -181,7 +181,7 @@
   // The collapsed Map options line: what is on.
   function syncPanelSum() {
     const el = document.getElementById('mo-psum'); if (!el) return;
-    const loads = MM().isWW() && !Object.values(MM().getWwLay()).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
+    const loads = MM().isWW() && !Object.values(MM().getWwLay()).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'committed'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
     const on = [MM().getDevsOn() && 'developments', MM().svcOn.bk && 'blocks', MM().svcOn.pz && 'zones', WT().WF.on && 'water facilities', MM().mstyle.cap !== 'off' && 'capacity', Object.values(MM().getExistOn()).some(Boolean) && 'pipes', ...(window.PeelConstraints ? Object.entries(window.PeelConstraints.getOn()).filter(([, v]) => v).map(([k]) => window.PeelConstraints.LAYERS[k].short) : []), MM().getDcOn().on && 'DC works', (MM().areaOn.sp || MM().areaOn.mtsa) && 'planning areas', CA().getDaOn() && 'census areas'].filter(Boolean);
     el.textContent = [on.length ? on.join(', ') : 'none on', loads].filter(Boolean).join(' · ');
     syncAreaOn();
@@ -255,7 +255,8 @@
     if (!App().state.servicing || !M) return null;
     const e = D.estimate(areaMembers(p), App().state.criteria, 'all', App().jobsOf), cb = e.combined;
     if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return null;
-    const layer = p.phase === 'completed' ? 'built' : D.COMMITTED_PHASES.has(p.phase) ? 'approved' : (p.phase === 'inception' || p.phase === 'review') ? 'proposed' : null;
+    // The same layer as the Water / Wastewater tables and the map (completed before the census = existing).
+    const layer = ({ existing: 'existing', built: 'built', approved: 'approved', proposed: 'proposed' })[MM().svcLayerOf(p)] || null;
     const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean)[0];
     const zl = z && M.zones.get(z.id);
     const zMax = zl ? M.wMax(M.total(zl), M.jobs(zl)) : 0;
@@ -284,7 +285,7 @@
   function servicingCheckHTML(p, F, opt = {}) {
     const { M, e, cb, layer, z, zl, zMax, path, pl, cap, devAvg } = F;
     const mld = D.toMLd, ls = uLs, pct = DD().pctOf;
-    const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
+    const layerText = { existing: 'existing — built before the census, in the census flow', built: 'built since the census — part of today\u2019s flow', approved: 'committed (D-5-1) — already counted against capacity', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
     const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}${F.zNear ? `<small>${esc(nearText(F.zNear))}</small>` : ''}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)}) ${estTag}` : ''}</td></tr>`;
     const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
     const pathRows = path.map((a, i) => {
@@ -294,12 +295,12 @@
     let plant = '';
     if (cap) {
       const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
-      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + approved ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
+      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + built + committed ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}. ${estTag}</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `${SCREEN_NOTE}<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${opt.trace === false ? '' : `<div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>`}
-      ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
+      ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out ${M.mode === 'calibrated' ? 'annual average flow at each outlet (capacity check, 2025 measured rate)' : 'average dry weather flow (ADWF) at each outlet (design flows)'}</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
       <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(roundPop(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
   }

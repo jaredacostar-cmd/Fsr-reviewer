@@ -109,7 +109,7 @@
     const outWw = !(p.dr && p.dr.length), outWa = !(p.pz && p.pz.length);
     const conn = [outWw && (dcNearest('wastewater', pt, DC_CONNECT_M) || null), outWa && (dcNearest('water', pt, DC_CONNECT_M) || null)].filter(Boolean);
     const needBy = Math.max(0, ...conn.filter(n => n.ln.y && n.ln.y >= MM().THIS_YEAR).map(n => n.ln.y));
-    const committed = D.COMMITTED_PHASES.has(p.phase);
+    const committed = D.isCommitted(p);
     return { ww: outWw ? conn.find(n => n.ln.sys === 'wastewater') || ww : ww, wa: outWa ? conn.find(n => n.ln.sys === 'water') || wa : wa, outWw, outWa,
       trunks: [...byProj.values()].sort((a, b) => a.y - b.y), facs, plant, needBy, gap: committed && needBy > MM().THIS_YEAR };
   }

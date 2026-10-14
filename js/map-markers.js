@@ -374,13 +374,13 @@
   const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm pm-hit', iconSize: [32, 32], html: dot(phase) }));
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
-  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Approved', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
+  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Committed (draft plan or site plan approved)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
   const layerColors = () => ({ existing: 'var(--text-muted)', built: phaseColor('completed'), approved: phaseColor('approved'), proposed: 'var(--layer-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
   function svcLayerOf(p) {
     if (p.phase === 'cancelled') return 'out';
     if (p.phase === 'completed') { const bc = App().state.censuses && CA().baselineCensus(); return bc && +p.milestones.completed < +new Date(`${bc.date}T00:00:00Z`) ? 'existing' : 'built'; }
-    return D.COMMITTED_PHASES.has(p.phase) ? 'approved' : 'proposed';
+    return D.isCommitted(p) ? 'approved' : 'proposed';
   }
   const plantOfDev = p => { const a = App().state.servicing && SD().svcIds(p, 'dr').map(id => SD().svcById.get(id)).filter(Boolean)[0]; return a ? a.plant : 'none'; };
   // Data quality: what to check before relying on a development's numbers.

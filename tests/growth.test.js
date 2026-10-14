@@ -25,18 +25,22 @@ const permitUnits = rs => {
 };
 const deps = { completedAt, permitUnits };
 
-test('pipelineTotals sums the build-out buckets and skips projects without one', () => {
+test('pipelineTotals: one definition — every development with units, counted once, net of demolitions', () => {
   const t = G.pipelineTotals([
-    proj({ buildout: { planned: 100, permitted: 60, completed: 20, remaining: 40 } }),
-    proj({ buildout: { planned: 50, permitted: 50, completed: 50, remaining: 0 } }),
-    proj({ phase: 'completed' }), // no buildout: skipped
+    proj({ units: 100, buildout: { planned: 100, permitted: 60, completed: 20, remaining: 40 } }),
+    proj({ units: 50, buildout: { planned: 50, permitted: 50, completed: 50, remaining: 0 } }),
+    proj({ phase: 'completed', units: 8 }),   // no build-out: counted by its stage (permitted, completed)
+    proj({ phase: 'review', units: 30 }),     // no build-out, not permitted: left to build
+    proj({ phase: 'cancelled', units: 99 }),  // withdrawn: not counted
+    proj({ phase: 'review' }),                // no units: not counted
   ]);
-  assert.equal(t.n, 2);
-  assert.equal(t.planned, 150);
-  assert.equal(t.permitted, 110);
-  assert.equal(t.completed, 70);
-  assert.equal(t.left, 40);
-  assert.deepEqual(G.pipelineTotals([]), { planned: 0, permitted: 0, completed: 0, left: 0, n: 0 });
+  assert.equal(t.n, 4);
+  assert.equal(t.withBuildout, 2);
+  assert.equal(t.planned, 188);
+  assert.equal(t.permitted, 118);
+  assert.equal(t.completed, 78);
+  assert.equal(t.left, 70);
+  assert.deepEqual(G.pipelineTotals([]), { planned: 0, permitted: 0, completed: 0, left: 0, n: 0, withBuildout: 0 });
 });
 
 test('aggregateTypes sums dwelling types and employment space with injected deps', () => {
