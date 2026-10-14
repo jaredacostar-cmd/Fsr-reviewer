@@ -16,6 +16,8 @@
   // Individual-pipe modelling results (capacity, % full, freeboard, sewer profile, tightest pipes,
   // the pipe upgrade tool, the EPANET per-main table) are off for now: true brings them back.
   const PIPE_RESULTS = false;
+  // Growth's pace, census and 2051 views at development scope (design audit, Group 6).
+  const AREA_ONLY_NOTE = '<p class="small muted area-only">Pace, the census and the 2051 allocation describe an area, not one development. Use the trail (Peel, or the area) to see them.</p>';
   // Pipe class by size (design audit, Group 4), not by distance along the path: the smallest
   // "primary wastewater main (trunk)" on the Region's 2026 DC capital maps is 750 mm.
   const TRUNK_MM = 750;
@@ -170,7 +172,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

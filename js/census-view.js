@@ -82,6 +82,8 @@
   function renderGrowthCensus() {
     const body = $('#growth-census-body'); if (!body) return;
     SvcTab().renderSvcTab();
+    // Area-only content: not shown at development scope (design audit, Group 6).
+    if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const bc = CA().baselineCensus();
     const has = !!(bc && bc.das.length && App().state.projects.length);
     // Phase 4: census is a Growth sub-view now — hide its subtab (and leave it) when

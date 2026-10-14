@@ -43,7 +43,7 @@
     // Filters button on the <1200px shell.
     { ch: 'Find', el: () => DT().shellNarrow() ? $('#toggle-sidebar') : $('#f-search'), t: 'Search', b: 'Type an address, file number, secondary plan, pressure zone, pumping station or DC project number, then pick a result to jump to it.' },
     { ch: 'Find', el: () => DT().shellNarrow() ? $('#toggle-sidebar') : $('#pipeline'), t: 'Phases', b: 'Tap a phase to show only it. On a computer, Ctrl-click (⌘ on a Mac) to pick several.' },
-    { ch: 'Map', el: () => document.querySelector('.mo-view'), t: 'Map views', b: 'Planning, Water, Wastewater and DC: each view sets the right layers, colours and background, and remembers your changes.' },
+    { ch: 'Map', el: () => document.querySelector('#tb-views'), t: 'Map views', b: 'In the top bar: Planning, Water, Wastewater and DC: each view sets the right layers, colours and background, and remembers your changes.' },
     // Phase 2 layout shell: the legend folded into the Layers panel, "More settings" merged back
     // into it, "Filter by area" moved to the filter panel, and the tools dropdown became a rail.
     { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per layer: developments, blocks, pressure zones, water facilities, capacity colours, existing pipes, planned DC works, planning and census areas — the legend for what is shown, and More settings below.' },

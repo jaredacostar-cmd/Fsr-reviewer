@@ -194,6 +194,21 @@
       <p class="small muted ov-info">${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow.</p>`;
   }
 
+  // Water / Wastewater / DC are Peel-wide: below Peel (municipality, area, servicing scope) they say
+  // so, and link the plants or zones the scoped developments load (design audit, Group 6).
+  const PEEL_WIDE = { water: 'Pressure zones and treatment', ww: 'Plants, blocks and pumping stations', dca: 'DC projects' };
+  function peelWideNote() {
+    const el = typeof document !== 'undefined' && document.getElementById('scope-note'); if (!el || !App() || !App().state) return;
+    const st = App().state, tab = AT() && AT().getFootTab();
+    const below = st.muni || st.sp.length || st.mtsa.length || st.pz.length || st.dr.length || st.ss;
+    if (!below || (window.DevScope && window.DevScope.current()) || !PEEL_WIDE[tab]) { el.hidden = true; return; }
+    const set = st.filtered || [], count = new Map(), bump = k => count.set(k, (count.get(k) || 0) + 1);
+    if (tab === 'water') { for (const p of set) for (const id of SD().svcIds(p, 'pz')) bump(id); }
+    else for (const p of set) { const pl = MM().plantOfDev(p); if (PLANTS.includes(pl)) bump(`plant:${pl}`); }
+    const top = [...count].sort((a, b) => b[1] - a[1]).slice(0, 5).filter(([ref]) => resolve(ref));
+    el.innerHTML = `<strong>Peel-wide.</strong> ${PEEL_WIDE[tab]} serve all of Peel, so these tables are not filtered to ${esc(OT().scopeText())}.${top.length ? ` The ${fmtNum(set.length)} developments shown load: ${top.map(([ref, n]) => `${link(ref, resolve(ref).short)} (${fmtNum(n)})`).join(' · ')}.` : ''}`;
+    el.hidden = false;
+  }
   document.addEventListener('click', e => {
     const b = e.target.closest && e.target.closest('[data-ss],[data-ss-close],[data-ss-all],[data-ss-report]'); if (!b) return;
     if (b.dataset.ss) { e.preventDefault(); open(b.dataset.ss); return; }
@@ -202,7 +217,7 @@
     if (b.hasAttribute('data-ss-report')) { const s = current(); if (s) Rep().areaReport(App().state.filtered.filter(has), `Area report – ${s.title}`, s.a && s.a.rings ? s.a.rings : []); }
   });
 
-  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, PLANTS, KIND_LABEL };
+  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, peelWideNote, PLANTS, KIND_LABEL };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);
