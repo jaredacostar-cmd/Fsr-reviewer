@@ -247,7 +247,7 @@
     s.textContent =
       '.compare-col.tcmp-on{display:block}' +
       '@media (min-width:1200px) and (max-width:1799px){' +
-      '.compare-col.tcmp-on{position:fixed;top:0;right:0;bottom:var(--footer-h,0px);width:min(440px,100vw);z-index:1000;overflow-y:auto;box-shadow:var(--shadow);border-left:1px solid var(--border)}}' +
+      '.compare-col.tcmp-on{position:fixed;top:var(--top-h,0px);right:0;bottom:var(--footer-h,0px);width:min(440px,100vw);z-index:1000;overflow-y:auto;box-shadow:var(--shadow);border-left:1px solid var(--border)}}' +
       '@media (max-width:1199px){' +
       '.compare-col.tcmp-on{position:fixed;left:0;right:0;bottom:0;z-index:1150;max-height:62dvh;overflow-y:auto;background:var(--surface-1);border-top:1px solid var(--border);border-radius:var(--radius-panel) var(--radius-panel) 0 0;padding-bottom:env(safe-area-inset-bottom)}}' +
       '.tcmp-head{position:sticky;top:0;background:var(--surface-1);z-index:2;display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding:var(--space-3) var(--space-3) var(--space-2);border-bottom:1px solid var(--border)}' +
