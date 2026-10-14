@@ -1,4 +1,7 @@
-# Peel Development Tracker
+# Peel Growth Pipeline (unofficial)
+
+> **Unofficial prototype · public data only · not a Region of Peel product.**
+> Capacity and development-charge figures are screening estimates, not engineering analysis.
 
 A map of every development in Peel Region (Mississauga, Brampton, Caledon), following each
 site from application to completion.
@@ -74,7 +77,7 @@ from the iPhone's Files app won't work. Any one of these options does it:
    on and on the same network.
 
 To use it like an app, tap **Share → Add to Home Screen** in Safari. It opens full screen with
-its own icon.
+its own icon, under the home-screen name **Peel Dev**.
 
 On a phone, the **List** button opens the filters and project list. Tap the legend to show
 the phase names. **Hide** folds the bottom panel to its tabs (tap a tab to open it again), and
@@ -90,7 +93,8 @@ dwelling type and phase, plus the editable design criteria).
 The sidebar has three tabs.
 
 **What is this?** Rest the pointer on a heading, figure or control for 3 seconds (on a phone,
-press and hold) for a card explaining what it represents and where the data comes from
+a genuine press-and-hold of about two-thirds of a second, finger still down — a plain tap no
+longer opens it) for a card explaining what it represents and where the data comes from
 (`js/info.js`).
 
 **Explore**
@@ -256,7 +260,10 @@ from street zoom (14), up to 3,000 in view.
   with edits highlighted, and references) and starts the print dialog; Excel writes a workbook
   with a Summary sheet, one sheet per table (numbers as numbers, units in the headers, second
   lines such as population as extra columns) and a Criteria sheet. SheetJS (cdnjs) loads only when
-  Excel is clicked. Per-file record tables are left to *Export CSV*.
+  Excel is clicked. Per-file record tables are left to *Export CSV*. CSV and Excel
+  Developments / Records exports carry provenance columns: `portal`, `source_url`,
+  `retrieved_at` and `source_record_id`; the Excel Summary sheet and the CSV header comments
+  carry the unofficial-prototype line.
 - **Default view**: the map opens on the active development applications (application to
   construction, any year) over the background. On desktop the analysis panel opens on
   **Overview**; on phones it starts folded (*Analysis* opens it). Map tools (trace a sewer path,
@@ -285,6 +292,7 @@ from street zoom (14), up to 3,000 in view.
 - **Number conventions**: people and jobs are rounded the same way everywhere (whole under 1,000,
   nearest 10 to 10,000, nearest 100 above); units are exact counts; L/s for pipes, stations and
   single developments, ML/d for plants, zones and totals; ≈ marks a screening estimate.
+  Capacity and DC results are labelled **screening estimate** wherever they appear.
 - **Bottom panel tabs**: **Overview** (the headline numbers on one screen: developments, units,
   people, jobs, water max day and wastewater peak wet; the plants' and South Peel water treatment's
   capacity against the 90% expansion trigger, committed and at build-out; the servicing demand by
@@ -302,6 +310,10 @@ from street zoom (14), up to 3,000 in view.
   it's in any pick of a list and matches every list used. Picks are outlined on the map, named in
   the filter chips and kept in share links and saved views (comma lists; older one-id links still
   open). The box folds to one line with a summary.
+- **Unofficial banner**: a slim strip at the very top of every screen reads *Unofficial
+  prototype · public data only · not a Region of Peel product*. The same line is printed on the
+  executive briefing, the servicing memo, the area report, the print map, the Excel Summary
+  sheet, the PDF footer and the CSV header comments.
 - **Map layout**: top right, the view switch (Planning / Water / Wastewater / DC) over **Layers**:
   one switch per layer — Developments, Wastewater blocks, Pressure zones, Capacity colours,
   Existing pipes, Planned DC works, Planning areas, Census areas — then *More
@@ -660,7 +672,11 @@ from street zoom (14), up to 3,000 in view.
    motion, requirements, concerns, reports, correspondence and minutes), file events and permits.
    *Key events* counts permits per year; *All dated events* lists each one.
 4. **Servicing** (flows, sewer path, plant reserve, demand by stage), **Units, jobs & build-out**,
-   **Aerial check** (runs when opened) and **Source records**, collapsed.
+   **Aerial check** (runs when opened) and **Source records**, collapsed. Every source record
+   shows its portal (e.g. *City of Brampton Open Data*), a link to the record in its ArcGIS
+   FeatureServer layer (queried by object ID), and the pulled-on date (the snapshot build date,
+   or the live-load time after Refresh live). The header shows *Data as of \<date\> · \<n\>
+   sources*, linking to the sources list.
 
 `data/council.json` is built weekly by `scripts/build-council.js` from the Mississauga, Brampton
 and Caledon eSCRIBE portals (planning committees, council, general committee, since 2019; only
@@ -1102,6 +1118,22 @@ date, a link to the pull request and the build (commit).
 - **What's new:** releases since this browser last opened the tab are marked New, and a red dot
   shows on the tab until you open it.
 - You can filter to new features or fixes, search the log, and download it as CSV.
+
+### Phase 0 — Trust and transparency
+
+- Renamed the app to **Peel Growth Pipeline (unofficial)**; the home-screen install name stays
+  **Peel Dev**. A slim banner strip at the very top of every screen reads *Unofficial prototype
+  · public data only · not a Region of Peel product*; the same line is printed on the executive
+  briefing, the servicing memo, the area report, the print map, the Excel Summary sheet, the PDF
+  footer and the CSV header comments.
+- Every source record (development → Source records, permit pop-ups) now shows the portal name
+  (e.g. *City of Brampton Open Data*), a link to the record in its ArcGIS FeatureServer layer
+  (queried by object ID), and the pulled-on date (the snapshot build date, or the live-load time
+  after Refresh live). CSV and Excel Developments / Records exports gained `portal`,
+  `source_url`, `retrieved_at` and `source_record_id` columns.
+- Capacity and DC results are labelled **screening estimate** wherever they appear.
+- On phones, a plain tap no longer opens the press-and-hold info card: it appears only on a
+  genuine ~650 ms press-and-hold with the finger still down (pointercancel handled; `js/info.js`).
 
 ## Outside data: targets, projections, costs, storms, compliance, hydraulics
 
