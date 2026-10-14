@@ -1435,6 +1435,41 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## One home for tool results, and the top bar
+
+From design audit, Group 7:
+
+- **One home for tool results.** Results from the **sewer trace** and from **Test a site**
+  (the form, its servicing check and the list of test sites) now open in the **Tool result**
+  tab, with a trail crumb such as "Peel › Sewer path" or "Peel › Test site 1". They used to
+  open in the right-hand detail panel.
+  - The detail panel is used only when the tool framework is absent.
+  - Every other tool already used the Tool result tab.
+- **Inspect point and Fit fixed.** Both use the sewer trace. The trace returned nothing and
+  opened a panel as a side effect, so Inspect's sewer-path section was empty. The trace now
+  comes back to them with no panel.
+- **Test sites don't outlive the tool.**
+  - A test site that is placed and then closed unchanged is removed with its result.
+  - A test site that was edited or counted in the totals stays. The bar under the map lists
+    it, with Remove.
+- **Top bar**, left to right:
+
+  | Group | Controls |
+  |---|---|
+  | Navigation | name · trail · search |
+  | View | view switch · Scenario |
+  | Output | Export ▾ · Present ▾ |
+  | Help and settings | Help · ⚙ |
+
+  - **Present ▾** holds Present and Time-lapse; the separate Time-lapse button is gone.
+  - **Export ▾** gains *Save this view…*; the Save button in the Layers card is gone. Saved
+    views still open from the Layers card and the chips above the filters.
+  - The **Executive briefing** is an Export item. The Overview keeps it as a link, not a big
+    accent button.
+  - **Search** moves into the top bar at 1600 px and wider, the projector and wide desks. It
+    stays at the top of Explore on narrower screens. It is one search box, moved, not copied.
+  - On a phone, every top-bar control and menu item is at least 44 px.
+
 ## Scope-aware tabs and duplicates removed
 
 From design audit, Group 6:

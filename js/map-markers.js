@@ -100,7 +100,7 @@
         <div class="mo-legend" id="mo-legend" hidden><details><summary>Legend</summary><div class="lg-body"></div></details></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
-          <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
+          <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
         </div>
         <div class="mo-sec"><div class="mo-h">Developments</div>
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
@@ -150,7 +150,6 @@
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) SD().clearAreaFilters(); });
       el.querySelector('#opt-spl').onchange = e => PA().setAreaOn({ sp: e.target.checked });
       el.querySelector('#opt-mtl').onchange = e => PA().setAreaOn({ mtsa: e.target.checked });
-      el.querySelector('#opt-save').onclick = () => MA().saveCurrentView();
       el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') MA().openSavedView(+i); };
       el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = MA().savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); MA().renderSavedViews(); };
       el.querySelector('#opt-hov').onchange = e => AS().setHov({ on: e.target.checked });

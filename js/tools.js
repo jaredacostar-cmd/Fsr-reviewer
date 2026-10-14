@@ -118,6 +118,7 @@
     closeResult() {
       if (!result) return false;
       result = null;
+      if (typeof document !== 'undefined' && typeof document.dispatchEvent === 'function' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
       const tab = $('#ftab-tool'); if (tab) tab.hidden = true;
       const pane = $('#pane-tool'); if (pane) pane.hidden = true;
       const h = H();

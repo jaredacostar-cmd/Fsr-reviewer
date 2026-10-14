@@ -53,6 +53,7 @@
     <header class="topbar" id="topbar">
       <span class="tb-wordmark">Peel Growth Pipeline</span>
       <nav class="tb-trail" id="trail" aria-label="Scope"></nav>
+      <div class="tb-search" id="tb-search"></div>
       <div class="tb-views" id="tb-views" role="group" aria-label="Map view"></div>
       <div class="tb-scen-wrap">
         <button type="button" class="tb-scen" id="tb-scen" aria-haspopup="dialog" aria-expanded="false" title="Scenario: the assumptions behind the servicing figures"></button>
@@ -63,8 +64,13 @@
           <button type="button" class="btn small tb-btn" id="tb-export" aria-haspopup="menu" aria-expanded="false" title="Export the developments, areas, reports and share link">Export</button>
           <div class="tb-menu" id="tb-export-menu" role="menu" hidden></div>
         </div>
-        <button type="button" class="btn small tb-btn" id="tb-present" aria-pressed="false" title="Presentation mode: fill the screen with the map and headline numbers (Esc exits)">Present</button>
-        <button type="button" class="btn small tb-btn" id="tb-timelapse" aria-pressed="false" data-info="timelapse" title="Time-lapse: replay development growth year by year in presentation mode">Time-lapse</button>
+        <div class="tb-wrap">
+          <button type="button" class="btn small tb-btn" id="tb-present" aria-haspopup="menu" aria-expanded="false" title="Present the map full screen, or replay growth as a time-lapse">Present</button>
+          <div class="tb-menu" id="tb-present-menu" role="menu" hidden>
+            <button type="button" role="menuitem" id="tb-present-go" title="Presentation mode: fill the screen with the map and headline numbers (Exit or Esc leaves)">Present</button>
+            <button type="button" role="menuitem" id="tb-timelapse" aria-pressed="false" data-info="timelapse" title="Time-lapse: replay development growth year by year in presentation mode">Time-lapse</button>
+          </div>
+        </div>
         <button type="button" class="btn small tb-btn" id="tb-help" data-help-open title="Guides for common tasks and a quick tour">Help<span class="log-dot" hidden aria-label="new changes"></span></button>
         <div class="tb-wrap">
           <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="menu" aria-expanded="false" aria-label="Settings menu" title="Settings"></button>
@@ -83,10 +89,12 @@
       <div class="tab-panel" id="tab-explore" role="tabpanel" aria-labelledby="tab-btn-explore">
         <div class="presets" id="saved-presets" data-info="saved-presets" aria-label="Saved views"></div>
         <div class="search-bar">
+          <div class="search-box" id="search-box">
           <label class="field"><span class="sr">Search</span>
             <input type="search" id="f-search" placeholder="Search address, file number, description…" autocomplete="off" aria-autocomplete="list" aria-controls="search-sug">
           </label>
           <ul class="search-sug" id="search-sug" role="listbox" hidden></ul>
+          </div>
           <div class="active-filters" id="active-filters" aria-live="polite"></div>
           <p class="showing small" id="f-showing" aria-live="polite"></p>
           <p class="empty-msg" id="empty-msg" hidden></p>
