@@ -13,11 +13,12 @@ report, its screenshots (`docs/design-audit/*.jpg`) and a `tests/private/` line 
 - Code read for every comparison in Section 0. Evidence is given as `file:line`.
 - **Console errors:** none from the app. The only errors were 404s for basemap tiles and live services, which the test harness blocks.
 
-**Two decisions are open (your call):**
-- **When "committed" starts.** Peel's open data has no allocation by-laws or agreements. The app's
-  allocations are what you record in it (browser only, CSV import / export). This report proposes
-  **committed = draft plan approved, or site plan approved where there is no draft plan**, and
-  **allocated = only what you record**. Confirm or change before Group 1 lands.
+**Decisions confirmed:**
+- **Committed: strict MECP D-5-1** (confirmed 2026-10-14).
+  - **Committed** = registered or draft-approved plans of subdivision, plus site plan approved where there is no subdivision, through permit and construction.
+  - **Approved zoning alone is not committed.**
+  - **Allocated** = only allocations you record. Peel publishes no allocation list, and a March 2026 Regional Council report says allocation happens within the development application process, with a Peel Capacity Allocation Program study planned for 2026.
+  - Group 1 adds draft approval to the committed set, read from the file statuses ("Draft Approved" / "Closed Approved" on Brampton OZS / 21T and Caledon 21T files). Today only site plan approved, permit and construction count, so draft-approved subdivisions still in review are counted as proposed.
 - **Planning roles.** Confirmed: the local municipalities approve land use, and the Region services
   (water, wastewater) and comments.
 
@@ -100,7 +101,7 @@ Proposed. Items marked ⚑ change today's behaviour.
 | Existing | Census population (and jobs) on census day | census | Plant "existing" = census + built + inflows (`svc-tab.js:475`). It should be called "existing + built". |
 | Built since census | Completed after census day, by the **permit completion date** (estimated for Brampton / Caledon) | completed, date ≥ census | **Three tests** (`areas.js:116`, `svc-tab.js:76`, `map-markers.js:380`). `svc-data.js:258` treats every completed project as built ⚑ |
 | Approved | ⚑ Rename the servicing layer to **Committed**. "Approved" stays the phase name (site plan approved). | — | The same word means "site plan approved" (phase) and "approved + permit + construction" (layer). |
-| Committed | ⚑ **Draft plan approved, or site plan approved where there's no draft plan, through construction** (your call, see top) | approved, permit, construction (+ draft-approved once readable) | `COMMITTED_PHASES` = approved, permit, construction (`demand.js:101`) |
+| Committed | ⚑ **Strict D-5-1 (confirmed):** registered or draft-approved subdivisions, plus site plan approved where there's no subdivision, through construction; approved zoning alone is not committed | approved, permit, construction (+ draft-approved once readable) | `COMMITTED_PHASES` = approved, permit, construction (`demand.js:101`) |
 | Allocated | Only allocations you record (by-law / agreement reference) | recorded | Also used for the 2051 LNA municipal allocation (`census-view.js:139`) ⚑ rename that one "LNA 2051 forecast" |
 | Proposed | Pre-consultation, inception and review | inception, review | Defined three times (`areas.js:93`, `svc-data.js:258`, `svc-tab.js:78`) |
 | Planned / permitted / left to build | planned − permitted = left to build (no permit yet) | — | Consistent, except "Remaining" means *unbuilt* in demand tables, Growth "still to build" and Timing ⚑ |
