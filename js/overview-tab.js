@@ -155,7 +155,8 @@
     const ch = App().state.snapshot && App().state.snapshot.changes;
     const changes = (!ch || ch.baseline) ? [] : [
       ...(ch.moved || []).map(m => ({ key: m.key, text: `${m.title}: ${P.PHASE_BY_KEY[m.from].label} → ${P.PHASE_BY_KEY[m.to].label}` })),
-      ...(ch.added || []).map(a => ({ key: a.key, text: `New: ${a.title} (${P.PHASE_BY_KEY[a.phase].label}, ${a.municipality})` })),
+      // A newly listed file that is already completed is old news, not a Peel-level concern: This week has it.
+      ...(ch.added || []).filter(a => a.phase !== 'completed').map(a => ({ key: a.key, text: `New: ${a.title} (${P.PHASE_BY_KEY[a.phase].label}, ${a.municipality})` })),
     ];
     return { adv, trig, stalled, changes };
   }

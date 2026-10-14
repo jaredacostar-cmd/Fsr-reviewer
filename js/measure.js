@@ -132,7 +132,7 @@
   function measureDist() { return tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0); }
   function measureBannerHTML() {
     return `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(measureDist())}</span>`}
-      ${tool.pts.length ? `<span class="pt-row">Select within <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small" data-ptool-act="buffer:${r}">${fmtDist(r)}</button>`).join('')}</span> of the last point</span>` : ''}
+      ${tool.pts.length ? '<span class="pt-row muted">To select developments within a distance, use Select › Radius.</span>' : ''}
       ${tool.pts.length ? '<span class="pt-row pt-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
       <span class="pt-row"><button type="button" class="btn small link" data-ptool-act="clear">Clear</button> <button type="button" class="btn small link" data-ptool-act="done">Done</button></span>`;
   }
@@ -202,7 +202,6 @@
       onBannerAct(act) {
         if (act === 'done') { setTool(null); return; }
         if (act === 'clear') { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); refreshMeasureBanner(); return; }
-        if (act.startsWith('buffer:') && tool.pts.length) bufferSelect(tool.pts[tool.pts.length - 1], +act.slice(7));
       },
       onDeactivate() { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); },
     });

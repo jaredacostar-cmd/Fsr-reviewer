@@ -79,6 +79,7 @@
     if (tc) steps.push(tc);
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('');
     el._steps = steps;
+    if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }
   $('#trail').addEventListener('click', e => {
     const b = e.target.closest('[data-i]'); if (!b) return;

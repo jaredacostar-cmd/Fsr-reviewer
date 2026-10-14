@@ -2304,3 +2304,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .ss-t td:first-child { min-width: 11em; max-width: 20em; }
 .ss-t .btn.link { white-space: normal; text-align: left; }
 .ss-t td.n, .ss-t th.n { white-space: nowrap; }
+
+/* Peel-wide note on Water / Wastewater / DC below Peel scope (design audit, Group 6). */
+.scope-note { margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border-left: 3px solid var(--accent); border-radius: 4px; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text-secondary); }
+.scope-note strong { color: var(--text-primary); }
+.scope-note .btn.link { padding: 0; }

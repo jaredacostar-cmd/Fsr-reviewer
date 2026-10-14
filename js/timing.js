@@ -409,6 +409,8 @@
     const app = App(); if (!app || !app.state) return;
     SvcTab().renderSvcTab();  // ensure the servicing model exists (as the Census sub-view does)
     if (!app.state.projects.length) { body.innerHTML = skel('Timing forecast'); return; }
+    // Area-only content: not shown at development scope (design audit, Group 6).
+    if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const cal = calibrate(observationsFromProjects(app.state.projects));
     const set = DU().demandSet();
     const items = pipelineItems(set);

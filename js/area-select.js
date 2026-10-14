@@ -106,20 +106,7 @@
     },
   });
   new ToolRail().addTo(map);
-  // Present: full-screen map with the headline sentence and the four key tiles
-  // from the Overview (developments, units, people, jobs). Placed in the map's
-  // top-left control stack, right under the always-visible Help button.
-  const PresentControl = L.Control.extend({
-    options: { position: 'topleft' },
-    onAdd() {
-      const el = L.DomUtil.create('div', 'leaflet-bar present-ctl');
-      el.innerHTML = `<button type="button" data-present title="Present: full-screen map with the headline numbers (Esc exits)" aria-label="Present">${PD.icon('present')}</button>`;
-      L.DomEvent.disableClickPropagation(el);
-      el.querySelector('button').onclick = () => enterPresentation();
-      return el;
-    },
-  });
-  new PresentControl().addTo(map);
+  // Present lives in the top bar only (the map's own Present button was a duplicate; design audit, Group 6).
   // Fill the presentation bar from the Overview: its headline sentence plus the
   // four key tiles of the Growth card (developments shown, units planned,
   // people at build-out, jobs).

@@ -1435,6 +1435,29 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Scope-aware tabs and duplicates removed
+
+From design audit, Group 6:
+
+- **Peel-wide, said out loud.** Water, Wastewater and DC show Peel-wide tables. Below Peel
+  scope, a note at the top says so. "Below Peel" means a municipality, a planning area, a zone
+  or block filter, or a servicing scope.
+  - It reads: "Peel-wide. Plants, blocks and pumping stations serve all of Peel, so these
+    tables are not filtered to Brampton."
+  - It then links the plants or zones the scoped developments load, with counts. For example,
+    "G.E. Booth (750) · Clarkson (122)" opens each one as a servicing scope.
+  - At development scope these tabs show the site's own figures instead, so no note is needed.
+- **Area-only content at development scope.** Growth's *Census & 2051* and *Timing* views
+  describe an area, not one development. At development scope they now say so and point to
+  the trail, instead of showing Peel-wide figures.
+- **Duplicates removed:**
+  - The **view switch** is only in the top bar; it is gone from the Layers card. The tour's
+    map-views step points at the top bar.
+  - **Present** is only in the top bar; the map's own button is gone.
+  - **Select within a distance** is only in Select › Radius; it is gone from Measure.
+- **Needs attention** no longer lists newly listed files that are already completed. This week
+  still has them.
+
 ## Servicing scopes: the servicing ladder
 
 Plants, pumping stations, wastewater blocks, pressure zones and the South Peel water system are

@@ -79,7 +79,6 @@
       // An on / off chip (a checkbox styled as a pill).
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
-        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${PD.icon(k)}<span>${t}</span></button>`).join('')}</div>
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
         <div class="mo-area-on" id="mo-area-on" hidden></div>
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-psum" id="mo-psum"></span></summary>
@@ -170,7 +169,6 @@
       el.querySelector('#opt-msize').onchange = e => MA().setMapStyle({ size: e.target.value });
       el.querySelector('#opt-mshow').onchange = e => MA().setMapStyle({ show: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => MA().setMapStyle({ cap: e.target.value });
-      el.querySelector('.mo-view').onclick = e => { const b = e.target.closest('[data-mview]'); if (b) MA().setMapView(b.dataset.mview); };
       el.querySelector('#opt-pz').onchange = e => SD().setSvcLayer('pz', e.target.checked);
       el.querySelector('#opt-dr').onchange = e => SD().setSvcLayer('dr', e.target.checked);
       el.querySelector('#opt-devs').onchange = e => SD().setDevsOn(e.target.checked);
