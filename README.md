@@ -79,14 +79,16 @@ from the iPhone's Files app won't work. Any one of these options does it:
 To use it like an app, tap **Share → Add to Home Screen** in Safari. It opens full screen with
 its own icon, under the home-screen name **Peel Dev**.
 
-On a phone, the **List** button opens the filters and project list. Tap the legend to show
-the phase names. **Hide** folds the bottom panel to its tabs (tap a tab to open it again), and
-the ▾ on the timeline folds it to just the year range (it starts folded on phones).
+On a phone, the **Filters (n)** button opens the filter sheet. The analysis column becomes a
+bottom sheet: tap its grip to step through summary → half → full, or drag it. The ▾ on the
+timeline folds it to just the year range (it starts folded on phones).
 
-**Bottom panel:** three tabs, so only one thing shows at a time (the last one picked is
-remembered; **Servicing demand** opens by default): **Servicing demand**, **Growth since
-2021**, and **Breakdown & criteria** (by
-dwelling type and phase, plus the editable design criteria).
+**Layout:** one screen, no page scroll. A top bar holds the scope trail (Peel › municipality ›
+area › development), the view switch (Planning / Water / Wastewater / DC), the Scenario chip,
+Export, Present, Help and Settings. Below it: the filter column on the left, the full-height
+map in the middle, and the analysis column on the right (resizable by dragging its left edge).
+The footer is a slim timeline strip. On wide screens (≥1800px) a fourth column is reserved for
+side-by-side comparison.
 
 ## Using it
 
@@ -244,18 +246,18 @@ from street zoom (14), up to 3,000 in view.
 - Each development is tagged by its location point. The map panel's **Areas** fold toggles both
   layers and has the Pressure zone and Wastewater block filters; the development panel shows its
   zone and block.
-- **Bottom panel tabs:** **Growth & demand** (demand of the shown developments, then growth
-  since the census), **Water**, **Wastewater** (two views: *Plants & capacity* and *Catchments*)
-  and **Criteria & references**. Every servicing table opens with a stamp of the criteria it uses
-  and the data dates, with a **Modified criteria** badge when the criteria have been edited; method
-  notes fold under *Method & notes*. Wastewater has two modes: **Capacity check** (default;
+- **Analysis column tabs:** **Growth & demand** (demand of the shown developments, then growth
+  since the census), **Water**, **Wastewater** (two views: *Plants & capacity* and *Catchments*),
+  **Developments** (the project list, 25 per page) and **Criteria & references**. Every servicing
+  table opens with a stamp of the criteria it uses and the data dates, with a **Modified criteria**
+  badge when the criteria have been edited; method notes fold under *Method & notes*. Wastewater has two modes: **Capacity check** (default;
   calibrated to the 2025 reported flows, the basis for capacity statements) and **Design flows**
   (Peel criteria, for sizing), and a *Details* switch (Engineering shows the Harmon factor and
   drainage areas). Plants carry the names in Peel's reports (G.E. Booth WRRF (Lakeview), Clarkson
   WRRF, Inglewood WWTP). Population is rounded to the nearest 100 above 10,000 and the nearest 10
   above 1,000.
-- **Share link** (top of the sidebar): copies a link to the exact view — stages, flags, filters
-  (municipality, plans, MTSA, pressure zone, drainage area, size, land use, dwelling type, years), the bottom-panel tab
+- **Share link** (top bar → Export → Copy share link): copies a link to the exact view — stages, flags, filters
+  (municipality, plans, MTSA, pressure zone, drainage area, size, land use, dwelling type, years), the analysis tab
   and wastewater view, the mode / max-day / diversion switches, the map position and the open
   development. The address bar keeps the same link as you work (`#…` parameters).
 - **Export** (*PDF / print* and *Excel* buttons on the Growth & demand, Water, Plants and
@@ -269,10 +271,10 @@ from street zoom (14), up to 3,000 in view.
   `retrieved_at` and `source_record_id`; the Excel Summary sheet and the CSV header comments
   carry the unofficial-prototype line.
 - **Default view**: the map opens on the active development applications (application to
-  construction, any year) over the background. On desktop the analysis panel opens on
-  **Overview**; on phones it starts folded (*Analysis* opens it). Map tools (trace a sewer path,
-  select an area, measure, test a site) sit under one Tools button, and are also buttons on the
-  Overview; the north arrow stays on the map (tap it to switch between road grid and north up).
+  construction, any year) over the background. On desktop the analysis column opens on
+  **Overview**; on phones it starts as a summary sheet (tap the grip to expand). Map tools (trace a sewer path,
+  select an area, measure, test a site) sit in the tool rail on the map's left edge, below zoom
+  and the north arrow (tap it to switch between road grid and north up).
   The sidebar has search, a "Showing …" line, and the unified filter panel (Search · Stage · Where · What · When · Flags).
 - **Executive briefing (PDF)** (Overview, top right): one printable Letter page for management —
   title block with the date, *Prepared by* (set it in Settings & sources) and the data date; the
@@ -297,36 +299,33 @@ from street zoom (14), up to 3,000 in view.
   nearest 10 to 10,000, nearest 100 above); units are exact counts; L/s for pipes, stations and
   single developments, ML/d for plants, zones and totals; ≈ marks a screening estimate.
   Capacity and DC results are labelled **screening estimate** wherever they appear.
-- **Bottom panel tabs**: **Overview** (the headline numbers on one screen: developments, units,
+- **Analysis column tabs**: **Overview** (the headline numbers on one screen: developments, units,
   people, jobs, water max day and wastewater peak wet; the plants' and South Peel water treatment's
   capacity against the 90% expansion trigger, committed and at build-out; the servicing demand by
-  phase; the DC projects that come online too late and those most growth relies on; the tools —
-  each card links to its tab), **Demand** (flows of the shown developments, then the *servicing
+  phase; the DC projects that come online too late and those most growth relies on — each card
+  links to its tab), **Demand** (flows of the shown developments, then the *servicing
   demand breakdown* by phase, by dwelling type and build-out by type, then growth since the census),
-  **Water**, **Wastewater** (plants / blocks), **DC Analysis** and **Settings & sources** (the
-  editable criteria and the references). Each tab's criteria and data sources fold to one line
-  (ⓘ Criteria & data); the scenario line sits once at the top. Tables open in **Simple** columns
+  **Water**, **Wastewater** (plants / blocks), **DC Analysis**, **Developments** (the project list,
+  25 per page) and **Settings & sources** (the editable criteria and the references). Each tab's criteria and data sources fold to one line
+  (ⓘ Criteria & data); the scenario chip sits in the top bar. Tables open in **Simple** columns
   (the build-out flows and peaks); **Engineering** adds the layer-by-layer and local / upstream
   columns.
-- **Filter by area** (own box, bottom right of the map, under the Wastewater loads box): the
+- **Filter by area** (in the filter panel's Where section): the
   municipality (All · Brampton · Caledon · Mississauga) on top, then secondary plan / character area, MTSA, pressure zone and drainage area (wastewater block). Each is a
   dropdown of checkboxes with a search and Clear, so several can be picked: a development counts if
   it's in any pick of a list and matches every list used. Picks are outlined on the map, named in
   the filter chips and kept in share links and saved views (comma lists; older one-id links still
-  open). The box folds to one line with a summary.
+  open).
 - **Unofficial banner**: a slim strip at the very top of every screen reads *Unofficial
   prototype · public data only · not a Region of Peel product*. The same line is printed on the
   executive briefing, the servicing memo, the area report, the print map, the Excel Summary
   sheet, the PDF footer and the CSV header comments.
-- **Map layout**: top right, the view switch (Planning / Water / Wastewater / DC) over **Layers**:
+- **Map layout**: two boxes only. Left edge: zoom, the north arrow, then the tool rail (trace a sewer path, select an area, measure, test a site — one active at a time). Right: **Layers**,
   one switch per layer — Developments, Wastewater blocks, Pressure zones, Capacity colours,
-  Existing pipes, Planned DC works, Planning areas, Census areas — then *More
-  settings* (saved views, development colour / size / labels, capacity shading, existing pipe kinds
-  and size labels, DC works by system, planning area kinds, base map). The views set the switches;
-  changes are remembered per view. With the blocks as the catchments there is one wastewater area
-  layer (Wastewater blocks), so it can always be switched off. Bottom left, one box: the Demand
-  year over the legend, with the timeline beside it (above it when there's no room). The boxes along
-  the bottom never overlap: the timeline, the wastewater loads box and the Clear selection button
+  Existing pipes, Planned DC works, Planning areas, Census areas — with the legend built into the
+  layer swatches, then the remaining settings (saved views, development colour / size / labels, capacity shading, existing pipe kinds
+  and size labels, DC works by system, planning area kinds, base map). The view switch (Planning / Water / Wastewater / DC) lives in the top bar and sets the layers; changes are remembered per view. With the blocks as the catchments there is one wastewater area
+  layer (Wastewater blocks), so it can always be switched off. The timeline is a slim strip along the bottom of the screen.
   move clear of each other and of an open development panel, and the Layers panel scrolls rather
   than run into them. When a setting hides the developments (switched off, no growth load on in
   the Wastewater view, or Hidden while a path is shown) a notice above Layers says why, with *Show
@@ -392,9 +391,9 @@ from street zoom (14), up to 3,000 in view.
 - **What loads this?**: tap a catchment, pumping station, pressure zone or plant (on the map or in
   the Water / Wastewater tables) for the developments adding flow since the census through it,
   largest first, with built / approved / proposed totals; open one and come back to the list.
-- **Scenario bar** (bottom panel): wastewater mode, water max day factor, the diversion,
-  outside-area assignment and modified criteria in one place, summarised on every tab, the map
-  legend, exports and share links (map style is in the link too).
+- **Scenario chip** (top bar): wastewater mode, water max day factor, the diversion,
+  outside-area assignment and modified criteria in one place (click to open the full control),
+  summarised on every tab, the map legend, exports and share links (map style is in the link too).
 - **Compare scenarios**: in the Scenario bar, *Pin this scenario as A*, change the switches, and
   see plant existing + approved and build-out % (A, now, Δ), pumping stations over firm capacity
   and total water max day side by side.
@@ -438,7 +437,7 @@ from street zoom (14), up to 3,000 in view.
 - **Tapping a pipe works with nothing selected**: the canvas the development dots are drawn on no
   longer swallows taps meant for the pipes and areas below it; a tap or hover it doesn't hit is
   handed to the canvases underneath (pipes, catchments, census areas).
-- **DC Analysis** (bottom panel tab): every 2026 DC project that relieves a capacity constraint
+- **DC Analysis** (analysis tab): every 2026 DC project that relieves a capacity constraint
   (sanitary sewer groups, pumping stations, the plants, water treatment and supply into the upper
   zones) or serves developments outside the existing network, replayed year by year with growth
   phased as in Horizon years. **Diversion:** from each project's construction year, flow above
@@ -521,9 +520,9 @@ from street zoom (14), up to 3,000 in view.
   conditions; the legend lists the loads when some are off.
   Site boundaries stay on the map whatever these switches say: a development whose layer is off
   has its boundary dashed and faint, with "Not in the wastewater loads" in its tooltip.
-- **Resizable bottom panels**: drag the analysis panel's top edge (or focus it and use the arrow keys)
-  to give the map more or less room; on a phone, drag the info sheet's grip, or tap it to step
-  30% → 50% → 62% → 92%. Heights are remembered.
+- **Resizable analysis column**: drag its left edge (or focus it and use the arrow keys)
+  to give the map more or less room; on a phone, drag the bottom sheet's grip, or tap it to step
+  summary → half → full. Widths and snaps are remembered.
 - **Paths over developments**: flow paths (a development trace, a catchment's or block's route) draw
   above the development markers, and the markers fade while a path is shown; *Developments: Show ·
   Faded · Hidden* in the bottom bar picks how (remembered). The map fits the path into the part not
@@ -944,12 +943,12 @@ A development opens on six tabs (the last one picked is kept):
   connects to or sits on the path of (with the year it needs them); and the DCs it would pay.
 - **History** — how the phase was set, the dated history, source records.
 
-The bottom panel's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis.
+The analysis column's tabs run Overview · Growth · Demand · Water · Wastewater · DC Analysis · Developments.
 
 ## Map boxes, the results year and the tour
 
-- **More settings** has its own box under Layers (top right). With both open they share the
-  height down to the boxes at the bottom right; only open boxes are capped.
+- **Map boxes:** two only — the tool rail on the left edge, and the Layers panel (top right)
+  with the legend built into its swatches. The panel is height-capped so it never covers the map.
 - **Site boundary on hover:** point at a development (mouse / trackpad) and its application site is
   outlined in dashed orange with its address, phase and units; one without a published boundary
   gets a dashed ring. More settings → *Site boundary on hover*: Show on / off and Reach (10–120
@@ -1109,7 +1108,7 @@ largest single shortfall to the sum of the projects' own impacts.
 
 ## Change log and versions
 
-The **Change log** tab (last tab in the bottom panel) lists every release of the app, newest
+The **Change log** tab (last tab in the analysis column) lists every release of the app, newest
 first. One release is one pull request merged into `main`, numbered **1.<pull request number>**
 (for example 1.111). Each release shows its title, the bullet points from its description, the
 date, a link to the pull request and the build (commit).
@@ -1174,6 +1173,28 @@ date, a link to the pull request and the build (commit).
 - **Basemaps:** Water, Wastewater and DC views use a dark grey canvas; Planning uses aerial,
   slightly darkened so data stands out. Zooming to 15+ on the canvas basemap switches to
   aerial automatically for site checks; a manual pick in Layers is respected otherwise.
+
+### Phase 2 — Layout shell (one screen)
+
+- **Top bar** (one line): scope trail (Peel › municipality › area › development, each step
+  clickable), the view switch (Planning / Water / Wastewater / DC), the Scenario chip (with a
+  "modified" badge; click to open the full scenario control), Export (every export action plus
+  Copy share link), Present, Help and the gear menu (Settings, Sources & checks, Change log).
+  The old sidebar title block, Share link and Help buttons are gone.
+- **Three-column desktop shell** (≥1200px): filter column (300px) | full-height map | analysis
+  column (440px, resizable by dragging its left edge). The footer is now a slim timeline strip.
+  ≥1800px reserves a fourth column for side-by-side comparison (Phase 3b).
+- **Phone/tablet** (<1200px): map-first; the **Filters (n)** button opens the filter sheet; the
+  analysis column becomes a bottom sheet with summary / half / full snaps (tap the grip to
+  cycle, drag to snap).
+- **Map boxes:** two only. Left edge: zoom, north arrow, then the tool rail (one toggle button
+  per map tool). Right: the Layers panel, with the legend folded into its swatches. Removed:
+  the area-filter box, the separate legend box, the More-settings box and the Tools dropdown —
+  every tool and setting kept its function.
+- **View ↔ tab linking:** the view switch sets the map layers and opens the matching analysis
+  tab, and picking an analysis tab sets the matching map view.
+- **Developments tab:** the project list moved from the sidebar into the analysis column,
+  paged 25 per page with the existing sorts.
 
 ## Outside data: targets, projections, costs, storms, compliance, hydraulics
 
