@@ -554,13 +554,15 @@
   function recordProvHTML(r) {
     const also = r.alsoIn && r.alsoIn.length ? ` (also in ${esc(r.alsoIn.join(', '))})` : '';
     const mapBtn = r.lat != null ? ` · <button type="button" class="btn small link" data-dt-rec="${esc(r.uid)}">${r.kind === 'permit' ? 'Show on map & parent application' : 'Show on map'}</button>` : '';
+    const ri = root.PeelReportIssue;
     const pv = PV();
-    if (!pv) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}</p>`;
-    const portal = esc(pv.portalFor(r.sourceName));
+    if (!pv) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
+    const portal = pv.portalFor(r.sourceName);
     const url = pv.recordSourceUrl(r, sourceUrlFor(r));
     const st = state(), meta = st && st.snapshot && { generatedAt: st.snapshot.generatedAt };
     const pulled = pv.retrievedAt(r, meta);
-    return `<p class="small muted">Source: ${portal}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}</p>`;
+    const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';
+    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}${report}</p>`;
   }
   const REC_GROUPS = [
     ['master', 'Official plan / zoning / subdivision'], ['siteplan', 'Site plan'], ['condo', 'Condominium'],
