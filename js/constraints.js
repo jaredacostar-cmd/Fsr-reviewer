@@ -22,31 +22,35 @@
   const UTIL_LINE = `${LIO}/LIO_Open05/MapServer/11`;
   // A field that may be named differently in each source: the first one present.
   const pick = (p, ...ks) => { for (const k of ks) { const v = p[k] ?? p[k.toUpperCase()] ?? p[k.toLowerCase()]; if (v != null && String(v).trim() !== '') return String(v).trim(); } return ''; };
-  const utilType = p => pick(p, 'UTILITY_LINE_TYPE', 'UTILITY_TYPE', 'TYPE', 'FEATURE_TYPE', 'UTILITY_LINE_CLASS', 'CLASS');
+  // The province's Utility Line type (CLASS_SUBTYPE), e.g. "Unknown Pipeline", "Unknown Transmission Line".
+  const utilType = p => pick(p, 'CLASS_SUBTYPE', 'UTILITY_LINE_TYPE', 'TYPE');
 
   const LAYERS = {
     gas: {
       label: 'Gas pipelines', short: 'gas', color: '--cx-gas', minZoom: 11, area: false, dash: '9 5', weight: 2.5,
-      sources: [{ url: UTIL_LINE, src: 'Land Information Ontario (Utility Line)', keep: p => /gas|petrol|oil|pipeline/i.test(utilType(p)) && !/water|sewer/i.test(utilType(p)), name: p => [utilType(p), pick(p, 'OWNER', 'OPERATOR', 'UTILITY_OWNER')].filter(Boolean).join(' · ') }],
+      // Peel's pipelines are recorded as "Unknown Pipeline" (product not given): the gas and oil
+      // transmission pipelines; water pipelines are excluded.
+      sources: [{ url: UTIL_LINE, f: 'CLASS_SUBTYPE,LOCATION_DESCR,LOCATION_ACCURACY', src: 'Land Information Ontario (Utility Line)', keep: p => /pipeline/i.test(utilType(p)) && !/water|sewer/i.test(utilType(p)), name: p => [/unknown pipeline/i.test(utilType(p)) ? 'Pipeline (gas or oil; product not recorded)' : utilType(p), pick(p, 'LOCATION_DESCR'), pick(p, 'LOCATION_ACCURACY') && `located ${pick(p, 'LOCATION_ACCURACY').toLowerCase()}`].filter(Boolean).join(' · ') }],
       osm: 'way["man_made"="pipeline"]["substance"~"gas|oil|fuel",i]', osmName: t => [t.substance && `${t.substance} pipeline`, t.operator, t.name].filter(Boolean).join(' · '),
       note: 'Major pipelines only: local gas mains are not published. Call Ontario One Call before digging.',
     },
     hydro: {
       label: 'Hydro lines', short: 'hydro', color: '--cx-hydro', minZoom: 11, area: false, dash: null, weight: 2.5,
-      sources: [{ url: UTIL_LINE, src: 'Land Information Ontario (Utility Line)', keep: p => /hydro|electric|power|transmission/i.test(utilType(p)), name: p => [utilType(p), pick(p, 'VOLTAGE', 'OWNER')].filter(Boolean).join(' · ') }],
+      sources: [{ url: UTIL_LINE, f: 'CLASS_SUBTYPE,LOCATION_DESCR,LOCATION_ACCURACY', src: 'Land Information Ontario (Utility Line)', keep: p => /transmission line|hydro|electric|power/i.test(utilType(p)) && !/communication|pipeline/i.test(utilType(p)), name: p => [/unknown transmission/i.test(utilType(p)) ? 'Transmission line' : utilType(p), pick(p, 'LOCATION_DESCR'), pick(p, 'LOCATION_ACCURACY') && `located ${pick(p, 'LOCATION_ACCURACY').toLowerCase()}`].filter(Boolean).join(' · ') }],
       osm: 'way["power"~"^(line|minor_line|cable)$"]', osmName: t => [t.power === 'line' ? 'Transmission line' : t.power === 'cable' ? 'Power cable' : 'Power line', t.voltage && `${Math.round(+String(t.voltage).split(';')[0] / 1000) || t.voltage} kV`, t.operator].filter(Boolean).join(' · '),
       note: 'Transmission and major distribution lines. Corridors carry easements: check with the utility.',
     },
     water: {
       label: 'Watercourses', short: 'watercourses', color: '--cx-water', minZoom: 12, area: false, dash: null, weight: 2,
-      sources: [{ url: `${LIO}/LIO_Open01/MapServer/26`, src: 'Ontario Hydro Network (LIO)', keep: () => true, name: p => pick(p, 'OFFICIAL_NAME', 'GEOGRAPHIC_NAME', 'NAME', 'WATERCOURSE_NAME') }],
+      // "Virtual Flow" / "Virtual Connector" lines carry the network through lakes and ponds: not drawn.
+      sources: [{ url: `${LIO}/LIO_Open01/MapServer/26`, f: 'WATERCOURSE_TYPE,OFFICIAL_NAME_LABEL,PERMANENCY', src: 'Ontario Hydro Network (LIO)', keep: p => !/^virtual/i.test(pick(p, 'WATERCOURSE_TYPE')), name: p => [pick(p, 'OFFICIAL_NAME_LABEL'), /intermittent/i.test(pick(p, 'PERMANENCY')) && 'intermittent'].filter(Boolean).join(' · ') }],
       osm: 'way["waterway"~"^(river|stream|canal|drain|ditch|brook)$"]', osmName: t => t.name || '',
       note: 'Ontario Hydro Network (1:10,000): small and piped watercourses may be missing.',
     },
     reg: {
       label: 'Regulation limits', short: 'regulation limits', color: '--cx-reg', minZoom: 12, area: true, dash: '6 4', weight: 1.6,
       sources: [
-        { url: 'https://services1.arcgis.com/d0ZCwU7eGKVeNiEE/ArcGIS/rest/services/TRCA_Regulation_Limit2/FeatureServer/0', src: 'TRCA', keep: () => true, name: () => 'TRCA regulated area' },
+        { url: 'https://services1.arcgis.com/d0ZCwU7eGKVeNiEE/ArcGIS/rest/services/TRCA_Regulation_Limit2/FeatureServer/0', f: 'OBJECTID', src: 'Toronto and Region Conservation Authority (2025)', keep: () => true, name: () => 'TRCA regulated area' },
       ],
       note: 'Conservation authority regulated areas (O. Reg. 41/24). Screening only: the authority confirms the limit, and a feature need not be mapped to be regulated.',
     },
@@ -68,7 +72,7 @@
     const pr = (async () => {
       const info = await A.layerInfo(S.url);
       const bbox = { xmin: tx * TILE, ymin: ty * TILE, xmax: (tx + 1) * TILE, ymax: (ty + 1) * TILE };
-      const { features } = await A.queryAll(S.url, info, { bbox, max: 3000 });
+      const { features } = await A.queryAll(S.url, info, { bbox, max: 3000, outFields: S.f || '*' });
       return features.filter(f => f.geometry && S.keep(f.properties || {})).map(f => ({ id: `${i}|${f.id ?? JSON.stringify(linesOf(f.geometry)[0]?.[0])}`, rings: linesOf(f.geometry), poly: /Polygon/.test(f.geometry.type), name: S.name(f.properties || {}), src: S.src }));
     })();
     cache.set(ck, pr); pr.catch(() => { cache.delete(ck); failed.add(S.url); });
