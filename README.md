@@ -1440,6 +1440,17 @@ are planning-level estimates, not a substitute for a functional servicing report
 values against the current Region of Peel standards; a 2025 edition of the Linear Wastewater
 Standards is listed on the Region's site.
 
+## Stage selector
+
+The *Stage* section shows a slim bar with each phase's share, in its phase colour. Under it is a
+row per phase with its colour, name and count. Before, each bar segment carried its own label,
+and small phases were cut off ("pprove", "Inde truc").
+- Tap a row or a bar segment to show only that phase. Tap again for all phases. Ctrl / ⌘-click
+  adds or removes a phase.
+- Phases switched off are dimmed and struck through.
+- The phase colours had stopped showing since the module split: two modules read the colours
+  once at load, before they were set. They now read them each time they draw.
+
 ## Wide screens
 
 At 1800 px and wider, the Compare tool gets its own column to the right of the analysis

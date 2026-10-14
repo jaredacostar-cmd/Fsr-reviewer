@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   // Reference rewrites per SPLIT_MAP.md §0 rule 4.
-  const { $, esc, fmtNum, fmtDate, dot, colors, glyphColor } = window.PeelUtil;
+  const { $, esc, fmtNum, fmtDate, dot, getColors } = window.PeelUtil;
   const P = window.PeelPhases;
   const map = window.PeelMapCore.map;
   const MM = () => window.PeelMapMarkers;
@@ -20,11 +20,16 @@
     for (const p of base) counts[p.phase]++;
     const total = base.length;
     $('#total-count').textContent = `${fmtNum(App().state.filtered.length)} of ${fmtNum(App().state.projects.length)} developments`;
-    $('#pipeline').innerHTML = P.ALL_PHASES.filter(p => counts[p.key]).map(p => {
-      const on = App().state.phases.has(p.key);
-      return `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${on ? '' : 'off'}" aria-pressed="${on}" style="flex:${counts[p.key]};background:${colors[p.key]};color:${glyphColor(colors[p.key])}"
-        title="${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%) — tap: only this phase; Ctrl/⌘-click: add or remove">${esc(p.label)} <span class="n">${fmtNum(counts[p.key])}</span></button>`;
-    }).join('');
+    // A slim bar shows the share of each phase; the rows under it carry the labels and counts
+    // (segment labels clipped when a phase is a small share).
+    const shown = P.ALL_PHASES.filter(p => counts[p.key]);
+    const tip = p => `${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%) — tap: only this phase; Ctrl/⌘-click: add or remove`;
+    $('#pipeline').innerHTML =
+      `<div class="pipe-bar" aria-hidden="true">${shown.map(p => `<i data-phase="${p.key}" class="${App().state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${getColors()[p.key]}" title="${tip(p)}"></i>`).join('')}</div>` +
+      `<div class="pipe-rows">${shown.map(p => {
+        const on = App().state.phases.has(p.key);
+        return `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${on ? '' : 'off'}" aria-pressed="${on}" title="${tip(p)}"><i class="sw" style="background:${getColors()[p.key]}"></i><span class="t">${esc(p.key === 'construction' ? 'Construction' : p.label)}</span><span class="n">${fmtNum(counts[p.key])}</span></button>`;
+      }).join('')}</div>`;
     FU().renderFlagChips();
   }
 

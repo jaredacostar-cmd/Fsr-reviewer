@@ -434,9 +434,6 @@ button, input, select { font: inherit; color: inherit; }
 .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-2); }
 
 /* Pipeline: one stacked bar, 2px surface gaps between segments */
-.pipeline { display: flex; gap: var(--space-1); height: 14px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
-.pipeline button { border: 0; padding: 0; min-width: 3px; cursor: pointer; }
-.pipeline button.off { opacity: .2; }
 
 .dot {
   display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%;
@@ -2113,23 +2110,23 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .filter-panel .fp-sec .row.btns { flex-wrap: wrap; }
 .filter-panel #total-count { margin: var(--space-1) 0 0; }
 
-/* Stage: the pipeline segments carry their label + count, keeping the phase colours. */
-.pipeline { height: auto; min-height: 46px; border-radius: var(--radius-panel); }
-.pipeline button {
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-1);
-  padding: var(--space-2) var(--space-1); min-width: 3px; overflow: hidden;
-  color: var(--on-tint); font-size: var(--fs-1); line-height: 1.25; text-align: center;
-  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+/* Stage: a slim bar of each phase's share, and a row per phase (colour, label, count) to tap. */
+.pipeline { display: grid; gap: var(--space-2); height: auto; min-height: 0; border-radius: 0; overflow: visible; background: none; }
+.pipe-bar { display: flex; gap: 2px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-2); }
+.pipe-bar i { min-width: 3px; cursor: pointer; }
+.pipe-bar i.off { opacity: .2; }
+.pipe-rows { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-1); }
+.pipe-rows button {
+  display: flex; align-items: center; gap: var(--space-2); min-width: 0;
+  padding: var(--space-1) var(--space-2); border: 1px solid var(--border); border-radius: var(--radius-panel);
+  background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-1); line-height: 1.3; text-align: left; cursor: pointer;
 }
-.pipeline button .n { font-size: var(--fs-2); font-weight: 500; font-variant-numeric: tabular-nums; }
-/* The lightest segment colour in each theme gets dark ink so its label reads. */
-.pipeline button[data-phase="inception"] { color: var(--text-primary); text-shadow: 0 1px 1px rgba(255,255,255,.45); }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .pipeline button[data-phase="inception"] { color: var(--on-tint); text-shadow: 0 1px 2px rgba(0,0,0,.6); }
-  :root:not([data-theme="light"]) .pipeline button[data-phase="construction"] { color: var(--ink-fixed); text-shadow: 0 1px 1px rgba(255,255,255,.45); }
-}
-:root[data-theme="dark"] .pipeline button[data-phase="inception"] { color: var(--on-tint); text-shadow: 0 1px 2px rgba(0,0,0,.6); }
-:root[data-theme="dark"] .pipeline button[data-phase="construction"] { color: var(--ink-fixed); text-shadow: 0 1px 1px rgba(255,255,255,.45); }
+.pipe-rows button:hover { border-color: var(--accent); }
+.pipe-rows button .sw { flex: none; width: 10px; height: 10px; border-radius: 50%; }
+.pipe-rows button .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pipe-rows button .n { font-size: var(--fs-2); font-weight: 500; font-variant-numeric: tabular-nums; }
+.pipe-rows button.off { opacity: .45; }
+.pipe-rows button.off .t { text-decoration: line-through; text-decoration-color: var(--text-muted); }
 
 /* Flags: same chip look as the rest of the app, with tabular counts. */
 .flag-chips:empty { display: none; }
