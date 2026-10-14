@@ -50,17 +50,32 @@
   </script>
   <div class="unofficial-banner">Unofficial prototype · public data only · not a Region of Peel product</div>
   <div class="app">
+    <header class="topbar" id="topbar">
+      <span class="tb-wordmark">Peel Growth Pipeline</span>
+      <nav class="tb-trail" id="trail" aria-label="Scope"></nav>
+      <div class="tb-views" id="tb-views" role="group" aria-label="Map view"></div>
+      <div class="tb-scen-wrap">
+        <button type="button" class="tb-scen" id="tb-scen" aria-haspopup="dialog" aria-expanded="false" title="Scenario: the assumptions behind the servicing figures"></button>
+        <div class="tb-pop" id="tb-scen-pop" hidden></div>
+      </div>
+      <div class="tb-actions">
+        <div class="tb-wrap">
+          <button type="button" class="btn small tb-btn" id="tb-export" aria-haspopup="menu" aria-expanded="false" title="Export the developments, areas, reports and share link">Export</button>
+          <div class="tb-menu" id="tb-export-menu" role="menu" hidden></div>
+        </div>
+        <button type="button" class="btn small tb-btn" id="tb-present" aria-pressed="false" title="Presentation mode: fill the screen with the map and headline numbers (Esc exits)">Present</button>
+        <button type="button" class="btn small tb-btn" id="tb-timelapse" aria-pressed="false" data-info="timelapse" title="Time-lapse: replay development growth year by year in presentation mode">Time-lapse</button>
+        <button type="button" class="btn small tb-btn" id="tb-help" data-help-open title="Guides for common tasks and a quick tour">Help<span class="log-dot" hidden aria-label="new changes"></span></button>
+        <div class="tb-wrap">
+          <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="menu" aria-expanded="false" aria-label="Settings menu" title="Settings"></button>
+          <div class="tb-menu" id="tb-gear-menu" role="menu" hidden></div>
+        </div>
+      </div>
+    </header>
     <aside class="sidebar" id="sidebar">
-      <header class="brand">
-        <h1>Peel Growth Pipeline (unofficial)</h1>
-        <p class="sub">Mississauga · Brampton · Caledon — from application to completion</p>
-        <button type="button" class="btn small share-btn" data-share title="Copy a link to this exact view: filters, tab, switches, map position and the open development">Share link</button>
-        <button type="button" class="btn small help-btn" data-help-open title="Guides for common tasks and a quick tour">Help</button>
-      </header>
-
       <nav class="tabs" role="tablist" aria-label="Sidebar">
         <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Explore</button>
-        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span></button>
+        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span><span class="badge-n" id="alerts-n" hidden></span></button>
         <button type="button" role="tab" id="tab-btn-data" aria-controls="tab-data" aria-selected="false" data-tab="data">Data</button>
       </nav>
 
@@ -121,14 +136,6 @@
           </div>
           <p class="muted small" id="list-note"></p>
           <ol class="project-list" id="project-list"></ol>
-          <div class="row btns export-row">
-            <span class="muted small">Export all matching:</span>
-            <button type="button" id="btn-csv" class="btn small">CSV</button>
-            <button type="button" id="btn-geojson" class="btn small">GeoJSON</button>
-            <button type="button" id="btn-areas-geojson" class="btn small" title="Pressure zones and catchments with census / build-out flows and pumping station load">Servicing areas (GeoJSON)</button>
-            <button type="button" id="btn-dc-geojson" class="btn small" title="Planned water and wastewater works from the 2026 DC capital maps (draft)">Planned works (GeoJSON)</button>
-            <button type="button" id="btn-print-map" class="btn small" title="Print the map with legend, scenario and north arrow">Print map</button>
-          </div>
         </section>
       </div>
 
@@ -137,6 +144,11 @@
         <section class="panel" id="watch-panel">
           <div class="panel-head"><h2 class="label" data-info="watchlist">Your watchlist</h2><span class="muted small" id="watch-head"></span></div>
           <ol class="project-list" id="watch-list"></ol>
+        </section>
+        <section class="panel" id="alerts-panel" hidden>
+          <div class="panel-head"><h2 class="label" data-info="alerts">Alerts for your watchlist</h2><span class="muted small" id="alerts-head"></span></div>
+          <ol class="project-list" id="alerts-list"></ol>
+          <p class="small muted" id="alerts-foot"></p>
         </section>
         <section class="panel changes" id="changes">
           <div class="panel-head"><h2 class="label">Changes since last update</h2><span class="muted small" id="changes-head"></span></div>
@@ -192,13 +204,110 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
+      <div class="tool-banner" id="tool-banner" role="status" hidden></div>
       <div id="presentation-bar" hidden>
         <p class="pres-hl" id="pres-hl"></p>
         <div class="pres-tiles" id="pres-tiles"></div>
         <button type="button" class="btn small" id="pres-exit" title="Exit presentation (Esc)">Exit</button>
       </div>
       <div class="loading" id="loading" hidden></div>
-      <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
+      <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar" aria-expanded="false">Filters</button>
+    </main>
+
+    <!-- Phase 2 shell: the analysis panes live in this right-hand column on desktop
+         (a bottom sheet below 1200px). The tab buttons and panes moved here verbatim
+         from the old bottom footer. Worker 3 appends a "Developments" tab + pane. -->
+    <aside class="analysis" id="analysis" aria-label="Analysis">
+      <div class="analysis-resize" id="analysis-resize" role="separator" aria-orientation="vertical" aria-label="Resize the analysis column: drag left or right" tabindex="0"><span></span></div>
+      <button type="button" class="sheet-grip" id="analysis-grip" aria-label="Resize the analysis panel: drag, or tap to change its height"><span></span></button>
+      <button type="button" class="f-sum" id="f-sum" title="Show the overview totals"></button>
+      <div id="site-bar" hidden></div>
+      <div class="analysis-tabs" role="tablist" aria-label="Analysis">
+        <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="pane-growth-pipeline" aria-selected="false">Growth</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>DC</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dev" data-tab="dev" data-info="tab-dev" aria-controls="pane-dev" aria-selected="false" hidden>Development</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-tool" data-tab="tool" aria-controls="pane-tool" aria-selected="false" hidden>Tool result</button>
+      </div>
+      <div class="analysis-panes" id="analysis-panes">
+
+      <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
+        <div id="ov-body"></div>
+      </section>
+
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="census2051">Census &amp; 2051</button><button type="button" class="btn small" data-gsub="timing">Timing</button></div>
+      <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
+      <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="census2051" role="tabpanel" aria-labelledby="ftab-growth" data-off="1" hidden><div id="growth-census-body"></div></section>
+      <section class="f-pane" id="pane-growth-timing" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="timing-body"></div></section>
+
+      <div class="f-pane f-subtabs" data-pane="water" hidden role="group" aria-label="Water view">
+        <button type="button" class="btn small" data-wsub="capacity">Treatment &amp; capacity</button>
+        <button type="button" class="btn small" data-wsub="zones">Pressure zones</button>
+        <button type="button" class="btn small" data-wsub="facilities">Facilities</button>
+        <button type="button" class="btn small" data-wsub="hydro">Hydraulic check (beta)</button>
+      </div>
+      <section class="f-pane svc-pane" id="pane-wcap" data-pane="water" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Water treatment and capacity</h2></div>
+        <div id="wcap-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-water" data-pane="water" data-sub="zones" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
+        <div id="water-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-wfac" data-pane="water" data-sub="facilities" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Existing water facilities</h2></div>
+        <div id="wfac-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-hydro" data-pane="water" data-sub="hydro" role="tabpanel" aria-labelledby="ftab-water" hidden>
+        <div class="tb-head"><h2 class="sr">Hydraulic check</h2></div>
+        <div id="hyd-box"></div>
+      </section>
+      <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
+        <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
+        <button type="button" class="btn small" data-wwsub="catchments">Blocks</button>
+        <button type="button" class="btn small" data-wwsub="alloc">Allocations</button>
+        <button type="button" class="btn small" data-wwsub="pumpstations">Pumping stations</button>
+      </div>
+      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
+        <div id="ww-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-alloc" data-pane="ww" data-sub="alloc" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Servicing allocations</h2></div>
+        <div id="alloc-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
+        <div id="plants-body"></div>
+      </section>
+      <section class="f-pane svc-pane" id="pane-pumpstations" data-pane="ww" data-sub="pumpstations" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+        <div class="tb-head"><h2 class="sr">Pumping stations</h2></div>
+        <div id="pumpstations-body"></div>
+      </section>
+
+      <div class="f-pane f-subtabs" data-pane="dc" hidden role="group" aria-label="DC view"><button type="button" class="btn small" data-dcasub="timing">Timing</button><button type="button" class="btn small" data-dcasub="recommendations">Recommendations</button><button type="button" class="btn small" data-dcasub="funding">Funding</button></div>
+      <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
+      <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="recommendations" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
+      <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
+
+      <section class="f-pane" id="pane-dev" data-pane="dev" role="tabpanel" aria-labelledby="ftab-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></section>
+
+      <section class="f-pane" id="pane-tool" data-pane="tool" role="tabpanel" aria-labelledby="ftab-tool" hidden>
+        <div class="tb-head"><h2 class="pane-h" id="tool-title">Tool result</h2><button type="button" class="btn small" id="tool-close" title="Close the tool result">Close ×</button></div>
+        <div id="pane-tool-body"></div>
+      </section>
+      </div>
+    </aside>
+    <!-- Phase 3b provision: the Compare tool renders its second scenario in this
+         fourth column (visible at ≥1800px once unhidden). Empty until then. -->
+    <aside class="compare-col" id="compare-col" hidden></aside>
+
+    <!-- Phase 2 shell: the footer is a slim timeline strip only. The #scen-bar stays
+         here for now; Worker 1 moves it into the topbar popover. -->
+    <footer class="footer" id="footer">
+      <div class="scen-bar" id="scen-bar" data-info="scenario"><div id="scen-criteria-mount"></div></div>
       <section class="timebar" id="timebar" aria-label="Timeline">
         <div class="tb-head">
           <h2 data-info="timeline">Timeline</h2>
@@ -224,111 +333,6 @@
           <div class="ticks" id="t-ticks" aria-hidden="true"></div>
         </div>
       </section>
-    </main>
-
-    <footer class="footer" id="footer">
-      <div class="f-grip" id="footer-grip" role="separator" aria-orientation="horizontal" aria-label="Resize the analysis panel: drag up or down" tabindex="0"><span></span></div>
-      <div class="f-tabs" role="tablist" aria-label="Bottom panel">
-        <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-census" data-tab="census" data-info="tab-growth" aria-controls="census" aria-selected="false" hidden>Growth</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-demand" aria-controls="pane-demand" aria-selected="false">Demand</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca" aria-selected="false" hidden>DC Analysis</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-criteria" data-tab="criteria" data-info="tab-criteria" aria-controls="pane-criteria" aria-selected="false">Settings &amp; sources</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-log" data-tab="log" data-info="tab-log" aria-controls="pane-log" aria-selected="false">Change log<span class="log-dot" hidden aria-label="new changes"></span></button>
-        <button type="button" class="f-sum" id="f-sum" title="Open the analysis"></button>
-        <span class="f-spacer"></span>
-        <button type="button" class="btn small footer-toggle" id="footer-toggle" aria-expanded="true" aria-controls="footer">Hide</button>
-      </div>
-      <div class="scen-bar" id="scen-bar" data-info="scenario"></div>
-
-      <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
-        <div id="ov-body"></div>
-      </section>
-
-      <section class="f-pane demand" id="pane-demand" data-pane="growth" role="tabpanel" aria-labelledby="ftab-growth">
-        <div class="tb-head">
-          <h2 class="pane-h" data-info="tab-demand">Demand of the shown developments</h2>
-          <div class="d-sel" id="d-sel" data-info="demand-selection"></div>
-        </div>
-        <div class="d-layout">
-          <div class="d-stats" id="d-stats"></div>
-          <div class="d-flows" id="d-tiles"></div>
-        </div>
-        <h3 class="sub-title" data-info="unit-types">Servicing demand breakdown</h3>
-        <div id="d-breakdown" class="d-breakdown"></div>
-      </section>
-
-      <section class="f-pane census" id="census" data-pane="census" role="tabpanel" data-off="1" aria-labelledby="ftab-census" hidden>
-        <div class="tb-head">
-          <h2 class="pane-h" id="c-head" data-info="tab-growth">Growth since the 2021 Census</h2>
-          <span class="muted small" id="c-note" data-info="census"></span>
-        </div>
-        <div class="c-ctx" id="c-ctx"></div>
-        <div class="c-layout">
-          <div class="tiles" id="c-tiles"></div>
-          <div class="c-right">
-            <div class="growth-chart" id="c-chart" data-info="growth-bars"></div>
-            <p class="small muted" id="c-ii" data-info="ii"></p>
-          </div>
-        </div>
-        <div id="c-forecast" data-info="forecast-2051"></div>
-      </section>
-
-      <div class="f-pane f-subtabs" data-pane="water" hidden role="group" aria-label="Water view">
-        <button type="button" class="btn small" data-wsub="capacity">Treatment &amp; capacity</button>
-        <button type="button" class="btn small" data-wsub="zones">Pressure zones</button>
-        <button type="button" class="btn small" data-wsub="facilities">Facilities</button>
-      </div>
-      <section class="f-pane svc-pane" id="pane-wcap" data-pane="water" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-water" hidden>
-        <div class="tb-head"><h2 class="sr">Water treatment and capacity</h2></div>
-        <div id="wcap-body"></div>
-      </section>
-      <section class="f-pane svc-pane" id="pane-water" data-pane="water" data-sub="zones" role="tabpanel" aria-labelledby="ftab-water" hidden>
-        <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
-        <div id="water-body"></div>
-      </section>
-      <section class="f-pane svc-pane" id="pane-wfac" data-pane="water" data-sub="facilities" role="tabpanel" aria-labelledby="ftab-water" hidden>
-        <div class="tb-head"><h2 class="sr">Existing water facilities</h2></div>
-        <div id="wfac-body"></div>
-      </section>
-      <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
-        <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
-        <button type="button" class="btn small" data-wwsub="catchments">Blocks</button>
-        <button type="button" class="btn small" data-wwsub="alloc">Allocations</button>
-      </div>
-      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-ww" hidden>
-        <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
-        <div id="ww-body"></div>
-      </section>
-      <section class="f-pane svc-pane" id="pane-alloc" data-pane="ww" data-sub="alloc" role="tabpanel" aria-labelledby="ftab-ww" hidden>
-        <div class="tb-head"><h2 class="sr">Servicing allocations</h2></div>
-        <div id="alloc-body"></div>
-      </section>
-      <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-ww" hidden>
-        <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
-        <div id="plants-body"></div>
-      </section>
-
-      <section class="f-pane svc-pane" id="pane-dca" data-pane="dca" role="tabpanel" aria-labelledby="ftab-dca" hidden>
-        <div class="tb-head"><h2 class="pane-h" data-info="tab-dca">DC Analysis: diverting flows to the DC projects, and what if one is cancelled</h2></div>
-        <div id="dca-body"></div>
-      </section>
-
-      <section class="f-pane log-pane" id="pane-log" data-pane="log" role="tabpanel" aria-labelledby="ftab-log" hidden>
-        <div id="log-body"><div class="skel-row" role="status" aria-label="Loading the change log"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div></div>
-      </section>
-
-      <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
-        <fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind"><option value="application" selected>Planning applications + their permits</option><option value="">All records (incl. permits with no application)</option><option value="permit">Building permits</option><option value="both">Application + permits</option></select></label></div><label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>
-        <div id="d-quality" class="d-quality"></div>
-        <h3 class="sub-title" data-info="tab-criteria">Design criteria</h3>
-        <div class="d-grid">
-          <form id="d-criteria" class="criteria"></form>
-        </div>
-        <div id="d-refs" class="d-refs" data-info="references" hidden></div>
-      </section>
     </footer>
 
     <aside class="detail" id="detail" hidden aria-live="polite">
@@ -341,20 +345,91 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-rotate@0.2.8/dist/leaflet-rotate.js"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="js/util.js?v=__BUILD__"></script>
   <script src="js/config.js?v=__BUILD__"></script>
   <script src="js/phases.js?v=__BUILD__"></script>
   <script src="js/demand.js?v=__BUILD__"></script>
   <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/aerial.js?v=__BUILD__"></script>
   <script src="js/areas.js?v=__BUILD__"></script>
+  <script src="js/growth.js?v=__BUILD__"></script>
   <script src="js/employment.js?v=__BUILD__"></script>
   <script src="js/brief.js?v=__BUILD__"></script>
   <script src="js/info.js?v=__BUILD__"></script>
+  <script src="js/alerts.js?v=__BUILD__"></script>
   <script src="js/arcgis.js?v=__BUILD__"></script>
   <script src="js/loader.js?v=__BUILD__"></script>
+  <script src="js/offline.js?v=__BUILD__"></script>
   <script src="js/provenance.js?v=__BUILD__"></script>
+  <script src="js/report-issue.js?v=__BUILD__"></script>
   <script src="js/filters.js?v=__BUILD__"></script>
+  <script src="js/snapshot-index.js?v=__BUILD__"></script>
   <script src="js/design.js?v=__BUILD__"></script>
+  <script src="js/devscope.js?v=__BUILD__"></script>
+  <script src="js/devtab.js?v=__BUILD__"></script>
+  <script src="js/tools.js?v=__BUILD__"></script>
+  <script src="js/upstream.js?v=__BUILD__"></script>
+  <script src="js/tightpipes.js?v=__BUILD__"></script>
+  <script src="js/tools-fit.js?v=__BUILD__"></script>
+  <script src="js/tools-inspect.js?v=__BUILD__"></script>
+  <script src="js/tools-corridor.js?v=__BUILD__"></script>
+  <script src="js/tools-compare.js?v=__BUILD__"></script>
+  <script src="js/export-comparison.js?v=__BUILD__"></script>
+  <script src="js/tools-inquiry.js?v=__BUILD__"></script>
+  <script src="js/tools-upgrade.js?v=__BUILD__"></script>
+  <script src="js/tools-batch.js?v=__BUILD__"></script>
+  <script src="js/export-workbook.js?v=__BUILD__"></script>
+  <!-- Phase 6: extracted from js/app.js (order matters — see git history for SPLIT_MAP) -->
+  <script src="js/map-core.js?v=__BUILD__"></script>
+  <script src="js/map-labels.js?v=__BUILD__"></script>
+  <script src="js/map-census.js?v=__BUILD__"></script>
+  <script src="js/map-markers.js?v=__BUILD__"></script>
+  <script src="js/share.js?v=__BUILD__"></script>
+  <script src="js/timeline.js?v=__BUILD__"></script>
+  <script src="js/developments-tab.js?v=__BUILD__"></script>
+  <script src="js/analysis-tabs.js?v=__BUILD__"></script>
+  <script src="js/changelog.js?v=__BUILD__"></script>
+  <script src="js/demand-ui.js?v=__BUILD__"></script>
+  <script src="js/accuracy.js?v=__BUILD__"></script>
+  <script src="js/census-view.js?v=__BUILD__"></script>
+  <script src="js/dev-verdict.js?v=__BUILD__"></script>
+  <script src="js/overview-tab.js?v=__BUILD__"></script>
+  <script src="js/growth-ui.js?v=__BUILD__"></script>
+  <script src="js/timing.js?v=__BUILD__"></script>
+  <script src="js/settings.js?v=__BUILD__"></script>
+  <script src="js/render-list.js?v=__BUILD__"></script>
+  <script src="js/dev-detail.js?v=__BUILD__"></script>
+  <script src="js/fsr.js?v=__BUILD__"></script>
+  <script src="js/fsr-check.js?v=__BUILD__"></script>
+  <script src="js/dev-nav.js?v=__BUILD__"></script>
+  <script src="js/aerial-check.js?v=__BUILD__"></script>
+  <script src="js/exports.js?v=__BUILD__"></script>
+  <script src="js/sewer-profile.js?v=__BUILD__"></script>
+  <script src="js/area-select.js?v=__BUILD__"></script>
+  <script src="js/timelapse.js?v=__BUILD__"></script>
+  <script src="js/search-filter.js?v=__BUILD__"></script>
+  <script src="js/svc-data.js?v=__BUILD__"></script>
+  <script src="js/svc-tab.js?v=__BUILD__"></script>
+  <script src="js/svc-plants.js?v=__BUILD__"></script>
+  <script src="js/sewer-trace.js?v=__BUILD__"></script>
+  <script src="js/map-analysis.js?v=__BUILD__"></script>
+  <script src="js/tool-scope.js?v=__BUILD__"></script>
+  <script src="js/measure.js?v=__BUILD__"></script>
+  <script src="js/dc-infra.js?v=__BUILD__"></script>
+  <script src="js/sewer-cap.js?v=__BUILD__"></script>
+  <script src="js/exist-pipes.js?v=__BUILD__"></script>
+  <script src="js/site-context.js?v=__BUILD__"></script>
+  <script src="js/water-trace.js?v=__BUILD__"></script>
+  <script src="js/water-tab.js?v=__BUILD__"></script>
+  <script src="js/masterplan.js?v=__BUILD__"></script>
+  <script src="js/dc-cost.js?v=__BUILD__"></script>
+  <script src="js/dca-tab.js?v=__BUILD__"></script>
+  <script src="js/plan-areas.js?v=__BUILD__"></script>
+  <script src="js/filter-ui.js?v=__BUILD__"></script>
+  <script src="js/data-tab.js?v=__BUILD__"></script>
+  <script src="js/reports.js?v=__BUILD__"></script>
+  <script src="js/tips.js?v=__BUILD__"></script>
+  <script src="js/topbar.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
 </body>
 </html>
