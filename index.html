@@ -15,9 +15,25 @@
   <meta name="app-version" content="__BUILD__">
   <title>Peel Growth Pipeline (unofficial)</title>
   <meta name="description" content="Every development in Peel Region (Mississauga, Brampton, Caledon) from application to completion, on a map.">
+  <script>
+    // Theme before first paint: no dark/light flash. Mirrors resolveTheme() in
+    // js/design.js (kept inline so it runs before any stylesheet or script).
+    // peel-dev:theme is 'dark' | 'light' | 'device' (JSON-encoded); 'device' or
+    // unset leaves data-theme off so the follow-device media query decides,
+    // and dark is the default for everyone else.
+    (function () {
+      try {
+        var s = JSON.parse(localStorage.getItem('peel-dev:theme') || 'null');
+        if (s === 'light') document.documentElement.dataset.theme = 'light';
+        else if (s === 'device') document.documentElement.removeAttribute('data-theme');
+        else document.documentElement.dataset.theme = 'dark';
+      } catch (e) { document.documentElement.dataset.theme = 'dark'; }
+    })();
+  </script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
   <link rel="stylesheet" href="css/app.css?v=__BUILD__">
+  <link rel="stylesheet" href="css/modes.css?v=__BUILD__">
 </head>
 <body>
   <div class="error-banner" id="error-banner" role="alert" hidden>
@@ -176,6 +192,11 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
+      <div id="presentation-bar" hidden>
+        <p class="pres-hl" id="pres-hl"></p>
+        <div class="pres-tiles" id="pres-tiles"></div>
+        <button type="button" class="btn small" id="pres-exit" title="Exit presentation (Esc)">Exit</button>
+      </div>
       <div class="loading" id="loading" hidden></div>
       <button type="button" class="btn toggle-sidebar" id="toggle-sidebar" aria-controls="sidebar">List</button>
       <section class="timebar" id="timebar" aria-label="Timeline">
@@ -296,7 +317,7 @@
       </section>
 
       <section class="f-pane log-pane" id="pane-log" data-pane="log" role="tabpanel" aria-labelledby="ftab-log" hidden>
-        <div id="log-body"><p class="small muted">Loading the change log…</p></div>
+        <div id="log-body"><div class="skel-row" role="status" aria-label="Loading the change log"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div></div>
       </section>
 
       <section class="f-pane" id="pane-criteria" data-pane="criteria" role="tabpanel" aria-labelledby="ftab-criteria" hidden>
@@ -333,6 +354,7 @@
   <script src="js/loader.js?v=__BUILD__"></script>
   <script src="js/provenance.js?v=__BUILD__"></script>
   <script src="js/filters.js?v=__BUILD__"></script>
+  <script src="js/design.js?v=__BUILD__"></script>
   <script src="js/app.js?v=__BUILD__"></script>
 </body>
 </html>
