@@ -2,9 +2,12 @@
  * Peel Development Tracker — service worker (Phase 6: offline support).
  *
  * Strategy:
- * - App shell (index.html, css/, js/, icons/, manifest) is precached at
- *   install under a versioned cache name and served cache-first, so the
- *   app opens fully offline from the last successful visit.
+ * - The page itself (navigation, index.html) is network-first: every visit gets
+ *   the latest deploy, and the cached copy is only the offline fallback.
+ * - Other app-shell files (css/, js/, icons/, manifest) are cache-first. The page
+ *   asks for them with ?v=<build>, so a new deploy asks for new URLs.
+ * - SW_VERSION is stamped with the build at deploy (.github/workflows/site.yml),
+ *   so each deploy installs a new worker that clears the previous caches.
  * - data/*.json (snapshot.json plus the ~19 per-topic files) uses
  *   stale-while-revalidate: an instant answer from the cache on every
  *   load, refreshed silently in the background when the network is there.
@@ -14,10 +17,9 @@
  * never broken by this worker.
  */
 
-// Bump this on every release that changes the app shell or data contract.
-// The worker deletes every cache whose name does not carry this version,
-// so a bump is the cache-bust mechanism (see activate handler below).
-const SW_VERSION = '2026-10-14-phase6';
+// Stamped with the build (short commit) at deploy; '__BUILD__' locally. The worker
+// deletes every cache whose name does not carry this version (activate handler).
+const SW_VERSION = '__BUILD__';
 
 const SHELL_CACHE = `peel-dev-shell-${SW_VERSION}`;
 const DATA_CACHE = `peel-dev-data-${SW_VERSION}`;
@@ -122,6 +124,8 @@ const SHELL_ASSETS = [
 const DATA_URL_RE = /(?:^|\/)data\/[^/]+\.json(\?|$)/;
 
 self.addEventListener('install', (event) => {
+  // A new deploy's worker takes over at once instead of waiting for every tab to close.
+  try { self.skipWaiting(); } catch (e) { /* defensive */ }
   event.waitUntil((async () => {
     if (!('caches' in self)) return;
     try {
@@ -179,8 +183,21 @@ async function staleWhileRevalidate(request) {
   return res || new Response('offline', { status: 503, statusText: 'offline' });
 }
 
-// cache-first for the app shell; navigation requests fall back to index.html
-// when the network is unreachable.
+// network-first for the page: the latest deploy when online, the cached copy offline.
+async function pageFirst(request) {
+  const cache = await caches.open(SHELL_CACHE);
+  try {
+    const res = await fetch(request, { cache: 'no-cache' });
+    if (res && res.ok) cache.put('index.html', res.clone()).catch(() => {});
+    return res;
+  } catch (e) {
+    const cached = await cache.match('index.html').catch(() => null);
+    return cached || new Response('offline', { status: 503, statusText: 'offline' });
+  }
+}
+
+// cache-first for the rest of the app shell (versioned URLs); navigation requests fall
+// back to index.html when the network is unreachable.
 async function shellFirst(request) {
   const cache = await caches.open(SHELL_CACHE);
   const cached = await cache.match(request).catch(() => null);
@@ -206,7 +223,13 @@ self.addEventListener('fetch', (event) => {
   let url;
   try { url = new URL(req.url); } catch (e) { return; }
   if (url.origin !== self.location.origin) return; // third-party left alone
-  if (DATA_URL_RE.test(url.pathname + url.search)) {
+  const isPage = req.mode === 'navigate' || /\/(index\.html)?$/.test(url.pathname);
+  if (isPage) {
+    event.respondWith((async () => {
+      try { return await pageFirst(req); }
+      catch (e) { return fetch(req); }
+    })());
+  } else if (DATA_URL_RE.test(url.pathname + url.search)) {
     event.respondWith((async () => {
       try { return await staleWhileRevalidate(req); }
       catch (e) { return fetch(req); }
