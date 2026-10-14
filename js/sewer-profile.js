@@ -162,15 +162,28 @@
     if (m) { const i = +m[1], all = ST().pipeRoute(i); let run = 0; const r = []; for (const k of all) { r.push(k); const c = SC().pipeCoords(MM().SEW.data.pipes[k]); for (let q = 1; q < c.length; q++) run += DI().dcM(c[q - 1], c[q]); if (run > 3000) break; } sewerProfile(r, `Sewer profile: ${MM().SEW.data.pipes[i][0]} mm sewer and ${(run / 1000).toFixed(1)} km downstream`); }
   });
 
-  // Trace from any point on the map: the nearest 300 mm+ sewer down to the plant.
-  async function tracePoint(ll) {
+  // One home for tool results (design audit, Group 7): the Tool result tab, with its trail crumb;
+  // the #detail panel only when the tool framework is absent.
+  const Tools = () => window.PeelTools;
+  let resultView = null, resultTitle = null;   // this module's result while it is the open one
+  function showResult(view, title, html, reopen) {
+    resultView = view; resultTitle = title;
+    if (Tools() && Tools().openResult) { Tools().openResult({ title, html, reopen }); /* the trace summary and the servicing check carry their own note */ return; }
+    $('#detail-body').innerHTML = html; $('#detail').hidden = false; $('#detail').dataset.view = view; $('#detail').scrollTop = 0;
+  }
+  const resultOpen = view => resultView === view && (Tools() && Tools().resultTitle ? Tools().resultTitle() === resultTitle : !$('#detail').hidden);
+  function closeResult() { resultView = null; if (Tools() && Tools().hasResult && Tools().hasResult()) Tools().closeResult(); else AC().closeDetail(); }
+  // Trace from any point on the map: the nearest 300 mm+ sewer down to the plant. Returns the
+  // trace; shows it only when asked (Inspect point and Fit use the trace without a panel).
+  async function tracePoint(ll, show = true) {
     const pt = { key: `pt:${ll.lat.toFixed(5)},${ll.lng.toFixed(5)}`, lat: ll.lat, lng: ll.lng, title: 'Point on the map' };
-    $('#detail-body').innerHTML = '<div class="head"><h3>Sewer path from this point</h3><div class="m">Tracing…</div></div>';
-    $('#detail').hidden = false; $('#detail').dataset.view = 'trace'; $('#detail').scrollTop = 0;
+    if (!show) return ST().traceDev(pt);
+    showResult('trace', 'Sewer path', '<div class="head"><h3>Sewer path from this point</h3><div class="m">Tracing…</div></div>');
     const t = await ST().traceDev(pt);
-    $('#detail-body').innerHTML = `<div class="head"><h3>Sewer path from this point</h3><div class="m">${ll.lat.toFixed(5)}, ${ll.lng.toFixed(5)} · ${t ? `${t.km.toFixed(1)} km to ${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : SD().plantLabel(t.plantName))}` : 'no sewer found'}</div></div>
+    showResult('trace', 'Sewer path', `<div class="head"><h3>Sewer path from this point</h3><div class="m">${ll.lat.toFixed(5)}, ${ll.lng.toFixed(5)} · ${t ? `${t.km.toFixed(1)} km to ${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : SD().plantLabel(t.plantName))}` : 'no sewer path found'}</div></div>
       ${ST().traceSummaryHTML(t)}
-      <p class="small"><button type="button" class="btn small" data-tool-again="trace">Trace another point</button></p>`;
+      <p class="small"><button type="button" class="btn small" data-tool-again="trace">Trace another point</button></p>`, () => tracePoint(ll));
+    return t;
   }
   document.addEventListener('click', e => { const b = e.target.closest('[data-tool-again]'); if (b) Meas().setTool(b.dataset.toolAgain); });
   addEventListener('keydown', e => { if (e.key === 'Escape' && Meas().tool.mode) Meas().setTool(null); });
@@ -202,10 +215,10 @@
   function removeWhatIfs(ids) {
     const gone = whatIfs.filter(w => ids.includes(w.id)); if (!gone.length) return;
     whatIfs = whatIfs.filter(w => !ids.includes(w.id));
-    if ($('#detail-body').dataset.wf && ids.includes($('#detail-body').dataset.wf) && $('#detail').dataset.view === 'whatif') AC().closeDetail();
+    if (wfCurrent && ids.includes(wfCurrent) && resultOpen('whatif')) closeResult();
     wfUndo = gone; clearTimeout(wfUndoT); wfUndoT = setTimeout(() => { wfUndo = null; renderWfBar(); }, 8000);
     syncWhatIfs();
-    if ($('#detail').dataset.view === 'whatifs' && !$('#detail').hidden) showWhatIfList();
+    if (resultOpen('whatifs')) showWhatIfList();
   }
   function renderWfBar() {
     const n = whatIfs.length;
@@ -218,20 +231,23 @@
   wfBar.addEventListener('click', e => {
     const act = e.target.closest('[data-wf-undo]') ? 'undo' : e.target.closest('[data-wf-all]') ? 'all' : e.target.closest('[data-wf-list]') ? 'list' : '';
     setTimeout(() => {
-      if (act === 'undo' && wfUndo) { whatIfs = whatIfs.concat(wfUndo); wfUndo = null; clearTimeout(wfUndoT); syncWhatIfs(); if ($('#detail').dataset.view === 'whatifs' && !$('#detail').hidden) showWhatIfList(); }
+      if (act === 'undo' && wfUndo) { whatIfs = whatIfs.concat(wfUndo); wfUndo = null; clearTimeout(wfUndoT); syncWhatIfs(); if (resultOpen('whatifs')) showWhatIfList(); }
       else if (act === 'all') removeWhatIfs(whatIfs.map(w => w.id));
       else if (act === 'list') showWhatIfList();
     });
   });
   // Every test site, each with its own remove.
   function showWhatIfList() {
-    if (!whatIfs.length) { AC().closeDetail(); return; }
-    $('#detail-body').innerHTML = `<div class="head"><h3>Test sites</h3><div class="m">${whatIfs.length} on the map · kept in this browser · not real applications</div></div>
+    if (!whatIfs.length) { closeResult(); return; }
+    showResult('whatifs', 'Test sites', `<div class="head"><h3>Test sites</h3><div class="m">${whatIfs.length} on the map · kept in this browser · not real applications</div></div>
       <ul class="wf-list">${whatIfs.map(w => `<li><button type="button" class="wf-open" data-wf-open="${esc(w.id)}"><strong>${esc(w.name || 'Test site')}</strong><small>${fmtNum(w.single + w.town + w.apartment)} units${w.jobs ? ` · ${fmtNum(w.jobs)} jobs` : ''}${w.include ? ' · counted in totals' : ''}</small></button><button type="button" class="btn small" data-wf-rm="${esc(w.id)}" aria-label="Remove ${esc(w.name || 'test site')}">Remove <span aria-hidden="true">×</span></button></li>`).join('')}</ul>
-      <p><button type="button" class="btn small" data-wf-rmall>Remove all test sites</button></p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'whatifs';
+      <p><button type="button" class="btn small" data-wf-rmall>Remove all test sites</button></p>`, () => showWhatIfList());
   }
-  $('#detail-body').addEventListener('click', e => {
+  // Test-site controls work in the Tool result tab and in the #detail fallback.
+  const wfBodies = ['#detail-body', '#pane-tool-body'].map(q => $(q)).filter(Boolean);
+  const onWf = (type, fn) => wfBodies.forEach(b => b.addEventListener(type, fn));
+  let wfCurrent = null;   // the test site whose form is open
+  onWf('click', e => {
     const rm = e.target.closest('[data-wf-rm]'); if (rm) { removeWhatIfs([rm.dataset.wfRm]); return; }
     if (e.target.closest('[data-wf-rmall]')) { removeWhatIfs(whatIfs.map(w => w.id)); return; }
     const op = e.target.closest('[data-wf-open]'); if (op) { const w = whatIfs.find(x => x.id === op.dataset.wfOpen); if (w) { map.setView([w.lat, w.lng], Math.max(map.getZoom(), 15)); showWhatIf(null, w.id); } return; }
@@ -255,19 +271,18 @@
     let w = id ? whatIfs.find(x => x.id === id) : null;
     if (!w) {
       const muni = (App().state.areas && App().state.censusDas) ? '' : '';
-      w = { id: Date.now().toString(36), name: `Test site ${whatIfs.length + 1}`, lat: latlng.lat, lng: latlng.lng, single: 0, town: 0, apartment: 200, jobs: 0, ha: 0, phase: 'review', include: false, municipality: muni };
+      w = { id: Date.now().toString(36), name: `Test site ${whatIfs.length + 1}`, lat: latlng.lat, lng: latlng.lng, single: 0, town: 0, apartment: 200, jobs: 0, ha: 0, phase: 'review', include: false, municipality: muni, fresh: true };
       whatIfs.push(w); syncWhatIfs();
     }
     const num = (k, label, step = 1) => `<label class="field"><span>${label}</span><input type="number" min="0" step="${step}" data-wf="${k}" value="${w[k]}"></label>`;
-    $('#detail-body').innerHTML = `
+    wfCurrent = w.id;
+    showResult('whatif', w.name || 'Test site', `
       <div class="head"><h3><input class="wf-name" data-wf="name" value="${esc(w.name)}" aria-label="Name"></h3><div class="m">Test site · drag the pin to move it · not a real application${whatIfs.length > 1 ? ` · <button type="button" class="btn small link" data-wf-showall>all ${whatIfs.length} test sites</button>` : ''}</div>
         <div class="wf-head-act"><button type="button" class="btn small" data-wf-del="1">Remove this test site <span aria-hidden="true">×</span></button></div></div>
       <div class="wf-form">${num('single', 'Single / semi')}${num('town', 'Townhouses')}${num('apartment', 'Apartments')}${num('jobs', 'Jobs')}${num('ha', 'Site area (ha)', 0.1)}
         <label class="field"><span>Layer</span><select data-wf="phase"><option value="review"${w.phase === 'review' ? ' selected' : ''}>Proposed</option><option value="approved"${w.phase === 'approved' ? ' selected' : ''}>Committed</option></select></label></div>
       <label class="chk small"><input type="checkbox" data-wf="include"${w.include ? ' checked' : ''}> Count it in the Water / Wastewater totals and plant capacity</label>
-      <div id="wf-out"></div>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'whatif';
-    $('#detail-body').dataset.wf = w.id;
+      <div id="wf-out"></div>`, () => showWhatIf(null, w.id));
     renderWhatIfOut(w);
   }
   function renderWhatIfOut(w) {
@@ -277,16 +292,25 @@
       <section class="brief"><div class="b-row"><div class="b-k">Servicing</div><div class="b-v">${DD().servicingBriefHTML(p, f).replace(/<p class="small"><button[^]*?<\/p>/, '')}</div></div></section>
       ${f ? SD().servicingCheckHTML(p, f) : ''}`;
   }
-  $('#detail-body').addEventListener('input', e => {
+  onWf('input', e => {
     const k = e.target.dataset && e.target.dataset.wf; if (!k) return;
-    const w = whatIfs.find(x => x.id === $('#detail-body').dataset.wf); if (!w) return;
+    const w = whatIfs.find(x => x.id === wfCurrent); if (!w) return;
+    delete w.fresh;   // edited: it stays when the result closes
     w[k] = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'number' ? Math.max(0, +e.target.value || 0) : e.target.value;
     clearTimeout(w._t); w._t = setTimeout(() => { delete w._t; syncWhatIfs(); renderWhatIfOut(w); }, 250);
   });
-  $('#detail-body').addEventListener('change', e => { if (e.target.dataset && (e.target.dataset.wf === 'include' || e.target.dataset.wf === 'phase')) e.target.dispatchEvent(new Event('input', { bubbles: true })); });
-  $('#detail-body').addEventListener('click', e => {
+  onWf('change', e => { if (e.target.dataset && (e.target.dataset.wf === 'include' || e.target.dataset.wf === 'phase')) e.target.dispatchEvent(new Event('input', { bubbles: true })); });
+  onWf('click', e => {
     if (!e.target.closest('[data-wf-del]')) return;
-    removeWhatIfs([$('#detail-body').dataset.wf]);
+    removeWhatIfs([wfCurrent]);
+  });
+
+  // A test site placed and closed without any change is cleared with its result (design audit,
+  // Group 7): the test site no longer outlives the tool. Edited or counted ones stay (bottom bar).
+  document.addEventListener('peel:tool-closed', () => {
+    if (resultView !== 'whatif') return;
+    const w = whatIfs.find(x => x.id === wfCurrent); resultView = null;
+    if (w && w.fresh && !w.include) { whatIfs = whatIfs.filter(x => x !== w); syncWhatIfs(); }
   });
 
   // Boot init (SPLIT_MAP M31/R4): these ran at app.js eval time; the app

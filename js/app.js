@@ -685,7 +685,7 @@
     pipeColour: r => window.PeelSewerCap.pipeColour(r),
     peopleFor: (room, add) => window.PeelMasterPlan.peopleFor(room, add),
     runOut: (q, lim) => window.PeelMasterPlan.runOut(q, lim),
-    tracePoint: ll => window.PeelSewerProfile.tracePoint(ll),
+    tracePoint: ll => window.PeelSewerProfile.tracePoint(ll, false),   // returns the trace, no panel (Inspect, Fit)
     traceSummaryHTML: t => window.PeelSewerTrace.traceSummaryHTML(t),
     waterTrace: (p, zid) => window.PeelWaterTrace.waterTrace(p, zid),
     waterTraceSummaryHTML: r => window.PeelWaterTrace.waterTraceSummaryHTML(r),

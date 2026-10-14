@@ -181,13 +181,14 @@
       '<button type="button" role="menuitem" data-tbx="print">Print map</button>' +
       '<hr>' +
       '<button type="button" role="menuitem" data-tbx="inquiry">Inquiry response draft</button>' +
-      '<button type="button" role="menuitem" data-share>Copy share link</button>';
+      '<button type="button" role="menuitem" data-share>Copy share link</button>' +
+      '<button type="button" role="menuitem" data-tbx="saveview">Save this view…</button>';
   }
   $('#tb-export-menu').addEventListener('click', e => {
     const item = e.target.closest('[role="menuitem"]'); if (!item || item.disabled) return;
     closeTbMenus();
     const b = e.target.closest('[data-tbx]'); if (!b) return;
-    const fn = { csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
+    const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
     if (fn) fn();
   });
   function renderGearMenu() {
@@ -228,15 +229,15 @@
     else if (k === 'sources') openGearPage('sources');
   });
   function closeTbMenus() {
-    for (const id of ['#tb-export-menu', '#tb-gear-menu']) { const m = $(id); if (m) m.hidden = true; }
-    for (const id of ['#tb-export', '#tb-gear']) { const b = $(id); if (b) b.setAttribute('aria-expanded', 'false'); }
+    for (const id of ['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu']) { const m = $(id); if (m) m.hidden = true; }
+    for (const id of ['#tb-export', '#tb-gear', '#tb-present']) { const b = $(id); if (b) b.setAttribute('aria-expanded', 'false'); }
   }
   function toggleTbMenu(btnId, menuId) {
     const m = $(menuId); if (!m) return;
     const willOpen = m.hidden;
     closeTbMenus(); closeScenPop();
     if (!willOpen) return;
-    if (btnId === '#tb-export') renderExportMenu(); else renderGearMenu();
+    if (btnId === '#tb-export') renderExportMenu(); else if (btnId === '#tb-gear') renderGearMenu();
     m.hidden = false;
     $(btnId).setAttribute('aria-expanded', 'true');
   }
@@ -260,13 +261,27 @@
     b.setAttribute('aria-pressed', String(on));
     b.classList.toggle('on', on);
   }
-  $('#tb-present').addEventListener('click', () => { if (AS().inPresentation()) AS().exitPresentation(); else AS().enterPresentation(); syncPresentBtn(); });
+  // Present ▾ (design audit, Group 7): Present and Time-lapse in one menu.
+  $('#tb-present').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-present', '#tb-present-menu'); });
+  $('#tb-present-go').addEventListener('click', () => { closeTbMenus(); if (AS().inPresentation()) AS().exitPresentation(); else AS().enterPresentation(); syncPresentBtn(); });
+  $('#tb-timelapse').addEventListener('click', () => closeTbMenus());
   document.addEventListener('fullscreenchange', syncPresentBtn);
 
+  // Search sits in the top bar on wide screens, so it is always reachable (design audit, Group 7);
+  // on narrower screens it stays at the top of the Explore panel. The node moves: one search box.
+  function placeSearch() {
+    const box = $('#search-box'), slot = $('#tb-search'), home = document.querySelector('#tab-explore .search-bar'); if (!box || !slot || !home) return;
+    const wide = matchMedia('(min-width: 1600px)').matches;
+    if (wide && box.parentElement !== slot) slot.appendChild(box);
+    else if (!wide && box.parentElement !== home) home.insertBefore(box, home.firstChild);
+    slot.hidden = !wide;
+  }
   function initTopbar() {
     if (!$('#topbar')) return;
+    placeSearch(); matchMedia('(min-width: 1600px)').addEventListener('change', placeSearch);
     $('#tb-export').insertAdjacentHTML('afterbegin', PD.icon('export'));
     $('#tb-present').insertAdjacentHTML('afterbegin', PD.icon('present'));
+    $('#tb-present-go').insertAdjacentHTML('afterbegin', PD.icon('present'));
     $('#tb-help').insertAdjacentHTML('afterbegin', PD.icon('tips'));
     $('#tb-gear').innerHTML = PD.icon('settings');
     renderViewSwitch();

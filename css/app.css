@@ -1855,7 +1855,7 @@ details.stamp { display: block; }
 #alloc-body td.over strong { color: var(--cap-over); }
 .ov-top { display: flex; gap: var(--space-2); align-items: stretch; }
 .ov-top .headline { flex: 1; margin: var(--space-2) 0 var(--space-1); }
-.ov-brief { align-self: center; white-space: nowrap; font-weight: 500; background: var(--accent); border-color: var(--accent); color: var(--on-tint); }
+.ov-brief { align-self: center; white-space: nowrap; }   /* a link: the briefing is an output, in Export (design audit, Group 7) */
 @media (max-width: 700px) { .ov-top { flex-direction: column; } .ov-brief { align-self: flex-start; } }
 
 .wet-box select { max-width: 100%; }
@@ -2309,3 +2309,16 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .scope-note { margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border-left: 3px solid var(--accent); border-radius: 4px; background: color-mix(in srgb, var(--accent) 8%, transparent); color: var(--text-secondary); }
 .scope-note strong { color: var(--text-primary); }
 .scope-note .btn.link { padding: 0; }
+
+/* Top bar (design audit, Group 7): search in the bar on wide screens; Present ▾ menu; every
+   top-bar control at least 44 px on a phone. */
+.tb-search { flex: 0 1 300px; min-width: 180px; position: relative; }
+.tb-search[hidden] { display: none; }
+.tb-search .field { margin: 0; }
+.tb-search input { width: 100%; height: 32px; }
+.tb-search .search-sug { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 1200; }
+#tb-timelapse.on, #tb-present.on { color: var(--accent); }
+@media (max-width: 700px) {
+  .topbar .tb-btn, .topbar .tb-step, .topbar .tb-views .btn, .topbar .tb-scen { min-height: 44px; min-width: 44px; }
+  .tb-menu [role="menuitem"] { min-height: 44px; }
+}
