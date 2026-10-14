@@ -9,14 +9,18 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 
-const APP = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
+// assertions read the whole js/ tree (app core + modules) as one source.
+const JS_DIR = path.join(__dirname, '..', 'js');
+const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
+  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
 
-// The DC region: from the DC Analysis banner to the Planning areas banner.
+// The DC region: the Phase 6 DC modules (js/dca-tab.js + js/dc-cost.js).
 const dcRegion = () => {
-  const a = APP.indexOf('// ---- DC Analysis (bottom panel tab)');
-  const b = APP.indexOf('// ---- Planning areas', a);
-  assert.ok(a !== -1 && b !== -1, 'DC region markers');
-  return APP.slice(a, b);
+  const dca = fs.readFileSync(path.join(JS_DIR, 'dca-tab.js'), 'utf8');
+  const dcc = fs.readFileSync(path.join(JS_DIR, 'dc-cost.js'), 'utf8');
+  assert.ok(dca.length > 1000 && dcc.length > 1000, 'DC module sources');
+  return dca + '\n' + dcc;
 };
 
 test('three DC sub-view renderers fill the three Phase 4 bodies', () => {
@@ -62,9 +66,9 @@ test('filter chips: All / Keep / Defer narrow the merged table', () => {
   const R = dcRegion();
   assert.ok(/\[\['all',\s*'All'\],\s*\['keep',\s*'Keep'\],\s*\['defer',\s*'Defer'\]\]/.test(R), 'All/Keep/Defer chips');
   assert.ok(/data-dcarec-filter="\$\{k\}"/.test(R), 'chips carry data-dcarec-filter');
-  assert.ok(/DCA\.recFilter = rf\.dataset\.dcarecFilter/.test(R), 'click handler stores the filter');
-  assert.ok(/DCA\.recAll = false/.test(R), 'changing the filter resets See all');
-  assert.ok(/x\.dec\.toLowerCase\(\) === DCA\.recFilter/.test(R), 'table filters on recFilter');
+  assert.ok(/MP\(\)\.DCA\.recFilter = rf\.dataset\.dcarecFilter/.test(R), 'click handler stores the filter');
+  assert.ok(/MP\(\)\.DCA\.recAll = false/.test(R), 'changing the filter resets See all');
+  assert.ok(/x\.dec\.toLowerCase\(\) === MP\(\)\.DCA\.recFilter/.test(R), 'table filters on recFilter');
 });
 
 test('each sub-view follows headline → tiles → chart → table → info', () => {

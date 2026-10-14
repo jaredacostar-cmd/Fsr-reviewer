@@ -17,13 +17,17 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const APP = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
+// assertions read the whole js/ tree (app core + modules) as one source.
+const JS_DIR = path.join(__dirname, '..', 'js');
+const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
+  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
 const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 
 // Extract a `const name = (args) => { ... };` (2-space indent) and evaluate it standalone (pure only).
 function extractArrow(name) {
   const m = new RegExp(`const ${name} = ([\\s\\S]*?\\n  \\});`).exec(APP);
-  assert.ok(m, `const ${name} not found in js/app.js`);
+  assert.ok(m, `const ${name} not found in js/`);
   return new Function(`return (${m[1]});`)();
 }
 
@@ -46,7 +50,7 @@ test('migrateTabKey: current and legacy tabs are untouched or mapped as before',
 
 test('migrateTabKey is applied to the stored tab pref and to share links', () => {
   assert.ok(APP.includes('const m = migrateTabKey(footPref); footPref = m.tab;'), 'stored footPref not migrated');
-  assert.ok(APP.includes('const m = migrateTabKey(q.get(\'t\'));'), 'share-link t param not migrated');
+  assert.ok(APP.includes('AT().migrateTabKey(q.get(\'t\'))'), 'share-link t param not migrated');
 });
 
 test('sub-view defaults: gSub pipeline, dcSub timing (and the old water/ww defaults kept)', () => {
@@ -70,13 +74,13 @@ test('sub-view persistence: picks are stored and restored', () => {
     assert.ok(APP.includes(s), `store key missing from TABSUBS: ${s}`);
   }
   assert.ok(APP.includes('store.set(s.store, v)'), 'subtab clicks do not persist');
-  assert.ok(APP.includes(`store.set(TABSUBS[tab].store, sub)`), 'openAnalysis does not persist the sub-view');
+  assert.ok(APP.includes(`store.set(AT().TABSUBS[tab].store, sub)`), 'openAnalysis does not persist the sub-view');
   assert.ok(APP.includes(`store.set('footTab4', tab)`), 'openAnalysis does not persist the tab');
 });
 
 test('share link: gs/dcs params are written and read', () => {
-  assert.ok(APP.includes(`set('gs', gSub)`), 'gs not written to share links');
-  assert.ok(APP.includes(`set('dcs', dcSub)`), 'dcs not written to share links');
+  assert.ok(APP.includes(`set('gs', AT().getGSub())`), 'gs not written to share links');
+  assert.ok(APP.includes(`set('dcs', AT().getDcSub())`), 'dcs not written to share links');
   assert.ok(APP.includes(`q.get('gs')`), 'gs not read from share links');
   assert.ok(APP.includes(`q.get('dcs')`), 'dcs not read from share links');
 });
