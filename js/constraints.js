@@ -51,6 +51,9 @@
       label: 'Regulation limits', short: 'regulation limits', color: '--cx-reg', minZoom: 12, area: true, dash: '6 4', weight: 1.6,
       sources: [
         { url: 'https://services1.arcgis.com/d0ZCwU7eGKVeNiEE/ArcGIS/rest/services/TRCA_Regulation_Limit2/FeatureServer/0', f: 'OBJECTID', src: 'Toronto and Region Conservation Authority (2025)', keep: () => true, name: () => 'TRCA regulated area' },
+        // CVC publishes its limit as one ~12 MB polygon, so it is cut into tiles at build time
+        // (scripts/build-regulation.js) and served with the site.
+        { url: 'data/regulation/cvc/', tiled: true, src: 'Credit Valley Conservation (2025)', keep: () => true, name: () => 'CVC regulated area' },
       ],
       note: 'Conservation authority regulated areas (O. Reg. 41/24). Screening only: the authority confirms the limit, and a feature need not be mapped to be regulated.',
     },
@@ -66,9 +69,23 @@
   const status = {};                // layer key -> 'ok' | 'osm' | 'none'
 
   const linesOf = geom => !geom ? [] : geom.type === 'MultiLineString' ? geom.coordinates : geom.type === 'LineString' ? [geom.coordinates] : geom.type === 'Polygon' ? geom.coordinates : geom.type === 'MultiPolygon' ? geom.coordinates.flat() : [];
+  // Pre-built tiles: an index of the tiles that hold anything, then one file per tile with the
+  // clipped fill (no outline) and the limit's own edges.
+  const tileIndex = new Map();
+  async function builtTile(S, i, tx, ty) {
+    if (!tileIndex.has(S.url)) tileIndex.set(S.url, fetch(`${S.url}index.json`).then(r => r.ok ? r.json() : Promise.reject(new Error(r.status))).then(j => new Set(j.tiles)));
+    const have = await tileIndex.get(S.url);
+    if (!have.has(`${tx}_${ty}`)) return [];
+    const t = await (await fetch(`${S.url}${tx}_${ty}.json`)).json();
+    return [
+      ...(t.f && t.f.length ? [{ id: `${i}|${tx}_${ty}|f`, rings: t.f, poly: true, fillOnly: true, name: S.name({}), src: S.src }] : []),
+      ...(t.e && t.e.length ? [{ id: `${i}|${tx}_${ty}|e`, rings: t.e, poly: false, name: S.name({}), src: S.src }] : []),
+    ];
+  }
   async function arcTile(key, i, tx, ty) {
     const S = LAYERS[key].sources[i], ck = `${key}|${i}|${tx},${ty}`;
     if (cache.has(ck)) return cache.get(ck);
+    if (S.tiled) { const pr = builtTile(S, i, tx, ty); cache.set(ck, pr); pr.catch(() => { cache.delete(ck); tileIndex.delete(S.url); }); return pr; }
     const pr = (async () => {
       const info = await A.layerInfo(S.url);
       const bbox = { xmin: tx * TILE, ymin: ty * TILE, xmax: (tx + 1) * TILE, ymax: (ty + 1) * TILE };
@@ -129,7 +146,7 @@
           const ll = f.rings.map(r => r.map(([x, y]) => [y, x]));
           const tip = `<strong>${esc(f.name || L0.label.replace(/s$/, ''))}</strong><br><span class="muted">${esc(L0.label)} · ${esc(f.src)} (live)</span>`;
           const shape = f.poly
-            ? L.polygon(ll, { renderer, color: col, weight: L0.weight, dashArray: L0.dash, fillColor: col, fillOpacity: 0.14, opacity: 0.9 })
+            ? L.polygon(ll, { renderer, stroke: !f.fillOnly, color: col, weight: L0.weight, dashArray: L0.dash, fillColor: col, fillOpacity: 0.14, opacity: 0.9 })
             : L.polyline(ll, { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 });
           shape.bindTooltip(tip, { sticky: true, className: 'pt' }).addTo(layer);
         }
