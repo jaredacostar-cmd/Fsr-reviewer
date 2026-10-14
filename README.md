@@ -878,6 +878,17 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
 
 ## How applications connect: the development process
 
+> **Audit in progress (report only).** `js/tree.js` and `scripts/audit-tree.js` rebuild the grouping
+> as containment trees, following the Ontario process:
+> - pre-consultation → block plan
+> - OPA / ZBA beside a draft plan
+> - draft plan ⊃ site plan ⊃ condominium ⊃ permits
+>
+> Each file gets a role and the reason for it. Each link records its rule, overlap, address match,
+> date order and confidence. The audit writes `data/tree-audit.json`. Run it locally with
+> `node scripts/audit-tree.js`, or from the *Probe data sources* workflow (mode `tree-audit`) for a
+> live pull. The app's grouping and totals below are unchanged until the audit is reviewed.
+
 In Ontario (and Peel's municipalities) one piece of land moves through a sequence of files:
 
 1. **Pre-consultation** (PRE-…): the proposal is discussed before a formal application.
