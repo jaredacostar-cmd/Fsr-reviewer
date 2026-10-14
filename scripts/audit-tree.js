@@ -49,6 +49,9 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
   const nodes = T.fileNodes(records);
   const permits = records.filter(r => r.kind === 'permit');
   const built = T.buildTrees(nodes, { permits, log });
+  // Counts found online for files that state none (curated, with the page they came from).
+  const lk = readJSON(path.join(DATA, 'unit-lookups.json'));
+  built.lookups = new Map(Object.entries((lk && lk.files) || {}));
   const { links, trees, flags, permitOf } = built;
   const counts = trees.map(t => ({ t, c: T.countTree(t, built) }));
   const treeOfNode = new Map(); counts.forEach(({ t }, k) => t.nodes.forEach(i => treeOfNode.set(i, k)));
@@ -121,6 +124,21 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
   }
   changes.sort((a, b) => Math.abs(b.change) - Math.abs(a.change));
 
+  // Developments where no file states a count: what kind of growth the wording names. Active ones
+  // still to find a count for are listed (address, wording) for the online lookup.
+  const YR = 365.25 * 864e5, nowMs = Date.now();
+  const noCount = {}, toFind = [];
+  for (const { t, c } of counts) {
+    const live = t.nodes.filter(i => !nodes[i].cancelled); if (!live.length || !c.growth) continue;
+    const recs = live.flatMap(i => nodes[i].records);
+    const last = Math.max(0, ...recs.flatMap(r => (r.events || []).map(e => +e.date)));
+    const built5 = recs.every(r => /approved|permit|construction|completed/.test(r.phase)) && nowMs - last > 5 * YR;
+    const k = `${c.growth.kind}${built5 ? ' (approved 5+ years ago)' : ''}`;
+    const m = nodes[live[0]].municipality; inc(noCount, m, k); inc(noCount, 'Peel', k);
+    if (!built5 && ['count to find', 'mixed use, check', 'no description'].includes(c.growth.kind)) toFind.push({ municipality: m, kind: c.growth.kind, files: live.map(refOf), address: [...new Set(recs.map(r => r.address).filter(Boolean))].slice(0, 3), description: [...new Set(recs.map(r => r.description).filter(Boolean))].join(' / ').slice(0, 400), phase: recs.map(r => r.phase), lastEvent: last ? new Date(last).toISOString().slice(0, 10) : null });
+  }
+  const growthNoCount = { note: 'Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.', byKind: noCount, foundOnline: counts.filter(x => x.c.growth && x.c.growth.kind === 'found online').length, toFind: toFind.sort((a, b) => String(b.lastEvent).localeCompare(String(a.lastEvent))) };
+
   // Official plan amendments (policy, never counted): the latest that applies to each development.
   const pa = T.planAmendments(built);
   const opaRows = counts.map(({ t, c }, k) => pa[k] && { municipality: nodes[t.nodes[0]].municipality, files: t.nodes.map(refOf).slice(0, 8), units: c.units, latest: pa[k].latest, siteSpecific: pa[k].all.filter(x => x.scope === 'site-specific').length, areaWide: pa[k].all.filter(x => x.scope === 'area-wide').length }).filter(Boolean);
@@ -149,6 +167,7 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     },
     doubleCounts: { currentFileInTwoDevelopments: currentSplit, proposedFileInTwoTrees: flags.twoTrees, sameLandSitePlans: { verdicts, how: 'Scored from the files: phase/tower/block wording, revision wording, approval status, filing gap, description similarity, counts within 25%. A margin of 2 decides; 8+ years after an approved or completed file is a redevelopment. Resubmissions and redevelopments count the later file only; phases count both; unclear pairs count both and are listed for review.', pairs: flags.sameLandSitePlans }, crossMunicipality: flags.crossMuni, preconOverlappingTwo: flags.precon },
     planAmendments: planAmendmentsOut,
+    growthNoCount,
     dateReversed: flags.dateReversed,
     unitMismatches: mismatches,
     orphans: { byMunicipalityRole: orphanCount, withUnits: orphans.slice(0, 200), withUnitsTotal: orphans.length },

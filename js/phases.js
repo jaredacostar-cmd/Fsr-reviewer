@@ -244,7 +244,7 @@
   function unitsFromText(text) {
     const s = numberWords(String(text || '').replace(/,(?=\d{3})/g, ''));
     let best = 0;
-    for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+|purpose[- ]built\s+)*(?:dwelling\s+)?(?:units?|suites)\b/gi)) {
+    for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+|additional\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+|purpose[- ]built\s+)*(?:dwelling\s+)?(?:units?|suites)\b/gi)) {
       const n = Number(m[1]);
       const before = s.slice(Math.max(0, m.index - 90), m.index);
       if (NOT_HOME_UNITS.test(before) && !HOME_WORDS.test(`${before} ${m[0]}`)) continue;

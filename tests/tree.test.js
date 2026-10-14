@@ -293,3 +293,30 @@ test('an area-wide amendment never joins separate developments into one count', 
   assert.notEqual(b.treeOf('D-A'), b.treeOf('D-B'));
   assert.equal(T.countTree(b.treeOf('D-A'), b).units + T.countTree(b.treeOf('D-B'), b).units, 500);
 });
+
+test('growth wording: what a file with no stated count adds', () => {
+  const k = s => T.growthKind([s]);
+  assert.deepEqual([k('NEW 2-STOREY SINGLE FAMILY DETACHED DWELLING AND POOL').kind, k('PROPOSED TWO STOREY DETATCHED').units], ['one new house', 1]);
+  assert.equal(k('2-STOREY SINGLE FAMILY DETACHED DWELLING (REPLACEMENT)').units, 0, 'growth only: a replacement adds nothing');
+  assert.equal(k('Detached garage and shed').units, 0);
+  assert.equal(k('Site plan for warehouse building').kind, 'non-residential');
+  assert.equal(k('Convention centre and two hotel towers attached by a podium').kind, 'non-residential');
+  assert.equal(k('4-storey non-residential building containing a self storage facility and offices').kind, 'non-residential');
+  assert.equal(k('Existing one-story dwelling will be converted into a worship space').kind, 'non-residential');
+  assert.equal(k('Condominium development - 2 towers (24 & 19 storeys) and 14 Horizontal Multiple Dwellings').kind, 'count to find');
+  assert.equal(k('Rezoning for a two-storey mixed Use building').kind, 'mixed use, check');
+  assert.equal(k('Application for Site Plan Control').kind, 'no description');
+});
+
+test('a development with no stated count: a minor file\'s wording, then a count found online, then the wording', () => {
+  const one = run([app({ ref: 'SP-H', poly: box(0, 0, 1, 1), description: 'New 2-storey single family detached dwelling' })]);
+  assert.equal(T.countTree(one.treeOf('SP-H'), one).units, 1);
+  const tw = run([app({ ref: 'SPA-T', poly: box(0, 0, 1, 1), description: 'Two residential towers of 34 and 32 storeys' })]);
+  const c0 = T.countTree(tw.treeOf('SPA-T'), tw);
+  assert.equal(c0.units, 0); assert.equal(c0.growth.kind, 'count to find');
+  tw.lookups = new Map([['Brampton|SPA-T', { units: 812, source: 'Brampton staff report', url: 'https://example.org/r' }]]);
+  const c1 = T.countTree(tw.treeOf('SPA-T'), tw);
+  assert.equal(c1.units, 812); assert.match(c1.basis, /found online/);
+  const non = run([app({ ref: 'SP-W', poly: box(0, 0, 1, 1), description: 'New 1-storey industrial warehouse' })]);
+  assert.equal(T.countTree(non.treeOf('SP-W'), non).growth.kind, 'non-residential');
+});

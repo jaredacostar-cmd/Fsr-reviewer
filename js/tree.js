@@ -414,10 +414,55 @@
     const live = [...set].filter(i => !nodes[i].cancelled);
     if (!(units > 0)) { const c = Math.max(0, ...live.filter(i => nodes[i].role === 'condo').map(i => nodes[i].units || 0)); if (c > 0) { units = c; basis = 'condominium count (no site plan or draft plan in the data states one)'; } }
     if (!(units > 0)) { const pre = Math.max(0, ...[...set].map(i => nodes[i].precUnits || 0), ...[...set].filter(i => nodes[i].role === 'precon').map(i => nodes[i].units || 0)); if (pre > 0) { units = pre; basis = 'pre-consultation count (no other file states one)'; } }
+    // No file states a count: a minor file's wording ("convert into 3 dwelling units"), a count
+    // found online (data/unit-lookups.json), else the wording's kind of growth.
+    let growth = null;
+    if (!(units > 0)) {
+      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => P.unitsFromText(r.description) || 0))));
+      const found = built.lookups && built.lookups.size ? live.map(i => nodes[i].refs.map(r => built.lookups.get(`${nodes[i].municipality}|${r}`)).find(Boolean)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
+      if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; }
+      else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; }
+      else {
+        growth = growthKind(live.map(i => nodes[i].records.map(r => r.description || '').join(' ')));
+        if (growth.units > 0) { units = growth.units; basis = growth.why; }
+        else basis = growth.why || growth.kind;
+      }
+    }
     // Trees with only condominium files are still listed for review.
     const condoOnly = live.length > 0 && live.every(i => nodes[i].role === 'condo' || nodes[i].role === 'precon') && live.some(i => nodes[i].role === 'condo');
     const condoUnits = condoOnly ? Math.max(0, ...live.map(i => nodes[i].units || 0)) : 0;
-    return { units, basis, tops: topCounts, flags, condoOnly: condoOnly ? { units: condoUnits, files: live.map(i => nodes[i].refs[0]) } : null };
+    return { units, basis, growth, tops: topCounts, flags, condoOnly: condoOnly ? { units: condoUnits, files: live.map(i => nodes[i].refs[0]) } : null };
+  }
+
+  // Developments where no file states a count. Growth only: what new homes does the wording say?
+  //   non-residential   — no homes (jobs instead); never counted
+  //   one new house     — "a detached dwelling" counts 1
+  //   no new homes      — a replacement house, an addition, a garage or pool: 0 by design
+  //   count to find     — homes are proposed but no number is given (looked up online)
+  //   mixed use, check  — "mixed use" without saying whether homes are in it
+  //   no description    — the file says only its application type
+  const NONRES = /\b(industrial|warehous\w*|offices?|hotels?|motel|commercial|retail|restaurants?|gas (station|bar)|car ?wash|schools?|classrooms?|portables?|church|religious|worship|temple|mosque|gurdwara|day ?care|child ?care|plaza|manufactur\w*|distribution|logistics?|truck\w*|self[- ]storage|storage|factory|dealership|automobile|motor vehicle|substation|battery|telecom\w*|antenna|transformer|canopy|patio|drive[- ]?thr\w*|signs?|signage|arena|library|community cent\w*|fire station|emergency services|stadium|studios?|convention|banquet|cemetery|funeral|mall|supermarket|grocery|hospital|clinic|medical|hospice|data cent\w*|depot|mill|costco|lube|bank|employment|business park|place of religious)\b/i;
+  const HOMES = /\b(residential|residences?|dwellings?|detached|detatched|semi|town ?houses?|townhomes?|apartments?|stacked|back[- ]to[- ]back|condominium (development|towers?|apartments?|buildings?)|horizontal multiple|homes?|houses?|duplex|triplex|fourplex|rental|seniors?|retirement|student residence|condo towers?)\b/i;
+  const NOT_NEW = /\b(replac\w*|rebuild|addition|additions|renovat\w*|alteration|extension|garage|pool|deck|porch|shed|cabana|accessory|demolish\w* and rebuild|existing (dwelling|house|home|building))\b/i;
+  const ONE_HOUSE = /\b(single[- ]family|single[- ]detached|detached|detatched|custom|estate)\b[^.;|]{0,30}\b(dwelling|house|home|residence)\b|\b(new|proposed)\s+(\d[- ]storey\s+|two[- ]storey\s+)?(single\s+)?(dwelling|house|home)\b|\bproposed two storey deta?t?ched\b/i;
+  const MULTI = /\b(towns?|town ?houses?|townhomes?|semis?|semi[- ]detached|apartments?|towers?|storey (residential|condominium|apartment)|stacked|lots|subdivision|units|condominium|blocks?|multiple)\b/i;
+  function growthKind(texts) {
+    const d = texts.join(' ').replace(/Application for Site Plan Control|Pre-?consultation application|PDOX TRANSFER FILE \S+ \S+ \S+|Site Plan (Basic|Full|Limited)|Basic Site Plan|Limited Site Plan|Full Site Plan/gi, ' ').replace(/\s+/g, ' ').trim();
+    if (!d || d.length < 4) return { kind: 'no description', units: null };
+    // Words that name no new homes: "non-residential", an existing house put to another use, "RV rental".
+    const h = d.replace(/\bnon[- ]?residential\b|\b(existing|main unit|one[- ]stor(e)?y) (\w+ )?(dwelling|house|home)\b|\b(sales|vehicle|equipment|car|truck)[, ]+(and )?rental\b|\brental (and|&) (sales|maintenance)\b/gi, ' ');
+    if (!HOMES.test(h) && /\b(non[- ]?residential)\b/i.test(d)) return { kind: 'non-residential', units: null, why: 'no homes in the proposal' };
+    const homes = HOMES.test(h), non = NONRES.test(d), mixed = /\bmixed[- ]?use\b/i.test(d);
+    if (homes && /\breplac\w*\b/i.test(d) && !MULTI.test(d)) return { kind: 'no new homes', units: 0, why: 'a replacement house (growth only)' };
+    if (homes && NOT_NEW.test(d) && !MULTI.test(d) && !ONE_HOUSE.test(d.replace(/existing (dwelling|house|home)/gi, ''))) return { kind: 'no new homes', units: 0, why: 'work on an existing house' };
+    if (/\bmodel (home|house)s?\b/i.test(d) && !MULTI.test(d.replace(/\b21T\S*/g, ''))) return { kind: 'no new homes', units: 0, why: 'a model home (its lot is counted in the subdivision)' };
+    if (ONE_HOUSE.test(d) && !MULTI.test(d)) return { kind: 'one new house', units: 1, why: 'one detached house' };
+    if (/\bsemi[- ]detached (dwelling|house|home)\b/i.test(d) && !/\b(towns?|apartments?|lots|subdivision|units)\b/i.test(d)) return { kind: 'one new house', units: 2, why: 'one semi-detached pair' };
+    if (mixed && !homes) return { kind: 'mixed use, check', units: null, why: 'mixed use without saying whether it has homes' };
+    if (homes && !(non && !/\b(residential|dwellings?|apartments?|town ?houses?|townhomes?|homes)\b/i.test(d))) return { kind: 'count to find', units: null, why: 'homes proposed, no number given' };
+    if (non) return { kind: 'non-residential', units: null, why: 'no homes in the proposal' };
+    if (NOT_NEW.test(d)) return { kind: 'non-residential', units: null, why: 'work on an existing building, no homes named' };
+    return { kind: 'no homes named', units: null, why: 'the wording names no homes' };
   }
 
   // Official plan amendments: policy, never counted. For each tree, the amendments that apply —
@@ -454,7 +499,7 @@
     });
   }
 
-  const api = { ROLES, T, classifyRole, fileNodes, buildTrees, countTree, planAmendments, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
+  const api = { ROLES, T, classifyRole, fileNodes, buildTrees, countTree, growthKind, planAmendments, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);
