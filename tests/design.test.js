@@ -9,7 +9,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 const DG = require('../js/design.js');
 
-const APP = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
+// assertions read the whole js/ tree (app core + modules) as one source.
+const JS_DIR = path.join(__dirname, '..', 'js');
+const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
+  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
 const HTML = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
 
 test('resolveTheme: dark/light/device x prefers-light', () => {
@@ -84,7 +88,7 @@ test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', ()
 test('rail TOOL_ITEMS: every icon key is a real icon (no silent fallback)', () => {
   // js/app.js is a browser IIFE; read the rail definition as source.
   const m = /const TOOL_ITEMS = (\[[\s\S]*?\]);/.exec(APP);
-  assert.ok(m, 'TOOL_ITEMS not found in js/app.js');
+  assert.ok(m, 'TOOL_ITEMS not found in js/');
   const items = new Function(`return (${m[1]});`)();
   assert.deepEqual(items.map(i => i[0]), ['select', 'measure', 'trace', 'whatif', 'inspect', 'corridor', 'unitsfit']);
   for (const [k, , , ic] of items) assert.ok(DG.iconNames.includes(ic), `rail tool ${k} uses unknown icon ${ic}`);
@@ -95,7 +99,7 @@ test('share-link serialization excludes theme and density', () => {
   // js/app.js; theme/density live only in the store (peel-dev:theme,
   // peel-dev:density) and must never become link parameters.
   const m = /const encode = \(\) => \{([\s\S]*?)\n    \};/.exec(APP);
-  assert.ok(m, 'encode() not found in js/app.js');
+  assert.ok(m, 'encode() not found in js/');
   const body = m[1];
   assert.ok(!/['"]theme['"]/.test(body), 'encode() references theme');
   assert.ok(!/['"]density['"]/.test(body), 'encode() references density');

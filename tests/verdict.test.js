@@ -12,12 +12,16 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
 
-const APP = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
+// assertions read the whole js/ tree (app core + modules) as one source.
+const JS_DIR = path.join(__dirname, '..', 'js');
+const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
+  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
 
 // Extract a `const name = (args) => { ... };` and evaluate it standalone (pure only).
 function extractFn(name) {
   const m = new RegExp(`const ${name} = (\\([\\s\\S]*?\\n  \\});`).exec(APP);
-  assert.ok(m, `const ${name} not found in js/app.js`);
+  assert.ok(m, `const ${name} not found in js/`);
   return new Function(`return (${m[1]});`)();
 }
 
@@ -140,7 +144,7 @@ test('scopedDev: prefers DevScope.current(), falls back to currentProject', () =
   const m = /function scopedDev\(\) \{[\s\S]*?\n  \}/.exec(APP);
   assert.ok(m, 'scopedDev not found');
   assert.match(m[0], /DevScope\.current\(\)/);
-  assert.match(m[0], /return currentProject/);
+  assert.match(m[0], /return DN\(\)\.getCurrentProject\(\)/);
 });
 
 test('verdict card: four key numbers, one status sentence, four tab-linked verdict lines', () => {
@@ -180,7 +184,7 @@ test('scoped Water/Wastewater: site brief content, no ground/storm/ponds on the 
 });
 
 test('scoped DC: site DC brief without the sewer-path/plant-reserve numbers', () => {
-  const m = /const p = scopedDev\(\);\n    if \(p\) \{[\s\S]*?devBriefHTML\(p, st, f, 'dc', \{ noWwNeeds: true \}\);/.exec(APP);
+  const m = /const p = DV\(\)\.scopedDev\(\);\n    if \(p\) \{[\s\S]*?DD\(\)\.devBriefHTML\(p, st, f, 'dc', \{ noWwNeeds: true \}\);/.exec(APP);
   assert.ok(m, 'renderDca scoped branch must reuse devBriefHTML(p, st, f, \'dc\') with noWwNeeds');
   const b = /function devServicingBriefHTML\(p, st, f, part, opts = \{\}\) \{[\s\S]*?\n  \}/.exec(APP);
   assert.match(b[0], /opts\.noWwNeeds/);
@@ -188,7 +192,7 @@ test('scoped DC: site DC brief without the sewer-path/plant-reserve numbers', ()
 });
 
 test('scoped Growth (census): DA view links I&I flows to the Wastewater tab instead of repeating them', () => {
-  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{homeLine\('ww', 'Wastewater tab'\)\}/);
+  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{DV\(\)\.homeLine\('ww', 'Wastewater tab'\)\}/);
 });
 
 test('scopeBriefIds: prefixes dev-* ids so footer copies do not collide with the detail panel', () => {
@@ -202,8 +206,8 @@ test('scopeBriefIds: prefixes dev-* ids so footer copies do not collide with the
 
 test('scoped renders: footer copies get prefixed ids (water, ww, demand, dc)', () => {
   for (const re of [
-    /function renderSvcScoped\(p\) \{[\s\S]*?scopeBriefIds\(\$\('#water-body'\)\); scopeBriefIds\(\$\('#ww-body'\)\);/,
-    /devBriefHTML\(p, st, f, 'dc', \{ noWwNeeds: true \}\);[\s\S]*?scopeBriefIds\(bodies\[0\] \|\| legacy\);/,
+    /function renderSvcScoped\(p\) \{[\s\S]*?DV\(\)\.scopeBriefIds\(\$\('#water-body'\)\); DV\(\)\.scopeBriefIds\(\$\('#ww-body'\)\);/,
+    /DD\(\)\.devBriefHTML\(p, st, f, 'dc', \{ noWwNeeds: true \}\);[\s\S]*?DV\(\)\.scopeBriefIds\(bodies\[0\] \|\| legacy\);/,
   ]) assert.match(APP, re);
 });
 

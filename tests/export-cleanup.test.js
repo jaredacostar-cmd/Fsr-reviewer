@@ -11,7 +11,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = path.join(__dirname, '..');
-const APP = fs.readFileSync(path.join(root, 'js', 'app.js'), 'utf8');
+// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
+// assertions read the whole js/ tree (app core + modules) as one source.
+const JS_DIR = path.join(root, 'js');
+const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
+  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
 const HTML = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const CSS = fs.readFileSync(path.join(root, 'css', 'app.css'), 'utf8');
 
@@ -61,10 +65,10 @@ test('document-level [data-export] delegation no longer routes PDF', () => {
 
 test('menu carries the comparison PDF item, guarded on comparisonPDF', () => {
   assert.ok(menuSrc.includes('data-tbx="comparepdf"'), 'menu lacks the comparison PDF item');
-  assert.ok(menuSrc.includes('typeof comparisonPDF'), 'menu does not guard on comparisonPDF');
+  assert.ok(menuSrc.includes('typeof RP().comparisonPDF'), 'menu does not guard on comparisonPDF');
   assert.ok(menuSrc.includes('disabled'), 'comparison item has no disabled state');
   assert.ok(menuSrc.includes('title='), 'comparison item has no title tooltip');
-  assert.ok(APP.includes("comparepdf: () => { if (typeof comparisonPDF === 'function') comparisonPDF(); }"),
+  assert.ok(APP.includes("comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }"),
     'menu click handler does not route comparepdf to comparisonPDF()');
 });
 
@@ -72,16 +76,19 @@ test('menu preserves the SWMM model download removed from exportBar', () => {
   assert.ok(menuSrc.includes('data-tbx="swmm"'), 'menu lacks the SWMM model item');
   assert.ok(menuSrc.includes('SWMM model (.inp)'), 'SWMM menu label missing');
   assert.ok(APP.includes('function exportSwmmModel()'), 'exportSwmmModel missing');
-  assert.ok(APP.includes('swmm: exportSwmmModel'), 'menu click handler does not route swmm');
+  assert.ok(APP.includes('swmm: SC().exportSwmmModel'), 'menu click handler does not route swmm');
   assert.ok(!APP.includes('[data-swmm]'), 'dead data-swmm delegation remains');
 });
 
 test('every removed sidebar/menu output is still routed in the export menu', () => {
   // csv / geojson / areas / dc / print map -> the kept named functions.
   const routing = menuSrc.slice(menuSrc.indexOf('const fn ='));
-  for (const [key, fn] of [['csv', 'exportDevsCSV'], ['geojson', 'exportDevsGeoJSON'],
-      ['areas', 'exportAreasGeoJSON'], ['dc', 'exportDcGeoJSON'], ['print', 'printMap']]) {
-    assert.ok(routing.includes(`${key}: ${fn}`), `menu does not route ${key} to ${fn}`);
+  for (const [key, route, fn] of [['csv', 'PE().exportDevsCSV', 'exportDevsCSV'],
+      ['geojson', 'PE().exportDevsGeoJSON', 'exportDevsGeoJSON'],
+      ['areas', 'PE().exportAreasGeoJSON', 'exportAreasGeoJSON'],
+      ['dc', 'DCT().exportDcGeoJSON', 'exportDcGeoJSON'],
+      ['print', 'TS().printMap', 'printMap']]) {
+    assert.ok(routing.includes(`${key}: ${route}`), `menu does not route ${key} to ${route}`);
     assert.ok(APP.includes(`function ${fn}(`), `${fn} must be kept`);
   }
 });

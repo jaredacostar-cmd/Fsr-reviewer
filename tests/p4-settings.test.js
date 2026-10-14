@@ -13,7 +13,11 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const D = require('../js/demand.js');
-const APP = fs.readFileSync(path.join(__dirname, '..', 'js', 'app.js'), 'utf8');
+// Phase 6: js/app.js was split into js/util.js + 46 area modules. Structural
+// assertions read the whole js/ tree (app core + modules) as one source.
+const JS_DIR = path.join(__dirname, '..', 'js');
+const APP = fs.readdirSync(JS_DIR).filter(f => f.endsWith('.js')).sort()
+  .map(f => fs.readFileSync(path.join(JS_DIR, f), 'utf8')).join('\n');
 
 // ---- demand.js: source metadata for every parameter ---------------------------------
 test('every editable parameter has source document + version metadata', () => {
@@ -76,7 +80,7 @@ test('reset-to-defaults restores a fresh deep copy of the Peel defaults', () => 
 });
 
 test('app reset path restores from DEFAULT_CRITERIA', () => {
-  assert.ok(/function resetCriteriaToPeel\(\)\s*\{\s*state\.criteria = mergeCriteria\(null\)/.test(APP),
+  assert.ok(/function resetCriteriaToPeel\(\)\s*\{\s*App\(\)\.state\.criteria = App\(\)\.mergeCriteria\(null\)/.test(APP),
     'resetCriteriaToPeel restores state.criteria from mergeCriteria(null)');
   assert.ok(APP.includes('data-scen-crit-reset') && APP.includes('Reset to Peel criteria'),
     'Scenario criteria editor has the reset button');
