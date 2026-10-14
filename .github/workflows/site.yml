@@ -114,7 +114,7 @@ jobs:
       - name: Stamp version (cache-busting for scripts and styles)
         run: |
           v="$(git rev-parse --short HEAD)"
-          sed -i "s/__BUILD__/${v}/g" index.html
+          sed -i "s/__BUILD__/${v}/g" index.html sw.js
           grep -c "?v=${v}" index.html
 
       - uses: actions/configure-pages@v5
