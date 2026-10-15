@@ -252,7 +252,8 @@ function nextStepOf(ms, ls, today) {
 function purposeDraft(ls) {
   for (const l of ls) {
     if (l.length < 40 || CONTACT.test(l)) continue;
-    const s = l.split(/(?<=[.!?])\s+/).find(x => /\b(study|EA|assessment)\b.*\b(will|to|is)\b|\bpurpose\b|\bto (identify|address|assess|evaluate|determine|accommodate|provide|improve|service)\b/i.test(x) && x.length >= 40);
+    // Sentence ends, but not after initials or common abbreviations ("G.E. Booth", "St.", "Rd.").
+    const s = l.split(/(?<!\b[A-Z]\.|\b(?:St|Rd|Dr|Ave|Blvd|Hwy|No|Mt|e\.g|i\.e)\.)(?<=[.!?])\s+/).find(x => /\b(study|EA|assessment)\b.*\b(will|to|is)\b|\bpurpose\b|\bto (identify|address|assess|evaluate|determine|accommodate|provide|improve|service)\b/i.test(x) && x.length >= 40);
     if (s) return s.replace(/\s+/g, ' ').trim().slice(0, 220);
   }
   return null;
