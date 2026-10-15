@@ -657,17 +657,6 @@
    43.671284
   ]
  ],
- "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
- "osm:Castlemore Road & Bramalea Road, Brampton": [],
- "osm:Castlemore Road & Highway 410, Brampton": [],
- "osm:Steeles Avenue East & Highway 50, Brampton": [],
- "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
- "osm:Highway 50 & Huntington Road, Brampton": [],
- "osm:Hurontario Street & Old School Road, Caledon": [],
- "osm:Airport Road & Old Base Line Road, Caledon": [],
- "osm:Mountainview Road & Old Base Line Road, Caledon": [],
- "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
- "osm:Kane Road & Lakeshore Road West, Mississauga": [],
  "osm:Airport Road & Braydon Boulevard / Stonecrest Drive, Brampton": [
   [
    -79.735225,
@@ -782,14 +771,12 @@
    43.793839
   ]
  ],
- "osm:Mississauga Road & Bush Street, Caledon": [],
  "osm:Bush Street & Winston Churchill Boulevard, Caledon": [
   [
    -80.030986,
    43.781431
   ]
  ],
- "osm:Bush Street & Olde Base Line Road, Caledon": [],
  "osm:The Gore Road & Patterson Sideroad / Patterson Side Road, Caledon": [
   [
    -79.862192,
@@ -846,6 +833,69 @@
   [
    -79.683123,
    43.546461
+  ]
+ ],
+ "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
+ "osm:Bovaird Drive East / Castlemore Road & Bramalea Road, Brampton": [
+  [
+   -79.744345,
+   43.744399
+  ]
+ ],
+ "osm:Bovaird Drive East / Castlemore Road & Highway 410, Brampton": [
+  [
+   -79.764979,
+   43.7256
+  ]
+ ],
+ "osm:Bovaird Drive East / Castlemore Road & Torbram Road, Brampton": [
+  [
+   -79.733891,
+   43.754346
+  ]
+ ],
+ "osm:Steeles Avenue East & Highway 50, Brampton": [],
+ "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
+ "osm:Highway 50 & Huntington Road, Brampton": [],
+ "osm:Hurontario Street & Old School Road, Caledon": [],
+ "osm:Airport Road & Old Base Line Road, Caledon": [
+  [
+   -79.851135,
+   43.858308
+  ]
+ ],
+ "osm:Mountainview Road & Old Base Line Road, Caledon": [
+  [
+   -79.861604,
+   43.849023
+  ]
+ ],
+ "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
+ "osm:Kane Road & Lakeshore Road West, Mississauga": [],
+ "osm:Mississauga Road & Bush Street, Caledon": [],
+ "osm:Bush Street & Olde Base Line Road, Caledon": [],
+ "osm:Bovaird Drive West / Bovaird Drive & Heritage Road, Brampton": [
+  [
+   -79.839672,
+   43.65697
+  ]
+ ],
+ "osm:Bovaird Drive West / Bovaird Drive & Lake Louise Drive / Worthington Avenue, Brampton": [
+  [
+   -79.814801,
+   43.680547
+  ]
+ ],
+ "osm:Erin Mills Parkway & Britannia Road West / Britannia Road, Mississauga": [
+  [
+   -79.733209,
+   43.578554
+  ]
+ ],
+ "osm:Erin Mills Parkway & Eglinton Avenue West / Eglinton Avenue, Mississauga": [
+  [
+   -79.706725,
+   43.558854
   ]
  ]
 }
