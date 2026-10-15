@@ -494,20 +494,38 @@ function overlapTokens(a, b) {
 
 // ---- links -----------------------------------------------------------------------------------
 /**
- * DC projects with an EA phase (scripts/dc-facilities.json items): by facility name in the EA
- * name, or the facility within 300 m of the EA geometry. Returns [{proj, what, facility, method}].
+ * DC projects with an EA phase (scripts/dc-facilities.json items), linked to an EA when:
+ *   - name: the facility's own words (not water / plant / …) are in the EA name, the EA name has a
+ *     facility word (plant, station, reservoir, tank, well, intake, outfall, biosolids, treatment),
+ *     the systems agree (water EA → water facility, wastewater → wastewater, multi → either), and
+ *     the item is the same kind of work when the EA names one (reservoir / tank / intake / …);
+ *   - location: only a facility or study-area EA, same system, facility within 300 m.
+ * Road and pipe-route EAs never link by a facility name that is also a street ("Heritage Road").
+ * Returns [{ proj, what, facility, system, method }].
  */
+const FAC_WORD = /\b(plant|station|reservoir|tank|wells?|intake|outfall|biosolids|treatment|wrrf|resource recovery|storage facility)\b/i;
+const KIND_WORDS = ['reservoir', 'tank', 'intake', 'outfall', 'biosolids', 'pumping', 'well', 'treatment', 'odour', 'storage'];
+const sysOk = (eaSys, facSys) => eaSys === 'multi' || eaSys === facSys;
 function linkDc(ea, dcFacilities, facPoints) {
   const out = [];
   const nt = new Set(tokens(ea.name));
-  for (const sys of ['water', 'wastewater']) for (const fc of (dcFacilities?.[sys] || [])) for (const it of fc.items || []) {
-    if (!(it.phases || []).some(p => p[0] === 'EA')) continue;
-    const ft = tokens(fc.name).filter(t => !/^(water|wastewater|treatment|plant|resource|recovery|facility)$/.test(t));
-    let method = null;
-    if (ft.length && ft.every(t => nt.has(t))) method = 'name';
-    const pt = fc.g || (facPoints || {})[fc.name];
-    if (!method && pt && ea.geometry && distToGeom(pt, ea.geometry) <= 300) method = 'location';
-    if (method) out.push({ proj: it.proj, what: it.what, facility: fc.name, system: sys, method });
+  const eaSys = ea.system || systemOf(ea.name);
+  const isSite = ea.geomType ? /facility|area/.test(ea.geomType) : !!(ea.geometry && /Polygon|Point/.test(ea.geometry.type));
+  // The kind of work named ("reservoir expansion"), not the facility's own name ("… Treatment Plant", "… Pumping Station").
+  const work = String(ea.name).replace(/(water|wastewater)?\s*(treatment plant|resource recovery facility|pumping station)/ig, ' ');
+  const kinds = KIND_WORDS.filter(k => new RegExp(`\\b${k}`, 'i').test(work));
+  for (const sys of ['water', 'wastewater']) {
+    if (!sysOk(eaSys, sys)) continue;
+    for (const fc of (dcFacilities?.[sys] || [])) for (const it of fc.items || []) {
+      if (!(it.phases || []).some(p => p[0] === 'EA')) continue;
+      const ft = tokens(fc.name).filter(t => !/^(water|wastewater|treatment|plant|resource|recovery|facility|pumping|station|elevated|tank|reservoir)$/.test(t));
+      const sameKind = !kinds.length || kinds.some(k => new RegExp(`\\b${k}`, 'i').test(it.what) || (k === 'tank' && /tank/i.test(it.what)) || (k === 'storage' && /reservoir|tank|storage/i.test(it.what)));
+      let method = null;
+      if (ft.length && ft.every(t => nt.has(t)) && FAC_WORD.test(ea.name) && sameKind) method = 'name';
+      const pt = fc.g || (facPoints || {})[fc.name];
+      if (!method && isSite && pt && ea.geometry && distToGeom(pt, ea.geometry) <= 300 && sameKind) method = 'location';
+      if (method) out.push({ proj: it.proj, what: it.what, facility: fc.name, system: sys, method });
+    }
   }
   return out;
 }

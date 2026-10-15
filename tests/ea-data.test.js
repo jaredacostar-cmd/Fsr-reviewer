@@ -296,3 +296,19 @@ test('next step text only from an explicit "Next steps:" sentence', () => {
   assert.equal(E.nextStepOf([], ['Next steps will be shared in the Study process.'], '2026-10-15'), null);
   assert.deepEqual(E.nextStepOf([], ['Next steps: The project team will review all comments and finalize the report.'], '2026-10-15'), { text: 'The project team will review all comments and finalize the report.', date: null });
 });
+
+test('DC links: no match by a facility name that is also a street, wrong system or a different kind of work', () => {
+  const FAC = { water: [
+    { name: 'Heritage Road', g: [-79.80, 43.60], items: [{ what: 'New Elevated Tank', proj: '31-1999', phases: [['EA', 2030, '1']] }] },
+    { name: 'Victoria', items: [{ what: 'New Pumping Station', proj: '30-1963', phases: [['EA', 2028, '2']] }] },
+    { name: 'Arthur P. Kennedy Water Treatment Plant', items: [{ what: 'Treatment Expansion', proj: '29-1925', phases: [['EA', 2025, '3']] }, { what: 'New Intake', proj: '30-1997', phases: [['EA', 2030, '4']] }] },
+  ], wastewater: [{ name: 'Clarkson Water Resource Recovery Facility', g: [-79.62, 43.50], items: [{ what: 'Treatment Expansion', proj: '26-2564', phases: [['EA', 2026, '5']] }] }] };
+  const link = (name, extra = {}) => E.linkDc({ name, ...extra }, FAC, {}).map(d => d.proj);
+  assert.deepEqual(link('Bovaird Drive – Mississauga Road from Lake Louise Drive to 1.45 km west of Heritage Road'), [], 'road EA');
+  assert.deepEqual(link('Fair Birch Drive, Queen Victoria Avenue and Lorne Park Road sanitary sewer improvements'), [], 'street names, wastewater EA');
+  assert.deepEqual(link('Arthur P. Kennedy Water Treatment Plant reservoir expansion'), [], 'reservoir EA does not take the treatment or intake items');
+  assert.deepEqual(link('Arthur P. Kennedy Water Treatment Plant expansion'), ['29-1925', '30-1997']);
+  assert.deepEqual(link('Clarkson Wastewater Treatment Plant'), ['26-2564']);
+  assert.deepEqual(link('Lower west sanitary trunk sewer twinning', { system: 'wastewater', geomType: 'linear', geometry: { type: 'LineString', coordinates: [[-79.62, 43.50], [-79.61, 43.51]] } }), [], 'a pipe route near a plant is not the plant');
+  assert.deepEqual(link('Heritage Road elevated tank', { system: 'water' }), ['31-1999']);
+});
