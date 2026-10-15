@@ -380,7 +380,8 @@
   // ---- 5. Counting (proposed; report only) -----------------------------------------------------------
   // Per branch: the lowest level whose children cover ≥ 90% of the parent's land, else the parent's
   // own count with the rest shown as "not yet in a draft plan / site plan". Condos never add units;
-  // permits are progress only. A pre-consultation's count stands only if the tree has no other.
+  // permits are progress only, except when no file states a count: then the permits' units count (Step B0).
+  // A pre-consultation's count stands only if the tree has no other.
   function countTree(tree, built) {
     const { nodes, parent } = built;
     const set = new Set(tree.nodes);
@@ -440,7 +441,8 @@
     // found online (data/unit-lookups.json), else the wording's kind of growth.
     let growth = null;
     if (!(units > 0)) {
-      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => P.unitsFromText(r.description) || 0))));
+      // A minor file's own stated count, else its wording (Step B0: a stated count was being missed).
+      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0))));
       const found = built.lookups && built.lookups.size ? live.map(i => nodes[i].refs.map(r => built.lookups.get(`${nodes[i].municipality}|${r}`)).find(Boolean)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
       if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; }
       else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; }
@@ -449,6 +451,14 @@
         growth = growthKind(live.map(i => nodes[i].records.map(r => r.description || '').join(' ')));
         if (growth.units > 0) { units = growth.units; basis = growth.why; }
         else basis = growth.why || growth.kind;
+        // Building permits (Step B0 rule): no file states a count, but the permits placed in the
+        // tree carry units, so the homes are permitted or built. Never for a replacement or model
+        // house, which adds no growth.
+        if (!(units > 0) && growth.kind !== 'no new homes') {
+          const seen = new Set(); let pu = 0;
+          for (const i of live) for (const { r } of (built.permitOf && built.permitOf.get(i)) || []) { const k = r.ref || r.uid; if (r.units > 0 && !seen.has(k)) { seen.add(k); pu += r.units; } }
+          if (pu > 0) { units = pu; basis = `building permits: ${pu} units permitted (no file states a count)`; growth = { ...growth, kind: 'permits', units: pu }; }
+        }
       }
     }
     // Trees with only condominium files are still listed for review.

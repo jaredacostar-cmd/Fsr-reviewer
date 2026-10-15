@@ -31,6 +31,27 @@ function loadOverrides() {
   return new Map(Object.entries((o && o.overrides) || {}));
 }
 
+// Your bulk decisions of 2026-10-15 (data/tree-overrides.json "accepted"): accept the safe
+// categories; everything else is left as Ask with the reason. An override always wins.
+function callOf(r) {
+  const big = Math.abs(r.change) >= 100, low = r.flags.includes('low-confidence link');
+  if (r.trees.some(t => t.override != null)) return { call: 'Override', why: 'your override' };
+  // Large pre-consultation estimates come first: they matter even where the app already counts them.
+  if (r.flags.includes('estimate (pre-consultation)')) return r.treeUnits >= 1000
+    ? { call: 'Ask', why: 'large pre-consultation estimate (1,000+ units): is it still a live proposal?' }
+    : { call: 'Accept', why: 'rule: a pre-consultation count stands when nothing else states one (proposed only, never committed)' };
+  if (r.kind === 'unchanged') return { call: 'Accept', why: 'no change' };
+  if (r.kind === 'count found (app had 0)') return { call: 'Accept', why: 'rule: the tree found a count where the app had 0' };
+  if (r.kind.startsWith('split')) return r.change <= -100
+    ? { call: 'Ask', why: 'a split that lowers the count by 100+ units' }
+    : { call: 'Accept', why: 'rule: separate proposals the app grouped together' };
+  if (r.kind === 'count dropped to 0' || r.kind.startsWith('gone')) return { call: 'Accept', why: 'rule: a replacement house, no new homes, or the app counted a withdrawn file' };
+  if (r.kind.startsWith('new')) return { call: 'Accept', why: 'rule: a tree the app had no development for' };
+  if ((r.kind.startsWith('merge') || r.kind === 'regrouped') && big) return { call: 'Ask', why: `${r.kind.split(':')[0]} changes the count by ${r.change > 0 ? '+' : ''}${r.change}${low ? ' on a low-confidence link' : ''}` };
+  if (r.kind === 'count changed' && (r.change <= -100 || (low && big))) return { call: 'Ask', why: `the count changes by ${r.change > 0 ? '+' : ''}${r.change}${low ? ' on a low-confidence link' : ''}` };
+  return { call: 'Accept', why: 'rule: a small or well-linked change' };
+}
+
 function review(res, overrides = new Map()) {
   const { nodes, built, links, counts, treeOfNode, tagsByTree, comps, projByKey, refOf, straddling } = res.internals;
   const blocks = (readJSON(path.join(DATA, 'blocks.json')) || {}).blocks || [];
@@ -95,7 +116,9 @@ function review(res, overrides = new Map()) {
     if (treeRows.some(x => x.confidence === 'low')) flags.push('low-confidence link');
     if (treeRows.some(x => x.flags)) flags.push('children exceed parent');
     if (treeRows.some(x => x.planShare != null && x.planShare < 90)) flags.push('straddles plans');
+    const call = callOf({ kind, change, treeUnits, flags, trees: treeRows });
     rows.push({
+      call: call.call, callWhy: call.why,
       group: gid, municipality: (treeRows[0] || {}).municipality || (projs[0] || {}).municipality || '',
       appDevelopments: projs.map(p => p.title), appKeys: projs.map(p => p.key), appPhase: [...new Set(projs.map(p => p.phase))],
       committedNow: projs.some(p => D.isCommitted(p)),
@@ -108,7 +131,8 @@ function review(res, overrides = new Map()) {
   // Totals, by municipality: the app (header) definition vs the tree vs after overrides.
   const totals = {};
   for (const r of rows) for (const m of [r.municipality, 'Peel']) {
-    const t = totals[m] = totals[m] || { groups: 0, appUnits: 0, treeUnits: 0, afterOverrides: 0, up: 0, down: 0, unchanged: 0, preconEstimates: 0, preconUnits: 0 };
+    const t = totals[m] = totals[m] || { ask: 0, askChange: 0, groups: 0, appUnits: 0, treeUnits: 0, afterOverrides: 0, up: 0, down: 0, unchanged: 0, preconEstimates: 0, preconUnits: 0 };
+    if (r.call === 'Ask') { t.ask++; t.askChange += r.change; }
     t.groups++; t.appUnits += r.appUnits; t.treeUnits += r.treeUnits; t.afterOverrides += r.afterOverrides;
     if (r.change > 0) t.up++; else if (r.change < 0) t.down++; else t.unchanged++;
     const pre = r.trees.filter(x => x.preconOnly); if (pre.length) { t.preconEstimates++; t.preconUnits += pre.reduce((s, x) => s + x.units, 0); }
@@ -134,7 +158,7 @@ async function main() {
   const dir = path.join(ROOT, 'docs', 'tree-review'); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'tree-review.json'), JSON.stringify(out));
   const t = out.totals.Peel;
-  console.log(`tree review: ${out.rows.length} groups · Peel app ${t.appUnits} → tree ${t.treeUnits} (after overrides ${t.afterOverrides}) · up ${t.up}, down ${t.down}, unchanged ${t.unchanged} · pre-consultation estimates ${t.preconEstimates} (${t.preconUnits} units)`);
+  console.log(`tree review: ${out.rows.length} groups · Ask ${t.ask} (net ${t.askChange}) · Peel app ${t.appUnits} → tree ${t.treeUnits} (after overrides ${t.afterOverrides}) · up ${t.up}, down ${t.down}, unchanged ${t.unchanged} · pre-consultation estimates ${t.preconEstimates} (${t.preconUnits} units)`);
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { review, inParts };
+module.exports = { review, inParts, callOf };

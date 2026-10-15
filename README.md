@@ -1766,19 +1766,34 @@ share files with them. Each row has:
 with `units`, `reason`, `source` and `decidedOn`. Overrides apply to the workbook's "after
 overrides" totals now, and to the app at Step B1.
 
-**Results** (snapshot 2026-10-12): Peel app 247,760 → tree 264,764 units (+17,004, +6.9%).
+**Tree rules fixed after the first review (2026-10-15):**
+- **Building permits count when no file states a count.** 121 groups had dropped to 0; this
+  brings it to 94. The other 81 are replacement houses, which correctly count 0. Example:
+  11261 Chinguacousy keeps 456 units, all permitted. Permits are still never counted for a
+  replacement or model house.
+- **A minor file's own stated count counts,** not only the number found in its wording.
+- **The remaining drops to 0 are mostly correct.** The app was still counting withdrawn files.
+  Example: 2 Bartley Bull's 330 units come from OZS-2021-0010, which is cancelled.
 
-| Municipality | App units | Tree units | Change |
-|---|---|---|---|
-| Mississauga | 90,811 | 91,509 | +0.8% |
-| Brampton | 127,570 | 141,765 | +11.1% |
-| Caledon | 29,379 | 31,490 | +7.2% |
+**Your bulk accepts (2026-10-15).** These are recorded in `data/tree-overrides.json` as
+`accepted`:
+- counts found where the app had 0;
+- splits, unless the count drops by 100 or more;
+- drops to 0 (replacement houses, no new homes, withdrawn files);
+- pre-consultation estimates under 1,000 units;
+- new trees and gone developments;
+- small or well-linked changes.
 
-- 3,284 groups: 768 change, of which 208 go up and 164 down, 2,912 are unchanged.
+**Left for you: 24 groups** on the workbook's **To review** sheet:
+- 10 large pre-consultation estimates (1,000+ units);
+- merges and regroupings that move 100+ units;
+- splits and count changes that lower a count by 100+.
+
+Every row carries a pre-filled call and the reason for it.
+
+**Results** (snapshot 2026-10-12): Peel app 247,760 → tree 266,947 units (+19,187, +7.7%).
+- 3,284 groups: 227 go up, 131 go down, 2,926 are unchanged.
 - 88 groups are pre-consultation estimates, totalling 36,543 units.
-- On the same snapshot, the review's totals equal `scripts/audit-tree.js` exactly. The
-  committed `data/tree-audit.json` comes from a later live pull (Oct 14), so its totals differ
-  slightly.
 
 ## Definitions (one table, used everywhere)
 

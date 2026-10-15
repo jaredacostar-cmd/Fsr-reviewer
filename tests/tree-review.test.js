@@ -30,3 +30,19 @@ test('the pre-consultation flag is not vacuous: a tree with no stated count is n
   const src = fs.readFileSync(path.join(__dirname, '..', 'scripts', 'tree-review.js'), 'utf8');
   assert.match(src, /c\.units > 0 && stating\.length > 0 && stating\.every\(/);
 });
+
+test('bulk calls: your accepted categories accept, the rest ask', () => {
+  const { callOf } = require('../scripts/tree-review.js');
+  const t = (o = {}) => ({ override: null, ...o });
+  const r = o => callOf({ kind: 'count changed', change: 0, treeUnits: 0, flags: [], trees: [t()], ...o });
+  assert.equal(r({ kind: 'count found (app had 0)', change: 1946, treeUnits: 1946 }).call, 'Accept');
+  assert.equal(r({ kind: 'split: one app development, several trees', change: 991 }).call, 'Accept');
+  assert.equal(r({ kind: 'split: one app development, several trees', change: -360 }).call, 'Ask', 'a split that lowers the count by 100+');
+  assert.equal(r({ kind: 'count dropped to 0', change: -330 }).call, 'Accept', 'withdrawn file / replacement house');
+  assert.equal(r({ kind: 'unchanged', flags: ['estimate (pre-consultation)'], treeUnits: 9961 }).call, 'Ask', 'large pre-consultation estimate, even unchanged');
+  assert.equal(r({ kind: 'unchanged', flags: ['estimate (pre-consultation)'], treeUnits: 265 }).call, 'Accept');
+  assert.equal(r({ kind: 'merge: one tree over several app developments', change: 2928, flags: ['low-confidence link'] }).call, 'Ask');
+  assert.equal(r({ kind: 'count changed', change: -401 }).call, 'Ask');
+  assert.equal(r({ kind: 'count changed', change: 40 }).call, 'Accept');
+  assert.equal(r({ kind: 'count changed', change: -401, trees: [t({ override: 845 })] }).call, 'Override', 'your override wins');
+});

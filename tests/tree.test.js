@@ -380,3 +380,18 @@ test('area tags: on an equal overlap the smaller area (a precinct inside its sec
   assert.equal(tag.primary.name, 'Precinct 52-2');
   assert.equal(tag.tags.length, 2);
 });
+
+// Step B0 rule: when no file states a count, the units on the building permits placed in the tree
+// count (the homes are permitted or built); never for a replacement house.
+test('no stated count: the permits placed in the tree count; a replacement house still counts 0', () => {
+  const recs = [app({ ref: 'SUB-1', poly: box(0, 0, 4, 4), description: 'Draft plan of subdivision to permit single-detached and townhouse dwellings' })];
+  const permit = (ref, units) => ({ uid: `p-${ref}`, kind: 'permit', municipality: 'Brampton', ref, units, lat: Y + 1 * K, lng: X + 1 * K, address: '', events: ev('2023-01-01') });
+  const nodes = T.fileNodes(recs), b = T.buildTrees(nodes, { permits: [permit('BP-1', 40), permit('BP-2', 16), permit('BP-1', 40)] });
+  const c = T.countTree(b.trees[0], b);
+  assert.equal(c.units, 56, 'each permit counted once');
+  assert.match(c.basis, /building permits: 56 units permitted/);
+
+  const rep = [app({ ref: 'SP-R', poly: box(10, 10, 12, 12), description: 'Replace the existing dwelling with a new detached house' })];
+  const n2 = T.fileNodes(rep), b2 = T.buildTrees(n2, { permits: [{ ...permit('BP-9', 1), lat: Y + 11 * K, lng: X + 11 * K }] });
+  assert.equal(T.countTree(b2.trees[0], b2).units, 0, 'a replacement house adds no growth');
+});

@@ -2,7 +2,21 @@
   "version": 1,
   "note": "Step B0 decisions on the tree counts. Key: \"Municipality|ROOT-FILE\" (the tree's root file, as in docs/tree-review). Each override: units (the count to use), reason, source (a link or document), decidedOn (YYYY-MM-DD). Applied by scripts/tree-review.js now and by the app at Step B1.",
   "rules": {
-    "preconsultationOnlyCount": "count it, flagged 'estimate (pre-consultation)', proposed only, never committed (decided 2026-10-15)"
+    "preconsultationOnlyCount": "count it, flagged 'estimate (pre-consultation)', proposed only, never committed (decided 2026-10-15)",
+    "permitsWhenNoCount": "when no file states a count, the units on the building permits placed in the tree count; never for a replacement or model house (tree rule fixed 2026-10-15)",
+    "minorFileStatedCount": "a minor file's own stated count counts, not only its wording (tree rule fixed 2026-10-15)"
   },
-  "overrides": {}
+  "overrides": {},
+  "accepted": {
+    "decidedOn": "2026-10-15",
+    "categories": [
+      "count found where the app had 0",
+      "splits: separate proposals the app grouped together (unless the count drops by 100+)",
+      "drops to 0: a replacement house, no new homes, or the app counted a withdrawn file",
+      "pre-consultation estimates under 1,000 units",
+      "new trees and app developments with no live tree",
+      "small or well-linked count changes (under 100 units, or not low confidence)"
+    ],
+    "stillToReview": "large pre-consultation estimates (1,000+ units), merges and regroupings that move 100+ units, splits and count changes that lower a count by 100+, and low-confidence changes of 100+ (the To review sheet)"
+  }
 }

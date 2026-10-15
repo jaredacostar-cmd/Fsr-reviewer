@@ -81,7 +81,8 @@ def main():
         [f"{T['groups']:,} groups: {T['up']} up, {T['down']} down, {T['unchanged']:,} unchanged. Pre-consultation estimates: {T['preconEstimates']} groups, {T['preconUnits']:,} units (proposed only, never committed)."],
         [],
         ['How to review'],
-        ['1. Changes: every group whose count or grouping changes, largest first. Start with the top 20.'],
+        ['0. To review: the groups left after your bulk accepts. Only these need a call.'],
+        ['1. Changes: every group whose count or grouping changes, largest first, with the call each rule made.'],
         ['2. In the yellow columns choose Accept, Override or Ask. For Override give the units and a reason or source.'],
         ['3. Pre-consultation estimates: counts that come only from a pre-consultation (decided: count them, flagged, never committed). Override any that are not real.'],
         ['4. The other sheets are the audit lists (double counts, mismatches, unlinked nesting, unclear same-land pairs, orphans, low-confidence links, straddling, reversed dates, counts to find).'],
@@ -120,8 +121,8 @@ def main():
     # 3. Changes (with your-call columns)
     heads = ['Group', 'Municipality', 'Kind', 'App development(s)', 'App stage', 'Committed now (D-5-1)', 'App units', 'Tree units', 'Change', 'Flags',
              'Tree root file(s)', 'Counting rule', 'Confidence', 'Plan (primary)', 'Plan share %', 'Plant', 'Block', 'Files in tree(s)',
-             'Your call', 'Override units', 'Reason / source']
-    widths = {'App development(s)': 34, 'Counting rule': 46, 'Files in tree(s)': 40, 'Flags': 30, 'Kind': 30, 'Plan (primary)': 28, 'Reason / source': 40, 'Tree root file(s)': 24}
+             'Your call', 'Why this call', 'Override units', 'Reason / source']
+    widths = {'Why this call': 44, 'App development(s)': 34, 'Counting rule': 46, 'Files in tree(s)': 40, 'Flags': 30, 'Kind': 30, 'Plan (primary)': 28, 'Reason / source': 40, 'Tree root file(s)': 24}
 
     def row_of(r):
         ts = r['trees']
@@ -129,18 +130,25 @@ def main():
                 [t['root'] for t in ts], [f"{t['root']}: {t['units']:,} ({t['basis']})" for t in ts], [t['confidence'] for t in ts],
                 [t['plan'] for t in ts], [t['planShare'] for t in ts if t['planShare'] is not None], [t['plant'] for t in ts], [t['block'] for t in ts],
                 [', '.join(t['files'][:12]) + (f' +{len(t["files"]) - 12}' if len(t['files']) > 12 else '') for t in ts],
-                'Override' if any(t['override'] is not None for t in ts) else '', next((t['override'] for t in ts if t['override'] is not None), ''), next((t['overrideReason'] for t in ts if t['overrideReason']), '')]
+                r.get('call', ''), r.get('callWhy', ''), next((t['override'] for t in ts if t['override'] is not None), ''), next((t['overrideReason'] for t in ts if t['overrideReason']), '')]
 
+    ask = [r for r in d['rows'] if r.get('call') == 'Ask']
+    ws = wb.create_sheet('To review', 1)
+    ws.append([f'{len(ask)} groups left for you after the bulk accepts of 2026-10-15 (data/tree-overrides.json "accepted"). Change Ask to Accept or Override; for Override give units and a reason.'])
+    ws['A1'].font = Font(italic=True)
+    table(ws, heads, [row_of(r) for r in ask], widths, call_cols=4)
+    dv0 = DataValidation(type='list', formula1='"Accept,Override,Ask"', allow_blank=True)
+    ws.add_data_validation(dv0); dv0.add(f'S3:S{ws.max_row}')
     changed = [r for r in d['rows'] if r['kind'] != 'unchanged']
     ws = wb.create_sheet('Changes')
-    table(ws, heads, [row_of(r) for r in changed], widths, call_cols=3)
+    table(ws, heads, [row_of(r) for r in changed], widths, call_cols=4)
     dv = DataValidation(type='list', formula1='"Accept,Override,Ask"', allow_blank=True)
     ws.add_data_validation(dv); dv.add(f'S2:S{ws.max_row}')
 
     # 4. Pre-consultation estimates
     pre = [r for r in d['rows'] if any(t['preconOnly'] for t in r['trees'])]
     ws = wb.create_sheet('Pre-consultation estimates')
-    table(ws, heads, [row_of(r) for r in pre], widths, call_cols=3)
+    table(ws, heads, [row_of(r) for r in pre], widths, call_cols=4)
     dv2 = DataValidation(type='list', formula1='"Accept,Override,Ask"', allow_blank=True)
     ws.add_data_validation(dv2); dv2.add(f'S2:S{ws.max_row}')
 
