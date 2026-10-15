@@ -298,7 +298,11 @@
     out.sort((a, b) => order[a.rec] - order[b.rec] || b.bo - a.bo);
     // Held back with every project as scheduled (projects late or too small), the largest constraint.
     const baseBo = Math.max(0, ...[...base.values()].map(v => v.bo)), baseY = years.map((_, i) => Math.max(0, ...[...base.values()].map(v => v.ys[i])));
-    MP().DCA.key = k; MP().DCA.res = { list: out, years, ppu, rate, baseBo, baseY, nCons: cons.length };
+    // Of it, Committed growth (demand at the committed level already beyond the build-out capacity, on
+    // the same constraint); the rest is Proposed (SPEC §2.6).
+    const top = cons.reduce((a, c) => (base.get(c.id).bo > (a ? base.get(a.id).bo : 0) ? c : a), null);
+    const baseBoCom = top ? Math.min(baseBo, MP().heldAtLevel(top, 'committed', none)) : 0;
+    MP().DCA.key = k; MP().DCA.res = { list: out, years, ppu, rate, baseBo, baseBoCom, baseY, nCons: cons.length };
     return MP().DCA.res;
   }
   // Timeline chart for one project's tightest constraint: demand, existing capacity, capacity with

@@ -96,6 +96,7 @@
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
         ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
         ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>
+      ${layerStripHTML(set)}
       ${empTiles}
       <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
       ${topTable}
@@ -110,6 +111,21 @@
       gr.built.jobs = j.jbuilt; gr.approved.jobs = j.japproved; gr.proposed.jobs = j.jproposed;
       CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'), { builtLabel: `Completed since ${bc.year} on the developments shown (not every permit: see Census & 2051)` });
     }
+  }
+  // The pipeline by layer (SPEC §2.2): growth only, the census as context; and by dwelling type.
+  function layerStripHTML(set) {
+    const Ly = root.PeelLayers, LB = root.PeelLayerBar; if (!Ly || !LB || !set.length) return '';
+    const t = Ly.totals(set), u = t.units, bc = CA().baselineCensus();
+    const census = bc ? PeelAreas.censusTotals(bc.das, {}).dwellings : null;
+    const growth = ['built', 'committed', 'proposed', 'anticipated'];
+    const segs = growth.map(k => ({ layer: k, value: u[k], est: Math.min(u[k], t.estimatedBy[k] || 0) }));
+    const bt = Ly.byType(set), n0 = v => fmtNum(Math.round(v));
+    const rows = D.UNIT_TYPES.filter(ty => growth.some(k => bt[ty.key][k] >= 0.5)).map(ty => `<tr><td>${esc(ty.label)}</td>${growth.map(k => `<td class="n">${n0(bt[ty.key][k])}</td>`).join('')}</tr>`).join('');
+    return `<h3 class="sub-title" data-info="growth-layers">By layer <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
+      ${LB.barHTML({ segments: segs })}
+      ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
+      ${u.existing > 0 ? `<p class="small muted">${n0(u.existing)} more on these sites were completed before census day (in the census already, Existing).</p>` : ''}
+      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];

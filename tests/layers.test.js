@@ -84,3 +84,20 @@ test('a file: its own layer and units (OZS-2025-0032: 592, Proposed)', { skip },
   const r = p.records.find(x => x.ref === 'OZS-2025-0032');
   assert.deepEqual(L.ofFile(r, p), { layer: 'proposed', units: 592, confidence: 'stated' });
 });
+
+test('by dwelling type × layer: adds up to the layer totals', { skip }, () => {
+  const { projects } = H.realDevs();
+  const set = projects.filter(p => p.phase !== 'cancelled'), t = L.totals(set), bt = L.byType(set);
+  for (const k of ['existing', 'built', 'committed', 'proposed', 'anticipated']) {
+    const sum = Object.values(bt).reduce((a, r) => a + r[k], 0);
+    assert.ok(Math.abs(sum - t.units[k]) < 1, `${k}: ${Math.round(sum)} vs ${t.units[k]}`);
+  }
+});
+
+test('estimated units are tracked in their own layer', { skip }, () => {
+  const { projects } = H.realDevs();
+  const t = L.totals(projects.filter(p => p.phase !== 'cancelled'));
+  const sum = Object.values(t.estimatedBy).reduce((a, v) => a + v, 0);
+  assert.equal(sum, t.estimated);
+  for (const k in t.estimatedBy) assert.ok(t.estimatedBy[k] <= t.units[k], k);
+});

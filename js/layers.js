@@ -122,15 +122,30 @@
   }
 
   function totals(devs, opts = {}) {
-    const units = zero(), people = zero(), n = zero();
+    const units = zero(), people = zero(), n = zero(), est = zero();
     let jobs = 0, estimated = 0;
     for (const p of devs) {
       const L = ofDev(p, opts); if (!L.layer) continue;
       n[L.layer]++;
       for (const k in units) { units[k] += L.parts[k]; people[k] += L.people[k] || 0; }
       jobs += L.jobs; estimated += L.estimated;
+      if (L.estimated > 0 && L.layer in est) est[L.layer] += L.estimated;
     }
-    return { units, people, devs: n, jobs, estimated };
+    return { units, people, devs: n, jobs, estimated, estimatedBy: est };
+  }
+
+  /** Units by dwelling type × layer: each development's layer parts split by its own type mix
+   *  (js/demand.js unitSplit). → { single: { existing, built, … }, town, apartment, unknown } */
+  function byType(devs, opts = {}) {
+    const out = {};
+    for (const t of D().UNIT_TYPES) out[t.key] = zero();
+    for (const p of devs) {
+      const L = ofDev(p, opts); if (!L.layer || !(L.units > 0)) continue;
+      const s = D().unitSplit({ ...p, types: p.types || [], description: p.description || '' }, 'all'), n = Object.values(s).reduce((a, v) => a + v, 0);
+      if (!(n > 0)) continue;
+      for (const k in s) if (s[k] > 0) for (const ly in L.parts) out[k][ly] += L.parts[ly] * s[k] / n;
+    }
+    return out;
   }
 
   /** What a plan target allows beyond the layers applied for (Existing is the base, not counted). */
@@ -140,7 +155,7 @@
     return Math.max(0, target - (u.built || 0) - (u.committed || 0) - (u.proposed || 0) - (u.anticipated || 0));
   }
 
-  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, toTarget, confidenceOf };
+  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);
