@@ -31,6 +31,7 @@ name: Probe data sources
 #  mode=ea-maps: download every EA page's study-area maps (images, study-area figures; PDFs as PNG) to the ea-maps branch, for tracing
 #  mode=ea-trace: trace the EA study areas listed in scripts/ea-trace.json from the ea-maps images (intersections geocoded); data/eas-overrides.json committed to this branch
 #  mode=eas: Region EA list + project pages → data/eas.json and data/eas-review.csv, committed to this branch; only=with-capital also links EAs to capital records
+#  mode=constraints-build: the approved constraint layers → data/constraints/<id>/ tiles, manifest.json and the 25 m screening grid (grid.json), committed to this branch; only=<id,id> rebuilds some
 #  mode=elev-bench: the lidar sampler against Brampton benchmarks (height above grade, CGVD28 → CGVD2013 with NRCan grids) and where coverage ends (data/probe/elevation-bench.json)
 #  mode=elev-check: the lidar elevation sampler's service checks and the benchmark comparison (data/probe/elevation.json, committed to this branch)
 #  mode=constraints-lidar: Stage 0 source check for lidar elevation and the constraint layers (endpoint, coverage, resolution, dates, licence, CORS); data/probe/constraints-lidar.json committed to this branch, report only
@@ -76,6 +77,15 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/probe/elevation.json
           git diff --cached --quiet || { git commit -m "Elevation checks: lidar sampler, hillshade, benchmarks"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+      - name: Constraint layers (data/constraints committed to this branch)
+        if: inputs.mode == 'constraints-build'
+        run: |
+          if [ -n "${{ inputs.only }}" ]; then node scripts/build-constraints.js --only "${{ inputs.only }}"; else node scripts/build-constraints.js; fi
+          du -sh data/constraints; du -s data/constraints/* | sort -n | tail -20
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/constraints
+          git diff --cached --quiet || { git commit -m "Constraint layers: tiles, manifest and screening grid"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Lidar sampler against benchmarks (data/probe/elevation-bench.json committed to this branch)
         if: inputs.mode == 'elev-bench'
         run: |
