@@ -298,12 +298,14 @@
   function fillCxCard(set) {
     const CXD = root.PeelCxData, my = ++cxSeq; if (!CXD) return;
     const scope = cxScope(); if (!scope) { const h = $('#ov-cx'); if (h) h.remove(); return; }
+    // All of Peel: on request (the screening grid is 0.6 MB; area scopes load it themselves).
+    if (!scope.muni && !scope.polys && !cxPeel) { const h = $('#ov-cx'); if (h) h.innerHTML = '<div class="ov-h"><h3>Land under constraints</h3></div><p class="small muted">The share of Peel’s land in regulation limits, floodplain and provincial plan areas, and the developments inside each (screening). Opens by itself for a municipality, plan area, zone or block. <button type="button" class="btn small" data-cx-peel>Show for all of Peel</button></p>'; return; }
     CXD.areaCard(scope, set || []).then(r => {
       const h = $('#ov-cx'); if (!h || my !== cxSeq) return;
       h.innerHTML = r.html; cxRows = { rows: r.rows, scope: scope.name };
     }).catch(() => { const h = $('#ov-cx'); if (h && my === cxSeq) h.innerHTML = '<div class="ov-h"><h3>Land under constraints</h3></div><p class="small muted">The constraint layers did not load.</p>'; });
   }
-  let cxRows = null;
+  let cxRows = null, cxPeel = false;
   // "n developments inside" → those developments, as a selection in the right panel.
   function openCxDevs(k) {
     const row = cxRows && cxRows.rows.find(r => r.k === k); if (!row || !root.PeelSvcScope) return;
@@ -312,7 +314,10 @@
     const html = AS && AS.selectionSummaryHTML ? AS.selectionSummaryHTML(devs, false) : `<ul class="small">${devs.map(p => `<li><button type="button" class="btn small link" data-ov-dev="${esc(p.key)}">${esc(p.title)}</button></li>`).join('')}</ul>`;
     root.PeelSvcScope.openResult({ ref: `sel:cx-${k}`, title: `${devs.length} developments inside ${row.label.toLowerCase()} (${cxRows.scope}; screening)`, html: `<p class="small muted">Developments whose point is inside the mapped ${esc(row.label.toLowerCase())} (${esc(row.from)}), on a 25 m grid. Screening only: the conservation authority or province confirms.</p>${html}`, devKeys: row.devs });
   }
-  if (typeof document !== 'undefined') document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-cx-devs]'); if (b) openCxDevs(b.dataset.cxDevs); });
+  if (typeof document !== 'undefined') document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('[data-cx-devs]'); if (b) { openCxDevs(b.dataset.cxDevs); return; }
+    if (e.target.closest && e.target.closest('[data-cx-peel]')) { cxPeel = true; fillCxCard(DU().overviewSet()); }
+  });
 
   // The scope the numbers cover: "all of Peel" only when nothing narrows it (SPEC 1.9: never
   // "all of Peel · 52: Heritage Heights").

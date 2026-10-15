@@ -80,13 +80,14 @@
       SS().openResult({ ref: `cx:${id}-${String(label[0]).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`, title: label[0], html: CX().featureCardHTML(d, label) });
     });
   }
-  function draw(key, id, feats, edges) {
-    const L0 = LAYERS[key], col = token(L0.color) || token('--nodata');
+  // coarse: the overview (low zoom): thin outlines, no dashes, so many small polygons stay readable.
+  function draw(key, id, feats, edges, coarse) {
+    const L0 = LAYERS[key], col = token(L0.color) || token('--nodata'), w = coarse ? 0.7 : L0.weight, dash = coarse ? null : L0.dash;
     for (const f of feats) {
       if (L0.keep && !L0.keep(f.label)) continue;
       const tip = `<strong>${esc(f.label[0] || L0.label)}</strong><br><span class="muted">${esc(f.label[1] || L0.label)} · screening</span>`;
       const shapes = f.polys
-        ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: L0.weight, dashArray: L0.dash, fillColor: col, fillOpacity: 0.16, opacity: 0.9 })]
+        ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: col, fillOpacity: coarse ? 0.22 : 0.16, opacity: coarse ? 0.6 : 0.9 })]
         : (f.lines || []).length ? [L.polyline(f.lines.map(l => l.map(([x, y]) => [y, x])), { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 })] : [];
       for (const s of shapes) s.bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', e => { L.DomEvent.stop(e); featureClick(id, f.label); }).addTo(layer);
     }
@@ -113,7 +114,7 @@
           if (my !== seq) return;
           if (L0.area && (z < TILE_ZOOM || tiles.length > MAX_TILES)) {
             const ov = await overview(id); if (my !== seq) return;
-            if (ov) { draw(key, id, ov, null); drew = true; continue; }
+            if (ov) { draw(key, id, ov, null, true); drew = true; continue; }
           }
           if (tiles.length > MAX_TILES) { notes.push(`Zoom in to see ${L0.short}`); continue; }
           const got = await Promise.all(tiles.map(([tx, ty]) => CX().tile(id, tx, ty)));
