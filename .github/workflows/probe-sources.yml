@@ -34,6 +34,7 @@ name: Probe data sources
 #  mode=elev-bench: the lidar sampler against Brampton benchmarks (height above grade, CGVD28 → CGVD2013 with NRCan grids) and where coverage ends (data/probe/elevation-bench.json)
 #  mode=elev-check: the lidar elevation sampler's service checks and the benchmark comparison (data/probe/elevation.json, committed to this branch)
 #  mode=elev-validate: ground elevation (lidar, terrain tiles) against Peel sanitary manholes in the validation areas: data/elevation-validation.json and tests/fixtures/manhole-sample.json committed to this branch; the internal data check (manholes > 5 m off, with FacilityID) as an artifact only, never committed
+#  mode=tiles-3d: the 3D view's pilot tiles (North Brampton): lidar terrain and OSM buildings as PMTiles in data/3d/, committed to this branch
 #  mode=constraints-lidar: Stage 0 source check for lidar elevation and the constraint layers (endpoint, coverage, resolution, dates, licence, CORS); data/probe/constraints-lidar.json committed to this branch, report only
 on:
   workflow_dispatch:
@@ -43,7 +44,7 @@ on:
         default: 'all'
         required: false
       only:
-        description: 'mode=external: one part only (mto, cmhc); mode=capital: commit; mode=eas: with-capital'
+        description: 'mode=external: one part only (mto, cmhc); mode=capital: commit; mode=eas: with-capital; mode=tiles-3d: terrain or buildings'
         default: ''
         required: false
 
@@ -112,6 +113,17 @@ jobs:
           name: internal-manhole-check
           path: reports-internal/
           retention-days: 30
+      - name: 3D view pilot tiles (lidar terrain + OSM buildings, committed to this branch)
+        if: inputs.mode == 'tiles-3d'
+        timeout-minutes: 30
+        run: |
+          npm install --no-save --silent geojson-vt@4.0.2 vt-pbf@3.1.3
+          node scripts/build-3d-tiles.js ${{ inputs.only != '' && format('--only={0}', inputs.only) || '' }}
+          node --test tests/tiles-3d.test.js
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/3d/
+          git diff --cached --quiet || { git commit -m "3D view: pilot lidar terrain and OSM building tiles"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Lidar elevation and constraint layers, source check (report only; summary committed to this branch)
         if: inputs.mode == 'constraints-lidar'
         run: |

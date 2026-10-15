@@ -2552,3 +2552,54 @@ Everything here is **indicative, not design**.
   - The site deploy now publishes only the app files (`_site`: index.html, manifest, sw.js,
     css, js, data, icons). It fails if anything internal is in them.
 - **Polite fetching.** Overpass is retried at most 3 times, honouring `Retry-After` on 429.
+
+## 3D view, Part 2: terrain, buildings and proposed massing
+
+Tap **3D** on the map, under the tool buttons. A 3D map opens over the 2D map at the same place.
+Everything drawn is **indicative, not design**.
+
+- **Camera.** Tilted 60°. *Tilt* toggles a straight-down view. **2D** or Esc goes back, keeping
+  the place you moved to.
+- **Libraries.** MapLibre GL 4.7.1 and PMTiles 3.2.1 load only the first time the view opens.
+  Without WebGL the view says so.
+- **Ground.**
+  - Terrain is exaggerated ×1.2 and hillshaded.
+  - It comes from the same module as the ground profile: `PeelElevation.demTile`.
+  - Inside the **North Brampton pilot box** (dashed) it is the province's lidar terrain model:
+    bare earth (the DTM, never the surface model), CGVD2013, up to z16 (about 1.8 m pixels),
+    rounded to 0.1 m.
+  - Everywhere else it is the terrain tiles (CDEM / SRTM, CGVD28 / EGM96). Above their z15 they
+    are upsampled from decoded heights.
+  - The legend names the sources in view, and says the two datums are about 0.4 m apart and
+    not adjusted.
+- **Buildings** (pilot box only): OpenStreetMap buildings and building parts.
+  - **Height:** the `height` tag, else `building:levels` (+ roof levels) × 3.2 m, else
+    2 storeys.
+  - Estimated heights are drawn darker, and a tap says which rule applied.
+- **Proposals:** the developments shown in 2D, coloured by status (the phase colours).
+  - **Height:** the stated height in metres, else the stated storeys × 3.2 m, else (apartment
+    types only) units × 90 m² ÷ (footprint × 85% efficiency), 1–60 storeys. Anything else is
+    hidden, and the legend counts how many.
+  - Additions and extensions are hidden unless they add units.
+  - **Footprint:** half the application site, scaled about its centre. Where no site boundary
+    exists, a 30 m square at the address. Never the real building outline.
+  - A tap shows the basis and opens the development.
+  - The rules are in `js/massing-core.js` and tested in `tests/massing-core.test.js`.
+- **Pilot tiles.** In Actions, run *Probe data sources* with `mode=tiles-3d`
+  (`scripts/build-3d-tiles.js`). It writes:
+  - `data/3d/lidar-pilot.pmtiles` (Terrarium PNG, z12–16): five pixels per zoom are checked
+    against the lidar service's own samples;
+  - `data/3d/buildings-pilot.pmtiles` (vector, z13–16);
+  - `data/3d/manifest.json`: sources, datums, dates, counts and attribution.
+- **Dependencies.** The PMTiles writer, PNG encoder and TIFF reader are small dependency-free
+  helpers in `scripts/`, tested in `tests/tiles-3d.test.js`. The writer was checked against the
+  pmtiles library's reader.
+- **Attribution.** A line at the bottom of the 3D view credits the sources in view:
+  - Esri imagery or canvas;
+  - Ontario DTM (OGL-Ontario);
+  - Terrain Tiles (Mapzen / AWS; CDEM © NRCan, SRTM);
+  - © OpenStreetMap contributors (ODbL);
+  - municipal open data.
+- **Planned deviation from the brief.** The lidar tiles stop at z16 rather than the 0.5 m
+  native resolution (z18 would be about 3,500 tiles). The ground profile still reads the lidar
+  at native resolution.
