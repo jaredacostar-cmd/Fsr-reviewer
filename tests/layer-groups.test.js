@@ -29,8 +29,12 @@ test('six groups in order, with the brief\'s layers', () => {
 test('presets: everything off except Developments; each view adds its own', () => {
   for (const v of ['planning', 'water', 'wastewater', 'dc']) assert.ok(LG.PRESETS[v].includes('devs'), v);
   assert.deepEqual(LG.PRESETS.planning.filter(k => k !== 'devs' && k !== 'hov'), ['sp', 'mtsa']);
-  assert.deepEqual(LG.PRESETS.water.filter(k => k !== 'devs' && k !== 'hov').sort(), ['cap', 'ex-water', 'pz', 'wf']);
-  assert.deepEqual(LG.PRESETS.wastewater.filter(k => k !== 'devs' && k !== 'hov').sort(), ['bk', 'cap', 'ex-sanitary']);
+  assert.deepEqual(LG.PRESETS.water.filter(k => k !== 'devs' && k !== 'hov').sort(), ['cap', 'dcw', 'ex-water', 'pz', 'wf']);
+  assert.deepEqual(LG.PRESETS.wastewater.filter(k => k !== 'devs' && k !== 'hov').sort(), ['bk', 'cap', 'dcw', 'ex-sanitary']);
+  // Each servicing view shows its own system's planned works; Capital shows both.
+  const s = src('js/map-analysis.js');
+  assert.match(s, /wf: true, dc: \{ on: true, sys: 'water' \} \}/);
+  assert.match(s, /wf: false, dc: \{ on: true, sys: 'wastewater' \} \}/);
   assert.deepEqual(LG.PRESETS.dc.filter(k => k !== 'devs' && k !== 'hov'), ['dcw']);
   // No constraint, utility or base-map layer is on in any preset (gas / hydro off by default).
   for (const p of Object.values(LG.PRESETS)) for (const k of p) assert.ok(!['cx', 'base'].includes(LG.groupOf(k)) && k !== 'gas' && k !== 'hydro', k);

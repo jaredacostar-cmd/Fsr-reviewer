@@ -45,8 +45,9 @@
   // Everything off except Developments; each view adds its own (remembered per view after that).
   const PRESETS = {
     planning: ['devs', 'hov', 'sp', 'mtsa'],
-    water: ['devs', 'hov', 'cap', 'pz', 'wf', 'ex-water'],
-    wastewater: ['devs', 'hov', 'cap', 'bk', 'ex-sanitary'],
+    // Water and Wastewater also show their own system's planned DC works (the Capital view, both).
+    water: ['devs', 'hov', 'cap', 'pz', 'wf', 'ex-water', 'dcw'],
+    wastewater: ['devs', 'hov', 'cap', 'bk', 'ex-sanitary', 'dcw'],
     dc: ['devs', 'hov', 'dcw'],
   };
   const presetFor = v => new Set(PRESETS[v] || PRESETS.planning);

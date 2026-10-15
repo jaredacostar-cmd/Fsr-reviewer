@@ -238,12 +238,14 @@ The six groups:
 
 **Presets.** Everything is off except Developments (and the site boundary on hover). Each view adds:
 - Planning: the planning context.
-- Water: pressure zones (capacity colours by zone), water facilities, existing watermains.
-- Wastewater: blocks, capacity colours, sanitary sewers.
+- Water: pressure zones (capacity colours by zone), water facilities, existing watermains, planned
+  water DC works.
+- Wastewater: blocks, capacity colours, sanitary sewers, planned wastewater DC works.
 - Capital: planned DC works.
 
 Changes are remembered per view, as before, and the memory now includes the constraints, plan areas
-and hillshade. Planned DC works no longer come on in the Water and Wastewater views.
+and hillshade. Water and Wastewater also show their own system's planned DC works (restored
+2026-10-15 after review); Capital shows both.
 
 **Draw order**, bottom to top, set in `PeelLayerGroups.Z` and used by every pane:
 1. base map (150)
