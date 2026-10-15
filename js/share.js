@@ -37,6 +37,8 @@
       if (AT().getFootPref() === 'growth') set('gs', AT().getGSub()); if (AT().getFootPref() === 'dca') set('dcs', AT().getDcSub());
       if (SVCT().svcOpt.ww !== 'calibrated') set('wm', SVCT().svcOpt.ww); if (SVCT().svcOpt.md !== 'design') set('md', SVCT().svcOpt.md); if (SVCT().svcOpt.div !== 'off') set('dv', SVCT().svcOpt.div); if (SVCT().svcOpt.nr !== 'on') set('nr', SVCT().svcOpt.nr);
       if (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed' || MM().mstyle.cap !== 'off') set('ms', `${MM().mstyle.color}.${MM().mstyle.size}.${MM().mstyle.cap}`);
+      // Layer groups: the layers on and the groups open (js/layer-groups.js).
+      if (window.PeelLayerGroups) set('lg', window.PeelLayerGroups.encodeCurrent());
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
@@ -84,6 +86,9 @@
       SF().syncFilterControls();
       for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) SVCT().svcOpt[o] = q.get(k);
       if (q.get('ms')) { const [color, size, cap] = q.get('ms').split('.'); for (const [k, v] of [['color', color], ['size', size], ['cap', cap]]) if (MM().MSTYLE[k][v]) MM().mstyle[k] = v; }
+      // Layers (lg=…). Links from before the groups have none: their layers stay as the view sets them
+      // (and ms= above), as they opened before.
+      if (q.get('lg') && window.PeelLayerGroups) { const lg = q.get('lg'); setTimeout(() => window.PeelLayerGroups.applyEncoded(lg), 0); }
       if (q.get('t')) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
         const m = AT().migrateTabKey(q.get('t'));

@@ -214,3 +214,114 @@ Not built (decisions of 2026-10-15): source protection (CTC); NVCA regulation li
      include some water.
 7. **Missing as-of dates:** the Utility Line layer has no update date, so its as-of reads
    "not stated by the source".
+
+## Stage 3 (layer groups): what was built
+
+`js/layer-groups.js` (`PeelLayerGroups`) holds the group definitions; `js/map-markers.js` builds the
+Layers panel from it.
+
+**Groups.** Each group is an accordion section with:
+- a group switch: on turns on the group's main layers, off turns off all of them;
+- a count of layers on and in view, e.g. "2 on · 1 in view";
+- a one-line summary when folded.
+
+The six groups:
+1. **Developments:** developments, heatmap, site boundary on hover.
+2. **Capacity:** capacity colours, pressure zones, wastewater blocks, drainage areas.
+3. **Infrastructure:** existing watermains / sanitary / storm sewers, water facilities, planned DC
+   works. Under "Other utilities": gas pipelines and hydro lines (approximate, off by default).
+4. **Constraints:** regulation limits, floodplain, Greenbelt, Oak Ridges Moraine, Niagara Escarpment,
+   PSW / ANSI, Natural Heritage System, source protection (listed as "not included"), watercourses.
+5. **Planning context:** secondary plans / character areas, precincts (new layer), MTSAs, census
+   areas.
+6. **Base map:** background, lidar hillshade, labels, aerial opacity (new), orientation.
+
+**Presets.** Everything is off except Developments (and the site boundary on hover). Each view adds:
+- Planning: the planning context.
+- Water: pressure zones (capacity colours by zone), water facilities, existing watermains.
+- Wastewater: blocks, capacity colours, sanitary sewers.
+- Capital: planned DC works.
+
+Changes are remembered per view, as before, and the memory now includes the constraints, plan areas
+and hillshade. Planned DC works no longer come on in the Water and Wastewater views.
+
+**Draw order**, bottom to top, set in `PeelLayerGroups.Z` and used by every pane:
+1. base map (150)
+2. hillshade (210)
+3. constraints (300; fills ≤ 25%)
+4. census areas (320)
+5. planning areas (330)
+6. capacity (360)
+7. existing pipes (370)
+8. planned works (380)
+9. site boundaries (400)
+10. markers (600)
+11. traces (640)
+12. selection (650)
+
+**Share links and saved views.**
+- Share links carry `lg=<layers>~<open groups>`.
+- Saved views and per-view memory store `layers` and `groups`.
+- Links and saved views from before the groups carry no `lg`. They open as they did: the view's layers
+  plus `ms=`, with the other layers unchanged.
+
+**Legend.** It follows the group order: developments, capacity, infrastructure (with other
+utilities), then constraints.
+
+**Phone.** One group is open at a time, and the group headers wrap to fit the 236 px panel. Opening a
+development still folds the Layers panel, so it doesn't cover the selection.
+
+**Assumptions (Stage 3).**
+1. **Layers not built yet:** wastewater facilities, "Planned & under construction" and EAs are not in
+   the app. The capital-ea work owns them, and its files are not touched here, so their rows are left
+   out until they exist.
+2. **"Wastewater loads":** this is the loads selector (census / built / committed / proposed), not a
+   map layer, so it stays where it is.
+3. **"In view":**
+   - constraint layers report the features they drew;
+   - existing pipes count only from zoom 15, and the hillshade from zoom 11;
+   - other layers count as in view when on.
+4. **"Site boundaries":** these are drawn with Developments whenever it is on. The switch in the group
+   is the boundary on hover, the one setting the app has.
+
+## Design alignment (redesign spec and design audit)
+
+Stages 2–3 were checked against `docs/redesign/SPEC.md`, its Map controls board
+(`boards/MapControls.dc.html`) and `docs/design-audit.md`, and brought into line.
+
+- **One destination for clicks (SPEC §0.3, §3):**
+  - A constraint feature opens in the right panel as a result scope, and the trail updates.
+  - It uses **the same hover card** as plants, zones, DC works and files: kind, name, what it is,
+    "Click: …".
+  - Hover and click are hit-tested at the map level. Each pane draws on its own canvas and the top
+    one takes the pointer, so planning areas or zones drawn above no longer swallow it.
+  - While a constraint layer is on, planning areas are context outlines; filtering to a plan from
+    the left panel still works.
+- **Two ladders kept apart (SPEC §0.1) and the Stage 3 colours:**
+  - Constraint areas are **hatched**, not filled, so they never read as a phase, layer or capacity
+    colour. Hazards hatch one way; plans and the heritage system hatch the other.
+  - Swatches in the panel and legend match.
+- **Every number says its basis once (SPEC §0.5):** the Site checklist and the Land under
+  constraints card each end with one basis line (layers, grid, built date, screening) instead of a
+  separate disclaimer paragraph.
+- **Map controls board (SPEC §4):**
+  - Zoom thresholds are stated on each layer: "Existing watermains · from zoom 15", "Watercourses ·
+    from zoom 12", "Gas pipelines · from zoom 11", "Lidar hillshade · from zoom 11", and for
+    constraint areas "detail from zoom 13".
+  - A layer below its zoom is dimmed, with "Zoom in to see it".
+  - Gas and hydro are back to the spec's zoom 11.
+  - The panel opens with the view's preset ("Planning preset", or "· changed · Reset").
+  - "Planned DC works · 2026 draft" carries its basis.
+- **Five tabs at every scope (SPEC §0.4):**
+  - The checklist sits in Development › Site.
+  - The area card is in the Overview at municipality, plan, MTSA, zone and block scope.
+  - The feature card is a result scope; no new tab is added.
+- **Design audit:**
+  - Text at least 11 px (`--fs-1`).
+  - Screening wording on every constraint line, with no determinations.
+  - Constraints stay out of the Regional servicing verdict (jurisdiction: CA and province).
+- **Kept from the Stage 3 brief, not the board:** the brief's **six** groups replace the board's three
+  (Growth / Servicing / Capital & constraints).
+
+Also fixed: the "Show developments" button in the "Developments are switched off" note was white
+on white.

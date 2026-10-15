@@ -133,6 +133,8 @@
   }
 
   // Map layer: planned mains (dashed when approved in 2026) and facilities.
+  // Planned works draw with the infrastructure, under the developments (PeelLayerGroups.Z).
+  if (!map.getPane('infraPane')) map.createPane('infraPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.infra : 380);
   const dcLayer = L.layerGroup();
   function renderDcLayer() {
     dcLayer.clearLayers();
@@ -143,7 +145,7 @@
       if (MM().getDcOn().sys !== 'both' && MM().getDcOn().sys !== sys) continue;
       for (const ln of App().state.dcInfra[sys].lines) {
         const [label, colName, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
-        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: token(colName), weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
+        L.polyline(ln.g.map(([x, y]) => [y, x]), { color: token(colName), weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line', pane: 'infraPane' })
           .bindTooltip(window.PeelUtil.hoverCard({ kind: `DC work · ${ln.s === 'approved' ? 'approved 2026' : 'proposed'}`, name: `${label}${ln.d ? ` · ${ln.d} mm` : ''}`, value: ln.y ? String(ln.y) : '–', sub: `${ln.y ? 'construction' : 'year not labelled'} · ${lnStatus(ln)}`,
             html: `${ln.p ? `Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft, as of ${CAPITAL.asOf}; new growth procurements paused from June 11, 2026)</span>`, also: 'what it relieves' }), { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); MP().showDcLine(ln); }).addTo(dcLayer);

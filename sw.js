@@ -123,6 +123,7 @@ const SHELL_ASSETS = [
   'js/util.js',
   'js/water-tab.js',
   'js/zone-of.js',
+  'js/layer-groups.js',
   'js/layers.js',
   'js/layer-bar.js',
   'js/records-tab.js',

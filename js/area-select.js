@@ -37,7 +37,8 @@
   // areas add to the selection. The summary opens in the side panel.
   const selection = new Map();          // project key -> project
   let selAreas = [];                    // drawn areas as [[lng, lat], ...] rings
-  const selLayer = L.layerGroup().addTo(map), selCanvas = L.canvas({ padding: 0.3 });
+  if (!map.getPane('selPane')) map.createPane('selPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.sel : 650);
+  const selLayer = L.layerGroup().addTo(map), selCanvas = L.canvas({ pane: 'selPane', padding: 0.3 });
   let lassoOn = false;
   const lassoSvg = L.DomUtil.create('div', 'lasso-layer', map.getContainer());
   lassoSvg.innerHTML = '<svg><path/></svg><div class="lasso-hint">Draw around the developments to select<span class="mouse-only"> · middle-drag to move the map · Esc to cancel</span> <button type="button" class="btn small lasso-cancel">Cancel</button></div>';

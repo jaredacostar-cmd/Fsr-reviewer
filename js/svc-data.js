@@ -49,9 +49,9 @@
   // Region's sanitary sewer network (scripts/build-servicing.js). Both tag every project (by its
   // location point), filter the map, group the demand and show in the project panel.
   const svcById = new Map();
-  map.createPane('svcPane', map.getPane('rotatePane') || undefined).style.zIndex = 360;
+  map.createPane('svcPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.svc : 360);
   // Flow paths (development trace, catchment / block routes) draw above the development markers.
-  map.createPane('flowPane', map.getPane('rotatePane') || undefined).style.zIndex = 640;
+  map.createPane('flowPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.flow : 640);
   const flowRenderer = L.svg({ pane: 'flowPane', padding: 0.3 });
   const svcRenderer = L.canvas({ pane: 'svcPane', padding: 0.3 });
   const svcSelLayer = L.layerGroup().addTo(map);
@@ -92,7 +92,7 @@
       tagServicing();
       renderSvcSelects();
       // Blocks are the catchments: one map chip for them (Wastewater blocks), not two.
-      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; { const l = $('#f-dr-label'); if (l) l.textContent = 'Wastewater block'; } Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); { const q = $('#f-dr-q'); if (q) q.placeholder = 'Find a block…'; } PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
+      if (App().state.servicing.blocks) { const c = $('#lyr-dr'); if (c) c.closest('.mo-sw').hidden = true; { const l = $('#f-dr-label'); if (l) l.textContent = 'Wastewater block'; } Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); { const q = $('#f-dr-q'); if (q) q.placeholder = 'Find a block…'; } PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
       for (const k of ['pz', 'dr']) if (MM().svcOn[k]) setSvcLayer(k, true);
       if (MM().svcOn.bk) ST().setBlocksLayer(true);
       DI().renderDcLayer(); MA().renderLegend();

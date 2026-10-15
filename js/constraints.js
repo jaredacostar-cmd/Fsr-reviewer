@@ -60,10 +60,11 @@
 
   const on = Object.fromEntries(Object.keys(LAYERS).map(k => [k, false]));
   Object.assign(on, Object.fromEntries(Object.entries(store.get('cxOn', {}) || {}).filter(([k]) => k in on)));
-  map.createPane('cxPane', map.getPane('rotatePane') || undefined).style.zIndex = 352;
+  map.createPane('cxPane', map.getPane('rotatePane') || undefined).style.zIndex = (root.PeelLayerGroups ? root.PeelLayerGroups.Z.cx : 300);
   const renderer = L.canvas({ pane: 'cxPane', padding: 0.3 });
   const layer = L.layerGroup().addTo(map);
   const status = {};   // layer key -> 'ok' | 'none'
+  const drawn = {};    // layer key -> features drawn in the last render (the Layers header's "in view")
 
   // ---- Loading ----------------------------------------------------------------------------------
   const overviews = new Map();
@@ -97,16 +98,19 @@
     });
   }
   // coarse: the overview (low zoom): thin outlines, no dashes, so many small polygons stay readable.
+  // What is drawn, for the map-level hover card and click (below): each map pane draws on its own
+  // canvas and the top one takes the pointer, so constraint shapes are not interactive themselves.
+  let hits = [];
   function draw(key, id, feats, edges, coarse) {
     const L0 = LAYERS[key], col = token(L0.color) || token('--nodata'), w = coarse ? 0.7 : L0.weight, dash = coarse ? null : L0.dash;
     for (const f of feats) {
       if (L0.keep && !L0.keep(f.label)) continue;
-      // The same hover card as every other feature (SPEC §3): kind, name, what it is; click opens its card.
-      const tip = window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: f.label[0] || L0.label, sub: f.label[1] || '', open: 'its card (owner, as-of date, source)' });
-      const shapes = f.polys
-        ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: hatch(col, BACK.has(key)), fillOpacity: coarse ? 0.25 : 0.22, opacity: coarse ? 0.6 : 0.9 })]
-        : (f.lines || []).length ? [L.polyline(f.lines.map(l => l.map(([x, y]) => [y, x])), { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 })] : [];
-      for (const s of shapes) s.bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', e => { L.DomEvent.stop(e); featureClick(id, f.label); }).addTo(layer);
+      drawn[key] = (drawn[key] || 0) + 1;
+      if (f.polys) L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, interactive: false, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: hatch(col, BACK.has(key)), fillOpacity: coarse ? 0.25 : 0.22, opacity: coarse ? 0.6 : 0.9 }).addTo(layer);
+      else if ((f.lines || []).length) L.polyline(f.lines.map(l => l.map(([x, y]) => [y, x])), { renderer, interactive: false, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 }).addTo(layer);
+      else continue;
+      const pts = (f.polys ? f.polys[0] : f.lines).flat();
+      hits.push({ key, id, label: f.label, rings: f.polys ? f.polys[0] : null, lines: f.lines || null, bb: [Math.min(...pts.map(p => p[0])), Math.min(...pts.map(p => p[1])), Math.max(...pts.map(p => p[0])), Math.max(...pts.map(p => p[1]))] });
     }
     for (const g of edges || []) {
       if (L0.keep && !L0.keep(g.label)) continue;
@@ -115,7 +119,8 @@
   }
   async function render() {
     const my = ++seq;
-    layer.clearLayers();
+    layer.clearLayers(); hits = []; hideTip();
+    for (const k of Object.keys(drawn)) delete drawn[k];
     const keys = ORDER.filter(k => on[k]);
     const note = $('#cx-note');
     if (!keys.length) { if (note) note.textContent = ''; return; }
@@ -147,12 +152,49 @@
       } catch (e) { status[key] = 'none'; notes.push(`${L0.label} did not load`); }
     }
     if (my === seq && note) note.textContent = [...new Set(notes)].join(' · ');
+    if (my === seq && root.PeelLayerGroups) root.PeelLayerGroups.sync();
   }
+  // ---- Hover card and click, at the map level (SPEC §3: one hover card; click opens the right panel) ----
+  // Lines are hit within ~6 px; the top-most (last drawn) feature wins.
+  function hitAt(latlng) {
+    if (!hits.length) return null;
+    const x = latlng.lng, y = latlng.lat, tolM = 6 * 40075016 * Math.cos(y * Math.PI / 180) / 2 ** (map.getZoom() + 8), tolD = tolM / 111320;
+    for (let i = hits.length - 1; i >= 0; i--) {
+      const h = hits[i], b = h.bb;
+      if (x < b[0] - tolD * 2 || x > b[2] + tolD * 2 || y < b[1] - tolD || y > b[3] + tolD) continue;
+      if (h.rings ? G.pointInRings([x, y], h.rings) : h.lines.some(l => G.distToLine([x, y], l) <= tolM)) return h;
+    }
+    return null;
+  }
+  const toolOn = () => !!(root.PeelMeasure && root.PeelMeasure.tool && root.PeelMeasure.tool.mode);
+  let tip = null, tipFor = null, moveT = 0;
+  function hideTip() { if (tip) { map.closeTooltip(tip); tip = null; tipFor = null; } map.getContainer().classList.remove('cx-hover'); }
+  map.on('mousemove', e => {
+    const now = Date.now(); if (now - moveT < 60) return; moveT = now;
+    const h = !toolOn() && hitAt(e.latlng);
+    if (!h) { hideTip(); return; }
+    const L0 = LAYERS[h.key];
+    if (tipFor !== h) {
+      // The same hover card as every other feature: kind, name, what it is; click opens its card.
+      const html = window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: h.label[0] || L0.label, sub: h.label[1] || '', open: 'its card (owner, as-of date, source)' });
+      if (!tip) tip = L.tooltip({ className: 'pt', direction: 'top', offset: [0, -10] });
+      tip.setContent(html); tipFor = h;
+    }
+    tip.setLatLng(e.latlng); if (!map.hasLayer(tip)) map.openTooltip(tip);
+    map.getContainer().classList.add('cx-hover');
+  });
+  map.on('mouseout', hideTip);
+  map.on('click', e => { if (toolOn()) return; const h = hitAt(e.latlng); if (h) { hideTip(); featureClick(h.id, h.label); } });
+
   let timer = null;
   map.on('moveend', () => { if (Object.values(on).some(Boolean)) { clearTimeout(timer); timer = setTimeout(render, 150); } });
 
+  const anyOn = () => Object.values(on).some(Boolean);
   function setOn(o) {
+    const was = anyOn();
     for (const k of Object.keys(o)) if (k in on) on[k] = !!o[k];
+    // Planning areas are context outlines while constraints are on (they would take the taps).
+    if (was !== anyOn() && root.PeelPlanAreas && root.PeelPlanAreas.renderPlanAreas) root.PeelPlanAreas.renderPlanAreas();
     store.set('cxOn', on);
     render();
     if (MA() && MA().renderLegend) MA().renderLegend();
@@ -175,10 +217,12 @@
     return [...peel, ...onePerStream(ohn, peel)].flatMap(f => (f.lines || []).map(g => ({ g, name: f.label[0] === 'Watercourse' ? '' : f.label[0] })));
   }
   const watercourseSource = () => status.water === 'ok' ? 'Region of Peel watercourses and the Ontario Hydro Network (LIO)' : 'OpenStreetMap';
-  function legendHTML() {
-    const keys = ORDER.filter(k => on[k]);
+  // The legend follows the Layers groups: 'cx' (Constraints) or 'utility' (Infrastructure ›
+  // Other utilities: gas, hydro).
+  function legendHTML(which = 'cx') {
+    const keys = ORDER.filter(k => on[k] && ((k === 'gas' || k === 'hydro') === (which === 'utility')));
     if (!keys.length) return '';
-    return `<div class="lg-t">Constraints (screening)</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area hatch${BACK.has(k) ? ' back' : ''}" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
+    return `<div class="lg-t">${which === 'utility' ? 'Other utilities (approximate)' : 'Constraints (screening)'}</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area hatch${BACK.has(k) ? ' back' : ''}" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
   }
 
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
@@ -187,7 +231,7 @@
     showLayer(b.dataset.cxShow, p && p.lat != null ? [p.lat, p.lng] : null);
   });
   if (Object.values(on).some(Boolean)) map.whenReady(() => setTimeout(render, 0));
-  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
+  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), anyOn, hitAt, drawnCount: k => drawn[k] || 0, setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelConstraints = api;
 })(typeof window !== 'undefined' ? window : globalThis);

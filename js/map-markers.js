@@ -67,12 +67,38 @@
   // Planning area outlines on the map (secondary plans / character areas, MTSAs): tap one to filter.
   // Site boundary on hover (More settings): on / off and the reach in screen pixels.
   const hov = { on: true, r: 40, ...(store.get('hoverPoly', {}) || {}) };
-  const areaOn = { sp: store.get('areaSp', false) === true, mtsa: store.get('areaMtsa', false) === true };
+  // First visit: the Planning view's preset shows the planning context (plan areas and MTSAs).
+  const firstPlanning = store.get('mapView', 'planning') === 'planning';
+  const areaOn = { sp: store.get('areaSp', firstPlanning) === true, mtsa: store.get('areaMtsa', firstPlanning) === true, pr: store.get('areaPr', false) === true };
   // Site constraint layers (js/constraints.js owns them; the switches read the saved state).
   const cxOn = { ...(store.get('cxOn', {}) || {}) };
   const CN = () => window.PeelConstraints;
-  // [key, label, colour token, area?, dashed?] in the order of the Layers list.
-  const CX_SWITCHES = [['reg', 'Regulation limits', '--cx-reg', true], ['flood', 'Floodplain', '--cx-flood', true], ['greenbelt', 'Greenbelt', '--cx-greenbelt', true], ['orm', 'Oak Ridges Moraine', '--cx-orm', true], ['nep', 'Niagara Escarpment', '--cx-nep', true], ['natural', 'PSW / ANSI', '--cx-natural', true], ['nhs', 'Natural Heritage System', '--cx-nhs', true], ['water', 'Watercourses', '--cx-water', false, false], ['gas', 'Gas pipelines (approx.)', '--cx-gas', false, true], ['hydro', 'Hydro lines (approx.)', '--cx-hydro', false, false]];
+  // The Layers panel is six groups (js/layer-groups.js). Its switches start from the saved state
+  // (the modules that own each layer may load after this one); PeelLayerGroups.sync() follows them.
+  const LG = () => window.PeelLayerGroups;
+  function initialOn() {
+    const hill = store.get('hillshade', false) === true, cx = store.get('cxOn', {}) || {}, wf = (WT() || {}).WF;
+    const m = { devs: devsOn, heat: mstyle.show === 'heat', hov: hov.on, cap: mstyle.cap !== 'off', pz: svcOn.pz, bk: svcOn.bk, dr: svcOn.dr, 'ex-water': existOn.water, 'ex-sanitary': existOn.sanitary, 'ex-storm': existOn.storm, wf: wf ? wf.on : false, dcw: dcOn.on, sp: areaOn.sp, pr: areaOn.pr, mtsa: areaOn.mtsa, da: CA().getDaOn(), hill };
+    for (const [k, v] of Object.entries(cx)) m[k] = !!v;
+    return new Set(Object.keys(m).filter(k => m[k]));
+  }
+  function layerSwatch(L0) {
+    const c = L0.color ? `var(${L0.color})` : '';
+    switch (L0.sw) {
+      case 'dev': return '<i class="dev-sw" aria-hidden="true"></i>';
+      case 'heat': return '<i class="lg-line" style="background:linear-gradient(90deg,transparent,var(--accent))"></i>';
+      case 'cap': return '<i class="lg-line" style="background:linear-gradient(90deg,var(--cap-room) 0 33%,var(--cap-tight) 33% 66%,var(--cap-over) 66%)"></i>';
+      case 'svc-pz': return svcSwatch('pz');
+      case 'svc-dr': return svcSwatch('dr');
+      case 'block': return blockSwatch;
+      case 'wf': return '<i class="wf-ic wf-pumping wf-sw" aria-hidden="true">▲</i>';
+      case 'da': return CA().daSwatch();
+      case 'area': return `<i class="lg-area" style="--c:${c}"></i>`;
+      case 'dash': return `<i class="lg-line" style="background:repeating-linear-gradient(90deg,${c} 0 6px,transparent 6px 9px)"></i>`;
+      case 'line': return `<i class="lg-line" style="background:${c}"></i>`;
+      default: return '';
+    }
+  }
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
     onAdd() {
@@ -85,20 +111,15 @@
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
         <div class="mo-area-on" id="mo-area-on" hidden></div>
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-psum" id="mo-psum"></span></summary>
-        <div class="mo-layers" role="group" aria-label="Map layers" data-info="map-layers">
-          ${[['opt-devs', devsOn, '<i class="dev-sw" aria-hidden="true"></i>', 'Developments', 'devs-toggle'],
-             ['opt-bk', svcOn.bk, blockSwatch, 'Wastewater blocks', 'blocks'],
-             ['opt-pz', svcOn.pz, svcSwatch('pz'), 'Pressure zones', 'pressure-zone'],
-             ['opt-wf', ((WT() || {}).WF || {}).on, '<i class="wf-ic wf-pumping wf-sw" aria-hidden="true">▲</i>', 'Water facilities', 'water-facilities'],
-             ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,var(--cap-room) 0 33%,var(--cap-tight) 33% 66%,var(--cap-over) 66%)"></i>', 'Capacity colours', 'map-capacity'],
-             ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:var(${EXIST_STYLE.sanitary.color})"></i>`, 'Existing pipes', 'existing-pipes'],
-             ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:var(--dc-ww-main)"></i>', 'Planned DC works', 'dc-works'],
-             ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-sp)"></i>', 'Planning areas', 'secondary-plans'],
-             // Constraint layers (js/constraints.js; screening). Gas and hydro: approximate, off by default.
-             ...CX_SWITCHES.map(([k, t, c, area, dash]) => [`opt-cx-${k}`, !!cxOn[k], area ? `<i class="lg-area" style="--c:var(${c})"></i>` : `<i class="lg-line" style="background:${dash ? `repeating-linear-gradient(90deg,var(${c}) 0 6px,transparent 6px 9px)` : `var(${c})`}"></i>`, t, `cx-${k}`]),
-             ['opt-da', CA().getDaOn(), CA().daSwatch(), '<span id="da-label">2021 census areas</span>', 'da-layer']].map(([id, on, sw, t, info]) =>
-            `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
-        <small class="cx-note" id="cx-note"></small>
+        <div class="mo-layers lg-groups" role="group" aria-label="Map layers" data-info="map-layers">
+          ${LG().panelHTML({ on: initialOn(), open: LG().getOpen(), inView: null, swatch: layerSwatch, view: (() => { const v = store.get('mapView', 'planning'); const m = MAP_VIEWS.find(x => x[0] === (v === 'servicing' ? 'water' : v)) || MAP_VIEWS[0]; return { key: m[0], label: m[1] }; })(), extra: {
+            infra: '<small id="exist-note" data-info="existing-pipes"></small>',
+            cx: '<small class="cx-note" id="cx-note"></small>',
+            base: `<label class="mo-sel" data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
+              <label class="mo-sel" data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(ML().LABEL_MODES, ML().getLabelMode())}</select></label>
+              <label class="mo-range" data-info="opt-basemap"><span>Aerial opacity</span><input type="range" id="opt-aerial" min="20" max="100" step="10" value="${Math.round(MC().getAerialOpacity() * 100)}" aria-label="Aerial photo opacity, percent"><b id="opt-aerial-v">${Math.round(MC().getAerialOpacity() * 100)}%</b></label>
+              ${MC().canRotate ? `<label class="mo-sel" data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(MC().ORIENTATIONS, MC().getOrientation())}</select></label>` : ''}`,
+          } })}
         </div>
         <div class="mo-legend" id="mo-legend" hidden><details><summary>Legend</summary><div class="lg-body"></div></details></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
@@ -109,30 +130,15 @@
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
           <label data-info="map-show"><span>Show as</span><select id="opt-mshow">${opts(MSTYLE.show, mstyle.show)}</select></label>
           <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
-          <label data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(ML().LABEL_MODES, ML().getLabelMode())}</select></label>
+          <label class="mo-range" data-info="hover-boundary"><span>Boundary reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development to outline its site, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
         </div>
         <div class="mo-sec"><div class="mo-h">Capacity colours</div>
           <label data-info="map-capacity"><span>Shade</span><select id="opt-mcap">${opts(MSTYLE.cap, mstyle.cap)}</select></label>
         </div>
         <div class="mo-sec"><div class="mo-h">Pipes and works</div>
-          <div class="mo-row" data-info="existing-pipes"><span class="mo-k">Existing</span><div class="mo-chips">${['water', 'sanitary', 'storm'].map(k => chip(`data-exist="${k}"`, existOn[k], `<i class="lg-line" style="background:var(${EXIST_STYLE[k].color})"></i>${{ water: 'Water', sanitary: 'Sanitary', storm: 'Storm' }[k]}`)).join('')}</div></div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
-          <small id="exist-note"></small>
           <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
-        </div>
-        <div class="mo-sec"><div class="mo-h">Planning areas</div>
-          <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:var(--area-sp)"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-mtsa)"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
-        </div>
-        <div class="mo-sec" data-info="hover-boundary"><div class="mo-h">Site boundary on hover</div>
-          <div class="mo-chips">${chip('id="opt-hov"', hov.on, '<i class="lg-line dash" style="background:var(--select)"></i>Show', 'hover-boundary')}</div>
-          <label class="mo-range"><span>Reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
-          <small>Point at a development to outline its application site (mouse or trackpad).</small>
-        </div>
-        <div class="mo-sec"><div class="mo-h">Base map</div>
-          <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
-          <div class="mo-chips">${chip('id="opt-hill"', store.get('hillshade', false) === true, '<i class="lg-area" style="--c:var(--text-muted)"></i>Lidar hillshade', 'hillshade')}</div>
-          ${MC().canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(MC().ORIENTATIONS, MC().getOrientation())}</select></label>` : ''}
         </div>
         </details>
         </details>
@@ -141,29 +147,17 @@
       L.DomEvent.disableScrollPropagation(el);
       el.querySelector('.mo-adv').addEventListener('toggle', e => { if (e.target.classList.contains('mo-adv')) store.set('moOpen', e.target.open); });
       // The Layers switches: one per layer, each with a sensible default for the view.
-      el.querySelector('#opt-cap').onchange = e => MA().setMapStyle({ cap: e.target.checked ? (MA().currentView() === 'water' ? 'zone' : PIPE_RESULTS ? 'pipes' : 'growth') : 'off' });
-      el.querySelector('#opt-exist').onchange = e => { const v = MA().currentView(), on = e.target.checked; MA().setExistOn(on ? { water: v !== 'wastewater', sanitary: v !== 'water', storm: false } : { water: false, sanitary: false, storm: false }); };
-      el.querySelector('#opt-dcw').onchange = e => MA().setDcOn({ on: e.target.checked, sys: MA().currentView() === 'water' ? 'water' : MA().currentView() === 'wastewater' ? 'wastewater' : (dcOn.sys || 'both') });
-      el.querySelector('#opt-plan').onchange = e => PA().setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });
-      for (const [k] of CX_SWITCHES) el.querySelector(`#opt-cx-${k}`).onchange = e => { cxOn[k] = e.target.checked; if (CN()) CN().setOn({ [k]: e.target.checked }); };
-      el.querySelector('#opt-wf').onchange = e => WT().setWfOn(e.target.checked);
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       // The legend is a section inside this panel now (not its own map box): remembered open state.
       const lgd = el.querySelector('.mo-legend details'); if (lgd) { lgd.open = store.get('legendOpen', !small); lgd.addEventListener('toggle', () => store.set('legendOpen', lgd.open)); }
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) SD().showAllDevs(); });
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) SD().clearAreaFilters(); });
-      el.querySelector('#opt-spl').onchange = e => PA().setAreaOn({ sp: e.target.checked });
-      el.querySelector('#opt-mtl').onchange = e => PA().setAreaOn({ mtsa: e.target.checked });
       el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') MA().openSavedView(+i); };
       el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = MA().savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); MA().renderSavedViews(); };
-      el.querySelector('#opt-hov').onchange = e => AS().setHov({ on: e.target.checked });
       el.querySelector('#opt-hovr').oninput = e => { AS().setHov({ r: +e.target.value }); document.querySelector('#opt-hovr-v').textContent = `${hov.r} px`; };
-      el.querySelector('#opt-hill').onchange = e => { if (window.PeelElevation) window.PeelElevation.setHillshade(e.target.checked); };
       el.querySelector('#opt-basemap').onchange = e => { MC().setBasemap(e.target.value); store.set('basemap', e.target.value); MC().setTiles(); CA().restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { ML().setLabelMode(e.target.value); store.set('labelMode', e.target.value); ML().updateLabels(); };
-      el.querySelector('#opt-da').onchange = e => CA().setDaLayer(e.target.checked);
       el.querySelector('#opt-pipelbl').onchange = e => { pipeLbl = e.target.checked; store.set('pipeLabels', pipeLbl); EP().renderExisting(); if (mstyle.cap === 'pipes') MA().renderCapLayer(); };
-      el.querySelectorAll('[data-exist]').forEach(c => { c.onchange = e => MA().setExistOn({ [e.target.dataset.exist]: e.target.checked }); });
       el.querySelector('#opt-dctiming').onclick = () => { if (typeof MP().showDcTiming === 'function') { SC().loadSewers(); MP().showDcTiming(); } };
       el.querySelectorAll('[data-dcsys]').forEach(c => { c.onchange = () => {
         const on = k => document.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
@@ -173,12 +167,11 @@
       el.querySelector('#opt-msize').onchange = e => MA().setMapStyle({ size: e.target.value });
       el.querySelector('#opt-mshow').onchange = e => MA().setMapStyle({ show: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => MA().setMapStyle({ cap: e.target.value });
-      el.querySelector('#opt-pz').onchange = e => SD().setSvcLayer('pz', e.target.checked);
-      el.querySelector('#opt-dr').onchange = e => SD().setSvcLayer('dr', e.target.checked);
-      el.querySelector('#opt-devs').onchange = e => SD().setDevsOn(e.target.checked);
-      el.querySelector('#opt-bk').onchange = e => ST().setBlocksLayer(e.target.checked);
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => MC().setOrientation(e.target.value);
+      el.querySelector('#opt-aerial').oninput = e => { MC().setAerialOpacity(+e.target.value / 100); el.querySelector('#opt-aerial-v').textContent = `${e.target.value}%`; };
+      // The group headers, group switches and every layer switch (js/layer-groups.js).
+      LG().bind(el);
       return el;
     },
   });
