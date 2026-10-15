@@ -363,14 +363,18 @@
     return list;
   }
   // Status: the event behind the current phase, signals in the status text, stalled or not.
-  // Zoning / official plan / subdivision approved, but no site plan approval yet: the site stays
-  // under review (only a site plan approval makes it Approved).
+  // Zoning approved, but no draft plan or site plan approved yet: the development stays under review.
   function planApprovedNote(p) {
+    // Zoning approved (a zoning file approved, or a zoning by-law passed at council) with no draft or
+    // site plan approved yet: the development stays under review (SPEC 1.2).
+    const z = p.zoningApproved;
+    if (z && p.rank < P.PHASE_BY_KEY.approved.rank) return `Zoning approved${z.bylaws.length ? ` (By-law ${z.bylaws.slice(0, 3).join(', ')}${z.date ? `, ${z.date}` : ''})` : z.date ? ` (${z.date})` : ''}${z.refs.length ? ` on ${z.refs.slice(0, 3).join(', ')}` : ''}; no draft plan or site plan approved yet`;
     const a = p.planApproved;
     if (!a || p.rank >= P.PHASE_BY_KEY.approved.rank) return '';
     const sp = p.records.some(r => r.kind === 'application' && r.stage === 'siteplan' && r.phase !== 'cancelled');
-    return `Zoning / official plan / subdivision approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no site plan file yet and the plan is not shown as registered'}`;
+    return `Official plan / condominium approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no draft plan or site plan approved yet'}`;
   }
+
   function statusOf(p) {
     const apps = p.records.filter(r => r.kind === 'application');
     const seen = new Map();
@@ -387,15 +391,18 @@
     const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
     const pa = planApprovedNote(p);
     const why2 = pa ? `${why}. ${esc(pa)}` : why;
-    const stalled = FI().PLANNING_PHASES.includes(p.phase) && p.last && Date.now() - p.last > 2 * FI().YEAR_MS;
-    const years = p.last ? (Date.now() - p.last) / FI().YEAR_MS : 0;
+    // SPEC 1.3: active · stalled · under appeal, on the latest file event, permit or council item.
+    const ps = P.proposedStateOf(p);
+    const stalled = !!ps && ps.state === 'stalled', appealed = !!ps && ps.state === 'appeal';
+    const lastAt = P.lastActivityOf(p);
+    const years = lastAt ? (Date.now() - lastAt) / (365.25 * 864e5) : 0;
     const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
     const sig = [...seen.values()].sort((a, b) => RANK[a.kind] - RANK[b.kind]);
     const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check the council and committee items') : '';
     // The most recently active application and its status text.
     const lastOf = r => r.events.length ? Math.max(...r.events.map(e => +e.date)) : 0;
     const latest = apps.slice().sort((a, b) => lastOf(b) - lastOf(a))[0];
-    return { sig, why: why2, stalled, years, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
+    return { sig, why: why2, stalled, appealed, state: ps ? ps.state : null, years, lastAt, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
   }
 
   const psName = a => SV().drName(a).replace(/^[^·]+· /, '');
@@ -408,7 +415,7 @@
   function devFlags(p, st, f) {
     const out = [];
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
-    if (planApprovedNote(p)) out.push(chip('Zoning approved · site plan pending'));
+    if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank) out.push(chip(`Zoning approved${p.zoningApproved.bylaws.length ? ` · By-law ${esc(p.zoningApproved.bylaws[0])}` : ''}`));
     if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
     if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
     if (f) {
@@ -478,11 +485,11 @@
     lines.push(`<strong>Water</strong> ${uLs(cb.water.maxDay)} max day, ${uLs(cb.water.peakHour)} peak hour${f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zMax ? ` (${pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of its build-out max day)` : ''}` : ' · no pressure zone'} ${estTag}`);
     const ps = f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0];
     if (f.zNear || f.dNear) lines.push(`<span class="est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'traced catchments'].filter(Boolean).join(' and ')} — assigned to: ${[f.zNear && `${esc(f.z.name.replace('Pressure zone ', 'Zone '))} (${esc(SV().nearText(f.zNear))})`, f.dNear && f.path[0] && `${esc(SV().drName(f.path[0]))} (${esc(SV().nearText(f.dNear))})`].filter(Boolean).join(', ')}. A screening estimate: the connection point comes from the FSR / master plan.</span>`);
-    lines.push(`<strong>Wastewater</strong> ${uLs(cb.wastewater.peak)} peak dry, ${uLs(cb.wastewater.wetPeak)} peak wet${ps ? ` · via ${esc(psName(ps.a))} (build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm, peak wet)` : ''} ${estTag}`);
+    lines.push(`<strong>Wastewater</strong> ${uLs(cb.wastewater.peak)} peak dry, ${uLs(cb.wastewater.wetPeak)} peak wet${cb.wastewater.infiltration > 0 ? ` <span class="muted">(${esc(D.iiText(cb.wastewater.infiltration, App().state.criteria))})</span>` : ''}${ps ? ` · via ${esc(psName(ps.a))} (build-out ≈${Math.round(ps.wet / ps.firm * 100)}% of firm, peak wet)` : ''} ${estTag}`);
     const pp = SC().pathPipes(p);
     const pipeTxt = x => `${x.p[0]} mm at <strong>${Math.round(x.r1 * 100)}%</strong> <button type="button" class="btn small link" data-pipe="${x.i}">what loads it</button>`;
     if (PIPE_RESULTS && pp && pp.worst) lines.push(`<strong>Sewer pipes</strong> (load / full capacity at ${MA().getCapYear() == null ? 'build-out' : MA().getCapYear()}): ${pp.local ? `local tightest ${pipeTxt(pp.local)}` : ''}${pp.local && pp.trunk ? ' · ' : ''}${pp.trunk ? `downstream trunk tightest ${pipeTxt(pp.trunk)}` : ''}`);
-    if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it` : ' — the plant screens over rated capacity'} ${estTag}`);
+    if (f.cap) lines.push(`<strong>${esc(f.cap.name)}</strong> uncommitted reserve ${uML(f.reserve)}${f.reserve > 0 ? ` — this development ${f.layer === 'proposed' ? 'would use' : f.layer === 'built' ? 'is in the existing flow,' : 'is committed,'} ${pctOf(f.use, f.reserve)} of it (${fmt1(f.use)} ML/d, ${esc(f.useNote)})` : ' — the plant screens over rated capacity'} ${estTag}`);
     else if (f.pl === 'Toronto') lines.push('Drains to the City of Toronto system (Malton).');
     return `${SCREEN_NOTE}<ul class="b-lines small">${lines.map(l => `<li>${l}</li>`).join('')}</ul>
       <p class="small"><button type="button" class="btn small link" data-open="dev-svc">Flows, sewer path and demand by stage</button></p>`;
@@ -505,7 +512,7 @@
   function devBriefHTML(p, st, f, part = 'overview', opts = {}) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const status = `<p class="small">${st.why}</p>
-      ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
+      ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
       ${(x => x && x.kind !== 'info' ? `<p class="small why-${x.kind}-t">${esc(x.text)} <span class="muted">· ${esc(x.files[0])}</span></p>` : '')(st.sig.find(x => x.main))}
       ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`;
     if (part === 'overview') return `<section class="brief" data-info="dev-brief">

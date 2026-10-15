@@ -105,7 +105,8 @@
     const M = App().state.svcModel, cap = M && M.plantCap(pl); if (!cap) return null;
     const rows = allocRows().filter(r => r.pl === pl), ahead = rows.filter(r => r.lay === 'proposed');
     const aheadMld = ahead.reduce((t, r) => t + r.people * cap.perPerson / 1e6, 0);
-    const lim = MP().PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
+    const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${pl}`);
+    const lim = MP().PLANT_TRIGGER * cap.rated, room = k ? k.room : lim - cap.committed;   // room to the 90% trigger (js/capacity.js)
     return { pl, cap, lim, rows, ahead, aheadMld, room, after: room - aheadMld, peopleAfter: cap.perPerson > 0 ? (room - aheadMld) * 1e6 / cap.perPerson : 0 };
   }
   function allocBoxHTML(p) {

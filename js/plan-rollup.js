@@ -164,7 +164,24 @@
     return { rows, noTarget };
   }
 
-  const api = { KEYS, placement, build, matrix, vsTarget };
+  // The part of a roll-up inside the given plans (SPEC 1.9): By plan's figure for a plan filter.
+  // A development the filter shows in full can lie partly in another plan; that part is `outside`
+  // (total − inside), so the Overview and By plan reconcile instead of disagreeing.
+  function within(r, ids) {
+    const m = zero(); let found = 0; const devs = new Set(), part = new Set();
+    for (const id of ids || []) {
+      const n = r.nodes.get(`a:${id}`); if (!n) continue; found++;
+      addInto(m, n.m, 1);
+    }
+    for (const { p, at } of r.placed) {
+      const sh = (ids || []).reduce((t, id) => t + (at.get(`a:${id}`) || 0), 0);
+      if (sh > 0) devs.add(p); if (sh > 0 && sh < 1 - 1e-9) part.add(p);
+    }
+    const total = zero(); for (const { m: x } of r.placed) addInto(total, x, 1);
+    return { found, planned: m.planned, people: m.people, outside: total.planned - m.planned, outsidePeople: total.people - m.people, straddling: part.size, devs: devs.size };
+  }
+
+  const api = { KEYS, placement, build, matrix, vsTarget, within };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanRollup = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -312,8 +312,9 @@
   function pipelineItems(projects) {
     const out = [];
     for (const p of projects || []) {
-      if (!p || p.phase === 'cancelled' || p.phase === 'completed') continue;
-      const units = p.buildout ? (p.buildout.unbuilt || 0) : (p.units || 0);
+      if (!p || p.phase === 'cancelled') continue;
+      // Unbuilt: the count less its completed units — Growth's "left to build" (SPEC 1.6).
+      const units = (P || (typeof require === 'function' ? require('./phases.js') : null)).unbuiltOf(p);
       if (!(units > 0)) continue;
       const ms = p.milestones || {};
       const ds = Object.values(ms).map(v => +v).filter(v => v > 0);
@@ -333,8 +334,10 @@
   function plantFacs() {
     const M = App().state.svcModel;
     if (!M || typeof M.plantCap !== 'function') return [];
+    // From the one capacity function (js/capacity.js, SPEC 1.4).
+    const CAP = root.PeelCapacity;
     return ['Lakeview', 'Clarkson', 'Inglewood']
-      .map(pl => M.plantCap(pl)).filter(c => c && c.rated > 0)
+      .map(pl => (CAP && CAP.of(`plant:${pl}`)) || (c => c && { ...c, buildout: c.buildout })(M.plantCap(pl))).filter(c => c && c.rated > 0)
       .map(c => ({
         name: c.name, rated: c.rated, capWord: 'rated',
         existing: c.existing,
@@ -351,9 +354,12 @@
     const sp = R.water.southPeel;
     const lake = MP().lakeZones().filter(id => MP().zLevel(SD().svcById.get(id).zone) <= 7);
     const rows = [];
-    const treat = WT().waterCapRow(M, 'South Peel treatment', lake,
+    // Treatment serves every lake-based zone (not only those up to zone 7): the one capacity function.
+    const k = root.PeelCapacity && root.PeelCapacity.of('wsys:southPeel');
+    const treat = k ? null : WT().waterCapRow(M, 'South Peel treatment', MP().lakeZones(),
       sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, '');
-    if (treat) rows.push({
+    if (k) rows.push({ name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: k.rated, capWord: 'rated', existing: k.existing, approved: k.committed - k.existing, proposed: k.buildout - k.committed });
+    else if (treat) rows.push({
       name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: treat.rated, capWord: 'rated',
       existing: treat.v[0] + treat.v[1], approved: treat.v[2], proposed: treat.v[3],
     });

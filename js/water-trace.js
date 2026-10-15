@@ -131,15 +131,22 @@
     if (level) z = viaZ && viaL === level ? viaZ : (n => n && SD().svcById.get(n.id))(near(a => MP().zLevel(a.zone) === level));
     else if (elev != null && elev > PZ_TABLE[7][2]) { z = (n => n && SD().svcById.get(n.id))(near(a => !!MP().wellSystem[a.zone])); how = 'above'; }
     if (!z) { z = viaZ || nearZ; how = how || (viaZ ? 'dc-only' : 'nearest'); }
-    const est = z ? { z, level: MP().zLevel(z.zone), elev, cand, how, via: how === 'dc' || how === 'dc-only' ? via : null } : null;
+    // SPEC 1.8: the development's one zone (SD().zoneOf: the planned main it would connect to, else the
+    // nearest zone) is the answer everywhere; the elevation band only flags another zone the ground fits.
+    const one = SD().zoneOf(p);
+    if (one && one.reason !== 'mapped') { z = one.z; how = one.reason === 'planned-main' ? 'dc-only' : 'nearest'; }
+    const est = z ? { z, level: MP().zLevel(z.zone), elev, cand, how, via: how === 'dc' || how === 'dc-only' ? (via || (one && one.via ? { via: one.via, ln: null } : null)) : null } : null;
     zoneEst.set(p, est);
     return est;
   }
   function zoneEstHTML(e) {
     if (!e) return '';
-    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level], g = e.elev != null ? `ground about ${Math.round(e.elev)} m` : 'ground elevation unavailable';
+    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level];
     const why = { dc: 'the planned DC main within 1 km feeds it', near: 'it is the nearest mapped zone in range', pressure: 'its grade line gives about 55 m of pressure', above: 'above Zone 7\'s range: the nearest groundwater system', 'dc-only': 'the zone the nearest planned DC main feeds', nearest: 'the nearest mapped zone' }[e.how] || '';
-    return `<p class="small est-line">Outside the mapped pressure zones: ${g} → <strong>${zn}</strong>${r && e.how !== 'above' ? ` (serves ${r[1]}–${r[2]} m, grade line ${r[0]} m; 2020 Master Plan, Vol. 3, Table 3)` : ''}${e.cand.length > 1 ? `; the ground is also in Zone ${e.cand.filter(n => n !== e.level).join(' / ')}'s range, ${why}` : why ? `; ${why}` : ''}${e.via ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
+    // One flag (SPEC 1.8): the assigned zone and why; the other zone(s) the ground also fits.
+    const other = e.cand.filter(n => n !== e.level);
+    const fits = e.elev == null ? '' : e.cand.length ? (other.length ? ` · ground ≈${Math.round(e.elev)} m also fits Zone ${other.join(' / ')} — <strong>pressure zone uncertain</strong>, confirm in the FSR` : ` · ground ≈${Math.round(e.elev)} m is in its range`) : ` · ground ≈${Math.round(e.elev)} m is outside its range — confirm in the FSR`;
+    return `<p class="small est-line">Outside the mapped pressure zones: assigned to <strong>${zn}</strong> (${why})${r && e.how !== 'above' ? ` <span class="muted">— serves ${r[1]}–${r[2]} m, grade line ${r[0]} m (2020 Master Plan, Vol. 3, Table 3)</span>` : ''}${fits}${e.via && (e.via.ln || e.via.via) ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
   }
   const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };
   function waterTrace(p, zidIn) {

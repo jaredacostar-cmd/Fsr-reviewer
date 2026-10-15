@@ -92,16 +92,17 @@
       tagServicing();
       renderSvcSelects();
       // Blocks are the catchments: one map chip for them (Wastewater blocks), not two.
-      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; $('#f-dr-label').textContent = 'Wastewater block'; Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); $('#f-dr-q').placeholder = 'Find a block…'; PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
+      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; { const l = $('#f-dr-label'); if (l) l.textContent = 'Wastewater block'; } Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); { const q = $('#f-dr-q'); if (q) q.placeholder = 'Find a block…'; } PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
       for (const k of ['pz', 'dr']) if (MM().svcOn[k]) setSvcLayer(k, true);
       if (MM().svcOn.bk) ST().setBlocksLayer(true);
       DI().renderDcLayer(); MA().renderLegend();
-      // A model built before the 2025 annual reports arrived has no plants: rebuild it now.
-      if (App().state.svcModel && App().state.reports) SvcTab().renderSvcTab();
+      // The model is built once the servicing lookup is filled (renderSvcTab waits for it): build it
+      // now, which also replaces one built before the 2025 annual reports arrived.
+      SvcTab().renderSvcTab();
       App().applyFilters();
       setTimeout(SC().loadSewers, 1500);
       MP().loadWaterSupply().then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });
-    } catch (e) { /* optional */ }
+    } catch (e) { console.warn('Servicing data did not load completely:', e); }   // (was silent: a missing element stopped the model, the layers and the sewers)
   }
   // A development's pressure zone and wastewater block. Outside the mapped zones / blocks: the
   // nearest one within NEAR_M of its edge, the area it would most likely connect to (greenfield
@@ -127,6 +128,11 @@
   // The development's pressure zone / drainage area ids: mapped, else (switch on) the nearest.
   const svcIds = (p, key) => (p[key] && p[key].length) ? p[key] : SvcTab().svcOpt.nr === 'on' && p[`${key}Near`] ? [p[`${key}Near`].id] : [];
   const nearOf = (p, key) => !(p[key] && p[key].length) && SvcTab().svcOpt.nr === 'on' ? p[`${key}Near`] : null;
+  // SPEC 1.8: one pressure zone per development, used everywhere (summary, supply route, reservoir
+  // check, the flag), with its reason: 'mapped' (inside a zone), 'planned-main' (the zone the planned
+  // DC main it would connect to feeds), 'nearest' (the nearest zone). The ground's elevation band is
+  // shown beside it as a flag when it fits another zone too (js/water-trace.js), never a second answer.
+  const zoneOf = p => window.PeelZoneOf.zoneOf(p, svcById);
   const kmText = m => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
   // How an outside development was assigned: through the planned main it would connect to, or by distance.
   const nearText = n => n.via ? `via planned ${n.via.y || ''} ${n.via.d ? `${n.via.d} mm ` : ''}main ${n.via.p || ''}, ${kmText(n.m)}`.replace(/\s+/g, ' ') : `nearest, ${kmText(n.m)}`;
@@ -259,8 +265,8 @@
     if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return null;
     // The same layer as the Water / Wastewater tables and the map (completed before the census = existing).
     const layer = ({ existing: 'existing', built: 'built', approved: 'approved', proposed: 'proposed' })[MM().svcLayerOf(p)] || null;
-    const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean)[0];
-    const zl = z && M.zones.get(z.id);
+    const zo = zoneOf(p), z = zo ? zo.z : null;   // (one zone everywhere, SPEC 1.8)
+    const zl = z && svcIds(p, 'pz').includes(z.id) ? M.zones.get(z.id) : null;   // its load counts in the zone when mapped or "nearest" is on
     const zMax = zl ? M.wMax(M.total(zl), M.jobs(zl)) : 0;
     let d = svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0];
     const path = []; const seen = new Set();
@@ -278,7 +284,12 @@
     });
     const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
     const devAvg = D.toMLd(cb.wastewater.avg);
-    return { M, e, cb, layer, z, zNear: nearOf(p, 'pz'), dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0 };
+    // The plant from the one capacity function (js/capacity.js, SPEC 1.4); the site's use of its
+    // reserve says its basis (SPEC 1.5): the development's flow at the plant's measured rate
+    // (calibrated) or at Peel design criteria.
+    const k = pl && window.PeelCapacity ? window.PeelCapacity.of(`plant:${pl}`) : null;
+    const useNote = cap ? (M.mode === 'calibrated' && cap.f !== 1 ? `flow at the plant's measured rate, ×${cap.f.toFixed(2)} design` : 'flow at Peel design criteria') : '';
+    return { M, e, cb, layer, z, zone: zo, zNear: zo && zo.reason !== 'mapped' ? p.pzNear : null, dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: k ? k.reserve : cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0, useNote };
   }
   // Servicing check (inside the Servicing section): the development's flows at Peel design
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
@@ -337,7 +348,7 @@
     PLANT_TOKEN, plantColor, PLANT_SHORT, PLANT_NAME, plantLabel, drName,
     svcFacts,
     svcLayers, svcById, flowRenderer, svcRenderer, loadServicing, tagAreas,
-    tagServicing, NEAR_M, svcIds, nearOf, kmText, nearText, renderSvcSelects,
+    tagServicing, NEAR_M, svcIds, nearOf, zoneOf, kmText, nearText, renderSvcSelects,
     showSvcArea, setDevsOn, setWwLay, syncWwLayers, syncPanelSum, syncAreaOn,
     clearAreaFilters, syncDevsOff, showAllDevs, devShown, setSvcLayer, spsKey,
     spsOf, spsNote, byZone, servicingCheckHTML, servicingLineHTML,

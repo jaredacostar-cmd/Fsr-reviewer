@@ -57,7 +57,11 @@
     let tree = 0, kept = 0;
     for (const p of projects) {
       if (p.unitsPrevious === undefined) p.unitsPrevious = p.units == null ? null : p.units;
+      if (p.buildoutPrevious === undefined) p.buildoutPrevious = p.buildout || null;
+      if (p.siteAreaHaPrevious === undefined) p.siteAreaHaPrevious = p.siteAreaHa == null ? null : p.siteAreaHa;
       p.units = p.unitsPrevious;
+      p.buildout = p.buildoutPrevious;
+      p.siteAreaHa = p.siteAreaHaPrevious; p.siteAreaFrom = undefined;
       p.count = { mode: 'previous', previous: p.unitsPrevious };
       if (m !== 'tree') continue;
       if (!d) { p.count.why = 'tree counts not loaded'; continue; }
@@ -67,7 +71,22 @@
       if (full && (p.records || []).some(r => r.unitsUser)) { p.count.why = 'you entered a count for one of its files'; kept++; continue; }
       if (full && e.s && sigOf(p, canonRef) !== e.s) { p.count.why = `its files differ from the tree build of ${(d.snapshotAt || '').slice(0, 10)}`; kept++; continue; }
       p.units = e.u;
-      p.count = { mode: 'tree', previous: p.unitsPrevious, trees: e.t || [], with: e.with || null };
+      p.count = { mode: 'tree', previous: p.unitsPrevious, trees: e.t || [], with: e.with || null, parts: (e.c || []).map(([ref, units, kind, source]) => ({ ref, units, kind, source: source || null })) };
+      // SPEC 1.6: one basis on every screen — the build-out's planned figure is the tree count too;
+      // permitted and completed stay what the permits say.
+      const b = p.buildoutPrevious;
+      if (b) p.buildout = { ...b, planned: p.units, remaining: Math.max(0, p.units - (b.permitted || 0)), unbuilt: Math.max(0, p.units - (b.completed || 0)) };
+      // SPEC 1.7: I&I on the land of the files being counted — the sum of their boundaries, when
+      // every one has a boundary (a block of draft plans: all of them, not the root file's land).
+      const ringsArea = opts.ringsArea || (root.PeelPhases && root.PeelPhases.ringsArea);
+      if (ringsArea && p.count.parts.length && p.records) {
+        let m2 = 0, all = true;
+        for (const x of p.count.parts) {
+          const r = x.ref && p.records.find(q => q.kind === 'application' && q.ref === x.ref && q.poly && q.poly.length);
+          if (r) m2 += ringsArea(r.poly); else { all = false; break; }
+        }
+        if (all && m2 > 0) { p.siteAreaHa = m2 / 1e4; p.siteAreaFrom = 'counted files'; }
+      }
       tree++;
     }
     return { mode: m, tree, kept };
@@ -76,14 +95,26 @@
   // Development panel: one line under the units, saying which count is shown and how it was made.
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const num = n => (n == null ? '–' : Math.round(n).toLocaleString('en-CA'));
+  // How each part of a count is known (SPEC 1.6): stated on the file, or an estimate, labelled.
+  const PART_KIND = { stated: 'stated on the file', online: 'found online', override: 'your override', condo: 'condominium count', precon: 'pre-consultation estimate', minor: 'minor file states it', estimate: 'estimate from the wording', permits: 'from building permits' };
+  const ESTIMATED = new Set(['online', 'precon', 'estimate', 'permits']);
+  // "6,289 OZS-2025-0034 (stated) + 2,929 OZS-2024-0051 (found online: …) = 9,862"
+  function partsHTML(p) {
+    const parts = p && p.count && p.count.parts; if (!parts || !parts.length) return '';
+    const row = x => `${num(x.units)} ${esc(x.ref || 'permits')} <span class="muted">(${esc(PART_KIND[x.kind] || x.kind)}${x.source ? `: ${esc(x.source)}` : ''})</span>${ESTIMATED.has(x.kind) ? ' <span class="tag">estimate</span>' : ''}`;
+    return parts.length === 1 && parts[0].kind === 'stated' ? '' : `<br>${parts.map(row).join(' + ')} = <strong>${num(p.units)}</strong>`;
+  }
+  const estimatedUnits = p => ((p && p.count && p.count.parts) || []).filter(x => ESTIMATED.has(x.kind)).reduce((t, x) => t + x.units, 0);
   function noteHTML(p, max = Infinity) {
     const c = p && p.count; if (!c) return '';
+    // A site with no units (employment only) has no count to explain (SPEC 1.9: no "Tree count · –").
+    if (!(p.units > 0) && !((c.parts || []).length) && !c.with) return '';
     if (c.mode === 'tree') {
       const more = (c.trees || []).length > max ? `<br><span class="muted">+${(c.trees || []).length - max} more trees</span>` : '';
       const parts = (c.trees || []).slice(0, max).map(([rootRef, u, basis, flag]) => `${esc(rootRef)}: ${num(u)}${flag ? ` <span class="tag">${esc(flag)}</span>` : ''} <span class="muted">(${esc(basis)})</span>`);
-      const moved = c.previous !== p.units ? ` · ${num(c.previous)} by the previous rule` : '';
+      const moved = '';   // (the previous count is shown only in Settings › Counting: SPEC 1.6)
       const withTxt = c.with ? `<br>Its files are counted in the tree of ${esc(c.with)}, a file another development holds, so they count 0 here.` : '';
-      return `<p class="small count-note" data-count="tree"><strong>Tree count</strong>${moved}${parts.length ? `<br>${parts.join('<br>')}` : ''}${more}${withTxt}</p>`;
+      return `<p class="small count-note" data-count="tree"><strong>Tree count</strong>${moved}${parts.length ? `<br>${parts.join('<br>')}` : ''}${more}${partsHTML(p)}${withTxt}</p>`;
     }
     if (mode() === 'tree' && c.why) return `<p class="small muted count-note" data-count="previous"><strong>Previous count</strong>: ${esc(c.why)}.</p>`;
     return `<p class="small muted count-note" data-count="previous"><strong>Previous count</strong> (Settings › Counting).</p>`;
@@ -99,7 +130,7 @@
   }
   const label = () => (mode() === 'tree' ? 'tree count' : 'previous count');
 
-  const api = { MODES, mode, setMode, load, setData, apply, sigOf, signature, fileKeysOf, noteHTML, settingsHTML, label, get data() { return data; } };
+  const api = { MODES, mode, setMode, load, setData, apply, sigOf, signature, fileKeysOf, noteHTML, partsHTML, estimatedUnits, PART_KIND, settingsHTML, label, get data() { return data; } };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTreeCounts = api;
 })(typeof window !== 'undefined' ? window : globalThis);

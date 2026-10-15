@@ -54,7 +54,7 @@
     if (d.pipesOff) bits.push('sewer pipes not assessed');
     else if (d.pipeMm != null) bits.push(`tightest pipe ${d.pipeMm} mm at ${d.pipePct}% of full capacity`);
     if (d.psName) bits.push(`${d.psName} ≈${d.psPct}% of firm capacity`);
-    if (d.plant) bits.push(d.over ? `${d.plant} screens over rated capacity` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it`);
+    if (d.plant) bits.push(d.over ? `${d.plant} screens over rated capacity` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it${d.useNote ? ` (${d.useNote})` : ''}`);
     return { tone: bad ? 'bad' : warn ? 'warn' : 'ok', text: bits.join(' · ') || 'No capacity flags on its path' };
   };
   const verdictDc = (d) => {
