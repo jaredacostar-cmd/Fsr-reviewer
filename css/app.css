@@ -225,6 +225,25 @@
   --on-accent: #ffffff;
 }
 
+/* Growth layers (SPEC §2): one hue, lightness = certainty; theme-independent, like the plants'
+   hues they sit beside. Hatched = estimated or anticipated; red hatch = beyond rated / firm. */
+:root {
+  --ly-existing: #3b4a5e;
+  --ly-built: #5f7fae;
+  --ly-committed: #9cc0fa;
+  --ly-proposed: #cfe0fb;
+  --ly-anticipated: #cfe0fb;
+  --ly-to2051: #cfe0fb;
+  --ly-ink: #10213a;
+  --ly-track: #3a3a37;
+  --ly-trigger: #ffffff;
+  --ly-rated: #9a998f;
+  --ly-over: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px);
+  --ly-hatch: repeating-linear-gradient(135deg, rgba(16, 33, 58, .55) 0 2px, transparent 2px 5px);
+}
+:root[data-theme="light"] { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; } }
+
 /* phase-1.5: type & spacing tokens */
 :root {
   /* Type scale: five steps only. */
@@ -341,7 +360,7 @@ body {
 .tb-scen-wrap { position: relative; }
 .tb-scen {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  max-width: 320px;
+  max-width: 520px;
   border: 1px solid var(--border);
   background: var(--surface-2);
   border-radius: 999px;
@@ -2373,3 +2392,47 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pt-matrix th[scope="row"] .btn.link, .pt-table th[scope="row"] .btn.link { white-space: normal; text-align: left; min-height: auto; }
 .pt-target td { vertical-align: top; }
 .pt-target td:nth-child(2) { min-width: 9em; max-width: 14em; }
+
+/* ---- Layer bar (js/layer-bar.js, SPEC §2): every capacity and pipeline bar ---- */
+.lybar { position: relative; height: 14px; background: var(--ly-track); border-radius: 3px; margin: 3px 0; }
+.lybar.sm { height: 8px; }
+.lybar .ly-seg { position: absolute; top: 0; bottom: 0; }
+.lybar .ly-seg:first-child { border-radius: 3px 0 0 3px; }
+.ly-existing { background: var(--ly-existing); }
+.ly-built { background: var(--ly-built); }
+.ly-committed { background: var(--ly-committed); }
+.ly-proposed { background: var(--ly-proposed); }
+.ly-anticipated { background: var(--ly-hatch), var(--ly-anticipated); opacity: .85; }
+.ly-to2051 { background: transparent; outline: 1px dashed var(--ly-to2051); outline-offset: -1px; }
+.lybar .ly-est { position: absolute; top: 0; bottom: 0; background: var(--ly-hatch); pointer-events: none; }
+.lybar .ly-over { position: absolute; top: 0; bottom: 0; background: var(--ly-over); border-radius: 0 3px 3px 0; pointer-events: none; }
+.lybar .ly-tick { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ly-trigger); pointer-events: none; }
+.lybar .ly-tick.ly-rated { width: 1px; background: var(--ly-rated); }
+.ly-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: var(--fs-1); color: var(--text-secondary); }
+.ly-legend .ly-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 4px; }
+.ly-legend .ly-sw.ly-tick-sw { width: 2px; background: var(--ly-trigger); }
+.ly-legend .ly-sw.ly-rated-sw { width: 1px; background: var(--ly-rated); }
+.ly-legend .ly-sw.ly-over-sw { background: var(--ly-over); }
+.ly-legend .ly-sw.ly-est-sw { background: var(--ly-hatch), var(--ly-proposed); }
+.ly-legend b { font-variant-numeric: tabular-nums; font-weight: 500; color: var(--text-primary); }
+.ly-badge { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ly-badge .ly-pill { border-radius: 999px; padding: 1px 8px; font-size: var(--fs-1); color: var(--ly-ink); }
+.ly-badge .ly-arrow { color: var(--text-muted); }
+.ly-name { white-space: nowrap; }
+.ly-name::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; background: var(--ly-c, var(--ly-proposed)); }
+
+/* Scenario chip (SPEC §2): the layers counted, as toggles in the layer swatches, then the settings. */
+.tb-scen { cursor: default; }
+.scen-chip-row { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.tb-scen .sc-ly { display: inline-flex; align-items: center; gap: 3px; padding: 1px 5px; border-radius: 999px; border: 1px solid transparent; background: none; color: var(--text-muted); font-size: var(--fs-1); cursor: default; }
+.tb-scen button.sc-ly { cursor: pointer; }
+.tb-scen .sc-ly .ly-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; opacity: .35; }
+.tb-scen .sc-ly.on { color: var(--text-primary); }
+.tb-scen .sc-ly.on .ly-sw { opacity: 1; }
+.tb-scen button.sc-ly:hover { border-color: var(--accent); }
+.tb-scen .sc-what { font-size: var(--fs-1); color: var(--text-muted); margin: 0 4px; white-space: nowrap; }
+.tb-scen .sc-more { display: inline-flex; align-items: center; min-width: 0; gap: 2px; border: 0; background: none; color: var(--text-secondary); font-size: var(--fs-1); cursor: pointer; padding: 0 2px; }
+.tb-scen .sc-more:hover { color: var(--text-primary); }
+@media (max-width: 1100px) { .tb-scen .sc-l, .tb-scen .sc-what { display: none; } }
+/* The footer scenario line is gone: the panel opens from the chip (SPEC §2, §4). */
+.footer > .scen-bar { display: none; }

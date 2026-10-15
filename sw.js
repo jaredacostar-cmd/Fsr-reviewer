@@ -119,6 +119,8 @@ const SHELL_ASSETS = [
   'js/util.js',
   'js/water-tab.js',
   'js/zone-of.js',
+  'js/layers.js',
+  'js/layer-bar.js',
   'js/water-trace.js'
 ];
 

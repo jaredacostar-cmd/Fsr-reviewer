@@ -65,7 +65,7 @@
       if (q.get('pl') && SD().PLANT_SHORT[q.get('pl')]) App().state.plant = q.get('pl');
       if (q.get('dw') && ['single', 'town', 'apartment'].includes(q.get('dw'))) App().state.dwelling = q.get('dw');
       if (q.get('lu') && ['all', 'growth', 'residential', 'mixed', 'employment'].includes(q.get('lu'))) App().state.landuse = q.get('lu');
-      if (q.get('basis') && ['all', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
+      if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';
       App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr'); App().state.ss = q.get('ss') || null;

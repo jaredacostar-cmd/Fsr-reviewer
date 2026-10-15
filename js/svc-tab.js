@@ -100,7 +100,7 @@
   // on the tabs, the map legend, the exports and share links.
   function scenarioText() {
     const R = App().state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
-    const basisTxt = { all: 'All units', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
+    const basisTxt = { all: 'All units', buildout: 'Units applied for (no anticipated)', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, Sett().wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, App().state.dcInfra ? `plant expansions ${SP().hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
       `counting: ${basisTxt}${window.PeelTreeCounts ? ` (${window.PeelTreeCounts.label()})` : ''}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
@@ -130,10 +130,9 @@
       <table class="dt"><thead><tr><th>Plant</th><th>Existing + committed A</th><th>Now</th><th>Δ pts</th><th>Build-out A</th><th>Now</th><th>Δ pts</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="small">Pumping stations over firm capacity at build-out: A ${over(A)} → now ${over(B)}${changed.length ? ` (changed: ${changed.map(a => esc(SD().drName(a).replace(/^[^·]+· /, ''))).join(', ')})` : ''}. Water max day at build-out, all zones: A ${fmt1(zA)} → now ${fmt1(zB)} ML/d.</p></div>`;
   }
-  const scenarioChip = () => `<button type="button" class="chip scen-chip" data-open-scen="1" title="Change the scenario">Scenario: ${esc(scenarioText())}</button>`;
   // Counting basis: which of each project's units the demand counts. It changes the math,
   // so it lives in the Scenario control, not the filter panel.
-  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
+  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['buildout', 'Applied for'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
     `<button type="button" class="btn small${App().state.basis === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${App().state.basis === v}">${t}</button>`).join('')}</div>`;
   // Results for year: the year the capacity colours, pipe loads and station loads are worked
   // out for — the census year, this year through the horizon end, or build-out (null).
@@ -154,7 +153,7 @@
     const el = $('#scen-bar'); if (!el) return;
     const R = App().state.reports, c = App().state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion;
     const open = el.querySelector('details') && el.querySelector('details').open;
-    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t" data-scen-t>${esc(scenarioText())}</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
+    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario settings</span> <span class="muted small">(the chip above shows the scenario)</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
       <div class="svc-switches">
         ${basisSwitch()}
         ${yearSelect()}
@@ -293,8 +292,7 @@
     const bar = $('#scen-bar'); if (!bar) return;
     const line = bar.querySelector('[data-scen-crit]');
     if (line) line.innerHTML = scenCritLineHTML();
-    const sum = bar.querySelector('[data-scen-t]');
-    if (sum) sum.innerHTML = esc(scenarioText());
+    TB().renderTbScen();
   }
   // ---- Plain-language headlines: one sentence at the top of each tab, written from the numbers.
   function setHeadline(el, html) {
@@ -529,7 +527,7 @@
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return TS().filterInView(); }
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
     if (b.dataset.svcopt === 'basis') {
-      if (!['all', 'committed', 'remaining'].includes(b.dataset.v)) return;
+      if (!['all', 'buildout', 'committed', 'remaining'].includes(b.dataset.v)) return;
       App().state.basis = b.dataset.v; store.set('svcBasis', App().state.basis);
       renderSvcTab(); App().applyFilters(); Sh().viewLink.write();
       return;

@@ -91,12 +91,22 @@
   // a popover that holds the real #scen-bar node (moved, not duplicated); closing
   // puts the node back where it was. renderScenario() calls renderTbScen(), so the
   // chip follows every scenario change.
-  const BASIS_SHORT = { all: 'all units', committed: 'committed units', remaining: 'units left to build' };
+  const BASIS_SHORT = { all: 'all units', buildout: 'units applied for', committed: 'committed units', remaining: 'units left to build' };
   function renderTbScen() {
     const chip = $('#tb-scen'); if (!chip) return;
-    const n = SvcTab().criteriaChanges().length;
-    const txt = ['Scenario', SvcTab().svcOpt.ww === 'calibrated' ? 'calibrated (2025 flows)' : 'design flows', n ? `${n} criteria modified` : 'Peel criteria', `counting ${BASIS_SHORT[App().state.basis] || 'all units'}${root.PeelTreeCounts ? ` (${root.PeelTreeCounts.label()})` : ''}`].join(' · ');
-    chip.innerHTML = `<span class="tb-scen-t">${esc(txt)}</span>${n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : ''}`;
+    // The scenario chip (SPEC §2): the layers counted, then the settings; the one place the
+    // scenario is shown (the footer line is gone).
+    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants;
+    const open = !$('#tb-scen-pop').hidden;
+    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({
+      basis: App().state.basis,
+      flows: o.ww === 'calibrated' ? '2025 metered' : 'design',
+      criteria: n ? `${n} modified` : 'Peel v2.0',
+      count: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree',
+      expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
+      outside: o.nr === 'on' ? 'nearest' : 'left out',
+    }) + (n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : '');
+    const more = chip.querySelector('[data-scen-open]'); if (more) more.setAttribute('aria-expanded', String(open));
   }
   let scenHome = null;
   function openScenPop() {
@@ -104,16 +114,24 @@
     if (!scenHome) { scenHome = document.createComment('scen-bar home'); bar.replaceWith(scenHome); }
     if (bar.parentNode !== pop) pop.appendChild(bar);
     pop.hidden = false;
-    $('#tb-scen').setAttribute('aria-expanded', 'true');
+    { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'true'); }
     SvcTab().renderScenario();
   }
   function closeScenPop() {
     const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop || pop.hidden) return;
     pop.hidden = true;
-    $('#tb-scen').setAttribute('aria-expanded', 'false');
+    { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'false'); }
     if (scenHome && scenHome.parentNode) { scenHome.parentNode.replaceChild(bar, scenHome); scenHome = null; }
   }
-  $('#tb-scen').addEventListener('click', () => { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); });
+  $('#tb-scen').addEventListener('click', e => {
+    const ly = e.target.closest('[data-scen-layer]');
+    if (ly) {
+      const next = root.PeelLayerBar.nextBasis(App().state.basis, ly.dataset.scenLayer);
+      if (next !== App().state.basis) { App().state.basis = next; store.set('svcBasis', next); SvcTab().renderSvcTab(); App().applyFilters(); SvcTab().renderScenario(); if (root.PeelShare) root.PeelShare.viewLink.write(); }
+      return;
+    }
+    if (e.target.closest('[data-scen-open]')) { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); }
+  });
 
   // Menus. Items carrying data-export / data-share / data-area-report are handled by
   // the existing document-level handlers; the rest use data-tbx (export) / data-tbg

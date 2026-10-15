@@ -62,7 +62,7 @@
   }
 
   const n0 = v => fmtNum(Math.round(v));
-  const BASIS = { all: 'all units', committed: 'committed units', remaining: 'units left to build' };
+  const BASIS = { all: 'all units', buildout: 'units applied for (no anticipated)', committed: 'committed units', remaining: 'units left to build' };
   const KIND = { subplan: 'sub-area', precinct: 'precinct' };
   function checkCell(n) {
     if (!n.children.length) return '<td class="num muted">–</td>';
