@@ -43,13 +43,13 @@ async function req(url, { timeout = 30000, headers = {}, method = 'GET' } = {}) 
 const getJ = async url => { const r = await req(url); return r.json ? Object.assign(r.json, { _cors: r.headers['access-control-allow-origin'], _status: r.status }) : { _status: r.status, _error: r.error || r.text, _cors: r.headers['access-control-allow-origin'] }; };
 const env = { geometry: `${PEEL.xmin},${PEEL.ymin},${PEEL.xmax},${PEEL.ymax}`, geometryType: 'esriGeometryEnvelope', inSR: 4326, spatialRel: 'esriSpatialRelIntersects' };
 
-// ArcGIS items: title, owner, licence text, credits, modified, url.
+// ArcGIS items: title, licence text, credits, modified, url (not the owner: account names can be personal).
 async function items(query, num = 20) {
   const r = await getJ(`${SHARING}/search?${q({ q: query, num, f: 'json' })}`);
   const list = [];
   for (const it of r.results || []) {
     const d = await getJ(`${SHARING}/content/items/${it.id}?f=json`);
-    list.push({ id: it.id, title: it.title, type: it.type, owner: it.owner, url: it.url || null, modified: it.modified ? new Date(it.modified).toISOString().slice(0, 10) : null,
+    list.push({ id: it.id, title: it.title, type: it.type, url: it.url || null, modified: it.modified ? new Date(it.modified).toISOString().slice(0, 10) : null,
       licence: strip(d.licenseInfo || it.licenseInfo).slice(0, 600) || null, credits: strip(d.accessInformation || it.accessInformation).slice(0, 300) || null,
       snippet: strip(it.snippet).slice(0, 200) || null, extent: it.extent || null });
   }
@@ -87,7 +87,7 @@ async function lio(id, re, max = 6) {
 async function arc(id, query, re, max = 6) {
   const list = await items(query, 25);
   for (const it of list.filter(x => !re || re.test(x.title)).slice(0, max)) {
-    const entry = { source: 'ArcGIS item', title: it.title, owner: it.owner, itemType: it.type, modified: it.modified, licence: it.licence, credits: it.credits, url: it.url };
+    const entry = { source: 'ArcGIS item', title: it.title, itemType: it.type, modified: it.modified, licence: it.licence, credits: it.credits, url: it.url };
     if (it.url && /Feature Service|Map Service/.test(it.type)) {
       const svc = await getJ(`${it.url}?f=json`);
       const ls = svc.layers ? svc.layers.slice(0, 4).map(l => `${it.url.replace(/\/$/, '')}/${l.id}`) : [it.url];

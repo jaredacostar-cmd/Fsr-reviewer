@@ -1,222 +1,193 @@
-/* Site constraint layers (PeelConstraints): gas pipelines, hydro (transmission) lines,
- * watercourses and conservation authority regulation limits, each a map toggle.
+/* Site constraint layers (PeelConstraints): one map switch per layer, drawn from the built files in
+ * data/constraints/ (scripts/build-constraints.js, rebuilt in Actions; source, owner, licence and
+ * as-of date of each in data/constraints/manifest.json). Nothing loads until a layer is switched on.
  *
- * Live from public services, drawn from the zoom each layer needs, fetched by ~2 km tile and
- * cached (like the existing pipes):
- *  - gas, hydro: the province's Utility Line layer (Land Information Ontario); OpenStreetMap
- *    when that service doesn't answer.
- *  - watercourses: the Region of Peel's watercourses (named, with watershed and conservation
- *    authority), then the Ontario Hydro Network (LIO) where Peel has none (a provincial line along
- *    a Peel one is dropped: one line per stream); OpenStreetMap as the fallback. The measure
- *    tool reads them too, for the watercourses a line crosses.
- *  - regulation limits: each conservation authority covering Peel that publishes its limit
- *    (Ontario Regulation 41/24). Screening only: the authority confirms what is regulated.
+ *  - Regulation limits (CVC, TRCA), floodplain (CVC regulatory floodlines; TRCA generalized, with
+ *    TRCA's disclaimer), Greenbelt, Oak Ridges Moraine, Niagara Escarpment, PSW / ANSI, the
+ *    Growth Plan Natural Heritage System, watercourses (Region of Peel, then the Ontario Hydro
+ *    Network where Peel maps none), gas pipelines and hydro lines (approximate; off by default).
+ *  - Area layers draw from one coarse overview file below zoom 13 and from 0.02° tiles above it.
+ *  - Click a feature: its card (name, type, owner, as-of date, source, screening note).
+ * Screening only: the conservation authority or province confirms; nothing here is a determination.
  */
 (function (root) {
   'use strict';
   const { $, esc, store, token } = window.PeelUtil;
-  const A = window.PeelArcGIS;
   const map = window.PeelMapCore.map;
+  const G = root.PeelConstraintGeo;
+  const CX = () => root.PeelCxData;
   const MA = () => root.PeelMapAnalysis;
   const SD = () => root.PeelSvcData;
+  const SS = () => root.PeelSvcScope;
 
-  const LIO = 'https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA';
-  const UTIL_LINE = `${LIO}/LIO_Open05/MapServer/11`;
-  // A field that may be named differently in each source: the first one present.
-  const pick = (p, ...ks) => { for (const k of ks) { const v = p[k] ?? p[k.toUpperCase()] ?? p[k.toLowerCase()]; if (v != null && String(v).trim() !== '') return String(v).trim(); } return ''; };
-  // The province's Utility Line type (CLASS_SUBTYPE), e.g. "Unknown Pipeline", "Unknown Transmission Line".
-  const utilType = p => pick(p, 'CLASS_SUBTYPE', 'UTILITY_LINE_TYPE', 'TYPE');
-
-  // Peel's watercourse layer names the conservation authority by its initials.
-  const CA_NAME = { CVC: 'Credit Valley Conservation', TRCA: 'Toronto and Region Conservation', HRCA: 'Conservation Halton', NVCA: 'Nottawasaga Valley Conservation' };
+  const SCREEN = 'Screening only: the owner confirms.';
+  const isGas = lab => /(^|· )gas( |$)/.test(lab[1] || '') || /pipeline/i.test(lab[0] || '');
   const LAYERS = {
-    gas: {
-      label: 'Gas pipelines', short: 'gas', color: '--cx-gas', minZoom: 11, area: false, dash: '9 5', weight: 2.5,
-      // Peel's pipelines are recorded as "Unknown Pipeline" (product not given): the gas and oil
-      // transmission pipelines; water pipelines are excluded.
-      sources: [{ url: UTIL_LINE, f: 'CLASS_SUBTYPE,LOCATION_DESCR,LOCATION_ACCURACY', src: 'Land Information Ontario (Utility Line)', keep: p => /pipeline/i.test(utilType(p)) && !/water|sewer/i.test(utilType(p)), name: p => [/unknown pipeline/i.test(utilType(p)) ? 'Pipeline (gas or oil; product not recorded)' : utilType(p), pick(p, 'LOCATION_DESCR'), pick(p, 'LOCATION_ACCURACY') && `located ${pick(p, 'LOCATION_ACCURACY').toLowerCase()}`].filter(Boolean).join(' · ') }],
-      osm: 'way["man_made"="pipeline"]["substance"~"gas|oil|fuel",i]', osmName: t => [t.substance && `${t.substance} pipeline`, t.operator, t.name].filter(Boolean).join(' · '),
-      note: 'Major pipelines only: local gas mains are not published. Call Ontario One Call before digging.',
-    },
-    hydro: {
-      label: 'Hydro lines', short: 'hydro', color: '--cx-hydro', minZoom: 11, area: false, dash: null, weight: 2.5,
-      sources: [{ url: UTIL_LINE, f: 'CLASS_SUBTYPE,LOCATION_DESCR,LOCATION_ACCURACY', src: 'Land Information Ontario (Utility Line)', keep: p => /transmission line|hydro|electric|power/i.test(utilType(p)) && !/communication|pipeline/i.test(utilType(p)), name: p => [/unknown transmission/i.test(utilType(p)) ? 'Transmission line' : utilType(p), pick(p, 'LOCATION_DESCR'), pick(p, 'LOCATION_ACCURACY') && `located ${pick(p, 'LOCATION_ACCURACY').toLowerCase()}`].filter(Boolean).join(' · ') }],
-      osm: 'way["power"~"^(line|minor_line|cable)$"]', osmName: t => [t.power === 'line' ? 'Transmission line' : t.power === 'cable' ? 'Power cable' : 'Power line', t.voltage && `${Math.round(+String(t.voltage).split(';')[0] / 1000) || t.voltage} kV`, t.operator].filter(Boolean).join(' · '),
-      note: 'Transmission and major distribution lines. Corridors carry easements: check with the utility.',
-    },
-    water: {
-      label: 'Watercourses', short: 'watercourses', color: '--cx-water', minZoom: 12, area: false, dash: null, weight: 2,
-      // "Virtual Flow" / "Virtual Connector" lines carry the network through lakes and ponds: not drawn.
-      sources: [
-        { url: 'https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Watercourses/FeatureServer/0', f: 'RIVER_NAME,WATERSHED,SUBWATSHED,AUTHORITY,Type,Tunnel', src: 'Region of Peel watercourses', peel: true, keep: () => true,
-          name: p => [pick(p, 'RIVER_NAME'), /^y|tunnel|pipe/i.test(pick(p, 'Tunnel')) && 'piped', pick(p, 'WATERSHED') && pick(p, 'WATERSHED') !== pick(p, 'RIVER_NAME') && `${pick(p, 'WATERSHED')} watershed`, CA_NAME[pick(p, 'AUTHORITY')] || pick(p, 'AUTHORITY')].filter(Boolean).join(' · ') },
-        { url: `${LIO}/LIO_Open01/MapServer/26`, f: 'WATERCOURSE_TYPE,OFFICIAL_NAME_LABEL,PERMANENCY', src: 'Ontario Hydro Network (LIO)', keep: p => !/^virtual/i.test(pick(p, 'WATERCOURSE_TYPE')), name: p => [pick(p, 'OFFICIAL_NAME_LABEL'), /intermittent/i.test(pick(p, 'PERMANENCY')) && 'intermittent'].filter(Boolean).join(' · ') },
-      ],
-      osm: 'way["waterway"~"^(river|stream|canal|drain|ditch|brook)$"]', osmName: t => t.name || '',
-      note: 'Region of Peel watercourses (with their watershed and conservation authority), and the Ontario Hydro Network (1:10,000) where Peel maps none: small and piped watercourses may be missing.',
-    },
-    reg: {
-      label: 'Regulation limits', short: 'regulation limits', color: '--cx-reg', minZoom: 12, area: true, dash: '6 4', weight: 1.6,
-      sources: [
-        { url: 'https://services1.arcgis.com/d0ZCwU7eGKVeNiEE/ArcGIS/rest/services/TRCA_Regulation_Limit2/FeatureServer/0', f: 'OBJECTID', src: 'Toronto and Region Conservation Authority (2025)', keep: () => true, name: () => 'TRCA regulated area' },
-        // CVC publishes its limit as one ~12 MB polygon, so it is cut into tiles at build time
-        // (scripts/build-regulation.js) and served with the site.
-        { url: 'data/regulation/cvc/', tiled: true, src: 'Credit Valley Conservation (2025)', keep: () => true, name: () => 'CVC regulated area' },
-      ],
-      note: 'Conservation authority regulated areas (O. Reg. 41/24). Screening only: the authority confirms the limit, and a feature need not be mapped to be regulated.',
-    },
+    reg: { label: 'Regulation limits', short: 'regulation limits', color: '--cx-reg', ids: ['reg-cvc', 'reg-trca'], area: true, dash: '6 4', weight: 1.6,
+      note: `Conservation authority regulated areas (O. Reg. 41/24): CVC and TRCA. ${SCREEN} A feature need not be mapped to be regulated; NVCA and Conservation Halton publish no open layer.` },
+    flood: { label: 'Floodplain', short: 'floodplain', color: '--cx-flood', ids: ['flood-cvc', 'flood-trca'], area: true, dash: null, weight: 1.2,
+      note: `CVC regulatory floodlines; TRCA generalized floodplain (TRCA: not a regulatory flood plain map; contact TRCA for the precise limit). ${SCREEN}` },
+    greenbelt: { label: 'Greenbelt', short: 'Greenbelt', color: '--cx-greenbelt', ids: ['greenbelt'], area: true, dash: '2 3', weight: 1.2, note: `Greenbelt Plan designations (province). ${SCREEN}` },
+    orm: { label: 'Oak Ridges Moraine', short: 'Oak Ridges Moraine', color: '--cx-orm', ids: ['orm'], area: true, dash: '2 3', weight: 1.2, note: `Oak Ridges Moraine Conservation Plan designations (province). ${SCREEN}` },
+    nep: { label: 'Niagara Escarpment', short: 'Niagara Escarpment', color: '--cx-nep', ids: ['nep'], area: true, dash: '2 3', weight: 1.2, note: `Niagara Escarpment Plan designations. ${SCREEN}` },
+    natural: { label: 'PSW / ANSI', short: 'PSW / ANSI', color: '--cx-natural', ids: ['psw', 'ansi'], area: true, dash: null, weight: 1.2, note: `Provincially significant wetlands (evaluated) and areas of natural and scientific interest (province). ${SCREEN}` },
+    nhs: { label: 'Natural Heritage System', short: 'Natural Heritage System', color: '--cx-nhs', ids: ['nhs'], area: true, dash: '4 3', weight: 1.2, note: `The Growth Plan's Natural Heritage System (province), outside settlement areas. ${SCREEN}` },
+    water: { label: 'Watercourses', short: 'watercourses', color: '--cx-water', ids: ['wc-peel', 'wc-ohn'], area: false, dash: null, weight: 2, minZoom: 12,
+      note: 'Region of Peel watercourses (watershed and conservation authority), and the Ontario Hydro Network (1:10,000) where Peel maps none: small and piped watercourses may be missing.' },
+    gas: { label: 'Gas pipelines', short: 'gas', color: '--cx-gas', ids: ['utility'], keep: isGas, area: false, dash: '9 5', weight: 2.5, minZoom: 11,
+      note: 'Approximate location (Land Information Ontario); call Ontario One Call before any work. Major pipelines only: local gas mains are not published.' },
+    hydro: { label: 'Hydro lines', short: 'hydro', color: '--cx-hydro', ids: ['utility'], keep: lab => !isGas(lab), area: false, dash: null, weight: 2.5, minZoom: 11,
+      note: 'Approximate location (Land Information Ontario); call Ontario One Call before any work. Transmission lines; corridors carry easements.' },
   };
+  const ORDER = ['nhs', 'greenbelt', 'orm', 'nep', 'reg', 'flood', 'natural', 'water', 'gas', 'hydro'];
+  const TILE_ZOOM = 13, MAX_TILES = 90;
+  // Constraint areas are hatched, not solid: they must not read as phase, layer or capacity colours
+  // (SPEC §0 two ladders; Stage 3 colours). One small pattern per colour, ≤ 25% ink.
+  const HATCH = new Map();
+  function hatch(col, back) {
+    const k = `${col}|${back ? 1 : 0}`; if (HATCH.has(k)) return HATCH.get(k);
+    let pat = col;
+    try {
+      const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d');
+      g.strokeStyle = col; g.lineWidth = 1.4; g.globalAlpha = 0.9;
+      g.beginPath(); if (back) { g.moveTo(0, 0); g.lineTo(8, 8); g.moveTo(-4, 4); g.lineTo(4, 12); g.moveTo(4, -4); g.lineTo(12, 4); } else { g.moveTo(0, 8); g.lineTo(8, 0); g.moveTo(-4, 4); g.lineTo(4, -4); g.moveTo(4, 12); g.lineTo(12, 4); } g.stroke();
+      pat = g.createPattern(c, 'repeat') || col;
+    } catch (e) { /* no canvas: solid */ }
+    HATCH.set(k, pat); return pat;
+  }
+  // Plans and the heritage system hatch the other way from the hazard layers.
+  const BACK = new Set(['greenbelt', 'orm', 'nep', 'nhs']);
 
-  const on = { gas: false, hydro: false, water: false, reg: false, ...(store.get('cxOn', {}) || {}) };
+  const on = Object.fromEntries(Object.keys(LAYERS).map(k => [k, false]));
+  Object.assign(on, Object.fromEntries(Object.entries(store.get('cxOn', {}) || {}).filter(([k]) => k in on)));
   map.createPane('cxPane', map.getPane('rotatePane') || undefined).style.zIndex = 352;
   const renderer = L.canvas({ pane: 'cxPane', padding: 0.3 });
   const layer = L.layerGroup().addTo(map);
-  const TILE = 0.02, MAX_TILES = 30;
-  const cache = new Map();          // `${key}|${src}|${tile}` -> Promise<[{ g, name, src }]>
-  const failed = new Set();         // sources that didn't answer this session -> use OSM
-  const status = {};                // layer key -> 'ok' | 'osm' | 'none'
+  const status = {};   // layer key -> 'ok' | 'none'
 
-  const linesOf = geom => !geom ? [] : geom.type === 'MultiLineString' ? geom.coordinates : geom.type === 'LineString' ? [geom.coordinates] : geom.type === 'Polygon' ? geom.coordinates : geom.type === 'MultiPolygon' ? geom.coordinates.flat() : [];
-  // Pre-built tiles: an index of the tiles that hold anything, then one file per tile with the
-  // clipped fill (no outline) and the limit's own edges.
-  const tileIndex = new Map();
-  async function builtTile(S, i, tx, ty) {
-    if (!tileIndex.has(S.url)) tileIndex.set(S.url, fetch(`${S.url}index.json`).then(r => r.ok ? r.json() : Promise.reject(new Error(r.status))).then(j => new Set(j.tiles)));
-    const have = await tileIndex.get(S.url);
-    if (!have.has(`${tx}_${ty}`)) return [];
-    const t = await (await fetch(`${S.url}${tx}_${ty}.json`)).json();
-    // Points are 0.00001° steps from the tile's south-west corner.
-    const dec = l => l.map(([dx, dy]) => [tx * TILE + dx / 1e5, ty * TILE + dy / 1e5]);
-    t.f = (t.f || []).map(dec); t.e = (t.e || []).map(dec);
-    return [
-      ...(t.f && t.f.length ? [{ id: `${i}|${tx}_${ty}|f`, rings: t.f, poly: true, fillOnly: true, name: S.name({}), src: S.src }] : []),
-      ...(t.e && t.e.length ? [{ id: `${i}|${tx}_${ty}|e`, rings: t.e, poly: false, name: S.name({}), src: S.src }] : []),
-    ];
+  // ---- Loading ----------------------------------------------------------------------------------
+  const overviews = new Map();
+  function overview(id) {
+    if (!overviews.has(id)) overviews.set(id, Promise.all([fetch(`${CX().BASE}${id}/overview.json`).then(r => r.ok ? r.json() : null).catch(() => null), CX().index(id)]).then(([o, ix]) => o ? o.p.map(([li, rings]) => ({ label: ix.labels[li] || ['', ''], polys: [rings.map(r => r.map(([x, y]) => [x / o.units, y / o.units]))] })) : null));
+    return overviews.get(id);
   }
-  async function arcTile(key, i, tx, ty) {
-    const S = LAYERS[key].sources[i], ck = `${key}|${i}|${tx},${ty}`;
-    if (cache.has(ck)) return cache.get(ck);
-    if (S.tiled) { const pr = builtTile(S, i, tx, ty); cache.set(ck, pr); pr.catch(() => { cache.delete(ck); tileIndex.delete(S.url); }); return pr; }
-    const pr = (async () => {
-      const info = await A.layerInfo(S.url);
-      const bbox = { xmin: tx * TILE, ymin: ty * TILE, xmax: (tx + 1) * TILE, ymax: (ty + 1) * TILE };
-      const { features } = await A.queryAll(S.url, info, { bbox, max: 3000, outFields: S.f || '*' });
-      return features.filter(f => f.geometry && S.keep(f.properties || {})).map(f => ({ id: `${i}|${f.id ?? JSON.stringify(linesOf(f.geometry)[0]?.[0])}`, rings: linesOf(f.geometry), poly: /Polygon/.test(f.geometry.type), name: S.name(f.properties || {}), src: S.src }));
-    })();
-    cache.set(ck, pr); pr.catch(() => { cache.delete(ck); failed.add(S.url); });
-    return pr;
-  }
-  async function osmTile(key, tx, ty) {
-    const ck = `${key}|osm|${tx},${ty}`;
-    if (cache.has(ck)) return cache.get(ck);
-    const L0 = LAYERS[key], bb = `${ty * TILE},${tx * TILE},${(ty + 1) * TILE},${(tx + 1) * TILE}`;
-    const pr = (async () => {
-      const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(`[out:json][timeout:25];${L0.osm}(${bb});out geom tags;`), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
-      const j = await r.json();
-      return (j.elements || []).filter(e => e.geometry).map(e => ({ id: `osm|${e.id}`, rings: [e.geometry.map(q => [q.lon, q.lat])], poly: false, name: L0.osmName(e.tags || {}), src: 'OpenStreetMap' }));
-    })();
-    cache.set(ck, pr); pr.catch(() => cache.delete(ck));
-    return pr;
-  }
-  // Features of one layer on one tile: its published sources, or OpenStreetMap where they failed.
-  async function tileFeatures(key, tx, ty) {
-    const L0 = LAYERS[key];
-    const res = await Promise.all(L0.sources.map((S, i) => failed.has(S.url) ? null : arcTile(key, i, tx, ty).catch(() => null)));
-    let got = res.filter(Boolean).flat();
-    // Two sources for one stream (Peel's line and the province's): keep Peel's.
-    const peelI = L0.sources.findIndex(S => S.peel);
-    if (peelI >= 0 && res[peelI] && res[peelI].length) got = onePerStream(got, res[peelI]);
-    if (res.some(r => r) || !L0.osm) { status[key] = res.some(r => r) ? 'ok' : 'none'; return got; }
-    status[key] = 'osm';
-    return osmTile(key, tx, ty).catch(() => { status[key] = 'none'; return []; });
-  }
-  // Drop the lines that run along one of the primary (Peel) lines: most of their points within
-  // ~25 m of it. A grid of the primary lines' segments keeps this quick.
+  const viewTiles = b => { const t = []; for (let tx = Math.floor(b.getWest() / G.TILE); tx <= Math.floor(b.getEast() / G.TILE); tx++) for (let ty = Math.floor(b.getSouth() / G.TILE); ty <= Math.floor(b.getNorth() / G.TILE); ty++) t.push([tx, ty]); return t; };
+  // The tiles of a dataset in view that exist (the index lists them).
+  async function tilesInView(id, b) { const ix = await CX().index(id); return viewTiles(b).filter(([tx, ty]) => ix._have.has(G.tileKey(tx, ty))); }
+
+  // Drop OHN lines that run along a Region of Peel line (most points within ~25 m): one line per stream.
   function onePerStream(all, primary) {
     const CELL = 0.0005, grid = new Map(), add = (k, s) => { if (!grid.has(k)) grid.set(k, []); grid.get(k).push(s); };
-    for (const f of primary) for (const r of f.rings) for (let i = 1; i < r.length; i++) {
+    for (const f of primary) for (const r of f.lines || []) for (let i = 1; i < r.length; i++) {
       const [a, b] = [r[i - 1], r[i]];
       for (let gx = Math.floor(Math.min(a[0], b[0]) / CELL); gx <= Math.floor(Math.max(a[0], b[0]) / CELL); gx++)
         for (let gy = Math.floor(Math.min(a[1], b[1]) / CELL); gy <= Math.floor(Math.max(a[1], b[1]) / CELL); gy++) add(`${gx},${gy}`, [a, b]);
     }
-    const kx = Math.cos(43.7 * Math.PI / 180), near = ([x, y]) => {
-      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const [a, b] of grid.get(`${Math.floor(x / CELL) + dx},${Math.floor(y / CELL) + dy}`) || []) {
-        const ux = (b[0] - a[0]) * kx, uy = b[1] - a[1], px = (x - a[0]) * kx, py = y - a[1], L2 = ux * ux + uy * uy;
-        const t = L2 ? Math.max(0, Math.min(1, (px * ux + py * uy) / L2)) : 0, ex = px - t * ux, ey = py - t * uy;
-        if ((ex * ex + ey * ey) * 111320 * 111320 < 25 * 25) return true;
-      }
-      return false;
-    };
-    const mine = new Set(primary);
-    return all.filter(f => { if (mine.has(f)) return true; const pts = f.rings.flat(); if (!pts.length) return true; let n = 0; for (const p of pts) if (near(p)) n++; return n / pts.length < 0.6; });
+    const near = p => { for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const seg of grid.get(`${Math.floor(p[0] / CELL) + dx},${Math.floor(p[1] / CELL) + dy}`) || []) if (G.distToLine(p, seg) < 25) return true; return false; };
+    return all.filter(f => { const pts = (f.lines || []).flat(); if (!pts.length) return true; let n = 0; for (const p of pts) if (near(p)) n++; return n / pts.length < 0.6; });
   }
-  const tilesOf = b => { const t = []; for (let tx = Math.floor(b.xmin / TILE); tx <= Math.floor(b.xmax / TILE); tx++) for (let ty = Math.floor(b.ymin / TILE); ty <= Math.floor(b.ymax / TILE); ty++) t.push([tx, ty]); return t; };
 
-  let seq = 0;
+  // ---- Drawing ----------------------------------------------------------------------------------
+  let seq = 0, manifestP = null;
+  const manifest = () => (manifestP = manifestP || CX().manifest().catch(() => { manifestP = null; return null; }));
+  function featureClick(id, label) {
+    manifest().then(m => {
+      const d = m && m.datasets.find(x => x.id === id); if (!d || !SS()) return;
+      SS().openResult({ ref: `cx:${id}-${String(label[0]).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}`, title: label[0], html: CX().featureCardHTML(d, label) });
+    });
+  }
+  // coarse: the overview (low zoom): thin outlines, no dashes, so many small polygons stay readable.
+  function draw(key, id, feats, edges, coarse) {
+    const L0 = LAYERS[key], col = token(L0.color) || token('--nodata'), w = coarse ? 0.7 : L0.weight, dash = coarse ? null : L0.dash;
+    for (const f of feats) {
+      if (L0.keep && !L0.keep(f.label)) continue;
+      // The same hover card as every other feature (SPEC §3): kind, name, what it is; click opens its card.
+      const tip = window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: f.label[0] || L0.label, sub: f.label[1] || '', open: 'its card (owner, as-of date, source)' });
+      const shapes = f.polys
+        ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: hatch(col, BACK.has(key)), fillOpacity: coarse ? 0.25 : 0.22, opacity: coarse ? 0.6 : 0.9 })]
+        : (f.lines || []).length ? [L.polyline(f.lines.map(l => l.map(([x, y]) => [y, x])), { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 })] : [];
+      for (const s of shapes) s.bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', e => { L.DomEvent.stop(e); featureClick(id, f.label); }).addTo(layer);
+    }
+    for (const g of edges || []) {
+      if (L0.keep && !L0.keep(g.label)) continue;
+      L.polyline(g.edges.map(l => l.map(([x, y]) => [y, x])), { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9, interactive: false }).addTo(layer);
+    }
+  }
   async function render() {
     const my = ++seq;
     layer.clearLayers();
-    const keys = Object.keys(LAYERS).filter(k => on[k]);
+    const keys = ORDER.filter(k => on[k]);
     const note = $('#cx-note');
     if (!keys.length) { if (note) note.textContent = ''; return; }
-    const z = map.getZoom(), b = map.getBounds();
-    const tiles = tilesOf({ xmin: b.getWest(), ymin: b.getSouth(), xmax: b.getEast(), ymax: b.getNorth() });
-    const shown = keys.filter(k => z >= LAYERS[k].minZoom);
-    const hidden = keys.filter(k => z < LAYERS[k].minZoom);
-    if (note) note.textContent = hidden.length ? `Zoom in to see ${hidden.map(k => LAYERS[k].short).join(', ')}` : '';
-    if (!shown.length) return;
-    if (tiles.length > MAX_TILES) { if (note) note.textContent = `Zoom in to see ${keys.map(k => LAYERS[k].short).join(', ')}`; return; }
+    const z = map.getZoom(), b = map.getBounds(), notes = [];
     if (note) note.textContent = 'Loading…';
-    // Regulation areas first (underneath), then lines.
-    const order = shown.sort((a, c) => (LAYERS[c].area ? 1 : 0) - (LAYERS[a].area ? 1 : 0));
-    const seen = new Set();
-    for (const key of order) {
-      const L0 = LAYERS[key], col = token(L0.color) || token('--nodata');
-      await Promise.all(tiles.map(async ([tx, ty]) => {
-        const feats = await tileFeatures(key, tx, ty);
-        if (my !== seq) return;
-        for (const f of feats) {
-          const id = `${key}|${f.id}`; if (seen.has(id)) continue; seen.add(id);
-          const ll = f.rings.map(r => r.map(([x, y]) => [y, x]));
-          const tip = `<strong>${esc(f.name || L0.label.replace(/s$/, ''))}</strong><br><span class="muted">${esc(L0.label)} · ${esc(f.src)} (live)</span>`;
-          const shape = f.poly
-            ? L.polygon(ll, { renderer, stroke: !f.fillOnly, color: col, weight: L0.weight, dashArray: L0.dash, fillColor: col, fillOpacity: 0.14, opacity: 0.9 })
-            : L.polyline(ll, { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 });
-          shape.bindTooltip(tip, { sticky: true, className: 'pt' }).addTo(layer);
+    for (const key of keys) {
+      const L0 = LAYERS[key];
+      if (z < (L0.minZoom || 0)) { notes.push(`Zoom in to see ${L0.short}`); continue; }
+      try {
+        let drew = false;
+        for (const id of L0.ids) {
+          const tiles = await tilesInView(id, b);
+          if (my !== seq) return;
+          if (L0.area && (z < TILE_ZOOM || tiles.length > MAX_TILES)) {
+            const ov = await overview(id); if (my !== seq) return;
+            if (ov) { draw(key, id, ov, null, true); drew = true; continue; }
+          }
+          if (tiles.length > MAX_TILES) { notes.push(`Zoom in to see ${L0.short}`); continue; }
+          const got = await Promise.all(tiles.map(([tx, ty]) => CX().tile(id, tx, ty)));
+          if (my !== seq) return;
+          let feats = got.flatMap(t => (Array.isArray(t) ? t : t.feats)), edges = got.flatMap(t => (Array.isArray(t) ? [] : t.edges));
+          if (id === 'wc-ohn' && on.water) {
+            const peel = (await Promise.all(tiles.map(([tx, ty]) => CX().tile('wc-peel', tx, ty).catch(() => [])))).flatMap(t => (Array.isArray(t) ? t : t.feats));
+            feats = onePerStream(feats, peel);
+          }
+          draw(key, id, feats, L0.area ? edges : null); drew = true;
         }
-      }));
+        status[key] = drew ? 'ok' : status[key];
+      } catch (e) { status[key] = 'none'; notes.push(`${L0.label} did not load`); }
     }
-    if (my === seq && note) {
-      const osm = order.filter(k => status[k] === 'osm'), none = order.filter(k => status[k] === 'none');
-      note.textContent = [osm.length && `${osm.map(k => LAYERS[k].label).join(', ')}: from OpenStreetMap (the provincial service did not answer)`, none.length && `${none.map(k => LAYERS[k].label).join(', ')} did not load`].filter(Boolean).join(' · ');
-    }
+    if (my === seq && note) note.textContent = [...new Set(notes)].join(' · ');
   }
   let timer = null;
   map.on('moveend', () => { if (Object.values(on).some(Boolean)) { clearTimeout(timer); timer = setTimeout(render, 150); } });
 
   function setOn(o) {
-    Object.assign(on, o);
+    for (const k of Object.keys(o)) if (k in on) on[k] = !!o[k];
     store.set('cxOn', on);
     render();
     if (MA() && MA().renderLegend) MA().renderLegend();
     if (SD() && SD().syncPanelSum) SD().syncPanelSum();
+    if (typeof document !== 'undefined') for (const k of Object.keys(o)) { const el = document.getElementById(`opt-cx-${k}`); if (el) el.checked = !!on[k]; }
+  }
+  // "Show layer" from the checklist or the area card: switch it on and look at the site.
+  function showLayer(key, latlng) {
+    if (!(key in LAYERS)) return;
+    setOn({ [key]: true });
+    if (latlng) map.setView(latlng, Math.max(map.getZoom(), 15));
   }
   // Watercourses inside a box ({ xmin, ymin, xmax, ymax }) for the measure tool: [{ g, name }].
   async function watercoursesIn(bbox) {
-    const feats = (await Promise.all(tilesOf(bbox).slice(0, MAX_TILES).map(([tx, ty]) => tileFeatures('water', tx, ty)))).flat();
-    if (status.water !== 'ok') return null;   // the measure tool has its own OSM lookup
-    const seen = new Set();
-    return feats.filter(f => !seen.has(f.id) && seen.add(f.id)).flatMap(f => f.rings.map(g => ({ g, name: f.name })));
+    const tiles = []; for (let tx = Math.floor(bbox.xmin / G.TILE); tx <= Math.floor(bbox.xmax / G.TILE); tx++) for (let ty = Math.floor(bbox.ymin / G.TILE); ty <= Math.floor(bbox.ymax / G.TILE); ty++) tiles.push([tx, ty]);
+    if (tiles.length > MAX_TILES) return null;
+    const get = id => Promise.all(tiles.map(([tx, ty]) => CX().tile(id, tx, ty))).then(ts => ts.flatMap(t => (Array.isArray(t) ? t : t.feats)));
+    const [peel, ohn] = await Promise.all([get('wc-peel'), get('wc-ohn')]);
+    status.water = 'ok';
+    return [...peel, ...onePerStream(ohn, peel)].flatMap(f => (f.lines || []).map(g => ({ g, name: f.label[0] === 'Watercourse' ? '' : f.label[0] })));
   }
   const watercourseSource = () => status.water === 'ok' ? 'Region of Peel watercourses and the Ontario Hydro Network (LIO)' : 'OpenStreetMap';
   function legendHTML() {
-    const keys = Object.keys(LAYERS).filter(k => on[k]);
+    const keys = ORDER.filter(k => on[k]);
     if (!keys.length) return '';
-    return `<div class="lg-t">Site constraints (live)</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
+    return `<div class="lg-t">Constraints (screening)</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area hatch${BACK.has(k) ? ' back' : ''}" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
   }
 
+  if (typeof document !== 'undefined') document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('[data-cx-show]'); if (!b) return;
+    const p = root.DevScope && root.DevScope.current && root.DevScope.current();
+    showLayer(b.dataset.cxShow, p && p.lat != null ? [p.lat, p.lng] : null);
+  });
   if (Object.values(on).some(Boolean)) map.whenReady(() => setTimeout(render, 0));
-  const api = { LAYERS, getOn: () => ({ ...on }), setOn, render, watercoursesIn, watercourseSource, legendHTML };
+  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelConstraints = api;
 })(typeof window !== 'undefined' ? window : globalThis);

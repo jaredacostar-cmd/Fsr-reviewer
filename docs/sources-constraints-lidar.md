@@ -131,3 +131,86 @@ Built:
     source. The fall to outlet now also shows in the newer Site tab.
   - The sewer profile's ground.
   - The pressure-zone estimate's ground.
+
+## Stage 2 (constraint layers): what was built
+
+Built in Actions (`mode=constraints-build`, `scripts/build-constraints.js`) on 2026-10-15, into
+`data/constraints/`:
+- one folder per layer: `index.json`, 0.02° tiles, and `overview.json` for area layers;
+- `manifest.json`: source, owner, licence and as-of date of every layer, with its size;
+- `grid.json`: the 25 m screening grid, 0.58 MB.
+
+How the build works:
+- Each layer is queried over Peel's extent and simplified at the service to about 2–11 m.
+- It is cut into tiles where Peel has land, using the 2021 census areas.
+- Area layers also get one overview, simplified to about 30 m and clipped to Peel's extent, for
+  zooms below 13.
+- Nothing about people is stored: no item owners, editors or comments.
+- The Stage 0 probe file's account names were removed in this stage too.
+
+| Layer (id) | Owner | Licence | As of | Features in Peel | Tiles | Size (largest tile) | Overview |
+|---|---|---|---|---|---|---|---|
+| Regulation limit (CVC) (`reg-cvc`) | Credit Valley Conservation | CVC Open Data Licence v1.0 | 2026-03-03 | 1 | 226 | 9.58 MB (166 kB) | 372 kB |
+| Regulation limit (TRCA) (`reg-trca`) | Toronto and Region Conservation Authority | TRCA Open Data Licence v1.0 | 2026-04-29 | 3,513 | 223 | 1.78 MB (22 kB) | 411 kB |
+| Regulatory floodplain (CVC) (`flood-cvc`) | Credit Valley Conservation | CVC Open Data Licence v1.0 | 2026-02-13 | 1,000 | 211 | 1.58 MB (23 kB) | 238 kB |
+| Floodplain, generalized (TRCA) (`flood-trca`) | Toronto and Region Conservation Authority | No licence stated; published by TRCA with a disclaimer (shown with the layer) | 2026-09-21 | 640 | 218 | 2.38 MB (34 kB) | 299 kB |
+| Greenbelt Plan (`greenbelt`) | Province of Ontario (Municipal Affairs and Housing) | Open Government Licence – Ontario | 2023-12-14 | 31 | 313 | 0.13 MB (3 kB) | 65 kB |
+| Oak Ridges Moraine Conservation Plan (`orm`) | Province of Ontario (Municipal Affairs and Housing) | Open Government Licence – Ontario | 2025-02-26 | 113 | 74 | 0.07 MB (4 kB) | 34 kB |
+| Niagara Escarpment Plan (`nep`) | Niagara Escarpment Commission / Province of Ontario | Open Government Licence – Ontario | 2026-07-13 | 343 | 69 | 0.28 MB (12 kB) | 108 kB |
+| Provincially significant wetlands (`psw`) | Province of Ontario (Natural Resources) | Open Government Licence – Ontario | 2026-10-13 | 8,825 | 217 | 1.63 MB (46 kB) | 287 kB |
+| Areas of natural and scientific interest (ANSI) (`ansi`) | Province of Ontario (Natural Resources) | Open Government Licence – Ontario | 2026-08-18 | 101 | 140 | 0.33 MB (8 kB) | 106 kB |
+| Natural Heritage System (Growth Plan) (`nhs`) | Province of Ontario (Municipal Affairs and Housing) | Open Government Licence – Ontario | 2022-12-14 | 59 | 43 | 0.01 MB (4 kB) | 23 kB |
+| Watercourses (Region of Peel) (`wc-peel`) | Region of Peel | Open Data Licence for the Regional Municipality of Peel v1.0 | 2021-10-04 | 890 | 389 | 0.55 MB (6 kB) | — |
+| Watercourses (Ontario Hydro Network) (`wc-ohn`) | Province of Ontario (Natural Resources) | Open Government Licence – Ontario | 2026-06-22 | 11,859 | 425 | 1.08 MB (9 kB) | — |
+| Gas pipelines and hydro lines (approximate) (`utility`) | Province of Ontario (Land Information Ontario, Utility Line) | Open Government Licence – Ontario | not stated | 127 | 92 | 0.01 MB (1 kB) | — |
+
+Not built (decisions of 2026-10-15): source protection (CTC); NVCA regulation limit and floodplain
+(not published for north Caledon). Both appear in the manifest's `skipped` list and in the checklist.
+
+**Loading.**
+- Nothing loads at start.
+- A layer loads only when switched on:
+  - below zoom 13, its overview (23–411 kB);
+  - above it, the tiles in view (at most 90; the largest tile is 166 kB).
+- The screening grid loads with the first area-scope Overview (municipality, plan area, MTSA,
+  zone or block), or when "Show for all of Peel" is pressed.
+- The old CVC tiles (`data/regulation/cvc`, 13 MB) and `mode=regulation-build` are retired. The new
+  build replaces them, and its clipping is still `scripts/build-regulation.js`.
+
+**In the app.**
+- **Layers:** ten switches:
+  - regulation limits, floodplain;
+  - Greenbelt, Oak Ridges Moraine, Niagara Escarpment;
+  - PSW / ANSI, Natural Heritage System;
+  - watercourses;
+  - gas and hydro lines (approximate, off by default).
+  All are off by default. Stage 3 groups them.
+- **Feature card:** click a feature for its name, type, owner, as-of date, licence, source and
+  screening note, plus TRCA's disclaimer on its floodplain.
+- **Development › Site:** a Constraints checklist at the top, one line per check. Each line is
+  flagged, nearby, clear, not published or not checked, and links to the layer and its source.
+- **Overview, "Land under constraints":** for an area scope, the share of the land in regulation
+  limits, floodplain and provincial plan areas, and the developments whose point is inside each
+  (click to list them).
+
+**Assumptions (Stage 2).**
+1. **Checklist point:** checks run at the development's point. Site boundaries are not used, and
+   "within 120 m" is measured from the point.
+2. **Not published:** "not published" for regulation limit and floodplain comes from the
+   conservation authority on the nearest Region of Peel watercourse within 3 km (NVCA, or
+   Conservation Halton / HRCA). This is used only where no CVC or TRCA layer covers the point.
+3. **Provincial plan areas:** these are the three plans' designation layers. Their union is each
+   plan's area, so the checklist can name the designation, e.g. "Greenbelt: Protected Countryside".
+4. **Watercourses:** checked against both the Region of Peel and the Ontario Hydro Network
+   (virtual flow lines excluded).
+5. **"Peel-clipped" means two things:**
+   - tiles exist only where the 2021 census areas (Peel's land) reach;
+   - overviews are clipped to Peel's extent.
+   Features crossing the boundary are drawn to the tile edge.
+6. **Area card figures:**
+   - shares are measured on the 25 m grid, inside Peel's land;
+   - municipalities are taken from the census areas;
+   - the Peel total is 128,591 ha against Peel's published ~125,000 ha, because census outlines
+     include some water.
+7. **Missing as-of dates:** the Utility Line layer has no update date, so its as-of reads
+   "not stated by the source".

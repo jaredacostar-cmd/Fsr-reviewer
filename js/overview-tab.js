@@ -215,7 +215,7 @@
     }
     return true;
   }
-  const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result' };
+  const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result', cx: 'Constraint layer · screening' };
   function renderOverview(set, e, basis) {
     const el = $('#ov-body'); if (!el) return;
     const rsc = root.PeelSvcScope && root.PeelSvcScope.current();
@@ -225,7 +225,7 @@
     const sec = $('#ov-dev'); if (sec) sec.hidden = true;
     // A servicing scope (plant / station / block / zone / water system) has its own Overview.
     const ss = root.PeelSvcScope && root.PeelSvcScope.current();
-    if (ss) { el.innerHTML = root.PeelSvcScope.cardHTML(ss, set || DU().overviewSet()); return; }
+    if (ss) { const sset = set || DU().overviewSet(); el.innerHTML = root.PeelSvcScope.cardHTML(ss, sset) + CX_HOST; fillCxCard(sset); return; }
     if (!set) { set = DU().overviewSet(); basis = DU().demandBasis(); e = D.estimate(set, App().state.criteria, basis, App().jobsOf); }
     if (!basis) basis = DU().demandBasis();
     const em = e.employment;
@@ -270,11 +270,55 @@
         ${needs}
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity ${root.PeelUtil.basisChip('mixed', SvcTab().svcOpt.ww === 'calibrated' ? 'Mixed basis: existing flows 2025 measured; growth at Peel design criteria (wastewater scaled to each plant\u2019s measured rate); rated capacity from the 2025 reports; 90% trigger from the 2020 Master Plan' : 'Mixed basis: flows at Peel design criteria; rated capacity from the 2025 reports; 90% trigger from the 2020 Master Plan')}</h3>${go('ww', 'Plants')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
+        ${CX_HOST}
         <div class="ov-info-w">${info}</div>
       </div>`;
+    fillCxCard(set);
     if (App().state.dcInfra && MM().SEW.data && !(MP().DCA.res && MP().DCA.key === MP().scenarioKey()) && AT().getFootTab() === 'overview') setTimeout(() => { try { DC().dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
     if (document.documentElement.hasAttribute('data-presentation')) AS().renderPresentation();
   }
+  // ---- Land under constraints (js/constraint-data.js): the area in scope and its developments ----
+  const CX_HOST = '<section class="ov-card ov-cx" id="ov-cx" data-info="land-constraints"><div class="ov-h"><h3>Land under constraints</h3></div><p class="small muted">Loading the constraint layers…</p></section>';
+  // The area the Overview covers: a servicing scope, else the plan / MTSA / zone / block filter,
+  // else the municipality, else Peel. { name, polys } | { name, muni } | { name } (all of Peel).
+  function cxScope() {
+    const st = App().state, A = st.areas, SDm = root.PeelSvcData;
+    const ss = root.PeelSvcScope && root.PeelSvcScope.current();
+    const svc = ids => [...ids].map(id => SDm && SDm.svcById.get(id)).filter(a => a && a.rings);
+    if (ss && ss.ids) { const xs = svc(ss.ids); return xs.length ? { name: ss.title, polys: xs.map(a => a.rings) } : null; }
+    const pick = (ids, list) => ids.map(id => (list || []).find(x => x.id === id)).filter(x => x && x.rings);
+    const named = (xs, more) => ({ name: xs.length > 2 ? `${xs.slice(0, 2).map(x => x.name).join(', ')} and ${xs.length - 2} ${more}` : xs.map(x => x.name).join(', '), polys: xs.map(x => x.rings) });
+    if (st.sp.length && A) { const xs = pick(st.sp, [...A.secondaryPlans, ...(A.precincts || [])]); if (xs.length) return named(xs, 'more plan areas'); }
+    if (st.mtsa.length && A) { const xs = pick(st.mtsa, A.mtsas); if (xs.length) return named(xs, 'more MTSAs'); }
+    if (st.pz.length || st.dr.length) { const xs = svc([...st.pz, ...st.dr]); if (xs.length) return { name: xs.length === 1 ? (xs[0].name || SDm.drName(xs[0])) : `${xs.length} servicing areas`, polys: xs.map(a => a.rings) }; }
+    if (st.muni) return { name: st.muni, muni: st.muni };
+    return { name: 'Peel' };
+  }
+  let cxSeq = 0;
+  function fillCxCard(set) {
+    const CXD = root.PeelCxData, my = ++cxSeq; if (!CXD) return;
+    const scope = cxScope(); if (!scope) { const h = $('#ov-cx'); if (h) h.remove(); return; }
+    // All of Peel: on request (the screening grid is 0.6 MB; area scopes load it themselves).
+    if (!scope.muni && !scope.polys && !cxPeel) { const h = $('#ov-cx'); if (h) h.innerHTML = '<div class="ov-h"><h3>Land under constraints</h3></div><p class="small muted">The share of Peel’s land in regulation limits, floodplain and provincial plan areas, and the developments inside each (screening). Opens by itself for a municipality, plan area, zone or block. <button type="button" class="btn small" data-cx-peel>Show for all of Peel</button></p>'; return; }
+    CXD.areaCard(scope, set || []).then(r => {
+      const h = $('#ov-cx'); if (!h || my !== cxSeq) return;
+      h.innerHTML = r.html; cxRows = { rows: r.rows, scope: scope.name };
+    }).catch(() => { const h = $('#ov-cx'); if (h && my === cxSeq) h.innerHTML = '<div class="ov-h"><h3>Land under constraints</h3></div><p class="small muted">The constraint layers did not load.</p>'; });
+  }
+  let cxRows = null, cxPeel = false;
+  // "n developments inside" → those developments, as a selection in the right panel.
+  function openCxDevs(k) {
+    const row = cxRows && cxRows.rows.find(r => r.k === k); if (!row || !root.PeelSvcScope) return;
+    const devs = row.devs.map(key => DN().projectByKey(key)).filter(Boolean);
+    const AS = root.PeelAreaSelect;
+    const html = AS && AS.selectionSummaryHTML ? AS.selectionSummaryHTML(devs, false) : `<ul class="small">${devs.map(p => `<li><button type="button" class="btn small link" data-ov-dev="${esc(p.key)}">${esc(p.title)}</button></li>`).join('')}</ul>`;
+    root.PeelSvcScope.openResult({ ref: `sel:cx-${k}`, title: `${devs.length} developments inside ${row.label.toLowerCase()} (${cxRows.scope}; screening)`, html: `<p class="small muted">Developments whose point is inside the mapped ${esc(row.label.toLowerCase())} (${esc(row.from)}), on a 25 m grid. Screening only: the conservation authority or province confirms.</p>${html}`, devKeys: row.devs });
+  }
+  if (typeof document !== 'undefined') document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('[data-cx-devs]'); if (b) { openCxDevs(b.dataset.cxDevs); return; }
+    if (e.target.closest && e.target.closest('[data-cx-peel]')) { cxPeel = true; fillCxCard(DU().overviewSet()); }
+  });
+
   // The scope the numbers cover: "all of Peel" only when nothing narrows it (SPEC 1.9: never
   // "all of Peel · 52: Heritage Heights").
   function scopeLabel({ muni, sp, mtsa, svc }) {

@@ -277,7 +277,6 @@
    {
     "source": "ArcGIS item",
     "title": "Ontario Digital Terrain Model (Lidar-Derived) Package Index",
-    "owner": "OntarioProvincialMapping",
     "itemType": "Feature Service",
     "modified": "2025-09-12",
     "licence": "Open Government Licence – Ontario",
@@ -315,7 +314,6 @@
    {
     "source": "ArcGIS item",
     "title": "Ontario Digital Terrain Model (Lidar-Derived)",
-    "owner": "OntarioProvincialMapping",
     "itemType": "Web Map",
     "modified": "2026-06-11",
     "licence": "Open Government Licence – Ontario",
@@ -325,7 +323,6 @@
    {
     "source": "ArcGIS item",
     "title": "Ontario Classified Point Cloud (Lidar-Derived)",
-    "owner": "OntarioProvincialMapping",
     "itemType": "Web Map",
     "modified": "2026-08-14",
     "licence": "Open Government Licence – Ontario",
@@ -335,7 +332,6 @@
    {
     "source": "ArcGIS item",
     "title": "Ontario Classified Point Cloud (Lidar-Derived) Package Index",
-    "owner": "OntarioProvincialMapping",
     "itemType": "Feature Service",
     "modified": "2025-02-26",
     "licence": "Open Government Licence – Ontario",
@@ -375,7 +371,6 @@
    {
     "source": "ArcGIS item",
     "title": "Ontario Classified Point Cloud _Lidar_Derived_",
-    "owner": "walkowj_mcmaster",
     "itemType": "Web Map",
     "modified": "2025-03-06",
     "licence": "Open Government Licence – Ontario",
@@ -385,7 +380,6 @@
    {
     "source": "ArcGIS item",
     "title": "Ontario Digital Surface Model (Lidar-Derived) Package Index",
-    "owner": "OntarioProvincialMapping",
     "itemType": "Feature Service",
     "modified": "2025-09-12",
     "licence": "Open Government Licence – Ontario",
@@ -708,7 +702,6 @@
    {
     "source": "ArcGIS item",
     "title": "Engineering Survey Controls",
-    "owner": "BramptonMaps",
     "itemType": "Feature Service",
     "modified": "2024-11-20",
     "licence": "CC BY",
@@ -789,7 +782,6 @@
    {
     "source": "ArcGIS item",
     "title": "CVC_Regulation_Lines",
-    "owner": "DufferinGIS",
     "itemType": "Feature Service",
     "modified": "2019-03-05",
     "licence": null,
@@ -824,7 +816,6 @@
    {
     "source": "ArcGIS item",
     "title": "Generic Regulations Limit (2025)",
-    "owner": "CreditValley",
     "itemType": "Feature Service",
     "modified": "2026-08-26",
     "licence": "https://geohub.cvc.ca/portal/sharing/rest/content/items/93888c79b9d6442fb940dbfd701c4158/data",
@@ -858,7 +849,6 @@
    {
     "source": "ArcGIS item",
     "title": "Generic Regulations Limit (2024)",
-    "owner": "CreditValley",
     "itemType": "Feature Service",
     "modified": "2024-04-01",
     "licence": "CVC Open Data Licence v1.0",
@@ -892,7 +882,6 @@
    {
     "source": "ArcGIS item",
     "title": "Parcels_around_RegulationAreas_Interim2024",
-    "owner": "CreditValley",
     "itemType": "Feature Service",
     "modified": "2024-03-28",
     "licence": null,
@@ -926,7 +915,6 @@
    {
     "source": "ArcGIS item",
     "title": "Generic_Regulations_limit_2025_mercator",
-    "owner": "CreditValley",
     "itemType": "Feature Service",
     "modified": "2026-02-23",
     "licence": null,
@@ -987,7 +975,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRCA_Regulated_Area",
-    "owner": "trca.S.Ling",
     "itemType": "Feature Service",
     "modified": "2026-04-29",
     "licence": "Toronto and Region Conservation Authority (TRCA) Open Data Licence v1.0 - Toronto and Region Conservation Authority (TRCA)",
@@ -1020,7 +1007,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRCA_Regulation_2025",
-    "owner": "trca.S.Ling",
     "itemType": "Feature Service",
     "modified": "2026-04-29",
     "licence": null,
@@ -1124,7 +1110,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRCA Regulation Mapping Public Viewer",
-    "owner": "trca.S.Ling",
     "itemType": "Web Experience",
     "modified": "2026-04-28",
     "licence": null,
@@ -1134,7 +1119,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRCA_Regulation_2025_group",
-    "owner": "trca.S.Ling",
     "itemType": "Group Layer",
     "modified": "2026-04-29",
     "licence": null,
@@ -1144,7 +1128,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRCA Regulation Limit 2022",
-    "owner": "trca.S.Ling",
     "itemType": "Web Map",
     "modified": "2023-05-08",
     "licence": null,
@@ -1154,7 +1137,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRCA_Regulation_Limit2_2087924700106184590",
-    "owner": "katputhalingam@torontomu.ca_torontomu",
     "itemType": "Feature Service",
     "modified": "2026-02-08",
     "licence": null,
@@ -1301,7 +1283,6 @@
    {
     "source": "ArcGIS item",
     "title": "NVCA Regulation Lines",
-    "owner": "DufferinGIS",
     "itemType": "Feature Service",
     "modified": "2026-05-22",
     "licence": null,
@@ -1325,7 +1306,6 @@
    {
     "source": "ArcGIS item",
     "title": "NVCA_Regulation_Line_2024",
-    "owner": "DufferinGIS",
     "itemType": "Feature Service",
     "modified": "2026-05-22",
     "licence": null,
@@ -1359,7 +1339,6 @@
    {
     "source": "ArcGIS item",
     "title": "CA Regulated Area-NVCA",
-    "owner": "ashley@ashleymeghan.ca",
     "itemType": "Feature Service",
     "modified": "2021-10-12",
     "licence": null,
@@ -1394,7 +1373,6 @@
    {
     "source": "ArcGIS item",
     "title": "NVCA Regulation Lines",
-    "owner": "DufferinGIS",
     "itemType": "Feature Service",
     "modified": "2026-05-22",
     "licence": null,
@@ -1428,7 +1406,6 @@
    {
     "source": "ArcGIS item",
     "title": " Slope Hazards Within the Pine Creek Subwatershed.",
-    "owner": "94509920_GeorgianCollege",
     "itemType": "StoryMap",
     "modified": "2022-04-15",
     "licence": null,
@@ -1452,7 +1429,6 @@
    {
     "source": "ArcGIS item",
     "title": "Floodplain MapViewer (CVC)",
-    "owner": "CreditValley",
     "itemType": "Web Mapping Application",
     "modified": "2026-02-19",
     "licence": "Access Constraint: CVC Open Data Licence v1.0 Use Constraint: None - in accordance with Licence agreement Citation: Contains Information made available under “Credit Valley Conservation Authority Open Data Licence v1.0.\"",
@@ -1462,7 +1438,6 @@
    {
     "source": "ArcGIS item",
     "title": "Regulatory Floodplain areas",
-    "owner": "CreditValley",
     "itemType": "Feature Service",
     "modified": "2026-02-13",
     "licence": null,
@@ -1497,7 +1472,6 @@
    {
     "source": "ArcGIS item",
     "title": "CVCA FHIMP -  regulatory floodplain mapping - Sep. 2024",
-    "owner": "cvca.admin",
     "itemType": "Web Map",
     "modified": "2024-09-12",
     "licence": null,
@@ -1507,7 +1481,6 @@
    {
     "source": "ArcGIS item",
     "title": "Regulatory Floodplain areas",
-    "owner": "CreditValley",
     "itemType": "Web Map",
     "modified": "2026-03-02",
     "licence": null,
@@ -1517,7 +1490,6 @@
    {
     "source": "ArcGIS item",
     "title": "Floodplains CVC",
-    "owner": "Student_CVC",
     "itemType": "Web Map",
     "modified": "2018-02-28",
     "licence": null,
@@ -1527,7 +1499,6 @@
    {
     "source": "ArcGIS item",
     "title": "CVC Flood Risk & Regulated Floodplain Areas",
-    "owner": "tariqm23_utoronto",
     "itemType": "Web Map",
     "modified": "2025-11-29",
     "licence": null,
@@ -1539,7 +1510,6 @@
    {
     "source": "ArcGIS item",
     "title": "Floodline_TRCA_Line",
-    "owner": "trca.m.todd",
     "itemType": "Feature Service",
     "modified": "2026-09-21",
     "licence": "Disclaimer: This feature (Floodline_TRCA_Line) does not constitute a regulatory flood plain map as formally approved by a qualified Professional Engineer and TRCA. This feature depicts a generalized representation of the regulatory flood plain and should not be relied upon for the precise limits of the regulatory flood plain. For confirmation of the precise flood plain limit and/or to obtain a copy of an up-to-date regulation flood plain map, please contact TRCA. Toronto and Region Conservation Authority does not warrant that the data is complete or current. Toronto and Region Conservation Aut",
@@ -1572,7 +1542,6 @@
    {
     "source": "ArcGIS item",
     "title": "Floodline_TRCA_Polygon",
-    "owner": "trca.m.todd",
     "itemType": "Feature Service",
     "modified": "2026-09-21",
     "licence": "Disclaimer: This feature (Floodline_TRCA_Polygon) does not constitute a regulatory flood plain map as formally approved by a qualified Professional Engineer and TRCA. This feature depicts a generalized representation of the regulatory flood plain and should not be relied upon for the precise limits of the regulatory flood plain. For confirmation of the precise flood plain limit and/or to obtain a copy of an up-to-date regulation flood plain map, please contact TRCA. Toronto and Region Conservation Authority does not warrant that the data is complete or current. Toronto and Region Conservation ",
@@ -1606,7 +1575,6 @@
    {
     "source": "ArcGIS item",
     "title": "FloodPlain_Regulatory",
-    "owner": "trca.m.todd",
     "itemType": "Feature Service",
     "modified": "2026-09-21",
     "licence": null,
@@ -1661,7 +1629,6 @@
    {
     "source": "ArcGIS item",
     "title": "FloodPlainMappingIndex",
-    "owner": "jason.tam",
     "itemType": "Feature Service",
     "modified": "2022-03-09",
     "licence": null,
@@ -1694,7 +1661,6 @@
    {
     "source": "ArcGIS item",
     "title": "Floodplain_Development",
-    "owner": "trca_d.macleod",
     "itemType": "Feature Service",
     "modified": "2025-11-26",
     "licence": null,
@@ -1740,7 +1706,6 @@
    {
     "source": "ArcGIS item",
     "title": "Floodline_TRCA_Polygon",
-    "owner": "GIS_DurhamRegion",
     "itemType": "Feature Service",
     "modified": "2022-10-31",
     "licence": null,
@@ -1776,7 +1741,6 @@
    {
     "source": "ArcGIS item",
     "title": "NVCA floodplains",
-    "owner": "ashley@ashleymeghan.ca",
     "itemType": "Feature Service",
     "modified": "2021-10-12",
     "licence": null,
@@ -1968,7 +1932,6 @@
    {
     "source": "ArcGIS item",
     "title": "Greenbelt outer boundary",
-    "owner": "LandInformationOntario",
     "itemType": "Feature Service",
     "modified": "2025-11-27",
     "licence": "Open Government Licence – Ontario",
@@ -2004,7 +1967,6 @@
    {
     "source": "ArcGIS item",
     "title": "Greenbelt Outer Boundary",
-    "owner": "sheavenrich@ryerson.ca_ryerson",
     "itemType": "Feature Service",
     "modified": "2022-11-26",
     "licence": "The Open Government Licence for Ontario applies to the data contained in this layer. Refer to https://www.ontario.ca/page/open-government-licence-ontario for details of the terms of use.",
@@ -2039,7 +2001,6 @@
    {
     "source": "ArcGIS item",
     "title": "Greenbelt Designation_Nov2020",
-    "owner": "MP_GIS_USER",
     "itemType": "Feature Service",
     "modified": "2022-04-20",
     "licence": null,
@@ -2073,7 +2034,6 @@
    {
     "source": "ArcGIS item",
     "title": "Greenbelt towns and villages",
-    "owner": "LandInformationOntario",
     "itemType": "Feature Service",
     "modified": "2025-11-27",
     "licence": "Open Government Licence – Ontario",
@@ -2414,7 +2374,6 @@
    {
     "source": "ArcGIS item",
     "title": "HRWP Significant Groundwater Recharge Areas",
-    "owner": "trca_d.macleod",
     "itemType": "Feature Service",
     "modified": "2025-03-21",
     "licence": "TRCA Open Data License",
@@ -2452,7 +2411,6 @@
    {
     "source": "ArcGIS item",
     "title": "ECWP Significant Groundwater Recharge Areas",
-    "owner": "trca_d.macleod",
     "itemType": "Feature Service",
     "modified": "2025-08-08",
     "licence": "TRCA Open Data License",
@@ -2486,7 +2444,6 @@
    {
     "source": "ArcGIS item",
     "title": "TRSPA SWP Significant Groundwater Recharge Areas",
-    "owner": "trca_d.macleod",
     "itemType": "Feature Service",
     "modified": "2024-01-23",
     "licence": "As defined by TRCA's open data licen c e: https://trca.ca/about/open-data-licence/",
@@ -2519,7 +2476,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Significant Groundwater Recharge Area (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2026-03-26",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -2558,7 +2514,6 @@
    {
     "source": "ArcGIS item",
     "title": "CCWP Highly Vulnerable Aquifers",
-    "owner": "trca_d.macleod",
     "itemType": "Feature Service",
     "modified": "2025-03-21",
     "licence": null,
@@ -2592,7 +2547,6 @@
    {
     "source": "ArcGIS item",
     "title": "HRWP Highly Vulnerable Aquifers",
-    "owner": "trca_d.macleod",
     "itemType": "Feature Service",
     "modified": "2023-10-18",
     "licence": "TRCA Open Data License",
@@ -3796,7 +3750,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Intake Protection Zone (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2026-03-26",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -3838,7 +3791,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Wellhead Protection Area E (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2026-03-26",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -3879,7 +3831,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Wellhead Protection Area (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2026-03-26",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -3921,7 +3872,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Vulnerable Scoring Area WHPA-E (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2026-03-26",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -3962,7 +3912,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Wellhead Protection Area Q2 (WHPAQ2) (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2026-03-26",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -4003,7 +3952,6 @@
    {
     "source": "ArcGIS item",
     "title": "SWP Wellhead Protection Area Q1 (WHPAQ1) (2024)",
-    "owner": "CreditValley",
     "itemType": "Map Service",
     "modified": "2025-10-02",
     "licence": "https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data",
@@ -4044,7 +3992,6 @@
    {
     "source": "ArcGIS item",
     "title": "(Figure 13) Wellhead Protection Areas in Peel Region (2008)",
-    "owner": "PeelPlanning",
     "itemType": "Web Map",
     "modified": "2012-05-16",
     "licence": null,
@@ -4054,7 +4001,6 @@
    {
     "source": "ArcGIS item",
     "title": "(Figure 13) Wellhead Protection Areas in Peel Region (October 2014)",
-    "owner": "PeelPlanning",
     "itemType": "Web Map",
     "modified": "2015-01-08",
     "licence": null,
@@ -4344,7 +4290,6 @@
    {
     "source": "ArcGIS item",
     "title": "Watercourses",
-    "owner": "shahir.alam@peelregion.ca_RegionofPeel",
     "itemType": "Feature Service",
     "modified": "2024-01-13",
     "licence": "Open Data Licence for The Regional Municipality of Peel (Version 1.0)",
@@ -4384,7 +4329,6 @@
    {
     "source": "ArcGIS item",
     "title": "Watercourses in Peel Region",
-    "owner": "PeelPlanning",
     "itemType": "Web Map",
     "modified": "2012-03-21",
     "licence": null,
@@ -4394,7 +4338,6 @@
    {
     "source": "ArcGIS item",
     "title": "Watercourses",
-    "owner": "jsohal",
     "itemType": "Feature Service",
     "modified": "2019-02-27",
     "licence": "Open Data Licence for The Regional Municipality of Peel (Version 1.0)",
@@ -4764,7 +4707,6 @@
    {
     "source": "ArcGIS item",
     "title": "Oak Ridges Moraine (ORM) Land Use Designation",
-    "owner": "LandInformationOntario",
     "itemType": "Feature Service",
     "modified": "2025-11-27",
     "licence": "Use Limitation Open Government Licence – Ontario You are encouraged to use the Information that is available under this licence with only a few conditions. Using Information under this licence 1. Use of any Information indicates your acceptance of the terms below. 2. The Information Provider grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information, including for commercial purposes, subject to the terms below. You are free to: 3. Copy, modify, publish, translate, adapt, distribute or otherwise use the Information in any medium, mode or format for any lawful",
@@ -4800,7 +4742,6 @@
    {
     "source": "ArcGIS item",
     "title": "Regional Official Plan 2022 - Map 7 - Vulnerable Aquifers within the Oak Ridges Moraine Conservation Plan Area and Clean Water Act",
-    "owner": "YorkMunicipalGovt",
     "itemType": "Map Service",
     "modified": "2025-08-01",
     "licence": null,
@@ -4998,7 +4939,6 @@
    {
     "source": "ArcGIS item",
     "title": "Countryside Area - Oak Ridges Moraine",
-    "owner": "DufferinGIS",
     "itemType": "Feature Service",
     "modified": "2017-09-18",
     "licence": null,
@@ -5031,7 +4971,6 @@
    {
     "source": "ArcGIS item",
     "title": "Oak Ridges Moraine (2023)",
-    "owner": "mahgis",
     "itemType": "Feature Service",
     "modified": "2023-12-08",
     "licence": null,
@@ -5093,7 +5032,6 @@
    {
     "source": "ArcGIS item",
     "title": "Official Plan: Schedule A1 - Land Use: Oak Ridges Moraine",
-    "owner": "City.of.Oshawa",
     "itemType": "Map Package",
     "modified": "2019-11-13",
     "licence": "Open Data License Agreement This data is for reference use only. The City assumes no responsibility for the correctness of the data as it changes frequently and should not be used as a substitute for legal, real estate, survey or City of Oshawa staff advice.",
@@ -5103,7 +5041,6 @@
    {
     "source": "ArcGIS item",
     "title": "Oak Ridges Moraine (ORM) Planning Area",
-    "owner": "LandInformationOntario",
     "itemType": "Feature Service",
     "modified": "2026-08-04",
     "licence": "Use Limitation Open Government Licence – Ontario You are encouraged to use the Information that is available under this licence with only a few conditions. Using Information under this licence 1. Use of any Information indicates your acceptance of the terms below. 2. The Information Provider grants you a worldwide, royalty-free, perpetual, non-exclusive licence to use the Information, including for commercial purposes, subject to the terms below. You are free to: 3. Copy, modify, publish, translate, adapt, distribute or otherwise use the Information in any medium, mode or format for any lawful",
@@ -5137,7 +5074,6 @@
    {
     "source": "ArcGIS item",
     "title": "York Region Official Plan - 2022 Map 13 - Oak Ridges Moraine Landform Conservation Area",
-    "owner": "YorkMunicipalGovt",
     "itemType": "Map Package",
     "modified": "2025-08-01",
     "licence": "Please refer to &quot;York Region Open Data Licence&quot;, searchable on this website.",
@@ -5147,7 +5083,6 @@
    {
     "source": "ArcGIS item",
     "title": "York Region Official Plan - 2022 Map 7 - Vulnerable Aquifers Within the ORM Plan and Clean Water Act",
-    "owner": "YorkMunicipalGovt",
     "itemType": "Map Package",
     "modified": "2025-08-01",
     "licence": "Please refer to &quot;York Region Open Data Licence&quot;, searchable on this website.",
