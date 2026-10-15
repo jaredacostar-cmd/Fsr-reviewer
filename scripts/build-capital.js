@@ -117,6 +117,12 @@ async function main() {
   const model = F.modelRules(facs, records, RULES, readJSON(path.join(root, 'scripts', 'dc-facilities.json'), {}));
   aud.facilityRules = { facilities: facs.length, rules: model };
 
+  // Weekly change list (This week, Needs attention): against the previous build when there is one.
+  const prev = readJSON(path.join(outDir, 'capital.json'), null) || readJSON(path.join(root, 'data', 'capital.json'), null);
+  const today = new Date().toISOString().slice(0, 10);
+  let changes = C.changesSince(prev, records, links, today);
+  if (!changes.length && prev && prev.changes) changes = prev.changes.filter(c => c.date >= new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10));
+
   const lastUpdate = records.map(r => r.lastUpdate).filter(Boolean).sort().pop() || null;
   const out = {
     version: 1,
@@ -124,6 +130,7 @@ async function main() {
     source: { layer: LAYER, name: 'Proposed Projects - Line', description: 'Current, historic and future capital projects undertaken by the Region of Peel', latestLastUpdate: lastUpdate },
     note: 'General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.',
     counts: C.tally(records),
+    changes,
     records,
     links,
   };
@@ -134,6 +141,7 @@ async function main() {
 
   console.log('\nRecords by system × status:');
   for (const [s, m] of Object.entries(out.counts)) console.log(`  ${s.padEnd(10)} ${Object.entries(m).map(([k, n]) => `${k}=${n}`).join('  ')}`);
+  console.log(`Changes since the previous build: ${changes.length}${prev ? '' : ' (no previous build)'}`);
   console.log(`Slip computable: ${records.filter(r => r.slip).length}; with geometry: ${records.filter(r => r.geometry).length}; latest LastUpdate ${lastUpdate}`);
   console.log(`\nDC match: ${JSON.stringify(aud.counts)}`);
   const by = (list, f) => list.reduce((m, x) => (m[f(x)] = (m[f(x)] || 0) + 1, m), {});
