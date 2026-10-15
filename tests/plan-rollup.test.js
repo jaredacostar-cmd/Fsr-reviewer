@@ -95,3 +95,34 @@ test('By plan CSV: one row per area and development, with a path for pivot table
   assert.equal(rows.find(x => x.path === 'Peel').units_planned, 140);
   assert.ok(rows.filter(x => x.level !== 'development' && x.check_units !== '').every(x => x.check_units === 0), 'every check 0');
 });
+
+// Step C4: areas against their targets.
+test('targets: units compared (committed and all proposed); no target is never 0; municipalities use the 2051 allocation growth', () => {
+  const set = [dev('a', 100, { pt: ['bolton'], c: true }), dev('b', 300, { pt: ['bolton'] }), dev('m', 50, { pt: ['mayfield'] })];
+  const r = R.build(set, { areas: AREAS, pointOf: p => p.pt, measure });
+  const v = R.vsTarget(r, [{ id: 'bolton', units: 800, year: 2051, source: 'x', url: 'u' }, { id: 'core', density: '50 people and jobs per ha', source: 'y', url: 'u' }], { Caledon: { units2021: 24000, units2051: 92000, pop2021: 0, pop2051: 0, jobs2021: 0, jobs2051: 0 } });
+  const b = v.rows.find(x => x.node.id === 'a:bolton');
+  assert.equal(b.pctCommitted, 100 / 800); assert.equal(b.pctTotal, 400 / 800); assert.equal(b.gap, 400);
+  const mu = v.rows.find(x => x.node.kind === 'municipality');
+  assert.equal(mu.target.units, 68000, '2051 minus 2021');
+  assert.ok(!v.rows.some(x => x.node.id === 'a:mayfield'), 'a plan with no target is left out, not shown as 0');
+  assert.ok(v.noTarget >= 1);
+  assert.ok(v.rows.every(x => x.target.units == null || x.target.units > 0));
+});
+
+test('data/plan-targets.json: every figure has a source, a link and its wording; every id is a plan', () => {
+  const file = path.join(__dirname, '..', 'data', 'plan-targets.json');
+  if (!fs.existsSync(file)) return;
+  const d = JSON.parse(fs.readFileSync(file, 'utf8'));
+  const tc = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'tree-counts.json'), 'utf8'));
+  const ids = new Set(tc.areas.map(a => a.id));
+  assert.ok(Array.isArray(d.targets));
+  for (const t of d.targets) {
+    assert.ok(ids.has(t.id), `${t.id} is a plan`);
+    assert.ok(t.source && t.url && t.quote, `${t.id} has source, url and quote`);
+    assert.ok(t.units > 0 || t.population > 0 || t.jobs > 0 || t.density, `${t.id} has a figure`);
+    for (const k of ['units', 'population', 'jobs']) if (t[k] != null) assert.ok(t[k] > 0, `${t.id} ${k} is never 0`);
+    assert.ok(['total', 'growth', 'unknown'].includes(t.scope), `${t.id} scope`);
+  }
+  assert.equal(new Set(d.targets.map(t => t.id)).size, d.targets.length, 'one target per plan');
+});

@@ -127,7 +127,38 @@
     return { rows: [...rows.values()], cols };
   }
 
-  const api = { KEYS, placement, build, matrix };
+  // Table 2: areas against their published targets. Units are the main comparison (decided):
+  // targets count homes the same way the pipeline does; people are shown but not compared, since
+  // targets use household persons per unit and the pipeline Peel design criteria. A municipality's
+  // target is the Region's 2051 allocation of growth (2051 minus 2021). An area with no target
+  // shows "no target", never 0; a density-only target is shown, not compared.
+  //   targets: [{ id, units, population, jobs, density, year, kind, scope, source, url, page }]
+  //   munis: { Brampton: { units2021, units2051, pop2021, pop2051, jobs2021, jobs2051 } }
+  function vsTarget(r, targets, munis) {
+    const byId = new Map((targets || []).map(t => [t.id, t]));
+    const rows = [];
+    const row = (n, t, muni) => {
+      const m = n.m, base = t.units > 0 ? t.units : null;
+      return {
+        node: n, muni, target: t,
+        committed: m.committed, total: m.planned, people: m.people,
+        pctCommitted: base ? m.committed / base : null, pctTotal: base ? m.planned / base : null,
+        gap: base ? base - m.planned : null,
+        compared: base ? 'units' : t.population > 0 ? 'people (not compared)' : t.density ? 'density only' : 'none',
+      };
+    };
+    for (const mu of r.root.children) {
+      const a = munis && munis[mu.name];
+      if (a) rows.push(row(mu, { id: `m:${mu.name}`, units: a.units2051 - a.units2021, population: a.pop2051 - a.pop2021, jobs: a.jobs2051 - a.jobs2021, year: 2051, kind: 'allocation', scope: 'growth', source: 'Region of Peel 2051 allocation (growth since 2021)' }, mu.name));
+      const walk = n => { for (const c of n.children) { if (c.areaId && byId.has(c.areaId)) rows.push(row(c, byId.get(c.areaId), mu.name)); walk(c); } };
+      walk(mu);
+    }
+    const withTarget = new Set(rows.map(x => x.node.id));
+    const noTarget = [...r.nodes.values()].filter(n => (n.kind === 'plan' || n.kind === 'subplan') && !withTarget.has(n.id)).length;
+    return { rows, noTarget };
+  }
+
+  const api = { KEYS, placement, build, matrix, vsTarget };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanRollup = api;
 })(typeof window !== 'undefined' ? window : globalThis);
