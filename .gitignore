@@ -2,3 +2,6 @@ __pycache__/
 
 # Step B0 review: rebuilt by scripts/tree-review.js (the .xlsx is kept)
 docs/tree-review/tree-review.json
+
+# Known-answer figures (never committed)
+tests/private/

@@ -199,6 +199,7 @@
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     const records = P.dedupeRecords(raw);
     state.projects = P.buildProjects(records);
+    if (window.PeelTreeCounts) PeelTreeCounts.apply(state.projects);
     PeelPlanAreas.tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
@@ -501,6 +502,7 @@
     indexPainted = true;
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     state.projects = idx.projects.map(e => window.PeelSnapshotIndex.hydrate(e, idx));
+    if (window.PeelTreeCounts) PeelTreeCounts.apply(state.projects);
     PeelPlanAreas.tagProjects();
     state.auditInput = null;
     state.audit = null;
@@ -543,7 +545,24 @@
   }
 
   // Start from the weekly snapshot (fast, survives source outages); fall back to live.
+  // Step B1: the tree counts (small, built with the snapshot) load alongside; when they arrive
+  // after first paint, the developments take them and every view refreshes.
+  function loadTreeCounts() {
+    if (!window.PeelTreeCounts) return;
+    PeelTreeCounts.load().then(d => { if (d && state.projects && state.projects.length) recount(); });
+  }
+  function recount() {
+    if (!window.PeelTreeCounts || !state.projects) return;
+    PeelTreeCounts.apply(state.projects);
+    state.audit = null;
+    if (window.PeelSvcTab && PeelSvcTab.renderScenario) PeelSvcTab.renderScenario();
+    else if (window.PeelTopbar && PeelTopbar.renderTbScen) PeelTopbar.renderTbScen();
+    applyFilters();
+    const cur = typeof PeelDevNav !== 'undefined' && PeelDevNav.getCurrentProject && PeelDevNav.getCurrentProject();
+    if (cur && PeelDevNav.showDetail) PeelDevNav.showDetail(cur);
+  }
   async function boot() {
+    loadTreeCounts();
     if (await bootFromIndex()) {
       // First paint is up; pull the full snapshot when the browser is idle.
       const go = () => { loadFullSnapshot().catch(() => {}); };
@@ -648,7 +667,7 @@
     map: window.PeelMapCore.map,
     showDetail: (...a) => window.PeelDevNav.showDetail(...a),
     // ---- newly exposed core internals (used cross-module) ----
-    applyFilters, matches, scheduleRebuild, loadSource, showLoading, saveSources,
+    applyFilters, matches, scheduleRebuild, recount, loadSource, showLoading, saveSources,
     applySnapshot, jobsOf, empOf, clearEmp, mergeCriteria, setUserUnits,
     timeActive, yearsOf, setSheetH, refreshTheme,
     // Phase 6: full-snapshot load state (startup index paints first; the detail

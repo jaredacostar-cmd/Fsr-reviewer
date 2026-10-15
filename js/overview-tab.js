@@ -107,6 +107,7 @@
         <section class="ov-card ov-growth"><div class="ov-h"><h3>At a glance</h3>${devBtn}</div>
           <p class="small">${DV().firstSentence(st.why)}</p>
           <div class="ov-tiles">${tiles}</div>
+          ${window.PeelTreeCounts ? window.PeelTreeCounts.noteHTML(p, 3) : ''}
           <p class="small muted">Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. Below: the proposal, its files and history, and the site.</p>
         </section>
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Screening summary</h3></div>

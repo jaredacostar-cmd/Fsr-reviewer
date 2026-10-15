@@ -145,6 +145,10 @@
   // The headline numbers, first thing in the panel: planned, permitted, completed, left to build.
   function summaryHTML(p) {
     const b = p.buildout;
+    // Step B1: with the tree count in use, the development's count is the tree's (p.units); the
+    // build-out bar still shows progress from the applications and permits. The tree-count note
+    // itself is under At a glance (overview-tab.js), shown once.
+    const tree = p.count && p.count.mode === 'tree';
     const permits = p.records.filter(r => r.kind === 'permit');
     const tile = (cls, label, value, sub) => `<div class="sum-tile ${cls}"><div class="sl">${label}</div><div class="sv">${value}</div>${sub ? `<div class="ss">${sub}</div>` : ''}</div>`;
     if (b) {
@@ -153,10 +157,10 @@
       const w = v => total ? (v / total * 100).toFixed(2) : 0;
       return `<div class="summary" data-info="buildout">
         <div class="sum-tiles">
-          ${tile('s-plan', 'Planned', fmtNum(b.planned), 'units')}
+          ${tile('s-plan', 'Planned', fmtNum(tree ? p.units || 0 : b.planned), tree ? 'units · tree count' : 'units')}
           ${tile('s-perm', 'Permitted', fmtNum(b.permitted), `${pc(b.permitted)} · ${fmtNum(b.permits)} permits`)}
           ${tile('s-done', 'Completed', fmtNum(b.completed), pc(b.completed))}
-          ${tile('s-left', 'Left to build', fmtNum(b.remaining), 'no permit yet')}
+          ${tile('s-left', 'Left to build', fmtNum(tree ? Math.max(0, (p.units || 0) - (b.permitted || 0)) : b.remaining), 'no permit yet')}
         </div>
         <div class="sum-bar" role="img" aria-label="${fmtNum(b.completed)} completed, ${fmtNum(Math.max(0, b.permitted - b.completed))} permitted not completed, ${fmtNum(b.remaining)} left to build">
           <span class="bo-done" style="width:${w(b.completed)}%"></span><span class="bo-perm" style="width:${w(Math.max(0, b.permitted - b.completed))}%"></span><span class="bo-left" style="width:${w(b.remaining)}%"></span>
@@ -164,7 +168,7 @@
     }
     const done = permits.filter(r => r.phase === 'completed').length;
     return `<div class="summary"><div class="sum-tiles">
-      ${tile('s-plan', 'Units', p.units ? fmtNum(p.units) : p.unitsLost ? '0' : '–', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : p.units ? 'on the files' : 'not stated')}
+      ${tile('s-plan', 'Units', p.units ? fmtNum(p.units) : p.unitsLost || tree ? '0' : '–', tree ? 'tree count' : p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : p.units ? 'on the files' : 'not stated')}
       ${tile('s-perm', 'Permits', fmtNum(permits.length), '')}
       ${tile('s-done', 'Completed', fmtNum(done), done ? 'permits' : '')}
       ${tile('s-left', 'Applications', fmtNum(p.records.length - permits.length), '')}
