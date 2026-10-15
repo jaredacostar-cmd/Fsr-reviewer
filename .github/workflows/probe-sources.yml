@@ -28,12 +28,13 @@ name: Probe data sources
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
 #  mode=capital: Region capital projects layer → capital.json + DC match audit, built in the runner and summarised in the log (no personnel fields); only=commit also commits data/capital.json and data/capital-links-audit.json to this branch (hold until Peel GIS confirms the layer may be published)
 #  mode=capital-probe: the capital service's other layers and the line layer's text fields / project websites (counts and facility names only; log only)
+#  mode=ea-maps: download every EA page's study-area maps (images, study-area figures; PDFs as PNG) to the ea-maps branch, for tracing
 #  mode=eas: Region EA list + project pages → data/eas.json and data/eas-review.csv, committed to this branch; only=with-capital also links EAs to capital records
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, fsr, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe or eas'
+        description: 'all, fsr, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe, ea-maps or eas'
         default: 'all'
         required: false
       only:
@@ -272,6 +273,24 @@ jobs:
         if: inputs.mode == 'capital-probe'
         timeout-minutes: 15
         run: node scripts/probe-capital.js
+      - name: EA study-area maps (pushed to the ea-maps branch)
+        if: inputs.mode == 'ea-maps'
+        timeout-minutes: 40
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils imagemagick >/dev/null
+          node scripts/fetch-ea-maps.js --out ea-maps
+          for f in $(find ea-maps -name '*.pdf'); do
+            pdftoppm -r 110 -png -f 1 -l 2 "$f" "${f%.pdf}-p" || true
+            rm -f "$f"
+          done
+          for f in $(find ea-maps -name '*.webp' -o -name '*.jpg' -o -name '*.png'); do convert "$f" -resize '2200x2200>' "$f" 2>/dev/null || true; done
+          du -sh ea-maps; find ea-maps -type f | wc -l
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B ea-maps
+          git add -f ea-maps
+          git commit -m "EA study-area maps (raw, for tracing)"
+          git push -f origin ea-maps
       - name: Environmental assessments (committed to this branch)
         if: inputs.mode == 'eas'
         timeout-minutes: 40
