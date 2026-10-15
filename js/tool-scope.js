@@ -95,8 +95,8 @@
     if (plantName) {
       ids = new Set(App().state.servicing.drainage.filter(d => d.plant === plantName).map(d => d.id));
       title = SD().plantLabel(plantName); sub = `${fmtNum(ids.size)} ${App().state.servicing.blocks ? 'blocks' : 'catchments'}`;
-      const cap = M.plantCap(plantName);
-      if (cap) sub += ` · rated ${fmt1(cap.rated)} ML/d · existing + built + committed ${Math.round(cap.committed / cap.rated * 100)}% · uncommitted reserve ${fmt1(cap.rated - cap.committed)} ML/d`;
+      const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${plantName}`);
+      if (k) sub += ` · rated ${fmt1(k.rated)} ML/d · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · uncommitted reserve ${fmt1(k.reserve)} ML/d`;
       const ce = SP().plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
       if (ce) sub += ` · ${ce}`;
     } else if (a && a.zone) {
@@ -126,6 +126,7 @@
     if (!plantName && a && !a.zone) acts.push(ptBtn('upstream', id, 'Show upstream', 'List the catchments draining through this one'));
     acts.push(ptBtn('areareport', null, 'Area report', 'A printable report on the developments loading this area'));
     const totAvg = rows.reduce((t, r) => t + r.avg, 0);
+    const totPj = rows.reduce((t, r) => t + r.e.population + r.e.employment.jobs, 0);
     const byLayer = ['built', 'approved', 'proposed'].map(k => [k, rows.filter(r => r.lay === k).reduce((t, r) => t + r.avg, 0)]);
     const LIMIT = 60;
     const what = key === 'pz' ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
@@ -136,9 +137,9 @@
       <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total, ${key === 'pz' ? 'average day' : 'average dry weather (design)'} ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
 
       <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments adding flow since the census, largest ${key === 'pz' ? 'max day' : 'peak wet weather'} first · Peel design criteria, each development alone</caption>
-        <thead><tr><th>Development</th><th>People + jobs</th><th>${what[0]}</th><th>${what[1]}</th><th class="ld-share">Share</th></tr></thead>
+        <thead><tr><th>Development</th><th>People + jobs</th><th>${what[0]}</th><th>${what[1]}</th><th class="ld-share" title="Share of all the growth loading it, by people + jobs (not of capacity or reserve)">Share of growth (people + jobs)</th></tr></thead>
         <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[r.lay]}"></span>${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.via && !a?.zone && r.via.id !== id ? ` · via ${esc(SD().drName(r.via).replace(/^[^·]+· /, ''))}` : ''}${r.near ? ' · nearest assigned' : ''}</small></td>
-          <td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
+          <td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totPj > 0 ? `${Math.round((r.e.population + r.e.employment.jobs) / totPj * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments (Excel export has the top ${LIMIT}).</p>` : ''}
       ${DI().dcAreaWorksHTML(ids, key, plantName)}
       <p class="small muted">Developments built since the census, approved and proposed (existing development is in the census flow). Flows are each development's own at Peel design criteria; peaks are not additive. ${esc(SvcTab().scenarioText())}.</p>`;

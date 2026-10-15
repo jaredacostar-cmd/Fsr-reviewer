@@ -102,11 +102,12 @@
   function headroom(s) {
     const M = App().state.svcModel, R = App().state.reports;
     if (s.kind === 'plant') {
-      const cap = M.plantCap(s.pl), c = MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)); if (!cap || !c) return { tiles: '', hl: '' };
-      const reserve = cap.rated - cap.committed, ppl = cap.perPerson > 0 ? reserve * 1e6 / cap.perPerson : null;
+      // One capacity function (js/capacity.js): the same % and reserve as every other tab (SPEC 1.4).
+      const k = window.PeelCapacity.of(`plant:${s.pl}`), c = MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)); if (!k || !c) return { tiles: '', hl: '' };
+      const reserve = k.reserve, ppl = k.perPerson > 0 ? reserve * 1e6 / k.perPerson : null, pc = window.PeelCapacity.pctTxt;
       return {
-        hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${SvcTab().pctRated(c, 'com')}%</strong> of its rated ${fmt1(cap.rated)} ML/d, <strong>${SvcTab().pctRated(c, 'bo')}%</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
-        tiles: tile(fmt1(cap.rated), 'ML/d', 'rated capacity') + tile(`${SvcTab().pctRated(c, 'com')}%`, 'of rated', 'existing + built + committed', `${SvcTab().pctRated(c, 'bo')}% at build-out`)
+        hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${pc(k.pctCommitted)}</strong> of its rated ${fmt1(k.rated)} ML/d, <strong>${pc(k.pctBuildout)}</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
+        tiles: tile(fmt1(k.rated), 'ML/d', 'rated capacity') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
           + tile(fmt1(reserve), 'ML/d', 'uncommitted reserve (D-5-1)', ppl != null && reserve > 0 ? `≈${fmtNum(roundPop(ppl))} people` : '')
           + tile(c.out === 'today' ? 'now' : c.out ? `≈${c.out}` : `after ${window.PeelSvcPlants.hz.end}`, '', 'reaches the 90% expansion trigger', c.relief.length ? `next: ${esc(c.relief[0].text)}` : ''),
       };
@@ -136,13 +137,15 @@
         tiles: tile(fmt1(now), 'ML/d', 'max day at the census') + tile(fmt1(bo), 'ML/d', 'max day at build-out', `+${fmt1(bo - now)} ML/d growth`),
       };
     }
-    // wsys: lake-based treatment against the lake zones' build-out maximum day.
+    // wsys: South Peel treatment — the 2025 measured maximum day plus the lake zones' growth, from the
+    // one capacity function (as the Overview, the Water tab and the DC tab).
     const sp = R && R.water && R.water.southPeel; if (!sp) return { tiles: '', hl: '' };
-    const rated = sp.plants.reduce((t, p) => t + p.ratedMLd, 0);
-    let bo = 0; for (const id of s.ids) { const l = M.zones.get(id); if (l) bo += M.wMax(M.total(l), M.jobs(l)); }
+    const k = window.PeelCapacity.of('wsys:southPeel'); if (!k) return { tiles: '', hl: '' };
+    const pc = window.PeelCapacity.pctTxt, ty = k.triggerYear === 'today' ? 'is at its 90% expansion trigger now' : k.triggerYear ? `reaches its 90% expansion trigger ≈${k.triggerYear}` : 'stays below its 90% expansion trigger';
     return {
-      hl: `<strong>South Peel water system</strong>: rated ${fmt1(rated)} ML/d of treatment (A.P. Kennedy + Lorne Park); 2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d; the lake-based zones' maximum day reaches ≈${fmt1(bo)} ML/d at build-out.`,
-      tiles: tile(fmt1(rated), 'ML/d', 'rated treatment') + tile(fmt1(sp.maxDayMLd), 'ML/d', '2025 maximum day (measured)') + tile(fmt1(bo), 'ML/d', 'zones’ max day at build-out (design)'),
+      hl: `<strong>South Peel water system</strong> ${ty}: rated ${fmt1(k.rated)} ML/d of treatment (A.P. Kennedy + Lorne Park); 2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d + committed growth = <strong>${pc(k.pctCommitted)}</strong> of rated, <strong>${pc(k.pctBuildout)}</strong> at build-out.`,
+      tiles: tile(fmt1(k.rated), 'ML/d', 'rated treatment') + tile(fmt1(sp.maxDayMLd), 'ML/d', '2025 maximum day (measured)') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
+        + tile(fmt1(k.reserve), 'ML/d', 'uncommitted reserve (to 100% of rated)'),
     };
   }
   // The ladder both ways: what the scope drains to / is fed by, and what feeds it.
@@ -175,6 +178,7 @@
     const h = headroom(s), rows = loadRows(s, set), water = s.key === 'pz';
     const shown = showAll ? rows : rows.slice(0, 10);
     const totAvg = rows.reduce((t, r) => t + r.avg, 0);
+    const totPj = rows.reduce((t, r) => t + r.e.population + r.e.employment.jobs, 0);
     const what = water ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
     const works = (s.key === 'dr' || s.key === 'pz') && DI() && DI().dcAreaWorksHTML ? DI().dcAreaWorksHTML(s.ids, s.key, s.kind === 'plant' ? s.pl : null) : '';
     return `<div class="ov-top">${hlP(h.hl || `<strong>${esc(s.title)}</strong>`)}</div>${SCREEN_NOTE_SHORT}
@@ -184,8 +188,8 @@
         ${ladder(s)}
         <section class="ov-card ss-devs"><div class="ov-h"><h3>Developments loading it</h3><button type="button" class="btn small" data-ss-report>Area report</button></div>
           ${rows.length ? `<div class="dcb-scroll"><table class="dt ov-t ss-t"><caption class="small muted">${fmtNum(rows.length)} developments adding flow since the census, largest ${water ? 'max day' : 'peak wet weather'} first; each alone at Peel design criteria (peaks are not additive)</caption>
-          <thead><tr><th>Development</th><th class="n">People + jobs</th><th class="n">${what[0]}</th><th class="n">${what[1]}</th><th class="n">Share</th></tr></thead>
-          <tbody>${shown.map(r => `<tr><td>${dot(r.p.phase)} <button type="button" class="btn small link" data-ov-dev="${esc(r.p.key)}">${esc(r.p.title)}</button><small class="muted">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}</small></td><td class="n">${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td class="n">${uLs(r.avg)}</td><td class="n">${uLs(r.peak)}</td><td class="n">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table></div>
+          <thead><tr><th>Development</th><th class="n">People + jobs</th><th class="n">${what[0]}</th><th class="n">${what[1]}</th><th class="n" title="This development's people + jobs as a share of all the growth loading it (not a share of capacity or reserve)">Share of growth<br><span class="muted">(people + jobs)</span></th></tr></thead>
+          <tbody>${shown.map(r => `<tr><td>${dot(r.p.phase)} <button type="button" class="btn small link" data-ov-dev="${esc(r.p.key)}">${esc(r.p.title)}</button><small class="muted">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}</small></td><td class="n">${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td class="n">${uLs(r.avg)}</td><td class="n">${uLs(r.peak)}</td><td class="n">${totPj > 0 ? `${Math.round((r.e.population + r.e.employment.jobs) / totPj * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table></div>
           ${rows.length > 10 ? `<p><button type="button" class="btn small" data-ss-all>${showAll ? 'Show top 10' : `See all ${fmtNum(rows.length)}`}</button></p>` : ''}
           <p class="small muted">Growth total, ${water ? 'average day' : 'average dry weather (design)'}: ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}.</p>` : '<p class="small muted">No development adds flow here since the census.</p>'}
         </section>

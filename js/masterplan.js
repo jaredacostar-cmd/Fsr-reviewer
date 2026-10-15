@@ -322,6 +322,9 @@
         util: { today: q('today') / lim, com: q('committed') / lim, bo: q(null) / lim }, room, people: room / perPersonMax(), out: runOut(q, () => lim), relief: wells.map(f => facRelief(f)), q };
     }
     const sp = R.water.southPeel, ids = lakeZones(), rated = sp.plants.reduce((t, p) => t + p.ratedMLd, 0), lim = PLANT_TRIGGER * rated;
+    // Before the zones are in the servicing lookup there is no growth to add: not a result (it would
+    // read 2025 max day alone, 48% → 48%, and stay cached for this model).
+    if (!ids.length) return null;
     const q = y => sp.maxDayMLd + zonesMax(ids, y) - zonesMax(ids, 'today');
     const room = lim - q('committed');
     const facs = App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.kind === 'plant') : [];
@@ -379,8 +382,10 @@
   function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}|g${App().state.svcGen || 0}${sewUpgKey}`; }
   function cached(id, fn) {
     const k = scenarioKey(); if (DCN.key !== k) { DCN.cache.clear(); DCN.key = k; }
-    if (!DCN.cache.has(id)) DCN.cache.set(id, fn());
-    return DCN.cache.get(id);
+    if (DCN.cache.has(id)) return DCN.cache.get(id);
+    const v = fn();
+    if (v != null) DCN.cache.set(id, v);   // (not ready yet: ask again next time)
+    return v;
   }
   // Constraints a development relies on.
   function devNeeds(p) {
@@ -424,7 +429,10 @@
     return `${fmtNum(roundPop(c.people))} people<small>≈${fmtNum(Math.round(c.people / ppu))} units</small>`;
   }
   const reliefHTML = c => c.relief.length ? c.relief.slice(0, 3).map(r => `<button type="button" class="btn small link" data-dcn-relief="${esc(c.id)}|${c.relief.indexOf(r)}">${esc(r.text)}</button>`).join('<br>') + (c.relief.length > 3 ? ` <small>+${c.relief.length - 3}</small>` : '') : '<span class="muted">none on the 2026 DC map</span>';
-  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${Math.round(c.util.com * 100)}% committed → ${Math.round(c.util.bo * 100)}% build-out`}</small>`;
+  // % of rated capacity for plants and water treatment (never % of the 90% trigger, SPEC 1.4); % of
+  // capacity (firm, full pipe) for the rest.
+  const pctCap = (c, k) => (c.kind === 'plant' || c.kind === 'wplant' ? SvcTab().pctRated(c, k) : Math.round(c.util[k] * 100));
+  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${pctCap(c, 'com')}% committed → ${pctCap(c, 'bo')}% build-out${c.kind === 'plant' || c.kind === 'wplant' ? ' of rated' : ''}`}</small>`;
   function needsTable(list, ppu, opts = {}) {
     return `<table class="dt dcn-table"><thead><tr><th>${opts.first || 'Existing capacity'}</th><th>Room after approved</th><th>Runs out</th><th>DC relief (construction)</th></tr></thead><tbody>
       ${list.map(reg).map(c => `<tr class="${STATUS[c.status][0]}"><td>${c.sys === 'water' ? '💧 ' : ''}${consName(c)}</td><td data-l="Room after approved">${roomText(c, ppu)}</td><td data-l="Runs out">${outText(c)}${c.outAfter != null ? `<small>again ${c.outAfter === 'today' ? 'now' : `≈${c.outAfter}`} with the expansions</small>` : ''}<small>${esc(STATUS[c.status][1])}</small></td><td data-l="DC relief">${reliefHTML(c)}</td></tr>`).join('')}</tbody></table>`;
@@ -438,7 +446,7 @@
     const nChk = list.filter(c => c.status === 'check').length;
     return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} Room in units at this development's ${ppu.toFixed(1)} persons per unit.${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
       ${main.length ? needsTable(main, ppu) : ''}
-      ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.round(Math.max(...rest.map(c => c.util.bo)) * 100)}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
+      ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.max(...rest.map(c => pctCap(c, 'bo')))}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
       <p class="small"><button type="button" class="btn small link" data-dcn-all="1">All DC timing →</button></p>
       <p class="small muted">Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (${esc(SvcTab().scenarioText())}). ${sys === 'water' ? 'Water supply is a rough conveyance estimate: water pumping station capacities are not published.' : `Sewers: full-pipe capacity at peak wet (pipe screen); pumping stations: firm capacity; plants: ${Math.round(PLANT_TRIGGER * 100)}% of rated.${sys ? '' : ' Water supply is a rough conveyance estimate: water pumping station capacities are not published.'}`} A screen, not a hydraulic model.</p>`;
   }

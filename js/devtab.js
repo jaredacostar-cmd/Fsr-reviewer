@@ -707,7 +707,9 @@
     { url: `${PEEL_FS}/storm_infrastructure/FeatureServer/4`, f: 'Diameter,Material,MainType', src: 'Region of Peel' },
   ];
   const STORM_STYLE = { color: '--pipe-storm', label: 'Storm sewer' };
-  const geoQ = (url, lng, lat, r, outFields) => ARC().fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' });
+  // A reverse-geocode that hangs must not hold the list: 6 s, then no street name.
+  const fetchT = (url, opts = {}, ms = 6000) => { const c = new AbortController(), t = setTimeout(() => c.abort(), ms); return fetch(url, { ...opts, signal: c.signal }).finally(() => clearTimeout(t)); };
+  const geoQ = (url, lng, lat, r, outFields) => ARC().fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' }, { timeout: 15000 });
   function dcDist(pt, g) {
     const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320;
     let best = Infinity;
@@ -742,12 +744,12 @@
     const k = `${lat.toFixed(4)},${lng.toFixed(4)}`; if (streetCache.has(k)) return streetCache.get(k);
     const pr = (async () => {
       try {
-        const j = await (await fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
+        const j = await (await fetchT(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
         const a = j && j.address, st = a && String(a.Address || a.ShortLabel || '').replace(/^[\d\s-]+[A-Za-z]?\s+(?=\D)/, '').trim();
         if (st) return st;
       } catch (e) { /* next */ }
       try {
-        const j = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
+        const j = await (await fetchT(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
         if (j && j.address && j.address.road) return j.address.road;
       } catch (e) { /* offline */ }
       return '';
@@ -804,7 +806,7 @@
     }).catch(() => {
       if (liveKey !== p.key) return;
       const box = document.getElementById('devtab-exist-storm');
-      if (box) box.innerHTML = '<p class="small muted">Storm sewer lookup failed (the municipal layers did not respond).</p>';
+      if (box) box.innerHTML = '<p class="small muted ex-fail">Couldn\'t load the storm sewers from the municipal GIS · <button type="button" class="btn small link" data-dt-exr="' + exR + '">Retry</button></p>';
     });
   }
 

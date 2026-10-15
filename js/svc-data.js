@@ -92,16 +92,17 @@
       tagServicing();
       renderSvcSelects();
       // Blocks are the catchments: one map chip for them (Wastewater blocks), not two.
-      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; $('#f-dr-label').textContent = 'Wastewater block'; Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); $('#f-dr-q').placeholder = 'Find a block…'; PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
+      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; { const l = $('#f-dr-label'); if (l) l.textContent = 'Wastewater block'; } Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); { const q = $('#f-dr-q'); if (q) q.placeholder = 'Find a block…'; } PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
       for (const k of ['pz', 'dr']) if (MM().svcOn[k]) setSvcLayer(k, true);
       if (MM().svcOn.bk) ST().setBlocksLayer(true);
       DI().renderDcLayer(); MA().renderLegend();
-      // A model built before the 2025 annual reports arrived has no plants: rebuild it now.
-      if (App().state.svcModel && App().state.reports) SvcTab().renderSvcTab();
+      // The model is built once the servicing lookup is filled (renderSvcTab waits for it): build it
+      // now, which also replaces one built before the 2025 annual reports arrived.
+      SvcTab().renderSvcTab();
       App().applyFilters();
       setTimeout(SC().loadSewers, 1500);
       MP().loadWaterSupply().then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });
-    } catch (e) { /* optional */ }
+    } catch (e) { console.warn('Servicing data did not load completely:', e); }   // (was silent: a missing element stopped the model, the layers and the sewers)
   }
   // A development's pressure zone and wastewater block. Outside the mapped zones / blocks: the
   // nearest one within NEAR_M of its edge, the area it would most likely connect to (greenfield
@@ -278,7 +279,12 @@
     });
     const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
     const devAvg = D.toMLd(cb.wastewater.avg);
-    return { M, e, cb, layer, z, zNear: nearOf(p, 'pz'), dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0 };
+    // The plant from the one capacity function (js/capacity.js, SPEC 1.4); the site's use of its
+    // reserve says its basis (SPEC 1.5): the development's flow at the plant's measured rate
+    // (calibrated) or at Peel design criteria.
+    const k = pl && window.PeelCapacity ? window.PeelCapacity.of(`plant:${pl}`) : null;
+    const useNote = cap ? (M.mode === 'calibrated' && cap.f !== 1 ? `flow at the plant's measured rate, ×${cap.f.toFixed(2)} design` : 'flow at Peel design criteria') : '';
+    return { M, e, cb, layer, z, zNear: nearOf(p, 'pz'), dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: k ? k.reserve : cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0, useNote };
   }
   // Servicing check (inside the Servicing section): the development's flows at Peel design
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant

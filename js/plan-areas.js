@@ -29,6 +29,8 @@
       renderAreaSelects();
       renderPlanAreas();
       App().applyFilters();
+      // The servicing model needs the census baseline: build it now that it is here.
+      if (App().state.servicing && window.PeelSvcTab) window.PeelSvcTab.renderSvcTab();
     } catch (e) { /* areas are optional */ }
   }
   function tagProjects() {

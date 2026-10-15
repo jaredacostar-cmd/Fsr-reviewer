@@ -65,7 +65,7 @@
       psPct: sps ? Math.round(sps.wet / sps.firm * 100) : 0,
       plant: f.cap ? f.cap.name : null,
       reserve: f.cap ? fmt1(f.reserve) : null,
-      usePct: f.cap && f.reserve > 0 ? Math.round(f.use / f.reserve * 100) : 0,
+      usePct: f.cap && f.reserve > 0 ? Math.round(f.use / f.reserve * 100) : 0, useNote: f.useNote || '',
       over: !!(f.cap && f.reserve <= 0),
       commitPct: f.cap ? Math.round(f.cap.committed / f.cap.rated * 100) : 0,
     });
@@ -131,7 +131,9 @@
     return list;
   }
   function capacityBarsHTML(list) {
-    const bar = c => { const pc = SvcTab().pctRated(c, 'com'), pb = SvcTab().pctRated(c, 'bo'), a = Math.min(130, pc), b = Math.min(130, pb), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
+    // The % come from the one capacity function (js/capacity.js), as every other tab (SPEC 1.4).
+    const capOf = c => window.PeelCapacity && window.PeelCapacity.of(c.kind === 'plant' ? `plant:${c.pl}` : 'wsys:southPeel');
+    const bar = c => { const k = capOf(c), pc = k ? Math.round(k.pctCommitted) : SvcTab().pctRated(c, 'com'), pb = k ? Math.round(k.pctBuildout) : SvcTab().pctRated(c, 'bo'), a = Math.min(130, pc), b = Math.min(130, pb), st = c.util.bo >= 1 ? 'over' : c.util.bo >= 0.85 ? 'near' : 'ok';
       return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}<button type="button" class="btn small link" data-ss="${c.kind === 'plant' ? `plant:${esc(c.pl)}` : 'wsys:lake'}" title="Open this as a scope">${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</button></span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
         <div class="ov-bar" role="img" aria-label="existing + built + committed ${pc}% of rated capacity, ${pb}% at build-out; expansion trigger at ${Math.round(MP().PLANT_TRIGGER * 100)}%"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i><i class="t" style="left:${(MP().PLANT_TRIGGER * 100 / 1.3).toFixed(1)}%" title="${Math.round(MP().PLANT_TRIGGER * 100)}% expansion trigger"></i><i class="t r" style="left:${(100 / 1.3).toFixed(1)}%" title="100% rated"></i></div>
         <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${SP().hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? DU().allocPlant(c.pl) : null)}</small></div>`; };

@@ -216,6 +216,10 @@
     PeelSearchFilter.renderMuniChips();
     PeelTimeline.updateYearBounds();
     applyFilters();
+    // The servicing model follows the developments: rebuilt with them (it used to wait for the Water /
+    // Wastewater tab, so the Overview, the DC tab and the scope cards read a model of the first-paint
+    // data — Inglewood 398% vs 42%, SPEC 1.4).
+    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.renderSvcTab(), 0); }
   }
 
   // Years in which the project hit the selected milestone (or any milestone).

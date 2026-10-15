@@ -184,6 +184,10 @@
     if (!WT().WF.data) { WT().loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
     const Y = M.Y, sp = R.water.southPeel, lake = MP().lakeZones().filter(id => MP().zLevel(SD().svcById.get(id).zone) <= 7);
     const treat = [WT().waterCapRow(M, 'South Peel (A.P. Kennedy + Lorne Park)', MP().lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
+    // South Peel's totals from the one capacity function (js/capacity.js), as the Overview and the DC
+    // tab count them; the census / built split stays the model's.
+    const kSP = window.PeelCapacity && window.PeelCapacity.of('wsys:southPeel');
+    if (treat[0] && kSP) { const r = treat[0], t0 = r.v[0] + r.v[1], sc = t0 > 0 ? kSP.existing / t0 : 1; r.v = [r.v[0] * sc, r.v[1] * sc, kSP.committed - kSP.existing, kSP.buildout - kSP.committed]; }
     for (const z of App().state.servicing.zones) { const s = MP().wellSystem[z.zone] && R.water.caledon.find(x => x.name === MP().wellSystem[z.zone]); if (s) treat.push(WT().waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
     const pumps = WT().wfPumps();
     const pump = [];

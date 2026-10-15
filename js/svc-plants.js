@@ -334,7 +334,14 @@
         const perPerson = popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0;   // L/person/d, incl. development jobs
         rows.push({ name, rated, v, extMld, perPerson, popToday, note });
       };
-      for (const x of secs) mkRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), x.sum, x.f, inflowsTo(x.pl) + divMld(x.pl), ratedOf(x.pl));
+      // Each plant from the one capacity function (js/capacity.js): the same layers, reserve and %
+      // as the Overview, the DC tab, the scope card and the development panel (SPEC 1.4).
+      const capRow = (name, k, note) => {
+        if (!k || !(k.rated > 0)) return;
+        rows.push({ name, rated: k.rated, v: [k.census, k.existing - k.census, k.committed - k.existing, k.buildout - k.committed].map(v => Math.max(0, v)), extMld: k.ext || 0, perPerson: k.perPerson, popToday: k.popToday, note });
+      };
+      const caps = secs.map(x => ({ x, k: window.PeelCapacity && window.PeelCapacity.of(`plant:${x.pl}`) }));
+      for (const { x, k } of caps) if (k) capRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), k); else mkRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), x.sum, x.f, inflowsTo(x.pl) + divMld(x.pl), ratedOf(x.pl));
       if (secs.length > 1) mkRow('All Peel plants', peel, peelFc, inflows.reduce((t, e) => t + e.mld, 0), secs.reduce((t, x) => t + ratedOf(x.pl), 0), 'incl. the City of Toronto inflow');
       chart = capChartHTML(rows, Y);
       // Horizon years: existing today, approved and proposed phased in over the set years.
@@ -369,6 +376,8 @@
     const peelF = secs.length ? secs.reduce((t, x) => t + adwf(x.sum, x.f), 0) / Math.max(1e-9, adwf(peel)) : 1;
     // Phase 4: Plants sub-view tiles — each plant's build-out flow as a % of rated capacity.
     const tileRows = secs.filter(x => ratedOf(x.pl) > 0).map(x => {
+      const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${x.pl}`);
+      if (k) return { name: SD().PLANT_SHORT[x.pl], pctBo: k.pctBuildout, rated: k.rated };
       const rated = ratedOf(x.pl), bo = adwf(x.sum, x.f) + inflowsTo(x.pl) + divMld(x.pl);
       return { name: SD().PLANT_SHORT[x.pl], pctBo: rated > 0 ? bo / rated * 100 : 0, rated };
     });

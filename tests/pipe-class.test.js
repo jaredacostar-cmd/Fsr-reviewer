@@ -43,5 +43,7 @@ test('a model rebuild is a new scenario for every cache, and an early render can
   assert.match(src('masterplan.js'), /function scenarioKey\(\) \{[^\n]*\|g\$\{App\(\)\.state\.svcGen \|\| 0\}/);
   assert.match(src('svc-tab.js'), /App\(\)\.state\.svcGen = \(App\(\)\.state\.svcGen \|\| 0\) \+ 1;/);
   assert.match(src('masterplan.js'), /SD\(\)\.svcById\.has\(z\.id\)\)\.map\(z => z\.id\)/, 'lakeZones skips zones not yet in svcById');
-  assert.match(src('svc-data.js'), /if \(App\(\)\.state\.svcModel && App\(\)\.state\.reports\) SvcTab\(\)\.renderSvcTab\(\);/);
+  // SPEC 1.4: built once the servicing lookup is filled, never before it (no model beats a wrong one).
+  assert.match(src('svc-data.js'), /now, which also replaces one built before the 2025 annual reports arrived\.\n\s*SvcTab\(\)\.renderSvcTab\(\);/);
+  assert.match(src('svc-tab.js'), /if \(!SD\(\)\.svcById\.size\) return;/);
 });
