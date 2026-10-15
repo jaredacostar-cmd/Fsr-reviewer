@@ -86,11 +86,11 @@ test('#pane-tool and #detail are gone from the markup and the code', () => {
   }
 });
 
-test('a shared link re-opens a pipe, a file, a DC work or a block; tool results are not written to links', () => {
+test('a shared link re-opens a pipe, a file, a DC work, a block, an EA or a capital project; tool results are not written to links', () => {
   const sh = src('js/share.js');
-  assert.match(sh, /!\/\^\(pipe\|file\|dcwork\|iiblock\):\/\.test\(App\(\)\.state\.ss\)/);
+  assert.match(sh, /!\/\^\(pipe\|file\|dcwork\|iiblock\|ea\|cap\):\/\.test\(App\(\)\.state\.ss\)/);
   const sc = src('js/svc-scope.js');
-  for (const k of ['pipe', 'file', 'dcwork', 'iiblock']) assert.match(sc, new RegExp(`\\n    ${k}: `), `restore ${k}`);
+  for (const k of ['pipe', 'file', 'dcwork', 'iiblock', 'ea', 'cap']) assert.match(sc, new RegExp(`\\n    ${k}: `), `restore ${k}`);
 });
 
 test('one hover card: kind, name, the number, what a click does', () => {

@@ -218,7 +218,8 @@ test('follows the redesign: one hover card, hatched areas, the stated zoom thres
   // level, so a pane drawn above (planning areas, zones) does not swallow the pointer.
   assert.match(s, /window\.PeelUtil\.hoverCard\(\{ kind: `\$\{L0\.label\} · screening`/);
   assert.match(s, /SS\(\)\.openResult\(/);
-  assert.match(s, /map\.on\('click', e => \{ if \(toolOn\(\)\) return; const h = hitAt\(e\.latlng\);/);
+  assert.match(s, /root\.PeelPick\.register\(\{ id: 'constraints'/);
+  assert.match(fs.readFileSync(path.join(ROOT, 'js/map-pick.js'), 'utf8'), /m\.on\('mousemove', hover\)/);
   assert.match(s, /interactive: false, stroke: !edges/);
   assert.match(fs.readFileSync(path.join(ROOT, 'js/plan-areas.js'), 'utf8'), /const tappable = !\(window\.PeelConstraints && window\.PeelConstraints\.anyOn/);
   // Two ladders: constraint areas are hatched, never a solid colour that reads as phase / capacity.

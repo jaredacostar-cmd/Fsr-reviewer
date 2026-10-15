@@ -649,9 +649,11 @@
   function renderWatch() {
     const box = $('#watch-list'); if (!box) return;
     const list = state.projects.filter(p => watch.has(p.key)).map(p => ({ p, ch: weekChangeOf(p.key) })).sort((a, b) => (!!b.ch - !!a.ch) || a.p.title.localeCompare(b.p.title));
+    // Watched EAs and capital projects (js/capital-ea.js).
+    const ceRows = window.PeelCapitalEA ? window.PeelCapitalEA.watchRows(watch) : [];
     const nCh = list.filter(x => x.ch).length;
     $('#watch-head').textContent = watch.size ? `${fmtNum(watch.size)} watched${nCh ? ` · ${nCh} changed this week` : ''}` : '';
-    box.innerHTML = list.length ? list.map(({ p, ch }) => `<li><button type="button" data-watch-open="${esc(p.key)}">${dot(p.phase)}<span><span class="t">★ ${esc(p.title)}</span><span class="m">${ch ? `<strong class="watch-ch">${esc(ch)}</strong> · ` : ''}${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</span></span></button></li>`).join('')
+    box.innerHTML = list.length || ceRows.length ? ceRows.join('') + list.map(({ p, ch }) => `<li><button type="button" data-watch-open="${esc(p.key)}">${dot(p.phase)}<span><span class="t">★ ${esc(p.title)}</span><span class="m">${ch ? `<strong class="watch-ch">${esc(ch)}</strong> · ` : ''}${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</span></span></button></li>`).join('')
       : '<li class="muted small">Tap ☆ Watch on a development to follow it here.</li>';
     const wk = $('#week-watch-n'); if (wk) { wk.hidden = !nCh; wk.textContent = `★${nCh}`; }
   }
@@ -661,7 +663,7 @@
       const k = b.dataset.watch; if (watch.has(k)) watch.delete(k); else watch.add(k);
       store.set('watch', [...watch]);
       const on = watch.has(k); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '★ Watching' : '☆ Watch';
-      renderWatch(); PeelFilterUI.renderFlagChips(); return;
+      renderWatch(); PeelFilterUI.renderFlagChips(); if (window.PeelCapitalEA) window.PeelCapitalEA.renderWeek(); return;
     }
     const o = e.target.closest('[data-watch-open]');
     if (o) { const p = PeelDevNav.projectByKey(o.dataset.watchOpen); if (p) PeelDevelopmentsTab.focusProject(p); }
@@ -710,7 +712,7 @@
     // view awaits the full records).
     fullSnapshotReady: () => fullLoaded, whenFullSnapshot: () => loadFullSnapshot(),
     getAnalysisSnap: () => analysisSnap, setAnalysisSnap,
-    watch, removed, disabled,
+    watch, removed, disabled, renderWatch,
     inflight: () => inflight,
     setInflight: v => { inflight = v; },
     // shared filter/state constants (core-owned, used by share/filter-ui/search-filter)

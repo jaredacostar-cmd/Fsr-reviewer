@@ -189,7 +189,9 @@
       // A newly listed file that is already completed is old news, not a Peel-level concern: This week has it.
       ...(ch.added || []).filter(a => a.phase !== 'completed').map(a => ({ key: a.key, text: `New: ${a.title} (${P.PHASE_BY_KEY[a.phase].label}, ${a.municipality})` })),
     ];
-    return { adv, trig, stalled, changes };
+    // Capital projects and EAs (Peel / area scope): review periods closing, DC-matched dates moved later.
+    const ce = window.PeelCapitalEA ? window.PeelCapitalEA.attention() : [];
+    return { adv, trig, stalled, changes, ce };
   }
   // Top-5 developments by planned units, with a "See all" to the Developments tab.
   function topDevsHTML(set, basis) {
@@ -215,7 +217,7 @@
     }
     return true;
   }
-  const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result', cx: 'Constraint layer · screening' };
+  const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result', cx: 'Constraint layer · screening', ea: 'Environmental assessment · screening', cap: 'Capital project · screening' };
   function renderOverview(set, e, basis) {
     const el = $('#ov-body'); if (!el) return;
     const rsc = root.PeelSvcScope && root.PeelSvcScope.current();
@@ -257,7 +259,7 @@
     const toneCls = { ok: 'why-ok-t', warn: 'why-stall-t', bad: 'why-stop-t' };
     const nd = needsAttentionData(set, capList), na = DV().needsAttention(nd), groups = DV().needsGroups(nd);
     const needs = `<section class="ov-card ov-needs"><div class="ov-h"><h3>Needs attention</h3></div>
-      ${na.length ? groups.map(g => `<div class="na-g"><h4 class="na-gh">${esc(g.name)} <span class="muted">· ${fmtNum(g.count)}${g.note ? ` · ${esc(g.note)}` : ''}</span></h4>${g.items.length ? `<ul class="na-list small">${g.items.map(it => `<li class="na-it"><span class="${toneCls[it.tone]}">${esc(it.text)}</span>${it.dev ? `<button type="button" class="btn small link" data-ov-dev="${esc(it.dev)}">Development →</button>` : it.tab ? go(it.tab, TAB_LABEL[it.tab] || it.tab) : ''}</li>`).join('')}</ul>` : '<p class="small muted">None.</p>'}</div>`).join('') : '<p class="small muted">Nothing needs attention right now.</p>'}</section>`;
+      ${na.length ? groups.map(g => `<div class="na-g"><h4 class="na-gh">${esc(g.name)} <span class="muted">· ${fmtNum(g.count)}${g.note ? ` · ${esc(g.note)}` : ''}</span></h4>${g.items.length ? `<ul class="na-list small">${g.items.map(it => `<li class="na-it"><span class="${toneCls[it.tone]}">${esc(it.text)}</span>${it.ce ? `<button type="button" class="btn small link" data-ce-open="${esc(it.ce)}">${it.ce.startsWith('ea:') ? 'EA' : 'Project'} →</button>` : it.dev ? `<button type="button" class="btn small link" data-ov-dev="${esc(it.dev)}">Development →</button>` : it.tab ? go(it.tab, TAB_LABEL[it.tab] || it.tab) : ''}</li>`).join('')}</ul>` : '<p class="small muted">None.</p>'}</div>`).join('') : '<p class="small muted">Nothing needs attention right now.</p>'}</section>`;
     const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(unitsAll))} units.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
