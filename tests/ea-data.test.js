@@ -317,3 +317,10 @@ test('purpose draft keeps initials and abbreviations inside the sentence', () =>
   assert.equal(E.purposeDraft(['A Schedule C Class Environmental Assessment (EA) will assess G.E. Booth Wastewater Treatment Plant capacity to 2041. Other text follows here.']),
     'A Schedule C Class Environmental Assessment (EA) will assess G.E. Booth Wastewater Treatment Plant capacity to 2041.');
 });
+
+test('purpose draft skips process sentences and cuts long ones at a word', () => {
+  assert.equal(E.purposeDraft(['Following the 30-day public review of the Environmental Study Report (ESR), the Region will address all comments and finalize the report. The study will identify the preferred water and wastewater servicing for growth in Bolton.']),
+    'The study will identify the preferred water and wastewater servicing for growth in Bolton.');
+  const long = E.purposeDraft([`The study will assess ${'servicing options for the downtown area and '.repeat(8)}beyond.`]);
+  assert.ok(long.length <= 221 && long.endsWith('…') && !/\s…$/.test(long), long);
+});
