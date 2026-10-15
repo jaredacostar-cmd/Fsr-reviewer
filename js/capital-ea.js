@@ -349,6 +349,70 @@
     if (e.target.closest('[data-ce-allcap]')) { allCap = true; const bb = document.querySelector('#dca-build-body'); if (bb) bb.innerHTML = listsHTML(); }
   });
 
+  // ---- Capital › EAs ----------------------------------------------------------------------------------
+  const eaTab = Object.assign({ f: { q: '', show: 'current', sys: {} }, sort: 'next' }, store.get('eaTab', null) || {});
+  eaTab.f.q = '';   // the search box starts empty each visit
+  const saveEaTab = () => store.set('eaTab', { f: { ...eaTab.f, q: '' }, sort: eaTab.sort });
+  const today = () => new Date().toISOString().slice(0, 10);
+  // A development in scope: the EAs within 1 km of its site.
+  function nearScope() {
+    const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev();
+    return p && p.lat != null ? { title: p.title, lat: p.lat, lng: p.lng, m: 1000 } : null;
+  }
+  function eaTabHTML() {
+    if (!data.loaded) return U.skel ? U.skel('Loading the environmental assessments') : '';
+    if (!data.eas) return '<p class="small muted">The environmental assessments did not load.</p>';
+    return M.eaTabHTML({ eas: data.eas.eas, f: eaTab.f, sort: eaTab.sort, today: today(), thisYear: new Date().getFullYear(), muni: muni(), near: nearScope(), checked: data.eas.generatedAt && data.eas.generatedAt.slice(0, 10), screenNote: U.SCREEN_NOTE_SHORT });
+  }
+  let eaBox = null;
+  function renderEaTab(box) {
+    eaBox = box || eaBox || document.querySelector('#dca-eas-body'); if (!eaBox) return;
+    const q = eaBox.querySelector('[data-eatab-q]'), focused = q && document.activeElement === q, pos = q ? q.selectionStart : 0;
+    eaBox.innerHTML = eaTabHTML();
+    if (focused) { const q2 = eaBox.querySelector('[data-eatab-q]'); if (q2) { q2.focus(); q2.setSelectionRange(pos, pos); } }
+  }
+  const filteredEAs = () => {
+    const near = nearScope(), all = (data.eas && data.eas.eas) || [];
+    const scoped = near ? M.easNear(all, near.lat, near.lng, near.m).map(h => h.e) : muni() ? all.filter(e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '')) : all;
+    return M.eaSort(scoped.filter(e => M.eaMatch(e, eaTab.f)), eaTab.sort);
+  };
+  if (typeof document !== 'undefined') {
+    let qTimer = null;
+    document.addEventListener('input', e => {
+      const q = e.target.closest && e.target.closest('[data-eatab-q]'); if (!q) return;
+      clearTimeout(qTimer); qTimer = setTimeout(() => { eaTab.f.q = q.value; renderEaTab(); }, 200);
+    });
+    document.addEventListener('change', e => {
+      const t = e.target; if (!t.closest || !t.closest('#dca-eas-body')) return;
+      if (t.dataset.eatabShow != null && t.checked) eaTab.f.show = t.dataset.eatabShow;
+      else if (t.dataset.eatabSys != null) eaTab.f.sys = { ...eaTab.f.sys, [t.dataset.eatabSys]: t.checked };
+      else if (t.dataset.eatabSort != null) eaTab.sort = t.value;
+      else return;
+      saveEaTab(); renderEaTab();
+    });
+    document.addEventListener('click', e => {
+      const go = e.target.closest('[data-ce-goto]');
+      if (go) { const AT = window.PeelAnalysisTabs; if (AT) { AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
+      if (!e.target.closest('#dca-eas-body')) return;
+      const stamp = today();
+      if (e.target.closest('[data-eatab-csv]')) {
+        const { cols, rows } = M.eaSheetRows(filteredEAs()), q = v => `"${String(v).replace(/"/g, '""')}"`;
+        if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.csv`, (U.CSV_DISCLAIMER || '') + [cols, ...rows].map(r => r.map(q).join(',')).join('\n'), 'text/csv');
+      } else if (e.target.closest('[data-eatab-geo]')) {
+        if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.geojson`, JSON.stringify(M.easGeoJSON(filteredEAs(), { ...exportProps(), asOf: data.eas.generatedAt })), 'application/geo+json');
+      } else if (e.target.closest('[data-eatab-ics]')) {
+        const near = nearScope(), all = (data.eas && data.eas.eas) || [];
+        const scoped = near ? M.easNear(all, near.lat, near.lng, near.m).map(h => h.e) : muni() ? all.filter(x => String(x.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(x.municipality || '')) : all;
+        if (window.PeelExports) window.PeelExports.download(`peel-ea-milestones-${stamp}.ics`, M.eaICS(M.upcoming(scoped, stamp, 90), new Date().toISOString()), 'text/calendar');
+      } else if (e.target.closest('[data-eatab-map]')) {
+        const sys = { water: eaTab.f.sys.water !== false, wastewater: eaTab.f.sys.wastewater !== false, roads: eaTab.f.sys.roads !== false || eaTab.f.sys.storm !== false };
+        setOn({ ea: true, show: eaTab.f.show === 'complete' ? 'completed' : eaTab.f.show, eaSys: sys });
+        const pts = filteredEAs().filter(x => !M.eaUnplaced(x)).map(x => L.geoJSON(x.geometry).getBounds()).filter(b => b.isValid());
+        if (pts.length) map.fitBounds(pts.reduce((a, b) => a.extend(b), L.latLngBounds(pts[0].getSouthWest(), pts[0].getNorthEast())), { padding: [30, 30], maxZoom: 15 });
+      }
+    });
+  }
+
   // ---- Exports: GeoJSON for both layers; sheets for the workbook (js/exports.js). No people. ----------
   const exportProps = () => ({ ...(U.DISCLAIMER_PROPS || {}), generated: new Date().toISOString() });
   function exportConsGeoJSON() {
@@ -371,6 +435,6 @@
     load();
   }
 
-  const api = { renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

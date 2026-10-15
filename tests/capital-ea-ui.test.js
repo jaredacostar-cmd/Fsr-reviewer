@@ -261,7 +261,8 @@ test('Capital tab lists: active construction, current EAs, recently completed EA
   assert.deepEqual(M.currentEAs(list, 'Brampton').map(e => e.id), ['a']);
   assert.deepEqual(M.recentEAs(list, null, 2026).map(e => e.id), ['c'], `completed in the last ${M.RECENT_YEARS} years`);
   const html = M.listsHTML({ contracts: cs, eas: list, thisYear: 2026, hasCapital: true, capitalAsOf: '2026-09-30', screenNote: SCREEN });
-  assert.deepEqual(order(html), ['active', 'current-eas', 'recent-eas']);
+  assert.deepEqual(order(html), ['active'], 'Construction lists capital projects; the EAs are on Capital › EAs');
+  assert.match(html, /data-ce-goto="eas"/);
   assert.match(html, /General screening results only/);
   assert.match(html, /data-ce-open="cap:web:peelregion\.ca\/construction\/project-90-0001"/);
   assert.match(M.listsHTML({ contracts: new Map(), eas: list, thisYear: 2026, hasCapital: false }), /not published yet/);
@@ -299,13 +300,15 @@ test('Needs attention: EA periods closing in 30 days; DC-matched capital dates m
   assert.match(src('js/overview-tab.js'), /data-ce-open="\$\{esc\(it\.ce\)\}"/);
 });
 
-test('Capital tab: renamed, a Construction & EAs view (public too), screening note in This week', () => {
+test('Capital tab: Construction and EAs views (public too), screening note in This week', () => {
   const html = src('index.html');
   assert.match(html, /id="ftab-dca"[^>]*>Capital</);
-  assert.match(html, /data-dcasub="build">Construction &amp; EAs</);
+  assert.match(html, /data-dcasub="build">Construction</);
+  assert.match(html, /data-dcasub="eas">EAs</);
   assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="build"/);
+  assert.match(html, /id="pane-dca-eas" data-pane="dca" data-sub="eas"/);
   assert.match(html, /id="ce-week-panel"[\s\S]{0,400}General screening results only/);
-  assert.match(src('js/analysis-tabs.js'), /dcSub !== 'timing' && dcSub !== 'build' && root\.PeelUtil/);
+  assert.match(src('js/analysis-tabs.js'), /dcSub !== 'timing' && dcSub !== 'build' && dcSub !== 'eas' && root\.PeelUtil/);
   assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);
   assert.match(src('js/dca-tab.js'), /PeelCapitalEA\.dcActualHTML\(/);
 });

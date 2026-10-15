@@ -27,6 +27,8 @@
   function renderDca() {
     // Construction & EAs: Region capital projects and EAs (needs neither the servicing model nor the sewers).
     const bb = $('#dca-build-body'); if (bb && window.PeelCapitalEA) bb.innerHTML = window.PeelCapitalEA.listsHTML();
+    // EAs: the Region's environmental assessments (Capital › EAs), scoped to the municipality or the site.
+    const eb = $('#dca-eas-body'); if (eb && window.PeelCapitalEA) window.PeelCapitalEA.renderEaTab(eb);
     const bodies = [$('#dca-timing-body'), $('#dca-rec-body'), $('#dca-funding-body')];
     const legacy = bodies.every(b => !b) ? $('#dca-body') : null;
     if (!bodies.some(Boolean) && !legacy) return;
