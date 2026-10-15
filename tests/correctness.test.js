@@ -105,3 +105,22 @@ test('10. pumping stations: screening note in the headline, peak wet and peak dr
   assert.match(sp, /<th>Peak dry<br><small>design<\/small><\/th>/);
   assert.doesNotMatch(sp, /Peak dry \(reference\)/);
 });
+
+// ---- 6. Anticipated defined; the count lives in the Scenario control ---------------------------------
+test('6. "Anticipated" carries its definition from js/layers.js wherever it appears', () => {
+  const Ly = require('../js/layers.js');
+  assert.equal(Ly.NOTE.anticipated, 'pre-consultation, block or precinct plan: no formal file yet');
+  assert.match(src('js/overview-tab.js'), /lyTiles\.anticipated \? `<p class="small muted ly-def">Anticipated: \$\{esc\(root\.PeelLayers\.NOTE\.anticipated\)\}\.<\/p>`/);
+  assert.match(src('js/growth-ui.js'), /u\.anticipated >= 0\.5 \? `<p class="small muted ly-def">Anticipated: \$\{esc\(Ly\.NOTE\.anticipated\)\}\.<\/p>`/);
+  assert.match(src('js/svc-tab.js'), /Anticipated: \$\{esc\(A\.anticipated\)\}\./, 'and in the Scenario control beside the switch');
+});
+
+test('6. Count: committed only · + proposed · + anticipated, in the Scenario control; the chip shows it read-only', () => {
+  const B = require('../js/layer-bar.js');
+  assert.deepEqual(B.COUNT_OPTS, [['committed', 'committed only'], ['buildout', '+ proposed'], ['all', '+ anticipated']]);
+  const st = src('js/svc-tab.js');
+  assert.match(st, /<span class="muted small">Count:<\/span>\$\{LB\.COUNT_OPTS\.map/);
+  assert.match(st, /\[\['all', 'All'\], \['remaining', 'Left to build'\]\]/, '"left to build" keeps its own switch');
+  assert.doesNotMatch(src('js/topbar.js'), /data-scen-layer|nextBasis\(/, 'no count toggles in the top bar');
+  for (const b of ['committed', 'buildout', 'all', 'remaining']) assert.match(B.scenarioChipHTML({ basis: b, flows: 'x', criteria: 'y', count: 'tree', outside: 'z' }), new RegExp(`Count: ${B.countLabel(b).replace(/[+]/g, '\\+')}`));
+});

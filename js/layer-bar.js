@@ -103,17 +103,19 @@
     if (layer === 'committed') return 'committed';
     return basis;
   }
-  /** o: { basis, flows, criteria, count, expansions, outside } → the chip (layer toggles + settings). */
+  // The count setting (Stage 1 #6), one label everywhere: the Scenario control's switch and the chip.
+  const COUNT_OPTS = [['committed', 'committed only'], ['buildout', '+ proposed'], ['all', '+ anticipated']];
+  const countLabel = basis => (basis === 'remaining' ? '+ anticipated, left to build' : (COUNT_OPTS.find(([v]) => v === basis) || COUNT_OPTS[2])[1]);
+  /** o: { basis, flows, criteria, count, expansions, outside } → the chip: read-only text, the count
+   *  setting first; the Committed / Proposed / Anticipated switch lives in the Scenario control. */
   function scenarioChipHTML(o) {
     const on = new Set(layersOf(o.basis));
-    const fixed = ['existing', 'built'].map(k => `<span class="sc-ly on" title="${LABEL[k]}: always counted"><span class="ly-sw ly-${k}"></span><span class="sc-l">${LABEL[k]}</span></span>`).join('');
-    const tog = ['committed', 'proposed', 'anticipated'].map(k => `<button type="button" class="sc-ly${on.has(k) ? ' on' : ''}" data-scen-layer="${k}" aria-pressed="${on.has(k)}" title="${LABEL[k]} = ${ROLE[k]}${k === 'committed' ? ' (always on)' : on.has(k) ? ': click to leave out' : ': click to add'}"><span class="ly-sw ly-${k}"></span><span class="sc-l">${LABEL[k]}</span></button>`).join('');
     const what = on.has('anticipated') ? 'stress test' : on.has('proposed') ? 'build-out' : 'D-5-1 check';
-    const set = [`Flows: ${o.flows}`, `Criteria: ${o.criteria}`, `Count: ${o.count}`, o.expansions ? `Expansions: ${o.expansions}` : null, `Outside zones: ${o.outside}`].filter(Boolean).join(' · ');
-    return `<div class="scen-chip-row" role="group" aria-label="Scenario: layers counted (${esc(what)})">${fixed}${tog}<span class="sc-what">= ${esc(what)}${o.basis === 'remaining' ? ', left to permit' : ''}</span></div><button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="${esc(set)}"><span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
+    const set = [`Count: ${countLabel(o.basis)}`, `Flows: ${o.flows}`, `Criteria: ${o.criteria}`, `Unit counting: ${o.count}`, o.expansions ? `Expansions: ${o.expansions}` : null, `Outside zones: ${o.outside}`].filter(Boolean).join(' · ');
+    return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(set)} — open the Scenario control to change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
   }
 
-  const api = { LABEL, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
+  const api = { COUNT_OPTS, countLabel, LABEL, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

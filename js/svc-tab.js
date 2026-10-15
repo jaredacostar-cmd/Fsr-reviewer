@@ -132,8 +132,18 @@
   }
   // Counting basis: which of each project's units the demand counts. It changes the math,
   // so it lives in the Scenario control, not the filter panel.
-  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['buildout', 'Applied for'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
-    `<button type="button" class="btn small${App().state.basis === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${App().state.basis === v}">${t}</button>`).join('')}</div>`;
+  // Count (Stage 1 #6): which layers are counted, moved here from the top bar; "left to build" is a
+  // separate switch (it counts every layer, only the units with no permit yet).
+  const basisSwitch = () => {
+    const b = App().state.basis, cur = b === 'remaining' ? 'all' : b, LB = root.PeelLayerBar;
+    const count = `<div class="svc-switch" role="group" aria-label="Count"><span class="muted small">Count:</span>${LB.COUNT_OPTS.map(([v, t]) =>
+      `<button type="button" class="btn small${cur === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${cur === v}">${esc(t)}</button>`).join('<span class="muted" aria-hidden="true"> · </span>')}</div>`;
+    const units = `<div class="svc-switch" role="group" aria-label="Units"><span class="muted small">Units</span>${[['all', 'All'], ['remaining', 'Left to build']].map(([v, t]) =>
+      `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
+    const A = root.PeelLayers && root.PeelLayers.NOTE;
+    const def = A ? `<p class="small muted ly-def">Committed: ${esc(A.committed)}. Proposed: ${esc(A.proposed)}. Anticipated: ${esc(A.anticipated)}.</p>` : '';
+    return count + units + def;
+  };
   // Results for year: the year the capacity colours, pipe loads and station loads are worked
   // out for — the census year, this year through the horizon end, or build-out (null).
   const yearSelect = () => {

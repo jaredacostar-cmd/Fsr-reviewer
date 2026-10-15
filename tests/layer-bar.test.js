@@ -54,12 +54,14 @@ test('scenario chip: the basis is a set of layers (Existing + Built always)', ()
   assert.equal(B.nextBasis('buildout', 'anticipated'), 'all', 'tick Anticipated → stress test');
   assert.equal(B.nextBasis('all', 'anticipated'), 'buildout');
   assert.equal(B.nextBasis('committed', 'committed'), 'committed', 'Committed stays on');
+  // Stage 1 #6: the chip is read-only and leads with the count; the switch is in the Scenario control.
   const h = B.scenarioChipHTML({ basis: 'buildout', flows: '2025 metered', criteria: 'Peel v2.0', count: 'tree', expansions: 'on', outside: 'nearest' });
-  assert.match(h, /data-scen-layer="proposed" aria-pressed="true"/);
-  assert.match(h, /data-scen-layer="anticipated" aria-pressed="false"/);
-  assert.match(h, /= build-out/);
-  assert.match(h, /Flows: 2025 metered · Criteria: Peel v2.0 · Count: tree · Expansions: on · Outside zones: nearest/);
-  assert.doesNotMatch(h, /data-scen-layer="existing"/, 'Existing is not a toggle');
+  assert.doesNotMatch(h, /data-scen-layer/, 'no layer toggles in the top bar');
+  assert.match(h, /Scenario \(build-out\)/);
+  assert.match(h, /Count: \+ proposed · Flows: 2025 metered · Criteria: Peel v2\.0 · Unit counting: tree · Expansions: on · Outside zones: nearest/);
+  assert.equal(B.countLabel('committed'), 'committed only');
+  assert.equal(B.countLabel('all'), '+ anticipated');
+  assert.equal(B.countLabel('remaining'), '+ anticipated, left to build');
 });
 
 test('the buildout basis counts every layer applied for, without Anticipated', () => {

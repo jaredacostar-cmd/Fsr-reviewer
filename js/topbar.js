@@ -124,13 +124,8 @@
     { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'false'); }
     if (scenHome && scenHome.parentNode) { scenHome.parentNode.replaceChild(bar, scenHome); scenHome = null; }
   }
+  // The chip is read-only (Stage 1 #6): a click opens the Scenario control, where the count is set.
   $('#tb-scen').addEventListener('click', e => {
-    const ly = e.target.closest('[data-scen-layer]');
-    if (ly) {
-      const next = root.PeelLayerBar.nextBasis(App().state.basis, ly.dataset.scenLayer);
-      if (next !== App().state.basis) { App().state.basis = next; store.set('svcBasis', next); SvcTab().renderSvcTab(); App().applyFilters(); SvcTab().renderScenario(); if (root.PeelShare) root.PeelShare.viewLink.write(); }
-      return;
-    }
     if (e.target.closest('[data-scen-open]')) { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); }
   });
 

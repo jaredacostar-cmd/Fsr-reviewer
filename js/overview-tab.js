@@ -247,7 +247,7 @@
     const lyTiles = (() => {
       const Ly = root.PeelLayers; if (!Ly || !set.length) return { units: '', people: '' };
       const t = Ly.totals(set), LB = root.PeelLayerBar, ks = ['built', 'committed', 'proposed', 'anticipated'].filter(k => t.units[k] >= 0.5);
-      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · ') };
+      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), anticipated: ks.includes('anticipated') };
     })();
     const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
@@ -273,7 +273,7 @@
     el.innerHTML = `<div class="ov-top">${hlP(hl)}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [lyTiles.units, n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div></section>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [lyTiles.units, n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>${lyTiles.anticipated ? `<p class="small muted ly-def">Anticipated: ${esc(root.PeelLayers.NOTE.anticipated)}.</p>` : ''}</section>
         ${needs}
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
