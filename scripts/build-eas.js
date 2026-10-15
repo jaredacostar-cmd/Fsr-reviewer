@@ -21,6 +21,11 @@ const C = require('./capital-lib.js');
 const LIST_URL = 'https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments';
 const SEEDS = [
   LIST_URL,
+  'https://peelregion.ca/',
+  'https://peelregion.ca/public-works',
+  'https://peelregion.ca/construction-projects',
+  'https://peelregion.ca/water',
+  'https://peelregion.ca/wastewater',
   'https://peelregion.ca/construction/environmental-assessments',
   'https://peelregion.ca/public-works/environmental-assessments/',
   'https://peelregion.ca/public-works/environmental-assessments/brampton/',
@@ -74,7 +79,7 @@ async function candidates() {
     for (const l of E.links(E.mainHtml(r.html), r.url)) {
       if (!/^https?:\/\/(www\.)?peelregion\.ca\//i.test(l.url) || /\.(pdf|docx?|xlsx?|jpg|png)(\?|$)/i.test(l.url)) continue;
       if (!found.has(l.url)) found.set(l.url, { url: l.url, label: l.label, title: '' });
-      if (depth < 2 && /environmental-assessment/i.test(l.url)) queue.push([l.url, depth + 1]);
+      if (depth < 2 && (/environmental|construction/i.test(l.url) || (depth === 0 && /environment|construction|public works/i.test(l.label)))) queue.push([l.url, depth + 1]);
     }
     await sleep(250);
   }
@@ -128,7 +133,15 @@ async function main() {
 
   get.log = true;
   let list = await get(LIST_URL);
-  for (const alt of [LIST_URL.replace('list-of-environment-assessments', 'list-of-environmental-assessments'), LIST_URL.replace('https://peelregion.ca', 'https://www.peelregion.ca')]) if (!list) list = await get(alt);
+  const cands = await candidates();
+  if (!list) {
+    // The list moved: find it among the pages under the Region's EA sections and sitemap.
+    const ea = cands.filter(c => /environment/i.test(`${c.url} ${c.title} ${c.label}`));
+    console.log(`EA-related pages found (${ea.length}):`);
+    for (const c of ea.slice(0, 120)) console.log(`  ${c.url}  "${(c.title || c.label || '').slice(0, 70)}"`);
+    const pick = ea.find(c => /list/i.test(`${c.url} ${c.title} ${c.label}`)) || ea.find(c => /environmental-assessments\/?$/i.test(c.url));
+    if (pick) { console.log(`List page: ${pick.url}`); list = await get(pick.url); }
+  }
   if (!list) throw new Error(`list page unreachable: ${LIST_URL}`);
   const items = E.parseList(list.html, list.url);
   console.log(`List page: ${items.length} EAs after de-duplication`);
@@ -136,7 +149,6 @@ async function main() {
     console.log('--- list page structure (main text, first 6000 chars) ---');
     console.log(E.lines(E.mainHtml(list.html)).join('\n').slice(0, 6000));
   }
-  const cands = await candidates();
 
   const facPts = facilityPoints();
   const dcLines = ['water', 'wastewater'].flatMap(sys => (dcInfra[sys]?.lines || []).filter(l => l.n).map(l => ({ name: `${l.n} ${l.t || ''}`, paths: [l.g] })));

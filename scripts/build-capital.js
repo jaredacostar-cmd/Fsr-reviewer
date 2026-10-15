@@ -128,8 +128,9 @@ async function main() {
   for (const [s, m] of Object.entries(out.counts)) console.log(`  ${s.padEnd(10)} ${Object.entries(m).map(([k, n]) => `${k}=${n}`).join('  ')}`);
   console.log(`Slip computable: ${records.filter(r => r.slip).length}; with geometry: ${records.filter(r => r.geometry).length}; latest LastUpdate ${lastUpdate}`);
   console.log(`\nDC match: ${JSON.stringify(aud.counts)}`);
-  console.log(`Unmatched DC works (${aud.unmatchedDc.length}):`);
-  for (const w of aud.unmatchedDc) console.log(`  ${w.dc} proj=${w.proj} year=${w.year}${w.name ? ` "${w.name.slice(0, 70)}"` : ''}`);
+  const by = (list, f) => list.reduce((m, x) => (m[f(x)] = (m[f(x)] || 0) + 1, m), {});
+  console.log(`Unmatched DC works: ${aud.unmatchedDc.length} ${JSON.stringify(by(aud.unmatchedDc, w => `${w.system} ${w.kind}`))} (full list in capital-links-audit.json)`);
+  console.log(`Links by system: ${JSON.stringify(by(links, l => `${l.dc.split(':')[0]} ${l.method}`))}`);
   console.log(`Unmatched capital water / wastewater records: ${aud.unmatchedCapital.length}; low-confidence links: ${aud.lowConfidence.length}; schedule differences: ${aud.scheduleDiffs.length}`);
 }
 
