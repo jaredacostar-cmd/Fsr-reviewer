@@ -2606,8 +2606,15 @@ Everything drawn is **indicative, not design**.
 
 ## Time Box, Part 3: a place's imagery over the years
 
-Tools › **Time Box** (the clock button). Drag a box on the map; the map stays still while you
-draw.
+Tools › **Time Box** (the clock button). Drag a box on the map. While drawing, the map stays
+still; **Pan the map** in the banner lets you move it first, and **Draw a box** switches back.
+Once a box is drawn, the map pans and zooms as usual.
+
+- **Rotated maps.** The box is the rectangle you drag on screen, so it stays square to the screen
+  on the road-grid orientation (44°). The imagery clip, the swipe divider and the applications
+  filter all use its four corners.
+- **Live check** (`mode=wayback`, `scripts/probe-wayback.js`): 197 releases, CORS allowed. A
+  Brampton box took 128 requests (2.7 MB) and about 3 s, finding 10 years from 2014 to 2026.
 
 - **Releases.** The app reads the Esri World Imagery Wayback release list from the WMTS
   capabilities document. If that fails, it reads Esri's `waybackconfig.json` instead.

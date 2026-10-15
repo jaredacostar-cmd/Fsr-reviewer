@@ -106,3 +106,20 @@ test('fallback release list: waybackconfig.json gives the same releases and temp
   assert.deepEqual(a.map(r => [r.date, r.release]), [['2014-02-20', 10], ['2016-01-13', 3]]);
   assert.equal(T.WAYBACK.tileURL(a[0], 5, 6, 7), T.WAYBACK.tileURL(b[0], 5, 6, 7));
 });
+
+test('a box drawn on a rotated map: only developments inside its outline count', () => {
+  // A square turned 45° (a diamond) inside its bbox [-1, -1, 1, 1].
+  const ring = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+  assert.equal(T.inRing(ring, 0, 0), true);
+  assert.equal(T.inRing(ring, 0.9, 0.9), false, 'a bbox corner is outside the turned box');
+  assert.deepEqual(T.ringBox(ring), [-1, -1, 1, 1]);
+  const app = (key, lat, lng) => ({ key, lat, lng, records: [{ kind: 'application', events: [['2015-01-01', 'inception', 'SubmissionDate']] }] });
+  const r = T.applicationsAsOf([app('mid', 0, 0), app('corner', 0.9, 0.9)], [-1, -1, 1, 1], 2020, ring);
+  assert.deepEqual(r.shown.map(x => x.p.key), ['mid']);
+  assert.deepEqual(T.applicationsAsOf([app('corner', 0.9, 0.9)], [-1, -1, 1, 1], 2020).shown.map(x => x.p.key), ['corner'], 'without a ring, the bbox');
+});
+
+test('the drawing rule is cheap: no descendant selectors on the map while drawing', () => {
+  const css = require('fs').readFileSync(require('path').join(__dirname, '../css/app.css'), 'utf8');
+  assert.ok(!/\.tb-drawing\s+[*.]/.test(css) && !/\.tb-drawing \*/.test(css), 'a .tb-drawing descendant rule restyles every marker');
+});
