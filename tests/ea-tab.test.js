@@ -86,6 +86,11 @@ test('build: the preferred solution is read from report text, skipping contents 
   assert.equal(E.extractDecision(report), 'The preferred solution is to twin the existing trunk sewer along Cawthra Road between Dundas Street and the Lakeview WRRF, with a new 1,500 mm pipe.');
   assert.equal(E.extractDecision('The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.'), 'The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.');
   assert.equal(E.extractDecision('No conclusion here. Alternatives were screened.'), null);
+  // Decimals and "No." stay inside the sentence; process sentences are not decisions.
+  assert.equal(E.extractDecision('A. The preferred design includes a six (6) lane urban cross-section with a 5.5 m median. B.'), 'The preferred design includes a six (6) lane urban cross-section with a 5.5 m median.');
+  assert.equal(E.extractDecision('A. The preferred design was developed and refined through extensive consultation with the public. B.'), null);
+  assert.equal(E.extractDecision('A. The preferred alternative was then formalized and presented at Public Information Centre No. 2 in May. B.'), null);
+  assert.equal(E.extractDecision('A. The recommended strategy is integrated with previously approved projects under design. B.'), null);
   // A sentence naming a consultant, contractor or contact is skipped for the next one.
   assert.equal(E.extractDecision('The preferred solution was developed with the consultant team and Smith Engineering Ltd. The preferred solution is a new 900 mm sanitary sewer along Queen Street East.'), 'The preferred solution is a new 900 mm sanitary sewer along Queen Street East.');
   assert.equal(E.extractDecision('The preferred solution is to contact jane@example.ca for the details of the study team.'), null, 'contact text never kept');
@@ -95,11 +100,13 @@ test('build: same-system capital work inside a confident study area is linked, a
   const E = require('../scripts/ea-lib.js');
   const area = { type: 'Polygon', coordinates: [[[-79.80, 43.70], [-79.78, 43.70], [-79.78, 43.72], [-79.80, 43.72], [-79.80, 43.70]]] };
   const cap = { records: [
-    { id: 'w-in', projectNumber: '24-1', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.71], [-79.79, 43.71]] } },
-    { id: 's-in', projectNumber: '24-2', system: 'wastewater', geometry: { type: 'LineString', coordinates: [[-79.795, 43.705], [-79.79, 43.705]] } },
-    { id: 'w-out', projectNumber: '24-3', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.70, 43.71], [-79.69, 43.71]] } },
+    { id: 'w-in', projectNumber: '24-1', contract: 'C1', status: 'planned', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.71], [-79.79, 43.71]] } },
+    { id: 's-in', projectNumber: '24-2', status: 'under construction', system: 'wastewater', geometry: { type: 'LineString', coordinates: [[-79.795, 43.705], [-79.79, 43.705]] } },
+    { id: 'w-out', projectNumber: '24-3', status: 'planned', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.70, 43.71], [-79.69, 43.71]] } },
+    { id: 'w-done', projectNumber: '19-1', status: 'complete', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.712], [-79.79, 43.712]] } },
+    { id: 'w-in-2', projectNumber: '24-1', contract: 'C1', status: 'planned', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.715], [-79.79, 43.715]] } },
   ] };
-  assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'medium', geometry: area }, cap).map(x => [x.id, x.method]), [['w-in', 'inside the study area']]);
+  assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'medium', geometry: area }, cap).map(x => [x.id, x.method]), [['w-in', 'inside the study area']], 'planned or active only, one link per contract');
   assert.deepEqual(E.linkCapitalInArea({ system: 'multi', geomConfidence: 'high', geometry: area }, cap).map(x => x.id), ['w-in', 's-in']);
   assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'low', geometry: area }, cap), [], 'not from a low-confidence area');
   assert.deepEqual(E.linkCapitalInArea({ system: 'roads', geomConfidence: 'high', geometry: area }, cap), [], 'not for roads EAs');
