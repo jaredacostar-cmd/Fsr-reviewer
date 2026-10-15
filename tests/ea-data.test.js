@@ -312,3 +312,8 @@ test('DC links: no match by a facility name that is also a street, wrong system 
   assert.deepEqual(link('Lower west sanitary trunk sewer twinning', { system: 'wastewater', geomType: 'linear', geometry: { type: 'LineString', coordinates: [[-79.62, 43.50], [-79.61, 43.51]] } }), [], 'a pipe route near a plant is not the plant');
   assert.deepEqual(link('Heritage Road elevated tank', { system: 'water' }), ['31-1999']);
 });
+
+test('purpose draft keeps initials and abbreviations inside the sentence', () => {
+  assert.equal(E.purposeDraft(['A Schedule C Class Environmental Assessment (EA) will assess G.E. Booth Wastewater Treatment Plant capacity to 2041. Other text follows here.']),
+    'A Schedule C Class Environmental Assessment (EA) will assess G.E. Booth Wastewater Treatment Plant capacity to 2041.');
+});
