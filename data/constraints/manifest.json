@@ -22,6 +22,7 @@
    "tiles": 226,
    "bytes": 9575416,
    "maxTileBytes": 166427,
+   "overviewBytes": 22,
    "path": "data/constraints/reg-cvc/"
   },
   {
@@ -43,6 +44,7 @@
    "tiles": 223,
    "bytes": 1777413,
    "maxTileBytes": 22188,
+   "overviewBytes": 22,
    "path": "data/constraints/reg-trca/"
   },
   {
@@ -64,6 +66,7 @@
    "tiles": 211,
    "bytes": 1578201,
    "maxTileBytes": 22579,
+   "overviewBytes": 22,
    "path": "data/constraints/flood-cvc/"
   },
   {
@@ -86,6 +89,7 @@
    "tiles": 218,
    "bytes": 2379492,
    "maxTileBytes": 33965,
+   "overviewBytes": 22,
    "path": "data/constraints/flood-trca/"
   },
   {
@@ -101,12 +105,13 @@
    "note": "Greenbelt Plan area by designation (Protected Countryside, Urban River Valley, and the Oak Ridges Moraine and Niagara Escarpment plan areas within it). Screening only: not an official determination.",
    "filter": null,
    "simplifiedM": 11,
-   "asOf": null,
+   "asOf": "2023-12-14",
    "licenceText": null,
    "features": 31,
    "tiles": 313,
    "bytes": 128433,
    "maxTileBytes": 3117,
+   "overviewBytes": 22,
    "path": "data/constraints/greenbelt/"
   },
   {
@@ -122,12 +127,13 @@
    "note": "Oak Ridges Moraine Conservation Plan land use designations. Screening only: not an official determination.",
    "filter": null,
    "simplifiedM": 11,
-   "asOf": null,
+   "asOf": "2025-02-26",
    "licenceText": null,
    "features": 113,
    "tiles": 74,
    "bytes": 68722,
    "maxTileBytes": 4058,
+   "overviewBytes": 22,
    "path": "data/constraints/orm/"
   },
   {
@@ -143,12 +149,13 @@
    "note": "Niagara Escarpment Plan land use designations. Screening only: not an official determination. Development control applies in parts of the plan area: check with the Niagara Escarpment Commission.",
    "filter": null,
    "simplifiedM": 11,
-   "asOf": null,
+   "asOf": "2026-07-13",
    "licenceText": null,
    "features": 343,
    "tiles": 69,
    "bytes": 283956,
    "maxTileBytes": 12402,
+   "overviewBytes": 22,
    "path": "data/constraints/nep/"
   },
   {
@@ -163,12 +170,13 @@
    "note": "Evaluated wetlands of provincial significance (PSW). Screening only: not an official determination. Wetland boundaries are confirmed by evaluation; unevaluated wetlands are not shown.",
    "filter": "WETLAND_SIGNIFICANCE = 'Evaluated-Provincial'",
    "simplifiedM": 4,
-   "asOf": null,
+   "asOf": "2026-10-13",
    "licenceText": null,
    "features": 8825,
    "tiles": 217,
    "bytes": 1628700,
    "maxTileBytes": 46244,
+   "overviewBytes": 22,
    "path": "data/constraints/psw/"
   },
   {
@@ -183,12 +191,13 @@
    "note": "Areas of natural and scientific interest (life or earth science). Screening only: not an official determination.",
    "filter": null,
    "simplifiedM": 4,
-   "asOf": null,
+   "asOf": "2026-08-18",
    "licenceText": null,
    "features": 101,
    "tiles": 140,
    "bytes": 327144,
    "maxTileBytes": 8369,
+   "overviewBytes": 22,
    "path": "data/constraints/ansi/"
   },
   {
@@ -203,12 +212,13 @@
    "note": "The provincial Natural Heritage System for the Growth Plan for the Greater Golden Horseshoe (outside settlement areas). Screening only: not an official determination.",
    "filter": "ENABLING_PLAN LIKE '%Growth Plan%'",
    "simplifiedM": 11,
-   "asOf": null,
+   "asOf": "2022-12-14",
    "licenceText": null,
    "features": 59,
    "tiles": 43,
    "bytes": 14909,
    "maxTileBytes": 4220,
+   "overviewBytes": 22,
    "path": "data/constraints/nhs/"
   },
   {
@@ -227,8 +237,9 @@
    "licenceText": " Open Data Licence for The Regional Municipality of Peel (Version 1.0) ",
    "features": 890,
    "tiles": 389,
-   "bytes": 548553,
+   "bytes": 549053,
    "maxTileBytes": 5698,
+   "overviewBytes": null,
    "path": "data/constraints/wc-peel/"
   },
   {
@@ -243,12 +254,13 @@
    "note": "Ontario Hydro Network watercourses (1:10,000). Small and piped watercourses may be missing.",
    "filter": "WATERCOURSE_TYPE NOT LIKE 'Virtual%'",
    "simplifiedM": 2,
-   "asOf": null,
+   "asOf": "2026-06-22",
    "licenceText": null,
    "features": 11859,
    "tiles": 425,
    "bytes": 1084481,
    "maxTileBytes": 8848,
+   "overviewBytes": null,
    "path": "data/constraints/wc-ohn/"
   },
   {
@@ -269,6 +281,7 @@
    "tiles": 92,
    "bytes": 14209,
    "maxTileBytes": 844,
+   "overviewBytes": null,
    "path": "data/constraints/utility/"
   }
  ],
