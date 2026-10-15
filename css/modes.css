@@ -98,3 +98,31 @@ html[data-presentation] .error-banner { display: none !important; }
   #detail, #detail-body, #presentation-bar { transition: none; }
   .skel::after { animation: none; }
 }
+
+/* Presentation (design audit, Group 9): only Exit is a control — the top bar, the analysis panel,
+   the tool rail, the time bar and the map's own controls are hidden; the headline ≥28 px and the
+   tile numbers ≥40 px for a projector; the screening note and the data date at the foot. */
+html[data-presentation] .topbar,
+html[data-presentation] .analysis,
+html[data-presentation] .tool-rail,
+html[data-presentation] .tool-banner,
+html[data-presentation] .map-bottom,
+html[data-presentation] .toggle-sidebar,
+html[data-presentation] .mo-legend,
+html[data-presentation] .leaflet-control-container .leaflet-top .leaflet-bar { display: none !important; }
+html[data-presentation] .app { grid-template-columns: 1fr !important; grid-template-rows: 1fr !important; grid-template-areas: "map" !important; }
+html[data-presentation] .map-wrap { grid-area: map; }
+html[data-presentation] .pres-hl { font-size: 1.9rem; line-height: 1.3; }
+html[data-presentation] .pres-tiles .ov-tile b { font-size: 2.75rem; line-height: 1.05; }
+html[data-presentation] .pres-tiles .ov-tile .ov-u { font-size: 1.15rem; }
+html[data-presentation] .pres-tiles .ov-tile .ov-l { font-size: 1.1rem; }
+.pres-note { margin: 12px 0 0; font-size: 1rem; color: var(--text-secondary); }
+.pres-tiles > * { min-width: 0; }
+@media (max-width: 700px) {
+  .pres-tiles { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  html[data-presentation] .pres-tiles .ov-tile .ov-u { display: block; }
+  html[data-presentation] .pres-tiles .ov-tile small { display: none; }
+  html[data-presentation] .pres-hl { font-size: 1.3rem; }
+  html[data-presentation] .pres-tiles .ov-tile b { font-size: 2.5rem; }
+  #pres-exit { min-height: 44px; min-width: 44px; }
+}

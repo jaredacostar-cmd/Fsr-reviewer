@@ -31,6 +31,7 @@
     if (!e.target || !e.target.id) return;
     if (e.target.id === 'dsp-theme') setTheme(e.target.value);
     else if (e.target.id === 'dsp-density') setDensity(e.target.value);
+    else if (e.target.id === 'dsp-present') store.set('presentTheme', e.target.value === 'app' ? 'app' : 'light');
     else if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim());
     else if (e.target.id === 'public-view') { store.set('publicView', !!e.target.checked); root.PeelUtil.applyPublic(); App().refreshTheme(); }
     const w = e.target.closest && e.target.closest('[data-wet]');

@@ -110,20 +110,32 @@
   // Fill the presentation bar from the Overview: its headline sentence plus the
   // four key tiles of the Growth card (developments shown, units planned,
   // people at build-out, jobs).
+  // Presentation shows the scope that is open: Peel, an area, a servicing scope or a development
+  // (design audit, Group 9): the Overview's own headline and first four tiles, the screening note and
+  // the data date. Only Exit is a control; the theme turns light for projectors unless set otherwise.
+  let presRendering = false;   // the Overview calls back here when it re-renders in presentation
   function renderPresentation() {
     const bar = $('#presentation-bar'); if (!bar) return;
-    const hl = document.querySelector('#pane-overview .ov-top .headline');
-    const tiles = document.querySelectorAll('#pane-overview .ov-growth .ov-tiles:not(.ov-flow) .ov-tile');
+    const OT = window.PeelOverviewTab;
+    if (!presRendering && OT && OT.renderOverview) { presRendering = true; try { OT.renderOverview(); } finally { presRendering = false; } }
+    const hl = document.querySelector('#ov-body .ov-top .headline');
+    const tiles = document.querySelectorAll('#ov-body .ov-tiles:not(.ov-flow) .ov-tile');
     $('#pres-hl').innerHTML = hl ? hl.innerHTML : '';
     $('#pres-tiles').innerHTML = [...tiles].slice(0, 4).map(t => t.outerHTML).join('');
+    const snap = App().state.snapshot, U = window.PeelUtil;
+    $('#pres-note').textContent = `${U.SCREEN_LINE} · Data ${snap && snap.generatedAt ? snap.generatedAt.slice(0, 10) : 'as loaded'} · ${U.UNOFFICIAL}`;
   }
+  let presTheme = null;   // the app theme to restore on exit, when presentation switched to light
   function enterPresentation() {
+    if (PD && store.get('presentTheme', 'light') === 'light' && document.documentElement.getAttribute('data-theme') !== 'light') {
+      presTheme = store.get('theme', 'dark'); PD.applyTheme('light'); App().refreshTheme();
+    }
     renderPresentation();
     $('#presentation-bar').hidden = false;
-    AC().closeDetail({ keepSelection: true });
     setLasso(false);
     if (Meas().tool.mode) Meas().setTool(null);
     document.documentElement.setAttribute('data-presentation', '');
+    setTimeout(() => map.invalidateSize(), 60);   // the map takes the freed columns
     try {
       const p = document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
       if (p && p.catch) p.catch(() => { /* fullscreen unavailable: the layout still presents */ });
@@ -132,6 +144,8 @@
   function exitPresentation() {
     document.documentElement.removeAttribute('data-presentation');
     const bar = $('#presentation-bar'); if (bar) bar.hidden = true;
+    if (presTheme) { PD.applyTheme(presTheme); presTheme = null; App().refreshTheme(); }
+    setTimeout(() => map.invalidateSize(), 60);
     try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); } catch (e) { /* noop */ }
   }
   const inPresentation = () => document.documentElement.hasAttribute('data-presentation');

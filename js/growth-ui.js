@@ -125,6 +125,7 @@
     return `
       <fieldset data-info="display"><legend>Display</legend>
         <label class="field"><span>Theme</span>${sel('dsp-theme', ['dark', 'light', 'device'].includes(theme) ? theme : 'dark', [['dark', 'Dark'], ['light', 'Light'], ['device', 'Follow device']])}</label>
+        <label class="field"><span>Presentation</span>${sel('dsp-present', store.get('presentTheme', 'light') === 'app' ? 'app' : 'light', [['light', 'Light (projectors)'], ['app', 'Same as the app']])}</label>
         <label class="field"><span>Density</span>${sel('dsp-density', density === 'comfortable' ? 'comfortable' : 'compact', [['compact', 'Compact'], ['comfortable', 'Comfortable']])}</label>
         <p class="small muted">Dark is the default; "Follow device" tracks the OS setting. Compact suits a computer, Comfortable a phone. Both stay in this browser — they are not part of share links.</p>
       </fieldset>
