@@ -147,7 +147,8 @@ function polygonsOf(el) {
   return [];
 }
 async function buildBuildings() {
-  const geojsonvt = require('geojson-vt'), vtpbf = require('vt-pbf');
+  // geojson-vt 4 is an ES module; vt-pbf is CommonJS.
+  const gv = await import('geojson-vt'), geojsonvt = gv.default || gv, vtpbf = require('vt-pbf');
   const [w, s, e, n] = PILOT.bbox, b = `${s},${w},${n},${e}`;
   const j = await overpass(`[out:json][timeout:200];(way["building"](${b});relation["building"]["type"="multipolygon"](${b});way["building:part"](${b}););out geom;`);
   const features = [], byBasis = { height: 0, levels: 0, default: 0 };
@@ -178,11 +179,16 @@ async function buildBuildings() {
   return { file, layer: 'buildings', minzoom: BUILD_Z[0], maxzoom: BUILD_Z[1], tiles: tiles.length, count: Object.values(byBasis).reduce((a, v) => a + v, 0), parts: parts.length, outlinesDrawnByParts: hasParts.size, byBasis, osmTimestamp: (j.osm3s && j.osm3s.timestamp_osm_base) || null, heightRule: `height tag → building:levels × ${M.STOREY_M} m → ${M.DEFAULT_STOREYS} storeys (estimated)`, attribution, bytes: fs.statSync(path.join(OUT, file)).size };
 }
 
+// --only=terrain | --only=buildings rebuilds one part and keeps the other from the last manifest.
+const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7);
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
+  const prev = (() => { try { return JSON.parse(fs.readFileSync(path.join(OUT, 'manifest.json'), 'utf8')); } catch (e) { return {}; } })();
   const manifest = { generatedAt: new Date().toISOString(), name: PILOT.name, bbox: PILOT.bbox, note: 'Indicative 3D context for the pilot box only; outside it the 3D view uses the terrain tiles and shows no buildings. Rebuilt by scripts/build-3d-tiles.js (Probe data sources, mode=tiles-3d).' };
-  try { manifest.terrain = await buildTerrain(); } catch (e) { console.log(`terrain: ${e.message}`); manifest.terrain = null; manifest.terrainError = e.message; }
-  try { manifest.buildings = await buildBuildings(); } catch (e) { console.log(`buildings: ${e.message}`); manifest.buildings = null; manifest.buildingsError = e.message; }
+  if (ONLY === 'buildings') manifest.terrain = prev.terrain || null;
+  else { try { manifest.terrain = await buildTerrain(); } catch (e) { console.log(`terrain: ${e.message}`); manifest.terrain = null; manifest.terrainError = e.message; } }
+  if (ONLY === 'terrain') manifest.buildings = prev.buildings || null;
+  else { try { manifest.buildings = await buildBuildings(); } catch (e) { console.log(`buildings: ${e.stack}`); manifest.buildings = null; manifest.buildingsError = e.message; } }
   fs.writeFileSync(path.join(OUT, 'manifest.json'), JSON.stringify(manifest, null, 1) + '\n');
   console.log(JSON.stringify(manifest, null, 1));
   if (!manifest.terrain && !manifest.buildings) process.exit(1);
