@@ -18,6 +18,16 @@ image (n control points, residual m)", geomConfidence medium when the control po
 or the scale bar check the fit and the residual is <= 60 m, else low. Streets that cross twice keep both
 crossings; the combination that fits best is used. Control points that disagree by > 250 m are skipped.
 
+Road corridors and points (scripts/ea-trace.json "roads"; no image needed), from the same local streets:
+  { "id", "kind": "road", "road": "Mayfield Road", "from": "Chinguacousy Road" | {"street", "offsetM", "dir": "N"},
+    "to": ..., "city" }                      → the road's centreline between the two crossings (shortest path
+                                               along the road's own ways; an offset walks that far along it)
+  { "id", "kind": "road", "segments": [ {road, from, to}, ... ] }   → several corridors (MultiLineString)
+  { "id", "kind": "point", "streets": [A, B] | "points": [[A, B], ...], "city" } → intersection(s)
+  { "id", "kind": "point", "road": R, "water": "Shaw's Creek", "city" }       → where the road crosses the creek
+  { "id", "kind": "water", "water": "Lornewood Creek", "city" }               → the creek's line (what the sewer follows)
+Waterways come from EA_WATER (a GeoJSON sequence of waterway ways). Method text credits OpenStreetMap (ODbL).
+
   python3 scripts/ea_trace.py            # needs network for new intersections (run in Actions)
   python3 scripts/ea_trace.py --selftest # pure checks, no network
 """
@@ -194,19 +204,22 @@ ABBR = {'st': 'street', 'rd': 'road', 'ave': 'avenue', 'av': 'avenue', 'blvd': '
 DIRS = {'east', 'west', 'north', 'south'}
 def norm_street(s):
     w = [ABBR.get(x, x) for x in __import__('re').sub(r'[^a-z0-9 ]', ' ', str(s).lower()).split()]
-    return ' '.join(w)
+    w = ['old' if x == 'olde' else x for x in w]   # Olde Base Line Road
+    return ' '.join(w).replace('base line', 'baseline').replace('side road', 'sideroad')
+def read_geojsonseq(path):
+    """Features from an osmium GeoJSON-sequence export (one per line, RS-prefixed)."""
+    if not path or not os.path.exists(path): return
+    for line in open(path, encoding='utf8'):
+        line = line.strip().lstrip('\x1e')
+        if line: yield json.loads(line)
 ROADS = None
 def roads():
     """name -> [coords], from EA_ROADS (one feature per line)."""
     global ROADS
     if ROADS is not None: return ROADS
     ROADS = {}
-    path = os.environ.get('EA_ROADS')
-    if not path or not os.path.exists(path): return ROADS
-    for line in open(path, encoding='utf8'):
-        line = line.strip().lstrip('\x1e')
-        if not line: continue
-        f = json.loads(line); g = f.get('geometry') or {}; pr = f.get('properties') or {}
+    for f in read_geojsonseq(os.environ.get('EA_ROADS')):
+        g = f.get('geometry') or {}; pr = f.get('properties') or {}
         if g.get('type') != 'LineString': continue
         names = {pr.get(k) for k in ('name', 'alt_name', 'old_name', 'official_name') if pr.get(k)}
         for ref in str(pr.get('ref') or '').split(';'):
@@ -221,12 +234,8 @@ def munis():
     global MUNIS
     if MUNIS is not None: return MUNIS
     MUNIS = {}
-    path = os.environ.get('EA_MUNIS')
-    if not path or not os.path.exists(path): return MUNIS
-    for line in open(path, encoding='utf8'):
-        line = line.strip().lstrip('\x1e')
-        if not line: continue
-        f = json.loads(line); g = f.get('geometry') or {}; nm = (f.get('properties') or {}).get('name')
+    for f in read_geojsonseq(os.environ.get('EA_MUNIS')):
+        g = f.get('geometry') or {}; nm = (f.get('properties') or {}).get('name')
         if nm not in ('Brampton', 'Mississauga', 'Caledon', 'Town of Caledon', 'City of Brampton', 'City of Mississauga'): continue
         polys = g['coordinates'] if g.get('type') == 'MultiPolygon' else [g['coordinates']] if g.get('type') == 'Polygon' else []
         MUNIS.setdefault(nm.split(' of ')[-1], []).extend(p[0] for p in polys)
@@ -271,9 +280,11 @@ def seg_x(p1, p2, p3, p4):
     u = ((p3[0] - p1[0]) * (p2[1] - p1[1]) - (p3[1] - p1[1]) * (p2[0] - p1[0])) / d
     return (p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])) if 0 <= t <= 1 and 0 <= u <= 1 else None
 
-def crossings(A, B):
+LAST_GAP = None   # the closest approach when two streets do not cross (for the report)
+def crossings(A, B, near=40):
     """Every point where the two sets of lines cross (merged within 25 m), else the closest vertex pair's
-    midpoint when within 40 m (a street that ends at the other)."""
+    midpoint when within `near` m (a street that ends at the other)."""
+    global LAST_GAP
     out = []
     for a in A:
         for b in B:
@@ -289,7 +300,8 @@ def crossings(A, B):
                 for q in b:
                     d = metres(p, q)
                     if best is None or d < best[1]: best = (((p[0] + q[0]) / 2, (p[1] + q[1]) / 2), d)
-    return [best[0]] if best and best[1] <= 40 else []
+    LAST_GAP = best
+    return [best[0]] if best and best[1] <= near else []
 
 def merge_near(pts, m):
     """Points within m metres of each other, as their centroid (the carriageways of a divided road)."""
@@ -300,16 +312,30 @@ def merge_near(pts, m):
         else: groups.append([p])
     return [(sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g)) for g in groups]
 
-def geocode_xing(streets, city, cache):
-    """Candidate points for an intersection (more than one when the streets cross twice, e.g. a crescent)."""
-    nm = lambda n: ' / '.join(n) if isinstance(n, list) else n
-    key = f"{'osm:' if roads() else ''}{nm(streets[0])} & {nm(streets[1])}, {city}"
+def similar_names(name, table):
+    """Names close to one that matched nothing (spelling help for the config)."""
+    import difflib
+    names = name if isinstance(name, list) else [name]
+    return sorted({m for n in names for m in difflib.get_close_matches(norm_street(n), list(table), n=4, cutoff=0.7)})
+def explain_miss(names, lines_):
+    """Why a lookup found nothing: names with no ways get spelling suggestions, else the closest approach."""
+    out = [f"no ways named {n if isinstance(n, str) else ' / '.join(n)} (similar: {', '.join(similar_names(n, roads())) or 'none'})"
+           for n, ls in zip(names, lines_) if not ls]
+    if not out and LAST_GAP: out.append(f"closest approach {round(LAST_GAP[1])} m at {[round(v, 5) for v in LAST_GAP[0]]}")
+    return '; '.join(out)
+def geocode_xing(streets, city, cache, near=40):
+    """Candidate points for an intersection (more than one when the streets cross twice, e.g. a crescent).
+    `near`: how far apart (m) the ends of two streets that only nearly meet may be."""
+    global LAST_GAP
+    key = f"{'osm:' if roads() else ''}{name_of(streets[0])} & {name_of(streets[1])}, {city}" + (f" ~{near} m" if near != 40 else '')
     if key not in cache:
+        LAST_GAP = None
         A, B = street_lines(streets[0], city), street_lines(streets[1], city)
-        xs = crossings(A, B) if A and B else []
+        xs = crossings(A, B, near) if A and B else []
         if roads(): xs = [x for x in merge_near(xs, 90) if near_city(x, city)]   # a divided road crosses as up to 4 points
         cache[key] = [[round(v, 6) for v in x] for x in xs]
         print(f"  {key}: {len(cache[key])} crossing(s) {cache[key][:3]} ({len(A)} / {len(B)} ways)")
+        if not xs and roads(): print(f"    {explain_miss(streets, [A, B])}")
     v = cache[key]
     return [] if not v else [v] if isinstance(v[0], (int, float)) else v   # older cache entries held one point
 
@@ -340,6 +366,214 @@ def best_fit(t, ctrl):
         score = res if checks else abs(m_per_px(tf) / t['mPerPx'] - 1) if t.get('mPerPx') and len(px) == 2 else 0
         if best is None or score < best[0]: best = (score, tf, res, list(ll))
     return best[1], best[2], best[3]
+
+# ---- road corridors, intersections and creek crossings (no image) ------------------------------------
+OSM_CREDIT = '© OpenStreetMap contributors, ODbL'
+WATER = None
+def waters():
+    """Waterway name -> [coords], from EA_WATER."""
+    global WATER
+    if WATER is not None: return WATER
+    WATER = {}
+    for f in read_geojsonseq(os.environ.get('EA_WATER')):
+        g = f.get('geometry') or {}; nm = (f.get('properties') or {}).get('name')
+        if g.get('type') != 'LineString': continue
+        WATER.setdefault('*', []).append(g['coordinates'])   # every waterway, named or not
+        if nm: WATER.setdefault(norm_street(nm), []).append(g['coordinates'])
+    print(f"  local waterways: {len(WATER.get('*', []))} ways, {len(WATER) - 1} names")
+    return WATER
+
+def water_lines(name):
+    """Waterways named `name` (a list: alternate spellings, e.g. Shaw's / Shaws Creek)."""
+    if isinstance(name, list): return [l for n in name for l in water_lines(n)]
+    return waters().get('*' if name == '*' else norm_street(name), [])   # '*': any waterway (a creek unnamed in OSM)
+def road_graph(lines):
+    """Nodes (rounded lng/lat) and weighted edges from a road's ways."""
+    key = lambda p: (round(p[0], 6), round(p[1], 6))
+    adj = {}
+    for l in lines:
+        for i in range(1, len(l)):
+            a, b = key(l[i - 1]), key(l[i]); w = metres(a, b)
+            adj.setdefault(a, []).append((b, w)); adj.setdefault(b, []).append((a, w))
+    # Join a way's loose end to the nearest node of another way within 30 m (a short unnamed bridge or
+    # ramp piece, or a carriageway split, leaves the named ways apart).
+    cell = lambda p: (int(p[0] / 0.0005), int(p[1] / 0.0005))
+    grid = {}
+    for n in adj: grid.setdefault(cell(n), []).append(n)
+    for n in [n for n, nb in adj.items() if len(nb) == 1]:
+        near = {nb for nb, _ in adj[n]} | {n}
+        cx, cy = cell(n); best = None
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for m in grid.get((cx + dx, cy + dy), []):
+                    if m in near: continue
+                    d = metres(n, m)
+                    if d <= 30 and (best is None or d < best[0]): best = (d, m)
+        if best: adj[n].append((best[1], best[0])); adj[best[1]].append((n, best[0]))
+    return adj
+def nearest_node(adj, pt):
+    """The point itself, joined into the graph on the nearest segment (so walks and paths start exactly
+    at a crossing, not at the next vertex)."""
+    if not adj: return None
+    p = (round(pt[0], 6), round(pt[1], 6))
+    if p in adj: return p
+    kx = 111320 * math.cos(math.radians(p[1]))
+    best = None
+    for a, nb in adj.items():
+        for b, _ in nb:
+            ax, ay, bx, by = (a[0] - p[0]) * kx, (a[1] - p[1]) * 110574, (b[0] - p[0]) * kx, (b[1] - p[1]) * 110574
+            vx, vy = bx - ax, by - ay; L2 = vx * vx + vy * vy
+            t = max(0.0, min(1.0, -(ax * vx + ay * vy) / L2)) if L2 else 0.0
+            d = math.hypot(ax + t * vx, ay + t * vy)
+            if best is None or d < best[0]: best = (d, a, b, t)
+    _, a, b, t = best
+    # The point projected onto the road: an end found by the closest-approach fallback sits between two
+    # streets, and the drawn road must not run off to it.
+    q = (round(a[0] + t * (b[0] - a[0]), 6), round(a[1] + t * (b[1] - a[1]), 6))
+    if q in adj: return q
+    adj[q] = [(a, metres(q, a)), (b, metres(q, b))]
+    adj[a].append((q, metres(q, a))); adj[b].append((q, metres(q, b)))
+    return q
+def dijkstra(adj, src):
+    import heapq
+    dist, prev, q = {src: 0.0}, {}, [(0.0, src)]
+    while q:
+        d, n = heapq.heappop(q)
+        if d > dist.get(n, 1e18): continue
+        for m, w in adj.get(n, []):
+            nd = d + w
+            if nd < dist.get(m, 1e18): dist[m] = nd; prev[m] = n; heapq.heappush(q, (nd, m))
+    return dist, prev
+def path_to(prev, src, dst):
+    out = [dst]
+    while out[-1] != src:
+        if out[-1] not in prev: return None
+        out.append(prev[out[-1]])
+    return out[::-1]
+def walk(adj, start, dir_, m):
+    """From `start`, the path of about m metres along the road heading roughly `dir_` (N / S / E / W)."""
+    dist, prev = dijkstra(adj, start)
+    vec = {'N': (0, 1), 'S': (0, -1), 'E': (1, 0), 'W': (-1, 0)}[dir_]
+    kx = 111320 * math.cos(math.radians(start[1]))
+    best = None
+    for n, d in dist.items():
+        if d < m * 0.8: continue
+        dx, dy = (n[0] - start[0]) * kx, (n[1] - start[1]) * 110574
+        cos_ = (dx * vec[0] + dy * vec[1]) / max(1.0, math.hypot(dx, dy))
+        if cos_ < 0.3: continue   # not the asked way (a road that only runs on the other side)
+        score = cos_ - abs(d - m) / max(m, 1)
+        if best is None or score > best[0]: best = (score, n)
+    if not best: return None   # the road does not run that far the asked way: no end, reported
+    pts = path_to(prev, start, best[1]) or [start]
+    # Cut the path at m metres.
+    out, run = [pts[0]], 0.0
+    for i in range(1, len(pts)):
+        w = metres(pts[i - 1], pts[i])
+        if run + w >= m:
+            f = (m - run) / w if w else 0
+            out.append((pts[i - 1][0] + f * (pts[i][0] - pts[i - 1][0]), pts[i - 1][1] + f * (pts[i][1] - pts[i - 1][1]))); return out
+        out.append(pts[i]); run += w
+    return out
+def end_point(adj, road, end, city, cache):
+    """A corridor end: the road's crossing with a street (candidates), moved by an offset when given."""
+    street = end if isinstance(end, (str, list)) else end['street']
+    cands = geocode_xing([road, street], city, cache, end.get('nearM', 40) if isinstance(end, dict) else 40)
+    if isinstance(end, dict) and end.get('offsetM'):
+        out = []
+        for c in cands:
+            n = nearest_node(adj, c)
+            w = walk(adj, n, end.get('dir', 'N'), end['offsetM']) if n else None
+            if w: out.append(w[-1])
+        return out
+    return cands
+def corridor(seg, city, cache):
+    """The road's centreline between two ends: the pair of candidates with the shortest path along the road."""
+    lines = street_lines(seg['road'], city)
+    adj = road_graph(lines)
+    if not adj: return None, f"no ways named {seg['road']}"
+    A, B = end_point(adj, seg['road'], seg['from'], city, cache), end_point(adj, seg['road'], seg['to'], city, cache)
+    if not A or not B: return None, f"{seg['road']}: {'from' if not A else 'to'} crossing not found"
+    best = None
+    NA, NB = [nearest_node(adj, a) for a in A], [nearest_node(adj, b) for b in B]   # join every end first
+    for a, na in zip(A, NA):
+        dist, prev = dijkstra(adj, na)
+        for b, nb in zip(B, NB):
+            if nb in dist and (best is None or dist[nb] < best[0]): best = (dist[nb], path_to(prev, na, nb), a, b)
+    if not best or not best[1] or best[0] < 30: return None, f"{seg['road']}: no path between the ends"
+    pts = dp(best[1], 0.00003)
+    return [[round(c, 6) for c in p] for p in pts], f"{round(best[0])} m"
+def name_of(x): return ' / '.join(x) if isinstance(x, list) else x['street'] if isinstance(x, dict) else x
+def end_text(x):
+    if isinstance(x, dict) and x.get('offsetM'): return f"{x['offsetM']} m {({'N': 'north', 'S': 'south', 'E': 'east', 'W': 'west'})[x.get('dir', 'N')]} of {x['street']}"
+    return name_of(x)
+GEOM_KEYS = ('geometry', 'geomType', 'geomMethod', 'geomConfidence')
+def place_roads(cfg, ov, cache, report):
+    global LAST_GAP
+    def unplaced(r, why):
+        report.append(f"{r['id']}: {why}")
+        e = ov['eas'].get(r['id'])
+        if e and any(k in e for k in GEOM_KEYS):
+            for k in GEOM_KEYS: e.pop(k, None)
+            report.append(f"  {r['id']}: earlier geometry removed (back to its approximate location)")
+    for r in cfg.get('roads', []):
+        city = r.get('city', '')
+        geom = None; method = None
+        if r['kind'] == 'road':
+            segs = r.get('segments') or [r]
+            parts, notes, done, missed = [], [], [], []
+            for sg in segs:
+                line, note = corridor(sg, sg.get('city', city), cache)
+                if line: parts.append(line); done.append(sg)
+                else: missed.append(sg)
+                notes.append(note)
+            # A segment marked optional may fail (its ways do not connect in OSM): the rest is kept and the
+            # method names the part that is not drawn.
+            if not parts or any(not sg.get('optional') for sg in missed): unplaced(r, f"corridor not placed ({'; '.join(notes)})"); continue
+            geom = {'type': 'LineString', 'coordinates': parts[0]} if len(parts) == 1 else {'type': 'MultiLineString', 'coordinates': parts}
+            method = 'road centreline ' + '; '.join(f"{name_of(sg['road'])} from {end_text(sg['from'])} to {end_text(sg['to'])}" for sg in done) + f" ({OSM_CREDIT})"
+            if missed: method += '; not drawn: ' + '; '.join(f"{name_of(sg['road'])} from {end_text(sg['from'])} to {end_text(sg['to'])}" for sg in missed)
+            gtype = 'road'
+        elif r['kind'] == 'point':
+            if r.get('water'):
+                A, W = street_lines(r['road'], city), water_lines(r['water'])
+                anchor = geocode_xing(r['nearXing'], city, cache) if r.get('nearXing') else None
+                if anchor:   # every waterway in Peel against a long road: keep only what is near the anchor
+                    ax, ay = anchor[0]; dx, dy = 2500 / (111320 * math.cos(math.radians(ay))), 2500 / 110574
+                    clip = lambda ls: [l for l in ls if any(abs(p[0] - ax) <= dx and abs(p[1] - ay) <= dy for p in l)]
+                    A, W = clip(A), clip(W)
+                LAST_GAP = None
+                xs = [x for x in crossings(A, W, r.get('nearM', 40)) if near_city(x, city)] if A and W else []
+                pts = merge_near(xs, 60)
+                if r.get('nearXing') and pts:
+                    # Many crossings (any waterway): the one closest to a named intersection, within 1.5 km.
+                    c = anchor
+                    pts = sorted((p for p in pts if c and metres(p, c[0]) <= 1500), key=lambda p: metres(p, c[0]))[:1]
+                    if not c: print(f"  {' & '.join(map(name_of, r['nearXing']))}: not found (no anchor for the crossing)")
+                if not pts and not W: print(f"  {name_of(r['water'])}: no waterways by that name (similar: {', '.join(similar_names(r['water'], waters())) or 'none'})")
+                elif not pts: print(f"  {name_of(r['road'])} / {name_of(r['water'])}: {explain_miss([r['road']], [A])}")
+                method = f"where {name_of(r['road'])} crosses {r.get('waterText') or name_of(r['water'])} ({OSM_CREDIT})"
+            else:
+                pairs = r.get('points') or [r['streets']]
+                pts = []
+                for pr in pairs:
+                    c = geocode_xing(pr, city, cache)
+                    if c: pts.append(c[0])
+                if len(pts) < len(pairs): pts = []
+                method = 'intersection of ' + '; '.join(f"{name_of(a)} and {name_of(b)}" for a, b in pairs) + f" ({OSM_CREDIT})"
+            if not pts: unplaced(r, 'point not found'); continue
+            pts = [[round(c, 6) for c in p] for p in pts]
+            geom = {'type': 'Point', 'coordinates': pts[0]} if len(pts) == 1 else {'type': 'MultiPoint', 'coordinates': pts}
+            gtype = 'road'
+        elif r['kind'] == 'water':
+            ls = [l for l in water_lines(r['water']) if any(near_city(p, city, 0) for p in l[::max(1, len(l) // 4)])]
+            if not ls: unplaced(r, f"{name_of(r['water'])} not found"); continue
+            geom = {'type': 'MultiLineString', 'coordinates': [[[round(c, 6) for c in p] for p in dp([tuple(q) for q in l], 0.00003)] for l in ls]}
+            method = f"along {name_of(r['water'])}, the creek the sewer follows ({OSM_CREDIT})"
+            gtype = 'linear'
+        e = ov['eas'].setdefault(r['id'], {})
+        if r.get('method'): method = f"{r['method']}: {method}"   # e.g. an approximate placement says so first
+        e.update({'geometry': geom, 'geomType': r.get('geomType', gtype), 'geomMethod': method, 'geomConfidence': r.get('confidence', 'medium')})
+        report.append(f"{r['id']}: {geom['type']} — {method}")
 
 # ---- main -------------------------------------------------------------------------------------------
 def main():
@@ -405,6 +639,7 @@ def main():
                                  f"traced from the project page image ({len(px)} control points{', scale bar checked' if t.get('mPerPx') else ''})"),
                   'geomConfidence': 'medium' if checked and len(px) >= 2 and res <= 60 else 'low'})
         report.append(f"{t['id']}: {geom['type']} {len(coords)} vertices, {len(px)} control points{f' ({amb} with two crossings)' if amb else ''}, residual {round(res)} m{scale_note}")
+    place_roads(cfg, ov, cache, report)
     json.dump(cache, open(xpath, 'w'), indent=1)
     json.dump(ov, open(opath, 'w'), indent=1, ensure_ascii=False)
     print('\n'.join(report))
@@ -479,6 +714,42 @@ def selftest():
             if v is None: os.environ.pop(k, None)
             else: os.environ[k] = v
         ROADS, MUNIS = old[2], old[3]
+    # Road corridors, offsets, intersections and creek crossings on a small grid (no network).
+    global WATER
+    keep = (ROADS, MUNIS, WATER)
+    lat0 = 43.70; dlat = 1000 / 110574            # ~1 km of latitude
+    ROADS = {'main street': [[[-79.75, lat0 - dlat], [-79.75, lat0 + 0.5 * dlat]], [[-79.75, lat0 + 0.5 * dlat], [-79.75, lat0 + 3 * dlat]]],
+             'first avenue': [[[-79.76, lat0], [-79.74, lat0]]], 'second avenue': [[[-79.76, lat0 + 2 * dlat], [-79.74, lat0 + 2 * dlat]]]}
+    MUNIS = {}; WATER = {'mill creek': [[[-79.76, lat0 + 1.2 * dlat], [-79.74, lat0 + 1.3 * dlat]]]}
+    try:
+        line, note = corridor({'road': 'Main Street', 'from': 'First Avenue', 'to': 'Second Avenue'}, '', {})
+        assert line and abs(metres(line[0], line[-1]) - 2000) < 30 and abs(line[0][1] - lat0) < 1e-5, (line, note)
+        # An offset walks along the road: 500 m north of First Avenue to 300 m north of Second Avenue.
+        line, _ = corridor({'road': 'Main Street', 'from': {'street': 'First Avenue', 'offsetM': 500, 'dir': 'N'}, 'to': {'street': 'Second Avenue', 'offsetM': 300, 'dir': 'N'}}, '', {})
+        assert line and abs(metres((-79.75, lat0), line[0]) - 500) < 30 and abs(metres((-79.75, lat0 + 2 * dlat), line[-1]) - 300) < 30, line
+        # Main Street runs only 1 km north of Second Avenue: 2000 m north has no end (not a walk south).
+        line, note = corridor({'road': 'Main Street', 'from': 'First Avenue', 'to': {'street': 'Second Avenue', 'offsetM': 2000, 'dir': 'N'}}, '', {})
+        assert line is None and 'to crossing not found' in note, (line, note)
+        # A street that stops short (Bush Street): the end is on the road, not out at the gap's midpoint.
+        ROADS['short street'] = [[[-79.7495, lat0 + 0.5 * dlat], [-79.70, lat0 + 0.5 * dlat]]]
+        line, note = corridor({'road': 'Main Street', 'from': 'First Avenue', 'to': {'street': 'Short Street', 'nearM': 100}}, '', {})
+        assert line and all(abs(p[0] + 79.75) < 1e-6 for p in line), (line, note)
+        ov = {'eas': {}}; rep = []
+        place_roads({'roads': [{'id': 'a', 'kind': 'road', 'road': 'Main Street', 'from': 'First Avenue', 'to': 'Second Avenue'},
+                               {'id': 'b', 'kind': 'point', 'streets': ['Main Street', 'Second Avenue']},
+                               {'id': 'c', 'kind': 'point', 'road': 'Main Street', 'water': 'Mill Creek'},
+                               {'id': 'd', 'kind': 'road', 'road': 'Main Street', 'from': 'First Avenue', 'to': 'Third Avenue'}]}, ov, {}, rep)
+        assert ov['eas']['a']['geometry']['type'] == 'LineString' and ov['eas']['a']['geomType'] == 'road' and 'OpenStreetMap' in ov['eas']['a']['geomMethod'], ov['eas']['a']
+        assert ov['eas']['a']['geomMethod'].startswith('road centreline Main Street from First Avenue to Second Avenue')
+        assert ov['eas']['b']['geometry']['type'] == 'Point' and abs(ov['eas']['b']['geometry']['coordinates'][1] - (lat0 + 2 * dlat)) < 1e-5
+        assert ov['eas']['c']['geometry']['type'] == 'Point' and ov['eas']['c']['geomMethod'].startswith('where Main Street crosses Mill Creek')
+        assert 'd' not in ov['eas'] and any(r.startswith('d: corridor not placed') for r in rep), rep
+        # A road that no longer places drops the geometry an earlier run wrote.
+        ov = {'eas': {'d': {'geometry': {'type': 'Point', 'coordinates': [0, 0]}, 'geomType': 'road', 'geomMethod': 'old', 'geomConfidence': 'medium', 'status': 'x'}}}; rep = []
+        place_roads({'roads': [{'id': 'd', 'kind': 'road', 'road': 'Main Street', 'from': 'First Avenue', 'to': 'Third Avenue'}]}, ov, {}, rep)
+        assert ov['eas']['d'] == {'status': 'x'} and any('earlier geometry removed' in r for r in rep), (ov, rep)
+    finally:
+        ROADS, MUNIS, WATER = keep
     print('selftest ok')
 
 if __name__ == '__main__':
