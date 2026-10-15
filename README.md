@@ -1435,6 +1435,35 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Trust signals: one note, every export, the criteria stamp, provenance
+
+From design audit, Group 10:
+
+- **One screening note, in the required wording:** "**General screening results only.**
+  Peel's W&WW Infrastructure Planning team must validate or confirm all results."
+  (`PeelUtil.SCREEN_LINE`, `SCREEN_NOTE`, `SCREEN_NOTE_SHORT`).
+  - It is pinned once at the top of the analysis panel, so every tab, sub-view and tool
+    result sits under it. The panes' own copies are hidden.
+  - It also appears in the development panel, presentation mode, and the footer of every
+    report: the briefing, memo, area report and comparison.
+- **The criteria stamp.** Every result names the criteria it uses: "Peel design criteria:
+  Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023)"
+  (`PeelUtil.CRITERIA_STAMP`). It appears in the note, the reports, the exports and the
+  workbook summary.
+- **Every export carries the disclaimer, the note and the stamp:**
+
+  | Export | How |
+  |---|---|
+  | CSVs (developments, allocations, corridor, batch, DC timing, funding) | three `#` lines at the top |
+  | GeoJSON (developments, servicing areas, planned works) | `disclaimer`, `screening` and `criteria` properties on the collection |
+  | SWMM and EPANET `.inp` model files | comment lines |
+  | Excel workbook | Summary sheet |
+
+- **Provenance on every exported row.** The developments CSV, GeoJSON and workbook gain
+  `source_portal`, `source_record_url` and `source_pulled_on`, taken from the development's
+  latest file. A missing value reads "not recorded", never blank. The Files tree view is owned
+  by the tree work and is unchanged.
+
 ## Presentation mode
 
 From design audit, Group 9:

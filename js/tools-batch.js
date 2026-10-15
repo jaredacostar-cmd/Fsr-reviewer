@@ -233,7 +233,8 @@
         r.maxDay == null ? '' : Math.round(r.maxDay * 10) / 10, r.wetPeak == null ? '' : Math.round(r.wetPeak * 10) / 10,
         r.note, r.tightest || ''].map(csvCell).join(',');
     }));
-    var blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+    var disc = (typeof window !== 'undefined' && window.PeelUtil && window.PeelUtil.CSV_DISCLAIMER) || '';
+    var blob = new Blob([disc + lines.join('\n')], { type: 'text/csv' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'batch-servicing.csv';

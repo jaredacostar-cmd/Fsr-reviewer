@@ -65,6 +65,8 @@ function summaryRows(meta) {
     meta.dataDates != null && meta.dataDates !== '' ? 'Data: ' + meta.dataDates : null,
     meta.version != null && meta.version !== '' ? 'Version: ' + meta.version : null,
     meta.disclaimer || 'Unofficial prototype · public data only · not a Region of Peel product',
+    meta.screening || null,
+    meta.criteria || null,
   ].filter(function (l) { return l != null && l !== ''; });
   return [[meta.title || 'Peel Growth Pipeline – workbook']]
     .concat(lines.map(function (l) { return [l]; }));

@@ -213,7 +213,7 @@
   function renderHydroBox() { const b = $('#hyd-box'); if (b) b.outerHTML = hydroBoxHTML(); }
   document.addEventListener('click', e => {
     const h = e.target.closest('[data-hyd]'); if (!h) return;
-    if (h.dataset.hyd === 'run') runHydro(); else if (h.dataset.hyd === 'inp' && HYD.inp) PE().download(`peel-zone-supply-${MM().THIS_YEAR}.inp`, HYD.inp, 'text/plain');
+    if (h.dataset.hyd === 'run') runHydro(); else if (h.dataset.hyd === 'inp' && HYD.inp) PE().download(`peel-zone-supply-${MM().THIS_YEAR}.inp`, window.PeelUtil.CSV_DISCLAIMER.replace(/^# /gm, '; ') + HYD.inp, 'text/plain');
   });
   const wellSystem = { AV13: 'Caledon Village – Alton', CE9: 'Palgrave – Caledon East' };
   const yearsAhead = () => { const ys = []; for (let y = MM().THIS_YEAR; y <= SP().hz.end; y++) ys.push(y); return ys; };

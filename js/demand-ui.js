@@ -150,7 +150,7 @@
     if (e.target.closest('[data-alloc-csv]')) {
       const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
       const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', SV().PLANT_SHORT[r.pl] || '', r.lay])];
-      EX().download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
+      EX().download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, root.PeelUtil.CSV_DISCLAIMER + lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
     }
     const r = e.target.closest('.ld-row'); if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) DN().showDetail(p); }
   });
