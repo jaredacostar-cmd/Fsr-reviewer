@@ -130,9 +130,21 @@ jobs:
 
       # One artifact name per attempt, so re-running a failed deploy doesn't find several
       # "github-pages" artifacts and refuse.
+      # The public build: the app files only (PUBLIC_BUILD). Scripts, tests, docs and anything
+      # internal (the manhole data check, reports-internal/) are never published; the build fails
+      # if any of it slips into the site.
+      - name: Public build (app files only)
+        env:
+          PUBLIC_BUILD: '1'
+        run: |
+          rm -rf _site && mkdir _site
+          cp -r index.html manifest.webmanifest sw.js css js data icons _site/
+          if find _site -path '*internal*' | grep -q . ; then echo "internal files in the public build:"; find _site -path '*internal*'; exit 1; fi
+          if grep -rl "reports-internal\|manhole-check.csv" _site/js _site/index.html >/dev/null; then echo "public code refers to the internal check"; exit 1; fi
+          du -sh _site
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
           name: github-pages-${{ github.run_attempt }}
 
       - id: deployment

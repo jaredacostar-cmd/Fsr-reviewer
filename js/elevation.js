@@ -18,10 +18,14 @@
   'use strict';
   const DTM = 'https://ws.geoservices.lrc.gov.on.ca/arcgis5/rest/services/Elevation/Ontario_DTM_LidarDerived/ImageServer';
   const TERRAIN_Z = 14;
+  // Each source's vertical datum is recorded, so values are never mixed silently: the lidar DTM is
+  // CGVD2013 (MNR); the terrain tiles' Canadian part is CDEM (CGVD28), their fill SRTM (EGM96).
   const SRC = {
-    lidar: { name: 'Ontario lidar terrain model', short: 'lidar', note: 'bare-earth lidar, 0.5 m pixels (Ontario Digital Terrain Model, Ministry of Natural Resources, CGVD2013)' },
-    terrain: { name: 'terrain tiles', short: 'terrain tiles', res: 7, note: 'terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m)' },
+    lidar: { name: 'Ontario lidar terrain model', short: 'lidar', res: 0.5, datum: 'CGVD2013', note: 'bare-earth lidar, 0.5 m pixels (Ontario Digital Terrain Model, Ministry of Natural Resources, CGVD2013)' },
+    terrain: { name: 'terrain tiles', short: 'terrain tiles', res: 7, datum: 'CGVD28 (CDEM) / EGM96 (SRTM)', note: 'terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m)' },
   };
+  // Bilinear sampling across tile edges (js/profile-core.js).
+  const PC = typeof module !== 'undefined' && module.exports ? require('./profile-core.js') : root.PeelProfileCore;
   const num = v => { if (v == null || v === '') return null; const n = +v; return isFinite(n) ? n : null; };
   const fmtRes = r => `${r < 1 ? r.toFixed(1) : Math.round(r)} m`;
 
@@ -76,7 +80,8 @@
   const LIDAR_CHUNK = 60;
   async function lidarFetch(pts) {
     const geometry = JSON.stringify({ points: pts.map(p => [+p.lng.toFixed(6), +p.lat.toFixed(6)]), spatialReference: { wkid: 4326 } });
-    const qs = new URLSearchParams({ geometry, geometryType: 'esriGeometryMultipoint', returnFirstValueOnly: 'true', outFields: 'Project,Resolution_m', f: 'json' });
+    // Bilinear: the service blends the four pixels around each point (not the nearest one).
+    const qs = new URLSearchParams({ geometry, geometryType: 'esriGeometryMultipoint', returnFirstValueOnly: 'true', interpolation: 'RSP_BilinearInterpolation', outFields: 'Project,Resolution_m', f: 'json' });
     const r = await fetch(`${DTM}/getSamples?${qs}`);
     if (!r.ok) throw new Error(`lidar service ${r.status}`);
     return parseSamples(await r.json(), pts.length);
@@ -96,11 +101,12 @@
     terrainTiles.set(k, pr); pr.catch(() => terrainTiles.delete(k));
     return pr;
   }
+  // Bilinear: the four pixels around the point, fetching the neighbouring tile at an edge; tiles
+  // are loaded once (decoded and cached) however many samples use them.
   async function terrainAt(lat, lng) {
-    const n = 2 ** TERRAIN_Z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
-    const x = Math.floor(xf), y = Math.floor(yf), px = Math.min(255, Math.floor((xf - x) * 256)), py = Math.min(255, Math.floor((yf - y) * 256));
-    const d = await terrainTile(x, y), i = (py * 256 + px) * 4;
-    return d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768;
+    const taps = PC.bilinearTaps(lat, lng, TERRAIN_Z), keys = [...new Set(taps.map(t => `${t.tx}/${t.ty}`))];
+    const data = new Map(await Promise.all(keys.map(async k => { const [x, y] = k.split('/').map(Number); return [k, await terrainTile(x, y)]; })));
+    return PC.bilinear(taps, (tx, ty, px, py) => { const d = data.get(`${tx}/${ty}`), i = (py * 256 + px) * 4; return PC.terrarium(d[i], d[i + 1], d[i + 2]); });
   }
 
   // ---- The sampler ----------------------------------------------------------------------------
@@ -162,7 +168,26 @@
     return new Hill('', { minZoom: HILL_MIN_ZOOM, maxZoom: 20, maxNativeZoom: 18, opacity: 0.45, attribution: 'Hillshade: Ontario Digital Terrain Model (Lidar-Derived), Ontario Ministry of Natural Resources, OGL-Ontario', crossOrigin: true, ...opts });
   }
 
-  const api = { DTM, SRC, sourceLabel, shortLabel, sourcesNote, sourceRuns, parseSamples, makeSampler, tileBBox, hillshadeURL, hillshadeLayer, HILL_MIN_ZOOM };
+  // ---- Terrain tiles for the 3D view (js/view-3d.js): the same sources as the sampler ----------
+  // Inside the pilot box the lidar terrain PMTiles (data/3d, CGVD2013, built in Actions); everywhere
+  // else the terrain tiles (CGVD28 / EGM96). Both are Terrarium PNGs. Above the terrain tiles'
+  // z15, a tile is upsampled from its z15 parent: heights are decoded, interpolated bilinearly,
+  // then re-encoded (interpolating the encoded colours would break at byte carries).
+  const DEM_TILE_MAX_Z = 15;
+  function upsampleTerrarium(rgba, dz, sx, sy, size = 256) {
+    const n = 2 ** dz, out = new Uint8ClampedArray(size * size * 4);
+    const hAt = (x, y) => { x = Math.max(0, Math.min(size - 1, x)); y = Math.max(0, Math.min(size - 1, y)); const o = (y * size + x) * 4; return rgba[o] * 256 + rgba[o + 1] + rgba[o + 2] / 256 - 32768; };
+    for (let j = 0; j < size; j++) for (let i = 0; i < size; i++) {
+      const px = (sx * size + i + 0.5) / n - 0.5, py = (sy * size + j + 0.5) / n - 0.5, x0 = Math.floor(px), y0 = Math.floor(py), fx = px - x0, fy = py - y0;
+      const h = hAt(x0, y0) * (1 - fx) * (1 - fy) + hAt(x0 + 1, y0) * fx * (1 - fy) + hAt(x0, y0 + 1) * (1 - fx) * fy + hAt(x0 + 1, y0 + 1) * fx * fy;
+      const v = h + 32768, o = (j * size + i) * 4;
+      out[o] = Math.floor(v / 256); out[o + 1] = Math.floor(v) % 256; out[o + 2] = Math.min(255, Math.round((v - Math.floor(v)) * 256)); out[o + 3] = 255;
+    }
+    return out;
+  }
+  const terrainTileURL = (z, x, y) => `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${z}/${x}/${y}.png`;
+
+  const api = { DEM_TILE_MAX_Z, upsampleTerrarium, terrainTileURL, DTM, SRC, TERRAIN_Z, terrainAt, sourceLabel, shortLabel, sourcesNote, sourceRuns, parseSamples, makeSampler, tileBBox, hillshadeURL, hillshadeLayer, HILL_MIN_ZOOM };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
 
   // ---- Browser: the shared sampler and the hillshade switch ------------------------------------
@@ -183,5 +208,32 @@
   api.setHillshade = setHillshade;
   api.getHillshade = () => hillOn;
   if (hillOn && map) map.whenReady(() => setHillshade(true));
+  // demTile(z, x, y) → { data: ArrayBuffer (Terrarium PNG), source: 'lidar' | 'terrain' }.
+  let pilot = null;
+  function pilotTerrain() {
+    if (!pilot) pilot = fetch('data/3d/manifest.json').then(r => r.ok ? r.json() : null).catch(() => null).then(man => {
+      const t = man && man.terrain, P = root.pmtiles;
+      return { man, terrain: t || null, archive: t && P ? new P.PMTiles(`data/3d/${t.file}`) : null };
+    });
+    return pilot;
+  }
+  const getBuf = async (url, signal) => { const r = await fetch(url, { signal }); if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.arrayBuffer(); };
+  async function demTile(z, x, y, signal) {
+    const p = await pilotTerrain();
+    if (p.archive && z >= p.terrain.minzoom && z <= p.terrain.maxzoom) {
+      const r = await p.archive.getZxy(z, x, y, signal).catch(() => null);
+      if (r && r.data) return { data: r.data, source: 'lidar' };
+    }
+    if (z <= DEM_TILE_MAX_Z) return { data: await getBuf(terrainTileURL(z, x, y), signal), source: 'terrain' };
+    const dz = z - DEM_TILE_MAX_Z, n = 2 ** dz;
+    const parent = await getBuf(terrainTileURL(DEM_TILE_MAX_Z, Math.floor(x / n), Math.floor(y / n)), signal);
+    const bmp = await createImageBitmap(new Blob([parent], { type: 'image/png' }));
+    const cv = new OffscreenCanvas(256, 256), cx = cv.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(bmp, 0, 0); const px = cx.getImageData(0, 0, 256, 256).data;
+    cx.putImageData(new ImageData(upsampleTerrarium(px, dz, x % n, y % n), 256, 256), 0, 0);
+    return { data: await (await cv.convertToBlob({ type: 'image/png' })).arrayBuffer(), source: 'terrain' };
+  }
+  api.demTile = demTile;
+  api.pilotTerrain = pilotTerrain;
   root.PeelElevation = api;
 })(typeof window !== 'undefined' ? window : globalThis);

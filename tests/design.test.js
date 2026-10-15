@@ -90,7 +90,7 @@ test('rail TOOL_ITEMS: every icon key is a real icon (no silent fallback)', () =
   const m = /const TOOL_ITEMS = (\[[\s\S]*?\]);/.exec(APP);
   assert.ok(m, 'TOOL_ITEMS not found in js/');
   const items = new Function(`return (${m[1]});`)();
-  assert.deepEqual(items.map(i => i[0]), ['select', 'measure', 'trace', 'whatif', 'inspect', 'corridor', 'unitsfit']);
+  assert.deepEqual(items.map(i => i[0]), ['select', 'measure', 'trace', 'whatif', 'inspect', 'corridor', 'unitsfit', 'timebox']);
   for (const [k, , , ic] of items) assert.ok(DG.iconNames.includes(ic), `rail tool ${k} uses unknown icon ${ic}`);
 });
 

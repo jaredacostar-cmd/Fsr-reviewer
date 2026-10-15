@@ -69,7 +69,9 @@ const SHELL_ASSETS = [
   'js/developments-tab.js',
   'js/devscope.js',
   'js/devtab.js',
+  'js/profile-core.js',
   'js/elevation.js',
+  'js/profile-view.js',
   'js/employment.js',
   'js/exist-pipes.js',
   'js/export-comparison.js',
@@ -89,6 +91,10 @@ const SHELL_ASSETS = [
   'js/map-markers.js',
   'js/masterplan.js',
   'js/measure.js',
+  'js/massing-core.js',
+  'js/view-3d.js',
+  'js/timebox-core.js',
+  'js/time-box.js',
   'js/offline.js',
   'js/overview-tab.js',
   'js/phases.js',
@@ -238,6 +244,9 @@ self.addEventListener('fetch', (event) => {
   let url;
   try { url = new URL(req.url); } catch (e) { return; }
   if (url.origin !== self.location.origin) return; // third-party left alone
+  // Byte-range reads (the 3D view's PMTiles archives in data/3d/) go straight to the network: the
+  // Cache API cannot store partial (206) responses, and a cached whole file must not answer a range.
+  if (req.headers.has('range') || /\/data\/3d\//.test(url.pathname)) return;
   const isPage = req.mode === 'navigate' || /\/(index\.html)?$/.test(url.pathname);
   if (isPage) {
     event.respondWith((async () => {

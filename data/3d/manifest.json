@@ -1,0 +1,51 @@
+{
+ "generatedAt": "2026-10-15T14:42:11.837Z",
+ "name": "North Brampton pilot",
+ "bbox": [
+  -79.83,
+  43.7,
+  -79.76,
+  43.74
+ ],
+ "note": "Indicative 3D context for the pilot box only; outside it the 3D view uses the terrain tiles and shows no buildings. Rebuilt by scripts/build-3d-tiles.js (Probe data sources, mode=tiles-3d).",
+ "terrain": {
+  "file": "lidar-pilot.pmtiles",
+  "encoding": "terrarium",
+  "minzoom": 12,
+  "maxzoom": 16,
+  "tiles": 235,
+  "skipped": 0,
+  "filledPixels": 120,
+  "datum": "CGVD2013",
+  "model": "DTM (bare earth)",
+  "project": "GTA 2023",
+  "year": 2023,
+  "quantum": 0.1,
+  "check": {
+   "n": 25,
+   "medianAbs": 0.063,
+   "maxAbs": 0.772
+  },
+  "attribution": "Terrain: Ontario Digital Terrain Model (Lidar-Derived), Ontario Ministry of Natural Resources, Open Government Licence – Ontario",
+  "bytes": 8046546
+ },
+ "buildings": {
+  "file": "buildings-pilot.pmtiles",
+  "layer": "buildings",
+  "minzoom": 13,
+  "maxzoom": 16,
+  "tiles": 231,
+  "count": 19001,
+  "parts": 0,
+  "outlinesDrawnByParts": 0,
+  "byBasis": {
+   "height": 0,
+   "levels": 55,
+   "default": 18946
+  },
+  "osmTimestamp": "2026-10-15T14:36:11Z",
+  "heightRule": "height tag → building:levels × 3.2 m → 2 storeys (estimated)",
+  "attribution": "© OpenStreetMap contributors, ODbL",
+  "bytes": 1613744
+ }
+}
