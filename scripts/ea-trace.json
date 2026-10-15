@@ -1,5 +1,5 @@
 {
- "note": "Study-area traces (scripts/ea_trace.py). Outline and control points read off each project-page map (pixel coordinates of the image on the ea-maps branch); control points are street intersections geocoded in Actions. Maps with no single study area (Region-wide key maps, aerial context only) are not traced.",
+ "note": "Study-area traces (scripts/ea_trace.py). Outline and control points read off each project-page map (pixel coordinates of the image on the ea-maps branch); control points are street intersections geocoded in Actions. Maps with no single study area (Region-wide key maps, aerial context only) are not traced. Road corridors, intersections and creek crossings (\"roads\") are placed from the streets the EA names (its title or purpose), on the OpenStreetMap streets.",
  "traces": [
   {
    "id": "downtown-brampton-water-and-wastewater-capacity-improvements",
@@ -2015,5 +2015,28 @@
    },
    "road": true
   }
+ ],
+ "roads": [
+  {"id": "airport-road-braydon-boulevard-stonecrest-drive-to-countryside-drive", "kind": "road", "road": "Airport Road", "from": ["Braydon Boulevard", "Stonecrest Drive"], "to": "Countryside Drive", "city": "Brampton"},
+  {"id": "dixie-road-queen-street-drive-to-mayfield-road", "kind": "road", "road": "Dixie Road", "from": ["Queen Street East", "Queen Street"], "to": "Mayfield Road", "city": "Brampton"},
+  {"id": "highway-50-and-mayfield-road", "kind": "point", "streets": [["Highway 50", "Regional Road 50"], "Mayfield Road"], "city": "Brampton"},
+  {"id": "mayfield-road-airport-road-to-coleraine-drive", "kind": "road", "road": "Mayfield Road", "from": "Airport Road", "to": "Coleraine Drive", "city": "Brampton"},
+  {"id": "mayfield-road-chinguacousy-road-to-heart-lake-road", "kind": "road", "road": "Mayfield Road", "from": "Chinguacousy Road", "to": "Heart Lake Road", "city": "Brampton"},
+  {"id": "mayfield-road-chinguacousy-road-to-winston-churchill-boulevard", "kind": "road", "road": "Mayfield Road", "from": "Chinguacousy Road", "to": "Winston Churchill Boulevard", "city": "Brampton"},
+  {"id": "mayfield-road-heart-lake-road-to-airport-road", "kind": "road", "road": "Mayfield Road", "from": "Heart Lake Road", "to": "Airport Road", "city": "Brampton"},
+  {"id": "mississauga-road-bovaird-drive-to-mayfield-road", "kind": "road", "road": "Mississauga Road", "from": ["Bovaird Drive West", "Bovaird Drive"], "to": "Mayfield Road", "city": "Brampton"},
+  {"id": "mississauga-road-financial-drive-to-bovaird-drive-west", "kind": "road", "road": "Mississauga Road", "from": "Financial Drive", "to": ["Bovaird Drive West", "Bovaird Drive"], "city": "Brampton"},
+  {"id": "steeles-avenue-chinguacousy-road-mavis-road-to-winston-churchill-boulevard", "kind": "road", "road": ["Steeles Avenue West", "Steeles Avenue"], "from": ["Chinguacousy Road", "Mavis Road"], "to": "Winston Churchill Boulevard", "city": "Brampton"},
+  {"id": "airport-road-1km-north-of-mayfield-road-to-600m-north-of-king-street", "kind": "road", "road": "Airport Road", "from": {"street": "Mayfield Road", "offsetM": 1000, "dir": "N"}, "to": {"street": "King Street", "offsetM": 600, "dir": "N"}, "city": "Caledon"},
+  {"id": "airport-road-100m-north-of-king-street-to-300m-north-of-huntsmill-drive", "kind": "road", "road": "Airport Road", "from": {"street": "King Street", "offsetM": 100, "dir": "N"}, "to": {"street": "Huntsmill Drive", "offsetM": 300, "dir": "N"}, "city": "Caledon"},
+  {"id": "albion-vaughan-road-and-king-street-intersection", "kind": "point", "streets": ["Albion Vaughan Road", "King Street"], "city": "Caledon"},
+  {"id": "bridge-and-culvert-replacement-queen-street-east-over-shaw-s-creek-in-the-villag", "kind": "point", "road": ["Queen Street East", "Queen Street"], "water": ["Shaw's Creek", "Shaws Creek"], "city": "Caledon"},
+  {"id": "mississauga-road-and-bush-street", "kind": "road", "city": "Caledon", "segments": [{"road": "Mississauga Road", "from": "Old Main Street", "to": "Bush Street"}, {"road": "Bush Street", "from": "Winston Churchill Boulevard", "to": "Olde Base Line Road"}]},
+  {"id": "the-gore-road-patterson-sideroad-to-hwy-9", "kind": "road", "road": "The Gore Road", "from": ["Patterson Sideroad", "Patterson Side Road"], "to": ["Highway 9", "King Street"], "city": "Caledon"},
+  {"id": "cawthra-road-improvements", "kind": "road", "road": "Cawthra Road", "from": ["Queen Elizabeth Way", "QEW"], "to": "Eastgate Parkway", "city": "Mississauga"},
+  {"id": "derry-road-and-argentia-road-intersection-improvements", "kind": "point", "streets": [["Derry Road West", "Derry Road"], "Argentia Road"], "city": "Mississauga"},
+  {"id": "dixie-road-rometown-drive-to-lakeshore-road-corridor-study", "kind": "road", "road": "Dixie Road", "from": "Rometown Drive", "to": ["Lakeshore Road East", "Lakeshore Road"], "city": "Mississauga"},
+  {"id": "erin-mills-parkway-intersection-improvements-at-dundas-street-and-burnhamthorpe-", "kind": "point", "points": [["Erin Mills Parkway", ["Dundas Street West", "Dundas Street"]], ["Erin Mills Parkway", ["Burnhamthorpe Road West", "Burnhamthorpe Road"]]], "city": "Mississauga"},
+  {"id": "lornewood-creek-sanitary-sewer-improvement", "kind": "water", "water": "Lornewood Creek", "city": "Mississauga", "confidence": "low"}
  ]
 }
