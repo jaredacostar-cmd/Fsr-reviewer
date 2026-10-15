@@ -198,6 +198,8 @@
     applyUserUnits(raw);
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     const records = P.dedupeRecords(raw);
+    // Council decisions (zoning by-laws passed, draft plans approved) onto their files (SPEC 1.2).
+    if (window.PeelCouncilDecisions && PeelCouncilDecisions.data) PeelCouncilDecisions.applyTo(records, PeelCouncilDecisions.data, P.canonRef);
     // Step B2: with the tree count in use, the trees are the developments (js/tree-groups.js
     // through buildProjects' regroup hook); Previous keeps today's grouping.
     const TG = window.PeelTreeGroups, TC = window.PeelTreeCounts;
@@ -558,6 +560,7 @@
   // Step B2: the developments become the trees once the data is in; a switch in Settings ›
   // Counting regroups (Tree) or puts today's grouping back (Previous).
   function loadTreeCounts() {
+    if (window.PeelCouncilDecisions) PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
     if (!window.PeelTreeCounts) return;
     PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
   }

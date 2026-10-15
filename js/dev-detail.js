@@ -363,14 +363,18 @@
     return list;
   }
   // Status: the event behind the current phase, signals in the status text, stalled or not.
-  // Zoning / official plan / subdivision approved, but no site plan approval yet: the site stays
-  // under review (only a site plan approval makes it Approved).
+  // Zoning approved, but no draft plan or site plan approved yet: the development stays under review.
   function planApprovedNote(p) {
+    // Zoning approved (a zoning file approved, or a zoning by-law passed at council) with no draft or
+    // site plan approved yet: the development stays under review (SPEC 1.2).
+    const z = p.zoningApproved;
+    if (z && p.rank < P.PHASE_BY_KEY.approved.rank) return `Zoning approved${z.bylaws.length ? ` (By-law ${z.bylaws.slice(0, 3).join(', ')}${z.date ? `, ${z.date}` : ''})` : z.date ? ` (${z.date})` : ''}${z.refs.length ? ` on ${z.refs.slice(0, 3).join(', ')}` : ''}; no draft plan or site plan approved yet`;
     const a = p.planApproved;
     if (!a || p.rank >= P.PHASE_BY_KEY.approved.rank) return '';
     const sp = p.records.some(r => r.kind === 'application' && r.stage === 'siteplan' && r.phase !== 'cancelled');
-    return `Zoning / official plan / subdivision approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no site plan file yet and the plan is not shown as registered'}`;
+    return `Official plan / condominium approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no draft plan or site plan approved yet'}`;
   }
+
   function statusOf(p) {
     const apps = p.records.filter(r => r.kind === 'application');
     const seen = new Map();
@@ -408,7 +412,7 @@
   function devFlags(p, st, f) {
     const out = [];
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
-    if (planApprovedNote(p)) out.push(chip('Zoning approved · site plan pending'));
+    if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank) out.push(chip(`Zoning approved${p.zoningApproved.bylaws.length ? ` · By-law ${esc(p.zoningApproved.bylaws[0])}` : ''}`));
     if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
     if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
     if (f) {

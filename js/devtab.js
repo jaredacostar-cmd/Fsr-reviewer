@@ -116,11 +116,16 @@
     [/withheld/i, 'info', 'Status withheld in the municipal data'],
   ];
   function planApprovedNote(p) {
+    // Zoning approved (a zoning file approved, or a zoning by-law passed at council) with no draft or
+    // site plan approved yet: the development stays under review (SPEC 1.2).
+    const z = p.zoningApproved;
+    if (z && p.rank < P().PHASE_BY_KEY.approved.rank) return `Zoning approved${z.bylaws.length ? ` (By-law ${z.bylaws.slice(0, 3).join(', ')}${z.date ? `, ${z.date}` : ''})` : z.date ? ` (${z.date})` : ''}${z.refs.length ? ` on ${z.refs.slice(0, 3).join(', ')}` : ''}; no draft plan or site plan approved yet`;
     const a = p.planApproved;
     if (!a || p.rank >= P().PHASE_BY_KEY.approved.rank) return '';
     const sp = p.records.some(r => r.kind === 'application' && r.stage === 'siteplan' && r.phase !== 'cancelled');
-    return `Zoning / official plan / subdivision approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no site plan file yet and the plan is not shown as registered'}`;
+    return `Official plan / condominium approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no draft plan or site plan approved yet'}`;
   }
+
   function statusOf(p) {
     const apps = p.records.filter(r => r.kind === 'application');
     const seen = new Map();
@@ -197,7 +202,7 @@
       }
     }
     const masterLive = live.filter(r => stageKey(r) === 'master'), spLive = live.filter(r => stageKey(r) === 'siteplan');
-    if (planApprovedNote(p)) flags.push(['info', `${planApprovedNote(p)}. Only a site plan approval${spLive.length ? '' : ' or a registered plan of subdivision'} makes the site Approved, so it stays under review.`]);
+    if (planApprovedNote(p)) flags.push(['info', `${planApprovedNote(p)}. Only a draft plan or site plan approval (or a registered plan) counts as approved, so it stays under review.`]);
     if (masterLive.some(r => /draft/i.test(r.statusRaw) && r.phase === 'approved')) flags.push(['info', 'Draft plan approval: the subdivision still has to meet its conditions and be registered.']);
     if (live.some(r => r.kind === 'application' && r.phase === 'approved' && /^\s*closed\s*$/i.test(r.statusRaw) && !r.closedUnconfirmed && !phaseAt(r, 'approved'))) flags.push(['warn', 'A planning file’s status is just “Closed”, read as approved (a closed file usually follows approval, but it can also be a file closed without a decision). Check the file.']);
     if (live.some(r => r.kind === 'permit' && rank(r) >= P().PHASE_BY_KEY.permit.rank) && live.some(r => r.kind === 'application' && r.stage !== 'precon' && rank(r) <= P().PHASE_BY_KEY.review.rank)) flags.push(['warn', 'Building permits are issued while a planning file on the site is still in review: the permits may be for an earlier phase or another building on the site.']);

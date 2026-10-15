@@ -12,8 +12,8 @@
   // Ordered lifecycle, inception -> completion. `rank` drives "furthest phase reached".
   const PHASES = [
     { key: 'inception',    rank: 0, label: 'Inception',          short: '1', desc: 'Pre-consultation or application submitted' },
-    { key: 'review',       rank: 1, label: 'Under review',       short: '2', desc: 'Circulation, public meeting, appeal; includes zoning / official plan / subdivision approved with no site plan approval yet' },
-    { key: 'approved',     rank: 2, label: 'Approved',           short: '3', desc: 'Site plan approved (building permits can follow)' },
+    { key: 'review',       rank: 1, label: 'Under review',       short: '2', desc: 'Circulation, public meeting, appeal; includes zoning / official plan approved (a passed zoning by-law) with no draft plan or site plan approval yet' },
+    { key: 'approved',     rank: 2, label: 'Draft / site plan approved', short: '3', desc: 'Draft plan of subdivision or site plan approved, or plan registered (building permits can follow). Zoning or official plan approval alone stays under review' },
     { key: 'permit',       rank: 3, label: 'Permit issued',      short: '4', desc: 'Building permit issued' },
     { key: 'construction', rank: 4, label: 'Under construction', short: '5', desc: 'Inspections underway' },
     { key: 'completed',    rank: 5, label: 'Completed',          short: '✓', desc: 'Occupancy, final inspection or permit closed' },
@@ -1082,14 +1082,141 @@
     /\bregistered\b|^\s*registration\s*$/i.test(String(r.statusRaw || '')) && !/draft/i.test(String(r.statusRaw || ''));
   // Demolition permits clear a site; they don't say how far the new development has got.
   const isDemolition = r => r.kind === 'permit' && (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || '')));
+  // What a planning file is, for which permits it can hold and what its approval means (SPEC 1.1):
+  //   precon (pre-consultation) · block (block / precinct / secondary plan) · draft (draft plan of
+  //   subdivision, consent) · use (official plan / zoning amendment) · siteplan · condo · other.
+  const BLOCK_TEXT = /block plan|precinct plan|secondary plan|tertiary plan/i;
+  const DRAFT_TEXT = /draft plan of subdivision|plan of subdivision|draft plan(?! of condo)|\bsubdivision\b|consent|severance/i;
+  function fileKind(r) {
+    if (r.kind !== 'application') return null;
+    const stage = r.stage || stageOf(r);
+    if (stage === 'precon') return 'precon';
+    if (stage === 'siteplan') return 'siteplan';
+    if (stage === 'condo') return 'condo';
+    if (stage !== 'master') return 'other';
+    const d = String(r.description || ''), head = d.includes(' — ') ? d.split(' — ')[0] : d.slice(0, 160);
+    const ref = String(r.ref || '').toUpperCase();
+    // Brampton's combined files carry a generic type ("OPA ZBA Subdivision"): what was filed is listed
+    // at the head of the description instead.
+    const type = /^\s*(OPA ZBA Subdivision|Official Plan \/ Zoning \/ Subdivision)\s*$/i.test(r.type || '') ? '' : (r.type || '');
+    if (BLOCK_TEXT.test(`${type} ${head}`) && !DRAFT_TEXT.test(head)) return 'block';
+    if (/^21T\b|^21T-|^T-?M\b/.test(ref) || DRAFT_TEXT.test(`${type} ${head}`) || /draft approv|registered|registration|m-plan|condition clearance/i.test(String(r.statusRaw || ''))) return 'draft';
+    return 'use';
+  }
+  // A draft plan approval or registration commits the land (SPEC §2: Committed); a zoning or
+  // official plan approval alone does not ("Zoning approved", still under review).
+  // (A minor site plan approves its own small change; it sets the phase only where the site has
+  // nothing else — the builds filter in mergeProject.)
+  const committingApproval = r => r.kind === 'application' && ['siteplan', 'draft'].includes(fileKind(r));
   function sitePhaseOf(r) {
-    if (r.kind === 'application' && r.phase === 'approved' && (r.superseded || r.closedUnconfirmed || isLegacy(r) || ((r.stage || stageOf(r)) !== 'siteplan' && !isRegistered(r)))) return 'review';
+    if (r.kind === 'application' && r.phase !== 'cancelled' && r.council && r.council.draft && fileKind(r) === 'draft' && PHASE_BY_KEY[r.phase].rank < PHASE_BY_KEY.approved.rank && !r.superseded) return 'approved';
+    if (r.kind === 'application' && r.phase === 'approved' && (r.superseded || r.closedUnconfirmed || isLegacy(r) || (!committingApproval(r) && !isRegistered(r)))) return 'review';
     return r.phase;
+  }
+  // A zoning approval on a file (its status, or a by-law passed at council): { date, bylaw } or null.
+  function zoningOf(r) {
+    if (r.kind !== 'application' || r.phase === 'cancelled') return null;
+    const k = fileKind(r);
+    if (r.council && r.council.zoning && ['use', 'draft', 'block'].includes(k)) return { date: r.council.zoning.date, bylaw: r.council.zoning.bylaw || null, url: r.council.zoning.url || null };
+    if (r.phase === 'approved' && k === 'use') { const e = r.events.filter(x => x.phase === 'approved').pop(); return { date: e ? e.date.toISOString().slice(0, 10) : null, bylaw: null }; }
+    return null;
   }
   const recStart = r => r.events.length ? +r.events[0].date : null;
   const approvedDate = r => { const e = r.events.filter(x => x.phase === 'approved'); return e.length ? +e[e.length - 1].date : r.events.length ? +r.events[r.events.length - 1].date : null; };
   // Approval events that set the site's Approved milestone: site plan files and permits only.
-  const countsAsApproval = r => r.kind !== 'application' || (r.stage || stageOf(r)) === 'siteplan' || isRegistered(r);
+  const countsAsApproval = r => r.kind !== 'application' || committingApproval(r) || isRegistered(r);
+
+  // The files that hold a permit (SPEC 1.1): containment, else within 40 m of a boundary (an address
+  // point on the street side of the lot); the most specific kind first, then the smallest area.
+  const CONTAINER_RANK = { siteplan: 3, condo: 3, draft: 2, use: 1 };
+  const NEAR_M = 40;
+  function containerOf(r, files) {
+    const area = f => f._area != null ? f._area : (f._area = ringsArea(f.poly));
+    const hit = (x, y) => files.filter(f => pointInRings(x, y, f.poly));
+    let c = hit(r.lng, r.lat);
+    if (!c.length) {
+      const dx = NEAR_M / (111320 * Math.cos(r.lat * Math.PI / 180)), dy = NEAR_M / 110574;
+      for (const [a, b] of [[1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]]) { c = hit(r.lng + a * dx, r.lat + b * dy); if (c.length) break; }
+    }
+    return c.sort((a, b) => CONTAINER_RANK[fileKind(b)] - CONTAINER_RANK[fileKind(a)] || area(a) - area(b));
+  }
+  // Bounded files grouped into separate proposals: half of either boundary inside the other.
+  function landsOf(files) {
+    const up = files.map((f, i) => i);
+    const find = i => (up[i] === i ? i : (up[i] = find(up[i])));
+    for (let i = 0; i < files.length; i++) for (let j = i + 1; j < files.length; j++) {
+      if (find(i) === find(j)) continue;
+      if (landShare(files[i].poly, files[j].poly) >= 0.5 || landShare(files[j].poly, files[i].poly) >= 0.5) up[find(j)] = find(i);
+    }
+    const g = new Map();
+    files.forEach((f, i) => { const k = find(i); (g.get(k) || g.set(k, []).get(k)).push(f); });
+    return [...g.values()];
+  }
+  const mainOf = fs => fs.slice().sort((a, b) => CONTAINER_RANK[fileKind(b)] - CONTAINER_RANK[fileKind(a)] || (b.units || 0) - (a.units || 0))[0];
+  function nearestFile(r, files, maxM) {
+    let best = null, bd = Infinity;
+    for (const f of files) {
+      const c = f._c || (f._c = ringsCentroid(f.poly)); if (!c) continue;
+      const d = Math.hypot((c[0] - r.lng) * 111320 * Math.cos(r.lat * Math.PI / 180), (c[1] - r.lat) * 110574) - Math.sqrt((f._area != null ? f._area : (f._area = ringsArea(f.poly))) / Math.PI);
+      if (d < bd) { bd = d; best = f; }
+    }
+    return bd <= maxM ? best : null;
+  }
+  // The planning files of a development, each with its own phase, and the separate proposals they
+  // form: files whose boundaries overlap (half of either inside the other) are one proposal.
+  function fileView(recs, live) {
+    const liveSet = new Set(live);
+    const byFile = new Map();
+    for (const r of recs) {
+      if (r.kind !== 'application') continue;
+      const k = r.fileKey || canonRef(r.ref) || r.uid;
+      (byFile.get(k) || byFile.set(k, []).get(k)).push(r);
+    }
+    const permitsOf = new Map();
+    for (const r of recs) if (r.kind === 'permit' && r.fileOf && r.phase !== 'cancelled') (permitsOf.get(r.fileOf) || permitsOf.set(r.fileOf, []).get(r.fileOf)).push(r);
+    const files = [];
+    for (const [k, rs] of byFile) {
+      const lv = rs.filter(r => liveSet.has(r));
+      const main = rs.slice().sort((a, b) => (b.units || 0) - (a.units || 0))[0];
+      const kind = fileKind(main);
+      const perms = rs.flatMap(r => permitsOf.get(r.uid) || []);
+      const own = lv.length ? PHASES[lv.reduce((m, r) => Math.max(m, PHASE_BY_KEY[sitePhaseOf(r)].rank), 0)].key : rs.some(r => r.phase !== 'cancelled') ? 'review' : 'cancelled';
+      const units = Math.max(0, ...rs.filter(r => r.phase !== 'cancelled' && !r.minor).map(r => r.units || 0)) || null;
+      const permitted = permitUnits(perms), completed = permitUnits(perms.filter(r => r.phase === 'completed'));
+      let phase = own;
+      if (phase !== 'cancelled') for (const r of perms) if (liveSet.has(r) && PHASE_BY_KEY[r.phase].rank > PHASE_BY_KEY[phase].rank) phase = r.phase;
+      if (phase === 'completed' && units > completed && perms.length) phase = 'construction';
+      const z = phase !== 'cancelled' && PHASE_BY_KEY[phase].rank <= PHASE_BY_KEY.review.rank ? rs.map(zoningOf).find(Boolean) : null;
+      const status = z ? `Zoning approved${z.bylaw ? ` · By-law ${z.bylaw}` : ''}${z.date ? `${z.bylaw ? ',' : ' ·'} ${z.date}` : ''}` : PHASE_BY_KEY[phase].label;
+      files.push({ ref: main.ref, key: k, uid: main.uid, kind, units, phase, status, zoning: z || null, draftCouncil: (main.council && main.council.draft) || null,
+        permits: perms.length, permitted, completed, poly: rs.find(r => r.poly) ? rs.find(r => r.poly).poly : null, live: lv.length > 0, land: null });
+    }
+    // Separate proposals: union of the live, bounded draft / site plan / condo / rezoning files.
+    const cont = files.filter(f => f.live && f.poly && CONTAINER_RANK[f.kind]);
+    const up = cont.map((f, i) => i);
+    const find = i => (up[i] === i ? i : (up[i] = find(up[i])));
+    for (let i = 0; i < cont.length; i++) for (let j = i + 1; j < cont.length; j++) {
+      if (find(i) === find(j)) continue;
+      if (landShare(cont[i].poly, cont[j].poly) >= 0.5 || landShare(cont[j].poly, cont[i].poly) >= 0.5) up[find(j)] = find(i);
+    }
+    const groups = new Map();
+    cont.forEach((f, i) => { const g = find(i); (groups.get(g) || groups.set(g, []).get(g)).push(f); });
+    const lands = [...groups.values()].map((fs, i) => {
+      fs.forEach(f => { f.land = i; });
+      const rank = Math.max(...fs.map(f => PHASE_BY_KEY[f.phase].rank));
+      const recsOf = fs.flatMap(f => byFile.get(f.key));
+      const planned = plannedFromApps(recsOf).planned || Math.max(0, ...fs.map(f => f.units || 0)) || 0;
+      const completed = fs.reduce((t, f) => t + f.completed, 0);
+      return { files: fs.map(f => f.ref), phase: PHASES[Math.max(0, rank)].key, planned, completed, left: Math.max(0, planned - completed) };
+    });
+    let summary = null;
+    if (lands.length) {
+      const byLeft = lands.slice().sort((a, b) => b.left - a.left || PHASE_BY_KEY[b.phase].rank - PHASE_BY_KEY[a.phase].rank);
+      summary = byLeft[0].left > 0 ? byLeft[0].phase : lands.slice().sort((a, b) => PHASE_BY_KEY[b.phase].rank - PHASE_BY_KEY[a.phase].rank)[0].phase;
+    }
+    for (const f of files) delete f.poly;
+    return { files, lands, summary };
+  }
 
   function mergeProject(key, recs, site = {}) {
     let live = recs.filter(r => r.phase !== 'cancelled');
@@ -1115,16 +1242,54 @@
     // it moved systems — so only clearly earlier permits are set aside: completed more than a year
     // before the plan, or issued more than 3 years before it.)
     const YR = 365.25 * 864e5;
-    const planStart = Math.min(Infinity, ...live.filter(r => r.kind === 'application' && ['siteplan', 'master', 'condo'].includes(r.stage || stageOf(r)) && !isMinorFile(r) && recStart(r) != null)
-      .map(r => { const t = /TRANSFER FILE \D*(\d{2})[-/ ]\d/i.exec(r.description || ''); return t ? Math.min(recStart(r), Date.UTC(2000 + +t[1], 0, 1)) : recStart(r); }));
-    for (const r of recs) {
-      if (r.kind !== 'permit') continue;
+    const fileStart = r => { const t = /TRANSFER FILE \D*(\d{2})[-/ ]\d/i.exec(r.description || ''); return t ? Math.min(recStart(r), Date.UTC(2000 + +t[1], 0, 1)) : recStart(r); };
+    const planStart = Math.min(Infinity, ...live.filter(r => r.kind === 'application' && ['siteplan', 'master', 'condo'].includes(r.stage || stageOf(r)) && !isMinorFile(r) && recStart(r) != null).map(fileStart));
+    const building = r => ['units', 'res', 'nonres'].includes(permitRole(r));
+    const beforeFile = (r, start) => {
       const e = r.events.find(x => x.phase === 'permit'), at = e ? +e.date : recStart(r);
-      const before = isFinite(planStart) && at != null && at < planStart && ['units', 'res', 'nonres'].includes(permitRole(r));
-      r.prePlan = before && ((r.phase === 'completed' && at < planStart - YR) || at < planStart - 3 * YR) || undefined;
-      r.prePlanKept = before && !r.prePlan || undefined;
+      const before = isFinite(start) && start != null && at != null && at < start && building(r);
+      return { pre: before && ((r.phase === 'completed' && at < start - YR) || at < start - 3 * YR) || undefined, kept: before || undefined };
+    };
+    // SPEC 1.1: a permit belongs to the planning file whose boundary holds it — the smallest site plan
+    // / condominium, else draft plan, else rezoning; never a block or precinct plan or a
+    // pre-consultation — and is judged against that file's own dates (issued well before the file was
+    // filed: what stood there before). A building permit inside no such file sets no phase and counts
+    // in no build-out. Developments whose files have no boundary keep the permits as a whole, judged
+    // against the site's first planning file.
+    const containers = live.filter(r => r.kind === 'application' && r.poly && r.poly.length && CONTAINER_RANK[fileKind(r)] && !isMinorFile(r));
+    // Area files (block / precinct plans, pre-consultations): a permit inside one of these but in no
+    // draft / site plan is another building in the area, not this proposal's.
+    const areaFiles = live.filter(r => r.kind === 'application' && r.poly && r.poly.length && ['block', 'precon'].includes(fileKind(r)));
+    const proposals = landsOf(containers);
+    for (const r of recs) if (r.kind === 'permit') { r.fileOf = undefined; r.outside = undefined; }
+    if (containers.length) {
+      for (const r of recs) {
+        if (r.kind !== 'permit') continue;
+        // The most specific file holding it that was already filed when it was issued (a site plan
+        // revision filed later on part of the land is not where an earlier building came from).
+        const cands = r.lat != null ? containerOf(r, containers) : [];
+        let f = cands.find(c => !beforeFile(r, fileStart(c)).pre) || cands.slice().sort((a, b) => (fileStart(a) || 0) - (fileStart(b) || 0))[0] || null;
+        // In no boundary at all (an address point off the lot): the one proposal, else the nearest
+        // within 300 m. Inside an area file only: no proposal's.
+        if (!f && r.lat != null && !areaFiles.some(a => pointInRings(r.lng, r.lat, a.poly))) f = proposals.length === 1 ? mainOf(proposals[0]) : nearestFile(r, containers, 300);
+        if (!f && r.lat == null && proposals.length === 1) f = mainOf(proposals[0]);
+        if (f) {
+          const b = beforeFile(r, fileStart(f));
+          r.prePlan = b.pre; r.prePlanKept = b.kept && !b.pre || undefined;
+          if (!r.prePlan) r.fileOf = f.uid;
+        } else {
+          r.prePlan = undefined; r.prePlanKept = undefined;
+          r.outside = (building(r) || permitRole(r) === 'suite') || undefined;
+        }
+      }
+    } else {
+      for (const r of recs) {
+        if (r.kind !== 'permit') continue;
+        const b = beforeFile(r, planStart);
+        r.prePlan = b.pre; r.prePlanKept = b.kept && !b.pre || undefined;
+      }
     }
-    if (live.some(r => !r.prePlan)) live = live.filter(r => !r.prePlan);
+    if (live.some(r => !r.prePlan && !r.outside)) live = live.filter(r => !r.prePlan && !r.outside);
     const main = live.filter(builds);
     if (main.some(r => r.kind === 'permit' || (r.stage || stageOf(r)) !== 'precon')) live = main;
     else if (live.some(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r))))
@@ -1138,11 +1303,13 @@
     }
     // A site plan approved before a newer zoning / official plan / subdivision file that is still
     // pending was for an earlier proposal: the site is back under review for the new one.
-    const masters = live.filter(r => r.kind === 'application' && (r.stage || stageOf(r)) === 'master' && recStart(r) != null && PHASE_BY_KEY[r.phase].rank <= PHASE_BY_KEY.review.rank);
+    // (On the same land: a newer draft plan elsewhere in the block is another proposal.)
+    const masters = live.filter(r => r.kind === 'application' && (r.stage || stageOf(r)) === 'master' && recStart(r) != null && PHASE_BY_KEY[r.phase].rank <= PHASE_BY_KEY.review.rank && fileKind(r) !== 'block');
+    const sameLand = (a, b) => !(a.poly && b.poly) || landShare(a.poly, b.poly) >= 0.5 || landShare(b.poly, a.poly) >= 0.5;
     for (const r of live) {
-      if (r.kind !== 'application' || r.phase !== 'approved' || ((r.stage || stageOf(r)) !== 'siteplan' && !isRegistered(r))) continue;
+      if (r.kind !== 'application' || r.phase !== 'approved' || (!committingApproval(r) && !isRegistered(r))) continue;
       const at = approvedDate(r);
-      r.superseded = at != null && masters.some(m => m !== r && recStart(m) > at) || undefined;
+      r.superseded = at != null && masters.some(m => m !== r && recStart(m) > at && sameLand(r, m)) || undefined;
     }
     // Redevelopment: files that start after an earlier build on the site was
     // completed are a new cycle, and the site's phase is that cycle's phase.
@@ -1155,9 +1322,18 @@
     let phase = legacyOnly ? 'completed' : live.length
       ? PHASES[live.reduce((m, r) => Math.max(m, PHASE_BY_KEY[sitePhaseOf(r)].rank), 0)].key
       : 'cancelled';
+    // Per file, then per proposal (SPEC 1.1): separate proposals in one development (draft plans in a
+    // block) each keep their own phase, and the development takes the phase of the one with the most
+    // units still to build — the block never takes one file's phase.
+    const fv = fileView(recs, live);
+    if (!legacyOnly && fv.lands.length >= 2) phase = fv.summary;
     // Planning approval short of a site plan (zoning / official plan / subdivision): shown
     // alongside the site's phase, with the earliest date it was reached.
     const planApp = live.filter(r => r.kind === 'application' && r.phase === 'approved' && sitePhaseOf(r) !== 'approved');
+    // Zoning approved (a 'use' file approved, or a zoning by-law passed at council) while no draft or
+    // site plan is approved yet: still under review, shown as "Zoning approved" (SPEC 1.2).
+    const zl = PHASE_BY_KEY[phase].rank <= PHASE_BY_KEY.review.rank ? live.map(r => ({ r, z: zoningOf(r) })).filter(x => x.z) : [];
+    const zoningApproved = zl.length ? { refs: zl.map(x => x.r.ref).filter(Boolean), bylaws: zl.map(x => x.z.bylaw).filter(Boolean), date: zl.map(x => x.z.date).filter(Boolean).sort().pop() || null } : null;
     const planApproved = planApp.length ? {
       refs: planApp.map(r => r.ref).filter(Boolean),
       date: planApp.flatMap(r => r.events.filter(e => e.phase === 'approved').map(e => e.date)).sort((a, b) => a - b)[0] || null,
@@ -1165,7 +1341,7 @@
 
     // Build-out: planned units on the planning applications vs units on building permits.
     const liveApps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
-    const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan);
+    const livePermits = recs.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside);
     const plan = plannedFromApps(liveApps);
     // Units are net of the dwellings the site removes (a tear-down rebuild adds none).
     const lost = lostHomes(recs);
@@ -1234,6 +1410,11 @@
       kinds: Array.from(new Set(recs.map(r => r.kind))),
       milestones,
       planApproved,
+      zoningApproved,
+      // Each planning file with its own phase, status, units and the permits its boundary holds;
+      // the separate proposals (lands) they form (SPEC 1.1).
+      files: fv.files,
+      lands: fv.lands,
       legacyOnly: legacyOnly || undefined,
       // The files that set the phase, and the completion that started a new cycle (if any).
       phaseRecs: live,
@@ -1298,7 +1479,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;
