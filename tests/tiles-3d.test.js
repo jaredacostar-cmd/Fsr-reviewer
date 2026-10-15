@@ -71,3 +71,10 @@ test('terrain tiles above z15 are upsampled from decoded heights (no byte-carry 
     assert.ok(Math.abs(h - want) < 0.01, `${i}: ${h} vs ${want}`);
   }
 });
+
+test('the service worker leaves byte-range reads and data/3d to the network', () => {
+  const sw = fs.readFileSync(path.join(__dirname, '../sw.js'), 'utf8');
+  assert.match(sw, /req\.headers\.has\('range'\)/);
+  assert.match(sw, /\\\/data\\\/3d\\\//);
+  for (const f of ['js/massing-core.js', 'js/view-3d.js']) assert.ok(sw.includes(`'${f}'`), `${f} in the shell`);
+});
