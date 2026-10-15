@@ -2608,3 +2608,23 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 :root[data-theme="dark"] .view3d .maplibregl-ctrl-icon { filter: invert(1); }
 @media (prefers-color-scheme: dark) { :root:not([data-theme]) .view3d .maplibregl-ctrl-icon { filter: invert(1); } }
 @media (max-width: 480px) { .v3-attrib { font-size: 10px; } .v3-legend { bottom: 56px; } }
+
+/* Time Box (js/time-box.js): imagery over the years inside a dragged box. Dark first; fits 380 px. */
+.tb-drawing, .tb-drawing .leaflet-interactive { cursor: crosshair !important; }
+.leaflet-container.tb-drawing, .leaflet-container.tb-drawing * { touch-action: none !important; }
+.tb-active .leaflet-marker-pane, .tb-active .leaflet-overlay-pane, .tb-active .leaflet-tooltip-pane { opacity: .25; }
+.tb-row { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); }
+.tb-slider { display: inline-flex; align-items: center; gap: var(--space-2); flex: 1 1 180px; min-width: 0; }
+.tb-slider input[type="range"] { flex: 1 1 auto; min-width: 120px; accent-color: var(--accent); }
+.tb-year { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 4ch; }
+.tb-more { flex-basis: 100%; }
+.tb-more summary { cursor: pointer; min-height: 28px; display: flex; align-items: center; gap: var(--space-1); flex-wrap: wrap; }
+.tb-more[open] #tb-info { display: block; margin-top: var(--space-1); max-height: 30vh; overflow: auto; }
+.tb-chk { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 32px; }
+.tb-prog { display: inline-block; width: 120px; height: 6px; border-radius: 3px; background: var(--surface-2); vertical-align: middle; overflow: hidden; }
+.tb-prog-bar { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+.tb-swipe { position: absolute; z-index: 700; width: 4px; margin-left: -2px; background: var(--accent); cursor: ew-resize; touch-action: none; }
+.tb-swipe[hidden] { display: none; }
+.tb-swipe-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-weight: 700; box-shadow: var(--shadow); }
+.tb-swipe:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (pointer: coarse) { .tb-swipe-grip { width: 44px; height: 44px; } }
