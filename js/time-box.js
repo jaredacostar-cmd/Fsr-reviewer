@@ -18,8 +18,9 @@
 
   const S = {
     stage: 'idle',        // idle → drawing → checking → ready
-    box: null,            // [w, s, e, n]
-    rect: null, startLL: null,
+    box: null,            // [w, s, e, n]: the bbox of quad, for tiles and the cache key
+    quad: null,           // the box as dragged on screen: 4 corners (top-left, top-right, bottom-right, bottom-left) as latlngs
+    rect: null, startCP: null,
     releases: null,       // all Wayback releases
     years: [],            // one release per year with distinct imagery in the box
     note: '',             // how the years were found (or why not)
@@ -34,18 +35,26 @@
     if (!map.getPane(name)) { const p = map.createPane(name, map.getPane('rotatePane') || undefined); p.style.zIndex = z; p.style.pointerEvents = 'none'; }
     return map.getPane(name);
   }
-  function clip() {
-    if (!S.box) return;
-    const [w, s, e, n] = S.box, a = map.latLngToLayerPoint([n, w]), b = map.latLngToLayerPoint([s, e]);
-    const x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x), y1 = Math.min(a.y, b.y), y2 = Math.max(a.y, b.y);
-    const poly = (l, r) => `polygon(${l}px ${y1}px, ${r}px ${y1}px, ${r}px ${y2}px, ${l}px ${y2}px)`;
-    const xm = x1 + (x2 - x1) * (S.compare ? S.swipe : 1);
-    pane('tbA', 240).style.clipPath = poly(x1, xm);
-    pane('tbB', 239).style.clipPath = S.compare ? poly(xm, x2) : poly(x1, x1);
+  // The panes sit in the map's (rotating) pane, so the clip is the box's four corners in layer
+  // points: it stays on the box whatever the map's bearing. The swipe splits the box along its own
+  // top and bottom edges.
+  const lerp = (a, b, t) => L.point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+  const polyCSS = pts => `polygon(${pts.map(p => `${p.x.toFixed(1)}px ${p.y.toFixed(1)}px`).join(', ')})`;
+  let clipQueued = false;
+  function clip() { if (!clipQueued) { clipQueued = true; requestAnimationFrame(() => { clipQueued = false; clipNow(); }); } }
+  function clipNow() {
+    if (!S.quad) return;
+    const [A, B, Cc, D] = S.quad.map(ll => map.latLngToLayerPoint(ll));
+    const s = S.compare ? S.swipe : 1, T = lerp(A, B, s), Bm = lerp(D, Cc, s);
+    pane('tbA', 240).style.clipPath = polyCSS([A, T, Bm, D]);
+    pane('tbB', 239).style.clipPath = S.compare ? polyCSS([T, B, Cc, Bm]) : 'polygon(0 0, 0 0, 0 0)';
     const h = $('#tb-swipe');
     if (h) {
-      const pt = map.layerPointToContainerPoint(L.point(xm, y1)), pb = map.layerPointToContainerPoint(L.point(xm, y2));
-      h.hidden = !S.compare; h.style.left = `${pt.x}px`; h.style.top = `${Math.min(pt.y, pb.y)}px`; h.style.height = `${Math.abs(pb.y - pt.y)}px`;
+      h.hidden = !S.compare; if (!S.compare) return;
+      const ct = map.latLngToContainerPoint(map.layerPointToLatLng(T)), cb = map.latLngToContainerPoint(map.layerPointToLatLng(Bm));
+      const len = Math.hypot(cb.x - ct.x, cb.y - ct.y), ang = Math.atan2(cb.y - ct.y, cb.x - ct.x) * 180 / Math.PI - 90;
+      h.style.left = `${(ct.x + cb.x) / 2}px`; h.style.top = `${(ct.y + cb.y) / 2}px`; h.style.height = `${len}px`;
+      h.style.transform = `translate(-50%, -50%) rotate(${ang.toFixed(2)}deg)`;
     }
   }
   map.on('move zoom zoomend viewreset resize rotate', clip);
@@ -74,7 +83,7 @@
     S.apps.clearLayers();
     const A = S.years[S.idx]; if (!A || !S.box) return;
     const list = (App() && App().state && App().state.projects) || [];
-    const r = C().applicationsAsOf(list, S.box, A.year);
+    const r = C().applicationsAsOf(list, S.box, A.year, S.quad.map(ll => [ll.lng, ll.lat]));
     pane('tbApps', 670).style.pointerEvents = 'auto'; pane('tbTip', 700);
     const phaseAt = p => { try { return (TL() && TL().phaseAsOfYear && TL().phaseAsOfYear(p, A.year)) || p.phase; } catch (e) { return p.phase; } };
     const label = k => (PH() && PH().PHASE_BY_KEY && PH().PHASE_BY_KEY[k] && PH().PHASE_BY_KEY[k].label) || k;
@@ -162,32 +171,45 @@
   // ---- Drawing the box ---------------------------------------------------------------------------
   const el = map.getContainer();
   function onDown(ev) {
-    if (S.stage !== 'drawing' || (ev.pointerType === 'mouse' && ev.button !== 0)) return;
-    if (ev.target.closest('.leaflet-control, .tool-banner, #tb-swipe')) return;
+    if (S.stage !== 'drawing' || !S.draw || (ev.pointerType === 'mouse' && ev.button !== 0)) return;
+    // Only a press on the map itself starts a box: buttons and panels over the map keep working.
+    if (!(ev.target === el || ev.target.closest('.leaflet-map-pane')) || ev.target.closest('.leaflet-control, .tool-banner, #tb-swipe')) return;
     ev.preventDefault(); ev.stopPropagation();
-    S.startLL = map.mouseEventToLatLng(ev);
+    S.startCP = map.mouseEventToContainerPoint(ev);
     if (S.rect) map.removeLayer(S.rect);
     pane('tbRect', 660);
-    S.rect = L.rectangle(L.latLngBounds(S.startLL, S.startLL), { pane: 'tbRect', className: 'tb-rect', color: tok('--accent'), weight: 2, dashArray: '6 4', fill: false, interactive: false }).addTo(map);
+    S.rect = L.polygon(quadFrom(S.startCP, S.startCP), { pane: 'tbRect', className: 'tb-rect', color: tok('--accent'), weight: 2, dashArray: '6 4', fill: false, interactive: false }).addTo(map);
     el.setPointerCapture && el.setPointerCapture(ev.pointerId);
   }
+  // The box as dragged on screen (so it is square to the screen whatever the map's bearing): its
+  // four corners, top-left first, as latlngs.
+  function quadFrom(a, b) {
+    const x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x), y1 = Math.min(a.y, b.y), y2 = Math.max(a.y, b.y);
+    return [[x1, y1], [x2, y1], [x2, y2], [x1, y2]].map(([x, y]) => map.containerPointToLatLng(L.point(x, y)));
+  }
+  let moveQueued = null;
   function onMove(ev) {
-    if (S.stage === 'drawing' && S.startLL && S.rect) { S.rect.setBounds(L.latLngBounds(S.startLL, map.mouseEventToLatLng(ev))); return; }
-    if (S.dragSwipe) {
-      const [w, s, e, n] = S.box, a = map.latLngToContainerPoint([n, w]), b = map.latLngToContainerPoint([s, e]);
-      const r = el.getBoundingClientRect(), x = ev.clientX - r.left, x1 = Math.min(a.x, b.x), x2 = Math.max(a.x, b.x);
-      S.swipe = Math.max(0, Math.min(1, (x - x1) / Math.max(1, x2 - x1))); clip();
+    if (S.stage === 'drawing' && S.startCP && S.rect) {
+      const cp = map.mouseEventToContainerPoint(ev);
+      if (!moveQueued) requestAnimationFrame(() => { if (S.rect && S.startCP && moveQueued) S.rect.setLatLngs(quadFrom(S.startCP, moveQueued)); moveQueued = null; });
+      moveQueued = cp; return;
+    }
+    if (S.dragSwipe && S.quad) {
+      // Project the pointer onto the box's top edge (on screen) for the swipe fraction.
+      const a = map.latLngToContainerPoint(S.quad[0]), b = map.latLngToContainerPoint(S.quad[1]), p = map.mouseEventToContainerPoint(ev);
+      const dx = b.x - a.x, dy = b.y - a.y, len2 = Math.max(1, dx * dx + dy * dy);
+      S.swipe = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / len2)); clip();
     }
   }
   function onUp(ev) {
     if (S.dragSwipe) { S.dragSwipe = false; map.dragging.enable(); return; }
-    if (S.stage !== 'drawing' || !S.startLL) return;
-    const end = map.mouseEventToLatLng(ev), a = map.latLngToContainerPoint(S.startLL), b = map.latLngToContainerPoint(end);
-    const start = S.startLL; S.startLL = null;
+    if (S.stage !== 'drawing' || !S.startCP) return;
+    const a = S.startCP, b = map.mouseEventToContainerPoint(ev); S.startCP = null; moveQueued = null;
     if (Math.abs(a.x - b.x) < 12 || Math.abs(a.y - b.y) < 12) { if (S.rect) { map.removeLayer(S.rect); S.rect = null; } return; }
-    S.box = C().normBox([start.lng, start.lat, end.lng, end.lat]);
-    S.rect.setBounds(L.latLngBounds([[S.box[1], S.box[0]], [S.box[3], S.box[2]]]));
-    map.dragging.enable(); el.classList.remove('tb-drawing');
+    S.quad = quadFrom(a, b);
+    S.box = C().ringBox(S.quad.map(ll => [ll.lng, ll.lat]));
+    S.rect.setLatLngs(S.quad);
+    setDraw(false);
     check();
   }
   el.addEventListener('pointerdown', onDown, true);
@@ -196,10 +218,17 @@
   el.addEventListener('pointercancel', onUp);
   function startDrawing() {
     cancel(); clearImagery();
-    S.stage = 'drawing'; S.box = null; S.years = [];
+    S.stage = 'drawing'; S.box = null; S.quad = null; S.years = [];
     if (S.rect) { map.removeLayer(S.rect); S.rect = null; }
-    map.dragging.disable(); el.classList.add('tb-drawing');
+    setDraw(true);
     renderBanner();
+  }
+  // Drawing mode: a drag draws the box and the map holds still. Off (after a box, or "Pan the
+  // map"), the map pans and zooms as usual.
+  function setDraw(on) {
+    S.draw = !!on; S.startCP = null;
+    if (S.draw) { map.dragging.disable(); el.classList.add('tb-drawing'); }
+    else { map.dragging.enable(); el.classList.remove('tb-drawing'); }
   }
   function clearImagery() {
     stopPlay();
@@ -231,7 +260,9 @@
 
   // ---- Banner ------------------------------------------------------------------------------------
   function statusHTML() {
-    if (S.stage === 'drawing') return '<span class="muted">Drag a box on the map (the map stays still while you draw).</span>';
+    if (S.stage === 'drawing') return S.draw
+      ? '<span class="muted">Drag a box on the map.</span> <button type="button" class="btn small" data-ptool-act="tb-pan">Pan the map</button>'
+      : '<span class="muted">Move the map to the place, then draw.</span> <button type="button" class="btn small" data-ptool-act="tb-draw">Draw a box</button>';
     if (S.stage === 'checking') return `<span class="muted">Checking the Wayback releases for new imagery in the box…</span> <span class="tb-prog"><span class="tb-prog-bar" style="width:${pct()}%"></span></span> <button type="button" class="btn small" data-ptool-act="tb-cancel">Cancel</button>`;
     if (S.stage === 'cancelled') return '<span class="muted">Cancelled.</span> <button type="button" class="btn small" data-ptool-act="tb-retry">Check again</button>';
     if (S.stage === 'error') return `<span class="muted">${esc(S.note)}</span> <button type="button" class="btn small" data-ptool-act="tb-retry">Try again</button>`;
@@ -283,9 +314,9 @@
     bannerHTML,
     onActivate() { startDrawing(); },
     onDeactivate() {
-      cancel(); clearImagery(); map.dragging.enable(); el.classList.remove('tb-drawing');
+      cancel(); clearImagery(); setDraw(false);
       if (S.rect) { map.removeLayer(S.rect); S.rect = null; }
-      S.stage = 'idle'; S.box = null; S.years = [];
+      S.stage = 'idle'; S.box = null; S.quad = null; S.years = [];
       for (const n of ['tbA', 'tbB']) if (map.getPane(n)) map.getPane(n).style.clipPath = '';
     },
     onBannerAct(act) {
@@ -293,6 +324,8 @@
       if (act === 'tb-retry' && S.box) check();
       if (act === 'tb-new') startDrawing();
       if (act === 'tb-play') togglePlay();
+      if (act === 'tb-pan') { setDraw(false); updateBanner(); }
+      if (act === 'tb-draw') { setDraw(true); updateBanner(); }
     },
   });
 

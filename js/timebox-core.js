@@ -160,12 +160,26 @@
     return { time: null, year: null, basis: 'unknown' };
   }
   const inBox = ([w, s, e, n], lat, lng) => lat >= s && lat <= n && lng >= w && lng <= e;
+  // Point in a ring of [lng, lat] (ray casting): the box as drawn on a rotated map is a turned
+  // rectangle in map coordinates, so the bbox alone would take in its corners' surroundings.
+  function inRing(ring, lat, lng) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      if ((yi > lat) !== (yj > lat) && lng < (xj - xi) * (lat - yi) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+  // The bbox of a ring of [lng, lat].
+  const ringBox = ring => [Math.min(...ring.map(c => c[0])), Math.min(...ring.map(c => c[1])), Math.max(...ring.map(c => c[0])), Math.max(...ring.map(c => c[1]))];
   // The developments in the box filed by the end of `year`, and those whose date is unknown
   // (shown, flagged, whatever the year).
-  function applicationsAsOf(projects, bbox, year) {
+  // ring (optional): the box's own outline; only developments inside it count.
+  function applicationsAsOf(projects, bbox, year, ring) {
     const shown = [], unknown = [], later = [];
     for (const p of projects) {
       if (p.lat == null || p.lng == null || !inBox(bbox, p.lat, p.lng)) continue;
+      if (ring && !inRing(ring, p.lat, p.lng)) continue;
       if (!(p.records || [p]).some(r => !r.kind || r.kind === 'application')) continue;
       const f = filingDate(p);
       if (f.basis === 'unknown') unknown.push({ p, f });
@@ -181,7 +195,7 @@
     return years.reduce((best, v) => Math.abs(v - y) < Math.abs(best - y) ? v : best, years[0]);
   }
 
-  const api = { MAX_TILES, MAX_Z, MIN_Z, CONCURRENCY, WAYBACK, parseWaybackCapabilities, parseWaybackConfig, lngLatToTile, tilesForBox, chooseZoom, normBox, cacheKey, distinctReleases, onePerYear, pool, bisectSignatures, limiter, hashBytes, filingDate, applicationsAsOf, snapYear };
+  const api = { MAX_TILES, MAX_Z, MIN_Z, CONCURRENCY, WAYBACK, parseWaybackCapabilities, parseWaybackConfig, lngLatToTile, tilesForBox, chooseZoom, normBox, cacheKey, distinctReleases, onePerYear, pool, bisectSignatures, limiter, hashBytes, filingDate, applicationsAsOf, inRing, ringBox, snapYear };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTimeBoxCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);
