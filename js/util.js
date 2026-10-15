@@ -69,7 +69,9 @@
     pauseUrl: 'https://pub-peelregion.escribemeetings.com/filestream.ashx?DocumentId=45699',
     overrides: {},   // project or component number → 'scheduled' | 'paused' | 'unknown'
   };
-  const CAPITAL_STATUS = { scheduled: 'Scheduled', paused: 'Paused', unknown: 'Status unknown' };
+  // DC schedule status (Stage 1 #9: never "status unknown"): 'unknown' is a project in the 2026 budget,
+  // going ahead if tendered or awarded by June 11, 2026, paused otherwise.
+  const CAPITAL_STATUS = { scheduled: 'Scheduled', paused: 'Paused', unknown: 'In the 2026 budget' };
   // y: planned year; s: 'approved' (2026 budget) | 'proposed'; id: project / component number.
   const capitalStatus = (y, s, id) => {
     if (id && CAPITAL.overrides[id]) return CAPITAL.overrides[id];
@@ -83,14 +85,17 @@
   // index, as the by-law requires), taken at its average annual rate for other base years.
   const DOLLAR_YEAR = 2026;
   const toDollarYear = (v, fromYear, ix2020) => v * Math.pow(ix2020, (DOLLAR_YEAR - fromYear) / (DOLLAR_YEAR - 2020));
-  // Basis chip on a capacity figure: where its numbers come from. 'mixed' names the parts.
+  // Basis of a capacity figure: exactly one of three, shown in the row or tile (never blended: where
+  // two bases are both useful they are separate rows). The capacity rated / firm / required always
+  // comes from its published source (annual reports, Master Plan); the basis names the flow.
   const BASIS = {
-    design: ['Design', 'Peel design criteria (Modelling Demand Table v2.0, Aug 2024; Linear Wastewater Standards R1.0, Mar 2023)'],
-    measured: ['2025 measured', 'The Region\u2019s 2025 annual reports (plant flows and capacities)'],
-    mp2020: ['Master Plan 2020', 'The 2020 Water and Wastewater Master Plan (capacities, triggers, storage)'],
-    mixed: ['Mixed basis', ''],
+    metered: ['2025 metered (calibrated)', 'Existing flow is the 2025 metered flow (Region annual reports); growth is added at each facility\u2019s measured rate'],
+    design: ['design criteria', 'Flows at Peel design criteria (Modelling Demand Table v2.0, Aug 2024; Linear Wastewater Standards R1.0, Mar 2023)'],
+    mp: ['Master Plan', 'The 2020 Water and Wastewater Master Plan (its forecast against its capacities: storage required vs available)'],
   };
-  const basisChip = (kind, why = '') => { const b = BASIS[kind] || BASIS.mixed; const t = why || b[1]; return `<span class="basis-chip basis-${kind}" title="${t.replace(/"/g, '&quot;')}">${b[0]}</span>`; };
+  const BASIS_KEYS = Object.keys(BASIS);
+  const basisLabel = kind => (BASIS[kind] || BASIS.design)[0];
+  const basisChip = (kind, why = '') => { const k = BASIS[kind] ? kind : 'design', b = BASIS[k]; const t = why || b[1]; return `<span class="basis-chip basis-${k}" data-basis="${k}" title="${t.replace(/"/g, '&quot;')}">${b[0]}</span>`; };
   const $ = s => document.querySelector(s);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // Skeleton placeholder for loading states (styled in css/modes.css): grey
@@ -176,6 +181,11 @@
   const isSmallSystem = rated => rated > 0 && rated < SMALL_SYSTEM_MLD;
   const capTxt = (v, rated) => (isSmallSystem(rated) ? `${fmtNum(Math.round(v * 1000))} m³/d` : `${fmt1(v)} ML/d`);
   const uCap = (v, rated) => (isSmallSystem(rated) ? unit(fmtNum(Math.round(v * 1000)), 'm³/d') : uML(v));
+  // Room or shortfall in signed words, one column (Stage 1 #5): "room 35 ML/d" / "over by 103 ML/d",
+  // never a bare negative. u(v) formats the magnitude (default: fmt1 + the unit given).
+  const roomWords = (v, u = 'ML/d', fmt) => { const m = fmt ? fmt(Math.abs(v)) : `${fmt1(Math.abs(v))} ${u}`; return v < 0 ? `over by ${m}` : `room ${m}`; };
+  // The uncommitted reserve (MECP D-5-1) in words: "room to 100%: 29.3 ML/d" or "over 100% by 12 ML/d".
+  const reserveWords = (v, rated) => (v < 0 ? `over 100% by ${capTxt(-v, rated)}` : `room to 100%: ${capTxt(v, rated)}`);
   const uHa = n => unit(fmtNum(Math.round(n)), 'ha'), uDev = n => unit(fmtNum(n), n === 1 ? 'dev' : 'devs'), uUnits = n => unit(fmtNum(Math.round(n)), 'units');
 
   // ---- Headline helper (source: app.js 4682) ------------------------------------
@@ -200,9 +210,9 @@
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
     getColors,
-    fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits, SMALL_SYSTEM_MLD, isSmallSystem, capTxt, uCap,
+    fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits, SMALL_SYSTEM_MLD, isSmallSystem, capTxt, uCap, roomWords, reserveWords,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, CRITERIA_STAMP, DISCLAIMER_PROPS, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    UNOFFICIAL, CSV_DISCLAIMER, CRITERIA_STAMP, DISCLAIMER_PROPS, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, BASIS_KEYS, basisLabel, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

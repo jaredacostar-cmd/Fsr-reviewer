@@ -186,7 +186,7 @@
       return {
         hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${pc(k.pctCommitted)}</strong> of its rated ${capTxt(k.rated, k.rated)}, <strong>${pc(k.pctBuildout)}</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
         tiles: tile(fmt1(k.rated), 'ML/d', 'rated capacity') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
-          + tile(fmt1(reserve), 'ML/d', 'uncommitted reserve (D-5-1)', ppl != null && reserve > 0 ? `≈${fmtNum(roundPop(ppl))} people` : '')
+          + tile(fmt1(Math.abs(reserve)), 'ML/d', reserve < 0 ? 'over 100% of rated after committed' : 'room to 100% after committed (D-5-1 reserve)', ppl != null && reserve > 0 ? `≈${fmtNum(roundPop(ppl))} people` : '')
           + tile(c.out === 'today' ? 'now' : c.out ? `≈${c.out}` : `after ${window.PeelSvcPlants.hz.end}`, '', 'reaches the 90% expansion trigger', c.relief.length ? `next: ${esc(c.relief[0].text)}` : ''),
       };
     }
@@ -223,7 +223,7 @@
     return {
       hl: `<strong>South Peel water system</strong> ${ty}: rated ${fmt1(k.rated)} ML/d of treatment (A.P. Kennedy + Lorne Park); 2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d + committed growth = <strong>${pc(k.pctCommitted)}</strong> of rated, <strong>${pc(k.pctBuildout)}</strong> at build-out.`,
       tiles: tile(fmt1(k.rated), 'ML/d', 'rated treatment') + tile(fmt1(sp.maxDayMLd), 'ML/d', '2025 maximum day (measured)') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
-        + tile(fmt1(k.reserve), 'ML/d', 'uncommitted reserve (to 100% of rated)'),
+        + tile(fmt1(Math.abs(k.reserve)), 'ML/d', k.reserve < 0 ? 'over 100% of rated after committed' : 'room to 100% after committed (D-5-1 reserve)'),
     };
   }
   // The ladder both ways: what the scope drains to / is fed by, and what feeds it.

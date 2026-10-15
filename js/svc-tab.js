@@ -197,6 +197,8 @@
   // The wastewater flow compared with plant capacity, by mode. Capacity check scales every layer to
   // each plant's 2025 measured annual average (wet weather included), so it is an annual average
   // flow; design flows are average dry weather flow (ADWF) at Peel criteria.
+  // The one basis of a wastewater plant figure, by mode (Stage 1 #4): metered (calibrated) or design.
+  const wwBasis = () => (svcOpt.ww === 'calibrated' ? 'metered' : 'design');
   const wwFlowLabel = (form = 'short') => svcOpt.ww === 'calibrated'
     ? (form === 'long' ? 'annual average flow (2025 measured at each plant; growth at the plant\u2019s measured rate)' : 'annual average flow')
     : (form === 'long' ? 'average dry weather flow (ADWF, Peel design criteria)' : 'ADWF');
@@ -545,6 +547,7 @@
   });
 
   const api = {
+    wwBasis,
     renderSvcTab, renderScenario, scenarioText, scenarioMetrics, setCapYear,
     renderScenarioCriteria, criteriaChanges, CRIT_LABEL, CRIT_KEY_LABEL, svcOpt,
     svcFlowTree, upstreamOf, svcJobs, svcBar, svcLegend, optSwitch, refLink,

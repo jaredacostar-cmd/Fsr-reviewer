@@ -339,7 +339,7 @@
     return ['Lakeview', 'Clarkson', 'Inglewood']
       .map(pl => (CAP && CAP.of(`plant:${pl}`)) || (c => c && { ...c, buildout: c.buildout })(M.plantCap(pl))).filter(c => c && c.rated > 0)
       .map(c => ({
-        name: c.name, rated: c.rated, capWord: 'rated',
+        name: c.name, rated: c.rated, capWord: 'rated', basis: root.PeelSvcTab && root.PeelSvcTab.wwBasis ? root.PeelSvcTab.wwBasis() : 'design',
         existing: c.existing,
         approved: Math.max(0, c.committed - c.existing),
         proposed: Math.max(0, c.buildout - c.committed),
@@ -358,9 +358,9 @@
     const k = root.PeelCapacity && root.PeelCapacity.of('wsys:southPeel');
     const treat = k ? null : WT().waterCapRow(M, 'South Peel treatment', MP().lakeZones(),
       sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, '');
-    if (k) rows.push({ name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: k.rated, capWord: 'rated', existing: k.existing, approved: k.committed - k.existing, proposed: k.buildout - k.committed });
+    if (k) rows.push({ name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: k.rated, capWord: 'rated', basis: 'metered', existing: k.existing, approved: k.committed - k.existing, proposed: k.buildout - k.committed });
     else if (treat) rows.push({
-      name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: treat.rated, capWord: 'rated',
+      name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: treat.rated, capWord: 'rated', basis: 'metered',
       existing: treat.v[0] + treat.v[1], approved: treat.v[2], proposed: treat.v[3],
     });
     const pumps = WT().wfPumps();
@@ -372,7 +372,7 @@
       const r = WT().waterCapRow(M, n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, '', 'firm');
       if (r) rows.push({
         name: n === 1 ? 'Pumping: from the plants (zone 1 and above)' : `Pumping: into zone ${n} and above`,
-        rated: r.rated, capWord: 'firm',
+        rated: r.rated, capWord: 'firm', basis: 'design',
         existing: r.v[0] + r.v[1], approved: r.v[2], proposed: r.v[3],
       });
     }
@@ -485,7 +485,7 @@
           const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high;
           return `<td class="n">${like != null ? `<strong>${like}</strong><small>${esc(txt)}</small>` : `<span class="muted">${esc(txt)}</span>`}</td>`;
         };
-        return `${f === firstSmall ? '<tr class="grp"><td colspan="5">Small systems <small>capacity in m³/d</small></td></tr>' : ''}<tr><td>${esc(f.name)}<small>${f.capWord} ${capTxt(f.rated, f.rated)}</small></td><td class="n">${bo == null ? '–' : `${Math.round(bo)}%`}</td>${[80, 90, 100].map(cell).join('')}</tr>`;
+        return `${f === firstSmall ? '<tr class="grp"><td colspan="5">Small systems <small>capacity in m³/d</small></td></tr>' : ''}<tr data-basis="${f.basis}"><td>${esc(f.name)}<small>${f.capWord} ${capTxt(f.rated, f.rated)} · ${root.PeelUtil.basisChip(f.basis)}</small></td><td class="n">${bo == null ? '–' : `${Math.round(bo)}%`}</td>${[80, 90, 100].map(cell).join('')}</tr>`;
       }).join('');
       return `<div class="hyd-scroll"><table class="dt" data-info="timing-triggers"><caption>${title} ${estTag}</caption><thead><tr><th>Facility</th><th class="n">Load at<br>build-out</th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     };

@@ -237,11 +237,11 @@ test('new colours are tokens, distinct from phases, capacity, selection and the 
 // ---- Capital tab, DC timing status, This week, Needs attention ----------------------------------
 const dcInfra = JSON.parse(src('data/dc-infra.json'));
 
-test('DC timing: actual status where matched, "scheduled (not yet in capital records)" otherwise', () => {
+test('DC timing: actual status where matched, "not in capital records (DC schedule)" otherwise', () => {
   const idx = M.dcCapitalIndex(sample, dcInfra);
   assert.deepEqual(idx.get('24-1192'), { status: 'under construction', percent: 60, lastUpdate: '2026-09-30', key: 'web:peelregion.ca/construction/project-90-0001' });
   assert.match(M.dcActualHTML(idx.get('24-1192'), true), /60% built<\/button> as of Sep 30, 2026/);
-  assert.match(M.dcActualHTML(undefined, true), /scheduled \(not yet in capital records\)/);
+  assert.match(M.dcActualHTML(undefined, true), /not in capital records \(DC schedule\)/);
   assert.equal(M.dcActualHTML(undefined, false), '', 'nothing when capital data is not published');
   assert.match(M.dcActualHTML({ status: 'tendered', percent: null, lastUpdate: '2026-08-01', key: 'k' }, true), />Tendered</);
 });

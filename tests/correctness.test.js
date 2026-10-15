@@ -29,3 +29,79 @@ test('3. small systems sit in their own group and never set a shared chart scale
   assert.match(src('js/timing.js'), /Small systems <small>capacity in m³\/d<\/small>/);
   for (const f of ['js/masterplan.js', 'js/svc-scope.js', 'js/tool-scope.js']) assert.match(src(f), /capTxt\(/, `${f} prints rated capacity through capTxt`);
 });
+
+// ---- 4. One basis per capacity figure -----------------------------------------------------------
+test('4. a basis chip is one of {2025 metered (calibrated), design criteria, Master Plan}; "Mixed basis" is gone', () => {
+  assert.deepEqual(U.BASIS_KEYS, ['metered', 'design', 'mp']);
+  assert.deepEqual(U.BASIS_KEYS.map(U.basisLabel), ['2025 metered (calibrated)', 'design criteria', 'Master Plan']);
+  for (const k of U.BASIS_KEYS) assert.match(U.basisChip(k), new RegExp(`data-basis="${k}"`));
+  assert.match(U.basisChip('mixed'), /data-basis="design"/, 'an unknown kind never renders a fourth label');
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'js'))) {
+    const s = src(`js/${f}`);
+    assert.doesNotMatch(s, /Mixed basis/, `js/${f} still says "Mixed basis"`);
+    assert.doesNotMatch(s, /basisChip\('mixed'/, `js/${f} asks for a mixed basis chip`);
+  }
+});
+
+test('4. every capacity row carries one basis (data-basis): plants, Overview bars, water rows, pumping stations, timing', () => {
+  const sp = src('js/svc-plants.js');
+  assert.match(sp, /<div class="cap-row" data-basis="\$\{r\.basis \|\| basisKey\}">/);
+  assert.match(sp, /trows\.push\(`<tr data-basis="\$\{r\.basis \|\| basisKey\}">/);
+  assert.match(sp, /<tr data-basis="design"\$\{rowA\(x\.a\.id, ''\)\}>/, 'pumping station rows: design criteria');
+  assert.match(sp, /chart = capChartHTML\(rows, Y, \{ basis: bz \}\);/);
+  assert.match(sp, /if \(bz === 'metered'\) for \(const r of rows\) \{ r\.v = \[r\.v\[0\] \+ r\.v\[1\], 0, r\.v\[2\], r\.v\[3\]\]; \}/, 'metered: existing is one segment (it holds built since the census), never census + metered blended');
+  assert.match(src('js/overview-tab.js'), /<div class="ov-cap \$\{st\}" data-basis="\$\{bz\}">/);
+  assert.match(src('js/water-tab.js'), /<tr data-basis="\$\{x\.basis\}">/);
+  assert.match(src('js/water-tab.js'), /basis: 'mp', room:/, 'storage rows: Master Plan');
+  assert.match(src('js/timing.js'), /<tr data-basis="\$\{f\.basis\}">/);
+  assert.match(src('js/svc-tab.js'), /const wwBasis = \(\) => \(svcOpt\.ww === 'calibrated' \? 'metered' : 'design'\);/);
+});
+
+// ---- 5. Reserve vs shortfall ------------------------------------------------------------------------
+test('5. room or over in signed words, never a bare negative', () => {
+  assert.equal(U.roomWords(35), 'room 35 ML/d');
+  assert.equal(U.roomWords(-103), 'over by 103 ML/d');
+  assert.equal(U.roomWords(-0.5, 'ML'), 'over by 0.5 ML');
+  assert.equal(U.reserveWords(29.3, 518), 'room to 100%: 29.3 ML/d');
+  assert.equal(U.reserveWords(-12, 518), 'over 100% by 12 ML/d');
+  assert.equal(U.reserveWords(0.141, 0.243), 'room to 100%: 141 m³/d');
+  const sp = src('js/svc-plants.js');
+  assert.match(sp, /const roomWord = 'Room to 100%';/);
+  assert.match(sp, /<th class="n">At build-out<br><small>room or over<\/small><\/th>/);
+  assert.match(sp, /`room \$\{u\(afterProposed\)\}/);
+  assert.match(sp, /`<span class="over">over by \$\{u\(-afterProposed\)\}<\/span>`/);
+  assert.doesNotMatch(sp, /short \$\{u\(/, 'no "short" beside a reserve');
+  assert.doesNotMatch(sp, /Reserve \(D-5-1\)'/);
+  assert.match(src('js/water-tab.js'), /window\.PeelUtil\.roomWords\(x\.room, x\.unit\)/);
+  assert.doesNotMatch(src('js/water-tab.js'), /\$\{x\.room < 0 \? '−' : ''\}/);
+  assert.match(src('js/demand-ui.js'), /v < 0 \? `over by \$\{fmt1\(-v\)\} \$\{unitTxt\}`/);
+  for (const f of ['js/dev-detail.js', 'js/fsr.js', 'js/svc-data.js', 'js/tool-scope.js', 'js/reports.js']) assert.match(src(f), /reserveWords\(/, `${f}: reserve in words`);
+});
+
+// ---- 9. Capital status ------------------------------------------------------------------------------
+test('9. planned works: capital-records status where matched, "not in capital records (…)" otherwise; never "status unknown"', () => {
+  const mp = src('js/masterplan.js');
+  assert.match(mp, /const CE = window\.PeelCapitalEA, e = id && CE && CE\.dcStatusOf \? CE\.dcStatusOf\(id\) : null;/);
+  assert.match(mp, /\(capital records\)`;/);
+  assert.match(mp, /return ` · not in capital records \(\$\{src\}\$\{st === 'paused' \? '; procurement paused' : ''\}\)`;/);
+  assert.match(mp, /'council-approved February 2024' : 'DC schedule'/, 'G.E. Booth 2028 (no DC project number) names its source');
+  assert.match(mp, /\|c\$\{window\.PeelCapitalEA && window\.PeelCapitalEA\.data && window\.PeelCapitalEA\.data\.loaded \? 1 : 0\}/, 're-computed once the capital records load');
+  assert.match(src('js/capital-ea.js'), /const dcStatusOf = proj => \(proj && data\.capital \? dcIndex\(\)\.get\(proj\) \|\| null : null\);/);
+  assert.equal(U.CAPITAL_STATUS.unknown, 'In the 2026 budget');
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'js'))) {
+    const s = src(`js/${f}`).replace(/[Nn]ever "status unknown"/g, '');
+    assert.doesNotMatch(s.replace(/EA_STATUS = \{[^}]*\}/, ''), /'[Ss]tatus unknown'/, `js/${f}`);
+  }
+});
+
+// ---- 10. Pumping stations framing -----------------------------------------------------------------
+test('10. pumping stations: screening note in the headline, peak wet and peak dry shown, method limits stated', () => {
+  const sp = src('js/svc-plants.js');
+  assert.match(sp, /<strong>Screening estimate: \$\{over\.length\} pumping station/);
+  assert.match(sp, /at build-out peak wet \(design criteria, with I&amp;I on the traced area\)/);
+  assert.match(sp, /≈\$\{Math\.round\(r\.wet\)\}% \(peak dry \$\{Math\.round\(r\.dry\)\}%\)/);
+  assert.match(sp, /Trunk and local sewer methods are not separated here; the Region\\u2019s hydraulic model governs\./);
+  assert.match(sp, /DUI\(\)\.miniBar\('<small>peak dry<\/small>', x\.dry,/, 'peak dry bars by default');
+  assert.match(sp, /<th>Peak dry<br><small>design<\/small><\/th>/);
+  assert.doesNotMatch(sp, /Peak dry \(reference\)/);
+});

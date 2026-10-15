@@ -90,7 +90,7 @@
       ids = new Set(App().state.servicing.drainage.filter(d => d.plant === plantName).map(d => d.id));
       title = SD().plantLabel(plantName); sub = `${fmtNum(ids.size)} ${App().state.servicing.blocks ? 'blocks' : 'catchments'}`;
       const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${plantName}`);
-      if (k) sub += ` · rated ${capTxt(k.rated, k.rated)} · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · uncommitted reserve ${capTxt(k.reserve, k.rated)}`;
+      if (k) sub += ` · rated ${capTxt(k.rated, k.rated)} · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · ${window.PeelUtil.reserveWords(k.reserve, k.rated)}`;
       const ce = SP().plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
       if (ce) sub += ` · ${ce}`;
     } else if (a && a.zone) {

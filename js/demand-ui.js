@@ -77,7 +77,7 @@
         <span style="display:block;height:100%;width:${(Math.max(0, v) / max * 100).toFixed(1)}%;background:var(${neg ? '--cap-over' : '--cap-room'});border-radius:4px"></span>
         ${unitTxt === '%' && max > 100 ? `<span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:${(100 / max * 100).toFixed(1)}%;border-left:1px solid var(--text-primary)"></span>` : ''}
       </span>
-      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}${neg ? ` · ${negWord}` : ''}</span>
+      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${v < 0 ? `over by ${fmt1(-v)} ${unitTxt}` : `${fmt1(v)} ${unitTxt}${neg ? ` · ${negWord}` : ''}`}</span>
     </div>`;
   function wwInfoLine(method) {
     const c = App().state.criteria, E = c.employment, R = App().state.reports, bc = CA().baselineCensus(), Y = bc ? bc.year : 2021;

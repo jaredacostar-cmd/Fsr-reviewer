@@ -307,7 +307,7 @@
     let plant = '';
     if (cap) {
       const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
-      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uCap(cap.rated, cap.rated)}; existing + built + committed ${pct(cap.committed, cap.rated)} (${uCap(cap.committed, cap.rated)}); uncommitted reserve <strong>${uCap(reserve, cap.rated)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
+      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uCap(cap.rated, cap.rated)}; existing + built + committed ${pct(cap.committed, cap.rated)} (${uCap(cap.committed, cap.rated)}); <strong>${window.PeelUtil.reserveWords(reserve, cap.rated)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
         This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant already screens over rated capacity'}. ${estTag}</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `${SCREEN_NOTE}<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>

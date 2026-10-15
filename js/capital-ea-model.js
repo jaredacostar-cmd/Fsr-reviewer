@@ -27,7 +27,7 @@
     'under construction': { label: 'Under construction', cls: 'building' },
     'substantially complete': { label: 'Substantially complete', cls: 'done' },
     complete: { label: 'Complete', cls: 'done' },
-    unknown: { label: 'Status unknown', cls: 'unknown' },
+    unknown: { label: 'Status not stated', cls: 'unknown' },
   };
   const statusLabel = s => (STATUS[s] || STATUS.unknown).label;
   const statusBadge = s => `<span class="ce-badge ce-${(STATUS[s] || STATUS.unknown).cls}">${esc(statusLabel(s))}</span>`;
@@ -237,10 +237,10 @@
     }
     return idx;
   }
-  /** DC timing cell: actual status when matched ("Tendered", "60% built", as of), else "scheduled (not yet in capital records)". */
+  /** DC timing cell: actual status when matched ("Tendered", "60% built", as of), else "not in capital records (DC schedule)". */
   function dcActualHTML(entry, hasCapital) {
     if (!hasCapital) return '';
-    if (!entry) return '<small class="muted ce-dc-sched">scheduled (not yet in capital records)</small>';
+    if (!entry) return '<small class="muted ce-dc-sched">not in capital records (DC schedule)</small>';
     const what = entry.status === 'under construction' && entry.percent != null ? `${entry.percent}% built` : statusLabel(entry.status);
     return `<small class="ce-dc-act"><button type="button" class="btn small link" data-ce-open="cap:${esc(entry.key)}">${esc(what)}</button> as of ${esc(fmtDate(entry.lastUpdate))}</small>`;
   }

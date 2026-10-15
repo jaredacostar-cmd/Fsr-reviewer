@@ -2387,7 +2387,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .analysis-panes .dt th, .analysis-panes .dt td { padding-left: 6px; padding-right: 6px; }
 /* Basis chip on a capacity figure (design / 2025 measured / Master Plan 2020 / mixed). */
 .basis-chip { display: inline-block; margin-left: var(--space-1); padding: 0 6px; border: 1px solid var(--border); border-radius: 999px; font-size: var(--fs-1); font-weight: 500; line-height: 1.5; color: var(--text-secondary); vertical-align: middle; white-space: nowrap; cursor: help; }
-.basis-chip.basis-mixed { border-style: dashed; }
+.basis-chip.basis-mp { border-style: dashed; }
 
 /* Public version (Settings › Public version, or ?public): no funding screen, no screening-result
    column, and the screening results lose their red / amber / green (design audit, Group 2). */
