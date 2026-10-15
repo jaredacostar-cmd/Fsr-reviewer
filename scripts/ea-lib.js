@@ -562,14 +562,18 @@ function linkCapital(ea, capital, dcLinked) {
  * medium / high confidence (roads EAs are left out: Region road resurfacing rarely comes from them).
  * Weaker than a project website or a street match: method 'inside the study area'.
  */
+const ACTIVE_CAPITAL = ['planned', 'tendered', 'awarded', 'under construction'];
 function linkCapitalInArea(ea, capital) {
   const g = ea.geometry; if (!g || !/Polygon/.test(g.type) || ea.geomConfidence === 'low' || ea.system === 'roads') return [];
   const sysOk = r => r.system === ea.system || (ea.system === 'multi' && (r.system === 'water' || r.system === 'wastewater'));
-  const out = [];
+  // Planned or active work only, one link per contract: a large study area holds hundreds of
+  // finished records that say nothing about what the EA leads to.
+  const out = [], seen = new Set();
   for (const r of capital?.records || []) {
-    if (!r.geometry || !sysOk(r)) continue;
+    if (!r.geometry || !sysOk(r) || !ACTIVE_CAPITAL.includes(r.status)) continue;
+    const key = r.contract || r.projectNumber || r.id; if (seen.has(key)) continue;
     const pts = pointsOf(r.geometry); if (!pts.length) continue;
-    if (pts.filter(p => distToGeom(p, g) === 0).length >= pts.length / 2) out.push({ id: r.id, projectNumber: r.projectNumber, method: 'inside the study area' });
+    if (pts.filter(p => distToGeom(p, g) === 0).length >= pts.length / 2) { seen.add(key); out.push({ id: r.id, projectNumber: r.projectNumber, method: 'inside the study area' }); }
   }
   return out;
 }
@@ -578,18 +582,27 @@ function linkCapitalInArea(ea, capital) {
  * solution is to …", "The recommended alternative includes …"), not a table-of-contents line.
  * Returns ≤ 450 characters or null.
  */
+const DECISION_PEOPLE = /project ?manager|inspector|contractor|contract ?admin|consultant|conflict|comments|assignment ?id/i;
 function extractDecision(text) {
-  const t = String(text || '').replace(/\u00ad/g, '').replace(/-\s*\n\s*/g, '').replace(/\s+/g, ' ');
-  const re = /(?:^|[.;:]\s+)((?:The |the )?(?:recommended|preferred)(?: alternative)? (?:solution|alternative|design concept|design|option|servicing strategy|strategy)(?: \([^)]{1,40}\))? (?:is|was|includes|consists of|involves|will be|would be|for [^.]{3,80} is)\s[^.]{25,420}\.)/g;
+  // Full stops inside a sentence (decimals, "No.", "e.g.") are held as U+2024 while matching.
+  const HOLD = '\u2024';
+  const t = String(text || '').replace(/\u00ad/g, '').replace(/-\s*\n\s*/g, '').replace(/\s+/g, ' ')
+    .replace(/(\d)\.(\d)/g, `$1${HOLD}$2`).replace(/\b(No|Nos|St|Rd|Ave|Dr|Blvd|approx|min|max|e\.g|i\.e|etc)\./gi, `$1${HOLD}`);
+  // The sentence must state the solution, not the process that reached it.
+  const re = /(?:^|[.;:]\s+)((?:The |the )?(?:recommended|preferred)(?: alternative)? (?:solution|alternative|design concept|design|option|servicing strategy|strategy)(?: \([^)]{1,40}\))? (?:is to|is a|is an|is the|is for|includes|consists of|involves|comprises|will include|will involve|for [^.]{3,80} is)\s[^.]{25,420}\.)/g;
   for (let m; (m = re.exec(t));) {
-    const s = m[1].trim();
+    re.lastIndex = m.index + m[0].length - 1;   // a skipped sentence's full stop can start the next match
+    const s = m[1].trim().split(HOLD).join('.');
     if (/\.{4,}|…{2,}|\bTable of Contents\b|\bsection \d|\bpage \d/i.test(s)) continue;
-    if (/(?:telephone|e-?mail|@|\bphone\b)/i.test(s)) continue;
+    if (DECISION_PROCESS.test(s)) continue;
+    // No contact details, people or firms: the public data carries none (see the export checks).
+    if (CONTACT.test(s) || DECISION_PEOPLE.test(s)) continue;
     const out = s.charAt(0).toUpperCase() + s.slice(1);
     return out.length > 450 ? `${out.slice(0, 447).replace(/\s+\S*$/, '')}…` : out;
   }
   return null;
 }
+const DECISION_PROCESS = /\b(?:developed|refined|formali[sz]ed|presented|evaluated|screened|integrated with|consultation|public information centre)\b/i;
 const normUrl = u => String(u).toLowerCase().replace(/^https?:\/\/(www\.)?/, '').replace(/[?#].*$/, '').replace(/\/+$/, '');
 
 // ---- overrides / change list / review --------------------------------------------------------

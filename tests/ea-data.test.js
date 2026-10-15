@@ -222,7 +222,7 @@ test('data/eas.json (when built): every EA has a status and geometry or a flag; 
     assert.ok(E.STATUSES.includes(e.status), `${e.id} status ${e.status}`);
     assert.ok(e.geometry || (e.flags || []).length, `${e.id} geometry or flag`);
     assert.ok(E.GEOM_TYPES.includes(e.geomType));
-    for (const k of ['purpose', 'decision']) if (e[k]) assert.doesNotMatch(e[k], E.CONTACT, `${e.id} ${k}`);
+    for (const k of ['purpose', 'decision']) if (e[k]) assert.doesNotMatch(typeof e[k] === 'object' ? e[k].text : e[k], E.CONTACT, `${e.id} ${k}`);
   }
   assert.doesNotMatch(JSON.stringify(j), /@peelregion\.ca|\b\d{3}-\d{3}-\d{4}\b/);
 });
