@@ -2701,3 +2701,6 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .lg-cased { display: inline-block; width: 18px; height: 7px; border-radius: 4px; background: var(--cons-build); box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 70%, transparent); margin: 0 var(--space-1) 0 var(--space-1); vertical-align: middle; }
 .lg-dot.hollow { background: transparent; border: 1.5px solid var(--c); }
 .ce-lbl-ea.done span { opacity: .65; font-weight: 500; }
+/* Small systems (Stage 1 #3): plants rated under 5 ML/d in their own group, own scale, m³/d. */
+.cap-small-h, .ov-small-h { margin: var(--space-3) 0 var(--space-1); font-size: var(--fs-2); color: var(--text-secondary); font-weight: 600; }
+.dt tr.grp td { background: var(--surface-2); color: var(--text-secondary); font-weight: 600; font-size: var(--fs-1); }

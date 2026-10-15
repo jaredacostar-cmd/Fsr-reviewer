@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uHa, uLs, uPop, skel, estTag, hlP, store, PIPE_RESULTS, SCREEN_NOTE } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uHa, uLs, uPop, skel, estTag, hlP, store, PIPE_RESULTS, SCREEN_NOTE, isSmallSystem, uCap, capTxt } = window.PeelUtil;
   const App = () => window.PeelApp;
   const DD = () => window.PeelDevDetail;
   const FS = () => window.PeelFsr;
@@ -108,7 +108,7 @@
       <div class="hz-wrap">${svg}<div class="hz-tip" hidden></div></div>
       <ul class="grow-legend">${series.map(s => `<li><span class="hz-key f-${s.key}" style="background:var(--pl-${s.key})"></span>${esc(s.full)}</li>`).join('')}<li class="muted">dashed: 80% warning and 90% expansion trigger (2020 Master Plan); solid: rated capacity</li></ul>
       <table class="dt svc-table rep-table"><thead><tr><th>Plant</th>${pick.map(y => `<th>${y}</th>`).join('')}<th>Reaches 80%</th><th>Reaches 90%</th><th>Reaches 100%</th></tr></thead>
-        <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uML(s.rated)}${s.steps.length ? ` → ${s.steps.map(x => `${x.mld} (${x.year})`).join(' → ')}` : ''}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uML(s.v[at(y)] * s.r[at(y)] / 100)}${s.r[at(y)] !== s.rated ? ` of ${fmtNum(s.r[at(y)])} after the ${(s.steps.filter(x => x.mld <= s.r[at(y)]).pop() || {}).year || ''} expansion` : ''}${y === pick[0] && y <= MM().THIS_YEAR ? ' · measured' : ''}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
+        <tbody>${series.map(s => `<tr><td>${esc(s.full)}<small>rated ${uCap(s.rated, s.rated)}${s.steps.length ? ` → ${s.steps.map(x => `${x.mld} (${x.year})`).join(' → ')}` : ''}</small></td>${pick.map(y => `<td>${Math.round(s.v[at(y)])}%<small>${uCap(s.v[at(y)] * s.r[at(y)] / 100, s.rated)}${s.r[at(y)] !== s.rated ? ` of ${fmtNum(s.r[at(y)])} after the ${(s.steps.filter(x => x.mld <= s.r[at(y)]).pop() || {}).year || ''} expansion` : ''}${y === pick[0] && y <= MM().THIS_YEAR ? ' · measured' : ''}</small></td>`).join('')}<td>${c80[s.key]}</td><td>${c90[s.key]}</td><td class="bo">${c100[s.key]}</td></tr>`).join('')}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Starts from today (${hz.year0}: ${SvcTab().svcOpt.ww === 'calibrated' ? 'the 2025 reported flow' : 'census + built since at design rates'}, plus external inflows). Approved growth is added evenly over its years, then proposed growth over its years; further growth beyond today's applications (if set) is shared among the plants by today's population at each plant's flow per person. The diversion moves its flow from its start year. With planned expansions on, each % is of the rated capacity in that year: G.E. Booth +40 ML/d (council-approved February 2024, by 2028) and 518 to 600 ML/d after the 2036 construction, Clarkson 350 to 500 ML/d after the 2026–2028 construction (2026 DC capital map, draft; capacities from the 2020 DC Background Study); in service the year after construction, editable. 90% is the Region's own trigger: in the 2020 Master Plan an expansion is required when 90% of a plant's rated capacity is projected to be reached; 80% is shown as an earlier warning. Ontario's Procedure D-5-1 notes that plant expansions typically take at least 3 to 5 years to deliver. These are scenarios, not forecasts: actual timing depends on market absorption, servicing and approvals.</p></details>
     </section>`;
   }
@@ -142,17 +142,23 @@
   // green, approved blue, proposed hatched), every value is also written out below the bar.
   function capChartHTML(rows, Y, opt = {}) {
     const pct = (x, r) => x / r * 100;
-    const maxPct = Math.max(110, ...rows.map(r => pct(r.v.reduce((a, b) => a + b, 0), r.rated)));
-    const axisMax = Math.ceil(maxPct / 25) * 25;
-    const X = p => `${(p / axisMax * 100).toFixed(2)}%`;
-    const ticks = []; for (let t = 0; t <= axisMax; t += 25) ticks.push(t);
+    // Small systems (rated under 5 ML/d: Inglewood) get their own group and scale, in m³/d.
+    const main = rows.filter(r => !isSmallSystem(r.rated)), small = rows.filter(r => isSmallSystem(r.rated));
+    const scaleOf = rs => {
+      const axisMax = Math.ceil(Math.max(110, ...rs.map(r => pct(r.v.reduce((a, b) => a + b, 0), r.rated))) / 25) * 25;
+      const ticks = []; for (let t = 0; t <= axisMax; t += 25) ticks.push(t);
+      return { axisMax, ticks, X: p => `${(p / axisMax * 100).toFixed(2)}%` };
+    };
+    const S0 = scaleOf(main.length ? main : rows), S1 = scaleOf(small);
+    const axisHTML = sc => `<div class="cap-axis"><div></div><div class="cap-ticks">${sc.ticks.map(t => `<span style="left:${sc.X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>`;
     const ppl = n => unit(fmtNum(Math.round(n / 100) * 100), 'people');
     const segs = [['g-base', `${Y} Census (existing)`], ['g-built', `Built since ${Y}`], ['g-approved', 'Committed']
       , ['g-proposed', 'Proposed (in review)']];
     // One table under the bars (design audit, Group 8): the figures that were five lines of prose per bar.
     const roomWord = opt.title ? 'Room to rated' : 'Reserve (D-5-1)';
     const trows = [];
-    const body = rows.map(r => {
+    const rowHTML = (r, X) => {
+      const u = v => uCap(v, r.rated);
       const tot = r.v.reduce((a, b) => a + b, 0), committed = r.v[0] + r.v[1] + r.v[2];
       const reserve = r.rated - committed, afterProposed = r.rated - tot;
       // Too few people mapped to the sewershed (Inglewood: a village inside a large rural census
@@ -161,30 +167,33 @@
       const people = mld => okPop ? mld * 1e6 / r.perPerson : 0;
       const eq = mld => okPop ? ` ≈ ${ppl(people(mld))}` : '';
       const popAt100 = r.perPerson > 0 ? (r.rated - r.extMld) * 1e6 / r.perPerson : 0;
-      const bar = r.v.map((v, i) => v > 0 ? `<span class="gseg ${segs[i][0]}" style="flex:${(v / tot * 1000).toFixed(3)} 1 0" tabindex="0" data-tip="${esc(`${segs[i][1]}: ${fmt1(v)} ML/d · ${pct(v, r.rated).toFixed(1)}% of ${r.capWord || 'rated'} capacity`)}"></span>` : '').join('');
-      const resBox = reserve > 0 ? `<span class="cap-reserve" style="left:${X(pct(committed, r.rated))};width:${X(pct(reserve, r.rated))}" data-tip="${esc(`Uncommitted reserve: ${fmt1(reserve)} ML/d${okPop ? ` ≈ ${fmtNum(Math.round(people(reserve) / 100) * 100)} people` : ''}`)}"></span>` : '';
-      trows.push(`<tr><td>${r.name}${!opt.noPop100 && okPop ? `<small>100% ≈ ${ppl(popAt100)}</small>` : ''}</td><td class="n">${uML(r.rated)}</td><td class="n"><strong>${Math.round(pct(committed, r.rated))}%</strong><small>${uML(committed)}</small></td>
-        <td class="n">${reserve >= 0 ? `<strong>${uML(reserve)}</strong>${okPop ? `<small>≈ ${ppl(people(reserve))}</small>` : ''}` : `<strong class="over">over by ${uML(-reserve)}</strong>`}</td>
-        <td class="n">${afterProposed >= 0 ? `${uML(afterProposed)}${okPop ? `<small>≈ ${ppl(people(afterProposed))}</small>` : ''}` : `<span class="over">short ${uML(-afterProposed)}</span>`}</td>
+      const bar = r.v.map((v, i) => v > 0 ? `<span class="gseg ${segs[i][0]}" style="flex:${(v / tot * 1000).toFixed(3)} 1 0" tabindex="0" data-tip="${esc(`${segs[i][1]}: ${capTxt(v, r.rated)} · ${pct(v, r.rated).toFixed(1)}% of ${r.capWord || 'rated'} capacity`)}"></span>` : '').join('');
+      const resBox = reserve > 0 ? `<span class="cap-reserve" style="left:${X(pct(committed, r.rated))};width:${X(pct(reserve, r.rated))}" data-tip="${esc(`Uncommitted reserve: ${capTxt(reserve, r.rated)}${okPop ? ` ≈ ${fmtNum(Math.round(people(reserve) / 100) * 100)} people` : ''}`)}"></span>` : '';
+      trows.push(`<tr><td>${r.name}${!opt.noPop100 && okPop ? `<small>100% ≈ ${ppl(popAt100)}</small>` : ''}</td><td class="n">${u(r.rated)}</td><td class="n"><strong>${Math.round(pct(committed, r.rated))}%</strong><small>${u(committed)}</small></td>
+        <td class="n">${reserve >= 0 ? `<strong>${u(reserve)}</strong>${okPop ? `<small>≈ ${ppl(people(reserve))}</small>` : ''}` : `<strong class="over">over by ${u(-reserve)}</strong>`}</td>
+        <td class="n">${afterProposed >= 0 ? `${u(afterProposed)}${okPop ? `<small>≈ ${ppl(people(afterProposed))}</small>` : ''}` : `<span class="over">short ${u(-afterProposed)}</span>`}</td>
         </tr>`);
       return `<div class="cap-row">
-        <div class="cap-name">${r.name}<small>${r.capWord || 'rated'} ${uML(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
-        <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${pct(tot, r.rated) > 100 ? `<span class="cap-over" style="left:${X(100)};width:${X(pct(tot, r.rated) - 100)}" data-tip="${esc(`Beyond ${r.capWord || 'rated'}: ${fmt1(tot - r.rated)} ML/d`)}"></span>` : ''}${resBox}<span class="cap-line trig" style="left:${X(90)}" aria-hidden="true" title="90% expansion trigger"></span><span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
+        <div class="cap-name">${r.name}<small>${r.capWord || 'rated'} ${u(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
+        <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${pct(tot, r.rated) > 100 ? `<span class="cap-over" style="left:${X(100)};width:${X(pct(tot, r.rated) - 100)}" data-tip="${esc(`Beyond ${r.capWord || 'rated'}: ${capTxt(tot - r.rated, r.rated)}`)}"></span>` : ''}${resBox}<span class="cap-line trig" style="left:${X(90)}" aria-hidden="true" title="90% expansion trigger"></span><span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
           <span class="cap-end${Math.abs(pct(tot, r.rated) - 100) < 9 ? ' near' : ''}" style="left:${X(Math.max(pct(tot, r.rated), 100))}">${Math.round(pct(tot, r.rated))}%</span></div>
       </div>`;
-    }).join('');
+    };
+    const body = main.map(r => rowHTML(r, S0.X)).join('');
+    if (small.length) trows.push(`<tr class="grp"><td colspan="5">Small systems <small>capacity in m³/d</small></td></tr>`);
+    const smallBody = small.length ? `<h4 class="cap-small-h">Small systems <span class="muted small">own scale · capacity in m³/d</span></h4>${axisHTML(S1)}${small.map(r => rowHTML(r, S1.X)).join('')}` : '';
     const table = trows.length ? `<div class="dcb-scroll"><table class="dt cap-t"><thead><tr><th>${opt.title ? 'Facility' : 'Plant'}</th><th class="n">${opt.capWord || 'Rated'}</th><th class="n" title="Existing + built + committed, % of rated">Committed</th><th class="n">${roomWord}</th><th class="n">After proposed</th></tr></thead><tbody>${trows.join('')}</tbody></table></div>${rows.some(r => !(!opt.noPeople && r.popToday >= 1000 && r.perPerson > 0)) && !opt.noPeople ? '<p class="small muted">– : too few census people in the sewershed for population equivalents (Inglewood).</p>' : ''}<p class="small muted">${estTag}</p>` : '';
     if (opt.title) return `${opt.title.trim() ? `<h3 class="svc-sub">${opt.title} <span class="muted small">${opt.sub || ''}</span></h3>` : ''}
       <div class="cap-chart"${opt.info ? ` data-info="${opt.info}"` : ''}>
-        <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
-        ${body}
+        ${axisHTML(S0)}
+        ${body}${smallBody}
         ${opt.legend === false ? '' : `<ul class="grow-legend"><li><span class="gsw g-base"></span>${esc(opt.baseLabel || `${Y} Census (existing)`)}</li><li><span class="gsw g-built"></span>Built since ${Y}</li><li><span class="gsw g-approved"></span>Committed</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li><span class="gsw cap-reserve-sw"></span>Uncommitted reserve (D-5-1, to 100% of rated)</li><li><span class="cap-line-sw trig"></span>90% expansion trigger</li><li><span class="cap-line-sw"></span>${esc(opt.capLegend || 'Capacity (100%)')}</li></ul>`}
         <div class="grow-tip" hidden></div>
       </div>${table}${opt.notes ? `<details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">${opt.notes}</p></details>` : ''}`;
     return `<h3 class="svc-sub">Plant capacity ${window.PeelUtil.basisChip('mixed', SvcTab().svcOpt.ww === 'calibrated' ? 'Mixed basis: existing flow 2025 measured (annual reports); growth at Peel design criteria scaled to each plant\u2019s measured rate; rated capacity from the 2025 annual reports' : 'Mixed basis: flows at Peel design criteria; rated capacity from the 2025 annual reports')} <span class="muted small">${SvcTab().wwFlowLabel()} as a % of rated (annual average) capacity · ${SvcTab().svcOpt.ww === 'calibrated' ? 'capacity check, calibrated to 2025 flows' : 'design flows, Peel criteria'}${SvcTab().svcOpt.div === 'on' ? ' · with the 70 ML/d diversion' : ''}</span></h3>
       <div class="cap-chart" data-info="plant-capacity">
-        <div class="cap-axis"><div></div><div class="cap-ticks">${ticks.map(t => `<span style="left:${X(t)}"${t === 100 ? ' class="hundred"' : ''}>${t}%</span>`).join('')}</div></div>
-        ${body}
+        ${axisHTML(S0)}
+        ${body}${smallBody}
         <ul class="grow-legend"><li><span class="gsw g-base"></span>${Y} Census (existing) + external inflows</li><li><span class="gsw g-built"></span>Built since ${Y}</li><li><span class="gsw g-approved"></span>Committed</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li><span class="gsw cap-reserve-sw"></span>Uncommitted reserve (D-5-1, to 100% of rated)</li><li><span class="cap-line-sw trig"></span>90% expansion trigger</li><li><span class="cap-line-sw"></span>Rated capacity (100%)</li></ul>
         <div class="grow-tip" id="cap-tip" hidden></div>
       </div>${table}
@@ -360,8 +369,8 @@
       const rows = secs.map(x => {
         const p = rep(x.pl); if (!p) return '';
         const cb = calib[x.pl], todayDesign = cb.today + inflowsTo(x.pl), bo = adwf(x.sum, x.f) + inflowsTo(x.pl) + divMld(x.pl);
-        return `<tr><td>${esc(p.name)}<small>${SvcTab().refLink(p.ref, p.pages)}</small></td><td>${uML(p.ratedMLd)}</td><td>${uML(p.avgMLd)}<small>${p.pctOfCapacity}% of capacity</small></td><td>${uML(p.maxDayMLd)}<small>${esc(p.maxDayMonth)}${p.bypasses ? ` · ${p.bypasses} bypasses, ${fmtNum(p.bypassML)} ML` : ''}</small></td>
-          <td>${uML(todayDesign)}<small>${pct(todayDesign, p.avgMLd)} of reported</small></td><td>${cb.f ? `×${cb.f.toFixed(2)}` : '–'}</td><td class="bo">${uML(bo)}<small>${pct(bo, p.ratedMLd)} of capacity${SvcTab().svcOpt.ww === 'calibrated' ? ', calibrated' : ''}${divMld(x.pl) ? `, ${divMld(x.pl) > 0 ? '+' : '−'}${fmt1(Math.abs(divMld(x.pl)))} ML/d diversion` : ''}</small></td></tr>`;
+        return `<tr><td>${esc(p.name)}<small>${SvcTab().refLink(p.ref, p.pages)}</small></td><td>${uCap(p.ratedMLd, p.ratedMLd)}</td><td>${uCap(p.avgMLd, p.ratedMLd)}<small>${p.pctOfCapacity}% of capacity</small></td><td>${uCap(p.maxDayMLd, p.ratedMLd)}<small>${esc(p.maxDayMonth)}${p.bypasses ? ` · ${p.bypasses} bypasses, ${fmtNum(p.bypassML)} ML` : ''}</small></td>
+          <td>${uCap(todayDesign, p.ratedMLd)}<small>${pct(todayDesign, p.avgMLd)} of reported</small></td><td>${cb.f ? `×${cb.f.toFixed(2)}` : '–'}</td><td class="bo">${uCap(bo, p.ratedMLd)}<small>${pct(bo, p.ratedMLd)} of capacity${SvcTab().svcOpt.ww === 'calibrated' ? ', calibrated' : ''}${divMld(x.pl) ? `, ${divMld(x.pl) > 0 ? '+' : '−'}${fmt1(Math.abs(divMld(x.pl)))} ML/d diversion` : ''}</small></td></tr>`;
       }).join('');
       const tor = inflows.find(x => !x.plant);
       const sumRep = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).avgMLd : 0), 0), sumRated = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).ratedMLd : 0), 0);
@@ -386,7 +395,7 @@
     $('#plants-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${SvcTab().svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(SD().plantLabel(dv.from))} to ${esc(SD().plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       <div class="tiles">${[
-        ...tileRows.map(r => DUI().wwTile(esc(r.name), String(Math.round(r.pctBo)), '%', `of rated at build-out · rated ${fmtNum(r.rated)} ML/d`, 'plant-capacity')),
+        ...tileRows.map(r => DUI().wwTile(esc(r.name), String(Math.round(r.pctBo)), '%', `of rated at build-out · rated ${capTxt(r.rated, r.rated)}${isSmallSystem(r.rated) ? ' · small system' : ''}`, 'plant-capacity')),
         ...(tileRows.length > 1 && allRated > 0 ? [DUI().wwTile('All Peel plants', String(Math.round(allBo / allRated * 100)), '%', 'of rated at build-out', 'plant-capacity')] : []),
       ].join('')}</div>
       ${chart}

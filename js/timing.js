@@ -36,7 +36,7 @@
 (function (root) {
   'use strict';
 
-  const { $, esc, fmtNum, fmt1, hlP, unit, uUnits, skel, estTag, dot } = root.PeelUtil || {};
+  const { $, esc, fmtNum, fmt1, hlP, unit, uUnits, skel, estTag, dot, capTxt, isSmallSystem } = root.PeelUtil || {};
   const App = () => root.PeelApp;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
@@ -474,7 +474,10 @@
     // Trigger-year ranges: wastewater plants, then water treatment + pressure-zone pumping.
     const trigTable = (title, facs) => {
       if (!facs || !facs.length) return '';
-      const rows = facs.map(f => {
+      // Small systems (Inglewood) after the large ones, under their own row.
+      const ord = [...facs.filter(f => !isSmallSystem(f.rated)), ...facs.filter(f => isSmallSystem(f.rated))];
+      const firstSmall = ord.find(f => isSmallSystem(f.rated));
+      const rows = ord.map(f => {
         const fb = facilityBands({ name: f.name, rated: f.rated, existing: f.existing, approved: f.approved, proposed: f.proposed, div: f.div || 0, end: fc.nowYear + FORECAST_YEARS }, cal);
         const bo = fb.buildOut.likely;
         const cell = t => {
@@ -482,7 +485,7 @@
           const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high;
           return `<td class="n">${like != null ? `<strong>${like}</strong><small>${esc(txt)}</small>` : `<span class="muted">${esc(txt)}</span>`}</td>`;
         };
-        return `<tr><td>${esc(f.name)}<small>${f.capWord} ${fmt1(f.rated)} ML/d</small></td><td class="n">${bo == null ? '–' : `${Math.round(bo)}%`}</td>${[80, 90, 100].map(cell).join('')}</tr>`;
+        return `${f === firstSmall ? '<tr class="grp"><td colspan="5">Small systems <small>capacity in m³/d</small></td></tr>' : ''}<tr><td>${esc(f.name)}<small>${f.capWord} ${capTxt(f.rated, f.rated)}</small></td><td class="n">${bo == null ? '–' : `${Math.round(bo)}%`}</td>${[80, 90, 100].map(cell).join('')}</tr>`;
       }).join('');
       return `<div class="hyd-scroll"><table class="dt" data-info="timing-triggers"><caption>${title} ${estTag}</caption><thead><tr><th>Facility</th><th class="n">Load at<br>build-out</th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     };

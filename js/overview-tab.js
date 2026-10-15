@@ -7,7 +7,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, fmt1, roundPop, skel, dot, hlP, store } = root.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, skel, dot, hlP, store, isSmallSystem } = root.PeelUtil;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
   const App = () => root.PeelApp;
@@ -165,7 +165,9 @@
       return `<div class="ov-cap ${st}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}<button type="button" class="btn small link" data-ss="${c.kind === 'plant' ? `plant:${esc(c.pl)}` : 'wsys:lake'}" title="Open this as a scope">${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</button></span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
         ${k ? LB().capacityBarHTML(k) : `<div class="ov-bar" role="img" aria-label="existing + built + committed ${pc}% of rated capacity, ${pb}% at build-out"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i></div>`}
         <small>${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${SP().hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>room after allocations ${fmt1(x.after)} ML/d</strong>` : '')(c.kind === 'plant' ? DU().allocPlant(c.pl) : null)}</small></div>`; };
-    return list.map(bar).join('') + LB().legendHTML([{ layer: 'existing', text: 'Existing (2025 metered)' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day). Plants: the 2025 metered flow already holds what was built since the census.</p>`;
+    // Small systems (Inglewood) in their own group under the large plants.
+    const small = c => c.kind === 'plant' && isSmallSystem(c.rated);
+    return list.filter(c => !small(c)).map(bar).join('') + (list.some(small) ? `<h4 class="ov-small-h">Small systems</h4>${list.filter(small).map(bar).join('')}` : '') + LB().legendHTML([{ layer: 'existing', text: 'Existing (2025 metered)' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day). Plants: the 2025 metered flow already holds what was built since the census.</p>`;
   }
   // Plain-data input for the pure needsAttention: reuses the DCA results, the stalled flags,
   // the 90% trigger years and the weekly snapshot change log.

@@ -169,6 +169,13 @@
   // Numbers with their unit beside them.
   const unit = (v, u) => `${v}<span class="u">${u}</span>`;
   const uML = v => unit(fmt1(v), 'ML/d'), uLs = v => unit(fmt1(v), 'L/s'), uPop = n => unit(fmtNum(roundPop(n)), 'pop');
+  // Small systems: a plant rated under 5 ML/d (Inglewood WWTP, 243 m³/d) reads in m³/d, sits in its
+  // own "Small systems" group and never sets a shared chart scale beside plants rated in hundreds of
+  // ML/d. Its % figures are unchanged.
+  const SMALL_SYSTEM_MLD = 5;
+  const isSmallSystem = rated => rated > 0 && rated < SMALL_SYSTEM_MLD;
+  const capTxt = (v, rated) => (isSmallSystem(rated) ? `${fmtNum(Math.round(v * 1000))} m³/d` : `${fmt1(v)} ML/d`);
+  const uCap = (v, rated) => (isSmallSystem(rated) ? unit(fmtNum(Math.round(v * 1000)), 'm³/d') : uML(v));
   const uHa = n => unit(fmtNum(Math.round(n)), 'ha'), uDev = n => unit(fmtNum(n), n === 1 ? 'dev' : 'devs'), uUnits = n => unit(fmtNum(Math.round(n)), 'units');
 
   // ---- Headline helper (source: app.js 4682) ------------------------------------
@@ -193,7 +200,7 @@
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
     getColors,
-    fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
+    fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits, SMALL_SYSTEM_MLD, isSmallSystem, capTxt, uCap,
     hlP, fmtMoney,
     UNOFFICIAL, CSV_DISCLAIMER, CRITERIA_STAMP, DISCLAIMER_PROPS, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,

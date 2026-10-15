@@ -8,7 +8,7 @@
  */
 (function (root) {
   'use strict';
-  const { esc, fmtNum, fmt1, roundPop, uLs, uML, dot, hlP, skel, pipeClass, SCREEN_NOTE_SHORT } = window.PeelUtil;
+  const { esc, fmtNum, fmt1, roundPop, uLs, uML, dot, hlP, skel, pipeClass, SCREEN_NOTE_SHORT, capTxt } = window.PeelUtil;
   const D = window.PeelDemand;
   const App = () => window.PeelApp;
   const SD = () => window.PeelSvcData;
@@ -184,7 +184,7 @@
       const k = window.PeelCapacity.of(`plant:${s.pl}`), c = MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)); if (!k || !c) return { tiles: '', hl: '' };
       const reserve = k.reserve, ppl = k.perPerson > 0 ? reserve * 1e6 / k.perPerson : null, pc = window.PeelCapacity.pctTxt;
       return {
-        hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${pc(k.pctCommitted)}</strong> of its rated ${fmt1(k.rated)} ML/d, <strong>${pc(k.pctBuildout)}</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
+        hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${pc(k.pctCommitted)}</strong> of its rated ${capTxt(k.rated, k.rated)}, <strong>${pc(k.pctBuildout)}</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
         tiles: tile(fmt1(k.rated), 'ML/d', 'rated capacity') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
           + tile(fmt1(reserve), 'ML/d', 'uncommitted reserve (D-5-1)', ppl != null && reserve > 0 ? `≈${fmtNum(roundPop(ppl))} people` : '')
           + tile(c.out === 'today' ? 'now' : c.out ? `≈${c.out}` : `after ${window.PeelSvcPlants.hz.end}`, '', 'reaches the 90% expansion trigger', c.relief.length ? `next: ${esc(c.relief[0].text)}` : ''),

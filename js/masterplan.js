@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS, PIPES_NOT_ASSESSED } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS, PIPES_NOT_ASSESSED, capTxt } = window.PeelUtil;
   // Every planned date carries its capital status after the May 2026 pause (design audit, Group 3).
   const capTag = (y, s, id) => ` · ${CAPITAL_STATUS[capitalStatus(y, s, id)].toLowerCase()}`;
   const D = window.PeelDemand;
@@ -292,7 +292,7 @@
     const lim = PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
     const fac = App().state.dcInfra && App().state.dcInfra.wastewater.facilities.find(f => f.kind === 'plant' && f.plant === pl);
     const after = runOut(q, y => PLANT_TRIGGER * ratedAt(y === 'today' ? MM().THIS_YEAR : y));
-    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
+    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${capTxt(cap.rated, cap.rated)} · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
       util: { today: cap.existing / lim, com: cap.committed / lim, bo: cap.buildout / lim }, room, people: room * 1e6 / (cap.perPerson || 1), out: runOut(q, () => lim), outAfter: steps.length ? after : undefined,
       relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}${capTag(s.year, /council.approved/i.test(s.note || '') ? 'approved' : '', s.proj)}` })), q, rated: cap.rated };
   }
