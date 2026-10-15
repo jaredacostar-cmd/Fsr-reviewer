@@ -76,7 +76,7 @@
   // constraints, hillshade. A view's saved settings list them (layers: [...]); its preset takes
   // them from PeelLayerGroups.PRESETS. Saved views from before the groups leave them as they are.
   const LG = () => window.PeelLayerGroups;
-  const LG_EXTRA = ['devs', 'hov', 'sp', 'pr', 'mtsa', 'hill', 'reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water', 'gas', 'hydro'];
+  const LG_EXTRA = ['devs', 'hov', 'sp', 'pr', 'mtsa', 'hill', 'cons', 'ea', 'reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water', 'gas', 'hydro'];
   function currentMapSettings() { return { basemap: MC().getBasemap(), labelMode: ML().getLabelMode(), da: CA().getDaOn(), wf: WT().WF.on, pz: MM().svcOn.pz, dr: App().state.servicing && App().state.servicing.blocks ? MM().svcOn.bk : MM().svcOn.dr, mstyle: { ...MM().mstyle }, exist: { ...MM().getExistOn() }, dc: { ...MM().getDcOn() }, ...(LG() ? { layers: [...LG().onSet()], groups: [...LG().getOpen()] } : {}) }; }
   function setMapView(v) {
     const cur = currentView();
@@ -211,6 +211,7 @@
   function renderCapLayer() {
     capLayer.clearLayers();
     if (MM().getDcOn().on) DI().renderDcLayer();
+    if (window.PeelCapitalEA) window.PeelCapitalEA.render();
     if (MM().mstyle.cap === 'off' || !App().state.servicing || !App().state.svcModel) return;
     if (MM().mstyle.cap === 'pipes' && PIPE_RESULTS) { SC().renderPipes(capLayer); return; }
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
@@ -361,6 +362,7 @@
     if (Object.values(MM().getExistOn()).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${MM().EXIST_ZOOM})</div><ul>${Object.keys(MM().getExistOn()).filter(k => MM().getExistOn()[k]).map(k => `<li><span class="lg-line" style="background:var(${MM().EXIST_STYLE[k].color})"></span>${esc(MM().EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
     if (WT().WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WT().WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
     if (MM().getDcOn().on && App().state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DI().DC_KIND).filter(([k]) => MM().getDcOn().sys === 'both' || (MM().getDcOn().sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
+    if (window.PeelCapitalEA) { const ce = window.PeelCapitalEA.legendHTML(); if (ce) parts.push(ce); }
     // Then, in the Layers groups' order: Infrastructure › Other utilities, Constraints.
     if (window.PeelConstraints) for (const w of ['utility', 'cx']) { const cx = window.PeelConstraints.legendHTML(w); if (cx) parts.push(cx); }
     if (MM().mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${SP().hz.aYears} years from ${SP().hz.aStart}, proposed over ${SP().hz.pYears} from ${SP().hz.pStart} (Horizon years). ${esc(SvcTab().scenarioText())}</p>`);

@@ -241,6 +241,8 @@
     const ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
     const dc = WB.dcTimingRows(MP().allNeeds(), { filter: MP().dcnFilter, ppu, hzEnd: SP().hz.end, plantTrigger: MP().PLANT_TRIGGER });
     add('DC', [dc.cols, ...dc.rows]);
+    // Capital projects (when published) and the EA list (js/capital-ea.js); no people.
+    if (root.PeelCapitalEA && root.PeelCapitalEA.workbookSheets) for (const [name, t] of root.PeelCapitalEA.workbookSheets()) add(name, [t.cols, ...t.rows]);
     const d = D.DEFAULT_CRITERIA;
     add('Criteria', [['Group', 'Item', 'Used', 'Peel default', 'Unit', 'Source document', 'Source version'], ...Object.keys(d).flatMap(g => Object.keys(d[g]).map(k => { const r = criteriaExportRow(g, k); return [r.group, r.item, r.used, r.def, r.unit, r.doc, r.ver]; }))]);
     const src = WB.sourceRows(App().state.sources, { generatedAt: App().state.snapshot && App().state.snapshot.generatedAt, portalFor: PV ? PV.portalFor : null });

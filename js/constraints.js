@@ -156,27 +156,40 @@
   }
   // ---- Hover card and click, at the map level (SPEC §3: one hover card; click opens the right panel) ----
   // Lines are hit within ~6 px; the top-most (last drawn) feature wins.
-  function hitAt(latlng) {
-    if (!hits.length) return null;
+  function hitAt(latlng, list = hits) {
+    if (!list.length) return null;
     const x = latlng.lng, y = latlng.lat, tolM = 6 * 40075016 * Math.cos(y * Math.PI / 180) / 2 ** (map.getZoom() + 8), tolD = tolM / 111320;
-    for (let i = hits.length - 1; i >= 0; i--) {
-      const h = hits[i], b = h.bb;
+    for (let i = list.length - 1; i >= 0; i--) {
+      const h = list[i], b = h.bb;
       if (x < b[0] - tolD * 2 || x > b[2] + tolD * 2 || y < b[1] - tolD || y > b[3] + tolD) continue;
       if (h.rings ? G.pointInRings([x, y], h.rings) : h.lines.some(l => G.distToLine([x, y], l) <= tolM)) return h;
     }
     return null;
   }
   const toolOn = () => !!(root.PeelMeasure && root.PeelMeasure.tool && root.PeelMeasure.tool.mode);
+  const hoverOf = h => { const L0 = LAYERS[h.key]; return window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: h.label[0] || L0.label, sub: h.label[1] || '', open: 'its card (owner, as-of date, source)' }); };
+  // Every constraint feature under a point, for the one picker (js/map-pick.js): areas are context
+  // ("Also here"), lines (watercourses, gas, hydro) are targets.
+  function hitsAt(latlng) {
+    const out = [];
+    for (let i = hits.length - 1; i >= 0; i--) {
+      const h = hits[i]; const one = hitAt(latlng, [h]);
+      if (one) out.push(one);
+    }
+    return out;
+  }
   let tip = null, tipFor = null, moveT = 0;
   function hideTip() { if (tip) { map.closeTooltip(tip); tip = null; tipFor = null; } map.getContainer().classList.remove('cx-hover'); }
+  // With the picker present it owns the hover card and the tap; these are the stand-alone fallback.
+  const picker = () => !!root.PeelPick;
   map.on('mousemove', e => {
+    if (picker()) return;
     const now = Date.now(); if (now - moveT < 60) return; moveT = now;
     const h = !toolOn() && hitAt(e.latlng);
     if (!h) { hideTip(); return; }
-    const L0 = LAYERS[h.key];
     if (tipFor !== h) {
       // The same hover card as every other feature: kind, name, what it is; click opens its card.
-      const html = window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: h.label[0] || L0.label, sub: h.label[1] || '', open: 'its card (owner, as-of date, source)' });
+      const html = hoverOf(h);
       if (!tip) tip = L.tooltip({ className: 'pt', direction: 'top', offset: [0, -10] });
       tip.setContent(html); tipFor = h;
     }
@@ -184,7 +197,16 @@
     map.getContainer().classList.add('cx-hover');
   });
   map.on('mouseout', hideTip);
-  map.on('click', e => { if (toolOn()) return; const h = hitAt(e.latlng); if (h) { hideTip(); featureClick(h.id, h.label); } });
+  map.on('click', e => { if (picker() || toolOn()) return; const h = hitAt(e.latlng); if (h) { hideTip(); featureClick(h.id, h.label); } });
+  // Register with the picker once every script has loaded (js/map-pick.js loads after this file).
+  setTimeout(() => {
+    if (!root.PeelPick) return;
+    root.PeelPick.register({ id: 'constraints', hits: ctx => hitsAt(ctx.latlng).map(h => ({
+      kind: h.rings ? 'area' : 'line', kindLabel: `${LAYERS[h.key].label} · screening`, key: `cx:${h.id}:${h.label[0]}`, d: 0,
+      label: h.label[0] || LAYERS[h.key].label, sub: h.label[1] || '', short: LAYERS[h.key].short, swatch: `background:var(${LAYERS[h.key].color})`,
+      hover: hoverOf(h), open: () => featureClick(h.id, h.label), highlight: () => {},
+    })) });
+  }, 0);
 
   let timer = null;
   map.on('moveend', () => { if (Object.values(on).some(Boolean)) { clearTimeout(timer); timer = setTimeout(render, 150); } });
@@ -231,7 +253,7 @@
     showLayer(b.dataset.cxShow, p && p.lat != null ? [p.lat, p.lng] : null);
   });
   if (Object.values(on).some(Boolean)) map.whenReady(() => setTimeout(render, 0));
-  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), anyOn, hitAt, drawnCount: k => drawn[k] || 0, setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
+  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), anyOn, hitAt, hitsAt, drawnCount: k => drawn[k] || 0, setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelConstraints = api;
 })(typeof window !== 'undefined' ? window : globalThis);

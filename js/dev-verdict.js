@@ -90,6 +90,7 @@
     for (const c of d.trig || []) items.push({ tone: c.now ? 'bad' : 'warn', tab: c.sys === 'water' ? 'water' : 'ww', dev: null, text: c.text });
     const big = (d.stalled || []).filter(s => s.units >= 250).sort((a, b) => b.units - a.units).slice(0, 3);
     for (const s of big) items.push({ tone: 'warn', tab: null, dev: s.key, text: `Stalled ${s.years} with no activity — ${s.title} (${s.unitsTxt} units, ${s.muni})` });
+    for (const c of (d.ce || []).slice(0, 4)) items.push({ tone: c.tone || 'warn', tab: null, dev: null, ce: c.ce, text: c.text });
     for (const c of (d.changes || []).slice(0, 4)) items.push({ tone: 'ok', tab: null, dev: c.key, text: c.text });
     return items;
   };
