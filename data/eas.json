@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T03:29:09.348Z",
+ "generatedAt": "2026-10-15T03:46:17.597Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -12736,12 +12736,12 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     -79.584799,
-     43.584468
+     -79.578936,
+     43.578749
     ]
    },
    "geomType": "approx",
-   "geomMethod": "approximate point: Cawthra Road, Dixie",
+   "geomMethod": "approximate point: Cawthra Road, Lakeview",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
@@ -18071,8 +18071,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     -79.617335,
-     43.53246
+     -79.612971,
+     43.535032
     ]
    },
    "geomType": "approx",
