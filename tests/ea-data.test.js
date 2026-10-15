@@ -226,3 +226,20 @@ test('data/eas.json (when built): every EA has a status and geometry or a flag; 
   }
   assert.doesNotMatch(JSON.stringify(j), /@peelregion\.ca|\b\d{3}-\d{3}-\d{4}\b/);
 });
+
+test('list page: explanatory sentences are not EA names', () => {
+  const html = `<main><h2>Brampton</h2><ul><li>Dixie Road – Queen Street Drive to Mayfield Road</li><li>An environmental assessment (EA) is a study.</li><li>Schedule C projects must go through a 5-phased environmental assessment process.</li></ul></main>`;
+  assert.deepEqual(E.parseList(html, 'https://peelregion.ca/x').map(i => i.name), ['Dixie Road – Queen Street Drive to Mayfield Road']);
+});
+
+test('a month-only date is dropped when the same milestone has the full date', () => {
+  assert.deepEqual(E.milestonesOf(['Notice of Commencement: June 2023', 'Notice of Commencement issued June 22, 2023']), [{ type: 'commencement', date: '2023-06-22' }]);
+});
+
+test('road EAs are not placed on an area boundary that shares a word with a cross street', () => {
+  const ctx = { ...CTX, areas: [{ name: 'Heart Lake', rings: CTX.areas[0].rings }], roadWays: () => null };
+  const g = E.resolveGeometry({ name: 'Mayfield Road – Chinguacousy Road to Heart Lake Road', municipalities: ['Brampton'] }, ctx);
+  assert.equal(g.geomType, 'approx');
+  const sp = E.resolveGeometry({ name: 'Arterial roads within Bolton secondary plan area', municipalities: ['Caledon'] }, CTX);
+  assert.equal(sp.geomType, 'area');
+});

@@ -106,6 +106,8 @@ async function osmWays(name) {
   const q = `[out:json][timeout:90];(way["highway"]["name"~"${re}",i](${s},${w},${n},${e});${num ? `way["highway"]["ref"~"^${num[2]}$"](${s},${w},${n},${e});` : ''});out geom;`;
   const j = await get(OVERPASS, { json: true, body: `data=${encodeURIComponent(q)}` });
   await sleep(1500);
+  osmWays.n = (osmWays.n || 0) + 1;
+  if (osmWays.n <= 30) console.log(`  OSM "${name}": ${j ? `${(j.elements || []).length} ways${j.remark ? ` (${j.remark.slice(0, 80)})` : ''}` : 'request failed'}`);
   return ((j && j.elements) || []).filter(el => el.geometry && (C.sameStreet(name, el.tags?.name || '') || (num && el.tags?.ref === num[2]))).map(el => el.geometry.map(p => [p.lon, p.lat]));
 }
 async function nominatim(q) {
@@ -197,6 +199,17 @@ async function main() {
     Object.assign(ea, g);
     if (g.geomType === 'approx') ea.flags.push('geometry approximate');
     if (!g.geometry) ea.flags.push('no geometry');
+  }
+
+  // Pages with no recognisable status: show their text (contact lines dropped) for tuning.
+  let shown = 0;
+  for (const ea of eas) {
+    if (ea.status !== 'unknown' || !ea.links?.page || shown >= 8) continue;
+    const r = await get(ea.links.page);
+    if (!r) continue;
+    shown++;
+    console.log(`--- no status: ${ea.links.page}`);
+    console.log(E.lines(E.mainHtml(r.html)).filter(l => !E.CONTACT.test(l)).join(' | ').slice(0, 1600));
   }
 
   // Links.

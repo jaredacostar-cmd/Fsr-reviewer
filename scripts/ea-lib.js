@@ -71,6 +71,7 @@ function parseList(html, base) {
     if (tag === 'li' && /<(ul|ol)\b/i.test(inner)) continue; // nested list wrapper
     if (/\b(phone|email|tel\.?|ext\.)\b|@/i.test(t)) continue;
     if (tag === 'p' && t.split(' ').length > 25) continue;   // prose paragraph, not a name
+    if (/[.!?]$/.test(t) && !/\b(St|Rd|Dr|Ave|Blvd|Hwy|No)\.$/.test(t)) continue;   // a sentence, not a name
     const a = links(inner, base)[0];
     out.push({ name: t.replace(/\s*\((pdf|opens? in new window)[^)]*\)\s*/gi, ' ').trim(), municipality: muni, href: a ? a.url : null });
   }
@@ -195,7 +196,8 @@ function milestonesOf(ls) {
       const k = `${type}|${d}`; if (!seen.has(k)) { seen.add(k); out.push({ type, date: d }); }
     }
   }
-  return out.sort((a, b) => a.date.localeCompare(b.date));
+  return out.filter(m => m.date.length > 7 || !out.some(x => x.type === m.type && x.date.length > 7 && x.date.startsWith(m.date)))
+    .sort((a, b) => a.date.localeCompare(b.date));
 }
 
 /**
@@ -458,7 +460,8 @@ function resolveGeometry(ea, ctx) {
     if (cap.length) return { geometry: multi(cap.flatMap(r => r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.coordinates)), geomType: 'linear', geomMethod: 'capital project lines on the named street', geomConfidence: 'medium' };
   }
   // 4. area study
-  const area = (ctx.areas || []).find(a => { const at = tokens(a.name.replace(/^\d+[a-z]?\s*:\s*/i, '')); return at.length && at.every(t => nt.has(t)); });
+  const areaOk = !rd && (systemOf(name) !== 'roads' || /secondary plan|\barea\b/i.test(name));
+  const area = areaOk && (ctx.areas || []).find(a => { const at = tokens(a.name.replace(/^\d+[a-z]?\s*:\s*/i, '')); return at.length && at.every(t => nt.has(t)); });
   if (area) return { geometry: area.rings.length === 1 ? { type: 'Polygon', coordinates: area.rings } : { type: 'MultiPolygon', coordinates: area.rings.map(r => [r]) }, geomType: 'area', geomMethod: `boundary: ${area.name}`, geomConfidence: 'medium' };
   // road without a parsable segment: whole named road is not drawn; fall through to a point
   // 5. approximate point
