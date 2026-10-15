@@ -113,7 +113,7 @@
     body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: previous (Settings › Counting).'}</p>
         <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
       ${tableHTML(r)}${notesHTML(r)}
-      ${root.PeelPlanTables.matrixHTML ? root.PeelPlanTables.matrixHTML(r) : ''}`;
+      ${matrixHTML(r)}`;
   }
 
   // CSV: one row per area (and per development at the leaves), with its path for pivot tables.
@@ -163,7 +163,76 @@
     else if (t.hasAttribute('data-pt-csv')) downloadCSV();
   });
 
-  const api = { render, compute, csvRows, sheetRows, planOf, downloadCSV, areas };
+  // ---- Table 5 (C3): plans by plant or pressure zone ----------------------------------------
+  // Rows: each municipality's plans and "Not in a plan" (the Table 1 rows); columns: the plant
+  // that receives its wastewater, or its pressure zone (the first, if it has two), plus "none".
+  // Cells: people at build-out (units on hover). Row totals equal Table 1, column totals the
+  // per-plant (per-zone) sums, the corner Peel.
+  let mxMode = (store && store.get('ptMx', 'plant')) === 'zone' ? 'zone' : 'plant';
+  const PLANT_ORDER = ['Lakeview', 'Clarkson', 'Inglewood', 'Toronto', 'none'];
+  function colOf(p, mode) {
+    if (!App().state.servicing) return 'none';
+    if (mode === 'zone') { const id = SD().svcIds(p, 'pz')[0]; return id || 'none'; }
+    return MM().plantOfDev(p) || 'none';
+  }
+  function colName(k, mode) {
+    if (k === 'none') return mode === 'zone' ? 'No zone' : 'No plant';
+    if (mode === 'zone') { const z = SD().svcById.get(k); return z ? String(z.name).replace(/^Pressure zone/i, 'Zone') : k; }
+    return (SD().PLANT_SHORT && SD().PLANT_SHORT[k]) || k;
+  }
+  function matrixData(r, mode) {
+    const mx = R().matrix(r, p => colOf(p, mode));
+    const keys = [...mx.cols.keys()];
+    keys.sort((a, b) => mode === 'plant' ? (PLANT_ORDER.indexOf(a) + 1 || 9) - (PLANT_ORDER.indexOf(b) + 1 || 9) : (a === 'none') - (b === 'none') || colName(a, mode).localeCompare(colName(b, mode), undefined, { numeric: true }));
+    return { ...mx, keys };
+  }
+  function matrixHTML(r) {
+    const mode = mxMode, mx = matrixData(r, mode), keys = mx.keys;
+    const byMuni = new Map(); for (const row of mx.rows) (byMuni.get(row.muni) || byMuni.set(row.muni, []).get(row.muni)).push(row);
+    const cellBtn = (row, k, c) => c && c.people >= 0.5 ? `<button type="button" class="btn small link" data-mx-cell="${esc(row ? row.node.areaId || '' : '')}" data-mx-col="${esc(k)}" title="${n0(c.planned)} units">${n0(c.people)}</button>` : '<span class="muted">–</span>';
+    const head = `<tr><th scope="col">Plan</th>${keys.map(k => `<th scope="col" class="num"><button type="button" class="btn small link" data-mx-col="${esc(k)}" data-mx-cell="">${esc(colName(k, mode))}</button></th>`).join('')}<th scope="col" class="num">Total</th></tr>`;
+    const rows = [];
+    for (const [muni, list] of byMuni) {
+      const tot = new Map(); let all = 0;
+      for (const row of list) { for (const [k, c] of row.cells) tot.set(k, (tot.get(k) || 0) + c.people); all += row.people; }
+      rows.push(`<tr class="pt-municipality"><th scope="row">${esc(muni)}</th>${keys.map(k => `<td class="num">${tot.get(k) ? n0(tot.get(k)) : '–'}</td>`).join('')}<td class="num"><strong>${n0(all)}</strong></td></tr>`);
+      for (const row of list) rows.push(`<tr class="pt-${row.node.kind}"><th scope="row" style="padding-left:14px">${row.node.areaId ? `<button type="button" class="btn small link" data-mx-cell="${esc(row.node.areaId)}" data-mx-col="">${esc(row.node.name)}</button>` : esc(row.node.name)}</th>${keys.map(k => `<td class="num">${cellBtn(row, k, row.cells.get(k))}</td>`).join('')}<td class="num">${n0(row.people)}</td></tr>`);
+    }
+    const colSum = keys.reduce((t, k) => t + mx.cols.get(k).people, 0);
+    const ok = Math.abs(colSum - r.root.m.people) < 0.5 && mx.rows.every(row => Math.abs(row.people - row.node.m.people) < 0.5);
+    rows.push(`<tr class="pt-peel"><th scope="row">Peel</th>${keys.map(k => `<td class="num"><strong>${n0(mx.cols.get(k).people)}</strong></td>`).join('')}<td class="num"><strong>${n0(r.root.m.people)}</strong> <span class="${ok ? 'ok' : 'warn'}" title="${ok ? 'Rows equal Table 1; columns add up to Peel' : 'Totals differ'}">${ok ? '✓' : '≠'}</span></td></tr>`);
+    const twoZones = mode === 'zone' ? r.placed.filter(x => App().state.servicing && SD().svcIds(x.p, 'pz').length > 1).length : 0;
+    return `<section class="pt-mx"><h3 class="sub-title">Plans by ${mode === 'zone' ? 'pressure zone' : 'wastewater plant'}</h3>
+      <p class="small">People at build-out by plan and by the ${mode === 'zone' ? 'water pressure zone' : 'plant that receives the wastewater'} (units on hover). Pick a cell to filter the map and every tab to that plan and ${mode === 'zone' ? 'zone' : 'plant'}.
+        <span role="group" aria-label="Columns"><button type="button" class="btn small${mode === 'plant' ? ' on' : ''}" data-mx-mode="plant" aria-pressed="${mode === 'plant'}">Plants</button><button type="button" class="btn small${mode === 'zone' ? ' on' : ''}" data-mx-mode="zone" aria-pressed="${mode === 'zone'}">Pressure zones</button></span></p>
+      <div class="tbl-scroll"><table class="dt pt-table pt-matrix"><thead>${head}</thead><tbody>${rows.join('')}</tbody></table></div>
+      <p class="small muted">Pipeline people at Peel design criteria (the Overview's). The plant capacity tables use census-relative layers: see Wastewater › Plants.${twoZones ? ` ${fmtNum(twoZones)} development${twoZones === 1 ? '' : 's'} in two zones counted in the first.` : ''}</p></section>`;
+  }
+  // Workbook: both matrices.
+  function matrixSheetRows() {
+    const r = compute(), out = [];
+    for (const mode of ['plant', 'zone']) {
+      const mx = matrixData(r, mode);
+      if (out.length) out.push([]);
+      out.push([`People at build-out by plan and ${mode === 'zone' ? 'pressure zone' : 'wastewater plant'}`]);
+      out.push(['Municipality', 'Plan', ...mx.keys.map(k => colName(k, mode)), 'Total']);
+      for (const row of mx.rows) out.push([row.muni, row.node.name, ...mx.keys.map(k => Math.round((row.cells.get(k) || { people: 0 }).people)), Math.round(row.people)]);
+      out.push(['Peel', '', ...mx.keys.map(k => Math.round(mx.cols.get(k).people)), Math.round(r.root.m.people)]);
+    }
+    return out;
+  }
+  if (typeof document !== 'undefined') document.addEventListener('click', e => {
+    const m = e.target.closest('[data-mx-mode]');
+    if (m) { mxMode = m.dataset.mxMode === 'zone' ? 'zone' : 'plant'; if (store) store.set('ptMx', mxMode); render(); return; }
+    const c = e.target.closest('[data-mx-cell]'); if (!c) return;
+    const st = App().state, plan = c.dataset.mxCell, col = c.dataset.mxCol;
+    st.sp = plan ? [plan] : [];
+    if (mxMode === 'zone') { st.pz = col && col !== 'none' ? [col] : []; } else st.plant = col && col !== 'none' ? col : '';
+    if (root.PeelPlanAreas && root.PeelPlanAreas.renderAreaSelects) root.PeelPlanAreas.renderAreaSelects();
+    App().applyFilters();
+  });
+
+  const api = { render, compute, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanTables = api;
 })(typeof window !== 'undefined' ? window : globalThis);
