@@ -116,6 +116,68 @@ async function cog(url) {
   return { url, status: r.status, cors: r.headers['access-control-allow-origin'], acceptRanges: r.headers['accept-ranges'], contentRange: r.headers['content-range'], exposeHeaders: r.headers['access-control-expose-headers'], contentType: r.headers['content-type'], lastModified: r.headers['last-modified'], error: r.error || null };
 }
 
+// Values of a field inside Peel (counts).
+async function valuesIn(url, field) {
+  const r = await getJ(`${url}/query?${q({ where: '1=1', ...env, groupByFieldsForStatistics: field, outStatistics: JSON.stringify([{ statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'n' }]), f: 'json' })}`);
+  return (r.features || []).map(f => [f.attributes[field], f.attributes.n]);
+}
+async function detail() {
+  const D = 'detail';
+  // Every LIO open data layer name (to find the Oak Ridges Moraine and source protection layers).
+  add(D, { what: 'LIO open data layer names', names: (await lioIndex()).map(l => `${l.service}/${l.url.split('/').pop()}: ${l.name}`) });
+  const L6 = `${LIO}/LIO_Open06/MapServer`;
+  add(D, { what: 'Greenbelt Designation values in Peel', values: await valuesIn(`${L6}/15`, 'DESIGNATION') });
+  add(D, { what: 'Natural Heritage System Area: plan and type in Peel', plan: await valuesIn(`${L6}/22`, 'ENABLING_PLAN'), type: await valuesIn(`${L6}/22`, 'AREA_TYPE'), legislation: await valuesIn(`${L6}/22`, 'ENABLING_LEGISLATION') });
+  add(D, { what: 'Wetland significance in Peel', values: await valuesIn(`${LIO}/LIO_Open01/MapServer/15`, 'WETLAND_SIGNIFICANCE'), evaluated: await valuesIn(`${LIO}/LIO_Open01/MapServer/15`, 'EVALUATED_WETLAND_IND') });
+  add(D, { what: 'Niagara Escarpment Plan designations in Peel', values: await valuesIn(`${L6}/26`, 'DESIGNATION') });
+  // Oak Ridges Moraine.
+  await arc('orm', '("Oak Ridges Moraine") AND (plan OR "land use" OR designation OR boundary OR area)', /oak ridges|orm/i, 8);
+  // NVCA's own open data, and its 2024 limits.
+  await arc('reg-nvca', '(owner:NVCA OR owner:nvca OR "Nottawasaga Valley Conservation") AND (regulat OR floodplain OR "regulation limit" OR hazard)', null, 8);
+  for (const u of ['https://services.arcgis.com/?f=json', 'https://www.nvca.on.ca/']) { const r = await req(u); add('reg-nvca', { source: 'NVCA web', url: u, status: r.status, title: (/<title>([^<]*)/i.exec(r.text || '') || [])[1] || null }); }
+  // CVC GeoHub: CTC source protection (wellhead, intake, HVA, SGRA, issue contributing areas).
+  const cvc = await getJ('https://geohub.cvc.ca/server/rest/services?f=json');
+  add('source-protection', { source: 'CVC GeoHub services', services: (cvc.services || []).map(x => `${x.name}:${x.type}`), folders: cvc.folders || [] });
+  for (const sv of cvc.services || []) if (/wellhead|whpa|intake|ipz|vulnerab|hva|recharge|sgra|swp|source/i.test(sv.name)) {
+    const u = `https://geohub.cvc.ca/server/rest/services/${sv.name}/${sv.type}`;
+    const j = await getJ(`${u}?f=json`);
+    for (const l of (j.layers || []).slice(0, 4)) add('source-protection', { source: 'CVC GeoHub', service: sv.name, ...(await layerInfo(`${u}/${l.id}`)) });
+  }
+  for (const f of cvc.folders || []) {
+    const j = await getJ(`https://geohub.cvc.ca/server/rest/services/${f}?f=json`);
+    for (const sv of j.services || []) if (/wellhead|whpa|intake|ipz|vulnerab|hva|recharge|sgra|swp|source|regul|flood/i.test(sv.name)) {
+      const u = `https://geohub.cvc.ca/server/rest/services/${sv.name}/${sv.type}`;
+      const k = await getJ(`${u}?f=json`);
+      for (const l of (k.layers || []).slice(0, 4)) add('source-protection', { source: `CVC GeoHub (${f})`, service: sv.name, ...(await layerInfo(`${u}/${l.id}`)) });
+    }
+  }
+  await arc('source-protection', '("wellhead protection" OR WHPA OR "intake protection" OR IPZ) AND (CVC OR "Credit Valley" OR Peel OR CTC OR Caledon OR Brampton)', /wellhead|whpa|intake|ipz/i, 8);
+  // CVC open data licence text (linked from the 2025 regulation limit item).
+  for (const u of ['https://geohub.cvc.ca/portal/sharing/rest/content/items/93888c79b9d6442fb940dbfd701c4158/data', 'https://camaps.maps.arcgis.com/sharing/rest/content/items/9813a6fc912149e48f483b3d18f9ac8c/data', 'https://trca.ca/about/open-data-licence/']) {
+    const r = await req(u, { timeout: 40000 }); add('licence-text', { url: u, status: r.status, contentType: r.headers['content-type'], text: strip(r.text).slice(0, 300) });
+  }
+  // Lidar DTM: the acquisition projects covering Peel (package index).
+  const IDX = 'https://services1.arcgis.com/TJH5KDher0W13Kgo/arcgis/rest/services/Ontario_Digital_Terrain_Model_Lidar_Derived_WFL1/FeatureServer/0';
+  const pk = await getJ(`${IDX}/query?${q({ where: '1=1', ...env, outFields: 'Package,Project,Resolution,Size_GB', returnGeometry: false, f: 'json' })}`);
+  const proj = {}; for (const f of pk.features || []) { const a = f.attributes; const k = `${a.Project} · ${a.Resolution}`; proj[k] = (proj[k] || { packages: 0, gb: 0 }); proj[k].packages++; proj[k].gb += +a.Size_GB || 0; }
+  add('elev-ontario-dtm', { what: 'DTM packages covering Peel, by project', projects: proj });
+  // AWS terrain tiles: CORS on a GET (the app's current fallback).
+  const t = await req('https://s3.amazonaws.com/elevation-tiles-prod/terrarium/12/1144/1493.png');
+  add('elev-aws-terrain', { what: 'GET with Origin', status: t.status, cors: t.headers['access-control-allow-origin'], contentType: t.headers['content-type'] });
+  // Benchmarks: Brampton engineering survey controls vs the lidar DTM and the NRCan 1 m mosaic.
+  const BM = 'https://maps1.brampton.ca/arcgis/rest/services/ACRIS/ACRIS/MapServer/15';
+  const bm = await getJ(`${BM}/query?${q({ where: "ELEVATION IS NOT NULL AND ELEVATION > 0", outFields: 'MONUMENT,ELEVATION,DATUM_V,STATUS,DESCRIPTION,LAST_INSP,VC', returnGeometry: true, outSR: 4326, resultRecordCount: 25, f: 'json' })}`);
+  const DTM = 'https://ws.geoservices.lrc.gov.on.ca/arcgis5/rest/services/Elevation/Ontario_DTM_LidarDerived/ImageServer';
+  const cmp = [];
+  for (const f of (bm.features || []).slice(0, 25)) {
+    const g = f.geometry; if (!g) continue;
+    const r = await getJ(`${DTM}/identify?${q({ geometry: JSON.stringify({ x: g.x, y: g.y, spatialReference: { wkid: 4326 } }), geometryType: 'esriGeometryPoint', returnGeometry: false, returnCatalogItems: false, f: 'json' })}`);
+    const v = parseFloat(r.value);
+    cmp.push({ monument: f.attributes.MONUMENT, elevation: f.attributes.ELEVATION, datum: f.attributes.DATUM_V, status: f.attributes.STATUS, lastInsp: f.attributes.LAST_INSP, vc: f.attributes.VC, desc: strip(f.attributes.DESCRIPTION).slice(0, 80), lat: g.y, lng: g.x, dtm: isFinite(v) ? v : r.value, diff: isFinite(v) ? +(v - f.attributes.ELEVATION).toFixed(3) : null });
+  }
+  add('benchmark', { what: 'Brampton survey controls vs Ontario lidar DTM (identify)', n: cmp.length, datums: [...new Set(cmp.map(c => c.datum))], comparisons: cmp, error: bm.error || null });
+}
+
 (async () => {
   const outFile = (() => { const i = process.argv.indexOf('--out'); return i > 0 ? process.argv[i + 1] : null; })();
 
@@ -190,6 +252,9 @@ async function cog(url) {
   console.log('\n### Existing layers: watercourses (Peel), gas / hydro');
   add('watercourse-peel', { source: 'in the app today', ...(await layerInfo('https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Watercourses/FeatureServer/0')) });
   await arc('watercourse-peel', 'Watercourses AND (Peel OR "Region of Peel")', /watercourse/i, 3);
+
+  console.log('\n### Detail: the gaps after the first pass');
+  await detail();
 
   if (outFile) { fs.mkdirSync(path.dirname(outFile), { recursive: true }); fs.writeFileSync(outFile, JSON.stringify(out, null, 1)); console.log(`\nWrote ${outFile}`); }
 })().catch(e => { console.error(e); process.exit(1); });
