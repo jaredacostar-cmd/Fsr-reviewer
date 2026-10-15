@@ -1,11 +1,21 @@
 {
  "version": 1,
- "generatedAt": null,
- "note": "Pending: rebuilt in Actions by scripts/probe-elev-validate.js (Probe data sources, mode=elev-validate). Until then the accuracy label says there is no validation for the area.",
+ "generatedAt": "2026-10-15T13:15:12.273Z",
+ "note": "Ground elevation against Peel sanitary manholes (ground = invert + published depth, 0.5–15 m). Error = source − manhole ground, on CGVD2013. Raw sources only: never the manhole-corrected line. Rebuilt by scripts/probe-elev-validate.js in Actions; the app's accuracy label reads it.",
  "datums": {
   "lidar": "CGVD2013 (Ontario DTM, MNR)",
   "terrain": "CGVD28 (CDEM) / EGM96 (SRTM)",
-  "peelSewers": "unknown"
+  "peelSewers": "CGVD28",
+  "peelSewersBasis": "inferred: lidar − manhole ground has a median of -0.501 m as published and -0.088 m after the CGVD28 → CGVD2013 shift; confirm with the Region",
+  "shift": "NRCan HT2_2010v70 (CGVD28) and CGG2013a (CGVD2013) via PROJ cct",
+  "shiftMedian": -0.411,
+  "horizontal": "both queried in WGS84 (wkid 4326) from NAD83 sources; NAD83 realizations differ by about 1–1.5 m here, well inside the 15 m manhole match",
+  "peelMetadata": {
+   "stated": null,
+   "vcsWkid": null,
+   "wkid": 26917,
+   "metadataNote": "This dataset is a line representation of Wastewater Network Main locations within the Regional Muncipality of Peel. Public Works, Regional Municipality of Peel, Information Management Group {\"wkid\":26917,\"latestWkid\":26917}"
+  }
  },
  "lidarTarget": "median |error| < 0.3 m and 90% within 0.5 m",
  "areas": {
@@ -18,7 +28,28 @@
     -79.6,
     43.6
    ],
-   "rows": {}
+   "shift": -0.414,
+   "rows": {
+    "lidar": {
+     "n": 60,
+     "median": -0.1,
+     "medianAbs": 0.17,
+     "within05": 88.3,
+     "within1": 96.7,
+     "target": "not met"
+    },
+    "terrain": {
+     "n": 60,
+     "median": 0.099,
+     "medianAbs": 0.966,
+     "within05": 26.7,
+     "within1": 53.3
+    }
+   },
+   "lidarProjects": [
+    "GTA 2014-18"
+   ],
+   "lidarYear": 2014
   },
   "downtown-brampton": {
    "name": "downtown Brampton",
@@ -29,7 +60,28 @@
     -79.745,
     43.695
    ],
-   "rows": {}
+   "shift": -0.411,
+   "rows": {
+    "lidar": {
+     "n": 60,
+     "median": -0.057,
+     "medianAbs": 0.132,
+     "within05": 83.3,
+     "within1": 93.3,
+     "target": "not met"
+    },
+    "terrain": {
+     "n": 60,
+     "median": -0.873,
+     "medianAbs": 1.042,
+     "within05": 21.7,
+     "within1": 48.3
+    }
+   },
+   "lidarProjects": [
+    "GTA 2023"
+   ],
+   "lidarYear": 2023
   },
   "bolton": {
    "name": "Bolton",
@@ -40,7 +92,28 @@
     -79.715,
     43.89
    ],
-   "rows": {}
+   "shift": -0.399,
+   "rows": {
+    "lidar": {
+     "n": 60,
+     "median": -0.078,
+     "medianAbs": 0.211,
+     "within05": 81.7,
+     "within1": 91.7,
+     "target": "not met"
+    },
+    "terrain": {
+     "n": 60,
+     "median": 0.68,
+     "medianAbs": 1.077,
+     "within05": 23.3,
+     "within1": 45
+    }
+   },
+   "lidarProjects": [
+    "GTA 2023"
+   ],
+   "lidarYear": 2023
   },
   "streetsville": {
    "name": "Streetsville",
@@ -51,7 +124,28 @@
     -79.7,
     43.592
    ],
-   "rows": {}
+   "shift": -0.413,
+   "rows": {
+    "lidar": {
+     "n": 60,
+     "median": -0.04,
+     "medianAbs": 0.15,
+     "within05": 88.3,
+     "within1": 95,
+     "target": "not met"
+    },
+    "terrain": {
+     "n": 60,
+     "median": -0.45,
+     "medianAbs": 1.134,
+     "within05": 28.3,
+     "within1": 45
+    }
+   },
+   "lidarProjects": [
+    "GTA 2014-18"
+   ],
+   "lidarYear": 2014
   },
   "north-brampton": {
    "name": "north Brampton (pilot)",
@@ -63,7 +157,28 @@
     -79.76,
     43.74
    ],
-   "rows": {}
+   "shift": -0.408,
+   "rows": {
+    "lidar": {
+     "n": 60,
+     "median": -0.134,
+     "medianAbs": 0.159,
+     "within05": 93.3,
+     "within1": 95,
+     "target": "met"
+    },
+    "terrain": {
+     "n": 60,
+     "median": -1.263,
+     "medianAbs": 2.038,
+     "within05": 13.3,
+     "within1": 23.3
+    }
+   },
+   "lidarProjects": [
+    "GTA 2023"
+   ],
+   "lidarYear": 2023
   }
  }
 }
