@@ -8,7 +8,7 @@
  "note": "Firm capacity = installed capacity with the largest pump out of service (L/s). Stations outside the lake-based system, leachate stations and lift stations have no Master Plan capacity.",
  "facilities": [
   {
-   "id": "ww1",
+   "id": "ww-watersedge",
    "name": "Watersedge",
    "kind": "pumping",
    "system": "wastewater",
@@ -26,7 +26,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww2",
+   "id": "ww-bolton-north-hill",
    "name": "Bolton North Hill",
    "kind": "pumping",
    "system": "wastewater",
@@ -44,7 +44,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww3",
+   "id": "ww-inglewood",
    "name": "Inglewood",
    "kind": "pumping",
    "system": "wastewater",
@@ -62,7 +62,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww4",
+   "id": "ww-heartlake",
    "name": "Heartlake",
    "kind": "pumping",
    "system": "wastewater",
@@ -80,7 +80,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww5",
+   "id": "ww-jack-darling-2",
    "name": "Jack Darling 2",
    "kind": "pumping",
    "system": "wastewater",
@@ -98,7 +98,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww6",
+   "id": "ww-torbram",
    "name": "Torbram",
    "kind": "pumping",
    "system": "wastewater",
@@ -116,7 +116,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww7",
+   "id": "ww-silverbirch-trail",
    "name": "Silverbirch Trail",
    "kind": "pumping",
    "system": "wastewater",
@@ -134,7 +134,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww8",
+   "id": "ww-rosemere-road",
    "name": "Rosemere Road",
    "kind": "pumping",
    "system": "wastewater",
@@ -152,7 +152,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww9",
+   "id": "ww-chinguacousy-leachate",
    "name": "Chinguacousy Leachate",
    "kind": "leachate",
    "system": "wastewater",
@@ -170,7 +170,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww10",
+   "id": "ww-britannia-leachate",
    "name": "Britannia Leachate",
    "kind": "leachate",
    "system": "wastewater",
@@ -188,7 +188,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww11",
+   "id": "ww-mullet-creek",
    "name": "Mullet Creek",
    "kind": "pumping",
    "system": "wastewater",
@@ -206,7 +206,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww12",
+   "id": "ww-mayfield",
    "name": "Mayfield",
    "kind": "pumping",
    "system": "wastewater",
@@ -224,7 +224,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww13",
+   "id": "ww-intermodal-drive",
    "name": "Intermodal Drive",
    "kind": "pumping",
    "system": "wastewater",
@@ -242,7 +242,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww14",
+   "id": "ww-deer-valley-dr",
    "name": "Deer Valley Dr",
    "kind": "pumping",
    "system": "wastewater",
@@ -260,7 +260,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww15",
+   "id": "ww-bolton",
    "name": "Bolton",
    "kind": "pumping",
    "system": "wastewater",
@@ -278,7 +278,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww16",
+   "id": "ww-meadowvale",
    "name": "Meadowvale",
    "kind": "pumping",
    "system": "wastewater",
@@ -296,7 +296,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww17",
+   "id": "ww-beach-street",
    "name": "Beach Street",
    "kind": "pumping",
    "system": "wastewater",
@@ -314,7 +314,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww18",
+   "id": "ww-stonehaven-drive",
    "name": "Stonehaven Drive",
    "kind": "pumping",
    "system": "wastewater",
@@ -332,7 +332,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww19",
+   "id": "ww-sewer-lift-green-gl",
    "name": "Lift - Green Gl",
    "kind": "lift",
    "system": "wastewater",
@@ -350,7 +350,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww20",
+   "id": "ww-gore-road",
    "name": "Gore Road",
    "kind": "pumping",
    "system": "wastewater",
@@ -368,7 +368,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww21",
+   "id": "ww-hiawatha-parkway",
    "name": "Hiawatha Parkway",
    "kind": "pumping",
    "system": "wastewater",
@@ -386,7 +386,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww22",
+   "id": "ww-ben-machree",
    "name": "Ben Machree",
    "kind": "pumping",
    "system": "wastewater",
@@ -404,7 +404,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww23",
+   "id": "ww-clarkson",
    "name": "Clarkson",
    "kind": "pumping",
    "system": "wastewater",
@@ -422,7 +422,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww24",
+   "id": "ww-elmwood-avenue",
    "name": "Elmwood Avenue",
    "kind": "pumping",
    "system": "wastewater",
@@ -440,7 +440,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww25",
+   "id": "ww-richards-memorial",
    "name": "Richard's Memorial",
    "kind": "pumping",
    "system": "wastewater",
@@ -458,7 +458,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww26",
+   "id": "ww-pinetree-crescent",
    "name": "Pinetree Crescent",
    "kind": "pumping",
    "system": "wastewater",
@@ -476,7 +476,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww27",
+   "id": "ww-castlemore",
    "name": "Castlemore",
    "kind": "pumping",
    "system": "wastewater",
@@ -494,7 +494,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww28",
+   "id": "ww-beechwood",
    "name": "Beechwood",
    "kind": "pumping",
    "system": "wastewater",
@@ -512,7 +512,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww29",
+   "id": "ww-harvestview",
    "name": "Harvestview",
    "kind": "pumping",
    "system": "wastewater",
@@ -530,7 +530,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww30",
+   "id": "ww-lakelands",
    "name": "Lakelands",
    "kind": "pumping",
    "system": "wastewater",
@@ -548,7 +548,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww31",
+   "id": "ww-dougall",
    "name": "Dougall",
    "kind": "pumping",
    "system": "wastewater",
@@ -566,7 +566,7 @@
    "capacityFrom": null
   },
   {
-   "id": "ww32",
+   "id": "ww-front-street",
    "name": "Front Street",
    "kind": "pumping",
    "system": "wastewater",
@@ -584,7 +584,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww33",
+   "id": "ww-shardawn-mews",
    "name": "Shardawn Mews",
    "kind": "pumping",
    "system": "wastewater",
@@ -602,7 +602,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww34",
+   "id": "ww-caledon-east",
    "name": "Caledon East",
    "kind": "pumping",
    "system": "wastewater",
@@ -620,7 +620,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww35",
+   "id": "ww-jack-darling-1",
    "name": "Jack Darling 1",
    "kind": "pumping",
    "system": "wastewater",
@@ -638,7 +638,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww36",
+   "id": "ww-mcvean-drive",
    "name": "McVean Drive",
    "kind": "pumping",
    "system": "wastewater",
@@ -656,7 +656,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww37",
+   "id": "ww-oneil-court",
    "name": "O'Neil Court",
    "kind": "pumping",
    "system": "wastewater",
@@ -674,7 +674,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww38",
+   "id": "ww-fifeshire",
    "name": "Fifeshire",
    "kind": "pumping",
    "system": "wastewater",
@@ -692,7 +692,7 @@
    "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
   },
   {
-   "id": "ww39",
+   "id": "ww-indian-road",
    "name": "Indian Road",
    "kind": "pumping",
    "system": "wastewater",

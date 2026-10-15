@@ -267,13 +267,28 @@ function toRecord(feature, i) {
   const attrs = feature.attributes || feature.properties || {};
   const r = cleanAttributes(attrs);
   const paths = toWgs84Paths(feature.geometry);
-  r.id = r.componentId ? `c${normComp(r.componentId) || r.componentId}` : `p${normProj(r.projectNumber) || r.projectNumber || 'x'}#${i}`;
+  r.id = stableId(r, paths);
+  r.contract = contractKey(r);
   r.system = systemOf(r.workType);
   r.status = statusOf(r);
   r.lengthM = paths.length ? lengthM(paths) : null;
   r.slip = slipOf(r);
   r.geometry = paths.length ? (paths.length === 1 ? { type: 'LineString', coordinates: paths[0] } : { type: 'MultiLineString', coordinates: paths }) : null;
   return r;
+}
+// Stable ids: component number when present, else project number + a short hash of the line's
+// rounded end points, so ids survive reordering and additions on the layer (Watch / This week /
+// overrides key on them).
+function stableId(r, paths) {
+  if (r.componentId && normComp(r.componentId)) return `c${normComp(r.componentId)}`;
+  const ends = paths.length ? [paths[0][0], paths[paths.length - 1][paths[paths.length - 1].length - 1]].map(([x, y]) => `${x.toFixed(4)},${y.toFixed(4)}`).sort().join('|') : String(r.street || '');
+  const h = require('crypto').createHash('sha1').update(`${r.projectNumber || ''}|${ends}`).digest('hex').slice(0, 8);
+  return `p${normProj(r.projectNumber) || 'x'}-${h}`;
+}
+/** Contract a record belongs to: its project page (one page covers many segments), else its project number. */
+function contractKey(r) {
+  if (r.website) return `web:${String(r.website).toLowerCase().replace(/^https?:\/\/(www\.)?/, '').replace(/[?#].*$/, '').replace(/\/+$/, '')}`;
+  return r.projectNumber ? `proj:${normProj(r.projectNumber) || r.projectNumber}` : null;
 }
 // Unique ids (a component can come back as several features).
 function uniqueIds(records) {
@@ -422,5 +437,5 @@ module.exports = {
   KEEP, NEVER, STATUSES, SYSTEMS, MILESTONES,
   isoDate, cleanAttributes, systemOf, statusOf, lengthM, haversine, utmToLngLat, toWgs84Paths, overlapShare,
   monthsBetween, slipOf, streetTokens, sameStreet, normProj, normComp,
-  toRecord, uniqueIds, dcWorks, matchDc, applyOverrides, audit, tally, hasForbidden, CONF_RANK,
+  toRecord, uniqueIds, stableId, contractKey, dcWorks, matchDc, applyOverrides, audit, tally, hasForbidden, CONF_RANK,
 };

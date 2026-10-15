@@ -31,7 +31,19 @@ test('data/capital.json (when built) carries no forbidden key', () => {
   if (!fs.existsSync(data('capital.json'))) return;
   const j = JSON.parse(fs.readFileSync(data('capital.json'), 'utf8'));
   assert.equal(C.hasForbidden(j), false);
-  for (const r of j.records) for (const k of Object.keys(r)) assert.ok([...Object.keys(C.KEEP), 'id', 'system', 'status', 'lengthM', 'slip', 'geometry'].includes(k), k);
+  for (const r of j.records) for (const k of Object.keys(r)) assert.ok([...Object.keys(C.KEEP), 'id', 'contract', 'system', 'status', 'lengthM', 'slip', 'geometry'].includes(k), k);
+});
+
+test('ids are stable across reordering; contract key from the project page, else the project number', () => {
+  const a = feature({ ProjectNumber: '22-2300', ProjectWebsite: 'https://www.peelregion.ca/pw/construction/bram/22-2300F.asp' });
+  const b = feature({ ProjectNumber: '22-2300' }, [[[-79.70, 43.70], [-79.69, 43.70]]]);
+  const id1 = C.toRecord(a, 0).id, id2 = C.toRecord(a, 57).id;
+  assert.equal(id1, id2, 'position in the layer does not change the id');
+  assert.match(id1, /^p22-2300-[0-9a-f]{8}$/);
+  assert.notEqual(C.toRecord(b, 0).id, id1, 'another segment of the same project gets its own id');
+  assert.equal(C.toRecord(feature({ ComponentID: '058439' }), 3).id, 'c58439');
+  assert.equal(C.toRecord(a, 0).contract, 'web:peelregion.ca/pw/construction/bram/22-2300f.asp');
+  assert.equal(C.toRecord(b, 0).contract, 'proj:22-2300');
 });
 
 test('dates become YYYY-MM-DD; non-http project websites are dropped', () => {
@@ -154,7 +166,7 @@ const CAP = [
   C.toRecord(feature({ ProjectNumber: '30-1000', ComponentID: '99999', WorkType: 'Watermain', StreetName: 'X Rd' }, [[[-79.70, 43.71], [-79.69, 43.71]]]), 1),
   C.toRecord(feature({ ProjectNumber: '50-0001', WorkType: 'Watermain', StreetName: 'Queen St E' }, [[[-79.65, 43.72005], [-79.64, 43.72005]]]), 2),
   C.toRecord(feature({ ProjectNumber: '50-0002', WorkType: 'Watermain', StreetName: 'Elm Dr' }, [[[-79.60, 43.73005], [-79.59, 43.73005]]]), 3),
-  C.toRecord(feature({ ProjectNumber: '50-0003', WorkType: 'Watermain', StreetName: 'Far Rd' }, [[[-79.40, 43.80], [-79.39, 43.80]]]), 4),
+  Object.assign(C.toRecord(feature({ ProjectNumber: '50-0003', WorkType: 'Watermain', StreetName: 'Far Rd' }, [[[-79.40, 43.80], [-79.39, 43.80]]]), 4), { id: 'p50-0003#4' }),
   C.toRecord(feature({ ProjectNumber: '30-1946', ComponentID: '55556', WorkType: 'Watermain', StreetName: 'Tank Rd', ConstructionStartDateActual: Date.UTC(2030, 5, 1) }), 5),
 ];
 

@@ -36,7 +36,7 @@ function joinStations(located, table) {
     if (t) used.add(k);
     const kind = stationKind(p.name);
     return {
-      id: `ww${i + 1}`,
+      id: `ww-${(t ? t.name : p.name).toLowerCase().replace(/['’]/g, '').replace(/\b(sewage|pumping|stn|station|sps|sew|pump)\b\.?/g, ' ').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`,
       name: t ? t.name : titleCase(String(p.name).replace(STATION_WORDS, ' ').replace(/\s+/g, ' ').trim()),
       kind, system: 'wastewater', lnglat: p.lnglat,
       municipality: t ? t.municipality : null, role: t ? t.role : null, pumps: t ? t.pumps : null, firmLs: t ? t.firmLs : null,
