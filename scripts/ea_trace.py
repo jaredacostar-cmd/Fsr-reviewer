@@ -384,14 +384,16 @@ def waters():
         line = line.strip().lstrip('\x1e')
         if not line: continue
         f = json.loads(line); g = f.get('geometry') or {}; nm = (f.get('properties') or {}).get('name')
-        if nm and g.get('type') == 'LineString': WATER.setdefault(norm_street(nm), []).append(g['coordinates'])
-    print(f"  local waterways: {sum(len(v) for v in WATER.values())} ways, {len(WATER)} names")
+        if g.get('type') != 'LineString': continue
+        WATER.setdefault('*', []).append(g['coordinates'])   # every waterway, named or not
+        if nm: WATER.setdefault(norm_street(nm), []).append(g['coordinates'])
+    print(f"  local waterways: {len(WATER.get('*', []))} ways, {len(WATER) - 1} names")
     return WATER
 
 def water_lines(name):
     """Waterways named `name` (a list: alternate spellings, e.g. Shaw's / Shaws Creek)."""
     if isinstance(name, list): return [l for n in name for l in water_lines(n)]
-    return waters().get(norm_street(name), [])
+    return waters().get('*' if name == '*' else norm_street(name), [])   # '*': any waterway (a creek unnamed in OSM)
 def road_graph(lines):
     """Nodes (rounded lng/lat) and weighted edges from a road's ways."""
     key = lambda p: (round(p[0], 6), round(p[1], 6))
@@ -400,6 +402,21 @@ def road_graph(lines):
         for i in range(1, len(l)):
             a, b = key(l[i - 1]), key(l[i]); w = metres(a, b)
             adj.setdefault(a, []).append((b, w)); adj.setdefault(b, []).append((a, w))
+    # Join a way's loose end to the nearest node of another way within 30 m (a short unnamed bridge or
+    # ramp piece, or a carriageway split, leaves the named ways apart).
+    cell = lambda p: (int(p[0] / 0.0005), int(p[1] / 0.0005))
+    grid = {}
+    for n in adj: grid.setdefault(cell(n), []).append(n)
+    for n in [n for n, nb in adj.items() if len(nb) == 1]:
+        near = {m for nb, _ in adj[n] for m in [nb]} | {n}
+        cx, cy = cell(n); best = None
+        for dx in (-1, 0, 1):
+            for dy in (-1, 0, 1):
+                for m in grid.get((cx + dx, cy + dy), []):
+                    if m in near: continue
+                    d = metres(n, m)
+                    if d <= 30 and (best is None or d < best[0]): best = (d, m)
+        if best: adj[n].append((best[1], best[0])); adj[best[1]].append((n, best[0]))
     return adj
 def nearest_node(adj, pt):
     """The point itself, joined into the graph on the nearest segment (so walks and paths start exactly
@@ -510,9 +527,14 @@ def place_roads(cfg, ov, cache, report):
                 A, W = street_lines(r['road'], city), water_lines(r['water'])
                 xs = [x for x in crossings(A, W, r.get('nearM', 40)) if near_city(x, city)] if A and W else []
                 pts = merge_near(xs, 60)
+                if r.get('nearXing') and pts:
+                    # Many crossings (any waterway): the one closest to a named intersection, within 1.5 km.
+                    c = geocode_xing(r['nearXing'], city, cache)
+                    pts = sorted((p for p in pts if c and metres(p, c[0]) <= 1500), key=lambda p: metres(p, c[0]))[:1]
+                    if not c: print(f"  {' & '.join(map(name_of, r['nearXing']))}: not found (no anchor for the crossing)")
                 if not pts and not W: print(f"  {name_of(r['water'])}: no waterways by that name (similar: {', '.join(similar_names(r['water'], waters())) or 'none'})")
                 elif not pts: print(f"  {name_of(r['road'])} / {name_of(r['water'])}: {explain_miss([r['road']], [A])}")
-                method = f"where {name_of(r['road'])} crosses {name_of(r['water'])} ({OSM_CREDIT})"
+                method = f"where {name_of(r['road'])} crosses {r.get('waterText') or name_of(r['water'])} ({OSM_CREDIT})"
             else:
                 pairs = r.get('points') or [r['streets']]
                 pts = []
