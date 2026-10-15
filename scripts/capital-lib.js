@@ -414,6 +414,35 @@ function audit(works, records, links) {
   };
 }
 
+const DATE_LABEL = { tenderTarget: 'Tender target', tenderActual: 'Tender', awardTarget: 'Award target', awardActual: 'Award', startTarget: 'Start target', startActual: 'Start', substantialTarget: 'Substantial completion target', substantialActual: 'Substantial completion' };
+/**
+ * Changes since the previous build (weekly): status or milestone dates changed, new records.
+ * slipMonths = the largest move later of a start / substantial-completion date (target or actual);
+ * dc = the record is matched to the DC program. First build (no previous file) → [].
+ */
+function changesSince(prev, records, links, date) {
+  if (!prev || !Array.isArray(prev.records)) return [];
+  const before = new Map(prev.records.map(r => [r.id, r]));
+  const dcIds = new Set((links || []).map(l => l.capital));
+  const out = [];
+  for (const r of records) {
+    const p = before.get(r.id);
+    const base = { id: r.id, contract: r.contract || null, projectNumber: r.projectNumber || null, system: r.system, dc: dcIds.has(r.id), date };
+    if (!p) { out.push({ ...base, change: 'new on the capital layer', slipMonths: 0 }); continue; }
+    const ch = [];
+    if (p.status !== r.status) ch.push(`status ${p.status} → ${r.status}`);
+    let slip = 0;
+    for (const k of Object.keys(DATE_LABEL)) {
+      if ((p[k] || null) === (r[k] || null)) continue;
+      ch.push(`${DATE_LABEL[k]} ${p[k] || '–'} → ${r[k] || '–'}`);
+      if (p[k] && r[k] && /^(start|substantial)/.test(k)) slip = Math.max(slip, monthsBetween(p[k], r[k]));
+    }
+    if (p.percentComplete !== r.percentComplete && r.percentComplete != null) ch.push(`${r.percentComplete}% built`);
+    if (ch.length) out.push({ ...base, change: ch.join('; '), slipMonths: slip });
+  }
+  return out;
+}
+
 /** Counts by system × status. */
 function tally(records) {
   const t = {};
@@ -437,5 +466,5 @@ module.exports = {
   KEEP, NEVER, STATUSES, SYSTEMS, MILESTONES,
   isoDate, cleanAttributes, systemOf, statusOf, lengthM, haversine, utmToLngLat, toWgs84Paths, overlapShare,
   monthsBetween, slipOf, streetTokens, sameStreet, normProj, normComp,
-  toRecord, uniqueIds, stableId, contractKey, dcWorks, matchDc, applyOverrides, audit, tally, hasForbidden, CONF_RANK,
+  toRecord, uniqueIds, stableId, contractKey, changesSince, dcWorks, matchDc, applyOverrides, audit, tally, hasForbidden, CONF_RANK,
 };

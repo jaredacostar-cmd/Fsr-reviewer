@@ -214,3 +214,19 @@ test('audit: counts, unmatched both ways, low confidence, schedule differences',
   assert.equal(t.water['under construction'], 1);
   assert.equal(t.water.unknown, 4);
 });
+
+test('weekly change list: status and date changes, later dates on DC-matched records, new records', () => {
+  const a = C.toRecord(feature({ ProjectNumber: '24-1192', ComponentID: '57150', WorkType: 'WM', Phase: 'DESIGN', ConstructionStartDateTarget: Date.UTC(2026, 2, 1) }), 0);
+  const b = { ...a, status: 'tendered', startTarget: '2026-09-01' };
+  const n = C.toRecord(feature({ ProjectNumber: '99-0001', WorkType: 'SAN' }, [[[-79.6, 43.6], [-79.59, 43.6]]]), 1);
+  assert.deepEqual(C.changesSince(null, [a], [], '2026-10-19'), [], 'first build: nothing to compare');
+  const ch = C.changesSince({ records: [a] }, [b, n], [{ dc: 'water:line:c57150', capital: a.id }], '2026-10-19');
+  assert.equal(ch.length, 2);
+  assert.equal(ch[0].id, a.id);
+  assert.match(ch[0].change, /status planned → tendered/);
+  assert.match(ch[0].change, /Start target 2026-03-01 → 2026-09-01/);
+  assert.equal(ch[0].slipMonths, 6);
+  assert.equal(ch[0].dc, true);
+  assert.deepEqual([ch[1].change, ch[1].dc], ['new on the capital layer', false]);
+  assert.deepEqual(C.changesSince({ records: [a] }, [a], [], 'x'), [], 'no change, no item');
+});
