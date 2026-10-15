@@ -71,6 +71,8 @@
   // Site constraint layers (js/constraints.js owns them; the switches read the saved state).
   const cxOn = { ...(store.get('cxOn', {}) || {}) };
   const CN = () => window.PeelConstraints;
+  // [key, label, colour token, area?, dashed?] in the order of the Layers list.
+  const CX_SWITCHES = [['reg', 'Regulation limits', '--cx-reg', true], ['flood', 'Floodplain', '--cx-flood', true], ['greenbelt', 'Greenbelt', '--cx-greenbelt', true], ['orm', 'Oak Ridges Moraine', '--cx-orm', true], ['nep', 'Niagara Escarpment', '--cx-nep', true], ['natural', 'PSW / ANSI', '--cx-natural', true], ['nhs', 'Natural Heritage System', '--cx-nhs', true], ['water', 'Watercourses', '--cx-water', false, false], ['gas', 'Gas pipelines (approx.)', '--cx-gas', false, true], ['hydro', 'Hydro lines (approx.)', '--cx-hydro', false, false]];
   const MapOptions = L.Control.extend({
     options: { position: 'topright' },
     onAdd() {
@@ -92,8 +94,8 @@
              ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:var(${EXIST_STYLE.sanitary.color})"></i>`, 'Existing pipes', 'existing-pipes'],
              ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:var(--dc-ww-main)"></i>', 'Planned DC works', 'dc-works'],
              ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-sp)"></i>', 'Planning areas', 'secondary-plans'],
-             ...[['gas', 'Gas pipelines', 'cx-gas', '--cx-gas', true], ['hydro', 'Hydro lines', 'cx-hydro', '--cx-hydro', false], ['water', 'Watercourses', 'cx-water', '--cx-water', false], ['reg', 'Regulation limits', 'cx-reg', '--cx-reg', true]]
-               .map(([k, t, info, c, dash]) => [`opt-cx-${k}`, !!cxOn[k], k === 'reg' ? `<i class="lg-area" style="--c:var(${c})"></i>` : `<i class="lg-line" style="background:${dash ? `repeating-linear-gradient(90deg,var(${c}) 0 6px,transparent 6px 9px)` : `var(${c})`}"></i>`, t, info]),
+             // Constraint layers (js/constraints.js; screening). Gas and hydro: approximate, off by default.
+             ...CX_SWITCHES.map(([k, t, c, area, dash]) => [`opt-cx-${k}`, !!cxOn[k], area ? `<i class="lg-area" style="--c:var(${c})"></i>` : `<i class="lg-line" style="background:${dash ? `repeating-linear-gradient(90deg,var(${c}) 0 6px,transparent 6px 9px)` : `var(${c})`}"></i>`, t, `cx-${k}`]),
              ['opt-da', CA().getDaOn(), CA().daSwatch(), '<span id="da-label">2021 census areas</span>', 'da-layer']].map(([id, on, sw, t, info]) =>
             `<label class="mo-sw" data-info="${info}"><span class="mo-sw-l">${sw}${t}</span><input type="checkbox" role="switch" id="${id}"${on ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`).join('')}
         <small class="cx-note" id="cx-note"></small>
@@ -143,7 +145,7 @@
       el.querySelector('#opt-exist').onchange = e => { const v = MA().currentView(), on = e.target.checked; MA().setExistOn(on ? { water: v !== 'wastewater', sanitary: v !== 'water', storm: false } : { water: false, sanitary: false, storm: false }); };
       el.querySelector('#opt-dcw').onchange = e => MA().setDcOn({ on: e.target.checked, sys: MA().currentView() === 'water' ? 'water' : MA().currentView() === 'wastewater' ? 'wastewater' : (dcOn.sys || 'both') });
       el.querySelector('#opt-plan').onchange = e => PA().setAreaOn({ sp: e.target.checked, mtsa: e.target.checked });
-      for (const k of ['gas', 'hydro', 'water', 'reg']) el.querySelector(`#opt-cx-${k}`).onchange = e => { cxOn[k] = e.target.checked; if (CN()) CN().setOn({ [k]: e.target.checked }); };
+      for (const [k] of CX_SWITCHES) el.querySelector(`#opt-cx-${k}`).onchange = e => { cxOn[k] = e.target.checked; if (CN()) CN().setOn({ [k]: e.target.checked }); };
       el.querySelector('#opt-wf').onchange = e => WT().setWfOn(e.target.checked);
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       // The legend is a section inside this panel now (not its own map box): remembered open state.

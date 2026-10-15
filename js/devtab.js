@@ -667,6 +667,14 @@
       .catch(e => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
   }
 
+  // ---- Site: constraint checklist (js/constraint-data.js; never blank) ---------------
+  async function fillConstraints(p) {
+    if (!hasDOM() || !root.PeelCxData) return;
+    let html;
+    try { html = await root.PeelCxData.siteChecklistHTML(p); } catch (e) { html = '<p class="small muted">Constraint layers did not load: not checked.</p>'; }
+    if (liveKey === p.key) { const b = document.getElementById('devtab-cx'); if (b) b.innerHTML = html; }
+  }
+
   // ---- Site: ground elevation and the fall to the catchment outlet (js/site-context.js, from the
   // lidar terrain model through js/elevation.js; each value names its source).
   async function fillGround(p) {
@@ -890,11 +898,13 @@
       ${devHistoryHTML(p, st)}
       ${sourceRecordsHTML(p)}`;
   }
-  // Site: aerial check, ground elevation, storm sewers, stormwater ponds.
-  // (Ground/storm/ponds moved here from the old Wastewater tab.)
+  // Site: the constraint checklist (screening) first, then aerial check, ground elevation, storm
+  // sewers, stormwater ponds. (Ground/storm/ponds moved here from the old Wastewater tab.)
   function siteViewHTML(p) {
     const has = p.lat != null;
     return `${drillBackHTML(p)}
+    <details class="sect" id="devtab-cx-sect" open><summary><h2 class="section-title" data-info="site-constraints">Constraints</h2><span class="muted small sect-sum">screening · mapped layers</span></summary>
+      <div id="devtab-cx">${has ? '<p class="small muted">Checking the mapped constraint layers…</p>' : '<p class="small muted">Not checked: this development has no map location.</p>'}</div></details>
     <details class="sect" id="devtab-site" open><summary><h2 class="section-title" data-info="site-check">Site</h2><span class="muted small sect-sum">aerial · ground · stormwater</span></summary>
       <div class="brief">
         ${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}
@@ -929,7 +939,7 @@
     const s = currentSub();
     body.innerHTML = s === 'about' ? aboutHTML(p) : s === 'files' ? filesViewHTML(p) : siteViewHTML(p);
     if (s === 'about' || s === 'files') ensureCouncil(p);
-    if (s === 'site' && p.lat != null) { devAerial(p); fillGround(p); fillStormMains(p); }
+    if (s === 'site' && p.lat != null) { fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
   }
   // Re-render after async data (council, FSR) arrives, keeping open sections.
   function rerenderPreserve() {

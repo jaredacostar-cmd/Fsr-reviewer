@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 /*
+ * (Superseded as a data build by scripts/build-constraints.js, which reuses the clipping below.)
  * Credit Valley Conservation's regulation limit (Generic Regulations Limit 2025, O. Reg. 41/24),
  * cut into the map's 0.02° tiles over Peel for the Regulation limits layer.
  *

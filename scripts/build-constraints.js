@@ -216,7 +216,7 @@ function writeOverview(d, feats, labelOf, mask) {
     const b = bboxOf(g.rings); let any = false;
     for (let tx = Math.floor(b.xmin / G.TILE); tx <= Math.floor(b.xmax / G.TILE) && !any; tx++) for (let ty = Math.floor(b.ymin / G.TILE); ty <= Math.floor(b.ymax / G.TILE) && !any; ty++) any = mask.has(G.tileKey(tx, ty));
     if (!any) continue;
-    const rings = g.rings.map(r => simplify(r, TOL)).filter(r => r.length >= 4 && ringArea(r) >= MIN).map(r => r.map(([x, y]) => [Math.round(x * 1e4), Math.round(y * 1e4)]));
+    const rings = g.rings.map(r => clipRing(r, PEEL)).filter(r => r.length >= 3).map(r => simplify([...r, r[0]], TOL)).filter(r => r.length >= 4 && ringArea(r) >= MIN).map(r => r.map(([x, y]) => [Math.round(x * 1e4), Math.round(y * 1e4)]));
     if (rings.length) out.push([labelOf(f.attributes || {}), rings]);
   }
   const str = JSON.stringify({ units: 1e4, p: out });

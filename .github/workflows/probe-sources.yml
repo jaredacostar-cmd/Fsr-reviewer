@@ -22,7 +22,6 @@ name: Probe data sources
 #  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
 #  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
-#  mode=regulation-build: cut Credit Valley Conservation's regulation limit into map tiles (data/regulation/cvc), committed to this branch
 #  mode=peel-open: Region of Peel housing construction activity and building permit statistics (data/peel-housing.json, committed to this branch); scripts/probe-peel-open.js lists the Region's other layers
 #  mode=tree-audit: how applications nest into developments — a live pull of every source, then scripts/audit-tree.js (data/tree-audit.json, committed to this branch; report only)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
@@ -195,14 +194,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/tree-audit.json
           git diff --cached --quiet || { git commit -m "Application tree audit (live pull)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
-      - name: CVC regulation limit tiles (committed to this branch)
-        if: inputs.mode == 'regulation-build'
-        run: |
-          node scripts/build-regulation.js --out data
-          git config user.name "peel-snapshot-bot"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/regulation
-          git diff --cached --quiet || { git commit -m "CVC regulation limit tiles"; git push; }
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js

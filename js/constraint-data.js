@@ -3,7 +3,7 @@
  * area card "Land under constraints".
  *
  * Screening context only: every line says what a mapped layer shows at the development's point,
- * never that a site is or is not regulated; the owner (conservation authority, province) confirms.
+ * never a determination; the owner (conservation authority, province) confirms.
  */
 (function (root) {
   'use strict';

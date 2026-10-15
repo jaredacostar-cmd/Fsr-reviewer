@@ -81,7 +81,7 @@
   //   openResult({ ref, title, html, reopen, devKeys, filter, screen })
   //     ref: '<kind>:<id>' (kinds below; default 'tool:<title>'); devKeys: the developments it covers
   //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer.
-  const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help']);
+  const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help', 'cx']);
   const isResultRef = ref => !!ref && RESULT_KINDS.has(String(ref).slice(0, String(ref).indexOf(':')));
   let result = null, resultV = 0;
   const slug = t => String(t || 'result').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
