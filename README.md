@@ -2354,3 +2354,34 @@ On the default view (active applications, 2021–2026), the Overview shows 228,4
 - every planning file is in exactly one development, its tree's;
 - keys are unique;
 - Peel equals the review total.
+
+## Population tables, C1: the plan roll-up engine
+
+`js/plan-rollup.js` (`PeelPlanRollup`, pure, no UI yet) builds Table 1 and Table 5.
+
+**Levels:** Peel → municipality → secondary plan / character area → sub-levels → developments.
+- A nested plan is a sub-level: Bolton Core in Bolton, Malton CN in Malton NHD, and four more.
+- A Brampton precinct sits in the plan holding most of it (29 of 30).
+- "Not in a plan" and "Elsewhere in <plan>" make every parent equal the sum of its children.
+  The `check` column is parent − Σ children, always 0.
+
+**Placement** follows the tree. A tree development is placed by its share of its root file's
+land in each plan (the tree build stores these in `data/tree-counts.json`: `devs[].a`, plus
+`areas` with their nesting). So a development straddling two plans is split by area, not
+assigned whole. With no boundary, or with Previous grouping, it is placed whole by its point.
+
+**Measures** are the Overview's:
+- units from `Growth.pipelineTotals`: planned, permitted, completed, left to build;
+- committed by D-5-1, and proposed;
+- people and jobs from `PeelDemand.estimate` at the chosen basis.
+
+Each development is measured once and its shares multiply it, so Peel equals the Overview.
+`matrix()` gives Table 5: plans down the side, plants or pressure zones across.
+
+**Tests** (`tests/plan-rollup.test.js`), including the full snapshot regrouped into trees:
+- every check is 0;
+- Peel people equal `estimate(set)`, and Peel units equal the header;
+- nested plans are counted once;
+- straddling developments are split by area;
+- shares over 100% are scaled down;
+- matrix rows and columns reconcile.
