@@ -16,7 +16,7 @@
   };
   const PITCH = 60, EXAGGERATION = 1.2;
   const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
-  const tok = name => token(name) || '#888';
+  const tok = name => token(name) || 'gray';
 
   let libs = null;
   function loadLibs() {
@@ -72,7 +72,7 @@
       },
       layers: [
         { id: 'base', type: 'raster', source: 'base', paint: base.imagery ? { 'raster-opacity': 0.9 } : {} },
-        { id: 'hill', type: 'hillshade', source: 'hill', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': '#000000', 'hillshade-highlight-color': '#ffffff' } },
+        { id: 'hill', type: 'hillshade', source: 'hill', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': tok('--hill-shadow'), 'hillshade-highlight-color': tok('--hill-light') } },
       ],
       terrain: { source: 'dem', exaggeration: EXAGGERATION },
     };
@@ -84,7 +84,7 @@
     if (buildings) {
       s.sources.buildings = { type: 'vector', url: `pmtiles://${new URL(`data/3d/${man.buildings.file}`, location.href).href}`, attribution: '© OpenStreetMap contributors, ODbL' };
       s.layers.push({ id: 'buildings', type: 'fill-extrusion', source: 'buildings', 'source-layer': 'buildings', minzoom: 13,
-        paint: { 'fill-extrusion-color': ['case', ['==', ['get', 'e'], 1], '#9aa1ad', '#d3d7de'], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'], 'fill-extrusion-opacity': 0.85 } });
+        paint: { 'fill-extrusion-color': ['case', ['==', ['get', 'e'], 1], tok('--b3d-est'), tok('--b3d-known')], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'], 'fill-extrusion-opacity': 0.85 } });
     }
     s.layers.push({ id: 'massing', type: 'fill-extrusion', source: 'massing',
       paint: { 'fill-extrusion-color': phaseColor(), 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': 0, 'fill-extrusion-opacity': 0.78 } });
@@ -140,7 +140,7 @@
         <div class="v3-keys">${PHASE_KEYS.filter(k => counts[k]).map(k => `<span>${sw(tok(`--ph-${k}`))}${esc((ph[k] && ph[k].label) || k)} <span class="muted">${counts[k]}</span></span>`).join('') || '<span class="muted">None with a height to draw.</span>'}</div>
         <p class="muted small">Height: the stated height, else stated storeys × ${MS().STOREY_M} m, else (apartments only) units × ${MS().UNIT_GFA_M2} m² ÷ (footprint × ${Math.round(MS().FLOOR_EFFICIENCY * 100)}%). Footprint: ${Math.round(MS().SITE_COVERAGE * 100)}% of the application site about its centre, or a ${MS().SQUARE_M} m square at the address. ${lastMassing && lastMassing.hidden ? `${lastMassing.hidden.toLocaleString()} shown developments have no stated height and no units estimate: not drawn.` : ''} Tap a block for its basis.</p></div>
       <div class="v3-sec"><b>Buildings</b> ${b ? `<span class="muted">(OpenStreetMap, ${esc(man.name)} only)</span>
-        <div class="v3-keys"><span>${sw('#d3d7de')}height tagged</span><span>${sw('#9aa1ad')}estimated (levels × ${MS().STOREY_M} m, else ${MS().DEFAULT_STOREYS} storeys)</span></div>
+        <div class="v3-keys"><span>${sw(tok('--b3d-known'))}height tagged</span><span>${sw(tok('--b3d-est'))}estimated (levels × ${MS().STOREY_M} m, else ${MS().DEFAULT_STOREYS} storeys)</span></div>
         <p class="muted small">${b.count.toLocaleString()} buildings: ${b.byBasis.height.toLocaleString()} with a height, ${b.byBasis.levels.toLocaleString()} from levels, ${b.byBasis.default.toLocaleString()} assumed ${MS().DEFAULT_STOREYS} storeys. OSM data ${esc(String(b.osmTimestamp || '').slice(0, 10))}.</p>` : '<span class="muted">Not built yet: the pilot tiles are made in Actions (mode=tiles-3d).</span>'}</div>
       <div class="v3-sec"><b>Ground</b> <span class="muted">×${EXAGGERATION} vertical, hillshaded</span>
         <p class="muted small">${terr.length ? esc(terr.join('; ')) : 'Loading…'}.${man ? ` Dashed box: ${esc(man.name)}.` : ''}</p></div>`;

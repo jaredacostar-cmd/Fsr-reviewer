@@ -37,6 +37,7 @@
   --ph-construction: #1b8166;
   --ph-completed: #9ca3af;
   --ph-cancelled: #676e7b;
+  --b3d-known: #d3d7de; --b3d-est: #8d94a1; --hill-shadow: #000000; --hill-light: #ffffff;
   --cap-over: #f0665f;
   --cap-tight: #ffa94d;
   --cap-room: #51cf66;
@@ -106,6 +107,7 @@
     --ph-construction: #176b54;
     --ph-completed: #7f868f;
     --ph-cancelled: #5c626e;
+    --b3d-known: #c3c8d0; --b3d-est: #7d8592; --hill-shadow: #3a3a3a; --hill-light: #ffffff;
     --cap-over: #e03131;
     --cap-tight: #b26a00;
     --cap-room: #2f9e44;
@@ -177,6 +179,7 @@
   --ph-construction: #176b54;
   --ph-completed: #7f868f;
   --ph-cancelled: #5c626e;
+  --b3d-known: #c3c8d0; --b3d-est: #7d8592; --hill-shadow: #3a3a3a; --hill-light: #ffffff;
   --cap-over: #e03131;
   --cap-tight: #b26a00;
   --cap-room: #2f9e44;
