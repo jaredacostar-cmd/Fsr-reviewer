@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T14:40:25.831Z",
+ "generatedAt": "2026-10-15T15:55:52.253Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -5810,16 +5810,8 @@
     "type": "LineString",
     "coordinates": [
      [
-      -79.754516,
-      43.646791
-     ],
-     [
-      -79.754512,
-      43.646664
-     ],
-     [
-      -79.755764,
-      43.645526
+      -79.754428,
+      43.646739
      ],
      [
       -79.771218,
@@ -7219,10 +7211,6 @@
       43.789271
      ],
      [
-      -80.018802,
-      43.790335
-     ],
-     [
       -80.016109,
       43.792693
      ],
@@ -7231,12 +7219,8 @@
       43.793807
      ],
      [
-      -80.014439,
-      43.794034
-     ],
-     [
-      -80.012596,
-      43.79643
+      -80.014286,
+      43.79413
      ]
     ]
    },
@@ -10274,8 +10258,8 @@
       43.574111
      ],
      [
-      -79.727479,
-      43.573079
+      -79.727698,
+      43.573241
      ],
      [
       -79.723229,
@@ -10294,12 +10278,8 @@
       43.560569
      ],
      [
-      -79.70687,
-      43.558824
-     ],
-     [
-      -79.706725,
-      43.558854
+      -79.706816,
+      43.558786
      ]
     ]
    },

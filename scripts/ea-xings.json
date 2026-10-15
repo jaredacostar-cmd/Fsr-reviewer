@@ -901,5 +901,17 @@
  "osm:Highway 50 & Huntington Road, Brampton": [],
  "osm:Hurontario Street & Old School Road, Caledon": [],
  "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
- "osm:Kane Road & Lakeshore Road West, Mississauga": []
+ "osm:Kane Road & Lakeshore Road West, Mississauga": [],
+ "osm:Mississauga Road & Bush Street, Caledon ~700 m": [
+  [
+   -80.012596,
+   43.79643
+  ]
+ ],
+ "osm:Bush Street & Mississauga Road, Caledon ~700 m": [
+  [
+   -80.012596,
+   43.79643
+  ]
+ ]
 }
