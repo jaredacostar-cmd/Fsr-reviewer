@@ -253,8 +253,10 @@ function purposeDraft(ls) {
   for (const l of ls) {
     if (l.length < 40 || CONTACT.test(l)) continue;
     // Sentence ends, but not after initials or common abbreviations ("G.E. Booth", "St.", "Rd.").
-    const s = l.split(/(?<!\b[A-Z]\.|\b(?:St|Rd|Dr|Ave|Blvd|Hwy|No|Mt|e\.g|i\.e)\.)(?<=[.!?])\s+/).find(x => /\b(study|EA|assessment)\b.*\b(will|to|is)\b|\bpurpose\b|\bto (identify|address|assess|evaluate|determine|accommodate|provide|improve|service)\b/i.test(x) && x.length >= 40);
-    if (s) return s.replace(/\s+/g, ' ').trim().slice(0, 220);
+    // Skip process sentences (review periods, comments, field work, meetings): they say what happens, not why.
+    const s = l.split(/(?<!\b[A-Z]\.|\b(?:St|Rd|Dr|Ave|Blvd|Hwy|No|Mt|e\.g|i\.e)\.)(?<=[.!?])\s+/).find(x => /\b(study|EA|assessment)\b.*\b(will|to|is)\b|\bpurpose\b|\bto (identify|address|assess|evaluate|determine|accommodate|provide|improve|service)\b/i.test(x) && x.length >= 40
+      && !/\b(review period|30-day|public review|comments?|field investigations?|public information cent|PIC|meeting|notice)\b/i.test(x));
+    if (s) { const t = s.replace(/\s+/g, ' ').trim(); return t.length <= 220 ? t : `${t.slice(0, 220).replace(/\s+\S*$/, '')}…`; }
   }
   return null;
 }
