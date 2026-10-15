@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T05:23:55.820Z",
+ "generatedAt": "2026-10-15T06:20:41.848Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -34,7 +34,7 @@
     "date": "2026-11"
    },
    "completedYear": null,
-   "purpose": "As part of the Flow | Central Brampton Program, and to support the environmental assessment process and preliminary design of the preferred sewer and watermain route options, field investigations will be taking place alo",
+   "purpose": "The study area for this Schedule B MCEA will be divided to three distinct packages, refer to Figure 1.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/downtown-brampton-water-wastewater-capacity-improvements",
     "report": null,
@@ -50,361 +50,171 @@
     "coordinates": [
      [
       [
-       -79.76579,
-       43.69449
+       -79.772633,
+       43.700558
       ],
       [
-       -79.76506,
-       43.69462
+       -79.771962,
+       43.700911
       ],
       [
-       -79.76473,
-       43.69452
+       -79.771068,
+       43.700911
       ],
       [
-       -79.76453,
-       43.69431
+       -79.770695,
+       43.700477
       ],
       [
-       -79.76372,
-       43.69413
+       -79.769838,
+       43.699663
       ],
       [
-       -79.76346,
-       43.69416
+       -79.768459,
+       43.699337
       ],
       [
-       -79.76337,
-       43.69435
+       -79.763315,
+       43.699446
       ],
       [
-       -79.76304,
-       43.69433
+       -79.762495,
+       43.701236
       ],
       [
-       -79.76264,
-       43.69404
+       -79.761265,
+       43.701779
       ],
       [
-       -79.76253,
-       43.69373
+       -79.758656,
+       43.701915
       ],
       [
-       -79.76193,
-       43.6933
+       -79.758097,
+       43.701453
       ],
       [
-       -79.76194,
-       43.69313
+       -79.758283,
+       43.700287
       ],
       [
-       -79.76217,
-       43.69285
+       -79.759588,
+       43.69988
       ],
       [
-       -79.76207,
-       43.69266
+       -79.76078,
+       43.698306
       ],
       [
-       -79.76187,
-       43.69262
+       -79.750083,
+       43.699174
       ],
       [
-       -79.76148,
-       43.69232
+       -79.748965,
+       43.698577
       ],
       [
-       -79.76107,
-       43.69229
+       -79.749151,
+       43.697438
       ],
       [
-       -79.76089,
-       43.69212
+       -79.749971,
+       43.697112
       ],
       [
-       -79.76011,
-       43.69177
+       -79.762197,
+       43.695864
       ],
       [
-       -79.75882,
-       43.69093
+       -79.767042,
+       43.696353
       ],
       [
-       -79.75819,
-       43.69064
+       -79.767154,
+       43.694399
       ],
       [
-       -79.75765,
-       43.69052
+       -79.76995,
+       43.694101
       ],
       [
-       -79.75655,
-       43.69059
+       -79.770583,
+       43.692419
       ],
       [
-       -79.75627,
-       43.69054
+       -79.777852,
+       43.685989
       ],
       [
-       -79.75439,
-       43.6894
+       -79.779342,
+       43.685772
       ],
       [
-       -79.75419,
-       43.68912
+       -79.780274,
+       43.686531
       ],
       [
-       -79.75381,
-       43.68811
+       -79.780274,
+       43.687264
       ],
       [
-       -79.7535,
-       43.68784
+       -79.774273,
+       43.692446
       ],
       [
-       -79.75258,
-       43.68745
+       -79.773118,
+       43.693775
       ],
       [
-       -79.75177,
-       43.68731
+       -79.774571,
+       43.694128
       ],
       [
-       -79.75091,
-       43.68707
+       -79.77487,
+       43.694996
       ],
       [
-       -79.75038,
-       43.6867
+       -79.774311,
+       43.695756
       ],
       [
-       -79.74941,
-       43.68558
+       -79.77282,
+       43.695864
       ],
       [
-       -79.74895,
-       43.68467
+       -79.773416,
+       43.696488
       ],
       [
-       -79.74899,
-       43.68406
+       -79.773379,
+       43.697302
       ],
       [
-       -79.74949,
-       43.68309
+       -79.772931,
+       43.697763
       ],
       [
-       -79.74987,
-       43.68136
-      ],
-      [
-       -79.7498,
-       43.68055
-      ],
-      [
-       -79.74962,
-       43.68022
-      ],
-      [
-       -79.74981,
-       43.67971
-      ],
-      [
-       -79.74983,
-       43.67944
-      ],
-      [
-       -79.74931,
-       43.67834
-      ],
-      [
-       -79.7493,
-       43.67801
-      ],
-      [
-       -79.75086,
-       43.67916
-      ],
-      [
-       -79.7516,
-       43.67849
-      ],
-      [
-       -79.75216,
-       43.67891
-      ],
-      [
-       -79.75692,
-       43.67466
-      ],
-      [
-       -79.75996,
-       43.67695
-      ],
-      [
-       -79.76261,
-       43.67458
-      ],
-      [
-       -79.76261,
-       43.67268
-      ],
-      [
-       -79.76381,
-       43.67355
-      ],
-      [
-       -79.76407,
-       43.67351
-      ],
-      [
-       -79.76465,
-       43.67381
-      ],
-      [
-       -79.76542,
-       43.67463
-      ],
-      [
-       -79.76512,
-       43.67483
-      ],
-      [
-       -79.76537,
-       43.67526
-      ],
-      [
-       -79.76528,
-       43.67558
-      ],
-      [
-       -79.76568,
-       43.67576
-      ],
-      [
-       -79.76673,
-       43.67599
-      ],
-      [
-       -79.76718,
-       43.67581
-      ],
-      [
-       -79.76767,
-       43.67581
-      ],
-      [
-       -79.76792,
-       43.67555
-      ],
-      [
-       -79.76808,
-       43.67523
-      ],
-      [
-       -79.76874,
-       43.67472
-      ],
-      [
-       -79.77131,
-       43.6766
-      ],
-      [
-       -79.77058,
-       43.67722
-      ],
-      [
-       -79.77021,
-       43.67948
-      ],
-      [
-       -79.77032,
-       43.6804
-      ],
-      [
-       -79.77015,
-       43.68071
-      ],
-      [
-       -79.77021,
-       43.68085
-      ],
-      [
-       -79.77057,
-       43.68114
-      ],
-      [
-       -79.77144,
-       43.6815
-      ],
-      [
-       -79.77381,
-       43.68204
-      ],
-      [
-       -79.77461,
-       43.6828
-      ],
-      [
-       -79.77626,
-       43.68382
-      ],
-      [
-       -79.77661,
-       43.68439
-      ],
-      [
-       -79.76819,
-       43.68609
-      ],
-      [
-       -79.7715,
-       43.68882
-      ],
-      [
-       -79.77335,
-       43.68987
-      ],
-      [
-       -79.77276,
-       43.69019
-      ],
-      [
-       -79.77211,
-       43.69067
-      ],
-      [
-       -79.77047,
-       43.69217
-      ],
-      [
-       -79.76943,
-       43.69295
-      ],
-      [
-       -79.76714,
-       43.69505
-      ],
-      [
-       -79.76617,
-       43.69458
-      ],
-      [
-       -79.76579,
-       43.69449
+       -79.772633,
+       43.700558
       ]
      ]
     ]
    },
    "geomType": "area",
-   "geomMethod": "boundary: 7: Downtown Brampton",
-   "geomConfidence": "medium",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "castlemore-trunk-sewer-diversion",
@@ -740,7 +550,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "This planning work is being completed through a Municipal Class Environmental Assessment (EA) which is a provincially regulated process that helps identify the best solution while considering the environment, technical r",
+   "purpose": "This planning work is being completed through a Municipal Class Environmental Assessment (EA) which is a provincially regulated process that helps identify the best solution while considering the environment, technical…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/bolton-zone-7-water-elevated-storage-transmission-mains",
     "report": null,
@@ -1076,8 +886,7 @@
    "name": "Charleston Sideroad between Kennedy and Main Street/Highway 136 Complete Corridor Study and Preliminary Design",
    "municipality": "Caledon",
    "flags": [
-    "status from page wording (no dated milestone)",
-    "geometry approximate"
+    "status from page wording (no dated milestone)"
    ],
    "schedule": "unknown",
    "status": "commenced",
@@ -1096,21 +905,47 @@
    "system": "roads",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "Polygon",
     "coordinates": [
-     -79.8711,
-     43.8668
+     [
+      [
+       -79.979822,
+       43.873328
+      ],
+      [
+       -79.977828,
+       43.871501
+      ],
+      [
+       -80.036393,
+       43.825031
+      ],
+      [
+       -80.038388,
+       43.826857
+      ],
+      [
+       -79.979822,
+       43.873328
+      ]
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Caledon",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "inglewood-groundwater-based-drinking-water-system-additional-groundwater-supply",
@@ -1127,7 +962,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "A Class Environmental Assessment (Class EA) study is being initiated to plan for supply capacity and redundancy increase through addition of a new municipal production well to meet the long-term water needs of the servic",
+   "purpose": "A Class Environmental Assessment (Class EA) study is being initiated to plan for supply capacity and redundancy increase through addition of a new municipal production well to meet the long-term water needs of the…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/inglewood-groundwater-based-drinking-water-system-additional-groundwater-supply",
     "report": null,
@@ -1960,7 +1795,7 @@
    ],
    "nextStep": null,
    "completedYear": 2026,
-   "purpose": "Following the 30-day public review of the Environmental Study Report (ESR), the Region will address all comments and finalize the report.",
+   "purpose": null,
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/bolton-water-wastewater-capacity-improvements",
     "report": {
@@ -2971,7 +2806,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "This Municipal Class Environmental Assessment (EA) will support this recommendation by developing, evaluating, and selecting a preferred storage facility and transmission main route to service the projected growth within",
+   "purpose": "This Municipal Class Environmental Assessment (EA) will support this recommendation by developing, evaluating, and selecting a preferred storage facility and transmission main route to service the projected growth…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/west-caledon-storage-facility-transmission-main",
     "report": {
@@ -2999,23 +2834,65 @@
    "system": "water",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "Polygon",
     "coordinates": [
-     -79.887773,
-     43.713944
+     [
+      [
+       -79.958788,
+       43.833383
+      ],
+      [
+       -79.830049,
+       43.833383
+      ],
+      [
+       -79.836766,
+       43.791873
+      ],
+      [
+       -79.842363,
+       43.753889
+      ],
+      [
+       -79.844976,
+       43.736254
+      ],
+      [
+       -79.84908,
+       43.72106
+      ],
+      [
+       -79.977072,
+       43.721332
+      ],
+      [
+       -79.958788,
+       43.833383
+      ]
+     ]
     ]
    },
-   "geomType": "facility",
-   "geomMethod": "facility point: West Caledon",
-   "geomConfidence": "high",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": [
+     "Inglewood",
+     "Cheltenham",
+     "Mayfield West",
+     "Victoria",
      "West Caledon"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "palgrave-caledon-east-drinking-water-system-supply-capacity",
@@ -5110,153 +4987,35 @@
    "system": "wastewater",
    "decision": null,
    "geometry": {
-    "type": "LineString",
+    "type": "Polygon",
     "coordinates": [
      [
-      -79.65143,
-      43.535304
-     ],
-     [
-      -79.657058,
-      43.530531
-     ],
-     [
-      -79.628519,
-      43.509975
-     ],
-     [
-      -79.628315,
-      43.5098
-     ],
-     [
-      -79.625543,
-      43.507715
-     ],
-     [
-      -79.62426,
-      43.506749
-     ],
-     [
-      -79.622661,
-      43.505282
-     ],
-     [
-      -79.621143,
-      43.504184
-     ],
-     [
-      -79.621084,
-      43.50414
-     ],
-     [
-      -79.621056,
-      43.504075
-     ],
-     [
-      -79.621059,
-      43.503945
-     ],
-     [
-      -79.621091,
-      43.503859
-     ],
-     [
-      -79.621242,
-      43.503731
-     ],
-     [
-      -79.622303,
-      43.502751
-     ],
-     [
-      -79.622335,
-      43.502644
-     ],
-     [
-      -79.622337,
-      43.502557
-     ],
-     [
-      -79.622279,
-      43.502492
-     ],
-     [
-      -79.621609,
-      43.501922
-     ],
-     [
-      -79.620997,
-      43.501461
-     ],
-     [
-      -79.620938,
-      43.501417
-     ],
-     [
-      -79.62088,
-      43.501351
-     ],
-     [
-      -79.620853,
-      43.501286
-     ],
-     [
-      -79.620854,
-      43.501178
-     ],
-     [
-      -79.62182,
-      43.50052
-     ],
-     [
-      -79.62188,
-      43.500478
-     ],
-     [
-      -79.621911,
-      43.500413
-     ],
-     [
-      -79.621912,
-      43.500349
-     ],
-     [
-      -79.621884,
-      43.500283
-     ],
-     [
-      -79.621826,
-      43.500197
-     ],
-     [
-      -79.620893,
-      43.499516
-     ],
-     [
-      -79.619637,
-      43.498615
-     ],
-     [
-      -79.61958,
-      43.498527
-     ],
-     [
-      -79.619583,
-      43.498441
-     ],
-     [
-      -79.619613,
-      43.498377
-     ],
-     [
-      -79.620461,
-      43.497588
+      [
+       -79.680165,
+       43.520102
+      ],
+      [
+       -79.648901,
+       43.546003
+      ],
+      [
+       -79.589942,
+       43.506838
+      ],
+      [
+       -79.622719,
+       43.479684
+      ],
+      [
+       -79.680165,
+       43.520102
+      ]
      ]
     ]
    },
-   "geomType": "linear",
-   "geomMethod": "DC capital map mains named like the EA",
-   "geomConfidence": "medium",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low",
    "related": {
     "dcProjects": [
      {
@@ -5269,10 +5028,20 @@
     ],
     "capitalProjects": [],
     "facilities": [
-     "Clarkson"
+     "Clarkson",
+     "Herridge",
+     "Watersedge",
+     "Silverbirch Trail",
+     "Stonehaven Drive"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "kirwin-avenue-sanitary-sewer-diversion",
@@ -5307,7 +5076,7 @@
    ],
    "nextStep": null,
    "completedYear": 2024,
-   "purpose": "The Region has undertaken a study to evaluate potential alternatives for the installation of a new sanitary sewer to accommodate flows from proposed developments near Hurontario Street and Kirwin Avenue within the highli",
+   "purpose": "The Region has undertaken a study to evaluate potential alternatives for the installation of a new sanitary sewer to accommodate flows from proposed developments near Hurontario Street and Kirwin Avenue within the…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/kirwin-avenue-sanitary-sewer-diversion",
     "report": {
@@ -5395,9 +5164,7 @@
    "id": "royal-windsor-sanitary-sewer-diversion",
    "name": "Royal Windsor sanitary sewer diversion",
    "municipality": "Mississauga",
-   "flags": [
-    "geometry approximate"
-   ],
+   "flags": [],
    "schedule": "B",
    "status": "commenced",
    "milestones": [
@@ -5420,29 +5187,102 @@
    "system": "wastewater",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "Polygon",
     "coordinates": [
-     -79.6441,
-     43.589
+     [
+      [
+       -79.63702,
+       43.504806
+      ],
+      [
+       -79.630282,
+       43.510943
+      ],
+      [
+       -79.630631,
+       43.511499
+      ],
+      [
+       -79.630296,
+       43.511771
+      ],
+      [
+       -79.629737,
+       43.511569
+      ],
+      [
+       -79.629236,
+       43.51183
+      ],
+      [
+       -79.62896,
+       43.511617
+      ],
+      [
+       -79.629302,
+       43.51112
+      ],
+      [
+       -79.627927,
+       43.51012
+      ],
+      [
+       -79.627737,
+       43.510421
+      ],
+      [
+       -79.627513,
+       43.510275
+      ],
+      [
+       -79.627765,
+       43.50985
+      ],
+      [
+       -79.62696,
+       43.509191
+      ],
+      [
+       -79.627295,
+       43.508919
+      ],
+      [
+       -79.629885,
+       43.510682
+      ],
+      [
+       -79.636647,
+       43.504561
+      ],
+      [
+       -79.63702,
+       43.504806
+      ]
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Mississauga",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "erin-mills-parkway-south-of-highway-403-low-impact-development-facilities",
    "name": "Erin Mills Parkway South of Highway 403 Low Impact Development facilities",
    "municipality": "Mississauga",
    "flags": [
-    "status not found on the page",
-    "geometry approximate"
+    "status not found on the page"
    ],
    "schedule": "A+",
    "status": "unknown",
@@ -5461,29 +5301,79 @@
    "system": "roads",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "MultiPolygon",
     "coordinates": [
-     -79.6441,
-     43.589
+     [
+      [
+       [
+        -79.697675,
+        43.55119
+       ],
+       [
+        -79.695949,
+        43.552448
+       ],
+       [
+        -79.694871,
+        43.551819
+       ],
+       [
+        -79.696596,
+        43.550403
+       ],
+       [
+        -79.697675,
+        43.55119
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        -79.691852,
+        43.550953
+       ],
+       [
+        -79.691097,
+        43.551583
+       ],
+       [
+        -79.688617,
+        43.550324
+       ],
+       [
+        -79.689372,
+        43.549695
+       ],
+       [
+        -79.691852,
+        43.550953
+       ]
+      ]
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Mississauga",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "erin-mills-parkway-between-britannia-road-and-highway-407",
    "name": "Erin Mills Parkway between Britannia Road and Highway 407",
    "municipality": "Mississauga",
-   "flags": [
-    "geometry approximate"
-   ],
+   "flags": [],
    "schedule": "unknown",
    "status": "consultation",
    "milestones": [
@@ -5494,7 +5384,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Region of Peel is undertaking a Complete Corridor Study to transform Erin Mills Parkway between Britannia Road (Regional Road 3) and Highway 407 within the City of Mississauga into a “complete street” that supports a",
+   "purpose": "The Region of Peel is undertaking a Complete Corridor Study to transform Erin Mills Parkway between Britannia Road (Regional Road 3) and Highway 407 within the City of Mississauga into a “complete street” that supports…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/erin-mills-parkway-between-britannia-road-highway-407",
     "report": null,
@@ -5506,21 +5396,123 @@
    "system": "roads",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "Polygon",
     "coordinates": [
-     -79.6441,
-     43.589
+     [
+      [
+       -79.726551,
+       43.602085
+      ],
+      [
+       -79.721343,
+       43.602085
+      ],
+      [
+       -79.721566,
+       43.598829
+      ],
+      [
+       -79.723203,
+       43.598829
+      ],
+      [
+       -79.723351,
+       43.593403
+      ],
+      [
+       -79.721715,
+       43.593403
+      ],
+      [
+       -79.722087,
+       43.58917
+      ],
+      [
+       -79.723575,
+       43.589062
+      ],
+      [
+       -79.724319,
+       43.586891
+      ],
+      [
+       -79.727667,
+       43.58445
+      ],
+      [
+       -79.731982,
+       43.582008
+      ],
+      [
+       -79.732503,
+       43.576473
+      ],
+      [
+       -79.734735,
+       43.576473
+      ],
+      [
+       -79.734512,
+       43.582279
+      ],
+      [
+       -79.732875,
+       43.583907
+      ],
+      [
+       -79.727667,
+       43.58662
+      ],
+      [
+       -79.726327,
+       43.588519
+      ],
+      [
+       -79.726179,
+       43.589333
+      ],
+      [
+       -79.727295,
+       43.589333
+      ],
+      [
+       -79.726923,
+       43.593403
+      ],
+      [
+       -79.724839,
+       43.593403
+      ],
+      [
+       -79.724691,
+       43.598829
+      ],
+      [
+       -79.726551,
+       43.598938
+      ],
+      [
+       -79.726551,
+       43.602085
+      ]
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Mississauga",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "2025-water-and-wastewater-master-plan-for-the-lake-based-systems",
@@ -6263,15 +6255,7 @@
    "geomMethod": "municipality centre: Brampton",
    "geomConfidence": "low",
    "related": {
-    "dcProjects": [
-     {
-      "proj": "31-1999",
-      "what": "New Elevated Tank",
-      "facility": "Heritage Road",
-      "system": "water",
-      "method": "name"
-     }
-    ],
+    "dcProjects": [],
     "capitalProjects": [],
     "facilities": [
      "Heritage Road"
@@ -6834,7 +6818,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Region of Peel is undertaking a Municipal Class Environmental Assessment (EA) Study to identify, develop and implement a solution to address future capacity needs and existing sanitary sewer issues in the Etobicoke C",
+   "purpose": "The Region of Peel is undertaking a Municipal Class Environmental Assessment (EA) Study to identify, develop and implement a solution to address future capacity needs and existing sanitary sewer issues in the Etobicoke…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/etobicoke-creek-trunk-sewer-improvements-upgrades",
     "report": {
@@ -6919,189 +6903,47 @@
    "system": "wastewater",
    "decision": null,
    "geometry": {
-    "type": "MultiLineString",
+    "type": "Polygon",
     "coordinates": [
      [
       [
-       -79.862165,
-       43.743803
+       -79.690807,
+       43.683546
       ],
       [
-       -79.847185,
-       43.732595
-      ]
-     ],
-     [
-      [
-       -79.716027,
-       43.671261
+       -79.651609,
+       43.683546
       ],
       [
-       -79.714997,
-       43.672136
+       -79.656389,
+       43.655831
       ],
       [
-       -79.708423,
-       43.674804
+       -79.6953,
+       43.655692
       ],
       [
-       -79.708215,
-       43.674781
-      ],
-      [
-       -79.706743,
-       43.67403
-      ],
-      [
-       -79.706713,
-       43.674029
-      ],
-      [
-       -79.706714,
-       43.674008
-      ],
-      [
-       -79.706654,
-       43.674008
-      ],
-      [
-       -79.705762,
-       43.673976
-      ],
-      [
-       -79.703963,
-       43.674625
-      ],
-      [
-       -79.700899,
-       43.677311
-      ],
-      [
-       -79.700898,
-       43.677333
-      ],
-      [
-       -79.700869,
-       43.677333
-      ],
-      [
-       -79.700868,
-       43.677355
-      ],
-      [
-       -79.700809,
-       43.677354
-      ],
-      [
-       -79.700779,
-       43.677375
-      ],
-      [
-       -79.698436,
-       43.675642
-      ],
-      [
-       -79.696284,
-       43.676028
-      ],
-      [
-       -79.695987,
-       43.676025
-      ],
-      [
-       -79.695927,
-       43.676024
-      ],
-      [
-       -79.694916,
-       43.675991
-      ],
-      [
-       -79.694857,
-       43.67599
-      ],
-      [
-       -79.694827,
-       43.676012
-      ],
-      [
-       -79.694797,
-       43.676011
-      ],
-      [
-       -79.694767,
-       43.676011
-      ],
-      [
-       -79.694707,
-       43.676031
-      ],
-      [
-       -79.694677,
-       43.676053
-      ],
-      [
-       -79.694312,
-       43.676394
-      ],
-      [
-       -79.692188,
-       43.676931
-      ],
-      [
-       -79.692129,
-       43.676931
-      ],
-      [
-       -79.692098,
-       43.67693
-      ],
-      [
-       -79.692039,
-       43.67693
-      ],
-      [
-       -79.68892,
-       43.678018
-      ],
-      [
-       -79.683364,
-       43.677608
-      ],
-      [
-       -79.681469,
-       43.677176
-      ],
-      [
-       -79.677394,
-       43.678424
-      ],
-      [
-       -79.673578,
-       43.676027
-      ]
-     ],
-     [
-      [
-       -79.86577,
-       43.728616
-      ],
-      [
-       -79.862282,
-       43.731843
+       -79.690807,
+       43.683546
       ]
      ]
     ]
    },
-   "geomType": "linear",
-   "geomMethod": "DC capital map mains named like the EA",
-   "geomConfidence": "medium",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "finch-stormwater-pumping-station-upgrades",
@@ -7128,7 +6970,7 @@
    ],
    "nextStep": null,
    "completedYear": 2023,
-   "purpose": "As part of the Class EA study, a virtual public information centre (PIC) was held on May 18, 2023, to allow interested members of the public to learn more about the study background, the list of station upgrade alternati",
+   "purpose": "This study will evaluate alternative locations for the upgraded facility, with consideration for social, environmental, regulatory, technical feasibility and costs.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/finch-stormwater-pumping-station-upgrades",
     "report": null,
@@ -7186,1356 +7028,51 @@
    "system": "water",
    "decision": null,
    "geometry": {
-    "type": "MultiLineString",
+    "type": "Polygon",
     "coordinates": [
      [
       [
-       -79.845829,
-       43.67841
+       -79.788465,
+       43.618208
       ],
       [
-       -79.851792,
-       43.673346
+       -79.787727,
+       43.618751
       ],
       [
-       -79.852105,
-       43.672716
+       -79.773843,
+       43.608724
       ],
       [
-       -79.854958,
-       43.67037
+       -79.774581,
+       43.608181
       ],
       [
-       -79.856776,
-       43.669873
-      ]
-     ],
-     [
-      [
-       -79.846007,
-       43.661821
-      ],
-      [
-       -79.850482,
-       43.657968
-      ]
-     ],
-     [
-      [
-       -79.840149,
-       43.656504
-      ],
-      [
-       -79.841232,
-       43.657242
-      ],
-      [
-       -79.842698,
-       43.65935
-      ],
-      [
-       -79.846007,
-       43.661821
-      ]
-     ],
-     [
-      [
-       -79.856776,
-       43.669873
-      ],
-      [
-       -79.86253,
-       43.674016
-      ],
-      [
-       -79.863666,
-       43.674269
-      ],
-      [
-       -79.865604,
-       43.674241
-      ],
-      [
-       -79.866911,
-       43.674504
-      ],
-      [
-       -79.86804,
-       43.675156
-      ]
-     ],
-     [
-      [
-       -79.856624,
-       43.686338
-      ],
-      [
-       -79.860718,
-       43.682754
-      ],
-      [
-       -79.861822,
-       43.680718
-      ],
-      [
-       -79.86804,
-       43.675156
-      ]
-     ],
-     [
-      [
-       -79.86804,
-       43.675156
-      ],
-      [
-       -79.871162,
-       43.672258
-      ],
-      [
-       -79.87151,
-       43.672035
-      ],
-      [
-       -79.87201,
-       43.671821
-      ],
-      [
-       -79.872943,
-       43.671408
-      ],
-      [
-       -79.873508,
-       43.671062
-      ],
-      [
-       -79.874078,
-       43.670529
-      ],
-      [
-       -79.875524,
-       43.669192
-      ],
-      [
-       -79.878031,
-       43.666897
-      ]
-     ],
-     [
-      [
-       -79.867258,
-       43.694403
-      ],
-      [
-       -79.870306,
-       43.691504
-      ],
-      [
-       -79.873566,
-       43.687537
-      ],
-      [
-       -79.881008,
-       43.680955
-      ]
-     ],
-     [
-      [
-       -79.881008,
-       43.680955
-      ],
-      [
-       -79.878904,
-       43.679536
-      ],
-      [
-       -79.872713,
-       43.677897
-      ],
-      [
-       -79.86804,
-       43.675156
-      ]
-     ],
-     [
-      [
-       -79.827253,
-       43.648023
-      ],
-      [
-       -79.820156,
-       43.642904
-      ],
-      [
-       -79.816944,
-       43.640511
-      ],
-      [
-       -79.817054,
-       43.640388
-      ]
-     ],
-     [
-      [
-       -79.817054,
-       43.640388
-      ],
-      [
-       -79.820789,
-       43.638021
-      ],
-      [
-       -79.823057,
-       43.637005
-      ],
-      [
-       -79.826969,
-       43.636608
-      ],
-      [
-       -79.830309,
-       43.637392
-      ],
-      [
-       -79.833181,
-       43.637952
-      ],
-      [
-       -79.835852,
-       43.637761
-      ],
-      [
-       -79.837297,
-       43.637604
-      ],
-      [
-       -79.837982,
-       43.637189
-      ]
-     ],
-     [
-      [
-       -79.846007,
-       43.661821
-      ],
-      [
-       -79.856776,
-       43.669873
-      ]
-     ],
-     [
-      [
-       -79.867599,
-       43.694602
-      ],
-      [
-       -79.870598,
-       43.69196
-      ],
-      [
-       -79.873121,
-       43.68893
-      ],
-      [
-       -79.874592,
-       43.687391
-      ],
-      [
-       -79.877405,
-       43.684887
-      ],
-      [
-       -79.881368,
-       43.681302
-      ],
-      [
-       -79.88296,
-       43.680193
-      ]
-     ],
-     [
-      [
-       -79.882982,
-       43.680193
-      ],
-      [
-       -79.885305,
-       43.678513
-      ],
-      [
-       -79.888863,
-       43.675243
-      ]
-     ],
-     [
-      [
-       -79.818074,
-       43.658067
-      ],
-      [
-       -79.819736,
-       43.656678
-      ],
-      [
-       -79.821956,
-       43.653194
-      ],
-      [
-       -79.822644,
-       43.652654
-      ],
-      [
-       -79.828071,
-       43.647969
-      ],
-      [
-       -79.830618,
-       43.647557
-      ],
-      [
-       -79.833098,
-       43.652261
-      ],
-      [
-       -79.837574,
-       43.655541
-      ],
-      [
-       -79.839531,
-       43.656178
-      ],
-      [
-       -79.840149,
-       43.656504
-      ]
-     ],
-     [
-      [
-       -79.881008,
-       43.680955
-      ],
-      [
-       -79.88514,
-       43.678121
-      ],
-      [
-       -79.888849,
-       43.674868
-      ]
-     ],
-     [
-      [
-       -79.888863,
-       43.675243
-      ],
-      [
-       -79.883565,
-       43.671364
-      ]
-     ],
-     [
-      [
-       -79.840149,
-       43.656504
-      ],
-      [
-       -79.843852,
-       43.653043
-      ]
-     ],
-     [
-      [
-       -79.603424,
-       43.607386
-      ],
-      [
-       -79.600076,
-       43.60506
-      ],
-      [
-       -79.597904,
-       43.603557
-      ],
-      [
-       -79.595388,
-       43.601803
-      ],
-      [
-       -79.595221,
-       43.601686
-      ],
-      [
-       -79.593798,
-       43.600705
-      ],
-      [
-       -79.593507,
-       43.600503
-      ]
-     ],
-     [
-      [
-       -79.603424,
-       43.607386
-      ],
-      [
-       -79.604654,
-       43.606059
-      ],
-      [
-       -79.605104,
-       43.605281
-      ],
-      [
-       -79.606116,
-       43.60556
-      ]
-     ],
-     [
-      [
-       -79.689369,
-       43.809053
-      ],
-      [
-       -79.687122,
-       43.811357
-      ],
-      [
-       -79.686784,
-       43.811924
-      ],
-      [
-       -79.686641,
-       43.812691
-      ],
-      [
-       -79.68675,
-       43.813476
-      ],
-      [
-       -79.6869,
-       43.815266
-      ],
-      [
-       -79.686851,
-       43.816065
-      ],
-      [
-       -79.686759,
-       43.816893
-      ],
-      [
-       -79.686597,
-       43.817546
-      ],
-      [
-       -79.686361,
-       43.818251
-      ]
-     ],
-     [
-      [
-       -79.792463,
-       43.762505
-      ],
-      [
-       -79.793382,
-       43.763191
-      ],
-      [
-       -79.796764,
-       43.765675
-      ],
-      [
-       -79.800286,
-       43.768332
-      ]
-     ],
-     [
-      [
-       -79.800886,
-       43.754067
-      ],
-      [
-       -79.801366,
-       43.754386
-      ],
-      [
-       -79.792359,
-       43.762427
-      ],
-      [
-       -79.789523,
-       43.76034
-      ]
-     ],
-     [
-      [
-       -79.800887,
-       43.754057
-      ],
-      [
-       -79.800913,
-       43.754039
-      ],
-      [
-       -79.801432,
-       43.754387
-      ],
-      [
-       -79.797178,
-       43.758125
-      ],
-      [
-       -79.794808,
-       43.7603
-      ],
-      [
-       -79.792424,
-       43.762485
-      ],
-      [
-       -79.781829,
-       43.772195
-      ],
-      [
-       -79.779379,
-       43.77436
-      ],
-      [
-       -79.778119,
-       43.775575
-      ],
-      [
-       -79.777565,
-       43.776293
-      ],
-      [
-       -79.776956,
-       43.777135
-      ],
-      [
-       -79.775591,
-       43.778987
-      ],
-      [
-       -79.775254,
-       43.779374
-      ],
-      [
-       -79.773914,
-       43.780589
-      ],
-      [
-       -79.771878,
-       43.782396
-      ],
-      [
-       -79.76019,
-       43.791225
-      ],
-      [
-       -79.759617,
-       43.7916
-      ],
-      [
-       -79.759087,
-       43.791813
-      ],
-      [
-       -79.758581,
-       43.792103
-      ],
-      [
-       -79.758139,
-       43.792479
-      ],
-      [
-       -79.757081,
-       43.793411
-      ]
-     ],
-     [
-      [
-       -79.753391,
-       43.786207
-      ],
-      [
-       -79.760114,
-       43.791129
-      ],
-      [
-       -79.759713,
-       43.791448
-      ],
-      [
-       -79.759578,
-       43.791561
-      ],
-      [
-       -79.759114,
-       43.791775
-      ],
-      [
-       -79.758649,
-       43.792008
-      ],
-      [
-       -79.758435,
-       43.792149
-      ],
-      [
-       -79.757029,
-       43.793382
-      ]
-     ],
-     [
-      [
-       -79.598796,
-       43.593985
-      ],
-      [
-       -79.5988,
-       43.593811
-      ],
-      [
-       -79.597015,
-       43.592602
-      ],
-      [
-       -79.594179,
-       43.590645
-      ],
-      [
-       -79.591722,
-       43.588908
-      ]
-     ],
-     [
-      [
-       -79.591722,
-       43.588908
-      ],
-      [
-       -79.593663,
-       43.587225
-      ],
-      [
-       -79.59409,
-       43.586755
-      ],
-      [
-       -79.594462,
-       43.586069
-      ],
-      [
-       -79.59508,
-       43.585126
-      ],
-      [
-       -79.595233,
-       43.584891
-      ],
-      [
-       -79.595507,
-       43.584592
-      ],
-      [
-       -79.596083,
-       43.584102
-      ],
-      [
-       -79.599389,
-       43.581248
-      ],
-      [
-       -79.603542,
-       43.57767
-      ],
-      [
-       -79.606,
-       43.575453
-      ],
-      [
-       -79.606758,
-       43.57475
-      ],
-      [
-       -79.607213,
-       43.574345
-      ],
-      [
-       -79.60719,
-       43.574107
-      ]
-     ],
-     [
-      [
-       -79.65143,
-       43.535304
-      ],
-      [
-       -79.657058,
-       43.530531
-      ],
-      [
-       -79.628519,
-       43.509975
-      ],
-      [
-       -79.628315,
-       43.5098
-      ],
-      [
-       -79.625543,
-       43.507715
-      ],
-      [
-       -79.62426,
-       43.506749
-      ],
-      [
-       -79.622661,
-       43.505282
-      ],
-      [
-       -79.621143,
-       43.504184
-      ],
-      [
-       -79.621084,
-       43.50414
-      ],
-      [
-       -79.621056,
-       43.504075
-      ],
-      [
-       -79.621059,
-       43.503945
-      ],
-      [
-       -79.621091,
-       43.503859
-      ],
-      [
-       -79.621242,
-       43.503731
-      ],
-      [
-       -79.622303,
-       43.502751
-      ],
-      [
-       -79.622335,
-       43.502644
-      ],
-      [
-       -79.622337,
-       43.502557
-      ],
-      [
-       -79.622279,
-       43.502492
-      ],
-      [
-       -79.621609,
-       43.501922
-      ],
-      [
-       -79.620997,
-       43.501461
-      ],
-      [
-       -79.620938,
-       43.501417
-      ],
-      [
-       -79.62088,
-       43.501351
-      ],
-      [
-       -79.620853,
-       43.501286
-      ],
-      [
-       -79.620854,
-       43.501178
-      ],
-      [
-       -79.62182,
-       43.50052
-      ],
-      [
-       -79.62188,
-       43.500478
-      ],
-      [
-       -79.621911,
-       43.500413
-      ],
-      [
-       -79.621912,
-       43.500349
-      ],
-      [
-       -79.621884,
-       43.500283
-      ],
-      [
-       -79.621826,
-       43.500197
-      ],
-      [
-       -79.620893,
-       43.499516
-      ],
-      [
-       -79.619637,
-       43.498615
-      ],
-      [
-       -79.61958,
-       43.498527
-      ],
-      [
-       -79.619583,
-       43.498441
-      ],
-      [
-       -79.619613,
-       43.498377
-      ],
-      [
-       -79.620461,
-       43.497588
-      ]
-     ],
-     [
-      [
-       -79.722284,
-       43.763389
-      ],
-      [
-       -79.722587,
-       43.763132
-      ],
-      [
-       -79.724836,
-       43.761149
-      ],
-      [
-       -79.725868,
-       43.76021
-      ],
-      [
-       -79.726749,
-       43.759443
-      ],
-      [
-       -79.727356,
-       43.758909
-      ],
-      [
-       -79.727811,
-       43.758504
-      ],
-      [
-       -79.728937,
-       43.75748
-      ],
-      [
-       -79.729633,
-       43.756904
-      ],
-      [
-       -79.730391,
-       43.756308
-      ],
-      [
-       -79.730846,
-       43.755946
-      ],
-      [
-       -79.733153,
-       43.753898
-      ],
-      [
-       -79.73373,
-       43.753407
-      ],
-      [
-       -79.737799,
-       43.749845
-      ],
-      [
-       -79.739893,
-       43.747989
-      ],
-      [
-       -79.741562,
-       43.746539
-      ],
-      [
-       -79.743808,
-       43.744576
-      ],
-      [
-       -79.744112,
-       43.744299
-      ]
-     ],
-     [
-      [
-       -79.704236,
-       43.574708
-      ],
-      [
-       -79.70257,
-       43.573435
-      ],
-      [
-       -79.703142,
-       43.573075
-      ],
-      [
-       -79.703383,
-       43.572948
-      ],
-      [
-       -79.704876,
-       43.572598
-      ],
-      [
-       -79.706025,
-       43.571618
-      ],
-      [
-       -79.706878,
-       43.570655
-      ],
-      [
-       -79.707248,
-       43.570033
-      ],
-      [
-       -79.70744,
-       43.569387
-      ],
-      [
-       -79.707371,
-       43.568415
-      ],
-      [
-       -79.707145,
-       43.566511
-      ],
-      [
-       -79.707339,
-       43.565779
-      ],
-      [
-       -79.707922,
-       43.564878
-      ],
-      [
-       -79.708933,
-       43.56342
-      ],
-      [
-       -79.709393,
-       43.562756
-      ],
-      [
-       -79.710808,
-       43.561887
-      ]
-     ],
-     [
-      [
-       -79.717889,
-       43.592141
-      ],
-      [
-       -79.722461,
-       43.588154
-      ],
-      [
-       -79.7241,
-       43.589359
-      ],
-      [
-       -79.704236,
-       43.574708
-      ]
-     ],
-     [
-      [
-       -79.692577,
-       43.789617
-      ],
-      [
-       -79.689878,
-       43.791962
-      ],
-      [
-       -79.684121,
-       43.796927
-      ],
-      [
-       -79.681565,
-       43.79912
-      ],
-      [
-       -79.681314,
-       43.799346
-      ],
-      [
-       -79.680796,
-       43.799798
-      ],
-      [
-       -79.680368,
-       43.800123
-      ],
-      [
-       -79.679976,
-       43.800373
-      ],
-      [
-       -79.679409,
-       43.800671
-      ],
-      [
-       -79.679001,
-       43.80087
-      ],
-      [
-       -79.678629,
-       43.801056
-      ],
-      [
-       -79.678292,
-       43.801217
-      ],
-      [
-       -79.677991,
-       43.801353
-      ],
-      [
-       -79.677619,
-       43.801514
-      ],
-      [
-       -79.677318,
-       43.801625
-      ],
-      [
-       -79.676929,
-       43.80176
-      ],
-      [
-       -79.67647,
-       43.801907
-      ],
-      [
-       -79.676135,
-       43.801993
-      ],
-      [
-       -79.675782,
-       43.802052
-      ],
-      [
-       -79.675167,
-       43.802134
-      ],
-      [
-       -79.674446,
-       43.802202
-      ],
-      [
-       -79.672198,
-       43.802353
-      ],
-      [
-       -79.671265,
-       43.80247
-      ],
-      [
-       -79.670772,
-       43.802578
-      ],
-      [
-       -79.670242,
-       43.802712
-      ],
-      [
-       -79.669448,
-       43.802957
-      ]
-     ],
-     [
-      [
-       -79.86577,
-       43.728616
-      ],
-      [
-       -79.862282,
-       43.731843
-      ]
-     ],
-     [
-      [
-       -79.819872,
-       43.656389
-      ],
-      [
-       -79.817892,
-       43.657941
-      ]
-     ],
-     [
-      [
-       -79.861138,
-       43.690146
-      ],
-      [
-       -79.856436,
-       43.686692
-      ]
-     ],
-     [
-      [
-       -79.85333,
-       43.684396
-      ],
-      [
-       -79.856436,
-       43.686692
-      ]
-     ],
-     [
-      [
-       -79.873667,
-       43.670676
-      ],
-      [
-       -79.864586,
-       43.678134
-      ]
-     ],
-     [
-      [
-       -79.827616,
-       43.648008
-      ],
-      [
-       -79.822487,
-       43.65261
-      ],
-      [
-       -79.821975,
-       43.654419
-      ],
-      [
-       -79.819872,
-       43.656389
-      ]
-     ],
-     [
-      [
-       -79.85031,
-       43.657967
-      ],
-      [
-       -79.84924,
-       43.657233
-      ],
-      [
-       -79.847122,
-       43.654759
-      ],
-      [
-       -79.845979,
-       43.654118
-      ],
-      [
-       -79.844613,
-       43.653811
-      ],
-      [
-       -79.843857,
-       43.653321
-      ]
-     ],
-     [
-      [
-       -79.867265,
-       43.694673
-      ],
-      [
-       -79.861138,
-       43.690146
-      ]
-     ],
-     [
-      [
-       -79.864586,
-       43.678134
-      ],
-      [
-       -79.856524,
-       43.686609
-      ]
-     ],
-     [
-      [
-       -79.882049,
-       43.679795
-      ],
-      [
-       -79.87551,
-       43.674866
-      ]
-     ],
-     [
-      [
-       -79.875496,
-       43.674824
-      ],
-      [
-       -79.87484,
-       43.673623
-      ],
-      [
-       -79.873667,
-       43.670676
-      ]
-     ],
-     [
-      [
-       -79.831913,
-       43.651271
-      ],
-      [
-       -79.830614,
-       43.647515
-      ],
-      [
-       -79.82763,
-       43.648019
-      ]
-     ],
-     [
-      [
-       -79.843829,
-       43.65331
-      ],
-      [
-       -79.840399,
-       43.656746
-      ]
-     ],
-     [
-      [
-       -79.833152,
-       43.637844
-      ],
-      [
-       -79.826957,
-       43.6365
-      ]
-     ],
-     [
-      [
-       -79.826957,
-       43.6365
-      ],
-      [
-       -79.822921,
-       43.636896
-      ],
-      [
-       -79.821041,
-       43.637761
-      ]
-     ],
-     [
-      [
-       -79.821041,
-       43.637761
-      ],
-      [
-       -79.820648,
-       43.638049
-      ],
-      [
-       -79.82046,
-       43.638141
-      ],
-      [
-       -79.819907,
-       43.638551
-      ],
-      [
-       -79.817019,
-       43.640375
-      ]
-     ],
-     [
-      [
-       -79.806182,
-       43.622959
-      ],
-      [
-       -79.800123,
-       43.627872
-      ]
-     ],
-     [
-      [
-       -79.800123,
-       43.627872
-      ],
-      [
-       -79.794939,
-       43.624038
+       -79.788465,
+       43.618208
       ]
      ]
     ]
    },
-   "geomType": "linear",
-   "geomMethod": "DC capital map mains named like the EA",
-   "geomConfidence": "medium",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low",
    "related": {
-    "dcProjects": [
-     {
-      "proj": "31-1999",
-      "what": "New Elevated Tank",
-      "facility": "Heritage Road",
-      "system": "water",
-      "method": "name"
-     },
-     {
-      "proj": "26-2564",
-      "what": "Treatment Expansion",
-      "facility": "Clarkson Water Resource Recovery Facility",
-      "system": "wastewater",
-      "method": "location"
-     }
-    ],
+    "dcProjects": [],
     "capitalProjects": [],
     "facilities": [
-     "Clarkson",
-     "North Brampton",
-     "Silverthorn",
-     "West Brampton",
-     "Dixie Road",
-     "Mayfield",
+     "Meadowvale North",
+     "Mullet Creek",
      "Heritage Road"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "highway-50-and-mayfield-road",
@@ -8694,7 +7231,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "Peel Region has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study for the new offline storage facility required to alleviate capacity constraints at the Lakelands Wastewater Pumping Station (WW",
+   "purpose": "Peel Region has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study for the new offline storage facility required to alleviate capacity constraints at the Lakelands Wastewater Pumping Station…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/lakelands-wastewater-pumping-station-new-offline-storage-facility",
     "report": {
@@ -8777,7 +7314,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) for the improvements to Mayfield Road from Airport Road to Coleraine Drive, in the Region of Peel at the municipal boundary to the City of B",
+   "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) for the improvements to Mayfield Road from Airport Road to Coleraine Drive, in the Region of Peel at the municipal boundary to the City of…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-airport-road-coleraine-drive",
     "report": {
@@ -8836,7 +7373,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Region of Peel has completed the Schedule “C” Environmental Assessment (EA) to examine the need and feasibility for widening, intersection improvements, changes to road and intersection geometrics and pavement rehabi",
+   "purpose": "The Region of Peel has completed the Schedule “C” Environmental Assessment (EA) to examine the need and feasibility for widening, intersection improvements, changes to road and intersection geometrics and pavement…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-chinguacousy-road-heart-lake-road",
     "report": {
@@ -9000,7 +7537,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Regional Municipality of Peel has completed the Schedule \"C\" Environmental Assessment (EA) to examine roadway widening and improvement options on Mayfield Road (Regional Road 14) between Heart Lake Road and Airport R",
+   "purpose": "The Regional Municipality of Peel has completed the Schedule \"C\" Environmental Assessment (EA) to examine roadway widening and improvement options on Mayfield Road (Regional Road 14) between Heart Lake Road and Airport…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-heart-lake-road-airport-road",
     "report": {
@@ -9095,7 +7632,7 @@
    ],
    "nextStep": null,
    "completedYear": 2023,
-   "purpose": "December 5, 2023 – Peel Region has completed a Schedule B Municipal Class Environmental Assessment (MCEA) study to upgrade and expand the capacity of the McVean Sanitary Pumping Station (SPS), in order to service planned",
+   "purpose": "December 5, 2023 – Peel Region has completed a Schedule B Municipal Class Environmental Assessment (MCEA) study to upgrade and expand the capacity of the McVean Sanitary Pumping Station (SPS), in order to service…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mcvean-sanitary-pumping-station-upgrades",
     "report": {
@@ -9203,7 +7740,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) on Mississauga Road from Queen Street West to Bovaird Drive West to examine the need, justification and feasibility for roadway widening and",
+   "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) on Mississauga Road from Queen Street West to Bovaird Drive West to examine the need, justification and feasibility for roadway widening…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mississauga-road-financial-drive-bovaird-drive-west",
     "report": {
@@ -9412,7 +7949,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Regional Municipality of Peel has completed the Schedule “C” Class Environmental Assessment (EA) study to evaluate the need and feasibility of a widening and improvements on Steeles Avenue to address short and long t",
+   "purpose": "The Regional Municipality of Peel has completed the Schedule “C” Class Environmental Assessment (EA) study to evaluate the need and feasibility of a widening and improvements on Steeles Avenue to address short and long…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/steeles-avenue-chinguacousy-roadmavis-road-winston-churchill-boulevard",
     "report": {
@@ -9447,9 +7984,7 @@
    "id": "the-gore-road-queen-street-to-castlemore-road",
    "name": "The Gore Road – Queen Street to Castlemore Road",
    "municipality": "Brampton",
-   "flags": [
-    "geometry approximate"
-   ],
+   "flags": [],
    "schedule": "C",
    "status": "complete",
    "milestones": [],
@@ -9475,14 +8010,52 @@
    "system": "roads",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "LineString",
     "coordinates": [
-     -79.7624,
-     43.7315
+     [
+      -79.689934,
+      43.791894
+     ],
+     [
+      -79.686145,
+      43.788801
+     ],
+     [
+      -79.681376,
+      43.785066
+     ],
+     [
+      -79.676959,
+      43.781956
+     ],
+     [
+      -79.672973,
+      43.779116
+     ],
+     [
+      -79.669805,
+      43.776618
+     ],
+     [
+      -79.664324,
+      43.77221
+     ],
+     [
+      -79.660051,
+      43.769278
+     ],
+     [
+      -79.656812,
+      43.766824
+     ],
+     [
+      -79.655545,
+      43.765825
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Brampton",
+   "geomType": "road",
+   "geomMethod": "traced from the project page image (2 control points)",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
@@ -9492,15 +8065,19 @@
      "Castlemore"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "winston-churchill-boulevard-from-highway-401-to-embleton-road",
    "name": "Winston Churchill Boulevard – from Highway 401 to Embleton Road",
    "municipality": "Brampton",
-   "flags": [
-    "geometry approximate"
-   ],
+   "flags": [],
    "schedule": "C",
    "status": "consultation",
    "milestones": [
@@ -9668,21 +8245,47 @@
    "system": "roads",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "Polygon",
     "coordinates": [
-     -79.7624,
-     43.7315
+     [
+      [
+       -79.806562,
+       43.6449
+      ],
+      [
+       -79.803562,
+       43.6449
+      ],
+      [
+       -79.802985,
+       43.604697
+      ],
+      [
+       -79.805985,
+       43.604697
+      ],
+      [
+       -79.806562,
+       43.6449
+      ]
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Brampton",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "airport-road-1km-north-of-mayfield-road-to-600m-north-of-king-street",
@@ -10606,7 +9209,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "Peel region has completed a Municipal Class Environmental Assessment Study to identify the upgrades/modifications to the existing Palgrave Well #4 Water Treatment Plant required to accommodate the proposed increase in wa",
+   "purpose": "Peel region has completed a Municipal Class Environmental Assessment Study to identify the upgrades/modifications to the existing Palgrave Well #4 Water Treatment Plant required to accommodate the proposed increase in…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/palgrave-well-4-supply-capacity-increase",
     "report": {
@@ -10725,7 +9328,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "To address the need to increase the water storage capacity, Peel has completed a Schedule ‘C’ Municipal Class Environmental Assessment (Class EA) for the planned reservoir expansion at the Arthur P.",
+   "purpose": "To address the need to increase the water storage capacity, Peel has completed a Schedule ‘C’ Municipal Class Environmental Assessment (Class EA) for the planned reservoir expansion at the Arthur P. Kennedy WTP.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/arthur-p-kennedy-water-treatment-plant-reservoir-expansion",
     "report": {
@@ -10740,38 +9343,78 @@
    "system": "water",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "Polygon",
     "coordinates": [
-     -79.558143,
-     43.570893
+     [
+      [
+       -79.56229,
+       43.56972
+      ],
+      [
+       -79.561075,
+       43.570806
+      ],
+      [
+       -79.558038,
+       43.572645
+      ],
+      [
+       -79.558038,
+       43.5728
+      ],
+      [
+       -79.557825,
+       43.572756
+      ],
+      [
+       -79.557582,
+       43.572312
+      ],
+      [
+       -79.556823,
+       43.571426
+      ],
+      [
+       -79.556428,
+       43.570651
+      ],
+      [
+       -79.556671,
+       43.569764
+      ],
+      [
+       -79.55819,
+       43.568878
+      ],
+      [
+       -79.560772,
+       43.568546
+      ],
+      [
+       -79.56229,
+       43.56972
+      ]
+     ]
     ]
    },
-   "geomType": "facility",
-   "geomMethod": "facility point: A.P. Kennedy",
-   "geomConfidence": "high",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low",
    "related": {
-    "dcProjects": [
-     {
-      "proj": "29-1925",
-      "what": "Treatment Expansion",
-      "facility": "Arthur P. Kennedy Water Treatment Plant",
-      "system": "water",
-      "method": "name"
-     },
-     {
-      "proj": "30-1997",
-      "what": "New Intake",
-      "facility": "Arthur P. Kennedy Water Treatment Plant",
-      "system": "water",
-      "method": "name"
-     }
-    ],
+    "dcProjects": [],
     "capitalProjects": [],
     "facilities": [
-     "A.P. Kennedy"
+     "A.P. Kennedy",
+     "Beach Street"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "beach-street-sewage-pumping-station-diversion",
@@ -10790,7 +9433,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "The Region of Peel has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study to review existing sanitary sewer infrastructure and evaluate options to divert flow from the Beach Street Sewage Pumpin",
+   "purpose": "The Region of Peel has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study to review existing sanitary sewer infrastructure and evaluate options to divert flow from the Beach Street Sewage…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/beach-street-sewage-pumping-station-diversion",
     "report": {
@@ -10948,12 +9591,12 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     -79.578936,
-     43.578749
+     -79.620094,
+     43.60938
     ]
    },
    "geomType": "approx",
-   "geomMethod": "approximate point: Cawthra Road, Lakeview",
+   "geomMethod": "approximate point: Cawthra Road, Rathwood",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
@@ -10985,7 +9628,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "Peel Region has identified the need for a trunk sewer along Burnhamthorpe Road from Cawthra Road to the existing East Trunk Sanitary sewer, adjacent to Little Etobicoke Creek to improve local sanitary servicing along Wil",
+   "purpose": "Peel Region has identified the need for a trunk sewer along Burnhamthorpe Road from Cawthra Road to the existing East Trunk Sanitary sewer, adjacent to Little Etobicoke Creek to improve local sanitary servicing along…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/cawthra-road-phase-3-sanitary-trunk-sewer",
     "report": null,
@@ -10997,1365 +9640,89 @@
    "system": "wastewater",
    "decision": null,
    "geometry": {
-    "type": "MultiLineString",
+    "type": "MultiPolygon",
     "coordinates": [
      [
       [
-       -79.894107,
-       43.714461
-      ],
-      [
-       -79.890874,
-       43.712097
-      ],
-      [
-       -79.888098,
-       43.7141
+       [
+        -79.61715,
+        43.607858
+       ],
+       [
+        -79.615708,
+        43.607803
+       ],
+       [
+        -79.616138,
+        43.601659
+       ],
+       [
+        -79.617631,
+        43.601622
+       ],
+       [
+        -79.61715,
+        43.607858
+       ]
       ]
      ],
      [
       [
-       -79.872838,
-       43.733865
-      ],
-      [
-       -79.868262,
-       43.737988
-      ],
-      [
-       -79.867959,
-       43.738288
-      ],
-      [
-       -79.867745,
-       43.738545
-      ],
-      [
-       -79.867347,
-       43.739124
-      ],
-      [
-       -79.867134,
-       43.73936
-      ],
-      [
-       -79.862165,
-       43.743803
-      ]
-     ],
-     [
-      [
-       -79.862165,
-       43.743803
-      ],
-      [
-       -79.861377,
-       43.744486
-      ],
-      [
-       -79.860346,
-       43.74547
-      ],
-      [
-       -79.857556,
-       43.748012
-      ],
-      [
-       -79.856918,
-       43.748632
-      ],
-      [
-       -79.856735,
-       43.74889
-      ],
-      [
-       -79.855127,
-       43.750364
-      ],
-      [
-       -79.851578,
-       43.753633
-      ]
-     ],
-     [
-      [
-       -79.851578,
-       43.753633
-      ],
-      [
-       -79.851276,
-       43.753889
-      ],
-      [
-       -79.848092,
-       43.756751
-      ],
-      [
-       -79.847455,
-       43.757349
-      ],
-      [
-       -79.84718,
-       43.757693
-      ],
-      [
-       -79.84672,
-       43.758336
-      ],
-      [
-       -79.846174,
-       43.758891
-      ],
-      [
-       -79.843869,
-       43.760985
-      ],
-      [
-       -79.8412,
-       43.763399
-      ]
-     ],
-     [
-      [
-       -79.862165,
-       43.743803
-      ],
-      [
-       -79.847185,
-       43.732595
-      ]
-     ],
-     [
-      [
-       -79.593533,
-       43.600526
-      ],
-      [
-       -79.583876,
-       43.609283
-      ]
-     ],
-     [
-      [
-       -79.742334,
-       43.725419
-      ],
-      [
-       -79.74288,
-       43.724972
-      ],
-      [
-       -79.74467,
-       43.723393
-      ],
-      [
-       -79.745427,
-       43.722753
-      ],
-      [
-       -79.74571,
-       43.722065
-      ],
-      [
-       -79.746907,
-       43.720329
-      ],
-      [
-       -79.747457,
-       43.719709
-      ],
-      [
-       -79.748156,
-       43.719046
-      ],
-      [
-       -79.748912,
-       43.718472
-      ],
-      [
-       -79.750484,
-       43.717323
-      ],
-      [
-       -79.75106,
-       43.716875
-      ],
-      [
-       -79.751452,
-       43.716599
-      ],
-      [
-       -79.751845,
-       43.716301
-      ],
-      [
-       -79.752269,
-       43.716003
-      ],
-      [
-       -79.752662,
-       43.715726
-      ],
-      [
-       -79.752994,
-       43.715471
-      ],
-      [
-       -79.753267,
-       43.715258
-      ],
-      [
-       -79.753509,
-       43.715088
-      ],
-      [
-       -79.75375,
-       43.714939
-      ],
-      [
-       -79.754022,
-       43.714791
-      ],
-      [
-       -79.754322,
-       43.714643
-      ],
-      [
-       -79.754653,
-       43.714495
-      ],
-      [
-       -79.754922,
-       43.714412
-      ],
-      [
-       -79.755221,
-       43.714328
-      ],
-      [
-       -79.755611,
-       43.714225
-      ],
-      [
-       -79.756,
-       43.714164
-      ],
-      [
-       -79.756417,
-       43.714126
-      ],
-      [
-       -79.757847,
-       43.714077
-      ],
-      [
-       -79.758622,
-       43.714085
-      ],
-      [
-       -79.75889,
-       43.714066
-      ],
-      [
-       -79.759099,
-       43.714025
-      ],
-      [
-       -79.759458,
-       43.713964
-      ],
-      [
-       -79.759757,
-       43.713881
-      ],
-      [
-       -79.760027,
-       43.713798
-      ],
-      [
-       -79.760387,
-       43.71365
-      ],
-      [
-       -79.76072,
-       43.71346
-      ],
-      [
-       -79.76093,
-       43.713354
-      ],
-      [
-       -79.761112,
-       43.713205
-      ],
-      [
-       -79.763873,
-       43.710686
-      ],
-      [
-       -79.766634,
-       43.708167
-      ],
-      [
-       -79.769394,
-       43.705669
-      ],
-      [
-       -79.771731,
-       43.703535
-      ],
-      [
-       -79.772004,
-       43.703257
-      ],
-      [
-       -79.772127,
-       43.703107
-      ],
-      [
-       -79.772493,
-       43.702679
-      ],
-      [
-       -79.772888,
-       43.702251
-      ],
-      [
-       -79.773101,
-       43.702038
-      ],
-      [
-       -79.773617,
-       43.701525
-      ],
-      [
-       -79.774437,
-       43.700777
-      ],
-      [
-       -79.774649,
-       43.700607
-      ],
-      [
-       -79.774861,
-       43.700437
-      ],
-      [
-       -79.775766,
-       43.699798
-      ],
-      [
-       -79.77628,
-       43.699458
-      ],
-      [
-       -79.776793,
-       43.699118
-      ],
-      [
-       -79.777248,
-       43.698734
-      ],
-      [
-       -79.778733,
-       43.697368
-      ],
-      [
-       -79.77925,
-       43.696877
-      ],
-      [
-       -79.779462,
-       43.696684
-      ],
-      [
-       -79.779707,
-       43.696384
-      ],
-      [
-       -79.779891,
-       43.696106
-      ],
-      [
-       -79.779923,
-       43.695955
-      ],
-      [
-       -79.780109,
-       43.695611
-      ],
-      [
-       -79.780295,
-       43.695267
-      ],
-      [
-       -79.780446,
-       43.695118
-      ],
-      [
-       -79.781146,
-       43.694391
-      ],
-      [
-       -79.781662,
-       43.693878
-      ],
-      [
-       -79.782088,
-       43.693386
-      ],
-      [
-       -79.782303,
-       43.693151
-      ],
-      [
-       -79.783216,
-       43.692102
-      ],
-      [
-       -79.783643,
-       43.69161
-      ],
-      [
-       -79.783917,
-       43.69131
-      ],
-      [
-       -79.784314,
-       43.690839
-      ],
-      [
-       -79.784739,
-       43.690412
-      ],
-      [
-       -79.787163,
-       43.688277
-      ],
-      [
-       -79.787741,
-       43.687722
-      ],
-      [
-       -79.787952,
-       43.68753
-      ],
-      [
-       -79.788106,
-       43.687294
-      ],
-      [
-       -79.788229,
-       43.68708
-      ],
-      [
-       -79.788351,
-       43.68693
-      ],
-      [
-       -79.788597,
-       43.686565
-      ],
-      [
-       -79.788751,
-       43.686329
-      ],
-      [
-       -79.788813,
-       43.686222
-      ],
-      [
-       -79.788904,
-       43.686115
-      ],
-      [
-       -79.790873,
-       43.684364
-      ],
-      [
-       -79.79163,
-       43.683702
-      ],
-      [
-       -79.791992,
-       43.683469
-      ],
-      [
-       -79.792294,
-       43.683299
-      ],
-      [
-       -79.792744,
-       43.683132
-      ],
-      [
-       -79.793222,
-       43.683006
-      ],
-      [
-       -79.7937,
-       43.682925
-      ],
-      [
-       -79.794177,
-       43.682888
-      ],
-      [
-       -79.794623,
-       43.682914
-      ],
-      [
-       -79.79489,
-       43.682938
-      ],
-      [
-       -79.795662,
-       43.683032
-      ],
-      [
-       -79.79673,
-       43.683195
-      ],
-      [
-       -79.796908,
-       43.683219
-      ],
-      [
-       -79.797087,
-       43.683242
-      ],
-      [
-       -79.797771,
-       43.683227
-      ],
-      [
-       -79.79801,
-       43.683208
-      ],
-      [
-       -79.798248,
-       43.68319
-      ],
-      [
-       -79.799175,
-       43.683005
-      ],
-      [
-       -79.80043,
-       43.682737
-      ],
-      [
-       -79.800669,
-       43.682675
-      ],
-      [
-       -79.800909,
-       43.682591
-      ],
-      [
-       -79.801209,
-       43.682464
-      ],
-      [
-       -79.80145,
-       43.682359
-      ],
-      [
-       -79.801571,
-       43.682274
-      ],
-      [
-       -79.801782,
-       43.682146
-      ],
-      [
-       -79.802234,
-       43.681827
-      ],
-      [
-       -79.804377,
-       43.680295
-      ],
-      [
-       -79.804559,
-       43.680124
-      ],
-      [
-       -79.804712,
-       43.679952
-      ],
-      [
-       -79.805503,
-       43.679054
-      ],
-      [
-       -79.805838,
-       43.678668
-      ],
-      [
-       -79.806051,
-       43.678432
-      ],
-      [
-       -79.806326,
-       43.678134
-      ],
-      [
-       -79.806478,
-       43.677897
-      ],
-      [
-       -79.806602,
-       43.677704
-      ],
-      [
-       -79.806634,
-       43.677597
-      ],
-      [
-       -79.806697,
-       43.677425
-      ],
-      [
-       -79.806759,
-       43.677252
-      ],
-      [
-       -79.806791,
-       43.677123
-      ],
-      [
-       -79.806825,
-       43.676972
-      ],
-      [
-       -79.806828,
-       43.676799
-      ],
-      [
-       -79.806801,
-       43.676626
-      ],
-      [
-       -79.806748,
-       43.676302
-      ],
-      [
-       -79.806693,
-       43.676085
-      ],
-      [
-       -79.806154,
-       43.674719
-      ],
-      [
-       -79.806041,
-       43.674415
-      ],
-      [
-       -79.805561,
-       43.673136
-      ],
-      [
-       -79.8052,
-       43.671836
-      ],
-      [
-       -79.805061,
-       43.671359
-      ],
-      [
-       -79.805005,
-       43.671143
-      ],
-      [
-       -79.80498,
-       43.670948
-      ],
-      [
-       -79.804984,
-       43.670733
-      ],
-      [
-       -79.805017,
-       43.670625
-      ],
-      [
-       -79.805018,
-       43.670517
-      ],
-      [
-       -79.80505,
-       43.670387
-      ],
-      [
-       -79.805083,
-       43.670258
-      ],
-      [
-       -79.805146,
-       43.670065
-      ],
-      [
-       -79.805238,
-       43.669892
-      ],
-      [
-       -79.80527,
-       43.669828
-      ],
-      [
-       -79.805301,
-       43.669742
-      ],
-      [
-       -79.805423,
-       43.669593
-      ],
-      [
-       -79.805484,
-       43.669506
-      ],
-      [
-       -79.805575,
-       43.669399
-      ],
-      [
-       -79.805728,
-       43.669228
-      ],
-      [
-       -79.806123,
-       43.668865
-      ],
-      [
-       -79.806365,
-       43.668608
-      ],
-      [
-       -79.807245,
-       43.667754
-      ],
-      [
-       -79.807853,
-       43.66709
-      ],
-      [
-       -79.808644,
-       43.666256
-      ],
-      [
-       -79.808856,
-       43.665999
-      ],
-      [
-       -79.809069,
-       43.665807
-      ],
-      [
-       -79.809403,
-       43.665465
-      ],
-      [
-       -79.811826,
-       43.663265
-      ],
-      [
-       -79.812524,
-       43.662625
-      ],
-      [
-       -79.81322,
-       43.662005
-      ],
-      [
-       -79.813796,
-       43.661472
-      ],
-      [
-       -79.814069,
-       43.661215
-      ],
-      [
-       -79.815401,
-       43.660019
-      ],
-      [
-       -79.815946,
-       43.659528
-      ],
-      [
-       -79.816461,
-       43.659059
-      ],
-      [
-       -79.817825,
-       43.657841
-      ],
-      [
-       -79.817822,
-       43.65795
-      ],
-      [
-       -79.819435,
-       43.659133
-      ],
-      [
-       -79.819525,
-       43.659134
-      ],
-      [
-       -79.821068,
-       43.657745
-      ],
-      [
-       -79.821158,
-       43.657746
-      ],
-      [
-       -79.822673,
-       43.656379
-      ],
-      [
-       -79.822761,
-       43.656381
-      ],
-      [
-       -79.822878,
-       43.656446
-      ],
-      [
-       -79.822908,
-       43.656512
-      ],
-      [
-       -79.822847,
-       43.656576
-      ]
-     ],
-     [
-      [
-       -79.81037,
-       43.664611
-      ],
-      [
-       -79.811849,
-       43.663275
-      ],
-      [
-       -79.81255,
-       43.662642
-      ],
-      [
-       -79.813251,
-       43.662001
-      ],
-      [
-       -79.813832,
-       43.661483
-      ],
-      [
-       -79.814106,
-       43.661229
-      ],
-      [
-       -79.815431,
-       43.660032
-      ],
-      [
-       -79.815957,
-       43.659545
-      ],
-      [
-       -79.816494,
-       43.659059
-      ],
-      [
-       -79.817852,
-       43.657846
-      ],
-      [
-       -79.81786,
-       43.657956
-      ],
-      [
-       -79.819472,
-       43.659144
-      ],
-      [
-       -79.819558,
-       43.659145
-      ],
-      [
-       -79.821092,
-       43.657755
-      ],
-      [
-       -79.821178,
-       43.657748
-      ],
-      [
-       -79.82269,
-       43.656388
-      ],
-      [
-       -79.822776,
-       43.656382
-      ],
-      [
-       -79.822914,
-       43.656461
-      ],
-      [
-       -79.822924,
-       43.656524
-      ],
-      [
-       -79.822869,
-       43.65657
-      ]
-     ],
-     [
-      [
-       -79.603424,
-       43.607386
-      ],
-      [
-       -79.600076,
-       43.60506
-      ],
-      [
-       -79.597904,
-       43.603557
-      ],
-      [
-       -79.595388,
-       43.601803
-      ],
-      [
-       -79.595221,
-       43.601686
-      ],
-      [
-       -79.593798,
-       43.600705
-      ],
-      [
-       -79.593507,
-       43.600503
-      ]
-     ],
-     [
-      [
-       -79.603424,
-       43.607386
-      ],
-      [
-       -79.604654,
-       43.606059
-      ],
-      [
-       -79.605104,
-       43.605281
-      ],
-      [
-       -79.606116,
-       43.60556
-      ]
-     ],
-     [
-      [
-       -79.807737,
-       43.773773
-      ],
-      [
-       -79.80664,
-       43.774724
-      ],
-      [
-       -79.805708,
-       43.775324
-      ],
-      [
-       -79.804871,
-       43.775753
-      ],
-      [
-       -79.804012,
-       43.775973
-      ],
-      [
-       -79.803075,
-       43.776135
-      ],
-      [
-       -79.802112,
-       43.776334
-      ],
-      [
-       -79.801201,
-       43.776505
-      ],
-      [
-       -79.800355,
-       43.776716
-      ],
-      [
-       -79.799667,
-       43.776918
-      ],
-      [
-       -79.798965,
-       43.777178
-      ],
-      [
-       -79.797483,
-       43.778315
-      ]
-     ],
-     [
-      [
-       -79.792463,
-       43.762505
-      ],
-      [
-       -79.793382,
-       43.763191
-      ],
-      [
-       -79.796764,
-       43.765675
-      ],
-      [
-       -79.800286,
-       43.768332
-      ]
-     ],
-     [
-      [
-       -79.790082,
-       43.778246
-      ],
-      [
-       -79.784745,
-       43.774312
-      ]
-     ],
-     [
-      [
-       -79.800299,
-       43.768332
-      ],
-      [
-       -79.790082,
-       43.778246
-      ]
-     ],
-     [
-      [
-       -79.598796,
-       43.593985
-      ],
-      [
-       -79.5988,
-       43.593811
-      ],
-      [
-       -79.597015,
-       43.592602
-      ],
-      [
-       -79.594179,
-       43.590645
-      ],
-      [
-       -79.591722,
-       43.588908
-      ]
-     ],
-     [
-      [
-       -79.591722,
-       43.588908
-      ],
-      [
-       -79.593663,
-       43.587225
-      ],
-      [
-       -79.59409,
-       43.586755
-      ],
-      [
-       -79.594462,
-       43.586069
-      ],
-      [
-       -79.59508,
-       43.585126
-      ],
-      [
-       -79.595233,
-       43.584891
-      ],
-      [
-       -79.595507,
-       43.584592
-      ],
-      [
-       -79.596083,
-       43.584102
-      ],
-      [
-       -79.599389,
-       43.581248
-      ],
-      [
-       -79.603542,
-       43.57767
-      ],
-      [
-       -79.606,
-       43.575453
-      ],
-      [
-       -79.606758,
-       43.57475
-      ],
-      [
-       -79.607213,
-       43.574345
-      ],
-      [
-       -79.60719,
-       43.574107
-      ]
-     ],
-     [
-      [
-       -79.722284,
-       43.763389
-      ],
-      [
-       -79.722587,
-       43.763132
-      ],
-      [
-       -79.724836,
-       43.761149
-      ],
-      [
-       -79.725868,
-       43.76021
-      ],
-      [
-       -79.726749,
-       43.759443
-      ],
-      [
-       -79.727356,
-       43.758909
-      ],
-      [
-       -79.727811,
-       43.758504
-      ],
-      [
-       -79.728937,
-       43.75748
-      ],
-      [
-       -79.729633,
-       43.756904
-      ],
-      [
-       -79.730391,
-       43.756308
-      ],
-      [
-       -79.730846,
-       43.755946
-      ],
-      [
-       -79.733153,
-       43.753898
-      ],
-      [
-       -79.73373,
-       43.753407
-      ],
-      [
-       -79.737799,
-       43.749845
-      ],
-      [
-       -79.739893,
-       43.747989
-      ],
-      [
-       -79.741562,
-       43.746539
-      ],
-      [
-       -79.743808,
-       43.744576
-      ],
-      [
-       -79.744112,
-       43.744299
-      ]
-     ],
-     [
-      [
-       -79.799637,
-       43.776558
-      ],
-      [
-       -79.797363,
-       43.778299
-      ],
-      [
-       -79.793123,
-       43.775238
-      ]
-     ],
-     [
-      [
-       -79.861312,
-       43.725309
-      ],
-      [
-       -79.854224,
-       43.72004
-      ]
-     ],
-     [
-      [
-       -79.862282,
-       43.731843
-      ],
-      [
-       -79.859628,
-       43.734317
-      ]
-     ],
-     [
-      [
-       -79.859628,
-       43.734317
-      ],
-      [
-       -79.858858,
-       43.735025
-      ],
-      [
-       -79.85804,
-       43.735993
-      ],
-      [
-       -79.857632,
-       43.736477
-      ],
-      [
-       -79.857224,
-       43.73696
-      ],
-      [
-       -79.859596,
-       43.738234
-      ]
-     ],
-     [
-      [
-       -79.819872,
-       43.656389
-      ],
-      [
-       -79.817892,
-       43.657941
-      ]
-     ],
-     [
-      [
-       -79.873667,
-       43.670676
-      ],
-      [
-       -79.864586,
-       43.678134
-      ]
-     ],
-     [
-      [
-       -79.827616,
-       43.648008
-      ],
-      [
-       -79.822487,
-       43.65261
-      ],
-      [
-       -79.821975,
-       43.654419
-      ],
-      [
-       -79.819872,
-       43.656389
-      ]
-     ],
-     [
-      [
-       -79.85031,
-       43.657967
-      ],
-      [
-       -79.84924,
-       43.657233
-      ],
-      [
-       -79.847122,
-       43.654759
-      ],
-      [
-       -79.845979,
-       43.654118
-      ],
-      [
-       -79.844613,
-       43.653811
-      ],
-      [
-       -79.843857,
-       43.653321
-      ]
-     ],
-     [
-      [
-       -79.864586,
-       43.678134
-      ],
-      [
-       -79.856524,
-       43.686609
+       [
+        -79.614341,
+        43.601714
+       ],
+       [
+        -79.597361,
+        43.602249
+       ],
+       [
+        -79.59726,
+        43.601198
+       ],
+       [
+        -79.603789,
+        43.601013
+       ],
+       [
+        -79.604093,
+        43.597028
+       ],
+       [
+        -79.605586,
+        43.597084
+       ],
+       [
+        -79.605383,
+        43.600958
+       ],
+       [
+        -79.614291,
+        43.600663
+       ],
+       [
+        -79.614341,
+        43.601714
+       ]
       ]
      ]
     ]
    },
-   "geomType": "linear",
-   "geomMethod": "DC capital map mains named like the EA",
-   "geomConfidence": "medium",
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
-    "facilities": [
-     "Silverthorn",
-     "West Brampton",
-     "Dixie Road",
-     "Mayfield",
-     "West Caledon"
-    ]
+    "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "claredale-road-to-beechwood-pumping-station",
@@ -12489,7 +9856,7 @@
    ],
    "nextStep": null,
    "completedYear": 2021,
-   "purpose": "The EA study is being carried out in accordance with the planning and design process for “Schedule B” projects under the Environmental Assessment Act as outlined in the Municipal Engineers Association’s Municipal Class E",
+   "purpose": "The EA study is being carried out in accordance with the planning and design process for “Schedule B” projects under the Environmental Assessment Act as outlined in the Municipal Engineers Association’s Municipal Class…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/credit-valley-sanitary-trunk-sewer-relocation",
     "report": null,
@@ -12583,7 +9950,7 @@
    ],
    "nextStep": null,
    "completedYear": 2022,
-   "purpose": "July 14, 2022 - Bombardier Inc., in partnership with the City of Mississauga and the Region of Peel (The Proponents), has completed a Municipal Class Environmental Assessment (Class EA) Study to assess existing and futur",
+   "purpose": "July 14, 2022 - Bombardier Inc., in partnership with the City of Mississauga and the Region of Peel (The Proponents), has completed a Municipal Class Environmental Assessment (Class EA) Study to assess existing and…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/derry-road-east-alstep-drive-road-improvements",
     "report": {
@@ -12858,7 +10225,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "Peel Region has now completed a Schedule B Municipal Class Environmental Assessment (EA) study to identify if and how the existing abandoned ETSS or a new offline storage facility could be used for storage of peak sanita",
+   "purpose": "Peel Region has now completed a Schedule B Municipal Class Environmental Assessment (EA) study to identify if and how the existing abandoned ETSS or a new offline storage facility could be used for storage of peak…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/east-trunk-sanitary-sewer-offline-storage-facility-notice-study-completion",
     "report": null,
@@ -13693,22 +11060,7 @@
    "geomMethod": "DC capital map mains named like the EA",
    "geomConfidence": "medium",
    "related": {
-    "dcProjects": [
-     {
-      "proj": "31-1997",
-      "what": "Treatment Expansion",
-      "facility": "Lorne Park Water Treatment Plant",
-      "system": "water",
-      "method": "name"
-     },
-     {
-      "proj": "30-1963",
-      "what": "New Pumping Station",
-      "facility": "Victoria",
-      "system": "water",
-      "method": "name"
-     }
-    ],
+    "dcProjects": [],
     "capitalProjects": [],
     "facilities": [
      "Lorne Park",
@@ -13728,7 +11080,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "In 2019, the Region of Peel completed a Schedule B Municipal Class Environmental Assessment (Class EA) Study to address wastewater flows from the Front Street Sewage Pumping Station (SPS) catchment area to align with the",
+   "purpose": "In 2019, the Region of Peel completed a Schedule B Municipal Class Environmental Assessment (Class EA) Study to address wastewater flows from the Front Street Sewage Pumping Station (SPS) catchment area to align with…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/front-street-wastewater-pumping-station-wastewater-diversion",
     "report": {
@@ -13789,7 +11141,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
-   "purpose": "A Schedule C Class Environmental Assessment (EA) will assess G.E.",
+   "purpose": "A Schedule C Class Environmental Assessment (EA) will assess G.E. Booth’s long-term servicing needs.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/ge-booth-wastewater-treatment-plant",
     "report": {
@@ -13915,8 +11267,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     -79.620798,
-     43.533224
+     -79.617335,
+     43.53246
     ]
    },
    "geomType": "approx",

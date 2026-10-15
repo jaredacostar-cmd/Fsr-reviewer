@@ -1,6 +1,801 @@
 {
  "note": "Manual fixes to data/eas.json, applied on every build. eas.<id>: any of name, system, municipality, schedule, status, purpose, decision, nextStep, milestones, completedYear, geometry (GeoJSON, WGS84; a traced boundary is recorded as 'traced from the project page image'), geomType, geomMethod, geomConfidence, links, related. add: whole EA records; remove: ids. No names, contacts or internal notes.",
- "eas": {},
+ "eas": {
+  "downtown-brampton-water-and-wastewater-capacity-improvements": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.772633,
+       43.700558
+      ],
+      [
+       -79.771962,
+       43.700911
+      ],
+      [
+       -79.771068,
+       43.700911
+      ],
+      [
+       -79.770695,
+       43.700477
+      ],
+      [
+       -79.769838,
+       43.699663
+      ],
+      [
+       -79.768459,
+       43.699337
+      ],
+      [
+       -79.763315,
+       43.699446
+      ],
+      [
+       -79.762495,
+       43.701236
+      ],
+      [
+       -79.761265,
+       43.701779
+      ],
+      [
+       -79.758656,
+       43.701915
+      ],
+      [
+       -79.758097,
+       43.701453
+      ],
+      [
+       -79.758283,
+       43.700287
+      ],
+      [
+       -79.759588,
+       43.69988
+      ],
+      [
+       -79.76078,
+       43.698306
+      ],
+      [
+       -79.750083,
+       43.699174
+      ],
+      [
+       -79.748965,
+       43.698577
+      ],
+      [
+       -79.749151,
+       43.697438
+      ],
+      [
+       -79.749971,
+       43.697112
+      ],
+      [
+       -79.762197,
+       43.695864
+      ],
+      [
+       -79.767042,
+       43.696353
+      ],
+      [
+       -79.767154,
+       43.694399
+      ],
+      [
+       -79.76995,
+       43.694101
+      ],
+      [
+       -79.770583,
+       43.692419
+      ],
+      [
+       -79.777852,
+       43.685989
+      ],
+      [
+       -79.779342,
+       43.685772
+      ],
+      [
+       -79.780274,
+       43.686531
+      ],
+      [
+       -79.780274,
+       43.687264
+      ],
+      [
+       -79.774273,
+       43.692446
+      ],
+      [
+       -79.773118,
+       43.693775
+      ],
+      [
+       -79.774571,
+       43.694128
+      ],
+      [
+       -79.77487,
+       43.694996
+      ],
+      [
+       -79.774311,
+       43.695756
+      ],
+      [
+       -79.77282,
+       43.695864
+      ],
+      [
+       -79.773416,
+       43.696488
+      ],
+      [
+       -79.773379,
+       43.697302
+      ],
+      [
+       -79.772931,
+       43.697763
+      ],
+      [
+       -79.772633,
+       43.700558
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "arthur-p-kennedy-water-treatment-plant-reservoir-expansion": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.56229,
+       43.56972
+      ],
+      [
+       -79.561075,
+       43.570806
+      ],
+      [
+       -79.558038,
+       43.572645
+      ],
+      [
+       -79.558038,
+       43.5728
+      ],
+      [
+       -79.557825,
+       43.572756
+      ],
+      [
+       -79.557582,
+       43.572312
+      ],
+      [
+       -79.556823,
+       43.571426
+      ],
+      [
+       -79.556428,
+       43.570651
+      ],
+      [
+       -79.556671,
+       43.569764
+      ],
+      [
+       -79.55819,
+       43.568878
+      ],
+      [
+       -79.560772,
+       43.568546
+      ],
+      [
+       -79.56229,
+       43.56972
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "cawthra-road-phase-3-sanitary-trunk-sewer": {
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        -79.61715,
+        43.607858
+       ],
+       [
+        -79.615708,
+        43.607803
+       ],
+       [
+        -79.616138,
+        43.601659
+       ],
+       [
+        -79.617631,
+        43.601622
+       ],
+       [
+        -79.61715,
+        43.607858
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        -79.614341,
+        43.601714
+       ],
+       [
+        -79.597361,
+        43.602249
+       ],
+       [
+        -79.59726,
+        43.601198
+       ],
+       [
+        -79.603789,
+        43.601013
+       ],
+       [
+        -79.604093,
+        43.597028
+       ],
+       [
+        -79.605586,
+        43.597084
+       ],
+       [
+        -79.605383,
+        43.600958
+       ],
+       [
+        -79.614291,
+        43.600663
+       ],
+       [
+        -79.614341,
+        43.601714
+       ]
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "erin-mills-parkway-between-britannia-road-and-highway-407": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.726551,
+       43.602085
+      ],
+      [
+       -79.721343,
+       43.602085
+      ],
+      [
+       -79.721566,
+       43.598829
+      ],
+      [
+       -79.723203,
+       43.598829
+      ],
+      [
+       -79.723351,
+       43.593403
+      ],
+      [
+       -79.721715,
+       43.593403
+      ],
+      [
+       -79.722087,
+       43.58917
+      ],
+      [
+       -79.723575,
+       43.589062
+      ],
+      [
+       -79.724319,
+       43.586891
+      ],
+      [
+       -79.727667,
+       43.58445
+      ],
+      [
+       -79.731982,
+       43.582008
+      ],
+      [
+       -79.732503,
+       43.576473
+      ],
+      [
+       -79.734735,
+       43.576473
+      ],
+      [
+       -79.734512,
+       43.582279
+      ],
+      [
+       -79.732875,
+       43.583907
+      ],
+      [
+       -79.727667,
+       43.58662
+      ],
+      [
+       -79.726327,
+       43.588519
+      ],
+      [
+       -79.726179,
+       43.589333
+      ],
+      [
+       -79.727295,
+       43.589333
+      ],
+      [
+       -79.726923,
+       43.593403
+      ],
+      [
+       -79.724839,
+       43.593403
+      ],
+      [
+       -79.724691,
+       43.598829
+      ],
+      [
+       -79.726551,
+       43.598938
+      ],
+      [
+       -79.726551,
+       43.602085
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "erin-mills-parkway-south-of-highway-403-low-impact-development-facilities": {
+   "geometry": {
+    "type": "MultiPolygon",
+    "coordinates": [
+     [
+      [
+       [
+        -79.697675,
+        43.55119
+       ],
+       [
+        -79.695949,
+        43.552448
+       ],
+       [
+        -79.694871,
+        43.551819
+       ],
+       [
+        -79.696596,
+        43.550403
+       ],
+       [
+        -79.697675,
+        43.55119
+       ]
+      ]
+     ],
+     [
+      [
+       [
+        -79.691852,
+        43.550953
+       ],
+       [
+        -79.691097,
+        43.551583
+       ],
+       [
+        -79.688617,
+        43.550324
+       ],
+       [
+        -79.689372,
+        43.549695
+       ],
+       [
+        -79.691852,
+        43.550953
+       ]
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "etobicoke-creek-trunk-sewer-improvements-and-upgrades": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.690807,
+       43.683546
+      ],
+      [
+       -79.651609,
+       43.683546
+      ],
+      [
+       -79.656389,
+       43.655831
+      ],
+      [
+       -79.6953,
+       43.655692
+      ],
+      [
+       -79.690807,
+       43.683546
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "heritage-road-watermain-construction": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.788465,
+       43.618208
+      ],
+      [
+       -79.787727,
+       43.618751
+      ],
+      [
+       -79.773843,
+       43.608724
+      ],
+      [
+       -79.774581,
+       43.608181
+      ],
+      [
+       -79.788465,
+       43.618208
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low"
+  },
+  "lower-west-sanitary-trunk-sewer-twinning": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.680165,
+       43.520102
+      ],
+      [
+       -79.648901,
+       43.546003
+      ],
+      [
+       -79.589942,
+       43.506838
+      ],
+      [
+       -79.622719,
+       43.479684
+      ],
+      [
+       -79.680165,
+       43.520102
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low"
+  },
+  "royal-windsor-sanitary-sewer-diversion": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.63702,
+       43.504806
+      ],
+      [
+       -79.630282,
+       43.510943
+      ],
+      [
+       -79.630631,
+       43.511499
+      ],
+      [
+       -79.630296,
+       43.511771
+      ],
+      [
+       -79.629737,
+       43.511569
+      ],
+      [
+       -79.629236,
+       43.51183
+      ],
+      [
+       -79.62896,
+       43.511617
+      ],
+      [
+       -79.629302,
+       43.51112
+      ],
+      [
+       -79.627927,
+       43.51012
+      ],
+      [
+       -79.627737,
+       43.510421
+      ],
+      [
+       -79.627513,
+       43.510275
+      ],
+      [
+       -79.627765,
+       43.50985
+      ],
+      [
+       -79.62696,
+       43.509191
+      ],
+      [
+       -79.627295,
+       43.508919
+      ],
+      [
+       -79.629885,
+       43.510682
+      ],
+      [
+       -79.636647,
+       43.504561
+      ],
+      [
+       -79.63702,
+       43.504806
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low"
+  },
+  "west-caledon-storage-facility-and-transmission-main": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.958788,
+       43.833383
+      ],
+      [
+       -79.830049,
+       43.833383
+      ],
+      [
+       -79.836766,
+       43.791873
+      ],
+      [
+       -79.842363,
+       43.753889
+      ],
+      [
+       -79.844976,
+       43.736254
+      ],
+      [
+       -79.84908,
+       43.72106
+      ],
+      [
+       -79.977072,
+       43.721332
+      ],
+      [
+       -79.958788,
+       43.833383
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "winston-churchill-boulevard-from-highway-401-to-embleton-road": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.806562,
+       43.6449
+      ],
+      [
+       -79.803562,
+       43.6449
+      ],
+      [
+       -79.802985,
+       43.604697
+      ],
+      [
+       -79.805985,
+       43.604697
+      ],
+      [
+       -79.806562,
+       43.6449
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (1 control point and the map scale)",
+   "geomConfidence": "low"
+  },
+  "the-gore-road-queen-street-to-castlemore-road": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.689934,
+      43.791894
+     ],
+     [
+      -79.686145,
+      43.788801
+     ],
+     [
+      -79.681376,
+      43.785066
+     ],
+     [
+      -79.676959,
+      43.781956
+     ],
+     [
+      -79.672973,
+      43.779116
+     ],
+     [
+      -79.669805,
+      43.776618
+     ],
+     [
+      -79.664324,
+      43.77221
+     ],
+     [
+      -79.660051,
+      43.769278
+     ],
+     [
+      -79.656812,
+      43.766824
+     ],
+     [
+      -79.655545,
+      43.765825
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low"
+  },
+  "charleston-sideroad-between-kennedy-and-main-street-highway-136-complete-corrido": {
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -79.979822,
+       43.873328
+      ],
+      [
+       -79.977828,
+       43.871501
+      ],
+      [
+       -80.036393,
+       43.825031
+      ],
+      [
+       -80.038388,
+       43.826857
+      ],
+      [
+       -79.979822,
+       43.873328
+      ]
+     ]
+    ]
+   },
+   "geomType": "area",
+   "geomMethod": "traced from the project page image (2 control points)",
+   "geomConfidence": "low"
+  }
+ },
  "add": [],
  "remove": []
 }
