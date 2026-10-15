@@ -30,7 +30,7 @@ test('every CSV, GeoJSON and model file carries the disclaimer, the note and the
   assert.ok(U.CSV_DISCLAIMER.includes(NOTE) && U.CSV_DISCLAIMER.includes(U.CRITERIA_STAMP) && U.CSV_DISCLAIMER.includes(U.UNOFFICIAL));
   assert.deepEqual(Object.keys(U.DISCLAIMER_PROPS), ['disclaimer', 'screening', 'criteria']);
   const ex = src('js/exports.js');
-  assert.match(ex, /download\('peel-developments\.csv', CSV_DISCLAIMER \+/);
+  assert.match(ex, /function exportDevsCSV\(list, name = 'peel-developments\.csv'\) \{[\s\S]*?download\(name, CSV_DISCLAIMER \+/);
   assert.equal((ex.match(/\.\.\.DISCLAIMER_PROPS/g) || []).length, 2, 'developments and servicing-area GeoJSON');
   assert.match(src('js/dc-infra.js'), /properties: \{ \.\.\.window\.PeelUtil\.DISCLAIMER_PROPS/);
   assert.match(src('js/demand-ui.js'), /\.csv`, root\.PeelUtil\.CSV_DISCLAIMER \+ lines/);

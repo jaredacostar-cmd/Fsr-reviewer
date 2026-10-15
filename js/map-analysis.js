@@ -230,11 +230,11 @@
     for (const d of App().state.servicing.psAreas || []) {
       const ps = d.outletAt && psLoad(d, capYear);
       if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: token('--sym-outline'), fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
-        .bindTooltip(`<strong>${esc(SD().drName(d).replace(/^[^·]+· /, ''))}</strong><br>${Math.round(ps.pct)}% of firm at build-out (peak wet)`, { className: 'pt' })
+        .bindTooltip(window.PeelUtil.hoverCard({ kind: 'Pumping station', name: SD().drName(d).replace(/^[^·]+· /, ''), value: `${Math.round(ps.pct)}%`, sub: `of firm at ${capYear == null ? 'build-out' : capYear} (peak wet)`, also: 'Trace upstream from its scope' }), { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); TS().showLoads(d.id); }).addTo(layer);
     }
     for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:var(${SD().PLANT_TOKEN[p.name] || '--nodata'})"></span>`, iconSize: [16, 16] }) })
-      .bindTooltip(`<strong>${esc(SD().plantLabel(p.name))}</strong><br><span class="muted">Tap: everything it treats</span>`, { className: 'pt' })
+      .bindTooltip(() => { const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${p.name}`); return window.PeelUtil.hoverCard({ kind: 'Wastewater treatment plant', name: SD().plantLabel(p.name), value: k ? window.PeelCapacity.pctTxt(k.pctBuildout) : null, sub: k ? `of rated at build-out (${window.PeelCapacity.pctTxt(k.pctCommitted)} committed)` : 'everything it treats' }); }, { className: 'pt' })
       .on('click', () => TS().showLoads(null, p.name)).addTo(layer);
     ST().addFlowMarker();
   }
@@ -269,7 +269,7 @@
     const mr = map.getContainer().getBoundingClientRect(); if (!mr.width) return;
     const gap = 8, edge = phoneMap ? 8 : 12;
     // The development panel (right side, over the map on wide screens): lay out in the part left visible.
-    const dt = $('#detail'), dr = dt && !dt.hidden ? dt.getBoundingClientRect() : null;
+    const dt = $('#analysis'), dr = dt && !dt.hidden && dt.getBoundingClientRect().left < map.getContainer().getBoundingClientRect().right - 1 ? dt.getBoundingClientRect() : null;
     const cover = dr && dr.left > mr.left + 300 && dr.left < mr.right ? mr.right - dr.left : 0;
     // On a phone the panel is a bottom sheet: the bottom boxes sit above it.
     const coverB = dr && !cover && dr.width >= mr.width * 0.9 && dr.top > mr.top + mr.height * 0.2 && dr.top < mr.bottom ? Math.round(mr.bottom - dr.top) : 0;

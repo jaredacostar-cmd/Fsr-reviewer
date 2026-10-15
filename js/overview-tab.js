@@ -174,8 +174,23 @@
     return `<section class="ov-card ov-topdevs"><div class="ov-h"><h3>Largest developments</h3><button type="button" class="btn small link ov-go" data-ov-tab="developments">See all →</button></div>
       <table class="dt ov-t"><thead><tr><th>Development</th><th>Phase</th><th class="n">Units</th><th class="n">People</th></tr></thead><tbody>${rows}</tbody></table></section>`;
   }
+  // A result scope (a DC work, a pipe, a file, a tool's result: SPEC §3) shows in its own host next to
+  // the Overview body; it is rebuilt only when the result changes, so its inputs keep their state.
+  function resultHost(rs) {
+    const el = $('#ov-body'), host = $('#scope-body'); if (!host) return false;
+    if (!rs) { host.hidden = true; if (el) el.hidden = false; return false; }
+    if (el) el.hidden = true; host.hidden = false;
+    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v)) {
+      host.innerHTML = `<div class="scope-head"><span class="muted small">${esc(SCOPE_KIND[rs.rkind] || 'Result')}</span><button type="button" class="btn small scope-x" data-scope-result-close aria-label="Close ${esc(rs.title)}">× Close</button></div>${rs.result.html}`;
+      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v);
+    }
+    return true;
+  }
+  const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result' };
   function renderOverview(set, e, basis) {
     const el = $('#ov-body'); if (!el) return;
+    const rsc = root.PeelSvcScope && root.PeelSvcScope.current();
+    if (resultHost(rsc && rsc.kind === 'result' && !DV().scopedDev() ? rsc : null)) return;
     const p = DV().scopedDev();
     if (p) { renderVerdictCard(p); return; }
     const sec = $('#ov-dev'); if (sec) sec.hidden = true;
@@ -242,6 +257,7 @@
     if (!w.found || Math.abs(w.outside) < 0.5) return null;
     return { ...w, name: ids.length === 1 ? PA().spSummary() : 'the plans' };
   }
+  { const host = $('#scope-body'); if (host) host.addEventListener('click', e => { if (e.target.closest('[data-scope-result-close]')) root.PeelSvcScope.closeResult(); }); }
   $('#ov-body').addEventListener('click', e => {
     const t = e.target.closest('[data-ov-tab]');
     if (t) {

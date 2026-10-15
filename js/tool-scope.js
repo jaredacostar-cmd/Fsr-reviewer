@@ -27,26 +27,20 @@
   let loadsOf = null;
   // ---- Phase 3b: pop-up results as a Tool result scope ----------------------------------
   // Feature taps (catchment / zone / plant / pipe / DC line / facility) open their
-  // result in the Tool result tab (trail: Peel › title) via PeelTools.openResult,
-  // not the #detail side panel. Each show* builds {title, html} and opens it here;
-  // the #detail fallback keeps the calls working when the framework is absent.
+  // result as a scope in the right panel (SPEC §3; trail: Peel › title) via
+  // PeelTools.openResult → PeelSvcScope.openResult. Each show* builds {title, html}.
   let toolScope = null; // {kind, title} of the result currently shown in the Tool tab
-  // Phase 3b: pop-up results live in the Tool result tab — exports from one read
-  // that tab while it holds a result (the #detail fallback keeps toolScope null).
-  const toolScopeBody = () => (toolScope && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult()) ? $('#pane-tool-body') : null;
-  function toolResult(kind, title, html, reopen) {
+  // Exports read the result scope's host while it holds a result.
+  const toolScopeBody = () => (toolScope && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult()) ? $('#scope-body') : null;
+  // Feature results open as scopes in the right panel (SPEC §3): opts.ref names the scope
+  // (dcwork:<sys>:<id>, pipe:<i>, …); the developments it lists filter the left panel and the map.
+  function toolResult(kind, title, html, reopen, opts = {}) {
     toolScope = { kind, title };
-    if (typeof window !== 'undefined' && window.PeelTools && typeof window.PeelTools.openResult === 'function') {
-      window.PeelTools.openResult({ title, html, reopen });
-      return true;
-    }
-    toolScope = null;
-    $('#detail-body').innerHTML = html;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'tool'; $('#detail').scrollTop = 0;
-    return false;
+    window.PeelTools.openResult({ title, html, reopen, filter: true, ...opts });
+    return true;
   }
   // Pop-up action row shared by the feature result views. Buttons carry data-pt
-  // and are handled by the #pane-tool-body delegation below.
+  // and are handled by the #scope-body delegation below.
   const ptActions = btns => btns.length ? `<div class="pt-actions" role="group" aria-label="Actions">${btns.join('')}</div>` : '';
   const ptBtn = (act, v, label, title, extra = '') => `<button type="button" class="btn small" data-pt="${act}"${v != null ? ` data-pt-v="${esc(v)}"` : ''}${extra} title="${esc(title)}">${esc(label)}</button>`;
   // The "Area report" action reports on the developments of the most recent
@@ -148,22 +142,15 @@
     Sh().viewLink.write();
     if (id && ST().svcFocus.id !== id) ST().focusSvc(id, { zoom: false, loads: false });
   }
-  $('#detail-body').addEventListener('click', e => {
-    const r = e.target.closest('.ld-row'); if (!r) return;
-    const p = DN().projectByKey(r.dataset.dev); if (!p) return;
-    DN().setBackToLoads({ ...loadsOf }); DN().showDetail(p);
-    if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15));
-  });
-  $('#detail-body').addEventListener('keydown', e => { const r = e.target.closest('.ld-row'); if (r && e.key === 'Enter') r.click(); });
-  // Phase 3b: the Tool result tab's own delegation — pop-up actions, development
-  // rows, pipe links and DC links (the #detail-body handlers don't see this container).
-  const toolBody = $('#pane-tool-body');
+  // The result scope's delegation (right panel): pop-up actions, development rows, pipe links and DC
+  // links.
+  const toolBody = $('#scope-body');
   if (toolBody) {
     toolBody.addEventListener('click', e => {
       const pa = e.target.closest('[data-pt]');
       if (pa) { toolAction(pa.dataset.pt, pa.dataset.ptV, pa); return; }
       const r = e.target.closest('.ld-row');
-      if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) { DN().showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+      if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) { if (loadsOf) DN().setBackToLoads({ ...loadsOf }); DN().showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
       const pb = e.target.closest('[data-pipe]');
       if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
       const f = e.target.closest('[data-dcn-filter]');

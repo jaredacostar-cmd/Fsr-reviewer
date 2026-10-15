@@ -395,9 +395,9 @@
   function showDvTab(k) {
     if (k === 'servicing') k = 'ww';   // the old combined Servicing tab
     if (!DV_TABS.some(([x]) => x === k)) k = 'overview';
-    document.querySelectorAll('#detail-body [data-dvt]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.dvt === k)));
-    document.querySelectorAll('#detail-body .dv-pane').forEach(p => { p.hidden = p.dataset.dvp !== k; });
-    const on = document.querySelector(`#detail-body [data-dvt="${k}"]`); if (on && on.parentElement.scrollWidth > on.parentElement.clientWidth) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    document.querySelectorAll('[data-dvt]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.dvt === k)));
+    document.querySelectorAll('.dv-pane').forEach(p => { p.hidden = p.dataset.dvp !== k; });
+    const on = document.querySelector(`[data-dvt="${k}"]`); if (on && on.parentElement.scrollWidth > on.parentElement.clientWidth) on.scrollIntoView({ block: 'nearest', inline: 'nearest' });
   }
 
   // ---- Public contract ----

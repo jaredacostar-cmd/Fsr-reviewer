@@ -558,7 +558,7 @@
       ${dcNeedsSection({ ln })}
       `;
     TS().loadsOf = { dc: { ln } };
-    TS().toolResult('dc', dcTitle, html, () => showDcLine(ln));
+    TS().toolResult('dc', dcTitle, html, () => showDcLine(ln), { ref: `dcwork:${ln.sys}:${ln.p || ln.c}` });
   }
   // All constraints in the network, for the DC timing table.
   function allNeeds() {
@@ -608,7 +608,7 @@
       <p class="small"><span class="muted">Tap a name for what loads it; tap a DC project for what it relieves and who relies on it.</span></p>
       <p class="small muted">Sewers: pipes reaching 90% of full capacity by build-out, grouped by the DC main that runs along them (or by run); the tightest pipe of each group is shown. Room in units at ${ppu} persons per unit (apartment). Room = capacity − (existing + built + approved); runs out = the year approved and proposed growth reach it, phased as in Horizon years. Plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated; pumping stations at firm capacity; storage from the 2020 Master Plan forecast; water supply into the upper zones is a rough conveyance estimate (1.5 m/s in the large mains crossing each zone boundary; water pumping station capacities are not published). A screen, not a hydraulic model.</p>`;
     TS().loadsOf = { dc: { timing: true } };
-    TS().toolResult('dc', 'DC timing', html, showDcTiming);
+    TS().toolResult('dc', 'DC timing', html, showDcTiming, { filter: false });
   }
   function showConsDevs(c) {
     const ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
@@ -620,15 +620,6 @@
     TS().toolResult('dc', c.name, html, () => showConsDevs(c));
   }
   function showDcBack(b) { if (b.ln) showDcLine(b.ln); else if (b.fc) DI().showFacility(b.fc); else if (b.cons && DCN.reg && DCN.reg.get(b.cons)) showConsDevs(DCN.reg.get(b.cons)); else showDcTiming(); }
-  $('#detail-body').addEventListener('click', e => {
-    const f = e.target.closest('[data-dcn-filter]'); if (f) { dcnFilter = f.dataset.dcnFilter; return showDcTiming(); }
-    if (e.target.closest('[data-dcn-all]')) { SC().loadSewers(); return showDcTiming(); }
-    const cn = e.target.closest('[data-dcn-cons]'); if (cn && DCN.reg && DCN.reg.get(cn.dataset.dcnCons)) return showConsDevs(DCN.reg.get(cn.dataset.dcnCons));
-    const r = e.target.closest('[data-dcn-relief]'); if (!r) return;
-    const [id, k] = r.dataset.dcnRelief.split('|'), c = DCN.reg && DCN.reg.get(id), rl = c && c.relief[+k]; if (!rl) return;
-    if (rl.ln) { showDcLine(rl.ln); map.fitBounds(L.latLngBounds(rl.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); }
-    else if (rl.fc) { DI().showFacility(rl.fc); if (rl.fc.g) map.setView([rl.fc.g[1], rl.fc.g[0]], Math.max(map.getZoom(), 14)); }
-  });
 
   // ---- DC Analysis (bottom panel tab): divert flows to each DC project when it comes online, and
   // what happens if it is cancelled ---------------------------------------------------------------

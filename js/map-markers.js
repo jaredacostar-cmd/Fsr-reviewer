@@ -300,8 +300,8 @@
       });
       poly._area = area;
       const nested = apps.length > 1 && area < biggest * 0.6;
-      poly.bindTooltip(`<strong>${esc(a.ref || a.type || 'Application')}</strong>${a.type ? ` · ${esc(a.type)}` : ''}<br>${esc(a.address || p.title)}` +
-        `${a.units ? ` · ${fmtNum(a.units)} units` : ''}${unloaded ? `<br><span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
+      poly.bindTooltip(window.PeelUtil.hoverCard({ kind: `File · ${a.type || 'application'}`, name: a.ref || a.type || 'Application', value: a.units ? fmtNum(a.units) : null, sub: a.units ? `units · ${a.address || p.title}` : a.address || p.title,
+        html: unloaded ? `<span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : '', open: nested ? 'open this file' : 'open the development' }), { className: 'pt', sticky: true });
       poly.on('click', ev => { L.DomEvent.stop(ev); const sub = nested && Nav().isFormal(a) && Nav().subProject(p, a.ref); if (sub) Nav().showDetail(sub); else if (nested) AC().showRecordDetail(a, p); else Nav().showDetail(p); });
       return poly;
     });
@@ -312,8 +312,7 @@
       color: emph ? selColor() : token('--sym-outline'), fillColor: phaseColor(r.phase), fillOpacity: 1,
     });
     const parent = parentApps(r, p)[0];
-    m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
-      (parent ? `<br><span class="muted">Part of ${esc(parent.ref || parent.type || 'application')}</span>` : ''), { className: 'pt', direction: 'top', offset: [0, -6] });
+    m.bindTooltip(window.PeelUtil.hoverCard({ kind: `Building permit · ${P.PHASE_BY_KEY[r.phase].label}`, name: r.address || r.ref, value: r.units ? fmtNum(r.units) : null, sub: r.units ? `unit${r.units === 1 ? '' : 's'}${parent ? ` · part of ${parent.ref || parent.type || 'application'}` : ''}` : parent ? `Part of ${parent.ref || parent.type || 'application'}` : '', open: 'open this file' }), { className: 'pt', direction: 'top', offset: [0, -6] });
     m.on('click', ev => { L.DomEvent.stop(ev); AC().showRecordDetail(r, p); });
     return m;
   }

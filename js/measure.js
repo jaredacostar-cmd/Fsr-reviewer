@@ -106,16 +106,14 @@
     if (typeof PeelTools !== 'undefined') PeelTools.sync(tool.mode);
   }
   const hasTools = () => typeof PeelTools !== 'undefined';
-  // Selection results open in the Tool result pane (Peel › <title> in the trail);
-  // when the framework is absent (tests, old builds) they fall back to #detail.
+  // A selection opens as a scope in the right panel (Peel › Selection in the trail), filtered to
+  // the developments selected.
   function openSelectionResult(title, added) {
     CA().setDaContext(null);
     const sel = [...AS().selection.values()];
     DN().setCurrentProject(null);
     MM().highlight(null);
-    if (hasTools()) PeelTools.openResult({ title, html: AS().selectionSummaryHTML(sel, added), reopen: () => openSelectionResult(title, added) });
-    else AS().showSelection(added);
-    TB().renderTrail();
+    PeelTools.openResult({ ref: 'sel:selection', title, html: AS().selectionSummaryHTML(sel, added), devKeys: sel.map(p => p.key), reopen: () => openSelectionResult(title, added) });
   }
   function refreshMeasureBanner() {
     if (tool.mode === 'measure' && hasTools()) { PeelTools.banner(measureBannerHTML()); if (tool.pts.length) fillElev(tool.pts.slice()); }

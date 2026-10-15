@@ -572,14 +572,9 @@ button, input, select { font: inherit; color: inherit; }
 .leaflet-control-attribution a { color: var(--accent); }
 .leaflet-tooltip.pt { font-size: var(--fs-2); background: var(--surface-1); color: var(--text-primary); border-color: var(--border); }
 
-/* Detail drawer */
-.detail {
-  position: fixed; top: var(--top-h, 0px); right: 0; bottom: var(--footer-h, 0px); width: min(440px, 100vw); z-index: 1000; overflow-y: auto;
-  background: var(--surface-1); box-shadow: var(--shadow); padding: var(--space-3);
-}
-.detail .close { position: absolute; top: 8px; right: 10px; font-size: var(--fs-5); border: 0; background: none; cursor: pointer; color: var(--text-secondary); }
-.detail .head { padding-right: var(--space-4); }
-.detail .head .m { color: var(--text-secondary); font-size: var(--fs-2); margin-top: var(--space-1); }
+/* Result scopes in the right panel (SPEC §3: the #detail drawer is gone). */
+.scope-body .head .m { color: var(--text-secondary); font-size: var(--fs-2); margin-top: var(--space-1); }
+.scope-body .scope-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
 .badge { display: inline-flex; gap: var(--space-2); align-items: center; padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1); border-radius: 999px; background: var(--surface-2); font-size: var(--fs-2); font-weight: 500; margin-top: var(--space-2); }
 .badge .dot { width: 16px; height: 16px; font-size: var(--fs-1); box-shadow: none; }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-3); font-size: var(--fs-2); margin: var(--space-3) 0; }
@@ -777,14 +772,6 @@ button, input, select { font: inherit; color: inherit; }
   .legend { cursor: pointer; }
   .legend:not(.expanded) { grid-template-columns: repeat(7, auto); gap: var(--space-2); }
   .legend:not(.expanded) .li span:not(.dot) { display: none; }
-  /* Detail as a bottom sheet so the selected point stays visible above it */
-  .detail {
-    z-index: 1150; top: auto; bottom: 0; left: 0; right: 0; width: 100%; height: var(--sheet-hv, 62vh); height: var(--sheet-h, 62dvh);
-    max-height: calc(100dvh - var(--top-h, 0px));   /* never under the top bar */
-    border-left: 0; border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
-  }
-  .detail .sheet-grip { display: flex; }
   .legend { left: auto; right: 8px; bottom: 16px; }
   .panel, .brand { padding-left: var(--space-3); padding-right: var(--space-3); }
 }
@@ -2357,8 +2344,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 
 /* 11 px minimum for text in the analysis panel and the detail panel (design audit, Group 8):
    secondary lines (<small>) and unit suffixes keep their relative size but never go below 11 px. */
-#analysis-panes small, #detail small { font-size: max(var(--fs-1), .83em); }
-#analysis-panes .u, #detail .u { font-size: max(var(--fs-1), .82em); }
+#analysis-panes small { font-size: max(var(--fs-1), .83em); }
+#analysis-panes .u { font-size: max(var(--fs-1), .82em); }
 .svc-more > summary { cursor: pointer; list-style: revert; margin: var(--space-2) 0 var(--space-1); }
 .cap-t th { white-space: nowrap; }
 .cap-t td.n { white-space: nowrap; }
@@ -2440,3 +2427,16 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 /* The footer scenario line is gone: the panel opens from the chip (SPEC §2, §4). */
 .footer > .scen-bar { display: none; }
 .pace-ly { display: grid; grid-template-columns: 56px 1fr; gap: var(--space-2); align-items: center; }
+/* Site tools (SPEC §3): Trace sewer / Trace water / Check FSR stay one click away; the rest in ⋯. */
+.site-more { position: relative; display: inline-block; }
+.site-more > summary { list-style: none; cursor: pointer; }
+.site-more > summary::-webkit-details-marker { display: none; }
+.site-more-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; display: flex; flex-direction: column; align-items: stretch; min-width: 160px; padding: var(--space-1); background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 16px rgba(0, 0, 0, .35); }
+.site-more-menu .btn { text-align: left; }
+/* One hover card (SPEC §3). */
+.hcard { display: flex; flex-direction: column; gap: 2px; min-width: 180px; max-width: 300px; white-space: normal; }
+.hcard .hc-k { font-size: var(--fs-1); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.hcard .hc-n { font-size: var(--fs-3); }
+.hcard .hc-v b { font-size: var(--fs-4); font-variant-numeric: tabular-nums; }
+.hcard .hc-v span, .hcard .hc-x { font-size: var(--fs-2); color: var(--text-secondary); }
+.hcard .hc-a { font-size: var(--fs-1); color: var(--accent); margin-top: 2px; }

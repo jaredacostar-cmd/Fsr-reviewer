@@ -45,7 +45,10 @@
       const [cat, col] = MM().markerCat(p), pop = MM().mstyle.size === 'pop' ? MM().popOf(p) : 0;
       const m = L.marker([p.lat, p.lng], { icon: MM().markerIcon(p), phase: p.phase, cat, col, pop, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : 0 });
       const near = App().state.servicing && (SD().nearOf(p, 'dr') || SD().nearOf(p, 'pz'));
-      m.bindTooltip(`<strong>${esc(p.title)}</strong><br>${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${MM().mstyle.color === 'layer' ? `<br>${esc(MM().LAYER_NAME[cat])}` : MM().mstyle.color === 'quality' ? `<br>${esc(MM().QUALITY[cat][1])}` : MM().mstyle.color === 'timing' ? `<br>${esc(MM().TIMING[cat][1])}` : MM().mstyle.color === 'plant' ? `<br>→ ${esc(cat === 'none' ? 'no traced catchment' : SD().PLANT_SHORT[cat])}` : ''}${pop ? `<br>${fmtNum(Math.round(pop))} people + jobs at build-out` : ''}${near ? '<br><span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`, { className: 'pt', direction: 'top', offset: [0, -8] });
+      m.bindTooltip(() => window.PeelUtil.hoverCard({ kind: `Development · ${P.PHASE_BY_KEY[p.phase].label}${window.PeelLayers ? ` → ${window.PeelLayers.LABEL[window.PeelLayers.layerOf(p)] || 'none'}` : ''}`, name: p.title,
+        value: pop ? fmtNum(Math.round(pop)) : p.units > 0 ? fmtNum(p.units) : null, sub: pop ? 'people + jobs at build-out' : p.units > 0 ? `units · ${p.municipality}` : p.municipality,
+        html: `${MM().mstyle.color === 'quality' ? esc(MM().QUALITY[cat][1]) : MM().mstyle.color === 'timing' ? esc(MM().TIMING[cat][1]) : MM().mstyle.color === 'plant' ? `→ ${esc(cat === 'none' ? 'no traced catchment' : SD().PLANT_SHORT[cat])}` : ''}${near ? '<span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`,
+        open: 'open the development', also: 'Trace from its panel' }), { className: 'pt', direction: 'top', offset: [0, -8] });
       m.on('click', () => Nav().showDetail(p));
       MM().markerByKey.set(p.key, m);
       ML().projectByMarker.set(m, p);

@@ -326,19 +326,9 @@
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault();
     store.set('analysisW', setAnalysisW(analysisEl.getBoundingClientRect().width + (e.key === 'ArrowRight' ? 40 : -40)));
   });
-  // Phone bottom sheet (the info panel): drag the grip, or tap it to step 30% → 50% → 62% → 92%.
-  const SHEET_STEPS = [30, 50, 62, 92], detailEl = $('#detail');
-  const setSheetH = vh => { const v = Math.max(18, Math.min(94, vh)); detailEl.style.setProperty('--sheet-h', `${v}dvh`); detailEl.style.setProperty('--sheet-hv', `${v}vh`); return v; };
-  if (store.get('sheetH', null)) setSheetH(store.get('sheetH'));
-  PeelDataTab.dragResize($('#detail-grip'), {
-    get: () => detailEl.getBoundingClientRect().height,
-    set: h => setSheetH(h / innerHeight * 100),
-    done: moved => {
-      const cur = detailEl.getBoundingClientRect().height / innerHeight * 100;
-      if (moved) store.set('sheetH', Math.round(setSheetH(cur)));
-      else { const nx = SHEET_STEPS.find(s => s > cur + 2) || SHEET_STEPS[0]; store.set('sheetH', setSheetH(nx)); }
-    },
-  });
+  // The #detail bottom sheet is gone (SPEC §3: every click lands in the right panel). setSheetH stays
+  // as a no-op for callers that lowered it to make room on a phone.
+  const setSheetH = vh => vh;
   // The summary line: the totals for what is on the map (filled by renderGrowth).
   // Desktop: jump to the Overview tab. Compact: expand the bottom sheet.
   $('#f-sum').onclick = () => {
@@ -386,7 +376,7 @@
   // themselves; form fields keep theirs.)
   addEventListener('keydown', e => {
     if (e.key !== 'Escape' || !PeelDataTab.shellNarrow()) return;
-    if (document.querySelector('.tour') || !$('#detail').hidden) return;
+    if (document.querySelector('.tour')) return;
     if (e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
     if ($('#sidebar').classList.contains('open')) PeelDataTab.toggleSidebar(false);
     else if (analysisSnap !== 'peek') setAnalysisSnap('peek');
