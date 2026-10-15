@@ -1457,6 +1457,23 @@
     };
   }
 
+  // SPEC 1.3: where a proposal under review stands — Proposed splits into active · stalled · under
+  // appeal. Its clock is the latest file event, permit or council item naming one of its files; a
+  // file under appeal (OLT / OMB / LPAT in its status) is "appeal", never stalled.
+  const YEAR_MS = 365.25 * 864e5;
+  const APPEAL_TEXT = /\b(OMB|OLT|LPAT)\b|appeal/i;
+  function lastActivityOf(p) {
+    let t = p && p.last ? +p.last : 0;
+    for (const r of (p && p.records) || []) if (r.council && r.council.last) t = Math.max(t, Date.parse(`${r.council.last}T00:00:00Z`));
+    return t || null;
+  }
+  function proposedStateOf(p, now = Date.now()) {
+    if (!p || p.phase !== 'review') return null;
+    const last = lastActivityOf(p), years = last ? (now - last) / YEAR_MS : null;
+    const appeal = p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled' && APPEAL_TEXT.test(r.statusRaw || ''));
+    return { state: appeal ? 'appeal' : last && now - last > 2 * YEAR_MS ? 'stalled' : 'active', last, years };
+  }
+
   // Units not yet built (SPEC 1.6): the development's count less its completed units, one definition
   // for Growth › Pipeline "left to build" and Timing "unbuilt".
   function unbuiltOf(p) {
@@ -1499,7 +1516,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

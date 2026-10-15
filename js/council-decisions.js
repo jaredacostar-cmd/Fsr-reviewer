@@ -5,7 +5,7 @@
   // items that name the file (data/council.json, built weekly by scripts/build-council.js) into a
   // small index, data/council-decisions.json, that loads with the developments:
   //   { files: { "Brampton|OZS|2025|32": { zoning: { bylaw: "153-2026", date: "2026-09-09", url },
-  //                                        draft: { date, url } } } }
+  //                                        draft: { date, url }, last: "2026-09-09" } } }
   // A passed zoning by-law makes the file "Zoning approved" (still under review: zoning alone
   // commits no servicing); a draft plan approval makes it "Draft / site plan approved".
   // Pure functions (decisionsFrom, applyTo) plus the browser loader.
@@ -37,13 +37,16 @@
     return DRAFT_TITLE.test(`${it.title || ''} ${(it.text || '').slice(0, 600)}`) && DRAFT_DECIDED.test(it.text || '');
   }
 
-  /** council.json → { files: { "<muni>|<canonical file>": { zoning?, draft? } } }, the latest of each. */
+  /** council.json → { files: { "<muni>|<canonical file>": { zoning?, draft?, last } } }: the latest of
+   *  each decision, and the date of the file's latest item of any kind (SPEC 1.3: council items count
+   *  as activity on the file). */
   function decisionsFrom(council) {
     const files = {};
     for (const [fk, refs] of Object.entries((council && council.files) || {})) {
       for (const [mid, i] of refs) {
         const m = council.meetings && council.meetings[mid]; const it = m && m.items && m.items[i];
         if (!it || !m.date) continue;
+        { const e = files[fk] || (files[fk] = {}); if (!e.last || m.date > e.last) e.last = m.date; }
         const z = zoningOf(m, it, fk);
         if (z != null) { const e = files[fk] || (files[fk] = {}); if (!e.zoning || m.date > e.zoning.date) e.zoning = { bylaw: z || null, date: m.date, url: m.url || null }; }
         if (draftOf(m, it)) { const e = files[fk] || (files[fk] = {}); if (!e.draft || m.date > e.draft.date) e.draft = { date: m.date, url: m.url || null }; }

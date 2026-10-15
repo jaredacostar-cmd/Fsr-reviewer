@@ -391,15 +391,18 @@
     const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
     const pa = planApprovedNote(p);
     const why2 = pa ? `${why}. ${esc(pa)}` : why;
-    const stalled = FI().PLANNING_PHASES.includes(p.phase) && p.last && Date.now() - p.last > 2 * FI().YEAR_MS;
-    const years = p.last ? (Date.now() - p.last) / FI().YEAR_MS : 0;
+    // SPEC 1.3: active · stalled · under appeal, on the latest file event, permit or council item.
+    const ps = P.proposedStateOf(p);
+    const stalled = !!ps && ps.state === 'stalled', appealed = !!ps && ps.state === 'appeal';
+    const lastAt = P.lastActivityOf(p);
+    const years = lastAt ? (Date.now() - lastAt) / (365.25 * 864e5) : 0;
     const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
     const sig = [...seen.values()].sort((a, b) => RANK[a.kind] - RANK[b.kind]);
     const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check the council and committee items') : '';
     // The most recently active application and its status text.
     const lastOf = r => r.events.length ? Math.max(...r.events.map(e => +e.date)) : 0;
     const latest = apps.slice().sort((a, b) => lastOf(b) - lastOf(a))[0];
-    return { sig, why: why2, stalled, years, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
+    return { sig, why: why2, stalled, appealed, state: ps ? ps.state : null, years, lastAt, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
   }
 
   const psName = a => SV().drName(a).replace(/^[^·]+· /, '');
@@ -509,7 +512,7 @@
   function devBriefHTML(p, st, f, part = 'overview', opts = {}) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const status = `<p class="small">${st.why}</p>
-      ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
+      ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
       ${(x => x && x.kind !== 'info' ? `<p class="small why-${x.kind}-t">${esc(x.text)} <span class="muted">· ${esc(x.files[0])}</span></p>` : '')(st.sig.find(x => x.main))}
       ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`;
     if (part === 'overview') return `<section class="brief" data-info="dev-brief">

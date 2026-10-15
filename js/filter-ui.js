@@ -51,7 +51,8 @@
   }
   const FLAG_TESTS = {
     // Planning stage only: many open permits have no inspection dates in the source data.
-    stalled: p => PLANNING_PHASES.includes(p.phase) && !!p.last && Date.now() - p.last > 2 * YEAR_MS,
+    // SPEC 1.3: under review with no file event, permit or council item in 2+ years; never under appeal.
+    stalled: p => { const s = window.PeelPhases.proposedStateOf(p); return !!s && s.state === 'stalled'; },
     // The index precomputes this per project (p.appeal); full projects fall back
     // to scanning their records — the same test either way.
     appeal: p => p.appeal ?? (p.records || []).some(r => r.kind === 'application' && DD().STATUS_SIGNALS[0][0].test(r.statusRaw || '')),
