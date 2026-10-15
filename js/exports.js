@@ -233,6 +233,7 @@
     const dev = WB.developmentsSheetRows(exportRows());   // defaults to state.filtered: totals match the screen
     add('Developments', [dev.cols, ...dev.rows]);
     add('By plan', root.PeelPlanTables ? root.PeelPlanTables.sheetRows() : [['(not loaded)']]);
+    add('Plan × servicing', root.PeelPlanTables ? root.PeelPlanTables.matrixSheetRows() : [['(not loaded)']]);
     const rec = DD().recordAuditRows();
     add('Records', [rec.cols, ...rec.rows]);
     add('Water', panelTableRows([['Water treatment & capacity', '#wcap-body'], ['Water by pressure zone', '#water-body'], ['Existing water facilities', '#wfac-body']]));

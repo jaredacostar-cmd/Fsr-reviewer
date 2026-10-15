@@ -6,7 +6,7 @@ const P = require('../js/provenance.js');
 
 test('sheet list and order match the workbook contract', () => {
   assert.deepEqual(WB.SHEET_NAMES,
-    ['Summary', 'Developments', 'By plan', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources']);
+    ['Summary', 'Developments', 'By plan', 'Plan × servicing', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources']);
 });
 
 test('summaryRows: title first, then one meta line per row', () => {

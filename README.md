@@ -2422,3 +2422,25 @@ precinct → developments.
 - Peel is 228,490 units and 683,671 people, the same as the Overview and the header.
 - Every check passes.
 - 42 developments are split between plans.
+
+## Population tables, C3: Table 5, plans by plant or pressure zone
+
+Under Table 1 in Growth › By plan, the plans run down the side: each municipality's plans and
+"Not in a plan", the same rows as Table 1. Across the top are either:
+- **Plants:** the plant receiving the wastewater (G.E. Booth, Clarkson, Inglewood, No plant);
+- **Pressure zones:** the first zone, if a development has two.
+
+**Cells and links:**
+- Cells show people at build-out; hover for units.
+- A cell filters the map and every tab to that plan and plant (or zone).
+- A row header filters to the plan, a column header to the plant or zone.
+
+**Totals:**
+- Each row's total equals Table 1.
+- The columns add up to Peel; the ✓ in the corner confirms both.
+- Default view: G.E. Booth 476,611, Clarkson 206,147, Inglewood 55, No plant 859, which add up
+  to 683,671.
+
+The plant capacity tables use census-relative layers; see Wastewater › Plants.
+
+**Workbook:** a new **Plan × servicing** sheet holds both matrices.
