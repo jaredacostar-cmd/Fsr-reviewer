@@ -324,3 +324,11 @@ test('purpose draft skips process sentences and cuts long ones at a word', () =>
   const long = E.purposeDraft([`The study will assess ${'servicing options for the downtown area and '.repeat(8)}beyond.`]);
   assert.ok(long.length <= 221 && long.endsWith('…') && !/\s…$/.test(long), long);
 });
+
+test('study-area tracing: affine fit, outline extraction, street intersections (python self-test)', () => {
+  const { spawnSync } = require('child_process');
+  const r = spawnSync('python3', [path.join(__dirname, '..', 'scripts', 'ea_trace.py'), '--selftest'], { encoding: 'utf8' });
+  if (r.error || /No module named/.test(r.stderr || '')) return;   // python3 / numpy / PIL not installed here
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /selftest ok/);
+});
