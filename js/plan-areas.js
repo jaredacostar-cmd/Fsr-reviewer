@@ -129,13 +129,18 @@
   function renderPlanAreas() {
     planLayer.clearLayers();
     if (!App().state.areas) return;
+    // While constraint layers are on, the outlines are context only: the constraints take the
+    // hover card and the tap (each pane draws on its own canvas; the top one takes the pointer).
+    const tappable = !(window.PeelConstraints && window.PeelConstraints.anyOn && window.PeelConstraints.anyOn());
     for (const [on, list, colorName, kind] of [[MM().areaOn.sp, App().state.areas.secondaryPlans, '--area-sp', 'sp'], [MM().areaOn.pr, App().state.areas.precincts || [], '--area-pr', 'pr'], [MM().areaOn.mtsa, App().state.areas.mtsas, '--area-mtsa', 'mtsa']]) {
       if (!on) continue;
       for (const a of list) {
         if (App().state.muni && a.municipality !== App().state.muni) continue;
         const sel = (kind === 'mtsa' ? App().state.mtsa : App().state.sp).includes(a.id);
-        L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color: token(colorName), weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 })
-          .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : kind === 'pr' ? 'precinct' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
+        const poly = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, interactive: tappable, color: token(colorName), weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 });
+        // Precincts are outlines for context (developments are tagged by plan and MTSA, not precinct).
+        if (!tappable || kind === 'pr') { poly.options.interactive = false; poly.addTo(planLayer); continue; }
+        poly.bindTooltip(window.PeelUtil.hoverCard({ kind: kind === 'mtsa' ? 'MTSA' : kind === 'pr' ? 'Precinct' : a.municipality === 'Mississauga' ? 'Character area' : 'Secondary plan', name: a.name, sub: a.municipality || '', open: sel ? 'clear the filter' : 'filter to it' }), { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); togglePlanArea(kind, a.id); }).addTo(planLayer);
       }
     }

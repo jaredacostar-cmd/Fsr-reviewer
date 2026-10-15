@@ -116,7 +116,7 @@ test('group header, summary and switch', () => {
 function env(over = {}) {
   const stored = {};
   const calls = [];
-  const map = { createPane: () => ({ style: {} }), getPane: () => null, getZoom: () => 14, getBounds: () => ({ getWest: () => -79.705, getEast: () => -79.695, getSouth: () => 43.695, getNorth: () => 43.705 }), on() {}, whenReady(fn) { fn(); } };
+  const map = { createPane: () => ({ style: {} }), getPane: () => null, getContainer: () => ({ classList: { add() {}, remove() {} } }), closeTooltip() {}, getZoom: () => 14, getBounds: () => ({ getWest: () => -79.705, getEast: () => -79.695, getSouth: () => 43.695, getNorth: () => 43.705 }), on() {}, whenReady(fn) { fn(); } };
   const chain = () => ({ addTo() { return this; }, bindTooltip() { return this; }, on() { return this; }, clearLayers() {} });
   const window = {
     PeelUtil: { $: () => null, esc: s => String(s), token: () => '#000', store: { get: (k, d) => (k in stored ? stored[k] : d), set: (k, v) => { stored[k] = v; } } },
@@ -169,4 +169,22 @@ test('the Layers panel is built from the groups and keeps the panel off the sele
   assert.match(src('js/devscope.js'), /_foldLayers/);
   const html = src('index.html');
   assert.ok(html.indexOf('js/layer-groups.js') < html.indexOf('js/map-core.js'), 'loads before the modules that make panes');
+});
+
+test('follows the Map controls board: zoom stated on the layer, the view preset with Reset, DC works marked draft', () => {
+  // SPEC §4: "Existing pipes · from zoom 15"; the thresholds match the modules that draw them.
+  assert.equal(LG.LAYER.get('ex-water').zoomText, 'from zoom 15');
+  assert.match(src('js/map-markers.js'), /const EXIST_ZOOM = 15;/);
+  const cx = src('js/constraints.js');
+  for (const k of ['gas', 'hydro', 'water']) assert.equal(LG.LAYER.get(k).zoom, +cx.match(new RegExp(`${k}: \\{[^\\n]*minZoom: (\\d+)`))[1], k);
+  assert.equal(LG.LAYER.get('hill').zoom, 11);
+  assert.equal(LG.LAYER.get('reg').zoomText, 'detail from zoom 13');
+  assert.match(cx, /const TILE_ZOOM = 13/);
+  const html = LG.panelHTML({ on: new Set(['devs', 'hov', 'sp', 'mtsa']), open: new Set(['infra']), inView: null, view: { key: 'planning', label: 'Planning' } });
+  assert.match(html, /^<div class="lg-preset" id="lg-preset"><span>Planning preset<\/span><\/div>/);
+  assert.match(html, /Existing watermains<small class="lg-z"> · from zoom 15<\/small>/);
+  assert.match(html, /Planned DC works · 2026 draft/);
+  const changed = LG.panelHTML({ on: new Set(['devs', 'reg']), open: new Set(), inView: null, view: { key: 'planning', label: 'Planning' } });
+  assert.match(changed, /Planning preset · <em>changed<\/em><\/span><button type="button" class="btn small link" data-lg-reset>Reset<\/button>/);
+  assert.match(src('js/map-analysis.js'), /function resetView\(\) \{ const v = currentView\(\); store\.set\(`mapView-\$\{v\}`, null\); applyViewSettings\(v, null\); \}/);
 });

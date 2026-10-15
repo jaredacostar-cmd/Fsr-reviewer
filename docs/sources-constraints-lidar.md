@@ -283,3 +283,45 @@ development still folds the Layers panel, so it doesn't cover the selection.
    - other layers count as in view when on.
 4. **"Site boundaries":** these are drawn with Developments whenever it is on. The switch in the group
    is the boundary on hover, the one setting the app has.
+
+## Design alignment (redesign spec and design audit)
+
+Stages 2–3 were checked against `docs/redesign/SPEC.md`, its Map controls board
+(`boards/MapControls.dc.html`) and `docs/design-audit.md`, and brought into line.
+
+- **One destination for clicks (SPEC §0.3, §3):**
+  - A constraint feature opens in the right panel as a result scope, and the trail updates.
+  - It uses **the same hover card** as plants, zones, DC works and files: kind, name, what it is,
+    "Click: …".
+  - Hover and click are hit-tested at the map level. Each pane draws on its own canvas and the top
+    one takes the pointer, so planning areas or zones drawn above no longer swallow it.
+  - While a constraint layer is on, planning areas are context outlines; filtering to a plan from
+    the left panel still works.
+- **Two ladders kept apart (SPEC §0.1) and the Stage 3 colours:**
+  - Constraint areas are **hatched**, not filled, so they never read as a phase, layer or capacity
+    colour. Hazards hatch one way; plans and the heritage system hatch the other.
+  - Swatches in the panel and legend match.
+- **Every number says its basis once (SPEC §0.5):** the Site checklist and the Land under
+  constraints card each end with one basis line (layers, grid, built date, screening) instead of a
+  separate disclaimer paragraph.
+- **Map controls board (SPEC §4):**
+  - Zoom thresholds are stated on each layer: "Existing watermains · from zoom 15", "Watercourses ·
+    from zoom 12", "Gas pipelines · from zoom 11", "Lidar hillshade · from zoom 11", and for
+    constraint areas "detail from zoom 13".
+  - A layer below its zoom is dimmed, with "Zoom in to see it".
+  - Gas and hydro are back to the spec's zoom 11.
+  - The panel opens with the view's preset ("Planning preset", or "· changed · Reset").
+  - "Planned DC works · 2026 draft" carries its basis.
+- **Five tabs at every scope (SPEC §0.4):**
+  - The checklist sits in Development › Site.
+  - The area card is in the Overview at municipality, plan, MTSA, zone and block scope.
+  - The feature card is a result scope; no new tab is added.
+- **Design audit:**
+  - Text at least 11 px (`--fs-1`).
+  - Screening wording on every constraint line, with no determinations.
+  - Constraints stay out of the Regional servicing verdict (jurisdiction: CA and province).
+- **Kept from the Stage 3 brief, not the board:** the brief's **six** groups replace the board's three
+  (Growth / Servicing / Capital & constraints).
+
+Also fixed: the "Show developments" button in the "Developments are switched off" note was white
+on white.

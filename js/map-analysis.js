@@ -107,6 +107,9 @@
     renderCapLayer(); renderLegend(); syncMapOpts(); ML().updateLabels(); Sh().viewLink.write();
   }
 
+  // "Reset" in the Layers panel: the current view back to its preset (its memory cleared).
+  function resetView() { const v = currentView(); store.set(`mapView-${v}`, null); applyViewSettings(v, null); }
+
   // Saved views: a name for the filters, map position, view and layers (kept in this browser).
   const savedViews = () => store.get('savedViews', []) || [];
   // Saved views as one-tap preset chips at the top of the filter panel (the Layers panel
@@ -370,7 +373,7 @@
   // the developments adding flow since the census, ranked by their peak flow.
 
   const api = {
-    VIEW_PRESETS, LG_EXTRA,
+    VIEW_PRESETS, LG_EXTRA, resetView,
     setMapStyle, setDcOn, setExistOn, currentView, syncMapOpts, setMapView,
     getCapYear() { return capYear; },
     setCapYear(v) { capYear = v; },

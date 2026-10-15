@@ -28,12 +28,16 @@
   const GROUPS = [
     { key: 'devs', label: 'Developments', primary: ['devs'], layers: [['devs', 'Developments', 'devs-toggle', 'dev', null], ['heat', 'Heatmap (people + jobs)', 'map-show', 'heat', null], ['hov', 'Site boundary on hover', 'hover-boundary', 'dash', '--select']] },
     { key: 'cap', label: 'Capacity', primary: ['cap'], layers: [['cap', 'Capacity colours', 'map-capacity', 'cap', null], ['pz', 'Pressure zones', 'pressure-zone', 'svc-pz', null], ['bk', 'Wastewater blocks', 'blocks', 'block', null], ['dr', 'Drainage areas', 'drainage-area', 'svc-dr', null]] },
-    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works', 'dc-works', 'line', '--dc-ww-main'], ['gas', 'Gas pipelines (approximate)', 'cx-gas', 'dash', '--cx-gas'], ['hydro', 'Hydro lines (approximate)', 'cx-hydro', 'line', '--cx-hydro']], sub: { gas: 'Other utilities' } },
+    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['gas', 'Gas pipelines (approximate)', 'cx-gas', 'dash', '--cx-gas'], ['hydro', 'Hydro lines (approximate)', 'cx-hydro', 'line', '--cx-hydro']], sub: { gas: 'Other utilities' } },
     { key: 'cx', label: 'Constraints', primary: ['reg', 'flood'], layers: [['reg', 'Regulation limits', 'cx-reg', 'area', '--cx-reg'], ['flood', 'Floodplain', 'cx-flood', 'area', '--cx-flood'], ['greenbelt', 'Greenbelt', 'cx-greenbelt', 'area', '--cx-greenbelt'], ['orm', 'Oak Ridges Moraine', 'cx-orm', 'area', '--cx-orm'], ['nep', 'Niagara Escarpment', 'cx-nep', 'area', '--cx-nep'], ['natural', 'PSW / ANSI', 'cx-natural', 'area', '--cx-natural'], ['nhs', 'Natural Heritage System', 'cx-nhs', 'area', '--cx-nhs'], ['source', 'Source protection (not included)', 'site-constraints', 'none', null], ['water', 'Watercourses', 'cx-water', 'line', '--cx-water']], disabled: { source: 'Not included in this app: see the CTC Source Protection Region maps' } },
     { key: 'plan', label: 'Planning context', primary: ['sp', 'mtsa'], layers: [['sp', 'Secondary plans / character areas', 'secondary-plans', 'dash', '--area-sp'], ['pr', 'Precincts', 'secondary-plans', 'dash', '--area-pr'], ['mtsa', 'MTSAs', 'mtsa', 'dash', '--area-mtsa'], ['da', '2021 census areas', 'da-layer', 'da', null]] },
     { key: 'base', label: 'Base map', primary: [], layers: [['hill', 'Lidar hillshade', 'hillshade', 'area', '--text-muted']] },
   ];
-  const LAYER = new Map(GROUPS.flatMap(g => g.layers.map(([key, label, info, sw, color]) => [key, { key, label, info, sw, color, group: g.key, disabled: (g.disabled || {})[key] || null }])));
+  // The zoom each layer shows from, stated on the layer (SPEC §4: "Existing pipes · from zoom 15").
+  // Constraint areas show everywhere (a coarse overview), in detail from zoom 13.
+  const ZOOM = { 'ex-water': [15], 'ex-sanitary': [15], 'ex-storm': [15], gas: [11], hydro: [11], water: [12], hill: [11], reg: [13, 'detail'], flood: [13, 'detail'], greenbelt: [13, 'detail'], orm: [13, 'detail'], nep: [13, 'detail'], natural: [13, 'detail'], nhs: [13, 'detail'] };
+  const zoomText = k => { const z = ZOOM[k]; return z ? (z[1] ? `detail from zoom ${z[0]}` : `from zoom ${z[0]}`) : ''; };
+  const LAYER = new Map(GROUPS.flatMap(g => g.layers.map(([key, label, info, sw, color]) => [key, { key, label, info, sw, color, group: g.key, disabled: (g.disabled || {})[key] || null, zoom: ZOOM[key] ? ZOOM[key][0] : null, zoomText: zoomText(key) }])));
   const KEYS = [...LAYER.keys()];
   const groupOf = k => (LAYER.get(k) || {}).group || null;
 
@@ -98,14 +102,17 @@
   // ---- The panel ----------------------------------------------------------------------------------------
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // swatch(layer) → HTML; extra[groupKey] → HTML after the group's switches (selects, notes).
-  function panelHTML({ on, open, inView, swatch = () => '', extra = {} }) {
-    return GROUPS.map(g => {
+  // The view's preset, as the board draws it: "Wastewater preset · Reset" (changed or not).
+  const presetLine = (viewLabel, changed) => `<div class="lg-preset" id="lg-preset"><span>${esc(viewLabel)} preset${changed ? ' · <em>changed</em>' : ''}</span>${changed ? '<button type="button" class="btn small link" data-lg-reset>Reset</button>' : ''}</div>`;
+  const sameSet = (a, b) => a.size === b.size && [...a].every(k => b.has(k));
+  function panelHTML({ on, open, inView, swatch = () => '', extra = {}, view = null }) {
+    return (view ? presetLine(view.label, !sameSet(on, presetFor(view.key))) : '') + GROUPS.map(g => {
       const isOpen = open.has(g.key), gOn = groupOn(g, on);
       const rows = g.layers.map(([k]) => {
         const L0 = LAYER.get(k), sub = (g.sub || {})[k];
         const row = L0.disabled
           ? `<div class="mo-sw lg-off" data-info="${esc(L0.info)}" title="${esc(L0.disabled)}"><span class="mo-sw-l">${esc(L0.label)}</span><small class="muted">n/a</small></div>`
-          : `<label class="mo-sw" data-info="${esc(L0.info)}"><span class="mo-sw-l">${swatch(L0)}${esc(L0.label)}</span><input type="checkbox" role="switch" id="lyr-${k}" data-lyr="${k}"${on.has(k) ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`;
+          : `<label class="mo-sw" data-info="${esc(L0.info)}"${L0.zoom ? ` data-minz="${L0.zoom}"` : ''}><span class="mo-sw-l">${swatch(L0)}<span>${esc(L0.label)}${L0.zoomText ? `<small class="lg-z"> · ${esc(L0.zoomText)}</small>` : ''}</span></span><input type="checkbox" role="switch" id="lyr-${k}" data-lyr="${k}"${on.has(k) ? ' checked' : ''}><i class="mo-sw-t" aria-hidden="true"></i></label>`;
         return `${sub ? `<div class="lg-sub">${esc(sub)}</div>` : ''}${row}`;
       }).join('');
       return `<section class="lg-grp${isOpen ? ' open' : ''}" data-grp="${g.key}">
@@ -116,7 +123,7 @@
     }).join('');
   }
 
-  const pure = { Z, DRAW_ORDER, CX_FILL_MAX, GROUPS, LAYER, KEYS, groupOf, PRESETS, presetFor, encode, decode, fromLegacy, headerText, summaryText, groupOn, groupToggle, panelHTML };
+  const pure = { Z, DRAW_ORDER, CX_FILL_MAX, GROUPS, LAYER, KEYS, ZOOM, groupOf, PRESETS, presetFor, encode, decode, fromLegacy, headerText, summaryText, groupOn, groupToggle, panelHTML, presetLine, sameSet };
   if (typeof module !== 'undefined' && module.exports) { module.exports = pure; return; }
 
   // ---- Browser: each layer through the module that owns it ------------------------------------------
@@ -183,6 +190,10 @@
     const host = document.querySelector('.lg-groups'); if (!host) return;
     const on = onSet(), iv = inViewSet(on);
     for (const k of KEYS) { const c = document.getElementById(`lyr-${k}`); if (c) c.checked = on.has(k); }
+    const map = W.PeelMapCore && W.PeelMapCore.map, z = map ? map.getZoom() : 99;
+    host.querySelectorAll('[data-minz]').forEach(l => { const below = z < +l.dataset.minz && !LAYER.get(l.querySelector('[data-lyr]').dataset.lyr).zoomText.startsWith('detail'); l.classList.toggle('lg-dim', below); l.title = below ? `Zoom in to see it (from zoom ${l.dataset.minz})` : ''; });
+    const pl = document.getElementById('lg-preset');
+    if (pl && MA() && MM()) { const v = MA().currentView(), vl = (MM().MAP_VIEWS.find(x => x[0] === v) || [v, v])[1]; pl.outerHTML = presetLine(vl, !sameSet(on, presetFor(v))); }
     for (const g of GROUPS) {
       const sec = host.querySelector(`[data-grp="${g.key}"]`); if (!sec) continue;
       const isOpen = openGroups.has(g.key);
@@ -196,7 +207,8 @@
   }
   function bind(el) {
     el.addEventListener('click', e => {
-      const t = e.target.closest('[data-grp-toggle]'); if (t) { e.preventDefault(); setOpen(t.dataset.grpToggle, !openGroups.has(t.dataset.grpToggle)); }
+      const t = e.target.closest('[data-grp-toggle]'); if (t) { e.preventDefault(); setOpen(t.dataset.grpToggle, !openGroups.has(t.dataset.grpToggle)); return; }
+      if (e.target.closest('[data-lg-reset]') && MA() && MA().resetView) MA().resetView();
     });
     el.addEventListener('change', e => {
       const gs = e.target.closest('[data-grp-switch]');

@@ -1731,7 +1731,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .map-opts details.mo-more > summary .mo-sum.on { color: var(--accent); font-weight: 500; }
 .mo-devs-off { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); padding: var(--space-2) var(--space-2); border-radius: 4px; background: color-mix(in srgb, var(--cap-tight) 22%, var(--surface-1)); color: var(--text-primary); font-size: var(--fs-2); }
 .mo-devs-off[hidden] { display: none; }
-.mo-devs-off .btn { background: var(--on-tint); }
+.mo-devs-off .btn { background: var(--on-tint); color: var(--ink-fixed); border-color: transparent; }
 @media (max-width: 700px) {
   .map-opts details.mo-panel[open] { max-height: calc(var(--map-h, 640px) * .6); overflow-y: auto; overscroll-behavior: contain; }
 }
@@ -1802,6 +1802,11 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 /* Layer groups (js/layer-groups.js): six accordion groups, each with a group switch, a count of
    layers on / in view, and a one-line summary when folded. */
 .map-opts .lg-groups { gap: 0; }
+.leaflet-container.cx-hover { cursor: pointer; }
+.map-opts .lg-preset { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); font-size: var(--fs-1); color: var(--text-muted); padding: 0 var(--space-1) var(--space-1); }
+.map-opts .lg-preset em { font-style: normal; color: var(--text-primary); }
+.map-opts .lg-z { color: var(--text-muted); font-size: var(--fs-1); font-weight: 400; }
+.map-opts label.mo-sw.lg-dim .mo-sw-l { opacity: .55; }
 .map-opts .lg-grp { border-top: 1px solid var(--border); padding: 2px 0; }
 .map-opts .lg-grp:first-child { border-top: 0; }
 .map-opts .lg-gh { display: flex; align-items: center; gap: var(--space-1); }
