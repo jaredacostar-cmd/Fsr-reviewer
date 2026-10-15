@@ -11,7 +11,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, fmtDate, UNOFFICIAL } = root.PeelUtil;
+  const { $, esc, fmtNum, fmtDate, UNOFFICIAL, CSV_DISCLAIMER, DISCLAIMER_PROPS, SCREEN_LINE, CRITERIA_STAMP } = root.PeelUtil;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
   const PV = root.PeelProvenance || null;
@@ -46,8 +46,21 @@
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
+      ...provenanceFields(p),
       ...svcExportFields(p),
     }));
+  }
+  // Provenance on every row (design audit, Group 10): the portal, a link to the record and when it was
+  // pulled, from the development's latest file; "not recorded" rather than a blank.
+  function provenanceFields(p) {
+    const last = r => Math.max(0, ...(r.events || []).map(e => +e.date || 0));
+    const r = (p.records || []).slice().sort((a, b) => last(b) - last(a))[0];
+    if (!r) return { source_portal: 'not recorded', source_record_url: 'not recorded', source_pulled_on: 'not recorded' };
+    const srcId = r.sourceId ? String(r.sourceId).split('/')[0] : null;
+    const s = srcId && (App().state.sources || []).find(x => x.id === srcId || String(x.id).split('/')[0] === srcId);
+    const url = PV && s ? PV.recordSourceUrl(r, s.url) : null;
+    const pulled = PV ? PV.retrievedAt(r, App().state.snapshot && { generatedAt: App().state.snapshot.generatedAt }) : null;
+    return { source_portal: (PV ? PV.portalFor(r.sourceName) : r.sourceName) || 'not recorded', source_record_url: url || 'not recorded', source_pulled_on: pulled || 'not recorded' };
   }
   // Servicing fields for GIS / spreadsheet: layer, build-out people + jobs, flows at Peel design
   // criteria (L/s), pressure zone, catchment and plant (with the distance when assigned to the nearest).
@@ -78,7 +91,7 @@
         ...(c ? { outlet_adwf_buildout_mld: r2(M.adwf(c)), outlet_pdwf_buildout_mld: r2(M.pdwf(c, 1)), outlet_pwwf_buildout_mld: r2(M.pdwf(c, 1) + M.ii(c)) } : {}),
         ...(ps ? { ps_firm_lps: ps.firm, ps_peak_wet_lps: Math.round(ps.wet), ps_pct_firm: Math.round(ps.pct) } : {}) });
     });
-    return { type: 'FeatureCollection', properties: { scenario: ST().scenarioText(), criteria: 'Peel design criteria', generated: new Date().toISOString() }, features: [...zones, ...dr] };
+    return { type: 'FeatureCollection', properties: { ...DISCLAIMER_PROPS, scenario: ST().scenarioText(), generated: new Date().toISOString() }, features: [...zones, ...dr] };
   }
   function download(name, text, type) {
     const a = document.createElement('a');
@@ -92,12 +105,12 @@
     const rows = exportRows(); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
     const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
-    download('peel-developments.csv', [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
+    download('peel-developments.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   function exportDevsGeoJSON() {
     const rows = exportRows();
     const fc = { type: 'FeatureCollection', features: rows.filter(r => r.lat).map(r => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+r.lng, +r.lat] }, properties: r })) };
-    fc.properties = { scenario: App().state.svcModel ? ST().scenarioText() : '', generated: new Date().toISOString() };
+    fc.properties = { ...DISCLAIMER_PROPS, scenario: App().state.svcModel ? ST().scenarioText() : '', generated: new Date().toISOString() };
     download('peel-developments.geojson', JSON.stringify(fc), 'application/geo+json');
   }
   function exportAreasGeoJSON() { const fc = areasGeoJSON(); if (fc) download('peel-servicing-areas.geojson', JSON.stringify(fc), 'application/geo+json'); }
@@ -213,7 +226,7 @@
       scenario: ST().scenarioText(),
       dataDates: `${App().state.snapshot ? `applications and permits ${App().state.snapshot.generatedAt.slice(0, 10)}` : 'live applications'}${bc ? ` · ${bc.year} Census` : ''}${R ? ` · Region of Peel ${R.year} annual reports` : ''}`,
       version: await RP().appVersion(),
-      disclaimer: UNOFFICIAL,
+      disclaimer: UNOFFICIAL, screening: SCREEN_LINE, criteria: CRITERIA_STAMP,
     }));
     const dev = WB.developmentsSheetRows(exportRows());   // defaults to state.filtered: totals match the screen
     add('Developments', [dev.cols, ...dev.rows]);

@@ -20,6 +20,9 @@
   PD.applyTheme(store.get('theme', 'dark'));
   PD.applyDensity(store.get('density', PD.densityDefault()));
   window.PeelUtil.applyPublic();
+  // One screening note, the user's wording, at the top of the analysis panel: it covers every tab and
+  // tool result (the panes' own copies are hidden by the .screen-note ~ * rule; design audit, Group 10).
+  { const n = document.getElementById('screen-note-top'); if (n) n.outerHTML = window.PeelUtil.SCREEN_NOTE.replace('<p class="screen-note"', '<p class="screen-note" id="screen-note-top"'); }
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';

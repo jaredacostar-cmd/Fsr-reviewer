@@ -9,15 +9,19 @@
 
   // ---- Unofficial banner (source: app.js 13–14) ---------------------------------
   const UNOFFICIAL = 'Unofficial prototype · public data only · not a Region of Peel product';
-  const CSV_DISCLAIMER = `# ${UNOFFICIAL}\n`;
+  // The screening note, in the user's wording, everywhere a result appears (design audit, Group 10).
+  const SCREEN_LINE = 'General screening results only. Peel\u2019s W&WW Infrastructure Planning team must validate or confirm all results.';
+  // The criteria behind every flow and capacity figure: document and version (the criteria stamp).
+  const CRITERIA_STAMP = 'Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023)';
+  // Every CSV starts with these lines (and every GeoJSON / model file carries the same text).
+  const CSV_DISCLAIMER = `# ${UNOFFICIAL}\n# ${SCREEN_LINE}\n# ${CRITERIA_STAMP}\n`;
+  const DISCLAIMER_PROPS = { disclaimer: UNOFFICIAL, screening: SCREEN_LINE, criteria: CRITERIA_STAMP };
 
   // ---- Tiny DOM / string / number helpers (source: app.js 17–24) ----------------
   const estTag = '<span class="est-tag">screening estimate</span>';
   // Individual-pipe modelling results (capacity, % full, freeboard, sewer profile, tightest pipes,
   // the pipe upgrade tool, the EPANET per-main table) are off for now: true brings them back.
   const PIPE_RESULTS = false;
-  // The screening note in one line, the user's wording (presentation, exports; design audit, Groups 9–10).
-  const SCREEN_LINE = 'General screening results only. Peel\u2019s W&WW Infrastructure Planning team must validate or confirm all results.';
   // Chart width in SVG units = the analysis panel's width in pixels (design audit, Group 8): a chart
   // drawn at its rendered size keeps its 11-unit labels at 11 px instead of scaling them down.
   const chartW = (min = 320, max = 900) => {
@@ -35,8 +39,8 @@
   const PIPES_NOT_ASSESSED = 'Sewer pipes: not assessed (pipe-by-pipe capacity is left to the Region\u2019s hydraulic model)';
   // Shown before every trace and servicing demand result: this is one screening method, and the
   // Region's hydraulic models stay the authority.
-  const SCREEN_NOTE_SHORT = '<p class="screen-note screen-note-sm" role="note"><strong>Screening estimate, not a model result:</strong> the Region of Peel\u2019s water and wastewater models are the authority.</p>';
-  const SCREEN_NOTE = '<p class="screen-note" role="note"><strong>Screening estimate, not a model result.</strong> One screening method from public data and Peel design criteria, not a hydraulic model. The Region of Peel\u2019s water and wastewater models are the authority: confirm servicing with the Region.</p>';
+  const SCREEN_NOTE_SHORT = `<p class="screen-note screen-note-sm" role="note"><strong>General screening results only.</strong> Peel\u2019s W&amp;WW Infrastructure Planning team must validate or confirm all results.</p>`;
+  const SCREEN_NOTE = `<p class="screen-note" role="note"><strong>General screening results only.</strong> Peel\u2019s W&amp;WW Infrastructure Planning team must validate or confirm all results. <span class="crit-stamp">${CRITERIA_STAMP}; public data, not a hydraulic model.</span></p>`;
   // Public version (?public in the address, or Settings): hides the DC timing / funding screens'
   // results, the verdict colours and the CSV screening column (design audit, Group 2).
   const isPublic = () => { try { if (typeof location !== 'undefined' && /[?&]public(=|&|$)/.test(location.search)) return true; } catch (e) { /* no location */ } return !!store.get('publicView', false); };
@@ -181,7 +185,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    UNOFFICIAL, CSV_DISCLAIMER, CRITERIA_STAMP, DISCLAIMER_PROPS, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

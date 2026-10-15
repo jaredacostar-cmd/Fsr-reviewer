@@ -200,7 +200,7 @@
       for (const ln of App().state.dcInfra[sys].lines) feats.push({ type: 'Feature', geometry: { type: 'LineString', coordinates: ln.g }, properties: { system: sys, kind: ln.k, status: ln.s, construction_year: ln.y, component: ln.c, project: ln.p, diameter_mm: ln.d, study_name: ln.n || '', study_description: ln.t || '' } });
       for (const fc of App().state.dcInfra[sys].facilities) if (fc.g) feats.push({ type: 'Feature', geometry: { type: 'Point', coordinates: fc.g }, properties: { system: sys, kind: fc.kind, name: fc.name, approximate: !!fc.approx, last_construction_year: lastYear(fc), projects: fc.items.map(i => `${i.what} ${i.proj}: ${i.phases.map(ph => `${ph[0]}-${ph[1]} (${ph[2]})`).join(', ')}`).join(' | ') } });
     }
-    return { type: 'FeatureCollection', properties: { source: App().state.dcInfra.source }, features: feats };
+    return { type: 'FeatureCollection', properties: { ...window.PeelUtil.DISCLAIMER_PROPS, source: App().state.dcInfra.source, schedule_as_of: CAPITAL.asOf }, features: feats };
   }
 
   const api = {

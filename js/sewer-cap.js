@@ -341,7 +341,7 @@
   // SWMM 5 model of the wastewater blocks (was a per-panel export-bar button; now a top-bar Export menu item).
   function exportSwmmModel() {
     if (!App().state.svcModel) return;
-    const go = () => Ex().download(`peel-blocks-swmm-${MA().getCapYear() == null ? 'buildout' : MA().getCapYear()}.inp`, swmmInp(), 'text/plain');
+    const go = () => Ex().download(`peel-blocks-swmm-${MA().getCapYear() == null ? 'buildout' : MA().getCapYear()}.inp`, window.PeelUtil.CSV_DISCLAIMER.replace(/^# /gm, ';; ') + swmmInp(), 'text/plain');
     if (!MM().SEW.data) loadSewers().then(go); else go();
   }
 
