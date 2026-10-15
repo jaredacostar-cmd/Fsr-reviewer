@@ -107,7 +107,6 @@
    43.879595
   ]
  ],
- "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
  "osm:Mount Hope Road & Columbia Way, Caledon": [
   [
    -79.739668,
@@ -150,8 +149,6 @@
    43.848643
   ]
  ],
- "osm:Castlemore Road & Bramalea Road, Brampton": [],
- "osm:Castlemore Road & Highway 410, Brampton": [],
  "osm:Bramalea Road & Highway 407, Brampton": [
   [
    -79.683545,
@@ -344,14 +341,12 @@
    43.742773
   ]
  ],
- "osm:Steeles Avenue East & Highway 50, Brampton": [],
  "osm:Lakeshore Road West & Lorne Park Road, Mississauga": [
   [
    -79.607092,
    43.531856
   ]
  ],
- "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
  "osm:Heritage Road & Steeles Avenue West, Brampton": [
   [
    -79.786829,
@@ -394,7 +389,6 @@
    43.757878
   ]
  ],
- "osm:Highway 50 & Huntington Road, Brampton": [],
  "osm:King Street & Highway 50 / Queen Street South / Queen Street North, Caledon": [
   [
    -79.738244,
@@ -425,7 +419,6 @@
    43.702669
   ]
  ],
- "osm:Hurontario Street & Old School Road, Caledon": [],
  "osm:Hurontario Street & Central Parkway, Mississauga": [
   [
    -79.62908,
@@ -496,21 +489,18 @@
    43.8701
   ]
  ],
- "osm:Airport Road & Old Base Line Road, Caledon": [],
  "osm:Innis Lake Road & Castlederg Sideroad, Caledon": [
   [
    -79.828444,
    43.859021
   ]
  ],
- "osm:Mountainview Road & Old Base Line Road, Caledon": [],
  "osm:Highway 50 / Queen Street South / Queen Street North & Buckstown Trail, Caledon": [
   [
    -79.845734,
    43.95714
   ]
  ],
- "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
  "osm:Royal Windsor Drive & Southdown Road, Mississauga": [
   [
    -79.630039,
@@ -637,7 +627,6 @@
    43.550896
   ]
  ],
- "osm:Kane Road & Lakeshore Road West, Mississauga": [],
  "osm:Bovaird Drive West & Heritage Road, Brampton": [
   [
    -79.839672,
@@ -666,6 +655,197 @@
   [
    -79.825077,
    43.671284
+  ]
+ ],
+ "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
+ "osm:Castlemore Road & Bramalea Road, Brampton": [],
+ "osm:Castlemore Road & Highway 410, Brampton": [],
+ "osm:Steeles Avenue East & Highway 50, Brampton": [],
+ "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
+ "osm:Highway 50 & Huntington Road, Brampton": [],
+ "osm:Hurontario Street & Old School Road, Caledon": [],
+ "osm:Airport Road & Old Base Line Road, Caledon": [],
+ "osm:Mountainview Road & Old Base Line Road, Caledon": [],
+ "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
+ "osm:Kane Road & Lakeshore Road West, Mississauga": [],
+ "osm:Airport Road & Braydon Boulevard / Stonecrest Drive, Brampton": [
+  [
+   -79.735225,
+   43.772913
+  ]
+ ],
+ "osm:Airport Road & Countryside Drive, Brampton": [
+  [
+   -79.749003,
+   43.783067
+  ]
+ ],
+ "osm:Dixie Road & Queen Street East / Queen Street, Brampton": [
+  [
+   -79.727937,
+   43.714878
+  ]
+ ],
+ "osm:Dixie Road & Mayfield Road, Brampton": [
+  [
+   -79.792557,
+   43.762473
+  ]
+ ],
+ "osm:Highway 50 / Regional Road 50 & Mayfield Road, Brampton": [
+  [
+   -79.695873,
+   43.848643
+  ]
+ ],
+ "osm:Mayfield Road & Airport Road, Brampton": [
+  [
+   -79.76,
+   43.791216
+  ]
+ ],
+ "osm:Mayfield Road & Chinguacousy Road, Brampton": [
+  [
+   -79.846153,
+   43.714078
+  ]
+ ],
+ "osm:Mayfield Road & Heart Lake Road, Brampton": [
+  [
+   -79.803083,
+   43.75281
+  ]
+ ],
+ "osm:Mayfield Road & Winston Churchill Boulevard, Brampton": [
+  [
+   -79.888847,
+   43.674868
+  ]
+ ],
+ "osm:Mississauga Road & Bovaird Drive West / Bovaird Drive, Brampton": [
+  [
+   -79.829583,
+   43.667046
+  ]
+ ],
+ "osm:Mississauga Road & Mayfield Road, Brampton": [
+  [
+   -79.867247,
+   43.694662
+  ]
+ ],
+ "osm:Mississauga Road & Financial Drive, Brampton": [
+  [
+   -79.786564,
+   43.635297
+  ]
+ ],
+ "osm:Steeles Avenue West / Steeles Avenue & Chinguacousy Road / Mavis Road, Brampton": [
+  [
+   -79.754516,
+   43.646791
+  ]
+ ],
+ "osm:Steeles Avenue West / Steeles Avenue & Winston Churchill Boulevard, Brampton": [
+  [
+   -79.797632,
+   43.607619
+  ]
+ ],
+ "osm:Airport Road & Mayfield Road, Caledon": [
+  [
+   -79.76,
+   43.791216
+  ]
+ ],
+ "osm:Airport Road & King Street, Caledon": [
+  [
+   -79.81367,
+   43.830613
+  ]
+ ],
+ "osm:Airport Road & Huntsmill Drive, Caledon": [
+  [
+   -79.876468,
+   43.877092
+  ]
+ ],
+ "osm:Albion Vaughan Road & King Street, Caledon": [
+  [
+   -79.718396,
+   43.888044
+  ]
+ ],
+ "osm:Mississauga Road & Old Main Street, Caledon": [
+  [
+   -80.002813,
+   43.793839
+  ]
+ ],
+ "osm:Mississauga Road & Bush Street, Caledon": [],
+ "osm:Bush Street & Winston Churchill Boulevard, Caledon": [
+  [
+   -80.030986,
+   43.781431
+  ]
+ ],
+ "osm:Bush Street & Olde Base Line Road, Caledon": [],
+ "osm:The Gore Road & Patterson Sideroad / Patterson Side Road, Caledon": [
+  [
+   -79.862192,
+   43.91832
+  ]
+ ],
+ "osm:The Gore Road & Highway 9 / King Street, Caledon": [
+  [
+   -79.781659,
+   43.859499
+  ],
+  [
+   -79.917297,
+   43.958813
+  ]
+ ],
+ "osm:Cawthra Road & Queen Elizabeth Way / QEW, Mississauga": [
+  [
+   -79.583248,
+   43.58356
+  ]
+ ],
+ "osm:Cawthra Road & Eastgate Parkway, Mississauga": [
+  [
+   -79.628705,
+   43.615623
+  ]
+ ],
+ "osm:Derry Road West / Derry Road & Argentia Road, Mississauga": [
+  [
+   -79.756683,
+   43.601263
+  ]
+ ],
+ "osm:Dixie Road & Rometown Drive, Mississauga": [
+  [
+   -79.565338,
+   43.594524
+  ]
+ ],
+ "osm:Dixie Road & Lakeshore Road East / Lakeshore Road, Mississauga": [
+  [
+   -79.550922,
+   43.584388
+  ]
+ ],
+ "osm:Erin Mills Parkway & Dundas Street West / Dundas Street, Mississauga": [
+  [
+   -79.666077,
+   43.536873
+  ]
+ ],
+ "osm:Erin Mills Parkway & Burnhamthorpe Road West / Burnhamthorpe Road, Mississauga": [
+  [
+   -79.683123,
+   43.546461
   ]
  ]
 }

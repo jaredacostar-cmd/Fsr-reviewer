@@ -1976,6 +1976,1314 @@
    "geomType": "area",
    "geomMethod": "traced from the project page image (3 control points, residual 108 m)",
    "geomConfidence": "low"
+  },
+  "airport-road-braydon-boulevard-stonecrest-drive-to-countryside-drive": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.735225,
+      43.772913
+     ],
+     [
+      -79.749003,
+      43.783067
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Airport Road from Braydon Boulevard / Stonecrest Drive to Countryside Drive (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "dixie-road-queen-street-drive-to-mayfield-road": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.727937,
+      43.714878
+     ],
+     [
+      -79.730047,
+      43.716393
+     ],
+     [
+      -79.730605,
+      43.716717
+     ],
+     [
+      -79.732832,
+      43.718417
+     ],
+     [
+      -79.733438,
+      43.718901
+     ],
+     [
+      -79.73346,
+      43.718986
+     ],
+     [
+      -79.734343,
+      43.719646
+     ],
+     [
+      -79.734582,
+      43.719738
+     ],
+     [
+      -79.739222,
+      43.723212
+     ],
+     [
+      -79.741187,
+      43.724632
+     ],
+     [
+      -79.741389,
+      43.72472
+     ],
+     [
+      -79.748407,
+      43.729982
+     ],
+     [
+      -79.753223,
+      43.733464
+     ],
+     [
+      -79.756747,
+      43.736122
+     ],
+     [
+      -79.760734,
+      43.738989
+     ],
+     [
+      -79.766177,
+      43.743079
+     ],
+     [
+      -79.780401,
+      43.75354
+     ],
+     [
+      -79.780519,
+      43.753681
+     ],
+     [
+      -79.781767,
+      43.754646
+     ],
+     [
+      -79.791769,
+      43.761984
+     ],
+     [
+      -79.792125,
+      43.762158
+     ],
+     [
+      -79.792557,
+      43.762473
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Dixie Road from Queen Street East / Queen Street to Mayfield Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "highway-50-and-mayfield-road": {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.695873,
+     43.848643
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "intersection of Highway 50 / Regional Road 50 and Mayfield Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "mayfield-road-airport-road-to-coleraine-drive": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.76,
+      43.791216
+     ],
+     [
+      -79.759262,
+      43.791662
+     ],
+     [
+      -79.759152,
+      43.791782
+     ],
+     [
+      -79.758391,
+      43.792193
+     ],
+     [
+      -79.748121,
+      43.801195
+     ],
+     [
+      -79.722236,
+      43.824166
+     ],
+     [
+      -79.721079,
+      43.825126
+     ],
+     [
+      -79.718535,
+      43.82739
+     ],
+     [
+      -79.716384,
+      43.829366
+     ],
+     [
+      -79.706524,
+      43.838192
+     ],
+     [
+      -79.705784,
+      43.838949
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Mayfield Road from Airport Road to Coleraine Drive (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "mayfield-road-chinguacousy-road-to-heart-lake-road": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.846153,
+      43.714078
+     ],
+     [
+      -79.843738,
+      43.716244
+     ],
+     [
+      -79.835546,
+      43.723784
+     ],
+     [
+      -79.835221,
+      43.724021
+     ],
+     [
+      -79.832808,
+      43.7262
+     ],
+     [
+      -79.830951,
+      43.728019
+     ],
+     [
+      -79.829164,
+      43.729904
+     ],
+     [
+      -79.826559,
+      43.732316
+     ],
+     [
+      -79.82599,
+      43.732896
+     ],
+     [
+      -79.825914,
+      43.733036
+     ],
+     [
+      -79.823864,
+      43.7349
+     ],
+     [
+      -79.82292,
+      43.735647
+     ],
+     [
+      -79.820948,
+      43.737438
+     ],
+     [
+      -79.818973,
+      43.739411
+     ],
+     [
+      -79.814608,
+      43.743544
+     ],
+     [
+      -79.809695,
+      43.748014
+     ],
+     [
+      -79.808391,
+      43.749149
+     ],
+     [
+      -79.805932,
+      43.750679
+     ],
+     [
+      -79.804405,
+      43.751692
+     ],
+     [
+      -79.803758,
+      43.752304
+     ],
+     [
+      -79.803566,
+      43.752362
+     ],
+     [
+      -79.803083,
+      43.75281
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Mayfield Road from Chinguacousy Road to Heart Lake Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "mayfield-road-chinguacousy-road-to-winston-churchill-boulevard": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.846153,
+      43.714078
+     ],
+     [
+      -79.851049,
+      43.709729
+     ],
+     [
+      -79.851596,
+      43.709194
+     ],
+     [
+      -79.852432,
+      43.7085
+     ],
+     [
+      -79.856643,
+      43.704749
+     ],
+     [
+      -79.860869,
+      43.700907
+     ],
+     [
+      -79.861425,
+      43.700356
+     ],
+     [
+      -79.862963,
+      43.698579
+     ],
+     [
+      -79.863499,
+      43.698054
+     ],
+     [
+      -79.870081,
+      43.692097
+     ],
+     [
+      -79.870919,
+      43.691177
+     ],
+     [
+      -79.873621,
+      43.687898
+     ],
+     [
+      -79.877102,
+      43.684694
+     ],
+     [
+      -79.881146,
+      43.681091
+     ],
+     [
+      -79.884055,
+      43.679116
+     ],
+     [
+      -79.885225,
+      43.678245
+     ],
+     [
+      -79.888114,
+      43.675599
+     ],
+     [
+      -79.888847,
+      43.674868
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Mayfield Road from Chinguacousy Road to Winston Churchill Boulevard (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "mayfield-road-heart-lake-road-to-airport-road": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.803083,
+      43.75281
+     ],
+     [
+      -79.79712,
+      43.758106
+     ],
+     [
+      -79.790291,
+      43.764326
+     ],
+     [
+      -79.785095,
+      43.769134
+     ],
+     [
+      -79.785059,
+      43.769265
+     ],
+     [
+      -79.784591,
+      43.769676
+     ],
+     [
+      -79.784418,
+      43.76973
+     ],
+     [
+      -79.78177,
+      43.77217
+     ],
+     [
+      -79.778635,
+      43.774952
+     ],
+     [
+      -79.777747,
+      43.775957
+     ],
+     [
+      -79.775277,
+      43.779282
+     ],
+     [
+      -79.773025,
+      43.781308
+     ],
+     [
+      -79.770902,
+      43.783031
+     ],
+     [
+      -79.760938,
+      43.790579
+     ],
+     [
+      -79.76,
+      43.791216
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Mayfield Road from Heart Lake Road to Airport Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "mississauga-road-bovaird-drive-to-mayfield-road": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.829583,
+      43.667046
+     ],
+     [
+      -79.837346,
+      43.672654
+     ],
+     [
+      -79.840696,
+      43.674959
+     ],
+     [
+      -79.840844,
+      43.675015
+     ],
+     [
+      -79.842732,
+      43.676492
+     ],
+     [
+      -79.845218,
+      43.678265
+     ],
+     [
+      -79.848777,
+      43.680975
+     ],
+     [
+      -79.854753,
+      43.68539
+     ],
+     [
+      -79.854853,
+      43.685518
+     ],
+     [
+      -79.867247,
+      43.694662
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Mississauga Road from Bovaird Drive West / Bovaird Drive to Mayfield Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "mississauga-road-financial-drive-to-bovaird-drive-west": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.786564,
+      43.635297
+     ],
+     [
+      -79.790337,
+      43.638069
+     ],
+     [
+      -79.790509,
+      43.638118
+     ],
+     [
+      -79.794098,
+      43.640732
+     ],
+     [
+      -79.799004,
+      43.644379
+     ],
+     [
+      -79.80082,
+      43.645785
+     ],
+     [
+      -79.801189,
+      43.646097
+     ],
+     [
+      -79.801984,
+      43.646912
+     ],
+     [
+      -79.80257,
+      43.647375
+     ],
+     [
+      -79.804509,
+      43.648458
+     ],
+     [
+      -79.805708,
+      43.649402
+     ],
+     [
+      -79.807835,
+      43.650944
+     ],
+     [
+      -79.807943,
+      43.651088
+     ],
+     [
+      -79.811176,
+      43.653399
+     ],
+     [
+      -79.81135,
+      43.653645
+     ],
+     [
+      -79.811972,
+      43.654104
+     ],
+     [
+      -79.812243,
+      43.654297
+     ],
+     [
+      -79.812373,
+      43.654331
+     ],
+     [
+      -79.813974,
+      43.65542
+     ],
+     [
+      -79.814301,
+      43.655566
+     ],
+     [
+      -79.815194,
+      43.656194
+     ],
+     [
+      -79.81845,
+      43.658595
+     ],
+     [
+      -79.821673,
+      43.661226
+     ],
+     [
+      -79.822795,
+      43.662081
+     ],
+     [
+      -79.829583,
+      43.667046
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Mississauga Road from Financial Drive to Bovaird Drive West / Bovaird Drive (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "steeles-avenue-chinguacousy-road-mavis-road-to-winston-churchill-boulevard": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.754516,
+      43.646791
+     ],
+     [
+      -79.754512,
+      43.646664
+     ],
+     [
+      -79.755764,
+      43.645526
+     ],
+     [
+      -79.771218,
+      43.631513
+     ],
+     [
+      -79.773877,
+      43.629159
+     ],
+     [
+      -79.775763,
+      43.627406
+     ],
+     [
+      -79.777344,
+      43.626019
+     ],
+     [
+      -79.77746,
+      43.626001
+     ],
+     [
+      -79.780788,
+      43.622927
+     ],
+     [
+      -79.780847,
+      43.622804
+     ],
+     [
+      -79.78406,
+      43.619916
+     ],
+     [
+      -79.78601,
+      43.618071
+     ],
+     [
+      -79.787575,
+      43.616655
+     ],
+     [
+      -79.787895,
+      43.616513
+     ],
+     [
+      -79.795445,
+      43.609711
+     ],
+     [
+      -79.796642,
+      43.608607
+     ],
+     [
+      -79.796701,
+      43.608441
+     ],
+     [
+      -79.797632,
+      43.607619
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Steeles Avenue West / Steeles Avenue from Chinguacousy Road / Mavis Road to Winston Churchill Boulevard (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "airport-road-1km-north-of-mayfield-road-to-600m-north-of-king-street": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.768765,
+      43.797636
+     ],
+     [
+      -79.769088,
+      43.797795
+     ],
+     [
+      -79.786595,
+      43.810748
+     ],
+     [
+      -79.81367,
+      43.830613
+     ],
+     [
+      -79.818895,
+      43.834492
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Airport Road from 1000 m north of Mayfield Road to 600 m north of King Street (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "airport-road-100m-north-of-king-street-to-300m-north-of-huntsmill-drive": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.814533,
+      43.831265
+     ],
+     [
+      -79.840592,
+      43.850476
+     ],
+     [
+      -79.863079,
+      43.867152
+     ],
+     [
+      -79.866354,
+      43.869533
+     ],
+     [
+      -79.878869,
+      43.878851
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Airport Road from 100 m north of King Street to 300 m north of Huntsmill Drive (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "albion-vaughan-road-and-king-street-intersection": {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.718396,
+     43.888044
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "intersection of Albion Vaughan Road and King Street (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "the-gore-road-patterson-sideroad-to-hwy-9": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.862192,
+      43.91832
+     ],
+     [
+      -79.876186,
+      43.928596
+     ],
+     [
+      -79.879687,
+      43.931241
+     ],
+     [
+      -79.885058,
+      43.93513
+     ],
+     [
+      -79.885474,
+      43.935459
+     ],
+     [
+      -79.886214,
+      43.936203
+     ],
+     [
+      -79.886528,
+      43.936412
+     ],
+     [
+      -79.887408,
+      43.936863
+     ],
+     [
+      -79.888947,
+      43.937976
+     ],
+     [
+      -79.89068,
+      43.939004
+     ],
+     [
+      -79.891656,
+      43.939919
+     ],
+     [
+      -79.892336,
+      43.940449
+     ],
+     [
+      -79.910349,
+      43.953642
+     ],
+     [
+      -79.911159,
+      43.954325
+     ],
+     [
+      -79.911673,
+      43.954834
+     ],
+     [
+      -79.912968,
+      43.955584
+     ],
+     [
+      -79.913731,
+      43.956096
+     ],
+     [
+      -79.915761,
+      43.957592
+     ],
+     [
+      -79.917297,
+      43.958813
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline The Gore Road from Patterson Sideroad / Patterson Side Road to Highway 9 / King Street (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "cawthra-road-improvements": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.583248,
+      43.58356
+     ],
+     [
+      -79.583835,
+      43.583969
+     ],
+     [
+      -79.584491,
+      43.58432
+     ],
+     [
+      -79.586666,
+      43.585375
+     ],
+     [
+      -79.586741,
+      43.585496
+     ],
+     [
+      -79.588347,
+      43.586518
+     ],
+     [
+      -79.588481,
+      43.586539
+     ],
+     [
+      -79.589122,
+      43.586993
+     ],
+     [
+      -79.589203,
+      43.587125
+     ],
+     [
+      -79.589918,
+      43.587659
+     ],
+     [
+      -79.589945,
+      43.587753
+     ],
+     [
+      -79.590162,
+      43.587921
+     ],
+     [
+      -79.590497,
+      43.588151
+     ],
+     [
+      -79.59066,
+      43.588184
+     ],
+     [
+      -79.591151,
+      43.588492
+     ],
+     [
+      -79.59118,
+      43.588641
+     ],
+     [
+      -79.592296,
+      43.589435
+     ],
+     [
+      -79.592504,
+      43.589485
+     ],
+     [
+      -79.593764,
+      43.59031
+     ],
+     [
+      -79.593842,
+      43.590427
+     ],
+     [
+      -79.594162,
+      43.590671
+     ],
+     [
+      -79.594423,
+      43.590796
+     ],
+     [
+      -79.598711,
+      43.593732
+     ],
+     [
+      -79.601176,
+      43.595286
+     ],
+     [
+      -79.60276,
+      43.596622
+     ],
+     [
+      -79.604081,
+      43.597569
+     ],
+     [
+      -79.608881,
+      43.600873
+     ],
+     [
+      -79.608925,
+      43.600957
+     ],
+     [
+      -79.609385,
+      43.6013
+     ],
+     [
+      -79.610033,
+      43.601747
+     ],
+     [
+      -79.61016,
+      43.601776
+     ],
+     [
+      -79.612973,
+      43.603784
+     ],
+     [
+      -79.617691,
+      43.607037
+     ],
+     [
+      -79.617763,
+      43.60716
+     ],
+     [
+      -79.618548,
+      43.607732
+     ],
+     [
+      -79.619043,
+      43.608476
+     ],
+     [
+      -79.61956,
+      43.609004
+     ],
+     [
+      -79.621382,
+      43.610228
+     ],
+     [
+      -79.622124,
+      43.610771
+     ],
+     [
+      -79.622242,
+      43.610922
+     ],
+     [
+      -79.625057,
+      43.612948
+     ],
+     [
+      -79.625449,
+      43.613173
+     ],
+     [
+      -79.628705,
+      43.615623
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Cawthra Road from Queen Elizabeth Way / QEW to Eastgate Parkway (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "derry-road-and-argentia-road-intersection-improvements": {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -79.756683,
+     43.601263
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "intersection of Derry Road West / Derry Road and Argentia Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "dixie-road-rometown-drive-to-lakeshore-road-corridor-study": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.565338,
+      43.594524
+     ],
+     [
+      -79.564838,
+      43.594192
+     ],
+     [
+      -79.564779,
+      43.594089
+     ],
+     [
+      -79.56082,
+      43.59136
+     ],
+     [
+      -79.55607,
+      43.587965
+     ],
+     [
+      -79.550922,
+      43.584388
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "road centreline Dixie Road from Rometown Drive to Lakeshore Road East / Lakeshore Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "erin-mills-parkway-intersection-improvements-at-dundas-street-and-burnhamthorpe-": {
+   "geometry": {
+    "type": "MultiPoint",
+    "coordinates": [
+     [
+      -79.666077,
+      43.536873
+     ],
+     [
+      -79.683123,
+      43.546461
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "intersection of Erin Mills Parkway and Dundas Street West / Dundas Street; Erin Mills Parkway and Burnhamthorpe Road West / Burnhamthorpe Road (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "medium"
+  },
+  "lornewood-creek-sanitary-sewer-improvement": {
+   "geometry": {
+    "type": "MultiLineString",
+    "coordinates": [
+     [
+      [
+       -79.607317,
+       43.537131
+      ],
+      [
+       -79.606758,
+       43.537065
+      ],
+      [
+       -79.606398,
+       43.537182
+      ],
+      [
+       -79.60581,
+       43.537136
+      ],
+      [
+       -79.60545,
+       43.537159
+      ],
+      [
+       -79.605129,
+       43.537256
+      ],
+      [
+       -79.604368,
+       43.53724
+      ],
+      [
+       -79.604008,
+       43.537337
+      ]
+     ],
+     [
+      [
+       -79.603091,
+       43.53733
+      ],
+      [
+       -79.602241,
+       43.537056
+      ]
+     ],
+     [
+      [
+       -79.604008,
+       43.537337
+      ],
+      [
+       -79.603091,
+       43.53733
+      ]
+     ],
+     [
+      [
+       -79.617178,
+       43.532534
+      ],
+      [
+       -79.617044,
+       43.532552
+      ],
+      [
+       -79.616907,
+       43.532711
+      ],
+      [
+       -79.616776,
+       43.53277
+      ],
+      [
+       -79.616671,
+       43.533023
+      ],
+      [
+       -79.61613,
+       43.533408
+      ]
+     ],
+     [
+      [
+       -79.618493,
+       43.53346
+      ],
+      [
+       -79.617597,
+       43.53345
+      ],
+      [
+       -79.617146,
+       43.533347
+      ],
+      [
+       -79.61613,
+       43.533408
+      ]
+     ],
+     [
+      [
+       -79.622092,
+       43.532931
+      ],
+      [
+       -79.621132,
+       43.533225
+      ],
+      [
+       -79.620507,
+       43.533223
+      ],
+      [
+       -79.620123,
+       43.533341
+      ],
+      [
+       -79.619482,
+       43.533396
+      ]
+     ],
+     [
+      [
+       -79.615668,
+       43.533431
+      ],
+      [
+       -79.615008,
+       43.533823
+      ],
+      [
+       -79.614509,
+       43.533979
+      ],
+      [
+       -79.613854,
+       43.534492
+      ],
+      [
+       -79.61327,
+       43.534873
+      ],
+      [
+       -79.611923,
+       43.535597
+      ],
+      [
+       -79.611376,
+       43.535834
+      ],
+      [
+       -79.61129,
+       43.535939
+      ],
+      [
+       -79.610979,
+       43.536021
+      ],
+      [
+       -79.610223,
+       43.536534
+      ]
+     ],
+     [
+      [
+       -79.617492,
+       43.532385
+      ],
+      [
+       -79.617178,
+       43.532534
+      ]
+     ],
+     [
+      [
+       -79.609874,
+       43.536942
+      ],
+      [
+       -79.609708,
+       43.537119
+      ]
+     ],
+     [
+      [
+       -79.61613,
+       43.533408
+      ],
+      [
+       -79.615668,
+       43.533431
+      ]
+     ],
+     [
+      [
+       -79.619482,
+       43.533396
+      ],
+      [
+       -79.618493,
+       43.53346
+      ]
+     ],
+     [
+      [
+       -79.618892,
+       43.532033
+      ],
+      [
+       -79.618278,
+       43.532038
+      ],
+      [
+       -79.617707,
+       43.532184
+      ],
+      [
+       -79.617492,
+       43.532385
+      ]
+     ]
+    ]
+   },
+   "geomType": "linear",
+   "geomMethod": "along Lornewood Creek, the creek the sewer follows (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "low"
   }
  },
  "add": [],
