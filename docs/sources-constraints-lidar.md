@@ -79,3 +79,55 @@ Everything else in the tables above is approved as recommended.
     today, so one switch never pulls more than ~2 MB.
 - **Current regulation limits.** CVC 2025 and TRCA 2025 both post-date O. Reg. 41/24 (April 2024)
   and are current.
+
+## Stage 1 (lidar elevation): checks and what was built
+
+Checked in Actions (`mode=elev-check` → `data/probe/elevation.json`; `mode=elev-bench` →
+`data/probe/elevation-bench.json`):
+
+- **Sampler.** The Ontario DTM image service's `getSamples` takes a multipoint, so a whole profile
+  is one request (60 points per request).
+  - Each value comes with the raster's attributes, including `Project` (e.g. "GTA 2023") and
+    `Resolution_m`. That means the project label needs no second lookup in the package index.
+  - Values are strings ("231.069992065").
+  - Off the coverage, the service leaves the point out of `samples`. When no point in the request
+    has a value, it answers with error 400.
+- **Hillshade.** The same service has a `Hillshade` raster function (15 others too), and
+  `exportImage` with that rendering rule returns a 256 × 256 PNG for the site origin.
+  - The hillshade therefore comes from the Ontario service, not NRCan's `hillshade-dtm` COG as
+    planned in Stage 0. It is one source with no COG reader to add, and the licence is the same
+    OGL – Ontario.
+  - NRCan HRDEM is not used in Stage 1.
+- **Benchmarks.** City of Brampton benchmarks are brass tablets set in walls, foundations, culverts
+  and bridges, on **CGVD28** (1978 Southern Ontario adjustment). The lidar is on **CGVD2013**.
+  - For the 142 active benchmarks whose description states the tablet's height above grade:
+    ground (CGVD2013) = published elevation − height above grade + (N28 − N2013).
+  - N28 − N2013 comes from NRCan's HT2_2010v70 and CGG2013a grids (via PROJ `cct`). It is
+    **−0.40 to −0.41 m** across Brampton.
+  - Lidar − ground over all 142: median **−0.09 m**; 76 within 0.5 m (55 within 0.25 m); p10
+    −1.85 m, p90 +0.97 m.
+  - The tails are tablets on bridges, culverts and raised porches. There, the bare-earth pixel at
+    the mapped point is not the grade at the tablet.
+  - Example: benchmark 544 (inspected 2019, tablet 0.30 m above ground) differs by −0.09 m.
+  - The fixture `tests/fixtures/elevation-benchmarks.json` keeps the monument number, position and
+    values only. The descriptions name private addresses, so they are dropped.
+
+Built:
+
+- `js/elevation.js` (`PeelElevation`):
+  - `getGround(lat, lng)` → `{ z, source, res, project, label }`. Single calls in the same tick go
+    out as one request.
+  - `getGroundMany(points)`.
+  - Terrain Tiles as the fallback, used both off the lidar coverage and when the service does not
+    answer.
+  - `sourceLabel` / `shortLabel` / `sourcesNote` / `sourceRuns` for the source on every result.
+  - The hillshade layer (a switch under Layers › More settings › Base map, off by default; the Base
+    map group comes in Stage 3).
+- Switched to the sampler:
+  - Measure & ground profile: each run's source along the line, and terrain-tile stretches drawn
+    dashed.
+  - Pipe depth (ground − invert, with the ground's source).
+  - Development › Site, both views: ground and the fall to the catchment outlet, each with its
+    source. The fall to outlet now also shows in the newer Site tab.
+  - The sewer profile's ground.
+  - The pressure-zone estimate's ground.

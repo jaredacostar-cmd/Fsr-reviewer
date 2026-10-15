@@ -116,7 +116,7 @@
   async function estimateZone(p) {
     if (zoneEst.has(p)) return zoneEst.get(p);
     const zones = App().state.servicing.zones, near = (f, m = 30000) => Areas().nearest(zones.filter(f), p.lng, p.lat, m);
-    let elev = null; try { elev = await Meas().elevAt(p.lat, p.lng); } catch (e) { /* tiles unavailable */ }
+    let elev = null, elevSrc = null; try { const g = await window.PeelElevation.getGround(p.lat, p.lng); elev = g.z; elevSrc = g.z != null ? window.PeelElevation.shortLabel(g) : null; } catch (e) { /* no elevation */ }
     const via = DI().dcVia(p, 'pz'), viaZ = via && SD().svcById.get(via.id), viaL = viaZ && MP().zLevel(viaZ.zone);
     const nz = near(() => true, 20000), nearZ = nz && SD().svcById.get(nz.id), nearL = nearZ && MP().zLevel(nearZ.zone);
     const cand = elev == null ? [] : Object.keys(PZ_TABLE).map(Number).filter(n => elev >= PZ_TABLE[n][1] && elev <= PZ_TABLE[n][2]);
@@ -134,7 +134,7 @@
     // nearest zone) is the answer everywhere; the elevation band only flags another zone the ground fits.
     const one = SD().zoneOf(p);
     if (one && one.reason !== 'mapped') { z = one.z; how = one.reason === 'planned-main' ? 'dc-only' : 'nearest'; }
-    const est = z ? { z, level: MP().zLevel(z.zone), elev, cand, how, via: how === 'dc' || how === 'dc-only' ? (via || (one && one.via ? { via: one.via, ln: null } : null)) : null } : null;
+    const est = z ? { z, level: MP().zLevel(z.zone), elev, elevSrc, cand, how, via: how === 'dc' || how === 'dc-only' ? (via || (one && one.via ? { via: one.via, ln: null } : null)) : null } : null;
     zoneEst.set(p, est);
     return est;
   }
@@ -143,8 +143,8 @@
     const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level];
     const why = { dc: 'the planned DC main within 1 km feeds it', near: 'it is the nearest mapped zone in range', pressure: 'its grade line gives about 55 m of pressure', above: 'above Zone 7\'s range: the nearest groundwater system', 'dc-only': 'the zone the nearest planned DC main feeds', nearest: 'the nearest mapped zone' }[e.how] || '';
     // One flag (SPEC 1.8): the assigned zone and why; the other zone(s) the ground also fits.
-    const other = e.cand.filter(n => n !== e.level);
-    const fits = e.elev == null ? '' : e.cand.length ? (other.length ? ` · ground ≈${Math.round(e.elev)} m also fits Zone ${other.join(' / ')} — <strong>pressure zone uncertain</strong>, confirm in the FSR` : ` · ground ≈${Math.round(e.elev)} m is in its range`) : ` · ground ≈${Math.round(e.elev)} m is outside its range — confirm in the FSR`;
+    const other = e.cand.filter(n => n !== e.level), gsrc = e.elevSrc ? ` (${esc(e.elevSrc)})` : '';
+    const fits = e.elev == null ? '' : e.cand.length ? (other.length ? ` · ground ≈${Math.round(e.elev)} m${gsrc} also fits Zone ${other.join(' / ')} — <strong>pressure zone uncertain</strong>, confirm in the FSR` : ` · ground ≈${Math.round(e.elev)} m${gsrc} is in its range`) : ` · ground ≈${Math.round(e.elev)} m${gsrc} is outside its range — confirm in the FSR`;
     return `<p class="small est-line">Outside the mapped pressure zones: assigned to <strong>${zn}</strong> (${why})${r && e.how !== 'above' ? ` <span class="muted">— serves ${r[1]}–${r[2]} m, grade line ${r[0]} m (2020 Master Plan, Vol. 3, Table 3)</span>` : ''}${fits}${e.via && (e.via.ln || e.via.via) ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
   }
   const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };

@@ -667,36 +667,13 @@
       .catch(e => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
   }
 
-  // ---- Site: ground elevation (fetch pattern copied from js/app.js) ----------------
-  // Note: the old row also showed the fall to the catchment outlet using the
-  // private svcFacts(); that needs the sewer model, so this row shows the site
-  // elevation only.
-  const ELEV_Z = 14, elevTiles = new Map();
-  function elevTile(x, y) {
-    const k = `${x}/${y}`; if (elevTiles.has(k)) return elevTiles.get(k);
-    const pr = new Promise((ok, fail) => {
-      const img = new Image(); img.crossOrigin = 'anonymous';
-      img.onload = () => { try { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.drawImage(img, 0, 0); ok(g.getImageData(0, 0, 256, 256).data); } catch (e) { fail(e); } };
-      img.onerror = () => fail(new Error('elevation tile unavailable'));
-      img.src = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${ELEV_Z}/${x}/${y}.png`;
-    });
-    elevTiles.set(k, pr); pr.catch(() => elevTiles.delete(k));
-    return pr;
-  }
-  async function elevAt(lat, lng) {
-    const n = 2 ** ELEV_Z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
-    const x = Math.floor(xf), y = Math.floor(yf), px = Math.min(255, Math.floor((xf - x) * 256)), py = Math.min(255, Math.floor((yf - y) * 256));
-    const d = await elevTile(x, y), i = (py * 256 + px) * 4;
-    return d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768;
-  }
+  // ---- Site: ground elevation and the fall to the catchment outlet (js/site-context.js, from the
+  // lidar terrain model through js/elevation.js; each value names its source).
   async function fillGround(p) {
-    if (!hasDOM() || typeof Image === 'undefined') return;
-    const box = document.getElementById('devtab-ground');
-    if (!box) return;
-    try {
-      const z = await elevAt(p.lat, p.lng);
-      if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = `<p class="small">Site <strong>${z.toFixed(1)} m</strong> above sea level</p><p class="small muted">Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts.</p>`; }
-    } catch (e) { if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = '<p class="small muted">Ground elevation unavailable (terrain tiles did not load).</p>'; } }
+    if (!hasDOM() || !root.PeelSiteContext || !root.PeelSiteContext.groundHTML) return;
+    if (!document.getElementById('devtab-ground')) return;
+    const html = await root.PeelSiteContext.groundHTML(p);
+    if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = html; }
   }
 
   // ---- Site: storm sewers (storm-only variant of app.js fillExisting) --------------

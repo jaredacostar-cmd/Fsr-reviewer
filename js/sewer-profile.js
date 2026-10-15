@@ -21,7 +21,8 @@
   const MM = () => window.PeelMapMarkers;
 
   // ---- Sewer profile: ground, pipe and the modelled flow along a route --------------------------
-  // For a route of 300 mm+ pipes (a trace, or downstream of a pipe): the ground (terrain tiles), the
+  // For a route of 300 mm+ pipes (a trace, or downstream of a pipe): the ground (lidar terrain model,
+  // terrain tiles where it has no value; js/elevation.js), the
   // pipe (Region of Peel inverts; where one isn't published it follows on from the pipe before at the
   // published slope, drawn dashed), and the sewage at the demand year: the normal depth in a
   // part-full pipe (Manning), or, over capacity, the hydraulic grade above the crown
@@ -50,14 +51,15 @@
     });
     // Back-fill pipes before the first published invert, from the one after.
     for (let k = segs.length - 2; k >= 0; k--) if (segs[k].up == null && segs[k + 1].up != null) { const g = segs[k]; g.dn = segs[k + 1].up; g.up = g.dn + (P[g.i][1] || 0.002) * g.len; g.est = true; }
-    let ground;
+    let ground, gsrc = [];
     try {
       const pts = segs.flatMap(g => [g.a, g.mid, g.b]);
-      const z = await Promise.all(pts.map(([lng, lat]) => Meas().elevAt(lat, lng).catch(() => null)));
+      gsrc = await window.PeelElevation.getGroundMany(pts.map(([lng, lat]) => ({ lat, lng })));
+      const z = gsrc.map(r => r.z);
       ground = segs.map((g, k) => [z[3 * k], z[3 * k + 1], z[3 * k + 2]]);
     } catch (e) { ground = segs.map(() => [null, null, null]); }
     if (seq !== PROF.seq) return;
-    PROF.data = { segs, ground, title };
+    PROF.data = { segs, ground, title, groundNote: window.PeelElevation ? window.PeelElevation.sourcesNote(gsrc) : '' };
     const tight = segs.reduce((b, g, k) => g.st.r1 != null && (!b || g.st.r1 > segs[b.k].st.r1) ? { k } : b, null);
     PROF.wins = [{ t: `Whole path (${(x / 1000).toFixed(1)} km)`, a: 0, b: x }];
     if (x > 2500) PROF.wins.push({ t: 'First 2 km', a: 0, b: 2000 });
@@ -65,7 +67,7 @@
     drawProfile(PROF.wins.length > 1 && x > 8000 ? (tight ? 2 : 1) : 0);
   }
   function drawProfile(w) {
-    const { segs, ground, title } = PROF.data, win = PROF.wins[w] || PROF.wins[0], P = MM().SEW.data.pipes;
+    const { segs, ground, title, groundNote } = PROF.data, win = PROF.wins[w] || PROF.wins[0], P = MM().SEW.data.pipes;
     const inWin = segs.map((g, k) => ({ g, z: ground[k] })).filter(({ g }) => g.x1 >= win.a && g.x0 <= win.b && g.up != null);
     const W = Math.min(1100, innerWidth - 40), H = Math.min(420, Math.max(260, innerHeight * 0.45)), L = 52, R = 14, T = 14, B = 34;
     // Water surface / hydraulic grade at each end of a pipe.
@@ -110,8 +112,8 @@
       <div class="prof-bar"><span class="seg">${PROF.wins.map((o, k) => `<button type="button" class="btn small${k === w ? ' on' : ''}" data-prof-win="${k}">${esc(o.t)}</button>`).join('')}</span>
         <span class="muted small">Sewage at <strong>${esc(String(yrT))}</strong> (Demand year) · ${fmtNum(inWin.length)} pipes${nSur ? ` · <strong class="pf-over-t">${nSur} surcharged</strong>` : ''}</span></div>
       <div class="prof-wrap">${svg}<div class="prof-tip" hidden></div></div>
-      <ul class="grow-legend prof-legend"><li><span class="pf-sw ground"></span>Ground (terrain tiles, ±1–2 m)</li><li><span class="pf-sw pipe"></span>Pipe (published inverts${nEst ? '; dashed: estimated from the slope' : ''})</li><li><span class="pf-sw water"></span>Sewage, part full</li><li><span class="pf-sw near"></span>85–100% of capacity</li><li><span class="pf-sw over"></span>Surcharged; red line = hydraulic grade</li></ul>
-      <p class="small muted">Flows at Peel criteria for the scenario (${esc(SvcTab().scenarioText())}). Normal depth in each pipe on its own (Manning, n = 0.013), not a backwater model; above capacity the grade line rises upstream at Sf = S0 × (Q / Qfull)². Depth of cover = ground − crown.</p>`;
+      <ul class="grow-legend prof-legend"><li><span class="pf-sw ground"></span>Ground (${groundNote && /lidar/.test(groundNote) ? (/terrain tiles/.test(groundNote) ? 'lidar 0.5 m; terrain tiles beyond its coverage' : 'lidar 0.5 m') : 'terrain tiles, ±1–2 m'})</li><li><span class="pf-sw pipe"></span>Pipe (published inverts${nEst ? '; dashed: estimated from the slope' : ''})</li><li><span class="pf-sw water"></span>Sewage, part full</li><li><span class="pf-sw near"></span>85–100% of capacity</li><li><span class="pf-sw over"></span>Surcharged; red line = hydraulic grade</li></ul>
+      <p class="small muted">Flows at Peel criteria for the scenario (${esc(SvcTab().scenarioText())}). Normal depth in each pipe on its own (Manning, n = 0.013), not a backwater model; above capacity the grade line rises upstream at Sf = S0 × (Q / Qfull)². Depth of cover = ground − crown. ${esc(groundNote || '')}</p>`;
     // Hover / tap: the pipe under the pointer.
     const svgEl = PROF.el.querySelector('.prof-svg'), tip = PROF.el.querySelector('.prof-tip'), cur = svgEl.querySelector('.pf-cur');
     const hitAt = ev => { const r = svgEl.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W, xx = win.a + (px - L) / (W - L - R) * (win.b - win.a); return { r, px, xx, hit: inWin.find(({ g }) => xx >= g.x0 && xx <= g.x1) }; };

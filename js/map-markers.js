@@ -129,6 +129,7 @@
         </div>
         <div class="mo-sec"><div class="mo-h">Base map</div>
           <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
+          <div class="mo-chips">${chip('id="opt-hill"', store.get('hillshade', false) === true, '<i class="lg-area" style="--c:var(--text-muted)"></i>Lidar hillshade', 'hillshade')}</div>
           ${MC().canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(MC().ORIENTATIONS, MC().getOrientation())}</select></label>` : ''}
         </div>
         </details>
@@ -155,6 +156,7 @@
       el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = MA().savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); MA().renderSavedViews(); };
       el.querySelector('#opt-hov').onchange = e => AS().setHov({ on: e.target.checked });
       el.querySelector('#opt-hovr').oninput = e => { AS().setHov({ r: +e.target.value }); document.querySelector('#opt-hovr-v').textContent = `${hov.r} px`; };
+      el.querySelector('#opt-hill').onchange = e => { if (window.PeelElevation) window.PeelElevation.setHillshade(e.target.checked); };
       el.querySelector('#opt-basemap').onchange = e => { MC().setBasemap(e.target.value); store.set('basemap', e.target.value); MC().setTiles(); CA().restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { ML().setLabelMode(e.target.value); store.set('labelMode', e.target.value); ML().updateLabels(); };
       el.querySelector('#opt-da').onchange = e => CA().setDaLayer(e.target.checked);

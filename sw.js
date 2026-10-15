@@ -63,6 +63,7 @@ const SHELL_ASSETS = [
   'js/developments-tab.js',
   'js/devscope.js',
   'js/devtab.js',
+  'js/elevation.js',
   'js/employment.js',
   'js/exist-pipes.js',
   'js/export-comparison.js',
