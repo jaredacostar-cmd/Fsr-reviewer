@@ -152,13 +152,79 @@ function review(res, overrides = new Map()) {
   };
 }
 
+// Chronology rules (proposed; report only): model js/tree.js r1–r4 one at a time, cumulatively, and
+// list what each step changes. r5 is the filing order of every tree, with backwards steps marked.
+const STEPS = [
+  { key: 'r1', label: 'Rule 1: undated files take the year in their file number' },
+  { key: 'r2', label: 'Rule 2: old approvals (3+ years before a newer proposal) become history' },
+  { key: 'r3', label: 'Rule 3: same land: the latest file wins only when it replaces the earlier one' },
+  { key: 'r4', label: 'Rule 4: permits issued 2+ years before their file are the old building' },
+];
+const iso = t => (t == null ? null : new Date(t).toISOString().slice(0, 10));
+function snapshotOf(res) {
+  const { nodes, counts } = res.internals;
+  const treeOf = new Map(), trees = counts.map(({ t, c }, k) => ({ k, units: c.units || 0, basis: c.basis, nodes: t.nodes.map(i => nodes[i].id), root: nodes[t.nodes[0]].refs[0] || nodes[t.nodes[0]].id, muni: nodes[t.nodes[0]].municipality }));
+  trees.forEach(t => t.nodes.forEach(id => treeOf.set(id, t.k)));
+  return { trees, treeOf };
+}
+// Groups of files whose trees differ between two runs (by membership or count).
+function diffRuns(A, B) {
+  const ids = [...A.treeOf.keys()], uf = new Map(ids.map(x => [x, x]));
+  const find = x => { while (uf.get(x) !== x) { uf.set(x, uf.get(uf.get(x))); x = uf.get(x); } return x; };
+  const join = (a, b) => { uf.set(find(a), find(b)); };
+  for (const S of [A, B]) for (const t of S.trees) for (const id of t.nodes.slice(1)) join(t.nodes[0], id);
+  const comp = new Map();
+  for (const S of [A, B]) S.trees.forEach(t => { const r = find(t.nodes[0]); if (!comp.has(r)) comp.set(r, { a: new Set(), b: new Set() }); comp.get(r)[S === A ? 'a' : 'b'].add(t.k); });
+  const out = [];
+  for (const { a, b } of comp.values()) {
+    const ta = [...a].map(k => A.trees[k]), tb = [...b].map(k => B.trees[k]);
+    const ua = ta.reduce((s, t) => s + t.units, 0), ub = tb.reduce((s, t) => s + t.units, 0);
+    const same = ta.length === tb.length && ta.every(t => tb.some(u => u.units === t.units && u.nodes.length === t.nodes.length && u.nodes.every(id => t.nodes.includes(id))));
+    if (same) continue;
+    out.push({ municipality: (ta[0] || tb[0]).muni, before: ta.map(t => `${t.root}: ${t.units.toLocaleString('en-CA')}`), after: tb.map(t => `${t.root}: ${t.units.toLocaleString('en-CA')}`), beforeUnits: ua, afterUnits: ub, change: ub - ua, treesBefore: ta.length, treesAfter: tb.length, basisAfter: tb.map(t => t.basis), files: [...new Set(ta.concat(tb).flatMap(t => t.nodes))].length });
+  }
+  return out.sort((x, y) => Math.abs(y.change) - Math.abs(x.change) || y.files - x.files);
+}
+function chronoModel(data, log = () => {}) {
+  const T = require('../js/tree.js');
+  const runs = [{ key: 'today', label: 'Tree rules today', res: audit(data, { log: () => {} }) }];
+  const on = {};
+  for (const st of STEPS) { on[st.key] = true; log(`modelling ${st.key}`); runs.push({ ...st, res: audit(data, { log: () => {}, chrono: { ...on } }) }); }
+  const muniUnits = res => { const o = { Peel: 0 }; for (const { t, c } of res.internals.counts) { const m = res.internals.nodes[t.nodes[0]].municipality; o[m] = (o[m] || 0) + (c.units || 0); o.Peel += c.units || 0; } return o; };
+  const snaps = runs.map(r => snapshotOf(r.res));
+  const steps = runs.map((r, k) => ({ key: r.key, label: r.label, trees: r.res.internals.counts.length, units: muniUnits(r.res), change: k ? muniUnits(r.res).Peel - muniUnits(runs[k - 1].res).Peel : 0, changes: k ? diffRuns(snaps[k - 1], snaps[k]) : [] }));
+  const last = runs[runs.length - 1].res.internals, first = runs[0].res.internals;
+  // r1: which files were dated from their number.
+  const r1 = runs[1].res.internals.nodes.filter(n => n.dateFrom === 'file number').map(n => ({ file: n.refs[0], municipality: n.municipality, role: n.role, filedFromNumber: iso(n.date0), units: n.units || 0 }));
+  const stillUndated = runs[1].res.internals.nodes.filter(n => n.date0 == null).map(n => ({ file: n.refs[0] || n.id, municipality: n.municipality, role: n.role, units: n.units || 0 }));
+  // r3: every same-land group where the latest file states a different count.
+  const r3 = last.counts.filter(x => x.c.latestWins).map(({ t, c }) => ({ tree: last.nodes[t.nodes[0]].refs[0], municipality: last.nodes[t.nodes[0]].municipality, ...c.latestWins, counted: c.units }));
+  // r5: filing order of every tree with two or more dated files, all rules on.
+  const order = [];
+  for (const { t, c } of last.counts) {
+    const ch = T.chronology(t, last.built); if (ch.filter(x => x.filed).length < 2) continue;
+    const bad = ch.filter(x => x.outOfOrder);
+    order.push({ tree: ch[0].ref, municipality: last.nodes[t.nodes[0]].municipality, units: c.units || 0, files: ch.length, outOfOrder: bad.length, order: ch.map(x => `${x.filed || 'undated'}${x.dateFrom === 'file number' ? '*' : ''} ${x.ref} (${x.role}${x.units ? `, ${x.units}` : ''}${x.cancelled ? ', withdrawn' : ''})`).join(' → '), backwards: bad.map(x => `${x.ref} ${x.outOfOrder}`) });
+  }
+  order.sort((a, b) => (b.outOfOrder > 0) - (a.outOfOrder > 0) || b.units - a.units);
+  const before = first.counts.reduce((s, x) => s + (x.c.units || 0), 0);
+  return {
+    note: 'Chronology rules (proposed; report only). Each step adds one rule to the ones before it; the app is unchanged. * = date from the file number.',
+    base: before, steps: steps.map(s => ({ ...s, changes: undefined, groupsChanged: s.changes.length })), changes: steps.flatMap(s => s.changes.map(c => ({ step: s.label, ...c }))),
+    lists: { datedFromNumber: r1, stillUndated, history: last.built.flags.history, latestVsLargest: r3, permitsEarly: last.built.flags.permitsEarly, order },
+  };
+}
+
 async function main() {
-  const res = audit(await loadRecords(false), { log: () => {} });
+  const data = await loadRecords(false);
+  const res = audit(data, { log: () => {} });
   const out = review(res, loadOverrides());
+  out.chrono = chronoModel(data, console.log);
   const dir = path.join(ROOT, 'docs', 'tree-review'); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'tree-review.json'), JSON.stringify(out));
   const t = out.totals.Peel;
+  for (const st of out.chrono.steps) console.log(`${st.label}: Peel ${st.units.Peel} (${st.change >= 0 ? '+' : ''}${st.change}) · ${st.groupsChanged} groups change`);
   console.log(`tree review: ${out.rows.length} groups · Ask ${t.ask} (net ${t.askChange}) · Peel app ${t.appUnits} → tree ${t.treeUnits} (after overrides ${t.afterOverrides}) · up ${t.up}, down ${t.down}, unchanged ${t.unchanged} · pre-consultation estimates ${t.preconEstimates} (${t.preconUnits} units)`);
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { review, inParts, callOf };
+module.exports = { review, inParts, callOf, chronoModel, diffRuns };

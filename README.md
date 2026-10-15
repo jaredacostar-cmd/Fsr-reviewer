@@ -2194,3 +2194,22 @@ status maps to a phase.
   Brampton datasets are updated irregularly.
 - Phases are inferred from status wording and dates, which differ between municipalities.
   Open the source record in the project panel to check a specific project.
+
+**Chronology rules (proposed, modelled; the app is unchanged).** `js/tree.js` has five date rules.
+They are off unless `chrono` names them (`audit(data, { chrono: { r1, r2, r3, r4 } })`).
+`scripts/tree-review.js` models them step by step, each adding to the ones before, and the
+workbook's **Chronology** sheets show what each changes. On the 2026-10-12 snapshot (Peel tree
+total today 266,947):
+
+| Rule | What it does | Peel units | Groups changed |
+|---|---|---|---|
+| 1 | An undated file (1,544, mostly Brampton site plans) takes 1 July of the year in its file number. The number's year matches the real date within a year for 99% of dated files. | −8 | 110 (mostly regrouping files with no count) |
+| 2 | An approved site plan, condo or draft plan filed 3+ years before a newer pre-consultation, rezoning or block plan on its land is history: its own tree, not the new proposal's child. | +94 | 99 (606 links not made; 466 are pre-consultations) |
+| 3 | Same land, counted once: the latest file replaces the largest only when it is the same stage refiled or covers 90%+ of the earlier land; else the largest stands (a phase). | −1,769 | 15 of 29 (the 13 Mississauga rezoning + site plan pairs have no boundary, so the largest stands) |
+| 4 | A permit issued 2+ years before the file it would sit under is the old building: not placed. | −10 | 8 (324 permits) |
+| 5 | Each tree's files in filing order, with backwards steps marked (the **Filing order** sheet). | report only | 230 of 976 trees with backwards steps |
+
+With all four, Peel goes from 266,947 to 265,254 (−1,693).
+
+New sheets: Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
+History links, Permits early, Dated from number, Filing order.
