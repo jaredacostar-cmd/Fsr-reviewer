@@ -1,0 +1,191 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Timing
+Funding screen
+Funding levels
+
+Across 36 DC projects, 1 comes online after the capacity it relieves runs out (they screen late); without G.E. Booth WRRF (Lakeview): expansion to 600 ML/d · 25-2945 the screen shows the most growth constrained: ≈101,200 people (≈33,726 units) by build-out.
+
+Capital schedule as of March 2026. In May 2026 Regional Council paused all new growth-related water and wastewater capital procurements from June 11, 2026, until upper levels of government commit funding. Planned dates are from the draft 2026 DC capital maps (March 2026) and may move. Council report
+
+36
+DC projects relieve a capacity constraint or serve new development
+1
+screen late: in service after the capacity runs out
+28
+screen in time (1 well ahead of need)
+234,100
+people (≈78,024 units) the screen shows constrained at build-out with every project as scheduled
+Project timing: capacity runs out vs online year
+2026
+2031
+2036
+2041
+2046
+2051
+G.E. Booth WRRF (Lake…
+Water distribution fe…
+after 2051
+Water distribution fe…
+after 2051
+Water distribution fe…
+after 2051
+Water distribution fe…
+after 2051
+Water distribution fe…
+after 2051
+Water distribution fe…
+after 2051
+Water distribution fe…
+after 2051
+Local wastewater main…
+after 2051
+Water distribution fe…
+after 2051
+
+● capacity runs out ≈year · ○ online year — red screens late (capacity runs out before it is in service).
+
+Year 
+2026
+2027
+2028
+2029
+2030
+2031
+2032
+2033
+2034
+2035
+2036
+2037
+2038
+2039
+2040
+2041
+2042
+2043
+2044
+2045
+2046
+2047
+2048
+2049
+2050
+2051
+Build-out
+Largest impactCost per personBy screening resultBy year
+CSV
+Impact at the Demand year (2026) and at build-out · tap a row for its timeline
+DC project	Online draft, as of March 2026	Relieves	Capacity runs out	If cancelled · 2026	If cancelled · build-out	Cost (2026$)	Screening result
+G.E. Booth WRRF (Lakeview): expansion to 600 ML/d · 25-2945
+	2037Paused	G.E. Booth WRRF (Lakeview)	≈2028	none	101,200 people
+≈33,726 units · $1.28 B DCs
+	$654 M
+$6,459 / person · gross $654 M
+	Screens late
+Capacity runs out ≈2028, before it is in service (2037): the screen shows it late.
+
+💧 Water distribution feeder main · 31-1199
+proposed
+	2031Paused	
+5 developments connect to it
+	–	1 people
+≈0 units
+	38,100 people
+≈12,715 units · $481 M DCs
+	$112 M
+$2,924 / person · 11 of 23 parts priced
+	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+💧 Water distribution feeder main · 28-1195
+proposed
+	2030Paused	
+3 developments connect to it
+	–	2 people
+≈1 units
+	15,400 people
+≈5,128 units · $194 M DCs
+	not in the 2020 study	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+💧 Water distribution feeder main · 27-1142
+proposed
+	2027Paused	
+35 developments connect to it
+	–	1,570 people
+≈525 units
+	13,900 people
+≈4,649 units · $176 M DCs
+	not in the 2020 study	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+💧 Water distribution feeder main 400 mm · 24-1191
+proposed
+	2027Paused	
+6 developments connect to it
+	–	1 people
+≈0 units
+	8,390 people
+≈2,798 units · $106 M DCs
+	not in the 2020 study	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+💧 Water distribution feeder main 600 mm · 27-1137
+proposed
+	2029Paused	
+1 development connects to it
+	–	none	8,230 people
+≈2,745 units · $104 M DCs
+	$4.5 M
+$544 / person · gross $4.5 M
+	Screens in time
+Without it, the screen shows growth constrained from ≈2028.
+
+💧 Water distribution feeder main · 24-1190
+approved 2026
+	2026Status unknown	
+3 developments connect to it
+	–	887 people
+≈296 units
+	7,700 people
+≈2,568 units · $97.1 M DCs
+	not in the 2020 study	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+💧 Water distribution feeder main · 27-1185
+proposed
+	2027Paused	
+1 development connects to it
+	–	1,470 people
+≈489 units
+	7,330 people
+≈2,444 units · $92.4 M DCs
+	not in the 2020 study	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+Local wastewater main 450 mm · 27-2142
+proposed
+	2027Paused	
+2 developments connect to it
+	–	107 people
+≈36 units
+	6,610 people
+≈2,203 units · $83.3 M DCs
+	not in the 2020 study	Screens in time
+Without it, the screen shows growth constrained from ≈2026.
+
+💧 Water distribution feeder main 400 mm · 31-1198
+proposed
+	2031Paused	
+2 developments connect to it
+	–	none	6,320 people
+≈2,105 units · $79.6 M DCs
+	$26.8 M
+$4,249 / person · 11 of 21 parts priced
+	Screens in time
+Without it, the screen shows growth constrained from ≈2028.
+
+See all 36 projects
+
+ⓘ Method, criteria & data dates

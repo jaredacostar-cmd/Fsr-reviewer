@@ -1,0 +1,66 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Timing
+Funding screen
+Funding levels
+
+The 35-project DC program coming online 2026–2035 costs $1.21 B in 2026 DC-recoverable dollars; the $1.00 B funding screen has 33 within it and 2 outside it.
+
+Capital schedule as of March 2026. In May 2026 Regional Council paused all new growth-related water and wastewater capital procurements from June 11, 2026, until upper levels of government commit funding. Planned dates are from the draft 2026 DC capital maps (March 2026) and may move. Council report
+
+$1.21 B
+DC-recoverable program cost, 2026$ (35 projects, 2026–2035)
+$1.00 B
+DC funding over the next 10 years
+$999 M
+for the 33 projects within the screen ($130 M already committed)
+$1.2 M
+left over
+DC funding over the next  years: $ B
+$1 B$5 BWhole program
+Growth held back by 2035 vs DC funding
+0
+24
+48
+$500M
+26/9
+$1B
+33/2
+Whole
+35/0
+
+Kept / deferred under each point. Range: largest single constraint left short → sum of the deferred projects' own impacts. Dashed line: the current $1.00 B screen.
+
+Most expensive projects (DC cost, 2026$)
+Project	Online	DC cost 2026$	Estimated	Growth it carries by 2035
+💧 Water distribution feeder main · 31-1199	2031Paused	$197 M	45%	30,500 people
+≈10,173 units
+
+💧 Water transmission main 1500 mm · 31-1299	2033Paused	$147 M	100%	10 people
+≈3 units
+
+Clarkson WRRF: expansion to 500 ML/d · 22-2950	2029Paused	$140 M	0%	none
+Primary wastewater main (trunk) 1500 mm · 25-2267	2030Paused	$124 M	100%	22 people
+≈7 units
+
+G.E. Booth WRRF (Lakeview): expansion to 558 ML/d
+committed (approved 2026)
+	2028Status unknown	$105 M	0%	96,400 people
+≈32,120 units
+
+💧 Arthur P. Kennedy Water Treatment Plant · Treatment Expansion · paused	2031Paused	$73.2 M	100%	none
+💧 Lorne Park Water Treatment Plant · Treatment Expansion · paused	2034Paused	$73.2 M	100%	none
+💧 Water transmission main 1500 mm · 28-1250	2030Paused	$66.6 M	100%	4 people
+≈1 units
+
+💧 Water distribution feeder main · 28-1272	2030Paused	$57.2 M	100%	13 people
+≈4 units
+
+💧 Water distribution feeder main 400 mm · 31-1198	2031Paused	$52.2 M	50%	5,050 people
+≈1,684 units
+
+See all 35 projects
+
+Outside the window: G.E. Booth WRRF (Lakeview): expansion to 600 ML/d · 25-2945 (online 2037, capacity runs out ≈2028, ≈$654 M) is scheduled after 2035 but needed sooner; bringing it into the window needs ≈$654 M more.
+
+ⓘ Method, criteria & data dates

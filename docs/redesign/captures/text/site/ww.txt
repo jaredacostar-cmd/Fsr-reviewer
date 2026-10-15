@@ -1,0 +1,23 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Wastewater by sanitary catchment
+9763 HERITAGE RD · site servicing
+9763 HERITAGE RD · Wastewater
+⤳ Trace the sewer path to the plant
+On the map, pipe by pipe to the plant, along the existing sewers and the planned DC mains
+Wastewater
+Flows
+
+284L/s peak wet · 273L/s peak dry · 113L/s average
+
+To the plant
+Block 15 → Block 11 → Block 12 → Block 8 → Block 6 → Block 3 → Block 2 → Clarkson WRRF
+Plant
+
+Clarkson WRRF: uncommitted reserve 112ML/d · this development is committed, 14% of it screening estimate
+
+Sanitary sewers
+
+Looking up the nearest sanitary sewers…
+
+Ground, storm sewers and stormwater ponds live in Overview › Site. Peel-wide catchments return when no site is scoped.

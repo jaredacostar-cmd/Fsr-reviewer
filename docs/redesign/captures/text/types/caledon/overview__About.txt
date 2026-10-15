@@ -1,0 +1,52 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+14337 HIGHWAY 50 CALEDON ON L7E 3H6 · Caledon · 2 Under review
+
+At a glance
+Files & history ↓
+
+Under review: from the status of 21T-26004C (“Circulation”)
+
+315
+units
+planned
+1,220
+people
+at build-out
+6.83
+L/s
+water max day
+4.08
+L/s
+average dry weather
+15.3
+L/s
+peak dry weather
+20.2
+L/s
+peak wet weather
+
+Tree count
+21T-26004C: 315 (own count)
+
+Flows at Peel design criteria, as in a functional servicing report. Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Outside the mapped pressure zones — counted in Zone 6 (nearest): a screening estimate Water →
+🚰 Wastewater sewer pipes not assessed · G.E. Booth WRRF (Lakeview) reserve 30.4 ML/d — this site 1% of it Wastewater →
+🏗 DC works Outside the existing network: servicing about 2027 on the 2026 DC draft schedule (as of March 2026, before the May 2026 pause) DC Analysis →
+🚩 Next milestone Next milestone: Approved Files & history ↓
+About
+Files & history
+Site
+Status
+
+2 Under review · latest activity 2026-03-27
+
+Latest decision
+
+Latest file status: 21T-26004C “Circulation” (2026-03-27). No council or committee items name its files since 2019.
+
+Servicing report
+Functional Servicing Report Functional Service Report & Storm Water Management Report ↗
+Latest posted · all documents ↗

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Peel overview panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 480px; height: 1500px; box-sizing: border-box; background: #1b1b1a; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.45; display: flex; flex-direction: column">
+
+  <header style="padding: 14px 18px 0; border-bottom: 1px solid #383835; display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600">All of Peel</h1>
+      <span style="color: #9a998f; font-size: 11.5px">1,485 developments · active stages · 2021–2026</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; color: #9a998f; font-size: 11.5px">
+      <span style="display: inline-flex; gap: 1px"><span style="width: 6px; height: 10px; background: #3b4a5e"></span><span style="width: 6px; height: 10px; background: #5f7fae"></span><span style="width: 6px; height: 10px; background: #9cc0fa"></span><span style="width: 6px; height: 10px; background: #cfe0fb"></span></span>Counting: Existing + Built + Committed + Proposed · tree · Peel criteria v2.0 · 2025 flows · <a href="#">change</a>
+    </div>
+    <nav style="display: flex; gap: 18px; font-weight: 500; margin-top: 2px">
+      <a href="#" style="color: #ffffff; border-bottom: 2px solid #6da7ec; padding: 8px 0">Overview</a>
+      <a href="PeelGrowth.dc.html" style="color: #9a998f; padding: 8px 0">Growth</a>
+      <a href="PeelServicing.dc.html" style="color: #9a998f; padding: 8px 0">Servicing</a>
+      <a href="PeelCapital.dc.html" style="color: #9a998f; padding: 8px 0">Capital</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Records</a>
+    </nav>
+  </header>
+
+  <main style="padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 14px">
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+      <div style="background: #242422; border: 1px solid #383835; border-radius: 8px; padding: 10px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">228k</div><div style="color: #9a998f; font-size: 11px">units planned</div><div style="display: flex; height: 4px; margin-top: 6px; border-radius: 2px; overflow: hidden; gap: 1px"><div style="width: 2.5%; background: #5f7fae"></div><div style="width: 27.2%; background: #9cc0fa"></div><div style="width: 70.3%; background: #cfe0fb"></div></div></div>
+      <div style="background: #242422; border: 1px solid #383835; border-radius: 8px; padding: 10px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">96%</div><div style="color: #9a998f; font-size: 11px">left to build · 219k</div><div style="color: #9a998f; font-size: 10.5px; margin-top: 6px"><span style="color: #9cc0fa">55k</span> committed · <span style="color: #cfe0fb">142k</span> proposed</div></div>
+      <div style="background: #242422; border: 1px solid #383835; border-radius: 8px; padding: 10px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">684k</div><div style="color: #9a998f; font-size: 11px">people at build-out</div><div style="color: #9a998f; font-size: 10.5px; margin-top: 6px"><span style="color: #9cc0fa">175k</span> committed · <span style="color: #cfe0fb">414k</span> proposed</div></div>
+      <div style="background: #242422; border: 1px solid #383835; border-radius: 8px; padding: 10px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">81.9k</div><div style="color: #9a998f; font-size: 11px">jobs on sites</div></div>
+    </div>
+
+    <section style="background: #2a2418; border: 1px solid #4a3c22; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #ffc98a">Needs attention</h2>
+        <div style="display: flex; gap: 6px; font-size: 11px">
+          <span style="background: #3a2a1d; color: #ffc98a; border-radius: 999px; padding: 2px 8px">Capacity 3</span>
+          <span style="background: #3a2a1d; color: #ffc98a; border-radius: 999px; padding: 2px 8px">Stalled 3</span>
+          <span style="background: #2d2d2a; color: #c3c2b7; border-radius: 999px; padding: 2px 8px">This week 2</span>
+        </div>
+      </div>
+      <div style="display: flex; gap: 10px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #f0665f; margin-top: 6px; flex: none"></span><div><strong style="font-weight: 600">G.E. Booth WRRF</strong> <span style="color: #d9d3c4">reaches its 90% trigger ≈2028 (94% committed → 121% at build-out). The 600 ML/d expansion (25-2945) lands after capacity runs out.</span> <a href="PeelCapital.dc.html">Capital →</a></div></div>
+      <div style="display: flex; gap: 10px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #f0665f; margin-top: 6px; flex: none"></span><div><strong style="font-weight: 600">Richards Memorial PS</strong> <span style="color: #d9d3c4">110% of firm at build-out, peak wet. Clarkson system.</span> <a href="PeelServicing.dc.html">Servicing →</a></div></div>
+      <div style="display: flex; gap: 10px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #ffa94d; margin-top: 6px; flex: none"></span><div><strong style="font-weight: 600">Inglewood WWTP</strong> <span style="color: #d9d3c4">398% committed on the Overview, 45% on the Wastewater tab. Shown once the figures agree.</span></div></div>
+      <div style="display: flex; gap: 10px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #9a998f; margin-top: 6px; flex: none"></span><div><strong style="font-weight: 600">Stalled 3.5–5.1 yrs, 11,500 units</strong> <span style="color: #d9d3c4">14275 The Gore Rd (4,456) · 1750 Steeles Ave W (3,809) · 10159 The Gore Rd (3,239)</span></div></div>
+      <div style="display: flex; gap: 10px"><span style="width: 8px; height: 8px; border-radius: 999px; background: #9a998f; margin-top: 6px; flex: none"></span><div><strong style="font-weight: 600">This week</strong> <span style="color: #d9d3c4">11 Chapel St, Caledon (new) · 2719 Bovaird Dr W (withdrawn)</span> <a href="#">Watch →</a></div></div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Capacity at build-out</h2><span style="color: #9a998f; font-size: 11px">committed → build-out · % of rated / firm</span></div>
+      <div style="display: grid; grid-template-columns: 136px minmax(0, 1fr) 76px; gap: 8px 10px; align-items: center; font-size: 12px">
+        <a href="ScopeCard.dc.html" style="color: #ffffff">G.E. Booth WRRF</a><div style="position: relative; height: 10px; background: #3a3a37; border-radius: 3px"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 78.3%; background: #3b4a5e; border-radius: 3px 0 0 3px"></div><div style="position: absolute; left: 78.3%; top: 0; bottom: 0; width: 21.7%; background: #cfe0fb; border-radius: 0 3px 3px 0"></div><div style="position: absolute; left: 83.3%; top: 0; bottom: 0; width: 16.7%; background: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px)"></div><div style="position: absolute; left: 75%; top: -3px; width: 2px; height: 16px; background: #ffffff"></div></div><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">94→121%</span>
+        <a href="ScopeCard.dc.html" style="color: #ffffff">Clarkson WRRF</a><div style="position: relative; height: 10px; background: #3a3a37; border-radius: 3px"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 56.7%; background: #3b4a5e; border-radius: 3px 0 0 3px"></div><div style="position: absolute; left: 56.7%; top: 0; bottom: 0; width: 12.5%; background: #cfe0fb"></div><div style="position: absolute; left: 75%; top: -3px; width: 2px; height: 16px; background: #ffffff"></div></div><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">68→83%</span>
+        <span>South Peel water</span><div style="position: relative; height: 10px; background: #3a3a37; border-radius: 3px"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 45%; background: #3b4a5e; border-radius: 3px 0 0 3px"></div><div style="position: absolute; left: 45%; top: 0; bottom: 0; width: 10.8%; background: #cfe0fb"></div><div style="position: absolute; left: 75%; top: -3px; width: 2px; height: 16px; background: #ffffff"></div></div><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">54→67%</span>
+        <span>Pumping into Zone 7+</span><div style="position: relative; height: 10px; background: #3a3a37; border-radius: 3px"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 50.8%; background: #3b4a5e; border-radius: 3px 0 0 3px"></div><div style="position: absolute; left: 50.8%; top: 0; bottom: 0; width: 17.5%; background: #cfe0fb"></div><div style="position: absolute; left: 75%; top: -3px; width: 2px; height: 16px; background: #ffffff"></div></div><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">61→82%</span>
+        <span>Storage, all zones</span><div style="position: relative; height: 10px; background: #3a3a37; border-radius: 3px"><div style="position: absolute; left: 0; top: 0; bottom: 0; width: 84%; background: #3b4a5e; border-radius: 3px"></div><div style="position: absolute; left: 83.3%; top: 0; bottom: 0; width: 4%; background: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px)"></div><div style="position: absolute; left: 75%; top: -3px; width: 2px; height: 16px; background: #ffffff"></div></div><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">−12 ML 2041</span>
+      </div>
+      <div style="display: flex; gap: 12px; color: #9a998f; font-size: 11px; flex-wrap: wrap"><span><span style="display: inline-block; width: 8px; height: 8px; background: #3b4a5e; margin-right: 4px"></span>existing + built + committed (D-5-1 check)</span><span><span style="display: inline-block; width: 8px; height: 8px; background: #cfe0fb; margin-right: 4px"></span>proposed (build-out)</span><span><span style="display: inline-block; width: 8px; height: 8px; background: repeating-linear-gradient(135deg, #f0665f 0 2px, transparent 2px 4px); margin-right: 4px"></span>beyond rated</span><span>│ 90% trigger</span></div>
+      <div style="color: #9a998f; font-size: 11px">Bar spans 0–120%. Plants on annual average flow, water on max day, pumping on firm capacity. One layer function feeds every tab; the scenario chip picks which layers are summed.</div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Where the growth is</h2><a href="PeelGrowth.dc.html" style="font-size: 12px">By plan →</a></div>
+      <div style="display: flex; height: 14px; border-radius: 3px; overflow: hidden; gap: 2px">
+        <div style="width: 57.4%; background: #7c3aed" title="Brampton 131,222"></div>
+        <div style="width: 29.8%; background: #3987e5" title="Mississauga 68,138"></div>
+        <div style="width: 12.8%; background: #1b8166" title="Caledon 29,130"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #c3c2b7"><span>Brampton <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">131k</span> · 57%</span><span>Mississauga <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">68k</span> · 30%</span><span>Caledon <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">29k</span> · 13%</span></div>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) 70px 54px; gap: 5px 10px; font-size: 12px; align-items: center; border-top: 1px solid #383835; padding-top: 8px">
+        <span style="color: #9a998f; font-size: 11px">Top plans</span><span style="color: #9a998f; font-size: 11px; text-align: right">units</span><span style="color: #9a998f; font-size: 11px; text-align: right">of Peel</span>
+        <a href="#" style="color: #ffffff">52 Heritage Heights · Brampton</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">26,525</span><span style="color: #9a998f; text-align: right">12%</span>
+        <a href="#" style="color: #ffffff">36 Queen St Corridor · Brampton</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">24,311</span><span style="color: #9a998f; text-align: right">11%</span>
+        <a href="#" style="color: #ffffff">Downtown Core · Mississauga</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">16,151</span><span style="color: #9a998f; text-align: right">7%</span>
+        <a href="#" style="color: #ffffff">51 Mount Pleasant · Brampton</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">14,530</span><span style="color: #9a998f; text-align: right">6%</span>
+        <a href="#" style="color: #ffffff">Not in any plan · Caledon</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">7,371</span><span style="color: #ffc98a; text-align: right">25% of Caledon</span>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Largest unbuilt</h2><span style="color: #9a998f; font-size: 11px">one list, used by Overview and Growth</span></div>
+      <div style="display: grid; grid-template-columns: minmax(0, 1fr) 64px 70px; gap: 5px 10px; font-size: 12px; align-items: center">
+        <a href="#" style="color: #ffffff">1-295 Queen St E <span style="color: #cfe0fb">· Proposed</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">7,641</span><span style="color: #9a998f; text-align: right">23,700 ppl</span>
+        <a href="Main.dc.html" style="color: #ffffff">Heritage / Bovaird block <span style="color: #cfe0fb">· Proposed</span> <span style="color: #ffa94d">⚠ count</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">6,933–9,862</span><span style="color: #9a998f; text-align: right">3 draft plans</span>
+        <a href="#" style="color: #ffffff">0 Heritage Rd <span style="color: #cfe0fb">· Proposed</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">5,146</span><span style="color: #9a998f; text-align: right">13,900 ppl</span>
+        <a href="#" style="color: #ffffff">14275 The Gore Rd <span style="color: #cfe0fb">· Proposed</span><span style="color: #9a998f"> · stalled</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">4,456</span><span style="color: #9a998f; text-align: right">15,400 ppl</span>
+        <a href="#" style="color: #ffffff">1750 Steeles Ave W <span style="color: #cfe0fb">· Proposed</span><span style="color: #9a998f"> · stalled</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">3,809</span><span style="color: #9a998f; text-align: right">11,800 ppl</span>
+      </div>
+      <a href="#" style="font-size: 12px">All 450 developments with units →</a>
+    </section>
+
+    <div style="display: flex; gap: 8px">
+      <a href="#" style="flex: 1; text-align: center; border: 1px solid #383835; border-radius: 8px; padding: 9px 0; color: #ffffff; background: #242422">Executive briefing (PDF)</a>
+      <a href="#" style="flex: 1; text-align: center; border: 1px solid #383835; border-radius: 8px; padding: 9px 0; color: #ffffff; background: #242422">Area report</a>
+      <a href="#" style="flex: 1; text-align: center; border: 1px solid #383835; border-radius: 8px; padding: 9px 0; color: #ffffff; background: #242422">Share this view</a>
+    </div>
+
+    <footer style="color: #9a998f; font-size: 11.5px; border-top: 1px solid #383835; padding-top: 12px">Screening only: public open data, Peel Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); not a hydraulic model. Peel W&amp;WW Infrastructure Planning must confirm. Applications as of 2026-10-12.</footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":480,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

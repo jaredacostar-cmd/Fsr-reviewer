@@ -1,0 +1,38 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Timing
+Funding screen
+Funding levels
+
+DC analysis for 12489 DIXIE ROAD CALEDON ON L7C 2M4.
+
+DC projects potentially required
+Wastewater
+
+Sewer path, pumping stations and the plant's reserve live on the Wastewater tab →.
+
+Water
+
+Every constraint has room to build-out or a DC project before it runs out. Room in units at this development's 3.1 persons per unit.
+
+2 with room to build-out (tightest 75% of capacity)
+💧 Victoria Reservoir (future, Zone 6 Central)
+required vs available storage (2020 Master Plan forecast) · in Pressure zone 7
+144,900 people≈46,728 units
+after 2051Room to build-out
+2026 Victoria · Reservoir · status unknown
+💧 South Peel water treatment (A.P. Kennedy + Lorne Park)
+rated 1,700 ML/d · 2025 max day ≤ 810 ML/d (incl. York supply) + growth · 60% committed → 75% build-out
+1,268,100 people≈409,053 units
+after 2051Room to build-out
+2031 Arthur P. Kennedy Water Treatment Plant · Treatment Expansion · paused
+2034 Lorne Park Water Treatment Plant · Treatment Expansion · paused
+
+All DC timing →
+
+Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026). Water supply is a rough conveyance estimate: water pumping station capacities are not published. A screen, not a hydraulic model.
+
+Planned works
+Downstream trunks: 2028 2400 mm 25-2269
+Facilities: North Brampton 2028 · Victoria 2032
+Plant capacity: 558 ML/d from 2028 → 600 ML/d from 2037

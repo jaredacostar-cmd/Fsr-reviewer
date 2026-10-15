@@ -1,0 +1,37 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Water by pressure zone
+1580 and 1650 Dundas St E. · site servicing
+1580 and 1650 Dundas St E. · Water
+⤳ Trace the water supply from the plant
+On the map, along the existing watermains and the planned DC mains
+Water
+Demand
+
+46.2L/s max day · 77.1L/s peak hour · 25.7L/s average
+
+Zone 2 · 4% of the zone's build-out max day screening estimate
+
+Supply route
+■
+A.P. Kennedy treatment plant (rated 1,200 ML/d)
+■
+High-lift pumps HLP1C · 282 ML/d firm → zone 1
+▲
+Silverthorn LLP2C · 192 ML/d firm → zone 2
+●
+This development · Zone 2
+
+Pumping into zone 2 and above: 45% of firm capacity with existing + built + approved, 57% at build-out.
+
+Trace on the map The stations lifting water into each zone (2020 Master Plan pumping); the trace follows the mains between them.
+
+Watermains
+
+Looking up the nearest watermains…
+
+Fire flow
+
+Looking up hydrants…
+
+Peel-wide pressure zones return when no site is scoped.

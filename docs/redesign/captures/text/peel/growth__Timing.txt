@@ -1,0 +1,71 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+A statistical screening estimate of when the pipeline builds out: ≈126,207 units expected by 2031 (range 109,737–140,004), ≈132,527 by 2041 — against 222,511 unbuilt units in the pipeline.
+
+Expected by 2031 screening estimate
+126,207units
+range 109,737–140,004
+Expected by 2041 screening estimate
+132,527units
+range 116,393–148,392
+Unbuilt in pipeline screening estimate
+222,511units
+≈60% expected by 2041 (likely)
+Calibration screening estimate
+11,265units
+dated file events, cohorts 2016–2019
+0
+21.3k
+42.5k
+63.8k
+85k
+2026
+2031
+2036
+2041
+2046
+2051
+2052
+Low–high range
+Likely
+screening estimate statistical projection — not a prediction for any one site
+Largest contributors to the forecast expected completions, likely (range) screening estimate
+Development	Expected
+units
+9763 HERITAGE RDBrampton · 5 Under construction · Single detached	6,2096,193–6,219
+111 MAYFIELD RDBrampton · 1 Inception · Type not stated	4,0173,062–4,905
+1-295 QUEEN ST EBrampton · 2 Under review · Type not stated	3,0812,349–3,763
+5100 Erin Mills ParkwayMississauga · 2 Under review · Type not stated	2,9682,832–3,050
+1580 and 1650 Dundas St E.Mississauga · 2 Under review · Type not stated	2,8412,711–2,919
+3672 Kariya DriveMississauga · 2 Under review · Type not stated	2,4862,371–2,554
+25 & 33 Hillcrest Avenue; 3146, 3154 & 3168 Hurontario StMississauga · 2 Under review · Type not stated	2,0881,992–2,145
+0 HERITAGE RDBrampton · 2 Under review · Type not stated	2,0751,582–2,534
+355 Burnhamthorpe Rd WMississauga · 2 Under review · Type not stated	1,7591,678–1,807
+120, 128, 142, 148, 154, 158 Queen St S and 169 Crumbie StMississauga · 2 Under review · Type not stated	1,6971,619–1,744
+See all 527 developments
+Calibration: approval and completion rates, time lags screening estimate
+by municipality and building type, from the dated file events
+Municipality	Type	Apps	Approval
+rate	Median
+app → approval	Permits	Completion
+rate	Median
+permit → completion
+Mississauga	Single detached	84	100%96–100%	6 mo · n=84	1,014	40%37–43%	8 mo · n=398
+Mississauga	Semi-detached	0	–	–	241	43%37–49%	9 mo · n=103
+Mississauga	Townhouse	0	–	–	37	27%15–43%	6 mo · n=10
+Mississauga	Apartment	6	100%61–100%	46 mo · n=6	10	30%11–60%	29 mo · n=3
+Mississauga	Type not stated	369	97%95–99%	10 mo · n=357	398	96%94–98%	22 mo · n=383
+Brampton	Single detached	57	100%94–100%	–	3,972	100%99–100%	–
+Brampton	Semi-detached	3	100%44–100%	–	708	100%99–100%	–
+Brampton	Townhouse	11	100%74–100%	–	1,447	100%100–100%	–
+Brampton	Apartment	70	77%66–85%	–	284	100%99–100%	–
+Brampton	Type not stated	442	54%49–59%	–	59	75%62–84%	–
+Caledon	Apartment	4	75%30–95%	–	1	100%21–100%	–
+Caledon	Type not stated	32	13%5–28%	–	1,711	88%86–89%	–
+
+ⓘ Timing forecast — a statistical screening estimate, not a prediction for any one site. Approval and completion rates and the time lags are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts 2016–2019, so every project had 5+ years of follow-up; 11,265 dated observations; Wilson 95% intervals; cells with fewer than 10 observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); lags use dated events only. LOW uses the slow lags (p75) with the low rate bound, LIKELY the medians, HIGH the fast lags (p25) with the high bound. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects; the forecast covers the developments shown. Applications as of 2026-10-12.

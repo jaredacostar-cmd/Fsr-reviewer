@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Overview panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 480px; height: 1760px; box-sizing: border-box; background: #1b1b1a; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.45; display: flex; flex-direction: column">
+
+  <header style="background: #1b1b1a; border-bottom: 1px solid #383835; padding: 14px 18px 0; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: center; color: #9a998f; font-size: 12px">
+      <a href="#" style="color: #9a998f">Around this site · 23 developments · 9,361 homes</a>
+      <button type="button" aria-label="Close" style="background: none; border: 1px solid #383835; border-radius: 6px; width: 28px; height: 28px; color: #c3c2b7; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></button>
+    </div>
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+      <div>
+        <h1 style="margin: 0; font-size: 22px; font-weight: 600; letter-spacing: -0.01em">9763 Heritage Rd</h1>
+        <div style="color: #c3c2b7; margin-top: 2px">Brampton · Ward 6 · 101.5 ha</div>
+      </div>
+      <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 4px 10px 4px 5px; font-weight: 500"><span style="background: #9cc0fa; color: #10213a; border-radius: 999px; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600">3</span>Zoning approved</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px; background: #cfe0fb; color: #10213a; border-radius: 999px; padding: 3px 10px; font-weight: 500; font-size: 11.5px" title="Capacity layer: zoning approval alone does not commit capacity under D-5-1">counts as Proposed</span>
+        <span style="color: #9a998f; font-size: 11px">By-law 153-2026 · Sep 9, 2026</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; color: #9a998f; font-size: 11.5px">
+      <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6" stroke="#ffa94d" stroke-width="1.3" fill="none"/><path d="M7 6v4M7 3.8v.4" stroke="#ffa94d" stroke-width="1.4"/></svg>
+      Screening estimate · public data · Peel criteria v2.0 (2024) · <a href="#">Method</a>
+    </div>
+    <div style="display: flex; gap: 8px">
+      <button type="button" style="flex: 1; height: 36px; background: #6da7ec; color: #0f1d30; border: none; border-radius: 7px; font: inherit; font-weight: 600; cursor: pointer">Trace to plant ▾</button>
+      <button type="button" style="flex: 1; height: 36px; background: #2d2d2a; color: #ffffff; border: 1px solid #383835; border-radius: 7px; font: inherit; font-weight: 500; cursor: pointer">Check FSR</button>
+      <button type="button" aria-label="Watch" style="width: 40px; height: 36px; background: #2d2d2a; color: #c3c2b7; border: 1px solid #383835; border-radius: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/></svg></button>
+      <button type="button" aria-label="More actions: memo, record allocation, compare, export" style="width: 40px; height: 36px; background: #2d2d2a; color: #c3c2b7; border: 1px solid #383835; border-radius: 7px; cursor: pointer; font-size: 16px; line-height: 1">⋯</button>
+    </div>
+    <nav style="display: flex; gap: 18px; font-weight: 500; margin-top: 2px">
+      <a href="#" style="color: #ffffff; border-bottom: 2px solid #6da7ec; padding: 8px 0">Overview</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Servicing</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Funding</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Area</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Files</a>
+    </nav>
+  </header>
+
+  <main style="padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 14px">
+
+    <section style="background: #2a2418; border: 1px solid #4a3c22; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 13px; font-weight: 600; color: #ffc98a">4 things to confirm</h2>
+        <span style="color: #b8a888; font-size: 11.5px">before relying on these numbers</span>
+      </div>
+      <div style="display: flex; gap: 10px">
+        <span style="color: #ffa94d; font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding-top: 1px">00</span>
+        <div><strong style="font-weight: 600">Counts as Proposed, not Committed.</strong> <span style="color: #d9d3c4">No draft-plan approval or permit inside this file’s boundary. The old “Under construction” came from a 2022 house permit at 59 Dairymaid Rd.</span> <a href="Tree.dc.html">Records →</a></div>
+      </div>
+      <div style="display: flex; gap: 10px">
+        <span style="color: #ffa94d; font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding-top: 1px">01</span>
+        <div><strong style="font-weight: 600">Pressure zone uncertain.</strong> <span style="color: #d9d3c4">Ground ≈231 m fits Zone 5 and Zone 6; assigned to Zone 5 (nearest).</span> <a href="#">Servicing →</a></div>
+      </div>
+      <div style="display: flex; gap: 10px">
+        <span style="color: #ffa94d; font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding-top: 1px">02</span>
+        <div><strong style="font-weight: 600">Connecting works paused.</strong> <span style="color: #d9d3c4">Water main 26-1245 (2027) and local sewer 28-2133 (2028), as of Mar 2026.</span> <a href="#">Funding →</a></div>
+      </div>
+      <div style="display: flex; gap: 10px">
+        <span style="color: #ffa94d; font-family: 'IBM Plex Mono', monospace; font-size: 12px; padding-top: 1px">03</span>
+        <div><strong style="font-weight: 600">Sewer pipes not assessed.</strong> <span style="color: #d9d3c4">Only the plant was screened.</span></div>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Build-out</h2>
+        <span style="color: #9a998f; font-size: 11px">Source: OZS-2025-0032 · layer: <span style="color: #cfe0fb">Proposed</span></span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.1">592</div><div style="color: #9a998f; font-size: 12px">units</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.1">2,010</div><div style="color: #9a998f; font-size: 12px">people</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 500; line-height: 1.1">3.40</div><div style="color: #9a998f; font-size: 12px">persons / unit</div></div>
+      </div>
+      <div>
+        <div style="display: flex; height: 10px; border-radius: 3px; overflow: hidden; gap: 2px">
+          <div style="width: 42.7%; background: #9cc0fa"></div>
+          <div style="width: 57.3%; background: #5f7fae"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px; color: #c3c2b7">
+          <span><span style="font-family: 'IBM Plex Mono', monospace; color: #ffffff">253</span> detached</span>
+          <span><span style="font-family: 'IBM Plex Mono', monospace; color: #ffffff">339</span> townhouses</span>
+          <span style="color: #9a998f">+15 part lots, not counted</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Servicing · L/s</h2>
+        <a href="#" style="font-size: 12px">Details →</a>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 2px; background: #5b9bf5"></span>Water · Zone 5<span style="color: #ffa94d; font-weight: 500">?</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #9a998f">Average day</span><span style="font-family: 'IBM Plex Mono', monospace">6.29</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #c3c2b7">Max day</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 500">11.3</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #9a998f">Peak hour</span><span style="font-family: 'IBM Plex Mono', monospace">18.9</span></div>
+          <div style="border-top: 1px solid #383835; padding-top: 8px; font-size: 12px; color: #c3c2b7">0.39% of Zone 5 build-out max day</div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; border-left: 1px solid #383835; padding-left: 12px">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 2px; background: #c98a5e"></span>Wastewater · Clarkson</div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #9a998f">Avg dry</span><span style="font-family: 'IBM Plex Mono', monospace">6.76</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #9a998f">Peak dry</span><span style="font-family: 'IBM Plex Mono', monospace">24.2</span></div>
+          <div style="display: flex; justify-content: space-between"><span style="color: #c3c2b7">Peak wet</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 500">50.6</span></div>
+          <div style="border-top: 1px solid #383835; padding-top: 8px; font-size: 12px; color: #c3c2b7">0.74% of plant reserve</div>
+        </div>
+      </div>
+      <div>
+        <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #9a998f; margin-bottom: 5px"><span>What makes up peak wet weather</span><span style="font-family: 'IBM Plex Mono', monospace">50.6</span></div>
+        <div style="display: flex; height: 14px; border-radius: 3px; overflow: hidden; gap: 2px">
+          <div style="width: 13.4%; background: #e3b28c"></div>
+          <div style="width: 34.4%; background: #c98a5e"></div>
+          <div style="width: 52.2%; background: #6e4a30"></div>
+        </div>
+        <div style="display: flex; gap: 14px; margin-top: 6px; font-size: 11.5px; color: #c3c2b7">
+          <span><span style="display: inline-block; width: 8px; height: 8px; background: #e3b28c; border-radius: 2px; margin-right: 4px"></span>Base 6.8</span>
+          <span><span style="display: inline-block; width: 8px; height: 8px; background: #c98a5e; border-radius: 2px; margin-right: 4px"></span>Peaking ×3.58 +17.4</span>
+          <span><span style="display: inline-block; width: 8px; height: 8px; background: #6e4a30; border-radius: 2px; margin-right: 4px"></span>I&amp;I +26.4</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Approvals</h2>
+        <a href="#" style="font-size: 12px">Files &amp; history →</a>
+      </div>
+      <ol style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0">
+        <li style="display: flex; gap: 12px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 14px"><span style="width: 12px; height: 12px; border-radius: 999px; background: #9cc0fa; margin-top: 3px"></span><span style="flex: 1; width: 2px; background: #9cc0fa; min-height: 20px"></span></div>
+          <div style="padding-bottom: 10px; flex: 1; display: flex; justify-content: space-between"><span>Pre-consultation <span style="color: #9a998f">· PRE-2024-0100</span></span><span style="color: #9a998f; font-family: 'IBM Plex Mono', monospace; font-size: 12px">2024</span></div>
+        </li>
+        <li style="display: flex; gap: 12px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 14px"><span style="width: 12px; height: 12px; border-radius: 999px; background: #9cc0fa; margin-top: 3px"></span><span style="flex: 1; width: 2px; background: #9cc0fa; min-height: 20px"></span></div>
+          <div style="padding-bottom: 10px; flex: 1; display: flex; justify-content: space-between"><span>Subdivision &amp; zoning filed <span style="color: #9a998f">· OZS-2025-0032</span></span><span style="color: #9a998f; font-family: 'IBM Plex Mono', monospace; font-size: 12px">Jul 2025</span></div>
+        </li>
+        <li style="display: flex; gap: 12px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 14px"><span style="width: 12px; height: 12px; border-radius: 999px; background: #9cc0fa; box-shadow: 0 0 0 4px #22324a; margin-top: 3px"></span><span style="flex: 1; width: 2px; background: #3a3a37; min-height: 20px"></span></div>
+          <div style="padding-bottom: 10px; flex: 1; display: flex; justify-content: space-between"><span style="font-weight: 600">Zoning by-law 153-2026 passed</span><span style="color: #c3c2b7; font-family: 'IBM Plex Mono', monospace; font-size: 12px">Sep 9, 2026</span></div>
+        </li>
+        <li style="display: flex; gap: 12px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 14px"><span style="width: 12px; height: 12px; border-radius: 999px; border: 2px dashed #9a998f; box-sizing: border-box; margin-top: 3px"></span><span style="flex: 1; width: 2px; background: #3a3a37; min-height: 20px"></span></div>
+          <div style="padding-bottom: 10px; flex: 1; display: flex; justify-content: space-between; color: #c3c2b7"><span>Draft plan approval <span style="color: #ffc98a">· next</span></span><span style="color: #9a998f; font-size: 12px">—</span></div>
+        </li>
+        <li style="display: flex; gap: 12px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 14px"><span style="width: 12px; height: 12px; border-radius: 999px; border: 2px solid #4a4a46; box-sizing: border-box; margin-top: 3px"></span></div>
+          <div style="flex: 1; color: #9a998f">Registration → permits → built</div>
+        </li>
+      </ol>
+    </section>
+
+    <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <a href="#" style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 4px; color: #ffffff">
+        <span style="font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Regional DCs</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">≈ $32.8M</span>
+        <span style="color: #9a998f; font-size: 11.5px">253 × $62,957 + 339 × $49,862, before credits</span>
+      </a>
+      <a href="#" style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 6px; color: #ffffff">
+        <span style="font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Share of area</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">6%</span>
+        <span style="display: flex; height: 6px; background: #3a3a37; border-radius: 3px; overflow: hidden"><span style="width: 6%; background: #6da7ec"></span></span>
+        <span style="color: #9a998f; font-size: 11.5px">of 9,361 homes proposed nearby</span>
+      </a>
+    </section>
+
+    <footer style="color: #9a998f; font-size: 11.5px; border-top: 1px solid #383835; padding-top: 12px; display: flex; flex-direction: column; gap: 4px">
+      <span>Units from the OZS-2025-0032 description · flows at Peel Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023) · DC rates Aug 1, 2026 – Jan 31, 2027.</span>
+      <span>Not a hydraulic model. Peel W&amp;WW Infrastructure Planning must confirm all results.</span>
+    </footer>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":480,"height":1760}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

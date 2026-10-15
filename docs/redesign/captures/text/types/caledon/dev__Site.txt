@@ -1,0 +1,75 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+14337 HIGHWAY 50 CALEDON ON L7E 3H6 · Caledon · 2 Under review
+
+At a glance
+Files & history ↓
+
+Under review: from the status of 21T-26004C (“Circulation”)
+
+315
+units
+planned
+1,220
+people
+at build-out
+6.83
+L/s
+water max day
+4.08
+L/s
+average dry weather
+15.3
+L/s
+peak dry weather
+20.2
+L/s
+peak wet weather
+
+Tree count
+21T-26004C: 315 (own count)
+
+Flows at Peel design criteria, as in a functional servicing report. Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Outside the mapped pressure zones — counted in Zone 6 (nearest): a screening estimate Water →
+🚰 Wastewater sewer pipes not assessed · G.E. Booth WRRF (Lakeview) reserve 30.4 ML/d — this site 1% of it Wastewater →
+🏗 DC works Outside the existing network: servicing about 2027 on the 2026 DC draft schedule (as of March 2026, before the May 2026 pause) DC Analysis →
+🚩 Next milestone Next milestone: Approved Files & history ↓
+About
+Files & history
+Site
+Site
+aerial · ground · stormwater
+Aerial check
+3%likely completed
+Not visibly started
+2025 · latest
+•
+Records: Under review
+•
+No earlier aerial to compare with
+
+Town of Caledon aerial photos. Site: application boundary (yellow outline). Estimate from how much the site changed compared with its surroundings and how much building structure it shows; not a site inspection.
+
+Ground
+
+Site 264.9 m above sea level
+
+Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts.
+
+Storm sewers
+Within
+100 m
+200 m
+400 m
+Storm sewers
+none within 200 m (Caledon storm sewers are not published)
+
+Live from the municipal stormwater GIS, measured from the development's point (not the connection point). Tap a main to see it on the map.
+
+Stormwater
+Nearest pond: 4 (dry pond), 936 m (Town of Caledon)
+Status: Assumed
+
+Live from the municipal stormwater layers. Whether the pond was sized for this site is in its SWM report, not the GIS.

@@ -1,0 +1,234 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+9763 HERITAGE RD · Brampton · 5 Under construction
+
+At a glance
+Files & history ↓
+
+Under construction: from the status of OZS-2025-0032 (“Staff Review Complete”), PRE-2024-0100 (“Closed”)
+
+9,862
+units
+planned
+33,500
+people
+at build-out
+189
+L/s
+water max day
+113
+L/s
+average dry weather
+273
+L/s
+peak dry weather
+284
+L/s
+peak wet weather
+
+Tree count · 6,289 by the previous rule
+OZS-2025-0034: 9,862 (children (the parent states no count))
+
+Flows at Peel design criteria, as in a functional servicing report. Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Zone 6: this site is 7% of the zone's build-out max day Water →
+🚰 Wastewater sewer pipes not assessed · Clarkson WRRF reserve 112 ML/d — this site 14% of it Wastewater →
+🏗 DC works Served by the existing network · 15 planned works nearby DC Analysis →
+🚩 Next milestone Next milestone: Completed Files & history ↓
+About
+Files & history
+Site
+Status
+Under construction
+Phase
+
+5 Under construction
+
+Status
+
+Under construction: from the status of OZS-2025-0032 (“Staff Review Complete”), PRE-2024-0100 (“Closed”)
+
+Applications in this development
+10 files · open one on its own
+1
+PRE-2023-0100 · Pre Consultation · Closed
+1
+PRE18.016 · Pre Consultation · Verification of Documents
+pre-consultation → the formal file it overlaps most · high confidence, 100% inside
+3
+C05W07.006 · OPA ZBA Subdivision · Closed Approved · 52 units
+block plan ⊃ draft plan · low confidence, 100% inside
+1
+PRE17.126 · Pre Consultation · Closed
+pre-consultation → the formal file it overlaps most · high confidence, 100% inside
+1
+PRE-2023-0067 · Pre Consultation · Comments Released
+pre-consultation → the formal file it overlaps most · high confidence, 100% inside
+1
+PRE-2024-0100 · Pre Consultation · Closed
+pre-consultation → the formal file it overlaps most · high confidence, 100% inside
+2
+OZS-2024-0051 · OPA ZBA Subdivision · Staff Review Complete
+block plan ⊃ draft plan · high confidence, 100% inside
+2
+OZS-2025-0032 · OPA ZBA Subdivision · Staff Review Complete · 592 units
+block plan ⊃ draft plan · high confidence, 100% inside
+2
+OZS-2025-0034 · OPA ZBA Subdivision · In Review-Public Mtg Complete · 6,289 units
+block plan ⊃ draft plan · high confidence, 100% inside
+1
+PRE-2024-0087 · Pre Consultation · Closed
+pre-consultation → the formal file it overlaps most · high confidence, 100% inside
+
+Files in tree order: each sits under the file whose land holds it, with the rule that linked them and its confidence; files on the same land sit side by side. The development counts its units once, from the tree (Settings › Counting). Open a file to see its branch on its own.
+
+Related applications
+4 developments on overlapping land
+How the phase was set
+Under construction · from 22-234447-000-00
+
+Approved means a site plan is approved, or a plan of subdivision is registered: zoning, official plan, draft subdivision and condominium approvals keep the site under review; demolition permits don't count. Otherwise the site shows the furthest phase reached by any of its files that is not withdrawn — here 22-234447-000-00 (★), from its status.
+
+Approvals by stage
+Stage	Furthest	Latest submission
+Pre-consultation
+6 files
+	1 Inception
+PRE-2024-0100
+	PRE-2024-0100
+2024-08-12 · inception
+
+Official plan / zoning / subdivision
+4 files
+	3 Approved
+C05W07.006
+	OZS-2025-0034
+2025-07-22 · under review
+
+Building permits
+54 files
+	✓ Completed
+22-234447-000-00
+	22-234447-000-00
+2022-03-27 · completed
+A newer official plan / zoning / subdivision file (OZS-2025-0032, submitted 2025-07-11; OZS-2024-0051, submitted 2024-08-14; OZS-2025-0034, submitted 2025-07-22) is still in review after C05W07.006 was approved (2018-04-16): the approval may be for an earlier proposal, not the current submission.
+Building permits are issued while a planning file on the site is still in review: the permits may be for an earlier phase or another building on the site.
+22-234447-000-00 reads completed, but 6,236 planned units have no building permit yet, so the site is shown as under construction rather than completed.
+Each file: published status and how it was read (64)
+
+Statuses are as each municipality publishes them; phases are this app's reading of them (open the ⓘ for the rules). A screening view — confirm against the file before relying on it.
+
+History
+since 2017 · 19 council
+1
+Inception
+2017-11-03
+2
+Under review
+reached
+3
+Approved
+reached
+4
+Permit issued
+2021-01-27
+5
+Under construction
+reached
+✓
+Completed
+Staff review complete
+OZS-2025-0032 (“Staff Review Complete”); OZS-2024-0051 (“Staff Review Complete”)
+Pre-consultation comments released to the applicant
+PRE-2023-0067 (“Comments Released”)
+Statutory public meeting held; recommendation report to follow
+OZS-2025-0034 (“In Review-Public Mtg Complete”)
+Key events
+All dated events (50)
+2026 10 council
+09-09
+Council
+By-law 153-2026 passed · City Council · item 18.13 By-law
+By-law 153-2026 - To amend Comprehensive Zoning By-law 270-2004, as amended, Glen Schnarr and Associates Inc., Argo TFP Brampton III Ltd. & Argo TFP Brampton V Limited,9763, 0, 9553, and 9577 Heritage Road -Ward 6 - (File: OZS-2025-0032)
+09-09
+Council
+By-law 154-2026 passed · City Council · item 18.14 By-law
+By-law 154-2026 - To amend Zoning By-law 14-2026- Glen Schnarr and Associates Inc., Argo TFP Brampton III Ltd. & Argo TFP Brampton V Limited, 9763, 0, 9553, and 9577 Heritage Road Ward: Ward 6 (File: OZS-2025-0032)
+09-09
+Council
+By-law 155-2026 passed · City Council · item 18.15 By-law
+By-law 155-2026 - To amend Comprehensive Zoning By-law 270-2004, as amended, Glen Schnarr and Associates Inc., GIL (Heritage Heights) Inc.,2055 Bovaird Drive West & 9980 Mississauga Road - Ward 6 (File: OZS-2025-0034)
+09-09
+Council
+By-law 156-2026 passed · City Council · item 18.16 By-law
+By-law 156-2026 - To amend Zoning By-law 14-2026, Glen Schnarr and Associates Inc., GIL (Heritage Heights) Inc.,2055 Bovaird Drive West & 9980 Mississauga Road - Ward 6 (File: OZS-2025-0034)
+06-08
+Council
+Planning and Development Committee · item 7.1 Item
+File: OZS-2025-0032
+06-08
+Council
+Planning and Development Committee · item 7.1.1 Recommendation report
+Staff Report by Rajvi Patel, Planner, Development Services
+06-08
+Council
+Planning and Development Committee · item 7.2 Item
+File: OZS-2025-0034
+06-08
+Council
+Planning and Development Committee · item 7.2.1 Recommendation report
+Staff Report by Rajvi Patel, Planner, Development Services
+06-08
+Council
+Carried · Planning and Development Committee · item 7.2.3 Correspondence Carried
+Correspondence - Nil
+04-22
+Council
+City Council · item 18.13 By-law
+By-law-70-2026 -To amend Comprehensive Zoning By-law 270-2004, as amended - KLM Planning, Four X Development Inc., Mustque Development Inc., and Pencil Top Developments Inc., c/o DG Group, 9752 and 0 Mississauga Road - Ward 6 (File: OZS-2024-0051)
+2025 6 council · 2 file
+10-06
+Council
+Planning and Development Committee · item 7.1 Item
+File: OZS-2024-0051
+10-06
+Council
+Planning and Development Committee · item 7.1.1 Recommendation report
+Staff Report by Yin Xiao, Principal Planner/Supervisor, Development Services
+09-08
+Council
+Public meeting held · Planning and Development Committee · item 6.2 Public meeting
+File: OZS-2025-0032 - Public Meeting
+09-08
+Council
+Planning and Development Committee · item 6.2.1 Staff presentation
+Staff Presentation by Rajvi Patel, Planner, Development Services
+09-08
+Council
+Public meeting held · Planning and Development Committee · item 6.3 Public meeting
+File: OZS-2025-0034 - Public Meeting
+09-08
+Council
+Planning and Development Committee · item 6.3.1 Staff presentation
+Staff Presentation by Rajvi Patel, Planner, Development Services
+07-22
+File
+1
+Inception · Date received — OZS-2025-0034
+07-11
+File
+1
+Inception · Date received — OZS-2025-0032
+2024 3 council · 3 file
+2023 2 file
+2022 permits
+2021 permits
+2020 permits
+2018 2 file
+2017 1 file
+
+Phase changes from the weekly check; council and committee items that name the files (agendas and minutes since 2019); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.
+
+Source records
+64 files by type

@@ -1,0 +1,87 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+1580 and 1650 Dundas St E. · Mississauga · 2 Under review
+
+At a glance
+Files & history ↓
+
+Under review: from the status of 21T-M 22-4 (“WITHHELD”), OZ/OPA 22-22 (“OMB APPEAL”)
+
+3,027
+units
+planned
+8,170
+people
+at build-out
+56
+jobs
+on the site
+2,506
+m²
+retail / commercial floor area
+46.2
+L/s
+water max day
+27.6
+L/s
+average dry weather
+84.1
+L/s
+peak dry weather
+86.5
+L/s
+peak wet weather
+
+Tree count
+21T-M 22-4: 3,027 (same land, counted once (largest of 2))
+
+Flows at Peel design criteria, as in a functional servicing report; jobs from the floor area the applications state (250 L/job/d water). Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Zone 2: this site is 4% of the zone's build-out max day Water →
+🚰 Wastewater sewer pipes not assessed · G.E. Booth WRRF (Lakeview) reserve 30.4 ML/d — this site 10% of it Wastewater →
+🏗 DC works Served by the existing network · 6 planned works nearby DC Analysis →
+🚩 Next milestone Under appeal — next: Approved, after the Tribunal decides Files & history ↓
+About
+Files & history
+Site
+Site
+aerial · ground · stormwater
+Aerial check
+2%likely completed
+Not visibly started
+2021 · before the application
+2024 · latest
+•
+Records: Under review
+▼
+No visible change on the site 2021 → 2024
+•
+Mapped buildings cover 100% (2021) → 100% (2024) of the site
+
+City of Mississauga aerial photos. Site: 45 m around the address (no boundary in the data) (yellow outline). Estimate from how much the site changed compared with its surroundings and how much building structure it shows, plus building footprints traced from the photos; not a site inspection.
+
+Ground
+
+Site 116.5 m above sea level
+
+Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts.
+
+Storm sewers
+Within
+100 m
+200 m
+400 m
+Storm sewers
+7 within 200 m · 26 more pieces farther out
+300 mm CON, 1990 on Mattawa Ave · 1 m (City of Mississauga)
+size not recorded on Mattawa Ave · 3 m (6 pieces · City of Mississauga)
+375 mm CON, 1990 on Mattawa Ave · 10 m (City of Mississauga)
+450 mm CON, 1990 on Mattawa Ave · 59 m (2 pieces · City of Mississauga)
+3 more
+
+Live from the municipal stormwater GIS, measured from the development's point (not the connection point). Tap a main to see it on the map.
+
+Stormwater
+
+Mississauga does not publish its stormwater ponds; see the nearest storm sewer above.

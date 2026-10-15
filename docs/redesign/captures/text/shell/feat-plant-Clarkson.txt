@@ -1,0 +1,246 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Clarkson WRRF stays below its 90% expansion trigger to 2051: existing + built + committed use 68% of its rated 350 ML/d, 83% at build-out (annual average flow (2025 measured at each plant; growth at the plant’s measured rate)).
+
+Wastewater treatment plant · 297 developments in this scope · Back to Peel
+
+350
+ML/d
+rated capacity
+68%
+of rated
+existing + built + committed
+83% at build-out
+112
+ML/d
+uncommitted reserve (D-5-1)
+≈245,400 people
+after 2051
+reaches the 90% expansion trigger
+next: 2029 500 ML/d (22-2950) · paused
+Servicing ladder
+Pumping stations (peak wet at build-out, % of firm): Clarkson · Richards Memorial PS 110% · Clarkson · Silver Birch Trail PS 75% · Clarkson · Jack Darling Memorial Park 1 PS 55% · Clarkson · Watersedge PS · Clarkson · Meadowvale PS
+Arriving at the plant (block and everything upstream, average dry at build-out): Block 2 186 ML/d
+Developments loading it
+Area report
+216 developments adding flow since the census, largest peak wet weather first; each alone at Peel design criteria (peaks are not additive)
+Development	People + jobs	Average dry	Peak wet	Share
+1 111 MAYFIELD RD
+Proposed (in review) · Brampton
+	31,300	105L/s	303L/s	14%
+5 9763 HERITAGE RD
+Committed (draft plan or site plan approved) · Brampton
+	33,500	113L/s	284L/s	15%
+2 0 HERITAGE RD
+Proposed (in review) · Brampton
+	13,900	46.6L/s	138L/s	6%
+2 1750 STEELES AVE W
+Proposed (in review) · Brampton
+	11,800	39.7L/s	123L/s	5%
+4 9485 WINSTON CHURCHILL BLVD
+Committed (draft plan or site plan approved) · Brampton
+	1,200	4.03L/s	114L/s	1%
+2 10869 HERITAGE RD
+Proposed (in review) · Brampton
+	8,230	27.6L/s	113L/s	4%
+1 0 HERITAGE RD
+Proposed (in review) · Brampton
+	7,260	24.4L/s	111L/s	3%
+2 5100 Erin Mills Parkway
+Proposed (in review) · Mississauga
+	8,550	28.7L/s	95.3L/s	4%
+2 0 LAGERFELD DR
+Proposed (in review) · Brampton
+	7,640	25.6L/s	79.8L/s	3%
+2 0 MISSISSAUGA RD
+Proposed (in review) · Brampton
+	4,800	16.1L/s	62.9L/s	2%
+
+See all 216
+
+Growth total, average dry weather (design): 734L/s · 63.4ML/d.
+
+Planned works (2026 DC capital map, draft)
+
+Treatment capacity: 500 ML/d from 2029 (Treatment expansion to 500 ML/d: construction 2026-2028 (2026 DC map; 350 to 500 ML/d in the 2020 DC Background Study))
+
+Facilities: Clarkson Water Resource Recovery Facility (last construction 2032)
+
+Construction	Main	Length
+2026	Primary wastewater main (trunk) · 1500 mm · approved 2026
+19-2208 · Eglinton West Sanitary Trunk Sewer
+	4,810m
+2026	Local wastewater main · 600 mm · approved 2026
+26-2131 · Constructi 600-mm Sanitary Sewer - Future sewer on Street (Huttonville North) Bovaird Dri 340
+	470m
+2026	Local wastewater main · 450 mm · approved 2026
+24-2104
+	1,090m
+2026–2027	Local wastewater main · approved 2026
+24-2141
+	1,380m
+2026	Local wastewater main · approved 2026
+24-2105
+	580m
+2027	Primary wastewater main (trunk) · 1200 mm
+25-2225 · Credit Valley Sanitary Trunk Sewer (P 4)
+	1,240m
+2027	Primary wastewater main (trunk) · 900 mm
+25-2224 · Credit Valley Sanitary Trunk Sewer (P 3)
+	360m
+2027	Primary wastewater main (trunk) · 750 mm
+26-2221 · Heritage Heights Sanitary Trunk Sew (Phase 1)
+	1,380m
+2027–2028	Primary wastewater main (trunk) · 525 mm
+28-2139
+	4,170m
+2028	Primary wastewater main (trunk) · 2400 mm
+25-2219 · Lower West Sanitary Trunk Sewer Twinni
+	5,780m
+2028	Local wastewater main · 750 mm
+26-2118
+	1,030m
+2028	Local wastewater main · 600 mm
+25-2135 · Constructio 450-mm Sanitary Sewer - Future sewer on a Street (Bram West) Embleton Ro to 700
+	1,330m
+2028	Local wastewater main · 525 mm
+28-2133
+	2,820m
+2028	Local wastewater main
+28-2136
+	1,210m
+2028	Local wastewater main
+28-2137
+	820m
+2029	Primary wastewater main (trunk) · 825 mm
+27-2229 · Northwest Brampton Sanitary Trunk Sew (Phase 2)
+	2,250m
+2029	Local wastewater main · 375 mm
+29-2130 · Constructi 375-mm Sanitary Sewer - Future sewer on Street (Huttonville North) Bovaird Dri 770 Constructi
+	1,070m
+2029	Local wastewater main · 375 mm
+29-2134 · sewer on 375-mm Sanitary Sewer - Future Winston Ch Street (Bram West) north of met
+	750m
+2030	Primary wastewater main (trunk) · 1200 mm
+28-2226
+	7,280m
+2030	Primary wastewater main (trunk) · 825 mm
+28-2230
+	2,150m
+2030	Local wastewater main · 450 mm
+30-2131
+	1,590m
+2030	Local wastewater main · 450 mm
+30-2138 · sewer on 375-mm Sanitary Sewer - Future Embleton Street (Bram West) Churchill metres w
+	1,460m
+2034	Local wastewater main · 750 mm
+31-2199 · Constructio 600-mm Sanitary Sewer - Heritage sewer on Road (Mount Pleasant West) Mayfield southe
+	1,250m
+–	Primary wastewater main (trunk) · 1500 mm · approved 2026
+no project label
+	860m
+–	Local wastewater main
+no project label
+	1,320m
+
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026. Developments built since the census, committed and proposed; existing development is in the census flow.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 297 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Inception
+27
+Under review
+112
+Approved
+85
+Permit issued
+54
+Construction
+19
+Completed
+186
+Withdrawn / refused
+15
+
+297 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 125
+Under appeal 11
+Waiting on DC works 0
+PS over firm capacity 0
+Changed this week 0
+★ Watched 0
+Estimate check 106
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴
