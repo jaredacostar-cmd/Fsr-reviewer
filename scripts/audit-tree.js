@@ -41,12 +41,13 @@ async function loadRecords(live) {
   return { misTyped, records: P.dedupeRecords(decoded), generatedAt: snap.generatedAt, sources: snap.sources.map(s => ({ id: s.id, status: s.status, count: s.count })) };
 }
 
-function audit({ records, generatedAt, sources, misTyped = [] }, { live = false, log = console.log, chrono = {} } = {}) {
+function audit({ records, generatedAt, sources, misTyped = [] }, { live = false, log = console.log, chrono = T.CHRONO_ALL } = {}) {
   // Current grouping, as the app builds it.
   const projects = P.buildProjects(records);
   const projOfUid = new Map(); for (const p of projects) for (const r of p.records) projOfUid.set(r.uid, p);
   // Proposed trees.
-  // chrono: the proposed chronology rules to model (js/tree.js r1–r4); none by default.
+  // chrono: the chronology rules (js/tree.js r1–r4), all on since your approval of 2026-10-15;
+  // pass {} for the tree as it was before them.
   const nodes = T.fileNodes(records, { chrono });
   const permits = records.filter(r => r.kind === 'permit');
   const built = T.buildTrees(nodes, { permits, log, chrono });

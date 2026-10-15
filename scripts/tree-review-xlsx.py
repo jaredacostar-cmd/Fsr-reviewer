@@ -140,7 +140,10 @@ def main():
     ws['A1'].font = Font(italic=True)
     table(ws, heads, [row_of(r) for r in ask], widths, call_cols=4)
     dv0 = DataValidation(type='list', formula1='"Accept,Override,Ask"', allow_blank=True)
-    ws.add_data_validation(dv0); dv0.add(f'S3:S{ws.max_row}')
+    if ask:
+        ws.add_data_validation(dv0); dv0.add(f'S3:S{ws.max_row}')
+    else:
+        ws.append(['Nothing left to review: every group is accepted or overridden (see Decisions).'])
     changed = [r for r in d['rows'] if r['kind'] != 'unchanged']
     ws = wb.create_sheet('Changes')
     table(ws, heads, [row_of(r) for r in changed], widths, call_cols=4)
@@ -172,21 +175,26 @@ def main():
     dict_sheet(wb, 'Counts to find', L['growthToFind'], 'Active developments where no file states a count and the wording does not settle it.')
     # Decisions: everything left to finalize Step B0, in one place.
     C0 = d.get('chrono')
+    OV = json.load(open(os.path.join(ROOT, 'data', 'tree-overrides.json')))
+    chrono_ok = (OV.get('rules', {}).get('chronology') or {}).get('decidedOn')
+    reviewed = set(((OV.get('accepted') or {}).get('reviewed') or {}).get('roots') or [])
+    ovs = OV.get('overrides') or {}
     ws = wb.create_sheet('Decisions', 1)
-    ws.append(['Decisions to finalize Step B0. Fill the yellow column; then GO 2 starts Step B1 (tree counts in the app, with a Previous/Tree switch).'])
+    ws.append(['Decisions for Step B0, with your calls (data/tree-overrides.json). Anything still blank needs a call; then GO 2 starts Step B1 (tree counts in the app, with a Previous/Tree switch).'])
     ws['A1'].font = Font(italic=True)
     dec = []
     if C0:
         for st in C0['steps'][1:]:
-            dec.append(['Chronology rule', st['label'], f"{st['change']:+,} units · {st['groupsChanged']} groups", 'Chronology', 'Approve recommended' if st['key'] != 'r3' else 'Approve recommended (see the unclear groups below)', ''])
+            dec.append(['Chronology rule', st['label'], f"{st['change']:+,} units · {st['groupsChanged']} groups", 'Chronology', 'Approve recommended', f'Approved {chrono_ok}' if chrono_ok else ''])
         for x in C0['lists']['latestVsLargest']:
             if x.get('verdict') == 'unclear':
-                dec.append(['Same land: unclear', f"{x['largest']} {x['largestUnits']:,} vs later {x['latest']} {x['latestUnits']:,}", f"counted {x['counted']:,} (the largest) until you decide", 'Latest vs largest', 'Latest or Largest', ''])
+                dec.append(['Same land: unclear', f"{x['largest']} {x['largestUnits']:,} vs later {x['latest']} {x['latestUnits']:,}", f"counted {x['counted']:,} (the largest) until you decide", 'Latest vs largest', 'Latest or Largest', f'Largest (decided {chrono_ok})' if chrono_ok else ''])
             if x.get('wordingUnits'):
-                dec.append(['Data check', f"{x['latest']}: the record says {x['latestUnits']:,} units, its wording says {x['wordingUnits']:,}", 'which is right?', 'Latest vs largest', 'Record or Wording', ''])
-    ask = [r for r in d['rows'] if r.get('call') == 'Ask']
-    for r in ask:
-        dec.append(['Group to review', '; '.join(t['root'] for t in r['trees']) + f" ({r['municipality']})", f"app {r['appUnits']:,} → tree {r['treeUnits']:,} ({r['change']:+,})", 'To review', r.get('callWhy', ''), ''])
+                dec.append(['Data check', f"{x['latest']}: the record says {x['latestUnits']:,} units, its wording says {x['wordingUnits']:,}", 'which is right?', 'Latest vs largest', 'Record or Wording', next((f"Override: {v['units']:,} ({v['decidedOn']})" for k, v in ovs.items() if k.endswith('|' + x['latest'])), '')])
+    for r in d['rows']:
+        keys = [f"{r['municipality']}|{t['root']}" for t in r['trees']]
+        if r.get('call') == 'Ask' or (r['kind'] != 'unchanged' and any(k in reviewed for k in keys)):
+            dec.append(['Group to review', '; '.join(t['root'] for t in r['trees']) + f" ({r['municipality']})", f"app {r['appUnits']:,} → tree {r['treeUnits']:,} ({r['change']:+,})", 'Changes', r.get('callWhy', ''), 'Accept' if r.get('call') == 'Accept' else ''])
     table(ws, ['Kind', 'What', 'Effect', 'Where to look', 'Recommendation / why asked', 'Your call'], dec, {'What': 60, 'Effect': 34, 'Recommendation / why asked': 60, 'Your call': 22}, call_cols=1)
 
     # Chronology (proposed rules r1–r5, modelled; report only)

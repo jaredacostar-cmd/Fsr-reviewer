@@ -4,9 +4,25 @@
   "rules": {
     "preconsultationOnlyCount": "count it, flagged 'estimate (pre-consultation)', proposed only, never committed (decided 2026-10-15)",
     "permitsWhenNoCount": "when no file states a count, the units on the building permits placed in the tree count; never for a replacement or model house (tree rule fixed 2026-10-15)",
-    "minorFileStatedCount": "a minor file's own stated count counts, not only its wording (tree rule fixed 2026-10-15)"
+    "minorFileStatedCount": "a minor file's own stated count counts, not only its wording (tree rule fixed 2026-10-15)",
+    "chronology": {
+      "decidedOn": "2026-10-15",
+      "r1": "an undated file takes 1 July of the year in its file number, flagged \"date from file number\"",
+      "r2": "an approved site plan / condo / draft plan filed 3+ years before a newer pre-consultation, rezoning or block plan on its land is history, not part of the new tree",
+      "r3": "same land, counted once: the latest file (stating its own count) wins when it is the same stage refiled, covers 90%+ of the earlier land, or (no boundary) its wording reads as a resubmission; else the largest stands",
+      "r3Unclear": "pairs the wording cannot call keep the largest count (decided: OZ/OPA 24-2 vs SP 25-67, OZ/OPA 10-5 vs SP 21-155)",
+      "r4": "a permit issued 2+ years before the file it would sit under is the old building: not placed",
+      "r5": "each tree is shown in filing order with backwards steps marked (report only)"
+    }
   },
-  "overrides": {},
+  "overrides": {
+    "Mississauga|SP 22-75": {
+      "units": 322,
+      "reason": "the record says 457 units; the file’s own description says \"33 storey residential apartment building with a 4 storey podium (322 units)\"",
+      "source": "Mississauga development applications record SP 22-75 (description field)",
+      "decidedOn": "2026-10-15"
+    }
+  },
   "accepted": {
     "decidedOn": "2026-10-15",
     "categories": [
@@ -17,6 +33,58 @@
       "new trees and app developments with no live tree",
       "small or well-linked count changes (under 100 units, or not low confidence)"
     ],
-    "stillToReview": "large pre-consultation estimates (1,000+ units), merges and regroupings that move 100+ units, splits and count changes that lower a count by 100+, and low-confidence changes of 100+ (the To review sheet)"
+    "reviewed": {
+      "decidedOn": "2026-10-15",
+      "note": "the 24 To review groups, plus the 6 roots whose change comes from the approved chronology rules (rule 3 resubmissions; 2 Bartley Bull, already accepted as a withdrawn file): tree count accepted as is (keyed by tree root)",
+      "roots": [
+        "Brampton|OZS-2025-0034",
+        "Brampton|OZS-2026-0009",
+        "Brampton|SPA-2025-0088",
+        "Brampton|SPA-2024-0085",
+        "Brampton|SPA-2021-0143",
+        "Brampton|DPC-2023-0005",
+        "Brampton|SPA-2021-0074",
+        "Brampton|OZS-2025-0011",
+        "Brampton|SPA-2025-0184",
+        "Brampton|SP16-078.000",
+        "Brampton|SPA-2021-0063",
+        "Brampton|SP86-047.000",
+        "Brampton|SP87-153.000",
+        "Brampton|SP89-139.000",
+        "Brampton|SPA-2025-0130",
+        "Brampton|SP85-035.000",
+        "Brampton|C06W13.001",
+        "Brampton|PRE17.129",
+        "Mississauga|SP 17/131",
+        "Brampton|OZS-2026-0034",
+        "Brampton|PRE-2024-0029",
+        "Brampton|PRE-2024-0145",
+        "Brampton|PRE-2021-0183",
+        "Brampton|PRE-2021-0177",
+        "Brampton|OZS-2021-0052",
+        "Brampton|C05W12.004",
+        "Brampton|OZS-2020-0031",
+        "Mississauga|SP 21-155",
+        "Caledon|2026-0001",
+        "Caledon|21CDM-16001C",
+        "Brampton|OZS-2022-0023",
+        "Brampton|SPA-2026-0058",
+        "Brampton|SPA-2021-0100",
+        "Brampton|SPA-2022-0214",
+        "Brampton|SPA-2025-0050",
+        "Brampton|SPA-2025-0009",
+        "Brampton|SPA-2025-0031",
+        "Brampton|SP18-087.000",
+        "Brampton|SP18-112.000",
+        "Brampton|PRE-2026-0016",
+        "Brampton|PRE-2021-0190",
+        "Mississauga|SP 25-5",
+        "Mississauga|21T-M 20-4",
+        "Mississauga|SP 25-13",
+        "Brampton|OZS-2026-0016",
+        "Brampton|SP86-037.000",
+        "Brampton|PRE-2020-0001"
+      ]
+    }
   }
 }

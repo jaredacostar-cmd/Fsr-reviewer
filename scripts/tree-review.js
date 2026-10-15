@@ -28,7 +28,10 @@ const inParts = (x, y, parts) => (parts || []).some(poly => poly.length && pip(x
 // Overrides you have decided: key "Municipality|ROOT-FILE" → { units, reason, source, decidedOn }.
 function loadOverrides() {
   const o = readJSON(path.join(DATA, 'tree-overrides.json'));
-  return new Map(Object.entries((o && o.overrides) || {}));
+  const m = new Map(Object.entries((o && o.overrides) || {}));
+  // Groups you reviewed and accepted as they stand (keyed by tree root).
+  m.reviewed = new Set(((o && o.accepted && o.accepted.reviewed) || {}).roots || []);
+  return m;
 }
 
 // Your bulk decisions of 2026-10-15 (data/tree-overrides.json "accepted"): accept the safe
@@ -36,6 +39,7 @@ function loadOverrides() {
 function callOf(r) {
   const big = Math.abs(r.change) >= 100, low = r.flags.includes('low-confidence link');
   if (r.trees.some(t => t.override != null)) return { call: 'Override', why: 'your override' };
+  if (r.reviewed) return { call: 'Accept', why: 'you reviewed and accepted it (2026-10-15)' };
   // Large pre-consultation estimates come first: they matter even where the app already counts them.
   if (r.flags.includes('estimate (pre-consultation)')) return r.treeUnits >= 1000
     ? { call: 'Ask', why: 'large pre-consultation estimate (1,000+ units): is it still a live proposal?' }
@@ -116,7 +120,8 @@ function review(res, overrides = new Map()) {
     if (treeRows.some(x => x.confidence === 'low')) flags.push('low-confidence link');
     if (treeRows.some(x => x.flags)) flags.push('children exceed parent');
     if (treeRows.some(x => x.planShare != null && x.planShare < 90)) flags.push('straddles plans');
-    const call = callOf({ kind, change, treeUnits, flags, trees: treeRows });
+    const reviewed = !!(overrides.reviewed && treeRows.some(x => overrides.reviewed.has(x.key)));
+    const call = callOf({ kind, change, treeUnits, flags, trees: treeRows, reviewed });
     rows.push({
       call: call.call, callWhy: call.why,
       group: gid, municipality: (treeRows[0] || {}).municipality || (projs[0] || {}).municipality || '',
@@ -187,7 +192,7 @@ function diffRuns(A, B) {
 }
 function chronoModel(data, log = () => {}) {
   const T = require('../js/tree.js');
-  const runs = [{ key: 'today', label: 'Tree rules today', res: audit(data, { log: () => {} }) }];
+  const runs = [{ key: 'today', label: 'Before the chronology rules', res: audit(data, { log: () => {}, chrono: {} }) }];
   const on = {};
   for (const st of STEPS) { on[st.key] = true; log(`modelling ${st.key}`); runs.push({ ...st, res: audit(data, { log: () => {}, chrono: { ...on } }) }); }
   const muniUnits = res => { const o = { Peel: 0 }; for (const { t, c } of res.internals.counts) { const m = res.internals.nodes[t.nodes[0]].municipality; o[m] = (o[m] || 0) + (c.units || 0); o.Peel += c.units || 0; } return o; };

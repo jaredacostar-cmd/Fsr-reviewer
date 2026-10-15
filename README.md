@@ -2224,9 +2224,25 @@ Two points or more either way decides; otherwise the pair is unclear and the lar
 The latest file must state its own count (a draft plan counted only through one child is
 not a replacement).
 
-**Decisions sheet.** Every call left before Step B1 is in one list: the four rules, the unclear
-same-land groups, a data check (SP 22-75: the record says 457 units, its wording says 322) and
-the 24 To review groups.
+**Step B0 decided (2026-10-15): approve all.** Recorded in `data/tree-overrides.json`:
+- Chronology rules 1–4 are on: `audit()` uses them by default; pass `chrono: {}` for the tree
+  as it was before them.
+- The two unclear same-land pairs keep the largest count (OZ/OPA 24-2, OZ/OPA 10-5).
+- SP 22-75 is overridden to 322 units, from its own description (the record says 457).
+- The 24 To review groups are accepted. So are the 6 roots whose change comes from the rules:
+  - the rule 3 resubmissions (88 Park E, 51 Tannery, 2225 Erin Mills, OZS-2026-0016);
+  - 2 Bartley Bull, already accepted as a withdrawn file.
+
+Final tree totals on the 2026-10-12 snapshot:
+
+| | App units | Tree units | After overrides |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,574 | 90,439 |
+| Brampton | 127,570 | 141,870 | 141,870 |
+| Caledon | 29,379 | 31,522 | 31,522 |
+| **Peel** | **247,760** | **263,966** | **263,831** |
+
+Nothing is left to review. The Decisions sheet lists every call and what you decided.
 
 New sheets: Decisions, Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
 History links, Permits early, Dated from number, Filing order.
