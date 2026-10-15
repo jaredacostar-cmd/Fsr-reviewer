@@ -44,10 +44,11 @@
 
   const on = Object.fromEntries(Object.keys(LAYERS).map(k => [k, false]));
   Object.assign(on, Object.fromEntries(Object.entries(store.get('cxOn', {}) || {}).filter(([k]) => k in on)));
-  map.createPane('cxPane', map.getPane('rotatePane') || undefined).style.zIndex = 352;
+  map.createPane('cxPane', map.getPane('rotatePane') || undefined).style.zIndex = (root.PeelLayerGroups ? root.PeelLayerGroups.Z.cx : 300);
   const renderer = L.canvas({ pane: 'cxPane', padding: 0.3 });
   const layer = L.layerGroup().addTo(map);
   const status = {};   // layer key -> 'ok' | 'none'
+  const drawn = {};    // layer key -> features drawn in the last render (the Layers header's "in view")
 
   // ---- Loading ----------------------------------------------------------------------------------
   const overviews = new Map();
@@ -85,6 +86,7 @@
     const L0 = LAYERS[key], col = token(L0.color) || token('--nodata'), w = coarse ? 0.7 : L0.weight, dash = coarse ? null : L0.dash;
     for (const f of feats) {
       if (L0.keep && !L0.keep(f.label)) continue;
+      drawn[key] = (drawn[key] || 0) + 1;
       const tip = `<strong>${esc(f.label[0] || L0.label)}</strong><br><span class="muted">${esc(f.label[1] || L0.label)} · screening</span>`;
       const shapes = f.polys
         ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: col, fillOpacity: coarse ? 0.22 : 0.16, opacity: coarse ? 0.6 : 0.9 })]
@@ -99,6 +101,7 @@
   async function render() {
     const my = ++seq;
     layer.clearLayers();
+    for (const k of Object.keys(drawn)) delete drawn[k];
     const keys = ORDER.filter(k => on[k]);
     const note = $('#cx-note');
     if (!keys.length) { if (note) note.textContent = ''; return; }
@@ -130,6 +133,7 @@
       } catch (e) { status[key] = 'none'; notes.push(`${L0.label} did not load`); }
     }
     if (my === seq && note) note.textContent = [...new Set(notes)].join(' · ');
+    if (my === seq && root.PeelLayerGroups) root.PeelLayerGroups.sync();
   }
   let timer = null;
   map.on('moveend', () => { if (Object.values(on).some(Boolean)) { clearTimeout(timer); timer = setTimeout(render, 150); } });
@@ -158,10 +162,12 @@
     return [...peel, ...onePerStream(ohn, peel)].flatMap(f => (f.lines || []).map(g => ({ g, name: f.label[0] === 'Watercourse' ? '' : f.label[0] })));
   }
   const watercourseSource = () => status.water === 'ok' ? 'Region of Peel watercourses and the Ontario Hydro Network (LIO)' : 'OpenStreetMap';
-  function legendHTML() {
-    const keys = ORDER.filter(k => on[k]);
+  // The legend follows the Layers groups: 'cx' (Constraints) or 'utility' (Infrastructure ›
+  // Other utilities: gas, hydro).
+  function legendHTML(which = 'cx') {
+    const keys = ORDER.filter(k => on[k] && ((k === 'gas' || k === 'hydro') === (which === 'utility')));
     if (!keys.length) return '';
-    return `<div class="lg-t">Constraints (screening)</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
+    return `<div class="lg-t">${which === 'utility' ? 'Other utilities (approximate)' : 'Constraints (screening)'}</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
   }
 
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
@@ -170,7 +176,7 @@
     showLayer(b.dataset.cxShow, p && p.lat != null ? [p.lat, p.lng] : null);
   });
   if (Object.values(on).some(Boolean)) map.whenReady(() => setTimeout(render, 0));
-  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
+  const api = { LAYERS, ORDER, getOn: () => ({ ...on }), drawnCount: k => drawn[k] || 0, setOn, showLayer, render, watercoursesIn, watercourseSource, legendHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelConstraints = api;
 })(typeof window !== 'undefined' ? window : globalThis);

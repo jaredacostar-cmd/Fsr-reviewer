@@ -56,6 +56,7 @@
     for (const k of ['water', 'wastewater']) set(`[data-dcsys="${k}"]`, MM().getDcOn().on && (MM().getDcOn().sys === 'both' || MM().getDcOn().sys === k));
     const v = currentView();
     document.querySelectorAll('[data-mview]').forEach(b => b.classList.toggle('on', b.dataset.mview === v));
+    if (LG()) LG().sync();
   }
   // Map views: Planning (how it was), Water and Wastewater (servicing review, one system each) and
   // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
@@ -63,12 +64,20 @@
   // The per-view basemap comes from PeelDesign.basemapForView (single source of
   // truth, unit-tested): planning -> aerial, the servicing views -> dark canvas.
   const VIEW_PRESETS = {
-    planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
-    water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
-    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: PIPE_RESULTS ? 'pipes' : 'growth' }, focus: null, exist: { water: false, sanitary: true, storm: false }, dc: { on: true, sys: 'wastewater' } },
-    dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off' }, focus: null, exist: { water: false, sanitary: false, storm: false }, dc: { on: true, sys: 'both' } },
+    // Stage 3 (layer groups): everything off except Developments; each view adds its own layers
+    // (PeelLayerGroups.PRESETS; the groups' other layers — constraints, plan areas, hillshade — come
+    // from LG_EXTRA below).
+    planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
+    water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone', show: 'markers' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: false, sys: 'water' } },
+    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: PIPE_RESULTS ? 'pipes' : 'growth', show: 'markers' }, focus: null, exist: { water: false, sanitary: true, storm: false }, wf: false, dc: { on: false, sys: 'wastewater' } },
+    dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: true, sys: 'both' } },
   };
-  function currentMapSettings() { return { basemap: MC().getBasemap(), labelMode: ML().getLabelMode(), da: CA().getDaOn(), wf: WT().WF.on, pz: MM().svcOn.pz, dr: App().state.servicing && App().state.servicing.blocks ? MM().svcOn.bk : MM().svcOn.dr, mstyle: { ...MM().mstyle }, exist: { ...MM().getExistOn() }, dc: { ...MM().getDcOn() } }; }
+  // The layers the settings above don't carry: developments, site boundary on hover, plan areas,
+  // constraints, hillshade. A view's saved settings list them (layers: [...]); its preset takes
+  // them from PeelLayerGroups.PRESETS. Saved views from before the groups leave them as they are.
+  const LG = () => window.PeelLayerGroups;
+  const LG_EXTRA = ['devs', 'hov', 'sp', 'pr', 'mtsa', 'hill', 'reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water', 'gas', 'hydro'];
+  function currentMapSettings() { return { basemap: MC().getBasemap(), labelMode: ML().getLabelMode(), da: CA().getDaOn(), wf: WT().WF.on, pz: MM().svcOn.pz, dr: App().state.servicing && App().state.servicing.blocks ? MM().svcOn.bk : MM().svcOn.dr, mstyle: { ...MM().mstyle }, exist: { ...MM().getExistOn() }, dc: { ...MM().getDcOn() }, ...(LG() ? { layers: [...LG().onSet()], groups: [...LG().getOpen()] } : {}) }; }
   function setMapView(v) {
     const cur = currentView();
     if (cur === v) return;
@@ -88,6 +97,12 @@
     Object.assign(MM().mstyle, s.mstyle); store.set('mapStyle', MM().mstyle);
     MM().setExistOn({ ...p.exist, ...(s.exist || {}) }); store.set('existOn', MM().getExistOn()); EP().renderExisting();
     MM().setDcOn({ ...p.dc, ...(s.dc || {}) }); store.set('dcOn', MM().getDcOn().on); store.set('dcSys', MM().getDcOn().sys); DI().renderDcLayer();
+    // The groups' other layers: as saved for this view, else its preset (old saved views: unchanged).
+    if (LG()) {
+      const extra = new Set(LG_EXTRA);
+      if (saved && Array.isArray(saved.layers)) LG().apply(new Set(saved.layers), extra);
+      else if (!saved) LG().apply(LG().presetFor(v), extra);
+    }
     App().applyFilters();
     renderCapLayer(); renderLegend(); syncMapOpts(); ML().updateLabels(); Sh().viewLink.write();
   }
@@ -341,9 +356,10 @@
     if (MM().mstyle.cap === 'growth' || MM().mstyle.cap === 'zone') parts.push(`<div class="lg-t">${MM().mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(`var(${c})`, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (MM().svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${MM().blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(MM().getExistOn()).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${MM().EXIST_ZOOM})</div><ul>${Object.keys(MM().getExistOn()).filter(k => MM().getExistOn()[k]).map(k => `<li><span class="lg-line" style="background:var(${MM().EXIST_STYLE[k].color})"></span>${esc(MM().EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
-    if (window.PeelConstraints) { const cx = window.PeelConstraints.legendHTML(); if (cx) parts.push(cx); }
     if (WT().WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WT().WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
     if (MM().getDcOn().on && App().state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DI().DC_KIND).filter(([k]) => MM().getDcOn().sys === 'both' || (MM().getDcOn().sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
+    // Then, in the Layers groups' order: Infrastructure › Other utilities, Constraints.
+    if (window.PeelConstraints) for (const w of ['utility', 'cx']) { const cx = window.PeelConstraints.legendHTML(w); if (cx) parts.push(cx); }
     if (MM().mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${SP().hz.aYears} years from ${SP().hz.aStart}, proposed over ${SP().hz.pYears} from ${SP().hz.pStart} (Horizon years). ${esc(SvcTab().scenarioText())}</p>`);
     el.querySelector('.lg-body').innerHTML = parts.join('');
     el.hidden = !parts.length;
@@ -354,6 +370,7 @@
   // the developments adding flow since the census, ranked by their peak flow.
 
   const api = {
+    VIEW_PRESETS, LG_EXTRA,
     setMapStyle, setDcOn, setExistOn, currentView, syncMapOpts, setMapView,
     getCapYear() { return capYear; },
     setCapYear(v) { capYear = v; },

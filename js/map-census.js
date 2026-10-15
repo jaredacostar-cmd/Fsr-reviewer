@@ -17,7 +17,7 @@
   const daCache = new Map();   // census year -> Promise of its outline layer
   // Inside the rotating pane (leaflet-rotate) with the tiles and overlays: a pane made directly
   // in the map pane would sit under the whole rotating stack, i.e. under the background.
-  map.createPane('daPane', map.getPane('rotatePane') || undefined).style.zIndex = 350;
+  map.createPane('daPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.da : 320);
   const daRenderer = L.canvas({ pane: 'daPane', padding: 0.3 });
   // The outlines follow the census used as the baseline (2021, or 2016 for an earlier timeline).
   // (The layer can be switched on before the app has loaded — a saved setting restored at start-up:
@@ -77,7 +77,7 @@
       // Outlines for that year not published: fall back to 2021's.
       if (year !== 2021) { daYear = 2021; loadDaLayer(2021, 'data/das.json').then(l => { if (daOn && daYear === 2021) { if (daLayer && daLayer !== l) map.removeLayer(daLayer); daLayer = l; restyleDa(); l.addTo(map); } }); return; }
       daOn = false; daYear = null;
-      const cb = $('#opt-da'); if (cb) { cb.checked = false; cb.disabled = true; cb.closest('label').title = 'Census area outlines are not published yet'; }
+      const cb = $('#lyr-da'); if (cb) { cb.checked = false; cb.disabled = true; cb.closest('label').title = 'Census area outlines are not published yet'; }
     });
   }
   // A light border, thicker as you zoom in so it stays visible at street scale: white with a

@@ -36,7 +36,7 @@
   const existCache = new Map();      // `${kind}|${i}|${tile}` -> Promise<features>
   // Under the model's results (svcPane, 360): zoomed in, the live pipes are context and the
   // sewer screen's capacity colours stay on top of them.
-  map.createPane('existPane', map.getPane('rotatePane') || undefined).style.zIndex = 355;
+  map.createPane('existPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.exist : 370);
   const existRenderer = L.canvas({ pane: 'existPane', padding: 0.3 });
   // Attributes common to all sources.
   function pipeAttrs(kind, src, p) {

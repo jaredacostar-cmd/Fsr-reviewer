@@ -95,9 +95,13 @@ const Aerial = () => root.PeelAerial;
   // Aerial photos sit in their own pane, 40% transparent as a whole (one blend, so the city
   // aerial and the Esri imagery under it don't show through each other); road and place labels
   // stay opaque in the tile pane above.
+  // The opacity is a Base map setting (Layers › Base map), 0.6 by default.
   const AERIAL_OPACITY = 0.6;
+  let aerialOpacity = (() => { const v = +store.get('aerialOpacity', AERIAL_OPACITY); return v >= 0.2 && v <= 1 ? v : AERIAL_OPACITY; })();
   const imageryPane = map.createPane('imageryPane', map.getPane('rotatePane') || undefined);
-  imageryPane.style.zIndex = 150; imageryPane.style.opacity = AERIAL_OPACITY;
+  imageryPane.style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.imagery : 150); imageryPane.style.opacity = aerialOpacity;
+  function setAerialOpacity(v) { aerialOpacity = Math.max(0.2, Math.min(1, +v || AERIAL_OPACITY)); imageryPane.style.opacity = aerialOpacity; store.set('aerialOpacity', aerialOpacity); }
+  const getAerialOpacity = () => aerialOpacity;
   function setTiles() {
     for (const l of baseLayers) map.removeLayer(l);
     const imageryAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics';
@@ -153,7 +157,7 @@ function setBasemap(b) { basemap = b; store.set('basemap', b); }
 const getOrientation = () => orientation;
 
 // ---- Public contract ------------------------------------------------------------------
-const api = { map, setTiles, getBasemap, setBasemap, getOrientation, setOrientation, canRotate, BASEMAPS, ORIENTATIONS, GRID_BEARING, esriLayer, DATA_ATTR };
+const api = { map, setTiles, getBasemap, setBasemap, setAerialOpacity, getAerialOpacity, getOrientation, setOrientation, canRotate, BASEMAPS, ORIENTATIONS, GRID_BEARING, esriLayer, DATA_ATTR };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else root.PeelMapCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

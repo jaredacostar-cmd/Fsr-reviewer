@@ -175,7 +175,7 @@
     hillOn = !!on; if (store) store.set('hillshade', hillOn);
     if (!map) return;
     if (!hill) {
-      if (!map.getPane('hillPane')) { const p = map.createPane('hillPane', map.getPane('rotatePane') || undefined); p.style.zIndex = 210; p.style.mixBlendMode = 'multiply'; }
+      if (!map.getPane('hillPane')) { const p = map.createPane('hillPane', map.getPane('rotatePane') || undefined); p.style.zIndex = (root.PeelLayerGroups ? root.PeelLayerGroups.Z.hill : 210); p.style.mixBlendMode = 'multiply'; }
       hill = hillshadeLayer(root.L, { pane: 'hillPane' });
     }
     if (hillOn) hill.addTo(map); else map.removeLayer(hill);

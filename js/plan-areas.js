@@ -116,25 +116,26 @@
   }
   // Outlines of every secondary plan / character area and MTSA (map toggles), under the results
   // and developments; tapping one filters to it, tapping it again clears that filter.
-  map.createPane('planPane', map.getPane('rotatePane') || undefined).style.zIndex = 352;
+  map.createPane('planPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.plan : 330);
   const planRenderer = L.canvas({ pane: 'planPane', padding: 0.3 });
   const planLayer = L.layerGroup().addTo(map);
   function setAreaOn(ch) {
-    Object.assign(MM().areaOn, ch); store.set('areaSp', MM().areaOn.sp); store.set('areaMtsa', MM().areaOn.mtsa);
+    Object.assign(MM().areaOn, ch); store.set('areaSp', MM().areaOn.sp); store.set('areaMtsa', MM().areaOn.mtsa); store.set('areaPr', !!MM().areaOn.pr);
     const set = (id, v) => { const c = document.getElementById(id); if (c) c.checked = v; };
-    set('opt-spl', MM().areaOn.sp); set('opt-mtl', MM().areaOn.mtsa); set('opt-plan', MM().areaOn.sp || MM().areaOn.mtsa);
+    set('lyr-sp', MM().areaOn.sp); set('lyr-mtsa', MM().areaOn.mtsa); set('lyr-pr', !!MM().areaOn.pr);
+    if (window.PeelLayerGroups) window.PeelLayerGroups.sync();
     renderPlanAreas();
   }
   function renderPlanAreas() {
     planLayer.clearLayers();
     if (!App().state.areas) return;
-    for (const [on, list, colorName, kind] of [[MM().areaOn.sp, App().state.areas.secondaryPlans, '--area-sp', 'sp'], [MM().areaOn.mtsa, App().state.areas.mtsas, '--area-mtsa', 'mtsa']]) {
+    for (const [on, list, colorName, kind] of [[MM().areaOn.sp, App().state.areas.secondaryPlans, '--area-sp', 'sp'], [MM().areaOn.pr, App().state.areas.precincts || [], '--area-pr', 'pr'], [MM().areaOn.mtsa, App().state.areas.mtsas, '--area-mtsa', 'mtsa']]) {
       if (!on) continue;
       for (const a of list) {
         if (App().state.muni && a.municipality !== App().state.muni) continue;
-        const sel = (kind === 'sp' ? App().state.sp : App().state.mtsa).includes(a.id);
+        const sel = (kind === 'mtsa' ? App().state.mtsa : App().state.sp).includes(a.id);
         L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, color: token(colorName), weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 })
-          .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
+          .bindTooltip(`<strong>${esc(a.name)}</strong><br>${esc(a.municipality || '')} ${kind === 'mtsa' ? 'MTSA' : kind === 'pr' ? 'precinct' : a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}<br><span class="muted">Tap to ${sel ? 'clear the filter' : 'filter to it'}</span>`, { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); togglePlanArea(kind, a.id); }).addTo(planLayer);
       }
     }

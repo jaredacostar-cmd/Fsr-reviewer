@@ -144,7 +144,11 @@ test('hillshade tiles: exportImage with the Hillshade raster function, in Web Me
 
 test('the hillshade is a switch, off by default, with its source in the help', () => {
   const mm = fs.readFileSync(path.join(__dirname, '../js/map-markers.js'), 'utf8');
-  assert.match(mm, /id="opt-hill"', store\.get\('hillshade', false\) === true/);
+  // Stage 3: a switch in the Base map group (js/layer-groups.js), from the saved state.
+  assert.match(mm, /const hill = store\.get\('hillshade', false\) === true/);
+  const LG = require('../js/layer-groups.js');
+  assert.equal(LG.groupOf('hill'), 'base');
+  assert.ok(!Object.values(LG.PRESETS).some(p => p.includes('hill')), 'off in every view preset');
   const info = fs.readFileSync(path.join(__dirname, '../js/info.js'), 'utf8');
   assert.match(info, /'hillshade': \{[^\n]*Open Government Licence – Ontario/);
   const html = fs.readFileSync(path.join(__dirname, '../index.html'), 'utf8');
