@@ -387,15 +387,21 @@
   eaTab.f.q = '';   // the search box starts empty each visit
   const saveEaTab = () => store.set('eaTab', { f: { ...eaTab.f, q: '' }, sort: eaTab.sort });
   const today = () => new Date().toISOString().slice(0, 10);
-  // A development in scope: the EAs within 1 km of its site.
+  // A development in scope: the EAs within 1 km of its site, measured from the site's boundary (the
+  // outlines of its applications; its point where it has none), and the unmapped EAs naming its
+  // municipality or the whole Region.
   function nearScope() {
     const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev();
-    return p && p.lat != null ? { title: p.title, lat: p.lat, lng: p.lng, m: 1000 } : null;
+    if (!p || p.lat == null) return null;
+    const pts = [];
+    for (const a of p.records || []) if (a.kind === 'application' && a.poly) for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
+    const step = Math.max(1, Math.ceil(pts.length / 150));
+    return { title: p.title, lat: p.lat, lng: p.lng, m: 1000, pts: pts.filter((_, i) => i % step === 0), muni: p.municipality, edge: pts.length > 0 };
   }
   function eaTabHTML() {
     if (!data.loaded) return U.skel ? U.skel('Loading the environmental assessments') : '';
     if (!data.eas) return '<p class="small muted">The environmental assessments did not load.</p>';
-    return M.eaTabHTML({ eas: data.eas.eas, f: eaTab.f, sort: eaTab.sort, today: today(), thisYear: new Date().getFullYear(), muni: muni(), near: nearScope(), checked: data.eas.generatedAt && data.eas.generatedAt.slice(0, 10), screenNote: U.SCREEN_NOTE_SHORT });
+    return M.eaTabHTML({ eas: data.eas.eas, f: eaTab.f, picked: !!eaTab.picked, sort: eaTab.sort, today: today(), thisYear: new Date().getFullYear(), muni: muni(), near: nearScope(), checked: data.eas.generatedAt && data.eas.generatedAt.slice(0, 10), screenNote: U.SCREEN_NOTE_SHORT });
   }
   let eaBox = null;
   function renderEaTab(box) {
@@ -406,10 +412,10 @@
   }
   // EAs within the site's radius (null when no site is scoped): an empty Capital › EAs is hidden.
   // (Any status: a site with only completed EAs nearby still lists them under its filter.)
-  const siteEaCount = () => { const near = nearScope(); return near && data.eas ? M.easNear(data.eas.eas || [], near.lat, near.lng, near.m).length : null; };
+  const siteEaCount = () => { const near = nearScope(); return near && data.eas ? M.easNear(data.eas.eas || [], near.lat, near.lng, near.m, near.pts).length + M.easMayApply(data.eas.eas || [], near.muni).length : null; };
   const filteredEAs = () => {
     const near = nearScope(), all = (data.eas && data.eas.eas) || [];
-    const scoped = near ? M.easNear(all, near.lat, near.lng, near.m).map(h => h.e) : muni() ? all.filter(e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '')) : all;
+    const scoped = near ? M.easNear(all, near.lat, near.lng, near.m, near.pts).map(h => h.e) : muni() ? all.filter(e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '')) : all;
     return M.eaSort(scoped.filter(e => M.eaMatch(e, eaTab.f)), eaTab.sort);
   };
   if (typeof document !== 'undefined') {
@@ -420,7 +426,7 @@
     });
     document.addEventListener('change', e => {
       const t = e.target; if (!t.closest || !t.closest('#dca-eas-body')) return;
-      if (t.dataset.eatabShow != null && t.checked) eaTab.f.show = t.dataset.eatabShow;
+      if (t.dataset.eatabShow != null && t.checked) { eaTab.f.show = t.dataset.eatabShow; eaTab.picked = true; }
       else if (t.dataset.eatabSys != null) eaTab.f.sys = { ...eaTab.f.sys, [t.dataset.eatabSys]: t.checked };
       else if (t.dataset.eatabSort != null) eaTab.sort = t.value;
       else return;
@@ -438,7 +444,7 @@
         if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.geojson`, JSON.stringify(M.easGeoJSON(filteredEAs(), { ...exportProps(), asOf: data.eas.generatedAt })), 'application/geo+json');
       } else if (e.target.closest('[data-eatab-ics]')) {
         const near = nearScope(), all = (data.eas && data.eas.eas) || [];
-        const scoped = near ? M.easNear(all, near.lat, near.lng, near.m).map(h => h.e) : muni() ? all.filter(x => String(x.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(x.municipality || '')) : all;
+        const scoped = near ? M.easNear(all, near.lat, near.lng, near.m, near.pts).map(h => h.e) : muni() ? all.filter(x => String(x.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(x.municipality || '')) : all;
         if (window.PeelExports) window.PeelExports.download(`peel-ea-milestones-${stamp}.ics`, M.eaICS(M.upcoming(scoped, stamp, 90), new Date().toISOString()), 'text/calendar');
       } else if (e.target.closest('[data-eatab-map]')) {
         const sys = { water: eaTab.f.sys.water !== false, wastewater: eaTab.f.sys.wastewater !== false, roads: eaTab.f.sys.roads !== false || eaTab.f.sys.storm !== false };

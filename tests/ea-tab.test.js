@@ -144,3 +144,20 @@ test('map: EA styles (current strong, completed faint, approximate thinner and f
   assert.equal(M.pctLabel({ percent: 100 }), 'finishing');
   assert.deepEqual(Object.keys(M.SYS_CASING), ['water', 'wastewater', 'roads']);
 });
+
+test('at a site: 1 km from the site boundary (not its point), "May apply" for unmapped EAs, All when nothing is current', () => {
+  // A site whose point is ≈2.4 km from the Dixie Rd route but whose boundary comes within ≈400 m of it.
+  const at = [43.61, -79.57], edge = [[43.61, -79.57], [43.61, -79.595], [43.615, -79.595]];
+  assert.deepEqual(M.easNear(EAS, ...at, 1000).map(x => x.e.id), [], 'from the point alone: nothing');
+  assert.deepEqual(M.easNear(EAS, ...at, 1000, edge).map(x => x.e.id), ['c'], 'from the boundary: the route');
+  // Unmapped EAs naming the municipality or the whole Region may apply.
+  assert.deepEqual(M.easMayApply(EAS, 'Brampton').map(e => e.id), ['d']);
+  assert.deepEqual(M.easMayApply([{ ...EAS[3], municipality: 'Caledon' }], 'Brampton'), []);
+  const near = { title: 'Site', lat: at[0], lng: at[1], m: 1000, pts: edge, muni: 'Mississauga', edge: true };
+  const html = M.eaTabHTML({ eas: EAS, f: { show: 'current' }, today: '2026-10-15', thisYear: 2026, near });
+  assert.match(html, /within 1 km of the site boundary of Site/);
+  assert.match(html, /<h3 class="sub-title">May apply <small class="muted">not on the map yet · 1<\/small><\/h3>[\s\S]*Region-wide water master plan/);
+  assert.match(html, /All EAs <small class="muted">1 shown<\/small>[\s\S]*Dixie Rd widening/, 'no current EA nearby: the list opens on All');
+  const picked = M.eaTabHTML({ eas: EAS, f: { show: 'current' }, picked: true, today: '2026-10-15', thisYear: 2026, near });
+  assert.match(picked, /All EAs <small class="muted">0 shown<\/small>/, 'a filter the user picked is kept');
+});
