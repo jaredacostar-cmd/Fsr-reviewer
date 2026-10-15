@@ -1,0 +1,91 @@
+'use strict';
+// SPEC §4 (Phase 3): the shell. Top bar: trail with its count, lens Planning / Water / Wastewater /
+// Capital that sets the map only, the scenario chip. Left panel = find: Find · Watch · Data, the count
+// first, Reset n filters, Save this view, Stage with "Done / gone", rows that show their value,
+// "Counts as" layer chips, the In view list. Bottom bar: timeline, data date and version.
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('fs');
+const path = require('path');
+const ROOT = path.join(__dirname, '..');
+const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
+const HTML = src('index.html');
+
+test('top bar: lenses Planning / Water / Wastewater / Capital; a lens never switches the right panel tab', () => {
+  assert.match(src('js/map-markers.js'), /MAP_VIEWS = \[\['planning', 'Planning'\], \['water', 'Water'\], \['wastewater', 'Wastewater'\], \['dc', 'Capital'\]\]/);
+  const tb = src('js/topbar.js');
+  const h = tb.slice(tb.indexOf("$('#tb-views').addEventListener('click'"), tb.indexOf('});', tb.indexOf("$('#tb-views').addEventListener('click'")));
+  assert.match(h, /MA\(\)\.setMapView\(b\.dataset\.mview\);/);
+  assert.doesNotMatch(h, /openAnalysis|showFootTab/, 'no tab change from the lens');
+  assert.doesNotMatch(tb, /VIEW_TAB/);
+});
+
+test('top bar: the trail carries its count (developments, units)', () => {
+  assert.match(src('js/topbar.js'), /<span class="tb-count" title="Developments in scope and their planned units">· \$\{fmtNum\(set\.length\)\} development/);
+});
+
+test('left panel: Find · Watch · Data; rows Where / What / When / Counts as / Flags collapsed with their value', () => {
+  assert.match(HTML, /data-tab="explore">Find<\/button>/);
+  assert.match(HTML, /data-tab="week">Watch <span class="badge-n"/);
+  assert.match(HTML, /data-tab="data">Data<\/button>/);
+  const order = ['fr-where', 'fr-what', 'fr-when', 'fr-counts', 'fr-flags'].map(id => HTML.indexOf(`<details class="fp-sec fp-row" id="${id}">`));
+  assert.ok(order.every(i => i > 0), 'all rows present');
+  assert.deepEqual([...order].sort((a, b) => a - b), order, 'in the board order');
+  for (const v of ['fv-where', 'fv-what', 'fv-when', 'fv-counts', 'fv-flags']) assert.match(src('js/filter-ui.js'), new RegExp(`set\\('#${v}'`), v);
+  assert.match(HTML, /data-info="projects-list">In view <span class="muted small" id="list-count">/);
+});
+
+test('left panel: the count first, Reset n filters, + Save this view', () => {
+  const f = src('js/filter-ui.js');
+  assert.match(f, /<span class="find-count"><b>\$\{fmtNum\(App\(\)\.state\.filtered\.length\)\}<\/b> developments<\/span>/);
+  assert.match(f, />Reset \$\{activeList\.length\} filter\$\{activeList\.length === 1 \? '' : 's'\}<\/button>/);
+  assert.match(f, /id="f-saveview"[^>]*>\+ Save this view<\/button>/);
+  assert.match(f, /if \(e\.target\.closest\('#f-saveview'\)\) \{ MA\(\)\.saveCurrentView\(\); return; \}/);
+});
+
+test('Stage: five toggles, completed and withdrawn folded into one "Done / gone" button', () => {
+  const r = src('js/render-list.js');
+  assert.match(r, /const DONE = \['completed', 'cancelled'\];/);
+  assert.match(r, /rows = shown\.filter\(p => !DONE\.includes\(p\.key\)\)/);
+  assert.match(r, /<span class="t">Done \/ gone<\/span>/);
+  assert.match(r, /for \(const k of DONE\) \{ if \(on\) next\.delete\(k\); else next\.add\(k\); \}/);
+  assert.match(src('js/search-filter.js'), /if \(b\.closest\('\.pipe-rows'\)\) \{\n      const next = new Set\(App\(\)\.state\.phases\); if \(next\.has\(b\.dataset\.phase\)\) next\.delete\(b\.dataset\.phase\); else next\.add\(b\.dataset\.phase\);/, 'rows toggle');
+});
+
+test('Counts as: a layer filter (js/layers.js) in the filter, the chips, the reset and the link', () => {
+  const a = src('js/app.js');
+  assert.match(a, /lyr: null,/);
+  assert.match(a, /state\.filtered = base\.filter\(p => state\.phases\.has\(p\.phase\) && \(!state\.lyr \|\| state\.lyr\.has\(layerOf\(p\)\)\)\);/);
+  assert.match(src('js/render-list.js'), /function renderLayerChips\(base\)/);
+  assert.match(src('js/filter-ui.js'), /ss: null, lyr: null,/);
+  const sh = src('js/share.js');
+  assert.match(sh, /set\('ly', \[\.\.\.App\(\)\.state\.lyr\]\.join\(','\)\)/);
+  assert.match(sh, /App\(\)\.state\.lyr = ly\.length \? new Set\(ly\) : null;/);
+});
+
+test('Watch: real changes; backfill (newly listed, already completed) counted and filed under Data › Sources', () => {
+  const a = src('js/app.js');
+  assert.match(a, /const real = c\.added\.filter\(a => a\.phase !== 'completed'\), backfill = c\.added\.filter\(a => a\.phase === 'completed'\);/);
+  assert.match(a, /\.\.\.real\.map\(a =>/);
+  assert.match(HTML, /<p class="small muted" id="backfill-note" hidden><\/p>/);
+});
+
+test('Data: checks and duplicates first; the source list behind Advanced', () => {
+  const data = HTML.slice(HTML.indexOf('id="tab-data"'));
+  assert.ok(data.indexOf('id="audit-panel"') < data.indexOf('id="sources-panel"'), 'duplicates first');
+  const adv = data.slice(data.indexOf('<details class="panel advanced">'));
+  assert.ok(adv.includes('<ul class="source-list" id="source-list"></ul>'), 'sources behind Advanced');
+});
+
+test('bottom bar: timeline only, data date · version · change log at the right; no scenario line', () => {
+  assert.match(HTML, /<span class="tb-meta small muted" id="tb-meta"><\/span>/);
+  assert.match(src('js/app.js'), /el\.innerHTML = `Data \$\{esc\(state\.snapshot && state\.snapshot\.generatedAt/);
+  assert.match(src('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
+});
+
+test('map: legend names the marker unit and offers Colour sites by Phase | Layer; an In view chip', () => {
+  const m = src('js/map-analysis.js');
+  assert.match(m, /Colour sites by<\/span> \$\{b\('phase', 'Phase'\)\}\$\{b\('layer', 'Layer'\)\}/);
+  assert.match(m, /a cluster’s number is its people \+ jobs/);
+  assert.match(src('js/render-list.js'), /inViewChip\.textContent = `In view · \$\{fmtNum\(n\)\} of \$\{fmtNum\(of\)\}`;/);
+});

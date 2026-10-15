@@ -15,23 +15,56 @@
   // ---- Rendering -----------------------------------------------------------------
   // Stage selector: one segment per phase with its label and count, sized by share.
   // A tap shows that phase only (again: all phases); Ctrl / ⌘-click adds or removes it.
+  // Stage (SPEC §4): a stacked bar and the five active phases as toggles; completed and withdrawn
+  // fold into one "Done / gone" button (they are hidden by default, so their counts never read as a
+  // mismatch with the header).
+  const DONE = ['completed', 'cancelled'];
   function renderPipeline(base) {
     const counts = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, 0]));
     for (const p of base) counts[p.phase]++;
+    renderLayerChips(base);
     const total = base.length;
     $('#total-count').textContent = `${fmtNum(App().state.filtered.length)} of ${fmtNum(App().state.projects.length)} developments`;
     // A slim bar shows the share of each phase; the rows under it carry the labels and counts
     // (segment labels clipped when a phase is a small share).
-    const shown = P.ALL_PHASES.filter(p => counts[p.key]);
+    const shown = P.ALL_PHASES.filter(p => counts[p.key]), rows = shown.filter(p => !DONE.includes(p.key));
+    const doneN = DONE.reduce((t, k) => t + counts[k], 0), doneOn = DONE.some(k => App().state.phases.has(k));
     const tip = p => `${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%) — tap: only this phase; Ctrl/⌘-click: add or remove`;
     $('#pipeline').innerHTML =
       `<div class="pipe-bar" aria-hidden="true">${shown.map(p => `<i data-phase="${p.key}" class="${App().state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${getColors()[p.key]}" title="${tip(p)}"></i>`).join('')}</div>` +
-      `<div class="pipe-rows">${shown.map(p => {
+      `<div class="pipe-rows">${rows.map(p => {
         const on = App().state.phases.has(p.key);
         return `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${on ? '' : 'off'}" aria-pressed="${on}" title="${tip(p)}"><i class="sw" style="background:${getColors()[p.key]}"></i><span class="t">${esc(p.key === 'construction' ? 'Construction' : p.label)}</span><span class="n">${fmtNum(counts[p.key])}</span></button>`;
-      }).join('')}</div>`;
+      }).join('')}${doneN ? `<button type="button" data-done-gone class="done-gone${doneOn ? '' : ' off'}" aria-pressed="${doneOn}" title="Completed (${fmtNum(counts.completed)}) and withdrawn / refused (${fmtNum(counts.cancelled)}): ${doneOn ? 'shown — tap to hide' : 'hidden — tap to show'}"><i class="sw" style="background:${getColors().completed}"></i><span class="t">Done / gone</span><span class="n">${fmtNum(doneN)}${doneOn ? '' : ' hidden'}</span></button>` : ''}</div>`;
     FU().renderFlagChips();
   }
+
+  // "Counts as" (SPEC §4): layer chips with their counts (by the phase mapping, js/layers.js), a
+  // filter like the stage; the counts are over the same base as the stage (every phase).
+  const LY = ['built', 'committed', 'proposed', 'anticipated', 'existing'];
+  function renderLayerChips(base) {
+    const el = $('#f-layers'); if (!el || !window.PeelLayers) return;
+    const n = {}; for (const p of base) { const l = App().layerOf(p); if (l) n[l] = (n[l] || 0) + 1; }
+    const sel = App().state.lyr, LB = window.PeelLayerBar;
+    el.innerHTML = LY.filter(k => n[k]).map(k => {
+      const on = !sel || sel.has(k), hidden = !App().state.filtered.some(p => App().layerOf(p) === k) && on;
+      return `<button type="button" class="chip${sel && sel.has(k) ? ' on' : ''}" data-ly="${k}" aria-pressed="${!!(sel && sel.has(k))}" title="${esc(window.PeelLayers.NOTE[k])}"><span class="ly-sw ly-${k}"></span>${esc(LB ? LB.LABEL[k] : k)} ${fmtNum(n[k])}${hidden ? ' <span class="muted">· hidden by stage</span>' : ''}</button>`;
+    }).join('');
+  }
+  $('#f-layers').addEventListener('click', e => {
+    const b = e.target.closest('[data-ly]'); if (!b) return;
+    const next = new Set(App().state.lyr || []);
+    if (next.has(b.dataset.ly)) next.delete(b.dataset.ly); else next.add(b.dataset.ly);
+    App().state.lyr = next.size ? next : null;
+    App().applyFilters();
+  });
+  $('#pipeline').addEventListener('click', e => {
+    if (!e.target.closest('[data-done-gone]')) return;
+    const on = DONE.some(k => App().state.phases.has(k)), next = new Set(App().state.phases);
+    for (const k of DONE) { if (on) next.delete(k); else next.add(k); }
+    App().state.phases = next.size ? next : new Set(App().DEFAULT_PHASES());
+    App().applyFilters();
+  });
 
   function renderMarkers() {
     MM().cluster.clearLayers();
@@ -81,11 +114,12 @@
     const pg = pageOf(sorted, listPage, LIST_PAGE);
     listPage = pg.page;
     $('#list-count').textContent = `· ${fmtNum(inView.length)} of ${fmtNum(App().state.filtered.length)}`;
+    syncInViewChip(inView.length, App().state.filtered.length);
     $('#list-note').textContent = !inView.length ? (App().state.filtered.length ? 'No matching developments in this part of the map — zoom out or pan.' : 'No developments match the filters.')
       : pg.pages > 1 ? `Showing ${pg.start + 1}–${pg.start + pg.items.length} of ${fmtNum(sorted.length)} — page ${pg.page + 1} of ${pg.pages}.` : '';
     $('#project-list').innerHTML = pg.items.map((p, i) =>
       `<li><button type="button" data-i="${pg.start + i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
-        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)}${window.PeelLayers && window.PeelLayerBar ? ` → ${window.PeelLayerBar.nameHTML(window.PeelLayers.layerOf(p))}` : ''} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
+        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)}${window.PeelLayerBar ? ` → ${window.PeelLayerBar.nameHTML(App().layerOf(p))}` : ''} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
     $('#project-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
       const p = sorted[+b.dataset.i];
@@ -97,6 +131,22 @@
     if (nx) nx.disabled = pg.page >= pg.pages - 1;
   }
 
+  // The In view chip on the map (SPEC §4): the developments in view, one tap to the In view list in
+  // the left panel (Find), which follows the map view.
+  let inViewChip = null;
+  function syncInViewChip(n, of) {
+    const mc = map.getContainer(); if (!mc) return;
+    if (!inViewChip) {
+      inViewChip = L.DomUtil.create('button', 'btn small inview-chip', mc); inViewChip.type = 'button';
+      L.DomEvent.disableClickPropagation(inViewChip);
+      inViewChip.title = 'The developments in this part of the map: open the In view list (it follows the map)';
+      inViewChip.addEventListener('click', () => {
+        const DT = window.PeelDataTab; if (DT) { DT.showTab('explore'); if (DT.shellNarrow && DT.shellNarrow()) DT.toggleSidebar(true); }
+        const l = document.querySelector('.list-panel'); if (l) l.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+    inViewChip.textContent = `In view · ${fmtNum(n)} of ${fmtNum(of)}`;
+  }
   let listTimer;
   map.on('moveend', () => { clearTimeout(listTimer); listTimer = setTimeout(() => { listPage = 0; renderList(); }, 120); });
   $('#list-sort').onchange = () => { listPage = 0; renderList(); };

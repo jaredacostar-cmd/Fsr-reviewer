@@ -29,6 +29,7 @@
       if (MA().getCapYear() !== MM().THIS_YEAR) set('cy', MA().getCapYear() == null ? 'bo' : String(MA().getCapYear()));
       set('mu', App().state.muni); if (App().state.kind !== App().DEFAULT_KIND) set('k', App().state.kind); set('q', App().state.search);
       if (App().state.sp.length) set('sp', App().state.sp.join(',')); set('mt', App().state.mtsa.join(',')); set('pz', App().state.pz.join(',')); set('dr', App().state.dr.join(','));
+      if (App().state.lyr) set('ly', [...App().state.lyr].join(','));   // "Counts as" layers
       if (App().state.minUnits) set('u', App().state.minUnits); if (!App().state.newOnly) set('nn', '0');
       if (App().state.yearMode !== 'any') set('ym', App().state.yearMode);
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
@@ -67,6 +68,7 @@
       if (q.get('dw') && ['single', 'town', 'apartment'].includes(q.get('dw'))) App().state.dwelling = q.get('dw');
       if (q.get('lu') && ['all', 'growth', 'residential', 'mixed', 'employment'].includes(q.get('lu'))) App().state.landuse = q.get('lu');
       if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
+      { const ly = (q.get('ly') || '').split(',').filter(k => ['existing', 'built', 'committed', 'proposed', 'anticipated'].includes(k)); App().state.lyr = ly.length ? new Set(ly) : null; }
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';
       App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr');
