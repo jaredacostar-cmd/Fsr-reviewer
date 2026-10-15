@@ -22,7 +22,7 @@
    "tiles": 226,
    "bytes": 9575416,
    "maxTileBytes": 166427,
-   "overviewBytes": 22,
+   "overviewBytes": 375551,
    "path": "data/constraints/reg-cvc/"
   },
   {
@@ -44,7 +44,7 @@
    "tiles": 223,
    "bytes": 1777413,
    "maxTileBytes": 22188,
-   "overviewBytes": 22,
+   "overviewBytes": 403259,
    "path": "data/constraints/reg-trca/"
   },
   {
@@ -66,7 +66,7 @@
    "tiles": 211,
    "bytes": 1578201,
    "maxTileBytes": 22579,
-   "overviewBytes": 22,
+   "overviewBytes": 237454,
    "path": "data/constraints/flood-cvc/"
   },
   {
@@ -89,7 +89,7 @@
    "tiles": 218,
    "bytes": 2379492,
    "maxTileBytes": 33965,
-   "overviewBytes": 22,
+   "overviewBytes": 298290,
    "path": "data/constraints/flood-trca/"
   },
   {
@@ -111,7 +111,7 @@
    "tiles": 313,
    "bytes": 128433,
    "maxTileBytes": 3117,
-   "overviewBytes": 22,
+   "overviewBytes": 166686,
    "path": "data/constraints/greenbelt/"
   },
   {
@@ -133,7 +133,7 @@
    "tiles": 74,
    "bytes": 68722,
    "maxTileBytes": 4058,
-   "overviewBytes": 22,
+   "overviewBytes": 36546,
    "path": "data/constraints/orm/"
   },
   {
@@ -155,7 +155,7 @@
    "tiles": 69,
    "bytes": 283956,
    "maxTileBytes": 12402,
-   "overviewBytes": 22,
+   "overviewBytes": 112925,
    "path": "data/constraints/nep/"
   },
   {
@@ -176,7 +176,7 @@
    "tiles": 217,
    "bytes": 1628700,
    "maxTileBytes": 46244,
-   "overviewBytes": 22,
+   "overviewBytes": 285413,
    "path": "data/constraints/psw/"
   },
   {
@@ -197,7 +197,7 @@
    "tiles": 140,
    "bytes": 327144,
    "maxTileBytes": 8369,
-   "overviewBytes": 22,
+   "overviewBytes": 109135,
    "path": "data/constraints/ansi/"
   },
   {
@@ -218,7 +218,7 @@
    "tiles": 43,
    "bytes": 14909,
    "maxTileBytes": 4220,
-   "overviewBytes": 22,
+   "overviewBytes": 608818,
    "path": "data/constraints/nhs/"
   },
   {
