@@ -2301,3 +2301,56 @@ On the default view (active applications, 2021–2026), the Overview goes from 2
   The tree counts are unchanged.
 - The tree reads a pre-consultation's own figure directly. It counts it only when no other file
   states one, flagged as an estimate (decision B-a).
+
+## Step B2: the trees are the developments
+
+Since GO 3 (2026-10-15), with Settings › Counting on **Tree**, each tree of files on one land is a
+development. An app development that held unrelated trees splits, and developments that shared
+a tree merge. **Previous** puts back today's developments and counts for one release.
+
+**How it runs.**
+- `data/tree-counts.json` (version 2, built by `scripts/build-tree-counts.js`) lists every tree
+  as a development. Each one has:
+  - its key;
+  - its count and how it was made;
+  - its files in tree order, each with the link that put it there (rule, overlap, confidence).
+
+  The file also maps each planning file to its development, and lists the 1,861 permits the tree
+  places somewhere other than the rest of their site.
+- `js/phases.js` `buildProjects(records, { regroup })` has one new hook. The site, nesting and
+  permit-joining steps run as before; then `js/tree-groups.js` moves the records into their
+  trees' developments. Without the hook nothing changes.
+- **Keys:** a tree keeps the key of the development that held its root file. A second tree of
+  the same development is `<key>~<root file>`. On the 2026-10-12 snapshot:
+  - 23,445 keys are kept;
+  - 824 are new (split-off trees);
+  - 379 are absorbed into another tree.
+- **Saved keys are rewritten on load, and nothing is dropped:**
+  - the watchlist follows its developments (a split watches every part);
+  - an allocation moves to the part with the most units, noting where it came from;
+  - share links, saved views and "Back to" resolve old keys, including branch keys
+    (`<key>#<file>`);
+  - the weekly changes and the phase history are copied to the new keys.
+- **Files view** (Development › Files & history): the tree's files in order. Each sits under the
+  file whose land holds it, with its rule, confidence and overlap. Opening a file opens its whole
+  branch as a sub-development (decided: one development, branches as subs).
+
+**What moved** (live developments, snapshot 2026-10-12):
+
+| | Previous | Tree |
+|---|---|---|
+| Developments | 3,342 | 3,919 |
+| Peel units | 231,726 | 263,831 |
+
+Peel matches the B0 review after your overrides exactly.
+
+On the default view (active applications, 2021–2026), the Overview shows 228,490 units and
+683,700 people with the trees, against 202,264 units and 597,100 people before.
+
+**Tests** (`tests/tree-counts.test.js`):
+- every old key resolves;
+- the watchlist and allocations survive;
+- no record sits in two developments, and none is lost;
+- every planning file is in exactly one development, its tree's;
+- keys are unique;
+- Peel equals the review total.

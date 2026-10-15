@@ -691,7 +691,10 @@
     }
     if (t > 0) { r.units = t; r.unitsFromText = true; }
   }
-  function buildProjects(records) {
+  // opts.regroup (Step B2, js/tree-groups.js): given the parts this function grouped
+  // ({ key, recs, site }), returns the parts to build instead (the trees as developments).
+  // Without it, nothing changes.
+  function buildProjects(records, opts = {}) {
     let groups = new Map();
     for (const r of records) readTextUnits(r);
     for (const r of records) {
@@ -880,7 +883,7 @@
     }
     for (const [key, recs] of loose) parts.push({ key, recs, site: {} });
     // Sites made only of permits that build nothing (signs, entrances, demolitions…) aren't developments.
-    return joinNearbyPermits(parts).filter(p => !p.records.every(r => r.kind === 'permit' && permitRole(r) === 'none'));
+    return joinNearbyPermits(opts.regroup ? opts.regroup(parts) : parts).filter(p => !p.records.every(r => r.kind === 'permit' && permitRole(r) === 'none'));
   }
 
   // 1b. A multi-address application ("202 and 204 Main St", "65-71 Agnes St") joins the
