@@ -2357,3 +2357,14 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .tool-rail button:first-child, .tool-rail button:last-child { border-radius: 0; }
   input[type="range"] { min-height: 44px; }
 }
+
+/* Growth › By plan (C2): the plan roll-up table */
+.pt-table { font-size: var(--fs-2); }
+.pt-table th[scope="row"] { font-weight: 500; text-align: left; white-space: normal; min-width: 12em; }
+.pt-table td.num, .pt-table th.num { text-align: right; white-space: nowrap; }
+.pt-table .pt-peel th, .pt-table .pt-municipality th { font-weight: 700; }
+.pt-table .pt-none th, .pt-table .pt-rest th { font-style: italic; color: var(--text-muted); }
+.pt-table .pt-dev th { font-weight: 400; }
+.pt-table .pt-tog, .pt-table .pt-sp { display: inline-block; width: 1.4em; min-height: auto; padding: 0; }
+.pt-table td.ok { color: var(--cap-room); }
+.pt-table td.warn { color: var(--cap-tight); }

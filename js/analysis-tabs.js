@@ -30,7 +30,7 @@
   const TABSUBS = {
     water: { attr: 'wsub', store: 'wSub', valid: ['capacity', 'zones', 'facilities', 'hydro'], get: () => wSub, set: v => { wSub = v; } },
     ww: { attr: 'wwsub', store: 'wwSub', valid: ['plants', 'catchments', 'alloc', 'pumpstations'], get: () => wwSub, set: v => { wwSub = v; } },
-    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'census2051', 'timing'], get: () => gSub, set: v => { gSub = v; } },
+    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'census2051', 'timing', 'byplan'], get: () => gSub, set: v => { gSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'recommendations', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
@@ -51,6 +51,7 @@
     if (key === 'dca' && typeof DcaTab().renderDca === 'function') setTimeout(() => DcaTab().renderDca(), 0);
     if (key === 'overview') setTimeout(() => { if (OT() && window.PeelApp) OT().renderOverview(); }, 0);   // (may fire before the app has loaded; its boot renders the overview)
     if (key === 'ww' && wwSub === 'alloc') setTimeout(() => DUI().renderAlloc(), 0);
+    if (key === 'growth' && gSub === 'byplan' && root.PeelPlanTables) setTimeout(() => root.PeelPlanTables.render(), 0);
     // A narrow screen scrolls the tab strip: keep the open tab in view.
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;
     if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: Math.max(0, ft.offsetLeft - (strip.clientWidth - ft.offsetWidth) / 2), behavior: 'smooth' });

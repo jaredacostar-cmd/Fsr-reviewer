@@ -46,6 +46,8 @@
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
       description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
+      // Step C2: its plan (the innermost, largest share) and every plan's share of its land.
+      ...(x => ({ plan: x.plan, plan_shares: x.shares }))(root.PeelPlanTables ? root.PeelPlanTables.planOf(p) : { plan: '', shares: '' }),
       ...provenanceFields(p),
       ...svcExportFields(p),
     }));
@@ -230,6 +232,7 @@
     }));
     const dev = WB.developmentsSheetRows(exportRows());   // defaults to state.filtered: totals match the screen
     add('Developments', [dev.cols, ...dev.rows]);
+    add('By plan', root.PeelPlanTables ? root.PeelPlanTables.sheetRows() : [['(not loaded)']]);
     const rec = DD().recordAuditRows();
     add('Records', [rec.cols, ...rec.rows]);
     add('Water', panelTableRows([['Water treatment & capacity', '#wcap-body'], ['Water by pressure zone', '#water-body'], ['Existing water facilities', '#wfac-body']]));

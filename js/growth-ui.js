@@ -33,6 +33,7 @@
   function renderGrowth() {
     renderGrowthPipeline();
     TL().renderTiming();
+    if (root.PeelPlanTables) root.PeelPlanTables.render();
     CV().renderGrowthCensus();
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
