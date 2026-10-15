@@ -126,3 +126,13 @@ test('data/plan-targets.json: every figure has a source, a link and its wording;
   }
   assert.equal(new Set(d.targets.map(t => t.id)).size, d.targets.length, 'one target per plan');
 });
+
+test('targets: one figure covering two plans is compared with both; a people-only target is indicative', () => {
+  const set = [dev('a', 100, { pt: ['bolton'] }), dev('m', 50, { pt: ['mayfield'] })];
+  const r = R.build(set, { areas: AREAS, pointOf: p => p.pt, measure });
+  const v = R.vsTarget(r, [{ id: 'bolton', units: 300, covers: ['bolton', 'mayfield'], source: 'x', url: 'u' }, { id: 'mayfield', population: 600, source: 'y', url: 'u' }], null);
+  const b = v.rows.find(x => x.node.id === 'a:bolton');
+  assert.equal(b.total, 150, 'both plans'); assert.equal(b.pctTotal, 0.5); assert.equal(b.name, 'Bolton + Mayfield West', 'different plans keep both names');
+  const m = v.rows.find(x => x.node.id === 'a:mayfield');
+  assert.equal(m.pctTotal, null); assert.equal(m.pctPeople, 150 / 600); assert.equal(m.compared, 'people');
+});

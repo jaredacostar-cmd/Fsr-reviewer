@@ -2372,3 +2372,4 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pt-matrix th[scope="row"] { position: sticky; left: 0; z-index: 1; background: var(--surface-1); min-width: 0; max-width: 13em; white-space: normal; }
 .pt-matrix th[scope="row"] .btn.link, .pt-table th[scope="row"] .btn.link { white-space: normal; text-align: left; min-height: auto; }
 .pt-target td { vertical-align: top; }
+.pt-target td:nth-child(2) { min-width: 9em; max-width: 14em; }

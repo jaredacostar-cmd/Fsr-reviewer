@@ -134,27 +134,33 @@
   // shows "no target", never 0; a density-only target is shown, not compared.
   //   targets: [{ id, units, population, jobs, density, year, kind, scope, source, url, page }]
   //   munis: { Brampton: { units2021, units2051, pop2021, pop2051, jobs2021, jobs2051 } }
+  // "40 (a): Bram West" + "40 (b): Bram West" → "40 (a), 40 (b): Bram West".
+  const joinNames = names => { const parts = names.map(x => x.split(': ')); const tail = parts[0].length > 1 && parts.every(p => p.length > 1 && p[1] === parts[0][1]) ? parts[0][1] : null; return tail ? `${parts.map(p => p[0]).join(', ')}: ${tail}` : names.join(' + '); };
   function vsTarget(r, targets, munis) {
     const byId = new Map((targets || []).map(t => [t.id, t]));
     const rows = [];
-    const row = (n, t, muni) => {
-      const m = n.m, base = t.units > 0 ? t.units : null;
+    // A target covering several plans (one figure for 48 (a) and (b)) is compared with all of them.
+    const sumOf = ids => { const m = { planned: 0, committed: 0, people: 0 }; const names = []; for (const id of ids) { const n = r.nodes.get(`a:${id}`); if (!n) continue; m.planned += n.m.planned; m.committed += n.m.committed; m.people += n.m.people; names.push(n.name); } return { m, names }; };
+    const row = (n, t, muni, cover) => {
+      const m = cover ? cover.m : n.m, base = t.units > 0 ? t.units : null, pBase = !base && t.population > 0 ? t.population : null;
       return {
-        node: n, muni, target: t,
+        node: n, muni, target: t, name: cover && cover.names.length > 1 ? joinNames(cover.names) : n.name,
         committed: m.committed, total: m.planned, people: m.people,
         pctCommitted: base ? m.committed / base : null, pctTotal: base ? m.planned / base : null,
         gap: base ? base - m.planned : null,
-        compared: base ? 'units' : t.population > 0 ? 'people (not compared)' : t.density ? 'density only' : 'none',
+        // People-only targets: shown side by side, indicative only (household vs design persons per unit).
+        pctPeople: pBase ? m.people / pBase : null,
+        compared: base ? 'units' : pBase ? 'people' : t.density ? 'density only' : 'none',
       };
     };
     for (const mu of r.root.children) {
       const a = munis && munis[mu.name];
       if (a) rows.push(row(mu, { id: `m:${mu.name}`, units: a.units2051 - a.units2021, population: a.pop2051 - a.pop2021, jobs: a.jobs2051 - a.jobs2021, year: 2051, kind: 'allocation', scope: 'growth', source: 'Region of Peel 2051 allocation (growth since 2021)' }, mu.name));
-      const walk = n => { for (const c of n.children) { if (c.areaId && byId.has(c.areaId)) rows.push(row(c, byId.get(c.areaId), mu.name)); walk(c); } };
+      const walk = n => { for (const c of n.children) { const t = c.areaId && byId.get(c.areaId); if (t) rows.push(row(c, t, mu.name, t.covers ? sumOf(t.covers) : null)); walk(c); } };
       walk(mu);
     }
-    const withTarget = new Set(rows.map(x => x.node.id));
-    const noTarget = [...r.nodes.values()].filter(n => (n.kind === 'plan' || n.kind === 'subplan') && !withTarget.has(n.id)).length;
+    const covered = new Set((targets || []).flatMap(t => t.covers || [t.id]));
+    const noTarget = [...r.nodes.values()].filter(n => (n.kind === 'plan' || n.kind === 'subplan') && !covered.has(n.areaId)).length;
     return { rows, noTarget };
   }
 
