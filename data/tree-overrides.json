@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "note": "Step B0 decisions on the tree counts. Key: \"Municipality|ROOT-FILE\" (the tree's root file, as in docs/tree-review). Each override: units (the count to use), reason, source (a link or document), decidedOn (YYYY-MM-DD). Applied by scripts/tree-review.js now and by the app at Step B1.",
+  "rules": {
+    "preconsultationOnlyCount": "count it, flagged 'estimate (pre-consultation)', proposed only, never committed (decided 2026-10-15)"
+  },
+  "overrides": {}
+}

@@ -1726,6 +1726,60 @@ link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on
 screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
 the screening summary to plain text. Everything else is unchanged.
 
+## Applying the tree: Step B0 review workbook
+
+This is the review before the containment tree (`js/tree.js`, PR #180) feeds the app's counts.
+It is **report only: the app is unchanged.** The plan is in `docs/apply-tree-plan.md`.
+
+```
+node scripts/tree-review.js          # → docs/tree-review/tree-review.json (git-ignored)
+python3 scripts/tree-review-xlsx.py  # → docs/tree-review/tree-review.xlsx
+```
+
+**What a row is.** One row per **change group**: the app development(s) and the tree(s) that
+share files with them. Each row has:
+- app units (the header's definition) vs tree units, and the change;
+- the counting rule;
+- the weakest link's confidence;
+- the primary plan and its share;
+- the receiving plant and block;
+- flags;
+- three yellow **your call** columns: Accept / Override / Ask, override units, and reason or
+  source.
+
+**Sheets.**
+- Read me, Summary, Changes (largest first), Pre-consultation estimates, All groups.
+- The audit lists: double counts, unit mismatches, nested files not linked, unclear same-land
+  pairs, condo-only trees, orphans, low-confidence links, straddling plans, reversed dates,
+  counts to find.
+
+**Flags.**
+- **estimate (pre-consultation):** every file stating a count is a pre-consultation, by role or
+  by its PRE file number. Large ones are promoted to block-plan roots but are still flagged.
+  Decided: these count, as proposed only, never committed.
+- **count from data/unit-lookups.json**
+- **low-confidence link**
+- **children exceed parent**
+- **straddles plans:** the primary plan holds less than 90%.
+
+**Decisions** go into `data/tree-overrides.json`. Each override is keyed `Municipality|ROOT-FILE`,
+with `units`, `reason`, `source` and `decidedOn`. Overrides apply to the workbook's "after
+overrides" totals now, and to the app at Step B1.
+
+**Results** (snapshot 2026-10-12): Peel app 247,760 → tree 264,764 units (+17,004, +6.9%).
+
+| Municipality | App units | Tree units | Change |
+|---|---|---|---|
+| Mississauga | 90,811 | 91,509 | +0.8% |
+| Brampton | 127,570 | 141,765 | +11.1% |
+| Caledon | 29,379 | 31,490 | +7.2% |
+
+- 3,284 groups: 768 change, of which 208 go up and 164 down, 2,912 are unchanged.
+- 88 groups are pre-consultation estimates, totalling 36,543 units.
+- On the same snapshot, the review's totals equal `scripts/audit-tree.js` exactly. The
+  committed `data/tree-audit.json` comes from a later live pull (Oct 14), so its totals differ
+  slightly.
+
 ## Definitions (one table, used everywhere)
 
 The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use

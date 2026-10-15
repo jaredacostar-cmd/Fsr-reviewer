@@ -195,7 +195,7 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
   // Permits (progress only): how many found a file.
   const permitsPlaced = [...permitOf.values()].reduce((t, l) => t + l.length, 0);
 
-  return {
+  const res = {
     generatedAt: new Date().toISOString(), records: { from: live ? 'live pull' : 'data/snapshot.json', snapshotAt: generatedAt, sources },
     thresholds: { containInside: T.T.CONTAIN, sameLandMutual: T.T.SAME, preconMin: T.T.PRECON, neverBelow: T.T.NEVER, coverChildren: T.T.COVER, childrenOverParent: T.T.OVER },
     files: { total: nodes.length, byRole, boundary, ozsSplit, reclassified,
@@ -217,6 +217,9 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     biggestChanges: changes.slice(0, 20),
     changesCount: { components: changes.length, up: changes.filter(c => c.change > 0).length, down: changes.filter(c => c.change < 0).length },
   };
+  // The working tables, for scripts/tree-review.js (Step B0); not written to tree-audit.json.
+  Object.defineProperty(res, 'internals', { value: { projects, nodes, built, links, counts, treeOfNode, projsOfNode, tagsByTree, comps, projByKey, refOf, straddling, roots, opaNotes }, enumerable: false });
+  return res;
 }
 
 async function main() {
