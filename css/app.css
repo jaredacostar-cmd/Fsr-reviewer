@@ -1429,6 +1429,8 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dc-fac.lg span { width: 14px; height: 14px; background: var(--text-muted); font-size: var(--fs-1); }
 .lg-line { display: inline-block; width: 18px; height: 4px; border-radius: 4px; flex: none; margin-right: var(--space-1); }
 .lg-line.dash { background: repeating-linear-gradient(90deg, var(--text-muted) 0 5px, transparent 5px 9px); }
+.lg-area.hatch { background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--c) 70%, transparent) 0 1.5px, transparent 1.5px 4px); }
+.lg-area.hatch.back { background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--c) 70%, transparent) 0 1.5px, transparent 1.5px 4px); }
 .lg-area { display: inline-block; width: 14px; height: 10px; flex: none; margin-right: var(--space-1); border: 1.5px dashed var(--c); background: color-mix(in srgb, var(--c) 18%, transparent); border-radius: 2px; }
 .cx-note { display: block; color: var(--text-muted); font-size: var(--fs-1); }
 .cx-note:empty { display: none; }

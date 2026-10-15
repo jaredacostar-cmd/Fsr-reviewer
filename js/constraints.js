@@ -34,13 +34,29 @@
     nhs: { label: 'Natural Heritage System', short: 'Natural Heritage System', color: '--cx-nhs', ids: ['nhs'], area: true, dash: '4 3', weight: 1.2, note: `The Growth Plan's Natural Heritage System (province), outside settlement areas. ${SCREEN}` },
     water: { label: 'Watercourses', short: 'watercourses', color: '--cx-water', ids: ['wc-peel', 'wc-ohn'], area: false, dash: null, weight: 2, minZoom: 12,
       note: 'Region of Peel watercourses (watershed and conservation authority), and the Ontario Hydro Network (1:10,000) where Peel maps none: small and piped watercourses may be missing.' },
-    gas: { label: 'Gas pipelines', short: 'gas', color: '--cx-gas', ids: ['utility'], keep: isGas, area: false, dash: '9 5', weight: 2.5, minZoom: 10,
+    gas: { label: 'Gas pipelines', short: 'gas', color: '--cx-gas', ids: ['utility'], keep: isGas, area: false, dash: '9 5', weight: 2.5, minZoom: 11,
       note: 'Approximate location (Land Information Ontario); call Ontario One Call before any work. Major pipelines only: local gas mains are not published.' },
-    hydro: { label: 'Hydro lines', short: 'hydro', color: '--cx-hydro', ids: ['utility'], keep: lab => !isGas(lab), area: false, dash: null, weight: 2.5, minZoom: 10,
+    hydro: { label: 'Hydro lines', short: 'hydro', color: '--cx-hydro', ids: ['utility'], keep: lab => !isGas(lab), area: false, dash: null, weight: 2.5, minZoom: 11,
       note: 'Approximate location (Land Information Ontario); call Ontario One Call before any work. Transmission lines; corridors carry easements.' },
   };
   const ORDER = ['nhs', 'greenbelt', 'orm', 'nep', 'reg', 'flood', 'natural', 'water', 'gas', 'hydro'];
   const TILE_ZOOM = 13, MAX_TILES = 90;
+  // Constraint areas are hatched, not solid: they must not read as phase, layer or capacity colours
+  // (SPEC §0 two ladders; Stage 3 colours). One small pattern per colour, ≤ 25% ink.
+  const HATCH = new Map();
+  function hatch(col, back) {
+    const k = `${col}|${back ? 1 : 0}`; if (HATCH.has(k)) return HATCH.get(k);
+    let pat = col;
+    try {
+      const c = document.createElement('canvas'); c.width = c.height = 8; const g = c.getContext('2d');
+      g.strokeStyle = col; g.lineWidth = 1.4; g.globalAlpha = 0.9;
+      g.beginPath(); if (back) { g.moveTo(0, 0); g.lineTo(8, 8); g.moveTo(-4, 4); g.lineTo(4, 12); g.moveTo(4, -4); g.lineTo(12, 4); } else { g.moveTo(0, 8); g.lineTo(8, 0); g.moveTo(-4, 4); g.lineTo(4, -4); g.moveTo(4, 12); g.lineTo(12, 4); } g.stroke();
+      pat = g.createPattern(c, 'repeat') || col;
+    } catch (e) { /* no canvas: solid */ }
+    HATCH.set(k, pat); return pat;
+  }
+  // Plans and the heritage system hatch the other way from the hazard layers.
+  const BACK = new Set(['greenbelt', 'orm', 'nep', 'nhs']);
 
   const on = Object.fromEntries(Object.keys(LAYERS).map(k => [k, false]));
   Object.assign(on, Object.fromEntries(Object.entries(store.get('cxOn', {}) || {}).filter(([k]) => k in on)));
@@ -87,9 +103,10 @@
     for (const f of feats) {
       if (L0.keep && !L0.keep(f.label)) continue;
       drawn[key] = (drawn[key] || 0) + 1;
-      const tip = `<strong>${esc(f.label[0] || L0.label)}</strong><br><span class="muted">${esc(f.label[1] || L0.label)} · screening</span>`;
+      // The same hover card as every other feature (SPEC §3): kind, name, what it is; click opens its card.
+      const tip = window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: f.label[0] || L0.label, sub: f.label[1] || '', open: 'its card (owner, as-of date, source)' });
       const shapes = f.polys
-        ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: col, fillOpacity: coarse ? 0.22 : 0.16, opacity: coarse ? 0.6 : 0.9 })]
+        ? [L.polygon(f.polys[0].map(r => r.map(([x, y]) => [y, x])), { renderer, stroke: !edges, color: col, weight: w, dashArray: dash, fillColor: hatch(col, BACK.has(key)), fillOpacity: coarse ? 0.25 : 0.22, opacity: coarse ? 0.6 : 0.9 })]
         : (f.lines || []).length ? [L.polyline(f.lines.map(l => l.map(([x, y]) => [y, x])), { renderer, color: col, weight: L0.weight, dashArray: L0.dash, opacity: 0.9 })] : [];
       for (const s of shapes) s.bindTooltip(tip, { sticky: true, className: 'pt' }).on('click', e => { L.DomEvent.stop(e); featureClick(id, f.label); }).addTo(layer);
     }
@@ -167,7 +184,7 @@
   function legendHTML(which = 'cx') {
     const keys = ORDER.filter(k => on[k] && ((k === 'gas' || k === 'hydro') === (which === 'utility')));
     if (!keys.length) return '';
-    return `<div class="lg-t">${which === 'utility' ? 'Other utilities (approximate)' : 'Constraints (screening)'}</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
+    return `<div class="lg-t">${which === 'utility' ? 'Other utilities (approximate)' : 'Constraints (screening)'}</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area hatch${BACK.has(k) ? ' back' : ''}" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
   }
 
   if (typeof document !== 'undefined') document.addEventListener('click', e => {

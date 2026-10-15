@@ -102,7 +102,7 @@
     return `<div class="ov-h"><h3>Land under constraints</h3><span class="muted small">${esc(scopeName)} · ${fmtHa(stats.ha)}</span></div>
       <table class="dt ov-t cx-area"><thead><tr><th>Mapped layer</th><th class="n">Share of the area</th><th class="n">Developments inside</th></tr></thead>
       <tbody>${rows.map(r => `<tr><td>${esc(r.label)}<small class="muted">${esc(r.from)}</small></td><td class="n"><strong>${fmtPct(r.pct)}</strong><small class="muted">${fmtHa(r.ha)}</small></td><td class="n">${r.devs.length ? `<button type="button" class="btn small link" data-cx-devs="${esc(r.k)}">${r.devs.length.toLocaleString('en-CA')}</button>` : '0'}</td></tr>`).join('')}</tbody></table>
-      <p class="small muted">Screening: shares of the land mapped in each layer (overlaps counted once per layer), on a ${grid.cellM} m grid; a development counts by its point. Not an official determination: the conservation authority or province confirms. <button type="button" class="btn small link" data-cx-show="reg">Show the layers</button></p>`;
+      <p class="small muted cx-basis">Basis: land mapped in each layer, overlaps counted once · ${grid.cellM} m grid · a development counts by its point · screening, not an official determination (the conservation authority or province confirms) · <button type="button" class="btn small link" data-cx-show="reg">Show the layers</button></p>`;
   }
 
   // ---- HTML for the checklist ---------------------------------------------------------------------
@@ -111,7 +111,7 @@
     const byId = new Map(((manifest && manifest.datasets) || []).map(d => [d.id, d]));
     const src = id => { const d = byId.get(id); return d ? `<a href="${esc(d.url)}" target="_blank" rel="noopener" title="${esc(`${d.owner} · ${d.licence}${d.asOf ? ` · as of ${d.asOf}` : ''}`)}">${esc(d.title)}</a>` : ''; };
     return `<ul class="cx-check" aria-label="Site constraint checklist (screening)">${lines.map(l => `<li class="cx-l cx-${l.status}" data-cx-key="${esc(l.key)}"><span class="cx-i" aria-hidden="true">${ICON[l.status]}</span><span class="cx-t"><span class="sr-only">${STATUS_TEXT[l.status]}: </span>${esc(l.text)}<small class="cx-s">${l.layer ? `<button type="button" class="btn small link" data-cx-show="${esc(l.layer)}">Show layer</button>` : ''}${l.sources.map(src).filter(Boolean).join(' · ')}</small></span></li>`).join('')}</ul>
-      <p class="small muted">Screening at the development's point, from the mapped layers${manifest && manifest.built ? ` (built ${esc(manifest.built)})` : ''}. Not an official determination: the conservation authority or province confirms.</p>`;
+      <p class="small muted cx-basis">Basis: mapped layers at the development's point${manifest && manifest.built ? ` · built ${esc(manifest.built)}` : ''} · screening, not an official determination (the conservation authority or province confirms)</p>`;
   }
   // The feature card: name, type, owner, as-of, source, screening note (and the owner's disclaimer).
   function featureCardHTML(d, label) {

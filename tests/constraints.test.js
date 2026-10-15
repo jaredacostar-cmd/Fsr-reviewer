@@ -137,7 +137,8 @@ test('checklist and card wording stays screening: no determinations', () => {
   const near = empty();
   near['reg-cvc'].feats = [poly(['Regulated area', 'CVC'], [around(0)])];
   const html = CX.checklistHTML(CX.evaluateSite(PT, near), null);
-  assert.match(html, /Not an official determination/);
+  assert.match(html, /not an official determination/i);
+  assert.equal((html.match(/cx-basis/g) || []).length, 1, 'one basis line');
   for (const re of [/\bis regulated\b/i, /\bnot regulated\b/i, /\bpermit (is )?required\b/i, /\bcannot be developed\b/i, /\bprohibited\b/i]) assert.doesNotMatch(html, re);
   const src = fs.readFileSync(path.join(ROOT, 'js/constraint-data.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'js/constraints.js'), 'utf8');
   for (const re of [/'[^']*\bis regulated\b[^']*'/i, /\bnot regulated\b/i, /\bcannot be developed\b/i]) assert.doesNotMatch(src, re);
@@ -209,4 +210,17 @@ test('nothing in the app loads constraint data until a layer is switched on', ()
   assert.match(s, /if \(Object\.values\(on\)\.some\(Boolean\)\) map\.whenReady/);
   const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
   assert.ok(html.indexOf('js/constraint-geo.js') < html.indexOf('js/constraint-data.js') && html.indexOf('js/constraint-data.js') < html.indexOf('js/constraints.js'));
+});
+
+test('follows the redesign: one hover card, hatched areas, the stated zoom thresholds', () => {
+  const s = fs.readFileSync(path.join(ROOT, 'js/constraints.js'), 'utf8');
+  // SPEC §3: one hover card for every feature; click opens the right panel.
+  assert.match(s, /window\.PeelUtil\.hoverCard\(\{ kind: `\$\{L0\.label\} · screening`/);
+  assert.match(s, /SS\(\)\.openResult\(/);
+  // Two ladders: constraint areas are hatched, never a solid colour that reads as phase / capacity.
+  assert.match(s, /fillColor: hatch\(col, BACK\.has\(key\)\)/);
+  assert.doesNotMatch(s, /fillColor: col\b/);
+  // SPEC §4 thresholds (unchanged, stated): gas / hydro from 11, watercourses from 12.
+  const C = { gas: /gas: \{[^\n]*minZoom: (\d+)/, hydro: /hydro: \{[^\n]*minZoom: (\d+)/, water: /water: \{[^\n]*minZoom: (\d+)/ };
+  assert.equal(+s.match(C.gas)[1], 11); assert.equal(+s.match(C.hydro)[1], 11); assert.equal(+s.match(C.water)[1], 12);
 });
