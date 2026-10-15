@@ -18,8 +18,22 @@
     attribution: 'Imagery: Esri World Imagery Wayback (Esri, Maxar, Earthstar Geographics and the GIS User Community)',
     capabilitiesURL: 'https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/WMTSCapabilities.xml',
     parse: parseWaybackCapabilities,
-    tileURL: (r, z, x, y) => r.template.replace('{TileMatrix}', z).replace('{TileRow}', y).replace('{TileCol}', x),
+    tileURL: (r, z, x, y) => fillTemplate(r).replace('{TileMatrix}', z).replace('{TileRow}', y).replace('{TileCol}', x),
+    // The same address as a Leaflet tile-layer template ({z}/{y}/{x}).
+    // Anything still unfilled fails here, inside the Time Box, not later on every pan in Leaflet.
+    leafletTemplate: r => {
+      const t = fillTemplate(r).replace('{TileMatrix}', '{z}').replace('{TileRow}', '{y}').replace('{TileCol}', '{x}');
+      const left = /\{(?!(?:z|x|y)\})[^}]*\}/.exec(t);
+      if (left) throw new Error(`The Wayback tile address has a part the app cannot fill (${left[0]}).`);
+      return t;
+    },
   };
+  // The live capabilities give …/WMTS/1.0.0/{TileMatrixSet}/MapServer/tile/<release>/{TileMatrix}/…:
+  // the tile matrix set (and a style, if given) are filled from the layer, else Esri's defaults.
+  // Leaflet refuses a template with an unfilled {…}; Esri's server tolerates one, so only the map broke.
+  function fillTemplate(r) {
+    return String(r.template || '').replace(/\{TileMatrixSet\}/g, r.matrixSet || 'default028mm').replace(/\{Style\}/g, r.style || 'default');
+  }
   function parseWaybackCapabilities(xml) {
     const out = [];
     const layers = String(xml || '').split(/<Layer[\s>]/).slice(1);
@@ -30,7 +44,9 @@
       const date = (/(\d{4}-\d{2}-\d{2})/.exec(title) || [])[1];
       const rel = (/\/tile\/(\d+)\/\{TileMatrix\}/.exec(tpl) || [])[1];
       if (!date || !rel || !tpl) continue;
-      out.push({ id, release: +rel, date, year: +date.slice(0, 4), title: title.trim(), template: tpl.replace(/&amp;/g, '&') });
+      const matrixSet = (/<TileMatrixSet>([^<]+)<\/TileMatrixSet>/.exec(L) || [])[1];
+      const style = (/<Style[^>]*>\s*<ows:Identifier>([^<]+)<\/ows:Identifier>/.exec(L) || [])[1];
+      out.push({ id, release: +rel, date, year: +date.slice(0, 4), title: title.trim(), template: tpl.replace(/&amp;/g, '&'), ...(matrixSet ? { matrixSet: matrixSet.trim() } : {}), ...(style ? { style: style.trim() } : {}) });
     }
     return out.sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : a.release - b.release);
   }
@@ -195,7 +211,7 @@
     return years.reduce((best, v) => Math.abs(v - y) < Math.abs(best - y) ? v : best, years[0]);
   }
 
-  const api = { MAX_TILES, MAX_Z, MIN_Z, CONCURRENCY, WAYBACK, parseWaybackCapabilities, parseWaybackConfig, lngLatToTile, tilesForBox, chooseZoom, normBox, cacheKey, distinctReleases, onePerYear, pool, bisectSignatures, limiter, hashBytes, filingDate, applicationsAsOf, inRing, ringBox, snapYear };
+  const api = { fillTemplate, MAX_TILES, MAX_Z, MIN_Z, CONCURRENCY, WAYBACK, parseWaybackCapabilities, parseWaybackConfig, lngLatToTile, tilesForBox, chooseZoom, normBox, cacheKey, distinctReleases, onePerYear, pool, bisectSignatures, limiter, hashBytes, filingDate, applicationsAsOf, inRing, ringBox, snapYear };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTimeBoxCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

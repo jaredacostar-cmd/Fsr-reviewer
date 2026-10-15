@@ -20,6 +20,8 @@ const ms = t0 => `${Date.now() - t0} ms`;
   const xml = await r.text();
   console.log(`capabilities: HTTP ${r.status}, ${(xml.length / 1e6).toFixed(2)} MB, CORS ${r.headers.get('access-control-allow-origin')}, ${ms(t0)}`);
   t0 = Date.now(); const rels = T.parseWaybackCapabilities(xml); console.log(`parsed ${rels.length} releases in ${ms(t0)}: ${rels[0] && rels[0].date} … ${rels[rels.length - 1] && rels[rels.length - 1].date}`);
+  const last = rels[rels.length - 1];
+  if (last) console.log(`latest template: ${last.template}\n  matrix set ${last.matrixSet || '(none; default028mm)'}, Leaflet: ${T.WAYBACK.leafletTemplate(last)}`);
   const cfg = await fetch(T.WAYBACK.configURL, { headers: { Origin: ORIGIN } });
   console.log(`config fallback: HTTP ${cfg.status}, CORS ${cfg.headers.get('access-control-allow-origin')}, ${T.parseWaybackConfig(await cfg.json()).length} releases`);
   for (const [name, box] of Object.entries(BOXES)) {

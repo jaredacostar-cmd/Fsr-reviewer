@@ -123,3 +123,18 @@ test('the drawing rule is cheap: no descendant selectors on the map while drawin
   const css = require('fs').readFileSync(require('path').join(__dirname, '../css/app.css'), 'utf8');
   assert.ok(!/\.tb-drawing\s+[*.]/.test(css) && !/\.tb-drawing \*/.test(css), 'a .tb-drawing descendant rule restyles every marker');
 });
+
+test('live template with {TileMatrixSet}: filled from the layer, so Leaflet gets only {z}/{y}/{x}', () => {
+  const live = `<Capabilities><Contents><Layer><ows:Title>World Imagery (Wayback 2026-04-30)</ows:Title><ows:Identifier>WB_2026_R05</ows:Identifier>
+    <Style isDefault="true"><ows:Identifier>default</ows:Identifier></Style><Format>image/jpeg</Format>
+    <TileMatrixSetLink><TileMatrixSet>default028mm</TileMatrixSet></TileMatrixSetLink>
+    <ResourceURL format="image/jpeg" resourceType="tile" template="https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/{TileMatrixSet}/MapServer/tile/49849/{TileMatrix}/{TileRow}/{TileCol}"/></Layer></Contents></Capabilities>`;
+  const [r] = T.parseWaybackCapabilities(live);
+  assert.equal(r.release, 49849); assert.equal(r.matrixSet, 'default028mm');
+  const base = 'https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/WMTS/1.0.0/default028mm/MapServer/tile/49849';
+  assert.equal(T.WAYBACK.tileURL(r, 17, 36600, 47800), `${base}/17/47800/36600`);
+  assert.equal(T.WAYBACK.leafletTemplate(r), `${base}/{z}/{y}/{x}`);
+  // A release list cached before this fix (no matrixSet) still gets Esri's default.
+  assert.equal(T.WAYBACK.leafletTemplate({ template: r.template }), `${base}/{z}/{y}/{x}`);
+  assert.throws(() => T.WAYBACK.leafletTemplate({ template: 'https://x/{Unknown}/{TileMatrix}/{TileRow}/{TileCol}' }), /cannot fill \(\{Unknown\}\)/);
+});
