@@ -416,7 +416,10 @@
     {
      "px": [208, 545],
      "streets": [
-      "Castlemore Road",
+      [
+       "Bovaird Drive East",
+       "Castlemore Road"
+      ],
       "Bramalea Road"
      ],
      "city": "Brampton"
@@ -424,8 +427,22 @@
     {
      "px": [128, 552],
      "streets": [
-      "Castlemore Road",
+      [
+       "Bovaird Drive East",
+       "Castlemore Road"
+      ],
       "Highway 410"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [247, 545],
+     "streets": [
+      [
+       "Bovaird Drive East",
+       "Castlemore Road"
+      ],
+      "Torbram Road"
      ],
      "city": "Brampton"
     },
@@ -597,8 +614,7 @@
      ]
     ]
    },
-   "mPerPx": 6.45,
-   "note": "new sewer alignment (preferred solution)"
+   "note": "new sewer alignment (preferred solution); no scale-bar check: the four control points agree within 40 m"
   },
   {
    "id": "coleraine-drive-grade-separation",
@@ -1739,41 +1755,6 @@
    "mPerPx": 30
   },
   {
-   "id": "west-trunk-sanitary-sewer-diversion",
-   "image": "ea-maps/west-trunk-sanitary-sewer-diversion/1.jpg",
-   "kind": "area",
-   "ctrl": [
-    {
-     "px": [135, 66],
-     "streets": [
-      "Britannia Road West",
-      "Queen Street South"
-     ],
-     "city": "Mississauga"
-    },
-    {
-     "px": [181, 190],
-     "streets": [
-      "Eglinton Avenue West",
-      "Erin Mills Parkway"
-     ],
-     "city": "Mississauga"
-    }
-   ],
-   "outline": {
-    "px": [
-     [118, 6],
-     [269, 135],
-     [196, 218],
-     [44, 91],
-     [118, 6]
-    ]
-   },
-   "mPerPx": 17.2,
-   "mPerPxTol": 0.35,
-   "note": "small, blurry figure"
-  },
-  {
    "id": "winston-churchill-boulevard-from-highway-401-to-embleton-road",
    "image": "ea-maps/winston-churchill-boulevard-from-highway-401-to-embleton-road/1.jpg",
    "kind": "area",
@@ -1950,70 +1931,6 @@
      [97, 142]
     ]
    }
-  },
-  {
-   "id": "bovaird-drive-mississauga-road-from-lake-louise-drive-worthington-avenue-to-1-45",
-   "image": "ea-maps/bovaird-drive-mississauga-road-from-lake-louise-drive-worthington-avenue-to-1-45/1-p-1.png",
-   "kind": "line",
-   "ctrl": [
-    {
-     "px": [482, 1473],
-     "streets": [
-      "Bovaird Drive West",
-      "Heritage Road"
-     ],
-     "city": "Brampton"
-    },
-    {
-     "px": [819, 1463],
-     "streets": [
-      "Bovaird Drive West",
-      "Mississauga Road"
-     ],
-     "city": "Brampton"
-    },
-    {
-     "px": [913, 732],
-     "streets": [
-      "Wanless Drive",
-      "Mississauga Road"
-     ],
-     "city": "Brampton"
-    },
-    {
-     "px": [582, 740],
-     "streets": [
-      "Wanless Drive",
-      "Heritage Road"
-     ],
-     "city": "Brampton"
-    },
-    {
-     "px": [1150, 1503],
-     "streets": [
-      "Bovaird Drive West",
-      "Creditview Road"
-     ],
-     "city": "Brampton"
-    }
-   ],
-   "outline": {
-    "px": [
-     [132, 1468],
-     [173, 1468],
-     [347, 1472],
-     [482, 1474],
-     [600, 1477],
-     [720, 1463],
-     [819, 1463],
-     [1013, 1463],
-     [1067, 1488],
-     [1150, 1503],
-     [1190, 1493],
-     [1260, 1472]
-    ]
-   },
-   "road": true
   }
  ],
  "roads": [
@@ -2030,8 +1947,10 @@
   {"id": "airport-road-1km-north-of-mayfield-road-to-600m-north-of-king-street", "kind": "road", "road": "Airport Road", "from": {"street": "Mayfield Road", "offsetM": 1000, "dir": "N"}, "to": {"street": "King Street", "offsetM": 600, "dir": "N"}, "city": "Caledon"},
   {"id": "airport-road-100m-north-of-king-street-to-300m-north-of-huntsmill-drive", "kind": "road", "road": "Airport Road", "from": {"street": "King Street", "offsetM": 100, "dir": "N"}, "to": {"street": "Huntsmill Drive", "offsetM": 300, "dir": "N"}, "city": "Caledon"},
   {"id": "albion-vaughan-road-and-king-street-intersection", "kind": "point", "streets": ["Albion Vaughan Road", "King Street"], "city": "Caledon"},
-  {"id": "bridge-and-culvert-replacement-queen-street-east-over-shaw-s-creek-in-the-villag", "kind": "point", "road": ["Queen Street East", "Queen Street"], "water": ["Shaw's Creek", "Shaws Creek"], "city": "Caledon"},
-  {"id": "mississauga-road-and-bush-street", "kind": "road", "city": "Caledon", "segments": [{"road": "Mississauga Road", "from": "Old Main Street", "to": "Bush Street"}, {"road": "Bush Street", "from": "Winston Churchill Boulevard", "to": "Olde Base Line Road"}]},
+  {"id": "bridge-and-culvert-replacement-queen-street-east-over-shaw-s-creek-in-the-villag", "kind": "point", "road": ["Queen Street East", "Queen Street", "Queen Street West"], "water": ["Shaw's Creek", "Shaws Creek"], "city": "Caledon"},
+  {"id": "mississauga-road-and-bush-street", "kind": "road", "city": "Caledon", "segments": [{"road": "Mississauga Road", "from": "Old Main Street", "to": {"street": "Bush Street", "nearM": 150}}, {"road": "Bush Street", "from": "Winston Churchill Boulevard", "to": {"street": "Olde Base Line Road", "nearM": 150}}]},
+  {"id": "bovaird-drive-mississauga-road-from-lake-louise-drive-worthington-avenue-to-1-45", "kind": "road", "road": ["Bovaird Drive West", "Bovaird Drive"], "from": {"street": "Heritage Road", "offsetM": 1450, "dir": "W"}, "to": ["Lake Louise Drive", "Worthington Avenue"], "city": "Brampton"},
+  {"id": "west-trunk-sanitary-sewer-diversion", "kind": "road", "road": "Erin Mills Parkway", "from": ["Britannia Road West", "Britannia Road"], "to": ["Eglinton Avenue West", "Eglinton Avenue"], "city": "Mississauga", "geomType": "linear", "confidence": "low", "method": "approximate: the new west trunk sewer runs along Erin Mills Parkway through the study area (project page figure)"},
   {"id": "the-gore-road-patterson-sideroad-to-hwy-9", "kind": "road", "road": "The Gore Road", "from": ["Patterson Sideroad", "Patterson Side Road"], "to": ["Highway 9", "King Street"], "city": "Caledon"},
   {"id": "cawthra-road-improvements", "kind": "road", "road": "Cawthra Road", "from": ["Queen Elizabeth Way", "QEW"], "to": "Eastgate Parkway", "city": "Mississauga"},
   {"id": "derry-road-and-argentia-road-intersection-improvements", "kind": "point", "streets": [["Derry Road West", "Derry Road"], "Argentia Road"], "city": "Mississauga"},

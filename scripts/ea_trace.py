@@ -204,7 +204,8 @@ ABBR = {'st': 'street', 'rd': 'road', 'ave': 'avenue', 'av': 'avenue', 'blvd': '
 DIRS = {'east', 'west', 'north', 'south'}
 def norm_street(s):
     w = [ABBR.get(x, x) for x in __import__('re').sub(r'[^a-z0-9 ]', ' ', str(s).lower()).split()]
-    return ' '.join(w)
+    w = ['old' if x == 'olde' else x for x in w]   # Olde Base Line Road
+    return ' '.join(w).replace('base line', 'baseline').replace('side road', 'sideroad')
 ROADS = None
 def roads():
     """name -> [coords], from EA_ROADS (one feature per line)."""
@@ -281,9 +282,11 @@ def seg_x(p1, p2, p3, p4):
     u = ((p3[0] - p1[0]) * (p2[1] - p1[1]) - (p3[1] - p1[1]) * (p2[0] - p1[0])) / d
     return (p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])) if 0 <= t <= 1 and 0 <= u <= 1 else None
 
-def crossings(A, B):
+LAST_GAP = None   # the closest approach when two streets do not cross (for the report)
+def crossings(A, B, near=40):
     """Every point where the two sets of lines cross (merged within 25 m), else the closest vertex pair's
-    midpoint when within 40 m (a street that ends at the other)."""
+    midpoint when within `near` m (a street that ends at the other)."""
+    global LAST_GAP
     out = []
     for a in A:
         for b in B:
@@ -299,7 +302,8 @@ def crossings(A, B):
                 for q in b:
                     d = metres(p, q)
                     if best is None or d < best[1]: best = (((p[0] + q[0]) / 2, (p[1] + q[1]) / 2), d)
-    return [best[0]] if best and best[1] <= 40 else []
+    LAST_GAP = best
+    return [best[0]] if best and best[1] <= near else []
 
 def merge_near(pts, m):
     """Points within m metres of each other, as their centroid (the carriageways of a divided road)."""
@@ -310,16 +314,31 @@ def merge_near(pts, m):
         else: groups.append([p])
     return [(sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g)) for g in groups]
 
-def geocode_xing(streets, city, cache):
-    """Candidate points for an intersection (more than one when the streets cross twice, e.g. a crescent)."""
+def similar_names(name, table):
+    """Names close to one that matched nothing (spelling help for the config)."""
+    import difflib
+    names = name if isinstance(name, list) else [name]
+    return sorted({m for n in names for m in difflib.get_close_matches(norm_street(n), list(table), n=4, cutoff=0.7)})
+def explain_miss(names, lines_):
+    """Why a lookup found nothing: names with no ways get spelling suggestions, else the closest approach."""
+    out = [f"no ways named {n if isinstance(n, str) else ' / '.join(n)} (similar: {', '.join(similar_names(n, roads())) or 'none'})"
+           for n, ls in zip(names, lines_) if not ls]
+    if not out and LAST_GAP: out.append(f"closest approach {round(LAST_GAP[1])} m at {[round(v, 5) for v in LAST_GAP[0]]}")
+    return '; '.join(out)
+def geocode_xing(streets, city, cache, near=40):
+    """Candidate points for an intersection (more than one when the streets cross twice, e.g. a crescent).
+    `near`: how far apart (m) the ends of two streets that only nearly meet may be."""
+    global LAST_GAP
     nm = lambda n: ' / '.join(n) if isinstance(n, list) else n
     key = f"{'osm:' if roads() else ''}{nm(streets[0])} & {nm(streets[1])}, {city}"
     if key not in cache:
+        LAST_GAP = None
         A, B = street_lines(streets[0], city), street_lines(streets[1], city)
-        xs = crossings(A, B) if A and B else []
+        xs = crossings(A, B, near) if A and B else []
         if roads(): xs = [x for x in merge_near(xs, 90) if near_city(x, city)]   # a divided road crosses as up to 4 points
         cache[key] = [[round(v, 6) for v in x] for x in xs]
         print(f"  {key}: {len(cache[key])} crossing(s) {cache[key][:3]} ({len(A)} / {len(B)} ways)")
+        if not xs and roads(): print(f"    {explain_miss(streets, [A, B])}")
     v = cache[key]
     return [] if not v else [v] if isinstance(v[0], (int, float)) else v   # older cache entries held one point
 
@@ -442,7 +461,7 @@ def walk(adj, start, dir_, m):
 def end_point(adj, road, end, city, cache):
     """A corridor end: the road's crossing with a street (candidates), moved by an offset when given."""
     street = end if isinstance(end, (str, list)) else end['street']
-    cands = geocode_xing([road, street], city, cache)
+    cands = geocode_xing([road, street], city, cache, end.get('nearM', 40) if isinstance(end, dict) else 40)
     if isinstance(end, dict) and end.get('offsetM'):
         out = []
         for c in cands:
@@ -488,8 +507,11 @@ def place_roads(cfg, ov, cache, report):
             gtype = 'road'
         elif r['kind'] == 'point':
             if r.get('water'):
-                xs = [x for x in crossings(street_lines(r['road'], city), water_lines(r['water'])) if near_city(x, city)]
+                A, W = street_lines(r['road'], city), water_lines(r['water'])
+                xs = [x for x in crossings(A, W, r.get('nearM', 40)) if near_city(x, city)] if A and W else []
                 pts = merge_near(xs, 60)
+                if not pts and not W: print(f"  {name_of(r['water'])}: no waterways by that name (similar: {', '.join(similar_names(r['water'], waters())) or 'none'})")
+                elif not pts: print(f"  {name_of(r['road'])} / {name_of(r['water'])}: {explain_miss([r['road']], [A])}")
                 method = f"where {name_of(r['road'])} crosses {name_of(r['water'])} ({OSM_CREDIT})"
             else:
                 pairs = r.get('points') or [r['streets']]
@@ -510,7 +532,8 @@ def place_roads(cfg, ov, cache, report):
             method = f"along {name_of(r['water'])}, the creek the sewer follows ({OSM_CREDIT})"
             gtype = 'linear'
         e = ov['eas'].setdefault(r['id'], {})
-        e.update({'geometry': geom, 'geomType': gtype, 'geomMethod': method, 'geomConfidence': r.get('confidence', 'medium')})
+        if r.get('method'): method = f"{r['method']}: {method}"   # e.g. an approximate placement says so first
+        e.update({'geometry': geom, 'geomType': r.get('geomType', gtype), 'geomMethod': method, 'geomConfidence': r.get('confidence', 'medium')})
         report.append(f"{r['id']}: {geom['type']} — {method}")
 
 # ---- main -------------------------------------------------------------------------------------------
