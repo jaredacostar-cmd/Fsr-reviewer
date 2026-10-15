@@ -33,6 +33,7 @@
   function renderGrowth() {
     renderGrowthPipeline();
     TL().renderTiming();
+    if (root.PeelPlanTables) root.PeelPlanTables.render();
     CV().renderGrowthCensus();
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
@@ -142,7 +143,8 @@
       + `<label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new"${App().state.newOnly ? ' checked' : ''}><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>`;
   }
   function settingsPageHTML() {
-    return `<h2 class="pane-h">Settings</h2>${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
+    const TC = root.PeelTreeCounts;
+    return `<h2 class="pane-h">Settings</h2>${TC ? TC.settingsHTML() : ''}${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
   }
   window.GearPages = window.GearPages || {};
   window.GearPages.settings = () => settingsPageHTML();

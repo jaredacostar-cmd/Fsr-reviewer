@@ -250,10 +250,11 @@
         <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="census2051">Census &amp; 2051</button><button type="button" class="btn small" data-gsub="timing">Timing</button></div>
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="census2051">Census &amp; 2051</button><button type="button" class="btn small" data-gsub="byplan">By plan</button><button type="button" class="btn small" data-gsub="timing">Timing</button></div>
       <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
       <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="census2051" role="tabpanel" aria-labelledby="ftab-growth" data-off="1" hidden><div id="growth-census-body"></div></section>
       <section class="f-pane" id="pane-growth-timing" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="timing-body"></div></section>
+      <section class="f-pane" id="pane-growth-byplan" data-pane="growth" data-sub="byplan" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="byplan-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="water" hidden role="group" aria-label="Water view">
         <button type="button" class="btn small" data-wsub="capacity">Treatment &amp; capacity</button>
@@ -361,6 +362,8 @@
   <script src="js/util.js?v=__BUILD__"></script>
   <script src="js/config.js?v=__BUILD__"></script>
   <script src="js/phases.js?v=__BUILD__"></script>
+  <script src="js/tree-groups.js?v=__BUILD__"></script>
+  <script src="js/tree-counts.js?v=__BUILD__"></script>
   <script src="js/demand.js?v=__BUILD__"></script>
   <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/aerial.js?v=__BUILD__"></script>
@@ -408,6 +411,8 @@
   <script src="js/dev-verdict.js?v=__BUILD__"></script>
   <script src="js/overview-tab.js?v=__BUILD__"></script>
   <script src="js/growth-ui.js?v=__BUILD__"></script>
+  <script src="js/plan-rollup.js?v=__BUILD__"></script>
+  <script src="js/plan-tables.js?v=__BUILD__"></script>
   <script src="js/timing.js?v=__BUILD__"></script>
   <script src="js/settings.js?v=__BUILD__"></script>
   <script src="js/render-list.js?v=__BUILD__"></script>

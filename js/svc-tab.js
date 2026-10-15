@@ -98,7 +98,7 @@
     const basisTxt = { all: 'All units', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, Sett().wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, App().state.dcInfra ? `plant expansions ${SP().hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
-      `counting: ${basisTxt}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
+      `counting: ${basisTxt}${window.PeelTreeCounts ? ` (${window.PeelTreeCounts.label()})` : ''}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
   }
   // Scenario A: a pinned set of results to compare the current scenario with.
   function scenarioMetrics() {

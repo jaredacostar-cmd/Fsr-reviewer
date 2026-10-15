@@ -1726,6 +1726,75 @@ link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on
 screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
 the screening summary to plain text. Everything else is unchanged.
 
+## Applying the tree: Step B0 review workbook
+
+This is the review before the containment tree (`js/tree.js`, PR #180) feeds the app's counts.
+It is **report only: the app is unchanged.** The plan is in `docs/apply-tree-plan.md`.
+
+```
+node scripts/tree-review.js          # → docs/tree-review/tree-review.json (git-ignored)
+python3 scripts/tree-review-xlsx.py  # → docs/tree-review/tree-review.xlsx
+```
+
+**What a row is.** One row per **change group**: the app development(s) and the tree(s) that
+share files with them. Each row has:
+- app units (the header's definition) vs tree units, and the change;
+- the counting rule;
+- the weakest link's confidence;
+- the primary plan and its share;
+- the receiving plant and block;
+- flags;
+- three yellow **your call** columns: Accept / Override / Ask, override units, and reason or
+  source.
+
+**Sheets.**
+- Read me, Summary, Changes (largest first), Pre-consultation estimates, All groups.
+- The audit lists: double counts, unit mismatches, nested files not linked, unclear same-land
+  pairs, condo-only trees, orphans, low-confidence links, straddling plans, reversed dates,
+  counts to find.
+
+**Flags.**
+- **estimate (pre-consultation):** every file stating a count is a pre-consultation, by role or
+  by its PRE file number. Large ones are promoted to block-plan roots but are still flagged.
+  Decided: these count, as proposed only, never committed.
+- **count from data/unit-lookups.json**
+- **low-confidence link**
+- **children exceed parent**
+- **straddles plans:** the primary plan holds less than 90%.
+
+**Decisions** go into `data/tree-overrides.json`. Each override is keyed `Municipality|ROOT-FILE`,
+with `units`, `reason`, `source` and `decidedOn`. Overrides apply to the workbook's "after
+overrides" totals now, and to the app at Step B1.
+
+**Tree rules fixed after the first review (2026-10-15):**
+- **Building permits count when no file states a count.** 121 groups had dropped to 0; this
+  brings it to 94. The other 81 are replacement houses, which correctly count 0. Example:
+  11261 Chinguacousy keeps 456 units, all permitted. Permits are still never counted for a
+  replacement or model house.
+- **A minor file's own stated count counts,** not only the number found in its wording.
+- **The remaining drops to 0 are mostly correct.** The app was still counting withdrawn files.
+  Example: 2 Bartley Bull's 330 units come from OZS-2021-0010, which is cancelled.
+
+**Your bulk accepts (2026-10-15).** These are recorded in `data/tree-overrides.json` as
+`accepted`:
+- counts found where the app had 0;
+- splits, unless the count drops by 100 or more;
+- drops to 0 (replacement houses, no new homes, withdrawn files);
+- pre-consultation estimates under 1,000 units;
+- new trees and gone developments;
+- small or well-linked changes.
+
+**Left for you: 24 groups** on the workbook's **To review** sheet:
+- 10 large pre-consultation estimates (1,000+ units);
+- merges and regroupings that move 100+ units;
+- splits and count changes that lower a count by 100+.
+
+Every row carries a pre-filled call and the reason for it.
+
+**Results** (snapshot 2026-10-12): Peel app 247,760 → tree 266,947 units (+19,187, +7.7%).
+- 3,284 groups: 227 go up, 131 go down, 2,926 are unchanged.
+- 88 groups are pre-consultation estimates, totalling 36,543 units.
+
 ## Definitions (one table, used everywhere)
 
 The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use
@@ -2125,3 +2194,301 @@ status maps to a phase.
   Brampton datasets are updated irregularly.
 - Phases are inferred from status wording and dates, which differ between municipalities.
   Open the source record in the project panel to check a specific project.
+
+**Chronology rules (proposed, modelled; the app is unchanged).** `js/tree.js` has five date rules.
+They are off unless `chrono` names them (`audit(data, { chrono: { r1, r2, r3, r4 } })`).
+`scripts/tree-review.js` models them step by step, each adding to the ones before, and the
+workbook's **Chronology** sheets show what each changes. On the 2026-10-12 snapshot (Peel tree
+total today 266,947):
+
+| Rule | What it does | Peel units | Groups changed |
+|---|---|---|---|
+| 1 | An undated file (1,544, mostly Brampton site plans) takes 1 July of the year in its file number. The number's year matches the real date within a year for 99% of dated files. | −8 | 110 (mostly regrouping files with no count) |
+| 2 | An approved site plan, condo or draft plan filed 3+ years before a newer pre-consultation, rezoning or block plan on its land is history: its own tree, not the new proposal's child. | +94 | 99 (606 links not made; 466 are pre-consultations) |
+| 3 | Same land, counted once: the latest file replaces the largest only when it is the same stage refiled, covers 90%+ of the earlier land, or (with no boundary) its wording reads as a resubmission; else the largest stands (a phase). | −3,057 | 23 (2 unclear, left at the largest for your call) |
+| 4 | A permit issued 2+ years before the file it would sit under is the old building: not placed. | −10 | 8 (324 permits) |
+| 5 | Each tree's files in filing order, with backwards steps marked (the **Filing order** sheet). | report only | 230 of 976 trees with backwards steps |
+
+With all four, Peel goes from 266,947 to 263,966 (−2,981).
+
+**Resubmission or phase, with no boundary (rule 3).** The later file is scored against the
+largest from its own words:
+- **Buildings:** the same number means a resubmission; fewer means a phase.
+- **Home types:** only some of the earlier file's types means a phase.
+- **Civic addresses:** the same means a resubmission; part means a phase; different means
+  another building on the site.
+- **Wording:** "revised" or "resubmission" against "phase", "tower" or "block".
+- **Counts within 25%:** a resubmission.
+
+Two points or more either way decides; otherwise the pair is unclear and the largest stands.
+The latest file must state its own count (a draft plan counted only through one child is
+not a replacement).
+
+**Step B0 decided (2026-10-15): approve all.** Recorded in `data/tree-overrides.json`:
+- Chronology rules 1–4 are on: `audit()` uses them by default; pass `chrono: {}` for the tree
+  as it was before them.
+- The two unclear same-land pairs keep the largest count (OZ/OPA 24-2, OZ/OPA 10-5).
+- SP 22-75 is overridden to 322 units, from its own description (the record says 457).
+- The 24 To review groups are accepted. So are the 6 roots whose change comes from the rules:
+  - the rule 3 resubmissions (88 Park E, 51 Tannery, 2225 Erin Mills, OZS-2026-0016);
+  - 2 Bartley Bull, already accepted as a withdrawn file.
+
+Final tree totals on the 2026-10-12 snapshot:
+
+| | App units | Tree units | After overrides |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,574 | 90,439 |
+| Brampton | 127,570 | 141,870 | 141,870 |
+| Caledon | 29,379 | 31,522 | 31,522 |
+| **Peel** | **247,760** | **263,966** | **263,831** |
+
+Nothing is left to review. The Decisions sheet lists every call and what you decided.
+
+New sheets: Decisions, Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
+History links, Permits early, Dated from number, Filing order.
+
+## Step B1: tree counts in the app (Previous / Tree switch)
+
+Since GO 2 (2026-10-15), each development's units are the **tree count**: the sum of the trees
+whose root file it holds (`js/tree.js` with the chronology rules, plus `data/unit-lookups.json`
+and your decisions in `data/tree-overrides.json`). Development keys are unchanged; Step B2
+(GO 3) makes the trees the developments.
+
+**How it runs.**
+- `scripts/build-tree-counts.js` writes `data/tree-counts.json` with the weekly snapshot
+  (`site.yml`). Each development key has its units, its trees (root, units, basis, flag) and a
+  signature of its planning files.
+- `js/tree-counts.js` (`PeelTreeCounts`) applies the counts after the developments are built.
+  The browser never builds the trees, which takes seconds.
+- A development keeps its previous count, with the reason shown, when:
+  - it has no tree (12 developments whose only planning files are withdrawn: 2 units);
+  - its files differ from the tree build (a live refresh, or a source turned off);
+  - you entered a count for one of its files.
+- A development whose files are counted in another development's tree shows 0 and names that
+  tree (30 developments).
+
+**Where it shows.**
+- **Settings › Counting:** Tree (new), the default, or Previous. Kept for one release so you
+  can compare.
+- The scenario bar and the top-bar chip say "counting: All units (tree count)" or
+  "(previous count)". Exports and share links carry the same scenario text.
+- The development panel's At a glance has a **Tree count** note: the trees, their counts and
+  flags, and the previous count when it differs.
+
+**What moved** (snapshot 2026-10-12, live developments):
+
+| | Previous | Tree | Change |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,439 | −372 |
+| Brampton | 111,536 | 141,872 | +30,336 |
+| Caledon | 29,379 | 31,522 | +2,143 |
+| **Peel** | **231,726** | **263,833** | **+32,107 (+13.9%)** |
+
+382 developments change. The full list, with the reasons, is in the review workbook
+(`docs/tree-review/tree-review.xlsx`, Changes sheet).
+
+On the default view (active applications, 2021–2026), the Overview goes from 202,264 to
+233,028 units and from 597,100 to 688,600 people.
+
+**Fixed along the way: the Node tools' baseline.**
+- `countUnitsFromText` (`scripts/build-snapshot-index.js`) read unit counts from the
+  descriptions of the Brampton pre-consultation layer. That layer is marked `countUnits: false`,
+  and the browser skips it.
+- So the startup index and the Node tools counted 16,034 units that the full app never shows.
+  Most are pre-consultation estimates: 111 Mayfield's 9,961, and 2,341 at 10884 Winston
+  Churchill.
+- The B0 workbook's "app units" column is now the true previous count (231,726, not 247,760).
+  The tree counts are unchanged.
+- The tree reads a pre-consultation's own figure directly. It counts it only when no other file
+  states one, flagged as an estimate (decision B-a).
+
+## Step B2: the trees are the developments
+
+Since GO 3 (2026-10-15), with Settings › Counting on **Tree**, each tree of files on one land is a
+development. An app development that held unrelated trees splits, and developments that shared
+a tree merge. **Previous** puts back today's developments and counts for one release.
+
+**How it runs.**
+- `data/tree-counts.json` (version 2, built by `scripts/build-tree-counts.js`) lists every tree
+  as a development. Each one has:
+  - its key;
+  - its count and how it was made;
+  - its files in tree order, each with the link that put it there (rule, overlap, confidence).
+
+  The file also maps each planning file to its development, and lists the 1,861 permits the tree
+  places somewhere other than the rest of their site.
+- `js/phases.js` `buildProjects(records, { regroup })` has one new hook. The site, nesting and
+  permit-joining steps run as before; then `js/tree-groups.js` moves the records into their
+  trees' developments. Without the hook nothing changes.
+- **Keys:** a tree keeps the key of the development that held its root file. A second tree of
+  the same development is `<key>~<root file>`. On the 2026-10-12 snapshot:
+  - 23,445 keys are kept;
+  - 824 are new (split-off trees);
+  - 379 are absorbed into another tree.
+- **Saved keys are rewritten on load, and nothing is dropped:**
+  - the watchlist follows its developments (a split watches every part);
+  - an allocation moves to the part with the most units, noting where it came from;
+  - share links, saved views and "Back to" resolve old keys, including branch keys
+    (`<key>#<file>`);
+  - the weekly changes and the phase history are copied to the new keys.
+- **Files view** (Development › Files & history): the tree's files in order. Each sits under the
+  file whose land holds it, with its rule, confidence and overlap. Opening a file opens its whole
+  branch as a sub-development (decided: one development, branches as subs).
+
+**What moved** (live developments, snapshot 2026-10-12):
+
+| | Previous | Tree |
+|---|---|---|
+| Developments | 3,342 | 3,919 |
+| Peel units | 231,726 | 263,831 |
+
+Peel matches the B0 review after your overrides exactly.
+
+On the default view (active applications, 2021–2026), the Overview shows 228,490 units and
+683,700 people with the trees, against 202,264 units and 597,100 people before.
+
+**Tests** (`tests/tree-counts.test.js`):
+- every old key resolves;
+- the watchlist and allocations survive;
+- no record sits in two developments, and none is lost;
+- every planning file is in exactly one development, its tree's;
+- keys are unique;
+- Peel equals the review total.
+
+## Population tables, C1: the plan roll-up engine
+
+`js/plan-rollup.js` (`PeelPlanRollup`, pure, no UI yet) builds Table 1 and Table 5.
+
+**Levels:** Peel → municipality → secondary plan / character area → sub-levels → developments.
+- A nested plan is a sub-level: Bolton Core in Bolton, Malton CN in Malton NHD, and four more.
+- A Brampton precinct sits in the plan holding most of it (29 of 30).
+- "Not in a plan" and "Elsewhere in <plan>" make every parent equal the sum of its children.
+  The `check` column is parent − Σ children, always 0.
+
+**Placement** follows the tree. A tree development is placed by its share of its root file's
+land in each plan (the tree build stores these in `data/tree-counts.json`: `devs[].a`, plus
+`areas` with their nesting). So a development straddling two plans is split by area, not
+assigned whole. With no boundary, or with Previous grouping, it is placed whole by its point.
+
+**Measures** are the Overview's:
+- units from `Growth.pipelineTotals`: planned, permitted, completed, left to build;
+- committed by D-5-1, and proposed;
+- people and jobs from `PeelDemand.estimate` at the chosen basis.
+
+Each development is measured once and its shares multiply it, so Peel equals the Overview.
+`matrix()` gives Table 5: plans down the side, plants or pressure zones across.
+
+**Tests** (`tests/plan-rollup.test.js`), including the full snapshot regrouped into trees:
+- every check is 0;
+- Peel people equal `estimate(set)`, and Peel units equal the header;
+- nested plans are counted once;
+- straddling developments are split by area;
+- shares over 100% are scaled down;
+- matrix rows and columns reconcile.
+
+## Population tables, C2: Table 1, the roll-up (Growth › By plan)
+
+Growth has a new **By plan** sub-view (`js/plan-tables.js`). It shows the developments on screen
+(the Overview's set and basis) by where they are: Peel → municipality → plan → sub-area or
+precinct → developments.
+
+**Columns:**
+- Compact by default: Area, Units, People, Check. This fits the panel.
+- **All columns** adds developments, committed, proposed, left to build, persons per unit, jobs,
+  and people in an MTSA. The MTSA column is an overlay and is never added up.
+
+**Check** is ✓ when a row equals the sum of the rows under it.
+
+**Rows:**
+- Rows expand and collapse; Peel and the municipalities start open.
+- A plan shows 10 developments, with "See all".
+- A development straddling plans appears under each plan with its share, e.g. "(45% of it)".
+- **filter** narrows the map and every tab to that plan.
+
+**Below the table:**
+- the developments split between plans;
+- the nested plans;
+- the precincts with no development in the current set.
+
+**Exports:**
+- **Download CSV** gives one row per area and per development. It has a `path` column
+  (`Peel/Caledon/Bolton/Bolton Core`) and a `share` column, plus the disclaimer, the screening
+  line, the criteria stamp, and the basis and grouping.
+- The workbook gains a **By plan** sheet with the same rows, after Developments.
+- The Developments export gains `plan` (the innermost plan with the largest share) and
+  `plan_shares`.
+
+**On the default view (2021–2026 active):**
+- Peel is 228,490 units and 683,671 people, the same as the Overview and the header.
+- Every check passes.
+- 42 developments are split between plans.
+
+## Population tables, C3: Table 5, plans by plant or pressure zone
+
+Under Table 1 in Growth › By plan, the plans run down the side: each municipality's plans and
+"Not in a plan", the same rows as Table 1. Across the top are either:
+- **Plants:** the plant receiving the wastewater (G.E. Booth, Clarkson, Inglewood, No plant);
+- **Pressure zones:** the first zone, if a development has two.
+
+**Cells and links:**
+- Cells show people at build-out; hover for units.
+- A cell filters the map and every tab to that plan and plant (or zone).
+- A row header filters to the plan, a column header to the plant or zone.
+
+**Totals:**
+- Each row's total equals Table 1.
+- The columns add up to Peel; the ✓ in the corner confirms both.
+- Default view: G.E. Booth 476,611, Clarkson 206,147, Inglewood 55, No plant 859, which add up
+  to 683,671.
+
+The plant capacity tables use census-relative layers; see Wastewater › Plants.
+
+**Workbook:** a new **Plan × servicing** sheet holds both matrices.
+
+## Population tables, C4: plans against their targets (Table 2)
+
+Growth › By plan has a third table, **Plans against their targets**.
+- **Municipalities** are compared with the Region's 2051 allocation of growth (2051 minus 2021,
+  from `data/peel-reports.json`).
+- **Plans** are compared with their published targets in `data/plan-targets.json`.
+- **Units are the main comparison.** The table shows committed units (D-5-1), all proposed
+  units, the percentage of target, and the gap.
+- **People-only targets:** where a target states only people, pipeline people are shown beside
+  it. This is marked † and is indicative only, because targets use household persons per unit
+  while the pipeline uses Peel design criteria.
+- **Density-only targets** are shown but not compared.
+- **Combined targets:** a target covering several plans is compared with all of them, e.g.
+  48 (a)+(b) Countryside Villages, or 40 (a)–(d) Bram West.
+- **No target:** a plan with no published target is left out, never shown as 0. The footnote
+  counts them.
+- **"total"** marks a target that counts every home at build-out, existing ones included.
+
+**`data/plan-targets.json`** holds 15 targets, researched 2026-10-15:
+- 3 state units: Mayfield West, Brookvalley, Alloa;
+- 6 state people and jobs: Heritage Heights, Mount Pleasant, Countryside Villages, Bram West,
+  Highway 427 Industrial, Mayfield West Phase 2 Stage 1;
+- 6 are densities only: Downtown Brampton, Vales of Humber, Humber Station, Mississauga DT Core,
+  Lakeview Waterfront, Ninth Line.
+
+Each has its source, page, date, wording and a note. `leftOut` lists what was not used and why:
+- applicant proposals;
+- the Bolton expansion-area figure;
+- Wildfield and Innis Lake, which have no plan boundary yet;
+- Mississauga's class-wide node densities.
+
+**Not yet checked against the documents.** Every figure was found in search results. The
+municipal sites (brampton.ca, caledon.ca, mississauga.ca and their eScribe meeting portals)
+could not be opened from the session that gathered them. Each one is marked **unchecked** in the
+table (`checked: false`) until someone confirms its wording against the source.
+
+The CSV and the By plan sheet gain target columns: units, population, jobs, density, year,
+scope, % of target and source.
+
+**Tests** check that every target:
+- has a source, a link and its wording;
+- names a real plan;
+- is never 0;
+- is one per plan.
+
+They also check the comparison: committed vs proposed, municipal growth, combined targets, and
+people-only targets.

@@ -41,14 +41,16 @@ async function loadRecords(live) {
   return { misTyped, records: P.dedupeRecords(decoded), generatedAt: snap.generatedAt, sources: snap.sources.map(s => ({ id: s.id, status: s.status, count: s.count })) };
 }
 
-function audit({ records, generatedAt, sources, misTyped = [] }, { live = false, log = console.log } = {}) {
+function audit({ records, generatedAt, sources, misTyped = [] }, { live = false, log = console.log, chrono = T.CHRONO_ALL } = {}) {
   // Current grouping, as the app builds it.
   const projects = P.buildProjects(records);
   const projOfUid = new Map(); for (const p of projects) for (const r of p.records) projOfUid.set(r.uid, p);
   // Proposed trees.
-  const nodes = T.fileNodes(records);
+  // chrono: the chronology rules (js/tree.js r1–r4), all on since your approval of 2026-10-15;
+  // pass {} for the tree as it was before them.
+  const nodes = T.fileNodes(records, { chrono });
   const permits = records.filter(r => r.kind === 'permit');
-  const built = T.buildTrees(nodes, { permits, log });
+  const built = T.buildTrees(nodes, { permits, log, chrono });
   // Counts found online for files that state none (curated, with the page they came from).
   const lk = readJSON(path.join(DATA, 'unit-lookups.json'));
   built.lookups = new Map(Object.entries((lk && lk.files) || {}));
@@ -195,7 +197,7 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
   // Permits (progress only): how many found a file.
   const permitsPlaced = [...permitOf.values()].reduce((t, l) => t + l.length, 0);
 
-  return {
+  const res = {
     generatedAt: new Date().toISOString(), records: { from: live ? 'live pull' : 'data/snapshot.json', snapshotAt: generatedAt, sources },
     thresholds: { containInside: T.T.CONTAIN, sameLandMutual: T.T.SAME, preconMin: T.T.PRECON, neverBelow: T.T.NEVER, coverChildren: T.T.COVER, childrenOverParent: T.T.OVER },
     files: { total: nodes.length, byRole, boundary, ozsSplit, reclassified,
@@ -217,6 +219,9 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     biggestChanges: changes.slice(0, 20),
     changesCount: { components: changes.length, up: changes.filter(c => c.change > 0).length, down: changes.filter(c => c.change < 0).length },
   };
+  // The working tables, for scripts/tree-review.js (Step B0); not written to tree-audit.json.
+  Object.defineProperty(res, 'internals', { value: { projects, nodes, built, links, counts, treeOfNode, projsOfNode, tagsByTree, comps, projByKey, refOf, straddling, roots, opaNotes }, enumerable: false });
+  return res;
 }
 
 async function main() {

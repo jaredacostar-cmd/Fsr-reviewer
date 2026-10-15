@@ -414,6 +414,9 @@
   }
   const sameLand = (a, b) => !!landRel(a, b);
   function fileTree(p) {
+    // Step B2: a tree development lists its files in tree order, with their links.
+    const TG = window.PeelTreeGroups, tRows = TG && !p.parent && state() && state().treeGrouped ? TG.fileRows(p) : null;
+    if (tRows && tRows.length) return tRows;
     const formal = p.records.filter(isFormal), pre = p.records.filter(isPrecon), used = new Set();
     const rows = formal.map(a => ({ a, pre: pre.filter(r => !used.has(r) && sameLand(a, r) && used.add(r)) }));
     for (const r of pre) if (!used.has(r)) rows.push({ a: r, pre: [] });
@@ -435,7 +438,9 @@
     const row = fileTree(p).find(t => t.a.ref === ref); if (!row) return null;
     const a = row.a;
     const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P().pointInRings(r.lng, r.lat, a.poly)) : [];
-    const sub = P().mergeProject(key, [a, ...row.pre, ...permits], {});
+    // A tree row opens its whole branch (the file and the files under it).
+    const own = row.branch ? row.branch : [a, ...row.pre];
+    const sub = P().mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))], {});
     sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
     if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
     tagAreasLite(sub);
@@ -449,7 +454,13 @@
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
     const p = st.projects.find(x => x.key === base);
-    return p && i > 0 ? subProject(p, k.slice(i + 1)) : p || null;
+    if (!p) {
+      // A key saved before the trees became the developments (Step B2): resolve it.
+      const TG = window.PeelTreeGroups, list = st.projects;
+      const to = TG && TG.resolve(k, x => list.some(q => q.key === x));
+      return to && to !== k ? projectByKey(to) : null;
+    }
+    return i > 0 ? subProject(p, k.slice(i + 1)) : p;
   }
   // Plain bbox for a development (app.js `projectBounds` needs Leaflet).
   function devBbox(p) {
@@ -482,12 +493,13 @@
     const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
     const rel = relatedProjects(p).slice(0, 12);
     let html = '';
-    if (formal.length > 1 || (formal.length && tree.length > formal.length)) {
+    const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
+    if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
       const counted = p.buildout && p.buildout.basis;
       html += `<details class="sect" id="devtab-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
-        <ul class="file-tree">${tree.map(t => `<li>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-dt-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
-          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}</div></li>`).join('')}</ul>
-        <p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`;
+        <ul class="file-tree">${tree.map(t => `<li${TG ? TG.indent(t) : ''}>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-dt-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) && !treeRows ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
+          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}${TG ? TG.linkHTML(t) : ''}</div></li>`).join('')}</ul>
+        ${treeRows ? `<p class="small muted">${esc(TG.FILES_NOTE)}</p></details>` : `<p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`}`;
     }
     if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
     if (rel.length) html += `<details class="sect" id="devtab-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>

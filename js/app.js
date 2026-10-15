@@ -198,7 +198,14 @@
     applyUserUnits(raw);
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     const records = P.dedupeRecords(raw);
-    state.projects = P.buildProjects(records);
+    // Step B2: with the tree count in use, the trees are the developments (js/tree-groups.js
+    // through buildProjects' regroup hook); Previous keeps today's grouping.
+    const TG = window.PeelTreeGroups, TC = window.PeelTreeCounts;
+    const grouped = !!(TG && TC && TC.mode() === 'tree' && TG.ready());
+    state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
+    state.treeGrouped = grouped;
+    if (TC) TC.apply(state.projects);
+    if (grouped) migrateSavedKeys();
     PeelPlanAreas.tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
@@ -535,7 +542,10 @@
         const missing = state.sources.filter(s => s.enabled && !s.fromSnapshot);
         inflight += missing.length; showLoading();
         for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
-        fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => { state.history = h; }).catch(() => {});
+        fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => {
+          state.history = h;
+          if (state.treeGrouped && window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k)); }
+        }).catch(() => {});
       }
       rebuild();
     })();
@@ -543,7 +553,39 @@
   }
 
   // Start from the weekly snapshot (fast, survives source outages); fall back to live.
+  // Step B1: the tree counts (small, built with the snapshot) load alongside; when they arrive
+  // after first paint, the developments take them and every view refreshes.
+  // Step B2: the developments become the trees once the data is in; a switch in Settings ›
+  // Counting regroups (Tree) or puts today's grouping back (Previous).
+  function loadTreeCounts() {
+    if (!window.PeelTreeCounts) return;
+    PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
+  }
+  function recount() {
+    if (!window.PeelTreeCounts || !state.projects) return;
+    const cur = typeof PeelDevNav !== 'undefined' && PeelDevNav.getCurrentProject && PeelDevNav.getCurrentProject();
+    const curKey = cur && cur.key;
+    rebuild();
+    if (window.PeelSvcTab && PeelSvcTab.renderScenario) PeelSvcTab.renderScenario();
+    else if (window.PeelTopbar && PeelTopbar.renderTbScen) PeelTopbar.renderTbScen();
+    const again = curKey && PeelDevNav.projectByKey(curKey);
+    if (again && PeelDevNav.showDetail) PeelDevNav.showDetail(again);
+  }
+  // Keys saved under today's developments (watchlist, allocations), the weekly changes and the
+  // phase history, rewritten to the trees' keys. Nothing saved is dropped (js/tree-groups.js).
+  function migrateSavedKeys() {
+    const TG = window.PeelTreeGroups; if (!TG) return;
+    const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k);
+    const w = TG.migrateKeys([...watch], exists);
+    if (w.length !== watch.size || w.some(k => !watch.has(k))) { watch.clear(); w.forEach(k => watch.add(k)); store.set('watch', w); }
+    const unitsOf = k => { const p = state.projects.find(x => x.key === k); return p ? p.units : 0; };
+    const al = TG.migrateAllocations(store.get('allocations', {}) || {}, exists, unitsOf);
+    if (al.moved) store.set('allocations', al.all);
+    TG.translateChanges(state.snapshot && state.snapshot.changes, exists);
+    TG.translateHistory(state.history, exists);
+  }
   async function boot() {
+    loadTreeCounts();
     if (await bootFromIndex()) {
       // First paint is up; pull the full snapshot when the browser is idle.
       const go = () => { loadFullSnapshot().catch(() => {}); };
@@ -648,7 +690,7 @@
     map: window.PeelMapCore.map,
     showDetail: (...a) => window.PeelDevNav.showDetail(...a),
     // ---- newly exposed core internals (used cross-module) ----
-    applyFilters, matches, scheduleRebuild, loadSource, showLoading, saveSources,
+    applyFilters, matches, scheduleRebuild, recount, loadSource, showLoading, saveSources,
     applySnapshot, jobsOf, empOf, clearEmp, mergeCriteria, setUserUnits,
     timeActive, yearsOf, setSheetH, refreshTheme,
     // Phase 6: full-snapshot load state (startup index paints first; the detail

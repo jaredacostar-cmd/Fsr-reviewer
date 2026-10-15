@@ -26,7 +26,7 @@
 'use strict';
 
 // The workbook contract: exactly these sheets, in this order.
-var SHEET_NAMES = ['Summary', 'Developments', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources'];
+var SHEET_NAMES = ['Summary', 'Developments', 'By plan', 'Plan × servicing', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources'];
 
 var DC_STATUS_LABEL = { gap: 'Screens late: runs out before the DC project', planned: 'DC project in time', check: 'Check the data', ok: 'Room to build-out' };
 var DC_KIND_LABEL = { pipe: 'Sewer', ps: 'Pumping station', plant: 'Treatment plant', wplant: 'Water treatment', storage: 'Storage', supply: 'Supply mains (rough)' };
