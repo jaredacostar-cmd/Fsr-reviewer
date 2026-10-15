@@ -1,0 +1,306 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+DC Water distribution feeder main · 750 mm
+Close ×
+Water distribution feeder main · 750 mm
+Project 24-1270 · construction 2027 · 9,370m · proposed · 2026 DC capital map (draft)
+
+West Caledon Transmission Main
+
+What it relieves
+
+No tabled capacity matched to it.
+
+3 developments outside the existing network would connect to it.
+
+No published capacity to compare: developments in Pressure zone 7 (the zone it serves).
+
+Developments relying on it
+Built since the census 3,660 · 16,800 people
+Committed (draft plan or site plan approved) 330 · 26,100 people
+Proposed (in review) 44 · 16,700 people
+4,034 developments relying on it, largest peak wet weather first
+Development	People + jobs	Peak wet
+2 0 CHINGUACOUSY ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	7,330	41.2L/s
+2 0 CREDITVIEW ROAD CALEDON ON
+Proposed (in review) · Caledon
+	6,080	34.2L/s
+2 0 CHINGUACOUSY ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	3,090	17.4L/s
+2 3431 OLD SCHOOL ROAD CALEDON ON L7C 0X8
+Proposed (in review) · Caledon
+	2,850	16L/s
+2 12909 KENNEDY ROAD CALEDON ON L7C 2H1
+Proposed (in review) · Caledon
+	2,830	15.9L/s
+5 2068 MAYFIELD ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	2,310	13L/s
+2 12455 CREDITVIEW ROAD CALEDON ON L7C 1Y6
+Committed (draft plan or site plan approved) · Caledon
+	2,250	12.7L/s
+2 12489 DIXIE ROAD CALEDON ON L7C 2M4
+Proposed (in review) · Caledon
+	2,940	11.9L/s
+4 12290 HUTCHINSON FARM LANE CALEDON ON L7C 2B6
+Committed (draft plan or site plan approved) · Caledon
+	2,040	11.5L/s
+5 0 MCLAUGHLIN ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	2,030	11.4L/s
+2 12461 MCLAUGHLIN ROAD CALEDON ON L7C 2A8
+Proposed (in review) · Caledon
+	1,830	10.3L/s
+✓ 0 MCLAUGHLIN ROAD CALEDON ON
+Built since the census · Caledon
+	1,610	9.03L/s
+2 2412 MAYFIELD ROAD CALEDON ON L7C 0Y9
+Committed (draft plan or site plan approved) · Caledon
+	1,380	7.74L/s
+2 12862 DIXIE ROAD CALEDON ON
+Proposed (in review) · Caledon
+	1,580	7.69L/s
+2 11722 MISSISSAUGA RD
+Proposed (in review) · Brampton
+	1,860	7.53L/s
+5 Southeast corner of Mississauga Road and Mayfield Road
+Committed (draft plan or site plan approved) · Brampton
+	1,090	6.07L/s
+2 12506 HEART LAKE ROAD CALEDON ON L7C 2J3
+Proposed (in review) · Caledon
+	1,440	5.83L/s
+2 12100 CREDITVIEW ROAD CALEDON ON L7C 1X9
+Proposed (in review) · Caledon
+	986	5.55L/s
+2 2650 MAYFIELD ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	836	4.7L/s
+✓ 2256 MAYFIELD ROAD CALEDON ON L7C 0Y9
+Built since the census · Caledon
+	706	3.97L/s
+2 12100 CREDITVIEW ROAD CALEDON ON L7C 1X9
+Proposed (in review) · Caledon
+	961	3.89L/s
+1 12039 HURONTARIO ST
+Proposed (in review) · Brampton
+	636	3.57L/s
+3 12039 HURONTARIO ST
+Committed (draft plan or site plan approved) · Brampton
+	543	3.05L/s
+2 12192 CHINGUACOUSY ROAD CALEDON ON L7C 1Y9
+Committed (draft plan or site plan approved) · Caledon
+	533	3L/s
+5 1930 WANLESS DR
+Committed (draft plan or site plan approved) · Brampton
+	496	2.79L/s
+2 1850 MAYFIELD ROAD CALEDON ON L7C 0Y8
+Committed (draft plan or site plan approved) · Caledon
+	425	2.39L/s
+2 0 DIXIE ROAD CALEDON ON
+Proposed (in review) · Caledon
+	255	1.42L/s
+4 12211 HURONTARIO STREET CALEDON ON L7C 2C6
+Committed (draft plan or site plan approved) · Caledon
+	239	1.35L/s
+4 12304 HEART LAKE ROAD CALEDON ON L7C 2J2
+Committed (draft plan or site plan approved) · Caledon
+	267	1.09L/s
+✓ 0 KENNEDY ROAD CALEDON ON
+Built since the census · Caledon
+	184	1.04L/s
+2 11953 CREDITVIEW RD
+Proposed (in review) · Brampton
+	241	0.98L/s
+4 12600 Kennedy Road, Caledon, ON,
+Committed (draft plan or site plan approved) · Caledon
+	162	0.91L/s
+2 14027 HURONTARIO STREET CALEDON ON L7C 2E1
+Proposed (in review) · Caledon
+	202	0.82L/s
+3 SPA-2019-0005
+Committed (draft plan or site plan approved) · Brampton
+	112	0.63L/s
+✓ 95 REMEMBRANCE ROAD
+Built since the census · Brampton
+	148	0.6L/s
+2 0 HEART LAKE RD
+Proposed (in review) · Brampton
+	142	0.58L/s
+2 12530 KENNEDY ROAD CALEDON ON
+Proposed (in review) · Caledon
+	97	0.51L/s
+2 0 KENNEDY ROAD CALEDON ON
+Proposed (in review) · Caledon
+	87	0.49L/s
+1 PRE19.018
+Proposed (in review) · Brampton
+	68	0.38L/s
+✓ 320 Robert Parkinson Dr, Brampton, ON,
+Built since the census · Brampton
+	94	0.38L/s
+2 3728 MAYFIELD ROAD CALEDON ON L7C 0Z2
+Proposed (in review) · Caledon
+	68	0.28L/s
+5 East side of Creditview Road, south of Mayfield Road (Block 64 on 43M-2007)
+Committed (draft plan or site plan approved) · Brampton
+	46	0.26L/s
+2 1285 MAYFIELD RD
+Proposed (in review) · Brampton
+	41	0.23L/s
+4 12600 Old Kennedy Road, Caledon, ON,
+Committed (draft plan or site plan approved) · Caledon
+	34	0.19L/s
+✓ SW corner of Mayfield Road and Creditview Road
+Built since the census · Brampton
+	46	0.19L/s
+1 12148 HURONTARIO ST
+Proposed (in review) · Brampton
+	31	0.17L/s
+2 12197 HURONTARIO ST
+Committed (draft plan or site plan approved) · Brampton
+	25	0.14L/s
+✓ 12196 Mclaughlin Road, Caledon, ON,
+Built since the census · Caledon
+	24	0.14L/s
+✓ 1 Minnock Street, Caledon, ON,
+Built since the census · Caledon
+	24	0.14L/s
+✓ 12180 Mclaughlin Road, Caledon, ON,
+Built since the census · Caledon
+	24	0.14L/s
+✓ 90 Collingwood Ave, Brampton, ON,
+Built since the census · Brampton
+	31	0.13L/s
+4 17 Minnock Street, Caledon, ON,
+Committed (draft plan or site plan approved) · Caledon
+	22	0.12L/s
+✓ East side of Creditview Road, South of Mayfield Road (Blocks 23 & 24 on 43M-2006)
+Built since the census · Brampton
+	17	0.09L/s
+2 12507 OLD KENNEDY ROAD CALEDON ON L7C 2G9
+Proposed (in review) · Caledon
+	13	0.07L/s
+4 12891 Hurontario Street, Caledon, ON, L7C 2C7
+Committed (draft plan or site plan approved) · Caledon
+	13	0.07L/s
+✓ 26 Spinland Street, Caledon, ON,
+Built since the census · Caledon
+	13	0.07L/s
+1 12084 HURONTARIO ST
+Proposed (in review) · Brampton
+	11	0.06L/s
+✓ 203 Abbotside Way, Caledon, ON, L7C 4C3
+Built since the census · Caledon
+	11	0.06L/s
+✓ 94 Losino Street, Caledon, ON,
+Built since the census · Caledon
+	11	0.06L/s
+✓ 10 Garden Wood Avenue, Caledon, ON, L7C 1A9
+Built since the census · Caledon
+	8	0.05L/s
+
++ 3,974 smaller developments.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Tool result
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 1,485 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Inception
+210
+Under review
+565
+Approved
+491
+Permit issued
+163
+Construction
+56
+Completed
+471
+Withdrawn / refused
+159
+
+1,485 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 734
+Under appeal 34
+Waiting on DC works 0
+PS over firm capacity 86
+Changed this week 1
+★ Watched 0
+Estimate check 759
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

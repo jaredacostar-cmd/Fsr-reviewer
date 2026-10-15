@@ -75,6 +75,11 @@ const trim = (s, n) => (s.length <= n ? s : `${s.slice(0, Math.round(n * 0.7))} 
   });
   for (const k of Object.keys(out.files)) out.files[k] = [...new Map(out.files[k].map(x => [x.join('#'), x])).values()];
   fs.writeFileSync(path.join(OUT, 'council.json'), JSON.stringify(out));
+  // The decisions that move a file's phase (zoning by-laws passed, draft plans approved): a small
+  // index the app loads with the developments (js/council-decisions.js, SPEC 1.2).
+  const dec = require('../js/council-decisions.js').decisionsFrom(out);
+  fs.writeFileSync(path.join(OUT, 'council-decisions.json'), JSON.stringify(dec));
+  console.log(`data/council-decisions.json: ${Object.keys(dec.files).length} files with a zoning by-law or draft approval at council`);
   const nItems = Object.values(out.meetings).reduce((t, m) => t + m.items.length, 0);
   console.log(`data/council.json: ${Object.keys(out.meetings).length} meetings, ${nItems} items, ${Object.keys(out.files).length} file keys, ${(fs.statSync(path.join(OUT, 'council.json')).size / 1e6).toFixed(1)} MB`);
 })().catch(e => { console.error(e); process.exit(1); });

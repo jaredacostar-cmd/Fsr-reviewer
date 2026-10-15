@@ -138,7 +138,7 @@
   // Fit bounds into the part of the map the open panel doesn't cover (beside it on a wide screen,
   // above the bottom sheet on a phone).
   function fitClear(bd) {
-    const d = $('#detail'), m = map.getContainer().getBoundingClientRect();
+    const d = $('#analysis'), m = map.getContainer().getBoundingClientRect();
     let br = [30, 30];
     if (d && !d.hidden) {
       const r = d.getBoundingClientRect();
@@ -385,7 +385,7 @@
       BLK.layer = L.featureGroup();
       for (const b of BLK.data.blocks) {
         const pl = L.polygon(b.parts.map(p => p.map(r => r.map(([x, y]) => [y, x]))), { renderer: SD().svcRenderer, pane: 'svcPane', color: blkColor(), weight: b.planning ? 2.4 : 1.3, opacity: 0.9, fill: true, fillColor: blkColor(), fillOpacity: b.planning ? 0.12 : 0.03 })
-          .bindTooltip(`<strong>Block ${esc(b.id)}</strong>${b.planning ? ' · prioritised (block study)' : ''}<br>${fmtNum(b.ha)} ha · wastewater I&amp;I program<br><span class="muted">Tap for its outlets and route to the plant</span>`, { sticky: true, className: 'pt' })
+          .bindTooltip(window.PeelUtil.hoverCard({ kind: `Wastewater block (I&I program)${b.planning ? ' · prioritised' : ''}`, name: `Block ${b.id}`, value: `${fmtNum(b.ha)} ha`, also: 'its outlets and route to the plant' }), { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); showBlock(b.id); });
         BLK.layer.addLayer(pl);
         // In the marker pane: leaflet-rotate places markers there on the turned map (in another pane
@@ -416,7 +416,6 @@
     const endC = route.length ? SC().pipeCoords(P[route[route.length - 1]]).pop() : null;
     if (endC) L.circleMarker([endC[1], endC[0]], { radius: 7, className: 'svc-plant', interactive: true }).bindTooltip(esc(plant ? SD().plantLabel(plant.name) : x.plant || 'Plant'), { className: 'pt' }).addTo(BLK.focus);
     addFlowMarker();
-    $('#detail').hidden = false;
     if (opt.zoom !== false) { const bd = main.getBounds(); if (endC && route.length && routeKm(route) < 30) bd.extend([endC[1], endC[0]]); fitClear(bd); }
     // Panel
     const chain = []; for (let z = x.into, n = 0; z && n < 40; z = net.byId.get(z) && net.byId.get(z).into, n++) chain.push(z);
@@ -426,7 +425,7 @@
     const own = x.pipes.length, km = route.length ? routeKm(route) : 0;
     const blkBtn = z => `<button type="button" class="btn small link" data-block="${esc(z)}">Block ${esc(z)}${net.byId.get(z) && net.byId.get(z).b.planning ? ' ★' : ''}</button>`;
     const pipeBtn = i => `<button type="button" class="btn small link" data-pipe="${i}">${P[i][0]} mm</button>`;
-    $('#detail-body').innerHTML = `<div class="head"><h3>Wastewater Block ${esc(b.id)}</h3><div class="m">${b.planning ? '<strong>Prioritised for a block study</strong> · ' : ''}${fmtNum(b.ha)} ha · Region of Peel inflow &amp; infiltration program</div></div>
+    root.PeelSvcScope.openResult({ ref: `iiblock:${b.id}`, title: `Wastewater Block ${b.id}`, devKeys: devs.map(p => p.key), reopen: () => showBlock(b.id, { zoom: false }), html: `<div class="head"><h3>Wastewater Block ${esc(b.id)}</h3><div class="m">${b.planning ? '<strong>Prioritised for a block study</strong> · ' : ''}${fmtNum(b.ha)} ha · Region of Peel inflow &amp; infiltration program</div></div>
       <section class="brief">
         <div class="b-row"><div class="b-k">Drains to</div><div class="b-v">${x.into ? `${blkBtn(x.into)}${chain.length > 1 ? ` → ${chain.slice(1).map(blkBtn).join(' → ')}` : ''} → ` : ''}<strong>${esc(plant ? SD().plantLabel(plant.name) : x.plant || 'plant')}</strong>${km ? ` · ${km.toFixed(1)} km along the sewers` : ''}</div></div>
         <div class="b-row"><div class="b-k">Outlets</div><div class="b-v">${x.main >= 0 ? `Main: ${pipeBtn(x.main)} sewer, full-flow capacity ${fmtNum(P[x.main][2])} L/s, ${fmtNum(P[x.main][4])} people upstream (2021)` : 'No mapped sewer of 300 mm+ leaves the block'}${x.outs.length > 1 ? `<br><span class="muted small">${x.outs.length - 1} other pipe${x.outs.length === 2 ? ' leaves' : 's leave'} the block: ${x.outs.slice(1, 6).map(pipeBtn).join(', ')}${x.outs.length > 6 ? '…' : ''}</span>` : ''}</div></div>
@@ -434,8 +433,7 @@
         <div class="b-row"><div class="b-k">Sewers</div><div class="b-v">${fmtNum(own)} Region sanitary mains of 300 mm+ inside the block</div></div>
         <div class="b-row"><div class="b-k">Growth</div><div class="b-v">${fmtNum(devs.length)} development site${devs.length === 1 ? '' : 's'}${gr ? ` · since the census: +${fmtNum(gr.built.units)} built, +${fmtNum(gr.approved.units)} approved / permitted, +${fmtNum(gr.proposed.units)} proposed units` : ''}${jb.jbuilt + jb.japproved + jb.jproposed ? ` · +${fmtNum(Math.round(jb.jbuilt + jb.japproved + jb.jproposed))} jobs` : ''}</div></div>
       </section>
-      <p class="small muted">Blocks: Region of Peel <em>Block_view</em> feature service — the 40 sewersheds of its inflow &amp; infiltration (I&amp;I) program, as used in “Dragonfly: An Integrated Approach to Resiliency” (F. Salehzadeh, WEFTEC 2024); ★ / heavier outline = prioritised for a block study. Outlets and route: Region sanitary mains of 300 mm+ (each pipe's next pipe downstream); the main outlet is the one carrying the most people. Arrows follow the pipes to the plant; dashed = other outlets until they join.</p>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'block';
+      <p class="small muted">Blocks: Region of Peel <em>Block_view</em> feature service — the 40 sewersheds of its inflow &amp; infiltration (I&amp;I) program, as used in a 2024 conference paper on its inflow &amp; infiltration program; ★ / heavier outline = prioritised for a block study. Outlets and route: Region sanitary mains of 300 mm+ (each pipe's next pipe downstream); the main outlet is the one carrying the most people. Arrows follow the pipes to the plant; dashed = other outlets until they join.</p>` });
   }
   document.addEventListener('click', e => { const bb = e.target.closest('[data-block]'); if (bb) showBlock(bb.dataset.block); });
 

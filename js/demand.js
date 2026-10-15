@@ -101,9 +101,10 @@
   const COMMITTED_PHASES = new Set(['approved', 'permit', 'construction']);
   // Committed follows MECP Procedure D-5-1 (confirmed): registered or draft-approved plans of
   // subdivision, plus site plan approval where there is no subdivision, through permit and
-  // construction. Approved zoning alone is not committed. A development still in pre-consultation
-  // or review is committed when its most recent subdivision file is draft-approved or registered
-  // (a newer subdivision file in review means the land is being re-proposed: not committed).
+  // construction. Approved zoning alone is not committed. The phase carries it (SPEC §2, one
+  // definition with js/layers.js): a draft or site plan approval is phase 3 (js/phases.js), and a
+  // development whose approved plan a newer file on the same land supersedes is back in review.
+  // draftApproved() is kept for the record-level views.
   const SUBDIV_REF = /^21T|^T\d{2}[EW]\d/i;
   const isSubdivisionFile = r => r.kind === 'application' && (SUBDIV_REF.test(r.ref || '') || /draft plan of subdivision/i.test(String(r.description || '').split(' \u2014 ')[0]));
   const lastEvent = r => Math.max(0, ...(r.events || []).map(e => +e.date));
@@ -115,7 +116,7 @@
   }
   function isCommitted(project) {
     if (!project || project.phase === 'cancelled' || project.phase === 'completed') return false;
-    return COMMITTED_PHASES.has(project.phase) || ((project.phase === 'inception' || project.phase === 'review') && draftApproved(project));
+    return COMMITTED_PHASES.has(project.phase);
   }
 
   /** How many of a project's units count, by basis. */
@@ -126,6 +127,9 @@
       return b.unbuilt;
     }
     if (basis === 'remaining') return b ? b.remaining : 0;   // planned, no building permit yet
+    // Build-out without the Anticipated layer (SPEC §2 scenario chip): pre-consultation and block
+    // plans with no formal file are left out.
+    if (basis === 'buildout') return project.phase === 'inception' || project.phase === 'cancelled' ? 0 : project.units || 0;
     if (basis === 'unbuilt') return b ? b.unbuilt : (project.phase === 'completed' ? 0 : project.units || 0);
     if (basis === 'completed') return b ? b.completed : (project.phase === 'completed' ? project.units || 0 : 0);
     return project.units || 0;
@@ -416,7 +420,15 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+  // SPEC 1.7: I&I always with its basis, wherever peak wet is shown: "I&I 26.4 L/s over 101.5 ha (0.26 L/s/ha)".
+  function iiText(ii, criteria = DEFAULT_CRITERIA) {
+    const rate = criteria.wastewater && criteria.wastewater.infiltration != null ? criteria.wastewater.infiltration : DEFAULT_CRITERIA.wastewater.infiltration;
+    if (!(ii > 0) || !(rate > 0)) return '';
+    const ha = ii / rate, f1 = v => (Math.round(v * 10) / 10).toLocaleString('en-CA');
+    return `I&I ${f1(ii)} L/s over ${f1(ha)} ha (${rate} L/s/ha)`;
+  }
+  const api = {
+    iiText, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

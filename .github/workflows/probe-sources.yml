@@ -31,6 +31,9 @@ name: Probe data sources
 #  mode=ea-maps: download every EA page's study-area maps (images, study-area figures; PDFs as PNG) to the ea-maps branch, for tracing
 #  mode=ea-trace: trace the EA study areas listed in scripts/ea-trace.json from the ea-maps images (intersections geocoded); data/eas-overrides.json committed to this branch
 #  mode=eas: Region EA list + project pages → data/eas.json and data/eas-review.csv, committed to this branch; only=with-capital also links EAs to capital records
+#  mode=elev-bench: the lidar sampler against Brampton benchmarks (height above grade, CGVD28 → CGVD2013 with NRCan grids) and where coverage ends (data/probe/elevation-bench.json)
+#  mode=elev-check: the lidar elevation sampler's service checks and the benchmark comparison (data/probe/elevation.json, committed to this branch)
+#  mode=constraints-lidar: Stage 0 source check for lidar elevation and the constraint layers (endpoint, coverage, resolution, dates, licence, CORS); data/probe/constraints-lidar.json committed to this branch, report only
 on:
   workflow_dispatch:
     inputs:
@@ -65,6 +68,31 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/areas.json data/das*.json
           git diff --cached --quiet || { git commit -m "Areas and census baselines (2021, 2016)"; git push; }
+      - name: Lidar elevation sampler checks and benchmarks (data/probe/elevation.json committed to this branch)
+        if: inputs.mode == 'elev-check'
+        run: |
+          node scripts/probe-elevation.js
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/probe/elevation.json
+          git diff --cached --quiet || { git commit -m "Elevation checks: lidar sampler, hillshade, benchmarks"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+      - name: Lidar sampler against benchmarks (data/probe/elevation-bench.json committed to this branch)
+        if: inputs.mode == 'elev-bench'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq proj-bin >/dev/null
+          node scripts/probe-elev-bench.js
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/probe/elevation-bench.json
+          git diff --cached --quiet || { git commit -m "Elevation benchmarks: lidar vs Brampton benchmarks (CGVD2013)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+      - name: Lidar elevation and constraint layers, source check (report only; summary committed to this branch)
+        if: inputs.mode == 'constraints-lidar'
+        run: |
+          node scripts/probe-constraints-lidar.js --out data/probe/constraints-lidar.json
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/probe/constraints-lidar.json
+          git diff --cached --quiet || { git commit -m "Stage 0 source check: lidar elevation and constraint layers (report only)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Block plan / precinct area layers (log only)
         if: inputs.mode == 'block-areas'
         run: node scripts/probe-areas.js --blocks

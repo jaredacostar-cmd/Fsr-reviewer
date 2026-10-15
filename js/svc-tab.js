@@ -44,7 +44,12 @@
   // Census population per zone / drainage area: shares by area overlap (data/svc-census.json,
   // scripts/build-svc-census.js) when published for the census year, else the DA centre point.
   function svcCensusPop(bc) {
-    if (bc._svcPop) return bc._svcPop;
+    // Cached per census and per servicing lookup: computed before the lookup is filled, every rural
+    // dissemination area would count as fully sewered (no "served" share) — Inglewood's block took
+    // ≈20,700 census people instead of ≈850 (SPEC 1.4: one model, whatever is scoped or loaded when).
+    const gen = `${SD().svcById.size}|${App().state.svcCensus ? 1 : 0}`;
+    if (bc._svcPop && bc._svcPopGen === gen) return bc._svcPop;
+    bc._svcPopGen = gen;
     const pop = new Map(), add = (id, v) => pop.set(id, (pop.get(id) || 0) + v);
     const ov = App().state.svcCensus && App().state.svcCensus.years[bc.year];
     const drIds = new Set(App().state.servicing.drainage.map(a => a.id));
@@ -95,7 +100,7 @@
   // on the tabs, the map legend, the exports and share links.
   function scenarioText() {
     const R = App().state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
-    const basisTxt = { all: 'All units', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
+    const basisTxt = { all: 'All units', buildout: 'Units applied for (no anticipated)', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, Sett().wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, App().state.dcInfra ? `plant expansions ${SP().hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
       `counting: ${basisTxt}${window.PeelTreeCounts ? ` (${window.PeelTreeCounts.label()})` : ''}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
@@ -125,10 +130,9 @@
       <table class="dt"><thead><tr><th>Plant</th><th>Existing + committed A</th><th>Now</th><th>Δ pts</th><th>Build-out A</th><th>Now</th><th>Δ pts</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="small">Pumping stations over firm capacity at build-out: A ${over(A)} → now ${over(B)}${changed.length ? ` (changed: ${changed.map(a => esc(SD().drName(a).replace(/^[^·]+· /, ''))).join(', ')})` : ''}. Water max day at build-out, all zones: A ${fmt1(zA)} → now ${fmt1(zB)} ML/d.</p></div>`;
   }
-  const scenarioChip = () => `<button type="button" class="chip scen-chip" data-open-scen="1" title="Change the scenario">Scenario: ${esc(scenarioText())}</button>`;
   // Counting basis: which of each project's units the demand counts. It changes the math,
   // so it lives in the Scenario control, not the filter panel.
-  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
+  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['buildout', 'Applied for'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
     `<button type="button" class="btn small${App().state.basis === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${App().state.basis === v}">${t}</button>`).join('')}</div>`;
   // Results for year: the year the capacity colours, pipe loads and station loads are worked
   // out for — the census year, this year through the horizon end, or build-out (null).
@@ -149,7 +153,7 @@
     const el = $('#scen-bar'); if (!el) return;
     const R = App().state.reports, c = App().state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion;
     const open = el.querySelector('details') && el.querySelector('details').open;
-    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario</span> <span class="scen-t" data-scen-t>${esc(scenarioText())}</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
+    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario settings</span> <span class="muted small">(the chip above shows the scenario)</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
       <div class="svc-switches">
         ${basisSwitch()}
         ${yearSelect()}
@@ -288,8 +292,7 @@
     const bar = $('#scen-bar'); if (!bar) return;
     const line = bar.querySelector('[data-scen-crit]');
     if (line) line.innerHTML = scenCritLineHTML();
-    const sum = bar.querySelector('[data-scen-t]');
-    if (sum) sum.innerHTML = esc(scenarioText());
+    TB().renderTbScen();
   }
   // ---- Plain-language headlines: one sentence at the top of each tab, written from the numbers.
   function setHeadline(el, html) {
@@ -322,9 +325,13 @@
   function renderSvcTab() {
     const bc = CA().baselineCensus();
     const has = !!(App().state.servicing && bc);
-    $('#ftab-water').hidden = $('#ftab-ww').hidden = !has;
+    $('#ftab-svc').hidden = !has;
     $('#ftab-dca').hidden = !has || !App().state.dcInfra;
     if (!has) return;
+    // Not before the servicing lookup is filled (js/svc-data.js): a model built without it counts
+    // rural land as sewered and tags no development — Inglewood read 398% until the next rebuild.
+    // No model is better than a wrong one (SPEC 1.4).
+    if (!SD().svcById.size) return;
     const p = DV().scopedDev();
     if (!p && SP().getSavedSubs()) {
       // Back from a scoped view: restore the sub-tab choices and the full set of panes.
@@ -475,9 +482,6 @@
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(SD().plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
       <details class="svc-notes"><summary>Method &amp; notes</summary>${nearNote([...local.values()].reduce((a, l) => a + (l.near || 0), 0), 'traced catchment')}<p class="small muted">ML/d = megalitres per day, at build-out (${Y} Census + growth). ${App().state.servicing.blocks ? `<strong>Blocks</strong> are the Region of Peel's 40 wastewater sewersheds (its inflow &amp; infiltration program; the blocks of "Dragonfly"); each drains into the next block along the sewers (data/sewers.json: the pipe leaving the block that carries the most people) down to its plant. ` : ''}<strong>Local</strong> = the catchment's own population, jobs and flow; <strong>upstream</strong> = everything that drains into it (the indented rows above it); <strong>total</strong> = local + upstream = ${Y} Census + built + approved + proposed, the average dry weather flow leaving its outlet. Each plant's last row is its total inflow from Peel catchments; external inflows (York Region, City of Toronto) are in the Plants tab. Residential ${c.wastewater.avg} L/cap/d, employment ${E.wastewater} L/emp/d (jobs on development sites; existing employment is not in the census baseline). <strong>Peak dry weather</strong> = residential average × Harmon M = 1 + 14 / (4 + √(P/1000)) on the total population (M shown) + employment average × Harmon on the jobs, kept between ${E.peakMin} and ${E.peakMax}; <strong>I&amp;I</strong> = ${c.wastewater.infiltration} L/s/ha on the whole traced drainage area to the outlet; <strong>peak wet weather</strong> = peak dry + I&amp;I. Peaks are not additive. ${Y} Census ${censusHow}; growth from every development located in the catchment (other filters ignored).${App().state.servicing.blocks ? '' : ' Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); I&amp;I here uses the traced catchment outline, which overstates the area of small catchments, so peak wet is approximate (≈). Very small stations (Watersedge, Meadowvale) showing over 100% even at peak dry most likely have a traced catchment larger than the area they really serve.'} Click a ${App().state.servicing.blocks ? 'block' : 'catchment'} to see its flow path to the lake on the map.</p></details>
       ${DUI().wwInfoLine('Flows build up along the traced flow path to the lake: each catchment\u2019s own flow plus everything upstream of it.')}`;
-    // Phase 4: pumping stations have their own sub-view now (#pumpstations-body).
-    SP().renderPumpStationsTab({ total, jobs, pdwf, ii });
-    SP().renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     // Kept for the development panel's servicing check and the export.
     const dvR = R && R.wastewater.diversion, divMldOf = pl => !(dvR && svcOpt.div === 'on') ? 0 : pl === dvR.from ? -dvR.mld : pl === dvR.to ? dvR.mld : 0;
     const plantCap = pl => {
@@ -487,14 +491,24 @@
       // not in today's existing flow before then; committed and build-out are future, so they take it.
       const divFrom = (SP() && SP().hz && SP().hz.divYear) || 2028, divNow = MM().THIS_YEAR >= divFrom;
       const ext = n => inflowsTo(pl) + (n <= 1 && !divNow ? 0 : divMldOf(pl));
-      const up = n => { const o = { census: s.census, built: n > 0 ? s.built : 0, approved: n > 1 ? s.approved : 0, proposed: n > 2 ? s.proposed : 0, jbuilt: n > 0 ? s.jbuilt : 0, japproved: n > 1 ? s.japproved : 0, jproposed: n > 2 ? s.jproposed : 0 }; return adwf(o, f) + ext(n); };
+      const up0 = n => { const o = { census: s.census, built: n > 0 ? s.built : 0, approved: n > 1 ? s.approved : 0, proposed: n > 2 ? s.proposed : 0, jbuilt: n > 0 ? s.jbuilt : 0, japproved: n > 1 ? s.japproved : 0, jproposed: n > 2 ? s.jproposed : 0 }; return adwf(o, f) + ext(n); };
+      // SPEC 1.4: in the capacity check a plant's Existing is its 2025 metered flow (it already
+      // contains Built). The calibration gives exactly that unless its factor is clamped (a sewershed
+      // holding far more census people than the plant serves: Inglewood); anchor the layers to the
+      // metered flow then, so growth adds to what the plant actually treats.
+      const anchor = svcOpt.ww === 'calibrated' && rep.avgMLd > 0 ? rep.avgMLd - (up0(1) - (divNow ? divMldOf(pl) : 0)) : 0;   // (the meter includes the external inflows; it saw no diversion)
+      const up = n => up0(n) + (Math.abs(anchor) > 1e-9 ? anchor : 0);
       const today = { census: s.census, built: s.built, approved: 0, proposed: 0, jbuilt: s.jbuilt }, popToday = total(today);
-      return { rated: rep.ratedMLd, name: rep.name, existing: up(1), committed: up(2), buildout: up(3), f, perPerson: popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0 };
+      return { rated: rep.ratedMLd, name: rep.name, census: Math.max(0, up(0)), existing: up(1), committed: up(2), buildout: up(3), f, anchored: Math.abs(anchor) > 1e-6 ? anchor : 0, perPerson: popToday > 0 ? adwf(today, f) * 1e6 / popToday : 0, popToday };
     };
     for (const d of App().state.servicing.drainage) cumOf(d);
     // A model rebuild (e.g. the 2025 annual reports arriving) is a new scenario for every cache.
     App().state.svcGen = (App().state.svcGen || 0) + 1;
     App().state.svcModel = { Y, mode: svcOpt.ww, cum, local, fOf, adwf, pdwf, ii, total, jobs, plantCap, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wPH, wAvg, calib, inflowsTo, zsum, secs, raw };
+    // The sub-views render after the model is published, so every figure in them comes from this
+    // model (js/capacity.js), never the one before it (SPEC 1.4).
+    SP().renderPumpStationsTab({ total, jobs, pdwf, ii });
+    SP().renderPlantsTab(secs, peel, tor, { Y, c, total, jobs, adwf, pdwf, ii, calib, inflowsTo, censusHow });
     renderHeadlines(); MP().renderMpCompare();
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();
     if (AT().getFootTab() === 'dca') DCAT().renderDca();
@@ -513,7 +527,7 @@
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return TS().filterInView(); }
     const b = e.target.closest('[data-svcopt]'); if (!b) return;
     if (b.dataset.svcopt === 'basis') {
-      if (!['all', 'committed', 'remaining'].includes(b.dataset.v)) return;
+      if (!['all', 'buildout', 'committed', 'remaining'].includes(b.dataset.v)) return;
       App().state.basis = b.dataset.v; store.set('svcBasis', App().state.basis);
       renderSvcTab(); App().applyFilters(); Sh().viewLink.write();
       return;

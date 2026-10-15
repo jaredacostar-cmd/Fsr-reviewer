@@ -1,0 +1,49 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Plants & capacity
+Blocks
+Allocations
+Pumping stations
+Servicing allocations
+
+No servicing allocations recorded yet. Record one from a development's Servicing tab, or import a CSV.
+
+Allocations recorded
+0allocations
+0 units
+G.E. Booth room
+-21.41ML/d
+after allocations · ≈-57,300 people
+Clarkson room
+76.8ML/d
+after allocations · ≈168,500 people
+Inglewood room
+0.12ML/d
+after allocations · ≈976 people
+Room after allocations at the 90% expansion trigger · ML/d annual average flow
+G.E. Booth
+-21.41 ML/d · short
+Clarkson
+76.8 ML/d
+Inglewood
+0.12 ML/d
+Plants: room at the 90% expansion trigger after existing + built + committed, and after allocations (annual average flow (2025 measured at each plant; growth at the plant’s measured rate))
+Plant	Trigger (90%)	Existing + built + committed	Room to the trigger	Allocated ahead of approval	Room after allocations
+G.E. Booth	466 ML/d	488 ML/d	-21.41 ML/d
+≈-57,300 people
+	none	-21.41 ML/d
+≈-57,300 people
+
+Clarkson	315 ML/d	238 ML/d	76.8 ML/d
+≈168,500 people
+	none	76.8 ML/d
+≈168,500 people
+
+Inglewood	0.22 ML/d	0.1 ML/d	0.12 ML/d
+≈976 people
+	none	0.12 ML/d
+≈976 people
+Export CSV
+Import CSV
+
+ⓘ Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; annual average flow (2025 measured at each plant; growth at the plant’s measured rate). Criteria: wastewater 290 L/cap/d with Harmon peaking (2–4), I&I 0.26 L/s/ha (Peel Linear Wastewater Standards 2023); employment 270 L/emp/d (Peel Modelling Demand Table, Aug 2024). Data: applications 2026-10-12 · 2021 Census · Peel 2025 annual reports.

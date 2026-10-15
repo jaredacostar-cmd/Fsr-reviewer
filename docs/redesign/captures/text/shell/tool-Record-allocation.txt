@@ -1,0 +1,10 @@
+##### #detail
+
+
+##### #analysis-panes
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+##### #analysis .site-bar, #analysis .devscope, #devscope
+
+
+##### dialog[open]

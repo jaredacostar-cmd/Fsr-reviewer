@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, store } = window.PeelUtil;
+  const { $, esc, store, fmtNum } = window.PeelUtil;
   const PD = window.PeelDesign;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -19,20 +19,18 @@
   const SD = () => window.PeelSvcData;
   const FI = () => window.PeelFilterUI;
 
-  // ---- Top bar (Phase 2): scope trail, view switch, scenario chip, menus --------------
-  // View switch: one button per MAP_VIEWS entry; clicking switches the map AND opens
-  // the mapped analysis tab. syncMapOpts() toggles .on on every [data-mview], so this
-  // switch stays in sync with the map control's own switch for free.
-  const VIEW_TAB = { planning: 'overview', water: 'water', wastewater: 'ww', dc: 'dca' };
+  // ---- Top bar: scope trail with its count, lens switch, scenario chip, menus ----------------
+  // Lens switch (SPEC §4): one button per MAP_VIEWS entry. A lens sets the map's layer preset,
+  // marker encoding and legend only; it never changes the right panel's tabs or the open tab.
+  // syncMapOpts() toggles .on on every [data-mview], so this stays in sync with the map control.
   function renderViewSwitch() {
     const el = $('#tb-views'); if (!el) return;
-    el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="Switch to the ${t} map view and its analysis tab">${PD.icon(k)}<span>${t}</span></button>`).join('');
+    el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="${t} lens: the map's layers, marker colours and legend">${PD.icon(k)}<span>${t}</span></button>`).join('');
     MA().syncMapOpts();
   }
   $('#tb-views').addEventListener('click', e => {
     const b = e.target.closest('[data-mview]'); if (!b) return;
     MA().setMapView(b.dataset.mview);
-    Tips().openAnalysis(VIEW_TAB[b.dataset.mview] || 'overview');
   });
 
   // Scope trail: Peel › municipality › area › development. Only the active steps show;
@@ -77,7 +75,10 @@
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
     if (tc) steps.push(tc);
-    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('');
+    // The trail carries its count (SPEC §4): the developments in scope and their planned units.
+    const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
+    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
+      + `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
     el._steps = steps;
     if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }
@@ -91,12 +92,22 @@
   // a popover that holds the real #scen-bar node (moved, not duplicated); closing
   // puts the node back where it was. renderScenario() calls renderTbScen(), so the
   // chip follows every scenario change.
-  const BASIS_SHORT = { all: 'all units', committed: 'committed units', remaining: 'units left to build' };
+  const BASIS_SHORT = { all: 'all units', buildout: 'units applied for', committed: 'committed units', remaining: 'units left to build' };
   function renderTbScen() {
     const chip = $('#tb-scen'); if (!chip) return;
-    const n = SvcTab().criteriaChanges().length;
-    const txt = ['Scenario', SvcTab().svcOpt.ww === 'calibrated' ? 'calibrated (2025 flows)' : 'design flows', n ? `${n} criteria modified` : 'Peel criteria', `counting ${BASIS_SHORT[App().state.basis] || 'all units'}${root.PeelTreeCounts ? ` (${root.PeelTreeCounts.label()})` : ''}`].join(' · ');
-    chip.innerHTML = `<span class="tb-scen-t">${esc(txt)}</span>${n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : ''}`;
+    // The scenario chip (SPEC §2): the layers counted, then the settings; the one place the
+    // scenario is shown (the footer line is gone).
+    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants;
+    const open = !$('#tb-scen-pop').hidden;
+    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({
+      basis: App().state.basis,
+      flows: o.ww === 'calibrated' ? '2025 metered' : 'design',
+      criteria: n ? `${n} modified` : 'Peel v2.0',
+      count: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree',
+      expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
+      outside: o.nr === 'on' ? 'nearest' : 'left out',
+    }) + (n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : '');
+    const more = chip.querySelector('[data-scen-open]'); if (more) more.setAttribute('aria-expanded', String(open));
   }
   let scenHome = null;
   function openScenPop() {
@@ -104,16 +115,24 @@
     if (!scenHome) { scenHome = document.createComment('scen-bar home'); bar.replaceWith(scenHome); }
     if (bar.parentNode !== pop) pop.appendChild(bar);
     pop.hidden = false;
-    $('#tb-scen').setAttribute('aria-expanded', 'true');
+    { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'true'); }
     SvcTab().renderScenario();
   }
   function closeScenPop() {
     const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop || pop.hidden) return;
     pop.hidden = true;
-    $('#tb-scen').setAttribute('aria-expanded', 'false');
+    { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'false'); }
     if (scenHome && scenHome.parentNode) { scenHome.parentNode.replaceChild(bar, scenHome); scenHome = null; }
   }
-  $('#tb-scen').addEventListener('click', () => { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); });
+  $('#tb-scen').addEventListener('click', e => {
+    const ly = e.target.closest('[data-scen-layer]');
+    if (ly) {
+      const next = root.PeelLayerBar.nextBasis(App().state.basis, ly.dataset.scenLayer);
+      if (next !== App().state.basis) { App().state.basis = next; store.set('svcBasis', next); SvcTab().renderSvcTab(); App().applyFilters(); SvcTab().renderScenario(); if (root.PeelShare) root.PeelShare.viewLink.write(); }
+      return;
+    }
+    if (e.target.closest('[data-scen-open]')) { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); }
+  });
 
   // Menus. Items carrying data-export / data-share / data-area-report are handled by
   // the existing document-level handlers; the rest use data-tbx (export) / data-tbg

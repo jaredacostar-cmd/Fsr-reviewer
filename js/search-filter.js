@@ -33,7 +33,16 @@
     }
     App().applyFilters();
   }
-  $('#pipeline').onclick = e => { const b = e.target.closest('[data-phase]'); if (b) togglePhase(b.dataset.phase, e.ctrlKey || e.metaKey); };
+  // Stage rows toggle their phase on and off (SPEC §4: "tap to toggle"); a tap on the bar shows that
+  // phase only (Ctrl / ⌘ adds or removes it).
+  $('#pipeline').onclick = e => {
+    const b = e.target.closest('[data-phase]'); if (!b) return;
+    if (b.closest('.pipe-rows')) {
+      const next = new Set(App().state.phases); if (next.has(b.dataset.phase)) next.delete(b.dataset.phase); else next.add(b.dataset.phase);
+      App().state.phases = next.size ? next : new Set(App().DEFAULT_PHASES()); App().applyFilters(); return;
+    }
+    togglePhase(b.dataset.phase, e.ctrlKey || e.metaKey);
+  };
 
   let searchTimer;
   $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { App().state.search = e.target.value.trim().toLowerCase(); App().applyFilters(); }, 200); };

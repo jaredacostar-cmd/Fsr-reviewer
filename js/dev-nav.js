@@ -1,6 +1,6 @@
 /* js/dev-nav.js — development navigation (Phase 6 extraction).
  * DV_TABS/showDvTab, project lookup, related projects, file tree, flyToSite,
- * showDetail, timeline toggle, and the #detail-body listeners.
+ * showDetail, the timeline toggle and its document listener.
  * Extracted verbatim from js/app.js (lines 3206, 3216-3382); the only edits are the
  * reference rewrites in SPLIT_MAP.md §0 rule 4.
  * Note: DV_TABS/showDvTab are defined in js/fsr.js (per the ranges) and re-exported
@@ -156,11 +156,9 @@
     else map.flyTo(t, z, { duration: 0.55 });
   }
   async function showDetail(p) {
-    // Phase 3: opening a development sets the analysis scope (js/devscope.js) — the
-    // site bar, the Development tab and the map treatment — instead of opening the
-    // #detail side panel. The record, selection and block views of #detail keep
-    // their own functions (showRecordDetail, showSelection, showBlock) and are
-    // untouched.
+    // Opening a development sets the analysis scope (js/devscope.js): the site bar, the
+    // right panel and the map treatment. Files, selections and blocks are result scopes
+    // (PeelSvcScope.openResult).
     // Phase 6: the detail needs full records. While the startup index is still
     // serving first paint, show the Development tab with a skeleton and open
     // once the full snapshot lands (same project key: the grouping is identical).
@@ -178,48 +176,21 @@
     return DevScope.open(p);
   }
   function showTl(v) {
-    document.querySelectorAll('#detail-body [data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
-    document.querySelectorAll('#detail-body [data-tlv]').forEach(d => { d.hidden = d.dataset.tlv !== v; });
+    document.querySelectorAll('[data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
+    document.querySelectorAll('[data-tlv]').forEach(d => { d.hidden = d.dataset.tlv !== v; });
   }
-  $('#detail-body').addEventListener('click', e => {
+  // The #detail side panel is gone (SPEC §3): what only it handled now listens on the document. Pipe
+  // and DC links, unit counts and files are js/dev-verdict.js's document listener and the result
+  // scope's (js/tool-scope.js).
+  document.addEventListener('click', e => {
     if (e.target.closest('[data-loads-back]') && devBack) { const b = devBack; devBack = null; if (b.dc) return MP().showDcBack(b.dc); return b.pipe != null ? SC().showPipeLoads(b.pipe) : TS().showLoads(b.id, b.plantName); }
-    const pb = e.target.closest('[data-pipe]'); if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
     const t = e.target.closest('[data-tl]');
     if (t) return showTl(t.dataset.tl);
-    const dt = e.target.closest('[data-dvt]');
-    if (dt) { store.set('dvTab', dt.dataset.dvt); PF().showDvTab(dt.dataset.dvt); return; }
-    // The user's unit count for a file.
-    const us = e.target.closest('[data-uu-set]');
-    if (us && currentProject) { const inp = us.parentElement.querySelector('[data-uu]'), n = +inp.value; const r = currentProject.records.find(x => x.ref === us.dataset.uuSet); if (r && n > 0) App().setUserUnits(r, n); else inp.focus(); return; }
-    const uc = e.target.closest('[data-uu-clear]');
-    if (uc && currentProject) { const r = currentProject.records.find(x => x.ref === uc.dataset.uuClear); if (r) App().setUserUnits(r, 0); return; }
-    // Drill down to one application, across to a related development, and back.
-    const sb = e.target.closest('[data-sub]');
-    if (sb && currentProject) {
-      const sub = subProject(currentProject.parent || currentProject, sb.dataset.sub); if (!sub) return;
-      MM().hoverSubLayer.clearLayers(); showDetail(sub);
-      const rings = MM().siteApps(sub).flatMap(a => a.poly); if (rings.length) ST().fitClear(L.latLngBounds(MM().toLatLngs(rings).flat()).pad(0.4));
-      return;
-    }
     const rq = e.target.closest('[data-relq]');
     if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); } return; }
-    if (e.target.closest('[data-dev-parent]') && currentProject && currentProject.parent) { showDetail(currentProject.parent); return; }
     if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
-    // "Data as of" in the development header: open the gear menu's Sources & checks page
-    // (same destination as the overview's "Data & checks →" button).
-    if (e.target.closest('[data-open="d-quality"]')) { TB().openGearPage('sources'); return; }
-    const o = e.target.closest('[data-open]');
-    if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) PF().showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+    return undefined;
   });
-  // Hovering a file in the lists previews it on the map in the application colour (hoverSubLayer).
-  $('#detail-body').addEventListener('mouseover', e => {
-    const b = e.target.closest('[data-sub]'); if (!b || !currentProject) return;
-    const dev = currentProject.parent || currentProject, a = dev.records.find(r => r.ref === b.dataset.sub && r.poly);
-    MM().hoverSubLayer.clearLayers(); if (a) MM().subPoly(a.poly, { weight: 3, fillOpacity: 0.2, dashArray: '4 3' }).addTo(MM().hoverSubLayer);
-  });
-  $('#detail-body').addEventListener('mouseout', e => { if (e.target.closest('[data-sub]') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-sub]'))) MM().hoverSubLayer.clearLayers(); });
-  $('#detail-body').addEventListener('keydown', e => { const i = e.target.closest && e.target.closest('[data-uu]'); if (i && e.key === 'Enter') { e.preventDefault(); i.parentElement.querySelector('[data-uu-set]').click(); } });
-  $('#detail-body').addEventListener('toggle', e => { if (e.target.id === 'dev-aerial' && e.target.open && currentProject) AC().runAerial(currentProject); }, true);
 
   // ---- Public contract ----
   const getCurrentProject = () => currentProject;

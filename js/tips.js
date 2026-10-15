@@ -114,14 +114,12 @@
     'On a phone or tablet, Filters opens the search, filters and the developments on the map; tap it again to go back to the map.',
   ];
   function showHelp() {
-    AC().closeDetail({ keepSelection: true });
-    $('#detail-body').innerHTML = `<div class="head"><h3>Help &amp; tips</h3><div class="m">Guides for common tasks — each one can set the map up for you</div></div>
+    root.PeelSvcScope.openResult({ ref: 'help:help', title: 'Help & tips', reopen: showHelp, html: `<div class="head"><h3>Help &amp; tips</h3><div class="m">Guides for common tasks — each one can set the map up for you</div></div>
       <p><button type="button" class="btn" data-help-tour>Take the tour again</button> <button type="button" class="btn" data-help-log>What's new — change log</button></p>
       <div id="help-log-body" aria-live="polite"></div>
       ${HELP.map((h, i) => `<details class="help-card"${i === 0 ? ' open' : ''}><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
         <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me</button></details>`).join('')}
-      <h3 class="sub-title">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'help'; $('#detail').scrollTop = 0;
+      <h3 class="sub-title">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` });
     if (phoneUI()) DT().toggleSidebar(false);
   }
   // The Help menu's change log: render into the help view (marks the releases seen,
@@ -140,7 +138,7 @@
     const h = HELP[+g.dataset.helpGo]; if (!h) return;
     h.go();
     // On a phone the guide would cover what it just set up: close it (the topbar Help button reopens it).
-    if (phoneUI() && $('#detail').dataset.view === 'help' && !$('#detail').hidden) AC().closeDetail({ keepSelection: true });
+    if (phoneUI() && root.PeelSvcScope.hasResult() && String(App().state.ss).startsWith('help:')) AC().closeDetail({ keepSelection: true });
   });
   let tourEl = null, tourI = 0, tourChecked = false;
   function maybeTour() {

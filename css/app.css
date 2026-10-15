@@ -225,6 +225,25 @@
   --on-accent: #ffffff;
 }
 
+/* Growth layers (SPEC §2): one hue, lightness = certainty; theme-independent, like the plants'
+   hues they sit beside. Hatched = estimated or anticipated; red hatch = beyond rated / firm. */
+:root {
+  --ly-existing: #3b4a5e;
+  --ly-built: #5f7fae;
+  --ly-committed: #9cc0fa;
+  --ly-proposed: #cfe0fb;
+  --ly-anticipated: #cfe0fb;
+  --ly-to2051: #cfe0fb;
+  --ly-ink: #10213a;
+  --ly-track: #3a3a37;
+  --ly-trigger: #ffffff;
+  --ly-rated: #9a998f;
+  --ly-over: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px);
+  --ly-hatch: repeating-linear-gradient(135deg, rgba(16, 33, 58, .55) 0 2px, transparent 2px 5px);
+}
+:root[data-theme="light"] { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; } }
+
 /* phase-1.5: type & spacing tokens */
 :root {
   /* Type scale: five steps only. */
@@ -321,7 +340,9 @@ body {
   text-overflow: ellipsis;
 }
 .tb-step:hover { background: var(--surface-2); color: var(--text-primary); }
-.tb-step:last-child { color: var(--text-primary); font-weight: 600; }
+.tb-step:last-of-type { color: var(--text-primary); font-weight: 600; }
+.tb-count { color: var(--text-muted); font-size: var(--fs-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@media (max-width: 1100px) { .tb-count { display: none; } }
 .tb-step:first-child { flex: none; }   /* "Peel" never truncates; the deeper steps share the rest */
 .tb-step:not(:first-child) { min-width: 3em; flex: 0 1 auto; }
 .tb-views {
@@ -341,7 +362,7 @@ body {
 .tb-scen-wrap { position: relative; }
 .tb-scen {
   display: inline-flex; align-items: center; gap: var(--space-1);
-  max-width: 320px;
+  max-width: 520px;
   border: 1px solid var(--border);
   background: var(--surface-2);
   border-radius: 999px;
@@ -553,14 +574,9 @@ button, input, select { font: inherit; color: inherit; }
 .leaflet-control-attribution a { color: var(--accent); }
 .leaflet-tooltip.pt { font-size: var(--fs-2); background: var(--surface-1); color: var(--text-primary); border-color: var(--border); }
 
-/* Detail drawer */
-.detail {
-  position: fixed; top: var(--top-h, 0px); right: 0; bottom: var(--footer-h, 0px); width: min(440px, 100vw); z-index: 1000; overflow-y: auto;
-  background: var(--surface-1); box-shadow: var(--shadow); padding: var(--space-3);
-}
-.detail .close { position: absolute; top: 8px; right: 10px; font-size: var(--fs-5); border: 0; background: none; cursor: pointer; color: var(--text-secondary); }
-.detail .head { padding-right: var(--space-4); }
-.detail .head .m { color: var(--text-secondary); font-size: var(--fs-2); margin-top: var(--space-1); }
+/* Result scopes in the right panel (SPEC §3: the #detail drawer is gone). */
+.scope-body .head .m { color: var(--text-secondary); font-size: var(--fs-2); margin-top: var(--space-1); }
+.scope-body .scope-head { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin-bottom: var(--space-2); }
 .badge { display: inline-flex; gap: var(--space-2); align-items: center; padding: var(--space-1) var(--space-2) var(--space-1) var(--space-1); border-radius: 999px; background: var(--surface-2); font-size: var(--fs-2); font-weight: 500; margin-top: var(--space-2); }
 .badge .dot { width: 16px; height: 16px; font-size: var(--fs-1); box-shadow: none; }
 .kv { display: grid; grid-template-columns: auto 1fr; gap: var(--space-1) var(--space-3); font-size: var(--fs-2); margin: var(--space-3) 0; }
@@ -684,8 +700,9 @@ button, input, select { font: inherit; color: inherit; }
 
 .hist { display: flex; align-items: flex-end; gap: var(--space-1); height: 44px; }
 .hist .bar { flex: 1; height: 100%; padding: 0; border: 0; background: transparent; cursor: pointer; display: flex; align-items: flex-end; min-width: 0; }
-.hist .bar i { display: block; width: 100%; border-radius: 4px 4px 0 0; background: var(--text-muted); opacity: .35; }
-.hist .bar.on i { background: var(--accent); opacity: 1; }
+.hist .bar i { display: flex; flex-direction: column; width: 100%; border-radius: 4px 4px 0 0; overflow: hidden; background: var(--text-muted); opacity: .35; }
+.hist .bar i > span { display: block; min-height: 0; }
+.hist .bar.on i { opacity: 1; }
 .hist .bar:hover i { opacity: .8; }
 
 .range { position: relative; height: 20px; }
@@ -757,14 +774,6 @@ button, input, select { font: inherit; color: inherit; }
   .legend { cursor: pointer; }
   .legend:not(.expanded) { grid-template-columns: repeat(7, auto); gap: var(--space-2); }
   .legend:not(.expanded) .li span:not(.dot) { display: none; }
-  /* Detail as a bottom sheet so the selected point stays visible above it */
-  .detail {
-    z-index: 1150; top: auto; bottom: 0; left: 0; right: 0; width: 100%; height: var(--sheet-hv, 62vh); height: var(--sheet-h, 62dvh);
-    max-height: calc(100dvh - var(--top-h, 0px));   /* never under the top bar */
-    border-left: 0; border-radius: var(--radius-panel) var(--radius-panel) 0 0;
-    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
-  }
-  .detail .sheet-grip { display: flex; }
   .legend { left: auto; right: 8px; bottom: 16px; }
   .panel, .brand { padding-left: var(--space-3); padding-right: var(--space-3); }
 }
@@ -957,10 +966,12 @@ h2.label, .label { font-size: var(--fs-2); text-transform: none; letter-spacing:
 .grow-bar { display: flex; gap: var(--space-1); height: 18px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
 .gseg { display: block; min-width: 2px; outline-offset: 2px; }
 .gseg:focus-visible { outline: 2px solid var(--focus); }
-.g-base { background: var(--ph-cancelled); }
-.g-built { background: var(--ph-completed); }
-.g-approved { background: var(--ph-approved); }
-.g-proposed { background: repeating-linear-gradient(45deg, var(--ph-approved) 0 3px, transparent 3px 6px), color-mix(in srgb, var(--ph-approved) 25%, var(--surface-1)); }
+.g-base { background: var(--ly-existing); }
+.g-built { background: var(--ly-built); }
+.g-approved { background: var(--ly-committed); }
+.g-proposed { background: var(--ly-proposed); }
+.g-anticipated { background: var(--ly-hatch), var(--ly-anticipated); }
+.cap-over { position: absolute; top: 0; bottom: 0; background: var(--ly-over); pointer-events: none; border-radius: 0 4px 4px 0; }
 .grow-legend { list-style: none; padding: 0; margin: var(--space-2) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); font-size: var(--fs-2); color: var(--text-secondary); }
 .grow-legend li { display: flex; align-items: center; gap: var(--space-2); }
 .grow-legend .gv { color: var(--text-primary); font-variant-numeric: tabular-nums; }
@@ -2007,9 +2018,9 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .mpc-cell { min-width: 170px; width: 24%; }
 .mpc-bar { position: relative; height: 16px; background: var(--surface-2); border-radius: 4px; margin-top: var(--space-2); }
 .mpc-bar i { position: absolute; top: 0; bottom: 0; left: 0; }
-.mpc-t, .gsw.mpc-t { background: var(--ph-cancelled); }
-.mpc-a, .gsw.mpc-a { background: var(--ph-approved); }
-.mpc-p, .gsw.mpc-p { background: repeating-linear-gradient(45deg, var(--ph-approved) 0 3px, transparent 3px 6px), color-mix(in srgb, var(--ph-approved) 25%, var(--surface-1)); }
+.mpc-t, .gsw.mpc-t { background: var(--ly-existing); }
+.mpc-a, .gsw.mpc-a { background: var(--ly-committed); }
+.mpc-p, .gsw.mpc-p { background: var(--ly-proposed); }
 .mpc-bar .mpc-mp { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed var(--select); }
 .mpc-bar .mpc-mp span { position: absolute; top: -12px; left: -7px; font-size: var(--fs-1); font-weight: 500; color: var(--select); }
 .mpc-bar .mpc-cap { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--text-primary); }
@@ -2335,8 +2346,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 
 /* 11 px minimum for text in the analysis panel and the detail panel (design audit, Group 8):
    secondary lines (<small>) and unit suffixes keep their relative size but never go below 11 px. */
-#analysis-panes small, #detail small { font-size: max(var(--fs-1), .83em); }
-#analysis-panes .u, #detail .u { font-size: max(var(--fs-1), .82em); }
+#analysis-panes small { font-size: max(var(--fs-1), .83em); }
+#analysis-panes .u { font-size: max(var(--fs-1), .82em); }
 .svc-more > summary { cursor: pointer; list-style: revert; margin: var(--space-2) 0 var(--space-1); }
 .cap-t th { white-space: nowrap; }
 .cap-t td.n { white-space: nowrap; }
@@ -2373,3 +2384,113 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pt-matrix th[scope="row"] .btn.link, .pt-table th[scope="row"] .btn.link { white-space: normal; text-align: left; min-height: auto; }
 .pt-target td { vertical-align: top; }
 .pt-target td:nth-child(2) { min-width: 9em; max-width: 14em; }
+
+/* ---- Layer bar (js/layer-bar.js, SPEC §2): every capacity and pipeline bar ---- */
+.lybar { position: relative; height: 14px; background: var(--ly-track); border-radius: 3px; margin: 3px 0; }
+.lybar.sm { height: 8px; }
+.lybar .ly-seg { position: absolute; top: 0; bottom: 0; }
+.lybar .ly-seg:first-child { border-radius: 3px 0 0 3px; }
+.ly-existing { background: var(--ly-existing); }
+.ly-built { background: var(--ly-built); }
+.ly-committed { background: var(--ly-committed); }
+.ly-proposed { background: var(--ly-proposed); }
+.ly-anticipated { background: var(--ly-hatch), var(--ly-anticipated); opacity: .85; }
+.ly-to2051 { background: transparent; outline: 1px dashed var(--ly-to2051); outline-offset: -1px; }
+.lybar .ly-est { position: absolute; top: 0; bottom: 0; background: var(--ly-hatch); pointer-events: none; }
+.lybar .ly-over { position: absolute; top: 0; bottom: 0; background: var(--ly-over); border-radius: 0 3px 3px 0; pointer-events: none; }
+.lybar .ly-tick { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ly-trigger); pointer-events: none; }
+.lybar .ly-tick.ly-rated { width: 1px; background: var(--ly-rated); }
+.ly-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: var(--fs-1); color: var(--text-secondary); }
+.ly-legend .ly-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin-right: 4px; }
+.ly-legend .ly-sw.ly-tick-sw { width: 2px; background: var(--ly-trigger); }
+.ly-legend .ly-sw.ly-rated-sw { width: 1px; background: var(--ly-rated); }
+.ly-legend .ly-sw.ly-over-sw { background: var(--ly-over); }
+.ly-legend .ly-sw.ly-est-sw { background: var(--ly-hatch), var(--ly-proposed); }
+.ly-legend b { font-variant-numeric: tabular-nums; font-weight: 500; color: var(--text-primary); }
+.ly-badge { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.ly-badge .ly-pill { border-radius: 999px; padding: 1px 8px; font-size: var(--fs-1); color: var(--ly-ink); }
+.ly-badge .ly-arrow { color: var(--text-muted); }
+.ly-name { white-space: nowrap; }
+.ly-name::before { content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; background: var(--ly-c, var(--ly-proposed)); }
+
+/* Scenario chip (SPEC §2): the layers counted, as toggles in the layer swatches, then the settings. */
+.tb-scen { cursor: default; }
+.scen-chip-row { display: inline-flex; align-items: center; gap: 2px; flex: none; }
+.tb-scen .sc-ly { display: inline-flex; align-items: center; gap: 3px; padding: 1px 5px; border-radius: 999px; border: 1px solid transparent; background: none; color: var(--text-muted); font-size: var(--fs-1); cursor: default; }
+.tb-scen button.sc-ly { cursor: pointer; }
+.tb-scen .sc-ly .ly-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; opacity: .35; }
+.tb-scen .sc-ly.on { color: var(--text-primary); }
+.tb-scen .sc-ly.on .ly-sw { opacity: 1; }
+.tb-scen button.sc-ly:hover { border-color: var(--accent); }
+.tb-scen .sc-what { font-size: var(--fs-1); color: var(--text-muted); margin: 0 4px; white-space: nowrap; }
+.tb-scen .sc-more { display: inline-flex; align-items: center; min-width: 0; gap: 2px; border: 0; background: none; color: var(--text-secondary); font-size: var(--fs-1); cursor: pointer; padding: 0 2px; }
+.tb-scen .sc-more:hover { color: var(--text-primary); }
+@media (max-width: 1100px) { .tb-scen .sc-l, .tb-scen .sc-what { display: none; } }
+/* The footer scenario line is gone: the panel opens from the chip (SPEC §2, §4). */
+.footer > .scen-bar { display: none; }
+.pace-ly { display: grid; grid-template-columns: 56px 1fr; gap: var(--space-2); align-items: center; }
+/* Site tools (SPEC §3): Trace sewer / Trace water / Check FSR stay one click away; the rest in ⋯. */
+.site-more { position: relative; display: inline-block; }
+.site-more > summary { list-style: none; cursor: pointer; }
+.site-more > summary::-webkit-details-marker { display: none; }
+.site-more-menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; display: flex; flex-direction: column; align-items: stretch; min-width: 160px; padding: var(--space-1); background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 16px rgba(0, 0, 0, .35); }
+.site-more-menu .btn { text-align: left; }
+/* One hover card (SPEC §3). */
+.hcard { display: flex; flex-direction: column; gap: 2px; min-width: 180px; max-width: 300px; white-space: normal; }
+.hcard .hc-k { font-size: var(--fs-1); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+.hcard .hc-n { font-size: var(--fs-3); }
+.hcard .hc-v b { font-size: var(--fs-4); font-variant-numeric: tabular-nums; }
+.hcard .hc-v span, .hcard .hc-x { font-size: var(--fs-2); color: var(--text-secondary); }
+.hcard .hc-a { font-size: var(--fs-1); color: var(--accent); margin-top: 2px; }
+
+/* Left panel = find (SPEC §4): the count first, rows that show their value, Counts as. */
+#f-showing .find-count b { font-size: var(--fs-5); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+#f-showing .find-count { margin-right: var(--space-1); }
+.fp-row > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: var(--space-2); }
+.fp-row > summary::-webkit-details-marker { display: none; }
+.fp-row > summary .label { margin: 0; flex: none; }
+.fp-row > summary .fr-val { flex: 1 1 auto; min-width: 0; font-size: var(--fs-2); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fp-row > summary .fr-val::after { content: " ▸"; color: var(--text-muted); }
+.fp-row[open] > summary .fr-val::after { content: " ▾"; }
+.fp-row.active > summary .fr-val { color: var(--accent); }
+.fp-row[open] > summary { margin-bottom: var(--space-2); }
+.ly-chips .chip .ly-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.pipe-rows .done-gone { opacity: .85; }
+.pipe-rows .done-gone.off .n { color: var(--text-muted); }
+#active-filters #f-saveview { margin-left: auto; }
+.tb-meta { margin-left: auto; white-space: nowrap; }
+@media (max-width: 700px) { .tb-meta { display: none; } }
+
+/* The shell at narrower widths (SPEC §4): one top-bar row at 1440 — the chip keeps its swatches,
+   the action buttons their icons (names in their titles). */
+@media (max-width: 1600px) {
+  .tb-scen .sc-l, .tb-scen .sc-what { display: none; }
+  .tb-scen { max-width: 340px; }
+}
+@media (max-width: 1500px) {
+  .tb-actions .tb-btn:not(.tb-icon) { font-size: 0; gap: 0; }
+  .tb-actions .tb-btn:not(.tb-icon) svg { width: 16px; height: 16px; }
+}
+@media (max-width: 700px) {
+  .topbar { gap: var(--space-1); padding: var(--space-1) var(--space-2); }
+  .topbar .tb-trail { order: 1; flex: 1 1 0; }
+  .topbar .tb-actions { order: 2; }
+  .topbar .tb-views { order: 3; }
+  .topbar .tb-scen-wrap { order: 4; }
+  .topbar .tb-search { order: 5; }
+  .tb-scen .sc-more { display: none; }
+  .tb-scen { max-width: none; padding: 2px var(--space-1); }
+}
+.pipe-rows .done-gone { grid-column: 1 / -1; }
+.inview-chip { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 900; white-space: nowrap; background: var(--surface-1); border: 1px solid var(--border); box-shadow: var(--shadow); }
+@media (max-width: 1199px) { .inview-chip { display: none; } }
+
+/* Five tabs at every scope (SPEC §5). Servicing: the wastewater and water views in one row. */
+.svc-subtabs .sv-g { font-size: var(--fs-1); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; align-self: center; margin: 0 2px 0 var(--space-2); }
+.svc-subtabs .sv-g:first-child { margin-left: 0; }
+/* Site scope: no placeholder sub-views; the site bar's note is the one disclaimer. */
+#analysis.site-scope [data-gsub="census2051"], #analysis.site-scope [data-gsub="timing"],
+#analysis.site-scope [data-dcasub="recommendations"], #analysis.site-scope [data-dcasub="funding"],
+#analysis.site-scope #screen-note-top { display: none; }
+/* The development's Files & history is the Records tab; its Overview keeps About and Site. */
+#pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }

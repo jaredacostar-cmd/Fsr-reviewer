@@ -1,0 +1,45 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Water by pressure zone
+12489 DIXIE ROAD CALEDON ON L7C 2M4 · site servicing
+12489 DIXIE ROAD CALEDON ON L7C 2M4 · Water
+⤳ Trace the water supply from the plant
+On the map, along the existing watermains and the planned DC mains
+Water
+Demand
+
+11.9L/s max day · 25.5L/s peak hour · 8.5L/s average
+
+Zone 7 · 3% of the zone's build-out max day screening estimate
+
+Supply route
+■
+A.P. Kennedy treatment plant (rated 1,200 ML/d)
+■
+High-lift pumps HLP1C · 282 ML/d firm → zone 1
+▲
+Silverthorn LLP2C · 192 ML/d firm → zone 2
+▲
+Hanlan LLP3C · 1,024 ML/d firm → zone 3
+▲
+Beckett Sproule LLP4C · 195 ML/d firm → zone 4
+▲
+East Brampton LLP5C · 100 ML/d firm → zone 5
+▲
+North Brampton HLP7C · 21 ML/d firm → zone 7
+●
+This development · Zone 7
+
+Pumping into zone 7 and above: 61% of firm capacity with existing + built + approved, 82% at build-out.
+
+Trace on the map The stations lifting water into each zone (2020 Master Plan pumping); the trace follows the mains between them.
+
+Watermains
+
+Looking up the nearest watermains…
+
+Fire flow
+
+Looking up hydrants…
+
+Peel-wide pressure zones return when no site is scoped.

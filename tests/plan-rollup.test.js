@@ -136,3 +136,30 @@ test('targets: one figure covering two plans is compared with both; a people-onl
   const m = v.rows.find(x => x.node.id === 'a:mayfield');
   assert.equal(m.pctTotal, null); assert.equal(m.pctPeople, 150 / 600); assert.equal(m.compared, 'people');
 });
+
+test('SPEC 1.9: a plan filter reconciles: inside the plan (By plan) + the parts outside it = units shown', () => {
+  // The filter shows both developments in full (their points are in Bolton); By plan counts 50% of s.
+  const set = [dev('s', 200, { sh: [['bolton', 0.5], ['mayfield', 0.3]] }), dev('t', 40, { sh: [['bolton', 1]] })];
+  const r = R.build(set, { areas: AREAS, sharesOf: p => p.sh, measure });
+  const w = R.within(r, ['bolton']);
+  assert.equal(w.found, 1);
+  assert.equal(w.planned, r.nodes.get('a:bolton').m.planned, 'the By plan row');
+  assert.equal(w.planned, 140);
+  assert.equal(w.outside, 100, 'the rest of s');
+  assert.equal(w.planned + w.outside, r.root.m.planned, 'adds up to the units shown');
+  assert.equal(w.straddling, 1);
+  assert.equal(w.devs, 2);
+  assert.equal(R.within(r, ['nowhere']).found, 0);
+});
+
+test('SPEC 1.9: the scope label says "all of Peel" only when nothing narrows it', () => {
+  const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'overview-tab.js'), 'utf8');
+  const m = src.match(/function scopeLabel\(\{ muni, sp, mtsa, svc \}\) \{[\s\S]*?\n  \}/);
+  assert.ok(m, 'scopeLabel source');
+  const scopeLabel = require('node:vm').runInNewContext(`(${m[0].replace('function scopeLabel', 'function')})`);
+  assert.equal(scopeLabel({}), 'all of Peel');
+  assert.equal(scopeLabel({ sp: '52: Heritage Heights' }), '52: Heritage Heights');
+  assert.equal(scopeLabel({ muni: 'Brampton', sp: '52: Heritage Heights' }), 'Brampton · 52: Heritage Heights');
+  assert.equal(scopeLabel({ muni: 'Caledon' }), 'Caledon');
+  assert.equal(scopeLabel({ svc: 'G.E. Booth sewershed' }), 'G.E. Booth sewershed');
+});

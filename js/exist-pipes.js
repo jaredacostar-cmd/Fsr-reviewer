@@ -189,16 +189,18 @@
   const MAT_NOTE = { AC: 'asbestos cement', ACP: 'asbestos cement', VIT: 'vitrified clay', CONC: 'concrete', CONP: 'concrete', RCOP: 'reinforced concrete', PVC: 'PVC', DI: 'ductile iron', ST: 'steel', HDPE: 'HDPE', PE: 'polyethylene' };
   // Street names for points on pipes: reverse geocoding (ArcGIS World, then OpenStreetMap), cached.
   const streetCache = new Map();
+  // (A lookup that hangs must not hold the mains list: 6 s each, then no street name.)
+  const fetchT = (url, opts = {}, ms = 6000) => { const c = new AbortController(), t = setTimeout(() => c.abort(), ms); return fetch(url, { ...opts, signal: c.signal }).finally(() => clearTimeout(t)); };
   function streetAt(lat, lng) {
     const k = `${lat.toFixed(4)},${lng.toFixed(4)}`; if (streetCache.has(k)) return streetCache.get(k);
     const pr = (async () => {
       try {
-        const j = await (await fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
+        const j = await (await fetchT(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
         const a = j && j.address, st = a && String(a.Address || a.ShortLabel || '').replace(/^[\d\s-]+[A-Za-z]?\s+(?=\D)/, '').trim();
         if (st) return st;
       } catch (e) { /* next */ }
       try {
-        const j = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
+        const j = await (await fetchT(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
         if (j && j.address && j.address.road) return j.address.road;
       } catch (e) { /* offline */ }
       return '';
@@ -222,15 +224,16 @@
     const key = `${lng.toFixed(5)},${lat.toFixed(5)},${r}`; if (aroundCache.has(key)) return aroundCache.get(key);
     const pr = Promise.all(Object.entries(EXIST).map(async ([kind, srcs]) => {
       const items = [];
+      let failed = 0;
       for (const S of srcs) {
         try {
-          const j = await A.fetchJSON(`${S.url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields: S.f, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' });
+          const j = await A.fetchJSON(`${S.url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields: S.f, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' }, { timeout: 15000 });
           for (const f of j.features || []) {
             const paths = (f.geometry && f.geometry.paths) || []; if (!paths.length) continue;
             const c = paths.map(pth => closestOn([lng, lat], pth)).sort((a, b) => a.m - b.m)[0];
             if (c.m <= r) items.push({ m: c.m, at: c.at, paths, a: pipeAttrs(kind, S.src, f.attributes || {}) });
           }
-        } catch (e) { /* source unavailable */ }
+        } catch (e) { failed++; }
       }
       items.sort((a, b) => a.m - b.m);
       const near = items.slice(0, 16);
@@ -240,9 +243,9 @@
         const g = `${it.street}|${it.a.d}|${it.a.mat}|${/FM/.test(it.a.type)}`;
         const x = groups.get(g); if (!x) groups.set(g, { ...it, n: 1, paths: [...it.paths] }); else { x.n++; x.paths.push(...it.paths); }
       }
-      return [kind, { list: [...groups.values()].sort((a, b) => a.m - b.m), more: Math.max(0, items.length - near.length) }];
+      return [kind, { list: [...groups.values()].sort((a, b) => a.m - b.m), more: Math.max(0, items.length - near.length), failed: srcs.length > 0 && failed === srcs.length }];
     })).then(Object.fromEntries);
-    aroundCache.set(key, pr); pr.catch(() => aroundCache.delete(key));
+    aroundCache.set(key, pr); pr.then(res => { if (Object.values(res).some(v => v.failed)) aroundCache.delete(key); }, () => aroundCache.delete(key));
     return pr;
   }
   const exHL = L.layerGroup().addTo(map);
@@ -255,13 +258,19 @@
     const r = store.get('exR', 200);
     const rBtns = `<div class="ex-r"><span class="muted small">Within</span> ${[100, 200, 400].map(x => `<button type="button" class="btn small${x === r ? ' on' : ''}" data-exr="${x}">${x} m</button>`).join('')}</div>`;
     for (const k of ['water', 'sanitary', 'storm']) if (box(k)) box(k).innerHTML = `${k === 'water' ? rBtns : ''}<p class="small muted">Looking up the mains around the site…</p>`;
-    existingAround(p.lng, p.lat, r).then(res => {
+    // Couldn't load (the GIS host is unreachable or slow): say so, with a retry — never "Looking up…" forever.
+    const failHTML = k => `<p class="small muted ex-fail">Couldn't load the ${k === 'water' ? 'watermains' : k === 'sanitary' ? 'sanitary sewers' : 'storm sewers'} from the Region / municipal GIS · <button type="button" class="btn small link" data-ex-retry>Retry</button></p>`;
+    const guard = new Promise((_, no) => setTimeout(() => no(new Error('timeout')), 45000));
+    Promise.race([existingAround(p.lng, p.lat, r), guard]).catch(() => { aroundCache.delete(`${p.lng.toFixed(5)},${p.lat.toFixed(5)},${r}`); return null; }).then(res => {
       if (DN().getCurrentProject() !== p || !box('water')) return;
+      if (!res) { for (const k of ['water', 'sanitary', 'storm']) if (box(k)) box(k).innerHTML = `${k === 'water' ? rBtns : ''}${failHTML(k)}`; return; }
+      for (const [k, v] of Object.entries(res)) if (v.failed) { v.list = []; v.more = 0; }
       exGroups = res;
       const SHOW = 4, parts = {};
       const row = (k, g, i) => `<li><button type="button" class="btn small link" data-exhl="${k}|${i}" title="Show it on the map">${esc(existText(k, g.a).replace(MM().EXIST_STYLE[k].label, '').trim() || 'size not recorded')}</button>${g.street ? ` on <strong>${esc(g.street)}</strong>` : ''} · ${fmtNum(Math.round(g.m))} m <span class="muted">(${g.n > 1 ? `${g.n} pieces · ` : ''}${esc(g.a.src)})</span></li>`;
       for (const [k, v] of Object.entries(res)) {
         const L0 = v.list;
+        if (v.failed) { parts[k] = failHTML(k); continue; }
         parts[k] = (`<div class="ex-kind"><div class="ex-k"><i class="lg-line" style="background:var(${MM().EXIST_STYLE[k].color})"></i><strong>${MM().EXIST_STYLE[k].label}s</strong> <span class="muted small">${L0.length ? `${L0.length} within ${r} m${v.more ? ` · ${v.more} more pieces farther out` : ''}` : `none within ${r} m${k === 'storm' && p.municipality === 'Caledon' ? ' (Caledon storm sewers are not published)' : ''}`}</span></div>
           ${L0.length ? `<ul class="b-lines small">${L0.slice(0, SHOW).map((g, i) => row(k, g, i)).join('')}</ul>${L0.length > SHOW ? `<details class="ex-more"><summary class="small">${L0.length - SHOW} more</summary><ul class="b-lines small">${L0.slice(SHOW).map((g, i) => row(k, g, i + SHOW)).join('')}</ul></details>` : ''}` : ''}</div>`);
       }
@@ -282,6 +291,7 @@
   document.addEventListener('click', e => {
     const rb = e.target.closest('[data-exr]');
     if (rb && DN().getCurrentProject()) { store.set('exR', +rb.dataset.exr); return fillExisting(DN().getCurrentProject()); }
+    if (e.target.closest('[data-ex-retry]') && DN().getCurrentProject()) { const q = DN().getCurrentProject(); for (const k of [...aroundCache.keys()]) if (k.startsWith(`${q.lng.toFixed(5)},${q.lat.toFixed(5)},`)) aroundCache.delete(k); return fillExisting(q); }
     const h = e.target.closest('[data-exhl]'); if (!h) return;
     const [k, i] = h.dataset.exhl.split('|'), g = exGroups[k] && exGroups[k].list[+i]; if (!g) return;
     exHL.clearLayers();
@@ -290,7 +300,6 @@
     L.polyline(ll, { color: token(MM().EXIST_STYLE[k].color), weight: 4, opacity: 1, interactive: false }).addTo(exHL);
     if (DN().getCurrentProject()) L.polyline([[DN().getCurrentProject().lat, DN().getCurrentProject().lng], [g.at[1], g.at[0]]], { color: token('--text-primary'), weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
     map.fitBounds(L.latLngBounds(ll.flat().concat(DN().getCurrentProject() ? [[DN().getCurrentProject().lat, DN().getCurrentProject().lng]] : [])), { maxZoom: 18, padding: [40, 40] });
-    if (innerWidth <= 760) $('#detail').scrollTop = 0;
   });
   map.on('click', () => exHL.clearLayers());
 

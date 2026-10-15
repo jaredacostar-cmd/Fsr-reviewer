@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Top and bottom bars</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 1440px; height: 120px; box-sizing: border-box; background: #141413; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 12.5px; line-height: 1.4; display: flex; flex-direction: column; gap: 14px">
+
+  <header style="height: 46px; display: flex; align-items: center; gap: 14px; padding: 0 14px; border: 1px solid #383835; border-radius: 8px; background: #1b1b1a">
+    <strong style="font-size: 14px; font-weight: 600">Peel Growth Pipeline</strong>
+    <nav aria-label="Scope" style="display: flex; align-items: center; gap: 6px; color: #c3c2b7">
+      <a href="#" style="color: #c3c2b7">Peel</a><span style="color: #6b6a63">›</span><a href="#" style="color: #c3c2b7">Clarkson</a><span style="color: #6b6a63">›</span><span style="color: #ffffff; font-weight: 500">Block 16</span>
+      <span style="color: #6b6a63; margin-left: 6px">· 1,173 developments · 160,101 units</span>
+    </nav>
+    <div role="group" aria-label="Lens" style="margin-left: auto; display: flex; background: #242422; border: 1px solid #383835; border-radius: 8px; padding: 2px; gap: 2px">
+      <button type="button" aria-pressed="false" style="height: 28px; padding: 0 12px; border: none; border-radius: 6px; background: transparent; color: #c3c2b7; font: inherit">Planning</button>
+      <button type="button" aria-pressed="false" style="height: 28px; padding: 0 12px; border: none; border-radius: 6px; background: transparent; color: #c3c2b7; font: inherit">Water</button>
+      <button type="button" aria-pressed="true" style="height: 28px; padding: 0 12px; border: none; border-radius: 6px; background: #3a2a1d; color: #ffffff; font: inherit; font-weight: 600">Wastewater</button>
+      <button type="button" aria-pressed="false" style="height: 28px; padding: 0 12px; border: none; border-radius: 6px; background: transparent; color: #c3c2b7; font: inherit">Capital</button>
+    </div>
+    <button type="button" aria-haspopup="dialog" style="height: 30px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #242422; color: #ffffff; font: inherit; display: flex; align-items: center; gap: 6px"><span style="display: inline-flex; gap: 1px"><span style="width: 6px; height: 10px; background: #3b4a5e"></span><span style="width: 6px; height: 10px; background: #5f7fae"></span><span style="width: 6px; height: 10px; background: #9cc0fa"></span><span style="width: 6px; height: 10px; background: #cfe0fb"></span></span>Counting: Existing + Built + Committed + Proposed · 2025 flows · tree <span style="color: #9a998f">▾ edit</span></button>
+    <button type="button" aria-haspopup="menu" style="height: 30px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #242422; color: #ffffff; font: inherit">Export ▾</button>
+    <button type="button" style="height: 30px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #242422; color: #ffffff; font: inherit">Present</button>
+    <button type="button" aria-label="Help" style="height: 30px; width: 30px; border: 1px solid #383835; border-radius: 7px; background: #242422; color: #ffffff; font: inherit">?</button>
+    <button type="button" aria-label="Settings" style="height: 30px; width: 30px; border: 1px solid #383835; border-radius: 7px; background: #242422; color: #ffffff; font: inherit">⚙</button>
+  </header>
+
+  <footer style="height: 52px; display: flex; align-items: center; gap: 14px; padding: 0 14px; border: 1px solid #383835; border-radius: 8px; background: #1b1b1a">
+    <strong style="font-size: 12px; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Timeline</strong>
+    <label style="height: 28px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #242422; display: inline-flex; align-items: center; gap: 6px">Any milestone ▾<select aria-label="Milestone" style="position: absolute; opacity: 0; width: 1px; height: 1px"><option>Any milestone</option><option>Application submitted</option><option>Approved</option><option>Permit issued</option><option>Completed</option></select></label>
+    <div style="flex: 1; position: relative; height: 30px">
+      <div style="position: absolute; left: 0; right: 0; bottom: 8px; display: flex; align-items: flex-end; gap: 2px; height: 20px">
+        <div style="flex: 1; height: 30%; background: #3a3a37"></div><div style="flex: 1; height: 45%; background: #3a3a37"></div><div style="flex: 1; height: 50%; background: #3a3a37"></div><div style="flex: 1; height: 40%; background: #3a3a37"></div><div style="flex: 1; height: 70%; background: linear-gradient(to top, #9cc0fa 0 55%, #cfe0fb 55%)"></div><div style="flex: 1; height: 90%; background: linear-gradient(to top, #9cc0fa 0 45%, #cfe0fb 45%)"></div><div style="flex: 1; height: 100%; background: linear-gradient(to top, #9cc0fa 0 35%, #cfe0fb 35%)"></div><div style="flex: 1; height: 85%; background: linear-gradient(to top, #9cc0fa 0 30%, #cfe0fb 30%)"></div><div style="flex: 1; height: 75%; background: linear-gradient(to top, #9cc0fa 0 25%, #cfe0fb 25%)"></div><div style="flex: 1; height: 55%; background: linear-gradient(to top, #9cc0fa 0 20%, #cfe0fb 20%)"></div>
+      </div>
+      <div style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; font-size: 10px; color: #6b6a63; font-family: 'IBM Plex Mono', monospace"><span>2017</span><span>2019</span><span>2021</span><span>2023</span><span>2026</span></div>
+      <div style="position: absolute; left: 40%; right: 0; bottom: 14px; height: 3px; background: #6da7ec; border-radius: 2px"></div>
+    </div>
+    <span style="display: inline-flex; gap: 8px; font-size: 11px; color: #9a998f"><span><span style="display: inline-block; width: 8px; height: 8px; background: #5f7fae; margin-right: 3px"></span>built</span><span><span style="display: inline-block; width: 8px; height: 8px; background: #9cc0fa; margin-right: 3px"></span>committed</span><span><span style="display: inline-block; width: 8px; height: 8px; background: #cfe0fb; margin-right: 3px"></span>proposed</span></span>
+    <strong style="font-family: 'IBM Plex Mono', monospace; font-weight: 500">2021 – 2026</strong>
+    <a href="#" style="font-size: 11.5px">All years</a>
+    <span style="color: #6b6a63">|</span>
+    <span style="color: #9a998f; font-size: 11.5px">Data 2026-10-12 · v1.111 · <a href="#">Change log</a></span>
+    <button type="button" aria-label="Collapse timeline" style="width: 28px; height: 28px; border: 1px solid #383835; border-radius: 7px; background: #242422; color: #c3c2b7; font: inherit">▾</button>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":120}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

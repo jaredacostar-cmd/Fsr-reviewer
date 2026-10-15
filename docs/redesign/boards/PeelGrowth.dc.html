@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Peel growth panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 480px; height: 1500px; box-sizing: border-box; background: #1b1b1a; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.45; display: flex; flex-direction: column">
+
+  <header style="padding: 14px 18px 0; border-bottom: 1px solid #383835; display: flex; flex-direction: column; gap: 6px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><h1 style="margin: 0; font-size: 20px; font-weight: 600">All of Peel</h1><span style="color: #9a998f; font-size: 11.5px">1,485 developments · active stages · 2021–2026</span></div>
+    <nav style="display: flex; gap: 18px; font-weight: 500; margin-top: 2px">
+      <a href="PeelOverview.dc.html" style="color: #9a998f; padding: 8px 0">Overview</a>
+      <a href="#" style="color: #ffffff; border-bottom: 2px solid #6da7ec; padding: 8px 0">Growth</a>
+      <a href="PeelServicing.dc.html" style="color: #9a998f; padding: 8px 0">Servicing</a>
+      <a href="PeelCapital.dc.html" style="color: #9a998f; padding: 8px 0">Capital</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Records</a>
+    </nav>
+  </header>
+
+  <main style="padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 14px">
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Pipeline · dwellings by layer</h2><span style="color: #9a998f; font-size: 11px">tree count, net of demolitions</span></div>
+      <div style="display: flex; height: 14px; border-radius: 3px; overflow: hidden; gap: 2px">
+        <div style="width: 2.5%; background: #5f7fae" title="built since census 5,096"></div>
+        <div style="width: 27.2%; background: #9cc0fa" title="committed 55,033"></div>
+        <div style="width: 70.3%; background: #cfe0fb" title="proposed 142,428"></div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; font-size: 12px">
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: #5f7fae">5,096</div><div style="color: #9a998f; font-size: 11px">built since 2021 · 3%</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: #9cc0fa">55,033</div><div style="color: #9a998f; font-size: 11px">committed · 27% · 9,556 permitted</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; color: #cfe0fb">142,428</div><div style="color: #9a998f; font-size: 11px">proposed · 70%</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px">202,557</div><div style="color: #9a998f; font-size: 11px">layered total</div></div>
+      </div>
+      <div style="color: #ffc98a; font-size: 11.5px">228,490 units are “planned” but only 202,557 land in a layer: 25,933 have no phase or date that places them. Surface the gap instead of hiding it.</div>
+      <div style="display: flex; gap: 12px; font-size: 11.5px; color: #c3c2b7; border-top: 1px solid #383835; padding-top: 8px">
+        <span>Single <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">15.4k</span></span>
+        <span>Town <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">27.0k</span></span>
+        <span>Apartment <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">147.6k</span></span>
+        <span>Not stated <span style="font-family: 'IBM Plex Mono', monospace; color: #ffc98a">13.2k</span></span>
+        <span style="margin-left: auto">Jobs <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">81.9k</span></span>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; overflow: hidden">
+      <div style="padding: 12px 14px; border-bottom: 1px solid #383835; display: flex; justify-content: space-between; align-items: center">
+        <h2 style="margin: 0; font-size: 15px; font-weight: 600">By plan</h2>
+        <div style="display: flex; gap: 6px; font-size: 11.5px">
+          <span style="border: 1px solid #6da7ec; color: #cfe0fb; border-radius: 999px; padding: 2px 8px">Units</span>
+          <span style="border: 1px solid #383835; color: #c3c2b7; border-radius: 999px; padding: 2px 8px">People</span>
+          <span style="border: 1px solid #383835; color: #c3c2b7; border-radius: 999px; padding: 2px 8px">By plant</span>
+          <span style="border: 1px solid #383835; color: #c3c2b7; border-radius: 999px; padding: 2px 8px">CSV</span>
+        </div>
+      </div>
+      <div style="padding: 6px 14px 4px; display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; font-size: 11px; color: #9a998f">
+        <span>Peel › municipality › plan</span><span style="text-align: right">units</span><span style="text-align: right">committed | proposed | to target</span>
+      </div>
+      <div style="padding: 0 14px 10px; display: flex; flex-direction: column; font-size: 12.5px">
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 7px 0; border-top: 1px solid #383835; font-weight: 600">
+          <span>▾ Peel</span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">228,490</span><span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-weight: 400"><span style="width: 100%; height: 5px; display: flex; gap: 1px; border-radius: 3px; overflow: hidden"><span style="width: 27.9%; background: #9cc0fa"></span><span style="width: 72.1%; background: #cfe0fb"></span></span><span style="font-size: 11px; color: #c3c2b7">55k committed · 142k proposed · sums ✓</span></span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 7px 0 7px 14px; border-top: 1px solid #2d2d2a; font-weight: 500">
+          <span>▾ Brampton</span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">131,222</span>
+          <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="width: 100%; height: 5px; background: #3a3a37; border-radius: 3px; overflow: hidden; display: flex"><span style="display: block; width: 100%; height: 100%; background: linear-gradient(90deg, #9cc0fa 0 28%, #cfe0fb 28%)"></span></span><span style="font-size: 11px; color: #c3c2b7">124% of 106,000 by 2051 · split per row from the layer function</span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a">
+          <a href="#" style="color: #ffffff">▸ 52 Heritage Heights <span style="color: #ffa94d; font-size: 11px" title="target not yet checked against its document">unchecked</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">26,525</span>
+          <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="width: 100%; height: 5px; background: #3a3a37; border-radius: 3px; overflow: hidden"><span style="display: block; width: 64%; height: 100%; background: #9cc0fa"></span></span><span style="font-size: 11px; color: #c3c2b7">64% of 134,000 people†</span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a">
+          <a href="#" style="color: #ffffff">▸ 36 Queen St Corridor</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">24,311</span><span style="font-size: 11px; color: #6b6a63; text-align: right">no published target</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a">
+          <a href="#" style="color: #ffffff">▸ 51 Mount Pleasant <span style="color: #ffa94d; font-size: 11px">unchecked</span></a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">14,530</span>
+          <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="width: 100%; height: 5px; background: #3a3a37; border-radius: 3px; overflow: hidden"><span style="display: block; width: 100%; height: 100%; background: #ffa94d"></span></span><span style="font-size: 11px; color: #ffc98a">116% of 35,500 people†</span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a">
+          <a href="#" style="color: #ffffff">▸ 47 Highway 427 Industrial</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">8,391</span>
+          <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="width: 100%; height: 5px; background: #3a3a37; border-radius: 3px; overflow: hidden"><span style="display: block; width: 87%; height: 100%; background: #9cc0fa"></span></span><span style="font-size: 11px; color: #c3c2b7">87% of 31,120 people† by 2041</span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a">
+          <a href="#" style="color: #ffffff">▸ 7 Downtown Brampton</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">7,731</span><span style="font-size: 11px; color: #c3c2b7; text-align: right">density target · 200/ha by 2031</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a">
+          <a href="#" style="color: #ffffff">▸ 40 Bram West (a–d)</a><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">6,456</span>
+          <span style="display: flex; flex-direction: column; align-items: flex-end; gap: 2px"><span style="width: 100%; height: 5px; background: #3a3a37; border-radius: 3px; overflow: hidden"><span style="display: block; width: 51%; height: 100%; background: #9cc0fa"></span></span><span style="font-size: 11px; color: #c3c2b7">51% of 38,600 people†</span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a; color: #9a998f">
+          <span>+ 18 more plans · <a href="#">show all</a> · 8 with no units hidden</span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">43,080</span><span></span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 6px 0 6px 28px; border-top: 1px solid #2d2d2a; color: #9a998f">
+          <span>Not in a plan</span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">198</span><span></span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 7px 0 7px 14px; border-top: 1px solid #383835; font-weight: 500">
+          <span>▸ Mississauga</span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">68,138</span><span style="font-size: 11px; color: #c3c2b7; text-align: right">Downtown Core 16,151 · Cooksville 6,564</span>
+        </div>
+        <div style="display: grid; grid-template-columns: minmax(0, 1fr) 68px 112px; gap: 0 10px; align-items: center; padding: 7px 0 7px 14px; border-top: 1px solid #383835; font-weight: 500">
+          <span>▸ Caledon</span><span style="font-family: 'IBM Plex Mono', monospace; text-align: right">29,130</span><span style="font-size: 11px; color: #ffc98a; text-align: right">7,371 (25%) not in any plan</span>
+        </div>
+      </div>
+      <div style="padding: 10px 14px; border-top: 1px solid #383835; color: #9a998f; font-size: 11px">Each row’s bar: <span style="color: #9cc0fa">committed</span> | <span style="color: #cfe0fb">proposed</span> against the target; the unfilled remainder is “to 2051”. † target states people; pipeline people shown at Peel criteria, indicative only. “total” targets count existing homes, so the pipeline reads low. Targets: data/plan-targets.json; “unchecked” = not yet verified against the source document.</div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Pace</h2><span style="color: #9a998f; font-size: 11px">screening estimate</span></div>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; font-size: 12px">
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px">≈126k</div><div style="color: #9a998f; font-size: 11px">units expected by 2031<br>range 110k–140k · <span style="color: #9cc0fa">committed</span> builds first</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px">≈133k</div><div style="color: #9a998f; font-size: 11px">by 2041<br>of 219k unbuilt</div></div>
+        <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 16px">12 mo</div><div style="color: #9a998f; font-size: 11px">application → approval<br>Mississauga only, n=196</div></div>
+      </div>
+      <div style="color: #ffc98a; font-size: 11.5px">Completions fell from ≈944/yr to ≈653/yr when the tree became the count. Check which permits the tree drops before trusting the pace.</div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Since the 2021 census</h2><a href="#" style="font-size: 12px">Census areas on map</a></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px"><span style="color: #c3c2b7">2021 census</span><span style="font-family: 'IBM Plex Mono', monospace">1,451,022 people · 450,746 dwellings</span></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px"><span style="color: #c3c2b7">Built since (estimate)</span><span style="font-family: 'IBM Plex Mono', monospace">+98,797 · +33,524</span></div>
+      <div style="display: flex; justify-content: space-between; font-size: 12px"><span style="color: #c3c2b7">Approved or proposed, not built</span><span style="font-family: 'IBM Plex Mono', monospace">+625,500 people</span></div>
+    </section>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":480,"height":1500}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

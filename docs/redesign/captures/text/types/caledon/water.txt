@@ -1,0 +1,51 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Water by pressure zone
+14337 HIGHWAY 50 CALEDON ON L7E 3H6 · site servicing
+14337 HIGHWAY 50 CALEDON ON L7E 3H6 · Water
+⤳ Trace the water supply from the plant
+On the map, along the existing watermains and the planned DC mains
+
+Outside the mapped pressure zones: assigned to the nearest (Zone 6, via planned 2027 600 mm main 24-1191, 390 m). The connection point comes from the FSR / master plan.
+
+Water
+Demand
+
+6.83L/s max day · 11.4L/s peak hour · 3.8L/s average
+
+Zone 6 · 0.24% of the zone's build-out max day screening estimate
+
+Supply route
+
+Outside the mapped pressure zones: ground about 265 m → Zone 7A (serves 243.4–289.6 m, grade line 335.3 m; 2020 Master Plan, Vol. 3, Table 3); its grade line gives about 55 m of pressure.
+
+■
+A.P. Kennedy treatment plant (rated 1,200 ML/d)
+■
+High-lift pumps HLP1C · 282 ML/d firm → zone 1
+▲
+Silverthorn LLP2C · 192 ML/d firm → zone 2
+▲
+Hanlan LLP3C · 1,024 ML/d firm → zone 3
+▲
+Beckett Sproule LLP4C · 195 ML/d firm → zone 4
+▲
+East Brampton LLP5C · 100 ML/d firm → zone 5
+▲
+North Brampton HLP7C · 21 ML/d firm → zone 7
+●
+This development · Zone 7A
+
+Pumping into zone 7 and above: 61% of firm capacity with existing + built + approved, 82% at build-out.
+
+Trace on the map The stations lifting water into each zone (2020 Master Plan pumping); the trace follows the mains between them.
+
+Watermains
+
+Looking up the nearest watermains…
+
+Fire flow
+
+Looking up hydrants…
+
+Peel-wide pressure zones return when no site is scoped.

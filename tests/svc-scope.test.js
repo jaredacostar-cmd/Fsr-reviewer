@@ -83,7 +83,9 @@ test('wired in: filter, trail, Overview, search, share link, reset, "What loads 
   const sf = src('js/search-filter.js');
   assert.match(sf, /SS\(\)\.open\(`plant:\$\{pl\}`\)/); assert.match(sf, /area\('Water pressure zone', a, \(\) => SS\(\)\.open\(a\.id\)\)/); assert.match(sf, /psAreas/);
   const sh = src('js/share.js');
-  assert.match(sh, /set\('ss', App\(\)\.state\.ss\)/); assert.match(sh, /App\(\)\.state\.ss = q\.get\('ss'\) \|\| null;/);
+  assert.match(sh, /set\('ss', App\(\)\.state\.ss && window\.PeelSvcScope/); assert.match(sh, /else App\(\)\.state\.ss = ss;/);
+  // Result scopes (SPEC §3): re-opened from a link once their data loads.
+  assert.match(sh, /S\.isResultRef\(ss\)\) \{ App\(\)\.state\.ss = null; setTimeout\(\(\) => S\.restore\(ss\), 0\);/);
   assert.match(src('js/filter-ui.js'), /dr: \[\], ss: null,/);
   assert.match(src('js/tool-scope.js'), /window\.PeelSvcScope\.open\(plantName \? `plant:\$\{plantName\}` : id\)\) return;/);
 });

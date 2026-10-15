@@ -73,21 +73,17 @@
     const head = set.length
       ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
       : 'No developments match the current filters.';
-    // Largest pipelines still to build: top 5, the rest behind "See all".
-    const unbuilt = set.filter(p => p.buildout && p.buildout.unbuilt > 0).sort((a, b) => b.buildout.unbuilt - a.buildout.unbuilt);
-    const denom = Math.max(1, t.left + t.completed);
-    const lrow = p => `<tr><td>${esc(p.title)}<small>${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}</small></td><td>${uUnits(p.buildout.unbuilt)}</td><td>${pc(p.buildout.unbuilt / denom)}</td></tr>`;
-    const topTable = unbuilt.length ? `<table class="dt"><caption>Largest pipelines still to build <span class="muted">share of the build-out</span></caption><thead><tr><th>Development</th><th>Unbuilt</th><th>Share</th></tr></thead><tbody>${unbuilt.slice(0, 5).map(lrow).join('')}</tbody></table>`
-      + (unbuilt.length > 5 ? `<details class="see-all"><summary>See all ${fmtNum(unbuilt.length)} developments</summary><table class="dt"><thead><tr><th>Development</th><th>Unbuilt</th><th>Share</th></tr></thead><tbody>${unbuilt.map(lrow).join('')}</tbody></table></details>` : '') : '';
     // Completions per year: a compact strip; the numbers by municipality below it.
     const cmax = Math.max(1, ...yrs.map(y => y.units));
     const strip = yrs.length ? `<div class="cc-strip" role="img" aria-label="Units completed per year, ${yr0} to ${yr1}">${yrs.map(y => `<div class="cc-bar" style="--h:${(y.units / cmax * 100).toFixed(1)}" title="${y.year}: ${fmtNum(Math.round(y.units))} units in ${fmtNum(y.projects)} development${y.projects === 1 ? '' : 's'}"><i></i><span>${String(y.year).slice(2)}</span></div>`).join('')}</div>` : '';
+    // The approval-pace column shows only once it has data (SPEC §5).
+    const pace = lags.length > 0 && allMedian != null;
     const mrow = m => {
       const c = comp.byMuni.find(r => r.m === m), a = apprByM[m];
-      return `<tr><td>${esc(m)}</td><td>${c ? `${fmtNum(Math.round(c.perYear))}<small>/yr · ${fmtNum(c.projects)} devs</small>` : '–'}</td><td>${a && a.medianMonths != null ? `${a.medianMonths.toFixed(0)}<small> mo · n=${a.n}</small>` : '–'}</td></tr>`;
+      return `<tr><td>${esc(m)}</td><td>${c ? `${fmtNum(Math.round(c.perYear))}<small>/yr · ${fmtNum(c.projects)} devs</small>` : '–'}</td>${pace ? `<td>${a && a.medianMonths != null ? `${a.medianMonths.toFixed(0)}<small> mo · n=${a.n}</small>` : '–'}</td>` : ''}</tr>`;
     };
-    const muniTable = `<table class="dt"><caption>Completions and approval pace by municipality</caption><thead><tr><th>Municipality</th><th>Completions</th><th>Median application → approval</th></tr></thead><tbody>${DU().MUNIS.map(mrow).join('')}
-      <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(yrUnits / yrs.length))}<small>/yr</small>` : '–'}</td><td>${allMedian != null ? `${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small>` : '–'}</td></tr></tbody></table>`;
+    const muniTable = `<table class="dt"><caption>Completions${pace ? ' and approval pace' : ''} by municipality</caption><thead><tr><th>Municipality</th><th>Completions</th>${pace ? '<th>Median application → approval</th>' : ''}</tr></thead><tbody>${DU().MUNIS.map(mrow).join('')}
+      <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(yrUnits / yrs.length))}<small>/yr</small>` : '–'}</td>${pace ? `<td>${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small></td>` : ''}</tr></tbody></table>`;
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     body.innerHTML = `
       ${hlP(head)}
@@ -96,9 +92,10 @@
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
         ${tile('Completed', fmtNum(Math.round(t.completed)), yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr completed ${yr0}–${yr1}` : '', 'demand-units')}
         ${tile('Left to build', fmtNum(Math.round(t.left)), t.planned ? `${pc(t.left / t.planned)} of planned` : '', 'demand-units')}</div>
+      ${layerStripHTML(set)}
       ${empTiles}
       <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
-      ${topTable}
+      <p class="small muted">The largest developments still to build are on the Overview (one list).</p>
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
       ${strip}${muniTable}
       <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
@@ -108,8 +105,23 @@
       // Jobs by layer as well (built / approved / proposed), as the census sub-view does.
       const gr = PeelAreas.growthSince(set, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(set.filter(p => p.phase !== 'cancelled'), bc.date);
       gr.built.jobs = j.jbuilt; gr.approved.jobs = j.japproved; gr.proposed.jobs = j.jproposed;
-      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'));
+      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'), { builtLabel: `Completed since ${bc.year} on the developments shown (not every permit: see Census & 2051)` });
     }
+  }
+  // The pipeline by layer (SPEC §2.2): growth only, the census as context; and by dwelling type.
+  function layerStripHTML(set) {
+    const Ly = root.PeelLayers, LB = root.PeelLayerBar; if (!Ly || !LB || !set.length) return '';
+    const t = Ly.totals(set), u = t.units, bc = CA().baselineCensus();
+    const census = bc ? PeelAreas.censusTotals(bc.das, {}).dwellings : null;
+    const growth = ['built', 'committed', 'proposed', 'anticipated'];
+    const segs = growth.map(k => ({ layer: k, value: u[k], est: Math.min(u[k], t.estimatedBy[k] || 0) }));
+    const bt = Ly.byType(set), n0 = v => fmtNum(Math.round(v));
+    const rows = D.UNIT_TYPES.filter(ty => growth.some(k => bt[ty.key][k] >= 0.5)).map(ty => `<tr><td>${esc(ty.label)}</td>${growth.map(k => `<td class="n">${n0(bt[ty.key][k])}</td>`).join('')}</tr>`).join('');
+    return `<h3 class="sub-title" data-info="growth-layers">By layer <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
+      ${LB.barHTML({ segments: segs })}
+      ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
+      ${u.existing > 0 ? `<p class="small muted">${n0(u.existing)} more on these sites were completed before census day (in the census already, Existing).</p>` : ''}
+      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];

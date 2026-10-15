@@ -45,9 +45,11 @@ const SHELL_ASSETS = [
   'js/areas.js',
   'js/audit.js',
   'js/brief.js',
+  'js/capacity.js',
   'js/census-view.js',
   'js/changelog.js',
   'js/config.js',
+  'js/council-decisions.js',
   'js/data-tab.js',
   'js/dc-cost.js',
   'js/dc-infra.js',
@@ -61,6 +63,7 @@ const SHELL_ASSETS = [
   'js/developments-tab.js',
   'js/devscope.js',
   'js/devtab.js',
+  'js/elevation.js',
   'js/employment.js',
   'js/exist-pipes.js',
   'js/export-comparison.js',
@@ -116,6 +119,10 @@ const SHELL_ASSETS = [
   'js/upstream.js',
   'js/util.js',
   'js/water-tab.js',
+  'js/zone-of.js',
+  'js/layers.js',
+  'js/layer-bar.js',
+  'js/records-tab.js',
   'js/water-trace.js'
 ];
 

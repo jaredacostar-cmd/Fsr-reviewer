@@ -103,11 +103,11 @@
   }
   // Named so the topbar Export menu calls the same actions as the list panel's
   // Export row (a sibling worktree is removing that row; the functions stay).
-  function exportDevsCSV() {
-    const rows = exportRows(); if (!rows.length) return;
+  function exportDevsCSV(list, name = 'peel-developments.csv') {
+    const rows = exportRows(Array.isArray(list) ? list : undefined); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
     const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
-    download('peel-developments.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
+    download(name, CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   function exportDevsGeoJSON() {
     const rows = exportRows();
@@ -128,9 +128,9 @@
     catchments: { title: 'Wastewater by sanitary catchment', els: () => [$('#ww-body')] },
     growth: { title: 'Demand', els: () => [$('#growth-pipeline-body')].filter(e => e && !e.hidden) },
     census: { title: 'Growth', els: () => [$('#growth-census-body')].filter(e => e && !e.hidden) },
-    dev: { title: 'Development servicing summary', els: () => [$('#detail-body')] },
-    loads: { title: 'What loads it', els: () => [TS().toolScopeBody() || $('#detail-body')] },
-    whatif: { title: 'Test site servicing check', els: () => [$('#detail-body')] },
+    dev: { title: 'Development servicing summary', els: () => [$('#pane-dev-body'), $('#scope-body')].filter(e => e && !e.hidden && e.innerHTML) },
+    loads: { title: 'What loads it', els: () => [TS().toolScopeBody() || $('#scope-body')] },
+    whatif: { title: 'Test site servicing check', els: () => [$('#scope-body')] },
   };
   // One criteria row for exports: group, item, used value, Peel default, unit,
   // and the source document + version behind the default.
@@ -147,7 +147,7 @@
   }
   function reportMeta(scope) {
     const bc = CA().baselineCensus(), R = App().state.reports;
-    const title = scope === 'loads' ? (((TS().toolScopeBody() || $('#detail-body')).querySelector('h3') || {}).textContent || SCOPES.loads.title) : scope === 'dev' && DN().getCurrentProject() ? `${SCOPES.dev.title} – ${DN().getCurrentProject().title}` : scope === 'dev' && AS().selection.size ? `Selection servicing summary – ${fmtNum(AS().selection.size)} developments` : SCOPES[scope].title;
+    const title = scope === 'loads' ? (((TS().toolScopeBody() || $('#scope-body')).querySelector('h3') || {}).textContent || SCOPES.loads.title) : scope === 'dev' && DN().getCurrentProject() ? `${SCOPES.dev.title} – ${DN().getCurrentProject().title}` : scope === 'dev' && AS().selection.size ? `Selection servicing summary – ${fmtNum(AS().selection.size)} developments` : SCOPES[scope].title;
     return { title, lines: [
       `Prepared ${new Date().toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' })} with the Peel Growth Pipeline (unofficial)`,
       UNOFFICIAL,

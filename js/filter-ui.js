@@ -51,7 +51,8 @@
   }
   const FLAG_TESTS = {
     // Planning stage only: many open permits have no inspection dates in the source data.
-    stalled: p => PLANNING_PHASES.includes(p.phase) && !!p.last && Date.now() - p.last > 2 * YEAR_MS,
+    // SPEC 1.3: under review with no file event, permit or council item in 2+ years; never under appeal.
+    stalled: p => { const s = window.PeelPhases.proposedStateOf(p); return !!s && s.state === 'stalled'; },
     // The index precomputes this per project (p.appeal); full projects fall back
     // to scanning their records — the same test either way.
     appeal: p => p.appeal ?? (p.records || []).some(r => r.kind === 'application' && DD().STATUS_SIGNALS[0][0].test(r.statusRaw || '')),
@@ -110,6 +111,7 @@
       out.push({ label: from === to ? `${from}` : `${from}–${to}`, clear: () => TL().setYearsSilently(App().state.yearMin, App().state.yearMax) });
     }
     if (!App().state.newOnly) out.push({ label: 'Including alterations', clear: () => { App().state.newOnly = true; const el = $('#f-new'); if (el) el.checked = true; } });
+    if (App().state.lyr) out.push({ label: `Counts as ${[...App().state.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ')}`, clear: () => { App().state.lyr = null; } });
     return out;
   }
   let activeList = [];
@@ -126,29 +128,44 @@
     const sm = $('#sum-more'); if (sm) sm.textContent = more.length ? more.join(' · ') : 'Record type, size';
     const sx = $('#sect-more'); if (sx) sx.classList.toggle('active', more.length > 0);
   }
+  // The collapsed rows show their current value (SPEC §4: Where / What / When / Counts as / Flags).
+  function renderRowValues() {
+    const S = App().state, set = (id, t) => { const el = $(id); if (el) el.textContent = t; };
+    const sel = id => { const el = $(id); return el && el.selectedOptions && el.selectedOptions[0] ? el.selectedOptions[0].textContent.toLowerCase() : ''; };
+    const areas = Object.keys(MM().AREA_F).map(k => PA().multiSummary(k, true)).filter(Boolean);
+    set('#fv-where', [S.muni || 'All of Peel', S.plant ? (SD().PLANT_SHORT[S.plant] || S.plant) : 'any plant', areas.length ? areas.join(', ') : 'any plan'].join(' · '));
+    set('#fv-what', [S.minUnits ? sel('#f-size') : 'any size', S.dwelling ? sel('#f-dwelling') : 'any dwelling', S.landuse !== App().DEFAULT_LANDUSE ? sel('#f-landuse') : 'any land use'].join(' · ').replace(/^./, c => c.toUpperCase()));
+    const from = S.yearFrom ?? S.yearMin, to = S.yearTo ?? S.yearMax;
+    set('#fv-when', `${App().timeActive() ? (from === to ? `${from}` : `${from}–${to}`) : 'All years'} · ${S.yearMode === 'any' ? 'any milestone' : sel('#f-milestone')}`);
+    set('#fv-counts', S.lyr ? [...S.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ') : 'Every layer');
+    const fl = PF.FLAG_META.filter(([k]) => S.flags[k]).map(([, l]) => l);
+    set('#fv-flags', fl.length ? fl.join(', ') : 'None');
+    for (const [id, on] of [['#fr-where', S.muni || S.plant || areas.length], ['#fr-what', S.minUnits || S.dwelling || S.landuse !== App().DEFAULT_LANDUSE], ['#fr-when', App().timeActive() || S.yearMode !== 'any'], ['#fr-counts', !!S.lyr], ['#fr-flags', fl.length]]) { const el = $(id); if (el) el.classList.toggle('active', !!on); }
+  }
   // One line saying what the map shows and why.
   function renderShowing() {
     const v = currentPhaseView();
     const what = v === 'all' ? 'developments (all phases)' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
     const years = App().timeActive() ? (() => { const a = App().state.yearFrom ?? App().state.yearMin, b = App().state.yearTo ?? App().state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
     const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (App().timeActive() ? 1 : 0) - (App().state.muni ? 1 : 0) - (App().state.search ? 1 : 0);
-    $('#f-showing').innerHTML = `Showing <strong>${fmtNum(App().state.filtered.length)}</strong> ${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''} · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
+    // The result count first (SPEC §4), then what it is.
+    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
   }
   function renderFilterUI() {
     renderSectionSummaries();
     renderShowing();
+    renderRowValues();
     activeList = activeFilters();
-    $('#active-filters').innerHTML = activeList.length
-      ? activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('') +
-        `<button type="button" class="btn small link" id="f-reset">Reset all</button>`
-      : '';
+    $('#active-filters').innerHTML = (activeList.length
+      ? `<button type="button" class="btn small" id="f-reset">Reset ${activeList.length} filter${activeList.length === 1 ? '' : 's'}</button>` + activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')
+      : '') + '<button type="button" class="btn small link" id="f-saveview" title="Save the filters, scope and map as a named view">+ Save this view</button>';
     renderEmptyMsg();
     DT().syncFiltersBtn();   // Phase 2 shell: the compact "Filters (n)" button label
   }
   // Reset every filter to its default. Shared by the "Reset all" chip and the
   // topbar's Peel trail step.
   function resetAllFilters() {
-    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
+    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, lyr: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
     MA().setCapYear(MM().THIS_YEAR);
     SF().syncFilterControls();
     SF().renderMuniChips();
@@ -157,6 +174,7 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) { resetAllFilters(); return; }
+    if (e.target.closest('#f-saveview')) { MA().saveCurrentView(); return; }
     const b = e.target.closest('[data-i]'); if (!b) return;
     activeList[+b.dataset.i].clear();
     App().applyFilters();

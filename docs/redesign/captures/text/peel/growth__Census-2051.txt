@@ -1,0 +1,42 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+Since the 2021 Census, Peel Region has added ≈98,797 people in 33,524 dwellings; 625,500 more people are approved or proposed in the application pipeline.
+
+2021 Census
+1,451,022people
+450,746 dwellings · 1,746 dissemination areas
++ Built since (estimate today)
+1,549,819people
+484,270 dwellings · +33,524 units (+7.4%)
++9,920 jobs
++ Approved or permitted, not yet built
+1,742,590people
+544,775 dwellings · +60,505 units (+20.9%) vs 2021
++28,700 jobs
++ Proposed: full build-out of applications
+2,175,305people
+693,532 dwellings · +148,757 units (+53.9%) vs 2021
++62,200 jobs
+People
+2,175,305pop
+Dwellings
+693,532units
+Jobs
+100,763jobs
+2021 Census
+1,451,022 people · 450,746 dwellings
+Built since 2021
++98,797 people · +33,524 dwellings · +9,920 jobs
+Committed (draft plan or site plan approved, permit, construction)
++192,772 people · +60,505 dwellings · +28,700 jobs
+Proposed (in review)
++432,714 people · +148,757 dwellings · +62,200 jobs
+
+Wastewater I&I from growth since 2021: 1,982 L/s on 7,624 ha of development sites.
+
+ⓘ Peel Region · 2021 Census baseline (timeline starts 2021) · built = permits completed since census day (May 11, 2021); Brampton and Caledon completion dates estimated from issue date; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of 2026-10-12.

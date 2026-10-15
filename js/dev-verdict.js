@@ -54,7 +54,7 @@
     if (d.pipesOff) bits.push('sewer pipes not assessed');
     else if (d.pipeMm != null) bits.push(`tightest pipe ${d.pipeMm} mm at ${d.pipePct}% of full capacity`);
     if (d.psName) bits.push(`${d.psName} ≈${d.psPct}% of firm capacity`);
-    if (d.plant) bits.push(d.over ? `${d.plant} screens over rated capacity` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it`);
+    if (d.plant) bits.push(d.over ? `${d.plant} screens over rated capacity` : `${d.plant} reserve ${d.reserve} ML/d — this site ${d.usePct}% of it${d.useNote ? ` (${d.useNote})` : ''}`);
     return { tone: bad ? 'bad' : warn ? 'warn' : 'ok', text: bits.join(' · ') || 'No capacity flags on its path' };
   };
   const verdictDc = (d) => {
@@ -93,6 +93,17 @@
     for (const c of (d.changes || []).slice(0, 4)) items.push({ tone: 'ok', tab: null, dev: c.key, text: c.text });
     return items;
   };
+  // Needs attention, grouped and counted (SPEC §5): Capacity (DC projects late, constraints at or
+  // past the trigger) · Stalled (every stalled site; the largest listed) · This week (real changes).
+  const needsGroups = (d) => {
+    const items = needsAttention(d);
+    const cap = items.filter(it => it.tab), stall = items.filter(it => it.dev && /^Stalled /.test(it.text)), week = items.filter(it => it.dev && !/^Stalled /.test(it.text));
+    return [
+      { name: 'Capacity', count: (d.adv || []).length + (d.trig || []).length, items: cap },
+      { name: 'Stalled', count: (d.stalled || []).length, items: stall, note: stall.length ? 'the largest (250+ units)' : '' },
+      { name: 'This week', count: (d.changes || []).length, items: week },
+    ];
+  };
   // One-line pointer to a number's home tab, used where a duplicate was removed.
   const homeLine = (tab, label) => `<button type="button" class="btn small link" data-foot-tab="${tab}">${label} →</button>`;
   // The brief HTML carries document-wide ids (dev-*); footer copies get prefixed ids so the
@@ -100,13 +111,13 @@
   const scopeBriefIds = (root) => {
     for (const n of root.querySelectorAll('[id^="dev-"]')) n.id = `f-${n.id}`;
   };
-  // [data-foot-tab] clicks anywhere, plus the development-brief buttons reused in the footer
-  // tabs whose handlers otherwise live on #detail-body ([data-pipe], [data-dcn-*]): no dead ends.
-  // Clicks inside #detail-body keep their existing handlers (this listener skips them).
+  // [data-foot-tab] clicks anywhere, plus the development-brief buttons ([data-pipe], [data-dcn-*],
+  // unit counts, files) wherever they are: no dead ends. Inside a result scope (#scope-body) the
+  // pipe and DC links are js/tool-scope.js's (handled once).
   document.addEventListener('click', e => {
-    if (e.target.closest('#detail-body')) return;
     const g = e.target.closest('[data-foot-tab]');
     if (g) { AT().showFootTab(g.dataset.footTab); return; }
+    if (e.target.closest('#scope-body') && e.target.closest('[data-pipe], [data-dcn-all], [data-dcn-cons], [data-dcn-relief], [data-dcn-filter]')) return;
     const pb = e.target.closest('[data-pipe]');
     if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
     if (e.target.closest('[data-dcn-all]')) { SC().loadSewers(); MP().showDcTiming(); return; }
@@ -140,7 +151,7 @@
   });
 
   // ---- Public contract ----
-  const api = { scopedDev, firstSentence, verdictWater, verdictWastewater, verdictDc, verdictMilestone, needsAttention, homeLine, scopeBriefIds };
+  const api = { needsGroups, scopedDev, firstSentence, verdictWater, verdictWastewater, verdictDc, verdictMilestone, needsAttention, homeLine, scopeBriefIds };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevVerdict = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -21,7 +21,8 @@
   const MM = () => window.PeelMapMarkers;
 
   // ---- Sewer profile: ground, pipe and the modelled flow along a route --------------------------
-  // For a route of 300 mm+ pipes (a trace, or downstream of a pipe): the ground (terrain tiles), the
+  // For a route of 300 mm+ pipes (a trace, or downstream of a pipe): the ground (lidar terrain model,
+  // terrain tiles where it has no value; js/elevation.js), the
   // pipe (Region of Peel inverts; where one isn't published it follows on from the pipe before at the
   // published slope, drawn dashed), and the sewage at the demand year: the normal depth in a
   // part-full pipe (Manning), or, over capacity, the hydraulic grade above the crown
@@ -50,14 +51,15 @@
     });
     // Back-fill pipes before the first published invert, from the one after.
     for (let k = segs.length - 2; k >= 0; k--) if (segs[k].up == null && segs[k + 1].up != null) { const g = segs[k]; g.dn = segs[k + 1].up; g.up = g.dn + (P[g.i][1] || 0.002) * g.len; g.est = true; }
-    let ground;
+    let ground, gsrc = [];
     try {
       const pts = segs.flatMap(g => [g.a, g.mid, g.b]);
-      const z = await Promise.all(pts.map(([lng, lat]) => Meas().elevAt(lat, lng).catch(() => null)));
+      gsrc = await window.PeelElevation.getGroundMany(pts.map(([lng, lat]) => ({ lat, lng })));
+      const z = gsrc.map(r => r.z);
       ground = segs.map((g, k) => [z[3 * k], z[3 * k + 1], z[3 * k + 2]]);
     } catch (e) { ground = segs.map(() => [null, null, null]); }
     if (seq !== PROF.seq) return;
-    PROF.data = { segs, ground, title };
+    PROF.data = { segs, ground, title, groundNote: window.PeelElevation ? window.PeelElevation.sourcesNote(gsrc) : '' };
     const tight = segs.reduce((b, g, k) => g.st.r1 != null && (!b || g.st.r1 > segs[b.k].st.r1) ? { k } : b, null);
     PROF.wins = [{ t: `Whole path (${(x / 1000).toFixed(1)} km)`, a: 0, b: x }];
     if (x > 2500) PROF.wins.push({ t: 'First 2 km', a: 0, b: 2000 });
@@ -65,7 +67,7 @@
     drawProfile(PROF.wins.length > 1 && x > 8000 ? (tight ? 2 : 1) : 0);
   }
   function drawProfile(w) {
-    const { segs, ground, title } = PROF.data, win = PROF.wins[w] || PROF.wins[0], P = MM().SEW.data.pipes;
+    const { segs, ground, title, groundNote } = PROF.data, win = PROF.wins[w] || PROF.wins[0], P = MM().SEW.data.pipes;
     const inWin = segs.map((g, k) => ({ g, z: ground[k] })).filter(({ g }) => g.x1 >= win.a && g.x0 <= win.b && g.up != null);
     const W = Math.min(1100, innerWidth - 40), H = Math.min(420, Math.max(260, innerHeight * 0.45)), L = 52, R = 14, T = 14, B = 34;
     // Water surface / hydraulic grade at each end of a pipe.
@@ -110,8 +112,8 @@
       <div class="prof-bar"><span class="seg">${PROF.wins.map((o, k) => `<button type="button" class="btn small${k === w ? ' on' : ''}" data-prof-win="${k}">${esc(o.t)}</button>`).join('')}</span>
         <span class="muted small">Sewage at <strong>${esc(String(yrT))}</strong> (Demand year) · ${fmtNum(inWin.length)} pipes${nSur ? ` · <strong class="pf-over-t">${nSur} surcharged</strong>` : ''}</span></div>
       <div class="prof-wrap">${svg}<div class="prof-tip" hidden></div></div>
-      <ul class="grow-legend prof-legend"><li><span class="pf-sw ground"></span>Ground (terrain tiles, ±1–2 m)</li><li><span class="pf-sw pipe"></span>Pipe (published inverts${nEst ? '; dashed: estimated from the slope' : ''})</li><li><span class="pf-sw water"></span>Sewage, part full</li><li><span class="pf-sw near"></span>85–100% of capacity</li><li><span class="pf-sw over"></span>Surcharged; red line = hydraulic grade</li></ul>
-      <p class="small muted">Flows at Peel criteria for the scenario (${esc(SvcTab().scenarioText())}). Normal depth in each pipe on its own (Manning, n = 0.013), not a backwater model; above capacity the grade line rises upstream at Sf = S0 × (Q / Qfull)². Depth of cover = ground − crown.</p>`;
+      <ul class="grow-legend prof-legend"><li><span class="pf-sw ground"></span>Ground (${groundNote && /lidar/.test(groundNote) ? (/terrain tiles/.test(groundNote) ? 'lidar 0.5 m; terrain tiles beyond its coverage' : 'lidar 0.5 m') : 'terrain tiles, ±1–2 m'})</li><li><span class="pf-sw pipe"></span>Pipe (published inverts${nEst ? '; dashed: estimated from the slope' : ''})</li><li><span class="pf-sw water"></span>Sewage, part full</li><li><span class="pf-sw near"></span>85–100% of capacity</li><li><span class="pf-sw over"></span>Surcharged; red line = hydraulic grade</li></ul>
+      <p class="small muted">Flows at Peel criteria for the scenario (${esc(SvcTab().scenarioText())}). Normal depth in each pipe on its own (Manning, n = 0.013), not a backwater model; above capacity the grade line rises upstream at Sf = S0 × (Q / Qfull)². Depth of cover = ground − crown. ${esc(groundNote || '')}</p>`;
     // Hover / tap: the pipe under the pointer.
     const svgEl = PROF.el.querySelector('.prof-svg'), tip = PROF.el.querySelector('.prof-tip'), cur = svgEl.querySelector('.pf-cur');
     const hitAt = ev => { const r = svgEl.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W, xx = win.a + (px - L) / (W - L - R) * (win.b - win.a); return { r, px, xx, hit: inWin.find(({ g }) => xx >= g.x0 && xx <= g.x1) }; };
@@ -147,8 +149,7 @@
     profMapBar.innerHTML = `<button type="button" class="btn small" data-prof-back>‹ Back to profile</button><button type="button" class="btn small" data-prof-pipe="${i}">Pipe details</button><button type="button" class="btn small link" data-prof-off aria-label="Clear the marked pipe">×</button>`;
     profMapBar.hidden = false;
     // On a phone, lower the bottom sheet for now so the pipe has room (back to the profile restores it).
-    const sh = $('#detail'), shH = sh && !sh.hidden && MA().phoneMap ? sh.getBoundingClientRect().height / innerHeight * 100 : 0;
-    if (shH > 32) { PROF.sheetH = shH; App().setSheetH(30); } else PROF.sheetH = null;
+    PROF.sheetH = null;
     MA().layoutMapBoxes(); map.invalidateSize();
     const bd = L.latLngBounds(c); bd.extend(L.latLng(mid).toBounds(300)); ST().fitClear(bd);
   }
@@ -162,17 +163,15 @@
     if (m) { const i = +m[1], all = ST().pipeRoute(i); let run = 0; const r = []; for (const k of all) { r.push(k); const c = SC().pipeCoords(MM().SEW.data.pipes[k]); for (let q = 1; q < c.length; q++) run += DI().dcM(c[q - 1], c[q]); if (run > 3000) break; } sewerProfile(r, `Sewer profile: ${MM().SEW.data.pipes[i][0]} mm sewer and ${(run / 1000).toFixed(1)} km downstream`); }
   });
 
-  // One home for tool results (design audit, Group 7): the Tool result tab, with its trail crumb;
-  // the #detail panel only when the tool framework is absent.
+  // One home for tool results (design audit, Group 7; SPEC §3): a scope in the right panel.
   const Tools = () => window.PeelTools;
   let resultView = null, resultTitle = null;   // this module's result while it is the open one
   function showResult(view, title, html, reopen) {
     resultView = view; resultTitle = title;
-    if (Tools() && Tools().openResult) { Tools().openResult({ title, html, reopen }); /* the trace summary and the servicing check carry their own note */ return; }
-    $('#detail-body').innerHTML = html; $('#detail').hidden = false; $('#detail').dataset.view = view; $('#detail').scrollTop = 0;
+    Tools().openResult({ title, html, reopen });   // the trace summary and the servicing check carry their own note
   }
-  const resultOpen = view => resultView === view && (Tools() && Tools().resultTitle ? Tools().resultTitle() === resultTitle : !$('#detail').hidden);
-  function closeResult() { resultView = null; if (Tools() && Tools().hasResult && Tools().hasResult()) Tools().closeResult(); else AC().closeDetail(); }
+  const resultOpen = view => resultView === view && Tools().resultTitle() === resultTitle;
+  function closeResult() { resultView = null; if (Tools().hasResult()) Tools().closeResult(); }
   // Trace from any point on the map: the nearest 300 mm+ sewer down to the plant. Returns the
   // trace; shows it only when asked (Inspect point and Fit use the trace without a panel).
   async function tracePoint(ll, show = true) {
@@ -243,8 +242,8 @@
       <ul class="wf-list">${whatIfs.map(w => `<li><button type="button" class="wf-open" data-wf-open="${esc(w.id)}"><strong>${esc(w.name || 'Test site')}</strong><small>${fmtNum(w.single + w.town + w.apartment)} units${w.jobs ? ` · ${fmtNum(w.jobs)} jobs` : ''}${w.include ? ' · counted in totals' : ''}</small></button><button type="button" class="btn small" data-wf-rm="${esc(w.id)}" aria-label="Remove ${esc(w.name || 'test site')}">Remove <span aria-hidden="true">×</span></button></li>`).join('')}</ul>
       <p><button type="button" class="btn small" data-wf-rmall>Remove all test sites</button></p>`, () => showWhatIfList());
   }
-  // Test-site controls work in the Tool result tab and in the #detail fallback.
-  const wfBodies = ['#detail-body', '#pane-tool-body'].map(q => $(q)).filter(Boolean);
+  // Test-site controls work in the result scope (right panel).
+  const wfBodies = ['#scope-body'].map(q => $(q)).filter(Boolean);
   const onWf = (type, fn) => wfBodies.forEach(b => b.addEventListener(type, fn));
   let wfCurrent = null;   // the test site whose form is open
   onWf('click', e => {
