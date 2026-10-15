@@ -214,3 +214,72 @@ Not built (decisions of 2026-10-15): source protection (CTC); NVCA regulation li
      include some water.
 7. **Missing as-of dates:** the Utility Line layer has no update date, so its as-of reads
    "not stated by the source".
+
+## Stage 3 (layer groups): what was built
+
+`js/layer-groups.js` (`PeelLayerGroups`) holds the group definitions; `js/map-markers.js` builds the
+Layers panel from it.
+
+**Groups.** Each group is an accordion section with:
+- a group switch: on turns on the group's main layers, off turns off all of them;
+- a count of layers on and in view, e.g. "2 on · 1 in view";
+- a one-line summary when folded.
+
+The six groups:
+1. **Developments:** developments, heatmap, site boundary on hover.
+2. **Capacity:** capacity colours, pressure zones, wastewater blocks, drainage areas.
+3. **Infrastructure:** existing watermains / sanitary / storm sewers, water facilities, planned DC
+   works. Under "Other utilities": gas pipelines and hydro lines (approximate, off by default).
+4. **Constraints:** regulation limits, floodplain, Greenbelt, Oak Ridges Moraine, Niagara Escarpment,
+   PSW / ANSI, Natural Heritage System, source protection (listed as "not included"), watercourses.
+5. **Planning context:** secondary plans / character areas, precincts (new layer), MTSAs, census
+   areas.
+6. **Base map:** background, lidar hillshade, labels, aerial opacity (new), orientation.
+
+**Presets.** Everything is off except Developments (and the site boundary on hover). Each view adds:
+- Planning: the planning context.
+- Water: pressure zones (capacity colours by zone), water facilities, existing watermains.
+- Wastewater: blocks, capacity colours, sanitary sewers.
+- Capital: planned DC works.
+
+Changes are remembered per view, as before, and the memory now includes the constraints, plan areas
+and hillshade. Planned DC works no longer come on in the Water and Wastewater views.
+
+**Draw order**, bottom to top, set in `PeelLayerGroups.Z` and used by every pane:
+1. base map (150)
+2. hillshade (210)
+3. constraints (300; fills ≤ 25%)
+4. census areas (320)
+5. planning areas (330)
+6. capacity (360)
+7. existing pipes (370)
+8. planned works (380)
+9. site boundaries (400)
+10. markers (600)
+11. traces (640)
+12. selection (650)
+
+**Share links and saved views.**
+- Share links carry `lg=<layers>~<open groups>`.
+- Saved views and per-view memory store `layers` and `groups`.
+- Links and saved views from before the groups carry no `lg`. They open as they did: the view's layers
+  plus `ms=`, with the other layers unchanged.
+
+**Legend.** It follows the group order: developments, capacity, infrastructure (with other
+utilities), then constraints.
+
+**Phone.** One group is open at a time, and the group headers wrap to fit the 236 px panel. Opening a
+development still folds the Layers panel, so it doesn't cover the selection.
+
+**Assumptions (Stage 3).**
+1. **Layers not built yet:** wastewater facilities, "Planned & under construction" and EAs are not in
+   the app. The capital-ea work owns them, and its files are not touched here, so their rows are left
+   out until they exist.
+2. **"Wastewater loads":** this is the loads selector (census / built / committed / proposed), not a
+   map layer, so it stays where it is.
+3. **"In view":**
+   - constraint layers report the features they drew;
+   - existing pipes count only from zoom 15, and the hillshade from zoom 11;
+   - other layers count as in view when on.
+4. **"Site boundaries":** these are drawn with Developments whenever it is on. The switch in the group
+   is the boundary on hover, the one setting the app has.
