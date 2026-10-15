@@ -409,6 +409,20 @@
     </div>`;
   }
 
+  // Expected by 2031 / 2041 split by layer (SPEC §2.5): the same forecast run on each layer's
+  // developments (Committed, Proposed, Anticipated), likely values, on the shared bar.
+  function paceByLayerHTML(items, cal) {
+    const Ly = root.PeelLayers, LB = root.PeelLayerBar; if (!Ly || !LB || !items.length) return '';
+    const ks = ['committed', 'proposed', 'anticipated'];
+    const by = Object.fromEntries(ks.map(k => [k, forecastBands(items.filter(i => Ly.layerOfPhase(i.stage) === k), cal)]));
+    const to = (k, y) => by[k].years.filter(r => r.year <= y).reduce((t, r) => t + r.likely, 0);
+    const unb = k => items.filter(i => Ly.layerOfPhase(i.stage) === k).reduce((t, i) => t + i.units, 0);
+    const max = ks.reduce((t, k) => t + unb(k), 0);
+    const row = y => `<div class="pace-ly"><span class="small">By ${y}</span>${LB.barHTML({ segments: ks.map(k => ({ layer: k, value: to(k, y), title: `${LB.LABEL[k]}: ≈${fmtNum(Math.round(to(k, y)))} of ${fmtNum(Math.round(unb(k)))} unbuilt units expected by ${y} (likely)` })), max })}</div>`;
+    return `<h3 class="sub-title" data-info="growth-layers">Expected by layer <span class="muted small">likely, of the unbuilt units in each layer</span></h3>${row(2031)}${row(2041)}
+      ${LB.legendHTML(ks.map(k => ({ layer: k, text: `${LB.LABEL[k]} ${fmtNum(Math.round(to(k, 2031)))} → ${fmtNum(Math.round(to(k, 2041)))} of ${fmtNum(Math.round(unb(k)))}` })))}`;
+  }
+
   // ---- Browser: the Growth › Timing sub-view ---------------------------------------
   function renderTiming() {
     const body = $('#timing-body'); if (!body) return;
@@ -434,7 +448,7 @@
       + tile('Expected by 2041', fmtNum(Math.round(sumTo(2041, 'likely'))), `range ${fmtNum(Math.round(sumTo(2041, 'low')))}–${fmtNum(Math.round(sumTo(2041, 'high')))}`, 'timing-tiles')
       + tile('Unbuilt in pipeline', fmtNum(Math.round(unbuilt)), unbuilt ? `≈${Math.round(sumTo(2041, 'likely') / unbuilt * 100)}% expected by 2041 (likely)` : '', 'timing-tiles')
       + tile('Calibration', fmtNum(cal.nObs), `dated file events, cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}`, 'timing-calibration')
-      + `</div>`;
+      + `</div>` + paceByLayerHTML(items, cal);
 
     // Calibration table: approval / completion rates and lags by municipality × type.
     const munis = DU().MUNIS || ['Mississauga', 'Brampton', 'Caledon'];

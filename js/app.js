@@ -36,7 +36,7 @@
   // Filter-panel state (Phase 1): flags are multi-select (see FLAG_TESTS and js/filters.js
   // FLAG_META); the counting basis lives in the Scenario control, not the filters.
   const DEFAULT_FLAGS = () => ({ stalled: false, appeal: false, dcwait: false, psover: false, week: false, watched: false, est: false });
-  const DEFAULT_BASIS = 'all';        // counting basis: 'all' | 'committed' | 'remaining'
+  const DEFAULT_BASIS = 'all';        // counting basis: 'all' | 'buildout' | 'committed' | 'remaining'
   // 'all' (the default: every application, as the municipalities map them) | 'growth' |
   // 'residential' | 'mixed' | 'employment'.
   const DEFAULT_LANDUSE = 'all';
@@ -57,7 +57,7 @@
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
     landuse: DEFAULT_LANDUSE,
-    basis: ['all', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
+    basis: ['all', 'buildout', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
     criteria: mergeCriteria(store.get('criteria', null)),

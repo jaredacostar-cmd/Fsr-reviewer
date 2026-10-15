@@ -16,7 +16,7 @@
   // left to build), committed by D-5-1, people and jobs from PeelDemand.estimate at the chosen
   // basis. Each development is measured once and its shares multiply it, so Peel equals the
   // Overview.
-  const KEYS = ['planned', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs'];
+  const KEYS = ['planned', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated'];
   const zero = () => Object.fromEntries(KEYS.map(k => [k, 0]));
   const addInto = (t, m, f) => { for (const k of KEYS) t[k] += (m[k] || 0) * f; };
 

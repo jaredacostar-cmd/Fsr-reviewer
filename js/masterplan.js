@@ -672,6 +672,12 @@
     const qy = c.q(y), base = Math.max(capWith(c, y, off), c.q('today'));
     return Math.max(0, qy - base) / m;
   }
+  // People held back at a demand level ('committed', or null = build-out) against the capacity at
+  // build-out with every project as scheduled: the Committed part of growth waiting on works (SPEC §2.6).
+  function heldAtLevel(c, level, off) {
+    const m = ratePP(c); if (!m) return 0;
+    return Math.max(0, c.q(level) - Math.max(capWith(c, null, off), c.q('today'))) / m;
+  }
   function growthPpu() {
     let pop = 0, units = 0;
     for (const p of App().state.projects) { const lay = MM().svcLayerOf(p); if (lay !== 'approved' && lay !== 'proposed') continue; const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf); if (e.totalUnits > 0) { pop += e.population; units += e.totalUnits; } }
@@ -721,7 +727,7 @@
     dcItemCons,
     reliefAdd,
     capWith,
-    heldPeople,
+    heldPeople, heldAtLevel,
     growthPpu,
     reliefKey,
     lineRelief,

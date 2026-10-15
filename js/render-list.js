@@ -82,7 +82,7 @@
       : pg.pages > 1 ? `Showing ${pg.start + 1}–${pg.start + pg.items.length} of ${fmtNum(sorted.length)} — page ${pg.page + 1} of ${pg.pages}.` : '';
     $('#project-list').innerHTML = pg.items.map((p, i) =>
       `<li><button type="button" data-i="${pg.start + i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
-        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(p.buildout.remaining)} left` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
+        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)}${window.PeelLayers && window.PeelLayerBar ? ` → ${window.PeelLayerBar.nameHTML(window.PeelLayers.layerOf(p))}` : ''} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
     $('#project-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
       const p = sorted[+b.dataset.i];

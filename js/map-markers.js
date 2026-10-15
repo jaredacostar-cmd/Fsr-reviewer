@@ -372,7 +372,8 @@
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
   const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Committed (draft plan or site plan approved)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
-  const layerColors = () => ({ existing: 'var(--text-muted)', built: phaseColor('completed'), approved: phaseColor('approved'), proposed: 'var(--layer-proposed)', out: 'var(--nodata)' });
+  // The layer tokens (SPEC §2): one hue, lightness = certainty.
+  const layerColors = () => ({ existing: 'var(--ly-existing)', built: 'var(--ly-built)', approved: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
   function svcLayerOf(p) {
     if (p.phase === 'cancelled') return 'out';
