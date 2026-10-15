@@ -1400,9 +1400,21 @@
       const v = recs.filter(r => !(f === 'units' && isDemolition(r))).map(r => r[f]).filter(x => x != null && x > 0);
       return v.length ? Math.max(...v) : null;
     };
+    // A block of separate proposals is titled as a block (SPEC 1.9): its streets and how many draft
+    // / site plans it holds still to build — not one file's address.
+    let title = (hasAddr(best) && best.address) || best.ref || '(no address)';
+    if (fv.lands.length >= 2) {
+      const open = fv.files.filter(f => f.live && f.land != null && ['draft', 'siteplan'].includes(f.kind) && f.phase !== 'completed');
+      const streetOf = a => String(a || '').split(/\s+(?:&|and)\s+|[,;]/i)[0].replace(/^[\d\s&,-]+/, '').replace(/\b(rd|road|dr|drive|st|street|ave|avenue|blvd|boulevard|pkwy|parkway|cres|crescent|ln|lane|ct|court|way|trl|trail|sdrd|e|w|n|s|east|west|north|south)\b\.?/gi, ' ').replace(/\s+/g, ' ').trim()
+        .toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+      const byUnits = recs.filter(r => r.kind === 'application' && hasAddr(r) && r.phase !== 'cancelled').sort((a, b) => (b.units || 0) - (a.units || 0));
+      const names = [...new Set([best, ...byUnits].map(r => streetOf(r.address)).filter(x => x && !/^\d/.test(x)))].slice(0, 2);
+      const kinds = open.every(f => f.kind === 'draft') ? 'draft plan' : 'draft / site plan';
+      if (names.length && open.length >= 2) title = `${names.join(' / ')} block · ${open.length} ${kinds}s`;
+    }
     return {
       key,
-      title: (hasAddr(best) && best.address) || best.ref || '(no address)',
+      title,
       municipality: recs[0].municipality,
       phase,
       rank: PHASE_BY_KEY[phase].rank,
@@ -1445,6 +1457,14 @@
     };
   }
 
+  // Units not yet built (SPEC 1.6): the development's count less its completed units, one definition
+  // for Growth › Pipeline "left to build" and Timing "unbuilt".
+  function unbuiltOf(p) {
+    if (!p || p.phase === 'cancelled' || !(p.units > 0)) return 0;
+    if (p.buildout) return Math.max(0, p.units - (p.buildout.completed || 0));
+    return p.phase === 'completed' ? 0 : p.units;
+  }
+
   // The same file can come from two layers (e.g. "all permits" and "growth" permits):
   // merge by municipality + kind + file number, keeping the furthest phase.
   function dedupeRecords(records) {
@@ -1479,7 +1499,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

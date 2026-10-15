@@ -39,7 +39,9 @@ test('pipelineTotals: one definition — every development with units, counted o
   assert.equal(t.planned, 188);
   assert.equal(t.permitted, 118);
   assert.equal(t.completed, 78);
-  assert.equal(t.left, 70);
+  // Left to build = planned − completed (SPEC 1.6: Growth's "left" is Timing's "unbuilt").
+  assert.equal(t.left, 110);
+  assert.equal(t.left, t.planned - t.completed);
   assert.deepEqual(G.pipelineTotals([]), { planned: 0, permitted: 0, completed: 0, left: 0, n: 0, withBuildout: 0 });
 });
 

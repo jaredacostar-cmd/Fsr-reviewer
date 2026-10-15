@@ -312,8 +312,9 @@
   function pipelineItems(projects) {
     const out = [];
     for (const p of projects || []) {
-      if (!p || p.phase === 'cancelled' || p.phase === 'completed') continue;
-      const units = p.buildout ? (p.buildout.unbuilt || 0) : (p.units || 0);
+      if (!p || p.phase === 'cancelled') continue;
+      // Unbuilt: the count less its completed units — Growth's "left to build" (SPEC 1.6).
+      const units = (P || (typeof require === 'function' ? require('./phases.js') : null)).unbuiltOf(p);
       if (!(units > 0)) continue;
       const ms = p.milestones || {};
       const ds = Object.values(ms).map(v => +v).filter(v => v > 0);

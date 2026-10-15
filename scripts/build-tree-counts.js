@@ -7,6 +7,8 @@
  *     a second tree of that development is "<key>~<root file>";
  *   - u / t: its count (countTree, the counts found online and your decisions in
  *     data/tree-overrides.json applied) and how it was made;
+ *   - c: the count as its parts, [file, units, kind, source] summing to u (SPEC 1.6): kind stated,
+ *     online (found online), override, condo, precon, minor, estimate (the wording) or permits;
  *   - n: its files in tree order, each with the link that put it there (rule, overlap,
  *     confidence), for the Files view and the branch sub-developments;
  *   - s: a signature of its planning files.
@@ -76,8 +78,10 @@ function build(res, overridesFile, records, areasFile) {
     const stating = t.nodes.filter(i => !nodes[i].cancelled && nodes[i].units > 0);
     const precon = /pre-consultation/i.test(c.basis) || (c.units > 0 && stating.length > 0 && stating.every(i => nodes[i].role === 'precon' || nodes[i].refs.some(r => /^PRE[-.]?\d/i.test(r))));
     let units = c.units || 0, basis = c.basis || '', flag = precon ? 'estimate (pre-consultation)' : /found online/.test(basis) ? 'found online' : '';
-    if (o && o.units != null) { units = o.units; basis = `your override (${o.decidedOn}): ${o.reason}`; flag = 'override'; overridden++; }
-    return { t, rootRef, owner: holders[0] || null, units, basis, flag, live: !t.nodes.every(i => nodes[i].cancelled) };
+    // SPEC 1.6: the count as its parts, each file's units and how it is known.
+    let parts = (c.parts || []).map(([i, u, kind, src]) => [i == null ? '' : (nodes[i].refs[0] || nodes[i].id), u, kind, src || null]);
+    if (o && o.units != null) { units = o.units; basis = `your override (${o.decidedOn}): ${o.reason}`; flag = 'override'; overridden++; parts = [[rootRef, o.units, 'override', o.reason || null]]; }
+    return { t, rootRef, owner: holders[0] || null, units, basis, flag, parts, live: !t.nodes.every(i => nodes[i].cancelled) };
   });
   // 2. Keys: the owner's key for its largest tree, "<key>~<root>" for the others.
   const byOwner = new Map();
@@ -108,7 +112,7 @@ function build(res, overridesFile, records, areasFile) {
     const tg = tagsByTree && tagsByTree[k];
     const a = tg ? tg.tags.filter(g => areaIdx.has(g.id)).map(g => [areaIdx.get(g.id), +g.share.toFixed(3)]) : [];
     const mt = tg ? tg.tags.filter(g => g.kind === 'MTSA').map(g => g.id) : [];
-    devs.push({ k: x.key, root: x.rootRef, u: x.units, t: [[x.rootRef, x.units, x.basis, x.flag]], n: order, ...(a.length ? { a } : {}), ...(mt.length ? { mt } : {}) });
+    devs.push({ k: x.key, root: x.rootRef, u: x.units, t: [[x.rootRef, x.units, x.basis, x.flag]], ...(x.parts.length ? { c: x.parts } : {}), n: order, ...(a.length ? { a } : {}), ...(mt.length ? { mt } : {}) });
     for (const i of x.t.nodes) files[nodes[i].id] = d;
   }
   // 4. Permits: where the tree placed them, recorded only when that differs from where the rest of
