@@ -79,3 +79,35 @@ test('tab HTML: tiles, coming up, list with filters, outputs; scoped to a munici
   assert.match(M.eaTabHTML({ eas: EAS, today: '2026-10-15', thisYear: 2026, near: { title: 'Far', lat: 43, lng: -79, m: 1000 } }), /No environmental assessments mapped within 1 km of Far/);
   assert.ok(!/<img|<script/i.test(M.eaTabHTML({ eas: [{ ...EAS[0], name: '<img onerror=x>' }], today: '2026-10-15', thisYear: 2026, f: { show: 'all' } })), 'names are escaped');
 });
+
+test('build: the preferred solution is read from report text, skipping contents lines and contact text', () => {
+  const E = require('../scripts/ea-lib.js');
+  const report = `Table of Contents\n3.4 The preferred solution is described ........................ 12\nExecutive Summary\nFour alternatives were assessed. The preferred solu-\ntion is to twin the existing trunk sewer along Cawthra Road between Dundas Street and the Lakeview WRRF, with a new 1,500 mm pipe. Construction is planned for 2028.`;
+  assert.equal(E.extractDecision(report), 'The preferred solution is to twin the existing trunk sewer along Cawthra Road between Dundas Street and the Lakeview WRRF, with a new 1,500 mm pipe.');
+  assert.equal(E.extractDecision('The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.'), 'The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.');
+  assert.equal(E.extractDecision('No conclusion here. Alternatives were screened.'), null);
+  assert.equal(E.extractDecision('The preferred solution is to contact jane@example.ca for the details of the study team.'), null, 'contact text never kept');
+});
+
+test('build: same-system capital work inside a confident study area is linked, as a weaker match', () => {
+  const E = require('../scripts/ea-lib.js');
+  const area = { type: 'Polygon', coordinates: [[[-79.80, 43.70], [-79.78, 43.70], [-79.78, 43.72], [-79.80, 43.72], [-79.80, 43.70]]] };
+  const cap = { records: [
+    { id: 'w-in', projectNumber: '24-1', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.71], [-79.79, 43.71]] } },
+    { id: 's-in', projectNumber: '24-2', system: 'wastewater', geometry: { type: 'LineString', coordinates: [[-79.795, 43.705], [-79.79, 43.705]] } },
+    { id: 'w-out', projectNumber: '24-3', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.70, 43.71], [-79.69, 43.71]] } },
+  ] };
+  assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'medium', geometry: area }, cap).map(x => [x.id, x.method]), [['w-in', 'inside the study area']]);
+  assert.deepEqual(E.linkCapitalInArea({ system: 'multi', geomConfidence: 'high', geometry: area }, cap).map(x => x.id), ['w-in', 's-in']);
+  assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'low', geometry: area }, cap), [], 'not from a low-confidence area');
+  assert.deepEqual(E.linkCapitalInArea({ system: 'roads', geomConfidence: 'high', geometry: area }, cap), [], 'not for roads EAs');
+});
+
+test('the EA page shows an extracted decision as an extract, with its source', () => {
+  const html = M.eaScopeHTML({ id: 'x', name: 'X', status: 'complete', system: 'water', milestones: [], links: { report: { url: 'https://peelregion.ca/x.pdf', label: 'ESR' } }, decision: { text: 'The preferred solution is a new reservoir.', method: 'extracted from the report (automatic; check the report)' }, related: { capitalProjects: [{ id: 'c1', projectNumber: '24-1', method: 'inside the study area' }] } }, { capitalById: () => ({ workType: 'WM', status: 'planned' }) });
+  assert.match(html, /The preferred solution is a new reservoir\. <small class="muted">\(extracted from the report \(automatic; check the report\)\)<\/small>/);
+  assert.match(html, /\(inside the study area\)/);
+  const { cols, rows } = M.eaSheetRows([{ id: 'x', name: 'X', system: 'water', status: 'complete', milestones: [], decision: { text: 'Twin it.' }, related: { capitalProjects: [{ projectNumber: '24-1' }, { projectNumber: '24-1' }] }, links: {} }]);
+  assert.equal(rows[0][cols.indexOf('Decision (from the report; check it)')], 'Twin it.');
+  assert.equal(rows[0][cols.indexOf('Linked capital projects')], '24-1');
+});

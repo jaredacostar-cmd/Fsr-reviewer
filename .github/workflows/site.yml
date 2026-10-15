@@ -65,11 +65,25 @@ jobs:
         timeout-minutes: 10
         run: node scripts/build-tree-counts.js --out data
 
+      # Region capital projects (construction progress) and environmental assessments (status, next
+      # steps, report decisions, links to the capital projects). Each refuses to write when it reads
+      # much less than last week; a failure keeps last week's files.
+      - name: Capital projects
+        continue-on-error: true
+        timeout-minutes: 20
+        run: node scripts/build-capital.js --out data
+      - name: Environmental assessments
+        continue-on-error: true
+        timeout-minutes: 40
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
+          node scripts/build-eas.js --out data --capital data/capital.json
+
       - name: Commit if changed
         run: |
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json
+          git add data/snapshot.json data/history.json data/areas.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv
           if git diff --cached --quiet; then
             echo "No changes."
           else

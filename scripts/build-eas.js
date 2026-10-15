@@ -130,6 +130,20 @@ function facilityPoints() {
   return F.registry({ waterFacilities: readJSON(path.join(root, 'data', 'water-facilities.json'), { facilities: [] }).facilities, wwFacilities: readJSON(path.join(root, 'data', 'ww-facilities.json'), { facilities: [] }).facilities, wwPlants: sv.plants || [], dcInfra: readJSON(path.join(root, 'data', 'dc-infra.json'), {}) });
 }
 
+// A report PDF as text (pdftotext from poppler-utils), or null. Large or slow files are skipped.
+async function pdfText(url) {
+  const { execFileSync } = require('child_process'), os = require('os');
+  try {
+    const r = await fetch(url, { headers: { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/fsr-reviewer)' }, signal: AbortSignal.timeout(90000) });
+    if (!r.ok) return null;
+    const buf = Buffer.from(await r.arrayBuffer()); if (buf.length > 80e6 || buf.subarray(0, 4).toString() !== '%PDF') return null;
+    const f = path.join(os.tmpdir(), `ea-${Date.now()}.pdf`); fs.writeFileSync(f, buf);
+    // The executive summary and the conclusions hold the preferred solution: the first 40 pages are enough.
+    const out = execFileSync('pdftotext', ['-l', '40', '-layout', f, '-'], { maxBuffer: 64e6, timeout: 60000 }).toString();
+    fs.unlinkSync(f); return out;
+  } catch (e) { console.log(`  report not read: ${url} (${e.message.slice(0, 80)})`); return null; }
+}
+
 async function main() {
   const prev = readJSON(path.join(outDir, 'eas.json'), null) || readJSON(path.join(root, 'data', 'eas.json'), null);
   const overrides = readJSON(path.join(root, 'data', 'eas-overrides.json'), {});
@@ -213,13 +227,27 @@ async function main() {
   // Links.
   for (const ea of eas) {
     const dc = E.linkDc(ea, dcFac, facNameToPt);
-    const cap = capital ? E.linkCapital(ea, capital, dc) : [];
+    const cap = capital ? [...E.linkCapital(ea, capital, dc), ...E.linkCapitalInArea(ea, capital)].filter((x, i, a) => a.findIndex(y => y.id === x.id) === i) : [];
     const facs = facPts.filter(f => ea.geometry && E.distToGeom(f.lnglat, ea.geometry) <= 300 || E.tokens(f.name).length && E.tokens(f.name).every(t => E.tokens(ea.name).includes(t))).map(f => f.name);
     ea.related = { dcProjects: dc, capitalProjects: cap, facilities: [...new Set(facs)] };
     ea.lastChecked = today;
   }
 
+  // Decisions: for completed EAs, the preferred-solution passage of the report (an automatic extract,
+  // labelled as one; data/eas-overrides.json can replace it). Needs pdftotext (poppler-utils).
+  let decided = 0;
+  for (const ea of eas) {
+    if (!(ea.status === 'complete' || ea.status === 'addendum') || !ea.links?.report?.url || !/\.pdf(\?|$)/i.test(ea.links.report.url)) continue;
+    const txt = await pdfText(ea.links.report.url);
+    const d = txt && E.extractDecision(txt);
+    if (d) { ea.decision = { text: d, source: ea.links.report.url, method: 'extracted from the report (automatic; check the report)' }; decided++; }
+  }
+  console.log(`Decisions extracted from reports: ${decided}`);
+
   const final = E.applyOverrides(eas, overrides).map(({ municipalities, ...e }) => e);
+  // A weekly rebuild must not replace good data with a partial read (the Region's site down).
+  const pages = final.filter(e => e.links?.page).length, prevPages = (prev?.eas || []).filter(e => e.links?.page).length;
+  if (prevPages && pages < prevPages * 0.8 && !process.argv.includes('--force')) { console.error(`Only ${pages} project pages read against ${prevPages} last time: not written (pass --force to accept).`); process.exit(1); }
   const changes = E.changesSince(prev, final, today);
   const out = {
     version: 1,

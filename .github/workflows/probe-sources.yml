@@ -389,9 +389,11 @@ jobs:
         if: inputs.mode == 'eas'
         timeout-minutes: 40
         run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
           if [ "${{ inputs.only }}" = "with-capital" ]; then
-            node scripts/build-capital.js --out /tmp/capital > /tmp/capital.log
-            node scripts/build-eas.js --out data --capital /tmp/capital/capital.json
+            # The published capital data when it is there; otherwise a fresh build (not committed).
+            if [ -f data/capital.json ]; then CAP=data/capital.json; else node scripts/build-capital.js --out /tmp/capital > /tmp/capital.log; CAP=/tmp/capital/capital.json; fi
+            node scripts/build-eas.js --out data --capital "$CAP"
           else
             node scripts/build-eas.js --out data --capital /nonexistent
           fi
