@@ -6,8 +6,8 @@ cannot reach these hosts). The raw results are in `data/probe/constraints-lidar.
 (−80.16, 43.47 to −79.48, 44.00). "CORS" is whether a browser on `https://jaredacostar-cmd.github.io`
 may read the endpoint (`*` or the site's origin returned in `Access-Control-Allow-Origin`).
 
-Nothing has been built or shipped. **Waiting for your approval** of the recommendations below,
-and for your decision on the four items under "Stop: licence or source unclear".
+Nothing has been built or shipped in this stage. The recommendations below were approved on
+2026-10-15 with the four decisions under "Decisions".
 
 ## Elevation
 
@@ -33,9 +33,9 @@ CGVD2013 monument.
 |---|---|---|---|---|---|---|---|---|---|
 | **CVC regulation limit 2025** (current, O. Reg. 41/24) | Credit Valley Conservation | `services1.arcgis.com/d0ZCwU7eGKVeNiEE/…/Generic_Regulations_Limit_2025/FeatureServer/0` (also on `geohub.cvc.ca`) | Feature service (1 multipart polygon) | 1 (whole watershed) | Parcel scale | Edited 2026-09-10 | CVC Open Data Licence v1.0 (2024 item states it; the 2025 item links the licence PDF) | Yes | **Keep** (in the app today, pre-cut into tiles). Rebuild from the 2026-09 edit. |
 | **TRCA regulation limit 2025** | Toronto and Region CA | `…/TRCA_Regulation_Limit2/FeatureServer/0` | Feature service | 3,513 | Parcel scale | 2026-04-29 | TRCA Open Data Licence v1.0 | Yes | **Keep** (in the app today). |
-| NVCA regulation limit (north Caledon) | Nottawasaga Valley CA | — none published by NVCA; only a Dufferin County copy (`DufferinGIS/NVCA_Regulation_Line_2024`, "DufferinOnly") and a 2021 Grey County mirror (0 in Peel) | — | — | — | — | — | — | **Not published for Caledon.** Checklist line reads "not published for Caledon (NVCA area)". See "Stop". |
+| NVCA regulation limit (north Caledon) | Nottawasaga Valley CA | — none published by NVCA; only a Dufferin County copy (`DufferinGIS/NVCA_Regulation_Line_2024`, "DufferinOnly") and a 2021 Grey County mirror (0 in Peel) | — | — | — | — | — | — | **Skipped** (decision 3): "not published for the NVCA area". |
 | **CVC regulatory floodplain** | Credit Valley Conservation | `…/Regulatory_Floodplain_areas/FeatureServer/0` (CVC_RegulatoryFloodlines_Feb2026) | Polygons | 1,000+ | Engineered floodlines | 2026-02-13 | CVC Open Data Licence v1.0 (stated in the service copyright) | Yes | **Use.** |
-| TRCA floodplain (generalized) | Toronto and Region CA | `…/FloodPlain_Regulatory/FeatureServer/2` and `…/Floodline_TRCA_Polygon/FeatureServer/1` | Polygons (+ floodlines) | 640 | 1:144,448 min scale; TRCA says "generalized, not a regulatory floodplain map" | 2026-09-21 | **Item states a disclaimer only, no licence** | Yes | See "Stop". If cleared: use with TRCA's own disclaimer in the label. |
+| TRCA floodplain (generalized) | Toronto and Region CA | `…/FloodPlain_Regulatory/FeatureServer/2` and `…/Floodline_TRCA_Polygon/FeatureServer/1` | Polygons (+ floodlines) | 640 | 1:144,448 min scale; TRCA says "generalized, not a regulatory floodplain map" | 2026-09-21 | **Item states a disclaimer only, no licence** | Yes | **Use, with TRCA's disclaimer** (decision 1). |
 | NVCA floodplain | NVCA | none for Caledon (Grey County mirror, 0 in Peel) | — | — | — | — | — | — | "Not published for Caledon (NVCA area)". |
 | **Greenbelt Plan area** | Ontario (MMAH), LIO | `ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open06/MapServer/17` (outer boundary), `/15` (designation: Protected Countryside, Urban River Valley, ORM Conservation Plan, Niagara Escarpment Plan) | Polygons | 1 / 31 | Provincial plan schedules | Item 2025-11-27 | OGL – Ontario | Yes | **Use** (`/15` gives all four designations in one layer). |
 | **Oak Ridges Moraine Conservation Plan** | Ontario, LIO | `…/LIO_Open06/MapServer/29` (planning area), `/28` (land use designation) | Polygons | 1 / 113 | Plan schedules | 2026-08-04 | OGL – Ontario | Yes | **Use** both. |
@@ -43,25 +43,26 @@ CGVD2013 monument.
 | **Provincially significant wetlands** | Ontario (MNR), LIO | `…/LIO_Open01/MapServer/15` (Wetland With Significance; `WETLAND_SIGNIFICANCE` = Evaluated-Provincial) | Polygons | 19,252 wetlands (PSW subset by field) | 1:10,000 | — (`VERIFICATION_STATUS_DATE` per feature) | OGL – Ontario | Yes | **Use**, filtered to Evaluated-Provincial (PSW). |
 | **ANSI** | Ontario (MNR), LIO | `…/LIO_Open05/MapServer/3` | Polygons | 101 | — | — | OGL – Ontario | Yes | **Use.** |
 | **Growth Plan Natural Heritage System** | Ontario, LIO | `…/LIO_Open06/MapServer/22` (`ENABLING_PLAN` = Growth Plan for the GGH; same layer also holds the Greenbelt, ORM and NEP systems) | Polygons | 354 | — | — | OGL – Ontario | Yes | **Use**, filtered to the Growth Plan (other plans' NHS shown with their plan). |
-| **Source protection (CTC)**: wellhead protection areas (A–D, E, Q1, Q2), intake protection zones, highly vulnerable aquifers, significant groundwater recharge areas, issue contributing areas | CTC Source Protection Region (TRCA, CVC, CLOCA), hosted by CVC | `geohub.cvc.ca/server/rest/services/SWP_Wellhead_Protection_Area_2024/FeatureServer/0`, `SWP_Intake_Protection_Zone_2024`, `SWP_Highly_Vulnerable_Aquifer_2024`, `SWP_Significant_Groundwater_RechargeArea_2024`, `SWP_Wellhead_ProtectionArea_E/Q1/Q2_2024` | Polygons | WHPA 101, IPZ 6, HVA 435, SGRA 1,316 | Assessment-report mapping | 2024 edition (items 2025-10 to 2026-03) | **Linked PDF** (camaps item 9813a6fc…; presumed CVC Open Data Licence v1.0) | Yes | See "Stop". If cleared: use, CTC 2024. |
+| **Source protection (CTC)**: wellhead protection areas (A–D, E, Q1, Q2), intake protection zones, highly vulnerable aquifers, significant groundwater recharge areas, issue contributing areas | CTC Source Protection Region (TRCA, CVC, CLOCA), hosted by CVC | `geohub.cvc.ca/server/rest/services/SWP_Wellhead_Protection_Area_2024/FeatureServer/0`, `SWP_Intake_Protection_Zone_2024`, `SWP_Highly_Vulnerable_Aquifer_2024`, `SWP_Significant_Groundwater_RechargeArea_2024`, `SWP_Wellhead_ProtectionArea_E/Q1/Q2_2024` | Polygons | WHPA 101, IPZ 6, HVA 435, SGRA 1,316 | Assessment-report mapping | 2024 edition (items 2025-10 to 2026-03) | **Linked PDF** (camaps item 9813a6fc…; presumed CVC Open Data Licence v1.0) | Yes | **Skipped** (decision 2). |
 | **Watercourses** | Ontario (MNR), Ontario Hydro Network, LIO | `…/LIO_Open01/MapServer/26` (OHN Watercourse), `/25` (Waterbody) | Lines / polygons | 15,343 / 7,421 | 1:10,000 | — | OGL – Ontario | Yes | **Use OHN** as the base layer (in the app today). |
 | Watercourses (Region of Peel) | Region of Peel | `services6.arcgis.com/ONZht79c8QWuX759/…/Watercourses/FeatureServer/0` | Lines | 890 | — | 2021-10-04 | Open Data Licence for the Regional Municipality of Peel v1.0 | Yes | Keep as today (named, with watershed); OHN for the 30 m / 120 m checks. |
 | Gas pipelines, hydro lines | Ontario, LIO Utility Line | `…/LIO_Open05/MapServer/11` | Lines | 127 | Varies ("located" accuracy field) | — | OGL – Ontario | Yes | **Keep, off by default**, labelled "approximate; call Ontario One Call before any work". The app's OpenStreetMap fallback (ODbL) needs its attribution shown, or drop it. |
 | Brampton survey controls (benchmark) | City of Brampton | `maps1.brampton.ca/…/ACRIS/ACRIS/MapServer/15` | Points | 451 | Survey | — | CC BY | Yes | For the Stage 1 benchmark test only. |
 
-## Stop: licence or source unclear (your decision)
+## Decisions (2026-10-15)
 
-1. **TRCA floodplain.** The item carries TRCA's disclaimer ("generalized … not a regulatory flood
-   plain map") but no licence statement. TRCA's open data licence probably applies (it does to the
-   regulation limit), but the item doesn't say so. Ship with TRCA's disclaimer, or leave it out?
-2. **CTC source protection (CVC GeoHub, 2024).** The items link a licence PDF rather than naming it.
-   The same CVC items elsewhere name the "CVC Open Data Licence v1.0". Can you confirm with CVC, or
-   should I treat it as that licence?
-3. **NVCA (north Caledon).** NVCA publishes no regulation limit or floodplain covering Caledon; the
-   only copy online is Dufferin County's, clipped to Dufferin. The checklist would say "not published
-   for Caledon (NVCA area)". Do you want to request it from NVCA?
-4. **Gas pipelines / hydro lines.** LIO's Utility Line is OGL – Ontario and public, so it can be
-   shown. Keep it off by default with an "approximate" label, or remove it?
+1. **TRCA floodplain: ship, with TRCA's own disclaimer** on the layer, its legend entry, the feature
+   card and the Site checklist line ("generalized representation of the regulatory flood plain, not a
+   regulatory flood plain map; confirm with TRCA").
+2. **CTC source protection: skipped.** Not built. The Site checklist has no source protection line,
+   and the Constraints group has no source protection layer.
+3. **NVCA: skipped.** Nothing is built for the NVCA area. The checklist's regulation-limit and
+   floodplain lines read "not published for the NVCA area (north Caledon)" for a site there, so they
+   are never blank.
+4. **Gas pipelines / hydro lines: kept, off by default**, labelled approximate ("approximate location
+   (Land Information Ontario); call Ontario One Call before any work").
+
+Everything else in the tables above is approved as recommended.
 
 ## Notes for Stages 1–2
 
