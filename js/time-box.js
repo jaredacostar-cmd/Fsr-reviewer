@@ -61,7 +61,7 @@
 
   // ---- Imagery layers ----------------------------------------------------------------------------
   function imagery(rel, paneName) {
-    const t = rel.template.replace('{TileMatrix}', '{z}').replace('{TileRow}', '{y}').replace('{TileCol}', '{x}');
+    const t = SRC().leafletTemplate(rel);
     const [w, s, e, n] = S.box;
     return L.tileLayer(t, { pane: paneName, bounds: L.latLngBounds([[s, w], [n, e]]), maxZoom: 21, maxNativeZoom: 19, crossOrigin: true, attribution: `${SRC().attribution}, release ${rel.date}` });
   }
