@@ -123,7 +123,11 @@ async function main() {
   let changes = C.changesSince(prev, records, links, today);
   if (!changes.length && prev && prev.changes) changes = prev.changes.filter(c => c.date >= new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10));
 
-  const lastUpdate = records.map(r => r.lastUpdate).filter(Boolean).sort().pop() || null;
+  // The layer's "as of" date: the latest LastUpdate that is not in the future (a record dated after
+  // today is a data-entry slip in the source; it is logged, not used as the as-of date).
+  const future = records.filter(r => r.lastUpdate && r.lastUpdate > today);
+  if (future.length) console.log(`LastUpdate after today (ignored for "as of"): ${future.length} record(s): ${future.slice(0, 5).map(r => `${r.projectNumber} ${r.lastUpdate}`).join(', ')}`);
+  const lastUpdate = records.map(r => r.lastUpdate).filter(d => d && d <= today).sort().pop() || null;
   const out = {
     version: 1,
     generatedAt: new Date().toISOString(),
