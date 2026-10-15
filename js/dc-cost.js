@@ -199,12 +199,35 @@
     const e = D.estimate(all, App().state.criteria, 'all', App().jobsOf), v = dcRevenue(e);
     return v && e.totalUnits > 0 ? v.total / e.totalUnits : null;
   }
+  // The unit types are stated (a unit mix on a file) or not (read from the wording, or unknown).
+  const mixStated = p => !!(p && p.unitMix && ['single', 'semi', 'town', 'apartment'].some(k => p.unitMix[k] > 0));
+  // Without stated types, a range from all small apartments to all townhouses (SPEC 1.9: never the
+  // cheapest rate silently).
+  function dcRange(e) {
+    const r = dcRates(); if (!r || !e || !(e.totalUnits > 0)) return null;
+    return { low: e.totalUnits * r.aptSmall, high: e.totalUnits * r.town, units: e.totalUnits, r };
+  }
+  // Non-residential water + wastewater DC per m² of floor area (SPEC 1.9), from the same schedule
+  // when data/dc-costs.json carries it (rates.nonResidential: { water, wastewater } per m² GFA).
+  function dcNonResHTML(p) {
+    const em = App().empOf ? App().empOf(p) : null; if (!em || !(em.totalM2 > 0)) return '';
+    const R = App().state.dcCosts && App().state.dcCosts.rates, nr = R && R.nonResidential;
+    const perM2 = nr ? (nr.water || 0) + (nr.wastewater || 0) : null;
+    return `<div class="dcrev dcrev-nonres" data-info="dc-revenue"><div class="alloc-h"><strong>Non-residential water &amp; wastewater DCs</strong> ${perM2 ? `<span class="fr-b fr-ok">≈${fmtMoney(em.totalM2 * perM2)}</span>` : '<span class="fr-b fr-ref">Rate not loaded</span>'}</div>
+      <p class="small">${fmtNum(Math.round(em.totalM2))} m² of floor area${perM2 ? ` × ${fmtMoney(perM2)} per m² (water ${fmtMoney(nr.water)} + wastewater ${fmtMoney(nr.wastewater)}, ${esc(R.effective)} to ${esc(R.until)})` : ' × the Region\'s non-residential rate per m² — [ADD RATE]: not yet in data/dc-costs.json (rates.nonResidential)'}.</p></div>`;
+  }
   function dcRevenueHTML(p) {
-    const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf), v = dcRevenue(e); if (!v) return '';
+    const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf), v = dcRevenue(e); if (!v) return dcNonResHTML(p);
     const R = v.r.R;
+    if (!mixStated(p)) {
+      const g = dcRange(e);
+      return `<div class="dcrev" data-info="dc-revenue"><div class="alloc-h"><strong>Regional water &amp; wastewater DCs</strong> <span class="fr-b fr-due">${fmtMoney(g.low)} – ${fmtMoney(g.high)}</span></div>
+      <p class="small">Unit types are not stated on the files: ${fmtNum(Math.round(g.units))} units from all small apartments (≤750 sq ft, ${fmtMoney(g.r.aptSmall)}) to all townhouses (${fmtMoney(g.r.town)}). The FSR or the unit mix narrows it.</p>
+      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>${dcNonResHTML(p)}`;
+    }
     return `<div class="dcrev" data-info="dc-revenue"><div class="alloc-h"><strong>Regional water &amp; wastewater DCs</strong> <span class="fr-b fr-ok">≈${fmtMoney(v.total)}</span></div>
       <table class="dt dcrev-t"><tbody>${v.rows.map(([t, n, rt]) => `<tr><td>${esc(t)}</td><td class="n">${fmtNum(Math.round(n))} × ${fmtMoney(rt)}</td><td class="n">${fmtMoney(n * rt)}</td></tr>`).join('')}</tbody></table>
-      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>`;
+      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>${dcNonResHTML(p)}`;
   }
   // Developments outside the existing network that would connect to each planned main.
   function dcaConnectors() {
@@ -275,7 +298,11 @@
     out.sort((a, b) => order[a.rec] - order[b.rec] || b.bo - a.bo);
     // Held back with every project as scheduled (projects late or too small), the largest constraint.
     const baseBo = Math.max(0, ...[...base.values()].map(v => v.bo)), baseY = years.map((_, i) => Math.max(0, ...[...base.values()].map(v => v.ys[i])));
-    MP().DCA.key = k; MP().DCA.res = { list: out, years, ppu, rate, baseBo, baseY, nCons: cons.length };
+    // Of it, Committed growth (demand at the committed level already beyond the build-out capacity, on
+    // the same constraint); the rest is Proposed (SPEC §2.6).
+    const top = cons.reduce((a, c) => (base.get(c.id).bo > (a ? base.get(a.id).bo : 0) ? c : a), null);
+    const baseBoCom = top ? Math.min(baseBo, MP().heldAtLevel(top, 'committed', none)) : 0;
+    MP().DCA.key = k; MP().DCA.res = { list: out, years, ppu, rate, baseBo, baseBoCom, baseY, nCons: cons.length };
     return MP().DCA.res;
   }
   // Timeline chart for one project's tightest constraint: demand, existing capacity, capacity with
@@ -311,7 +338,7 @@
 
   const api = {
     dcAnalysis,
-    dcRevenueHTML,
+    dcRevenueHTML, dcNonResHTML, dcRange, mixStated,
     dcaBudget,
     DCB,
     dcaMergeRecs,

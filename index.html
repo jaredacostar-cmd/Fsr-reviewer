@@ -56,7 +56,7 @@
       <div class="tb-search" id="tb-search"></div>
       <div class="tb-views" id="tb-views" role="group" aria-label="Map view"></div>
       <div class="tb-scen-wrap">
-        <button type="button" class="tb-scen" id="tb-scen" aria-haspopup="dialog" aria-expanded="false" title="Scenario: the assumptions behind the servicing figures"></button>
+        <div class="tb-scen" id="tb-scen" title="Scenario: the layers counted and the assumptions behind the servicing figures"></div>
         <div class="tb-pop" id="tb-scen-pop" hidden></div>
       </div>
       <div class="tb-actions">
@@ -80,8 +80,8 @@
     </header>
     <aside class="sidebar" id="sidebar">
       <nav class="tabs" role="tablist" aria-label="Sidebar">
-        <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Explore</button>
-        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">This week <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span><span class="badge-n" id="alerts-n" hidden></span></button>
+        <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Find</button>
+        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">Watch <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span><span class="badge-n" id="alerts-n" hidden></span></button>
         <button type="button" role="tab" id="tab-btn-data" aria-controls="tab-data" aria-selected="false" data-tab="data">Data</button>
       </nav>
 
@@ -106,33 +106,38 @@
             <div class="pipeline" id="pipeline" role="group" aria-label="Developments by phase"></div>
             <p class="muted small" id="total-count">—</p>
           </div>
-          <div class="fp-sec">
-            <h2 class="label" data-info="filter-where">Where</h2>
+          <details class="fp-sec fp-row" id="fr-where">
+            <summary><h2 class="label" data-info="filter-where">Where</h2><span class="fr-val" id="fv-where"></span></summary>
             <div class="chips" id="f-muni" role="group" aria-label="Municipality"></div>
             <div id="f-areas"></div>
             <label class="field"><span class="label">Receiving plant</span><select id="f-plant" autocomplete="off"><option value="">Any plant</option><option value="Lakeview">G.E. Booth</option><option value="Clarkson">Clarkson</option><option value="Inglewood">Inglewood</option></select></label>
             <p class="small muted" id="f-drawn" hidden></p>
-          </div>
-          <div class="fp-sec">
-            <h2 class="label" data-info="filter-what">What</h2>
+          </details>
+          <details class="fp-sec fp-row" id="fr-what">
+            <summary><h2 class="label" data-info="filter-what">What</h2><span class="fr-val" id="fv-what"></span></summary>
             <div class="row two"><label class="field"><span class="label">Size</span><select id="f-size" autocomplete="off"><option value="0">Any size</option><option value="1">Adds units or jobs</option><option value="10">10+ units</option><option value="50">50+ units</option><option value="100">100+ units</option><option value="500">500+ units</option></select></label><label class="field"><span class="label">Dwelling type</span><select id="f-dwelling" autocomplete="off"><option value="">Any dwelling type</option><option value="single">Single / semi-detached</option><option value="town">Townhouse</option><option value="apartment">Apartment</option></select></label></div>
             <label class="field"><span class="label">Land use</span><select id="f-landuse" autocomplete="off"><option value="all" selected>Any land use</option><option value="growth">Adds units or jobs</option><option value="residential">Residential</option><option value="mixed">Mixed</option><option value="employment">Employment</option></select></label>
-          </div>
-          <div class="fp-sec">
-            <h2 class="label" data-info="filter-when">When</h2>
+          </details>
+          <details class="fp-sec fp-row" id="fr-when">
+            <summary><h2 class="label" data-info="filter-when">When</h2><span class="fr-val" id="fv-when"></span></summary>
             <div class="row two"><label class="field"><span class="label">Milestone</span><select id="f-milestone" autocomplete="off"><option value="any">Any milestone</option><option value="inception">Application submitted</option><option value="approved">Approved</option><option value="permit">Permit issued</option><option value="completed">Completed</option></select></label></div>
             <div class="row two"><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
             <div class="row btns"><button type="button" class="btn small" id="f-when-12m">Last 12 months</button><button type="button" class="btn small" id="f-when-week">This week</button></div>
-          </div>
-          <div class="fp-sec">
-            <h2 class="label" data-info="filter-flags">Flags</h2>
+          </details>
+          <details class="fp-sec fp-row" id="fr-counts">
+            <summary><h2 class="label" data-info="growth-layers">Counts as</h2><span class="fr-val" id="fv-counts"></span></summary>
+            <div class="chips ly-chips" id="f-layers" role="group" aria-label="Counts as (growth layer)"></div>
+            <p class="small muted">Capacity accounting, from each file's phase. Stage above is the process view; this is what the bars sum.</p>
+          </details>
+          <details class="fp-sec fp-row" id="fr-flags">
+            <summary><h2 class="label" data-info="filter-flags">Flags</h2><span class="fr-val" id="fv-flags"></span></summary>
             <div class="chips flag-chips" id="flag-chips" data-info="filter-flags" role="group" aria-label="Flags"></div>
-          </div>
+          </details>
         </section>
 
         <section class="panel list-panel">
           <div class="panel-head">
-            <h2 class="label" data-info="projects-list">On the map <span class="muted small" id="list-count"></span></h2>
+            <h2 class="label" data-info="projects-list">In view <span class="muted small" id="list-count"></span></h2>
             <div class="btns">
               <select autocomplete="off" id="list-sort" aria-label="Sort developments">
                 <option value="recent">Latest activity</option>
@@ -167,20 +172,22 @@
 
       <!-- ===== Data ===== -->
       <div class="tab-panel" id="tab-data" role="tabpanel" aria-labelledby="tab-btn-data" hidden>
+        <section class="panel audit" id="audit-panel">
+          <div class="panel-head"><h2 class="label" data-info="duplicate-check">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
+          <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
+        </section>
         <section class="panel sources" id="sources-panel">
           <div class="panel-head"><h2 class="label" data-info="data-sources">Data sources</h2><span class="muted small" id="sources-summary"></span></div>
-          <ul class="source-list" id="source-list"></ul>
+          <p class="small muted" id="backfill-note" hidden></p>
           <p class="small muted" id="app-version"></p>
           <div class="row btns">
             <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
           </div>
         </section>
-        <section class="panel audit" id="audit-panel">
-          <div class="panel-head"><h2 class="label" data-info="duplicate-check">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
-          <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
-        </section>
         <details class="panel advanced">
           <summary><h2 class="label">Advanced</h2></summary>
+          <p class="small muted">Each source, with its switch and remove button.</p>
+          <ul class="source-list" id="source-list"></ul>
           <div class="row">
             <label class="field"><span class="label">Records since</span>
               <input type="number" autocomplete="off" id="s-since" min="1990" max="2100" step="1">
@@ -234,11 +241,9 @@
       <div class="analysis-tabs" role="tablist" aria-label="Analysis">
         <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="pane-growth-pipeline" aria-selected="false">Growth</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-water" data-tab="water" data-info="tab-water" aria-controls="pane-water" aria-selected="false" hidden>Water</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>DC</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-dev" data-tab="dev" data-info="tab-dev" aria-controls="pane-dev" aria-selected="false" hidden>Development</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-tool" data-tab="tool" aria-controls="pane-tool" aria-selected="false" hidden>Tool result</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-svc" data-tab="svc" data-info="tab-servicing" aria-controls="pane-plants" aria-selected="false" hidden>Servicing</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>Capital</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records</button>
       </div>
       <div class="analysis-panes" id="analysis-panes">
       <div id="screen-note-top"></div>
@@ -246,6 +251,7 @@
 
       <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
         <div id="ov-body"></div>
+        <div id="scope-body" class="scope-body" hidden aria-live="polite"></div>
         <!-- A scoped development: its About / Files & history / Site views, below the verdict. -->
         <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
@@ -256,47 +262,47 @@
       <section class="f-pane" id="pane-growth-timing" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="timing-body"></div></section>
       <section class="f-pane" id="pane-growth-byplan" data-pane="growth" data-sub="byplan" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="byplan-body"></div></section>
 
-      <div class="f-pane f-subtabs" data-pane="water" hidden role="group" aria-label="Water view">
+      <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
+        <span class="sv-g">Wastewater</span>
+        <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
+        <button type="button" class="btn small" data-wwsub="catchments">Blocks</button>
+        <button type="button" class="btn small" data-wwsub="alloc">Allocations</button>
+        <button type="button" class="btn small" data-wwsub="pumpstations">Pumping stations</button>
+        <span class="sv-g">Water</span>
         <button type="button" class="btn small" data-wsub="capacity">Treatment &amp; capacity</button>
         <button type="button" class="btn small" data-wsub="zones">Pressure zones</button>
         <button type="button" class="btn small" data-wsub="facilities">Facilities</button>
         <button type="button" class="btn small" data-wsub="hydro">Hydraulic check (beta)</button>
       </div>
-      <section class="f-pane svc-pane" id="pane-wcap" data-pane="water" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-water" hidden>
+      <section class="f-pane svc-pane" id="pane-wcap" data-pane="water" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Water treatment and capacity</h2></div>
         <div id="wcap-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-water" data-pane="water" data-sub="zones" role="tabpanel" aria-labelledby="ftab-water" hidden>
+      <section class="f-pane svc-pane" id="pane-water" data-pane="water" data-sub="zones" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
         <div id="water-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-wfac" data-pane="water" data-sub="facilities" role="tabpanel" aria-labelledby="ftab-water" hidden>
+      <section class="f-pane svc-pane" id="pane-wfac" data-pane="water" data-sub="facilities" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Existing water facilities</h2></div>
         <div id="wfac-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-hydro" data-pane="water" data-sub="hydro" role="tabpanel" aria-labelledby="ftab-water" hidden>
+      <section class="f-pane svc-pane" id="pane-hydro" data-pane="water" data-sub="hydro" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Hydraulic check</h2></div>
         <div id="hyd-box"></div>
       </section>
-      <div class="f-pane f-subtabs" data-pane="ww" hidden role="group" aria-label="Wastewater view">
-        <button type="button" class="btn small" data-wwsub="plants">Plants &amp; capacity</button>
-        <button type="button" class="btn small" data-wwsub="catchments">Blocks</button>
-        <button type="button" class="btn small" data-wwsub="alloc">Allocations</button>
-        <button type="button" class="btn small" data-wwsub="pumpstations">Pumping stations</button>
-      </div>
-      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+      <section class="f-pane svc-pane" id="pane-ww" data-pane="ww" data-sub="catchments" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater by sanitary catchment</h2><span class="muted small" id="ww-note"></span></div>
         <div id="ww-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-alloc" data-pane="ww" data-sub="alloc" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+      <section class="f-pane svc-pane" id="pane-alloc" data-pane="ww" data-sub="alloc" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Servicing allocations</h2></div>
         <div id="alloc-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+      <section class="f-pane svc-pane" id="pane-plants" data-pane="ww" data-sub="plants" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Wastewater treatment plants</h2><span class="muted small" id="plants-note"></span></div>
         <div id="plants-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-pumpstations" data-pane="ww" data-sub="pumpstations" role="tabpanel" aria-labelledby="ftab-ww" hidden>
+      <section class="f-pane svc-pane" id="pane-pumpstations" data-pane="ww" data-sub="pumpstations" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Pumping stations</h2></div>
         <div id="pumpstations-body"></div>
       </section>
@@ -306,12 +312,8 @@
       <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="recommendations" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
       <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
-      <section class="f-pane" id="pane-dev" data-pane="dev" role="tabpanel" aria-labelledby="ftab-dev" hidden></section>
+      <section class="f-pane" id="pane-records" data-pane="records" role="tabpanel" aria-labelledby="ftab-records" hidden><div id="records-body"></div></section>
 
-      <section class="f-pane" id="pane-tool" data-pane="tool" role="tabpanel" aria-labelledby="ftab-tool" hidden>
-        <div class="tb-head"><h2 class="pane-h" id="tool-title">Tool result</h2><button type="button" class="btn small" id="tool-close" title="Close the tool result">Close ×</button></div>
-        <div id="pane-tool-body"></div>
-      </section>
       </div>
     </aside>
     <!-- Phase 3b provision: the Compare tool renders its second scenario in this
@@ -336,6 +338,7 @@
           </label>
           <strong class="t-label" id="t-label">All years</strong>
           <button type="button" class="btn small" id="t-reset" hidden>Reset</button>
+          <span class="tb-meta small muted" id="tb-meta"></span>
           <button type="button" class="t-toggle" id="t-toggle" aria-expanded="true" aria-controls="t-body" title="Show or hide the timeline">▾</button>
         </div>
         <div class="t-body" id="t-body">
@@ -349,11 +352,6 @@
       </section>
     </footer>
 
-    <aside class="detail" id="detail" hidden aria-live="polite">
-      <button type="button" class="sheet-grip" id="detail-grip" aria-label="Resize the panel: drag, or tap to change its height"><span></span></button>
-      <button type="button" class="close" id="detail-close" aria-label="Close">×</button>
-      <div id="detail-body"></div>
-    </aside>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -364,6 +362,7 @@
   <script src="js/phases.js?v=__BUILD__"></script>
   <script src="js/tree-groups.js?v=__BUILD__"></script>
   <script src="js/tree-counts.js?v=__BUILD__"></script>
+  <script src="js/council-decisions.js?v=__BUILD__"></script>
   <script src="js/demand.js?v=__BUILD__"></script>
   <script src="js/audit.js?v=__BUILD__"></script>
   <script src="js/aerial.js?v=__BUILD__"></script>
@@ -443,6 +442,11 @@
   <script src="js/water-trace.js?v=__BUILD__"></script>
   <script src="js/water-tab.js?v=__BUILD__"></script>
   <script src="js/masterplan.js?v=__BUILD__"></script>
+  <script src="js/capacity.js?v=__BUILD__"></script>
+  <script src="js/zone-of.js?v=__BUILD__"></script>
+  <script src="js/layers.js?v=__BUILD__"></script>
+  <script src="js/layer-bar.js?v=__BUILD__"></script>
+  <script src="js/records-tab.js?v=__BUILD__"></script>
   <script src="js/dc-cost.js?v=__BUILD__"></script>
   <script src="js/dca-tab.js?v=__BUILD__"></script>
   <script src="js/plan-areas.js?v=__BUILD__"></script>

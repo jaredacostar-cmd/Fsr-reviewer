@@ -149,8 +149,7 @@
     profMapBar.innerHTML = `<button type="button" class="btn small" data-prof-back>‹ Back to profile</button><button type="button" class="btn small" data-prof-pipe="${i}">Pipe details</button><button type="button" class="btn small link" data-prof-off aria-label="Clear the marked pipe">×</button>`;
     profMapBar.hidden = false;
     // On a phone, lower the bottom sheet for now so the pipe has room (back to the profile restores it).
-    const sh = $('#detail'), shH = sh && !sh.hidden && MA().phoneMap ? sh.getBoundingClientRect().height / innerHeight * 100 : 0;
-    if (shH > 32) { PROF.sheetH = shH; App().setSheetH(30); } else PROF.sheetH = null;
+    PROF.sheetH = null;
     MA().layoutMapBoxes(); map.invalidateSize();
     const bd = L.latLngBounds(c); bd.extend(L.latLng(mid).toBounds(300)); ST().fitClear(bd);
   }
@@ -164,17 +163,15 @@
     if (m) { const i = +m[1], all = ST().pipeRoute(i); let run = 0; const r = []; for (const k of all) { r.push(k); const c = SC().pipeCoords(MM().SEW.data.pipes[k]); for (let q = 1; q < c.length; q++) run += DI().dcM(c[q - 1], c[q]); if (run > 3000) break; } sewerProfile(r, `Sewer profile: ${MM().SEW.data.pipes[i][0]} mm sewer and ${(run / 1000).toFixed(1)} km downstream`); }
   });
 
-  // One home for tool results (design audit, Group 7): the Tool result tab, with its trail crumb;
-  // the #detail panel only when the tool framework is absent.
+  // One home for tool results (design audit, Group 7; SPEC §3): a scope in the right panel.
   const Tools = () => window.PeelTools;
   let resultView = null, resultTitle = null;   // this module's result while it is the open one
   function showResult(view, title, html, reopen) {
     resultView = view; resultTitle = title;
-    if (Tools() && Tools().openResult) { Tools().openResult({ title, html, reopen }); /* the trace summary and the servicing check carry their own note */ return; }
-    $('#detail-body').innerHTML = html; $('#detail').hidden = false; $('#detail').dataset.view = view; $('#detail').scrollTop = 0;
+    Tools().openResult({ title, html, reopen });   // the trace summary and the servicing check carry their own note
   }
-  const resultOpen = view => resultView === view && (Tools() && Tools().resultTitle ? Tools().resultTitle() === resultTitle : !$('#detail').hidden);
-  function closeResult() { resultView = null; if (Tools() && Tools().hasResult && Tools().hasResult()) Tools().closeResult(); else AC().closeDetail(); }
+  const resultOpen = view => resultView === view && Tools().resultTitle() === resultTitle;
+  function closeResult() { resultView = null; if (Tools().hasResult()) Tools().closeResult(); }
   // Trace from any point on the map: the nearest 300 mm+ sewer down to the plant. Returns the
   // trace; shows it only when asked (Inspect point and Fit use the trace without a panel).
   async function tracePoint(ll, show = true) {
@@ -245,8 +242,8 @@
       <ul class="wf-list">${whatIfs.map(w => `<li><button type="button" class="wf-open" data-wf-open="${esc(w.id)}"><strong>${esc(w.name || 'Test site')}</strong><small>${fmtNum(w.single + w.town + w.apartment)} units${w.jobs ? ` · ${fmtNum(w.jobs)} jobs` : ''}${w.include ? ' · counted in totals' : ''}</small></button><button type="button" class="btn small" data-wf-rm="${esc(w.id)}" aria-label="Remove ${esc(w.name || 'test site')}">Remove <span aria-hidden="true">×</span></button></li>`).join('')}</ul>
       <p><button type="button" class="btn small" data-wf-rmall>Remove all test sites</button></p>`, () => showWhatIfList());
   }
-  // Test-site controls work in the Tool result tab and in the #detail fallback.
-  const wfBodies = ['#detail-body', '#pane-tool-body'].map(q => $(q)).filter(Boolean);
+  // Test-site controls work in the result scope (right panel).
+  const wfBodies = ['#scope-body'].map(q => $(q)).filter(Boolean);
   const onWf = (type, fn) => wfBodies.forEach(b => b.addEventListener(type, fn));
   let wfCurrent = null;   // the test site whose form is open
   onWf('click', e => {

@@ -1,0 +1,45 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The 4 developments shown propose 2,448 homes (planned units, net of homes demolished): 0 permitted, 0 completed, 2,448 left to build.
+
+Homes
+Planned
+2,448units
+4 developments with units
+Permitted
+0units
+0% of planned
+Completed
+0units
+Left to build
+2,448units
+100% of planned
+People
+6,914pop
+Dwellings
+1,903units
+Proposed (in review)
++6,914 people · +1,903 dwellings · +0 jobs
+Largest pipelines still to build share of the build-out
+Development	Unbuilt	Share
+9408 COLUMBIA WAY CALEDON ONCaledon · 2 Under review	1,020units	42%
+14475 HIGHWAY 50 CALEDON ONCaledon · 2 Under review	568units	23%
+14337 HIGHWAY 50 CALEDON ON L7E 3H6Caledon · 2 Under review	315units	13%
+Build-out by dwelling type
+Type	Planned	Permitted	Completed	Left
+Single / semi-detached	708units	0units	0units	708units
+Townhouse	785units	0units	0units	785units
+Apartment	410units	0units	0units	410units
+Completions and approval pace by municipality
+Municipality	Completions	Median application → approval
+Mississauga	–	–
+Brampton	–	–
+Caledon	–	–
+Peel	–	–
+
+ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions — from dated permit events. Approval pace = months from first application activity to the site's approval. Applications as of 2026-10-12.

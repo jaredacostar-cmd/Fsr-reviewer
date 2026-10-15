@@ -53,6 +53,10 @@
     const y = new Date().getFullYear();
     setYears(y - 1, y);
   }
+  // A development's layer, kept per development object (rebuilt developments are new objects).
+  const LAYER_ORDER = ['anticipated', 'proposed', 'committed', 'built', 'existing'];
+  const lyCache = new WeakMap();
+  const layerOf = p => { if (!window.PeelLayers) return null; if (!lyCache.has(p)) lyCache.set(p, window.PeelLayers.layerOf(p)); return lyCache.get(p); };
   function renderTimeline() {
     const lo = App().state.yearMin, hi = App().state.yearMax;
     if (lo == null) return;
@@ -66,20 +70,28 @@
     const atDefault = atDefaultYears();
     $('#t-reset').hidden = atDefault && !App().timeActive();
     $('#t-reset').textContent = atDefault || !DEFAULT_YEARS ? 'All years' : `${DEFAULT_YEARS[0]}–${DEFAULT_YEARS[1]}`;
-    // Histogram ignores the year filter itself so you can see where to drag.
-    const counts = new Map();
+    // Histogram ignores the year filter itself so you can see where to drag. Each year's bar is
+    // coloured by the developments' layers (SPEC §2.4).
+    const counts = new Map(), byLy = new Map();
     for (const p of App().state.projects) {
       if (!App().matches(p, false, true)) continue;
-      for (const y of App().yearsOf(p, App().state.yearMode)) if (y >= lo && y <= hi) counts.set(y, (counts.get(y) || 0) + 1);
+      const ly = layerOf(p);
+      for (const y of App().yearsOf(p, App().state.yearMode)) if (y >= lo && y <= hi) {
+        counts.set(y, (counts.get(y) || 0) + 1);
+        const m = byLy.get(y) || byLy.set(y, {}).get(y); if (ly) m[ly] = (m[ly] || 0) + 1;
+      }
     }
     const max = Math.max(1, ...counts.values());
+    const LN = window.PeelLayerBar ? window.PeelLayerBar.LABEL : {};
+    const stack = y => LAYER_ORDER.filter(k => (byLy.get(y) || {})[k]).map(k => `<span class="ly-${k}" style="flex:${byLy.get(y)[k]} 1 0"></span>`).join('');
+    const split = y => LAYER_ORDER.filter(k => (byLy.get(y) || {})[k]).map(k => `${LN[k] || k} ${fmtNum(byLy.get(y)[k])}`).join(', ');
     const mode = (($('#t-mode').selectedOptions || [])[0] || { textContent: 'any milestone' }).textContent.toLowerCase();
     let bars = '';
     for (let y = lo; y <= hi; y++) {
       const n = counts.get(y) || 0;
       const on = y >= from && y <= to;
-      bars += `<button type="button" class="bar${on ? ' on' : ''}" data-y="${y}" title="${y}: ${fmtNum(n)} development${n === 1 ? '' : 's'} (${esc(mode)})"
-        aria-label="${y}: ${n} developments"><i style="height:${n ? Math.max(2, n / max * 100) : 0}%"></i></button>`;
+      bars += `<button type="button" class="bar${on ? ' on' : ''}" data-y="${y}" title="${y}: ${fmtNum(n)} development${n === 1 ? '' : 's'} (${esc(mode)})${n ? `: ${esc(split(y))}` : ''}"
+        aria-label="${y}: ${n} developments"><i style="height:${n ? Math.max(2, n / max * 100) : 0}%">${stack(y)}</i></button>`;
     }
     $('#t-hist').innerHTML = bars;
     const span = hi - lo, step = span > 24 ? 5 : span > 10 ? 2 : 1;

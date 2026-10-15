@@ -10,6 +10,7 @@
   'use strict';
 
   const MONTH = 30.44 * 864e5;
+  const P = typeof module !== 'undefined' && module.exports ? require('./phases.js') : root.PeelPhases;
 
   /**
    * Planned / permitted / completed / left-to-build units, summed over the projects
@@ -18,7 +19,8 @@
   // One definition of the pipeline, used by the Overview, Growth, the header and the briefing:
   // planned = each development's units counted once (the larger of planned and permitted, net of
   // homes demolished: project.units); permitted / completed from its build-out; left to build =
-  // planned with no building permit yet. A development with no build-out counts by its stage.
+  // planned not yet completed (P.unbuiltOf, the same figure Timing calls unbuilt: SPEC 1.6). A
+  // development with no build-out counts by its stage.
   const PERMIT_STAGES = new Set(['permit', 'construction', 'completed']);
   function pipelineTotals(projects) {
     const t = { planned: 0, permitted: 0, completed: 0, left: 0, n: 0, withBuildout: 0 };
@@ -29,12 +31,12 @@
       if (p.buildout) {
         t.withBuildout++;
         t.permitted += p.buildout.permitted || 0;
-        t.completed += p.buildout.completed || 0;
-        t.left += Math.max(0, p.units - (p.buildout.permitted || 0));
+        t.completed += Math.min(p.units, p.buildout.completed || 0);   // (more completed than counted: the count)
       } else if (PERMIT_STAGES.has(p.phase)) {
         t.permitted += p.units;
         if (p.phase === 'completed') t.completed += p.units;
-      } else t.left += p.units;
+      }
+      t.left += P.unbuiltOf(p);
     }
     return t;
   }

@@ -80,12 +80,23 @@ test('statusOf: not stalled for recent activity or non-planning phases', () => {
   assert.equal(DT.statusOf(project({ phase: 'completed', last: old, records: [appRec()] })).stalled, false);
 });
 
-test('statusOf: appeal signal outranks the stalled signal', () => {
+test('statusOf: a file under appeal is under appeal, never stalled (SPEC 1.3)', () => {
   const old = Date.now() - 4 * 365.25 * 864e5;
   const st = DT.statusOf(project({ last: old, records: [appRec({ statusRaw: 'Under appeal to the OLT' })] }));
-  assert.ok(st.stalled);
-  assert.match(st.cause, /appeal/);
+  assert.equal(st.stalled, false);
+  assert.ok(st.appealed);
+  assert.equal(st.state, 'appeal');
   assert.equal(st.sig[0].kind, 'appeal');
+});
+
+test('statusOf: a council item naming the file is activity — no stall (SPEC 1.3)', () => {
+  const old = Date.now() - 4 * 365.25 * 864e5;
+  const recent = new Date(Date.now() - 200 * 864e5).toISOString().slice(0, 10);
+  assert.ok(DT.statusOf(project({ last: old, records: [appRec()] })).stalled, 'no activity for 4 years');
+  const st = DT.statusOf(project({ last: old, records: [appRec({ council: { last: recent } })] }));
+  assert.equal(st.stalled, false);
+  assert.equal(st.state, 'active');
+  assert.ok(st.years < 1);
 });
 
 test('statusOf: why names the phase-setting event when the timeline has one', () => {

@@ -1,0 +1,189 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+The 1,485 developments shown would add about 683,700 people and 81,900 jobs in 228,490 units. G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% of rated capacity → 121% at build-out).
+
+Executive briefing (PDF)
+Growth
+Growth →
+1,485
+developments
+shown on the map
+all of Peel
+228,490
+units
+planned
+219,299 left to build
+683,700
+people
+at build-out
+81,900
+jobs
+on development sites
+Needs attention
+1 DC project comes online after the capacity it relieves runs out: G.E. Booth WRRF (Lakeview): expansion to 600 ML/d · 25-2945
+DC Analysis →
+G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% → 121% at build-out)
+Wastewater →
+Stalled 4.6 yrs with no activity — 14275 THE GORE ROAD CALEDON ON L7E 0W9 (4,456 units, Caledon)
+Development →
+Stalled 3.5 yrs with no activity — 1750 STEELES AVE W (3,809 units, Brampton)
+Development →
+Stalled 5.1 yrs with no activity — 10159 THE GORE RD (3,239 units, Brampton)
+Development →
+New: 11 CHAPEL STREET CALEDON ON L7E 1C2 (Inception, Caledon)
+Development →
+New: 2719 BOVAIRD DR W (Withdrawn / refused, Brampton)
+Development →
+Capacity Mixed basis
+Plants →
+G.E. Booth
+94% committed → 121% build-out
+Reaches the trigger ≈2028 · next expansion 2028 558 ML/d · status unknown
+Clarkson
+68% committed → 83% build-out
+Room to 2051 · next expansion 2029 500 ML/d (22-2950) · paused
+Inglewood
+42% committed → 45% build-out
+Room to 2051
+💧 South Peel water treatment
+54% committed → 67% build-out
+Room to 2051 · next expansion 2031 Arthur P. Kennedy Water Treatment Plant · Treatment Expansion · paused
+
+% of rated capacity, as in Wastewater → Plants (plants: annual average flow (2025 measured at each plant; growth at the plant’s measured rate); water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.
+
+Largest developments
+See all →
+Development	Phase	Units	People
+1-295 QUEEN ST E
+Brampton
+	2 Under review	7,641	23,700
+9763 HERITAGE RD
+Brampton
+	5 Under construction	9,862	33,500
+0 HERITAGE RD
+Brampton
+	2 Under review	5,146	13,900
+14275 THE GORE ROAD CALEDON ON L7E 0W9
+Caledon
+	2 Under review	4,456	15,400
+1750 STEELES AVE W
+Brampton
+	2 Under review	3,809	11,800
+
+Definitions · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: annual average flow (2025 measured at each plant; growth at the plant’s measured rate); water: max day); black tick: the 90% expansion trigger. Scope: every stage, pre-consultation to completed. Applications as of 2026-10-12 · all sources current Data & checks →
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 1,485 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Inception
+210
+Under review
+565
+Approved
+491
+Permit issued
+163
+Construction
+56
+Completed
+471
+Withdrawn / refused
+159
+
+1,485 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 734
+Under appeal 34
+Waiting on DC works 0
+PS over firm capacity 86
+Changed this week 1
+★ Watched 0
+Estimate check 759
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴
+
+##### menus
+CSV — developments shown
+GeoJSON — developments shown
+Servicing areas (GeoJSON)
+Planned works (GeoJSON)
+SWMM model (.inp) — wastewater blocks
+Excel workbook (.xlsx)
+PDF — comparison
+PDF — executive briefing
+PDF — development memo
+PDF — area report
+Print map
+Inquiry response draft
+Copy share link
+Save this view…

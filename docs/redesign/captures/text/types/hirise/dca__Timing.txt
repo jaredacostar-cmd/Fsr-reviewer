@@ -1,0 +1,36 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Timing
+Funding screen
+Funding levels
+
+DC analysis for 1580 and 1650 Dundas St E..
+
+DC projects potentially required
+Wastewater
+
+Sewer path, pumping stations and the plant's reserve live on the Wastewater tab →.
+
+Water
+
+Every constraint has room to build-out or a DC project before it runs out. Room in units at this development's 2.7 persons per unit.
+
+💧 Silverthorn Reservoir
+required vs available storage (2020 Master Plan forecast) · in Pressure zone 2
+19,800 people≈7,316 units
+≈2037DC project in time
+2028 Silverthorn · Reservoir Expansion · paused
+1 with room to build-out (tightest 75% of capacity)
+
+All DC timing →
+
+Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026). Water supply is a rough conveyance estimate: water pumping station capacities are not published. A screen, not a hydraulic model.
+
+Planned works
+Downstream trunks: 2026 1800 mm 22-2255 · 2028 1500 mm 22-2256 · 2028 1800 mm 26-2242
+Facilities: Lakeview Village 2026 · Beach Street Sanitary Pumping Station 2027 · Silverthorn 2028
+Plant capacity: 558 ML/d from 2028 → 600 ML/d from 2037
+Regional water & wastewater DCs
+≈$73.1 M
+Apartment (≤750 sq ft)	3,027 × $24,150	$73.1 M
+Rates 2026-08-01 to 2027-01-31: water $30,181 + wastewater $32,776 per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).

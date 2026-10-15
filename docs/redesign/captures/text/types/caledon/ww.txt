@@ -1,0 +1,26 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Wastewater by sanitary catchment
+14337 HIGHWAY 50 CALEDON ON L7E 3H6 · site servicing
+14337 HIGHWAY 50 CALEDON ON L7E 3H6 · Wastewater
+⤳ Trace the sewer path to the plant
+On the map, pipe by pipe to the plant, along the existing sewers and the planned DC mains
+
+Outside the mapped pressure zones: assigned to the nearest (Zone 6, via planned 2027 600 mm main 24-1191, 390 m). The connection point comes from the FSR / master plan.
+
+Wastewater
+Flows
+
+20.2L/s peak wet · 15.3L/s peak dry · 4.08L/s average
+
+To the plant
+Block 35 → Block 34 → Block 33 → Block 32 → Block 24 → Block 22 → Block 16 → G.E. Booth WRRF (Lakeview)
+Plant
+
+G.E. Booth WRRF (Lakeview): uncommitted reserve 30.4ML/d · this development would use 1% of it screening estimate
+
+Sanitary sewers
+
+Looking up the nearest sanitary sewers…
+
+Ground, storm sewers and stormwater ponds live in Overview › Site. Peel-wide catchments return when no site is scoped.

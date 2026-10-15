@@ -24,6 +24,7 @@
   const Areas = () => window.PeelAreas;
   const DI = () => window.PeelDcInfra;
   const P = window.PeelPhases;
+  const TB = () => window.PeelTopbar;
 
   const PLANTS = ['Lakeview', 'Clarkson', 'Inglewood'];
   const KIND_LABEL = { plant: 'Wastewater treatment plant', ps: 'Pumping station catchment', block: 'Wastewater block and everything upstream', zone: 'Water pressure zone', wsys: 'Water system (lake-based)' };
@@ -31,6 +32,7 @@
   // A scope reference → what it covers: key 'dr' / 'pz' (developments by their servicing areas) or
   // 'ps' (by the catchment outline); ids the areas counted.
   function resolve(ref) {
+    if (isResultRef(ref)) return result && result.ref === ref ? { ref, kind: 'result', rkind: ref.slice(0, ref.indexOf(':')), title: result.title, short: result.title, result } : null;
     const sv = App() && App().state.servicing; if (!ref || !sv) return null;
     const i = ref.indexOf(':'), k = ref.slice(0, i), v = ref.slice(i + 1);
     if (k === 'plant') return PLANTS.includes(v) ? { ref, kind: 'plant', pl: v, title: SD().plantLabel(v), short: SD().PLANT_SHORT[v], key: 'dr', ids: new Set(sv.drainage.filter(d => d.plant === v).map(d => d.id)) } : null;
@@ -44,13 +46,14 @@
   let memo = { k: null, s: null, members: null };
   function current() {
     const ref = App() && App().state.ss; if (!ref) return null;
-    const k = `${ref}|${App().state.svcGen || 0}|${!!App().state.servicing}`;
+    const k = `${ref}|${App().state.svcGen || 0}|${!!App().state.servicing}|${result ? result.v : 0}`;
     if (memo.k !== k) memo = { k, s: resolve(ref), members: null };
     return memo.s;
   }
   // Is a development in the current scope? (app.js matches; no scope → every development)
   function has(p) {
     const s = current(); if (!s) return true;
+    if (s.kind === 'result') return !s.result.devKeys || s.result.devKeys.has(p.key);
     if (s.key === 'ps') return !!(s.a.bbox && p.lat != null && Areas().locate([s.a], p.lng, p.lat).length);
     return SD().svcIds(p, s.key).some(id => s.ids.has(id));
   }
@@ -59,7 +62,7 @@
   function open(ref) {
     if (!resolve(ref)) return false;
     if (window.DevScope && window.DevScope.current()) window.DevScope.close();
-    if (window.PeelTools && window.PeelTools.hasResult && window.PeelTools.hasResult()) window.PeelTools.closeResult();
+    result = null;
     App().state.ss = ref; showAll = false;
     AT().setFootPref('overview'); AT().showFootTab('overview');
     App().applyFilters(); OT().renderOverview(); Sh().viewLink.write();
@@ -68,13 +71,78 @@
     return true;
   }
   // Drop the scope without re-rendering (the caller re-filters), e.g. the trail's Peel step.
-  function clear() { if (App()) App().state.ss = null; }
+  function clear() { if (App()) App().state.ss = null; result = null; }
   function close() { clear(); App().applyFilters(); OT().renderOverview(); Sh().viewLink.write(); }
+
+  // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
+  // A DC work, a sewer pipe, a single file, a wastewater block, a water facility, a selection or a
+  // tool's result is a scope too: it opens in the right panel (Overview) with its trail step, filters
+  // the developments to the ones it lists, and goes in the share link (ss=pipe:123, file:<uid>, …).
+  //   openResult({ ref, title, html, reopen, devKeys, filter, screen })
+  //     ref: '<kind>:<id>' (kinds below; default 'tool:<title>'); devKeys: the developments it covers
+  //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer.
+  const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help']);
+  const isResultRef = ref => !!ref && RESULT_KINDS.has(String(ref).slice(0, String(ref).indexOf(':')));
+  let result = null, resultV = 0;
+  const slug = t => String(t || 'result').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  function devKeysOf(html) { const out = new Set(); String(html || '').replace(/data-dev="([^"]+)"/g, (m, k) => { out.add(k.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")); return m; }); return out.size ? out : null; }
+  function openResult(o) {
+    o = o || {};
+    const ref = o.ref || `tool:${slug(o.title)}`;
+    if (window.DevScope && window.DevScope.current() && !o.keepDev) window.DevScope.close();
+    const keys = o.devKeys ? new Set(o.devKeys) : o.filter ? devKeysOf(o.html) : null;
+    result = { ref, title: o.title || 'Result', html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, v: ++resultV };
+    App().state.ss = ref; showAll = false;
+    AT().setFootPref('overview'); AT().showFootTab('overview');
+    App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
+    const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;
+    // On a phone the right panel is a bottom sheet: raise it from its peek so the result shows.
+    const DT = window.PeelDataTab, A = App();
+    if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap && A.getAnalysisSnap() === 'peek') A.setAnalysisSnap('half');
+    return result;
+  }
+  function closeResult() {
+    if (!result) return false;
+    result = null;
+    if (isResultRef(App().state.ss)) App().state.ss = null;
+    if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
+    App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
+    return true;
+  }
+  function reopenResult() {
+    if (!result) return false;
+    if (result.reopen) { try { result.reopen(); return true; } catch (e) { /* show what we have */ } }
+    AT().showFootTab('overview'); OT().renderOverview();
+    return true;
+  }
+  const hasResult = () => !!result && App().state.ss === result.ref;
+  const resultTitle = () => (result ? result.title : null);
+  // A shared link to a result scope: re-run its producer once the data it needs has loaded.
+  const RESTORE = {
+    pipe: id => { const M = MM(); if (!M.SEW.data) { window.PeelSewerCap.loadSewers(); return false; } window.PeelSewerCap.showPipeLoads(+id); return true; },
+    file: uid => { const A = App(); if (!A.fullSnapshotReady || !A.fullSnapshotReady()) return false; for (const p of A.state.projects) { const r = p.records.find(x => x.uid === uid); if (r) { window.PeelAerialCheck.showRecordDetail(r, p); return true; } } return true; },
+    dcwork: id => {
+      const I = App().state.dcInfra; if (!I) { if (MA() && MA().setDcOn) MA().setDcOn({ on: true, sys: 'both' }); return false; }
+      const [sys, ...rest] = id.split(':'), key = rest.join(':'), d = I[sys]; if (!d) return true;
+      const ln = d.lines.find(x => (x.p || x.c) === key); if (ln) { MP().showDcLine(ln); return true; }
+      const fc = d.facilities.find(x => x.name === key); if (fc) DI().showFacility(fc);
+      return true;
+    },
+    iiblock: id => { if (!ST() || !ST().showBlock) return true; return ST().showBlock(id) !== false; },
+  };
+  function restore(ref, tries = 40) {
+    if (!isResultRef(ref) || (result && result.ref === ref)) return;
+    const k = ref.slice(0, ref.indexOf(':')), id = ref.slice(ref.indexOf(':') + 1), f = RESTORE[k];
+    if (!f) { if (App().state.ss === ref) { App().state.ss = null; App().applyFilters(); } return; }
+    let done = false; try { done = f(id); } catch (e) { done = false; }
+    if (!done && tries > 0) setTimeout(() => restore(ref, tries - 1), 500);
+  }
 
   // Trail steps, top of the ladder first: plant before its blocks and stations; the water system
   // before a lake-based zone.
   function crumbs() {
     const s = current(); if (!s) return [];
+    if (s.kind === 'result') return [{ label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` }];
     const step = (ref, label, title) => ({ label, go: () => open(ref), title });
     const out = [];
     if ((s.kind === 'block' || s.kind === 'ps') && PLANTS.includes(s.pl)) out.push(step(`plant:${s.pl}`, SD().PLANT_SHORT[s.pl], `Open ${SD().plantLabel(s.pl)}`));
@@ -102,11 +170,12 @@
   function headroom(s) {
     const M = App().state.svcModel, R = App().state.reports;
     if (s.kind === 'plant') {
-      const cap = M.plantCap(s.pl), c = MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)); if (!cap || !c) return { tiles: '', hl: '' };
-      const reserve = cap.rated - cap.committed, ppl = cap.perPerson > 0 ? reserve * 1e6 / cap.perPerson : null;
+      // One capacity function (js/capacity.js): the same % and reserve as every other tab (SPEC 1.4).
+      const k = window.PeelCapacity.of(`plant:${s.pl}`), c = MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)); if (!k || !c) return { tiles: '', hl: '' };
+      const reserve = k.reserve, ppl = k.perPerson > 0 ? reserve * 1e6 / k.perPerson : null, pc = window.PeelCapacity.pctTxt;
       return {
-        hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${SvcTab().pctRated(c, 'com')}%</strong> of its rated ${fmt1(cap.rated)} ML/d, <strong>${SvcTab().pctRated(c, 'bo')}%</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
-        tiles: tile(fmt1(cap.rated), 'ML/d', 'rated capacity') + tile(`${SvcTab().pctRated(c, 'com')}%`, 'of rated', 'existing + built + committed', `${SvcTab().pctRated(c, 'bo')}% at build-out`)
+        hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${pc(k.pctCommitted)}</strong> of its rated ${fmt1(k.rated)} ML/d, <strong>${pc(k.pctBuildout)}</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
+        tiles: tile(fmt1(k.rated), 'ML/d', 'rated capacity') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
           + tile(fmt1(reserve), 'ML/d', 'uncommitted reserve (D-5-1)', ppl != null && reserve > 0 ? `≈${fmtNum(roundPop(ppl))} people` : '')
           + tile(c.out === 'today' ? 'now' : c.out ? `≈${c.out}` : `after ${window.PeelSvcPlants.hz.end}`, '', 'reaches the 90% expansion trigger', c.relief.length ? `next: ${esc(c.relief[0].text)}` : ''),
       };
@@ -136,13 +205,15 @@
         tiles: tile(fmt1(now), 'ML/d', 'max day at the census') + tile(fmt1(bo), 'ML/d', 'max day at build-out', `+${fmt1(bo - now)} ML/d growth`),
       };
     }
-    // wsys: lake-based treatment against the lake zones' build-out maximum day.
+    // wsys: South Peel treatment — the 2025 measured maximum day plus the lake zones' growth, from the
+    // one capacity function (as the Overview, the Water tab and the DC tab).
     const sp = R && R.water && R.water.southPeel; if (!sp) return { tiles: '', hl: '' };
-    const rated = sp.plants.reduce((t, p) => t + p.ratedMLd, 0);
-    let bo = 0; for (const id of s.ids) { const l = M.zones.get(id); if (l) bo += M.wMax(M.total(l), M.jobs(l)); }
+    const k = window.PeelCapacity.of('wsys:southPeel'); if (!k) return { tiles: '', hl: '' };
+    const pc = window.PeelCapacity.pctTxt, ty = k.triggerYear === 'today' ? 'is at its 90% expansion trigger now' : k.triggerYear ? `reaches its 90% expansion trigger ≈${k.triggerYear}` : 'stays below its 90% expansion trigger';
     return {
-      hl: `<strong>South Peel water system</strong>: rated ${fmt1(rated)} ML/d of treatment (A.P. Kennedy + Lorne Park); 2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d; the lake-based zones' maximum day reaches ≈${fmt1(bo)} ML/d at build-out.`,
-      tiles: tile(fmt1(rated), 'ML/d', 'rated treatment') + tile(fmt1(sp.maxDayMLd), 'ML/d', '2025 maximum day (measured)') + tile(fmt1(bo), 'ML/d', 'zones’ max day at build-out (design)'),
+      hl: `<strong>South Peel water system</strong> ${ty}: rated ${fmt1(k.rated)} ML/d of treatment (A.P. Kennedy + Lorne Park); 2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d + committed growth = <strong>${pc(k.pctCommitted)}</strong> of rated, <strong>${pc(k.pctBuildout)}</strong> at build-out.`,
+      tiles: tile(fmt1(k.rated), 'ML/d', 'rated treatment') + tile(fmt1(sp.maxDayMLd), 'ML/d', '2025 maximum day (measured)') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
+        + tile(fmt1(k.reserve), 'ML/d', 'uncommitted reserve (to 100% of rated)'),
     };
   }
   // The ladder both ways: what the scope drains to / is fed by, and what feeds it.
@@ -175,6 +246,7 @@
     const h = headroom(s), rows = loadRows(s, set), water = s.key === 'pz';
     const shown = showAll ? rows : rows.slice(0, 10);
     const totAvg = rows.reduce((t, r) => t + r.avg, 0);
+    const totPj = rows.reduce((t, r) => t + r.e.population + r.e.employment.jobs, 0);
     const what = water ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
     const works = (s.key === 'dr' || s.key === 'pz') && DI() && DI().dcAreaWorksHTML ? DI().dcAreaWorksHTML(s.ids, s.key, s.kind === 'plant' ? s.pl : null) : '';
     return `<div class="ov-top">${hlP(h.hl || `<strong>${esc(s.title)}</strong>`)}</div>${SCREEN_NOTE_SHORT}
@@ -184,8 +256,8 @@
         ${ladder(s)}
         <section class="ov-card ss-devs"><div class="ov-h"><h3>Developments loading it</h3><button type="button" class="btn small" data-ss-report>Area report</button></div>
           ${rows.length ? `<div class="dcb-scroll"><table class="dt ov-t ss-t"><caption class="small muted">${fmtNum(rows.length)} developments adding flow since the census, largest ${water ? 'max day' : 'peak wet weather'} first; each alone at Peel design criteria (peaks are not additive)</caption>
-          <thead><tr><th>Development</th><th class="n">People + jobs</th><th class="n">${what[0]}</th><th class="n">${what[1]}</th><th class="n">Share</th></tr></thead>
-          <tbody>${shown.map(r => `<tr><td>${dot(r.p.phase)} <button type="button" class="btn small link" data-ov-dev="${esc(r.p.key)}">${esc(r.p.title)}</button><small class="muted">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}</small></td><td class="n">${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td class="n">${uLs(r.avg)}</td><td class="n">${uLs(r.peak)}</td><td class="n">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table></div>
+          <thead><tr><th>Development</th><th class="n">People + jobs</th><th class="n">${what[0]}</th><th class="n">${what[1]}</th><th class="n" title="This development's people + jobs as a share of all the growth loading it (not a share of capacity or reserve)">Share of growth<br><span class="muted">(people + jobs)</span></th></tr></thead>
+          <tbody>${shown.map(r => `<tr><td>${dot(r.p.phase)} <button type="button" class="btn small link" data-ov-dev="${esc(r.p.key)}">${esc(r.p.title)}</button><small class="muted">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}</small></td><td class="n">${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td class="n">${uLs(r.avg)}</td><td class="n">${uLs(r.peak)}</td><td class="n">${totPj > 0 ? `${Math.round((r.e.population + r.e.employment.jobs) / totPj * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table></div>
           ${rows.length > 10 ? `<p><button type="button" class="btn small" data-ss-all>${showAll ? 'Show top 10' : `See all ${fmtNum(rows.length)}`}</button></p>` : ''}
           <p class="small muted">Growth total, ${water ? 'average day' : 'average dry weather (design)'}: ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}.</p>` : '<p class="small muted">No development adds flow here since the census.</p>'}
         </section>
@@ -217,7 +289,7 @@
     if (b.hasAttribute('data-ss-report')) { const s = current(); if (s) Rep().areaReport(App().state.filtered.filter(has), `Area report – ${s.title}`, s.a && s.a.rings ? s.a.rings : []); }
   });
 
-  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, peelWideNote, PLANTS, KIND_LABEL };
+  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

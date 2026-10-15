@@ -1,0 +1,79 @@
+Layers
+Developments
+Wastewater blocks
+Pressure zones
+▲
+Water facilities
+Capacity colours
+Existing pipes
+Planned DC works
+Planning areas
+Gas pipelines
+Hydro lines
+Watercourses
+Regulation limits
+2021 census areas
+Legend
+Phase
+1
+Inception
+2
+Under review
+3
+Approved
+4
+Permit issued
+5
+Under construction
+Local flow growth over the census
+< 10%
+10–25%
+25–50%
+50–100%
+> 100% or new
+
+2026 (Results for year, in the Scenario control). Approved growth over 5 years from 2026, proposed over 10 from 2028 (Horizon years). Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+
+More settings
+#####analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+The 1,485 developments shown would add about 683,700 people and 81,900 jobs in 228,490 units. G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% of rated capacity → 121% at build-out).
+
+Executive briefing (PDF)
+Growth
+Growth →
+1,485
+developments
+shown on the map
+all of Peel
+228,490
+units
+planned
+219,299 left to build
+683,700
+people
+at build-out
+81,900
+jobs
+on development sites
+Needs attention
+1 DC project comes online after the capacity it relieves runs out: G.E. Booth WRRF (Lakeview): expansion to 600 ML/d · 25-2945
+DC Analysis →
+G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% → 121% at build-out)
+Wastewater →
+Stalled 4.6 yrs with no activity — 14275 THE GORE ROAD CALEDON ON L7E 0W9 (4,456 units, Caledon)
+Development →
+Stalled 3.5 yrs with no activity — 1750 STEELES AVE W (3,809 units, Brampton)
+Development →
+Stalled 5.1 yrs with no activity — 10159 THE GORE RD (3,239 units, Brampton)
+Development →
+New: 11 CHAPEL STREET CALEDON ON L7E 1C2 (Inception, Caledon)
+Development →
+New: 2719 BOVAIRD DR W (Withdrawn / refused, Brampton)
+Development →
+Capacity Mixed basis
+Plants →
+G.E. Booth
+94% committed → 121% build-out
+Reaches the trigger ≈2028 · next expansio

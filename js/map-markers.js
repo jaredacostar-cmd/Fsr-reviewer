@@ -52,7 +52,8 @@
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
   // Map views: presets of the layers and style, each remembering its last settings.
-  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
+  // The lenses (SPEC §4): Planning / Water / Wastewater / Capital ('dc' stays the key for saved views and links).
+  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'Capital']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
   // Sewer load as a share of full-pipe capacity, with its flow state: [upper %,
@@ -302,8 +303,8 @@
       });
       poly._area = area;
       const nested = apps.length > 1 && area < biggest * 0.6;
-      poly.bindTooltip(`<strong>${esc(a.ref || a.type || 'Application')}</strong>${a.type ? ` · ${esc(a.type)}` : ''}<br>${esc(a.address || p.title)}` +
-        `${a.units ? ` · ${fmtNum(a.units)} units` : ''}${unloaded ? `<br><span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
+      poly.bindTooltip(window.PeelUtil.hoverCard({ kind: `File · ${a.type || 'application'}`, name: a.ref || a.type || 'Application', value: a.units ? fmtNum(a.units) : null, sub: a.units ? `units · ${a.address || p.title}` : a.address || p.title,
+        html: unloaded ? `<span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : '', open: nested ? 'open this file' : 'open the development' }), { className: 'pt', sticky: true });
       poly.on('click', ev => { L.DomEvent.stop(ev); const sub = nested && Nav().isFormal(a) && Nav().subProject(p, a.ref); if (sub) Nav().showDetail(sub); else if (nested) AC().showRecordDetail(a, p); else Nav().showDetail(p); });
       return poly;
     });
@@ -314,8 +315,7 @@
       color: emph ? selColor() : token('--sym-outline'), fillColor: phaseColor(r.phase), fillOpacity: 1,
     });
     const parent = parentApps(r, p)[0];
-    m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
-      (parent ? `<br><span class="muted">Part of ${esc(parent.ref || parent.type || 'application')}</span>` : ''), { className: 'pt', direction: 'top', offset: [0, -6] });
+    m.bindTooltip(window.PeelUtil.hoverCard({ kind: `Building permit · ${P.PHASE_BY_KEY[r.phase].label}`, name: r.address || r.ref, value: r.units ? fmtNum(r.units) : null, sub: r.units ? `unit${r.units === 1 ? '' : 's'}${parent ? ` · part of ${parent.ref || parent.type || 'application'}` : ''}` : parent ? `Part of ${parent.ref || parent.type || 'application'}` : '', open: 'open this file' }), { className: 'pt', direction: 'top', offset: [0, -6] });
     m.on('click', ev => { L.DomEvent.stop(ev); AC().showRecordDetail(r, p); });
     return m;
   }
@@ -374,7 +374,8 @@
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
   const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Committed (draft plan or site plan approved)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
-  const layerColors = () => ({ existing: 'var(--text-muted)', built: phaseColor('completed'), approved: phaseColor('approved'), proposed: 'var(--layer-proposed)', out: 'var(--nodata)' });
+  // The layer tokens (SPEC §2): one hue, lightness = certainty.
+  const layerColors = () => ({ existing: 'var(--ly-existing)', built: 'var(--ly-built)', approved: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
   function svcLayerOf(p) {
     if (p.phase === 'cancelled') return 'out';

@@ -1,0 +1,79 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The 1,485 developments shown propose 228,490 homes (planned units, net of homes demolished): 9,556 permitted, 5,792 completed, 219,299 left to build.
+
+Homes
+Planned
+228,490units
+541 developments with units
+Permitted
+9,556units
+4% of planned
+Completed
+5,792units
+≈653/yr completed 2017–2026
+Left to build
+219,299units
+96% of planned
+Employment
+Planned
+6,026,566m²
+≈81,946 jobs
+Permitted
+1,356,062m²
+23% of planned · ≈18,439 jobs
+Completed
+0m²
+≈0 jobs
+Left to build
+4,670,504m²
+77% of planned · ≈63,507 jobs
+People
+603,807pop
+Dwellings
+202,557units
+Jobs
+81,946jobs
+Built since 2021
++14,831 people · +5,096 dwellings · +0 jobs
+Committed (draft plan or site plan approved, permit, construction)
++174,741 people · +55,033 dwellings · +24,400 jobs
+Proposed (in review)
++414,234 people · +142,428 dwellings · +57,500 jobs
+Largest pipelines still to build share of the build-out
+Development	Unbuilt	Share
+1-295 QUEEN ST EBrampton · 2 Under review	7,641units	3%
+9763 HERITAGE RDBrampton · 5 Under construction	6,236units	3%
+0 HERITAGE RDBrampton · 2 Under review	5,146units	2%
+14275 THE GORE ROAD CALEDON ON L7E 0W9Caledon · 2 Under review	4,456units	2%
+1750 STEELES AVE WBrampton · 2 Under review	3,809units	2%
+See all 450 developments
+Build-out by dwelling type
+Type	Planned	Permitted	Completed	Left
+Single / semi-detached	15,408units	1,538units	1,028units	13,667units
+Townhouse	27,044units	1,180units	832units	24,930units
+Apartment	147,580units	6,720units	3,991units	142,434units
+Type not stated	13,221units	0units	0units	13,211units
+Employment floor space (~81,946 jobs)	6,026,566m²	1,356,062m²	0m²	4,670,504m²
+17
+19
+20
+21
+22
+23
+24
+25
+26
+Completions and approval pace by municipality
+Municipality	Completions	Median application → approval
+Mississauga	413/yr · 52 devs	12 mo · n=196
+Brampton	206/yr · 61 devs	–
+Caledon	89/yr · 7 devs	–
+Peel	653/yr	12 mo · n=196
+
+ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions 2017–2026 from dated permit events (2,708 completion dates estimated from issue dates — Brampton and Caledon publish none). Approval pace = months from first application activity to the site's approval. Applications as of 2026-10-12.

@@ -1,0 +1,357 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+G.E. Booth Water Resource Recovery Facility
+Close ×
+G.E. Booth Water Resource Recovery Facility
+Treatment plant · wastewater · 2026 DC capital map (draft, not approved by Council)
+Project	Schedule
+New Outfall
+22-2944
+	D 2026 D 2027
+Site Security Improvements
+24-2917
+	C 2026
+Ash Management Facility
+24-2942
+	C 2026 C 2027
+Ash Removal
+25-2925
+	C 2026 C 2027 C 2028
+Treatment Expansion (518 to 600 ML/d)
+25-2945
+	D 2033 D 2033 C 2036 C 2036 C 2036
+Treatment Expansion
+26-2563
+	EA 2026
+Digesters and Beneficial Gas Reuse
+27-2941
+	D 2027 C 2029
+Ultraviolet Disinfection
+26-2949
+	D 2026 D 2027 C 2028
+Administration Building
+26-2943
+	D 2026 C 2028
+Biosolids Expansion
+31-2599
+	EA 2031
+Biosolids Expansion
+31-2999
+	D 2032 D 2032 C 2036 C 2034 C 2036
+Standby Power Expansion
+31-2999
+	D 2030 C 2032
+Ash Management Facility
+31-2999
+	D 2032 C 2034
+Odour Control Improvements
+20-2961
+	C 2026 C 2028
+Plant 2 Blower Replacement
+22-2923
+	C 2026 C 2028
+SCADA Improvements
+19-2981
+	C 2027
+
+EA = environmental assessment, P = property, D = design, C = construction (year and component number from the map). Schedules are subject to annual review and approval by Regional Council.
+
+What it relieves
+G.E. Booth WRRF (Lakeview)
+rated 518 ML/d · 90% expansion trigger (2020 Master Plan) · annual average flow · 105% committed → 135% build-out
+none over by 21.4 ML/d (94% of rated; trigger 90%)
+≈2028again ≈2029 with the expansionsScreens late: runs out before the DC project is in service
+2028 558 ML/d · status unknown
+2037 600 ML/d (25-2945) · paused
+
+Room in units at 3.1 persons per unit (apartment).
+
+Developments relying on it
+Built since the census 8,970 · 74,800 people
+Committed (draft plan or site plan approved) 2,049 · 165,200 people
+Proposed (in review) 504 · 358,700 people
+11,523 developments relying on it, largest peak wet weather first
+Development	People + jobs	Peak wet
+2 1-295 QUEEN ST E
+Proposed (in review) · Brampton
+	23,800	222L/s
+2 14275 THE GORE ROAD CALEDON ON L7E 0W9
+Proposed (in review) · Caledon
+	15,400	199L/s
+2 12561 CENTREVILLE CREEK ROAD CALEDON ON L7C 3B7
+Committed (draft plan or site plan approved) · Caledon
+	9,470	189L/s
+2 10159 THE GORE RD
+Committed (draft plan or site plan approved) · Brampton
+	10,000	136L/s
+2 0 CHINGUACOUSY ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	7,330	117L/s
+2 5155 OLD SCHOOL ROAD CALEDON ON L7C 0Y3
+Proposed (in review) · Caledon
+	5,600	96L/s
+2 12489 DIXIE ROAD CALEDON ON L7C 2M4
+Proposed (in review) · Caledon
+	2,940	92.2L/s
+2 1-200 COUNTY COURT BLVD
+Proposed (in review) · Brampton
+	8,270	90.4L/s
+2 1580 and 1650 Dundas St E.
+Proposed (in review) · Mississauga
+	8,230	86.5L/s
+4 12245 TORBRAM ROAD CALEDON ON L7C 2T4
+Committed (draft plan or site plan approved) · Caledon
+	4,170	81.9L/s
+2 14-263 QUEEN ST E
+Proposed (in review) · Brampton
+	7,590	81.5L/s
+3 10100 HEART LAKE RD
+Committed (draft plan or site plan approved) · Brampton
+	3,180	81.4L/s
+2 0 CREDITVIEW ROAD CALEDON ON
+Proposed (in review) · Caledon
+	6,080	80L/s
+✓ 10254 Hurontario Street
+Built since the census · Brampton
+	2,550	79.3L/s
+2 East of the Gore Rd and North of Queen St E
+Proposed (in review) · Brampton
+	7,210	78.4L/s
+2 3672 Kariya Drive
+Proposed (in review) · Mississauga
+	7,230	75.6L/s
+2 25 & 33 Hillcrest Avenue; 3146, 3154 & 3168 Hurontario St
+Proposed (in review) · Mississauga
+	6,480	71.5L/s
+2 35-499 MAIN ST S
+Proposed (in review) · Brampton
+	2,720	70.8L/s
+2 12713 HUMBER STATION ROAD CALEDON ON L7E 0Y4
+Proposed (in review) · Caledon
+	1,300	70.7L/s
+2 30 PEEL CENTRE DR
+Proposed (in review) · Brampton
+	3,840	69.9L/s
+2 12461 MCLAUGHLIN ROAD CALEDON ON L7C 2A8
+Proposed (in review) · Caledon
+	1,830	67.1L/s
+2 12563 HIGHWAY 50 CALEDON ON
+Proposed (in review) · Caledon
+	6,110	67L/s
+2 1004-210 STEELES AVE W
+Proposed (in review) · Brampton
+	5,820	66.3L/s
+2 OZS-2019-0013
+Committed (draft plan or site plan approved) · Brampton
+	3,420	66.2L/s
+1 85 HEART LAKE RD S
+Proposed (in review) · Brampton
+	5,810	63.1L/s
+2 12862 DIXIE ROAD CALEDON ON
+Proposed (in review) · Caledon
+	1,580	60.6L/s
+2 5076 OLD CASTLEMORE RD
+Committed (draft plan or site plan approved) · Brampton
+	4,130	59.2L/s
+2 9408 COLUMBIA WAY CALEDON ON
+Proposed (in review) · Caledon
+	3,610	58.2L/s
+2 100-2 COUNTY COURT BLVD
+Proposed (in review) · Brampton
+	4,960	57.4L/s
+2 260 MALTA AVE
+Proposed (in review) · Brampton
+	2,070	56L/s
+2 355 Burnhamthorpe Rd W
+Proposed (in review) · Mississauga
+	5,110	55.9L/s
+2 14196 HUMBER STATION ROAD CALEDON ON L7E 0Y5
+Committed (draft plan or site plan approved) · Caledon
+	4,550	55.8L/s
+2 15728 AIRPORT ROAD CALEDON ON
+Proposed (in review) · Caledon
+	5,170	54.1L/s
+5 1-30 GILLINGHAM DR
+Committed (draft plan or site plan approved) · Brampton
+	4,740	54L/s
+5 11690 Chinguacousy Road and 0 Mayfield Road
+Committed (draft plan or site plan approved) · Brampton
+	2,780	53.7L/s
+2 3431 OLD SCHOOL ROAD CALEDON ON L7C 0X8
+Proposed (in review) · Caledon
+	2,850	52.1L/s
+2 3085 Hurontario Street
+Proposed (in review) · Mississauga
+	4,590	51.9L/s
+2 12909 KENNEDY ROAD CALEDON ON L7C 2H1
+Proposed (in review) · Caledon
+	2,830	51.9L/s
+✓ 10900 COLERAINE DR
+Built since the census · Brampton
+	1,580	51.7L/s
+5 15717 AIRPORT ROAD CALEDON ON L7C 2Y1
+Committed (draft plan or site plan approved) · Caledon
+	2,620	49.5L/s
+2 35 RAILROAD ST
+Proposed (in review) · Brampton
+	4,410	49.2L/s
+2 5044 Hurontario Street
+Proposed (in review) · Mississauga
+	4,350	48.5L/s
+2 30 Eglinton Avenue West
+Proposed (in review) · Mississauga
+	4,300	48.5L/s
+2 0 CHINGUACOUSY ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	3,090	47.4L/s
+2 249 QUEEN ST E
+Proposed (in review) · Brampton
+	4,020	45.4L/s
+2 100 Queensway West
+Proposed (in review) · Mississauga
+	4,110	45.2L/s
+5 0 MCLAUGHLIN ROAD CALEDON ON
+Committed (draft plan or site plan approved) · Caledon
+	2,030	44.7L/s
+2 3970 Redmond Road and 535 Webb Drive
+Proposed (in review) · Mississauga
+	3,930	44.3L/s
+2 0 TORBRAM ROAD CALEDON ON
+Proposed (in review) · Caledon
+	1,700	44.1L/s
+2 227 VODDEN ST E
+Proposed (in review) · Brampton
+	3,480	44.1L/s
+4 12290 HUTCHINSON FARM LANE CALEDON ON L7C 2B6
+Committed (draft plan or site plan approved) · Caledon
+	2,040	43.9L/s
+2 0 AIRPORT ROAD CALEDON ON
+Proposed (in review) · Caledon
+	3	43.7L/s
+2 241 QUEEN ST E
+Committed (draft plan or site plan approved) · Brampton
+	3,480	43.4L/s
+2 12506 HEART LAKE ROAD CALEDON ON L7C 2J3
+Proposed (in review) · Caledon
+	1,440	43.3L/s
+2 137 STEELES AVE W
+Proposed (in review) · Brampton
+	3,590	42.8L/s
+2 1-16 LISA ST
+Proposed (in review) · Brampton
+	3,620	42.4L/s
+2 950 Aerodrome Avenue,750 Cove View, 705 Leading Sea Ave and 975 Marina Vista (formerly 985 Hydro Road)
+Proposed (in review) · Mississauga
+	3,450	41.9L/s
+2 10647 THE GORE RD
+Committed (draft plan or site plan approved) · Brampton
+	1,980	41.8L/s
+✓ 10387 McVean Drive
+Built since the census · Brampton
+	3	40.9L/s
+2 97-101 City Centre Drive
+Proposed (in review) · Mississauga
+	3,570	40.8L/s
+
++ 11,463 smaller developments.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Tool result
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 1,485 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Inception
+210
+Under review
+565
+Approved
+491
+Permit issued
+163
+Construction
+56
+Completed
+471
+Withdrawn / refused
+159
+
+1,485 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 734
+Under appeal 34
+Waiting on DC works 0
+PS over firm capacity 86
+Changed this week 1
+★ Watched 0
+Estimate check 759
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

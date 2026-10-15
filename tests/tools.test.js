@@ -135,36 +135,34 @@ test('banner action buttons route to the active tool onBannerAct', () => {
   assert.deepEqual(acts, ['lasso']);
 });
 
-test('openResult: tab shown, body filled, foot tab + trail updated; trailCrumb; closeResult restores', () => {
+test('openResult goes through PeelSvcScope (SPEC §3): one scope host, its trail step; no tab, no crumb of its own', () => {
   resetDOM();
+  const calls = [];
+  let open = null;
+  global.window.PeelSvcScope = {
+    openResult: o => { calls.push(['open', o.title, o.ref]); open = o; return o; },
+    closeResult: () => { calls.push(['close']); const was = !!open; open = null; return was; },
+    reopenResult: () => { calls.push(['reopen']); return !!open; },
+    hasResult: () => !!open, resultTitle: () => (open ? open.title : null),
+  };
   const T = freshTools();
   assert.equal(T.hasResult(), false);
-  assert.equal(T.trailCrumb(), null);
-  T.openResult({ title: 'Lasso selection', html: '<p>3 developments</p>' });
+  T.openResult({ title: 'Lasso selection', html: '<p>3 developments</p>', ref: 'sel:selection' });
   assert.equal(T.hasResult(), true);
   assert.equal(T.resultTitle(), 'Lasso selection');
-  assert.equal(els['#tool-title'].textContent, 'Lasso selection');
-  assert.equal(els['#pane-tool-body'].innerHTML, '<p>3 developments</p>');
-  assert.equal(els['#ftab-tool'].hidden, false);
-  assert.deepEqual(bridgeCalls, [['showFootTab', 'tool'], ['renderTrail']]);
-  const crumb = T.trailCrumb();
-  assert.equal(crumb.label, 'Lasso selection');
-  // Reopen via the crumb re-selects the tool tab.
-  bridgeCalls.length = 0;
-  crumb.go();
-  assert.deepEqual(bridgeCalls, [['showFootTab', 'tool']]);
-  // Close button.
-  els['#tool-close'].fireClick({ closest: () => null });
+  assert.equal(T.trailCrumb(), null, 'the trail step comes from PeelSvcScope.crumbs()');
+  assert.equal(T.reopenResult(), true);
+  assert.equal(T.closeResult(), true);
   assert.equal(T.hasResult(), false);
-  assert.equal(els['#ftab-tool'].hidden, true);
-  assert.deepEqual(bridgeCalls, [['showFootTab', 'tool'], ['showFootTab', 'overview'], ['renderTrail']]);
-  assert.equal(T.trailCrumb(), null);
+  assert.deepEqual(calls, [['open', 'Lasso selection', 'sel:selection'], ['reopen'], ['close']]);
+  assert.deepEqual(bridgeCalls, [], 'no Tool result tab to show');
+  delete global.window.PeelSvcScope;
 });
 
 test('closeResult with no result is a no-op', () => {
   resetDOM();
   const T = freshTools();
-  assert.equal(T.closeResult(), false);
+  assert.equal(T.closeResult(), false, 'no PeelSvcScope: nothing to close');
   assert.deepEqual(bridgeCalls, []);
 });
 

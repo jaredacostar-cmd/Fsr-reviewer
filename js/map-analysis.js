@@ -230,11 +230,11 @@
     for (const d of App().state.servicing.psAreas || []) {
       const ps = d.outletAt && psLoad(d, capYear);
       if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: token('--sym-outline'), fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
-        .bindTooltip(`<strong>${esc(SD().drName(d).replace(/^[^·]+· /, ''))}</strong><br>${Math.round(ps.pct)}% of firm at build-out (peak wet)`, { className: 'pt' })
+        .bindTooltip(window.PeelUtil.hoverCard({ kind: 'Pumping station', name: SD().drName(d).replace(/^[^·]+· /, ''), value: `${Math.round(ps.pct)}%`, sub: `of firm at ${capYear == null ? 'build-out' : capYear} (peak wet)`, also: 'Trace upstream from its scope' }), { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); TS().showLoads(d.id); }).addTo(layer);
     }
     for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:var(${SD().PLANT_TOKEN[p.name] || '--nodata'})"></span>`, iconSize: [16, 16] }) })
-      .bindTooltip(`<strong>${esc(SD().plantLabel(p.name))}</strong><br><span class="muted">Tap: everything it treats</span>`, { className: 'pt' })
+      .bindTooltip(() => { const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${p.name}`); return window.PeelUtil.hoverCard({ kind: 'Wastewater treatment plant', name: SD().plantLabel(p.name), value: k ? window.PeelCapacity.pctTxt(k.pctBuildout) : null, sub: k ? `of rated at build-out (${window.PeelCapacity.pctTxt(k.pctCommitted)} committed)` : 'everything it treats' }); }, { className: 'pt' })
       .on('click', () => TS().showLoads(null, p.name)).addTo(layer);
     ST().addFlowMarker();
   }
@@ -269,7 +269,7 @@
     const mr = map.getContainer().getBoundingClientRect(); if (!mr.width) return;
     const gap = 8, edge = phoneMap ? 8 : 12;
     // The development panel (right side, over the map on wide screens): lay out in the part left visible.
-    const dt = $('#detail'), dr = dt && !dt.hidden ? dt.getBoundingClientRect() : null;
+    const dt = $('#analysis'), dr = dt && !dt.hidden && dt.getBoundingClientRect().left < map.getContainer().getBoundingClientRect().right - 1 ? dt.getBoundingClientRect() : null;
     const cover = dr && dr.left > mr.left + 300 && dr.left < mr.right ? mr.right - dr.left : 0;
     // On a phone the panel is a bottom sheet: the bottom boxes sit above it.
     const coverB = dr && !cover && dr.width >= mr.width * 0.9 && dr.top > mr.top + mr.height * 0.2 && dr.top < mr.bottom ? Math.round(mr.bottom - dr.top) : 0;
@@ -316,12 +316,18 @@
   // The year the map's capacity results are worked out for now lives in the Scenario control
   // ("Results for year"); the legend keeps naming it.
   const censusYr = () => (CA().baselineCensus() || {}).year || SP().hz.year0;
+  document.addEventListener('click', e => { const b = e.target.closest('[data-lg-color]'); if (b) setMapStyle({ color: b.dataset.lgColor }); });
   function renderLegend() {
     // Phase 2: renders inline in the Layers panel (#mo-legend); the legendOpen state lives on the
     // panel's own <details>, set once in MapOptions.onAdd.
     const el = document.getElementById('mo-legend'); if (!el) return;
     const parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
+    // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by Phase | Layer.
+    if (MM().mstyle.show !== 'heat') {
+      const c = MM().mstyle.color, b = (k, t) => `<button type="button" class="btn small${c === k ? ' on' : ''}" data-lg-color="${k}" aria-pressed="${c === k}">${t}</button>`;
+      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Phase')}${b('layer', 'Layer')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : 'One marker per development; a cluster’s number counts developments.'}</p>`);
+    }
     if (MM().mstyle.show === 'heat') parts.push(`<div class="lg-t">Heatmap: people + jobs at build-out</div><div class="lg-heat"></div><p class="lg-s">Low → high density of the shown developments; markers are hidden (Layers &amp; style → Show as).</p>`);
     if (MM().mstyle.color === 'phase' && MM().mstyle.show !== 'heat') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);

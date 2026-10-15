@@ -158,7 +158,7 @@ test('verdict card: key numbers (homes, jobs, flows), one status sentence, four 
   assert.match(src, /verdictDc\(/, 'DC verdict from per-tab brief logic');
   assert.match(src, /verdictMilestone\(/, 'milestone verdict');
   for (const tab of ["go('water'", "go('ww'", "go('dca'"]) assert.match(src, new RegExp(tab.replace(/[()']/g, '\\$&')), `missing tab link ${tab}`);
-  assert.match(src, /data-ov-devsec/, "milestone line must open the development's files (in the Overview)");
+  assert.match(src, /data-ov-tab="records">Files &amp; history \(Records\) →/, "milestone line opens the development's files (Records, SPEC §5)");
 });
 
 test('growth chart tooltip: delegated to .growth-chart so both sub-views keep it', () => {
@@ -212,16 +212,16 @@ test('scoped renders: footer copies get prefixed ids (water, ww, demand, dc)', (
 });
 
 test('water trace button: output goes to the clicked container, labels stay in sync across copies', () => {
-  assert.match(APP, /const scope = b\.closest\('#detail-body, #water-body'\) \|\| document;/);
+  assert.match(APP, /const scope = b\.closest\('#scope-body, #pane-dev-body, #water-body'\) \|\| document;/);
   assert.match(APP, /const tops = \[\.\.\.document\.querySelectorAll\(`\[data-wtrace="\$\{CSS\.escape\(p\.key\)\}"\]`\)\];/);
   assert.match(APP, /for \(const o of document\.querySelectorAll\('\.wtrace-out'\)\) o\.innerHTML = '';/);
 });
 
 test('footer copies: no dead ends — brief buttons work outside the detail panel', () => {
-  const m = /document\.addEventListener\('click', e => \{\n    if \(e\.target\.closest\('#detail-body'\)\) return;[\s\S]*?\n  \}\);/.exec(APP);
+  const m = /document\.addEventListener\('click', e => \{\n    const g = e\.target\.closest\('\[data-foot-tab\]'\);[\s\S]*?\n  \}\);/.exec(APP);
   assert.ok(m, 'footer click listener not found');
   for (const sel of ['[data-foot-tab]', '[data-pipe]', '[data-dcn-all]', '[data-dcn-cons]', '[data-dcn-relief]',
     '[data-uu-set]', '[data-uu-clear]', '[data-sub]', '[data-dev-parent]', '[data-open]'])
-    assert.match(m[0], new RegExp(sel.replace(/[\[\]]/g, '\\$&')), `${sel} not handled outside #detail-body`);
+    assert.match(m[0], new RegExp(sel.replace(/[\[\]]/g, '\\$&')), `${sel} not handled`);
   assert.match(m[0], /scope\.querySelector\(`#f-\$\{CSS\.escape\(o\.dataset\.open\)\}`\)/);
 });

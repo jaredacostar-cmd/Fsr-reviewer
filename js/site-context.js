@@ -43,7 +43,7 @@
   // Peel hydrants (live). Hydrant flow tests are not published, so this is coverage and zone only.
   const HYDRANTS = `${EP().PEEL_FS}/HydrantsExport_/FeatureServer/0`;
   const FIRE_R = 150, TRANS_R = 1500;
-  const geoQ = (url, lng, lat, r, outFields) => A.fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' });
+  const geoQ = (url, lng, lat, r, outFields) => A.fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' }, { timeout: 15000 });
   const fireCache = new Map();
   function fireContext(lng, lat) {
     const key = `${lng.toFixed(5)},${lat.toFixed(5)}`;

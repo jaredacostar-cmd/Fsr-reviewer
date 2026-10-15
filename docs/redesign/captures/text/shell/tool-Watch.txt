@@ -1,0 +1,69 @@
+##### #detail
+
+
+##### #analysis-panes
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+9763 HERITAGE RD · Brampton · 5 Under construction
+
+At a glance
+Files & history ↓
+
+Under construction: from the status of OZS-2025-0032 (“Staff Review Complete”), PRE-2024-0100 (“Closed”)
+
+9,862
+units
+planned
+33,500
+people
+at build-out
+189
+L/s
+water max day
+113
+L/s
+average dry weather
+273
+L/s
+peak dry weather
+284
+L/s
+peak wet weather
+
+Tree count · 6,289 by the previous rule
+OZS-2025-0034: 9,862 (children (the parent states no count))
+
+Flows at Peel design criteria, as in a functional servicing report. Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Zone 6: this site is 7% of the zone's build-out max day Water →
+🚰 Wastewater sewer pipes not assessed · Clarkson WRRF reserve 112 ML/d — this site 14% of it Wastewater →
+🏗 DC works Served by the existing network · 15 planned works nearby DC Analysis →
+🚩 Next milestone Next milestone: Completed Files & history ↓
+About
+Files & history
+Site
+Status
+
+5 Under construction · latest activity 2025-07-22
+
+Latest decision
+2026-09-09 · City Council · By-law
+
+By-law 153-2026 passed — By-law 153-2026 - To amend Comprehensive Zoning By-law 270-2004, as amended, Glen Schnarr and Associates Inc., Argo TFP Brampton III Ltd. & Argo TFP Brampton V Limited,9763, 0, 9553, and 9577 Heritage Road -Ward 6 - (File: OZS-2025-0032)
+
+Requirements on record
+Traffic / transportation study
+
+19 council and committee items since 2024 — all in History. Latest file status: OZS-2025-0034 “In Review-Public Mtg Complete” (2025-07-22).
+
+Servicing report
+Brampton's documents are on BramPlanOnline (sign-in) · Brampton applications ↗
+Proposal
+
+Draft Plan of Subdivision | Zoning By Law Amendment — To permit the development of 253 detached dwelling lots, 241 rear lane townhouses, 98 dual frontage townhouses, 15 part lots, an elementary school block, a stormwater management pond natural heritage system, a park, open space and walkways.
+
+##### #analysis .site-bar, #analysis .devscope, #devscope
+
+
+##### dialog[open]

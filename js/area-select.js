@@ -395,30 +395,21 @@
       <details class="sect"><summary><h2 class="section-title">Developments</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>
         <ul class="sel-list">${list}</ul></details>`;
   }
-  // Legacy entry point: the selection summary in the #detail side panel.
-  function showSelection(added) {
-    CA().setDaContext(null);
-    const sel = [...selection.values()];
-    DN().setCurrentProject(null);
-    TB().renderTrail();
-    MM().highlight(null);
-    $('#detail-body').innerHTML = selectionSummaryHTML(sel, added);
-    $('#detail').hidden = false; $('#detail').dataset.view = 'sel';
-    $('#detail').scrollTop = 0;
-  }
+  // The selection summary, as a scope in the right panel (sel:selection).
+  function showSelection(added) { Meas().openSelectionResult('Selection', added); }
   function exportSelectionCSV() {
     const rows = Ex().exportRows([...selection.values()]); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
     const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
     Ex().download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
-  // Phase 3b: the same selection actions, but the summary lives in the Tool result pane.
-  $('#pane-tool-body').addEventListener('click', e => {
+  // The selection actions, in the selection scope (right panel).
+  $('#scope-body').addEventListener('click', e => {
     const a = e.target.closest('[data-sel]');
     if (a) {
       const k = a.dataset.sel;
       if (k === 'add') setLasso(true);
-      else if (k === 'clear') { clearSelection(); if (Meas().hasTools()) PeelTools.closeResult(); }
+      else if (k === 'clear') { clearSelection(); PeelTools.closeResult(); }
       else if (k === 'csv') exportSelectionCSV();
       else if (k === 'back') Meas().openSelectionResult('Selection');
       return;
@@ -428,36 +419,22 @@
     const d = e.target.closest('[data-drop]');
     if (d) { selection.delete(d.dataset.drop); drawSelection(); Meas().openSelectionResult('Selection'); }
   });
-  $('#detail-body').addEventListener('click', e => {
-    const a = e.target.closest('[data-sel]');
-    if (a) {
-      const k = a.dataset.sel;
-      if (k === 'add') setLasso(true);
-      else if (k === 'clear') { clearSelection(); AC().closeDetail(); }
-      else if (k === 'csv') exportSelectionCSV();
-      else if (k === 'back') showSelection();
-      return;
-    }
-    const o = e.target.closest('[data-open]');
-    if (o && selection.has(o.dataset.open)) { DN().showDetail(selection.get(o.dataset.open)); return; }
-    const d = e.target.closest('[data-drop]');
-    if (d) { selection.delete(d.dataset.drop); drawSelection(); showSelection(); }
-  });
 
   // ---- Unselect: tap empty map, Esc, or the Clear selection button ----------------------------
   // Clears the open panel (development, area, DC item…), the highlighted catchment / zone, a drawn
   // selection, the address pin and highlighted mains. Filters stay as they are.
   let panelAt = 0;
-  new MutationObserver(() => { panelAt = Date.now(); syncClearBtn(); }).observe($('#detail-body'), { childList: true });
-  new MutationObserver(() => { syncClearBtn(); MA().fitLegend(); }).observe($('#detail'), { attributes: true, attributeFilter: ['hidden'] });
+  // A result scope opening or closing (a file, a block, a DC work…) is a selection too.
+  const resultOpen = () => !!(window.PeelSvcScope && window.PeelSvcScope.hasResult());
+  new MutationObserver(() => { panelAt = Date.now(); syncClearBtn(); MA().fitLegend(); }).observe($('#scope-body'), { childList: true, attributes: true, attributeFilter: ['hidden'] });
   const clearBtn = L.DomUtil.create('button', 'btn clear-sel', mapBottom);
   clearBtn.type = 'button'; clearBtn.innerHTML = 'Clear selection <span aria-hidden="true">×</span>'; clearBtn.title = 'Unselect (or tap an empty part of the map, or press Esc)'; clearBtn.hidden = true;
   L.DomEvent.disableClickPropagation(clearBtn);
-  const somethingSelected = () => !$('#detail').hidden || !!ST().BLK.id || !!ST().TRACE.key || !!ST().svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || EP().exHL.getLayers().length > 0 || SF().pinLayer.getLayers().length > 0 || ST().WTRACE.layer.getLayers().length > 0;
+  const somethingSelected = () => resultOpen() || !!ST().BLK.id || !!ST().TRACE.key || !!ST().svcFocus.id || selection.size > 0 || selAreas.length > 0 || lassoOn || EP().exHL.getLayers().length > 0 || SF().pinLayer.getLayers().length > 0 || ST().WTRACE.layer.getLayers().length > 0;
   function syncClearBtn() { clearBtn.hidden = !somethingSelected(); }
   function clearSelected() {
     if (lassoOn) setLasso(false);
-    if (!$('#detail').hidden) AC().closeDetail();
+    if (resultOpen()) AC().closeDetail();
     MM().highlight(null);
     if (ST().svcFocus.id) ST().focusSvc(ST().svcFocus.id, { zoom: false, loads: false });
     if (selection.size || selAreas.length) clearSelection();

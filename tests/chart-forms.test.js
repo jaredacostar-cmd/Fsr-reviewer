@@ -17,7 +17,7 @@ test('charts are drawn at the panel width, so their 11-unit labels render at 11 
   assert.doesNotMatch(dc, /const W = 560/);
   assert.match(src('js/timing.js'), /const W = window\.PeelUtil\.chartW\(320, 900\)/);
   assert.match(src('js/svc-plants.js'), /const W = window\.PeelUtil\.chartW\(320, 900\), narrow = W < 560/);
-  assert.match(src('css/app.css'), /#analysis-panes small, #detail small \{ font-size: max\(var\(--fs-1\), \.83em\); \}/);
+  assert.match(src('css/app.css'), /#analysis-panes small \{ font-size: max\(var\(--fs-1\), \.83em\); \}/);
   assert.match(src('css/app.css'), /--fs-1: 11px;/);
 });
 

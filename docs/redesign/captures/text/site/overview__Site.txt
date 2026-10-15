@@ -1,0 +1,74 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+9763 HERITAGE RD · Brampton · 5 Under construction
+
+At a glance
+Files & history ↓
+
+Under construction: from the status of OZS-2025-0032 (“Staff Review Complete”), PRE-2024-0100 (“Closed”)
+
+9,862
+units
+planned
+33,500
+people
+at build-out
+189
+L/s
+water max day
+113
+L/s
+average dry weather
+273
+L/s
+peak dry weather
+284
+L/s
+peak wet weather
+
+Tree count · 6,289 by the previous rule
+OZS-2025-0034: 9,862 (children (the parent states no count))
+
+Flows at Peel design criteria, as in a functional servicing report. Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Zone 6: this site is 7% of the zone's build-out max day Water →
+🚰 Wastewater sewer pipes not assessed · Clarkson WRRF reserve 112 ML/d — this site 14% of it Wastewater →
+🏗 DC works Served by the existing network · 15 planned works nearby DC Analysis →
+🚩 Next milestone Next milestone: Completed Files & history ↓
+About
+Files & history
+Site
+Site
+aerial · ground · stormwater
+Aerial check
+21%likely completed
+Likely under construction
+2015 fall · before the application
+2025 fall · latest
+•
+Records: Under construction
+▲
+Permits: 1% of units completed
+▼
+6,236 planned units have no building permit yet
+▲
+Permit issued 5 years ago
+▼
+Fewer building edges 2015 → 2025 (structure ×0.7): cleared or graded, construction under way
+
+City of Brampton aerial photos. Site: application boundary (yellow outline). Estimate from how much the site changed compared with its surroundings and how much building structure it shows, plus building footprints traced from the photos; not a site inspection.
+
+Ground
+
+Site 235.8 m above sea level
+
+Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts.
+
+Storm sewers
+
+Looking up the nearest storm sewers…
+
+Stormwater
+
+Looking up stormwater ponds…

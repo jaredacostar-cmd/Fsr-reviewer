@@ -178,7 +178,17 @@
   const fmtMoney = v => v == null || !isFinite(v) ? '–' : v >= 1e9 ? `$${(v / 1e9).toFixed(2)} B` : v >= 1e6 ? `$${(v / 1e6).toFixed(v >= 1e8 ? 0 : 1)} M` : `$${fmtNum(Math.round(v))}`;
 
   // ---- Public API ----------------------------------------------------------------
+  // One hover card for every map feature (SPEC §3, boards/MapControls): what it is, its name, the
+  // one number that matters, then what a click does. Plain strings; html is trusted markup.
+  //   hoverCard({ kind, name, value, sub, html, open = 'open its scope', also })
+  function hoverCard(o) {
+    const e = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    return `<div class="hcard">${o.kind ? `<span class="hc-k">${e(o.kind)}</span>` : ''}<strong class="hc-n">${e(o.name)}</strong>`
+      + `${o.value != null && o.value !== '' ? `<div class="hc-v"><b>${e(o.value)}</b>${o.sub ? ` <span>${e(o.sub)}</span>` : ''}</div>` : o.sub ? `<div class="hc-v"><span>${e(o.sub)}</span></div>` : ''}`
+      + `${o.html ? `<div class="hc-x">${o.html}</div>` : ''}<div class="hc-a">Click: ${e(o.open || 'open its scope')}${o.also ? ` · ${e(o.also)}` : ''}</div></div>`;
+  }
   const api = {
+    hoverCard,
     $, esc, fmtNum, fmtDate, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },

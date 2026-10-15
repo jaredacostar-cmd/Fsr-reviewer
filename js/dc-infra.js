@@ -114,10 +114,13 @@
     return { ww: outWw ? conn.find(n => n.ln.sys === 'wastewater') || ww : ww, wa: outWa ? conn.find(n => n.ln.sys === 'water') || wa : wa, outWw, outWa,
       trunks: [...byProj.values()].sort((a, b) => a.y - b.y), facs, plant, needBy, gap: committed && needBy > MM().THIS_YEAR };
   }
+  // Which network a site is outside: one system can be served while the other waits on a new main
+  // (SPEC 1.9: "outside the existing network" and "on the existing network" said together).
+  const netOut = w => (w.outWa && w.outWw ? 'water and sewer networks' : w.outWa ? 'water network' : w.outWw ? 'sewer network' : 'network');
   function devWorksHTML(w, sys = null) {
     if (!w) return '';
     const li = [], on = k => !sys || sys === k;
-    for (const [n, what, out, k] of [[w.ww, 'Wastewater', w.outWw, 'wastewater'], [w.wa, 'Water', w.outWa, 'water']]) if (n && on(k)) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ' <span class="muted">(site is on the existing network)</span>'}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
+    for (const [n, what, out, k] of [[w.ww, 'Wastewater', w.outWw, 'wastewater'], [w.wa, 'Water', w.outWa, 'water']]) if (n && on(k)) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ` <span class="muted">(site is on the existing ${k === 'water' ? 'water' : 'sewer'} network)</span>`}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
     const facs = w.facs.filter(x => on(x.sys));
     if (w.trunks.length && on('wastewater')) li.push(`<li><strong>Downstream trunks:</strong> ${w.trunks.slice(0, 4).map(t => esc(`${t.y} ${t.d ? `${t.d} mm` : ''} ${t.p || ''}`.trim())).join(' · ')}${w.trunks.length > 4 ? ` +${w.trunks.length - 4}` : ''}</li>`);
     if (facs.length) li.push(`<li><strong>Facilities:</strong> ${facs.slice().sort((a, b) => lastYear(a) - lastYear(b)).slice(0, 4).map(x => `<button type="button" class="btn small link" data-dcfac="${esc(x.sys)}|${esc(x.name)}">${esc(x.name)}</button> ${lastYear(x)}`).join(' · ')}${facs.length > 4 ? ` +${facs.length - 4} more (What loads this)` : ''}</li>`);
@@ -126,7 +129,7 @@
     // The timing note goes with the system the site would connect through.
     const timing = !sys || (sys === 'wastewater' ? w.outWw : w.outWa && !w.outWw);
     return `<ul class="b-lines small dc-works">${li.join('')}</ul>
-      ${!timing ? '' : w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing network, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing network: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
+      ${!timing ? '' : w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing ${netOut(w)}, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing ${netOut(w)}: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
   }
 
   // Map layer: planned mains (dashed when approved in 2026) and facilities.
@@ -141,14 +144,15 @@
       for (const ln of App().state.dcInfra[sys].lines) {
         const [label, colName, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
         L.polyline(ln.g.map(([x, y]) => [y, x]), { color: token(colName), weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
-          .bindTooltip(`<strong>${esc(label)}</strong><br>${ln.y ? `Construction ${ln.y}` : 'Year not labelled'}${ln.d ? ` · ${ln.d} mm` : ''}${ln.s === 'approved' ? ' · approved 2026' : ' · proposed'} · ${lnStatus(ln)}${ln.p ? `<br>Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft, as of ${CAPITAL.asOf}; new growth procurements paused from June 11, 2026) · tap: what it relieves</span>`, { sticky: true, className: 'pt' })
+          .bindTooltip(window.PeelUtil.hoverCard({ kind: `DC work · ${ln.s === 'approved' ? 'approved 2026' : 'proposed'}`, name: `${label}${ln.d ? ` · ${ln.d} mm` : ''}`, value: ln.y ? String(ln.y) : '–', sub: `${ln.y ? 'construction' : 'year not labelled'} · ${lnStatus(ln)}`,
+            html: `${ln.p ? `Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft, as of ${CAPITAL.asOf}; new growth procurements paused from June 11, 2026)</span>`, also: 'what it relieves' }), { sticky: true, className: 'pt' })
           .on('click', ev => { L.DomEvent.stop(ev); MP().showDcLine(ln); }).addTo(dcLayer);
       }
       for (const fc of App().state.dcInfra[sys].facilities) {
         if (!fc.g) continue;
         const y = lastYear(fc), later = yr != null && y > yr;
         L.marker([fc.g[1], fc.g[0]], { icon: L.divIcon({ className: `dc-fac dc-${sys}${later ? ' later' : ''}`, html: `<span>${{ plant: 'P', pumping_station: 'S', odour_control: 'O', reservoir: 'R', elevated_tank: 'T', well: 'W' }[fc.kind] || '•'}</span>`, iconSize: [20, 20] }) })
-          .bindTooltip(`<strong>${esc(fc.name)}</strong><br>${esc(DC_FAC[fc.kind] || fc.kind)} · ${fc.items.length} project${fc.items.length === 1 ? '' : 's'}, last construction ${y || '–'}${fc.approx ? '<br><span class="muted">approximate location</span>' : ''}<br><span class="muted">Tap for the schedule</span>`, { className: 'pt' })
+          .bindTooltip(window.PeelUtil.hoverCard({ kind: `DC facility · ${DC_FAC[fc.kind] || fc.kind}`, name: fc.name, value: y ? String(y) : '–', sub: `last construction · ${fc.items.length} project${fc.items.length === 1 ? '' : 's'}`, html: fc.approx ? '<span class="muted">approximate location</span>' : '', also: 'its schedule' }), { className: 'pt' })
           .on('click', () => showFacility(fc)).addTo(dcLayer);
       }
     }
@@ -163,7 +167,7 @@
       ${MP().dcNeedsSection({ fc })}
       `;
     TS().loadsOf = { dc: { fc } };
-    TS().toolResult('dc', fc.name, html, () => showFacility(fc));
+    TS().toolResult('dc', fc.name, html, () => showFacility(fc), { ref: `dcwork:${fc.sys}:${fc.name}` });
   }
   document.addEventListener('click', e => {
     const b = e.target.closest('[data-dcfac]'); if (!b || !App().state.dcInfra) return;

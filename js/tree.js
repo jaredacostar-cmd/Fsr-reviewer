@@ -488,12 +488,16 @@
       if (n.units > 0) return n.units;
       const f = looked(n); return f && f.units > 0 ? f.units : 0;
     }
+    // SPEC 1.6: the count as its parts, [node, units, kind, source], always summing to the units:
+    // stated (the file says so) · online (found online, data/unit-lookups.json) · and, when no file
+    // states one, condo / precon / minor / estimate (the wording) / permits.
+    const ownPart = i => { const u = own(i); if (!(u > 0)) return []; const n = nodes[i]; return [[i, u, n.units > 0 ? 'stated' : 'online', n.units > 0 ? null : (looked(n) || {}).source || null]]; };
     function count(i, depth = 0) {
-      if (depth > 12) return { units: own(i), basis: 'depth limit' };
+      if (depth > 12) return { units: own(i), basis: 'depth limit', parts: ownPart(i) };
       const n = nodes[i];
       const ch = (kids.get(i) || []).filter(k => nodes[k].role !== 'condo' && nodes[k].role !== 'precon' && !nodes[k].cancelled);
       const ownBasis = n.units > 0 || !looked(n) || !(looked(n).units > 0) ? 'own count' : `found online: ${looked(n).source}`;
-      if (!ch.length) return { units: own(i), basis: ownBasis };
+      if (!ch.length) return { units: own(i), basis: ownBasis, parts: ownPart(i) };
       const sub = ch.map(k => ({ k, ...count(k, depth + 1) }));
       const sum = sub.reduce((t, s) => t + s.units, 0);
       // Coverage counts only the children that state a count: land under a file with no count
@@ -506,15 +510,16 @@
       const blank = sub.filter(s => !(s.units > 0)).length;
       if (cover != null && cover >= T.COVER && sum > 0) {
         if (blank && mine > 0 && sum < mine * (1 - T.OVER)) flags.push({ kind: 'children cover the land but some state no count', parent: n.refs[0], parentUnits: mine, childUnits: sum, childrenWithoutCount: blank });
-        return { units: sum, basis: `children cover ${Math.round(cover * 100)}% of the land${blank ? ` (${blank} of ${sub.length} state no count)` : ''}`, children: sub };
+        return { units: sum, basis: `children cover ${Math.round(cover * 100)}% of the land${blank ? ` (${blank} of ${sub.length} state no count)` : ''}`, children: sub, parts: sub.flatMap(x => x.parts) };
       }
-      if (mine > 0) return { units: mine, basis: cover == null ? 'parent count (children have no boundary to measure)' : `parent count (children cover ${Math.round(cover * 100)}%)`, remainder: Math.max(0, mine - sum), children: sub };
-      return { units: sum, basis: 'children (the parent states no count)', children: sub };
+      if (mine > 0) return { units: mine, basis: cover == null ? 'parent count (children have no boundary to measure)' : `parent count (children cover ${Math.round(cover * 100)}%)`, remainder: Math.max(0, mine - sum), children: sub, parts: ownPart(i) };
+      return { units: sum, basis: 'children (the parent states no count)', children: sub, parts: sub.flatMap(x => x.parts) };
     }
     // Top-level same-land siblings: one proposal, counted once (the largest stated count).
     // Tops in one tree are joined by same-land sibling links: one proposal, the largest count.
     const topCounts = tops.map(i => ({ i, ...count(i) }));
     let units = topCounts.length ? Math.max(...topCounts.map(t => t.units)) : 0;
+    let parts = topCounts.length ? topCounts.find(t => t.units === units).parts : [];
     // r3: the latest file wins when it replaces the largest (same stage refiled, or it covers ≥ 90%
     // of the largest's land); a later file on part of the land is a phase and the largest stands.
     let latestWins = null;
@@ -532,7 +537,7 @@
         const why = L.role === G.role ? 'the same stage refiled' : covers != null && covers >= T.COVER ? `it covers ${Math.round(covers * 100)}% of the earlier file's land` : text && text.verdict === 'resubmission' ? `the wording says a resubmission (${text.evidence.filter(e => e.startsWith('resub')).map(e => e.replace(/^resubmission \+\d: /, '')).join('; ')})` : null;
         const not = covers != null ? `a phase (covers ${Math.round(covers * 100)}% of the earlier land; the largest stands)` : text && text.verdict === 'phase' ? `a phase (${text.evidence.filter(e => e.startsWith('phase')).map(e => e.replace(/^phase \+\d: /, '')).join('; ')}; the largest stands)` : 'unclear from the wording (no boundary to measure; the largest stands)';
         latestWins = { latest: L.refs[0], latestUnits: latest.units, latestRole: L.role, largest: G.refs[0], largestUnits: largest.units, largestRole: G.role, covers: covers == null ? null : +covers.toFixed(2), applied: !!why, verdict: why ? 'resubmission' : text && text.verdict === 'unclear' ? 'unclear' : 'phase', why: why || not, evidence: text ? text.evidence : [], buildings: text ? text.buildings : null, addresses: text ? text.addresses : null, wordingUnits: text ? text.wordingUnits : null };
-        if (why) units = latest.units;
+        if (why) { units = latest.units; parts = latest.parts; }
       }
     }
     // Tops joined only through a chain of same-land links (A~B, B~C but not A~C): flagged for review.
@@ -546,8 +551,13 @@
     // A tree whose only count is on a condominium file (no site plan or draft plan in the data
     // states one): the condo's count stands, so the units aren't lost.
     const live = [...set].filter(i => !nodes[i].cancelled);
-    if (!(units > 0)) { const c = Math.max(0, ...live.filter(i => nodes[i].role === 'condo').map(i => nodes[i].units || 0)); if (c > 0) { units = c; basis = 'condominium count (no site plan or draft plan in the data states one)'; } }
-    if (!(units > 0)) { const pre = Math.max(0, ...[...set].map(i => nodes[i].precUnits || 0), ...[...set].filter(i => nodes[i].role === 'precon').map(i => nodes[i].units || 0)); if (pre > 0) { units = pre; basis = 'pre-consultation count (no other file states one)'; } }
+    const argmax = (is, f) => is.slice().sort((a, b) => f(b) - f(a))[0];
+    if (!(units > 0)) { const cs = live.filter(i => nodes[i].role === 'condo'); const c = Math.max(0, ...cs.map(i => nodes[i].units || 0)); if (c > 0) { units = c; basis = 'condominium count (no site plan or draft plan in the data states one)'; parts = [[argmax(cs, i => nodes[i].units || 0), c, 'condo', null]]; } }
+    if (!(units > 0)) {
+      const pu = i => Math.max(nodes[i].precUnits || 0, nodes[i].role === 'precon' ? nodes[i].units || 0 : 0);
+      const pre = Math.max(0, ...[...set].map(pu));
+      if (pre > 0) { units = pre; basis = 'pre-consultation count (no other file states one)'; parts = [[argmax([...set], pu), pre, 'precon', null]]; }
+    }
     // No file states a count: a minor file's wording ("convert into 3 dwelling units"), a count
     // found online (data/unit-lookups.json), else the wording's kind of growth.
     let growth = null;
@@ -555,12 +565,13 @@
       // A minor file's own stated count, else its wording (Step B0: a stated count was being missed).
       const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0))));
       const found = built.lookups && built.lookups.size ? live.map(i => nodes[i].refs.map(r => built.lookups.get(`${nodes[i].municipality}|${r}`)).find(Boolean)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
-      if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; }
-      else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; }
+      const minorOf = i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0));
+      if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; parts = [[argmax(live.filter(i => nodes[i].minor), minorOf), minorText, 'minor', null]]; }
+      else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; parts = [[live.find(i => nodes[i].refs.some(r => built.lookups.get(`${nodes[i].municipality}|${r}`) === found)), found.units, 'online', found.source]]; }
       else if (found && found.units === 0) { basis = `no new homes (checked: ${found.source})`; growth = { kind: 'non-residential', units: null, why: found.note || 'checked online: no new homes', url: found.url }; }
       else {
         growth = growthKind(live.map(i => nodes[i].records.map(r => r.description || '').join(' ')));
-        if (growth.units > 0) { units = growth.units; basis = growth.why; }
+        if (growth.units > 0) { units = growth.units; basis = growth.why; parts = [[live[0], growth.units, 'estimate', growth.why]]; }
         else basis = growth.why || growth.kind;
         // Building permits (Step B0 rule): no file states a count, but the permits placed in the
         // tree carry units, so the homes are permitted or built. Never for a replacement or model
@@ -568,14 +579,15 @@
         if (!(units > 0) && growth.kind !== 'no new homes') {
           const seen = new Set(); let pu = 0;
           for (const i of live) for (const { r } of (built.permitOf && built.permitOf.get(i)) || []) { const k = r.ref || r.uid; if (r.units > 0 && !seen.has(k)) { seen.add(k); pu += r.units; } }
-          if (pu > 0) { units = pu; basis = `building permits: ${pu} units permitted (no file states a count)`; growth = { ...growth, kind: 'permits', units: pu }; }
+          if (pu > 0) { units = pu; basis = `building permits: ${pu} units permitted (no file states a count)`; growth = { ...growth, kind: 'permits', units: pu }; parts = [[null, pu, 'permits', null]]; }
         }
       }
     }
     // Trees with only condominium files are still listed for review.
     const condoOnly = live.length > 0 && live.every(i => nodes[i].role === 'condo' || nodes[i].role === 'precon') && live.some(i => nodes[i].role === 'condo');
     const condoUnits = condoOnly ? Math.max(0, ...live.map(i => nodes[i].units || 0)) : 0;
-    return { units, basis, growth, tops: topCounts, flags, latestWins, condoOnly: condoOnly ? { units: condoUnits, files: live.map(i => nodes[i].refs[0]) } : null };
+    if (!(units > 0)) parts = [];
+    return { units, basis, parts, growth, tops: topCounts, flags, latestWins, condoOnly: condoOnly ? { units: condoUnits, files: live.map(i => nodes[i].refs[0]) } : null };
   }
 
   // Developments where no file states a count. Growth only: what new homes does the wording say?

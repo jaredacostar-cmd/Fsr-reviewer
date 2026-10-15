@@ -51,9 +51,13 @@
     if (cache && cache.set === set.length && cache.first === set[0] && cache.basis === basis && cache.crit === crit && cache.tree === App().state.treeGrouped && cache.areas === areas().length) return cache.r;
     const r = R().build(set, {
       areas: areas(), sharesOf, pointOf, inMtsa,
+      // Committed / proposed from the layer function (SPEC §2): committed holds what is built (Existing
+      // + Built on the site) and Committed; proposed holds Proposed and Anticipated (anticipated: its part).
       measure: p => {
-        const t = G().pipelineTotals([p]), e = D().estimate([p], crit, basis, App().jobsOf), c = D().isCommitted(p) ? t.planned : 0;
-        return { planned: t.planned, committed: c, proposed: t.planned - c, permitted: t.permitted, completed: t.completed, left: t.left, people: e.population, jobs: e.employment ? e.employment.jobs : 0 };
+        const t = G().pipelineTotals([p]), e = D().estimate([p], crit, basis, App().jobsOf), L = root.PeelLayers.ofDev(p).parts;
+        const prop = t.planned > 0 ? L.proposed + L.anticipated : 0;
+        return { planned: t.planned, committed: t.planned - prop, proposed: prop, permitted: t.permitted, completed: t.completed, left: t.left, people: e.population, jobs: e.employment ? e.employment.jobs : 0,
+          built: t.planned > 0 ? L.existing + L.built : 0, anticipated: t.planned > 0 ? L.anticipated : 0 };
       },
     });
     r.mOf = new Map(r.placed.map(x => [x.p, x.m]));
@@ -62,19 +66,28 @@
   }
 
   const n0 = v => fmtNum(Math.round(v));
-  const BASIS = { all: 'all units', committed: 'committed units', remaining: 'units left to build' };
+  const BASIS = { all: 'all units', buildout: 'units applied for (no anticipated)', committed: 'committed units', remaining: 'units left to build' };
   const KIND = { subplan: 'sub-area', precinct: 'precinct' };
   function checkCell(n) {
     if (!n.children.length) return '<td class="num muted">–</td>';
     const ok = Math.abs(n.check.planned) < 0.5 && Math.abs(n.check.people) < 0.5;
     return ok ? '<td class="num ok" title="Equals the sum of the rows under it">✓</td>' : `<td class="num warn" title="Differs from the sum of the rows under it">${n0(n.check.planned)} units · ${n0(n.check.people)} people</td>`;
   }
+  // Each row's units by layer (SPEC §2.3): built | committed | proposed | anticipated, then what the
+  // plan's published target allows beyond them (to target, dashed).
+  let toTarget = new Map();
+  function layerBar(n) {
+    const LB = root.PeelLayerBar, m = n.m; if (!LB || !(m.planned > 0)) return '';
+    const tg = toTarget.get(n.id) || 0;
+    const segs = [{ layer: 'built', value: m.built }, { layer: 'committed', value: m.committed - m.built }, { layer: 'proposed', value: m.proposed - m.anticipated }, { layer: 'anticipated', value: m.anticipated }, { layer: 'to2051', value: tg, title: `To target: ${n0(tg)} units the plan's target allows beyond these` }];
+    return LB.barHTML({ segments: segs, small: true, max: m.planned + tg });
+  }
   function rowHTML(n, depth) {
     const m = n.m, has = n.children.length || n.devs.length, isOpen = open.has(n.id);
     const ppu = m.planned > 0 ? (m.people / m.planned).toFixed(2) : '–';
     const tog = has ? `<button type="button" class="btn small link pt-tog" data-pt-tog="${esc(n.id)}" aria-expanded="${isOpen}">${isOpen ? '▾' : '▸'}</button>` : '<span class="pt-sp"></span>';
     const filt = n.areaId && n.kind !== 'precinct' && n.kind !== 'subplan' ? ` <button type="button" class="btn small link" data-pt-filter="${esc(n.areaId)}" title="Filter the map and every tab to this plan">filter</button>` : '';
-    return `<tr class="pt-row pt-${n.kind}" data-depth="${depth}"><th scope="row" style="padding-left:${depth * 14}px">${tog}${esc(n.name)}${KIND[n.kind] ? ` <span class="muted small">${KIND[n.kind]}</span>` : ''}${filt}</th>
+    return `<tr class="pt-row pt-${n.kind}" data-depth="${depth}"><th scope="row" style="padding-left:${depth * 14}px">${tog}${esc(n.name)}${KIND[n.kind] ? ` <span class="muted small">${KIND[n.kind]}</span>` : ''}${filt}${layerBar(n)}</th>
       <td${c('x')}>${n0(n.n)}</td><td class="num">${n0(m.planned)}</td><td${c('x')}>${n0(m.committed)}</td><td${c('x')}>${n0(m.proposed)}</td><td${c('x')}>${n0(m.left)}</td>
       <td${c('x')}>${ppu}</td><td class="num"><strong>${n0(m.people)}</strong></td><td${c('x')}>${n0(m.jobs)}</td><td${c('x')}>${n.mtsa.people ? n0(n.mtsa.people) : '–'}</td>${checkCell(n)}</tr>`;
   }
@@ -85,10 +98,13 @@
       <td${c('x')}>1</td><td class="num">${n0(mm.planned * f)}</td><td${c('x')}>${n0(mm.committed * f)}</td><td${c('x')}>${n0(mm.proposed * f)}</td><td${c('x')}>${n0(mm.left * f)}</td>
       <td${c('x')}>${mm.planned > 0 ? (mm.people / mm.planned).toFixed(2) : '–'}</td><td class="num">${n0(mm.people * f)}</td><td${c('x')}>${n0(mm.jobs * f)}</td><td${c('x')}>${inMtsa(p) ? n0(mm.people * f) : '–'}</td><td class="num muted">–</td></tr>`;
   }
+  // Plans with no units in the developments shown sit behind "show empty" (SPEC §5).
+  let showEmpty = false;
+  const isEmpty = n => n.kind !== 'peel' && n.kind !== 'municipality' && !(n.m.planned >= 0.5);
   function bodyRows(n, depth, out) {
     out.push(rowHTML(n, depth));
     if (!open.has(n.id)) return;
-    for (const c of n.children) bodyRows(c, depth + 1, out);
+    for (const c of n.children) if (showEmpty || !isEmpty(c)) bodyRows(c, depth + 1, out);
     const devs = all.has(n.id) ? n.devs : n.devs.slice(0, 10);
     for (const x of devs) out.push(devRowHTML(x, depth + 1));
     if (n.devs.length > devs.length) out.push(`<tr class="pt-more"><td colspan="11" style="padding-left:${(depth + 1) * 14 + 18}px"><button type="button" class="btn small link" data-pt-all="${esc(n.id)}">See all ${fmtNum(n.devs.length)} developments</button></td></tr>`);
@@ -117,8 +133,11 @@
     const r = compute();
     for (const m of r.root.children) if (!open.has(m.id) && !open.has(`!${m.id}`)) open.add(m.id);
     const basis = DU().demandBasis();
-    body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: previous (Settings › Counting).'}</p>
-        <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
+    // To target (SPEC §2, "To 2051"): a growth target in units less the layers applied for; a target
+    // that counts every home (scope total) holds existing homes too, so it draws no to-target part.
+    toTarget = new Map(R().vsTarget(r, targets && targets.targets, munisAlloc()).rows.filter(x => x.compared === 'units' && x.target.scope !== 'total' && x.gap > 0 && !x.target.covers).map(x => [x.node.id, x.gap]));
+    body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check). Bars: units by layer, then what a published target allows beyond them (dashed).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: previous (Settings › Counting).'}</p>
+        <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-empty aria-pressed="${showEmpty}">${showEmpty ? 'Hide empty plans' : `Show empty plans (${[...r.nodes.values()].filter(isEmpty).length})`}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
       ${tableHTML(r)}${notesHTML(r)}
       ${targetHTML(r)}
       ${matrixHTML(r)}`;
@@ -195,7 +214,8 @@
   }
 
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
-    const t = e.target.closest('[data-pt-tog],[data-pt-all],[data-pt-dev],[data-pt-filter],[data-pt-csv],[data-pt-wide]'); if (!t) return;
+    const t = e.target.closest('[data-pt-tog],[data-pt-all],[data-pt-dev],[data-pt-filter],[data-pt-csv],[data-pt-wide],[data-pt-empty]'); if (!t) return;
+    if (t.hasAttribute('data-pt-empty')) { showEmpty = !showEmpty; render(); return; }
     if (t.hasAttribute('data-pt-wide')) { wide = !wide; if (store) store.set('ptWide', wide); render(); return; }
     if (t.dataset.ptTog) { const id = t.dataset.ptTog; if (open.has(id)) { open.delete(id); open.add(`!${id}`); } else { open.add(id); open.delete(`!${id}`); } render(); }
     else if (t.dataset.ptAll) { all.add(t.dataset.ptAll); render(); }
