@@ -1,0 +1,43 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Water by pressure zone
+9763 HERITAGE RD · site servicing
+9763 HERITAGE RD · Water
+⤳ Trace the water supply from the plant
+On the map, along the existing watermains and the planned DC mains
+Water
+Demand
+
+189L/s max day · 314L/s peak hour · 105L/s average
+
+Zone 6 · 7% of the zone's build-out max day screening estimate
+
+Supply route
+■
+Lorne Park treatment plant (rated 500 ML/d)
+■
+High-lift pumps HLP1W · 336 ML/d firm → zone 1
+▲
+Herridge LLP2W · 309 ML/d firm → zone 2
+▲
+Streetsville LLP3W · 250 ML/d firm → zone 3
+▲
+Meadowvale North LLP4W · 226 ML/d firm → zone 4
+▲
+West Brampton HLP6W · 93 ML/d firm → zone 6
+●
+This development · Zone 6
+
+Pumping into zone 6 and above: 44% of firm capacity with existing + built + approved, 55% at build-out.
+
+Trace on the map The stations lifting water into each zone (2020 Master Plan pumping); the trace follows the mains between them.
+
+Watermains
+
+Looking up the nearest watermains…
+
+Fire flow
+
+Looking up hydrants…
+
+Peel-wide pressure zones return when no site is scoped.

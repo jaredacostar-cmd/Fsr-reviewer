@@ -1,0 +1,66 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The 14 developments shown propose 3,093 homes (planned units, net of homes demolished): 0 permitted, 0 completed, 3,093 left to build.
+
+Homes
+Planned
+3,093units
+6 developments with units
+Permitted
+0units
+0% of planned
+Completed
+0units
+Left to build
+3,093units
+100% of planned
+Employment
+Planned
+597,590m²
+≈5,473 jobs
+Permitted
+28,895m²
+5% of planned · ≈265 jobs
+Completed
+0m²
+≈0 jobs
+Left to build
+568,695m²
+95% of planned · ≈5,208 jobs
+People
+11,198pop
+Dwellings
+3,093units
+Jobs
+5,473jobs
+Committed (draft plan or site plan approved, permit, construction)
++4 people · +1 dwellings · +263 jobs
+Proposed (in review)
++11,194 people · +3,092 dwellings · +5,210 jobs
+Largest pipelines still to build share of the build-out
+Development	Unbuilt	Share
+5155 OLD SCHOOL ROAD CALEDON ON L7C 0Y3Caledon · 2 Under review	1,526units	49%
+12909 KENNEDY ROAD CALEDON ON L7C 2H1Caledon · 2 Under review	779units	25%
+0 TORBRAM ROAD CALEDON ONCaledon · 2 Under review	442units	14%
+12862 DIXIE ROAD CALEDON ONCaledon · 2 Under review	265units	9%
+0 DIXIE ROAD CALEDON ONCaledon · 2 Under review	80units	3%
+See all 6 developments
+Build-out by dwelling type
+Type	Planned	Permitted	Completed	Left
+Single / semi-detached	1,045units	0units	0units	1,045units
+Townhouse	1,535units	0units	0units	1,535units
+Apartment	513units	0units	0units	513units
+Employment floor space (~5,473 jobs)	597,590m²	28,895m²	0m²	568,695m²
+Completions and approval pace by municipality
+Municipality	Completions	Median application → approval
+Mississauga	–	–
+Brampton	–	–
+Caledon	–	–
+Peel	–	–
+
+ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions — from dated permit events. Approval pace = months from first application activity to the site's approval. Applications as of 2026-10-12.

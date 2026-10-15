@@ -1,0 +1,57 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The 3 developments shown propose 3,027 homes (planned units, net of homes demolished): 0 permitted, 0 completed, 3,027 left to build.
+
+Homes
+Planned
+3,027units
+1 developments with units
+Permitted
+0units
+0% of planned
+Completed
+0units
+Left to build
+3,027units
+100% of planned
+Employment
+Planned
+43,338m²
+≈432 jobs
+Permitted
+0m²
+0% of planned · ≈0 jobs
+Completed
+0m²
+≈0 jobs
+Left to build
+43,338m²
+100% of planned · ≈432 jobs
+People
+8,173pop
+Dwellings
+3,027units
+Jobs
+432jobs
+Proposed (in review)
++8,173 people · +3,027 dwellings · +432 jobs
+Largest pipelines still to build share of the build-out
+Development	Unbuilt	Share
+1580 and 1650 Dundas St E.Mississauga · 2 Under review	3,027units	100%
+Build-out by dwelling type
+Type	Planned	Permitted	Completed	Left
+Apartment	3,027units	0units	0units	3,027units
+Employment floor space (~432 jobs)	43,338m²	0m²	0m²	43,338m²
+Completions and approval pace by municipality
+Municipality	Completions	Median application → approval
+Mississauga	–	–
+Brampton	–	–
+Caledon	–	–
+Peel	–	–
+
+ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions — from dated permit events. Approval pace = months from first application activity to the site's approval. Applications as of 2026-10-12.

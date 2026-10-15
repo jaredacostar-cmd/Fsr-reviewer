@@ -1,0 +1,133 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Clarkson · Jack Darling Memorial Park 1 PS: peak wet weather ≈441 L/s at build-out, 55% of its firm capacity (800 L/s), to Clarkson WRRF.
+
+Pumping station catchment · 8 developments in this scope · Back to Peel
+
+800
+L/s
+firm capacity
+441
+L/s
+peak wet at build-out (check)
+55% of firm
+159
+L/s
+peak dry at build-out (reference)
+Servicing ladder
+Pumps to Clarkson WRRF
+Developments loading it
+Area report
+5 developments adding flow since the census, largest peak wet weather first; each alone at Peel design criteria (peaks are not additive)
+Development	People + jobs	Average dry	Peak wet	Share
+4 1188 Lakeshore Rd W
+Committed (draft plan or site plan approved) · Mississauga
+	2	0.01L/s	8.92L/s	13%
+4 1710 RUSCOMBE CLOSE
+Committed (draft plan or site plan approved) · Mississauga
+	3	0.01L/s	0.11L/s	22%
+3 1654 Birchwood Dr
+Committed (draft plan or site plan approved) · Mississauga
+	3	0.01L/s	0.09L/s	22%
+3 1465 Merrow Rd
+Committed (draft plan or site plan approved) · Mississauga
+	3	0.01L/s	0.08L/s	22%
+3 1489 Rogerswood Crt
+Committed (draft plan or site plan approved) · Mississauga
+	3	0.01L/s	0.08L/s	22%
+
+Growth total, average dry weather (design): 0.05L/s · 0ML/d.
+
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026. Developments built since the census, committed and proposed; existing development is in the census flow.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 8 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Approved
+4
+Permit issued
+4
+Completed
+25
+
+8 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 4
+Under appeal 0
+Waiting on DC works 0
+PS over firm capacity 0
+Changed this week 0
+★ Watched 0
+Estimate check 3
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

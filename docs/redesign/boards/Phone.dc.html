@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Phone overview</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 390px; height: 1360px; box-sizing: border-box; background: #1b1b1a; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.45; position: relative; display: flex; flex-direction: column">
+
+  <header style="padding: 16px 16px 0; display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid #383835">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start">
+      <div>
+        <h1 style="margin: 0; font-size: 21px; font-weight: 600">9763 Heritage Rd</h1>
+        <div style="color: #c3c2b7; font-size: 13px">Brampton · Ward 6 · 101.5 ha</div>
+      </div>
+      <div style="display: flex; gap: 6px">
+        <button type="button" aria-label="Watch" style="width: 44px; height: 44px; background: #2d2d2a; color: #c3c2b7; border: 1px solid #383835; border-radius: 8px; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.8l1.9 3.9 4.3.6-3.1 3 .7 4.3L8 11.6l-3.8 2 .7-4.3-3.1-3 4.3-.6z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/></svg></button>
+        <button type="button" aria-label="Close" style="width: 44px; height: 44px; background: #2d2d2a; color: #c3c2b7; border: 1px solid #383835; border-radius: 8px; display: flex; align-items: center; justify-content: center"><svg width="13" height="13" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.5" fill="none"/></svg></button>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+      <span style="display: inline-flex; align-items: center; gap: 6px; background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 4px 10px 4px 5px; font-weight: 500; font-size: 13px"><span style="background: #9cc0fa; color: #10213a; border-radius: 999px; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600">3</span>Zoning approved</span>
+      <span style="display: inline-flex; align-items: center; background: #cfe0fb; color: #10213a; border-radius: 999px; padding: 3px 9px; font-weight: 500; font-size: 12px">counts as Proposed</span>
+      <span style="color: #9a998f; font-size: 12px">Sep 9, 2026</span>
+    </div>
+    <nav style="display: flex; gap: 20px; font-weight: 500; font-size: 14px">
+      <a href="#" style="color: #ffffff; border-bottom: 2px solid #6da7ec; padding: 10px 0">Overview</a>
+      <a href="#" style="color: #9a998f; padding: 10px 0">Servicing</a>
+      <a href="#" style="color: #9a998f; padding: 10px 0">Funding</a>
+      <a href="#" style="color: #9a998f; padding: 10px 0">Area</a>
+      <a href="#" style="color: #9a998f; padding: 10px 0">Files</a>
+    </nav>
+  </header>
+
+  <main style="padding: 14px 16px 100px; display: flex; flex-direction: column; gap: 12px">
+
+    <a href="#" style="background: #2a2418; border: 1px solid #4a3c22; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; color: #ffffff">
+      <span style="display: flex; justify-content: space-between"><strong style="color: #ffc98a; font-weight: 600">4 things to confirm</strong><span style="color: #b8a888">▾</span></span>
+      <span style="color: #d9d3c4; font-size: 13px">Proposed, not committed · Zone 5 or 6 · works paused · sewers not assessed</span>
+    </a>
+
+    <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <div style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 500">592</div><div style="color: #9a998f; font-size: 12.5px">units · 253 det / 339 town</div></div>
+      <div style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px"><div style="font-family: 'IBM Plex Mono', monospace; font-size: 26px; font-weight: 500">2,010</div><div style="color: #9a998f; font-size: 12.5px">people · 3.40 ppu</div></div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; overflow: hidden">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #5b9bf5"></span>Water · Z5<span style="color: #ffa94d">?</span></div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">11.3</div>
+          <div style="color: #9a998f; font-size: 12px">L/s max day</div>
+          <div style="color: #c3c2b7; font-size: 12px">avg 6.29 · peak hr 18.9</div>
+        </div>
+        <div style="padding: 12px; display: flex; flex-direction: column; gap: 6px; border-left: 1px solid #383835">
+          <div style="display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 13px"><span style="width: 8px; height: 8px; border-radius: 2px; background: #c98a5e"></span>Wastewater</div>
+          <div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">50.6</div>
+          <div style="color: #9a998f; font-size: 12px">L/s peak wet</div>
+          <div style="color: #c3c2b7; font-size: 12px">avg 6.76 · peak dry 24.2</div>
+        </div>
+      </div>
+      <div style="border-top: 1px solid #383835; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; height: 12px; border-radius: 3px; overflow: hidden; gap: 2px">
+          <div style="width: 13.4%; background: #e3b28c"></div>
+          <div style="width: 34.4%; background: #c98a5e"></div>
+          <div style="width: 52.2%; background: #6e4a30"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 11.5px; color: #9a998f"><span>base 6.8</span><span>peaking +17.4</span><span>I&amp;I +26.4</span></div>
+      </div>
+      <a href="Servicing.dc.html" style="display: flex; justify-content: space-between; border-top: 1px solid #383835; padding: 12px; font-size: 13px"><span>Clarkson 0.74% of reserve · Zone 5 0.39%</span><span>›</span></a>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em"><span>Approvals</span><span style="text-transform: none; letter-spacing: 0; font-weight: 400; color: #ffc98a">Next: draft plan</span></div>
+      <div style="display: flex; align-items: center; gap: 0">
+        <span style="width: 12px; height: 12px; border-radius: 999px; background: #9cc0fa"></span><span style="flex: 1; height: 2px; background: #9cc0fa"></span>
+        <span style="width: 12px; height: 12px; border-radius: 999px; background: #9cc0fa"></span><span style="flex: 1; height: 2px; background: #9cc0fa"></span>
+        <span style="width: 12px; height: 12px; border-radius: 999px; background: #9cc0fa; box-shadow: 0 0 0 4px #22324a"></span><span style="flex: 1; height: 2px; background: #3a3a37"></span>
+        <span style="width: 12px; height: 12px; border-radius: 999px; border: 2px dashed #9a998f; box-sizing: border-box"></span><span style="flex: 1; height: 2px; background: #3a3a37"></span>
+        <span style="width: 12px; height: 12px; border-radius: 999px; border: 2px solid #4a4a46; box-sizing: border-box"></span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); font-size: 11px; color: #9a998f; gap: 2px">
+        <span>Pre-con 2024</span><span>Filed Jul 2025</span><span style="color: #ffffff">By-law Sep 2026</span><span>Draft plan</span><span>Permits</span>
+      </div>
+    </section>
+
+    <section style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+      <a href="#" style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px; color: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11.5px; color: #9a998f">Regional DCs</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 19px">≈ $32.8M</span></a>
+      <a href="#" style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px; color: #ffffff; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 11.5px; color: #9a998f">Share of nearby homes</span><span style="font-family: 'IBM Plex Mono', monospace; font-size: 19px">6% of 9,361</span></a>
+    </section>
+
+    <div style="color: #9a998f; font-size: 11.5px">Units from OZS-2025-0032 · Peel criteria v2.0 (2024) · not a hydraulic model. <a href="#">Method</a></div>
+  </main>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 0; background: #1b1b1a; border-top: 1px solid #383835; padding: 12px 16px 20px; display: flex; gap: 8px">
+    <button type="button" style="flex: 1; height: 46px; background: #6da7ec; color: #0f1d30; border: none; border-radius: 9px; font: inherit; font-weight: 600">Trace ▾</button>
+    <button type="button" style="flex: 1; height: 46px; background: #2d2d2a; color: #ffffff; border: 1px solid #383835; border-radius: 9px; font: inherit; font-weight: 500">Check FSR</button>
+    <button type="button" aria-label="More actions" style="width: 50px; height: 46px; background: #2d2d2a; color: #c3c2b7; border: 1px solid #383835; border-radius: 9px; font-size: 18px">⋯</button>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":1360}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

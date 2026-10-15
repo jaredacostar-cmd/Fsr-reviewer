@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Map controls</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 560px; height: 700px; box-sizing: border-box; background: #0f1a14; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 12.5px; line-height: 1.4; position: relative; overflow: hidden; border-radius: 8px">
+  <div style="position: absolute; inset: 0; background-image: linear-gradient(#1d2a21 1px, transparent 1px), linear-gradient(90deg, #1d2a21 1px, transparent 1px); background-size: 48px 48px"></div>
+
+  <div style="position: absolute; left: 12px; top: 12px; right: 12px; display: flex; gap: 8px; align-items: center">
+    <button type="button" aria-expanded="true" style="height: 30px; padding: 0 10px; border: 1px solid #6da7ec; border-radius: 7px; background: #1b1b1a; color: #ffffff; font: inherit; display: flex; align-items: center; gap: 6px">Layers <span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 0 6px; font-size: 11px">3</span> ▴</button>
+    <button type="button" style="height: 30px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #ffffff; font: inherit">Legend</button>
+    <span style="height: 30px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #c3c2b7; display: inline-flex; align-items: center; gap: 6px">In view <span style="font-family: 'IBM Plex Mono', monospace; color: #ffffff">96</span> of 1,485</span>
+    <span style="margin-left: auto; height: 30px; padding: 0 10px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #9a998f; display: inline-flex; align-items: center; font-size: 11.5px">Zoom 14</span>
+  </div>
+
+  <div style="position: absolute; left: 12px; top: 52px; width: 300px; background: #1b1b1a; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><strong style="font-weight: 600">Layers</strong><span style="color: #9a998f; font-size: 11.5px">Wastewater lens preset · <a href="#">reset</a></span></div>
+
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-size: 11px; color: #9a998f; text-transform: uppercase; letter-spacing: 0.06em">Growth</div>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 999px; background: #7c3aed; margin-right: 8px"></span>Developments</span><input type="checkbox" checked aria-label="Developments"></label>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 10px; border: 1.5px solid #ff8c42; margin-right: 8px"></span>Planning areas &amp; MTSAs</span><input type="checkbox" aria-label="Planning areas"></label>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 10px; background: #5f7fae; margin-right: 8px"></span>2021 census areas</span><input type="checkbox" aria-label="Census areas"></label>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 4px; border-top: 1px solid #2d2d2a; padding-top: 8px">
+      <div style="font-size: 11px; color: #9a998f; text-transform: uppercase; letter-spacing: 0.06em">Servicing</div>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 10px; border: 1.5px solid #8f7bf0; margin-right: 8px"></span>Wastewater blocks &amp; stations</span><input type="checkbox" checked aria-label="Wastewater blocks"></label>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 10px; border: 1.5px dashed #3fb3c4; margin-right: 8px"></span>Pressure zones &amp; water facilities</span><input type="checkbox" aria-label="Pressure zones"></label>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 4px; background: #c98a5e; margin-right: 8px; vertical-align: middle"></span>Existing pipes <span style="color: #9a998f; font-size: 11px">· from zoom 15</span></span><input type="checkbox" aria-label="Existing pipes"></label>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 4px; background: linear-gradient(90deg, #51cf66, #ffa94d, #f0665f); margin-right: 8px; vertical-align: middle"></span>Capacity colours on pipes</span><input type="checkbox" checked aria-label="Capacity colours"></label>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 4px; border-top: 1px solid #2d2d2a; padding-top: 8px">
+      <div style="font-size: 11px; color: #9a998f; text-transform: uppercase; letter-spacing: 0.06em">Capital &amp; constraints</div>
+      <label style="display: flex; justify-content: space-between; align-items: center; height: 32px"><span><span style="display: inline-block; width: 10px; height: 4px; background: #ff6b9d; margin-right: 8px; vertical-align: middle"></span>Planned DC works <span style="color: #9a998f; font-size: 11px">· 2026 draft</span></span><input type="checkbox" aria-label="Planned DC works"></label>
+      <button type="button" aria-expanded="false" style="display: flex; justify-content: space-between; align-items: center; height: 32px; background: none; border: none; color: #c3c2b7; font: inherit; padding: 0; text-align: left"><span>Gas · hydro · watercourses · regulation limits</span><span>▸</span></button>
+    </div>
+    <div style="border-top: 1px solid #2d2d2a; padding-top: 8px; display: flex; justify-content: space-between; align-items: center"><span style="color: #c3c2b7">Base map</span><span style="display: flex; gap: 4px"><span style="border: 1px solid #6da7ec; color: #cfe0fb; border-radius: 999px; padding: 2px 8px; font-size: 11px">Imagery</span><span style="border: 1px solid #383835; border-radius: 999px; padding: 2px 8px; font-size: 11px">Dark</span><span style="border: 1px solid #383835; border-radius: 999px; padding: 2px 8px; font-size: 11px">Streets</span></span></div>
+  </div>
+
+  <div style="position: absolute; right: 12px; top: 52px; width: 210px; background: #1b1b1a; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; font-size: 11.5px">
+    <strong style="font-weight: 600; font-size: 12.5px">Legend · Wastewater lens</strong>
+    <div style="display: flex; gap: 4px; font-size: 11px"><span style="color: #9a998f">Colour sites by</span><span style="border: 1px solid #383835; border-radius: 999px; padding: 1px 7px; color: #c3c2b7">Phase</span><span style="border: 1px solid #6da7ec; border-radius: 999px; padding: 1px 7px; color: #cfe0fb">Layer</span></div>
+    <div style="display: flex; height: 8px; border-radius: 2px; overflow: hidden; gap: 1px"><div style="flex: 1; background: #5f7fae"></div><div style="flex: 1; background: #9cc0fa"></div><div style="flex: 1; background: #cfe0fb"></div><div style="flex: 1; background: repeating-linear-gradient(135deg, #cfe0fb 0 2px, #1b1b1a 2px 4px)"></div></div>
+    <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: #9a998f"><span>Built</span><span>Committed</span><span>Proposed</span><span>Anticipated</span></div>
+    <div style="color: #9a998f">Marker number = peak wet L/s at build-out</div>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span><span style="display: inline-block; width: 14px; height: 6px; background: #51cf66; border-radius: 2px; margin-right: 6px; vertical-align: middle"></span>Pipe under 85% full</span>
+      <span><span style="display: inline-block; width: 14px; height: 6px; background: #ffa94d; border-radius: 2px; margin-right: 6px; vertical-align: middle"></span>85–100% near full</span>
+      <span><span style="display: inline-block; width: 14px; height: 6px; background: #f0665f; border-radius: 2px; margin-right: 6px; vertical-align: middle"></span>Over 100% surcharged</span>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 4px; border-top: 1px solid #2d2d2a; padding-top: 6px">
+      <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 999px; background: #3987e5; margin-right: 6px"></span>G.E. Booth block</span>
+      <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 999px; background: #c46a1c; margin-right: 6px"></span>Clarkson block</span>
+      <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 999px; background: #9085e9; margin-right: 6px"></span>Inglewood block</span>
+      <span><span style="display: inline-block; width: 10px; height: 10px; border-radius: 999px; border: 2px solid #ffffff; box-sizing: border-box; margin-right: 6px"></span>Pumping station · ring = % of firm</span>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 50%; top: 56%; transform: translate(-50%, -50%); width: 230px; background: #1b1b1a; border: 1px solid #383835; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 11.5px; box-shadow: 0 8px 24px rgba(0,0,0,0.5)">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><strong style="font-weight: 600; font-size: 12.5px">Richards Memorial PS</strong><span style="color: #f0665f; font-family: 'IBM Plex Mono', monospace">110%</span></div>
+    <div style="color: #c3c2b7">Clarkson · peak wet at build-out vs firm capacity</div>
+    <div style="height: 6px; background: #3a3a37; border-radius: 3px; overflow: hidden"><div style="width: 100%; height: 100%; background: #f0665f"></div></div>
+    <div style="display: flex; gap: 6px; margin-top: 2px">
+      <a href="#" style="flex: 1; text-align: center; border: 1px solid #3b5576; border-radius: 6px; padding: 5px 0; color: #cfe0fb; background: #1f2b3d">Open scope</a>
+      <a href="#" style="flex: 1; text-align: center; border: 1px solid #383835; border-radius: 6px; padding: 5px 0; color: #c3c2b7">Trace upstream</a>
+    </div>
+    <div style="color: #6b6a63; font-size: 11px">Hover shows this card; click opens the scope in the right panel. Same card for plants, zones, blocks, DC works and files.</div>
+  </div>
+
+  <div style="position: absolute; left: 12px; bottom: 12px; right: 12px; display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <button type="button" aria-label="Zoom in" style="width: 30px; height: 30px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #fff; font: inherit">+</button>
+      <button type="button" aria-label="Zoom out" style="width: 30px; height: 30px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #fff; font: inherit">−</button>
+      <button type="button" aria-label="Select an area" style="width: 30px; height: 30px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #c3c2b7; font: inherit; margin-top: 6px">▭</button>
+      <button type="button" aria-label="Measure" style="width: 30px; height: 30px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #c3c2b7; font: inherit">⟷</button>
+      <button type="button" aria-label="Inspect the sewer here" style="width: 30px; height: 30px; border: 1px solid #383835; border-radius: 7px; background: #1b1b1a; color: #c3c2b7; font: inherit">⌖</button>
+    </div>
+    <div style="background: #1b1b1a; border: 1px solid #383835; border-radius: 7px; padding: 4px 8px; font-size: 11px; color: #9a998f; display: flex; align-items: center; gap: 8px"><span style="display: inline-block; width: 60px; height: 4px; border-left: 1px solid #c3c2b7; border-right: 1px solid #c3c2b7; border-bottom: 1px solid #c3c2b7"></span>500 m · Imagery: Brampton 2025, Mississauga 2024, Caledon 2025</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":560,"height":700}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

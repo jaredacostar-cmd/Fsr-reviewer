@@ -1,0 +1,100 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Treatment & capacity
+Pressure zones
+Facilities
+Water by pressure zone
+2021 Census baseline (follows the timeline) · top zones by build-out maximum day
+
+Zone 5 adds the most water demand: +102 ML/d at maximum day by build-out, then Zone 6 (+93.4).
+
+2021 Census
+Built since
+Committed
+Proposed (in review)
+Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map
+Only areas in map view
+1,077
+ML/d
+maximum day at build-out
+all pressure zones
+1,812
+ML/d
+peak hour at build-out
++336
+ML/d
+approved + proposed
+maximum day growth
+Zone 5
+adds the most demand
++102 ML/d max day
+Zone 5
+258 ML/d
+Zone 6
+250 ML/d
+Zone 4
+206 ML/d
+Zone 3
+143 ML/d
+Zone 2
+101 ML/d
+Zone 1
+58.3 ML/d
+Zone 7
+39.3 ML/d
+Zone 4A
+6.87 ML/d
+Zone 8B
+5.65 ML/d
+Zone 5A
+3.69 ML/d
+Water by pressure zone · maximum day (ML/d) at design ×1.8 residential, ×1.4 employment; people and jobs below · top 8 of 24
+Pressure zone	Build-out mix	Developments	Build-out	Peak hour
+build-out
+Zone 5	
+	1,646devs
+1 nearest
+	258ML/d
+509,800pop · 29,085jobs
+	435ML/d
+Zone 6	
+	610devs
+32 nearest
+	250ML/d
+501,800pop · 17,905jobs
+	420ML/d
+Zone 4	
+	719devs	206ML/d
+409,400pop · 20,153jobs
+	347ML/d
+Zone 3	
+	158devs	143ML/d
+288,100pop · 7,391jobs
+	239ML/d
+Zone 2	
+	125devs	101ML/d
+206,300pop · 3,410jobs
+	170ML/d
+Zone 1	
+	534devs	58.3ML/d
+114,700pop · 7,387jobs
+	98.5ML/d
+Zone 7	
+	69devs
+21 nearest
+	39.3ML/d
+74,400pop · 8,957jobs
+	67ML/d
+Zone 4A	
+	2devs	6.87ML/d
+14,100pop
+	11.5ML/d
+All pressure zones	
+	3,923devs
+72 nearest
+	1,077ML/d
+2,144,000pop · 100,905jobs
+	1,812ML/d
+See all 24 zones
+
+ⓘ ML/d = megalitres per day. Residential 270 L/cap/d and employment 250 L/emp/d (jobs on development sites; existing employment is not in the census baseline); maximum day ×1.8 residential, ×1.4 employment; peak hour ×3 residential, ×3 employment. 2021 Census shared out by the area of each dissemination area inside it; growth from every development located in the zone (other filters ignored), as in the Growth tab. 72 developments outside every zone are counted in the nearest one.

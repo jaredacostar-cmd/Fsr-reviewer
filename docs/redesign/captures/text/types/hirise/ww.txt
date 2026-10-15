@@ -1,0 +1,23 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Wastewater by sanitary catchment
+1580 and 1650 Dundas St E. · site servicing
+1580 and 1650 Dundas St E. · Wastewater
+⤳ Trace the sewer path to the plant
+On the map, pipe by pipe to the plant, along the existing sewers and the planned DC mains
+Wastewater
+Flows
+
+86.5L/s peak wet · 84.1L/s peak dry · 27.6L/s average
+
+To the plant
+Block 16 → G.E. Booth WRRF (Lakeview)
+Plant
+
+G.E. Booth WRRF (Lakeview): uncommitted reserve 30.4ML/d · this development would use 10% of it screening estimate
+
+Sanitary sewers
+
+Looking up the nearest sanitary sewers…
+
+Ground, storm sewers and stormwater ponds live in Overview › Site. Peel-wide catchments return when no site is scoped.

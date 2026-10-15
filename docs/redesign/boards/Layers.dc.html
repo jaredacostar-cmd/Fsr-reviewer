@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Growth layers</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 960px; height: 1240px; box-sizing: border-box; background: #1b1b1a; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.45; display: flex; flex-direction: column; padding: 22px 26px; gap: 18px">
+
+  <header style="display: flex; justify-content: space-between; align-items: flex-end; gap: 16px">
+    <div>
+      <h1 style="margin: 0; font-size: 22px; font-weight: 600">Growth layers · one vocabulary for every bar</h1>
+      <div style="color: #c3c2b7; margin-top: 4px">Phases say where a file is in the process. Layers say whether its demand counts against capacity, and how firmly. Layers are additive and mutually exclusive, so they stack to a total.</div>
+    </div>
+  </header>
+
+  <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline"><h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Encoding · one hue, lightness = certainty</h2><span style="color: #9a998f; font-size: 11.5px">plants keep their own hue (Booth blue · Clarkson orange · Inglewood violet), so layers never use hue</span></div>
+    <div style="display: flex; height: 26px; border-radius: 4px; overflow: hidden; gap: 2px">
+      <div style="width: 22%; background: #3b4a5e; display: flex; align-items: center; justify-content: center; font-size: 11.5px">Existing</div>
+      <div style="width: 10%; background: #5f7fae; display: flex; align-items: center; justify-content: center; font-size: 11.5px">Built</div>
+      <div style="width: 22%; background: #9cc0fa; color: #10213a; display: flex; align-items: center; justify-content: center; font-size: 11.5px">Committed</div>
+      <div style="width: 24%; background: #cfe0fb; color: #10213a; display: flex; align-items: center; justify-content: center; font-size: 11.5px">Proposed</div>
+      <div style="width: 10%; background: repeating-linear-gradient(135deg, #cfe0fb 0 4px, #1b1b1a 4px 8px); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 11.5px; text-shadow: 0 0 3px #000">Anticipated</div>
+      <div style="width: 12%; border: 1.5px dashed #9a998f; box-sizing: border-box; color: #c3c2b7; display: flex; align-items: center; justify-content: center; font-size: 11.5px">To 2051</div>
+    </div>
+    <div style="display: flex; gap: 18px; font-size: 11.5px; color: #c3c2b7; flex-wrap: wrap">
+      <span><span style="display: inline-block; width: 2px; height: 12px; background: #ffffff; vertical-align: middle; margin-right: 6px"></span>90% expansion trigger</span>
+      <span><span style="display: inline-block; width: 1px; height: 12px; background: #9a998f; vertical-align: middle; margin-right: 6px"></span>100% rated / firm</span>
+      <span><span style="display: inline-block; width: 14px; height: 10px; background: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px); vertical-align: middle; margin-right: 6px"></span>portion beyond rated</span>
+      <span><span style="display: inline-block; width: 14px; height: 10px; border: 1px solid #ffa94d; box-sizing: border-box; vertical-align: middle; margin-right: 6px"></span>count estimated, not stated</span>
+    </div>
+  </section>
+
+  <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; overflow: hidden">
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 10px 16px; border-bottom: 1px solid #383835; font-size: 11px; color: #9a998f; text-transform: uppercase; letter-spacing: 0.06em">
+      <span>Layer</span><span>Represents</span><span>Rule</span><span>Counts in</span>
+    </div>
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 9px 16px; border-bottom: 1px solid #2d2d2a; font-size: 12.5px; align-items: center">
+      <span><span style="display: inline-block; width: 10px; height: 10px; background: #3b4a5e; border-radius: 2px; margin-right: 7px; vertical-align: middle"></span>Existing</span><span style="color: #d9d3c4">What is on the system today</span><span style="color: #c3c2b7">2021 Census population. Plants: the 2025 metered flow replaces census + built.</span><span style="display: flex; gap: 4px"><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">D-5-1</span><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">Build-out</span></span>
+    </div>
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 9px 16px; border-bottom: 1px solid #2d2d2a; font-size: 12.5px; align-items: center">
+      <span><span style="display: inline-block; width: 10px; height: 10px; background: #5f7fae; border-radius: 2px; margin-right: 7px; vertical-align: middle"></span>Built</span><span style="color: #d9d3c4">Demand not in the census yet</span><span style="color: #c3c2b7">Permits completed after May 2021 (completion estimated from issue date where none is published).</span><span style="display: flex; gap: 4px"><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">D-5-1</span><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">Build-out</span></span>
+    </div>
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 9px 16px; border-bottom: 1px solid #2d2d2a; font-size: 12.5px; align-items: center">
+      <span><span style="display: inline-block; width: 10px; height: 10px; background: #9cc0fa; border-radius: 2px; margin-right: 7px; vertical-align: middle"></span>Committed</span><span style="color: #d9d3c4">Capacity the Region must supply (Procedure D-5-1)</span><span style="color: #c3c2b7">Draft plan or site plan <strong style="color: #fff; font-weight: 600">approved</strong>, registered, permit issued or under construction. Zoning or OPA approval alone does not commit. A permit commits only the file whose boundary contains it.</span><span style="display: flex; gap: 4px"><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">D-5-1</span><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">Build-out</span></span>
+    </div>
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 9px 16px; border-bottom: 1px solid #2d2d2a; font-size: 12.5px; align-items: center">
+      <span><span style="display: inline-block; width: 10px; height: 10px; background: #cfe0fb; border-radius: 2px; margin-right: 7px; vertical-align: middle"></span>Proposed</span><span style="color: #d9d3c4">Demand under formal review</span><span style="color: #c3c2b7">OPA / ZBA / draft plan / site plan filed, not approved. Sub-split: active · stalled 2+ yrs · under appeal.</span><span style="display: flex; gap: 4px"><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 1px 7px; font-size: 11px">Build-out</span></span>
+    </div>
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 9px 16px; border-bottom: 1px solid #2d2d2a; font-size: 12.5px; align-items: center">
+      <span><span style="display: inline-block; width: 10px; height: 10px; background: repeating-linear-gradient(135deg, #cfe0fb 0 3px, #1b1b1a 3px 6px); border-radius: 2px; margin-right: 7px; vertical-align: middle"></span>Anticipated</span><span style="color: #d9d3c4">Early signals, low confidence</span><span style="color: #c3c2b7">Pre-consultations, block and precinct plans with no formal file. 210 developments today.</span><span style="display: flex; gap: 4px"><span style="background: #2d2d2a; color: #c3c2b7; border-radius: 999px; padding: 1px 7px; font-size: 11px">Stress test only</span></span>
+    </div>
+    <div style="display: grid; grid-template-columns: 120px minmax(0, 1.2fr) minmax(0, 1.4fr) 150px; gap: 0 14px; padding: 9px 16px; font-size: 12.5px; align-items: center">
+      <span><span style="display: inline-block; width: 10px; height: 10px; border: 1.5px dashed #9a998f; box-sizing: border-box; border-radius: 2px; margin-right: 7px; vertical-align: middle"></span>To 2051</span><span style="color: #d9d3c4">Growth the plan allows that has not surfaced as an application</span><span style="color: #c3c2b7">Region allocation (municipality) or published plan target, minus the layers above. Density-based estimate where a plan has neither.</span><span style="display: flex; gap: 4px"><span style="background: #2d2d2a; color: #c3c2b7; border-radius: 999px; padding: 1px 7px; font-size: 11px">Master plan view</span></span>
+    </div>
+  </section>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px">
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Phase → layer mapping</h2>
+      <div style="display: grid; grid-template-columns: 24px minmax(0, 1fr) 110px; gap: 4px 10px; font-size: 12px; align-items: center">
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #e2d9fd; color: #10213a; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">1</span><span>Inception (pre-consultation, block plan)</span><span style="color: #c3c2b7; text-align: right">Anticipated</span>
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #7c3aed; color: #fff; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">2</span><span>Under review · incl. zoning approved, appeals</span><span style="color: #c3c2b7; text-align: right">Proposed</span>
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #9cc0fa; color: #10213a; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">3</span><span>Draft / site plan approved <span style="color: #9a998f">(rename from “Approved”)</span></span><span style="color: #c3c2b7; text-align: right">Committed</span>
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #147989; color: #fff; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">4</span><span>Permit issued</span><span style="color: #c3c2b7; text-align: right">Committed</span>
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #1b8166; color: #fff; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">5</span><span>Under construction</span><span style="color: #c3c2b7; text-align: right">Committed</span>
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #9ca3af; color: #10213a; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">6</span><span>Completed (occupancy after May 2021)</span><span style="color: #c3c2b7; text-align: right">Built</span>
+        <span style="width: 18px; height: 18px; border-radius: 999px; background: #676e7b; color: #fff; font-size: 10px; display: inline-flex; align-items: center; justify-content: center">7</span><span>Withdrawn / refused</span><span style="color: #c3c2b7; text-align: right">none</span>
+      </div>
+      <div style="color: #ffc98a; font-size: 11.5px; border-top: 1px solid #383835; padding-top: 8px">Each file maps on its own, then the development sums its files. The whole block never inherits one file’s phase: that is what put 9,862 Heritage / Bovaird units into Committed on the strength of a single 2022 house permit at 59 Dairymaid Rd.</div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Scenario chip · the basis is a set of layers</h2>
+      <div style="border: 1px solid #383835; border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px">
+        <label style="display: flex; justify-content: space-between; align-items: center"><span><input type="checkbox" checked disabled aria-label="Existing"> <span style="display: inline-block; width: 10px; height: 10px; background: #3b4a5e; border-radius: 2px; margin: 0 6px; vertical-align: middle"></span>Existing</span><span style="color: #9a998f; font-size: 11px">always</span></label>
+        <label style="display: flex; justify-content: space-between; align-items: center"><span><input type="checkbox" checked disabled aria-label="Built"> <span style="display: inline-block; width: 10px; height: 10px; background: #5f7fae; border-radius: 2px; margin: 0 6px; vertical-align: middle"></span>Built</span><span style="color: #9a998f; font-size: 11px">always</span></label>
+        <label style="display: flex; justify-content: space-between; align-items: center"><span><input type="checkbox" checked aria-label="Committed"> <span style="display: inline-block; width: 10px; height: 10px; background: #9cc0fa; border-radius: 2px; margin: 0 6px; vertical-align: middle"></span>Committed</span><span style="color: #9a998f; font-size: 11px">= D-5-1 capacity check</span></label>
+        <label style="display: flex; justify-content: space-between; align-items: center"><span><input type="checkbox" checked aria-label="Proposed"> <span style="display: inline-block; width: 10px; height: 10px; background: #cfe0fb; border-radius: 2px; margin: 0 6px; vertical-align: middle"></span>Proposed</span><span style="color: #9a998f; font-size: 11px">= build-out</span></label>
+        <label style="display: flex; justify-content: space-between; align-items: center"><span><input type="checkbox" aria-label="Anticipated"> <span style="display: inline-block; width: 10px; height: 10px; background: repeating-linear-gradient(135deg, #cfe0fb 0 3px, #1b1b1a 3px 6px); border-radius: 2px; margin: 0 6px; vertical-align: middle"></span>Anticipated</span><span style="color: #9a998f; font-size: 11px">= stress test</span></label>
+        <div style="border-top: 1px solid #383835; padding-top: 6px; color: #c3c2b7; font-size: 11.5px">Flows: 2025 metered · Criteria: Peel v2.0 · Count: tree · Expansions: on · Outside zones: nearest</div>
+      </div>
+      <div style="color: #9a998f; font-size: 11.5px">Replaces the read-only scenario line (shown twice today). Every bar in the app sums exactly the ticked layers and repeats these swatches.</div>
+    </section>
+  </div>
+
+  <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 12px">
+    <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">The same bar in four places</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 24px; font-size: 12px">
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between"><strong style="font-weight: 600">Peel pipeline · dwellings</strong><span style="color: #9a998f">growth only, census as context</span></div>
+        <div style="display: flex; height: 16px; border-radius: 3px; overflow: hidden; gap: 2px">
+          <div style="width: 2.5%; background: #5f7fae" title="built since census 5,096"></div>
+          <div style="width: 27.2%; background: #9cc0fa" title="committed 55,033"></div>
+          <div style="width: 70.3%; background: #cfe0fb" title="proposed 142,428"></div>
+        </div>
+        <div style="display: flex; gap: 12px; color: #c3c2b7; font-size: 11.5px; flex-wrap: wrap"><span>Built <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">5,096</span></span><span>Committed <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">55,033</span></span><span>Proposed <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">142,428</span></span><span style="color: #9a998f">on 450,746 census dwellings</span></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between"><strong style="font-weight: 600">G.E. Booth WRRF · % of 518 ML/d</strong><span style="color: #9a998f">annual average</span></div>
+        <div style="position: relative; height: 16px; background: #3a3a37; border-radius: 3px">
+          <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 78.3%; background: #3b4a5e; border-radius: 3px 0 0 3px"></div>
+          <div style="position: absolute; left: 60%; top: 0; bottom: 0; width: 18.3%; background: #9cc0fa; border-left: 1px dashed #1b1b1a"></div>
+          <div style="position: absolute; left: 78.3%; top: 0; bottom: 0; width: 21.7%; background: #cfe0fb"></div>
+          <div style="position: absolute; left: 83.3%; top: 0; bottom: 0; width: 16.7%; background: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px); border-radius: 0 3px 3px 0"></div>
+          <div style="position: absolute; left: 75%; top: -3px; width: 2px; height: 22px; background: #fff"></div>
+          <div style="position: absolute; left: 83.3%; top: -3px; width: 1px; height: 22px; background: #9a998f"></div>
+        </div>
+        <div style="display: flex; gap: 12px; color: #c3c2b7; font-size: 11.5px; flex-wrap: wrap"><span>Metered + committed <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">94%</span></span><span>Build-out <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">121%</span></span><span>Reserve <span style="font-family: 'IBM Plex Mono', monospace; color: #fff">30.4 ML/d</span></span><span style="color: #ffc98a">metered ⁄ committed split: from the one capacity function</span></div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between"><strong style="font-weight: 600">Site badge · phase and layer together</strong><span style="color: #9a998f">three real sites</span></div>
+        <div style="display: flex; flex-direction: column; gap: 5px">
+          <div style="display: flex; justify-content: space-between; align-items: center"><span>9763 Heritage Rd</span><span style="display: inline-flex; gap: 6px; align-items: center"><span style="background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 2px 8px; font-size: 11px">3 · zoning approved</span><span style="color: #6b6a63">→</span><span style="background: #cfe0fb; color: #10213a; border-radius: 999px; padding: 2px 8px; font-size: 11px">counts as Proposed</span></span></div>
+          <div style="display: flex; justify-content: space-between; align-items: center"><span>14337 Hwy 50, Bolton</span><span style="display: inline-flex; gap: 6px; align-items: center"><span style="background: #2a2440; color: #d9cffb; border-radius: 999px; padding: 2px 8px; font-size: 11px">2 · in circulation</span><span style="color: #6b6a63">→</span><span style="background: #cfe0fb; color: #10213a; border-radius: 999px; padding: 2px 8px; font-size: 11px">Proposed</span></span></div>
+          <div style="display: flex; justify-content: space-between; align-items: center"><span>Embleton &amp; Heritage (537 units)</span><span style="display: inline-flex; gap: 6px; align-items: center"><span style="background: #1f3a26; color: #b8f0c2; border-radius: 999px; padding: 2px 8px; font-size: 11px">5 · under construction</span><span style="color: #6b6a63">→</span><span style="background: #9cc0fa; color: #10213a; border-radius: 999px; padding: 2px 8px; font-size: 11px">Committed · 343 left</span></span></div>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <div style="display: flex; justify-content: space-between"><strong style="font-weight: 600">Timeline · year of latest milestone</strong><span style="color: #9a998f">bars coloured by layer</span></div>
+        <div style="display: flex; align-items: flex-end; gap: 4px; height: 44px">
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: 30%; background: #5f7fae"></div></div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: 20%; background: #9cc0fa"></div><div style="height: 18%; background: #5f7fae"></div></div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: 28%; background: #cfe0fb"></div><div style="height: 26%; background: #9cc0fa"></div><div style="height: 8%; background: #5f7fae"></div></div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: 48%; background: #cfe0fb"></div><div style="height: 24%; background: #9cc0fa"></div></div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: 62%; background: #cfe0fb"></div><div style="height: 18%; background: #9cc0fa"></div></div>
+          <div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%"><div style="height: 40%; background: #cfe0fb"></div><div style="height: 10%; background: repeating-linear-gradient(135deg, #cfe0fb 0 3px, #1b1b1a 3px 6px)"></div></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 10.5px; color: #6b6a63; font-family: 'IBM Plex Mono', monospace"><span>2021</span><span>2022</span><span>2023</span><span>2024</span><span>2025</span><span>2026</span></div>
+        <div style="color: #9a998f; font-size: 11.5px">Illustrative shape; heights come from the snapshot once the layer function exists.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="color: #9a998f; font-size: 11.5px; display: flex; justify-content: space-between; gap: 16px">
+    <span>Also fixes: “Built since 2021” reads +14,831 people on Growth › Pipeline and +98,797 on Census &amp; 2051, because one counts pipeline sites only and the other every permit. One layer function, one answer.</span>
+    <span style="white-space: nowrap">Sub-splits are filters, not layers: permit vs approved-only · active / stalled / appeal · stated / summed / estimated.</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":960,"height":1240}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

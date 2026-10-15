@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Servicing panel</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#6da7ec;text-decoration:none}a:hover{color:#9cc0fa}
+</style>
+</helmet>
+<div style="width: 480px; height: 1760px; box-sizing: border-box; background: #1b1b1a; color: #ffffff; font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 13px; line-height: 1.45; display: flex; flex-direction: column">
+
+  <header style="border-bottom: 1px solid #383835; padding: 14px 18px 0; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <div style="display: flex; align-items: baseline; gap: 8px"><h1 style="margin: 0; font-size: 17px; font-weight: 600">9763 Heritage Rd</h1><span style="color: #9a998f; font-size: 12px">Brampton</span></div>
+      <span style="display: inline-flex; align-items: center; gap: 6px; background: #22324a; color: #cfe0fb; border-radius: 999px; padding: 3px 9px 3px 4px; font-weight: 500; font-size: 12px"><span style="background: #9cc0fa; color: #10213a; border-radius: 999px; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600">3</span>Zoning approved</span>
+    </div>
+    <nav style="display: flex; gap: 18px; font-weight: 500">
+      <a href="Main.dc.html" style="color: #9a998f; padding: 8px 0">Overview</a>
+      <a href="#" style="color: #ffffff; border-bottom: 2px solid #6da7ec; padding: 8px 0">Servicing</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Funding</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Area</a>
+      <a href="#" style="color: #9a998f; padding: 8px 0">Files</a>
+    </nav>
+  </header>
+
+  <main style="padding: 16px 18px 24px; display: flex; flex-direction: column; gap: 14px">
+
+    <div style="display: flex; gap: 8px">
+      <button type="button" style="flex: 1; height: 36px; background: #1f2b3d; color: #cfe0fb; border: 1px solid #3b5576; border-radius: 7px; font: inherit; font-weight: 500; cursor: pointer">Trace water from plant</button>
+      <button type="button" style="flex: 1; height: 36px; background: #2f261f; color: #f0d2bb; border: 1px solid #6a4d36; border-radius: 7px; font: inherit; font-weight: 500; cursor: pointer">Trace sewer to plant</button>
+    </div>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; overflow: hidden">
+      <div style="padding: 12px 14px; border-bottom: 1px solid #383835; display: flex; align-items: center; gap: 8px">
+        <span style="width: 10px; height: 10px; border-radius: 2px; background: #5b9bf5"></span>
+        <h2 style="margin: 0; font-size: 15px; font-weight: 600">Water</h2>
+        <span style="margin-left: auto; color: #9a998f; font-size: 12px">L/s</span>
+      </div>
+      <div style="padding: 14px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px">6.29</div><div style="color: #9a998f; font-size: 12px">Average day</div></div>
+          <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">11.3</div><div style="color: #c3c2b7; font-size: 12px">Max day</div></div>
+          <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px">18.9</div><div style="color: #9a998f; font-size: 12px">Peak hour</div></div>
+        </div>
+
+        <div style="background: #2a2418; border: 1px solid #4a3c22; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: space-between"><strong style="font-weight: 600; color: #ffc98a">Pressure zone: 5 or 6?</strong><span style="color: #b8a888; font-size: 12px">assigned to nearest</span></div>
+          <div style="position: relative; height: 34px">
+            <div style="position: absolute; left: 0; right: 0; top: 12px; height: 8px; background: #3a3a37; border-radius: 4px"></div>
+            <div style="position: absolute; left: 6%; right: 18%; top: 12px; height: 8px; background: #5b9bf5; border-radius: 4px"></div>
+            <div style="position: absolute; left: 76%; top: 4px; width: 2px; height: 24px; background: #ffa94d"></div>
+            <div style="position: absolute; left: 6%; top: 24px; font-size: 10.5px; color: #9a998f; font-family: 'IBM Plex Mono', monospace">182.4 m</div>
+            <div style="position: absolute; left: 70%; top: -8px; font-size: 10.5px; color: #ffc98a; font-family: 'IBM Plex Mono', monospace">site 231 m</div>
+            <div style="position: absolute; right: 18%; top: 24px; font-size: 10.5px; color: #9a998f; font-family: 'IBM Plex Mono', monospace; transform: translateX(50%)">236.2</div>
+          </div>
+          <div style="color: #d9d3c4; font-size: 12.5px">Zone 5 serves 182.4–236.2 m (HGL 274.3 m); the ground is also in Zone 6’s range. Connection via planned main 26-1245, 330 m away. Confirm the zone in the FSR.</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Supply path · firm capacity ML/d</div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px">
+            <span style="background: #1f2b3d; border: 1px solid #3b5576; border-radius: 6px; padding: 4px 8px">Lorne Park WTP <span style="font-family: 'IBM Plex Mono', monospace; color: #9cc0fa">500</span></span>
+            <span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">Z1 <span style="font-family: 'IBM Plex Mono', monospace; color: #c3c2b7">336</span></span>
+            <span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">Z2 <span style="font-family: 'IBM Plex Mono', monospace; color: #c3c2b7">309</span></span>
+            <span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">Z3 <span style="font-family: 'IBM Plex Mono', monospace; color: #c3c2b7">250</span></span>
+            <span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">Z4 <span style="font-family: 'IBM Plex Mono', monospace; color: #c3c2b7">226</span></span>
+            <span style="color: #6b6a63">→</span>
+            <span style="background: #2a2418; border: 1px solid #6a5226; border-radius: 6px; padding: 4px 8px">Z5 West Brampton <span style="font-family: 'IBM Plex Mono', monospace; color: #ffc98a">40</span></span>
+          </div>
+          <div style="color: #9a998f; font-size: 11.5px">Smallest link is the Zone 5 lift: 40 ML/d firm.</div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; justify-content: space-between; font-size: 12px"><span style="color: #c3c2b7">Pumping into Zone 5 and above</span><span style="font-family: 'IBM Plex Mono', monospace">46% → 59%</span></div>
+          <div style="position: relative; height: 10px; background: #3a3a37; border-radius: 3px; overflow: hidden">
+            <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 59%; background: #2f6b3a"></div>
+            <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 46%; background: #51cf66"></div>
+          </div>
+          <div style="display: flex; gap: 14px; font-size: 11.5px; color: #9a998f"><span>Now (existing + approved)</span><span>At build-out</span></div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <div style="border: 1px dashed #4a4a46; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 500">Nearest watermain</span><span style="color: #9a998f; font-size: 12px">Couldn’t load the map layer.</span><a href="#" style="font-size: 12px">Retry</a></div>
+          <div style="border: 1px dashed #4a4a46; border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 500">Fire flow</span><span style="color: #9a998f; font-size: 12px">Couldn’t load hydrants.</span><a href="#" style="font-size: 12px">Retry</a></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; overflow: hidden">
+      <div style="padding: 12px 14px; border-bottom: 1px solid #383835; display: flex; align-items: center; gap: 8px">
+        <span style="width: 10px; height: 10px; border-radius: 2px; background: #c98a5e"></span>
+        <h2 style="margin: 0; font-size: 15px; font-weight: 600">Wastewater</h2>
+        <span style="margin-left: auto; color: #9a998f; font-size: 12px">L/s</span>
+      </div>
+      <div style="padding: 14px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px">
+          <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px">6.76</div><div style="color: #9a998f; font-size: 12px">Avg dry weather</div></div>
+          <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px">24.2</div><div style="color: #9a998f; font-size: 12px">Peak dry · M 3.58</div></div>
+          <div><div style="font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500">50.6</div><div style="color: #c3c2b7; font-size: 12px">Peak wet weather</div></div>
+        </div>
+        <div style="color: #9a998f; font-size: 12px">I&amp;I 26.4 L/s over 101.5 ha (0.26 L/s/ha)</div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <div style="font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Path to the plant</div>
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 12px; font-family: 'IBM Plex Mono', monospace">
+            <span style="background: #2f261f; border: 1px solid #6a4d36; border-radius: 6px; padding: 4px 8px">B15</span><span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">B11</span><span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">B12</span><span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">B8</span><span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">B6</span><span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">B3</span><span style="color: #6b6a63">→</span>
+            <span style="background: #2d2d2a; border: 1px solid #383835; border-radius: 6px; padding: 4px 8px">B2</span><span style="color: #6b6a63">→</span>
+            <span style="background: #3a2a1d; border: 1px solid #8a6040; border-radius: 6px; padding: 4px 8px; font-family: 'IBM Plex Sans', sans-serif">Clarkson WRRF</span>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; justify-content: space-between; font-size: 12px"><span style="color: #c3c2b7">Clarkson uncommitted reserve · 123 ML/d</span><span style="font-family: 'IBM Plex Mono', monospace">0.74%</span></div>
+          <div style="height: 10px; background: #3a3a37; border-radius: 3px; overflow: hidden"><div style="width: 0.74%; min-width: 3px; height: 100%; background: #c98a5e"></div></div>
+        </div>
+
+        <div style="background: #2a2418; border: 1px solid #4a3c22; border-radius: 8px; padding: 10px 12px; color: #d9d3c4; font-size: 12.5px"><strong style="color: #ffc98a; font-weight: 600">Sewer pipes not assessed.</strong> Only plant reserve is screened; local and trunk capacity are unknown.</div>
+      </div>
+    </section>
+
+    <section style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 0; font-size: 12px; font-weight: 600; color: #c3c2b7; text-transform: uppercase; letter-spacing: 0.06em">Planned works this site needs</h2>
+      <div style="display: flex; justify-content: space-between; gap: 10px; align-items: center">
+        <div><div style="font-weight: 500">Water transmission main 26-1245</div><div style="color: #9a998f; font-size: 12px">2027 · 325 m away</div></div>
+        <span style="background: #3a2a1d; color: #ffc98a; border-radius: 999px; padding: 3px 9px; font-size: 11.5px; font-weight: 500">Paused</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; gap: 10px; align-items: center">
+        <div><div style="font-weight: 500">Local wastewater main 28-2133</div><div style="color: #9a998f; font-size: 12px">2028 · 132 m away</div></div>
+        <span style="background: #3a2a1d; color: #ffc98a; border-radius: 999px; padding: 3px 9px; font-size: 11.5px; font-weight: 500">Paused</span>
+      </div>
+      <div style="color: #9a998f; font-size: 11.5px">2026 DC draft schedule, as of March 2026. <a href="#">All DC timing →</a></div>
+    </section>
+
+    <a href="#" style="background: #242422; border: 1px solid #383835; border-radius: 10px; padding: 12px 14px; display: flex; justify-content: space-between; color: #ffffff"><span>Site conditions <span style="color: #9a998f">· ground, storm sewers, ponds</span></span><span style="color: #9a998f">▸</span></a>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":480,"height":1760}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+300 mm sanitary sewer
+Close ×
+300 mm sanitary sewer
+G.E. Booth WRRF (Lakeview) sewershed · slope 0.09% · full capacity 30 L/s · installed 2004
+What loads this?
+
+Pipe-by-pipe capacity results (load, % full, freeboard, profile) are hidden for now: the Region's hydraulic model is the authority for individual pipes. Below: the developments draining through this pipe.
+
+255 developments since the census draining through this pipe, largest peak wet first
+Development	People + jobs	Peak wet
+✓ 0 Mayfield Road
+Built since the census · Brampton
+	214	13.1L/s
+✓ 565 REMEMBRANCE RD
+Built since the census · Brampton
+	154	2.62L/s
+✓ 625 REMEMBRANCE RD
+Built since the census · Brampton
+	66	1.3L/s
+✓ 685 REMEMBRANCE RD
+Built since the census · Brampton
+	19	0.39L/s
+✓ 574 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 570 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 572 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 566 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 138 Dolobram Trail, Brampton, ON,
+Built since the census · Brampton
+	4	0.07L/s
+✓ 134 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 136 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 562 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 568 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 531 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 529 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 564 Queen Mary Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 26 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 527 Queen Mary Dr, Brampton, ON,
+Built since the census · Brampton
+	4	0.07L/s
+✓ 18 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 46 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 34 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 40 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 36 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 117 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 119 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 121 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 123 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 115 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 113 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 24 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 42 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 38 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 22 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 44 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 32 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 30 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 28 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 20 Wainwright Dr, Brampton, ON, L7A 4Y6
+Built since the census · Brampton
+	4	0.07L/s
+✓ 35 Wainwright Dr, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 105 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 107 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 132 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 130 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 109 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 111 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 101 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 103 Dolobram Trail, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 37 Wainwright Dr, Brampton, ON,
+Built since the census · Brampton
+	4	0.07L/s
+✓ 21 Wainwright Dr, Brampton, ON, L7A 4Y5
+Built since the census · Brampton
+	4	0.07L/s
+✓ 91 Dolobram Trail, Brampton, ON, L7A 4Y4
+Built since the census · Brampton
+	4	0.07L/s
+
+Existing: 6,614 people upstream (2021 Census) at peak dry weather, scaled ×1.28 to the plant's 2025 measured flow (capacity check); growth since the census at Peel design peak wet weather (Harmon, employment rates, I&I 0.26 L/s/ha on its site area). Full-pipe capacity by Manning (n 0.013) on the published slope. A screen for where to look, not a hydraulic model: existing wet-weather inflow and infiltration, surcharge, storage and relief sewers are not modelled. Developments join the nearest sewer of 300 mm or more.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Tool result
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 1,485 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Inception
+210
+Under review
+565
+Approved
+491
+Permit issued
+163
+Construction
+56
+Completed
+471
+Withdrawn / refused
+159
+
+1,485 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 734
+Under appeal 34
+Waiting on DC works 0
+PS over firm capacity 86
+Changed this week 1
+★ Watched 0
+Estimate check 759
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

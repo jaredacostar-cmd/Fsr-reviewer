@@ -1,0 +1,168 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The 12 developments shown propose 26,722 homes (planned units, net of homes demolished): 53 permitted, 53 completed, 26,669 left to build.
+
+Homes
+Planned
+26,722units
+7 developments with units
+Permitted
+53units
+0% of planned
+Completed
+53units
+≈27/yr completed 2022–2023
+Left to build
+26,669units
+100% of planned
+Employment
+Planned
+198,717m²
+≈2,439 jobs
+Permitted
+0m²
+0% of planned · ≈0 jobs
+Completed
+0m²
+≈0 jobs
+Left to build
+198,717m²
+100% of planned · ≈2,439 jobs
+People
+32,957pop
+Dwellings
+10,002units
+Jobs
+2,439jobs
+Built since 2021
++180 people · +53 dwellings · +0 jobs
+Committed (draft plan or site plan approved, permit, construction)
++21,202 people · +6,236 dwellings · +113 jobs
+Proposed (in review)
++11,575 people · +3,713 dwellings · +2,330 jobs
+Largest pipelines still to build share of the build-out
+Development	Unbuilt	Share
+9763 HERITAGE RDBrampton · 5 Under construction	6,236units	23%
+10869 HERITAGE RDBrampton · 2 Under review	2,656units	10%
+0 MISSISSAUGA RDBrampton · 2 Under review	568units	2%
+2774 BOVAIRD DR WBrampton · 2 Under review	265units	1%
+0 HERITAGE RDBrampton · 2 Under review	224units	1%
+Build-out by dwelling type
+Type	Planned	Permitted	Completed	Left
+Single / semi-detached	383units	53units	53units	330units
+Townhouse	6,556units	0units	0units	6,556units
+Apartment	2,798units	0units	0units	2,798units
+Type not stated	265units	0units	0units	265units
+Employment floor space (~2,439 jobs)	198,717m²	0m²	0m²	198,717m²
+22
+23
+Completions and approval pace by municipality
+Municipality	Completions	Median application → approval
+Mississauga	–	–
+Brampton	27/yr · 1 devs	–
+Caledon	–	–
+Peel	27/yr	–
+
+ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions 2022–2023 from dated permit events (54 completion dates estimated from issue dates — Brampton and Caledon publish none). Approval pace = months from first application activity to the site's approval. Applications as of 2026-10-12.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+52: Heritage Heights ×
+2021–2026 ×
+Reset all
+
+Showing 12 active applications · 2021–2026 · all of Peel · 1 more filter · Report
+
+Stage
+Inception
+5
+Under review
+5
+Approved
+1
+Construction
+1
+Withdrawn / refused
+5
+
+12 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 3
+Under appeal 0
+Waiting on DC works 0
+PS over firm capacity 0
+Changed this week 0
+★ Watched 0
+Estimate check 10
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

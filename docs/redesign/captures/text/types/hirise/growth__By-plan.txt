@@ -1,0 +1,38 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting all units (the Overview's basis). Every row equals the sum of the rows under it (Check). Grouping: tree.
+
+All columns Download CSV
+
+Area	Units	People	Check
+▾Peel	3,027	8,173	✓
+▾Mississauga	3,027	8,173	✓
+▸Dixie EA filter	3,027	8,173	✓
+Developments split between plans 0
+
+Nested plans are sub-levels of their plan, counted once: Bolton Core (in Bolton); DixieDundas CN (in Dixie EA); Malton CN (in Malton NHD); Meadowvale CN (in Meadowvale NHD); South Common CN (in Erin Mills NHD); Streetsville CN (in Streetsville NHD). Brampton precincts sit in the plan holding most of each; 30 of 30 have no development in the current set.
+
+Plans against their targets
+
+Each municipality against the Region's 2051 allocation of growth, and each plan against its published target, compared on units: committed (D-5-1) and all proposed. Where a target states only people, pipeline people are shown beside it (†, indicative only: targets use household persons per unit, the pipeline Peel design criteria). "unchecked" marks a figure not yet checked against its document. "total" marks a target that counts every home at build-out, existing ones included, so the pipeline (new proposals only) reads low there.
+
+Area	Target	Proposed units	% of target	Source
+Mississauga	98,000 units · 196,000 people · 90,000 jobs by 2051	3,027	3%	Region of Peel 2051 allocation
+
+2 plans shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json, checked not yet: every figure is from search-result excerpts, the documents could not be opened from the session that gathered them (2026-10-15); hover a source for its wording, ⓘ for a note. All columns adds committed units, % committed and the gap.
+
+Plans by wastewater plant
+
+People at build-out by plan and by the plant that receives the wastewater (units on hover). Pick a cell to filter the map and every tab to that plan and plant. PlantsPressure zones
+
+Plan	G.E. Booth	Total
+Mississauga	8,173	8,173
+Dixie EA	8,173	8,173
+Peel	8,173	8,173 ✓
+
+Pipeline people at Peel design criteria (the Overview's). The plant capacity tables use census-relative layers: see Wastewater › Plants.
