@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-15T14:38:53.061Z",
+ "generatedAt": "2026-10-15T14:42:11.837Z",
  "name": "North Brampton pilot",
  "bbox": [
   -79.83,
@@ -13,8 +13,8 @@
   "encoding": "terrarium",
   "minzoom": 12,
   "maxzoom": 16,
-  "tiles": 220,
-  "skipped": 15,
+  "tiles": 235,
+  "skipped": 0,
   "filledPixels": 120,
   "datum": "CGVD2013",
   "model": "DTM (bare earth)",
@@ -27,7 +27,7 @@
    "maxAbs": 0.772
   },
   "attribution": "Terrain: Ontario Digital Terrain Model (Lidar-Derived), Ontario Ministry of Natural Resources, Open Government Licence – Ontario",
-  "bytes": 7467446
+  "bytes": 8046546
  },
  "buildings": {
   "file": "buildings-pilot.pmtiles",
