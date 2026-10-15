@@ -976,10 +976,12 @@ h2.label, .label { font-size: var(--fs-2); text-transform: none; letter-spacing:
 .grow-bar { display: flex; gap: var(--space-1); height: 18px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
 .gseg { display: block; min-width: 2px; outline-offset: 2px; }
 .gseg:focus-visible { outline: 2px solid var(--focus); }
-.g-base { background: var(--ph-cancelled); }
-.g-built { background: var(--ph-completed); }
-.g-approved { background: var(--ph-approved); }
-.g-proposed { background: repeating-linear-gradient(45deg, var(--ph-approved) 0 3px, transparent 3px 6px), color-mix(in srgb, var(--ph-approved) 25%, var(--surface-1)); }
+.g-base { background: var(--ly-existing); }
+.g-built { background: var(--ly-built); }
+.g-approved { background: var(--ly-committed); }
+.g-proposed { background: var(--ly-proposed); }
+.g-anticipated { background: var(--ly-hatch), var(--ly-anticipated); }
+.cap-over { position: absolute; top: 0; bottom: 0; background: var(--ly-over); pointer-events: none; border-radius: 0 4px 4px 0; }
 .grow-legend { list-style: none; padding: 0; margin: var(--space-2) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); font-size: var(--fs-2); color: var(--text-secondary); }
 .grow-legend li { display: flex; align-items: center; gap: var(--space-2); }
 .grow-legend .gv { color: var(--text-primary); font-variant-numeric: tabular-nums; }
@@ -2026,9 +2028,9 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .mpc-cell { min-width: 170px; width: 24%; }
 .mpc-bar { position: relative; height: 16px; background: var(--surface-2); border-radius: 4px; margin-top: var(--space-2); }
 .mpc-bar i { position: absolute; top: 0; bottom: 0; left: 0; }
-.mpc-t, .gsw.mpc-t { background: var(--ph-cancelled); }
-.mpc-a, .gsw.mpc-a { background: var(--ph-approved); }
-.mpc-p, .gsw.mpc-p { background: repeating-linear-gradient(45deg, var(--ph-approved) 0 3px, transparent 3px 6px), color-mix(in srgb, var(--ph-approved) 25%, var(--surface-1)); }
+.mpc-t, .gsw.mpc-t { background: var(--ly-existing); }
+.mpc-a, .gsw.mpc-a { background: var(--ly-committed); }
+.mpc-p, .gsw.mpc-p { background: var(--ly-proposed); }
 .mpc-bar .mpc-mp { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 2px dashed var(--select); }
 .mpc-bar .mpc-mp span { position: absolute; top: -12px; left: -7px; font-size: var(--fs-1); font-weight: 500; color: var(--select); }
 .mpc-bar .mpc-cap { position: absolute; top: -4px; bottom: -4px; width: 2px; background: var(--text-primary); }

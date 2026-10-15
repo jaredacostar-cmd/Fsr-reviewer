@@ -59,10 +59,34 @@
   function badgeHTML(phaseText, L, o = {}) {
     if (!L || !L.layer) return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-secondary)">${esc(phaseText)}</span></span>`;
     const ink = L.layer === 'existing' || L.layer === 'built' ? 'var(--map-label)' : 'var(--ly-ink)';
-    const left = (L.layer === 'committed' || L.layer === 'proposed' || L.layer === 'anticipated') && L.toPermit > 0 && L.toPermit < L.units ? ` · ${num(L.toPermit)} left` : '';
+    // What a committed development has left to permit (the board's "Committed · 343 left").
+    const left = L.layer === 'committed' && L.toPermit > 0 && L.toPermit < L.units ? ` · ${num(L.toPermit)} left` : '';
     return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-primary)">${esc(phaseText)}</span><span class="ly-arrow">→</span><span class="ly-pill" style="background:${PILL[L.layer]};color:${ink}" title="${esc(o.title || '')}">counts as ${LABEL[L.layer]}${left}</span></span>`;
   }
+  /** The site badge for a development: "2 · Under review · zoning approved → counts as Proposed". */
+  function siteBadgeHTML(p, o = {}) {
+    const P = root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
+    const Ly = root.PeelLayers || (typeof require === 'function' ? require('./layers.js') : null);
+    const ph = P && P.PHASE_BY_KEY[p.phase];
+    const zoning = p.zoningApproved && ph && ph.rank < P.PHASE_BY_KEY.approved.rank;
+    const text = `${ph ? `${ph.short} · ${ph.label}` : p.phase}${zoning ? ' · zoning approved' : ''}`;
+    const L = Ly ? Ly.ofDev(p, o) : null;
+    return badgeHTML(text, L, { title: L && L.layer && Ly ? `${LABEL[L.layer]}: ${Ly.NOTE[L.layer]}` : '' });
+  }
   const nameHTML = layer => (LABEL[layer] ? `<span class="ly-name" style="--ly-c:${PILL[layer]}">${LABEL[layer]}</span>` : '<span class="muted">none</span>');
+
+  /** A capacity result (js/capacity.js compute / of) as the layered bar: Existing, Built, Committed,
+   *  Proposed against rated (or firm), the trigger tick and the red hatch beyond. */
+  function capacityBarHTML(k, o = {}) {
+    if (!k || !(k.cap > 0)) return '';
+    const f = o.fmt || (v => (Math.abs(v) >= 100 ? Math.round(v).toLocaleString('en-CA') : (Math.round(v * 10) / 10).toLocaleString('en-CA')));
+    const pct = v => `${Math.round(v / k.cap * 100)}%`;
+    const seg = (layer, v) => ({ layer, value: v, title: `${LABEL[layer]}: ${f(v)} ${k.unit || ''} (${pct(v)} of ${k.firm != null ? 'firm' : 'rated'})` });
+    const segs = [seg('existing', k.existing), seg('built', k.built), seg('committed', Math.max(0, k.committed - k.existing - k.built)), seg('proposed', Math.max(0, k.buildout - k.committed))];
+    return barHTML({ segments: segs, rated: k.cap, trigger: k.trigger < 1 ? k.trigger * k.cap : null, max: Math.max(k.cap * 1.3, k.buildout), unit: k.unit, fmt: f, small: o.small,
+      ratedLabel: `100% ${k.firm != null ? 'firm' : 'rated'}: ${f(k.cap)} ${k.unit || ''}`, triggerLabel: `${Math.round(k.trigger * 100)}% expansion trigger`,
+      label: o.label || `Existing + built + committed ${pct(k.committed)} of ${k.firm != null ? 'firm' : 'rated'} capacity, ${pct(k.buildout)} at build-out` });
+  }
 
   // ---- Scenario chip (SPEC §2): the basis is a set of layers ----------------------------------
   // Existing + Built always count; Committed alone = the D-5-1 capacity check; + Proposed = build-out;
@@ -89,7 +113,7 @@
     return `<div class="scen-chip-row" role="group" aria-label="Scenario: layers counted (${esc(what)})">${fixed}${tog}<span class="sc-what">= ${esc(what)}${o.basis === 'remaining' ? ', left to permit' : ''}</span></div><button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="${esc(set)}"><span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
   }
 
-  const api = { LABEL, barHTML, legendHTML, badgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
+  const api = { LABEL, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

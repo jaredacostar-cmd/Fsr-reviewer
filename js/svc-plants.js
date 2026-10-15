@@ -169,7 +169,7 @@
         </tr>`);
       return `<div class="cap-row">
         <div class="cap-name">${r.name}<small>${r.capWord || 'rated'} ${uML(r.rated)}${r.note ? ` · ${esc(r.note)}` : ''}</small></div>
-        <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${resBox}<span class="cap-line trig" style="left:${X(90)}" aria-hidden="true" title="90% expansion trigger"></span><span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
+        <div class="cap-track"><div class="cap-bar" style="width:${X(pct(tot, r.rated))}">${bar}</div>${pct(tot, r.rated) > 100 ? `<span class="cap-over" style="left:${X(100)};width:${X(pct(tot, r.rated) - 100)}" data-tip="${esc(`Beyond ${r.capWord || 'rated'}: ${fmt1(tot - r.rated)} ML/d`)}"></span>` : ''}${resBox}<span class="cap-line trig" style="left:${X(90)}" aria-hidden="true" title="90% expansion trigger"></span><span class="cap-line" style="left:${X(100)}" aria-hidden="true"></span>
           <span class="cap-end${Math.abs(pct(tot, r.rated) - 100) < 9 ? ' near' : ''}" style="left:${X(Math.max(pct(tot, r.rated), 100))}">${Math.round(pct(tot, r.rated))}%</span></div>
       </div>`;
     }).join('');

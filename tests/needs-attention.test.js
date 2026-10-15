@@ -108,9 +108,10 @@ test('renderOverview: Phase 4 structure and removed cards', () => {
   assert.match(APP, /See all →/, '"See all" link');
   assert.match(APP, /Largest developments/, 'top-N developments table heading');
   assert.match(body, /ov-info/, 'ⓘ line');
-  // Capacity bars keep the existing computation (90% trigger tick, 100% rated tick).
-  assert.match(APP, /PLANT_TRIGGER \* 100 \/ 1\.3/, '90% trigger tick kept');
-  assert.match(APP, /100 \/ 1\.3/, '100% rated tick kept');
+  // Capacity bars: the shared layer bar (SPEC §2) with the 90% trigger and 100% rated ticks.
+  assert.match(APP, /LB\(\)\.capacityBarHTML\(k\)/, 'Overview bars use the shared layer bar');
+  assert.match(APP, /class="ly-tick ly-trig"/, '90% trigger tick kept');
+  assert.match(APP, /class="ly-tick ly-rated"/, '100% rated tick kept');
   // Removed from Overview: housing, outlook, demand-by-phase, DC card, tools line.
   assert.doesNotMatch(body, /housingCardHTML\(\)/, 'housing targets card removed');
   assert.doesNotMatch(body, /outlookCardHTML\(\)/, 'population outlook card removed');

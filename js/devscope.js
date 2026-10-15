@@ -188,7 +188,7 @@
             <h2>${esc(p.title || 'Development')}</h2>
             <div class="site-bar-meta"><span class="muted">${esc(p.municipality || '')}</span></div>
           </div>
-          <span class="badge">${F.dot(p.phase)}${esc(ph ? ph.label : p.phase)}</span>
+          ${window.PeelLayerBar ? window.PeelLayerBar.siteBadgeHTML(p) : `<span class="badge">${F.dot(p.phase)}${esc(ph ? ph.label : p.phase)}</span>`}
           <button type="button" class="btn small site-bar-x" data-scope-close aria-label="Close the development scope">×</button>
         </div>
         ${(window.PeelUtil || {}).SCREEN_NOTE_SHORT || ''}

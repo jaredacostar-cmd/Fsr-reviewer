@@ -76,3 +76,12 @@ test('one scenario line: the chip in the top bar; no footer line, no in-tab copy
   assert.doesNotMatch(read('js/svc-tab.js'), /data-scen-t|const scenarioChip/);
   assert.match(read('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
 });
+
+test('site badge: Bovaird → "2 · Under review · zoning approved → counts as Proposed"; Embleton → "Committed · 343 left"', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
+  const H = require('./helpers/real-devs.js');
+  const { byKey, projects } = H.realDevs();
+  const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  assert.equal(strip(B.siteBadgeHTML(byKey.get('Brampton|2055 BOVAIRD DR W'))), '2 · Under review · zoning approved → counts as Proposed');
+  const e = projects.find(p => (p.records || []).some(r => r.ref === 'C05W06.007'));
+  assert.equal(strip(B.siteBadgeHTML(e)), '5 · Under construction → counts as Committed · 343 left');
+});
