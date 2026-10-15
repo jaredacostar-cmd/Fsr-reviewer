@@ -93,6 +93,8 @@
     const keys = o.devKeys ? new Set(o.devKeys) : o.filter ? devKeysOf(o.html) : null;
     result = { ref, title: o.title || 'Result', group: o.group || null, html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, v: ++resultV };
     App().state.ss = ref; showAll = false;
+    // Layers that drew a selection for an earlier result (EA / capital highlights) drop it when replaced.
+    if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:result-opened', { detail: { ref } }));
     AT().setFootPref('overview'); AT().showFootTab('overview');
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
     const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;

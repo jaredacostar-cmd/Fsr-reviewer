@@ -225,7 +225,7 @@
     return `<p class="small">What must be built first, and where is it at${where}: Region capital projects (construction) and environmental assessments.${o.capitalAsOf ? ` Capital projects as of ${esc(fmtDate(o.capitalAsOf))}.` : ''}</p>
       <section class="ce-sec" data-sec="active"><h3 class="sub-title">Active construction <small class="muted">${act.length}</small></h3>${capSec}</section>
       <section class="ce-sec" data-sec="current-eas"><h3 class="sub-title">Current EAs <small class="muted">${cur.length}</small></h3>${cur.length ? `<ul class="ce-list">${cur.map(eaRow).join('')}</ul>` : `<p class="small muted">No current EAs${where}.</p>`}</section>
-      <section class="ce-sec" data-sec="recent-eas"><h3 class="sub-title">Recently completed EAs <small class="muted">${rec.length} · last ${RECENT_YEARS} years</small></h3>${rec.length ? `<ul class="ce-list">${rec.map(eaRow).join('')}</ul>` : `<p class="small muted">None completed in the last ${RECENT_YEARS} years${where}.</p>`}</section>
+      <section class="ce-sec" data-sec="recent-eas"><h3 class="sub-title">Recently completed EAs <small class="muted">${rec.length} · completed ${o.thisYear - RECENT_YEARS} or later</small></h3>${rec.length ? `<ul class="ce-list">${rec.map(eaRow).join('')}</ul>` : `<p class="small muted">None completed since ${o.thisYear - RECENT_YEARS}${where}.</p>`}</section>
       ${o.screenNote || ''}`;
   }
 

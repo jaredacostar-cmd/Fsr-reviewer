@@ -173,6 +173,22 @@ test('picker: overlapping features → list; one feature → opens directly; sam
   hits = [hit('construction', 'only', 1), { kind: 'area', key: 'zone', d: 0, label: 'Zone 6' }];
   P.at(ev(400, 400));
   assert.deepEqual(opened, ['ea1', 'only'], 'one target opens directly; the area is context');
+  // Two overlapping EA study areas: both are areas, so the list is shown and the second is reachable.
+  hits = [{ kind: 'area', key: 'a1', d: 0, label: 'EA study area: A', open: () => opened.push('a1') }, { kind: 'area', key: 'a2', d: 0, label: 'EA study area: B', open: () => opened.push('a2') }];
+  P.at(ev(700, 700));
+  assert.equal(popups.length, 2, 'overlapping study areas get the picker');
+  assert.match(popups[1].html, /EA study area: B/);
+  assert.deepEqual(opened, ['ea1', 'only']);
+});
+
+test('EA / capital scope: hover previews use their own layer; a replacing result clears the selection; DC hits merge by work', () => {
+  const c = src('js/capital-ea.js'), s = src('js/svc-scope.js');
+  assert.match(c, /highlight: on => preview\(on, \[e\.geometry\]\)/, 'EA picker rows preview, not select');
+  assert.doesNotMatch(c, /highlight: h?on => \(h?on \? highlight\(/, 'no picker row clears the selection layer');
+  assert.match(c, /addEventListener\('peel:result-opened'/);
+  assert.match(s, /new CustomEvent\('peel:result-opened', \{ detail: \{ ref \} \}\)/);
+  assert.match(c, /prev = out\.find\(h => h\.key === k\)/, 'one DC hit per component');
+  assert.match(c, /return r\.ok \? await r\.json\(\) : null/, 'a malformed file is caught');
 });
 
 test('wiring: scripts, offline cache, Layers switches, year re-render, legend, trail group, Esc, issue title', () => {
@@ -190,7 +206,7 @@ test('wiring: scripts, offline cache, Layers switches, year re-render, legend, t
   const mm = src('js/map-markers.js');
   assert.match(mm, /id=\\"ce-settings\\"|id="ce-settings"/);
   const ma = src('js/map-analysis.js');
-  assert.match(ma, /function renderCapLayer\(\) \{[\s\S]{0,200}PeelCapitalEA\.render\(\)/);
+  assert.match(ma, /function renderCapLayer\(\) \{[\s\S]{0,200}PeelCapitalEA\.renderIfChanged\(\)/, 'redrawn on a year change, not on every pan');
   assert.match(ma, /PeelCapitalEA\.legendHTML\(\)/);
   assert.match(src('js/svc-scope.js'), /const g = s\.result && s\.result\.group;/);
   // Share links re-open an EA or capital project scope.

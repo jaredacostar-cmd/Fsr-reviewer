@@ -99,8 +99,9 @@
     const r = collect(ev.latlng, point);
     if (!r.targets.length) return;
     last = { point, time: now, list: r.targets, i: 0 };
-    if (r.targets.length === 1 && !r.context.length) { openHit(r.targets[0]); return; }
-    if (r.targets.length === 1) { openHit(r.targets[0]); return; }
+    // One feature opens directly (areas around it are context). When the only target is itself an area
+    // and others overlap it (two EA study areas), list them so each can be reached.
+    if (r.targets.length === 1 && (r.targets[0].kind !== 'area' || !r.context.some(h => h.open))) { openHit(r.targets[0]); return; }
     showPicker(ev.latlng, r);
   }
 

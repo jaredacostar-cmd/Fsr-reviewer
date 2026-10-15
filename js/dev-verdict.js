@@ -98,11 +98,15 @@
   // past the trigger) · Stalled (every stalled site; the largest listed) · This week (real changes).
   const needsGroups = (d) => {
     const items = needsAttention(d);
-    const cap = items.filter(it => it.tab), stall = items.filter(it => it.dev && /^Stalled /.test(it.text)), week = items.filter(it => it.dev && !/^Stalled /.test(it.text));
+    // Capital / EA items: a DC project's capital dates moving later is a Capacity item; an EA comment or
+    // review period closing soon is a This week item.
+    const ceCap = it => it.ce && it.ce.startsWith('cap:'), ceWeek = it => it.ce && !it.ce.startsWith('cap:');
+    const cap = items.filter(it => it.tab || ceCap(it)), stall = items.filter(it => it.dev && /^Stalled /.test(it.text)), week = items.filter(it => (it.dev && !/^Stalled /.test(it.text)) || ceWeek(it));
+    const ce = d.ce || [], nCap = ce.filter(c => c.ce.startsWith('cap:')).length;
     return [
-      { name: 'Capacity', count: (d.adv || []).length + (d.trig || []).length, items: cap },
+      { name: 'Capacity', count: (d.adv || []).length + (d.trig || []).length + nCap, items: cap },
       { name: 'Stalled', count: (d.stalled || []).length, items: stall, note: stall.length ? 'the largest (250+ units)' : '' },
-      { name: 'This week', count: (d.changes || []).length, items: week },
+      { name: 'This week', count: (d.changes || []).length + ce.length - nCap, items: week },
     ];
   };
   // One-line pointer to a number's home tab, used where a duplicate was removed.

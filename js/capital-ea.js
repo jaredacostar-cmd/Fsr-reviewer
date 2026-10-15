@@ -35,12 +35,12 @@
   // developments. Shapes don't take the pointer: js/map-pick.js gives the hover card and the tap.
   const Zs = (window.PeelLayerGroups && window.PeelLayerGroups.Z) || { infra: 380, eas: 390 };
   for (const [pane, z] of [['infraPane', Zs.infra], ['eaPane', Zs.eas]]) if (!map.getPane(pane)) map.createPane(pane, map.getPane('rotatePane') || undefined).style.zIndex = z;
-  const consLayer = L.layerGroup(), eaLayer = L.layerGroup(), labelLayer = L.layerGroup(), hlLayer = L.layerGroup();
+  const consLayer = L.layerGroup(), eaLayer = L.layerGroup(), labelLayer = L.layerGroup(), hlLayer = L.layerGroup(), pvLayer = L.layerGroup();
   let openKind = null;
 
   // ---- data ----------------------------------------------------------------------------------------
   async function load() {
-    const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? r.json() : null; } catch (e) { return null; } };
+    const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? await r.json() : null; } catch (e) { return null; } };
     const [cap, eas] = await Promise.all([opt('data/capital.json'), opt('data/eas.json')]);
     setData(cap, eas);
   }
@@ -65,7 +65,13 @@
   const shownEAs = () => ((data.eas && data.eas.eas) || []).filter(e => !M.eaUnplaced(e) && M.eaShown(e, ce.show, ce.eaSys));
   const unplacedEAs = () => ((data.eas && data.eas.eas) || []).filter(e => M.eaUnplaced(e) && M.eaShown(e, ce.show, ce.eaSys));
 
+  // The map-analysis capacity re-render runs on every pan in pipes mode: redraw only when what is drawn
+  // could differ (results year, filters, data, theme, picker presence).
+  let drawnKey = null;
+  const drawKey = () => JSON.stringify([yr(), ce, data.loaded, !!data.capital, !!data.eas, document.documentElement.dataset.theme || '', !!PK()]);
+  function renderIfChanged() { if (drawKey() !== drawnKey) render(); }
   function render() {
+    drawnKey = drawKey();
     consLayer.clearLayers(); eaLayer.clearLayers();
     const y = yr();
     if (ce.cons && data.capital) {
@@ -115,13 +121,15 @@
   map.on('zoomend moveend', () => { if (ce.cons || ce.ea) renderLabels(); });
 
   // ---- highlight (selection orange) -----------------------------------------------------------------
-  function highlight(geoms, linked) {
-    hlLayer.clearLayers(); hlLayer.addTo(map);
+  function highlight(geoms, linked, layer = hlLayer) {
+    layer.clearLayers(); layer.addTo(map);
     const sel = token('--select');
-    for (const g of geoms) if (g) L.geoJSON(g, { interactive: false, style: () => ({ color: sel, weight: 5, opacity: 0.95, fill: false }), pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 10, color: sel, weight: 3, fill: false, interactive: false }) }).addTo(hlLayer);
-    for (const g of linked || []) if (g) L.geoJSON(g, { interactive: false, style: () => ({ color: sel, weight: 3, opacity: 0.8, dashArray: '4 4', fill: false }), pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 8, color: sel, weight: 2, dashArray: '3 3', fill: false, interactive: false }) }).addTo(hlLayer);
+    for (const g of geoms) if (g) L.geoJSON(g, { interactive: false, style: () => ({ color: sel, weight: 5, opacity: 0.95, fill: false }), pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 10, color: sel, weight: 3, fill: false, interactive: false }) }).addTo(layer);
+    for (const g of linked || []) if (g) L.geoJSON(g, { interactive: false, style: () => ({ color: sel, weight: 3, opacity: 0.8, dashArray: '4 4', fill: false }), pointToLayer: (f, latlng) => L.circleMarker(latlng, { radius: 8, color: sel, weight: 2, dashArray: '3 3', fill: false, interactive: false }) }).addTo(layer);
   }
   const clearHl = () => { hlLayer.clearLayers(); map.removeLayer(hlLayer); };
+  // Picker hover previews (a row under the pointer): their own layer, so the open scope's highlight stays.
+  const preview = (on, geoms) => { if (on) highlight(geoms, null, pvLayer); else { pvLayer.clearLayers(); map.removeLayer(pvLayer); } };
 
   // DC works for an EA's linked DC projects (lines with that project number, facilities with that item).
   function dcGeomsFor(projs) {
@@ -192,6 +200,7 @@
       const b = e.target.closest('[data-ce-ea]'); if (b) openEA(b.dataset.ceEa);
     });
     document.addEventListener('peel:tool-closed', () => { if (openKind) { openKind = null; clearHl(); } });
+    document.addEventListener('peel:result-opened', e => { const ref = (e.detail && e.detail.ref) || ''; if (openKind && !/^(ea|cap):/.test(ref)) { openKind = null; clearHl(); } });
     document.addEventListener('keydown', e => {
       if (e.key !== 'Escape' || !openKind || document.querySelector('.pick-sheet, .pick-pop')) return;
       if (window.PeelTools && window.PeelTools.hasResult()) window.PeelTools.closeResult();
@@ -199,16 +208,30 @@
   }
 
   // ---- picker providers ----------------------------------------------------------------------------------
+  // Each feature's lng/lat bounding box (cached), so a hover far from it skips the per-vertex distance.
+  const BB = new WeakMap();
+  function bboxOf(coords) {
+    let b = BB.get(coords); if (b) return b;
+    b = [Infinity, Infinity, -Infinity, -Infinity];
+    const walk = c => { if (typeof c[0] === 'number') { if (c[0] < b[0]) b[0] = c[0]; if (c[1] < b[1]) b[1] = c[1]; if (c[0] > b[2]) b[2] = c[0]; if (c[1] > b[3]) b[3] = c[1]; } else c.forEach(walk); };
+    walk(coords); BB.set(coords, b); return b;
+  }
+  function near(ctx, coords, pad = 0) {
+    if (!coords) return false;
+    const b = bboxOf(coords), q = [[b[0], b[1]], [b[2], b[1]], [b[0], b[3]], [b[2], b[3]]].map(ctx.toPx), t = ctx.tol + pad, [x, y] = ctx.point;
+    return x >= Math.min(...q.map(p => p[0])) - t && x <= Math.max(...q.map(p => p[0])) + t && y >= Math.min(...q.map(p => p[1])) - t && y <= Math.max(...q.map(p => p[1])) + t;
+  }
   function consHits(ctx) {
     if (!ce.cons || !data.capital) return [];
     const best = new Map();
     for (const r of shownRecords()) {
+      if (!r.geometry || !near(ctx, r.geometry.coordinates)) continue;
       const d = M.hitDistance(ctx.point, r.geometry, ctx.toPx); if (d > ctx.tol) continue;
       const c = data.contracts.get(r.contract || `id:${r.id}`);
       if (!best.has(c.key) || best.get(c.key).d > d) best.set(c.key, {
         kind: 'construction', kindLabel: 'Capital project · screening', key: `cap:${c.key}`, d, label: M.capitalHover(c), short: M.workLabel(c.lead.workType).split(/[ (:]/)[0].toLowerCase(),
         sub: c.projectNumbers.join(', '), swatch: `background:var(${M.isBuilding(c.lead) ? '--cons-build' : '--cons-plan'})`,
-        open: () => openCapital(c.key), highlight: on => (on ? highlight(c.records.map(x => x.geometry)) : clearHl()),
+        open: () => openCapital(c.key), highlight: on => preview(on, c.records.map(x => x.geometry)),
       });
     }
     return [...best.values()];
@@ -217,9 +240,10 @@
     if (!ce.ea || !data.eas) return [];
     const out = [];
     for (const e of shownEAs()) {
+      if (!near(ctx, e.geometry.coordinates)) continue;
       const d = M.hitDistance(ctx.point, e.geometry, ctx.toPx); if (d > ctx.tol) continue;
       const inside = d === 0 && /Polygon/.test(e.geometry.type);
-      out.push({ kind: inside ? 'area' : 'ea', kindLabel: 'Environmental assessment · screening', key: `ea:${e.id}`, d, label: inside ? `EA study area: ${e.name}` : M.eaHover(e), short: 'EA', sub: M.EA_STATUS[e.status], swatch: 'background:var(--ea-line)', open: () => openEA(e.id), highlight: on => (on ? highlight([e.geometry]) : clearHl()) });
+      out.push({ kind: inside ? 'area' : 'ea', kindLabel: 'Environmental assessment · screening', key: `ea:${e.id}`, d, label: inside ? `EA study area: ${e.name}` : M.eaHover(e), short: 'EA', sub: M.EA_STATUS[e.status], swatch: 'background:var(--ea-line)', open: () => openEA(e.id), highlight: on => preview(on, [e.geometry]) });
     }
     return out;
   }
@@ -231,13 +255,16 @@
     for (const sys of ['water', 'wastewater']) {
       if (on.sys !== 'both' && on.sys !== sys) continue;
       for (const ln of dc[sys].lines) {
+        if (!near(ctx, ln.g)) continue;
         const d = M.hitDistance(ctx.point, { type: 'LineString', coordinates: ln.g }, ctx.toPx); if (d > ctx.tol) continue;
-        out.push({ kind: 'dc', key: `dc:${sys}:${ln.c || ln.p}`, d, label: `Planned DC ${sys === 'water' ? 'watermain' : 'sewer'}${ln.d ? ` ${ln.d} mm` : ''}${ln.y ? ` · ${ln.y}` : ''}`, short: 'planned DC', sub: ln.p ? `Project ${ln.p}` : '', swatch: `background:var(${(DI().DC_KIND[ln.k] || [])[1] || '--dc-ww-main'})`, open: () => MP().showDcLine(ln), highlight: hon => (hon ? highlight([{ type: 'LineString', coordinates: ln.g }]) : clearHl()) });
+        const k = `dc:${sys}:${ln.c || ln.p}`, prev = out.find(h => h.key === k);
+        if (prev) { if (d < prev.d) prev.d = d; continue; }
+        out.push({ kind: 'dc', key: k, d, label: `Planned DC ${sys === 'water' ? 'watermain' : 'sewer'}${ln.d ? ` ${ln.d} mm` : ''}${ln.y ? ` · ${ln.y}` : ''}`, short: 'planned DC', sub: ln.p ? `Project ${ln.p}` : '', swatch: `background:var(${(DI().DC_KIND[ln.k] || [])[1] || '--dc-ww-main'})`, open: () => MP().showDcLine(ln), highlight: hon => preview(hon, [{ type: 'LineString', coordinates: ln.g }]) });
       }
       for (const f of dc[sys].facilities) {
-        if (!f.g) continue;
+        if (!f.g || !near(ctx, f.g, 6)) continue;
         const d = M.hitDistance(ctx.point, { type: 'Point', coordinates: f.g }, ctx.toPx); if (d > ctx.tol + 6) continue;
-        out.push({ kind: 'facility', key: `dcf:${sys}:${f.name}`, d, label: f.name, short: 'facility', sub: (DI().DC_FAC[f.kind] || f.kind), swatch: 'background:var(--dc-ww-force)', open: () => DI().showFacility(f), highlight: hon => (hon ? highlight([{ type: 'Point', coordinates: f.g }]) : clearHl()) });
+        out.push({ kind: 'facility', key: `dcf:${sys}:${f.name}`, d, label: f.name, short: 'facility', sub: (DI().DC_FAC[f.kind] || f.kind), swatch: 'background:var(--dc-ww-force)', open: () => DI().showFacility(f), highlight: hon => preview(hon, [{ type: 'Point', coordinates: f.g }]) });
       }
     }
     return out;
@@ -344,6 +371,6 @@
     load();
   }
 
-  const api = { exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

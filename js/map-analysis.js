@@ -211,7 +211,7 @@
   function renderCapLayer() {
     capLayer.clearLayers();
     if (MM().getDcOn().on) DI().renderDcLayer();
-    if (window.PeelCapitalEA) window.PeelCapitalEA.render();
+    if (window.PeelCapitalEA) window.PeelCapitalEA.renderIfChanged();
     if (MM().mstyle.cap === 'off' || !App().state.servicing || !App().state.svcModel) return;
     if (MM().mstyle.cap === 'pipes' && PIPE_RESULTS) { SC().renderPipes(capLayer); return; }
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));

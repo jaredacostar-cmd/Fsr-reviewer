@@ -84,4 +84,7 @@ test('Peel Overview: tiles with layer sub-labels; Needs attention grouped and co
   const na = new Function(`${dv.match(/const needsAttention = \(d\) => \{[\s\S]*?\n  \};/)[0]}\n${dv.match(/const needsGroups = \(d\) => \{[\s\S]*?\n  \};/)[0]}\nreturn needsGroups;`)();
   const g = na({ adv: [{ name: 'X' }], trig: [{ sys: 'ww', now: false, text: 'G.E. Booth ≈2028' }], stalled: [{ key: 'a', title: 'A', muni: 'B', units: 300, unitsTxt: '300', years: '3.0 yrs' }, { key: 'b', title: 'B', muni: 'B', units: 10, unitsTxt: '10', years: '2.1 yrs' }], changes: [{ key: 'c', text: 'New: C' }] });
   assert.deepEqual(g.map(x => [x.name, x.count, x.items.length]), [['Capacity', 2, 2], ['Stalled', 2, 1], ['This week', 1, 1]]);
+  // Capital / EA items are shown too: DC dates moving later under Capacity, EA periods closing under This week.
+  const g2 = na({ ce: [{ ce: 'ea:x', text: 'EA comment period closes Oct 30: X' }, { ce: 'cap:k', text: 'DC project 1: capital dates moved 3 months later' }] });
+  assert.deepEqual(g2.map(x => [x.name, x.count, x.items.map(i => i.ce)]), [['Capacity', 1, ['cap:k']], ['Stalled', 0, []], ['This week', 1, ['ea:x']]]);
 });
