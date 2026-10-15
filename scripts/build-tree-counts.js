@@ -24,13 +24,38 @@ const { audit, loadRecords } = require('./audit-tree.js');
 const TC = require('../js/tree-counts.js');
 const TG = require('../js/tree-groups.js');
 const P = require('../js/phases.js');
+const T = require('../js/tree.js');
 
 const ROOT = path.join(__dirname, '..');
 const readJSON = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
 const CONF = { high: 'h', medium: 'm', low: 'l' };
 
-function build(res, overridesFile, records) {
-  const { projects, nodes, counts, projsOfNode, built } = res.internals;
+// Step C1: the plans as a hierarchy. A secondary plan / character area lying (almost) wholly
+// inside a larger one is its sub-level (Bolton Core in Bolton); a Brampton precinct sits in the
+// plan holding most of it. Ids index the list sent to the app.
+function planAreas(areasFile) {
+  const A = areasFile || {};
+  const list = [
+    ...(A.secondaryPlans || []).map(a => ({ id: a.id, name: a.name, municipality: a.municipality, kind: a.municipality === 'Mississauga' ? 'character area' : 'secondary plan', rings: a.rings })),
+    ...(A.precincts || []).map(a => ({ id: a.id, name: a.name, municipality: a.municipality, kind: 'precinct', rings: a.rings })),
+  ].filter(a => a.rings && a.rings.length);
+  for (const a of list) { a.bbox = T.bboxOf(a.rings); a.m2 = P.ringsArea(a.rings); }
+  const parentOf = new Map();
+  for (const a of list) {
+    let best = null;
+    for (const b of list) {
+      if (b === a || b.kind === 'precinct' || b.municipality !== a.municipality || b.m2 <= a.m2) continue;
+      const s = T.shareInside(a, b);
+      if (a.kind === 'precinct' ? s >= 0.5 && (!best || s > best.s) : s >= 0.95 && (!best || b.m2 < best.b.m2)) best = { b, s };
+    }
+    if (best) parentOf.set(a.id, best.b.id);
+  }
+  return { list, parentOf };
+}
+
+function build(res, overridesFile, records, areasFile) {
+  const { projects, nodes, counts, projsOfNode, built, tagsByTree } = res.internals;
+  const PA = planAreas(areasFile), areaIdx = new Map(PA.list.map((a, i) => [a.id, i]));
   const ov = (overridesFile && overridesFile.overrides) || {};
   const rules = [], roles = [], code = (list, v) => { if (!v) return -1; let i = list.indexOf(v); if (i < 0) { i = list.length; list.push(v); } return i; };
   const idOf = new Map(nodes.map((n, i) => [n.id, i]));
@@ -63,7 +88,7 @@ function build(res, overridesFile, records) {
   }
   // 3. Developments: files in tree order (root, then each branch under its parent).
   const devs = [], files = {};
-  for (const x of trees) {
+  for (const [k, x] of trees.entries()) {
     const set = new Set(x.t.nodes), kids = new Map();
     for (const i of x.t.nodes) { const p = built.parent[i]; if (p >= 0 && set.has(p)) (kids.get(p) || kids.set(p, []).get(p)).push(i); }
     const order = [], pos = new Map();
@@ -78,14 +103,20 @@ function build(res, overridesFile, records) {
     tops.sort((a, b) => (a === x.t.nodes[0] ? -1 : b === x.t.nodes[0] ? 1 : (nodes[a].date0 || 0) - (nodes[b].date0 || 0)));
     for (const i of tops) walk(i, -1);
     const d = devs.length;
-    devs.push({ k: x.key, root: x.rootRef, u: x.units, t: [[x.rootRef, x.units, x.basis, x.flag]], n: order });
+    // Step C1: the plans its root file's land lies in, by share of that land (a point: 1), and the
+    // MTSAs it touches (an overlay, never added up).
+    const tg = tagsByTree && tagsByTree[k];
+    const a = tg ? tg.tags.filter(g => areaIdx.has(g.id)).map(g => [areaIdx.get(g.id), +g.share.toFixed(3)]) : [];
+    const mt = tg ? tg.tags.filter(g => g.kind === 'MTSA').map(g => g.id) : [];
+    devs.push({ k: x.key, root: x.rootRef, u: x.units, t: [[x.rootRef, x.units, x.basis, x.flag]], n: order, ...(a.length ? { a } : {}), ...(mt.length ? { mt } : {}) });
     for (const i of x.t.nodes) files[nodes[i].id] = d;
   }
   // 4. Permits: where the tree placed them, recorded only when that differs from where the rest of
   // their site goes (the regroup default).
   const desired = new Map();
   for (const [i, list] of built.permitOf) for (const { r } of list) desired.set(r.uid, files[nodes[i].id]);
-  const data = { version: 2, devs, files, permits: {}, codes: { rules, roles } };
+  const data = { version: 2, devs, files, permits: {}, codes: { rules, roles },
+    areas: PA.list.map(a => ({ id: a.id, name: a.name, municipality: a.municipality, kind: a.kind, parent: PA.parentOf.get(a.id) || null })) };
   TG.setData(data);
   let parts = null;
   P.buildProjects(records, { regroup: ps => (parts = TG.regroup(ps, { canonRef: P.canonRef, ringsArea: P.ringsArea })) });
@@ -120,7 +151,7 @@ async function main() {
   const recs = await loadRecords(false);
   const res = audit(recs, { log: () => {} });
   const ovFile = readJSON(path.join(ROOT, 'data', 'tree-overrides.json'));
-  const b = build(res, ovFile, recs.records);
+  const b = build(res, ovFile, recs.records, readJSON(path.join(ROOT, 'data', 'areas.json')));
   if (b.check.dupKeys.length || b.check.missing.length) throw new Error(`tree developments don't check out: ${b.check.dupKeys.length} duplicate keys, ${b.check.missing.length} missing (${b.check.missing.slice(0, 5).join(', ')})`);
   const doc = {
     ...b.data,
