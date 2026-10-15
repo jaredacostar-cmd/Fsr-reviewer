@@ -1,0 +1,74 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The 26 developments shown propose 11,574 homes (planned units, net of homes demolished): 348 permitted, 164 completed, 11,226 left to build.
+
+Homes
+Planned
+11,574units
+12 developments with units
+Permitted
+348units
+3% of planned
+Completed
+164units
+≈33/yr completed 2020–2026
+Left to build
+11,226units
+97% of planned
+Employment
+Planned
+19,902m²
+≈521 jobs
+Permitted
+1,505m²
+8% of planned · ≈39 jobs
+Completed
+0m²
+≈0 jobs
+Left to build
+18,397m²
+92% of planned · ≈482 jobs
+People
+26,697pop
+Dwellings
+7,993units
+Jobs
+521jobs
+Built since 2021
++532 people · +164 dwellings · +0 jobs
+Committed (draft plan or site plan approved, permit, construction)
++23,302 people · +6,913 dwellings · +48 jobs
+Proposed (in review)
++2,862 people · +916 dwellings · +473 jobs
+Largest pipelines still to build share of the build-out
+Development	Unbuilt	Share
+9763 HERITAGE RDBrampton · 5 Under construction	6,236units	55%
+North East Corner of Embleton and Heritage RoadBrampton · 5 Under construction	433units	4%
+8957 HERITAGE RDBrampton · 2 Under review	398units	3%
+8654 MISSISSAUGA RDBrampton · 3 Approved	243units	2%
+8799 HERITAGE RDBrampton · 2 Under review	162units	1%
+See all 11 developments
+Build-out by dwelling type
+Type	Planned	Permitted	Completed	Left
+Single / semi-detached	96units	95units	95units	1units
+Townhouse	6,554units	69units	69units	6,485units
+Apartment	1,343units	176units	0units	1,167units
+Employment floor space (~521 jobs)	19,902m²	1,505m²	0m²	18,397m²
+20
+22
+23
+24
+26
+Completions and approval pace by municipality
+Municipality	Completions	Median application → approval
+Mississauga	–	–
+Brampton	33/yr · 4 devs	–
+Caledon	–	–
+Peel	33/yr	–
+
+ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions 2020–2026 from dated permit events (167 completion dates estimated from issue dates — Brampton and Caledon publish none). Approval pace = months from first application activity to the site's approval. Applications as of 2026-10-12.

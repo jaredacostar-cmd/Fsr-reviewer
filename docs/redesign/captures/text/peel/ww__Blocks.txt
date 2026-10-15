@@ -1,0 +1,321 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Plants & capacity
+Blocks
+Allocations
+Pumping stations
+Wastewater by sanitary catchment
+2021 Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood
+
+Block 16 delivers the most flow to G.E. Booth WRRF (Lakeview): 591 ML/d annual average flow at build-out.
+
+2021 Census
+Built since
+Committed
+Proposed (in review)
+Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map
+Columns
+Simple
+Engineering
+Only areas in map view
+
+Capacity check (calibrated to 2025 flows): G.E. Booth ×1.28 · Clarkson ×1.56 · Inglewood ×0.41. Each plant's population and employment flow is scaled so that today (census + built since, plus the York Region inflow at G.E. Booth) matches its 2025 reported annual average; the factor absorbs existing employment, institutional and commercial flow, infiltration in dry weather and any flows not modelled. I&I is not scaled.
+
+Wastewater blocks
+40
+traced to the lake
+Peel build-out
+881ML/d
+annual average flow · 2,139,900pop
+Largest single catchment
+591ML/d
+Block 16 → G.E. Booth WRRF (Lakeview)
+Peak wet build-out
+2,918ML/d
+of it I&I 1,155 ML/d
+Largest catchments build-out annual average flow, ML/d
+Block 16
+591 ML/d
+Block 22
+402 ML/d
+Block 2
+290 ML/d
+Block 3
+267 ML/d
+Block 24
+212 ML/d
+Block 31
+188 ML/d
+Block 6
+187 ML/d
+Block 36
+186 ML/d
+Wastewater by block (the Region's 40 I&I sewersheds), building up along the flow path to the lake · average dry weather (ML/d); people and jobs below
+Block (top of the sewershed → plant)	Build-out mix	Developments	= Total
+annual avg	Peak dry
+weather	I&I	Peak wet
+weather
+G.E. Booth WRRF (Lakeview)
+↳Block 29
+→ Block 28
+	
+	15devs
+3 nearest
+	5.47ML/d
+10,200pop · 4,885jobs
+	16.6ML/d	10.1ML/d	26.7ML/d
+↳Block 28
+→ Block 24 · 1 upstream
+	
+	235devs	46.2ML/d
+107,800pop · 17,622jobs
+	96.7ML/d	55.7ML/d	152ML/d
+↳Block 35
+→ Block 34
+	
+	21devs
+6 nearest
+	8.85ML/d
+23,800pop
+	22.8ML/d	24.4ML/d	47.2ML/d
+↳Block 34
+→ Block 33 · 1 upstream
+	
+	95devs	33.8ML/d
+81,400pop · 10,097jobs
+	73.1ML/d	58.9ML/d	132ML/d
+↳Block 33
+→ Block 32 · 1 upstream
+	
+	113devs	67.6ML/d
+170,700pop · 12,054jobs
+	139ML/d	87.9ML/d	227ML/d
+↳Block 32
+→ Block 24 · 1 upstream
+	
+	83devs	82.2ML/d
+209,000pop · 12,889jobs
+	168ML/d	110ML/d	278ML/d
+↳Block 27
+→ Block 26
+	
+	133devs	31.1ML/d
+78,700pop · 5,305jobs
+	67ML/d	33.4ML/d	100ML/d
+↳Block 26
+→ Block 25 · 1 upstream
+	
+	51devs	46.8ML/d
+120,500pop · 5,864jobs
+	96ML/d	42.2ML/d	138ML/d
+↳Block 25
+→ Block 24 · 1 upstream
+	
+	289devs	51.9ML/d
+131,800pop · 8,467jobs
+	107ML/d	62.3ML/d	169ML/d
+↳Block 30
+→ Block 24
+	
+	120devs	7.06ML/d
+17,800pop · 1,240jobs
+	19.5ML/d	13.9ML/d	33.4ML/d
+↳Block 23
+→ Block 24
+	
+	79devs	15.5ML/d
+38,900pop · 3,028jobs
+	37.8ML/d	41.3ML/d	79.2ML/d
+↳Block 24
+→ Block 22 · 5 upstream
+	
+	330devs	212ML/d
+527,300pop · 45,691jobs
+	429ML/d	340ML/d	768ML/d
+↳Block 38
+→ Block 37
+	
+	65devs
+1 nearest
+	20.7ML/d
+53,800pop · 2,015jobs
+	47.2ML/d	25.3ML/d	72.5ML/d
+↳Block 37
+→ Block 36 · 1 upstream
+	
+	250devs
+2 nearest
+	55.8ML/d
+146,900pop · 3,467jobs
+	113ML/d	65.4ML/d	179ML/d
+↳Block 14
+→ Block 13
+	
+	92devs
+7 nearest
+	45.3ML/d
+119,700pop · 2,348jobs
+	91.9ML/d	38.4ML/d	130ML/d
+↳Block 13
+→ Block 36 · 1 upstream
+	
+	153devs	74.5ML/d
+197,700pop · 2,950jobs
+	151ML/d	68.8ML/d	219ML/d
+↳Block 39
+→ Block 36
+	
+	250devs	26.8ML/d
+69,700pop · 2,595jobs
+	58.4ML/d	20ML/d	78.5ML/d
+↳Block 36
+→ Block 31 · 3 upstream
+	
+	252devs	186ML/d
+486,300pop · 14,966jobs
+	376ML/d	183ML/d	559ML/d
+↳Block 31
+→ Block 22 · 1 upstream
+	
+	28devs	188ML/d
+487,400pop · 18,643jobs
+	380ML/d	216ML/d	595ML/d
+↳Block 22
+→ Block 16 · 2 upstream
+	
+	22devs	402ML/d
+1,020,600pop · 65,909jobs
+	808ML/d	602ML/d	1,410ML/d
+↳Block 19
+→ Block 16
+	
+	22devs	20.4ML/d
+52,600pop · 2,585jobs
+	47ML/d	23ML/d	70ML/d
+↳Block 20
+→ Block 16
+	
+	6devs	10.6ML/d
+28,400pop · 73jobs
+	26.5ML/d	10.2ML/d	36.7ML/d
+↳Block 21
+→ Block 16
+	
+	58devs	25.5ML/d
+66,700pop · 2,007jobs
+	55.8ML/d	51.2ML/d	107ML/d
+↳Block 18
+→ Block 16
+	
+	56devs	42.7ML/d
+109,600pop · 5,713jobs
+	87.8ML/d	34.8ML/d	123ML/d
+↳Block 17
+→ Block 16
+	
+	199devs	12.7ML/d
+33,800pop · 416jobs
+	31.1ML/d	20.2ML/d	51.3ML/d
+Block 16
+→ G.E. Booth WRRF (Lakeview) · 6 upstream
+	
+	171devs	591ML/d
+1,516,600pop · 79,441jobs
+	1,185ML/d	806ML/d	1,991ML/d
+Clarkson WRRF
+↳Block 15
+→ Block 11
+	
+	94devs	56.5ML/d
+122,300pop · 3,118jobs
+	115ML/d	31.9ML/d	147ML/d
+↳Block 11
+→ Block 12 · 1 upstream
+	
+	121devs	88.7ML/d
+190,600pop · 6,314jobs
+	180ML/d	66.8ML/d	247ML/d
+↳Block 12
+→ Block 8 · 1 upstream
+	
+	54devs	106ML/d
+225,800pop · 9,286jobs
+	215ML/d	99.7ML/d	315ML/d
+↳Block 10
+→ Block 9
+	
+	43devs	2.47ML/d
+2,710pop · 2,969jobs
+	8.55ML/d	13ML/d	21.6ML/d
+↳Block 9
+→ Block 8 · 1 upstream
+	
+	11devs	19.6ML/d
+40,700pop · 3,066jobs
+	47.5ML/d	35.1ML/d	82.7ML/d
+↳Block 8
+→ Block 6 · 2 upstream
+	
+	35devs	148ML/d
+314,700pop · 13,453jobs
+	300ML/d	166ML/d	466ML/d
+↳Block 6
+→ Block 3 · 1 upstream
+	
+	15devs	187ML/d
+401,500pop · 13,584jobs
+	379ML/d	202ML/d	581ML/d
+↳Block 7
+→ Block 5
+	
+	15devs	22ML/d
+47,600pop · 1,082jobs
+	50.8ML/d	19.9ML/d	70.8ML/d
+↳Block 5
+→ Block 3 · 1 upstream
+	
+	17devs	51.2ML/d
+112,200pop · 1,274jobs
+	103ML/d	46.2ML/d	150ML/d
+↳Block 4
+→ Block 3
+	
+	29devs	15.4ML/d
+32,600pop · 1,653jobs
+	38.5ML/d	21.9ML/d	60.4ML/d
+↳Block 3
+→ Block 2 · 3 upstream
+	
+	40devs	267ML/d
+574,200pop · 17,801jobs
+	539ML/d	294ML/d	833ML/d
+↳Block 1
+→ Block 2
+	
+	36devs	10.6ML/d
+21,700pop · 2,047jobs
+	28.7ML/d	18.2ML/d	46.9ML/d
+Block 2
+→ Clarkson WRRF · 2 upstream
+	
+	205devs
+1 nearest
+	290ML/d
+622,400pop · 21,271jobs
+	585ML/d	348ML/d	933ML/d
+Inglewood WWTP
+Block 40
+→ Inglewood WWTP
+	
+	1dev	0.11ML/d
+908pop
+	0.42ML/d	0.97ML/d	1.38ML/d
+Peel total (G.E. Booth + Clarkson + Inglewood)	
+	3,904devs
+20 nearest
+	881ML/d
+2,139,900pop · 100,712jobs
+	1,763ML/d	1,155ML/d	2,918ML/d
+Method & notes
+
+ⓘ Flows build up along the traced flow path to the lake: each catchment’s own flow plus everything upstream of it. Criteria: wastewater 290 L/cap/d with Harmon peaking (2–4), I&I 0.26 L/s/ha (Peel Linear Wastewater Standards 2023); employment 270 L/emp/d (Peel Modelling Demand Table, Aug 2024). Data: applications 2026-10-12 · 2021 Census · Peel 2025 annual reports.

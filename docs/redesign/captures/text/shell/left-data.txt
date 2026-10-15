@@ -1,0 +1,183 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+The 1,485 developments shown would add about 683,700 people and 81,900 jobs in 228,490 units. Inglewood is at its 90% expansion trigger now (existing + built + committed 398% of rated capacity → 495% at build-out).
+
+Executive briefing (PDF)
+Growth
+Growth →
+1,485
+developments
+shown on the map
+all of Peel
+228,490
+units
+planned
+219,299 left to build
+683,700
+people
+at build-out
+81,900
+jobs
+on development sites
+Needs attention
+G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% → 120% at build-out)
+Wastewater →
+Inglewood is at its 90% expansion trigger now (existing + built + committed 398% → 495% at build-out)
+Wastewater →
+Stalled 4.6 yrs with no activity — 14275 THE GORE ROAD CALEDON ON L7E 0W9 (4,456 units, Caledon)
+Development →
+Stalled 3.5 yrs with no activity — 1750 STEELES AVE W (3,809 units, Brampton)
+Development →
+Stalled 5.1 yrs with no activity — 10159 THE GORE RD (3,239 units, Brampton)
+Development →
+New: 11 CHAPEL STREET CALEDON ON L7E 1C2 (Inception, Caledon)
+Development →
+New: 2719 BOVAIRD DR W (Withdrawn / refused, Brampton)
+Development →
+Capacity Mixed basis
+Plants →
+G.E. Booth
+94% committed → 120% build-out
+Reaches the trigger ≈2028
+Clarkson
+68% committed → 82% build-out
+Room to 2051
+Inglewood
+398% committed → 495% build-out
+At the expansion trigger now
+💧 South Peel water treatment
+48% committed → 48% build-out
+Room to 2051
+
+% of rated capacity, as in Wastewater → Plants (plants: annual average flow (2025 measured at each plant; growth at the plant’s measured rate); water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.
+
+Largest developments
+See all →
+Development	Phase	Units	People
+1-295 QUEEN ST E
+Brampton
+	2 Under review	7,641	23,700
+9763 HERITAGE RD
+Brampton
+	5 Under construction	9,862	33,500
+0 HERITAGE RD
+Brampton
+	2 Under review	5,146	13,900
+14275 THE GORE ROAD CALEDON ON L7E 0W9
+Caledon
+	2 Under review	4,456	15,400
+1750 STEELES AVE W
+Brampton
+	2 Under review	3,809	11,800
+
+Definitions · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: annual average flow (2025 measured at each plant; growth at the plant’s measured rate); water: max day); black tick: the 90% expansion trigger. Scope: every stage, pre-consultation to completed. Applications as of 2026-10-12 · all sources current Data & checks →
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Data sources
+Weekly snapshot · 2026-10-12
+Mississauga – development applications (latest monthly)
+×
+Planning applications · 564 records · 2026-10-12
+Mississauga – growth management active applications
+×
+Planning applications · 211 records · 2026-10-12
+Mississauga – site plan applications
+×
+Planning applications · 993 records · 2026-10-12
+Mississauga – issued building permits
+×
+Building permits · 7,491 records · 2026-10-12
+Mississauga – growth management permits (new units / floor area)
+×
+Building permits · 7,254 records · 2026-10-12
+Brampton – official plan / zoning amendments & subdivisions
+×
+Planning applications · 435 records · 2026-10-12
+Brampton – site plan approval
+×
+Planning applications · 3,047 records · 2026-10-12
+Brampton – draft plans of condominium
+×
+Planning applications · 94 records · 2026-10-12
+Brampton – development permit system
+×
+Planning applications · 18 records · 2026-10-12
+Brampton – pre-consultation
+×
+Planning applications · 1,416 records · 2026-10-12
+Brampton – building permits
+×
+Building permits · 23,924 records · 2026-10-12
+Caledon – development applications
+×
+Planning applications · 265 records · 2026-10-12
+Caledon – building permits
+×
+Building permits · 7,525 records · 2026-10-12
+
+App version 1.111 (build dev) · data 2026-10-12 · see the Change log tab
+
+Refresh live
+Duplicate check
+Check failed
+
+53,237 records from 13 layers → 10,334 copies of the same file merged (3,982 files listed in more than one layer or spelling) → 42,903 unique files → 24,269 projects.
+
+✓ Files still listed twice after merging: 0
+✕ Files counted in more than one project: 1
+✓ Files missing from every project: 0
+Units: every record → counted once
+Units on every record	451,990
+− copies of the same file	133,725
+− withdrawn / refused files	6,129
+− repeat applications for one proposal	14,818
+− repeat permits for one building	412
+− permits already in their planning application	30,768
++ sites with no plan: largest figure on any file	26,068
+= Units counted	292,054
+
+Units counted equals the demand panel's “All units” with every filter off (all years, all phases).
+
+Possible duplicates left: 40
+
+Separate developments of 20+ units within 60 m of each other, 3 with the same unit count. Usually neighbouring buildings; tap to check.
+
+10194 HEART LAKE RD (200) ↔ 10194 HEART LAKE RD (200) · 21 m · same units
+2200 Bromsgrove Road (74) ↔ 2200 Bromsgrove Road (74) · 2 m · same units
+125 RAILROAD ST (72) ↔ C01W06.079 (72) · 34 m · same units
+137 STEELES AVE W (991) ↔ 137 STEELES AVE W (1,147) · 1 m
+950 Aerodrome Avenue,750 Cove View, 705 Leading Sea Ave and 975 Marina Vista (formerly 985 Hydro Road) (1,100) ↔ 910 Aerodrome Avenue and 700 Leading Sea Avenue (formerly 1082 Lakeshore Road East) (865) · 0 m
+3980 Confederation Pkwy (949) ↔ 3980 Confederation Pkwy (793) · 1 m
+2 Erskine Road formerly known as 151 City Centre Dr (624) ↔ 151 CITY CENTRE DRIVE (856) · 57 m
+10625 MISSISSAUGA RD (1,062) ↔ 10625 Mississauga Road (195) · 0 m
+5081 Hurontario Street (709) ↔ 5081 Hurontario Street (497) · 0 m
+10625 MISSISSAUGA RD (1,062) ↔ 180 Veterans Drive (75) · 50 m
+5081 Hurontario Street (709) ↔ 8 Nahani Way (404) · 58 m
+2 Erskine Road formerly known as 151 City Centre Dr (624) ↔ 151 City Centre Drive (437) · 32 m
+Download audit CSV
+Advanced
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

@@ -16,7 +16,7 @@
       const res = await fetch('data/areas.json', { cache: 'no-cache' });
       if (!res.ok) return;
       const a = await res.json();
-      App().state.areas = { secondaryPlans: PeelAreas.prepare(a.secondaryPlans), mtsas: PeelAreas.prepare(a.mtsas), census: a.census, sources: a.sources, generatedAt: a.generatedAt };
+      App().state.areas = { secondaryPlans: PeelAreas.prepare(a.secondaryPlans), mtsas: PeelAreas.prepare(a.mtsas), precincts: PeelAreas.prepare(a.precincts || []), census: a.census, sources: a.sources, generatedAt: a.generatedAt };
       for (const x of [...App().state.areas.secondaryPlans, ...App().state.areas.mtsas]) areaById.set(x.id, x);
       // Census years (newest first): 2021 always; earlier ones (2016) when published.
       const list = a.censuses || (a.census ? [{ year: 2021, ...a.census }] : []);
@@ -29,6 +29,8 @@
       renderAreaSelects();
       renderPlanAreas();
       App().applyFilters();
+      // The servicing model needs the census baseline: build it now that it is here.
+      if (App().state.servicing && window.PeelSvcTab) window.PeelSvcTab.renderSvcTab();
     } catch (e) { /* areas are optional */ }
   }
   function tagProjects() {

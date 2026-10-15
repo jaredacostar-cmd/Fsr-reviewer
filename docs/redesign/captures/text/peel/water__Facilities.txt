@@ -1,0 +1,173 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Treatment & capacity
+Pressure zones
+Facilities
+Existing water facilities
+
+45 existing water facilities · 712 ML of storage · 4 short by 2041 in the 2020 Master Plan assessment.
+
+45
+sites
+existing water facilities
+712
+ML
+storage
+reservoirs, tanks & standpipes
+1,700
+ML/d
+treatment rated
+A.P. Kennedy + Lorne Park
+4
+facilities
+short by 2041
+Master Plan assessment
+2020 Master Plan vs this tracker maximum day, ML/d
+Today
++ Committed
++ Proposed (in review)
+Master Plan forecast (26, 31, 41)
+Capacity
+Facility	Capacity	Master Plan
+2026 · 2031 · 2041	Today	+ Approved	+ Proposed	Build-out	Build-out against the Master Plan
+South Peel system, both plants (incl. York supply)
+3,757 developments
+Vol. 3, Tables 8–9
+	1,530
+90% of installed
+	1,159 · 1,285 · 1,415	810
+2025 measured (upper bound)
+	+102	+229	1,141
+≈ the MP's 2025 forecast
+	
+26
+31
+41
+
+A.P. Kennedy WTP (Central, East, Bolton, York)
+2,961 developments
+Vol. 3, Table 9
+	1,080
+90% of installed
+	822 · 918 · 1,003	521
+2025 measured
+	+75	+175	770
+≈ the MP's 2023 forecast
+	
+26
+31
+41
+
+Lorne Park WTP (West)
+796 developments
+Vol. 3, Table 9
+	450
+90% of installed
+	337 · 367 · 412	298
+2025 measured
+	+28	+54	380
+≈ the MP's 2034 forecast
+	
+26
+31
+41
+
+Lorne Park Zone 2 high lift
+571 developments
+Vol. 3, Table 11
+	152
+actual firm
+	210 · 227 · 274	193
+MP 2021 + built
+	+26	+52	271
+≈ the MP's 2040 forecast · over capacity
+	
+26
+31
+41
+
+Beckett Sproule transfer (to the East system)
+847 developments
+Vol. 3, Table 11
+	275
+actual firm
+	387 · 457 · 484	327
+MP 2021 + built
+	+29	+40	396
+≈ the MP's 2027 forecast · over capacity
+	
+26
+31
+41
+
+West Brampton Zone 5 low lift
+304 developments
+Vol. 3, Table 11
+	74
+actual firm
+	67 · 99 · 116	67
+MP 2021 + built
+	+20	+25	113
+≈ the MP's 2039 forecast · over capacity
+	
+26
+31
+41
+
+West Brampton Zone 6 high lift
+138 developments
+Vol. 3, Table 11
+	87
+actual firm
+	77 · 88 · 110	60
+MP 2021 + built
+	+17	+19	96
+≈ the MP's 2035 forecast · over capacity
+	
+26
+31
+41
+
+Silverthorn Reservoir
+Vol. 3, Table 12
+	46 ML	43 · 44 · 49 ML required	Short by 3 ML by 2041 in the Master Plan (new cell planned). Not computed by the tracker: storage includes fire and emergency volumes it doesn't model.
+West Brampton Reservoir
+Vol. 3, Table 12
+	40 ML	34 · 44 · 49 ML required	Short by 9 ML by 2041 in the Master Plan (new cell planned). Not computed by the tracker: storage includes fire and emergency volumes it doesn't model.
+
+Master Plan: forecast maximum day demand for the facilities it assessed (Vol. 3, Tables 8, 9, 11, 12). Tracker: today is the 2025 measured maximum day for the plants, and the Master Plan's 2021 figure + growth built since the census for the pumping stations; then + approved and + proposed developments whose supply route (the water trace's station chain) passes the facility, at Peel design maximum day. York Region's agreement supply is in the Master Plan figures and the measured plant flows, not in the growth.
+
+Existing water facilities short by 2041 first · 45 sites
+Facility	Type	Firm pumping by zone fed (ML/d)	Storage (ML)	Treatment	Master Plan: short by 2041	Planned DC works
+West transmission system
+■ Lorne Park	Treatment plant, clearwell, reservoir	
+LL in plant 900
+HLP1W 450
+actual 336
+HLP2W 150
+actual 152
+	23	500 ML/d
+2025 max day 60%
+	zone 2 high lift	Lake Ontario Monitoring System; Transient Upgrades; Transients / Protection Expansion
+▲ West Brampton	Pumping station, reservoir	
+LLP5W 60
+actual 40
+HLP6W 62
+actual 93
+	40		zone 5 low lift, zone 6 high lift, storage	Reservoir Expansion; Pumping Station Expansion; Pumping Station Expansion
+Central transmission system
+▲ Beckett Sproule	Pumping station, reservoir	
+LLP4C 297
+actual 195
+HLP5C 195
+actual 176
+Transfer (east) 306
+	93		transfer pumping	Improvements and Upgrades; Transient Protection Expansion; Pumping Station Expansion
+▲ Silverthorn	Pumping station, reservoir	
+LLP2C 387
+actual 192
+HLP3C 58
+	46		storage	Reservoir Expansion
+See all 45 facilities (41 with room to 2041)
+
+ⓘ Tap a row for the facility. Locations: Region of Peel open data (water storage, treatment plants and pumping stations). Pumping (firm = largest pump out of service) and reservoir capacity: 2020 Water and Wastewater Master Plan, Vol. 3, Tables 4–7; shortfalls by 2041: Tables 9, 11, 12; plant ratings and 2025 flows: the Region's drinking water reports. Booster and small stations without a published capacity are listed without one.

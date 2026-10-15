@@ -1,6 +1,6 @@
 /* js/dev-nav.js — development navigation (Phase 6 extraction).
  * DV_TABS/showDvTab, project lookup, related projects, file tree, flyToSite,
- * showDetail, timeline toggle, and the #detail-body listeners.
+ * showDetail, the timeline toggle and its document listener.
  * Extracted verbatim from js/app.js (lines 3206, 3216-3382); the only edits are the
  * reference rewrites in SPLIT_MAP.md §0 rule 4.
  * Note: DV_TABS/showDvTab are defined in js/fsr.js (per the ranges) and re-exported
@@ -70,6 +70,9 @@
   // The development's formal applications, each with the pre-consultations on its land; the
   // pre-consultations that match none stand alone. Every file appears once.
   function fileTree(p) {
+    // Step B2: a tree development lists its files in tree order, with their links.
+    const TG = window.PeelTreeGroups, tRows = TG && !p.parent && App().state && App().state.treeGrouped ? TG.fileRows(p) : null;
+    if (tRows && tRows.length) return tRows;
     const formal = p.records.filter(isFormal), pre = p.records.filter(isPrecon), used = new Set();
     const rows = formal.map(a => ({ a, pre: pre.filter(r => !used.has(r) && sameLand(a, r) && used.add(r)) }));
     for (const r of pre) if (!used.has(r)) rows.push({ a: r, pre: [] });
@@ -82,7 +85,9 @@
     const row = fileTree(p).find(t => t.a.ref === ref); if (!row) return null;
     const a = row.a;
     const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P.pointInRings(r.lng, r.lat, a.poly)) : [];
-    const sub = P.mergeProject(key, [a, ...row.pre, ...permits], {});
+    // A tree row opens its whole branch (the file and the files under it).
+    const own = row.branch ? row.branch : [a, ...row.pre];
+    const sub = P.mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))], {});
     sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
     if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
     if (App().state.servicing) SD().tagAreas(sub);
@@ -95,7 +100,13 @@
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
     const p = App().state.projects.find(x => x.key === base);
-    return p && i > 0 ? subProject(p, k.slice(i + 1)) : p || null;
+    if (!p) {
+      // A key saved before the trees became the developments (Step B2): resolve it.
+      const TG = window.PeelTreeGroups, list = App().state.projects;
+      const to = TG && TG.resolve(k, x => list.some(q => q.key === x));
+      return to && to !== k ? projectByKey(to) : null;
+    }
+    return i > 0 ? subProject(p, k.slice(i + 1)) : p;
   }
   // Other developments on overlapping land (a precinct's draft plans, the precinct a site sits in).
   function relatedProjects(p) {
@@ -119,12 +130,13 @@
     const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
     const rel = relatedProjects(p).slice(0, 12);
     let html = '';
-    if (formal.length > 1 || (formal.length && tree.length > formal.length)) {
+    const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
+    if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
       const counted = p.buildout && p.buildout.basis;
       html += `<details class="sect" id="dev-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
-        <ul class="file-tree">${tree.map(t => `<li>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
-          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}</div></li>`).join('')}</ul>
-        <p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`;
+        <ul class="file-tree">${tree.map(t => `<li${TG ? TG.indent(t) : ''}>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) && !treeRows ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
+          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}${TG ? TG.linkHTML(t) : ''}</div></li>`).join('')}</ul>
+        ${treeRows ? `<p class="small muted">${esc(TG.FILES_NOTE)}</p></details>` : `<p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`}`;
     }
     if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
     if (rel.length) html += `<details class="sect" id="dev-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
@@ -144,11 +156,9 @@
     else map.flyTo(t, z, { duration: 0.55 });
   }
   async function showDetail(p) {
-    // Phase 3: opening a development sets the analysis scope (js/devscope.js) — the
-    // site bar, the Development tab and the map treatment — instead of opening the
-    // #detail side panel. The record, selection and block views of #detail keep
-    // their own functions (showRecordDetail, showSelection, showBlock) and are
-    // untouched.
+    // Opening a development sets the analysis scope (js/devscope.js): the site bar, the
+    // right panel and the map treatment. Files, selections and blocks are result scopes
+    // (PeelSvcScope.openResult).
     // Phase 6: the detail needs full records. While the startup index is still
     // serving first paint, show the Development tab with a skeleton and open
     // once the full snapshot lands (same project key: the grouping is identical).
@@ -166,48 +176,21 @@
     return DevScope.open(p);
   }
   function showTl(v) {
-    document.querySelectorAll('#detail-body [data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
-    document.querySelectorAll('#detail-body [data-tlv]').forEach(d => { d.hidden = d.dataset.tlv !== v; });
+    document.querySelectorAll('[data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
+    document.querySelectorAll('[data-tlv]').forEach(d => { d.hidden = d.dataset.tlv !== v; });
   }
-  $('#detail-body').addEventListener('click', e => {
+  // The #detail side panel is gone (SPEC §3): what only it handled now listens on the document. Pipe
+  // and DC links, unit counts and files are js/dev-verdict.js's document listener and the result
+  // scope's (js/tool-scope.js).
+  document.addEventListener('click', e => {
     if (e.target.closest('[data-loads-back]') && devBack) { const b = devBack; devBack = null; if (b.dc) return MP().showDcBack(b.dc); return b.pipe != null ? SC().showPipeLoads(b.pipe) : TS().showLoads(b.id, b.plantName); }
-    const pb = e.target.closest('[data-pipe]'); if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
     const t = e.target.closest('[data-tl]');
     if (t) return showTl(t.dataset.tl);
-    const dt = e.target.closest('[data-dvt]');
-    if (dt) { store.set('dvTab', dt.dataset.dvt); PF().showDvTab(dt.dataset.dvt); return; }
-    // The user's unit count for a file.
-    const us = e.target.closest('[data-uu-set]');
-    if (us && currentProject) { const inp = us.parentElement.querySelector('[data-uu]'), n = +inp.value; const r = currentProject.records.find(x => x.ref === us.dataset.uuSet); if (r && n > 0) App().setUserUnits(r, n); else inp.focus(); return; }
-    const uc = e.target.closest('[data-uu-clear]');
-    if (uc && currentProject) { const r = currentProject.records.find(x => x.ref === uc.dataset.uuClear); if (r) App().setUserUnits(r, 0); return; }
-    // Drill down to one application, across to a related development, and back.
-    const sb = e.target.closest('[data-sub]');
-    if (sb && currentProject) {
-      const sub = subProject(currentProject.parent || currentProject, sb.dataset.sub); if (!sub) return;
-      MM().hoverSubLayer.clearLayers(); showDetail(sub);
-      const rings = MM().siteApps(sub).flatMap(a => a.poly); if (rings.length) ST().fitClear(L.latLngBounds(MM().toLatLngs(rings).flat()).pad(0.4));
-      return;
-    }
     const rq = e.target.closest('[data-relq]');
     if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); } return; }
-    if (e.target.closest('[data-dev-parent]') && currentProject && currentProject.parent) { showDetail(currentProject.parent); return; }
     if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
-    // "Data as of" in the development header: open the gear menu's Sources & checks page
-    // (same destination as the overview's "Data & checks →" button).
-    if (e.target.closest('[data-open="d-quality"]')) { TB().openGearPage('sources'); return; }
-    const o = e.target.closest('[data-open]');
-    if (o) { const d = document.getElementById(o.dataset.open); if (d) { const pane = d.closest('.dv-pane'); if (pane && pane.hidden) PF().showDvTab(pane.dataset.dvp); d.open = true; d.scrollIntoView({ behavior: 'smooth', block: 'start' }); } }
+    return undefined;
   });
-  // Hovering a file in the lists previews it on the map in the application colour (hoverSubLayer).
-  $('#detail-body').addEventListener('mouseover', e => {
-    const b = e.target.closest('[data-sub]'); if (!b || !currentProject) return;
-    const dev = currentProject.parent || currentProject, a = dev.records.find(r => r.ref === b.dataset.sub && r.poly);
-    MM().hoverSubLayer.clearLayers(); if (a) MM().subPoly(a.poly, { weight: 3, fillOpacity: 0.2, dashArray: '4 3' }).addTo(MM().hoverSubLayer);
-  });
-  $('#detail-body').addEventListener('mouseout', e => { if (e.target.closest('[data-sub]') && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('[data-sub]'))) MM().hoverSubLayer.clearLayers(); });
-  $('#detail-body').addEventListener('keydown', e => { const i = e.target.closest && e.target.closest('[data-uu]'); if (i && e.key === 'Enter') { e.preventDefault(); i.parentElement.querySelector('[data-uu-set]').click(); } });
-  $('#detail-body').addEventListener('toggle', e => { if (e.target.id === 'dev-aerial' && e.target.open && currentProject) AC().runAerial(currentProject); }, true);
 
   // ---- Public contract ----
   const getCurrentProject = () => currentProject;

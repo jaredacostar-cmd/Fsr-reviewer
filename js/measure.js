@@ -18,28 +18,13 @@
   const EP = () => root.PeelExistPipes;
   const TB = () => root.PeelTopbar;
   const SD = () => root.PeelSvcData;
-  // ---- Ground elevation: Mapzen / AWS Terrain Tiles (Terrarium PNG, open data, no key) ----------
-  // Elevation (m) = R × 256 + G + B / 256 − 32768, at zoom 14 (~7 m pixels here). Sources: Canada's
-  // CDEM and SRTM; good for grades over hundreds of metres, not for invert design.
-  const ELEV_Z = 14, elevTiles = new Map();
-  function elevTile(x, y) {
-    const k = `${x}/${y}`; if (elevTiles.has(k)) return elevTiles.get(k);
-    const pr = new Promise((ok, fail) => {
-      const img = new Image(); img.crossOrigin = 'anonymous';
-      img.onload = () => { try { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.drawImage(img, 0, 0); ok(g.getImageData(0, 0, 256, 256).data); } catch (e) { fail(e); } };
-      img.onerror = () => fail(new Error('elevation tile unavailable'));
-      img.src = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${ELEV_Z}/${x}/${y}.png`;
-    });
-    elevTiles.set(k, pr); pr.catch(() => elevTiles.delete(k));
-    return pr;
-  }
-  async function elevAt(lat, lng) {
-    const n = 2 ** ELEV_Z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
-    const x = Math.floor(xf), y = Math.floor(yf), px = Math.min(255, Math.floor((xf - x) * 256)), py = Math.min(255, Math.floor((yf - y) * 256));
-    const d = await elevTile(x, y), i = (py * 256 + px) * 4;
-    return d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768;
-  }
-  // Elevations along a polyline ([lat, lng] points), sampled about every 25 m (up to 120 samples).
+  // ---- Ground elevation: js/elevation.js (the province's lidar terrain model, terrain tiles where
+  // it has no value). elevAt keeps the number-only contract; ground() gives the value with its source.
+  const EL = () => root.PeelElevation;
+  const elevAt = (lat, lng) => EL().elevAt(lat, lng);
+  const ground = (lat, lng) => EL().getGround(lat, lng);
+  // Elevations along a polyline ([lat, lng] points), sampled about every 25 m (up to 120 samples),
+  // each with its source (one lidar request for the line).
   async function elevProfile(pts) {
     const segs = []; let tot = 0;
     for (let i = 1; i < pts.length; i++) { const d = map.distance(pts[i - 1], pts[i]); segs.push(d); tot += d; }
@@ -49,8 +34,9 @@
       const f = segs[i] ? Math.min(1, t / segs[i]) : 0, a = pts[i], b = pts[i + 1] || pts[i];
       out.push({ d: tot * k / (n - 1), lat: a.lat + (b.lat - a.lat) * f, lng: a.lng + (b.lng - a.lng) * f });
     }
-    const z = await Promise.all(out.map(p => elevAt(p.lat, p.lng)));
-    return out.map((p, i) => ({ ...p, z: z[i] }));
+    const g = await EL().getGroundMany(out);
+    if (g.some(r => r.z == null)) throw new Error('elevation unavailable');
+    return out.map((p, i) => ({ ...p, z: g[i].z, source: g[i].source, res: g[i].res, project: g[i].project }));
   }
   // The measured points: A (start, green) … the end (red), the ones between in distinct colours;
   // the same colour and letter on the map and in the profile.
@@ -73,9 +59,11 @@
     // Runs of consecutive samples on a pipe, as separate paths.
     const runs = (get) => { let d = '', on = false; for (const p of prof) { const z = get(p); if (z == null) { on = false; continue; } d += `${on ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(z).toFixed(1)}`; on = true; } return d; };
     const san = runs(p => p.san ? p.san.inv : null), wat = runs(p => p.wat ? p.z - WM_COVER : null);
+    // Stretches from terrain tiles (outside the lidar coverage): the ground line dashed.
+    const coarse = prof.some(p => p.source === 'terrain') ? runs(p => p.source === 'terrain' ? p.z : null) : '';
     const dots = (get, col) => prof.filter((p, i) => get(p) != null && get(prof[i - 1] || {}) == null && get(prof[i + 1] || {}) == null).map(p => `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(get(p)).toFixed(1)}" r="2.6" fill="${col}"/>`).join('');
-    return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile${san ? ' with sanitary sewer inverts' : ''}${wat ? ' and watermains' : ''}">
-      <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>
+    return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile${coarse ? ' (dashed: terrain tiles, outside the lidar coverage)' : ''}${san ? ' with sanitary sewer inverts' : ''}${wat ? ' and watermains' : ''}">
+      <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>${coarse ? `<path class="elev-coarse" d="${coarse}" fill="none" stroke="var(--surface-1)" stroke-width="1.8" stroke-dasharray="3 3"/>` : ''}
       ${san ? `<path d="${san}" fill="none" stroke="${tok(MM().EXIST_STYLE.sanitary.color)}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, tok(MM().EXIST_STYLE.sanitary.color))}` : ''}
       ${wat ? `<path d="${wat}" fill="none" stroke="${tok(MM().EXIST_STYLE.water.color)}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, tok(MM().EXIST_STYLE.water.color))}` : ''}
       ${xingSVG}${markSVG}
@@ -106,16 +94,14 @@
     if (typeof PeelTools !== 'undefined') PeelTools.sync(tool.mode);
   }
   const hasTools = () => typeof PeelTools !== 'undefined';
-  // Selection results open in the Tool result pane (Peel › <title> in the trail);
-  // when the framework is absent (tests, old builds) they fall back to #detail.
+  // A selection opens as a scope in the right panel (Peel › Selection in the trail), filtered to
+  // the developments selected.
   function openSelectionResult(title, added) {
     CA().setDaContext(null);
     const sel = [...AS().selection.values()];
     DN().setCurrentProject(null);
     MM().highlight(null);
-    if (hasTools()) PeelTools.openResult({ title, html: AS().selectionSummaryHTML(sel, added), reopen: () => openSelectionResult(title, added) });
-    else AS().showSelection(added);
-    TB().renderTrail();
+    PeelTools.openResult({ ref: 'sel:selection', title, html: AS().selectionSummaryHTML(sel, added), devKeys: sel.map(p => p.key), reopen: () => openSelectionResult(title, added) });
   }
   function refreshMeasureBanner() {
     if (tool.mode === 'measure' && hasTools()) { PeelTools.banner(measureBannerHTML()); if (tool.pts.length) fillElev(tool.pts.slice()); }
@@ -132,7 +118,7 @@
   function measureDist() { return tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0); }
   function measureBannerHTML() {
     return `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(measureDist())}</span>`}
-      ${tool.pts.length ? `<span class="pt-row">Select within <span class="seg">${[250, 500, 1000, 2000].map(r => `<button type="button" class="btn small" data-ptool-act="buffer:${r}">${fmtDist(r)}</button>`).join('')}</span> of the last point</span>` : ''}
+      ${tool.pts.length ? '<span class="pt-row muted">To select developments within a distance, use Select › Radius.</span>' : ''}
       ${tool.pts.length ? '<span class="pt-row pt-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
       <span class="pt-row"><button type="button" class="btn small link" data-ptool-act="clear">Clear</button> <button type="button" class="btn small link" data-ptool-act="done">Done</button></span>`;
   }
@@ -202,7 +188,6 @@
       onBannerAct(act) {
         if (act === 'done') { setTool(null); return; }
         if (act === 'clear') { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); refreshMeasureBanner(); return; }
-        if (act.startsWith('buffer:') && tool.pts.length) bufferSelect(tool.pts[tool.pts.length - 1], +act.slice(7));
       },
       onDeactivate() { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); },
     });
@@ -312,7 +297,7 @@
     const dep = s.map(p => p.z - p.san.inv), wd = [...new Set(w.map(p => p.wat.d).filter(Boolean))].sort((a, b) => a - b);
     const r = (a, f = 1) => a.length ? (Math.min(...a) === Math.max(...a) ? Math.min(...a).toFixed(f) : `${Math.min(...a).toFixed(f)}–${Math.max(...a).toFixed(f)}`) : '';
     const sw = col => `<span class="lg-line" style="background:${col}"></span>`;
-    return `<span class="pd-row">${sw(tok(MM().EXIST_STYLE.sanitary.color))}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong>` : 'No sanitary sewer within 12 m of the line'}</span>
+    return `<span class="pd-row">${sw(tok(MM().EXIST_STYLE.sanitary.color))}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong> <span class="muted">(ground − invert; ground from ${esc([...new Set(s.map(p => EL().shortLabel(p)))].join(' and '))})</span>` : 'No sanitary sewer within 12 m of the line'}</span>
       <span class="pd-row">${sw(tok(MM().EXIST_STYLE.water.color))}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
   }
   // Streets and watercourses the line crosses (OpenStreetMap, or the provincial watercourses
@@ -364,16 +349,22 @@
     xs.forEach((x, k) => L.circleMarker([x.lat, x.lng], { radius: 4, color: XING[x.kind].color, weight: 2, fillColor: XING[x.kind].color, fillOpacity: 0.9, interactive: false })
       .bindTooltip(`<b>${k + 1}</b> ${esc(x.name || (x.kind === 'water' ? 'Watercourse' : 'Street'))}`, { permanent: true, direction: 'right', offset: [5, 0], className: `pt xing-lbl xing-${x.kind}` }).addTo(xingLayer));
   }
+  // Where along the line each source applies: one entry per run, so the label changes at the
+  // edge of the lidar coverage.
+  function sourceRunsHTML(prof) {
+    const runs = EL().sourceRuns(prof);
+    return `<span class="pd-row elev-src" data-runs="${runs.length}">${runs.map(r => `<span class="elev-run elev-${r.source || 'none'}">${esc(r.label)}${r.project ? ` (${esc(r.project)})` : ''}${runs.length > 1 ? ` <span class="muted">${fmtDist(r.from)}–${fmtDist(r.to)}</span>` : ''}</span>`).join(' · ')}</span>`;
+  }
   let elevSeq = 0;
   async function fillElev(pts) {
     const seq = ++elevSeq;
     try {
-      if (pts.length === 1) { const z = await elevAt(pts[0].lat, pts[0].lng); if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${z.toFixed(1)} m</strong> <span class="muted">above sea level · tap another point for a profile</span>`; return; }
+      if (pts.length === 1) { const r = await ground(pts[0].lat, pts[0].lng); if (r.z == null) throw new Error('unavailable'); if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${r.z.toFixed(1)} m</strong> <span class="muted">above sea level · ${esc(r.label)} · tap another point for a profile</span>`; return; }
       const prof = await elevProfile(pts); if (seq !== elevSeq || !$('#tp-elev')) return;
       let cum = 0; const marks = pts.map((p, i) => { if (i) cum += map.distance(pts[i - 1], p); return { d: cum, c: ptColor(i, pts.length), l: ptLetter(i) }; });
       const a = prof[0].z, b = prof[prof.length - 1].z, D = prof[prof.length - 1].d, zs = prof.map(p => p.z);
       const head = `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m</span>`;
-      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, 96, marks)}<span class="muted small">Looking up sewers, watermains, streets and watercourses along the line…</span>`;
+      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, 96, marks)}${sourceRunsHTML(prof)}<span class="muted small">Looking up sewers, watermains, streets and watercourses along the line…</span>`;
       const [pipes, xs] = await Promise.all([pipesAlong(prof).catch(() => null), crossingsAlong(pts).catch(() => undefined)]);
       if (seq !== elevSeq || !$('#tp-elev')) return;
       drawCrossings(xs || []);
@@ -381,8 +372,8 @@
         <span class="pd-row mpt-key">${marks.map(m => `<span><i style="background:${m.c}"></i>${m.l}${m.d ? ` ${fmtDist(m.d)}` : ''}</span>`).join('')}</span>
         ${xs === null ? '<span class="pd-row muted">Line too long to look up crossings</span>' : xs ? crossingsHTML(xs) : '<span class="pd-row muted">Streets and watercourses did not load.</span>'}
         ${pipes ? pipeDepthHTML(prof, pipes) : '<span class="muted small">Sewer and watermain layers did not load.</span>'}
-        <span class="muted small">Ground: terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m), so depths are approximate. Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed). Streets: OpenStreetMap. Watercourses: ${CN() && CN().watercourseSource ? CN().watercourseSource() : 'OpenStreetMap'}.</span>`;
-    } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (terrain tiles did not load).</span>'; }
+        ${sourceRunsHTML(prof)}<span class="muted small">${esc(EL().sourcesNote(prof))}${prof.some(p => p.source === 'terrain') ? ' Depths over the terrain-tile stretch are approximate.' : ''} Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed). Streets: OpenStreetMap. Watercourses: ${CN() && CN().watercourseSource ? CN().watercourseSource() : 'OpenStreetMap'}.</span>`;
+    } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (neither the lidar service nor the terrain tiles answered).</span>'; }
   }
   map.on('click', e => {
     // Phase 3b: registered tools (select, measure, trace, test-a-site, inspect point,

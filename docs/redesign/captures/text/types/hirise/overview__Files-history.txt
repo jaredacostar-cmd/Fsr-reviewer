@@ -1,0 +1,131 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+1580 and 1650 Dundas St E. · Mississauga · 2 Under review
+
+At a glance
+Files & history ↓
+
+Under review: from the status of 21T-M 22-4 (“WITHHELD”), OZ/OPA 22-22 (“OMB APPEAL”)
+
+3,027
+units
+planned
+8,170
+people
+at build-out
+56
+jobs
+on the site
+2,506
+m²
+retail / commercial floor area
+46.2
+L/s
+water max day
+27.6
+L/s
+average dry weather
+84.1
+L/s
+peak dry weather
+86.5
+L/s
+peak wet weather
+
+Tree count
+21T-M 22-4: 3,027 (same land, counted once (largest of 2))
+
+Flows at Peel design criteria, as in a functional servicing report; jobs from the floor area the applications state (250 L/job/d water). Below: the proposal, its files and history, and the site.
+
+Screening summary
+💧 Water Zone 2: this site is 4% of the zone's build-out max day Water →
+🚰 Wastewater sewer pipes not assessed · G.E. Booth WRRF (Lakeview) reserve 30.4 ML/d — this site 10% of it Wastewater →
+🏗 DC works Served by the existing network · 6 planned works nearby DC Analysis →
+🚩 Next milestone Under appeal — next: Approved, after the Tribunal decides Files & history ↓
+About
+Files & history
+Site
+Status
+Under review
+Phase
+
+2 Under review
+
+Status
+
+Under review: from the status of 21T-M 22-4 (“WITHHELD”), OZ/OPA 22-22 (“OMB APPEAL”)
+
+Stalled: no activity since 2022-09-21 (4.1 years), while under appeal.
+
+Under appeal to the Ontario Land Tribunal (formerly the OMB / LPAT) — the decision rests with the Tribunal · OZ/OPA 22-22 (“OMB APPEAL”)
+
+Applications in this development
+2 files · open one on its own
+2
+21T-M 22-4 · SUBDIVISION · WITHHELD · 3,027 units
+same land: use + draft plan · medium confidence
+2
+OZ/OPA 22-22 · REZONING · OMB APPEAL · 3,027 units
+same land: use + draft plan · medium confidence
+
+Files in tree order: each sits under the file whose land holds it, with the rule that linked them and its confidence; files on the same land sit side by side. The development counts its units once, from the tree (Settings › Counting). Open a file to see its branch on its own.
+
+How the phase was set
+Under review · from OZ/OPA 22-22
+
+Approved means a site plan is approved, or a plan of subdivision is registered: zoning, official plan, draft subdivision and condominium approvals keep the site under review; demolition permits don't count. Otherwise the site shows the furthest phase reached by any of its files that is not withdrawn — here OZ/OPA 22-22 (★), from its status.
+
+Approvals by stage
+Stage	Furthest	Latest submission
+Official plan / zoning / subdivision
+2 files
+	2 Under review
+OZ/OPA 22-22
+	OZ/OPA 22-22
+2022-09-21 · under review
+Under appeal at the Ontario Land Tribunal (OZ/OPA 22-22: “OMB APPEAL”): the Tribunal, not council, will decide.
+Each file: published status and how it was read (2)
+
+Statuses are as each municipality publishes them; phases are this app's reading of them (open the ⓘ for the rules). A screening view — confirm against the file before relying on it.
+
+History
+since 2022 · 2 council
+1
+Inception
+2022-09-21
+2
+Under review
+reached
+3
+Approved
+4
+Permit issued
+5
+Under construction
+✓
+Completed
+Under appeal to the Ontario Land Tribunal (formerly the OMB / LPAT) — the decision rests with the Tribunal
+OZ/OPA 22-22 (“OMB APPEAL”)
+Status withheld in the municipal data
+21T-M 22-4 (“WITHHELD”)
+Key events
+All dated events (3)
+2023 2 council
+09-18
+Council
+Carried · Planning and Development Committee · item 6.5 Recommendation report Carried 10–0
+RECOMMENDATION REPORT (WARD 1)
+06-26
+Council
+Public meeting held · Planning and Development Committee · item 7.2 Public meeting Carried 8–0
+PUBLIC MEETING INFORMATION REPORT (WARD 1)
+2022 1 file
+09-21
+File
+1
+Inception · Submission date — OZ/OPA 22-22
+
+Phase changes from the weekly check; council and committee items that name the files (agendas and minutes since 2019); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.
+
+Source records
+2 files by type

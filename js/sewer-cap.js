@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs, PIPE_RESULTS, SCREEN_NOTE } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, dot, token, uLs, PIPE_RESULTS, SCREEN_NOTE, pipeClass } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -138,7 +138,7 @@
   const fbText = (dMm, r) => { const f = freeboard(dMm, r); return !f ? 'n/a' : r >= 1 ? 'none (surcharged)' : `${fmtNum(Math.round(f.mm))} mm (${Math.round(f.pct)}% of D)`; };
   function pipeTip(i) {
     const s = pipeStats(i), p = s.p, D0 = MM().SEW.data;
-    if (!PIPE_RESULTS) return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}<br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}<br><span class="muted">Pipe-by-pipe capacity results are hidden: the Region's model is the authority</span>`;
+    if (!PIPE_RESULTS) return window.PeelUtil.hoverCard({ kind: `Sanitary sewer${p[7] ? ` · ${p[7]}` : ''}`, name: `${p[0]} mm sanitary sewer`, value: fmtNum(Math.round(s.then.pop)), sub: `people upstream${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}`, html: `<span class="muted">${esc(D0.materials[p[8]] || '')} · pipe-by-pipe capacity results are hidden: the Region's model is the authority</span>`, also: 'Sewer profile from its scope' });
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
       <br>Slope ${(p[1] * 100).toFixed(3)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : s.badSlope ? 'n/a (published slope not reliable)' : 'n/a (no slope)'}
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}
@@ -172,12 +172,11 @@
     if (!PIPE_RESULTS || !MM().SEW.data || p.lat == null) return null;
     const G = sewerGrowth(); const k = G.devPipe.get(p) ?? nearestPipe(p.lng, p.lat);
     if (k < 0) return null;
-    // Local: the first 3 km of the path; downstream: the rest to the plant.
-    let local = null, trunk = null, n = 0, dist = 0;
+    // Local vs trunk by pipe size (pipeClass: 750 mm and over is trunk), not by distance.
+    let local = null, trunk = null, n = 0;
     for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) {
       const s = pipeStats(i); n++;
-      const c = MM().SEW.data.pipes[i][10]; dist += DI().dcM([c[0], c[1]], [c[c.length - 2], c[c.length - 1]]);
-      const slot = dist <= 3000 ? 'local' : 'trunk';
+      const slot = pipeClass(MM().SEW.data.pipes[i][0]);
       if (s.r1 != null) { if (slot === 'local' && (!local || s.r1 > local.r1)) local = { i, ...s }; if (slot === 'trunk' && (!trunk || s.r1 > trunk.r1)) trunk = { i, ...s }; }
     }
     return { first: k, local, trunk, worst: [local, trunk].filter(Boolean).sort((a, b) => b.r1 - a.r1)[0] || null, n };
@@ -278,7 +277,7 @@
         <tbody>${up.slice(0, 50).map(r => `<tr class="ld-row" data-dev="${esc(r.dev.key)}" tabindex="0"><td>${dot(r.dev.phase)} ${esc(r.dev.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[MM().svcLayerOf(r.dev)]}"></span>${esc(MM().LAYER_NAME[MM().svcLayerOf(r.dev)])} · ${esc(r.dev.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       <p class="small muted">Existing: ${fmtNum(p[4])} people upstream (2021 Census) at peak dry weather, ${s.today.f !== 1 ? `scaled ×${s.today.f.toFixed(2)} to the plant's 2025 measured flow (capacity check)` : 'at design rates'}; growth since the census at Peel design peak wet weather (Harmon, employment rates, I&amp;I ${App().state.criteria.wastewater.infiltration} L/s/ha on its site area). Full-pipe capacity by Manning (n 0.013) on the published slope. A screen for where to look, not a hydraulic model: existing wet-weather inflow and infiltration, surcharge, storage and relief sewers are not modelled. Developments join the nearest sewer of 300 mm or more.</p>`;
     TS().loadsOf = { pipe: i };
-    TS().toolResult('pipe', `${p[0]} mm sanitary sewer`, html, () => showPipeLoads(i));
+    TS().toolResult('pipe', `${p[0]} mm sanitary sewer`, html, () => showPipeLoads(i), { ref: `pipe:${i}`, devKeys: up.map(r => r.dev.key) });
   }
 
 
@@ -342,7 +341,7 @@
   // SWMM 5 model of the wastewater blocks (was a per-panel export-bar button; now a top-bar Export menu item).
   function exportSwmmModel() {
     if (!App().state.svcModel) return;
-    const go = () => Ex().download(`peel-blocks-swmm-${MA().getCapYear() == null ? 'buildout' : MA().getCapYear()}.inp`, swmmInp(), 'text/plain');
+    const go = () => Ex().download(`peel-blocks-swmm-${MA().getCapYear() == null ? 'buildout' : MA().getCapYear()}.inp`, window.PeelUtil.CSV_DISCLAIMER.replace(/^# /gm, ';; ') + swmmInp(), 'text/plain');
     if (!MM().SEW.data) loadSewers().then(go); else go();
   }
 

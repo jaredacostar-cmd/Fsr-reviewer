@@ -450,9 +450,10 @@ from street zoom (14), up to 3,000 in view.
   build-out). **Cancelled:** the same without that one project; the growth held back is given in
   people (each constraint's own rate) and units (the approved and proposed developments' average
   persons per unit) at the chosen year and at build-out; developments that would connect to a new
-  main count in full. **Recommendations:** Keep · advance (online after the capacity runs out),
-  Keep, Keep · could defer (nothing held back until 5+ years after it is due), Review (nothing
-  held back by build-out in this screen); the five largest impacts are listed first. Tap a row
+  main count in full. **Screening results** (not Region decisions): Screens late (in service
+  after the capacity runs out), Screens in time, Screens well ahead of need (nothing constrained
+  until 5+ years after it is due), No modelled need (nothing constrained by build-out in this
+  screen); the five largest impacts are listed first. Tap a row
   for each constraint's timeline (demand, capacity with and without, flow diverted to it) and
   *Show on the map*; CSV export with the impact by year. A screen to rank and question projects:
   condition, I&I reduction, servicing beyond today's applications and cost are not in it.
@@ -1434,6 +1435,398 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Tokens and accessibility
+
+From design audit, Group 11:
+
+- **Text on the accent passes WCAG AA.** A new `--on-accent` token is used by every rule that
+  paints text on an accent fill: active chips, buttons and tabs, and the active view switch.
+  - Dark theme: dark text on the light-blue accent, 7.9:1. White on #6da7ec was 2.5:1.
+  - Light theme: white text on a deeper accent (#2269c0), 5.4:1.
+- **Light-theme tokens.**
+  - Muted text goes from #77756f to #6b6963: at least 4.7:1 on every surface. It was 3.97:1
+    on surface-2.
+  - The accent goes from #2a78d6 to #2269c0: at least 4.7:1 on every surface. It was 4.30:1
+    on surface-1.
+- **44 px tap targets on a phone.** Every visible control was measured in the browser at
+  390 px. The phone rule now covers:
+  - buttons, chips, tabs and form fields;
+  - disclosure summaries, the stage buttons and the timeline toggle;
+  - the map's zoom, north and tool-rail buttons. The rail goes to two columns so it still
+    fits the phone map.
+
+  Exempt: inline text links, map markers, and chart segments that only carry a tooltip.
+- `tests/tokens-a11y.test.js` reads the tokens from the stylesheet and checks the WCAG ratios
+  directly.
+
+## Trust signals: one note, every export, the criteria stamp, provenance
+
+From design audit, Group 10:
+
+- **One screening note, in the required wording:** "**General screening results only.**
+  Peel's W&WW Infrastructure Planning team must validate or confirm all results."
+  (`PeelUtil.SCREEN_LINE`, `SCREEN_NOTE`, `SCREEN_NOTE_SHORT`).
+  - It is pinned once at the top of the analysis panel, so every tab, sub-view and tool
+    result sits under it. The panes' own copies are hidden.
+  - It also appears in the development panel, presentation mode, and the footer of every
+    report: the briefing, memo, area report and comparison.
+- **The criteria stamp.** Every result names the criteria it uses: "Peel design criteria:
+  Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023)"
+  (`PeelUtil.CRITERIA_STAMP`). It appears in the note, the reports, the exports and the
+  workbook summary.
+- **Every export carries the disclaimer, the note and the stamp:**
+
+  | Export | How |
+  |---|---|
+  | CSVs (developments, allocations, corridor, batch, DC timing, funding) | three `#` lines at the top |
+  | GeoJSON (developments, servicing areas, planned works) | `disclaimer`, `screening` and `criteria` properties on the collection |
+  | SWMM and EPANET `.inp` model files | comment lines |
+  | Excel workbook | Summary sheet |
+
+- **Provenance on every exported row.** The developments CSV, GeoJSON and workbook gain
+  `source_portal`, `source_record_url` and `source_pulled_on`, taken from the development's
+  latest file. A missing value reads "not recorded", never blank. The Files tree view is owned
+  by the tree work and is unchanged.
+
+## Presentation mode
+
+From design audit, Group 9:
+
+- **Any scope.** Present shows whatever is open: Peel, a municipality or area, a servicing
+  scope (a plant, station, block or zone) or a development. It takes that view's Overview
+  headline and first four tiles. Entering it no longer closes the development.
+- **Only Exit.** The top bar, the analysis panel, the tool rail, the time bar, the test-site
+  bar and the map's own controls are hidden. The map takes the whole screen. Esc also leaves.
+- **Readable on a projector.** The headline is about 30 px and the tile numbers 44 px. On a
+  phone the tiles stack in one column.
+- **The screening note and the data date** sit at the foot: "General screening results only.
+  Peel's W&WW Infrastructure Planning team must validate or confirm all results. · Data
+  2026-10-12 · Unofficial prototype…".
+- **Light by default.** Projectors wash out dark themes, so presentation switches to the light
+  theme and restores yours on exit. To keep the app theme, set Settings › Display ›
+  Presentation › *Same as the app*.
+
+## Chart and table forms
+
+From design audit, Group 8:
+
+- **11 px minimum, measured.** Text sizes were measured in the browser on every analysis view
+  at desk and phone sizes:
+  - **Chart labels** were drawn at 11 units, but the charts scaled down to fit the panel, so
+    they rendered at 5–9 px. This affected the DC charts, the Growth timing band and the plant
+    Horizon chart. Charts are now drawn at the panel's own width (`PeelUtil.chartW`), so 11
+    units render as 11 px. On narrow screens the label column shrinks and names are trimmed
+    to fit.
+  - **Small text** (`<small>` lines and unit suffixes) in the analysis and detail panels was
+    8–10 px. It now never goes below 11 px.
+- **Plant figures in a table.** Each plant bar on Wastewater › Plants used to carry four lines
+  of prose. One table under the bars now holds the same figures:
+
+  | Column | What it shows |
+  |---|---|
+  | Plant | name, with population at 100% under it |
+  | Rated | rated capacity |
+  | Committed | % and ML/d |
+  | Reserve (D-5-1) | uncommitted reserve, ≈ people |
+  | After proposed | room left after proposed growth |
+
+  Water's treatment chart uses the same table, with "Room to rated".
+- **Plants pane shortened.** The stage-by-stage "Plant inflow by growth layer" table folds
+  behind a summary line. The pane drops from 5,177 to 2,539 px at desk (5,678 → 3,018 on a
+  phone).
+- **Colour is never the only signal.** The pumping-station and allocation mini bars say
+  "over" or "short" in words next to the value, and a % bar has a 100% tick. The DC funding
+  screen colours became neutral in Group 2.
+- **No future years.** "≈N/yr completed 2017–2027" was caused by a completion dated in the
+  future. It now stops at the data year.
+- **See all after 10** on the pumping-station table. The DC tables and the Developments list
+  already had it. The Files tree is owned by the tree work and is unchanged.
+- **Ranges** whose two ends round to the same number show one number (Group 2).
+
+## One home for tool results, and the top bar
+
+From design audit, Group 7:
+
+- **One home for tool results.** Results from the **sewer trace** and from **Test a site**
+  (the form, its servicing check and the list of test sites) now open in the **Tool result**
+  tab, with a trail crumb such as "Peel › Sewer path" or "Peel › Test site 1". They used to
+  open in the right-hand detail panel.
+  - The detail panel is used only when the tool framework is absent.
+  - Every other tool already used the Tool result tab.
+- **Inspect point and Fit fixed.** Both use the sewer trace. The trace returned nothing and
+  opened a panel as a side effect, so Inspect's sewer-path section was empty. The trace now
+  comes back to them with no panel.
+- **Test sites don't outlive the tool.**
+  - A test site that is placed and then closed unchanged is removed with its result.
+  - A test site that was edited or counted in the totals stays. The bar under the map lists
+    it, with Remove.
+- **Top bar**, left to right:
+
+  | Group | Controls |
+  |---|---|
+  | Navigation | name · trail · search |
+  | View | view switch · Scenario |
+  | Output | Export ▾ · Present ▾ |
+  | Help and settings | Help · ⚙ |
+
+  - **Present ▾** holds Present and Time-lapse; the separate Time-lapse button is gone.
+  - **Export ▾** gains *Save this view…*; the Save button in the Layers card is gone. Saved
+    views still open from the Layers card and the chips above the filters.
+  - The **Executive briefing** is an Export item. The Overview keeps it as a link, not a big
+    accent button.
+  - **Search** moves into the top bar at 1600 px and wider, the projector and wide desks. It
+    stays at the top of Explore on narrower screens. It is one search box, moved, not copied.
+  - On a phone, every top-bar control and menu item is at least 44 px.
+
+## Scope-aware tabs and duplicates removed
+
+From design audit, Group 6:
+
+- **Peel-wide, said out loud.** Water, Wastewater and DC show Peel-wide tables. Below Peel
+  scope, a note at the top says so. "Below Peel" means a municipality, a planning area, a zone
+  or block filter, or a servicing scope.
+  - It reads: "Peel-wide. Plants, blocks and pumping stations serve all of Peel, so these
+    tables are not filtered to Brampton."
+  - It then links the plants or zones the scoped developments load, with counts. For example,
+    "G.E. Booth (750) · Clarkson (122)" opens each one as a servicing scope.
+  - At development scope these tabs show the site's own figures instead, so no note is needed.
+- **Area-only content at development scope.** Growth's *Census & 2051* and *Timing* views
+  describe an area, not one development. At development scope they now say so and point to
+  the trail, instead of showing Peel-wide figures.
+- **Duplicates removed:**
+  - The **view switch** is only in the top bar; it is gone from the Layers card. The tour's
+    map-views step points at the top bar.
+  - **Present** is only in the top bar; the map's own button is gone.
+  - **Select within a distance** is only in Select › Radius; it is gone from Measure.
+- **Needs attention** no longer lists newly listed files that are already completed. This week
+  still has them.
+
+## Servicing scopes: the servicing ladder
+
+Plants, pumping stations, wastewater blocks, pressure zones and the South Peel water system are
+now **scopes**, like a municipality or a secondary plan (design audit, Group 5; `js/svc-scope.js`).
+Before this change, tapping one gave a "What loads this?" tool result.
+
+| Ladder | Trail |
+|---|---|
+| Wastewater | Peel › plant › pumping-station catchment, or block (with everything upstream) |
+| Water | Peel › South Peel water › pressure zone (well-based zones stand alone) |
+
+**Opening a scope.** You can open one by:
+- tapping it on the map ("What loads this?" now opens the scope);
+- tapping a plant or South Peel water in the Peel Overview's capacity bars;
+- searching for its name (plants, stations, blocks and zones are all searchable);
+- following a link in another scope's ladder;
+- following a share link (`ss=`).
+
+**What a scope does.**
+- It filters the developments to those it serves.
+- It adds its rungs to the trail. Each rung opens that level, and "Peel" clears the scope.
+- Its Overview shows:
+  - a headline;
+  - headroom tiles:
+
+    | Scope | Headroom tiles |
+    |---|---|
+    | Plant | rated, % committed, uncommitted reserve and people, 90% trigger year |
+    | Station | firm capacity vs peak wet (the check) and peak dry (reference) |
+    | Block | average dry at the census vs build-out; upstream count; outlet sewer size and class (capacity not assessed) |
+    | Zone, water system | maximum day |
+
+  - the **servicing ladder both ways**:
+
+    | Scope | Ladder links |
+    |---|---|
+    | Plant | its stations ranked by % of firm; the blocks arriving at it |
+    | Block | drains to (up); fed by (down) |
+    | Station | pumps to (up) |
+    | Zone | supplied by (up) |
+    | Water system | its zones (down) |
+
+  - the developments loading it, largest peak first, with *See all* and *Area report*;
+  - the planned DC works in it.
+
+From the Peel Overview, "the most loaded station and the developments driving it" now takes two
+taps: the plant, then the top station.
+
+## Pipe class and "not assessed"
+
+Pipe-by-pipe sewer results are off (`PIPE_RESULTS = false`). Before the design audit's Group 4,
+they were hidden in the interface but still drove the outputs: sewer pipes at 90%+ of full
+capacity formed "sewer groups" that fed DC timing, the funding screen, the workbook and the
+briefing. They no longer do (design audit, Group 4):
+
+- **Not assessed, not "no constraint".** With pipe results off, `allNeeds()` builds no sewer
+  groups. The development's DC needs say "Sewer pipes: not assessed (pipe-by-pipe capacity is
+  left to the Region's hydraulic model)" instead of "No sewer on its path reaches 90%". The
+  Overview's wastewater line says "sewer pipes not assessed". The DC method note says no sewer
+  main is tested.
+- **What it changes (Peel, default scenario).** DC Timing goes from 54 projects (5 screening
+  late) to 33 (0 screening late). The difference is the sewer-group mains and their timing
+  flags. Plants, pumping stations, water treatment, storage and connecting developments are
+  unchanged.
+- **Class by size, not distance.** Local vs trunk was "the first 3 km of the path" vs the rest.
+  It is now the pipe's diameter. **Trunk is 750 mm and over**, the smallest "primary wastewater
+  main (trunk)" on the Region's 2026 DC capital maps (`PeelUtil.TRUNK_MM`, `pipeClass`). The FSR
+  check reads "Local sewers (under 750 mm)" and "Trunk sewers (750 mm and over)".
+- **Stale model fixed.** If the DC tab was opened while data was still loading, a render could
+  run before the servicing lookup was filled. It then threw, and the model stayed one built
+  without the 2025 annual reports, so DC timing had no plant constraints. `lakeZones()` now
+  skips zones not yet loaded. The model is rebuilt once the reports arrive. Every cache keys on
+  the model's generation (`svcGen` in `scenarioKey()`).
+
+## Capital schedule currency: status, "as of" and one dollar year
+
+Every planned date comes from the 2026 DC capital maps (draft v2, **as of March 2026**). In May
+2026 Regional Council paused all new growth-related water and wastewater capital procurements
+from **June 11, 2026**, until upper levels of government commit funding
+([Council report, May 28, 2026](https://pub-peelregion.escribemeetings.com/filestream.ashx?DocumentId=45699)).
+Each planned work now shows a status (`PeelUtil.capitalStatus`):
+
+| Status | Rule |
+|---|---|
+| **Paused** | Proposed for 2027 or later: not yet tendered, so its procurement is on hold |
+| **Status unknown** | In the 2026 budget (approved 2026, or a plant step Council already funded): paused only if not tendered or awarded by June 11, 2026 |
+| **Scheduled** | Known to be going ahead: set per project number in `CAPITAL.overrides` (none yet) |
+
+Shown on the DC Timing and funding tables (with "Online — draft, as of March 2026"), every DC
+relief text (Water, Wastewater, the briefing, the memo), the planned-works map tooltip and the
+development brief; a pause note heads each DC sub-view, the briefing's DC section and the memo's
+DC needs. The CSVs carry an "Online (draft, as of March 2026)" and a "Capital status" column.
+The analysis itself still replays the draft schedule: the status says how far to trust each date.
+
+**One dollar year (2026$).** The DC Timing cost column was 2020$ and the funding views 2026$; all
+are now 2026$: the 2020 study's costs indexed by the Region's DC rate indexing (×1.40 wastewater,
+×1.35 water, August 2026 over 2020), and G.E. Booth's $130 M (2024$) indexed from 2024 at the same
+average annual rate (≈×1.12).
+
+## Screening wording and the public version
+
+Results say what the screen shows, never what the Region should do (design audit, Group 2). One
+set of labels (`PeelUtil.SCREEN`) is used on the DC tab, the briefing, the memo, the workbook and
+the CSVs:
+
+| Was | Now |
+|---|---|
+| Keep · advance / "bring it forward" | **Screens late** (in service after the capacity runs out) |
+| Keep | **Screens in time** |
+| Keep · could defer | **Screens well ahead of need** |
+| Review | **No modelled need** |
+| Keep / Defer (funding) | **Within / Outside the funding screen** |
+| Over-committed | **Screens over rated capacity** |
+| Recommendation / Decision column | **Screening result** |
+| Servicing verdict / Verdict | **Screening summary** |
+
+"Held back" figures read "people the screen shows constrained". A range whose two ends round to
+the same number shows one number (no "65,100–65,100"). The funding screen's within / outside
+colours are neutral (accent / grey): they are not capacity states.
+
+**Public version** (Settings › Number conventions › *Public version*, or add `?public` to the
+link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on Timing), the
+screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
+the screening summary to plain text. Everything else is unchanged.
+
+## Applying the tree: Step B0 review workbook
+
+This is the review before the containment tree (`js/tree.js`, PR #180) feeds the app's counts.
+It is **report only: the app is unchanged.** The plan is in `docs/apply-tree-plan.md`.
+
+```
+node scripts/tree-review.js          # → docs/tree-review/tree-review.json (git-ignored)
+python3 scripts/tree-review-xlsx.py  # → docs/tree-review/tree-review.xlsx
+```
+
+**What a row is.** One row per **change group**: the app development(s) and the tree(s) that
+share files with them. Each row has:
+- app units (the header's definition) vs tree units, and the change;
+- the counting rule;
+- the weakest link's confidence;
+- the primary plan and its share;
+- the receiving plant and block;
+- flags;
+- three yellow **your call** columns: Accept / Override / Ask, override units, and reason or
+  source.
+
+**Sheets.**
+- Read me, Summary, Changes (largest first), Pre-consultation estimates, All groups.
+- The audit lists: double counts, unit mismatches, nested files not linked, unclear same-land
+  pairs, condo-only trees, orphans, low-confidence links, straddling plans, reversed dates,
+  counts to find.
+
+**Flags.**
+- **estimate (pre-consultation):** every file stating a count is a pre-consultation, by role or
+  by its PRE file number. Large ones are promoted to block-plan roots but are still flagged.
+  Decided: these count, as proposed only, never committed.
+- **count from data/unit-lookups.json**
+- **low-confidence link**
+- **children exceed parent**
+- **straddles plans:** the primary plan holds less than 90%.
+
+**Decisions** go into `data/tree-overrides.json`. Each override is keyed `Municipality|ROOT-FILE`,
+with `units`, `reason`, `source` and `decidedOn`. Overrides apply to the workbook's "after
+overrides" totals now, and to the app at Step B1.
+
+**Tree rules fixed after the first review (2026-10-15):**
+- **Building permits count when no file states a count.** 121 groups had dropped to 0; this
+  brings it to 94. The other 81 are replacement houses, which correctly count 0. Example:
+  11261 Chinguacousy keeps 456 units, all permitted. Permits are still never counted for a
+  replacement or model house.
+- **A minor file's own stated count counts,** not only the number found in its wording.
+- **The remaining drops to 0 are mostly correct.** The app was still counting withdrawn files.
+  Example: 2 Bartley Bull's 330 units come from OZS-2021-0010, which is cancelled.
+
+**Your bulk accepts (2026-10-15).** These are recorded in `data/tree-overrides.json` as
+`accepted`:
+- counts found where the app had 0;
+- splits, unless the count drops by 100 or more;
+- drops to 0 (replacement houses, no new homes, withdrawn files);
+- pre-consultation estimates under 1,000 units;
+- new trees and gone developments;
+- small or well-linked changes.
+
+**Left for you: 24 groups** on the workbook's **To review** sheet:
+- 10 large pre-consultation estimates (1,000+ units);
+- merges and regroupings that move 100+ units;
+- splits and count changes that lower a count by 100+.
+
+Every row carries a pre-filled call and the reason for it.
+
+**Results** (snapshot 2026-10-12): Peel app 247,760 → tree 266,947 units (+19,187, +7.7%).
+- 3,284 groups: 227 go up, 131 go down, 2,926 are unchanged.
+- 88 groups are pre-consultation estimates, totalling 36,543 units.
+
+## Definitions (one table, used everywhere)
+
+The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use
+these definitions. In the app they're in the **Definitions** card (Overview ⓘ line).
+
+| Term | Definition |
+|---|---|
+| Existing | Census population (and jobs) on census day |
+| Built since census | Completed after census day, by the building permit completion date (estimated for Brampton and Caledon) |
+| **Committed** (MECP D-5-1) | Registered or draft-approved plans of subdivision, plus site plan approved where there is no subdivision, through permit and construction. Approved zoning alone is not committed. A development still in review is committed when its most recent subdivision file is draft-approved or registered; a newer subdivision file in review means the land is being re-proposed. The servicing layer is called *Committed*; the phase *Approved* still means site plan approved. |
+| Proposed | Pre-consultation, inception and review, not committed |
+| Allocated | Only the allocations you record. Peel publishes no allocation list. |
+| Planned units | Each development's units counted once (the larger of planned and permitted), net of homes demolished |
+| Permitted / left to build | Units with a building permit / planned units with no permit yet |
+| Uncommitted reserve (D-5-1) | Rated capacity − (existing + built + committed), to **100%** of rated |
+| Room to the trigger | **90%** of rated (2020 Master Plan expansion trigger) − (existing + built + committed) |
+
+**Pairings:**
+- Wastewater plants: rated (annual average) capacity against average flow. The flow is the **annual average** in Capacity check (the plant's 2025 measured rate) and **ADWF** in Design flows. The label follows the mode.
+- Pumping stations: firm capacity against **peak wet weather flow**. Peak dry is shown for reference only.
+- Water treatment: rated capacity against **maximum day** (design ×1.8, or the 2025 observed factor; the label follows the switch).
+- Pumping into zones: firm capacity, or the Master Plan's modelled actual firm where given. Facilities show both.
+- Capacity bars mark the 90% trigger (dashed) and 100% rated (solid).
+
+**Basis chips:**
+- *Design*, *2025 measured*, *Master Plan 2020*, or *Mixed basis* (dashed) on each capacity figure.
+- Hover a chip for its parts.
+
+**Other changes:**
+- The diversion switch, counting basis and outside-area rule are part of the scenario cache, so a result never outlives its scenario.
+- The diversion counts from its start year (Horizon's diversion year, default 2028): not in today's existing flow before then.
+
 ## Population and demand criteria (`js/demand.js`)
 
 | Parameter | Default | Source |
@@ -1801,3 +2194,301 @@ status maps to a phase.
   Brampton datasets are updated irregularly.
 - Phases are inferred from status wording and dates, which differ between municipalities.
   Open the source record in the project panel to check a specific project.
+
+**Chronology rules (proposed, modelled; the app is unchanged).** `js/tree.js` has five date rules.
+They are off unless `chrono` names them (`audit(data, { chrono: { r1, r2, r3, r4 } })`).
+`scripts/tree-review.js` models them step by step, each adding to the ones before, and the
+workbook's **Chronology** sheets show what each changes. On the 2026-10-12 snapshot (Peel tree
+total today 266,947):
+
+| Rule | What it does | Peel units | Groups changed |
+|---|---|---|---|
+| 1 | An undated file (1,544, mostly Brampton site plans) takes 1 July of the year in its file number. The number's year matches the real date within a year for 99% of dated files. | −8 | 110 (mostly regrouping files with no count) |
+| 2 | An approved site plan, condo or draft plan filed 3+ years before a newer pre-consultation, rezoning or block plan on its land is history: its own tree, not the new proposal's child. | +94 | 99 (606 links not made; 466 are pre-consultations) |
+| 3 | Same land, counted once: the latest file replaces the largest only when it is the same stage refiled, covers 90%+ of the earlier land, or (with no boundary) its wording reads as a resubmission; else the largest stands (a phase). | −3,057 | 23 (2 unclear, left at the largest for your call) |
+| 4 | A permit issued 2+ years before the file it would sit under is the old building: not placed. | −10 | 8 (324 permits) |
+| 5 | Each tree's files in filing order, with backwards steps marked (the **Filing order** sheet). | report only | 230 of 976 trees with backwards steps |
+
+With all four, Peel goes from 266,947 to 263,966 (−2,981).
+
+**Resubmission or phase, with no boundary (rule 3).** The later file is scored against the
+largest from its own words:
+- **Buildings:** the same number means a resubmission; fewer means a phase.
+- **Home types:** only some of the earlier file's types means a phase.
+- **Civic addresses:** the same means a resubmission; part means a phase; different means
+  another building on the site.
+- **Wording:** "revised" or "resubmission" against "phase", "tower" or "block".
+- **Counts within 25%:** a resubmission.
+
+Two points or more either way decides; otherwise the pair is unclear and the largest stands.
+The latest file must state its own count (a draft plan counted only through one child is
+not a replacement).
+
+**Step B0 decided (2026-10-15): approve all.** Recorded in `data/tree-overrides.json`:
+- Chronology rules 1–4 are on: `audit()` uses them by default; pass `chrono: {}` for the tree
+  as it was before them.
+- The two unclear same-land pairs keep the largest count (OZ/OPA 24-2, OZ/OPA 10-5).
+- SP 22-75 is overridden to 322 units, from its own description (the record says 457).
+- The 24 To review groups are accepted. So are the 6 roots whose change comes from the rules:
+  - the rule 3 resubmissions (88 Park E, 51 Tannery, 2225 Erin Mills, OZS-2026-0016);
+  - 2 Bartley Bull, already accepted as a withdrawn file.
+
+Final tree totals on the 2026-10-12 snapshot:
+
+| | App units | Tree units | After overrides |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,574 | 90,439 |
+| Brampton | 127,570 | 141,870 | 141,870 |
+| Caledon | 29,379 | 31,522 | 31,522 |
+| **Peel** | **247,760** | **263,966** | **263,831** |
+
+Nothing is left to review. The Decisions sheet lists every call and what you decided.
+
+New sheets: Decisions, Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
+History links, Permits early, Dated from number, Filing order.
+
+## Step B1: tree counts in the app (Previous / Tree switch)
+
+Since GO 2 (2026-10-15), each development's units are the **tree count**: the sum of the trees
+whose root file it holds (`js/tree.js` with the chronology rules, plus `data/unit-lookups.json`
+and your decisions in `data/tree-overrides.json`). Development keys are unchanged; Step B2
+(GO 3) makes the trees the developments.
+
+**How it runs.**
+- `scripts/build-tree-counts.js` writes `data/tree-counts.json` with the weekly snapshot
+  (`site.yml`). Each development key has its units, its trees (root, units, basis, flag) and a
+  signature of its planning files.
+- `js/tree-counts.js` (`PeelTreeCounts`) applies the counts after the developments are built.
+  The browser never builds the trees, which takes seconds.
+- A development keeps its previous count, with the reason shown, when:
+  - it has no tree (12 developments whose only planning files are withdrawn: 2 units);
+  - its files differ from the tree build (a live refresh, or a source turned off);
+  - you entered a count for one of its files.
+- A development whose files are counted in another development's tree shows 0 and names that
+  tree (30 developments).
+
+**Where it shows.**
+- **Settings › Counting:** Tree (new), the default, or Previous. Kept for one release so you
+  can compare.
+- The scenario bar and the top-bar chip say "counting: All units (tree count)" or
+  "(previous count)". Exports and share links carry the same scenario text.
+- The development panel's At a glance has a **Tree count** note: the trees, their counts and
+  flags, and the previous count when it differs.
+
+**What moved** (snapshot 2026-10-12, live developments):
+
+| | Previous | Tree | Change |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,439 | −372 |
+| Brampton | 111,536 | 141,872 | +30,336 |
+| Caledon | 29,379 | 31,522 | +2,143 |
+| **Peel** | **231,726** | **263,833** | **+32,107 (+13.9%)** |
+
+382 developments change. The full list, with the reasons, is in the review workbook
+(`docs/tree-review/tree-review.xlsx`, Changes sheet).
+
+On the default view (active applications, 2021–2026), the Overview goes from 202,264 to
+233,028 units and from 597,100 to 688,600 people.
+
+**Fixed along the way: the Node tools' baseline.**
+- `countUnitsFromText` (`scripts/build-snapshot-index.js`) read unit counts from the
+  descriptions of the Brampton pre-consultation layer. That layer is marked `countUnits: false`,
+  and the browser skips it.
+- So the startup index and the Node tools counted 16,034 units that the full app never shows.
+  Most are pre-consultation estimates: 111 Mayfield's 9,961, and 2,341 at 10884 Winston
+  Churchill.
+- The B0 workbook's "app units" column is now the true previous count (231,726, not 247,760).
+  The tree counts are unchanged.
+- The tree reads a pre-consultation's own figure directly. It counts it only when no other file
+  states one, flagged as an estimate (decision B-a).
+
+## Step B2: the trees are the developments
+
+Since GO 3 (2026-10-15), with Settings › Counting on **Tree**, each tree of files on one land is a
+development. An app development that held unrelated trees splits, and developments that shared
+a tree merge. **Previous** puts back today's developments and counts for one release.
+
+**How it runs.**
+- `data/tree-counts.json` (version 2, built by `scripts/build-tree-counts.js`) lists every tree
+  as a development. Each one has:
+  - its key;
+  - its count and how it was made;
+  - its files in tree order, each with the link that put it there (rule, overlap, confidence).
+
+  The file also maps each planning file to its development, and lists the 1,861 permits the tree
+  places somewhere other than the rest of their site.
+- `js/phases.js` `buildProjects(records, { regroup })` has one new hook. The site, nesting and
+  permit-joining steps run as before; then `js/tree-groups.js` moves the records into their
+  trees' developments. Without the hook nothing changes.
+- **Keys:** a tree keeps the key of the development that held its root file. A second tree of
+  the same development is `<key>~<root file>`. On the 2026-10-12 snapshot:
+  - 23,445 keys are kept;
+  - 824 are new (split-off trees);
+  - 379 are absorbed into another tree.
+- **Saved keys are rewritten on load, and nothing is dropped:**
+  - the watchlist follows its developments (a split watches every part);
+  - an allocation moves to the part with the most units, noting where it came from;
+  - share links, saved views and "Back to" resolve old keys, including branch keys
+    (`<key>#<file>`);
+  - the weekly changes and the phase history are copied to the new keys.
+- **Files view** (Development › Files & history): the tree's files in order. Each sits under the
+  file whose land holds it, with its rule, confidence and overlap. Opening a file opens its whole
+  branch as a sub-development (decided: one development, branches as subs).
+
+**What moved** (live developments, snapshot 2026-10-12):
+
+| | Previous | Tree |
+|---|---|---|
+| Developments | 3,342 | 3,919 |
+| Peel units | 231,726 | 263,831 |
+
+Peel matches the B0 review after your overrides exactly.
+
+On the default view (active applications, 2021–2026), the Overview shows 228,490 units and
+683,700 people with the trees, against 202,264 units and 597,100 people before.
+
+**Tests** (`tests/tree-counts.test.js`):
+- every old key resolves;
+- the watchlist and allocations survive;
+- no record sits in two developments, and none is lost;
+- every planning file is in exactly one development, its tree's;
+- keys are unique;
+- Peel equals the review total.
+
+## Population tables, C1: the plan roll-up engine
+
+`js/plan-rollup.js` (`PeelPlanRollup`, pure, no UI yet) builds Table 1 and Table 5.
+
+**Levels:** Peel → municipality → secondary plan / character area → sub-levels → developments.
+- A nested plan is a sub-level: Bolton Core in Bolton, Malton CN in Malton NHD, and four more.
+- A Brampton precinct sits in the plan holding most of it (29 of 30).
+- "Not in a plan" and "Elsewhere in <plan>" make every parent equal the sum of its children.
+  The `check` column is parent − Σ children, always 0.
+
+**Placement** follows the tree. A tree development is placed by its share of its root file's
+land in each plan (the tree build stores these in `data/tree-counts.json`: `devs[].a`, plus
+`areas` with their nesting). So a development straddling two plans is split by area, not
+assigned whole. With no boundary, or with Previous grouping, it is placed whole by its point.
+
+**Measures** are the Overview's:
+- units from `Growth.pipelineTotals`: planned, permitted, completed, left to build;
+- committed by D-5-1, and proposed;
+- people and jobs from `PeelDemand.estimate` at the chosen basis.
+
+Each development is measured once and its shares multiply it, so Peel equals the Overview.
+`matrix()` gives Table 5: plans down the side, plants or pressure zones across.
+
+**Tests** (`tests/plan-rollup.test.js`), including the full snapshot regrouped into trees:
+- every check is 0;
+- Peel people equal `estimate(set)`, and Peel units equal the header;
+- nested plans are counted once;
+- straddling developments are split by area;
+- shares over 100% are scaled down;
+- matrix rows and columns reconcile.
+
+## Population tables, C2: Table 1, the roll-up (Growth › By plan)
+
+Growth has a new **By plan** sub-view (`js/plan-tables.js`). It shows the developments on screen
+(the Overview's set and basis) by where they are: Peel → municipality → plan → sub-area or
+precinct → developments.
+
+**Columns:**
+- Compact by default: Area, Units, People, Check. This fits the panel.
+- **All columns** adds developments, committed, proposed, left to build, persons per unit, jobs,
+  and people in an MTSA. The MTSA column is an overlay and is never added up.
+
+**Check** is ✓ when a row equals the sum of the rows under it.
+
+**Rows:**
+- Rows expand and collapse; Peel and the municipalities start open.
+- A plan shows 10 developments, with "See all".
+- A development straddling plans appears under each plan with its share, e.g. "(45% of it)".
+- **filter** narrows the map and every tab to that plan.
+
+**Below the table:**
+- the developments split between plans;
+- the nested plans;
+- the precincts with no development in the current set.
+
+**Exports:**
+- **Download CSV** gives one row per area and per development. It has a `path` column
+  (`Peel/Caledon/Bolton/Bolton Core`) and a `share` column, plus the disclaimer, the screening
+  line, the criteria stamp, and the basis and grouping.
+- The workbook gains a **By plan** sheet with the same rows, after Developments.
+- The Developments export gains `plan` (the innermost plan with the largest share) and
+  `plan_shares`.
+
+**On the default view (2021–2026 active):**
+- Peel is 228,490 units and 683,671 people, the same as the Overview and the header.
+- Every check passes.
+- 42 developments are split between plans.
+
+## Population tables, C3: Table 5, plans by plant or pressure zone
+
+Under Table 1 in Growth › By plan, the plans run down the side: each municipality's plans and
+"Not in a plan", the same rows as Table 1. Across the top are either:
+- **Plants:** the plant receiving the wastewater (G.E. Booth, Clarkson, Inglewood, No plant);
+- **Pressure zones:** the first zone, if a development has two.
+
+**Cells and links:**
+- Cells show people at build-out; hover for units.
+- A cell filters the map and every tab to that plan and plant (or zone).
+- A row header filters to the plan, a column header to the plant or zone.
+
+**Totals:**
+- Each row's total equals Table 1.
+- The columns add up to Peel; the ✓ in the corner confirms both.
+- Default view: G.E. Booth 476,611, Clarkson 206,147, Inglewood 55, No plant 859, which add up
+  to 683,671.
+
+The plant capacity tables use census-relative layers; see Wastewater › Plants.
+
+**Workbook:** a new **Plan × servicing** sheet holds both matrices.
+
+## Population tables, C4: plans against their targets (Table 2)
+
+Growth › By plan has a third table, **Plans against their targets**.
+- **Municipalities** are compared with the Region's 2051 allocation of growth (2051 minus 2021,
+  from `data/peel-reports.json`).
+- **Plans** are compared with their published targets in `data/plan-targets.json`.
+- **Units are the main comparison.** The table shows committed units (D-5-1), all proposed
+  units, the percentage of target, and the gap.
+- **People-only targets:** where a target states only people, pipeline people are shown beside
+  it. This is marked † and is indicative only, because targets use household persons per unit
+  while the pipeline uses Peel design criteria.
+- **Density-only targets** are shown but not compared.
+- **Combined targets:** a target covering several plans is compared with all of them, e.g.
+  48 (a)+(b) Countryside Villages, or 40 (a)–(d) Bram West.
+- **No target:** a plan with no published target is left out, never shown as 0. The footnote
+  counts them.
+- **"total"** marks a target that counts every home at build-out, existing ones included.
+
+**`data/plan-targets.json`** holds 15 targets, researched 2026-10-15:
+- 3 state units: Mayfield West, Brookvalley, Alloa;
+- 6 state people and jobs: Heritage Heights, Mount Pleasant, Countryside Villages, Bram West,
+  Highway 427 Industrial, Mayfield West Phase 2 Stage 1;
+- 6 are densities only: Downtown Brampton, Vales of Humber, Humber Station, Mississauga DT Core,
+  Lakeview Waterfront, Ninth Line.
+
+Each has its source, page, date, wording and a note. `leftOut` lists what was not used and why:
+- applicant proposals;
+- the Bolton expansion-area figure;
+- Wildfield and Innis Lake, which have no plan boundary yet;
+- Mississauga's class-wide node densities.
+
+**Not yet checked against the documents.** Every figure was found in search results. The
+municipal sites (brampton.ca, caledon.ca, mississauga.ca and their eScribe meeting portals)
+could not be opened from the session that gathered them. Each one is marked **unchecked** in the
+table (`checked: false`) until someone confirms its wording against the source.
+
+The CSV and the By plan sheet gain target columns: units, population, jobs, density, year,
+scope, % of target and source.
+
+**Tests** check that every target:
+- has a source, a link and its wording;
+- names a real plan;
+- is never 0;
+- is one per plan.
+
+They also check the comparison: committed vs proposed, municipal growth, combined targets, and
+people-only targets.

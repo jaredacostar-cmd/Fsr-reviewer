@@ -116,11 +116,16 @@
     [/withheld/i, 'info', 'Status withheld in the municipal data'],
   ];
   function planApprovedNote(p) {
+    // Zoning approved (a zoning file approved, or a zoning by-law passed at council) with no draft or
+    // site plan approved yet: the development stays under review (SPEC 1.2).
+    const z = p.zoningApproved;
+    if (z && p.rank < P().PHASE_BY_KEY.approved.rank) return `Zoning approved${z.bylaws.length ? ` (By-law ${z.bylaws.slice(0, 3).join(', ')}${z.date ? `, ${z.date}` : ''})` : z.date ? ` (${z.date})` : ''}${z.refs.length ? ` on ${z.refs.slice(0, 3).join(', ')}` : ''}; no draft plan or site plan approved yet`;
     const a = p.planApproved;
     if (!a || p.rank >= P().PHASE_BY_KEY.approved.rank) return '';
     const sp = p.records.some(r => r.kind === 'application' && r.stage === 'siteplan' && r.phase !== 'cancelled');
-    return `Zoning / official plan / subdivision approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no site plan file yet and the plan is not shown as registered'}`;
+    return `Official plan / condominium approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no draft plan or site plan approved yet'}`;
   }
+
   function statusOf(p) {
     const apps = p.records.filter(r => r.kind === 'application');
     const seen = new Map();
@@ -136,14 +141,17 @@
     const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
     const pa = planApprovedNote(p);
     const why2 = pa ? `${why}. ${esc(pa)}` : why;
-    const stalled = PLANNING_PHASES.includes(p.phase) && p.last && Date.now() - p.last > 2 * YEAR_MS;
-    const years = p.last ? (Date.now() - p.last) / YEAR_MS : 0;
+    // SPEC 1.3: active · stalled · under appeal, on the latest file event, permit or council item.
+    const ps = P().proposedStateOf(p);
+    const stalled = !!ps && ps.state === 'stalled', appealed = !!ps && ps.state === 'appeal';
+    const lastAt = P().lastActivityOf(p);
+    const years = lastAt ? (Date.now() - lastAt) / (365.25 * 864e5) : 0;
     const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
     const sig = [...seen.values()].sort((a, b) => RANK[a.kind] - RANK[b.kind]);
     const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check the council and committee items') : '';
     const lastOf = r => r.events.length ? Math.max(...r.events.map(e => +e.date)) : 0;
     const latest = apps.slice().sort((a, b) => lastOf(b) - lastOf(a))[0];
-    return { sig, why: why2, stalled, years, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
+    return { sig, why: why2, stalled, appealed, state: ps ? ps.state : null, years, lastAt, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
   }
 
   // ---- How the phase was set (copied from js/app.js) ------------------------------
@@ -197,7 +205,7 @@
       }
     }
     const masterLive = live.filter(r => stageKey(r) === 'master'), spLive = live.filter(r => stageKey(r) === 'siteplan');
-    if (planApprovedNote(p)) flags.push(['info', `${planApprovedNote(p)}. Only a site plan approval${spLive.length ? '' : ' or a registered plan of subdivision'} makes the site Approved, so it stays under review.`]);
+    if (planApprovedNote(p)) flags.push(['info', `${planApprovedNote(p)}. Only a draft plan or site plan approval (or a registered plan) counts as approved, so it stays under review.`]);
     if (masterLive.some(r => /draft/i.test(r.statusRaw) && r.phase === 'approved')) flags.push(['info', 'Draft plan approval: the subdivision still has to meet its conditions and be registered.']);
     if (live.some(r => r.kind === 'application' && r.phase === 'approved' && /^\s*closed\s*$/i.test(r.statusRaw) && !r.closedUnconfirmed && !phaseAt(r, 'approved'))) flags.push(['warn', 'A planning file’s status is just “Closed”, read as approved (a closed file usually follows approval, but it can also be a file closed without a decision). Check the file.']);
     if (live.some(r => r.kind === 'permit' && rank(r) >= P().PHASE_BY_KEY.permit.rank) && live.some(r => r.kind === 'application' && r.stage !== 'precon' && rank(r) <= P().PHASE_BY_KEY.review.rank)) flags.push(['warn', 'Building permits are issued while a planning file on the site is still in review: the permits may be for an earlier phase or another building on the site.']);
@@ -414,6 +422,9 @@
   }
   const sameLand = (a, b) => !!landRel(a, b);
   function fileTree(p) {
+    // Step B2: a tree development lists its files in tree order, with their links.
+    const TG = window.PeelTreeGroups, tRows = TG && !p.parent && state() && state().treeGrouped ? TG.fileRows(p) : null;
+    if (tRows && tRows.length) return tRows;
     const formal = p.records.filter(isFormal), pre = p.records.filter(isPrecon), used = new Set();
     const rows = formal.map(a => ({ a, pre: pre.filter(r => !used.has(r) && sameLand(a, r) && used.add(r)) }));
     for (const r of pre) if (!used.has(r)) rows.push({ a: r, pre: [] });
@@ -435,7 +446,9 @@
     const row = fileTree(p).find(t => t.a.ref === ref); if (!row) return null;
     const a = row.a;
     const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P().pointInRings(r.lng, r.lat, a.poly)) : [];
-    const sub = P().mergeProject(key, [a, ...row.pre, ...permits], {});
+    // A tree row opens its whole branch (the file and the files under it).
+    const own = row.branch ? row.branch : [a, ...row.pre];
+    const sub = P().mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))], {});
     sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
     if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
     tagAreasLite(sub);
@@ -449,7 +462,13 @@
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
     const p = st.projects.find(x => x.key === base);
-    return p && i > 0 ? subProject(p, k.slice(i + 1)) : p || null;
+    if (!p) {
+      // A key saved before the trees became the developments (Step B2): resolve it.
+      const TG = window.PeelTreeGroups, list = st.projects;
+      const to = TG && TG.resolve(k, x => list.some(q => q.key === x));
+      return to && to !== k ? projectByKey(to) : null;
+    }
+    return i > 0 ? subProject(p, k.slice(i + 1)) : p;
   }
   // Plain bbox for a development (app.js `projectBounds` needs Leaflet).
   function devBbox(p) {
@@ -482,12 +501,13 @@
     const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
     const rel = relatedProjects(p).slice(0, 12);
     let html = '';
-    if (formal.length > 1 || (formal.length && tree.length > formal.length)) {
+    const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
+    if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
       const counted = p.buildout && p.buildout.basis;
       html += `<details class="sect" id="devtab-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
-        <ul class="file-tree">${tree.map(t => `<li>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-dt-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
-          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}</div></li>`).join('')}</ul>
-        <p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`;
+        <ul class="file-tree">${tree.map(t => `<li${TG ? TG.indent(t) : ''}>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-dt-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) && !treeRows ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
+          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}${TG ? TG.linkHTML(t) : ''}</div></li>`).join('')}</ul>
+        ${treeRows ? `<p class="small muted">${esc(TG.FILES_NOTE)}</p></details>` : `<p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`}`;
     }
     if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
     if (rel.length) html += `<details class="sect" id="devtab-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
@@ -647,36 +667,13 @@
       .catch(e => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
   }
 
-  // ---- Site: ground elevation (fetch pattern copied from js/app.js) ----------------
-  // Note: the old row also showed the fall to the catchment outlet using the
-  // private svcFacts(); that needs the sewer model, so this row shows the site
-  // elevation only.
-  const ELEV_Z = 14, elevTiles = new Map();
-  function elevTile(x, y) {
-    const k = `${x}/${y}`; if (elevTiles.has(k)) return elevTiles.get(k);
-    const pr = new Promise((ok, fail) => {
-      const img = new Image(); img.crossOrigin = 'anonymous';
-      img.onload = () => { try { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d'); g.drawImage(img, 0, 0); ok(g.getImageData(0, 0, 256, 256).data); } catch (e) { fail(e); } };
-      img.onerror = () => fail(new Error('elevation tile unavailable'));
-      img.src = `https://s3.amazonaws.com/elevation-tiles-prod/terrarium/${ELEV_Z}/${x}/${y}.png`;
-    });
-    elevTiles.set(k, pr); pr.catch(() => elevTiles.delete(k));
-    return pr;
-  }
-  async function elevAt(lat, lng) {
-    const n = 2 ** ELEV_Z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
-    const x = Math.floor(xf), y = Math.floor(yf), px = Math.min(255, Math.floor((xf - x) * 256)), py = Math.min(255, Math.floor((yf - y) * 256));
-    const d = await elevTile(x, y), i = (py * 256 + px) * 4;
-    return d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768;
-  }
+  // ---- Site: ground elevation and the fall to the catchment outlet (js/site-context.js, from the
+  // lidar terrain model through js/elevation.js; each value names its source).
   async function fillGround(p) {
-    if (!hasDOM() || typeof Image === 'undefined') return;
-    const box = document.getElementById('devtab-ground');
-    if (!box) return;
-    try {
-      const z = await elevAt(p.lat, p.lng);
-      if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = `<p class="small">Site <strong>${z.toFixed(1)} m</strong> above sea level</p><p class="small muted">Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts.</p>`; }
-    } catch (e) { if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = '<p class="small muted">Ground elevation unavailable (terrain tiles did not load).</p>'; } }
+    if (!hasDOM() || !root.PeelSiteContext || !root.PeelSiteContext.groundHTML) return;
+    if (!document.getElementById('devtab-ground')) return;
+    const html = await root.PeelSiteContext.groundHTML(p);
+    if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = html; }
   }
 
   // ---- Site: storm sewers (storm-only variant of app.js fillExisting) --------------
@@ -687,7 +684,9 @@
     { url: `${PEEL_FS}/storm_infrastructure/FeatureServer/4`, f: 'Diameter,Material,MainType', src: 'Region of Peel' },
   ];
   const STORM_STYLE = { color: '--pipe-storm', label: 'Storm sewer' };
-  const geoQ = (url, lng, lat, r, outFields) => ARC().fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' });
+  // A reverse-geocode that hangs must not hold the list: 6 s, then no street name.
+  const fetchT = (url, opts = {}, ms = 6000) => { const c = new AbortController(), t = setTimeout(() => c.abort(), ms); return fetch(url, { ...opts, signal: c.signal }).finally(() => clearTimeout(t)); };
+  const geoQ = (url, lng, lat, r, outFields) => ARC().fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' }, { timeout: 15000 });
   function dcDist(pt, g) {
     const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320;
     let best = Infinity;
@@ -722,12 +721,12 @@
     const k = `${lat.toFixed(4)},${lng.toFixed(4)}`; if (streetCache.has(k)) return streetCache.get(k);
     const pr = (async () => {
       try {
-        const j = await (await fetch(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
+        const j = await (await fetchT(`https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/reverseGeocode?f=json&location=${lng},${lat}&featureTypes=StreetAddress&outFields=Address,ShortLabel`)).json();
         const a = j && j.address, st = a && String(a.Address || a.ShortLabel || '').replace(/^[\d\s-]+[A-Za-z]?\s+(?=\D)/, '').trim();
         if (st) return st;
       } catch (e) { /* next */ }
       try {
-        const j = await (await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
+        const j = await (await fetchT(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&zoom=17&lat=${lat}&lon=${lng}`, { headers: { 'Accept-Language': 'en' } })).json();
         if (j && j.address && j.address.road) return j.address.road;
       } catch (e) { /* offline */ }
       return '';
@@ -784,7 +783,7 @@
     }).catch(() => {
       if (liveKey !== p.key) return;
       const box = document.getElementById('devtab-exist-storm');
-      if (box) box.innerHTML = '<p class="small muted">Storm sewer lookup failed (the municipal layers did not respond).</p>';
+      if (box) box.innerHTML = '<p class="small muted ex-fail">Couldn\'t load the storm sewers from the municipal GIS · <button type="button" class="btn small link" data-dt-exr="' + exR + '">Retry</button></p>';
     });
   }
 
@@ -861,7 +860,7 @@
     return `${drillBackHTML(p)}${p.parent ? subHeadHTML(p) : ''}
     <section class="brief" data-info="dev-brief">
       ${brow('Status', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong>${p.last ? ` · latest activity ${fmtDate(new Date(p.last))}` : ''}</p>
-        ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}`)}
+        ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}`)}
       ${brow('Latest decision', latestDecisionHTML(p, st))}
       ${p.records.some(r => r.kind === 'application') ? brow('Servicing report', fsrBoxHTML(p)) : ''}
       ${p.description ? brow('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
@@ -874,7 +873,7 @@
       <div class="brief">
         ${brow('Phase', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong></p>`)}
         ${brow('Status', `<p class="small">${st.why}</p>
-          ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no activity since ${fmtDate(new Date(p.last))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
+          ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
           ${main && main.kind !== 'info' ? `<p class="small why-${main.kind}-t">${esc(main.text)} <span class="muted">· ${esc(main.files[0])}</span></p>` : ''}
           ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`)}
       </div></details>`;
@@ -982,7 +981,7 @@
   }
 
   // ---- Delegated clicks ----------------------------------------------------------------
-  // All interactive attributes use a data-dt-* prefix so the old #detail-body
+  // All interactive attributes use a data-dt-* prefix so the document-level
   // handlers in js/app.js never see them (and vice versa).
   function onClick(e) {
     if (!e.target || !e.target.closest) return;

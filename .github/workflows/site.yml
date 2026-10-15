@@ -56,11 +56,20 @@ jobs:
         timeout-minutes: 30
         run: node scripts/build-fsr.js --out data
 
+      # Steps B1–B2: the trees as the developments and their counts (js/tree-groups.js,
+      # js/tree-counts.js).
+      # A failure keeps last week's file; the app then keeps the previous count for any
+      # development whose files changed.
+      - name: Tree counts
+        continue-on-error: true
+        timeout-minutes: 10
+        run: node scripts/build-tree-counts.js --out data
+
       - name: Commit if changed
         run: |
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json data/council.json data/fsr.json
+          git add data/snapshot.json data/history.json data/areas.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json
           if git diff --cached --quiet; then
             echo "No changes."
           else

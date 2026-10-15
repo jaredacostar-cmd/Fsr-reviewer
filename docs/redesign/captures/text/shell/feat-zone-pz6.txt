@@ -1,0 +1,266 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pressure zone 6: maximum day 157 ML/d at the census, 250 ML/d at build-out. Supplied from the lake (South Peel water system).
+
+Water pressure zone · 274 developments in this scope · Back to Peel
+
+157
+ML/d
+max day at the census
+250
+ML/d
+max day at build-out
++93.4 ML/d growth
+Servicing ladder
+Supplied by the South Peel water system
+Developments loading it
+Area report
+147 developments adding flow since the census, largest max day first; each alone at Peel design criteria (peaks are not additive)
+Development	People + jobs	Average day	Max day	Share
+5 9763 HERITAGE RD
+Committed (draft plan or site plan approved) · Brampton
+	33,500	105L/s	189L/s	15%
+1 111 MAYFIELD RD
+Proposed (in review) · Brampton
+	31,300	97.6L/s	175L/s	14%
+2 14275 THE GORE ROAD CALEDON ON L7E 0W9
+Proposed (in review) · Caledon
+	15,400	48.2L/s	86.6L/s	7%
+2 0 HERITAGE RD
+Proposed (in review) · Brampton
+	13,900	43.4L/s	78.2L/s	6%
+2 12561 CENTREVILLE CREEK ROAD CALEDON ON L7C 3B7
+Committed (draft plan or site plan approved) · Caledon
+	9,470	29.6L/s	53.3L/s	4%
+2 10869 HERITAGE RD
+Proposed (in review) · Brampton
+	8,230	25.7L/s	46.3L/s	4%
+2 0 LAGERFELD DR
+Proposed (in review) · Brampton
+	7,640	23.9L/s	42.9L/s	3%
+1 0 HERITAGE RD
+Proposed (in review) · Brampton
+	7,260	22.7L/s	40.8L/s	3%
+2 12563 HIGHWAY 50 CALEDON ON
+Proposed (in review) · Caledon
+	6,110	19.1L/s	34.3L/s	3%
+2 5155 OLD SCHOOL ROAD CALEDON ON L7C 0Y3
+Proposed (in review) · Caledon
+	5,600	17.5L/s	31.5L/s	2%
+
+See all 147
+
+Growth total, average day: 713L/s · 61.6ML/d.
+
+Planned works (2026 DC capital map, draft)
+
+Facilities: Snelgrove (last construction 2032) · North Brampton (last construction 2028) · East Brampton (last construction 2027) · Tullamore (last construction 2031) · West Brampton (last construction 2035)
+
+Construction	Main	Length
+2026–2027	Water distribution feeder main · 1200 mm · approved 2026
+24-1268 · Con 600-mm Water Main - Healey Road main Co
+	9,020m
+2026	Water transmission main · 1200 mm · approved 2026
+14-1256 · Co Williams Parkway Sub-Transmission Main ma (Phase 1 and Phase 2)
+	10,980m
+2026	Water distribution feeder main · 600 mm · approved 2026
+24-1194 · 400-mm Water Main - Humber Station Road C (Bolton West) Humb C
+	2,090m
+2026	Water distribution feeder main · 600 mm · approved 2026
+24-1183 · Con 400-mm Water Main - Airport Road Airpo (Tullamore Industrial)
+	1,300m
+2026	Water distribution feeder main · 400 mm · approved 2026
+26-1137 · C 400-mm Water Main - Bovaird Drive West Bo Co
+	490m
+2026	Water distribution feeder main · 400 mm · approved 2026
+26-1197 · 400-mm Water Main - Future Street (Bolton f West) H C
+	1,370m
+2026	Water distribution feeder main · 400 mm · approved 2026
+26-1152 · 400-mm Water Main - Future Street fut (Tullamore Industrial) Tor
+	1,990m
+2026	Water distribution feeder main · approved 2026
+24-1192
+	5,630m
+2026	Water distribution feeder main · approved 2026
+24-1190
+	2,090m
+2027	Water transmission main · 1500 mm
+24-1270 · West Caledon Transmission Main
+	7,120m
+2027	Water distribution feeder main · 600 mm
+24-1191
+	5,690m
+2027	Water distribution feeder main · 600 mm
+25-1140
+	1,730m
+2027	Water distribution feeder main · 400 mm
+27-1164
+	1,880m
+2027	Water transmission main · 400 mm
+24-1269 · Const main 750-mm Water Main - Innis Lake Road Pumpi
+	2,830m
+2027	Water distribution feeder main
+24-1197
+	2,830m
+2028	Water distribution feeder main · 600 mm
+24-1182
+	2,110m
+2028	Water distribution feeder main · 400 mm
+28-1139 · C 400-mm Water Main - Future Street (Heritage Heights)
+	560m
+2028	Water distribution feeder main · 400 mm
+28-1130
+	690m
+2028	Water distribution feeder main
+28-1146 · 400-mm Water Main - Future Street futur (Heritage Heights)
+	790m
+2029	Water distribution feeder main · 750 mm
+27-1191 · 400-mm Water Main - Humber Station Road Hu (Bolton West) nor Con
+	3,260m
+2029	Water distribution feeder main · 600 mm
+27-1137 · Con 600-mm Water Main - Heritage Road (Mount Herit Pleasant West) San
+	1,130m
+2029	Water distribution feeder main · 400 mm
+27-1146 · 400-mm Water Main - Wanless Drive
+	1,560m
+2030	Water transmission main · 1800 mm
+28-1258 · Mayfield Road Sub-Transmission Main
+	8,350m
+2030	Water transmission main · 1500 mm
+28-1250
+	5,800m
+2030	Water transmission main · 900 mm
+28-1271
+	5,320m
+2030	Water distribution feeder main · 900 mm
+28-1272
+	6,310m
+2030	Water distribution feeder main · 600 mm
+28-1145 · 600-mm Water Main - Future Sandalwood Parkway West
+	1,320m
+2030	Water distribution feeder main · 600 mm
+28-1135 · Con 600-mm Water Main - Heritage Road Heri (Heritage Heights)
+	770m
+2030	Water distribution feeder main · 600 mm
+28-1136 · Con 600-mm Water Main - Heritage Road Her (Heritage Heights) futu
+	1,250m
+2030	Water distribution feeder main
+28-1195
+	2,390m
+2031–2037	Water distribution feeder main · 750 mm
+31-1199
+	16,890m
+2031	Water distribution feeder main · 400 mm
+29-1158 · 400-mm Water Main - Dixie Road (Mayfield West Phase 4)
+	900m
+2032–2035	Water distribution feeder main · 400 mm
+31-1198 · 400-mm Water Main - Future Street Cons (Tullamore Industrial) fut Inni Con
+	15,170m
+–	Water distribution feeder main · 900 mm
+no project label
+	9,490m
+–	Water transmission main · approved 2026
+no project label
+	2,240m
+
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026. Developments built since the census, committed and proposed; existing development is in the census flow.
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+2021–2026 ×
+Reset all
+
+Showing 274 active applications · 2021–2026 · all of Peel · Report
+
+Stage
+Inception
+45
+Under review
+105
+Approved
+82
+Permit issued
+25
+Construction
+17
+Completed
+45
+Withdrawn / refused
+32
+
+274 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 128
+Under appeal 8
+Waiting on DC works 0
+PS over firm capacity 19
+Changed this week 0
+★ Watched 0
+Estimate check 146
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

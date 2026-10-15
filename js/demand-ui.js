@@ -21,6 +21,7 @@
   const ST = () => root.PeelSewerTrace;
   const SV = () => root.PeelSvcData;
   const SET = () => root.PeelSettings;
+  const SvcTab = () => root.PeelSvcTab;
   const EX = () => root.PeelExports;
   const OV = () => root.PeelOverviewTab;
 
@@ -41,7 +42,7 @@
   // so this sub-view renders either way (the generic sub-tab code in showFootTab picks
   // both up: the button by [data-wwsub], the pane by data-pane="ww" data-sub).
   function ensurePumpSubTab() {
-    const group = document.querySelector('.f-subtabs[data-pane="ww"]');
+    const group = document.querySelector('.f-subtabs[data-pane="svc"]');
     if (group && !group.querySelector('[data-wwsub="pumpstations"]')) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'btn small'; b.dataset.wwsub = 'pumpstations';
@@ -53,7 +54,7 @@
       const sec = document.createElement('section');
       sec.className = 'f-pane svc-pane'; sec.id = 'pane-pumpstations';
       sec.dataset.pane = 'ww'; sec.dataset.sub = 'pumpstations';
-      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-ww');
+      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-svc');
       sec.hidden = true;
       sec.innerHTML = '<div class="tb-head"><h2 class="sr">Pumping stations</h2></div><div id="pumpstations-body"></div>';
       const ref = document.getElementById('pane-alloc');
@@ -67,13 +68,16 @@
   // stampHTML scenario line (the scenario bar now carries that once).
   const wwTile = (label, value, unitTxt = '', sub = '', info = '') =>
     `<div class="tile"${info ? ` data-info="${info}"` : ''}><div class="tl">${label}</div><div class="tv">${value}${unitTxt ? `<span class="tu">${unitTxt}</span>` : ''}</div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
-  const miniBar = (name, v, max, unitTxt, neg = false) => `
+  // A labelled bar: the state is in words ("over" / "short"), not only in colour (design audit,
+  // Group 8); a % bar carries a 100% tick.
+  const miniBar = (name, v, max, unitTxt, neg = false, negWord = unitTxt === '%' ? 'over' : 'short') => `
     <div style="display:flex;align-items:center;gap:8px;margin:3px 0">
       <span class="muted small" style="width:92px;flex:none">${name}</span>
-      <span style="flex:1;background:var(--surface-1);border-radius:4px;height:10px;display:block;overflow:hidden">
+      <span style="flex:1;background:var(--surface-1);border-radius:4px;height:10px;display:block;overflow:hidden;position:relative">
         <span style="display:block;height:100%;width:${(Math.max(0, v) / max * 100).toFixed(1)}%;background:var(${neg ? '--cap-over' : '--cap-room'});border-radius:4px"></span>
+        ${unitTxt === '%' && max > 100 ? `<span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:${(100 / max * 100).toFixed(1)}%;border-left:1px solid var(--text-primary)"></span>` : ''}
       </span>
-      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}</span>
+      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}${neg ? ` · ${negWord}` : ''}</span>
     </div>`;
   function wwInfoLine(method) {
     const c = App().state.criteria, E = c.employment, R = App().state.reports, bc = CA().baselineCensus(), Y = bc ? bc.year : 2021;
@@ -101,7 +105,8 @@
     const M = App().state.svcModel, cap = M && M.plantCap(pl); if (!cap) return null;
     const rows = allocRows().filter(r => r.pl === pl), ahead = rows.filter(r => r.lay === 'proposed');
     const aheadMld = ahead.reduce((t, r) => t + r.people * cap.perPerson / 1e6, 0);
-    const lim = MP().PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
+    const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${pl}`);
+    const lim = MP().PLANT_TRIGGER * cap.rated, room = k ? k.room : lim - cap.committed;   // room to the 90% trigger (js/capacity.js)
     return { pl, cap, lim, rows, ahead, aheadMld, room, after: room - aheadMld, peopleAfter: cap.perPerson > 0 ? (room - aheadMld) * 1e6 / cap.perPerson : 0 };
   }
   function allocBoxHTML(p) {
@@ -125,28 +130,28 @@
     const totU = rows.reduce((t, r) => t + r.a.units, 0), ahead = rows.filter(r => r.lay === 'proposed');
     const shown = allocSeeAll ? rows : rows.slice(0, 10);
     const maxRoom = Math.max(1e-9, ...plants.map(x => Math.max(0, x.after)));
-    el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} ahead of approval and commit capacity now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
+    el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} recorded ahead of approval and counted against the reserve now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
       <div class="tiles">${[
         wwTile('Allocations recorded', fmtNum(rows.length), rows.length === 1 ? 'allocation' : 'allocations', `${fmtNum(totU)} units`, 'allocations'),
         ...plants.map(x => wwTile(`${esc(SV().PLANT_SHORT[x.pl])} room`, fmt1(x.after), 'ML/d', `after allocations · ≈${fmtNum(roundPop(x.peopleAfter))} people`, 'allocations')),
       ].join('')}</div>
-      <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d average dry</span></h3>
+      <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d ${SvcTab().wwFlowLabel()}</span></h3>
       <div>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}</div>
-      <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + approved, and after allocations (average dry weather at each plant's measured rate)</caption>
-        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + approved</th><th>Room</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
+      <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + built + committed, and after allocations (${SvcTab().wwFlowLabel('long')})</caption>
+        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + committed</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
         <tbody>${plants.map(x => `<tr><td>${esc(SV().PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${fmt1(x.room)} ML/d<small>≈${fmtNum(roundPop(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${fmt1(x.after)} ML/d</strong><small>≈${fmtNum(roundPop(x.peopleAfter))} people</small></td></tr>`).join('')}</tbody></table>
       <div class="export-bar"><button type="button" class="btn small" data-alloc-csv>Export CSV</button><label class="btn small">Import CSV<input type="file" accept=".csv,text/csv" data-alloc-imp hidden></label></div>
       ${rows.length ? `<table class="dt"><caption>Allocations recorded${rows.length > 10 ? ` · showing ${shown.length} of ${fmtNum(rows.length)}` : ''}</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
         ${shown.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(SV().PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>
         ${rows.length > 10 ? `<p><button type="button" class="btn small link" data-alloc-all>${allocSeeAll ? 'Show fewer' : `See all ${fmtNum(rows.length)} allocations`}</button></p>` : ''}` : ''}
-      ${wwInfoLine('Room at the 90% expansion trigger after existing + approved, less allocations recorded ahead of approval; average dry weather at each plant\u2019s measured rate.')}`;
+      ${wwInfoLine('Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ' + SvcTab().wwFlowLabel('long') + '.')}`;
   }
   $('#alloc-body').addEventListener('click', e => {
     if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }
     if (e.target.closest('[data-alloc-csv]')) {
       const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
       const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', SV().PLANT_SHORT[r.pl] || '', r.lay])];
-      EX().download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
+      EX().download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, root.PeelUtil.CSV_DISCLAIMER + lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
     }
     const r = e.target.closest('.ld-row'); if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) DN().showDetail(p); }
   });
@@ -268,6 +273,8 @@
   function numberConventionsHTML() {
     return `<h3 class="sub-title">Number conventions</h3>
       <p class="small muted">People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.</p>
+      <h3 class="sub-title">Public version</h3>
+      <p class="small"><label><input type="checkbox" id="public-view"${root.PeelUtil.isPublic() ? ' checked' : ''}> Public version: hide the DC funding screen and funding levels, the screening-result column (table and CSV) and the screening-summary colours</label><br><span class="muted">Or add <code>?public</code> to the address to share a public link.</span></p>
       <h3 class="sub-title">Prepared by</h3>
       <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
   }

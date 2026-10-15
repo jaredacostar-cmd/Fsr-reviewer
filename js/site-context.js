@@ -14,25 +14,36 @@
   const Meas = () => window.PeelMeasure;
   const SD = () => window.PeelSvcData;
 
-  // Ground at the site, and the fall to its catchment's outlet (gravity hint for the sewer path).
+  // Ground at the site, and the fall to its catchment's outlet (gravity hint for the sewer path),
+  // from the lidar terrain model (terrain tiles where it has no value), each with its source.
+  const EL = () => window.PeelElevation;
+  // The Ground row's HTML (Development › Site, both views).
+  async function groundHTML(p) {
+    try {
+      const f = SD() && SD().svcFacts ? SD().svcFacts(p) : null, out = f && f.path.find(a => a.outletAt && a.kind !== 'plant');
+      const pts = [{ lat: p.lat, lng: p.lng }, ...(out ? [{ lat: out.outletAt[1], lng: out.outletAt[0] }] : [])];
+      const [site, outlet] = await EL().getGroundMany(pts);
+      if (site.z == null) throw new Error('unavailable');
+      const z = site.z;
+      let line = `Site <strong>${z.toFixed(1)} m</strong> above sea level <span class="muted">(${esc(EL().shortLabel(site))})</span>`;
+      if (out && outlet && outlet.z != null) {
+        const zo = outlet.z, dist = map.distance([p.lat, p.lng], [out.outletAt[1], out.outletAt[0]]);
+        line += ` · ${esc(SD().drName(out).replace(/^[^·]+· /, ''))} outlet ${zo.toFixed(1)} m <span class="muted">(${esc(EL().shortLabel(outlet))})</span>: ${zo < z ? `falls ${(z - zo).toFixed(1)} m` : `<strong>rises ${(zo - z).toFixed(1)} m</strong>`} over ${Meas().fmtDist(dist)} (${(Math.abs(z - zo) / Math.max(1, dist) * 100).toFixed(2)}% straight line)`;
+      }
+      return `<p class="small">${line}</p><p class="small muted">${esc(EL().sourcesNote([site, outlet].filter(Boolean)))} Ground surface, not pipe inverts. Measure & ground profile (Tools) draws a profile along any line.</p>`;
+    } catch (e) { return '<p class="small muted">Ground elevation unavailable (neither the lidar service nor the terrain tiles answered).</p>'; }
+  }
   async function fillGround(p) {
     if (!$('#dev-ground')) return;
-    try {
-      const z = await Meas().elevAt(p.lat, p.lng), f = SD().svcFacts(p), out = f && f.path.find(a => a.outletAt && a.kind !== 'plant');
-      let line = `Site <strong>${z.toFixed(1)} m</strong> above sea level`;
-      if (out) {
-        const zo = await Meas().elevAt(out.outletAt[1], out.outletAt[0]), dist = map.distance([p.lat, p.lng], [out.outletAt[1], out.outletAt[0]]);
-        line += ` · ${esc(SD().drName(out).replace(/^[^·]+· /, ''))} outlet ${zo.toFixed(1)} m: ${zo < z ? `falls ${(z - zo).toFixed(1)} m` : `<strong>rises ${(zo - z).toFixed(1)} m</strong>`} over ${Meas().fmtDist(dist)} (${(Math.abs(z - zo) / Math.max(1, dist) * 100).toFixed(2)}% straight line)`;
-      }
-      if (DN().getCurrentProject() === p && $('#dev-ground')) $('#dev-ground').innerHTML = `<p class="small">${line}</p><p class="small muted">Ground surface from terrain tiles (CDEM / SRTM), not pipe inverts. Measure & ground profile (Tools) draws a profile along any line.</p>`;
-    } catch (e) { if (DN().getCurrentProject() === p && $('#dev-ground')) $('#dev-ground').innerHTML = '<p class="small muted">Ground elevation unavailable (terrain tiles did not load).</p>'; }
+    const html = await groundHTML(p);
+    if (DN().getCurrentProject() === p && $('#dev-ground')) $('#dev-ground').innerHTML = html;
   }
 
   // ---- Fire flow context: hydrants near the site, their pressure zone, nearest large watermain ----
   // Peel hydrants (live). Hydrant flow tests are not published, so this is coverage and zone only.
   const HYDRANTS = `${EP().PEEL_FS}/HydrantsExport_/FeatureServer/0`;
   const FIRE_R = 150, TRANS_R = 1500;
-  const geoQ = (url, lng, lat, r, outFields) => A.fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' });
+  const geoQ = (url, lng, lat, r, outFields) => A.fetchJSON(`${url}/query`, { geometry: `${lng},${lat}`, geometryType: 'esriGeometryPoint', inSR: 4326, distance: r, units: 'esriSRUnit_Meter', spatialRel: 'esriSpatialRelIntersects', outFields, outSR: 4326, returnGeometry: true, resultRecordCount: 200, f: 'json' }, { timeout: 15000 });
   const fireCache = new Map();
   function fireContext(lng, lat) {
     const key = `${lng.toFixed(5)},${lat.toFixed(5)}`;
@@ -120,7 +131,7 @@
   }
 
   const api = {
-    fillGround, fillFire, fillStorm, fireContext, nearestPond, inRing, geoQ,
+    fillGround, groundHTML, fillFire, fillStorm, fireContext, nearestPond, inRing, geoQ,
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

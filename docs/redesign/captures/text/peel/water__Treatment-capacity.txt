@@ -1,0 +1,171 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Treatment & capacity
+Pressure zones
+Facilities
+Water treatment and capacity
+
+South Peel water treatment stays below its 90% expansion trigger to 2051 (existing + built + committed 54% of rated capacity → 67% at build-out).
+
+67%
+of rated
+South Peel treatment at build-out
+rated 1,700 ML/d
+82%
+of firm capacity
+Tightest pumping at build-out
+Into zone 7 and above
+1,077
+ML/d
+maximum day demand at build-out
+all pressure zones
+12
+ML
+storage short by 2041
+Master Plan assessment
+Demand flows build-out, ML/d · all pressure zones
+	Average day	Maximum day	Peak hour
+Residential	579ML/d	1,042ML/d	1,737ML/d
+Employment	25.2ML/d	35.3ML/d	75.7ML/d
+Total	604ML/d	1,077ML/d	1,812ML/d
+
+604 ML/d average · residential 270 L/cap/d (single 4.2 · town 3.4 · apartment 3.1 persons per unit) ×1.8 maximum day / ×3 peak hour; employment 250 L/emp/d ×1.4 / ×3.
+
+Water capacity by growth layer Mixed basis
+
+Tightest: Into zone 7 and above, 61% of its firm capacity with existing + built + approved, 82% at build-out.
+
+Treatment maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)
+0%
+25%
+50%
+75%
+100%
+125%
+South Peel (A.P. Kennedy + Lorne Park)
+rated 1,700ML/d · 2025 maximum day 810 ML/d incl. York supply
+67%
+Caledon Village – Alton wells
+rated 7.6ML/d · 2025 maximum day 3.67 ML/d
+48%
+Palgrave – Caledon East wells
+rated 19.3ML/d · 2025 maximum day 11.8 ML/d
+61%
+Existing (2021 Census; treatment scaled to the 2025 measured maximum day)
+Built since 2021
+Committed
+Proposed (in review)
+Uncommitted reserve (D-5-1, to 100% of rated)
+90% expansion trigger
+Capacity: rated (treatment) or firm (pumping)
+Facility	Rated	Committed	Room to rated	After proposed
+South Peel (A.P. Kennedy + Lorne Park)	1,700ML/d	54%
+914ML/d
+	786ML/d
+≈ 1,473,900people
+	554ML/d
+≈ 1,038,800people
+
+Caledon Village – Alton wells	7.6ML/d	48%
+3.67ML/d
+	3.92ML/d	3.92ML/d
+Palgrave – Caledon East wells	19.3ML/d	61%
+11.8ML/d
+	7.48ML/d	7.48ML/d
+
+– : too few census people in the sewershed for population equivalents (Inglewood).
+
+screening estimate
+
+Pumping into each pressure zone design maximum day (×1.8) as a % of firm pumping capacity (actual firm where the 2020 Master Plan models it)
+0%
+25%
+50%
+75%
+100%
+125%
+From the plants (zone 1 and above)
+firm 1,768ML/d · 4 pump groups: A.P. Kennedy HLP1C, A.P. Kennedy HLP2C, Lorne Park HLP1W, Lorne Park HLP2W
+60%
+Into zone 2 and above
+firm 1,757ML/d · 6 pump groups: A.P. Kennedy HLP2C, Lorne Park HLP2W, Herridge LLP2W, Herridge HLP3W, Silverthorn LLP2C, Silverthorn HLP3C
+57%
+Into zone 3 and above
+firm 1,678ML/d · 6 pump groups: Hanlan LLP3C, Hanlan HLP4C, Herridge HLP3W, Silverthorn HLP3C, Streetsville LLP3W, Streetsville HLP4W
+54%
+Into zone 4 and above
+firm 1,272ML/d · 8 pump groups: Airport Road LLP4E, Airport Road HLP5E, Beckett Sproule LLP4C, Beckett Sproule HLP5C, Hanlan HLP4C, Meadowvale North LLP4W, Meadowvale North HLP5W, Streetsville HLP4W
+60%
+Into zone 5 and above
+firm 914ML/d · 9 pump groups: Airport Road HLP5E, Beckett Sproule HLP5C, East Brampton LLP5C, East Brampton HLP6C, Meadowvale North HLP5W, Tullamore LLP5E, Tullamore HLP6E, West Brampton LLP5W, West Brampton HLP6W
+60%
+Into zone 6 and above
+firm 523ML/d · 7 pump groups: Alloa LLP6W, Alloa HLP7W, East Brampton HLP6C, North Brampton LLP6C, North Brampton HLP7C, Tullamore HLP6E, West Brampton HLP6W
+55%
+Into zone 7 and above
+firm 48ML/d · 2 pump groups: Alloa HLP7W, North Brampton HLP7C
+82%
+Facility	Rated	Committed	Room to rated	After proposed
+From the plants (zone 1 and above)	1,768ML/d	47%
+839ML/d
+	929ML/d	700ML/d
+Into zone 2 and above	1,757ML/d	45%
+795ML/d
+	962ML/d	747ML/d
+Into zone 3 and above	1,678ML/d	43%
+716ML/d
+	962ML/d	770ML/d
+Into zone 4 and above	1,272ML/d	48%
+609ML/d
+	663ML/d	506ML/d
+Into zone 5 and above	914ML/d	47%
+427ML/d
+	487ML/d	361ML/d
+Into zone 6 and above	523ML/d	44%
+231ML/d
+	292ML/d	233ML/d
+Into zone 7 and above	48ML/d	61%
+29.2ML/d
+	18.8ML/d	8.61ML/d
+
+screening estimate
+
+Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see Facilities).
+
+Room left & trigger years Mixed basis zones: % of firm pumping capacity · storage: Master Plan required vs available
+Zone / storage facility	Room left
+at build-out
+ML/d pumping · ML storage	Reaches
+80%	Reaches
+90%	Reaches
+100%
+West Brampton Reservoir
+40 ML available · 2020 Master Plan
+	−9 ML
+-22% left
+	2021	2027	2029
+Silverthorn Reservoir
+46 ML available · 2020 Master Plan
+	−3 ML
+-7% left
+	2023	2025	2036
+Into zone 7 and above
+firm 48ML/d
+	8.61 ML/d
+18% left
+	2037	after 2051	after 2051
+West Caledon Elevated Tank (future, Zone 7 West)
+10 ML available · 2020 Master Plan
+	2 ML
+20% left
+	2041	after 2041	after 2041
+Into zone 5 and above
+firm 914ML/d
+	361 ML/d
+40% left
+	after 2051	after 2051	after 2051
+See all 11 zones & storage facilities
+
+Room = capacity − demand at build-out. Trigger years phase approved growth in from 2026 over 5 years and proposed from 2028 over 10 years, as in the plant Horizon years; storage years interpolate the Master Plan forecast.
+
+ⓘ Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region). Pumping: firm capacity, largest pump out of service (the Region's modelled actual firm where the 2020 Master Plan gives it). Demand at design maximum day (×1.8) (270 L/cap/d, employment 250 L/emp/d). Storage: required vs available (2020 Master Plan, Vol. 3, Table 12).

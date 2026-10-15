@@ -27,26 +27,20 @@
   let loadsOf = null;
   // ---- Phase 3b: pop-up results as a Tool result scope ----------------------------------
   // Feature taps (catchment / zone / plant / pipe / DC line / facility) open their
-  // result in the Tool result tab (trail: Peel › title) via PeelTools.openResult,
-  // not the #detail side panel. Each show* builds {title, html} and opens it here;
-  // the #detail fallback keeps the calls working when the framework is absent.
+  // result as a scope in the right panel (SPEC §3; trail: Peel › title) via
+  // PeelTools.openResult → PeelSvcScope.openResult. Each show* builds {title, html}.
   let toolScope = null; // {kind, title} of the result currently shown in the Tool tab
-  // Phase 3b: pop-up results live in the Tool result tab — exports from one read
-  // that tab while it holds a result (the #detail fallback keeps toolScope null).
-  const toolScopeBody = () => (toolScope && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult()) ? $('#pane-tool-body') : null;
-  function toolResult(kind, title, html, reopen) {
+  // Exports read the result scope's host while it holds a result.
+  const toolScopeBody = () => (toolScope && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult()) ? $('#scope-body') : null;
+  // Feature results open as scopes in the right panel (SPEC §3): opts.ref names the scope
+  // (dcwork:<sys>:<id>, pipe:<i>, …); the developments it lists filter the left panel and the map.
+  function toolResult(kind, title, html, reopen, opts = {}) {
     toolScope = { kind, title };
-    if (typeof window !== 'undefined' && window.PeelTools && typeof window.PeelTools.openResult === 'function') {
-      window.PeelTools.openResult({ title, html, reopen });
-      return true;
-    }
-    toolScope = null;
-    $('#detail-body').innerHTML = html;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'tool'; $('#detail').scrollTop = 0;
-    return false;
+    window.PeelTools.openResult({ title, html, reopen, filter: true, ...opts });
+    return true;
   }
   // Pop-up action row shared by the feature result views. Buttons carry data-pt
-  // and are handled by the #pane-tool-body delegation below.
+  // and are handled by the #scope-body delegation below.
   const ptActions = btns => btns.length ? `<div class="pt-actions" role="group" aria-label="Actions">${btns.join('')}</div>` : '';
   const ptBtn = (act, v, label, title, extra = '') => `<button type="button" class="btn small" data-pt="${act}"${v != null ? ` data-pt-v="${esc(v)}"` : ''}${extra} title="${esc(title)}">${esc(label)}</button>`;
   // The "Area report" action reports on the developments of the most recent
@@ -84,6 +78,9 @@
   }
   function showLoads(id, plantName) {
     if (!App().state.servicing || !App().state.svcModel) return;
+    // Design audit, Group 5: a plant, station, block or zone is a level, not a tool — it opens as a
+    // servicing scope (its own Overview and trail steps). The tool result below stays as the fallback.
+    if (window.PeelSvcScope && window.PeelSvcScope.open(plantName ? `plant:${plantName}` : id)) return;
     const M = App().state.svcModel, a = id && SD().svcById.get(id), c = App().state.criteria;
     // A pumping station beside the blocks: what passes through the pipe arriving at it.
     if (a && a.kind === 'ps' && App().state.servicing.blocks) { const k = MA().stationPipe(a); if (k >= 0) { if (ST().svcFocus.id !== id) ST().focusSvc(id, { zoom: false, loads: false }); SC().showPipeLoads(k); } return; }
@@ -92,8 +89,8 @@
     if (plantName) {
       ids = new Set(App().state.servicing.drainage.filter(d => d.plant === plantName).map(d => d.id));
       title = SD().plantLabel(plantName); sub = `${fmtNum(ids.size)} ${App().state.servicing.blocks ? 'blocks' : 'catchments'}`;
-      const cap = M.plantCap(plantName);
-      if (cap) sub += ` · rated ${fmt1(cap.rated)} ML/d · existing + approved ${Math.round(cap.committed / cap.rated * 100)}% · uncommitted reserve ${fmt1(cap.rated - cap.committed)} ML/d`;
+      const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${plantName}`);
+      if (k) sub += ` · rated ${fmt1(k.rated)} ML/d · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · uncommitted reserve ${fmt1(k.reserve)} ML/d`;
       const ce = SP().plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
       if (ce) sub += ` · ${ce}`;
     } else if (a && a.zone) {
@@ -123,6 +120,7 @@
     if (!plantName && a && !a.zone) acts.push(ptBtn('upstream', id, 'Show upstream', 'List the catchments draining through this one'));
     acts.push(ptBtn('areareport', null, 'Area report', 'A printable report on the developments loading this area'));
     const totAvg = rows.reduce((t, r) => t + r.avg, 0);
+    const totPj = rows.reduce((t, r) => t + r.e.population + r.e.employment.jobs, 0);
     const byLayer = ['built', 'approved', 'proposed'].map(k => [k, rows.filter(r => r.lay === k).reduce((t, r) => t + r.avg, 0)]);
     const LIMIT = 60;
     const what = key === 'pz' ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
@@ -130,12 +128,12 @@
       <div class="head"><h3>What loads ${esc(title)}</h3><div class="m">${key === 'pz' ? 'Water pressure zone' : plantName ? 'Wastewater treatment plant' : `${a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment'} and everything upstream`}</div></div>
       ${ptActions(acts)}
       <p class="small">${esc(sub)}${plantName ? ` ${estTag}` : ''}</p>
-      <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
+      <div class="chips">${byLayer.map(([k, v]) => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${uLs(v)}</span>`).join('')}<span class="chip">Growth total, ${key === 'pz' ? 'average day' : 'average dry weather (design)'} ${uLs(totAvg)} · ${uML(D.toMLd(totAvg))}</span></div>
 
       <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments adding flow since the census, largest ${key === 'pz' ? 'max day' : 'peak wet weather'} first · Peel design criteria, each development alone</caption>
-        <thead><tr><th>Development</th><th>People + jobs</th><th>${what[0]}</th><th>${what[1]}</th><th class="ld-share">Share</th></tr></thead>
+        <thead><tr><th>Development</th><th>People + jobs</th><th>${what[0]}</th><th>${what[1]}</th><th class="ld-share" title="Share of all the growth loading it, by people + jobs (not of capacity or reserve)">Share of growth (people + jobs)</th></tr></thead>
         <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[r.lay]}"></span>${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.via && !a?.zone && r.via.id !== id ? ` · via ${esc(SD().drName(r.via).replace(/^[^·]+· /, ''))}` : ''}${r.near ? ' · nearest assigned' : ''}</small></td>
-          <td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totAvg > 0 ? `${Math.round(r.avg / totAvg * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
+          <td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.avg)}</td><td>${uLs(r.peak)}</td><td class="ld-share">${totPj > 0 ? `${Math.round((r.e.population + r.e.employment.jobs) / totPj * 100)}%` : '–'}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments (Excel export has the top ${LIMIT}).</p>` : ''}
       ${DI().dcAreaWorksHTML(ids, key, plantName)}
       <p class="small muted">Developments built since the census, approved and proposed (existing development is in the census flow). Flows are each development's own at Peel design criteria; peaks are not additive. ${esc(SvcTab().scenarioText())}.</p>`;
@@ -144,22 +142,15 @@
     Sh().viewLink.write();
     if (id && ST().svcFocus.id !== id) ST().focusSvc(id, { zoom: false, loads: false });
   }
-  $('#detail-body').addEventListener('click', e => {
-    const r = e.target.closest('.ld-row'); if (!r) return;
-    const p = DN().projectByKey(r.dataset.dev); if (!p) return;
-    DN().setBackToLoads({ ...loadsOf }); DN().showDetail(p);
-    if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15));
-  });
-  $('#detail-body').addEventListener('keydown', e => { const r = e.target.closest('.ld-row'); if (r && e.key === 'Enter') r.click(); });
-  // Phase 3b: the Tool result tab's own delegation — pop-up actions, development
-  // rows, pipe links and DC links (the #detail-body handlers don't see this container).
-  const toolBody = $('#pane-tool-body');
+  // The result scope's delegation (right panel): pop-up actions, development rows, pipe links and DC
+  // links.
+  const toolBody = $('#scope-body');
   if (toolBody) {
     toolBody.addEventListener('click', e => {
       const pa = e.target.closest('[data-pt]');
       if (pa) { toolAction(pa.dataset.pt, pa.dataset.ptV, pa); return; }
       const r = e.target.closest('.ld-row');
-      if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) { DN().showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
+      if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) { if (loadsOf) DN().setBackToLoads({ ...loadsOf }); DN().showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
       const pb = e.target.closest('[data-pipe]');
       if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
       const f = e.target.closest('[data-dcn-filter]');

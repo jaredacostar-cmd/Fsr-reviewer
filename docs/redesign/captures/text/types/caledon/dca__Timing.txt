@@ -1,0 +1,44 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Timing
+Funding screen
+Funding levels
+
+DC analysis for 14337 HIGHWAY 50 CALEDON ON L7E 3H6.
+
+Needs DC works by 2027: it connects through a planned main.
+
+DC projects potentially required
+Wastewater
+
+Sewer path, pumping stations and the plant's reserve live on the Wastewater tab →.
+
+Water
+
+1 constraint runs out before a DC project relieves it. Room in units at this development's 3.9 persons per unit.
+
+💧 West Brampton Reservoir
+required vs available storage (2020 Master Plan forecast) · in Pressure zone 6
+39,500 people≈10,242 units
+≈2030Screens late: runs out before the DC project is in service
+2033 West Brampton · Reservoir Expansion · paused
+1 with room to build-out (tightest 75% of capacity)
+
+All DC timing →
+
+Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026). Water supply is a rough conveyance estimate: water pumping station capacities are not published. A screen, not a hydraulic model.
+
+Planned works
+Wastewater nearby: 2027 local wastewater main (project 24-2191, component 56805) · paused (as of March 2026), 358 m away (site is on the existing network)
+Water connection: 2027 600 mm water distribution feeder main (project 24-1191, component 54021) · paused (as of March 2026), 386 m away
+Downstream trunks: 2027 450 mm 24-2197 · 2028 1500 mm 25-2268
+Facilities: North Hill 2027 · East Brampton 2027 · North Brampton 2028 · Tullamore 2031 +2 more (What loads this)
+Plant capacity: 558 ML/d from 2028 → 600 ML/d from 2037
+
+Outside the existing network: servicing about 2027 on the 2026 DC draft schedule.
+
+Regional water & wastewater DCs
+≈$18.1 M
+Single / semi	180 × $62,957	$11.3 M
+Townhouse / other	135 × $49,862	$6.7 M
+Rates 2026-08-01 to 2027-01-31: water $30,181 + wastewater $32,776 per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).

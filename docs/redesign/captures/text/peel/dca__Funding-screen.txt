@@ -1,0 +1,110 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Timing
+Funding screen
+Funding levels
+
+With $1.00 B of DC funding over 10 years (2026–2035) against a $1.21 B program, 33 projects fall within the funding screen ($999 M) and 2 outside it ($213 M) — no growth expected by 2035 relies on the projects outside it.
+
+Capital schedule as of March 2026. In May 2026 Regional Council paused all new growth-related water and wastewater capital procurements from June 11, 2026, until upper levels of government commit funding. Planned dates are from the draft 2026 DC capital maps (March 2026) and may move. Council report
+
+33
+within the funding screen ($999 M, $130 M already committed)
+2
+outside the funding screen ($213 M)
+0
+people the screen shows constrained by 2035 without the projects outside it
+$1.00 B
+DC funding over 10 years (2026–2035)
+Growth relying on each project by 2035 (top 10)
+48,200
+96,400
+G.E. Booth WRRF (Lake…
+96,400 · within
+Water distribution fe…
+30,500 · within
+Water distribution fe…
+12,700 · within
+Water distribution fe…
+12,300 · within
+Water distribution fe…
+7,330 · within
+Water distribution fe…
+7,050 · within
+Water distribution fe…
+6,720 · within
+Water distribution fe…
+6,590 · within
+Local wastewater main…
+5,390 · within
+Water distribution fe…
+5,050 · within
+
+People of growth relying on the project by 2035 — growth the screen shows constrained if the project is not in service. ■ within the funding screen · ■ outside it.
+
+All (35)Within (33)Outside (2)
+CSV
+Funding screen for the 2026–2035 window
+Screening result	Project	Online	DC cost 2026$	Growth by 2035	$ / person	Why
+Within the funding screen	Local wastewater main 525 mm · 25-2189
+committed (approved 2026)
+	2026Status unknown	$999,782
+estimated
+	2,030 people
+≈678 units by 2035
+	$492	Committed in the 2026 capital program
+Within the funding screen	💧 Water distribution feeder main 400 mm · 24-1187
+committed (approved 2026)
+	2026Status unknown	$3.1 M	3,530 people
+≈1,177 units by 2035
+	$884	Committed in the 2026 capital program
+Within the funding screen	G.E. Booth WRRF (Lakeview): expansion to 558 ML/d
+committed (approved 2026)
+	2028Status unknown	$105 M	96,400 people
+≈32,120 units by 2035
+	$1,087	Committed in the 2026 capital program
+Within the funding screen	💧 Water distribution feeder main · 24-1190
+committed (approved 2026)
+	2026Status unknown	$8.3 M
+estimated
+	7,050 people
+≈2,350 units by 2035
+	$1,176	Committed in the 2026 capital program
+Within the funding screen	💧 Water distribution feeder main 600 mm · 18-1184
+committed (approved 2026)
+	2026Status unknown	$6.2 M
+estimated
+	2,870 people
+≈957 units by 2035
+	$2,172	Committed in the 2026 capital program
+Within the funding screen	Local wastewater main · 24-2195
+committed (approved 2026)
+	2026Status unknown	$3.6 M
+estimated
+	8 people
+≈3 units by 2035
+	$430,221	Committed in the 2026 capital program
+Within the funding screen	Local wastewater main 1200 mm · 25-2120
+committed (approved 2026)
+	2026Status unknown	$3.1 M
+estimated
+	7 people
+≈2 units by 2035
+	$450,483	Committed in the 2026 capital program
+Within the funding screen	💧 Water distribution feeder main · 27-1142	2027Paused	$5.4 M
+estimated
+	12,700 people
+≈4,244 units by 2035
+	$427	Lets through 12,700 people by 2035
+Within the funding screen	Local wastewater main 450 mm · 27-2142	2027Paused	$3.4 M
+estimated
+	5,390 people
+≈1,798 units by 2035
+	$624	Lets through 5,390 people by 2035
+Within the funding screen	💧 Water distribution feeder main 600 mm · 27-1137	2029Paused	$4.5 M	6,590 people
+≈2,196 units by 2035
+	$680	Lets through 6,590 people by 2035
+
+See all 35 projects
+
+ⓘ Method, criteria & data dates

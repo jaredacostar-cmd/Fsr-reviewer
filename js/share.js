@@ -29,6 +29,7 @@
       if (MA().getCapYear() !== MM().THIS_YEAR) set('cy', MA().getCapYear() == null ? 'bo' : String(MA().getCapYear()));
       set('mu', App().state.muni); if (App().state.kind !== App().DEFAULT_KIND) set('k', App().state.kind); set('q', App().state.search);
       if (App().state.sp.length) set('sp', App().state.sp.join(',')); set('mt', App().state.mtsa.join(',')); set('pz', App().state.pz.join(',')); set('dr', App().state.dr.join(','));
+      if (App().state.lyr) set('ly', [...App().state.lyr].join(','));   // "Counts as" layers
       if (App().state.minUnits) set('u', App().state.minUnits); if (!App().state.newOnly) set('nn', '0');
       if (App().state.yearMode !== 'any') set('ym', App().state.yearMode);
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
@@ -40,6 +41,8 @@
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);
+      // servicing scope (plant / station / block / zone), or a result scope that can be re-opened
+      set('ss', App().state.ss && window.PeelSvcScope && window.PeelSvcScope.isResultRef(App().state.ss) && !/^(pipe|file|dcwork|iiblock):/.test(App().state.ss) ? null : App().state.ss);
       return q.toString();
     };
     const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };
@@ -47,7 +50,7 @@
     const ready = () => {
       if (applied) { write(); return; }
       const q = pending;
-      if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr')) && !App().state.servicing)) return;
+      if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr') || q.get('ss')) && !App().state.servicing)) return;
       applied = true;
       if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
       if (q.has('fo')) {
@@ -64,10 +67,13 @@
       if (q.get('pl') && SD().PLANT_SHORT[q.get('pl')]) App().state.plant = q.get('pl');
       if (q.get('dw') && ['single', 'town', 'apartment'].includes(q.get('dw'))) App().state.dwelling = q.get('dw');
       if (q.get('lu') && ['all', 'growth', 'residential', 'mixed', 'employment'].includes(q.get('lu'))) App().state.landuse = q.get('lu');
-      if (q.get('basis') && ['all', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
+      if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
+      { const ly = (q.get('ly') || '').split(',').filter(k => ['existing', 'built', 'committed', 'proposed', 'anticipated'].includes(k)); App().state.lyr = ly.length ? new Set(ly) : null; }
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';
       App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr');
+      // A result scope (a pipe, a file, a DC work, a block) re-runs its producer once its data loads (SPEC §3).
+      { const ss = q.get('ss') || null, S = window.PeelSvcScope; if (ss && S && S.isResultRef(ss)) { App().state.ss = null; setTimeout(() => S.restore(ss), 0); } else App().state.ss = ss; }
       // Old links could carry u=left / u=committed (the old size select's basis steps):
       // they migrate to the counting basis, like the old fo=left / fo=committed.
       if (q.get('u') === 'left') { App().state.minUnits = 0; App().state.basis = 'remaining'; }
@@ -97,7 +103,7 @@
     map.on('moveend', write);
     // Apply a saved view's link: back to the defaults, then its filters.
     const apply = h => {
-      App().state.phases = App().DEFAULT_PHASES(); App().state.flags = App().DEFAULT_FLAGS(); App().state.plant = ''; App().state.dwelling = ''; App().state.landuse = App().DEFAULT_LANDUSE; App().state.basis = App().DEFAULT_BASIS; MA().setCapYear(MM().THIS_YEAR); App().state.yearMode = 'any'; $('#t-mode').value = 'any';
+      App().state.phases = App().DEFAULT_PHASES(); App().state.flags = App().DEFAULT_FLAGS(); App().state.plant = ''; App().state.ss = null; App().state.dwelling = ''; App().state.landuse = App().DEFAULT_LANDUSE; App().state.basis = App().DEFAULT_BASIS; MA().setCapYear(MM().THIS_YEAR); App().state.yearMode = 'any'; $('#t-mode').value = 'any';
       if (App().state.yearMin != null) TL().setYearsSilently(App().state.yearMin, App().state.yearMax);
       pending = new URLSearchParams(h); applied = false; ready();
     };

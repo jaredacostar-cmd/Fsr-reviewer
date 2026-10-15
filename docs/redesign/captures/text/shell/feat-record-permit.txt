@@ -1,0 +1,164 @@
+##### analysis
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+The 12 developments shown would add about 86,100 people and 2,440 jobs in 26,722 units. G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% of rated capacity → 121% at build-out).
+
+Executive briefing (PDF)
+Growth
+Growth →
+12
+developments
+shown on the map
+all of Peel · 52: Heritage Heights
+26,722
+units
+planned
+26,669 left to build
+86,100
+people
+at build-out
+2,440
+jobs
+on development sites
+Needs attention
+1 DC project comes online after the capacity it relieves runs out: G.E. Booth WRRF (Lakeview): expansion to 600 ML/d · 25-2945
+DC Analysis →
+G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% → 121% at build-out)
+Wastewater →
+New: 11 CHAPEL STREET CALEDON ON L7E 1C2 (Inception, Caledon)
+Development →
+New: 2719 BOVAIRD DR W (Withdrawn / refused, Brampton)
+Development →
+Capacity Mixed basis
+Plants →
+G.E. Booth
+94% committed → 121% build-out
+Reaches the trigger ≈2028 · next expansion 2028 558 ML/d · status unknown
+Clarkson
+68% committed → 83% build-out
+Room to 2051 · next expansion 2029 500 ML/d (22-2950) · paused
+Inglewood
+42% committed → 45% build-out
+Room to 2051
+💧 South Peel water treatment
+54% committed → 67% build-out
+Room to 2051 · next expansion 2031 Arthur P. Kennedy Water Treatment Plant · Treatment Expansion · paused
+
+% of rated capacity, as in Wastewater → Plants (plants: annual average flow (2025 measured at each plant; growth at the plant’s measured rate); water: max day). Black tick: the 90% expansion trigger; grey: 100% rated.
+
+Largest developments
+See all →
+Development	Phase	Units	People
+9763 HERITAGE RD
+Brampton
+	5 Under construction	9,862	33,500
+10869 HERITAGE RD
+Brampton
+	2 Under review	2,656	8,230
+0 MISSISSAUGA RD
+Brampton
+	2 Under review	1,413	4,800
+0 HERITAGE RD
+Brampton
+	2 Under review	224	694
+10869 HERITAGE RD
+Brampton
+	1 Inception	0	0
+
+Definitions · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: annual average flow (2025 measured at each plant; growth at the plant’s measured rate); water: max day); black tick: the 90% expansion trigger. Scope: every stage, pre-consultation to completed. Applications as of 2026-10-12 · all sources current Data & checks →
+
+##### head
+Overview
+Growth
+Water
+Wastewater
+DC
+Developments
+
+##### sidebar
+Explore
+This week 7
+Data
+Search
+52: Heritage Heights ×
+2021–2026 ×
+Reset all
+
+Showing 12 active applications · 2021–2026 · all of Peel · 1 more filter · Report
+
+Stage
+Inception
+5
+Under review
+5
+Approved
+1
+Construction
+1
+Withdrawn / refused
+5
+
+12 of 24,269 developments
+
+Where
+All
+Brampton
+Caledon
+Mississauga
+Receiving plant
+Any plant
+G.E. Booth
+Clarkson
+Inglewood
+What
+Size
+Any size
+Adds units or jobs
+10+ units
+50+ units
+100+ units
+500+ units
+Dwelling type
+Any dwelling type
+Single / semi-detached
+Townhouse
+Apartment
+Land use
+Any land use
+Adds units or jobs
+Residential
+Mixed
+Employment
+When
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+From year
+To year
+Last 12 months
+This week
+Flags
+Stalled 2+ years 3
+Under appeal 0
+Waiting on DC works 0
+PS over firm capacity 0
+Changed this week 0
+★ Watched 0
+Estimate check 10
+
+##### footer
+Scenario
+Capacity check (2025 flows) · max day design · diversion off · outside areas to nearest · plant expansions on · Peel criteria · counting: All units (tree count) · results: 2026
+Timeline
+Milestone
+Any milestone
+Application submitted
+Approved
+Permit issued
+Completed
+2021 – 2026
+All years
+▴

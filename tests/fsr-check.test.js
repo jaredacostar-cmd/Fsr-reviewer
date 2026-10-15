@@ -136,7 +136,7 @@ test('plantCheck: reserve, over-commitment and missing figures', () => {
   assert.match(ok.text, /10\.0%/);
   const bad = F.plantCheck({ name: 'G.E. Booth', reserve: -2, use: 4 });
   assert.equal(bad.flag, 'bad');
-  assert.match(bad.text, /over-committed/);
+  assert.match(bad.text, /screens over rated capacity/);
   assert.equal(F.plantCheck(null).flag, 'na');
   assert.equal(F.plantCheck({}).flag, 'na');
 });

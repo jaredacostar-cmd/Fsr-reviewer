@@ -8,14 +8,14 @@
  *    large apartment 3.1; apartments above 475 persons/ha are designed at 2.7 ppu.
  *  - Wastewater: 290 L/cap/day residential (Linear Wastewater Standards R1.0),
  *    peaked with the Harmon formula M = 1 + 14 / (4 + sqrt(P / 1000)).
- *  - Water: 280 L/cap/day average day, maximum day factor 2.0, peak hour
- *    factor 3.0 (Peel Watermain Design Criteria, rev. June 2010).
+ *  - Water: 270 L/cap/day average day, maximum day factor 1.8, peak hour
+ *    factor 3.0 (Peel Water and Wastewater Modelling Demand Table v2.0, Aug 2024).
  *  - Infiltration & inflow (I&I): 0.26 L/s per hectare of gross site area (Linear
  *    Wastewater Standards); peak wet weather flow = Harmon peak + I&I. Site area comes from
  *    the application boundary; where there is none it is estimated from the units by type.
  *  - Employment (industrial, office, retail, hotel, institutional jobs estimated from the
- *    floor areas on the applications): water 300 L/employee/day, max day ×1.4, peak hour ×3.0
- *    (Peel Functional Servicing Report requirements / Watermain Design Criteria, ICI);
+ *    floor areas on the applications): water 250 L/employee/day, max day ×1.4, peak hour ×3.0
+ *    (Peel Water and Wastewater Modelling Demand Table v2.0, Aug 2024, non-residential);
  *    wastewater 270 L/employee/day peaked with Harmon on the employee count, bounded 2–4
  *    (Peel Water & Wastewater Modelling Demand Table, Aug 2024, non-residential). Employment
  *    I&I is counted on the boundary of non-residential sites (mixed-use sites already count
@@ -99,15 +99,37 @@
   // pre-consultation or review are proposed, not committed; completed units already draw on
   // the system; permits with no planning application (infill houses) are not growth.
   const COMMITTED_PHASES = new Set(['approved', 'permit', 'construction']);
+  // Committed follows MECP Procedure D-5-1 (confirmed): registered or draft-approved plans of
+  // subdivision, plus site plan approval where there is no subdivision, through permit and
+  // construction. Approved zoning alone is not committed. The phase carries it (SPEC §2, one
+  // definition with js/layers.js): a draft or site plan approval is phase 3 (js/phases.js), and a
+  // development whose approved plan a newer file on the same land supersedes is back in review.
+  // draftApproved() is kept for the record-level views.
+  const SUBDIV_REF = /^21T|^T\d{2}[EW]\d/i;
+  const isSubdivisionFile = r => r.kind === 'application' && (SUBDIV_REF.test(r.ref || '') || /draft plan of subdivision/i.test(String(r.description || '').split(' \u2014 ')[0]));
+  const lastEvent = r => Math.max(0, ...(r.events || []).map(e => +e.date));
+  function draftApproved(project) {
+    const subs = (project.records || []).filter(r => isSubdivisionFile(r) && r.phase !== 'cancelled');
+    if (!subs.length) return false;
+    const latest = subs.reduce((a, b) => (lastEvent(b) > lastEvent(a) ? b : a));
+    return COMMITTED_PHASES.has(latest.phase) || latest.phase === 'completed';
+  }
+  function isCommitted(project) {
+    if (!project || project.phase === 'cancelled' || project.phase === 'completed') return false;
+    return COMMITTED_PHASES.has(project.phase);
+  }
 
   /** How many of a project's units count, by basis. */
   function unitsFor(project, basis = 'all') {
     const b = project.buildout;
     if (basis === 'committed') {
-      if (!b || !COMMITTED_PHASES.has(project.phase)) return 0;
+      if (!b || !isCommitted(project)) return 0;
       return b.unbuilt;
     }
     if (basis === 'remaining') return b ? b.remaining : 0;   // planned, no building permit yet
+    // Build-out without the Anticipated layer (SPEC §2 scenario chip): pre-consultation and block
+    // plans with no formal file are left out.
+    if (basis === 'buildout') return project.phase === 'inception' || project.phase === 'cancelled' ? 0 : project.units || 0;
     if (basis === 'unbuilt') return b ? b.unbuilt : (project.phase === 'completed' ? 0 : project.units || 0);
     if (basis === 'completed') return b ? b.completed : (project.phase === 'completed' ? project.units || 0 : 0);
     return project.units || 0;
@@ -170,7 +192,7 @@
     if (!(jobs > 0)) return 0;
     const ph = project.phase;
     if (ph === 'cancelled') return 0;
-    if (basis === 'committed') return COMMITTED_PHASES.has(ph) ? jobs : 0;
+    if (basis === 'committed') return isCommitted(project) ? jobs : 0;
     if (basis === 'remaining') return NOT_PERMITTED.has(ph) ? jobs : 0;
     if (basis === 'unbuilt') return ph !== 'completed' ? jobs : 0;
     if (basis === 'completed') return ph === 'completed' ? jobs : 0;
@@ -398,7 +420,15 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+  // SPEC 1.7: I&I always with its basis, wherever peak wet is shown: "I&I 26.4 L/s over 101.5 ha (0.26 L/s/ha)".
+  function iiText(ii, criteria = DEFAULT_CRITERIA) {
+    const rate = criteria.wastewater && criteria.wastewater.infiltration != null ? criteria.wastewater.infiltration : DEFAULT_CRITERIA.wastewater.infiltration;
+    if (!(ii > 0) || !(rate > 0)) return '';
+    const ha = ii / rate, f1 = v => (Math.round(v * 10) / 10).toLocaleString('en-CA');
+    return `I&I ${f1(ii)} L/s over ${f1(ha)} ha (${rate} L/s/ha)`;
+  }
+  const api = {
+    iiText, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

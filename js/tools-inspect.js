@@ -84,9 +84,9 @@
       if (trace.plantName === 'Toronto') return '<p class="muted small">Drains to the City of Toronto system — capacity not modelled here.</p>';
       const c = app.plantCons(trace.plantName);
       if (!c) return fail(`Treatment plant reserve (${trace.plantName})`);
-      return `<table class="dt"><caption>${esc(c.name)} — reserve at 90% of rated ${EST}</caption>
+      return `<table class="dt"><caption>${esc(c.name)} — room to the 90% expansion trigger ${EST}</caption>
         <tbody>
-        <tr><td>Room left (committed)</td><td>${c.room.toFixed(1)} ML/d</td></tr>
+        <tr><td>Room to the 90% trigger after existing + built + committed</td><td>${c.room.toFixed(1)} ML/d</td></tr>
         <tr><td>≈ People</td><td>≈${fmtInt(Math.max(0, c.people))}</td></tr>
         <tr><td>Runs out</td><td>${c.out === 'today' ? 'at capacity today' : c.out == null ? 'holds to build-out' : `≈${c.out}`}</td></tr>
         </tbody></table>`;

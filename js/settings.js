@@ -31,7 +31,10 @@
     if (!e.target || !e.target.id) return;
     if (e.target.id === 'dsp-theme') setTheme(e.target.value);
     else if (e.target.id === 'dsp-density') setDensity(e.target.value);
+    else if (e.target.id === 'dsp-present') store.set('presentTheme', e.target.value === 'app' ? 'app' : 'light');
     else if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim());
+    else if (e.target.id === 'count-mode') { root.PeelTreeCounts.setMode(e.target.value); App().recount(); }
+    else if (e.target.id === 'public-view') { store.set('publicView', !!e.target.checked); root.PeelUtil.applyPublic(); App().refreshTheme(); }
     const w = e.target.closest && e.target.closest('[data-wet]');
     if (w) { App().state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged(); }
   });
@@ -84,13 +87,11 @@
   function refreshCriteria(jobs) {
     if (jobs) { App().clearEmp(); RL().renderPipeline(App().state.projects.filter(p => App().matches(p, true))); }
     GU().renderGrowth();
-    // Redraw the open panel where it shows demand or jobs, keeping its scroll position.
-    const det = $('#detail'), view = det.dataset.view, top = det.scrollTop;
-    if (det.hidden) return;
-    if (view === 'dev' && DN().getCurrentProject()) DN().showDetail(DN().getCurrentProject());
-    else if (view === 'sel' && AS().selection.size) AS().showSelection();
-    else return;
-    det.scrollTop = top;
+    // Redraw an open result scope that shows demand or jobs (a selection, a file), keeping its scroll.
+    const S = root.PeelSvcScope, host = $('#scope-body'), top = host ? host.scrollTop : 0;
+    if (!S || !S.hasResult()) return;
+    S.reopenResult();
+    if (host) host.scrollTop = top;
   }
   // Reset to Peel defaults now lives in the Scenario control's criteria editor
   // (renderScenarioCriteria): the #d-reset button it handled was moved there.

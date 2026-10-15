@@ -1,0 +1,108 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Plants & capacity
+Blocks
+Allocations
+Pumping stations
+Pumping stations
+
+6 pumping stations exceed firm capacity at build-out peak wet: McVean PS ≈184%, Caledon East PS ≈149%, Gore Road PS ≈132%, Lakelands PS ≈124% +2.
+
+Pumping stations
+15
+2020 Master Plan, firm capacity
+Over firm (peak wet)
+6
+tightest: McVean PS ≈184%
+Tightest station
+McVean PS
+peak wet ≈184% of firm · peak dry 82%
+Basis
+Firm
+largest pump out of service
+Mixed basis Build-out peak wet weather as a % of firm capacity
+McVean PS
+184 % · over
+Caledon East PS
+149 % · over
+Gore Road PS
+132 % · over
+Lakelands PS
+124 % · over
+Rosemere PS
+114 % · over
+Richards Memorial PS
+110 % · over
+Bolton PS
+85.1 %
+Elmwood PS
+78.1 %
+Silver Birch Trail PS
+74.7 %
+Indian Road PS
+57.1 %
+Jack Darling Memorial Park 1 PS
+55.1 %
+Front Street PS
+51.9 %
+Intermodal PS
+46.5 %
+Beechwood PS
+33.4 %
+Beach Street PS
+20 %
+Pumping stations · firm capacity (2020 Master Plan) against the build-out flow in the sewer arriving at each, Peel design criteria
+Pumping station	Block → plant	People + jobs upstream	Firm	Peak wet ≈ (check)	Peak dry (reference)
+McVean Drive	– → G.E. Booth	152,500pop · 13,762jobs	1,400 L/s	2,574L/s
+184%
+	1,145L/s
+82%
+
+Caledon East	– → G.E. Booth	6,410pop	101 L/s	150L/s
+149%
+	67.7L/s
+67%
+
+Gore Road	– → G.E. Booth	6,970pop · 1,209jobs	81 L/s	107L/s
+132%
+	86.9L/s
+107%
+
+Lakelands	– → G.E. Booth	4,970pop · 45jobs	64 L/s	79.5L/s
+124%
+	54.7L/s
+85%
+
+Rosemere Road	– → G.E. Booth	1,380pop	25 L/s	28.5L/s
+114%
+	17.2L/s
+69%
+
+Richard's Memorial	– → Clarkson	8,640pop	195 L/s	215L/s
+110%
+	87.5L/s
+45%
+
+Bolton	– → G.E. Booth	16,100pop	380 L/s	323L/s
+85%
+	148L/s
+39%
+
+Elmwood Avenue	– → G.E. Booth	10,900pop · 64jobs	195 L/s	152L/s
+78%
+	108L/s
+55%
+
+Silverbirch Trail	– → Clarkson	1,390pop	48 L/s	35.9L/s
+75%
+	17.2L/s
+36%
+
+Indian Road	– → G.E. Booth	1,060pop	72.5 L/s	41.4L/s
+57%
+	13.5L/s
+19%
+
+See all 15 stations
+
+ⓘ Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the check is peak wet weather flow (PWWF) against firm capacity, the comparison the Region expands a station on. Peak dry is shown for reference only. I&I at a station uses the land draining through its arriving sewer (published network, 300 mm and up), so peak wet is approximate (≈). Criteria: wastewater 290 L/cap/d with Harmon peaking (2–4), I&I 0.26 L/s/ha (Peel Linear Wastewater Standards 2023); employment 270 L/emp/d (Peel Modelling Demand Table, Aug 2024). Data: applications 2026-10-12 · 2021 Census · Peel 2025 annual reports.

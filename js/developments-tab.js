@@ -8,54 +8,18 @@
   const DT = () => window.PeelDataTab;
   const App = () => window.PeelApp;
 
-  // ---- Developments analysis tab: the development list as a tab ---------------------------
-  // Phase 2 moves the sidebar list into the analysis panel. The tab button and pane are created
-  // here (guarded) so this works with the current #footer markup and with Worker 2's
-  // <aside id="analysis"> markup. The .export-row stays in the sidebar (Worker 1 moves it).
+  // ---- The In view list stays in the left panel (SPEC §4: left panel = find) ----------------------
+  // It was moved into a right-hand "Developments" tab (Phase 2 shell); SPEC §5 drops that tab, so the
+  // list keeps its place under the filters and only gains its pager here.
   function ensureDevelopmentsTab() {
-    if (document.getElementById('ftab-developments')) return;
-    const strip = document.querySelector('.analysis-tabs') || document.querySelector('#footer .f-tabs');
-    const tabs = strip && strip.querySelectorAll('.f-tab');
-    if (!strip || !tabs.length) return;
-    const btn = document.createElement('button');
-    btn.type = 'button'; btn.className = 'f-tab'; btn.id = 'ftab-developments';
-    btn.setAttribute('role', 'tab');
-    btn.dataset.tab = 'developments'; btn.dataset.atab = 'developments';
-    btn.setAttribute('aria-controls', 'pane-developments');
-    btn.setAttribute('aria-selected', 'false');
-    btn.dataset.info = 'tab-developments';
-    btn.textContent = 'Developments';
-    tabs[tabs.length - 1].after(btn);
-    const pane = document.createElement('section');
-    pane.className = 'f-pane'; pane.id = 'pane-developments';
-    pane.dataset.pane = 'developments';
-    pane.setAttribute('role', 'tabpanel');
-    pane.setAttribute('aria-labelledby', 'ftab-developments');
-    pane.hidden = true;
-    // Move the sidebar list pieces in (the export row stays in the sidebar).
-    const head = document.createElement('div'); head.className = 'dev-head';
-    const h2 = document.querySelector('.list-panel h2');
-    const sort = document.getElementById('list-sort');
-    if (h2) head.appendChild(h2);
-    if (sort) { const sw = document.createElement('div'); sw.className = 'dev-sort'; sw.appendChild(sort); head.appendChild(sw); }
-    const ph = document.querySelector('.list-panel .panel-head');
-    if (ph && !ph.children.length && !ph.textContent.trim()) ph.remove();   // emptied by the move
-    pane.appendChild(head);
-    const note = document.getElementById('list-note'); if (note) pane.appendChild(note);
-    const list = document.getElementById('project-list'); if (list) pane.appendChild(list);
+    if (document.getElementById('dev-pages')) return;
+    const panel = document.querySelector('.list-panel'); if (!panel) return;
     const pages = document.createElement('div');
-    pages.className = 'dev-pages'; pages.setAttribute('role', 'group'); pages.setAttribute('aria-label', 'Development list pages');
+    pages.className = 'dev-pages'; pages.id = 'dev-pages'; pages.setAttribute('role', 'group'); pages.setAttribute('aria-label', 'Development list pages');
     pages.innerHTML = `<button type="button" class="btn small" id="dev-prev" aria-label="Previous page">‹ Prev</button><span class="muted small" id="dev-page-ind"></span><button type="button" class="btn small" id="dev-next" aria-label="Next page">Next ›</button>`;
-    pane.appendChild(pages);
-    const panesBox = document.querySelector('#analysis-panes');
-    if (panesBox) panesBox.appendChild(pane);
-    else {
-      const box = strip.closest('footer, aside') || document.body;
-      const panes = box.querySelectorAll('.f-pane');
-      if (panes.length) panes[panes.length - 1].after(pane); else box.appendChild(pane);
-    }
-    pane.querySelector('#dev-prev').onclick = () => { RL().setListPage(RL().getListPage() - 1); RL().renderList(); };
-    pane.querySelector('#dev-next').onclick = () => { RL().setListPage(RL().getListPage() + 1); RL().renderList(); };
+    panel.appendChild(pages);
+    pages.querySelector('#dev-prev').onclick = () => { RL().setListPage(RL().getListPage() - 1); RL().renderList(); };
+    pages.querySelector('#dev-next').onclick = () => { RL().setListPage(RL().getListPage() + 1); RL().renderList(); };
   }
 
   function focusProject(p) {
@@ -83,7 +47,7 @@
 
   // Moved from the analysis-tabs section (old line 1334): the call lives in the
   // module that owns the function. Runs before analysis-tabs' showFootTab(footPref).
-  ensureDevelopmentsTab();   // before showFootTab so a stored 'developments' tab restores
+  ensureDevelopmentsTab();
   const api = { ensureDevelopmentsTab, focusProject, renderSources, setSourceStatus };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevelopmentsTab = api;

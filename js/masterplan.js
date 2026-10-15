@@ -1,6 +1,8 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS, PIPES_NOT_ASSESSED } = window.PeelUtil;
+  // Every planned date carries its capital status after the May 2026 pause (design audit, Group 3).
+  const capTag = (y, s, id) => ` · ${CAPITAL_STATUS[capitalStatus(y, s, id)].toLowerCase()}`;
   const D = window.PeelDemand;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
@@ -101,7 +103,7 @@
       <td class="n"><strong${bo > cap ? ' class="mpc-hi"' : ''}>${fmtNum(Math.round(bo))}</strong><small>${verdict}${bo > cap ? ' · over capacity' : ''}</small></td><td class="mpc-cell">${bar}</td></tr>`;
   }
   const mpHead = unitT => `<tr><th>Facility</th><th class="n">Capacity</th><th class="n">Master Plan<br>2026 · 2031 · 2041</th><th class="n mpc-x">Today</th><th class="n mpc-x">+ Approved</th><th class="n mpc-x">+ Proposed</th><th class="n">Build-out</th><th>${unitT}</th></tr>`;
-  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Approved</li><li><span class="gsw mpc-p"></span>+ Proposed (in review)</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
+  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Committed</li><li><span class="gsw mpc-p"></span>+ Proposed (in review)</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
   function renderMpCompare() {
     const M = App().state.svcModel, R = App().state.reports;
     const ww = $('#mp-ww');
@@ -138,7 +140,7 @@
     const ratedTreat = fs.filter(f => f.plant && /Kennedy|Lorne/.test(f.name)).reduce((t, f) => t + (f.plant.ratedMLd || 0), 0);
     const nShort = fs.filter(f => short(f).length).length;
     const grpName = sy => esc(sy === 'Lake-based' ? 'Lake-based (other)' : sy === 'Caledon groundwater' ? 'Caledon groundwater systems' : `${sy} transmission system`);
-    const rowFor = f => { const sh = short(f), w = WT().wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WT().WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(WT().wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong></span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; };
+    const rowFor = f => { const sh = short(f), w = WT().wfWorks(f); return `<tr class="wf-row" data-wf="${esc(f.id)}" tabindex="0"><td><i class="wf-ic wf-${f.kind}">${(WT().WF_KIND[f.kind] || ['●'])[0]}</i> ${esc(f.name)}</td><td>${esc(WT().wfKinds(f))}</td><td class="n">${f.pumps ? f.pumps.map(p => `<span class="wf-pz" title="Firm (largest pump out of service)${p.actualFirm != null && p.actualFirm !== p.firm ? `; the capacity check uses the 2020 Master Plan\u2019s modelled actual firm, ${fmtNum(p.actualFirm)}` : ''}">${esc(p.zone)} <strong>${fmtNum(p.firm)}</strong>${p.actualFirm != null && p.actualFirm !== p.firm ? `<small> actual ${fmtNum(p.actualFirm)}</small>` : ''}</span>`).join('') : ''}</td><td class="n">${f.storageML ? fmtNum(f.storageML) : ''}</td><td>${plantCap(f)}</td><td>${sh.length ? `<span class="dcn-gap-t">${esc(sh.join(', '))}</span>` : ''}</td><td>${w.length ? esc(w.flatMap(x => x.items.map(i => i.what)).slice(0, 3).join('; ')) : ''}</td></tr>`; };
     const tableFor = list => { const rows = SYS.map(sy => { const ls = list.filter(f => f.system === sy); if (!ls.length) return ''; return `<tr class="wf-grp"><td colspan="7">${grpName(sy)}</td></tr>${ls.map(rowFor).join('')}`; }).join(''); return rows ? `<div class="hyd-scroll"><table class="dt svc-table wf-table"><thead><tr><th>Facility</th><th>Type</th><th class="n">Firm pumping by zone fed (ML/d)</th><th class="n">Storage (ML)</th><th>Treatment</th><th>Master Plan: short by 2041</th><th>Planned DC works</th></tr></thead><tbody>${rows}</tbody></table></div>` : ''; };
     const main = fs.filter(f => short(f).length), rest = fs.filter(f => !short(f).length);
     return `<div id="wfac-sec"><p class="headline">${fs.length} existing water facilities · ${fmtNum(tot.ml)} ML of storage${nShort ? ` · <strong>${nShort} short by 2041</strong> in the 2020 Master Plan assessment` : ''}.</p>
@@ -211,7 +213,7 @@
   function renderHydroBox() { const b = $('#hyd-box'); if (b) b.outerHTML = hydroBoxHTML(); }
   document.addEventListener('click', e => {
     const h = e.target.closest('[data-hyd]'); if (!h) return;
-    if (h.dataset.hyd === 'run') runHydro(); else if (h.dataset.hyd === 'inp' && HYD.inp) PE().download(`peel-zone-supply-${MM().THIS_YEAR}.inp`, HYD.inp, 'text/plain');
+    if (h.dataset.hyd === 'run') runHydro(); else if (h.dataset.hyd === 'inp' && HYD.inp) PE().download(`peel-zone-supply-${MM().THIS_YEAR}.inp`, window.PeelUtil.CSV_DISCLAIMER.replace(/^# /gm, '; ') + HYD.inp, 'text/plain');
   });
   const wellSystem = { AV13: 'Caledon Village – Alton', CE9: 'Palgrave – Caledon East' };
   const yearsAhead = () => { const ys = []; for (let y = MM().THIS_YEAR; y <= SP().hz.end; y++) ys.push(y); return ys; };
@@ -247,8 +249,8 @@
     DCN.pipeRelief.set(i, out);
     return out;
   }
-  const lineRelief = ln => ({ kind: 'line', ln, y: ln.y || null, text: `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DI().DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` ${ln.p}` : ''}` });
-  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}` }; };
+  const lineRelief = ln => ({ kind: 'line', ln, y: ln.y || null, text: `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DI().DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` ${ln.p}` : ''}${capTag(ln.y, ln.s, ln.p || ln.c)}` });
+  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}${capTag(y, '', null)}` }; };
   // Growth (peak wet, L/s) of gp people, gj jobs on gh hectares, as in pipeFlow.
   function growthLs(gp, gj, gh) {
     const c = App().state.criteria, E = c.employment;
@@ -290,9 +292,9 @@
     const lim = PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
     const fac = App().state.dcInfra && App().state.dcInfra.wastewater.facilities.find(f => f.kind === 'plant' && f.plant === pl);
     const after = runOut(q, y => PLANT_TRIGGER * ratedAt(y === 'today' ? MM().THIS_YEAR : y));
-    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · average dry`, cap: lim, unit: 'ML/d',
+    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
       util: { today: cap.existing / lim, com: cap.committed / lim, bo: cap.buildout / lim }, room, people: room * 1e6 / (cap.perPerson || 1), out: runOut(q, () => lim), outAfter: steps.length ? after : undefined,
-      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}` })), q, rated: cap.rated };
+      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}${capTag(s.year, /council.approved/i.test(s.note || '') ? 'approved' : '', s.proj)}` })), q, rated: cap.rated };
   }
   // Water: max day of a set of zones by year (ML/d).
   function zonesMax(ids, y) {
@@ -305,7 +307,9 @@
     return t;
   }
   const perPersonMax = () => App().state.svcModel.wMax(1, 0);
-  const lakeZones = () => App().state.servicing.zones.filter(z => zLevel(z.zone) != null && !wellSystem[z.zone]).map(z => z.id);
+  // Only zones already in the servicing lookup (svcById is filled after the optional data loads;
+  // a render in between used to throw on the missing zone and leave a stale model).
+  const lakeZones = () => App().state.servicing.zones.filter(z => zLevel(z.zone) != null && !wellSystem[z.zone] && SD().svcById.has(z.id)).map(z => z.id);
   function waterPlantCons(zone) {
     const R = App().state.reports; if (!R || !App().state.svcModel) return null;
     if (wellSystem[zone.zone]) {
@@ -318,6 +322,9 @@
         util: { today: q('today') / lim, com: q('committed') / lim, bo: q(null) / lim }, room, people: room / perPersonMax(), out: runOut(q, () => lim), relief: wells.map(f => facRelief(f)), q };
     }
     const sp = R.water.southPeel, ids = lakeZones(), rated = sp.plants.reduce((t, p) => t + p.ratedMLd, 0), lim = PLANT_TRIGGER * rated;
+    // Before the zones are in the servicing lookup there is no growth to add: not a result (it would
+    // read 2025 max day alone, 48% → 48%, and stay cached for this model).
+    if (!ids.length) return null;
     const q = y => sp.maxDayMLd + zonesMax(ids, y) - zonesMax(ids, 'today');
     const room = lim - q('committed');
     const facs = App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.kind === 'plant') : [];
@@ -370,11 +377,15 @@
      the scenario key so cached() rebuilds the DCN cache with the upgraded
      pipe's capacity. Empty in normal use: no behaviour change. */
   let sewUpgKey = '';
-  function scenarioKey() { return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${SvcTab().svcOpt.ww}|${SvcTab().svcOpt.md}${sewUpgKey}`; }
+  // Every switch that changes a result is in the key (the diversion, counting basis and outside-area
+  // rule included), so a cached result never outlives the scenario it was computed for.
+  function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}|g${App().state.svcGen || 0}${sewUpgKey}`; }
   function cached(id, fn) {
     const k = scenarioKey(); if (DCN.key !== k) { DCN.cache.clear(); DCN.key = k; }
-    if (!DCN.cache.has(id)) DCN.cache.set(id, fn());
-    return DCN.cache.get(id);
+    if (DCN.cache.has(id)) return DCN.cache.get(id);
+    const v = fn();
+    if (v != null) DCN.cache.set(id, v);   // (not ready yet: ask again next time)
+    return v;
   }
   // Constraints a development relies on.
   function devNeeds(p) {
@@ -411,14 +422,17 @@
   }
   const ppuOf = p => { const e = p && D.estimate([p], App().state.criteria, 'all', App().jobsOf); return e && e.totalUnits > 0 && e.population > 0 ? e.population / e.totalUnits : (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment; };
   const outText = c => c.out === 'today' ? '<strong>already</strong>' : c.out == null ? `after ${SP().hz.end}` : `≈${c.out}`;
-  const STATUS = { gap: ['dcn-gap', 'Needed before the DC project'], planned: ['dcn-ok', 'DC project in time'], check: ['dcn-check', 'Check the data: the existing flow alone is over the full-pipe capacity from the published slope'], ok: ['dcn-fine', 'Room to build-out'] };
+  const STATUS = { gap: ['dcn-gap', 'Screens late: runs out before the DC project is in service'], planned: ['dcn-ok', 'DC project in time'], check: ['dcn-check', 'Check the data: the existing flow alone is over the full-pipe capacity from the published slope'], ok: ['dcn-fine', 'Room to build-out'] };
   function roomText(c, ppu) {
     if (c.room == null) return '<span class="muted">new facility</span>';
     if (c.room <= 0) return `<strong>none</strong> <small>over by ${c.unit === 'L/s' ? fmtNum(Math.round(-c.room)) : fmt1(-c.room)} ${c.unit} (${c.kind === 'plant' || c.kind === 'wplant' ? `${SvcTab().pctRated(c, 'com')}% of rated; trigger ${Math.round(PLANT_TRIGGER * 100)}%` : `${Math.round((c.util.com - 1) * 100)}%`})</small>`;
-    return `${fmtNum(roundPop(c.people))} people<small>≈${fmtNum(Math.round(c.people / ppu))} units</small>`;
+    return `${fmtNum(roundPop(c.people))} people${ppu ? `<small>≈${fmtNum(Math.round(c.people / ppu))} units</small>` : ''}`;
   }
   const reliefHTML = c => c.relief.length ? c.relief.slice(0, 3).map(r => `<button type="button" class="btn small link" data-dcn-relief="${esc(c.id)}|${c.relief.indexOf(r)}">${esc(r.text)}</button>`).join('<br>') + (c.relief.length > 3 ? ` <small>+${c.relief.length - 3}</small>` : '') : '<span class="muted">none on the 2026 DC map</span>';
-  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${Math.round(c.util.com * 100)}% committed → ${Math.round(c.util.bo * 100)}% build-out`}</small>`;
+  // % of rated capacity for plants and water treatment (never % of the 90% trigger, SPEC 1.4); % of
+  // capacity (firm, full pipe) for the rest.
+  const pctCap = (c, k) => (c.kind === 'plant' || c.kind === 'wplant' ? SvcTab().pctRated(c, k) : Math.round(c.util[k] * 100));
+  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${pctCap(c, 'com')}% committed → ${pctCap(c, 'bo')}% build-out${c.kind === 'plant' || c.kind === 'wplant' ? ' of rated' : ''}`}</small>`;
   function needsTable(list, ppu, opts = {}) {
     return `<table class="dt dcn-table"><thead><tr><th>${opts.first || 'Existing capacity'}</th><th>Room after approved</th><th>Runs out</th><th>DC relief (construction)</th></tr></thead><tbody>
       ${list.map(reg).map(c => `<tr class="${STATUS[c.status][0]}"><td>${c.sys === 'water' ? '💧 ' : ''}${consName(c)}</td><td data-l="Room after approved">${roomText(c, ppu)}</td><td data-l="Runs out">${outText(c)}${c.outAfter != null ? `<small>again ${c.outAfter === 'today' ? 'now' : `≈${c.outAfter}`} with the expansions</small>` : ''}<small>${esc(STATUS[c.status][1])}</small></td><td data-l="DC relief">${reliefHTML(c)}</td></tr>`).join('')}</tbody></table>`;
@@ -427,12 +441,13 @@
     if (!App().state.svcModel) return '';
     const all = devNeeds(p); if (!all) return '<p class="small muted">No servicing demand to compare.</p>';
     const list = sys ? all.filter(c => c.sys === sys) : all;
-    if (!list.length) return `<p class="small muted">${sys === 'water' ? 'No water supply or storage constraint applies.' : 'No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.'}</p>`;
-    const ppu = ppuOf(p), gaps = list.filter(c => c.status === 'gap').length, main = list.filter(c => c.status !== 'ok'), rest = list.filter(c => c.status === 'ok');
+    if (!list.length) return `<p class="small muted">${sys === 'water' ? 'No water supply or storage constraint applies.' : (PIPE_RESULTS ? 'No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.' : `No tabled facility applies. ${PIPES_NOT_ASSESSED}.`)}</p>`;
+    // An employment site has no units: room in people only (SPEC 1.9).
+    const ppu = p.units > 0 ? ppuOf(p) : null, gaps = list.filter(c => c.status === 'gap').length, main = list.filter(c => c.status !== 'ok'), rest = list.filter(c => c.status === 'ok');
     const nChk = list.filter(c => c.status === 'check').length;
-    return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} Room in units at this development's ${ppu.toFixed(1)} persons per unit.${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
+    return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} ${ppu ? `Room in units at this development's ${ppu.toFixed(1)} persons per unit.` : 'Room in people at Peel design criteria (an employment site: no units).'}${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
       ${main.length ? needsTable(main, ppu) : ''}
-      ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.round(Math.max(...rest.map(c => c.util.bo)) * 100)}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
+      ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.max(...rest.map(c => pctCap(c, 'bo')))}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
       <p class="small"><button type="button" class="btn small link" data-dcn-all="1">All DC timing →</button></p>
       <p class="small muted">Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (${esc(SvcTab().scenarioText())}). ${sys === 'water' ? 'Water supply is a rough conveyance estimate: water pumping station capacities are not published.' : `Sewers: full-pipe capacity at peak wet (pipe screen); pumping stations: firm capacity; plants: ${Math.round(PLANT_TRIGGER * 100)}% of rated.${sys ? '' : ' Water supply is a rough conveyance estimate: water pumping station capacities are not published.'}`} A screen, not a hydraulic model.</p>`;
   }
@@ -543,13 +558,14 @@
       ${dcNeedsSection({ ln })}
       `;
     TS().loadsOf = { dc: { ln } };
-    TS().toolResult('dc', dcTitle, html, () => showDcLine(ln));
+    TS().toolResult('dc', dcTitle, html, () => showDcLine(ln), { ref: `dcwork:${ln.sys}:${ln.p || ln.c}` });
   }
   // All constraints in the network, for the DC timing table.
   function allNeeds() {
     return cached('all', () => {
       const out = [];
-      if (MM().SEW.data) {
+      // Sewer groups only while pipe results are on: hidden results never drive DC timing or exports.
+      if (PIPE_RESULTS && MM().SEW.data) {
         const flagged = [];
         MM().SEW.data.pipes.forEach((p, i) => { if (p[2] && SC().pipeFlow(i, null).q >= 0.9 * p[2]) flagged.push(i); });
         const fset = new Set(flagged), grp = new Map(), rootOf = new Map();
@@ -585,14 +601,14 @@
     const n = k => all.filter(c => c.status === k).length;
     const html = `
       <div class="head"><h3 data-info="dc-needs">DC timing</h3><div class="m">Existing capacity against the 2026 DC capital program (draft) · ${esc(SvcTab().scenarioText())}</div></div>
-      <div class="chips">${[['gap', `Needed before the DC project ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
+      <div class="chips">${[['gap', `Screens late ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
         <span class="seg">${[['all', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']].map(([k, t]) => `<button type="button" class="btn small${sysF === k ? ' on' : ''}" data-dcn-filter="${stF}:${k}">${t}</button>`).join('')}</span></div>
       ${list.length ? needsTable(list.slice(0, 150), ppu) : '<p class="small muted">Nothing in this group.</p>'}
       ${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more.</p>` : ''}
       <p class="small"><span class="muted">Tap a name for what loads it; tap a DC project for what it relieves and who relies on it.</span></p>
       <p class="small muted">Sewers: pipes reaching 90% of full capacity by build-out, grouped by the DC main that runs along them (or by run); the tightest pipe of each group is shown. Room in units at ${ppu} persons per unit (apartment). Room = capacity − (existing + built + approved); runs out = the year approved and proposed growth reach it, phased as in Horizon years. Plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated; pumping stations at firm capacity; storage from the 2020 Master Plan forecast; water supply into the upper zones is a rough conveyance estimate (1.5 m/s in the large mains crossing each zone boundary; water pumping station capacities are not published). A screen, not a hydraulic model.</p>`;
     TS().loadsOf = { dc: { timing: true } };
-    TS().toolResult('dc', 'DC timing', html, showDcTiming);
+    TS().toolResult('dc', 'DC timing', html, showDcTiming, { filter: false });
   }
   function showConsDevs(c) {
     const ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
@@ -604,15 +620,6 @@
     TS().toolResult('dc', c.name, html, () => showConsDevs(c));
   }
   function showDcBack(b) { if (b.ln) showDcLine(b.ln); else if (b.fc) DI().showFacility(b.fc); else if (b.cons && DCN.reg && DCN.reg.get(b.cons)) showConsDevs(DCN.reg.get(b.cons)); else showDcTiming(); }
-  $('#detail-body').addEventListener('click', e => {
-    const f = e.target.closest('[data-dcn-filter]'); if (f) { dcnFilter = f.dataset.dcnFilter; return showDcTiming(); }
-    if (e.target.closest('[data-dcn-all]')) { SC().loadSewers(); return showDcTiming(); }
-    const cn = e.target.closest('[data-dcn-cons]'); if (cn && DCN.reg && DCN.reg.get(cn.dataset.dcnCons)) return showConsDevs(DCN.reg.get(cn.dataset.dcnCons));
-    const r = e.target.closest('[data-dcn-relief]'); if (!r) return;
-    const [id, k] = r.dataset.dcnRelief.split('|'), c = DCN.reg && DCN.reg.get(id), rl = c && c.relief[+k]; if (!rl) return;
-    if (rl.ln) { showDcLine(rl.ln); map.fitBounds(L.latLngBounds(rl.ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); }
-    else if (rl.fc) { DI().showFacility(rl.fc); if (rl.fc.g) map.setView([rl.fc.g[1], rl.fc.g[0]], Math.max(map.getZoom(), 14)); }
-  });
 
   // ---- DC Analysis (bottom panel tab): divert flows to each DC project when it comes online, and
   // what happens if it is cancelled ---------------------------------------------------------------
@@ -655,6 +662,12 @@
     const m = ratePP(c); if (!m) return 0;
     const qy = c.q(y), base = Math.max(capWith(c, y, off), c.q('today'));
     return Math.max(0, qy - base) / m;
+  }
+  // People held back at a demand level ('committed', or null = build-out) against the capacity at
+  // build-out with every project as scheduled: the Committed part of growth waiting on works (SPEC §2.6).
+  function heldAtLevel(c, level, off) {
+    const m = ratePP(c); if (!m) return 0;
+    return Math.max(0, c.q(level) - Math.max(capWith(c, null, off), c.q('today'))) / m;
   }
   function growthPpu() {
     let pop = 0, units = 0;
@@ -705,7 +718,7 @@
     dcItemCons,
     reliefAdd,
     capWith,
-    heldPeople,
+    heldPeople, heldAtLevel,
     growthPpu,
     reliefKey,
     lineRelief,

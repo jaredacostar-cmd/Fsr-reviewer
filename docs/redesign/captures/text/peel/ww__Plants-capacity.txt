@@ -1,0 +1,170 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Plants & capacity
+Blocks
+Allocations
+Pumping stations
+Wastewater treatment plants
+2021 Census baseline (follows the timeline) · flows reaching each wastewater treatment plant
+
+G.E. Booth reaches its 90% expansion trigger ≈2028 (existing + built + committed 94% of rated capacity → 121% at build-out; next expansion 2028 558 ML/d · status unknown); Clarkson stays below its 90% expansion trigger to 2051 (existing + built + committed 68% of rated capacity → 83% at build-out); Inglewood stays below its 90% expansion trigger to 2051 (existing + built + committed 42% of rated capacity → 45% at build-out).
+
+2021 Census
+Built since
+Committed
+Proposed (in review)
+Each bar is the row's build-out population, split by layer
+Columns
+Simple
+Engineering
+G.E. Booth
+121%
+of rated at build-out · rated 518 ML/d
+Clarkson
+83%
+of rated at build-out · rated 350 ML/d
+Inglewood
+45%
+of rated at build-out · rated 0.243 ML/d
+All Peel plants
+113%
+of rated at build-out
+Plant capacity Mixed basis annual average flow as a % of rated (annual average) capacity · capacity check, calibrated to 2025 flows
+0%
+25%
+50%
+75%
+100%
+125%
+G.E. Booth WRRF (Lakeview)
+rated 518ML/d
+121%
+Clarkson WRRF
+rated 350ML/d
+83%
+Inglewood WWTP
+rated 0.24ML/d
+45%
+All Peel plants
+rated 868ML/d · incl. the City of Toronto inflow
+109%
+2021 Census (existing) + external inflows
+Built since 2021
+Committed
+Proposed (in review)
+Uncommitted reserve (D-5-1, to 100% of rated)
+90% expansion trigger
+Rated capacity (100%)
+Plant	Rated	Committed	Reserve (D-5-1)	After proposed
+G.E. Booth WRRF (Lakeview)
+100% ≈ 1,289,900people
+	518ML/d	94%
+488ML/d
+	30.4ML/d
+≈ 81,300people
+	short 109ML/d
+Clarkson WRRF
+100% ≈ 768,500people
+	350ML/d	68%
+238ML/d
+	112ML/d
+≈ 245,400people
+	60.1ML/d
+≈ 131,900people
+
+Inglewood WWTP	0.24ML/d	42%
+0.1ML/d
+	0.14ML/d	0.13ML/d
+All Peel plants
+100% ≈ 2,020,000people
+	868ML/d	87%
+754ML/d
+	114ML/d
+≈ 287,600people
+	short 79.4ML/d
+
+– : too few census people in the sewershed for population equivalents (Inglewood).
+
+screening estimate
+
+Method & notes
+Horizon years Mixed basis annual average flow as a % of rated (annual average) capacity, 2025–2051 · capacity check
+Approved built from 
+over 
+years ·
+Proposed built from 
+over 
+years ·
+Further growth beyond applications 
+people / year ·
+70 ML/d diversion from 
+(switch the diversion on to use it)
+
+
+ Planned expansions (2026 DC draft):
+G.E. Booth 558 ML/d from
+, G.E. Booth 600 ML/d from
+· Clarkson 500 ML/d from
+Reset
+0%
+20%
+40%
+60%
+80%
+100%
+2025
+2030
+2040
+2050
+80%
+90% expansion trigger
+100% rated
+G.E. Booth 558
+G.E. Booth 600
+Clarkson 500
+G.E. Booth 105%
+Clarkson 58%
+Inglewood 45%
+G.E. Booth WRRF (Lakeview)
+Clarkson WRRF
+Inglewood WWTP
+dashed: 80% warning and 90% expansion trigger (2020 Master Plan); solid: rated capacity
+Plant	2025	2031	2041	2051	Reaches 80%	Reaches 90%	Reaches 100%
+G.E. Booth WRRF (Lakeview)
+rated 518ML/d → 558 (2028) → 600 (2037)
+	83%
+428ML/d · measured
+	97%
+544ML/d of 558 after the 2028 expansion
+	105%
+627ML/d of 600 after the 2037 expansion
+	105%
+627ML/d of 600 after the 2037 expansion
+	by 2025	2029	2033
+Clarkson WRRF
+rated 350ML/d → 500 (2029)
+	61%
+212ML/d · measured
+	52%
+259ML/d of 500 after the 2029 expansion
+	58%
+290ML/d of 500 after the 2029 expansion
+	58%
+290ML/d of 500 after the 2029 expansion
+	after 2051	after 2051	after 2051
+Inglewood WWTP
+rated 0.24ML/d
+	42%
+0.1ML/d · measured
+	43%
+0.1ML/d
+	45%
+0.11ML/d
+	45%
+0.11ML/d
+	after 2051	after 2051	after 2051
+Method & notes
+Plant inflow by growth layer (the build-up behind the bars: table)
+Method & notes
+
+ⓘ Each plant’s whole sewershed (all catchments traced to it): average dry weather flow against rated capacity; horizon years phase approved then proposed growth in. The 2025-report comparison and the Master Plan comparison moved to Sources & checks. Criteria: wastewater 290 L/cap/d with Harmon peaking (2–4), I&I 0.26 L/s/ha (Peel Linear Wastewater Standards 2023); employment 270 L/emp/d (Peel Modelling Demand Table, Aug 2024). Data: applications 2026-10-12 · 2021 Census · Peel 2025 annual reports.

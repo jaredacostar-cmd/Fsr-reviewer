@@ -23,7 +23,6 @@
 
   const registry = {};   // id -> { title, icon, hint, onClick(latlng), onActivate(), onDeactivate(), onBannerAct(act, el), bannerHTML() }
   let activeId = null;
-  let result = null;     // { title, reopen } while a tool result scope is open
 
   // The app.js bridge (installed at the end of js/app.js). Null until app.js runs.
   const H = () => (typeof window !== 'undefined' && window.PeelApp && window.PeelApp.scope) || null;
@@ -95,54 +94,24 @@
     },
 
     /**
-     * Open a tool result as a scope in the analysis panel: the Tool result tab
-     * appears and is selected, and the trail gains a "Peel › <title>" crumb
-     * (via the renderTrail hook in app.js). opts: { title, html, reopen }.
+     * Open a tool result as a scope in the right panel (SPEC §3): it goes through
+     * PeelSvcScope.openResult, so it gets the trail step, the share link and the
+     * left-panel filter like every other scope. opts: { title, html, reopen, ref,
+     * devKeys, filter, screen }.
      */
     openResult(opts) {
-      const o = opts || {};
-      result = { title: o.title || 'Tool result', reopen: typeof o.reopen === 'function' ? o.reopen : null };
-      const t = $('#tool-title'); if (t) t.textContent = result.title;
-      // Servicing results (batch, fit, inquiry, traces) open with the screening note.
-      const body = $('#pane-tool-body'); if (body) body.innerHTML = (o.screen && window.PeelUtil ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || '');
-      const tab = $('#ftab-tool'); if (tab) tab.hidden = false;
-      const h = H();
-      if (h && typeof h.showFootTab === 'function') h.showFootTab('tool');
-      if (h && typeof h.renderTrail === 'function') h.renderTrail();
-      const x = $('#tool-close');
-      if (x && !x._ptWired) { x._ptWired = true; x.addEventListener('click', () => PeelTools.closeResult()); }
-      return result;
+      const S = typeof window !== 'undefined' && window.PeelSvcScope;
+      if (!S || !S.openResult) return null;
+      return S.openResult(opts || {});
     },
-
-    /** Close the tool result scope and return to the overview. */
-    closeResult() {
-      if (!result) return false;
-      result = null;
-      const tab = $('#ftab-tool'); if (tab) tab.hidden = true;
-      const pane = $('#pane-tool'); if (pane) pane.hidden = true;
-      const h = H();
-      if (h && typeof h.showFootTab === 'function') h.showFootTab('overview');
-      if (h && typeof h.renderTrail === 'function') h.renderTrail();
-      return true;
-    },
-
-    /** Re-select the tool result tab (used by the trail crumb). */
-    reopenResult() {
-      if (!result) return false;
-      if (result.reopen) { try { result.reopen(); } catch (e) { /* fall through to tab select */ } }
-      const h = H();
-      if (h && typeof h.showFootTab === 'function') h.showFootTab('tool');
-      return true;
-    },
-
-    /** Trail crumb consumed by the renderTrail hook in app.js. */
-    trailCrumb() {
-      if (!result) return null;
-      return { label: result.title, title: 'Tool result — reopen it', go: () => PeelTools.reopenResult() };
-    },
-
-    hasResult() { return !!result; },
-    resultTitle() { return result ? result.title : null; },
+    /** Close the result scope and return to the overview. */
+    closeResult() { const S = typeof window !== 'undefined' && window.PeelSvcScope; return !!(S && S.closeResult && S.closeResult()); },
+    /** Re-run the result's producer (used by the trail step). */
+    reopenResult() { const S = typeof window !== 'undefined' && window.PeelSvcScope; return !!(S && S.reopenResult && S.reopenResult()); },
+    /** The trail step comes from PeelSvcScope.crumbs() now. */
+    trailCrumb() { return null; },
+    hasResult() { const S = typeof window !== 'undefined' && window.PeelSvcScope; return !!(S && S.hasResult && S.hasResult()); },
+    resultTitle() { const S = typeof window !== 'undefined' && window.PeelSvcScope; return S && S.hasResult && S.hasResult() ? S.resultTitle() : null; },
   };
 
   // Banner action buttons ([data-ptool-act]) route to the active tool.

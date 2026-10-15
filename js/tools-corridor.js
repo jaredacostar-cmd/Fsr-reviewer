@@ -232,7 +232,7 @@
     for (const q of r.pipes) rows.push(['existing sewer', 'wastewater', `${q.d} mm sanitary sewer`, q.name || '']);
     for (const x of r.dcLines) rows.push(['planned main', x.sys, `planned ${x.sys} main`, (P() && P().dcLineText(x.ln)) || '']);
     for (const x of r.dcFacs) rows.push(['planned facility', x.sys, x.fc.name || x.fc.kind || '', x.fc.kind || '']);
-    const csv = rows.map(row => row.map(csvCell).join(',')).join('\n');
+    const csv = ((typeof window !== 'undefined' && window.PeelUtil && window.PeelUtil.CSV_DISCLAIMER) || '') + rows.map(row => row.map(csvCell).join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);

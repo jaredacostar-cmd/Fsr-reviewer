@@ -92,14 +92,17 @@
       tagServicing();
       renderSvcSelects();
       // Blocks are the catchments: one map chip for them (Wastewater blocks), not two.
-      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; $('#f-dr-label').textContent = 'Wastewater block'; Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); $('#f-dr-q').placeholder = 'Find a block…'; PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
+      if (App().state.servicing.blocks) { const c = $('#opt-dr'); if (c) c.closest('.mo-chip').hidden = true; { const l = $('#f-dr-label'); if (l) l.textContent = 'Wastewater block'; } Object.assign(MM().AREA_F.dr, { all: 'All wastewater blocks', find: 'Find a block…', one: 'block' }); { const q = $('#f-dr-q'); if (q) q.placeholder = 'Find a block…'; } PA().renderMulti('dr'); if (MM().svcOn.dr) { MM().svcOn.dr = false; MM().svcOn.bk = true; } }
       for (const k of ['pz', 'dr']) if (MM().svcOn[k]) setSvcLayer(k, true);
       if (MM().svcOn.bk) ST().setBlocksLayer(true);
       DI().renderDcLayer(); MA().renderLegend();
+      // The model is built once the servicing lookup is filled (renderSvcTab waits for it): build it
+      // now, which also replaces one built before the 2025 annual reports arrived.
+      SvcTab().renderSvcTab();
       App().applyFilters();
       setTimeout(SC().loadSewers, 1500);
       MP().loadWaterSupply().then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });
-    } catch (e) { /* optional */ }
+    } catch (e) { console.warn('Servicing data did not load completely:', e); }   // (was silent: a missing element stopped the model, the layers and the sewers)
   }
   // A development's pressure zone and wastewater block. Outside the mapped zones / blocks: the
   // nearest one within NEAR_M of its edge, the area it would most likely connect to (greenfield
@@ -125,6 +128,11 @@
   // The development's pressure zone / drainage area ids: mapped, else (switch on) the nearest.
   const svcIds = (p, key) => (p[key] && p[key].length) ? p[key] : SvcTab().svcOpt.nr === 'on' && p[`${key}Near`] ? [p[`${key}Near`].id] : [];
   const nearOf = (p, key) => !(p[key] && p[key].length) && SvcTab().svcOpt.nr === 'on' ? p[`${key}Near`] : null;
+  // SPEC 1.8: one pressure zone per development, used everywhere (summary, supply route, reservoir
+  // check, the flag), with its reason: 'mapped' (inside a zone), 'planned-main' (the zone the planned
+  // DC main it would connect to feeds), 'nearest' (the nearest zone). The ground's elevation band is
+  // shown beside it as a flag when it fits another zone too (js/water-trace.js), never a second answer.
+  const zoneOf = p => window.PeelZoneOf.zoneOf(p, svcById);
   const kmText = m => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
   // How an outside development was assigned: through the planned main it would connect to, or by distance.
   const nearText = n => n.via ? `via planned ${n.via.y || ''} ${n.via.d ? `${n.via.d} mm ` : ''}main ${n.via.p || ''}, ${kmText(n.m)}`.replace(/\s+/g, ' ') : `nearest, ${kmText(n.m)}`;
@@ -145,11 +153,10 @@
   }
   const svcColor = a => a.zone ? token('--svc-drainage') : plantColor(a.plant);
   function svcTooltip(a) {
-    if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone · tap: what loads it</span>`;
-    if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return `<strong>Wastewater ${esc(a.name)}</strong>${a.planning ? ' · prioritised (block study)' : ''}<br>Drains to ${to ? `${esc(to.name)} → ` : ''}${esc(plantLabel(a.plant))}<br>
-      <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} sewers of 300 mm+${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · Region I&amp;I block · tap: what loads it</span>`; }
-    return `<strong>${esc(drName(a))}</strong><br>Drains to ${esc(plantLabel(a.plant))}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
-      <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network · tap: what loads it</span>`;
+    const H = window.PeelUtil.hoverCard;
+    if (a.zone) return H({ kind: 'Water pressure zone', name: a.name, sub: 'Region of Peel', also: 'what loads it' });
+    if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return H({ kind: `Wastewater block${a.planning ? ' · prioritised (block study)' : ''}`, name: a.name, value: `${fmtNum(a.areaHa)} ha`, sub: `drains to ${to ? `${to.name} → ` : ''}${plantLabel(a.plant)}`, html: `<span class="muted">${fmtNum(a.manholes)} sewers of 300 mm+${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · Region I&amp;I block</span>`, also: 'what loads it' }); }
+    return H({ kind: 'Sanitary catchment', name: drName(a), value: `${fmtNum(a.areaHa)} ha`, sub: `drains to ${plantLabel(a.plant)}${a.outlet ? ` via ${a.outlet}` : ''}`, html: `<span class="muted">${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network</span>`, also: 'what loads it' });
   }
   function setDevsOn(on) {
     MM().setDevsOn(on); store.set('devsOn', on);
@@ -181,7 +188,7 @@
   // The collapsed Map options line: what is on.
   function syncPanelSum() {
     const el = document.getElementById('mo-psum'); if (!el) return;
-    const loads = MM().isWW() && !Object.values(MM().getWwLay()).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'approved'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
+    const loads = MM().isWW() && !Object.values(MM().getWwLay()).every(v => v !== false) ? `loads: ${[['existing', 'census'], ['built', 'built'], ['approved', 'committed'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'}` : '';
     const on = [MM().getDevsOn() && 'developments', MM().svcOn.bk && 'blocks', MM().svcOn.pz && 'zones', WT().WF.on && 'water facilities', MM().mstyle.cap !== 'off' && 'capacity', Object.values(MM().getExistOn()).some(Boolean) && 'pipes', ...(window.PeelConstraints ? Object.entries(window.PeelConstraints.getOn()).filter(([, v]) => v).map(([k]) => window.PeelConstraints.LAYERS[k].short) : []), MM().getDcOn().on && 'DC works', (MM().areaOn.sp || MM().areaOn.mtsa) && 'planning areas', CA().getDaOn() && 'census areas'].filter(Boolean);
     el.textContent = [on.length ? on.join(', ') : 'none on', loads].filter(Boolean).join(' · ');
     syncAreaOn();
@@ -255,9 +262,10 @@
     if (!App().state.servicing || !M) return null;
     const e = D.estimate(areaMembers(p), App().state.criteria, 'all', App().jobsOf), cb = e.combined;
     if (!(e.totalUnits > 0 || e.employment.jobs > 0)) return null;
-    const layer = p.phase === 'completed' ? 'built' : D.COMMITTED_PHASES.has(p.phase) ? 'approved' : (p.phase === 'inception' || p.phase === 'review') ? 'proposed' : null;
-    const z = svcIds(p, 'pz').map(id => svcById.get(id)).filter(Boolean)[0];
-    const zl = z && M.zones.get(z.id);
+    // The same layer as the Water / Wastewater tables and the map (completed before the census = existing).
+    const layer = ({ existing: 'existing', built: 'built', approved: 'approved', proposed: 'proposed' })[MM().svcLayerOf(p)] || null;
+    const zo = zoneOf(p), z = zo ? zo.z : null;   // (one zone everywhere, SPEC 1.8)
+    const zl = z && svcIds(p, 'pz').includes(z.id) ? M.zones.get(z.id) : null;   // its load counts in the zone when mapped or "nearest" is on
     const zMax = zl ? M.wMax(M.total(zl), M.jobs(zl)) : 0;
     let d = svcIds(p, 'dr').map(id => svcById.get(id)).filter(Boolean)[0];
     const path = []; const seen = new Set();
@@ -275,7 +283,12 @@
     });
     const pl = path.length ? path[path.length - 1].plant : null, cap = pl && M.plantCap(pl);
     const devAvg = D.toMLd(cb.wastewater.avg);
-    return { M, e, cb, layer, z, zNear: nearOf(p, 'pz'), dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0 };
+    // The plant from the one capacity function (js/capacity.js, SPEC 1.4); the site's use of its
+    // reserve says its basis (SPEC 1.5): the development's flow at the plant's measured rate
+    // (calibrated) or at Peel design criteria.
+    const k = pl && window.PeelCapacity ? window.PeelCapacity.of(`plant:${pl}`) : null;
+    const useNote = cap ? (M.mode === 'calibrated' && cap.f !== 1 ? `flow at the plant's measured rate, ×${cap.f.toFixed(2)} design` : 'flow at Peel design criteria') : '';
+    return { M, e, cb, layer, z, zone: zo, zNear: zo && zo.reason !== 'mapped' ? p.pzNear : null, dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: k ? k.reserve : cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0, useNote };
   }
   // Servicing check (inside the Servicing section): the development's flows at Peel design
   // criteria (FSR basis), its pressure zone, the sewer path from its catchment down to the plant
@@ -284,7 +297,7 @@
   function servicingCheckHTML(p, F, opt = {}) {
     const { M, e, cb, layer, z, zl, zMax, path, pl, cap, devAvg } = F;
     const mld = D.toMLd, ls = uLs, pct = DD().pctOf;
-    const layerText = { built: 'built — part of the existing flow', approved: 'approved — already committed', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
+    const layerText = { existing: 'existing — built before the census, in the census flow', built: 'built since the census — part of today\u2019s flow', approved: 'committed (D-5-1) — already counted against capacity', proposed: 'proposed — not yet committed; it would draw on the reserve' }[layer] || 'withdrawn — not counted';
     const water = `<tr><td>Water · ${z ? esc(z.name.replace('Pressure zone ', 'Zone ')) : 'no pressure zone'}${F.zNear ? `<small>${esc(nearText(F.zNear))}</small>` : ''}</td><td>${ls(cb.water.avg)}<small>${uML(mld(cb.water.avg))}</small></td><td>${ls(cb.water.maxDay)}<small>${uML(mld(cb.water.maxDay))}</small></td><td>${ls(cb.water.peakHour)}</td><td>${zl ? `${pct(mld(cb.water.maxDay), zMax)} of the zone's build-out max day (${uML(zMax)}) ${estTag}` : ''}</td></tr>`;
     const sewer = `<tr><td>Wastewater</td><td>${ls(cb.wastewater.avg)}<small>${uML(mld(cb.wastewater.avg))}</small></td><td>${ls(cb.wastewater.peak)}<small>peak dry</small></td><td>${ls(cb.wastewater.wetPeak)}<small>peak wet</small></td><td></td></tr>`;
     const pathRows = path.map((a, i) => {
@@ -294,12 +307,12 @@
     let plant = '';
     if (cap) {
       const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
-      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + approved ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
-        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant is already over-committed'}. ${estTag}</p>`;
+      plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uML(cap.rated)}; existing + built + committed ${pct(cap.committed, cap.rated)} (${uML(cap.committed)}); uncommitted reserve <strong>${uML(reserve)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
+        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant already screens over rated capacity'}. ${estTag}</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `${SCREEN_NOTE}<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${opt.trace === false ? '' : `<div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>`}
-      ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out average dry weather at each outlet (${M.mode === 'calibrated' ? 'capacity check' : 'design flows'})</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
+      ${path.length ? `<table class="dt chk-table"><caption>Sewer path to the plant · build-out ${M.mode === 'calibrated' ? 'annual average flow at each outlet (capacity check, 2025 measured rate)' : 'average dry weather flow (ADWF) at each outlet (design flows)'}</caption><thead><tr><th>Catchment outlet</th><th>Flow at outlet</th><th>This development</th></tr></thead><tbody>${pathRows}</tbody></table>` : '<p class="small muted">Not in a traced drainage area.</p>'}
       ${plant}
       <p class="small muted">${fmtNum(Math.round(e.totalUnits))} units, ${fmtNum(roundPop(e.population))} people${e.employment.jobs > 0 ? `, ${fmtNum(roundPop(e.employment.jobs))} jobs` : ''} at build-out; flows in L/s as in a functional servicing report, ML/d below. Pumping stations are checked against their firm capacity (2020 Master Plan, Vol. 4 Table 6) at peak wet weather; trunk sewer capacities are not published, so they are not checked.</p>`;
   }
@@ -334,7 +347,7 @@
     PLANT_TOKEN, plantColor, PLANT_SHORT, PLANT_NAME, plantLabel, drName,
     svcFacts,
     svcLayers, svcById, flowRenderer, svcRenderer, loadServicing, tagAreas,
-    tagServicing, NEAR_M, svcIds, nearOf, kmText, nearText, renderSvcSelects,
+    tagServicing, NEAR_M, svcIds, nearOf, zoneOf, kmText, nearText, renderSvcSelects,
     showSvcArea, setDevsOn, setWwLay, syncWwLayers, syncPanelSum, syncAreaOn,
     clearAreaFilters, syncDevsOff, showAllDevs, devShown, setSvcLayer, spsKey,
     spsOf, spsNote, byZone, servicingCheckHTML, servicingLineHTML,

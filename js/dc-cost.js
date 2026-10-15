@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { esc, fmtNum, roundPop, store, fmtMoney } = window.PeelUtil;
+  const { esc, fmtNum, roundPop, store, fmtMoney, capitalStatus, toDollarYear, capitalChip, chartW } = window.PeelUtil;
   const D = window.PeelDemand;
   const App = () => window.PeelApp;
   const MP = () => window.PeelMasterPlan;
@@ -20,12 +20,14 @@
     const items = r.kind === 'step' ? (r.fc ? r.fc.items.filter(i => r.step.proj && i.proj === r.step.proj) : []) : r.items || (r.fc ? r.fc.items : []);
     return [...new Set(items.flatMap(i => (i.phases || []).map(ph => ph[2])).filter(Boolean))];
   }
-  // Cost of a relief: the priced components (2020$) and how many of its components have a price.
+  // Cost of a relief: the priced components (2020 study, indexed to 2026$ like every other cost)
+  // and how many of its components have a price.
   function dcCost(r) {
-    const C = App().state.dcCosts && App().state.dcCosts.components, ids = reliefComps(r);
+    const K = App().state.dcCosts, C = K && K.components, ids = reliefComps(r);
     if (!C || !ids.length) return null;
+    const sys = r.ln ? r.ln.sys : r.fc ? r.fc.sys : null, ix = (K.index2026 && sys && K.index2026[sys]) || 1;
     let gross = 0, dc = 0, n = 0;
-    for (const id of ids) { const c = C[id]; if (c) { gross += c.gross; dc += c.dc; n++; } }
+    for (const id of ids) { const c = C[id]; if (c) { gross += c.gross * ix; dc += c.dc * ix; n++; } }
     return { gross, dc, n, of: ids.length };
   }
   // Full cost of a relief in 2026$ (funding scenario): priced components indexed from 2020$ by the
@@ -49,7 +51,7 @@
     } else {
       const items = r.kind === 'step' ? (r.fc ? r.fc.items.filter(i => r.step.proj && i.proj === r.step.proj) : []) : r.items || (r.fc ? r.fc.items : []);
       const sc = r.kind === 'step' && !items.length && K.stepCosts && K.stepCosts[`${r.step.year}:${r.step.mld}`];
-      if (sc) add(sc.gross, sc.gross * K.dcShare[sys], false);
+      if (sc) { const g = toDollarYear(sc.gross, sc.year || 2026, ix); add(g, g * K.dcShare[sys], false); }   // e.g. G.E. Booth's $130 M (2024$)
       for (const it of items) {
         const ph = (it.phases || []).map(x => x[2]).filter(Boolean), pr = ph.filter(c => C[c]);
         if (pr.length) { const g0 = pr.reduce((t, c) => t + C[c].gross, 0), d0 = pr.reduce((t, c) => t + C[c].dc, 0), k = ph.length / pr.length; add(g0 * ix, d0 * ix, false); if (k > 1) add(g0 * ix * (k - 1), d0 * ix * (k - 1), true); continue; }
@@ -83,7 +85,7 @@
     let lower = 0; for (const c of new Set(defer.flatMap(r => r.cons))) lower = Math.max(lower, Math.max(0, MP().heldPeople(c, end, off) - MP().heldPeople(c, end, none)));
     lower += defer.reduce((t, r) => t + (r.conn || []).reduce((a, x) => a + x.e.population * MA().hzFrac(end)[x.lay === 'approved' ? 'fa' : 'fp'], 0), 0);
     const upper = defer.reduce((t, r) => t + r.v, 0);
-    // Later projects the analysis says to bring forward (capacity runs out before they come online).
+    // Later projects that screen late (capacity runs out before they are in service).
     const later = R.list.filter(r => r.y && r.y > end && r.rec === 'advance').map(r => ({ ...r, cost: (costEstimate(r.r) || {}).dc || 0 }));
     return { budget, years, end, rows, keep, defer, spent, later, total: rows.reduce((t, r) => t + r.cost, 0), committed: keep.filter(r => r.committed).reduce((t, r) => t + r.cost, 0), lower: Math.min(lower, upper), upper, est: rows.reduce((t, r) => t + (r.c ? r.c.gross * r.c.est : 0), 0) / Math.max(1, rows.reduce((t, r) => t + (r.c ? r.c.gross : 0), 0)), ppu: R.ppu, rate: R.rate };
   }
@@ -93,18 +95,18 @@
   function dcaMergeRecs(B) {
     return [...B.keep.map(r => ({ dec: 'Keep', r })), ...B.defer.slice().sort((a, b) => b.v - a.v).map(r => ({ dec: 'Defer', r }))];
   }
-  // Keep/defer row cells: project, online, DC cost, growth, $/person, why.
+  // Funding-screen row cells: project, online, DC cost, growth, $/person, why.
   function dcbCells(r, kept, B, pp, uu) {
-    return `<td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}${r.c && r.c.est > 0.5 ? '<small>estimated</small>' : r.c && r.c.est > 0 ? '<small>part estimated</small>' : ''}</td>
+    return `<td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}${r.committed ? '<small>committed (approved 2026)</small>' : ''}</td><td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}</td><td>${r.cost ? fmtMoney(r.cost) : '<span class="muted">not costed</span>'}${r.c && r.c.est > 0.5 ? '<small>estimated</small>' : r.c && r.c.est > 0 ? '<small>part estimated</small>' : ''}</td>
       <td>${r.v > 0 ? `${pp(r.v)} people<small>≈${uu(r.v)} units by ${B.end}</small>` : `<span class="muted">none by ${B.end}</span>`}</td><td>${r.v > 0 && r.cost ? fmtMoney(r.cost / r.v) : '–'}</td>
-      <td>${kept ? (r.committed ? 'Committed in the 2026 capital program' : r.other ? `Funded from what's left: no modelled growth needs it by ${B.end} (other drivers)` : `Lets through ${pp(r.v)} people by ${B.end}`) : r.v > 0 ? `<strong>Over budget:</strong> holds back ${pp(r.v)} people by ${B.end}${r.firstY ? ` (from ≈${r.firstY})` : ''}${B.rate ? `, ≈${fmtMoney(r.v / B.ppu * B.rate)} DCs delayed` : ''}` : r.firstY && r.firstY > B.end ? `Not needed until ≈${r.firstY}` : 'No growth relies on it in this screen'}</td>`;
+      <td>${kept ? (r.committed ? 'Committed in the 2026 capital program' : r.other ? `Funded from what's left: no modelled growth needs it by ${B.end} (other drivers)` : `Lets through ${pp(r.v)} people by ${B.end}`) : r.v > 0 ? `<strong>Outside the screen:</strong> ${pp(r.v)} people screen constrained by ${B.end}${r.firstY ? ` (from ≈${r.firstY})` : ''}${B.rate ? `, ≈${fmtMoney(r.v / B.ppu * B.rate)} DCs later` : ''}` : r.firstY && r.firstY > B.end ? `Not needed until ≈${r.firstY}` : 'No growth relies on it in this screen'}</td>`;
   }
-  // One merged recommendations row: the recommendation first, then the project cells.
+  // One merged funding-screen row: the screening result first, then the project cells.
   function dcaRecRow(x, B, pp, uu) {
     const kept = x.dec === 'Keep';
-    return `<tr class="${kept ? 'dca-keep' : 'dca-defer dcb-def'}"><td><span class="dca-rec">${x.dec}</span></td>${dcbCells(x.r, kept, B, pp, uu)}</tr>`;
+    return `<tr class="${kept ? 'dca-keep' : 'dca-defer dcb-def'}"><td><span class="dca-rec">${DEC[x.dec]}</span></td>${dcbCells(x.r, kept, B, pp, uu)}</tr>`;
   }
-  // Funding curve data: the keep/defer screen replayed at several budget levels.
+  // Funding curve data: the funding screen replayed at several budget levels.
   function dcaCurve(B) {
     return [0.5e9, 1e9, 2e9, 3e9, 5e9].filter(b => b < B.total).concat([B.total]).map(b => ({ b, x: b === DCB.budget ? B : dcaBudget(b, DCB.years) }));
   }
@@ -113,12 +115,12 @@
   // Timing chart: capacity runs out vs online year for the top projects by build-out impact.
   function dcaTimingChart(rows) {
     if (!rows.length) return '';
-    const W = 560, L0 = 200, R0 = 34, T0 = 20, RH = 24, B0 = 24, H = T0 + rows.length * RH + B0;
+    const W = chartW(320, 760), L0 = Math.min(200, Math.round(W * 0.38)), R0 = 34, T0 = 20, RH = 24, B0 = 24, H = T0 + rows.length * RH + B0;
     const x0 = MM().THIS_YEAR, x1 = SP().hz.end;
     const x = y => L0 + (W - L0 - R0) * (Math.min(Math.max(y, x0), x1) - x0) / Math.max(1, x1 - x0);
     const yOf = i => T0 + i * RH + RH / 2;
     const ticks = []; for (let y = x0; y <= x1; y += 5) ticks.push(y); if (ticks[ticks.length - 1] !== x1) ticks.push(x1);
-    const short = s => { s = String(s || ''); return s.length > 30 ? `${s.slice(0, 29)}…` : s; };
+    const nMax = Math.max(12, Math.floor((L0 - 10) / 6.2)), short = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
     return `<h3 class="sub-title">Project timing: capacity runs out vs online year</h3>
     <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Capacity run-out year and online year for the top ${rows.length} DC projects by build-out impact">
       ${ticks.map(y => `<line x1="${x(y).toFixed(1)}" x2="${x(y).toFixed(1)}" y1="${T0 - 8}" y2="${H - B0}" class="dca-grid"/><text x="${x(y).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}
@@ -133,31 +135,31 @@
           + (xn == null ? '' : `<circle cx="${xn.toFixed(1)}" cy="${yc}" r="4.5" fill="none" style="stroke:${col};stroke-width:2"/>`);
       }).join('')}
     </svg>
-    <p class="small muted">● capacity runs out ≈year · ○ online year — <span style="color:var(--cap-over)">red</span> runs out before it comes online: advance it.</p>`;
+    <p class="small muted">● capacity runs out ≈year · ○ online year — <span style="color:var(--cap-over)">red</span> screens late (capacity runs out before it is in service).</p>`;
   }
   // Recommendations chart: growth relying on each project by the window's last year (top 10).
   function dcaRecChart(items, end) {
     const top = items.slice().sort((a, b) => b.r.v - a.r.v).slice(0, 10).filter(x => x.r.v > 0);
     if (!top.length) return '';
-    const W = 560, L0 = 200, R0 = 110, T0 = 8, RH = 24, B0 = 20, H = T0 + top.length * RH + B0;
+    const W = chartW(320, 760), L0 = Math.min(200, Math.round(W * 0.38)), R0 = Math.min(110, Math.round(W * 0.22)), T0 = 8, RH = 24, B0 = 20, H = T0 + top.length * RH + B0;
     const max = Math.max(...top.map(x => x.r.v));
     const bw = v => Math.max(2, (W - L0 - R0) * v / max);
     const pp = v => fmtNum(roundPop(v));
-    const short = s => { s = String(s || ''); return s.length > 30 ? `${s.slice(0, 29)}…` : s; };
+    const nMax = Math.max(12, Math.floor((L0 - 10) / 6.2)), short = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
     return `<h3 class="sub-title">Growth relying on each project by ${end} (top ${top.length})</h3>
-    <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Growth relying on the top ${top.length} projects by ${end}, coloured by recommendation">
+    <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Growth relying on the top ${top.length} projects by ${end}, coloured by funding-screen result">
       <line x1="${L0}" x2="${L0}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/>
       ${[0.5, 1].map(f => `<line x1="${(L0 + (W - L0 - R0) * f).toFixed(1)}" x2="${(L0 + (W - L0 - R0) * f).toFixed(1)}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/><text x="${(L0 + (W - L0 - R0) * f).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${pp(max * f)}</text>`).join('')}
       ${top.map((x, i) => { const yc = T0 + i * RH + RH / 2; return `<text x="${L0 - 8}" y="${(yc + 3).toFixed(1)}" class="dca-ax" text-anchor="end">${esc(short(x.r.name))}</text>
-        <rect x="${L0}" y="${(yc - 7).toFixed(1)}" width="${bw(x.r.v).toFixed(1)}" height="14" rx="3" style="fill:${x.dec === 'Keep' ? 'var(--cap-room)' : 'var(--cap-tight)'};fill-opacity:.75"/>
-        <text x="${(L0 + bw(x.r.v) + 6).toFixed(1)}" y="${(yc + 3).toFixed(1)}" class="dca-ax">${pp(x.r.v)} · ${x.dec}</text>`; }).join('')}
+        <rect x="${L0}" y="${(yc - 7).toFixed(1)}" width="${bw(x.r.v).toFixed(1)}" height="14" rx="3" style="fill:${x.dec === 'Keep' ? 'var(--accent)' : 'var(--text-muted)'};fill-opacity:.75"/>
+        <text x="${(L0 + bw(x.r.v) + 6).toFixed(1)}" y="${(yc + 3).toFixed(1)}" class="dca-ax">${pp(x.r.v)} · ${x.dec === 'Keep' ? 'within' : 'outside'}</text>`; }).join('')}
     </svg>
-    <p class="small muted">People of growth relying on the project by ${end} — deferring it holds this growth back. <span style="color:var(--cap-room)">■</span> keep · <span style="color:var(--cap-tight)">■</span> defer.</p>`;
+    <p class="small muted">People of growth relying on the project by ${end} — growth the screen shows constrained if the project is not in service. <span style="color:var(--accent)">■</span> within the funding screen · <span style="color:var(--text-muted)">■</span> outside it.</p>`;
   }
   // Funding chart: growth held back by the window's last year across funding levels.
   function dcaCurveChart(curve, B) {
     if (curve.length < 2) return '';
-    const W = 560, H = 210, L0 = 54, R0 = 14, T0 = 12, B0 = 46;
+    const W = chartW(320, 760), H = 210, L0 = 54, R0 = 14, T0 = 12, B0 = 46;
     const maxB = Math.max(...curve.map(c => c.b)), maxV = Math.max(...curve.map(c => c.x.upper), 1) * 1.08;
     const x = b => L0 + (W - L0 - R0) * b / maxB, y = v => T0 + (H - T0 - B0) * (1 - v / maxV);
     const up = curve.map(c => y(c.x.upper)), lo = curve.map(c => y(c.x.lower));
@@ -197,12 +199,35 @@
     const e = D.estimate(all, App().state.criteria, 'all', App().jobsOf), v = dcRevenue(e);
     return v && e.totalUnits > 0 ? v.total / e.totalUnits : null;
   }
+  // The unit types are stated (a unit mix on a file) or not (read from the wording, or unknown).
+  const mixStated = p => !!(p && p.unitMix && ['single', 'semi', 'town', 'apartment'].some(k => p.unitMix[k] > 0));
+  // Without stated types, a range from all small apartments to all townhouses (SPEC 1.9: never the
+  // cheapest rate silently).
+  function dcRange(e) {
+    const r = dcRates(); if (!r || !e || !(e.totalUnits > 0)) return null;
+    return { low: e.totalUnits * r.aptSmall, high: e.totalUnits * r.town, units: e.totalUnits, r };
+  }
+  // Non-residential water + wastewater DC per m² of floor area (SPEC 1.9), from the same schedule
+  // when data/dc-costs.json carries it (rates.nonResidential: { water, wastewater } per m² GFA).
+  function dcNonResHTML(p) {
+    const em = App().empOf ? App().empOf(p) : null; if (!em || !(em.totalM2 > 0)) return '';
+    const R = App().state.dcCosts && App().state.dcCosts.rates, nr = R && R.nonResidential;
+    const perM2 = nr ? (nr.water || 0) + (nr.wastewater || 0) : null;
+    return `<div class="dcrev dcrev-nonres" data-info="dc-revenue"><div class="alloc-h"><strong>Non-residential water &amp; wastewater DCs</strong> ${perM2 ? `<span class="fr-b fr-ok">≈${fmtMoney(em.totalM2 * perM2)}</span>` : '<span class="fr-b fr-ref">Rate not loaded</span>'}</div>
+      <p class="small">${fmtNum(Math.round(em.totalM2))} m² of floor area${perM2 ? ` × ${fmtMoney(perM2)} per m² (water ${fmtMoney(nr.water)} + wastewater ${fmtMoney(nr.wastewater)}, ${esc(R.effective)} to ${esc(R.until)})` : ' × the Region\'s non-residential rate per m² — [ADD RATE]: not yet in data/dc-costs.json (rates.nonResidential)'}.</p></div>`;
+  }
   function dcRevenueHTML(p) {
-    const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf), v = dcRevenue(e); if (!v) return '';
+    const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf), v = dcRevenue(e); if (!v) return dcNonResHTML(p);
     const R = v.r.R;
+    if (!mixStated(p)) {
+      const g = dcRange(e);
+      return `<div class="dcrev" data-info="dc-revenue"><div class="alloc-h"><strong>Regional water &amp; wastewater DCs</strong> <span class="fr-b fr-due">${fmtMoney(g.low)} – ${fmtMoney(g.high)}</span></div>
+      <p class="small">Unit types are not stated on the files: ${fmtNum(Math.round(g.units))} units from all small apartments (≤750 sq ft, ${fmtMoney(g.r.aptSmall)}) to all townhouses (${fmtMoney(g.r.town)}). The FSR or the unit mix narrows it.</p>
+      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>${dcNonResHTML(p)}`;
+    }
     return `<div class="dcrev" data-info="dc-revenue"><div class="alloc-h"><strong>Regional water &amp; wastewater DCs</strong> <span class="fr-b fr-ok">≈${fmtMoney(v.total)}</span></div>
       <table class="dt dcrev-t"><tbody>${v.rows.map(([t, n, rt]) => `<tr><td>${esc(t)}</td><td class="n">${fmtNum(Math.round(n))} × ${fmtMoney(rt)}</td><td class="n">${fmtMoney(n * rt)}</td></tr>`).join('')}</tbody></table>
-      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>`;
+      <small class="muted">Rates ${esc(R.effective)} to ${esc(R.until)}: water ${fmtMoney(R.single.water)} + wastewater ${fmtMoney(R.single.wastewater)} per single / semi; other types scaled by the 2020 schedule. Residential only; before credits, exemptions, discounts or deferrals (rental, affordable, additional units).</small></div>${dcNonResHTML(p)}`;
   }
   // Developments outside the existing network that would connect to each planned main.
   function dcaConnectors() {
@@ -259,24 +284,31 @@
       const late = pr.y && outY < pr.y;
       const firstY = years.find((y, i) => ys[i] > 0) || null;
       let rec, why;
-      if (bo <= 0 && !cbo) { rec = 'review'; why = pr.cons.length ? `No growth held back by build-out without it: the existing capacity${pr.cons.some(c => c.relief.length > 1) ? ' or the other projects relieving the same constraint' : ''} covers the demand.` : 'No modelled constraint or connecting development relies on it.'; }
-      else if (late) { rec = 'advance'; why = `Capacity runs out ≈${outY === MM().THIS_YEAR ? 'now' : outY}, before it comes online (${pr.y}): bring it forward.`; }
-      else if (firstY && firstY - (pr.y || MM().THIS_YEAR) >= 5) { rec = 'defer'; why = `Growth isn't held back until ≈${firstY} without it: it could follow later (≈${firstY - 1}).`; }
-      else { rec = 'keep'; why = `Without it, growth is held back from ≈${firstY || pr.y}.`; }
+      if (bo <= 0 && !cbo) { rec = 'review'; why = pr.cons.length ? `Without it, the screen shows no growth constrained by build-out: the existing capacity${pr.cons.some(c => c.relief.length > 1) ? ' or the other projects relieving the same constraint' : ''} covers the demand.` : 'No modelled constraint or connecting development relies on it.'; }
+      else if (late) { rec = 'advance'; why = `Capacity runs out ≈${outY === MM().THIS_YEAR ? 'now' : outY}, before it is in service (${pr.y}): the screen shows it late.`; }
+      else if (firstY && firstY - (pr.y || MM().THIS_YEAR) >= 5) { rec = 'defer'; why = `Without it, the screen shows no growth constrained until ≈${firstY}: well ahead of need.`; }
+      else { rec = 'keep'; why = `Without it, the screen shows growth constrained from ≈${firstY || pr.y}.`; }
       const cost = dcCost(pr.r), perP = cost && cost.n && bo > 0 ? cost.dc / bo : null;
-      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why, cost, perP, revRisk: rate ? bo / ppu * rate : null });
+      // Capital status after the May 2026 pause: a plant step Council already funded counts as in the budget.
+      const st = pr.status || (pr.r && pr.r.step && /council.approved/i.test(pr.r.step.note || '') ? 'approved' : '');
+      const cap = capitalStatus(pr.y, st, pr.r && (pr.r.ln ? pr.r.ln.p || pr.r.ln.c : pr.r.step ? pr.r.step.proj : null));
+      out.push({ ...pr, rows, ys, bo, units: bo / ppu, cbo, cu, outY: outY === 9999 ? null : outY, late, firstY, rec, why, cost, perP, cap, revRisk: rate ? bo / ppu * rate : null });
     }
     const order = { advance: 0, keep: 1, defer: 2, review: 3 };
     out.sort((a, b) => order[a.rec] - order[b.rec] || b.bo - a.bo);
     // Held back with every project as scheduled (projects late or too small), the largest constraint.
     const baseBo = Math.max(0, ...[...base.values()].map(v => v.bo)), baseY = years.map((_, i) => Math.max(0, ...[...base.values()].map(v => v.ys[i])));
-    MP().DCA.key = k; MP().DCA.res = { list: out, years, ppu, rate, baseBo, baseY, nCons: cons.length };
+    // Of it, Committed growth (demand at the committed level already beyond the build-out capacity, on
+    // the same constraint); the rest is Proposed (SPEC §2.6).
+    const top = cons.reduce((a, c) => (base.get(c.id).bo > (a ? base.get(a.id).bo : 0) ? c : a), null);
+    const baseBoCom = top ? Math.min(baseBo, MP().heldAtLevel(top, 'committed', none)) : 0;
+    MP().DCA.key = k; MP().DCA.res = { list: out, years, ppu, rate, baseBo, baseBoCom, baseY, nCons: cons.length };
     return MP().DCA.res;
   }
   // Timeline chart for one project's tightest constraint: demand, existing capacity, capacity with
   // the project; flow diverted to it (blue) and what would be unserved if it is cancelled (red).
   function dcaChart(row, years) {
-    const c = row.c, W = 560, H = 180, L0 = 46, R0 = 10, T0 = 10, B0 = 26;
+    const c = row.c, W = chartW(320, 760), H = 180, L0 = 46, R0 = 10, T0 = 10, B0 = 26;
     const none = new Set(), off = new Set([row.key]);
     const dem = years.map(y => c.q(y)), cw = years.map(y => MP().capWith(c, y, none)), co = years.map(y => MP().capWith(c, y, off));
     const max = Math.max(...dem, ...cw) * 1.08 || 1;
@@ -299,11 +331,14 @@
   }
   // Cost cell: DC-recoverable cost of the priced components, per person enabled, and coverage.
   const costCell = r => !r.cost ? '<span class="muted">–</span>' : !r.cost.n ? '<span class="muted">not in the 2020 study</span>' : `${fmtMoney(r.cost.dc)}<small>${r.perP ? `${fmtMoney(r.perP)} / person · ` : ''}${r.cost.n < r.cost.of ? `${r.cost.n} of ${r.cost.of} parts priced` : `gross ${fmtMoney(r.cost.gross)}`}</small>`;
-  const REC = { advance: ['dca-advance', 'Keep · advance'], keep: ['dca-keep', 'Keep'], defer: ['dca-defer', 'Keep · could defer'], review: ['dca-review', 'Review'] };
+  const { SCREEN } = window.PeelUtil;
+  const REC = { advance: ['dca-advance', SCREEN.advance], keep: ['dca-keep', SCREEN.keep], defer: ['dca-defer', SCREEN.defer], review: ['dca-review', SCREEN.review] };
+  // The funding screen's two outcomes, as shown (the data keeps 'Keep' / 'Defer').
+  const DEC = { Keep: SCREEN.within, Defer: SCREEN.outside };
 
   const api = {
     dcAnalysis,
-    dcRevenueHTML,
+    dcRevenueHTML, dcNonResHTML, dcRange, mixStated,
     dcaBudget,
     DCB,
     dcaMergeRecs,

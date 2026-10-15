@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, store } = window.PeelUtil;
+  const { $, esc, store, fmtNum } = window.PeelUtil;
   const PD = window.PeelDesign;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -19,20 +19,18 @@
   const SD = () => window.PeelSvcData;
   const FI = () => window.PeelFilterUI;
 
-  // ---- Top bar (Phase 2): scope trail, view switch, scenario chip, menus --------------
-  // View switch: one button per MAP_VIEWS entry; clicking switches the map AND opens
-  // the mapped analysis tab. syncMapOpts() toggles .on on every [data-mview], so this
-  // switch stays in sync with the map control's own switch for free.
-  const VIEW_TAB = { planning: 'overview', water: 'water', wastewater: 'ww', dc: 'dca' };
+  // ---- Top bar: scope trail with its count, lens switch, scenario chip, menus ----------------
+  // Lens switch (SPEC §4): one button per MAP_VIEWS entry. A lens sets the map's layer preset,
+  // marker encoding and legend only; it never changes the right panel's tabs or the open tab.
+  // syncMapOpts() toggles .on on every [data-mview], so this stays in sync with the map control.
   function renderViewSwitch() {
     const el = $('#tb-views'); if (!el) return;
-    el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="Switch to the ${t} map view and its analysis tab">${PD.icon(k)}<span>${t}</span></button>`).join('');
+    el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="${t} lens: the map's layers, marker colours and legend">${PD.icon(k)}<span>${t}</span></button>`).join('');
     MA().syncMapOpts();
   }
   $('#tb-views').addEventListener('click', e => {
     const b = e.target.closest('[data-mview]'); if (!b) return;
     MA().setMapView(b.dataset.mview);
-    Tips().openAnalysis(VIEW_TAB[b.dataset.mview] || 'overview');
   });
 
   // Scope trail: Peel › municipality › area › development. Only the active steps show;
@@ -45,7 +43,7 @@
     return { kind, id: App().state[kind][0], label: PA().areaName(kind, App().state[kind][0]) + (total > 1 ? ` +${total - 1}` : '') };
   }
   // Phase 3: the "Peel" trail step also clears the dev scope.
-  function trailGoPeel() { if (typeof DevScope !== 'undefined') DevScope.close(); if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult(); FI().resetAllFilters(); AS().clearSelected(); }
+  function trailGoPeel() { if (window.PeelSvcScope) window.PeelSvcScope.clear(); if (typeof DevScope !== 'undefined') DevScope.close(); if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult(); FI().resetAllFilters(); AS().clearSelected(); }
   function trailGoMuni() {
     if (!App().state.muni) return;
     // Reuse the filter panel's own chip: it also drops areas from other municipalities.
@@ -69,14 +67,20 @@
     if (App().state.muni) steps.push({ label: App().state.muni, go: trailGoMuni, title: `Filter to ${App().state.muni}` });
     const a = trailArea();
     if (a) steps.push({ label: a.label, go: trailGoArea, title: 'Filter to this area only' });
+    // Servicing ladder (plant › block / station; water system › zone): one step per rung.
+    if (window.PeelSvcScope) steps.push(...window.PeelSvcScope.crumbs());
     // Phase 3: the development step follows the dev scope, not the #detail panel.
     const scoped = typeof DevScope !== 'undefined' ? DevScope.current() : null;
     if (scoped) steps.push({ label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
     if (tc) steps.push(tc);
-    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('');
+    // The trail carries its count (SPEC §4): the developments in scope and their planned units.
+    const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
+    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
+      + `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
     el._steps = steps;
+    if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }
   $('#trail').addEventListener('click', e => {
     const b = e.target.closest('[data-i]'); if (!b) return;
@@ -88,12 +92,22 @@
   // a popover that holds the real #scen-bar node (moved, not duplicated); closing
   // puts the node back where it was. renderScenario() calls renderTbScen(), so the
   // chip follows every scenario change.
-  const BASIS_SHORT = { all: 'all units', committed: 'committed units', remaining: 'units left to build' };
+  const BASIS_SHORT = { all: 'all units', buildout: 'units applied for', committed: 'committed units', remaining: 'units left to build' };
   function renderTbScen() {
     const chip = $('#tb-scen'); if (!chip) return;
-    const n = SvcTab().criteriaChanges().length;
-    const txt = ['Scenario', SvcTab().svcOpt.ww === 'calibrated' ? 'calibrated (2025 flows)' : 'design flows', n ? `${n} criteria modified` : 'Peel criteria', `counting ${BASIS_SHORT[App().state.basis] || 'all units'}`].join(' · ');
-    chip.innerHTML = `<span class="tb-scen-t">${esc(txt)}</span>${n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : ''}`;
+    // The scenario chip (SPEC §2): the layers counted, then the settings; the one place the
+    // scenario is shown (the footer line is gone).
+    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants;
+    const open = !$('#tb-scen-pop').hidden;
+    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({
+      basis: App().state.basis,
+      flows: o.ww === 'calibrated' ? '2025 metered' : 'design',
+      criteria: n ? `${n} modified` : 'Peel v2.0',
+      count: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree',
+      expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
+      outside: o.nr === 'on' ? 'nearest' : 'left out',
+    }) + (n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : '');
+    const more = chip.querySelector('[data-scen-open]'); if (more) more.setAttribute('aria-expanded', String(open));
   }
   let scenHome = null;
   function openScenPop() {
@@ -101,16 +115,24 @@
     if (!scenHome) { scenHome = document.createComment('scen-bar home'); bar.replaceWith(scenHome); }
     if (bar.parentNode !== pop) pop.appendChild(bar);
     pop.hidden = false;
-    $('#tb-scen').setAttribute('aria-expanded', 'true');
+    { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'true'); }
     SvcTab().renderScenario();
   }
   function closeScenPop() {
     const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop || pop.hidden) return;
     pop.hidden = true;
-    $('#tb-scen').setAttribute('aria-expanded', 'false');
+    { const m = $('#tb-scen [data-scen-open]'); if (m) m.setAttribute('aria-expanded', 'false'); }
     if (scenHome && scenHome.parentNode) { scenHome.parentNode.replaceChild(bar, scenHome); scenHome = null; }
   }
-  $('#tb-scen').addEventListener('click', () => { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); });
+  $('#tb-scen').addEventListener('click', e => {
+    const ly = e.target.closest('[data-scen-layer]');
+    if (ly) {
+      const next = root.PeelLayerBar.nextBasis(App().state.basis, ly.dataset.scenLayer);
+      if (next !== App().state.basis) { App().state.basis = next; store.set('svcBasis', next); SvcTab().renderSvcTab(); App().applyFilters(); SvcTab().renderScenario(); if (root.PeelShare) root.PeelShare.viewLink.write(); }
+      return;
+    }
+    if (e.target.closest('[data-scen-open]')) { $('#tb-scen-pop').hidden ? openScenPop() : closeScenPop(); }
+  });
 
   // Menus. Items carrying data-export / data-share / data-area-report are handled by
   // the existing document-level handlers; the rest use data-tbx (export) / data-tbg
@@ -178,13 +200,14 @@
       '<button type="button" role="menuitem" data-tbx="print">Print map</button>' +
       '<hr>' +
       '<button type="button" role="menuitem" data-tbx="inquiry">Inquiry response draft</button>' +
-      '<button type="button" role="menuitem" data-share>Copy share link</button>';
+      '<button type="button" role="menuitem" data-share>Copy share link</button>' +
+      '<button type="button" role="menuitem" data-tbx="saveview">Save this view…</button>';
   }
   $('#tb-export-menu').addEventListener('click', e => {
     const item = e.target.closest('[role="menuitem"]'); if (!item || item.disabled) return;
     closeTbMenus();
     const b = e.target.closest('[data-tbx]'); if (!b) return;
-    const fn = { csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
+    const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
     if (fn) fn();
   });
   function renderGearMenu() {
@@ -225,15 +248,15 @@
     else if (k === 'sources') openGearPage('sources');
   });
   function closeTbMenus() {
-    for (const id of ['#tb-export-menu', '#tb-gear-menu']) { const m = $(id); if (m) m.hidden = true; }
-    for (const id of ['#tb-export', '#tb-gear']) { const b = $(id); if (b) b.setAttribute('aria-expanded', 'false'); }
+    for (const id of ['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu']) { const m = $(id); if (m) m.hidden = true; }
+    for (const id of ['#tb-export', '#tb-gear', '#tb-present']) { const b = $(id); if (b) b.setAttribute('aria-expanded', 'false'); }
   }
   function toggleTbMenu(btnId, menuId) {
     const m = $(menuId); if (!m) return;
     const willOpen = m.hidden;
     closeTbMenus(); closeScenPop();
     if (!willOpen) return;
-    if (btnId === '#tb-export') renderExportMenu(); else renderGearMenu();
+    if (btnId === '#tb-export') renderExportMenu(); else if (btnId === '#tb-gear') renderGearMenu();
     m.hidden = false;
     $(btnId).setAttribute('aria-expanded', 'true');
   }
@@ -257,13 +280,27 @@
     b.setAttribute('aria-pressed', String(on));
     b.classList.toggle('on', on);
   }
-  $('#tb-present').addEventListener('click', () => { if (AS().inPresentation()) AS().exitPresentation(); else AS().enterPresentation(); syncPresentBtn(); });
+  // Present ▾ (design audit, Group 7): Present and Time-lapse in one menu.
+  $('#tb-present').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-present', '#tb-present-menu'); });
+  $('#tb-present-go').addEventListener('click', () => { closeTbMenus(); if (AS().inPresentation()) AS().exitPresentation(); else AS().enterPresentation(); syncPresentBtn(); });
+  $('#tb-timelapse').addEventListener('click', () => closeTbMenus());
   document.addEventListener('fullscreenchange', syncPresentBtn);
 
+  // Search sits in the top bar on wide screens, so it is always reachable (design audit, Group 7);
+  // on narrower screens it stays at the top of the Explore panel. The node moves: one search box.
+  function placeSearch() {
+    const box = $('#search-box'), slot = $('#tb-search'), home = document.querySelector('#tab-explore .search-bar'); if (!box || !slot || !home) return;
+    const wide = matchMedia('(min-width: 1600px)').matches;
+    if (wide && box.parentElement !== slot) slot.appendChild(box);
+    else if (!wide && box.parentElement !== home) home.insertBefore(box, home.firstChild);
+    slot.hidden = !wide;
+  }
   function initTopbar() {
     if (!$('#topbar')) return;
+    placeSearch(); matchMedia('(min-width: 1600px)').addEventListener('change', placeSearch);
     $('#tb-export').insertAdjacentHTML('afterbegin', PD.icon('export'));
     $('#tb-present').insertAdjacentHTML('afterbegin', PD.icon('present'));
+    $('#tb-present-go').insertAdjacentHTML('afterbegin', PD.icon('present'));
     $('#tb-help').insertAdjacentHTML('afterbegin', PD.icon('tips'));
     $('#tb-gear').innerHTML = PD.icon('settings');
     renderViewSwitch();

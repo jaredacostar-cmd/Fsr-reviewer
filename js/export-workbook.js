@@ -26,9 +26,9 @@
 'use strict';
 
 // The workbook contract: exactly these sheets, in this order.
-var SHEET_NAMES = ['Summary', 'Developments', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources'];
+var SHEET_NAMES = ['Summary', 'Developments', 'By plan', 'Plan × servicing', 'Records', 'Water', 'Wastewater', 'DC', 'Criteria', 'Sources'];
 
-var DC_STATUS_LABEL = { gap: 'Needed before the DC project', planned: 'DC project in time', check: 'Check the data', ok: 'Room to build-out' };
+var DC_STATUS_LABEL = { gap: 'Screens late: runs out before the DC project', planned: 'DC project in time', check: 'Check the data', ok: 'Room to build-out' };
 var DC_KIND_LABEL = { pipe: 'Sewer', ps: 'Pumping station', plant: 'Treatment plant', wplant: 'Water treatment', storage: 'Storage', supply: 'Supply mains (rough)' };
 // Column 13 interpolates the apartment persons-per-unit; built by dcCols().
 var DC_COLS_BASE = ['Status', 'System', 'Type', 'Existing capacity', 'Detail', 'Pipes in group', 'Capacity (plants: rated)', 'Unit', 'Today % of capacity', 'Committed % of capacity', 'Build-out % of capacity', 'Room after approved', 'Room (people)', null, 'Runs out', 'Runs out again with expansions', 'DC relief', 'DC relief construction year'];
@@ -65,6 +65,8 @@ function summaryRows(meta) {
     meta.dataDates != null && meta.dataDates !== '' ? 'Data: ' + meta.dataDates : null,
     meta.version != null && meta.version !== '' ? 'Version: ' + meta.version : null,
     meta.disclaimer || 'Unofficial prototype · public data only · not a Region of Peel product',
+    meta.screening || null,
+    meta.criteria || null,
   ].filter(function (l) { return l != null && l !== ''; });
   return [[meta.title || 'Peel Growth Pipeline – workbook']]
     .concat(lines.map(function (l) { return [l]; }));

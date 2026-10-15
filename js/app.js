@@ -19,6 +19,10 @@
   const PD = window.PeelDesign;
   PD.applyTheme(store.get('theme', 'dark'));
   PD.applyDensity(store.get('density', PD.densityDefault()));
+  window.PeelUtil.applyPublic();
+  // One screening note, the user's wording, at the top of the analysis panel: it covers every tab and
+  // tool result (the panes' own copies are hidden by the .screen-note ~ * rule; design audit, Group 10).
+  { const n = document.getElementById('screen-note-top'); if (n) n.outerHTML = window.PeelUtil.SCREEN_NOTE.replace('<p class="screen-note"', '<p class="screen-note" id="screen-note-top"'); }
 
   // ---- State -------------------------------------------------------------------
   const DEFAULT_KIND = 'application';
@@ -32,7 +36,7 @@
   // Filter-panel state (Phase 1): flags are multi-select (see FLAG_TESTS and js/filters.js
   // FLAG_META); the counting basis lives in the Scenario control, not the filters.
   const DEFAULT_FLAGS = () => ({ stalled: false, appeal: false, dcwait: false, psover: false, week: false, watched: false, est: false });
-  const DEFAULT_BASIS = 'all';        // counting basis: 'all' | 'committed' | 'remaining'
+  const DEFAULT_BASIS = 'all';        // counting basis: 'all' | 'buildout' | 'committed' | 'remaining'
   // 'all' (the default: every application, as the municipalities map them) | 'growth' |
   // 'residential' | 'mixed' | 'employment'.
   const DEFAULT_LANDUSE = 'all';
@@ -45,15 +49,16 @@
     projects: [],
     filtered: [],
     phases: DEFAULT_PHASES(),
+    lyr: null,   // "Counts as" (SPEC §4): a Set of layers (js/layers.js), or null for every layer
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
-    sp: [], mtsa: [], pz: [], dr: [],   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
+    sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     flags: DEFAULT_FLAGS(),   // flag filters, multi-select (see FLAG_TESTS)
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
     landuse: DEFAULT_LANDUSE,
-    basis: ['all', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
+    basis: ['all', 'buildout', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
     criteria: mergeCriteria(store.get('criteria', null)),
@@ -194,7 +199,16 @@
     applyUserUnits(raw);
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     const records = P.dedupeRecords(raw);
-    state.projects = P.buildProjects(records);
+    // Council decisions (zoning by-laws passed, draft plans approved) onto their files (SPEC 1.2).
+    if (window.PeelCouncilDecisions && PeelCouncilDecisions.data) PeelCouncilDecisions.applyTo(records, PeelCouncilDecisions.data, P.canonRef);
+    // Step B2: with the tree count in use, the trees are the developments (js/tree-groups.js
+    // through buildProjects' regroup hook); Previous keeps today's grouping.
+    const TG = window.PeelTreeGroups, TC = window.PeelTreeCounts;
+    const grouped = !!(TG && TC && TC.mode() === 'tree' && TG.ready());
+    state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
+    state.treeGrouped = grouped;
+    if (TC) TC.apply(state.projects);
+    if (grouped) migrateSavedKeys();
     PeelPlanAreas.tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
@@ -203,6 +217,10 @@
     PeelSearchFilter.renderMuniChips();
     PeelTimeline.updateYearBounds();
     applyFilters();
+    // The servicing model follows the developments: rebuilt with them (it used to wait for the Water /
+    // Wastewater tab, so the Overview, the DC tab and the scope cards read a model of the first-paint
+    // data — Inglewood 398% vs 42%, SPEC 1.4).
+    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.renderSvcTab(), 0); }
   }
 
   // Years in which the project hit the selected milestone (or any milestone).
@@ -253,6 +271,7 @@
     if (state.mtsa.length && !state.mtsa.some(id => (p.mtsa || []).includes(id))) return false;
     if (state.pz.length && !PeelSvcData.svcIds(p, 'pz').some(id => state.pz.includes(id))) return false;
     if (state.dr.length && !PeelSvcData.svcIds(p, 'dr').some(id => state.dr.includes(id))) return false;
+    if (state.ss && window.PeelSvcScope && !window.PeelSvcScope.has(p)) return false;   // servicing scope (plant / station / block / zone)
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
@@ -269,10 +288,13 @@
     return true;
   }
 
+  // A development's layer (js/layers.js), kept per development object (rebuilt ones are new objects).
+  const lyCache = new WeakMap();
+  const layerOf = p => { if (!window.PeelLayers) return null; if (!lyCache.has(p)) lyCache.set(p, window.PeelLayers.layerOf(p)); return lyCache.get(p); };
   function applyFilters() {
     PeelSvcData.syncWwLayers();   // growth layers follow the selected stages
     const base = state.projects.filter(p => matches(p, true));
-    state.filtered = base.filter(p => state.phases.has(p.phase));
+    state.filtered = base.filter(p => state.phases.has(p.phase) && (!state.lyr || state.lyr.has(layerOf(p))));
     PeelRenderList.renderPipeline(base);
     PeelRenderList.renderMarkers();
     PeelRenderList.setListPage(0); PeelRenderList.renderList();   // filters changed: back to the first page
@@ -308,19 +330,9 @@
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault();
     store.set('analysisW', setAnalysisW(analysisEl.getBoundingClientRect().width + (e.key === 'ArrowRight' ? 40 : -40)));
   });
-  // Phone bottom sheet (the info panel): drag the grip, or tap it to step 30% → 50% → 62% → 92%.
-  const SHEET_STEPS = [30, 50, 62, 92], detailEl = $('#detail');
-  const setSheetH = vh => { const v = Math.max(18, Math.min(94, vh)); detailEl.style.setProperty('--sheet-h', `${v}dvh`); detailEl.style.setProperty('--sheet-hv', `${v}vh`); return v; };
-  if (store.get('sheetH', null)) setSheetH(store.get('sheetH'));
-  PeelDataTab.dragResize($('#detail-grip'), {
-    get: () => detailEl.getBoundingClientRect().height,
-    set: h => setSheetH(h / innerHeight * 100),
-    done: moved => {
-      const cur = detailEl.getBoundingClientRect().height / innerHeight * 100;
-      if (moved) store.set('sheetH', Math.round(setSheetH(cur)));
-      else { const nx = SHEET_STEPS.find(s => s > cur + 2) || SHEET_STEPS[0]; store.set('sheetH', setSheetH(nx)); }
-    },
-  });
+  // The #detail bottom sheet is gone (SPEC §3: every click lands in the right panel). setSheetH stays
+  // as a no-op for callers that lowered it to make room on a phone.
+  const setSheetH = vh => vh;
   // The summary line: the totals for what is on the map (filled by renderGrowth).
   // Desktop: jump to the Overview tab. Compact: expand the bottom sheet.
   $('#f-sum').onclick = () => {
@@ -329,7 +341,9 @@
   };
   $('#analysis').querySelector('.analysis-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
-    PeelAnalysisTabs.setFootPref(t.dataset.tab); store.set('footTab4', PeelAnalysisTabs.getFootPref());
+    // Servicing opens the half last used (wastewater by default): 'ww' or 'water'.
+    const k = t.dataset.tab === 'svc' ? (store.get('svcSys', 'ww') === 'water' ? 'water' : 'ww') : t.dataset.tab;
+    PeelAnalysisTabs.setFootPref(k); store.set('footTab4', PeelAnalysisTabs.getFootPref());
     PeelAnalysisTabs.showFootTab(PeelAnalysisTabs.getFootPref()); PeelShare.viewLink.write();
   });
   // Bottom-sheet snaps (compact): peek shows the summary + tabs, half and full the
@@ -368,7 +382,7 @@
   // themselves; form fields keep theirs.)
   addEventListener('keydown', e => {
     if (e.key !== 'Escape' || !PeelDataTab.shellNarrow()) return;
-    if (document.querySelector('.tour') || !$('#detail').hidden) return;
+    if (document.querySelector('.tour')) return;
     if (e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
     if ($('#sidebar').classList.contains('open')) PeelDataTab.toggleSidebar(false);
     else if (analysisSnap !== 'peek') setAnalysisSnap('peek');
@@ -386,7 +400,8 @@
     if (!strip || strip.dataset.tabview) return; strip.dataset.tabview = '1';
     strip.addEventListener('click', e => {
       const t = e.target.closest('.f-tab[data-tab], .f-tab[data-atab]'); if (!t) return;
-      const v = TAB_VIEW[t.dataset.tab || t.dataset.atab];
+      const k = t.dataset.tab === 'svc' ? (store.get('svcSys', 'ww') === 'water' ? 'water' : 'ww') : t.dataset.tab || t.dataset.atab;
+      const v = TAB_VIEW[k];
       if (!v || tabViewLink || PeelMapAnalysis.currentView() === v) return;
       tabViewLink = true;
       try { PeelMapAnalysis.setMapView(v); } finally { tabViewLink = false; }
@@ -437,7 +452,10 @@
   function renderVersion() {
     const d = state.snapshot ? ` · data ${state.snapshot.generatedAt.slice(0, 10)}` : '';
     $('#app-version').textContent = `App version ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION}${d}`;
-    PeelChangelog.loadChangelog().then(() => { const r = PeelChangelog.currentRelease(); if (r) $('#app-version').textContent = `App version ${r.version} (build ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION})${d} · see the Change log tab`; });
+    // The bottom bar's right end (SPEC §4): data date, version, change log.
+    const meta = v => { const el = $('#tb-meta'); if (el) el.innerHTML = `Data ${esc(state.snapshot && state.snapshot.generatedAt ? state.snapshot.generatedAt.slice(0, 10) : 'live')} · ${esc(v)} · <button type="button" class="btn small link" data-tbg-log>Change log</button>`; };
+    meta(APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION);
+    PeelChangelog.loadChangelog().then(() => { const r = PeelChangelog.currentRelease(); if (r) { $('#app-version').textContent = `App version ${r.version} (build ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION})${d} · see the Change log tab`; meta(`v${r.version}`); } });
   }
 
   // ---- Boot ------------------------------------------------------------------------
@@ -530,7 +548,10 @@
         const missing = state.sources.filter(s => s.enabled && !s.fromSnapshot);
         inflight += missing.length; showLoading();
         for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
-        fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => { state.history = h; }).catch(() => {});
+        fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => {
+          state.history = h;
+          if (state.treeGrouped && window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k)); }
+        }).catch(() => {});
       }
       rebuild();
     })();
@@ -538,7 +559,40 @@
   }
 
   // Start from the weekly snapshot (fast, survives source outages); fall back to live.
+  // Step B1: the tree counts (small, built with the snapshot) load alongside; when they arrive
+  // after first paint, the developments take them and every view refreshes.
+  // Step B2: the developments become the trees once the data is in; a switch in Settings ›
+  // Counting regroups (Tree) or puts today's grouping back (Previous).
+  function loadTreeCounts() {
+    if (window.PeelCouncilDecisions) PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
+    if (!window.PeelTreeCounts) return;
+    PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
+  }
+  function recount() {
+    if (!window.PeelTreeCounts || !state.projects) return;
+    const cur = typeof PeelDevNav !== 'undefined' && PeelDevNav.getCurrentProject && PeelDevNav.getCurrentProject();
+    const curKey = cur && cur.key;
+    rebuild();
+    if (window.PeelSvcTab && PeelSvcTab.renderScenario) PeelSvcTab.renderScenario();
+    else if (window.PeelTopbar && PeelTopbar.renderTbScen) PeelTopbar.renderTbScen();
+    const again = curKey && PeelDevNav.projectByKey(curKey);
+    if (again && PeelDevNav.showDetail) PeelDevNav.showDetail(again);
+  }
+  // Keys saved under today's developments (watchlist, allocations), the weekly changes and the
+  // phase history, rewritten to the trees' keys. Nothing saved is dropped (js/tree-groups.js).
+  function migrateSavedKeys() {
+    const TG = window.PeelTreeGroups; if (!TG) return;
+    const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k);
+    const w = TG.migrateKeys([...watch], exists);
+    if (w.length !== watch.size || w.some(k => !watch.has(k))) { watch.clear(); w.forEach(k => watch.add(k)); store.set('watch', w); }
+    const unitsOf = k => { const p = state.projects.find(x => x.key === k); return p ? p.units : 0; };
+    const al = TG.migrateAllocations(store.get('allocations', {}) || {}, exists, unitsOf);
+    if (al.moved) store.set('allocations', al.all);
+    TG.translateChanges(state.snapshot && state.snapshot.changes, exists);
+    TG.translateHistory(state.history, exists);
+  }
   async function boot() {
+    loadTreeCounts();
     if (await bootFromIndex()) {
       // First paint is up; pull the full snapshot when the browser is idle.
       const go = () => { loadFullSnapshot().catch(() => {}); };
@@ -614,18 +668,24 @@
   });
 
   // "This week" panel: projects that appeared or changed phase since the previous snapshot.
+  document.addEventListener('click', e => { if (e.target.closest('[data-tbg-log]')) PeelTips.showHelpLog(); });
   function renderChanges() {
     const c = state.snapshot && state.snapshot.changes;
     if (!c || c.baseline) return;
     $('#changes-head').textContent = `${c.since} → ${c.until}`;
-    const n = (c.movedCount || 0) + (c.addedCount || 0);
+    // Real changes vs backfill (SPEC §4): a newly listed file that is already completed is an old
+    // record surfacing in the refresh, not news; it is counted here and listed under Data › Sources.
+    const real = c.added.filter(a => a.phase !== 'completed'), backfill = c.added.filter(a => a.phase === 'completed');
+    const n = (c.movedCount || c.moved.length || 0) + real.length;
     $('#week-count').hidden = !n;
     $('#week-count').textContent = n > 99 ? '99+' : String(n);
     const items = [
       ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${watch.has(m.key) ? '★ ' : ''}${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
-      ...c.added.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${watch.has(a.key) ? '★ ' : ''}${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
+      ...real.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${watch.has(a.key) ? '★ ' : ''}${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
     ];
-    $('#changes-summary').textContent = `${fmtNum(c.movedCount)} changed phase · ${fmtNum(c.addedCount)} new`;
+    $('#changes-summary').textContent = `${fmtNum(c.movedCount || c.moved.length)} changed phase · ${fmtNum(real.length)} new${backfill.length ? ` · ${fmtNum(backfill.length)} backfill hidden (older completed files that surfaced in the refresh: Data › Sources)` : ''}`;
+    const bf = $('#backfill-note');
+    if (bf) { bf.hidden = !backfill.length; bf.innerHTML = backfill.length ? `<strong>Backfill ${esc(c.since)} → ${esc(c.until)}:</strong> ${fmtNum(backfill.length)} older completed file${backfill.length === 1 ? '' : 's'} surfaced in the refresh (not counted as changes): ${backfill.slice(0, 8).map(a => esc(a.title)).join(' · ')}${backfill.length > 8 ? ` · +${fmtNum(backfill.length - 8)} more` : ''}.` : ''; }
     const SHOW = 25;
     $('#changes-list').innerHTML = items.slice(0, SHOW).map((it, i) => `<li><button type="button" data-i="${i}">${it.html}</button></li>`).join('') +
       (items.length > SHOW ? `<li class="muted small">+ ${fmtNum(items.length - SHOW)} more</li>` : '');
@@ -643,7 +703,7 @@
     map: window.PeelMapCore.map,
     showDetail: (...a) => window.PeelDevNav.showDetail(...a),
     // ---- newly exposed core internals (used cross-module) ----
-    applyFilters, matches, scheduleRebuild, loadSource, showLoading, saveSources,
+    applyFilters, matches, layerOf, scheduleRebuild, recount, loadSource, showLoading, saveSources,
     applySnapshot, jobsOf, empOf, clearEmp, mergeCriteria, setUserUnits,
     timeActive, yearsOf, setSheetH, refreshTheme,
     // Phase 6: full-snapshot load state (startup index paints first; the detail
@@ -683,7 +743,7 @@
     pipeColour: r => window.PeelSewerCap.pipeColour(r),
     peopleFor: (room, add) => window.PeelMasterPlan.peopleFor(room, add),
     runOut: (q, lim) => window.PeelMasterPlan.runOut(q, lim),
-    tracePoint: ll => window.PeelSewerProfile.tracePoint(ll),
+    tracePoint: ll => window.PeelSewerProfile.tracePoint(ll, false),   // returns the trace, no panel (Inspect, Fit)
     traceSummaryHTML: t => window.PeelSewerTrace.traceSummaryHTML(t),
     waterTrace: (p, zid) => window.PeelWaterTrace.waterTrace(p, zid),
     waterTraceSummaryHTML: r => window.PeelWaterTrace.waterTraceSummaryHTML(r),

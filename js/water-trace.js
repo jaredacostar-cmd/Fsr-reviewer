@@ -40,7 +40,7 @@
           if (!f.lnglat) continue;
           const [sym] = WF_KIND[f.kind] || ['●'];
           const m = L.marker([f.lnglat[1], f.lnglat[0]], { icon: L.divIcon({ className: 'wf-mk', html: `<i class="wf-ic wf-${f.kind}">${sym}</i>`, iconSize: [22, 22], iconAnchor: [11, 11] }), keyboard: true, title: f.name, zIndexOffset: 500 });
-          m.bindTooltip(`${esc(f.name)} · ${esc(wfKinds(f))}`, { direction: 'top', offset: [0, -10] });
+          m.bindTooltip(window.PeelUtil.hoverCard({ kind: 'Water facility', name: f.name, sub: wfKinds(f), also: 'capacity and Master Plan assessment' }), { direction: 'top', offset: [0, -10], className: 'pt' });
           m.on('click', () => showWaterFacility(f));
           WF.layer.addLayer(m);
         }
@@ -65,12 +65,11 @@
     const as = [f.assess && wfAssessHTML('Master Plan: treatment capacity vs forecast maximum day (ML/d)', f.assess.years, f.assess.demand, 'Forecast demand', f.assess.capacity, 'Capacity (90%)'),
       ...(f.assessPumps || []).map(a => wfAssessHTML(`Master Plan: ${a.what} (ML/d)`, a.years, a.demand, 'Forecast demand', a.capacity, 'Existing capacity')),
       f.assessStorage && wfAssessHTML('Master Plan: storage (ML)', f.assessStorage.years, f.assessStorage.required, 'Required', f.assessStorage.available, 'Available')].filter(Boolean).join('');
-    $('#detail-body').innerHTML = `<div class="head"><h3>${esc(f.name)}</h3><div class="m">${esc(wfKinds(f))} · ${esc(f.system)}${z ? ` · ${esc(z.name)}` : ''}</div></div>
+    root.PeelSvcScope.openResult({ ref: `wfac:${f.id != null ? f.id : f.name}`, title: f.name, reopen: () => showWaterFacility(f), html: `<div class="head"><h3>${esc(f.name)}</h3><div class="m">${esc(wfKinds(f))} · ${esc(f.system)}${z ? ` · ${esc(z.name)}` : ''}</div></div>
       <div class="brief" data-info="water-facilities">${plant}${gw}${stor}${pumps}
       ${as ? `<h3 class="sub-title">2020 Master Plan assessment</h3>${as}<p class="small muted">Red: capacity below the forecast (the Master Plan's trigger for the works below).</p>` : ''}
       ${works.length ? `<h3 class="sub-title">Planned works (2026 DC, draft)</h3><ul class="small">${works.flatMap(w => w.items.map(it => `<li>${esc(it.what)}${it.proj ? ` · ${esc(it.proj)}` : ''}${it.phases && it.phases.length ? ` · ${[...new Set(it.phases.map(p => p[1]))].join(', ')}` : ''}</li>`)).join('')}</ul>` : ''}
-      <p class="small muted">${esc(f.parts.join(' · '))}${f.posFrom ? ` · position: ${esc(f.posFrom)}` : ''}. Sources: Region of Peel open data (locations); <a href="${esc(D.sources.mpUrl)}" target="_blank" rel="noopener">2020 Master Plan, Vol. 3</a> (pumping and storage capacity, Tables 4–7, 9, 11, 12)${f.plant || f.groundwater ? `; Region of Peel ${R ? R.year : 2025} drinking water reports` : ''}. The 2025 Master Plan will update these capacities.</p></div>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'wf'; $('#detail').scrollTop = 0;
+      <p class="small muted">${esc(f.parts.join(' · '))}${f.posFrom ? ` · position: ${esc(f.posFrom)}` : ''}. Sources: Region of Peel open data (locations); <a href="${esc(D.sources.mpUrl)}" target="_blank" rel="noopener">2020 Master Plan, Vol. 3</a> (pumping and storage capacity, Tables 4–7, 9, 11, 12)${f.plant || f.groundwater ? `; Region of Peel ${R ? R.year : 2025} drinking water reports` : ''}. The 2025 Master Plan will update these capacities.</p></div>` });
   }
   // Water capacity by growth layer (Water tab), on the same bars as the wastewater plants:
   // treatment (South Peel; the Caledon well systems) as the Overview counts it (the 2025 measured
@@ -117,7 +116,7 @@
   async function estimateZone(p) {
     if (zoneEst.has(p)) return zoneEst.get(p);
     const zones = App().state.servicing.zones, near = (f, m = 30000) => Areas().nearest(zones.filter(f), p.lng, p.lat, m);
-    let elev = null; try { elev = await Meas().elevAt(p.lat, p.lng); } catch (e) { /* tiles unavailable */ }
+    let elev = null, elevSrc = null; try { const g = await window.PeelElevation.getGround(p.lat, p.lng); elev = g.z; elevSrc = g.z != null ? window.PeelElevation.shortLabel(g) : null; } catch (e) { /* no elevation */ }
     const via = DI().dcVia(p, 'pz'), viaZ = via && SD().svcById.get(via.id), viaL = viaZ && MP().zLevel(viaZ.zone);
     const nz = near(() => true, 20000), nearZ = nz && SD().svcById.get(nz.id), nearL = nearZ && MP().zLevel(nearZ.zone);
     const cand = elev == null ? [] : Object.keys(PZ_TABLE).map(Number).filter(n => elev >= PZ_TABLE[n][1] && elev <= PZ_TABLE[n][2]);
@@ -131,15 +130,22 @@
     if (level) z = viaZ && viaL === level ? viaZ : (n => n && SD().svcById.get(n.id))(near(a => MP().zLevel(a.zone) === level));
     else if (elev != null && elev > PZ_TABLE[7][2]) { z = (n => n && SD().svcById.get(n.id))(near(a => !!MP().wellSystem[a.zone])); how = 'above'; }
     if (!z) { z = viaZ || nearZ; how = how || (viaZ ? 'dc-only' : 'nearest'); }
-    const est = z ? { z, level: MP().zLevel(z.zone), elev, cand, how, via: how === 'dc' || how === 'dc-only' ? via : null } : null;
+    // SPEC 1.8: the development's one zone (SD().zoneOf: the planned main it would connect to, else the
+    // nearest zone) is the answer everywhere; the elevation band only flags another zone the ground fits.
+    const one = SD().zoneOf(p);
+    if (one && one.reason !== 'mapped') { z = one.z; how = one.reason === 'planned-main' ? 'dc-only' : 'nearest'; }
+    const est = z ? { z, level: MP().zLevel(z.zone), elev, elevSrc, cand, how, via: how === 'dc' || how === 'dc-only' ? (via || (one && one.via ? { via: one.via, ln: null } : null)) : null } : null;
     zoneEst.set(p, est);
     return est;
   }
   function zoneEstHTML(e) {
     if (!e) return '';
-    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level], g = e.elev != null ? `ground about ${Math.round(e.elev)} m` : 'ground elevation unavailable';
+    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level];
     const why = { dc: 'the planned DC main within 1 km feeds it', near: 'it is the nearest mapped zone in range', pressure: 'its grade line gives about 55 m of pressure', above: 'above Zone 7\'s range: the nearest groundwater system', 'dc-only': 'the zone the nearest planned DC main feeds', nearest: 'the nearest mapped zone' }[e.how] || '';
-    return `<p class="small est-line">Outside the mapped pressure zones: ${g} → <strong>${zn}</strong>${r && e.how !== 'above' ? ` (serves ${r[1]}–${r[2]} m, grade line ${r[0]} m; 2020 Master Plan, Vol. 3, Table 3)` : ''}${e.cand.length > 1 ? `; the ground is also in Zone ${e.cand.filter(n => n !== e.level).join(' / ')}'s range, ${why}` : why ? `; ${why}` : ''}${e.via ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
+    // One flag (SPEC 1.8): the assigned zone and why; the other zone(s) the ground also fits.
+    const other = e.cand.filter(n => n !== e.level), gsrc = e.elevSrc ? ` (${esc(e.elevSrc)})` : '';
+    const fits = e.elev == null ? '' : e.cand.length ? (other.length ? ` · ground ≈${Math.round(e.elev)} m${gsrc} also fits Zone ${other.join(' / ')} — <strong>pressure zone uncertain</strong>, confirm in the FSR` : ` · ground ≈${Math.round(e.elev)} m${gsrc} is in its range`) : ` · ground ≈${Math.round(e.elev)} m${gsrc} is outside its range — confirm in the FSR`;
+    return `<p class="small est-line">Outside the mapped pressure zones: assigned to <strong>${zn}</strong> (${why})${r && e.how !== 'above' ? ` <span class="muted">— serves ${r[1]}–${r[2]} m, grade line ${r[0]} m (2020 Master Plan, Vol. 3, Table 3)</span>` : ''}${fits}${e.via && (e.via.ln || e.via.via) ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
   }
   const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };
   function waterTrace(p, zidIn) {
@@ -351,7 +357,7 @@
     const p = Nav().projectByKey(b.dataset.wtrace); if (!p) return;
     // The button can appear twice (detail panel and the footer Water tab): the trace output
     // goes to the clicked button's container, and every copy's label stays in sync.
-    const scope = b.closest('#detail-body, #water-body') || document;
+    const scope = b.closest('#scope-body, #pane-dev-body, #water-body') || document;
     const top = scope.querySelector(`.trace-box [data-wtrace="${CSS.escape(p.key)}"]`), box = top && top.closest('.trace-box');
     const tops = [...document.querySelectorAll(`[data-wtrace="${CSS.escape(p.key)}"]`)];
     for (const t of tops) if (t._label == null) t._label = t.innerHTML;

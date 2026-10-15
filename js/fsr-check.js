@@ -127,13 +127,13 @@
 
   /**
    * Pipe capacity along the sewer path, from SC().pathPipes(p): the tightest local
-   * pipe (first 3 km) and the tightest downstream trunk. Bands follow the map legend:
+   * pipe (under 750 mm) and the tightest trunk (750 mm and over). Bands follow the map legend:
    * green under 85% (free flowing), amber 85–100% (near full), red over 100% (surcharged).
    */
   function pipeChecks(pp) {
     if (!pp) return [];
     const out = [];
-    for (const [kind, label] of [['local', 'Local sewers (first 3 km)'], ['trunk', 'Downstream trunk']]) {
+    for (const [kind, label] of [['local', 'Local sewers (under 750 mm)'], ['trunk', 'Trunk sewers (750 mm and over)']]) {
       const x = pp[kind];
       if (!x || x.r1 == null || !isFinite(x.r1)) continue;
       const pct = x.r1 * 100;
@@ -149,8 +149,8 @@
   function plantCheck(c) {
     const f1 = n => n == null || !isFinite(n) ? '–' : String(Math.round(n * 10) / 10);
     if (!c || c.reserve == null) return { flag: 'na', text: 'No plant figures for this development.' };
-    if (c.reserve <= 0) return { flag: 'bad', text: `${c.name || 'The plant'} is over-committed — no uncommitted reserve.` };
-    const share = c.use != null && c.use > 0 ? `; this development ≈${(c.use / c.reserve * 100).toFixed(1)}% of it` : '';
+    if (c.reserve <= 0) return { flag: 'bad', text: `${c.name || 'The plant'} screens over rated capacity — no uncommitted reserve.` };
+    const share = c.use != null && c.use > 0 ? `; this development ≈${(c.use / c.reserve * 100).toFixed(1)}% of it${c.useNote ? ` (${c.useNote})` : ''}` : '';
     return { flag: 'ok', text: `${c.name || 'Plant'}: uncommitted reserve ${f1(c.reserve)} ML/d${share}.` };
   }
 
@@ -210,7 +210,7 @@
       catchmentShort: p0 && sd ? short(sd.drName(p0)) : null,
       plantFull: f.pl && sd ? sd.plantLabel(f.pl) : null,
       plantShort: f.pl && sd && sd.PLANT_SHORT ? (sd.PLANT_SHORT[f.pl] || f.pl) : f.pl,
-      reserve: f.cap ? f.reserve : null, reserveUse: f.cap ? f.use : null, plantName: f.cap ? f.cap.name : null,
+      reserve: f.cap ? f.reserve : null, reserveUse: f.cap ? f.use : null, reserveUseNote: f.cap ? f.useNote : null, plantName: f.cap ? f.cap.name : null,
       pathTxt: f.path && sd ? f.path.slice(0, 6).map(a => a.kind === 'plant' ? sd.plantLabel(a.plant) : short(sd.drName(a))).join(' → ') : '',
       pipes: safe(() => SC() && SC().pathPipes && SC().pathPipes(p)),
       dcw: safe(() => (h.devWorks ? h.devWorks(p, f) : DI() && DI().devWorks(p, f))),
@@ -318,7 +318,7 @@
       return;
     }
     const rows = flowRows(con, app);
-    const comp = { rows, conn: connRows(con, app), pipes: pipeChecks(app.pipes), plant: plantCheck({ name: app.plantName, reserve: app.reserve, use: app.reserveUse }), dc: dcCheck(app.dcw), sum: summarize(rows) };
+    const comp = { rows, conn: connRows(con, app), pipes: pipeChecks(app.pipes), plant: plantCheck({ name: app.plantName, reserve: app.reserve, use: app.reserveUse, useNote: app.reserveUseNote }), dc: dcCheck(app.dcw), sum: summarize(rows) };
     _last = { key: p.key, p: { title: p.title, municipality: p.municipality, phase: p.phase }, con, app, comp };
     out.hidden = false;
     out.innerHTML = resultsHTML(comp, app);

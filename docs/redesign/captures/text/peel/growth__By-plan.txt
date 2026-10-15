@@ -1,0 +1,285 @@
+General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results. Peel design criteria: Modelling Demand Table v2.0 (Aug 2024) and Linear Wastewater Standards R1.0 (Mar 2023); public data, not a hydraulic model.
+
+Pipeline
+Census & 2051
+By plan
+Timing
+
+The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting all units (the Overview's basis). Every row equals the sum of the rows under it (Check). Grouping: tree.
+
+All columns Download CSV
+
+Area	Units	People	Check
+▾Peel	228,490	683,671	✓
+▾Brampton	131,222	391,980	✓
+▸52: Heritage Heights filter	26,525	85,444	✓
+▸36: Queen Street Corridor filter	24,311	69,646	–
+▸51: Mount Pleasant filter	14,530	41,356	✓
+▸47: Highway 427 Industrial filter	8,391	27,145	✓
+▸55: Hurontario-Main Corridor filter	8,889	25,440	–
+▸7: Downtown Brampton filter	7,731	21,165	–
+▸41: Bram East filter	6,736	18,880	✓
+▸6: Brampton Flowertown filter	5,494	16,280	–
+▸40 (c): Bram West filter	5,213	15,912	✓
+▸12: Credit Valley filter	3,596	10,764	✓
+▸24: Fletcher's Creek South filter	3,055	8,660	–
+▸1: Snelgrove-Heart Lake filter	2,744	8,596	–
+▸3: Bramalea filter	2,608	7,242	–
+▸39: Goreway Drive Corridor filter	2,354	7,004	–
+▸48 (b): Countryside Villages filter	1,719	5,617	✓
+▸56: Gore Meadows filter	1,510	4,897	✓
+▸2: Springdale filter	1,199	3,796	✓
+▸40 (d): Bram West filter	856	2,674	–
+▸Precinct 40-3 precinct	856	2,674	–
+▸44: Fletcher's Meadow filter	594	1,703	–
+▸9: Brampton Mobility Hub filter	572	1,544	–
+▸40 (a): Bram West filter	387	1,200	✓
+▸50: Vales Of Humber filter	332	1,106	✓
+▸49: Vales Of Castlemore North filter	299	949	–
+▸5: Highway 410 And Steeles filter	144	446	–
+▸42: Vales Of Castlemore filter	132	414	✓
+▸16: Brampton South filter	109	338	–
+▸4: Airport Intermodal Area filter	94	281	–
+▸26: Toronto Gore Rural Estate filter	44	135	–
+▸48 (a): Countryside Villages filter	0	0	–
+▸40 (b): Bram West filter	0	0	–
+▸PWB: Parkway Belt filter	0	0	–
+▸54: Kennedy Road South filter	0	0	–
+▸CC: Clairville Conservation filter	0	0	–
+▸43: Fletcher's Creek Village filter	0	0	–
+▸2(a): Northwest Sandalwood Parkway filter	0	0	–
+▸Not in a plan	198	674	–
+▾Caledon	29,130	102,311	✓
+▸Caledon Station filter	5,902	21,021	–
+▸Alloa filter	3,642	13,360	–
+▸Bolton filter	3,804	10,597	✓
+▸Mayfield West (Phase 2) filter	2,648	8,641	–
+▸Brookvalley (Mayfield West Phase 2 Secondary Plan Stage 3) filter	2,217	8,015	–
+▸Mayfield West (Phase 3, Stage 1) filter	1,268	4,773	–
+▸Mount Hope West filter	1,010	3,578	–
+▸Caledon East filter	559	2,111	–
+▸Dixie Road filter	265	822	–
+▸Bolton South Hill filter	199	733	–
+▸Mayfield West filter	113	417	–
+▸Palgrave Estate filter	49	206	–
+▸West Bolton filter	43	136	–
+▸South Simpson Industrial filter	27	84	–
+▸Inglewood filter	13	55	–
+▸Tullamore filter	1	2	–
+▸Bolton Community Shopping Centre Commercial filter	0	0	–
+▸Humber Station Employment Area filter	0	0	–
+▸Coleraine West Employment Area filter	0	0	–
+▸Sandhill filter	0	0	–
+▸Not in a plan	7,371	27,760	–
+▾Mississauga	68,138	189,380	✓
+▸DT Core filter	16,151	43,608	–
+▸DT Cooksville filter	6,564	17,728	–
+▸Uptown MN filter	4,894	13,224	–
+▸Dixie EA filter	4,639	12,577	✓
+▸Lakeview Waterfront MN filter	3,869	11,350	–
+▸Central Erin Mills MN filter	4,077	11,234	–
+▸Streetsville NHD filter	3,607	9,835	✓
+▸Lakeview NHD filter	2,668	7,286	–
+▸Ninth Line NHD filter	2,208	7,265	–
+▸Applewood NHD filter	2,497	7,114	–
+▸Port Credit CN filter	2,012	5,432	–
+▸DT Fairview filter	1,914	5,168	–
+▸Cooksville NHD (West) filter	1,324	3,751	–
+▸Southdown EA filter	1,246	3,367	–
+▸Central Erin Mills NHD filter	1,177	3,228	–
+▸Rathwood NHD filter	1,056	3,185	–
+▸DT Hospital filter	852	2,408	–
+▸Sheridan CN filter	884	2,387	–
+▸Meadowvale Village NHD filter	633	2,314	–
+▸Sheridan Park CC filter	632	1,959	–
+▸Erin Mills NHD filter	703	1,898	✓
+▸Clarkson - Lorne Park NHD filter	582	1,773	–
+▸Port Credit NHD (West) filter	557	1,753	–
+▸East Credit NHD filter	442	1,322	–
+▸Mineola NHD filter	409	1,152	–
+▸Mississauga Valleys NHD filter	406	1,096	–
+▸Rathwood-Applewood CN filter	399	1,077	–
+▸Sheridan NHD filter	325	966	–
+▸Clarkson Village CN filter	294	795	–
+▸Meadowvale NHD filter	234	734	✓
+▸Northeast EA (West) filter	224	605	–
+▸Port Credit NHD (East) filter	209	564	–
+▸Erindale NHD filter	194	524	–
+▸Western Business Park EA filter	156	421	–
+▸Gateway EA (West) filter	35	95	–
+▸Malton NHD filter	31	94	✓
+▸Cooksville NHD (East) filter	24	65	–
+▸Fairview NHD filter	9	24	–
+▸Meadowvale Business Park CC filter	0	0	–
+▸Northeast EA (East) filter	0	0	–
+▸Churchill Meadows NHD filter	0	0	–
+▸Gateway CC filter	0	0	–
+▸Churchill Meadows EA filter	0	0	–
+▸Mavis-Erindale EA filter	0	0	–
+▸Gateway EA (East) filter	0	0	–
+▸Airport CC filter	0	0	–
+▸Hurontario NHD filter	0	0	–
+▸UTM SPA filter	0	0	–
+▸Clarkson EA filter	0	0	–
+▸Not in a plan	1	1	–
+Developments split between plans 42
+
+Nested plans are sub-levels of their plan, counted once: Bolton Core (in Bolton); DixieDundas CN (in Dixie EA); Malton CN (in Malton NHD); Meadowvale CN (in Meadowvale NHD); South Common CN (in Erin Mills NHD); Streetsville CN (in Streetsville NHD). Brampton precincts sit in the plan holding most of each; 1 of 30 have no development in the current set.
+
+Plans against their targets
+
+Each municipality against the Region's 2051 allocation of growth, and each plan against its published target, compared on units: committed (D-5-1) and all proposed. Where a target states only people, pipeline people are shown beside it (†, indicative only: targets use household persons per unit, the pipeline Peel design criteria). "unchecked" marks a figure not yet checked against its document. "total" marks a target that counts every home at build-out, existing ones included, so the pipeline (new proposals only) reads low there.
+
+Area	Target	Proposed units	% of target	Source
+Brampton	106,000 units · 287,000 people · 146,000 jobs by 2051	131,222	124%	Region of Peel 2051 allocation
+52: Heritage Heights total unchecked	134,000 people · 54,000 jobs ⓘ	26,525
+85,444 people
+	64% of people†	City of Brampton news release: Heritage Heights Secondary Plan OLT settlement (revised plan approved by Ontario Land Tribunal) News release body
+51: Mount Pleasant total unchecked	35,500 people · 4,600 jobs ⓘ	14,530
+41,356 people
+	116% of people†	Mount Pleasant Secondary Plan (Chapter 51(a), Amendment to the 2006 Official Plan / office consolidation) Density / population target policy (section number not confirmed)
+47: Highway 427 Industrial total unchecked	31,120 people · 8,130 jobs by 2041 ⓘ	8,391
+27,145 people
+	87% of people†	Arterial Roads within Highway 427 Industrial Secondary Plan Area (Area 47) Class EA, Part B Environmental Study Report (Region of Peel / City of Brampton) Study background / growth forecast section
+7: Downtown Brampton total unchecked	minimum 200 residents and jobs combined per ha (Urban Growth Centre, ~224 ha) by 2031 ⓘ	7,731	–	City of Brampton staff report: Brampton's Response to the Provincial Growth Plan Status (citing 2006 Growth Plan / Official Plan UGC policy) UGC discussion
+40 (a), 40 (b), 40 (c), 40 (d): Bram West total unchecked	38,600 people · 39,000 jobs ⓘ	6,456
+19,786 people
+	51% of people†	City of Brampton brochure: A New Direction in Planning & Public Consultation - Bram West Secondary Plan n/a
+50: Vales Of Humber total unchecked	650 jobs ⓘ	332	–	Office Consolidation, Chapter 50 Vales of Humber Secondary Plan Density policy (applies jointly to Block Plan Areas 50-1 and 50-2)
+48 (a), 48 (b): Countryside Villages total unchecked	20,000 people · 7,500 jobs ⓘ	1,719
+5,617 people
+	28% of people†	Office Consolidation, Secondary Plan Area 48, Chapter 48(a) Countryside Villages Secondary Plan Density target policy (section number not confirmed)
+Caledon	68,000 units · 219,000 people · 98,000 jobs by 2051	29,130	43%	Region of Peel 2051 allocation
+Alloa total unchecked	11,200 units · 33,600 people · 3,900 jobs by 2051	3,642	33%	Official Plan Amendment No. 286 (Alloa Secondary Plan), Town of Caledon By-law 2025-061 Purpose of the Amendment
+Mayfield West (Phase 2) total unchecked	10,348 people · 3,799 jobs ⓘ	2,648
+8,641 people
+	84% of people†	Town of Caledon news release: OMB Greenlights Mayfield West Development (OPA 222, Mayfield West Phase 2 Stage 1) News release (207.5 ha Phase 2 Stage 1 lands)
+Brookvalley (Mayfield West Phase 2 Secondary Plan Stage 3) total unchecked	4,551 units · 13,061 people · 914 jobs	2,217	49%	Town of Caledon Staff Report 2024-0654 (OPA No. 281, Mayfield West Phase 2 Stage 3 lands, file POPA 2023-0006; adopted by By-law 2024-104) Staff Report 2024-0654 (13 pp.), proposal description
+Mayfield West total unchecked	6,200 units · 19,000 people ⓘ	113	2%	Draft Official Plan Amendment (Mayfield West Phase 1 Stage 2, Argo Kennedy) restating Town of Caledon Official Plan Section 7.12 Mayfield West Secondary Plan Section 7.12 (Mayfield West Secondary Plan), as restated in draft OPA
+Humber Station Employment Area total unchecked	minimum 26 jobs per hectare (Region of Peel OP direction for Caledon Employment Areas, restated in OPA 287)	0	–	Official Plan Amendment No. 287 (Humber Station Employment Area Secondary Plan), Town of Caledon By-law 2025-062 Basis / background (Section 7.18 secondary plan; approx. 236 gross ha)
+Mississauga	98,000 units · 196,000 people · 90,000 jobs by 2051	68,138	70%	Region of Peel 2051 allocation
+DT Core total unchecked	min. 200 residents+jobs/ha by 2031 (entire Urban Growth Centre); strive for 300-400/ha by 2031 ⓘ	16,151	–	Mississauga Official Plan - Downtown Core Local Area Plan Downtown Core LAP, Urban Growth Centre / density section (also Sept 3 2020 consolidation: http://www6.mississauga.ca/onlinemaps/planbldg/MOP/DowntownCore-LAP-September3,2020.pdf)
+Lakeview Waterfront MN total unchecked	200-300 residents+jobs/ha across the Node; target ~15,000-22,000 people and 7,000-9,000 jobs at full build-out (2:1 ratio) ⓘ	3,869	–	Mississauga Official Plan Part 3, Chapter 13 Major Nodes - Lakeview Waterfront Ch.13 Lakeview Waterfront, policy 13.2.3.3 (density) and population/jobs table
+Ninth Line NHD total unchecked	min. 82 residents+jobs/ha on lands where development is permitted ⓘ	2,208	–	City of Mississauga Planning & Development Committee staff report, Appendix 1, File OZ 22-004 W10 (citing MOP Ninth Line Neighbourhood Character Area policies) MOP Ninth Line Neighbourhood Character Area policy 16.20.2.2.2 (introduced by MOPA 90, 2018)
+
+90 plans shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json, checked not yet: every figure is from search-result excerpts, the documents could not be opened from the session that gathered them (2026-10-15); hover a source for its wording, ⓘ for a note. All columns adds committed units, % committed and the gap.
+
+Plans by wastewater plant
+
+People at build-out by plan and by the plant that receives the wastewater (units on hover). Pick a cell to filter the map and every tab to that plan and plant. PlantsPressure zones
+
+Plan	G.E. Booth	Clarkson	Inglewood	No plant	Total
+Brampton	235,784	156,196	–	–	391,980
+52: Heritage Heights	–	85,444	–	–	85,444
+36: Queen Street Corridor	69,646	–	–	–	69,646
+51: Mount Pleasant	4,610	36,746	–	–	41,356
+47: Highway 427 Industrial	27,145	–	–	–	27,145
+55: Hurontario-Main Corridor	25,440	–	–	–	25,440
+7: Downtown Brampton	21,165	–	–	–	21,165
+41: Bram East	18,880	–	–	–	18,880
+6: Brampton Flowertown	16,280	–	–	–	16,280
+40 (c): Bram West	–	15,912	–	–	15,912
+12: Credit Valley	564	10,199	–	–	10,764
+24: Fletcher's Creek South	7,983	677	–	–	8,660
+1: Snelgrove-Heart Lake	8,596	–	–	–	8,596
+3: Bramalea	7,242	–	–	–	7,242
+39: Goreway Drive Corridor	7,004	–	–	–	7,004
+48 (b): Countryside Villages	5,617	–	–	–	5,617
+56: Gore Meadows	4,897	–	–	–	4,897
+2: Springdale	3,796	–	–	–	3,796
+40 (d): Bram West	–	2,674	–	–	2,674
+Precinct 40-3	–	2,674	–	–	2,674
+44: Fletcher's Meadow	1,703	–	–	–	1,703
+9: Brampton Mobility Hub	1,544	–	–	–	1,544
+40 (a): Bram West	–	1,200	–	–	1,200
+50: Vales Of Humber	1,106	–	–	–	1,106
+49: Vales Of Castlemore North	949	–	–	–	949
+5: Highway 410 And Steeles	446	–	–	–	446
+42: Vales Of Castlemore	414	–	–	–	414
+16: Brampton South	338	–	–	–	338
+4: Airport Intermodal Area	281	–	–	–	281
+26: Toronto Gore Rural Estate	135	–	–	–	135
+48 (a): Countryside Villages	–	–	–	–	0
+40 (b): Bram West	–	–	–	–	0
+PWB: Parkway Belt	–	–	–	–	0
+54: Kennedy Road South	–	–	–	–	0
+CC: Clairville Conservation	–	–	–	–	0
+43: Fletcher's Creek Village	–	–	–	–	0
+2(a): Northwest Sandalwood Parkway	–	–	–	–	0
+Not in a plan	3	671	–	–	674
+Caledon	101,397	–	55	859	102,311
+Caledon Station	21,021	–	–	–	21,021
+Alloa	13,360	–	–	–	13,360
+Bolton	10,597	–	–	–	10,597
+Mayfield West (Phase 2)	8,641	–	–	–	8,641
+Brookvalley (Mayfield West Phase 2 Secondary Plan Stage 3)	8,015	–	–	–	8,015
+Mayfield West (Phase 3, Stage 1)	4,773	–	–	–	4,773
+Mount Hope West	3,578	–	–	–	3,578
+Caledon East	2,111	–	–	–	2,111
+Dixie Road	822	–	–	–	822
+Bolton South Hill	733	–	–	–	733
+Mayfield West	417	–	–	–	417
+Palgrave Estate	46	–	–	160	206
+West Bolton	136	–	–	–	136
+South Simpson Industrial	84	–	–	–	84
+Inglewood	–	–	55	–	55
+Tullamore	2	–	–	–	2
+Bolton Community Shopping Centre Commercial	–	–	–	–	0
+Humber Station Employment Area	–	–	–	–	0
+Coleraine West Employment Area	–	–	–	–	0
+Sandhill	–	–	–	–	0
+Not in a plan	27,060	–	–	699	27,760
+Mississauga	139,430	49,950	–	–	189,380
+DT Core	43,608	–	–	–	43,608
+DT Cooksville	17,728	–	–	–	17,728
+Uptown MN	13,224	–	–	–	13,224
+Dixie EA	12,577	–	–	–	12,577
+Lakeview Waterfront MN	11,350	–	–	–	11,350
+Central Erin Mills MN	–	11,234	–	–	11,234
+Streetsville NHD	–	9,835	–	–	9,835
+Lakeview NHD	7,286	–	–	–	7,286
+Ninth Line NHD	–	7,265	–	–	7,265
+Applewood NHD	7,114	–	–	–	7,114
+Port Credit CN	5,432	–	–	–	5,432
+DT Fairview	5,168	–	–	–	5,168
+Cooksville NHD (West)	3,751	–	–	–	3,751
+Southdown EA	–	3,367	–	–	3,367
+Central Erin Mills NHD	–	3,228	–	–	3,228
+Rathwood NHD	3,185	–	–	–	3,185
+DT Hospital	2,408	–	–	–	2,408
+Sheridan CN	–	2,387	–	–	2,387
+Meadowvale Village NHD	–	2,314	–	–	2,314
+Sheridan Park CC	–	1,959	–	–	1,959
+Erin Mills NHD	–	1,898	–	–	1,898
+Clarkson - Lorne Park NHD	–	1,773	–	–	1,773
+Port Credit NHD (West)	1,753	–	–	–	1,753
+East Credit NHD	–	1,322	–	–	1,322
+Mineola NHD	1,152	–	–	–	1,152
+Mississauga Valleys NHD	1,096	–	–	–	1,096
+Rathwood-Applewood CN	1,077	–	–	–	1,077
+Sheridan NHD	–	966	–	–	966
+Clarkson Village CN	–	795	–	–	795
+Meadowvale NHD	–	734	–	–	734
+Northeast EA (West)	605	–	–	–	605
+Port Credit NHD (East)	564	–	–	–	564
+Erindale NHD	73	451	–	–	524
+Western Business Park EA	–	421	–	–	421
+Gateway EA (West)	95	–	–	–	95
+Malton NHD	94	–	–	–	94
+Cooksville NHD (East)	65	–	–	–	65
+Fairview NHD	24	–	–	–	24
+Meadowvale Business Park CC	–	–	–	–	0
+Northeast EA (East)	–	–	–	–	0
+Churchill Meadows NHD	–	–	–	–	0
+Gateway CC	–	–	–	–	0
+Churchill Meadows EA	–	–	–	–	0
+Mavis-Erindale EA	–	–	–	–	0
+Gateway EA (East)	–	–	–	–	0
+Airport CC	–	–	–	–	0
+Hurontario NHD	–	–	–	–	0
+UTM SPA	–	–	–	–	0
+Clarkson EA	–	–	–	–	0
+Not in a plan	–	1	–	–	1
+Peel	476,611	206,147	55	859	683,671 ✓
+
+Pipeline people at Peel design criteria (the Overview's). The plant capacity tables use census-relative layers: see Wastewater › Plants.

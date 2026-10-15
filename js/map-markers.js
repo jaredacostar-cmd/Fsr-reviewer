@@ -52,7 +52,8 @@
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
   // Map views: presets of the layers and style, each remembering its last settings.
-  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
+  // The lenses (SPEC §4): Planning / Water / Wastewater / Capital ('dc' stays the key for saved views and links).
+  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'Capital']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
   // Sewer load as a share of full-pipe capacity, with its flow state: [upper %,
@@ -79,7 +80,6 @@
       // An on / off chip (a checkbox styled as a pill).
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
-        <div class="seg mo-view" role="group" aria-label="Map view" data-info="map-view">${MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}">${PD.icon(k)}<span>${t}</span></button>`).join('')}</div>
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
         <div class="mo-area-on" id="mo-area-on" hidden></div>
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-psum" id="mo-psum"></span></summary>
@@ -101,7 +101,7 @@
         <div class="mo-legend" id="mo-legend" hidden><details><summary>Legend</summary><div class="lg-body"></div></details></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
-          <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small" id="opt-save" title="Save the current filters, map position, view and layers">Save</button><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
+          <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
         </div>
         <div class="mo-sec"><div class="mo-h">Developments</div>
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
@@ -129,6 +129,7 @@
         </div>
         <div class="mo-sec"><div class="mo-h">Base map</div>
           <label data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
+          <div class="mo-chips">${chip('id="opt-hill"', store.get('hillshade', false) === true, '<i class="lg-area" style="--c:var(--text-muted)"></i>Lidar hillshade', 'hillshade')}</div>
           ${MC().canRotate ? `<label data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(MC().ORIENTATIONS, MC().getOrientation())}</select></label>` : ''}
         </div>
         </details>
@@ -151,11 +152,11 @@
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) SD().clearAreaFilters(); });
       el.querySelector('#opt-spl').onchange = e => PA().setAreaOn({ sp: e.target.checked });
       el.querySelector('#opt-mtl').onchange = e => PA().setAreaOn({ mtsa: e.target.checked });
-      el.querySelector('#opt-save').onclick = () => MA().saveCurrentView();
       el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') MA().openSavedView(+i); };
       el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = MA().savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); MA().renderSavedViews(); };
       el.querySelector('#opt-hov').onchange = e => AS().setHov({ on: e.target.checked });
       el.querySelector('#opt-hovr').oninput = e => { AS().setHov({ r: +e.target.value }); document.querySelector('#opt-hovr-v').textContent = `${hov.r} px`; };
+      el.querySelector('#opt-hill').onchange = e => { if (window.PeelElevation) window.PeelElevation.setHillshade(e.target.checked); };
       el.querySelector('#opt-basemap').onchange = e => { MC().setBasemap(e.target.value); store.set('basemap', e.target.value); MC().setTiles(); CA().restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { ML().setLabelMode(e.target.value); store.set('labelMode', e.target.value); ML().updateLabels(); };
       el.querySelector('#opt-da').onchange = e => CA().setDaLayer(e.target.checked);
@@ -170,7 +171,6 @@
       el.querySelector('#opt-msize').onchange = e => MA().setMapStyle({ size: e.target.value });
       el.querySelector('#opt-mshow').onchange = e => MA().setMapStyle({ show: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => MA().setMapStyle({ cap: e.target.value });
-      el.querySelector('.mo-view').onclick = e => { const b = e.target.closest('[data-mview]'); if (b) MA().setMapView(b.dataset.mview); };
       el.querySelector('#opt-pz').onchange = e => SD().setSvcLayer('pz', e.target.checked);
       el.querySelector('#opt-dr').onchange = e => SD().setSvcLayer('dr', e.target.checked);
       el.querySelector('#opt-devs').onchange = e => SD().setDevsOn(e.target.checked);
@@ -303,8 +303,8 @@
       });
       poly._area = area;
       const nested = apps.length > 1 && area < biggest * 0.6;
-      poly.bindTooltip(`<strong>${esc(a.ref || a.type || 'Application')}</strong>${a.type ? ` · ${esc(a.type)}` : ''}<br>${esc(a.address || p.title)}` +
-        `${a.units ? ` · ${fmtNum(a.units)} units` : ''}${unloaded ? `<br><span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : ''}<br><span class="muted">Tap for details</span>`, { className: 'pt', sticky: true });
+      poly.bindTooltip(window.PeelUtil.hoverCard({ kind: `File · ${a.type || 'application'}`, name: a.ref || a.type || 'Application', value: a.units ? fmtNum(a.units) : null, sub: a.units ? `units · ${a.address || p.title}` : a.address || p.title,
+        html: unloaded ? `<span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : '', open: nested ? 'open this file' : 'open the development' }), { className: 'pt', sticky: true });
       poly.on('click', ev => { L.DomEvent.stop(ev); const sub = nested && Nav().isFormal(a) && Nav().subProject(p, a.ref); if (sub) Nav().showDetail(sub); else if (nested) AC().showRecordDetail(a, p); else Nav().showDetail(p); });
       return poly;
     });
@@ -315,8 +315,7 @@
       color: emph ? selColor() : token('--sym-outline'), fillColor: phaseColor(r.phase), fillOpacity: 1,
     });
     const parent = parentApps(r, p)[0];
-    m.bindTooltip(`<strong>${esc(r.address || r.ref)}</strong><br>${esc(P.PHASE_BY_KEY[r.phase].label)}${r.units ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}` +
-      (parent ? `<br><span class="muted">Part of ${esc(parent.ref || parent.type || 'application')}</span>` : ''), { className: 'pt', direction: 'top', offset: [0, -6] });
+    m.bindTooltip(window.PeelUtil.hoverCard({ kind: `Building permit · ${P.PHASE_BY_KEY[r.phase].label}`, name: r.address || r.ref, value: r.units ? fmtNum(r.units) : null, sub: r.units ? `unit${r.units === 1 ? '' : 's'}${parent ? ` · part of ${parent.ref || parent.type || 'application'}` : ''}` : parent ? `Part of ${parent.ref || parent.type || 'application'}` : '', open: 'open this file' }), { className: 'pt', direction: 'top', offset: [0, -6] });
     m.on('click', ev => { L.DomEvent.stop(ev); AC().showRecordDetail(r, p); });
     return m;
   }
@@ -374,13 +373,14 @@
   const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm pm-hit', iconSize: [32, 32], html: dot(phase) }));
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
-  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Approved', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
-  const layerColors = () => ({ existing: 'var(--text-muted)', built: phaseColor('completed'), approved: phaseColor('approved'), proposed: 'var(--layer-proposed)', out: 'var(--nodata)' });
+  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Committed (draft plan or site plan approved)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
+  // The layer tokens (SPEC §2): one hue, lightness = certainty.
+  const layerColors = () => ({ existing: 'var(--ly-existing)', built: 'var(--ly-built)', approved: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
   function svcLayerOf(p) {
     if (p.phase === 'cancelled') return 'out';
     if (p.phase === 'completed') { const bc = App().state.censuses && CA().baselineCensus(); return bc && +p.milestones.completed < +new Date(`${bc.date}T00:00:00Z`) ? 'existing' : 'built'; }
-    return D.COMMITTED_PHASES.has(p.phase) ? 'approved' : 'proposed';
+    return D.isCommitted(p) ? 'approved' : 'proposed';
   }
   const plantOfDev = p => { const a = App().state.servicing && SD().svcIds(p, 'dr').map(id => SD().svcById.get(id)).filter(Boolean)[0]; return a ? a.plant : 'none'; };
   // Data quality: what to check before relying on a development's numbers.
