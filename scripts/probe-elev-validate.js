@@ -182,5 +182,12 @@ async function check() {
   if (moved) process.exit(1);
 }
 
-(process.argv.includes('--check') ? check() : build()).catch(e => { console.error(e); process.exit(1); });
+// --check: a source that does not answer is an outage, not a change in the data: a warning, not a
+// failure (values that moved still fail). The stored-table test above does not need the network.
+const unreachable = e => /no answer|fetch failed|ETIMEDOUT|ECONNRESET|ENOTFOUND|EAI_AGAIN|aborted|timeout|HTTP 5\d\d|HTTP 429/i.test(String(e && (e.message || e)) + String(e && e.cause && e.cause.code));
+if (process.argv.includes('--check')) check().catch(e => {
+  if (unreachable(e)) { console.log(`::warning::Live re-check skipped: a source did not answer (${String(e.message || e).slice(0, 160)})`); process.exit(0); }
+  console.error(e); process.exit(1);
+});
+else build().catch(e => { console.error(e); process.exit(1); });
 module.exports = { AREAS };
