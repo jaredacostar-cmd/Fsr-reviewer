@@ -68,8 +68,8 @@
     // (PeelLayerGroups.PRESETS; the groups' other layers — constraints, plan areas, hillshade — come
     // from LG_EXTRA below).
     planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
-    water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone', show: 'markers' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: false, sys: 'water' } },
-    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: PIPE_RESULTS ? 'pipes' : 'growth', show: 'markers' }, focus: null, exist: { water: false, sanitary: true, storm: false }, wf: false, dc: { on: false, sys: 'wastewater' } },
+    water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone', show: 'markers' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
+    wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: PIPE_RESULTS ? 'pipes' : 'growth', show: 'markers' }, focus: null, exist: { water: false, sanitary: true, storm: false }, wf: false, dc: { on: true, sys: 'wastewater' } },
     dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: true, sys: 'both' } },
   };
   // The layers the settings above don't carry: developments, site boundary on hover, plan areas,
