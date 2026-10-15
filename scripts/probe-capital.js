@@ -80,7 +80,32 @@ async function main() {
   const sites = {};
   for (const a of feats) { const u = String(a.ProjectWebsite || '').trim(); if (!u) continue; let k; try { const x = new URL(u); k = `${x.host}${x.pathname.replace(/\/+$/, '')}`; } catch { k = '(not a URL)'; } sites[k] = (sites[k] || 0) + 1; }
   console.log(`  ProjectWebsite: ${feats.filter(a => a.ProjectWebsite).length} filled, ${Object.keys(sites).length} distinct`);
-  for (const [k, v] of Object.entries(sites).sort((a, b) => b[1] - a[1]).slice(0, 60)) console.log(`    ${v}  ${k}`);
+  for (const [k, v] of Object.entries(sites).sort((a, b) => b[1] - a[1]).slice(0, 15)) console.log(`    ${v}  ${k}`);
+
+  // The project pages themselves (public): reachable? a description? facilities named?
+  const E = require('./ea-lib.js');
+  const urls = [...new Set(feats.map(a => String(a.ProjectWebsite || '').trim()).filter(u => /^https?:/i.test(u)))];
+  const st = {}; let ok = 0, desc = 0, facPages = 0; const facNamed = {}; const samples = [];
+  for (const u of urls) {
+    let r = null;
+    try { r = await fetch(u, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; peel-dev-tracker)' }, redirect: 'follow' }); } catch (e) { st.error = (st.error || 0) + 1; continue; }
+    const key = `${r.status}${r.redirected ? ' (redirected)' : ''}`; st[key] = (st[key] || 0) + 1;
+    if (!r.ok) continue;
+    ok++;
+    const html = await r.text();
+    const lines = E.lines(E.mainHtml(html)).filter(l => !E.CONTACT.test(l));
+    const title = (/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html) || [])[1];
+    const para = lines.find(l => l.length > 80 && /\b(will|is|are|to)\b/.test(l));
+    if (para) desc++;
+    const txt = lines.join(' ');
+    const hits = reg.filter(f => [f.name, ...(f.aliases || [])].some(n => { const k = F.stationKey(n); return k.length > 3 && k.split(' ').every(t => new RegExp(`\\b${t}\\b`, 'i').test(txt.replace(/['’.]/g, ''))); }) && FAC_WORD.test(txt));
+    if (hits.length) { facPages++; for (const h of hits) facNamed[h.name] = (facNamed[h.name] || 0) + 1; }
+    if (samples.length < 12 && para) samples.push(`${title ? E.text(title).slice(0, 80) : '(no title)'} — ${para.slice(0, 220)}`);
+    await new Promise(res => setTimeout(res, 250));
+  }
+  console.log(`\nProject pages: ${urls.length} distinct; status ${JSON.stringify(st)}; reachable ${ok}; with a description paragraph ${desc}; naming a known facility ${facPages}`);
+  console.log(`  facilities named on project pages: ${Object.entries(facNamed).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${k} ${v}`).join('; ')}`);
+  for (const sm of samples) console.log(`  sample: ${sm}`);
 }
 
 main().catch(e => { console.error(e); process.exit(1); });
