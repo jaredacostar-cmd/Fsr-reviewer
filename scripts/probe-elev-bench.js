@@ -35,6 +35,8 @@ function gradeHeight(desc) {
   const m = String(desc || '').match(/(\d+(?:\.\d+)?)\s*m(?:etres?|\.)?\s*(above|below)\s*(?:the\s+)?(?:finished\s+|existing\s+)?(grade|ground)/i);
   return m ? (m[2].toLowerCase() === 'below' ? -1 : 1) * +m[1] : null;
 }
+// What the tablet is set in (the description itself names private addresses, so it is not kept).
+const kindOf = d => /culvert|bridge|abutment|headwall|retaining/i.test(String(d || '')) ? 'structure' : /house|dwelling|residence/i.test(String(d || '')) ? 'house' : 'building';
 function geoid(grid, pts) {
   // cct reads "lon lat h t" in degrees and adds the grid value to h (multiplier=1): h_out = N.
   const input = pts.map(([x, y]) => `${x} ${y} 0 0`).join('\n') + '\n';
@@ -74,7 +76,7 @@ function geoid(grid, pts) {
     const shift = n28[i] != null && n13[i] != null ? +(n28[i] - n13[i]).toFixed(3) : null;
     const ground2013 = shift != null ? +(num(x.a.ELEVATION) - x.h + shift).toFixed(3) : null;
     const l = lid[i];
-    return { monument: x.a.MONUMENT, elevation28: num(x.a.ELEVATION), aboveGrade: x.h, shift, ground2013, lidar: l && l.z, project: l && l.project, diff: l && l.z != null && ground2013 != null ? +(l.z - ground2013).toFixed(3) : null, lat: +x.g.y.toFixed(6), lng: +x.g.x.toFixed(6), lastInsp: String(x.a.LAST_INSP || '').trim() || null, desc: String(x.a.DESCRIPTION || '').slice(0, 240) };
+    return { monument: x.a.MONUMENT, elevation28: num(x.a.ELEVATION), aboveGrade: x.h, shift, ground2013, lidar: l && l.z, project: l && l.project, diff: l && l.z != null && ground2013 != null ? +(l.z - ground2013).toFixed(3) : null, lat: +x.g.y.toFixed(6), lng: +x.g.x.toFixed(6), lastInsp: String(x.a.LAST_INSP || '').trim() || null, kind: kindOf(x.a.DESCRIPTION) };
   });
   const d = out.points.map(p => p.diff).filter(v => v != null).sort((a, b) => a - b);
   const sh = out.points.map(p => p.shift).filter(v => v != null);

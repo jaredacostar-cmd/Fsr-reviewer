@@ -81,7 +81,7 @@ const out = { generatedAt: new Date().toISOString(), dtm: DTM };
     const s = (r.json && r.json.samples) || [];
     chunk.forEach((x, k) => { const v = s.find(t => t.locationId === k); samples.push({ x, v: v ? num(v.value) : null }); });
   }
-  out.benchmarks = samples.map(({ x, v }) => ({ monument: x.a.MONUMENT, elevation: num(x.a.ELEVATION), datum: x.a.DATUM_V, status: x.a.STATUS, vc: x.a.VC, desc: String(x.a.DESCRIPTION || '').slice(0, 100), lastInsp: x.a.LAST_INSP, lat: +x.g.y.toFixed(6), lng: +x.g.x.toFixed(6), lidar: v, diff: v != null ? +(v - num(x.a.ELEVATION)).toFixed(3) : null }));
+  out.benchmarks = samples.map(({ x, v }) => ({ monument: x.a.MONUMENT, elevation: num(x.a.ELEVATION), datum: x.a.DATUM_V, status: x.a.STATUS, vc: x.a.VC, kind: /culvert|bridge|abutment|headwall|retaining/i.test(String(x.a.DESCRIPTION || '')) ? 'structure' : /house|dwelling|residence/i.test(String(x.a.DESCRIPTION || '')) ? 'house' : 'building', lastInsp: x.a.LAST_INSP, lat: +x.g.y.toFixed(6), lng: +x.g.x.toFixed(6), lidar: v, diff: v != null ? +(v - num(x.a.ELEVATION)).toFixed(3) : null }));
   const d = out.benchmarks.map(b => b.diff).filter(v => v != null).sort((a, b) => a - b);
   out.benchmarkStats = d.length ? { n: d.length, median: d[Math.floor(d.length / 2)], p10: d[Math.floor(d.length * 0.1)], p90: d[Math.floor(d.length * 0.9)], within05: d.filter(v => Math.abs(v) <= 0.5).length } : null;
   console.log('benchmarks', JSON.stringify(out.benchmarkStats), JSON.stringify(out.datums));

@@ -148,7 +148,7 @@
    "lat": 43.728111,
    "lng": -79.690101,
    "lastInsp": null,
-   "desc": "The north end of the east face of a concrete retaining wall at the southwest corner of building no.195 Summerlea Road, 70m north of Atlas Court. Tablet is set 0.25m above ground level and 0.27m from the south face."
+   "kind": "structure"
   },
   {
    "monument": "544",
@@ -162,7 +162,7 @@
    "lat": 43.699974,
    "lng": -79.784121,
    "lastInsp": "2019.7.16",
-   "desc": "Two storey brick house, no.246 Murray Street. Tablet is set in south face 1.1m east of the southwest corner, 0.1m below brick, and 0.3m above ground level, facing the park."
+   "kind": "house"
   },
   {
    "monument": "409",
@@ -176,7 +176,7 @@
    "lat": 43.744631,
    "lng": -79.73908,
    "lastInsp": null,
-   "desc": "East wall of house, no.20 Professor's Lake Parkway. Tablet is set 0.50m north of southeast corner, 0.10m above ground level and 0.20m below brick."
+   "kind": "house"
   },
   {
    "monument": "411",
@@ -190,7 +190,7 @@
    "lat": 43.662334,
    "lng": -79.716695,
    "lastInsp": null,
-   "desc": "Two storey dwelling, no.50 Bloomingdale Crescent. Tablet is set 1.25m east of most northwest corner of house and 0.10m above ground."
+   "kind": "house"
   },
   {
    "monument": "412",
@@ -204,7 +204,7 @@
    "lat": 43.662843,
    "lng": -79.727007,
    "lastInsp": null,
-   "desc": "Two storey brick dwelling, no.2 Inverary Drive. Tablet is set in the west wall, 1.82m south of the northwest corner and 0.18m above grade."
+   "kind": "house"
   },
   {
    "monument": "413",
@@ -218,7 +218,7 @@
    "lat": 43.66498,
    "lng": -79.72517,
    "lastInsp": null,
-   "desc": "Two storey brick dwelling, no.27 Inverary Drive. Tablet is set in the west wall, 3.51m north of the southwest corner and 0.13m above grade."
+   "kind": "house"
   },
   {
    "monument": "488",
@@ -232,7 +232,7 @@
    "lat": 43.758261,
    "lng": -79.711472,
    "lastInsp": null,
-   "desc": "The easterly wall of no.14 Automatic Drive, beside the rear door of Unit #50. Tablet is set 11.05m north of the most southeasterly corner of building, 0.10m below brick, and 0.10m above ground level."
+   "kind": "building"
   },
   {
    "monument": "489",
@@ -246,7 +246,7 @@
    "lat": 43.7623,
    "lng": -79.708234,
    "lastInsp": null,
-   "desc": "The east wall of no.24 Edvac Drive. Tablet is set 5.0m north of the southeast corner of building, 0.15m below precast concrete panel, and 0.10m above ground level."
+   "kind": "building"
   },
   {
    "monument": "490",
@@ -260,7 +260,7 @@
    "lat": 43.761452,
    "lng": -79.701127,
    "lastInsp": null,
-   "desc": "The north wall of no.5 Edvac Drive. Tablet is set 0.10m east of northwest corner of building, 0.05m below brick, and 0.05m above ground level."
+   "kind": "building"
   },
   {
    "monument": "491",
@@ -274,7 +274,7 @@
    "lat": 43.669064,
    "lng": -79.739752,
    "lastInsp": null,
-   "desc": "North wall of dwelling, no.3 Hodgson Street.  Tablet is set 0.45m east of northwest corner of house, 0.20m below brick, and 0.20m above ground level."
+   "kind": "house"
   },
   {
    "monument": "305",
@@ -288,7 +288,7 @@
    "lat": 43.737423,
    "lng": -79.751015,
    "lastInsp": null,
-   "desc": "In north face of concrete foundation of house no.2 Mackay Street. Tablet is set 6.01m west of northeast corner and 0.08m above ground."
+   "kind": "house"
   },
   {
    "monument": "400",
@@ -302,7 +302,7 @@
    "lat": 43.730173,
    "lng": -79.789573,
    "lastInsp": null,
-   "desc": "South face of southern abutment of underground walkway on Sandalwood Parkway, 80m west of Richvale Drive. Tablet is set 1.50m west of the southeast corner and 0.75m above grade."
+   "kind": "structure"
   },
   {
    "monument": "401",
@@ -316,7 +316,7 @@
    "lat": 43.725806,
    "lng": -79.799757,
    "lastInsp": null,
-   "desc": "North wall of Loafers Lake Library. Tablet is set 0.38m above grade, and 0.27m west of the northeast corner."
+   "kind": "building"
   },
   {
    "monument": "523",
@@ -330,7 +330,7 @@
    "lat": 43.713672,
    "lng": -79.743363,
    "lastInsp": null,
-   "desc": "Concrete culvert on north side of Vodden Street, 40m east of Loneoak Avenue. Tablet is set on the south face at the southeast corner, 0.40m above ground level."
+   "kind": "structure"
   },
   {
    "monument": "524",
@@ -344,7 +344,7 @@
    "lat": 43.714238,
    "lng": -79.747314,
    "lastInsp": null,
-   "desc": "Concrete foundation of house no.2 Lehar Court. Tablet is set 1.65m south of northwest corner and 0.30m above ground level."
+   "kind": "house"
   },
   {
    "monument": "525",
@@ -358,7 +358,7 @@
    "lat": 43.716127,
    "lng": -79.745622,
    "lastInsp": null,
-   "desc": "Concrete foundation of house no.48 Leeward Drive. Tablet is set in the easterly face 1.40m north of southeast corner and 0.30m above ground level."
+   "kind": "house"
   },
   {
    "monument": "533",
@@ -372,7 +372,7 @@
    "lat": 43.727089,
    "lng": -79.811874,
    "lastInsp": null,
-   "desc": "Concrete foundation of a two storey red brick dwelling, no.2 Ridelle Court. Tablet is set in southwest face, 1.0m southeasterly of westerly building corner and 0.10m above grade."
+   "kind": "house"
   },
   {
    "monument": "534",
@@ -386,7 +386,7 @@
    "lat": 43.726014,
    "lng": -79.805469,
    "lastInsp": null,
-   "desc": "Concrete foundation of a garage attached to a two storey red brick dwelling, no.22 Tremont Court. Tablet is set in the southeast face, 1.0m northeast of the southerly corner of the garage and 0.20m above grade."
+   "kind": "house"
   },
   {
    "monument": "480",
@@ -400,7 +400,7 @@
    "lat": 43.721724,
    "lng": -79.780786,
    "lastInsp": null,
-   "desc": "Concrete foundation of house no.138 Richvale Drive, southwest of Drayglass Court. Tablet is set at the northeast corner of garage, 0.20m west of the northeast corner and 0.13m above grade."
+   "kind": "house"
   },
   {
    "monument": "482",
@@ -414,7 +414,7 @@
    "lat": 43.724169,
    "lng": -79.784045,
    "lastInsp": null,
-   "desc": "North face of concrete foundation for chimney,on west side of house no.2 Allenhead Crescent, north of Cochrane Avenue. Tablet is set 0.10m east of the northwest corner and 0.13m above grade."
+   "kind": "house"
   },
   {
    "monument": "484",
@@ -428,7 +428,7 @@
    "lat": 43.726236,
    "lng": -79.780255,
    "lastInsp": null,
-   "desc": "South face of concrete foundation for chimney on west side of house no.25 Moorehead Crescent, southeast of Kirkpatrick Street. Tablet is set 0.21m east of the southwest corner and 0.08m above grade."
+   "kind": "house"
   },
   {
    "monument": "284",
@@ -442,7 +442,7 @@
    "lat": 43.715227,
    "lng": -79.706322,
    "lastInsp": null,
-   "desc": "Bramalea Secondary School at the northwest corner of Balmoral Drive and Bramalea Road South. Tablet is set on south face, 0.25m west of southeast corner and 0.10m above ground."
+   "kind": "building"
   },
   {
    "monument": "286",
@@ -456,7 +456,7 @@
    "lat": 43.685382,
    "lng": -79.745615,
    "lastInsp": null,
-   "desc": "Apartment no.26 Sterne Avenue at the southwest corner of Clarence and Sterne Ave. Tablet on east face of wall, 0.15m from the most northeast corner and 0.10m above ground."
+   "kind": "building"
   },
   {
    "monument": "288",
@@ -470,7 +470,7 @@
    "lat": 43.714582,
    "lng": -79.681157,
    "lastInsp": null,
-   "desc": "Building at no.8026 Torbram Road, just north of Steeles Ave.  Tablet is set on south face 0.13m west of southeast corner and 0.05m above ground."
+   "kind": "building"
   },
   {
    "monument": "289",
@@ -484,7 +484,7 @@
    "lat": 43.710513,
    "lng": -79.682989,
    "lastInsp": null,
-   "desc": "White brick one storey building, no.1 Melanie Drive. Tablet is set on north face, 0.3m west of northeast corner and 0.1m above ground."
+   "kind": "building"
   },
   {
    "monument": "541",
@@ -498,7 +498,7 @@
    "lat": 43.721313,
    "lng": -79.682581,
    "lastInsp": null,
-   "desc": "The southeast corner of porch, no.70 Summerlea Road, 0.30Km north of Walker Drive. Tablet is set in the south face, 0.28m above ground level and 0.71m from east face."
+   "kind": "building"
   },
   {
    "monument": "585",
@@ -512,7 +512,7 @@
    "lat": 43.699196,
    "lng": -79.799882,
    "lastInsp": null,
-   "desc": "One story brick building, no.14A Regan Road. Tablet is set in the southeast face of concrete foundation  0.60m northeasterly of southerly building corner and 0.15m above grade."
+   "kind": "building"
   },
   {
    "monument": "590",
@@ -526,7 +526,7 @@
    "lat": 43.749492,
    "lng": -79.678412,
    "lastInsp": null,
-   "desc": "One storey building, no.510 Deerhurst Drive at the southeast corner of Goreway Drive. Tablet is set in the concrete foundation at the curved portion of building at the northwest corner 0.11m above grade"
+   "kind": "building"
   },
   {
    "monument": "439",
@@ -540,7 +540,7 @@
    "lat": 43.731141,
    "lng": -79.789718,
    "lastInsp": null,
-   "desc": "Concrete foundation of a two storey brick and frame mall at the northeast corner of Sandalwood Parkway and Richvale Avenue. Tablet is set in north face, 0.1m east from the northwest corner and 0.10m above grade."
+   "kind": "building"
   },
   {
    "monument": "461",
@@ -554,7 +554,7 @@
    "lat": 43.656631,
    "lng": -79.723213,
    "lastInsp": null,
-   "desc": "Southeast face of concrete foundation of Cherrytree Public School, no.155 Cherrytree Drive. Tablet is set 2.0m northeasterly from the southerly corner of building, and 0.06m above grade."
+   "kind": "building"
   },
   {
    "monument": "253",
@@ -568,7 +568,7 @@
    "lat": 43.716885,
    "lng": -79.735653,
    "lastInsp": null,
-   "desc": "At rear of garage of house no.18 Longley Place. Tablet is set in concrete foundation, 0.68m north of southeast corner and 0.15m above ground level."
+   "kind": "house"
   },
   {
    "monument": "254",
@@ -582,7 +582,7 @@
    "lat": 43.7246,
    "lng": -79.754683,
    "lastInsp": null,
-   "desc": "Building no.4 of New Haven Manors, at the southwest corner of North Park Drive and Nasmith Street. Tablet is set in concrete foundation of most southerly building, 0.67m north of southeast corner of most southerly building, and 0.14m above "
+   "kind": "building"
   },
   {
    "monument": "260",
@@ -596,7 +596,7 @@
    "lat": 43.697355,
    "lng": -79.696761,
    "lastInsp": null,
-   "desc": "Electrical room of Industrial Plaza on southwest corner of Advance Blvd. and Steeles Avenue. Tablet is set in south face of southerly wall 15.4m west of southeast corner of Unit 20, and 0.20m west of southeast corner of electrical room, 0.2"
+   "kind": "building"
   },
   {
    "monument": "262",
@@ -610,7 +610,7 @@
    "lat": 43.70064,
    "lng": -79.690603,
    "lastInsp": null,
-   "desc": "West wall of no.100 Alfred Kuehne Blvd. Tablet is set 9.6m south of most northwesterly corner of building, 0.10m below aluminum siding, and 0.06m above existing ground level."
+   "kind": "building"
   },
   {
    "monument": "264",
@@ -624,7 +624,7 @@
    "lat": 43.692923,
    "lng": -79.694059,
    "lastInsp": null,
-   "desc": "East wall of no.180 Advance Blvd. Tablet is set 0.23m north of southeast corner, and 0.55m above ground level."
+   "kind": "building"
   },
   {
    "monument": "265",
@@ -638,7 +638,7 @@
    "lat": 43.65695,
    "lng": -79.756216,
    "lastInsp": null,
-   "desc": "The two story brick dwelling no.20 Pearson Road. Tablet in concrete foundation of southeast wall of garage 0.5m southwest of the easterly corner of garage 0.1m above ground."
+   "kind": "house"
   },
   {
    "monument": "266",
@@ -652,7 +652,7 @@
    "lat": 43.660467,
    "lng": -79.756029,
    "lastInsp": null,
-   "desc": "The two story brick dwelling no.12 Paramount Place. Tablet in concrete foundation of north wall of garage, 0.4m west of northeast corner of garage 0.1m above ground."
+   "kind": "house"
   },
   {
    "monument": "267",
@@ -666,7 +666,7 @@
    "lat": 43.659099,
    "lng": -79.758379,
    "lastInsp": null,
-   "desc": "St. Brigid School building, no.81 Torrance Woods. Tablet in concrete foundation of southeast wall, 9.0m southwest from entrance and 0.2m northeast of southerly corner of building, 0.07m above ground."
+   "kind": "building"
   },
   {
    "monument": "454",
@@ -680,7 +680,7 @@
    "lat": 43.721447,
    "lng": -79.789012,
    "lastInsp": null,
-   "desc": "Two-storey house, no.1 Ruth Avenue. Tablet is set in westerly foundation wall at most northwest corner of house and 0.1m above ground."
+   "kind": "house"
   },
   {
    "monument": "606",
@@ -694,7 +694,7 @@
    "lat": 43.725198,
    "lng": -79.821088,
    "lastInsp": null,
-   "desc": "In front of house  Nos. 4 and 6 Torada Court, brass plaque is set in a hydro vault, no. 7867, in the West face of concrete base and 0.05m above grade."
+   "kind": "house"
   },
   {
    "monument": "607",
@@ -708,7 +708,7 @@
    "lat": 43.730182,
    "lng": -79.82821,
    "lastInsp": null,
-   "desc": "Water Tower at the southwest corner of Mayfield Road and Cresthaven Road. Brass plaque is located in the north face of a concrete pillar support, 32.8m west of the centreline of Cresthaven and 43.5m south of Mayfield, and 0.40m above grade"
+   "kind": "building"
   },
   {
    "monument": "457",
@@ -722,7 +722,7 @@
    "lat": 43.74481,
    "lng": -79.809913,
    "lastInsp": null,
-   "desc": "A brick house, no.29 Kenpark Avenue. Tablet is set on the south face near the southeast corner and 0.30m above grade."
+   "kind": "house"
   },
   {
    "monument": "458",
@@ -736,7 +736,7 @@
    "lat": 43.74436,
    "lng": -79.807951,
    "lastInsp": null,
-   "desc": "A brick house, no.27 Burtree Drive. Tablet is set on the south face, 0.30m from the southeast corner and 0.10m above grade."
+   "kind": "house"
   },
   {
    "monument": "252",
@@ -750,7 +750,7 @@
    "lat": 43.729648,
    "lng": -79.748977,
    "lastInsp": null,
-   "desc": "At North Dixie Centre Plaza, no.860 North Park Drive. Tablet is set at in westerly face of foundation at northwest corner, 0.42m south of northwest corner and 0.15m above ground level."
+   "kind": "building"
   },
   {
    "monument": "402",
@@ -764,7 +764,7 @@
    "lat": 43.723412,
    "lng": -79.796823,
    "lastInsp": null,
-   "desc": "South face of southern bridge abutment carrying Sandalwood Parkway over Etobicoke Creek, 0.70Km east of Highway 10. Tablet is set 0.29m east of the southwest corner and 0.80m above grade."
+   "kind": "structure"
   },
   {
    "monument": "278",
@@ -778,7 +778,7 @@
    "lat": 43.69344,
    "lng": -79.764906,
    "lastInsp": null,
-   "desc": "Two storey brick dwelling, no.8 Sproule Drive. Tablet is set in east face 1.66m north of southeast corner, and 0.20m above grade."
+   "kind": "house"
   },
   {
    "monument": "117",
@@ -792,7 +792,7 @@
    "lat": 43.731479,
    "lng": -79.798936,
    "lastInsp": null,
-   "desc": "Two storey dwelling on southwest corner of Somerset Drive and Kennedy Road. Tablet is 0.15m north of southeast corner of foundation and 0.06m above ground."
+   "kind": "house"
   },
   {
    "monument": "119",
@@ -806,7 +806,7 @@
    "lat": 43.734014,
    "lng": -79.806352,
    "lastInsp": null,
-   "desc": "Two storey dwelling on north side of Conservation Drive, 0.40Km west of Kennedy Road. Tablet is 1.89m north of southeast corner of foundation, 0.46m north of southeast corner of brick chimney, 0.15m above ground."
+   "kind": "house"
   },
   {
    "monument": "216",
@@ -820,7 +820,7 @@
    "lat": 43.749327,
    "lng": -79.738232,
    "lastInsp": null,
-   "desc": "West wall of brick plaza on the northeast corner of Philosophers Trail and Professor's Lake Parkway.  Tablet is set 0.44m north of the southwest corner and 0.27m above grade."
+   "kind": "building"
   },
   {
    "monument": "560",
@@ -834,7 +834,7 @@
    "lat": 43.649317,
    "lng": -79.728494,
    "lastInsp": null,
-   "desc": "Two story brick building, no.53 Meadlowlark Drive. Tablet is set in the west face of the concrete foundation of the garage, 1.05m south from the northwest corner and 0.25m above grade."
+   "kind": "building"
   },
   {
    "monument": "554",
@@ -848,7 +848,7 @@
    "lat": 43.651979,
    "lng": -79.752498,
    "lastInsp": "2019.7.16",
-   "desc": "Two story brick dwelling no.104 Moffatt Avenue. Tablet is set on east face at the southeasterly corner of house, 0.12m below brick and 0.20m above grade."
+   "kind": "house"
   },
   {
    "monument": "TT247",
@@ -862,7 +862,7 @@
    "lat": 43.630842,
    "lng": -79.755189,
    "lastInsp": null,
-   "desc": "A red brick house on the east side, No.7655 Creditview Road, 0.12Km. south of Hallstone Road.  Tablet is set in the west face 0.61m south of the north corner, 0.3m above grade."
+   "kind": "house"
   },
   {
    "monument": "556",
@@ -876,7 +876,7 @@
    "lat": 43.659101,
    "lng": -79.76787,
    "lastInsp": null,
-   "desc": "Two story brick dwelling no.57 Mullis Crescent. Tablet is set in concrete foundation, 0.40m west of easterly corner of a one story part of house, 0.10m below brick, and 0.16m above grade."
+   "kind": "house"
   },
   {
    "monument": "579",
@@ -890,7 +890,7 @@
    "lat": 43.78379,
    "lng": -79.7208,
    "lastInsp": null,
-   "desc": "The north face of the southeast abutment of a concrete bridge on Morris Court, 70m west of the centreline of Cynthia Crescent. Tablet is set 0.27m west of the east end of the abutment and 0.34m above grade."
+   "kind": "structure"
   },
   {
    "monument": "583",
@@ -904,7 +904,7 @@
    "lat": 43.705253,
    "lng": -79.8,
    "lastInsp": null,
-   "desc": "One story brick building, no.105 Van Kirk Drive. Tablet is set in the southeast face of concrete foundation 40m northeasterly of the southerly building corner and 0.30m above grade."
+   "kind": "building"
   },
   {
    "monument": "449",
@@ -918,7 +918,7 @@
    "lat": 43.657029,
    "lng": -79.717597,
    "lastInsp": null,
-   "desc": "Two storey dwelling, no.18 Merganser Crescent. Tablet is set 1.0m south of most northeast corner of foundation, and 0.1m above ground."
+   "kind": "house"
   },
   {
    "monument": "758052",
@@ -932,7 +932,7 @@
    "lat": 43.815472,
    "lng": -79.677126,
    "lastInsp": null,
-   "desc": "On west side of Highway 50, 30m west of west edge of pavement and 15m south of centreline of Cadetta Road. RIB with flat plate is set 0.3m north of fence and 0.15m above grade."
+   "kind": "building"
   },
   {
    "monument": "557",
@@ -946,7 +946,7 @@
    "lat": 43.651262,
    "lng": -79.735433,
    "lastInsp": null,
-   "desc": "A one storey brick shopping plaza, no.499 Ray Lawson Boulevard, Unit #33. Tablet is set in the northeast face of concrete foundation, 2.15m southeasterly of the northerly building corner and 0.15m above grade."
+   "kind": "building"
   },
   {
    "monument": "558",
@@ -960,7 +960,7 @@
    "lat": 43.650891,
    "lng": -79.732532,
    "lastInsp": null,
-   "desc": "Garage attached to a two story brick dwelling, no.26 Timberlane Drive. Tablet is set in the north face of concrete foundation, 2.30m west of the northeast corner of the garage and 0.23m above grade."
+   "kind": "house"
   },
   {
    "monument": "492",
@@ -974,7 +974,7 @@
    "lat": 43.666296,
    "lng": -79.744558,
    "lastInsp": null,
-   "desc": "North wall of dwelling, no.2 Conover Court. Tablet is set 0.80m west of northeast corner of house, 0.10m below brick work, and 0.10m above ground level."
+   "kind": "house"
   },
   {
    "monument": "493",
@@ -988,7 +988,7 @@
    "lat": 43.660011,
    "lng": -79.74487,
    "lastInsp": null,
-   "desc": "North wall of dwelling, no.51 Parkside Drive. Tablet is set 0.50m east of northwest corner of house, 0.30m below brick work, and 0.15m above ground level."
+   "kind": "house"
   },
   {
    "monument": "494",
@@ -1002,7 +1002,7 @@
    "lat": 43.663618,
    "lng": -79.744161,
    "lastInsp": "2019.7.16",
-   "desc": "West wall of dwelling no.52 Cousins Court. Tablet is set 0.60m south of southwest corner of house, 0.15m below brick work, and 0.15m above ground level."
+   "kind": "house"
   },
   {
    "monument": "495",
@@ -1016,7 +1016,7 @@
    "lat": 43.661503,
    "lng": -79.744262,
    "lastInsp": "2019.7.16",
-   "desc": "East wall of dwelling no.52 Lily Crescent. Tablet is set 0.75m south of northwest corner of house, 0.20m below brick work, and 0.15m above ground level."
+   "kind": "house"
   },
   {
    "monument": "498",
@@ -1030,7 +1030,7 @@
    "lat": 43.672889,
    "lng": -79.72515,
    "lastInsp": null,
-   "desc": "Concrete and brick entrance to Westchester Estates on southwest corner of Hartford Trail and Steeles Avenue. Tablet is set in easterly face of most northeasterly column, 0.60m below brick, and 0.40m above ground."
+   "kind": "building"
   },
   {
    "monument": "505",
@@ -1044,7 +1044,7 @@
    "lat": 43.758809,
    "lng": -79.698293,
    "lastInsp": null,
-   "desc": "The northeast face of concrete foundation of building no.10 Sun Pac Boulevard. Tablet is set below metal doors, 13.4m northwest of building corner and 0.06m above grade."
+   "kind": "building"
   },
   {
    "monument": "559",
@@ -1058,7 +1058,7 @@
    "lat": 43.65149,
    "lng": -79.727366,
    "lastInsp": null,
-   "desc": "Two story brick dwelling, no.62 Ravenswood Drive. Tablet is set in the northwest face of the concrete foundation of the garage, 7.40m northeasterly from the westerly corner and 0.08m above grade."
+   "kind": "house"
   },
   {
    "monument": "405",
@@ -1072,7 +1072,7 @@
    "lat": 43.742578,
    "lng": -79.803667,
    "lastInsp": null,
-   "desc": "The northwesterly corner of brick dwelling, no.117 Kenpark Avenue, 0.11Km north of Mintwood Court. Tablet is set in the concrete foundation 0.94m southwesterly from the northwest corner, and 0.15m above grade."
+   "kind": "house"
   },
   {
    "monument": "406",
@@ -1086,7 +1086,7 @@
    "lat": 43.741298,
    "lng": -79.801565,
    "lastInsp": null,
-   "desc": "The southwesterly corner of brick dwelling, no.112 Kenpark Avenue, 30m north of Christie Drive. Tablet is set in the concrete foundation 0.55m north from the southwest corner, and 0.15m above grade."
+   "kind": "house"
   },
   {
    "monument": "408",
@@ -1100,7 +1100,7 @@
    "lat": 43.742186,
    "lng": -79.738872,
    "lastInsp": null,
-   "desc": "South wall of house, no.4 Pepperwood Road. Tablet is set 0.30m west of southeast corner, 0.60m below brick and 0.30m above grade"
+   "kind": "house"
   },
   {
    "monument": "566",
@@ -1114,7 +1114,7 @@
    "lat": 43.720196,
    "lng": -79.777363,
    "lastInsp": null,
-   "desc": "Concrete foundation of two storey brick house, no.159, at corner of Richvale and Notre Dame. Tablet is set 0.20m above finished grade and 2.70m east of front stairs."
+   "kind": "house"
   },
   {
    "monument": "570",
@@ -1128,7 +1128,7 @@
    "lat": 43.72835,
    "lng": -79.815257,
    "lastInsp": null,
-   "desc": "St. Stephen Secondary School building, no.17 Colonel Bertram Road. Tablet is set in the northeast face of the concrete foundation, 0.75m northwesterly from the easterly corner and 0.25m above grade."
+   "kind": "building"
   },
   {
    "monument": "571",
@@ -1142,7 +1142,7 @@
    "lat": 43.646223,
    "lng": -79.729081,
    "lastInsp": null,
-   "desc": "Townhouse dwelling no.138 Timberlane Drive. Tablet is set northwest face of the concrete foundation of the garage, 3.60m southwesterly from the northerly corner and 0.12m above grade."
+   "kind": "house"
   },
   {
    "monument": "445",
@@ -1156,7 +1156,7 @@
    "lat": 43.653929,
    "lng": -79.737823,
    "lastInsp": "2019.7.16",
-   "desc": "Service vault for South Fletchers Sports Place on McLaughlin Road South, 0.5Km south of Steeles Avenue. Tablet is set 0.03m east of the northwest corner and 0.05m above grade on north entrance on McLaughlin on north side of building."
+   "kind": "building"
   },
   {
    "monument": "448",
@@ -1170,7 +1170,7 @@
    "lat": 43.659345,
    "lng": -79.717125,
    "lastInsp": null,
-   "desc": "Two storey dwelling, no.36 Blackmere Circle. Tablet is set 2.0m north of most southwest corner of foundation, and 0.1m above ground."
+   "kind": "house"
   },
   {
    "monument": "535",
@@ -1184,7 +1184,7 @@
    "lat": 43.727181,
    "lng": -79.807425,
    "lastInsp": null,
-   "desc": "Concrete foundation of a two storey red brick dwelling, no.12 Vogue Crescent. Tablet is set in the southwest face, 1.0m northwesterly from the southerly corner of the building and 0.2m above grade."
+   "kind": "house"
   },
   {
    "monument": "538",
@@ -1198,7 +1198,7 @@
    "lat": 43.732199,
    "lng": -79.697519,
    "lastInsp": null,
-   "desc": "The northeast corner of building, no.250 Summerlea Road, 0.20Km north of Baker Road. Tablet is set in the north face, 0.21m above ground level and 0.18m from the east face."
+   "kind": "building"
   },
   {
    "monument": "539",
@@ -1212,7 +1212,7 @@
    "lat": 43.729447,
    "lng": -79.693616,
    "lastInsp": null,
-   "desc": "The southeast corner of building, no.1195 Clark Boulevard, 100m south of Clark Boulevard. Tablet is set in the east face, 0.27m above ground level and 0.14m from south face."
+   "kind": "building"
   },
   {
    "monument": "165",
@@ -1226,7 +1226,7 @@
    "lat": 43.685583,
    "lng": -79.734901,
    "lastInsp": null,
-   "desc": "Yellow brick building, no.134 Kennedy Road South. Tablet is set 0.12m southeast of the most northwesterly corner, and 0.28m above the ground."
+   "kind": "building"
   },
   {
    "monument": "186",
@@ -1240,7 +1240,7 @@
    "lat": 43.700077,
    "lng": -79.71969,
    "lastInsp": null,
-   "desc": "Red brick building, no.40 West Drive. Tablet is set 0.13m southeast of the most northeasterly corner, and 0.12m above the ground."
+   "kind": "building"
   },
   {
    "monument": "189",
@@ -1254,7 +1254,7 @@
    "lat": 43.703535,
    "lng": -79.727578,
    "lastInsp": null,
-   "desc": "Concrete block building with white siding, no.80 West Drive. Tablet is set 0.95m southeast of the most northwesterly corner, and 0.20m above the ground."
+   "kind": "building"
   },
   {
    "monument": "29",
@@ -1268,7 +1268,7 @@
    "lat": 43.727175,
    "lng": -79.712438,
    "lastInsp": null,
-   "desc": "Red brick church 76m south of centreline of Highway 7 and 26m west of centreline of Finchgate Blvd. Tablet is set on east face, 4.48m north of southeast corner and 0.58m above grade."
+   "kind": "building"
   },
   {
    "monument": "506",
@@ -1282,7 +1282,7 @@
    "lat": 43.758181,
    "lng": -79.702382,
    "lastInsp": null,
-   "desc": "The southwest face of concrete foundation of building no.2051 Williams Parkway. Tablet is set 0.8m southeast of northwest corner and 0.06m above grade."
+   "kind": "building"
   },
   {
    "monument": "596",
@@ -1296,7 +1296,7 @@
    "lat": 43.75687,
    "lng": -79.736704,
    "lastInsp": null,
-   "desc": "The southeast corner of a concrete gate pillar located in the southerly boulevard of Peter Robertson Boulevard at the southeast corner of Torbram Road. Tablet is set in the base, 0.20m west of the southeast corner and 0.05m above grade."
+   "kind": "building"
   },
   {
    "monument": "599",
@@ -1310,7 +1310,7 @@
    "lat": 43.757655,
    "lng": -79.730702,
    "lastInsp": null,
-   "desc": "The northeast corner of a concrete gate pillar located in the westerly boulevard of Mountain Ash Road at the northwest corner of Bovaird Drive. Tablet is set in the base, 0.20m west of the northeast corner and 0.05m above grade."
+   "kind": "building"
   },
   {
    "monument": "600",
@@ -1324,7 +1324,7 @@
    "lat": 43.739495,
    "lng": -79.760271,
    "lastInsp": null,
-   "desc": "Woodsmere Plaza, no.630 Peter Robertson Boulevard, at the northeast corner of Dixie Road. Tablet is set in the north face of the concrete foundation wall, 0.30m east of the northwest corner and 0.20m above grade"
+   "kind": "building"
   },
   {
    "monument": "464",
@@ -1338,7 +1338,7 @@
    "lat": 43.710398,
    "lng": -79.791504,
    "lastInsp": null,
-   "desc": "Concrete lamp standard in the Wexford Square Plaza, 46.0m east of the centreline of Highway 10 and 45.0m south of the centreline of Wexford Road. Tablet is set in the southwesterly face, 0.67m above grade."
+   "kind": "building"
   },
   {
    "monument": "465",
@@ -1352,7 +1352,7 @@
    "lat": 43.711401,
    "lng": -79.786974,
    "lastInsp": "2019.7.16",
-   "desc": "The southerly face of the foundation of a house, no.38 Sunforest Drive, 14.6m northwest of the centreline of Dumfries Avenue and 22.9m southwest of the centreline of Sunforest Drive. Tablet is set west of the southeast corner and 0.27m abov"
+   "kind": "house"
   },
   {
    "monument": "466",
@@ -1366,7 +1366,7 @@
    "lat": 43.710151,
    "lng": -79.789485,
    "lastInsp": null,
-   "desc": "On the easterly face of the foundation of house, no.2 Tralee Street, 21.0m northeast of the centreline of Dumfries Avenue and 17.1m northwest of the centreline of Tralee Street. Tablet is set north of the southeast corner of garage and 0.15"
+   "kind": "house"
   },
   {
    "monument": "467",
@@ -1380,7 +1380,7 @@
    "lat": 43.709274,
    "lng": -79.784914,
    "lastInsp": null,
-   "desc": "On the northerly face of the foundation of house, no.4 Sunforest Drive, 25.3m southwest of the centreline and between houses no's. 4 & 6 Sunforest Drive. Tablet is set west of the northeast corner and 0.27m above grade."
+   "kind": "house"
   },
   {
    "monument": "282",
@@ -1394,7 +1394,7 @@
    "lat": 43.718607,
    "lng": -79.691526,
    "lastInsp": null,
-   "desc": "Bramalea Bible Chapel at the southeast corner of Balmoral Drive and Dearbourne Blvd. Tablet is set on north face of church, 12m east of northerly entrance and 15m west of gas meter, and 0.05m above ground."
+   "kind": "building"
   },
   {
    "monument": "283",
@@ -1408,7 +1408,7 @@
    "lat": 43.721801,
    "lng": -79.69801,
    "lastInsp": null,
-   "desc": "Cardinal John Newman Catholic School, no.698 Balmoral Drive, just west of Eastborne Drive. Tablet is set on west face of most westerly wall of school, 0.10m north of southwest corner and 0.20m above existing ground."
+   "kind": "building"
   },
   {
    "monument": "291",
@@ -1422,7 +1422,7 @@
    "lat": 43.689594,
    "lng": -79.696187,
    "lastInsp": null,
-   "desc": "Red brick office building, no.200 Wilkinson Road, at the southeast corner of Advance Blvd. Tablet is set in the northwest corner, 0.20m south of north face and 0.25m above grade."
+   "kind": "building"
   },
   {
    "monument": "292",
@@ -1436,7 +1436,7 @@
    "lat": 43.685503,
    "lng": -79.696876,
    "lastInsp": null,
-   "desc": "One storey brick office building, no.221 Wilkinson Road. Tablet is set 0.20m north of the southeast corner, and 0.55m above grade."
+   "kind": "building"
   },
   {
    "monument": "300",
@@ -1450,7 +1450,7 @@
    "lat": 43.729056,
    "lng": -79.66359,
    "lastInsp": null,
-   "desc": "Northeast corner of concrete railroad bridge over Steeles Avenue, 0.75Km east of Airport Road. Tablet is set in south face, 0.80m west of most northeasterly corner of bridge abutment, and 0.80m above ground grade."
+   "kind": "structure"
   },
   {
    "monument": "304",
@@ -1464,7 +1464,7 @@
    "lat": 43.729963,
    "lng": -79.759913,
    "lastInsp": null,
-   "desc": "North face of concrete foundation for house no.73 Nasmith Street. Tablet set 0.18m west of the northeast corner and 0.07m above ground."
+   "kind": "house"
   },
   {
    "monument": "468",
@@ -1478,7 +1478,7 @@
    "lat": 43.651125,
    "lng": -79.741236,
    "lastInsp": null,
-   "desc": "North foundation wall of two story red brick house, no.90 Windmill Blvd. Tablet is set 0.70m east of northwest corner, 0.30m below brick, and 0.15m above ground."
+   "kind": "house"
   },
   {
    "monument": "469",
@@ -1492,7 +1492,7 @@
    "lat": 43.649926,
    "lng": -79.736768,
    "lastInsp": null,
-   "desc": "North foundation wall of two story brown brick house, no.534 Ray Lawson Blvd. Tablet is set 2.65m north of the southeasterly corner, 0.35m below brick, and 0.20m above ground."
+   "kind": "house"
   },
   {
    "monument": "440",
@@ -1506,7 +1506,7 @@
    "lat": 43.727323,
    "lng": -79.784502,
    "lastInsp": null,
-   "desc": "Concrete foundation of a two storey brick dwelling, no.53 Richvale Drive. Tablet is set on the south face, 1.7m east of southwest corner and 0.1m above grade."
+   "kind": "house"
   },
   {
    "monument": "442",
@@ -1520,7 +1520,7 @@
    "lat": 43.651808,
    "lng": -79.742482,
    "lastInsp": null,
-   "desc": "Two story brick dwelling, no.69 Kingknoll Drive, at the southeasterly corner of Windmill Boulevard. Tablet is set 0.84m southerly from the northwesterly corner of the house by the front entrance and 0.11m above grade."
+   "kind": "house"
   },
   {
    "monument": "190",
@@ -1534,7 +1534,7 @@
    "lat": 43.707081,
    "lng": -79.730786,
    "lastInsp": null,
-   "desc": "Reddish brick building, no.101 West Drive. Tablet is set 0.09m northeast of the most southwesterly corner, and 0.26m above the ground."
+   "kind": "building"
   },
   {
    "monument": "192",
@@ -1548,7 +1548,7 @@
    "lat": 43.720363,
    "lng": -79.74773,
    "lastInsp": null,
-   "desc": "North Park Secondary School, no.10 North Park Drive, at the northwest corner of Williams Parkway. Tablet is set on wall at southeast corner of 0.60m west of corner and 0.30m above ground."
+   "kind": "building"
   },
   {
    "monument": "193",
@@ -1562,7 +1562,7 @@
    "lat": 43.730126,
    "lng": -79.735313,
    "lastInsp": null,
-   "desc": "Concrete culvert on north side of Williams Parkway, 0.20Km west of MacKay Street. Tablet is set on northeast end of culvert, 0.21m above grade."
+   "kind": "structure"
   },
   {
    "monument": "194",
@@ -1576,7 +1576,7 @@
    "lat": 43.731094,
    "lng": -79.739691,
    "lastInsp": null,
-   "desc": "Concrete culvert on north side of Maitland Street, 0.20Km west of MacKay Street. Tablet is set on northeast end of culvert, 0.21m above grade."
+   "kind": "structure"
   },
   {
    "monument": "195",
@@ -1590,7 +1590,7 @@
    "lat": 43.732844,
    "lng": -79.744664,
    "lastInsp": null,
-   "desc": "Ellen Mitchell Recreation Centre on North Park Drive. Tablet is set on south face of wall near entrance, 0.67m west of the southeast corner and 0.47m above grade."
+   "kind": "building"
   },
   {
    "monument": "196",
@@ -1604,7 +1604,7 @@
    "lat": 43.747789,
    "lng": -79.732309,
    "lastInsp": null,
-   "desc": "Professor's Lake Recreation Centre, 268m west of Porteous Circle. Tablet is set on south face, 0.46m west of southeast corner and 0.64m above grade."
+   "kind": "building"
   },
   {
    "monument": "197",
@@ -1618,7 +1618,7 @@
    "lat": 43.743833,
    "lng": -79.731815,
    "lastInsp": null,
-   "desc": "St. John Bosco Catholic School, no.1025 North Park Drive. Tablet is set on west face, 0.21m north of southwest corner and 0.34m above grade."
+   "kind": "building"
   },
   {
    "monument": "202",
@@ -1632,7 +1632,7 @@
    "lat": 43.697837,
    "lng": -79.757925,
    "lastInsp": null,
-   "desc": "Agnes Taylor Public School, No.80 Beech Street, opposite of Salisbury Circle. Tablet on face of most northerly brick wall of school, 0.32m east of northwest corner and 0.45m above grade."
+   "kind": "building"
   },
   {
    "monument": "166",
@@ -1646,7 +1646,7 @@
    "lat": 43.68204,
    "lng": -79.730145,
    "lastInsp": null,
-   "desc": "White brick building, no.158 Kennedy Road South at the southeast corner of Kennedy Road and Glidden Road. Tablet is set 0.15m northeast of the most northwesterly corner, and 0.08m above the ground."
+   "kind": "building"
   },
   {
    "monument": "169",
@@ -1660,7 +1660,7 @@
    "lat": 43.684339,
    "lng": -79.721719,
    "lastInsp": null,
-   "desc": "Pre-cast concrete building, no.286 Rutherford Road South. Tablet is set 0.10m northwest of the most southwesterly corner, and 0.10m above the ground."
+   "kind": "building"
   },
   {
    "monument": "170",
@@ -1674,7 +1674,7 @@
    "lat": 43.687103,
    "lng": -79.725433,
    "lastInsp": null,
-   "desc": "Red brick building, no.268 Rutherford Road South, at the northeast corner of Glidden Road. Tablet is set 5.15m northeast of the most northwesterly corner, and 0.06m above the ground."
+   "kind": "building"
   },
   {
    "monument": "171",
@@ -1688,7 +1688,7 @@
    "lat": 43.689929,
    "lng": -79.727655,
    "lastInsp": null,
-   "desc": "Red brick building, no. 7 Selby Road, at the southeast corner of Rutherford Road. Tablet is set 0.09m southwest of the most northeasterly corner, and 0.08m above the ground."
+   "kind": "building"
   },
   {
    "monument": "172",
@@ -1702,7 +1702,7 @@
    "lat": 43.691214,
    "lng": -79.731113,
    "lastInsp": null,
-   "desc": "Concrete block garage, no.307 Clarence Street, at the southeast corner of Rutherford Road. Tablet is set 0.08m northeast of the most southwesterly corner, and 0.14m above the ground."
+   "kind": "building"
   },
   {
    "monument": "174",
@@ -1716,7 +1716,7 @@
    "lat": 43.700663,
    "lng": -79.736496,
    "lastInsp": null,
-   "desc": "Red brick and precast concrete building, no.21 Clark Blvd. Tablet is set in the northerly face of loading dock, 0.10m west of the most northeasterly corner, and 0.14m above the ground."
+   "kind": "building"
   },
   {
    "monument": "155",
@@ -1730,7 +1730,7 @@
    "lat": 43.746751,
    "lng": -79.72467,
    "lastInsp": null,
-   "desc": "One storey brick dwelling no.2 Jardine Crescent, at the northwest corner of Torbram Road. Tablet is set 0.12m north of southeast corner of foundation and 0.18m above ground."
+   "kind": "house"
   },
   {
    "monument": "177",
@@ -1744,7 +1744,7 @@
    "lat": 43.698572,
    "lng": -79.731489,
    "lastInsp": null,
-   "desc": "Red brick building, no.145 Heart Lake Road, 0.20Km northwest of Orenda Road on the west side of old Heart Lake Road. Tablet is set 0.10m northwest of the most northwesterly corner, and 0.13m above the ground."
+   "kind": "building"
   },
   {
    "monument": "180",
@@ -1758,7 +1758,7 @@
    "lat": 43.686067,
    "lng": -79.717016,
    "lastInsp": null,
-   "desc": "Red brick industrial plaza, no.56 Bramsteele Road. Tablet is set 0.08m northwest of the most southeasterly corner, and 0.11m above the ground."
+   "kind": "building"
   },
   {
    "monument": "183",
@@ -1772,7 +1772,7 @@
    "lat": 43.693376,
    "lng": -79.71668,
    "lastInsp": null,
-   "desc": "White brick building, no.1 Blair Drive. Tablet is set 0.07m northwest of the most southwesterly corner, and 0.06m above the ground."
+   "kind": "building"
   },
   {
    "monument": "217",
@@ -1786,7 +1786,7 @@
    "lat": 43.744959,
    "lng": -79.738292,
    "lastInsp": null,
-   "desc": "East face of concrete wall of hydro vault, 12.6m south of centreline of Professor's Lake Parkway, 9.6m east of centeline of Princeton Terrace. Tablet is set 0.85m south of the northeast corner of the vault and 0.10m above grade."
+   "kind": "building"
   },
   {
    "monument": "455",
@@ -1800,7 +1800,7 @@
    "lat": 43.727054,
    "lng": -79.790938,
    "lastInsp": null,
-   "desc": "Two storey building, Heart Lake Medical Centre, no.10425 Kennedy Road North. Tablet is set in westerly wall, 12.0m south of most northwest corner and 0.1m above ground."
+   "kind": "building"
   },
   {
    "monument": "230",
@@ -1814,7 +1814,7 @@
    "lat": 43.717533,
    "lng": -79.80478,
    "lastInsp": null,
-   "desc": "Large factory building at the northwest corner of Highway 10 and Sandalwood Parkway. Tablet in east face of wall 0.5m north of southeast corner of brick office, 0.4m above grade."
+   "kind": "building"
   },
   {
    "monument": "233",
@@ -1828,7 +1828,7 @@
    "lat": 43.79698,
    "lng": -79.718853,
    "lastInsp": null,
-   "desc": "Two storey light brown brick dwelling, no.4 Forestbrook Court. Tablet is located near the chimney, 3.1m west of the northeast corner of the main part of the house and is 0.43m above ground."
+   "kind": "house"
   },
   {
    "monument": "234",
@@ -1842,7 +1842,7 @@
    "lat": 43.79724,
    "lng": -79.712916,
    "lastInsp": null,
-   "desc": "One storey red brick dwelling, no.11 Ryckman Lane. Tablet is set in face of south wall, 1.25m west of the southeast corner and 0.1m above the ground."
+   "kind": "house"
   },
   {
    "monument": "246",
@@ -1856,7 +1856,7 @@
    "lat": 43.706157,
    "lng": -79.769744,
    "lastInsp": null,
-   "desc": "On north side of Williams Parkway, 0.37Km west of centreline Kennedy Road North. Tablet in west face of 0.3m wide retaining wall for pedestrian underpass and 0.3m above ground."
+   "kind": "structure"
   },
   {
    "monument": "248",
@@ -1870,7 +1870,7 @@
    "lat": 43.71135,
    "lng": -79.763785,
    "lastInsp": null,
-   "desc": "Pedestrian underpass on north side of Williams Parkway, 0.32Km east of centreline of Kennedy Road North. Tablet is set in west face of 0.3m wide retaining wall 0.3m above ground level."
+   "kind": "structure"
   },
   {
    "monument": "49",
@@ -1884,7 +1884,7 @@
    "lat": 43.730439,
    "lng": -79.724229,
    "lastInsp": null,
-   "desc": "Hydro sub station on Bramalea Road, 79.2m north of Central Park Drive. Tablet is set on west face, 3.96m north of southwest corner and 0.31m above grade."
+   "kind": "building"
   },
   {
    "monument": "108",
@@ -1898,7 +1898,7 @@
    "lat": 43.701998,
    "lng": -79.756119,
    "lastInsp": null,
-   "desc": "Grocery Store, Centennial Plaza on east side of Kennedy Road, 0.80Km north of Queen Street East. Tablet is set 1.31m north of southwest corner of foundation and 0.15m above ground."
+   "kind": "building"
   },
   {
    "monument": "109",
@@ -1912,7 +1912,7 @@
    "lat": 43.702881,
    "lng": -79.760418,
    "lastInsp": null,
-   "desc": "Kennedy Road Tabernacle Church on west side of Kennedy Road, 91.4m north of Vodden Street. Tablet in north face of nursery building, 5.18m west of northeast corner, and 0.06m above ground."
+   "kind": "building"
   },
   {
    "monument": "110",
@@ -1926,7 +1926,7 @@
    "lat": 43.705912,
    "lng": -79.764396,
    "lastInsp": "2019.7.16",
-   "desc": "Dwelling no.4 Linkdale Road, at the northwest corner of Kennedy Road. Tablet in foundation of porch, 1.22m north of southeasterly corner of house, and 0.06m above ground."
+   "kind": "house"
   },
   {
    "monument": "04",
@@ -1940,7 +1940,7 @@
    "lat": 43.715051,
    "lng": -79.776437,
    "lastInsp": null,
-   "desc": "Credit Valley Treatment Centre at southwest corner of Highway 7 and Kennedy Road. Tablet on west face, 0.23m south of northwest corner and 0.20m above grade."
+   "kind": "building"
   },
   {
    "monument": "05",
@@ -1954,7 +1954,7 @@
    "lat": 43.716729,
    "lng": -79.774507,
    "lastInsp": null,
-   "desc": "Two and one-half storey red brick house on south side of Highway 7, 121.9m east of Kennedy Road. Tablet on north face, 4.  69m east of northwest corner and 0.18m above grade."
+   "kind": "house"
   },
   {
    "monument": "67",
@@ -1968,7 +1968,7 @@
    "lat": 43.670792,
    "lng": -79.740165,
    "lastInsp": null,
-   "desc": "Bridge over Etobicoke Creek on Highway 10, 38.1m south of Peel Village Parkway. Tablet in west face of bridge 3.78m south of northwest corner, 0.85m above ground."
+   "kind": "structure"
   },
   {
    "monument": "38",
@@ -1982,7 +1982,7 @@
    "lat": 43.704981,
    "lng": -79.740272,
    "lastInsp": null,
-   "desc": "Red brick building, no. 382 Queen Street East, 0.15Km west of Highway 410. Tablet set on most easterly face, 0.23m north of southeast corner and 0.16m above grade"
+   "kind": "building"
   },
   {
    "monument": "46",
@@ -1996,7 +1996,7 @@
    "lat": 43.737898,
    "lng": -79.736318,
    "lastInsp": null,
-   "desc": "Medical Centre, no.9780 Bramalea Road. Tablet is set on north face 0.61m west of northeast corner and 0.18m above grade."
+   "kind": "building"
   },
   {
    "monument": "47",
@@ -2010,7 +2010,7 @@
    "lat": 43.736497,
    "lng": -79.732699,
    "lastInsp": null,
-   "desc": "Two storey semi-detached house, no.1 Jackson Road. Tablet is set on west face, 1.98m north of southwest corner and 0.12m above grade."
+   "kind": "house"
   },
   {
    "monument": "56",
@@ -2024,7 +2024,7 @@
    "lat": 43.682323,
    "lng": -79.762947,
    "lastInsp": null,
-   "desc": "Brick building, no.147 Queen Street West. Tablet in north face 5.76m west of northeast corner, 0.3m above ground."
+   "kind": "building"
   },
   {
    "monument": "63",
@@ -2038,7 +2038,7 @@
    "lat": 43.666852,
    "lng": -79.733454,
    "lastInsp": null,
-   "desc": "At the northeast corner of Steeles Avenue and Main Street. Tablet is in west end of northerly concrete retaining wall, 0.18m above ground."
+   "kind": "structure"
   },
   {
    "monument": "54",
@@ -2052,7 +2052,7 @@
    "lat": 43.691629,
    "lng": -79.754929,
    "lastInsp": null,
-   "desc": "White brick building, 134 Queen Street East at  Centre Street. Tablet is 0.55m north of southeast corner, and 0.43m above ground."
+   "kind": "building"
   },
   {
    "monument": "82",
@@ -2066,7 +2066,7 @@
    "lat": 43.688137,
    "lng": -79.785836,
    "lastInsp": null,
-   "desc": "Concrete headwall on east side of McLaughlin Road, 0.64Km north of CNR overpass. Tablet in west face of wall 3.78m south of northwest corner, 0.55m above ground."
+   "kind": "structure"
   },
   {
    "monument": "86",
@@ -2080,7 +2080,7 @@
    "lat": 43.67208,
    "lng": -79.764613,
    "lastInsp": null,
-   "desc": "John Knox Christian School, east side of Mclaughlin Road South, north of CPR tracks. Tablet in north face 0.34m east of northwest corner, 0.45m above ground."
+   "kind": "building"
   },
   {
    "monument": "92",
@@ -2094,7 +2094,7 @@
    "lat": 43.65753,
    "lng": -79.744253,
    "lastInsp": null,
-   "desc": "Brampton Hydro sub-station 152.4m north of Steeles Avenue on east side of McLaughlin Road South. Tablet in north face 0.46m east of northwest corner, 0.27m above ground."
+   "kind": "building"
   },
   {
    "monument": "145",
@@ -2108,7 +2108,7 @@
    "lat": 43.756078,
    "lng": -79.689678,
    "lastInsp": "2015.10.28",
-   "desc": "One storey brick dwelling with stone front on the west side of Goreway Drive, 0.53Km north of Highway 7 (#9198 Goreway Dr.). Tablet is set 6.31m west of northeast corner of foundation and 0.09m above ground."
+   "kind": "house"
   },
   {
    "monument": "146",
@@ -2122,7 +2122,7 @@
    "lat": 43.75164,
    "lng": -79.687232,
    "lastInsp": null,
-   "desc": "Motel at the northwest corner of Highway 7 and Goreway Drive. Tablet is set 4.51m west of southeast corner of foundation and 0.06m above ground."
+   "kind": "building"
   }
  ],
  "stats": {

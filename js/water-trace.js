@@ -117,7 +117,7 @@
   async function estimateZone(p) {
     if (zoneEst.has(p)) return zoneEst.get(p);
     const zones = App().state.servicing.zones, near = (f, m = 30000) => Areas().nearest(zones.filter(f), p.lng, p.lat, m);
-    let elev = null; try { elev = await Meas().elevAt(p.lat, p.lng); } catch (e) { /* tiles unavailable */ }
+    let elev = null, elevSrc = null; try { const g = await window.PeelElevation.getGround(p.lat, p.lng); elev = g.z; elevSrc = g.z != null ? window.PeelElevation.shortLabel(g) : null; } catch (e) { /* no elevation */ }
     const via = DI().dcVia(p, 'pz'), viaZ = via && SD().svcById.get(via.id), viaL = viaZ && MP().zLevel(viaZ.zone);
     const nz = near(() => true, 20000), nearZ = nz && SD().svcById.get(nz.id), nearL = nearZ && MP().zLevel(nearZ.zone);
     const cand = elev == null ? [] : Object.keys(PZ_TABLE).map(Number).filter(n => elev >= PZ_TABLE[n][1] && elev <= PZ_TABLE[n][2]);
@@ -131,13 +131,13 @@
     if (level) z = viaZ && viaL === level ? viaZ : (n => n && SD().svcById.get(n.id))(near(a => MP().zLevel(a.zone) === level));
     else if (elev != null && elev > PZ_TABLE[7][2]) { z = (n => n && SD().svcById.get(n.id))(near(a => !!MP().wellSystem[a.zone])); how = 'above'; }
     if (!z) { z = viaZ || nearZ; how = how || (viaZ ? 'dc-only' : 'nearest'); }
-    const est = z ? { z, level: MP().zLevel(z.zone), elev, cand, how, via: how === 'dc' || how === 'dc-only' ? via : null } : null;
+    const est = z ? { z, level: MP().zLevel(z.zone), elev, elevSrc, cand, how, via: how === 'dc' || how === 'dc-only' ? via : null } : null;
     zoneEst.set(p, est);
     return est;
   }
   function zoneEstHTML(e) {
     if (!e) return '';
-    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level], g = e.elev != null ? `ground about ${Math.round(e.elev)} m` : 'ground elevation unavailable';
+    const zn = esc(e.z.name.replace('Pressure zone ', 'Zone ')), r = e.level && PZ_TABLE[e.level], g = e.elev != null ? `ground about ${Math.round(e.elev)} m${e.elevSrc ? ` (${esc(e.elevSrc)})` : ''}` : 'ground elevation unavailable';
     const why = { dc: 'the planned DC main within 1 km feeds it', near: 'it is the nearest mapped zone in range', pressure: 'its grade line gives about 55 m of pressure', above: 'above Zone 7\'s range: the nearest groundwater system', 'dc-only': 'the zone the nearest planned DC main feeds', nearest: 'the nearest mapped zone' }[e.how] || '';
     return `<p class="small est-line">Outside the mapped pressure zones: ${g} → <strong>${zn}</strong>${r && e.how !== 'above' ? ` (serves ${r[1]}–${r[2]} m, grade line ${r[0]} m; 2020 Master Plan, Vol. 3, Table 3)` : ''}${e.cand.length > 1 ? `; the ground is also in Zone ${e.cand.filter(n => n !== e.level).join(' / ')}'s range, ${why}` : why ? `; ${why}` : ''}${e.via ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
   }
