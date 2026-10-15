@@ -2246,3 +2246,58 @@ Nothing is left to review. The Decisions sheet lists every call and what you dec
 
 New sheets: Decisions, Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
 History links, Permits early, Dated from number, Filing order.
+
+## Step B1: tree counts in the app (Previous / Tree switch)
+
+Since GO 2 (2026-10-15), each development's units are the **tree count**: the sum of the trees
+whose root file it holds (`js/tree.js` with the chronology rules, plus `data/unit-lookups.json`
+and your decisions in `data/tree-overrides.json`). Development keys are unchanged; Step B2
+(GO 3) makes the trees the developments.
+
+**How it runs.**
+- `scripts/build-tree-counts.js` writes `data/tree-counts.json` with the weekly snapshot
+  (`site.yml`). Each development key has its units, its trees (root, units, basis, flag) and a
+  signature of its planning files.
+- `js/tree-counts.js` (`PeelTreeCounts`) applies the counts after the developments are built.
+  The browser never builds the trees, which takes seconds.
+- A development keeps its previous count, with the reason shown, when:
+  - it has no tree (12 developments whose only planning files are withdrawn: 2 units);
+  - its files differ from the tree build (a live refresh, or a source turned off);
+  - you entered a count for one of its files.
+- A development whose files are counted in another development's tree shows 0 and names that
+  tree (30 developments).
+
+**Where it shows.**
+- **Settings › Counting:** Tree (new), the default, or Previous. Kept for one release so you
+  can compare.
+- The scenario bar and the top-bar chip say "counting: All units (tree count)" or
+  "(previous count)". Exports and share links carry the same scenario text.
+- The development panel's At a glance has a **Tree count** note: the trees, their counts and
+  flags, and the previous count when it differs.
+
+**What moved** (snapshot 2026-10-12, live developments):
+
+| | Previous | Tree | Change |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,439 | −372 |
+| Brampton | 111,536 | 141,872 | +30,336 |
+| Caledon | 29,379 | 31,522 | +2,143 |
+| **Peel** | **231,726** | **263,833** | **+32,107 (+13.9%)** |
+
+382 developments change. The full list, with the reasons, is in the review workbook
+(`docs/tree-review/tree-review.xlsx`, Changes sheet).
+
+On the default view (active applications, 2021–2026), the Overview goes from 202,264 to
+233,028 units and from 597,100 to 688,600 people.
+
+**Fixed along the way: the Node tools' baseline.**
+- `countUnitsFromText` (`scripts/build-snapshot-index.js`) read unit counts from the
+  descriptions of the Brampton pre-consultation layer. That layer is marked `countUnits: false`,
+  and the browser skips it.
+- So the startup index and the Node tools counted 16,034 units that the full app never shows.
+  Most are pre-consultation estimates: 111 Mayfield's 9,961, and 2,341 at 10884 Winston
+  Churchill.
+- The B0 workbook's "app units" column is now the true previous count (231,726, not 247,760).
+  The tree counts are unchanged.
+- The tree reads a pre-consultation's own figure directly. It counts it only when no other file
+  states one, flagged as an estimate (decision B-a).

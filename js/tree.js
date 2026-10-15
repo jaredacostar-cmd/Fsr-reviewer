@@ -147,7 +147,10 @@
       const poly = polys.sort((a, b) => P.ringsArea(b) - P.ringsArea(a))[0] || null;
       const live = recs.filter(r => r.phase !== 'cancelled');
       const units = Math.max(0, ...live.filter(r => !r.minor && !P.isMinorFile(r)).map(r => (r.units > 0 ? r.units : 0)));
-      const precUnits = Math.max(0, ...live.map(r => r.precUnits || 0));
+      // A pre-consultation's own figure, kept aside by the app (and not read at all when the file
+      // describes a block or precinct plan): the tree counts it only when no other file states one,
+      // flagged as an estimate (decision B-a, 2026-10-15).
+      const precUnits = Math.max(0, ...live.map(r => r.precUnits || (best.role === 'precon' || (r.stage || '') === 'precon' || /^bra-precon\b/.test(String(r.sourceId || '')) ? P.unitsFromText(r.description) || 0 : 0)));
       const pt = recs.find(r => r.lat != null);
       nodes.push({
         id, municipality: recs[0].municipality, refs: [...new Set(recs.map(r => r.ref).filter(Boolean))], records: recs,

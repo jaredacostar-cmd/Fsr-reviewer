@@ -95,7 +95,7 @@
   function renderTbScen() {
     const chip = $('#tb-scen'); if (!chip) return;
     const n = SvcTab().criteriaChanges().length;
-    const txt = ['Scenario', SvcTab().svcOpt.ww === 'calibrated' ? 'calibrated (2025 flows)' : 'design flows', n ? `${n} criteria modified` : 'Peel criteria', `counting ${BASIS_SHORT[App().state.basis] || 'all units'}`].join(' · ');
+    const txt = ['Scenario', SvcTab().svcOpt.ww === 'calibrated' ? 'calibrated (2025 flows)' : 'design flows', n ? `${n} criteria modified` : 'Peel criteria', `counting ${BASIS_SHORT[App().state.basis] || 'all units'}${root.PeelTreeCounts ? ` (${root.PeelTreeCounts.label()})` : ''}`].join(' · ');
     chip.innerHTML = `<span class="tb-scen-t">${esc(txt)}</span>${n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : ''}`;
   }
   let scenHome = null;

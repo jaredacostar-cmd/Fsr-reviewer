@@ -55,9 +55,14 @@ const ymd = d => d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.ge
  * files whose count lives only in an attachment ("unit count: 2656") get it
  * here so the index and the full-load projects agree on units.
  */
+// As the browser does (js/app.js applySnapshot): never for a source whose units repeat a later
+// file (config countUnits: false, the Brampton pre-consultations), or first paint and the Node
+// tools count units the full app doesn't.
+const NO_COUNT = new Set(require('../js/config.js').services.filter(s => s.countUnits === false).map(s => s.id));
 function countUnitsFromText(records) {
   for (const r of records) {
     if (r.kind !== 'application' || r.unitMix || (r.units > 0 && !r.unitsFromText)) continue;
+    if (NO_COUNT.has(String(r.sourceId || '').split('/')[0])) continue;
     const t = P.unitsFromText(r.description);
     if (t && !(r.units >= t)) { r.units = t; r.unitsFromText = true; }
   }
