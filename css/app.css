@@ -340,7 +340,9 @@ body {
   text-overflow: ellipsis;
 }
 .tb-step:hover { background: var(--surface-2); color: var(--text-primary); }
-.tb-step:last-child { color: var(--text-primary); font-weight: 600; }
+.tb-step:last-of-type { color: var(--text-primary); font-weight: 600; }
+.tb-count { color: var(--text-muted); font-size: var(--fs-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@media (max-width: 1100px) { .tb-count { display: none; } }
 .tb-step:first-child { flex: none; }   /* "Peel" never truncates; the deeper steps share the rest */
 .tb-step:not(:first-child) { min-width: 3em; flex: 0 1 auto; }
 .tb-views {
@@ -2440,3 +2442,45 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .hcard .hc-v b { font-size: var(--fs-4); font-variant-numeric: tabular-nums; }
 .hcard .hc-v span, .hcard .hc-x { font-size: var(--fs-2); color: var(--text-secondary); }
 .hcard .hc-a { font-size: var(--fs-1); color: var(--accent); margin-top: 2px; }
+
+/* Left panel = find (SPEC §4): the count first, rows that show their value, Counts as. */
+#f-showing .find-count b { font-size: var(--fs-5); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+#f-showing .find-count { margin-right: var(--space-1); }
+.fp-row > summary { list-style: none; cursor: pointer; display: flex; align-items: baseline; gap: var(--space-2); }
+.fp-row > summary::-webkit-details-marker { display: none; }
+.fp-row > summary .label { margin: 0; flex: none; }
+.fp-row > summary .fr-val { flex: 1 1 auto; min-width: 0; font-size: var(--fs-2); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fp-row > summary .fr-val::after { content: " ▸"; color: var(--text-muted); }
+.fp-row[open] > summary .fr-val::after { content: " ▾"; }
+.fp-row.active > summary .fr-val { color: var(--accent); }
+.fp-row[open] > summary { margin-bottom: var(--space-2); }
+.ly-chips .chip .ly-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.pipe-rows .done-gone { opacity: .85; }
+.pipe-rows .done-gone.off .n { color: var(--text-muted); }
+#active-filters #f-saveview { margin-left: auto; }
+.tb-meta { margin-left: auto; white-space: nowrap; }
+@media (max-width: 700px) { .tb-meta { display: none; } }
+
+/* The shell at narrower widths (SPEC §4): one top-bar row at 1440 — the chip keeps its swatches,
+   the action buttons their icons (names in their titles). */
+@media (max-width: 1600px) {
+  .tb-scen .sc-l, .tb-scen .sc-what { display: none; }
+  .tb-scen { max-width: 340px; }
+}
+@media (max-width: 1500px) {
+  .tb-actions .tb-btn:not(.tb-icon) { font-size: 0; gap: 0; }
+  .tb-actions .tb-btn:not(.tb-icon) svg { width: 16px; height: 16px; }
+}
+@media (max-width: 700px) {
+  .topbar { gap: var(--space-1); padding: var(--space-1) var(--space-2); }
+  .topbar .tb-trail { order: 1; flex: 1 1 0; }
+  .topbar .tb-actions { order: 2; }
+  .topbar .tb-views { order: 3; }
+  .topbar .tb-scen-wrap { order: 4; }
+  .topbar .tb-search { order: 5; }
+  .tb-scen .sc-more { display: none; }
+  .tb-scen { max-width: none; padding: 2px var(--space-1); }
+}
+.pipe-rows .done-gone { grid-column: 1 / -1; }
+.inview-chip { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 900; white-space: nowrap; background: var(--surface-1); border: 1px solid var(--border); box-shadow: var(--shadow); }
+@media (max-width: 1199px) { .inview-chip { display: none; } }

@@ -316,12 +316,18 @@
   // The year the map's capacity results are worked out for now lives in the Scenario control
   // ("Results for year"); the legend keeps naming it.
   const censusYr = () => (CA().baselineCensus() || {}).year || SP().hz.year0;
+  document.addEventListener('click', e => { const b = e.target.closest('[data-lg-color]'); if (b) setMapStyle({ color: b.dataset.lgColor }); });
   function renderLegend() {
     // Phase 2: renders inline in the Layers panel (#mo-legend); the legendOpen state lives on the
     // panel's own <details>, set once in MapOptions.onAdd.
     const el = document.getElementById('mo-legend'); if (!el) return;
     const parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
+    // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by Phase | Layer.
+    if (MM().mstyle.show !== 'heat') {
+      const c = MM().mstyle.color, b = (k, t) => `<button type="button" class="btn small${c === k ? ' on' : ''}" data-lg-color="${k}" aria-pressed="${c === k}">${t}</button>`;
+      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Phase')}${b('layer', 'Layer')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : 'One marker per development; a cluster’s number counts developments.'}</p>`);
+    }
     if (MM().mstyle.show === 'heat') parts.push(`<div class="lg-t">Heatmap: people + jobs at build-out</div><div class="lg-heat"></div><p class="lg-s">Low → high density of the shown developments; markers are hidden (Layers &amp; style → Show as).</p>`);
     if (MM().mstyle.color === 'phase' && MM().mstyle.show !== 'heat') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);

@@ -49,6 +49,7 @@
     projects: [],
     filtered: [],
     phases: DEFAULT_PHASES(),
+    lyr: null,   // "Counts as" (SPEC §4): a Set of layers (js/layers.js), or null for every layer
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
@@ -287,10 +288,13 @@
     return true;
   }
 
+  // A development's layer (js/layers.js), kept per development object (rebuilt ones are new objects).
+  const lyCache = new WeakMap();
+  const layerOf = p => { if (!window.PeelLayers) return null; if (!lyCache.has(p)) lyCache.set(p, window.PeelLayers.layerOf(p)); return lyCache.get(p); };
   function applyFilters() {
     PeelSvcData.syncWwLayers();   // growth layers follow the selected stages
     const base = state.projects.filter(p => matches(p, true));
-    state.filtered = base.filter(p => state.phases.has(p.phase));
+    state.filtered = base.filter(p => state.phases.has(p.phase) && (!state.lyr || state.lyr.has(layerOf(p))));
     PeelRenderList.renderPipeline(base);
     PeelRenderList.renderMarkers();
     PeelRenderList.setListPage(0); PeelRenderList.renderList();   // filters changed: back to the first page
@@ -445,7 +449,10 @@
   function renderVersion() {
     const d = state.snapshot ? ` · data ${state.snapshot.generatedAt.slice(0, 10)}` : '';
     $('#app-version').textContent = `App version ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION}${d}`;
-    PeelChangelog.loadChangelog().then(() => { const r = PeelChangelog.currentRelease(); if (r) $('#app-version').textContent = `App version ${r.version} (build ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION})${d} · see the Change log tab`; });
+    // The bottom bar's right end (SPEC §4): data date, version, change log.
+    const meta = v => { const el = $('#tb-meta'); if (el) el.innerHTML = `Data ${esc(state.snapshot && state.snapshot.generatedAt ? state.snapshot.generatedAt.slice(0, 10) : 'live')} · ${esc(v)} · <button type="button" class="btn small link" data-tbg-log>Change log</button>`; };
+    meta(APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION);
+    PeelChangelog.loadChangelog().then(() => { const r = PeelChangelog.currentRelease(); if (r) { $('#app-version').textContent = `App version ${r.version} (build ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION})${d} · see the Change log tab`; meta(`v${r.version}`); } });
   }
 
   // ---- Boot ------------------------------------------------------------------------
@@ -658,18 +665,24 @@
   });
 
   // "This week" panel: projects that appeared or changed phase since the previous snapshot.
+  document.addEventListener('click', e => { if (e.target.closest('[data-tbg-log]')) PeelTips.showHelpLog(); });
   function renderChanges() {
     const c = state.snapshot && state.snapshot.changes;
     if (!c || c.baseline) return;
     $('#changes-head').textContent = `${c.since} → ${c.until}`;
-    const n = (c.movedCount || 0) + (c.addedCount || 0);
+    // Real changes vs backfill (SPEC §4): a newly listed file that is already completed is an old
+    // record surfacing in the refresh, not news; it is counted here and listed under Data › Sources.
+    const real = c.added.filter(a => a.phase !== 'completed'), backfill = c.added.filter(a => a.phase === 'completed');
+    const n = (c.movedCount || c.moved.length || 0) + real.length;
     $('#week-count').hidden = !n;
     $('#week-count').textContent = n > 99 ? '99+' : String(n);
     const items = [
       ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${watch.has(m.key) ? '★ ' : ''}${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
-      ...c.added.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${watch.has(a.key) ? '★ ' : ''}${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
+      ...real.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${watch.has(a.key) ? '★ ' : ''}${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
     ];
-    $('#changes-summary').textContent = `${fmtNum(c.movedCount)} changed phase · ${fmtNum(c.addedCount)} new`;
+    $('#changes-summary').textContent = `${fmtNum(c.movedCount || c.moved.length)} changed phase · ${fmtNum(real.length)} new${backfill.length ? ` · ${fmtNum(backfill.length)} backfill hidden (older completed files that surfaced in the refresh: Data › Sources)` : ''}`;
+    const bf = $('#backfill-note');
+    if (bf) { bf.hidden = !backfill.length; bf.innerHTML = backfill.length ? `<strong>Backfill ${esc(c.since)} → ${esc(c.until)}:</strong> ${fmtNum(backfill.length)} older completed file${backfill.length === 1 ? '' : 's'} surfaced in the refresh (not counted as changes): ${backfill.slice(0, 8).map(a => esc(a.title)).join(' · ')}${backfill.length > 8 ? ` · +${fmtNum(backfill.length - 8)} more` : ''}.` : ''; }
     const SHOW = 25;
     $('#changes-list').innerHTML = items.slice(0, SHOW).map((it, i) => `<li><button type="button" data-i="${i}">${it.html}</button></li>`).join('') +
       (items.length > SHOW ? `<li class="muted small">+ ${fmtNum(items.length - SHOW)} more</li>` : '');
@@ -687,7 +700,7 @@
     map: window.PeelMapCore.map,
     showDetail: (...a) => window.PeelDevNav.showDetail(...a),
     // ---- newly exposed core internals (used cross-module) ----
-    applyFilters, matches, scheduleRebuild, recount, loadSource, showLoading, saveSources,
+    applyFilters, matches, layerOf, scheduleRebuild, recount, loadSource, showLoading, saveSources,
     applySnapshot, jobsOf, empOf, clearEmp, mergeCriteria, setUserUnits,
     timeActive, yearsOf, setSheetH, refreshTheme,
     // Phase 6: full-snapshot load state (startup index paints first; the detail

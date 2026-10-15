@@ -52,7 +52,8 @@
   // Planned works layer (2026 DC capital maps): on / off and which system.
   let dcOn = { on: !!store.get('dcOn', false), sys: store.get('dcSys', 'both') };
   // Map views: presets of the layers and style, each remembering its last settings.
-  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'DC']];
+  // The lenses (SPEC §4): Planning / Water / Wastewater / Capital ('dc' stays the key for saved views and links).
+  const MAP_VIEWS = [['planning', 'Planning'], ['water', 'Water'], ['wastewater', 'Wastewater'], ['dc', 'Capital']];
   // Sewer pipe screen state and classes (used by the legend from the first render).
   const SEW = { data: null, loading: null, grid: null, growth: null, key: '' };
   // Sewer load as a share of full-pipe capacity, with its flow state: [upper %,

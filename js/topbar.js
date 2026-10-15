@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, store } = window.PeelUtil;
+  const { $, esc, store, fmtNum } = window.PeelUtil;
   const PD = window.PeelDesign;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -19,20 +19,18 @@
   const SD = () => window.PeelSvcData;
   const FI = () => window.PeelFilterUI;
 
-  // ---- Top bar (Phase 2): scope trail, view switch, scenario chip, menus --------------
-  // View switch: one button per MAP_VIEWS entry; clicking switches the map AND opens
-  // the mapped analysis tab. syncMapOpts() toggles .on on every [data-mview], so this
-  // switch stays in sync with the map control's own switch for free.
-  const VIEW_TAB = { planning: 'overview', water: 'water', wastewater: 'ww', dc: 'dca' };
+  // ---- Top bar: scope trail with its count, lens switch, scenario chip, menus ----------------
+  // Lens switch (SPEC §4): one button per MAP_VIEWS entry. A lens sets the map's layer preset,
+  // marker encoding and legend only; it never changes the right panel's tabs or the open tab.
+  // syncMapOpts() toggles .on on every [data-mview], so this stays in sync with the map control.
   function renderViewSwitch() {
     const el = $('#tb-views'); if (!el) return;
-    el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="Switch to the ${t} map view and its analysis tab">${PD.icon(k)}<span>${t}</span></button>`).join('');
+    el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="${t} lens: the map's layers, marker colours and legend">${PD.icon(k)}<span>${t}</span></button>`).join('');
     MA().syncMapOpts();
   }
   $('#tb-views').addEventListener('click', e => {
     const b = e.target.closest('[data-mview]'); if (!b) return;
     MA().setMapView(b.dataset.mview);
-    Tips().openAnalysis(VIEW_TAB[b.dataset.mview] || 'overview');
   });
 
   // Scope trail: Peel › municipality › area › development. Only the active steps show;
@@ -77,7 +75,10 @@
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
     if (tc) steps.push(tc);
-    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('');
+    // The trail carries its count (SPEC §4): the developments in scope and their planned units.
+    const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
+    el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
+      + `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
     el._steps = steps;
     if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }
