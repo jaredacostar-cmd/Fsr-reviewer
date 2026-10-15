@@ -279,3 +279,17 @@ test('Capital tab: renamed, a Construction & EAs view (public too), screening no
   assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);
   assert.match(src('js/dca-tab.js'), /PeelCapitalEA\.dcActualHTML\(/);
 });
+
+test('DC facility panel lists its EAs (linked items or an EA placed on the facility)', () => {
+  const m = (a, b) => Math.hypot((a[0] - b[0]) * 80000, (a[1] - b[1]) * 111000);
+  const fc = { name: 'G.E. Booth Water Resource Recovery Facility', g: [-79.546, 43.58] };
+  const list = [
+    { id: 'booth', name: 'G.E. Booth WWTP', status: 'complete', completedYear: 2011, related: { dcProjects: [{ facility: fc.name, proj: '26-2563' }] } },
+    { id: 'near', name: 'Site EA', status: 'consultation', geomType: 'facility', geometry: { type: 'Point', coordinates: [-79.5462, 43.5801] }, related: {} },
+    { id: 'far', name: 'Far EA', status: 'complete', geomType: 'facility', geometry: { type: 'Point', coordinates: [-79.7, 43.7] }, related: {} },
+  ];
+  assert.deepEqual(M.easForDc(fc, list, m).map(e => e.id), ['booth', 'near']);
+  assert.match(M.easForDcHTML(M.easForDc(fc, list, m)), /data-ce-open="ea:booth"[\s\S]*completed 2011/);
+  assert.equal(M.easForDcHTML([]), '');
+  assert.match(src('js/dc-infra.js'), /PeelCapitalEA\.easForDcHTML\(fc\)/);
+});

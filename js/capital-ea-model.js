@@ -228,6 +228,16 @@
       ${o.screenNote || ''}`;
   }
 
+  /**
+   * EAs for a DC facility: linked through its DC items, or an EA placed on this facility (facility
+   * geometry within 300 m). For the DC facility panel.
+   */
+  function easForDc(fc, list, distM) {
+    return (list || []).filter(e => ((e.related && e.related.dcProjects) || []).some(d => d.facility === fc.name)
+      || (fc.g && e.geomType === 'facility' && e.geometry && e.geometry.type === 'Point' && distM(fc.g, e.geometry.coordinates) <= 300));
+  }
+  const easForDcHTML = eas => (eas.length ? `<h3 class="sub-title">Environmental assessments</h3><ul class="small">${eas.map(e => `<li><button type="button" class="btn small link" data-ce-open="ea:${esc(e.id)}">${esc(e.name)}</button> ${eaBadge(e.status)}${e.completedYear ? ` <small class="muted">completed ${e.completedYear}</small>` : ''}${e.nextStep && e.nextStep.date ? ` <small class="muted">next: ${esc(e.nextStep.text)} · ${esc(fmtDate(e.nextStep.date))}</small>` : ''}</li>`).join('')}</ul>` : '');
+
   // ---- This week, Watch, Needs attention -------------------------------------------------------------
   /** This week: capital changes (one per contract) and EA page changes; watched items first, then newest. */
   function weekItems(capital, eas, watched) {
@@ -338,7 +348,7 @@
     EA_STATUS, EA_CURRENT, eaBadge, eaShown, eaDashed, eaUnplaced, MS_LABEL,
     PRIORITY, rankHits, tolerance, hitDistance, pickHeading, sameSpot,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
-    dcCapitalIndex, dcActualHTML, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, weekItems, weekHTML, watchRows, attentionItems,
+    dcCapitalIndex, dcActualHTML, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCapitalEAModel = api;

@@ -290,6 +290,8 @@
     return dcIdx;
   }
   const dcActualHTML = proj => (proj ? M.dcActualHTML(dcIndex().get(proj), !!data.capital) : '');
+  const metres = (a, b) => Math.hypot((a[0] - b[0]) * 111320 * Math.cos(a[1] * Math.PI / 180), (a[1] - b[1]) * 110574);
+  const easForDcHTML = fc => (data.eas ? M.easForDcHTML(M.easForDc(fc, data.eas.eas, metres)) : '');
   const muni = () => (App() && App().state.muni) || null;
   const listsHTML = () => (data.loaded ? M.listsHTML({ contracts: data.contracts, eas: data.eas && data.eas.eas, muni: muni(), thisYear: new Date().getFullYear(), hasCapital: !!data.capital, capitalAsOf: data.capital && data.capital.source && data.capital.source.latestLastUpdate, screenNote: U.SCREEN_NOTE_SHORT, allCap }) : U.skel ? U.skel('Loading capital projects and EAs') : '');
   const attention = () => (data.loaded ? M.attentionItems(data.capital, data.eas, new Date().toISOString().slice(0, 10)) : []);
@@ -322,6 +324,6 @@
     load();
   }
 
-  const api = { listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

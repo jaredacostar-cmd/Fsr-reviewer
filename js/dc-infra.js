@@ -160,6 +160,7 @@
         ${fc.items.map(i => `<tr><td>${esc(i.what)}<small>${esc(i.proj)}</small></td><td>${i.phases.map(ph => `<span class="dc-ph dc-${ph[0]}" title="${esc(PHASE_NAME[ph[0]] || ph[0])} · component ${esc(ph[2])}">${esc(ph[0])} ${ph[1]}</span>`).join(' ')}</td></tr>`).join('')}
       </tbody></table>
       <p class="small muted">EA = environmental assessment, P = property, D = design, C = construction (year and component number from the map). Schedules are subject to annual review and approval by Regional Council.</p>
+      ${window.PeelCapitalEA ? window.PeelCapitalEA.easForDcHTML(fc) : ''}
       ${MP().dcNeedsSection({ fc })}
       `;
     TS().loadsOf = { dc: { fc } };
