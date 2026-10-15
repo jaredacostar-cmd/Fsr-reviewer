@@ -2385,3 +2385,40 @@ Each development is measured once and its shares multiply it, so Peel equals the
 - straddling developments are split by area;
 - shares over 100% are scaled down;
 - matrix rows and columns reconcile.
+
+## Population tables, C2: Table 1, the roll-up (Growth › By plan)
+
+Growth has a new **By plan** sub-view (`js/plan-tables.js`). It shows the developments on screen
+(the Overview's set and basis) by where they are: Peel → municipality → plan → sub-area or
+precinct → developments.
+
+**Columns:**
+- Compact by default: Area, Units, People, Check. This fits the panel.
+- **All columns** adds developments, committed, proposed, left to build, persons per unit, jobs,
+  and people in an MTSA. The MTSA column is an overlay and is never added up.
+
+**Check** is ✓ when a row equals the sum of the rows under it.
+
+**Rows:**
+- Rows expand and collapse; Peel and the municipalities start open.
+- A plan shows 10 developments, with "See all".
+- A development straddling plans appears under each plan with its share, e.g. "(45% of it)".
+- **filter** narrows the map and every tab to that plan.
+
+**Below the table:**
+- the developments split between plans;
+- the nested plans;
+- the precincts with no development in the current set.
+
+**Exports:**
+- **Download CSV** gives one row per area and per development. It has a `path` column
+  (`Peel/Caledon/Bolton/Bolton Core`) and a `share` column, plus the disclaimer, the screening
+  line, the criteria stamp, and the basis and grouping.
+- The workbook gains a **By plan** sheet with the same rows, after Developments.
+- The Developments export gains `plan` (the innermost plan with the largest share) and
+  `plan_shares`.
+
+**On the default view (2021–2026 active):**
+- Peel is 228,490 units and 683,671 people, the same as the Overview and the header.
+- Every check passes.
+- 42 developments are split between plans.

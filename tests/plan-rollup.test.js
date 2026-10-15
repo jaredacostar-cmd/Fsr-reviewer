@@ -81,3 +81,17 @@ test('real data: every check is 0 and Peel equals estimate(set)', async () => {
   assert.ok(r.nodes.has('a:sp:caledon:bolton-core') || [...r.nodes.values()].some(n => n.kind === 'subplan'), 'nested plans are sub-levels');
   TG.setData(null);
 });
+
+test('By plan CSV: one row per area and development, with a path for pivot tables', () => {
+  globalThis.PeelUtil = globalThis.PeelUtil || { $: () => null, esc: s => String(s), fmtNum: n => String(n), store: null, CSV_DISCLAIMER: '' };
+  const PT = require('../js/plan-tables.js');
+  const set = [dev('a', 100, { pt: ['core', 'bolton'], title: 'A' }), dev('s', 40, { sh: [['bolton', 0.5], ['mayfield', 0.5]], title: 'S' })];
+  const r = R.build(set, { areas: AREAS, sharesOf: p => p.sh || null, pointOf: p => p.pt || [], measure });
+  const rows = PT.csvRows(r);
+  assert.ok(rows.some(x => x.path === 'Peel/Caledon/Bolton/Bolton Core' && x.units_planned === 100));
+  const sRows = rows.filter(x => x.name === 'S');
+  assert.equal(sRows.length, 2, 'a split development appears under each plan, with its share');
+  assert.deepEqual(sRows.map(x => x.share).sort(), [0.5, 0.5]);
+  assert.equal(rows.find(x => x.path === 'Peel').units_planned, 140);
+  assert.ok(rows.filter(x => x.level !== 'development' && x.check_units !== '').every(x => x.check_units === 0), 'every check 0');
+});
