@@ -40,7 +40,7 @@
           if (!f.lnglat) continue;
           const [sym] = WF_KIND[f.kind] || ['●'];
           const m = L.marker([f.lnglat[1], f.lnglat[0]], { icon: L.divIcon({ className: 'wf-mk', html: `<i class="wf-ic wf-${f.kind}">${sym}</i>`, iconSize: [22, 22], iconAnchor: [11, 11] }), keyboard: true, title: f.name, zIndexOffset: 500 });
-          m.bindTooltip(`${esc(f.name)} · ${esc(wfKinds(f))}`, { direction: 'top', offset: [0, -10] });
+          m.bindTooltip(window.PeelUtil.hoverCard({ kind: 'Water facility', name: f.name, sub: wfKinds(f), also: 'capacity and Master Plan assessment' }), { direction: 'top', offset: [0, -10], className: 'pt' });
           m.on('click', () => showWaterFacility(f));
           WF.layer.addLayer(m);
         }
@@ -65,12 +65,11 @@
     const as = [f.assess && wfAssessHTML('Master Plan: treatment capacity vs forecast maximum day (ML/d)', f.assess.years, f.assess.demand, 'Forecast demand', f.assess.capacity, 'Capacity (90%)'),
       ...(f.assessPumps || []).map(a => wfAssessHTML(`Master Plan: ${a.what} (ML/d)`, a.years, a.demand, 'Forecast demand', a.capacity, 'Existing capacity')),
       f.assessStorage && wfAssessHTML('Master Plan: storage (ML)', f.assessStorage.years, f.assessStorage.required, 'Required', f.assessStorage.available, 'Available')].filter(Boolean).join('');
-    $('#detail-body').innerHTML = `<div class="head"><h3>${esc(f.name)}</h3><div class="m">${esc(wfKinds(f))} · ${esc(f.system)}${z ? ` · ${esc(z.name)}` : ''}</div></div>
+    root.PeelSvcScope.openResult({ ref: `wfac:${f.id != null ? f.id : f.name}`, title: f.name, reopen: () => showWaterFacility(f), html: `<div class="head"><h3>${esc(f.name)}</h3><div class="m">${esc(wfKinds(f))} · ${esc(f.system)}${z ? ` · ${esc(z.name)}` : ''}</div></div>
       <div class="brief" data-info="water-facilities">${plant}${gw}${stor}${pumps}
       ${as ? `<h3 class="sub-title">2020 Master Plan assessment</h3>${as}<p class="small muted">Red: capacity below the forecast (the Master Plan's trigger for the works below).</p>` : ''}
       ${works.length ? `<h3 class="sub-title">Planned works (2026 DC, draft)</h3><ul class="small">${works.flatMap(w => w.items.map(it => `<li>${esc(it.what)}${it.proj ? ` · ${esc(it.proj)}` : ''}${it.phases && it.phases.length ? ` · ${[...new Set(it.phases.map(p => p[1]))].join(', ')}` : ''}</li>`)).join('')}</ul>` : ''}
-      <p class="small muted">${esc(f.parts.join(' · '))}${f.posFrom ? ` · position: ${esc(f.posFrom)}` : ''}. Sources: Region of Peel open data (locations); <a href="${esc(D.sources.mpUrl)}" target="_blank" rel="noopener">2020 Master Plan, Vol. 3</a> (pumping and storage capacity, Tables 4–7, 9, 11, 12)${f.plant || f.groundwater ? `; Region of Peel ${R ? R.year : 2025} drinking water reports` : ''}. The 2025 Master Plan will update these capacities.</p></div>`;
-    $('#detail').hidden = false; $('#detail').dataset.view = 'wf'; $('#detail').scrollTop = 0;
+      <p class="small muted">${esc(f.parts.join(' · '))}${f.posFrom ? ` · position: ${esc(f.posFrom)}` : ''}. Sources: Region of Peel open data (locations); <a href="${esc(D.sources.mpUrl)}" target="_blank" rel="noopener">2020 Master Plan, Vol. 3</a> (pumping and storage capacity, Tables 4–7, 9, 11, 12)${f.plant || f.groundwater ? `; Region of Peel ${R ? R.year : 2025} drinking water reports` : ''}. The 2025 Master Plan will update these capacities.</p></div>` });
   }
   // Water capacity by growth layer (Water tab), on the same bars as the wastewater plants:
   // treatment (South Peel; the Caledon well systems) as the Overview counts it (the 2025 measured
@@ -358,7 +357,7 @@
     const p = Nav().projectByKey(b.dataset.wtrace); if (!p) return;
     // The button can appear twice (detail panel and the footer Water tab): the trace output
     // goes to the clicked button's container, and every copy's label stays in sync.
-    const scope = b.closest('#detail-body, #water-body') || document;
+    const scope = b.closest('#scope-body, #pane-dev-body, #water-body') || document;
     const top = scope.querySelector(`.trace-box [data-wtrace="${CSS.escape(p.key)}"]`), box = top && top.closest('.trace-box');
     const tops = [...document.querySelectorAll(`[data-wtrace="${CSS.escape(p.key)}"]`)];
     for (const t of tops) if (t._label == null) t._label = t.innerHTML;

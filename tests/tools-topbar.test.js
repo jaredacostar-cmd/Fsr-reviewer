@@ -7,14 +7,15 @@ const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 
-test('one home for tool results: traces and test sites open in the Tool result tab', () => {
+test('one home for tool results: traces and test sites open as a scope in the right panel', () => {
   const sp = src('js/sewer-profile.js');
-  assert.match(sp, /if \(Tools\(\) && Tools\(\)\.openResult\) \{ Tools\(\)\.openResult\(\{ title, html, reopen \}\);/);
+  assert.match(sp, /Tools\(\)\.openResult\(\{ title, html, reopen \}\);/);
   assert.match(sp, /showResult\('trace', 'Sewer path',/);
   assert.match(sp, /showResult\('whatif', w\.name \|\| 'Test site',/);
   assert.match(sp, /showResult\('whatifs', 'Test sites',/);
   assert.doesNotMatch(sp, /\$\('#detail-body'\)\.dataset\.wf/, 'no state kept on the detail panel');
-  assert.match(sp, /const wfBodies = \['#detail-body', '#pane-tool-body'\]/, 'the form works in both homes');
+  assert.match(sp, /const wfBodies = \['#scope-body'\]/, 'the form works in the scope host');
+  assert.doesNotMatch(sp, /#detail/, 'no #detail fallback');
 });
 
 test('Inspect point and Fit get the trace back, without opening a panel', () => {
@@ -27,7 +28,7 @@ test('a test site placed and closed without a change is cleared with its result'
   assert.match(sp, /include: false, municipality: muni, fresh: true \}/);
   assert.match(sp, /delete w\.fresh;/);
   assert.match(sp, /document\.addEventListener\('peel:tool-closed', \(\) => \{[\s\S]*?if \(w && w\.fresh && !w\.include\)/);
-  assert.match(src('js/tools.js'), /document\.dispatchEvent\(new CustomEvent\('peel:tool-closed'\)\)/);
+  assert.match(src('js/svc-scope.js'), /document\.dispatchEvent\(new CustomEvent\('peel:tool-closed'\)\)/);
 });
 
 test('top bar: Present ▾ holds Present and Time-lapse; saved views in Export; search moves up on wide screens', () => {

@@ -24,6 +24,7 @@
   const Areas = () => window.PeelAreas;
   const DI = () => window.PeelDcInfra;
   const P = window.PeelPhases;
+  const TB = () => window.PeelTopbar;
 
   const PLANTS = ['Lakeview', 'Clarkson', 'Inglewood'];
   const KIND_LABEL = { plant: 'Wastewater treatment plant', ps: 'Pumping station catchment', block: 'Wastewater block and everything upstream', zone: 'Water pressure zone', wsys: 'Water system (lake-based)' };
@@ -31,6 +32,7 @@
   // A scope reference → what it covers: key 'dr' / 'pz' (developments by their servicing areas) or
   // 'ps' (by the catchment outline); ids the areas counted.
   function resolve(ref) {
+    if (isResultRef(ref)) return result && result.ref === ref ? { ref, kind: 'result', rkind: ref.slice(0, ref.indexOf(':')), title: result.title, short: result.title, result } : null;
     const sv = App() && App().state.servicing; if (!ref || !sv) return null;
     const i = ref.indexOf(':'), k = ref.slice(0, i), v = ref.slice(i + 1);
     if (k === 'plant') return PLANTS.includes(v) ? { ref, kind: 'plant', pl: v, title: SD().plantLabel(v), short: SD().PLANT_SHORT[v], key: 'dr', ids: new Set(sv.drainage.filter(d => d.plant === v).map(d => d.id)) } : null;
@@ -44,13 +46,14 @@
   let memo = { k: null, s: null, members: null };
   function current() {
     const ref = App() && App().state.ss; if (!ref) return null;
-    const k = `${ref}|${App().state.svcGen || 0}|${!!App().state.servicing}`;
+    const k = `${ref}|${App().state.svcGen || 0}|${!!App().state.servicing}|${result ? result.v : 0}`;
     if (memo.k !== k) memo = { k, s: resolve(ref), members: null };
     return memo.s;
   }
   // Is a development in the current scope? (app.js matches; no scope → every development)
   function has(p) {
     const s = current(); if (!s) return true;
+    if (s.kind === 'result') return !s.result.devKeys || s.result.devKeys.has(p.key);
     if (s.key === 'ps') return !!(s.a.bbox && p.lat != null && Areas().locate([s.a], p.lng, p.lat).length);
     return SD().svcIds(p, s.key).some(id => s.ids.has(id));
   }
@@ -59,7 +62,7 @@
   function open(ref) {
     if (!resolve(ref)) return false;
     if (window.DevScope && window.DevScope.current()) window.DevScope.close();
-    if (window.PeelTools && window.PeelTools.hasResult && window.PeelTools.hasResult()) window.PeelTools.closeResult();
+    result = null;
     App().state.ss = ref; showAll = false;
     AT().setFootPref('overview'); AT().showFootTab('overview');
     App().applyFilters(); OT().renderOverview(); Sh().viewLink.write();
@@ -68,13 +71,78 @@
     return true;
   }
   // Drop the scope without re-rendering (the caller re-filters), e.g. the trail's Peel step.
-  function clear() { if (App()) App().state.ss = null; }
+  function clear() { if (App()) App().state.ss = null; result = null; }
   function close() { clear(); App().applyFilters(); OT().renderOverview(); Sh().viewLink.write(); }
+
+  // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
+  // A DC work, a sewer pipe, a single file, a wastewater block, a water facility, a selection or a
+  // tool's result is a scope too: it opens in the right panel (Overview) with its trail step, filters
+  // the developments to the ones it lists, and goes in the share link (ss=pipe:123, file:<uid>, …).
+  //   openResult({ ref, title, html, reopen, devKeys, filter, screen })
+  //     ref: '<kind>:<id>' (kinds below; default 'tool:<title>'); devKeys: the developments it covers
+  //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer.
+  const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help']);
+  const isResultRef = ref => !!ref && RESULT_KINDS.has(String(ref).slice(0, String(ref).indexOf(':')));
+  let result = null, resultV = 0;
+  const slug = t => String(t || 'result').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+  function devKeysOf(html) { const out = new Set(); String(html || '').replace(/data-dev="([^"]+)"/g, (m, k) => { out.add(k.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")); return m; }); return out.size ? out : null; }
+  function openResult(o) {
+    o = o || {};
+    const ref = o.ref || `tool:${slug(o.title)}`;
+    if (window.DevScope && window.DevScope.current() && !o.keepDev) window.DevScope.close();
+    const keys = o.devKeys ? new Set(o.devKeys) : o.filter ? devKeysOf(o.html) : null;
+    result = { ref, title: o.title || 'Result', html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, v: ++resultV };
+    App().state.ss = ref; showAll = false;
+    AT().setFootPref('overview'); AT().showFootTab('overview');
+    App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
+    const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;
+    // On a phone the right panel is a bottom sheet: raise it from its peek so the result shows.
+    const DT = window.PeelDataTab, A = App();
+    if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap && A.getAnalysisSnap() === 'peek') A.setAnalysisSnap('half');
+    return result;
+  }
+  function closeResult() {
+    if (!result) return false;
+    result = null;
+    if (isResultRef(App().state.ss)) App().state.ss = null;
+    if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
+    App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
+    return true;
+  }
+  function reopenResult() {
+    if (!result) return false;
+    if (result.reopen) { try { result.reopen(); return true; } catch (e) { /* show what we have */ } }
+    AT().showFootTab('overview'); OT().renderOverview();
+    return true;
+  }
+  const hasResult = () => !!result && App().state.ss === result.ref;
+  const resultTitle = () => (result ? result.title : null);
+  // A shared link to a result scope: re-run its producer once the data it needs has loaded.
+  const RESTORE = {
+    pipe: id => { const M = MM(); if (!M.SEW.data) { window.PeelSewerCap.loadSewers(); return false; } window.PeelSewerCap.showPipeLoads(+id); return true; },
+    file: uid => { const A = App(); if (!A.fullSnapshotReady || !A.fullSnapshotReady()) return false; for (const p of A.state.projects) { const r = p.records.find(x => x.uid === uid); if (r) { window.PeelAerialCheck.showRecordDetail(r, p); return true; } } return true; },
+    dcwork: id => {
+      const I = App().state.dcInfra; if (!I) { if (MA() && MA().setDcOn) MA().setDcOn({ on: true, sys: 'both' }); return false; }
+      const [sys, ...rest] = id.split(':'), key = rest.join(':'), d = I[sys]; if (!d) return true;
+      const ln = d.lines.find(x => (x.p || x.c) === key); if (ln) { MP().showDcLine(ln); return true; }
+      const fc = d.facilities.find(x => x.name === key); if (fc) DI().showFacility(fc);
+      return true;
+    },
+    iiblock: id => { if (!ST() || !ST().showBlock) return true; return ST().showBlock(id) !== false; },
+  };
+  function restore(ref, tries = 40) {
+    if (!isResultRef(ref) || (result && result.ref === ref)) return;
+    const k = ref.slice(0, ref.indexOf(':')), id = ref.slice(ref.indexOf(':') + 1), f = RESTORE[k];
+    if (!f) { if (App().state.ss === ref) { App().state.ss = null; App().applyFilters(); } return; }
+    let done = false; try { done = f(id); } catch (e) { done = false; }
+    if (!done && tries > 0) setTimeout(() => restore(ref, tries - 1), 500);
+  }
 
   // Trail steps, top of the ladder first: plant before its blocks and stations; the water system
   // before a lake-based zone.
   function crumbs() {
     const s = current(); if (!s) return [];
+    if (s.kind === 'result') return [{ label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` }];
     const step = (ref, label, title) => ({ label, go: () => open(ref), title });
     const out = [];
     if ((s.kind === 'block' || s.kind === 'ps') && PLANTS.includes(s.pl)) out.push(step(`plant:${s.pl}`, SD().PLANT_SHORT[s.pl], `Open ${SD().plantLabel(s.pl)}`));
@@ -221,7 +289,7 @@
     if (b.hasAttribute('data-ss-report')) { const s = current(); if (s) Rep().areaReport(App().state.filtered.filter(has), `Area report – ${s.title}`, s.a && s.a.rings ? s.a.rings : []); }
   });
 
-  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, peelWideNote, PLANTS, KIND_LABEL };
+  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

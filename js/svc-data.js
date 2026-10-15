@@ -153,11 +153,10 @@
   }
   const svcColor = a => a.zone ? token('--svc-drainage') : plantColor(a.plant);
   function svcTooltip(a) {
-    if (a.zone) return `<strong>${esc(a.name)}</strong><br><span class="muted">Region of Peel water pressure zone · tap: what loads it</span>`;
-    if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return `<strong>Wastewater ${esc(a.name)}</strong>${a.planning ? ' · prioritised (block study)' : ''}<br>Drains to ${to ? `${esc(to.name)} → ` : ''}${esc(plantLabel(a.plant))}<br>
-      <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} sewers of 300 mm+${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · Region I&amp;I block · tap: what loads it</span>`; }
-    return `<strong>${esc(drName(a))}</strong><br>Drains to ${esc(plantLabel(a.plant))}${a.outlet ? ` via ${esc(a.outlet)}` : ''}<br>
-      <span class="muted">${fmtNum(a.areaHa)} ha · ${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network · tap: what loads it</span>`;
+    const H = window.PeelUtil.hoverCard;
+    if (a.zone) return H({ kind: 'Water pressure zone', name: a.name, sub: 'Region of Peel', also: 'what loads it' });
+    if (a.kind === 'block') { const to = a.downstream && svcById.get(a.downstream); return H({ kind: `Wastewater block${a.planning ? ' · prioritised (block study)' : ''}`, name: a.name, value: `${fmtNum(a.areaHa)} ha`, sub: `drains to ${to ? `${to.name} → ` : ''}${plantLabel(a.plant)}`, html: `<span class="muted">${fmtNum(a.manholes)} sewers of 300 mm+${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · Region I&amp;I block</span>`, also: 'what loads it' }); }
+    return H({ kind: 'Sanitary catchment', name: drName(a), value: `${fmtNum(a.areaHa)} ha`, sub: `drains to ${plantLabel(a.plant)}${a.outlet ? ` via ${a.outlet}` : ''}`, html: `<span class="muted">${fmtNum(a.manholes)} manholes${a.trunkMm ? ` · outlet ${a.trunkMm} mm` : ''} · traced from the sewer network</span>`, also: 'what loads it' });
   }
   function setDevsOn(on) {
     MM().setDevsOn(on); store.set('devsOn', on);

@@ -38,6 +38,9 @@
         if (this._prevTab === 'dev') this._prevTab = 'overview';
       }
       this._current = p;
+      // A development replaces a result scope (a file, a pipe, a DC work): one scope at a time (SPEC §3).
+      const SS = window.PeelSvcScope;
+      if (SS && SS.isResultRef && SS.isResultRef(window.PeelApp && window.PeelApp.state.ss)) SS.clear();
       if (h) {
         h.setProject(p);      // keep app.js's module-level currentProject in sync
         h.setDaContext(p);
@@ -130,6 +133,8 @@
         }
         // Phase 3b: hand the open development to the Compare tool (sibling module;
         // guarded — the button is inert until that module loads).
+        const ex = e.target.closest('[data-scope-export]');
+        if (ex) { const p = DevScope.current(); if (p && window.PeelExports) window.PeelExports.exportDevsCSV([p], `peel-${String(p.title).toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40)}.csv`); return; }
         const cmp = e.target.closest('[data-scope-compare]');
         if (cmp) { const p = DevScope.current(); if (p && window.PeelToolCompare) window.PeelToolCompare.addDevelopment(p); return; }
       });
@@ -198,11 +203,15 @@
         <div class="site-bar-actions">
           <button type="button" class="btn small" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">Trace sewer</button>
           <button type="button" class="btn small" data-wtrace="${esc(p.key)}" title="Trace the water supply route from the plant on the map">Trace water</button>
-          <button type="button" class="watch-btn${watched ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${watched}" title="${watched ? 'Remove from your watchlist' : 'Add to your watchlist (This week tab, Watched focus)'}">${watched ? '★ Watching' : '☆ Watch'}</button>
-          <button type="button" class="btn small" data-memo title="One-page servicing memo to print or save as PDF">Memo</button>
-          <button type="button" class="btn small" data-scope-alloc title="Record a servicing allocation for this development">Record allocation</button>
           <button type="button" class="btn small" data-scope-fsr aria-expanded="false" title="Cross-check the consultant's FSR figures">Check FSR</button>
-          <button type="button" class="btn small" data-scope-compare title="Add this development to the comparison (Compare tool)">Compare</button>
+          <button type="button" class="watch-btn${watched ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${watched}" title="${watched ? 'Remove from your watchlist' : 'Add to your watchlist (This week tab, Watched focus)'}">${watched ? '★ Watching' : '☆ Watch'}</button>
+          <details class="site-more"><summary class="btn small" aria-label="More site tools">⋯</summary>
+            <div class="site-more-menu" role="menu">
+              <button type="button" role="menuitem" class="btn small link" data-memo title="One-page servicing memo to print or save as PDF">Memo</button>
+              <button type="button" role="menuitem" class="btn small link" data-scope-alloc title="Record a servicing allocation for this development">Record allocation</button>
+              <button type="button" role="menuitem" class="btn small link" data-scope-compare title="Add this development to the comparison (Compare tool)">Compare</button>
+              <button type="button" role="menuitem" class="btn small link" data-scope-export title="This development's row (phase, units, layer, demand) as a CSV">Export (CSV)</button>
+            </div></details>
         </div>
         <div class="site-bar-fsr" id="site-bar-fsr" hidden></div>`;
       bar.hidden = false;

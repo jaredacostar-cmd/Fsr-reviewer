@@ -40,7 +40,8 @@
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);
-      set('ss', App().state.ss);   // servicing scope (plant / station / block / zone)
+      // servicing scope (plant / station / block / zone), or a result scope that can be re-opened
+      set('ss', App().state.ss && window.PeelSvcScope && window.PeelSvcScope.isResultRef(App().state.ss) && !/^(pipe|file|dcwork|iiblock):/.test(App().state.ss) ? null : App().state.ss);
       return q.toString();
     };
     const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };
@@ -68,7 +69,9 @@
       if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';
-      App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr'); App().state.ss = q.get('ss') || null;
+      App().state.sp = q.get('sp') ? q.get('sp').split(',') : []; const list = k => (q.get(k) || '').split(',').filter(Boolean); App().state.mtsa = list('mt'); App().state.pz = list('pz'); App().state.dr = list('dr');
+      // A result scope (a pipe, a file, a DC work, a block) re-runs its producer once its data loads (SPEC §3).
+      { const ss = q.get('ss') || null, S = window.PeelSvcScope; if (ss && S && S.isResultRef(ss)) { App().state.ss = null; setTimeout(() => S.restore(ss), 0); } else App().state.ss = ss; }
       // Old links could carry u=left / u=committed (the old size select's basis steps):
       // they migrate to the counting basis, like the old fo=left / fo=committed.
       if (q.get('u') === 'left') { App().state.minUnits = 0; App().state.basis = 'remaining'; }

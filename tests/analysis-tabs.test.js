@@ -100,9 +100,12 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
   assert.ok(/id="ftab-growth"[^>]*>Growth</.test(HTML), 'Growth tab button missing/renamed wrong');
   assert.ok(/id="ftab-dca"[^>]*>DC</.test(HTML), 'DC tab button missing/renamed wrong');
   for (const kept of ['data-tab="overview"', 'data-tab="growth"', 'data-tab="water"', 'data-tab="ww"',
-    'data-tab="dca"', 'data-tab="dev"', 'data-tab="tool"']) {
+    'data-tab="dca"', 'data-tab="dev"']) {
     assert.ok(HTML.includes(kept), `missing tab: ${kept}`);
   }
+  // SPEC §3: no Tool result tab, no #detail aside; results open in the right panel's scope host.
+  for (const gone of ['data-tab="tool"', 'id="pane-tool"', 'id="detail"', 'id="detail-body"']) assert.ok(!HTML.includes(gone), `still present: ${gone}`);
+  assert.ok(HTML.includes('<div id="scope-body" class="scope-body" hidden aria-live="polite"></div>'), 'scope host');
 });
 
 test('index.html: growth sub-views', () => {

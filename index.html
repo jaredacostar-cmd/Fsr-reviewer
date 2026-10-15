@@ -238,7 +238,6 @@
         <button type="button" role="tab" class="f-tab" id="ftab-ww" data-tab="ww" data-info="tab-ww" aria-controls="pane-ww" aria-selected="false" hidden>Wastewater</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>DC</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dev" data-tab="dev" data-info="tab-dev" aria-controls="pane-dev" aria-selected="false" hidden>Development</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-tool" data-tab="tool" aria-controls="pane-tool" aria-selected="false" hidden>Tool result</button>
       </div>
       <div class="analysis-panes" id="analysis-panes">
       <div id="screen-note-top"></div>
@@ -246,6 +245,7 @@
 
       <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
         <div id="ov-body"></div>
+        <div id="scope-body" class="scope-body" hidden aria-live="polite"></div>
         <!-- A scoped development: its About / Files & history / Site views, below the verdict. -->
         <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
@@ -308,10 +308,6 @@
 
       <section class="f-pane" id="pane-dev" data-pane="dev" role="tabpanel" aria-labelledby="ftab-dev" hidden></section>
 
-      <section class="f-pane" id="pane-tool" data-pane="tool" role="tabpanel" aria-labelledby="ftab-tool" hidden>
-        <div class="tb-head"><h2 class="pane-h" id="tool-title">Tool result</h2><button type="button" class="btn small" id="tool-close" title="Close the tool result">Close ×</button></div>
-        <div id="pane-tool-body"></div>
-      </section>
       </div>
     </aside>
     <!-- Phase 3b provision: the Compare tool renders its second scenario in this
@@ -349,11 +345,6 @@
       </section>
     </footer>
 
-    <aside class="detail" id="detail" hidden aria-live="polite">
-      <button type="button" class="sheet-grip" id="detail-grip" aria-label="Resize the panel: drag, or tap to change its height"><span></span></button>
-      <button type="button" class="close" id="detail-close" aria-label="Close">×</button>
-      <div id="detail-body"></div>
-    </aside>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

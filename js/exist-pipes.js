@@ -300,7 +300,6 @@
     L.polyline(ll, { color: token(MM().EXIST_STYLE[k].color), weight: 4, opacity: 1, interactive: false }).addTo(exHL);
     if (DN().getCurrentProject()) L.polyline([[DN().getCurrentProject().lat, DN().getCurrentProject().lng], [g.at[1], g.at[0]]], { color: token('--text-primary'), weight: 1.5, dashArray: '4 4', interactive: false }).bindTooltip(`${fmtNum(Math.round(g.m))} m`, { permanent: true, className: 'pt', direction: 'center' }).addTo(exHL);
     map.fitBounds(L.latLngBounds(ll.flat().concat(DN().getCurrentProject() ? [[DN().getCurrentProject().lat, DN().getCurrentProject().lng]] : [])), { maxZoom: 18, padding: [40, 40] });
-    if (innerWidth <= 760) $('#detail').scrollTop = 0;
   });
   map.on('click', () => exHL.clearLayers());
 

@@ -138,7 +138,7 @@
   const fbText = (dMm, r) => { const f = freeboard(dMm, r); return !f ? 'n/a' : r >= 1 ? 'none (surcharged)' : `${fmtNum(Math.round(f.mm))} mm (${Math.round(f.pct)}% of D)`; };
   function pipeTip(i) {
     const s = pipeStats(i), p = s.p, D0 = MM().SEW.data;
-    if (!PIPE_RESULTS) return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}<br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}<br><span class="muted">Pipe-by-pipe capacity results are hidden: the Region's model is the authority</span>`;
+    if (!PIPE_RESULTS) return window.PeelUtil.hoverCard({ kind: `Sanitary sewer${p[7] ? ` · ${p[7]}` : ''}`, name: `${p[0]} mm sanitary sewer`, value: fmtNum(Math.round(s.then.pop)), sub: `people upstream${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}`, html: `<span class="muted">${esc(D0.materials[p[8]] || '')} · pipe-by-pipe capacity results are hidden: the Region's model is the authority</span>`, also: 'Sewer profile from its scope' });
     return `<strong>${p[0]} mm sanitary sewer</strong>${p[7] ? ` · ${p[7]}` : ''} · ${esc(D0.materials[p[8]] || '')}${D0.risks[p[9]] && D0.risks[p[9]] !== 'INSIGNIFICANT' ? ` · risk ${esc(D0.risks[p[9]].toLowerCase())}` : ''}
       <br>Slope ${(p[1] * 100).toFixed(3)}% · full capacity ${s.cap ? `${fmtNum(s.cap)} L/s` : s.badSlope ? 'n/a (published slope not reliable)' : 'n/a (no slope)'}
       <br>Upstream: ${fmtNum(Math.round(s.then.pop))} people${s.then.jobs ? ` + ${fmtNum(roundPop(s.then.jobs))} jobs` : ''}
@@ -277,7 +277,7 @@
         <tbody>${up.slice(0, 50).map(r => `<tr class="ld-row" data-dev="${esc(r.dev.key)}" tabindex="0"><td>${dot(r.dev.phase)} ${esc(r.dev.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[MM().svcLayerOf(r.dev)]}"></span>${esc(MM().LAYER_NAME[MM().svcLayerOf(r.dev)])} · ${esc(r.dev.municipality)}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       <p class="small muted">Existing: ${fmtNum(p[4])} people upstream (2021 Census) at peak dry weather, ${s.today.f !== 1 ? `scaled ×${s.today.f.toFixed(2)} to the plant's 2025 measured flow (capacity check)` : 'at design rates'}; growth since the census at Peel design peak wet weather (Harmon, employment rates, I&amp;I ${App().state.criteria.wastewater.infiltration} L/s/ha on its site area). Full-pipe capacity by Manning (n 0.013) on the published slope. A screen for where to look, not a hydraulic model: existing wet-weather inflow and infiltration, surcharge, storage and relief sewers are not modelled. Developments join the nearest sewer of 300 mm or more.</p>`;
     TS().loadsOf = { pipe: i };
-    TS().toolResult('pipe', `${p[0]} mm sanitary sewer`, html, () => showPipeLoads(i));
+    TS().toolResult('pipe', `${p[0]} mm sanitary sewer`, html, () => showPipeLoads(i), { ref: `pipe:${i}`, devKeys: up.map(r => r.dev.key) });
   }
 
 

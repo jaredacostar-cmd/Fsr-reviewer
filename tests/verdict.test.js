@@ -212,16 +212,16 @@ test('scoped renders: footer copies get prefixed ids (water, ww, demand, dc)', (
 });
 
 test('water trace button: output goes to the clicked container, labels stay in sync across copies', () => {
-  assert.match(APP, /const scope = b\.closest\('#detail-body, #water-body'\) \|\| document;/);
+  assert.match(APP, /const scope = b\.closest\('#scope-body, #pane-dev-body, #water-body'\) \|\| document;/);
   assert.match(APP, /const tops = \[\.\.\.document\.querySelectorAll\(`\[data-wtrace="\$\{CSS\.escape\(p\.key\)\}"\]`\)\];/);
   assert.match(APP, /for \(const o of document\.querySelectorAll\('\.wtrace-out'\)\) o\.innerHTML = '';/);
 });
 
 test('footer copies: no dead ends — brief buttons work outside the detail panel', () => {
-  const m = /document\.addEventListener\('click', e => \{\n    if \(e\.target\.closest\('#detail-body'\)\) return;[\s\S]*?\n  \}\);/.exec(APP);
+  const m = /document\.addEventListener\('click', e => \{\n    const g = e\.target\.closest\('\[data-foot-tab\]'\);[\s\S]*?\n  \}\);/.exec(APP);
   assert.ok(m, 'footer click listener not found');
   for (const sel of ['[data-foot-tab]', '[data-pipe]', '[data-dcn-all]', '[data-dcn-cons]', '[data-dcn-relief]',
     '[data-uu-set]', '[data-uu-clear]', '[data-sub]', '[data-dev-parent]', '[data-open]'])
-    assert.match(m[0], new RegExp(sel.replace(/[\[\]]/g, '\\$&')), `${sel} not handled outside #detail-body`);
+    assert.match(m[0], new RegExp(sel.replace(/[\[\]]/g, '\\$&')), `${sel} not handled`);
   assert.match(m[0], /scope\.querySelector\(`#f-\$\{CSS\.escape\(o\.dataset\.open\)\}`\)/);
 });

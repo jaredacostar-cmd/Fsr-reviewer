@@ -100,13 +100,13 @@
   const scopeBriefIds = (root) => {
     for (const n of root.querySelectorAll('[id^="dev-"]')) n.id = `f-${n.id}`;
   };
-  // [data-foot-tab] clicks anywhere, plus the development-brief buttons reused in the footer
-  // tabs whose handlers otherwise live on #detail-body ([data-pipe], [data-dcn-*]): no dead ends.
-  // Clicks inside #detail-body keep their existing handlers (this listener skips them).
+  // [data-foot-tab] clicks anywhere, plus the development-brief buttons ([data-pipe], [data-dcn-*],
+  // unit counts, files) wherever they are: no dead ends. Inside a result scope (#scope-body) the
+  // pipe and DC links are js/tool-scope.js's (handled once).
   document.addEventListener('click', e => {
-    if (e.target.closest('#detail-body')) return;
     const g = e.target.closest('[data-foot-tab]');
     if (g) { AT().showFootTab(g.dataset.footTab); return; }
+    if (e.target.closest('#scope-body') && e.target.closest('[data-pipe], [data-dcn-all], [data-dcn-cons], [data-dcn-relief], [data-dcn-filter]')) return;
     const pb = e.target.closest('[data-pipe]');
     if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
     if (e.target.closest('[data-dcn-all]')) { SC().loadSewers(); MP().showDcTiming(); return; }

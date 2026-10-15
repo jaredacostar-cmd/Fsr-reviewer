@@ -1004,7 +1004,7 @@
   }
 
   // ---- Delegated clicks ----------------------------------------------------------------
-  // All interactive attributes use a data-dt-* prefix so the old #detail-body
+  // All interactive attributes use a data-dt-* prefix so the document-level
   // handlers in js/app.js never see them (and vice versa).
   function onClick(e) {
     if (!e.target || !e.target.closest) return;
