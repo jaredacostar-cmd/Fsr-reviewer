@@ -578,13 +578,16 @@ function linkCapitalInArea(ea, capital) {
  * solution is to …", "The recommended alternative includes …"), not a table-of-contents line.
  * Returns ≤ 450 characters or null.
  */
+const DECISION_PEOPLE = /project ?manager|inspector|contractor|contract ?admin|consultant|conflict|comments|assignment ?id/i;
 function extractDecision(text) {
   const t = String(text || '').replace(/\u00ad/g, '').replace(/-\s*\n\s*/g, '').replace(/\s+/g, ' ');
   const re = /(?:^|[.;:]\s+)((?:The |the )?(?:recommended|preferred)(?: alternative)? (?:solution|alternative|design concept|design|option|servicing strategy|strategy)(?: \([^)]{1,40}\))? (?:is|was|includes|consists of|involves|will be|would be|for [^.]{3,80} is)\s[^.]{25,420}\.)/g;
   for (let m; (m = re.exec(t));) {
+    re.lastIndex = m.index + m[0].length - 1;   // a skipped sentence's full stop can start the next match
     const s = m[1].trim();
     if (/\.{4,}|…{2,}|\bTable of Contents\b|\bsection \d|\bpage \d/i.test(s)) continue;
-    if (/(?:telephone|e-?mail|@|\bphone\b)/i.test(s)) continue;
+    // No contact details, people or firms: the public data carries none (see the export checks).
+    if (CONTACT.test(s) || DECISION_PEOPLE.test(s)) continue;
     const out = s.charAt(0).toUpperCase() + s.slice(1);
     return out.length > 450 ? `${out.slice(0, 447).replace(/\s+\S*$/, '')}…` : out;
   }

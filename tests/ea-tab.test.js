@@ -86,6 +86,8 @@ test('build: the preferred solution is read from report text, skipping contents 
   assert.equal(E.extractDecision(report), 'The preferred solution is to twin the existing trunk sewer along Cawthra Road between Dundas Street and the Lakeview WRRF, with a new 1,500 mm pipe.');
   assert.equal(E.extractDecision('The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.'), 'The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.');
   assert.equal(E.extractDecision('No conclusion here. Alternatives were screened.'), null);
+  // A sentence naming a consultant, contractor or contact is skipped for the next one.
+  assert.equal(E.extractDecision('The preferred solution was developed with the consultant team and Smith Engineering Ltd. The preferred solution is a new 900 mm sanitary sewer along Queen Street East.'), 'The preferred solution is a new 900 mm sanitary sewer along Queen Street East.');
   assert.equal(E.extractDecision('The preferred solution is to contact jane@example.ca for the details of the study team.'), null, 'contact text never kept');
 });
 
