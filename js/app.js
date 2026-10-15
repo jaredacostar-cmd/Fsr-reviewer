@@ -508,7 +508,6 @@
     indexPainted = true;
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     state.projects = idx.projects.map(e => window.PeelSnapshotIndex.hydrate(e, idx));
-    if (window.PeelTreeCounts) PeelTreeCounts.apply(state.projects);
     PeelPlanAreas.tagProjects();
     state.auditInput = null;
     state.audit = null;
