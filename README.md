@@ -1726,6 +1726,75 @@ link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on
 screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
 the screening summary to plain text. Everything else is unchanged.
 
+## Applying the tree: Step B0 review workbook
+
+This is the review before the containment tree (`js/tree.js`, PR #180) feeds the app's counts.
+It is **report only: the app is unchanged.** The plan is in `docs/apply-tree-plan.md`.
+
+```
+node scripts/tree-review.js          # → docs/tree-review/tree-review.json (git-ignored)
+python3 scripts/tree-review-xlsx.py  # → docs/tree-review/tree-review.xlsx
+```
+
+**What a row is.** One row per **change group**: the app development(s) and the tree(s) that
+share files with them. Each row has:
+- app units (the header's definition) vs tree units, and the change;
+- the counting rule;
+- the weakest link's confidence;
+- the primary plan and its share;
+- the receiving plant and block;
+- flags;
+- three yellow **your call** columns: Accept / Override / Ask, override units, and reason or
+  source.
+
+**Sheets.**
+- Read me, Summary, Changes (largest first), Pre-consultation estimates, All groups.
+- The audit lists: double counts, unit mismatches, nested files not linked, unclear same-land
+  pairs, condo-only trees, orphans, low-confidence links, straddling plans, reversed dates,
+  counts to find.
+
+**Flags.**
+- **estimate (pre-consultation):** every file stating a count is a pre-consultation, by role or
+  by its PRE file number. Large ones are promoted to block-plan roots but are still flagged.
+  Decided: these count, as proposed only, never committed.
+- **count from data/unit-lookups.json**
+- **low-confidence link**
+- **children exceed parent**
+- **straddles plans:** the primary plan holds less than 90%.
+
+**Decisions** go into `data/tree-overrides.json`. Each override is keyed `Municipality|ROOT-FILE`,
+with `units`, `reason`, `source` and `decidedOn`. Overrides apply to the workbook's "after
+overrides" totals now, and to the app at Step B1.
+
+**Tree rules fixed after the first review (2026-10-15):**
+- **Building permits count when no file states a count.** 121 groups had dropped to 0; this
+  brings it to 94. The other 81 are replacement houses, which correctly count 0. Example:
+  11261 Chinguacousy keeps 456 units, all permitted. Permits are still never counted for a
+  replacement or model house.
+- **A minor file's own stated count counts,** not only the number found in its wording.
+- **The remaining drops to 0 are mostly correct.** The app was still counting withdrawn files.
+  Example: 2 Bartley Bull's 330 units come from OZS-2021-0010, which is cancelled.
+
+**Your bulk accepts (2026-10-15).** These are recorded in `data/tree-overrides.json` as
+`accepted`:
+- counts found where the app had 0;
+- splits, unless the count drops by 100 or more;
+- drops to 0 (replacement houses, no new homes, withdrawn files);
+- pre-consultation estimates under 1,000 units;
+- new trees and gone developments;
+- small or well-linked changes.
+
+**Left for you: 24 groups** on the workbook's **To review** sheet:
+- 10 large pre-consultation estimates (1,000+ units);
+- merges and regroupings that move 100+ units;
+- splits and count changes that lower a count by 100+.
+
+Every row carries a pre-filled call and the reason for it.
+
+**Results** (snapshot 2026-10-12): Peel app 247,760 → tree 266,947 units (+19,187, +7.7%).
+- 3,284 groups: 227 go up, 131 go down, 2,926 are unchanged.
+- 88 groups are pre-consultation estimates, totalling 36,543 units.
+
 ## Definitions (one table, used everywhere)
 
 The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use
@@ -2125,3 +2194,55 @@ status maps to a phase.
   Brampton datasets are updated irregularly.
 - Phases are inferred from status wording and dates, which differ between municipalities.
   Open the source record in the project panel to check a specific project.
+
+**Chronology rules (proposed, modelled; the app is unchanged).** `js/tree.js` has five date rules.
+They are off unless `chrono` names them (`audit(data, { chrono: { r1, r2, r3, r4 } })`).
+`scripts/tree-review.js` models them step by step, each adding to the ones before, and the
+workbook's **Chronology** sheets show what each changes. On the 2026-10-12 snapshot (Peel tree
+total today 266,947):
+
+| Rule | What it does | Peel units | Groups changed |
+|---|---|---|---|
+| 1 | An undated file (1,544, mostly Brampton site plans) takes 1 July of the year in its file number. The number's year matches the real date within a year for 99% of dated files. | −8 | 110 (mostly regrouping files with no count) |
+| 2 | An approved site plan, condo or draft plan filed 3+ years before a newer pre-consultation, rezoning or block plan on its land is history: its own tree, not the new proposal's child. | +94 | 99 (606 links not made; 466 are pre-consultations) |
+| 3 | Same land, counted once: the latest file replaces the largest only when it is the same stage refiled, covers 90%+ of the earlier land, or (with no boundary) its wording reads as a resubmission; else the largest stands (a phase). | −3,057 | 23 (2 unclear, left at the largest for your call) |
+| 4 | A permit issued 2+ years before the file it would sit under is the old building: not placed. | −10 | 8 (324 permits) |
+| 5 | Each tree's files in filing order, with backwards steps marked (the **Filing order** sheet). | report only | 230 of 976 trees with backwards steps |
+
+With all four, Peel goes from 266,947 to 263,966 (−2,981).
+
+**Resubmission or phase, with no boundary (rule 3).** The later file is scored against the
+largest from its own words:
+- **Buildings:** the same number means a resubmission; fewer means a phase.
+- **Home types:** only some of the earlier file's types means a phase.
+- **Civic addresses:** the same means a resubmission; part means a phase; different means
+  another building on the site.
+- **Wording:** "revised" or "resubmission" against "phase", "tower" or "block".
+- **Counts within 25%:** a resubmission.
+
+Two points or more either way decides; otherwise the pair is unclear and the largest stands.
+The latest file must state its own count (a draft plan counted only through one child is
+not a replacement).
+
+**Step B0 decided (2026-10-15): approve all.** Recorded in `data/tree-overrides.json`:
+- Chronology rules 1–4 are on: `audit()` uses them by default; pass `chrono: {}` for the tree
+  as it was before them.
+- The two unclear same-land pairs keep the largest count (OZ/OPA 24-2, OZ/OPA 10-5).
+- SP 22-75 is overridden to 322 units, from its own description (the record says 457).
+- The 24 To review groups are accepted. So are the 6 roots whose change comes from the rules:
+  - the rule 3 resubmissions (88 Park E, 51 Tannery, 2225 Erin Mills, OZS-2026-0016);
+  - 2 Bartley Bull, already accepted as a withdrawn file.
+
+Final tree totals on the 2026-10-12 snapshot:
+
+| | App units | Tree units | After overrides |
+|---|---|---|---|
+| Mississauga | 90,811 | 90,574 | 90,439 |
+| Brampton | 127,570 | 141,870 | 141,870 |
+| Caledon | 29,379 | 31,522 | 31,522 |
+| **Peel** | **247,760** | **263,966** | **263,831** |
+
+Nothing is left to review. The Decisions sheet lists every call and what you decided.
+
+New sheets: Decisions, Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
+History links, Permits early, Dated from number, Filing order.

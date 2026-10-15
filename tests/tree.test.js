@@ -380,3 +380,106 @@ test('area tags: on an equal overlap the smaller area (a precinct inside its sec
   assert.equal(tag.primary.name, 'Precinct 52-2');
   assert.equal(tag.tags.length, 2);
 });
+
+// Step B0 rule: when no file states a count, the units on the building permits placed in the tree
+// count (the homes are permitted or built); never for a replacement house.
+test('no stated count: the permits placed in the tree count; a replacement house still counts 0', () => {
+  const recs = [app({ ref: 'SUB-1', poly: box(0, 0, 4, 4), description: 'Draft plan of subdivision to permit single-detached and townhouse dwellings' })];
+  const permit = (ref, units) => ({ uid: `p-${ref}`, kind: 'permit', municipality: 'Brampton', ref, units, lat: Y + 1 * K, lng: X + 1 * K, address: '', events: ev('2023-01-01') });
+  const nodes = T.fileNodes(recs), b = T.buildTrees(nodes, { permits: [permit('BP-1', 40), permit('BP-2', 16), permit('BP-1', 40)] });
+  const c = T.countTree(b.trees[0], b);
+  assert.equal(c.units, 56, 'each permit counted once');
+  assert.match(c.basis, /building permits: 56 units permitted/);
+
+  const rep = [app({ ref: 'SP-R', poly: box(10, 10, 12, 12), description: 'Replace the existing dwelling with a new detached house' })];
+  const n2 = T.fileNodes(rep), b2 = T.buildTrees(n2, { permits: [{ ...permit('BP-9', 1), lat: Y + 11 * K, lng: X + 11 * K }] });
+  assert.equal(T.countTree(b2.trees[0], b2).units, 0, 'a replacement house adds no growth');
+});
+
+// Chronology rules (proposed; off unless chrono names them — the counts today don't change).
+test('chronology r1: the year in a file number dates an undated file', () => {
+  for (const [ref, y] of [['SP 25-5', 2025], ['OZ/OPA 22-10', 2022], ['OZS-2026-0009', 2026], ['SP18-113.000', 2018], ['21T-M 21-4', 2021], ['SPM 19/091', 2019], ['SP81-015.000', 1981], ['2021-0011', 2021], ['C05W12.005', null], ['', null]]) assert.equal(T.yearOf(ref), y, ref);
+  const recs = [app({ ref: 'SP 25-5', events: [] })];
+  assert.equal(T.fileNodes(recs)[0].date0, null, 'off by default');
+  const n = T.fileNodes(recs, { chrono: { r1: true } })[0];
+  assert.equal(new Date(n.date0).toISOString().slice(0, 10), '2025-07-01');
+  assert.equal(n.dateFrom, 'file number');
+});
+
+test('chronology r2: an approved site plan filed 3+ years before a new rezoning is history, not its child', () => {
+  const recs = [
+    app({ ref: 'OZS-NEW', sourceId: 'bra-opa-zba-sub/9', description: 'Zoning By Law Amendment — 300 units', poly: box(0, 0, 10, 10), units: 300, date: '2024-03-01' }),
+    app({ ref: 'SP-OLD', poly: box(1, 1, 4, 4), units: 20, phase: 'approved', date: '2016-05-01' }),
+  ];
+  const off = T.buildTrees(T.fileNodes(recs));
+  assert.equal(off.trees.length, 1, 'today: one tree');
+  const nodes = T.fileNodes(recs), on = T.buildTrees(nodes, { chrono: { r2: true } });
+  assert.equal(on.trees.length, 2);
+  assert.equal(on.flags.history.length, 1);
+  assert.equal(on.flags.history[0].old, 'SP-OLD');
+  assert.ok(on.flags.history[0].years >= 7);
+});
+
+test('chronology r3: the latest file wins only when it replaces the earlier one', () => {
+  const mk = (sp) => [
+    app({ ref: 'OZ-1', sourceId: 'bra-opa-zba-sub/9', description: 'Zoning By Law Amendment — 300 units', poly: box(0, 0, 10, 10), units: 300, date: '2020-01-01' }),
+    app({ ref: 'SP-1', units: 200, date: '2022-06-01', ...sp }),
+  ];
+  const count = (recs, chrono) => { const nodes = T.fileNodes(recs, { chrono }), b = T.buildTrees(nodes, { chrono }); assert.equal(b.trees.length, 1); return T.countTree(b.trees[0], b); };
+  const whole = mk({ poly: box(0, 0, 10, 10) });
+  assert.equal(count(whole, {}).units, 300, 'today: the largest');
+  const c = count(whole, { r3: true });
+  assert.equal(c.units, 200, 'covers the land: the later file replaces it');
+  assert.match(c.basis, /latest of 2: SP-1/);
+  const part = mk({ poly: box(0, 0, 10, 8.5) });
+  const p = count(part, { r3: true });
+  assert.equal(p.units, 300, 'on 85% of the land: a phase, the largest stands');
+  assert.equal(p.latestWins.applied, false);
+});
+
+test('chronology r4: a permit issued 2+ years before its file is the old building', () => {
+  const recs = [app({ ref: 'SUB-9', poly: box(0, 0, 4, 4), description: 'Draft plan of subdivision for townhouse dwellings', date: '2022-01-01' })];
+  const permit = d => ({ uid: `p-${d}`, kind: 'permit', municipality: 'Brampton', ref: `BP-${d}`, units: 10, lat: Y + 1 * K, lng: X + 1 * K, address: '', events: ev(d) });
+  const nodes = T.fileNodes(recs), b = T.buildTrees(nodes, { permits: [permit('2015-01-01'), permit('2023-01-01')], chrono: { r4: true } });
+  assert.equal(b.flags.permitsEarly.length, 1);
+  assert.equal(b.flags.permitsEarly[0].permit, 'BP-2015-01-01');
+  assert.equal(T.countTree(b.trees[0], b).units, 10, 'only the later permit counts');
+});
+
+test('chronology r5: files in filing order, an earlier stage filed years after a later one marked', () => {
+  const recs = [
+    app({ ref: 'SUB', sourceId: 'bra-opa-zba-sub/9', description: 'Draft Plan of Subdivision — 100 units', poly: box(0, 0, 10, 10), units: 100, date: '2019-01-01' }),
+    app({ ref: 'SP-A', poly: box(1, 1, 4, 4), units: 40, date: '2020-01-01' }),
+    app({ ref: 'PRE-LATE', sourceId: 'bra-precon/10', poly: box(1, 1, 4, 4), date: '2023-01-01' }),
+  ];
+  const nodes = T.fileNodes(recs), b = T.buildTrees(nodes);
+  const ch = T.chronology(b.trees[0], b);
+  assert.deepEqual(ch.map(x => x.ref), ['SUB', 'SP-A', 'PRE-LATE']);
+  assert.equal(ch[1].outOfOrder, '');
+  assert.match(ch[2].outOfOrder, /filed after SUB .*SP-A/);
+});
+
+test('chronology r3 without a boundary: the wording tells a resubmission from a phase', () => {
+  const node = (ref, description, address, units) => T.fileNodes([app({ ref, description, address, units, poly: null })])[0];
+  const oz = node('OZ 22-10', 'Two residential buildings - 40 and 42 storeys (1,329 units)', '88 Park Street East', 1329);
+  const sp = node('SP 25-5', 'Site plan for two 21 mixed use towers', '88 Park Street East', 819);
+  assert.equal(T.replaceVerdict(oz, sp).verdict, 'resubmission', 'same buildings, same address');
+  const big = node('OZ 24-8', '5 mixed use buildings with heights ranging from 2 to 15 storey', '120, 128, 142, 154, 158 Queen St S', 1808);
+  const part = node('SP 25-17', 'Two mixed use buildings with retail at grade', '120, 128, 154 Queen St S', 526);
+  assert.equal(T.replaceVerdict(big, part).verdict, 'phase', 'fewer buildings on part of the addresses');
+  const other = node('SP 21-155', 'New 5 storey condo building', '190 Rutledge Road', 79);
+  const oz2 = node('OZ 10-5', '143 Condominium Apartments in 7 Storey Building', '56 Tannery Street', 210);
+  assert.notEqual(T.replaceVerdict(oz2, other).verdict, 'resubmission', 'a different civic address is another building');
+  assert.equal(T.buildingsOf('Residential development with 12 & 14 storey towers'), 2);
+  assert.equal(T.buildingsOf('Townhouse development'), null);
+  assert.deepEqual([...T.homeKinds('120 townhomes, 2 semi detached and 2 detached dwellings')].sort(), ['detached', 'semi', 'townhouse']);
+});
+
+test('chronology r3: every civic number counts, not only the first before a comma', () => {
+  const node = (ref, description, address, units) => T.fileNodes([app({ ref, description, address, units, poly: null })])[0];
+  const oz = node('OZ 21-15', '2 apartment buildings,15 townhouse blocks, and a public park', '5080, 5054, 5034 Ninth Line', 1244);
+  const sp = node('SP 26-27', 'Townhouse development', '5080 Ninth Line', 164);
+  const v = T.replaceVerdict(oz, sp);
+  assert.equal(v.addresses, 'part');
+  assert.equal(v.verdict, 'phase');
+});
