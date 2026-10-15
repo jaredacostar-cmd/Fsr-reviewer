@@ -158,6 +158,11 @@
           <div class="panel-head"><h2 class="label" data-info="watchlist">Your watchlist</h2><span class="muted small" id="watch-head"></span></div>
           <ol class="project-list" id="watch-list"></ol>
         </section>
+        <section class="panel" id="ce-week-panel" hidden>
+          <div class="panel-head"><h2 class="label" data-info="ce-week">Capital projects and EAs</h2><span class="muted small" id="ce-week-head"></span></div>
+          <ol class="project-list" id="ce-week-list"></ol>
+          <p class="small muted">General screening results only. Peel’s W&amp;WW Infrastructure Planning team must validate or confirm all results.</p>
+        </section>
         <section class="panel" id="alerts-panel" hidden>
           <div class="panel-head"><h2 class="label" data-info="alerts">Alerts for your watchlist</h2><span class="muted small" id="alerts-head"></span></div>
           <ol class="project-list" id="alerts-list"></ol>
@@ -307,8 +312,9 @@
         <div id="pumpstations-body"></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="dc" hidden role="group" aria-label="DC view"><button type="button" class="btn small" data-dcasub="timing">Timing</button><button type="button" class="btn small pv-hide" data-dcasub="recommendations">Funding screen</button><button type="button" class="btn small pv-hide" data-dcasub="funding">Funding levels</button></div>
+      <div class="f-pane f-subtabs" data-pane="dc" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="build">Construction &amp; EAs</button><button type="button" class="btn small pv-hide" data-dcasub="recommendations">Funding screen</button><button type="button" class="btn small pv-hide" data-dcasub="funding">Funding levels</button></div>
       <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
+      <section class="f-pane" id="pane-dca-build" data-pane="dca" data-sub="build" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-build-body"></div></section>
       <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="recommendations" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
       <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
@@ -433,8 +439,14 @@
   <script src="js/map-analysis.js?v=__BUILD__"></script>
   <script src="js/tool-scope.js?v=__BUILD__"></script>
   <script src="js/svc-scope.js?v=__BUILD__"></script>
+  <script src="js/profile-core.js?v=__BUILD__"></script>
   <script src="js/elevation.js?v=__BUILD__"></script>
+  <script src="js/profile-view.js?v=__BUILD__"></script>
   <script src="js/measure.js?v=__BUILD__"></script>
+  <script src="js/massing-core.js?v=__BUILD__"></script>
+  <script src="js/view-3d.js?v=__BUILD__"></script>
+  <script src="js/timebox-core.js?v=__BUILD__"></script>
+  <script src="js/time-box.js?v=__BUILD__"></script>
   <script src="js/dc-infra.js?v=__BUILD__"></script>
   <script src="js/sewer-cap.js?v=__BUILD__"></script>
   <script src="js/exist-pipes.js?v=__BUILD__"></script>
@@ -450,6 +462,9 @@
   <script src="js/layers.js?v=__BUILD__"></script>
   <script src="js/layer-bar.js?v=__BUILD__"></script>
   <script src="js/records-tab.js?v=__BUILD__"></script>
+  <script src="js/capital-ea-model.js?v=__BUILD__"></script>
+  <script src="js/map-pick.js?v=__BUILD__"></script>
+  <script src="js/capital-ea.js?v=__BUILD__"></script>
   <script src="js/dc-cost.js?v=__BUILD__"></script>
   <script src="js/dca-tab.js?v=__BUILD__"></script>
   <script src="js/plan-areas.js?v=__BUILD__"></script>

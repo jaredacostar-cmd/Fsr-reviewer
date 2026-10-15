@@ -21,19 +21,18 @@
   // ---- Ground elevation: js/elevation.js (the province's lidar terrain model, terrain tiles where
   // it has no value). elevAt keeps the number-only contract; ground() gives the value with its source.
   const EL = () => root.PeelElevation;
+  const PC = () => root.PeelProfileCore;
+  const PV = () => root.PeelProfileView;
   const elevAt = (lat, lng) => EL().elevAt(lat, lng);
   const ground = (lat, lng) => EL().getGround(lat, lng);
-  // Elevations along a polyline ([lat, lng] points), sampled about every 25 m (up to 120 samples),
-  // each with its source (one lidar request for the line).
+  // Elevations along a polyline ([lat, lng] points), each with its source and the leg it lies on.
+  // Spacing = max(5 m, the source's pixel, length / 600) (js/profile-core.js): at most 600 samples,
+  // never finer than the data. The source at the middle of the line sets the pixel (lidar 0.5 m,
+  // terrain tiles ~7 m here).
   async function elevProfile(pts) {
-    const segs = []; let tot = 0;
-    for (let i = 1; i < pts.length; i++) { const d = map.distance(pts[i - 1], pts[i]); segs.push(d); tot += d; }
-    const n = Math.max(2, Math.min(120, Math.round(tot / 25) + 1)), out = [];
-    for (let k = 0; k < n; k++) {
-      let t = tot * k / (n - 1), i = 0; while (i < segs.length - 1 && t > segs[i]) { t -= segs[i]; i++; }
-      const f = segs[i] ? Math.min(1, t / segs[i]) : 0, a = pts[i], b = pts[i + 1] || pts[i];
-      out.push({ d: tot * k / (n - 1), lat: a.lat + (b.lat - a.lat) * f, lng: a.lng + (b.lng - a.lng) * f });
-    }
+    const mid = pts[Math.floor(pts.length / 2)], probe = await ground(mid.lat, mid.lng).catch(() => null);
+    const pixel = probe && probe.source === 'lidar' ? probe.res || 0.5 : PC().pixelSizeM(EL().TERRAIN_Z || 14, mid.lat);
+    const out = PC().samplePoints(pts.map(p => ({ lat: p.lat, lng: p.lng })), pixel, (a, b) => map.distance([a.lat, a.lng], [b.lat, b.lng]));
     const g = await EL().getGroundMany(out);
     if (g.some(r => r.z == null)) throw new Error('elevation unavailable');
     return out.map((p, i) => ({ ...p, z: g[i].z, source: g[i].source, res: g[i].res, project: g[i].project }));
@@ -45,30 +44,6 @@
   const ptLetter = i => i < 26 ? String.fromCharCode(65 + i) : `P${i + 1}`;
   // Crossings along the line: streets (grey) and watercourses (blue), numbered in order.
   const XING = { street: { get color() { return tok('--xing-street'); }, label: 'Street' }, water: { get color() { return tok('--xing-water'); }, label: 'Watercourse' } };
-  function profileSVG(prof, W = 300, H = 90, marks = [], xings = []) {
-    // Pipes along the line (when looked up): sanitary invert (solid) and watermain at an assumed cover (dashed).
-    const zs = prof.flatMap(p => [p.z, p.san ? p.san.inv : p.z, p.wat ? p.z - WM_COVER : p.z]);
-    const lo = Math.floor(Math.min(...zs) - 1), hi = Math.ceil(Math.max(...zs) + 1), D = prof[prof.length - 1].d || 1;
-    const top = marks.length ? 16 : 6, X = d => 28 + d / D * (W - 34), Y = z => top + (1 - (z - lo) / (hi - lo || 1)) * (H - 16 - top);
-    const zAt = d => { let i = 1; while (i < prof.length - 1 && prof[i].d < d) i++; const a = prof[i - 1], b = prof[i] || a, f = b.d > a.d ? (d - a.d) / (b.d - a.d) : 0; return a.z + (b.z - a.z) * Math.max(0, Math.min(1, f)); };
-    // Measured points: a dashed drop line, a dot on the ground line and the letter above.
-    const markSVG = marks.map(m => `<g><line x1="${X(m.d).toFixed(1)}" x2="${X(m.d).toFixed(1)}" y1="${top - 2}" y2="${H - 16}" stroke="${m.c}" stroke-width="1" stroke-dasharray="2 2" opacity=".8"/><circle cx="${X(m.d).toFixed(1)}" cy="${Y(zAt(m.d)).toFixed(1)}" r="3.6" fill="${m.c}" stroke="var(--surface-1)" stroke-width="1.2"/><text x="${X(m.d).toFixed(1)}" y="${top - 5}" text-anchor="middle" font-size="9" font-weight="700" fill="${m.c}">${m.l}</text></g>`).join('');
-    // Crossings: a coloured tick on the ground line with its number.
-    const xingSVG = xings.map((x, k) => { const cx = X(x.d).toFixed(1), cy = Y(zAt(x.d)); return `<g><line x1="${cx}" x2="${cx}" y1="${(cy - 5).toFixed(1)}" y2="${(cy + 5).toFixed(1)}" stroke="${XING[x.kind].color}" stroke-width="2.4"/><text x="${cx}" y="${(cy + 14).toFixed(1)}" text-anchor="middle" font-size="8" font-weight="600" fill="${XING[x.kind].color}">${k + 1}</text></g>`; }).join('');
-    const line = prof.map((p, i) => `${i ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(p.z).toFixed(1)}`).join('');
-    // Runs of consecutive samples on a pipe, as separate paths.
-    const runs = (get) => { let d = '', on = false; for (const p of prof) { const z = get(p); if (z == null) { on = false; continue; } d += `${on ? 'L' : 'M'}${X(p.d).toFixed(1)},${Y(z).toFixed(1)}`; on = true; } return d; };
-    const san = runs(p => p.san ? p.san.inv : null), wat = runs(p => p.wat ? p.z - WM_COVER : null);
-    // Stretches from terrain tiles (outside the lidar coverage): the ground line dashed.
-    const coarse = prof.some(p => p.source === 'terrain') ? runs(p => p.source === 'terrain' ? p.z : null) : '';
-    const dots = (get, col) => prof.filter((p, i) => get(p) != null && get(prof[i - 1] || {}) == null && get(prof[i + 1] || {}) == null).map(p => `<circle cx="${X(p.d).toFixed(1)}" cy="${Y(get(p)).toFixed(1)}" r="2.6" fill="${col}"/>`).join('');
-    return `<svg class="elev-svg" viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Ground profile${coarse ? ' (dashed: terrain tiles, outside the lidar coverage)' : ''}${san ? ' with sanitary sewer inverts' : ''}${wat ? ' and watermains' : ''}">
-      <path d="${line}L${X(D)},${H - 16}L${X(0)},${H - 16}Z" fill="color-mix(in srgb, var(--accent) 18%, transparent)"/><path d="${line}" fill="none" stroke="var(--accent)" stroke-width="1.6"/>${coarse ? `<path class="elev-coarse" d="${coarse}" fill="none" stroke="var(--surface-1)" stroke-width="1.8" stroke-dasharray="3 3"/>` : ''}
-      ${san ? `<path d="${san}" fill="none" stroke="${tok(MM().EXIST_STYLE.sanitary.color)}" stroke-width="2.2"/>${dots(p => p.san ? p.san.inv : null, tok(MM().EXIST_STYLE.sanitary.color))}` : ''}
-      ${wat ? `<path d="${wat}" fill="none" stroke="${tok(MM().EXIST_STYLE.water.color)}" stroke-width="1.8" stroke-dasharray="4 3"/>${dots(p => p.wat ? p.z - WM_COVER : null, tok(MM().EXIST_STYLE.water.color))}` : ''}
-      ${xingSVG}${markSVG}
-      <g font-size="9" fill="var(--text-muted)"><text x="2" y="${Y(hi) + 4}">${hi} m</text><text x="2" y="${Y(lo)}">${lo} m</text><text x="${X(0)}" y="${H - 4}">0</text><text x="${X(D) - 2}" y="${H - 4}" text-anchor="end">${fmtDist(D)}</text></g></svg>`;
-  }
 
   // ---- Measure, buffer select and test-site tools -------------------------------------------
   // Measure: tap points on the map for the distance along them; Buffer: select the shown
@@ -116,8 +91,15 @@
     });
   }
   function measureDist() { return tool.pts.reduce((t, p, i) => i ? t + metres(tool.pts[i - 1], p) : 0, 0); }
+  // Measure along a line (tap points) or along a sewer (tap a sanitary main: manhole to manhole downstream).
+  let measureSub = 'line';
+  const subBtn = (id, label) => `<button type="button" class="btn small${measureSub === id ? ' on' : ''}" data-ptool-act="msub:${id}" aria-pressed="${measureSub === id}">${label}</button>`;
   function measureBannerHTML() {
-    return `<strong>Measure</strong> ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(measureDist())}</span>`}
+    const seg = `<span class="seg" role="group" aria-label="Measure along">${subBtn('line', 'Line')}${subBtn('sewer', 'Along a sewer')}</span>`;
+    if (measureSub === 'sewer') return `<strong>Measure</strong> ${seg} <span class="muted">tap a sanitary main to follow it downstream</span>
+      <span class="pt-row pt-elev" id="tp-elev"></span>
+      <span class="pt-row"><button type="button" class="btn small link" data-ptool-act="clear">Clear</button> <button type="button" class="btn small link" data-ptool-act="done">Done</button></span>`;
+    return `<strong>Measure</strong> ${seg} ${tool.pts.length < 2 ? '<span class="muted">tap points on the map</span>' : `<span>${fmtDist(measureDist())}</span>`}
       ${tool.pts.length ? '<span class="pt-row muted">To select developments within a distance, use Select › Radius.</span>' : ''}
       ${tool.pts.length ? '<span class="pt-row pt-elev" id="tp-elev"><span class="muted">Ground elevation…</span></span>' : ''}
       <span class="pt-row"><button type="button" class="btn small link" data-ptool-act="clear">Clear</button> <button type="button" class="btn small link" data-ptool-act="done">Done</button></span>`;
@@ -179,6 +161,7 @@
       hint: 'tap points on the map',
       bannerHTML: measureBannerHTML,
       onClick(latlng) {
+        if (measureSub === 'sewer') { sewerProfileAt(latlng); return; }
         tool.pts.push(latlng);
         toolLayer.clearLayers();
         if (tool.pts.length > 1) L.polyline(tool.pts, { className: 'measure-line', interactive: false }).addTo(toolLayer);
@@ -188,6 +171,7 @@
       onBannerAct(act) {
         if (act === 'done') { setTool(null); return; }
         if (act === 'clear') { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); refreshMeasureBanner(); return; }
+        if (act.startsWith('msub:')) { measureSub = act.slice(5); tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); refreshMeasureBanner(); }
       },
       onDeactivate() { tool.pts = []; toolLayer.clearLayers(); xingLayer.clearLayers(); },
     });
@@ -289,7 +273,7 @@
       let bw = null; for (const w of wat) { const n = nearOn(pt, w.g); if (n.m <= 8 && (!bw || n.m < bw.m)) bw = { ...n, w }; }
       p.wat = bw ? { d: bw.w.d, m: bw.m } : null;
     }
-    return { san: san.length, wat: wat.length };
+    return { san: san.length, wat: wat.length, mains: san };
   }
   function pipeDepthHTML(prof) {
     const s = prof.filter(p => p.san && !p.san.fm), w = prof.filter(p => p.wat);
@@ -297,8 +281,21 @@
     const dep = s.map(p => p.z - p.san.inv), wd = [...new Set(w.map(p => p.wat.d).filter(Boolean))].sort((a, b) => a - b);
     const r = (a, f = 1) => a.length ? (Math.min(...a) === Math.max(...a) ? Math.min(...a).toFixed(f) : `${Math.min(...a).toFixed(f)}–${Math.max(...a).toFixed(f)}`) : '';
     const sw = col => `<span class="lg-line" style="background:${col}"></span>`;
-    return `<span class="pd-row">${sw(tok(MM().EXIST_STYLE.sanitary.color))}${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong> <span class="muted">(ground − invert; ground from ${esc([...new Set(s.map(p => EL().shortLabel(p)))].join(' and '))})</span>` : 'No sanitary sewer within 12 m of the line'}</span>
+    return `<span class="pd-row">${sw(tok(MM().EXIST_STYLE.sanitary.color))}<span>${s.length ? `Sanitary sewer along ${Math.round(s.length / prof.length * 100)}% of the line (${ids.length} pipe${ids.length === 1 ? '' : 's'}${dia.length ? `, ${dia.map(d => `${d}`).join(' / ')} mm` : ''}): invert <strong>${r(s.map(p => p.san.inv))} m</strong>, depth to invert <strong>≈${r(dep)} m</strong> <span class="muted">(ground − invert; ground from ${esc([...new Set(s.map(p => EL().shortLabel(p)))].join(' and '))})</span>` : 'No sanitary sewer within 12 m of the line'}</span></span>
       <span class="pd-row">${sw(tok(MM().EXIST_STYLE.water.color))}${w.length ? `Watermain along ${Math.round(w.length / prof.length * 100)}% of the line${wd.length ? ` (${wd.join(' / ')} mm)` : ''}: depth not published — drawn at ${WM_COVER} m cover (assumed)` : 'No watermain within 8 m of the line'}</span>`;
+  }
+  // A polite fetch for public APIs (Overpass): at most 3 tries, backing off 1 s, 2 s (or the server's
+  // Retry-After) on HTTP 429, a 5xx or a network error.
+  async function politeFetch(url, opts, tries = 3, wait = ms => new Promise(r => setTimeout(r, ms))) {
+    for (let k = 1; ; k++) {
+      let r = null;
+      try { r = await fetch(url, opts); } catch (e) { if (k >= tries) throw e; }
+      if (r && r.ok) return r;
+      if (r && r.status !== 429 && r.status < 500) throw new Error(`HTTP ${r.status}`);
+      if (k >= tries) throw new Error(r ? `HTTP ${r.status}` : 'network');
+      const ra = r && +r.headers.get('Retry-After');
+      await wait(ra > 0 ? Math.min(ra, 30) * 1000 : 1000 * 2 ** (k - 1));
+    }
   }
   // Streets and watercourses the line crosses (OpenStreetMap, or the provincial watercourses
   // when the constraint layers module has them): where, and their names.
@@ -311,7 +308,7 @@
     if (!xingCache.has(key)) xingCache.set(key, (async () => {
       const bb = `${b.s},${b.w},${b.n},${b.e}`;
       const ql = `[out:json][timeout:25];(way["highway"~"^(motorway|trunk|primary|secondary|tertiary|unclassified|residential|living_street|motorway_link|trunk_link|primary_link|secondary_link)$"](${bb});way["waterway"~"^(river|stream|canal|drain|ditch|brook)$"](${bb}););out geom tags;`;
-      const r = await fetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(ql), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+      const r = await politeFetch('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(ql), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
       const j = await r.json();
       const lines = (j.elements || []).filter(e => e.geometry).map(e => ({ kind: e.tags.waterway ? 'water' : 'street', name: e.tags.name || e.tags.ref || '', g: e.geometry.map(q => [q.lon, q.lat]) }));
       // The provincial watercourses (Ontario Hydro Network) replace OSM's when they loaded.
@@ -356,24 +353,96 @@
     return `<span class="pd-row elev-src" data-runs="${runs.length}">${runs.map(r => `<span class="elev-run elev-${r.source || 'none'}">${esc(r.label)}${r.project ? ` (${esc(r.project)})` : ''}${runs.length > 1 ? ` <span class="muted">${fmtDist(r.from)}–${fmtDist(r.to)}</span>` : ''}</span>`).join(' · ')}</span>`;
   }
   let elevSeq = 0;
+  // The accuracy label: the dominant source over the line, from the validation table (never
+  // hard-coded); lidar names its project and year.
+  function accuracyOf(prof) {
+    const lid = prof.filter(p => p.source === 'lidar'), src = lid.length >= prof.length / 2 ? 'lidar' : 'terrain';
+    const mid = prof[Math.floor(prof.length / 2)], proj = (lid[0] || {}).project || null;
+    const year = proj && (String(proj).match(/(19|20)\d\d/) || [])[0];
+    return PC().accuracyLabel(PV().getTable(), mid.lat, mid.lng, src, { project: proj, year: year ? +year : null }).text;
+  }
   async function fillElev(pts) {
     const seq = ++elevSeq;
     try {
-      if (pts.length === 1) { const r = await ground(pts[0].lat, pts[0].lng); if (r.z == null) throw new Error('unavailable'); if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${r.z.toFixed(1)} m</strong> <span class="muted">above sea level · ${esc(r.label)} · tap another point for a profile</span>`; return; }
-      const prof = await elevProfile(pts); if (seq !== elevSeq || !$('#tp-elev')) return;
+      if (pts.length === 1) {
+        const r = await ground(pts[0].lat, pts[0].lng); if (r.z == null) throw new Error('unavailable');
+        await PV().loadTable();
+        if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = `Ground <strong>${r.z.toFixed(1)} m</strong> <span class="muted">above sea level · ${esc(r.label)} · tap another point for a profile</span><span class="pd-row muted small">${esc(PC().accuracyLabel(PV().getTable(), pts[0].lat, pts[0].lng, r.source, { project: r.project }).text)}</span>`;
+        return;
+      }
+      const [raw] = await Promise.all([elevProfile(pts), PV().loadTable()]); if (seq !== elevSeq || !$('#tp-elev')) return;
       let cum = 0; const marks = pts.map((p, i) => { if (i) cum += map.distance(pts[i - 1], p); return { d: cum, c: ptColor(i, pts.length), l: ptLetter(i) }; });
-      const a = prof[0].z, b = prof[prof.length - 1].z, D = prof[prof.length - 1].d, zs = prof.map(p => p.z);
-      const head = `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m</span>`;
-      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, 96, marks)}${sourceRunsHTML(prof)}<span class="muted small">Looking up sewers, watermains, streets and watercourses along the line…</span>`;
-      const [pipes, xs] = await Promise.all([pipesAlong(prof).catch(() => null), crossingsAlong(pts).catch(() => undefined)]);
+      const colors = { san: tok(MM().EXIST_STYLE.sanitary.color), wat: tok(MM().EXIST_STYLE.water.color), xing: { street: XING.street.color, water: XING.water.color } };
+      const headOf = prof => { const a = prof[0].z, b = prof[prof.length - 1].z, D = prof[prof.length - 1].d, zs = prof.map(p => p.z); return `<span>Ground ${a.toFixed(1)} → ${b.toFixed(1)} m · ${b < a ? 'falls' : 'rises'} <strong>${Math.abs(b - a).toFixed(1)} m</strong> (${(Math.abs(b - a) / D * 100).toFixed(2)}%) · range ${Math.min(...zs).toFixed(0)}–${Math.max(...zs).toFixed(0)} m · ${raw.length} samples</span>`; };
+      const accuracy = accuracyOf(raw);
+      const base = { prof: raw.map(p => ({ ...p, zRaw: p.z })), marks, xings: [], manholes: [], colors, wmCover: WM_COVER, sourcesNote: EL().sourcesNote(raw), accuracy };
+      PV().render($('#tp-elev'), { ...base, head: headOf(raw), tail: `${sourceRunsHTML(raw)}<span class="pd-row muted small">${esc(accuracy)}</span><span class="muted small">Looking up sewers, manholes, watermains, streets and watercourses along the line…</span>` });
+      const [pipes, xs] = await Promise.all([pipesAlong(raw).catch(() => null), crossingsAlong(pts).catch(() => undefined)]);
       if (seq !== elevSeq || !$('#tp-elev')) return;
       drawCrossings(xs || []);
-      $('#tp-elev').innerHTML = `${head}${profileSVG(prof, 300, pipes ? 126 : 100, marks, xs || [])}
-        <span class="pd-row mpt-key">${marks.map(m => `<span><i style="background:${m.c}"></i>${m.l}${m.d ? ` ${fmtDist(m.d)}` : ''}</span>`).join('')}</span>
-        ${xs === null ? '<span class="pd-row muted">Line too long to look up crossings</span>' : xs ? crossingsHTML(xs) : '<span class="pd-row muted">Streets and watercourses did not load.</span>'}
-        ${pipes ? pipeDepthHTML(prof, pipes) : '<span class="muted small">Sewer and watermain layers did not load.</span>'}
-        ${sourceRunsHTML(prof)}<span class="muted small">${esc(EL().sourcesNote(prof))}${prof.some(p => p.source === 'terrain') ? ' Depths over the terrain-tile stretch are approximate.' : ''} Sewer inverts: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed). Streets: OpenStreetMap. Watercourses: ${CN() && CN().watercourseSource ? CN().watercourseSource() : 'OpenStreetMap'}.</span>`;
+      // Peel manhole ground (invert + published depth) within 15 m of the line, and the DEM corrected
+      // between manholes no more than 150 m apart (never extrapolated; the raw value kept).
+      const mid = raw[Math.floor(raw.length / 2)], dat = PV().datumShift(mid.lat, mid.lng);
+      const mhs = pipes ? PC().matchManholes(raw, PC().manholesFromMains(pipes.mains.map(m => ({ id: m.id, g: m.g, up: m.up, dn: m.dn, dUp: m.dUp, dDn: m.dDn, fm: m.fm })))) : [];
+      const corr = PC().correct(raw, mhs, { shift: dat.shift });
+      const prof = corr.prof.map((p, i) => ({ ...p, san: raw[i].san, wat: raw[i].wat }));
+      const nCorr = prof.filter(p => p.corrected).length;
+      const corrNote = mhs.length ? `${mhs.length} Peel manhole${mhs.length === 1 ? '' : 's'} within ${PC().MANHOLE_MATCH_M} m of the line (ground = invert + published depth); ${nCorr ? `the ground is corrected to them over ${Math.round(nCorr / prof.length * 100)}% of the line (between manholes no more than ${PC().CORRECT_SPAN_M} m apart; never extrapolated)` : `none close enough together (≤ ${PC().CORRECT_SPAN_M} m) to correct between`}. ${dat.note}` : `No Peel manhole with a published depth within ${PC().MANHOLE_MATCH_M} m of the line: the ground is the DEM, uncorrected.`;
+      PV().render($('#tp-elev'), { ...base, prof, manholes: corr.manholes, spans: corr.spans, xings: xs || [], pipes, datumNote: dat.note, head: headOf(prof),
+        tail: `<span class="pd-row mpt-key">${marks.map(m => `<span><i style="background:${m.c}"></i>${m.l}${m.d ? ` ${fmtDist(m.d)}` : ''}</span>`).join('')}</span>
+          ${xs === null ? '<span class="pd-row muted">Line too long to look up crossings</span>' : xs ? crossingsHTML(xs) : '<span class="pd-row muted">Streets and watercourses did not load.</span>'}
+          ${pipes ? pipeDepthHTML(prof, pipes) : '<span class="muted small">Sewer and watermain layers did not load.</span>'}
+          <span class="pd-row small">${esc(corrNote)}</span>
+          ${sourceRunsHTML(raw)}<span class="pd-row muted small">${esc(accuracy)}</span><span class="muted small">${esc(EL().sourcesNote(raw))}${raw.some(p => p.source === 'terrain') ? ' Depths over the terrain-tile stretch are approximate.' : ''} Sewer inverts and depths: Region of Peel sanitary mains. Watermain depth is not published: shown at Peel's ${WM_COVER} m minimum cover (assumed). Streets: OpenStreetMap. Watercourses: ${CN() && CN().watercourseSource ? CN().watercourseSource() : 'OpenStreetMap'}.</span>` });
     } catch (e) { if (seq === elevSeq && $('#tp-elev')) $('#tp-elev').innerHTML = '<span class="muted">Ground elevation unavailable (neither the lidar service nor the terrain tiles answered).</span>'; }
+  }
+  // ---- Profile along a sewer: from the main nearest the tap, downstream manhole to manhole ----------
+  // Peel's mains are digitized upstream → downstream; the next main starts within 1.5 m of the last
+  // one's downstream end. Stops at 40 pipes or 3 km, or where no gravity main continues.
+  const SEWER_FIELDS = 'FacilityID,Diameter,InvertUp,InvertDown,DepthUp,DepthDown,MainType';
+  async function mainsNear(lat, lng, r) {
+    const S = EP().EXIST.sanitary[0], info = await A.layerInfo(S.url);
+    const dy = r / 111320, dx = r / (111320 * Math.cos(lat * Math.PI / 180));
+    const fs = (await A.queryAll(S.url, info, { bbox: { xmin: lng - dx, ymin: lat - dy, xmax: lng + dx, ymax: lat + dy }, max: 400, outFields: SEWER_FIELDS })).features;
+    const lines = f => !f.geometry ? [] : f.geometry.type === 'MultiLineString' ? f.geometry.coordinates : [f.geometry.coordinates];
+    return fs.flatMap(f => { const p = f.properties || {}; return lines(f).map(g => ({ g, id: p.FacilityID || '', up: +p.InvertUp || null, dn: +p.InvertDown || null, dUp: +p.DepthUp || 0, dDn: +p.DepthDown || 0, d: +p.Diameter || 0, fm: /FM/.test(p.MainType || '') })); });
+  }
+  const lenOf = g => g.reduce((t, q, i) => (i ? t + PC().haversine({ lat: g[i - 1][1], lng: g[i - 1][0] }, { lat: q[1], lng: q[0] }) : 0), 0);
+  async function sewerWalk(ll, maxPipes = 40, maxM = 3000) {
+    const near = (await mainsNear(ll.lat, ll.lng, 30)).filter(m => !m.fm);
+    let best = null; for (const m of near) { const n = nearOn([ll.lng, ll.lat], m.g); if (n.m <= 30 && (!best || n.m < best.n.m)) best = { m, n }; }
+    if (!best) return { route: [], stopped: 'no sanitary main within 30 m' };
+    const route = [best.m], seen = new Set([best.m.g.map(c => c.join()).join(';')]); let total = lenOf(best.m.g), stopped = null;
+    while (true) {
+      if (route.length >= maxPipes) { stopped = `stopped after ${maxPipes} pipes`; break; }
+      if (total >= maxM) { stopped = `stopped after ${fmtDist(maxM)}`; break; }
+      const end = route[route.length - 1].g[route[route.length - 1].g.length - 1];
+      const next = (await mainsNear(end[1], end[0], 4)).filter(m => !m.fm && !seen.has(m.g.map(c => c.join()).join(';')) && PC().haversine({ lat: m.g[0][1], lng: m.g[0][0] }, { lat: end[1], lng: end[0] }) <= 1.5);
+      if (!next.length) { stopped = route.length > 1 ? 'no gravity main continues downstream (a pumping station, a force main or the edge of the data)' : 'no downstream main joins this one'; break; }
+      next.sort((a, b) => b.d - a.d || (a.up || 0) - (b.up || 0));
+      route.push(next[0]); seen.add(next[0].g.map(c => c.join()).join(';')); total += lenOf(next[0].g);
+    }
+    return { route: route.map(m => ({ ...m, len: lenOf(m.g) })), stopped };
+  }
+  let sewerSeq = 0;
+  async function sewerProfileAt(ll) {
+    const seq = ++sewerSeq, el = () => $('#tp-elev');
+    toolLayer.clearLayers();
+    if (el()) el().innerHTML = '<span class="muted">Following the sewer downstream…</span>';
+    try {
+      const [{ route, stopped }] = await Promise.all([sewerWalk(ll), PV().loadTable()]);
+      if (seq !== sewerSeq || !el()) return;
+      if (route.length) {
+        L.polyline(route.map(m => m.g.map(([x, y]) => [y, x])), { className: 'measure-line', interactive: false }).addTo(toolLayer);
+        // The raw DEM at each manhole, for comparison (lidar / terrain tiles; not corrected).
+        const pts = route.flatMap(m => [{ lat: m.g[0][1], lng: m.g[0][0] }, { lat: m.g[m.g.length - 1][1], lng: m.g[m.g.length - 1][0] }]);
+        const g = await EL().getGroundMany(pts).catch(() => null);
+        route.forEach((m, i) => { if (g) { m.demUp = g[2 * i] && g[2 * i].z; m.demDn = g[2 * i + 1] && g[2 * i + 1].z; } });
+      }
+      if (seq !== sewerSeq || !el()) return;
+      const dat = PV().datumShift(ll.lat, ll.lng);
+      el().innerHTML = PV().sewerHTML(route, { stopped, sanColor: tok(MM().EXIST_STYLE.sanitary.color), datumNote: dat.note });
+    } catch (e) { if (seq === sewerSeq && el()) el().innerHTML = '<span class="muted">The sanitary mains did not load — try again in a moment.</span>'; }
   }
   map.on('click', e => {
     // Phase 3b: registered tools (select, measure, trace, test-a-site, inspect point,
@@ -385,7 +454,7 @@
   function setTraceDir(d) { traceDir = d; }
 
   // ---- Public contract ------------------------------------------------------------------
-  const api = { tool, setTool, hasTools, metres, fmtDist, elevAt, elevProfile, setSelectSub, openSelectionResult, bufferSelect, nearestShownDev, getSelectSub, getTraceDir, setTraceDir };
+  const api = { politeFetch, sewerWalk, tool, setTool, hasTools, metres, fmtDist, elevAt, elevProfile, setSelectSub, openSelectionResult, bufferSelect, nearestShownDev, getSelectSub, getTraceDir, setTraceDir };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelMeasure = api;
 })(typeof window !== 'undefined' ? window : globalThis);

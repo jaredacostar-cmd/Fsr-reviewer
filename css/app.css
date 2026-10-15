@@ -10,6 +10,7 @@
    --area-sp/--area-mtsa: secondary-plan / MTSA outlines.
    --pipe-water/--pipe-sanitary/--pipe-storm: existing network lines.
    --dc-ww-main/--dc-ww-local/--dc-ww-force, --dc-w-trans/--dc-w-feed: 2026 DC planned works.
+   --cons-build/--cons-plan: Region capital projects (under construction / planned). --ea-line: EA outlines.
    --hl-sub: sub-project highlight violet (also the "unknown" data-quality colour).
    --q-est: estimated data-quality. --time-soon/--time-mid: servicing-timing steps.
    --layer-proposed: "proposed" servicing layer. --map-label/--map-halo: fixed
@@ -37,6 +38,7 @@
   --ph-construction: #1b8166;
   --ph-completed: #9ca3af;
   --ph-cancelled: #676e7b;
+  --b3d-known: #d3d7de; --b3d-est: #8d94a1; --hill-shadow: #000000; --hill-light: #ffffff;
   --cap-over: #f0665f;
   --cap-tight: #ffa94d;
   --cap-room: #51cf66;
@@ -64,6 +66,9 @@
   --dc-ww-force: #c07ae0;
   --dc-w-trans: #7d9bf0;
   --dc-w-feed: #5aa7ec;
+  --cons-build: #f1f3f5;
+  --cons-plan: #ced4da;
+  --ea-line: #d9a066;
   --hl-sub: #c07ae0;
   --q-est: #7cc4f8;
   --time-soon: #a9e34b;
@@ -106,6 +111,7 @@
     --ph-construction: #176b54;
     --ph-completed: #7f868f;
     --ph-cancelled: #5c626e;
+    --b3d-known: #c3c8d0; --b3d-est: #7d8592; --hill-shadow: #3a3a3a; --hill-light: #ffffff;
     --cap-over: #e03131;
     --cap-tight: #b26a00;
     --cap-room: #2f9e44;
@@ -134,6 +140,9 @@
     --dc-ww-force: #9c36b5;
     --dc-w-trans: #1c3d8f;
     --dc-w-feed: #1c7ed6;
+    --cons-build: #212529;
+    --cons-plan: #495057;
+    --ea-line: #8a5a2b;
     --hl-sub: #9c36b5;
     --q-est: #4dabf7;
     --time-soon: #74b816;
@@ -177,6 +186,7 @@
   --ph-construction: #176b54;
   --ph-completed: #7f868f;
   --ph-cancelled: #5c626e;
+  --b3d-known: #c3c8d0; --b3d-est: #7d8592; --hill-shadow: #3a3a3a; --hill-light: #ffffff;
   --cap-over: #e03131;
   --cap-tight: #b26a00;
   --cap-room: #2f9e44;
@@ -203,6 +213,9 @@
   --dc-ww-force: #9c36b5;
   --dc-w-trans: #1c3d8f;
   --dc-w-feed: #1c7ed6;
+  --cons-build: #212529;
+  --cons-plan: #495057;
+  --ea-line: #8a5a2b;
   --hl-sub: #9c36b5;
   --q-est: #4dabf7;
   --time-soon: #74b816;
@@ -1402,7 +1415,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tool-banner[hidden] { display: none; }
 .tool-banner strong { font-weight: 600; }
 .tool-banner .pt-row { display: inline-flex; gap: var(--space-1); align-items: center; flex-wrap: wrap; }
-.tool-banner .pt-elev { flex-basis: 100%; }
+.tool-banner .pt-elev { flex-basis: 100%; min-width: 0; max-width: 100%; }
 .tool-banner .seg { display: inline-flex; gap: 2px; background: var(--surface-2); border-radius: var(--radius-panel); padding: 2px; }
 .tool-banner .seg .btn.small { border: 0; background: transparent; }
 .tool-banner .seg .btn.small.on { background: var(--accent); color: var(--on-accent); }
@@ -2169,6 +2182,27 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pf-sw.pipe { border: 1.2px solid var(--text-secondary); background: color-mix(in srgb, var(--text-primary) 8%, transparent); }
 .pf-sw.water { background: var(--ph-review); } .pf-sw.near { background: var(--select); } .pf-sw.over { background: var(--cap-over); }
 
+/* Measure: ground profile (profile-view.js). Dark first; fits a 380 px phone. */
+.prof-wrap .prof-chart { touch-action: pan-y; cursor: crosshair; }
+.prof-wrap .prof-tip { width: min(240px, 90%); top: 4px; }
+.prof-big .prof-chart { min-height: 220px; }
+.prof-shallow { fill: color-mix(in srgb, var(--cap-tight) 22%, transparent); }
+.prof-mh { fill: var(--surface-1); stroke: var(--text-primary); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.lg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; margin-right: var(--space-1); }
+.prof-mh-dot { background: var(--surface-1); border: 1.5px solid var(--text-primary); }
+.lg-box { display: inline-block; width: 14px; height: 10px; border-radius: 2px; flex: none; margin-right: var(--space-1); }
+.prof-shallow-key { background: color-mix(in srgb, var(--cap-tight) 30%, transparent); }
+.lg-line.lg-thick { height: 6px; }
+.lg-line.lg-dash { height: 0; border-top: 2px dashed; background: none; }
+.prof-legend, .prof-grades { flex-wrap: wrap; gap: var(--space-1) var(--space-3); font-size: var(--fs-2); }
+.prof-legend > span, .prof-grades > span { display: inline-block; }
+.prof-legend .lg-line, .prof-legend .lg-dot, .prof-legend .lg-box { vertical-align: middle; }
+.prof-tools { flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.prof-thr { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--fs-2); }
+.prof-thr input { width: 4.5em; }
+.prof-sewer tr.warn td { color: var(--cap-over); }
+.prof-sewer th, .prof-sewer td { white-space: nowrap; }
+
 /* Pipe picked on the sewer profile, marked on the map */
 .pipe-hl { stroke: var(--cap-tight); stroke-width: 14; stroke-opacity: .6; stroke-linecap: round; fill: none; animation: pipe-hl 1.2s ease-in-out 3; }
 @keyframes pipe-hl { 50% { stroke-opacity: .15; } }
@@ -2424,7 +2458,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   details > summary { display: flex; align-items: center; }
   .leaflet-touch .leaflet-bar a, .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
   .pipeline button, .f-tab { min-height: 44px; min-width: 44px; }
-  #north-btn, .north-ctl button, .sel-ctl button, .tool-rail button { width: 44px; height: 44px; }
+  #north-btn, .north-ctl button, .sel-ctl button, .tool-rail button, .view3d-ctl button { width: 44px; height: 44px; }
   .tool-rail { display: grid; grid-template-columns: repeat(2, 44px); }   /* two columns: 44 px buttons still fit the phone map */
   .tool-rail button:first-child, .tool-rail button:last-child { border-radius: 0; }
   input[type="range"] { min-height: 44px; }
@@ -2555,3 +2589,88 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 #analysis.site-scope #screen-note-top { display: none; }
 /* The development's Files & history is the Records tab; its Overview keeps About and Site. */
 #pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }
+/* Construction and EAs (js/capital-ea.js) and the tap picker (js/map-pick.js) */
+.lg-line.dot { background: repeating-linear-gradient(90deg, var(--c) 0 2px, transparent 2px 6px); }
+.ce-lbl span { display: inline-block; white-space: nowrap; font-size: 11px; font-weight: 600; color: var(--map-label); text-shadow: 0 0 3px var(--map-halo), 0 0 2px var(--map-halo); transform: translate(-50%, -140%); pointer-events: none; }
+.ce-lbl-ea span { font-weight: 500; font-style: italic; }
+.ce-badge { display: inline-block; padding: 0 var(--space-1); border-radius: 4px; font-size: .8em; font-weight: 600; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-primary); }
+.ce-building { border-color: var(--cons-build); }
+.ce-planned { border-style: dashed; }
+.ce-approx { border-style: dashed; font-weight: 500; }
+.ce-ea-complete { border-color: var(--text-muted); }
+.ce-ea-consultation, .ce-ea-report-review { border-color: var(--ea-line); }
+.ce-head h3 { margin: 0 0 var(--space-1); }
+.ce-head .m { color: var(--text-secondary); font-size: .9em; }
+.ce-purpose { margin: var(--space-2) 0; }
+.ce-tl { list-style: none; margin: 0; padding: 0 0 0 var(--space-3); border-left: 2px solid var(--border); }
+.ce-tl li { position: relative; padding: 2px 0; font-size: .9em; }
+.ce-tl li::before { content: ''; position: absolute; left: calc(-1 * var(--space-3) - 5px); top: .55em; width: 8px; height: 8px; border-radius: 50%; background: var(--ea-line); }
+.ce-tl li.next::before { background: transparent; border: 2px solid var(--ea-line); width: 6px; height: 6px; }
+.ce-tl .d { display: inline-block; min-width: 7.5em; color: var(--text-secondary); }
+.ce-bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; max-width: 22em; }
+.ce-bar i { display: block; height: 100%; background: var(--cons-build); }
+.ce-ms td, .ce-ms th { padding: 2px var(--space-2); }
+.ce-foot { margin-top: var(--space-3); border-top: 1px solid var(--border); padding-top: var(--space-2); }
+.ce-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; margin-top: var(--space-2); }
+.pick { min-width: 220px; }
+.pick-h { font-weight: 600; margin-bottom: var(--space-1); }
+.pick-l { list-style: none; margin: 0; padding: 0; }
+.pick-i { display: flex; gap: var(--space-2); align-items: flex-start; width: 100%; min-height: 44px; text-align: left; background: none; border: 0; border-radius: 6px; padding: var(--space-1); color: inherit; cursor: pointer; }
+.pick-i:hover, .pick-i:focus-visible { background: var(--surface-2); outline: 2px solid var(--focus); outline-offset: -2px; }
+.pick-i .t { display: block; }
+.pick-i .m { display: block; font-size: .85em; color: var(--text-secondary); }
+.pick-sw { flex: none; width: 14px; height: 4px; margin-top: .6em; border-radius: 2px; }
+.pick-ctx { margin-top: var(--space-2); display: flex; flex-wrap: wrap; gap: var(--space-1); align-items: center; }
+.pick-pop .leaflet-popup-content-wrapper { background: var(--surface-1); color: var(--text-primary); }
+.pick-pop .leaflet-popup-tip { background: var(--surface-1); }
+.pick-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200; max-height: 60vh; overflow: auto; background: var(--surface-1); color: var(--text-primary); border-top: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: var(--space-3) var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom)); box-shadow: var(--shadow); }
+.pick-sheet .pick-x { position: absolute; top: var(--space-2); right: var(--space-2); min-width: 44px; min-height: 44px; }
+
+/* 3D view (js/view-3d.js): a MapLibre map over the Leaflet map. Dark first; fits 380 px. */
+.view3d-ctl button { width: 34px; height: 34px; border: 0; background: var(--surface-1); color: var(--text-primary); font-weight: 700; font-size: var(--fs-2); cursor: pointer; border-radius: 4px; }
+.view3d-ctl button:hover { background: var(--surface-2); }
+.view3d { position: absolute; inset: 0; z-index: 1200; background: var(--surface-0, var(--surface-1)); }
+.view3d[hidden] { display: none; }
+.view3d .v3-map { position: absolute; inset: 0; }
+.v3-bar { position: absolute; top: var(--space-2); left: var(--space-2); right: 56px; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: var(--radius-panel); box-shadow: var(--shadow); padding: var(--space-1) var(--space-2); font-size: var(--fs-2); max-width: 640px; }
+.v3-bar .btn { min-height: 36px; }
+.v3-chk { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 36px; }
+.v3-chk[hidden] { display: none; }
+.v3-legend { position: absolute; left: var(--space-2); bottom: 40px; width: min(340px, calc(100% - 2 * var(--space-2))); max-height: 45%; overflow: auto; background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: var(--radius-panel); box-shadow: var(--shadow); padding: var(--space-1) var(--space-2); font-size: var(--fs-2); }
+.v3-legend summary { cursor: pointer; font-weight: 600; min-height: 32px; display: flex; align-items: center; }
+.v3-sec { margin: var(--space-1) 0; }
+.v3-sec p { margin: 2px 0 0; }
+.v3-keys { display: flex; flex-wrap: wrap; gap: 2px var(--space-3); margin-top: 2px; }
+.v3-keys > span { display: inline-flex; align-items: center; gap: var(--space-1); }
+.v3-sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; border: 1px solid color-mix(in srgb, var(--text-primary) 30%, transparent); }
+.v3-msg { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surface-1); color: var(--text-primary); border-radius: var(--radius-panel); box-shadow: var(--shadow); padding: var(--space-2) var(--space-3); max-width: 90%; text-align: center; }
+.v3-msg[hidden] { display: none; }
+.view3d .maplibregl-popup-content { background: var(--surface-1); color: var(--text-primary); font-size: var(--fs-2); line-height: 1.35; }
+.view3d .maplibregl-popup-tip { border-top-color: var(--surface-1); border-bottom-color: var(--surface-1); }
+.v3-attrib { position: absolute; right: 0; bottom: 0; left: 0; padding: 2px var(--space-2); background: color-mix(in srgb, var(--surface-1) 85%, transparent); color: var(--text-secondary); font-size: 11px; line-height: 1.3; }
+@media (max-width: 480px) { .v3-legend { max-height: 38%; } .v3-bar { right: 48px; } }
+.view3d .maplibregl-ctrl-group { background: var(--surface-1); border: 1px solid var(--border); }
+.view3d .maplibregl-ctrl-group button + button { border-top-color: var(--border); }
+:root[data-theme="dark"] .view3d .maplibregl-ctrl-icon { filter: invert(1); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) .view3d .maplibregl-ctrl-icon { filter: invert(1); } }
+@media (max-width: 480px) { .v3-attrib { font-size: 10px; } .v3-legend { bottom: 56px; } }
+
+/* Time Box (js/time-box.js): imagery over the years inside a dragged box. Dark first; fits 380 px. */
+.tb-drawing, .tb-drawing .leaflet-interactive { cursor: crosshair !important; }
+.leaflet-container.tb-drawing, .leaflet-container.tb-drawing * { touch-action: none !important; }
+.tb-active .leaflet-marker-pane, .tb-active .leaflet-overlay-pane, .tb-active .leaflet-tooltip-pane { opacity: .25; }
+.tb-row { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); }
+.tb-slider { display: inline-flex; align-items: center; gap: var(--space-2); flex: 1 1 180px; min-width: 0; }
+.tb-slider input[type="range"] { flex: 1 1 auto; min-width: 120px; accent-color: var(--accent); }
+.tb-year { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 4ch; }
+.tb-more { flex-basis: 100%; }
+.tb-more summary { cursor: pointer; min-height: 28px; display: flex; align-items: center; gap: var(--space-1); flex-wrap: wrap; }
+.tb-more[open] #tb-info { display: block; margin-top: var(--space-1); max-height: 30vh; overflow: auto; }
+.tb-chk { display: inline-flex; align-items: center; gap: var(--space-1); min-height: 32px; }
+.tb-prog { display: inline-block; width: 120px; height: 6px; border-radius: 3px; background: var(--surface-2); vertical-align: middle; overflow: hidden; }
+.tb-prog-bar { display: block; height: 100%; background: var(--accent); transition: width .3s; }
+.tb-swipe { position: absolute; z-index: 700; width: 4px; margin-left: -2px; background: var(--accent); cursor: ew-resize; touch-action: none; }
+.tb-swipe[hidden] { display: none; }
+.tb-swipe-grip { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-weight: 700; box-shadow: var(--shadow); }
+.tb-swipe:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (pointer: coarse) { .tb-swipe-grip { width: 44px; height: 44px; } }

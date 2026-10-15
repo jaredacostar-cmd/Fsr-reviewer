@@ -78,7 +78,8 @@
   const LG = () => window.PeelLayerGroups;
   function initialOn() {
     const hill = store.get('hillshade', false) === true, cx = store.get('cxOn', {}) || {}, wf = (WT() || {}).WF;
-    const m = { devs: devsOn, heat: mstyle.show === 'heat', hov: hov.on, cap: mstyle.cap !== 'off', pz: svcOn.pz, bk: svcOn.bk, dr: svcOn.dr, 'ex-water': existOn.water, 'ex-sanitary': existOn.sanitary, 'ex-storm': existOn.storm, wf: wf ? wf.on : false, dcw: dcOn.on, sp: areaOn.sp, pr: areaOn.pr, mtsa: areaOn.mtsa, da: CA().getDaOn(), hill };
+    const ce = store.get('ceOn', {}) || {};
+    const m = { cons: !!ce.cons, ea: !!ce.ea, devs: devsOn, heat: mstyle.show === 'heat', hov: hov.on, cap: mstyle.cap !== 'off', pz: svcOn.pz, bk: svcOn.bk, dr: svcOn.dr, 'ex-water': existOn.water, 'ex-sanitary': existOn.sanitary, 'ex-storm': existOn.storm, wf: wf ? wf.on : false, dcw: dcOn.on, sp: areaOn.sp, pr: areaOn.pr, mtsa: areaOn.mtsa, da: CA().getDaOn(), hill };
     for (const [k, v] of Object.entries(cx)) m[k] = !!v;
     return new Set(Object.keys(m).filter(k => m[k]));
   }
@@ -113,7 +114,7 @@
         <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-psum" id="mo-psum"></span></summary>
         <div class="mo-layers lg-groups" role="group" aria-label="Map layers" data-info="map-layers">
           ${LG().panelHTML({ on: initialOn(), open: LG().getOpen(), inView: null, swatch: layerSwatch, view: (() => { const v = store.get('mapView', 'planning'); const m = MAP_VIEWS.find(x => x[0] === (v === 'servicing' ? 'water' : v)) || MAP_VIEWS[0]; return { key: m[0], label: m[1] }; })(), extra: {
-            infra: '<small id="exist-note" data-info="existing-pipes"></small>',
+            infra: '<div id="ce-settings"></div><small id="exist-note" data-info="existing-pipes"></small>',
             cx: '<small class="cx-note" id="cx-note"></small>',
             base: `<label class="mo-sel" data-info="opt-basemap"><span>Background</span><select id="opt-basemap">${opts(MC().BASEMAPS, MC().getBasemap())}</select></label>
               <label class="mo-sel" data-info="opt-labels"><span>Labels</span><select id="opt-labels">${opts(ML().LABEL_MODES, ML().getLabelMode())}</select></label>

@@ -66,6 +66,7 @@
     ['inspect', 'Inspect point', 'What is at this point: sewers, watermains, pressure zones and plants nearby', 'inspect'],
     ['corridor', 'Corridor select', 'Select the developments along a drawn corridor', 'corridor'],
     ['unitsfit', 'How many more units fit?', 'Estimate the remaining unit capacity of an area', 'unitsfit'],
+    ['timebox', 'Time Box', 'Drag a box to see its aerial imagery over the years, with the applications filed by then', 'clock'],
   ];
   // Phase 3b: Help lives in the topbar Help button only — the map ? control is removed
   // (no tool in two places). The tool rail shows which tool is on (one tool active at a time).

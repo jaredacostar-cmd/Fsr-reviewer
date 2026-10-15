@@ -74,7 +74,7 @@
     if (scoped) steps.push({ label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
-    if (tc) steps.push(tc);
+    if (tc) steps.push(...[].concat(tc));
     // The trail carries its count (SPEC §4): the developments in scope and their planned units.
     const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
@@ -191,6 +191,9 @@
       '<button type="button" role="menuitem" data-tbx="geojson">GeoJSON \u2014 developments shown</button>' +
       '<button type="button" role="menuitem" data-tbx="areas">Servicing areas (GeoJSON)</button>' +
       '<button type="button" role="menuitem" data-tbx="dc">Planned works (GeoJSON)</button>' +
+      // Capital projects only once the layer is published (held until Peel GIS confirms).
+      (window.PeelCapitalEA && window.PeelCapitalEA.data.capital ? '<button type="button" role="menuitem" data-tbx="cons">Capital projects (GeoJSON)</button>' : '') +
+      '<button type="button" role="menuitem" data-tbx="eas">Environmental assessments (GeoJSON)</button>' +
       `<button type="button" role="menuitem" data-tbx="swmm"${swmmOk ? '' : ' disabled title="The wastewater servicing data is not loaded yet"'}>SWMM model (.inp) \u2014 wastewater blocks</button>` +
       '<button type="button" role="menuitem" data-tbx="workbook">Excel workbook (.xlsx)</button>' +
       `<button type="button" role="menuitem" data-tbx="comparepdf"${cmpOk ? '' : ` disabled title="${cmpTitle}"`}>PDF \u2014 comparison</button>` +
@@ -207,7 +210,7 @@
     const item = e.target.closest('[role="menuitem"]'); if (!item || item.disabled) return;
     closeTbMenus();
     const b = e.target.closest('[data-tbx]'); if (!b) return;
-    const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
+    const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, cons: () => window.PeelCapitalEA && window.PeelCapitalEA.exportConsGeoJSON(), eas: () => window.PeelCapitalEA && window.PeelCapitalEA.exportEasGeoJSON(), swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
     if (fn) fn();
   });
   function renderGearMenu() {

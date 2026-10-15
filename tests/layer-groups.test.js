@@ -17,7 +17,7 @@ test('six groups in order, with the brief\'s layers', () => {
   assert.deepEqual(LG.GROUPS.map(g => g.label), ['Developments', 'Capacity', 'Infrastructure', 'Constraints', 'Planning context', 'Base map']);
   assert.deepEqual(keys('devs'), ['devs', 'heat', 'hov']);
   assert.deepEqual(keys('cap'), ['cap', 'pz', 'bk', 'dr']);
-  assert.deepEqual(keys('infra'), ['ex-water', 'ex-sanitary', 'ex-storm', 'wf', 'dcw', 'gas', 'hydro']);
+  assert.deepEqual(keys('infra'), ['ex-water', 'ex-sanitary', 'ex-storm', 'wf', 'dcw', 'cons', 'ea', 'gas', 'hydro']);
   assert.equal(LG.GROUPS.find(g => g.key === 'infra').sub.gas, 'Other utilities');
   assert.deepEqual(keys('cx'), ['reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'source', 'water']);
   assert.match(LG.LAYER.get('source').disabled, /Not included/);
@@ -35,7 +35,7 @@ test('presets: everything off except Developments; each view adds its own', () =
   const s = src('js/map-analysis.js');
   assert.match(s, /wf: true, dc: \{ on: true, sys: 'water' \} \}/);
   assert.match(s, /wf: false, dc: \{ on: true, sys: 'wastewater' \} \}/);
-  assert.deepEqual(LG.PRESETS.dc.filter(k => k !== 'devs' && k !== 'hov'), ['dcw']);
+  assert.deepEqual(LG.PRESETS.dc.filter(k => k !== 'devs' && k !== 'hov'), ['dcw', 'cons', 'ea']);
   // No constraint, utility or base-map layer is on in any preset (gas / hydro off by default).
   for (const p of Object.values(LG.PRESETS)) for (const k of p) assert.ok(!['cx', 'base'].includes(LG.groupOf(k)) && k !== 'gas' && k !== 'hydro', k);
 });
@@ -127,6 +127,7 @@ function env(over = {}) {
     PeelMapCore: { map }, PeelConstraintGeo: G,
     PeelCxData: { BASE: 'data/constraints/', index: id => { calls.push(`index:${id}`); return Promise.resolve({ _have: new Set(), labels: [] }); }, tile: (id, x, y) => { calls.push(`tile:${id}`); return Promise.resolve([]); }, manifest: () => { calls.push('manifest'); return Promise.resolve(null); } },
     L: { canvas: () => ({}), layerGroup: chain, polygon: chain, polyline: chain, DomEvent: { stop() {} } },
+    setTimeout: (fn, ms) => setTimeout(fn, ms),
     fetch: url => { calls.push(`fetch:${url}`); return Promise.resolve({ ok: false, json: () => ({}) }); },
     ...over,
   };

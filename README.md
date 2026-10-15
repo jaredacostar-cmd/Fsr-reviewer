@@ -2492,3 +2492,155 @@ scope, % of target and source.
 
 They also check the comparison: committed vs proposed, municipal growth, combined targets, and
 people-only targets.
+
+## Measure, Part 1: ground profile accuracy, manholes, and the sewer profile
+
+Everything here is **indicative, not design**.
+
+- **Sampling.** The ground is now read with bilinear interpolation. This works across tile
+  edges, with no stair steps. The lidar service is asked for bilinear samples too.
+  - Samples are spaced every 5 m, or one pixel, or length ÷ 600, whichever is largest. A line
+    never has more than 600 samples.
+  - Terrain tiles are fetched once, shared, and cached after decoding. The raw value is kept on
+    every sample. `js/profile-core.js` holds the arithmetic and is tested in
+    `tests/profile-core.test.js`.
+- **Peel manhole ground.**
+  - **Ground** = invert + published depth, at each end of a sanitary main.
+  - **Not used:** depths of 0.5 m or less, depths of 15 m or more, and force mains.
+  - **Matching:** manholes within 15 m of the line are drawn as dots, labelled *Peel manhole
+    ground*.
+  - **Correction:** between two matched manholes no more than 150 m apart, the ground is
+    corrected by the offset at each manhole, linearly interpolated, and labelled *corrected*. It
+    is never extrapolated. The raw line stays as a dotted line.
+  - **Datum:** the datum of Peel's inverts is not confirmed, so manhole grounds are used as
+    published and the app says so. If the validation finds they are CGVD28, the NRCan shift
+    (about −0.4 m) is applied and named. Datums are never mixed silently.
+- **Accuracy label.** Under every profile: "typically within X m of Peel manholes in this
+  area".
+  - It is read from `data/elevation-validation.json`, per area and per source (lidar or
+    terrain tiles).
+  - For lidar it names the project and the year flown.
+  - Outside the validated areas it says "No validation against Peel manholes for this area".
+- **Profile.**
+  - **Expand** gives a larger chart.
+  - **Crosshair** on hover or touch: distance, ground and its source, invert, depth, and
+    watermain cover (assumed).
+  - Grade per leg (A→B, B→C…) and a note of the vertical exaggeration.
+  - **Shading** where the depth to invert is under 2.0 m. The threshold is a setting, kept per
+    browser.
+  - **CSV** columns: `d, lat, lng, ground, ground_raw, source, invert, depth, watermain_flag`.
+- **Along a sewer** (Measure › *Along a sewer*). Tap a sanitary main and the app follows it
+  downstream, manhole to manhole, using Peel's published inverts and depths.
+  - It stops after 40 pipes, after 3 km, or where no gravity main continues.
+  - Each pipe shows its length, diameter, invert up → down, slope % and depth.
+  - **Adverse slopes** (the invert rises downstream) are flagged in red.
+  - The raw lidar or terrain ground is drawn for comparison. No FacilityIDs are shown.
+- **Validation.** In Actions, run *Probe data sources* with `mode=elev-validate`
+  (`scripts/probe-elev-validate.js`).
+  - It samples up to 60 Peel manholes in each of five areas, against the raw lidar and the raw
+    terrain tiles. Ground is shifted to the lidar's datum (CGVD2013) with PROJ and the NRCan
+    grids.
+  - It writes the table and a stored sample with no IDs, `tests/fixtures/manhole-sample.json`.
+  - `tests/elevation-validation.test.js` recomputes the table from the stored sample and fails
+    if they differ. The *Elevation validation* workflow runs it when the sampler changes.
+  - **Lidar target:** median |error| under 0.3 m, and 90% within 0.5 m. The table records
+    whether it is met.
+- **Internal data check (not public).** The same run lists manholes where invert + depth is
+  more than 5 m from the lidar, with FacilityID.
+  - It is uploaded only as a private workflow artifact (`internal-manhole-check`) and never
+    committed.
+  - The site deploy now publishes only the app files (`_site`: index.html, manifest, sw.js,
+    css, js, data, icons). It fails if anything internal is in them.
+- **Polite fetching.** Overpass is retried at most 3 times, honouring `Retry-After` on 429.
+
+## 3D view, Part 2: terrain, buildings and proposed massing
+
+Tap **3D** on the map, under the tool buttons. A 3D map opens over the 2D map at the same place.
+Everything drawn is **indicative, not design**.
+
+- **Camera.** Tilted 60°. *Tilt* toggles a straight-down view. **2D** or Esc goes back, keeping
+  the place you moved to.
+- **Libraries.** MapLibre GL 4.7.1 and PMTiles 3.2.1 load only the first time the view opens.
+  Without WebGL the view says so.
+- **Ground.**
+  - Terrain is exaggerated ×1.2 and hillshaded.
+  - It comes from the same module as the ground profile: `PeelElevation.demTile`.
+  - Inside the **North Brampton pilot box** (dashed) it is the province's lidar terrain model:
+    bare earth (the DTM, never the surface model), CGVD2013, up to z16 (about 1.8 m pixels),
+    rounded to 0.1 m.
+  - Everywhere else it is the terrain tiles (CDEM / SRTM, CGVD28 / EGM96). Above their z15 they
+    are upsampled from decoded heights.
+  - The legend names the sources in view, and says the two datums are about 0.4 m apart and
+    not adjusted.
+- **Buildings** (pilot box only): OpenStreetMap buildings and building parts.
+  - **Height:** the `height` tag, else `building:levels` (+ roof levels) × 3.2 m, else
+    2 storeys.
+  - Estimated heights are drawn darker, and a tap says which rule applied.
+- **Proposals:** the developments shown in 2D, coloured by status (the phase colours).
+  - **Height:** the stated height in metres, else the stated storeys × 3.2 m, else (apartment
+    types only) units × 90 m² ÷ (footprint × 85% efficiency), 1–60 storeys. Anything else is
+    hidden, and the legend counts how many.
+  - Additions and extensions are hidden unless they add units.
+  - **Footprint:** half the application site, scaled about its centre. Where no site boundary
+    exists, a 30 m square at the address. Never the real building outline.
+  - A tap shows the basis and opens the development.
+  - The rules are in `js/massing-core.js` and tested in `tests/massing-core.test.js`.
+- **Pilot tiles.** In Actions, run *Probe data sources* with `mode=tiles-3d`
+  (`scripts/build-3d-tiles.js`). It writes:
+  - `data/3d/lidar-pilot.pmtiles` (Terrarium PNG, z12–16): five pixels per zoom are checked
+    against the lidar service's own samples;
+  - `data/3d/buildings-pilot.pmtiles` (vector, z13–16);
+  - `data/3d/manifest.json`: sources, datums, dates, counts and attribution.
+- **Dependencies.** The PMTiles writer, PNG encoder and TIFF reader are small dependency-free
+  helpers in `scripts/`, tested in `tests/tiles-3d.test.js`. The writer was checked against the
+  pmtiles library's reader.
+- **Attribution.** A line at the bottom of the 3D view credits the sources in view:
+  - Esri imagery or canvas;
+  - Ontario DTM (OGL-Ontario);
+  - Terrain Tiles (Mapzen / AWS; CDEM © NRCan, SRTM);
+  - © OpenStreetMap contributors (ODbL);
+  - municipal open data.
+- **Planned deviation from the brief.** The lidar tiles stop at z16 rather than the 0.5 m
+  native resolution (z18 would be about 3,500 tiles). The ground profile still reads the lidar
+  at native resolution.
+
+## Time Box, Part 3: a place's imagery over the years
+
+Tools › **Time Box** (the clock button). Drag a box on the map; the map stays still while you
+draw.
+
+- **Releases.** The app reads the Esri World Imagery Wayback release list from the WMTS
+  capabilities document. If that fails, it reads Esri's `waybackconfig.json` instead.
+- **New imagery only.** Each release's tiles over the box are hashed.
+  - The tiles are fetched at the deepest zoom where the box fits in 4 tiles or fewer.
+  - Releases with identical tiles show the same imagery, so only releases where the box
+    changed are kept, with at most one per year (the latest that year).
+  - The search bisects the release list: when two releases match, the ones between them are
+    taken as the same. About 100 tile requests cover 60 releases with 6 changes, instead of
+    240.
+  - **Limitation:** imagery that changed and then changed back between two matching releases
+    is missed.
+  - At most 6 requests are in flight. A progress bar and **Cancel** show while it checks.
+  - The result is cached per box and zoom: in memory, and the last 20 boxes in the browser.
+  - If the tiles cannot be compared, one release per year is shown, and the notes say so.
+- **Year slider.** It snaps to the years found. **Play** steps through them every 1.5 s.
+  - The imagery shows **inside the box only**. Outside the box the map is unchanged; the
+    normal development markers and outlines are dimmed.
+  - A release date is when Esri published the imagery, not when it was flown, and the notes
+    say so.
+- **Applications.** The developments in the box that were **filed by the end of the year** are
+  shown in their phase colour as of that year.
+  - **Filing date:** the earliest submission date on its applications. Failing that, its
+    earliest dated milestone ("filed on or before"). Developments with no dated application
+    events are drawn dashed as **date unknown**, in every year, and counted.
+  - Tap a marker to open the development.
+- **Compare with** another year: a swipe handle splits the box, with the slider year on the
+  left and the compare year on the right. Drag the handle, or use the arrow keys.
+- **Attribution.** "Imagery © Esri Wayback" shows in the banner, and the full Esri credit in
+  the notes and the map's attribution.
+- **Code.**
+  - `js/timebox-core.js`: pure functions, tested in `tests/timebox-core.test.js`. The
+    capabilities and config parsing, dedupe, one per year, bisection, request limiter, tile
+    hash, filing dates and slider snapping. The imagery source sits behind a small interface
+    (`WAYBACK`).
+  - `js/time-box.js`: the tool.

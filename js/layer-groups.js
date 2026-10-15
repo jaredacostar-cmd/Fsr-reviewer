@@ -19,8 +19,8 @@
   // ---- Draw order (bottom → top): pane z-index for every module that makes a pane ---------------
   // base map → hillshade → constraints (fills ≤ 25%) → planning areas (outlines) → capacity →
   // infrastructure → (EAs) → developments → selection / trace.
-  const Z = { imagery: 150, tiles: 200, hill: 210, cx: 300, da: 320, plan: 330, svc: 360, exist: 370, infra: 380, overlay: 400, markers: 600, flow: 640, sel: 650 };
-  const DRAW_ORDER = [['base map', 'imagery'], ['hillshade', 'hill'], ['constraints', 'cx'], ['census areas', 'da'], ['planning areas', 'plan'], ['capacity', 'svc'], ['existing pipes', 'exist'], ['planned works', 'infra'], ['developments (site boundaries)', 'overlay'], ['developments (markers)', 'markers'], ['trace', 'flow'], ['selection', 'sel']];
+  const Z = { imagery: 150, tiles: 200, hill: 210, cx: 300, da: 320, plan: 330, svc: 360, exist: 370, infra: 380, eas: 390, overlay: 400, markers: 600, flow: 640, sel: 650 };
+  const DRAW_ORDER = [['base map', 'imagery'], ['hillshade', 'hill'], ['constraints', 'cx'], ['census areas', 'da'], ['planning areas', 'plan'], ['capacity', 'svc'], ['existing pipes', 'exist'], ['planned works and construction', 'infra'], ['EAs', 'eas'], ['developments (site boundaries)', 'overlay'], ['developments (markers)', 'markers'], ['trace', 'flow'], ['selection', 'sel']];
   const CX_FILL_MAX = 0.25;
 
   // ---- Groups ---------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@
   const GROUPS = [
     { key: 'devs', label: 'Developments', primary: ['devs'], layers: [['devs', 'Developments', 'devs-toggle', 'dev', null], ['heat', 'Heatmap (people + jobs)', 'map-show', 'heat', null], ['hov', 'Site boundary on hover', 'hover-boundary', 'dash', '--select']] },
     { key: 'cap', label: 'Capacity', primary: ['cap'], layers: [['cap', 'Capacity colours', 'map-capacity', 'cap', null], ['pz', 'Pressure zones', 'pressure-zone', 'svc-pz', null], ['bk', 'Wastewater blocks', 'blocks', 'block', null], ['dr', 'Drainage areas', 'drainage-area', 'svc-dr', null]] },
-    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['gas', 'Gas pipelines (approximate)', 'cx-gas', 'dash', '--cx-gas'], ['hydro', 'Hydro lines (approximate)', 'cx-hydro', 'line', '--cx-hydro']], sub: { gas: 'Other utilities' } },
+    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['cons', 'Planned & under construction', 'construction', 'line', '--cons-build'], ['ea', 'EAs', 'eas', 'area', '--ea-line'], ['gas', 'Gas pipelines (approximate)', 'cx-gas', 'dash', '--cx-gas'], ['hydro', 'Hydro lines (approximate)', 'cx-hydro', 'line', '--cx-hydro']], sub: { gas: 'Other utilities' } },
     { key: 'cx', label: 'Constraints', primary: ['reg', 'flood'], layers: [['reg', 'Regulation limits', 'cx-reg', 'area', '--cx-reg'], ['flood', 'Floodplain', 'cx-flood', 'area', '--cx-flood'], ['greenbelt', 'Greenbelt', 'cx-greenbelt', 'area', '--cx-greenbelt'], ['orm', 'Oak Ridges Moraine', 'cx-orm', 'area', '--cx-orm'], ['nep', 'Niagara Escarpment', 'cx-nep', 'area', '--cx-nep'], ['natural', 'PSW / ANSI', 'cx-natural', 'area', '--cx-natural'], ['nhs', 'Natural Heritage System', 'cx-nhs', 'area', '--cx-nhs'], ['source', 'Source protection (not included)', 'site-constraints', 'none', null], ['water', 'Watercourses', 'cx-water', 'line', '--cx-water']], disabled: { source: 'Not included in this app: see the CTC Source Protection Region maps' } },
     { key: 'plan', label: 'Planning context', primary: ['sp', 'mtsa'], layers: [['sp', 'Secondary plans / character areas', 'secondary-plans', 'dash', '--area-sp'], ['pr', 'Precincts', 'secondary-plans', 'dash', '--area-pr'], ['mtsa', 'MTSAs', 'mtsa', 'dash', '--area-mtsa'], ['da', '2021 census areas', 'da-layer', 'da', null]] },
     { key: 'base', label: 'Base map', primary: [], layers: [['hill', 'Lidar hillshade', 'hillshade', 'area', '--text-muted']] },
@@ -48,7 +48,7 @@
     // Water and Wastewater also show their own system's planned DC works (the Capital view, both).
     water: ['devs', 'hov', 'cap', 'pz', 'wf', 'ex-water', 'dcw'],
     wastewater: ['devs', 'hov', 'cap', 'bk', 'ex-sanitary', 'dcw'],
-    dc: ['devs', 'hov', 'dcw'],
+    dc: ['devs', 'hov', 'dcw', 'cons', 'ea'],
   };
   const presetFor = v => new Set(PRESETS[v] || PRESETS.planning);
 
@@ -130,7 +130,7 @@
   // ---- Browser: each layer through the module that owns it ------------------------------------------
   const W = root;
   const MM = () => W.PeelMapMarkers, MA = () => W.PeelMapAnalysis, SD = () => W.PeelSvcData, ST = () => W.PeelSewerTrace, WT = () => W.PeelWaterTrace;
-  const CN = () => W.PeelConstraints, PA = () => W.PeelPlanAreas, CA = () => W.PeelCensusAreas, EL = () => W.PeelElevation, AS = () => W.PeelAreaSelect, App = () => W.PeelApp;
+  const CE = () => W.PeelCapitalEA, CN = () => W.PeelConstraints, PA = () => W.PeelPlanAreas, CA = () => W.PeelCensusAreas, EL = () => W.PeelElevation, AS = () => W.PeelAreaSelect, App = () => W.PeelApp;
   const CXK = ['reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water', 'gas', 'hydro'];
   const ADAPT = {
     devs: { get: () => MM().getDevsOn(), set: v => SD().setDevsOn(v) },
@@ -150,6 +150,8 @@
     mtsa: { get: () => !!MM().areaOn.mtsa, set: v => PA().setAreaOn({ mtsa: v }) },
     da: { get: () => !!CA().getDaOn(), set: v => CA().setDaLayer(v) },
     hill: { get: () => !!(EL() && EL().getHillshade()), set: v => EL() && EL().setHillshade(v) },
+    cons: { get: () => !!(CE() && CE().getState().cons), set: v => CE() && CE().setOn({ cons: v }) },
+    ea: { get: () => !!(CE() && CE().getState().ea), set: v => CE() && CE().setOn({ ea: v }) },
   };
   for (const k of CXK) ADAPT[k] = { get: () => !!(CN() && CN().getOn()[k]), set: v => CN() && CN().setOn({ [k]: v }) };
   const safe = f => { try { return f(); } catch (e) { return false; } };

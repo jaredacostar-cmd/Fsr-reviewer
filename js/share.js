@@ -44,7 +44,7 @@
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);
       // servicing scope (plant / station / block / zone), or a result scope that can be re-opened
-      set('ss', App().state.ss && window.PeelSvcScope && window.PeelSvcScope.isResultRef(App().state.ss) && !/^(pipe|file|dcwork|iiblock):/.test(App().state.ss) ? null : App().state.ss);
+      set('ss', App().state.ss && window.PeelSvcScope && window.PeelSvcScope.isResultRef(App().state.ss) && !/^(pipe|file|dcwork|iiblock|ea|cap):/.test(App().state.ss) ? null : App().state.ss);
       return q.toString();
     };
     const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };

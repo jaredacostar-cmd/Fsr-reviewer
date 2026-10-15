@@ -81,7 +81,7 @@
   //   openResult({ ref, title, html, reopen, devKeys, filter, screen })
   //     ref: '<kind>:<id>' (kinds below; default 'tool:<title>'); devKeys: the developments it covers
   //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer.
-  const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help', 'cx']);
+  const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help', 'cx', 'ea', 'cap']);
   const isResultRef = ref => !!ref && RESULT_KINDS.has(String(ref).slice(0, String(ref).indexOf(':')));
   let result = null, resultV = 0;
   const slug = t => String(t || 'result').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
@@ -91,8 +91,10 @@
     const ref = o.ref || `tool:${slug(o.title)}`;
     if (window.DevScope && window.DevScope.current() && !o.keepDev) window.DevScope.close();
     const keys = o.devKeys ? new Set(o.devKeys) : o.filter ? devKeysOf(o.html) : null;
-    result = { ref, title: o.title || 'Result', html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, v: ++resultV };
+    result = { ref, title: o.title || 'Result', group: o.group || null, html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, v: ++resultV };
     App().state.ss = ref; showAll = false;
+    // Layers that drew a selection for an earlier result (EA / capital highlights) drop it when replaced.
+    if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:result-opened', { detail: { ref } }));
     AT().setFootPref('overview'); AT().showFootTab('overview');
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
     const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;
@@ -129,6 +131,9 @@
       return true;
     },
     iiblock: id => { if (!ST() || !ST().showBlock) return true; return ST().showBlock(id) !== false; },
+    // EAs and capital projects re-open once their data has loaded (js/capital-ea.js).
+    ea: id => { const C = window.PeelCapitalEA; if (!C || !C.data.loaded) return false; C.openEA(id); return true; },
+    cap: key => { const C = window.PeelCapitalEA; if (!C || !C.data.loaded) return false; C.openCapital(key); return true; },
   };
   function restore(ref, tries = 40) {
     if (!isResultRef(ref) || (result && result.ref === ref)) return;
@@ -142,7 +147,12 @@
   // before a lake-based zone.
   function crumbs() {
     const s = current(); if (!s) return [];
-    if (s.kind === 'result') return [{ label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` }];
+    if (s.kind === 'result') {
+      const back = { label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` };
+      // A group step before the title: Peel › EA › name, Peel › Capital › project (opens Capital › Construction & EAs).
+      const g = s.result && s.result.group;
+      return g ? [{ label: g, go: () => { if (AT().setDcSub) AT().setDcSub('build'); AT().showFootTab('dca'); }, title: g === 'EA' ? 'Environmental assessments (Capital › Construction & EAs)' : 'Capital projects (Capital › Construction & EAs)' }, back] : [back];
+    }
     const step = (ref, label, title) => ({ label, go: () => open(ref), title });
     const out = [];
     if ((s.kind === 'block' || s.kind === 'ps') && PLANTS.includes(s.pl)) out.push(step(`plant:${s.pl}`, SD().PLANT_SHORT[s.pl], `Open ${SD().plantLabel(s.pl)}`));
