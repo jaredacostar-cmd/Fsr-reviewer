@@ -65,7 +65,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing (and the old water/ww defau
 
 test('sub-view valid values cover the new sub-views', () => {
   assert.ok(APP.includes(`valid: ['pipeline', 'census2051', 'timing', 'byplan']`), 'growth valid values wrong');
-  assert.ok(APP.includes(`valid: ['timing', 'build', 'recommendations', 'funding']`), 'dca valid values wrong');
+  assert.ok(APP.includes(`valid: ['timing', 'build', 'eas', 'recommendations', 'funding']`), 'dca valid values wrong');
   assert.ok(APP.includes(`'hydro'`), 'hydro not a valid water sub-view');
   assert.ok(APP.includes(`'pumpstations'`), 'pumpstations not a valid ww sub-view');
 });

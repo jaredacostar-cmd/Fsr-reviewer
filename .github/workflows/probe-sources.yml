@@ -389,17 +389,27 @@ jobs:
         if: inputs.mode == 'eas'
         timeout-minutes: 40
         run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
           if [ "${{ inputs.only }}" = "with-capital" ]; then
-            node scripts/build-capital.js --out /tmp/capital > /tmp/capital.log
-            node scripts/build-eas.js --out data --capital /tmp/capital/capital.json
+            # The published capital data when it is there; otherwise a fresh build (not committed).
+            if [ -f data/capital.json ]; then CAP=data/capital.json; else node scripts/build-capital.js --out /tmp/capital > /tmp/capital.log; CAP=/tmp/capital/capital.json; fi
+            node scripts/build-eas.js --out data --capital "$CAP"
           else
             node scripts/build-eas.js --out data --capital /nonexistent
           fi
-          npm test > /tmp/test.log 2>&1 || { tail -80 /tmp/test.log; exit 1; }
+          mkdir -p /tmp/eas-built && cp data/eas.json data/eas-review.csv /tmp/eas-built/
+          npm test > /tmp/test.log 2>&1 || { grep -A40 '^not ok' /tmp/test.log | head -200; exit 1; }
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/eas.json data/eas-review.csv
           git diff --cached --quiet || { git commit -m "Environmental assessments (list, project pages, geometry)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+      - name: Upload the EA build (when its checks fail)
+        if: failure() && inputs.mode == 'eas'
+        uses: actions/upload-artifact@v4
+        with:
+          name: eas-built
+          path: /tmp/eas-built/
+          if-no-files-found: ignore
       - name: Rebuild pressure zones and drainage areas (committed to this branch)
         if: inputs.mode == 'servicing-build'
         run: |

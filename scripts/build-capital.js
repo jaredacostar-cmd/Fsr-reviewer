@@ -140,6 +140,10 @@ async function main() {
   };
   if (C.hasForbidden(out)) throw new Error('a personnel / contractor / notes field reached the output');
   fs.mkdirSync(outDir, { recursive: true });
+  // A weekly rebuild must not replace good data with a partial read (the layer down or paging cut short).
+  if (prev && prev.records && records.length < prev.records.length * 0.8 && !process.argv.includes('--force')) {
+    console.error(`Only ${records.length} records against ${prev.records.length} last time: not written (pass --force to accept).`); process.exit(1);
+  }
   fs.writeFileSync(path.join(outDir, 'capital.json'), JSON.stringify(out));
   fs.writeFileSync(path.join(outDir, 'capital-links-audit.json'), JSON.stringify({ version: 1, generatedAt: out.generatedAt, ...aud }, null, 1));
 

@@ -557,6 +557,39 @@ function linkCapital(ea, capital, dcLinked) {
   }
   return out;
 }
+/**
+ * A capital contract of the same system lying mostly inside a study area traced or placed with
+ * medium / high confidence (roads EAs are left out: Region road resurfacing rarely comes from them).
+ * Weaker than a project website or a street match: method 'inside the study area'.
+ */
+function linkCapitalInArea(ea, capital) {
+  const g = ea.geometry; if (!g || !/Polygon/.test(g.type) || ea.geomConfidence === 'low' || ea.system === 'roads') return [];
+  const sysOk = r => r.system === ea.system || (ea.system === 'multi' && (r.system === 'water' || r.system === 'wastewater'));
+  const out = [];
+  for (const r of capital?.records || []) {
+    if (!r.geometry || !sysOk(r)) continue;
+    const pts = pointsOf(r.geometry); if (!pts.length) continue;
+    if (pts.filter(p => distToGeom(p, g) === 0).length >= pts.length / 2) out.push({ id: r.id, projectNumber: r.projectNumber, method: 'inside the study area' });
+  }
+  return out;
+}
+/**
+ * The preferred solution from an EA report's text: the first sentence that states it ("The preferred
+ * solution is to …", "The recommended alternative includes …"), not a table-of-contents line.
+ * Returns ≤ 450 characters or null.
+ */
+function extractDecision(text) {
+  const t = String(text || '').replace(/\u00ad/g, '').replace(/-\s*\n\s*/g, '').replace(/\s+/g, ' ');
+  const re = /(?:^|[.;:]\s+)((?:The |the )?(?:recommended|preferred)(?: alternative)? (?:solution|alternative|design concept|design|option|servicing strategy|strategy)(?: \([^)]{1,40}\))? (?:is|was|includes|consists of|involves|will be|would be|for [^.]{3,80} is)\s[^.]{25,420}\.)/g;
+  for (let m; (m = re.exec(t));) {
+    const s = m[1].trim();
+    if (/\.{4,}|…{2,}|\bTable of Contents\b|\bsection \d|\bpage \d/i.test(s)) continue;
+    if (/(?:telephone|e-?mail|@|\bphone\b)/i.test(s)) continue;
+    const out = s.charAt(0).toUpperCase() + s.slice(1);
+    return out.length > 450 ? `${out.slice(0, 447).replace(/\s+\S*$/, '')}…` : out;
+  }
+  return null;
+}
 const normUrl = u => String(u).toLowerCase().replace(/^https?:\/\/(www\.)?/, '').replace(/[?#].*$/, '').replace(/\/+$/, '');
 
 // ---- overrides / change list / review --------------------------------------------------------
@@ -599,7 +632,7 @@ function reviewCsv(eas) {
   const head = ['id', 'name', 'municipality', 'system', 'schedule', 'status', 'commencement', 'pic', 'completion', 'review_end', 'next_step', 'next_step_date', 'purpose_draft', 'decision', 'page', 'report', 'geom_type', 'geom_method', 'geom_confidence', 'dc_matches', 'capital_matches', 'facility_matches', 'flags'];
   const rows = eas.map(e => {
     const m = t => (e.milestones || []).filter(x => x.type === t).map(x => x.date).join(' ');
-    return [e.id, e.name, e.municipality, e.system, e.schedule, e.status, m('commencement'), m('pic'), m('completion'), m('reviewEnd'), e.nextStep?.text, e.nextStep?.date, e.purpose, e.decision, e.links?.page, e.links?.report?.url,
+    return [e.id, e.name, e.municipality, e.system, e.schedule, e.status, m('commencement'), m('pic'), m('completion'), m('reviewEnd'), e.nextStep?.text, e.nextStep?.date, e.purpose, (e.decision && e.decision.text) || e.decision, e.links?.page, e.links?.report?.url,
       e.geomType, e.geomMethod, e.geomConfidence, (e.related?.dcProjects || []).map(d => `${d.proj} ${d.what}`).join('; '), (e.related?.capitalProjects || []).map(c => c.projectNumber || c.id).join('; '), (e.related?.facilities || []).join('; '), (e.flags || []).join('; ')];
   });
   return [head, ...rows].map(r => r.map(csvCell).join(',')).join('\n') + '\n';
@@ -610,5 +643,5 @@ module.exports = {
   text, lines, mainHtml, links, normName, slug, tokens, parseList, dedupe, findPage,
   systemOf, scheduleOf, datesIn, milestonesOf, statusOf, nextStepOf, purposeDraft, docLinks, parsePage, pageHash,
   parseRoad, chain, roadBetween, pointInRing, distToGeom, resolveGeometry, linkDc, linkCapital,
-  applyOverrides, changesSince, reviewCsv,
+  applyOverrides, changesSince, reviewCsv, linkCapitalInArea, extractDecision,
 };

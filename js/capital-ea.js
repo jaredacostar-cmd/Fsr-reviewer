@@ -79,6 +79,8 @@
       for (const r of shownRecords()) {
         const c = data.contracts.get(r.contract || `id:${r.id}`), build = M.isBuilding(r), faded = M.fadedAt(r, y);
         for (const p of pathsOf(r.geometry)) {
+          // The system as a casing in the existing-pipe colours (water blue, wastewater brown, roads grey).
+          L.polyline(ll(p), { pane: 'infraPane', interactive: false, color: token(M.SYS_CASING[r.system] || '--xing-street'), weight: (build ? 3 : 2) + 4, opacity: faded ? 0.15 : 0.55, lineCap: 'round' }).addTo(consLayer);
           L.polyline(ll(p), { pane: 'infraPane', interactive: !PK(), color: token(build ? '--cons-build' : '--cons-plan'), weight: build ? 3 : 2, opacity: faded ? 0.3 : 0.95, dashArray: build ? null : '2 6', lineCap: 'round', bubblingMouseEvents: false, className: 'ce-cons' })
             .bindTooltip(esc(M.capitalHover(c)), { sticky: true, className: 'pt' })
             .on('click', () => openCapital(c.key)).addTo(consLayer);
@@ -87,9 +89,17 @@
     } else map.removeLayer(consLayer);
     if (ce.ea && data.eas) {
       eaLayer.addTo(map);
+      const low = map.getZoom() < M.EA_OUTLINE_ZOOM;
       for (const e of shownEAs()) {
-        const dash = M.eaDashed(e), col = token('--ea-line');
-        const style = { pane: 'eaPane', interactive: !PK(), color: col, weight: 2, opacity: 0.9, dashArray: dash ? '5 5' : null, fill: /Polygon/.test(e.geometry.type), fillColor: col, fillOpacity: 0.05, bubblingMouseEvents: false, className: 'ce-ea' };
+        const st = M.eaStyle(e), col = token('--ea-line');
+        const style = { pane: 'eaPane', interactive: !PK(), color: col, weight: st.weight, opacity: st.opacity, dashArray: st.dashArray, fill: /Polygon/.test(e.geometry.type) && st.fillOpacity > 0, fillColor: col, fillOpacity: st.fillOpacity, bubblingMouseEvents: false, className: 'ce-ea' };
+        // Region view: one small marker per EA (current filled, completed hollow), outlines from zoom 12.
+        if (low) {
+          const lp = M.labelPoint(e.geometry); if (!lp) continue;
+          L.circleMarker([lp[1], lp[0]], { pane: 'eaPane', interactive: !PK(), radius: e.status === 'complete' ? 4 : 5, color: col, weight: 1.5, opacity: st.opacity, fill: true, fillColor: col, fillOpacity: e.status === 'complete' ? 0 : 0.85, bubblingMouseEvents: false, className: 'ce-ea' })
+            .bindTooltip(esc(M.eaHover(e)), { sticky: true, className: 'pt' }).on('click', () => openEA(e.id)).addTo(eaLayer);
+          continue;
+        }
         const lyr = e.geometry.type === 'Point'
           ? L.circleMarker([e.geometry.coordinates[1], e.geometry.coordinates[0]], { ...style, radius: 7, fill: true, fillOpacity: 0.25 })
           : L.geoJSON(e.geometry, { style: () => style, interactive: !PK(), pane: 'eaPane', pointToLayer: (f, ll) => L.circleMarker(ll, { ...style, radius: 7, fill: true, fillOpacity: 0.25 }) });   // MultiPoint: several intersections
@@ -111,14 +121,37 @@
       const c = data.contracts.get(r.contract || `id:${r.id}`); if (seen.has(c.key)) continue;
       const p = pathsOf(r.geometry)[0]; if (!p) continue;
       const mid = p[Math.floor(p.length / 2)]; if (!b.contains([mid[1], mid[0]])) continue;
-      seen.add(c.key); lbl([mid[1], mid[0]], `${c.percent}% built`, 'ce-lbl-cons');
+      const t = M.pctLabel(c); if (!t) continue;
+      seen.add(c.key); lbl([mid[1], mid[0]], t, 'ce-lbl-cons');
     }
     if (ce.ea && data.eas) for (const e of shownEAs()) {
-      const g = e.geometry, pt = g.type === 'Point' ? g.coordinates : g.type === 'MultiPoint' ? g.coordinates[0] : g.type === 'LineString' ? g.coordinates[Math.floor(g.coordinates.length / 2)] : g.type === 'MultiLineString' ? g.coordinates[0][Math.floor(g.coordinates[0].length / 2)] : g.type === 'Polygon' ? g.coordinates[0][0] : g.coordinates[0][0][0];
-      if (b.contains([pt[1], pt[0]])) lbl([pt[1], pt[0]], e.name.length > 48 ? `${e.name.slice(0, 46)}…` : e.name, 'ce-lbl-ea');
+      const pt = M.labelPoint(e.geometry); if (!pt) continue;
+      if (b.contains([pt[1], pt[0]])) lbl([pt[1], pt[0]], e.name.length > 48 ? `${e.name.slice(0, 46)}…` : e.name, `ce-lbl-ea${e.status === 'complete' ? ' done' : ''}`);
     }
+    declutter();
   }
-  map.on('zoomend moveend', () => { if (ce.cons || ce.ea) renderLabels(); });
+  // EA and construction labels give way to development labels (and to each other): after the
+  // development labels are placed, a label that overlaps one is hidden.
+  let declutterT = null;
+  function declutter() {
+    clearTimeout(declutterT);
+    declutterT = setTimeout(() => {
+      const box = el => el.getBoundingClientRect(), hit = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+      const taken = [...document.querySelectorAll('.plabel > div, .marker-cluster, .leaflet-marker-icon.pm')].map(box);
+      for (const el of document.querySelectorAll('.ce-lbl > span')) {
+        el.parentElement.style.visibility = '';
+        const r = box(el);
+        if (taken.some(t => hit(t, r))) { el.parentElement.style.visibility = 'hidden'; continue; }
+        taken.push(r);
+      }
+    }, 80);
+  }
+  let lowZoom = map.getZoom() < M.EA_OUTLINE_ZOOM;
+  map.on('zoomend moveend', () => {
+    const low = map.getZoom() < M.EA_OUTLINE_ZOOM;
+    if (ce.ea && low !== lowZoom) { lowZoom = low; render(); return; }
+    lowZoom = low; if (ce.cons || ce.ea) renderLabels();
+  });
 
   // ---- highlight (selection orange) -----------------------------------------------------------------
   function highlight(geoms, linked, layer = hlLayer) {
@@ -309,8 +342,8 @@
   /** Legend section (js/map-analysis.js renderLegend). */
   function legendHTML() {
     const parts = [];
-    if (ce.cons && data.capital) parts.push(`<div class="lg-t">Capital projects (Region layer, as of ${esc(M.fmtDate(data.capital.source && data.capital.source.latestLastUpdate))})</div><ul><li><span class="lg-line" style="background:var(--cons-build)"></span>Under construction, awarded or tendered</li><li><span class="lg-line dot" style="--c:var(--cons-plan)"></span>Planned</li>${yr() != null ? `<li class="muted">faded: not in service by ${yr()}</li>` : ''}<li class="muted">"% built" labels from street zoom</li></ul>`);
-    if (ce.ea && data.eas) parts.push(`<div class="lg-t">Environmental assessments (${esc({ current: 'current', completed: 'completed', all: 'all' }[ce.show])})</div><ul><li><span class="lg-area" style="--c:var(--ea-line)"></span>Study area, route or site</li><li><span class="lg-line dash" style="background:var(--ea-line)"></span>dashed: approximate or traced</li>${unplacedEAs().length ? `<li class="muted">${unplacedEAs().length} with no mapped location yet (listed in the Capital tab)</li>` : ''}</ul>`);
+    if (ce.cons && data.capital) parts.push(`<div class="lg-t">Capital projects (Region layer, as of ${esc(M.fmtDate(data.capital.source && data.capital.source.latestLastUpdate))})</div><ul><li><span class="lg-line" style="background:var(--cons-build)"></span>Under construction, awarded or tendered</li><li><span class="lg-line dot" style="--c:var(--cons-plan)"></span>Planned</li><li><span class="lg-cased" style="--c:var(--pipe-water)"></span>Water <span class="lg-cased" style="--c:var(--pipe-sanitary)"></span>Wastewater <span class="lg-cased" style="--c:var(--xing-street)"></span>Roads <span class="muted">(edging)</span></li>${yr() != null ? `<li class="muted">faded: not in service by ${yr()}</li>` : ''}<li class="muted">from street zoom: "% built" (1–99%), "finishing" at 100%</li></ul>`);
+    if (ce.ea && data.eas) parts.push(`<div class="lg-t">Environmental assessments (${esc({ current: 'current', completed: 'completed', all: 'all' }[ce.show])})</div><ul>${map.getZoom() < M.EA_OUTLINE_ZOOM ? '<li><span class="lg-dot" style="background:var(--ea-line)"></span>Current EA <span class="lg-dot hollow" style="--c:var(--ea-line)"></span>completed <span class="muted">(outlines from zoom 12)</span></li>' : '<li><span class="lg-area" style="--c:var(--ea-line)"></span>Current: study area, route or site</li><li><span class="lg-line dot" style="--c:var(--ea-line)"></span>Completed (fainter)</li>'}<li><span class="lg-line dash" style="background:var(--ea-line);opacity:.6"></span>thinner, dashed: approximate or traced</li>${unplacedEAs().length ? `<li class="muted">${unplacedEAs().length} with no mapped location yet (listed in Capital › EAs)</li>` : ''}</ul>`);
     return parts.join('');
   }
 
@@ -349,6 +382,70 @@
     if (e.target.closest('[data-ce-allcap]')) { allCap = true; const bb = document.querySelector('#dca-build-body'); if (bb) bb.innerHTML = listsHTML(); }
   });
 
+  // ---- Capital › EAs ----------------------------------------------------------------------------------
+  const eaTab = Object.assign({ f: { q: '', show: 'current', sys: {} }, sort: 'next' }, store.get('eaTab', null) || {});
+  eaTab.f.q = '';   // the search box starts empty each visit
+  const saveEaTab = () => store.set('eaTab', { f: { ...eaTab.f, q: '' }, sort: eaTab.sort });
+  const today = () => new Date().toISOString().slice(0, 10);
+  // A development in scope: the EAs within 1 km of its site.
+  function nearScope() {
+    const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev();
+    return p && p.lat != null ? { title: p.title, lat: p.lat, lng: p.lng, m: 1000 } : null;
+  }
+  function eaTabHTML() {
+    if (!data.loaded) return U.skel ? U.skel('Loading the environmental assessments') : '';
+    if (!data.eas) return '<p class="small muted">The environmental assessments did not load.</p>';
+    return M.eaTabHTML({ eas: data.eas.eas, f: eaTab.f, sort: eaTab.sort, today: today(), thisYear: new Date().getFullYear(), muni: muni(), near: nearScope(), checked: data.eas.generatedAt && data.eas.generatedAt.slice(0, 10), screenNote: U.SCREEN_NOTE_SHORT });
+  }
+  let eaBox = null;
+  function renderEaTab(box) {
+    eaBox = box || eaBox || document.querySelector('#dca-eas-body'); if (!eaBox) return;
+    const q = eaBox.querySelector('[data-eatab-q]'), focused = q && document.activeElement === q, pos = q ? q.selectionStart : 0;
+    eaBox.innerHTML = eaTabHTML();
+    if (focused) { const q2 = eaBox.querySelector('[data-eatab-q]'); if (q2) { q2.focus(); q2.setSelectionRange(pos, pos); } }
+  }
+  const filteredEAs = () => {
+    const near = nearScope(), all = (data.eas && data.eas.eas) || [];
+    const scoped = near ? M.easNear(all, near.lat, near.lng, near.m).map(h => h.e) : muni() ? all.filter(e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '')) : all;
+    return M.eaSort(scoped.filter(e => M.eaMatch(e, eaTab.f)), eaTab.sort);
+  };
+  if (typeof document !== 'undefined') {
+    let qTimer = null;
+    document.addEventListener('input', e => {
+      const q = e.target.closest && e.target.closest('[data-eatab-q]'); if (!q) return;
+      clearTimeout(qTimer); qTimer = setTimeout(() => { eaTab.f.q = q.value; renderEaTab(); }, 200);
+    });
+    document.addEventListener('change', e => {
+      const t = e.target; if (!t.closest || !t.closest('#dca-eas-body')) return;
+      if (t.dataset.eatabShow != null && t.checked) eaTab.f.show = t.dataset.eatabShow;
+      else if (t.dataset.eatabSys != null) eaTab.f.sys = { ...eaTab.f.sys, [t.dataset.eatabSys]: t.checked };
+      else if (t.dataset.eatabSort != null) eaTab.sort = t.value;
+      else return;
+      saveEaTab(); renderEaTab();
+    });
+    document.addEventListener('click', e => {
+      const go = e.target.closest('[data-ce-goto]');
+      if (go) { const AT = window.PeelAnalysisTabs; if (AT) { AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
+      if (!e.target.closest('#dca-eas-body')) return;
+      const stamp = today();
+      if (e.target.closest('[data-eatab-csv]')) {
+        const { cols, rows } = M.eaSheetRows(filteredEAs()), q = v => `"${String(v).replace(/"/g, '""')}"`;
+        if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.csv`, (U.CSV_DISCLAIMER || '') + [cols, ...rows].map(r => r.map(q).join(',')).join('\n'), 'text/csv');
+      } else if (e.target.closest('[data-eatab-geo]')) {
+        if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.geojson`, JSON.stringify(M.easGeoJSON(filteredEAs(), { ...exportProps(), asOf: data.eas.generatedAt })), 'application/geo+json');
+      } else if (e.target.closest('[data-eatab-ics]')) {
+        const near = nearScope(), all = (data.eas && data.eas.eas) || [];
+        const scoped = near ? M.easNear(all, near.lat, near.lng, near.m).map(h => h.e) : muni() ? all.filter(x => String(x.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(x.municipality || '')) : all;
+        if (window.PeelExports) window.PeelExports.download(`peel-ea-milestones-${stamp}.ics`, M.eaICS(M.upcoming(scoped, stamp, 90), new Date().toISOString()), 'text/calendar');
+      } else if (e.target.closest('[data-eatab-map]')) {
+        const sys = { water: eaTab.f.sys.water !== false, wastewater: eaTab.f.sys.wastewater !== false, roads: eaTab.f.sys.roads !== false || eaTab.f.sys.storm !== false };
+        setOn({ ea: true, show: eaTab.f.show === 'complete' ? 'completed' : eaTab.f.show, eaSys: sys });
+        const pts = filteredEAs().filter(x => !M.eaUnplaced(x)).map(x => L.geoJSON(x.geometry).getBounds()).filter(b => b.isValid());
+        if (pts.length) map.fitBounds(pts.reduce((a, b) => a.extend(b), L.latLngBounds(pts[0].getSouthWest(), pts[0].getNorthEast())), { padding: [30, 30], maxZoom: 15 });
+      }
+    });
+  }
+
   // ---- Exports: GeoJSON for both layers; sheets for the workbook (js/exports.js). No people. ----------
   const exportProps = () => ({ ...(U.DISCLAIMER_PROPS || {}), generated: new Date().toISOString() });
   function exportConsGeoJSON() {
@@ -371,6 +468,6 @@
     load();
   }
 
-  const api = { renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);
