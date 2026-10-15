@@ -14,6 +14,13 @@
   const SD = () => root.PeelSvcData;
 
   const open = new Set(['peel']), all = new Set();
+  // Step C4: published targets (data/plan-targets.json, every figure with its source).
+  let targets = null, targetsLoading = null;
+  function loadTargets() {
+    if (!targetsLoading && typeof fetch === 'function') targetsLoading = fetch('data/plan-targets.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => { targets = d; render(); });
+    return targets;
+  }
+  const munisAlloc = () => { const F = App() && App().state.reports && App().state.reports.forecast2051; return F ? F.municipalities : null; };
   // Compact by default (Area, Units, People, Check: fits the panel); "All columns" adds the rest.
   let wide = !!(store && store.get('ptWide', false));
   const c = () => (wide ? ' class="num"' : ' class="num" hidden');
@@ -113,7 +120,39 @@
     body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: previous (Settings › Counting).'}</p>
         <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
       ${tableHTML(r)}${notesHTML(r)}
+      ${targetHTML(r)}
       ${matrixHTML(r)}`;
+  }
+
+  // ---- Table 2 (C4): areas against their published targets -------------------------------------
+  const pct = v => (v == null ? '–' : `${Math.round(v * 100)}%`);
+  function targetText(t) {
+    const parts = [];
+    if (t.units > 0) parts.push(`${n0(t.units)} units`);
+    if (t.population > 0) parts.push(`${n0(t.population)} people`);
+    if (t.jobs > 0) parts.push(`${n0(t.jobs)} jobs`);
+    if (!parts.length && t.density) parts.push(esc(t.density));
+    return parts.join(' · ') + (t.year ? ` <span class="muted">by ${esc(t.year)}</span>` : '');
+  }
+  function srcLink(t) {
+    if (t.kind === 'allocation') return '<span class="muted small">Region of Peel 2051 allocation</span>';
+    return t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener" title="${esc(t.quote || '')}">${esc(t.source || 'source')}</a>${t.page ? ` <span class="muted small">${esc(t.page)}</span>` : ''}` : esc(t.source || '');
+  }
+  function targetHTML(r) {
+    loadTargets();
+    const v = R().vsTarget(r, targets && targets.targets, munisAlloc());
+    if (!v.rows.length) return `<section class="pt-tg"><h3 class="sub-title">Plans against their targets</h3><p class="small muted">${targets ? 'No published targets for the areas shown.' : 'Loading the targets…'}</p></section>`;
+    const rows = v.rows.map(x => {
+      const t = x.target, isM = x.node.kind === 'municipality';
+      const flags = `${t.scope === 'total' ? ' <span class="muted small" title="The target counts every home at build-out, existing ones included; the pipeline counts new proposals only">total</span>' : ''}${t.checked === false ? ' <span class="tag" title="' + esc((targets && targets.checkNote) || 'Not yet checked against the document') + '">unchecked</span>' : ''}`;
+      const pctTot = x.pctTotal != null ? `<strong>${pct(x.pctTotal)}</strong>` : x.pctPeople != null ? `<span class="muted" title="People against a people target: indicative only, since targets use household persons per unit and the pipeline Peel design criteria">${pct(x.pctPeople)} of people†</span>` : '–';
+      return `<tr class="pt-${isM ? 'municipality' : 'plan'}"><th scope="row"${isM ? '' : ' style="padding-left:14px"'}>${esc(x.name)}${flags}</th>
+        <td${t.note ? ` title="${esc(t.note)}"` : ''}>${targetText(t)}${t.note ? ' <span class="muted" aria-hidden="true">ⓘ</span>' : ''}</td><td${c()}>${n0(x.committed)}</td><td class="num">${n0(x.total)}${x.pctPeople != null ? `<div class="small muted">${n0(x.people)} people</div>` : ''}</td><td${c()}>${pct(x.pctCommitted)}</td><td class="num">${pctTot}</td><td${c()}>${x.gap == null ? '<span class="muted">' + esc(x.compared === 'people' ? '–' : x.compared) + '</span>' : n0(x.gap)}</td><td class="small">${srcLink(t)}</td></tr>`;
+    }).join('');
+    return `<section class="pt-tg"><h3 class="sub-title">Plans against their targets</h3>
+      <p class="small">Each municipality against the Region's 2051 allocation of growth, and each plan against its published target, compared on <strong>units</strong>: committed (D-5-1) and all proposed. Where a target states only people, pipeline people are shown beside it (†, indicative only: targets use household persons per unit, the pipeline Peel design criteria). "unchecked" marks a figure not yet checked against its document. "total" marks a target that counts every home at build-out, existing ones included, so the pipeline (new proposals only) reads low there.</p>
+      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Committed units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">${fmtNum(v.noTarget)} plan${v.noTarget === 1 ? '' : 's'} shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json${targets && targets.checked ? `, checked ${esc(targets.checked)}` : ''}; hover a source for its wording, ⓘ for a note. All columns adds committed units, % committed and the gap.</p></section>`;
   }
 
   // CSV: one row per area (and per development at the leaves), with its path for pivot tables.
@@ -121,11 +160,13 @@
     const rows = [];
     const walk = (n, path) => {
       const here = path ? `${path}/${n.name}` : n.name, m = n.m;
-      rows.push({ path: here, level: n.kind, name: n.name, developments: Math.round(n.n), units_planned: Math.round(m.planned), committed: Math.round(m.committed), proposed: Math.round(m.proposed), permitted: Math.round(m.permitted), completed: Math.round(m.completed), left_to_build: Math.round(m.left), ppu: m.planned > 0 ? +(m.people / m.planned).toFixed(2) : '', people: Math.round(m.people), jobs: Math.round(m.jobs), people_in_mtsa: Math.round(n.mtsa.people), check_units: n.children.length ? Math.round(n.check.planned) : '', check_people: n.children.length ? Math.round(n.check.people) : '', share: '' });
+      const tg = n.areaId && targets && targets.targets ? targets.targets.find(t => t.id === n.areaId) : null;
+      rows.push({ path: here, level: n.kind, name: n.name, developments: Math.round(n.n), units_planned: Math.round(m.planned), committed: Math.round(m.committed), proposed: Math.round(m.proposed), permitted: Math.round(m.permitted), completed: Math.round(m.completed), left_to_build: Math.round(m.left), ppu: m.planned > 0 ? +(m.people / m.planned).toFixed(2) : '', people: Math.round(m.people), jobs: Math.round(m.jobs), people_in_mtsa: Math.round(n.mtsa.people), check_units: n.children.length ? Math.round(n.check.planned) : '', check_people: n.children.length ? Math.round(n.check.people) : '', share: '',
+        target_units: tg && tg.units ? tg.units : '', target_population: tg && tg.population ? tg.population : '', target_jobs: tg && tg.jobs ? tg.jobs : '', target_density: tg && tg.density ? tg.density : '', target_year: tg && tg.year ? tg.year : '', target_scope: tg ? tg.scope || '' : '', pct_target_proposed: tg && tg.units ? +(m.planned / tg.units).toFixed(3) : '', target_source: tg ? `${tg.source || ''}${tg.page ? `, ${tg.page}` : ''} ${tg.url || ''}`.trim() : '' });
       for (const c of n.children) walk(c, here);
       for (const x of n.devs) {
         const mm = r.mOf ? r.mOf.get(x.p) : r.placed.find(z => z.p === x.p).m, f = x.share;
-        rows.push({ path: `${here}/${x.p.title}`, level: 'development', name: x.p.title, developments: 1, units_planned: Math.round(mm.planned * f), committed: Math.round(mm.committed * f), proposed: Math.round(mm.proposed * f), permitted: Math.round(mm.permitted * f), completed: Math.round(mm.completed * f), left_to_build: Math.round(mm.left * f), ppu: mm.planned > 0 ? +(mm.people / mm.planned).toFixed(2) : '', people: Math.round(mm.people * f), jobs: Math.round(mm.jobs * f), people_in_mtsa: inMtsa(x.p) ? Math.round(mm.people * f) : 0, check_units: '', check_people: '', share: +x.share.toFixed(3) });
+        rows.push({ path: `${here}/${x.p.title}`, level: 'development', name: x.p.title, developments: 1, units_planned: Math.round(mm.planned * f), committed: Math.round(mm.committed * f), proposed: Math.round(mm.proposed * f), permitted: Math.round(mm.permitted * f), completed: Math.round(mm.completed * f), left_to_build: Math.round(mm.left * f), ppu: mm.planned > 0 ? +(mm.people / mm.planned).toFixed(2) : '', people: Math.round(mm.people * f), jobs: Math.round(mm.jobs * f), people_in_mtsa: inMtsa(x.p) ? Math.round(mm.people * f) : 0, check_units: '', check_people: '', share: +x.share.toFixed(3), target_units: '', target_population: '', target_jobs: '', target_density: '', target_year: '', target_scope: '', pct_target_proposed: '', target_source: '' });
       }
     };
     walk(r.root, '');
@@ -232,7 +273,7 @@
     App().applyFilters();
   });
 
-  const api = { render, compute, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
+  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, render, compute, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanTables = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -2444,3 +2444,51 @@ Under Table 1 in Growth › By plan, the plans run down the side: each municipal
 The plant capacity tables use census-relative layers; see Wastewater › Plants.
 
 **Workbook:** a new **Plan × servicing** sheet holds both matrices.
+
+## Population tables, C4: plans against their targets (Table 2)
+
+Growth › By plan has a third table, **Plans against their targets**.
+- **Municipalities** are compared with the Region's 2051 allocation of growth (2051 minus 2021,
+  from `data/peel-reports.json`).
+- **Plans** are compared with their published targets in `data/plan-targets.json`.
+- **Units are the main comparison.** The table shows committed units (D-5-1), all proposed
+  units, the percentage of target, and the gap.
+- **People-only targets:** where a target states only people, pipeline people are shown beside
+  it. This is marked † and is indicative only, because targets use household persons per unit
+  while the pipeline uses Peel design criteria.
+- **Density-only targets** are shown but not compared.
+- **Combined targets:** a target covering several plans is compared with all of them, e.g.
+  48 (a)+(b) Countryside Villages, or 40 (a)–(d) Bram West.
+- **No target:** a plan with no published target is left out, never shown as 0. The footnote
+  counts them.
+- **"total"** marks a target that counts every home at build-out, existing ones included.
+
+**`data/plan-targets.json`** holds 15 targets, researched 2026-10-15:
+- 3 state units: Mayfield West, Brookvalley, Alloa;
+- 6 state people and jobs: Heritage Heights, Mount Pleasant, Countryside Villages, Bram West,
+  Highway 427 Industrial, Mayfield West Phase 2 Stage 1;
+- 6 are densities only: Downtown Brampton, Vales of Humber, Humber Station, Mississauga DT Core,
+  Lakeview Waterfront, Ninth Line.
+
+Each has its source, page, date, wording and a note. `leftOut` lists what was not used and why:
+- applicant proposals;
+- the Bolton expansion-area figure;
+- Wildfield and Innis Lake, which have no plan boundary yet;
+- Mississauga's class-wide node densities.
+
+**Not yet checked against the documents.** Every figure was found in search results. The
+municipal sites (brampton.ca, caledon.ca, mississauga.ca and their eScribe meeting portals)
+could not be opened from the session that gathered them. Each one is marked **unchecked** in the
+table (`checked: false`) until someone confirms its wording against the source.
+
+The CSV and the By plan sheet gain target columns: units, population, jobs, density, year,
+scope, % of target and source.
+
+**Tests** check that every target:
+- has a source, a link and its wording;
+- names a real plan;
+- is never 0;
+- is one per plan.
+
+They also check the comparison: committed vs proposed, municipal growth, combined targets, and
+people-only targets.
