@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T04:52:07.143Z",
+ "generatedAt": "2026-10-15T05:23:55.820Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -37,10 +37,7 @@
    "purpose": "As part of the Flow | Central Brampton Program, and to support the environmental assessment process and preliminary design of the preferred sewer and watermain route options, field investigations will be taking place alo",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/downtown-brampton-water-wastewater-capacity-improvements",
-    "report": {
-     "label": "Figure 1: Study area for the Downtown Brampton water and wastewater capacity improvements project",
-     "url": "https://peelregion.ca/sites/default/files/2026-02/brampton-water-and-ww-capacity-improve-project.jpg"
-    },
+    "report": null,
     "appendices": [],
     "notices": []
    },
@@ -432,10 +429,7 @@
      "date": "2026-09-29"
     }
    ],
-   "nextStep": {
-    "text": ", the Region has initiated a Schedule B Municipal Class EA . The alternative sewer routes already identified will be looked at more closely ",
-    "date": null
-   },
+   "nextStep": null,
    "completedYear": null,
    "purpose": "As part of this effort, we’re conducting a Schedule B Municipal Class Environmental Assessment (Class EA) to explore options for building new large sewer pipes (called “sanitary trunk sewers”) in the area.",
    "links": {
@@ -497,10 +491,7 @@
    "purpose": "We will present the results of the completed evaluation of construction methods and preliminary shaft locations, with opportunities to provide feedback and ask questions.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/kennedy-road-sanitary-trunk-sewer-project",
-    "report": {
-     "label": "Study area",
-     "url": "https://peelregion.ca/sites/default/files/2024-11/Kennedy-road-sanitary-trunk-sewer-project.jpg"
-    },
+    "report": null,
     "appendices": [],
     "notices": []
    },
@@ -652,10 +643,7 @@
    "purpose": "Peel Region is undertaking a Complete Corridor Study and Preliminary Design to improve Highway 50 from Queen Street East to The Gore Road.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/highway-50-queen-street-east-gore-road",
-    "report": {
-     "label": "Study summary presentation",
-     "url": "https://peelregion.ca/sites/default/files/2026-09/hwy50-EA-study-summary-presentation_AODA.pdf"
-    },
+    "report": null,
     "appendices": [],
     "notices": []
    },
@@ -698,10 +686,7 @@
    "purpose": "Peel Region is undertaking a Complete Corridor Study and Preliminary Design Improvements to Airport Road from Derry Road to Intermodal Drive within Brampton and Mississauga (the Study).",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/airport-road-complete-corridor-study-preliminary-design-improvements",
-    "report": {
-     "label": "Airport Road study map",
-     "url": "https://peelregion.ca/sites/default/files/2025-12/airport-corridor-map.pdf"
-    },
+    "report": null,
     "appendices": [],
     "notices": []
    },
@@ -1428,10 +1413,7 @@
    "purpose": "Peel Region has initiated a corridor study for Queen Street (Regional Road 50) from 300m south of Queensgate Boulevard to 300m north of Columbia Way in Bolton (see map of study area).",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/highway-50-queensgate-columbia-way-bolton",
-    "report": {
-     "label": "Regional Road Highway 50 map",
-     "url": "https://peelregion.ca/sites/default/files/styles/large/public/2024-08/Hwy-50-Study-Area-Map.jpg"
-    },
+    "report": null,
     "appendices": [],
     "notices": [
      {
@@ -3635,10 +3617,7 @@
    "purpose": "Peel Region has initiated a corridor study and preliminary design for Derry Road from 250 metres west of McLaughlin Road to Tomken Road in the City of Mississauga.",
    "links": {
     "page": "https://peelregion.ca/construction/derry-road-mclaughlin-road-tomken-road",
-    "report": {
-     "label": "Study area map",
-     "url": "https://peelregion.ca/sites/default/files/2026-05/enviro-dixie-mclaughlin-tomken.jpg"
-    },
+    "report": null,
     "appendices": [],
     "notices": []
    },
@@ -5427,10 +5406,7 @@
      "date": "2023-07-27"
     }
    ],
-   "nextStep": {
-    "text": "in the Study process. Any input received, will be incorporated into the Project File Report, which will be available for public review when ",
-    "date": null
-   },
+   "nextStep": null,
    "completedYear": null,
    "purpose": "The study outlined conceptual wastewater infrastructure required to enhance flood resiliency, prevent sewage overflow into Sheridan creek, support additional growth, and facilitate treatment plant expansion.",
    "links": {
@@ -5521,10 +5497,7 @@
    "purpose": "The Region of Peel is undertaking a Complete Corridor Study to transform Erin Mills Parkway between Britannia Road (Regional Road 3) and Highway 407 within the City of Mississauga into a “complete street” that supports a",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/erin-mills-parkway-between-britannia-road-highway-407",
-    "report": {
-     "label": "Feb 25, 2026 - Public Open House presentation",
-     "url": "https://peelregion.ca/sites/default/files/2026-03/erin-mills-parkway-corridor-study-presentation.pdf"
-    },
+    "report": null,
     "appendices": [],
     "notices": []
    },
@@ -8719,10 +8692,7 @@
      "date": "2025-05-13"
     }
    ],
-   "nextStep": {
-    "text": ". Electronic display boards and video will be available to the public on this webpage starting October 14, 2024 .",
-    "date": null
-   },
+   "nextStep": null,
    "completedYear": null,
    "purpose": "Peel Region has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study for the new offline storage facility required to alleviate capacity constraints at the Lakelands Wastewater Pumping Station (WW",
    "links": {
@@ -11013,10 +10983,7 @@
      "date": "2024-06-17"
     }
    ],
-   "nextStep": {
-    "text": "in the Study process.",
-    "date": null
-   },
+   "nextStep": null,
    "completedYear": null,
    "purpose": "Peel Region has identified the need for a trunk sewer along Burnhamthorpe Road from Cawthra Road to the existing East Trunk Sanitary sewer, adjacent to Little Etobicoke Creek to improve local sanitary servicing along Wil",
    "links": {
@@ -12525,10 +12492,7 @@
    "purpose": "The EA study is being carried out in accordance with the planning and design process for “Schedule B” projects under the Environmental Assessment Act as outlined in the Municipal Engineers Association’s Municipal Class E",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/credit-valley-sanitary-trunk-sewer-relocation",
-    "report": {
-     "label": "Figure 1. Environmental Assessment Study Area.",
-     "url": "https://peelregion.ca/sites/default/files/styles/original/public/2024-07/cv-environ-assess-study-area.jpg"
-    },
+    "report": null,
     "appendices": [],
     "notices": [
      {
@@ -13980,10 +13944,7 @@
      "date": "2022-06-01"
     }
    ],
-   "nextStep": {
-    "text": "includes preliminary design concepts for the preferred solution which will be presented at the study’s next PIC, anticipated for late 2022. ",
-    "date": null
-   },
+   "nextStep": null,
    "completedYear": null,
    "purpose": "The Port Credit East study is being undertaken as a Schedule C Municipal Class EA and will ensure public feedback is accepted during the prescribed milestones.",
    "links": {
