@@ -2587,6 +2587,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 #analysis.site-scope [data-gsub="census2051"], #analysis.site-scope [data-gsub="timing"],
 #analysis.site-scope [data-dcasub="recommendations"], #analysis.site-scope [data-dcasub="funding"],
 #analysis.site-scope #screen-note-top { display: none; }
+#analysis.site-scope .site-off { display: none; }
 /* The development's Files & history is the Records tab; its Overview keeps About and Site. */
 #pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }
 /* Construction and EAs (js/capital-ea.js) and the tap picker (js/map-pick.js) */

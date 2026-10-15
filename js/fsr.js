@@ -122,7 +122,7 @@
       // Sewer-path and plant-reserve numbers live on the Wastewater tab; the DC tab keeps the
       // water constraints, the planned works and the DCs the site would pay.
       const wwNeeds = opts.noWwNeeds
-        ? `<p class="small muted">Sewer path, pumping stations and the plant's reserve live on the ${DV().homeLine('ww', 'Wastewater tab')}.</p>`
+        ? `<p class="small muted">Sewer path, pumping stations and the plant's reserve live on the ${DV().homeLine('ww', 'Servicing › Wastewater')}.</p>`
         : `<div id="dev-dcn" data-info="dc-needs">${MP().dcNeedsHTML(p, 'ww')}</div>`;
       return `${head}<section class="svc-sys svc-sys-dc"><h3 class="svc-sys-h"><i aria-hidden="true"></i>DC projects potentially required</h3><div class="brief">
         ${f ? row('Wastewater', wwNeeds) : ''}

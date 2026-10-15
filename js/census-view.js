@@ -130,7 +130,7 @@
         tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
       ].join('')}</div>
       <div class="growth-chart" id="gc-chart" data-info="growth-bars"></div>
-      ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('ww', 'Wastewater tab')}.</p>`
+      ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('ww', 'Servicing › Wastewater')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
       ${forecastTableHTML(bc)}
       ${da ? '' : housingActivityHTML() + outlookCardHTML(true)}

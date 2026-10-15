@@ -37,7 +37,13 @@
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
   const SVC = new Set(['ww', 'water']);
-  const SITE_HIDDEN = { growth: ['census2051', 'timing'], dca: ['recommendations', 'funding'] };
+  // Site scope (a development open): a sub-view with nothing to show for one site is hidden, never
+  // blank, and area-only content never renders there (pace, census, 2051, by-plan tables, plant and
+  // facility tables, allocations, DC funding, the Region-wide construction list).
+  const SITE_HIDDEN = { growth: ['census2051', 'timing', 'byplan'], ww: ['plants', 'alloc', 'pumpstations'], water: ['capacity', 'facilities', 'hydro'], dca: ['build', 'recommendations', 'funding'] };
+  const siteHidden = (tab, sub) => !!(SITE_HIDDEN[tab] && SITE_HIDDEN[tab].includes(sub));
+  // The sub-view a tab shows: the one picked, else (hidden at this scope) the first that is not.
+  const subFor = (tab, sub, site) => (site && siteHidden(tab, sub) ? TABSUBS[tab].valid.find(v => !siteHidden(tab, v)) : sub);
   const tabOf = key => (SVC.has(key) ? 'svc' : key);   // the tab button a view belongs to
   function showFootTab(key) {
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
@@ -51,8 +57,7 @@
     // bar's note is the panel's one disclaimer.
     const site = !!(root.DevScope && root.DevScope.current());
     const an = document.getElementById('analysis'); if (an) an.classList.toggle('site-scope', site);
-    if (site && SITE_HIDDEN.growth.includes(gSub)) gSub = 'pipeline';
-    if (site && SITE_HIDDEN.dca.includes(dcSub)) dcSub = 'timing';
+    for (const [tk, s] of Object.entries(TABSUBS)) { const v = subFor(tk, s.get(), site); if (v !== s.get()) s.set(v); }
     footTab = key;
     for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === tabOf(key)));
     for (const p of document.querySelectorAll('.f-pane')) {
@@ -61,7 +66,7 @@
       p.hidden = pk !== key || p.dataset.off === '1' || (p.dataset.sub != null && (!TABSUBS[pk] || p.dataset.sub !== TABSUBS[pk].get()));
     }
     for (const [tk, s] of Object.entries(TABSUBS))
-      for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get() && (!SVC.has(tk) || tk === key); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }
+      for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get() && (!SVC.has(tk) || tk === key); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.classList.toggle('site-off', site && siteHidden(tk, b.dataset[s.attr])); }
     if (key === 'records' && root.PeelRecordsTab) setTimeout(() => root.PeelRecordsTab.render(), 0);
     if (root.PeelRecordsTab && root.PeelRecordsTab.syncDevHome) root.PeelRecordsTab.syncDevHome(key);
     if (root.PeelSvcScope) root.PeelSvcScope.peelWideNote();
@@ -91,7 +96,7 @@
     getWSub: () => wSub, setWSub: v => { wSub = v; },
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },
-    showFootTab, TABSUBS, migrateTabKey, setSub,
+    showFootTab, TABSUBS, migrateTabKey, setSub, SITE_HIDDEN, siteHidden, subFor,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAnalysisTabs = api;

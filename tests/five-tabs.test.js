@@ -36,8 +36,8 @@ test('Records follows the scope: Peel sources / checks / duplicates; a developme
 
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /const SITE_HIDDEN = \{ growth: \['census2051', 'timing'\], dca: \['recommendations', 'funding'\] \};/);
-  assert.match(at, /if \(site && SITE_HIDDEN\.growth\.includes\(gSub\)\) gSub = 'pipeline';/);
+  assert.match(at, /const SITE_HIDDEN = \{ growth: \['census2051', 'timing', 'byplan'\], ww: \['plants', 'alloc', 'pumpstations'\], water: \['capacity', 'facilities', 'hydro'\], dca: \['build', 'recommendations', 'funding'\] \};/);
+  assert.match(at, /const v = subFor\(tk, s\.get\(\), site\); if \(v !== s\.get\(\)\) s\.set\(v\);/, 'a hidden sub-view falls back (tests/site-scope.test.js)');
   const css = src('css/app.css');
   for (const s of ['#analysis.site-scope [data-gsub="census2051"]', '#analysis.site-scope [data-gsub="timing"]', '#analysis.site-scope [data-dcasub="recommendations"]', '#analysis.site-scope [data-dcasub="funding"]', '#analysis.site-scope #screen-note-top']) assert.ok(css.includes(s), s);
 });

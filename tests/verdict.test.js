@@ -188,11 +188,11 @@ test('scoped DC: site DC brief without the sewer-path/plant-reserve numbers', ()
   assert.ok(m, 'renderDca scoped branch must reuse devBriefHTML(p, st, f, \'dc\') with noWwNeeds');
   const b = /function devServicingBriefHTML\(p, st, f, part, opts = \{\}\) \{[\s\S]*?\n  \}/.exec(APP);
   assert.match(b[0], /opts\.noWwNeeds/);
-  assert.match(b[0], /homeLine\('ww', 'Wastewater tab'\)/);
+  assert.match(b[0], /homeLine\('ww', 'Servicing › Wastewater'\)/);
 });
 
 test('scoped Growth (census): DA view links I&I flows to the Wastewater tab instead of repeating them', () => {
-  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{DV\(\)\.homeLine\('ww', 'Wastewater tab'\)\}/);
+  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{DV\(\)\.homeLine\('ww', 'Servicing › Wastewater'\)\}/);
 });
 
 test('scopeBriefIds: prefixes dev-* ids so footer copies do not collide with the detail panel', () => {

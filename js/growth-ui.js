@@ -85,6 +85,8 @@
     const muniTable = `<table class="dt"><caption>Completions${pace ? ' and approval pace' : ''} by municipality</caption><thead><tr><th>Municipality</th><th>Completions</th>${pace ? '<th>Median application → approval</th>' : ''}</tr></thead><tbody>${DU().MUNIS.map(mrow).join('')}
       <tr class="tot"><td>Peel</td><td>${yrs.length ? `${fmtNum(Math.round(yrUnits / yrs.length))}<small>/yr</small>` : '–'}</td>${pace ? `<td>${allMedian.toFixed(0)}<small> mo · n=${lags.length}</small></td>` : ''}</tr></tbody></table>`;
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
+    // Completions per year and pace by municipality are area content: not at a development's scope.
+    const site = !!(window.DevScope && window.DevScope.current());
     body.innerHTML = `
       ${hlP(head)}
       <h3 class="sub-title" data-info="demand-units">Homes</h3>
@@ -97,7 +99,7 @@
       <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
       <p class="small muted">The largest developments still to build are on the Overview (one list).</p>
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
-      ${strip}${muniTable}
+      ${site ? '' : strip + muniTable}
       <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
     // The pipeline by stage reuses the growth chart (no census baseline here).
     const bc = CA().baselineCensus();
