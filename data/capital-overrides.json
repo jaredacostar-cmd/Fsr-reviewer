@@ -1,0 +1,4 @@
+{
+ "note": "Manual decisions on DC ↔ capital links, applied on every build of data/capital.json. action: accept (keep or add dc → capital), reject (remove), reassign (move dc from capital to `to`). dc keys and capital ids are listed in data/capital-links-audit.json.",
+ "links": []
+}
