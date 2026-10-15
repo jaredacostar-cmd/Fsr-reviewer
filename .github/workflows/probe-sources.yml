@@ -299,7 +299,17 @@ jobs:
         run: |
           pip install -q pillow numpy
           git fetch -q origin ea-maps && git checkout origin/ea-maps -- ea-maps
-          python3 scripts/ea_trace.py
+          # Streets and city boundaries from OpenStreetMap (the Ontario extract cut to Peel): every
+          # segment of each street, so the crossings are found locally.
+          sudo apt-get update -qq && sudo apt-get install -y -qq osmium-tool >/dev/null
+          curl -sSfL -o /tmp/on.pbf https://download.geofabrik.de/north-america/canada/ontario-latest.osm.pbf
+          osmium extract -s smart -b -80.35,43.40,-79.40,44.10 /tmp/on.pbf -o /tmp/peel.pbf --overwrite
+          osmium tags-filter /tmp/peel.pbf w/highway -o /tmp/peel-roads.pbf --overwrite
+          osmium export /tmp/peel-roads.pbf -f geojsonseq --geometry-types=linestring -o /tmp/peel-roads.geojsonseq --overwrite
+          osmium tags-filter /tmp/peel.pbf r/boundary=administrative -o /tmp/peel-admin.pbf --overwrite
+          osmium export /tmp/peel-admin.pbf -f geojsonseq --geometry-types=polygon -o /tmp/peel-munis.geojsonseq --overwrite
+          ls -la /tmp/peel-roads.geojsonseq /tmp/peel-munis.geojsonseq
+          EA_ROADS=/tmp/peel-roads.geojsonseq EA_MUNIS=/tmp/peel-munis.geojsonseq python3 scripts/ea_trace.py
           git reset -q ea-maps && rm -rf ea-maps
           # Rebuild the EA list so the traced areas drive the DC / facility links too.
           node scripts/build-eas.js --out data --capital /nonexistent > /tmp/eas.log 2>&1 || { tail -40 /tmp/eas.log; exit 1; }

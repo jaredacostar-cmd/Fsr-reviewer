@@ -185,8 +185,76 @@ def nominatim(params):
     time.sleep(1.2)
     with urllib.request.urlopen(req, timeout=40) as r: return json.loads(r.read())
 
+# ---- local OpenStreetMap roads (Actions: the Ontario extract cut to Peel with osmium) -----------------
+# EA_ROADS: GeoJSON sequence of highway ways; EA_MUNIS: administrative boundaries. When set, streets come
+# from these (every segment, not Nominatim's first 20) and crossings are kept inside the named city.
+ABBR = {'st': 'street', 'rd': 'road', 'ave': 'avenue', 'av': 'avenue', 'blvd': 'boulevard', 'dr': 'drive', 'pkwy': 'parkway',
+        'cres': 'crescent', 'ct': 'court', 'hwy': 'highway', 'ln': 'lane', 'sdrd': 'sideroad', 'cir': 'circle', 'pl': 'place',
+        'e': 'east', 'w': 'west', 'n': 'north', 's': 'south', 'trl': 'trail', 'gt': 'gate', 'tr': 'trail'}
+DIRS = {'east', 'west', 'north', 'south'}
+def norm_street(s):
+    w = [ABBR.get(x, x) for x in __import__('re').sub(r'[^a-z0-9 ]', ' ', str(s).lower()).split()]
+    return ' '.join(w)
+ROADS = None
+def roads():
+    """name -> [coords], from EA_ROADS (one feature per line)."""
+    global ROADS
+    if ROADS is not None: return ROADS
+    ROADS = {}
+    path = os.environ.get('EA_ROADS')
+    if not path or not os.path.exists(path): return ROADS
+    for line in open(path, encoding='utf8'):
+        line = line.strip().lstrip('\x1e')
+        if not line: continue
+        f = json.loads(line); g = f.get('geometry') or {}; pr = f.get('properties') or {}
+        if g.get('type') != 'LineString': continue
+        names = {pr.get(k) for k in ('name', 'alt_name', 'old_name', 'official_name') if pr.get(k)}
+        for ref in str(pr.get('ref') or '').split(';'):
+            n = ''.join(c for c in ref if c.isdigit())
+            if n: names |= {f'Highway {n}', f'Regional Road {n}'}
+        for n in names: ROADS.setdefault(norm_street(n), []).append(g['coordinates'])
+    print(f"  local roads: {sum(len(v) for v in ROADS.values())} ways, {len(ROADS)} names")
+    return ROADS
+MUNIS = None
+def munis():
+    """City name -> [rings], from EA_MUNIS."""
+    global MUNIS
+    if MUNIS is not None: return MUNIS
+    MUNIS = {}
+    path = os.environ.get('EA_MUNIS')
+    if not path or not os.path.exists(path): return MUNIS
+    for line in open(path, encoding='utf8'):
+        line = line.strip().lstrip('\x1e')
+        if not line: continue
+        f = json.loads(line); g = f.get('geometry') or {}; nm = (f.get('properties') or {}).get('name')
+        if nm not in ('Brampton', 'Mississauga', 'Caledon', 'Town of Caledon', 'City of Brampton', 'City of Mississauga'): continue
+        polys = g['coordinates'] if g.get('type') == 'MultiPolygon' else [g['coordinates']] if g.get('type') == 'Polygon' else []
+        MUNIS.setdefault(nm.split(' of ')[-1], []).extend(p[0] for p in polys)
+    print(f"  city boundaries: {sorted(MUNIS)}")
+    return MUNIS
+def in_ring(x, y, ring):
+    c = False
+    for i in range(len(ring)):
+        x1, y1 = ring[i - 1]; x2, y2 = ring[i]
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1: c = not c
+    return c
+def near_city(pt, city, m=300):
+    """Inside the city, or within m metres of it (boundary roads: Steeles, Mayfield, Winston Churchill)."""
+    rings = munis().get(city)
+    if not rings: return True
+    dx = m / (111320 * math.cos(math.radians(pt[1]))); dy = m / 110574
+    return any(in_ring(pt[0] + a * dx, pt[1] + b * dy, r) for a, b in ((0, 0), (1, 0), (-1, 0), (0, 1), (0, -1), (.7, .7), (-.7, .7), (.7, -.7), (-.7, -.7)) for r in rings)
+def local_lines(name):
+    """Ways named `name`; "Queen Street" also takes "Queen Street East / West" (a direction suffix)."""
+    R = roads(); q = norm_street(name)
+    out = list(R.get(q, []))
+    if not q.split()[-1] in DIRS:
+        for d in DIRS: out += R.get(f'{q} {d}', [])
+    return out
+
 def street_lines(name, city):
     if isinstance(name, list): return [l for n in name for l in street_lines(n, city)]   # alternate names (Highway 50 / Queen Street South)
+    if roads(): return local_lines(name)
     out = []
     res = nominatim({'street': name, 'city': city, 'state': 'Ontario'}) if city else []
     if not res: res = nominatim({'q': f"{name}, Ontario"})   # boundary roads (Steeles, Mayfield) sit in two cities
@@ -223,13 +291,24 @@ def crossings(A, B):
                     if best is None or d < best[1]: best = (((p[0] + q[0]) / 2, (p[1] + q[1]) / 2), d)
     return [best[0]] if best and best[1] <= 40 else []
 
+def merge_near(pts, m):
+    """Points within m metres of each other, as their centroid (the carriageways of a divided road)."""
+    groups = []
+    for p in pts:
+        g = next((g for g in groups if metres(p, g[0]) <= m), None)
+        if g: g.append(p)
+        else: groups.append([p])
+    return [(sum(p[0] for p in g) / len(g), sum(p[1] for p in g) / len(g)) for g in groups]
+
 def geocode_xing(streets, city, cache):
     """Candidate points for an intersection (more than one when the streets cross twice, e.g. a crescent)."""
     nm = lambda n: ' / '.join(n) if isinstance(n, list) else n
-    key = f"{nm(streets[0])} & {nm(streets[1])}, {city}"
+    key = f"{'osm:' if roads() else ''}{nm(streets[0])} & {nm(streets[1])}, {city}"
     if key not in cache:
         A, B = street_lines(streets[0], city), street_lines(streets[1], city)
-        cache[key] = [[round(v, 6) for v in x] for x in crossings(A, B)] if A and B else []
+        xs = crossings(A, B) if A and B else []
+        if roads(): xs = [x for x in merge_near(xs, 90) if near_city(x, city)]   # a divided road crosses as up to 4 points
+        cache[key] = [[round(v, 6) for v in x] for x in xs]
         print(f"  {key}: {len(cache[key])} crossing(s) {cache[key][:3]} ({len(A)} / {len(B)} ways)")
     v = cache[key]
     return [] if not v else [v] if isinstance(v[0], (int, float)) else v   # older cache entries held one point
@@ -268,6 +347,7 @@ def main():
     cfg = json.load(open(os.path.join(ROOT, 'scripts', 'ea-trace.json')))
     xpath = os.path.join(ROOT, 'scripts', 'ea-xings.json')
     cache = json.load(open(xpath)) if os.path.exists(xpath) else {}
+    if roads(): cache = {k: v for k, v in cache.items() if v and k.startswith('osm:')}   # local roads: recompute, keep only earlier local hits
     opath = os.path.join(ROOT, 'data', 'eas-overrides.json')
     ov = json.load(open(opath))
     ov.setdefault('eas', {})
@@ -376,6 +456,29 @@ def selftest():
     ctrl = [(P[0], [good[0]]), (P[1], [(good[1][0] + 0.01, good[1][1]), good[1]]), (P[2], [good[2]])]
     tf, res, ll = best_fit({}, ctrl)
     assert ll[1] == good[1] and res < 50, (ll, res)
+    # Local roads: abbreviations and a direction suffix match; a divided road's crossings merge; the city filters.
+    import tempfile
+    global ROADS, MUNIS
+    d = tempfile.mkdtemp(); rp, mp = os.path.join(d, 'r.geojsonseq'), os.path.join(d, 'm.geojsonseq')
+    with open(rp, 'w') as f:
+        for nm, ref, coords in [('Queen Street East', None, [[-79.80, 43.70], [-79.70, 43.70]]), ('Queen Street East', None, [[-79.80, 43.7003], [-79.70, 43.7003]]),
+                                ('Kennedy Road North', None, [[-79.75, 43.65], [-79.75, 43.75]]), ('Queen Street South', '50', [[-79.60, 43.80], [-79.60, 43.90]]),
+                                ('King Street', None, [[-79.65, 43.85], [-79.55, 43.85]]), ('King Street', None, [[-79.75, 43.60], [-79.74, 43.80]])]:
+            f.write('\x1e' + json.dumps({'type': 'Feature', 'properties': {'name': nm, **({'ref': ref} if ref else {})}, 'geometry': {'type': 'LineString', 'coordinates': coords}}) + '\n')
+    with open(mp, 'w') as f:
+        f.write(json.dumps({'type': 'Feature', 'properties': {'name': 'Caledon'}, 'geometry': {'type': 'Polygon', 'coordinates': [[[-79.7, 43.8], [-79.5, 43.8], [-79.5, 44.0], [-79.7, 44.0], [-79.7, 43.8]]]}}) + '\n')
+    old = (os.environ.get('EA_ROADS'), os.environ.get('EA_MUNIS'), ROADS, MUNIS)
+    os.environ['EA_ROADS'], os.environ['EA_MUNIS'] = rp, mp; ROADS = MUNIS = None
+    try:
+        x = geocode_xing(['Kennedy Rd', 'Queen St'], 'Brampton', {})
+        assert len(x) == 1 and abs(x[0][0] + 79.75) < 1e-6 and abs(x[0][1] - 43.70015) < 1e-4, x
+        y = geocode_xing(['Highway 50', 'King St'], 'Caledon', {})   # two King Streets: only the one in Caledon crosses Hwy 50
+        assert len(y) == 1 and abs(y[0][0] + 79.60) < 1e-6 and abs(y[0][1] - 43.85) < 1e-6, y
+    finally:
+        for k, v in zip(('EA_ROADS', 'EA_MUNIS'), old[:2]):
+            if v is None: os.environ.pop(k, None)
+            else: os.environ[k] = v
+        ROADS, MUNIS = old[2], old[3]
     print('selftest ok')
 
 if __name__ == '__main__':
