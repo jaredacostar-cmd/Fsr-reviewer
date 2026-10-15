@@ -241,7 +241,8 @@ function nextStepOf(ms, ls, today) {
   if (ahead.length) return { text: LABEL[ahead[0].type] || ahead[0].type, date: ahead[0].date };
   for (const l of ls) {
     if (CONTACT.test(l)) continue;
-    const m = /\bnext steps?\b[:\s-]*(.{10,160})/i.exec(l);
+    // Only an explicit "Next steps: <sentence>" (a capitalised sentence after a colon or dash), not prose that mentions next steps.
+    const m = /\b[Nn]ext [Ss]teps?\s*[:–—-]\s*([A-Z][^|]{20,160})/.exec(l);
     if (m) return { text: m[1].replace(/\s+/g, ' ').trim().slice(0, 140), date: null };
   }
   return null;

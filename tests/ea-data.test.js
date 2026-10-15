@@ -290,3 +290,9 @@ test('study-area images, maps and display boards are not taken as the report', (
   const d = E.docLinks('<main><a href="/sites/default/files/2025-01/kennedy-study-area.pdf">Study area</a><a href="/sites/default/files/2025-01/pic-boards.pdf">PIC display boards</a><a href="/sites/default/files/2025-09/esr.pdf">Environmental Study Report</a></main>', 'https://peelregion.ca/x');
   assert.equal(d.report.label, 'Environmental Study Report');
 });
+
+test('next step text only from an explicit "Next steps:" sentence', () => {
+  assert.equal(E.nextStepOf([], ['As part of the next steps, the Region has initiated a Schedule B Municipal Class EA.'], '2026-10-15'), null);
+  assert.equal(E.nextStepOf([], ['Next steps will be shared in the Study process.'], '2026-10-15'), null);
+  assert.deepEqual(E.nextStepOf([], ['Next steps: The project team will review all comments and finalize the report.'], '2026-10-15'), { text: 'The project team will review all comments and finalize the report.', date: null });
+});
