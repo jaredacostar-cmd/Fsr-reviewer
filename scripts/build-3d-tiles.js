@@ -54,7 +54,10 @@ const merc = (lng, lat) => [lng * 20037508.342789244 / 180, Math.log(Math.tan((9
 async function lidarTile(z, x, y) {
   const b = M.tileBounds(z, x, y), [x0, y0] = merc(b.w, b.s), [x1, y1] = merc(b.e, b.n);
   const url = `${DTM}/exportImage?${q({ bbox: `${x0},${y0},${x1},${y1}`, bboxSR: 3857, imageSR: 3857, size: `${SIZE},${SIZE}`, format: 'tiff', pixelType: 'F32', noData: -9999, noDataInterpretation: 'esriNoDataMatchAny', interpolation: 'RSP_BilinearInterpolation', compression: 'None', f: 'image' })}`;
-  const t = TIFF.decode(await get(url));
+  const t0 = Date.now(), buf = await get(url, { timeout: 45000 }, 2);
+  if (buf.subarray(0, 4).toString('latin1').match(/^(\{|<)/)) throw new Error(`not an image: ${buf.subarray(0, 200).toString()}`);
+  const t = TIFF.decode(buf);
+  if (!lidarTile.logged) { lidarTile.logged = true; console.log(`  first tile ${z}/${x}/${y}: ${buf.length} bytes, ${Date.now() - t0} ms`); }
   if (t.width !== SIZE || t.height !== SIZE) throw new Error(`tile ${z}/${x}/${y}: ${t.width}×${t.height}`);
   const bad = v => !Number.isFinite(v) || v === t.noData || v <= -9000 || v > 3000;
   return { data: t.data, valid: Array.from(t.data, v => !bad(v)) };
@@ -93,11 +96,16 @@ async function buildTerrain() {
     const list = M.tilesInBbox(PILOT.bbox, z);
     console.log(`lidar z${z}: ${list.length} tiles`);
     for (const t of list) {
-      let raw; try { raw = await lidarTile(t.z, t.x, t.y); } catch (e) { console.log(`  ${t.z}/${t.x}/${t.y}: ${e.message}`); skipped++; continue; }
+      let raw; try { raw = await lidarTile(t.z, t.x, t.y); } catch (e) {
+        console.log(`  ${t.z}/${t.x}/${t.y}: ${e.message.slice(0, 300)}`); skipped++;
+        if (!tiles.length && skipped >= 3) throw new Error(`lidar export failing: ${e.message.slice(0, 200)}`);
+        continue;
+      }
       const f = fillGaps(raw); if (!f) { skipped++; continue; }
       filled += f.filled;
       tiles.push({ ...t, data: encodeTile(f.z), z16: f.z });
-      await sleep(150);
+      if (tiles.length % 25 === 0) console.log(`  ${tiles.length} tiles`);
+      await sleep(100);
     }
     // Check: five pixel centres per zoom against getSamples (same service, bilinear).
     const zt = tiles.filter(t => t.z === z); if (!zt.length) continue;
@@ -122,7 +130,7 @@ async function buildTerrain() {
 // ---- 2. OSM buildings -----------------------------------------------------------------------
 async function overpass(ql) {
   for (const url of OVERPASS) {
-    try { return JSON.parse((await get(url, { method: 'POST', body: `data=${encodeURIComponent(ql)}`, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 240000 })).toString()); }
+    try { return JSON.parse((await get(url, { method: 'POST', body: `data=${encodeURIComponent(ql)}`, headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, timeout: 200000 }, 1)).toString()); }
     catch (e) { console.log(`overpass ${url}: ${e.message}`); }
   }
   throw new Error('no Overpass server answered');

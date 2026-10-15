@@ -58,3 +58,16 @@ test('committed pilot archives (when built) are readable, bounded and attributed
     assert.ok(r.header.maxZoom <= 16);
   }
 });
+
+test('terrain tiles above z15 are upsampled from decoded heights (no byte-carry artefacts)', () => {
+  const EL = require('../js/elevation.js');
+  const size = 256, px = new Uint8ClampedArray(size * size * 4);
+  // A plane crossing a green-channel carry: h = 255.5 + x / 100.
+  for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) { const v = 255.5 + x / 100 + 32768, o = (y * size + x) * 4; px[o] = Math.floor(v / 256); px[o + 1] = Math.floor(v) % 256; px[o + 2] = Math.round((v % 1) * 256); px[o + 3] = 255; }
+  const out = EL.upsampleTerrarium(px, 1, 1, 0);   // the right half, doubled
+  for (const i of [0, 77, 128, 200, 254]) {
+    const o = (10 * size + i) * 4, h = out[o] * 256 + out[o + 1] + out[o + 2] / 256 - 32768;
+    const parentX = (256 + i + 0.5) / 2 - 0.5, want = 255.5 + Math.min(255, parentX) / 100;
+    assert.ok(Math.abs(h - want) < 0.01, `${i}: ${h} vs ${want}`);
+  }
+});

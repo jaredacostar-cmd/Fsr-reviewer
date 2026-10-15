@@ -46,6 +46,8 @@ test('massing: stated height → storeys × 3.2 → units estimate → hidden', 
   assert.equal(M.massingFor({ ...at, description: '120 detached dwellings', units: 120 }), null, 'houses: hidden');
   assert.equal(M.massingFor({ ...at, description: 'Official plan amendment' }), null);
   assert.equal(M.massingFor({ description: '12 storey' }), null, 'no location: hidden');
+  assert.equal(M.massingFor({ ...at, description: '2-storey rear addition to existing dwelling' }), null, 'an addition: hidden');
+  assert.equal(M.massingFor({ ...at, description: '6 storey addition with 40 units', units: 40 }).storeys, 6, 'an addition with units: drawn');
 });
 
 test('footprint: half the application site about its centroid, or a 30 m square', () => {

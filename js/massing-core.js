@@ -93,6 +93,8 @@
   // estimate from its units (apartment-type only), else null (hidden).
   function massingFor(p) {
     const fp = footprint(p); if (!fp) return null;
+    // An addition or extension to an existing building is not a new block: hidden unless it adds units.
+    if (/\b(addition|extension|alteration|renovation)s?\b/i.test(p.description || '') && !(p.units > 0)) return null;
     const st = statedHeight(p.description);
     let h = null, storeys = null, basis = null;
     if (st.metres) { h = st.metres; storeys = st.storeys || Math.round(st.metres / STOREY_M); basis = 'stated height'; }

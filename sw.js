@@ -88,6 +88,8 @@ const SHELL_ASSETS = [
   'js/map-markers.js',
   'js/masterplan.js',
   'js/measure.js',
+  'js/massing-core.js',
+  'js/view-3d.js',
   'js/offline.js',
   'js/overview-tab.js',
   'js/phases.js',
