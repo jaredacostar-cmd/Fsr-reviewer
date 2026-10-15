@@ -268,6 +268,7 @@ function docLinks(html, base) {
     const item = { label: l.label.slice(0, 140) || 'Document', url: l.url };
     if (/notice/i.test(label)) out.notices.push(item);
     else if (/append|appx|\bapp\.?\s?[a-z0-9]\b/i.test(label)) out.appendices.push(item);
+    else if (/study area|\bmap\b|image|figure|boards?\b|presentation|video|rendering|roll plan/i.test(label)) continue;
     else if (!out.report && /report|\bESR\b|project file|final|master plan|study/i.test(label)) out.report = item;
   }
   return out;

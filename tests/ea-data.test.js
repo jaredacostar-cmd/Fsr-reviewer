@@ -285,3 +285,8 @@ test('real page wording: completed road and pumping-station EAs', () => {
   assert.ok(sps.milestones.some(m => m.type === 'reviewEnd' && m.date === '2024-01-08'));
   assert.equal(sps.completedYear, 2023);
 });
+
+test('study-area images, maps and display boards are not taken as the report', () => {
+  const d = E.docLinks('<main><a href="/sites/default/files/2025-01/kennedy-study-area.pdf">Study area</a><a href="/sites/default/files/2025-01/pic-boards.pdf">PIC display boards</a><a href="/sites/default/files/2025-09/esr.pdf">Environmental Study Report</a></main>', 'https://peelregion.ca/x');
+  assert.equal(d.report.label, 'Environmental Study Report');
+});
