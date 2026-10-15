@@ -3610,6 +3610,152 @@
    "geomType": "road",
    "geomMethod": "road centreline Bovaird Drive West / Bovaird Drive from 1450 m west of Heritage Road to Lake Louise Drive / Worthington Avenue (© OpenStreetMap contributors, ODbL)",
    "geomConfidence": "medium"
+  },
+  "bridge-and-culvert-replacement-queen-street-east-over-shaw-s-creek-in-the-villag": {
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -80.064616,
+     43.86414
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "where Queen Street East crosses the creek nearest Alton's Queen Street East and Main Street (Shaw's Creek is unnamed in OpenStreetMap) (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "low"
+  },
+  "west-trunk-sanitary-sewer-diversion": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.733209,
+      43.578554
+     ],
+     [
+      -79.741113,
+      43.584386
+     ],
+     [
+      -79.741496,
+      43.584714
+     ],
+     [
+      -79.742009,
+      43.585365
+     ],
+     [
+      -79.742284,
+      43.586128
+     ],
+     [
+      -79.742328,
+      43.586407
+     ],
+     [
+      -79.74231,
+      43.586677
+     ],
+     [
+      -79.742187,
+      43.587207
+     ],
+     [
+      -79.741084,
+      43.590022
+     ],
+     [
+      -79.738952,
+      43.595827
+     ],
+     [
+      -79.738776,
+      43.596636
+     ],
+     [
+      -79.738743,
+      43.597773
+     ],
+     [
+      -79.73898,
+      43.597764
+     ],
+     [
+      -79.738957,
+      43.597063
+     ],
+     [
+      -79.739027,
+      43.596366
+     ],
+     [
+      -79.739226,
+      43.595527
+     ],
+     [
+      -79.742398,
+      43.587177
+     ],
+     [
+      -79.742524,
+      43.586413
+     ],
+     [
+      -79.742422,
+      43.585658
+     ],
+     [
+      -79.74214,
+      43.585153
+     ],
+     [
+      -79.741721,
+      43.584632
+     ],
+     [
+      -79.730804,
+      43.576516
+     ],
+     [
+      -79.730198,
+      43.575936
+     ],
+     [
+      -79.72875,
+      43.574111
+     ],
+     [
+      -79.727479,
+      43.573079
+     ],
+     [
+      -79.723229,
+      43.570039
+     ],
+     [
+      -79.720436,
+      43.568695
+     ],
+     [
+      -79.719906,
+      43.568397
+     ],
+     [
+      -79.70932,
+      43.560569
+     ],
+     [
+      -79.70687,
+      43.558824
+     ],
+     [
+      -79.706725,
+      43.558854
+     ]
+    ]
+   },
+   "geomType": "linear",
+   "geomMethod": "approximate: the new west trunk sewer runs along Erin Mills Parkway through the study area (project page figure): road centreline Erin Mills Parkway from Britannia Road West / Britannia Road to Eglinton Avenue West / Eglinton Avenue (© OpenStreetMap contributors, ODbL)",
+   "geomConfidence": "low"
   }
  },
  "add": [],

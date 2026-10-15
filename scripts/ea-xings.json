@@ -835,7 +835,6 @@
    43.546461
   ]
  ],
- "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
  "osm:Bovaird Drive East / Castlemore Road & Bramalea Road, Brampton": [
   [
    -79.744345,
@@ -854,10 +853,6 @@
    43.754346
   ]
  ],
- "osm:Steeles Avenue East & Highway 50, Brampton": [],
- "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
- "osm:Highway 50 & Huntington Road, Brampton": [],
- "osm:Hurontario Street & Old School Road, Caledon": [],
  "osm:Airport Road & Old Base Line Road, Caledon": [
   [
    -79.851135,
@@ -870,10 +865,6 @@
    43.849023
   ]
  ],
- "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
- "osm:Kane Road & Lakeshore Road West, Mississauga": [],
- "osm:Mississauga Road & Bush Street, Caledon": [],
- "osm:Bush Street & Olde Base Line Road, Caledon": [],
  "osm:Bovaird Drive West / Bovaird Drive & Heritage Road, Brampton": [
   [
    -79.839672,
@@ -896,6 +887,31 @@
   [
    -79.706725,
    43.558854
+  ]
+ ],
+ "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
+ "osm:Steeles Avenue East & Highway 50, Brampton": [],
+ "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
+ "osm:Highway 50 & Huntington Road, Brampton": [],
+ "osm:Hurontario Street & Old School Road, Caledon": [],
+ "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
+ "osm:Kane Road & Lakeshore Road West, Mississauga": [],
+ "osm:Queen Street East & Main Street, Caledon": [
+  [
+   -80.068724,
+   43.860357
+  ]
+ ],
+ "osm:Mississauga Road & Bush Street, Caledon": [
+  [
+   -80.012596,
+   43.79643
+  ]
+ ],
+ "osm:Bush Street & Mississauga Road, Caledon": [
+  [
+   -80.012596,
+   43.79643
   ]
  ]
 }
