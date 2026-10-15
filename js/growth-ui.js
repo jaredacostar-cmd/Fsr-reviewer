@@ -100,7 +100,7 @@
       <div class="growth-chart" id="gp-chart" data-info="growth-bars"></div>
       <p class="small muted">The largest developments still to build are on the Overview (one list).</p>
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
-      ${site ? '' : strip + muniTable}
+      ${site ? siteCompareHTML(root.PeelDevVerdict && root.PeelDevVerdict.scopedDev()) : strip + muniTable}
       <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
     // The pipeline by stage reuses the growth chart (no census baseline here).
     const bc = CA().baselineCensus();
@@ -110,6 +110,31 @@
       gr.built.jobs = j.jbuilt; gr.approved.jobs = j.japproved; gr.proposed.jobs = j.jproposed;
       CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'), { builtLabel: `Completed since ${bc.year} on the developments shown (not every permit: see Census & 2051)` });
     }
+  }
+  // ---- Growth at a development (Stage 2): its units, then how this site compares --------------
+  // Pure: where a value sits among others (the share of them it is larger than, and their median).
+  function siteCompare(v, others) {
+    const xs = others.filter(x => x > 0).sort((a, b) => a - b); if (!(v > 0) || !xs.length) return null;
+    const below = xs.filter(x => x < v).length, mid = xs.length >> 1;
+    return { n: xs.length, pctLarger: Math.round(below / xs.length * 100), median: xs.length % 2 ? xs[mid] : (xs[mid - 1] + xs[mid]) / 2 };
+  }
+  // The site against the other developments in its municipality that have a planning application
+  // with homes (permit-only houses left out): planned homes, and homes per hectare where both have a
+  // stated site area.
+  function siteCompareHTML(p) {
+    if (!p || !App()) return '';
+    const units = q => Growth.pipelineTotals([q]).planned;
+    const hasApp = q => (q.records || []).some(r => r.kind === 'application');
+    const peers = App().state.projects.filter(q => q !== p && q.phase !== 'cancelled' && q.municipality === p.municipality && hasApp(q) && units(q) > 0);
+    const u = units(p), cu = siteCompare(u, peers.map(units));
+    const dens = q => (q.siteAreaHa > 0 ? units(q) / q.siteAreaHa : 0);
+    const cd = p.siteAreaHa > 0 ? siteCompare(dens(p), peers.map(dens)) : null;
+    if (!cu && !cd) return '';
+    const li = [];
+    const share = c => (c.pctLarger >= 100 ? 'more than any of' : `more than <strong>${c.pctLarger}%</strong> of`);
+    if (cu) li.push(`<li><strong>${fmtNum(Math.round(u))}</strong> planned homes: ${share(cu)} the ${fmtNum(cu.n)} other applications with homes in ${esc(p.municipality)} (median ${fmtNum(Math.round(cu.median))}).</li>`);
+    if (cd) li.push(`<li><strong>${fmtNum(Math.round(dens(p)))}</strong> homes per hectare of site: ${share(cd).replace('more than', 'denser than')} the ${fmtNum(cd.n)} with a stated site area (median ${fmtNum(Math.round(cd.median))}).</li>`);
+    return `<h3 class="sub-title">How this site compares <span class="muted small">applications with homes in ${esc(p.municipality)}, withdrawn left out</span></h3><ul class="b-lines small">${li.join('')}</ul>`;
   }
   // The pipeline by layer (SPEC §2.2): growth only, the census as context; and by dwelling type.
   function layerStripHTML(set) {
@@ -169,7 +194,7 @@
   function renderCriteria() {}
 
   // ---- Public contract ----
-  const api = { renderGrowth, renderGrowthPipeline, aggregateTypes, aggTypeRowsHTML, displaySettingsHTML, recordSettingsHTML, settingsPageHTML, renderCriteria, growthDeps };
+  const api = { renderGrowth, renderGrowthPipeline, aggregateTypes, aggTypeRowsHTML, displaySettingsHTML, recordSettingsHTML, settingsPageHTML, renderCriteria, growthDeps, siteCompare, siteCompareHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelGrowthUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

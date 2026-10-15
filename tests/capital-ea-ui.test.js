@@ -300,15 +300,16 @@ test('Needs attention: EA periods closing in 30 days; DC-matched capital dates m
   assert.match(src('js/overview-tab.js'), /data-ce-open="\$\{esc\(it\.ce\)\}"/);
 });
 
-test('Capital tab: Construction and EAs views (public too), screening note in This week', () => {
+test('Capital tab: Projects and EAs views (public too), screening note in This week', () => {
   const html = src('index.html');
   assert.match(html, /id="ftab-dca"[^>]*>Capital</);
-  assert.match(html, /data-dcasub="build">Construction</);
+  assert.match(html, /data-dcasub="projects">Projects</);
   assert.match(html, /data-dcasub="eas">EAs</);
-  assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="build"/);
+  assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="projects"/);
   assert.match(html, /id="pane-dca-eas" data-pane="dca" data-sub="eas"/);
   assert.match(html, /id="ce-week-panel"[\s\S]{0,400}General screening results only/);
-  assert.match(src('js/analysis-tabs.js'), /dcSub !== 'timing' && dcSub !== 'build' && dcSub !== 'eas' && root\.PeelUtil/);
+  // Only Funding is held back in the public version (and behind its Labs switch).
+  assert.match(src('js/analysis-tabs.js'), /tab === 'dca' && sub === 'funding' && \(!labOn\('funding'\) \|\| isPublic\(\)\)/);
   assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);
   assert.match(src('js/dca-tab.js'), /PeelCapitalEA\.dcActualHTML\(/);
 });

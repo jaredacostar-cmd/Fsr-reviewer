@@ -1,10 +1,9 @@
 /* Layer groups (PeelLayerGroups): the Layers panel as six groups, the view presets, the fixed draw
  * order of the map's panes, and the layer state in share links and saved views.
  *
- *  1 Developments   developments, heatmap, site boundary on hover
+ *  1 Developments   developments, site boundary on hover
  *  2 Capacity       capacity colours, pressure zones, wastewater blocks, drainage areas
- *  3 Infrastructure existing water / sanitary / storm pipes, water facilities, planned DC works;
- *                   "Other utilities": gas pipelines, hydro lines (approximate, off by default)
+ *  3 Infrastructure existing water / sanitary / storm pipes, water facilities, planned DC works
  *  4 Constraints    regulation limits, floodplain, Greenbelt, Oak Ridges Moraine, Niagara
  *                   Escarpment, PSW / ANSI, Natural Heritage System, source protection (not
  *                   included), watercourses
@@ -26,16 +25,16 @@
   // ---- Groups ---------------------------------------------------------------------------------------
   // Layer: [key, label, info key, swatch kind, colour token]; sub: a sub-heading before that layer.
   const GROUPS = [
-    { key: 'devs', label: 'Developments', primary: ['devs'], layers: [['devs', 'Developments', 'devs-toggle', 'dev', null], ['heat', 'Heatmap (people + jobs)', 'map-show', 'heat', null], ['hov', 'Site boundary on hover', 'hover-boundary', 'dash', '--select']] },
+    { key: 'devs', label: 'Developments', primary: ['devs'], layers: [['devs', 'Developments', 'devs-toggle', 'dev', null], ['hov', 'Site boundary on hover', 'hover-boundary', 'dash', '--select']] },
     { key: 'cap', label: 'Capacity', primary: ['cap'], layers: [['cap', 'Capacity colours', 'map-capacity', 'cap', null], ['pz', 'Pressure zones', 'pressure-zone', 'svc-pz', null], ['bk', 'Wastewater blocks', 'blocks', 'block', null], ['dr', 'Drainage areas', 'drainage-area', 'svc-dr', null]] },
-    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['cons', 'Planned & under construction', 'construction', 'line', '--cons-build'], ['ea', 'EAs', 'eas', 'area', '--ea-line'], ['gas', 'Gas pipelines (approximate)', 'cx-gas', 'dash', '--cx-gas'], ['hydro', 'Hydro lines (approximate)', 'cx-hydro', 'line', '--cx-hydro']], sub: { gas: 'Other utilities' } },
+    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['cons', 'Planned & under construction', 'construction', 'line', '--cons-build'], ['ea', 'EAs', 'eas', 'area', '--ea-line']] },
     { key: 'cx', label: 'Constraints', primary: ['reg', 'flood'], layers: [['reg', 'Regulation limits', 'cx-reg', 'area', '--cx-reg'], ['flood', 'Floodplain', 'cx-flood', 'area', '--cx-flood'], ['greenbelt', 'Greenbelt', 'cx-greenbelt', 'area', '--cx-greenbelt'], ['orm', 'Oak Ridges Moraine', 'cx-orm', 'area', '--cx-orm'], ['nep', 'Niagara Escarpment', 'cx-nep', 'area', '--cx-nep'], ['natural', 'PSW / ANSI', 'cx-natural', 'area', '--cx-natural'], ['nhs', 'Natural Heritage System', 'cx-nhs', 'area', '--cx-nhs'], ['source', 'Source protection (not included)', 'site-constraints', 'none', null], ['water', 'Watercourses', 'cx-water', 'line', '--cx-water']], disabled: { source: 'Not included in this app: see the CTC Source Protection Region maps' } },
     { key: 'plan', label: 'Planning context', primary: ['sp', 'mtsa'], layers: [['sp', 'Secondary plans / character areas', 'secondary-plans', 'dash', '--area-sp'], ['pr', 'Precincts', 'secondary-plans', 'dash', '--area-pr'], ['mtsa', 'MTSAs', 'mtsa', 'dash', '--area-mtsa'], ['da', '2021 census areas', 'da-layer', 'da', null]] },
     { key: 'base', label: 'Base map', primary: [], layers: [['hill', 'Lidar hillshade', 'hillshade', 'area', '--text-muted']] },
   ];
   // The zoom each layer shows from, stated on the layer (SPEC §4: "Existing pipes · from zoom 15").
   // Constraint areas show everywhere (a coarse overview), in detail from zoom 13.
-  const ZOOM = { 'ex-water': [15], 'ex-sanitary': [15], 'ex-storm': [15], gas: [11], hydro: [11], water: [12], hill: [11], reg: [13, 'detail'], flood: [13, 'detail'], greenbelt: [13, 'detail'], orm: [13, 'detail'], nep: [13, 'detail'], natural: [13, 'detail'], nhs: [13, 'detail'] };
+  const ZOOM = { 'ex-water': [15], 'ex-sanitary': [15], 'ex-storm': [15], water: [12], hill: [11], reg: [13, 'detail'], flood: [13, 'detail'], greenbelt: [13, 'detail'], orm: [13, 'detail'], nep: [13, 'detail'], natural: [13, 'detail'], nhs: [13, 'detail'] };
   const zoomText = k => { const z = ZOOM[k]; return z ? (z[1] ? `detail from zoom ${z[0]}` : `from zoom ${z[0]}`) : ''; };
   const LAYER = new Map(GROUPS.flatMap(g => g.layers.map(([key, label, info, sw, color]) => [key, { key, label, info, sw, color, group: g.key, disabled: (g.disabled || {})[key] || null, zoom: ZOOM[key] ? ZOOM[key][0] : null, zoomText: zoomText(key) }])));
   const KEYS = [...LAYER.keys()];
@@ -73,7 +72,7 @@
     if ('wf' in s) put('wf', !!s.wf);
     if ('pz' in s) put('pz', !!s.pz);
     if ('dr' in s) put(blocks ? 'bk' : 'dr', !!s.dr);
-    if (s.mstyle) { put('cap', s.mstyle.cap && s.mstyle.cap !== 'off'); put('heat', s.mstyle.show === 'heat'); }
+    if (s.mstyle) { put('cap', s.mstyle.cap && s.mstyle.cap !== 'off'); }
     if (s.exist) for (const k of ['water', 'sanitary', 'storm']) put(`ex-${k}`, !!s.exist[k]);
     if (s.dc) put('dcw', !!s.dc.on);
     return { on, named };
@@ -131,10 +130,9 @@
   const W = root;
   const MM = () => W.PeelMapMarkers, MA = () => W.PeelMapAnalysis, SD = () => W.PeelSvcData, ST = () => W.PeelSewerTrace, WT = () => W.PeelWaterTrace;
   const CE = () => W.PeelCapitalEA, CN = () => W.PeelConstraints, PA = () => W.PeelPlanAreas, CA = () => W.PeelCensusAreas, EL = () => W.PeelElevation, AS = () => W.PeelAreaSelect, App = () => W.PeelApp;
-  const CXK = ['reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water', 'gas', 'hydro'];
+  const CXK = ['reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water'];
   const ADAPT = {
     devs: { get: () => MM().getDevsOn(), set: v => SD().setDevsOn(v) },
-    heat: { get: () => MM().mstyle.show === 'heat', set: v => MA().setMapStyle({ show: v ? 'heat' : 'markers' }) },
     hov: { get: () => !!MM().hov.on, set: v => AS().setHov({ on: v }) },
     cap: { get: () => MM().mstyle.cap !== 'off', set: v => MA().setMapStyle({ cap: v ? (MA().currentView() === 'water' ? 'zone' : (W.PeelUtil || {}).PIPE_RESULTS ? 'pipes' : 'growth') : 'off' }) },
     pz: { get: () => !!MM().svcOn.pz, set: v => SD().setSvcLayer('pz', v) },

@@ -33,7 +33,9 @@
       if (App().state.minUnits) set('u', App().state.minUnits); if (!App().state.newOnly) set('nn', '0');
       if (App().state.yearMode !== 'any') set('ym', App().state.yearMode);
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
-      set('t', AT().getFootPref()); if (AT().getFootPref() === 'ww') set('ws', AT().getWwSub()); if (AT().getFootPref() === 'water') set('ws', AT().getWSub());
+      // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network|alloc|checks).
+      set('t', AT().getFootPref());
+      if (AT().getFootPref() === 'svc') set('svs', AT().getSvcSub()); if (AT().getFootPref() === 'records') set('rs', AT().getRSub());
       if (AT().getFootPref() === 'growth') set('gs', AT().getGSub()); if (AT().getFootPref() === 'dca') set('dcs', AT().getDcSub());
       if (SVCT().svcOpt.ww !== 'calibrated') set('wm', SVCT().svcOpt.ww); if (SVCT().svcOpt.md !== 'design') set('md', SVCT().svcOpt.md); if (SVCT().svcOpt.div !== 'off') set('dv', SVCT().svcOpt.div); if (SVCT().svcOpt.nr !== 'on') set('nr', SVCT().svcOpt.nr);
       if (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed' || MM().mstyle.cap !== 'off') set('ms', `${MM().mstyle.color}.${MM().mstyle.size}.${MM().mstyle.cap}`);
@@ -91,11 +93,17 @@
       if (q.get('lg') && window.PeelLayerGroups) { const lg = q.get('lg'); setTimeout(() => window.PeelLayerGroups.applyEncoded(lg), 0); }
       if (q.get('t')) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
-        const m = AT().migrateTabKey(q.get('t'));
-        AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.wwSub) AT().setWwSub(m.wwSub);
-        if (q.get('ws')) { const v = q.get('ws'); if (AT().getFootPref() === 'water' && AT().TABSUBS.water.valid.includes(v)) AT().setWSub(v); else if (AT().getFootPref() === 'ww' && AT().TABSUBS.ww.valid.includes(v)) AT().setWwSub(v); }
-        if (q.get('gs') && AT().TABSUBS.growth.valid.includes(q.get('gs'))) AT().setGSub(q.get('gs'));
-        if (q.get('dcs') && AT().TABSUBS.dca.valid.includes(q.get('dcs'))) AT().setDcSub(q.get('dcs'));
+        // Stage 2: old links name the Wastewater / Water halves (t=ww|water&ws=…) and old sub-views
+        // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on.
+        const t = q.get('t'), oldSub = t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : null;
+        const m = AT().migrateTabKey(t, oldSub);
+        AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub);
+        if (q.get('svs') && AT().TABSUBS.svc.valid.includes(q.get('svs'))) AT().setSvcSub(q.get('svs'));
+        if (q.get('rs') && AT().TABSUBS.records.valid.includes(q.get('rs'))) AT().setRSub(q.get('rs'));
+        // An old link to the funding screen or the hydraulic check turns that Labs switch on, so the
+        // link still opens its view.
+        if (window.PeelLabs && (m.dcSub === 'funding' || q.get('dcs') === 'funding')) window.PeelLabs.set('funding', true);
+        if (window.PeelLabs && t === 'water' && q.get('ws') === 'hydro') window.PeelLabs.set('hydro', true);
       }
       SD().showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }

@@ -1,6 +1,6 @@
 'use strict';
-// SPEC §5 (Phase 4): the right panel has the same five tabs at every scope — Overview · Growth ·
-// Servicing · Capital · Records. Servicing holds the wastewater and water views; Records follows the
+// SPEC §5 (Phase 4; Stage 2): the right panel has the same tabs at every scope — Overview · Growth ·
+// Servicing · Capital, then Records as a small trailing tab. Servicing holds the wastewater and water views; Records follows the
 // scope; no placeholder sub-views at site scope; one disclaimer per panel; one "Largest" list; empty
 // plans behind "show empty"; the approval-pace column only with data; site tiles follow the type.
 const test = require('node:test');
@@ -11,35 +11,36 @@ const ROOT = path.join(__dirname, '..');
 const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const HTML = src('index.html');
 
-test('five tabs, in order; Servicing holds the wastewater and water views in one sub-view row', () => {
-  const tabs = [...HTML.matchAll(/class="f-tab" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => m[2]);
+test('four tabs and Records, in order; Servicing holds water and wastewater in one sub-view row', () => {
+  const tabs = [...HTML.matchAll(/class="f-tab(?: f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => m[2]);
   assert.deepEqual(tabs, ['Overview', 'Growth', 'Servicing', 'Capital', 'Records']);
   const row = HTML.slice(HTML.indexOf('<div class="f-pane f-subtabs svc-subtabs" data-pane="svc"'), HTML.indexOf('</div>', HTML.indexOf('svc-subtabs')));
-  for (const s of ['data-wwsub="plants"', 'data-wwsub="catchments"', 'data-wwsub="alloc"', 'data-wwsub="pumpstations"', 'data-wsub="capacity"', 'data-wsub="zones"', 'data-wsub="facilities"', 'data-wsub="hydro"']) assert.ok(row.includes(s), s);
+  assert.deepEqual([...row.matchAll(/data-svcsub="(\w+)"/g)].map(m => m[1]), ['capacity', 'network', 'alloc', 'checks']);
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /const tabOf = key => \(SVC\.has\(key\) \? 'svc' : key\);/);
-  assert.match(at, /if \(pk === 'svc'\) \{ p\.hidden = !SVC\.has\(key\); continue; \}/);
+  assert.match(at, /const tabOf = key => \(key === 'ww' \|\| key === 'water' \? 'svc' : key\);/);
   assert.match(at, /if \(key === 'dev' \|\| key === 'developments' \|\| key === 'tool'\) key = 'overview';/);
   assert.match(src('js/svc-tab.js'), /\$\('#ftab-svc'\)\.hidden = !has;/);
 });
 
-test('Records follows the scope: Peel sources / checks / duplicates; a development its files; a file the file', () => {
+test('Records follows the scope: Sources and Checks at Peel; a development its files; a file the file', () => {
   const r = src('js/records-tab.js');
-  assert.match(r, /return `\$\{DU\(\)\.freshnessHTML\(\)\}\$\{dups\}/);
+  assert.match(r, /return `\$\{DU\(\)\.freshnessHTML\(\)\}/, 'Sources: freshness first');
   assert.match(r, /possible duplicate pair/);
+  assert.match(r, /body\.innerHTML = note \+ \(sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\)\);/);
   assert.match(r, /if \(scoped\) \{ syncDevHome\('records'\); return; \}/);
   assert.match(r, /if \(DT && DT\.setSub\) DT\.setSub\('files'\);/);
   assert.match(r, /s\.rkind === 'file' && AC\(\)\.currentFile/);
   assert.match(HTML, /<section class="f-pane" id="pane-records" data-pane="records"[^>]*><div id="records-body"><\/div><\/section>/);
+  assert.match(HTML, /data-rsub="sources">Sources<\/button><button type="button" class="btn small" data-rsub="checks">Checks<\/button><button type="button" class="btn small" data-rsub="files">Files<\/button>/);
   assert.match(src('css/app.css'), /#pane-overview \.dev-subtabs \[data-devsub="files"\]/, 'Files & history lives in Records');
 });
 
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /const SITE_HIDDEN = \{ growth: \['census2051', 'timing', 'byplan'\], ww: \['plants', 'alloc', 'pumpstations'\], water: \['capacity', 'facilities', 'hydro'\], dca: \['build', 'recommendations', 'funding'\] \};/);
-  assert.match(at, /const v = subFor\(tk, s\.get\(\), site\); if \(v !== s\.get\(\)\) s\.set\(v\);/, 'a hidden sub-view falls back (tests/site-scope.test.js)');
+  assert.match(at, /site: \{ growth: \['areas', 'timing'\], svc: \['capacity', 'alloc', 'checks'\], dca: \['projects', 'funding'\], records: \['sources', 'checks'\] \}/);
+  assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) s\.set\(v\);/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
   const css = src('css/app.css');
-  for (const s of ['#analysis.site-scope [data-gsub="census2051"]', '#analysis.site-scope [data-gsub="timing"]', '#analysis.site-scope [data-dcasub="recommendations"]', '#analysis.site-scope [data-dcasub="funding"]', '#analysis.site-scope #screen-note-top']) assert.ok(css.includes(s), s);
+  assert.ok(css.includes('.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }'));
 });
 
 test('one "Largest" list (Overview, by units left to build); no Developments tab', () => {

@@ -775,7 +775,7 @@
       QUALITY: window.PeelMapMarkers.QUALITY,
       setDaContext: (...a) => window.PeelCensusAreas.setDaContext(...a),
       ensureCouncil: () => window.PeelDevDetail.loadCouncil(),
-      showAllocSub: () => { window.PeelAnalysisTabs.setWwSub('alloc'); window.PeelAnalysisTabs.showFootTab('ww'); window.PeelShare.viewLink.write(); },
+      showAllocSub: () => { window.PeelAnalysisTabs.showFootTab('svc', 'alloc'); window.PeelShare.viewLink.write(); },
       writeLink: () => window.PeelShare.viewLink.write(),
       estimate: p => D.estimate([p], state.criteria, 'all', jobsOf),
       renderScopeTab: () => {

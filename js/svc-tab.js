@@ -345,12 +345,9 @@
     // No model is better than a wrong one (SPEC 1.4).
     if (!SD().svcById.size) return;
     const p = DV().scopedDev();
-    if (!p && SP().getSavedSubs()) {
-      // Back from a scoped view: restore the sub-tab choices and the full set of panes.
-      { const _ss = SP().getSavedSubs(); AT().setWSub(_ss && _ss.wSub); AT().setWwSub(_ss && _ss.wwSub); SP().setSavedSubs(null); }
-      for (const id of ['#pane-wcap', '#pane-wfac', '#pane-alloc', '#pane-plants', '#pane-pumpstations']) { const n = $(id); if (n) n.dataset.off = ''; }
-      for (const s of document.querySelectorAll('.f-subtabs[data-pane="water"], .f-subtabs[data-pane="ww"]')) s.dataset.off = '';
-    }
+    // Back from a site: the Region-wide station list returns to Network (the area-only sub-views
+    // are hidden at a site by PeelAnalysisTabs).
+    if (!p) { const n = $('#pane-pumpstations'); if (n && n.dataset.off === '1') n.dataset.off = ''; }
     const c = App().state.criteria, E = c.employment, Y = bc.year, R = App().state.reports;
     $('#analysis').classList.toggle('show-tech', svcOpt.tech === 'on');
     svcCensusPop(bc);
@@ -381,16 +378,16 @@
     const zsum = addLayers(zr.map(r => r.l));
     // ---- Water: Zones sub-view (headline → tiles → chart → top-N table → ⓘ line). ----
     const wcapM = { Y, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wAvg, wPH, total, jobs };
-    $('#water-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${TS().inViewBox()}</div></div>
+    $('#water-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>
       ${WTab().waterZonesHTML(zr, zsum, { wMax, wPH, total, jobs, wRow, layerHead, Y, c, E, mdR, mdE, observed, censusHowW })}`;
     // ---- Water: Capacity sub-view. The 2025 production / Caledon groundwater reports moved
     // to Sources & checks (window.ModelChecks); the hydraulic check moved to its own sub-view.
     $('#wcap-body').innerHTML = `${WTab().waterCapHTML(wcapM)}`;
     // ---- Water: Facilities sub-view (tiles → Master Plan compare → facilities table). ----
     $('#wfac-body').innerHTML = `${MP().waterFacilitiesHTML()}`;
-    // ---- Water: Hydraulic check sub-view (pane + button created by Worker A in index.html).
+    // ---- Hydraulic check (Labs).
     const hydPane = $('#hyd-box'); if (hydPane) hydPane.outerHTML = MP().hydroBoxHTML();
-    const hydBtn = document.querySelector('[data-wsub="hydro"]'); if (hydBtn) hydBtn.hidden = !(window.PeelUtil || {}).PIPE_RESULTS;   // EPANET per-main results: off for now
+    // (Its pane sits in Servicing › Checks while Settings › Labs › Hydraulic check is on.)
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · top zones by build-out maximum day`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -525,13 +522,14 @@
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();
     if (AT().getFootTab() === 'dca') DCAT().renderDca();
     if (AT().getFootTab() === 'overview') OV().renderOverview();
-    if (AT().getFootTab() === 'ww' && AT().getWwSub() === 'alloc') DUI().renderAlloc();
+    if (AT().getFootTab() === 'svc' && AT().getSvcSub() === 'alloc') DUI().renderAlloc();
+    if (root.PeelSvcCapacity) root.PeelSvcCapacity.renderAll();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
     if (p) SP().renderSvcScoped(p);
   }
   // Sub-tab choices stashed while a site is the scope (restored when it isn't).
   // Switches in the Water / Wastewater / Plants tabs.
-  for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#scen-bar']) $(id).addEventListener('click', e => {
+  for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#svc-capacity-body', '#svc-checks-body', '#scen-bar']) if ($(id)) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
     if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); return; } return AT().showFootTab(gt); }
     if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }

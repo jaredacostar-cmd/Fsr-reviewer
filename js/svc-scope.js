@@ -151,7 +151,7 @@
       const back = { label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` };
       // A group step before the title: Peel › EA › name (opens Capital › EAs), Peel › Capital › project (Capital › Construction).
       const g = s.result && s.result.group;
-      return g ? [{ label: g, go: () => { if (AT().setDcSub) AT().setDcSub(g === 'EA' ? 'eas' : 'build'); AT().showFootTab('dca'); }, title: g === 'EA' ? 'Environmental assessments (Capital › EAs)' : 'Capital projects (Capital › Construction)' }, back] : [back];
+      return g ? [{ label: g, go: () => { if (AT().setDcSub) AT().setDcSub(g === 'EA' ? 'eas' : 'projects'); AT().showFootTab('dca'); }, title: g === 'EA' ? 'Environmental assessments (Capital › EAs)' : 'Capital projects (Capital › Construction)' }, back] : [back];
     }
     const step = (ref, label, title) => ({ label, go: () => open(ref), title });
     const out = [];

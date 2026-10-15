@@ -18,7 +18,6 @@
    outline for point symbols. --flow: sewer flow-direction arrows.
    --hl-find: find-highlight yellow. --swatch-ink/--swatch-paper: glyph colours
    on light/dark fills. --growth-1..5: capacity-growth sequential ramp.
-   --heat-ramp: build-out heatmap stops (theme-independent).
    --report-brand/--report-brand-deep: print-document branding (always light). */
 :root {
   color-scheme: dark;
@@ -59,7 +58,7 @@
   --mpt-start: #51cf66; --mpt-end: #f0665f;
   --mpt-1: #5b9bf5; --mpt-2: #ffa94d; --mpt-3: #c07ae0; --mpt-4: #f06595; --mpt-5: #3fb3c4; --mpt-6: #e8b93e;
   --xing-street: #b8b7ad; --xing-water: #4fc3f7;
-  --cx-gas: #ffd43b; --cx-hydro: #ff6b6b; --cx-water: #4fc3f7; --cx-reg: #38d9a9;
+  --cx-water: #4fc3f7; --cx-reg: #38d9a9;
   --cx-flood: #74c0fc; --cx-greenbelt: #69db7c; --cx-orm: #c0eb75; --cx-nep: #e599f7; --cx-natural: #faa2c1; --cx-nhs: #bac8ff;
   --dc-ww-main: #f06595;
   --dc-ww-local: #5ec46f;
@@ -86,7 +85,6 @@
   --growth-3: #b96f1f;
   --growth-4: #e08e2d;
   --growth-5: #f7b955;
-  --heat-ramp: #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c;
   --report-brand: #1c5cab;
   --report-brand-deep: #0d366b;
   --ring: #1a1a19;
@@ -132,7 +130,7 @@
     --mpt-start: #2f9e44; --mpt-end: #e03131;
     --mpt-1: #1971c2; --mpt-2: #b26a00; --mpt-3: #9c36b5; --mpt-4: #d6336c; --mpt-5: #0b7285; --mpt-6: #946c00;
     --xing-street: #6b6a62; --xing-water: #0277bd;
-    --cx-gas: #b8860b; --cx-hydro: #c92a2a; --cx-water: #0277bd; --cx-reg: #087f5b;
+    --cx-water: #0277bd; --cx-reg: #087f5b;
   --cx-flood: #1971c2; --cx-greenbelt: #2b8a3e; --cx-orm: #5c940d; --cx-nep: #862e9c; --cx-natural: #a61e4d; --cx-nhs: #364fc7;
     --cx-flood: #1971c2; --cx-greenbelt: #2b8a3e; --cx-orm: #5c940d; --cx-nep: #862e9c; --cx-natural: #a61e4d; --cx-nhs: #364fc7;
     --dc-ww-main: #d6336c;
@@ -160,7 +158,6 @@
     --growth-3: #f6a04d;
     --growth-4: #e3672a;
     --growth-5: #a83a12;
-    --heat-ramp: #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c;
     --report-brand: #1c5cab;
     --report-brand-deep: #0d366b;
     --ring: #ffffff;
@@ -207,7 +204,7 @@
   --mpt-start: #2f9e44; --mpt-end: #e03131;
   --mpt-1: #1971c2; --mpt-2: #b26a00; --mpt-3: #9c36b5; --mpt-4: #d6336c; --mpt-5: #0b7285; --mpt-6: #946c00;
   --xing-street: #6b6a62; --xing-water: #0277bd;
-  --cx-gas: #b8860b; --cx-hydro: #c92a2a; --cx-water: #0277bd; --cx-reg: #087f5b;
+  --cx-water: #0277bd; --cx-reg: #087f5b;
   --dc-ww-main: #d6336c;
   --dc-ww-local: #2b8a3e;
   --dc-ww-force: #9c36b5;
@@ -233,7 +230,6 @@
   --growth-3: #f6a04d;
   --growth-4: #e3672a;
   --growth-5: #a83a12;
-  --heat-ramp: #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c;
   --report-brand: #1c5cab;
   --report-brand-deep: #0d366b;
   --ring: #ffffff;
@@ -1571,10 +1567,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tour-btns { display: flex; justify-content: space-between; }
 .head .watch-btn.memo-btn { margin-right: var(--space-2); }
 
-/* Heatmap and ground profile */
-.heat-canvas { position: absolute; inset: 0; z-index: 450; pointer-events: none; }
-.heat-canvas[hidden] { display: none; }
-.lg-heat { height: 8px; border-radius: 4px; margin: var(--space-1) 0; background: linear-gradient(90deg, var(--ph-approved), var(--cap-room), var(--cap-tight), var(--select), var(--cap-over)); }
+/* Ground profile */
 .tp-elev { display: block; width: 100%; }
 .elev-svg { display: block; margin: var(--space-1) 0 var(--space-1); }
 .leaflet-top.leaflet-left { z-index: 1001; }   /* the Tools menu opens over the options panel */
@@ -2583,14 +2576,24 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .inview-chip { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 900; white-space: nowrap; background: var(--surface-1); border: 1px solid var(--border); box-shadow: var(--shadow); }
 @media (max-width: 1199px) { .inview-chip { display: none; } }
 
-/* Five tabs at every scope (SPEC §5). Servicing: the wastewater and water views in one row. */
-.svc-subtabs .sv-g { font-size: var(--fs-1); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; align-self: center; margin: 0 2px 0 var(--space-2); }
-.svc-subtabs .sv-g:first-child { margin-left: 0; }
-/* Site scope: no placeholder sub-views; the site bar's note is the one disclaimer. */
-#analysis.site-scope [data-gsub="census2051"], #analysis.site-scope [data-gsub="timing"],
-#analysis.site-scope [data-dcasub="recommendations"], #analysis.site-scope [data-dcasub="funding"],
-#analysis.site-scope #screen-note-top { display: none; }
-#analysis.site-scope .site-off { display: none; }
+/* Four tabs at every scope (Stage 2): Overview · Growth · Servicing · Capital, then Records as a
+   small trailing tab (right-aligned, muted). One chip row of sub-views per tab, never two. */
+.f-tab.f-tab-trail { margin-left: auto; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
+.f-tab.f-tab-trail[aria-selected="true"] { color: var(--text-primary); }
+.f-subtabs:not([hidden]) { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.f-subtabs .btn { white-space: nowrap; }
+.f-subtabs .lab-chip small { font-size: var(--fs-0, 10px); color: inherit; opacity: .7; margin-left: 2px; }
+/* A sub-view with nothing to show at this scope is hidden, never blank (PeelAnalysisTabs.HIDDEN).
+   At a site the site bar's note is the one disclaimer. */
+.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }
+/* Labs (Settings › Labs): each tool shows only while its switch is on (js/labs.js). */
+html:not(.lab-3d) .view3d-ctl, html:not(.lab-timebox) .tool-rail [data-tool="timebox"],
+html:not(.lab-swmm) [data-tbx="swmm"], html:not(.lab-batch) [data-ptool-act="batch"],
+html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] { display: none !important; }
+.labs-page { padding: var(--space-2) var(--space-3); max-width: 360px; }
+.labs-page h3 { margin: 0 0 var(--space-1); }
+.labs-row { display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-1) 0; cursor: pointer; }
+.labs-row small { display: block; }
 /* The development's Files & history is the Records tab; its Overview keeps About and Site. */
 #pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }
 /* Construction and EAs (js/capital-ea.js) and the tap picker (js/map-pick.js) */
@@ -2714,3 +2717,32 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 #tb-scen-pop { left: auto; right: 0; }
 #tb-scen-pop .svc-switch { flex-wrap: wrap; }
 #tb-scen-pop .ly-def { flex-basis: 100%; }
+
+/* Servicing › Capacity (Stage 2): one table, water and wastewater; the charts behind it fold under
+   "Charts and method"; the horizon years fold under each row. */
+.svc-detail:not(.cap-detail-on) { display: none !important; }
+/* The panel is narrow (440 px; a phone): each row is a small card on a grid, every cell labelled
+   with its column (data-l). Still one table: the header is kept for screen readers. */
+.analysis-panes table.cap-all { display: block; min-width: 0; width: 100%; }
+.analysis-panes table.cap-all > thead { display: block; position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.cap-all.dt-wide td:first-child, .cap-all.dt-wide th:first-child { position: static; box-shadow: none; background: none; }
+.cap-all tbody { display: block; }
+.cap-all tr.cap-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--space-2); row-gap: 2px;
+  grid-template-areas: "fac fac fac sys" "cmp cmp cmp cmp" "com bo lim room"; align-items: start; padding: var(--space-2) 0; border-top: 1px solid var(--border); }
+.cap-all tr.cap-row > td { display: block; padding: 0; border: 0; text-align: left; min-width: 0; }
+.cap-all .c-fac { grid-area: fac; } .cap-all .c-sys { grid-area: sys; text-align: right; color: var(--text-secondary); font-size: var(--fs-1); }
+.cap-all .c-cmp { grid-area: cmp; font-size: var(--fs-1); color: var(--text-secondary); }
+.cap-all .c-com { grid-area: com; } .cap-all .c-bo { grid-area: bo; } .cap-all .c-lim { grid-area: lim; } .cap-all .c-room { grid-area: room; }
+.cap-all td[data-l]:not(.c-sys):not(.c-cmp)::before { content: attr(data-l); display: block; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
+.cap-all td.c-lim small, .cap-all td.c-room small { display: block; }
+.show-tech .cap-all tr.cap-row { grid-template-areas: "fac fac fac sys" "cmp cmp cmp cmp" "com bo lim room" "x1 x2 x3 x4"; }
+.cap-all .lybar { margin-top: 4px; }
+.cap-all td.c-bo.over strong, .cap-all td.c-room.over { color: var(--cap-over); }
+.cap-all td.c-bo.near strong { color: var(--cap-tight, inherit); }
+.cap-all tr.cap-hz { display: block; } .cap-all tr.cap-hz > td { display: block; }
+.cap-fold { border: 0; background: none; padding: 0 2px; cursor: pointer; color: var(--text-muted); font: inherit; }
+.cap-fold:hover { color: var(--text-primary); }
+.cap-hz > td { background: var(--surface-2); padding: var(--space-2) var(--space-3); }
+.cap-hz-t { margin: 0; width: auto; }
+.net-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); }
+#analysis.site-scope #pane-svc-netbar { display: none; }

@@ -36,33 +36,7 @@
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
   const demandBasis = () => App().state.basis;
   // What the demand covers: the phases picked in the filter panel, then any other filters.
-  // ---- Phase 4: the Wastewater tab's fourth sub-view, Pumping stations. The contract is
-  // that index.html carries a `data-wwsub="pumpstations"` button and a #pane-pumpstations
-  // pane holding #pumpstations-body; create them here too if a merged branch hasn't yet,
-  // so this sub-view renders either way (the generic sub-tab code in showFootTab picks
-  // both up: the button by [data-wwsub], the pane by data-pane="ww" data-sub).
-  function ensurePumpSubTab() {
-    const group = document.querySelector('.f-subtabs[data-pane="svc"]');
-    if (group && !group.querySelector('[data-wwsub="pumpstations"]')) {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'btn small'; b.dataset.wwsub = 'pumpstations';
-      b.textContent = 'Pumping stations';
-      const alloc = group.querySelector('[data-wwsub="alloc"]');
-      if (alloc) group.insertBefore(b, alloc); else group.appendChild(b);
-    }
-    if (!document.getElementById('pane-pumpstations')) {
-      const sec = document.createElement('section');
-      sec.className = 'f-pane svc-pane'; sec.id = 'pane-pumpstations';
-      sec.dataset.pane = 'ww'; sec.dataset.sub = 'pumpstations';
-      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-svc');
-      sec.hidden = true;
-      sec.innerHTML = '<div class="tb-head"><h2 class="sr">Pumping stations</h2></div><div id="pumpstations-body"></div>';
-      const ref = document.getElementById('pane-alloc');
-      if (ref && ref.parentElement) ref.parentElement.insertBefore(sec, ref);
-      else if (group) group.after(sec);
-    }
-  }
-  ensurePumpSubTab();
+  // (Stage 2: pumping stations are part of Servicing › Network — #pane-pumpstations in index.html.)
   // ---- Phase 4 shared bits for the Wastewater sub-views: tiles, a compact inline bar,
   // and the one-line ⓘ footer (method, criteria, data dates) that replaces the per-tab
   // stampHTML scenario line (the scenario bar now carries that once).
@@ -294,7 +268,7 @@
   window.GearPages.sources = () => sourcesPageHTML();
 
   // ---- Public contract ----
-  const api = { MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, ensurePumpSubTab, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  const api = { MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

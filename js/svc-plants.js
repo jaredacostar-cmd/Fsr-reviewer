@@ -25,13 +25,12 @@
   const Areas = () => window.PeelAreas;
 
   let savedSubs = null;
-  // Scoped Water / Wastewater tabs: the site's brief replaces the Peel-wide aggregates; the
-  // ground / storm / pond rows stay out (their home is Development › Site).
+  // Servicing › Network at a site: the site's brief (zone, path, plant reserve, infrastructure
+  // coming) replaces the Peel-wide blocks and zones; the Region-wide station list gives way. The
+  // area-only sub-views are hidden by PeelAnalysisTabs (site scope). Ground / storm / ponds stay
+  // out (their home is Development › Site).
   function renderSvcScoped(p) {
-    if (!savedSubs) savedSubs = { wSub: AT().getWSub(), wwSub: AT().getWwSub() };
-    AT().setWSub('zones'); AT().setWwSub('catchments');
-    for (const id of ['#pane-wcap', '#pane-wfac', '#pane-alloc', '#pane-plants', '#pane-pumpstations']) { const n = $(id); if (n) n.dataset.off = '1'; }
-    for (const s of document.querySelectorAll('.f-subtabs[data-pane="water"], .f-subtabs[data-pane="ww"]')) s.dataset.off = '1';
+    { const n = $('#pane-pumpstations'); if (n) n.dataset.off = '1'; }
     const st = DD().statusOf(p), f = SD().svcFacts(p);
     st.works = st.works || DI().devWorks(p, f);
     $('#water-body').innerHTML = `<div class="tb-head"><h2 class="pane-h">${esc(p.title)} <span class="muted">· Water</span></h2></div>`
@@ -43,7 +42,7 @@
     DV().scopeBriefIds($('#water-body')); DV().scopeBriefIds($('#ww-body'));
     $('#water-note').textContent = `${p.title} · site servicing`;
     $('#ww-note').textContent = `${p.title} · site servicing`;
-    if (AT().getFootTab() === 'water' || AT().getFootTab() === 'ww') AT().showFootTab(AT().getFootTab());
+    if (AT().getFootTab() === 'svc') AT().showFootTab('svc');
   }
   // Plants tab: a comparison of the model with each plant's 2025 annual report, then each
   // plant's total inflow built up layer by layer like the Growth tab: census + built since +
@@ -234,7 +233,6 @@
   let psAll = false;
   document.addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-ps-all]')) { psAll = !psAll; SvcTab().renderSvcTab(); } });
   function renderPumpStationsTab(k) {
-    DUI().ensurePumpSubTab();
     const el = $('#pumpstations-body'); if (!el) return;
     const { total, jobs, pdwf, ii } = k;
     if (!App().state.servicing.blocks) {

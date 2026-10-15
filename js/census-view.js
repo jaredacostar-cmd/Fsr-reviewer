@@ -49,7 +49,7 @@
       <div class="hyd-scroll"><table class="dt"><thead><tr><th></th><th>Starts</th><th>Completions</th><th>Absorbed</th><th>Permit units</th><th>Permit value</th></tr></thead><tbody>
         ${h.rows.map(r => `<tr${r.m === 'Peel' ? ' class="tot"' : ''}><td>${esc(r.m)}</td><td>${n(r.starts)}<small>avg ${n(r.avgStarts)}</small></td><td>${n(r.completions)}<small>avg ${n(r.avgCompl)}</small></td><td>${n(r.absorbed)}</td><td>${n(r.permits)}</td><td>${money(r.value)}</td></tr>`).join('')}
       </tbody></table></div>
-      ${pr.length ? `<p class="small muted">The check of this app's permit units against these Region figures is in ${DV().homeLine('records', 'Records › Checks')}.</p>` : ''}
+      ${pr.length ? `<p class="small muted">The check of this app's permit units against these Region figures is in ${DV().homeLine('records:checks', 'Records › Checks')}.</p>` : ''}
       <p class="small muted">Region of Peel open data: housing construction activity (CMHC Starts and Completions Survey; averages over 5 years to ${h.y}) and building permit statistics (all permits, values in current dollars). Starts and completions replace the CMHC copy year by year: one series is kept.</p></section>`;
   }
   // ---- Population outlook (data/housing.json) --------------------------------------------------
@@ -88,10 +88,9 @@
     const has = !!(bc && bc.das.length && App().state.projects.length);
     // Phase 4: census is a Growth sub-view now — hide its subtab (and leave it) when
     // there is no census data, mirroring the old tab's show/hide.
-    const gcPane = $('#pane-growth-census'), gcBtn = document.querySelector('[data-gsub="census2051"]');
+    // (Stage 2: it is part of Growth › Areas, under the plan tables.)
+    const gcPane = $('#pane-growth-census');
     if (gcPane) gcPane.dataset.off = has ? '' : '1';
-    if (gcBtn) gcBtn.hidden = !has;
-    if (!has && AT().getGSub() === 'census2051') { AT().setGSub('pipeline'); store.set('gSub', 'pipeline'); }
     AT().showFootTab(AT().getFootPref());
     CA().syncDaYear();
     if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
@@ -130,7 +129,7 @@
         tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
       ].join('')}</div>
       <div class="growth-chart" id="gc-chart" data-info="growth-bars"></div>
-      ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('ww', 'Servicing › Wastewater')}.</p>`
+      ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('svc:network', 'Servicing › Network')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
       ${forecastTableHTML(bc)}
       ${da ? '' : housingActivityHTML() + outlookCardHTML(true)}
@@ -259,7 +258,7 @@
   function permitCaveatHTML() {
     const c = permitCheck(); if (!c || !c.failing.length) return '';
     const list = c.failing.length > 1 ? `${c.failing.slice(0, -1).join(', ')} and ${c.failing[c.failing.length - 1]}` : c.failing[0];
-    return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records', 'Records › Checks')}</p>`;
+    return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Checks')}</p>`;
   }
   const api = { permitCheck, permitCheckHTML, permitCaveatHTML, outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

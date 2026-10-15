@@ -45,7 +45,7 @@
   document.documentElement.dataset.mapview = currentView();
   function syncMapOpts() {
     const set = (id, v) => { const e = $(id); if (e) { if (e.type === 'checkbox') e.checked = v; else e.value = v; } };
-    set('#opt-mcolor', MM().mstyle.color); set('#opt-msize', MM().mstyle.size); set('#opt-mcap', MM().mstyle.cap); set('#opt-mshow', MM().mstyle.show);
+    set('#opt-mcolor', MM().mstyle.color); set('#opt-msize', MM().mstyle.size); set('#opt-mcap', MM().mstyle.cap);
     set('#opt-devs', MM().getDevsOn()); set('#opt-wf', WT().WF.on);
     const wc = $('#ww-census'); if (wc) wc.checked = MM().getWwLay().existing !== false;
     const mw = document.querySelector('.ww-loads'); if (mw) { mw.hidden = !MM().isWW(); const all = Object.values(MM().getWwLay()).every(v => v !== false); const n = mw.querySelector('.wl-sum'); n.textContent = all ? 'full build-out' : [['existing', 'census'], ['built', 'built'], ['approved', 'committed'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'; n.classList.toggle('on', !all); }
@@ -76,7 +76,7 @@
   // constraints, hillshade. A view's saved settings list them (layers: [...]); its preset takes
   // them from PeelLayerGroups.PRESETS. Saved views from before the groups leave them as they are.
   const LG = () => window.PeelLayerGroups;
-  const LG_EXTRA = ['devs', 'hov', 'sp', 'pr', 'mtsa', 'hill', 'cons', 'ea', 'reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water', 'gas', 'hydro'];
+  const LG_EXTRA = ['devs', 'hov', 'sp', 'pr', 'mtsa', 'hill', 'cons', 'ea', 'reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'water'];
   function currentMapSettings() { return { basemap: MC().getBasemap(), labelMode: ML().getLabelMode(), da: CA().getDaOn(), wf: WT().WF.on, pz: MM().svcOn.pz, dr: App().state.servicing && App().state.servicing.blocks ? MM().svcOn.bk : MM().svcOn.dr, mstyle: { ...MM().mstyle }, exist: { ...MM().getExistOn() }, dc: { ...MM().getDcOn() }, ...(LG() ? { layers: [...LG().onSet()], groups: [...LG().getOpen()] } : {}) }; }
   function setMapView(v) {
     const cur = currentView();
@@ -343,12 +343,11 @@
     const parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
     // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by Phase | Layer.
-    if (MM().mstyle.show !== 'heat') {
+    {
       const c = MM().mstyle.color, b = (k, t) => `<button type="button" class="btn small${c === k ? ' on' : ''}" data-lg-color="${k}" aria-pressed="${c === k}">${t}</button>`;
       parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Phase')}${b('layer', 'Layer')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : 'One marker per development; a cluster’s number counts developments.'}</p>`);
     }
-    if (MM().mstyle.show === 'heat') parts.push(`<div class="lg-t">Heatmap: people + jobs at build-out</div><div class="lg-heat"></div><p class="lg-s">Low → high density of the shown developments; markers are hidden (Layers &amp; style → Show as).</p>`);
-    if (MM().mstyle.color === 'phase' && MM().mstyle.show !== 'heat') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
+    if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);
     if (MM().mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(MM().TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(MM().QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
@@ -364,7 +363,7 @@
     if (MM().getDcOn().on && App().state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DI().DC_KIND).filter(([k]) => MM().getDcOn().sys === 'both' || (MM().getDcOn().sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
     if (window.PeelCapitalEA) { const ce = window.PeelCapitalEA.legendHTML(); if (ce) parts.push(ce); }
     // Then, in the Layers groups' order: Infrastructure › Other utilities, Constraints.
-    if (window.PeelConstraints) for (const w of ['utility', 'cx']) { const cx = window.PeelConstraints.legendHTML(w); if (cx) parts.push(cx); }
+    if (window.PeelConstraints) for (const w of ['cx']) { const cx = window.PeelConstraints.legendHTML(w); if (cx) parts.push(cx); }
     if (MM().mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${SP().hz.aYears} years from ${SP().hz.aStart}, proposed over ${SP().hz.pYears} from ${SP().hz.pStart} (Horizon years). ${esc(SvcTab().scenarioText())}</p>`);
     el.querySelector('.lg-body').innerHTML = parts.join('');
     el.hidden = !parts.length;

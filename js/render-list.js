@@ -68,8 +68,6 @@
 
   function renderMarkers() {
     MM().cluster.clearLayers();
-    MM().heat.setData(MM().mstyle.show === 'heat' ? App().state.filtered.filter(p => p.lat != null && SD().devShown(p)).map(p => [p.lat, p.lng, MM().popOf(p)]) : null);
-    if (MM().mstyle.show === 'heat') { MM().markerByKey = new Map(); ML().projectByMarker = new Map(); ML().scheduleLabels(); return; }
     MM().markerByKey = new Map();
     ML().projectByMarker = new Map();
     const markers = [];

@@ -82,7 +82,7 @@
       let dc;
       [App().state.svcCensus, App().state.reports, dc, App().state.dcCosts, Sett().IDF.data, App().state.housing] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json'), opt('data/dc-costs.json'), opt('data/idf.json'), opt('data/housing.json')]);
       mergePeelHousing(App().state.housing, await opt('data/peel-housing.json'));
-      opt('data/compliance.json').then(c => { App().state.compliance = c; if (c && AT().getFootTab() === 'ww') SvcTab().renderSvcTab(); });
+      opt('data/compliance.json').then(c => { App().state.compliance = c; if (c && AT().getFootTab() === 'svc') SvcTab().renderSvcTab(); });
       if (Sett().IDF.data) { Sett().applyWet(); const f = $('#wet-box'); if (f) f.outerHTML = Sett().wetBoxHTML(); }
       App().state.dcInfra = DI().prepDc(dc);
       SP().renderRefs();

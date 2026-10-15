@@ -18,6 +18,8 @@
   const PA = () => window.PeelPlanAreas;
   const SD = () => window.PeelSvcData;
   const FI = () => window.PeelFilterUI;
+  const AT = () => window.PeelAnalysisTabs;
+  const Sh = () => window.PeelShare;
 
   // ---- Top bar: scope trail with its count, lens switch, scenario chip, menus ----------------
   // Lens switch (SPEC §4): one button per MAP_VIEWS entry. A lens sets the map's layer preset,
@@ -212,7 +214,9 @@
     const m = $('#tb-gear-menu'); if (!m) return;
     m.innerHTML =
       '<button type="button" role="menuitem" data-tbg="settings">Settings</button>' +
-      '<button type="button" role="menuitem" data-tbg="sources">Sources &amp; checks</button>' +
+      // Stage 2: Records (Sources · Checks · Files) replaces the Sources & checks page here.
+      '<button type="button" role="menuitem" data-tbg="records">Records</button>' +
+      '<button type="button" role="menuitem" data-tbg="labs">Labs</button>' +
       '<button type="button" role="menuitem" data-tbg="log">Change log</button>';
   }
   // Gear menu pages (Phase 4): workers register page renderers on window.GearPages —
@@ -244,6 +248,9 @@
     if (k === 'settings') openGearPage('settings');
     else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
     else if (k === 'sources') openGearPage('sources');
+    // Stage 2: Records is the panel's trailing tab, also reached from here; Labs holds the extra tools.
+    else if (k === 'records') { closeTbMenus(); AT().showFootTab('records'); Sh().viewLink.write(); }
+    else if (k === 'labs') openGearPage('labs');
   });
   function closeTbMenus() {
     for (const id of ['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu']) { const m = $(id); if (m) m.hidden = true; }

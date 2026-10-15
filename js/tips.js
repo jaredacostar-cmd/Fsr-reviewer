@@ -73,7 +73,7 @@
   const HELP = [
     { t: 'Check servicing for a development', w: 'Reviewing an application, an FSR or a pre-consultation.',
       s: ['Tap its marker, or search its address or file number — the site bar appears and every analysis tab now shows this site.', 'Water and Wastewater tabs: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow. The Development tab\u2019s Site view has stormwater and ground.', 'Memo (in the site bar) prints a one-page servicing memo.'],
-      go: () => { const p = pickDev(); if (!p) return; toMap(); PDT().focusProject(p); setTimeout(() => AT().showFootTab('ww'), 50); } },
+      go: () => { const p = pickDev(); if (!p) return; toMap(); PDT().focusProject(p); setTimeout(() => AT().showFootTab('svc', 'network'), 50); } },
     { t: 'Find when DC projects are needed', w: 'DC background study, capital timing, or explaining why a site waits for a trunk sewer.',
       s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'More settings (in the Layers panel) → DC timing: every existing constraint, filtered to "Screens late".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Export (top bar) → Excel writes the full DC timing table for a memo or spreadsheet.'],
       go: () => { MA().setMapView('dc'); SC().loadSewers(); MP().showDcTiming(); } },
@@ -107,7 +107,7 @@
     'Press and hold (or hover) a heading or label for what it means and where the data comes from.',
     'The north arrow switches between Peel’s road grid and north up.',
     'Search a DC project number (e.g. 25-2269) or a pumping station to jump to it.',
-    'Hover a cluster for its phase counts; More settings (in the Layers panel) → Show as → Heatmap shows where people and jobs concentrate.',
+    'Hover a cluster for its phase counts.',
     'The summary line above the Analysis tabs always shows the totals for what is on the map.',
     'Tables in the Water and Wastewater tabs keep their headers while you scroll.',
     'The PDFs under Export (top bar) — executive briefing, development memo, area report, comparison — open a print-ready page: use Print / Save as PDF.',

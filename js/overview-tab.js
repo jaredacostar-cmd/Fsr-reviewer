@@ -140,8 +140,8 @@
         </section>
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Screening summary</h3></div>
           <ul class="b-lines small">
-            ${vline(wv, '💧 Water', go('water', 'Servicing'))}
-            ${vline(wwv, '🚰 Wastewater', go('ww', 'Servicing'))}
+            ${vline(wv, '💧 Water', go('svc:network', 'Servicing'))}
+            ${vline(wwv, '🚰 Wastewater', go('svc:network', 'Servicing'))}
             ${vline(dcv, '🏗 DC works', go('dca', 'Capital'))}
             ${vline(mv, '🚩 Next milestone', devBtn)}
           </ul></section>
@@ -276,7 +276,7 @@
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
           <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [lyTiles.units, n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>${lyTiles.anticipated ? `<p class="small muted ly-def">Anticipated: ${esc(root.PeelLayers.NOTE.anticipated)}.</p>` : ''}</section>
         ${needs}
-        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('ww', 'Plants')}</div>${cap}</section>
+        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('svc:capacity', 'Servicing › Capacity')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
         ${CX_HOST}
         <div class="ov-info-w">${info}</div>
@@ -356,7 +356,8 @@
     if (t) {
       // Phase 4: the criteria tab is gone — "Data & checks" opens the gear menu's Sources & checks page.
       if (t.dataset.ovTab === 'criteria') { TB().openGearPage('sources'); return; }
-      AT().setFootPref(t.dataset.ovTab); store.set('footTab4', t.dataset.ovTab); AT().showFootTab(t.dataset.ovTab); return;
+      const [tab, sub] = t.dataset.ovTab.split(':');   // "tab" or "tab:sub-view"
+      AT().setFootPref(AT().tabOf(tab)); store.set('footTab4', AT().tabOf(tab)); AT().showFootTab(tab, sub); return;
     }
     const ds = e.target.closest('[data-ov-devsec]');
     if (ds) { if (window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(ds.dataset.ovDevsec); const sec = $('#ov-dev'); if (sec) sec.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }

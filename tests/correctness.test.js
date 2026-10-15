@@ -134,7 +134,7 @@ test('7. permit check: pass / fail per municipality (fail beyond 25%); in Record
   assert.equal(U.permitCheckRows([{ m: 'X', app: 126, region: 100 }])[0].pass, false);
   const cv = src('js/census-view.js');
   assert.doesNotMatch(cv, /<p class="small">Check: units on this app's building permit records/, 'gone from Growth › Census & 2051');
-  assert.match(cv, /Permit counts differ from Region figures for \$\{esc\(list\)\}; see \$\{DV\(\)\.homeLine\('records', 'Records › Checks'\)\}/);
+  assert.match(cv, /Permit counts differ from Region figures for \$\{esc\(list\)\}; see \$\{DV\(\)\.homeLine\('records:checks', 'Records › Checks'\)\}/);
   assert.match(cv, /<span class="fr-b \$\{r\.pass \? 'fr-ok' : 'fr-stale'\}">\$\{r\.pass \? 'Pass' : 'Fail'\}<\/span>/);
   assert.match(src('js/demand-ui.js'), /root\.PeelCensusView\.permitCheckHTML\(\)/, 'listed with the model checks');
   assert.match(src('js/growth-ui.js'), /\$\{hlP\(head\)\}\$\{caveat\}/, 'caveat under the Growth pipeline headline');

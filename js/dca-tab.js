@@ -20,7 +20,9 @@
   const SC = () => window.PeelSewerCap;
   const SP = () => window.PeelSvcPlants;
 
-  // ---- DC tab sub-views (Phase 4): Timing / Funding screen / Funding ---------------------------
+  // ---- Capital sub-views (Stage 2): Timing · Projects · EAs, and Funding while its Labs switch is
+  // on (Settings › Labs): the funding screen's "Screening results" (was Recommendations) and the
+  // funding levels, one under the other. -----------------------------------------------------------
   // Worker A owns the sub-view chrome (dcSub state, data-dcasub buttons, the three panes); the
   // renderers below fill #dca-timing-body / #dca-rec-body / #dca-funding-body. The single scenario
   // bar replaces the old per-tab scenario stamp line (no stampHTML call remains in this tab).
@@ -96,7 +98,7 @@
     const rows = merged.filter(x => MP().DCA.recFilter === 'all' || x.dec.toLowerCase() === MP().DCA.recFilter);
     const shown = MP().DCA.recAll ? rows : rows.slice(0, 10);
     const hl = `With <strong>${fmtMoney(DC().DCB.budget)}</strong> of DC funding over ${DC().DCB.years} years (${MM().THIS_YEAR}–${B.end}) against a <strong>${fmtMoney(B.total)}</strong> program, <strong>${B.keep.length}</strong> projects fall within the funding screen (${fmtMoney(B.spent)}) and <strong>${B.defer.length}</strong> outside it (${fmtMoney(B.total - B.spent)})${B.upper > 0 ? ` — without them the screen shows ≈<strong>${ppRange(B.lower, B.upper)} people</strong> (≈${ppRange(B.lower, B.upper, uu)} units) of the growth expected by ${B.end} constrained` : B.defer.length ? ` — no growth expected by ${B.end} relies on the projects outside it` : ` — every project in the window is within it`}.`;
-    return `${hlP(hl)}${pauseNote()}
+    return `<h3 class="sub-title">Screening results <span class="muted small">funding screen · Labs</span></h3>${hlP(hl)}${pauseNote()}
       <div class="dca-sum">
         <div class="dca-tile"><b>${B.keep.length}</b><span>within the funding screen (${fmtMoney(B.spent)}${B.committed ? `, ${fmtMoney(B.committed)} already committed` : ''})</span></div>
         <div class="dca-tile"><b>${B.defer.length}</b><span>outside the funding screen (${fmtMoney(B.total - B.spent)})</span></div>
@@ -119,7 +121,7 @@
     const hl = `The <strong>${B.rows.length}-project</strong> DC program coming online ${MM().THIS_YEAR}–${B.end} costs <strong>${fmtMoney(B.total)}</strong> in 2026 DC-recoverable dollars; the <strong>${fmtMoney(DC().DCB.budget)}</strong> funding screen has <strong>${B.keep.length}</strong> within it and <strong>${B.defer.length}</strong> outside it.`;
     const byCost = B.rows.slice().sort((a, b) => b.cost - a.cost);
     const shown = MP().DCA.fundAll ? byCost : byCost.slice(0, 10);
-    return `<section data-info="dca-budget">${hlP(hl)}${pauseNote()}
+    return `<section data-info="dca-budget"><h3 class="sub-title">Funding levels <span class="muted small">Labs</span></h3>${hlP(hl)}${pauseNote()}
       <div class="dca-sum">
         <div class="dca-tile"><b>${fmtMoney(B.total)}</b><span>DC-recoverable program cost, 2026$ (${B.rows.length} projects, ${MM().THIS_YEAR}–${B.end})</span></div>
         <div class="dca-tile"><b>${fmtMoney(DC().DCB.budget)}</b><span>DC funding over the next ${DC().DCB.years} years</span></div>
@@ -196,9 +198,12 @@
 
   function exportDcGeoJSON() { if (App().state.dcInfra) PE().download('peel-2026-dc-planned-works.geojson', JSON.stringify(DI().dcGeoJSON()), 'application/geo+json'); }
 
-  for (const id of ['#water-body', '#ww-body']) {
-    $(id).addEventListener('click', e => { const r = e.target.closest('[data-svc]'); if (r) ST().focusSvc(r.dataset.svc); });
-    $(id).addEventListener('keydown', e => { const r = e.target.closest('[data-svc]'); if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); ST().focusSvc(r.dataset.svc); } });
+  // Servicing › Network rows: a tap selects the row (the map shows it with everything upstream);
+  // "What loads this?" and "Show upstream" act on it from the bar above (js/svc-capacity.js).
+  const netPick = id => { ST().focusSvc(id, { loads: false }); if (window.PeelSvcCapacity) window.PeelSvcCapacity.renderNetBar(); };
+  for (const id of ['#water-body', '#ww-body', '#pumpstations-body']) {
+    $(id).addEventListener('click', e => { const r = e.target.closest('[data-svc]'); if (r) netPick(r.dataset.svc); });
+    $(id).addEventListener('keydown', e => { const r = e.target.closest('[data-svc]'); if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); netPick(r.dataset.svc); } });
   }
 
 
