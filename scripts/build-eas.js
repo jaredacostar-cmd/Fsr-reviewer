@@ -203,8 +203,11 @@ async function main() {
       }
     }
     Object.assign(ea, g);
-    if (g.geomType === 'approx') ea.flags.push('geometry approximate');
-    if (!g.geometry) ea.flags.push('no geometry');
+    // A traced study area (data/eas-overrides.json) replaces the resolved geometry before the links below use it.
+    const tr = overrides.eas && overrides.eas[ea.id];
+    if (tr && tr.geometry) for (const k of ['geometry', 'geomType', 'geomMethod', 'geomConfidence']) if (tr[k] !== undefined) ea[k] = tr[k];
+    if (ea.geomType === 'approx') ea.flags.push('geometry approximate');
+    if (!ea.geometry) ea.flags.push('no geometry');
   }
 
   // Links.

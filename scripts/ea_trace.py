@@ -6,19 +6,22 @@ to the ea-maps branch) into data/eas-overrides.json.
 scripts/ea-trace.json lists, per EA:
   { "id": "<ea id>", "image": "ea-maps/<id>/1.png", "kind": "area" | "line",
     "ctrl": [ { "px": [x, y], "streets": ["Queen Street East", "Main Street North"], "city": "Brampton" }
-            | { "px": [x, y], "lnglat": [lng, lat] } ... ],            # 3+ control points
+            | { "px": [x, y], "lnglat": [lng, lat] } ... ],            # 2+ control points (1 with mPerPx)
     "outline": { "rgb": [r, g, b], "tol": 60 } | { "px": [[x, y], ...] } # colour of the drawn outline, or vertices
+    "mPerPx": 2.45, "rotationDeg": 0  # scale bar (checks the fit; with ONE control point it sets the scale); rotationDeg = clockwise angle of the north arrow from image-up
   }
 Steps: geocode each street intersection (Nominatim, both streets' geometry intersected; cached in
-scripts/ea-xings.json), fit pixel → lng/lat (least-squares affine), extract the outline (largest
+scripts/ea-xings.json), fit pixel → lng/lat (similarity for 2-3 points, least-squares affine for 4+), extract the outline (largest
 enclosed region of that colour for an area; the colour's centre line for a line), simplify, transform,
 and write eas-overrides.json entries: geometry, geomType, geomMethod "traced from the project page
-image (n control points, residual m)", geomConfidence medium (residual <= 60 m) else low.
+image (n control points, residual m)", geomConfidence medium when the control points
+or the scale bar check the fit and the residual is <= 60 m, else low. Streets that cross twice keep both
+crossings; the combination that fits best is used. Control points that disagree by > 250 m are skipped.
 
   python3 scripts/ea_trace.py            # needs network for new intersections (run in Actions)
   python3 scripts/ea_trace.py --selftest # pure checks, no network
 """
-import json, math, os, sys, time, urllib.parse, urllib.request
+import cmath, itertools, json, math, os, sys, time, urllib.parse, urllib.request
 
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')
 
@@ -44,6 +47,26 @@ def fit_affine(px, ll):
         return [A[k][3] / A[k][k] for k in range(3)]
     a = solve([p[0] for p in ll]); b = solve([p[1] for p in ll])
     return a + b
+
+def fit_similarity(px, ll, rot_deg=None):
+    """Two (or more) control points: shift + rotation + uniform scale, in a local metric frame
+    (image y points down). rot_deg fixes the rotation (the north arrow, clockwise from image-up) when
+    the control points sit too close together to give it. Returned as affine coefficients."""
+    lat0 = sum(q[1] for q in ll) / len(ll); kx = 111320 * math.cos(math.radians(lat0)); ky = 110574
+    P = [complex(x, -y) for x, y in px]
+    Q = [complex(q[0] * kx, q[1] * ky) for q in ll]
+    pm = sum(P) / len(P); qm = sum(Q) / len(Q)
+    num = sum((q - qm) * (p - pm).conjugate() for p, q in zip(P, Q)); den = sum(abs(p - pm) ** 2 for p in P)
+    a = num / den
+    if rot_deg is not None:
+        u = cmath.exp(1j * math.radians(rot_deg)); a = max((num * u.conjugate()).real / den, 1e-9) * u
+    b = qm - a * pm          # q = a * p + b, p = x - iy
+    # lng*kx = Re(a)(x) + Im(a)(y) + Re(b); lat*ky = Im(a)(x) - Re(a)(y) + Im(b)
+    return [a.real / kx, a.imag / kx, b.real / kx, a.imag / ky, -a.real / ky, b.imag / ky]
+
+def m_per_px(t):
+    lat = t[5]; kx = 111320 * math.cos(math.radians(lat)); ky = 110574
+    return math.hypot(t[0] * kx, t[3] * ky)
 
 def apply(t, x, y):
     return (t[0] * x + t[1] * y + t[2], t[3] * x + t[4] * y + t[5])
@@ -163,8 +186,11 @@ def nominatim(params):
     with urllib.request.urlopen(req, timeout=40) as r: return json.loads(r.read())
 
 def street_lines(name, city):
+    if isinstance(name, list): return [l for n in name for l in street_lines(n, city)]   # alternate names (Highway 50 / Queen Street South)
     out = []
-    for f in nominatim({'street': name, 'city': city, 'state': 'Ontario'}):
+    res = nominatim({'street': name, 'city': city, 'state': 'Ontario'}) if city else []
+    if not res: res = nominatim({'q': f"{name}, Ontario"})   # boundary roads (Steeles, Mayfield) sit in two cities
+    for f in res:
         g = f.get('geojson') or {}
         if g.get('type') == 'LineString': out.append(g['coordinates'])
         elif g.get('type') == 'MultiLineString': out.extend(g['coordinates'])
@@ -177,14 +203,17 @@ def seg_x(p1, p2, p3, p4):
     u = ((p3[0] - p1[0]) * (p2[1] - p1[1]) - (p3[1] - p1[1]) * (p2[0] - p1[0])) / d
     return (p1[0] + t * (p2[0] - p1[0]), p1[1] + t * (p2[1] - p1[1])) if 0 <= t <= 1 and 0 <= u <= 1 else None
 
-def nearest_pair(A, B):
-    """Intersection of two sets of lines, else the closest vertex pair midpoint when within 40 m."""
+def crossings(A, B):
+    """Every point where the two sets of lines cross (merged within 25 m), else the closest vertex pair's
+    midpoint when within 40 m (a street that ends at the other)."""
+    out = []
     for a in A:
         for b in B:
             for i in range(1, len(a)):
                 for j in range(1, len(b)):
                     x = seg_x(a[i - 1], a[i], b[j - 1], b[j])
-                    if x: return x, 0
+                    if x and all(metres(x, o) > 25 for o in out): out.append(x)
+    if out: return out
     best = None
     for a in A:
         for p in a:
@@ -192,16 +221,46 @@ def nearest_pair(A, B):
                 for q in b:
                     d = metres(p, q)
                     if best is None or d < best[1]: best = (((p[0] + q[0]) / 2, (p[1] + q[1]) / 2), d)
-    return best if best and best[1] <= 40 else None
+    return [best[0]] if best and best[1] <= 40 else []
 
 def geocode_xing(streets, city, cache):
-    key = f"{streets[0]} & {streets[1]}, {city}"
-    if key in cache: return cache[key]
-    A, B = street_lines(streets[0], city), street_lines(streets[1], city)
-    r = nearest_pair(A, B) if A and B else None
-    cache[key] = [round(r[0][0], 6), round(r[0][1], 6)] if r else None
-    print(f"  {key}: {cache[key]} ({len(A)} / {len(B)} ways)")
-    return cache[key]
+    """Candidate points for an intersection (more than one when the streets cross twice, e.g. a crescent)."""
+    nm = lambda n: ' / '.join(n) if isinstance(n, list) else n
+    key = f"{nm(streets[0])} & {nm(streets[1])}, {city}"
+    if key not in cache:
+        A, B = street_lines(streets[0], city), street_lines(streets[1], city)
+        cache[key] = [[round(v, 6) for v in x] for x in crossings(A, B)] if A and B else []
+        print(f"  {key}: {len(cache[key])} crossing(s) {cache[key][:3]} ({len(A)} / {len(B)} ways)")
+    v = cache[key]
+    return [] if not v else [v] if isinstance(v[0], (int, float)) else v   # older cache entries held one point
+
+def fit(t, px, ll):
+    """Pixel -> lng/lat transform for one set of control points, and its worst residual (m)."""
+    if len(px) == 1:
+        # One point + the scale bar + the map's rotation (north-up = 0): a similarity transform.
+        ang = math.radians(t.get('rotationDeg', 0)); sc = t['mPerPx']
+        kx = 111320 * math.cos(math.radians(ll[0][1])); ky = 110574
+        (x0, y0), (lng0, lat0) = px[0], ll[0]
+        c, s_ = math.cos(ang), math.sin(ang)
+        tf = [sc * c / kx, sc * s_ / kx, 0, sc * s_ / ky, -sc * c / ky, 0]
+        tf[2] = lng0 - tf[0] * x0 - tf[1] * y0; tf[5] = lat0 - tf[3] * x0 - tf[4] * y0
+        return tf, 0.0
+    if 'rotationDeg' in t: tf = fit_similarity(px, ll, t['rotationDeg'])
+    elif len(px) >= 4 and not t.get('similarity'): tf = fit_affine(px, ll)
+    else: tf = fit_similarity(px, ll)   # 2-3 points: similarity, so 3 points still check each other
+    return tf, residual(tf, px, ll)
+
+def best_fit(t, ctrl):
+    """ctrl: [(px, [candidate lnglat, ...])]. Try the candidate combinations and keep the one that fits best:
+    smallest residual when the points over-determine the fit, else the scale closest to the scale bar."""
+    px = [p for p, _ in ctrl]
+    checks = len(px) >= 3 or len(px) == 2 and 'rotationDeg' in t
+    best = None
+    for ll in itertools.islice(itertools.product(*[cs for _, cs in ctrl]), 5000):
+        tf, res = fit(t, px, list(ll))
+        score = res if checks else abs(m_per_px(tf) / t['mPerPx'] - 1) if t.get('mPerPx') and len(px) == 2 else 0
+        if best is None or score < best[0]: best = (score, tf, res, list(ll))
+    return best[1], best[2], best[3]
 
 # ---- main -------------------------------------------------------------------------------------------
 def main():
@@ -214,14 +273,29 @@ def main():
     ov.setdefault('eas', {})
     report = []
     for t in cfg['traces']:
-        px, ll = [], []
+        ctrl = []
         for c in t['ctrl']:
-            q = c.get('lnglat') or geocode_xing(c['streets'], c.get('city', t.get('city', '')), cache)
-            if q: px.append(tuple(c['px'])); ll.append(tuple(q))
-        if len(px) < 3: report.append(f"{t['id']}: only {len(px)} control points geocoded — skipped"); continue
-        tf = fit_affine(px, ll); res = residual(tf, px, ll)
+            cands = [c['lnglat']] if c.get('lnglat') else geocode_xing(c['streets'], c.get('city', t.get('city', '')), cache)
+            if cands: ctrl.append((tuple(c['px']), [tuple(q) for q in cands]))
+        px = [p for p, _ in ctrl]
+        if len(px) < 2 and not (len(px) == 1 and t.get('mPerPx')): report.append(f"{t['id']}: only {len(px)} control points geocoded — skipped"); continue
+        tf, res, ll = best_fit(t, ctrl)
+        amb = sum(len(cs) > 1 for _, cs in ctrl)
+        checked = len(px) >= 3 or len(px) == 2 and 'rotationDeg' in t   # the control points check each other
+        if res > 250: report.append(f"{t['id']}: control points disagree by {round(res)} m — skipped"); continue
+        if res > 30: report.append(f"  {t['id']} per-point residuals (m): " + ', '.join(f"{tuple(p)} {round(metres(apply(tf, *p), q))}" for p, q in zip(px, ll)))
+        # Scale check against the map's scale bar (metres per pixel), when given.
+        scale_note = ''
+        if t.get('mPerPx'):
+            k = m_per_px(tf) / t['mPerPx']
+            scale_note = f", scale {k:.2f}× the scale bar"
+            if abs(k - 1) > t.get('mPerPxTol', 0.25): report.append(f"{t['id']}: scale off by {k:.2f}× — check the control points"); continue
+            checked = checked or len(px) >= 2
         img_path = os.path.join(ROOT, t['image'])
-        if 'px' in t['outline']: pts = [tuple(p) for p in t['outline']['px']]
+        lines = None; polys = None
+        if 'polys' in t['outline']: polys = [[tuple(p) for p in r] for r in t['outline']['polys']]; pts = polys[0]
+        elif 'lines' in t['outline']: lines = [[tuple(p) for p in l] for l in t['outline']['lines']]; pts = lines[0]
+        elif 'px' in t['outline']: pts = [tuple(p) for p in t['outline']['px']]
         else:
             img = Image.open(img_path)
             mask = colour_mask(img, t['outline']['rgb'], t['outline'].get('tol', 60))
@@ -231,15 +305,26 @@ def main():
             pts = area_polygon(mask) if t['kind'] == 'area' else line_path(mask)
         if not pts: report.append(f"{t['id']}: outline not found"); continue
         coords = [[round(c, 6) for c in apply(tf, x, y)] for x, y in pts]
-        if t['kind'] == 'area':
+        if polys:
+            rings = []
+            for r in polys:
+                c = [[round(v, 6) for v in apply(tf, x, y)] for x, y in r]
+                if c[0] != c[-1]: c.append(c[0])
+                rings.append([c])
+            geom = {'type': 'MultiPolygon', 'coordinates': rings} if len(rings) > 1 else {'type': 'Polygon', 'coordinates': rings[0]}
+        elif lines and len(lines) > 1:
+            geom = {'type': 'MultiLineString', 'coordinates': [[[round(c, 6) for c in apply(tf, x, y)] for x, y in l] for l in lines]}
+        elif t['kind'] == 'area':
             if coords[0] != coords[-1]: coords.append(coords[0])
             geom = {'type': 'Polygon', 'coordinates': [coords]}
         else: geom = {'type': 'LineString', 'coordinates': coords}
         e = ov['eas'].setdefault(t['id'], {})
         e.update({'geometry': geom, 'geomType': 'area' if t['kind'] == 'area' else 'road' if t.get('road') else 'linear',
-                  'geomMethod': f"traced from the project page image ({len(px)} control points, residual {round(res)} m)",
-                  'geomConfidence': 'medium' if res <= 60 else 'low'})
-        report.append(f"{t['id']}: {geom['type']} {len(coords)} vertices, {len(px)} control points, residual {round(res)} m")
+                  'geomMethod': ("traced from the project page image (1 control point and the map scale)" if len(px) < 2 else
+                                 f"traced from the project page image ({len(px)} control points, residual {round(res)} m)" if len(px) >= 3 or 'rotationDeg' in t else
+                                 f"traced from the project page image ({len(px)} control points{', scale bar checked' if t.get('mPerPx') else ''})"),
+                  'geomConfidence': 'medium' if checked and len(px) >= 2 and res <= 60 else 'low'})
+        report.append(f"{t['id']}: {geom['type']} {len(coords)} vertices, {len(px)} control points{f' ({amb} with two crossings)' if amb else ''}, residual {round(res)} m{scale_note}")
     json.dump(cache, open(xpath, 'w'), indent=1)
     json.dump(ov, open(opath, 'w'), indent=1, ensure_ascii=False)
     print('\n'.join(report))
@@ -253,6 +338,20 @@ def selftest():
     ll = [apply(T, *p) for p in px]
     tf = fit_affine(px, ll)
     assert residual(tf, px, ll) < 0.01, 'affine fit'
+    # Similarity from two points: a rotated, scaled grid is recovered (image y down).
+    ang = math.radians(30); sc = 3.0   # 3 m / px, rotated 30 degrees
+    kx = 111320 * math.cos(math.radians(43.7)); ky = 110574
+    def truth(x, y):
+        X, Y = x * sc, -y * sc
+        return (-79.76 + (X * math.cos(ang) - Y * math.sin(ang)) / kx, 43.7 + (X * math.sin(ang) + Y * math.cos(ang)) / ky)
+    sp = [(100, 100), (500, 300)]; sl = [truth(*p) for p in sp]
+    ts = fit_similarity(sp, sl)
+    chk = truth(300, 50)
+    assert metres(apply(ts, 300, 50), chk) < 0.5, metres(apply(ts, 300, 50), chk)
+    assert abs(m_per_px(ts) - 3.0) < 0.01, m_per_px(ts)
+    # Fixed rotation (north arrow 30 degrees clockwise of image-up): scale and shift still recovered.
+    tr = fit_similarity(sp, sl, 30)
+    assert metres(apply(tr, 300, 50), chk) < 0.5 and abs(m_per_px(tr) - 3.0) < 0.01, (metres(apply(tr, 300, 50), chk), m_per_px(tr))
     # Outline extraction: a red dashed rectangle with black noise -> a 4-ish vertex ring.
     img = Image.new('RGB', (300, 200), 'white'); d = ImageDraw.Draw(img)
     for x in range(40, 260, 12): d.line([(x, 30), (x + 8, 30)], fill=(220, 30, 30), width=3); d.line([(x, 170), (x + 8, 170)], fill=(220, 30, 30), width=3)
@@ -267,8 +366,16 @@ def selftest():
     path = line_path(colour_mask(img2, (250, 200, 0), 50))
     assert len(path) >= 2 and math.hypot(path[0][0] - path[-1][0], path[0][1] - path[-1][1]) > 250, path
     # Intersection of two crossing streets.
-    x = nearest_pair([[[-79.80, 43.70], [-79.70, 43.70]]], [[[-79.75, 43.65], [-79.75, 43.75]]])
-    assert x and abs(x[0][0] + 79.75) < 1e-9 and abs(x[0][1] - 43.70) < 1e-9
+    x = crossings([[[-79.80, 43.70], [-79.70, 43.70]]], [[[-79.75, 43.65], [-79.75, 43.75]]])
+    assert len(x) == 1 and abs(x[0][0] + 79.75) < 1e-9 and abs(x[0][1] - 43.70) < 1e-9
+    # A crescent crossing the street twice: both crossings kept; the fit picks the one that agrees with the others.
+    two = crossings([[[-79.80, 43.70], [-79.70, 43.70]]], [[[-79.78, 43.69], [-79.77, 43.71], [-79.76, 43.69]]])
+    assert len(two) == 2, two
+    T2 = [0.0001, 0.0, -79.8, 0.0, -0.0000725, 43.75]
+    P = [(100, 100), (400, 120), (250, 600)]; good = [apply(T2, *p) for p in P]
+    ctrl = [(P[0], [good[0]]), (P[1], [(good[1][0] + 0.01, good[1][1]), good[1]]), (P[2], [good[2]])]
+    tf, res, ll = best_fit({}, ctrl)
+    assert ll[1] == good[1] and res < 50, (ll, res)
     print('selftest ok')
 
 if __name__ == '__main__':

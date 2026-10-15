@@ -325,6 +325,29 @@ test('purpose draft skips process sentences and cuts long ones at a word', () =>
   assert.ok(long.length <= 221 && long.endsWith('…') && !/\s…$/.test(long), long);
 });
 
+test('study-area trace list: every entry names a listed EA, its map on the ea-maps branch, an outline and enough control points', () => {
+  const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'scripts', 'ea-trace.json'), 'utf8'));
+  const ids = new Set(JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'eas.json'), 'utf8')).eas.map(e => e.id));
+  const seen = new Set();
+  for (const t of cfg.traces) {
+    assert.ok(ids.has(t.id), `unknown EA ${t.id}`);
+    assert.ok(!seen.has(t.id), `traced twice: ${t.id}`); seen.add(t.id);
+    assert.ok(t.image.startsWith(`ea-maps/${t.id}/`), t.image);
+    assert.ok(['area', 'line'].includes(t.kind), t.kind);
+    const o = t.outline;
+    assert.ok(o.px?.length >= 2 || o.lines?.length || o.polys?.length || o.rgb, `${t.id}: no outline`);
+    if (t.kind === 'area' && o.px) assert.deepEqual(o.px[0], o.px[o.px.length - 1], `${t.id}: ring not closed`);
+    // One control point only with the map's scale; two or more otherwise. Each is a pixel and two streets (or a lng/lat).
+    assert.ok(t.ctrl.length >= 2 || t.ctrl.length === 1 && t.mPerPx > 0, `${t.id}: ${t.ctrl.length} control points`);
+    for (const c of t.ctrl) {
+      assert.equal(c.px.length, 2);
+      assert.ok(c.lnglat?.length === 2 || c.streets?.length === 2 && c.city, `${t.id}: control point without streets`);
+    }
+    if (t.rotationDeg !== undefined) assert.ok(Math.abs(t.rotationDeg) <= 180);
+  }
+  assert.ok(cfg.traces.length >= 40, `only ${cfg.traces.length} traces`);
+});
+
 test('study-area tracing: affine fit, outline extraction, street intersections (python self-test)', () => {
   const { spawnSync } = require('child_process');
   const r = spawnSync('python3', [path.join(__dirname, '..', 'scripts', 'ea_trace.py'), '--selftest'], { encoding: 'utf8' });

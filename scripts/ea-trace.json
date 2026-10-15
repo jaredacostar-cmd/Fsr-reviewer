@@ -1,1 +1,2019 @@
-{ "note": "Study-area traces (scripts/ea_trace.py). Control points: street intersections read off each map, geocoded in Actions.", "traces": [] }
+{
+ "note": "Study-area traces (scripts/ea_trace.py). Outline and control points read off each project-page map (pixel coordinates of the image on the ea-maps branch); control points are street intersections geocoded in Actions. Maps with no single study area (Region-wide key maps, aerial context only) are not traced.",
+ "traces": [
+  {
+   "id": "downtown-brampton-water-and-wastewater-capacity-improvements",
+   "image": "ea-maps/downtown-brampton-water-and-wastewater-capacity-improvements/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [436, 339],
+     "streets": [
+      "Main Street",
+      "Queen Street"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [873, 278],
+     "streets": [
+      "Kennedy Road",
+      "Queen Street"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [250, 95],
+     [268, 82],
+     [292, 82],
+     [302, 98],
+     [325, 128],
+     [362, 140],
+     [500, 136],
+     [522, 70],
+     [555, 50],
+     [625, 45],
+     [640, 62],
+     [635, 105],
+     [600, 120],
+     [568, 178],
+     [855, 146],
+     [885, 168],
+     [880, 210],
+     [858, 222],
+     [530, 268],
+     [400, 250],
+     [397, 322],
+     [322, 333],
+     [305, 395],
+     [110, 632],
+     [70, 640],
+     [45, 612],
+     [45, 585],
+     [206, 394],
+     [237, 345],
+     [198, 332],
+     [190, 300],
+     [205, 272],
+     [245, 268],
+     [229, 245],
+     [230, 215],
+     [242, 198],
+     [250, 95]
+    ]
+   },
+   "mPerPx": 3.0
+  },
+  {
+   "id": "airport-road-complete-corridor-study",
+   "image": "ea-maps/airport-road-complete-corridor-study/2-p-1.png",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [347, 426],
+     "streets": [
+      "Airport Road",
+      "Intermodal Drive"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [557, 426],
+     "streets": [
+      "Airport Road",
+      "Steeles Avenue"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [1239, 426],
+     "streets": [
+      "Airport Road",
+      "Derry Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [131, 426],
+     [147, 372],
+     [180, 334],
+     [240, 318],
+     [1300, 318],
+     [1360, 334],
+     [1393, 372],
+     [1409, 426],
+     [1393, 480],
+     [1360, 518],
+     [1300, 534],
+     [240, 534],
+     [180, 518],
+     [147, 480],
+     [131, 426]
+    ]
+   },
+   "mPerPx": 4.56,
+   "similarity": true
+  },
+  {
+   "id": "arterial-roads-within-highway-427-industrial-secondary-plan-area-area-47",
+   "image": "ea-maps/arterial-roads-within-highway-427-industrial-secondary-plan-area-area-47/2.png",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [432, 93],
+     "streets": [
+      "Mayfield Road",
+      "Coleraine Drive"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [603, 92],
+     "streets": [
+      "Mayfield Road",
+      "Highway 50"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [25, 630],
+     "streets": [
+      "Castlemore Road",
+      "The Gore Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [318, 632],
+     "streets": [
+      "Castlemore Road",
+      "Highway 50"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [70, 245],
+     "streets": [
+      "Countryside Drive",
+      "The Gore Road"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [175, 92],
+     [605, 92],
+     [318, 632],
+     [25, 630],
+     [70, 245],
+     [157, 245],
+     [175, 92]
+    ]
+   }
+  },
+  {
+   "id": "arthur-p-kennedy-water-treatment-plant-reservoir-expansion",
+   "image": "ea-maps/arthur-p-kennedy-water-treatment-plant-reservoir-expansion/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [425, 647],
+     "streets": [
+      "Cawthra Road",
+      "Lakeshore Road East"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [258, 875],
+     "streets": [
+      "Enola Avenue",
+      "Lakeshore Road East"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [565, 652],
+     [605, 603],
+     [705, 520],
+     [705, 513],
+     [712, 515],
+     [720, 535],
+     [745, 575],
+     [758, 610],
+     [750, 650],
+     [700, 690],
+     [615, 705],
+     [565, 652]
+    ]
+   },
+   "mPerPx": 2.45
+  },
+  {
+   "id": "beach-street-sewage-pumping-station-diversion",
+   "image": "ea-maps/beach-street-sewage-pumping-station-diversion/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [872, 298],
+     "streets": [
+      "Lakeshore Road East",
+      "Cawthra Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [440, 300],
+     "streets": [
+      "Lakeshore Road East",
+      "Beechwood Avenue"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [1000, 298],
+     "streets": [
+      "Lakeshore Road East",
+      "West Avenue"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [893, 45],
+     "streets": [
+      "Cawthra Road",
+      "Third Street"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [455, 48],
+     [630, 52],
+     [625, 245],
+     [605, 295],
+     [1000, 287],
+     [1012, 425],
+     [1000, 520],
+     [1000, 560],
+     [985, 575],
+     [950, 578],
+     [880, 568],
+     [855, 735],
+     [625, 740],
+     [570, 805],
+     [537, 787],
+     [568, 735],
+     [555, 708],
+     [400, 665],
+     [410, 600],
+     [440, 300],
+     [430, 185],
+     [395, 152],
+     [440, 100],
+     [455, 48]
+    ]
+   }
+  },
+  {
+   "id": "bolton-water-and-wastewater-capacity-improvements",
+   "image": "ea-maps/bolton-water-and-wastewater-capacity-improvements/1.png",
+   "kind": "line",
+   "ctrl": [
+    {
+     "px": [708, 349],
+     "streets": [
+      "Highway 50",
+      "Emil Kolb Parkway"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [697, 997],
+     "streets": [
+      "Highway 50",
+      "King Street East"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [1000, 333],
+     "streets": [
+      "Mount Hope Road",
+      "Emil Kolb Parkway"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [997, 671],
+     "streets": [
+      "Mount Hope Road",
+      "Columbia Way"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "lines": [
+     [
+      [356, 754],
+      [310, 661],
+      [305, 594],
+      [341, 532],
+      [403, 496],
+      [444, 434],
+      [486, 372],
+      [506, 356],
+      [702, 349],
+      [997, 333],
+      [1000, 674]
+     ],
+     [
+      [708, 351],
+      [705, 604]
+     ]
+    ]
+   },
+   "note": "preferred design concept (water and wastewater alignments)"
+  },
+  {
+   "id": "bolton-zone-7-water-elevated-storage-and-transmission-mains",
+   "image": "ea-maps/bolton-zone-7-water-elevated-storage-and-transmission-mains/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [388, 523],
+     "streets": [
+      "King Street",
+      "The Gore Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [108, 525],
+     "streets": [
+      "King Street",
+      "Airport Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [362, 954],
+     "streets": [
+      "Mayfield Road",
+      "The Gore Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [77, 958],
+     "streets": [
+      "Mayfield Road",
+      "Airport Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [412, 91],
+     "streets": [
+      "Old Church Road",
+      "The Gore Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [642, 945],
+     "streets": [
+      "Mayfield Road",
+      "Highway 50"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [273, 235],
+     [1000, 242],
+     [646, 950],
+     [222, 958],
+     [273, 235]
+    ]
+   }
+  },
+  {
+   "id": "castlemore-trunk-sewer-diversion",
+   "image": "ea-maps/castlemore-trunk-sewer-diversion/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [208, 545],
+     "streets": [
+      "Castlemore Road",
+      "Bramalea Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [128, 552],
+     "streets": [
+      "Castlemore Road",
+      "Highway 410"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [210, 757],
+     "streets": [
+      "Bramalea Road",
+      "Highway 407"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [230, 172],
+     [325, 172],
+     [318, 215],
+     [350, 245],
+     [385, 240],
+     [398, 178],
+     [437, 185],
+     [440, 215],
+     [455, 200],
+     [458, 172],
+     [535, 168],
+     [548, 200],
+     [550, 240],
+     [535, 270],
+     [390, 665],
+     [355, 690],
+     [300, 690],
+     [255, 720],
+     [245, 770],
+     [150, 775],
+     [145, 740],
+     [135, 600],
+     [130, 530],
+     [115, 490],
+     [120, 420],
+     [102, 400],
+     [108, 350],
+     [135, 345],
+     [148, 295],
+     [178, 275],
+     [200, 300],
+     [235, 295],
+     [235, 280],
+     [232, 245],
+     [230, 172]
+    ]
+   },
+   "similarity": true
+  },
+  {
+   "id": "cawthra-road-phase-3-sanitary-trunk-sewer",
+   "image": "ea-maps/cawthra-road-phase-3-sanitary-trunk-sewer/2-p-1.png",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [635, 522],
+     "streets": [
+      "Burnhamthorpe Road East",
+      "Cawthra Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [1019, 509],
+     "streets": [
+      "Burnhamthorpe Road East",
+      "Tomken Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [164, 528],
+     "streets": [
+      "Burnhamthorpe Road East",
+      "Central Parkway East"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [635, 361],
+     "streets": [
+      "Rathburn Road East",
+      "Cawthra Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "polys": [
+     [
+      [522, 161],
+      [579, 164],
+      [562, 497],
+      [503, 499],
+      [522, 161]
+     ],
+     [
+      [633, 494],
+      [1304, 465],
+      [1308, 522],
+      [1050, 532],
+      [1038, 748],
+      [979, 745],
+      [987, 535],
+      [635, 551],
+      [633, 494]
+     ]
+    ]
+   },
+   "mPerPx": 2.04
+  },
+  {
+   "id": "central-mississauga-wastewater-capacity-improvements",
+   "image": "ea-maps/central-mississauga-wastewater-capacity-improvements/1.jpg",
+   "kind": "line",
+   "ctrl": [
+    {
+     "px": [242, 338],
+     "streets": [
+      "Queensway East",
+      "Cawthra Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [62, 339],
+     "streets": [
+      "Queensway East",
+      "Hurontario Street"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [415, 343],
+     "streets": [
+      "Queensway East",
+      "Dixie Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [250, 62],
+     "streets": [
+      "Burnhamthorpe Road East",
+      "Cawthra Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "lines": [
+     [
+      [50, 338],
+      [240, 336],
+      [500, 345],
+      [505, 360]
+     ],
+     [
+      [240, 232],
+      [242, 336]
+     ],
+     [
+      [170, 62],
+      [258, 62]
+     ]
+    ]
+   },
+   "mPerPx": 6.45,
+   "note": "new sewer alignment (preferred solution)"
+  },
+  {
+   "id": "coleraine-drive-grade-separation",
+   "image": "ea-maps/coleraine-drive-grade-separation/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [318, 108],
+     "streets": [
+      "Coleraine Drive",
+      "King Street West"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [548, 40],
+     "streets": [
+      "Queen Street South",
+      "King Street"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [255, 102],
+     [318, 85],
+     [388, 282],
+     [330, 308],
+     [255, 102]
+    ]
+   }
+  },
+  {
+   "id": "derry-road-east-and-alstep-drive-road-improvements",
+   "image": "ea-maps/derry-road-east-and-alstep-drive-road-improvements/1.png",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [520, 228],
+     "streets": [
+      "Derry Road East",
+      "Bramalea Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [200, 228],
+     "streets": [
+      "Derry Road East",
+      "Telford Way"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [92, 192],
+     [165, 192],
+     [165, 130],
+     [238, 130],
+     [238, 190],
+     [493, 190],
+     [513, 32],
+     [570, 40],
+     [550, 192],
+     [742, 192],
+     [742, 263],
+     [545, 263],
+     [518, 483],
+     [458, 472],
+     [475, 350],
+     [362, 350],
+     [362, 418],
+     [160, 415],
+     [160, 262],
+     [92, 262],
+     [92, 192]
+    ]
+   }
+  },
+  {
+   "id": "derry-road-mclaughlin-road-to-tomken-road",
+   "image": "ea-maps/derry-road-mclaughlin-road-to-tomken-road/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [75, 217],
+     "streets": [
+      "Derry Road West",
+      "McLaughlin Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [232, 213],
+     "streets": [
+      "Derry Road",
+      "Hurontario Street"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [415, 210],
+     "streets": [
+      "Derry Road East",
+      "Kennedy Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [580, 207],
+     "streets": [
+      "Derry Road East",
+      "Tomken Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [410, 383],
+     "streets": [
+      "Courtneypark Drive East",
+      "Kennedy Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [40, 222],
+     [48, 212],
+     [300, 207],
+     [590, 198],
+     [598, 205],
+     [592, 216],
+     [300, 230],
+     [48, 235],
+     [40, 222]
+    ]
+   }
+  },
+  {
+   "id": "downtown-brampton-watermain-replacement-and-improvement",
+   "image": "ea-maps/downtown-brampton-watermain-replacement-and-improvement/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [754, 1363],
+     "streets": [
+      "Main Street",
+      "Queen Street"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [1495, 741],
+     "streets": [
+      "Kennedy Road North",
+      "Vodden Street East"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [761, 765],
+     "streets": [
+      "Main Street North",
+      "Vodden Street"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [1099, 1352],
+     "streets": [
+      "Centre Street",
+      "Queen Street East"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [446, 241],
+     [1398, 276],
+     [1285, 1671],
+     [388, 1534],
+     [449, 1476],
+     [481, 1378],
+     [501, 1300],
+     [533, 1144],
+     [568, 832],
+     [501, 533],
+     [446, 241]
+    ]
+   }
+  },
+  {
+   "id": "east-trunk-sanitary-sewer-offline-storage-facility",
+   "image": "ea-maps/east-trunk-sanitary-sewer-offline-storage-facility/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [443, 190],
+     "streets": [
+      "Dundas Street East",
+      "Summerville Court"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [765, 190],
+     "streets": [
+      "Dundas Street East",
+      "Southcreek Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [138, 620],
+     [672, 308],
+     [795, 500],
+     [248, 825],
+     [138, 620]
+    ]
+   }
+  },
+  {
+   "id": "elia-avenue-sanitary-sewer-enhancements",
+   "image": "ea-maps/elia-avenue-sanitary-sewer-enhancements/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [487, 681],
+     "streets": [
+      "Hurontario Street",
+      "Elia Avenue"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [519, 270],
+     "streets": [
+      "Hurontario Street",
+      "Eglinton Avenue East"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [1381, 259],
+     "streets": [
+      "Eglinton Avenue East",
+      "Huron Heights Drive"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [241, 687],
+     [1030, 671],
+     [1035, 586],
+     [1344, 601],
+     [1560, 836],
+     [1502, 975],
+     [1494, 1014],
+     [885, 1035],
+     [888, 901],
+     [857, 893],
+     [739, 865],
+     [731, 822],
+     [231, 821],
+     [241, 687]
+    ]
+   }
+  },
+  {
+   "id": "erin-mills-parkway-between-britannia-road-and-highway-407",
+   "image": "ea-maps/erin-mills-parkway-between-britannia-road-and-highway-407/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [396, 190],
+     "streets": [
+      "Derry Road West",
+      "Mississauga Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [262, 478],
+     "streets": [
+      "Britannia Road West",
+      "Erin Mills Parkway"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [355, 40],
+     [425, 40],
+     [422, 100],
+     [400, 100],
+     [398, 200],
+     [420, 200],
+     [415, 278],
+     [395, 280],
+     [385, 320],
+     [340, 365],
+     [282, 410],
+     [275, 512],
+     [245, 512],
+     [248, 405],
+     [270, 375],
+     [340, 325],
+     [358, 290],
+     [360, 275],
+     [345, 275],
+     [350, 200],
+     [378, 200],
+     [380, 100],
+     [355, 98],
+     [355, 40]
+    ]
+   },
+   "mPerPx": 6.0
+  },
+  {
+   "id": "erin-mills-parkway-south-of-highway-403-low-impact-development-facilities",
+   "image": "ea-maps/erin-mills-parkway-south-of-highway-403-low-impact-development-facilities/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [585, 383],
+     "streets": [
+      "Erin Mills Parkway",
+      "Burnhamthorpe Road West"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "polys": [
+     [
+      [452, 322],
+      [468, 306],
+      [478, 314],
+      [462, 332],
+      [452, 322]
+     ],
+     [
+      [506, 325],
+      [513, 317],
+      [536, 333],
+      [529, 341],
+      [506, 325]
+     ]
+    ]
+   },
+   "mPerPx": 8.7,
+   "rotationDeg": 0
+  },
+  {
+   "id": "etobicoke-creek-trunk-sewer-improvements-and-upgrades",
+   "image": "ea-maps/etobicoke-creek-trunk-sewer-improvements-and-upgrades/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [70, 90],
+     "streets": [
+      "Steeles Avenue East",
+      "Kennedy Road South"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [470, 92],
+     "streets": [
+      "Steeles Avenue East",
+      "Dixie Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [28, 490],
+     "streets": [
+      "Derry Road East",
+      "Kennedy Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [432, 490],
+     "streets": [
+      "Derry Road East",
+      "Dixie Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [75, 92],
+     [485, 92],
+     [435, 490],
+     [28, 492],
+     [75, 92]
+    ]
+   },
+   "mPerPx": 7.7
+  },
+  {
+   "id": "finch-stormwater-pumping-station-upgrades",
+   "image": "ea-maps/finch-stormwater-pumping-station-upgrades/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [368, 82],
+     "streets": [
+      "Finch Avenue",
+      "Steeles Avenue East"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [602, 64],
+     "streets": [
+      "Steeles Avenue East",
+      "Highway 50"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [313, 177],
+     [390, 177],
+     [390, 235],
+     [412, 258],
+     [415, 338],
+     [285, 345],
+     [277, 235],
+     [310, 230],
+     [313, 177]
+    ]
+   },
+   "mPerPx": 3.23
+  },
+  {
+   "id": "front-street-wastewater-pumping-station-and-wastewater-diversion",
+   "image": "ea-maps/front-street-wastewater-pumping-station-and-wastewater-diversion/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [205, 113],
+     "streets": [
+      "Lakeshore Road West",
+      "Lorne Park Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [493, 112],
+     "streets": [
+      "Lakeshore Road West",
+      "Ilar Way"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [82, 125],
+     [175, 125],
+     [175, 218],
+     [82, 215],
+     [82, 125]
+    ]
+   },
+   "note": "new pumping station site (Jack Darling Memorial Park)"
+  },
+  {
+   "id": "heritage-road-watermain-construction",
+   "image": "ea-maps/heritage-road-watermain-construction/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [263, 284],
+     "streets": [
+      "Heritage Road",
+      "Steeles Avenue West"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [262, 968],
+     "streets": [
+      "Meadowvale Boulevard",
+      "Meadowpine Boulevard"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [248, 233],
+     [278, 233],
+     [278, 792],
+     [248, 792],
+     [248, 233]
+    ]
+   },
+   "note": "map not to scale"
+  },
+  {
+   "id": "highway-50-drainage-improvements",
+   "image": "ea-maps/highway-50-drainage-improvements/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [844, 1031],
+     "streets": [
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ],
+      "George Bolton Parkway"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [849, 2028],
+     "streets": [
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ],
+      "Mayfield Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [857, 1475],
+     "streets": [
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ],
+      "Parr Boulevard"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [805, 239],
+     [904, 239],
+     [904, 2063],
+     [805, 2063],
+     [805, 239]
+    ]
+   },
+   "mPerPx": 1.26,
+   "similarity": true
+  },
+  {
+   "id": "highway-50-queen-street-east-to-the-gore-road-corridor-study",
+   "image": "ea-maps/highway-50-queen-street-east-to-the-gore-road-corridor-study/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [410, 68],
+     "streets": [
+      "Queen Street East",
+      "Highway 50"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [555, 1075],
+     "streets": [
+      "The Gore Road",
+      "Highway 50"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [510, 445],
+     "streets": [
+      "Highway 50",
+      "Huntington Road"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [370, 78],
+     [448, 68],
+     [612, 1065],
+     [533, 1077],
+     [370, 78]
+    ]
+   }
+  },
+  {
+   "id": "highway-50-queensgate-columbia-way-bolton",
+   "image": "ea-maps/highway-50-queensgate-columbia-way-bolton/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [213, 330],
+     "streets": [
+      "King Street",
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ]
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [213, 592],
+     "streets": [
+      "Queensgate Boulevard",
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ]
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [175, 57],
+     [255, 57],
+     [255, 590],
+     [175, 590],
+     [175, 57]
+    ]
+   },
+   "mPerPx": 7.1,
+   "similarity": true
+  },
+  {
+   "id": "highway-50-to-hardwick-road-watermain-replacement",
+   "image": "ea-maps/highway-50-to-hardwick-road-watermain-replacement/1.png",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [288, 182],
+     "streets": [
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ],
+      "Queensgate Boulevard"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [295, 185],
+     [440, 300],
+     [490, 375],
+     [440, 460],
+     [360, 410],
+     [260, 375],
+     [240, 345],
+     [190, 310],
+     [255, 215],
+     [295, 185]
+    ]
+   },
+   "mPerPx": 1.2,
+   "rotationDeg": 0,
+   "note": "aerial; scale estimated from lot widths"
+  },
+  {
+   "id": "kennedy-road-sanitary-trunk-sewer-project",
+   "image": "ea-maps/kennedy-road-sanitary-trunk-sewer-project/3.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [587, 489],
+     "streets": [
+      "Kennedy Road",
+      "Queen Street East"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [548, 447],
+     "streets": [
+      "Kennedy Road",
+      "Vodden Street East"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [122, 138],
+     "streets": [
+      "Hurontario Street",
+      "Old School Road"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [185, -2],
+     [808, 598],
+     [606, 818],
+     [-10, 239],
+     [185, -2]
+    ]
+   },
+   "similarity": true
+  },
+  {
+   "id": "kirwin-avenue-sanitary-sewer-diversion",
+   "image": "ea-maps/kirwin-avenue-sanitary-sewer-diversion/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [46, 90],
+     "streets": [
+      "Hurontario Street",
+      "Central Parkway"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [404, 424],
+     "streets": [
+      "Hurontario Street",
+      "Dundas Street East"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [342, 201],
+     [375, 216],
+     [406, 220],
+     [431, 228],
+     [505, 299],
+     [404, 424],
+     [267, 289],
+     [342, 201]
+    ]
+   }
+  },
+  {
+   "id": "lakelands-wastewater-pumping-station-offline-storage-facility",
+   "image": "ea-maps/lakelands-wastewater-pumping-station-offline-storage-facility/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [27, 182],
+     "streets": [
+      "Bovaird Drive East",
+      "Southlake Boulevard"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [145, 193],
+     "streets": [
+      "Southlake Boulevard",
+      "Stoneylake Avenue"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [386, 232],
+     "streets": [
+      "Southlake Boulevard",
+      "Deep Sea Drive"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [100, 48],
+     [160, 8],
+     [205, 12],
+     [625, 255],
+     [570, 405],
+     [500, 422],
+     [455, 465],
+     [372, 462],
+     [14, 248],
+     [41, 173],
+     [100, 48]
+    ]
+   }
+  },
+  {
+   "id": "lower-west-sanitary-trunk-sewer-twinning",
+   "image": "ea-maps/lower-west-sanitary-trunk-sewer-twinning/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [166, 460],
+     "streets": [
+      "Winston Churchill Boulevard",
+      "Royal Windsor Drive"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [364, 449],
+     "streets": [
+      "Southdown Road",
+      "Royal Windsor Drive"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [378, 151],
+     "streets": [
+      "Erin Mills Parkway",
+      "Sheridan Park Drive"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [176, 88],
+     [548, 88],
+     [538, 715],
+     [148, 715],
+     [176, 88]
+    ]
+   }
+  },
+  {
+   "id": "mcvean-sanitary-pumping-station-upgrades",
+   "image": "ea-maps/mcvean-sanitary-pumping-station-upgrades/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [447, 462],
+     "streets": [
+      "Queen Street East",
+      "McVean Drive"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [467, 400],
+     "streets": [
+      "McVean Drive",
+      "Ebenezer Road"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [75, 95],
+     [115, 98],
+     [180, 120],
+     [230, 160],
+     [270, 165],
+     [330, 155],
+     [360, 120],
+     [395, 65],
+     [415, 45],
+     [490, 32],
+     [493, 60],
+     [470, 300],
+     [458, 440],
+     [445, 448],
+     [330, 425],
+     [125, 405],
+     [95, 290],
+     [80, 240],
+     [75, 95]
+    ]
+   },
+   "rotationDeg": 52,
+   "note": "aerial rotated; north arrow 52 degrees"
+  },
+  {
+   "id": "palgrave-caledon-east-drinking-water-system-supply-capacity",
+   "image": "ea-maps/palgrave-caledon-east-drinking-water-system-supply-capacity/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [326, 97],
+     "streets": [
+      "Airport Road",
+      "Old Church Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [326, 403],
+     "streets": [
+      "Airport Road",
+      "Old Base Line Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [568, 604],
+     "streets": [
+      "Innis Lake Road",
+      "Castlederg Sideroad"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [83, 428],
+     "streets": [
+      "Mountainview Road",
+      "Old Base Line Road"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [90, 90],
+     [150, 66],
+     [325, 50],
+     [325, 97],
+     [495, 99],
+     [565, 95],
+     [570, 605],
+     [415, 600],
+     [210, 610],
+     [200, 595],
+     [88, 605],
+     [90, 90]
+    ]
+   }
+  },
+  {
+   "id": "palgrave-well-4-supply-capacity-increase",
+   "image": "ea-maps/palgrave-well-4-supply-capacity-increase/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [92, 351],
+     "streets": [
+      [
+       "Highway 50",
+       "Queen Street South",
+       "Queen Street North"
+      ],
+      "Buckstown Trail"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [421, 310],
+     "streets": [
+      "Buckstown Trail",
+      "Edgewild Drive"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [262, 340],
+     [281, 339],
+     [304, 424],
+     [280, 426],
+     [262, 340]
+    ]
+   },
+   "note": "well property limits"
+  },
+  {
+   "id": "royal-windsor-sanitary-sewer-diversion",
+   "image": "ea-maps/royal-windsor-sanitary-sewer-diversion/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [412, 200],
+     "streets": [
+      "Royal Windsor Drive",
+      "Southdown Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [103, 220],
+     "streets": [
+      "Royal Windsor Drive",
+      "Avonhead Road"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [80, 213],
+     [402, 195],
+     [412, 172],
+     [427, 172],
+     [432, 190],
+     [450, 194],
+     [449, 206],
+     [427, 212],
+     [424, 270],
+     [437, 266],
+     [437, 275],
+     [419, 281],
+     [415, 317],
+     [400, 317],
+     [402, 211],
+     [80, 228],
+     [80, 213]
+    ]
+   }
+  },
+  {
+   "id": "twinning-of-the-meadowvale-north-and-streetsville-transmission-mains",
+   "image": "ea-maps/twinning-of-the-meadowvale-north-and-streetsville-transmission-mains/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [477, 344],
+     "streets": [
+      "Britannia Road West",
+      "Queen Street South"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [411, 505],
+     "streets": [
+      "Eglinton Avenue West",
+      "Erin Mills Parkway"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [430, 712],
+     "streets": [
+      "Dundas Street West",
+      "Erin Mills Parkway"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [218, 82],
+     [395, 83],
+     [430, 98],
+     [478, 118],
+     [560, 120],
+     [560, 795],
+     [500, 800],
+     [330, 822],
+     [328, 730],
+     [222, 740],
+     [218, 82]
+    ]
+   }
+  },
+  {
+   "id": "west-caledon-storage-facility-and-transmission-main",
+   "image": "ea-maps/west-caledon-storage-facility-and-transmission-main/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [214, 420],
+     "streets": [
+      "Mississauga Road",
+      "Mayfield Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [238, 206],
+     "streets": [
+      "Mississauga Road",
+      "King Street"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [462, 418],
+     "streets": [
+      "Kennedy Road",
+      "Mayfield Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [473, 310],
+     "streets": [
+      "Kennedy Road",
+      "Old School Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [550, 418],
+     "streets": [
+      "Heart Lake Road",
+      "Mayfield Road"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [158, 52],
+     [503, 52],
+     [485, 205],
+     [470, 345],
+     [463, 410],
+     [452, 466],
+     [109, 465],
+     [158, 52]
+    ]
+   },
+   "mPerPx": 30
+  },
+  {
+   "id": "west-trunk-sanitary-sewer-diversion",
+   "image": "ea-maps/west-trunk-sanitary-sewer-diversion/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [135, 66],
+     "streets": [
+      "Britannia Road West",
+      "Queen Street South"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [181, 190],
+     "streets": [
+      "Eglinton Avenue West",
+      "Erin Mills Parkway"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [118, 6],
+     [269, 135],
+     [196, 218],
+     [44, 91],
+     [118, 6]
+    ]
+   },
+   "mPerPx": 17.2,
+   "mPerPxTol": 0.35,
+   "note": "small, blurry figure"
+  },
+  {
+   "id": "winston-churchill-boulevard-from-highway-401-to-embleton-road",
+   "image": "ea-maps/winston-churchill-boulevard-from-highway-401-to-embleton-road/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [288, 411],
+     "streets": [
+      "Winston Churchill Boulevard",
+      "Steeles Avenue West"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [284, 79],
+     "streets": [
+      "Winston Churchill Boulevard",
+      "Embleton Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [443, 392],
+     "streets": [
+      "Heritage Road",
+      "Steeles Avenue West"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [597, 373],
+     "streets": [
+      "Mississauga Road",
+      "Steeles Avenue West"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [272, 67],
+     [298, 67],
+     [303, 545],
+     [277, 545],
+     [272, 67]
+    ]
+   },
+   "mPerPx": 9.3,
+   "road": true
+  },
+  {
+   "id": "the-gore-road-queen-street-to-castlemore-road",
+   "image": "ea-maps/the-gore-road-queen-street-to-castlemore-road/1-p-1.png",
+   "kind": "line",
+   "ctrl": [
+    {
+     "px": [378, 572],
+     "streets": [
+      "The Gore Road",
+      "Castlemore Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [878, 537],
+     "streets": [
+      "The Gore Road",
+      "Cottrelle Boulevard"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [1194, 522],
+     "streets": [
+      "The Gore Road",
+      "Ebenezer Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [1440, 498],
+     "streets": [
+      "The Gore Road",
+      "Queen Street East"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [378, 572],
+     [500, 568],
+     [650, 560],
+     [781, 546],
+     [900, 534],
+     [1000, 529],
+     [1175, 522],
+     [1300, 507],
+     [1400, 500],
+     [1440, 498]
+    ]
+   },
+   "road": true
+  },
+  {
+   "id": "charleston-sideroad-between-kennedy-and-main-street-highway-136-complete-corrido",
+   "image": "ea-maps/charleston-sideroad-between-kennedy-and-main-street-highway-136-complete-corrido/1.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [223, 149],
+     "streets": [
+      "Charleston Sideroad",
+      "Hurontario Street"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [161, 223],
+     "streets": [
+      "Charleston Sideroad",
+      "Willoughby Road"
+     ],
+     "city": "Caledon"
+    },
+    {
+     "px": [120, 291],
+     "streets": [
+      "Charleston Sideroad",
+      "McLaren Road"
+     ],
+     "city": "Caledon"
+    }
+   ],
+   "outline": {
+    "px": [
+     [298, 52],
+     [309, 64],
+     [36, 409],
+     [25, 397],
+     [298, 52]
+    ]
+   },
+   "road": true,
+   "note": "6.1 km corridor box"
+  },
+  {
+   "id": "gravity-sanitary-sewer-from-indian-road-sewage-pumping-station-to-lakeshore-road",
+   "image": "ea-maps/gravity-sanitary-sewer-from-indian-road-sewage-pumping-station-to-lakeshore-road/2.jpg",
+   "kind": "area",
+   "ctrl": [
+    {
+     "px": [69, 194],
+     "streets": [
+      "Indian Road",
+      "Kane Road"
+     ],
+     "city": "Mississauga"
+    },
+    {
+     "px": [271, 249],
+     "streets": [
+      "Kane Road",
+      "Lakeshore Road West"
+     ],
+     "city": "Mississauga"
+    }
+   ],
+   "outline": {
+    "px": [
+     [97, 142],
+     [316, 183],
+     [273, 258],
+     [64, 197],
+     [97, 142]
+    ]
+   }
+  },
+  {
+   "id": "bovaird-drive-mississauga-road-from-lake-louise-drive-worthington-avenue-to-1-45",
+   "image": "ea-maps/bovaird-drive-mississauga-road-from-lake-louise-drive-worthington-avenue-to-1-45/1-p-1.png",
+   "kind": "line",
+   "ctrl": [
+    {
+     "px": [482, 1473],
+     "streets": [
+      "Bovaird Drive West",
+      "Heritage Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [819, 1463],
+     "streets": [
+      "Bovaird Drive West",
+      "Mississauga Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [913, 732],
+     "streets": [
+      "Wanless Drive",
+      "Mississauga Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [582, 740],
+     "streets": [
+      "Wanless Drive",
+      "Heritage Road"
+     ],
+     "city": "Brampton"
+    },
+    {
+     "px": [1150, 1503],
+     "streets": [
+      "Bovaird Drive West",
+      "Creditview Road"
+     ],
+     "city": "Brampton"
+    }
+   ],
+   "outline": {
+    "px": [
+     [132, 1468],
+     [173, 1468],
+     [347, 1472],
+     [482, 1474],
+     [600, 1477],
+     [720, 1463],
+     [819, 1463],
+     [1013, 1463],
+     [1067, 1488],
+     [1150, 1503],
+     [1190, 1493],
+     [1260, 1472]
+    ]
+   },
+   "road": true
+  }
+ ]
+}
