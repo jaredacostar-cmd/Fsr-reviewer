@@ -325,7 +325,7 @@
   function renderSvcTab() {
     const bc = CA().baselineCensus();
     const has = !!(App().state.servicing && bc);
-    $('#ftab-water').hidden = $('#ftab-ww').hidden = !has;
+    $('#ftab-svc').hidden = !has;
     $('#ftab-dca').hidden = !has || !App().state.dcInfra;
     if (!has) return;
     // Not before the servicing lookup is filled (js/svc-data.js): a model built without it counts

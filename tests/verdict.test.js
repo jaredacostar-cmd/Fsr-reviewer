@@ -158,7 +158,7 @@ test('verdict card: key numbers (homes, jobs, flows), one status sentence, four 
   assert.match(src, /verdictDc\(/, 'DC verdict from per-tab brief logic');
   assert.match(src, /verdictMilestone\(/, 'milestone verdict');
   for (const tab of ["go('water'", "go('ww'", "go('dca'"]) assert.match(src, new RegExp(tab.replace(/[()']/g, '\\$&')), `missing tab link ${tab}`);
-  assert.match(src, /data-ov-devsec/, "milestone line must open the development's files (in the Overview)");
+  assert.match(src, /data-ov-tab="records">Files &amp; history \(Records\) →/, "milestone line opens the development's files (Records, SPEC §5)");
 });
 
 test('growth chart tooltip: delegated to .growth-chart so both sub-views keep it', () => {

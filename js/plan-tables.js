@@ -98,10 +98,13 @@
       <td${c('x')}>1</td><td class="num">${n0(mm.planned * f)}</td><td${c('x')}>${n0(mm.committed * f)}</td><td${c('x')}>${n0(mm.proposed * f)}</td><td${c('x')}>${n0(mm.left * f)}</td>
       <td${c('x')}>${mm.planned > 0 ? (mm.people / mm.planned).toFixed(2) : '–'}</td><td class="num">${n0(mm.people * f)}</td><td${c('x')}>${n0(mm.jobs * f)}</td><td${c('x')}>${inMtsa(p) ? n0(mm.people * f) : '–'}</td><td class="num muted">–</td></tr>`;
   }
+  // Plans with no units in the developments shown sit behind "show empty" (SPEC §5).
+  let showEmpty = false;
+  const isEmpty = n => n.kind !== 'peel' && n.kind !== 'municipality' && !(n.m.planned >= 0.5);
   function bodyRows(n, depth, out) {
     out.push(rowHTML(n, depth));
     if (!open.has(n.id)) return;
-    for (const c of n.children) bodyRows(c, depth + 1, out);
+    for (const c of n.children) if (showEmpty || !isEmpty(c)) bodyRows(c, depth + 1, out);
     const devs = all.has(n.id) ? n.devs : n.devs.slice(0, 10);
     for (const x of devs) out.push(devRowHTML(x, depth + 1));
     if (n.devs.length > devs.length) out.push(`<tr class="pt-more"><td colspan="11" style="padding-left:${(depth + 1) * 14 + 18}px"><button type="button" class="btn small link" data-pt-all="${esc(n.id)}">See all ${fmtNum(n.devs.length)} developments</button></td></tr>`);
@@ -134,7 +137,7 @@
     // that counts every home (scope total) holds existing homes too, so it draws no to-target part.
     toTarget = new Map(R().vsTarget(r, targets && targets.targets, munisAlloc()).rows.filter(x => x.compared === 'units' && x.target.scope !== 'total' && x.gap > 0 && !x.target.covers).map(x => [x.node.id, x.gap]));
     body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check). Bars: units by layer, then what a published target allows beyond them (dashed).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: previous (Settings › Counting).'}</p>
-        <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
+        <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-empty aria-pressed="${showEmpty}">${showEmpty ? 'Hide empty plans' : `Show empty plans (${[...r.nodes.values()].filter(isEmpty).length})`}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
       ${tableHTML(r)}${notesHTML(r)}
       ${targetHTML(r)}
       ${matrixHTML(r)}`;
@@ -211,7 +214,8 @@
   }
 
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
-    const t = e.target.closest('[data-pt-tog],[data-pt-all],[data-pt-dev],[data-pt-filter],[data-pt-csv],[data-pt-wide]'); if (!t) return;
+    const t = e.target.closest('[data-pt-tog],[data-pt-all],[data-pt-dev],[data-pt-filter],[data-pt-csv],[data-pt-wide],[data-pt-empty]'); if (!t) return;
+    if (t.hasAttribute('data-pt-empty')) { showEmpty = !showEmpty; render(); return; }
     if (t.hasAttribute('data-pt-wide')) { wide = !wide; if (store) store.set('ptWide', wide); render(); return; }
     if (t.dataset.ptTog) { const id = t.dataset.ptTog; if (open.has(id)) { open.delete(id); open.add(`!${id}`); } else { open.add(id); open.delete(`!${id}`); } render(); }
     else if (t.dataset.ptAll) { all.add(t.dataset.ptAll); render(); }

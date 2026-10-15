@@ -2484,3 +2484,13 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pipe-rows .done-gone { grid-column: 1 / -1; }
 .inview-chip { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 900; white-space: nowrap; background: var(--surface-1); border: 1px solid var(--border); box-shadow: var(--shadow); }
 @media (max-width: 1199px) { .inview-chip { display: none; } }
+
+/* Five tabs at every scope (SPEC §5). Servicing: the wastewater and water views in one row. */
+.svc-subtabs .sv-g { font-size: var(--fs-1); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; align-self: center; margin: 0 2px 0 var(--space-2); }
+.svc-subtabs .sv-g:first-child { margin-left: 0; }
+/* Site scope: no placeholder sub-views; the site bar's note is the one disclaimer. */
+#analysis.site-scope [data-gsub="census2051"], #analysis.site-scope [data-gsub="timing"],
+#analysis.site-scope [data-dcasub="recommendations"], #analysis.site-scope [data-dcasub="funding"],
+#analysis.site-scope #screen-note-top { display: none; }
+/* The development's Files & history is the Records tab; its Overview keeps About and Site. */
+#pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }
