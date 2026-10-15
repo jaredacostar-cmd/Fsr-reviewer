@@ -1435,6 +1435,24 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Presentation mode
+
+From design audit, Group 9:
+
+- **Any scope.** Present shows whatever is open: Peel, a municipality or area, a servicing
+  scope (a plant, station, block or zone) or a development. It takes that view's Overview
+  headline and first four tiles. Entering it no longer closes the development.
+- **Only Exit.** The top bar, the analysis panel, the tool rail, the time bar, the test-site
+  bar and the map's own controls are hidden. The map takes the whole screen. Esc also leaves.
+- **Readable on a projector.** The headline is about 30 px and the tile numbers 44 px. On a
+  phone the tiles stack in one column.
+- **The screening note and the data date** sit at the foot: "General screening results only.
+  Peel's W&WW Infrastructure Planning team must validate or confirm all results. · Data
+  2026-10-12 · Unofficial prototype…".
+- **Light by default.** Projectors wash out dark themes, so presentation switches to the light
+  theme and restores yours on exit. To keep the app theme, set Settings › Display ›
+  Presentation › *Same as the app*.
+
 ## Chart and table forms
 
 From design audit, Group 8:

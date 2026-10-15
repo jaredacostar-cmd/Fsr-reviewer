@@ -16,6 +16,8 @@
   // Individual-pipe modelling results (capacity, % full, freeboard, sewer profile, tightest pipes,
   // the pipe upgrade tool, the EPANET per-main table) are off for now: true brings them back.
   const PIPE_RESULTS = false;
+  // The screening note in one line, the user's wording (presentation, exports; design audit, Groups 9–10).
+  const SCREEN_LINE = 'General screening results only. Peel\u2019s W&WW Infrastructure Planning team must validate or confirm all results.';
   // Chart width in SVG units = the analysis panel's width in pixels (design audit, Group 8): a chart
   // drawn at its rendered size keeps its 11-unit labels at 11 px instead of scaling them down.
   const chartW = (min = 320, max = 900) => {
@@ -179,7 +181,7 @@
     getColors,
     fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits,
     hlP, fmtMoney,
-    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
+    UNOFFICIAL, CSV_DISCLAIMER, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
