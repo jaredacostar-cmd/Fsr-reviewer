@@ -1,0 +1,6 @@
+{
+ "note": "Manual fixes to data/eas.json, applied on every build. eas.<id>: any of name, system, municipality, schedule, status, purpose, decision, nextStep, milestones, completedYear, geometry (GeoJSON, WGS84; a traced boundary is recorded as 'traced from the project page image'), geomType, geomMethod, geomConfidence, links, related. add: whole EA records; remove: ids. No names, contacts or internal notes.",
+ "eas": {},
+ "add": [],
+ "remove": []
+}

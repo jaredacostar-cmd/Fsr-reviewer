@@ -26,15 +26,17 @@ name: Probe data sources
 #  mode=peel-open: Region of Peel housing construction activity and building permit statistics (data/peel-housing.json, committed to this branch); scripts/probe-peel-open.js lists the Region's other layers
 #  mode=tree-audit: how applications nest into developments — a live pull of every source, then scripts/audit-tree.js (data/tree-audit.json, committed to this branch; report only)
 #  mode=servicing-build: rebuild data/servicing.json (pressure zones, traced drainage areas), committed to this branch
+#  mode=capital: Region capital projects layer → capital.json + DC match audit, built in the runner and summarised in the log (no personnel fields); only=commit also commits data/capital.json and data/capital-links-audit.json to this branch (hold until Peel GIS confirms the layer may be published)
+#  mode=eas: Region EA list + project pages → data/eas.json and data/eas-review.csv, committed to this branch; only=with-capital also links EAs to capital records
 on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, fsr, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw or sewer-build'
+        description: 'all, fsr, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital or eas'
         default: 'all'
         required: false
       only:
-        description: 'mode=external: one part only (mto, cmhc)'
+        description: 'mode=external: one part only (mto, cmhc); mode=capital: commit; mode=eas: with-capital'
         default: ''
         required: false
 
@@ -252,6 +254,34 @@ jobs:
           git add -f dc
           git commit -m "2026 DC capital maps"
           git push -f origin ref-docs-dc
+      - name: Capital projects and DC match (log; committed only with only=commit)
+        if: inputs.mode == 'capital'
+        timeout-minutes: 20
+        run: |
+          node scripts/build-capital.js --out /tmp/capital
+          if [ "${{ inputs.only }}" = "commit" ]; then
+            cp /tmp/capital/capital.json /tmp/capital/capital-links-audit.json data/
+            npm test
+            git config user.name "peel-snapshot-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/capital.json data/capital-links-audit.json
+            git diff --cached --quiet || { git commit -m "Capital projects and DC match audit"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          fi
+      - name: Environmental assessments (committed to this branch)
+        if: inputs.mode == 'eas'
+        timeout-minutes: 40
+        run: |
+          if [ "${{ inputs.only }}" = "with-capital" ]; then
+            node scripts/build-capital.js --out /tmp/capital > /tmp/capital.log
+            node scripts/build-eas.js --out data --capital /tmp/capital/capital.json
+          else
+            node scripts/build-eas.js --out data --capital /nonexistent
+          fi
+          npm test
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/eas.json data/eas-review.csv
+          git diff --cached --quiet || { git commit -m "Environmental assessments (list, project pages, geometry)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Rebuild pressure zones and drainage areas (committed to this branch)
         if: inputs.mode == 'servicing-build'
         run: |
