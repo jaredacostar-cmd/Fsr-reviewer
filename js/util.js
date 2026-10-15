@@ -186,6 +186,13 @@
   const roomWords = (v, u = 'ML/d', fmt) => { const m = fmt ? fmt(Math.abs(v)) : `${fmt1(Math.abs(v))} ${u}`; return v < 0 ? `over by ${m}` : `room ${m}`; };
   // The uncommitted reserve (MECP D-5-1) in words: "room to 100%: 29.3 ML/d" or "over 100% by 12 ML/d".
   const reserveWords = (v, rated) => (v < 0 ? `over 100% by ${capTxt(-v, rated)}` : `room to 100%: ${capTxt(v, rated)}`);
+  // Permit check (Stage 1 #7): units on this app's permit records issued in a year against the Region's
+  // permit statistics, per municipality; fails when off by more than 25%.
+  const PERMIT_TOL = 0.25;
+  const permitCheckRows = rows => (rows || []).filter(r => r.app != null && r.region > 0).map(r => {
+    const diff = (r.app - r.region) / r.region;
+    return { m: r.m, app: r.app, region: r.region, diff, pass: Math.abs(diff) <= PERMIT_TOL };
+  });
   const uHa = n => unit(fmtNum(Math.round(n)), 'ha'), uDev = n => unit(fmtNum(n), n === 1 ? 'dev' : 'devs'), uUnits = n => unit(fmtNum(Math.round(n)), 'units');
 
   // ---- Headline helper (source: app.js 4682) ------------------------------------
@@ -210,7 +217,7 @@
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
     getColors,
-    fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits, SMALL_SYSTEM_MLD, isSmallSystem, capTxt, uCap, roomWords, reserveWords,
+    fmt1, roundPop, unit, uML, uLs, uPop, uHa, uDev, uUnits, SMALL_SYSTEM_MLD, isSmallSystem, capTxt, uCap, roomWords, reserveWords, PERMIT_TOL, permitCheckRows,
     hlP, fmtMoney,
     UNOFFICIAL, CSV_DISCLAIMER, CRITERIA_STAMP, DISCLAIMER_PROPS, PIPE_RESULTS, SCREEN_LINE, chartW, AREA_ONLY_NOTE, TRUNK_MM, pipeClass, PIPES_NOT_ASSESSED, SCREEN_NOTE, SCREEN_NOTE_SHORT, basisChip, BASIS_KEYS, basisLabel, isPublic, applyPublic, SCREEN,
     CAPITAL, CAPITAL_STATUS, capitalStatus, capitalChip, pauseNote, DOLLAR_YEAR, toDollarYear,

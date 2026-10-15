@@ -49,7 +49,7 @@
       <div class="hyd-scroll"><table class="dt"><thead><tr><th></th><th>Starts</th><th>Completions</th><th>Absorbed</th><th>Permit units</th><th>Permit value</th></tr></thead><tbody>
         ${h.rows.map(r => `<tr${r.m === 'Peel' ? ' class="tot"' : ''}><td>${esc(r.m)}</td><td>${n(r.starts)}<small>avg ${n(r.avgStarts)}</small></td><td>${n(r.completions)}<small>avg ${n(r.avgCompl)}</small></td><td>${n(r.absorbed)}</td><td>${n(r.permits)}</td><td>${money(r.value)}</td></tr>`).join('')}
       </tbody></table></div>
-      ${pr.length ? `<p class="small">Check: units on this app's building permit records issued in ${h.y}: ${pr.map(r => `${esc(r.m)} ${n(r.app)} (Region ${n(r.permits)})`).join(' · ')}.</p>` : ''}
+      ${pr.length ? `<p class="small muted">The check of this app's permit units against these Region figures is in ${DV().homeLine('records', 'Records › Checks')}.</p>` : ''}
       <p class="small muted">Region of Peel open data: housing construction activity (CMHC Starts and Completions Survey; averages over 5 years to ${h.y}) and building permit statistics (all permits, values in current dollars). Starts and completions replace the CMHC copy year by year: one series is kept.</p></section>`;
   }
   // ---- Population outlook (data/housing.json) --------------------------------------------------
@@ -237,7 +237,29 @@
   document.addEventListener('pointerout', e => { const ch = e.target.closest && e.target.closest('.cap-chart'); if (ch && !ch.contains(e.relatedTarget)) { const t = ch.querySelector('.grow-tip'); if (t) t.hidden = true; } });
 
   // ---- Public contract ----
-  const api = { outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
+  // Permit check (Stage 1 #7), shown in Records › Checks and as a caveat on the Growth and Overview
+  // headlines while any municipality fails.
+  function permitCheck() {
+    const h = housingActivityRows(); if (!h) return null;
+    const rows = root.PeelUtil.permitCheckRows(h.rows.filter(r => r.m !== 'Peel').map(r => ({ m: r.m, app: r.app, region: r.permits })));
+    return { y: h.y, rows, failing: rows.filter(r => !r.pass).map(r => r.m) };
+  }
+  function permitCheckHTML() {
+    const c = permitCheck(); if (!c || !c.rows.length) return '';
+    const n = v => fmtNum(Math.round(v));
+    return `<h3 class="sub-title" data-info="housing-activity">Permit counts vs Region figures, ${c.y}</h3>
+      <table class="dt fr-table" data-check="permits"><thead><tr><th>Municipality</th><th>This app's permit records</th><th>Region permit statistics</th><th>Difference</th><th>Result</th></tr></thead><tbody>
+      ${c.rows.map(r => `<tr data-pass="${r.pass}"><td>${esc(r.m)}</td><td>${n(r.app)} units</td><td>${n(r.region)} units</td><td>${r.diff >= 0 ? '+' : '−'}${Math.abs(r.diff * 100).toFixed(0)}%</td><td><span class="fr-b ${r.pass ? 'fr-ok' : 'fr-stale'}">${r.pass ? 'Pass' : 'Fail'}</span></td></tr>`).join('')}
+      </tbody></table>
+      <p class="small muted">Units on this app's building permit records issued in ${c.y} (counted once per building) against the Region of Peel's building permit statistics (open data, all permits). Fails when off by more than ${Math.round(root.PeelUtil.PERMIT_TOL * 100)}%: the records may use a different issue date, permit type or unit count, so permit-based figures (completions, the Permitted counts) read with care for a failing municipality.</p>`;
+  }
+  // The one-line caveat (Growth pipeline and Overview headlines).
+  function permitCaveatHTML() {
+    const c = permitCheck(); if (!c || !c.failing.length) return '';
+    const list = c.failing.length > 1 ? `${c.failing.slice(0, -1).join(', ')} and ${c.failing[c.failing.length - 1]}` : c.failing[0];
+    return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records', 'Records › Checks')}</p>`;
+  }
+  const api = { permitCheck, permitCheckHTML, permitCaveatHTML, outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCensusView = api;
 })(typeof window !== 'undefined' ? window : globalThis);

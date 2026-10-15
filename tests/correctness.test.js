@@ -124,3 +124,19 @@ test('6. Count: committed only · + proposed · + anticipated, in the Scenario c
   assert.doesNotMatch(src('js/topbar.js'), /data-scen-layer|nextBasis\(/, 'no count toggles in the top bar');
   for (const b of ['committed', 'buildout', 'all', 'remaining']) assert.match(B.scenarioChipHTML({ basis: b, flows: 'x', criteria: 'y', count: 'tree', outside: 'z' }), new RegExp(`Count: ${B.countLabel(b).replace(/[+]/g, '\\+')}`));
 });
+
+// ---- 7. Permit check -------------------------------------------------------------------------------
+test('7. permit check: pass / fail per municipality (fail beyond 25%); in Records › Checks with a headline caveat', () => {
+  // The audit's figures: Mississauga 6,257 vs Region 1,734; Brampton 690 vs 4,602.
+  const rows = U.permitCheckRows([{ m: 'Mississauga', app: 6257, region: 1734 }, { m: 'Brampton', app: 690, region: 4602 }, { m: 'Caledon', app: 1100, region: 1000 }, { m: 'Peel', app: null, region: 7336 }]);
+  assert.deepEqual(rows.map(r => [r.m, r.pass]), [['Mississauga', false], ['Brampton', false], ['Caledon', true]]);
+  assert.equal(U.permitCheckRows([{ m: 'X', app: 125, region: 100 }])[0].pass, true, '25% exactly passes');
+  assert.equal(U.permitCheckRows([{ m: 'X', app: 126, region: 100 }])[0].pass, false);
+  const cv = src('js/census-view.js');
+  assert.doesNotMatch(cv, /<p class="small">Check: units on this app's building permit records/, 'gone from Growth › Census & 2051');
+  assert.match(cv, /Permit counts differ from Region figures for \$\{esc\(list\)\}; see \$\{DV\(\)\.homeLine\('records', 'Records › Checks'\)\}/);
+  assert.match(cv, /<span class="fr-b \$\{r\.pass \? 'fr-ok' : 'fr-stale'\}">\$\{r\.pass \? 'Pass' : 'Fail'\}<\/span>/);
+  assert.match(src('js/demand-ui.js'), /root\.PeelCensusView\.permitCheckHTML\(\)/, 'listed with the model checks');
+  assert.match(src('js/growth-ui.js'), /\$\{hlP\(head\)\}\$\{caveat\}/, 'caveat under the Growth pipeline headline');
+  assert.match(src('js/overview-tab.js'), /<div class="ov-top">\$\{hlP\(hl\)\}\$\{permitCaveat\}/, 'and under the Overview headline');
+});

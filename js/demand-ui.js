@@ -257,7 +257,7 @@
         ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
           const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
       </tbody></table>
-      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}`;
+      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}${root.PeelCensusView && root.PeelCensusView.permitCheckHTML ? root.PeelCensusView.permitCheckHTML() : ''}`;
   }
   // Extra model-check sections registered by other modules (Workers D and E).
   // Convention: window.ModelChecks = { key: htmlString } or { key: { title, html } }.

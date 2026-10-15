@@ -87,8 +87,9 @@
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     // Completions per year and pace by municipality are area content: not at a development's scope.
     const site = !!(window.DevScope && window.DevScope.current());
+    const caveat = !site && root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     body.innerHTML = `
-      ${hlP(head)}
+      ${hlP(head)}${caveat}
       <h3 class="sub-title" data-info="demand-units">Homes</h3>
       <div class="tiles">${tile('Planned', fmtNum(Math.round(t.planned)), t.n ? `${fmtNum(t.n)} developments with units` : '', 'demand-units')}
         ${tile('Permitted', fmtNum(Math.round(t.permitted)), t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', 'demand-units')}
