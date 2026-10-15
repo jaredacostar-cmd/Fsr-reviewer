@@ -188,6 +188,9 @@
     const pipe = root.Growth ? root.Growth.pipelineTotals(set) : null;
     const left = pipe ? Math.round(pipe.left) : 0, n = pipe ? pipe.n : 0;
     const unitsAll = basis === 'all' && pipe ? pipe.planned : e.totalUnits;
+    // A plan filter shows whole developments; By plan counts the part inside the plan. Both are
+    // shown, reconciled: inside + outside = the units planned (SPEC 1.9).
+    const inPlan = planSplit(set);
     const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
     // Capacity: plants against the 90% expansion trigger (existing + approved, and at build-out).
@@ -212,7 +215,7 @@
     el.innerHTML = `<div class="ov-top">${hlP(hl)}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', n ? `${fmtNum(left)} left to build` : '')}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div></section>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out')}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div></section>
         ${needs}
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity ${root.PeelUtil.basisChip('mixed', SvcTab().svcOpt.ww === 'calibrated' ? 'Mixed basis: existing flows 2025 measured; growth at Peel design criteria (wastewater scaled to each plant\u2019s measured rate); rated capacity from the 2025 reports; 90% trigger from the 2020 Master Plan' : 'Mixed basis: flows at Peel design criteria; rated capacity from the 2025 reports; 90% trigger from the 2020 Master Plan')}</h3>${go('ww', 'Plants')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
@@ -221,7 +224,23 @@
     if (App().state.dcInfra && MM().SEW.data && !(MP().DCA.res && MP().DCA.key === MP().scenarioKey()) && AT().getFootTab() === 'overview') setTimeout(() => { try { DC().dcAnalysis(); renderOverview(); } catch (err) { /* shown on the DC tab */ } }, 50);
     if (document.documentElement.hasAttribute('data-presentation')) AS().renderPresentation();
   }
-  function scopeText() { return [App().state.muni || 'all of Peel', App().state.sp.length ? PA().spSummary() : '', App().state.mtsa.length ? 'MTSA filter' : '', root.PeelSvcScope ? root.PeelSvcScope.label() : ''].filter(Boolean).join(' · '); }
+  // The scope the numbers cover: "all of Peel" only when nothing narrows it (SPEC 1.9: never
+  // "all of Peel · 52: Heritage Heights").
+  function scopeLabel({ muni, sp, mtsa, svc }) {
+    const narrower = [sp || '', mtsa || '', svc || ''].filter(Boolean);
+    return [muni || (narrower.length ? '' : 'all of Peel'), ...narrower].filter(Boolean).join(' · ');
+  }
+  function scopeText() { return scopeLabel({ muni: App().state.muni, sp: App().state.sp.length ? PA().spSummary() : '', mtsa: App().state.mtsa.length ? 'MTSA filter' : '', svc: root.PeelSvcScope ? root.PeelSvcScope.label() : '' }); }
+  // Units of the developments shown inside the filtered plans, and in their parts outside, when a
+  // plan filter is on and some development straddles the boundary (else null: nothing to reconcile).
+  function planSplit(set) {
+    const PT = root.PeelPlanTables, RU = root.PeelPlanRollup, ids = App().state.sp;
+    if (!ids.length || !PT || !RU || !set.length || App().state.daCtx) return null;
+    let r; try { r = PT.compute(); } catch (err) { return null; }
+    const w = RU.within(r, ids);
+    if (!w.found || Math.abs(w.outside) < 0.5) return null;
+    return { ...w, name: ids.length === 1 ? PA().spSummary() : 'the plans' };
+  }
   $('#ov-body').addEventListener('click', e => {
     const t = e.target.closest('[data-ov-tab]');
     if (t) {
@@ -237,7 +256,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, capacityBarsHTML };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, capacityBarsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);
