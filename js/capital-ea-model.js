@@ -156,6 +156,7 @@
     const px = c => toPx(c);
     switch (g.type) {
       case 'Point': { const q = px(g.coordinates); return Math.hypot(p[0] - q[0], p[1] - q[1]); }
+      case 'MultiPoint': return Math.min(...g.coordinates.map(c => { const q = px(c); return Math.hypot(p[0] - q[0], p[1] - q[1]); }));
       case 'LineString': return lineDist(p, g.coordinates.map(px));
       case 'MultiLineString': return Math.min(...g.coordinates.map(l => lineDist(p, l.map(px))));
       case 'Polygon': { const r = g.coordinates[0].map(px); return inRing(p, r) ? 0 : lineDist(p, r); }

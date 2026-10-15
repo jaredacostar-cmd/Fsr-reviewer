@@ -86,7 +86,7 @@
         const style = { pane: 'eaPane', interactive: !PK(), color: col, weight: 2, opacity: 0.9, dashArray: dash ? '5 5' : null, fill: /Polygon/.test(e.geometry.type), fillColor: col, fillOpacity: 0.05, bubblingMouseEvents: false, className: 'ce-ea' };
         const lyr = e.geometry.type === 'Point'
           ? L.circleMarker([e.geometry.coordinates[1], e.geometry.coordinates[0]], { ...style, radius: 7, fill: true, fillOpacity: 0.25 })
-          : L.geoJSON(e.geometry, { style: () => style, interactive: !PK(), pane: 'eaPane' });
+          : L.geoJSON(e.geometry, { style: () => style, interactive: !PK(), pane: 'eaPane', pointToLayer: (f, ll) => L.circleMarker(ll, { ...style, radius: 7, fill: true, fillOpacity: 0.25 }) });   // MultiPoint: several intersections
         lyr.bindTooltip(esc(M.eaHover(e)), { sticky: true, className: 'pt' }).on('click', () => openEA(e.id)).addTo(eaLayer);
       }
     } else map.removeLayer(eaLayer);
@@ -108,7 +108,7 @@
       seen.add(c.key); lbl([mid[1], mid[0]], `${c.percent}% built`, 'ce-lbl-cons');
     }
     if (ce.ea && data.eas) for (const e of shownEAs()) {
-      const g = e.geometry, pt = g.type === 'Point' ? g.coordinates : g.type === 'LineString' ? g.coordinates[Math.floor(g.coordinates.length / 2)] : g.type === 'MultiLineString' ? g.coordinates[0][Math.floor(g.coordinates[0].length / 2)] : g.type === 'Polygon' ? g.coordinates[0][0] : g.coordinates[0][0][0];
+      const g = e.geometry, pt = g.type === 'Point' ? g.coordinates : g.type === 'MultiPoint' ? g.coordinates[0] : g.type === 'LineString' ? g.coordinates[Math.floor(g.coordinates.length / 2)] : g.type === 'MultiLineString' ? g.coordinates[0][Math.floor(g.coordinates[0].length / 2)] : g.type === 'Polygon' ? g.coordinates[0][0] : g.coordinates[0][0][0];
       if (b.contains([pt[1], pt[0]])) lbl([pt[1], pt[0]], e.name.length > 48 ? `${e.name.slice(0, 46)}…` : e.name, 'ce-lbl-ea');
     }
   }

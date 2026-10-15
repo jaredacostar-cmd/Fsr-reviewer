@@ -99,6 +99,7 @@ test('hit distance in screen pixels: points, lines, inside polygons', () => {
   assert.equal(M.hitDistance([5, 5], { type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]] }, toPx), 0);
   assert.equal(M.hitDistance([15, 5], { type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]] }, toPx), 5);
   assert.equal(M.hitDistance([0, 0], null, toPx), Infinity);
+  assert.equal(M.hitDistance([3, 4], { type: 'MultiPoint', coordinates: [[100, 100], [0, 0]] }, toPx), 5);   // several intersections
 });
 
 const order = html => [...html.matchAll(/data-sec="([^"]+)"/g)].map(m => m[1]);
