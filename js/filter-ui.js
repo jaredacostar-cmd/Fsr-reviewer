@@ -19,6 +19,7 @@
   const PLANNING_PHASES = ['inception', 'review', 'approved'];
   function currentPhaseView() {
     if (App().state.phases.size === P.ALL_PHASES.length) return 'all';
+    if (App().sameSet(App().state.phases, App().DEFAULT_PHASES())) return 'default';
     if (App().sameSet(App().state.phases, new Set(App().ACTIVE_PHASES))) return 'active';
     return App().state.phases.size === 1 ? [...App().state.phases][0] : null;
   }
@@ -145,7 +146,7 @@
   // One line saying what the map shows and why.
   function renderShowing() {
     const v = currentPhaseView();
-    const what = v === 'all' ? 'developments (all phases)' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
+    const what = v === 'all' ? 'developments (all phases)' : v === 'default' ? 'active and completed applications' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
     const years = App().timeActive() ? (() => { const a = App().state.yearFrom ?? App().state.yearMin, b = App().state.yearTo ?? App().state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
     const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (App().timeActive() ? 1 : 0) - (App().state.muni ? 1 : 0) - (App().state.search ? 1 : 0);
     // The result count first (SPEC §4), then what it is.

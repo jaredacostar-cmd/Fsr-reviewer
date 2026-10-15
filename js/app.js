@@ -28,10 +28,11 @@
   const DEFAULT_KIND = 'application';
   // Watchlist: developments the user starred (kept in this browser).
   const watch = new Set(store.get('watch', []) || []);
-  // Default view: development applications in progress (application to construction), any year —
-  // the map opens on the active applications and the background.
+  // Default view: development applications in progress (application to construction) and the
+  // completed ones, any year — what has been built since the 2021 Census is on the system but not in
+  // the census, so it shows by default. Withdrawn / refused stay hidden.
   const ACTIVE_PHASES = ['inception', 'review', 'approved', 'permit', 'construction'];
-  const DEFAULT_PHASES = () => new Set(ACTIVE_PHASES);
+  const DEFAULT_PHASES = () => new Set([...ACTIVE_PHASES, 'completed']);
   const sameSet = (a, b) => a.size === b.size && [...a].every(x => b.has(x));
   // Filter-panel state (Phase 1): flags are multi-select (see FLAG_TESTS and js/filters.js
   // FLAG_META); the counting basis lives in the Scenario control, not the filters.

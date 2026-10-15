@@ -1,7 +1,7 @@
 'use strict';
 // SPEC §4 (Phase 3): the shell. Top bar: trail with its count, lens Planning / Water / Wastewater /
 // Capital that sets the map only, the scenario chip. Left panel = find: Find · Watch · Data, the count
-// first, Reset n filters, Save this view, Stage with "Done / gone", rows that show their value,
+// first, Reset n filters, Save this view, Stage with Completed and Withdrawn / refused, rows that show their value,
 // "Counts as" layer chips, the In view list. Bottom bar: timeline, data date and version.
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -43,12 +43,16 @@ test('left panel: the count first, Reset n filters, + Save this view', () => {
   assert.match(f, /if \(e\.target\.closest\('#f-saveview'\)\) \{ MA\(\)\.saveCurrentView\(\); return; \}/);
 });
 
-test('Stage: five toggles, completed and withdrawn folded into one "Done / gone" button', () => {
+test('Stage: five toggles, then Completed (with how many since the census) and Withdrawn / refused as their own buttons', () => {
   const r = src('js/render-list.js');
   assert.match(r, /const DONE = \['completed', 'cancelled'\];/);
   assert.match(r, /rows = shown\.filter\(p => !DONE\.includes\(p\.key\)\)/);
-  assert.match(r, /<span class="t">Done \/ gone<\/span>/);
-  assert.match(r, /for \(const k of DONE\) \{ if \(on\) next\.delete\(k\); else next\.add\(k\); \}/);
+  assert.match(r, /const DONE_LABEL = \{ completed: 'Completed', cancelled: 'Withdrawn \/ refused' \};/);
+  assert.match(r, /const sinceCensus = base\.filter\(p => p\.phase === 'completed' && App\(\)\.layerOf\(p\) === 'built'\)\.length;/, 'completed after census day = the Built layer');
+  assert.match(r, /\$\{fmtNum\(sinceCensus\)\} since the \$\{censusYear\} census/);
+  assert.match(r, /if \(next\.has\(k\)\) next\.delete\(k\); else next\.add\(k\);/, 'each one toggles on its own');
+  assert.doesNotMatch(r, /Done \/ gone/);
+  assert.match(src('js/app.js'), /const DEFAULT_PHASES = \(\) => new Set\(\[\.\.\.ACTIVE_PHASES, 'completed'\]\);/, 'completed shows by default; withdrawn / refused does not');
   assert.match(src('js/search-filter.js'), /if \(b\.closest\('\.pipe-rows'\)\) \{\n      const next = new Set\(App\(\)\.state\.phases\); if \(next\.has\(b\.dataset\.phase\)\) next\.delete\(b\.dataset\.phase\); else next\.add\(b\.dataset\.phase\);/, 'rows toggle');
 });
 

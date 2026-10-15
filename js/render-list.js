@@ -15,10 +15,12 @@
   // ---- Rendering -----------------------------------------------------------------
   // Stage selector: one segment per phase with its label and count, sized by share.
   // A tap shows that phase only (again: all phases); Ctrl / ⌘-click adds or removes it.
-  // Stage (SPEC §4): a stacked bar and the five active phases as toggles; completed and withdrawn
-  // fold into one "Done / gone" button (they are hidden by default, so their counts never read as a
-  // mismatch with the header).
+  // Stage (SPEC §4): a stacked bar and the five active phases as toggles. Completed and withdrawn /
+  // refused each get their own button (a tap adds or removes it; when off it says "hidden" so its
+  // count never reads as a mismatch with the header). Completed is on by default and says how many
+  // finished after census day (the Built layer: on the system but not in the 2021 Census).
   const DONE = ['completed', 'cancelled'];
+  const DONE_LABEL = { completed: 'Completed', cancelled: 'Withdrawn / refused' };
   function renderPipeline(base) {
     const counts = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, 0]));
     for (const p of base) counts[p.phase]++;
@@ -28,14 +30,22 @@
     // A slim bar shows the share of each phase; the rows under it carry the labels and counts
     // (segment labels clipped when a phase is a small share).
     const shown = P.ALL_PHASES.filter(p => counts[p.key]), rows = shown.filter(p => !DONE.includes(p.key));
-    const doneN = DONE.reduce((t, k) => t + counts[k], 0), doneOn = DONE.some(k => App().state.phases.has(k));
+    const sinceCensus = base.filter(p => p.phase === 'completed' && App().layerOf(p) === 'built').length;
+    const censusYear = ((window.PeelLayers && window.PeelLayers.CENSUS_DATE) || '2021').slice(0, 4);
+    const doneBtn = k => {
+      if (!counts[k]) return '';
+      const on = App().state.phases.has(k);
+      const sub = k === 'completed' ? `<span class="pr-sub">${fmtNum(sinceCensus)} since the ${censusYear} census</span>` : '';
+      const title = k === 'completed' ? `Completed: ${fmtNum(counts.completed)} — ${fmtNum(sinceCensus)} after census day (Built: on the system, not in the ${censusYear} Census), ${fmtNum(counts.completed - sinceCensus)} before (Existing)` : `Withdrawn or refused: ${fmtNum(counts.cancelled)}`;
+      return `<button type="button" data-done="${k}" data-info="phase-${k}" class="done-row${on ? '' : ' off'}" aria-pressed="${on}" title="${esc(title)} — ${on ? 'shown, tap to hide' : 'hidden, tap to show'}"><i class="sw" style="background:${getColors()[k]}"></i><span class="t">${esc(DONE_LABEL[k])}${sub}</span><span class="n">${fmtNum(counts[k])}${on ? '' : ' hidden'}</span></button>`;
+    };
     const tip = p => `${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%) — tap: only this phase; Ctrl/⌘-click: add or remove`;
     $('#pipeline').innerHTML =
       `<div class="pipe-bar" aria-hidden="true">${shown.map(p => `<i data-phase="${p.key}" class="${App().state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${getColors()[p.key]}" title="${tip(p)}"></i>`).join('')}</div>` +
       `<div class="pipe-rows">${rows.map(p => {
         const on = App().state.phases.has(p.key);
         return `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${on ? '' : 'off'}" aria-pressed="${on}" title="${tip(p)}"><i class="sw" style="background:${getColors()[p.key]}"></i><span class="t">${esc(p.key === 'construction' ? 'Construction' : p.label)}</span><span class="n">${fmtNum(counts[p.key])}</span></button>`;
-      }).join('')}${doneN ? `<button type="button" data-done-gone class="done-gone${doneOn ? '' : ' off'}" aria-pressed="${doneOn}" title="Completed (${fmtNum(counts.completed)}) and withdrawn / refused (${fmtNum(counts.cancelled)}): ${doneOn ? 'shown — tap to hide' : 'hidden — tap to show'}"><i class="sw" style="background:${getColors().completed}"></i><span class="t">Done / gone</span><span class="n">${fmtNum(doneN)}${doneOn ? '' : ' hidden'}</span></button>` : ''}</div>`;
+      }).join('')}${DONE.map(doneBtn).join('')}</div>`;
     FU().renderFlagChips();
   }
 
@@ -59,9 +69,9 @@
     App().applyFilters();
   });
   $('#pipeline').addEventListener('click', e => {
-    if (!e.target.closest('[data-done-gone]')) return;
-    const on = DONE.some(k => App().state.phases.has(k)), next = new Set(App().state.phases);
-    for (const k of DONE) { if (on) next.delete(k); else next.add(k); }
+    const b = e.target.closest('[data-done]'); if (!b) return;
+    const k = b.dataset.done, next = new Set(App().state.phases);
+    if (next.has(k)) next.delete(k); else next.add(k);
     App().state.phases = next.size ? next : new Set(App().DEFAULT_PHASES());
     App().applyFilters();
   });
