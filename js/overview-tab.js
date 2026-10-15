@@ -239,11 +239,16 @@
     // shown, reconciled: inside + outside = the units planned (SPEC 1.9).
     const inPlan = planSplit(set);
     // The tiles carry layer sub-labels (SPEC §5): the units and people by layer, as the bars sum.
+    // Existing (completed before census day) is listed too, so the parts add up to the tile.
+    const lyT = root.PeelLayers && set.length ? root.PeelLayers.totals(set) : null;
     const lyTiles = (() => {
-      const Ly = root.PeelLayers; if (!Ly || !set.length) return { units: '', people: '' };
-      const t = Ly.totals(set), LB = root.PeelLayerBar, ks = ['built', 'committed', 'proposed', 'anticipated'].filter(k => t.units[k] >= 0.5);
+      if (!lyT) return { units: '', people: '' };
+      const t = lyT, LB = root.PeelLayerBar, ks = ['existing', 'built', 'committed', 'proposed', 'anticipated'].filter(k => t.units[k] >= 0.5);
       return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · ') };
     })();
+    // "Would add" is growth beyond the 2021 Census: units completed before census day are already in
+    // it (Existing), so they are taken out of the headline.
+    const pre = DU().preCensus(lyT, basis);
     const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
     // Capacity: plants against the 90% expansion trigger (existing + approved, and at build-out).
@@ -260,7 +265,7 @@
     const nd = needsAttentionData(set, capList), na = DV().needsAttention(nd), groups = DV().needsGroups(nd);
     const needs = `<section class="ov-card ov-needs"><div class="ov-h"><h3>Needs attention</h3></div>
       ${na.length ? groups.map(g => `<div class="na-g"><h4 class="na-gh">${esc(g.name)} <span class="muted">· ${fmtNum(g.count)}${g.note ? ` · ${esc(g.note)}` : ''}</span></h4>${g.items.length ? `<ul class="na-list small">${g.items.map(it => `<li class="na-it"><span class="${toneCls[it.tone]}">${esc(it.text)}</span>${it.ce ? `<button type="button" class="btn small link" data-ce-open="${esc(it.ce)}">${it.ce.startsWith('ea:') ? 'EA' : 'Project'} →</button>` : it.dev ? `<button type="button" class="btn small link" data-ov-dev="${esc(it.dev)}">Development →</button>` : it.tab ? go(it.tab, TAB_LABEL[it.tab] || it.tab) : ''}</li>`).join('')}</ul>` : '<p class="small muted">None.</p>'}</div>`).join('') : '<p class="small muted">Nothing needs attention right now.</p>'}</section>`;
-    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(unitsAll))} units.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
+    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
     const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'committed only (D-5-1)', remaining: 'units left to build' }[basis] || 'every stage';

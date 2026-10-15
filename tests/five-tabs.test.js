@@ -88,3 +88,19 @@ test('Peel Overview: tiles with layer sub-labels; Needs attention grouped and co
   const g2 = na({ ce: [{ ce: 'ea:x', text: 'EA comment period closes Oct 30: X' }, { ce: 'cap:k', text: 'DC project 1: capital dates moved 3 months later' }] });
   assert.deepEqual(g2.map(x => [x.name, x.count, x.items.map(i => i.ce)]), [['Capacity', 1, ['cap:k']], ['Stalled', 0, []], ['This week', 1, ['ea:x']]]);
 });
+
+test('Overview "would add": units and people completed before census day (Existing) are left out, and listed in the tile parts', () => {
+  const du = src('js/demand-ui.js');
+  const preCensus = new Function(`${du.match(/const preCensus = [^\n]+/)[0]}\nreturn preCensus;`)();
+  const t = { units: { existing: 2390, built: 22663 }, people: { existing: 7700, built: 65800 } };
+  assert.deepEqual(preCensus(t, 'all'), { units: 2390, people: 7700 });
+  assert.deepEqual(preCensus(t, 'committed'), { units: 2390, people: 7700 });
+  assert.deepEqual(preCensus(t, 'remaining'), { units: 0, people: 0 }, 'the remaining basis counts no completed units');
+  assert.deepEqual(preCensus(null, 'all'), { units: 0, people: 0 });
+  const o = src('js/overview-tab.js');
+  assert.match(o, /const pre = DU\(\)\.preCensus\(lyT, basis\);/);
+  assert.match(o, /e\.population - pre\.people/);
+  assert.match(o, /unitsAll - pre\.units/);
+  assert.match(o, /\['existing', 'built', 'committed', 'proposed', 'anticipated'\]/, 'the tile parts include Existing, so they add up');
+  assert.match(src('js/reports.js'), /e\.population - pre\.people/, 'the briefing says the same');
+});

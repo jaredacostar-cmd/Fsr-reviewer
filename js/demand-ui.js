@@ -294,7 +294,11 @@
   window.GearPages.sources = () => sourcesPageHTML();
 
   // ---- Public contract ----
-  const api = { MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, ensurePumpSubTab, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  // Units and people completed before census day (the Existing layer of js/layers.js totals): already
+  // in the 2021 Census, so "would add" leaves them out. The 'remaining' basis counts no completed
+  // units, so there is nothing to take out.
+  const preCensus = (t, basis) => (t && basis !== 'remaining' ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
+  const api = { preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, ensurePumpSubTab, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);
