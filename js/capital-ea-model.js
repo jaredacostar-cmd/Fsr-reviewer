@@ -308,7 +308,7 @@
     const L = e.links || {};
     const docs = [L.report && ['Report', L.report], ...(L.appendices || []).map(a => ['Appendix', a]), ...(L.notices || []).map(n => ['Notice', n])].filter(Boolean);
     parts.push(`<div data-sec="documents"><h4 class="sub-title">Documents</h4>${docs.length || L.page ? `<ul class="small">${L.page ? `<li><a href="${esc(L.page)}" target="_blank" rel="noopener">Project page (Peel) ↗</a></li>` : ''}${docs.map(([k, d]) => `<li>${esc(k)}: <a href="${esc(d.url)}" target="_blank" rel="noopener">${esc(d.label)} ↗</a></li>`).join('')}</ul>` : '<p class="muted small">No documents linked.</p>'}</div>`);
-    parts.push(`<div class="ce-foot" data-sec="footer"><p class="small muted">${eaDashed(e) ? '<span class="ce-badge ce-approx">Approximate location</span> ' : ''}Location: ${esc(e.geomMethod || 'not placed')} · page checked ${esc(fmtDate(e.lastChecked))}</p>${ctx.screenNote || ''}<div class="ce-actions">${ctx.reportLink || ''} ${watchBtn(`ea:${e.id}`, ctx.watched)}</div></div>`);
+    parts.push(`<div class="ce-foot" data-sec="footer"><p class="small muted">${eaDashed(e) ? `<span class="ce-badge ce-approx">${/traced/i.test(e.geomMethod || '') ? 'Traced from the project map — approximate' : 'Approximate location'}</span> ` : ''}Location: ${esc(e.geomMethod || 'not placed')} · page checked ${esc(fmtDate(e.lastChecked))}</p>${ctx.screenNote || ''}<div class="ce-actions">${ctx.reportLink || ''} ${watchBtn(`ea:${e.id}`, ctx.watched)}</div></div>`);
     return parts.join('');
   }
   const watchBtn = (key, on) => `<button type="button" class="btn small${on ? ' on' : ''}" data-watch="${esc(key)}" aria-pressed="${on ? 'true' : 'false'}">${on ? '★ Watching' : '☆ Watch'}</button>`;

@@ -112,6 +112,11 @@ test('EA scope sections in the agreed order, with the screening note, report lin
   const live = eas.eas.find(e => e.status === 'consultation');
   assert.deepEqual(order(M.eaScopeHTML(live, { screenNote: SCREEN })), ['header', 'purpose', 'timeline', 'outcomes', 'documents', 'footer'], 'no decision section before completion');
   assert.match(M.eaScopeHTML({ ...live, geomType: 'approx', geomConfidence: 'low' }, {}), /Approximate location/);
+  // A study area traced from the project page map is dashed and says so.
+  const traced = { ...live, geomType: 'area', geomConfidence: 'medium', geomMethod: 'traced from the project page image (3 control points, residual 22 m)', geometry: { type: 'Polygon', coordinates: [[[-79.7, 43.7], [-79.69, 43.7], [-79.69, 43.71], [-79.7, 43.7]]] } };
+  assert.ok(M.eaDashed(traced));
+  assert.match(M.eaScopeHTML(traced, {}), /Traced from the project map — approximate/);
+  assert.match(M.eaScopeHTML(traced, {}), /Location: traced from the project page image \(3 control points, residual 22 m\)/);
 });
 
 test('capital scope sections in order; slip is internal (hidden in the public view); no people anywhere', () => {
