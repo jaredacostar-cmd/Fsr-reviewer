@@ -207,17 +207,6 @@ async function main() {
     if (!g.geometry) ea.flags.push('no geometry');
   }
 
-  // Pages with no recognisable status: show their text (contact lines dropped) for tuning.
-  let shown = 0;
-  for (const ea of eas) {
-    if (ea.status !== 'unknown' || !ea.links?.page || shown >= 8) continue;
-    const r = await get(ea.links.page);
-    if (!r) continue;
-    shown++;
-    console.log(`--- no status: ${ea.links.page}`);
-    console.log(E.lines(E.mainHtml(r.html)).filter(l => !E.CONTACT.test(l)).join(' | ').slice(0, 1600));
-  }
-
   // Links.
   for (const ea of eas) {
     const dc = E.linkDc(ea, dcFac, facNameToPt);

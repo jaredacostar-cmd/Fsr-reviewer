@@ -275,3 +275,13 @@ test('real page wording: a study under way with no dates is "commenced", marked 
   const dated = E.parsePage(pg('Notice of Commencement issued January 15, 2024'), 'https://x/b', { today: '2026-10-15' });
   assert.equal(dated.statusInferred, null);
 });
+
+test('real page wording: completed road and pumping-station EAs', () => {
+  const road = E.parsePage(pg('Mayfield Road – Airport Road to Coleraine Drive | This environmental assessment has been completed. | The Region of Peel has completed the Schedule "C" Environmental Assessment (EA) for the improvements to Mayfield Road.'), 'https://x/m', { today: '2026-10-15' });
+  assert.equal(road.status, 'complete');
+  assert.equal(road.schedule, 'C');
+  const sps = E.parsePage(pg('Notice of completion | December 5, 2023 – Peel Region has completed a Schedule B Municipal Class Environmental Assessment (MCEA) study to upgrade the McVean Sanitary Pumping Station. | The project file report will be available until Monday January 8, 2024 for the required 30-day comment period.'), 'https://x/mc', { today: '2026-10-15' });
+  assert.equal(sps.status, 'complete');
+  assert.ok(sps.milestones.some(m => m.type === 'reviewEnd' && m.date === '2024-01-08'));
+  assert.equal(sps.completedYear, 2023);
+});

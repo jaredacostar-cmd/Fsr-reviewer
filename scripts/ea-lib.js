@@ -168,8 +168,8 @@ const MILESTONE_RE = [
   ['pic', /public information cent(re|er)|\bPICs?\b|public open house|community (information )?meeting|virtual (public )?meeting|public meeting|public consultation (centre|event|session)|online public engagement|public engagement/i],
   ['commentEnd', /comments?( or questions)?( on [^|]{0,60})? (may|can) be submitted[^|]{0,80}\bto\b|engagement[^|]{0,60}\bfrom\b[^|]{0,40}\bto\b/i],
   ['addendum', /addendum/i],
-  ['completion', /notice of (study )?completion|notice of filing|study completion|ESR (was )?(finali[sz]ed|completed)|project file (report )?(was )?(finali[sz]ed|completed)|has completed (a|the) (municipal )?(class )?(environmental assessment|EA)/i],
-  ['reviewEnd', /review period|comments? (are|must be) (received|submitted) by|available for (public )?review (until|from)|30-day (public )?review|review (ends|closes)|comment period/i],
+  ['completion', /notice of (study )?completion|notice of filing|study completion|ESR (was )?(finali[sz]ed|completed)|project file (report )?(was )?(finali[sz]ed|completed)|has completed (a|the) [^.|]{0,45}?(environmental assessment|\bEA\b|MCEA)|(this|the) (environmental assessment|EA) has been (completed|finali[sz]ed)|EA has been finali[sz]ed/i],
+  ['reviewEnd', /review period|will be available until|comments? (are|must be) (received|submitted) by|available for (public )?review (until|from)|30-day (public )?review|review (ends|closes)|comment period/i],
   ['report', /environmental study report|\bESR\b|project file report/i],
 ];
 const CONTACT = /\b(contact|project manager|consultant|phone|telephone|tel\.?|email|e-mail|ext\.?|fax|mailing list|P\.\s?Eng|M\.\s?Sc|Ph\.?D)\b|@|\(\d{3}\)|\d{3}[-.\s]\d{3}[-.\s]\d{4}/i;
@@ -282,7 +282,7 @@ function parsePage(html, url, { today } = {}) {
   const ms = milestonesOf(ls);
   const noticeText = docs.notices.map(n => n.label).join(' | ');
   const underway = UNDERWAY.test(body);
-  const status = statusOf(ms, { hasCompletionNotice: /notice of (study )?completion/i.test(noticeText), hasAddendum: /addendum/i.test(noticeText), underway, today });
+  const status = statusOf(ms, { hasCompletionNotice: /notice of (study )?completion/i.test(noticeText) || /(this|the) (environmental assessment|EA) has been (completed|finali[sz]ed)|has completed (a|the) [^.|]{0,45}?(environmental assessment|\bEA\b|MCEA)/i.test(body), hasAddendum: /addendum/i.test(noticeText), underway, today });
   const completion = ms.filter(m => m.type === 'completion').map(m => m.date).sort().pop();
   return {
     title: (/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html) || [])[1] ? text(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html)[1]) : null,
