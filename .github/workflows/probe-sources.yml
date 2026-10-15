@@ -261,7 +261,7 @@ jobs:
           node scripts/build-capital.js --out /tmp/capital
           if [ "${{ inputs.only }}" = "commit" ]; then
             cp /tmp/capital/capital.json /tmp/capital/capital-links-audit.json data/
-            npm test
+            npm test > /tmp/test.log 2>&1 || { tail -80 /tmp/test.log; exit 1; }
             git config user.name "peel-snapshot-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/capital.json data/capital-links-audit.json
@@ -277,7 +277,7 @@ jobs:
           else
             node scripts/build-eas.js --out data --capital /nonexistent
           fi
-          npm test
+          npm test > /tmp/test.log 2>&1 || { tail -80 /tmp/test.log; exit 1; }
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/eas.json data/eas-review.csv
