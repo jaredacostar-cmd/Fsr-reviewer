@@ -513,14 +513,18 @@ def place_roads(cfg, ov, cache, report):
         geom = None; method = None
         if r['kind'] == 'road':
             segs = r.get('segments') or [r]
-            parts, notes = [], []
+            parts, notes, done, missed = [], [], [], []
             for sg in segs:
                 line, note = corridor(sg, sg.get('city', city), cache)
-                if line: parts.append(line)
+                if line: parts.append(line); done.append(sg)
+                else: missed.append(sg)
                 notes.append(note)
-            if len(parts) < len(segs): report.append(f"{r['id']}: corridor not placed ({'; '.join(notes)})"); continue
+            # A segment marked optional may fail (its ways do not connect in OSM): the rest is kept and the
+            # method names the part that is not drawn.
+            if not parts or any(not sg.get('optional') for sg in missed): report.append(f"{r['id']}: corridor not placed ({'; '.join(notes)})"); continue
             geom = {'type': 'LineString', 'coordinates': parts[0]} if len(parts) == 1 else {'type': 'MultiLineString', 'coordinates': parts}
-            method = 'road centreline ' + '; '.join(f"{name_of(sg['road'])} from {end_text(sg['from'])} to {end_text(sg['to'])}" for sg in segs) + f" ({OSM_CREDIT})"
+            method = 'road centreline ' + '; '.join(f"{name_of(sg['road'])} from {end_text(sg['from'])} to {end_text(sg['to'])}" for sg in done) + f" ({OSM_CREDIT})"
+            if missed: method += '; not drawn: ' + '; '.join(f"{name_of(sg['road'])} from {end_text(sg['from'])} to {end_text(sg['to'])}" for sg in missed)
             gtype = 'road'
         elif r['kind'] == 'point':
             if r.get('water'):
