@@ -111,3 +111,27 @@ test('the EA page shows an extracted decision as an extract, with its source', (
   assert.equal(rows[0][cols.indexOf('Decision (from the report; check it)')], 'Twin it.');
   assert.equal(rows[0][cols.indexOf('Linked capital projects')], '24-1');
 });
+
+test('map: EA styles (current strong, completed faint, approximate thinner and fainter), label points, % labels', () => {
+  const cur = M.eaStyle({ status: 'consultation', geomConfidence: 'medium', geomType: 'area' });
+  const done = M.eaStyle({ status: 'complete', geomConfidence: 'medium', geomType: 'area' });
+  const approx = M.eaStyle({ status: 'consultation', geomConfidence: 'low', geomType: 'area' });
+  assert.ok(cur.weight > done.weight && cur.opacity > done.opacity && cur.fillOpacity > done.fillOpacity, 'completed fainter');
+  assert.ok(approx.weight < cur.weight && approx.opacity < cur.opacity && approx.dashArray, 'approximate thinner, fainter, dashed');
+  assert.equal(cur.dashArray, null);
+  const traced = M.eaStyle({ status: 'consultation', geomConfidence: 'medium', geomType: 'area', geomMethod: 'traced from the project page image' });
+  assert.equal(traced.weight, cur.weight, 'a medium-confidence trace keeps its weight'); assert.ok(traced.dashArray, '…and is dashed');
+  // An L-shaped area: the centroid falls outside, so the label goes to a point inside.
+  const L = { type: 'Polygon', coordinates: [[[0, 0], [10, 0], [10, 1], [1, 1], [1, 10], [0, 10], [0, 0]]] };
+  const lp = M.labelPoint(L);
+  const inside = ([x, y]) => (x >= 0 && x <= 10 && y >= 0 && y <= 1) || (x >= 0 && x <= 1 && y >= 0 && y <= 10);
+  assert.ok(inside(lp), JSON.stringify(lp));
+  const sq = M.labelPoint({ type: 'Polygon', coordinates: [[[0, 0], [2, 0], [2, 2], [0, 2], [0, 0]]] });
+  assert.deepEqual(sq.map(v => +v.toFixed(6)), [1, 1], 'a square: its centre, not a corner');
+  assert.deepEqual(M.labelPoint({ type: 'LineString', coordinates: [[0, 0], [1, 1], [2, 2]] }), [1, 1]);
+  assert.equal(M.pctLabel({ percent: 0 }), null);
+  assert.equal(M.pctLabel({ percent: null }), null);
+  assert.equal(M.pctLabel({ percent: 45 }), '45% built');
+  assert.equal(M.pctLabel({ percent: 100 }), 'finishing');
+  assert.deepEqual(Object.keys(M.SYS_CASING), ['water', 'wastewater', 'roads']);
+});

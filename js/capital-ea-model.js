@@ -123,6 +123,47 @@
   const MS_LABEL = { commencement: 'Notice of commencement', pic: 'Public information centre', commentEnd: 'Comment period ends', report: 'Report released', completion: 'Notice of completion', reviewEnd: 'Review period ends', addendum: 'Addendum' };
   const MS_ORDER = ['commencement', 'pic', 'commentEnd', 'report', 'completion', 'reviewEnd', 'addendum'];
 
+  // ---- map styling ----------------------------------------------------------------------------------
+  /** Below this zoom an EA is a small marker at its label point; from it, its outline, route or site. */
+  const EA_OUTLINE_ZOOM = 12;
+  /**
+   * EA line style: current EAs strong, completed ones faint; an approximate or traced location is
+   * thinner and fainter still (the least certain shapes must not be the loudest on the map).
+   */
+  function eaStyle(e) {
+    // Low confidence (placed approximately) is thinner and fainter; a medium-confidence trace from the
+    // project map keeps its weight and is only dashed.
+    const current = e.status !== 'complete', weak = e.geomType === 'approx' || e.geomConfidence === 'low', dashed = eaDashed(e);
+    const weight = (current ? 2.5 : 1.5) * (weak ? 0.6 : 1);
+    const opacity = (current ? 0.95 : 0.5) * (weak ? 0.65 : 1);
+    return { weight: +weight.toFixed(2), opacity: +opacity.toFixed(2), fillOpacity: current ? (weak ? 0.02 : 0.06) : 0, dashArray: dashed ? '4 5' : current ? null : '1 4' };
+  }
+  /**
+   * Where an EA's name (and its low-zoom marker) goes: a study area's area-weighted centroid when it
+   * lies inside (else the bbox centre if inside, else the first vertex); a route's middle vertex; a
+   * site's point. [lng, lat].
+   */
+  function labelPoint(g) {
+    if (!g) return null;
+    const inside = (ring, p) => { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if ((yi > p[1]) !== (yj > p[1]) && p[0] < (xj - xi) * (p[1] - yi) / (yj - yi) + xi) c = !c; } return c; };
+    const ringCentroid = ring => { let a = 0, x = 0, y = 0; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const f = ring[j][0] * ring[i][1] - ring[i][0] * ring[j][1]; a += f; x += (ring[j][0] + ring[i][0]) * f; y += (ring[j][1] + ring[i][1]) * f; } return a ? [x / (3 * a), y / (3 * a)] : ring[0]; };
+    const polyPoint = ring => { const c = ringCentroid(ring); if (inside(ring, c)) return c; const xs = ring.map(p => p[0]), ys = ring.map(p => p[1]), b = [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2]; return inside(ring, b) ? b : ring[0]; };
+    const mid = cs => cs[Math.floor(cs.length / 2)];
+    switch (g.type) {
+      case 'Point': return g.coordinates;
+      case 'MultiPoint': return g.coordinates[0];
+      case 'LineString': return mid(g.coordinates);
+      case 'MultiLineString': return mid(g.coordinates.slice().sort((a, b) => b.length - a.length)[0]);
+      case 'Polygon': return polyPoint(g.coordinates[0]);
+      case 'MultiPolygon': return polyPoint(g.coordinates.slice().sort((a, b) => b[0].length - a[0].length)[0][0]);
+      default: return null;
+    }
+  }
+  /** Construction labels: "% built" between 1 and 99; 100 while still under way reads "finishing"; 0 or none: no label. */
+  const pctLabel = c => (c.percent == null || c.percent <= 0 ? null : c.percent >= 100 ? 'finishing' : `${c.percent}% built`);
+  /** The system casing under a construction line (existing-pipe colours; roads in the street grey). */
+  const SYS_CASING = { water: '--pipe-water', wastewater: '--pipe-sanitary', roads: '--xing-street' };
+
   // ---- picker ------------------------------------------------------------------------------------
   /** Tap priority (lower first): applications, facilities, construction, planned DC works, EAs, pipes, areas. */
   const PRIORITY = { development: 1, facility: 2, construction: 3, dc: 4, ea: 5, pipe: 6, area: 9 };
@@ -483,6 +524,7 @@
     inServiceYear, fadedAt, contracts, slipText, MILESTONES,
     EA_STATUS, EA_CURRENT, eaBadge, eaShown, eaDashed, eaUnplaced, MS_LABEL,
     PRIORITY, rankHits, tolerance, hitDistance, pickHeading, sameSpot,
+    EA_OUTLINE_ZOOM, eaStyle, labelPoint, pctLabel, SYS_CASING,
     eaReview, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
     dcCapitalIndex, dcActualHTML, eaMatch, eaSort, geomDistM, easNear, upcoming, openPeriods, eaICS, eaTabHTML, EA_SYS, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,

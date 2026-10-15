@@ -68,7 +68,7 @@
   --dc-w-feed: #5aa7ec;
   --cons-build: #f1f3f5;
   --cons-plan: #ced4da;
-  --ea-line: #d9a066;
+  --ea-line: #fa42ed;
   --hl-sub: #c07ae0;
   --q-est: #7cc4f8;
   --time-soon: #a9e34b;
@@ -142,7 +142,7 @@
     --dc-w-feed: #1c7ed6;
     --cons-build: #212529;
     --cons-plan: #495057;
-    --ea-line: #8a5a2b;
+    --ea-line: #c2189f;
     --hl-sub: #9c36b5;
     --q-est: #4dabf7;
     --time-soon: #74b816;
@@ -215,7 +215,7 @@
   --dc-w-feed: #1c7ed6;
   --cons-build: #212529;
   --cons-plan: #495057;
-  --ea-line: #8a5a2b;
+  --ea-line: #c2189f;
   --hl-sub: #9c36b5;
   --q-est: #4dabf7;
   --time-soon: #74b816;
@@ -2695,3 +2695,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 @media (max-width: 480px) { .ea-up li { grid-template-columns: 1fr; gap: 0; } }
 .ea-up .btn.link, .ea-row .btn.link { white-space: normal; text-align: left; overflow-wrap: anywhere; }
 .ea-up li > span { min-width: 0; }
+
+/* EA and construction map legend and labels (js/capital-ea.js) */
+.lg-cased { display: inline-block; width: 18px; height: 7px; border-radius: 4px; background: var(--cons-build); box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 70%, transparent); margin: 0 var(--space-1) 0 var(--space-1); vertical-align: middle; }
+.lg-dot.hollow { background: transparent; border: 1.5px solid var(--c); }
+.ce-lbl-ea.done span { opacity: .65; font-weight: 500; }

@@ -79,6 +79,8 @@
       for (const r of shownRecords()) {
         const c = data.contracts.get(r.contract || `id:${r.id}`), build = M.isBuilding(r), faded = M.fadedAt(r, y);
         for (const p of pathsOf(r.geometry)) {
+          // The system as a casing in the existing-pipe colours (water blue, wastewater brown, roads grey).
+          L.polyline(ll(p), { pane: 'infraPane', interactive: false, color: token(M.SYS_CASING[r.system] || '--xing-street'), weight: (build ? 3 : 2) + 4, opacity: faded ? 0.15 : 0.55, lineCap: 'round' }).addTo(consLayer);
           L.polyline(ll(p), { pane: 'infraPane', interactive: !PK(), color: token(build ? '--cons-build' : '--cons-plan'), weight: build ? 3 : 2, opacity: faded ? 0.3 : 0.95, dashArray: build ? null : '2 6', lineCap: 'round', bubblingMouseEvents: false, className: 'ce-cons' })
             .bindTooltip(esc(M.capitalHover(c)), { sticky: true, className: 'pt' })
             .on('click', () => openCapital(c.key)).addTo(consLayer);
@@ -87,9 +89,17 @@
     } else map.removeLayer(consLayer);
     if (ce.ea && data.eas) {
       eaLayer.addTo(map);
+      const low = map.getZoom() < M.EA_OUTLINE_ZOOM;
       for (const e of shownEAs()) {
-        const dash = M.eaDashed(e), col = token('--ea-line');
-        const style = { pane: 'eaPane', interactive: !PK(), color: col, weight: 2, opacity: 0.9, dashArray: dash ? '5 5' : null, fill: /Polygon/.test(e.geometry.type), fillColor: col, fillOpacity: 0.05, bubblingMouseEvents: false, className: 'ce-ea' };
+        const st = M.eaStyle(e), col = token('--ea-line');
+        const style = { pane: 'eaPane', interactive: !PK(), color: col, weight: st.weight, opacity: st.opacity, dashArray: st.dashArray, fill: /Polygon/.test(e.geometry.type) && st.fillOpacity > 0, fillColor: col, fillOpacity: st.fillOpacity, bubblingMouseEvents: false, className: 'ce-ea' };
+        // Region view: one small marker per EA (current filled, completed hollow), outlines from zoom 12.
+        if (low) {
+          const lp = M.labelPoint(e.geometry); if (!lp) continue;
+          L.circleMarker([lp[1], lp[0]], { pane: 'eaPane', interactive: !PK(), radius: e.status === 'complete' ? 4 : 5, color: col, weight: 1.5, opacity: st.opacity, fill: true, fillColor: col, fillOpacity: e.status === 'complete' ? 0 : 0.85, bubblingMouseEvents: false, className: 'ce-ea' })
+            .bindTooltip(esc(M.eaHover(e)), { sticky: true, className: 'pt' }).on('click', () => openEA(e.id)).addTo(eaLayer);
+          continue;
+        }
         const lyr = e.geometry.type === 'Point'
           ? L.circleMarker([e.geometry.coordinates[1], e.geometry.coordinates[0]], { ...style, radius: 7, fill: true, fillOpacity: 0.25 })
           : L.geoJSON(e.geometry, { style: () => style, interactive: !PK(), pane: 'eaPane', pointToLayer: (f, ll) => L.circleMarker(ll, { ...style, radius: 7, fill: true, fillOpacity: 0.25 }) });   // MultiPoint: several intersections
@@ -111,14 +121,37 @@
       const c = data.contracts.get(r.contract || `id:${r.id}`); if (seen.has(c.key)) continue;
       const p = pathsOf(r.geometry)[0]; if (!p) continue;
       const mid = p[Math.floor(p.length / 2)]; if (!b.contains([mid[1], mid[0]])) continue;
-      seen.add(c.key); lbl([mid[1], mid[0]], `${c.percent}% built`, 'ce-lbl-cons');
+      const t = M.pctLabel(c); if (!t) continue;
+      seen.add(c.key); lbl([mid[1], mid[0]], t, 'ce-lbl-cons');
     }
     if (ce.ea && data.eas) for (const e of shownEAs()) {
-      const g = e.geometry, pt = g.type === 'Point' ? g.coordinates : g.type === 'MultiPoint' ? g.coordinates[0] : g.type === 'LineString' ? g.coordinates[Math.floor(g.coordinates.length / 2)] : g.type === 'MultiLineString' ? g.coordinates[0][Math.floor(g.coordinates[0].length / 2)] : g.type === 'Polygon' ? g.coordinates[0][0] : g.coordinates[0][0][0];
-      if (b.contains([pt[1], pt[0]])) lbl([pt[1], pt[0]], e.name.length > 48 ? `${e.name.slice(0, 46)}…` : e.name, 'ce-lbl-ea');
+      const pt = M.labelPoint(e.geometry); if (!pt) continue;
+      if (b.contains([pt[1], pt[0]])) lbl([pt[1], pt[0]], e.name.length > 48 ? `${e.name.slice(0, 46)}…` : e.name, `ce-lbl-ea${e.status === 'complete' ? ' done' : ''}`);
     }
+    declutter();
   }
-  map.on('zoomend moveend', () => { if (ce.cons || ce.ea) renderLabels(); });
+  // EA and construction labels give way to development labels (and to each other): after the
+  // development labels are placed, a label that overlaps one is hidden.
+  let declutterT = null;
+  function declutter() {
+    clearTimeout(declutterT);
+    declutterT = setTimeout(() => {
+      const box = el => el.getBoundingClientRect(), hit = (a, b) => a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom;
+      const taken = [...document.querySelectorAll('.plabel > div, .marker-cluster, .leaflet-marker-icon.pm')].map(box);
+      for (const el of document.querySelectorAll('.ce-lbl > span')) {
+        el.parentElement.style.visibility = '';
+        const r = box(el);
+        if (taken.some(t => hit(t, r))) { el.parentElement.style.visibility = 'hidden'; continue; }
+        taken.push(r);
+      }
+    }, 80);
+  }
+  let lowZoom = map.getZoom() < M.EA_OUTLINE_ZOOM;
+  map.on('zoomend moveend', () => {
+    const low = map.getZoom() < M.EA_OUTLINE_ZOOM;
+    if (ce.ea && low !== lowZoom) { lowZoom = low; render(); return; }
+    lowZoom = low; if (ce.cons || ce.ea) renderLabels();
+  });
 
   // ---- highlight (selection orange) -----------------------------------------------------------------
   function highlight(geoms, linked, layer = hlLayer) {
@@ -309,8 +342,8 @@
   /** Legend section (js/map-analysis.js renderLegend). */
   function legendHTML() {
     const parts = [];
-    if (ce.cons && data.capital) parts.push(`<div class="lg-t">Capital projects (Region layer, as of ${esc(M.fmtDate(data.capital.source && data.capital.source.latestLastUpdate))})</div><ul><li><span class="lg-line" style="background:var(--cons-build)"></span>Under construction, awarded or tendered</li><li><span class="lg-line dot" style="--c:var(--cons-plan)"></span>Planned</li>${yr() != null ? `<li class="muted">faded: not in service by ${yr()}</li>` : ''}<li class="muted">"% built" labels from street zoom</li></ul>`);
-    if (ce.ea && data.eas) parts.push(`<div class="lg-t">Environmental assessments (${esc({ current: 'current', completed: 'completed', all: 'all' }[ce.show])})</div><ul><li><span class="lg-area" style="--c:var(--ea-line)"></span>Study area, route or site</li><li><span class="lg-line dash" style="background:var(--ea-line)"></span>dashed: approximate or traced</li>${unplacedEAs().length ? `<li class="muted">${unplacedEAs().length} with no mapped location yet (listed in the Capital tab)</li>` : ''}</ul>`);
+    if (ce.cons && data.capital) parts.push(`<div class="lg-t">Capital projects (Region layer, as of ${esc(M.fmtDate(data.capital.source && data.capital.source.latestLastUpdate))})</div><ul><li><span class="lg-line" style="background:var(--cons-build)"></span>Under construction, awarded or tendered</li><li><span class="lg-line dot" style="--c:var(--cons-plan)"></span>Planned</li><li><span class="lg-cased" style="--c:var(--pipe-water)"></span>Water <span class="lg-cased" style="--c:var(--pipe-sanitary)"></span>Wastewater <span class="lg-cased" style="--c:var(--xing-street)"></span>Roads <span class="muted">(edging)</span></li>${yr() != null ? `<li class="muted">faded: not in service by ${yr()}</li>` : ''}<li class="muted">from street zoom: "% built" (1–99%), "finishing" at 100%</li></ul>`);
+    if (ce.ea && data.eas) parts.push(`<div class="lg-t">Environmental assessments (${esc({ current: 'current', completed: 'completed', all: 'all' }[ce.show])})</div><ul>${map.getZoom() < M.EA_OUTLINE_ZOOM ? '<li><span class="lg-dot" style="background:var(--ea-line)"></span>Current EA <span class="lg-dot hollow" style="--c:var(--ea-line)"></span>completed <span class="muted">(outlines from zoom 12)</span></li>' : '<li><span class="lg-area" style="--c:var(--ea-line)"></span>Current: study area, route or site</li><li><span class="lg-line dot" style="--c:var(--ea-line)"></span>Completed (fainter)</li>'}<li><span class="lg-line dash" style="background:var(--ea-line);opacity:.6"></span>thinner, dashed: approximate or traced</li>${unplacedEAs().length ? `<li class="muted">${unplacedEAs().length} with no mapped location yet (listed in Capital › EAs)</li>` : ''}</ul>`);
     return parts.join('');
   }
 

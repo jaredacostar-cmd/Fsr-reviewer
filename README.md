@@ -2685,3 +2685,32 @@ scope (SPEC §0.4). The EA lists moved here from the old "Construction & EAs" vi
     them.
 - **Code.** `js/capital-ea-model.js` (`eaTabHTML`, `eaMatch`, `eaSort`, `easNear`, `upcoming`,
   `openPeriods`, `eaICS`), tested in `tests/ea-tab.test.js`; `js/capital-ea.js` (state and events).
+
+### EA and construction improvements
+
+- **Capital links.**
+  - A contract is linked to an EA when it shares the EA's project page (as before).
+  - A contract is also linked when it is in the same system and at least half its points fall
+    inside the EA's study area. This is not done for roads EAs or for study areas placed with low
+    confidence.
+  - Each link says how it was made.
+- **Decisions.** For completed EAs with a PDF report, the build reads the report (`pdftotext`, the
+  first 40 pages) and keeps the sentence naming the preferred or recommended solution. It is
+  labelled "extracted from the report (automatic; check the report)" and is included in the CSV.
+- **Freshness.** The weekly site job rebuilds `data/capital.json` and `data/eas.json`. Each build
+  refuses to write if it read fewer than 80% of the previous count (`--force` overrides), so a
+  partial outage cannot empty the lists.
+- **Map styling.**
+  - EAs are magenta, chosen to stay clear of the secondary-plan orange and the pipe colours.
+  - Current EAs use solid, heavier lines. Completed EAs are fainter, with a dotted line and no
+    fill.
+  - Traced outlines are dashed at full weight. Approximate or low-confidence shapes are thinner
+    and fainter.
+  - Below zoom 12, each EA is a dot at its centre: filled if current, hollow if complete.
+  - Construction lines have a casing in their system's colour (water, wastewater, roads).
+- **Labels.**
+  - EA labels sit at the centre of the area, or the middle of the route.
+  - Construction labels say "N% built", or "finishing" at 100%. Nothing is shown when the figure
+    is 0% or missing.
+  - Any EA or construction label that overlaps a development label, cluster or marker is hidden,
+    so development labels take priority.
