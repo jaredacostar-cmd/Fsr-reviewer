@@ -2573,7 +2573,10 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .topbar .tb-views { order: 3; }
   .topbar .tb-scen-wrap { order: 4; }
   .topbar .tb-search { order: 5; }
-  .tb-scen .sc-more { display: none; }
+  .tb-scen .sc-more { max-width: 100%; min-width: 0; }   /* the read-only chip (Stage 1 #6) stays: it is the only scenario line */
+  .topbar .tb-scen-wrap { flex: 1 1 100%; min-width: 0; }
+  .topbar .tb-scen-wrap .tb-scen { width: 100%; min-width: 0; overflow: hidden; }
+  #tb-scen-pop { width: auto; left: 0; right: 0; }
   .tb-scen { max-width: none; padding: 2px var(--space-1); }
 }
 .pipe-rows .done-gone { grid-column: 1 / -1; }
@@ -2706,3 +2709,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .dt tr.grp td { background: var(--surface-2); color: var(--text-secondary); font-weight: 600; font-size: var(--fs-1); }
 /* A failing data check, one line under a headline (Stage 1 #7). */
 .caveat { margin: 2px 0 var(--space-2); color: var(--text-secondary); border-left: 3px solid var(--cap-tight); padding-left: var(--space-2); }
+/* The scenario popover opens from the chip's right edge (the chip sits near the right of the top bar),
+   so it stays on screen; its switch rows wrap. */
+#tb-scen-pop { left: auto; right: 0; }
+#tb-scen-pop .svc-switch { flex-wrap: wrap; }
+#tb-scen-pop .ly-def { flex-basis: 100%; }
