@@ -90,6 +90,8 @@ const SHELL_ASSETS = [
   'js/measure.js',
   'js/massing-core.js',
   'js/view-3d.js',
+  'js/timebox-core.js',
+  'js/time-box.js',
   'js/offline.js',
   'js/overview-tab.js',
   'js/phases.js',

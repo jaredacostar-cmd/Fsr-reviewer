@@ -2603,3 +2603,44 @@ Everything drawn is **indicative, not design**.
 - **Planned deviation from the brief.** The lidar tiles stop at z16 rather than the 0.5 m
   native resolution (z18 would be about 3,500 tiles). The ground profile still reads the lidar
   at native resolution.
+
+## Time Box, Part 3: a place's imagery over the years
+
+Tools › **Time Box** (the clock button). Drag a box on the map; the map stays still while you
+draw.
+
+- **Releases.** The app reads the Esri World Imagery Wayback release list from the WMTS
+  capabilities document. If that fails, it reads Esri's `waybackconfig.json` instead.
+- **New imagery only.** Each release's tiles over the box are hashed.
+  - The tiles are fetched at the deepest zoom where the box fits in 4 tiles or fewer.
+  - Releases with identical tiles show the same imagery, so only releases where the box
+    changed are kept, with at most one per year (the latest that year).
+  - The search bisects the release list: when two releases match, the ones between them are
+    taken as the same. About 100 tile requests cover 60 releases with 6 changes, instead of
+    240.
+  - **Limitation:** imagery that changed and then changed back between two matching releases
+    is missed.
+  - At most 6 requests are in flight. A progress bar and **Cancel** show while it checks.
+  - The result is cached per box and zoom: in memory, and the last 20 boxes in the browser.
+  - If the tiles cannot be compared, one release per year is shown, and the notes say so.
+- **Year slider.** It snaps to the years found. **Play** steps through them every 1.5 s.
+  - The imagery shows **inside the box only**. Outside the box the map is unchanged; the
+    normal development markers and outlines are dimmed.
+  - A release date is when Esri published the imagery, not when it was flown, and the notes
+    say so.
+- **Applications.** The developments in the box that were **filed by the end of the year** are
+  shown in their phase colour as of that year.
+  - **Filing date:** the earliest submission date on its applications. Failing that, its
+    earliest dated milestone ("filed on or before"). Developments with no dated application
+    events are drawn dashed as **date unknown**, in every year, and counted.
+  - Tap a marker to open the development.
+- **Compare with** another year: a swipe handle splits the box, with the slider year on the
+  left and the compare year on the right. Drag the handle, or use the arrow keys.
+- **Attribution.** "Imagery © Esri Wayback" shows in the banner, and the full Esri credit in
+  the notes and the map's attribution.
+- **Code.**
+  - `js/timebox-core.js`: pure functions, tested in `tests/timebox-core.test.js`. The
+    capabilities and config parsing, dedupe, one per year, bisection, request limiter, tile
+    hash, filing dates and slider snapping. The imagery source sits behind a small interface
+    (`WAYBACK`).
+  - `js/time-box.js`: the tool.
