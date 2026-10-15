@@ -61,3 +61,15 @@ test('1.7 I&I follows the files counted: the Heritage block is its three draft p
   assert.match(D.iiText(e.combined.wastewater.infiltration), /^I&I \d+(\.\d)? L\/s over 1[56]\d(\.\d)? ha \(0\.26 L\/s\/ha\)$/);
   assert.equal(D.iiText(0), '');
 });
+
+test('SPEC 1.9: an employment site (no units, nothing counted) gets no "Tree count" note', () => {
+  assert.equal(TC.noteHTML({ units: 0, count: { mode: 'tree', trees: [], parts: [] } }), '');
+  assert.equal(TC.noteHTML({ units: 0, count: { mode: 'tree', trees: [], parts: [], with: 'OZS-1' } }) === '', false, 'kept when counted in another tree');
+});
+
+test('SPEC 1.9: an employment site\'s DC room is in people, never units at a persons-per-unit', () => {
+  const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'js', 'masterplan.js'), 'utf8');
+  assert.match(src, /const ppu = p\.units > 0 \? ppuOf\(p\) : null/);
+  assert.match(src, /\$\{ppu \? `<small>≈/);
+  assert.match(src, /Room in people at Peel design criteria \(an employment site: no units\)/);
+});

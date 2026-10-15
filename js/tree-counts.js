@@ -107,6 +107,8 @@
   const estimatedUnits = p => ((p && p.count && p.count.parts) || []).filter(x => ESTIMATED.has(x.kind)).reduce((t, x) => t + x.units, 0);
   function noteHTML(p, max = Infinity) {
     const c = p && p.count; if (!c) return '';
+    // A site with no units (employment only) has no count to explain (SPEC 1.9: no "Tree count · –").
+    if (!(p.units > 0) && !((c.parts || []).length) && !c.with) return '';
     if (c.mode === 'tree') {
       const more = (c.trees || []).length > max ? `<br><span class="muted">+${(c.trees || []).length - max} more trees</span>` : '';
       const parts = (c.trees || []).slice(0, max).map(([rootRef, u, basis, flag]) => `${esc(rootRef)}: ${num(u)}${flag ? ` <span class="tag">${esc(flag)}</span>` : ''} <span class="muted">(${esc(basis)})</span>`);

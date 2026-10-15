@@ -426,7 +426,7 @@
   function roomText(c, ppu) {
     if (c.room == null) return '<span class="muted">new facility</span>';
     if (c.room <= 0) return `<strong>none</strong> <small>over by ${c.unit === 'L/s' ? fmtNum(Math.round(-c.room)) : fmt1(-c.room)} ${c.unit} (${c.kind === 'plant' || c.kind === 'wplant' ? `${SvcTab().pctRated(c, 'com')}% of rated; trigger ${Math.round(PLANT_TRIGGER * 100)}%` : `${Math.round((c.util.com - 1) * 100)}%`})</small>`;
-    return `${fmtNum(roundPop(c.people))} people<small>≈${fmtNum(Math.round(c.people / ppu))} units</small>`;
+    return `${fmtNum(roundPop(c.people))} people${ppu ? `<small>≈${fmtNum(Math.round(c.people / ppu))} units</small>` : ''}`;
   }
   const reliefHTML = c => c.relief.length ? c.relief.slice(0, 3).map(r => `<button type="button" class="btn small link" data-dcn-relief="${esc(c.id)}|${c.relief.indexOf(r)}">${esc(r.text)}</button>`).join('<br>') + (c.relief.length > 3 ? ` <small>+${c.relief.length - 3}</small>` : '') : '<span class="muted">none on the 2026 DC map</span>';
   // % of rated capacity for plants and water treatment (never % of the 90% trigger, SPEC 1.4); % of
@@ -442,9 +442,10 @@
     const all = devNeeds(p); if (!all) return '<p class="small muted">No servicing demand to compare.</p>';
     const list = sys ? all.filter(c => c.sys === sys) : all;
     if (!list.length) return `<p class="small muted">${sys === 'water' ? 'No water supply or storage constraint applies.' : (PIPE_RESULTS ? 'No sewer on its path reaches 90% of capacity by build-out and no tabled facility applies.' : `No tabled facility applies. ${PIPES_NOT_ASSESSED}.`)}</p>`;
-    const ppu = ppuOf(p), gaps = list.filter(c => c.status === 'gap').length, main = list.filter(c => c.status !== 'ok'), rest = list.filter(c => c.status === 'ok');
+    // An employment site has no units: room in people only (SPEC 1.9).
+    const ppu = p.units > 0 ? ppuOf(p) : null, gaps = list.filter(c => c.status === 'gap').length, main = list.filter(c => c.status !== 'ok'), rest = list.filter(c => c.status === 'ok');
     const nChk = list.filter(c => c.status === 'check').length;
-    return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} Room in units at this development's ${ppu.toFixed(1)} persons per unit.${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
+    return `<p class="small">${gaps ? `<strong class="dcn-gap-t">${gaps} constraint${gaps === 1 ? '' : 's'} run${gaps === 1 ? 's' : ''} out before a DC project relieves ${gaps === 1 ? 'it' : 'them'}.</strong>` : 'Every constraint has room to build-out or a DC project before it runs out.'} ${ppu ? `Room in units at this development's ${ppu.toFixed(1)} persons per unit.` : 'Room in people at Peel design criteria (an employment site: no units).'}${nChk ? ` <span class="muted">${nChk} sewer group${nChk === 1 ? '' : 's'} flagged “check the data”: the census flow alone exceeds the full-pipe capacity from the published slope, so the slope (or a parallel pipe) is more likely than a real shortfall.</span>` : ''}</p>
       ${main.length ? needsTable(main, ppu) : ''}
       ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.max(...rest.map(c => pctCap(c, 'bo')))}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
       <p class="small"><button type="button" class="btn small link" data-dcn-all="1">All DC timing →</button></p>
