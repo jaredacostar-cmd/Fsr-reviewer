@@ -45,6 +45,18 @@
    "unknown": 0
   }
  },
+ "changes": [
+  {
+   "id": "p90-0001-88d2eb1c",
+   "contract": "web:peelregion.ca/construction/project-90-0001",
+   "projectNumber": "90-0001",
+   "system": "water",
+   "dc": true,
+   "date": "2026-10-12",
+   "change": "Start target 2026-01-01 → 2026-02-01; 60% built",
+   "slipMonths": 1
+  }
+ ],
  "records": [
   {
    "projectNumber": "90-0001",
@@ -265,5 +277,12 @@
    }
   }
  ],
- "links": []
+ "links": [
+  {
+   "dc": "water:line:c57150",
+   "capital": "p90-0001-88d2eb1c",
+   "method": "project",
+   "confidence": "medium"
+  }
+ ]
 }

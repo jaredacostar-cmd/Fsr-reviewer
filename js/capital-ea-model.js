@@ -171,6 +171,114 @@
   /** Repeated tap at (about) the same spot within 4 s steps to the next item. */
   const sameSpot = (a, b, t0, t1) => !!a && !!b && Math.hypot(a[0] - b[0], a[1] - b[1]) <= 6 && Math.abs(t1 - t0) <= 4000;
 
+
+  // ---- DC timing: actual status where matched ------------------------------------------------------
+  /**
+   * DC project number → the most advanced matched capital contract { status, percent, lastUpdate, key }.
+   * Links name DC works as "<sys>:line:c<component>" (looked up in the DC map for its project) or
+   * "<sys>:fac:<facility>:<project>:<item>".
+   */
+  function dcCapitalIndex(capital, dcInfra) {
+    const idx = new Map();
+    if (!capital || !capital.links) return idx;
+    const cs = contracts(capital.records || []);
+    const byId = new Map((capital.records || []).map(r => [r.id, r]));
+    const compProj = new Map();
+    for (const sys of ['water', 'wastewater']) for (const ln of ((dcInfra && dcInfra[sys] && dcInfra[sys].lines) || [])) if (ln.c) compProj.set(`${sys}:c${String(+ln.c)}`, ln.p || ln.c);
+    for (const l of capital.links) {
+      const [sys, kind, ref, proj4] = l.dc.split(':');
+      const proj = kind === 'fac' ? proj4 : compProj.get(`${sys}:${ref}`);
+      const r = byId.get(l.capital); if (!proj || !r) continue;
+      const c = cs.get(r.contract || `id:${r.id}`);
+      const cur = idx.get(proj);
+      if (!cur || RANK.indexOf(c.status) > RANK.indexOf(cur.status) || (c.status === cur.status && (c.percent || 0) > (cur.percent || 0))) idx.set(proj, { status: c.status, percent: c.percent, lastUpdate: c.lastUpdate, key: c.key });
+    }
+    return idx;
+  }
+  /** DC timing cell: actual status when matched ("Tendered", "60% built", as of), else "scheduled (not yet in capital records)". */
+  function dcActualHTML(entry, hasCapital) {
+    if (!hasCapital) return '';
+    if (!entry) return '<small class="muted ce-dc-sched">scheduled (not yet in capital records)</small>';
+    const what = entry.status === 'under construction' && entry.percent != null ? `${entry.percent}% built` : statusLabel(entry.status);
+    return `<small class="ce-dc-act"><button type="button" class="btn small link" data-ce-open="cap:${esc(entry.key)}">${esc(what)}</button> as of ${esc(fmtDate(entry.lastUpdate))}</small>`;
+  }
+
+  // ---- Capital tab lists -------------------------------------------------------------------------
+  const inMuni = (m, muni) => !muni || String(m || '').toUpperCase().split(/[/,]/).map(x => x.trim()).includes(String(muni).toUpperCase());
+  /** Active construction: tendered / awarded / under construction contracts, most built first. */
+  const activeConstruction = (cs, muni) => [...cs.values()].filter(c => BUILDING.has(c.status) && inMuni(c.lead.municipality, muni)).sort((a, b) => (b.percent || 0) - (a.percent || 0) || String(a.lead.street).localeCompare(String(b.lead.street)));
+  /** Current EAs: commenced / consultation / report review / addendum; soonest next step first. */
+  const currentEAs = (list, muni) => (list || []).filter(e => EA_CURRENT.has(e.status) && (!muni || String(e.municipality || '').includes(muni))).sort((a, b) => String((a.nextStep && a.nextStep.date) || '9999').localeCompare(String((b.nextStep && b.nextStep.date) || '9999')) || a.name.localeCompare(b.name));
+  /** Recently completed EAs: complete with a completion year in the last two years. */
+  const RECENT_YEARS = 2;
+  const recentEAs = (list, muni, thisYear) => (list || []).filter(e => e.status === 'complete' && e.completedYear && e.completedYear >= thisYear - RECENT_YEARS && (!muni || String(e.municipality || '').includes(muni))).sort((a, b) => b.completedYear - a.completedYear || a.name.localeCompare(b.name));
+
+  function listsHTML(o) {
+    const cs = o.contracts || new Map(), eas = o.eas || [];
+    const act = activeConstruction(cs, o.muni), cur = currentEAs(eas, o.muni), rec = recentEAs(eas, o.muni, o.thisYear);
+    const where = o.muni ? ` in ${esc(o.muni)}` : '';
+    const capSec = !o.hasCapital ? '<p class="small muted">Capital projects are not published yet (waiting on Peel GIS).</p>'
+      : act.length ? `<ul class="ce-list">${act.slice(0, o.allCap ? act.length : 15).map(c => `<li><button type="button" class="btn small link" data-ce-open="cap:${esc(c.key)}">${esc(workLabel(c.lead.workType))}${c.lead.street ? ` · ${esc(titleCase(c.lead.street))}` : ''}</button> ${statusBadge(c.status)}${c.percent != null ? ` <span class="small">${c.percent}% built</span>` : ''}<small class="muted"> ${esc(c.projectNumbers.join(', '))}</small></li>`).join('')}</ul>${act.length > 15 && !o.allCap ? `<p><button type="button" class="btn small" data-ce-allcap>See all ${act.length}</button></p>` : ''}`
+        : `<p class="small muted">No active construction${where}.</p>`;
+    const eaRow = e => `<li><button type="button" class="btn small link" data-ce-open="ea:${esc(e.id)}">${esc(e.name)}</button> ${eaBadge(e.status)}${e.nextStep && e.nextStep.date ? `<small class="muted"> next: ${esc(e.nextStep.text)} · ${esc(fmtDate(e.nextStep.date))}</small>` : ''}${e.completedYear && e.status === 'complete' ? `<small class="muted"> completed ${e.completedYear}</small>` : ''}</li>`;
+    return `<p class="small">What must be built first, and where is it at${where}: Region capital projects (construction) and environmental assessments.${o.capitalAsOf ? ` Capital projects as of ${esc(fmtDate(o.capitalAsOf))}.` : ''}</p>
+      <section class="ce-sec" data-sec="active"><h3 class="sub-title">Active construction <small class="muted">${act.length}</small></h3>${capSec}</section>
+      <section class="ce-sec" data-sec="current-eas"><h3 class="sub-title">Current EAs <small class="muted">${cur.length}</small></h3>${cur.length ? `<ul class="ce-list">${cur.map(eaRow).join('')}</ul>` : `<p class="small muted">No current EAs${where}.</p>`}</section>
+      <section class="ce-sec" data-sec="recent-eas"><h3 class="sub-title">Recently completed EAs <small class="muted">${rec.length} · last ${RECENT_YEARS} years</small></h3>${rec.length ? `<ul class="ce-list">${rec.map(eaRow).join('')}</ul>` : `<p class="small muted">None completed in the last ${RECENT_YEARS} years${where}.</p>`}</section>
+      ${o.screenNote || ''}`;
+  }
+
+  // ---- This week, Watch, Needs attention -------------------------------------------------------------
+  /** This week: capital changes (one per contract) and EA page changes; watched items first, then newest. */
+  function weekItems(capital, eas, watched) {
+    const items = [], w = watched || new Set();
+    const cs = contracts((capital && capital.records) || []);
+    const byId = new Map(((capital && capital.records) || []).map(r => [r.id, r]));
+    const seen = new Map();
+    for (const ch of (capital && capital.changes) || []) {
+      const r = byId.get(ch.id), key = `cap:${(r && (r.contract || `id:${r.id}`)) || ch.contract || ch.id}`;
+      const c = r ? cs.get(r.contract || `id:${r.id}`) : null;
+      if (seen.has(key)) { seen.get(key).text += `; ${ch.change}`; continue; }
+      const it = { key, kind: 'capital', label: c ? `${workLabel(c.lead.workType)}${c.lead.street ? ` · ${titleCase(c.lead.street)}` : ''}` : `Project ${ch.projectNumber || ''}`, text: ch.change, date: ch.date, watched: w.has(key) };
+      seen.set(key, it); items.push(it);
+    }
+    for (const ch of (eas && eas.changes) || []) items.push({ key: `ea:${ch.id}`, kind: 'ea', label: ch.name, text: ch.change, date: ch.date, watched: w.has(`ea:${ch.id}`) });
+    return items.sort((a, b) => (b.watched - a.watched) || String(b.date).localeCompare(String(a.date)) || a.label.localeCompare(b.label));
+  }
+  const weekHTML = items => items.length ? items.map(it => `<li><button type="button" data-ce-open="${esc(it.key)}"><span class="ce-wk-ic">${it.kind === 'ea' ? 'EA' : '⛏'}</span><span><span class="t">${it.watched ? '★ ' : ''}${esc(it.label)}</span><span class="m">${esc(it.text)}${it.date ? ` · ${esc(fmtDate(it.date))}` : ''}</span></span></button></li>`).join('') : '';
+  /** Watched EAs and capital projects for the watchlist. */
+  function watchRows(watch, capital, eas) {
+    const cs = contracts((capital && capital.records) || []), eaBy = new Map(((eas && eas.eas) || []).map(e => [e.id, e]));
+    const rows = [];
+    for (const k of watch || []) {
+      if (k.startsWith('ea:')) { const e = eaBy.get(k.slice(3)); if (e) rows.push(`<li><button type="button" data-ce-open="${esc(k)}"><span class="ce-wk-ic">EA</span><span><span class="t">★ ${esc(e.name)}</span><span class="m">${esc(EA_STATUS[e.status] || '')}${e.nextStep ? ` · next: ${esc(e.nextStep.text)}${e.nextStep.date ? ` ${esc(fmtDate(e.nextStep.date))}` : ''}` : ''}</span></span></button></li>`); }
+      else if (k.startsWith('cap:')) { const c = cs.get(k.slice(4)); if (c) rows.push(`<li><button type="button" data-ce-open="${esc(k)}"><span class="ce-wk-ic">⛏</span><span><span class="t">★ ${esc(workLabel(c.lead.workType))}${c.lead.street ? ` · ${esc(titleCase(c.lead.street))}` : ''}</span><span class="m">${esc(statusLabel(c.status))}${c.percent != null ? ` · ${c.percent}% built` : ''}</span></span></button></li>`); }
+    }
+    return rows;
+  }
+  /**
+   * Needs attention (Peel / area scope): EAs whose review or comment period closes in the next 30
+   * days, and DC-matched capital projects whose dates moved later since last week.
+   * Items: { tone, ce, text } (ce = the scope to open).
+   */
+  function attentionItems(capital, eas, today) {
+    const t0 = today || new Date().toISOString().slice(0, 10);
+    const t30 = new Date(Date.parse(t0) + 30 * 864e5).toISOString().slice(0, 10);
+    const out = [];
+    for (const e of (eas && eas.eas) || []) {
+      const m = (e.milestones || []).filter(x => (x.type === 'reviewEnd' || x.type === 'commentEnd') && x.date.length === 10 && x.date >= t0 && x.date <= t30).sort((a, b) => a.date.localeCompare(b.date))[0];
+      if (m) out.push({ tone: 'warn', ce: `ea:${e.id}`, sort: m.date, text: `${m.type === 'reviewEnd' ? 'EA review period' : 'EA comment period'} closes ${fmtDate(m.date)}: ${e.name}` });
+    }
+    const byId = new Map(((capital && capital.records) || []).map(r => [r.id, r])), seen = new Set();
+    for (const ch of (capital && capital.changes) || []) {
+      if (!ch.dc || !(ch.slipMonths > 0)) continue;
+      const r = byId.get(ch.id), key = r ? (r.contract || `id:${r.id}`) : ch.id;
+      if (seen.has(key)) continue; seen.add(key);
+      out.push({ tone: 'warn', ce: `cap:${key}`, sort: 'z', text: `DC project ${ch.projectNumber || ''}: capital dates moved ${ch.slipMonths} month${ch.slipMonths === 1 ? '' : 's'} later since last week` });
+    }
+    return out.sort((a, b) => a.sort.localeCompare(b.sort)).map(({ sort, ...x }) => x);
+  }
+
   // ---- scope HTML ---------------------------------------------------------------------------------
   /**
    * EA scope, in order: header · purpose · milestone timeline + next step · decision (completed) ·
@@ -230,6 +338,7 @@
     EA_STATUS, EA_CURRENT, eaBadge, eaShown, eaDashed, eaUnplaced, MS_LABEL,
     PRIORITY, rankHits, tolerance, hitDistance, pickHeading, sameSpot,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
+    dcCapitalIndex, dcActualHTML, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, weekItems, weekHTML, watchRows, attentionItems,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCapitalEAModel = api;

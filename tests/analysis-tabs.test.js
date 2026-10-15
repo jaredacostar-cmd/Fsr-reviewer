@@ -1,6 +1,6 @@
 'use strict';
 /* Analysis-tab restructure tests (Phase 4, Worker A shell):
- * - the final tab set (Overview · Growth · Water · Wastewater · DC + Development/Tool result),
+ * - the final tab set (Overview · Growth · Water · Wastewater · Capital + Development/Tool result),
  *   with the removed tabs' buttons and panes gone from index.html;
  * - the new sub-view shells (growth pipeline/census, water hydro, ww pumpstations, DC timing/rec/funding);
  * - tab-key migration for old share links / stored prefs (migrateTabKey, pure — extracted and unit-tested);
@@ -62,7 +62,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing (and the old water/ww defau
 
 test('sub-view valid values cover the new sub-views', () => {
   assert.ok(APP.includes(`valid: ['pipeline', 'census2051', 'timing', 'byplan']`), 'growth valid values wrong');
-  assert.ok(APP.includes(`valid: ['timing', 'recommendations', 'funding']`), 'dca valid values wrong');
+  assert.ok(APP.includes(`valid: ['timing', 'build', 'recommendations', 'funding']`), 'dca valid values wrong');
   assert.ok(APP.includes(`'hydro'`), 'hydro not a valid water sub-view');
   assert.ok(APP.includes(`'pumpstations'`), 'pumpstations not a valid ww sub-view');
 });
@@ -98,7 +98,7 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
     assert.ok(!HTML.includes(gone), `still present: ${gone}`);
   }
   assert.ok(/id="ftab-growth"[^>]*>Growth</.test(HTML), 'Growth tab button missing/renamed wrong');
-  assert.ok(/id="ftab-dca"[^>]*>DC</.test(HTML), 'DC tab button missing/renamed wrong');
+  assert.ok(/id="ftab-dca"[^>]*>Capital</.test(HTML), 'Capital tab button missing/renamed wrong (was DC)');
   for (const kept of ['data-tab="overview"', 'data-tab="growth"', 'data-tab="water"', 'data-tab="ww"',
     'data-tab="dca"', 'data-tab="dev"', 'data-tab="tool"']) {
     assert.ok(HTML.includes(kept), `missing tab: ${kept}`);

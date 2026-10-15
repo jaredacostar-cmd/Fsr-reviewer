@@ -15,7 +15,10 @@ const raw = [
   f({ ProjectNumber: '90-0004', StreetName: 'SAMPLE ROAD AVE', Municipality: 'CALEDON', WorkType: 'ROAD-WIDENING 2-4 LANES', Phase: 'PLANNED', LastUpdate: D(2026, 5, 1) }, [[-79.8000, 43.8800], [-79.7900, 43.8810]]),
 ];
 const records = C.uniqueIds(raw.map(C.toRecord));
-const out = { version: 1, generatedAt: '2026-10-15T00:00:00Z', sample: true, source: { name: 'Synthetic sample for tests and local development (not Region data)', latestLastUpdate: '2026-09-30' }, note: "General screening results only. Peel's W&WW Infrastructure Planning team must validate or confirm all results.", counts: C.tally(records), records, links: [] };
+// A synthetic DC match (water main c57150, project 24-1192) and one weekly change with a later start.
+const links = [{ dc: 'water:line:c57150', capital: records[0].id, method: 'project', confidence: 'medium' }];
+const changes = [{ id: records[0].id, contract: records[0].contract, projectNumber: '90-0001', system: 'water', dc: true, date: '2026-10-12', change: 'Start target 2026-01-01 → 2026-02-01; 60% built', slipMonths: 1 }];
+const out = { version: 1, generatedAt: '2026-10-15T00:00:00Z', sample: true, source: { name: 'Synthetic sample for tests and local development (not Region data)', latestLastUpdate: '2026-09-30' }, note: "General screening results only. Peel's W&WW Infrastructure Planning team must validate or confirm all results.", counts: C.tally(records), changes, records, links };
 if (C.hasForbidden(out)) throw new Error('forbidden field');
 fs.writeFileSync(path.join(__dirname, 'capital-sample.json'), JSON.stringify(out, null, 1));
 console.log(records.map(r => `${r.id} ${r.contract} ${r.status}`).join('\n'));

@@ -49,6 +49,7 @@
     if (App() && App().state) { App().state.capital = cap; App().state.eas = eas; }
     syncControls(); render();
     if (MA()) MA().renderLegend();
+    refreshViews();
   }
   const contractOf = id => { const r = data.recById.get(id); return r ? data.contracts.get(r.contract || `id:${r.id}`) : null; };
 
@@ -281,6 +282,39 @@
     return parts.join('');
   }
 
+  // ---- Capital tab lists, DC timing status, This week, Needs attention, watchlist ----------------------------
+  let dcIdx = null, dcIdxFor = null, allCap = false;
+  function dcIndex() {
+    const dc = App() && App().state.dcInfra;
+    if (!dcIdx || dcIdxFor !== `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`) { dcIdx = M.dcCapitalIndex(data.capital, dc); dcIdxFor = `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`; }
+    return dcIdx;
+  }
+  const dcActualHTML = proj => (proj ? M.dcActualHTML(dcIndex().get(proj), !!data.capital) : '');
+  const muni = () => (App() && App().state.muni) || null;
+  const listsHTML = () => (data.loaded ? M.listsHTML({ contracts: data.contracts, eas: data.eas && data.eas.eas, muni: muni(), thisYear: new Date().getFullYear(), hasCapital: !!data.capital, capitalAsOf: data.capital && data.capital.source && data.capital.source.latestLastUpdate, screenNote: U.SCREEN_NOTE_SHORT, allCap }) : U.skel ? U.skel('Loading capital projects and EAs') : '');
+  const attention = () => (data.loaded ? M.attentionItems(data.capital, data.eas, new Date().toISOString().slice(0, 10)) : []);
+  const watchRows = watch => (data.loaded ? M.watchRows(watch, data.capital, data.eas) : []);
+  function renderWeek() {
+    const box = document.querySelector('#ce-week-list'), panel = document.querySelector('#ce-week-panel'); if (!box || !panel) return;
+    const items = data.loaded ? M.weekItems(data.capital, data.eas, (App() && App().watch) || new Set()) : [];
+    panel.hidden = !items.length;
+    box.innerHTML = M.weekHTML(items);
+    const h = document.querySelector('#ce-week-head'); if (h) h.textContent = items.length ? `${items.length} change${items.length === 1 ? '' : 's'} this week` : '';
+  }
+  // Refresh everything that reads the data once it arrives.
+  function refreshViews() {
+    renderWeek();
+    if (App() && App().renderWatch) App().renderWatch();
+    const AT = window.PeelAnalysisTabs;
+    if (AT && AT.getFootTab() === 'dca' && window.PeelDcaTab) window.PeelDcaTab.renderDca();
+    if (AT && AT.getFootTab() === 'overview' && window.PeelOverviewTab) window.PeelOverviewTab.renderOverview();
+  }
+  if (typeof document !== 'undefined') document.addEventListener('click', e => {
+    const o = e.target.closest('[data-ce-open]');
+    if (o) { const [k, ...rest] = o.dataset.ceOpen.split(':'), id = rest.join(':'); if (k === 'ea') openEA(id); else if (k === 'cap') openCapital(id); return; }
+    if (e.target.closest('[data-ce-allcap]')) { allCap = true; const bb = document.querySelector('#dca-build-body'); if (bb) bb.innerHTML = listsHTML(); }
+  });
+
   // Startup: the Layers control is already on the map (map-markers.js), so fill its section, then load.
   if (typeof document !== 'undefined') {
     const slot = document.querySelector('#ce-settings'); if (slot) slot.outerHTML = settingsHTML();
@@ -288,6 +322,6 @@
     load();
   }
 
-  const api = { load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

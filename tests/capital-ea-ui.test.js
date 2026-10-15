@@ -203,3 +203,79 @@ test('new colours are tokens, distinct from phases, capacity and selection', () 
   }
   assert.doesNotMatch(src('js/capital-ea.js') + src('js/map-pick.js') + src('js/capital-ea-model.js'), /#[0-9a-fA-F]{6}\b/, 'no hard-coded colours');
 });
+
+// ---- Capital tab, DC timing status, This week, Needs attention ----------------------------------
+const dcInfra = JSON.parse(src('data/dc-infra.json'));
+
+test('DC timing: actual status where matched, "scheduled (not yet in capital records)" otherwise', () => {
+  const idx = M.dcCapitalIndex(sample, dcInfra);
+  assert.deepEqual(idx.get('24-1192'), { status: 'under construction', percent: 60, lastUpdate: '2026-09-30', key: 'web:peelregion.ca/construction/project-90-0001' });
+  assert.match(M.dcActualHTML(idx.get('24-1192'), true), /60% built<\/button> as of Sep 30, 2026/);
+  assert.match(M.dcActualHTML(undefined, true), /scheduled \(not yet in capital records\)/);
+  assert.equal(M.dcActualHTML(undefined, false), '', 'nothing when capital data is not published');
+  assert.match(M.dcActualHTML({ status: 'tendered', percent: null, lastUpdate: '2026-08-01', key: 'k' }, true), />Tendered</);
+});
+
+test('Capital tab lists: active construction, current EAs, recently completed EAs; municipality scope', () => {
+  const cs = M.contracts(sample.records);
+  assert.deepEqual(M.activeConstruction(cs).map(c => c.key), ['web:peelregion.ca/construction/project-90-0001']);
+  assert.equal(M.activeConstruction(cs, 'Mississauga').length, 0, 'scoped to a municipality');
+  const list = [
+    { id: 'a', name: 'A', status: 'consultation', municipality: 'Brampton', nextStep: { text: 'PIC', date: '2026-11-20' } },
+    { id: 'b', name: 'B', status: 'commenced', municipality: 'Caledon', nextStep: { text: 'Comment period ends', date: '2026-10-23' } },
+    { id: 'c', name: 'C', status: 'complete', completedYear: 2025, municipality: 'Brampton' },
+    { id: 'd', name: 'D', status: 'complete', completedYear: 2019, municipality: 'Brampton' },
+    { id: 'e', name: 'E', status: 'unknown', municipality: 'Brampton' },
+  ];
+  assert.deepEqual(M.currentEAs(list).map(e => e.id), ['b', 'a'], 'soonest next step first');
+  assert.deepEqual(M.currentEAs(list, 'Brampton').map(e => e.id), ['a']);
+  assert.deepEqual(M.recentEAs(list, null, 2026).map(e => e.id), ['c'], `completed in the last ${M.RECENT_YEARS} years`);
+  const html = M.listsHTML({ contracts: cs, eas: list, thisYear: 2026, hasCapital: true, capitalAsOf: '2026-09-30', screenNote: SCREEN });
+  assert.deepEqual(order(html), ['active', 'current-eas', 'recent-eas']);
+  assert.match(html, /General screening results only/);
+  assert.match(html, /data-ce-open="cap:web:peelregion\.ca\/construction\/project-90-0001"/);
+  assert.match(M.listsHTML({ contracts: new Map(), eas: list, thisYear: 2026, hasCapital: false }), /not published yet/);
+});
+
+test('This week: capital changes and EA page changes, watched first', () => {
+  const eaData = { changes: [{ id: 'x', name: 'Bolton EA', change: 'new notice: Notice of Completion', date: '2026-10-19' }] };
+  const items = M.weekItems(sample, eaData, new Set());
+  assert.deepEqual(items.map(i => i.kind), ['ea', 'capital'], 'newest first');
+  const w = M.weekItems(sample, eaData, new Set(['cap:web:peelregion.ca/construction/project-90-0001']));
+  assert.equal(w[0].kind, 'capital', 'watched first');
+  assert.equal(w[0].watched, true);
+  assert.match(M.weekHTML(w), /★ Watermain · Sample Watermain Rd/);
+  assert.match(M.weekHTML(w), /Start target 2026-01-01 → 2026-02-01/);
+  const rows = M.watchRows(['ea:' + eas.eas[0].id, 'cap:web:peelregion.ca/construction/project-90-0001', 'some-dev-key'], sample, eas);
+  assert.equal(rows.length, 2, 'development keys are left to the development watchlist');
+});
+
+test('Needs attention: EA periods closing in 30 days; DC-matched capital dates moved later', () => {
+  const eaData = { eas: [
+    { id: 'soon', name: 'Soon EA', milestones: [{ type: 'commentEnd', date: '2026-10-23' }] },
+    { id: 'later', name: 'Later EA', milestones: [{ type: 'reviewEnd', date: '2026-12-31' }] },
+    { id: 'past', name: 'Past EA', milestones: [{ type: 'reviewEnd', date: '2026-10-01' }] },
+  ] };
+  const items = M.attentionItems(sample, eaData, '2026-10-15');
+  assert.deepEqual(items.map(i => i.ce), ['ea:soon', 'cap:web:peelregion.ca/construction/project-90-0001']);
+  assert.match(items[0].text, /EA comment period closes Oct 23, 2026: Soon EA/);
+  assert.match(items[1].text, /DC project 90-0001: capital dates moved 1 month later since last week/);
+  // needsAttention keeps them, after stalled sites and before this week's changes.
+  const all = fs.readdirSync(path.join(__dirname, '..', 'js')).map(f => src(`js/${f}`)).join('\n');
+  const m = /const needsAttention = \(d\) => \{[\s\S]*?\n  \};/.exec(all);
+  const needsAttention = new Function(`${m[0]}; return needsAttention;`)();
+  const out = needsAttention({ stalled: [{ key: 's', units: 300, years: '3 yrs', title: 'T', unitsTxt: '300', muni: 'B' }], ce: items, changes: [{ key: 'k', text: 'New' }] });
+  assert.deepEqual(out.map(i => i.ce || i.dev), ['s', 'ea:soon', items[1].ce, 'k']);
+  assert.match(src('js/overview-tab.js'), /data-ce-open="\$\{esc\(it\.ce\)\}"/);
+});
+
+test('Capital tab: renamed, a Construction & EAs view (public too), screening note in This week', () => {
+  const html = src('index.html');
+  assert.match(html, /id="ftab-dca"[^>]*>Capital</);
+  assert.match(html, /data-dcasub="build">Construction &amp; EAs</);
+  assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="build"/);
+  assert.match(html, /id="ce-week-panel"[\s\S]{0,400}General screening results only/);
+  assert.match(src('js/analysis-tabs.js'), /dcSub !== 'timing' && dcSub !== 'build' && root\.PeelUtil/);
+  assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);
+  assert.match(src('js/dca-tab.js'), /PeelCapitalEA\.dcActualHTML\(/);
+});

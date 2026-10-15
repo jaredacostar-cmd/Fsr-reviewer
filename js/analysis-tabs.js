@@ -31,13 +31,13 @@
     water: { attr: 'wsub', store: 'wSub', valid: ['capacity', 'zones', 'facilities', 'hydro'], get: () => wSub, set: v => { wSub = v; } },
     ww: { attr: 'wwsub', store: 'wwSub', valid: ['plants', 'catchments', 'alloc', 'pumpstations'], get: () => wwSub, set: v => { wwSub = v; } },
     growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'census2051', 'timing', 'byplan'], get: () => gSub, set: v => { gSub = v; } },
-    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'recommendations', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
+    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'build', 'recommendations', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
   function showFootTab(key) {
     if (key === 'dev') key = 'overview';   // the development's views live in the Overview
     // The public version shows DC timing only (no funding screen or recommendations).
-    if (dcSub !== 'timing' && root.PeelUtil && root.PeelUtil.isPublic && root.PeelUtil.isPublic()) dcSub = 'timing';
+    if (dcSub !== 'timing' && dcSub !== 'build' && root.PeelUtil && root.PeelUtil.isPublic && root.PeelUtil.isPublic()) dcSub = 'timing';
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';
     footTab = key;
     for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
