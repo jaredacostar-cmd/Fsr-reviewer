@@ -8,6 +8,7 @@
  * land (the census areas' extent) and written to
  *   data/constraints/<id>/index.json    labels, tiles, counts, as-of date
  *   data/constraints/<id>/<tx>_<ty>.json
+ *   data/constraints/<id>/overview.json   area layers: one coarse file (~30 m) for low zooms
  * plus data/constraints/manifest.json (source, owner, licence, as-of, size of every dataset) and
  * data/constraints/grid.json: a 25 m screening grid of Peel (municipality, and cells inside a
  * regulation limit, a floodplain or a provincial plan area) for "Land under constraints".
@@ -33,6 +34,7 @@ const title = v => s(v).toLowerCase().replace(/\b([a-z])/g, m => m.toUpperCase()
 const SCREEN = 'Screening only: not an official determination.';
 
 // group: reg | flood | plan | natural | water | utility. grid: the area card's layer.
+// label(attributes) → [name, type, extra?]; wc-peel's extra is the conservation authority (CVC, TRCA, NVCA, HRCA).
 const DATASETS = [
   { id: 'reg-cvc', group: 'reg', grid: 'reg', kind: 'area', title: 'Regulation limit (CVC)', owner: 'Credit Valley Conservation', ...CVC_L,
     url: `${AGO}/Generic_Regulations_Limit_2025/FeatureServer/0`, fields: 'objectid', offset: 0.00004,
@@ -78,7 +80,7 @@ const DATASETS = [
     note: `The provincial Natural Heritage System for the Growth Plan for the Greater Golden Horseshoe (outside settlement areas). ${SCREEN}` },
   { id: 'wc-peel', group: 'water', kind: 'line', title: 'Watercourses (Region of Peel)', owner: 'Region of Peel', ...PEEL_L,
     url: 'https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Watercourses/FeatureServer/0', fields: 'RIVER_NAME,WATERSHED,AUTHORITY,Tunnel', offset: 0.00002,
-    label: a => [s(a.RIVER_NAME) || 'Watercourse', [/^y|tunnel|pipe/i.test(s(a.Tunnel)) && 'piped', s(a.WATERSHED) && `${s(a.WATERSHED)} watershed`, s(a.AUTHORITY)].filter(Boolean).join(' · ')],
+    label: a => [s(a.RIVER_NAME) || 'Watercourse', [/^y|tunnel|pipe/i.test(s(a.Tunnel)) && 'piped', s(a.WATERSHED) && `${s(a.WATERSHED)} watershed`, s(a.AUTHORITY)].filter(Boolean).join(' · '), s(a.AUTHORITY)],
     note: 'Region of Peel watercourses, with watershed and conservation authority. Small and piped watercourses may be missing.' },
   { id: 'wc-ohn', group: 'water', kind: 'line', title: 'Watercourses (Ontario Hydro Network)', owner: 'Province of Ontario (Natural Resources)', ...OGL_ON,
     url: `${LIO}/LIO_Open01/MapServer/26`, where: "WATERCOURSE_TYPE NOT LIKE 'Virtual%'", fields: 'WATERCOURSE_TYPE,OFFICIAL_NAME_LABEL,PERMANENCY', offset: 0.00002,
@@ -106,27 +108,26 @@ async function getJSON(url, params, tries = 4) {
   }
 }
 // Every feature of a layer over Peel's extent: object ids first, then 200 at a time.
-async function fetchAll(d) {
+async function fetchAll(d, info) {
+  const df = dateFieldOf(info), outFields = df && !d.fields.split(',').includes(df) ? `${d.fields},${df}` : d.fields;
   const env = { geometry: JSON.stringify({ xmin: PEEL.xmin, ymin: PEEL.ymin, xmax: PEEL.xmax, ymax: PEEL.ymax, spatialReference: { wkid: 4326 } }), geometryType: 'esriGeometryEnvelope', inSR: 4326, spatialRel: 'esriSpatialRelIntersects' };
   const ids = (await getJSON(`${d.url}/query`, { where: d.where || '1=1', ...env, returnIdsOnly: true, f: 'json' })).objectIds || [];
   const feats = [];
   for (let i = 0; i < ids.length; i += 200) {
-    const j = await getJSON(`${d.url}/query`, { objectIds: ids.slice(i, i + 200).join(','), outFields: d.fields, returnGeometry: true, outSR: 4326, maxAllowableOffset: d.offset, geometryPrecision: 6, f: 'json' });
+    const j = await getJSON(`${d.url}/query`, { objectIds: ids.slice(i, i + 200).join(','), outFields, returnGeometry: true, outSR: 4326, maxAllowableOffset: d.offset, geometryPrecision: 6, f: 'json' });
     feats.push(...(j.features || []));
   }
   return feats;
 }
 // The as-of date: the layer's last edit, else the latest date field on its features.
-async function asOfDate(d, info) {
+// (LIO's map services have no edit date: their features' own update dates, fetched with them.)
+const dateFieldOf = info => ['GEOMETRY_UPDATE_DATETIME', 'SYSTEM_DATETIME', 'EFFECTIVE_DATETIME'].find(n => (info.fields || []).some(f => f.name === n)) || null;
+function asOfDate(info, feats) {
   const ms = info.editingInfo && (info.editingInfo.dataLastEditDate || info.editingInfo.lastEditDate);
   if (ms) return new Date(ms).toISOString().slice(0, 10);
-  const df = (info.fields || []).map(f => f.name).find(n => /^(SYSTEM_DATETIME|GEOMETRY_UPDATE_DATETIME|EFFECTIVE_DATETIME)$/i.test(n));
-  if (!df) return null;
-  try {
-    const j = await getJSON(`${d.url}/query`, { where: d.where || '1=1', outStatistics: JSON.stringify([{ statisticType: 'max', onStatisticField: df, outStatisticFieldName: 'mx' }]), f: 'json' });
-    const v = j.features && j.features[0] && j.features[0].attributes.mx;
-    return v ? new Date(v).toISOString().slice(0, 10) : null;
-  } catch (e) { return null; }
+  const df = dateFieldOf(info); if (!df) return null;
+  let mx = 0; for (const f of feats) { const v = +((f.attributes || {})[df]); if (v > mx) mx = v; }
+  return mx ? new Date(mx).toISOString().slice(0, 10) : null;
 }
 // The item's own licence text (feature services), to confirm the licence at build time.
 async function itemLicence(d) {
@@ -150,7 +151,7 @@ function peelTiles(das) {
 }
 function cutTiles(d, feats, mask) {
   const tiles = new Map(), labels = [], labelIx = new Map();
-  const lab = a => { const [n, t] = d.label(a); const k = `${n}\u0001${t}`; if (!labelIx.has(k)) { labelIx.set(k, labels.length); labels.push([n, t]); } return labelIx.get(k); };
+  const lab = a => { const [n, t, x] = d.label(a); const k = `${n}\u0001${t}\u0001${x || ''}`; if (!labelIx.has(k)) { labelIx.set(k, labels.length); labels.push(x ? [n, t, x] : [n, t]); } return labelIx.get(k); };
   const tile = k => { if (!tiles.has(k)) tiles.set(k, { p: [], e: [], l: [] }); return tiles.get(k); };
   let kept = 0;
   for (const f of feats) {
@@ -174,7 +175,7 @@ function cutTiles(d, feats, mask) {
         }
       }
   }
-  return { tiles, labels, kept };
+  return { tiles, labels, kept, lab };
 }
 function writeDataset(d, cut) {
   const dir = path.join(OUT, d.id);
@@ -189,6 +190,38 @@ function writeDataset(d, cut) {
   const index = { id: d.id, tile: G.TILE, units: G.UNITS, labels: cut.labels, tiles: [...cut.tiles.keys()].sort() };
   const istr = JSON.stringify(index); fs.writeFileSync(path.join(dir, 'index.json'), istr);
   return { bytes: bytes + istr.length, maxTile, tiles: cut.tiles.size };
+}
+
+// ---- Overview (low zoom) ------------------------------------------------------------------------
+// Area layers also get one coarse file for the zooms where tiles would be too many: rings
+// simplified to ~30 m (Douglas–Peucker), tiny ones dropped, points as whole 0.0001° (~10 m).
+function simplify(pts, tol) {
+  if (pts.length < 4) return pts;
+  const keep = new Uint8Array(pts.length); keep[0] = keep[pts.length - 1] = 1;
+  const stack = [[0, pts.length - 1]];
+  while (stack.length) {
+    const [a, b] = stack.pop(); let best = -1, bi = -1;
+    const [ax, ay] = pts[a], [bx, by] = pts[b], dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1e-12;
+    for (let i = a + 1; i < b; i++) { const d = Math.abs(dy * pts[i][0] - dx * pts[i][1] + bx * ay - by * ax) / L; if (d > best) { best = d; bi = i; } }
+    if (best > tol) { keep[bi] = 1; stack.push([a, bi], [bi, b]); }
+  }
+  return pts.filter((_, i) => keep[i]);
+}
+const ringArea = r => Math.abs(r.reduce((t, p, i) => { const q = r[(i + 1) % r.length]; return t + p[0] * q[1] - q[0] * p[1]; }, 0) / 2);
+function writeOverview(d, feats, labelOf, mask) {
+  const TOL = 0.0003, MIN = 0.0003 * 0.0003 * 4, out = [];
+  for (const f of feats) {
+    const g = f.geometry; if (!g || !g.rings || (d.keep && !d.keep(f.attributes || {}))) continue;
+    const b = bboxOf(g.rings); let any = false;
+    for (let tx = Math.floor(b.xmin / G.TILE); tx <= Math.floor(b.xmax / G.TILE) && !any; tx++) for (let ty = Math.floor(b.ymin / G.TILE); ty <= Math.floor(b.ymax / G.TILE) && !any; ty++) any = mask.has(G.tileKey(tx, ty));
+    if (!any) continue;
+    const rings = g.rings.map(r => simplify(r, TOL)).filter(r => r.length >= 4 && ringArea(r) >= MIN).map(r => r.map(([x, y]) => [Math.round(x * 1e4), Math.round(y * 1e4)]));
+    if (rings.length) out.push([labelOf(f.attributes || {}), rings]);
+  }
+  const str = JSON.stringify({ units: 1e4, p: out });
+  if (str.length > 1.5e6) { console.warn(`${d.id}: overview ${(str.length / 1e6).toFixed(2)} MB, over the 1.5 MB cap: not written (zoom in for this layer)`); return 0; }
+  fs.writeFileSync(path.join(OUT, d.id, 'overview.json'), str);
+  return str.length;
 }
 
 // ---- Screening grid ---------------------------------------------------------------------------
@@ -230,14 +263,15 @@ async function main() {
     const fieldNames = new Set((info.fields || []).map(f => f.name));
     const missing = d.fields.split(',').filter(f => !fieldNames.has(f));
     if (missing.length) console.warn(`${d.id}: fields not in the layer: ${missing.join(', ')} (have ${[...fieldNames].join(', ')})`);
-    const feats = await fetchAll(d);
+    const feats = await fetchAll(d, info);
     const cut = cutTiles(d, feats, mask);
     const w = writeDataset(d, cut);
+    const ovBytes = d.kind === 'area' ? writeOverview(d, feats, cut.lab, mask) : 0;
     if (d.grid) for (const f of feats) if (f.geometry && f.geometry.rings && (!d.keep || d.keep(f.attributes || {}))) polysByLayer[d.grid].push(f.geometry.rings);
-    const [asOf, licText] = await Promise.all([asOfDate(d, info), itemLicence(d)]);
+    const asOf = asOfDate(info, feats), licText = await itemLicence(d);
     const { label, keep, fields, offset, where, ...meta } = d;
-    manifest.datasets.push({ ...meta, filter: where || null, simplifiedM: Math.round(offset * 111320), asOf, licenceText: licText, features: cut.kept, tiles: w.tiles, bytes: w.bytes, maxTileBytes: w.maxTile, path: `data/constraints/${d.id}/` });
-    console.log(`${d.id}: ${feats.length} fetched, ${cut.kept} kept, ${w.tiles} tiles, ${(w.bytes / 1e6).toFixed(2)} MB (largest tile ${(w.maxTile / 1e3).toFixed(0)} kB), as of ${asOf || '–'}`);
+    manifest.datasets.push({ ...meta, filter: where || null, simplifiedM: Math.round(offset * 111320), asOf, licenceText: licText, features: cut.kept, tiles: w.tiles, bytes: w.bytes, maxTileBytes: w.maxTile, overviewBytes: ovBytes || null, path: `data/constraints/${d.id}/` });
+    console.log(`${d.id}: ${feats.length} fetched, ${cut.kept} kept, ${w.tiles} tiles, ${(w.bytes / 1e6).toFixed(2)} MB (largest tile ${(w.maxTile / 1e3).toFixed(0)} kB; overview ${(ovBytes / 1e3).toFixed(0)} kB), as of ${asOf || '–'}`);
   }
   if (!only || ['reg', 'flood', 'plan'].some(k => [...only].some(id => (DATASETS.find(d => d.id === id) || {}).grid === k))) {
     if (only) for (const d of DATASETS) if (d.grid && !only.has(d.id)) console.warn(`grid: ${d.id} not rebuilt in this run; build the grid with all layers`);
