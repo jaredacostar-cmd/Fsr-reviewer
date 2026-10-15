@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T14:23:26.890Z",
+ "generatedAt": "2026-10-15T14:40:25.831Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -7057,9 +7057,7 @@
    "id": "mississauga-road-and-bush-street",
    "name": "Mississauga Road and Bush Street",
    "municipality": "Caledon",
-   "flags": [
-    "geometry approximate"
-   ],
+   "flags": [],
    "schedule": "C",
    "status": "complete",
    "milestones": [
@@ -7190,21 +7188,73 @@
    "system": "roads",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "LineString",
     "coordinates": [
-     -79.8711,
-     43.8668
+     [
+      -80.030986,
+      43.781431
+     ],
+     [
+      -80.030165,
+      43.781439
+     ],
+     [
+      -80.029315,
+      43.781594
+     ],
+     [
+      -80.028599,
+      43.781946
+     ],
+     [
+      -80.028034,
+      43.782319
+     ],
+     [
+      -80.021587,
+      43.787732
+     ],
+     [
+      -80.020001,
+      43.789271
+     ],
+     [
+      -80.018802,
+      43.790335
+     ],
+     [
+      -80.016109,
+      43.792693
+     ],
+     [
+      -80.014773,
+      43.793807
+     ],
+     [
+      -80.014439,
+      43.794034
+     ],
+     [
+      -80.012596,
+      43.79643
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Caledon",
+   "geomType": "road",
+   "geomMethod": "approximate: in OpenStreetMap Bush Street stops about 0.6 km short of Mississauga Road and does not reach Olde Base Line Road, so Bush Street ends where the two streets come closest: road centreline Bush Street from Winston Churchill Boulevard to Mississauga Road (© OpenStreetMap contributors, ODbL); not drawn: Mississauga Road from Old Main Street to Bush Street",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-15",
+   "overridden": [
+    "geometry",
+    "geomType",
+    "geomMethod",
+    "geomConfidence"
+   ]
   },
   {
    "id": "palgrave-well-4-supply-capacity-increase",

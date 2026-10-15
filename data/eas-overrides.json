@@ -3756,6 +3756,64 @@
    "geomType": "linear",
    "geomMethod": "approximate: the new west trunk sewer runs along Erin Mills Parkway through the study area (project page figure): road centreline Erin Mills Parkway from Britannia Road West / Britannia Road to Eglinton Avenue West / Eglinton Avenue (© OpenStreetMap contributors, ODbL)",
    "geomConfidence": "low"
+  },
+  "mississauga-road-and-bush-street": {
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -80.030986,
+      43.781431
+     ],
+     [
+      -80.030165,
+      43.781439
+     ],
+     [
+      -80.029315,
+      43.781594
+     ],
+     [
+      -80.028599,
+      43.781946
+     ],
+     [
+      -80.028034,
+      43.782319
+     ],
+     [
+      -80.021587,
+      43.787732
+     ],
+     [
+      -80.020001,
+      43.789271
+     ],
+     [
+      -80.018802,
+      43.790335
+     ],
+     [
+      -80.016109,
+      43.792693
+     ],
+     [
+      -80.014773,
+      43.793807
+     ],
+     [
+      -80.014439,
+      43.794034
+     ],
+     [
+      -80.012596,
+      43.79643
+     ]
+    ]
+   },
+   "geomType": "road",
+   "geomMethod": "approximate: in OpenStreetMap Bush Street stops about 0.6 km short of Mississauga Road and does not reach Olde Base Line Road, so Bush Street ends where the two streets come closest: road centreline Bush Street from Winston Churchill Boulevard to Mississauga Road (© OpenStreetMap contributors, ODbL); not drawn: Mississauga Road from Old Main Street to Bush Street",
+   "geomConfidence": "low"
   }
  },
  "add": [],

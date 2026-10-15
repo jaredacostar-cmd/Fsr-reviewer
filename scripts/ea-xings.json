@@ -889,13 +889,6 @@
    43.558854
   ]
  ],
- "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
- "osm:Steeles Avenue East & Highway 50, Brampton": [],
- "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
- "osm:Highway 50 & Huntington Road, Brampton": [],
- "osm:Hurontario Street & Old School Road, Caledon": [],
- "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
- "osm:Kane Road & Lakeshore Road West, Mississauga": [],
  "osm:Queen Street East & Main Street, Caledon": [
   [
    -80.068724,
@@ -913,5 +906,12 @@
    -80.012596,
    43.79643
   ]
- ]
+ ],
+ "osm:Mount Hope Road & Emil Kolb Parkway, Caledon": [],
+ "osm:Steeles Avenue East & Highway 50, Brampton": [],
+ "osm:Lakeshore Road West & Ilar Way, Mississauga": [],
+ "osm:Highway 50 & Huntington Road, Brampton": [],
+ "osm:Hurontario Street & Old School Road, Caledon": [],
+ "osm:Buckstown Trail & Edgewild Drive, Caledon": [],
+ "osm:Kane Road & Lakeshore Road West, Mississauga": []
 }
