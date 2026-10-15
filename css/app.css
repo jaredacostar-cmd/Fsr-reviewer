@@ -1402,7 +1402,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tool-banner[hidden] { display: none; }
 .tool-banner strong { font-weight: 600; }
 .tool-banner .pt-row { display: inline-flex; gap: var(--space-1); align-items: center; flex-wrap: wrap; }
-.tool-banner .pt-elev { flex-basis: 100%; }
+.tool-banner .pt-elev { flex-basis: 100%; min-width: 0; max-width: 100%; }
 .tool-banner .seg { display: inline-flex; gap: 2px; background: var(--surface-2); border-radius: var(--radius-panel); padding: 2px; }
 .tool-banner .seg .btn.small { border: 0; background: transparent; }
 .tool-banner .seg .btn.small.on { background: var(--accent); color: var(--on-accent); }
@@ -2168,6 +2168,27 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pf-sw.ground { height: 0; border-top: 2px solid var(--text-muted); }
 .pf-sw.pipe { border: 1.2px solid var(--text-secondary); background: color-mix(in srgb, var(--text-primary) 8%, transparent); }
 .pf-sw.water { background: var(--ph-review); } .pf-sw.near { background: var(--select); } .pf-sw.over { background: var(--cap-over); }
+
+/* Measure: ground profile (profile-view.js). Dark first; fits a 380 px phone. */
+.prof-wrap .prof-chart { touch-action: pan-y; cursor: crosshair; }
+.prof-wrap .prof-tip { width: min(240px, 90%); top: 4px; }
+.prof-big .prof-chart { min-height: 220px; }
+.prof-shallow { fill: color-mix(in srgb, var(--cap-tight) 22%, transparent); }
+.prof-mh { fill: var(--surface-1); stroke: var(--text-primary); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.lg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; flex: none; margin-right: var(--space-1); }
+.prof-mh-dot { background: var(--surface-1); border: 1.5px solid var(--text-primary); }
+.lg-box { display: inline-block; width: 14px; height: 10px; border-radius: 2px; flex: none; margin-right: var(--space-1); }
+.prof-shallow-key { background: color-mix(in srgb, var(--cap-tight) 30%, transparent); }
+.lg-line.lg-thick { height: 6px; }
+.lg-line.lg-dash { height: 0; border-top: 2px dashed; background: none; }
+.prof-legend, .prof-grades { flex-wrap: wrap; gap: var(--space-1) var(--space-3); font-size: var(--fs-2); }
+.prof-legend > span, .prof-grades > span { display: inline-block; }
+.prof-legend .lg-line, .prof-legend .lg-dot, .prof-legend .lg-box { vertical-align: middle; }
+.prof-tools { flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.prof-thr { display: inline-flex; align-items: center; gap: var(--space-1); font-size: var(--fs-2); }
+.prof-thr input { width: 4.5em; }
+.prof-sewer tr.warn td { color: var(--cap-over); }
+.prof-sewer th, .prof-sewer td { white-space: nowrap; }
 
 /* Pipe picked on the sewer profile, marked on the map */
 .pipe-hl { stroke: var(--cap-tight); stroke-width: 14; stroke-opacity: .6; stroke-linecap: round; fill: none; animation: pipe-hl 1.2s ease-in-out 3; }
