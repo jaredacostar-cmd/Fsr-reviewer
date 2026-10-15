@@ -243,3 +243,35 @@ test('road EAs are not placed on an area boundary that shares a word with a cros
   const sp = E.resolveGeometry({ name: 'Arterial roads within Bolton secondary plan area', municipalities: ['Caledon'] }, CTX);
   assert.equal(sp.geomType, 'area');
 });
+
+// Wording seen on the Region's EA pages (October 2026).
+const pg = body => `<main><h1>T</h1>${body.split(' | ').map(l => `<p>${l}</p>`).join('')}</main>`;
+
+test('real page wording: label and date on separate lines', () => {
+  const p = E.parsePage(pg('Process | Project Initiation | Summer 2023 | Notice of Study Commencement | December 21, 2023 | We are here, Public Information Centre No.1 | Fall 2025'), 'https://x/gw', { today: '2026-10-15' });
+  assert.deepEqual(p.milestones.map(m => [m.type, m.date]), [['commencement', '2023-12-21']]);
+  assert.equal(p.status, 'commenced');
+});
+
+test('real page wording: "has completed a Class EA" is a completion', () => {
+  const p = E.parsePage(pg('Airport Road | Notice of study completion | June 17, 2021 - Peel Region has completed a Class Environmental Assessment (Class EA) Study for Airport Road. | The study was conducted according to the requirements for a Schedule C project.'), 'https://x/ar', { today: '2026-10-15' });
+  assert.equal(p.status, 'complete');
+  assert.equal(p.schedule, 'C');
+  assert.equal(p.completedYear, 2021);
+});
+
+test('real page wording: public meeting held; online engagement window gives the next step', () => {
+  const held = E.parsePage(pg('Virtual Public Meeting | A Public Meeting was held on November 29, 2023.'), 'https://x/q', { today: '2026-10-15' });
+  assert.equal(held.status, 'consultation');
+  const open = E.parsePage(pg('Online public engagement | Comments or questions on the study information may be submitted to one of the project team members from September 23, 2026 to October 23, 2026 .'), 'https://x/h50', { today: '2026-10-15' });
+  assert.equal(open.status, 'consultation');
+  assert.deepEqual(open.nextStep, { text: 'Comment period ends', date: '2026-10-23' });
+});
+
+test('real page wording: a study under way with no dates is "commenced", marked as inferred', () => {
+  const p = E.parsePage(pg('Complete corridor study | Peel Region is undertaking a Complete Corridor Study and Preliminary Design Improvements to Airport Road.'), 'https://x/a', { today: '2026-10-15' });
+  assert.equal(p.status, 'commenced');
+  assert.match(p.statusInferred, /page wording/);
+  const dated = E.parsePage(pg('Notice of Commencement issued January 15, 2024'), 'https://x/b', { today: '2026-10-15' });
+  assert.equal(dated.statusInferred, null);
+});

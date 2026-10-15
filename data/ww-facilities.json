@@ -1,0 +1,714 @@
+{
+ "version": 1,
+ "sources": {
+  "locations": "Region of Peel open data, Wastewater Pumping Station layer (via data/servicing.json)",
+  "capacities": "2020 Water and Wastewater Master Plan for the Lake-Based Systems, Volume 4, Table 6 (p. 31) and section 4.3.2 (p. 42)",
+  "mpUrl": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-4.pdf"
+ },
+ "note": "Firm capacity = installed capacity with the largest pump out of service (L/s). Stations outside the lake-based system, leachate stations and lift stations have no Master Plan capacity.",
+ "facilities": [
+  {
+   "id": "ww1",
+   "name": "Watersedge",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.60348,
+    43.50579
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 14,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "WATERSEDGE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww2",
+   "name": "Bolton North Hill",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.73059,
+    43.89763
+   ],
+   "municipality": "Caledon",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 22.5,
+   "mpSystem": "McVean",
+   "mpNote": null,
+   "sourceName": "BOLTON N HILL SEWAGE PUMPING",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww3",
+   "name": "Inglewood",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.92927,
+    43.79514
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "INGLEWOOD SEWAGE PUMPING STN",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww4",
+   "name": "Heartlake",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.80069,
+    43.70923
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "HEARTLAKE SEWAGE PUMPING STN",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww5",
+   "name": "Jack Darling 2",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.60324,
+    43.52657
+   ],
+   "municipality": "Mississauga",
+   "role": "Trunk",
+   "pumps": 3,
+   "firmLs": 107,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "JACK DARLING 2",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww6",
+   "name": "Torbram",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.66547,
+    43.70411
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "TORBRAM SEWAGE PUMPING STN",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww7",
+   "name": "Silverbirch Trail",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.6108,
+    43.51912
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 48,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "SILVERBIRCH SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww8",
+   "name": "Rosemere Road",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.58997,
+    43.55425
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 25,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "ROSEMERE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww9",
+   "name": "Chinguacousy Leachate",
+   "kind": "leachate",
+   "system": "wastewater",
+   "lnglat": [
+    -79.84862,
+    43.80096
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "CHINGUACOUSY LEACHATE PUMPING",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww10",
+   "name": "Britannia Leachate",
+   "kind": "leachate",
+   "system": "wastewater",
+   "lnglat": [
+    -79.69043,
+    43.59557
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "BRITANNIA LEACHATE PUMPING STN",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww11",
+   "name": "Mullet Creek",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.7763,
+    43.61411
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 4,
+   "firmLs": 232,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "MULLET CREEK SEWAGE PUMPING ST",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww12",
+   "name": "Mayfield",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.78244,
+    43.77293
+   ],
+   "municipality": "Caledon",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 16,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "MAYFIELD SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww13",
+   "name": "Intermodal Drive",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.67115,
+    43.73546
+   ],
+   "municipality": "Brampton",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 160,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "INTERMODAL SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww14",
+   "name": "Deer Valley Dr",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.75106,
+    43.87907
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "DEER VALLEY DR PUMPING STATION",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww15",
+   "name": "Bolton",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.72898,
+    43.88325
+   ],
+   "municipality": "Caledon",
+   "role": "Trunk",
+   "pumps": 3,
+   "firmLs": 380,
+   "mpSystem": "McVean",
+   "mpNote": null,
+   "sourceName": "BOLTON SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww16",
+   "name": "Meadowvale",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.72955,
+    43.62577
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 11,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "MEADOWVALE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww17",
+   "name": "Beach Street",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.56291,
+    43.56654
+   ],
+   "municipality": "Mississauga",
+   "role": "Trunk",
+   "pumps": 3,
+   "firmLs": 756,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "BEACH STREET SPS",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww18",
+   "name": "Stonehaven Drive",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.61476,
+    43.51796
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 6,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "STONEHAVEN SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww19",
+   "name": "Lift - Green Gl",
+   "kind": "lift",
+   "system": "wastewater",
+   "lnglat": [
+    -79.60998,
+    43.51574
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "SEWER LIFT STATION - GREEN GL",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww20",
+   "name": "Gore Road",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.65185,
+    43.76511
+   ],
+   "municipality": "Brampton",
+   "role": "Local",
+   "pumps": 3,
+   "firmLs": 81,
+   "mpSystem": "McVean",
+   "mpNote": null,
+   "sourceName": "GORE ROAD SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww21",
+   "name": "Hiawatha Parkway",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.5718,
+    43.55837
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 16.5,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "HIAWATHA SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww22",
+   "name": "Ben Machree",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.58978,
+    43.54081
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 30,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "BEN MACHREE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww23",
+   "name": "Clarkson",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.61772,
+    43.49308
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 38,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "CLARKSON SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww24",
+   "name": "Elmwood Avenue",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.57713,
+    43.55509
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 3,
+   "firmLs": 195,
+   "mpSystem": "East",
+   "mpNote": "Facing condition, maintenance and performance issues, with further issues from projected growth; requires additional capacity to service growth (separate Class EA, in parallel with Hiawatha).",
+   "sourceName": "ELMWOOD SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww25",
+   "name": "Richard's Memorial",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.60182,
+    43.5361
+   ],
+   "municipality": "Mississauga",
+   "role": "Trunk",
+   "pumps": 3,
+   "firmLs": 195,
+   "mpSystem": "West",
+   "mpNote": "Requires reconstruction with expanded capacity to service growth in the Port Credit area; a completed Class EA proposed a new station in Richard's Memorial Park, west of the existing station, taking new flows from a proposed gravity sewer on Lakeshore Road.",
+   "sourceName": "RICHARD MEMORIAL SEW. PUMP STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww26",
+   "name": "Pinetree Crescent",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.60459,
+    43.55609
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 7,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "PINETREE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww27",
+   "name": "Castlemore",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.7229,
+    43.77466
+   ],
+   "municipality": "Brampton",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 20,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "CASTLEMORE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww28",
+   "name": "Beechwood",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.57156,
+    43.56739
+   ],
+   "municipality": "Mississauga",
+   "role": "Trunk",
+   "pumps": 4,
+   "firmLs": 1500,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "BEECHWOOD SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww29",
+   "name": "Harvestview",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.71365,
+    43.87632
+   ],
+   "municipality": "Caledon",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 7,
+   "mpSystem": "McVean",
+   "mpNote": null,
+   "sourceName": "HARVESTVIEW SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww30",
+   "name": "Lakelands",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.76515,
+    43.71747
+   ],
+   "municipality": "Brampton",
+   "role": "Local",
+   "pumps": 3,
+   "firmLs": 64,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "LAKELANDS SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww31",
+   "name": "Dougall",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.8387,
+    43.75049
+   ],
+   "municipality": null,
+   "role": null,
+   "pumps": null,
+   "firmLs": null,
+   "mpSystem": null,
+   "mpNote": null,
+   "sourceName": "DOUGALL SEWAGE PUMPING STATION",
+   "capacityFrom": null
+  },
+  {
+   "id": "ww32",
+   "name": "Front Street",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.58685,
+    43.55014
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 4,
+   "firmLs": 276,
+   "mpSystem": "East",
+   "mpNote": "Equipment reaching end of life; a completed Class EA proposed decommissioning the station and a new gravity sewer along Lakeshore Road to Richard's Memorial.",
+   "sourceName": "FRONT ST SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww33",
+   "name": "Shardawn Mews",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.62526,
+    43.55413
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 3,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "SHARDAWN MEWS SEW. PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww34",
+   "name": "Caledon East",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.86417,
+    43.86853
+   ],
+   "municipality": "Caledon",
+   "role": "Local",
+   "pumps": 3,
+   "firmLs": 101,
+   "mpSystem": "East",
+   "mpNote": null,
+   "sourceName": "CALEDON E SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww35",
+   "name": "Jack Darling 1",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.6073,
+    43.5289
+   ],
+   "municipality": "Mississauga",
+   "role": "Trunk",
+   "pumps": 4,
+   "firmLs": 800,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "JACK DARLING 1",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww36",
+   "name": "McVean Drive",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.67671,
+    43.76061
+   ],
+   "municipality": "Brampton",
+   "role": "Trunk",
+   "pumps": 3,
+   "firmLs": 1400,
+   "mpSystem": "McVean",
+   "mpNote": "Peak flows projected to exceed firm capacity before 2026; requires an additional 700 L/s of pumping capacity and force main upgrades to service development in northeast Brampton and southeast Caledon.",
+   "sourceName": "MCVEAN SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww37",
+   "name": "O'Neil Court",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.67241,
+    43.55391
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 1.5,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "O'NEIL CT SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww38",
+   "name": "Fifeshire",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.6779,
+    43.55591
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 27.5,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "FIFESHIRE SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  },
+  {
+   "id": "ww39",
+   "name": "Indian Road",
+   "kind": "pumping",
+   "system": "wastewater",
+   "lnglat": [
+    -79.60053,
+    43.55265
+   ],
+   "municipality": "Mississauga",
+   "role": "Local",
+   "pumps": 2,
+   "firmLs": 72.5,
+   "mpSystem": "West",
+   "mpNote": null,
+   "sourceName": "INDIAN ROAD SEWAGE PUMPING STN",
+   "capacityFrom": "2020 Master Plan Vol. 4 Table 6"
+  }
+ ],
+ "unlocated": []
+}

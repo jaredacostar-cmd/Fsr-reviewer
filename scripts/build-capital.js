@@ -16,6 +16,7 @@
 const fs = require('fs');
 const path = require('path');
 const C = require('./capital-lib.js');
+const F = require('./facilities-lib.js');
 
 const LAYER = 'https://gisprd.peelregion.ca/arcgis/rest/services/SampleWorldCities/MapServer/4';
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
@@ -109,6 +110,13 @@ async function main() {
   const links = C.matchDc(works, records, overrides);
   const aud = C.audit(works, records, links);
 
+  // Capital work at a facility: candidate rules modelled side by side (aggregate results only).
+  const sv = readJSON(path.join(root, 'data', 'servicing.json'), {});
+  const facs = F.registry({ waterFacilities: readJSON(path.join(root, 'data', 'water-facilities.json'), { facilities: [] }).facilities, wwFacilities: readJSON(path.join(root, 'data', 'ww-facilities.json'), { facilities: [] }).facilities, wwPlants: sv.plants || [], dcInfra: readJSON(path.join(root, 'data', 'dc-infra.json'), {}) });
+  const RULES = ['project', 'near:25', 'near:50', 'near:100', 'near:200', 'nearsys:50', 'nearsys:100', 'nearsys:200', 'nearsysnew:50', 'nearsysnew:100', 'nearsysnew:200'];
+  const model = F.modelRules(facs, records, RULES, readJSON(path.join(root, 'scripts', 'dc-facilities.json'), {}));
+  aud.facilityRules = { facilities: facs.length, rules: model };
+
   const lastUpdate = records.map(r => r.lastUpdate).filter(Boolean).sort().pop() || null;
   const out = {
     version: 1,
@@ -131,6 +139,13 @@ async function main() {
   const by = (list, f) => list.reduce((m, x) => (m[f(x)] = (m[f(x)] || 0) + 1, m), {});
   console.log(`Unmatched DC works: ${aud.unmatchedDc.length} ${JSON.stringify(by(aud.unmatchedDc, w => `${w.system} ${w.kind}`))} (full list in capital-links-audit.json)`);
   console.log(`Links by system: ${JSON.stringify(by(links, l => `${l.dc.split(':')[0]} ${l.method}`))}`);
+  console.log(`\nCapital work at a facility (${facs.length} facilities) — rule: links | facilities linked | max per facility | lines on 2+ facilities | agree with project rule`);
+  for (const [r, m] of Object.entries(model)) console.log(`  ${r.padEnd(15)} ${String(m.links).padStart(5)} ${String(m.facilitiesLinked).padStart(4)} ${String(m.maxPerFacility).padStart(4)} ${String(m.capitalOnSeveralFacilities).padStart(4)} ${String(m.agreesWithProject).padStart(4)}  status ${JSON.stringify(m.byStatus)}  types ${JSON.stringify(m.byWorkType)}`);
+  for (const rule of ['project', 'nearsysnew:100']) {
+    const ls = F.facilityCapitalLinks(facs, records, rule, readJSON(path.join(root, 'scripts', 'dc-facilities.json'), {}));
+    const per = ls.reduce((m, l) => { const f = facs.find(x => x.key === l.facility); const k = f ? f.name : l.facility; (m[k] = m[k] || []).push(l); return m; }, {});
+    console.log(`  ${rule} by facility: ${Object.entries(per).sort((a, b) => b[1].length - a[1].length).slice(0, 25).map(([k, v]) => `${k} ${v.length} (${[...new Set(v.map(l => records.find(r => r.id === l.capital).workType))].slice(0, 2).join('/')}, ${Math.min(...v.map(l => l.distM))}–${Math.max(...v.map(l => l.distM))} m)`).join('; ')}`);
+  }
   console.log(`Unmatched capital water / wastewater records: ${aud.unmatchedCapital.length}; low-confidence links: ${aud.lowConfidence.length}; schedule differences: ${aud.scheduleDiffs.length}`);
 }
 

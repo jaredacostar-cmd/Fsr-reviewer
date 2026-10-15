@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const E = require('./ea-lib.js');
 const C = require('./capital-lib.js');
+const F = require('./facilities-lib.js');
 
 const LIST_URL = 'https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments';
 const SEEDS = [
@@ -54,9 +55,9 @@ async function get(url, { json = false, body, tries = 3 } = {}) {
     try {
       const r = await fetch(url, body ? { method: 'POST', headers: { ...UA, 'content-type': 'application/x-www-form-urlencoded' }, body } : { headers: UA, redirect: 'follow' });
       if (r.ok) { out = json ? await r.json() : await r.text(); if (!json) out = { html: out, url: r.url }; break; }
-      if (get.log && (get.logged = (get.logged || 0) + 1) <= 40) console.log(`  HTTP ${r.status} ${url.slice(0, 120)}`);
+      if (body || (get.log && (get.logged = (get.logged || 0) + 1) <= 40)) console.log(`  HTTP ${r.status} ${url.slice(0, 120)}${body ? ` ${(await r.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 160)}` : ''}`);
       if (r.status === 404 || r.status === 410) break;
-    } catch (e) { if (get.log && (get.logged = (get.logged || 0) + 1) <= 40) console.log(`  fetch error ${e.cause?.code || e.message} ${url.slice(0, 120)}`); }
+    } catch (e) { if (body || (get.log && (get.logged = (get.logged || 0) + 1) <= 40)) console.log(`  fetch error ${e.cause?.code || e.message} ${url.slice(0, 120)}`); }
     await sleep(1200 * (k + 1));
   }
   cache.set(key, out);
@@ -96,7 +97,7 @@ async function candidates() {
 }
 
 // ---- OpenStreetMap helpers (road centrelines, approximate places) ------------------------------
-const OVERPASS = 'https://overpass-api.de/api/interpreter';
+const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter', 'https://maps.mail.ru/osm/tools/overpass/api/interpreter'];
 async function osmWays(name) {
   const core = C.streetTokens(name);
   if (!core.length) return [];
@@ -104,7 +105,13 @@ async function osmWays(name) {
   const re = core.map(t => t.replace(/[^A-Z0-9]/g, '')).join('.*');
   const [s, w, n, e] = PEEL_BBOX;
   const q = `[out:json][timeout:90];(way["highway"]["name"~"${re}",i](${s},${w},${n},${e});${num ? `way["highway"]["ref"~"^${num[2]}$"](${s},${w},${n},${e});` : ''});out geom;`;
-  const j = await get(OVERPASS, { json: true, body: `data=${encodeURIComponent(q)}` });
+  let j = null;
+  for (const ep of OVERPASS.slice(osmWays.ep || 0)) {
+    j = await get(ep, { json: true, body: `data=${encodeURIComponent(q)}`, tries: 2 });
+    if (j) break;
+    osmWays.ep = (osmWays.ep || 0) + 1;   // this mirror failed: move on for the rest of the run
+    console.log(`  Overpass mirror failed, next: ${OVERPASS[osmWays.ep] || 'none'}`);
+  }
   await sleep(1500);
   osmWays.n = (osmWays.n || 0) + 1;
   if (osmWays.n <= 30) console.log(`  OSM "${name}": ${j ? `${(j.elements || []).length} ways${j.remark ? ` (${j.remark.slice(0, 80)})` : ''}` : 'request failed'}`);
@@ -117,12 +124,10 @@ async function nominatim(q) {
 }
 const GENERIC = /\b(class|municipal|environmental|assessment|ea|study|schedule [abc]\+?|improvements?|widening|reconstruction|expansion|upgrades?|new|sanitary|sewer|trunk|water ?main|feedermain|transmission main|pumping station|reservoir|elevated tank|servicing|master plan|phase \d+|and|the|of|for|\d+-?mm)\b/gi;
 
+// Facility points: water facilities, wastewater pumping stations and plants, DC capital map facilities.
 function facilityPoints() {
-  const out = [];
-  for (const f of readJSON(path.join(root, 'data', 'water-facilities.json'), { facilities: [] }).facilities) if (f.lnglat) out.push({ name: f.name, lnglat: f.lnglat, aliases: [...new Set(f.parts || [])] });
-  const dc = readJSON(path.join(root, 'data', 'dc-infra.json'), {});
-  for (const sys of ['water', 'wastewater']) for (const f of dc[sys]?.facilities || []) if (f.g && !f.approx) out.push({ name: f.name, lnglat: f.g, aliases: [f.label, f.plant].filter(Boolean) });
-  return out;
+  const sv = readJSON(path.join(root, 'data', 'servicing.json'), {});
+  return F.registry({ waterFacilities: readJSON(path.join(root, 'data', 'water-facilities.json'), { facilities: [] }).facilities, wwFacilities: readJSON(path.join(root, 'data', 'ww-facilities.json'), { facilities: [] }).facilities, wwPlants: sv.plants || [], dcInfra: readJSON(path.join(root, 'data', 'dc-infra.json'), {}) });
 }
 
 async function main() {
@@ -155,7 +160,7 @@ async function main() {
   const facPts = facilityPoints();
   const dcLines = ['water', 'wastewater'].flatMap(sys => (dcInfra[sys]?.lines || []).filter(l => l.n).map(l => ({ name: `${l.n} ${l.t || ''}`, paths: [l.g] })));
   const areas = [...(areasJ.secondaryPlans || []), ...(areasJ.precincts || [])];
-  const facNameToPt = Object.fromEntries(facPts.map(f => [f.name, f.lnglat]));
+  const facNameToPt = Object.fromEntries(facPts.flatMap(f => [[f.name, f.lnglat], ...(f.dcName ? [[f.dcName, f.lnglat]] : [])]));
 
   const eas = [];
   for (const it of items) {
@@ -166,6 +171,7 @@ async function main() {
     let page = null;
     if (pageUrl) { const r = await get(pageUrl); if (r) page = E.parsePage(r.html, r.url, { today }); await sleep(250); }
     if (page) {
+      if (page.statusInferred) ea.flags.push(`status ${page.statusInferred}`);
       Object.assign(ea, { schedule: page.schedule, status: page.status, milestones: page.milestones, nextStep: page.nextStep, completedYear: page.completedYear, purpose: page.purpose, links: page.links, pageHash: page.pageHash, pageMatch: pageScore });
       ea.system = E.systemOf(it.name, page.bodyText);
       if (!ea.municipality) { const m = ['Brampton', 'Caledon', 'Mississauga'].filter(x => new RegExp(`\\b${x}\\b`).test(page.bodyText)); if (m.length) { ea.municipality = m.join(' / '); ea.municipalities = m; } }

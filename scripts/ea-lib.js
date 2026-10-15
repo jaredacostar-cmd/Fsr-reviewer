@@ -164,10 +164,11 @@ function datesIn(s) {
 }
 
 const MILESTONE_RE = [
-  ['commencement', /notice of (study )?commencement|study commence|commenced in|initiated in|study began/i],
-  ['pic', /public information cent(re|er)|\bPICs?\b|public open house|community (information )?meeting|virtual (public )?meeting|public consultation (centre|event|session)/i],
+  ['commencement', /notice of (study )?commencement|study commence|commenced in|initiated in|study began|project initiation/i],
+  ['pic', /public information cent(re|er)|\bPICs?\b|public open house|community (information )?meeting|virtual (public )?meeting|public meeting|public consultation (centre|event|session)|online public engagement|public engagement/i],
+  ['commentEnd', /comments?( or questions)?( on [^|]{0,60})? (may|can) be submitted[^|]{0,80}\bto\b|engagement[^|]{0,60}\bfrom\b[^|]{0,40}\bto\b/i],
   ['addendum', /addendum/i],
-  ['completion', /notice of (study )?completion|notice of filing|study completion|ESR (was )?(finali[sz]ed|completed)|project file (report )?(was )?(finali[sz]ed|completed)/i],
+  ['completion', /notice of (study )?completion|notice of filing|study completion|ESR (was )?(finali[sz]ed|completed)|project file (report )?(was )?(finali[sz]ed|completed)|has completed (a|the) (municipal )?(class )?(environmental assessment|EA)/i],
   ['reviewEnd', /review period|comments? (are|must be) (received|submitted) by|available for (public )?review (until|from)|30-day (public )?review|review (ends|closes)|comment period/i],
   ['report', /environmental study report|\bESR\b|project file report/i],
 ];
@@ -177,8 +178,11 @@ const CONTACT = /\b(contact|project manager|consultant|phone|telephone|tel\.?|em
 function milestonesOf(ls) {
   const out = [];
   const seen = new Set();
-  for (const l of ls) {
+  for (let li = 0; li < ls.length; li++) {
+    let l = ls[li];
     if (CONTACT.test(l)) continue;
+    // A label line ("Notice of Study Commencement") followed by its date on the next line.
+    if (!datesIn(l).length && ls[li + 1] && l.length < 90 && MILESTONE_RE.some(([, re]) => re.test(l)) && datesIn(ls[li + 1]).length && ls[li + 1].length < 60) l = `${l} ${ls[li + 1]}`;
     const ds = datesIn(l);
     if (!ds.length) continue;
     for (const [type, re] of MILESTONE_RE) {
@@ -187,7 +191,7 @@ function milestonesOf(ls) {
       // the date nearest after the keyword, else the nearest before it
       const after = ds.filter(d => d.index >= m.index), d = (after.length ? after[0] : ds[ds.length - 1]).date;
       if (type === 'report' && out.some(x => x.date === d)) continue;
-      if (type === 'reviewEnd') {
+      if (type === 'reviewEnd' || type === 'commentEnd') {
         const range = ds.filter(x => x.index >= m.index - 60);
         const end = range.length > 1 ? range[range.length - 1].date : d;
         const k = `${type}|${end}`; if (!seen.has(k)) { seen.add(k); out.push({ type, date: end }); }
@@ -209,7 +213,7 @@ function milestonesOf(ls) {
  *   commenced      notice of commencement only
  *   unknown        no page or nothing recognisable
  */
-function statusOf(ms, { hasCompletionNotice = false, hasAddendum = false, today }) {
+function statusOf(ms, { hasCompletionNotice = false, hasAddendum = false, underway = false, today }) {
   const has = t => ms.some(m => m.type === t);
   const now = today || new Date().toISOString().slice(0, 10);
   if (hasAddendum || has('addendum')) return 'addendum';
@@ -217,10 +221,13 @@ function statusOf(ms, { hasCompletionNotice = false, hasAddendum = false, today 
     const rev = ms.filter(m => m.type === 'reviewEnd').map(m => m.date).sort().pop();
     return rev && rev >= now.slice(0, rev.length) ? 'report review' : 'complete';
   }
-  if (has('pic')) return 'consultation';
+  if (has('pic') || has('commentEnd')) return 'consultation';
   if (has('commencement')) return 'commenced';
+  if (underway) return 'commenced';
   return 'unknown';
 }
+// Page wording that says a study is under way, used only when no milestone is dated.
+const UNDERWAY = /\b(is|are) (undertaking|initiating|conducting|carrying out)\b|\bhas (initiated|commenced|begun|started)\b|\bhave (initiated|commenced|begun)\b/i;
 
 /** Next step: the review period end if still open, else the next dated milestone ahead. */
 function nextStepOf(ms, ls, today) {
@@ -228,7 +235,9 @@ function nextStepOf(ms, ls, today) {
   const ahead = ms.filter(m => m.date >= now.slice(0, m.date.length));
   const rev = ahead.find(m => m.type === 'reviewEnd');
   if (rev) return { text: 'Review period ends', date: rev.date };
-  const LABEL = { pic: 'Public information centre', completion: 'Notice of completion', commencement: 'Notice of commencement', report: 'Report released', addendum: 'Addendum' };
+  const com = ahead.find(m => m.type === 'commentEnd');
+  if (com) return { text: 'Comment period ends', date: com.date };
+  const LABEL = { commentEnd: 'Comment period ends', reviewEnd: 'Review period ends', pic: 'Public information centre', completion: 'Notice of completion', commencement: 'Notice of commencement', report: 'Report released', addendum: 'Addendum' };
   if (ahead.length) return { text: LABEL[ahead[0].type] || ahead[0].type, date: ahead[0].date };
   for (const l of ls) {
     if (CONTACT.test(l)) continue;
@@ -272,13 +281,15 @@ function parsePage(html, url, { today } = {}) {
   const docs = docLinks(html, url);
   const ms = milestonesOf(ls);
   const noticeText = docs.notices.map(n => n.label).join(' | ');
-  const status = statusOf(ms, { hasCompletionNotice: /notice of (study )?completion/i.test(noticeText), hasAddendum: /addendum/i.test(noticeText), today });
+  const underway = UNDERWAY.test(body);
+  const status = statusOf(ms, { hasCompletionNotice: /notice of (study )?completion/i.test(noticeText), hasAddendum: /addendum/i.test(noticeText), underway, today });
   const completion = ms.filter(m => m.type === 'completion').map(m => m.date).sort().pop();
   return {
     title: (/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html) || [])[1] ? text(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i.exec(html)[1]) : null,
     schedule: scheduleOf(body),
     milestones: ms,
     status,
+    statusInferred: status === 'commenced' && !ms.some(m => m.type === 'commencement') ? 'from page wording (no dated milestone)' : null,
     nextStep: status === 'complete' ? null : nextStepOf(ms, ls, today),
     completedYear: status === 'complete' || status === 'addendum' ? (completion ? +completion.slice(0, 4) : null) : null,
     purpose: purposeDraft(ls),
@@ -441,7 +452,7 @@ function resolveGeometry(ea, ctx) {
   const nt = new Set(tokens(name));
   // 1. facility
   const facHit = (ctx.facilities || []).map(f => ({ f, names: [f.name, ...(f.aliases || [])] }))
-    .find(({ names }) => names.some(n => { const ft = tokens(n).filter(t => !/^(water|wastewater|treatment|plant|pumping|station|reservoir|tank|elevated|facility|wrrf|resource|recovery|wtp|ps)$/.test(t)); return ft.length && ft.every(t => nt.has(t)); }));
+    .find(({ names }) => names.some(n => { const ft = tokens(n).filter(t => !/^(water|wastewater|treatment|plant|pumping|station|reservoir|tank|elevated|facility|wrrf|resource|recovery|wtp|ps|sps|stn|sewage|sanitary|sewer|street|road|drive|avenue|crescent|court|parkway|trail|mews)$/.test(t)); return ft.length && ft.every(t => nt.has(t)); }));
   if (facHit && /plant|station|reservoir|tank|facility|wrrf|resource recovery|treatment|well|intake|outfall|expansion|upgrade|biosolids/i.test(name)) {
     return { geometry: { type: 'Point', coordinates: facHit.f.lnglat }, geomType: 'facility', geomMethod: `facility point: ${facHit.f.name}`, geomConfidence: 'high' };
   }

@@ -245,7 +245,7 @@ function slipOf(r) {
 }
 
 // ---- streets / numbers -----------------------------------------------------------------------
-const SUFFIX = { ROAD: 'RD', RD: 'RD', STREET: 'ST', ST: 'ST', DRIVE: 'DR', DR: 'DR', AVENUE: 'AVE', AVE: 'AVE', AV: 'AVE', BOULEVARD: 'BLVD', BLVD: 'BLVD', LINE: 'LINE', SIDEROAD: 'SDRD', SDRD: 'SDRD', SIDE: 'SIDE', COURT: 'CRT', CRT: 'CRT', CRESCENT: 'CRES', CRES: 'CRES', PARKWAY: 'PKWY', PKWY: 'PKWY', TRAIL: 'TRL', TRL: 'TRL', HIGHWAY: 'HWY', HWY: 'HWY', WAY: 'WAY', LANE: 'LANE', GATE: 'GATE', PLACE: 'PL', PL: 'PL', CIRCLE: 'CIR', TERRACE: 'TERR' };
+const SUFFIX = { ROAD: 'RD', RD: 'RD', STREET: 'ST', ST: 'ST', DRIVE: 'DR', DR: 'DR', AVENUE: 'AVE', AVE: 'AVE', AV: 'AVE', BOULEVARD: 'BLVD', BLVD: 'BLVD', LINE: 'LINE', SIDEROAD: 'SDRD', SDRD: 'SDRD', SIDE: 'SIDE', COURT: 'CRT', CRT: 'CRT', CT: 'CRT', CRESCENT: 'CRES', CRES: 'CRES', PARKWAY: 'PKWY', PKWY: 'PKWY', TRAIL: 'TRL', TRL: 'TRL', HIGHWAY: 'HWY', HWY: 'HWY', WAY: 'WAY', LANE: 'LANE', GATE: 'GATE', PLACE: 'PL', PL: 'PL', CIRCLE: 'CIR', TERRACE: 'TERR' };
 const DIRS = new Set(['N', 'S', 'E', 'W', 'NORTH', 'SOUTH', 'EAST', 'WEST']);
 /** Core street-name tokens: upper case, suffix and direction words removed. */
 function streetTokens(s) {
