@@ -1,0 +1,269 @@
+{
+ "version": 1,
+ "generatedAt": "2026-10-15T00:00:00Z",
+ "sample": true,
+ "source": {
+  "name": "Synthetic sample for tests and local development (not Region data)",
+  "latestLastUpdate": "2026-09-30"
+ },
+ "note": "General screening results only. Peel's W&WW Infrastructure Planning team must validate or confirm all results.",
+ "counts": {
+  "water": {
+   "planned": 0,
+   "tendered": 0,
+   "awarded": 0,
+   "under construction": 2,
+   "substantially complete": 0,
+   "complete": 0,
+   "unknown": 0
+  },
+  "wastewater": {
+   "planned": 1,
+   "tendered": 0,
+   "awarded": 0,
+   "under construction": 0,
+   "substantially complete": 0,
+   "complete": 1,
+   "unknown": 0
+  },
+  "roads": {
+   "planned": 1,
+   "tendered": 0,
+   "awarded": 0,
+   "under construction": 0,
+   "substantially complete": 0,
+   "complete": 0,
+   "unknown": 0
+  },
+  "other": {
+   "planned": 0,
+   "tendered": 0,
+   "awarded": 0,
+   "under construction": 0,
+   "substantially complete": 0,
+   "complete": 0,
+   "unknown": 0
+  }
+ },
+ "records": [
+  {
+   "projectNumber": "90-0001",
+   "street": "SAMPLE WATERMAIN RD",
+   "municipality": "BRAMPTON",
+   "ward": "9",
+   "workType": "WM",
+   "phase": "CONSTRUCTION",
+   "projectStatus": "ACTIVE",
+   "from": "A ST",
+   "to": "B ST",
+   "tenderTarget": "2025-02-01",
+   "tenderActual": "2025-03-01",
+   "awardTarget": "2025-05-01",
+   "awardActual": "2025-06-01",
+   "startTarget": "2025-07-01",
+   "startActual": "2026-02-01",
+   "substantialTarget": "2026-12-01",
+   "substantialActual": null,
+   "percentComplete": 60,
+   "website": "https://peelregion.ca/construction/project-90-0001",
+   "lastUpdate": "2026-09-30",
+   "componentId": null,
+   "id": "p90-0001-88d2eb1c",
+   "contract": "web:peelregion.ca/construction/project-90-0001",
+   "system": "water",
+   "status": "under construction",
+   "lengthM": 1609,
+   "slip": {
+    "tender": 1,
+    "award": 1,
+    "start": 7
+   },
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.77,
+      43.745
+     ],
+     [
+      -79.76,
+      43.745
+     ],
+     [
+      -79.75,
+      43.7455
+     ]
+    ]
+   }
+  },
+  {
+   "projectNumber": "90-0001",
+   "street": "SAMPLE WATERMAIN RD",
+   "municipality": "BRAMPTON",
+   "ward": "9",
+   "workType": "WM",
+   "phase": "CONSTRUCTION",
+   "projectStatus": "ACTIVE",
+   "from": null,
+   "to": null,
+   "tenderTarget": null,
+   "tenderActual": null,
+   "awardTarget": null,
+   "awardActual": null,
+   "startTarget": null,
+   "startActual": null,
+   "substantialTarget": null,
+   "substantialActual": null,
+   "percentComplete": 60,
+   "website": "https://peelregion.ca/construction/project-90-0001",
+   "lastUpdate": "2026-09-30",
+   "componentId": null,
+   "id": "p90-0001-701bfe5a",
+   "contract": "web:peelregion.ca/construction/project-90-0001",
+   "system": "water",
+   "status": "under construction",
+   "lengthM": 642,
+   "slip": null,
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.75,
+      43.7455
+     ],
+     [
+      -79.745,
+      43.75
+     ]
+    ]
+   }
+  },
+  {
+   "projectNumber": "90-0002",
+   "street": "SAMPLE SEWER DR",
+   "municipality": "MISSISSAUGA",
+   "ward": "5",
+   "workType": "SAN",
+   "phase": "DESIGN",
+   "projectStatus": "ACTIVE",
+   "from": null,
+   "to": null,
+   "tenderTarget": null,
+   "tenderActual": null,
+   "awardTarget": null,
+   "awardActual": null,
+   "startTarget": "2028-04-01",
+   "startActual": null,
+   "substantialTarget": null,
+   "substantialActual": null,
+   "percentComplete": null,
+   "website": null,
+   "lastUpdate": "2026-09-01",
+   "componentId": null,
+   "id": "p90-0002-fcaf8de1",
+   "contract": "proj:90-0002",
+   "system": "wastewater",
+   "status": "planned",
+   "lengthM": 813,
+   "slip": null,
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.65,
+      43.6
+     ],
+     [
+      -79.64,
+      43.601
+     ]
+    ]
+   }
+  },
+  {
+   "projectNumber": "90-0003",
+   "street": "SAMPLE RELINE CRES",
+   "municipality": "MISSISSAUGA",
+   "ward": null,
+   "workType": "SAN-RELINING",
+   "phase": "COMPLETE",
+   "projectStatus": "COMPLETED",
+   "from": null,
+   "to": null,
+   "tenderTarget": null,
+   "tenderActual": null,
+   "awardTarget": null,
+   "awardActual": null,
+   "startTarget": null,
+   "startActual": "2023-04-01",
+   "substantialTarget": null,
+   "substantialActual": null,
+   "percentComplete": null,
+   "website": null,
+   "lastUpdate": "2024-02-01",
+   "componentId": null,
+   "id": "p90-0003-2c69f199",
+   "contract": "proj:90-0003",
+   "system": "wastewater",
+   "status": "complete",
+   "lengthM": 407,
+   "slip": null,
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.63,
+      43.59
+     ],
+     [
+      -79.625,
+      43.5905
+     ]
+    ]
+   }
+  },
+  {
+   "projectNumber": "90-0004",
+   "street": "SAMPLE ROAD AVE",
+   "municipality": "CALEDON",
+   "ward": null,
+   "workType": "ROAD-WIDENING 2-4 LANES",
+   "phase": "PLANNED",
+   "projectStatus": null,
+   "from": null,
+   "to": null,
+   "tenderTarget": null,
+   "tenderActual": null,
+   "awardTarget": null,
+   "awardActual": null,
+   "startTarget": null,
+   "startActual": null,
+   "substantialTarget": null,
+   "substantialActual": null,
+   "percentComplete": null,
+   "website": null,
+   "lastUpdate": "2026-06-01",
+   "componentId": null,
+   "id": "p90-0004-cf853946",
+   "contract": "proj:90-0004",
+   "system": "roads",
+   "status": "planned",
+   "lengthM": 809,
+   "slip": null,
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -79.8,
+      43.88
+     ],
+     [
+      -79.79,
+      43.881
+     ]
+    ]
+   }
+  }
+ ],
+ "links": []
+}
