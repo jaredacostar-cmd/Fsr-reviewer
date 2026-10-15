@@ -90,6 +90,8 @@
              ['opt-cap', mstyle.cap !== 'off', '<i class="lg-line" style="background:linear-gradient(90deg,var(--cap-room) 0 33%,var(--cap-tight) 33% 66%,var(--cap-over) 66%)"></i>', 'Capacity colours', 'map-capacity'],
              ['opt-exist', Object.values(existOn).some(Boolean), `<i class="lg-line" style="background:var(${EXIST_STYLE.sanitary.color})"></i>`, 'Existing pipes', 'existing-pipes'],
              ['opt-dcw', dcOn.on, '<i class="lg-line" style="background:var(--dc-ww-main)"></i>', 'Planned DC works', 'dc-works'],
+             ['opt-cons', !!(store.get('ceOn', {}) || {}).cons, '<i class="lg-line" style="background:var(--cons-build)"></i>', 'Planned &amp; under construction', 'construction'],
+             ['opt-eas', !!(store.get('ceOn', {}) || {}).ea, '<i class="lg-area" style="--c:var(--ea-line)"></i>', 'EAs', 'eas'],
              ['opt-plan', areaOn.sp || areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-sp)"></i>', 'Planning areas', 'secondary-plans'],
              ...[['gas', 'Gas pipelines', 'cx-gas', '--cx-gas', true], ['hydro', 'Hydro lines', 'cx-hydro', '--cx-hydro', false], ['water', 'Watercourses', 'cx-water', '--cx-water', false], ['reg', 'Regulation limits', 'cx-reg', '--cx-reg', true]]
                .map(([k, t, info, c, dash]) => [`opt-cx-${k}`, !!cxOn[k], k === 'reg' ? `<i class="lg-area" style="--c:var(${c})"></i>` : `<i class="lg-line" style="background:${dash ? `repeating-linear-gradient(90deg,var(${c}) 0 6px,transparent 6px 9px)` : `var(${c})`}"></i>`, t, info]),
@@ -118,6 +120,7 @@
           <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
         </div>
+        <div id="ce-settings"></div>
         <div class="mo-sec"><div class="mo-h">Planning areas</div>
           <div class="mo-chips">${chip('id="opt-spl"', areaOn.sp, '<i class="lg-line dash" style="background:var(--area-sp)"></i>Secondary plans', 'secondary-plans')}${chip('id="opt-mtl"', areaOn.mtsa, '<i class="lg-line dash" style="background:var(--area-mtsa)"></i>MTSAs', 'mtsa')}${chip('id="opt-dr"', svcOn.dr, `${svcSwatch('dr')}Drainage areas`, 'drainage-area')}</div>
         </div>

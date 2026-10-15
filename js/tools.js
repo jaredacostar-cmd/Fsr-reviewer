@@ -101,7 +101,7 @@
      */
     openResult(opts) {
       const o = opts || {};
-      result = { title: o.title || 'Tool result', reopen: typeof o.reopen === 'function' ? o.reopen : null };
+      result = { title: o.title || 'Tool result', group: o.group || null, reopen: typeof o.reopen === 'function' ? o.reopen : null };
       const t = $('#tool-title'); if (t) t.textContent = result.title;
       // Servicing results (batch, fit, inquiry, traces) open with the screening note.
       const body = $('#pane-tool-body'); if (body) body.innerHTML = (o.screen && window.PeelUtil ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || '');
@@ -136,10 +136,11 @@
       return true;
     },
 
-    /** Trail crumb consumed by the renderTrail hook in app.js. */
+    /** Trail crumb(s) consumed by the renderTrail hook: a group step (EA, Capital) when set, then the title. */
     trailCrumb() {
       if (!result) return null;
-      return { label: result.title, title: 'Tool result — reopen it', go: () => PeelTools.reopenResult() };
+      const t = { label: result.title, title: 'Tool result — reopen it', go: () => PeelTools.reopenResult() };
+      return result.group ? [{ label: result.group, title: result.group === 'EA' ? 'Environmental assessments' : 'Capital projects', go: () => PeelTools.reopenResult() }, t] : t;
     },
 
     hasResult() { return !!result; },

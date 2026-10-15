@@ -34,10 +34,11 @@
   // Phase 3b: pop-up results live in the Tool result tab — exports from one read
   // that tab while it holds a result (the #detail fallback keeps toolScope null).
   const toolScopeBody = () => (toolScope && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult()) ? $('#pane-tool-body') : null;
-  function toolResult(kind, title, html, reopen) {
+  // extra: { group } adds a trail step before the title (Peel › EA › name).
+  function toolResult(kind, title, html, reopen, extra) {
     toolScope = { kind, title };
     if (typeof window !== 'undefined' && window.PeelTools && typeof window.PeelTools.openResult === 'function') {
-      window.PeelTools.openResult({ title, html, reopen });
+      window.PeelTools.openResult({ ...(extra || {}), title, html, reopen });
       return true;
     }
     toolScope = null;

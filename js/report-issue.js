@@ -39,7 +39,7 @@
   // meta: { sourceUrl, portal, pulledOn, appVersion, snapshotDate } — all optional strings.
   function issueTitle(r) {
     const rec = r || {};
-    const what = [rec.kind === 'permit' ? 'Permit' : 'Application', rec.ref].filter(Boolean).join(' ');
+    const what = [{ permit: 'Permit', ea: 'EA', capital: 'Capital project' }[rec.kind] || 'Application', rec.ref].filter(Boolean).join(' ');
     const where = rec.municipality ? ` (${rec.municipality})` : '';
     const title = `Data issue: ${what || 'record'}${where}`;
     return title.length > TITLE_MAX ? title.slice(0, TITLE_MAX - 1) + '…' : title;

@@ -193,6 +193,7 @@
   function renderCapLayer() {
     capLayer.clearLayers();
     if (MM().getDcOn().on) DI().renderDcLayer();
+    if (window.PeelCapitalEA) window.PeelCapitalEA.render();
     if (MM().mstyle.cap === 'off' || !App().state.servicing || !App().state.svcModel) return;
     if (MM().mstyle.cap === 'pipes' && PIPE_RESULTS) { SC().renderPipes(capLayer); return; }
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
@@ -338,6 +339,7 @@
     if (window.PeelConstraints) { const cx = window.PeelConstraints.legendHTML(); if (cx) parts.push(cx); }
     if (WT().WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WT().WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
     if (MM().getDcOn().on && App().state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DI().DC_KIND).filter(([k]) => MM().getDcOn().sys === 'both' || (MM().getDcOn().sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
+    if (window.PeelCapitalEA) { const ce = window.PeelCapitalEA.legendHTML(); if (ce) parts.push(ce); }
     if (MM().mstyle.cap !== 'off') parts.push(`<p class="lg-s"><strong>${yearText()}</strong> (Results for year, in the Scenario control). Approved growth over ${SP().hz.aYears} years from ${SP().hz.aStart}, proposed over ${SP().hz.pYears} from ${SP().hz.pStart} (Horizon years). ${esc(SvcTab().scenarioText())}</p>`);
     el.querySelector('.lg-body').innerHTML = parts.join('');
     el.hidden = !parts.length;

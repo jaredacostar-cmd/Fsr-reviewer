@@ -142,14 +142,14 @@
         const [label, colName, w] = DC_KIND[ln.k], later = yr != null && ln.y && ln.y > yr;
         L.polyline(ln.g.map(([x, y]) => [y, x]), { color: token(colName), weight: w, opacity: later ? 0.35 : 0.95, dashArray: ln.s === 'approved' || later ? '6 5' : null, className: 'dc-line' })
           .bindTooltip(`<strong>${esc(label)}</strong><br>${ln.y ? `Construction ${ln.y}` : 'Year not labelled'}${ln.d ? ` · ${ln.d} mm` : ''}${ln.s === 'approved' ? ' · approved 2026' : ' · proposed'} · ${lnStatus(ln)}${ln.p ? `<br>Project ${esc(ln.p)}${ln.c ? ` · component ${esc(ln.c)}` : ''}` : ''}${ln.n ? `<br><span class="muted">${esc(ln.n)}</span>` : ''}${ln.t ? `<br><span class="muted small">${esc(ln.t)} (2020 DC study)</span>` : ''}<br><span class="muted">2026 DC capital map (draft, as of ${CAPITAL.asOf}; new growth procurements paused from June 11, 2026) · tap: what it relieves</span>`, { sticky: true, className: 'pt' })
-          .on('click', ev => { L.DomEvent.stop(ev); MP().showDcLine(ln); }).addTo(dcLayer);
+          .on('click', ev => { L.DomEvent.stop(ev); if (window.PeelPick) window.PeelPick.at(ev); else MP().showDcLine(ln); }).addTo(dcLayer);
       }
       for (const fc of App().state.dcInfra[sys].facilities) {
         if (!fc.g) continue;
         const y = lastYear(fc), later = yr != null && y > yr;
         L.marker([fc.g[1], fc.g[0]], { icon: L.divIcon({ className: `dc-fac dc-${sys}${later ? ' later' : ''}`, html: `<span>${{ plant: 'P', pumping_station: 'S', odour_control: 'O', reservoir: 'R', elevated_tank: 'T', well: 'W' }[fc.kind] || '•'}</span>`, iconSize: [20, 20] }) })
           .bindTooltip(`<strong>${esc(fc.name)}</strong><br>${esc(DC_FAC[fc.kind] || fc.kind)} · ${fc.items.length} project${fc.items.length === 1 ? '' : 's'}, last construction ${y || '–'}${fc.approx ? '<br><span class="muted">approximate location</span>' : ''}<br><span class="muted">Tap for the schedule</span>`, { className: 'pt' })
-          .on('click', () => showFacility(fc)).addTo(dcLayer);
+          .on('click', ev => { if (window.PeelPick && ev && ev.containerPoint) window.PeelPick.at(ev); else showFacility(fc); }).addTo(dcLayer);
       }
     }
   }

@@ -10,6 +10,7 @@
    --area-sp/--area-mtsa: secondary-plan / MTSA outlines.
    --pipe-water/--pipe-sanitary/--pipe-storm: existing network lines.
    --dc-ww-main/--dc-ww-local/--dc-ww-force, --dc-w-trans/--dc-w-feed: 2026 DC planned works.
+   --cons-build/--cons-plan: Region capital projects (under construction / planned). --ea-line: EA outlines.
    --hl-sub: sub-project highlight violet (also the "unknown" data-quality colour).
    --q-est: estimated data-quality. --time-soon/--time-mid: servicing-timing steps.
    --layer-proposed: "proposed" servicing layer. --map-label/--map-halo: fixed
@@ -63,6 +64,9 @@
   --dc-ww-force: #c07ae0;
   --dc-w-trans: #7d9bf0;
   --dc-w-feed: #5aa7ec;
+  --cons-build: #f1f3f5;
+  --cons-plan: #ced4da;
+  --ea-line: #63e6be;
   --hl-sub: #c07ae0;
   --q-est: #7cc4f8;
   --time-soon: #a9e34b;
@@ -131,6 +135,9 @@
     --dc-ww-force: #9c36b5;
     --dc-w-trans: #1c3d8f;
     --dc-w-feed: #1c7ed6;
+    --cons-build: #212529;
+    --cons-plan: #495057;
+    --ea-line: #087f5b;
     --hl-sub: #9c36b5;
     --q-est: #4dabf7;
     --time-soon: #74b816;
@@ -200,6 +207,9 @@
   --dc-ww-force: #9c36b5;
   --dc-w-trans: #1c3d8f;
   --dc-w-feed: #1c7ed6;
+  --cons-build: #212529;
+  --cons-plan: #495057;
+  --ea-line: #087f5b;
   --hl-sub: #9c36b5;
   --q-est: #4dabf7;
   --time-soon: #74b816;
@@ -2373,3 +2383,40 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .pt-matrix th[scope="row"] .btn.link, .pt-table th[scope="row"] .btn.link { white-space: normal; text-align: left; min-height: auto; }
 .pt-target td { vertical-align: top; }
 .pt-target td:nth-child(2) { min-width: 9em; max-width: 14em; }
+
+/* Construction and EAs (js/capital-ea.js) and the tap picker (js/map-pick.js) */
+.lg-line.dot { background: repeating-linear-gradient(90deg, var(--c) 0 2px, transparent 2px 6px); }
+.ce-lbl span { display: inline-block; white-space: nowrap; font-size: 11px; font-weight: 600; color: var(--map-label); text-shadow: 0 0 3px var(--map-halo), 0 0 2px var(--map-halo); transform: translate(-50%, -140%); pointer-events: none; }
+.ce-lbl-ea span { font-weight: 500; font-style: italic; }
+.ce-badge { display: inline-block; padding: 0 var(--space-1); border-radius: 4px; font-size: .8em; font-weight: 600; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-primary); }
+.ce-building { border-color: var(--cons-build); }
+.ce-planned { border-style: dashed; }
+.ce-approx { border-style: dashed; font-weight: 500; }
+.ce-ea-complete { border-color: var(--text-muted); }
+.ce-ea-consultation, .ce-ea-report-review { border-color: var(--ea-line); }
+.ce-head h3 { margin: 0 0 var(--space-1); }
+.ce-head .m { color: var(--text-secondary); font-size: .9em; }
+.ce-purpose { margin: var(--space-2) 0; }
+.ce-tl { list-style: none; margin: 0; padding: 0 0 0 var(--space-3); border-left: 2px solid var(--border); }
+.ce-tl li { position: relative; padding: 2px 0; font-size: .9em; }
+.ce-tl li::before { content: ''; position: absolute; left: calc(-1 * var(--space-3) - 5px); top: .55em; width: 8px; height: 8px; border-radius: 50%; background: var(--ea-line); }
+.ce-tl li.next::before { background: transparent; border: 2px solid var(--ea-line); width: 6px; height: 6px; }
+.ce-tl .d { display: inline-block; min-width: 7.5em; color: var(--text-secondary); }
+.ce-bar { height: 8px; border-radius: 4px; background: var(--surface-2); overflow: hidden; max-width: 22em; }
+.ce-bar i { display: block; height: 100%; background: var(--cons-build); }
+.ce-ms td, .ce-ms th { padding: 2px var(--space-2); }
+.ce-foot { margin-top: var(--space-3); border-top: 1px solid var(--border); padding-top: var(--space-2); }
+.ce-actions { display: flex; gap: var(--space-2); flex-wrap: wrap; align-items: center; margin-top: var(--space-2); }
+.pick { min-width: 220px; }
+.pick-h { font-weight: 600; margin-bottom: var(--space-1); }
+.pick-l { list-style: none; margin: 0; padding: 0; }
+.pick-i { display: flex; gap: var(--space-2); align-items: flex-start; width: 100%; min-height: 44px; text-align: left; background: none; border: 0; border-radius: 6px; padding: var(--space-1); color: inherit; cursor: pointer; }
+.pick-i:hover, .pick-i:focus-visible { background: var(--surface-2); outline: 2px solid var(--focus); outline-offset: -2px; }
+.pick-i .t { display: block; }
+.pick-i .m { display: block; font-size: .85em; color: var(--text-secondary); }
+.pick-sw { flex: none; width: 14px; height: 4px; margin-top: .6em; border-radius: 2px; }
+.pick-ctx { margin-top: var(--space-2); display: flex; flex-wrap: wrap; gap: var(--space-1); align-items: center; }
+.pick-pop .leaflet-popup-content-wrapper { background: var(--surface-1); color: var(--text-primary); }
+.pick-pop .leaflet-popup-tip { background: var(--surface-1); }
+.pick-sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1200; max-height: 60vh; overflow: auto; background: var(--surface-1); color: var(--text-primary); border-top: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: var(--space-3) var(--space-3) calc(var(--space-3) + env(safe-area-inset-bottom)); box-shadow: var(--shadow); }
+.pick-sheet .pick-x { position: absolute; top: var(--space-2); right: var(--space-2); min-width: 44px; min-height: 44px; }
