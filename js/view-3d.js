@@ -178,7 +178,7 @@
     gl.on('load', () => { message(''); renderNote(); });
     gl.on('error', e => { if (e && e.error && /peeldem|pmtiles/.test(String(e.error.message || ''))) console.warn('3D tile', e.error.message); });
     for (const id of ['massing', 'buildings']) {
-      gl.on('click', id, e => { const f = e.features && e.features[0]; if (f) new root.maplibregl.Popup({ maxWidth: '280px' }).setLngLat(e.lngLat).setHTML(popupHTML(f)).addTo(gl); });
+      gl.on('click', id, e => { const f = e.features && e.features[0]; if (!f) return; el.querySelector('.v3-legend').open = false; new root.maplibregl.Popup({ maxWidth: '280px' }).setLngLat(e.lngLat).setHTML(popupHTML(f)).addTo(gl); });
       gl.on('mouseenter', id, () => { gl.getCanvas().style.cursor = 'pointer'; });
       gl.on('mouseleave', id, () => { gl.getCanvas().style.cursor = ''; });
     }

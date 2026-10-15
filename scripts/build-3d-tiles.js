@@ -91,7 +91,7 @@ async function samples(points) {
   return out;
 }
 async function buildTerrain() {
-  const tiles = [], checks = []; let filled = 0, skipped = 0;
+  const tiles = [], checks = [], failed = []; let filled = 0, skipped = 0;
   for (let z = TERRAIN_Z[0]; z <= TERRAIN_Z[1]; z++) {
     const list = M.tilesInBbox(PILOT.bbox, z);
     console.log(`lidar z${z}: ${list.length} tiles`);
@@ -99,7 +99,7 @@ async function buildTerrain() {
       let raw; try { raw = await lidarTile(t.z, t.x, t.y); } catch (e) {
         console.log(`  ${t.z}/${t.x}/${t.y}: ${e.message.slice(0, 300)}`); skipped++;
         if (!tiles.length && skipped >= 3) throw new Error(`lidar export failing: ${e.message.slice(0, 200)}`);
-        continue;
+        failed.push(t); continue;
       }
       const f = fillGaps(raw); if (!f) { skipped++; continue; }
       filled += f.filled;
@@ -116,6 +116,11 @@ async function buildTerrain() {
       pts.push({ lng: +lng.toFixed(7), lat: +lat.toFixed(7), tile: t.z16[py * SIZE + px] });
     }
     try { const s = await samples(pts); pts.forEach((p, i) => { if (s[i]) checks.push({ z, diff: +(p.tile - s[i].z).toFixed(3) }); }); } catch (e) { console.log(`  check z${z}: ${e.message}`); }
+  }
+  // One more try for tiles that timed out (the service is sometimes slow), after a pause.
+  if (failed.length) { console.log(`retrying ${failed.length} tiles`); await sleep(20000); }
+  for (const t of failed) {
+    try { const f = fillGaps(await lidarTile(t.z, t.x, t.y)); if (f) { tiles.push({ ...t, data: encodeTile(f.z), z16: f.z }); filled += f.filled; skipped--; } } catch (e) { console.log(`  retry ${t.z}/${t.x}/${t.y}: ${e.message.slice(0, 120)}`); }
   }
   if (!tiles.length) return null;
   const centre = await samples([{ lng: (PILOT.bbox[0] + PILOT.bbox[2]) / 2, lat: (PILOT.bbox[1] + PILOT.bbox[3]) / 2 }]).catch(() => [null]);
