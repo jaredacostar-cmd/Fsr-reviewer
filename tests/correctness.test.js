@@ -140,3 +140,15 @@ test('7. permit check: pass / fail per municipality (fail beyond 25%); in Record
   assert.match(src('js/growth-ui.js'), /\$\{hlP\(head\)\}\$\{caveat\}/, 'caveat under the Growth pipeline headline');
   assert.match(src('js/overview-tab.js'), /<div class="ov-top">\$\{hlP\(hl\)\}\$\{permitCaveat\}/, 'and under the Overview headline');
 });
+
+// ---- 8. 2051 comparison basis -----------------------------------------------------------------------
+test('8. the 2051 comparison states its source (document, date, draft or final) and its basis', () => {
+  const F = require('../data/peel-reports.json').forecast2051;
+  assert.match(F.title, /Land Needs Assessment Report Update/);
+  assert.equal(F.status, 'draft');
+  assert.equal(F.date, 'August 2024');
+  assert.ok(F.pages && F.url);
+  const cv = src('js/census-view.js');
+  assert.match(cv, /const srcLine = `Source: \$\{esc\(F\.title\)\} \(\$\{esc\(F\.date \|\| 'date not stated'\)\}, \$\{esc\(F\.status \|\| 'status not stated'\)\}; \$\{esc\(F\.pages \|\| ''\)\}\)`;/);
+  assert.match(cv, /Pipeline people are at Peel design criteria \(persons per unit\); the allocation is a population forecast/);
+});
