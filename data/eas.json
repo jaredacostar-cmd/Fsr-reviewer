@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T03:57:44.966Z",
+ "generatedAt": "2026-10-15T04:52:07.143Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -4963,7 +4963,7 @@
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "consultation",
+   "status": "complete",
    "milestones": [
     {
      "type": "pic",
@@ -8569,11 +8569,10 @@
    "name": "Highway 50 and Mayfield Road",
    "municipality": "Brampton / Caledon",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -8801,11 +8800,10 @@
    "name": "Mayfield Road – Airport Road to Coleraine Drive",
    "municipality": "Brampton / Caledon",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -8861,11 +8859,10 @@
    "name": "Mayfield Road – Chinguacousy Road to Heart Lake Road",
    "municipality": "Brampton / Caledon",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -8972,11 +8969,10 @@
    "name": "Mayfield Road – Chinguacousy Road to Winston Churchill Boulevard",
    "municipality": "Brampton / Caledon",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -9027,11 +9023,10 @@
    "name": "Mayfield Road – Heart Lake Road to Airport Road",
    "municipality": "Brampton / Caledon",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -9115,22 +9110,21 @@
    "id": "mcvean-sanitary-pumping-station-upgrades",
    "name": "McVean Sanitary Pumping Station upgrades",
    "municipality": "Brampton",
-   "flags": [
-    "status not found on the page"
-   ],
+   "flags": [],
    "schedule": "B",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [
+    {
+     "type": "completion",
+     "date": "2023-12-05"
+    },
     {
      "type": "reviewEnd",
      "date": "2024-01-08"
     }
    ],
-   "nextStep": {
-    "text": "in the Study process.",
-    "date": null
-   },
-   "completedYear": null,
+   "nextStep": null,
+   "completedYear": 2023,
    "purpose": "December 5, 2023 – Peel Region has completed a Schedule B Municipal Class Environmental Assessment (MCEA) study to upgrade and expand the capacity of the McVean Sanitary Pumping Station (SPS), in order to service planned",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mcvean-sanitary-pumping-station-upgrades",
@@ -9174,11 +9168,10 @@
    "name": "Mississauga Road – Bovaird Drive to Mayfield Road",
    "municipality": "Brampton",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -9442,11 +9435,10 @@
    "name": "Steeles Avenue – Chinguacousy Road/Mavis Road to Winston Churchill Boulevard",
    "municipality": "Brampton",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -9486,11 +9478,10 @@
    "name": "The Gore Road – Queen Street to Castlemore Road",
    "municipality": "Brampton",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -9731,7 +9722,7 @@
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "consultation",
+   "status": "complete",
    "milestones": [
     {
      "type": "pic",
@@ -10473,7 +10464,7 @@
     "geometry approximate"
    ],
    "schedule": "C",
-   "status": "consultation",
+   "status": "complete",
    "milestones": [
     {
      "type": "pic",
@@ -10624,7 +10615,7 @@
    "municipality": "Caledon",
    "flags": [],
    "schedule": "C",
-   "status": "consultation",
+   "status": "complete",
    "milestones": [
     {
      "type": "pic",
@@ -10758,11 +10749,9 @@
    "id": "arthur-p-kennedy-water-treatment-plant-reservoir-expansion",
    "name": "Arthur P. Kennedy Water Treatment Plant reservoir expansion",
    "municipality": "Mississauga",
-   "flags": [
-    "status not found on the page"
-   ],
+   "flags": [],
    "schedule": "C",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -10989,12 +10978,12 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     -79.620094,
-     43.60938
+     -79.578936,
+     43.578749
     ]
    },
    "geomType": "approx",
-   "geomMethod": "approximate point: Cawthra Road, Rathwood",
+   "geomMethod": "approximate point: Cawthra Road, Lakeview",
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
@@ -12735,11 +12724,10 @@
    "name": "Derry Road and Argentia Road intersection improvements",
    "municipality": "Mississauga",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "B",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -12944,11 +12932,10 @@
    "name": "Erin Mills Parkway Intersection Improvements at Dundas Street and Burnhamthorpe Road",
    "municipality": "Mississauga",
    "flags": [
-    "status not found on the page",
     "geometry approximate"
    ],
    "schedule": "A+",
-   "status": "unknown",
+   "status": "complete",
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
@@ -13964,8 +13951,8 @@
    "geometry": {
     "type": "Point",
     "coordinates": [
-     -79.617335,
-     43.53246
+     -79.620798,
+     43.533224
     ]
    },
    "geomType": "approx",
