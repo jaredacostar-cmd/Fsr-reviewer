@@ -288,9 +288,10 @@ jobs:
           du -sh ea-maps; find ea-maps -type f | wc -l
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B ea-maps
-          git add -f ea-maps
-          git commit -m "EA study-area maps (raw, for tracing)"
+          # An orphan branch with the maps only (no workflow files, which the Actions token may not push).
+          git checkout --orphan ea-maps
+          git rm -rq --cached . && git add -f ea-maps
+          git commit -qm "EA study-area maps (raw, for tracing)"
           git push -f origin ea-maps
       - name: Trace EA study areas (data/eas-overrides.json committed to this branch)
         if: inputs.mode == 'ea-trace'
