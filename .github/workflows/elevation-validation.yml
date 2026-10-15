@@ -1,0 +1,40 @@
+name: Elevation validation
+
+# Ground elevation against Peel sanitary manholes (Part 1, item 6): whenever the elevation sampler
+# or the validation data changes, re-sample the stored manholes live (lidar DTM and terrain tiles)
+# and check the stored error table. The sandbox cannot reach these hosts; Actions can.
+on:
+  push:
+    paths:
+      - 'js/elevation.js'
+      - 'js/profile-core.js'
+      - 'scripts/probe-elev-validate.js'
+      - 'scripts/lib-png.js'
+      - 'data/elevation-validation.json'
+      - 'tests/fixtures/manhole-sample.json'
+      - 'tests/elevation-validation.test.js'
+  pull_request:
+    paths:
+      - 'js/elevation.js'
+      - 'js/profile-core.js'
+      - 'scripts/probe-elev-validate.js'
+      - 'scripts/lib-png.js'
+      - 'data/elevation-validation.json'
+      - 'tests/fixtures/manhole-sample.json'
+      - 'tests/elevation-validation.test.js'
+  workflow_dispatch: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: The stored table matches the stored sample
+        run: node --test tests/elevation-validation.test.js
+      - name: The sources, re-sampled live, match the sample
+        run: |
+          if [ -f tests/fixtures/manhole-sample.json ]; then node scripts/probe-elev-validate.js --check; else echo "No manhole sample yet (Probe data sources, mode=elev-validate)."; fi

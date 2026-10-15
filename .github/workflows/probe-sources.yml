@@ -33,6 +33,7 @@ name: Probe data sources
 #  mode=constraints-build: the approved constraint layers → data/constraints/<id>/ tiles, manifest.json and the 25 m screening grid (grid.json), committed to this branch; only=<id,id> rebuilds some
 #  mode=elev-bench: the lidar sampler against Brampton benchmarks (height above grade, CGVD28 → CGVD2013 with NRCan grids) and where coverage ends (data/probe/elevation-bench.json)
 #  mode=elev-check: the lidar elevation sampler's service checks and the benchmark comparison (data/probe/elevation.json, committed to this branch)
+#  mode=elev-validate: ground elevation (lidar, terrain tiles) against Peel sanitary manholes in the validation areas: data/elevation-validation.json and tests/fixtures/manhole-sample.json committed to this branch; the internal data check (manholes > 5 m off, with FacilityID) as an artifact only, never committed
 #  mode=constraints-lidar: Stage 0 source check for lidar elevation and the constraint layers (endpoint, coverage, resolution, dates, licence, CORS); data/probe/constraints-lidar.json committed to this branch, report only
 on:
   workflow_dispatch:
@@ -94,6 +95,23 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/probe/elevation-bench.json
           git diff --cached --quiet || { git commit -m "Elevation benchmarks: lidar vs Brampton benchmarks (CGVD2013)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+      - name: Elevation against Peel manholes (table and fixture committed to this branch; internal check as an artifact)
+        if: inputs.mode == 'elev-validate'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq proj-bin >/dev/null
+          node scripts/probe-elev-validate.js
+          node --test tests/elevation-validation.test.js
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/elevation-validation.json tests/fixtures/manhole-sample.json
+          git diff --cached --quiet || { git commit -m "Elevation validation: lidar and terrain tiles against Peel manholes"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+      - name: Internal data check (artifact only, not published)
+        if: inputs.mode == 'elev-validate'
+        uses: actions/upload-artifact@v4
+        with:
+          name: internal-manhole-check
+          path: reports-internal/
+          retention-days: 30
       - name: Lidar elevation and constraint layers, source check (report only; summary committed to this branch)
         if: inputs.mode == 'constraints-lidar'
         run: |

@@ -18,10 +18,14 @@
   'use strict';
   const DTM = 'https://ws.geoservices.lrc.gov.on.ca/arcgis5/rest/services/Elevation/Ontario_DTM_LidarDerived/ImageServer';
   const TERRAIN_Z = 14;
+  // Each source's vertical datum is recorded, so values are never mixed silently: the lidar DTM is
+  // CGVD2013 (MNR); the terrain tiles' Canadian part is CDEM (CGVD28), their fill SRTM (EGM96).
   const SRC = {
-    lidar: { name: 'Ontario lidar terrain model', short: 'lidar', note: 'bare-earth lidar, 0.5 m pixels (Ontario Digital Terrain Model, Ministry of Natural Resources, CGVD2013)' },
-    terrain: { name: 'terrain tiles', short: 'terrain tiles', res: 7, note: 'terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m)' },
+    lidar: { name: 'Ontario lidar terrain model', short: 'lidar', res: 0.5, datum: 'CGVD2013', note: 'bare-earth lidar, 0.5 m pixels (Ontario Digital Terrain Model, Ministry of Natural Resources, CGVD2013)' },
+    terrain: { name: 'terrain tiles', short: 'terrain tiles', res: 7, datum: 'CGVD28 (CDEM) / EGM96 (SRTM)', note: 'terrain tiles (CDEM / SRTM, ~7 m pixels, ±1–2 m)' },
   };
+  // Bilinear sampling across tile edges (js/profile-core.js).
+  const PC = typeof module !== 'undefined' && module.exports ? require('./profile-core.js') : root.PeelProfileCore;
   const num = v => { if (v == null || v === '') return null; const n = +v; return isFinite(n) ? n : null; };
   const fmtRes = r => `${r < 1 ? r.toFixed(1) : Math.round(r)} m`;
 
@@ -76,7 +80,8 @@
   const LIDAR_CHUNK = 60;
   async function lidarFetch(pts) {
     const geometry = JSON.stringify({ points: pts.map(p => [+p.lng.toFixed(6), +p.lat.toFixed(6)]), spatialReference: { wkid: 4326 } });
-    const qs = new URLSearchParams({ geometry, geometryType: 'esriGeometryMultipoint', returnFirstValueOnly: 'true', outFields: 'Project,Resolution_m', f: 'json' });
+    // Bilinear: the service blends the four pixels around each point (not the nearest one).
+    const qs = new URLSearchParams({ geometry, geometryType: 'esriGeometryMultipoint', returnFirstValueOnly: 'true', interpolation: 'RSP_BilinearInterpolation', outFields: 'Project,Resolution_m', f: 'json' });
     const r = await fetch(`${DTM}/getSamples?${qs}`);
     if (!r.ok) throw new Error(`lidar service ${r.status}`);
     return parseSamples(await r.json(), pts.length);
@@ -96,11 +101,12 @@
     terrainTiles.set(k, pr); pr.catch(() => terrainTiles.delete(k));
     return pr;
   }
+  // Bilinear: the four pixels around the point, fetching the neighbouring tile at an edge; tiles
+  // are loaded once (decoded and cached) however many samples use them.
   async function terrainAt(lat, lng) {
-    const n = 2 ** TERRAIN_Z, xf = (lng + 180) / 360 * n, lr = lat * Math.PI / 180, yf = (1 - Math.log(Math.tan(lr) + 1 / Math.cos(lr)) / Math.PI) / 2 * n;
-    const x = Math.floor(xf), y = Math.floor(yf), px = Math.min(255, Math.floor((xf - x) * 256)), py = Math.min(255, Math.floor((yf - y) * 256));
-    const d = await terrainTile(x, y), i = (py * 256 + px) * 4;
-    return d[i] * 256 + d[i + 1] + d[i + 2] / 256 - 32768;
+    const taps = PC.bilinearTaps(lat, lng, TERRAIN_Z), keys = [...new Set(taps.map(t => `${t.tx}/${t.ty}`))];
+    const data = new Map(await Promise.all(keys.map(async k => { const [x, y] = k.split('/').map(Number); return [k, await terrainTile(x, y)]; })));
+    return PC.bilinear(taps, (tx, ty, px, py) => { const d = data.get(`${tx}/${ty}`), i = (py * 256 + px) * 4; return PC.terrarium(d[i], d[i + 1], d[i + 2]); });
   }
 
   // ---- The sampler ----------------------------------------------------------------------------
@@ -162,7 +168,7 @@
     return new Hill('', { minZoom: HILL_MIN_ZOOM, maxZoom: 20, maxNativeZoom: 18, opacity: 0.45, attribution: 'Hillshade: Ontario Digital Terrain Model (Lidar-Derived), Ontario Ministry of Natural Resources, OGL-Ontario', crossOrigin: true, ...opts });
   }
 
-  const api = { DTM, SRC, sourceLabel, shortLabel, sourcesNote, sourceRuns, parseSamples, makeSampler, tileBBox, hillshadeURL, hillshadeLayer, HILL_MIN_ZOOM };
+  const api = { DTM, SRC, TERRAIN_Z, terrainAt, sourceLabel, shortLabel, sourcesNote, sourceRuns, parseSamples, makeSampler, tileBBox, hillshadeURL, hillshadeLayer, HILL_MIN_ZOOM };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
 
   // ---- Browser: the shared sampler and the hillshade switch ------------------------------------

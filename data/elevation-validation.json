@@ -1,0 +1,69 @@
+{
+ "version": 1,
+ "generatedAt": null,
+ "note": "Pending: rebuilt in Actions by scripts/probe-elev-validate.js (Probe data sources, mode=elev-validate). Until then the accuracy label says there is no validation for the area.",
+ "datums": {
+  "lidar": "CGVD2013 (Ontario DTM, MNR)",
+  "terrain": "CGVD28 (CDEM) / EGM96 (SRTM)",
+  "peelSewers": "unknown"
+ },
+ "lidarTarget": "median |error| < 0.3 m and 90% within 0.5 m",
+ "areas": {
+  "cooksville": {
+   "name": "Cooksville",
+   "municipality": "Mississauga",
+   "bbox": [
+    -79.635,
+    43.57,
+    -79.6,
+    43.6
+   ],
+   "rows": {}
+  },
+  "downtown-brampton": {
+   "name": "downtown Brampton",
+   "municipality": "Brampton",
+   "bbox": [
+    -79.775,
+    43.675,
+    -79.745,
+    43.695
+   ],
+   "rows": {}
+  },
+  "bolton": {
+   "name": "Bolton",
+   "municipality": "Caledon",
+   "bbox": [
+    -79.75,
+    43.865,
+    -79.715,
+    43.89
+   ],
+   "rows": {}
+  },
+  "streetsville": {
+   "name": "Streetsville",
+   "municipality": "Mississauga",
+   "bbox": [
+    -79.725,
+    43.57,
+    -79.7,
+    43.592
+   ],
+   "rows": {}
+  },
+  "north-brampton": {
+   "name": "north Brampton (pilot)",
+   "municipality": "Brampton",
+   "pilot": true,
+   "bbox": [
+    -79.83,
+    43.7,
+    -79.76,
+    43.74
+   ],
+   "rows": {}
+  }
+ }
+}

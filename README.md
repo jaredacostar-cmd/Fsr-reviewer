@@ -2492,3 +2492,63 @@ scope, % of target and source.
 
 They also check the comparison: committed vs proposed, municipal growth, combined targets, and
 people-only targets.
+
+## Measure, Part 1: ground profile accuracy, manholes, and the sewer profile
+
+Everything here is **indicative, not design**.
+
+- **Sampling.** The ground is now read with bilinear interpolation. This works across tile
+  edges, with no stair steps. The lidar service is asked for bilinear samples too.
+  - Samples are spaced every 5 m, or one pixel, or length ÷ 600, whichever is largest. A line
+    never has more than 600 samples.
+  - Terrain tiles are fetched once, shared, and cached after decoding. The raw value is kept on
+    every sample. `js/profile-core.js` holds the arithmetic and is tested in
+    `tests/profile-core.test.js`.
+- **Peel manhole ground.**
+  - **Ground** = invert + published depth, at each end of a sanitary main.
+  - **Not used:** depths of 0.5 m or less, depths of 15 m or more, and force mains.
+  - **Matching:** manholes within 15 m of the line are drawn as dots, labelled *Peel manhole
+    ground*.
+  - **Correction:** between two matched manholes no more than 150 m apart, the ground is
+    corrected by the offset at each manhole, linearly interpolated, and labelled *corrected*. It
+    is never extrapolated. The raw line stays as a dotted line.
+  - **Datum:** the datum of Peel's inverts is not confirmed, so manhole grounds are used as
+    published and the app says so. If the validation finds they are CGVD28, the NRCan shift
+    (about −0.4 m) is applied and named. Datums are never mixed silently.
+- **Accuracy label.** Under every profile: "typically within X m of Peel manholes in this
+  area".
+  - It is read from `data/elevation-validation.json`, per area and per source (lidar or
+    terrain tiles).
+  - For lidar it names the project and the year flown.
+  - Outside the validated areas it says "No validation against Peel manholes for this area".
+- **Profile.**
+  - **Expand** gives a larger chart.
+  - **Crosshair** on hover or touch: distance, ground and its source, invert, depth, and
+    watermain cover (assumed).
+  - Grade per leg (A→B, B→C…) and a note of the vertical exaggeration.
+  - **Shading** where the depth to invert is under 2.0 m. The threshold is a setting, kept per
+    browser.
+  - **CSV** columns: `d, lat, lng, ground, ground_raw, source, invert, depth, watermain_flag`.
+- **Along a sewer** (Measure › *Along a sewer*). Tap a sanitary main and the app follows it
+  downstream, manhole to manhole, using Peel's published inverts and depths.
+  - It stops after 40 pipes, after 3 km, or where no gravity main continues.
+  - Each pipe shows its length, diameter, invert up → down, slope % and depth.
+  - **Adverse slopes** (the invert rises downstream) are flagged in red.
+  - The raw lidar or terrain ground is drawn for comparison. No FacilityIDs are shown.
+- **Validation.** In Actions, run *Probe data sources* with `mode=elev-validate`
+  (`scripts/probe-elev-validate.js`).
+  - It samples up to 60 Peel manholes in each of five areas, against the raw lidar and the raw
+    terrain tiles. Ground is shifted to the lidar's datum (CGVD2013) with PROJ and the NRCan
+    grids.
+  - It writes the table and a stored sample with no IDs, `tests/fixtures/manhole-sample.json`.
+  - `tests/elevation-validation.test.js` recomputes the table from the stored sample and fails
+    if they differ. The *Elevation validation* workflow runs it when the sampler changes.
+  - **Lidar target:** median |error| under 0.3 m, and 90% within 0.5 m. The table records
+    whether it is met.
+- **Internal data check (not public).** The same run lists manholes where invert + depth is
+  more than 5 m from the lidar, with FacilityID.
+  - It is uploaded only as a private workflow artifact (`internal-manhole-check`) and never
+    committed.
+  - The site deploy now publishes only the app files (`_site`: index.html, manifest, sw.js,
+    css, js, data, icons). It fails if anything internal is in them.
+- **Polite fetching.** Overpass is retried at most 3 times, honouring `Retry-After` on 429.

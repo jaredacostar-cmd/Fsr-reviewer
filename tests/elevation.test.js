@@ -94,7 +94,7 @@ test('measure.js labels each profile and pipe depth with its source', () => {
   const src = fs.readFileSync(path.join(__dirname, '../js/measure.js'), 'utf8');
   assert.ok(!/elevation-tiles-prod/.test(src), 'one sampler: no terrain tile code left in measure.js');
   assert.match(src, /sourceRunsHTML\(prof\)/);
-  assert.match(src, /EL\(\)\.sourcesNote\(prof\)/);
+  assert.match(src, /EL\(\)\.sourcesNote\((prof|raw)\)/);
   assert.match(src, /ground − invert; ground from/);
   for (const f of ['site-context.js', 'sewer-profile.js', 'water-trace.js', 'devtab.js']) {
     const s = fs.readFileSync(path.join(__dirname, `../js/${f}`), 'utf8');
