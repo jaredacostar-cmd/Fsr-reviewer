@@ -43,7 +43,7 @@ async function fetchLayer() {
   const info = await getJSON(LAYER, { f: 'json' });
   console.log(`Layer "${info.name}" geom=${info.geometryType} sr=${info.extent?.spatialReference?.wkid || info.sourceSpatialReference?.wkid} max=${info.maxRecordCount}`);
   const fields = (info.fields || []).map(f => f.name);
-  console.log(`Fields (${fields.length}): ${fields.join(', ')}`);
+  console.log(`Fields (${fields.length}): ${(info.fields || []).map(f => `${f.name}${f.alias && f.alias !== f.name ? ` ("${f.alias}")` : ''}`).join(', ')}`);
   const mapped = new Set(Object.values(C.KEEP).flat().map(s => s.toLowerCase()));
   const never = new Set(C.NEVER.map(s => s.toLowerCase()));
   console.log(`Kept: ${fields.filter(f => mapped.has(f.toLowerCase())).join(', ')}`);
@@ -75,6 +75,13 @@ async function fetchLayer() {
   let count = null;
   try { count = (await getJSON(`${LAYER}/query`, { where: '1=1', returnCountOnly: true, f: 'json' })).count; } catch { /* optional */ }
   console.log(`Fetched ${out.length} features (server count ${count ?? '?'})`);
+  // Shapes of the id fields (digits → 9, letters → A), so matching rules can be tuned without
+  // printing record-level values.
+  for (const n of ['ProjectNumber', 'ComponentID']) {
+    const m = {};
+    for (const f of out) { const v = f.attributes?.[n]; const k = v == null || v === '' ? '(blank)' : String(v).replace(/[0-9]/g, '9').replace(/[A-Za-z]/g, 'A'); m[k] = (m[k] || 0) + 1; }
+    console.log(`${n} shapes: ${Object.entries(m).sort((a, b) => b[1] - a[1]).slice(0, 15).map(([k, c]) => `${k}=${c}`).join(' | ')}`);
+  }
   return { features: out, valueCounts: valueCounts(out, ['WorkType', 'Phase', 'ProjectStatus', 'Municipality']) };
 }
 

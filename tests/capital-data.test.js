@@ -55,6 +55,15 @@ test('system from WorkType', () => {
   assert.equal(C.systemOf('Road Widening'), 'roads');
   assert.equal(C.systemOf('Landscaping'), 'other');
   assert.equal(C.systemOf(null), 'other');
+  // codes on the layer
+  assert.equal(C.systemOf('SAN-TRENCHLESS'), 'wastewater');
+  assert.equal(C.systemOf('SAN-SMH_REPAIR/REPLACE'), 'wastewater');
+  assert.equal(C.systemOf('Sanitary - Trenchless'), 'wastewater');
+  assert.equal(C.systemOf('WM'), 'water');
+  assert.equal(C.systemOf('WM-TUNNELING'), 'water');
+  assert.equal(C.systemOf('Road - Storm sewer'), 'roads');
+  assert.equal(C.systemOf('ROAD – STORM INLET REPAIR/REPLACE'), 'roads');
+  assert.equal(C.systemOf('ROAD-NOISEWALL'), 'roads');
 });
 
 test('status from Phase, ProjectStatus and dates', () => {
@@ -62,8 +71,8 @@ test('status from Phase, ProjectStatus and dates', () => {
   assert.equal(C.statusOf({ phase: 'Substantial Completion' }), 'substantially complete');
   assert.equal(C.statusOf({ phase: 'Construction' }), 'under construction');
   assert.equal(C.statusOf({ phase: 'Pre-Construction' }), 'planned');
-  assert.equal(C.statusOf({ projectStatus: 'Awarded' }), 'awarded');
-  assert.equal(C.statusOf({ projectStatus: 'Tendered' }), 'tendered');
+  assert.equal(C.statusOf({ phase: 'Awarded' }), 'awarded');
+  assert.equal(C.statusOf({ phase: 'Tendered' }), 'tendered');
   assert.equal(C.statusOf({ phase: 'Design' }), 'planned');
   assert.equal(C.statusOf({ phase: 'Design', tenderActual: '2026-02-01' }), 'tendered', 'dates move a planned record forward');
   assert.equal(C.statusOf({ startActual: '2025-05-01' }), 'under construction');
@@ -72,6 +81,19 @@ test('status from Phase, ProjectStatus and dates', () => {
   assert.equal(C.statusOf({ awardActual: '2025-05-01' }), 'awarded');
   assert.equal(C.statusOf({ startTarget: '2027-05-01' }), 'planned');
   assert.equal(C.statusOf({}), 'unknown');
+  // Phase / ProjectStatus values on the layer
+  assert.equal(C.statusOf({ phase: 'COMPLETE', projectStatus: 'COMPLETED' }), 'complete');
+  assert.equal(C.statusOf({ phase: 'MAINTENANCE', projectStatus: 'ACTIVE' }), 'substantially complete');
+  assert.equal(C.statusOf({ phase: 'RESTORATION', projectStatus: 'ACTIVE' }), 'under construction');
+  assert.equal(C.statusOf({ phase: 'CONSTRUCTION', projectStatus: 'ACTIVE' }), 'under construction');
+  assert.equal(C.statusOf({ phase: 'PROCUREMENT RFQ/RFT' }), 'tendered');
+  assert.equal(C.statusOf({ phase: 'RFP', awardActual: '2026-05-01' }), 'awarded');
+  assert.equal(C.statusOf({ phase: 'EA-ENVIRONMENTAL ASSESSMENT' }), 'planned');
+  assert.equal(C.statusOf({ phase: 'INITIATION' }), 'planned');
+  assert.equal(C.statusOf({ phase: 'DESIGN', projectStatus: 'ACTIVE' }), 'planned');
+  assert.equal(C.statusOf({ phase: 'ON-HOLD', startTarget: '2027-01-01' }), 'unknown');
+  assert.equal(C.statusOf({ phase: 'CANCELLED' }), 'unknown');
+  assert.equal(C.statusOf({ phase: 'DEFERRED' }), 'unknown');
   for (const s of ['planned', 'tendered', 'awarded', 'under construction', 'substantially complete', 'complete', 'unknown']) assert.ok(C.STATUSES.includes(s));
 });
 

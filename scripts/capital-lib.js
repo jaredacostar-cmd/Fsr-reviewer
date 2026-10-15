@@ -29,8 +29,8 @@ const KEEP = {
   awardActual: ['AwardDateActual'],
   startTarget: ['ConstructionStartDateTarget'],
   startActual: ['ConstructionStartDateActual'],
-  substantialTarget: ['SubstantialCompletionDateTarget', 'SubstantialCompletionTarget', 'SubstantialCompDateTarget', 'SubstantialCompletionDateTarg'],
-  substantialActual: ['SubstantialCompletionDateActual', 'SubstantialCompletionActual', 'SubstantialCompDateActual', 'SubstantialCompletionDateActu'],
+  substantialTarget: ['ConstructionSubstantialCompleti', 'SubstantialCompletionDateTarget', 'SubstantialCompletionTarget', 'SubstantialCompDateTarget', 'SubstantialCompletionDateTarg'],
+  substantialActual: ['ConstructionSubstantialComple_1', 'SubstantialCompletionDateActual', 'SubstantialCompletionActual', 'SubstantialCompDateActual', 'SubstantialCompletionDateActu'],
   percentComplete: ['PercentageOfConstructionComplet', 'PercentageOfConstructionComplete'],
   website: ['ProjectWebsite'],
   lastUpdate: ['LastUpdate'],
@@ -81,27 +81,40 @@ function cleanAttributes(attrs) {
 function systemOf(workType) {
   const w = String(workType || '').toLowerCase();
   if (!w) return 'other';
-  if (/sanitary|sewer|wastewater|forcemain|force main|\bww\b|pumping station.*(sewage|wastewater)/.test(w) && !/storm/.test(w)) return 'wastewater';
-  if (/water ?main|\bwater\b|\bwm\b|reservoir|elevated tank/.test(w)) return 'water';
-  if (/road|intersection|bridge|traffic|sidewalk|multi-use|cycle|culvert/.test(w)) return 'roads';
+  // Layer codes: SAN-…, WM-…, ROAD-… (and a few spelled out: "Sanitary - Trenchless", "Road - Storm sewer").
+  if (/^road\b/.test(w)) return 'roads';
+  if (/^san\b|^sanitary|^ww\b|wastewater|sewage|forcemain|force main/.test(w) || (/\bsewer\b/.test(w) && !/storm/.test(w))) return 'wastewater';
+  if (/^wm\b|water ?main|^water\b|reservoir|elevated tank/.test(w)) return 'water';
+  if (/road|intersection|bridge|traffic|sidewalk|multi-use|cycle|culvert|noise ?wall/.test(w)) return 'roads';
   return 'other';
 }
 
 /**
- * Status from Phase, ProjectStatus and dates. Text says complete / substantial / construction /
- * awarded / tendered / planned first; dates fill in when the text says nothing usable.
+ * Status from Phase, ProjectStatus and dates. The layer's Phase values map as below; a record whose
+ * Phase says nothing usable falls back to its dates. ON-HOLD / CANCELLED / DEFERRED read "unknown"
+ * (the raw phase stays on the record for display).
  */
+const PHASE_STATUS = [
+  [/^complete|^closed/, 'complete'],
+  [/substantial|^maintenance|warranty/, 'substantially complete'],
+  [/^construction|^restoration/, 'under construction'],
+  [/^award/, 'awarded'],
+  [/^procurement|^rfp\b|^rfq|^rft|^tender/, 'tendered'],
+  [/^design|^planned|^planning|^initiation|^ea\b|environmental assessment|^study|^future|^proposed|^pre-?construction/, 'planned'],
+  [/^on.?hold|^cancel|^deferred/, 'unknown'],
+];
 function statusOf(r) {
-  const t = `${r.projectStatus || ''} | ${r.phase || ''}`.toLowerCase();
-  if (/substantial/.test(t)) return 'substantially complete';
-  if (/\b(complete|completed|closed|finished)\b/.test(t) && !/\bnot complete|incomplete/.test(t)) return 'complete';
-  if (/\bconstruction\b/.test(t) && !/pre-?construction|future|not started|post-?construction/.test(t)) return 'under construction';
-  if (/\bawarded?\b/.test(t)) return 'awarded';
-  if (/\btender(ed|ing)?\b/.test(t)) return 'tendered';
-  if (/plann|design|future|proposed|pre-?construction|study|\bea\b|environmental assessment|scheduled/.test(t)) {
-    // A planned record with an actual date further along still moves forward on the dates.
-    const byDate = statusFromDates(r);
-    return byDate === 'unknown' ? 'planned' : byDate;
+  const ph = String(r.phase || '').trim().toLowerCase();
+  const ps = String(r.projectStatus || '').trim().toLowerCase();
+  if (/^complete/.test(ps)) return 'complete';
+  for (const [re, st] of PHASE_STATUS) if (re.test(ph)) {
+    if (st === 'unknown') return 'unknown';
+    // A procurement / planned record whose actual dates are further along moves forward on them.
+    if (st === 'planned' || st === 'tendered') {
+      const byDate = statusFromDates(r), order = STATUSES.indexOf.bind(STATUSES);
+      return byDate !== 'unknown' && byDate !== 'planned' && order(byDate) > order(st) ? byDate : st;
+    }
+    return st;
   }
   return statusFromDates(r);
 }
@@ -321,7 +334,7 @@ function matchDc(works, records, overrides = {}, { tol = 30, share = 0.5 } = {})
     if (!found.size && w.proj) for (const r of byProj.get(w.proj) || []) if (!found.has(r.id)) { found.add(r.id); add(w, r, 'project', 'medium'); }
     if (!found.size && w.kind === 'line') {
       for (const r of records) {
-        if (!r.geometry || (r.system !== w.system && r.system !== 'other')) continue;
+        if (!r.geometry || r.system !== w.system) continue;
         const sh = overlapShare(w.paths, r.geometry, tol);
         if (sh < share) continue;
         const named = sameStreet(r.street, `${w.name || ''} ${w.text || ''}`);

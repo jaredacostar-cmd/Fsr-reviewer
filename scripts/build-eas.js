@@ -36,7 +36,7 @@ const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.arg
 const outDir = arg('--out') || 'data';
 const today = arg('--today') || new Date().toISOString().slice(0, 10);
 const root = path.join(__dirname, '..');
-const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/fsr-reviewer)' };
+const UA = { 'user-agent': 'Mozilla/5.0 (compatible; peel-dev-tracker; +https://github.com/jaredacostar-cmd/fsr-reviewer)', accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', 'accept-language': 'en-CA,en;q=0.9' };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const readJSON = (f, d) => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch { return d; } };
 
@@ -49,8 +49,9 @@ async function get(url, { json = false, body, tries = 3 } = {}) {
     try {
       const r = await fetch(url, body ? { method: 'POST', headers: { ...UA, 'content-type': 'application/x-www-form-urlencoded' }, body } : { headers: UA, redirect: 'follow' });
       if (r.ok) { out = json ? await r.json() : await r.text(); if (!json) out = { html: out, url: r.url }; break; }
+      if (get.log && (get.logged = (get.logged || 0) + 1) <= 40) console.log(`  HTTP ${r.status} ${url.slice(0, 120)}`);
       if (r.status === 404 || r.status === 410) break;
-    } catch { /* retry */ }
+    } catch (e) { if (get.log && (get.logged = (get.logged || 0) + 1) <= 40) console.log(`  fetch error ${e.cause?.code || e.message} ${url.slice(0, 120)}`); }
     await sleep(1200 * (k + 1));
   }
   cache.set(key, out);
@@ -125,7 +126,9 @@ async function main() {
   const dcFac = readJSON(path.join(root, 'scripts', 'dc-facilities.json'), {});
   const areasJ = readJSON(path.join(root, 'data', 'areas.json'), {});
 
-  const list = await get(LIST_URL);
+  get.log = true;
+  let list = await get(LIST_URL);
+  for (const alt of [LIST_URL.replace('list-of-environment-assessments', 'list-of-environmental-assessments'), LIST_URL.replace('https://peelregion.ca', 'https://www.peelregion.ca')]) if (!list) list = await get(alt);
   if (!list) throw new Error(`list page unreachable: ${LIST_URL}`);
   const items = E.parseList(list.html, list.url);
   console.log(`List page: ${items.length} EAs after de-duplication`);
