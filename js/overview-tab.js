@@ -43,7 +43,7 @@
     const st = DD().statusOf(p), f = SV().svcFacts(p);
     st.works = st.works || DI().devWorks(p, f);
     const pe = f ? f.e : D.estimate([p], App().state.criteria, 'all', App().jobsOf), cb = pe.combined;
-    const tile = (v, u, l) => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span></div>`;
+    const tile = (v, u, l, sub = "") => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ""}</div>`;
     const toneCls = { ok: 'why-ok-t', warn: 'why-stall-t', bad: 'why-stop-t' };
     const vtxt = v => esc(v.text);
     // Verdict inputs from the same per-tab brief logic the detail panel uses.
@@ -97,7 +97,7 @@
       tile(fmt1(cb.water.maxDay), 'L/s', 'water max day'),
       tile(fmt1(cb.wastewater.avg), 'L/s', 'average dry weather'),
       tile(fmt1(cb.wastewater.peak), 'L/s', 'peak dry weather'),
-      tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'peak wet weather'),
+      tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiText(cb.wastewater.infiltration, App().state.criteria)) : ''),
     ].join('');
     const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
     const devBtn = `<button type="button" class="btn small link ov-go" data-ov-devsec="files">Files &amp; history ↓</button>`;

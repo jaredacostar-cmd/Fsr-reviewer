@@ -31,7 +31,7 @@ function realDevs() {
   if (cd) CD.applyTo(records, cd, P.canonRef);
   TG.setData(tree); TC.setData(tree);
   const projects = P.buildProjects(records, { regroup: parts => TG.regroup(parts) });
-  TC.apply(projects, { mode: 'tree', data: tree });
+  TC.apply(projects, { mode: 'tree', data: tree, ringsArea: P.ringsArea });
   cache = { projects, records, tree, byKey: new Map(projects.map(p => [p.key, p])) };
   return cache;
 }

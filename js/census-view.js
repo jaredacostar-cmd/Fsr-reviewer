@@ -169,10 +169,12 @@
   // planning applications. One bar per measure (people, dwellings), sharing nothing but the
   // layer order, so there is no second axis. Values are direct-labelled in the legend.
   // el: the container (the Pipeline sub-view renders a copy with no census baseline).
-  function renderGrowthChart(base, gr, Y = 2021, el) {
+  // One label, one definition (SPEC 1.9): opt.builtLabel names a narrower "built since" (the
+  // developments shown) apart from the Census view's every completed permit.
+  function renderGrowthChart(base, gr, Y = 2021, el, opt = {}) {
     const layers = [
       { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings, jobs: 0 },
-      { key: 'built', label: `Built since ${Y}`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
+      { key: 'built', label: opt.builtLabel || `Built since ${Y} (every permit completed since census day)`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
       { key: 'approved', label: 'Committed (draft plan or site plan approved, permit, construction)', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
       { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units, jobs: gr.proposed.jobs || 0 },
     ].filter(l => l.people + l.dwellings + (l.jobs || 0) > 0);

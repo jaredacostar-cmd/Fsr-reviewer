@@ -108,7 +108,7 @@
       // Jobs by layer as well (built / approved / proposed), as the census sub-view does.
       const gr = PeelAreas.growthSince(set, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(set.filter(p => p.phase !== 'cancelled'), bc.date);
       gr.built.jobs = j.jbuilt; gr.approved.jobs = j.japproved; gr.proposed.jobs = j.jproposed;
-      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'));
+      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'), { builtLabel: `Completed since ${bc.year} on the developments shown (not every permit: see Census & 2051)` });
     }
   }
   function aggTypeRowsHTML({ bt, emp }) {

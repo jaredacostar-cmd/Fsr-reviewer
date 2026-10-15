@@ -51,3 +51,13 @@ test('Growth › Pipeline "left" == Timing "unbuilt" == planned − completed', 
   const unbuilt = T.pipelineItems(projects).reduce((s, i) => s + i.units, 0);
   assert.equal(unbuilt, t.left);
 });
+
+test('1.7 I&I follows the files counted: the Heritage block is its three draft plans and the old subdivision (≈165 ha)', { skip }, () => {
+  const D = require('../js/demand.js');
+  const p = H.realDevs().byKey.get('Brampton|2055 BOVAIRD DR W');
+  assert.equal(p.siteAreaFrom, 'counted files');
+  assert.ok(Math.abs(p.siteAreaHa - 165) < 3, `${p.siteAreaHa} ha`);
+  const e = D.estimate([p]);
+  assert.match(D.iiText(e.combined.wastewater.infiltration), /^I&I \d+(\.\d)? L\/s over 1[56]\d(\.\d)? ha \(0\.26 L\/s\/ha\)$/);
+  assert.equal(D.iiText(0), '');
+});

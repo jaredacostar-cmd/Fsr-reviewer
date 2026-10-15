@@ -58,8 +58,10 @@
     for (const p of projects) {
       if (p.unitsPrevious === undefined) p.unitsPrevious = p.units == null ? null : p.units;
       if (p.buildoutPrevious === undefined) p.buildoutPrevious = p.buildout || null;
+      if (p.siteAreaHaPrevious === undefined) p.siteAreaHaPrevious = p.siteAreaHa == null ? null : p.siteAreaHa;
       p.units = p.unitsPrevious;
       p.buildout = p.buildoutPrevious;
+      p.siteAreaHa = p.siteAreaHaPrevious; p.siteAreaFrom = undefined;
       p.count = { mode: 'previous', previous: p.unitsPrevious };
       if (m !== 'tree') continue;
       if (!d) { p.count.why = 'tree counts not loaded'; continue; }
@@ -74,6 +76,17 @@
       // permitted and completed stay what the permits say.
       const b = p.buildoutPrevious;
       if (b) p.buildout = { ...b, planned: p.units, remaining: Math.max(0, p.units - (b.permitted || 0)), unbuilt: Math.max(0, p.units - (b.completed || 0)) };
+      // SPEC 1.7: I&I on the land of the files being counted — the sum of their boundaries, when
+      // every one has a boundary (a block of draft plans: all of them, not the root file's land).
+      const ringsArea = opts.ringsArea || (root.PeelPhases && root.PeelPhases.ringsArea);
+      if (ringsArea && p.count.parts.length && p.records) {
+        let m2 = 0, all = true;
+        for (const x of p.count.parts) {
+          const r = x.ref && p.records.find(q => q.kind === 'application' && q.ref === x.ref && q.poly && q.poly.length);
+          if (r) m2 += ringsArea(r.poly); else { all = false; break; }
+        }
+        if (all && m2 > 0) { p.siteAreaHa = m2 / 1e4; p.siteAreaFrom = 'counted files'; }
+      }
       tree++;
     }
     return { mode: m, tree, kept };

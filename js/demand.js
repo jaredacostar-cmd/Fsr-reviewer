@@ -416,7 +416,15 @@
   /** L/s -> ML/day */
   const toMLd = lps => lps * SECONDS_PER_DAY / 1e6;
 
-  const api = { UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+  // SPEC 1.7: I&I always with its basis, wherever peak wet is shown: "I&I 26.4 L/s over 101.5 ha (0.26 L/s/ha)".
+  function iiText(ii, criteria = DEFAULT_CRITERIA) {
+    const rate = criteria.wastewater && criteria.wastewater.infiltration != null ? criteria.wastewater.infiltration : DEFAULT_CRITERIA.wastewater.infiltration;
+    if (!(ii > 0) || !(rate > 0)) return '';
+    const ha = ii / rate, f1 = v => (Math.round(v * 10) / 10).toLocaleString('en-CA');
+    return `I&I ${f1(ii)} L/s over ${f1(ha)} ha (${rate} L/s/ha)`;
+  }
+  const api = {
+    iiText, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

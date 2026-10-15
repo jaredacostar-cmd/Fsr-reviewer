@@ -114,10 +114,13 @@
     return { ww: outWw ? conn.find(n => n.ln.sys === 'wastewater') || ww : ww, wa: outWa ? conn.find(n => n.ln.sys === 'water') || wa : wa, outWw, outWa,
       trunks: [...byProj.values()].sort((a, b) => a.y - b.y), facs, plant, needBy, gap: committed && needBy > MM().THIS_YEAR };
   }
+  // Which network a site is outside: one system can be served while the other waits on a new main
+  // (SPEC 1.9: "outside the existing network" and "on the existing network" said together).
+  const netOut = w => (w.outWa && w.outWw ? 'water and sewer networks' : w.outWa ? 'water network' : w.outWw ? 'sewer network' : 'network');
   function devWorksHTML(w, sys = null) {
     if (!w) return '';
     const li = [], on = k => !sys || sys === k;
-    for (const [n, what, out, k] of [[w.ww, 'Wastewater', w.outWw, 'wastewater'], [w.wa, 'Water', w.outWa, 'water']]) if (n && on(k)) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ' <span class="muted">(site is on the existing network)</span>'}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
+    for (const [n, what, out, k] of [[w.ww, 'Wastewater', w.outWw, 'wastewater'], [w.wa, 'Water', w.outWa, 'water']]) if (n && on(k)) li.push(`<li><strong>${what} ${out ? 'connection' : 'nearby'}:</strong> ${esc(dcLineText(n.ln))}, ${fmtNum(Math.round(n.m))} m away${out ? '' : ` <span class="muted">(site is on the existing ${k === 'water' ? 'water' : 'sewer'} network)</span>`}${n.ln.n ? `<small>${esc(n.ln.n)}</small>` : ''}</li>`);
     const facs = w.facs.filter(x => on(x.sys));
     if (w.trunks.length && on('wastewater')) li.push(`<li><strong>Downstream trunks:</strong> ${w.trunks.slice(0, 4).map(t => esc(`${t.y} ${t.d ? `${t.d} mm` : ''} ${t.p || ''}`.trim())).join(' · ')}${w.trunks.length > 4 ? ` +${w.trunks.length - 4}` : ''}</li>`);
     if (facs.length) li.push(`<li><strong>Facilities:</strong> ${facs.slice().sort((a, b) => lastYear(a) - lastYear(b)).slice(0, 4).map(x => `<button type="button" class="btn small link" data-dcfac="${esc(x.sys)}|${esc(x.name)}">${esc(x.name)}</button> ${lastYear(x)}`).join(' · ')}${facs.length > 4 ? ` +${facs.length - 4} more (What loads this)` : ''}</li>`);
@@ -126,7 +129,7 @@
     // The timing note goes with the system the site would connect through.
     const timing = !sys || (sys === 'wastewater' ? w.outWw : w.outWa && !w.outWw);
     return `<ul class="b-lines small dc-works">${li.join('')}</ul>
-      ${!timing ? '' : w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing network, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing network: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
+      ${!timing ? '' : w.gap ? `<p class="small why-stall"><strong>Servicing timing:</strong> committed development outside the existing ${netOut(w)}, but the planned main it would connect to is not built until ${w.needBy} (2026 DC draft).</p>` : w.needBy ? `<p class="small muted">Outside the existing ${netOut(w)}: servicing about ${w.needBy} on the 2026 DC draft schedule.</p>` : ''}`;
   }
 
   // Map layer: planned mains (dashed when approved in 2026) and facilities.

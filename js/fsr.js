@@ -73,7 +73,10 @@
         <span class="muted small">On the map, along the existing watermains and the planned DC mains</span><div class="wtrace-out"></div></div>` : '';
     const traceS = has ? `<div class="svc-actions trace-box"><div class="trace-btns"><button type="button" class="btn trace-btn" data-trace="${esc(p.key)}" data-info="trace"><span aria-hidden="true">⤳</span> Trace the sewer path to the plant</button></div>
         <span class="muted small">On the map, pipe by pipe to the plant, along the existing sewers and the planned DC mains</span><div class="trace-out"></div></div>` : '';
-    const near = f && (f.zNear || f.dNear) ? `<p class="small est-line">Outside the ${[f.zNear && 'mapped pressure zones', f.dNear && 'sewered blocks'].filter(Boolean).join(' and ')}: assigned to the nearest (${[f.zNear && `${zn(f.z.name)}, ${esc(SD().nearText(f.zNear))}`, f.dNear && f.path[0] && `${esc(SD().drName(f.path[0]))}, ${esc(SD().nearText(f.dNear))}`].filter(Boolean).join('; ')}). The connection point comes from the FSR / master plan.</p>` : '';
+    // Each system says only its own (SPEC 1.9: the Wastewater part showed the water-zone message).
+    const nearW = f && f.zNear ? `<p class="small est-line">Outside the mapped pressure zones: assigned to ${zn(f.z.name)} (${esc(SD().nearText(f.zNear))}). The connection point comes from the FSR / master plan.</p>` : '';
+    const nearS = f && f.dNear && f.path[0] ? `<p class="small est-line">Outside the sewered blocks: assigned to ${esc(SD().drName(f.path[0]))} (${esc(SD().nearText(f.dNear))}). The connection point comes from the FSR / master plan.</p>` : '';
+    const near = nearW + nearS;
     // Water
     const wDemand = cb ? `<p class="small"><strong>${uLs(cb.water.maxDay)}</strong> max day · ${uLs(cb.water.peakHour)} peak hour · ${uLs(cb.water.avg)} average</p>
       <p class="small">${f.z ? `${zn(f.z.name)}${f.zMax ? ` · ${DD().pctOf(D.toMLd(cb.water.maxDay), f.zMax)} of the zone's build-out max day` : ''} ${estTag}` : 'No pressure zone'}</p>` : (SD().servicingLineHTML(p) || '<p class="small muted">No units or jobs stated: flows not estimated.</p>');
@@ -87,7 +90,7 @@
     let wwRows = '';
     if (cb) {
       const ps = f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0];
-      wwRows += row('Flows', `<p class="small"><strong>${uLs(cb.wastewater.wetPeak)}</strong> peak wet · ${uLs(cb.wastewater.peak)} peak dry · ${uLs(cb.wastewater.avg)} average</p>`);
+      wwRows += row('Flows', `<p class="small"><strong>${uLs(cb.wastewater.wetPeak)}</strong> peak wet · ${uLs(cb.wastewater.peak)} peak dry · ${uLs(cb.wastewater.avg)} average</p>${cb.wastewater.infiltration > 0 ? `<p class="small muted">Peak wet includes ${esc(D.iiText(cb.wastewater.infiltration, App().state.criteria))}.</p>` : ''}`);
       const chain = f.path.map(a => esc(a.kind === 'plant' ? SD().plantLabel(a.plant) : SD().drName(a).replace(/^[^·]+· /, ''))).join(' → ');
       const pp = SC().pathPipes(p);
       const pipeTxt = x => `<button type="button" class="btn small link" data-pipe="${x.i}">${x.p[0]} mm</button> at <strong>${Math.round(x.r1 * 100)}%</strong> (${esc(MM().pipeState(x.r1)[3].toLowerCase())}${x.r1 < 1 ? `, freeboard ${SC().fbText(x.p[0], x.r1)}` : ''})`;
@@ -108,8 +111,8 @@
       ${row('Storm sewers', '<div id="dev-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>')}
       ${row('Stormwater', '<div id="dev-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>')}
     </div></section>` : '';
-    if (part === 'water') return `${SCREEN_NOTE}${traceW}${near}${water}`;
-    if (part === 'ww') return `${SCREEN_NOTE}${traceS}${near}${ww}${site}`;
+    if (part === 'water') return `${SCREEN_NOTE}${traceW}${nearW}${water}`;
+    if (part === 'ww') return `${SCREEN_NOTE}${traceS}${nearS}${ww}${site}`;
     // DC Analysis: the DC works the development may rely on (both systems), the planned works near
     // it and on its path, and the DCs it would pay.
     if (part === 'dc') {
