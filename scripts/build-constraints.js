@@ -201,8 +201,9 @@ function simplify(pts, tol) {
   const stack = [[0, pts.length - 1]];
   while (stack.length) {
     const [a, b] = stack.pop(); let best = -1, bi = -1;
-    const [ax, ay] = pts[a], [bx, by] = pts[b], dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy) || 1e-12;
-    for (let i = a + 1; i < b; i++) { const d = Math.abs(dy * pts[i][0] - dx * pts[i][1] + bx * ay - by * ax) / L; if (d > best) { best = d; bi = i; } }
+    const [ax, ay] = pts[a], [bx, by] = pts[b], dx = bx - ax, dy = by - ay, L = Math.hypot(dx, dy);
+    // (A closed ring starts and ends on one point: distance to that point.)
+    for (let i = a + 1; i < b; i++) { const d = L < 1e-12 ? Math.hypot(pts[i][0] - ax, pts[i][1] - ay) : Math.abs(dy * pts[i][0] - dx * pts[i][1] + bx * ay - by * ax) / L; if (d > best) { best = d; bi = i; } }
     if (best > tol) { keep[bi] = 1; stack.push([a, bi], [bi, b]); }
   }
   return pts.filter((_, i) => keep[i]);
@@ -284,4 +285,4 @@ async function main() {
   console.log(`Wrote ${manPath}`);
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { DATASETS, cutTiles, buildGrid, peelTiles };
+module.exports = { DATASETS, cutTiles, buildGrid, peelTiles, simplify };
