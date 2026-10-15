@@ -81,6 +81,7 @@ def main():
         [f"{T['groups']:,} groups: {T['up']} up, {T['down']} down, {T['unchanged']:,} unchanged. Pre-consultation estimates: {T['preconEstimates']} groups, {T['preconUnits']:,} units (proposed only, never committed)."],
         [],
         ['How to review'],
+        ['Start with Decisions: every call left before Step B1, in one list.'],
         ['0. To review: the groups left after your bulk accepts. Only these need a call.'],
         ['1. Changes: every group whose count or grouping changes, largest first, with the call each rule made.'],
         ['2. In the yellow columns choose Accept, Override or Ask. For Override give the units and a reason or source.'],
@@ -98,7 +99,7 @@ def main():
     ]
     for l in lines:
         ws.append(l)
-    for r in (1, 9, 16):
+    for r in (1, 9, 17):
         ws.cell(row=r, column=1).font = Font(bold=True, size=13 if r == 1 else 11)
     ws.column_dimensions['A'].width = 150
 
@@ -169,6 +170,25 @@ def main():
     dict_sheet(wb, 'Straddling plans', L['straddling'], 'Trees with no plan holding 90% of the root file.')
     dict_sheet(wb, 'Dates reversed', L['dateReversed'], 'A child file dated before its parent.')
     dict_sheet(wb, 'Counts to find', L['growthToFind'], 'Active developments where no file states a count and the wording does not settle it.')
+    # Decisions: everything left to finalize Step B0, in one place.
+    C0 = d.get('chrono')
+    ws = wb.create_sheet('Decisions', 1)
+    ws.append(['Decisions to finalize Step B0. Fill the yellow column; then GO 2 starts Step B1 (tree counts in the app, with a Previous/Tree switch).'])
+    ws['A1'].font = Font(italic=True)
+    dec = []
+    if C0:
+        for st in C0['steps'][1:]:
+            dec.append(['Chronology rule', st['label'], f"{st['change']:+,} units · {st['groupsChanged']} groups", 'Chronology', 'Approve recommended' if st['key'] != 'r3' else 'Approve recommended (see the unclear groups below)', ''])
+        for x in C0['lists']['latestVsLargest']:
+            if x.get('verdict') == 'unclear':
+                dec.append(['Same land: unclear', f"{x['largest']} {x['largestUnits']:,} vs later {x['latest']} {x['latestUnits']:,}", f"counted {x['counted']:,} (the largest) until you decide", 'Latest vs largest', 'Latest or Largest', ''])
+            if x.get('wordingUnits'):
+                dec.append(['Data check', f"{x['latest']}: the record says {x['latestUnits']:,} units, its wording says {x['wordingUnits']:,}", 'which is right?', 'Latest vs largest', 'Record or Wording', ''])
+    ask = [r for r in d['rows'] if r.get('call') == 'Ask']
+    for r in ask:
+        dec.append(['Group to review', '; '.join(t['root'] for t in r['trees']) + f" ({r['municipality']})", f"app {r['appUnits']:,} → tree {r['treeUnits']:,} ({r['change']:+,})", 'To review', r.get('callWhy', ''), ''])
+    table(ws, ['Kind', 'What', 'Effect', 'Where to look', 'Recommendation / why asked', 'Your call'], dec, {'What': 60, 'Effect': 34, 'Recommendation / why asked': 60, 'Your call': 22}, call_cols=1)
+
     # Chronology (proposed rules r1–r5, modelled; report only)
     C = d.get('chrono')
     if C:
@@ -206,11 +226,11 @@ def main():
 
         ws = wb.create_sheet('Latest vs largest', 4)
         ws.append(['Rule 3: same-land groups where the latest file states a different count from the largest. Applied = the latest replaces it.']); ws['A1'].font = Font(italic=True)
-        table(ws, ['Tree', 'Municipality', 'Largest (counted today)', 'Its stage', 'Its units', 'Latest', 'Its stage ', 'Its units ', 'Latest covers % of the land', 'Applied', 'Why', 'Count with rule 3', 'Your call', 'Notes'],
-              [[x['tree'], x['municipality'], x['largest'], x['largestRole'], x['largestUnits'], x['latest'], x['latestRole'], x['latestUnits'], round(x['covers'] * 100) if x['covers'] is not None else 'no boundary', 'yes' if x['applied'] else 'no', x['why'], x['counted'], '', ''] for x in L2['latestVsLargest']],
-              {'Why': 50, 'Notes': 30}, call_cols=2)
+        table(ws, ['Tree', 'Municipality', 'Largest (counted today)', 'Its stage', 'Its units', 'Latest', 'Its stage ', 'Its units ', 'Latest covers % of the land', 'Reading', 'Why', 'Evidence (wording)', 'Wording says units', 'Count with rule 3', 'Your call', 'Notes'],
+              [[x['tree'], x['municipality'], x['largest'], x['largestRole'], x['largestUnits'], x['latest'], x['latestRole'], x['latestUnits'], round(x['covers'] * 100) if x['covers'] is not None else 'no boundary', x.get('verdict', ''), x['why'], x.get('evidence') or '', x.get('wordingUnits') or '', x['counted'], '', ''] for x in L2['latestVsLargest']],
+              {'Why': 50, 'Evidence (wording)': 60, 'Notes': 30}, call_cols=2)
         dvl = DataValidation(type='list', formula1='"Latest,Largest,Ask"', allow_blank=True)
-        ws.add_data_validation(dvl); dvl.add(f'M3:M{ws.max_row}')
+        ws.add_data_validation(dvl); dvl.add(f'O3:O{ws.max_row}')
 
         dict_sheet(wb, 'History links', L2['history'], 'Rule 2: links not made because the older file is earlier development (approved, a later stage, filed 3+ years before the newer file).')
         dict_sheet(wb, 'Permits early', L2['permitsEarly'], 'Rule 4: permits issued 2+ years before the file they would sit under (the old building): not placed.')

@@ -256,6 +256,56 @@
     const verdict = counts.resubmission - counts.phase >= 2 ? 'resubmission' : counts.phase - counts.resubmission >= 2 ? 'phase' : 'unclear';
     return { verdict, earlier: E, later: L, counts, evidence: ev };
   }
+  // r3 with no boundary to measure: does the later file replace the earlier one (a resubmission) or
+  // add to it (a phase)? Scored from the files' own words: how many buildings, which kinds of homes,
+  // which civic addresses, revision / phase wording, and how alike the counts are.
+  const NUMW = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10 };
+  function buildingsOf(text) {
+    const d = String(text || '');
+    let best = null;
+    for (const m of d.matchAll(/\b(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten)\b(?![\s-]*(?:stor|st\b|units?|sq|m²|%|lots?))\s+(?:[\w/-]+\s+){0,4}?(?:buildings?|towers?)\b/gi)) { const v = NUMW[m[1].toLowerCase()] || +m[1]; if (v > 0 && v <= 20) best = Math.max(best || 0, v); }
+    if (best == null && /\b\d+\s*(?:&|and)\s*\d+[\s-]*stor\w*\s+(?:towers|buildings)\b/i.test(d)) best = 2;
+    if (best == null && /\bbuilding\b|\btower\b/i.test(d) && !/\bbuildings\b|\btowers\b/i.test(d)) best = 1;
+    return best;
+  }
+  function homeKinds(text) {
+    const d = String(text || ''), k = new Set();
+    if (/apartment|\btowers?\b|\d[\s-]*stor(e)?y|condo\w* (apartment|building)|mixed[- ]use building/i.test(d)) k.add('apartment');
+    if (/town ?houses?|townhomes?|back[- ]to[- ]back|town ?house blocks?/i.test(d)) k.add('townhouse');
+    if (/\bsemi[- ]?detached\b/i.test(d)) k.add('semi');
+    if (/(?<!semi[- ]?)\bdetached\b/i.test(d)) k.add('detached');
+    return k;
+  }
+  // Every civic number in the file's addresses ("5080, 5054, 5034 Ninth Line"; "65-71 Agnes"), unit numbers in brackets dropped.
+  const civicsOf = n => new Set(n.records.flatMap(r => (String(r.address || '').replace(/\([^)]*\)/g, ' ').match(/\b\d{1,5}\b/g) || []).filter(x => +x > 0)));
+  function replaceVerdict(G, L) {
+    const dG = G.records.map(r => r.description || '').join(' '), dL = L.records.map(r => r.description || '').join(' ');
+    const counts = { resubmission: 0, phase: 0 }, ev = [];
+    const add = (k, n, why) => { counts[k] += n; ev.push(`${k} +${n}: ${why}`); };
+    if (RESUB.test(dL)) add('resubmission', 2, `${L.refs[0]} says it revises or replaces`);
+    if (ids(dL).size && ![...ids(dL)].some(x => ids(dG).has(x)) || /\b(phase|stage)\s*(1|i|one|2|ii|two|3|iii|three)\b/i.test(dL)) add('phase', 2, `${L.refs[0]} names a phase / tower / block`);
+    const bG = buildingsOf(dG), bL = buildingsOf(dL);
+    if (bG != null && bL != null) {
+      if (bL === bG) add('resubmission', 2, `the same number of buildings (${bG})`);
+      else if (bL < bG) add('phase', 2, `fewer buildings (${bL} of ${bG})`);
+      else add('resubmission', 1, `more buildings (${bL} vs ${bG}): a redesign`);
+    }
+    const kG = homeKinds(dG), kL = homeKinds(dL);
+    if (kL.size && kG.size > kL.size && [...kL].every(x => kG.has(x))) add('phase', 1, `only part of the home types (${[...kL].join(', ')} of ${[...kG].join(', ')})`);
+    const cG = civicsOf(G), cL = civicsOf(L);
+    let addr = 'unknown';
+    if (cG.size && cL.size) {
+      const shared = [...cG].filter(c => cL.has(c));
+      addr = !shared.length ? 'different' : [...cG].every(c => cL.has(c)) ? 'same' : 'part';
+      if (addr === 'same') add('resubmission', 1, 'the same civic addresses');
+      else if (addr === 'part') add('phase', 1, `part of the addresses (${[...cL].join(', ')} of ${[...cG].join(', ')})`);
+      else add('phase', 2, `different civic addresses (${[...cL].join(', ')} vs ${[...cG].join(', ')}): another building on the site`);
+    }
+    if (G.units > 0 && L.units > 0 && Math.abs(G.units - L.units) <= 0.25 * Math.max(G.units, L.units)) add('resubmission', 1, `counts within 25% (${G.units} vs ${L.units})`);
+    const verdict = counts.resubmission - counts.phase >= 2 ? 'resubmission' : counts.phase - counts.resubmission >= 2 ? 'phase' : 'unclear';
+    const said = P.unitsFromText ? P.unitsFromText(dL) : null;
+    return { verdict, counts, evidence: ev, buildings: [bG, bL], addresses: addr, wordingUnits: said && L.units > 0 && Math.abs(said - L.units) > 0.1 * L.units ? said : null };
+  }
   function buildTrees(nodes, { permits = [], log = () => {}, chrono = {} } = {}) {
     const links = [], flags = { twoTrees: [], precon: [], crossMuni: [], sameLandSitePlans: [], dateReversed: [], history: [], permitsEarly: [] };
     // r2: is `old` earlier development under `young` (approved, a later stage, filed 3+ years before)?
@@ -468,13 +518,17 @@
     if (built.chrono && built.chrono.r3) {
       const withCount = topCounts.filter(x => x.units > 0);
       const largest = withCount.slice().sort((x, y) => y.units - x.units)[0];
-      const dated = withCount.filter(x => nodes[x.i].date0 != null).sort((x, y) => nodes[y.i].date0 - nodes[x.i].date0);
+      // The latest file must state its own count: a draft plan counted only through one child site
+      // plan is not a replacement of the rezoning.
+      const dated = withCount.filter(x => nodes[x.i].date0 != null && (nodes[x.i].units > 0 || x.basis === 'own count')).sort((x, y) => nodes[y.i].date0 - nodes[x.i].date0);
       const latest = dated[0];
       if (largest && latest && latest !== largest && latest.units !== largest.units && nodes[largest.i].date0 != null && nodes[latest.i].date0 > nodes[largest.i].date0) {
         const L = nodes[latest.i], G = nodes[largest.i];
         const covers = L.rings && G.rings ? shareInside(G, L) : null;
-        const why = L.role === G.role ? 'the same stage refiled' : covers != null && covers >= T.COVER ? `it covers ${Math.round(covers * 100)}% of the earlier file's land` : null;
-        latestWins = { latest: L.refs[0], latestUnits: latest.units, latestRole: L.role, largest: G.refs[0], largestUnits: largest.units, largestRole: G.role, covers: covers == null ? null : +covers.toFixed(2), applied: !!why, why: why || (covers == null ? 'a phase? (no boundary to measure; the largest stands)' : `a phase (covers ${Math.round(covers * 100)}% of the earlier land; the largest stands)`) };
+        const text = covers == null && L.role !== G.role ? replaceVerdict(G, L) : null;
+        const why = L.role === G.role ? 'the same stage refiled' : covers != null && covers >= T.COVER ? `it covers ${Math.round(covers * 100)}% of the earlier file's land` : text && text.verdict === 'resubmission' ? `the wording says a resubmission (${text.evidence.filter(e => e.startsWith('resub')).map(e => e.replace(/^resubmission \+\d: /, '')).join('; ')})` : null;
+        const not = covers != null ? `a phase (covers ${Math.round(covers * 100)}% of the earlier land; the largest stands)` : text && text.verdict === 'phase' ? `a phase (${text.evidence.filter(e => e.startsWith('phase')).map(e => e.replace(/^phase \+\d: /, '')).join('; ')}; the largest stands)` : 'unclear from the wording (no boundary to measure; the largest stands)';
+        latestWins = { latest: L.refs[0], latestUnits: latest.units, latestRole: L.role, largest: G.refs[0], largestUnits: largest.units, largestRole: G.role, covers: covers == null ? null : +covers.toFixed(2), applied: !!why, verdict: why ? 'resubmission' : text && text.verdict === 'unclear' ? 'unclear' : 'phase', why: why || not, evidence: text ? text.evidence : [], buildings: text ? text.buildings : null, addresses: text ? text.addresses : null, wordingUnits: text ? text.wordingUnits : null };
         if (why) units = latest.units;
       }
     }
@@ -642,7 +696,7 @@
   }
   const iso = t => (t == null || !isFinite(t) ? null : new Date(t).toISOString().slice(0, 10));
 
-  const api = { ROLES, T, RANK, CHRONO_ALL, yearOf, chronology, classifyRole, fileNodes, buildTrees, countTree, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
+  const api = { ROLES, T, RANK, buildingsOf, homeKinds, replaceVerdict, CHRONO_ALL, yearOf, chronology, classifyRole, fileNodes, buildTrees, countTree, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);

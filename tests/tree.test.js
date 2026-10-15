@@ -458,3 +458,28 @@ test('chronology r5: files in filing order, an earlier stage filed years after a
   assert.equal(ch[1].outOfOrder, '');
   assert.match(ch[2].outOfOrder, /filed after SUB .*SP-A/);
 });
+
+test('chronology r3 without a boundary: the wording tells a resubmission from a phase', () => {
+  const node = (ref, description, address, units) => T.fileNodes([app({ ref, description, address, units, poly: null })])[0];
+  const oz = node('OZ 22-10', 'Two residential buildings - 40 and 42 storeys (1,329 units)', '88 Park Street East', 1329);
+  const sp = node('SP 25-5', 'Site plan for two 21 mixed use towers', '88 Park Street East', 819);
+  assert.equal(T.replaceVerdict(oz, sp).verdict, 'resubmission', 'same buildings, same address');
+  const big = node('OZ 24-8', '5 mixed use buildings with heights ranging from 2 to 15 storey', '120, 128, 142, 154, 158 Queen St S', 1808);
+  const part = node('SP 25-17', 'Two mixed use buildings with retail at grade', '120, 128, 154 Queen St S', 526);
+  assert.equal(T.replaceVerdict(big, part).verdict, 'phase', 'fewer buildings on part of the addresses');
+  const other = node('SP 21-155', 'New 5 storey condo building', '190 Rutledge Road', 79);
+  const oz2 = node('OZ 10-5', '143 Condominium Apartments in 7 Storey Building', '56 Tannery Street', 210);
+  assert.notEqual(T.replaceVerdict(oz2, other).verdict, 'resubmission', 'a different civic address is another building');
+  assert.equal(T.buildingsOf('Residential development with 12 & 14 storey towers'), 2);
+  assert.equal(T.buildingsOf('Townhouse development'), null);
+  assert.deepEqual([...T.homeKinds('120 townhomes, 2 semi detached and 2 detached dwellings')].sort(), ['detached', 'semi', 'townhouse']);
+});
+
+test('chronology r3: every civic number counts, not only the first before a comma', () => {
+  const node = (ref, description, address, units) => T.fileNodes([app({ ref, description, address, units, poly: null })])[0];
+  const oz = node('OZ 21-15', '2 apartment buildings,15 townhouse blocks, and a public park', '5080, 5054, 5034 Ninth Line', 1244);
+  const sp = node('SP 26-27', 'Townhouse development', '5080 Ninth Line', 164);
+  const v = T.replaceVerdict(oz, sp);
+  assert.equal(v.addresses, 'part');
+  assert.equal(v.verdict, 'phase');
+});

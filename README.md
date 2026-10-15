@@ -2205,11 +2205,28 @@ total today 266,947):
 |---|---|---|---|
 | 1 | An undated file (1,544, mostly Brampton site plans) takes 1 July of the year in its file number. The number's year matches the real date within a year for 99% of dated files. | −8 | 110 (mostly regrouping files with no count) |
 | 2 | An approved site plan, condo or draft plan filed 3+ years before a newer pre-consultation, rezoning or block plan on its land is history: its own tree, not the new proposal's child. | +94 | 99 (606 links not made; 466 are pre-consultations) |
-| 3 | Same land, counted once: the latest file replaces the largest only when it is the same stage refiled or covers 90%+ of the earlier land; else the largest stands (a phase). | −1,769 | 15 of 29 (the 13 Mississauga rezoning + site plan pairs have no boundary, so the largest stands) |
+| 3 | Same land, counted once: the latest file replaces the largest only when it is the same stage refiled, covers 90%+ of the earlier land, or (with no boundary) its wording reads as a resubmission; else the largest stands (a phase). | −3,057 | 23 (2 unclear, left at the largest for your call) |
 | 4 | A permit issued 2+ years before the file it would sit under is the old building: not placed. | −10 | 8 (324 permits) |
 | 5 | Each tree's files in filing order, with backwards steps marked (the **Filing order** sheet). | report only | 230 of 976 trees with backwards steps |
 
-With all four, Peel goes from 266,947 to 265,254 (−1,693).
+With all four, Peel goes from 266,947 to 263,966 (−2,981).
 
-New sheets: Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
+**Resubmission or phase, with no boundary (rule 3).** The later file is scored against the
+largest from its own words:
+- **Buildings:** the same number means a resubmission; fewer means a phase.
+- **Home types:** only some of the earlier file's types means a phase.
+- **Civic addresses:** the same means a resubmission; part means a phase; different means
+  another building on the site.
+- **Wording:** "revised" or "resubmission" against "phase", "tower" or "block".
+- **Counts within 25%:** a resubmission.
+
+Two points or more either way decides; otherwise the pair is unclear and the largest stands.
+The latest file must state its own count (a draft plan counted only through one child is
+not a replacement).
+
+**Decisions sheet.** Every call left before Step B1 is in one list: the four rules, the unclear
+same-land groups, a data check (SP 22-75: the record says 457 units, its wording says 322) and
+the 24 To review groups.
+
+New sheets: Decisions, Chronology (a call per rule), Chrono changes, Latest vs largest (a call per group),
 History links, Permits early, Dated from number, Filing order.
