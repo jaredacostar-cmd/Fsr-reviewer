@@ -42,7 +42,7 @@
   // so this sub-view renders either way (the generic sub-tab code in showFootTab picks
   // both up: the button by [data-wwsub], the pane by data-pane="ww" data-sub).
   function ensurePumpSubTab() {
-    const group = document.querySelector('.f-subtabs[data-pane="ww"]');
+    const group = document.querySelector('.f-subtabs[data-pane="svc"]');
     if (group && !group.querySelector('[data-wwsub="pumpstations"]')) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'btn small'; b.dataset.wwsub = 'pumpstations';
@@ -54,7 +54,7 @@
       const sec = document.createElement('section');
       sec.className = 'f-pane svc-pane'; sec.id = 'pane-pumpstations';
       sec.dataset.pane = 'ww'; sec.dataset.sub = 'pumpstations';
-      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-ww');
+      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-svc');
       sec.hidden = true;
       sec.innerHTML = '<div class="tb-head"><h2 class="sr">Pumping stations</h2></div><div id="pumpstations-body"></div>';
       const ref = document.getElementById('pane-alloc');

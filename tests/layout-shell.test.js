@@ -82,22 +82,13 @@ test('tab -> view mapping: only water/ww/dca/overview switch the map view', () =
   assert.ok(APP.includes("wireTabView(document.querySelector('.analysis-tabs'))"), 'not wired to .analysis-tabs');
 });
 
-test('developments sub-view: tab button and pane are created, guarded', () => {
+test('the In view list stays in the left panel (SPEC §4–5): no Developments tab; its pager is added once', () => {
   assert.ok(APP.includes('function ensureDevelopmentsTab()'), 'ensureDevelopmentsTab missing');
-  assert.ok(APP.includes("getElementById('ftab-developments')"), 'creation not guarded');
-  assert.ok(APP.includes("btn.dataset.atab = 'developments'"), 'tab button lacks data-atab="developments"');
-  assert.ok(APP.includes("pane.dataset.pane = 'developments'"), 'pane lacks data-pane="developments"');
-  assert.ok(APP.includes("document.querySelector('#analysis-panes')"), 'pane not targeted at #analysis-panes');
-  // The sidebar list pieces move (list-count travels inside the h2); the export row stays put.
-  for (const id of ['list-sort', 'list-note', 'project-list']) {
-    assert.ok(APP.includes(`getElementById('${id}')`), `list piece not moved: ${id}`);
-  }
-  assert.ok(APP.includes("querySelector('.list-panel h2')"), 'list header (with list-count) not moved');
+  const fn = APP.slice(APP.indexOf('function ensureDevelopmentsTab()'), APP.indexOf('function focusProject'));
+  assert.ok(fn.includes("if (document.getElementById('dev-pages')) return;"), 'guarded');
+  assert.ok(fn.includes("document.querySelector('.list-panel')"), 'pager in the left list panel');
+  assert.ok(!fn.includes('ftab-developments') && !fn.includes("dataset.pane = 'developments'"), 'no Developments tab or pane');
   assert.ok(APP.includes("$('#list-count')"), 'renderList must still update #list-count');
-  const moveFn = APP.slice(APP.indexOf('function ensureDevelopmentsTab()'), APP.indexOf('ensureDevelopmentsTab();'));
-  assert.ok(!moveFn.includes('export-row') && !moveFn.includes('btn-csv'), 'export row must not move');
-  // showFootTab recognises the new tab via its data-tab.
-  assert.ok(APP.includes("btn.dataset.tab = 'developments'"), 'tab button lacks data-tab="developments"');
 });
 
 test('pageOf: 25-per-page pagination clamps and slices', () => {

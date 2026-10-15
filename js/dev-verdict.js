@@ -93,6 +93,17 @@
     for (const c of (d.changes || []).slice(0, 4)) items.push({ tone: 'ok', tab: null, dev: c.key, text: c.text });
     return items;
   };
+  // Needs attention, grouped and counted (SPEC §5): Capacity (DC projects late, constraints at or
+  // past the trigger) · Stalled (every stalled site; the largest listed) · This week (real changes).
+  const needsGroups = (d) => {
+    const items = needsAttention(d);
+    const cap = items.filter(it => it.tab), stall = items.filter(it => it.dev && /^Stalled /.test(it.text)), week = items.filter(it => it.dev && !/^Stalled /.test(it.text));
+    return [
+      { name: 'Capacity', count: (d.adv || []).length + (d.trig || []).length, items: cap },
+      { name: 'Stalled', count: (d.stalled || []).length, items: stall, note: stall.length ? 'the largest (250+ units)' : '' },
+      { name: 'This week', count: (d.changes || []).length, items: week },
+    ];
+  };
   // One-line pointer to a number's home tab, used where a duplicate was removed.
   const homeLine = (tab, label) => `<button type="button" class="btn small link" data-foot-tab="${tab}">${label} →</button>`;
   // The brief HTML carries document-wide ids (dev-*); footer copies get prefixed ids so the
@@ -140,7 +151,7 @@
   });
 
   // ---- Public contract ----
-  const api = { scopedDev, firstSentence, verdictWater, verdictWastewater, verdictDc, verdictMilestone, needsAttention, homeLine, scopeBriefIds };
+  const api = { needsGroups, scopedDev, firstSentence, verdictWater, verdictWastewater, verdictDc, verdictMilestone, needsAttention, homeLine, scopeBriefIds };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevVerdict = api;
 })(typeof window !== 'undefined' ? window : globalThis);

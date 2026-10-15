@@ -158,7 +158,8 @@
   });
 
   // ---- Public contract ----
-  const api = { runAerial, renderAerial, closeDetail, showRecordDetail };
+  const currentFile = () => { const S = root.PeelSvcScope; return fileCtx && S && S.hasResult() && String(App().state.ss).startsWith('file:') ? fileCtx : null; };
+  const api = { runAerial, renderAerial, closeDetail, showRecordDetail, currentFile };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAerialCheck = api;
 })(typeof window !== 'undefined' ? window : globalThis);

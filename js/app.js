@@ -341,7 +341,9 @@
   };
   $('#analysis').querySelector('.analysis-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
-    PeelAnalysisTabs.setFootPref(t.dataset.tab); store.set('footTab4', PeelAnalysisTabs.getFootPref());
+    // Servicing opens the half last used (wastewater by default): 'ww' or 'water'.
+    const k = t.dataset.tab === 'svc' ? (store.get('svcSys', 'ww') === 'water' ? 'water' : 'ww') : t.dataset.tab;
+    PeelAnalysisTabs.setFootPref(k); store.set('footTab4', PeelAnalysisTabs.getFootPref());
     PeelAnalysisTabs.showFootTab(PeelAnalysisTabs.getFootPref()); PeelShare.viewLink.write();
   });
   // Bottom-sheet snaps (compact): peek shows the summary + tabs, half and full the
@@ -398,7 +400,8 @@
     if (!strip || strip.dataset.tabview) return; strip.dataset.tabview = '1';
     strip.addEventListener('click', e => {
       const t = e.target.closest('.f-tab[data-tab], .f-tab[data-atab]'); if (!t) return;
-      const v = TAB_VIEW[t.dataset.tab || t.dataset.atab];
+      const k = t.dataset.tab === 'svc' ? (store.get('svcSys', 'ww') === 'water' ? 'water' : 'ww') : t.dataset.tab || t.dataset.atab;
+      const v = TAB_VIEW[k];
       if (!v || tabViewLink || PeelMapAnalysis.currentView() === v) return;
       tabViewLink = true;
       try { PeelMapAnalysis.setMapView(v); } finally { tabViewLink = false; }

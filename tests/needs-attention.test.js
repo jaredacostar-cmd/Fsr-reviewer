@@ -103,7 +103,7 @@ test('renderOverview: Phase 4 structure and removed cards', () => {
   const body = APP.slice(start, APP.indexOf('function scopeText()', start));
   // New structure present.
   assert.match(body, /Needs attention/, 'Needs-attention card heading');
-  assert.match(body, /needsAttention\(needsAttentionData\(set, capList\)\)/, 'needsAttention wired to DCA/stalled/trigger/change data');
+  assert.match(body, /const nd = needsAttentionData\(set, capList\), na = DV\(\)\.needsAttention\(nd\), groups = DV\(\)\.needsGroups\(nd\);/, 'needsAttention wired to DCA/stalled/trigger/change data, grouped (SPEC §5)');
   assert.match(body, /\$\{topDevsHTML\(set, basis\)\}/, 'top-N developments table rendered');
   assert.match(APP, /See all →/, '"See all" link');
   assert.match(APP, /Largest developments/, 'top-N developments table heading');
