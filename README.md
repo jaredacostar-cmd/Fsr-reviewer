@@ -1435,6 +1435,30 @@ units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
 
+## Tokens and accessibility
+
+From design audit, Group 11:
+
+- **Text on the accent passes WCAG AA.** A new `--on-accent` token is used by every rule that
+  paints text on an accent fill: active chips, buttons and tabs, and the active view switch.
+  - Dark theme: dark text on the light-blue accent, 7.9:1. White on #6da7ec was 2.5:1.
+  - Light theme: white text on a deeper accent (#2269c0), 5.4:1.
+- **Light-theme tokens.**
+  - Muted text goes from #77756f to #6b6963: at least 4.7:1 on every surface. It was 3.97:1
+    on surface-2.
+  - The accent goes from #2a78d6 to #2269c0: at least 4.7:1 on every surface. It was 4.30:1
+    on surface-1.
+- **44 px tap targets on a phone.** Every visible control was measured in the browser at
+  390 px. The phone rule now covers:
+  - buttons, chips, tabs and form fields;
+  - disclosure summaries, the stage buttons and the timeline toggle;
+  - the map's zoom, north and tool-rail buttons. The rail goes to two columns so it still
+    fits the phone map.
+
+  Exempt: inline text links, map markers, and chart segments that only carry a tooltip.
+- `tests/tokens-a11y.test.js` reads the tokens from the stylesheet and checks the WCAG ratios
+  directly.
+
 ## Trust signals: one note, every export, the criteria stamp, provenance
 
 From design audit, Group 10:
