@@ -187,6 +187,8 @@
       }
 
       const watched = h ? !!h.isWatched(p.key) : false;
+      // Stage 3: the panel header carries the name, stage, × and identity; the bar keeps the tools.
+      if (bar.classList) bar.classList.toggle('pnl-tools', !!window.PeelPanel);
       bar.innerHTML = `
         <div class="site-bar-top">
           <div class="site-bar-id">

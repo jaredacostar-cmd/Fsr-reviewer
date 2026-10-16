@@ -22,11 +22,31 @@
   // cap is the 100% capacity (rated, firm or available); committed and build-out are cumulative.
   const SYSTEM = { ww: 'Wastewater', water: 'Water' };
   const pctOf = (r, v) => (r.cap > 0 ? v / r.cap * 100 : null);
-  const derive = r => ({ ...r, system: SYSTEM[r.sys], pctCom: pctOf(r, r.committed), pctBo: pctOf(r, r.buildout), room: r.cap - r.buildout });
+  const derive = r => { const d = { ...r, system: SYSTEM[r.sys], pctCom: pctOf(r, r.committed), pctBo: pctOf(r, r.buildout), room: r.cap - r.buildout }; d.impact = impactOf(d); return d; };
+  // Impact (Stage 3), one line per row, from the same figures as the table:
+  //   plants and water treatment: ML/d over or under the 90% trigger at build-out = (build-out % − 90%) × rated;
+  //   pumping stations (and pipes): L/s over or under firm (full-pipe) capacity at build-out;
+  //   storage and pumping into a zone (zone supply): people affected before relief (storage: the
+  //   shortfall in the years before its relief project; zone pumping lists no relief: at build-out).
+  // people (positive = affected / over) ranks "Largest impact" across systems; rate = flow per person.
+  function impactOf(r) {
+    const f = v => qty(r, Math.abs(v)), pp = v => fmtNum(U.roundPop ? U.roundPop(v) : Math.round(v));
+    // fig: the figure, its unit and the rest of the line (a key figure); text: the whole line.
+    const out = (v, people, num, unit, rest) => ({ v, people, fig: { v: num, u: unit, rest }, text: `${num}${unit ? ` ${unit}` : ''} ${rest}` });
+    const split = q => { const i = q.indexOf(' '); return i < 0 ? [q, ''] : [q.slice(0, i), q.slice(i + 1)]; };
+    if (r.kind === 'plant' || r.kind === 'wplant') { const v = (r.pctBo - 90) / 100 * r.cap; return out(v, r.rate ? v / r.rate : null, ...split(f(v)), `${v >= 0 ? 'over' : 'under'} the 90% trigger at build-out`); }
+    if (r.kind === 'ps' || r.kind === 'pipe') { const v = r.buildout - r.cap; return out(v, r.rate ? v / r.rate : null, ...split(f(v)), `${v >= 0 ? 'over' : 'under'} ${r.capWord} capacity at build-out`); }
+    const v = r.kind === 'storage' ? (r.shortBefore || 0) : r.buildout - r.cap, people = r.rate ? v / r.rate : null;
+    const when = r.kind === 'storage' ? (r.reliefY ? `before relief (${r.reliefY})` : '(no relief listed)') : 'at build-out (no relief listed)';
+    if (people == null) return { v, people, fig: { v: '–', u: '', rest: '' }, text: '–' };
+    if (people > 0.5) return out(v, people, `≈${pp(people)}`, 'people', `affected ${when}`);
+    return r.kind === 'storage' ? { v, people, fig: { v: '0', u: 'people', rest: `affected ${when}` }, text: `none affected ${when}` } : out(v, people, `≈${pp(-people)}`, 'people', 'of room at build-out');
+  }
   // Limit year as a number for sorting: now first, never-reached last.
   const yNum = (y, now) => (y === 'today' ? now : y == null ? Infinity : +y);
   function sortRows(rows, by = 'limit', now = new Date().getFullYear()) {
-    const imp = r => (r.pctBo == null ? -Infinity : r.pctBo);
+    // Largest impact: people affected or over (all systems on one scale); else the % at build-out.
+    const imp = r => (r.impact && r.impact.people != null ? r.impact.people : r.pctBo == null ? -Infinity : (r.pctBo - 100) * 1e-3);
     const cmp = by === 'impact'
       ? (a, b) => imp(b) - imp(a) || yNum(a.limit.y, now) - yNum(b.limit.y, now)
       : (a, b) => yNum(a.limit.y, now) - yNum(b.limit.y, now) || imp(b) - imp(a);
@@ -70,10 +90,10 @@
       const k = Cap().of(`plant:${pl}`), c = MP().cached(`plant:${pl}`, () => MP().plantCons(pl)); if (!k || !c) continue;
       rows.push({ id: `plant:${pl}`, ss: `plant:${pl}`, sys: 'ww', kind: 'plant', name: (SD().PLANT_SHORT && SD().PLANT_SHORT[pl]) || k.name, sub: 'treatment plant',
         compared: `${flowW} vs rated capacity`, basis: wwB, unit: 'ML/d', cap: k.cap, capWord: 'rated', existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout,
-        limit: { y: c.out, what: '90% trigger', after: c.outAfter }, horizon: hzPlant(pl) || hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false });
+        limit: { y: c.out, what: '90% trigger', after: c.outAfter }, horizon: hzPlant(pl) || hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, rate: k.perPerson > 0 ? k.perPerson / 1e6 : null });
     }
     // Water treatment: South Peel (lake-based) and the Caledon well systems, maximum day against rated.
-    const R = A.state.reports;
+    const R = A.state.reports, wPP = A.state.svcModel.wMax(1, 0);   // maximum day per person, ML/d
     if (R && R.water) {
       const sys = [['southPeel', 'wsys:lake', { zone: '1' }]];
       for (const z of ['AV13', 'CE9']) { const zz = A.state.servicing.zones.find(x => x.zone === z); if (zz) sys.push([MP().wellSystem[z], `wsys:${z}`, zz]); }
@@ -81,7 +101,7 @@
         const k = Cap().of(`wsys:${id}`), c = MP().cached(ck, () => MP().waterPlantCons(zone)); if (!k || !c) continue;
         rows.push({ id: `wsys:${id}`, ss: id === 'southPeel' ? 'wsys:lake' : null, sys: 'water', kind: 'wplant', name: id === 'southPeel' ? 'South Peel water treatment' : k.name, sub: id === 'southPeel' ? 'A.P. Kennedy + Lorne Park' : 'wells',
           compared: 'Maximum day vs rated capacity', basis: 'metered', unit: 'ML/d', cap: k.cap, capWord: 'rated', existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout,
-          limit: { y: c.out, what: '90% trigger' }, horizon: hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false });
+          limit: { y: c.out, what: '90% trigger' }, horizon: hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, rate: wPP });
       }
     }
     // Pumping into each pressure zone: maximum day against firm pumping (the water tab's rows).
@@ -92,26 +112,31 @@
       const v = r.v, rt = WTab().roomTrigger(r.rated, { today: v[0] + v[1], approved: v[2], proposed: v[3] }, ph);
       rows.push({ id: `pump:${r.name}`, sys: 'water', kind: 'pump', name: r.name, sub: 'pumping into the zone', compared: 'Maximum day vs firm pumping', basis: 'design', unit: 'ML/d', cap: r.rated, capWord: 'firm',
         existing: v[0], built: v[1], committed: v[0] + v[1] + v[2], buildout: v[0] + v[1] + v[2] + v[3],
-        limit: { y: rt.c100, what: '100% firm' }, horizon: { end: ph.end, at: PICK.filter(y => y <= ph.end).map(y => [y, rt.at(y) / r.rated * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 } });
+        limit: { y: rt.c100, what: '100% firm' }, horizon: { end: ph.end, at: PICK.filter(y => y <= ph.end).map(y => [y, rt.at(y) / r.rated * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 }, rate: wPP });
     }
     // Storage: the 2020 Master Plan's required against available storage (its own forecast).
     const mp = R && R.masterPlan;
     if (mp && mp.storage) {
       const ys = mp.storageYears, now = MM().THIS_YEAR;
       const interp = (arr, y) => { if (y <= ys[0]) return arr[0]; for (let k = 1; k < ys.length; k++) if (y <= ys[k]) return arr[k - 1] + (arr[k] - arr[k - 1]) * (y - ys[k - 1]) / (ys[k] - ys[k - 1]); return arr[arr.length - 1]; };
+      // Its relief: the Master Plan storage constraint's planned project (js/masterplan.js storageCons).
+      const stc = MP().cached('storage', MP().storageCons) || [];
       for (const s of mp.storage) {
         const rt = WTab().storageRoomTrigger(ys, s.required, s.available), av = s.available[s.available.length - 1];
         const reqNow = interp(s.required, now), reqEnd = s.required[s.required.length - 1];
+        const sc = stc.find(x => x.name === s.facility), reliefY = sc ? (sc.relief.map(x => x.y).filter(y => y && y >= now).sort((a, b) => a - b)[0] || null) : null;
+        let shortBefore = 0; for (let y = now; y <= (reliefY ? reliefY - 1 : ys[ys.length - 1]); y++) shortBefore = Math.max(shortBefore, interp(s.required, y) - interp(s.available, y));
         rows.push({ id: `stor:${s.facility}`, sys: 'water', kind: 'storage', name: s.facility, sub: 'storage', compared: 'Required vs available storage', basis: 'mp', unit: 'ML', cap: av, capWord: 'available',
           existing: reqNow, built: 0, committed: reqNow, buildout: reqEnd, limit: { y: rt.c100, what: 'required > available' },
-          horizon: { end: ys[ys.length - 1], at: PICK.filter(y => y <= ys[ys.length - 1]).map(y => [y, interp(s.required, y) / (interp(s.available, y) || av) * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 } });
+          horizon: { end: ys[ys.length - 1], at: PICK.filter(y => y <= ys[ys.length - 1]).map(y => [y, interp(s.required, y) / (interp(s.available, y) || av) * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 },
+          rate: 1.25 * 0.25 * wPP, reliefY, shortBefore });   // storage per person: the Master Plan rule in storageCons
       }
     }
     // Wastewater pumping stations: peak wet weather flow against firm capacity (design criteria).
     for (const a of A.state.servicing.psAreas || []) {
       const k = Cap().of(`ps:${a.id}`), c = MP().cached(`ps:${a.id}`, () => MP().psCons(a)); if (!k || !c) continue;
       rows.push({ id: `ps:${a.id}`, ss: `ps:${a.id}`, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
-        existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap) });
+        existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), rate: c.people ? c.room / c.people : null });
     }
     // Tightest sewers: only while pipe-by-pipe results are on (off for now: left to the Region's model).
     if (U.PIPE_RESULTS && MM().SEW.data && root.PeelTightPipes) {
@@ -120,7 +145,7 @@
       for (const x of root.PeelTightPipes.topTightPipes(entries, 5)) {
         const c = MP().cached(`pipe:${x.i}`, () => MP().pipeCons(x.i)); if (!c || c.check) continue;
         rows.push({ id: `pipe:${x.i}`, sys: 'ww', kind: 'pipe', name: c.name, sub: c.sub, compared: 'Peak wet weather vs full-pipe capacity', basis: 'design', unit: 'L/s', cap: c.cap, capWord: 'full-pipe',
-          existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap) });
+          existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap), rate: c.people ? c.room / c.people : null });
       }
     }
     return rows.map(derive);
@@ -168,12 +193,59 @@
       ${LB() ? LB().legendHTML([{ layer: 'existing', text: 'Existing (basis on each row)' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) : ''}
       <p class="small muted">Committed = existing + built + committed as a % of the row's capacity (rated for treatment, firm for pumping, available for storage); build-out adds the proposed applications. The limit year is when the row reaches its limit: the 2020 Master Plan's 90% expansion trigger for treatment, 100% of firm capacity for pumping, required above available for storage. ▸ opens the horizon years under a row.${U.PIPE_RESULTS ? '' : ' Sewer pipes are not in this table: pipe-by-pipe results are left to the Region’s model.'} Charts, the plant horizon assumptions and method notes: <button type="button" class="btn small link" data-cap-detail>Charts and method</button>.</p>`;
   }
+  // ---- The standard panel (Stage 3): Servicing › Capacity ------------------------------------------
+  const TONE_WORD = { over: 'Over', tight: 'Tight', room: 'Room' };
+  const P = () => root.PeelPanel;
+  function panelSpec(rows) {
+    const now = MM().THIS_YEAR, end = SP().hz.end, sorted = sortRows(rows, st.sort, now);
+    const over = rows.filter(r => r.pctBo >= 100), tight = rows.filter(r => r.pctBo >= 90 && r.pctBo < 100);
+    const soon = sortRows(rows, 'limit', now)[0], big = sortRows(rows, 'impact', now)[0];
+    const n = k => rows.filter(r => r.kind === k).length, plural = (x, a, b) => `${x} ${x === 1 ? a : b}`;
+    const sortBtn = (k, t) => `<button type="button" class="btn small${st.sort === k ? ' on' : ''}" data-cap-sort="${k}" aria-pressed="${st.sort === k}">${t}</button>`;
+    const row = r => {
+      const t = P().toneOf(r.pctBo);
+      return { tone: t, attrs: r.ss ? { 'data-ss': r.ss, title: `Open ${r.name} as a scope` } : { 'data-full-table': 'svc:capacity', title: 'Open the full table' },
+        html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.system} · ${esc(r.sub)}</small></span><span class="pnl-r-fig">${pctTxt(r.pctBo)}<small>build-out</small></span>${P().chip({ tone: t })}</div>
+          ${barOf(r)}<small class="pnl-r-line">Limit ${yTxt(r.limit.y, r.horizon ? r.horizon.end : end)} (${esc(r.limit.what)}) · ${esc(r.impact.text)}</small>` };
+    };
+    return {
+      key: 'svc:capacity', calc: true,
+      head: { trail: [{ label: 'Peel' }], name: 'Peel', status: over.length ? { tone: 'over', text: `${over.length} over` } : tight.length ? { tone: 'tight', text: `${tight.length} tight` } : { tone: 'room', text: 'Room' },
+        identity: `Servicing capacity, water and wastewater: ${[plural(n('plant'), 'plant', 'plants'), plural(n('wplant'), 'treatment system', 'treatment systems'), plural(n('pump'), 'pumping group', 'pumping groups'), plural(n('storage'), 'storage facility', 'storage facilities'), plural(n('ps'), 'pumping station', 'pumping stations')].join(' · ')}` },
+      answer: `<strong>${over.length}</strong> of ${rows.length} facilities are over capacity at build-out${tight.length ? ` and <strong>${tight.length}</strong> more are tight (90–100%)` : ''}${soon && soon.limit.y != null ? `; the soonest limit is <strong>${esc(soon.name)}</strong> (${yTxt(soon.limit.y, end)}, ${esc(soon.limit.what)})` : ''}.`,
+      figures: [
+        { v: over.length, u: 'over', label: 'over capacity at build-out', ctx: `of ${rows.length} facilities`, tone: over.length ? 'over' : 'room' },
+        { v: tight.length, u: 'tight', label: '90–100% at build-out', ctx: 'at or past the 90% trigger', tone: tight.length ? 'tight' : 'room' },
+        soon ? { v: soon.limit.y === 'today' ? 'now' : soon.limit.y == null ? `after ${end}` : soon.limit.y, u: '', label: 'soonest limit', ctx: `${esc(soon.name)} · ${esc(soon.limit.what)}`, tone: soon.limit.y != null ? 'over' : 'room' } : null,
+        big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo) } : null,
+      ].filter(Boolean),
+      chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed against ${sorted[0].capWord} capacity</p>${barOf(sorted[0])}${LB() ? LB().legendHTML([{ layer: 'existing' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) : ''}` : '',
+      lists: [{ title: 'Facilities', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('limit', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: sorted.slice(0, 5).map(row), total: rows.length, seeAll: { 'data-full-table': 'svc:capacity' } }],
+      method: `Committed = existing + built + committed as a % of the row's capacity (rated for treatment, firm for pumping, available for storage); build-out adds the proposed applications. Each row's basis: 2025 metered (calibrated), design criteria or the 2020 Master Plan. Limit year: the 90% expansion trigger for treatment (2020 Master Plan), 100% of firm capacity for pumping, required above available for storage. Impact: plants and water treatment, (build-out % − 90%) × rated; pumping stations, L/s over or under firm; storage, people affected before its relief project; pumping into a zone, people above firm at build-out (no relief is listed). Largest impact ranks them by people. ${U.PIPE_RESULTS ? '' : 'Sewer pipes are not in this table: pipe-by-pipe results are left to the Region\u2019s model. '}The plant and water charts and the horizon assumptions: <button type="button" class="btn small link" data-cap-detail>Charts and method</button>.`,
+      sources: 'Rated capacity and the 2025 metered flows: Region of Peel 2025 annual reports (wastewater plants, drinking water systems). Firm pumping and storage: 2020 Water and Wastewater Master Plan (Vol. 3 and 4). Growth: the applications and permits on the map at Peel design criteria. Planned expansions: 2026 DC capital maps (draft).',
+      foot: { primary: { label: 'Show capacity on the map', attrs: { 'data-mview': 'wastewater' }, title: 'The Wastewater view: capacity colours, blocks and sanitary sewers' } },
+    };
+  }
+  // The full-width Engineering table for the same scope and scenario: every row, every column.
+  function fullTableHTML(rows) {
+    const now = MM().THIS_YEAR, end = SP().hz.end, sorted = sortRows(rows, st.sort, now);
+    const h = r => r.horizon || { at: [], end };
+    const yc = (y, e) => (y === 'today' ? 'now' : y == null ? `after ${e}` : String(y));
+    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th>Basis</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">Committed</th><th class="n">Build-out</th><th class="n">Committed %</th><th class="n">Build-out %</th><th class="n">Limit year</th><th class="n">Room / over</th><th>Impact</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}<th class="n">Reaches 80%</th><th class="n">Reaches 90%</th><th class="n">Reaches 100%</th></tr></thead>
+      <tbody>${sorted.map(r => { const t = P().toneOf(r.pctBo); return `<tr data-basis="${r.basis}" class="t-${t}"><td>${esc(r.name)}<small>${esc(r.sub)}</small></td><td>${r.system}</td><td>${esc(r.compared)}</td><td>${U.basisChip ? U.basisChip(r.basis) : esc(r.basis)}</td><td class="n">${qty(r, r.cap)} <small>${r.capWord}</small></td><td class="n">${qty(r, r.existing + r.built)}</td><td class="n">${qty(r, r.committed)}</td><td class="n">${qty(r, r.buildout)}</td><td class="n">${pctTxt(r.pctCom)}</td><td class="n"><strong>${pctTxt(r.pctBo)}</strong> ${P().chip({ tone: t })}</td><td class="n">${yTxt(r.limit.y, h(r).end)}<small>${esc(r.limit.what)}</small></td><td class="n">${roomTxt(r)}</td><td>${esc(r.impact.text)}</td>${PICK.map(y => { const a = h(r).at.find(x => x[0] === y); return `<td class="n">${a ? pctTxt(a[1]) : '–'}</td>`; }).join('')}<td class="n">${yc(h(r).c80, h(r).end)}</td><td class="n">${yc(h(r).c90, h(r).end)}</td><td class="n">${yc(h(r).c100, h(r).end)}</td></tr>`; }).join('')}</tbody></table></div>`;
+  }
+  let lastRows = null;
+  if (root.PeelPanel) root.PeelPanel.register('svc:capacity', () => {
+    const rows = lastRows || collect(); if (!rows) return { title: 'Servicing › Capacity', html: '<p class="small muted">The servicing model is still loading.</p>' };
+    return { title: 'Servicing › Capacity · Peel', sub: `${rows.length} facilities, water and wastewater · Engineering table · sorted by ${st.sort === 'impact' ? 'largest impact' : 'soonest limit'}`, html: fullTableHTML(rows) };
+  });
   function render() {
     const el = $('#svc-capacity-body'); if (!el) return;
     if (root.DevScope && root.DevScope.current()) return;   // (hidden at a site: PeelAnalysisTabs.HIDDEN)
     const rows = collect();
     if (!rows) { el.innerHTML = U.skel ? U.skel('Loading the servicing model') : ''; return; }
-    el.innerHTML = `${U.SCREEN_NOTE || ''}${tableHTML(rows)}`;
+    lastRows = rows;
+    el.innerHTML = root.PeelPanel ? root.PeelPanel.html(panelSpec(rows)) : `${U.SCREEN_NOTE || ''}${tableHTML(rows)}`;
     syncDetail();
   }
   // The plant and water charts behind the table fold under "Charts and method" (kept in this browser).
@@ -222,7 +294,7 @@
     const f = e.target.closest('[data-cap-fold]'); if (f) { const id = f.dataset.capFold; if (st.open.has(id)) st.open.delete(id); else st.open.add(id); render(); return; }
     if (e.target.closest('[data-cap-detail]')) { detail = !detail; if (U.store) U.store.set('capDetail', detail); syncDetail(); if (detail) { const p = $('#pane-plants'); if (p) p.scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
   });
-  const api = { SYSTEM, derive, sortRows, yTxt, pctTxt, collect, tableHTML, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
+  const api = { SYSTEM, derive, impactOf, sortRows, yTxt, pctTxt, collect, tableHTML, panelSpec, fullTableHTML, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcCapacity = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -184,7 +184,9 @@ test('removed: the heatmap and the gas / hydro layers', () => {
 });
 
 test('every panel keeps the screening note', () => {
-  assert.match(src('js/svc-capacity.js'), /el\.innerHTML = `\$\{U\.SCREEN_NOTE \|\| ''\}\$\{tableHTML\(rows\)\}`/);
+  // Stage 3: the Capacity panel is a standard panel, whose footer carries the note (js/panel.js).
+  assert.match(src('js/svc-capacity.js'), /el\.innerHTML = root\.PeelPanel \? root\.PeelPanel\.html\(panelSpec\(rows\)\) : `\$\{U\.SCREEN_NOTE \|\| ''\}\$\{tableHTML\(rows\)\}`;/);
+  assert.match(src('js/panel.js'), /<p class="pnl-note small">\$\{NOTE\}<\/p><\/footer>/);
   assert.match(src('js/labs.js'), /General screening results only\. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results\./);
 });
 

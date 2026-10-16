@@ -129,6 +129,43 @@
     const devBtn = `<button type="button" class="btn small link ov-go" data-ov-tab="records">Files &amp; history (Records) →</button>`;
     const confirm = thingsToConfirm(p, { st, f, cb, kind });
     const vline = (v, label, btn) => `<li><strong>${label}</strong> <span class="${toneCls[v.tone]}">${vtxt(v)}</span> ${btn}</li>`;
+    // Stage 3: the standard panel (js/panel.js). The full set of tiles, the flow tables, the things to
+    // confirm and the screening summary are in its full table.
+    if (root.PeelPanel) {
+      const PN = root.PeelPanel, TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
+      const fig = (v, u, label, ctx) => ({ v, u, label, ctx });
+      const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', gfaT ? `${fmtNum(Math.round(em.totalM2))} m² ${esc(useTxt)} floor area` : ''), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt))]
+        : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : ''), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '')];
+      const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null;
+      const row = (v, label, at) => ({ tone: TONE[v.tone], attrs: { 'data-at': at }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${label}</span>${PN.chip({ tone: TONE[v.tone], text: v.tone === 'ok' ? 'OK' : v.tone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${vtxt(v)}</small>` });
+      el.innerHTML = PN.html({
+        key: 'ov:site', calc: true,
+        head: { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title, status: { tone: 'stage', text: phl },
+          identity: `${esc(p.municipality)}${f && f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'Zone '))}` : ''}${f && f.pl ? ` → ${esc(SV().PLANT_SHORT[f.pl] || f.pl)}` : ''}` },
+        // The answer: what needs attention here, from the same verdicts as the summary below.
+        answer: (() => {
+          const need = [['water', wv], ['wastewater', wwv], ['DC works', dcv]].filter(([, v]) => v.tone !== 'ok').map(([n]) => n);
+          const c = confirm.length ? `; ${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm` : '';
+          return `<strong>${esc(phl)}.</strong> ${need.length ? `Check ${need.join(' and ')}: the screen finds a shortfall or an open question there${c}.` : `The screen finds no servicing shortfall for this site${c}.`}`;
+        })(),
+        figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water max day', 'Peel design criteria'), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet', cb.wastewater.infiltration > 0 ? esc(D.iiText(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I')],
+        chart: k && LB() ? `<p class="small pnl-chart-t">${esc(SV().PLANT_SHORT[f.pl] || k.name)}, the plant it drains to: existing, built, committed and proposed against rated capacity</p>${LB().capacityBarHTML(k, { small: true })}` : '',
+        lists: [
+          { title: 'Screening summary', rows: [row(wv, '💧 Water', 'svc:network'), row(wwv, '🚰 Wastewater', 'svc:network'), row(dcv, '🏗 DC works', 'dca:timing'), row(mv, '🚩 Next milestone', 'records:files')], total: 4 },
+          { title: `${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm`, rows: confirm.map(c => ({ html: `<small class="pnl-r-line">${c}</small>` })), total: confirm.length, seeAll: { 'data-full-table': 'ov:site' } },
+        ],
+        method: `Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. The screening summary reads the same results as Servicing and Capital for this site.`,
+        sources: 'The municipal applications and building permits on the map (Records › Files for this site); Peel design criteria; the servicing model.',
+        foot: { primary: { label: 'Memo (PDF)', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' }, secondary: [{ label: 'Files & history', attrs: { 'data-at': 'records:files' } }] },
+      });
+      PN.register('ov:site', () => ({ title: `${p.title} · Overview`, sub: `${esc(p.municipality)} · ${esc(phl)} · every figure and flow`,
+        html: `<div class="ov-tiles">${tiles}</div>${root.PeelWaterTab && root.PeelWaterTab.flowTablesHTML ? `<div class="ft-flows">${root.PeelWaterTab.flowTablesHTML(pe)}</div>` : ''}
+          ${confirm.length ? `<h3>${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm</h3><ul class="b-lines small">${confirm.map(c => `<li>${c}</li>`).join('')}</ul>` : ''}
+          <h3>Screening summary</h3><ul class="b-lines small">${vline(wv, '💧 Water', '')}${vline(wwv, '🚰 Wastewater', '')}${vline(dcv, '🏗 DC works', '')}${vline(mv, '🚩 Next milestone', '')}</ul>` }));
+      const sec0 = $('#ov-dev'); if (sec0) sec0.hidden = false;
+      if (document.documentElement.hasAttribute('data-presentation')) AS().renderPresentation();
+      return;
+    }
     el.innerHTML = `<div class="ov-top">${hlP(`<strong>${esc(p.title)}</strong> · ${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}`)}</div>
       ${confirm.length ? `<section class="ov-card ov-confirm"><div class="ov-h"><h3>${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm</h3></div><ul class="b-lines small">${confirm.map(c => `<li>${c}</li>`).join('')}</ul></section>` : ''}
       <div class="ov-grid">
