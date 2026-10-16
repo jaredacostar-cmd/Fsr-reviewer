@@ -36,10 +36,10 @@
       if (!d || !WF.on) return;
       if (!WF.layer) {
         WF.layer = L.layerGroup();
+        const tones = wfTones();
         for (const f of d.facilities) {
           if (!f.lnglat) continue;
-          const [sym] = WF_KIND[f.kind] || ['●'];
-          const m = L.marker([f.lnglat[1], f.lnglat[0]], { icon: L.divIcon({ className: 'wf-mk', html: `<i class="wf-ic wf-${f.kind}">${sym}</i>`, iconSize: [22, 22], iconAnchor: [11, 11] }), keyboard: true, title: f.name, zIndexOffset: 500 });
+          const m = L.marker([f.lnglat[1], f.lnglat[0]], { icon: wfIcon(f, tones), fac: f, keyboard: true, title: f.name, zIndexOffset: 1000 });
           m.bindTooltip(window.PeelUtil.hoverCard({ kind: 'Water facility', name: f.name, sub: wfKinds(f), also: 'capacity and Master Plan assessment' }), { direction: 'top', offset: [0, -10], className: 'pt' });
           m.on('click', () => showWaterFacility(f));
           WF.layer.addLayer(m);
@@ -48,6 +48,25 @@
       WF.layer.addTo(map); MA().renderLegend();
     });
   }
+  // A facility's capacity ring (over at build-out, past the 90% trigger, room), from the Servicing ›
+  // Capacity rows: water treatment (South Peel, the well systems) and storage. Pumping stations have
+  // none: pumping is assessed into each zone, all the stations feeding it together.
+  function wfTones() {
+    const SCap = root.PeelSvcCapacity, rows = (SCap && SCap.collect && SCap.collect()) || [], out = new Map();
+    if (!WF.data || !rows.length) return out;
+    const tone = r => (r.pctBo >= 100 ? 'over' : r.pctBo >= 90 ? 'tight' : 'room');
+    const base = n => String(n).replace(/\s+(Reservoir|Elevated Tank|Standpipe)\b.*$/i, '');
+    for (const f of WF.data.facilities) {
+      let r = null;
+      if (f.kind === 'plant' && f.groundwater) r = rows.find(x => x.kind === 'wplant' && x.id !== 'wsys:southPeel' && (x.name === f.groundwater.system || String(f.groundwater.system).includes(x.name) || String(x.name).includes(f.name)));
+      else if (f.kind === 'plant') r = rows.find(x => x.id === 'wsys:southPeel');
+      else if (['reservoir', 'elevated_tank', 'standpipe'].includes(f.kind)) r = rows.find(x => x.kind === 'storage' && base(x.name) === f.name);
+      if (r && r.pctBo != null && isFinite(r.pctBo)) out.set(f.id, tone(r));
+    }
+    return out;
+  }
+  const wfIcon = (f, tones) => { const [sym] = WF_KIND[f.kind] || ['●'], t = tones.get(f.id); return L.divIcon({ className: 'wf-mk', html: `<i class="wf-ic wf-${f.kind}${t ? ` ring-${t}` : ''}">${sym}</i>`, iconSize: [22, 22], iconAnchor: [11, 11] }); };
+  function restyleWf() { if (!WF.layer) return; const tones = wfTones(); WF.layer.eachLayer(m => { if (m.options.fac) m.setIcon(wfIcon(m.options.fac, tones)); }); }
   const wfKinds = f => (f.kinds || [f.kind]).map(k => (WF_KIND[k] || [, k])[1].toLowerCase()).filter((v, i, a) => a.indexOf(v) === i).join(', ').replace(/^./, c => c.toUpperCase());
   // Planned DC works at a facility (2026 DC maps, same name).
   const wfWorks = f => App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(x => x.name.replace(/ Water Treatment Plant$/, '').replace(/^Arthur P\. /, 'A.P. ') === f.name) : [];
@@ -371,7 +390,7 @@
 
   const api = {
     WF,
-    WF_KIND,
+    WF_KIND, restyleWf,
     loadWaterFacilities,
     setWfOn,
     showWaterFacility,

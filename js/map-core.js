@@ -59,13 +59,22 @@ const Aerial = () => root.PeelAerial;
   const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
   const esriLayer = (svc, opts) => L.tileLayer(`${ESRI}/${svc}/MapServer/tile/{z}/{y}/{x}`, { maxZoom: 20, maxNativeZoom: 19, ...opts });
   const BASEMAPS = {
+    // The views' default: the grey street map (in the theme's shade) when zoomed out, so the stage and
+    // capacity colours read; the aerial with roads from street zoom, where the photo shows what a
+    // site connects to. The Base map row and a note on the map say when it switches.
+    'auto':          { label: 'Grey map, aerial from street zoom', imagery: false, auto: true },
     'aerial-labels': { label: 'Latest aerial + roads', imagery: true, city: true },
     'aerial':        { label: 'Latest aerial', imagery: true, city: true },
     'esri':          { label: 'Esri World Imagery', imagery: true },
     'streets':       { label: 'Street map (light)', imagery: false },
     'streets-color': { label: 'Street map (colour)', imagery: false },
-    'canvas-dark':   { label: 'Street map (dark grey)', imagery: false },
   };
+  // Street zoom, from which 'auto' shows the aerial.
+  const AUTO_AERIAL_ZOOM = 14;
+  // The servicing views' old basemap (the dark grey canvas whatever the theme, switching to the aerial
+  // at street zoom) is now 'auto': saved views and remembered settings that name it open as 'auto'.
+  const LEGACY_BASEMAP = { 'canvas-dark': 'auto' };
+  const basemapKey = b => (BASEMAPS[b] ? b : LEGACY_BASEMAP[b] || null);
   // Latest city aerials (Mississauga, Brampton, Caledon) over Esri World Imagery. Image
   // services are drawn as 512 px Web Mercator tiles from exportImage / export.
   const CityImagery = L.TileLayer.extend({
@@ -89,9 +98,13 @@ const Aerial = () => root.PeelAerial;
     }
     return { layers: out, attribution: `Imagery: ${credits.join(', ')}; Esri elsewhere` };
   }
-  let basemap = BASEMAPS[store.get('basemap', 'aerial-labels')] ? store.get('basemap', 'aerial-labels') : 'aerial-labels';
+  let basemap = basemapKey(store.get('basemap', 'auto')) || 'auto';
   let baseLayers = [];
-  const bboxOutline = L.rectangle([[CFG.bbox.ymin, CFG.bbox.xmin], [CFG.bbox.ymax, CFG.bbox.xmax]], { weight: 1, dashArray: '4 4', fill: false, interactive: false });
+  // What 'auto' shows at the current zoom (the others show themselves).
+  const shownBasemap = () => (BASEMAPS[basemap].auto ? (map.getZoom() >= AUTO_AERIAL_ZOOM ? 'aerial-labels' : 'streets') : basemap);
+  // The background as the Base map row names it ("Grey map", "Aerial + roads").
+  const BG_NAME = { streets: 'Grey map', 'streets-color': 'Street map', 'aerial-labels': 'Aerial + roads', aerial: 'Aerial', esri: 'Aerial (Esri)' };
+  const backgroundName = () => BG_NAME[shownBasemap()] || BASEMAPS[basemap].label;
   // Aerial photos sit in their own pane, 40% transparent as a whole (one blend, so the city
   // aerial and the Esri imagery under it don't show through each other); road and place labels
   // stay opaque in the tile pane above.
@@ -102,19 +115,16 @@ const Aerial = () => root.PeelAerial;
   imageryPane.style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.imagery : 150); imageryPane.style.opacity = aerialOpacity;
   function setAerialOpacity(v) { aerialOpacity = Math.max(0.2, Math.min(1, +v || AERIAL_OPACITY)); imageryPane.style.opacity = aerialOpacity; store.set('aerialOpacity', aerialOpacity); }
   const getAerialOpacity = () => aerialOpacity;
+  let tilesShown = null;
   function setTiles() {
     for (const l of baseLayers) map.removeLayer(l);
     const imageryAttr = 'Imagery &copy; Esri, Maxar, Earthstar Geographics';
+    const basemap = shownBasemap(); tilesShown = basemap;
     // Street maps: Esri basemaps (no key needed), like the aerial layers.
     if (basemap === 'streets') {
       const g = dark() ? 'Dark' : 'Light';
       baseLayers = [esriLayer(`Canvas/World_${g}_Gray_Base`, { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
         esriLayer(`Canvas/World_${g}_Gray_Reference`, { maxNativeZoom: 16 })];
-    } else if (basemap === 'canvas-dark') {
-      // The servicing views' basemap: always the dark grey canvas, whatever the
-      // theme (the 'streets' entry above follows the theme instead).
-      baseLayers = [esriLayer('Canvas/World_Dark_Gray_Base', { maxNativeZoom: 16, attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` }),
-        esriLayer('Canvas/World_Dark_Gray_Reference', { maxNativeZoom: 16 })];
     } else if (basemap === 'streets-color') {
       baseLayers = [esriLayer('World_Street_Map', { attribution: `Esri, HERE, Garmin, &copy; OpenStreetMap contributors · ${DATA_ATTR}` })];
     } else if (BASEMAPS[basemap].city) {
@@ -132,17 +142,84 @@ const Aerial = () => root.PeelAerial;
     baseLayers.forEach((l, i) => { l.addTo(map); l.setZIndex(i); });
     const imagery = BASEMAPS[basemap].imagery;
     map.getContainer().classList.toggle('on-imagery', imagery);
-    bboxOutline.setStyle({ color: imagery ? token('--map-label') : token('--text-muted'), opacity: imagery ? 0.8 : 1 });
+    styleMunis();
+    if (window.PeelLayerGroups && window.PeelLayerGroups.sync) window.PeelLayerGroups.sync();
   }
-  bboxOutline.addTo(map);
-  // Site check: at street zoom the grey canvas hides what the pipes connect to,
-  // so zooming to 15+ while on the dark canvas drops back to aerial
-  // automatically. Only this rule and view changes switch the basemap on their
-  // own; a manual pick in the Layers control is never overridden.
+  // 'auto' switches with the zoom, and says so for a moment on the map (the Base map row names it).
+  let bgNote = null, bgTimer = null;
+  function noteBackground(text) {
+    if (!bgNote) { bgNote = L.DomUtil.create('div', 'bg-note', map.getContainer()); bgNote.setAttribute('role', 'status'); }
+    bgNote.textContent = text; bgNote.hidden = false;
+    clearTimeout(bgTimer); bgTimer = setTimeout(() => { bgNote.hidden = true; }, 3500);
+  }
   map.on('zoomend', () => {
-    if (map.getZoom() >= 15 && basemap === 'canvas-dark') {
-      basemap = 'aerial-labels'; store.set('basemap', basemap); setTiles(); CA().restyleDa(); MA().syncMapOpts();
+    if (!BASEMAPS[basemap].auto || shownBasemap() === tilesShown) return;
+    setTiles(); CA().restyleDa();
+    noteBackground(shownBasemap() === 'streets' ? 'Background: grey map (the aerial shows from street zoom)' : 'Background: aerial + roads at street zoom');
+  });
+
+  // ---- Peel and its municipalities: the map's frame ---------------------------------------
+  // data/munis.json (scripts/build-munis.js, from the 2021 census areas): the outlines, drawn above the
+  // base map and under everything else, with the names while zoomed out.
+  const muniPane = map.createPane('muniPane', map.getPane('rotatePane') || undefined);
+  muniPane.style.zIndex = 205; muniPane.style.pointerEvents = 'none';
+  const muniLayer = L.layerGroup().addTo(map), muniLabels = L.layerGroup();
+  const MUNI_LABEL_MAX_ZOOM = 12;
+  let munis = null;
+  function styleMunis() {
+    if (!munis) return;
+    const on = map.getContainer().classList.contains('on-imagery'), col = on ? token('--map-label') : token('--muni-line');
+    muniLayer.eachLayer(l => l.setStyle && l.setStyle({ color: col }));
+  }
+  function drawMunis(d) {
+    munis = d; muniLayer.clearLayers(); muniLabels.clearLayers();
+    const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
+    for (const m of d.munis || []) {
+      L.polygon(ll(m.rings), { pane: 'muniPane', weight: 2, opacity: 0.8, fill: false, interactive: false }).addTo(muniLayer);
+      // (in the marker pane: leaflet-rotate places markers there on the turned map; under the developments)
+      if (m.label) L.marker([m.label[1], m.label[0]], { interactive: false, keyboard: false, zIndexOffset: -5000, icon: L.divIcon({ className: 'muni-lbl', html: `<span>${window.PeelUtil.esc(m.name)}</span>`, iconSize: null }) }).addTo(muniLabels);
     }
+    if (d.peel) L.polygon(ll(d.peel.rings), { pane: 'muniPane', weight: 3, opacity: 0.9, fill: false, interactive: false }).addTo(muniLayer);
+    styleMunis(); syncMuniLabels();
+  }
+  const syncMuniLabels = () => { if (!munis) return; if (map.getZoom() <= MUNI_LABEL_MAX_ZOOM) muniLabels.addTo(map); else map.removeLayer(muniLabels); };
+  map.on('zoomend', syncMuniLabels);
+  // The zoom as classes, for what CSS shows only from a zoom on (wastewater block labels from 12).
+  const syncZoomClass = () => { const c = map.getContainer(), z = map.getZoom(); c.classList.toggle('z-lt12', z < 12); c.classList.toggle('z-lt14', z < 14); };
+  map.on('zoomend', syncZoomClass); syncZoomClass();
+  // Peel's outline as bounds (for the first view).
+  function peelBounds() {
+    const r = munis && munis.peel && munis.peel.rings; if (!r) return null;
+    return L.latLngBounds(r.flat().map(([x, y]) => [y, x]));
+  }
+  // Fit Peel to the map, clear of the tool rail and an open Layers panel (only when no link or saved
+  // position set the view).
+  // (fitBounds takes the north-up box, too big on the turned map: the zoom is found on the outline as
+  // it is drawn, turned by the bearing)
+  function fitPeel() {
+    const r = munis && munis.peel && munis.peel.rings; if (!r) return;
+    const panel = document.querySelector('.map-opts .mo-panel[open]'), pw = panel ? panel.getBoundingClientRect().width : 0;
+    const size = map.getSize(), aw = size.x - 48 - 16 - pw, ah = size.y - 16 - 24;
+    const a = (canRotate && map.getBearing ? map.getBearing() : 0) * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
+    const pts = r.flat().map(([x, y]) => L.latLng(y, x));
+    let best = null;
+    for (let z = 12; z >= 6 && !best; z--) {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const ll of pts) { const p = map.project(ll, z), u = p.x * ca - p.y * sa, v = p.x * sa + p.y * ca; x0 = Math.min(x0, u); y0 = Math.min(y0, v); x1 = Math.max(x1, u); y1 = Math.max(y1, v); }
+      if (x1 - x0 <= aw && y1 - y0 <= ah) {
+        // The middle of the turned box, turned back, then shifted to the middle of the clear area.
+        const u = (x0 + x1) / 2 + (16 + pw - 48) / 2, v = (y0 + y1) / 2 + (24 - 16) / 2;
+        best = { z, c: map.unproject(L.point(u * ca + v * sa, -u * sa + v * ca), z) };
+      }
+    }
+    if (best) map.setView(best.c, best.z);
+  }
+  const startCentre = map.getCenter();
+  fetch('data/munis.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => {
+    if (!d) return;
+    drawMunis(d);
+    const c = map.getCenter();
+    if (!/[#&]m=/.test(location.hash) && c.lat === startCentre.lat && c.lng === startCentre.lng) fitPeel();
   });
 
   function setOrientation(o) {
@@ -153,11 +230,11 @@ const Aerial = () => root.PeelAerial;
     ML().scheduleLabels(); AS().updateNorth();
   }
 const getBasemap = () => basemap;
-function setBasemap(b) { basemap = b; store.set('basemap', b); }
+function setBasemap(b) { basemap = basemapKey(b) || 'auto'; store.set('basemap', basemap); }
 const getOrientation = () => orientation;
 
 // ---- Public contract ------------------------------------------------------------------
-const api = { map, setTiles, getBasemap, setBasemap, setAerialOpacity, getAerialOpacity, getOrientation, setOrientation, canRotate, BASEMAPS, ORIENTATIONS, GRID_BEARING, esriLayer, DATA_ATTR };
+const api = { map, setTiles, getBasemap, setBasemap, basemapKey, shownBasemap, backgroundName, AUTO_AERIAL_ZOOM, fitPeel, peelBounds, getMunis: () => munis, setAerialOpacity, getAerialOpacity, getOrientation, setOrientation, canRotate, BASEMAPS, ORIENTATIONS, GRID_BEARING, esriLayer, DATA_ATTR };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else root.PeelMapCore = api;
 })(typeof window !== 'undefined' ? window : globalThis);

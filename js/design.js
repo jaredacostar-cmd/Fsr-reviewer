@@ -18,8 +18,8 @@
  * - Density default: desktop (fine pointer) -> compact, phone (coarse pointer or
  *   narrow screen) -> comfortable; stored as `peel-dev:density`, applied as
  *   data-density on <html>, styled in css/modes.css.
- * - basemapForView mirrors the VIEW_PRESETS basemaps in js/app.js (single source
- *   of truth for which basemap each map view wants).
+ * - basemapForView mirrors the VIEW_PRESETS basemaps in js/map-analysis.js (single source
+ *   of truth for which basemap each map view wants): 'auto' for all of them.
  * - Icons are outline style, stroke="currentColor", fixed 24x24 viewBox; no fills
  *   except small solid dots/cursors. No hard-coded colours (the tokens test
  *   forbids hex colours in js/).
@@ -63,11 +63,10 @@
   }
 
   // ---- Basemap per view ------------------------------------------------------
-  // planning -> aerial (slightly darkened via CSS in css/modes.css so the data
-  // stands out); water / wastewater / dc -> dark grey canvas.
+  // Every view: 'auto', the grey street map in the theme's shade while zoomed out (the stage and
+  // capacity colours read on it) and the aerial with roads from street zoom (js/map-core.js).
   function basemapForView(view) {
-    if (view === 'water' || view === 'wastewater' || view === 'dc') return 'canvas-dark';
-    return 'aerial-labels';
+    return 'auto';
   }
 
   // ---- Motion ------------------------------------------------------------------

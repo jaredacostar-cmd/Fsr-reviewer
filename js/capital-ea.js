@@ -153,7 +153,7 @@
     lowZoom = low; if (ce.cons || ce.ea) renderLabels();
   });
 
-  // ---- highlight (selection orange) -----------------------------------------------------------------
+  // ---- highlight (selection cyan) -----------------------------------------------------------------
   function highlight(geoms, linked, layer = hlLayer) {
     layer.clearLayers(); layer.addTo(map);
     const sel = token('--select');

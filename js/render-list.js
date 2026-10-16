@@ -26,7 +26,7 @@
     const out = [], pc = rows.filter(p => p.key === 'permit' || p.key === 'construction');
     for (const p of rows) {
       if (p.key === 'construction' && pc.length > 1) continue;
-      out.push(p.key === 'permit' && pc.length > 1 ? { keys: pc.map(x => x.key), label: 'Permit / under construction' } : { keys: [p.key], label: p.label.replace('Pre-', 'Pre\u2011') });   // (a non-breaking hyphen: "Pre-application" wraps whole)
+      out.push(p.key === 'permit' && pc.length > 1 ? { keys: pc.map(x => x.key), label: 'Permit / under construction' } : { keys: [p.key], label: p.label });   // ("Pre-application" wraps after its hyphen in a narrow column)
     }
     return out;
   };
@@ -95,7 +95,8 @@
     for (const p of App().state.filtered) {
       if (p.lat == null || !SD().devShown(p)) continue;
       const [cat, col] = MM().markerCat(p), pop = MM().mstyle.size === 'pop' ? MM().popOf(p) : 0;
-      const m = L.marker([p.lat, p.lng], { icon: MM().markerIcon(p), phase: p.phase, cat, col, pop, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : 0 });
+      const units = MM().mstyle.size === 'units' ? p.units || 0 : 0;
+      const m = L.marker([p.lat, p.lng], { icon: MM().markerIcon(p), phase: p.phase, cat, col, pop, units, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : units ? -Math.round(Math.sqrt(units)) : 0 });
       const near = App().state.servicing && (SD().nearOf(p, 'dr') || SD().nearOf(p, 'pz'));
       m.bindTooltip(() => window.PeelUtil.hoverCard({ kind: `Development · ${window.PeelLayerBar && window.PeelLayerBar.stageText ? window.PeelLayerBar.stageText(p, window.PeelLayers ? { layer: window.PeelLayers.layerOf(p) } : null) : P.PHASE_BY_KEY[p.phase].label}`, name: p.title,
         value: pop ? fmtNum(Math.round(pop)) : p.units > 0 ? fmtNum(p.units) : null, sub: pop ? 'people + jobs at build-out' : p.units > 0 ? `units · ${p.municipality}` : p.municipality,

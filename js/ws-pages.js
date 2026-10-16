@@ -189,45 +189,75 @@
 
   // ---- Small maps: a Peel frame from the wastewater blocks -------------------------------------------
   // bounds: [minLng, minLat, maxLng, maxLat] to zoom to (an area), else all of Peel's sewered blocks.
+  // One orientation everywhere: the small maps turn as the live map does (Peel's road grid by default,
+  // north up as the option; js/map-core.js), with the municipal outlines and their names, and a north
+  // arrow when turned.
+  const bearing = () => { const C = root.PeelMapCore; return C && C.getOrientation && C.getOrientation() === 'grid' && C.canRotate ? C.GRID_BEARING : 0; };
   function frame(Wd = 360, H = 300, bounds = null) {
     const sv = App() && App().state.servicing; if (!sv) return null;
     const base = (sv.drainage || []).filter(d => d.rings && !(d.served != null && d.served < 0.5));
+    const munis = (root.PeelMapCore && root.PeelMapCore.getMunis && root.PeelMapCore.getMunis()) || null;
     let mnx = 1e9, mny = 1e9, mxx = -1e9, mxy = -1e9;
-    if (bounds) [mnx, mny, mxx, mxy] = bounds;
-    else for (const d of base) for (const r of d.rings) for (const [x, y] of r) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
+    const ext = (x, y) => { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); };
+    if (bounds) { ext(bounds[0], bounds[1]); ext(bounds[2], bounds[3]); } else for (const d of base) for (const r of d.rings) for (const [x, y] of r) ext(x, y);
     if (mnx > mxx) return null;
-    const kx = Math.cos((mny + mxy) / 2 * Math.PI / 180), s = Math.min((Wd - 10) / ((mxx - mnx) * kx), (H - 10) / (mxy - mny));
-    const X = x => (5 + (x - mnx) * kx * s).toFixed(1), Y = y => (5 + (mxy - y) * s).toFixed(1);
-    const path = rings => rings.map(r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x)},${Y(y)}`).join('') + 'Z').join('');
-    const line = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x)},${Y(y)}`).join('');
-    return { sv, base, X, Y, path, line, Wd, H, svg: (inner, aria) => `<svg viewBox="0 0 ${Wd} ${H}" class="home-map-svg" role="img" aria-label="${esc(aria)}">${base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`).join('')}${inner}</svg>` };
+    // Local projection (km east, km south), turned clockwise by the bearing, then fitted to the box.
+    const cx = (mnx + mxx) / 2, cy = (mny + mxy) / 2, kx = Math.cos(cy * Math.PI / 180), a = bearing() * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
+    const rot = (x, y) => { const e = (x - cx) * kx, sth = cy - y; return [e * ca - sth * sa, e * sa + sth * ca]; };
+    const pts = bounds ? [[mnx, mny], [mnx, mxy], [mxx, mny], [mxx, mxy]] : base.flatMap(d => d.rings.flat());
+    let a0 = 1e9, b0 = 1e9, a1 = -1e9, b1 = -1e9;
+    for (const [x, y] of pts) { const [u, v] = rot(x, y); a0 = Math.min(a0, u); b0 = Math.min(b0, v); a1 = Math.max(a1, u); b1 = Math.max(b1, v); }
+    const sc = Math.min((Wd - 10) / ((a1 - a0) || 1e-9), (H - 10) / ((b1 - b0) || 1e-9));
+    const ox = (Wd - (a1 - a0) * sc) / 2, oy = (H - (b1 - b0) * sc) / 2;
+    const pt = (x, y) => { const [u, v] = rot(x, y); return [+(ox + (u - a0) * sc).toFixed(1), +(oy + (v - b0) * sc).toFixed(1)]; };
+    const path = rings => rings.map(r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${pt(x, y).join(',')}`).join('') + 'Z').join('');
+    const line = ps => ps.map(([x, y], i) => `${i ? 'L' : 'M'}${pt(x, y).join(',')}`).join('');
+    const muniSvg = () => (munis ? (munis.munis || []).map(m => `<path d="${path(m.rings)}" class="hm-muni"/>`).join('') : '');
+    const muniLbl = () => (munis && !bounds ? (munis.munis || []).filter(m => m.label).map(m => { const [x, y] = pt(m.label[0], m.label[1]); return `<text x="${x}" y="${y}" class="hm-muni-l">${esc(m.name)}</text>`; }).join('') : '');
+    const north = () => (a ? `<g class="hm-north" transform="translate(${Wd - 16},16) rotate(${bearing()})"><path d="M0 -10 4 3 0 0 -4 3z"/><text y="12">N</text></g>` : '');
+    const svg = (inner, aria, labels = '') => `<svg viewBox="0 0 ${Wd} ${H}" class="home-map-svg" role="img" aria-label="${esc(aria)}">${base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`).join('')}${muniSvg()}${inner}${muniLbl()}${labels}${north()}</svg>`;
+    return { sv, base, pt, path, line, Wd, H, svg, bearing: bearing() };
+  }
+  // Labels on the top few items of a small map: name at the point, clear of the others.
+  function mapLabels(f, items) {
+    const placed = [];
+    return items.slice(0, 5).map(({ lng, lat, name }) => {
+      const [x, y] = f.pt(lng, lat), w = Math.min(140, String(name).length * 5.6), right = x + 7 + w < f.Wd;
+      const box = { x: right ? x + 6 : x - 6 - w, y: y - 9, w, h: 12 };
+      if (placed.some(o => o.x < box.x + box.w && box.x < o.x + o.w && o.y < box.y + box.h && box.y < o.y + o.h)) return '';
+      placed.push(box);
+      return `<text x="${right ? x + 6 : x - 6}" y="${y + 3}" class="hm-lbl"${right ? '' : ' text-anchor="end"'}>${esc(name)}</text>`;
+    }).join('');
   }
   // Servicing capacity: catchments, zones and plants over (red) or past the 90% trigger (amber).
   function capacityMap(rows) {
     const f = frame(); if (!f) return '';
-    const tone = r => (r.pctBo >= 100 ? 'over' : r.pctBo >= 90 ? 'tight' : null), out = [];
+    const tone = r => (r.pctBo >= 100 ? 'over' : r.pctBo >= 90 ? 'tight' : null), out = [], lbl = [];
     const byId = new Map((f.sv.psAreas || []).map(d => [d.id, d])), zones = f.sv.zones || [];
+    const centre = g => { let x = 0, y = 0, n = 0; for (const r of g.rings) for (const [a, b] of r) { x += a; y += b; n++; } return n ? [x / n, y / n] : null; };
     for (const r of rows) {
       const t = tone(r); if (!t) continue;
       let g = null;
       if (r.kind === 'ps') g = byId.get(r.id.slice(3));
       else if (r.kind === 'pump' || r.kind === 'storage') { const m = String(r.name).match(/zone\s*(\w+)/i); g = m ? zones.find(z => String(z.zone) === m[1]) : null; }
-      if (g && g.rings) out.push(`<path d="${f.path(g.rings)}" class="hm-${t}"><title>${esc(r.name)}: ${Math.round(r.pctBo)}% at build-out</title></path>`);
+      if (g && g.rings) { out.push(`<path d="${f.path(g.rings)}" class="hm-${t}"><title>${esc(r.name)}: ${Math.round(r.pctBo)}% at build-out</title></path>`); const c = g.outletAt || centre(g); if (c) lbl.push({ lng: c[0], lat: c[1], name: r.name, pct: r.pctBo }); }
     }
     for (const pl of (f.sv.meta && f.sv.meta.plants) || []) {
       if (!pl.lnglat) continue;
-      const r = rows.find(x => x.id === `plant:${pl.name}`), t = r ? tone(r) : null;
-      out.push(`<rect x="${(+f.X(pl.lnglat[0]) - 5).toFixed(1)}" y="${(+f.Y(pl.lnglat[1]) - 5).toFixed(1)}" width="10" height="10" class="hm-plant${t ? ` hm-${t}` : ''}"><title>${esc(r ? r.name : pl.name)}${r ? `: ${Math.round(r.pctBo)}% at build-out` : ''}</title></rect>`);
+      const r = rows.find(x => x.id === `plant:${pl.name}`), t = r ? tone(r) : null, [x, y] = f.pt(pl.lnglat[0], pl.lnglat[1]);
+      out.push(`<rect x="${(x - 5).toFixed(1)}" y="${(y - 5).toFixed(1)}" width="10" height="10" class="hm-plant${t ? ` hm-${t}` : ''}"><title>${esc(r ? r.name : pl.name)}${r ? `: ${Math.round(r.pctBo)}% at build-out` : ''}</title></rect>`);
+      if (t) lbl.push({ lng: pl.lnglat[0], lat: pl.lnglat[1], name: r.name, pct: r.pctBo + 1000 });
     }
-    return f.svg(out.join(''), 'Peel’s wastewater blocks, with the facilities over capacity or past the 90% trigger at build-out highlighted');
+    return f.svg(out.join(''), 'Peel’s wastewater blocks, with the facilities over capacity or past the 90% trigger at build-out highlighted', mapLabels(f, lbl.sort((a, b) => b.pct - a.pct)));
   }
-  // Developments as dots sized by units (Growth, This week), optional highlight set.
+  // Developments as dots sized by units (Growth, This week), optional highlight set (labelled).
   function devsMap(set, hl) {
     const f = frame(); if (!f) return '';
-    const out = [];
-    for (const p of set) if (p.lat != null && (p.units || 0) >= 50) out.push(`<circle cx="${f.X(p.lng)}" cy="${f.Y(p.lat)}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`);
-    for (const p of hl || []) if (p.lat != null) out.push(`<circle cx="${f.X(p.lng)}" cy="${f.Y(p.lat)}" r="4.5" class="hm-hl"><title>${esc(p.title)}</title></circle>`);
-    return f.svg(out.join(''), 'Peel’s wastewater blocks with the developments on the map');
+    const out = [], dotAt = (p, r, cls, t = '') => { const [x, y] = f.pt(p.lng, p.lat); return `<circle cx="${x}" cy="${y}" r="${r}" class="${cls}">${t}</circle>`; };
+    for (const p of set) if (p.lat != null && (p.units || 0) >= 50) out.push(dotAt(p, Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1), 'hm-dev'));
+    const hs = (hl || []).filter(p => p.lat != null);
+    for (const p of hs) out.push(dotAt(p, 4.5, 'hm-hl', `<title>${esc(p.title)}</title>`));
+    return f.svg(out.join(''), 'Peel’s wastewater blocks with the developments on the map', mapLabels(f, hs.slice(0, 3).map(p => ({ lng: p.lng, lat: p.lat, name: p.title }))));
   }
   // Projects: the 2026 DC works (wastewater, water).
   function worksMap() {
@@ -246,7 +276,7 @@
   function siteMap(p) {
     const r = R(); if (!r || !r.sketchSVG || p.lat == null) return '';
     const near = ((App() && App().state.filtered) || []).filter(q => q !== p && q.lat != null && Math.abs(q.lat - p.lat) < 0.02 && Math.abs(q.lng - p.lng) < 0.03);
-    try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260 }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
+    try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260, bearing: bearing() }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
   }
 
   // ---- Home --------------------------------------------------------------------------------------
@@ -321,7 +351,7 @@
         { title: 'Recently active', rows: recent.map(devRow), total: recent.length },
         { title: 'Large files under review', rows: big.map(devRow), total: big.length },
       ],
-      map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: 'Recently active files highlighted; click to pick one on the map' },
+      map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
   }
   // ---- Check a site, with a site -----------------------------------------------------------------------
@@ -331,7 +361,7 @@
     return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer,
       caveats: [], figures: s.figures, chart: s.chart,
       lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
-      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'site' }, label: `Open ${p.title} on the map`, caption: 'The site (orange), nearby developments, sewers and the 2026 DC works (dashed)' },
+      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'site' }, label: `Open ${p.title} on the map`, caption: '<span class="hm-key hm-key-site"></span> the site <span class="hm-key hm-key-dev"></span> nearby developments · sewers · 2026 DC works (dashed)' },
       folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount,
       actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
@@ -408,7 +438,7 @@
     const f = frame(360, 300, bb), devPts = [...dm.keys()];
     const allAreas = A ? [...(A.secondaryPlans || []), ...(A.precincts || [])] : [];
     const subRings = n.children.map(c => (c.areaId ? allAreas.find(x => x.id === c.areaId) : null)).filter(x => x && x.rings);
-    const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => `<circle cx="${f.X(p.lng)}" cy="${f.Y(p.lat)}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
+    const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => { const [x, y] = f.pt(p.lng, p.lat); return `<circle cx="${x}" cy="${y}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`; }).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
@@ -428,7 +458,7 @@
         empRows.length ? { title: 'Employment', rows: empRows, total: empRows.length } : null,
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
       ],
-      map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `${esc(n.name)} outlined; its developments sized by units` : 'Developments sized by units' },
+      map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines' },
       method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
@@ -486,7 +516,7 @@
         { title: 'New files', rows: added.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.phase))}</span></div><small class="pnl-r-line">${esc(m.municipality || '')}${flag(m.key)}</small>`)), total: added.length },
         { title: 'Capital and EA dates', rows: ce.map(it => ({ attrs: { 'data-ws-go': 'week', 'data-ws-ce': it.ce }, html: `<small class="pnl-r-line">${esc(it.text)}</small>` })), total: ce.length },
       ],
-      map: { svg: devsMap(((App() && App().state.filtered) || []), pts), attrs: { 'data-ws-go': 'week' }, label: 'Open This week on the map', caption: 'Changed files highlighted' },
+      map: { svg: devsMap(((App() && App().state.filtered) || []), pts), attrs: { 'data-ws-go': 'week' }, label: 'Open This week on the map', caption: '<span class="hm-key hm-key-hl"></span> changed this week <span class="hm-key hm-key-dev"></span> developments of 50+ units' },
       method: 'Changes between the last two data updates: files whose stage moved, files listed for the first time (not those already completed), Region capital projects and EAs with a review period closing or a DC-matched date moved later. "On a tight plant": the file drains to a wastewater plant past its 90% trigger at build-out.',
       sources: 'The municipal application records (each update); Region of Peel capital project and EA listings.',
       actions: [{ label: 'Watch list', attrs: { 'data-ws-watch': '' }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'week' } }] };
@@ -504,7 +534,7 @@
         { title: 'What the FSR should cover', rows: COVERAGE.map(([t, k, d]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc(t)}<small class="muted"> · ${esc(d)}</small></span><span class="t-${WD[k][0]}">${WD[k][1]}</span></div>` })), total: COVERAGE.length },
         ...(s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('fsr', r)) })),
       ],
-      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'fsr' }, label: `Open ${p.title} on the map`, caption: 'The site, sewers and DC works nearby' },
+      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'fsr' }, label: `Open ${p.title} on the map`, caption: '<span class="hm-key hm-key-site"></span> the site · sewers · 2026 DC works nearby (dashed)' },
       folds: s.folds, method: `${s.method || ''} What the FSR should cover: Region of Peel, Functional Servicing Report Requirements (November 2009); confirm the current version with the Region.`, sources: s.sources,
       onMount: host => { if (typeof s.onMount === 'function') try { s.onMount(host); } catch (e) { /* the async parts */ } const b = host.querySelector('[data-pnl-fsrbox]'); if (b && F && F.mount) F.mount(b, p); },
       actions: [{ label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' }, primary: true }, { label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }, { label: 'Check the site', attrs: { 'data-ws-page': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'fsr' } }] };
@@ -528,7 +558,7 @@
         { ...s.lists[0], rows: s.lists[0].rows.map(r => toMap('pipes', r)), see: { 'data-ws-go': 'pipes' } },
         { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc((SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k)}</span><span>${fmtNum(x.n)} runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
       ],
-      map: { svg: pipesMap(list), attrs: { 'data-ws-go': 'pipes' }, label: 'Open Old pipes on the map', caption: 'The old pipes on the list (heavier: moderate risk)' },
+      map: { svg: pipesMap(list), attrs: { 'data-ws-go': 'pipes' }, label: 'Open Old pipes on the map', caption: '<span class="hm-key hm-key-pipe"></span> old pipes on the list (heavier: moderate risk)' },
       method: `${s.method} The grid counts runs (one main: segments end to end with the same size, year, material and risk) by likelihood (age 50–64 / 65–79 / 80+ years; a moderate risk rating moves a run one band up) and consequence (planned units carried: 100–1,000 / 1,000–10,000 / 10,000+).`,
       sources: s.sources,
       actions: [{ label: 'Export the list (CSV)', attrs: { 'data-ws-pipescsv': '' }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'pipes' } }] };

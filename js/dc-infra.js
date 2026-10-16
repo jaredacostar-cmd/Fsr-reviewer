@@ -25,10 +25,22 @@
   // plant treatment capacity steps.
   // Planned DC line colours: [label, token name, weight]. Token names resolve to
   // `var(--*)` in HTML/SVG and to computed values via token() for Leaflet.
+  // At least 3 px, over a halo (css: the infrastructure pane's drop shadow), so the planned works read
+  // over the developments' colours.
   const DC_KIND = {
-    primary: ['Primary wastewater main (trunk)', '--dc-ww-main', 4], local: ['Local wastewater main', '--dc-ww-local', 2.5], force: ['Force main', '--dc-ww-force', 2.5],
-    transmission: ['Water transmission main', '--dc-w-trans', 4], feeder: ['Water distribution feeder main', '--dc-w-feed', 2.5],
+    primary: ['Primary wastewater main (trunk)', '--dc-ww-main', 4.5], local: ['Local wastewater main', '--dc-ww-local', 3], force: ['Force main', '--dc-ww-force', 3],
+    transmission: ['Water transmission main', '--dc-w-trans', 4.5], feeder: ['Water distribution feeder main', '--dc-w-feed', 3],
   };
+  // Facility symbols (12 px, currentColor) in place of letters.
+  const FAC_ICON = {
+    plant: '<rect x="2" y="2" width="8" height="8" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 6h3" stroke="currentColor" stroke-width="1.6"/>',
+    pumping_station: '<path d="M6 1.8 10.6 10H1.4z" fill="currentColor"/>',
+    odour_control: '<path d="M2.5 4.2c1.2-1 2.3 1 3.5 0s2.3 1 3.5 0M2.5 7.8c1.2-1 2.3 1 3.5 0s2.3 1 3.5 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+    reservoir: '<circle cx="6" cy="6" r="3.8" fill="currentColor"/>',
+    elevated_tank: '<path d="M3 2.5h6v3.5H3z" fill="currentColor"/><path d="M4.2 6 3.2 10.5M7.8 6l1 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>',
+    well: '<circle cx="6" cy="6" r="3.8" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="6" cy="6" r="1.5" fill="currentColor"/>',
+  };
+  const facIcon = kind => `<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true">${FAC_ICON[kind] || FAC_ICON.reservoir}</svg>`;
   const DC_FAC = { plant: 'Treatment plant', pumping_station: 'Pumping station', odour_control: 'Odour control facility', reservoir: 'Reservoir', elevated_tank: 'Elevated tank', well: 'Well', program: 'Program' };
   const PHASE_NAME = { EA: 'environmental assessment', P: 'property', D: 'design', C: 'construction' };
   const dcM = (a, b) => Math.hypot((a[0] - b[0]) * 111320 * Math.cos(a[1] * Math.PI / 180), (a[1] - b[1]) * 111320);
@@ -153,7 +165,7 @@
       for (const fc of App().state.dcInfra[sys].facilities) {
         if (!fc.g) continue;
         const y = lastYear(fc), later = yr != null && y > yr;
-        L.marker([fc.g[1], fc.g[0]], { icon: L.divIcon({ className: `dc-fac dc-${sys}${later ? ' later' : ''}`, html: `<span>${{ plant: 'P', pumping_station: 'S', odour_control: 'O', reservoir: 'R', elevated_tank: 'T', well: 'W' }[fc.kind] || '•'}</span>`, iconSize: [20, 20] }) })
+        L.marker([fc.g[1], fc.g[0]], { icon: L.divIcon({ className: `dc-fac dc-${sys}${later ? ' later' : ''}`, html: `<span>${facIcon(fc.kind)}</span>`, iconSize: [20, 20] }) })
           .bindTooltip(window.PeelUtil.hoverCard({ kind: `DC facility · ${DC_FAC[fc.kind] || fc.kind}`, name: fc.name, value: y ? String(y) : '–', sub: `last construction · ${fc.items.length} project${fc.items.length === 1 ? '' : 's'}`, html: fc.approx ? '<span class="muted">approximate location</span>' : '', also: 'its schedule' }), { className: 'pt' })
           .on('click', ev => { if (window.PeelPick && ev && ev.containerPoint) window.PeelPick.at(ev); else showFacility(fc); }).addTo(dcLayer);
       }
@@ -211,7 +223,7 @@
   }
 
   const api = {
-    DC_KIND, DC_FAC, DC_CONNECT_M, dcM, dcDist, dcTarget, dcNearest,
+    DC_KIND, DC_FAC, facIcon, DC_CONNECT_M, dcM, dcDist, dcTarget, dcNearest,
     dcLineText, dcVia, devWorks, devWorksHTML, renderDcLayer, showFacility,
     dcAreaWorksHTML, dcGeoJSON, prepDc,
   };

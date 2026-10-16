@@ -81,9 +81,10 @@
     onAdd() {
       const el = L.DomUtil.create('div', 'leaflet-bar north-ctl');
       el.dataset.info = 'north';
+      // The arrow points north; the caption names the orientation (Road grid is the default).
       el.innerHTML = `<button type="button" id="north-btn" title="North. Tap to switch between road grid and north up" aria-label="North arrow: switch orientation">
         <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><g id="north-rot"><path d="M12 2.5l4.5 11h-9z" fill="currentColor"/><path d="M12 21.5l-4.5-8h9z" fill="none" stroke="currentColor" stroke-width="1.2"/>
-        <text x="12" y="12.2" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--surface-1)">N</text></g></svg></button>`;
+        <text x="12" y="12.2" text-anchor="middle" font-size="5.5" font-weight="700" fill="var(--surface-1)">N</text></g></svg><span class="north-cap" id="north-cap"></span></button>`;
       L.DomEvent.disableClickPropagation(el);
       el.querySelector('button').onclick = () => MC().setOrientation(MC().getOrientation() === 'grid' ? 'north' : 'grid');
       return el;
@@ -162,6 +163,9 @@
     const g = document.getElementById('north-rot');
     const b = canRotate ? map.getBearing() : 0;
     if (g) g.setAttribute('transform', `rotate(${b} 12 12)`);
+    const cap = document.getElementById('north-cap'), grid = MC().getOrientation() === 'grid' && canRotate;
+    if (cap) cap.textContent = grid ? 'Grid' : 'North';
+    const btn = document.getElementById('north-btn'); if (btn) btn.setAttribute('aria-label', `Orientation: ${grid ? 'road grid' : 'north up'}. Switch to ${grid ? 'north up' : 'road grid'}`);
   }
   map.on('rotate', updateNorth);
   updateNorth();
@@ -304,7 +308,7 @@
     selLayer.clearLayers();
     for (const g of selAreas) L.polygon(g.map(([x, y]) => [y, x]), { className: 'sel-area', interactive: false }).addTo(selLayer);
     for (const p of selection.values()) {
-      // Each selected development's application boundaries in orange, and a ring for zoomed-out views.
+      // Each selected development's application boundaries in cyan, and a ring for zoomed-out views.
       for (const a of MM().siteApps(p)) L.polygon(MM().toLatLngs(a.poly), { renderer: selCanvas, color: MM().selColor(), weight: 2.5, fillColor: MM().selColor(), fillOpacity: 0.2, interactive: false }).addTo(selLayer);
       L.circleMarker([p.lat, p.lng], { radius: 10, className: 'sel-ring', interactive: false }).addTo(selLayer);
     }

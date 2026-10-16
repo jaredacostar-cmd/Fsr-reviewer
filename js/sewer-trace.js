@@ -389,8 +389,11 @@
           .on('click', ev => { L.DomEvent.stop(ev); showBlock(b.id); });
         BLK.layer.addLayer(pl);
         // In the marker pane: leaflet-rotate places markers there on the turned map (in another pane
-        // a label lands off its block when the map is turned to the road grid).
-        BLK.layer.addLayer(L.marker([(b.lp || b.c)[1], (b.lp || b.c)[0]], { interactive: false, keyboard: false, icon: L.divIcon({ className: `blk-lbl${b.planning ? ' pri' : ''}`, html: `<span>${esc(b.id)}</span>`, iconSize: [26, 16] }) }));
+        // a label lands off its block when the map is turned to the road grid). White text with a halo,
+        // from zoom 12 (css: .z-lt12 hides them); further out, only the block under the pointer.
+        const lbl = L.marker([(b.lp || b.c)[1], (b.lp || b.c)[0]], { interactive: false, keyboard: false, icon: L.divIcon({ className: `blk-lbl${b.planning ? ' pri' : ''}`, html: `<span>${esc(b.id)}</span>`, iconSize: [26, 16] }) });
+        BLK.layer.addLayer(lbl);
+        pl.on('mouseover', () => { const e = lbl.getElement(); if (e) e.classList.add('hov'); }).on('mouseout', () => { const e = lbl.getElement(); if (e) e.classList.remove('hov'); });
       }
     }
     if (MM().svcOn.bk) BLK.layer.addTo(map);

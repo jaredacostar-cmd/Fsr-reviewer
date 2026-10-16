@@ -56,12 +56,8 @@ test('densityDefault: coarse pointer -> comfortable, desktop -> compact', () => 
   assert.equal(DG.applyDensity('garbage'), 'compact');
 });
 
-test('basemapForView: planning -> aerial, servicing views -> dark canvas', () => {
-  assert.equal(DG.basemapForView('planning'), 'aerial-labels');
-  assert.equal(DG.basemapForView('water'), 'canvas-dark');
-  assert.equal(DG.basemapForView('wastewater'), 'canvas-dark');
-  assert.equal(DG.basemapForView('dc'), 'canvas-dark');
-  assert.equal(DG.basemapForView('something-else'), 'aerial-labels');
+test('basemapForView: every view opens on the grey map with the aerial from street zoom (auto)', () => {
+  for (const v of ['planning', 'water', 'wastewater', 'dc', 'something-else']) assert.equal(DG.basemapForView(v), 'auto');
 });
 
 test('icon(): inline SVG, outline style, 24x24 viewBox, every name resolves', () => {
