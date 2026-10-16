@@ -126,10 +126,12 @@
       'Please attach a screenshot showing the issue.',
     ].filter(l => l != null).join('\n');
   }
-  // The view's link without the search text (q) — the rest is the app's own state.
+  // The view's link without the search text (q), and the map centre rounded to ≈100 m (an address
+  // searched for is not pinpointed) — the rest is the app's own state.
   const linkWithoutSearch = url => {
     const u = String(url || ''), i = u.indexOf('#'); if (i < 0) return u;
     const q = new URLSearchParams(u.slice(i + 1)); q.delete('q');
+    if (q.get('m')) q.set('m', q.get('m').split(',').map((v, k) => (k < 2 && /^-?\d+(\.\d+)?$/.test(v) ? (+v).toFixed(3) : v)).join(','));
     const h = q.toString(); return h ? `${u.slice(0, i)}#${h}` : u.slice(0, i);
   };
   function panelIssueUrl(panel, meta) {

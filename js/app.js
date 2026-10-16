@@ -305,6 +305,7 @@
     if (PeelMapMarkers.mstyle.color === 'phase') PeelMapAnalysis.renderLegend();   // the phase legend lists the shown phases
     renderWatch();
     PeelTips.maybeTour();
+    if (window.PeelWorkspaces && window.PeelWorkspaces.bootRestore) window.PeelWorkspaces.bootRestore();
     PeelShare.viewLink.ready();
     PeelTopbar.renderTrail();
   }

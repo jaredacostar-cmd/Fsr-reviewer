@@ -392,6 +392,9 @@
       { kv: true, html: `<div class="pnl-kv"><span>Left to build</span><span>${n0(emp.left)} m²</span></div>` },
     ] : [];
     // The area on the small map: its outline (a plan or precinct), its developments.
+    // The map's plan filter takes secondary plans only: at a precinct or sub-area, its plan.
+    const spIds = new Set(((App().state.areas || {}).secondaryPlans || []).map(x => x.id));
+    const spId = (() => { for (let x = n; x; x = x.parent ? r.nodes.get(x.parent) : null) if (x.areaId && spIds.has(x.areaId)) return x.areaId; return null; })();
     const A = App().state.areas, ring = n.areaId && A ? [...(A.secondaryPlans || []), ...(A.precincts || [])].find(x => x.id === n.areaId) : null;
     // (an area: the map zooms to its outline, with a margin)
     let bb = null;
@@ -414,15 +417,15 @@
       lists: [
         kids.length ? { title: atPeel ? 'By municipality' : n.kind === 'municipality' ? 'Plans (secondary plans, character areas) and the rest' : 'Precincts and sub-areas', rows: kids.map(kidRow), total: kids.length, see: kids.length > 5 ? { 'data-ws-drillall': n.id } : null, all: gAll } : null,
         atPeel ? { title: 'Plans with the most planned units', rows: plans.map(kidRow), total: plans.length, see: { 'data-ws-go': 'growth', 'data-ws-fulltable': 'growth:areas' } } : null,
-        { title: gStage === 'all' ? `Files in ${n.name}` : `${STG[gStage]}: files in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: n.areaId ? { 'data-ws-go': 'growth', 'data-ws-area': n.areaId } : { 'data-ws-go': 'growth' } },
+        { title: gStage === 'all' ? `Files in ${n.name}` : `${STG[gStage]}: files in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
         estRows.length ? { title: gStage === 'all' ? 'Estimated counts: files to confirm' : `${STG[gStage]}: estimated counts`, rows: estRows, total: estRows.length, seeN: es.files.length, see: estRows.length > 5 ? { 'data-ws-estall': '1' } : null, all: gEst } : null,
         empRows.length ? { title: 'Employment', rows: empRows, total: empRows.length } : null,
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
       ],
-      map: { svg: mapSvg, attrs: n.areaId ? { 'data-ws-go': 'growth', 'data-ws-area': n.areaId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `${esc(n.name)} outlined; its developments sized by units` : 'Developments sized by units' },
+      map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `${esc(n.name)} outlined; its developments sized by units` : 'Developments sized by units' },
       method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
-      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: n.areaId ? { 'data-ws-go': 'growth', 'data-ws-area': n.areaId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
+      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
   }
   let gAll = false, gEst = false;
   document.addEventListener('click', e => {

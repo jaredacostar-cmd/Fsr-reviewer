@@ -68,6 +68,8 @@ test('Report a data issue: a pre-filled issue naming the panel and a link to the
   assert.match(body, /\*\*App version:\*\* v1\.230/);
   assert.match(body, /Please attach a screenshot/);
   assert.equal(RI.linkWithoutSearch('https://x.test/#q=a'), 'https://x.test/');
+  // The map centre to 3 decimals (≈100 m), the zoom as it was.
+  assert.equal(RI.linkWithoutSearch('https://x.test/#m=43.66812%2C-79.75764%2C17&q=12+main'), 'https://x.test/#m=43.668%2C-79.758%2C17');
 });
 
 test('Report a data issue sits at the foot of every panel and every page, at the end of the actions', () => {

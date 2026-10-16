@@ -334,7 +334,7 @@
       chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed against rated capacity</p>${capacityBarsHTML(capList)}` : '',
       lists: [
         { title: 'Needs attention', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('limit', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: ranked.slice(0, 5).map(SC.listRow), total: ranked.length, seeAll: { 'data-at': 'svc:capacity' } },
-        { title: 'This week', rows: week.slice(0, 5), total: week.length, seeAll: { 'data-full-table': 'overview' } },
+        { title: 'This week', rows: week, total: week.length, seeAll: { 'data-full-table': 'overview' } },   // (the panel shows 5; Home and This week count them all)
       ],
       method: info.replace(/^<p[^>]*>|<\/p>$/g, ''),
       sources: `${(fr || []).filter(r => r.date).slice(0, 6).map(r => `${esc(r.name)} · ${esc(r.date)}`).join('<br>')}<br><button type="button" class="btn small link" data-at="records:sources">Every source and its date (Records) →</button>`,

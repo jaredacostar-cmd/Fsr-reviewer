@@ -19,6 +19,9 @@
  */
 (function (root) {
   'use strict';
+  // The aerial and ground boxes can be on the page twice (the development's Site view and the Servicing
+  // panel's fold): fill the one on screen.
+  const byIdShown = id => { const all = typeof document !== 'undefined' ? [...document.querySelectorAll(`[id="${id}"]`)] : []; return all.find(e => e.getClientRects().length) || all[0] || null; };
 
   // ---- Guarded access to the app's globals ------------------------------------
   const P = () => root.PeelPhases;
@@ -653,7 +656,7 @@
   }
   function devAerial(p) {
     if (!hasDOM()) return;
-    const box = document.getElementById('devtab-aerial');
+    const box = byIdShown('devtab-aerial');
     if (!box) return;
     const Ae = Aerial(), cfg = CFG();
     if (!Ae || !cfg || !cfg.imagery || !cfg.imagery[p.municipality] || p.lat == null) {
@@ -661,12 +664,12 @@
       return;
     }
     const key = p.key;
-    const show = r => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) renderAerialInto(b, r); } };
+    const show = r => { if (liveKey === key) { const b = byIdShown('devtab-aerial'); if (b) renderAerialInto(b, r); } };
     if (aerialCache.has(key)) { show(aerialCache.get(key)); return; }
     box.innerHTML = '<p class="small muted">Comparing aerial photos…</p>';
     Ae.check(p, cfg, { phaseLabel: P().PHASE_BY_KEY[p.phase].label })
       .then(r => { aerialCache.set(key, r); show(r); })
-      .catch(e => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
+      .catch(e => { if (liveKey === key) { const b = byIdShown('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
   }
 
   // ---- Site: constraint checklist (js/constraint-data.js; never blank) ---------------
@@ -681,9 +684,9 @@
   // lidar terrain model through js/elevation.js; each value names its source).
   async function fillGround(p) {
     if (!hasDOM() || !root.PeelSiteContext || !root.PeelSiteContext.groundHTML) return;
-    if (!document.getElementById('devtab-ground')) return;
+    if (!byIdShown('devtab-ground')) return;
     const html = await root.PeelSiteContext.groundHTML(p);
-    if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = html; }
+    if (liveKey === p.key) { const b = byIdShown('devtab-ground'); if (b) b.innerHTML = html; }
   }
 
   // ---- Site: storm sewers (storm-only variant of app.js fillExisting) --------------

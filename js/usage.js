@@ -105,7 +105,9 @@
   window.addEventListener('click', onClick, true);
   // How the app opened, once per load (after the start screen has been chosen). Whether it came from
   // a link is read now, before the app writes its own state into the address.
-  const fromLink = location.hash.length > 1;
+  // (a reload or a restored tab carries the app's own address: only a navigation to it is a link)
+  const nav = (() => { try { return performance.getEntriesByType('navigation')[0] || null; } catch (e) { return null; } })();
+  const fromLink = location.hash.length > 1 && (!nav || nav.type === 'navigate');
   const started = () => { const W = root.PeelWorkspaces; const m = W && W.mode ? W.mode() : 'full'; count('start', `${m}${fromLink ? '-link' : ''}`); };
   if (document.readyState === 'complete') setTimeout(started, 0); else window.addEventListener('load', () => setTimeout(started, 0), { once: true });
 
