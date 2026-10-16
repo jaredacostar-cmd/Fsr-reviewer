@@ -36,7 +36,7 @@
     ? '<rect x="3" y="2" width="16" height="10" rx="1" style="fill:var(--svc-drainage);stroke:var(--svc-drainage)" fill-opacity=".1" stroke-width="1.6" stroke-dasharray="3 2"/>'
     : '<rect x="3" y="2" width="8" height="10" style="fill:var(--pl-booth);stroke:var(--pl-booth)" fill-opacity=".25"/><rect x="11" y="2" width="8" height="10" style="fill:var(--pl-clarkson);stroke:var(--pl-clarkson)" fill-opacity=".25"/>'}</svg>`;
   const MSTYLE = {
-    color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
+    color: { phase: 'Stage', layer: 'Counted as', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
     show: { markers: 'Markers' },   // (Stage 2: the heatmap is removed; an old 'heat' falls back to markers)
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', pipes: 'Sewer pipe capacity', zone: 'Pressure zone growth' },

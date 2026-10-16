@@ -100,7 +100,7 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   const now = old => MOVED.flatMap(g => g.rows).find(r => r[0].includes(old))[1];
   assert.match(now('Plants & capacity'), /Servicing › Capacity/);
   assert.match(now('Pressure zones'), /Servicing › Network/);
-  assert.match(now('Water › Facilities'), /Servicing › Checks/);
+  assert.match(now('Water › Facilities'), /Servicing › Model checks/);
   assert.match(now('Census & 2051'), /Growth › Areas/);
   assert.match(now('Capital › Construction'), /Capital › Projects/);
   const at = src('js/analysis-tabs.js');

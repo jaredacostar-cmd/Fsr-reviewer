@@ -132,7 +132,7 @@ test('Growth: the pipeline by stage, in the order a file moves; approved split o
 test('the layers in plain words, across the app; capacity bars keep the most-certain-first order', () => {
   const B = require('../js/layer-bar.js');
   assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
-  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
+  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
   assert.deepEqual(plain(require('../js/layers.js').LABEL), plain(B.LABEL), 'one set of names');
   // A capacity bar stacks from the base: on the system, built, approved, in review.
   assert.match(src('js/svc-capacity.js'), /segments: \[seg\('existing', r\.existing\), seg\('built', r\.built\), seg\('committed', [^)]+\)\), seg\('proposed',/);

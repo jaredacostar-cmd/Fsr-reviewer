@@ -61,10 +61,11 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   assert.ok(!/class="f-pane f-subtabs"[^>]*data-pane="overview"/.test(HTML), 'Overview has no sub-views');
   // The chip rows in index.html: one per tab, in the spec's order and words.
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
-  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Timing']);
-  assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Allocations', 'Checks']);
-  assert.deepEqual(row('dca'), ['Timing', 'Projects', 'EAs', 'Funding']);
-  assert.deepEqual(row('records'), ['Sources', 'Checks', 'Files']);
+  // (no two sub-views share a name: design bundle 2)
+  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast']);
+  assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Allocations', 'Model checks']);
+  assert.deepEqual(row('dca'), ['DC timing', 'Projects', 'EAs', 'Funding']);
+  assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
 });
 
 test('1. the panes behind each sub-view: Areas is one drill-down; Network holds blocks, stations, zones', () => {

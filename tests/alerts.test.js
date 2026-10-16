@@ -95,7 +95,7 @@ test('changeItems: item shape, absolute URLs, kind mapping, noise filtered', () 
   const kinds = items.map(i => i.kind).sort();
   assert.deepEqual(kinds, ['phase-change', 'units-change']);
   const ph = items.find(i => i.kind === 'phase-change');
-  assert.match(ph.text, /Under review → Draft \/ site plan approved/);
+  assert.match(ph.text, /In review → Approved, no permit yet/);
   assert.match(ph.text, /Mississauga/);
   const un = items.find(i => i.kind === 'units-change');
   assert.match(un.text, /1,000 → 1,600/);

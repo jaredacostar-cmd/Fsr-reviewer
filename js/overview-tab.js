@@ -279,7 +279,7 @@
       return `<tr><td><button type="button" class="btn small link" data-ov-dev="${esc(p.key)}">${esc(p.title)}</button><small class="muted">${esc(p.municipality)}</small></td><td>${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(Math.round(left(p)))}</td><td class="n">${fmtNum(roundPop(pe.population))}</td></tr>`;
     }).join('');
     return `<section class="ov-card ov-topdevs"><div class="ov-h"><h3>Largest unbuilt</h3><button type="button" class="btn small link ov-go" data-ov-inview title="The In view list in the left panel (sort: most left to build)">See all →</button></div>
-      <table class="dt ov-t"><thead><tr><th>Development</th><th>Phase</th><th class="n">Left to build</th><th class="n">People</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+      <table class="dt ov-t"><thead><tr><th>Development</th><th>Stage</th><th class="n">Left to build</th><th class="n">People</th></tr></thead><tbody>${rows}</tbody></table></section>`;
   }
   // A result scope (a DC work, a pipe, a file, a tool's result: SPEC §3) shows in its own host next to
   // the Overview body; it is rebuilt only when the result changes, so its inputs keep their state.

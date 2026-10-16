@@ -2272,7 +2272,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 }
 .pipe-rows button:hover { border-color: var(--accent); }
 .pipe-rows button .sw { flex: none; width: 10px; height: 10px; border-radius: 50%; }
-.pipe-rows button .t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pipe-rows button .t { flex: 1; min-width: 0; line-height: 1.2; overflow-wrap: anywhere; }   /* (stage names wrap, never cut: "Approved, no permit yet") */
 .pipe-rows button .n { font-size: var(--fs-2); font-weight: 500; font-variant-numeric: tabular-nums; }
 .pipe-rows button.off { opacity: .45; }
 .pipe-rows button.off .t { text-decoration: line-through; text-decoration-color: var(--text-muted); }

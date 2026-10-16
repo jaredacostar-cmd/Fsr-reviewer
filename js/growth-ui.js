@@ -224,7 +224,7 @@
     const segs = growth.map(k => ({ layer: k, value: u[k], est: Math.min(u[k], t.estimatedBy[k] || 0) }));
     const bt = Ly.byType(set), n0 = v => fmtNum(Math.round(v));
     const rows = D.UNIT_TYPES.filter(ty => growth.some(k => bt[ty.key][k] >= 0.5)).map(ty => `<tr><td>${esc(ty.label)}</td>${growth.map(k => `<td class="n">${n0(bt[ty.key][k])}</td>`).join('')}</tr>`).join('');
-    return `<h3 class="sub-title" data-info="growth-layers">By layer <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
+    return `<h3 class="sub-title" data-info="growth-layers">By stage <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
       ${LB.barHTML({ segments: segs })}
       ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
       ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Pre-application: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}

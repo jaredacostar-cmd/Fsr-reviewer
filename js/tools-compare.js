@@ -223,7 +223,7 @@
     var n = item.kind === 'dev' ? devNumbers(item.p) : areaNumbers(item.members);
     var rows = [];
     var kv = function (k, v) { rows.push('<div class="tcmp-f"><div class="k">' + k + '</div><div class="v">' + v + '</div></div>'); };
-    if (item.kind === 'dev') kv('Phase', phaseBadge(item.p)); else kv('Type', 'Area');
+    if (item.kind === 'dev') kv('Stage', phaseBadge(item.p)); else kv('Type', 'Area');
     kv('Units', n.units != null ? n.units : '<span class="muted">Loading…</span>');
     kv('People', n.people != null ? n.people : '<span class="muted">Loading…</span>');
     kv('Water max day', n.maxDay != null ? n.maxDay : '<span class="muted">Loading…</span>');

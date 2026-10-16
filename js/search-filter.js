@@ -38,7 +38,9 @@
   $('#pipeline').onclick = e => {
     const b = e.target.closest('[data-phase]'); if (!b) return;
     if (b.closest('.pipe-rows')) {
-      const next = new Set(App().state.phases); if (next.has(b.dataset.phase)) next.delete(b.dataset.phase); else next.add(b.dataset.phase);
+      // (one row can hold two phases of one stage: "permit construction")
+      const ks = b.dataset.phase.split(' '), next = new Set(App().state.phases), on = ks.every(k => next.has(k));
+      for (const k of ks) { if (on) next.delete(k); else next.add(k); }
       App().state.phases = next.size ? next : new Set(App().DEFAULT_PHASES()); App().applyFilters(); return;
     }
     togglePhase(b.dataset.phase, e.ctrlKey || e.metaKey);

@@ -278,7 +278,7 @@
     const el = L.DomUtil.create('div', 'ww-loads'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.innerHTML = `<div class="wl-h"><span data-info="ww-layers">Wastewater loads</span><span class="wl-sum"></span></div>
       <div class="wl-chips"><label class="mo-chip" title="Census (existing) flows"><input type="checkbox" id="ww-census"${MM().getWwLay().existing !== false ? ' checked' : ''}><span>Include census (existing)</span></label></div>
-      <p class="wl-note small muted">Growth layers follow the selected stages</p>`;
+      <p class="wl-note small muted">The loads follow the stages selected in the sidebar</p>`;
     el.querySelector('#ww-census').onchange = e => MM().setWwLay('existing', e.target.checked);
     el.hidden = !MM().isWW();
     return el;
@@ -351,9 +351,9 @@
     // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by Phase | Layer.
     {
       const c = MM().mstyle.color, b = (k, t) => `<button type="button" class="btn small${c === k ? ' on' : ''}" data-lg-color="${k}" aria-pressed="${c === k}">${t}</button>`;
-      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Phase')}${b('layer', 'Layer')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : 'One marker per development; a cluster’s number counts developments.'}</p>`);
+      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Stage')}${b('layer', 'Counted as')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : 'One marker per development; a cluster’s number counts developments.'}</p>`);
     }
-    if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Phase</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
+    if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Stage</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
     if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);
     if (MM().mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(MM().TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(MM().QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);

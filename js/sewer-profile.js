@@ -279,7 +279,7 @@
       <div class="head"><h3><input class="wf-name" data-wf="name" value="${esc(w.name)}" aria-label="Name"></h3><div class="m">Test site · drag the pin to move it · not a real application${whatIfs.length > 1 ? ` · <button type="button" class="btn small link" data-wf-showall>all ${whatIfs.length} test sites</button>` : ''}</div>
         <div class="wf-head-act"><button type="button" class="btn small" data-wf-del="1">Remove this test site <span aria-hidden="true">×</span></button></div></div>
       <div class="wf-form">${num('single', 'Single / semi')}${num('town', 'Townhouses')}${num('apartment', 'Apartments')}${num('jobs', 'Jobs')}${num('ha', 'Site area (ha)', 0.1)}
-        <label class="field"><span>Layer</span><select data-wf="phase"><option value="review"${w.phase === 'review' ? ' selected' : ''}>In review</option><option value="approved"${w.phase === 'approved' ? ' selected' : ''}>Approved</option></select></label></div>
+        <label class="field"><span>Counts as</span><select data-wf="phase"><option value="review"${w.phase === 'review' ? ' selected' : ''}>In review</option><option value="approved"${w.phase === 'approved' ? ' selected' : ''}>Approved</option></select></label></div>
       <label class="chk small"><input type="checkbox" data-wf="include"${w.include ? ' checked' : ''}> Count it in the Water / Wastewater totals and plant capacity</label>
       <div id="wf-out"></div>`, () => showWhatIf(null, w.id));
     renderWhatIfOut(w);

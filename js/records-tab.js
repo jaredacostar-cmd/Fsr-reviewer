@@ -28,7 +28,7 @@
         <p class="small">${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} unique files → ${fmtNum(a.records.projects)} developments; <strong>${fmtNum(a.possible.length)}</strong> possible duplicate pair${a.possible.length === 1 ? '' : 's'} to review (Find › Data).</p>`
       : '<p class="small muted">Checks run once the full data has loaded.</p>';
     const acc = root.ModelChecks && typeof root.ModelChecks.accuracy === 'string' ? root.ModelChecks.accuracy : '';
-    return `${dups}${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Checks →</button></p>`;
+    return `${dups}${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p>`;
   }
   const peelHTML = () => `${sourcesHTML()}${checksHTML()}`;
 
@@ -87,12 +87,12 @@
     const PN = root.PeelPanel, a = App().state.audit, pc = root.PeelCensusView && root.PeelCensusView.permitCheck ? root.PeelCensusView.permitCheck() : null;
     const fails = a ? a.checks.filter(c => c.value) : [], pFail = pc && pc.rows ? pc.rows.filter(r => !r.pass) : [];
     return {
-      fullTitle: 'Records › Checks: duplicates, published totals, permit counts and the accuracy report',
-      head: PN.areaHead('Records › Checks', 'Can the data be trusted?', fails.length || pFail.length ? { tone: 'tight', text: `${fails.length + pFail.length} to review` } : { tone: 'room', text: 'Pass' }, a ? `${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} files → ${fmtNum(a.records.projects)} developments` : 'Checks run once the full data has loaded'),
+      fullTitle: 'Records › Data checks: duplicates, published totals, permit counts and the accuracy report',
+      head: PN.areaHead('Records › Data checks', 'Can the data be trusted?', fails.length || pFail.length ? { tone: 'tight', text: `${fails.length + pFail.length} to review` } : { tone: 'room', text: 'Pass' }, a ? `${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} files → ${fmtNum(a.records.projects)} developments` : 'Checks run once the full data has loaded'),
       answer: a ? `${fmtNum(a.records.raw)} records make <strong>${fmtNum(a.records.projects)}</strong> developments; <strong>${fmtNum(a.possible.length)}</strong> possible duplicate pair${a.possible.length === 1 ? '' : 's'} to review${pFail.length ? `; permit counts differ from Region figures for ${pFail.map(r => esc(r.m)).join(' and ')}` : ''}.` : 'The checks run once the full data has loaded.',
       figures: a ? [{ v: fmtNum(a.records.raw), u: 'records', label: 'read', ctx: '' }, { v: fmtNum(a.records.unique), u: 'files', label: 'unique', ctx: '' }, { v: fmtNum(a.possible.length), u: 'pairs', label: 'possible duplicates', ctx: 'to review (Find › Data)', tone: a.possible.length ? 'tight' : 'room' }, { v: fails.length, u: '', label: 'checks flagged', ctx: '', tone: fails.length ? 'tight' : 'room' }] : [],
       lists: a ? [{ title: 'Checks', rows: a.checks.slice(0, 5).map(c => PN.kv(esc(c.label), `${c.value ? '✕' : '✓'} ${fmtNum(c.value)}`, c.value ? 'tight' : 'room')), total: a.checks.length, seeAll: { 'data-full-table': 'records' } }] : [],
-      method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model\u2019s checks are Servicing › Checks.',
+      method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model\u2019s checks are Servicing › Model checks.',
       sources: 'The municipal application and permit records; Region of Peel published totals and permit figures.',
       foot: { primary: { label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } } },
     };
@@ -118,8 +118,8 @@
       head: PN.siteHead(p),
       answer: `<strong>${files.length}</strong> planning file${files.length === 1 ? '' : 's'} and <strong>${permits.length}</strong> building permit${permits.length === 1 ? '' : 's'} on this site${p.last ? `; the latest activity ${esc(day(p.last))}` : ''}.`,
       figures: [{ v: files.length, u: 'files', label: 'planning applications', ctx: '' }, { v: permits.length, u: 'permits', label: 'building permits', ctx: '' }],
-      lists: [{ title: 'Files', rows: sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(r.type)}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`)), total: files.length, seeAll: { 'data-full-table': 'records' } }],
-      method: 'The files on the land and their history: how the phase was set (the furthest phase reached by a file that is not withdrawn), dated events and the source records with their provenance.',
+      lists: [{ title: 'Files', rows: sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(r.type)}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} units · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`)), total: files.length, seeAll: { 'data-full-table': 'records' } }],
+      method: 'The files on the land and their history: how the development\u2019s stage was set (the furthest stage reached by a file that is not withdrawn), dated events and the source records with their provenance. Each file shows the municipality\u2019s own status wording.',
       sources: `${esc(p.municipality)} open data (applications and permits), with each record\u2019s source and pull date in the full table.`,
       foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } } },
     };

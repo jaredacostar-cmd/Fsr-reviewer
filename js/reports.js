@@ -138,7 +138,7 @@
         <section><h2>Growth</h2><div class="tiles">
           <div class="t"><b>${fmtNum(set.length)}</b><span>developments</span></div><div class="t"><b>${fmtNum(Math.round(unitsAll))}</b><span>units (${fmtNum(left)} left to build)</span></div><div class="t"><b>${fmtNum(roundPop(e.population))}</b><span>people at build-out</span></div>
           <div class="t"><b>${fmtNum(roundPop(e.employment.jobs))}</b><span>jobs</span></div><div class="t"><b>${fmt1(cb.water.maxDay)} L/s</b><span>water max day</span></div><div class="t"><b>${fmt1(cb.wastewater.wetPeak)} L/s</b><span>wastewater peak wet</span></div></div>
-          <h2>Servicing demand by phase</h2><table><thead><tr><th>Phase</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day L/s</th><th>Wastewater peak wet L/s</th></tr></thead><tbody>${ph}<tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(e.employment.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table></section>
+          <h2>Servicing demand by stage</h2><table><thead><tr><th>Stage</th><th>Units</th><th>People</th><th>Jobs</th><th>Water max day L/s</th><th>Wastewater peak wet L/s</th></tr></thead><tbody>${ph}<tr class="tot"><td>Total</td><td>${fmtNum(Math.round(e.totalUnits))}</td><td>${fmtNum(roundPop(e.population))}</td><td>${fmtNum(roundPop(e.employment.jobs))}</td><td>${fmt1(cb.water.maxDay)}</td><td>${fmt1(cb.wastewater.wetPeak)}</td></tr></tbody></table></section>
         <section><h2>Capacity (% of rated capacity; tick = 90% expansion trigger)</h2>${plants.map(bar).join('') || '<p>Servicing model not loaded.</p>'}
           ${al.length ? `<p><b>After servicing allocations:</b> ${al.map(x => `${esc(SD().PLANT_SHORT[x.pl])} ${fmt1(x.after)} ML/d room (≈${fmtNum(roundPop(x.peopleAfter))} people)`).join('; ')}.</p>` : ''}
           <div class="map">${briefingMap(set)}<small>Wastewater blocks (shaded: prioritised for a block study), developments of 50+ units by phase, and the treatment plants (■).</small></div></section>
@@ -181,7 +181,7 @@
     const body = `<h1>Comparison — ${esc(titles)}</h1>` +
       `<p class="meta">Side-by-side of the Compare tool's ${fmtNum(items.length)} item${items.length === 1 ? '' : 's'} · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Growth Pipeline (unofficial)</p>` +
       `<p class="note">Filters: ${esc(filt)} · ${esc(ST().scenarioText())}. Screening estimates at Peel design criteria; not a hydraulic model or a functional servicing report. The compared items are the current Compare tool contents, independent of the map filters above.</p>` +
-      `<h2>Side by side</h2><table><thead><tr><th></th><th>Phase</th><th>Municipality</th><th class="n">Units</th><th class="n">People</th><th class="n">Jobs</th><th class="n">Water max day (L/s)</th><th class="n">Wastewater peak wet (L/s)</th><th>Tightest constraint</th></tr></thead>` +
+      `<h2>Side by side</h2><table><thead><tr><th></th><th>Stage</th><th>Municipality</th><th class="n">Units</th><th class="n">People</th><th class="n">Jobs</th><th class="n">Water max day (L/s)</th><th class="n">Wastewater peak wet (L/s)</th><th>Tightest constraint</th></tr></thead>` +
       `<tbody>${rows.map(tr).join('')}` +
       `<tr style="font-weight:700"><td>Total</td><td></td><td></td><td class="n">${fmtNum(Math.round(tot.units))}</td><td class="n">${fmtNum(Math.round(tot.people))}</td><td class="n">${fmtNum(Math.round(tot.jobs))}</td><td class="n">${fmt1(tot.waterMaxDay)}</td><td class="n">${fmt1(tot.wastewaterWetPeak)}</td><td></td></tr></tbody></table>` +
       reportFooter();
@@ -255,14 +255,14 @@
     const body = `<h1>${esc(title)}</h1><p class="sub">${fmtNum(devs.length)} developments · ${fmtNum(Math.round(e.totalUnits))} units · ${fmtNum(roundPop(e.population))} people · ${fmtNum(roundPop(e.employment.jobs))} jobs</p>
       <p class="meta">Area report · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Growth Pipeline (unofficial) · filters: ${esc(FI().activeFilters().map(f => f.label).join(', ') || 'none')}</p>
       <div class="grid"><div>
-        <h2>By phase</h2><table><tr><th>Phase</th><th class="n">Developments</th><th class="n">Units</th></tr>${byPhase}</table>
+        <h2>By stage</h2><table><tr><th>Stage</th><th class="n">Developments</th><th class="n">Units</th></tr>${byPhase}</table>
         <h2>Servicing demand (combined, Peel design criteria)</h2><table><tr><th></th><th class="n">Average</th><th class="n">Max day / peak dry</th><th class="n">Peak hour / wet</th></tr>
           <tr><td>Water</td><td class="n">${fmt1(cb.water.avg)} L/s</td><td class="n">${fmt1(cb.water.maxDay)} L/s</td><td class="n">${fmt1(cb.water.peakHour)} L/s</td></tr>
           <tr><td>Wastewater</td><td class="n">${fmt1(cb.wastewater.avg)} L/s</td><td class="n">${fmt1(cb.wastewater.peak)} L/s</td><td class="n">${fmt1(cb.wastewater.wetPeak)} L/s</td></tr></table>
         <p class="muted">${fmt1(D.toMLd(cb.water.avg))} ML/d water average · ${fmt1(D.toMLd(cb.wastewater.avg))} ML/d wastewater average. Pressure zones: ${esc(count('pz', id => (SD().svcById.get(id) || {}).name || id).replace(/Pressure zone /g, 'Zone '))}.</p>
       </div><div>${pts.length ? sketchSVG({ center, halfM, points: pts, rings }) : ''}</div></div>
       ${rows.length ? `<h2>Capacity it relies on (needs a DC project or a check)</h2><table>${needHead('<th class="n">Developments</th>')}${rows.map(a => needRow(a.c, ppu, `<td class="n">${fmtNum(a.n)}</td>`)).join('')}</table><p class="muted">From the ${fmtNum(Math.min(150, pts.length))} largest developments; room in units at ${ppu} persons per unit (apartment).</p>` : ''}
-      <h2>Largest developments</h2><table><tr><th>Development</th><th>Municipality</th><th>Phase</th><th class="n">Units</th></tr>${top.map(p => `<tr><td>${esc(p.title)}</td><td>${esc(p.municipality)}</td><td>${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(p.units || 0)}</td></tr>`).join('')}</table>
+      <h2>Largest developments</h2><table><tr><th>Development</th><th>Municipality</th><th>Stage</th><th class="n">Units</th></tr>${top.map(p => `<tr><td>${esc(p.title)}</td><td>${esc(p.municipality)}</td><td>${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(p.units || 0)}</td></tr>`).join('')}</table>
       ${reportFooter()}`;
     openReport(title, body);
   }

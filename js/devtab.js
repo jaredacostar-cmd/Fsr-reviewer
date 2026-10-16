@@ -284,7 +284,7 @@
     }
     return out;
   }
-  const TL_TYPE = { council: 'Council', phase: 'Phase', file: 'File', permit: 'Permit', permits: 'Permits' };
+  const TL_TYPE = { council: 'Council', phase: 'Stage', file: 'File', permit: 'Permit', permits: 'Permits' };
   function evHTML(x) {
     const tags = list => list.length <= 3 ? esc(list.join(', '))
       : `${esc(list.slice(0, 2).join(', '))} <details class="tl-more"><summary>+${list.length - 2} more</summary>${esc(list.slice(2).join(', '))}</details>`;
@@ -884,7 +884,7 @@
     const main = st.sig.find(x => x.main);
     return `<details class="sect" id="devtab-status" open><summary><h2 class="section-title" data-info="dev-status">Status</h2><span class="muted small sect-sum">${esc(P().PHASE_BY_KEY[p.phase].label)}</span></summary>
       <div class="brief">
-        ${brow('Phase', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong></p>`)}
+        ${brow('Stage', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong></p>`)}
         ${brow('Status', `<p class="small">${st.why}</p>
           ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
           ${main && main.kind !== 'info' ? `<p class="small why-${main.kind}-t">${esc(main.text)} <span class="muted">· ${esc(main.files[0])}</span></p>` : ''}

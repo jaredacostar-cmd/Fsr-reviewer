@@ -105,7 +105,7 @@ test('statusOf: why names the phase-setting event when the timeline has one', ()
     timeline: [{ date: new Date('2024-03-01'), phase: 'review', text: 'OZ 24-001 · Initial submission', tag: 'OZ 24-001', record: 'src/1' }],
   });
   const st = DT.statusOf(p);
-  assert.match(st.why, /Under review since 2024-03-01/);
+  assert.match(st.why, /In review since 2024-03-01/);
   assert.match(st.why, /Initial submission/);
 });
 

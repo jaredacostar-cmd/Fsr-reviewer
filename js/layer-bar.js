@@ -18,7 +18,7 @@
   // Plain names (the technical term in brackets where engineers use it: committed is MECP D-5-1's).
   const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   // Short names for table headings and tight rows.
-  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Approved', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const num = v => Math.round(v).toLocaleString('en-CA');
   const pc = v => `${Math.max(0, Math.min(100, v)).toFixed(2)}%`;
@@ -66,15 +66,28 @@
     const left = L.layer === 'committed' && L.toPermit > 0 && L.toPermit < L.units ? ` · ${num(L.toPermit)} left` : '';
     return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-primary)">${esc(phaseText)}</span><span class="ly-arrow">→</span><span class="ly-pill" style="background:${PILL[L.layer]};color:${ink}" title="${esc(o.title || '')}">counts as ${SHORT[L.layer]}${left}</span></span>`;
   }
-  /** The site badge for a development: "2 · Under review · zoning approved → counts as In review". */
+  // A development's stage in words (js/phases.js labels, the one set the app uses). Its counting
+  // category follows the stage, so it is not repeated ("In review → counts as In review"); only Built
+  // says which side of census day it is on.
+  function stageText(p, L) {
+    const P = root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
+    const ph = P && P.PHASE_BY_KEY[p.phase];
+    if (p.phase === 'completed') return L && L.layer === 'existing' ? 'Built before the 2021 census' : 'Built since 2021';
+    return ph ? ph.label : p.phase;
+  }
+  /** The site badge for a development: "2 · In review · zoning approved", in its stage's colour; an
+   *  approved one says what it has left to permit ("5 · Under construction · 343 left to permit"). */
   function siteBadgeHTML(p, o = {}) {
     const P = root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
     const Ly = root.PeelLayers || (typeof require === 'function' ? require('./layers.js') : null);
     const ph = P && P.PHASE_BY_KEY[p.phase];
     const zoning = p.zoningApproved && ph && ph.rank < P.PHASE_BY_KEY.approved.rank;
-    const text = `${ph ? `${ph.short} · ${ph.label}` : p.phase}${zoning ? ' · zoning approved' : ''}`;
     const L = Ly ? Ly.ofDev(p, o) : null;
-    return badgeHTML(text, L, { title: L && L.layer && Ly ? `${LABEL[L.layer]}: ${Ly.NOTE[L.layer]}` : '' });
+    const text = `${ph ? `${ph.short} · ` : ''}${stageText(p, L)}${zoning ? ' · zoning approved' : ''}`;
+    if (!L || !L.layer) return badgeHTML(text, L);
+    const ink = L.layer === 'existing' || L.layer === 'built' ? 'var(--map-label)' : 'var(--ly-ink)';
+    const left = L.layer === 'committed' && L.toPermit > 0 && L.toPermit < L.units ? ` · ${num(L.toPermit)} left to permit` : '';
+    return `<span class="ly-badge"><span class="ly-pill" style="background:${PILL[L.layer]};color:${ink}" title="${esc(`Counts as ${LABEL[L.layer]}: ${Ly.NOTE[L.layer]}`)}">${esc(text)}${left}</span></span>`;
   }
   const nameHTML = (layer, short) => (LABEL[layer] ? `<span class="ly-name" style="--ly-c:${PILL[layer]}"${short ? ` title="${LABEL[layer]}"` : ''}>${short ? SHORT[layer] : LABEL[layer]}</span>` : '<span class="muted">none</span>');
 
@@ -118,7 +131,7 @@
     return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(set)} — open the Scenario control to change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
   }
 
-  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
+  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

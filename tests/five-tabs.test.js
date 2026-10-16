@@ -31,7 +31,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
   assert.match(r, /if \(DT && DT\.setSub\) DT\.setSub\('files'\);/);
   assert.match(r, /s\.rkind === 'file' && AC\(\)\.currentFile/);
   assert.match(HTML, /<section class="f-pane" id="pane-records" data-pane="records"[^>]*><div id="records-body"><\/div><\/section>/);
-  assert.match(HTML, /data-rsub="sources">Sources<\/button><button type="button" class="btn small" data-rsub="checks">Checks<\/button><button type="button" class="btn small" data-rsub="files">Files<\/button>/);
+  assert.match(HTML, /data-rsub="sources">Sources<\/button><button type="button" class="btn small" data-rsub="checks">Data checks<\/button><button type="button" class="btn small" data-rsub="files">Files<\/button>/);
   assert.match(src('css/app.css'), /#pane-overview \.dev-subtabs \[data-devsub="files"\]/, 'Files & history lives in Records');
 });
 

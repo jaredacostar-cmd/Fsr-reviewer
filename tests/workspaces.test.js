@@ -16,7 +16,7 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
 test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
-  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Study area', 'Projects', 'Old pipes', 'This week']);
+  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Study area', 'DC projects', 'Old pipes', 'This week']);
   // Home's sidebar: Planning (Servicing capacity with it), Capital, Asset Management; then Full map.
   assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']], ['Capital', ['projects']], ['Asset Management', ['pipes']]]);
   const all = W.GROUPS.flatMap(g => g[1]).sort();
