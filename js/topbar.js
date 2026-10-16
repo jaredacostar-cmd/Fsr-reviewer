@@ -301,6 +301,7 @@
   // on narrower screens it stays at the top of the Explore panel. The node moves: one search box.
   function placeSearch() {
     const box = $('#search-box'), slot = $('#tb-search'), home = document.querySelector('#tab-explore .search-bar'); if (!box || !slot || !home) return;
+    if (document.documentElement.classList.contains('ws-mode')) { slot.hidden = true; return; }   // a workspace keeps it over the map
     const wide = matchMedia('(min-width: 1600px)').matches;
     if (wide && box.parentElement !== slot) slot.appendChild(box);
     else if (!wide && box.parentElement !== home) home.insertBefore(box, home.firstChild);
@@ -324,6 +325,7 @@
 
   const api = {
     initTopbar,
+    placeSearch,
     renderTrail,
     renderViewSwitch,
     renderTbScen,

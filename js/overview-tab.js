@@ -304,6 +304,8 @@
   const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result', cx: 'Constraint layer · screening', ea: 'Environmental assessment · screening', cap: 'Capital project · screening' };
   // ---- Stage 3: the area Overview (Peel, a municipality, a plan) as the standard panel -----------------
   let ovSort = store.get('ovSort', 'limit');
+  // The last area Overview panel (Peel or the municipality filter): Home shows its figures (Stage 4).
+  let lastArea = null;
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
     const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o;
@@ -390,7 +392,8 @@
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    if (root.PeelPanel) root.PeelPanel.set('overview:', areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue }));
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue });
+    if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
@@ -487,7 +490,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, capacityBarsHTML };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, capacityBarsHTML, lastAreaSpec: () => lastArea };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

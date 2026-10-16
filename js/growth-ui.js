@@ -229,7 +229,7 @@
   }
   function settingsPageHTML() {
     const TC = root.PeelTreeCounts;
-    return `<h2 class="pane-h">Settings</h2>${TC ? TC.settingsHTML() : ''}${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
+    return `<h2 class="pane-h">Settings</h2>${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${TC ? TC.settingsHTML() : ''}${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
   }
   window.GearPages = window.GearPages || {};
   window.GearPages.settings = () => settingsPageHTML();

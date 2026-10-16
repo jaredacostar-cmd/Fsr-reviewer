@@ -62,13 +62,14 @@
     return bd <= r ? best : -1;
   }
   // Growth loads per pipe (built since the census, approved, proposed; test sites counted in the
-  // totals included), recomputed when criteria or data change.
+  // totals included), recomputed when criteria or data change. units: the planned units of the
+  // developments draining through each pipe (Stage 4's Old pipes list; a count, not a load).
   function sewerGrowth() {
     if (!MM().SEW.data) return null;
     const key = `${JSON.stringify(App().state.criteria)}|${App().state.projects.length}|${(App().state.whatifs || []).length}`;
     if (MM().SEW.growth && MM().SEW.key === key) return MM().SEW.growth;
     const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed'];
-    const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n) }]));
+    const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));
     const devPipe = new Map();
     for (const p of App().state.projects.concat(App().state.whatifs || [])) {
       const lay = MM().svcLayerOf(p);
@@ -78,7 +79,7 @@
       const k = nearestPipe(p.lng, p.lat); if (k < 0) continue;
       devPipe.set(p, k);
       const ha = e.area.ha + (e.employment.area ? e.employment.area.ha : 0);
-      for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) { g[lay].pop[i] += e.population; g[lay].jobs[i] += e.employment.jobs; g[lay].ha[i] += ha; }
+      for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) { g[lay].pop[i] += e.population; g[lay].jobs[i] += e.employment.jobs; g[lay].ha[i] += ha; g[lay].units[i] += e.totalUnits || 0; }
     }
     MM().SEW.growth = { ...g, devPipe }; MM().SEW.key = key;
     return MM().SEW.growth;

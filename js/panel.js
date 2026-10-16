@@ -105,6 +105,7 @@
   // sub-view, for the scope it was made for (a development, a servicing scope, or the area). Until a
   // sub-view has a panel for the current scope, its detailed panes show as before.
   const STORE = new Map();
+  const HEAD = '<header class="pnl-head" data-sec="header">';
   const AT = () => root.PeelAnalysisTabs;
   const scopeId = () => {
     const d = root.DevScope && root.DevScope.current && root.DevScope.current(); if (d) return `dev:${d.key}`;
@@ -114,21 +115,30 @@
   const keyNow = () => { const A = AT(); if (!A) return ''; const t = A.getFootTab(), s = A.TABSUBS[t]; return `${t}:${s ? s.get() : ''}`; };
   // onMount(host): runs each time the panel is put on screen (fills async checks into its containers).
   function set(key, spec) {
-    STORE.set(key, { html: typeof spec === 'string' ? spec : html({ key, ...spec }), scope: scopeId(), title: (spec && spec.fullTitle) || '', onMount: spec && spec.onMount });
+    STORE.set(key, { html: typeof spec === 'string' ? spec : html({ key, ...spec }), scope: scopeId(), title: (spec && spec.fullTitle) || '', onMount: spec && spec.onMount, spec: typeof spec === 'string' ? null : spec });
     if (key === keyNow()) sync();
+    // (Stage 4: Home reads the Peel Overview panel's figures from here, so they are the map's.)
+    if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('pnl:set', { detail: { key, scope: scopeId() } }));
   }
+  const get = key => STORE.get(key) || null;
   const clear = key => { STORE.delete(key); if (key === keyNow()) sync(); };
   function sync() {
     if (typeof document === 'undefined') return;
     const A = AT(), an = document.getElementById('analysis'); if (!A || !an) return;
-    const t = A.getFootTab(), key = keyNow(), e = STORE.get(key), ok = !!(e && e.scope === scopeId());
+    const t = A.getFootTab(), key = keyNow(), e0 = STORE.get(key);
+    // Stage 4: a workspace may show its own view of a sub-view (Check a site before a site is picked,
+    // Old pipes, This week) and names its source in the header ("Getting tight · from Servicing ›
+    // Capacity", with Open full map).
+    const W = root.PeelWorkspaces, ov = W && W.override ? W.override(key, scopeId()) : null;
+    const e = ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
+    const v = e ? (W && W.srcLine ? e.html.replace(HEAD, `${HEAD}${W.srcLine(key)}`) : e.html) : '';
     an.classList.toggle('pnl-on', ok);
     const host = document.getElementById(`pnl-${t}`);
     if (host) {
       if (!ok) { host.innerHTML = ''; host.dataset.v = ''; }
-      else if (host.dataset.v !== e.html) {
+      else if (host.dataset.v !== v) {
         const sc = document.getElementById('analysis-panes'), keepY = host.dataset.key === key && sc ? sc.scrollTop : null;
-        host.innerHTML = e.html; host.dataset.v = e.html; host.dataset.key = key;
+        host.innerHTML = v; host.dataset.v = v; host.dataset.key = key;
         if (keepY != null) sc.scrollTop = keepY;
         if (typeof e.onMount === 'function') try { e.onMount(host); } catch (er) { /* the panel stays without the async parts */ }
       }
@@ -185,7 +195,7 @@
       if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('pnl-row') && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
     }, true);
   }
-  const api = { SECTIONS, NOTE, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
+  const api = { SECTIONS, NOTE, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPanel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

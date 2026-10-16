@@ -42,6 +42,8 @@
       // Layer groups: the layers on and the groups open (js/layer-groups.js).
       if (window.PeelLayerGroups) set('lg', window.PeelLayerGroups.encodeCurrent());
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
+      // Stage 4: Home or the workspace (w=home | w=<chip>); a link without w opens the full map.
+      { const W = window.PeelWorkspaces; if (W && W.mode() === 'home') set('w', 'home'); else if (W && W.mode() === 'ws' && W.current()) set('w', W.current()); }
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);

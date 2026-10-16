@@ -2831,3 +2831,73 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .pnl-kv .t-over { color: var(--pnl-over); } .pnl-kv .t-tight { color: var(--pnl-tight); } .pnl-kv .t-room { color: var(--pnl-room); }
 .pnl-list li.pnl-row.kv { min-height: 0; padding: var(--space-1) var(--space-2); border-left: 0; }
 .pnl-fold > div .brief { margin: 0; }
+
+/* ---- Stage 4: workspaces and Home (js/workspaces.js) ------------------------------------------ */
+/* A workspace: the map with the task chips; the left panel, its Filters button and the tool rail hide
+   ("Full map" brings them back with the same scope, filters and scenario). */
+.app.ws-mode { grid-template-columns: 0 minmax(0, 1fr) var(--analysis-w, 440px); }
+.app.ws-mode .sidebar, .app.ws-mode .toggle-sidebar, .app.ws-mode .leaflet-control.tool-rail { display: none !important; }
+.ws-bar { position: absolute; top: var(--space-2); left: 56px; right: var(--space-2); z-index: 1001; display: flex; flex-direction: column; gap: var(--space-2); pointer-events: none; max-width: 760px; }
+.ws-bar[hidden] { display: none; }
+.ws-bar > * { pointer-events: auto; }
+.ws-top { display: flex; gap: var(--space-2); align-items: flex-start; }
+.ws-search { flex: 1 1 auto; min-width: 0; max-width: 420px; position: relative; }
+.ws-search .field { margin: 0; }
+.ws-search input { width: 100%; height: 36px; box-shadow: var(--shadow); }
+.ws-search .search-sug { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 1200; }
+.ws-fullbtn { box-shadow: var(--shadow); background: var(--surface-1); min-height: 36px; }
+.ws-chips { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ws-chip { min-height: 32px; border-radius: 999px; background: var(--surface-1); box-shadow: var(--shadow); }
+.ws-chip.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ws-chip .badge-n { display: inline-block; min-width: 18px; padding: 0 6px; margin-left: 4px; border-radius: 999px; background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-1); line-height: 18px; }
+.ws-chip.on .badge-n { background: var(--on-accent); color: var(--accent); }
+/* The panel header's source line: "Getting tight · from Servicing › Capacity", Open full map. */
+.pnl-src { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-1); color: var(--text-muted); }
+.pnl-src > span { font-weight: 600; color: var(--pnl-stage, var(--text-secondary)); }
+.tb-home { flex: 0 0 auto; }
+/* Home: below the top bar, over the map and panels. */
+.home { position: fixed; top: var(--top-h, 0px); left: 0; right: 0; bottom: 0; z-index: 1150; background: var(--surface-0); overflow: auto; }
+.home[hidden] { display: none; }
+.home-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100%; }
+.home-side { background: var(--surface-1); border-right: 1px solid var(--border); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
+.home-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.home-g { font-size: var(--fs-1); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin: var(--space-3) 0 var(--space-1); }
+.home-g:first-child { margin-top: 0; }
+.home-ws { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; min-height: 44px; text-align: left; padding: var(--space-2); border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); background: var(--surface-1); color: var(--text-primary); cursor: pointer; }
+.home-ws:hover, .home-ws:focus-visible { border-color: var(--accent); }
+.home-ws small { color: var(--text-muted); font-size: var(--fs-1); }
+.home-ws .badge-n { display: inline-block; min-width: 18px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: var(--fs-1); line-height: 18px; }
+.home-full { margin-top: var(--space-3); }
+.home-full strong { color: var(--accent); }
+.home-pref { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); color: var(--text-muted); }
+.home-main { padding: var(--space-4, 24px) var(--space-4, 24px) var(--space-5, 32px); max-width: 1100px; display: flex; flex-direction: column; gap: var(--space-3); font-variant-numeric: tabular-nums; }
+.home-h { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.home-h p { flex-basis: 100%; margin: 0; }
+.home-h h1 { font-size: var(--fs-5, 22px); margin: 0; }
+.home-answer { font-size: var(--fs-3); margin: 0; }
+.home-caveat { margin: 0; padding: var(--space-1) var(--space-2); border-left: 3px solid var(--cap-tight); background: color-mix(in srgb, var(--cap-tight) 10%, transparent); }
+.home-main .pnl-figs { grid-template-columns: repeat(4, minmax(0, 1fr)); cursor: pointer; }
+.home-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-3); align-items: start; }
+.home-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.home-list .pnl-row { cursor: pointer; }
+.home-map-btn { display: block; width: 100%; padding: 0; border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); background: var(--surface-1); cursor: pointer; }
+.home-map-svg { display: block; width: 100%; height: auto; }
+.home-map-svg .hm-base { fill: color-mix(in srgb, var(--text-muted) 8%, transparent); stroke: var(--text-muted); stroke-width: .5; opacity: .7; }
+.home-map-svg .hm-over { fill: color-mix(in srgb, var(--cap-over) 45%, transparent); stroke: var(--cap-over); stroke-width: 1; }
+.home-map-svg .hm-tight { fill: color-mix(in srgb, var(--cap-tight) 40%, transparent); stroke: var(--cap-tight); stroke-width: 1; }
+.home-map-svg .hm-plant { fill: var(--text-secondary); stroke: var(--surface-1); stroke-width: 1.5; }
+.home-map-svg .hm-plant.hm-over { fill: var(--cap-over); } .home-map-svg .hm-plant.hm-tight { fill: var(--cap-tight); }
+.hm-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin: 0 2px 0 var(--space-2); }
+.hm-key.hm-over { background: var(--cap-over); } .hm-key.hm-tight { background: var(--cap-tight); }
+@media (max-width: 1199px) {
+  .ws-bar { left: 52px; right: var(--space-2); }
+  .home-grid { grid-template-columns: 1fr; }
+  .home-side { border-right: 0; border-bottom: 1px solid var(--border); order: 2; }
+  .home-main { order: 1; padding: var(--space-3); }
+  .home-cols { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .home-main .pnl-figs { grid-template-columns: 1fr 1fr; }
+  .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .ws-chip { flex: 0 0 auto; }
+}
