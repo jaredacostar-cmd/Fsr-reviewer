@@ -49,7 +49,7 @@
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { approvals: { label: 'How approvals work', what: 'Ontario’s steps, the app’s stages and the file tree' } };
+  const REF = { approvals: { label: 'How approvals work', what: 'Ontario’s steps, the app’s stages and the file tree' }, glossary: { label: 'Glossary', what: 'The capacity, flow and planning terms in plain words' } };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.

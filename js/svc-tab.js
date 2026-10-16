@@ -165,7 +165,10 @@
     const el = $('#scen-bar'); if (!el) return;
     const R = App().state.reports, c = App().state.criteria, sp = R && R.water.southPeel, dv = R && R.wastewater.diversion;
     const open = el.querySelector('details') && el.querySelector('details').open;
-    el.innerHTML = `<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Scenario settings</span> <span class="muted small">(the chip above shows the scenario)</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
+    // Bundle 5: the scenario in full first (each setting, changed ones with their default), then the controls.
+    const scn = TB() && TB().scenParts ? TB().scenParts() : null, LB = root.PeelLayerBar;
+    const list = scn && scn.settings ? `<div class="scen-now"><p class="scen-k">This scenario: ${esc(scn.text)}</p>${LB.scenarioListHTML(scn.settings)}</div>` : '';
+    el.innerHTML = `${list}<details class="scen"${open ? ' open' : ''}><summary><span class="scen-k">Change the scenario</span>${store.get('scenA', null) ? ' <span class="chip">comparing with A</span>' : ''}</summary>
       <div class="svc-switches">
         ${basisSwitch()}
         ${yearSelect()}

@@ -37,9 +37,11 @@
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}</header>`);
     if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
     if (m.top) out.push(m.top);
-    out.push(`<p class="home-answer" data-psec="answer">${m.answer || ''}</p>`);
+    // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
+    const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
+    out.push(`<p class="home-answer" data-psec="answer">${gl(m.answer || '')}</p>`);
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
-    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${esc(f.label)}</span>${f.ctx ? `<small>${f.ctx}</small>` : ''}</div>`).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
@@ -576,9 +578,10 @@
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'study' }, primary: !has }, has ? { label: 'Area report (PDF)', attrs: { 'data-area-report': 'sel' }, primary: true } : null] };
   }
 
-  // Reference pages (not workspaces): How approvals work (js/approvals-guide.js).
+  // Reference pages (not workspaces): How approvals work (js/approvals-guide.js), the Glossary (js/glossary.js).
   const approvals = () => (root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading('approvals', 'Loading…'));
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals };
+  const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
+  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary };
   const build = id => (BUILD[id] || home)();
   Object.assign(api, { build, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;

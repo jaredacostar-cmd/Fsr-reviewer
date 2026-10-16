@@ -124,7 +124,8 @@ test('6. Count: committed only · + proposed · + anticipated, in the Scenario c
   assert.match(st, /<span class="muted small">Count:<\/span>\$\{LB\.COUNT_OPTS\.map/);
   assert.match(st, /\[\['all', 'All'\], \['remaining', 'Left to build'\]\]/, '"left to build" keeps its own switch');
   assert.doesNotMatch(src('js/topbar.js'), /data-scen-layer|nextBasis\(/, 'no count toggles in the top bar');
-  for (const b of ['committed', 'buildout', 'all', 'remaining']) assert.match(B.scenarioChipHTML({ basis: b, flows: 'x', criteria: 'y', count: 'tree', outside: 'z' }), new RegExp(`Count: ${B.countLabel(b).replace(/[+]/g, '\\+')}`));
+  for (const b of ['committed', 'buildout', 'all']) assert.match(B.scenarioChipHTML({ basis: b, flows: 'x', criteria: 'y', count: 'tree', outside: 'z' }), new RegExp(`Count: ${B.countLabel(b).replace(/[+]/g, '\\+')} · Units: all`));
+  assert.match(B.scenarioChipHTML({ basis: 'remaining', flows: 'x', count: 'tree', outside: 'z' }), /Count: \+ pre-application · Units: left to build/, 'left to build is its own setting');
 });
 
 // ---- 7. Permit check -------------------------------------------------------------------------------

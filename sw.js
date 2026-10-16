@@ -41,6 +41,7 @@ const SHELL_ASSETS = [
   'js/analysis-tabs.js',
   'js/app.js',
   'js/approvals-guide.js',
+  'js/glossary.js',
   'js/arcgis.js',
   'js/area-select.js',
   'js/areas.js',

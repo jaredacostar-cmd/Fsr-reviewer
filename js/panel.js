@@ -57,9 +57,11 @@
       ${h.identity ? `<p class="pnl-id small muted">${h.identity}</p>` : ''}${h.extra || ''}
     </header>`);
     if (s.calc || s.scenario || calcIn(s)) out.push(`<div class="pnl-scen" data-sec="scenario">${s.scenario || scenarioChip()}</div>`);
-    out.push(`<p class="pnl-answer" data-sec="answer">${s.answer || ''}</p>`);
+    // Bundle 5: the first use of each term in the answer and the figures is underlined (js/glossary.js).
+    const seen = new Set(), gl = h => (root.PeelGlossary ? root.PeelGlossary.mark(h, seen) : h);
+    out.push(`<p class="pnl-answer" data-sec="answer">${gl(s.answer || '')}</p>`);
     const figs = (s.figures || []).slice(0, 4);
-    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${esc(f.label)}</span>${f.ctx ? `<small>${f.ctx}</small>` : ''}</div>`).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
     if (s.chart) out.push(`<div class="pnl-chart" data-sec="chart">${s.chart}</div>`);
     for (const l of (s.lists || []).filter(x => x && x.rows && x.rows.length)) {
       out.push(`<section class="pnl-list" data-sec="list">${l.title || l.tools ? `<div class="pnl-list-h">${l.title ? `<h3>${esc(l.title)}</h3>` : ''}${l.tools || ''}</div>` : ''}
@@ -83,8 +85,10 @@
   // The read-only scenario chip: the same settings as the top bar's chip; a click opens the control.
   function scenarioChip() {
     const T = root.PeelTopbar, p = T && T.scenParts ? T.scenParts() : null;
-    const txt = p ? [`Count: ${p.count}`, `Flows: ${p.flows}`, `Criteria: ${p.criteria}`].join(' · ') : 'Scenario';
-    return `<button type="button" class="pnl-scen-chip" data-pnl-scen title="The scenario these figures are worked out for: open the Scenario control to change it">Scenario <span>${esc(txt)}</span> ▾</button>`;
+    // "Default" or "n changes"; the settings in full on hover and in the Scenario control (bundle 5).
+    const LB = root.PeelLayerBar, txt = p && p.settings ? p.text : 'Default';
+    const line = p && p.settings && LB ? LB.scenarioLine(p.settings) : '';
+    return `<button type="button" class="pnl-scen-chip" data-pnl-scen title="The scenario these figures are worked out for${line ? `: ${esc(line)}` : ''}. Open the Scenario control to see or change it">Scenario <span>${esc(txt)}</span> ▾</button>`;
   }
   // ---- Shared headers -------------------------------------------------------------------------------
   // An area panel: Peel (› the municipality filter) › the tab and sub-view; named by its question.

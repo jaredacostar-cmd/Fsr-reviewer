@@ -122,16 +122,44 @@
   // The count setting (Stage 1 #6), one label everywhere: the Scenario control's switch and the chip.
   const COUNT_OPTS = [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']];
   const countLabel = basis => (basis === 'remaining' ? '+ pre-application, left to build' : (COUNT_OPTS.find(([v]) => v === basis) || COUNT_OPTS[2])[1]);
-  /** o: { basis, flows, criteria, count, expansions, outside } → the chip: read-only text, the count
-   *  setting first; the Committed / Proposed / Anticipated switch lives in the Scenario control. */
+  // Bundle 5: the scenario as a list of its settings, each with its default, so the chip can say
+  // "Default" or "2 changes" and the Scenario control can list them in full.
+  // o: { basis, flows ('2025 metered' | 'design'), md ('design' | 'observed'), div ('off' | 'on' | null
+  // when there is no diversion), outside ('nearest' | 'left out'), year (null = build-out), criteria
+  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null) }.
+  function scenarioSettings(o) {
+    const b = o.basis || 'all', cur = b === 'remaining' ? 'all' : b;
+    const crit = typeof o.criteria === 'number' ? o.criteria : /^\d+/.test(String(o.criteria || '')) ? parseInt(o.criteria, 10) : 0;
+    const row = (key, label, value, dflt) => ({ key, label, value, dflt, def: value === dflt });
+    return [
+      row('count', 'Count', countLabel(cur), countLabel('all')),
+      row('units', 'Units', b === 'remaining' ? 'left to build' : 'all', 'all'),
+      row('year', 'Results for', o.year == null ? 'build-out' : String(o.year), 'build-out'),
+      row('flows', 'Wastewater flows', o.flows || '2025 metered', '2025 metered'),
+      row('md', 'Water maximum day', o.md === 'observed' ? '2025 observed factor' : 'design factor', 'design factor'),
+      o.div == null ? null : row('div', 'Diversion', o.div === 'on' ? 'on' : 'off', 'off'),
+      row('outside', 'Outside mapped areas', o.outside || 'nearest', 'nearest'),
+      row('criteria', 'Design criteria', crit ? `${crit} edited` : 'Peel v2.0', 'Peel v2.0'),
+      row('countMode', 'Units per development', o.count === 'previous count' ? 'previous count' : 'tree count', 'tree count'),
+      o.expansions == null ? null : row('exp', 'Plant expansions', o.expansions, 'on'),
+    ].filter(Boolean);
+  }
+  const scenarioChanges = rows => rows.filter(r => !r.def).length;
+  // The chip's word: "Default" or "n change(s)".
+  const scenarioChipText = rows => { const n = scenarioChanges(rows); return n ? `${n} change${n === 1 ? '' : 's'}` : 'Default'; };
+  const scenarioLine = rows => rows.map(r => `${r.label}: ${r.value}`).join(' · ');
+  // The Scenario control's list: every setting, its value, and the default beside a changed one.
+  const scenarioListHTML = rows => `<ul class="scen-list" aria-label="This scenario">${rows.map(r => `<li${r.def ? '' : ' class="chg"'}><span class="muted">${esc(r.label)}</span> <b>${esc(r.value)}</b>${r.def ? ' <span class="muted small">default</span>' : ` <span class="small scen-chg">changed · default ${esc(r.dflt)}</span>`}</li>`).join('')}</ul>`;
+  /** o: as scenarioSettings → the chip: read-only, "Scenario Default ▾" or "Scenario 2 changes ▾";
+   *  the full settings on hover and in the Scenario control. */
   function scenarioChipHTML(o) {
     const on = new Set(layersOf(o.basis));
     const what = on.has('anticipated') ? 'stress test' : on.has('proposed') ? 'build-out' : 'D-5-1 check';
-    const set = [`Count: ${countLabel(o.basis)}`, `Flows: ${o.flows}`, `Criteria: ${o.criteria}`, `Unit counting: ${o.count}`, o.expansions ? `Expansions: ${o.expansions}` : null, `Outside zones: ${o.outside}`].filter(Boolean).join(' · ');
-    return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(set)} — open the Scenario control to change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
+    const rows = scenarioSettings(o);
+    return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(scenarioLine(rows))} — open the Scenario control to see or change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(scenarioChipText(rows))}</span> ▾</button>`;
   }
 
-  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
+  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioSettings, scenarioChanges, scenarioChipText, scenarioLine, scenarioListHTML, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

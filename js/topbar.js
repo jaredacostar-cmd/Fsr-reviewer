@@ -111,24 +111,30 @@
   const BASIS_SHORT = { all: 'all units', buildout: 'units applied for', committed: 'committed units', remaining: 'units left to build' };
   // The scenario's settings, as the chip shows them (also the panels' read-only chip: js/panel.js).
   function scenParts() {
-    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants;
-    return {
+    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants, MA = root.PeelMapAnalysis;
+    const R = App().state.reports, LB = root.PeelLayerBar;
+    const p = {
       basis: App().state.basis,
-      count: root.PeelLayerBar.countLabel(App().state.basis),
+      count: LB.countLabel(App().state.basis),
       flows: o.ww === 'calibrated' ? '2025 metered' : 'design',
       criteria: n ? `${n} modified` : 'Peel v2.0',
-      unitCount: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree',
+      unitCount: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree count',
       expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
       outside: o.nr === 'on' ? 'nearest' : 'left out',
+      md: o.md, div: R && R.wastewater && R.wastewater.diversion ? o.div : null,
+      year: MA && MA.getCapYear ? MA.getCapYear() : null,
     };
+    // Bundle 5: every setting with its default (the chip's "Default" / "n changes", the control's list).
+    p.settings = LB.scenarioSettings({ ...p, criteria: n, count: p.unitCount });
+    p.text = LB.scenarioChipText(p.settings);
+    return p;
   }
   function renderTbScen() {
     const chip = $('#tb-scen'); if (!chip) return;
-    // The scenario chip (SPEC §2): the layers counted, then the settings; the one place the
-    // scenario is shown (the footer line is gone).
-    const n = SvcTab().criteriaChanges().length, sp = scenParts();
+    // The scenario chip: "Default" or "n changes", the full settings on hover and in the popover.
+    const sp = scenParts();
     const open = !$('#tb-scen-pop').hidden;
-    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({ ...sp, count: sp.unitCount }) + (n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : '');
+    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({ ...sp, criteria: SvcTab().criteriaChanges().length, count: sp.unitCount });
     const more = chip.querySelector('[data-scen-open]'); if (more) more.setAttribute('aria-expanded', String(open));
   }
   let scenHome = null;

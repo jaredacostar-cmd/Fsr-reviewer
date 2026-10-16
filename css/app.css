@@ -1406,6 +1406,14 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .scen-bar { padding: var(--space-1) var(--space-3) 0; }
 .scen-bar details.scen > summary { cursor: pointer; font-size: var(--fs-2); display: flex; gap: var(--space-2); align-items: baseline; flex-wrap: wrap; }
 .scen-bar .scen-k { font-weight: 500; font-size: var(--fs-1); color: var(--accent); }
+/* Bundle 5: the scenario in full, above its controls */
+.scen-now { margin: 0 0 8px; }
+.scen-now .scen-k { margin: 0 0 4px; }
+.scen-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; font-size: var(--fs-2); }
+.scen-list li { display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.scen-list li .muted:first-child { min-width: 11em; }
+.scen-list li.chg b { color: var(--text-primary); }
+.scen-chg { color: var(--accent); }
 .scen-bar .scen-t { color: var(--text-secondary); }
 .scen-bar .svc-switches { margin: var(--space-2) 0 var(--space-1); }
 .scen-chip { cursor: pointer; }
@@ -3202,3 +3210,16 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   .ag-l1, .ag-l2, .ag-l3 { padding-left: 0; }
   .ag-row { padding-left: calc(var(--lvl, 0) * 12px); }
 }
+
+/* ---- Design bundle 5: plain language and charts ------------------------------------------------------ */
+/* The glossary: a dotted underline on a term's first use; its meaning on hover, focus or tap */
+.gl, .gl-eg { text-decoration: underline dotted; text-decoration-color: var(--text-muted); text-underline-offset: 3px; cursor: help; }
+.gl:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-radius: 2px; }
+.gl-pop { position: fixed; z-index: 3000; background: var(--surface-2); color: var(--text-primary); border: 1px solid var(--border); border-radius: var(--radius-panel); box-shadow: var(--shadow); padding: var(--space-2) var(--space-3); font-size: var(--fs-2); line-height: 1.45; }
+.gl-pop b { display: block; margin-bottom: 2px; }
+.gl-pop .btn { margin-top: var(--space-1); padding-left: 0; }
+.gl-list { margin: 0 0 var(--space-3); display: grid; gap: var(--space-2); }
+.gl-list > div { display: grid; grid-template-columns: minmax(10em, 15em) 1fr; gap: var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--border); }
+.gl-list dt { font-weight: 600; }
+.gl-list dd { margin: 0; color: var(--text-secondary); }
+@media (max-width: 700px) { .gl-list > div { grid-template-columns: 1fr; gap: 2px; } }
