@@ -30,6 +30,18 @@
     { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'What changed: files moved, new files, capital and EA dates' },
   ];
   const BY_ID = Object.fromEntries(WS.map(w => [w.id, w]));
+  // The map under each chip (decided with the user): only what the task reads, 1–2 layers
+  // (js/layer-groups.js keys); everything else off. The full map keeps its own presets.
+  const LAYERS = {
+    site: ['devs', 'hov'],                          // developments, site boundary on hover
+    tight: ['cap', 'bk'],                           // capacity colours on the wastewater blocks
+    growth: ['devs', 'sp'],                         // developments, secondary plans
+    fsr: ['devs', 'ex-sanitary', 'ex-water'],       // developments, existing sewers and watermains (from zoom 15)
+    study: ['devs'],
+    projects: ['dcw', 'cons'],                      // planned DC works, Region construction
+    pipes: [],                                      // the old pipes only (drawn by this module)
+    week: ['devs'],
+  };
   // Home's sidebar: by team (Getting tight with Planning), then Full map.
   const GROUPS = [
     ['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']],
@@ -94,7 +106,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, BY_ID, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -114,7 +126,7 @@
     const home = $('#home'); if (home) home.hidden = m !== 'home';
     const bar = $('#ws-bar'); if (bar) bar.hidden = m !== 'ws';
     placeSearch();
-    if (m !== 'ws') { cur = null; pipesLayer(false); if (m === 'full') unfoldLayers(); }
+    if (m !== 'ws') { cur = null; pipesLayer(false); if (m === 'full') { unfoldLayers(); restoreView(); } }
     renderChips();
     if (m === 'home') renderHome();
     if (root.PeelDataTab && root.PeelDataTab.fixMap) setTimeout(() => root.PeelDataTab.fixMap(), 50);
@@ -138,7 +150,13 @@
       if (site) root.DevScope.close();
       if (SS() && SS().current && SS().current()) SS().close();
     }
-    const MA = root.PeelMapAnalysis; if (MA && MA.setMapView && MA.currentView && MA.currentView() !== pl.view) MA.setMapView(pl.view);
+    // The chip's view from its preset (nothing saved), then its lean layers.
+    const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
+    if (MA && MA.showView) {
+      if (!viewKept) { MA.rememberCurrent(); viewKept = true; }
+      MA.showView(pl.view);
+      if (LG && LG.apply) LG.apply(new Set(LAYERS[id] || []));
+    }
     const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); }
     foldLayers();
     pipesLayer(id === 'pipes');
@@ -155,7 +173,13 @@
   }
   // The map's Layers panel closes when a chip is picked (the chip has set the layers); the full map gets
   // it back as it was before the workspace.
-  let layersWasOpen = null;
+  let layersWasOpen = null, viewKept = false;
+  // Back in the full map: the open view with its own remembered layers (not the chip's).
+  function restoreView() {
+    const MA = root.PeelMapAnalysis;
+    if (viewKept && MA && MA.showView && MA.currentView) MA.showView(MA.currentView(), { remembered: true });
+    viewKept = false;
+  }
   const layersPanel = () => document.querySelector('.map-opts .mo-panel');
   function foldLayers() {
     const el = layersPanel(); if (!el) return;

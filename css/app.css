@@ -2836,6 +2836,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 /* A workspace: the map with the task chips; the left panel, its Filters button and the tool rail hide
    ("Full map" brings them back with the same scope, filters and scenario). */
 .app.ws-mode .sidebar, .app.ws-mode .toggle-sidebar, .app.ws-mode .leaflet-control.tool-rail, html.home-on .toggle-sidebar { display: none !important; }
+/* (and the Wastewater loads box: a workspace's map has only its own layers) */
+.app.ws-mode .ww-loads { display: none !important; }
 /* Desktop: the left column closes (the analysis column is placed by the grid's flow, so it is named). */
 @media (min-width: 1200px) {
   .app.ws-mode { grid-template-columns: 0 minmax(0, 1fr) var(--analysis-w, 440px); }

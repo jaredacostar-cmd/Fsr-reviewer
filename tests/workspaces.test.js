@@ -47,7 +47,7 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   // The browser does what the plan says (go()), and every panel in a workspace carries Open full map.
   const s = src('js/workspaces.js');
   assert.match(s, /if \(pl\.closeScopes\) \{\s*if \(site\) root\.DevScope\.close\(\);\s*if \(SS\(\) && SS\(\)\.current && SS\(\)\.current\(\)\) SS\(\)\.close\(\);/);
-  assert.match(s, /MA\.setMapView\(pl\.view\)/);
+  assert.match(s, /MA\.showView\(pl\.view\);\s*if \(LG && LG\.apply\) LG\.apply\(new Set\(LAYERS\[id\] \|\| \[\]\)\);/);
   assert.match(s, /if \(pl\.sub && A\.setSub\) A\.setSub\(pl\.tab, pl\.sub\); if \(A\.setFootPref\) A\.setFootPref\(pl\.tab\); A\.showFootTab\(pl\.tab\);/);
   assert.match(s, /data-ws-full title="The same scope, filters and scenario with every tool">Open full map →/);
   assert.match(src('js/panel.js'), /e\.html\.replace\(HEAD, `\$\{HEAD\}\$\{W\.srcLine\(key\)\}`\)/);
@@ -181,6 +181,28 @@ test('picking a chip closes the map\u2019s Layers panel; the full map gets it ba
   panel.open = false; B.go('pipes'); B.setMode('full'); assert.equal(panel.open, false);
   // Home is not the full map: the panel is left as it is until the full map opens.
   panel.open = true; B.go('tight'); B.setMode('home'); assert.equal(panel.open, false);
+});
+
+test('each chip\u2019s map is lean (1–2 layers); the full map gets its own layers back, unsaved by the workspace', () => {
+  // The decided sets: only what the task reads.
+  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], projects: ['dcw', 'cons'], pipes: [], week: ['devs'] });
+  for (const id of Object.keys(W.LAYERS)) assert.ok(W.LAYERS[id].length <= 3 && W.BY_ID[id], id);
+  // Every key is a real layer switch.
+  const lg = src('js/layer-groups.js');
+  for (const k of new Set(Object.values(W.LAYERS).flat())) assert.ok(lg.includes(`['${k}', `) || lg.includes(`${k}: {`) || new RegExp(`\\b'?${k}'?: \\{ get`).test(lg), k);
+  const { W: B, window } = loadBrowser(AREA);
+  const log = [];
+  let view = 'planning';
+  window.PeelMapAnalysis = { currentView: () => view, rememberCurrent: () => log.push(`remember ${view}`), showView: (v, o) => { view = v; log.push(`show ${v}${o && o.remembered ? ' remembered' : ''}`); } };
+  window.PeelLayerGroups = { apply: set => log.push(`layers ${[...set].join('.') || '(none)'}`) };
+  B.go('tight'); B.go('projects'); B.go('pipes');
+  B.setMode('full');
+  assert.deepEqual(log, ['remember planning', 'show wastewater', 'layers cap.bk', 'show dc', 'layers dcw.cons', 'show wastewater', 'layers (none)', 'show wastewater remembered']);
+  // A workspace never saves its lean layers as a view's memory (the lens switch skips the save there).
+  assert.match(src('js/map-analysis.js'), /if \(!\(window\.PeelWorkspaces && window\.PeelWorkspaces\.mode\(\) === 'ws'\)\) store\.set\(`mapView-\$\{cur\}`, currentMapSettings\(\)\);/);
+  assert.match(src('css/app.css'), /\.app\.ws-mode \.ww-loads \{ display: none !important; \}/);
+  // No "Developments are switched off" notice where a chip switches them off on purpose.
+  assert.match(src('js/svc-data.js'), /if \(!MM\(\)\.getDevsOn\(\)\) return window\.PeelWorkspaces && window\.PeelWorkspaces\.mode\(\) === 'ws' \? '' : 'Developments are switched off';/);
 });
 
 test('Check a site: Find → Result → Output in the header once the site is open', () => {

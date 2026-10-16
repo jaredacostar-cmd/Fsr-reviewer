@@ -81,7 +81,8 @@
   function setMapView(v) {
     const cur = currentView();
     if (cur === v) return;
-    store.set(`mapView-${cur}`, currentMapSettings());
+    // (in a workspace the map shows the chip's lean layers: they are not the full map's memory of a view)
+    if (!(window.PeelWorkspaces && window.PeelWorkspaces.mode() === 'ws')) store.set(`mapView-${cur}`, currentMapSettings());
     applyViewSettings(v, store.get(`mapView-${v}`, null));
   }
   // Apply a view's layers and style (its saved settings over its preset).
@@ -107,6 +108,11 @@
     renderCapLayer(); renderLegend(); syncMapOpts(); ML().updateLabels(); Sh().viewLink.write();
   }
 
+  // Stage 4: a workspace shows a view from its preset without saving anything (remembered: false), and
+  // the full map takes the view back with its remembered settings; rememberCurrent() keeps the full
+  // map's settings of the view open when the workspace starts.
+  function showView(v, { remembered = false } = {}) { applyViewSettings(v, remembered ? store.get(`mapView-${v}`, null) : null); }
+  function rememberCurrent() { store.set(`mapView-${currentView()}`, currentMapSettings()); }
   // "Reset" in the Layers panel: the current view back to its preset (its memory cleared).
   function resetView() { const v = currentView(); store.set(`mapView-${v}`, null); applyViewSettings(v, null); }
 
@@ -375,7 +381,7 @@
 
   const api = {
     VIEW_PRESETS, LG_EXTRA, resetView,
-    setMapStyle, setDcOn, setExistOn, currentView, syncMapOpts, setMapView,
+    setMapStyle, setDcOn, setExistOn, currentView, syncMapOpts, setMapView, showView, rememberCurrent,
     getCapYear() { return capYear; },
     setCapYear(v) { capYear = v; },
     renderCapLayer, renderLegend, renderSavedViews, saveCurrentView,
