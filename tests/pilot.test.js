@@ -72,12 +72,12 @@ test('Report a data issue: a pre-filled issue naming the panel and a link to the
   assert.equal(RI.linkWithoutSearch('https://x.test/#m=43.66812%2C-79.75764%2C17&q=12+main'), 'https://x.test/#m=43.668%2C-79.758%2C17');
 });
 
-test('Report a data issue sits at the foot of every panel and every page, at the end of the actions', () => {
+test('Report a data issue sits at the foot of every panel and every page, at the end of the screening note (design bundle 4)', () => {
   const win = {}; const ctx = { window: win }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/report-issue.js'), ctx);
   vm.runInNewContext(src('js/panel.js'), ctx);
   const h = win.PeelPanel.html({ key: 'growth:pipeline', head: { name: 'How much is coming?' } });
-  assert.match(h, /<span class="pnl-report-line small"><a class="pnl-report" href="https:\/\/github\.com\/[^"]+\/issues\/new" target="_blank" rel="noopener" data-report-panel="growth:pipeline" data-report-name="How much is coming\?" data-report-where="" data-info="report-issue">Report a data issue ↗<\/a><\/span><\/div>\s*<p class="pnl-note small">General screening results only\.[^<]*<\/p><\/footer>/);
+  assert.match(h, /<\/div>\s*<p class="pnl-note small">General screening results only\.[^<]*<span class="pnl-report-line small"><a class="pnl-report" href="https:\/\/github\.com\/[^"]+\/issues\/new" target="_blank" rel="noopener" data-report-panel="growth:pipeline" data-report-name="How much is coming\?" data-report-where="" data-info="report-issue">Report a data issue ↗<\/a><\/span><\/p><\/footer>/);
   // The workspace pages (Home's layout) too.
   const mod = { exports: {} }; ctx.module = mod;
   vm.runInNewContext(src('js/ws-pages.js'), ctx);

@@ -120,6 +120,14 @@
     syncFiltersBtn();
   }
   $('#toggle-sidebar').onclick = () => toggleSidebar();
+  // Below 1200 px the Filters button sits in the top bar (before its actions), off the map and off
+  // the phone sheet; on a wide screen it goes back (hidden: the sidebar is visible).
+  const fBtn = $('#toggle-sidebar'), fHome = fBtn && fBtn.parentElement;
+  function placeFilters() {
+    const tb = $('#topbar'), acts = $('#tb-actions'); if (!fBtn || !tb || !acts || !fHome) return;
+    if (shellNarrow()) { if (fBtn.parentElement !== tb) tb.insertBefore(fBtn, acts); } else if (fBtn.parentElement !== fHome) fHome.appendChild(fBtn);
+  }
+  placeFilters(); addEventListener('resize', placeFilters);
   // Resizable panels: drag a grip to resize; tap a sheet grip to step through its
   // heights. Sizes are remembered per browser. (Used by the analysis column's
   // left-edge handle, the analysis bottom sheet and the detail sheet.)

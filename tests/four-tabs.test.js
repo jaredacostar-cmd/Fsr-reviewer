@@ -190,7 +190,7 @@ test('every panel keeps the screening note', () => {
   // its full table keeps the note too.
   assert.match(src('js/svc-capacity.js'), /el\.innerHTML = `\$\{U\.SCREEN_NOTE \|\| ''\}\$\{fullTableHTML\(rows\)\}`;/);
   assert.match(src('js/svc-capacity.js'), /root\.PeelPanel\.set\('svc:capacity', panelSpec\(rows\)\)/);
-  assert.match(src('js/panel.js'), /<p class="pnl-note small">\$\{NOTE\}<\/p><\/footer>/);
+  assert.match(src('js/panel.js'), /<p class="pnl-note small">\$\{NOTE\}\$\{reportLink\(s\.key, h\.name\)\}<\/p><\/footer>/);
   assert.match(src('js/labs.js'), /General screening results only\. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results\./);
 });
 

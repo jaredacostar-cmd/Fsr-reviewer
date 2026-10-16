@@ -42,5 +42,5 @@ test('top bar: Present ▾ holds Present and Time-lapse; saved views in Export; 
   assert.match(tb, /saveview: \(\) => MA\(\)\.saveCurrentView\(\)/);
   assert.match(tb, /matchMedia\('\(min-width: 1600px\)'\)/);
   assert.doesNotMatch(src('js/map-markers.js'), /id="opt-save"/, 'no Save button in the Layers card');
-  assert.match(src('css/app.css'), /@media \(max-width: 700px\) \{\n  \.topbar \.tb-btn, \.topbar \.tb-step, \.topbar \.tb-views \.btn, \.topbar \.tb-scen \{ min-height: 44px; min-width: 44px; \}/);
+  assert.match(src('css/app.css'), /@media \(max-width: 700px\), \(pointer: coarse\) \{\n  \.topbar \.tb-btn, \.topbar \.tb-step, \.topbar \.tb-views \.btn, \.topbar \.tb-scen \{ min-height: 44px; min-width: 44px; \}/);
 });

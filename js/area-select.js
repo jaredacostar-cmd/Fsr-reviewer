@@ -72,7 +72,11 @@
   // (no tool in two places). The tool rail shows which tool is on (one tool active at a time).
   // The legacy standalone lasso (started from the selection panel's "+ Add area") lights the
   // Select button too.
-  const syncToolsBtn = () => { document.querySelectorAll('.tool-rail [data-tool]').forEach(x => { const on = x.dataset.tool === 'select' ? (lassoOn || Meas().tool.mode === 'select') : Meas().tool.mode === x.dataset.tool; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); }); };
+  const syncToolsBtn = () => {
+    let any = false;
+    document.querySelectorAll('.tool-rail [data-tool]').forEach(x => { const on = x.dataset.tool === 'select' ? (lassoOn || Meas().tool.mode === 'select') : Meas().tool.mode === x.dataset.tool; any = any || on; x.classList.toggle('on', on); x.setAttribute('aria-pressed', String(on)); });
+    const t = document.querySelector('.tool-rail [data-rail-toggle]'); if (t) t.classList.toggle('on', any);   // (a tool is on while the rail is folded)
+  };
 
   // North arrow (points to true north whatever the orientation; tap to switch between the road
   // grid and north up) and a metric scale bar.
@@ -98,9 +102,14 @@
     onAdd() {
       const el = L.DomUtil.create('div', 'leaflet-bar tool-rail');
       el.setAttribute('role', 'toolbar'); el.setAttribute('aria-label', 'Map tools');
-      el.innerHTML = TOOL_ITEMS.map(([k, t, d, ic]) => `<button type="button" data-tool="${k}" title="${esc(t)} — ${esc(d)}" aria-label="${esc(t)}" aria-pressed="false">${PD.icon(ic)}</button>`).join('');
+      // Behind one Tools button (design bundle 4): open by default on a computer, folded on a phone or
+      // tablet; remembered. The button shows the tool that is on while folded.
+      const open = store.get('railOpen', !matchMedia('(max-width: 1199px), (pointer: coarse)').matches) !== false;
+      el.classList.toggle('folded', !open);
+      el.innerHTML = `<button type="button" class="rail-toggle" data-rail-toggle aria-expanded="${open}" title="Map tools: select, measure, trace, test a site, inspect, corridor, units fit">${PD.icon('tools')}<span class="rail-cap">Tools</span></button><div class="rail-tools">${TOOL_ITEMS.map(([k, t, d, ic]) => `<button type="button" data-tool="${k}" title="${esc(t)} — ${esc(d)}" aria-label="${esc(t)}" aria-pressed="false">${PD.icon(ic)}</button>`).join('')}</div>`;
       L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
       el.addEventListener('click', e => {
+        if (e.target.closest('[data-rail-toggle]')) { const o = el.classList.contains('folded'); el.classList.toggle('folded', !o); el.querySelector('[data-rail-toggle]').setAttribute('aria-expanded', String(o)); store.set('railOpen', o); return; }
         const b = e.target.closest('[data-tool]'); if (!b) return;
         if (lassoOn) setLasso(false);
         Meas().setTool(b.dataset.tool);
@@ -158,7 +167,8 @@
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && inPresentation()) exitPresentation(); });
   document.addEventListener('click', e => { if (e.target.closest('#pres-exit')) exitPresentation(); });
   PD.initPrintHandlers({ onAfter: () => App().refreshTheme() });
-  L.control.scale({ position: 'topleft', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
+  // The scale sits beside the attribution (bottom right), clear of the tool rail.
+  L.control.scale({ position: 'bottomright', metric: true, imperial: false, maxWidth: 110 }).addTo(map);
   function updateNorth() {
     const g = document.getElementById('north-rot');
     const b = canRotate ? map.getBearing() : 0;

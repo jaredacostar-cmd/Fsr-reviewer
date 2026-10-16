@@ -60,7 +60,10 @@
         <div class="tb-scen" id="tb-scen" title="Scenario: the layers counted and the assumptions behind the servicing figures"></div>
         <div class="tb-pop" id="tb-scen-pop" hidden></div>
       </div>
-      <div class="tb-actions">
+      <div class="tb-actions" id="tb-actions">
+        <!-- (phones: the four actions fold into this one menu, so the top bar is one row) -->
+        <button type="button" class="btn small tb-btn tb-more" id="tb-more" aria-expanded="false" aria-controls="tb-acts-list" aria-label="More: export, present, help and settings" title="Export, present, help and settings">⋯</button>
+        <div class="tb-acts-list" id="tb-acts-list">
         <div class="tb-wrap">
           <button type="button" class="btn small tb-btn" id="tb-export" aria-haspopup="menu" aria-expanded="false" title="Export the developments, areas, reports and share link">Export</button>
           <div class="tb-menu" id="tb-export-menu" role="menu" hidden></div>
@@ -76,6 +79,7 @@
         <div class="tb-wrap">
           <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="menu" aria-expanded="false" aria-label="Settings menu" title="Settings"></button>
           <div class="tb-menu" id="tb-gear-menu" role="menu" hidden></div>
+        </div>
         </div>
       </div>
     </header>
