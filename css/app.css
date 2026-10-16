@@ -2835,10 +2835,12 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 /* ---- Stage 4: workspaces and Home (js/workspaces.js) ------------------------------------------ */
 /* A workspace: the map with the task chips; the left panel, its Filters button and the tool rail hide
    ("Full map" brings them back with the same scope, filters and scenario). */
-.app.ws-mode { grid-template-columns: 0 minmax(0, 1fr) var(--analysis-w, 440px); }
-.app.ws-mode .sidebar, .app.ws-mode .toggle-sidebar, .app.ws-mode .leaflet-control.tool-rail { display: none !important; }
-/* (the analysis column is placed by the grid's flow; with the left panel gone it is named here) */
-@media (min-width: 1200px) { .app.ws-mode .analysis { grid-area: analysis; } }
+.app.ws-mode .sidebar, .app.ws-mode .toggle-sidebar, .app.ws-mode .leaflet-control.tool-rail, html.home-on .toggle-sidebar { display: none !important; }
+/* Desktop: the left column closes (the analysis column is placed by the grid's flow, so it is named). */
+@media (min-width: 1200px) {
+  .app.ws-mode { grid-template-columns: 0 minmax(0, 1fr) var(--analysis-w, 440px); }
+  .app.ws-mode .analysis { grid-area: analysis; }
+}
 .ws-bar { position: absolute; top: var(--space-2); left: 56px; right: var(--space-2); z-index: 1001; display: flex; flex-direction: column; gap: var(--space-2); pointer-events: none; max-width: 760px; }
 .ws-bar[hidden] { display: none; }
 .ws-bar > * { pointer-events: auto; }
@@ -2861,6 +2863,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .home { position: fixed; top: var(--top-h, 0px); left: 0; right: 0; bottom: 0; z-index: 1150; background: var(--surface-0); overflow: auto; }
 .home[hidden] { display: none; }
 .home-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100%; }
+.home-grid > * { min-width: 0; }
 .home-side { background: var(--surface-1); border-right: 1px solid var(--border); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
 .home-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
 .home-g { font-size: var(--fs-1); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin: var(--space-3) 0 var(--space-1); }

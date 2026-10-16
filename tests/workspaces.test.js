@@ -170,5 +170,7 @@ test('the page: Home, the chip bar, the Home button and the settings', () => {
   assert.ok(at('panel.js') > 0 && at('panel.js') < at('workspaces.js') && at('workspaces.js') < at('app.js'));
   assert.match(src('js/growth-ui.js'), /root\.PeelWorkspaces\.settingsHTML\(\)/);
   // A workspace hides the left panel and the tool rail; the full map keeps everything.
-  assert.match(src('css/app.css'), /\.app\.ws-mode \.sidebar, \.app\.ws-mode \.toggle-sidebar, \.app\.ws-mode \.leaflet-control\.tool-rail \{ display: none !important; \}/);
+  assert.match(src('css/app.css'), /\.app\.ws-mode \.sidebar, \.app\.ws-mode \.toggle-sidebar, \.app\.ws-mode \.leaflet-control\.tool-rail, html\.home-on \.toggle-sidebar \{ display: none !important; \}/);
+  // Desktop only: below 1200 px the app is one column (the panel is a bottom sheet).
+  assert.match(src('css/app.css'), /@media \(min-width: 1200px\) \{\n  \.app\.ws-mode \{ grid-template-columns: 0 minmax\(0, 1fr\) var\(--analysis-w, 440px\); \}/);
 });
