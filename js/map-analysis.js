@@ -62,12 +62,12 @@
   // DC (servicing timing against the 2026 DC program). Switching saves the current settings under the
   // view being left and restores the other view's last settings (its preset the first time).
   // The per-view basemap comes from PeelDesign.basemapForView (single source of
-  // truth, unit-tested): planning -> aerial, the servicing views -> dark canvas.
+  // truth, unit-tested): 'auto' (grey map, aerial from street zoom) for every view.
   const VIEW_PRESETS = {
     // Stage 3 (layer groups): everything off except Developments; each view adds its own layers
     // (PeelLayerGroups.PRESETS; the groups' other layers — constraints, plan areas, hillshade — come
     // from LG_EXTRA below).
-    planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-phase', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'fixed', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
+    planning: { basemap: PD.basemapForView('planning'), labelMode: 'address-units', da: false, pz: false, dr: false, mstyle: { color: 'phase', size: 'units', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: false, sys: 'both' } },
     water: { basemap: PD.basemapForView('water'), labelMode: 'off', da: false, pz: true, dr: false, mstyle: { color: 'layer', size: 'pop', cap: 'zone', show: 'markers' }, focus: null, exist: { water: true, sanitary: false, storm: false }, wf: true, dc: { on: true, sys: 'water' } },
     wastewater: { basemap: PD.basemapForView('wastewater'), labelMode: 'off', da: false, pz: false, dr: true, mstyle: { color: 'layer', size: 'pop', cap: PIPE_RESULTS ? 'pipes' : 'growth', show: 'markers' }, focus: null, exist: { water: false, sanitary: true, storm: false }, wf: false, dc: { on: true, sys: 'wastewater' } },
     dc: { basemap: PD.basemapForView('dc'), labelMode: 'off', da: false, pz: false, dr: false, mstyle: { color: 'timing', size: 'pop', cap: 'off', show: 'markers' }, focus: null, exist: { water: false, sanitary: false, storm: false }, wf: false, dc: { on: true, sys: 'both' } },
@@ -92,7 +92,7 @@
     store.set('mapView', v);
     // Exposed for CSS: the Planning aerial is darkened slightly (css/modes.css).
     document.documentElement.dataset.mapview = v;
-    if (MC().BASEMAPS[s.basemap]) { MC().setBasemap(s.basemap); store.set('basemap', MC().getBasemap()); MC().setTiles(); CA().restyleDa(); }
+    if (MC().basemapKey(s.basemap)) { MC().setBasemap(s.basemap); store.set('basemap', MC().getBasemap()); MC().setTiles(); CA().restyleDa(); }
     if (ML().LABEL_MODES[s.labelMode]) { ML().setLabelMode(s.labelMode); store.set('labelMode', ML().getLabelMode()); }
     CA().setDaLayer(!!s.da); SD().setSvcLayer('pz', !!s.pz); SD().setSvcLayer('dr', !!s.dr); WT().setWfOn(!!s.wf);
     Object.assign(MM().mstyle, s.mstyle); store.set('mapStyle', MM().mstyle);
@@ -218,6 +218,9 @@
     capLayer.clearLayers();
     if (MM().getDcOn().on) DI().renderDcLayer();
     if (window.PeelCapitalEA) window.PeelCapitalEA.renderIfChanged();
+    // With capacity colours on, the developments step back (smaller, fainter); facilities carry rings.
+    map.getContainer().classList.toggle('devs-quiet', MM().mstyle.cap !== 'off');
+    if (WT().WF.on && WT().restyleWf) WT().restyleWf();
     if (MM().mstyle.cap === 'off' || !App().state.servicing || !App().state.svcModel) return;
     if (MM().mstyle.cap === 'pipes' && PIPE_RESULTS) { SC().renderPipes(capLayer); return; }
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
@@ -238,8 +241,16 @@
     }
     if (MM().mstyle.cap !== 'zone') drawNetwork(capLayer);
   }
+  // Facility capacity rings (above the developments): over at build-out (≥ 100%), past the 90% trigger,
+  // or room, from the Servicing › Capacity rows (js/svc-capacity.js), the same rule as Home's map.
+  if (!map.getPane('facPane')) { const fp = map.createPane('facPane', map.getPane('rotatePane') || undefined); fp.style.zIndex = 620; }
+  const ringTone = pct => (pct == null || !isFinite(pct) ? '' : pct >= 100 ? 'over' : pct >= 90 ? 'tight' : 'room');
+  function capRing(id) {
+    const k = window.PeelCapacity && window.PeelCapacity.of(id);
+    const t = k ? ringTone(k.pctBuildout) : ''; return t ? ` ring-${t}` : '';
+  }
   // The traced sewer network, schematic: each catchment outlet to the next one down, to the plant;
-  // pumping stations as dots in their load colour, plants as squares.
+  // pumping stations as rings in their load colour, plants as squares ringed by their capacity.
   function drawNetwork(layer) {
     const ll = p => [p[1], p[0]], plants = App().state.servicing.meta.plants || [];
     // With the sewers loaded: each catchment's outlet down the pipes, drawn once as a tree (a
@@ -252,13 +263,14 @@
       const to = nx ? nx.outletAt || (pl && pl.lnglat) : pl && pl.lnglat;
       if (d.outletAt && to && (d.outletAt[0] !== to[0] || d.outletAt[1] !== to[1])) L.polyline([ll(d.outletAt), ll(to)], { className: 'svc-flow-net', interactive: false }).addTo(layer);
     }
+    // Pumping stations as capacity rings, in their own pane above the developments.
     for (const d of App().state.servicing.psAreas || []) {
       const ps = d.outletAt && psLoad(d, capYear);
-      if (ps) L.circleMarker(ll(d.outletAt), { radius: 6, weight: 2, color: token('--sym-outline'), fillColor: bucket(ps.pct, CAP_PS), fillOpacity: 1 })
+      if (ps) L.circleMarker(ll(d.outletAt), { pane: 'facPane', radius: 8, weight: 4, color: bucket(ps.pct, CAP_PS), fillColor: token('--sym-outline'), fillOpacity: 1, className: 'cap-ring' })
         .bindTooltip(window.PeelUtil.hoverCard({ kind: 'Pumping station', name: SD().drName(d).replace(/^[^·]+· /, ''), value: `${Math.round(ps.pct)}%`, sub: `of firm at ${capYear == null ? 'build-out' : capYear} (peak wet)`, also: 'Trace upstream from its scope' }), { className: 'pt' })
         .on('click', ev => { L.DomEvent.stop(ev); TS().showLoads(d.id); }).addTo(layer);
     }
-    for (const p of plants) L.marker(ll(p.lnglat), { icon: L.divIcon({ className: 'plant-mk', html: `<span style="background:var(${SD().PLANT_TOKEN[p.name] || '--nodata'})"></span>`, iconSize: [16, 16] }) })
+    for (const p of plants) L.marker(ll(p.lnglat), { zIndexOffset: 1000, icon: L.divIcon({ className: `plant-mk${capRing(`plant:${p.name}`)}`, html: `<span style="background:var(${SD().PLANT_TOKEN[p.name] || '--nodata'})"></span>`, iconSize: [16, 16] }) })
       .bindTooltip(() => { const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${p.name}`); return window.PeelUtil.hoverCard({ kind: 'Wastewater treatment plant', name: SD().plantLabel(p.name), value: k ? window.PeelCapacity.pctTxt(k.pctBuildout) : null, sub: k ? `of rated at build-out (${window.PeelCapacity.pctTxt(k.pctCommitted)} committed)` : 'everything it treats' }); }, { className: 'pt' })
       .on('click', () => TS().showLoads(null, p.name)).addTo(layer);
     ST().addFlowMarker();
@@ -283,6 +295,15 @@
     el.hidden = !MM().isWW();
     return el;
   } });
+  // The legend: its own card in the corner (folded on phones), so it stays in sight while Layers is closed.
+  const LegendCard = L.Control.extend({ options: { position: 'bottomleft' }, onAdd() {
+    const el = L.DomUtil.create('div', 'mo-legend lg-card'); el.id = 'mo-legend'; el.hidden = true;
+    el.innerHTML = '<details><summary>Legend</summary><div class="lg-body"></div></details>';
+    L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
+    const d = el.querySelector('details'); d.open = store.get('legendOpen', !phoneMap); d.addEventListener('toggle', () => store.set('legendOpen', d.open));
+    return el;
+  } });
+  new LegendCard().addTo(map);
   const wwLoads = new WwLoads().addTo(map);
   // Map box layout (Phase 2): only the Layers panel (top right) and the optional wastewater loads
   // box (bottom right) sit on the map now, both corner-anchored by CSS. What is left here is the
@@ -343,30 +364,32 @@
   const censusYr = () => (CA().baselineCensus() || {}).year || SP().hz.year0;
   document.addEventListener('click', e => { const b = e.target.closest('[data-lg-color]'); if (b) setMapStyle({ color: b.dataset.lgColor }); });
   function renderLegend() {
-    // Phase 2: renders inline in the Layers panel (#mo-legend); the legendOpen state lives on the
-    // panel's own <details>, set once in MapOptions.onAdd.
+    // Bundle 3: its own card (LegendCard above), visible whether or not Layers is open.
     const el = document.getElementById('mo-legend'); if (!el) return;
     const parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
     // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by Phase | Layer.
     {
       const c = MM().mstyle.color, b = (k, t) => `<button type="button" class="btn small${c === k ? ' on' : ''}" data-lg-color="${k}" aria-pressed="${c === k}">${t}</button>`;
-      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Stage')}${b('layer', 'Counted as')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : 'One marker per development; a cluster’s number counts developments.'}</p>`);
+      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Stage')}${b('layer', 'Counted as')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : MM().mstyle.size === 'units' ? 'Markers sized by planned homes; a cluster’s number is its planned homes (5.1k = 5,100).' : 'One marker per development; a cluster’s number counts developments (sites).'}</p>`);
     }
-    if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Stage</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.label)}</li>`).join('')}</ul>`);
+    // (Permit issued and Under construction share a colour, and a row: as in the sidebar.)
+    if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Stage</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key) && !(p.key === 'construction' && App().state.phases.has('permit'))).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.key === 'permit' && App().state.phases.has('construction') ? 'Permit issued / under construction' : p.key === 'completed' ? 'Built' : p.label)}</li>`).join('')}</ul>`);
     if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);
     if (MM().mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(MM().TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(MM().QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(`var(${SD().PLANT_TOKEN[k]})`, SD().PLANT_SHORT[k])).join('')}${sw('var(--nodata)', 'No traced catchment')}</ul>`);
+    if (MM().mstyle.size === 'units') parts.push(`<div class="lg-t">Size: planned homes</div><div class="lg-size">${[10, 100, 1000].map(n => `<span><i style="width:${MM().unitsPx(n)}px;height:${MM().unitsPx(n)}px"></i>${MM().shortNum(n)}</span>`).join('')}</div>`);
     if (MM().mstyle.size === 'pop') parts.push(`<div class="lg-t">Size: people + jobs at build-out</div><div class="lg-size">${[100, 1000, 10000].map(n => `<span><i style="width:${MM().markerPx(n)}px;height:${MM().markerPx(n)}px"></i>${MM().shortNum(n)}</span>`).join('')}</div>`);
     if (App().state.servicing && MM().mstyle.color !== 'quality' && MM().mstyle.color !== 'timing' && (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed') && SvcTab().svcOpt.nr === 'on') parts.push(`<ul>${sw('var(--text-muted)', 'Outside mapped areas (nearest assigned)', ' near')}</ul>`);
     if (MM().mstyle.cap === 'ps') parts.push(`<div class="lg-t">Pumping station, build-out peak wet</div><ul>${sw(`var(${CAP_PS[0][1]})`, '< 80% of firm')}${sw(`var(${CAP_PS[1][1]})`, '80–100%')}${sw(`var(${CAP_PS[2][1]})`, '> 100%')}${sw('var(--nodata)', 'Gravity / not tabled')}</ul>`);
+    if (MM().mstyle.cap !== 'off' && MM().mstyle.cap !== 'zone') parts.push(`<div class="lg-t">Facilities, at build-out</div><ul><li><span class="lg-ring t-over"></span>over capacity</li><li><span class="lg-ring t-tight"></span>past the 90% trigger (plants) or 80% of firm (stations)</li><li><span class="lg-ring t-room"></span>room</li></ul>`);
     if (MM().mstyle.cap === 'pipes') parts.push(`<div class="lg-t">Sewer load / full capacity${capYear == null ? ', build-out' : `, ${capYear}`}</div><ul>${MM().PIPE_CLS.map(([, c, t]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line" style="background:var(--nodata)"></span>no reliable slope published</li></ul>${(sm => sm ? `<p class="lg-s">${sm.n.map((k, i) => `${fmtNum(k)} ${MM().PIPE_CLS[i][4]}`).join(' · ')} of ${fmtNum(sm.total)} pipes</p>` : '')(SC().pipeSummary())}<p class="lg-s">Pipes of 300 mm+ (larger ones first when zoomed out). Existing peak dry (measured rate) + growth peak wet (design); screening only.</p>${MM().isWW() && !Object.values(MM().getWwLay()).every(v => v !== false) ? `<p class="lg-s"><strong>Loads:</strong> ${[['existing', 'census'], ['built', 'built since'], ['approved', 'site plan approved'], ['proposed', 'proposed']].filter(([k]) => MM().getWwLay()[k] !== false).map(([, t]) => t).join(' + ') || 'none'} (Wastewater loads in Layers)</p>` : ''}`);
     if (MM().mstyle.cap === 'growth' || MM().mstyle.cap === 'zone') parts.push(`<div class="lg-t">${MM().mstyle.cap === 'zone' ? 'Max day growth over the census' : 'Local flow growth over the census'}</div><ul>${CAP_GROWTH.map(([t, c], i) => sw(`var(${c})`, i === 0 ? '< 10%' : t === Infinity ? `> ${CAP_GROWTH[i - 1][0]}% or new` : `${CAP_GROWTH[i - 1][0]}–${t}%`)).join('')}</ul>`);
     if (MM().svcOn.bk) parts.push(`<div class="lg-t">Wastewater blocks (I&amp;I program)</div><ul><li>${MM().blockSwatch}Block (40)</li><li><span class="blk-lbl pri"><span style="transform:none">26</span></span> prioritised: block study</li><li class="muted">tap a block: outlets and the route to the plant along the sewers</li></ul>`);
     if (Object.values(MM().getExistOn()).some(Boolean)) parts.push(`<div class="lg-t">Existing pipes (live, from zoom ${MM().EXIST_ZOOM})</div><ul>${Object.keys(MM().getExistOn()).filter(k => MM().getExistOn()[k]).map(k => `<li><span class="lg-line" style="background:var(${MM().EXIST_STYLE[k].color})"></span>${esc(MM().EXIST_STYLE[k].label)}${k === 'storm' ? ' (Mississauga, Brampton, Region)' : ''}</li>`).join('')}<li class="muted">thicker = larger diameter; dashed = force main</li></ul>`);
-    if (WT().WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WT().WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}</ul>`);
-    if (MM().getDcOn().on && App().state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DI().DC_KIND).filter(([k]) => MM().getDcOn().sys === 'both' || (MM().getDcOn().sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>S</span></span>facility (tap for schedule)</li></ul>`);
+    if (WT().WF.on) parts.push(`<div class="lg-t">Water facilities (existing)</div><ul>${Object.entries(WT().WF_KIND).filter(([k]) => k !== 'clearwell').map(([k, [sym, t]]) => `<li><i class="wf-ic wf-${k} wf-lg">${sym}</i>${esc(t)}</li>`).join('')}<li><span class="lg-ring t-over"></span><span class="lg-ring t-tight"></span><span class="lg-ring t-room"></span>ring: over / past 90% / room at build-out (Servicing › Capacity)</li></ul>`);
+    if (MM().getDcOn().on && App().state.dcInfra) parts.push(`<div class="lg-t">Planned works (2026 DC, draft)</div><ul>${Object.entries(DI().DC_KIND).filter(([k]) => MM().getDcOn().sys === 'both' || (MM().getDcOn().sys === 'water') === (k === 'transmission' || k === 'feeder')).map(([, [t, c]]) => `<li><span class="lg-line" style="background:var(${c})"></span>${esc(t)}</li>`).join('')}<li><span class="lg-line dash"></span>dashed: approved 2026${capYear != null ? ' or after the year' : ''}</li><li><span class="dc-fac lg"><span>${DI().facIcon('pumping_station')}</span></span>facility (tap for schedule)</li></ul>`);
     if (window.PeelCapitalEA) { const ce = window.PeelCapitalEA.legendHTML(); if (ce) parts.push(ce); }
     // Then, in the Layers groups' order: Infrastructure › Other utilities, Constraints.
     if (window.PeelConstraints) for (const w of ['cx']) { const cx = window.PeelConstraints.legendHTML(w); if (cx) parts.push(cx); }

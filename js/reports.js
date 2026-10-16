@@ -56,11 +56,15 @@
     if (!w) { const a = document.createElement('a'); a.href = url; a.download = `${title.replace(/[^\w\s.–-]+/g, '').slice(0, 80)}.html`; a.click(); }
   }
   // A small map sketch (no basemap): sewers coloured by load, DC works, the site or developments.
-  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250 }) {
+  // bearing: turn it like the live map (the workspace pages pass the road grid's; printed reports
+  // stay north up).
+  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250, bearing = 0 }) {
     const kx = 111320 * Math.cos(center[1] * Math.PI / 180), ky = 111320, s = Math.min(W, H) / (2 * halfM);
-    const X = lng => W / 2 + (lng - center[0]) * kx * s, Y = lat => H / 2 - (lat - center[1]) * ky * s;
+    const ang = bearing * Math.PI / 180, ca = Math.cos(ang), sa = Math.sin(ang);
+    const pt = (lng, lat) => { const e = (lng - center[0]) * kx, sy = -(lat - center[1]) * ky; return [W / 2 + (e * ca - sy * sa) * s, H / 2 + (e * sa + sy * ca) * s]; };
+    const X = (lng, lat) => pt(lng, lat)[0], Y = (lat, lng) => pt(lng, lat)[1];
     const inBox = (lng, lat) => Math.abs((lng - center[0]) * kx) < halfM * 1.3 && Math.abs((lat - center[1]) * ky) < halfM * 1.3;
-    const path = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(y).toFixed(1)}`).join('');
+    const path = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x, y).toFixed(1)},${Y(y, x).toFixed(1)}`).join('');
     const out = [];
     if (MM().SEW.data) MM().SEW.data.pipes.forEach((p, i) => {
       const c = p[10]; if (p[0] < (halfM > 4000 ? 900 : halfM > 2000 ? 600 : 0) || (!inBox(c[0], c[1]) && !inBox(c[c.length - 2], c[c.length - 1]))) return;
@@ -73,12 +77,12 @@
       out.push(`<path d="${path(ln.g)}" style="stroke:var(${DI().DC_KIND[ln.k][1]})" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
     }
     for (const r of rings) out.push(`<path d="${path(r)}Z" style="fill:color-mix(in srgb, var(--accent) 8%, transparent);stroke:var(--accent)" stroke-width="1.2"/>`);
-    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng).toFixed(1)}" cy="${Y(p.lat).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline)" stroke-width=".8"/>`);
-    if (site) out.push(`<circle cx="${X(site[0])}" cy="${Y(site[1])}" r="7" style="fill:var(--select);stroke:var(--sym-outline)" stroke-width="2"/>`);
+    for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng, p.lat).toFixed(1)}" cy="${Y(p.lat, p.lng).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline)" stroke-width=".8"/>`);
+    if (site) out.push(`<circle cx="${X(site[0], site[1])}" cy="${Y(site[1], site[0])}" r="7" style="fill:var(--select);stroke:var(--sym-outline)" stroke-width="2"/>`);
     const bar = halfM > 2500 ? 1000 : 500, bw = bar * s;
     return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:var(--surface-1)">${out.join('')}
       <g font-size="9" style="fill:var(--text-primary)"><rect x="8" y="${H - 14}" width="${bw}" height="3"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>
-      <path d="M${W - 14} 10l5 12h-10z"/><text x="${W - 17}" y="32">N</text></g></svg>
+      <g transform="rotate(${bearing} ${W - 14} 20)"><path d="M${W - 14} 10l5 12h-10z"/><text x="${W - 17}" y="32">N</text></g></g></svg>
       <div class="meta">Sewers 300 mm+ coloured by build-out load / full capacity (green under 85%: free flowing; amber 85–100%: near full; red over 100%: surcharged); dashed: 2026 DC works (draft).</div>`;
   }
   // ---- Executive briefing: one printable page from the Overview (title block, headlines, key

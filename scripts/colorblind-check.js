@@ -27,6 +27,8 @@
 
   const CSS_PATH = path.join(__dirname, '..', 'css', 'app.css');
   const PHASES = ['inception', 'review', 'approved', 'permit', 'construction', 'completed', 'cancelled'];
+  // Stages the map shows as one (one colour): Permit issued and Under construction.
+  const MERGED = [['permit', 'construction']];
   const DE_MIN_PAIR = 10;      // CIE76 Delta-E floor for simulated phase pairs
   const TEXT_RATIO = 4.5;      // WCAG AA normal text
   const SYMBOL_RATIO = 3;      // WCAG AA non-text (map symbols)
@@ -99,6 +101,7 @@
     let worst = { de: Infinity };
     for (let i = 0; i < PHASES.length; i++) for (let j = i + 1; j < PHASES.length; j++) {
       const a = PHASES[i], b = PHASES[j];
+      if (MERGED.some(([x, y]) => (a === x && b === y) || (a === y && b === x))) continue;
       for (const theme of ['dark', 'light']) {
         const ca = hexToRgb(tokens[theme][`--ph-${a}`]), cb = hexToRgb(tokens[theme][`--ph-${b}`]);
         for (const [simName, sim] of [['protanopia', protanopia], ['deuteranopia', deuteranopia]]) {
@@ -172,7 +175,7 @@
   }
 
   const api = {
-    PHASES, DE_MIN_PAIR, TEXT_RATIO, SYMBOL_RATIO,
+    PHASES, MERGED, DE_MIN_PAIR, TEXT_RATIO, SYMBOL_RATIO,
     hexToRgb, rgbToLab, deltaE76, protanopia, deuteranopia, contrast,
     parseTokens, checkPhasePairs, checkTextContrast, checkSymbolContrast, run,
   };

@@ -45,11 +45,14 @@ test('map boxes: area, more-settings and legend controls are gone', () => {
   assert.ok(!CSS.includes('.map-legend'), 'no .map-legend rule left at all');
 });
 
-test('legend renders inline in the Layers panel (#mo-legend)', () => {
-  assert.ok(APP.includes('id="mo-legend"'), 'panel markup lacks #mo-legend');
+test('legend: its own card on the map (#mo-legend), in sight while Layers is closed (design bundle 3)', () => {
+  const ma = fs.readFileSync(path.join(JS_DIR, 'map-analysis.js'), 'utf8'), mm = fs.readFileSync(path.join(JS_DIR, 'map-markers.js'), 'utf8');
+  assert.match(ma, /const LegendCard = L\.Control\.extend\(\{ options: \{ position: 'bottomleft' \}/);
+  assert.match(ma, /el\.id = 'mo-legend'/);
   assert.ok(APP.includes("document.getElementById('mo-legend')"), 'renderLegend does not target #mo-legend');
-  assert.ok(APP.includes('.mo-legend details'), 'legend open state not wired on the panel details');
-  assert.ok(CSS.includes('.mo-legend'), 'CSS has no .mo-legend section styles');
+  assert.match(ma, /d\.open = store\.get\('legendOpen', !phoneMap\)/, 'open state remembered, folded on phones');
+  assert.ok(!mm.includes('id="mo-legend"'), 'no longer inside the Layers panel');
+  assert.ok(CSS.includes('.mo-legend.lg-card'), 'CSS has the card');
   assert.ok(!APP.includes('WwLoads().addTo(map); const legend'), 'legend control block not removed');
 });
 

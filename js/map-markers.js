@@ -37,12 +37,12 @@
     : '<rect x="3" y="2" width="8" height="10" style="fill:var(--pl-booth);stroke:var(--pl-booth)" fill-opacity=".25"/><rect x="11" y="2" width="8" height="10" style="fill:var(--pl-clarkson);stroke:var(--pl-clarkson)" fill-opacity=".25"/>'}</svg>`;
   const MSTYLE = {
     color: { phase: 'Stage', layer: 'Counted as', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
-    size: { fixed: 'Same size', pop: 'People + jobs' },
+    size: { fixed: 'Same size', units: 'Planned homes', pop: 'People + jobs' },
     show: { markers: 'Markers' },   // (Stage 2: the heatmap is removed; an old 'heat' falls back to markers)
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', pipes: 'Sewer pipe capacity', zone: 'Pressure zone growth' },
   };
   if (!PIPE_RESULTS) delete MSTYLE.cap.pipes;   // pipe-by-pipe capacity is off for now
-  let mstyle = Object.assign({ color: 'phase', size: 'fixed', cap: 'off', show: 'markers' }, store.get('mapStyle', null) || {});
+  let mstyle = Object.assign({ color: 'phase', size: 'units', cap: 'off', show: 'markers' }, store.get('mapStyle', null) || {});
   for (const k of Object.keys(MSTYLE)) if (!MSTYLE[k][mstyle[k]]) mstyle[k] = Object.keys(MSTYLE[k])[0];
   const THIS_YEAR = new Date().getFullYear();
   // Existing pipes layer (live): which kinds are shown.
@@ -121,7 +121,6 @@
               ${MC().canRotate ? `<label class="mo-sel" data-info="opt-orient"><span>Orientation</span><select id="opt-orient">${opts(MC().ORIENTATIONS, MC().getOrientation())}</select></label>` : ''}`,
           } })}
         </div>
-        <div class="mo-legend" id="mo-legend" hidden><details><summary>Legend</summary><div class="lg-body"></div></details></div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
           <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
@@ -147,8 +146,6 @@
       el.querySelector('.mo-adv').addEventListener('toggle', e => { if (e.target.classList.contains('mo-adv')) store.set('moOpen', e.target.open); });
       // The Layers switches: one per layer, each with a sensible default for the view.
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
-      // The legend is a section inside this panel now (not its own map box): remembered open state.
-      const lgd = el.querySelector('.mo-legend details'); if (lgd) { lgd.open = store.get('legendOpen', !small); lgd.addEventListener('toggle', () => store.set('legendOpen', lgd.open)); }
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) SD().showAllDevs(); });
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) SD().clearAreaFilters(); });
       el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') MA().openSavedView(+i); };
@@ -199,10 +196,10 @@
       const kids = c.getAllChildMarkers();
       // Ring: the mix by the marker colour (phase / layer / plant), weighted by count, or by
       // people + jobs when markers are sized; the number is the count or the people + jobs.
-      const sized = mstyle.size === 'pop';
+      const sized = mstyle.size === 'pop' || mstyle.size === 'units', byUnits = mstyle.size === 'units';
       const w = new Map(), col = new Map();
       let tot = 0;
-      for (const m of kids) { const v = sized ? m.options.pop || 0 : 1; tot += v; w.set(m.options.cat, (w.get(m.options.cat) || 0) + v); col.set(m.options.cat, m.options.col); }
+      for (const m of kids) { const v = !sized ? 1 : byUnits ? m.options.units || 0 : m.options.pop || 0; tot += v; w.set(m.options.cat, (w.get(m.options.cat) || 0) + v); col.set(m.options.cat, m.options.col); }
       const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : mstyle.color === 'quality' ? Object.keys(QUALITY) : mstyle.color === 'timing' ? Object.keys(TIMING) : [...w.keys()].sort();
       let acc = 0; const stops = [];
       for (const k of order) {
@@ -212,11 +209,16 @@
       }
       if (!stops.length) stops.push('var(--nodata) 0deg 360deg');
       const n = kids.length;
-      const size = sized ? (tot < 1000 ? 32 : tot < 10000 ? 40 : tot < 50000 ? 48 : 56) : n < 10 ? 30 : n < 100 ? 36 : n < 1000 ? 42 : 50;
+      const size = byUnits ? (tot < 500 ? 32 : tot < 5000 ? 40 : tot < 20000 ? 48 : 56) : sized ? (tot < 1000 ? 32 : tot < 10000 ? 40 : tot < 50000 ? 48 : 56) : n < 10 ? 30 : n < 100 ? 36 : n < 1000 ? 42 : 50;
+      // The number says what it counts: developments, planned homes, or people + jobs (a word under it
+      // where the circle has room; the legend and the hover say it in full).
+      // (sized by homes but none stated in the cluster: it counts its sites instead of showing 0)
+      const noUnits = byUnits && tot < 0.5;
+      const unitWord = noUnits ? 'sites' : byUnits ? 'homes' : sized ? (size >= 48 ? 'ppl+jobs' : '') : 'sites';
       return L.divIcon({
         className: 'pm',
         iconSize: [size, size],
-        html: `<div class="pc" style="width:${size}px;height:${size}px;background:conic-gradient(${stops.join(',')})" title="${fmtNum(n)} developments${sized ? ` · ${fmtNum(Math.round(tot))} people + jobs at build-out` : ''}${mstyle.color === 'phase' ? `\n${P.ALL_PHASES.map(ph => [ph, kids.filter(m => m.options.phase === ph.key).length]).filter(x => x[1]).map(([ph, k]) => `${k} ${ph.label.toLowerCase()}`).join(' · ')}` : ''}"><span style="width:${size - 14}px;height:${size - 14}px">${sized ? shortNum(tot) : n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : n}</span></div>`,
+        html: `<div class="pc" style="width:${size}px;height:${size}px;background:conic-gradient(${stops.join(',')})" title="${fmtNum(n)} developments${byUnits ? ` · ${fmtNum(Math.round(tot))} planned homes` : sized ? ` · ${fmtNum(Math.round(tot))} people + jobs at build-out` : ''}${mstyle.color === 'phase' ? `\n${P.ALL_PHASES.map(ph => [ph, kids.filter(m => m.options.phase === ph.key).length]).filter(x => x[1]).map(([ph, k]) => `${k} ${ph.label.toLowerCase()}`).join(' · ')}` : ''}"><span style="width:${size - 14}px;height:${size - 14}px"><b>${sized && !noUnits ? shortNum(tot) : n >= 1000 ? (n / 1000).toFixed(n >= 10000 ? 0 : 1) + 'k' : n}</b>${unitWord && size >= 40 ? `<small>${unitWord}</small>` : ''}</span></div>`,
       });
     },
   });
@@ -250,15 +252,17 @@
   }
   // Application boundaries are tappable: anywhere inside opens the project, or, for a site
   // plan nested in a larger development, that application (with a link to the whole project).
-  // Selected developments are outlined in orange (no phase uses it).
+  // Selected developments are outlined in cyan (nothing else uses it), over a dark / light halo so the
+  // outline reads on aerial photos and on the grey map alike.
   const selColor = () => token('--select');
+  const haloColor = () => token('--halo');
   function outline(p, strong, unloaded) {
     const apps = siteApps(p);
     const biggest = Math.max(...apps.map(a => P.ringsArea(a.poly)));
     return apps.map(a => {
       const area = P.ringsArea(a.poly);
       // Application boundaries in the project's phase colour with a light fill (the census
-      // areas are the white lines); the selected project is outlined in orange.
+      // areas are the white lines); the selected project is outlined in cyan.
       const ph = phaseColor(p.phase);
       // A development whose layer is off in Wastewater loads: its boundary stays, dashed and faint.
       const poly = L.polygon(toLatLngs(a.poly), {
@@ -267,6 +271,7 @@
         dashArray: unloaded && !strong ? '5 4' : null,
       });
       poly._area = area;
+      if (strong) poly._halo = L.polygon(toLatLngs(a.poly), { renderer: focusCanvas, color: haloColor(), weight: 7, opacity: 0.55, fill: false, interactive: false });
       const nested = apps.length > 1 && area < biggest * 0.6;
       poly.bindTooltip(window.PeelUtil.hoverCard({ kind: `File · ${a.type || 'application'}`, name: a.ref || a.type || 'Application', value: a.units ? fmtNum(a.units) : null, sub: a.units ? `units · ${a.address || p.title}` : a.address || p.title,
         html: unloaded ? `<span class="muted">Not in the wastewater loads (${esc(LAYER_NAME[svcLayerOf(p)] || svcLayerOf(p))} off)</span>` : '', open: nested ? 'open this file' : 'open the development' }), { className: 'pt', sticky: true });
@@ -315,22 +320,26 @@
   }
   map.on('moveend zoomend', scheduleSites);
   // An application opened on its own from a larger development: the whole development stays
-  // outlined (orange, lighter) and the application stands out in its own colour.
-  const subColor = () => token('--hl-sub');
+  // outlined (cyan, dashed and lighter) and the application stands out in solid cyan.
+  const subColor = () => token('--select');
   const hoverSubLayer = L.layerGroup().addTo(map);
   const subPoly = (rings, opt = {}) => L.polygon(toLatLngs(rings), { renderer: focusCanvas, color: subColor(), weight: 4, opacity: 1, fill: true, fillColor: subColor(), fillOpacity: 0.28, interactive: false, ...opt });
   function highlight(p, record) {
     focusLayer.clearLayers(); hoverSubLayer.clearLayers();
     if (!p) return;
+    const withHalo = o => { if (o._halo) focusLayer.addLayer(o._halo); focusLayer.addLayer(o); };
     if (p.parent) {
       for (const o of outline(p.parent, true).sort((a, b) => b._area - a._area)) { o.setStyle({ weight: 2, fillOpacity: 0.06, dashArray: '6 4' }); focusLayer.addLayer(o); }
-      for (const a of siteApps(p)) focusLayer.addLayer(subPoly(a.poly));
+      for (const a of siteApps(p)) { focusLayer.addLayer(subPoly(a.poly, { color: haloColor(), weight: 8, opacity: 0.55, fill: false })); focusLayer.addLayer(subPoly(a.poly)); }
       for (const r of sitePermits(p)) if (r !== record) focusLayer.addLayer(permitDot(r, p, false, true));
       return;
     }
-    for (const o of outline(p, true).sort((a, b) => b._area - a._area)) focusLayer.addLayer(o);
+    for (const o of outline(p, true).sort((a, b) => b._area - a._area)) withHalo(o);
     for (const r of sitePermits(p)) if (r !== record) focusLayer.addLayer(permitDot(r, p, false, true));
-    if (record && record.lat != null) focusLayer.addLayer(permitDot(record, p, true, true));
+    if (record && record.lat != null) {
+      focusLayer.addLayer(L.circleMarker([record.lat, record.lng], { renderer: focusCanvas, radius: 9, weight: 8, color: haloColor(), opacity: 0.55, fill: false, interactive: false }));
+      focusLayer.addLayer(permitDot(record, p, true, true));
+    }
   }
   cluster.on('animationend spiderfied unspiderfied', () => ML().scheduleLabels());
   const iconCache = {};
@@ -348,10 +357,11 @@
     return D.isCommitted(p) ? 'approved' : 'proposed';
   }
   const plantOfDev = p => { const a = App().state.servicing && SD().svcIds(p, 'dr').map(id => SD().svcById.get(id)).filter(Boolean)[0]; return a ? a.plant : 'none'; };
-  // Data quality: what to check before relying on a development's numbers.
+  // Data quality: what to check before relying on a development's numbers. One blue, darker = more to
+  // check, grey = nothing to check (red / amber / green are for capacity only).
   const QUALITY = {
-    far: ['var(--cap-over)', 'No zone / catchment within 5 km'], near: ['var(--cap-tight)', 'Assigned to the nearest area'],
-    nounits: ['var(--hl-sub)', 'No units or floor area stated'], estarea: ['var(--q-est)', 'Site area estimated (no boundary)'], ok: ['var(--cap-room)', 'Complete'],
+    far: ['var(--q-4)', 'No zone / catchment within 5 km'], near: ['var(--q-3)', 'Assigned to the nearest area'],
+    nounits: ['var(--q-2)', 'No units or floor area stated'], estarea: ['var(--q-1)', 'Site area estimated (no boundary)'], ok: ['var(--nodata)', 'Complete'],
   };
   function qualityOf(p) {
     if (App().state.servicing && p.lat != null && !SD().svcIds(p, 'dr').length && !SD().svcIds(p, 'pz').length) return 'far';
@@ -361,8 +371,9 @@
     return 'ok';
   }
   // Servicing timing: construction year of the planned main (wastewater or water, within 400 m)
-  // a development would connect to, from the 2026 DC maps; none = the existing network.
-  const TIMING = { none: ['var(--cap-room)', 'On the existing network'], far: ['var(--text-muted)', 'Outside the network, no planned main within 1 km'], y27: ['var(--time-soon)', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['var(--time-mid)', 'Planned main 2028–2030'], y35: ['var(--cap-tight)', 'Planned main 2031–2035'], y36: ['var(--cap-over)', 'Planned main 2036 or later'] };
+  // a development would connect to, from the 2026 DC maps; none = the existing network. One teal
+  // darkening by year, grey on the existing network (red / amber / green are for capacity only).
+  const TIMING = { none: ['var(--nodata)', 'On the existing network'], y27: ['var(--time-1)', `Connects via a planned main by ${THIS_YEAR + 1}`], y30: ['var(--time-2)', 'Planned main 2028–2030'], y35: ['var(--time-3)', 'Planned main 2031–2035'], y36: ['var(--time-4)', 'Planned main 2036 or later'], far: ['var(--time-far)', 'Outside the network, no planned main within 1 km'] };
   function timingOf(p) {
     if (p._dcT !== undefined) return p._dcT;
     const pt = p.lat == null ? null : [p.lng, p.lat];
@@ -389,14 +400,19 @@
     return popCache.get(p);
   }
   const markerPx = pop => Math.min(46, Math.round((8 + 2.2 * Math.sqrt(Math.max(0, pop) / 10)) / 2) * 2);
+  // By planned homes: a log scale, so an 8-unit infill and a 5,000-unit subdivision both read.
+  const unitsPx = u => Math.min(44, Math.max(10, Math.round((8 + 4 * Math.log2(1 + Math.max(0, u || 0) / 10)) / 2) * 2));
   const styledIcons = new Map();
   function markerIcon(p) {
     if (mstyle.color === 'phase' && mstyle.size === 'fixed' && !(SvcTab().svcOpt.nr === 'on' && (p.drNear || p.pzNear))) return iconFor(p.phase);
-    const [, col] = markerCat(p), d = mstyle.size === 'pop' ? markerPx(popOf(p)) : 14;
+    const [, col] = markerCat(p), d = mstyle.size === 'pop' ? markerPx(popOf(p)) : mstyle.size === 'units' ? unitsPx(p.units) : 14;
     const near = !!(App().state.servicing && (SD().nearOf(p, 'dr') || SD().nearOf(p, 'pz')));
-    const key = `${col}|${d}|${near}|${p.phase === 'cancelled'}`;
+    // Coloured by stage, a marker keeps its stage number where it has room (never colour alone).
+    const glyph = mstyle.color === 'phase' && d >= 14 && !near ? P.PHASE_BY_KEY[p.phase].short : '';
+    const gc = glyph ? window.PeelUtil.glyphColor(phaseColor(p.phase)) : '';
+    const key = `${col}|${d}|${near}|${p.phase === 'cancelled'}|${glyph}|${gc}`;
     if (!styledIcons.has(key)) styledIcons.set(key, L.divIcon({ className: 'pm pm-hit', iconSize: [Math.max(d, 24), Math.max(d, 24)],
-      html: `<span class="mk${near ? ' near' : ''}${p.phase === 'cancelled' ? ' out' : ''}" style="width:${d}px;height:${d}px;--mk:${col}"></span>` }));
+      html: `<span class="mk${near ? ' near' : ''}${p.phase === 'cancelled' ? ' out' : ''}${glyph ? ' g' : ''}" style="width:${d}px;height:${d}px;--mk:${col}${gc ? `;color:${gc}` : ''}">${esc(glyph)}</span>` }));
     return styledIcons.get(key);
   }
   const shortNum = n => n >= 1e4 ? `${Math.round(n / 1000)}k` : n >= 1000 ? `${(n / 1000).toFixed(1)}k` : `${Math.round(n)}`;
@@ -412,7 +428,7 @@
     EXIST_STYLE, EXIST_ZOOM, MAP_VIEWS, AREA_F, layerColors, svcLayerOf,
     plantOfDev, qualityOf, timingOf, markerCat, outline, highlight,
     hoverSubLayer, siteApps, sitePermits, parentApps, projectBounds, toLatLngs,
-    subPoly, popOf, markerPx, markerIcon,
+    subPoly, popOf, markerPx, unitsPx, markerIcon,
     get markerByKey() { return markerByKey; }, set markerByKey(v) { markerByKey = v; },
     cluster,
     renderSiteLayer, scheduleSites, selColor, shortNum, canvas, blockSwatch,
