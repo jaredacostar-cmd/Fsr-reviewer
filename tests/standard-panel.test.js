@@ -44,7 +44,7 @@ test('1. the panel builder renders the eight sections in order', () => {
   // Header: trail, close ×, name, a status chip in words (never colour alone), one identity line.
   assert.match(h, /<nav class="pnl-trail" aria-label="Scope"><span class="pnl-crumb">Peel<\/span>/);
   assert.match(h, /class="btn small pnl-x" data-x="" aria-label="Close">×<\/button>/);
-  assert.match(h, /<h2 class="pnl-name">Can the system take it\?<\/h2><span class="pnl-chip t-over">2 over<\/span>/);
+  assert.match(h, /<h2 class="pnl-name">Can the system take it\?<\/h2><button type="button" class="pnl-chip pnl-chip-btn t-over" data-full-table="[^"]*" title="Open the full table">2 over <span class="aer-car" aria-hidden="true">▸<\/span><\/button>/, 'a header count opens the full table');
   // At most four key figures; lists show five rows with "See all (n)"; rows are buttons opening the next level.
   assert.equal((h.match(/class="pnl-fig[ "]/g) || []).length, 4);
   assert.equal((h.match(/<li class="pnl-row/g) || []).length, 5);

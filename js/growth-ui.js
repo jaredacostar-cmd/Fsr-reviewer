@@ -186,10 +186,10 @@
       head: p ? PN.siteHead(p) : PN.areaHead('Growth › Pipeline', 'How much is coming?', null, `${esc(App().state.muni || 'Peel')} · ${fmtNum(set.length)} developments shown`),
       answer: head,
       figures: [
-        { v: fmtNum(Math.round(t.planned)), u: 'units', label: 'planned', ctx: t.n ? `${fmtNum(t.n)} developments with units` : '' },
-        { v: fmtNum(Math.round(t.permitted)), u: 'units', label: 'permitted', ctx: t.planned ? `${pc(t.permitted / t.planned)} of planned` : '' },
-        { v: fmtNum(Math.round(t.completed)), u: 'units', label: 'completed', ctx: !site && yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr, ${yr0}–${yr1}` : '' },
-        { v: fmtNum(Math.round(t.left)), u: 'units', label: 'left to build', ctx: t.planned ? `${pc(t.left / t.planned)} of planned` : '' },
+        { v: fmtNum(Math.round(t.planned)), u: 'units', label: 'planned', ctx: t.n ? `${fmtNum(t.n)} developments with units` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
+        { v: fmtNum(Math.round(t.permitted)), u: 'units', label: 'permitted', ctx: t.planned ? `${pc(t.permitted / t.planned)} of planned` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
+        { v: fmtNum(Math.round(t.completed)), u: 'units', label: 'completed', ctx: !site && yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr, ${yr0}–${yr1}` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
+        { v: fmtNum(Math.round(t.left)), u: 'units', label: 'left to build', ctx: t.planned ? `${pc(t.left / t.planned)} of planned` : '', attrs: site ? null : { 'data-full-table': 'growth' } },
       ],
       chart: layerStripHTML(set),
       lists: [

@@ -25,7 +25,10 @@
   // The first list sits beside the map; the others follow. Sections with nothing are left out.
   const attrs = a => Object.entries(a || {}).map(([k, v]) => (v === true ? ` ${k}` : v == null || v === false ? '' : ` ${k}="${esc(v)}"`)).join('');
   const TONE_WORD = { over: 'Over', tight: 'Tight', room: 'Room', stage: '' };
-  const chipHTML = s => (s ? `<span class="pnl-chip t-${esc(s.tone || 'stage')}">${esc(s.text || TONE_WORD[s.tone] || '')}</span>` : '');
+  // (a chip that opens its answer: a button with ▸, as on the panels)
+  const chipHTML = s => (!s ? '' : s.attrs
+    ? `<button type="button" class="pnl-chip pnl-chip-btn t-${esc(s.tone || 'stage')}"${attrs(s.attrs)}${s.expanded != null ? ` aria-expanded="${!!s.expanded}"` : ''}${s.title ? ` title="${esc(s.title)}"` : ''}>${esc(s.text || TONE_WORD[s.tone] || '')} <span class="aer-car" aria-hidden="true">${s.expanded ? '▾' : '▸'}</span></button>`
+    : `<span class="pnl-chip t-${esc(s.tone || 'stage')}">${esc(s.text || TONE_WORD[s.tone] || '')}</span>`);
   function listHTML(l) {
     if (!l || !l.rows || !l.rows.length) return '';
     return `<section class="pnl-list page-list" data-psec="list"><div class="pnl-list-h"><h3>${esc(l.title)}</h3>${l.tools || ''}${l.see && (l.all || l.total > Math.min(5, l.rows.length)) ? `<button type="button" class="btn small link"${attrs(l.see)}>${l.all ? 'Show fewer' : `See all (${fmtNum(l.seeN != null ? l.seeN : l.total)}) →`}</button>` : ''}</div>
@@ -341,7 +344,7 @@
     const first = plants[0], low = res[0], end = (root.PeelSvcPlants && root.PeelSvcPlants.hz.end) || 2051;
     const yTxt = y => (y === 'today' ? 'now' : y == null ? `after ${end}` : `≈${y}`);
     const q = r => (r.unit === 'L/s' ? `${fmtNum(Math.round(r.v))} L/s` : `${fmt1(r.v)} ${r.unit}`);
-    const resRow = r => ({ tone: r.pct < 0 ? 'over' : r.pct < 10 ? 'tight' : null, attrs: r.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': r.ss, title: `Open ${r.name} on the map` } : null,
+    const resRow = r => ({ tone: r.pct < 0 ? 'over' : r.pct < 10 ? 'tight' : null, attrs: r.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': r.ss, title: `Open ${r.name} on the map` } : { 'data-ws-go': 'tight', 'data-ws-fulltable': '1', title: `${r.name}: in the full table` },
       html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.kind === 'wplant' ? '💧 ' : ''}${esc(r.name)}</span><span class="pnl-r-year${r.reserve < 0 ? ' t-over' : ''}">${r.reserve < 0 ? 'none' : `${fmt1(r.reserve)} ML/d`}</span></div>
         <div class="pnl-r-meta"><span>${r.reserve < 0 ? `committed ${fmt1(-r.reserve)} ML/d past rated` : `≈${fmtNum(Math.round(r.people / 100) * 100)} people · ${Math.round(r.pct)}% of rated ${fmt1(r.cap)} ML/d`}</span></div>
         ${r.limits.length ? `<small class="pnl-r-line t-tight">Limited by ${r.limits.slice(0, 3).map(x => `${esc(x.name)} (${x.when}, ${Math.round(x.when === 'now' ? x.pctCom : x.pctBo)}%)`).join(', ')}${r.limits.length > 3 ? ` and ${r.limits.length - 3} more` : ''}</small>` : ''}` });
@@ -351,9 +354,9 @@
     return { id: 'tight', eyebrow: eyebrow('tight'), name: 'Can the system take it?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer, caveats: caveats().filter(c => /source/i.test(c.text)),
       figures: [
         s.figures[0],
-        { v: fmtNum(late.length), u: late.length === 1 ? 'facility' : 'facilities', label: 'no relief in time', ctx: `${fmtNum(late.filter(r => r.reliefY).length)} relief after the limit · ${fmtNum(late.filter(r => !r.reliefY).length)} none listed`, tone: late.length ? 'over' : 'room' },
-        first ? { v: yTxt(first.limit.y), u: '', label: 'first treatment trigger', ctx: `${esc(first.name)} · ${esc(first.limit.what)}`, tone: 'tight' } : null,
-        low ? { v: low.reserve < 0 ? 'none' : fmt1(low.reserve), u: low.reserve < 0 ? '' : 'ML/d', label: 'uncommitted reserve, lowest', ctx: `${esc(low.name)}${low.reserve > 0 ? ` · ≈${fmtNum(Math.round(low.people / 100) * 100)} people` : ''}`, tone: low.pct < 10 ? 'tight' : 'room' } : null,
+        { v: fmtNum(late.length), u: late.length === 1 ? 'facility' : 'facilities', label: 'no relief in time', ctx: `${fmtNum(late.filter(r => r.reliefY).length)} relief after the limit · ${fmtNum(late.filter(r => !r.reliefY).length)} none listed`, tone: late.length ? 'over' : 'room', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': '1' } },
+        first ? { v: yTxt(first.limit.y), u: '', label: 'first treatment trigger', ctx: `${esc(first.name)} · ${esc(first.limit.what)}`, tone: 'tight', attrs: first.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': first.ss } : null } : null,
+        low ? { v: low.reserve < 0 ? 'none' : fmt1(low.reserve), u: low.reserve < 0 ? '' : 'ML/d', label: 'uncommitted reserve, lowest', ctx: `${esc(low.name)}${low.reserve > 0 ? ` · ≈${fmtNum(Math.round(low.people / 100) * 100)} people` : ''}`, tone: low.pct < 10 ? 'tight' : 'room', attrs: low.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': low.ss } : null } : null,
       ],
       chart: area && area.chart ? area.chart : '',
       lists: [
@@ -460,7 +463,7 @@
     const stageLine = x => { const a = STG[x.st] || '', b = Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase; return [a, b].filter((v, i, arr) => v && arr.findIndex(w => String(w).toLowerCase() === String(v).toLowerCase()) === i).map(esc).join(' · '); };
     const treeBits = p => { const d = FT ? FT.of(p) : null; if (!d) return { sum: '', tog: '', open: '' }; const n = (d.n || []).length, on = gOpen.has(p.key), recOf = FT.recLookup(p);
       return { sum: `<small class="tr-sum">${FT.summaryHTML(d, recOf)}</small>`, tog: n > 1 ? `<button type="button" class="tr-tog" data-tr-tog="${esc(p.key)}" aria-expanded="${on}" title="Show how its files fit together">${on ? '▾' : '▸'}</button>` : '',
-        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : '') })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
+        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, devKey: p.key, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : '') })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
     const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${tb.sum}${tb.open}` }; };
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
     const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
@@ -636,8 +639,15 @@
   const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, glossary, help };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', pipes: 'network' };
+  // A page's header count opens its workspace's full table (as the map panels' do).
+  const FULL_OF = { home: 'tight', tight: 'tight', projects: 'projects', pipes: 'pipes' };
   function build(id) {
     const m = (BUILD[id] || home)(), RF = root.PeelReference, g = RF && GUIDE_OF[id] && RF.GUIDES.find(x => x[0] === GUIDE_OF[id]);
+    if (m.status && !m.status.attrs && m.status.tone !== 'stage' && FULL_OF[id]) m.status = { ...m.status, attrs: { 'data-ws-go': FULL_OF[id], 'data-ws-fulltable': '1' }, title: 'Open the full table' };
+    // A figure taken from a map panel opens the same thing from the page: the workspace's map, at it.
+    const ws = W() && W().BY_ID && W().BY_ID[id] ? id : null;
+    const onPage = a => { if (!a || !ws) return a; if (a['data-full-table'] != null) return { 'data-ws-go': ws, 'data-ws-fulltable': '1' }; if (a['data-ss']) return { 'data-ws-go': ws, 'data-ws-ss': a['data-ss'] }; if (a['data-ce-open']) return { 'data-ws-go': ws, 'data-ws-ce': a['data-ce-open'] }; return a; };
+    if (m.figures && ws) m.figures = m.figures.map(f => (f && f.attrs && !f.attrs['data-ws-go'] && !f.attrs['data-ws-page'] ? { ...f, attrs: onPage(f.attrs) } : f));
     if (g && m.actions) m.actions = [...m.actions, { label: `${g[1]} ›`, attrs: { 'data-ws-page': g[0] }, title: `How it works: ${g[2]}` }];
     return m;
   }

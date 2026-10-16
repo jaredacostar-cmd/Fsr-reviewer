@@ -23,7 +23,10 @@
   // The tone of a % of capacity at build-out: over ≥ 100, tight ≥ 90 (the expansion trigger), else room.
   const toneOf = pct => (pct == null || !isFinite(pct) ? null : pct >= 100 ? 'over' : pct >= 90 ? 'tight' : 'room');
   // A status chip: the tone in words (never colour alone) and, optionally, more text.
-  const chip = s => (s ? `<span class="pnl-chip t-${esc(s.tone || 'stage')}">${esc(s.text || TONES[s.tone] || '')}</span>` : '');
+  // A chip that opens its answer is a button, with ▸ (▾ while what it opens shows); a plain chip is a label.
+  const chip = s => (!s ? '' : s.attrs
+    ? `<button type="button" class="pnl-chip pnl-chip-btn t-${esc(s.tone || 'stage')}"${attrs(s.attrs)}${s.expanded != null ? ` aria-expanded="${!!s.expanded}"` : ''}${s.title ? ` title="${esc(s.title)}"` : ''}>${esc(s.text || TONES[s.tone] || '')} <span class="aer-car" aria-hidden="true">${s.expanded ? '▾' : '▸'}</span></button>`
+    : `<span class="pnl-chip t-${esc(s.tone || 'stage')}">${esc(s.text || TONES[s.tone] || '')}</span>`);
   // Attributes from an object ({ 'data-ss': 'plant:Lakeview' } → data-ss="plant:Lakeview").
   const attrs = a => Object.entries(a || {}).map(([k, v]) => (v === true ? ` ${k}` : v == null || v === false ? '' : ` ${k}="${esc(v)}"`)).join('');
   const btn = (b, cls) => `<button type="button" class="btn small ${cls}"${attrs(b.attrs)}${b.title ? ` title="${esc(b.title)}"` : ''}>${esc(b.label)}</button>`;
@@ -47,7 +50,9 @@
   // fills the issue on click).
   const reportLink = (key, name, where) => (root.PeelReportIssue && root.PeelReportIssue.panelLinkHTML ? `<span class="pnl-report-line small">${root.PeelReportIssue.panelLinkHTML(key, strip(name).trim(), where)}</span>` : '');
   function html(spec) {
-    const s = spec || {}, h = s.head || {};
+    const s = spec || {}, h0 = spec && spec.head || {};
+    // A header count ("9 over", "1 late", "1 open for comment") opens the panel's full table.
+    const h = h0.status && !h0.status.attrs && h0.status.tone !== 'stage' ? { ...h0, status: { ...h0.status, attrs: { 'data-full-table': s.key || '' }, title: 'Open the full table' } } : h0;
     // The trail: shown from two levels down (at Peel it would only repeat the name).
     const trail = (h.trail || []).length < 2 ? '' : h.trail.map((t, i, a) => (t.attrs ? `<button type="button" class="btn small link pnl-crumb"${attrs(t.attrs)}>${esc(t.label)}</button>` : `<span class="pnl-crumb">${esc(t.label)}</span>`)).join('<span class="pnl-sep" aria-hidden="true">›</span>');
     const out = [];
@@ -62,7 +67,7 @@
     out.push(`<p class="pnl-answer" data-sec="answer">${gl(s.answer || '')}</p>`);
     // A zero is never coloured ("0 tight" in green read as good news); n/a is never a figure (bundle 5).
     const figs = (s.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
-    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
     if (s.chart) out.push(`<div class="pnl-chart" data-sec="chart">${s.chart}</div>`);
     for (const l of (s.lists || []).filter(x => x && x.rows && x.rows.length)) {
       out.push(`<section class="pnl-list" data-sec="list">${l.title || l.tools ? `<div class="pnl-list-h">${l.title ? `<h3>${esc(l.title)}</h3>` : ''}${l.tools || ''}</div>` : ''}
@@ -114,13 +119,17 @@
     const ML = root.PeelMapLabels, ls = ML && ML.latestSub ? ML.latestSub(p) : null, PH = root.PeelPhases;
     const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const types = typesText(p.types);
+    const SC = root.PeelStageChip, AC = root.PeelAerialChip, nRec = (p.records || []).length;
     return { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
       // One status line: the development's phase, with its zoning approval where that came first (the
       // site bar no longer shows a second, contradicting chip).
-      status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}${p.smallSite ? ' · no site plan needed' : ''}` },
-      identity: [ls && ls.ref ? `<strong class="pnl-file">${esc(ls.ref)}</strong>` : '', types ? esc(types) : '', ls && ls.date ? `latest submission ${esc(day(ls.date))}` : ''].filter(Boolean).join(' · ') || esc(p.municipality),
+      status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}${p.smallSite ? ' · no site plan needed' : ''}`,
+        // (pressed: How the stage was set, under the header: js/stage-chip.js)
+        ...(SC ? { attrs: { 'data-stage-chip': p.key }, expanded: SC.isOpen(p.key), title: 'How the stage was set: the file that set it, and what it needs next' } : {}) },
+      identity: [ls && ls.ref ? `<button type="button" class="pnl-file tr-ref" data-dev-file="${esc(ls.ref)}" title="Its source record, in History">${esc(ls.ref)}</button>` : '', types ? esc(types) : '', ls && ls.date ? `latest submission ${esc(day(ls.date))}` : '',
+        nRec ? `<button type="button" class="btn small link" data-dev-hist="" title="History, with each file's source record">${nRec} file${nRec === 1 ? '' : 's'} · history ›</button>` : ''].filter(Boolean).join(' · ') || esc(p.municipality),
       // Beside the stage, what the latest aerial photo shows; pressed, the check opens under the header.
-      ...(root.PeelAerialChip ? { badge: root.PeelAerialChip.chipHTML(p), extra: root.PeelAerialChip.boxHTML(p) } : {}) };
+      badge: AC ? AC.chipHTML(p) : '', extra: `${SC ? SC.boxHTML(p) : ''}${AC ? AC.boxHTML(p) : ''}` };
   }
   // ---- Panels in the right-hand column ---------------------------------------------------------
   // Each tab has one panel slot (#pnl-<tab>, above its sub-views' panes). A renderer hands over the

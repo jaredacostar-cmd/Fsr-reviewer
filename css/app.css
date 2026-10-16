@@ -3420,3 +3420,31 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 12px); z-index: 3000; background: var(--text-primary); color: var(--surface-0); padding: 8px 14px; border-radius: 6px; font-size: var(--fs-2); opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s; max-width: calc(100vw - 32px); }
 .toast.on { opacity: 1; transform: translate(-50%, 0); }
 @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
+/* Navigation PR 2: chips and figures that open their answer; History with the source records */
+.pnl-chip-btn { cursor: pointer; background: transparent; font-family: inherit; display: inline-flex; align-items: center; gap: 4px; }
+.pnl-chip-btn:hover, .pnl-chip-btn:focus-visible { background: var(--surface-2); }
+.pnl-fig[role="button"] { cursor: pointer; }
+.pnl-fig[role="button"]:hover, .pnl-fig[role="button"]:focus-visible { border-color: var(--accent); }
+.pnl-fig[role="button"] .pnl-l::after { content: ' ▸'; color: var(--text-muted); font-size: 0.85em; }
+.chip.chip-link { cursor: pointer; font: inherit; font-size: var(--fs-1); }
+.chip.chip-link .aer-car { font-size: 9px; opacity: 0.8; }
+button.tr-ref, button.pnl-file { all: unset; cursor: pointer; font-weight: 600; font-variant-numeric: tabular-nums; color: var(--text-primary); text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 2px; }
+button.tr-ref:hover, button.tr-ref:focus-visible, button.pnl-file:hover, button.pnl-file:focus-visible { text-decoration-color: var(--accent); color: var(--accent); }
+button.tr-check, button.tr-new { cursor: pointer; font-family: inherit; }
+button.tr-check { background: transparent; }
+button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px; }
+.dev-hist .tl-type { cursor: pointer; font: inherit; }
+.dev-hist[data-only] li[data-tl-k] { display: none; }
+.dev-hist[data-only="council"] li[data-tl-k="council"], .dev-hist[data-only="file"] li[data-tl-k="file"], .dev-hist[data-only="permit"] li[data-tl-k="permit"], .dev-hist[data-only="phase"] li[data-tl-k="phase"] { display: grid; }
+.tl-only { margin: 4px 0; }
+.tl-rec { display: inline; }
+.tl-rec > summary { display: inline; list-style: none; cursor: pointer; }
+.tl-rec > summary::-webkit-details-marker { display: none; }
+.tl-rec .tl-ref { font-weight: 600; text-decoration: underline; text-decoration-color: var(--border); text-underline-offset: 2px; color: var(--text-primary); }
+.tl-rec[open] .tl-ref { color: var(--accent); }
+.tl-rec[open] > .tl-rec-b { display: block; margin: 6px 0 8px; padding: var(--space-2) var(--space-3); background: var(--surface-2); border-radius: var(--radius-panel); }
+.tl-rec-b table, .rec-t { width: 100%; border-collapse: collapse; font-size: var(--fs-1); }
+.tl-rec-b td, .rec-t td { padding: 2px 6px 2px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+.rec-flash { outline: 2px solid var(--accent); outline-offset: 2px; transition: outline-color 1.2s; }
+.stage-box .stage-next { margin: 0 0 var(--space-2); }
+.stage-box .dt { font-size: var(--fs-1); }

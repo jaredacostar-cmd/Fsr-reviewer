@@ -242,10 +242,11 @@
         identity: `Peel · ${sysWord}: ${[plural(n('plant'), 'plant', 'plants'), plural(n('wplant'), 'treatment system', 'treatment systems'), plural(n('pump'), 'pumping group', 'pumping groups'), plural(n('storage'), 'storage facility', 'storage facilities'), plural(n('ps'), 'pumping station', 'pumping stations')].filter(x => !/^0 /.test(x)).join(' · ')}` },
       answer: `<strong>${over.length}</strong> of ${rows.length} facilities are over capacity at build-out${tight.length ? ` and <strong>${tight.length}</strong> more are tight (90–100%)` : ''}.${soon && soon.limit.y != null ? ` <strong>${esc(soon.name)}</strong> is the first to reach its limit (${esc(limitWords(soon.limit.what))}: ${whenWords(soon.limit.y, end)})${big && big.impact.past > 0 ? big === soon ? ' and goes furthest past it at build-out' : `; <strong>${esc(big.name)}</strong> goes furthest past its limit at build-out` : ''}.` : big && big.impact.past > 0 ? ` <strong>${esc(big.name)}</strong> goes furthest past its limit at build-out.` : ''}`,
       figures: [
-        { v: over.length, u: 'over', label: 'over capacity at build-out', ctx: `of ${rows.length} facilities`, tone: over.length ? 'over' : 'room' },
-        { v: tight.length, u: 'tight', label: '90–100% at build-out', ctx: 'past the 90% trigger, under 100%', tone: tight.length ? 'tight' : 'room' },
-        soon ? { v: soon.limit.y === 'today' ? 'Now' : soon.limit.y == null ? `after ${end}` : `≈${soon.limit.y}`, u: '', label: soon.limit.y === 'today' ? 'soonest limit: already reached' : 'soonest limit', ctx: `${esc(soon.name)}: ${esc(limitWords(soon.limit.what))}`, tone: soon.limit.y != null ? 'over' : 'room' } : null,
-        big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo) } : null,
+        // (a count opens the full table; a figure that names one facility opens it)
+        { v: over.length, u: 'over', label: 'over capacity at build-out', ctx: `of ${rows.length} facilities`, tone: over.length ? 'over' : 'room', attrs: { 'data-full-table': 'svc:capacity' } },
+        { v: tight.length, u: 'tight', label: '90–100% at build-out', ctx: 'past the 90% trigger, under 100%', tone: tight.length ? 'tight' : 'room', attrs: { 'data-full-table': 'svc:capacity' } },
+        soon ? { v: soon.limit.y === 'today' ? 'Now' : soon.limit.y == null ? `after ${end}` : `≈${soon.limit.y}`, u: '', label: soon.limit.y === 'today' ? 'soonest limit: already reached' : 'soonest limit', ctx: `${esc(soon.name)}: ${esc(limitWords(soon.limit.what))}`, tone: soon.limit.y != null ? 'over' : 'room', attrs: soon.ss || soon.id ? { 'data-ss': soon.ss || soon.id } : null } : null,
+        big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo), attrs: big.ss || big.id ? { 'data-ss': big.ss || big.id } : null } : null,
       ].filter(Boolean),
       chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${sorted[0].capWord} capacity)</span></p>${labelledBar(sorted[0])}${LB() ? LB().capLegendHTML() : ''}` : '',
       lists: [{ title: 'Facilities', tools, rows: sorted.slice(0, 5).map(listRow), total: rows.length, seeAll: { 'data-full-table': 'svc:capacity' } }],
@@ -404,9 +405,9 @@
       head: PN.siteHead(p),
       answer: `${f.z ? `Water from <strong>${esc(f.z.name)}</strong>${share != null ? ` (this site ${share}% of its build-out maximum day)` : ''}` : 'No pressure zone mapped'}; wastewater ${f.path.length ? `along ${fmtNum(f.path.length)} block${f.path.length === 1 ? '' : 's'}${f.sps.length ? ` and ${f.sps.length} pumping station${f.sps.length === 1 ? '' : 's'}` : ''} to <strong>${esc(plant || '–')}</strong>` : 'with no traced path'}${usePct != null ? `, using ${usePct}% of its reserve` : ''}.`,
       figures: [
-        { v: fmt1(cb.water.maxDay), u: 'L/s', label: 'water, maximum day', ctx: share != null ? `${share}% of ${esc(f.z.name.replace('Pressure zone ', 'zone '))}` : '' },
+        { v: fmt1(cb.water.maxDay), u: 'L/s', label: 'water, maximum day', ctx: share != null ? `${share}% of ${esc(f.z.name.replace('Pressure zone ', 'zone '))}` : '', attrs: f.z ? { 'data-ss': f.z.id } : null },
         { v: fmt1(cb.wastewater.wetPeak), u: 'L/s', label: 'wastewater, peak wet weather', ctx: `${fmt1(cb.wastewater.peak)} L/s on a dry day` },
-        f.cap ? { v: fmt1(Math.abs(f.reserve)), u: 'ML/d', label: f.reserve < 0 ? `${esc(plant)} over 100% after committed` : `${esc(plant)} reserve`, ctx: usePct != null ? `this site ${usePct}% of it` : '', tone: f.reserve <= 0 ? 'over' : 'room' } : null,
+        f.cap ? { v: fmt1(Math.abs(f.reserve)), u: 'ML/d', label: f.reserve < 0 ? `${esc(plant)} over 100% after committed` : `${esc(plant)} reserve`, ctx: usePct != null ? `this site ${usePct}% of it` : '', tone: f.reserve <= 0 ? 'over' : 'room', attrs: { 'data-ss': `plant:${f.pl}` } } : null,
         { v: U.PIPE_RESULTS ? '–' : 'n/a', u: '', label: 'tightest pipe on the path', ctx: U.PIPE_RESULTS ? '' : 'pipe-by-pipe capacity is left to the Region\u2019s model' },
       ].filter(Boolean),
       lists: [{ title: 'The path', rows: pathRows, total: pathRows.length }],

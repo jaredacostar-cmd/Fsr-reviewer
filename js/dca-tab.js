@@ -76,8 +76,8 @@
       answer: `Across <strong>${fmtNum(R.list.length)} DC projects</strong>, ${adv.length ? `<strong>${adv.length}</strong> ${adv.length === 1 ? 'is' : 'are'} in service only after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out` : 'every project is in service before the capacity it relieves runs out'}${R.baseBo > 0 ? `. With every project as scheduled, <strong>≈${pp(R.baseBo)} people</strong> are still constrained at build-out` : ''}${big && big.bo > 0 ? `; without the <strong>${esc(big.short || big.name)}</strong>, ≈${pp(big.bo)} more would be, the most of any one project` : ''}.`,
       figures: [
         { v: fmtNum(R.list.length), u: 'projects', label: 'DC projects', ctx: 'relieve a constraint or serve new development' },
-        { v: adv.length, u: '', label: 'late', ctx: 'in service after the capacity runs out', tone: adv.length ? 'over' : null },
-        { v: inTime, u: '', label: 'in time', ctx: 'in service before it runs out' },
+        { v: adv.length, u: '', label: 'late', ctx: 'in service after the capacity runs out', tone: adv.length ? 'over' : null, attrs: { 'data-full-table': 'dca' } },
+        { v: inTime, u: '', label: 'in time', ctx: 'in service before it runs out', attrs: { 'data-full-table': 'dca' } },
         { v: pp(R.baseBo), u: 'people', label: 'constrained at build-out', ctx: `≈${uu(R.baseBo)} units, every project as scheduled`, tone: R.baseBo > 0 ? 'tight' : 'room' },
       ],
       chart: DC().dcaTimingChart(R.list, 6),
@@ -92,12 +92,15 @@
     const PN = window.PeelPanel, needs = MP().devNeeds(p) || [];
     const T = { gap: ['over', 'Short'], planned: ['room', 'In time'], ok: ['room', 'Room'], check: ['tight', 'Check'] };
     const gaps = needs.filter(c => c.status === 'gap');
-    const row = c => { const [tone, word] = T[c.status] || T.ok, r = c.relief && c.relief[0]; return { tone, attrs: c.id && /^(plant|ps):/.test(c.id) ? { 'data-ss': c.id.replace(/^ps:/, '') } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${c.sys === 'water' ? '💧 ' : ''}${esc(c.name)}<small>${esc(c.sub || '')}</small></span>${PN.chip({ tone, text: word })}</div><small class="pnl-r-line">${c.out ? `runs out ${c.out === 'today' ? 'now' : `≈${c.out}`}` : `room to ${SP().hz.end}`}${r ? ` · relief: ${esc(r.text)}` : ' · no relief listed'}</small>` }; };
+    // Every row opens its constraint: a plant, a pumping station or the lake-based water system its
+    // panel; storage its pressure zone; the rest (well systems, grouped blocks) the full table.
+    const scopeOf = c => (!c.id ? null : /^(plant|ps):/.test(c.id) ? c.id.replace(/^ps:/, '') : c.id === 'wsys:lake' ? c.id : c.zones && c.zones.length ? c.zones[0] : null);
+    const row = c => { const [tone, word] = T[c.status] || T.ok, r = c.relief && c.relief[0], sc = scopeOf(c); return { tone, attrs: sc ? { 'data-ss': sc } : { 'data-full-table': 'dca' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${c.sys === 'water' ? '💧 ' : ''}${esc(c.name)}<small>${esc(c.sub || '')}</small></span>${PN.chip({ tone, text: word })}</div><small class="pnl-r-line">${c.out ? `runs out ${c.out === 'today' ? 'now' : `≈${c.out}`}` : `room to ${SP().hz.end}`}${r ? ` · relief: ${esc(r.text)}` : ' · no relief listed'}</small>` }; };
     return {
       calc: true, fullTitle: `${p.title} · the DC projects it relies on`,
       head: PN.siteHead(p),
       answer: needs.length ? `This site relies on <strong>${needs.length}</strong> constraint${needs.length === 1 ? '' : 's'} on its path${gaps.length ? `; <strong>${gaps.length}</strong> run${gaps.length === 1 ? 's' : ''} out before a DC project relieves ${gaps.length === 1 ? 'it' : 'them'}` : ', each with room or relief in time'}.` : 'No capacity constraint on this site\u2019s path in the screen.',
-      figures: [{ v: needs.length, u: '', label: 'constraints it relies on', ctx: '' }, { v: gaps.length, u: '', label: 'run out before relief', ctx: '', tone: gaps.length ? 'over' : 'room' }],
+      figures: [{ v: needs.length, u: '', label: 'constraints it relies on', ctx: '', attrs: { 'data-full-table': 'dca' } }, { v: gaps.length, u: '', label: 'run out before relief', ctx: '', tone: gaps.length ? 'over' : 'room', attrs: { 'data-full-table': 'dca' } }],
       lists: [{ title: 'The projects it relies on', rows: needs.slice(0, 5).map(row), total: needs.length, seeAll: { 'data-full-table': 'dca' } }],
       method: 'The constraints on this site\u2019s path (its sewer path, pumping stations, plant, water system, storage and zone supply), each with the year its capacity runs out and the DC project that relieves it (2026 DC capital maps, draft).',
       sources: '2026 DC capital maps (draft v2, March 2026); 2020 Water and Wastewater Master Plan; the servicing model.',

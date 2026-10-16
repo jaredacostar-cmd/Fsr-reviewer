@@ -28,7 +28,7 @@ test('the year comes from the latest photo’s label', () => {
 test('wired in: the site header carries the chip and its box, on the panels and on Check a site / Review an FSR; one check per development', () => {
   const pn = src('js/panel.js'), wp = src('js/ws-pages.js'), dt = src('js/devtab.js');
   assert.match(pn, /\$\{chip\(h\.status\)\}\$\{h\.badge \|\| ''\}/);
-  assert.match(pn, /badge: root\.PeelAerialChip\.chipHTML\(p\), extra: root\.PeelAerialChip\.boxHTML\(p\)/);
+  assert.match(pn, /badge: AC \? AC\.chipHTML\(p\) : '', extra: `\$\{SC \? SC\.boxHTML\(p\) : ''\}\$\{AC \? AC\.boxHTML\(p\) : ''\}`/, 'with the stage chip\'s box (PR 2)');
   assert.match(wp, /\$\{chipHTML\(m\.status\)\}\$\{m\.badge \|\| ''\}/);
   assert.equal((wp.match(/badge: s\.head\.badge, extra: s\.head\.extra/g) || []).length, 2, 'site and fsr pages');
   assert.match(dt, /const aerialRuns = new Map\(\);/);
