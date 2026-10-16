@@ -136,7 +136,11 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   for (const id of ['tight', 'growth', 'projects']) { B.go(id); const p = B.plan(id); assert.equal(B.override(`${p.tab}:${p.sub}`, 'area'), null, id); }
   // Check a site before a site is picked: the Find step; once a site is open, the site's own panel.
   B.go('site');
-  assert.equal(B.override('overview:', 'area').head.name, 'Check a site');
+  const find = B.override('overview:', 'area');
+  assert.equal(find.head.name, 'Check a site');
+  // The steps as a numbered list, Find marked as the current step.
+  assert.deepEqual(plain(find.lists[0].rows.map(r => r.html.match(/<span class="pnl-step-n" aria-hidden="true">(\d)<\/span><span><strong>(\w+)<\/strong>/).slice(1))), [['1', 'Find'], ['2', 'Result'], ['3', 'Output']]);
+  assert.match(find.lists[0].rows[0].html, /^<div class="pnl-step on">/);
   assert.equal(B.override('overview:', 'dev:x'), null);
 });
 

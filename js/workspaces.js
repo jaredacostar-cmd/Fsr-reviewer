@@ -184,7 +184,7 @@
       head: { name: w.label, status: { tone: 'stage', text: 'Step 1 of 3' }, identity: esc(w.what) },
       answer: 'Find the development: search an address or file number above, or click it on the map.',
       lists: [
-        { title: 'Steps', rows: steps.map(([t, d], i) => ({ kv: true, html: `<div class="pnl-kv"><span><strong>${i + 1}. ${t}</strong></span><span>${esc(d)}</span></div>` })), total: 3 },
+        { title: 'Steps', rows: steps.map(([t, d], i) => ({ kv: true, html: `<div class="pnl-step${i === 0 ? ' on' : ''}"><span class="pnl-step-n" aria-hidden="true">${i + 1}</span><span><strong>${t}</strong> ${esc(d)}</span></div>` })), total: 3 },
         { title: 'Recently active', rows: recent.map(p => ({ attrs: { 'data-pnl-dev': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(P && P.PHASE_BY_KEY[p.phase] ? P.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units</small>` })), total: recent.length },
       ],
       foot: { primary: { label: 'Search', attrs: { 'data-ws-focus': '' } } },
