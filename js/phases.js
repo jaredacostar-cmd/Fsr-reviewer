@@ -1110,12 +1110,18 @@
   // official plan approval alone does not ("Zoning approved", still under review).
   // (A minor site plan approves its own small change; it sets the phase only where the site has
   // nothing else — the builds filter in mergeProject.)
+  // Bill 23: no site plan control for residential developments of up to 10 units.
+  const SMALL_SITE_UNITS = 10;
   const committingApproval = r => r.kind === 'application' && ['siteplan', 'draft'].includes(fileKind(r));
   function sitePhaseOf(r) {
     if (r.kind === 'application' && r.phase !== 'cancelled' && r.council && r.council.draft && fileKind(r) === 'draft' && PHASE_BY_KEY[r.phase].rank < PHASE_BY_KEY.approved.rank && !r.superseded) return 'approved';
     if (r.kind === 'application' && r.phase === 'approved' && (r.superseded || r.closedUnconfirmed || isLegacy(r) || (!committingApproval(r) && !isRegistered(r)))) return 'review';
     return r.phase;
   }
+  // Bundle 6: an application to lift a holding (H) symbol: the zoning is in place but held until a
+  // condition is met (often servicing). Mississauga files them as H-OZ; Brampton as "Lifting of Hold".
+  const HOLD_TEXT = /\blift(?:ing)?\s+(?:of\s+)?(?:the\s+)?hold|\bholding\s+(?:symbol|provision)|\bremoval\s+of\s+(?:the\s+)?'?h'?\b|\bholding\s+removal|\bremove\s+the\s+holding/i;
+  const isHolding = r => r.kind === 'application' && (/^H-?\s?OZ\b/i.test(String(r.ref || '')) || HOLD_TEXT.test(`${r.type || ''} ${r.description || ''}`));
   // A zoning approval on a file (its status, or a by-law passed at council): { date, bylaw } or null.
   function zoningOf(r) {
     if (r.kind !== 'application' || r.phase === 'cancelled') return null;
@@ -1342,6 +1348,9 @@
     // site plan is approved yet: still under review, shown as "Zoning approved" (SPEC 1.2).
     const zl = PHASE_BY_KEY[phase].rank <= PHASE_BY_KEY.review.rank ? live.map(r => ({ r, z: zoningOf(r) })).filter(x => x.z) : [];
     const zoningApproved = zl.length ? { refs: zl.map(x => x.r.ref).filter(Boolean), bylaws: zl.map(x => x.z.bylaw).filter(Boolean), date: zl.map(x => x.z.date).filter(Boolean).sort().pop() || null } : null;
+    // The holding (H) symbol: lifting applied for (open) or lifted (approved).
+    const holds = recs.filter(r => isHolding(r) && r.phase !== 'cancelled');
+    const holding = holds.length ? { refs: holds.map(r => r.ref).filter(Boolean), open: holds.some(r => PHASE_BY_KEY[r.phase].rank < PHASE_BY_KEY.approved.rank), lifted: holds.some(r => r.phase === 'approved' || r.phase === 'completed') } : null;
     const planApproved = planApp.length ? {
       refs: planApp.map(r => r.ref).filter(Boolean),
       date: planApp.flatMap(r => r.events.filter(e => e.phase === 'approved').map(e => e.date)).sort((a, b) => a - b)[0] || null,
@@ -1373,6 +1382,12 @@
     } : null;
     // A plan with units still to permit isn't finished even if every permit so far is.
     if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
+    // Bill 23 (2022): site plan control no longer applies to residential developments of 10 units or
+    // fewer, so for them an approved zoning is the last planning approval: the site is Approved, no
+    // permit yet (decided 2026-10-16). Not where a site plan was filed anyway and is still open.
+    const openSitePlan = live.some(r => r.kind === 'application' && fileKind(r) === 'siteplan' && PHASE_BY_KEY[r.phase].rank < PHASE_BY_KEY.approved.rank);
+    const smallSite = !!(zoningApproved && planned > 0 && planned <= SMALL_SITE_UNITS && PHASE_BY_KEY[phase].rank <= PHASE_BY_KEY.review.rank && !openSitePlan);
+    if (smallSite) phase = 'approved';
 
     // Milestones: earliest date at which each phase was reached, across all records.
     const milestones = {};
@@ -1431,6 +1446,9 @@
       milestones,
       planApproved,
       zoningApproved,
+      holding: holding || undefined,
+      // (10 or fewer homes with zoning approved: no site plan needed, Bill 23)
+      smallSite: smallSite || undefined,
       // Each planning file with its own phase, status, units and the permits its boundary holds;
       // the separate proposals (lands) they form (SPEC 1.1).
       files: fv.files,
@@ -1520,7 +1538,7 @@
 
   const api = {
     dedupeRecords,
-    PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
+    PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,

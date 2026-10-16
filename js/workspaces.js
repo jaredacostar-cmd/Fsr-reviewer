@@ -20,14 +20,14 @@
   // servicing scope closes), 'site' (the open development, or the Find step until one is picked) or
   // 'drawn' (the area the user draws); view: the map's layer preset (js/map-markers.js MAP_VIEWS).
   const WS = [
-    { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'A development: servicing, timing and what to confirm, then the servicing memo' },
-    { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage nearing or past their limit, soonest first' },
-    { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned units and people by municipality and plan' },
-    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A development’s servicing path with the FSR cross-check' },
-    { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and the servicing it needs' },
-    { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'DC projects and whether each comes before the capacity it relieves runs out' },
-    { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Sewers 50+ years old or rated moderate risk that carry 100+ units at build-out' },
-    { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'What changed: files moved, new files, capital and EA dates' },
+    { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'One development: servicing, timing, the memo' },
+    { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage near their limit' },
+    { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned homes and people, by area' },
+    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A consultant’s FSR against the app’s figures' },
+    { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
+    { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
+    { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
+    { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'Files moved, new files, capital and EA dates' },
   ];
   const BY_ID = Object.fromEntries(WS.map(w => [w.id, w]));
   // The map under each chip (decided with the user): only what the task reads, 1–2 layers
@@ -44,12 +44,12 @@
   };
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']],
+    ['Planning', ['site', 'fsr', 'growth', 'study', 'tight']],
     ['Capital', ['projects']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { approvals: { label: 'How approvals work', what: 'Ontario’s steps, the app’s stages and the file tree' }, glossary: { label: 'Glossary', what: 'The capacity, flow and planning terms in plain words' } };
+  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, approvals: { label: 'How approvals work', what: 'Ontario’s steps against the app’s stages' }, glossary: { label: 'Glossary', what: 'The terms in plain words' } };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
@@ -230,9 +230,24 @@
   }
   // This week's count (the chip's badge): the Peel Overview's own list.
   function weekRows() { const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
+  // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
+  // Reset, so a filtered page never reads as the whole of Peel.
+  function filterChipsHTML() {
+    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [];
+    if (!list.length) return '';
+    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button></div>`;
+  }
+  document.addEventListener('click', e => {
+    const F = root.PeelFilterUI; if (!F || !e.target.closest) return;
+    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'); if (!r && !c) return;
+    e.preventDefault();
+    if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
+    renderChips(); if (mode === 'home') renderPage(true);
+  });
   function renderChips() {
     const el = $('#ws-chips'); if (!el) return;
     const nW = weekRows().length;
+    const fl = $('#ws-filters'); if (fl) fl.innerHTML = filterChipsHTML();
     el.innerHTML = WS.map(w => `<button type="button" class="btn small ws-chip${cur === w.id ? ' on' : ''}" data-ws-go="${w.id}" aria-pressed="${cur === w.id}" title="${esc(w.what)}">${esc(w.label)}${w.id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</button>`).join('');
   }
   // The header line on every panel in a workspace: its source and "Open full map".
@@ -355,7 +370,8 @@
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     const item = (id, sub) => `<li><button type="button" class="home-ws${page === id ? ' on' : ''}" data-ws-page="${id}"${page === id ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
-    return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}</ul>
+    // (This week covers capital and EA dates too: it sits under Home, not Planning)
+    return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
       <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).map(id => item(id, REF[id].what)).join('')}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map (all tools)</strong><small>Every layer, filter and tool</small></button>
@@ -365,7 +381,9 @@
   // force: rebuild even when the page HTML is unchanged (a mode switch).
   function renderPage(force) {
     const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
-    const m = WP.build(page), main = WP.pageHTML(m, PN() ? PN().NOTE : '');
+    const m = WP.build(page);
+    if (!REF[page]) m.filters = filterChipsHTML();
+    const main = WP.pageHTML(m, PN() ? PN().NOTE : '');
     const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
     if (!force && html === lastHTML) return;
     // The search box and the map live outside the page while it is rebuilt.
@@ -404,6 +422,8 @@
     const pg = e.target.closest('[data-ws-page]');
     if (pg) { e.preventDefault(); openPage(pg.dataset.wsPage); return; }
     const pk = e.target.closest('[data-ws-pick]');
+    // "Its full tree →" / "show it in the tree →": the site on the full map, at Records › Files.
+    if (pk && pk.dataset.wsTree) { e.preventDefault(); setMode('full'); pickDev(pk.dataset.wsPick); setTimeout(() => { const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files'); }, 300); return; }
     if (pk) { e.preventDefault(); const as = pk.dataset.wsAs; pickDev(pk.dataset.wsPick); if (as && as !== page) openPage(as, { keepScroll: true }); else schedule(); return; }
     const un = e.target.closest('[data-ws-unpick]');
     if (un) { if (root.DevScope && root.DevScope.current()) root.DevScope.close(); openPage(un.dataset.wsUnpick); return; }

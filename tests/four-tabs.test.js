@@ -39,10 +39,9 @@ test('1. tabs: Overview · Growth · Servicing · Capital at every scope, then R
   const tabs = [...HTML.matchAll(/role="tab" class="f-tab( f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => [m[2], m[3], !!m[1]]);
   assert.deepEqual(tabs, [['overview', 'Overview', false], ['growth', 'Growth', false], ['svc', 'Servicing', false], ['dca', 'Capital', false], ['records', 'Records', true]]);
   assert.deepEqual(plain(loadTabs().TAB_KEYS), ['overview', 'growth', 'svc', 'dca', 'records']);
-  // Records is right-aligned and muted; it also opens from the Settings gear.
+  // Records is right-aligned and muted; since bundle 6 it is not in the Settings gear too.
   assert.match(src('css/app.css'), /\.f-tab\.f-tab-trail \{ margin-left: auto; font-size: var\(--fs-1\); color: var\(--text-muted\);/);
-  assert.match(src('js/topbar.js'), /data-tbg="records">Records<\/button>/);
-  assert.match(src('js/topbar.js'), /else if \(k === 'records'\) \{ closeTbMenus\(\); AT\(\)\.openTab\('records'\); \}/);
+  assert.doesNotMatch(src('js/topbar.js'), /data-tbg="records"/);
 });
 
 test('1. sub-views per scope match the spec (Peel / area and a development)', () => {

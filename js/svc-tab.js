@@ -177,6 +177,7 @@
         ${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${SD().PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}
         ${nearSwitch()}
       </div>
+      ${root.PeelTreeCounts && root.PeelTreeCounts.settingsHTML ? root.PeelTreeCounts.settingsHTML() : ''}
       ${compareHTML()}
       <p class="small muted">Horizon years: Wastewater → Plants & capacity. <span data-scen-crit>${scenCritLineHTML()}</span> — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p>
       <div id="scen-criteria-mount"></div></details>`;

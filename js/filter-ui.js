@@ -159,7 +159,7 @@
     activeList = activeFilters();
     $('#active-filters').innerHTML = (activeList.length
       ? `<button type="button" class="btn small" id="f-reset">Reset ${activeList.length} filter${activeList.length === 1 ? '' : 's'}</button>` + activeList.map((f, i) => `<button type="button" class="chip on removable" data-i="${i}" title="Remove filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')
-      : '') + '<button type="button" class="btn small link" id="f-saveview" title="Save the filters, scope and map as a named view">+ Save this view</button>';
+      : '');   // (bundle 6: views are saved in one place, Export › Save this view…, beside the share link)
     renderEmptyMsg();
     DT().syncFiltersBtn();   // Phase 2 shell: the compact "Filters (n)" button label
   }
@@ -175,7 +175,6 @@
   }
   $('#active-filters').onclick = e => {
     if (e.target.closest('#f-reset')) { resetAllFilters(); return; }
-    if (e.target.closest('#f-saveview')) { MA().saveCurrentView(); return; }
     const b = e.target.closest('[data-i]'); if (!b) return;
     activeList[+b.dataset.i].clear();
     App().applyFilters();

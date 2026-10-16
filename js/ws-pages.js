@@ -36,6 +36,7 @@
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}</header>`);
+    if (m.filters) out.push(m.filters);
     if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
     if (m.top) out.push(m.top);
     // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
@@ -132,6 +133,11 @@
   // estimate is what it has left to build (ofDev().estimated), its share in the area, split over the
   // kinds of estimate it holds. → { units, files: [{ p, share, est, kinds }], byKind }, largest first.
   const EST_KINDS = { online: 'found online', precon: 'pre-consultation estimate', estimate: 'estimate from the wording', permits: 'from building permits' };
+  // Bundle 6: the file an estimated count is on, and a way to see it in the development's tree.
+  function estFileHTML(p) {
+    const FT = root.PeelFileTree, d = FT && FT.of(p), e = d && FT.estimateOf(d); if (!e) return '';
+    return `<small class="tr-sum">the estimate is on <b>${esc(e.ref)}</b>${e.source ? ` (${esc(e.source)})` : ''} · <button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">show it in the tree →</button></small>`;
+  }
   function estimateRows(devs, ofDev) {
     const files = [], byKind = {};
     let units = 0;
@@ -142,6 +148,9 @@
       const raw = parts.reduce((t, x) => t + x.units, 0), kinds = {};
       for (const x of parts) kinds[x.kind] = (kinds[x.kind] || 0) + est * x.units / raw;
       for (const k in kinds) byKind[k] = (byKind[k] || 0) + kinds[k];
+      // (a development counted in two parts of the area is one row: its shares add up)
+      const had = files.find(f => f.p === p);
+      if (had) { had.share += sh; had.est += est; for (const k in kinds) had.kinds[k] = (had.kinds[k] || 0) + kinds[k]; units += est; continue; }
       units += est; files.push({ p, share: sh, est, kinds });
     }
     files.sort((a, b) => b.est - a.est);
@@ -153,7 +162,7 @@
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small pnl-chart-t"><strong>The pipeline by stage, in the order a file moves</strong> <span class="pnl-chart-u">(dwellings)</span></p>
-      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
+      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
       <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}</p>
     </div>`;
   }
@@ -283,6 +292,23 @@
   }
 
   // ---- Home --------------------------------------------------------------------------------------
+  function homeFigures(rows, ready, week) {
+    const over = rows.filter(r => r.pctBo >= 100);
+    const yr = r => (r.limit.y === 'today' ? 0 : r.limit.y);
+    const trig = rows.filter(r => r.kind === 'plant' && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y))[0];
+    // (the DC panel builds when Capital opens; until then the same analysis, cached, gives the count)
+    const dc = specOf('dca:timing', areaScope);
+    let late = dc && (dc.figures || []).find(f => f && f.label === 'late');
+    if (!late && root.PeelDcCost && root.PeelDcCost.dcAnalysis && App() && App().state.svcModel && App().state.dcInfra && MM() && MM().SEW && MM().SEW.data) { try { const R = root.PeelDcCost.dcAnalysis(); late = { v: R.list.filter(r => r.rec === 'advance').length }; } catch (e) { late = null; } }
+    const nW = week && week.rows ? week.rows.length : 0;
+    const go = (page, title) => ({ 'data-ws-page': page, title });
+    return [
+      ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `of ${fmtNum(rows.length)} facilities · Servicing capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing capacity') },
+      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first treatment trigger', ctx: `${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') } : null,
+      late ? { v: late.v, u: '', label: 'DC projects late', ctx: 'in service after the capacity runs out · DC projects →', tone: +late.v ? 'over' : null, attrs: go('projects', 'DC projects') } : null,
+      { v: fmtNum(nW), u: nW === 1 ? 'change' : 'changes', label: 'this week', ctx: 'files moved, new files, capital and EA dates · This week →', attrs: go('week', 'This week') },
+    ].filter(Boolean);
+  }
   function home() {
     const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('home', 'Loading the briefing…');
     // The servicing model loads after the developments: until then Needs attention keeps its place with
@@ -295,7 +321,10 @@
     // Home's rows open the matching workspace page.
     const toPage = (ws, l) => (l ? { ...l, rows: l.rows.map(r => ({ ...r, attrs: { 'data-ws-page': ws, title: (r.attrs || {}).title } })), see: { 'data-ws-page': ws } } : null);
     return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
-      figures: a.figures.map(f => ({ ...f, attrs: { 'data-ws-page': 'growth', title: 'Growth in an area' } })),
+      // Bundle 6: Home's figures are the other pages' answers, each opening its page (the pipeline's
+      // totals stay in the answer, with Growth in an area a tap away).
+      top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
+      figures: homeFigures(rows, ready, week),
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map (all tools)', attrs: { 'data-ws-full': '' } }] };
@@ -345,15 +374,24 @@
     const recent = proj.filter(p => p.phase !== 'cancelled' && p.phase !== 'completed' && (p.units || 0) > 0).map(p => [p, last(p)]).filter(x => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
     const big = proj.filter(p => p.phase === 'review' && (p.units || 0) >= 100).sort((a, b) => b.units - a.units).slice(0, 5);
     const devRow = p => ({ attrs: { 'data-ws-pick': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(Ph && Ph.PHASE_BY_KEY[p.phase] ? Ph.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units</small>` });
-    const steps = [['Find', 'Search an address or file number, or pick one below.'], ['Result', id === 'fsr' ? 'Its servicing path, with the FSR cross-check.' : 'Its servicing, timing and what to confirm.'], ['Output', id === 'fsr' ? 'The comparison, as notes for the review.' : 'The one-page servicing memo.']];
+    // Bundle 6: the steps in one line under the search (not a list beside the map); Review an FSR
+    // starts from the files that have an FSR posted (data/fsr.json), newest first.
+    const steps = [['Find', 'search or pick one below'], ['Result', id === 'fsr' ? 'its servicing path with the FSR cross-check' : 'its servicing, timing and what to confirm'], ['Output', id === 'fsr' ? 'notes for the review' : 'the one-page servicing memo']];
+    const stepper = `<p class="pnl-stepper small" aria-label="Steps">${steps.map(([t, d], i) => `<span class="${i === 0 ? 'on' : ''}"><b>${i + 1}</b> ${esc(t)}: ${esc(d)}</span>`).join('<span class="muted" aria-hidden="true"> › </span>')}</p>`;
+    const F = root.PeelFsr;
+    let fsrRows = null;
+    if (id === 'fsr' && F) {
+      if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
+      else fsrRows = proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best && x.p.phase !== 'cancelled').sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))).map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
+    }
+    const lists = id === 'fsr'
+      ? [{ title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 },
+        { title: 'Recently active', rows: recent.map(devRow), total: recent.length }]
+      : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
     return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
-      top: '<div class="page-search" id="page-search"></div>',
-      answer: 'Find the development: search an address or file number, or pick one below.',
-      lists: [
-        { title: 'Steps', rows: steps.map(([t, d], i) => ({ kv: true, html: `<div class="pnl-step${i === 0 ? ' on' : ''}"><span class="pnl-step-n" aria-hidden="true">${i + 1}</span><span><strong>${t}</strong> ${esc(d)}</span></div>` })), total: 3 },
-        { title: 'Recently active', rows: recent.map(devRow), total: recent.length },
-        { title: 'Large files under review', rows: big.map(devRow), total: big.length },
-      ],
+      top: `<div class="page-search" id="page-search"></div>${stepper}`,
+      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are behind a sign-in)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
+      lists,
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
   }
@@ -416,13 +454,20 @@
     const STG = Object.fromEntries(STAGES.map(([k, l]) => [k, l]));
     const files = items.map(({ p, share }) => ({ p, share, st: Ly ? stageOf(Ly.ofDev(p)) : null })).filter(x => x.st && (gStage === 'all' || x.st === gStage) && (x.p.units || 0) > 0).sort((x, y) => y.p.units * y.share - x.p.units * x.share);
     const tools = `<div class="seg" role="group" aria-label="Stage"><button type="button" class="btn small${gStage === 'all' ? ' on' : ''}" data-ws-stage="all" aria-pressed="${gStage === 'all'}">All</button>${STAGES.map(([k, l]) => `<button type="button" class="btn small${gStage === k ? ' on' : ''}" data-ws-stage="${k}" aria-pressed="${gStage === k}">${esc(l.replace(' or under construction', ' / building'))}</button>`).join('')}</div>`;
-    const fileRow = x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${esc(STG[x.st] || '')} · ${esc(Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>` });
+    // Bundle 6: each development's stage once (the growth stage, and the site's own stage only where
+    // it says something else), its files in one line and, ▸, how they fit together.
+    const FT = root.PeelFileTree;
+    const stageLine = x => { const a = STG[x.st] || '', b = Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase; return [a, b].filter((v, i, arr) => v && arr.findIndex(w => String(w).toLowerCase() === String(v).toLowerCase()) === i).map(esc).join(' · '); };
+    const treeBits = p => { const d = FT ? FT.of(p) : null; if (!d) return { sum: '', tog: '', open: '' }; const n = (d.n || []).length, on = gOpen.has(p.key), recOf = FT.recLookup(p);
+      return { sum: `<small class="tr-sum">${FT.summaryHTML(d, recOf)}</small>`, tog: n > 1 ? `<button type="button" class="tr-tog" data-tr-tog="${esc(p.key)}" aria-expanded="${on}" title="Show how its files fit together">${on ? '▾' : '▸'}</button>` : '',
+        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : '') })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
+    const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${tb.sum}${tb.open}` }; };
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
     const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
     const pipeU = stage ? (gStage === 'all' ? stage.total : (stage.rows.find(x => x.key === gStage) || {}).units || 0) : 0;
     const estRows = es && es.files.length ? [
       { kv: true, html: `<span><strong>${n0(es.units)}</strong> of ${n0(pipeU)} dwellings${pipeU > 0 ? ` (${Math.round(es.units / pipeU * 100)}%)` : ''} are estimated, in ${fmtNum(es.files.length)} ${es.files.length === 1 ? 'file' : 'files'} with no unit count stated: ${Object.entries(es.byKind).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${n0(v)} ${esc(EST_KINDS[k])}`).join(', ')}. ${es.files.some(x => Object.keys(x.kinds).length > 1) ? ' A file with more than one kind of estimate is split between them in proportion to their units.' : ''} Confirm these counts with the municipality.</span>` },
-      ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>` })),
+      ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${estFileHTML(x.p)}` })),
     ] : [];
     const empRows = emp.planned >= 1 ? [
       { kv: true, html: `<div class="pnl-kv"><span>Floor area planned</span><span>${n0(emp.planned)} m² · ≈${p0(emp.jobs)} jobs</span></div>` },
@@ -456,7 +501,7 @@
       lists: [
         kids.length ? { title: atPeel ? 'By municipality' : n.kind === 'municipality' ? 'Plans (secondary plans, character areas) and the rest' : 'Precincts and sub-areas', rows: kids.map(kidRow), total: kids.length, see: kids.length > 5 ? { 'data-ws-drillall': n.id } : null, all: gAll } : null,
         atPeel ? { title: 'Plans with the most planned units', rows: plans.map(kidRow), total: plans.length, see: { 'data-ws-go': 'growth', 'data-ws-fulltable': 'growth:areas' } } : null,
-        { title: gStage === 'all' ? `Files in ${n.name}` : `${STG[gStage]}: files in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
+        { title: gStage === 'all' ? `Developments in ${n.name}` : `${STG[gStage]}: developments in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
         estRows.length ? { title: gStage === 'all' ? 'Estimated counts: files to confirm' : `${STG[gStage]}: estimated counts`, rows: estRows, total: estRows.length, seeN: es.files.length, see: estRows.length > 5 ? { 'data-ws-estall': '1' } : null, all: gEst } : null,
         empRows.length ? { title: 'Employment', rows: empRows, total: empRows.length } : null,
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
@@ -467,10 +512,13 @@
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
   }
   let gAll = false, gEst = false;
+  // The developments whose file tree is open (▸ on their row).
+  const gOpen = new Set();
   document.addEventListener('click', e => {
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
-    if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
+    if (t.dataset.trTog) { const k = t.dataset.trTog; if (gOpen.has(k)) gOpen.delete(k); else gOpen.add(k); }
+    else if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
     else if (t.dataset.wsStage) gStage = gStage === t.dataset.wsStage ? 'all' : t.dataset.wsStage;
     else if (t.dataset.wsDrillall) gAll = !gAll;
     else if (t.dataset.wsEstall) gEst = !gEst;
@@ -582,7 +630,8 @@
   // Reference pages (not workspaces): How approvals work (js/approvals-guide.js), the Glossary (js/glossary.js).
   const approvals = () => (root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading('approvals', 'Loading…'));
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary };
+  const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
+  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary, help };
   const build = id => (BUILD[id] || home)();
   Object.assign(api, { build, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;

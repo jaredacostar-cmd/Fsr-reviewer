@@ -122,9 +122,6 @@
           } })}
         </div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
-        <div class="mo-sec" data-info="saved-views"><div class="mo-h">Saved views</div>
-          <div class="mo-saved"><select id="opt-saved" aria-label="Saved views"></select><button type="button" class="btn small link" id="opt-saved-del" hidden>Delete</button></div>
-        </div>
         <div class="mo-sec"><div class="mo-h">Developments</div>
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
           <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
@@ -148,8 +145,6 @@
       el.querySelector('.mo-panel').addEventListener('toggle', e => { if (e.target.classList.contains('mo-panel')) store.set('moPanelOpen', e.target.open); });
       el.querySelector('#mo-devs-off').addEventListener('click', e => { if (e.target.closest('[data-devs-show]')) SD().showAllDevs(); });
       el.querySelector('#mo-area-on').addEventListener('click', e => { if (e.target.closest('[data-areas-clear]')) SD().clearAreaFilters(); });
-      el.querySelector('#opt-saved').onchange = e => { const i = e.target.value; $('#opt-saved-del').hidden = i === ''; if (i !== '') MA().openSavedView(+i); };
-      el.querySelector('#opt-saved-del').onclick = () => { const i = $('#opt-saved').value; if (i === '') return; const list = MA().savedViews(); if (!confirm(`Delete the saved view “${list[+i].name}”?`)) return; list.splice(+i, 1); store.set('savedViews', list); MA().renderSavedViews(); };
       el.querySelector('#opt-hovr').oninput = e => { AS().setHov({ r: +e.target.value }); document.querySelector('#opt-hovr-v').textContent = `${hov.r} px`; };
       el.querySelector('#opt-basemap').onchange = e => { MC().setBasemap(e.target.value); store.set('basemap', e.target.value); MC().setTiles(); CA().restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { ML().setLabelMode(e.target.value); store.set('labelMode', e.target.value); ML().updateLabels(); };

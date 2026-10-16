@@ -118,20 +118,18 @@
 
   // Saved views: a name for the filters, map position, view and layers (kept in this browser).
   const savedViews = () => store.get('savedViews', []) || [];
-  // Saved views as one-tap preset chips at the top of the filter panel (the Layers panel
-  // keeps the full saved-views manager; both apply through viewLink.apply).
+  // Bundle 6: views are saved in one place (Export › Save this view…, beside the share link) and
+  // open from one-tap chips at the top of Find, each with × to delete it.
   function renderSavedPresets() {
     const el = $('#saved-presets'); if (!el) return;
     const list = savedViews();
-    el.innerHTML = list.map((x, i) => `<button type="button" class="chip" data-preset="${i}" title="Apply the saved view “${esc(x.name)}”">${esc(x.name)}</button>`).join('');
+    el.innerHTML = list.map((x, i) => `<span class="chip-saved"><button type="button" class="chip" data-preset="${i}" title="Apply the saved view “${esc(x.name)}”">${esc(x.name)}</button><button type="button" class="chip-x" data-preset-del="${i}" aria-label="Delete the saved view “${esc(x.name)}”" title="Delete this saved view">×</button></span>`).join('');
   }
-  function renderSavedViews() {
-    renderSavedPresets();
-    const sel = $('#opt-saved'); if (!sel) return;
-    const list = savedViews();
-    sel.innerHTML = `<option value="">${list.length ? 'Open a saved view…' : 'No saved views yet'}</option>${list.map((x, i) => `<option value="${i}">${esc(x.name)}</option>`).join('')}`;
-    $('#opt-saved-del').hidden = true;
+  function deleteSavedView(i) {
+    const list = savedViews(), x = list[i]; if (!x || !confirm(`Delete the saved view “${x.name}”?`)) return;
+    list.splice(i, 1); store.set('savedViews', list); renderSavedViews();
   }
+  function renderSavedViews() { renderSavedPresets(); }
   function saveCurrentView() {
     const name = (prompt('Name this view (filters, map position, view and layers):', '') || '').trim(); if (!name) return;
     const list = savedViews().filter(x => x.name !== name);
@@ -407,7 +405,7 @@
     setMapStyle, setDcOn, setExistOn, currentView, syncMapOpts, setMapView, showView, rememberCurrent,
     getCapYear() { return capYear; },
     setCapYear(v) { capYear = v; },
-    renderCapLayer, renderLegend, renderSavedViews, saveCurrentView,
+    renderCapLayer, renderLegend, renderSavedViews, saveCurrentView, deleteSavedView,
     savedViews,
     openSavedView, atYear, hzFrac, censusOnly, censusYr, stationPipe,
     phoneMap, timebarEl, psCum,

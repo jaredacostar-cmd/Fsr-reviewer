@@ -24,10 +24,10 @@ test('top bar: the trail carries its count (developments, units)', () => {
   assert.match(src('js/topbar.js'), /<span class="tb-count" title="Developments in scope and their planned units">· \$\{fmtNum\(set\.length\)\} development/);
 });
 
-test('left panel: Find · Watch · Data; rows Where / What / When / Counts as / Flags collapsed with their value', () => {
+test('left panel: Find · Watch (the Data tab folded into Records, bundle 6); rows Where / What / When / Counts as / Flags collapsed with their value', () => {
   assert.match(HTML, /data-tab="explore">Find<\/button>/);
   assert.match(HTML, /data-tab="week">Watch <span class="badge-n"/);
-  assert.match(HTML, /data-tab="data">Data<\/button>/);
+  assert.doesNotMatch(HTML, /data-tab="data"/);
   const order = ['fr-where', 'fr-what', 'fr-when', 'fr-counts', 'fr-flags'].map(id => HTML.indexOf(`<details class="fp-sec fp-row" id="${id}">`));
   assert.ok(order.every(i => i > 0), 'all rows present');
   assert.deepEqual([...order].sort((a, b) => a - b), order, 'in the board order');
@@ -35,12 +35,11 @@ test('left panel: Find · Watch · Data; rows Where / What / When / Counts as / 
   assert.match(HTML, /data-info="projects-list">In view <span class="muted small" id="list-count">/);
 });
 
-test('left panel: the count first, Reset n filters, + Save this view', () => {
+test('left panel: the count first, Reset n filters (views are saved from Export, bundle 6)', () => {
   const f = src('js/filter-ui.js');
   assert.match(f, /<span class="find-count"><b>\$\{fmtNum\(App\(\)\.state\.filtered\.length\)\}<\/b> developments<\/span>/);
   assert.match(f, />Reset \$\{activeList\.length\} filter\$\{activeList\.length === 1 \? '' : 's'\}<\/button>/);
-  assert.match(f, /id="f-saveview"[^>]*>\+ Save this view<\/button>/);
-  assert.match(f, /if \(e\.target\.closest\('#f-saveview'\)\) \{ MA\(\)\.saveCurrentView\(\); return; \}/);
+  assert.doesNotMatch(f, /id="f-saveview"/);
 });
 
 test('Stage: one row per stage (permit and construction share one), then Built (with how many since the census) and Withdrawn / refused', () => {
@@ -75,10 +74,11 @@ test('Watch: real changes; backfill (newly listed, already completed) counted an
   assert.match(HTML, /<p class="small muted" id="backfill-note" hidden><\/p>/);
 });
 
-test('Data: checks and duplicates first; the source list behind Advanced', () => {
-  const data = HTML.slice(HTML.indexOf('id="tab-data"'));
-  assert.ok(data.indexOf('id="audit-panel"') < data.indexOf('id="sources-panel"'), 'duplicates first');
-  const adv = data.slice(data.indexOf('<details class="panel advanced">'));
+test('the old Data tab, in Records: the duplicate check under Data checks, the sources (and Advanced) under Sources', () => {
+  const rec = HTML.slice(HTML.indexOf('id="pane-records"'));
+  assert.ok(rec.indexOf('id="rec-data-sources"') >= 0 && rec.indexOf('id="sources-panel"') > rec.indexOf('id="rec-data-sources"'));
+  assert.ok(rec.indexOf('id="audit-panel"') > rec.indexOf('id="rec-data-checks"'), 'the duplicate check under Data checks');
+  const adv = rec.slice(rec.indexOf('<details class="panel advanced">'));
   assert.ok(adv.includes('<ul class="source-list" id="source-list"></ul>'), 'sources behind Advanced');
 });
 

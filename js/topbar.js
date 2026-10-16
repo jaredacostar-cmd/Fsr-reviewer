@@ -38,6 +38,10 @@
     if (phone() && b.classList.contains('on') && !v.classList.contains('open')) { v.classList.add('open'); return; }
     v.classList.remove('open');
     MA().setMapView(b.dataset.mview);
+    // Bundle 6: a view opens its tab (picking Capital used to leave Overview open): Capital → Capital,
+    // Water and Wastewater → Servicing; Planning keeps the tab you are on.
+    const tab = { dc: 'dca', water: 'svc', wastewater: 'svc' }[b.dataset.mview];
+    if (tab && AT() && AT().openTab) AT().openTab(tab);
   });
   // Phones: Export, Present, Help and Settings in one ⋯ menu.
   const more = $('#tb-more'), acts = $('#tb-actions');
@@ -91,10 +95,14 @@
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
     if (tc) steps.push(...[].concat(tc));
-    // The trail carries its count (SPEC §4): the developments in scope and their planned units.
+    // The trail carries its count (SPEC §4), and owns it (bundle 6): at a development, that site's
+    // homes (the map's 1,956 belong to Peel, not to the site); else the developments in scope.
     const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
+    const devU = scoped && window.Growth ? window.Growth.pipelineTotals([scoped]).planned : 0;
+    const count = scoped ? `<span class="tb-count" title="This development's planned homes">· ${fmtNum(Math.round(devU))} home${Math.round(devU) === 1 ? '' : 's'} planned</span>`
+      : `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
-      + `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
+      + count;
     el._steps = steps;
     if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }
@@ -123,6 +131,7 @@
       outside: o.nr === 'on' ? 'nearest' : 'left out',
       md: o.md, div: R && R.wastewater && R.wastewater.diversion ? o.div : null,
       year: MA && MA.getCapYear ? MA.getCapYear() : null, yearDefault: root.PeelMapMarkers ? root.PeelMapMarkers.THIS_YEAR : null,
+      loads: (() => { const MMk = root.PeelMapMarkers, wl = MMk && MMk.getWwLay ? MMk.getWwLay() : null; if (!wl) return null; const on = [['built', 'built'], ['approved', 'committed'], ['proposed', 'in review']].filter(([k]) => wl[k] !== false).map(x => x[1]); return on.length === 3 ? 'every stage' : on.length ? `${on.join(' + ')} only (Stage filter)` : 'none (Stage filter)'; })(),
     };
     // Bundle 5: every setting with its default (the chip's "Default" / "n changes", the control's list).
     p.settings = LB.scenarioSettings({ ...p, criteria: n, count: p.unitCount });
@@ -245,7 +254,6 @@
     m.innerHTML =
       '<button type="button" role="menuitem" data-tbg="settings">Settings</button>' +
       // Stage 2: Records (Sources · Checks · Files) replaces the Sources & checks page here.
-      '<button type="button" role="menuitem" data-tbg="records">Records</button>' +
       '<button type="button" role="menuitem" data-tbg="labs">Labs</button>' +
       '<button type="button" role="menuitem" data-tbg="log">Change log</button>';
   }
@@ -279,7 +287,6 @@
     else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
     else if (k === 'sources') openGearPage('sources');
     // Stage 2: Records is the panel's trailing tab, also reached from here; Labs holds the extra tools.
-    else if (k === 'records') { closeTbMenus(); AT().openTab('records'); }
     else if (k === 'labs') openGearPage('labs');
   });
   function closeTbMenus() {

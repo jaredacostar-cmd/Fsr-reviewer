@@ -100,7 +100,7 @@ test('Review an FSR coverage: what an FSR covers and what the app can check', ()
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {
   const s = src('js/ws-pages.js'), w = src('js/workspaces.js');
-  assert.match(s, /const BUILD = \{ home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary \};/, "every workspace, and the Reference pages How approvals work and the Glossary");
+  assert.match(s, /const BUILD = \{ home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary, help \};/, "every workspace, and the Reference pages How approvals work, the Glossary and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); openPage\(pg\.dataset\.wsPage\); return; \}/);
@@ -147,7 +147,7 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   // A row opens the next level; the trail goes back up; the stage bars filter the files.
   assert.match(s, /const kidRow = c => \(\{ attrs: \{ 'data-ws-drill': c\.id/);
   assert.match(s, /data-ws-drill="\$\{esc\(x\.id\)\}">\$\{esc\(x\.name\)\}<\/button>/);
-  assert.match(s, /\$\{st\.click \? ` data-ws-stage="\$\{r\.key\}" tabindex="0"` : ''\}/);
+  assert.match(s, /\$\{st\.click && r\.units >= 0\.5 \? ` data-ws-stage="\$\{r\.key\}" tabindex="0"` : ''\}/, 'a stage with no units is not clickable (bundle 6)');
   assert.match(s, /label: '↑ Up a level', attrs: \{ 'data-ws-drill': n\.parent \|\| 'peel' \}/);
   // Employment: a figure and its own list (floor area planned, permitted, completed, left; jobs).
   assert.match(s, /label: 'employment', ctx: emp\.planned >= 1 \?/);

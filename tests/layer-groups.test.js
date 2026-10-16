@@ -13,12 +13,13 @@ const ROOT = path.join(__dirname, '..');
 const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const keys = g => LG.GROUPS.find(x => x.key === g).layers.map(l => l[0]);
 
-test('six groups in order, with the brief\'s layers', () => {
-  assert.deepEqual(LG.GROUPS.map(g => g.label), ['Developments', 'Capacity', 'Infrastructure', 'Constraints', 'Planning context', 'Base map']);
+test('seven groups in order, with the brief\'s layers (Infrastructure split in bundle 6)', () => {
+  assert.deepEqual(LG.GROUPS.map(g => g.label), ['Developments', 'Capacity', 'Existing network', 'Capital program', 'Constraints', 'Planning context', 'Base map']);
   assert.deepEqual(keys('devs'), ['devs', 'hov']);   // Stage 2: the heatmap is removed
   assert.deepEqual(keys('cap'), ['cap', 'pz', 'bk', 'dr']);
   // Stage 2: the gas pipeline and hydro line layers are removed.
-  assert.deepEqual(keys('infra'), ['ex-water', 'ex-sanitary', 'ex-storm', 'wf', 'dcw', 'cons', 'ea']);
+  assert.deepEqual(keys('infra'), ['ex-water', 'ex-sanitary', 'ex-storm', 'wf']);
+  assert.deepEqual(keys('capital'), ['dcw', 'cons', 'ea']);
   for (const k of ['heat', 'gas', 'hydro']) assert.ok(!LG.LAYER.get(k), `${k} removed`);
   assert.deepEqual(keys('cx'), ['reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'source', 'water']);
   assert.match(LG.LAYER.get('source').disabled, /Not included/);
@@ -109,7 +110,7 @@ test('group header, summary and switch', () => {
   assert.deepEqual([...LG.groupToggle(cx, new Set(['devs']))].sort(), ['devs', 'flood', 'reg']);
   assert.deepEqual([...LG.groupToggle(cx, new Set(['devs', 'reg', 'nhs']))], ['devs']);
   const html = LG.panelHTML({ on, open: new Set(['cx']), inView: new Set(['reg']), swatch: () => '' });
-  assert.equal((html.match(/class="lg-grp/g) || []).length, 6);
+  assert.equal((html.match(/class="lg-grp/g) || []).length, 7);
   assert.match(html, /data-grp="cx">[\s\S]*?aria-expanded="true"[\s\S]*?3 on · 1 in view/);
   assert.doesNotMatch(html, /Other utilities/, 'Stage 2: no gas / hydro layers');
   assert.match(html, /id="lyr-reg" data-lyr="reg" checked/);

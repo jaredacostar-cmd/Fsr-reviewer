@@ -199,8 +199,8 @@ test('wiring: scripts, offline cache, Layers switches, year re-render, legend, t
   }
   // Layers › Infrastructure (js/layer-groups.js): the two rows, their filters in the group.
   const LG = require('../js/layer-groups.js');
-  assert.equal(LG.groupOf('cons'), 'infra'); assert.equal(LG.LAYER.get('cons').label, 'Planned & under construction');
-  assert.equal(LG.groupOf('ea'), 'infra'); assert.equal(LG.LAYER.get('ea').label, 'EAs');
+  assert.equal(LG.groupOf('cons'), 'capital'); assert.equal(LG.LAYER.get('cons').label, 'Planned & under construction');
+  assert.equal(LG.groupOf('ea'), 'capital'); assert.equal(LG.LAYER.get('ea').label, 'EAs');
   assert.ok(LG.PRESETS.dc.includes('cons') && LG.PRESETS.dc.includes('ea'), 'the Capital view shows construction and EAs');
   assert.ok(LG.Z.infra < LG.Z.eas && LG.Z.eas < LG.Z.overlay, 'EAs draw above the works, under the developments');
   const mm = src('js/map-markers.js');

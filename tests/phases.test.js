@@ -217,3 +217,16 @@ test('building permits follow the planning file; alterations and second suites d
   assert.equal(P.buildProjects([sp(), bp('BP 3NEW 23-1', 'NEW (6) STOREY APARTMENT', 80, 2023)])[0].phase, 'permit');
   assert.equal(P.buildProjects([sp(), bp('SEC UNIT 24-1 ARU', 'RESIDENTIAL SECOND UNIT IN BASEMENT', 1, 2024, 'completed')])[0].phase, 'approved', 'a basement suite is not the site plan building');
 });
+
+test('10 or fewer homes with zoning approved: Approved, no permit yet (Bill 23: no site plan needed)', () => {
+  const pt = { type: 'Point', coordinates: [-79.7, 43.6] };
+  const am = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }, { name: 'TOTAL_UNITS', type: 'esriFieldTypeInteger' }]);
+  const f = (id, ref, status, units, y = 2023) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { FILE_NO: ref, STATUS: status, ADDRESS: '9 Elm St', SUBMITTED_DATE: Date.UTC(y, 0, 1), TOTAL_UNITS: units } }, am, appSrc);
+  assert.equal(P.SMALL_SITE_UNITS, 10);
+  const small = P.buildProjects([f(1, 'OZ 24/3', 'Approved', 10)])[0];
+  assert.equal(small.phase, 'approved'); assert.equal(small.smallSite, true);
+  const big = P.buildProjects([f(1, 'OZ 24/3', 'Approved', 12)])[0];
+  assert.equal(big.phase, 'review', '11+ homes still need a site plan'); assert.equal(big.smallSite, undefined);
+  assert.equal(P.buildProjects([f(1, 'OZ 24/3', 'Approved', 8), f(2, 'SP 24/9', 'Under Review', 8, 2024)])[0].phase, 'review', 'a site plan filed anyway and still open keeps it in review');
+  assert.equal(P.buildProjects([f(1, 'OZ 24/3', 'Under Review', 8)])[0].phase, 'review', 'zoning not yet approved');
+});

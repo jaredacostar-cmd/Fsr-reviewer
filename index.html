@@ -87,7 +87,6 @@
       <nav class="tabs" role="tablist" aria-label="Sidebar">
         <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Find</button>
         <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">Watch <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span><span class="badge-n" id="alerts-n" hidden></span></button>
-        <button type="button" role="tab" id="tab-btn-data" aria-controls="tab-data" aria-selected="false" data-tab="data">Data</button>
       </nav>
 
       <!-- ===== Explore ===== -->
@@ -127,7 +126,9 @@
           <details class="fp-sec fp-row" id="fr-when">
             <summary><h2 class="label" data-info="filter-when">When</h2><span class="fr-val" id="fv-when"></span></summary>
             <div class="row two"><label class="field"><span class="label">Milestone</span><select id="f-milestone" autocomplete="off"><option value="any">Any milestone</option><option value="inception">Application submitted</option><option value="approved">Approved</option><option value="permit">Permit issued</option><option value="completed">Completed</option></select></label></div>
-            <div class="row two"><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
+            <!-- Bundle 6: the timeline is the year control; When names the years and keeps the milestone and shortcuts. -->
+            <p class="small muted when-years">The years are set on the timeline at the bottom of the map.</p>
+            <div class="row two" hidden><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
             <div class="row btns"><button type="button" class="btn small" id="f-when-12m">Last 12 months</button><button type="button" class="btn small" id="f-when-week">This week</button></div>
           </details>
           <details class="fp-sec fp-row" id="fr-counts">
@@ -164,68 +165,31 @@
           <div class="panel-head"><h2 class="label" data-info="watchlist">Your watchlist</h2><span class="muted small" id="watch-head"></span></div>
           <ol class="project-list" id="watch-list"></ol>
         </section>
+        <!-- Bundle 6: what changed this week has one home, the This week page; the tab keeps the
+             watchlist and its alerts. (The two sections below stay for their renderers, never shown.) -->
+        <p class="small week-link"><button type="button" class="btn small" data-ws-page="week">This week: what changed →</button></p>
+        <div class="week-moved" hidden>
         <section class="panel" id="ce-week-panel" hidden>
           <div class="panel-head"><h2 class="label" data-info="ce-week">Capital projects and EAs</h2><span class="muted small" id="ce-week-head"></span></div>
           <ol class="project-list" id="ce-week-list"></ol>
           <p class="small muted">General screening results only. Peel’s W&amp;WW Infrastructure Planning team must validate or confirm all results.</p>
         </section>
+        </div>
         <section class="panel" id="alerts-panel" hidden>
           <div class="panel-head"><h2 class="label" data-info="alerts">Alerts for your watchlist</h2><span class="muted small" id="alerts-head"></span></div>
           <ol class="project-list" id="alerts-list"></ol>
           <p class="small muted" id="alerts-foot"></p>
         </section>
+        <div class="week-moved" hidden>
         <section class="panel changes" id="changes">
           <div class="panel-head"><h2 class="label">Changes since last update</h2><span class="muted small" id="changes-head"></span></div>
           <p class="small" id="changes-summary">Changes appear after the next weekly update (Mondays).</p>
           <ol class="project-list" id="changes-list"></ol>
         </section>
+        </div>
       </div>
 
-      <!-- ===== Data ===== -->
-      <div class="tab-panel" id="tab-data" role="tabpanel" aria-labelledby="tab-btn-data" hidden>
-        <section class="panel audit" id="audit-panel">
-          <div class="panel-head"><h2 class="label" data-info="duplicate-check">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
-          <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
-        </section>
-        <section class="panel sources" id="sources-panel">
-          <div class="panel-head"><h2 class="label" data-info="data-sources">Data sources</h2><span class="muted small" id="sources-summary"></span></div>
-          <p class="small muted" id="backfill-note" hidden></p>
-          <p class="small muted" id="app-version"></p>
-          <div class="row btns">
-            <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
-          </div>
-        </section>
-        <details class="panel advanced">
-          <summary><h2 class="label">Advanced</h2></summary>
-          <p class="small muted">Each source, with its switch and remove button.</p>
-          <ul class="source-list" id="source-list"></ul>
-          <div class="row">
-            <label class="field"><span class="label">Records since</span>
-              <input type="number" autocomplete="off" id="s-since" min="1990" max="2100" step="1">
-            </label>
-            <label class="field"><span class="label">Max per layer</span>
-              <input type="number" autocomplete="off" id="s-max" min="500" max="200000" step="500">
-            </label>
-          </div>
-          <div class="row btns">
-            <button type="button" class="btn" id="btn-discover" title="Search the Mississauga, Brampton, Caledon and Peel open-data hubs for more development and permit datasets">Discover datasets</button>
-          </div>
-          <form class="add-source" id="add-source">
-            <p class="small muted">Add any ArcGIS FeatureServer / MapServer URL:</p>
-            <input type="url" id="a-url" required placeholder="https://…/FeatureServer">
-            <div class="row">
-              <select autocomplete="off" id="a-muni" aria-label="Municipality">
-                <option>Mississauga</option><option>Brampton</option><option>Caledon</option><option>Peel Region</option>
-              </select>
-              <select autocomplete="off" id="a-kind" aria-label="Kind">
-                <option value="application">Applications</option>
-                <option value="permit">Permits</option>
-              </select>
-              <button type="submit" class="btn">Add</button>
-            </div>
-          </form>
-        </details>
-      </div>
+
     </aside>
 
     <main class="map-wrap">
@@ -234,6 +198,7 @@
       <div class="ws-bar" id="ws-bar" hidden>
         <div class="ws-top"><button type="button" class="btn small ws-fullbtn" data-ws-backpage title="Back to this workspace's page">← Page</button><div class="ws-search" id="ws-search"></div><button type="button" class="btn small ws-fullbtn" data-ws-full title="Every layer, filter and tool, with the same scope, filters and scenario">Full map</button></div>
         <div class="ws-chips" id="ws-chips" role="toolbar" aria-label="Tasks"></div>
+        <div class="ws-filters" id="ws-filters"></div>
       </div>
       <div class="tool-banner" id="tool-banner" role="status" hidden></div>
       <div id="presentation-bar" hidden>
@@ -349,7 +314,57 @@
 
       <div class="f-pane f-subtabs" data-pane="records" hidden role="group" aria-label="Records view"><button type="button" class="btn small" data-rsub="sources">Sources</button><button type="button" class="btn small" data-rsub="checks">Data checks</button><button type="button" class="btn small" data-rsub="files">Files</button></div>
       <section class="f-pane pnl-host" id="pnl-records" data-pane="records" aria-labelledby="ftab-records" hidden></section>
-      <section class="f-pane" id="pane-records" data-pane="records" role="tabpanel" aria-labelledby="ftab-records" hidden><div id="records-body"></div></section>
+      <section class="f-pane" id="pane-records" data-pane="records" role="tabpanel" aria-labelledby="ftab-records" hidden><div id="records-body"></div>
+        <!-- Bundle 6: the old Data tab folded into Records: refresh and manage the sources under Sources, the duplicate check under Data checks. -->
+        <div class="rec-data" id="rec-data-sources" hidden>
+        
+        <section class="panel sources" id="sources-panel">
+          <div class="panel-head"><h2 class="label" data-info="data-sources">Data sources</h2><span class="muted small" id="sources-summary"></span></div>
+          <p class="small muted" id="backfill-note" hidden></p>
+          <p class="small muted" id="app-version"></p>
+          <div class="row btns">
+            <button type="button" class="btn" id="btn-reload" title="Query every source now instead of using the weekly snapshot">Refresh live</button>
+          </div>
+        </section>
+        <details class="panel advanced">
+          <summary><h2 class="label">Advanced</h2></summary>
+          <p class="small muted">Each source, with its switch and remove button.</p>
+          <ul class="source-list" id="source-list"></ul>
+          <div class="row">
+            <label class="field"><span class="label">Records since</span>
+              <input type="number" autocomplete="off" id="s-since" min="1990" max="2100" step="1">
+            </label>
+            <label class="field"><span class="label">Max per layer</span>
+              <input type="number" autocomplete="off" id="s-max" min="500" max="200000" step="500">
+            </label>
+          </div>
+          <div class="row btns">
+            <button type="button" class="btn" id="btn-discover" title="Search the Mississauga, Brampton, Caledon and Peel open-data hubs for more development and permit datasets">Discover datasets</button>
+          </div>
+          <form class="add-source" id="add-source">
+            <p class="small muted">Add any ArcGIS FeatureServer / MapServer URL:</p>
+            <input type="url" id="a-url" required placeholder="https://…/FeatureServer">
+            <div class="row">
+              <select autocomplete="off" id="a-muni" aria-label="Municipality">
+                <option>Mississauga</option><option>Brampton</option><option>Caledon</option><option>Peel Region</option>
+              </select>
+              <select autocomplete="off" id="a-kind" aria-label="Kind">
+                <option value="application">Applications</option>
+                <option value="permit">Permits</option>
+              </select>
+              <button type="submit" class="btn">Add</button>
+            </div>
+          </form>
+        </details>
+      
+        </div>
+        <div class="rec-data" id="rec-data-checks" hidden>
+        <section class="panel audit" id="audit-panel">
+          <div class="panel-head"><h2 class="label" data-info="duplicate-check">Duplicate check</h2><span class="muted small" id="audit-status"></span></div>
+          <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
+        </section>
+        </div>
+      </section>
 
       </div>
     </aside>
@@ -401,6 +416,7 @@
   <script src="js/panel.js?v=__BUILD__"></script>
   <script src="js/approvals-guide.js?v=__BUILD__"></script>
   <script src="js/glossary.js?v=__BUILD__"></script>
+  <script src="js/file-tree.js?v=__BUILD__"></script>
   <script src="js/ws-pages.js?v=__BUILD__"></script>
   <script src="js/workspaces.js?v=__BUILD__"></script>
   <script src="js/usage.js?v=__BUILD__"></script>

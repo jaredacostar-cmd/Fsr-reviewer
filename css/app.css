@@ -2874,7 +2874,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .ft-bar p { margin: 0; }
 #analysis.ft-on .analysis-panes .f-pane { max-width: none; }
 @media (max-width: 600px) { .ft-bar { flex-wrap: wrap; } .ft-bar .ft-scen { order: 3; flex-basis: 100%; } }
-.pnl-r-year { font-family: var(--font-mono, ui-monospace, monospace); font-weight: 600; white-space: nowrap; }
+.pnl-r-year { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }   /* (bundle 6: the body font with tabular figures, not monospace: values read as numbers, not codes) */
 .pnl-r-meta { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-1); color: var(--text-secondary); margin-top: 4px; }
 .pnl-r-year.t-over, .pnl-r-meta .t-over { color: var(--pnl-over); }
 .pnl-r-year.t-tight, .pnl-r-meta .t-tight { color: var(--pnl-tight); }
@@ -3290,3 +3290,57 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .rb-zero { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--text-primary); }
 .rb-v { width: 120px; flex: none; text-align: right; }
 .rb-row.t-over .rb-v { color: var(--cap-over); font-weight: 500; }
+
+/* ---- Design bundle 6: organization ------------------------------------------------------------------ */
+/* A development's files as a tree (js/file-tree.js) */
+.tr { font-size: var(--fs-2); }
+.tr-row { display: grid; grid-template-columns: 18px 1fr auto; column-gap: var(--space-2); align-items: baseline; padding: 6px 4px; border-top: 1px solid var(--border); }
+.tr-row .dot { width: 16px; height: 16px; font-size: var(--fs-1); align-self: start; margin-top: 1px; }
+.tr-ref { font-weight: 600; font-variant-numeric: tabular-nums; }
+.tr-type { color: var(--text-secondary); margin-left: 4px; }
+.tr-ms, .tr-why { display: block; color: var(--text-muted); font-size: var(--fs-1); }
+.tr-ms em { font-style: normal; color: var(--text-secondary); }
+.tr-r { text-align: right; font-size: var(--fs-1); color: var(--text-secondary); white-space: nowrap; }
+.tr-r b { display: block; font-size: var(--fs-2); color: var(--text-primary); }
+.tr-kids { margin-left: var(--space-2); padding-left: 10px; border-left: 2px solid var(--border); }
+.tr-check { display: inline-block; margin-left: 4px; padding: 0 5px; border: 1px dashed var(--text-muted); border-radius: 999px; color: var(--text-secondary); font-size: var(--fs-1); line-height: 1.4; }
+.tr-new { display: inline-block; padding: 0 6px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-size: var(--fs-1); color: var(--text-primary); }
+.tr-more { margin: 4px 0; color: var(--text-muted); }
+.tr-same { margin: 4px 0 0; border-top: 1px solid var(--border); padding: 6px 4px; color: var(--text-secondary); }
+.tr-same summary { cursor: pointer; font-size: var(--fs-2); }
+.tr-key { margin: var(--space-2) 0 0; font-size: var(--fs-1); color: var(--text-muted); }
+.tr-sum { display: block; color: var(--text-secondary); font-size: var(--fs-1); margin-top: 2px; }
+.tr-sum b { color: var(--text-primary); font-weight: 600; }
+.tr-tog { all: unset; cursor: pointer; display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 6px; border-radius: 4px; color: var(--text-secondary); border: 1px solid var(--border); font-size: 10px; vertical-align: 1px; }
+.tr-tog:focus-visible { outline: 2px solid var(--accent); }
+.tr-open { margin: 6px 0 2px 28px; }
+.tr-open .tr { font-size: var(--fs-1); }
+.chip.chip-link { cursor: pointer; border-style: dashed; font: inherit; font-size: var(--fs-1); }
+.chip.chip-link:hover { border-color: var(--accent); }
+/* Help as a page (js/tips.js helpPage) */
+.help-roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-2); margin: 0 0 var(--space-3); }
+.help-role { padding: var(--space-2) var(--space-3); background: var(--surface-2); border-radius: var(--radius-panel); display: grid; gap: 4px; align-content: start; }
+.help-role small { color: var(--text-secondary); }
+.help-role div { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.help-asks { width: 100%; border-collapse: collapse; margin: 0 0 var(--space-3); }
+.help-asks th, .help-asks td { text-align: left; padding: 4px var(--space-2) 4px 0; border-bottom: 1px solid var(--border); vertical-align: baseline; font-weight: 400; }
+.help-asks th { white-space: nowrap; width: 1%; }
+.help-page .help-card { margin: 0 0 6px; }
+/* The sidebar: the active workspace with a filled accent bar */
+.home-ws.on { box-shadow: inset 4px 0 0 var(--accent); }
+.week-link { margin: var(--space-2) var(--space-3); }
+/* Saved views: one-tap chips at the top of Find, each with × */
+.chip-saved { display: inline-flex; align-items: center; gap: 0; margin: 0 4px 4px 0; }
+.chip-saved .chip { border-top-right-radius: 0; border-bottom-right-radius: 0; margin: 0; }
+.chip-saved .chip-x { all: unset; cursor: pointer; padding: 0 6px; border: 1px solid var(--border); border-left: 0; border-radius: 0 999px 999px 0; color: var(--text-muted); line-height: 1.6; font-size: var(--fs-2); }
+.chip-saved .chip-x:hover, .chip-saved .chip-x:focus-visible { color: var(--text-primary); }
+/* Filters on, shown on pages and in a workspace (with Reset) */
+.page-filters { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 0 0 var(--space-2); }
+.ws-filters:empty { display: none; }
+.ws-filters .page-filters { margin: 4px 0 0; }
+/* Check a site / Review an FSR: the steps in one line under the search */
+.pnl-stepper { margin: 4px 0 var(--space-2); color: var(--text-muted); display: flex; flex-wrap: wrap; gap: 2px 6px; align-items: baseline; }
+.pnl-stepper b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); font-size: 10px; margin-right: 2px; }
+.pnl-stepper .on { color: var(--text-primary); }
+.pnl-stepper .on b { background: var(--accent); border-color: var(--accent); color: var(--surface-0); }
+.home-start { margin: 0 0 var(--space-2); color: var(--text-secondary); }

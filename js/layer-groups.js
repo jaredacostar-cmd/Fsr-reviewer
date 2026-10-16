@@ -1,9 +1,10 @@
-/* Layer groups (PeelLayerGroups): the Layers panel as six groups, the view presets, the fixed draw
+/* Layer groups (PeelLayerGroups): the Layers panel as seven groups, the view presets, the fixed draw
  * order of the map's panes, and the layer state in share links and saved views.
  *
  *  1 Developments   developments, site boundary on hover
  *  2 Capacity       capacity colours, pressure zones, wastewater blocks, drainage areas
- *  3 Infrastructure existing water / sanitary / storm pipes, water facilities, planned DC works
+ *  3 Existing network existing water / sanitary / storm pipes, water facilities
+ *  4 Capital program  planned DC works, capital projects planned and under construction, EAs
  *  4 Constraints    regulation limits, floodplain, Greenbelt, Oak Ridges Moraine, Niagara
  *                   Escarpment, PSW / ANSI, Natural Heritage System, source protection (not
  *                   included), watercourses
@@ -27,7 +28,9 @@
   const GROUPS = [
     { key: 'devs', label: 'Developments', primary: ['devs'], layers: [['devs', 'Developments', 'devs-toggle', 'dev', null], ['hov', 'Site boundary on hover', 'hover-boundary', 'dash', '--select']] },
     { key: 'cap', label: 'Capacity', primary: ['cap'], layers: [['cap', 'Capacity colours', 'map-capacity', 'cap', null], ['pz', 'Pressure zones', 'pressure-zone', 'svc-pz', null], ['bk', 'Wastewater blocks', 'blocks', 'block', null], ['dr', 'Drainage areas', 'drainage-area', 'svc-dr', null]] },
-    { key: 'infra', label: 'Infrastructure', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null], ['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['cons', 'Planned & under construction', 'construction', 'line', '--cons-build'], ['ea', 'EAs', 'eas', 'area', '--ea-line']] },
+    // (bundle 6: what is in the ground, apart from what the capital program will build)
+    { key: 'infra', label: 'Existing network', primary: ['ex-water', 'ex-sanitary'], layers: [['ex-water', 'Existing watermains', 'existing-pipes', 'line', '--pipe-water'], ['ex-sanitary', 'Existing sanitary sewers', 'existing-pipes', 'line', '--pipe-sanitary'], ['ex-storm', 'Existing storm sewers', 'existing-pipes', 'line', '--pipe-storm'], ['wf', 'Water facilities', 'water-facilities', 'wf', null]] },
+    { key: 'capital', label: 'Capital program', primary: ['dcw'], layers: [['dcw', 'Planned DC works · 2026 draft', 'dc-works', 'line', '--dc-ww-main'], ['cons', 'Planned & under construction', 'construction', 'line', '--cons-build'], ['ea', 'EAs', 'eas', 'area', '--ea-line']] },
     { key: 'cx', label: 'Constraints', primary: ['reg', 'flood'], layers: [['reg', 'Regulation limits', 'cx-reg', 'area', '--cx-reg'], ['flood', 'Floodplain', 'cx-flood', 'area', '--cx-flood'], ['greenbelt', 'Greenbelt', 'cx-greenbelt', 'area', '--cx-greenbelt'], ['orm', 'Oak Ridges Moraine', 'cx-orm', 'area', '--cx-orm'], ['nep', 'Niagara Escarpment', 'cx-nep', 'area', '--cx-nep'], ['natural', 'PSW / ANSI', 'cx-natural', 'area', '--cx-natural'], ['nhs', 'Natural Heritage System', 'cx-nhs', 'area', '--cx-nhs'], ['source', 'Source protection (not included)', 'site-constraints', 'none', null], ['water', 'Watercourses', 'cx-water', 'line', '--cx-water']], disabled: { source: 'Not included in this app: see the CTC Source Protection Region maps' } },
     { key: 'plan', label: 'Planning context', primary: ['sp', 'mtsa'], layers: [['sp', 'Secondary plans / character areas', 'secondary-plans', 'dash', '--area-sp'], ['pr', 'Precincts', 'secondary-plans', 'dash', '--area-pr'], ['mtsa', 'MTSAs', 'mtsa', 'dash', '--area-mtsa'], ['da', '2021 census areas', 'da-layer', 'da', null]] },
     { key: 'base', label: 'Base map', primary: [], layers: [['hill', 'Lidar hillshade', 'hillshade', 'area', '--text-muted']] },
