@@ -127,7 +127,20 @@
 
   // home: a page is open (Home or a workspace's page, js/ws-pages.js); ws: a workspace's map view with
   // the chips; full: the map with every tool.
+  // Back from the full map: arriving there from a page or a workspace's map view, a bar over the map
+  // offers the way back ("← Back to Check a site"); it goes when you leave the full map or close it.
+  let backTo = null;
+  function renderBack() {
+    const wrap = mapWrap(); if (!wrap) return;
+    let bar = $('#back-bar');
+    if (!bar) { bar = document.createElement('div'); bar.id = 'back-bar'; bar.className = 'back-bar'; bar.setAttribute('role', 'navigation'); bar.setAttribute('aria-label', 'Back'); wrap.appendChild(bar); }
+    const on = mode === 'full' && !!backTo;
+    bar.hidden = !on;
+    bar.innerHTML = on ? `<button type="button" class="btn small" data-ws-back>← Back to ${esc(backTo.ws ? `${pageName(backTo.ws)} (map)` : pageName(backTo.page))}</button><button type="button" class="btn small link" data-ws-back-x aria-label="Close the back bar" title="Stay on the full map">×</button>` : '';
+  }
   function setMode(m, pg) {
+    if (m === 'full' && mode !== 'full') backTo = mode === 'home' ? { page } : mode === 'ws' && cur ? { ws: cur } : null;
+    else if (m !== 'full') backTo = null;
     if (m === 'home') page = pg || page || 'home';
     else putMapBack();
     mode = m;
@@ -141,6 +154,7 @@
     if (m === 'home') renderPage(true); else placeSearch();
     if (root.PeelDataTab && root.PeelDataTab.fixMap) setTimeout(() => root.PeelDataTab.fixMap(), 50);
     if (PN()) PN().sync();
+    renderBack();
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
   }
   // The one search box: over the map in a workspace's map view, on the Find step of Check a site and
@@ -441,6 +455,8 @@
       const area = g.dataset.wsArea; if (area && App()) { App().state.sp = [area]; if (root.PeelPlanAreas && root.PeelPlanAreas.renderAreaSelects) root.PeelPlanAreas.renderAreaSelects(); App().applyFilters(); }
       return; }
     if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
+    if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true }); } else openPage((b && b.page) || 'home', { keepScroll: true }); return; }
+    if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
     if (e.target.closest('[data-ws-full]')) { setMode('full'); return; }
     if (e.target.closest('[data-ws-home]')) { openPage('home'); return; }
     if (e.target.closest('[data-ws-focus]')) { const s = $('#f-search'); if (s) s.focus(); return; }
@@ -454,6 +470,15 @@
     if (e.target.closest('[data-ws-pipescsv]')) { pipesCSV(); return; }
     const sb = e.target.closest('[data-ws-start-btn]'); if (sb) { store.set('startScreen', sb.dataset.wsStartBtn); document.querySelectorAll('[data-ws-start-btn]').forEach(b => { const on = b === sb; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
   });
+  // A page's link to the map's tools (a tab, a servicing scope, the full table, a trace, a lens): the
+  // full map first, then the link does what it does there (its own handler, as the click bubbles on).
+  const MAP_LINK = '[data-at], [data-ss], [data-full-table], [data-trace], [data-mview]';
+  document.addEventListener('click', e => {
+    if (mode !== 'home' || !e.target.closest) return;
+    const a = e.target.closest(MAP_LINK);
+    if (!a || !a.closest('#home') || a.closest('[data-ws-go], [data-ws-page], [data-ws-pick], [data-ws-full], [data-ws-home], [data-ws-backpage]')) return;
+    setMode('full');
+  }, true);
   document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-ws-start]'); if (s) store.set('startScreen', s.value); });
   document.addEventListener('keydown', e => { if (!e.defaultPrevented && (e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
   // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what

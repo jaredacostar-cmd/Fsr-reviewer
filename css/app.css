@@ -3448,3 +3448,15 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .rec-flash { outline: 2px solid var(--accent); outline-offset: 2px; transition: outline-color 1.2s; }
 .stage-box .stage-next { margin: 0 0 var(--space-2); }
 .stage-box .dt { font-size: var(--fs-1); }
+/* Navigation PR 3: search finds (it no longer filters); in the Find panel the suggestions sit in the
+   flow, so they never cover Reset or the filter chips */
+.search-bar .search-sug { position: static; margin: 4px 0 var(--space-2); box-shadow: none; border: 1px solid var(--border); }
+.search-sug .sug-h { cursor: default; padding: 6px var(--space-2) 2px; font-size: var(--fs-1); font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+.search-sug .sug-h:hover { background: transparent; }
+.search-sug .sug-filter { border-top: 1px solid var(--border); }
+.search-sug .sug-fl { flex: none; width: 14px; text-align: center; color: var(--text-muted); }
+
+/* Navigation 3: the way back from the full map to the page or workspace it was opened from. */
+.back-bar { position: absolute; top: var(--space-2); left: 56px; z-index: 1001; display: flex; gap: 2px; align-items: center; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
+.back-bar[hidden] { display: none; }
+@media (max-width: 700px) { .back-bar { left: var(--space-2); top: auto; bottom: calc(var(--space-2) + 56px); } .back-bar .btn { min-height: 44px; } }

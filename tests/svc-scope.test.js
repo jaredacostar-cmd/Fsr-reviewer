@@ -77,7 +77,7 @@ test('wired in: filter, trail, Overview, search, share link, reset, "What loads 
   assert.match(src('sw.js'), /'js\/svc-scope\.js',/);
   assert.match(src('js/app.js'), /if \(state\.ss && window\.PeelSvcScope && !window\.PeelSvcScope\.has\(p\)\) return false;/);
   assert.match(src('js/topbar.js'), /steps\.push\(\.\.\.window\.PeelSvcScope\.crumbs\(\)\)/);
-  assert.match(src('js/topbar.js'), /function trailGoPeel\(\) \{ if \(window\.PeelSvcScope\) window\.PeelSvcScope\.clear\(\);/);
+  assert.match(src('js/topbar.js'), /function goPeel\(\) \{\n {4}if \(window\.PeelSvcScope\) window\.PeelSvcScope\.clear\(\);/);
   assert.match(src('js/overview-tab.js'), /const sset = set \|\| DU\(\)\.overviewSet\(\); el\.innerHTML = root\.PeelSvcScope\.cardHTML\(ss, sset\) \+ CX_HOST; fillCxCard\(sset\);/);
   // Stage 3: the scope's standard panel (the card is its full table).
   assert.match(src('js/overview-tab.js'), /root\.PeelPanel\.set\('overview:', root\.PeelSvcScope\.panelSpec\(ss, sset\)\)/);

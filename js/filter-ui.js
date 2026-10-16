@@ -12,7 +12,6 @@
   const SF = () => window.PeelSearchFilter;
   const TL = () => window.PeelTimeline;
   const DT = () => window.PeelDataTab;
-  const MA = () => window.PeelMapAnalysis;
 
   // Quick views: a phase (or phase group) plus an optional focus.
   const ALL_PHASE_KEYS = () => new Set(P.ALL_PHASES.map(p => p.key));
@@ -83,6 +82,9 @@
   // The stage selector narrows the phases when the pick is neither the default active set
   // nor every phase (a chip then offers one tap back to all phases).
   const phaseFilterActive = () => App().state.phases.size < P.ALL_PHASES.length && !App().sameSet(App().state.phases, App().DEFAULT_PHASES());
+  // The years narrow the view when they are not the default span (2021–2026): the default is the
+  // starting view, not a filter, so it has no chip and Reset leaves nothing behind.
+  const yearsFilterActive = () => App().timeActive() && !TL().atDefaultYears();
   // Active-filter chips: everything that narrows the view, each removable. The counting basis
   // lives in the Scenario control, so it has no chip here.
   function activeFilters() {
@@ -107,9 +109,9 @@
       const names = P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label);
       out.push({ label: names.length <= 2 ? names.join(' + ') : `${names.length} phases`, clear: () => { App().state.phases = ALL_PHASE_KEYS(); } });
     }
-    if (App().timeActive()) {
+    if (yearsFilterActive()) {
       const from = App().state.yearFrom ?? App().state.yearMin, to = App().state.yearTo ?? App().state.yearMax;
-      out.push({ label: from === to ? `${from}` : `${from}–${to}`, clear: () => TL().setYearsSilently(App().state.yearMin, App().state.yearMax) });
+      out.push({ label: from === to ? `${from}` : `${from}–${to}`, clear: () => TL().setDefaultYears() });
     }
     if (!App().state.newOnly) out.push({ label: 'Including alterations', clear: () => { App().state.newOnly = true; const el = $('#f-new'); if (el) el.checked = true; } });
     if (App().state.lyr) out.push({ label: `Counts as ${[...App().state.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ')}`, clear: () => { App().state.lyr = null; } });
@@ -148,7 +150,7 @@
     const v = currentPhaseView();
     const what = v === 'all' ? 'developments (all phases)' : v === 'default' ? 'active and completed applications' : v === 'active' ? 'active applications' : `developments: ${P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label.toLowerCase()).join(', ')}`;
     const years = App().timeActive() ? (() => { const a = App().state.yearFrom ?? App().state.yearMin, b = App().state.yearTo ?? App().state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
-    const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (App().timeActive() ? 1 : 0) - (App().state.muni ? 1 : 0) - (App().state.search ? 1 : 0);
+    const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (yearsFilterActive() ? 1 : 0) - (App().state.muni ? 1 : 0) - (App().state.search ? 1 : 0);
     // The result count first (SPEC §4), then what it is.
     $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
   }
@@ -163,11 +165,10 @@
     renderEmptyMsg();
     DT().syncFiltersBtn();   // Phase 2 shell: the compact "Filters (n)" button label
   }
-  // Reset every filter to its default. Shared by the "Reset all" chip and the
-  // topbar's Peel trail step.
+  // Reset every filter to its default (the default years among them). Shared by the "Reset" chip and
+  // the top bar's Start over. The capacity year and the scenario are not filters: they stay.
   function resetAllFilters() {
     Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, lyr: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
-    MA().setCapYear(MM().THIS_YEAR);
     SF().syncFilterControls();
     SF().renderMuniChips();
     TL().setDefaultYears();

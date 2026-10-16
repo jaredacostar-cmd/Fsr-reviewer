@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  const { $, esc, store, fmtNum } = window.PeelUtil;
+  const { $, esc, store, fmtNum, toast } = window.PeelUtil;
   const PD = window.PeelDesign;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -50,7 +50,7 @@
     more.addEventListener('click', e => { e.stopPropagation(); setMore(!acts.classList.contains('open')); });
     // (a pick inside it, or a tap elsewhere, folds it; a sub-menu it opens stays until its own pick)
     document.addEventListener('click', e => { if (acts.classList.contains('open') && !e.target.closest('#tb-actions')) setMore(false); });
-    acts.addEventListener('click', e => { if (e.target.closest('[role="menuitem"], #tb-help')) setMore(false); });
+    acts.addEventListener('click', e => { if (e.target.closest('[role="menuitem"], #tb-help, #tb-restart')) setMore(false); });
   }
 
   // Scope trail: Peel › municipality › area › development. Only the active steps show;
@@ -63,7 +63,35 @@
     return { kind, id: App().state[kind][0], label: PA().areaName(kind, App().state[kind][0]) + (total > 1 ? ` +${total - 1}` : '') };
   }
   // Phase 3: the "Peel" trail step also clears the dev scope.
-  function trailGoPeel() { if (window.PeelSvcScope) window.PeelSvcScope.clear(); if (typeof DevScope !== 'undefined') DevScope.close(); if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult(); FI().resetAllFilters(); AS().clearSelected(); }
+  // The Peel crumb only navigates: back to all of Peel (no municipality, area, servicing step,
+  // development or tool result); the filters stay. Start over clears them.
+  function goPeel() {
+    if (window.PeelSvcScope) window.PeelSvcScope.clear();
+    if (typeof DevScope !== 'undefined') DevScope.close();
+    if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult();
+    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [] });
+    if (window.PeelSearchFilter && window.PeelSearchFilter.renderMuniChips) window.PeelSearchFilter.renderMuniChips();
+    PA().renderAreaSelects(); SD().renderSvcSelects(); PA().showArea(); SD().showSvcArea();
+    AS().clearSelected();
+    App().applyFilters();
+  }
+  const trailGoPeel = goPeel;
+  // Start over (top bar): every filter, the search, the selection, the development, the scope and any
+  // tool result cleared, and back to Home. The map view (lens), the scenario and the capacity year
+  // stay: they are settings, not where you are.
+  function startOver() {
+    closeTbMenus();
+    if (root.PeelPanel && root.PeelPanel.isFull && root.PeelPanel.isFull()) root.PeelPanel.closeFull();
+    if (window.PeelSvcScope) window.PeelSvcScope.clear();
+    if (typeof DevScope !== 'undefined') DevScope.close();
+    if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult();
+    AS().clearSelected();
+    const box = $('#f-search'); if (box) box.value = '';
+    const sug = $('#search-sug'); if (sug) sug.hidden = true;
+    FI().resetAllFilters();
+    if (root.PeelWorkspaces && root.PeelWorkspaces.setMode) root.PeelWorkspaces.setMode('home', 'home');
+    if (toast) toast('Started over: filters, search and selection cleared. The map view and scenario stay.');
+  }
   function trailGoMuni() {
     if (!App().state.muni) return;
     // Reuse the filter panel's own chip: it also drops areas from other municipalities.
@@ -83,7 +111,7 @@
   function trailGoDev() { if (Nav().getCurrentProject()) Nav().showDetail(Nav().getCurrentProject()); }
   function renderTrail() {
     const el = $('#trail'); if (!el) return;
-    const steps = [{ label: 'Peel', go: trailGoPeel, title: 'Clear all filters and the selection' }];
+    const steps = [{ label: 'Peel', go: trailGoPeel, title: 'All of Peel: closes the development, the area and the selection (the filters stay; Start over clears them)' }];
     if (App().state.muni) steps.push({ label: App().state.muni, go: trailGoMuni, title: `Filter to ${App().state.muni}` });
     const a = trailArea();
     if (a) steps.push({ label: a.label, go: trailGoArea, title: 'Filter to this area only' });
@@ -303,6 +331,7 @@
     $(btnId).setAttribute('aria-expanded', 'true');
   }
   $('#tb-export').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-export', '#tb-export-menu'); });
+  { const so = $('#tb-restart'); if (so) so.addEventListener('click', startOver); }
   $('#tb-gear').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-gear', '#tb-gear-menu'); });
   // Outside a menu closes it. The click's path is read as it was dispatched: a menu item that
   // opens a page (Settings, Sources & checks) is replaced by the page, so the clicked element
@@ -342,6 +371,7 @@
   function initTopbar() {
     if (!$('#topbar')) return;
     placeSearch(); matchMedia('(min-width: 1600px)').addEventListener('change', placeSearch);
+    { const so = $('#tb-restart'); if (so) so.insertAdjacentHTML('afterbegin', PD.icon('restart')); }
     $('#tb-export').insertAdjacentHTML('afterbegin', PD.icon('export'));
     $('#tb-present').insertAdjacentHTML('afterbegin', PD.icon('present'));
     $('#tb-present-go').insertAdjacentHTML('afterbegin', PD.icon('present'));
@@ -356,7 +386,7 @@
 
 
   const api = {
-    initTopbar,
+    initTopbar, startOver, goPeel,
     placeSearch,
     renderTrail,
     renderViewSwitch,
