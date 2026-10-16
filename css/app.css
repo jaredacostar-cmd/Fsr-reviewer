@@ -2963,3 +2963,12 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .hm-key.hm-dc-wastewater { background: var(--dc-ww-main, var(--cap-tight)); } .hm-key.hm-dc-water { background: var(--pipe-water, var(--accent)); }
 .home-map .sk { width: 100%; height: auto; display: block; border: 0; }
 .home-map-empty { display: block; padding: var(--space-5, 32px) var(--space-3); text-align: center; }
+/* Narrow screens: the workspace list is a scrollable row of buttons above the page (one tap to switch). */
+@media (max-width: 1199px) {
+  .home-side { order: 0; flex-direction: row; align-items: center; overflow-x: auto; gap: var(--space-1); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+  .home-side ul { flex-direction: row; flex: 0 0 auto; }
+  .home-side .home-g, .home-side .home-ws small, .home-side .home-pref { display: none; }
+  .home-side .home-ws { width: auto; white-space: nowrap; min-height: 40px; padding: var(--space-1) var(--space-3); justify-content: center; }
+  .home-side .home-full { margin-top: 0; flex: 0 0 auto; }
+  .home-main { order: 1; }
+}
