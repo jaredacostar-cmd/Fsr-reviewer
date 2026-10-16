@@ -339,7 +339,7 @@
     PN.set('svc:network', {
       calc: true, fullTitle: 'Servicing › Network · Peel: blocks, pumping stations and pressure zones',
       head: PN.areaHead('Servicing › Network', 'Where does it flow?', psOver.length ? { tone: 'over', text: `${psOver.length} station${psOver.length === 1 ? '' : 's'} over` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(blocks.length)} wastewater blocks · ${fmtNum(ps.length)} pumping stations · ${fmtNum(zones.length)} pressure zones`),
-      answer: `Wastewater builds up through <strong>${fmtNum(blocks.length)}</strong> blocks to the plants${big ? `; <strong>${esc(SD().drName(big.a))}</strong> carries the most (${fmt1(big.bo)} ML/d at build-out)` : ''}. <strong>${fmtNum(psOver.length)}</strong> of ${fmtNum(ps.length)} pumping stations are over firm capacity at build-out${zg ? `; water grows most in <strong>${esc(zg.z.name)}</strong> (+${fmt1(zg.bo - zg.now)} ML/d maximum day)` : ''}.`,
+      answer: `Wastewater builds up through <strong>${fmtNum(blocks.length)}</strong> blocks to the plants${big ? `; <strong>${esc(SD().drName(big.a))}</strong> carries the most (${fmt1(big.bo)} ML/d at build-out)` : ''}. <strong>${fmtNum(psOver.length)}</strong> of ${fmtNum(ps.length)} pumping stations with a firm capacity on file are over it at build-out${zg ? `; water grows most in <strong>${esc(zg.z.name)}</strong> (+${fmt1(zg.bo - zg.now)} ML/d maximum day)` : ''}.`,
       figures: [
         { v: fmtNum(blocks.length), u: 'blocks', label: 'wastewater blocks', ctx: 'traced to the lake' },
         { v: fmtNum(psOver.length), u: `of ${fmtNum(ps.length)}`, label: 'stations over firm', ctx: 'peak wet at build-out', tone: psOver.length ? 'over' : 'room' },
