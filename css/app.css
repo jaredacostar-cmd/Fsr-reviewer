@@ -3125,7 +3125,7 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   #tb-scen-pop { left: var(--space-2); right: var(--space-2); width: auto; }
   /* Export, Present, Help and Settings in the ⋯ menu. */
   .tb-actions { position: relative; }
-  .tb-actions .tb-more { display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-4); line-height: 1; }
+  .tb-actions .tb-btn.tb-more { display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-4); line-height: 1; }
   .tb-acts-list { display: none; }
   .tb-actions.open .tb-acts-list { display: flex; flex-direction: column; align-items: stretch; gap: 2px; position: absolute; right: 0; top: calc(100% + var(--space-1)); min-width: 200px; padding: var(--space-1); background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel); box-shadow: var(--shadow); z-index: 80; }
   .tb-actions.open .tb-acts-list .tb-btn { font-size: var(--fs-2) !important; justify-content: flex-start; width: 100%; gap: var(--space-2) !important; border: 0; }
