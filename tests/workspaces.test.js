@@ -17,9 +17,12 @@ const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx
 
 test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
   assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Study area', 'DC projects', 'Old pipes', 'This week']);
-  // Home's sidebar: Planning (Servicing capacity with it), Capital, Asset Management; then Full map.
-  assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']], ['Capital', ['projects']], ['Asset Management', ['pipes']]]);
-  const all = W.GROUPS.flatMap(g => g[1]).sort();
+  // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
+  // Capital, Asset Management; then Full map.
+  assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'study', 'tight']], ['Capital', ['projects']], ['Asset Management', ['pipes']]]);
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
+  for (const w of W.WS) assert.ok(w.what.split(/\s+/).length <= 8, `${w.id}: 8 words or fewer`);
+  const all = [...W.GROUPS.flatMap(g => g[1]), 'week'].sort();
   assert.deepEqual(plain(all), plain(W.WS.map(w => w.id).sort()), 'every workspace listed once');
 });
 

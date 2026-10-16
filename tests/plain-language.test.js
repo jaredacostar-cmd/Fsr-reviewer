@@ -52,7 +52,7 @@ test('glossary: the first use of a term is underlined (three at most a panel), n
   const p = G.page();
   assert.equal(p.id, 'glossary');
   for (const [k] of G.TERMS) assert.match(p.mid, new RegExp(`id="gl-${k}"`));
-  assert.match(src('js/workspaces.js'), /glossary: \{ label: 'Glossary', what: 'The capacity, flow and planning terms in plain words' \}/);
+  assert.match(src('js/workspaces.js'), /glossary: \{ label: 'Glossary', what: 'The terms in plain words' \}/);
   assert.match(src('index.html'), /<script src="js\/glossary\.js\?v=__BUILD__"><\/script>/);
   assert.match(src('sw.js'), /'js\/glossary\.js',/);
   assert.match(src('js/glossary.js'), /<button type="button" class="btn small link" data-ws-page="glossary">All terms →<\/button>/);

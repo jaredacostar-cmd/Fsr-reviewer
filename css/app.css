@@ -3326,3 +3326,6 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .help-asks th, .help-asks td { text-align: left; padding: 4px var(--space-2) 4px 0; border-bottom: 1px solid var(--border); vertical-align: baseline; font-weight: 400; }
 .help-asks th { white-space: nowrap; width: 1%; }
 .help-page .help-card { margin: 0 0 6px; }
+/* The sidebar: the active workspace with a filled accent bar */
+.home-ws.on { box-shadow: inset 4px 0 0 var(--accent); }
+.week-link { margin: var(--space-2) 0; }

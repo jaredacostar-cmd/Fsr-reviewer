@@ -685,7 +685,7 @@
     // record surfacing in the refresh, not news; it is counted here and listed under Data › Sources.
     const real = c.added.filter(a => a.phase !== 'completed'), backfill = c.added.filter(a => a.phase === 'completed');
     const n = (c.movedCount || c.moved.length || 0) + real.length;
-    $('#week-count').hidden = !n;
+    $('#week-count').hidden = true;   // (bundle 6: the Watch tab is the watchlist; this week's count is on Home's This week)
     $('#week-count').textContent = n > 99 ? '99+' : String(n);
     const items = [
       ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${watch.has(m.key) ? '★ ' : ''}${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),

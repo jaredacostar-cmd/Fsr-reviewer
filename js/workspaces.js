@@ -20,14 +20,14 @@
   // servicing scope closes), 'site' (the open development, or the Find step until one is picked) or
   // 'drawn' (the area the user draws); view: the map's layer preset (js/map-markers.js MAP_VIEWS).
   const WS = [
-    { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'A development: servicing, timing and what to confirm, then the servicing memo' },
-    { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage nearing or past their limit, soonest first' },
-    { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned units and people by municipality and plan' },
-    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A development’s servicing path with the FSR cross-check' },
-    { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and the servicing it needs' },
-    { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'DC projects and whether each comes before the capacity it relieves runs out' },
-    { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Sewers 50+ years old or rated moderate risk that carry 100+ units at build-out' },
-    { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'What changed: files moved, new files, capital and EA dates' },
+    { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'One development: servicing, timing, the memo' },
+    { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage near their limit' },
+    { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned homes and people, by area' },
+    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A consultant’s FSR against the app’s figures' },
+    { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
+    { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
+    { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
+    { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'Files moved, new files, capital and EA dates' },
   ];
   const BY_ID = Object.fromEntries(WS.map(w => [w.id, w]));
   // The map under each chip (decided with the user): only what the task reads, 1–2 layers
@@ -44,12 +44,12 @@
   };
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']],
+    ['Planning', ['site', 'fsr', 'growth', 'study', 'tight']],
     ['Capital', ['projects']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { help: { label: 'Help', what: 'Start here by role, task guides, the tour and what’s new' }, approvals: { label: 'How approvals work', what: 'Ontario’s steps, the app’s stages and the file tree' }, glossary: { label: 'Glossary', what: 'The capacity, flow and planning terms in plain words' } };
+  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, approvals: { label: 'How approvals work', what: 'Ontario’s steps against the app’s stages' }, glossary: { label: 'Glossary', what: 'The terms in plain words' } };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
@@ -355,7 +355,8 @@
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     const item = (id, sub) => `<li><button type="button" class="home-ws${page === id ? ' on' : ''}" data-ws-page="${id}"${page === id ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
-    return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}</ul>
+    // (This week covers capital and EA dates too: it sits under Home, not Planning)
+    return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
       <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).map(id => item(id, REF[id].what)).join('')}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map (all tools)</strong><small>Every layer, filter and tool</small></button>

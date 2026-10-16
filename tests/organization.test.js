@@ -84,6 +84,6 @@ test('Help is a page in Home’s layout: start here by role, what each workspace
   assert.match(s, /<div id="help-log-body" aria-live="polite"><\/div>/, 'the change log renders on the page');
   assert.match(s, /data-ws-page="glossary">Glossary<\/button>/);
   assert.match(s, /\['Infrastructure planner or engineer', 'Screen an application, an FSR or a pre-consultation\.', \['site', 'fsr', 'tight'\]\]/);
-  assert.match(src('js/workspaces.js'), /const REF = \{ help: \{ label: 'Help', what: 'Start here by role, task guides, the tour and what’s new' \}/);
+  assert.match(src('js/workspaces.js'), /const REF = \{ help: \{ label: 'Help', what: 'Start here, guides, the tour, what’s new' \}/);
   assert.match(src('js/ws-pages.js'), /const help = \(\) => \(root\.PeelTips && root\.PeelTips\.helpPage \? root\.PeelTips\.helpPage\(\) : loading\('help', 'Loading…'\)\);/);
 });
