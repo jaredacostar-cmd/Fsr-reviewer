@@ -42,7 +42,7 @@ test('1. tabs: Overview · Growth · Servicing · Capital at every scope, then R
   // Records is right-aligned and muted; it also opens from the Settings gear.
   assert.match(src('css/app.css'), /\.f-tab\.f-tab-trail \{ margin-left: auto; font-size: var\(--fs-1\); color: var\(--text-muted\);/);
   assert.match(src('js/topbar.js'), /data-tbg="records">Records<\/button>/);
-  assert.match(src('js/topbar.js'), /else if \(k === 'records'\) \{ closeTbMenus\(\); AT\(\)\.showFootTab\('records'\);/);
+  assert.match(src('js/topbar.js'), /else if \(k === 'records'\) \{ closeTbMenus\(\); AT\(\)\.openTab\('records'\); \}/);
 });
 
 test('1. sub-views per scope match the spec (Peel / area and a development)', () => {

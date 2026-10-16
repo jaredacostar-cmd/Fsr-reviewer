@@ -118,7 +118,11 @@
     const more = chip.querySelector('[data-scen-open]'); if (more) more.setAttribute('aria-expanded', String(open));
   }
   let scenHome = null;
+  // A control outside the top bar (a panel's Scenario chip, a guide) can open the popover: the
+  // outside-click below must not close it in that same click.
+  let scenJustOpened = false;
   function openScenPop() {
+    scenJustOpened = true; setTimeout(() => { scenJustOpened = false; }, 0);
     const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop) return;
     if (!scenHome) { scenHome = document.createComment('scen-bar home'); bar.replaceWith(scenHome); }
     if (bar.parentNode !== pop) pop.appendChild(bar);
@@ -255,7 +259,7 @@
     else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
     else if (k === 'sources') openGearPage('sources');
     // Stage 2: Records is the panel's trailing tab, also reached from here; Labs holds the extra tools.
-    else if (k === 'records') { closeTbMenus(); AT().showFootTab('records'); Sh().viewLink.write(); }
+    else if (k === 'records') { closeTbMenus(); AT().openTab('records'); }
     else if (k === 'labs') openGearPage('labs');
   });
   function closeTbMenus() {
@@ -280,7 +284,7 @@
     const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
     const inside = sel => path.some(n => n && n.matches && n.matches(sel)) || !!(e.target.closest && e.target.closest(sel));
     if (!inside('.tb-wrap')) closeTbMenus();
-    if (!inside('.tb-scen-wrap')) closeScenPop();
+    if (!inside('.tb-scen-wrap') && !scenJustOpened) closeScenPop();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
 
@@ -302,6 +306,7 @@
   function placeSearch() {
     const box = $('#search-box'), slot = $('#tb-search'), home = document.querySelector('#tab-explore .search-bar'); if (!box || !slot || !home) return;
     if (document.documentElement.classList.contains('ws-mode')) { slot.hidden = true; return; }   // a workspace keeps it over the map
+    if (document.documentElement.classList.contains('home-on') && box.closest('#page-search')) return;   // a page's Find step keeps it
     const wide = matchMedia('(min-width: 1600px)').matches;
     if (wide && box.parentElement !== slot) slot.appendChild(box);
     else if (!wide && box.parentElement !== home) home.insertBefore(box, home.firstChild);

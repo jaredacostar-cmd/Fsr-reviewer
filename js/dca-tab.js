@@ -91,7 +91,7 @@
     const PN = window.PeelPanel, needs = MP().devNeeds(p) || [];
     const T = { gap: ['over', 'Short'], planned: ['room', 'In time'], ok: ['room', 'Room'], check: ['tight', 'Check'] };
     const gaps = needs.filter(c => c.status === 'gap');
-    const row = c => { const [tone, word] = T[c.status] || T.ok, r = c.relief && c.relief[0]; return { tone, attrs: c.id && /^(plant|ps):/.test(c.id) ? { 'data-ss': c.id.replace(/^plant:/, 'plant:') } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${c.sys === 'water' ? '💧 ' : ''}${esc(c.name)}<small>${esc(c.sub || '')}</small></span>${PN.chip({ tone, text: word })}</div><small class="pnl-r-line">${c.out ? `runs out ${c.out === 'today' ? 'now' : `≈${c.out}`}` : `room to ${SP().hz.end}`}${r ? ` · relief: ${r.text}` : ' · no relief listed'}</small>` }; };
+    const row = c => { const [tone, word] = T[c.status] || T.ok, r = c.relief && c.relief[0]; return { tone, attrs: c.id && /^(plant|ps):/.test(c.id) ? { 'data-ss': c.id.replace(/^ps:/, '') } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${c.sys === 'water' ? '💧 ' : ''}${esc(c.name)}<small>${esc(c.sub || '')}</small></span>${PN.chip({ tone, text: word })}</div><small class="pnl-r-line">${c.out ? `runs out ${c.out === 'today' ? 'now' : `≈${c.out}`}` : `room to ${SP().hz.end}`}${r ? ` · relief: ${esc(r.text)}` : ' · no relief listed'}</small>` }; };
     return {
       calc: true, fullTitle: `${p.title} · the DC projects it relies on`,
       head: PN.siteHead(p),

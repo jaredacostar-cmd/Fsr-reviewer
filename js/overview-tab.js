@@ -65,7 +65,7 @@
     const TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
     const ls = root.PeelMapLabels && root.PeelMapLabels.latestSub ? root.PeelMapLabels.latestSub(p) : null;
     const fig = (v, u, label, ctx) => ({ v, u, label, ctx });
-    const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', ''), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt))]
       : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : ''), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '')];
     const plant = f && f.pl ? (SV().PLANT_SHORT[f.pl] || f.pl) : null;
@@ -334,7 +334,7 @@
       chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed against rated capacity</p>${capacityBarsHTML(capList)}` : '',
       lists: [
         { title: 'Needs attention', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('limit', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: ranked.slice(0, 5).map(SC.listRow), total: ranked.length, seeAll: { 'data-at': 'svc:capacity' } },
-        { title: 'This week', rows: week.slice(0, 5), total: week.length, seeAll: { 'data-full-table': 'overview' } },
+        { title: 'This week', rows: week, total: week.length, seeAll: { 'data-full-table': 'overview' } },   // (the panel shows 5; Home and This week count them all)
       ],
       method: info.replace(/^<p[^>]*>|<\/p>$/g, ''),
       sources: `${(fr || []).filter(r => r.date).slice(0, 6).map(r => `${esc(r.name)} · ${esc(r.date)}`).join('<br>')}<br><button type="button" class="btn small link" data-at="records:sources">Every source and its date (Records) →</button>`,

@@ -177,7 +177,9 @@
     // The chip's view from its preset (nothing saved), then its lean layers.
     const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
     if (MA && MA.showView) {
-      if (!viewKept) { MA.rememberCurrent(); viewKept = true; }
+      // (the full map's own settings are remembered once; a flag kept in the browser says the lean
+      // layers are on, so a later visit neither remembers them as the view's nor opens the full map lean)
+      if (!viewKept) { if (!store.get('wsLean', null)) MA.rememberCurrent(); viewKept = true; store.set('wsLean', true); }
       MA.showView(pl.view);
       if (LG && LG.apply) LG.apply(new Set(LAYERS[id] || []));
     }
@@ -197,12 +199,19 @@
   }
   // The map's Layers panel closes when a chip is picked (the chip has set the layers); the full map gets
   // it back as it was before the workspace.
-  let layersWasOpen = null, viewKept = false;
+  let layersWasOpen = null, viewKept = false, booted = false;
   // Back in the full map: the open view with its own remembered layers (not the chip's).
   function restoreView() {
     const MA = root.PeelMapAnalysis;
-    if (viewKept && MA && MA.showView && MA.currentView) MA.showView(MA.currentView(), { remembered: true });
-    viewKept = false;
+    if (!viewKept && !booted) return;   // (before the data and the link: bootRestore does it)
+    if ((viewKept || store.get('wsLean', null)) && MA && MA.showView && MA.currentView) MA.showView(MA.currentView(), { remembered: true });
+    viewKept = false; store.set('wsLean', null);
+  }
+  // At boot, before a link is applied: a workspace's lean layers left on from an earlier visit give way
+  // to the view's remembered settings unless the app opens on a workspace map (once; app.js).
+  function bootRestore() {
+    if (booted) return; booted = true;
+    if (mode !== 'ws' && store.get('wsLean', null)) restoreView();
   }
   const layersPanel = () => document.querySelector('.map-opts .mo-panel');
   function foldLayers() {
@@ -406,7 +415,7 @@
     if (e.target.closest('[data-ws-full]')) { setMode('full'); return; }
     if (e.target.closest('[data-ws-home]')) { openPage('home'); return; }
     if (e.target.closest('[data-ws-focus]')) { const s = $('#f-search'); if (s) s.focus(); return; }
-    if (e.target.closest('[data-ws-watch]')) { setMode('full'); const t = $('#tab-btn-week'); if (t) t.click(); return; }
+    if (e.target.closest('[data-ws-watch]')) { setMode('full'); if (root.PeelDataTab && root.PeelDataTab.showTab) root.PeelDataTab.showTab('week'); return; }
     // Study area: draw on the page's map; the page refreshes once the drawing ends.
     if (e.target.closest('[data-ws-draw]')) { const AS = root.PeelAreaSelect; if (AS) { AS.setLasso(true); const iv = setInterval(() => { if (!AS.getLassoOn()) { clearInterval(iv); renderPage(true); } }, 300); } return; }
     if (e.target.closest('[data-ws-clear]')) { const AS = root.PeelAreaSelect; if (AS && AS.clearSelection) AS.clearSelection(); renderPage(true); return; }
@@ -417,7 +426,7 @@
     const sb = e.target.closest('[data-ws-start-btn]'); if (sb) { store.set('startScreen', sb.dataset.wsStartBtn); document.querySelectorAll('[data-ws-start-btn]').forEach(b => { const on = b === sb; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
   });
   document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-ws-start]'); if (s) store.set('startScreen', s.value); });
-  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
+  document.addEventListener('keydown', e => { if (!e.defaultPrevented && (e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
   // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what
   // it shows has changed.
   document.addEventListener('pnl:set', e => {
@@ -438,6 +447,6 @@
     else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderHome, renderPage, renderChips, settingsHTML, homeMapSVG, oldList, pipesSpec, init });
+  Object.assign(api, { bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderHome, renderPage, renderChips, settingsHTML, homeMapSVG, oldList, pipesSpec, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -39,7 +39,8 @@
     if (r.kind === 'plant' || r.kind === 'wplant') { const lim = 0.9 * r.cap, v = r.buildout - lim; return out(v, lim > 0 ? v / lim : 0, `${word(v)} the 90% trigger at build-out`); }
     if (r.kind === 'ps' || r.kind === 'pipe') { const v = r.buildout - r.cap; return out(v, r.cap > 0 ? v / r.cap : 0, `${word(v)} ${r.capWord} capacity at build-out`); }
     if (r.kind === 'storage') {
-      const when = r.reliefY ? `before relief (${r.reliefY})` : 'by build-out (no relief listed)';
+      const next = r.reliefNext !== undefined ? r.reliefNext : r.reliefY;   // (a row without reliefNext: its reliefY is the next)
+      const when = next ? `before relief (${next})` : r.reliefY ? `by build-out (relief listed for ${r.reliefY})` : 'by build-out (no relief listed)';
       if (r.shortBefore > 0) return out(r.shortBefore, r.cap > 0 ? r.shortBefore / r.cap : 0, `short of required storage ${when}`);
       const v = r.buildout - r.cap; return { ...out(v, r.cap > 0 ? v / r.cap : 0, v > 0 ? `short of required storage by build-out (relief ${r.reliefY || 'not listed'})` : 'of storage to spare at build-out'), short: false };
     }
@@ -130,18 +131,20 @@
       for (const s of mp.storage) {
         const rt = WTab().storageRoomTrigger(ys, s.required, s.available), av = s.available[s.available.length - 1];
         const reqNow = interp(s.required, now), reqEnd = s.required[s.required.length - 1];
-        const sc = stc.find(x => x.name === s.facility), reliefY = sc ? (sc.relief.map(x => x.y).filter(y => y && y >= now).sort((a, b) => a - b)[0] || null) : null;
-        let shortBefore = 0; for (let y = now; y <= (reliefY ? reliefY - 1 : ys[ys.length - 1]); y++) shortBefore = Math.max(shortBefore, interp(s.required, y) - interp(s.available, y));
+        // (reliefY: the first relief the Master Plan lists, as for plants and stations; the shortfall runs to
+        // the next relief still to come)
+        const sc = stc.find(x => x.name === s.facility), reliefY = sc ? reliefYearOf(sc) : null, reliefNext = sc ? (sc.relief.map(x => x.y).filter(y => y && y >= now).sort((a, b) => a - b)[0] || null) : null;
+        let shortBefore = 0; for (let y = now; y <= (reliefNext ? reliefNext - 1 : ys[ys.length - 1]); y++) shortBefore = Math.max(shortBefore, interp(s.required, y) - interp(s.available, y));
         rows.push({ id: `stor:${s.facility}`, sys: 'water', kind: 'storage', name: s.facility, sub: 'storage', compared: 'Required vs available storage', basis: 'mp', unit: 'ML', cap: av, capWord: 'available',
           existing: reqNow, built: 0, committed: reqNow, buildout: reqEnd, limit: { y: rt.c100, what: 'required > available' },
           horizon: { end: ys[ys.length - 1], at: PICK.filter(y => y <= ys[ys.length - 1]).map(y => [y, interp(s.required, y) / (interp(s.available, y) || av) * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 },
-          reliefY, shortBefore, relief: sc ? MP().consStatus(sc) : null });
+          reliefY, reliefNext, shortBefore, relief: sc ? MP().consStatus(sc) : null });
       }
     }
     // Wastewater pumping stations: peak wet weather flow against firm capacity (design criteria).
     for (const a of A.state.servicing.psAreas || []) {
       const k = Cap().of(`ps:${a.id}`), c = MP().cached(`ps:${a.id}`, () => MP().psCons(a)); if (!k || !c) continue;
-      rows.push({ id: `ps:${a.id}`, ss: `ps:${a.id}`, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
+      rows.push({ id: `ps:${a.id}`, ss: a.id, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
         existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
     }
     // Tightest sewers: only while pipe-by-pipe results are on (off for now: left to the Region's model).
@@ -394,7 +397,7 @@
   }
   const renderAll = () => { render(); renderChecks(); renderNetBar(); };
   // Render on entering the sub-view (PeelAnalysisTabs.showFootTab).
-  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') renderNetBar(); };
+  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } };
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
     if (!e.target.closest) return;
     const s = e.target.closest('[data-cap-sort]'); if (s) { st.sort = s.dataset.capSort; if (U.store) U.store.set('capSort', st.sort); render(); return; }

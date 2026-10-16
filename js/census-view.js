@@ -256,6 +256,8 @@
   }
   // The one-line caveat (Growth pipeline and Overview headlines).
   function permitCaveatHTML() {
+    // (Not inside a servicing scope: Records has no Checks there, so the link would lead nowhere.)
+    if (root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current()) return '';
     const c = permitCheck(); if (!c || !c.failing.length) return '';
     const list = c.failing.length > 1 ? `${c.failing.slice(0, -1).join(', ')} and ${c.failing[c.failing.length - 1]}` : c.failing[0];
     return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Checks')}</p>`;

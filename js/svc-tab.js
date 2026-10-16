@@ -134,12 +134,14 @@
   // so it lives in the Scenario control, not the filter panel.
   // Count (Stage 1 #6): which layers are counted, moved here from the top bar; "left to build" is a
   // separate switch (it counts every layer, only the units with no permit yet).
+  // (The button already on keeps the basis as it is: Units › All never resets the Count, and the
+  // Count already on never turns Left to build off.)
   const basisSwitch = () => {
     const b = App().state.basis, cur = b === 'remaining' ? 'all' : b, LB = root.PeelLayerBar;
     const count = `<div class="svc-switch" role="group" aria-label="Count"><span class="muted small">Count:</span>${LB.COUNT_OPTS.map(([v, t]) =>
-      `<button type="button" class="btn small${cur === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${cur === v}">${esc(t)}</button>`).join('<span class="muted" aria-hidden="true"> · </span>')}</div>`;
+      `<button type="button" class="btn small${cur === v ? ' on' : ''}" data-svcopt="basis" data-v="${cur === v ? b : v}" aria-pressed="${cur === v}">${esc(t)}</button>`).join('<span class="muted" aria-hidden="true"> · </span>')}</div>`;
     const units = `<div class="svc-switch" role="group" aria-label="Units"><span class="muted small">Units</span>${[['all', 'All'], ['remaining', 'Left to build']].map(([v, t]) =>
-      `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
+      `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v === 'all' ? cur : v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
     const A = root.PeelLayers && root.PeelLayers.NOTE;
     const def = A ? `<p class="small muted ly-def">Approved, not yet built (committed): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}.</p>` : '';
     return count + units + def;
@@ -532,7 +534,7 @@
   // Switches in the Water / Wastewater / Plants tabs.
   for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#svc-capacity-body', '#svc-checks-body', '#scen-bar']) if ($(id)) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
-    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); return; } return AT().showFootTab(gt); }
+    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); return; } return AT().openTab(gt); }
     if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }
     if (e.target.closest('[data-scen-clear]')) { store.set('scenA', null); return renderScenario(); }
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return TS().filterInView(); }
