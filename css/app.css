@@ -2837,6 +2837,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
    ("Full map" brings them back with the same scope, filters and scenario). */
 .app.ws-mode { grid-template-columns: 0 minmax(0, 1fr) var(--analysis-w, 440px); }
 .app.ws-mode .sidebar, .app.ws-mode .toggle-sidebar, .app.ws-mode .leaflet-control.tool-rail { display: none !important; }
+/* (the analysis column is placed by the grid's flow; with the left panel gone it is named here) */
+@media (min-width: 1200px) { .app.ws-mode .analysis { grid-area: analysis; } }
 .ws-bar { position: absolute; top: var(--space-2); left: 56px; right: var(--space-2); z-index: 1001; display: flex; flex-direction: column; gap: var(--space-2); pointer-events: none; max-width: 760px; }
 .ws-bar[hidden] { display: none; }
 .ws-bar > * { pointer-events: auto; }

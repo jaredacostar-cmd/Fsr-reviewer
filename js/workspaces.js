@@ -68,6 +68,17 @@
     });
     return out.sort((a, b) => b.units - a.units || (b.age || 0) - (a.age || 0));
   }
+  // Shown as runs: listed segments that join end to end (one drains into the next) with the same size,
+  // install year, material and risk are one main. A run carries the most units of its segments.
+  function pipeRuns(list, data) {
+    const at = new Map(list.map((r, k) => [r.i, k])), up = list.map((r, k) => k);
+    const find = k => { while (up[k] !== k) { up[k] = up[up[k]]; k = up[k]; } return k; };
+    const same = (a, b) => a.d === b.d && a.year === b.year && a.mat === b.mat && a.risk === b.risk;
+    list.forEach((r, k) => { const nx = data.pipes[r.i][3], j = at.get(nx); if (j != null && same(r, list[j])) up[find(k)] = find(j); });
+    const runs = new Map();
+    list.forEach((r, k) => { const g = find(k); const x = runs.get(g) || { ...r, n: 0, lengthM: 0, pipes: [] }; x.n++; x.lengthM += data.pipes[r.i][14] || 0; x.pipes.push(r.i); if (r.units > x.units) Object.assign(x, { i: r.i, units: r.units, at: r.at }); runs.set(g, x); });
+    return [...runs.values()].sort((a, b) => b.units - a.units || (b.age || 0) - (a.age || 0));
+  }
   // The start screen: a link opens what it names (w=home, w=<workspace>; without w the full map, as
   // old links always did); otherwise the preference: Home (default), the last workspace or the full map.
   const START = [['home', 'Home'], ['last', 'Last workspace'], ['full', 'Full map']];
@@ -83,7 +94,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, BY_ID, OLD, START, plan, sourceText, tabPath, oldPipes, startScreen, defaultWs };
+  const api = { WS, GROUPS, BY_ID, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -185,24 +196,24 @@
     return oldPipes(S.data, u, now());
   }
   function pipesSpec() {
-    const list = oldList();
+    const list = oldList(), runs = list ? pipeRuns(list, MM().SEW.data) : [];
     if (!list) { if (MM() && MM().SEW && !MM().SEW.data && SC() && SC().loadSewers) SC().loadSewers().then(() => PN() && PN().sync()); return { head: { name: 'Old pipes', identity: 'Sanitary sewers 300 mm and larger' }, answer: 'Loading the Region’s sanitary sewer records…' }; }
     const old = list.filter(r => r.old).length, risky = list.filter(r => r.risky).length, units = list.reduce((t, r) => Math.max(t, r.units), 0);
     const oldest = list.reduce((a, r) => (r.year && (!a || r.year < a.year) ? r : a), null);
     return {
       calc: true, fullTitle: 'Servicing › Network · Old pipes',
-      head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Network' }], name: 'Which old pipes carry the most growth?', status: list.length ? { tone: 'tight', text: `${fmtNum(list.length)} pipes` } : { tone: 'room', text: 'None' }, identity: `Sanitary sewers 300 mm+ · ${OLD.age}+ years old or rated ${OLD.risk.toLowerCase()} risk · ${OLD.minUnits}+ units at build-out` },
-      answer: list.length ? `<strong>${fmtNum(list.length)}</strong> sewers are ${OLD.age}+ years old or rated moderate risk and carry ${OLD.minUnits}+ planned units at build-out; <strong>${esc(`${list[0].d} mm, ${list[0].year || 'year not recorded'}`)}</strong> carries the most (${fmtNum(Math.round(list[0].units))} units).` : `No sewer ${OLD.age}+ years old or rated moderate risk carries ${OLD.minUnits}+ planned units at build-out.`,
+      head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Network' }], name: 'Which old pipes carry the most growth?', status: list.length ? { tone: 'tight', text: `${fmtNum(runs.length)} runs` } : { tone: 'room', text: 'None' }, identity: `Sanitary sewers 300 mm+ · ${OLD.age}+ years old or rated ${OLD.risk.toLowerCase()} risk · ${OLD.minUnits}+ units at build-out` },
+      answer: list.length ? `<strong>${fmtNum(list.length)}</strong> sewer segments (${fmtNum(runs.length)} runs of one main) are ${OLD.age}+ years old or rated moderate risk and carry ${OLD.minUnits}+ planned units at build-out; <strong>${esc(`${runs[0].d} mm, ${runs[0].year || 'year not recorded'}`)}</strong> carries the most (${fmtNum(Math.round(runs[0].units))} units).` : `No sewer ${OLD.age}+ years old or rated moderate risk carries ${OLD.minUnits}+ planned units at build-out.`,
       figures: [
-        { v: fmtNum(list.length), u: 'pipes', label: 'on the list', ctx: `${OLD.minUnits}+ units at build-out` },
+        { v: fmtNum(runs.length), u: 'runs', label: 'on the list', ctx: `${fmtNum(list.length)} segments · ${OLD.minUnits}+ units at build-out` },
         { v: fmtNum(old), u: 'pipes', label: `${OLD.age}+ years old`, ctx: `installed ${now() - OLD.age} or earlier` },
         { v: fmtNum(risky), u: 'pipes', label: 'rated moderate risk', ctx: 'the Region’s highest rating in the data', tone: risky ? 'tight' : 'room' },
         oldest ? { v: oldest.year, u: '', label: 'oldest on the list', ctx: `${oldest.d} mm${oldest.mat ? ` ${esc(oldest.mat)}` : ''} · ${fmtNum(Math.round(oldest.units))} units` } : { v: fmtNum(Math.round(units)), u: 'units', label: 'most carried', ctx: '' },
       ],
-      lists: [{ title: 'Pipes, most units first', rows: list.slice(0, 5).map(r => ({ tone: r.risky ? 'tight' : null, attrs: { 'data-pipe': r.i, title: 'Show the pipe and what loads it' },
-        html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.d} mm${r.mat ? ` ${esc(r.mat)}` : ''}${r.plant ? ` · to ${esc((root.PeelSvcData && root.PeelSvcData.PLANT_SHORT && root.PeelSvcData.PLANT_SHORT[r.plant]) || r.plant)}` : ''}</span><span class="pnl-r-year${r.old ? ' t-tight' : ''}">${r.year ? `${r.year} · ${r.age} yrs` : 'year not recorded'}</span></div><div class="pnl-r-meta"><span>${fmtNum(Math.round(r.units))} units at build-out</span><span${r.risky ? ' class="t-tight"' : ''}>${r.risk ? `${esc(r.risk.charAt(0) + r.risk.slice(1).toLowerCase())} risk` : 'risk not rated'}</span></div>` })),
-        total: list.length, seeAll: { 'data-full-table': 'svc:network' } }],
-      method: `From the Region’s sanitary sewer records (300 mm and larger): install year and risk rating as published. A pipe is listed when it was installed ${OLD.age}+ years ago or is rated ${OLD.risk.toLowerCase()} risk (the highest rating in the data; the others are low and insignificant), and the developments on the map that drain through it (built since the census, approved, proposed) plan ${OLD.minUnits}+ units. Units carried is a count of planned units, not a flow: pipe-by-pipe capacity is left to the Region’s model. Ranked by units carried.`,
+      lists: [{ title: 'Runs, most units first', rows: runs.slice(0, 5).map(r => ({ tone: r.risky ? 'tight' : null, attrs: { 'data-pipe': r.i, title: 'Show the pipe and what loads it' },
+        html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.d} mm${r.mat ? ` ${esc(r.mat)}` : ''}${r.plant ? ` · to ${esc((root.PeelSvcData && root.PeelSvcData.PLANT_SHORT && root.PeelSvcData.PLANT_SHORT[r.plant]) || r.plant)}` : ''}</span><span class="pnl-r-year${r.old ? ' t-tight' : ''}">${r.year ? `${r.year} · ${r.age} yrs` : 'year not recorded'}</span></div><div class="pnl-r-meta"><span>${fmtNum(Math.round(r.units))} units at build-out · ${r.n > 1 ? `${fmtNum(r.n)} segments, ` : ''}${fmtNum(Math.round(r.lengthM))} m</span><span${r.risky ? ' class="t-tight"' : ''}>${r.risk ? `${esc(r.risk.charAt(0) + r.risk.slice(1).toLowerCase())} risk` : 'risk not rated'}</span></div>` })),
+        total: runs.length, seeAll: { 'data-full-table': 'svc:network' } }],
+      method: `From the Region’s sanitary sewer records (300 mm and larger): install year and risk rating as published. A pipe is listed when it was installed ${OLD.age}+ years ago or is rated ${OLD.risk.toLowerCase()} risk (the highest rating in the data; the others are low and insignificant), and the developments on the map that drain through it (built since the census, approved, proposed) plan ${OLD.minUnits}+ units. Units carried is a count of planned units, not a flow: pipe-by-pipe capacity is left to the Region’s model. Segments that join end to end with the same size, install year, material and risk are shown as one run, ranked by the most units any of its segments carries.`,
       sources: 'Region of Peel Wastewater Main (open data): diameter, install date, material, risk rating. The applications and permits on the map.',
       foot: { primary: { label: 'Show the sewers on the map', attrs: { 'data-mview': 'wastewater' } } },
     };
@@ -232,11 +243,12 @@
     };
   }
   // ---- Home ---------------------------------------------------------------------------------------
-  // The small map: the trunk sewersheds muted; the pumping-station catchments and pressure zones of the
+  // The small map: the wastewater blocks muted; the pumping-station catchments and pressure zones of the
   // facilities over (red) or past the 90% trigger (amber) at build-out filled; the plants as squares.
   function homeMapSVG(rows, W = 360, H = 300) {
     const sv = App() && App().state.servicing; if (!sv) return '';
-    const base = (sv.drainage || []).filter(d => d.rings && d.kind === 'trunk');
+    // The base: the Region's wastewater blocks (rural blocks mostly on septic left out, as the briefing map).
+    const base = (sv.drainage || []).filter(d => d.rings && !(d.served != null && d.served < 0.5));
     let mnx = 1e9, mny = 1e9, mxx = -1e9, mxy = -1e9;
     for (const d of base) for (const r of d.rings) for (const [x, y] of r) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
     if (mnx > mxx) return '';
@@ -245,7 +257,7 @@
     const path = rings => rings.map(r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x)},${Y(y)}`).join('') + 'Z').join('');
     const tone = r => (r.pctBo >= 100 ? 'over' : r.pctBo >= 90 ? 'tight' : null);
     const out = base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`);
-    const byId = new Map((sv.drainage || []).map(d => [d.id, d])), zones = sv.zones || [];
+    const byId = new Map((sv.psAreas || []).map(d => [d.id, d])), zones = sv.zones || [];
     for (const r of rows) {
       const t = tone(r); if (!t) continue;
       let g = null;
@@ -253,7 +265,7 @@
       else if (r.kind === 'pump' || r.kind === 'storage') { const m = String(r.name).match(/zone\s*(\w+)/i); g = m ? zones.find(z => String(z.zone) === m[1]) : null; }
       if (g && g.rings) out.push(`<path d="${path(g.rings)}" class="hm-${t}"><title>${esc(r.name)}: ${Math.round(r.pctBo)}% at build-out</title></path>`);
     }
-    for (const pl of sv.plants || []) {
+    for (const pl of (sv.meta && sv.meta.plants) || []) {
       if (!pl.lnglat) continue;
       const r = rows.find(x => x.id === `plant:${pl.name}`), t = r ? tone(r) : null;
       out.push(`<rect x="${(+X(pl.lnglat[0]) - 5).toFixed(1)}" y="${(+Y(pl.lnglat[1]) - 5).toFixed(1)}" width="10" height="10" class="hm-plant${t ? ` hm-${t}` : ''}"><title>${esc(r ? r.name : pl.name)}${r ? `: ${Math.round(r.pctBo)}% at build-out` : ''}</title></rect>`);
