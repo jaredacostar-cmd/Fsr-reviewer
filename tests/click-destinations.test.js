@@ -103,11 +103,14 @@ test('one hover card: kind, name, the number, what a click does', () => {
     assert.match(src(f), /PeelUtil\.hoverCard/, `${f} uses the shared hover card`);
 });
 
-test('site tools: Trace sewer, Trace water and Check FSR stay buttons; Memo, allocation, Compare, Export in ⋯', () => {
+test('site tools: one Tools menu (trace, Check FSR, memo, allocation, Compare, Export) beside Watch (design bundle 4)', () => {
   const d = src('js/devscope.js');
   const acts = d.slice(d.indexOf('<div class="site-bar-actions">'), d.indexOf('<div class="site-bar-fsr"'));
-  const menu = acts.slice(acts.indexOf('<details class="site-more">'));
-  const top = acts.slice(0, acts.indexOf('<details class="site-more">'));
-  for (const a of ['data-trace=', 'data-wtrace=', 'data-scope-fsr']) assert.ok(top.includes(a), a);
-  for (const a of ['data-memo', 'data-scope-alloc', 'data-scope-compare', 'data-scope-export']) { assert.ok(menu.includes(a), a); assert.ok(!top.includes(a), `${a} not in the top row`); }
+  const menu = acts.slice(acts.indexOf('<details class="site-more site-tools">'), acts.indexOf('</details>'));
+  const rest = acts.slice(acts.indexOf('</details>'));
+  for (const a of ['data-trace=', 'data-wtrace=', 'data-scope-fsr', 'data-memo', 'data-scope-alloc', 'data-scope-compare', 'data-scope-export']) { assert.ok(menu.includes(a), a); assert.ok(!rest.includes(a), `${a} once`); }
+  assert.match(menu, /<summary class="btn small"[^>]*>Tools ▾<\/summary>/);
+  assert.ok(rest.includes('data-watch='), 'Watch stays a button');
+  // The footer no longer repeats Check FSR.
+  assert.doesNotMatch(src('js/overview-tab.js'), /label: 'Check FSR'/);
 });

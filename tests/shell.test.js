@@ -88,9 +88,10 @@ test('bottom bar: timeline only, data date · version · change log at the right
   assert.match(src('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
 });
 
-test('map: legend names the marker unit and offers Colour sites by Stage | Counted as; an In view chip', () => {
+test('map: legend names the marker unit and offers Colour sites by Stage | Counted as; In view in the Layers header', () => {
   const m = src('js/map-analysis.js');
   assert.match(m, /Colour sites by<\/span> \$\{b\('phase', 'Stage'\)\}\$\{b\('layer', 'Counted as'\)\}/);
   assert.match(m, /a cluster’s number is its people \+ jobs/);
-  assert.match(src('js/render-list.js'), /inViewChip\.textContent = `In view · \$\{fmtNum\(n\)\} of \$\{fmtNum\(of\)\}`;/);
+  assert.match(src('js/render-list.js'), /el\.textContent = `In view \$\{fmtNum\(n\)\} of \$\{fmtNum\(of\)\}`;/);
+  assert.match(src('js/map-markers.js'), /<span>Layers<\/span><span class="mo-inview" id="mo-inview" role="button"/, 'in the Layers header (design bundle 4)');
 });

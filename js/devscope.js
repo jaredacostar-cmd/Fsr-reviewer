@@ -46,6 +46,9 @@
         h.setDaContext(p);
         h.ensureCouncil();
         h.highlight(p);       // site outline on the map (focus layer)
+        // On a phone the sheet opens at its peek (the site's summary line and the tabs), so the site
+        // stays in sight above it; a drag or a tap on the grip opens the panel.
+        if (typeof innerWidth === 'number' && innerWidth <= 700 && window.PeelApp && window.PeelApp.setAnalysisSnap) window.PeelApp.setAnalysisSnap('peek', false);
         h.flyToSite(p);
       }
       this._wire();
@@ -119,6 +122,9 @@
       if (!bar) return;
       this._wired = true;
       bar.addEventListener('click', e => {
+        // A pick in the Tools menu folds it (its action still runs).
+        const mi = e.target.closest('.site-more [role="menuitem"]'), md = mi && mi.closest('details');
+        if (md) setTimeout(() => { md.open = false; }, 0);
         if (e.target.closest('[data-scope-close]')) { DevScope.close(); return; }
         const al = e.target.closest('[data-scope-alloc]');
         if (al) { const h = H(); if (h && h.showAllocSub) h.showAllocSub(); return; }
@@ -203,17 +209,18 @@
         <div class="site-bar-svc">${svcLine}</div>
         ${flags.length ? `<div class="chips site-bar-flags">${flags.join('')}</div>` : ''}
         <div class="site-bar-actions">
-          <button type="button" class="btn small" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">Trace sewer</button>
-          <button type="button" class="btn small" data-wtrace="${esc(p.key)}" title="Trace the water supply route from the plant on the map">Trace water</button>
-          <button type="button" class="btn small" data-scope-fsr aria-expanded="false" title="Cross-check the consultant's FSR figures">Check FSR</button>
-          <button type="button" class="watch-btn${watched ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${watched}" title="${watched ? 'Remove from your watchlist' : 'Add to your watchlist (This week tab, Watched focus)'}">${watched ? '★ Watching' : '☆ Watch'}</button>
-          <details class="site-more"><summary class="btn small" aria-label="More site tools">⋯</summary>
+          <details class="site-more site-tools"><summary class="btn small" aria-label="Site tools: trace, check the FSR, memo, allocation, compare, export">Tools ▾</summary>
             <div class="site-more-menu" role="menu">
+              <button type="button" role="menuitem" class="btn small link" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">Trace sewer</button>
+              <button type="button" role="menuitem" class="btn small link" data-wtrace="${esc(p.key)}" title="Trace the water supply route from the plant on the map">Trace water</button>
+              <button type="button" role="menuitem" class="btn small link" data-scope-fsr aria-expanded="false" title="Cross-check the consultant's FSR figures">Check FSR</button>
+              <hr>
               <button type="button" role="menuitem" class="btn small link" data-memo title="One-page servicing memo to print or save as PDF">Memo</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-alloc title="Record a servicing allocation for this development">Record allocation</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-compare title="Add this development to the comparison (Compare tool)">Compare</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-export title="This development's row (phase, units, layer, demand) as a CSV">Export (CSV)</button>
             </div></details>
+          <button type="button" class="watch-btn${watched ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${watched}" title="${watched ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)'}">${watched ? '★ Watching' : '☆ Watch'}</button>
         </div>
         <div class="site-bar-fsr" id="site-bar-fsr" hidden></div>`;
       bar.hidden = false;

@@ -147,10 +147,20 @@
   }
   // Opening a site flies the map to it (quick); with reduced motion it jumps via
   // setView instead. Skipped when the map is already there.
+  // Where the map is not under the phone's bottom sheet: the site goes in the middle of that part
+  // (the shift turned with the map, on the road grid).
+  function clearCentre(t, z) {
+    const mr = map.getContainer().getBoundingClientRect(), sh = document.getElementById('analysis');
+    const sr = sh && window.PeelDataTab && window.PeelDataTab.shellNarrow && window.PeelDataTab.shellNarrow() ? sh.getBoundingClientRect() : null;
+    const bottom = sr && sr.top > mr.top + 80 && sr.top < mr.bottom ? sr.top : mr.bottom;
+    const d = (mr.top + mr.bottom) / 2 - (mr.top + bottom) / 2; if (d < 4) return t;
+    const b = (map.getBearing ? map.getBearing() : 0) * Math.PI / 180;
+    return map.unproject(map.project(t, z).add(L.point(d * Math.sin(b), d * Math.cos(b))), z);
+  }
   function flyToSite(p, minZoom) {
     if (p.lat == null || p.lng == null) return;
     const z = Math.max(map.getZoom(), minZoom == null ? 15 : minZoom);
-    const t = L.latLng(p.lat, p.lng);
+    const t = clearCentre(L.latLng(p.lat, p.lng), z);
     if (map.getCenter().distanceTo(t) < 30 && Math.abs(map.getZoom() - z) < 0.01) return;
     if (PD.prefersReducedMotion()) map.setView(t, z, { animate: false });
     else map.flyTo(t, z, { duration: 0.55 });

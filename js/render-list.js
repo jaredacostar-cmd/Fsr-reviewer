@@ -151,21 +151,21 @@
     if (nx) nx.disabled = pg.page >= pg.pages - 1;
   }
 
-  // The In view chip on the map (SPEC §4): the developments in view, one tap to the In view list in
-  // the left panel (Find), which follows the map view.
-  let inViewChip = null;
+  // In view (SPEC §4; design bundle 4: in the Layers header, not a chip over the data): the
+  // developments in view, one tap to the In view list in the left panel (Find), which follows the map.
+  let inViewWired = false;
   function syncInViewChip(n, of) {
-    const mc = map.getContainer(); if (!mc) return;
-    if (!inViewChip) {
-      inViewChip = L.DomUtil.create('button', 'btn small inview-chip', mc); inViewChip.type = 'button';
-      L.DomEvent.disableClickPropagation(inViewChip);
-      inViewChip.title = 'The developments in this part of the map: open the In view list (it follows the map)';
-      inViewChip.addEventListener('click', () => {
+    const el = document.getElementById('mo-inview'); if (!el) return;
+    if (!inViewWired) {
+      inViewWired = true;
+      const go = e => {
+        e.preventDefault(); e.stopPropagation();   // (inside the Layers summary: no fold)
         const DT = window.PeelDataTab; if (DT) { DT.showTab('explore'); if (DT.shellNarrow && DT.shellNarrow()) DT.toggleSidebar(true); }
         const l = document.querySelector('.list-panel'); if (l) l.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
+      };
+      el.addEventListener('click', go); el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') go(e); });
     }
-    inViewChip.textContent = `In view · ${fmtNum(n)} of ${fmtNum(of)}`;
+    el.textContent = `In view ${fmtNum(n)} of ${fmtNum(of)}`;
   }
   let listTimer;
   map.on('moveend', () => { clearTimeout(listTimer); listTimer = setTimeout(() => { listPage = 0; renderList(); }, 120); });

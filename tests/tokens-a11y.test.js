@@ -37,5 +37,6 @@ test('44 px tap targets on a phone', () => {
   const m = css.slice(css.indexOf('/* 44 px tap targets on a phone'));
   for (const s of ['.btn:not(.link)', '.chip', '.f-tab', 'select', 'details > summary', '.leaflet-bar a', '.pipeline button', '#north-btn', '.tool-rail button']) assert.ok(m.includes(s), s);
   assert.match(m, /min-height: 44px/);
-  assert.match(m, /\.tool-rail \{ display: grid; grid-template-columns: repeat\(2, 44px\); \}/);
+  assert.match(m, /\.tool-rail \.rail-tools \{ display: grid; grid-template-columns: repeat\(2, 44px\); \}/);
+  assert.match(m, /\n@media \(max-width: 700px\), \(pointer: coarse\) \{/, "a touch screen of any width");
 });

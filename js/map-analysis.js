@@ -333,7 +333,7 @@
       let b = mb.getBoundingClientRect();
       if (b.width) {
         const rects = sel => [...document.querySelectorAll(sel)].filter(e => !e.hidden && e.offsetParent !== null).map(e => e.getBoundingClientRect()).filter(r => r.width && r.top < mr.top + 140);
-        const leftR = [...rects('.leaflet-top.leaflet-left .leaflet-control'), ...rects('#toggle-sidebar')].reduce((x, r) => Math.max(x, r.right), mr.left);
+        const leftR = [...rects('.leaflet-top.leaflet-left .leaflet-control'), ...rects('.map-wrap #toggle-sidebar')].reduce((x, r) => Math.max(x, r.right), mr.left);
         const right = [op].map(e => e.getBoundingClientRect()).filter(r => r.width);
         const rightL = right.reduce((x, r) => Math.min(x, r.left), m.right);
         const avail = rightL - leftR - 2 * gap, widest = Math.max(0, ...[...mb.children].filter(c => !c.hidden).map(c => c.getBoundingClientRect().width));

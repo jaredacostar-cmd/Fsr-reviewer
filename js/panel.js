@@ -70,8 +70,8 @@
     if (s.method) out.push(`<details class="pnl-fold" data-sec="method"><summary>Method and basis</summary><div class="small muted">${s.method}</div></details>`);
     if (s.sources) out.push(`<details class="pnl-fold" data-sec="sources"><summary>Sources</summary><div class="small muted">${s.sources}</div></details>`);
     const f = s.foot || {}, sec = (f.secondary || []).slice(0, 1);
-    out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}${reportLink(s.key, h.name)}</div>
-      <p class="pnl-note small">${NOTE}</p></footer>`);
+    out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}</div>
+      <p class="pnl-note small">${NOTE}${reportLink(s.key, h.name)}</p></footer>`);
     return `<article class="pnl" data-panel="${esc(s.key || '')}">${out.join('')}</article>`;
   }
   // A label / value row for a short list (the site panel's Timing and Site).

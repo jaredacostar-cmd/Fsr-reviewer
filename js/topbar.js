@@ -30,10 +30,24 @@
     el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="${t} lens: the map's layers, marker colours and legend">${PD.icon(k)}<span>${t}</span></button>`).join('');
     MA().syncMapOpts();
   }
+  // On a phone the switch shows the current view only: a tap opens the other three, a pick closes it.
+  const phone = () => matchMedia('(max-width: 700px)').matches;
   $('#tb-views').addEventListener('click', e => {
     const b = e.target.closest('[data-mview]'); if (!b) return;
+    const v = $('#tb-views');
+    if (phone() && b.classList.contains('on') && !v.classList.contains('open')) { v.classList.add('open'); return; }
+    v.classList.remove('open');
     MA().setMapView(b.dataset.mview);
   });
+  // Phones: Export, Present, Help and Settings in one ⋯ menu.
+  const more = $('#tb-more'), acts = $('#tb-actions');
+  if (more && acts) {
+    const setMore = o => { acts.classList.toggle('open', o); more.setAttribute('aria-expanded', String(o)); };
+    more.addEventListener('click', e => { e.stopPropagation(); setMore(!acts.classList.contains('open')); });
+    // (a pick inside it, or a tap elsewhere, folds it; a sub-menu it opens stays until its own pick)
+    document.addEventListener('click', e => { if (acts.classList.contains('open') && !e.target.closest('#tb-actions')) setMore(false); });
+    acts.addEventListener('click', e => { if (e.target.closest('[role="menuitem"], #tb-help')) setMore(false); });
+  }
 
   // Scope trail: Peel › municipality › area › development. Only the active steps show;
   // the development step is there while its panel is open, and reopens it.
