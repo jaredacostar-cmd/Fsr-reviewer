@@ -150,7 +150,7 @@
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small"><strong>The pipeline by stage</strong> <span class="muted">dwellings, in the order a file moves</span></p>
-      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${Math.round(r.pct)}%</span></div>`).join('')}
+      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
       <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}</p>
     </div>`;
   }
@@ -252,14 +252,19 @@
   // ---- Home --------------------------------------------------------------------------------------
   function home() {
     const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('home', 'Loading the briefing…');
-    const rows = Cap() && Cap().collect ? Cap().collect() || [] : [];
-    const needs = a.lists.find(l => l.title === 'Needs attention'), week = a.lists.find(l => l.title === 'This week');
+    // The servicing model loads after the developments: until then Needs attention keeps its place with
+    // a placeholder (never silently left out), and the map's key waits for the colours it explains.
+    const cap = Cap() && Cap().collect ? Cap().collect() : null, ready = !!cap, rows = cap || [];
+    const wait = { title: 'Needs attention', rows: [{ kv: true, html: '<span class="muted">Checking servicing capacity…</span>' }], total: 1 };
+    const nl = a.lists.find(l => l.title === 'Needs attention');
+    const needs = ready ? (nl && nl.rows.length ? nl : null) || { title: 'Needs attention', rows: [{ kv: true, html: '<span class="muted">Nothing reaches a limit or the 90% trigger at build-out.</span>' }], total: 1 } : wait;
+    const week = a.lists.find(l => l.title === 'This week');
     // Home's rows open the matching workspace page.
     const toPage = (ws, l) => (l ? { ...l, rows: l.rows.map(r => ({ ...r, attrs: { 'data-ws-page': ws, title: (r.attrs || {}).title } })), see: { 'data-ws-page': ws } } : null);
     return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
       figures: a.figures.map(f => ({ ...f, attrs: { 'data-ws-page': 'growth', title: 'Growth in an area' } })),
-      lists: [toPage('tight', needs), toPage('week', week)],
-      map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, label: 'Open Servicing capacity', caption: '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
+      lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
+      map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map (all tools)', attrs: { 'data-ws-full': '' } }] };
   }
 
@@ -365,12 +370,13 @@
     let emp = { planned: 0, jobs: 0, permitted: 0, completed: 0, left: 0 };
     const GU = root.PeelGrowthUI, deps = GU && GU.growthDeps ? GU.growthDeps().aggregate : null;
     if (G && G.aggregateTypes && deps) for (const { p, share } of items) { const e = G.aggregateTypes([p], deps).emp; for (const k in emp) emp[k] += (e[k] || 0) * share; }
-    const m = n.m, n0 = v => fmtNum(Math.round(v));
+    // (units exact; people and jobs to the nearest hundred, as Home and the panels: one rounding rule)
+    const m = n.m, n0 = v => fmtNum(Math.round(v)), p0 = v => fmtNum(U.roundPop ? U.roundPop(v) : Math.round(v));
     const anb = stage ? stage.rows.filter(x => x.key === 'approved' || x.key === 'permitted').reduce((t, x) => t + x.units, 0) : 0;
     const f2031 = atPeel && tm && tm.figures ? tm.figures.find(f => /2031/.test(f.label)) : null;
     // The next level down (municipalities, plans, precincts and sub-areas), each opening its own level.
     const kids = n.children.filter(c => c.m.planned >= 0.5 || c.m.jobs >= 0.5).sort((x, y) => y.m.planned - x.m.planned);
-    const kidRow = c => ({ attrs: { 'data-ws-drill': c.id, title: `Open ${c.name}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.name)}</span><span class="pnl-r-year">${n0(c.m.planned)} units</span></div><small class="pnl-r-line">${esc(kind(c))} · ${n0(c.m.left)} left to build · ${n0(c.m.people)} people${c.m.jobs >= 0.5 ? ` · ${n0(c.m.jobs)} jobs` : ''}${c.children.length ? ` · ${c.children.length} ${c.kind === 'municipality' ? 'plans' : 'parts'}` : ''}</small>` });
+    const kidRow = c => ({ attrs: { 'data-ws-drill': c.id, title: `Open ${c.name}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.name)}</span><span class="pnl-r-year">${n0(c.m.planned)} units</span></div><small class="pnl-r-line">${esc(kind(c))} · ${n0(c.m.left)} left to build · ${p0(c.m.people)} people${c.m.jobs >= 0.5 ? ` · ${p0(c.m.jobs)} jobs` : ''}${c.children.length ? ` · ${c.children.length} ${c.kind === 'municipality' ? 'plans' : 'parts'}` : ''}</small>` });
     // At Peel, the largest plans too (straight to their level).
     const plans = atPeel ? [...r.nodes.values()].filter(x => x.kind === 'plan' && x.m.planned >= 0.5).sort((x, y) => y.m.planned - x.m.planned) : [];
     // The area's files, by stage (the bars filter them): pre-application to built.
@@ -386,7 +392,7 @@
       ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>` })),
     ] : [];
     const empRows = emp.planned >= 1 ? [
-      { kv: true, html: `<div class="pnl-kv"><span>Floor area planned</span><span>${n0(emp.planned)} m² · ≈${n0(emp.jobs)} jobs</span></div>` },
+      { kv: true, html: `<div class="pnl-kv"><span>Floor area planned</span><span>${n0(emp.planned)} m² · ≈${p0(emp.jobs)} jobs</span></div>` },
       { kv: true, html: `<div class="pnl-kv"><span>Permitted</span><span>${n0(emp.permitted)} m²</span></div>` },
       { kv: true, html: `<div class="pnl-kv"><span>Completed</span><span>${n0(emp.completed)} m²</span></div>` },
       { kv: true, html: `<div class="pnl-kv"><span>Left to build</span><span>${n0(emp.left)} m²</span></div>` },
@@ -405,13 +411,13 @@
     const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => `<circle cx="${f.X(p.lng)}" cy="${f.Y(p.lat)}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`
-      : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${n0(m.people)} people${m.jobs >= 0.5 ? ` and ${n0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
+      : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
     return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: atPeel ? null : { tone: 'stage', text: kind(n) }, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       figures: [
         { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` },
         { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
-        { v: n0(m.people), u: 'people', label: 'at build-out', ctx: 'Peel design criteria' },
-        { v: n0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' },
+        { v: p0(m.people), u: 'people', label: 'at build-out', ctx: 'Peel design criteria' },
+        { v: p0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' },
       ],
       chart: stage ? stageChartHTML(stage, census) : pl.chart,
       lists: [
@@ -468,7 +474,7 @@
     const W0 = (a.lists.find(l => l.title === 'This week') || { rows: [] }).rows;
     const pts = [...moved, ...added].map(x => byKey.get(x.key)).filter(Boolean);
     return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: W0.length ? { tone: 'stage', text: `${fmtNum(W0.length)} changes` } : null, identity: a.head.identity,
-      answer: W0.length ? `<strong>${fmtNum(W0.length)}</strong> change${W0.length === 1 ? '' : 's'} since the last data update: ${[moved.length && `${fmtNum(moved.length)} files moved stage`, added.length && `${fmtNum(added.length)} new files`, ce.length && `${fmtNum(ce.length)} capital or EA dates`].filter(Boolean).join(', ')}.` : 'Nothing changed since the last data update.',
+      answer: W0.length ? `<strong>${fmtNum(W0.length)}</strong> change${W0.length === 1 ? '' : 's'} since the last data update: ${[moved.length && `${fmtNum(moved.length)} file${moved.length === 1 ? '' : 's'} moved stage`, added.length && `${fmtNum(added.length)} new file${added.length === 1 ? '' : 's'}`, ce.length && `${fmtNum(ce.length)} capital or EA date${ce.length === 1 ? '' : 's'}`].filter(Boolean).join(', ')}.` : 'Nothing changed since the last data update.',
       figures: [
         { v: fmtNum(moved.length), u: 'files', label: 'moved stage', ctx: '' },
         { v: fmtNum(added.length), u: 'files', label: 'new', ctx: '' },

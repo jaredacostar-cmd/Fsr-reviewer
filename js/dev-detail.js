@@ -415,7 +415,8 @@
   function devFlags(p, st, f) {
     const out = [];
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
-    if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank) out.push(chip(`Zoning approved${p.zoningApproved.bylaws.length ? ` · By-law ${esc(p.zoningApproved.bylaws[0])}` : ''}`));
+    // (zoning approved is in the header's status line; the by-law that passed it stays here)
+    if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank && p.zoningApproved.bylaws.length) out.push(chip(`Zoning by-law ${esc(p.zoningApproved.bylaws[0])}`));
     if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
     if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
     if (f) {

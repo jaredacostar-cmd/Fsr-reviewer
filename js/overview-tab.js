@@ -311,7 +311,10 @@
   let lastArea = null;
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
-    const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o;
+    const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
+    // The figures carry the answer's own number ("added since the 2021 census") beside the build-out
+    // total, so the sentence and the figure never read as two answers to one question.
+    const since = (v, d, f) => (d >= 0.5 ? `${f(Math.max(0, v - d))} added since the 2021 census` : '');
     const rows = SC && SC.collect ? (SC.collect() || []) : [], now = MM().THIS_YEAR;
     // Needs attention: the facilities that reach a limit or sit past the 90% trigger at build-out, ranked
     // as Servicing › Capacity (Soonest | Largest impact), with the same row and impact line.
@@ -323,12 +326,12 @@
     return {
       calc: true, fullTitle: `Overview · ${muni || 'Peel'}: every card`,
       head: { trail: [{ label: 'Peel' }, ...(muni ? [{ label: muni }] : []), { label: 'Overview' }], name: 'What needs attention?', status: over ? { tone: 'over', text: `${over} over` } : tight ? { tone: 'tight', text: `${tight} tight` } : rows.length ? { tone: 'room', text: 'Room' } : null,
-        identity: `${esc(muni || 'Peel')} · ${esc(scopeText())}${asOf ? ` · applications as of ${esc(asOf)}` : ''}`, extra: permitCaveat },
+        identity: `${esc(muni || 'Peel')} · ${esc(scopeText())}${asOf ? ` · applications as of ${esc(root.PeelUtil.dayText ? root.PeelUtil.dayText(asOf) : asOf)}` : ''}`, extra: permitCaveat },
       answer: hl,
       figures: [
         { v: fmtNum(set.length), u: 'developments', label: 'shown on the map', ctx: esc(scopeText()) },
-        { v: fmtNum(Math.round(unitsAll)), u: 'units', label: 'planned', ctx: n ? `${fmtNum(left)} left to build` : (lyTiles.units || '') },
-        { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: lyTiles.people || '' },
+        { v: fmtNum(Math.round(unitsAll)), u: 'units', label: 'planned', ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')].filter(Boolean).join(' · ') },
+        { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: [since(e.population, pre.people, x => fmtNum(roundPop(x))), lyTiles.people || ''].filter(Boolean).join(' · ') },
         { v: fmtNum(roundPop(e.employment.jobs)), u: 'jobs', label: 'on development sites', ctx: '' },
       ],
       chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed against rated capacity</p>${capacityBarsHTML(capList)}` : '',
@@ -400,7 +403,7 @@
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue });
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
     if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">

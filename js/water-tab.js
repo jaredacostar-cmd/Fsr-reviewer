@@ -53,7 +53,8 @@
   };
   // Storage: the Master Plan's required-vs-available series by year. Room left at the last
   // year; the crossing years linearly interpolate when required reaches 80 / 90 / 100% of
-  // the available storage.
+  // the available storage, as the first whole year at or past it (the same rule as plants and
+  // stations, js/masterplan.js runOut, and the storage relief check, storageCons).
   const storageRoomTrigger = (years, required, available) => {
     const n = years.length, avail = available[n - 1];
     const cross = f => {
@@ -62,7 +63,7 @@
       for (let i = 1; i < n; i++) {
         if (required[i] >= lim && required[i - 1] < lim) {
           const t = (lim - required[i - 1]) / ((required[i] - required[i - 1]) || 1);
-          return Math.round(years[i - 1] + t * (years[i] - years[i - 1]));
+          return Math.ceil(years[i - 1] + t * (years[i] - years[i - 1]) - 1e-9);
         }
       }
       return null;

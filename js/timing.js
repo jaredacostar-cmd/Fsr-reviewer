@@ -438,9 +438,11 @@
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     const sumTo = (y, b) => fc.years.filter(r => r.year <= y).reduce((t, r) => t + r[b], 0);
     const unbuilt = items.reduce((t, i) => t + i.units, 0);
-    const rng = () => `${fmtNum(Math.round(sumTo(2031, 'low')))}–${fmtNum(Math.round(sumTo(2031, 'high')))}`;
+    // (estimates to three significant figures: the precision a statistical screening has)
+    const est = v => fmtNum(root.PeelUtil.sig3 ? root.PeelUtil.sig3(v) : Math.round(v));
+    const rng = () => `${est(sumTo(2031, 'low'))}–${est(sumTo(2031, 'high'))}`;
     const head = items.length
-      ? `A statistical <strong>screening estimate</strong> of when the pipeline builds out: <strong>≈${fmtNum(Math.round(sumTo(2031, 'likely')))}</strong> units expected by 2031 (range ${rng()}), <strong>≈${fmtNum(Math.round(sumTo(2041, 'likely')))}</strong> by 2041 — against <strong>${fmtNum(Math.round(unbuilt))}</strong> unbuilt units in the pipeline.`
+      ? `A statistical <strong>screening estimate</strong> of when the pipeline builds out: <strong>≈${est(sumTo(2031, 'likely'))}</strong> units expected by 2031 (range ${rng()}), <strong>≈${est(sumTo(2041, 'likely'))}</strong> by 2041 — against <strong>${fmtNum(Math.round(unbuilt))}</strong> unbuilt units in the pipeline.`
       : 'No unbuilt units in the developments shown.';
     const tile = (label, v, sub, info) => `<div class="tile" data-info="${info}"><div class="tl">${label} ${estTag}</div><div class="tv">${v}<span class="tu">units</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     const tiles = `<div class="tiles" data-info="timing-tiles">`
@@ -505,12 +507,12 @@
     // Stage 3: the standard panel; the forecast, the contributors, the calibration and the trigger-year
     // tables below are its full table.
     if (root.PeelPanel) {
-      const PN = root.PeelPanel, fig = (y, b) => fmtNum(Math.round(sumTo(y, b)));
+      const PN = root.PeelPanel, fig = (y, b) => est(sumTo(y, b));
       const trig = plantFacs().map(f => { const fb = facilityBands({ name: f.name, rated: f.rated, existing: f.existing, approved: f.approved, proposed: f.proposed, div: f.div || 0, end: fc.nowYear + FORECAST_YEARS }, cal), tr = fb.triggers[90]; const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high; return { f, like, txt: triggerRangeText(tr, fb.end) }; })
         .sort((a, b) => (a.like == null ? 1e4 : a.like) - (b.like == null ? 1e4 : b.like));
       PN.set('growth:timing', {
         calc: true, fullTitle: `Growth › Timing · ${App().state.muni || 'Peel'}: the forecast, the contributors, the calibration and the trigger years`,
-        head: PN.areaHead('Growth › Timing', 'When does it come?', { tone: 'stage', text: 'Screening estimate' }, `${esc(App().state.muni || 'Peel')} · data as of ${esc(asof)}`),
+        head: PN.areaHead('Growth › Timing', 'When does it come?', { tone: 'stage', text: 'Screening estimate' }, `${esc(App().state.muni || 'Peel')} · data as of ${esc(root.PeelUtil.dayText ? root.PeelUtil.dayText(asof) : asof)}`),
         answer: head,
         figures: [
           { v: fig(2031, 'likely'), u: 'units', label: 'expected by 2031', ctx: `range ${fig(2031, 'low')}–${fig(2031, 'high')}` },
@@ -520,7 +522,9 @@
         ],
         chart: items.length ? timingChartSVG(fc) : '',
         lists: [
-          { title: 'Plants: 90% trigger year (likely)', rows: trig.map(x => PN.kv(esc(x.f.name), x.like != null ? `≈${x.like} <small>${esc(x.txt)}</small>` : esc(x.txt))), total: trig.length, seeAll: { 'data-full-table': 'growth' } },
+          // (the forecast pace; Servicing › Capacity puts every file on its own schedule, so its years can
+        // differ: both are named)
+        { title: 'Plants: 90% trigger year at the forecast pace', rows: [...trig.map(x => PN.kv(esc(x.f.name), x.like != null ? `≈${x.like}${x.txt !== String(x.like) ? ` <small>range ${esc(x.txt)}</small>` : ''}` : esc(x.txt))), { kv: true, html: '<span class="small muted">Servicing › Capacity puts every file on its own schedule instead, so its years can differ by a year or two.</span>' }], total: trig.length, seeAll: { 'data-full-table': 'growth' } },
           { title: 'Largest contributors', rows: contrib.slice(0, 5).map(c => ({ attrs: { 'data-pnl-dev': c.item.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.item.title || c.item.key)}<small>${esc(c.item.muni)}</small></span><span class="pnl-r-fig">${fmtNum(Math.round(c.likely))}<small>units, likely</small></span></div>` })), total: contrib.length, seeAll: { 'data-full-table': 'growth' } },
         ],
         method: 'A statistical screening estimate of when the pipeline builds out, not a prediction for any one site: approval and completion rates and the time lags are calibrated from the dated application and permit events, by municipality and building type; low / likely / high bands. Trigger years phase each plant\u2019s approved and proposed flow in over the calibrated lags (not the plant horizon assumptions).',

@@ -357,7 +357,7 @@
       const room = avail('today') > 0 ? avail('today') - req('today') : null;
       return { id: `stor:${nm}`, sys: 'water', kind: 'storage', name: r.facility, sub: `required vs available storage (2020 Master Plan forecast)${zid ? ` · in ${SD().svcById.get(zid).name}` : ''}`, cap: now, unit: 'ML', zones: zid ? [zid] : [],
         util: { today: req('today') / (avail('today') || now), com: req('today') / (avail('today') || now), bo: req(null) / (avail(null) || now) }, room, people: room == null ? 0 : room * 1e6 / (1.25 * 0.25 * perPersonMax() * 1e6),
-        out: (() => { for (const y of yearsAhead()) if (avail(y) > 0 && req(y) > avail(y)) return y; return null; })(), relief: fc ? [facRelief(fc, /reservoir|tank/i)] : [], mp: true };
+        out: (() => { for (const y of yearsAhead()) if (avail(y) > 0 && req(y) >= avail(y)) return y; return null; })(), relief: fc ? [facRelief(fc, /reservoir|tank/i)] : [], mp: true };
     });
   }
   // Supply: large mains across the boundary into zone level L carry the max day of every lake-based
