@@ -81,8 +81,10 @@ test('5. room or over in signed words, never a bare negative', () => {
 // ---- 9. Capital status ------------------------------------------------------------------------------
 test('9. planned works: capital-records status where matched, "not in capital records (…)" otherwise; never "status unknown"', () => {
   const mp = src('js/masterplan.js');
-  assert.match(mp, /const CE = window\.PeelCapitalEA, e = id && CE && CE\.dcStatusOf \? CE\.dcStatusOf\(id\) : null;/);
-  assert.match(mp, /\(capital records\)`;/);
+  assert.match(mp, /const CE = window\.PeelCapitalEA, e0 = id && CE && CE\.dcStatusOf \? CE\.dcStatusOf\(id\) : null;/);
+  // Audit: an outline-overlap (low) match is not trusted, nor "complete" for a work scheduled after this year.
+  assert.match(mp, /const e = e0 && e0\.conf !== 'low' && !\(done && y > new Date\(\)\.getFullYear\(\)\) \? e0 : null;/);
+  assert.match(mp, /\(capital records\$\{e\.status === 'planned' && st === 'paused' \? '; procurement paused' : ''\}\)`;/);
   assert.match(mp, /return ` · not in capital records \(\$\{src\}\$\{st === 'paused' \? '; procurement paused' : ''\}\)`;/);
   assert.match(mp, /'council-approved February 2024' : 'DC schedule'/, 'G.E. Booth 2028 (no DC project number) names its source');
   assert.match(mp, /\|c\$\{window\.PeelCapitalEA && window\.PeelCapitalEA\.data && window\.PeelCapitalEA\.data\.loaded \? 1 : 0\}/, 're-computed once the capital records load');
@@ -107,17 +109,17 @@ test('10. pumping stations: screening note in the headline, peak wet and peak dr
 });
 
 // ---- 6. Anticipated defined; the count lives in the Scenario control ---------------------------------
-test('6. "Anticipated" carries its definition from js/layers.js wherever it appears', () => {
+test('6. Pre-application (anticipated) carries its definition from js/layers.js wherever it appears', () => {
   const Ly = require('../js/layers.js');
   assert.equal(Ly.NOTE.anticipated, 'pre-consultation, block or precinct plan: no formal file yet');
-  assert.match(src('js/overview-tab.js'), /lyTiles\.anticipated \? `<p class="small muted ly-def">Anticipated: \$\{esc\(root\.PeelLayers\.NOTE\.anticipated\)\}\.<\/p>`/);
-  assert.match(src('js/growth-ui.js'), /u\.anticipated >= 0\.5 \? `<p class="small muted ly-def">Anticipated: \$\{esc\(Ly\.NOTE\.anticipated\)\}\.<\/p>`/);
-  assert.match(src('js/svc-tab.js'), /Anticipated: \$\{esc\(A\.anticipated\)\}\./, 'and in the Scenario control beside the switch');
+  assert.match(src('js/overview-tab.js'), /lyTiles\.anticipated \? `<p class="small muted ly-def">Pre-application: \$\{esc\(root\.PeelLayers\.NOTE\.anticipated\)\}\.<\/p>`/);
+  assert.match(src('js/growth-ui.js'), /u\.anticipated >= 0\.5 \? `<p class="small muted ly-def">Pre-application: \$\{esc\(Ly\.NOTE\.anticipated\)\}\.<\/p>`/);
+  assert.match(src('js/svc-tab.js'), /Pre-application: \$\{esc\(A\.anticipated\)\}\./, 'and in the Scenario control beside the switch');
 });
 
 test('6. Count: committed only · + proposed · + anticipated, in the Scenario control; the chip shows it read-only', () => {
   const B = require('../js/layer-bar.js');
-  assert.deepEqual(B.COUNT_OPTS, [['committed', 'committed only'], ['buildout', '+ proposed'], ['all', '+ anticipated']]);
+  assert.deepEqual(B.COUNT_OPTS, [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']]);
   const st = src('js/svc-tab.js');
   assert.match(st, /<span class="muted small">Count:<\/span>\$\{LB\.COUNT_OPTS\.map/);
   assert.match(st, /\[\['all', 'All'\], \['remaining', 'Left to build'\]\]/, '"left to build" keeps its own switch');
@@ -134,7 +136,7 @@ test('7. permit check: pass / fail per municipality (fail beyond 25%); in Record
   assert.equal(U.permitCheckRows([{ m: 'X', app: 126, region: 100 }])[0].pass, false);
   const cv = src('js/census-view.js');
   assert.doesNotMatch(cv, /<p class="small">Check: units on this app's building permit records/, 'gone from Growth › Census & 2051');
-  assert.match(cv, /Permit counts differ from Region figures for \$\{esc\(list\)\}; see \$\{DV\(\)\.homeLine\('records', 'Records › Checks'\)\}/);
+  assert.match(cv, /Permit counts differ from Region figures for \$\{esc\(list\)\}; see \$\{DV\(\)\.homeLine\('records:checks', 'Records › Checks'\)\}/);
   assert.match(cv, /<span class="fr-b \$\{r\.pass \? 'fr-ok' : 'fr-stale'\}">\$\{r\.pass \? 'Pass' : 'Fail'\}<\/span>/);
   assert.match(src('js/demand-ui.js'), /root\.PeelCensusView\.permitCheckHTML\(\)/, 'listed with the model checks');
   assert.match(src('js/growth-ui.js'), /\$\{hlP\(head\)\}\$\{caveat\}/, 'caveat under the Growth pipeline headline');

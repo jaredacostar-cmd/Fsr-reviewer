@@ -305,6 +305,7 @@
     if (PeelMapMarkers.mstyle.color === 'phase') PeelMapAnalysis.renderLegend();   // the phase legend lists the shown phases
     renderWatch();
     PeelTips.maybeTour();
+    if (window.PeelWorkspaces && window.PeelWorkspaces.bootRestore) window.PeelWorkspaces.bootRestore();
     PeelShare.viewLink.ready();
     PeelTopbar.renderTrail();
   }
@@ -341,9 +342,8 @@
   };
   $('#analysis').querySelector('.analysis-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
-    // Servicing opens the half last used (wastewater by default): 'ww' or 'water'.
-    const k = t.dataset.tab === 'svc' ? (store.get('svcSys', 'ww') === 'water' ? 'water' : 'ww') : t.dataset.tab;
-    PeelAnalysisTabs.setFootPref(k); store.set('footTab4', PeelAnalysisTabs.getFootPref());
+    // (Stage 2: Servicing is one tab, 'svc'; it opens on the sub-view last picked.)
+    PeelAnalysisTabs.setFootPref(t.dataset.tab); store.set('footTab4', PeelAnalysisTabs.getFootPref());
     PeelAnalysisTabs.showFootTab(PeelAnalysisTabs.getFootPref()); PeelShare.viewLink.write();
   });
   // Bottom-sheet snaps (compact): peek shows the summary + tabs, half and full the
@@ -355,7 +355,9 @@
     const vh = window.innerHeight;
     const footH = $('#footer') ? $('#footer').getBoundingClientRect().height : 0;
     if (name === 'half') return Math.round(vh * 0.5);
-    if (name === 'full') return Math.max(240, Math.round(vh - footH) - 8);
+    // Full stops at the top bar, so the sheet's tabs and the panel header stay in view.
+    const topB = $('#topbar') ? Math.max(0, $('#topbar').getBoundingClientRect().bottom) : 0;
+    if (name === 'full') return Math.max(240, Math.round(vh - footH - topB) - 8);
     return 96;
   }
   function setAnalysisSnap(name, save = true) {
@@ -443,7 +445,10 @@
   // its menus open over them; the detail drawer (Help, a selection…) starts below it.
   const topEl = document.querySelector('.topbar');
   if (topEl) {
-    const setTop = () => document.documentElement.style.setProperty('--top-h', `${Math.max(0, Math.round(topEl.getBoundingClientRect().bottom))}px`);
+    const setTop = () => {
+      document.documentElement.style.setProperty('--top-h', `${Math.max(0, Math.round(topEl.getBoundingClientRect().bottom))}px`);
+      if (analysisSnap === 'full') setAnalysisSnap('full', false);
+    };
     new ResizeObserver(setTop).observe(topEl); addEventListener('resize', setTop); setTop();
   }
 
@@ -775,14 +780,14 @@
       QUALITY: window.PeelMapMarkers.QUALITY,
       setDaContext: (...a) => window.PeelCensusAreas.setDaContext(...a),
       ensureCouncil: () => window.PeelDevDetail.loadCouncil(),
-      showAllocSub: () => { window.PeelAnalysisTabs.setWwSub('alloc'); window.PeelAnalysisTabs.showFootTab('ww'); window.PeelShare.viewLink.write(); },
+      showAllocSub: () => { window.PeelAnalysisTabs.showFootTab('svc', 'alloc'); window.PeelShare.viewLink.write(); },
       writeLink: () => window.PeelShare.viewLink.write(),
       estimate: p => D.estimate([p], state.criteria, 'all', jobsOf),
       renderScopeTab: () => {
         const t = window.PeelAnalysisTabs.getFootPref();
         if (t === 'overview') window.PeelOverviewTab.renderOverview();
         else if (t === 'growth') window.PeelGrowthUI.renderGrowth();
-        else if (t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
+        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
         else if (t === 'dca') window.PeelDcaTab.renderDca();
       },
       isWatched: k => watch.has(k),
@@ -810,4 +815,6 @@
   PeelSvcData.loadServicing();
   window.PeelTopbar.initTopbar();
   window.PeelDataTab.initDataTab();
+  // Stage 4: the start screen (Home, the last workspace or the full map; a link opens what it names).
+  if (window.PeelWorkspaces) window.PeelWorkspaces.init();
 })();

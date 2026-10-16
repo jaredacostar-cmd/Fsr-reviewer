@@ -204,7 +204,7 @@ test('manifest: every dataset has a source, owner, licence and size; no account 
 
 test('nothing in the app loads constraint data until a layer is switched on', () => {
   const s = fs.readFileSync(path.join(ROOT, 'js/constraints.js'), 'utf8');
-  // Off by default (gas and hydro included), and render returns before any fetch when all are off.
+  // Off by default, and render returns before any fetch when all are off.
   assert.match(s, /const on = Object\.fromEntries\(Object\.keys\(LAYERS\)\.map\(k => \[k, false\]\)\)/);
   assert.match(s, /if \(!keys\.length\) \{ if \(note\) note\.textContent = ''; return; \}/);
   assert.match(s, /if \(Object\.values\(on\)\.some\(Boolean\)\) map\.whenReady/);
@@ -225,7 +225,7 @@ test('follows the redesign: one hover card, hatched areas, the stated zoom thres
   // Two ladders: constraint areas are hatched, never a solid colour that reads as phase / capacity.
   assert.match(s, /fillColor: hatch\(col, BACK\.has\(key\)\)/);
   assert.doesNotMatch(s, /fillColor: col\b/);
-  // SPEC §4 thresholds (unchanged, stated): gas / hydro from 11, watercourses from 12.
-  const C = { gas: /gas: \{[^\n]*minZoom: (\d+)/, hydro: /hydro: \{[^\n]*minZoom: (\d+)/, water: /water: \{[^\n]*minZoom: (\d+)/ };
-  assert.equal(+s.match(C.gas)[1], 11); assert.equal(+s.match(C.hydro)[1], 11); assert.equal(+s.match(C.water)[1], 12);
+  // SPEC §4 thresholds (unchanged, stated): watercourses from 12. (Stage 2: no gas / hydro layers.)
+  assert.equal(+s.match(/water: \{[^\n]*minZoom: (\d+)/)[1], 12);
+  assert.doesNotMatch(s, /\b(gas|hydro): \{ label/);
 });

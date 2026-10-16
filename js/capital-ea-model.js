@@ -233,7 +233,10 @@
       const r = byId.get(l.capital); if (!proj || !r) continue;
       const c = cs.get(r.contract || `id:${r.id}`);
       const cur = idx.get(proj);
-      if (!cur || RANK.indexOf(c.status) > RANK.indexOf(cur.status) || (c.status === cur.status && (c.percent || 0) > (cur.percent || 0))) idx.set(proj, { status: c.status, percent: c.percent, lastUpdate: c.lastUpdate, key: c.key });
+      // A project-matched (medium) link outranks an outline-overlap (low) one; then the most advanced
+      // contract. The entry says how sure the match is (conf), so a label can leave a low one out.
+      const conf = l.confidence === 'low' ? 0 : 1, curConf = cur ? (cur.conf === 'low' ? 0 : 1) : -1;
+      if (!cur || conf > curConf || (conf === curConf && (RANK.indexOf(c.status) > RANK.indexOf(cur.status) || (c.status === cur.status && (c.percent || 0) > (cur.percent || 0))))) idx.set(proj, { status: c.status, percent: c.percent, lastUpdate: c.lastUpdate, key: c.key, conf: l.confidence || 'medium' });
     }
     return idx;
   }
@@ -404,7 +407,11 @@
     }
   }
   /** EAs within m metres of a point (a development's site), nearest first, with the distance. */
-  const easNear = (list, lat, lng, m = 1000) => (list || []).filter(e => !eaUnplaced(e)).map(e => ({ e, d: geomDistM(e.geometry, lat, lng) })).filter(x => x.d <= m).sort((a, b) => a.d - b.d);
+  // pts: the site's boundary points ([lat, lng]); the distance is from the nearest of them (0 inside).
+  const easNear = (list, lat, lng, m = 1000, pts = null) => (list || []).filter(e => !eaUnplaced(e))
+    .map(e => ({ e, d: Math.min(geomDistM(e.geometry, lat, lng), ...(pts || []).map(([la, ln]) => geomDistM(e.geometry, la, ln))) })).filter(x => x.d <= m).sort((a, b) => a.d - b.d);
+  /** EAs not on the map that name the municipality or the whole Region: they may apply to a site. */
+  const easMayApply = (list, muni) => (list || []).filter(e => eaUnplaced(e) && (/region-wide/i.test(e.municipality || '') || (muni && inMuni(e.municipality, muni))));
   /**
    * Dated milestones from today to today + days: { e, m, monthOnly }. A month-only date ("2026-11")
    * counts from its month. For "Coming up" and the calendar file.
@@ -437,12 +444,15 @@
   function eaTabHTML(o) {
     const all = o.eas || [], today = o.today, f = o.f || { show: 'current' };
     let scoped = all, where = '';
-    if (o.near) { const hits = easNear(all, o.near.lat, o.near.lng, o.near.m); scoped = hits.map(h => ({ ...h.e, _d: h.d })); where = ` within ${(o.near.m / 1000).toLocaleString('en-CA')} km of ${esc(o.near.title)}`; }
+    if (o.near) { const hits = easNear(all, o.near.lat, o.near.lng, o.near.m, o.near.pts); scoped = hits.map(h => ({ ...h.e, _d: h.d })); where = ` within ${(o.near.m / 1000).toLocaleString('en-CA')} km of ${o.near.edge ? 'the site boundary of ' : ''}${esc(o.near.title)}`; }
     else if (o.muni) { scoped = all.filter(e => inMuni(e.municipality, o.muni) || /region-wide/i.test(e.municipality || '')); where = ` in ${esc(o.muni)}`; }
     const cur = scoped.filter(e => EA_CURRENT.has(e.status)), done = scoped.filter(e => e.status === 'complete');
     const recent = done.filter(e => e.completedYear && e.completedYear >= o.thisYear - RECENT_YEARS);
     const up = upcoming(scoped, today, 90), open = openPeriods(scoped, today), unmapped = scoped.filter(e => eaUnplaced(e) || eaDashed(e));
-    const list = eaSort(scoped.filter(e => eaMatch(e, f)), o.sort || 'next');
+    // At a site with no current EA nearby, the list opens on All (until a filter is picked).
+    const fx = o.near && !o.picked && !cur.length && scoped.length ? { ...f, show: 'all' } : f;
+    const list = eaSort(scoped.filter(e => eaMatch(e, fx)), o.sort || 'next');
+    const may = o.near ? easMayApply(all, o.near.muni) : [];
     const tile = (n, t, warn) => `<div class="dca-tile${warn ? ' warn' : ''}"><b>${n}</b><span>${t}</span></div>`;
     const chip = (attr, val, on, label) => `<label class="mo-chip"><input type="${attr === 'show' ? 'radio' : 'checkbox'}" name="ea-${attr}" data-eatab-${attr}="${esc(val)}"${on ? ' checked' : ''}><span>${label}</span></label>`;
     const sysOn = k => !(f.sys && f.sys[k] === false);
@@ -454,14 +464,18 @@
         <span class="ea-next small muted">${tail}${loc ? ` · <span class="ce-badge ce-approx">${loc}</span>` : ''}${e.links && e.links.report ? ` · <a href="${esc(e.links.report.url)}" target="_blank" rel="noopener">Report ↗</a>` : ''}</span></li>`;
     };
     const upRow = ({ e, m, monthOnly }) => `<li><span class="ea-up-d">${esc(fmtDate(m.date))}${monthOnly ? ' <small class="muted">(month)</small>' : ''}</span> <span>${esc(MS_LABEL[m.type] || m.type)}: <button type="button" class="btn small link" data-ce-open="ea:${esc(e.id)}">${esc(e.name)}</button></span></li>`;
-    if (o.near && !scoped.length) return `<p class="small">No environmental assessments mapped${where}.</p><p class="small muted">EAs placed only approximately or not yet mapped are not checked against the site.</p>${o.screenNote || ''}`;
+    // EAs not on the map yet that name the site's municipality or the whole Region: listed apart.
+    const mayHTML = may.length ? `<section class="ce-sec ea-may" data-sec="may-apply"><h3 class="sub-title">May apply <small class="muted">not on the map yet · ${may.length}</small></h3><ul class="ea-list">${may.map(row).join('')}</ul>
+      <p class="small muted">These name ${esc(o.near.muni || 'the municipality')} or the whole Region but have no mapped study area, so they can't be checked against the site.</p></section>` : '';
+    if (o.near && !scoped.length) return `<p class="small">No environmental assessments mapped${where}.</p>${mayHTML}<p class="small muted">EAs placed only approximately or not yet mapped are not checked against the site.</p>${o.screenNote || ''}`;
     return `<p class="small">Region of Peel environmental assessments${where}: ${scoped.length} listed${o.checked ? `, project pages checked ${esc(fmtDate(o.checked))}` : ''}. Tap one to open it and see it on the map.</p>
       <div class="dca-sum ea-tiles">${tile(cur.length, 'current (commenced, in consultation, under review or in addendum)')}${tile(up.length, 'milestones in the next 90 days')}${tile(open.length, `comment or review period${open.length === 1 ? '' : 's'} open now`, open.length > 0)}${tile(recent.length, `completed ${o.thisYear - RECENT_YEARS} or later`)}</div>
+      ${mayHTML}
       <section class="ce-sec" data-sec="coming-up"><h3 class="sub-title">Coming up <small class="muted">next 90 days</small></h3>${up.length ? `<ul class="ea-up">${up.map(upRow).join('')}</ul>` : '<p class="small muted">No dated milestones in the next 90 days.</p>'}
         <p class="small"><button type="button" class="btn small" data-eatab-ics${up.some(x => !x.monthOnly) ? '' : ' disabled'}>Add to calendar (.ics)</button> <span class="muted">dated meetings and deadlines in the next 90 days; times and places are on each project page</span></p></section>
       <section class="ce-sec" data-sec="list"><h3 class="sub-title">All EAs <small class="muted">${list.length} shown</small></h3>
         <div class="ea-tools"><input type="search" class="ea-q" data-eatab-q value="${esc(f.q || '')}" placeholder="Search name, place or purpose" aria-label="Search the EAs">
-          <div class="mo-chips" role="radiogroup" aria-label="Which EAs">${[['current', `Current (${cur.length})`], ['complete', `Complete (${done.length})`], ['all', `All (${scoped.length})`]].map(([k, t]) => chip('show', k, (f.show || 'current') === k, t)).join('')}</div>
+          <div class="mo-chips" role="radiogroup" aria-label="Which EAs">${[['current', `Current (${cur.length})`], ['complete', `Complete (${done.length})`], ['all', `All (${scoped.length})`]].map(([k, t]) => chip('show', k, (fx.show || 'current') === k, t)).join('')}</div>
           <div class="mo-chips" aria-label="Systems">${EA_SYS.map(([k, t]) => chip('sys', k, sysOn(k), t)).join('')}</div>
           <label class="small ea-sort">Sort <select data-eatab-sort aria-label="Sort the EAs">${EA_SORTS.map(([k, t]) => `<option value="${k}"${(o.sort || 'next') === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label></div>
         ${list.length ? `<ul class="ea-list">${list.map(row).join('')}</ul>` : '<p class="small muted">No EAs match these filters.</p>'}
@@ -527,7 +541,7 @@
     EA_OUTLINE_ZOOM, eaStyle, labelPoint, pctLabel, SYS_CASING,
     eaReview, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
-    dcCapitalIndex, dcActualHTML, eaMatch, eaSort, geomDistM, easNear, upcoming, openPeriods, eaICS, eaTabHTML, EA_SYS, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,
+    dcCapitalIndex, dcActualHTML, eaMatch, eaSort, geomDistM, easNear, easMayApply, upcoming, openPeriods, eaICS, eaTabHTML, EA_SYS, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelCapitalEAModel = api;

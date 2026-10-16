@@ -15,10 +15,11 @@ const keys = g => LG.GROUPS.find(x => x.key === g).layers.map(l => l[0]);
 
 test('six groups in order, with the brief\'s layers', () => {
   assert.deepEqual(LG.GROUPS.map(g => g.label), ['Developments', 'Capacity', 'Infrastructure', 'Constraints', 'Planning context', 'Base map']);
-  assert.deepEqual(keys('devs'), ['devs', 'heat', 'hov']);
+  assert.deepEqual(keys('devs'), ['devs', 'hov']);   // Stage 2: the heatmap is removed
   assert.deepEqual(keys('cap'), ['cap', 'pz', 'bk', 'dr']);
-  assert.deepEqual(keys('infra'), ['ex-water', 'ex-sanitary', 'ex-storm', 'wf', 'dcw', 'cons', 'ea', 'gas', 'hydro']);
-  assert.equal(LG.GROUPS.find(g => g.key === 'infra').sub.gas, 'Other utilities');
+  // Stage 2: the gas pipeline and hydro line layers are removed.
+  assert.deepEqual(keys('infra'), ['ex-water', 'ex-sanitary', 'ex-storm', 'wf', 'dcw', 'cons', 'ea']);
+  for (const k of ['heat', 'gas', 'hydro']) assert.ok(!LG.LAYER.get(k), `${k} removed`);
   assert.deepEqual(keys('cx'), ['reg', 'flood', 'greenbelt', 'orm', 'nep', 'natural', 'nhs', 'source', 'water']);
   assert.match(LG.LAYER.get('source').disabled, /Not included/);
   assert.deepEqual(keys('plan'), ['sp', 'pr', 'mtsa', 'da']);
@@ -36,8 +37,8 @@ test('presets: everything off except Developments; each view adds its own', () =
   assert.match(s, /wf: true, dc: \{ on: true, sys: 'water' \} \}/);
   assert.match(s, /wf: false, dc: \{ on: true, sys: 'wastewater' \} \}/);
   assert.deepEqual(LG.PRESETS.dc.filter(k => k !== 'devs' && k !== 'hov'), ['dcw', 'cons', 'ea']);
-  // No constraint, utility or base-map layer is on in any preset (gas / hydro off by default).
-  for (const p of Object.values(LG.PRESETS)) for (const k of p) assert.ok(!['cx', 'base'].includes(LG.groupOf(k)) && k !== 'gas' && k !== 'hydro', k);
+  // No constraint or base-map layer is on in any preset.
+  for (const p of Object.values(LG.PRESETS)) for (const k of p) assert.ok(!['cx', 'base'].includes(LG.groupOf(k)), k);
 });
 
 test('the map views apply the same presets (map-analysis VIEW_PRESETS + the groups\' other layers)', () => {
@@ -110,7 +111,7 @@ test('group header, summary and switch', () => {
   const html = LG.panelHTML({ on, open: new Set(['cx']), inView: new Set(['reg']), swatch: () => '' });
   assert.equal((html.match(/class="lg-grp/g) || []).length, 6);
   assert.match(html, /data-grp="cx">[\s\S]*?aria-expanded="true"[\s\S]*?3 on · 1 in view/);
-  assert.match(html, /<div class="lg-sub">Other utilities<\/div>/);
+  assert.doesNotMatch(html, /Other utilities/, 'Stage 2: no gas / hydro layers');
   assert.match(html, /id="lyr-reg" data-lyr="reg" checked/);
   assert.match(html, /Source protection \(not included\)<\/span><small class="muted">n\/a/);
   assert.match(html, /data-grp-sum="infra">None on/);
@@ -181,7 +182,7 @@ test('follows the Map controls board: zoom stated on the layer, the view preset 
   assert.equal(LG.LAYER.get('ex-water').zoomText, 'from zoom 15');
   assert.match(src('js/map-markers.js'), /const EXIST_ZOOM = 15;/);
   const cx = src('js/constraints.js');
-  for (const k of ['gas', 'hydro', 'water']) assert.equal(LG.LAYER.get(k).zoom, +cx.match(new RegExp(`${k}: \\{[^\\n]*minZoom: (\\d+)`))[1], k);
+  for (const k of ['water']) assert.equal(LG.LAYER.get(k).zoom, +cx.match(new RegExp(`${k}: \\{[^\\n]*minZoom: (\\d+)`))[1], k);
   assert.equal(LG.LAYER.get('hill').zoom, 11);
   assert.equal(LG.LAYER.get('reg').zoomText, 'detail from zoom 13');
   assert.match(cx, /const TILE_ZOOM = 13/);

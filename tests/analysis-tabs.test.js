@@ -31,49 +31,58 @@ function extractArrow(name) {
   return new Function(`return (${m[1]});`)();
 }
 
-const migrateTabKey = extractArrow('migrateTabKey');
+// Stage 2: migrateTabKey uses the module's TAB_KEYS and SUB_MAP: load js/analysis-tabs.js in a vm.
+function loadTabs() {
+  const el = () => null, store = { get: (k, d) => d, set: () => {} };
+  const document = { querySelector: el, querySelectorAll: () => [], getElementById: el, addEventListener: () => {} };
+  const ctx = { window: { PeelUtil: { store }, document }, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(fs.readFileSync(path.join(JS_DIR, 'analysis-tabs.js'), 'utf8'), ctx);
+  return ctx.module.exports;
+}
+const AT = loadTabs();
+const migrateTabKey = AT.migrateTabKey;
+const plain = o => JSON.parse(JSON.stringify(o));
 
 test('migrateTabKey: removed tabs map onto the new tab set', () => {
-  assert.deepEqual(migrateTabKey('demand'), { tab: 'growth' });
-  assert.deepEqual(migrateTabKey('census'), { tab: 'growth', gSub: 'census2051' });
-  assert.deepEqual(migrateTabKey('criteria'), { tab: 'overview' });
-  assert.deepEqual(migrateTabKey('log'), { tab: 'overview' });
+  assert.deepEqual(plain(migrateTabKey('demand')), { tab: 'growth' });
+  assert.deepEqual(plain(migrateTabKey('census')), { tab: 'growth', gSub: 'areas' });
+  assert.deepEqual(plain(migrateTabKey('criteria')), { tab: 'overview' });
+  assert.deepEqual(plain(migrateTabKey('log')), { tab: 'overview' });
 });
 
-test('migrateTabKey: current and legacy tabs are untouched or mapped as before', () => {
-  for (const t of ['overview', 'growth', 'water', 'ww', 'svc', 'dca', 'dev', 'records']) {
-    assert.deepEqual(migrateTabKey(t), { tab: t }, `changed current tab ${t}`);
-  }
-  // SPEC §5: Servicing ('svc', resolved by showFootTab to its last half); the Developments and Tool
-  // result tabs are gone (their content is the left panel's In view list and the result scopes).
-  assert.deepEqual(migrateTabKey('developments'), { tab: 'overview' });
-  assert.deepEqual(migrateTabKey('tool'), { tab: 'overview' });
-  assert.deepEqual(migrateTabKey('plants'), { tab: 'ww', wwSub: 'plants' });
+test('migrateTabKey: current tabs are untouched; the Wastewater / Water halves are Servicing', () => {
+  for (const t of ['overview', 'growth', 'svc', 'dca', 'records']) assert.deepEqual(plain(migrateTabKey(t)), { tab: t }, `changed current tab ${t}`);
+  assert.deepEqual(plain(migrateTabKey('developments')), { tab: 'overview' });
+  assert.deepEqual(plain(migrateTabKey('tool')), { tab: 'overview' });
+  assert.deepEqual(plain(migrateTabKey('dev')), { tab: 'overview' });
+  assert.deepEqual(plain(migrateTabKey('plants')), { tab: 'svc', svcSub: 'capacity' });
+  assert.deepEqual(plain(migrateTabKey('ww')), { tab: 'svc', svcSub: 'capacity' });
+  assert.deepEqual(plain(migrateTabKey('water', 'zones')), { tab: 'svc', svcSub: 'network' });
 });
 
 test('migrateTabKey is applied to the stored tab pref and to share links', () => {
-  assert.ok(APP.includes('const m = migrateTabKey(footPref); footPref = m.tab;'), 'stored footPref not migrated');
-  assert.ok(APP.includes('AT().migrateTabKey(q.get(\'t\'))'), 'share-link t param not migrated');
+  assert.ok(APP.includes('const old = footPref, m = migrateTabKey(footPref); footPref = m.tab;'), 'stored footPref not migrated');
+  assert.ok(APP.includes('const m = AT().migrateTabKey(t, oldSub);'), 'share-link t param not migrated');
 });
 
-test('sub-view defaults: gSub pipeline, dcSub timing (and the old water/ww defaults kept)', () => {
-  for (const d of [`store.get('gSub', 'pipeline')`, `store.get('dcSub', 'timing')`,
-    `store.get('wwSub', 'plants')`, `store.get('wSub', 'capacity')`]) {
+test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Records sources', () => {
+  for (const d of [`store.get('gSub', 'pipeline')`, `store.get('dcSub', 'timing')`, `store.get('svcSub', null)`, `store.get('rSub', 'sources')`]) {
     assert.ok(APP.includes(d), `default missing: ${d}`);
   }
+  // Stored picks from before Stage 2 (wwSub / wSub) map onto the Servicing sub-views.
+  assert.ok(APP.includes(`store.get(sys === 'water' ? 'wSub' : 'wwSub', '')`), 'old ww / water sub-view prefs not migrated');
 });
 
-test('sub-view valid values cover the new sub-views', () => {
-  assert.ok(APP.includes(`valid: ['pipeline', 'census2051', 'timing', 'byplan']`), 'growth valid values wrong');
-  assert.ok(APP.includes(`valid: ['timing', 'build', 'eas', 'recommendations', 'funding']`), 'dca valid values wrong');
-  assert.ok(APP.includes(`'hydro'`), 'hydro not a valid water sub-view');
-  assert.ok(APP.includes(`'pumpstations'`), 'pumpstations not a valid ww sub-view');
+test('sub-view valid values: at most four per tab', () => {
+  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'alloc', 'checks']);
+  assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'projects', 'eas', 'funding']);
+  assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);
 });
 
 test('sub-view persistence: picks are stored and restored', () => {
-  // Persistence goes through the TABSUBS table: each entry names its store key,
-  // and both the subtab click handler and openAnalysis write through it.
-  for (const s of [`store: 'gSub'`, `store: 'dcSub'`, `store: 'wSub'`, `store: 'wwSub'`]) {
+  for (const s of [`store: 'gSub'`, `store: 'dcSub'`, `store: 'svcSub'`, `store: 'rSub'`]) {
     assert.ok(APP.includes(s), `store key missing from TABSUBS: ${s}`);
   }
   assert.ok(APP.includes('store.set(s.store, v)'), 'subtab clicks do not persist');
@@ -100,43 +109,33 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
     'data-tab="criteria"', 'data-tab="log"', 'data-tab="census"', 'Settings &amp; sources', '>Demand</button>']) {
     assert.ok(!HTML.includes(gone), `still present: ${gone}`);
   }
-  assert.ok(/id="ftab-growth"[^>]*>Growth</.test(HTML), 'Growth tab button missing/renamed wrong');
-  // SPEC §5: the same five tabs at every scope — Overview · Growth · Servicing · Capital · Records.
-  const tabs = [...HTML.matchAll(/<button type="button" role="tab" class="f-tab" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => [m[1], m[2]]);
-  assert.deepEqual(tabs, [['overview', 'Overview'], ['growth', 'Growth'], ['svc', 'Servicing'], ['dca', 'Capital'], ['records', 'Records']]);
-  for (const kept of ['data-tab="overview"', 'data-tab="growth"', 'data-tab="svc"', 'data-tab="dca"', 'data-tab="records"', 'data-pane="water"', 'data-pane="ww"']) {
-    assert.ok(HTML.includes(kept), `missing tab: ${kept}`);
-  }
-  // SPEC §3: no Tool result tab, no #detail aside; results open in the right panel's scope host.
-  for (const gone of ['data-tab="tool"', 'id="pane-tool"', 'id="detail"', 'id="detail-body"', 'id="ftab-water"', 'id="ftab-ww"', 'id="ftab-dev"', 'id="pane-dev"']) assert.ok(!HTML.includes(gone), `still present: ${gone}`);
+  // Stage 2: four tabs at every scope, then Records as a small trailing tab.
+  const tabs = [...HTML.matchAll(/<button type="button" role="tab" class="f-tab( f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => [m[2], m[3], !!m[1]]);
+  assert.deepEqual(tabs, [['overview', 'Overview', false], ['growth', 'Growth', false], ['svc', 'Servicing', false], ['dca', 'Capital', false], ['records', 'Records', true]]);
+  for (const gone of ['data-tab="tool"', 'id="pane-tool"', 'id="detail"', 'id="detail-body"', 'id="ftab-water"', 'id="ftab-ww"', 'id="ftab-dev"', 'id="pane-dev"', 'data-pane="water"', 'data-pane="ww"', 'data-wwsub', 'data-wsub']) assert.ok(!HTML.includes(gone), `still present: ${gone}`);
   assert.ok(HTML.includes('<div id="scope-body" class="scope-body" hidden aria-live="polite"></div>'), 'scope host');
 });
 
-test('index.html: growth sub-views', () => {
-  assert.ok(HTML.includes('data-gsub="pipeline"') && HTML.includes('>Pipeline</button>'), 'pipeline subtab missing');
-  assert.ok(HTML.includes('data-gsub="census2051"') && HTML.includes('Census &amp; 2051'), 'census2051 subtab missing');
-  assert.ok(HTML.includes('data-gsub="timing"') && HTML.includes('>Timing</button>'), 'timing subtab missing');
-  assert.ok(HTML.includes('id="pane-growth-pipeline"') && HTML.includes('data-sub="pipeline"'), 'pipeline pane missing');
-  assert.ok(HTML.includes('id="pane-growth-census"') && HTML.includes('data-sub="census2051"'), 'census pane missing');
-  assert.ok(HTML.includes('id="pane-growth-timing"') && HTML.includes('data-sub="timing"'), 'timing pane missing');
+test('index.html: growth sub-views (Pipeline · Areas · Timing)', () => {
+  assert.ok(HTML.includes('data-gsub="pipeline">Pipeline</button>') && HTML.includes('data-gsub="areas">Areas</button>') && HTML.includes('data-gsub="timing">Timing</button>'));
+  assert.ok(HTML.includes('id="pane-growth-byplan" data-pane="growth" data-sub="areas"'), 'plan tables in Areas');
+  assert.ok(HTML.includes('id="pane-growth-census" data-pane="growth" data-sub="areas"'), 'census & 2051 in Areas');
   assert.ok(HTML.includes('id="growth-pipeline-body"') && HTML.includes('id="growth-census-body"') && HTML.includes('id="timing-body"'), 'growth body divs missing');
   assert.ok(HTML.includes('js/timing.js?v=__BUILD__'), 'timing.js script tag missing');
 });
 
-test('index.html: water hydraulic check and ww pumping stations sub-views', () => {
-  assert.ok(HTML.includes('data-wsub="hydro"') && HTML.includes('Hydraulic check (beta)'), 'hydro subtab missing');
-  assert.ok(HTML.includes('id="pane-hydro"') && HTML.includes('id="hyd-box"'), 'hydro pane/body missing');
-  assert.ok(HTML.includes('data-wwsub="pumpstations"') && HTML.includes('>Pumping stations</button>'), 'pumpstations subtab missing');
-  assert.ok(HTML.includes('id="pane-pumpstations"') && HTML.includes('id="pumpstations-body"'), 'pumpstations pane/body missing');
+test('index.html: Servicing sub-views, the hydraulic check behind Labs, pumping stations in Network', () => {
+  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['alloc', 'Allocations'], ['checks', 'Checks']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
+  assert.ok(/class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="checks"/.test(HTML) && HTML.includes('id="hyd-box"'), 'hydro pane in Checks, Labs');
+  assert.ok(HTML.includes('id="pane-pumpstations" data-pane="svc" data-sub="network"') && HTML.includes('id="pumpstations-body"'), 'pumping stations in Network');
 });
 
-test('index.html: DC sub-views', () => {
-  for (const [sub, label] of [['timing', 'Timing'], ['recommendations', 'Funding screen'], ['funding', 'Funding levels']]) {
-    assert.ok(HTML.includes(`data-dcasub="${sub}"`) && HTML.includes(`>${label}</button>`), `DC subtab ${sub} missing`);
-  }
+test('index.html: Capital sub-views (Timing · Projects · EAs; Funding in Labs)', () => {
+  for (const [sub, label] of [['timing', 'Timing'], ['projects', 'Projects'], ['eas', 'EAs']]) assert.ok(HTML.includes(`data-dcasub="${sub}">${label}</button>`), `DC subtab ${sub} missing`);
+  assert.ok(HTML.includes('data-dcasub="funding">Funding <small>Labs</small></button>'), 'Funding chip (Labs)');
   assert.ok(HTML.includes('id="pane-dca-timing"') && HTML.includes('id="dca-timing-body"'), 'dca timing pane/body missing');
-  assert.ok(HTML.includes('id="pane-dca-rec"') && HTML.includes('id="dca-rec-body"'), 'dca recommendations pane/body missing');
-  assert.ok(HTML.includes('id="pane-dca-funding"') && HTML.includes('id="dca-funding-body"'), 'dca funding pane/body missing');
+  assert.ok(HTML.includes('id="pane-dca-rec" data-pane="dca" data-sub="funding"') && HTML.includes('id="dca-rec-body"'), 'screening results in Funding');
+  assert.ok(HTML.includes('id="pane-dca-funding" data-pane="dca" data-sub="funding"') && HTML.includes('id="dca-funding-body"'), 'funding levels in Funding');
   assert.ok(!HTML.includes('id="pane-dca"'), 'old single DC pane still present');
   assert.ok(!HTML.includes('id="dca-body"'), 'old dca-body still present');
 });

@@ -31,7 +31,7 @@
     const cur = typeof DevScope !== 'undefined' && DevScope._current;
     if (cur !== p) { PDT().focusProject(p); await new Promise(r => setTimeout(r, 500)); }
     if ((tab === 'dev' || tab === 'overview') && sub && window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(sub);
-    if (tab === 'ww') AT().setSub('ww', 'catchments');
+    if (tab === 'ww') { tab = 'svc'; AT().setSub('svc', 'network'); }
     openAnalysis(tab);
   };
   // The first of these that is on screen (phones hide some panels behind a button).
@@ -57,10 +57,10 @@
     { ch: 'Present', el: () => $('#tb-present'), t: 'Present and time-lapse', b: 'Present ▾ in the top bar has both. Present fills the screen with the map and the headline numbers of whatever is open (Peel, an area, a plant or a development), in the light theme for projectors, with the screening note and the data date — Exit or Esc leaves. Time-lapse replays growth year by year from 2016 in presentation mode: press play, or drag the year scrubber. Marker colours are each development\u2019s phase at the end of that year, read from the dated milestones on its files.' },
     { ch: 'A development', do: () => { if (typeof DevScope !== 'undefined') DevScope.close(); tourScopeDev(); }, wait: 700, el: () => $('#site-bar'), t: 'A development', b: 'Tap any marker. The site bar shows the address, phase, key numbers and zone → plant — and every analysis tab now shows this site. ☆ Watch follows it in This week; Memo prints a one-page servicing memo; Check FSR cross-checks consultant FSR figures against the app numbers; Compare adds it to the Compare tool.' },
     { ch: 'A development', do: () => tourShow('overview', 'files'), wait: 500, el: () => vis('#ov-dev', '#pane-overview', '#analysis'), t: 'Overview: the development', b: 'Units, people and jobs with their floor area, and the flows: water max day, wastewater average and peak dry weather, and peak wet weather. Below: About (proposal, status, latest decision, servicing report), Files & history (every application, how the phase was set, dated history and source records) and Site (the aerial check, ground and stormwater).' },
-    { ch: 'A development', do: () => tourShow('ww'), wait: 500, el: () => vis('#pane-ww', '#analysis'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with its pumping stations, and the plant\'s reserve (sewer pipes themselves are not assessed): screening estimates, with the Region\u2019s models as the authority. The Water tab has the same for the supply; Growth has the units.' },
+    { ch: 'A development', do: () => tourShow('ww'), wait: 500, el: () => vis('#pane-ww', '#analysis'), t: 'Wastewater', b: 'Flows, the sewer path to the plant with its pumping stations, and the plant\'s reserve (sewer pipes themselves are not assessed): screening estimates, with the Region\u2019s models as the authority. Servicing has the same for the water supply; Growth has the units.' },
     { ch: 'A development', do: () => { const b = document.querySelector('#site-bar [data-trace]'); if (b && !b.dataset.on) b.click(); }, wait: 2500, el: () => $('#map'), t: 'A trace on the map', b: 'The path to the plant, with arrows showing the flow; the other developments fade. Tap a catchment, zone, plant or sewer for the developments draining through it, in the Tool result tab — with actions for an area report or the upstream catchments.' },
     { ch: 'Analysis', do: () => { AS().clearSelected(); openAnalysis('overview'); }, wait: 500, el: () => $('#analysis'), t: 'Analysis', b: 'The totals for what is on the map, and the capacity that runs out first, with its DC relief.' },
-    { ch: 'This week', do: () => { const b = $('#tab-btn-week'); if (b) b.click(); }, el: () => vis('#tab-week', '#toggle-sidebar'), t: 'This week: watchlist and alerts', b: 'Star developments with \u2606 Watch to follow them here. Every Monday the site compares the new data with the previous week and posts alerts \u2014 phase changes, new or removed developments, big unit-count changes, and capacity thresholds crossed \u2014 matched against your watchlist in the alerts panel, with a count badge on this tab. The full feed is also published as data/alerts.rss.' },
+    { ch: 'This week', do: () => { if (DT() && DT().showTab) DT().showTab('week'); }, el: () => vis('#tab-week', '#toggle-sidebar'), t: 'This week: watchlist and alerts', b: 'Star developments with \u2606 Watch to follow them here. Every Monday the site compares the new data with the previous week and posts alerts \u2014 phase changes, new or removed developments, big unit-count changes, and capacity thresholds crossed \u2014 matched against your watchlist in the alerts panel, with a count badge on this tab. The full feed is also published as data/alerts.rss.' },
     { ch: 'Analysis', el: () => document.querySelector('.analysis-tabs'), t: 'Tabs', b: 'Overview for the headlines and what needs attention; Growth for the pipeline and the census story; Water and Wastewater for capacity by sub-view (plants, zones, facilities, pumping stations); DC for timing, the funding screen and funding levels (screening results, not Region decisions; the public version shows timing only; every planned date shows its status after the May 2026 pause). Plants, pumping stations, blocks and zones open as scopes of their own (tap one on the map, a plant in the Overview\'s capacity bars, or search): the trail then reads Peel › plant › station or block. Each tab has sub-views picked with buttons: headline, tiles, chart, top table, method note.' },
     { ch: 'Analysis', do: () => { openAnalysis('growth', 'timing'); }, wait: 600, el: () => $('#pane-growth-timing'), t: 'Timing forecast', b: 'Growth\u2019s Timing sub-view is a statistical screening estimate of WHEN the pipeline builds out: expected completions per year with a low / likely / high band, calibrated from the dated file events since 2016 by municipality and building type \u2014 plus plant and pressure-zone trigger years with a range instead of a single year.' },
     // Phase 3b: Help's only home is the topbar button (the map ? control was removed).
@@ -72,8 +72,8 @@
   const openAnalysis = (tab, sub) => { if (sub && AT().TABSUBS[tab]) { AT().TABSUBS[tab].set(sub); store.set(AT().TABSUBS[tab].store, sub); } AT().setFootPref(tab); store.set('footTab4', tab); AT().showFootTab(tab); if (DT().shellNarrow() && App().getAnalysisSnap() === 'peek') App().setAnalysisSnap('half'); };
   const HELP = [
     { t: 'Check servicing for a development', w: 'Reviewing an application, an FSR or a pre-consultation.',
-      s: ['Tap its marker, or search its address or file number — the site bar appears and every analysis tab now shows this site.', 'Water and Wastewater tabs: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow. The Development tab\u2019s Site view has stormwater and ground.', 'Memo (in the site bar) prints a one-page servicing memo.'],
-      go: () => { const p = pickDev(); if (!p) return; toMap(); PDT().focusProject(p); setTimeout(() => AT().showFootTab('ww'), 50); } },
+      s: ['Tap its marker, or search its address or file number — the site bar appears and every analysis tab now shows this site.', 'Servicing tab: water max day / peak hour and wastewater peak dry / wet at Peel criteria, the sewer path to the plant with pumping stations, and the plant\'s uncommitted reserve.', 'DC needs: the existing pipes, stations and plant it relies on — room left, the year it runs out, and the DC project that relieves it.', 'Existing mains: every main within 100–400 m with size, material, year and street (tap one to see it), plus fire flow. The Development tab\u2019s Site view has stormwater and ground.', 'Memo (in the site bar) prints a one-page servicing memo.'],
+      go: () => { const p = pickDev(); if (!p) return; toMap(); PDT().focusProject(p); setTimeout(() => AT().showFootTab('svc', 'network'), 50); } },
     { t: 'Find when DC projects are needed', w: 'DC background study, capital timing, or explaining why a site waits for a trunk sewer.',
       s: ['Switch to the DC map view: developments coloured by servicing timing, all 2026 DC works shown.', 'More settings (in the Layers panel) → DC timing: every existing constraint, filtered to "Screens late".', 'Tap a DC main or facility on the map for what it relieves and the developments relying on it.', 'Export (top bar) → Excel writes the full DC timing table for a memo or spreadsheet.'],
       go: () => { MA().setMapView('dc'); SC().loadSewers(); MP().showDcTiming(); } },
@@ -87,11 +87,11 @@
       s: ['This week tab: new files and phase changes from the latest weekly update.', '☆ Watch on any development adds it to Your watchlist (top of This week).', 'More filters → ★ Watched or Changed this week shows just those on the map.', 'Save the setup with Saved views (Layers & style).'],
       go: () => { if (DT().shellNarrow()) DT().toggleSidebar(true); DT().showTab('week'); } },
     { t: 'Plant and pumping station capacity over time', w: 'Allocation, servicing capacity reports, staging.',
-      s: ['Analysis → Wastewater → Plants & capacity: each plant\'s flow as a share of rated capacity by year (Horizon years), the 90% expansion trigger and the DC expansions.', 'Capacity layer (Layers & style → Shade): pumping station load or sewer pipe capacity, with a year slider in the legend.', 'The Scenario line switches design flows (ADWF) vs the 2025 measured annual average flows, the Booth → Clarkson diversion and more.', 'Pumping stations are checked on peak wet weather flow against firm capacity; Definitions (Overview ⓘ) explains committed, reserve and room.'],
-      go: () => { MA().setMapView('wastewater'); openAnalysis('ww', 'plants'); } },
+      s: ['Servicing › Capacity: each plant\'s flow as a share of rated capacity by year (Horizon years), the 90% expansion trigger and the DC expansions.', 'Capacity layer (Layers & style → Shade): pumping station load or sewer pipe capacity, with a year slider in the legend.', 'The Scenario line switches design flows (ADWF) vs the 2025 measured annual average flows, the Booth → Clarkson diversion and more.', 'Pumping stations are checked on peak wet weather flow against firm capacity; Definitions (Overview ⓘ) explains committed, reserve and room.'],
+      go: () => { MA().setMapView('wastewater'); openAnalysis('svc', 'capacity'); } },
     { t: 'Water demand by pressure zone', w: 'Zone growth, storage and supply checks.',
-      s: ['Water view: pressure zones shaded by max day growth.', 'Analysis → Water: census, built, committed and proposed max day by zone, reported plant production and the master plan storage assessment.', 'Tap a zone row or a zone on the map for What loads this — every development adding demand.'],
-      go: () => { MA().setMapView('water'); openAnalysis('water'); } },
+      s: ['Water view: pressure zones shaded by max day growth.', 'Servicing › Network: on the system, built, approved and in-review max day by zone; Servicing › Checks has the reported plant production and the Master Plan storage assessment.', 'Tap a zone row or a zone on the map for What loads this — every development adding demand.'],
+      go: () => { MA().setMapView('water'); openAnalysis('svc', 'network'); } },
     { t: 'Existing mains and ground near a site', w: 'Connection options, a site visit, or a quick constraint check.',
       s: ['Layers → Existing pipes (from street zoom); More settings → Existing for water, sanitary or storm, and Size labels for diameters.', 'A development\'s Servicing tab lists every main around it with street and distance.', 'The Measure & ground profile tool (map rail): tap points for the distance and the ground profile with fall and grade.'],
       go: () => { toMap(); AC().closeDetail(); Msr().setTool('measure'); } },
@@ -102,21 +102,56 @@
       s: ['Flows use Peel design criteria (editable in the Scenario control); the Scenario bar says which switches are on.', 'Capacity checks are screens, not hydraulic models: sewer capacity is full-pipe Manning on the published slope; "Check the data" flags likely slope errors.', 'The 2026 DC capital maps are a draft; schedules change annually.', 'Data tab: sources, dates and the weekly snapshot.'],
       go: () => { toMap(); TB().openScenPop(); } },
   ];
+  // Stage 5: "What moved where", one page for people who knew the app before the redesign. Each row:
+  // [what you used, where it is now]. Old links and saved views still open the equivalent view.
+  const MOVED = [
+    { h: 'Where the app opens', rows: [
+      ['The map with every tool', 'Full map (all tools), from Home or the top of every page. Settings › Start screen can open it straight away.'],
+      ['(new)', 'Home, a briefing of what needs attention, and the workspaces (Check a site, Servicing capacity, Growth in an area, Review an FSR, Study area, This week, Projects, Old pipes). Each opens a page; its "Open the map" shows the map with only its layers.'],
+    ] },
+    { h: 'The analysis tabs', rows: [
+      ['Servicing › the Wastewater and Water chip rows (four each)', 'One row for both: Capacity · Network · Allocations · Checks.'],
+      ['Wastewater › Plants & capacity; Water › Treatment & capacity', 'Servicing › Capacity: one table for plants, pumping stations and storage, with the limit year and room.'],
+      ['Wastewater › Blocks and Pumping stations; Water › Pressure zones', 'Servicing › Network ("What loads this?" and "Show upstream" are there).'],
+      ['Wastewater › Allocations', 'Servicing › Allocations.'],
+      ['Water › Facilities', 'Servicing › Checks.'],
+      ['Water › Hydraulic check (beta)', 'Settings › Labs; once on, it is under Servicing › Checks.'],
+      ['Growth › Census & 2051 and By plan', 'Growth › Areas.'],
+      ['Units on permit records vs Region figures (Growth › Census & 2051)', 'Records › Checks.'],
+      ['Capital › DC timing', 'Capital › Timing.'],
+      ['Capital › Construction', 'Capital › Projects.'],
+      ['Capital › Funding screen and Funding levels', 'Settings › Labs (DC funding); once on, Capital › Funding.'],
+      ['A development’s Files & history', 'Records › Files (Records is the small last tab, also in the Settings gear).'],
+      ['3D view, Time Box, SWMM export, Batch test sites', 'Settings › Labs.'],
+      ['Heatmap; gas and hydro layers', 'Removed.'],
+    ] },
+    { h: 'Words and controls', rows: [
+      ['Committed / Proposed / Anticipated switches in the top bar', 'The Scenario control: Count "approved only · + in review · + pre-application".'],
+      ['Existing', 'On the system (2021 census).'],
+      ['Built', 'Built since 2021.'],
+      ['Committed', 'Approved, not yet built (committed); "Approved" in table heads.'],
+      ['Proposed', 'In review.'],
+      ['Anticipated', 'Pre-application.'],
+      ['Each panel’s own layout', 'Every panel reads the same way: the answer, up to four figures, short lists, then Method and basis and Sources. Open full table shows the detailed table; Report a data issue is at the foot of every panel.'],
+    ] },
+  ];
+  const movedHTML = () => `<p class="small muted">For people who used the app before the four tabs and the workspaces. Old links and saved views still open the equivalent view.</p>${MOVED.map(g => `<h4>${esc(g.h)}</h4><table class="moved-t small"><thead><tr><th>You used</th><th>Now</th></tr></thead><tbody>${g.rows.map(([a, b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`).join('')}`;
   const QUICK_TIPS = [
     'Tap an empty part of the map, press Esc, or use Clear selection to unselect.',
     'Press and hold (or hover) a heading or label for what it means and where the data comes from.',
     'The north arrow switches between Peel’s road grid and north up.',
     'Search a DC project number (e.g. 25-2269) or a pumping station to jump to it.',
-    'Hover a cluster for its phase counts; More settings (in the Layers panel) → Show as → Heatmap shows where people and jobs concentrate.',
+    'Hover a cluster for its phase counts.',
     'The summary line above the Analysis tabs always shows the totals for what is on the map.',
-    'Tables in the Water and Wastewater tabs keep their headers while you scroll.',
+    'Tables in the Servicing tab keep their headers while you scroll.',
     'The PDFs under Export (top bar) — executive briefing, development memo, area report, comparison — open a print-ready page: use Print / Save as PDF.',
     'On a phone or tablet, Filters opens the search, filters and the developments on the map; tap it again to go back to the map.',
   ];
   function showHelp() {
     root.PeelSvcScope.openResult({ ref: 'help:help', title: 'Help & tips', reopen: showHelp, html: `<div class="head"><h3>Help &amp; tips</h3><div class="m">Guides for common tasks — each one can set the map up for you</div></div>
-      <p><button type="button" class="btn" data-help-tour>Take the tour again</button> <button type="button" class="btn" data-help-log>What's new — change log</button></p>
+      <p><button type="button" class="btn" data-help-tour>Take the tour again</button> <button type="button" class="btn" data-help-log>What's new — change log</button> <button type="button" class="btn" data-help-moved>What moved where</button></p>
       <div id="help-log-body" aria-live="polite"></div>
+      <details class="help-card help-moved" id="help-moved"><summary><strong>What moved where</strong><small>For existing users: where each tab, sub-view and control is now.</small></summary>${movedHTML()}</details>
       ${HELP.map((h, i) => `<details class="help-card"${i === 0 ? ' open' : ''}><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
         <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me</button></details>`).join('')}
       <h3 class="sub-title">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` });
@@ -131,6 +166,7 @@
   }
   document.addEventListener('click', e => {
     if (e.target.closest('[data-help-open]')) return showHelp();
+    if (e.target.closest('[data-help-moved]')) { if (!$('#help-moved')) showHelp(); const d = $('#help-moved'); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); } return; }
     if (e.target.closest('[data-help-tour]')) { AC().closeDetail(); return startTour(); }
     // Phase 3b: Help carries the change log too — same destination as the gear menu's Change log.
     if (e.target.closest('[data-help-log]')) { CL().renderChangelog(); const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
@@ -208,7 +244,7 @@
     const nx = tourEl.querySelector('[data-tour-next], [data-tour-help]'); if (nx) nx.focus({ preventScroll: true });
   }
 
-  const api = { maybeTour, showHelp, showHelpLog, openAnalysis, startTour };
+  const api = { maybeTour, showHelp, showHelpLog, openAnalysis, startTour, MOVED, movedHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTips = api;
 })(typeof window !== 'undefined' ? window : globalThis);

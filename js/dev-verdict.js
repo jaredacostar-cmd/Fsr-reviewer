@@ -121,7 +121,7 @@
   // pipe and DC links are js/tool-scope.js's (handled once).
   document.addEventListener('click', e => {
     const g = e.target.closest('[data-foot-tab]');
-    if (g) { AT().showFootTab(g.dataset.footTab); return; }
+    if (g) { const [tab, sub] = g.dataset.footTab.split(':'); AT().openTab(tab, sub); return; }   // "tab" or "tab:sub-view"
     if (e.target.closest('#scope-body') && e.target.closest('[data-pipe], [data-dcn-all], [data-dcn-cons], [data-dcn-relief], [data-dcn-filter]')) return;
     const pb = e.target.closest('[data-pipe]');
     if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }

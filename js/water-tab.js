@@ -20,7 +20,7 @@
     const growth = wMax(zsum.approved + zsum.proposed, (zsum.japproved || 0) + (zsum.jproposed || 0));
     const tiles = `<div class="ov-tiles">${wTile(fmt1(boTot), 'ML/d', 'maximum day at build-out', 'all pressure zones')}`
       + `${wTile(fmt1(phTot), 'ML/d', 'peak hour at build-out')}`
-      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + proposed', 'maximum day growth')}`
+      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + in review', 'maximum day growth')}`
       + `${sorted[0] ? wTile(esc(sorted[0].r.a.name.replace('Pressure zone ', 'Zone ')), '', 'adds the most demand', `+${fmt1(Math.max(0, sorted[0].bo - wMax(sorted[0].r.l.census, 0)))} ML/d max day`) : ''}</div>`;
     const top10 = sorted.slice(0, 10), mx = Math.max(...top10.map(t => t.bo), 1e-9);
     const chart = `<div data-info="pressure-zone" role="img" aria-label="Maximum day demand by pressure zone at build-out">`
@@ -49,7 +49,7 @@
       return null;
     };
     const bo = at(ph.end), room = cap - bo;
-    return { room, roomPct: cap > 0 ? room / cap * 100 : null, c80: cross(0.8), c90: cross(0.9), c100: cross(1) };
+    return { room, roomPct: cap > 0 ? room / cap * 100 : null, c80: cross(0.8), c90: cross(0.9), c100: cross(1), at };
   };
   // Storage: the Master Plan's required-vs-available series by year. Room left at the last
   // year; the crossing years linearly interpolate when required reaches 80 / 90 / 100% of
@@ -180,17 +180,12 @@
     const R = App().state.reports; if (!R) return '';
     return caledonGroundwaterHTML(R);
   };
-  function waterCapHTML(M) {
+  // Pumping into each pressure zone (and the zones above it): firm capacity of the pump groups
+  // lifting into the zone against the zones' maximum day, layered (also Servicing › Capacity).
+  function pumpRows(M) {
     M = M || App().state.svcModel;
-    const R = App().state.reports; if (!M || !R || !App().state.servicing) return '';
-    if (!WT().WF.data) { WT().loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
-    const Y = M.Y, sp = R.water.southPeel, lake = MP().lakeZones().filter(id => MP().zLevel(SD().svcById.get(id).zone) <= 7);
-    const treat = [WT().waterCapRow(M, 'South Peel (A.P. Kennedy + Lorne Park)', MP().lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
-    // South Peel's totals from the one capacity function (js/capacity.js), as the Overview and the DC
-    // tab count them; the census / built split stays the model's.
-    const kSP = window.PeelCapacity && window.PeelCapacity.of('wsys:southPeel');
-    if (treat[0] && kSP) { const r = treat[0], t0 = r.v[0] + r.v[1], sc = t0 > 0 ? kSP.existing / t0 : 1; r.v = [r.v[0] * sc, r.v[1] * sc, kSP.committed - kSP.existing, kSP.buildout - kSP.committed]; }
-    for (const z of App().state.servicing.zones) { const s = MP().wellSystem[z.zone] && R.water.caledon.find(x => x.name === MP().wellSystem[z.zone]); if (s) treat.push(WT().waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
+    if (!M || !App().state.servicing || !WT().WF.data) return [];
+    const lake = MP().lakeZones().filter(id => MP().zLevel(SD().svcById.get(id).zone) <= 7);
     const pumps = WT().wfPumps();
     const pump = [];
     for (let n = 1; n <= 7; n++) {
@@ -199,6 +194,20 @@
       const r = WT().waterCapRow(M, n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, `${into.length} pump group${into.length === 1 ? '' : 's'}: ${into.map(p => p.label).join(', ')}`, 'firm');
       if (r) pump.push(r);
     }
+    return pump;
+  }
+  function waterCapHTML(M) {
+    M = M || App().state.svcModel;
+    const R = App().state.reports; if (!M || !R || !App().state.servicing) return '';
+    if (!WT().WF.data) { WT().loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
+    const Y = M.Y, sp = R.water.southPeel;
+    const treat = [WT().waterCapRow(M, 'South Peel (A.P. Kennedy + Lorne Park)', MP().lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
+    // South Peel's totals from the one capacity function (js/capacity.js), as the Overview and the DC
+    // tab count them; the census / built split stays the model's.
+    const kSP = window.PeelCapacity && window.PeelCapacity.of('wsys:southPeel');
+    if (treat[0] && kSP) { const r = treat[0], t0 = r.v[0] + r.v[1], sc = t0 > 0 ? kSP.existing / t0 : 1; r.v = [r.v[0] * sc, r.v[1] * sc, kSP.committed - kSP.existing, kSP.buildout - kSP.committed]; }
+    for (const z of App().state.servicing.zones) { const s = MP().wellSystem[z.zone] && R.water.caledon.find(x => x.name === MP().wellSystem[z.zone]); if (s) treat.push(WT().waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
+    const pump = pumpRows(M);
     const boPct = r => r.v.reduce((a, b) => a + b, 0) / r.rated * 100;
     const tight = [...treat, ...pump].filter(Boolean).map(r => ({ r, c: (r.v[0] + r.v[1] + r.v[2]) / r.rated, b: boPct(r) / 100 })).sort((a, b) => b.b - a.b)[0];
     const tightPump = pump.map(r => ({ r, b: boPct(r) })).sort((a, b) => b.b - a.b)[0];
@@ -228,6 +237,7 @@
     flowTablesHTML,
     waterDemandFlowsHTML,
     waterRoomTriggerHTML,
+    pumpRows, roomTrigger, storageRoomTrigger,
     waterProductionHTML,
     caledonGroundwaterHTML,
     wTile,
