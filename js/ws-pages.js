@@ -132,6 +132,11 @@
   // estimate is what it has left to build (ofDev().estimated), its share in the area, split over the
   // kinds of estimate it holds. → { units, files: [{ p, share, est, kinds }], byKind }, largest first.
   const EST_KINDS = { online: 'found online', precon: 'pre-consultation estimate', estimate: 'estimate from the wording', permits: 'from building permits' };
+  // Bundle 6: the file an estimated count is on, and a way to see it in the development's tree.
+  function estFileHTML(p) {
+    const FT = root.PeelFileTree, d = FT && FT.of(p), e = d && FT.estimateOf(d); if (!e) return '';
+    return `<small class="tr-sum">the estimate is on <b>${esc(e.ref)}</b>${e.source ? ` (${esc(e.source)})` : ''} · <button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">show it in the tree →</button></small>`;
+  }
   function estimateRows(devs, ofDev) {
     const files = [], byKind = {};
     let units = 0;
@@ -142,6 +147,9 @@
       const raw = parts.reduce((t, x) => t + x.units, 0), kinds = {};
       for (const x of parts) kinds[x.kind] = (kinds[x.kind] || 0) + est * x.units / raw;
       for (const k in kinds) byKind[k] = (byKind[k] || 0) + kinds[k];
+      // (a development counted in two parts of the area is one row: its shares add up)
+      const had = files.find(f => f.p === p);
+      if (had) { had.share += sh; had.est += est; for (const k in kinds) had.kinds[k] = (had.kinds[k] || 0) + kinds[k]; units += est; continue; }
       units += est; files.push({ p, share: sh, est, kinds });
     }
     files.sort((a, b) => b.est - a.est);
@@ -416,13 +424,20 @@
     const STG = Object.fromEntries(STAGES.map(([k, l]) => [k, l]));
     const files = items.map(({ p, share }) => ({ p, share, st: Ly ? stageOf(Ly.ofDev(p)) : null })).filter(x => x.st && (gStage === 'all' || x.st === gStage) && (x.p.units || 0) > 0).sort((x, y) => y.p.units * y.share - x.p.units * x.share);
     const tools = `<div class="seg" role="group" aria-label="Stage"><button type="button" class="btn small${gStage === 'all' ? ' on' : ''}" data-ws-stage="all" aria-pressed="${gStage === 'all'}">All</button>${STAGES.map(([k, l]) => `<button type="button" class="btn small${gStage === k ? ' on' : ''}" data-ws-stage="${k}" aria-pressed="${gStage === k}">${esc(l.replace(' or under construction', ' / building'))}</button>`).join('')}</div>`;
-    const fileRow = x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${esc(STG[x.st] || '')} · ${esc(Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>` });
+    // Bundle 6: each development's stage once (the growth stage, and the site's own stage only where
+    // it says something else), its files in one line and, ▸, how they fit together.
+    const FT = root.PeelFileTree;
+    const stageLine = x => { const a = STG[x.st] || '', b = Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase; return [a, b].filter((v, i, arr) => v && arr.findIndex(w => String(w).toLowerCase() === String(v).toLowerCase()) === i).map(esc).join(' · '); };
+    const treeBits = p => { const d = FT ? FT.of(p) : null; if (!d) return { sum: '', tog: '', open: '' }; const n = (d.n || []).length, on = gOpen.has(p.key), recOf = FT.recLookup(p);
+      return { sum: `<small class="tr-sum">${FT.summaryHTML(d, recOf)}</small>`, tog: n > 1 ? `<button type="button" class="tr-tog" data-tr-tog="${esc(p.key)}" aria-expanded="${on}" title="Show how its files fit together">${on ? '▾' : '▸'}</button>` : '',
+        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : '') })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
+    const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${tb.sum}${tb.open}` }; };
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
     const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
     const pipeU = stage ? (gStage === 'all' ? stage.total : (stage.rows.find(x => x.key === gStage) || {}).units || 0) : 0;
     const estRows = es && es.files.length ? [
       { kv: true, html: `<span><strong>${n0(es.units)}</strong> of ${n0(pipeU)} dwellings${pipeU > 0 ? ` (${Math.round(es.units / pipeU * 100)}%)` : ''} are estimated, in ${fmtNum(es.files.length)} ${es.files.length === 1 ? 'file' : 'files'} with no unit count stated: ${Object.entries(es.byKind).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${n0(v)} ${esc(EST_KINDS[k])}`).join(', ')}. ${es.files.some(x => Object.keys(x.kinds).length > 1) ? ' A file with more than one kind of estimate is split between them in proportion to their units.' : ''} Confirm these counts with the municipality.</span>` },
-      ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>` })),
+      ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${estFileHTML(x.p)}` })),
     ] : [];
     const empRows = emp.planned >= 1 ? [
       { kv: true, html: `<div class="pnl-kv"><span>Floor area planned</span><span>${n0(emp.planned)} m² · ≈${p0(emp.jobs)} jobs</span></div>` },
@@ -456,7 +471,7 @@
       lists: [
         kids.length ? { title: atPeel ? 'By municipality' : n.kind === 'municipality' ? 'Plans (secondary plans, character areas) and the rest' : 'Precincts and sub-areas', rows: kids.map(kidRow), total: kids.length, see: kids.length > 5 ? { 'data-ws-drillall': n.id } : null, all: gAll } : null,
         atPeel ? { title: 'Plans with the most planned units', rows: plans.map(kidRow), total: plans.length, see: { 'data-ws-go': 'growth', 'data-ws-fulltable': 'growth:areas' } } : null,
-        { title: gStage === 'all' ? `Files in ${n.name}` : `${STG[gStage]}: files in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
+        { title: gStage === 'all' ? `Developments in ${n.name}` : `${STG[gStage]}: developments in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
         estRows.length ? { title: gStage === 'all' ? 'Estimated counts: files to confirm' : `${STG[gStage]}: estimated counts`, rows: estRows, total: estRows.length, seeN: es.files.length, see: estRows.length > 5 ? { 'data-ws-estall': '1' } : null, all: gEst } : null,
         empRows.length ? { title: 'Employment', rows: empRows, total: empRows.length } : null,
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
@@ -467,10 +482,13 @@
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
   }
   let gAll = false, gEst = false;
+  // The developments whose file tree is open (▸ on their row).
+  const gOpen = new Set();
   document.addEventListener('click', e => {
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
-    if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
+    if (t.dataset.trTog) { const k = t.dataset.trTog; if (gOpen.has(k)) gOpen.delete(k); else gOpen.add(k); }
+    else if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
     else if (t.dataset.wsStage) gStage = gStage === t.dataset.wsStage ? 'all' : t.dataset.wsStage;
     else if (t.dataset.wsDrillall) gAll = !gAll;
     else if (t.dataset.wsEstall) gEst = !gEst;

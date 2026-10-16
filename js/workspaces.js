@@ -404,6 +404,8 @@
     const pg = e.target.closest('[data-ws-page]');
     if (pg) { e.preventDefault(); openPage(pg.dataset.wsPage); return; }
     const pk = e.target.closest('[data-ws-pick]');
+    // "Its full tree →" / "show it in the tree →": the site on the full map, at Records › Files.
+    if (pk && pk.dataset.wsTree) { e.preventDefault(); setMode('full'); pickDev(pk.dataset.wsPick); setTimeout(() => { const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files'); }, 300); return; }
     if (pk) { e.preventDefault(); const as = pk.dataset.wsAs; pickDev(pk.dataset.wsPick); if (as && as !== page) openPage(as, { keepScroll: true }); else schedule(); return; }
     const un = e.target.closest('[data-ws-unpick]');
     if (un) { if (root.DevScope && root.DevScope.current()) root.DevScope.close(); openPage(un.dataset.wsUnpick); return; }

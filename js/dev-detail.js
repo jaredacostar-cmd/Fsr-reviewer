@@ -417,12 +417,15 @@
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
     // (zoning approved is in the header's status line; the by-law that passed it stays here)
     if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank && p.zoningApproved.bylaws.length) out.push(chip(`Zoning by-law ${esc(p.zoningApproved.bylaws[0])}`));
+    // Bundle 6: links in its file tree made by overlap only (low confidence): one tap to the tree.
+    { const FT = root.PeelFileTree, d = FT && FT.of(p), n = d ? FT.summary(d).check : 0;
+      if (n) out.push(`<button type="button" class="chip chip-link" data-tree-check title="Files linked to this development by overlap only: check them in Records › Files">${n} link${n === 1 ? '' : 's'} to check</button>`); }
     if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
     if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
     if (f) {
       for (const s of f.sps) if (s.wet >= s.firm) out.push(chip(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn'));
       if (f.cap) {
-        if (f.reserve <= 0) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} screens over rated capacity`, 'warn'));
+        if (f.reserve <= 0) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} over rated capacity`, 'warn'));
         else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% with approved`, 'warn'));
       }
     }

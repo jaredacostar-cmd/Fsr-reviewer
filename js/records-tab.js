@@ -110,22 +110,43 @@
   }
   // A development's files: the tree, the history and the source records are the full table.
   function filesPanelSpec(p) {
-    const PN = root.PeelPanel, PH = root.PeelPhases, files = (p.records || []).filter(r => r.kind === 'application'), permits = (p.records || []).filter(r => r.kind === 'permit');
+    const PN = root.PeelPanel, PH = root.PeelPhases, FT = root.PeelFileTree, files = (p.records || []).filter(r => r.kind === 'application'), permits = (p.records || []).filter(r => r.kind === 'permit');
     const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '');
     const sorted = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
+    const plain = t => (PN.typeWords ? PN.typeWords(t) : t);
+    const latest = sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(plain(r.type))}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} units · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`));
+    // Bundle 6: the files as a tree (the tree build), the latest activity under it; the flat list
+    // where the development has no tree entry (Previous counting, or its files changed since the build).
+    const d = FT && FT.of(p);
+    if (d) {
+      const s = FT.summary(d), recOf = FT.recLookup(p), mainN = FT.nodeOf(d, s.root), rr = (mainN && recOf(mainN)) || {};
+      const rootTxt = `<strong>${esc(s.root)}</strong>${rr.type ? ` (${esc(plain(rr.type))}${rr.statusRaw ? `, municipal status: ${esc(rr.statusRaw)}` : ''})` : ''}`;
+      const holds = s.counted.length > 1 ? `The homes (<strong>${fmtNum(s.units)}</strong>) are counted on ${s.counted.length} files, most on ${rootTxt}` : `${rootTxt} holds the <strong>${fmtNum(s.units)}</strong> homes`;
+      return {
+        fullTitle: `${p.title} · files, history and source records`,
+        head: PN.siteHead(p),
+        answer: s.files > 1 ? `<strong>${s.files}</strong> planning files on one site. ${holds}${s.onLand ? `; ${s.onLand} file${s.onLand === 1 ? ' sits' : 's sit'} on its land` : ''}${s.sameLand ? `${s.onLand ? ' and' : ';'} ${s.sameLand} earlier file${s.sameLand === 1 ? '' : 's'} share${s.sameLand === 1 ? 's' : ''} the land` : ''}.` : `One planning file: ${rootTxt}, with <strong>${fmtNum(s.units)}</strong> homes.`,
+        figures: [{ v: s.files, u: 'files', label: 'planning applications', ctx: 'in one tree' }, { v: fmtNum(s.units), u: 'homes', label: 'counted once', ctx: s.counted.length > 1 ? `on ${s.counted.length} files` : `on ${esc(s.root)}` }, { v: permits.length, u: permits.length === 1 ? 'permit' : 'permits', label: 'building permits', ctx: '' }, { v: s.check, u: s.check === 1 ? 'link' : 'links', label: 'to check', ctx: 'linked by overlap only' }],
+        chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">(each under the file whose land holds it)</span></h3>${FT.treeHTML(d, recOf, { dot: k => (root.PeelUtil.dot ? root.PeelUtil.dot(k) : ''), latest: sorted[0] && sorted[0].ref })}`,
+        lists: [{ title: 'Latest activity', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
+        method: 'The tree comes from the weekly tree build: each file sits under the file whose land holds it (by boundary overlap and file type, with a confidence on each link); the homes are counted once, on the root file. A link marked check was made by overlap only. Earlier files on the same land are the site\u2019s history and are not counted. Each file shows the municipality\u2019s own status wording.',
+        sources: `${esc(p.municipality)} open data (applications and permits); the tree build of ${esc(((root.PeelTreeCounts && root.PeelTreeCounts.data && root.PeelTreeCounts.data.snapshotAt) || '').slice(0, 10))}.`,
+        foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } }, secondary: [{ label: 'How approvals work', attrs: { 'data-ws-page': 'approvals' }, title: 'Ontario’s steps, the app’s stages and how the files make a tree' }] },
+      };
+    }
     return {
       fullTitle: `${p.title} · files, history and source records`,
       head: PN.siteHead(p),
       answer: `<strong>${files.length}</strong> planning file${files.length === 1 ? '' : 's'} and <strong>${permits.length}</strong> building permit${permits.length === 1 ? '' : 's'} on this site${p.last ? `; the latest activity ${esc(day(p.last))}` : ''}.`,
       figures: [{ v: files.length, u: 'files', label: 'planning applications', ctx: '' }, { v: permits.length, u: 'permits', label: 'building permits', ctx: '' }],
-      lists: [{ title: 'Files', rows: sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(r.type)}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} units · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`)), total: files.length, seeAll: { 'data-full-table': 'records' } }],
+      lists: [{ title: 'Files', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
       method: 'The files on the land and their history: how the development\u2019s stage was set (the furthest stage reached by a file that is not withdrawn), dated events and the source records with their provenance. Each file shows the municipality\u2019s own status wording.',
       sources: `${esc(p.municipality)} open data (applications and permits), with each record\u2019s source and pull date in the full table.`,
       foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } }, secondary: [{ label: 'How approvals work', attrs: { 'data-ws-page': 'approvals' }, title: 'Ontario’s steps, the app’s stages and how the files make a tree' }] },
     };
   }
 
-  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats };
+  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats, filesPanelSpec };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelRecordsTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

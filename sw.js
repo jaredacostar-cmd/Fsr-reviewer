@@ -42,6 +42,7 @@ const SHELL_ASSETS = [
   'js/app.js',
   'js/approvals-guide.js',
   'js/glossary.js',
+  'js/file-tree.js',
   'js/arcgis.js',
   'js/area-select.js',
   'js/areas.js',
