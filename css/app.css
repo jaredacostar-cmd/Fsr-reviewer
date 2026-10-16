@@ -3256,8 +3256,8 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   .cap-full thead { display: none; }
   .cap-full tbody tr { border: 1px solid var(--border); border-radius: var(--radius-panel); margin: 0 0 var(--space-2); padding: var(--space-2); }
   .cap-full .ft-pin { position: static; box-shadow: none; background: none; padding: 0 0 var(--space-1); }
-  .cap-full tbody td { display: flex; justify-content: space-between; gap: var(--space-2); text-align: right !important; border: 0; padding: 2px 0; white-space: normal; }
-  .cap-full tbody td::before { content: attr(data-l); color: var(--text-muted); text-align: left; }
+  .cap-full tbody td { display: flex; justify-content: flex-end; align-items: baseline; flex-wrap: wrap; gap: 4px var(--space-2); text-align: right !important; border: 0; padding: 2px 0; white-space: normal; }
+  .cap-full tbody td::before { content: attr(data-l); color: var(--text-muted); text-align: left; margin-right: auto; }
   .cap-full tbody td small { display: inline; margin-left: 4px; }
   .cap-full .reach-line { display: none; }
 }
