@@ -77,12 +77,15 @@
   // Plant room after allocations (average dry at the plant's measured rate, ML/d; at the 90% trigger).
   // Bundle 5: room after allocations as a bar from a zero line, left (red) for an over, right for room;
   // the tone by the Overview bars' rule: past the trigger = over, at 85%+ of rated = nearly full (amber).
+  // A small system (Inglewood) in m³/d, as everywhere else: "120 m³/d", not "0.12 ML/d".
+  const small = x => !!(root.PeelUtil.isSmallSystem && x.cap && root.PeelUtil.isSmallSystem(x.cap.rated));
+  const qAbs = x => (small(x) ? fmtNum(Math.round(Math.abs(x.after) * 1000)) : fmt1(Math.abs(x.after))), uOf = x => (small(x) ? 'm³/d' : 'ML/d');
   const allocTone = x => (x.after < 0 ? 'over' : x.cap && x.cap.rated > 0 && (x.lim - x.after) / x.cap.rated >= 0.85 ? 'tight' : 'room');
   const allocWord = x => ({ over: 'over', tight: 'nearly full', room: 'room' }[allocTone(x)]);
   function roomBar(name, x, maxPos, maxNeg, unitTxt) {
     const tot = Math.max(1e-9, maxPos + maxNeg), z = maxNeg / tot * 100, w = Math.abs(x.after) / tot * 100, tone = allocTone(x);
     const left = x.after < 0 ? z - w : z;
-    return `<div class="rb-row t-${tone}"><span class="muted small rb-name">${name}</span><span class="rb-track">${maxNeg > 0 ? `<i class="rb-zero" style="left:${z.toFixed(1)}%"></i>` : ''}<i class="rb-fill" style="left:${left.toFixed(1)}%;width:${w.toFixed(1)}%"></i></span><span class="small rb-v">${x.after < 0 ? `over by ${fmt1(-x.after)} ${unitTxt}` : `${fmt1(Math.max(0, x.after))} ${unitTxt}${tone === 'tight' ? ' · nearly full' : ''}`}</span></div>`;
+    return `<div class="rb-row t-${tone}"><span class="muted small rb-name">${name}</span><span class="rb-track">${maxNeg > 0 ? `<i class="rb-zero" style="left:${z.toFixed(1)}%"></i>` : ''}<i class="rb-fill" style="left:${left.toFixed(1)}%;width:${w.toFixed(1)}%"></i></span><span class="small rb-v">${x.after < 0 ? 'over by ' : ''}${qAbs(x)} ${small(x) ? 'm³/d' : unitTxt}${tone === 'tight' ? ' · nearly full' : ''}</span></div>`;
   }
   const roomBars = plants => { const maxPos = Math.max(0, ...plants.map(x => x.after)), maxNeg = Math.max(0, ...plants.map(x => -x.after)); return `<div class="rb">${plants.map(x => roomBar(esc(SV().PLANT_SHORT[x.pl]), x, maxPos, maxNeg, 'ML/d')).join('')}</div>`; };
   function allocPlant(pl) {
@@ -138,7 +141,7 @@
         answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${fmtNum(ahead.length)} ahead of approval.${short.length ? ` ${short.map(x => esc(SV().PLANT_SHORT[x.pl])).join(' and ')} ${short.length === 1 ? 'has' : 'have'} no room left at the 90% trigger after them.` : ''}` : `${short.length ? `${short.map(x => `<strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> is already ${fmt1(-x.after)} ML/d past its 90% trigger`).join('; ')}, before any allocation. ` : ''}No allocations recorded yet: record one from a development (its ⋯ menu, Record allocation) or import a CSV in the full table.`,
         figures: [{ v: fmtNum(rows.length), u: 'allocations', label: 'recorded', ctx: `${fmtNum(totU)} units` },
           // (an over is a positive "over by", never a negative room: one sign rule, as the bars)
-          ...plants.map(x => ({ v: fmt1(Math.abs(x.after)), u: 'ML/d', label: `${SV().PLANT_SHORT[x.pl]} ${allocWord(x)}`, ctx: `${x.after < 0 ? 'past the 90% trigger ' : 'to the 90% trigger '}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, tone: allocTone(x) }))].slice(0, 4),
+          ...plants.map(x => ({ v: qAbs(x), u: uOf(x), label: `${SV().PLANT_SHORT[x.pl]} ${allocWord(x)}`, ctx: `${x.after < 0 ? 'past the 90% trigger ' : 'to the 90% trigger '}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, tone: allocTone(x) }))].slice(0, 4),
         chart: `<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations <span class="pnl-chart-u">(ML/d)</span></p>${roomBars(plants)}`,
         lists: [{ title: 'Allocations', rows: rows.slice(0, 5).map(r => ({ attrs: r.p ? { 'data-pnl-dev': r.key } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : esc(r.key)}<small>${esc(SV().PLANT_SHORT[r.pl] || '')}${r.a.ref ? ` · ${esc(r.a.ref)}` : ''}</small></span><span class="pnl-r-fig">${fmtNum(r.a.units)}<small>units</small></span></div>` })), total: rows.length, seeAll: { 'data-full-table': 'svc' } }],
         method: `Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ${esc(SvcTab().wwFlowLabel('long'))}. Allocations are kept in this browser (export and import them as CSV in the full table).`,

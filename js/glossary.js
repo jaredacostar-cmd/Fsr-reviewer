@@ -37,6 +37,7 @@
   const BY_KEY = Object.fromEntries(TERMS.map(t => [t[0], t]));
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   // Inside these the text is left alone (a control's label, a link, an existing term).
+  const MAX = 3;
   const SKIP = /^(a|button|select|option|textarea|summary|svg|script|style|code|kbd)$/i;
 
   /** Underlines the first use of each term in html (text only, never inside a tag, link or button).
@@ -54,7 +55,8 @@
       if (skip || !part.trim()) return part;
       let out = part;
       for (const [key, , re] of TERMS) {
-        if (done.has(key)) continue;
+        // (three underlined terms at most per panel: more reads as noise)
+        if (done.has(key) || done.size >= MAX) continue;
         // Only in the text between the marks already made.
         const bits = out.split(/(<span class="gl"[^>]*>[^<]*<\/span>)/);
         let hit = false;
@@ -102,7 +104,7 @@
     addEventListener('scroll', hide, true);
   }
 
-  const api = { TERMS, BY_KEY, mark, page };
+  const api = { TERMS, BY_KEY, MAX, mark, page };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelGlossary = api;
 })(typeof window !== 'undefined' ? window : globalThis);

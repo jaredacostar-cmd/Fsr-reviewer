@@ -3272,7 +3272,8 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .capbar .cb-vals span, .capbar .cb-scale span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
 .capbar .cb-v { color: var(--text-secondary); }
 .capbar .cb-v.cb-bo { color: var(--text-primary); font-weight: 600; }
-.capbar .cb-t { color: var(--text-muted); }
+.capbar .cb-t { color: var(--text-muted); transform: translateX(calc(-100% - 2px)) !important; }
+.capbar .cb-t.cb-100 { transform: translateX(2px) !important; }
 .capbar.sm .cb-vals { display: none; }
 .capbar .lybar { margin: 1px 0; }
 .ly-legend.one-line { flex-wrap: nowrap; overflow-x: auto; gap: var(--space-2); white-space: nowrap; scrollbar-width: none; }
