@@ -86,6 +86,8 @@
     const cross = t => { const i = s.v.findIndex(v => v >= t); return i < 0 ? null : i === 0 ? 'today' : ys[i]; };
     return { end, at: PICK.filter(y => ys.includes(y)).map(y => [y, s.v[ys.indexOf(y)]]), c80: cross(80), c90: cross(90), c100: cross(100), exp: s.steps && s.steps.length ? s.steps.map(x => `${x.mld} ML/d (${x.year})`).join(' → ') : '' };
   }
+  // The first planned relief year of a Master Plan constraint (null: none listed).
+  const reliefYearOf = c => (c && c.relief ? c.relief.map(r => r.y).filter(Boolean).sort((a, b) => a - b)[0] || null : null);
   function collect() {
     const A = App(); if (!A || !A.state.svcModel || !MP() || !Cap()) return null;
     const rows = [], wwB = SvcTab().wwBasis(), flowW = SvcTab().wwFlowLabel();
@@ -94,7 +96,7 @@
       const k = Cap().of(`plant:${pl}`), c = MP().cached(`plant:${pl}`, () => MP().plantCons(pl)); if (!k || !c) continue;
       rows.push({ id: `plant:${pl}`, ss: `plant:${pl}`, sys: 'ww', kind: 'plant', name: (SD().PLANT_SHORT && SD().PLANT_SHORT[pl]) || k.name, sub: 'treatment plant',
         compared: `${flowW} vs rated capacity`, basis: wwB, unit: 'ML/d', cap: k.cap, capWord: 'rated', existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout,
-        limit: { y: c.out, what: '90% trigger', after: c.outAfter }, horizon: hzPlant(pl) || hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c) });
+        limit: { y: c.out, what: '90% trigger', after: c.outAfter }, horizon: hzPlant(pl) || hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
     }
     // Water treatment: South Peel (lake-based) and the Caledon well systems, maximum day against rated.
     const R = A.state.reports;
@@ -105,7 +107,7 @@
         const k = Cap().of(`wsys:${id}`), c = MP().cached(ck, () => MP().waterPlantCons(zone)); if (!k || !c) continue;
         rows.push({ id: `wsys:${id}`, ss: id === 'southPeel' ? 'wsys:lake' : null, sys: 'water', kind: 'wplant', name: id === 'southPeel' ? 'South Peel water treatment' : k.name, sub: id === 'southPeel' ? 'A.P. Kennedy + Lorne Park' : 'wells',
           compared: 'Maximum day vs rated capacity', basis: 'metered', unit: 'ML/d', cap: k.cap, capWord: 'rated', existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout,
-          limit: { y: c.out, what: '90% trigger' }, horizon: hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c) });
+          limit: { y: c.out, what: '90% trigger' }, horizon: hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
       }
     }
     // Pumping into each pressure zone: maximum day against firm pumping (the water tab's rows).
@@ -140,7 +142,7 @@
     for (const a of A.state.servicing.psAreas || []) {
       const k = Cap().of(`ps:${a.id}`), c = MP().cached(`ps:${a.id}`, () => MP().psCons(a)); if (!k || !c) continue;
       rows.push({ id: `ps:${a.id}`, ss: `ps:${a.id}`, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
-        existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c) });
+        existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
     }
     // Tightest sewers: only while pipe-by-pipe results are on (off for now: left to the Region's model).
     if (U.PIPE_RESULTS && MM().SEW.data && root.PeelTightPipes) {
@@ -149,7 +151,7 @@
       for (const x of root.PeelTightPipes.topTightPipes(entries, 5)) {
         const c = MP().cached(`pipe:${x.i}`, () => MP().pipeCons(x.i)); if (!c || c.check) continue;
         rows.push({ id: `pipe:${x.i}`, sys: 'ww', kind: 'pipe', name: c.name, sub: c.sub, compared: 'Peak wet weather vs full-pipe capacity', basis: 'design', unit: 'L/s', cap: c.cap, capWord: 'full-pipe',
-          existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap), relief: MP().consStatus(c) });
+          existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
       }
     }
     return rows.map(derive);
@@ -202,7 +204,8 @@
   const P = () => root.PeelPanel;
   // Relief status (js/masterplan.js consStatus): relief arrives after the limit, in time, or none needed.
   const RELIEF = { gap: ['Relief after the limit', 'over'], planned: ['Relief in time', 'room'], ok: ['Room', 'room'], check: ['Check the data', 'tight'] };
-  const reliefOf = r => (r.relief && RELIEF[r.relief] ? RELIEF[r.relief] : r.pctBo >= 100 ? ['No relief listed', 'over'] : ['Room', 'room']);
+  // ('gap' covers both a relief planned after the limit and none listed: the row says which)
+  const reliefOf = r => (r.relief === 'gap' && !r.reliefY ? ['No relief listed', 'over'] : r.relief && RELIEF[r.relief] ? RELIEF[r.relief] : r.pctBo >= 100 ? ['No relief listed', 'over'] : ['Room', 'room']);
   const KIND = { plant: 'Plant', wplant: 'Water treatment', pump: 'Pumping into the zone', storage: 'Storage', ps: 'Pumping station', pipe: 'Sewer' };
   // One facility as a list row (Capacity, and the Overview's Needs attention): name and limit year, the
   // stacked bar, committed → build-out and its relief, the impact line.

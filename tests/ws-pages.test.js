@@ -67,8 +67,10 @@ test('uncommitted reserve (D-5-1): treatment plants only, in ML/d and people; pu
   const s = src('js/ws-pages.js');
   assert.match(s, /title: 'Uncommitted reserve at the treatment plants'/);
   assert.match(s, /Uncommitted reserve \(Ontario MECP Procedure D-5-1, treatment plants only\)/);
-  assert.match(s, /label: 'relief after the limit'/);
-  assert.match(s, /late = rows\.filter\(r => r\.relief === 'gap'\)/);
+  assert.match(s, /label: 'no relief in time'/);
+  assert.match(s, /late = rows\.filter\(r => r\.relief === 'gap' && r\.limit\.y != null\)/);
+  // 'gap' is split on the page and in the rows: a relief after the limit, or none listed.
+  assert.match(src('js/svc-capacity.js'), /const reliefOf = r => \(r\.relief === 'gap' && !r\.reliefY \? \['No relief listed', 'over'\]/);
 });
 
 test('Old pipes grid: likelihood by age (moderate risk one band up) × consequence by units carried', () => {

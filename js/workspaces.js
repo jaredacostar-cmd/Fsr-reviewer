@@ -154,7 +154,14 @@
   }
   function placeMap() {
     const m = $('#map'), slot = $('#page-map-slot');
-    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); } } else putMapBack();
+    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); fitPeel(); } } else putMapBack();
+  }
+  // Study area with nothing drawn yet: the page's map opens on all of Peel (the wastewater blocks).
+  function fitPeel() {
+    const AS = root.PeelAreaSelect, map = root.PeelMapCore && root.PeelMapCore.map, sv = App() && App().state.servicing;
+    if (!map || !sv || (AS && AS.selection && AS.selection.size)) return;
+    const bb = (sv.drainage || []).filter(d => d.bbox && !(d.served != null && d.served < 0.5)).reduce((b, d) => [Math.min(b[0], d.bbox[0]), Math.min(b[1], d.bbox[1]), Math.max(b[2], d.bbox[2]), Math.max(b[3], d.bbox[3])], [180, 90, -180, -90]);
+    if (bb[0] < bb[2]) setTimeout(() => map.fitBounds([[bb[1], bb[0]], [bb[3], bb[2]]], { padding: [10, 10] }), 60);
   }
   const invalidate = () => { const map = root.PeelMapCore && root.PeelMapCore.map; if (map && map.invalidateSize) setTimeout(() => map.invalidateSize(), 30); };
   // ---- A chip -------------------------------------------------------------------------------------
