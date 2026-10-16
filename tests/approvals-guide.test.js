@@ -42,15 +42,16 @@ test('it says what the app does: draft approval commits (MECP D-5-1), zoning alo
 
 test('easy to reach: Home sidebar (Reference), the Stage block, a site’s stage section, Records › Files; a share link', () => {
   const w = src('js/workspaces.js');
-  assert.match(w, /const REF = \{ help: \{ label: 'Help'[^}]*\}, approvals: \{ label: 'How approvals work'/);
-  assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{Object\.keys\(REF\)\.map\(id => item\(id, REF\[id\]\.what\)\)\.join\(''\)\}<\/ul>/);
+  // (a guide since the reference pages: listed on How it works, which the sidebar carries)
+  assert.match(w, /\['approvals', 'How approvals work'\][^\n]*REF\[id\] = \{ label, guide: true \};/);
+  assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{Object\.keys\(REF\)\.filter\(id => !REF\[id\]\.guide\)\.map\(id => item\(id, REF\[id\]\.what\)\)\.join\(''\)\}<\/ul>/);
   assert.match(w, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\]\) id = 'home';/);
   assert.match(w, /\/\^p:\/\.test\(w\) && \(BY_ID\[w\.slice\(2\)\] \|\| REF\[w\.slice\(2\)\]\)/, 'a link to the page opens it');
   assert.match(src('index.html'), /<p class="small stage-how"><button type="button" class="btn small link" data-ws-page="approvals">How approvals map to these stages →<\/button><\/p>/);
   assert.match(src('js/devtab.js'), /data-ws-page="approvals">How approvals work →<\/button>/);
   assert.match(src('js/records-tab.js'), /secondary: \[\{ label: 'How approvals work', attrs: \{ 'data-ws-page': 'approvals' \}/);
   assert.match(src('js/ws-pages.js'), /const BUILD = \{ [^}]*approvals[^}]*\};/);
-  assert.match(src('index.html'), /<script src="js\/approvals-guide\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/glossary\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/file-tree\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/ws-pages\.js/);
+  assert.match(src('index.html'), /<script src="js\/approvals-guide\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/reference\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/glossary\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/file-tree\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/ws-pages\.js/);
   assert.match(src('sw.js'), /'js\/approvals-guide\.js',/);
   // The page: Home's layout (question, answer, the diagram), nothing calculated.
   const p = G.page();

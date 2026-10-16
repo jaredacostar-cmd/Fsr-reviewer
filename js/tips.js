@@ -175,7 +175,7 @@
       <h3 class="ws-h">What each workspace answers</h3>${asks}
       <h3 class="ws-h">Task guides</h3><p class="small muted">Each one sets the full map up for you.</p>${guides}
       <h3 class="ws-h">More help</h3>
-      <p><button type="button" class="btn small" data-help-tour>Take the tour</button> <button type="button" class="btn small" data-help-log>What's new: the change log</button> <button type="button" class="btn small" data-help-moved>What moved where</button> <button type="button" class="btn small" data-ws-page="glossary">Glossary</button> <button type="button" class="btn small" data-ws-page="approvals">How approvals work</button></p>
+      <p><button type="button" class="btn small" data-help-tour>Take the tour</button> <button type="button" class="btn small" data-help-log>What's new: the change log</button> <button type="button" class="btn small" data-help-moved>What moved where</button> <button type="button" class="btn small" data-ws-page="guides">How it works: the guides</button> <button type="button" class="btn small" data-ws-page="glossary">Glossary</button> <button type="button" class="btn small" data-ws-page="approvals">How approvals work</button></p>
       <div id="help-log-body" aria-live="polite"></div>
       <details class="help-card help-moved" id="help-moved"><summary><strong>What moved where</strong><small>For existing users: where each tab, sub-view and control is now.</small></summary>${movedHTML()}</details>
       <h3 class="ws-h">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
