@@ -576,7 +576,9 @@
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'study' }, primary: !has }, has ? { label: 'Area report (PDF)', attrs: { 'data-area-report': 'sel' }, primary: true } : null] };
   }
 
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study };
+  // Reference pages (not workspaces): How approvals work (js/approvals-guide.js).
+  const approvals = () => (root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading('approvals', 'Loading…'));
+  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals };
   const build = id => (BUILD[id] || home)();
   Object.assign(api, { build, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;
