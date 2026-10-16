@@ -102,6 +102,8 @@
       <div class="bd-w"><table class="dt" data-info="unit-types"><caption>Build-out by dwelling type</caption><thead><tr><th>Type</th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead><tbody>${aggTypeRowsHTML({ bt, emp })}</tbody></table></div>
       ${site ? siteCompareHTML(root.PeelDevVerdict && root.PeelDevVerdict.scopedDev()) : strip + muniTable}
       <p class="small muted">ⓘ Pipeline = applications with unit counts; permitted and completed come from the building permits. Completions ${yr0 ? `${yr0}–${yr1}` : '—'} from dated permit events${comp.estimated ? ` (${fmtNum(comp.estimated)} completion dates estimated from issue dates — Brampton and Caledon publish none)` : ''}. Approval pace = months from first application activity to the site's approval. Applications as of <strong>${esc(asof)}</strong>.</p>`;
+    // Stage 3: the standard panel; the tables above are its full table.
+    if (root.PeelPanel) root.PeelPanel.set('growth:pipeline', pipelinePanelSpec({ set, t, emp, comp, yrs, yrUnits, yr0, yr1, head, site, bt }));
     // The pipeline by stage reuses the growth chart (no census baseline here).
     const bc = CA().baselineCensus();
     if (bc) {
@@ -136,6 +138,48 @@
     if (cd) li.push(`<li><strong>${fmtNum(Math.round(dens(p)))}</strong> homes per hectare of site: ${share(cd).replace('more than', 'denser than')} the ${fmtNum(cd.n)} with a stated site area (median ${fmtNum(Math.round(cd.median))}).</li>`);
     return `<h3 class="sub-title">How this site compares <span class="muted small">applications with homes in ${esc(p.municipality)}, withdrawn left out</span></h3><ul class="b-lines small">${li.join('')}</ul>`;
   }
+  // ---- Stage 3: Growth › Pipeline as the standard panel ---------------------------------------------
+  function pipelinePanelSpec(o) {
+    const PN = root.PeelPanel, { set, t, emp, comp, yrs, yrUnits, yr0, yr1, head, site, bt } = o;
+    const pc = v => `${Math.round(v * 100)}%`, p = site && root.PeelDevVerdict ? root.PeelDevVerdict.scopedDev() : null;
+    const typeRows = D.UNIT_TYPES.filter(ty => bt[ty.key] && bt[ty.key].planned >= 0.5).sort((a, b) => bt[b.key].planned - bt[a.key].planned)
+      .map(ty => PN.kv(esc(ty.label), `${fmtNum(Math.round(bt[ty.key].planned))} planned · ${fmtNum(Math.round(bt[ty.key].left))} left`));
+    const muniRows = (comp.byMuni || []).slice().sort((a, b) => b.perYear - a.perYear).map(c => PN.kv(esc(c.m), `${fmtNum(Math.round(c.perYear))} completed / yr · ${fmtNum(c.projects)} devs`));
+    const cmp = p ? siteCompareRows(p) : [];
+    return {
+      calc: true, fullTitle: `Growth › Pipeline · ${p ? p.title : App().state.muni || 'Peel'}: by stage, dwelling type and municipality`,
+      head: p ? PN.siteHead(p) : PN.areaHead('Growth › Pipeline', 'How much is coming?', null, `${esc(App().state.muni || 'Peel')} · ${fmtNum(set.length)} developments shown`),
+      answer: head,
+      figures: [
+        { v: fmtNum(Math.round(t.planned)), u: 'units', label: 'planned', ctx: t.n ? `${fmtNum(t.n)} developments with units` : '' },
+        { v: fmtNum(Math.round(t.permitted)), u: 'units', label: 'permitted', ctx: t.planned ? `${pc(t.permitted / t.planned)} of planned` : '' },
+        { v: fmtNum(Math.round(t.completed)), u: 'units', label: 'completed', ctx: !site && yrs.length ? `≈${fmtNum(Math.round(yrUnits / yrs.length))}/yr, ${yr0}–${yr1}` : '' },
+        { v: fmtNum(Math.round(t.left)), u: 'units', label: 'left to build', ctx: t.planned ? `${pc(t.left / t.planned)} of planned` : '' },
+      ],
+      chart: layerStripHTML(set),
+      lists: [
+        ...(p ? [{ title: 'How this site compares', rows: cmp, total: cmp.length }] : []),
+        { title: 'By dwelling type', rows: typeRows, total: typeRows.length, seeAll: { 'data-full-table': 'growth' } },
+        ...(site ? [] : [{ title: 'Completions by municipality', rows: muniRows, total: muniRows.length, seeAll: { 'data-full-table': 'growth' } }]),
+        ...(emp.planned ? [{ title: 'Employment', rows: [PN.kv('Floor area planned', `${fmtNum(Math.round(emp.planned))} m² · ≈${fmtNum(Math.round(emp.jobs))} jobs`), PN.kv('Left to build', `${fmtNum(Math.round(emp.left))} m²`)], total: 2 }] : []),
+      ],
+      method: 'Pipeline = applications with unit counts; permitted and completed come from the building permits; completions per year from dated permit events. Units are planned units net of homes demolished. People and jobs at Peel design criteria.',
+      sources: 'The municipal applications and building permits on the map (Records › Sources has each source and its date).',
+      foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, title: 'A printable report for the developments shown' } },
+    };
+  }
+  // The site against the other applications with homes in its municipality, as label / value rows.
+  function siteCompareRows(p) {
+    const PN = root.PeelPanel, units = q => Growth.pipelineTotals([q]).planned;
+    const hasApp = q => (q.records || []).some(r => r.kind === 'application');
+    const peers = App().state.projects.filter(q => q !== p && q.phase !== 'cancelled' && q.municipality === p.municipality && hasApp(q) && units(q) > 0);
+    const cu = siteCompare(units(p), peers.map(units)), dens = q => (q.siteAreaHa > 0 ? units(q) / q.siteAreaHa : 0);
+    const cd = p.siteAreaHa > 0 ? siteCompare(dens(p), peers.map(dens)) : null, share = c => (c.pctLarger >= 100 ? 'more than any other' : `more than ${c.pctLarger}%`);
+    return [
+      ...(cu ? [PN.kv('Planned homes', `${fmtNum(Math.round(units(p)))} · ${share(cu)} of ${fmtNum(cu.n)} (median ${fmtNum(Math.round(cu.median))})`)] : []),
+      ...(cd ? [PN.kv('Homes per hectare', `${fmtNum(Math.round(dens(p)))} · ${share(cd)} of ${fmtNum(cd.n)} (median ${fmtNum(Math.round(cd.median))})`)] : []),
+    ];
+  }
   // The pipeline by layer (SPEC §2.2): growth only, the census as context; and by dwelling type.
   function layerStripHTML(set) {
     const Ly = root.PeelLayers, LB = root.PeelLayerBar; if (!Ly || !LB || !set.length) return '';
@@ -148,9 +192,9 @@
     return `<h3 class="sub-title" data-info="growth-layers">By layer <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
       ${LB.barHTML({ segments: segs })}
       ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
-      ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Anticipated: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}
+      ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Pre-application: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}
       ${u.existing > 0 ? `<p class="small muted">${n0(u.existing)} more on these sites were completed before census day (in the census already, Existing).</p>` : ''}
-      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
+      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k, true)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];
@@ -185,7 +229,7 @@
   }
   function settingsPageHTML() {
     const TC = root.PeelTreeCounts;
-    return `<h2 class="pane-h">Settings</h2>${TC ? TC.settingsHTML() : ''}${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
+    return `<h2 class="pane-h">Settings</h2>${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${root.PeelUsage && root.PeelUsage.settingsHTML ? root.PeelUsage.settingsHTML() : ''}${TC ? TC.settingsHTML() : ''}${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
   }
   window.GearPages = window.GearPages || {};
   window.GearPages.settings = () => settingsPageHTML();

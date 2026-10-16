@@ -162,7 +162,7 @@
     const srcLine = `Source: ${esc(F.title)} (${esc(F.date || 'date not stated')}, ${esc(F.status || 'status not stated')}; ${esc(F.pages || '')})`;
     return `<table class="dt" data-source-status="${esc(F.status || '')}"><caption>Applications against the 2051 forecast <span class="muted">growth since the ${bc.year} Census vs. growth allocated to 2051</span><br><small class="cap-src">${srcLine}. Pipeline people are at Peel design criteria (persons per unit); the allocation is a population forecast, so the two are compared, not reconciled.</small></caption><thead><tr><th>Municipality</th><th>2051 growth allocated</th><th>Built + approved + proposed</th><th>Still to plan for</th></tr></thead><tbody>${main}</tbody></table>
       <details class="see-all"><summary>See all: built / approved / proposed by municipality</summary>
-      <table class="dt"><thead><tr><th>Municipality</th><th>Built</th><th>Committed</th><th>Proposed</th><th>Units</th><th>Jobs</th></tr></thead><tbody>${full}</tbody></table>
+      <table class="dt"><thead><tr><th>Municipality</th><th>Built since 2021</th><th>Approved</th><th>In review</th><th>Units</th><th>Jobs</th></tr></thead><tbody>${full}</tbody></table>
       <p class="small muted">${esc(F.note)} Pipeline = growth since census day from every development in the municipality (built = permits completed since census day; approved; proposed = in pre-consultation or review), at Peel's design persons per unit; jobs only where the applications state floor area. Design persons per unit (2.7 per apartment) are higher than the average household size behind the forecast, so the units column is the fairer comparison; the pipeline also includes applications that may not be built by 2051. Source: <a href="${esc(F.url)}" target="_blank" rel="noopener">${esc(F.title)}</a>, ${esc(F.pages)}.</p></details>`;
   }
 
@@ -256,6 +256,8 @@
   }
   // The one-line caveat (Growth pipeline and Overview headlines).
   function permitCaveatHTML() {
+    // (Not inside a servicing scope: Records has no Checks there, so the link would lead nowhere.)
+    if (root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current()) return '';
     const c = permitCheck(); if (!c || !c.failing.length) return '';
     const list = c.failing.length > 1 ? `${c.failing.slice(0, -1).join(', ')} and ${c.failing[c.failing.length - 1]}` : c.failing[0];
     return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Checks')}</p>`;

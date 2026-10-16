@@ -502,6 +502,32 @@
     const waterTable = wf ? trigTable('Water: trigger-year ranges <span class="muted">maximum day vs rated (treatment) / firm (pumping) capacity</span>', wf)
       : wfLoading ? skel('Water facilities') : '';
 
+    // Stage 3: the standard panel; the forecast, the contributors, the calibration and the trigger-year
+    // tables below are its full table.
+    if (root.PeelPanel) {
+      const PN = root.PeelPanel, fig = (y, b) => fmtNum(Math.round(sumTo(y, b)));
+      const trig = plantFacs().map(f => { const fb = facilityBands({ name: f.name, rated: f.rated, existing: f.existing, approved: f.approved, proposed: f.proposed, div: f.div || 0, end: fc.nowYear + FORECAST_YEARS }, cal), tr = fb.triggers[90]; const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high; return { f, like, txt: triggerRangeText(tr, fb.end) }; })
+        .sort((a, b) => (a.like == null ? 1e4 : a.like) - (b.like == null ? 1e4 : b.like));
+      PN.set('growth:timing', {
+        calc: true, fullTitle: `Growth › Timing · ${App().state.muni || 'Peel'}: the forecast, the contributors, the calibration and the trigger years`,
+        head: PN.areaHead('Growth › Timing', 'When does it come?', { tone: 'stage', text: 'Screening estimate' }, `${esc(App().state.muni || 'Peel')} · data as of ${esc(asof)}`),
+        answer: head,
+        figures: [
+          { v: fig(2031, 'likely'), u: 'units', label: 'expected by 2031', ctx: `range ${fig(2031, 'low')}–${fig(2031, 'high')}` },
+          { v: fig(2041, 'likely'), u: 'units', label: 'expected by 2041', ctx: `range ${fig(2041, 'low')}–${fig(2041, 'high')}` },
+          { v: fmtNum(Math.round(unbuilt)), u: 'units', label: 'unbuilt in the pipeline', ctx: unbuilt ? `≈${Math.round(sumTo(2041, 'likely') / unbuilt * 100)}% expected by 2041` : '' },
+          { v: fmtNum(cal.nObs), u: 'events', label: 'calibration', ctx: `dated file events, cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}` },
+        ],
+        chart: items.length ? timingChartSVG(fc) : '',
+        lists: [
+          { title: 'Plants: 90% trigger year (likely)', rows: trig.map(x => PN.kv(esc(x.f.name), x.like != null ? `≈${x.like} <small>${esc(x.txt)}</small>` : esc(x.txt))), total: trig.length, seeAll: { 'data-full-table': 'growth' } },
+          { title: 'Largest contributors', rows: contrib.slice(0, 5).map(c => ({ attrs: { 'data-pnl-dev': c.item.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.item.title || c.item.key)}<small>${esc(c.item.muni)}</small></span><span class="pnl-r-fig">${fmtNum(Math.round(c.likely))}<small>units, likely</small></span></div>` })), total: contrib.length, seeAll: { 'data-full-table': 'growth' } },
+        ],
+        method: 'A statistical screening estimate of when the pipeline builds out, not a prediction for any one site: approval and completion rates and the time lags are calibrated from the dated application and permit events, by municipality and building type; low / likely / high bands. Trigger years phase each plant\u2019s approved and proposed flow in over the calibrated lags (not the plant horizon assumptions).',
+        sources: 'The dated file events of the applications and permits on the map (2016–2019 cohorts); the plants\u2019 2025 flows and rated capacity (2025 annual reports).',
+        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } } },
+      });
+    }
     body.innerHTML = `
       ${hlP(head)}
       ${tiles}

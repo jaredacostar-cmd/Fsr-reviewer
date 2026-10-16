@@ -15,7 +15,10 @@
   //   badgeHTML(phaseText, L)  "<phase> → counts as <Layer>" (the site badge)
   //   nameHTML(layer)    the layer's name with its swatch (list rows, "Developments loading it")
   // Pure strings.
-  const LABEL = { existing: 'Existing', built: 'Built', committed: 'Committed', proposed: 'Proposed', anticipated: 'Anticipated', to2051: 'To 2051' };
+  // Plain names (the technical term in brackets where engineers use it: committed is MECP D-5-1's).
+  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  // Short names for table headings and tight rows.
+  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Approved', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const num = v => Math.round(v).toLocaleString('en-CA');
   const pc = v => `${Math.max(0, Math.min(100, v)).toFixed(2)}%`;
@@ -55,15 +58,15 @@
   }
 
   const PILL = { existing: 'var(--ly-existing)', built: 'var(--ly-built)', committed: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', anticipated: 'var(--ly-anticipated)', to2051: 'var(--ly-to2051)' };
-  /** Phase and layer together: "3 · zoning approved → counts as Proposed" (SPEC §2.7). */
+  /** Phase and layer together: "3 · zoning approved → counts as In review" (SPEC §2.7; the short name). */
   function badgeHTML(phaseText, L, o = {}) {
     if (!L || !L.layer) return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-secondary)">${esc(phaseText)}</span></span>`;
     const ink = L.layer === 'existing' || L.layer === 'built' ? 'var(--map-label)' : 'var(--ly-ink)';
-    // What a committed development has left to permit (the board's "Committed · 343 left").
+    // What an approved development has left to permit (the board's "Approved · 343 left").
     const left = L.layer === 'committed' && L.toPermit > 0 && L.toPermit < L.units ? ` · ${num(L.toPermit)} left` : '';
-    return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-primary)">${esc(phaseText)}</span><span class="ly-arrow">→</span><span class="ly-pill" style="background:${PILL[L.layer]};color:${ink}" title="${esc(o.title || '')}">counts as ${LABEL[L.layer]}${left}</span></span>`;
+    return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-primary)">${esc(phaseText)}</span><span class="ly-arrow">→</span><span class="ly-pill" style="background:${PILL[L.layer]};color:${ink}" title="${esc(o.title || '')}">counts as ${SHORT[L.layer]}${left}</span></span>`;
   }
-  /** The site badge for a development: "2 · Under review · zoning approved → counts as Proposed". */
+  /** The site badge for a development: "2 · Under review · zoning approved → counts as In review". */
   function siteBadgeHTML(p, o = {}) {
     const P = root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
     const Ly = root.PeelLayers || (typeof require === 'function' ? require('./layers.js') : null);
@@ -73,7 +76,7 @@
     const L = Ly ? Ly.ofDev(p, o) : null;
     return badgeHTML(text, L, { title: L && L.layer && Ly ? `${LABEL[L.layer]}: ${Ly.NOTE[L.layer]}` : '' });
   }
-  const nameHTML = layer => (LABEL[layer] ? `<span class="ly-name" style="--ly-c:${PILL[layer]}">${LABEL[layer]}</span>` : '<span class="muted">none</span>');
+  const nameHTML = (layer, short) => (LABEL[layer] ? `<span class="ly-name" style="--ly-c:${PILL[layer]}"${short ? ` title="${LABEL[layer]}"` : ''}>${short ? SHORT[layer] : LABEL[layer]}</span>` : '<span class="muted">none</span>');
 
   /** A capacity result (js/capacity.js compute / of) as the layered bar: Existing, Built, Committed,
    *  Proposed against rated (or firm), the trigger tick and the red hatch beyond. */
@@ -104,8 +107,8 @@
     return basis;
   }
   // The count setting (Stage 1 #6), one label everywhere: the Scenario control's switch and the chip.
-  const COUNT_OPTS = [['committed', 'committed only'], ['buildout', '+ proposed'], ['all', '+ anticipated']];
-  const countLabel = basis => (basis === 'remaining' ? '+ anticipated, left to build' : (COUNT_OPTS.find(([v]) => v === basis) || COUNT_OPTS[2])[1]);
+  const COUNT_OPTS = [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']];
+  const countLabel = basis => (basis === 'remaining' ? '+ pre-application, left to build' : (COUNT_OPTS.find(([v]) => v === basis) || COUNT_OPTS[2])[1]);
   /** o: { basis, flows, criteria, count, expansions, outside } → the chip: read-only text, the count
    *  setting first; the Committed / Proposed / Anticipated switch lives in the Scenario control. */
   function scenarioChipHTML(o) {
@@ -115,7 +118,7 @@
     return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(set)} — open the Scenario control to change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
   }
 
-  const api = { COUNT_OPTS, countLabel, LABEL, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
+  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

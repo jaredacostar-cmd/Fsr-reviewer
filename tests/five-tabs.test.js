@@ -27,7 +27,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
   assert.match(r, /return `\$\{DU\(\)\.freshnessHTML\(\)\}/, 'Sources: freshness first');
   assert.match(r, /possible duplicate pair/);
   assert.match(r, /body\.innerHTML = note \+ \(sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\)\);/);
-  assert.match(r, /if \(scoped\) \{ syncDevHome\('records'\); return; \}/);
+  assert.match(r, /if \(scoped\) \{ syncDevHome\('records'\); if \(root\.PeelPanel\) root\.PeelPanel\.set\('records:files', filesPanelSpec\(scoped\)\); return; \}/);
   assert.match(r, /if \(DT && DT\.setSub\) DT\.setSub\('files'\);/);
   assert.match(r, /s\.rkind === 'file' && AC\(\)\.currentFile/);
   assert.match(HTML, /<section class="f-pane" id="pane-records" data-pane="records"[^>]*><div id="records-body"><\/div><\/section>/);
@@ -38,7 +38,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
   assert.match(at, /site: \{ growth: \['areas', 'timing'\], svc: \['capacity', 'alloc', 'checks'\], dca: \['projects', 'funding'\], records: \['sources', 'checks'\] \}/);
-  assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) s\.set\(v\);/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
+  assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) \{ if \(areaPick\[tk\] == null\) areaPick\[tk\] = s\.get\(\); s\.set\(v\); \}/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
   const css = src('css/app.css');
   assert.ok(css.includes('.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }'));
 });

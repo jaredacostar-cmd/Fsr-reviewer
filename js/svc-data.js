@@ -180,7 +180,8 @@
   }
   // Map panel notice when a setting hides the developments, with one tap to bring them back.
   function devsOffReason() {
-    if (!MM().getDevsOn()) return 'Developments are switched off';
+    // (a workspace switches them off on purpose: Getting tight, Projects, Old pipes)
+    if (!MM().getDevsOn()) return window.PeelWorkspaces && window.PeelWorkspaces.mode() === 'ws' ? '' : 'Developments are switched off';
     if (MM().isWW() && ['built', 'approved', 'proposed'].every(k => MM().getWwLay()[k] === false)) return 'Wastewater loads: no growth layer on';
     try { if (ST().getDevMode() === 'hidden' && (ST().TRACE.key || ST().WTRACE.key || ST().svcFocus.id || ST().BLK.id)) return 'Hidden while a path is shown'; } catch (e) { /* during start-up */ }
     return '';
@@ -308,7 +309,7 @@
     if (cap) {
       const reserve = cap.rated - cap.committed, use = devAvg * cap.f;
       plant = `<p class="small svc-verdict"><strong>${esc(cap.name)}</strong>: rated ${uCap(cap.rated, cap.rated)}; existing + built + committed ${pct(cap.committed, cap.rated)} (${uCap(cap.committed, cap.rated)}); <strong>${window.PeelUtil.reserveWords(reserve, cap.rated)}</strong>${M.mode === 'calibrated' ? ' (capacity check)' : ' (design flows)'}.
-        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uML(use)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant already screens over rated capacity'}. ${estTag}</p>`;
+        This development is <strong>${layerText}</strong>. Its average dry weather flow ${M.mode === 'calibrated' && cap.f !== 1 ? `at the plant's measured rate (×${cap.f.toFixed(2)}) ` : ''}is ${uCap(use, cap.rated)}${reserve > 0 ? ` = <strong>${pct(use, reserve)}</strong> of the reserve` : ' — the plant already screens over rated capacity'}. ${estTag}</p>`;
     } else if (pl === 'Toronto') plant = '<p class="small svc-verdict">Drains to the City of Toronto system (Malton): capacity is Toronto\'s, not in Peel\'s plant figures.</p>';
     return `${SCREEN_NOTE}<table class="dt chk-table"><thead><tr><th>Whole development<br><span class="muted">Peel design criteria</span></th><th>Average</th><th>Max day / peak</th><th>Peak hour / wet</th><th></th></tr></thead><tbody>${water}${sewer}</tbody></table>
       ${opt.trace === false ? '' : `<div class="trace-box"><p><button type="button" class="btn small" data-trace="${esc(p.key)}">Trace the path to the plant on the map</button></p><div class="trace-out"></div></div>`}

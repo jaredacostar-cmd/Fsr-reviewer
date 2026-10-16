@@ -233,7 +233,10 @@
       const r = byId.get(l.capital); if (!proj || !r) continue;
       const c = cs.get(r.contract || `id:${r.id}`);
       const cur = idx.get(proj);
-      if (!cur || RANK.indexOf(c.status) > RANK.indexOf(cur.status) || (c.status === cur.status && (c.percent || 0) > (cur.percent || 0))) idx.set(proj, { status: c.status, percent: c.percent, lastUpdate: c.lastUpdate, key: c.key });
+      // A project-matched (medium) link outranks an outline-overlap (low) one; then the most advanced
+      // contract. The entry says how sure the match is (conf), so a label can leave a low one out.
+      const conf = l.confidence === 'low' ? 0 : 1, curConf = cur ? (cur.conf === 'low' ? 0 : 1) : -1;
+      if (!cur || conf > curConf || (conf === curConf && (RANK.indexOf(c.status) > RANK.indexOf(cur.status) || (c.status === cur.status && (c.percent || 0) > (cur.percent || 0))))) idx.set(proj, { status: c.status, percent: c.percent, lastUpdate: c.lastUpdate, key: c.key, conf: l.confidence || 'medium' });
     }
     return idx;
   }

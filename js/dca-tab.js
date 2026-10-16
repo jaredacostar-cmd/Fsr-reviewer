@@ -31,6 +31,9 @@
     const bb = $('#dca-build-body'); if (bb && window.PeelCapitalEA) bb.innerHTML = window.PeelCapitalEA.listsHTML();
     // EAs: the Region's environmental assessments (Capital › EAs), scoped to the municipality or the site.
     const eb = $('#dca-eas-body'); if (eb && window.PeelCapitalEA) window.PeelCapitalEA.renderEaTab(eb);
+    // Stage 3: the standard panels (the bodies here are their full tables).
+    const PN = window.PeelPanel, CE = window.PeelCapitalEA;
+    if (PN && CE && CE.projectsPanelSpec) { PN.set('dca:projects', CE.projectsPanelSpec()); PN.set('dca:eas', CE.easPanelSpec()); }
     const bodies = [$('#dca-timing-body'), $('#dca-rec-body'), $('#dca-funding-body')];
     const legacy = bodies.every(b => !b) ? $('#dca-body') : null;
     if (!bodies.some(Boolean) && !legacy) return;
@@ -44,12 +47,78 @@
       st.works = st.works || DI().devWorks(p, f);
       const brief = `<p class="small muted">DC analysis for <strong>${esc(p.title)}</strong>.</p>` + DD().devBriefHTML(p, st, f, 'dc', { noWwNeeds: true });
       set(0, brief); DV().scopeBriefIds(bodies[0] || legacy);
+      if (PN) PN.set('dca:timing', siteTimingSpec(p, st, f));
       const note = `<p class="small muted">The Region-wide funding screen is shown when no site is scoped.</p>`;
       set(1, note); set(2, note);
       return;
     }
     const R = DC().dcAnalysis();
     set(0, renderDcaTiming(R)); set(1, renderDcaRec(R)); set(2, renderDcaFunding(R));
+    if (PN) { PN.set('dca:timing', timingSpec(R)); const fs = fundingSpec(R); if (fs) PN.set('dca:funding', fs); }
+  }
+  // ---- Stage 3: Capital › Timing (area and site) and Funding (Labs) as standard panels ------------------
+  let pnlSort = store.get('dcaPnlSort', 'soonest');
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-dca-pnlsort]'); if (b) { pnlSort = b.dataset.dcaPnlsort; store.set('dcaPnlSort', pnlSort); renderDca(); } });
+  const yrOf = r => (r.outY === MM().THIS_YEAR ? 0 : r.outY || 9999);
+  function timingSpec(R) {
+    const PN = window.PeelPanel, pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / R.ppu));
+    const adv = R.list.filter(r => r.rec === 'advance'), inTime = R.list.filter(r => r.rec === 'keep' || r.rec === 'defer').length;
+    const ranked = R.list.filter(r => r.outY || r.bo > 0).slice().sort(pnlSort === 'impact' ? (a, b) => b.bo - a.bo : (a, b) => yrOf(a) - yrOf(b) || b.bo - a.bo);
+    const big = R.list.slice().sort((a, b) => b.bo - a.bo)[0];
+    const sortBtn = (k, t) => `<button type="button" class="btn small${pnlSort === k ? ' on' : ''}" data-dca-pnlsort="${k}" aria-pressed="${pnlSort === k}">${t}</button>`;
+    const row = r => ({ tone: r.rec === 'advance' ? 'over' : 'room', attrs: { 'data-full-table': 'dca' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>online ${r.y || '–'}${r.status === 'approved' ? ' · approved 2026' : r.status === 'proposed' ? ' · proposed' : ''}</small></span><span class="pnl-r-year t-${r.rec === 'advance' ? 'over' : 'room'}">${r.outY ? (r.outY === MM().THIS_YEAR ? 'now' : `≈${r.outY}`) : `after ${SP().hz.end}`}</span></div>
+      <div class="pnl-r-meta"><span>capacity runs out</span><span class="t-${r.rec === 'advance' ? 'over' : 'room'}">${r.rec === 'advance' ? 'online after it runs out' : 'online in time'}</span></div>
+      <small class="pnl-r-line">Impact: ${r.bo > 0 ? `≈${pp(r.bo)} people (≈${uu(r.bo)} units) held back by build-out if cancelled` : 'none held back if cancelled'}</small>` });
+    return {
+      calc: true, fullTitle: `Capital › Timing · ${App().state.muni || 'Peel'}: every DC project`,
+      head: window.PeelPanel.areaHead('Capital › Timing', 'What must be built first?', adv.length ? { tone: 'over', text: `${adv.length} screen late` } : { tone: 'room', text: 'In time' }, `Peel · ${fmtNum(R.list.length)} DC projects · 2026 DC capital maps (draft, as of ${esc(CAPITAL.asOf)})`),
+      answer: `Across <strong>${fmtNum(R.list.length)} DC projects</strong>, ${adv.length ? `<strong>${adv.length}</strong> come${adv.length === 1 ? 's' : ''} online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out` : 'every project comes online before the capacity it relieves runs out'}${big && big.bo > 0 ? `; without <strong>${esc(big.name)}</strong> the screen shows the most growth constrained (≈${pp(big.bo)} people by build-out)` : ''}.`,
+      figures: [
+        { v: fmtNum(R.list.length), u: 'projects', label: 'DC projects', ctx: 'relieve a constraint or serve new development' },
+        { v: adv.length, u: '', label: 'screen late', ctx: 'in service after the capacity runs out', tone: adv.length ? 'over' : 'room' },
+        { v: inTime, u: '', label: 'screen in time', ctx: '' , tone: 'room' },
+        { v: pp(R.baseBo), u: 'people', label: 'constrained at build-out', ctx: `≈${uu(R.baseBo)} units, every project as scheduled`, tone: R.baseBo > 0 ? 'tight' : 'room' },
+      ],
+      chart: DC().dcaTimingChart(R.list.slice().sort((a, b) => b.bo - a.bo).slice(0, 5)),
+      lists: [{ title: 'DC projects', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('soonest', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: ranked.slice(0, 5).map(row), total: R.list.length, seeAll: { 'data-full-table': 'dca' } }],
+      method: 'Each capacity constraint (pumping stations at firm capacity, plants at 90% of rated, the water systems and supply into the upper zones) is replayed year by year to the horizon. Cancelling one project holds back the growth above the remaining capacity; people at each constraint\u2019s own rate, units at the growth\u2019s persons per unit. Constraints in series count the largest, not the sum. Screening results only, not a capital plan.',
+      sources: '2026 DC capital maps (draft v2, March 2026; dates as of March 2026, before the May 2026 pause); 2020 DC Background Study costs indexed to 2026$; Region capital records where a DC project matches one.',
+      foot: { primary: { label: 'Show the planned works', attrs: { 'data-mview': 'dc' } } },
+    };
+  }
+  // A development: the constraints it relies on (MasterPlan.devNeeds) and the projects that relieve them.
+  function siteTimingSpec(p, st, f) {
+    const PN = window.PeelPanel, needs = MP().devNeeds(p) || [];
+    const T = { gap: ['over', 'Short'], planned: ['room', 'In time'], ok: ['room', 'Room'], check: ['tight', 'Check'] };
+    const gaps = needs.filter(c => c.status === 'gap');
+    const row = c => { const [tone, word] = T[c.status] || T.ok, r = c.relief && c.relief[0]; return { tone, attrs: c.id && /^(plant|ps):/.test(c.id) ? { 'data-ss': c.id.replace(/^ps:/, '') } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${c.sys === 'water' ? '💧 ' : ''}${esc(c.name)}<small>${esc(c.sub || '')}</small></span>${PN.chip({ tone, text: word })}</div><small class="pnl-r-line">${c.out ? `runs out ${c.out === 'today' ? 'now' : `≈${c.out}`}` : `room to ${SP().hz.end}`}${r ? ` · relief: ${esc(r.text)}` : ' · no relief listed'}</small>` }; };
+    return {
+      calc: true, fullTitle: `${p.title} · the DC projects it relies on`,
+      head: PN.siteHead(p),
+      answer: needs.length ? `This site relies on <strong>${needs.length}</strong> constraint${needs.length === 1 ? '' : 's'} on its path${gaps.length ? `; <strong>${gaps.length}</strong> run${gaps.length === 1 ? 's' : ''} out before a DC project relieves ${gaps.length === 1 ? 'it' : 'them'}` : ', each with room or relief in time'}.` : 'No capacity constraint on this site\u2019s path in the screen.',
+      figures: [{ v: needs.length, u: '', label: 'constraints it relies on', ctx: '' }, { v: gaps.length, u: '', label: 'run out before relief', ctx: '', tone: gaps.length ? 'over' : 'room' }],
+      lists: [{ title: 'The projects it relies on', rows: needs.slice(0, 5).map(row), total: needs.length, seeAll: { 'data-full-table': 'dca' } }],
+      method: 'The constraints on this site\u2019s path (its sewer path, pumping stations, plant, water system, storage and zone supply), each with the year its capacity runs out and the DC project that relieves it (2026 DC capital maps, draft).',
+      sources: '2026 DC capital maps (draft v2, March 2026); 2020 Water and Wastewater Master Plan; the servicing model.',
+      foot: { primary: { label: 'Show the planned works', attrs: { 'data-mview': 'dc' } } },
+    };
+  }
+  // Capital › Funding (Labs): the funding screen ("Screening results") and the funding levels.
+  function fundingSpec(R) {
+    if (!App().state.dcCosts || !App().state.dcCosts.unitCost) return null;
+    const PN = window.PeelPanel, B = DC().dcaBudget(DC().DCB.budget, DC().DCB.years), pp = v => fmtNum(roundPop(v));
+    const merged = DC().dcaMergeRecs(B);
+    return {
+      calc: true, fullTitle: 'Capital › Funding (Labs) · the funding screen and funding levels',
+      head: PN.areaHead('Capital › Funding', 'What can be funded?', { tone: 'stage', text: 'Labs' }, `Peel · ${fmtMoney(DC().DCB.budget)} over ${DC().DCB.years} years (${MM().THIS_YEAR}–${B.end})`),
+      answer: `With <strong>${fmtMoney(DC().DCB.budget)}</strong> of DC funding against a <strong>${fmtMoney(B.total)}</strong> program, <strong>${B.keep.length}</strong> projects fall within the funding screen and <strong>${B.defer.length}</strong> outside it${B.upper > 0 ? `; without them the screen shows ≈${ppRange(B.lower, B.upper)} people constrained by ${B.end}` : ''}.`,
+      figures: [{ v: B.keep.length, u: '', label: 'within the screen', ctx: fmtMoney(B.spent), tone: 'room' }, { v: B.defer.length, u: '', label: 'outside the screen', ctx: fmtMoney(B.total - B.spent), tone: B.defer.length ? 'tight' : 'room' }, { v: B.upper > 0 ? ppRange(B.lower, B.upper) : '0', u: 'people', label: `constrained by ${B.end}`, ctx: 'without the projects outside it' }, { v: fmtMoney(B.total), u: '', label: 'DC program', ctx: `2026$, ${B.rows.length} projects` }],
+      chart: DC().dcaRecChart(merged, B.end),
+      lists: [{ title: 'Screening results', rows: merged.slice(0, 5).map(x => ({ tone: x.dec === 'Keep' ? 'room' : 'tight', attrs: { 'data-full-table': 'dca' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${x.r.sys === 'water' ? '💧 ' : ''}${esc(x.r.name)}<small>online ${x.r.y || '–'}</small></span>${PN.chip({ tone: x.dec === 'Keep' ? 'room' : 'tight', text: x.dec === 'Keep' ? 'Within' : 'Outside' })}</div><small class="pnl-r-line">${x.r.cost ? fmtMoney(x.r.cost) : 'not costed'} · ${x.r.v > 0 ? `${pp(x.r.v)} people by ${B.end}` : `none by ${B.end}`}</small>` })), total: merged.length, seeAll: { 'data-full-table': 'dca' } }],
+      method: 'A funding screen for discussion, not a capital plan: projects coming online in the window, committed projects first, then growth let through per dollar. DC cost = DC-recoverable share in 2026$. Condition, regulatory and I&amp;I drivers and non-DC funding are not in it.',
+      sources: '2020 DC Background Study (indexed to 2026$); 2026 DC capital maps (draft).',
+      foot: { primary: { label: 'Funding levels', attrs: { 'data-full-table': 'dca' } } },
+    };
   }
   function dcaTimingRow(r, years, atY, pp, uu) {
     const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0];

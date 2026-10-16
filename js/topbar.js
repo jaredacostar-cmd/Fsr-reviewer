@@ -95,24 +95,34 @@
   // puts the node back where it was. renderScenario() calls renderTbScen(), so the
   // chip follows every scenario change.
   const BASIS_SHORT = { all: 'all units', buildout: 'units applied for', committed: 'committed units', remaining: 'units left to build' };
+  // The scenario's settings, as the chip shows them (also the panels' read-only chip: js/panel.js).
+  function scenParts() {
+    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants;
+    return {
+      basis: App().state.basis,
+      count: root.PeelLayerBar.countLabel(App().state.basis),
+      flows: o.ww === 'calibrated' ? '2025 metered' : 'design',
+      criteria: n ? `${n} modified` : 'Peel v2.0',
+      unitCount: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree',
+      expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
+      outside: o.nr === 'on' ? 'nearest' : 'left out',
+    };
+  }
   function renderTbScen() {
     const chip = $('#tb-scen'); if (!chip) return;
     // The scenario chip (SPEC §2): the layers counted, then the settings; the one place the
     // scenario is shown (the footer line is gone).
-    const n = SvcTab().criteriaChanges().length, o = SvcTab().svcOpt, SPl = root.PeelSvcPlants;
+    const n = SvcTab().criteriaChanges().length, sp = scenParts();
     const open = !$('#tb-scen-pop').hidden;
-    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({
-      basis: App().state.basis,
-      flows: o.ww === 'calibrated' ? '2025 metered' : 'design',
-      criteria: n ? `${n} modified` : 'Peel v2.0',
-      count: root.PeelTreeCounts ? root.PeelTreeCounts.label() : 'tree',
-      expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
-      outside: o.nr === 'on' ? 'nearest' : 'left out',
-    }) + (n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : '');
+    chip.innerHTML = root.PeelLayerBar.scenarioChipHTML({ ...sp, count: sp.unitCount }) + (n ? `<span class="tb-mod" title="${esc(SvcTab().criteriaChanges().join('; '))}">${n} modified</span>` : '');
     const more = chip.querySelector('[data-scen-open]'); if (more) more.setAttribute('aria-expanded', String(open));
   }
   let scenHome = null;
+  // A control outside the top bar (a panel's Scenario chip, a guide) can open the popover: the
+  // outside-click below must not close it in that same click.
+  let scenJustOpened = false;
   function openScenPop() {
+    scenJustOpened = true; setTimeout(() => { scenJustOpened = false; }, 0);
     const bar = $('#scen-bar'), pop = $('#tb-scen-pop'); if (!bar || !pop) return;
     if (!scenHome) { scenHome = document.createComment('scen-bar home'); bar.replaceWith(scenHome); }
     if (bar.parentNode !== pop) pop.appendChild(bar);
@@ -249,7 +259,7 @@
     else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
     else if (k === 'sources') openGearPage('sources');
     // Stage 2: Records is the panel's trailing tab, also reached from here; Labs holds the extra tools.
-    else if (k === 'records') { closeTbMenus(); AT().showFootTab('records'); Sh().viewLink.write(); }
+    else if (k === 'records') { closeTbMenus(); AT().openTab('records'); }
     else if (k === 'labs') openGearPage('labs');
   });
   function closeTbMenus() {
@@ -274,7 +284,7 @@
     const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
     const inside = sel => path.some(n => n && n.matches && n.matches(sel)) || !!(e.target.closest && e.target.closest(sel));
     if (!inside('.tb-wrap')) closeTbMenus();
-    if (!inside('.tb-scen-wrap')) closeScenPop();
+    if (!inside('.tb-scen-wrap') && !scenJustOpened) closeScenPop();
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
 
@@ -295,6 +305,8 @@
   // on narrower screens it stays at the top of the Explore panel. The node moves: one search box.
   function placeSearch() {
     const box = $('#search-box'), slot = $('#tb-search'), home = document.querySelector('#tab-explore .search-bar'); if (!box || !slot || !home) return;
+    if (document.documentElement.classList.contains('ws-mode')) { slot.hidden = true; return; }   // a workspace keeps it over the map
+    if (document.documentElement.classList.contains('home-on') && box.closest('#page-search')) return;   // a page's Find step keeps it
     const wide = matchMedia('(min-width: 1600px)').matches;
     if (wide && box.parentElement !== slot) slot.appendChild(box);
     else if (!wide && box.parentElement !== home) home.insertBefore(box, home.firstChild);
@@ -318,11 +330,13 @@
 
   const api = {
     initTopbar,
+    placeSearch,
     renderTrail,
     renderViewSwitch,
     renderTbScen,
     openScenPop,
     closeScenPop,
+    scenParts,
     openGearPage,
     renderExportMenu,
     renderGearMenu,

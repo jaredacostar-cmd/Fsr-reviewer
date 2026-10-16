@@ -394,7 +394,7 @@
     const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev();
     if (!p || p.lat == null) return null;
     const pts = [];
-    for (const a of p.records || []) if (a.kind === 'application' && a.poly) for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
+    for (const a of p.records || []) if (a.kind === 'application' && a.poly && a.phase !== 'cancelled') for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
     const step = Math.max(1, Math.ceil(pts.length / 150));
     return { title: p.title, lat: p.lat, lng: p.lng, m: 1000, pts: pts.filter((_, i) => i % step === 0), muni: p.municipality, edge: pts.length > 0 };
   }
@@ -410,6 +410,46 @@
     eaBox.innerHTML = eaTabHTML();
     if (focused) { const q2 = eaBox.querySelector('[data-eatab-q]'); if (q2) { q2.focus(); q2.setSelectionRange(pos, pos); } }
   }
+  // ---- Stage 3: Capital › Projects and Capital › EAs as standard panels ---------------------------------
+  const inScope = e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '');
+  function projectsPanelSpec() {
+    const PN = root.PeelPanel, act = data.loaded ? M.activeConstruction(data.contracts || new Map(), muni()) : [];
+    const n = st => act.filter(c => c.status === st).length, asOf = data.capital && data.capital.source && data.capital.source.latestLastUpdate;
+    return {
+      fullTitle: `Capital › Projects · ${muni() || 'Peel'}: active Region capital projects`,
+      head: PN.areaHead('Capital › Projects', 'What is being built?', null, `${U.esc(muni() || 'Peel')}${asOf ? ` · capital projects as of ${U.esc(M.fmtDate(asOf))}` : ''}`),
+      answer: !data.capital ? 'Capital projects are not published yet (waiting on Peel GIS).' : act.length ? `<strong>${act.length}</strong> Region capital project${act.length === 1 ? ' is' : 's are'} active${muni() ? ` in ${U.esc(muni())}` : ''}: ${n('under construction')} under construction, ${n('awarded')} awarded and ${n('tendered')} tendered.` : `No active construction${muni() ? ` in ${U.esc(muni())}` : ''}.`,
+      figures: data.capital ? [{ v: act.length, u: 'active', label: 'capital projects', ctx: 'tendered, awarded or under construction' }, { v: n('under construction'), u: '', label: 'under construction', ctx: '' }, { v: n('awarded'), u: '', label: 'awarded', ctx: '' }, { v: n('tendered'), u: '', label: 'tendered', ctx: '' }] : [],
+      lists: [{ title: 'Furthest along', rows: act.slice(0, 5).map(c => ({ attrs: { 'data-ce-open': `cap:${c.key}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(M.workLabel(c.lead.workType))}${c.lead.street ? `<small>${U.esc(M.titleCase(c.lead.street))}${c.lead.municipality ? ` · ${U.esc(M.titleCase(c.lead.municipality))}` : ''}</small>` : ''}</span><span class="pnl-r-fig">${c.percent != null ? `${Math.round(c.percent)}%` : ''}<small>${U.esc(M.statusLabel(c.status))}</small></span></div>` })), total: act.length, seeAll: { 'data-full-table': 'dca' } }],
+      method: 'Region capital projects that are tendered, awarded or under construction, furthest along first. Screening wording: the capital program and its status are the Region\u2019s; nothing here is a Region decision.',
+      sources: 'Region of Peel capital projects (Peel GIS)' + (asOf ? `, as of ${U.esc(M.fmtDate(asOf))}` : '') + '.',
+      foot: { primary: { label: 'Show them on the map', attrs: { 'data-pnl-ce-map': 'cons' } } },
+    };
+  }
+  function easPanelSpec() {
+    const PN = root.PeelPanel, near = nearScope(), all = (data.eas && data.eas.eas) || [], t = today(), y = new Date().getFullYear();
+    const scoped = near ? M.easNear(all, near.lat, near.lng, near.m, near.pts).map(h => ({ ...h.e, _d: h.d })) : muni() ? all.filter(inScope) : all;
+    const cur = M.eaSort(scoped.filter(e => M.EA_CURRENT.has(e.status)), 'next'), up = M.upcoming(scoped, t, 90), open = M.openPeriods(scoped, t);
+    const recent = scoped.filter(e => e.status === 'complete' && e.completedYear && e.completedYear >= y - M.RECENT_YEARS);
+    const may = near ? M.easMayApply(all, near.muni) : [], p = near && root.PeelDevVerdict ? root.PeelDevVerdict.scopedDev() : null;
+    const eaRow = e => ({ attrs: { 'data-ce-open': `ea:${e.id}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(e.name)}<small>${U.esc(M.titleCase(e.system))}${e._d != null ? ` · ${e._d < 1 ? 'on the site' : `${Math.round(e._d)} m away`}` : ''}</small></span>${M.eaBadge(e.status)}</div><small class="pnl-r-line">${e.nextStep ? `next: ${U.esc(e.nextStep.text)}${e.nextStep.date ? ` · ${U.esc(M.fmtDate(e.nextStep.date))}` : ''}` : e.completedYear ? `completed ${e.completedYear}` : 'no next step published'}</small>` });
+    return {
+      fullTitle: `Capital › EAs · ${p ? p.title : muni() || 'Peel'}: every environmental assessment, with filters`,
+      head: p ? PN.siteHead(p) : PN.areaHead('Capital › EAs', 'What is being studied?', open.length ? { tone: 'tight', text: `${open.length} open for comment` } : null, `${U.esc(muni() || 'Peel')} · ${scoped.length} EAs`),
+      answer: near ? `${scoped.length ? `<strong>${scoped.length}</strong> EA${scoped.length === 1 ? '' : 's'} within 1 km of the site boundary (${cur.length} current)` : 'No EA mapped within 1 km of the site boundary'}${may.length ? `; <strong>${may.length}</strong> more may apply (not on the map yet)` : ''}.`
+        : `<strong>${cur.length}</strong> current EA${cur.length === 1 ? '' : 's'}${muni() ? ` in ${U.esc(muni())}` : ''}; ${up.length} milestone${up.length === 1 ? '' : 's'} in the next 90 days${open.length ? `, <strong>${open.length}</strong> open for comment now` : ''}.`,
+      figures: [{ v: cur.length, u: 'current', label: 'EAs under way', ctx: 'commenced, consultation, review or addendum' }, { v: up.length, u: '', label: 'milestones, next 90 days', ctx: '' }, { v: open.length, u: '', label: 'open for comment now', ctx: '', tone: open.length ? 'tight' : null }, { v: recent.length, u: '', label: `completed ${y - M.RECENT_YEARS} or later`, ctx: '' }],
+      lists: [
+        ...(up.length ? [{ title: 'Coming up (90 days)', rows: up.slice(0, 5).map(x => ({ attrs: { 'data-ce-open': `ea:${x.e.id}` }, html: `<div class="pnl-kv"><span>${U.esc(M.MS_LABEL[x.m.type] || x.m.type)}: ${U.esc(x.e.name)}</span><span>${U.esc(M.fmtDate(x.m.date))}</span></div>` })), total: up.length, seeAll: { 'data-full-table': 'dca' } }] : []),
+        { title: near ? 'Near the site' : 'Current EAs', rows: (near ? M.eaSort(scoped, 'next') : cur).slice(0, 5).map(eaRow), total: near ? scoped.length : cur.length, seeAll: { 'data-full-table': 'dca' } },
+        ...(may.length ? [{ title: 'May apply (not on the map yet)', rows: may.slice(0, 5).map(eaRow), total: may.length, seeAll: { 'data-full-table': 'dca' } }] : []),
+      ],
+      method: near ? 'EAs whose mapped study area is within 1 km of the site boundary (0 inside it); "may apply" lists EAs with no mapped study area that name the site\u2019s municipality or the whole Region.' : 'Region of Peel environmental assessments: current ones (commenced, in consultation, under review or in addendum), their dated milestones and open comment periods. Screening wording only.',
+      sources: `Region of Peel EA project pages${data.eas && data.eas.generatedAt ? `, checked ${U.esc(M.fmtDate(data.eas.generatedAt.slice(0, 10)))}` : ''}.`,
+      foot: { primary: { label: 'Show EAs on the map', attrs: { 'data-pnl-ce-map': 'ea' } } },
+    };
+  }
+  if (typeof document !== 'undefined') document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-pnl-ce-map]'); if (b) setOn({ [b.dataset.pnlCeMap]: true }); });
   // EAs within the site's radius (null when no site is scoped): an empty Capital › EAs is hidden.
   // (Any status: a site with only completed EAs nearby still lists them under its filter.)
   const siteEaCount = () => { const near = nearScope(); return near && data.eas ? M.easNear(data.eas.eas || [], near.lat, near.lng, near.m, near.pts).length + M.easMayApply(data.eas.eas || [], near.muni).length : null; };
@@ -479,6 +519,6 @@
 
   // Stage 1 #9: a DC project's status in the capital records (null when it has no record).
   const dcStatusOf = proj => (proj && data.capital ? dcIndex().get(proj) || null : null);
-  const api = { siteEaCount, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

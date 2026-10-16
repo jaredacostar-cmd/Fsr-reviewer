@@ -112,13 +112,30 @@
       <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d ${SvcTab().wwFlowLabel()}</span></h3>
       <div>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}</div>
       <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + built + committed, and after allocations (${SvcTab().wwFlowLabel('long')})</caption>
-        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + committed</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
+        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + approved</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
         <tbody>${plants.map(x => `<tr><td>${esc(SV().PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${fmt1(x.room)} ML/d<small>≈${fmtNum(roundPop(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${fmt1(x.after)} ML/d</strong><small>≈${fmtNum(roundPop(x.peopleAfter))} people</small></td></tr>`).join('')}</tbody></table>
       <div class="export-bar"><button type="button" class="btn small" data-alloc-csv>Export CSV</button><label class="btn small">Import CSV<input type="file" accept=".csv,text/csv" data-alloc-imp hidden></label></div>
       ${rows.length ? `<table class="dt"><caption>Allocations recorded${rows.length > 10 ? ` · showing ${shown.length} of ${fmtNum(rows.length)}` : ''}</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
         ${shown.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(SV().PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>
         ${rows.length > 10 ? `<p><button type="button" class="btn small link" data-alloc-all>${allocSeeAll ? 'Show fewer' : `See all ${fmtNum(rows.length)} allocations`}</button></p>` : ''}` : ''}
       ${wwInfoLine('Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ' + SvcTab().wwFlowLabel('long') + '.')}`;
+    // Stage 3: the standard panel; the tables above are its full table.
+    const PN = root.PeelPanel;
+    if (PN) {
+      const short = plants.filter(x => x.after < 0);
+      PN.set('svc:alloc', {
+        calc: true, fullTitle: 'Servicing › Allocations · Peel: the plants and every allocation recorded',
+        head: PN.areaHead('Servicing › Allocations', 'What is already allocated?', short.length ? { tone: 'over', text: `${short.length} short` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(rows.length)} allocation${rows.length === 1 ? '' : 's'} recorded in this browser`),
+        answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${fmtNum(ahead.length)} ahead of approval.${short.length ? ` ${short.map(x => esc(SV().PLANT_SHORT[x.pl])).join(' and ')} ${short.length === 1 ? 'has' : 'have'} no room left at the 90% trigger after them.` : ''}` : 'No allocations recorded yet. Record one from a development (its ⋯ menu, Record allocation) or import a CSV in the full table.',
+        figures: [{ v: fmtNum(rows.length), u: 'allocations', label: 'recorded', ctx: `${fmtNum(totU)} units` },
+          ...plants.map(x => ({ v: fmt1(x.after), u: 'ML/d', label: `${SV().PLANT_SHORT[x.pl]} room`, ctx: `after allocations · ≈${fmtNum(roundPop(x.peopleAfter))} people`, tone: x.after < 0 ? 'over' : 'room' }))].slice(0, 4),
+        chart: `<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations (ML/d)</p>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}`,
+        lists: [{ title: 'Allocations', rows: rows.slice(0, 5).map(r => ({ attrs: r.p ? { 'data-pnl-dev': r.key } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : esc(r.key)}<small>${esc(SV().PLANT_SHORT[r.pl] || '')}${r.a.ref ? ` · ${esc(r.a.ref)}` : ''}</small></span><span class="pnl-r-fig">${fmtNum(r.a.units)}<small>units</small></span></div>` })), total: rows.length, seeAll: { 'data-full-table': 'svc' } }],
+        method: `Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ${esc(SvcTab().wwFlowLabel('long'))}. Allocations are kept in this browser (export and import them as CSV in the full table).`,
+        sources: 'Plant capacity and flows: Region of Peel 2025 annual reports; the 90% trigger: 2020 Master Plan (Vol. 4, s. 2.3.1); allocations: recorded here.',
+        foot: { primary: { label: 'Import or export CSV', attrs: { 'data-full-table': 'svc' }, title: 'Open the full table: Export CSV and Import CSV are there' } },
+      });
+    }
   }
   $('#alloc-body').addEventListener('click', e => {
     if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }
