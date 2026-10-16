@@ -1616,6 +1616,12 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .help-card { border-radius: var(--radius-panel); padding: var(--space-2) var(--space-3); margin: var(--space-2) 0; background: var(--surface-2); }
 .help-card > summary { cursor: pointer; display: grid; gap: var(--space-1); }
 .help-card > summary small { color: var(--text-muted); font-size: var(--fs-2); font-weight: 400; }
+/* Stage 5: What moved where (Help) and Usage (Settings). */
+.help-moved h4 { margin: var(--space-3) 0 var(--space-1); }
+.moved-t, .usage-t { width: 100%; border-collapse: collapse; }
+.moved-t th, .moved-t td, .usage-t th, .usage-t td { text-align: left; vertical-align: top; padding: var(--space-1) var(--space-2) var(--space-1) 0; border-bottom: 1px solid var(--border); }
+.moved-t td:first-child { width: 42%; color: var(--text-muted); }
+.usage-t .num { text-align: right; font-variant-numeric: tabular-nums; }
 .help-card[open] > summary { margin-bottom: var(--space-2); }
 .help-card ol { margin: 0 0 var(--space-2); padding-left: var(--space-3); font-size: var(--fs-2); line-height: 1.45; }
 .help-card li { margin: var(--space-1) 0; }
@@ -2796,6 +2802,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .pnl-acts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .pnl-acts .pnl-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .pnl-note { margin: var(--space-1) 0 0; color: var(--text-muted); }
+/* Stage 5: Report a data issue, at the foot of every panel and page. */
+.pnl-acts .pnl-report-line { margin-left: auto; align-self: center; white-space: nowrap; }
 /* The full table's own table classes (js/svc-capacity.js fullTableHTML). */
 .ft-scroll { overflow-x: auto; }
 .ft-table { width: 100%; font-variant-numeric: tabular-nums; }

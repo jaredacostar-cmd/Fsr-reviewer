@@ -100,7 +100,60 @@
     return `<a href="${esc(url)}" target="_blank" rel="noopener" data-info="report-issue">Report data issue ↗</a>`;
   }
 
-  const api = { REPO_URL, TITLE_MAX, issueTitle, issueBody, issueUrl, appMeta, reportLinkHTML };
+  // ---- Stage 5: "Report a data issue" on every panel and page footer ---------------
+  // The issue names the panel (its title and key), where it was open, and a link to the same view,
+  // so the problem can be found again. The link is built when the person clicks (the view changes
+  // while the panel is open). Only what the app shows goes in: no search text (the share link's q),
+  // nothing typed or stored about a person.
+  // panel: { name, key, where, link } — any field may be missing.
+  function panelIssueTitle(panel) {
+    const pn = panel || {};
+    const title = `Data issue: ${pn.name || pn.key || 'panel'}${pn.where ? ` (${pn.where})` : ''}`;
+    return title.length > TITLE_MAX ? title.slice(0, TITLE_MAX - 1) + '…' : title;
+  }
+  function panelIssueBody(panel, meta) {
+    const pn = panel || {}, m = meta || {};
+    return [
+      `**Panel:** ${[pn.name, pn.key ? `(${pn.key})` : null].filter(Boolean).join(' ') || 'unknown panel'}`,
+      pn.where ? `**Open in:** ${pn.where}` : null,
+      pn.link ? `**Link to this view:** ${pn.link}` : null,
+      `**App version:** ${m.appVersion || 'unknown'}`,
+      `**Data snapshot:** ${m.snapshotDate || 'unknown'}`,
+      '',
+      '**What is wrong?**',
+      '_Which figure, row or label looks wrong, what it shows and what you expected. Say where the right value comes from if you know._',
+      '',
+      'Please attach a screenshot showing the issue.',
+    ].filter(l => l != null).join('\n');
+  }
+  // The view's link without the search text (q) — the rest is the app's own state.
+  const linkWithoutSearch = url => {
+    const u = String(url || ''), i = u.indexOf('#'); if (i < 0) return u;
+    const q = new URLSearchParams(u.slice(i + 1)); q.delete('q');
+    const h = q.toString(); return h ? `${u.slice(0, i)}#${h}` : u.slice(0, i);
+  };
+  function panelIssueUrl(panel, meta) {
+    const pn = { ...(panel || {}), link: panel && panel.link ? linkWithoutSearch(panel.link) : null };
+    const params = new URLSearchParams({ title: panelIssueTitle(pn), body: panelIssueBody(pn, meta) });
+    return `${REPO_URL}/issues/new?${params.toString()}`;
+  }
+  // The footer link: a plain <a> to a new issue; its pre-filled address is set on click.
+  const panelLinkHTML = (key, name, where) => `<a class="pnl-report" href="${esc(`${REPO_URL}/issues/new`)}" target="_blank" rel="noopener" data-report-panel="${esc(key || '')}" data-report-name="${esc(name || '')}" data-report-where="${esc(where || '')}" data-info="report-issue">Report a data issue ↗</a>`;
+  if (typeof document !== 'undefined' && document.addEventListener) {
+    // Capture: set the address before the browser follows the link (and before any panel handler).
+    // Where the panel was open: the full map, or a workspace's map view.
+    const whereNow = () => { try { const W = root.PeelWorkspaces; if (!W || !W.mode) return ''; const m = W.mode(); return m === 'ws' ? `Workspace map: ${W.current ? W.current() : ''}` : m === 'full' ? 'Full map' : 'Workspace page'; } catch (err) { return ''; } };
+    const fill = e => {
+      const a = e.target && e.target.closest && e.target.closest('a[data-report-panel]'); if (!a) return;
+      let link = null; try { link = root.PeelShare && root.PeelShare.viewLink && root.PeelShare.viewLink.url ? root.PeelShare.viewLink.url() : (typeof location !== 'undefined' ? location.href : null); } catch (err) { link = null; }
+      a.href = panelIssueUrl({ name: a.dataset.reportName, key: a.dataset.reportPanel, where: a.dataset.reportWhere || whereNow(), link }, appMeta());
+    };
+    document.addEventListener('click', fill, true);
+    document.addEventListener('auxclick', fill, true);
+    document.addEventListener('contextmenu', fill, true);
+  }
+
+  const api = { REPO_URL, TITLE_MAX, issueTitle, issueBody, issueUrl, appMeta, reportLinkHTML, panelIssueTitle, panelIssueBody, panelIssueUrl, panelLinkHTML, linkWithoutSearch };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelReportIssue = api;
 })(typeof window !== 'undefined' ? window : globalThis);

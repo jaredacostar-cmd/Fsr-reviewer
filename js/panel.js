@@ -43,6 +43,9 @@
   const CALC = /\d\s*(?:ML\/d|L\/s|ML\b|m³\/d|%|people\b)/;
   const strip = t => String(t == null ? '' : t).replace(/<[^>]*>/g, ' ');
   const calcIn = s => CALC.test([s.answer, ...(s.figures || []).map(f => f && `${strip(f.v)} ${f.u || ''} ${f.ctx || ''}`), ...(s.lists || []).flatMap(l => (l && l.rows ? l.rows.slice(0, 5) : []).map(r => r.html))].map(strip).join(' '));
+  // Stage 5: "Report a data issue" in every footer, at the end of the actions row (js/report-issue.js
+  // fills the issue on click).
+  const reportLink = (key, name, where) => (root.PeelReportIssue && root.PeelReportIssue.panelLinkHTML ? `<span class="pnl-report-line small">${root.PeelReportIssue.panelLinkHTML(key, strip(name).trim(), where)}</span>` : '');
   function html(spec) {
     const s = spec || {}, h = s.head || {};
     // The trail: shown from two levels down (at Peel it would only repeat the name).
@@ -67,7 +70,7 @@
     if (s.method) out.push(`<details class="pnl-fold" data-sec="method"><summary>Method and basis</summary><div class="small muted">${s.method}</div></details>`);
     if (s.sources) out.push(`<details class="pnl-fold" data-sec="sources"><summary>Sources</summary><div class="small muted">${s.sources}</div></details>`);
     const f = s.foot || {}, sec = (f.secondary || []).slice(0, 1);
-    out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}</div>
+    out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}${reportLink(s.key, h.name)}</div>
       <p class="pnl-note small">${NOTE}</p></footer>`);
     return `<article class="pnl" data-panel="${esc(s.key || '')}">${out.join('')}</article>`;
   }
@@ -199,7 +202,7 @@
       if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('pnl-row') && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
     }, true);
   }
-  const api = { SECTIONS, NOTE, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
+  const api = { SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPanel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

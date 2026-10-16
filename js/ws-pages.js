@@ -50,7 +50,8 @@
     if (m.method) out.push(`<details class="pnl-fold" data-psec="method"><summary>Method and basis</summary><div class="small muted">${m.method}</div></details>`);
     if (m.sources) out.push(`<details class="pnl-fold" data-psec="sources"><summary>Sources</summary><div class="small muted">${m.sources}</div></details>`);
     const acts = (m.actions || []).filter(Boolean);
-    out.push(`<footer class="page-foot" data-psec="footer">${acts.length ? `<div class="pnl-acts">${acts.map(a => `<button type="button" class="btn small${a.primary ? ' pnl-primary' : ' pnl-sec'}"${attrs(a.attrs)}${a.title ? ` title="${esc(a.title)}"` : ''}>${esc(a.label)}</button>`).join('')}</div>` : ''}<p class="pnl-note small">${note || ''}</p></footer>`);
+    const report = root.PeelReportIssue && root.PeelReportIssue.panelLinkHTML ? `<span class="pnl-report-line small">${root.PeelReportIssue.panelLinkHTML(`page:${m.id || ''}`, String(m.name || '').replace(/<[^>]*>/g, ''), m.id === 'home' ? 'Home' : 'Workspace page')}</span>` : '';
+    out.push(`<footer class="page-foot" data-psec="footer"><div class="pnl-acts">${acts.map(a => `<button type="button" class="btn small${a.primary ? ' pnl-primary' : ' pnl-sec'}"${attrs(a.attrs)}${a.title ? ` title="${esc(a.title)}"` : ''}>${esc(a.label)}</button>`).join('')}${report}</div><p class="pnl-note small">${note || ''}</p></footer>`);
     return `<div class="home-main page-main" data-page="${esc(m.id || '')}">${out.join('')}</div>`;
   }
   const sectionsOf = h => [...String(h).matchAll(/data-psec="(\w+)"/g)].map(x => x[1]);
