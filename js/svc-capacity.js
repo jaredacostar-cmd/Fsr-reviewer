@@ -160,6 +160,8 @@
     return rows.map(derive);
   }
   // The stacked bar: existing, built, committed, proposed; marks at 90% and 100% of capacity.
+  // The panel's chart: the same row as the shared capacity bar, with its % and the 90% / 100% marks labelled.
+  const labelledBar = r => (LB() && LB().capacityBarHTML ? LB().capacityBarHTML({ cap: r.cap, existing: r.existing, built: r.built, committed: r.committed, buildout: r.buildout, trigger: 0.9, unit: r.small ? '' : r.unit, firm: r.capWord === 'firm' ? r.cap : null }, { fmt: v => (r.small ? qty(r, v) : r.unit === 'L/s' ? fmtNum(Math.round(v)) : fmt1(v)) }) : barOf(r));
   function barOf(r) {
     if (!LB()) return '';
     const f = v => qty(r, v);
@@ -245,7 +247,7 @@
         soon ? { v: soon.limit.y === 'today' ? 'Now' : soon.limit.y == null ? `after ${end}` : `≈${soon.limit.y}`, u: '', label: soon.limit.y === 'today' ? 'soonest limit: already reached' : 'soonest limit', ctx: `${esc(soon.name)}: ${esc(limitWords(soon.limit.what))}`, tone: soon.limit.y != null ? 'over' : 'room' } : null,
         big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo) } : null,
       ].filter(Boolean),
-      chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${sorted[0].capWord} capacity)</span></p>${barOf(sorted[0])}${LB() ? LB().capLegendHTML() : ''}` : '',
+      chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${sorted[0].capWord} capacity)</span></p>${labelledBar(sorted[0])}${LB() ? LB().capLegendHTML() : ''}` : '',
       lists: [{ title: 'Facilities', tools, rows: sorted.slice(0, 5).map(listRow), total: rows.length, seeAll: { 'data-full-table': 'svc:capacity' } }],
       method: `Committed = existing + built + committed as a % of the row's capacity (rated for treatment, firm for pumping, available for storage); build-out adds the proposed applications. Each row's basis: 2025 metered (calibrated), design criteria or the 2020 Master Plan. Limit year and impact follow the 2020 Master Plan's own tests: treatment against the 90% expansion trigger (Vol. 4, s. 2.3.1), pumping stations peak wet weather against firm capacity (s. 2.3.2), storage required against available (Vol. 3, Table 12), pumping into a zone maximum day against firm pumping. Largest impact ranks how far build-out goes past that limit, as a share of it. ${U.PIPE_RESULTS ? '' : 'Sewer pipes are not in this list: pipe-by-pipe results are left to the Region\u2019s model. '}The full table adds the flows, the horizon years and the plant and water charts.`,
       sources: 'Rated capacity and the 2025 metered flows: Region of Peel 2025 annual reports (wastewater plants, drinking water systems). Firm pumping and storage: 2020 Water and Wastewater Master Plan (Vol. 3 and 4). Growth: the applications and permits on the map at Peel design criteria. Planned expansions and relief: 2026 DC capital maps (draft).',

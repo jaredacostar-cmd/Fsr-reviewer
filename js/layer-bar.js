@@ -112,9 +112,10 @@
     const trig = k.trigger < 1 && k.trigger > 0 ? `<span class="cb-t" style="left:${at(k.trigger * k.cap)}">${Math.round(k.trigger * 100)}%</span>` : '';
     return `<div class="capbar${o.small ? ' sm' : ''}"><div class="cb-vals" aria-hidden="true">${vals}</div>${bar}<div class="cb-scale" aria-hidden="true">${trig}<span class="cb-t cb-100" style="left:${at(k.cap)}">100%</span></div></div>`;
   }
-  // The capacity bars' legend on one line: short names (each segment's full name is on hover).
+  // The capacity bars' legend on one line: short names (each segment's full name is on hover); the
+  // 90% and 100% marks are labelled on the bar itself.
   function capLegendHTML() {
-    return legendHTML([{ layer: 'existing', text: 'On the system' }, { layer: 'built', text: 'Built' }, { layer: 'committed', text: 'Committed' }, { layer: 'proposed', text: 'In review' }, 'trigger', 'rated', 'over'], { cls: 'one-line' });
+    return legendHTML([{ layer: 'existing', text: 'On the system' }, { layer: 'built', text: 'Built' }, { layer: 'committed', text: 'Committed' }, { layer: 'proposed', text: 'In review' }, 'over'], { cls: 'one-line' });
   }
 
   // ---- Scenario chip (SPEC §2): the basis is a set of layers ----------------------------------

@@ -164,7 +164,9 @@ test('capacity bars: % on the bar, the 90% and 100% marks labelled, one-line leg
   assert.match(B.capacityBarHTML({ ...k, buildout: 75 }), /<span class="cb-v" style="left:[\d.]+%">70% → 75%<\/span>/, 'one label when close');
   const L = B.capLegendHTML();
   assert.match(L, /^<div class="ly-legend one-line">/);
-  assert.match(L, /100% capacity/); assert.match(L, /past capacity/); assert.doesNotMatch(L, /100% rated|beyond rated/);
+  assert.match(L, /past capacity/); assert.doesNotMatch(L, /100% rated|beyond rated|90% trigger/, 'the marks are labelled on the bar');
+  assert.match(B.legendHTML(['rated']), /100% capacity/, 'one word for 100%, firm or rated');
+  assert.match(src('js/svc-capacity.js'), /\$\{labelledBar\(sorted\[0\]\)\}/);
   for (const f of ['js/svc-capacity.js', 'js/overview-tab.js', 'js/svc-scope.js']) assert.doesNotMatch(src(f), /'trigger', 'rated', 'over'\]/, f);
   // A clearer step between committed and in review, in both themes.
   const css = src('css/app.css');
