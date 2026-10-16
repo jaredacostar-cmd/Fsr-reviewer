@@ -419,8 +419,8 @@
     const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
     Ex().download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
-  // The selection actions, in the selection scope (right panel).
-  $('#scope-body').addEventListener('click', e => {
+  // The selection actions, in the selection scope (right panel) and on the Study area page.
+  const selClick = e => {
     const a = e.target.closest('[data-sel]');
     if (a) {
       const k = a.dataset.sel;
@@ -431,10 +431,14 @@
       return;
     }
     const o = e.target.closest('[data-open]');
-    if (o && selection.has(o.dataset.open)) { DN().showDetail(selection.get(o.dataset.open)); return; }
+    if (o && selection.has(o.dataset.open)) { DN().showDetail(selection.get(o.dataset.open)); if (e.currentTarget && e.currentTarget.id === 'home' && root.PeelWorkspaces) root.PeelWorkspaces.openPage('site'); return; }
     const d = e.target.closest('[data-drop]');
     if (d) { selection.delete(d.dataset.drop); drawSelection(); Meas().openSelectionResult('Selection'); }
-  });
+    // (on the page: the page shows the new selection)
+    if (e.currentTarget && e.currentTarget.id === 'home' && root.PeelWorkspaces && root.PeelWorkspaces.renderPage) setTimeout(() => root.PeelWorkspaces.renderPage(true), 0);
+  };
+  $('#scope-body').addEventListener('click', selClick);
+  { const h = $('#home'); if (h) h.addEventListener('click', e => { if (e.target.closest('[data-page-map], .page-sel')) selClick(e); }); }
 
   // ---- Unselect: tap empty map, Esc, or the Clear selection button ----------------------------
   // Clears the open panel (development, area, DC item…), the highlighted catchment / zone, a drawn

@@ -143,7 +143,7 @@
   { const host = $('#scope-body'); if (host) host.addEventListener('click', e => {
     if (!fileCtx) return;
     if (e.target.closest('[data-file-open-dev]')) { DN().showDetail(fileCtx.p); return; }
-    if (e.target.closest('[data-file-tree]')) { const p = fileCtx.p; DN().showDetail(p); setTimeout(() => { if (window.DevTab && window.DevTab.setSub) window.DevTab.setSub('files'); }, 0); return; }
+    if (e.target.closest('[data-file-tree]')) { const p = fileCtx.p; DN().showDetail(p); setTimeout(() => { if (window.PeelAnalysisTabs && window.PeelAnalysisTabs.openTab) window.PeelAnalysisTabs.openTab('records', 'files'); }, 0); return; }
     const f = e.target.closest('[data-file]');
     if (f) { const r = fileCtx.p.records.find(x => x.uid === f.dataset.file); if (r) showRecordDetail(r, fileCtx.p); }
   }); }

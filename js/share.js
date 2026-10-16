@@ -128,13 +128,13 @@
     };
     return { ready, write, apply, hash: () => encode(), url: () => `${location.origin}${location.pathname}#${encode()}` };
   })();
-  async function copyViewLink(btn) {
+  async function copyViewLink() {
     const url = viewLink.url();
-    try { await navigator.clipboard.writeText(url); btn.textContent = 'Link copied'; }
+    // (the Export menu closes on the click, so the confirmation is a toast, not the button's label)
+    try { await navigator.clipboard.writeText(url); if (window.PeelUtil && window.PeelUtil.toast) window.PeelUtil.toast('Link copied: it opens this view, with its filters and scenario'); }
     catch (e) { prompt('Copy this link:', url); }
-    setTimeout(() => { btn.textContent = 'Share link'; }, 1800);
   }
-  document.addEventListener('click', e => { const b = e.target.closest('[data-share]'); if (b) copyViewLink(b); });
+  document.addEventListener('click', e => { const b = e.target.closest('[data-share]'); if (b) copyViewLink(); });
 
   // ---- Public contract ------------------------------------------------------------------
   const api = { viewLink, copyViewLink };

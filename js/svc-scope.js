@@ -282,7 +282,7 @@
       folds: [{ title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') }],
       method: `${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow. ${k ? (s.kind === 'ps' ? 'Peak wet weather against firm capacity (2020 Master Plan, Vol. 4, s. 2.3.2).' : 'Against rated capacity; the 2020 Master Plan expands a plant when 90% of rated is projected to be reached.') : ''}`,
       sources: 'Region of Peel 2025 annual reports; 2020 Water and Wastewater Master Plan; the sewer network and blocks (data/servicing.json, data/blocks.json); the applications and permits on the map at Peel design criteria.',
-      foot: { primary: { label: 'Show on the map', attrs: { 'data-pnl-focus': s.a ? s.a.id : '' }, title: 'Zoom to it, with everything upstream' }, secondary: [{ label: 'Area report', attrs: { 'data-ss-report': '' } }] },
+      foot: { primary: { label: 'Show on the map', attrs: s.a ? { 'data-pnl-focus': s.a.id } : { 'data-ss-fit': s.ref }, title: s.a ? 'Zoom to it, with everything upstream' : 'Zoom to the area it serves' }, secondary: [{ label: 'Area report', attrs: { 'data-ss-report': '' } }] },
     };
   }
   function cardHTML(s, set) {
@@ -333,7 +333,17 @@
     if (b.hasAttribute('data-ss-report')) { const s = current(); if (s) Rep().areaReport(App().state.filtered.filter(has), `Area report – ${s.title}`, s.a && s.a.rings ? s.a.rings : []); }
   });
 
-  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
+  // A plant or the water system: the map fitted to the blocks or zones it serves.
+  function fitScope(ref) {
+    const s = resolve(ref), map = root.PeelMapCore && root.PeelMapCore.map; if (!s || !map || !root.L || !s.ids) return false;
+    const bb = [...s.ids].map(id => SD().svcById.get(id)).filter(a => a && a.bbox);
+    if (!bb.length) return false;
+    const b = bb.reduce((t, a) => [Math.min(t[0], a.bbox[0]), Math.min(t[1], a.bbox[1]), Math.max(t[2], a.bbox[2]), Math.max(t[3], a.bbox[3])], [Infinity, Infinity, -Infinity, -Infinity]);
+    map.fitBounds([[b[1], b[0]], [b[3], b[2]]], { padding: [30, 30] });
+    return true;
+  }
+  if (typeof document !== 'undefined') document.addEventListener('click', e => { const f = e.target.closest && e.target.closest('[data-ss-fit]'); if (f) fitScope(f.dataset.ssFit); });
+  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

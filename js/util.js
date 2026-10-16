@@ -216,8 +216,17 @@
       + `${o.value != null && o.value !== '' ? `<div class="hc-v"><b>${e(o.value)}</b>${o.sub ? ` <span>${e(o.sub)}</span>` : ''}</div>` : o.sub ? `<div class="hc-v"><span>${e(o.sub)}</span></div>` : ''}`
       + `${o.html ? `<div class="hc-x">${o.html}</div>` : ''}<div class="hc-a">Click: ${e(o.open || 'open its scope')}${o.also ? ` · ${e(o.also)}` : ''}</div></div>`;
   }
+  // A short confirmation at the bottom of the screen ("Link copied"), read out by screen readers.
+  let toastT = null;
+  function toast(text) {
+    if (typeof document === 'undefined') return;
+    let el = document.getElementById('toast');
+    if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
+    el.textContent = text; el.classList.add('on');
+    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
+  }
   const api = {
-    hoverCard,
+    hoverCard, toast,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
