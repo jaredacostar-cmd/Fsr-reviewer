@@ -172,7 +172,12 @@
     setTimeout(() => { const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
   }
   document.addEventListener('click', e => {
-    if (e.target.closest('[data-help-open]')) return showHelp();
+    // On Home or a workspace page the side panel Help opens in is hidden: open the full map first,
+    // or the button seems to do nothing (Help becomes its own page in design bundle 6).
+    if (e.target.closest('[data-help-open]')) {
+      if (document.documentElement.classList.contains('home-on') && root.PeelWorkspaces && root.PeelWorkspaces.setMode) root.PeelWorkspaces.setMode('full');
+      return showHelp();
+    }
     if (e.target.closest('[data-help-moved]')) { if (!$('#help-moved')) showHelp(); const d = $('#help-moved'); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); } return; }
     if (e.target.closest('[data-help-tour]')) { AC().closeDetail(); return startTour(); }
     // Phase 3b: Help carries the change log too — same destination as the gear menu's Change log.
