@@ -63,7 +63,7 @@ test('devKeysOf reads the data-dev rows (escaped keys too)', () => {
   assert.equal(S.devKeysOf('<p>none</p>'), null);
 });
 
-test('every producer opens a named scope: file, pipe, DC work, block, water facility, selection, help', () => {
+test('every producer opens a named scope: file, pipe, DC work, block, water facility, selection (Help is a page: bundle 6)', () => {
   for (const [f, re] of [
     ['js/aerial-check.js', /openResult\(\{ ref: `file:\$\{r\.uid\}`/],
     ['js/sewer-cap.js', /\{ ref: `pipe:\$\{i\}`, devKeys: up\.map\(r => r\.dev\.key\) \}/],
@@ -72,7 +72,6 @@ test('every producer opens a named scope: file, pipe, DC work, block, water faci
     ['js/sewer-trace.js', /openResult\(\{ ref: `iiblock:\$\{b\.id\}`/],
     ['js/water-trace.js', /openResult\(\{ ref: `wfac:/],
     ['js/measure.js', /ref: 'sel:selection'/],
-    ['js/tips.js', /ref: 'help:help'/],
   ]) assert.match(src(f), re, f);
   assert.match(src('js/tools.js'), /return S\.openResult\(opts \|\| \{\}\);/, 'PeelTools.openResult goes through the scope');
 });

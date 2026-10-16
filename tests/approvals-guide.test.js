@@ -42,7 +42,7 @@ test('it says what the app does: draft approval commits (MECP D-5-1), zoning alo
 
 test('easy to reach: Home sidebar (Reference), the Stage block, a site’s stage section, Records › Files; a share link', () => {
   const w = src('js/workspaces.js');
-  assert.match(w, /const REF = \{ approvals: \{ label: 'How approvals work'/);
+  assert.match(w, /const REF = \{ help: \{ label: 'Help'[^}]*\}, approvals: \{ label: 'How approvals work'/);
   assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{Object\.keys\(REF\)\.map\(id => item\(id, REF\[id\]\.what\)\)\.join\(''\)\}<\/ul>/);
   assert.match(w, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\]\) id = 'home';/);
   assert.match(w, /\/\^p:\/\.test\(w\) && \(BY_ID\[w\.slice\(2\)\] \|\| REF\[w\.slice\(2\)\]\)/, 'a link to the page opens it');

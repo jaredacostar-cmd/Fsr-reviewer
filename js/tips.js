@@ -154,16 +154,41 @@
     'The PDFs under Export (top bar) — executive briefing, development memo, area report, comparison — open a print-ready page: use Print / Save as PDF.',
     'On a phone or tablet, Filters opens the search, filters and the developments on the map; tap it again to go back to the map.',
   ];
-  function showHelp() {
-    root.PeelSvcScope.openResult({ ref: 'help:help', title: 'Help & tips', reopen: showHelp, html: `<div class="head"><h3>Help &amp; tips</h3><div class="m">Guides for common tasks — each one can set the map up for you</div></div>
-      <p><button type="button" class="btn" data-help-tour>Take the tour again</button> <button type="button" class="btn" data-help-log>What's new — change log</button> <button type="button" class="btn" data-help-moved>What moved where</button></p>
+  // Bundle 6: Help is a page in Home's layout (Home › Reference): start here by role, what each
+  // workspace answers, the task guides ("Show me" opens the full map, set up), the tour, the change log,
+  // what moved where, the glossary and quick tips.
+  const ROLES = [
+    ['Infrastructure planner or engineer', 'Screen an application, an FSR or a pre-consultation.', ['site', 'fsr', 'tight']],
+    ['Manager or director', 'What needs attention, and whether the capital program keeps up.', ['home', 'tight', 'projects']],
+    ['Growth or policy analyst', 'How much is coming, where, and when.', ['growth', 'study', 'week']],
+    ['Capital or asset management', 'DC projects against the capacity they relieve; ageing sewers carrying growth.', ['projects', 'pipes']],
+  ];
+  const ASKS = { site: 'Can this development be serviced, and what must be confirmed?', fsr: 'Does the consultant’s FSR match the app’s figures?', growth: 'How much is coming, where, and how fast?', study: 'What does a drawn area add, and what does it lean on?', tight: 'Can the system take it?', week: 'What changed since the last update?', projects: 'Is the capital program arriving in time for growth?', pipes: 'Which ageing sewers carry the most growth?' };
+  function helpPage() {
+    const W = root.PeelWorkspaces, label = id => (id === 'home' ? 'Home' : W && W.BY_ID && W.BY_ID[id] ? W.BY_ID[id].label : id);
+    const roles = `<div class="help-roles">${ROLES.map(([r, w, ids]) => `<div class="help-role"><strong>${esc(r)}</strong><small>${esc(w)}</small><div>${ids.map(id => `<button type="button" class="btn small" data-ws-page="${id}">${esc(label(id))}</button>`).join('')}</div></div>`).join('')}</div>`;
+    const asks = `<table class="help-asks small"><tbody>${Object.entries(ASKS).map(([id, q]) => `<tr><th scope="row"><button type="button" class="btn small link" data-ws-page="${id}">${esc(label(id))}</button></th><td>${esc(q)}</td></tr>`).join('')}</tbody></table>`;
+    const guides = HELP.map((h, i) => `<details class="help-card"><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
+        <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me on the map</button></details>`).join('');
+    const mid = `<section class="help-page" data-psec="help">
+      <h3 class="ws-h">Start here</h3>${roles}
+      <h3 class="ws-h">What each workspace answers</h3>${asks}
+      <h3 class="ws-h">Task guides</h3><p class="small muted">Each one sets the full map up for you.</p>${guides}
+      <h3 class="ws-h">More help</h3>
+      <p><button type="button" class="btn small" data-help-tour>Take the tour</button> <button type="button" class="btn small" data-help-log>What's new: the change log</button> <button type="button" class="btn small" data-help-moved>What moved where</button> <button type="button" class="btn small" data-ws-page="glossary">Glossary</button> <button type="button" class="btn small" data-ws-page="approvals">How approvals work</button></p>
       <div id="help-log-body" aria-live="polite"></div>
       <details class="help-card help-moved" id="help-moved"><summary><strong>What moved where</strong><small>For existing users: where each tab, sub-view and control is now.</small></summary>${movedHTML()}</details>
-      ${HELP.map((h, i) => `<details class="help-card"${i === 0 ? ' open' : ''}><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
-        <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me</button></details>`).join('')}
-      <h3 class="sub-title">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` });
-    if (phoneUI()) DT().toggleSidebar(false);
+      <h3 class="ws-h">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+    </section>`;
+    return { id: 'help', eyebrow: 'Reference', name: 'How do I use this?', answer: 'Start with your question: each workspace answers one, on a page like this, and its <strong>Open the map</strong> shows the map with only the layers it needs. The <strong>Full map</strong> has every layer, filter and tool; the task guides below set it up for you.', mid,
+      actions: [{ label: 'Take the tour', attrs: { 'data-help-tour': '' }, primary: true }, { label: 'Open the full map', attrs: { 'data-ws-full': '' } }] };
   }
+  // The Help button, the tour's Help and old links: the Help page.
+  function showHelp() {
+    const W = root.PeelWorkspaces; if (W && W.openPage) { W.openPage('help'); return; }
+  }
+  // (a guide or the tour from the page: the full map first, where they set things up)
+  const toFull = () => { const W = root.PeelWorkspaces; if (document.documentElement.classList.contains('home-on') && W && W.setMode) { W.setMode('full'); return true; } return false; };
   // The Help menu's change log: render into the help view (marks the releases seen,
   // which clears the "new" dot on the Help button).
   function showHelpLog() {
@@ -172,19 +197,14 @@
     setTimeout(() => { const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
   }
   document.addEventListener('click', e => {
-    // On Home or a workspace page the side panel Help opens in is hidden: open the full map first,
-    // or the button seems to do nothing (Help becomes its own page in design bundle 6).
-    if (e.target.closest('[data-help-open]')) {
-      if (document.documentElement.classList.contains('home-on') && root.PeelWorkspaces && root.PeelWorkspaces.setMode) root.PeelWorkspaces.setMode('full');
-      return showHelp();
-    }
+    if (e.target.closest('[data-help-open]')) return showHelp();
     if (e.target.closest('[data-help-moved]')) { if (!$('#help-moved')) showHelp(); const d = $('#help-moved'); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); } return; }
-    if (e.target.closest('[data-help-tour]')) { AC().closeDetail(); return startTour(); }
+    if (e.target.closest('[data-help-tour]')) { const f = toFull(); AC().closeDetail(); return f ? setTimeout(startTour, 400) : startTour(); }
     // Phase 3b: Help carries the change log too — same destination as the gear menu's Change log.
     if (e.target.closest('[data-help-log]')) { CL().renderChangelog(); const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     const g = e.target.closest('[data-help-go]'); if (!g) return;
     const h = HELP[+g.dataset.helpGo]; if (!h) return;
-    h.go();
+    if (toFull()) setTimeout(() => h.go(), 300); else h.go();
     // On a phone the guide would cover what it just set up: close it (the topbar Help button reopens it).
     if (phoneUI() && root.PeelSvcScope.hasResult() && String(App().state.ss).startsWith('help:')) AC().closeDetail({ keepSelection: true });
   });
@@ -256,7 +276,7 @@
     const nx = tourEl.querySelector('[data-tour-next], [data-tour-help]'); if (nx) nx.focus({ preventScroll: true });
   }
 
-  const api = { maybeTour, showHelp, showHelpLog, openAnalysis, startTour, MOVED, movedHTML };
+  const api = { maybeTour, showHelp, showHelpLog, openAnalysis, startTour, MOVED, movedHTML, helpPage, ROLES, ASKS, HELP };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTips = api;
 })(typeof window !== 'undefined' ? window : globalThis);

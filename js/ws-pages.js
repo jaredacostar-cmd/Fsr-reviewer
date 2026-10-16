@@ -600,7 +600,8 @@
   // Reference pages (not workspaces): How approvals work (js/approvals-guide.js), the Glossary (js/glossary.js).
   const approvals = () => (root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading('approvals', 'Loading…'));
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary };
+  const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
+  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary, help };
   const build = id => (BUILD[id] || home)();
   Object.assign(api, { build, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;

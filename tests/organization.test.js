@@ -76,3 +76,14 @@ test('the holding (H) symbol: an application to lift it is flagged on the site (
   assert.match(s, /const holding = holds\.length \? \{ refs: holds\.map\(r => r\.ref\)\.filter\(Boolean\), open: holds\.some/);
   assert.match(src('js/dev-detail.js'), /`Holding \(H\): removal in review \(\$\{esc\(p\.holding\.refs\[0\] \|\| 'file'\)\}\)`/);
 });
+
+test('Help is a page in Home’s layout: start here by role, what each workspace answers, guides, tour, change log, glossary', () => {
+  const s = src('js/tips.js');
+  assert.match(s, /return \{ id: 'help', eyebrow: 'Reference', name: 'How do I use this\?'/);
+  for (const h of ['Start here', 'What each workspace answers', 'Task guides', 'More help', 'Quick tips']) assert.ok(s.includes(`<h3 class="ws-h">${h}</h3>`), h);
+  assert.match(s, /<div id="help-log-body" aria-live="polite"><\/div>/, 'the change log renders on the page');
+  assert.match(s, /data-ws-page="glossary">Glossary<\/button>/);
+  assert.match(s, /\['Infrastructure planner or engineer', 'Screen an application, an FSR or a pre-consultation\.', \['site', 'fsr', 'tight'\]\]/);
+  assert.match(src('js/workspaces.js'), /const REF = \{ help: \{ label: 'Help', what: 'Start here by role, task guides, the tour and what’s new' \}/);
+  assert.match(src('js/ws-pages.js'), /const help = \(\) => \(root\.PeelTips && root\.PeelTips\.helpPage \? root\.PeelTips\.helpPage\(\) : loading\('help', 'Loading…'\)\);/);
+});
