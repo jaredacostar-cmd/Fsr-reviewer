@@ -168,3 +168,24 @@ test('a development’s stage on the chart: its layer; an approved one by whethe
   const st = WP.stageRows([{ p: 'a', share: 0.25 }], () => ({ layer: 'proposed', parts: { proposed: 400 }, toPermit: 400 }));
   assert.equal(st.rows.find(r => r.key === 'proposed').units, 100);
 });
+
+test('estimated counts: a file’s units left to build not stated on it, its share, split over its kinds', () => {
+  const a = { key: 'a', count: { parts: [{ kind: 'stated', units: 100 }, { kind: 'precon', units: 300 }, { kind: 'online', units: 100 }] } };
+  const b = { key: 'b', count: { parts: [{ kind: 'stated', units: 50 }] } };
+  const c = { key: 'c', count: { parts: [{ kind: 'estimate', units: 80 }] } };
+  const L = { a: { layer: 'anticipated', estimated: 400 }, b: { layer: 'proposed', estimated: 0 }, c: { layer: 'proposed', estimated: 80 } };
+  const e = WP.estimateRows([{ p: a, share: 0.5 }, { p: b, share: 1 }, c], p => L[p.key]);
+  assert.equal(e.units, 280);
+  assert.deepEqual(plain(e.files.map(x => x.p.key)), ['a', 'c']);   // b states its count; largest first
+  assert.deepEqual(plain(e.byKind), { precon: 150, online: 50, estimate: 80 });
+  assert.deepEqual(plain(Object.keys(WP.EST_KINDS).sort()), ['estimate', 'online', 'permits', 'precon']);
+  // The same kinds as the hatching (js/layers.js ESTIMATED).
+  assert.match(src('js/layers.js'), /const ESTIMATED = new Set\(\['online', 'precon', 'estimate', 'permits'\]\)/);
+  // On the Growth page: a list at every level, at the chosen stage, its rows open Check a site.
+  const s = src('js/ws-pages.js');
+  assert.match(s, /estRows\.length \? \{ title: gStage === 'all' \? 'Estimated counts: files to confirm'/);
+  assert.match(s, /items\.filter\(\(\{ p \}\) => gStage === 'all' \|\| stageOf\(Ly\.ofDev\(p\)\) === gStage\)/);
+  assert.match(s, /\.\.\.es\.files\.map\(x => \(\{ attrs: \{ 'data-ws-pick': x\.p\.key, 'data-ws-as': 'site'/);
+  // The area kind sits on the detail line, not after the name (where it wrapped with a stray dot).
+  assert.match(s, /<span class="pnl-r-name">\$\{esc\(c\.name\)\}<\/span>.*<small class="pnl-r-line">\$\{esc\(kind\(c\)\)\} · /);
+});
