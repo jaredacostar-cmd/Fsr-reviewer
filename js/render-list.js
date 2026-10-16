@@ -20,7 +20,17 @@
   // count never reads as a mismatch with the header). Completed is on by default and says how many
   // finished after census day (the Built layer: on the system but not in the 2021 Census).
   const DONE = ['completed', 'cancelled'];
-  const DONE_LABEL = { completed: 'Completed', cancelled: 'Withdrawn / refused' };
+  // The stage rows: one per stage, so Permit issued and Under construction (one stage, "Permit issued
+  // or under construction") share a row; the bar above keeps every phase's own segment.
+  const stageRows = rows => {
+    const out = [], pc = rows.filter(p => p.key === 'permit' || p.key === 'construction');
+    for (const p of rows) {
+      if (p.key === 'construction' && pc.length > 1) continue;
+      out.push(p.key === 'permit' && pc.length > 1 ? { keys: pc.map(x => x.key), label: 'Permit / under construction' } : { keys: [p.key], label: p.label });   // ("Pre-application" wraps after its hyphen in a narrow column)
+    }
+    return out;
+  };
+  const DONE_LABEL = { completed: 'Built', cancelled: 'Withdrawn / refused' };
   function renderPipeline(base) {
     const counts = Object.fromEntries(P.ALL_PHASES.map(p => [p.key, 0]));
     for (const p of base) counts[p.phase]++;
@@ -36,15 +46,16 @@
       if (!counts[k]) return '';
       const on = App().state.phases.has(k);
       const sub = k === 'completed' ? `<span class="pr-sub">${fmtNum(sinceCensus)} since the ${censusYear} census</span>` : '';
-      const title = k === 'completed' ? `Completed: ${fmtNum(counts.completed)} — ${fmtNum(sinceCensus)} after census day (Built: on the system, not in the ${censusYear} Census), ${fmtNum(counts.completed - sinceCensus)} before (Existing)` : `Withdrawn or refused: ${fmtNum(counts.cancelled)}`;
+      const title = k === 'completed' ? `Built: ${fmtNum(counts.completed)} — ${fmtNum(sinceCensus)} since census day (on the system, not in the ${censusYear} Census), ${fmtNum(counts.completed - sinceCensus)} before it (in the census)` : `Withdrawn or refused: ${fmtNum(counts.cancelled)}`;
       return `<button type="button" data-done="${k}" data-info="phase-${k}" class="done-row${on ? '' : ' off'}" aria-pressed="${on}" title="${esc(title)} — ${on ? 'shown, tap to hide' : 'hidden, tap to show'}"><i class="sw" style="background:${getColors()[k]}"></i><span class="t">${esc(DONE_LABEL[k])}${sub}</span><span class="n">${fmtNum(counts[k])}${on ? '' : ' hidden'}</span></button>`;
     };
     const tip = p => `${esc(p.label)}: ${fmtNum(counts[p.key])} (${total ? Math.round(counts[p.key] / total * 100) : 0}%) — tap: only this phase; Ctrl/⌘-click: add or remove`;
     $('#pipeline').innerHTML =
       `<div class="pipe-bar" aria-hidden="true">${shown.map(p => `<i data-phase="${p.key}" class="${App().state.phases.has(p.key) ? '' : 'off'}" style="flex:${counts[p.key]};background:${getColors()[p.key]}" title="${tip(p)}"></i>`).join('')}</div>` +
-      `<div class="pipe-rows">${rows.map(p => {
-        const on = App().state.phases.has(p.key);
-        return `<button type="button" data-phase="${p.key}" data-info="phase-${p.key}" class="${on ? '' : 'off'}" aria-pressed="${on}" title="${tip(p)}"><i class="sw" style="background:${getColors()[p.key]}"></i><span class="t">${esc(p.key === 'construction' ? 'Construction' : p.label)}</span><span class="n">${fmtNum(counts[p.key])}</span></button>`;
+      `<div class="pipe-rows">${stageRows(rows).map(g => {
+        const on = g.keys.every(k => App().state.phases.has(k)), n = g.keys.reduce((t, k) => t + counts[k], 0);
+        const title = g.keys.length > 1 ? `${esc(g.label)}: ${fmtNum(n)} (${g.keys.map(k => `${esc(P.PHASE_BY_KEY[k].label)} ${fmtNum(counts[k])}`).join(', ')}) — tap to show or hide` : tip(P.PHASE_BY_KEY[g.keys[0]]);
+        return `<button type="button" data-phase="${g.keys.join(' ')}" data-info="phase-${g.keys[0]}" class="${on ? '' : 'off'}" aria-pressed="${on}" title="${title}"><i class="sw" style="background:${getColors()[g.keys[0]]}"></i><span class="t">${esc(g.label)}</span><span class="n">${fmtNum(n)}</span></button>`;
       }).join('')}${DONE.map(doneBtn).join('')}</div>`;
     FU().renderFlagChips();
   }
@@ -84,9 +95,10 @@
     for (const p of App().state.filtered) {
       if (p.lat == null || !SD().devShown(p)) continue;
       const [cat, col] = MM().markerCat(p), pop = MM().mstyle.size === 'pop' ? MM().popOf(p) : 0;
-      const m = L.marker([p.lat, p.lng], { icon: MM().markerIcon(p), phase: p.phase, cat, col, pop, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : 0 });
+      const units = MM().mstyle.size === 'units' ? p.units || 0 : 0;
+      const m = L.marker([p.lat, p.lng], { icon: MM().markerIcon(p), phase: p.phase, cat, col, pop, units, keyboard: false, title: '', zIndexOffset: pop ? -Math.round(Math.sqrt(pop)) : units ? -Math.round(Math.sqrt(units)) : 0 });
       const near = App().state.servicing && (SD().nearOf(p, 'dr') || SD().nearOf(p, 'pz'));
-      m.bindTooltip(() => window.PeelUtil.hoverCard({ kind: `Development · ${P.PHASE_BY_KEY[p.phase].label}${window.PeelLayers ? ` → ${window.PeelLayers.LABEL[window.PeelLayers.layerOf(p)] || 'none'}` : ''}`, name: p.title,
+      m.bindTooltip(() => window.PeelUtil.hoverCard({ kind: `Development · ${window.PeelLayerBar && window.PeelLayerBar.stageText ? window.PeelLayerBar.stageText(p, window.PeelLayers ? { layer: window.PeelLayers.layerOf(p) } : null) : P.PHASE_BY_KEY[p.phase].label}`, name: p.title,
         value: pop ? fmtNum(Math.round(pop)) : p.units > 0 ? fmtNum(p.units) : null, sub: pop ? 'people + jobs at build-out' : p.units > 0 ? `units · ${p.municipality}` : p.municipality,
         html: `${MM().mstyle.color === 'quality' ? esc(MM().QUALITY[cat][1]) : MM().mstyle.color === 'timing' ? esc(MM().TIMING[cat][1]) : MM().mstyle.color === 'plant' ? `→ ${esc(cat === 'none' ? 'no traced catchment' : SD().PLANT_SHORT[cat])}` : ''}${near ? '<span class="muted">Outside the mapped areas: nearest assigned</span>' : ''}`,
         open: 'open the development', also: 'Trace from its panel' }), { className: 'pt', direction: 'top', offset: [0, -8] });
@@ -127,7 +139,7 @@
       : pg.pages > 1 ? `Showing ${pg.start + 1}–${pg.start + pg.items.length} of ${fmtNum(sorted.length)} — page ${pg.page + 1} of ${pg.pages}.` : '';
     $('#project-list').innerHTML = pg.items.map((p, i) =>
       `<li><button type="button" data-i="${pg.start + i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
-        <span class="m">${esc(P.PHASE_BY_KEY[p.phase].label)}${window.PeelLayerBar ? ` → ${window.PeelLayerBar.nameHTML(App().layerOf(p))}` : ''} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
+        <span class="m">${window.PeelLayerBar && window.PeelLayerBar.stageText ? `<span class="ly-name" style="--ly-c:var(--ly-${App().layerOf(p) || 'proposed'})">${esc(window.PeelLayerBar.stageText(p, { layer: App().layerOf(p) }))}</span>` : esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
     $('#project-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
       const p = sorted[+b.dataset.i];

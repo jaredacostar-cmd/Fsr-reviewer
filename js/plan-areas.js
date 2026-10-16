@@ -115,7 +115,8 @@
     if (zoom && bounds) map.fitBounds(bounds, { padding: [30, 30], maxZoom: 16 });
   }
   // Outlines of every secondary plan / character area and MTSA (map toggles), under the results
-  // and developments; tapping one filters to it, tapping it again clears that filter.
+  // and developments; tapping one filters to it, tapping it again clears that filter. Neutral dashed
+  // lines (plans long dashes, precincts dots, MTSAs short dashes in slate blue): context, never a status.
   map.createPane('planPane', map.getPane('rotatePane') || undefined).style.zIndex = (window.PeelLayerGroups ? window.PeelLayerGroups.Z.plan : 330);
   const planRenderer = L.canvas({ pane: 'planPane', padding: 0.3 });
   const planLayer = L.layerGroup().addTo(map);
@@ -137,7 +138,7 @@
       for (const a of list) {
         if (App().state.muni && a.municipality !== App().state.muni) continue;
         const sel = (kind === 'mtsa' ? App().state.mtsa : App().state.sp).includes(a.id);
-        const poly = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, interactive: tappable, color: token(colorName), weight: sel ? 3 : 1.5, opacity: 0.9, dashArray: kind === 'mtsa' ? '4 4' : null, fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 });
+        const poly = L.polygon(a.rings.map(r => r.map(([x, y]) => [y, x])), { renderer: planRenderer, interactive: tappable, color: token(colorName), weight: sel ? 3 : 1.2, opacity: sel ? 0.95 : 0.7, dashArray: kind === 'mtsa' ? '3 3' : kind === 'pr' ? '2 4' : '7 5', fill: true, fillColor: token(colorName), fillOpacity: sel ? 0.12 : 0.03 });
         // Precincts are outlines for context (developments are tagged by plan and MTSA, not precinct).
         if (!tappable || kind === 'pr') { poly.options.interactive = false; poly.addTo(planLayer); continue; }
         poly.bindTooltip(window.PeelUtil.hoverCard({ kind: kind === 'mtsa' ? 'MTSA' : kind === 'pr' ? 'Precinct' : a.municipality === 'Mississauga' ? 'Character area' : 'Secondary plan', name: a.name, sub: a.municipality || '', open: sel ? 'clear the filter' : 'filter to it' }), { sticky: true, className: 'pt' })

@@ -511,8 +511,8 @@
       const trig = plantFacs().map(f => { const fb = facilityBands({ name: f.name, rated: f.rated, existing: f.existing, approved: f.approved, proposed: f.proposed, div: f.div || 0, end: fc.nowYear + FORECAST_YEARS }, cal), tr = fb.triggers[90]; const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high; return { f, like, txt: triggerRangeText(tr, fb.end) }; })
         .sort((a, b) => (a.like == null ? 1e4 : a.like) - (b.like == null ? 1e4 : b.like));
       PN.set('growth:timing', {
-        calc: true, fullTitle: `Growth › Timing · ${App().state.muni || 'Peel'}: the forecast, the contributors, the calibration and the trigger years`,
-        head: PN.areaHead('Growth › Timing', 'When does it come?', { tone: 'stage', text: 'Screening estimate' }, `${esc(App().state.muni || 'Peel')} · data as of ${esc(root.PeelUtil.dayText ? root.PeelUtil.dayText(asof) : asof)}`),
+        calc: true, fullTitle: `Growth › Forecast · ${App().state.muni || 'Peel'}: the forecast, the contributors, the calibration and the trigger years`,
+        head: PN.areaHead('Growth › Forecast', 'When does it come?', { tone: 'stage', text: 'Screening estimate' }, `${esc(App().state.muni || 'Peel')} · data as of ${esc(root.PeelUtil.dayText ? root.PeelUtil.dayText(asof) : asof)}`),
         answer: head,
         figures: [
           { v: fig(2031, 'likely'), u: 'units', label: 'expected by 2031', ctx: `range ${fig(2031, 'low')}–${fig(2031, 'high')}` },

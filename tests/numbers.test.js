@@ -90,12 +90,12 @@ test('at a development: the site first, its census area labelled, one status lin
   assert.match(g, /its census area: \$\{fmtNum\(set\.length\)\} developments/);
   assert.doesNotMatch(g, /Around \$\{esc\(App\(\)\.state\.daCtx\.title\)\}/);
   // The header names the phase and the zoning approval together; the site bar keeps only the by-law.
-  const win = { PeelPhases: { PHASE_BY_KEY: { review: { label: 'Under review', rank: 2 }, approved: { label: 'Draft / site plan approved', rank: 3 } } } };
+  const win = { PeelPhases: { PHASE_BY_KEY: { review: { label: 'In review', rank: 2 }, approved: { label: 'Approved, no permit yet', rank: 3 } } } };
   const ctx = { window: win }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
   const h = win.PeelPanel.siteHead({ title: '0 HERITAGE RD', municipality: 'Brampton', phase: 'review', rank: 2, zoningApproved: { bylaws: ['2024-101'] }, records: [] });
-  assert.equal(h.status.text, 'Under review · zoning approved');
-  assert.equal(win.PeelPanel.siteHead({ title: 'x', municipality: 'Brampton', phase: 'review', rank: 2, records: [] }).status.text, 'Under review');
+  assert.equal(h.status.text, 'In review · zoning approved');
+  assert.equal(win.PeelPanel.siteHead({ title: 'x', municipality: 'Brampton', phase: 'review', rank: 2, records: [] }).status.text, 'In review');
   assert.match(src('js/dev-detail.js'), /out\.push\(chip\(`Zoning by-law \$\{esc\(p\.zoningApproved\.bylaws\[0\]\)\}`\)\)/);
 });
 

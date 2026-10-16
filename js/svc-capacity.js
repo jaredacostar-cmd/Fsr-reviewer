@@ -293,8 +293,8 @@
     const check = (t, what) => ({ attrs: ft, html: `<div class="pnl-r-top"><span class="pnl-r-name">${t}</span></div><small class="pnl-r-line">${what}</small>` });
     const labs = root.PeelLabs && root.PeelLabs.on('hydro');
     PN.set('svc:checks', {
-      calc: true, fullTitle: 'Servicing › Checks · the model against the 2020 Master Plan and the 2025 reports',
-      head: PN.areaHead('Servicing › Checks', 'Does the model match the reports?', null, `Peel · ${cal ? 'capacity check: calibrated to the 2025 plant flows' : 'design flows (Peel criteria)'}`),
+      calc: true, fullTitle: 'Servicing › Model checks · the model against the 2020 Master Plan and the 2025 reports',
+      head: PN.areaHead('Servicing › Model checks', 'Does the model match the reports?', null, `Peel · ${cal ? 'capacity check: calibrated to the 2025 plant flows' : 'design flows (Peel criteria)'}`),
       answer: cal ? `The wastewater model is scaled to each plant's 2025 reported flow: ${plants.map(x => `<strong>${esc(SD().PLANT_SHORT[x.pl])}</strong> ×${x.c.f.toFixed(2)}`).join(', ')}. The factor absorbs existing employment, infiltration and flows the model does not hold.` : 'Design flows at Peel criteria: switch the Scenario to the capacity check (2025 flows) to see the calibration factors. The comparisons with the Master Plan and the 2025 reports are below.',
       figures: [...plants.map(x => ({ v: `×${x.c.f.toFixed(2)}`, u: '', label: `${SD().PLANT_SHORT[x.pl]} calibration`, ctx: '2025 reported ÷ the model today' })),
         ...(sp ? [{ v: fmt1(sp.maxDayMLd), u: 'ML/d', label: 'South Peel 2025 max day', ctx: `of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)` }] : [])].slice(0, 4),
@@ -305,7 +305,7 @@
         check('Existing water facilities', 'Every reservoir, tank and pumping station with its firm capacity, and the ones the Master Plan finds short by 2041.'),
         ...(labs ? [check('Hydraulic check (beta, Labs)', 'An experimental EPANET check of the large mains feeding each upper pressure zone.')] : []),
       ], total: labs ? 5 : 4, seeAll: ft }],
-      method: 'The calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs); it is applied in the capacity check mode, I&amp;I is not scaled. Data checks (freshness, duplicates, permit counts) are in Records › Checks.',
+      method: 'The calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs); it is applied in the capacity check mode, I&amp;I is not scaled. Data checks (freshness, duplicates, permit counts) are in Records › Data checks.',
       sources: 'Region of Peel 2025 annual reports (G.E. Booth, Clarkson, Inglewood; drinking water systems); 2020 Water and Wastewater Master Plan (Vol. 3 and 4); the Wastewater Collection System report (York and Toronto inflows).',
       foot: { primary: { label: 'The reports (Records)', attrs: { 'data-at': 'records:sources' }, title: 'Every report and source with its date' } },
     });

@@ -34,7 +34,7 @@ test('zero or unknown layers draw nothing; values escape in tooltips', () => {
 });
 
 test('the site badge: phase and layer together, with what is left to permit', () => {
-  assert.match(B.badgeHTML('5 · under construction', { layer: 'committed', units: 537, toPermit: 343 }), /counts as Approved · 343 left/);
+  assert.match(B.badgeHTML('5 · under construction', { layer: 'committed', units: 537, toPermit: 343 }), /counts as Approved, not yet built · 343 left/);
   assert.match(B.badgeHTML('2 · under review · zoning approved', { layer: 'proposed', units: 9862, toPermit: 9862 }), /counts as In review<\/span>/);
 });
 
@@ -79,11 +79,11 @@ test('one scenario line: the chip in the top bar; no footer line, no in-tab copy
   assert.match(read('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
 });
 
-test('site badge: Bovaird → "2 · Under review · zoning approved → counts as In review"; Embleton → "Approved · 343 left"', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
+test('site badge: one stage pill (Bovaird → "2 · In review · zoning approved"; Embleton → "5 · Under construction · 343 left to permit")', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
   const H = require('./helpers/real-devs.js');
   const { byKey, projects } = H.realDevs();
   const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  assert.equal(strip(B.siteBadgeHTML(byKey.get('Brampton|2055 BOVAIRD DR W'))), '2 · Under review · zoning approved → counts as In review');
+  assert.equal(strip(B.siteBadgeHTML(byKey.get('Brampton|2055 BOVAIRD DR W'))), '2 · In review · zoning approved');
   const e = projects.find(p => (p.records || []).some(r => r.ref === 'C05W06.007'));
-  assert.equal(strip(B.siteBadgeHTML(e)), '5 · Under construction → counts as Approved · 343 left');
+  assert.equal(strip(B.siteBadgeHTML(e)), '5 · Under construction · 343 left to permit');
 });
