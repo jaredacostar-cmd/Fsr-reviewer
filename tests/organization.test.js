@@ -87,3 +87,27 @@ test('Help is a page in Home’s layout: start here by role, what each workspace
   assert.match(src('js/workspaces.js'), /const REF = \{ help: \{ label: 'Help', what: 'Start here, guides, the tour, what’s new' \}/);
   assert.match(src('js/ws-pages.js'), /const help = \(\) => \(root\.PeelTips && root\.PeelTips\.helpPage \? root\.PeelTips\.helpPage\(\) : loading\('help', 'Loading…'\)\);/);
 });
+
+test('counting in one place: the Scenario control holds Units per development; the map loads say when the Stage filter limits them', () => {
+  const B = require('../js/layer-bar.js');
+  const base = { basis: 'all', flows: '2025 metered', md: 'design', outside: 'nearest', year: 2026, yearDefault: 2026, criteria: 0, count: 'tree count' };
+  assert.equal(B.scenarioChipText(B.scenarioSettings({ ...base, loads: 'every stage' })), 'Default');
+  const lim = B.scenarioSettings({ ...base, loads: 'built + committed only (Stage filter)' });
+  assert.equal(B.scenarioChipText(lim), '1 change', 'a Stage filter that drops a stage from the loads is a change, said in the chip');
+  assert.match(B.scenarioListHTML(lim), /Map loads from<\/span> <b>built \+ committed only \(Stage filter\)<\/b>/);
+  assert.match(src('js/svc-tab.js'), /\$\{root\.PeelTreeCounts && root\.PeelTreeCounts\.settingsHTML \? root\.PeelTreeCounts\.settingsHTML\(\) : ''\}/);
+  // Settings: Display → Start screen → Counting (a pointer to the Scenario control) → Usage.
+  const g = src('js/growth-ui.js');
+  assert.match(g, /<h2 class="pane-h">Settings<\/h2>\$\{displaySettingsHTML\(\)\}\$\{root\.PeelWorkspaces && root\.PeelWorkspaces\.settingsHTML \? root\.PeelWorkspaces\.settingsHTML\(\) : ''\}\$\{counting\}\$\{root\.PeelUsage/);
+  assert.match(g, /is set in the Scenario control, with the other scenario settings\. <button type="button" class="btn small" data-pnl-scen>Open the Scenario control<\/button>/);
+});
+
+test('the Data tab folds into Records; Records leaves the gear', () => {
+  const html = src('index.html');
+  assert.doesNotMatch(html, /id="tab-data"|data-tab="data"/);
+  assert.match(src('js/records-tab.js'), /function showData\(which\) \{/);
+  assert.match(src('js/data-tab.js'), /if \(name === 'data' \|\| !document\.getElementById\('tab-' \+ name\)\) name = 'explore';/, 'a stored or linked Data tab opens Find');
+  assert.doesNotMatch(src('js/topbar.js'), /data-tbg="records"/);
+  // The Watch tab: the watchlist and its alerts; what changed is on the This week page.
+  assert.match(html, /<button type="button" class="btn small" data-ws-page="week">This week: what changed →<\/button>/);
+});

@@ -140,7 +140,8 @@
   // "Default" or "2 changes" and the Scenario control can list them in full.
   // o: { basis, flows ('2025 metered' | 'design'), md ('design' | 'observed'), div ('off' | 'on' | null
   // when there is no diversion), outside ('nearest' | 'left out'), year (null = build-out), criteria
-  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null), yearDefault }.
+  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null), yearDefault,
+  // loads (the stages the map's loads count, from the Stage filter: 'every stage' or a list) }.
   function scenarioSettings(o) {
     const b = o.basis || 'all', cur = b === 'remaining' ? 'all' : b;
     const crit = typeof o.criteria === 'number' ? o.criteria : /^\d+/.test(String(o.criteria || '')) ? parseInt(o.criteria, 10) : 0;
@@ -157,6 +158,8 @@
       row('criteria', 'Design criteria', crit ? `${crit} edited` : 'Peel v2.0', 'Peel v2.0'),
       row('countMode', 'Units per development', o.count === 'previous count' ? 'previous count' : 'tree count', 'tree count'),
       o.expansions == null ? null : row('exp', 'Plant expansions', o.expansions, 'on'),
+      // Bundle 6: the map's sewer and station loads follow the Stage filter; said here, never silently.
+      o.loads == null ? null : row('loads', 'Map loads from', o.loads, 'every stage'),
     ].filter(Boolean);
   }
   const scenarioChanges = rows => rows.filter(r => !r.def).length;

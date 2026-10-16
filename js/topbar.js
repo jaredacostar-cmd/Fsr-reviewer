@@ -123,6 +123,7 @@
       outside: o.nr === 'on' ? 'nearest' : 'left out',
       md: o.md, div: R && R.wastewater && R.wastewater.diversion ? o.div : null,
       year: MA && MA.getCapYear ? MA.getCapYear() : null, yearDefault: root.PeelMapMarkers ? root.PeelMapMarkers.THIS_YEAR : null,
+      loads: (() => { const MMk = root.PeelMapMarkers, wl = MMk && MMk.getWwLay ? MMk.getWwLay() : null; if (!wl) return null; const on = [['built', 'built'], ['approved', 'committed'], ['proposed', 'in review']].filter(([k]) => wl[k] !== false).map(x => x[1]); return on.length === 3 ? 'every stage' : on.length ? `${on.join(' + ')} only (Stage filter)` : 'none (Stage filter)'; })(),
     };
     // Bundle 5: every setting with its default (the chip's "Default" / "n changes", the control's list).
     p.settings = LB.scenarioSettings({ ...p, criteria: n, count: p.unitCount });

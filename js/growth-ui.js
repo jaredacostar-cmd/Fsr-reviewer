@@ -264,7 +264,10 @@
   }
   function settingsPageHTML() {
     const TC = root.PeelTreeCounts;
-    return `<h2 class="pane-h">Settings</h2>${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${root.PeelUsage && root.PeelUsage.settingsHTML ? root.PeelUsage.settingsHTML() : ''}${TC ? TC.settingsHTML() : ''}${displaySettingsHTML()}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
+    // Bundle 6: Display → Start screen → Counting → Usage; every counting choice lives in the Scenario
+    // control (Count, Units, Units per development), so Counting here points there.
+    const counting = `<fieldset data-info="counting" class="set-counting"><legend>Counting</legend><p class="small">How units are counted (Count, Units and Units per development${TC ? `: now ${esc(TC.label())}` : ''}) is set in the Scenario control, with the other scenario settings. <button type="button" class="btn small" data-pnl-scen>Open the Scenario control</button></p></fieldset>`;
+    return `<h2 class="pane-h">Settings</h2>${displaySettingsHTML()}${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${counting}${root.PeelUsage && root.PeelUsage.settingsHTML ? root.PeelUsage.settingsHTML() : ''}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
   }
   window.GearPages = window.GearPages || {};
   window.GearPages.settings = () => settingsPageHTML();
