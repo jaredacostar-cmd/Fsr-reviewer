@@ -157,7 +157,8 @@ test('verdict card: key numbers (homes, jobs, flows), one status sentence, four 
   assert.match(src, /verdictWastewater\(/, 'wastewater verdict from per-tab brief logic');
   assert.match(src, /verdictDc\(/, 'DC verdict from per-tab brief logic');
   assert.match(src, /verdictMilestone\(/, 'milestone verdict');
-  for (const tab of ["go('water'", "go('ww'", "go('dca'"]) assert.match(src, new RegExp(tab.replace(/[()']/g, '\\$&')), `missing tab link ${tab}`);
+  // Stage 2: water and wastewater are one Servicing tab; both lines open Servicing › Network.
+  for (const tab of ["go('svc:network', 'Servicing')", "go('dca'"]) assert.match(src, new RegExp(tab.replace(/[()']/g, '\\$&')), `missing tab link ${tab}`);
   assert.match(src, /data-ov-tab="records">Files &amp; history \(Records\) →/, "milestone line opens the development's files (Records, SPEC §5)");
 });
 
@@ -188,11 +189,11 @@ test('scoped DC: site DC brief without the sewer-path/plant-reserve numbers', ()
   assert.ok(m, 'renderDca scoped branch must reuse devBriefHTML(p, st, f, \'dc\') with noWwNeeds');
   const b = /function devServicingBriefHTML\(p, st, f, part, opts = \{\}\) \{[\s\S]*?\n  \}/.exec(APP);
   assert.match(b[0], /opts\.noWwNeeds/);
-  assert.match(b[0], /homeLine\('ww', 'Wastewater tab'\)/);
+  assert.match(b[0], /homeLine\('svc:network', 'Servicing › Network'\)/);
 });
 
 test('scoped Growth (census): DA view links I&I flows to the Wastewater tab instead of repeating them', () => {
-  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{DV\(\)\.homeLine\('ww', 'Wastewater tab'\)\}/);
+  assert.match(APP, /Wastewater I&amp;I for this area lives on the \$\{DV\(\)\.homeLine\('svc:network', 'Servicing › Network'\)\}/);
 });
 
 test('scopeBriefIds: prefixes dev-* ids so footer copies do not collide with the detail panel', () => {

@@ -111,7 +111,7 @@
   }
   function tableHTML(r) {
     const x = (t, title) => `<th scope="col"${c('x')}${title ? ` title="${title}"` : ''}>${t}</th>`;
-    const head = `<tr><th scope="col">Area</th>${x('Developments')}<th scope="col" class="num">Units</th>${x('Committed')}${x('Proposed')}${x('Left to build')}${x('ppu', 'People per unit (people ÷ units)')}<th scope="col" class="num">People</th>${x('Jobs')}${x('In an MTSA', 'Of which in an MTSA (an overlay: never added up)')}<th scope="col" class="num" title="Parent minus the sum of the rows under it">Check</th></tr>`;
+    const head = `<tr><th scope="col">Area</th>${x('Developments')}<th scope="col" class="num">Units</th>${x('Approved')}${x('In review')}${x('Left to build')}${x('ppu', 'People per unit (people ÷ units)')}<th scope="col" class="num">People</th>${x('Jobs')}${x('In an MTSA', 'Of which in an MTSA (an overlay: never added up)')}<th scope="col" class="num" title="Parent minus the sum of the rows under it">Check</th></tr>`;
     const rows = []; bodyRows(r.root, 0, rows);
     return `<div class="tbl-scroll"><table class="dt pt-table"><thead>${head}</thead><tbody>${rows.join('')}</tbody></table></div>`;
   }
@@ -141,6 +141,28 @@
       ${tableHTML(r)}${notesHTML(r)}
       ${targetHTML(r)}
       ${matrixHTML(r)}`;
+    if (root.PeelPanel) root.PeelPanel.set('growth:areas', panelSpec(r));
+  }
+  // ---- Stage 3: Growth › Areas as the standard panel (the tables, the 2051 comparison, housing
+  // activity and the outlook below are its full table) ----------------------------------------------------
+  function panelSpec(r) {
+    const PN = root.PeelPanel, LB = root.PeelLayerBar, munis = r.root.children.filter(m => m.m.planned >= 0.5).sort((a, b) => b.m.planned - a.m.planned);
+    const total = r.root.m.planned || munis.reduce((t, m) => t + m.m.planned, 0) || 1;
+    const plans = munis.flatMap(m => m.children.filter(c => c.m.planned >= 0.5).map(c => ({ n: c, muni: m.name }))).sort((a, b) => b.n.m.planned - a.n.m.planned);
+    const max = Math.max(1, ...munis.map(m => m.m.planned));
+    const bar = n => (LB ? LB.barHTML({ small: true, max, segments: [{ layer: 'built', value: n.m.built || 0 }, { layer: 'committed', value: Math.max(0, n.m.committed - (n.m.built || 0)) }, { layer: 'proposed', value: n.m.proposed || 0 }], label: `${n.name}: ${n0(n.m.planned)} units planned` }) : '');
+    const top = munis[0], big = plans[0];
+    return {
+      calc: true, fullTitle: `Growth › Areas · ${App().state.muni || 'Peel'}: by plan, the 2051 comparison and housing activity`,
+      head: PN.areaHead('Growth › Areas', 'Where is it?', null, `${esc(App().state.muni || 'Peel')} · ${fmtNum(plans.length)} plans with planned units`),
+      answer: top ? `<strong>${esc(top.name)}</strong> holds the most planned units: <strong>${n0(top.m.planned)}</strong> (${Math.round(top.m.planned / total * 100)}% of the ${n0(total)} shown)${big ? `; the largest plan is <strong>${esc(big.n.name)}</strong> (${esc(big.muni)}, ${n0(big.n.m.planned)} units)` : ''}.` : 'No planned units in the developments shown.',
+      figures: [...munis.slice(0, 3).map(m => ({ v: n0(m.m.planned), u: 'units', label: m.name, ctx: `${n0(m.m.left)} left to build · ${n0(m.m.people)} people` })), { v: fmtNum(plans.length), u: 'plans', label: 'with planned units', ctx: big ? `largest: ${esc(big.n.name)}` : '' }].slice(0, 4),
+      chart: munis.length ? `<p class="small pnl-chart-t">Planned units by municipality: built, committed and proposed</p>${munis.map(m => `<div class="pnl-kv"><span>${esc(m.name)}</span><span>${n0(m.m.planned)}</span></div>${bar(m)}`).join('')}${LB ? LB.legendHTML([{ layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }]) : ''}` : '',
+      lists: [{ title: 'Plans with the most planned units', rows: plans.slice(0, 5).map(x => ({ attrs: x.n.areaId ? { 'data-pt-filter': x.n.areaId, title: `Show ${x.n.name} only` } : { 'data-full-table': 'growth' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.n.name)}<small>${esc(x.muni)}</small></span><span class="pnl-r-fig">${n0(x.n.m.planned)}<small>units planned</small></span></div><small class="pnl-r-line">${n0(x.n.m.left)} left to build · ${n0(x.n.m.people)} people at build-out</small>` })), total: plans.length, seeAll: { 'data-full-table': 'growth' } }],
+      method: `The developments shown, by where they are: Peel, municipality, plan, sub-area; every row equals the sum of the rows under it. People at Peel design criteria, counting ${esc(BASIS[DU().demandBasis()] || 'all units')}. The full table adds the targets, the 2051 comparison (Region of Peel draft allocation, August 2024), housing activity and the population outlook.`,
+      sources: 'Secondary plans and MTSAs (municipal open data); the applications on the map; Region of Peel Land Needs Assessment (draft 2051 allocation, August 2024); CMHC and Peel housing activity.',
+      foot: { primary: { label: 'Download CSV', attrs: { 'data-pt-csv': '' } } },
+    };
   }
 
   // ---- Table 2 (C4): areas against their published targets -------------------------------------
@@ -170,7 +192,7 @@
     }).join('');
     return `<section class="pt-tg"><h3 class="sub-title">Plans against their targets</h3>
       <p class="small">Each municipality against the Region's 2051 allocation of growth, and each plan against its published target, compared on <strong>units</strong>: committed (D-5-1) and all proposed. Where a target states only people, pipeline people are shown beside it (†, indicative only: targets use household persons per unit, the pipeline Peel design criteria). "unchecked" marks a figure not yet checked against its document. "total" marks a target that counts every home at build-out, existing ones included, so the pipeline (new proposals only) reads low there.</p>
-      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Committed units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Approved units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="small muted">${fmtNum(v.noTarget)} plan${v.noTarget === 1 ? '' : 's'} shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json${targets && targets.checked ? `, checked ${esc(targets.checked)}` : ''}; hover a source for its wording, ⓘ for a note. All columns adds committed units, % committed and the gap.</p></section>`;
   }
 

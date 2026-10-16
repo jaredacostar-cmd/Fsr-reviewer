@@ -38,7 +38,7 @@
   const MSTYLE = {
     color: { phase: 'Phase', layer: 'Servicing layer', plant: 'Receiving plant', quality: 'Data quality', timing: 'Servicing timing (2026 DC)' },
     size: { fixed: 'Same size', pop: 'People + jobs' },
-    show: { markers: 'Markers', heat: 'Heatmap (people + jobs)' },
+    show: { markers: 'Markers' },   // (Stage 2: the heatmap is removed; an old 'heat' falls back to markers)
     cap: { off: 'Off', growth: 'Catchment flow growth', ps: 'Pumping station load', pipes: 'Sewer pipe capacity', zone: 'Pressure zone growth' },
   };
   if (!PIPE_RESULTS) delete MSTYLE.cap.pipes;   // pipe-by-pipe capacity is off for now
@@ -79,7 +79,7 @@
   function initialOn() {
     const hill = store.get('hillshade', false) === true, cx = store.get('cxOn', {}) || {}, wf = (WT() || {}).WF;
     const ce = store.get('ceOn', {}) || {};
-    const m = { cons: !!ce.cons, ea: !!ce.ea, devs: devsOn, heat: mstyle.show === 'heat', hov: hov.on, cap: mstyle.cap !== 'off', pz: svcOn.pz, bk: svcOn.bk, dr: svcOn.dr, 'ex-water': existOn.water, 'ex-sanitary': existOn.sanitary, 'ex-storm': existOn.storm, wf: wf ? wf.on : false, dcw: dcOn.on, sp: areaOn.sp, pr: areaOn.pr, mtsa: areaOn.mtsa, da: CA().getDaOn(), hill };
+    const m = { cons: !!ce.cons, ea: !!ce.ea, devs: devsOn, hov: hov.on, cap: mstyle.cap !== 'off', pz: svcOn.pz, bk: svcOn.bk, dr: svcOn.dr, 'ex-water': existOn.water, 'ex-sanitary': existOn.sanitary, 'ex-storm': existOn.storm, wf: wf ? wf.on : false, dcw: dcOn.on, sp: areaOn.sp, pr: areaOn.pr, mtsa: areaOn.mtsa, da: CA().getDaOn(), hill };
     for (const [k, v] of Object.entries(cx)) m[k] = !!v;
     return new Set(Object.keys(m).filter(k => m[k]));
   }
@@ -87,7 +87,6 @@
     const c = L0.color ? `var(${L0.color})` : '';
     switch (L0.sw) {
       case 'dev': return '<i class="dev-sw" aria-hidden="true"></i>';
-      case 'heat': return '<i class="lg-line" style="background:linear-gradient(90deg,transparent,var(--accent))"></i>';
       case 'cap': return '<i class="lg-line" style="background:linear-gradient(90deg,var(--cap-room) 0 33%,var(--cap-tight) 33% 66%,var(--cap-over) 66%)"></i>';
       case 'svc-pz': return svcSwatch('pz');
       case 'svc-dr': return svcSwatch('dr');
@@ -129,7 +128,6 @@
         </div>
         <div class="mo-sec"><div class="mo-h">Developments</div>
           <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
-          <label data-info="map-show"><span>Show as</span><select id="opt-mshow">${opts(MSTYLE.show, mstyle.show)}</select></label>
           <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
           <label class="mo-range" data-info="hover-boundary"><span>Boundary reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development to outline its site, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
         </div>
@@ -166,7 +164,6 @@
       }; });
       el.querySelector('#opt-mcolor').onchange = e => MA().setMapStyle({ color: e.target.value });
       el.querySelector('#opt-msize').onchange = e => MA().setMapStyle({ size: e.target.value });
-      el.querySelector('#opt-mshow').onchange = e => MA().setMapStyle({ show: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => MA().setMapStyle({ cap: e.target.value });
       const orient = el.querySelector('#opt-orient');
       if (orient) orient.onchange = e => MC().setOrientation(e.target.value);
@@ -224,34 +221,6 @@
     },
   });
   map.addLayer(cluster);
-  // Heatmap of people + jobs at build-out (Layers & style → Show as): a canvas over the map,
-  // drawn in screen coordinates so it follows rotation; markers are hidden while it shows.
-  const heat = (() => {
-    const cv = L.DomUtil.create('canvas', 'heat-canvas', map.getContainer());
-    let pts = null, raf = 0;
-    const pal = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 1; const g = c.getContext('2d'), gr = g.createLinearGradient(0, 0, 256, 0);
-      // Heat ramp from the --heat-ramp token (comma-separated stops); stop 0 is
-      // the first stop fully transparent.
-      const ramp = token('--heat-ramp').split(',').map(s => s.trim());
-      [[0, `${ramp[0]}00`], [0.2, ramp[0]], [0.45, ramp[1]], [0.65, ramp[2]], [0.85, ramp[3]], [1, ramp[4]]].forEach(([o, col]) => gr.addColorStop(o, col)); g.fillStyle = gr; g.fillRect(0, 0, 256, 1); return g.getImageData(0, 0, 256, 1).data; })();
-    function draw() {
-      raf = 0; const sz = map.getSize(); cv.width = sz.x; cv.height = sz.y; cv.hidden = !pts;
-      if (!pts) return;
-      const g = cv.getContext('2d'), z = map.getZoom(), r = Math.max(10, Math.min(70, 14 * Math.pow(2, (z - 11) * 0.8)));
-      for (const [la, ln, w] of pts) {
-        const p = map.latLngToContainerPoint([la, ln]); if (p.x < -r || p.y < -r || p.x > sz.x + r || p.y > sz.y + r) continue;
-        const a = Math.min(1, 0.08 + Math.sqrt((w || 1) / 4000)), grd = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-        grd.addColorStop(0, `rgba(0,0,0,${a})`); grd.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = grd; g.fillRect(p.x - r, p.y - r, 2 * r, 2 * r);
-      }
-      const img = g.getImageData(0, 0, sz.x, sz.y), d = img.data;
-      for (let i = 3; i < d.length; i += 4) { const v = d[i]; if (!v) continue; const k = v * 4; d[i - 3] = pal[k]; d[i - 2] = pal[k + 1]; d[i - 1] = pal[k + 2]; d[i] = Math.min(230, pal[k + 3] + 40); }
-      g.putImageData(img, 0, 0);
-    }
-    const sched = () => { if (!raf) raf = requestAnimationFrame(draw); };
-    map.on('move zoom resize rotate viewreset', sched);
-    return { setData(p) { pts = p; sched(); } };
-  })();
-
   // ---- Sites on the map: application boundaries and the individual permits inside them
   // Site boundaries draw at every zoom; building-permit dots from street zoom (capped).
   const SITE_ZOOM = 14, SITE_MAX_POINTS = 3000;
@@ -445,7 +414,7 @@
     hoverSubLayer, siteApps, sitePermits, parentApps, projectBounds, toLatLngs,
     subPoly, popOf, markerPx, markerIcon,
     get markerByKey() { return markerByKey; }, set markerByKey(v) { markerByKey = v; },
-    cluster, heat,
+    cluster,
     renderSiteLayer, scheduleSites, selColor, shortNum, canvas, blockSwatch,
     svcSwatch, pipeState,
     get pipeLbl() { return pipeLbl; }, set pipeLbl(v) { pipeLbl = v; },

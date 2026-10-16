@@ -19,6 +19,9 @@
  */
 (function (root) {
   'use strict';
+  // The aerial and ground boxes can be on the page twice (the development's Site view and the Servicing
+  // panel's fold): fill the one on screen.
+  const byIdShown = id => { const all = typeof document !== 'undefined' ? [...document.querySelectorAll(`[id="${id}"]`)] : []; return all.find(e => e.getClientRects().length) || all[0] || null; };
 
   // ---- Guarded access to the app's globals ------------------------------------
   const P = () => root.PeelPhases;
@@ -367,6 +370,8 @@
     councilLoading = fetch('data/council.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
       st.council = d || { meetings: {}, files: {} };
       if (liveKey === p.key) rerenderPreserve();
+      // The Overview panel's About fold reads the same council items (Stage 3).
+      if (liveKey === p.key && root.PeelOverviewTab && root.PeelOverviewTab.renderOverview) root.PeelOverviewTab.renderOverview();
     }).catch(() => { st.council = { meetings: {}, files: {} }; });
   }
   function latestDecisionHTML(p, st) {
@@ -651,7 +656,7 @@
   }
   function devAerial(p) {
     if (!hasDOM()) return;
-    const box = document.getElementById('devtab-aerial');
+    const box = byIdShown('devtab-aerial');
     if (!box) return;
     const Ae = Aerial(), cfg = CFG();
     if (!Ae || !cfg || !cfg.imagery || !cfg.imagery[p.municipality] || p.lat == null) {
@@ -659,12 +664,12 @@
       return;
     }
     const key = p.key;
-    const show = r => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) renderAerialInto(b, r); } };
+    const show = r => { if (liveKey === key) { const b = byIdShown('devtab-aerial'); if (b) renderAerialInto(b, r); } };
     if (aerialCache.has(key)) { show(aerialCache.get(key)); return; }
     box.innerHTML = '<p class="small muted">Comparing aerial photos…</p>';
     Ae.check(p, cfg, { phaseLabel: P().PHASE_BY_KEY[p.phase].label })
       .then(r => { aerialCache.set(key, r); show(r); })
-      .catch(e => { if (liveKey === key) { const b = document.getElementById('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
+      .catch(e => { if (liveKey === key) { const b = byIdShown('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
   }
 
   // ---- Site: constraint checklist (js/constraint-data.js; never blank) ---------------
@@ -679,9 +684,9 @@
   // lidar terrain model through js/elevation.js; each value names its source).
   async function fillGround(p) {
     if (!hasDOM() || !root.PeelSiteContext || !root.PeelSiteContext.groundHTML) return;
-    if (!document.getElementById('devtab-ground')) return;
+    if (!byIdShown('devtab-ground')) return;
     const html = await root.PeelSiteContext.groundHTML(p);
-    if (liveKey === p.key) { const b = document.getElementById('devtab-ground'); if (b) b.innerHTML = html; }
+    if (liveKey === p.key) { const b = byIdShown('devtab-ground'); if (b) b.innerHTML = html; }
   }
 
   // ---- Site: storm sewers (storm-only variant of app.js fillExisting) --------------
@@ -1043,8 +1048,26 @@
   }
   if (hasDOM() && typeof document.addEventListener === 'function') document.addEventListener('click', onClick);
 
+  // ---- Stage 3: the development's pieces in the standard panels -------------------------------
+  // About (proposal, status, latest decision, servicing report) folds into the Overview panel; the
+  // site checks there are the constraint checklist and the storm sewers and ponds; the aerial check
+  // and ground elevation sit in Servicing at the site. Same containers and fillers as the Site view.
+  function partHTML(p, part) {
+    const has = p.lat != null, row = (t, id, msg, info) => brow(t, `<div id="${id}"${info ? ` data-info="${info}"` : ''}><p class="small muted">${msg}</p></div>`);
+    if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
+    if (part === 'site') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
+    if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
+    return '';
+  }
+  function fillParts(p, parts) {
+    if (!hasDOM() || !p) return;
+    liveKey = p.key;
+    if (parts.includes('about')) ensureCouncil(p);
+    if (parts.includes('site') && p.lat != null) { fillConstraints(p); fillStormMains(p); }
+    if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
+  }
   // ---- Public contract ------------------------------------------------------------------
-  const api = { render, setSub };
+  const api = { render, setSub, partHTML, fillParts };
   if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, currentSub, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, scopeProjectForTest: () => scopeProject() };
   else root.DevTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

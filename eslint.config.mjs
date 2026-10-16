@@ -29,5 +29,6 @@ const browser = Object.fromEntries(`window document navigator location history l
 export default [{
   files,
   languageOptions: { ecmaVersion: 2023, sourceType: 'script', globals: { ...browser, ...peel } },
-  rules: { 'no-undef': 'error' },
+  // A '${…}' inside a quoted (not backtick) string prints as text (a heading leaked one).
+  rules: { 'no-undef': 'error', 'no-template-curly-in-string': 'error' },
 }];

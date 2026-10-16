@@ -6,7 +6,7 @@
   'use strict';
 
   const D = window.PeelDemand;
-  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uLs, estTag, UNOFFICIAL, dot, store } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, uML, uLs, estTag, UNOFFICIAL, dot, store, capTxt } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
@@ -90,7 +90,7 @@
       ids = new Set(App().state.servicing.drainage.filter(d => d.plant === plantName).map(d => d.id));
       title = SD().plantLabel(plantName); sub = `${fmtNum(ids.size)} ${App().state.servicing.blocks ? 'blocks' : 'catchments'}`;
       const k = window.PeelCapacity && window.PeelCapacity.of(`plant:${plantName}`);
-      if (k) sub += ` · rated ${fmt1(k.rated)} ML/d · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · uncommitted reserve ${fmt1(k.reserve)} ML/d`;
+      if (k) sub += ` · rated ${capTxt(k.rated, k.rated)} · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · ${window.PeelUtil.reserveWords(k.reserve, k.rated)}`;
       const ce = SP().plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
       if (ce) sub += ` · ${ce}`;
     } else if (a && a.zone) {
