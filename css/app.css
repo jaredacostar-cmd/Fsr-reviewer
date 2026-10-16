@@ -2818,8 +2818,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
    the detailed panes, Engineering columns on. A sub-view without a panel shows its panes as before. */
 #analysis:not(.pnl-on) .pnl-host, #analysis.ft-on .pnl-host { display: none !important; }
 #analysis.pnl-on:not(.ft-on) .analysis-panes > .f-pane:not(.f-subtabs):not(.pnl-host) { display: none !important; }
-#analysis.pnl-on:not(.ft-on) #screen-note-top, #analysis.pnl-on:not(.ft-on) #scope-note { display: none; }   /* the panel's footer carries the note */
-#analysis.ft-on { position: fixed !important; top: var(--ft-top, 56px); left: 0; right: 0; bottom: 0; width: auto !important; max-width: none !important; height: auto !important; z-index: 1500; border-left: 0; }
+#analysis.pnl-on:not(.ft-on) #screen-note-top { display: none; }   /* the panel's footer carries the note; the Peel-wide note (#scope-note) stays */
+#analysis.ft-on { position: fixed !important; top: var(--ft-top, 56px); left: 0; right: 0; bottom: 0; width: auto !important; max-width: none !important; height: auto !important; z-index: 1150; border-left: 0; }   /* under the top bar (1200), so its menus open over the full table */
 #analysis.ft-on .analysis-resize, #analysis.ft-on .sheet-grip, #analysis.ft-on #site-bar, #analysis.ft-on .f-sum { display: none; }
 .ft-bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); background: var(--surface-2); flex: none; }
 .ft-bar[hidden] { display: none; }

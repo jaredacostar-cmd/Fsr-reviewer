@@ -111,7 +111,7 @@
   // A development's files: the tree, the history and the source records are the full table.
   function filesPanelSpec(p) {
     const PN = root.PeelPanel, PH = root.PeelPhases, files = (p.records || []).filter(r => r.kind === 'application'), permits = (p.records || []).filter(r => r.kind === 'permit');
-    const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }) : '');
+    const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '');
     const sorted = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
     return {
       fullTitle: `${p.title} · files, history and source records`,

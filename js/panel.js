@@ -96,7 +96,7 @@
   // number (how the municipality identifies it), the application types and the latest submission.
   function siteHead(p) {
     const ML = root.PeelMapLabels, ls = ML && ML.latestSub ? ML.latestSub(p) : null, PH = root.PeelPhases;
-    const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+    const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const types = (p.types || []).slice(0, 3).join(' / ');
     return { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
       status: { tone: 'stage', text: PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase },
@@ -164,6 +164,7 @@
   }
   function openFull() {
     const an = typeof document !== 'undefined' && document.getElementById('analysis'); if (!an) return false;
+    if (an.classList.contains('ft-on')) return true;   // already open: keep the state to restore on close
     lastFocus = document.activeElement;
     techBefore = an.classList.contains('show-tech');
     const tb = document.getElementById('topbar'); an.style.setProperty('--ft-top', `${tb ? Math.round(tb.getBoundingClientRect().bottom) : 0}px`);

@@ -239,7 +239,8 @@ const dcInfra = JSON.parse(src('data/dc-infra.json'));
 
 test('DC timing: actual status where matched, "not in capital records (DC schedule)" otherwise', () => {
   const idx = M.dcCapitalIndex(sample, dcInfra);
-  assert.deepEqual(idx.get('24-1192'), { status: 'under construction', percent: 60, lastUpdate: '2026-09-30', key: 'web:peelregion.ca/construction/project-90-0001' });
+  assert.deepEqual(idx.get('24-1192'), { status: 'under construction', percent: 60, lastUpdate: '2026-09-30', key: 'web:peelregion.ca/construction/project-90-0001', conf: idx.get('24-1192').conf });
+  assert.ok(['medium', 'low', 'high'].includes(idx.get('24-1192').conf));
   assert.match(M.dcActualHTML(idx.get('24-1192'), true), /60% built<\/button> as of Sep 30, 2026/);
   assert.match(M.dcActualHTML(undefined, true), /not in capital records \(DC schedule\)/);
   assert.equal(M.dcActualHTML(undefined, false), '', 'nothing when capital data is not published');

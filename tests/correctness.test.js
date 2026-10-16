@@ -81,8 +81,10 @@ test('5. room or over in signed words, never a bare negative', () => {
 // ---- 9. Capital status ------------------------------------------------------------------------------
 test('9. planned works: capital-records status where matched, "not in capital records (…)" otherwise; never "status unknown"', () => {
   const mp = src('js/masterplan.js');
-  assert.match(mp, /const CE = window\.PeelCapitalEA, e = id && CE && CE\.dcStatusOf \? CE\.dcStatusOf\(id\) : null;/);
-  assert.match(mp, /\(capital records\)`;/);
+  assert.match(mp, /const CE = window\.PeelCapitalEA, e0 = id && CE && CE\.dcStatusOf \? CE\.dcStatusOf\(id\) : null;/);
+  // Audit: an outline-overlap (low) match is not trusted, nor "complete" for a work scheduled after this year.
+  assert.match(mp, /const e = e0 && e0\.conf !== 'low' && !\(done && y > new Date\(\)\.getFullYear\(\)\) \? e0 : null;/);
+  assert.match(mp, /\(capital records\$\{e\.status === 'planned' && st === 'paused' \? '; procurement paused' : ''\}\)`;/);
   assert.match(mp, /return ` · not in capital records \(\$\{src\}\$\{st === 'paused' \? '; procurement paused' : ''\}\)`;/);
   assert.match(mp, /'council-approved February 2024' : 'DC schedule'/, 'G.E. Booth 2028 (no DC project number) names its source');
   assert.match(mp, /\|c\$\{window\.PeelCapitalEA && window\.PeelCapitalEA\.data && window\.PeelCapitalEA\.data\.loaded \? 1 : 0\}/, 're-computed once the capital records load');

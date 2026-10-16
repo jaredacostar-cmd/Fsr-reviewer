@@ -65,7 +65,7 @@
     const TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
     const ls = root.PeelMapLabels && root.PeelMapLabels.latestSub ? root.PeelMapLabels.latestSub(p) : null;
     const fig = (v, u, label, ctx) => ({ v, u, label, ctx });
-    const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', ''), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt))]
       : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : ''), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '')];
     const plant = f && f.pl ? (SV().PLANT_SHORT[f.pl] || f.pl) : null;

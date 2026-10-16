@@ -265,8 +265,8 @@
     const c = s.kind === 'plant' ? MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)) : null;
     const tone = k ? PN.toneOf(k.pctBuildout) : null;
     const LB = window.PeelLayerBar;
-    const dev = r => ({ tone: null, attrs: { 'data-pnl-dev': r.p.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${dot(r.p.phase)} ${esc(r.p.title)}</span><span class="pnl-r-fig">${water ? uML(D.toMLd(r.peak)) : uLs(r.peak)}<small>${water ? 'max day' : 'peak wet'}</small></span></div><small class="pnl-r-line">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)} · ${fmtNum(roundPop(r.e.population + r.e.employment.jobs))} people + jobs</small>` });
-    const relief = c && c.relief.length ? c.relief.map(r => ({ html: `<div class="pnl-kv"><span>${r.text}</span></div>`, kv: true })) : [];
+    const dev = r => ({ tone: null, attrs: { 'data-pnl-dev': r.p.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${dot(r.p.phase)} ${esc(r.p.title)}</span><span class="pnl-r-fig">${uLs(r.peak)}<small>${water ? 'max day' : 'peak wet'}</small></span></div><small class="pnl-r-line">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)} · ${fmtNum(roundPop(r.e.population + r.e.employment.jobs))} people + jobs</small>` });
+    const relief = c && c.relief.length ? c.relief.map(r => ({ html: `<div class="pnl-kv"><span>${esc(r.text)}</span></div>`, kv: true })) : [];
     return {
       calc: true, fullTitle: `${s.title} · every development loading it, the ladder and the planned works`,
       head: { trail: [{ label: 'Peel', attrs: { 'data-ss-close': '' } }, { label: s.title }], close: { 'data-ss-close': '' }, name: s.title,
@@ -312,15 +312,15 @@
 
   // Water / Wastewater / DC are Peel-wide: below Peel (municipality, area, servicing scope) they say
   // so, and link the plants or zones the scoped developments load (design audit, Group 6).
-  const PEEL_WIDE = { water: 'Pressure zones and treatment', ww: 'Plants, blocks and pumping stations', dca: 'DC projects' };
+  const PEEL_WIDE = { svc: 'Plants, pumping stations, storage and pressure zones', water: 'Pressure zones and treatment', ww: 'Plants, blocks and pumping stations', dca: 'DC projects' };
   function peelWideNote() {
     const el = typeof document !== 'undefined' && document.getElementById('scope-note'); if (!el || !App() || !App().state) return;
     const st = App().state, tab = AT() && AT().getFootTab();
     const below = st.muni || st.sp.length || st.mtsa.length || st.pz.length || st.dr.length || st.ss;
     if (!below || (window.DevScope && window.DevScope.current()) || !PEEL_WIDE[tab]) { el.hidden = true; return; }
     const set = st.filtered || [], count = new Map(), bump = k => count.set(k, (count.get(k) || 0) + 1);
-    if (tab === 'water') { for (const p of set) for (const id of SD().svcIds(p, 'pz')) bump(id); }
-    else for (const p of set) { const pl = MM().plantOfDev(p); if (PLANTS.includes(pl)) bump(`plant:${pl}`); }
+    if (tab === 'water' || tab === 'svc') { for (const p of set) for (const id of SD().svcIds(p, 'pz')) bump(id); }
+    if (tab !== 'water') for (const p of set) { const pl = MM().plantOfDev(p); if (PLANTS.includes(pl)) bump(`plant:${pl}`); }
     const top = [...count].sort((a, b) => b[1] - a[1]).slice(0, 5).filter(([ref]) => resolve(ref));
     el.innerHTML = `<strong>Peel-wide.</strong> ${PEEL_WIDE[tab]} serve all of Peel, so these tables are not filtered to ${esc(OT().scopeText())}.${top.length ? ` The ${fmtNum(set.length)} developments shown load: ${top.map(([ref, n]) => `${link(ref, resolve(ref).short)} (${fmtNum(n)})`).join(' · ')}.` : ''}`;
     el.hidden = false;

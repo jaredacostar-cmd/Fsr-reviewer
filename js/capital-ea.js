@@ -394,7 +394,7 @@
     const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev();
     if (!p || p.lat == null) return null;
     const pts = [];
-    for (const a of p.records || []) if (a.kind === 'application' && a.poly) for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
+    for (const a of p.records || []) if (a.kind === 'application' && a.poly && a.phase !== 'cancelled') for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
     const step = Math.max(1, Math.ceil(pts.length / 150));
     return { title: p.title, lat: p.lat, lng: p.lng, m: 1000, pts: pts.filter((_, i) => i % step === 0), muni: p.municipality, edge: pts.length > 0 };
   }

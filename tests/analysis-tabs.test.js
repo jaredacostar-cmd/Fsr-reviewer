@@ -62,7 +62,7 @@ test('migrateTabKey: current tabs are untouched; the Wastewater / Water halves a
 });
 
 test('migrateTabKey is applied to the stored tab pref and to share links', () => {
-  assert.ok(APP.includes('const m = migrateTabKey(footPref); footPref = m.tab;'), 'stored footPref not migrated');
+  assert.ok(APP.includes('const old = footPref, m = migrateTabKey(footPref); footPref = m.tab;'), 'stored footPref not migrated');
   assert.ok(APP.includes('const m = AT().migrateTabKey(t, oldSub);'), 'share-link t param not migrated');
 });
 

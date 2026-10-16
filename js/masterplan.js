@@ -5,10 +5,14 @@
   // Status of a planned work (Stage 1 #9): the capital records' status where the DC project matches
   // one (data/capital.json, via PeelCapitalEA's DC index), else "not in capital records" with the
   // schedule it comes from (and the Council procurement pause where it applies). Never "status unknown".
+  // (A match by outline overlap only (low confidence) is not trusted here, nor a "complete" status for a
+  // work scheduled after this year; a planned, untendered work keeps the Council pause note.)
   const capTag = (y, s, id, src = 'DC schedule') => {
-    const CE = window.PeelCapitalEA, e = id && CE && CE.dcStatusOf ? CE.dcStatusOf(id) : null;
-    if (e) return ` · ${e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : CE.statusText(e.status).toLowerCase()} (capital records)`;
+    const CE = window.PeelCapitalEA, e0 = id && CE && CE.dcStatusOf ? CE.dcStatusOf(id) : null;
+    const done = e0 && /complete/.test(e0.status || '');
+    const e = e0 && e0.conf !== 'low' && !(done && y > new Date().getFullYear()) ? e0 : null;
     const st = capitalStatus(y, s, id);
+    if (e) return ` · ${e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : CE.statusText(e.status).toLowerCase()} (capital records${e.status === 'planned' && st === 'paused' ? '; procurement paused' : ''})`;
     return ` · not in capital records (${src}${st === 'paused' ? '; procurement paused' : ''})`;
   };
   const D = window.PeelDemand;

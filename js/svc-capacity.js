@@ -141,7 +141,7 @@
     // Wastewater pumping stations: peak wet weather flow against firm capacity (design criteria).
     for (const a of A.state.servicing.psAreas || []) {
       const k = Cap().of(`ps:${a.id}`), c = MP().cached(`ps:${a.id}`, () => MP().psCons(a)); if (!k || !c) continue;
-      rows.push({ id: `ps:${a.id}`, ss: `ps:${a.id}`, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
+      rows.push({ id: `ps:${a.id}`, ss: a.id, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
         existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
     }
     // Tightest sewers: only while pipe-by-pipe results are on (off for now: left to the Region's model).
@@ -394,7 +394,7 @@
   }
   const renderAll = () => { render(); renderChecks(); renderNetBar(); };
   // Render on entering the sub-view (PeelAnalysisTabs.showFootTab).
-  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') renderNetBar(); };
+  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } };
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
     if (!e.target.closest) return;
     const s = e.target.closest('[data-cap-sort]'); if (s) { st.sort = s.dataset.capSort; if (U.store) U.store.set('capSort', st.sort); render(); return; }
