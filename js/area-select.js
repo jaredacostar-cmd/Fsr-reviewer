@@ -345,8 +345,8 @@
         <div class="sum-tiles">
           ${nDa ? `<div class="sum-tile"><div class="sl">${bc.year} Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
           ${g('Built since', 's-done', gr.built.units, gr.built.population, '', sj.jbuilt)}
-          ${g('Committed', 's-perm', gr.approved.units, gr.approved.population, 'draft plan or site plan approved, not yet built', sj.japproved)}
-          ${g('Proposed', 's-left', gr.proposed.units, gr.proposed.population, 'in review', sj.jproposed)}
+          ${g('Approved, not yet built', 's-perm', gr.approved.units, gr.approved.population, 'draft plan or site plan approved, not yet built', sj.japproved)}
+          ${g('In review', 's-left', gr.proposed.units, gr.proposed.population, 'in review', sj.jproposed)}
         </div>
         ${sum > 0 ? `<div class="grow-bar sel-grow" role="img" aria-label="Growth layers">${layers.filter(l => l[1] > 0).map(([k, v]) => `<span class="gseg g-${k}" style="flex:${v}" title="${fmtNum(Math.round(v))} people"></span>`).join('')}</div>` : ''}
         <p class="small muted">${nDa ? 'Census: dissemination areas whose centre falls inside the drawn area(s). ' : ''}Built = units on permits completed since census day; approved = site plan approved or permit issued, not yet built; proposed = applications in pre-consultation or review (including zoning approved without a site plan approval). People at Peel persons-per-unit; jobs from the floor area the applications state.</p>

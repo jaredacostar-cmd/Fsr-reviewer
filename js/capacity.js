@@ -60,7 +60,8 @@
         return { ref, kind: 'wplant', name: w.name, unit: 'ML/d', ...compute({ rated, existing: w.q('today'), built: 0, committed: w.q('committed'), buildout: w.q(null), triggerYear: w.out }), builtInExisting: true, zones: w.zones };
       }
       if (kind === 'ps') {
-        const a = (A.state.servicing.drainage || []).find(d => d.id === id); const k = a && MP().psCons(a); if (!k) return null;
+        // The traced pumping-station sewersheds (servicing.psAreas: the drainage list holds the blocks).
+        const a = [...(A.state.servicing.psAreas || []), ...(A.state.servicing.drainage || [])].find(d => d.id === id); const k = a && MP().psCons(a); if (!k) return null;
         return { ref, kind: 'ps', name: k.name, unit: 'L/s', ...compute({ firm: k.cap, existing: k.q('today'), built: 0, committed: k.util.com * k.cap, buildout: k.q(null), triggerYear: k.out }) };
       }
       return null;

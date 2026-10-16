@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T15:55:52.253Z",
+ "generatedAt": "2026-10-15T18:42:13.901Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -205,7 +205,28 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p18-1357-74b7c06e",
+      "projectNumber": "18-1357",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p25-2300-144a46f9",
+      "projectNumber": "25-2300",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p25-1340-47f33e8d",
+      "projectNumber": "25-1340",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p25-2158-2c59f561",
+      "projectNumber": "25-2158",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -501,7 +522,108 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p26-4055-b6586e84",
+      "projectNumber": "26-4055",
+      "method": "street + study area"
+     },
+     {
+      "id": "p16-4520-422cd111",
+      "projectNumber": "16-4520",
+      "method": "street + study area"
+     },
+     {
+      "id": "p15-2153-6b426900",
+      "projectNumber": "15-2153",
+      "method": "street + study area"
+     },
+     {
+      "id": "p26-4055-20d85971",
+      "projectNumber": "26-4055",
+      "method": "street + study area"
+     },
+     {
+      "id": "p18-1155-a674d7a6",
+      "projectNumber": "18-1155",
+      "method": "street + study area"
+     },
+     {
+      "id": "p23-2300-17d051ca",
+      "projectNumber": "23-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p23-2300-ed14488c",
+      "projectNumber": "23-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p23-2300-1a622375",
+      "projectNumber": "23-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p23-2300-7588bec6",
+      "projectNumber": "23-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-15958efc",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-d8d50100",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-d553b161",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-09b12334",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-8ab4f981",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-c5321b73",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p25-2267-64bd2fc4",
+      "projectNumber": "25-2267",
+      "method": "project website"
+     },
+     {
+      "id": "p25-2266-d9582269",
+      "projectNumber": "25-2266",
+      "method": "project website"
+     },
+     {
+      "id": "p25-2265-ec003993",
+      "projectNumber": "25-2265",
+      "method": "project website"
+     },
+     {
+      "id": "p25-2263-ecd9f74d",
+      "projectNumber": "25-2263",
+      "method": "project website"
+     },
+     {
+      "id": "p25-2264-a3adef8b",
+      "projectNumber": "25-2264",
+      "method": "project website"
+     }
+    ],
     "facilities": [
      "Beckett Sproule",
      "Snelgrove",
@@ -584,7 +706,18 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p23-1160-5f6a3560",
+      "projectNumber": "23-1160",
+      "method": "street + study area"
+     },
+     {
+      "id": "p25-4035-ffced84d",
+      "projectNumber": "25-4035",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Gore Road"
     ]
@@ -692,7 +825,38 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p21-1310-6a94c239",
+      "projectNumber": "21-1310",
+      "method": "street + study area"
+     },
+     {
+      "id": "p26-4045-4baf7810",
+      "projectNumber": "26-4045",
+      "method": "street + study area"
+     },
+     {
+      "id": "p20-2300-357ac1da",
+      "projectNumber": "20-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p23-4340-a00ccc9d",
+      "projectNumber": "23-4340",
+      "method": "street + study area"
+     },
+     {
+      "id": "p16-2300-6159c6a0",
+      "projectNumber": "16-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-d9292342",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Airport Road",
      "Intermodal Drive"
@@ -791,7 +955,48 @@
       "method": "location"
      }
     ],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p23-2272-eb671580",
+      "projectNumber": "23-2272",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p23-1370-1c71665d",
+      "projectNumber": "23-1370",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-1370-e4072538",
+      "projectNumber": "24-1370",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-2274-dc7a40e4",
+      "projectNumber": "24-2274",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p25-1163-42b8a4d5",
+      "projectNumber": "25-1163",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-1194-65e1e1c1",
+      "projectNumber": "24-1194",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p29-1199-4f6df55b.2",
+      "projectNumber": "29-1199",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-1192-2b59058b",
+      "projectNumber": "24-1192",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": [
      "Bolton North",
      "Bolton",
@@ -868,7 +1073,18 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p24-2303-8ed4f2bb",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-5e708852",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -1223,7 +1439,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p25-4055-647c119c",
+      "projectNumber": "25-4055",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Bolton North",
      "Bolton",
@@ -1843,7 +2065,23 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "c51458",
+      "projectNumber": "26-4090",
+      "method": "street + study area"
+     },
+     {
+      "id": "p16-2291-8c52f241",
+      "projectNumber": "16-2291",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-82311127",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "McLaughlin"
     ]
@@ -1969,7 +2207,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p23-2126-3b0d703e",
+      "projectNumber": "23-2126",
+      "method": "project website"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -2341,7 +2585,33 @@
       "method": "location"
      }
     ],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p16-2905-b45345da",
+      "projectNumber": "16-2905",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p23-2300-f1fd7e3f",
+      "projectNumber": "23-2300",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-2300-a60c9b85",
+      "projectNumber": "24-2300",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-2300-1c4d6dc4",
+      "projectNumber": "24-2300",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p14-2301-c29e29ad",
+      "projectNumber": "14-2301",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": [
      "Clarkson",
      "Herridge",
@@ -2500,7 +2770,18 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p23-2129-51e98ae7",
+      "projectNumber": "23-2129",
+      "method": "project website"
+     },
+     {
+      "id": "p23-2129-8fd4f135",
+      "projectNumber": "23-2129",
+      "method": "project website"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -2617,7 +2898,28 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p20-2300-3735feaf",
+      "projectNumber": "20-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p20-2300-3735feaf.2",
+      "projectNumber": "20-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p22-2300-4a4bdd67",
+      "projectNumber": "22-2300",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-2301-b9bd4805",
+      "projectNumber": "14-2301",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -3164,7 +3466,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p22-4030-57994a0d",
+      "projectNumber": "22-4030",
+      "method": "street + study area"
+     },
+     {
+      "id": "p16-4370-98c82f94",
+      "projectNumber": "16-4370",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Airport Road"
     ]
@@ -3703,7 +4016,33 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p19-4040-936417d7",
+      "projectNumber": "19-4040",
+      "method": "street + study area"
+     },
+     {
+      "id": "p12-4040-49cabc42",
+      "projectNumber": "12-4040",
+      "method": "street + study area"
+     },
+     {
+      "id": "p27-4030-b1b1e05c",
+      "projectNumber": "27-4030",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2223-4b843150",
+      "projectNumber": "24-2223",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2223-4b843150.2",
+      "projectNumber": "24-2223",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Heritage Road"
     ]
@@ -3860,7 +4199,43 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p14-1240-039ef407",
+      "projectNumber": "14-1240",
+      "method": "street + study area"
+     },
+     {
+      "id": "p10-4020-5e0007eb",
+      "projectNumber": "10-4020",
+      "method": "street + study area"
+     },
+     {
+      "id": "p10-4020-8d9ebc05",
+      "projectNumber": "10-4020",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-4020-fa73276e",
+      "projectNumber": "14-4020",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-1240-b622d42e",
+      "projectNumber": "14-1240",
+      "method": "street + study area"
+     },
+     {
+      "id": "p10-4020-701c1058",
+      "projectNumber": "10-4020",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-4020-7f949129",
+      "projectNumber": "14-4020",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "East Brampton",
      "Dixie Road",
@@ -4026,7 +4401,28 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p19-1156-a31a86ea",
+      "projectNumber": "19-1156",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p24-1340-a1a56858",
+      "projectNumber": "24-1340",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p25-1340-47f33e8d",
+      "projectNumber": "25-1340",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p25-1340-8097fae5",
+      "projectNumber": "25-1340",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -4184,7 +4580,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p23-2261-d4895745",
+      "projectNumber": "23-2261",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -4349,7 +4751,13 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p15-1138-d3c5c462",
+      "projectNumber": "15-1138",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Meadowvale North",
      "Mullet Creek",
@@ -4737,7 +5145,43 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p16-1177-67097517",
+      "projectNumber": "16-1177",
+      "method": "street + study area"
+     },
+     {
+      "id": "p11-4075-1c3625df",
+      "projectNumber": "11-4075",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-1165-919b2a66",
+      "projectNumber": "14-1165",
+      "method": "street + study area"
+     },
+     {
+      "id": "c22306",
+      "projectNumber": "27-4025",
+      "method": "street + study area"
+     },
+     {
+      "id": "p13-4065-3472e38d",
+      "projectNumber": "13-4065",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-1165-05a784a2",
+      "projectNumber": "14-1165",
+      "method": "street + study area"
+     },
+     {
+      "id": "p14-1165-7148be1a",
+      "projectNumber": "14-1165",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Airport Road",
      "Mayfield"
@@ -4938,7 +5382,33 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p19-1370-922a7934",
+      "projectNumber": "19-1370",
+      "method": "street + study area"
+     },
+     {
+      "id": "p13-4055-b164f5ac",
+      "projectNumber": "13-4055",
+      "method": "street + study area"
+     },
+     {
+      "id": "p12-1185-c19c5b8e",
+      "projectNumber": "12-1185",
+      "method": "street + study area"
+     },
+     {
+      "id": "p19-1370-922a7934.2",
+      "projectNumber": "19-1370",
+      "method": "street + study area"
+     },
+     {
+      "id": "p21-4030-9fc66e13",
+      "projectNumber": "21-4030",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "North Brampton",
      "Snelgrove",
@@ -5068,7 +5538,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p17-4030-eb82d38a",
+      "projectNumber": "17-4030",
+      "method": "street + study area"
+     },
+     {
+      "id": "p15-4070-1c4fb850",
+      "projectNumber": "15-4070",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Mayfield"
     ]
@@ -5217,7 +5698,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p17-4020-11feb185",
+      "projectNumber": "17-4020",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-1bcd6f9d",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Airport Road",
      "North Brampton",
@@ -5458,7 +5950,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p10-4040-fec15c89",
+      "projectNumber": "10-4040",
+      "method": "street + study area"
+     },
+     {
+      "id": "p29-2299-d6b2f282",
+      "projectNumber": "29-2299",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Mayfield"
     ]
@@ -5771,7 +6274,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p16-4060-0b343d64",
+      "projectNumber": "16-4060",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2300-8f25c1a8",
+      "projectNumber": "24-2300",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -5805,7 +6319,11 @@
    "pageHash": "9e34deb2ce199ed0",
    "pageMatch": 1,
    "system": "roads",
-   "decision": null,
+   "decision": {
+    "text": "The preferred design includes a six (6) lane urban cross-section including a 5.5 m median.",
+    "source": "https://peelregion.ca/sites/default/files/2024-08/steeles-avenue-ESR-final.pdf",
+    "method": "extracted from the report (automatic; check the report)"
+   },
    "geometry": {
     "type": "LineString",
     "coordinates": [
@@ -5880,7 +6398,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p14-4035-824a71e8",
+      "projectNumber": "14-4035",
+      "method": "street + study area"
+     },
+     {
+      "id": "p16-4020-803f93b1",
+      "projectNumber": "16-4020",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -5970,7 +6499,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p15-4080-412c008f",
+      "projectNumber": "15-4080",
+      "method": "street + study area"
+     },
+     {
+      "id": "p23-1160-5c46f543",
+      "projectNumber": "23-1160",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Gore Road",
      "Castlemore"
@@ -6322,7 +6862,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p14-4030-68734ba0",
+      "projectNumber": "14-4030",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Airport Road",
      "Mayfield"
@@ -6517,7 +7063,28 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p19-4060-3a7a1d07",
+      "projectNumber": "19-4060",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-a593d90a",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-38593867",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-34deb69b",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Airport Road",
      "Caledon East"
@@ -6889,7 +7456,13 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p24-4825-c077f123",
+      "projectNumber": "24-4825",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Bolton",
      "West Bolton"
@@ -7229,7 +7802,13 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p14-4065-5bfe4056",
+      "projectNumber": "14-4065",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -7293,7 +7872,11 @@
    "pageHash": "8505f0e62caa2c0c",
    "pageMatch": 1,
    "system": "water",
-   "decision": null,
+   "decision": {
+    "text": "The preferred alternative solution involves increasing the treatment capacity of the existing PAL4 Water Treatment Plant to support the water taking increase from 30 to 60 L/s.",
+    "source": "https://peelregion.ca/sites/default/files/2024-08/Palgrave-Well-4-final-ESR.pdf",
+    "method": "extracted from the report (automatic; check the report)"
+   },
    "geometry": {
     "type": "Point",
     "coordinates": [
@@ -7441,7 +8024,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p12-4085-610bc1eb",
+      "projectNumber": "12-4085",
+      "method": "street + study area"
+     },
+     {
+      "id": "p12-4085-81495bf1",
+      "projectNumber": "12-4085",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Gore Road"
     ]
@@ -7538,7 +8132,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p22-1125-76cd012c",
+      "projectNumber": "22-1125",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": [
      "A.P. Kennedy",
      "Beach Street"
@@ -7700,7 +8300,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p21-2411-734db121",
+      "projectNumber": "21-2411",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": [
      "Beach Street",
      "Beechwood"
@@ -8007,7 +8613,53 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p15-1345-6ae2c575",
+      "projectNumber": "15-1345",
+      "method": "street + study area"
+     },
+     {
+      "id": "p18-2252-4f9c6065",
+      "projectNumber": "18-2252",
+      "method": "street + study area"
+     },
+     {
+      "id": "p17-4070-b197da8c",
+      "projectNumber": "17-4070",
+      "method": "street + study area"
+     },
+     {
+      "id": "p22-2255-95b42972",
+      "projectNumber": "22-2255",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-c2e8b935",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-03e36102",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-dd53fb29",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-31bb9d86",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     },
+     {
+      "id": "p24-2303-6c5a36a1",
+      "projectNumber": "24-2303",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -8126,7 +8778,18 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p22-2254-b2c6382e",
+      "projectNumber": "22-2254",
+      "method": "inside the study area"
+     },
+     {
+      "id": "p23-2300-ef0e5678",
+      "projectNumber": "23-2300",
+      "method": "inside the study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -8540,7 +9203,18 @@
    "geomConfidence": "low",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p16-2291-73912474",
+      "projectNumber": "16-2291",
+      "method": "street + study area"
+     },
+     {
+      "id": "p20-4222-c57cc02b",
+      "projectNumber": "20-4222",
+      "method": "street + study area"
+     }
+    ],
     "facilities": []
    },
    "lastChecked": "2026-10-15",
@@ -8732,7 +9406,13 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p14-4850-6e84a3a4",
+      "projectNumber": "14-4850",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Dixie Road"
     ]
@@ -9627,7 +10307,28 @@
    "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
+    "capitalProjects": [
+     {
+      "id": "p24-2151-f6255f78",
+      "projectNumber": "24-2151",
+      "method": "street + study area"
+     },
+     {
+      "id": "p25-1251-8741089b",
+      "projectNumber": "25-1251",
+      "method": "street + study area"
+     },
+     {
+      "id": "p25-1251-d61a5a14",
+      "projectNumber": "25-1251",
+      "method": "street + study area"
+     },
+     {
+      "id": "p25-2264-a3adef8b",
+      "projectNumber": "25-2264",
+      "method": "street + study area"
+     }
+    ],
     "facilities": [
      "Lorne Park",
      "West Brampton",
@@ -10075,9 +10776,7 @@
    "id": "port-credit-east-water-and-wastewater-servicing-optimization",
    "name": "Port Credit East water and wastewater servicing optimization",
    "municipality": "Mississauga",
-   "flags": [
-    "geometry approximate"
-   ],
+   "flags": [],
    "schedule": "C",
    "status": "consultation",
    "milestones": [
@@ -10100,19 +10799,37 @@
    "system": "multi",
    "decision": null,
    "geometry": {
-    "type": "Point",
+    "type": "LineString",
     "coordinates": [
-     -79.6441,
-     43.589
+     [
+      -79.58062,
+      43.554575
+     ],
+     [
+      -79.582039,
+      43.553247
+     ],
+     [
+      -79.582927,
+      43.552411
+     ]
     ]
    },
-   "geomType": "approx",
-   "geomMethod": "municipality centre: Mississauga",
-   "geomConfidence": "low",
+   "geomType": "linear",
+   "geomMethod": "capital project lines on the named street",
+   "geomConfidence": "medium",
    "related": {
     "dcProjects": [],
-    "capitalProjects": [],
-    "facilities": []
+    "capitalProjects": [
+     {
+      "id": "p24-2115-c4b492a6",
+      "projectNumber": "24-2115",
+      "method": "street + study area"
+     }
+    ],
+    "facilities": [
+     "Elmwood Avenue"
+    ]
    },
    "lastChecked": "2026-10-15"
   },

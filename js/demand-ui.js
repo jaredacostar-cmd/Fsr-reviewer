@@ -36,33 +36,7 @@
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
   const demandBasis = () => App().state.basis;
   // What the demand covers: the phases picked in the filter panel, then any other filters.
-  // ---- Phase 4: the Wastewater tab's fourth sub-view, Pumping stations. The contract is
-  // that index.html carries a `data-wwsub="pumpstations"` button and a #pane-pumpstations
-  // pane holding #pumpstations-body; create them here too if a merged branch hasn't yet,
-  // so this sub-view renders either way (the generic sub-tab code in showFootTab picks
-  // both up: the button by [data-wwsub], the pane by data-pane="ww" data-sub).
-  function ensurePumpSubTab() {
-    const group = document.querySelector('.f-subtabs[data-pane="svc"]');
-    if (group && !group.querySelector('[data-wwsub="pumpstations"]')) {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'btn small'; b.dataset.wwsub = 'pumpstations';
-      b.textContent = 'Pumping stations';
-      const alloc = group.querySelector('[data-wwsub="alloc"]');
-      if (alloc) group.insertBefore(b, alloc); else group.appendChild(b);
-    }
-    if (!document.getElementById('pane-pumpstations')) {
-      const sec = document.createElement('section');
-      sec.className = 'f-pane svc-pane'; sec.id = 'pane-pumpstations';
-      sec.dataset.pane = 'ww'; sec.dataset.sub = 'pumpstations';
-      sec.setAttribute('role', 'tabpanel'); sec.setAttribute('aria-labelledby', 'ftab-svc');
-      sec.hidden = true;
-      sec.innerHTML = '<div class="tb-head"><h2 class="sr">Pumping stations</h2></div><div id="pumpstations-body"></div>';
-      const ref = document.getElementById('pane-alloc');
-      if (ref && ref.parentElement) ref.parentElement.insertBefore(sec, ref);
-      else if (group) group.after(sec);
-    }
-  }
-  ensurePumpSubTab();
+  // (Stage 2: pumping stations are part of Servicing › Network — #pane-pumpstations in index.html.)
   // ---- Phase 4 shared bits for the Wastewater sub-views: tiles, a compact inline bar,
   // and the one-line ⓘ footer (method, criteria, data dates) that replaces the per-tab
   // stampHTML scenario line (the scenario bar now carries that once).
@@ -77,7 +51,7 @@
         <span style="display:block;height:100%;width:${(Math.max(0, v) / max * 100).toFixed(1)}%;background:var(${neg ? '--cap-over' : '--cap-room'});border-radius:4px"></span>
         ${unitTxt === '%' && max > 100 ? `<span aria-hidden="true" style="position:absolute;top:0;bottom:0;left:${(100 / max * 100).toFixed(1)}%;border-left:1px solid var(--text-primary)"></span>` : ''}
       </span>
-      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${fmt1(v)} ${unitTxt}${neg ? ` · ${negWord}` : ''}</span>
+      <span class="small" style="width:104px;flex:none;text-align:right;${neg ? 'color:var(--cap-over);font-weight:500' : ''}">${v < 0 ? `over by ${fmt1(-v)} ${unitTxt}` : `${fmt1(v)} ${unitTxt}${neg ? ` · ${negWord}` : ''}`}</span>
     </div>`;
   function wwInfoLine(method) {
     const c = App().state.criteria, E = c.employment, R = App().state.reports, bc = CA().baselineCensus(), Y = bc ? bc.year : 2021;
@@ -138,13 +112,30 @@
       <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d ${SvcTab().wwFlowLabel()}</span></h3>
       <div>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}</div>
       <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + built + committed, and after allocations (${SvcTab().wwFlowLabel('long')})</caption>
-        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + committed</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
+        <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + approved</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
         <tbody>${plants.map(x => `<tr><td>${esc(SV().PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${fmt1(x.room)} ML/d<small>≈${fmtNum(roundPop(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${fmt1(x.after)} ML/d</strong><small>≈${fmtNum(roundPop(x.peopleAfter))} people</small></td></tr>`).join('')}</tbody></table>
       <div class="export-bar"><button type="button" class="btn small" data-alloc-csv>Export CSV</button><label class="btn small">Import CSV<input type="file" accept=".csv,text/csv" data-alloc-imp hidden></label></div>
       ${rows.length ? `<table class="dt"><caption>Allocations recorded${rows.length > 10 ? ` · showing ${shown.length} of ${fmtNum(rows.length)}` : ''}</caption><thead><tr><th>Development</th><th>Units</th><th>People</th><th>Date</th><th>Reference</th><th>Plant</th><th>Status</th></tr></thead><tbody>
         ${shown.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(SV().PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>
         ${rows.length > 10 ? `<p><button type="button" class="btn small link" data-alloc-all>${allocSeeAll ? 'Show fewer' : `See all ${fmtNum(rows.length)} allocations`}</button></p>` : ''}` : ''}
       ${wwInfoLine('Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ' + SvcTab().wwFlowLabel('long') + '.')}`;
+    // Stage 3: the standard panel; the tables above are its full table.
+    const PN = root.PeelPanel;
+    if (PN) {
+      const short = plants.filter(x => x.after < 0);
+      PN.set('svc:alloc', {
+        calc: true, fullTitle: 'Servicing › Allocations · Peel: the plants and every allocation recorded',
+        head: PN.areaHead('Servicing › Allocations', 'What is already allocated?', short.length ? { tone: 'over', text: `${short.length} short` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(rows.length)} allocation${rows.length === 1 ? '' : 's'} recorded in this browser`),
+        answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${fmtNum(ahead.length)} ahead of approval.${short.length ? ` ${short.map(x => esc(SV().PLANT_SHORT[x.pl])).join(' and ')} ${short.length === 1 ? 'has' : 'have'} no room left at the 90% trigger after them.` : ''}` : 'No allocations recorded yet. Record one from a development (its ⋯ menu, Record allocation) or import a CSV in the full table.',
+        figures: [{ v: fmtNum(rows.length), u: 'allocations', label: 'recorded', ctx: `${fmtNum(totU)} units` },
+          ...plants.map(x => ({ v: fmt1(x.after), u: 'ML/d', label: `${SV().PLANT_SHORT[x.pl]} room`, ctx: `after allocations · ≈${fmtNum(roundPop(x.peopleAfter))} people`, tone: x.after < 0 ? 'over' : 'room' }))].slice(0, 4),
+        chart: `<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations (ML/d)</p>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}`,
+        lists: [{ title: 'Allocations', rows: rows.slice(0, 5).map(r => ({ attrs: r.p ? { 'data-pnl-dev': r.key } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : esc(r.key)}<small>${esc(SV().PLANT_SHORT[r.pl] || '')}${r.a.ref ? ` · ${esc(r.a.ref)}` : ''}</small></span><span class="pnl-r-fig">${fmtNum(r.a.units)}<small>units</small></span></div>` })), total: rows.length, seeAll: { 'data-full-table': 'svc' } }],
+        method: `Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ${esc(SvcTab().wwFlowLabel('long'))}. Allocations are kept in this browser (export and import them as CSV in the full table).`,
+        sources: 'Plant capacity and flows: Region of Peel 2025 annual reports; the 90% trigger: 2020 Master Plan (Vol. 4, s. 2.3.1); allocations: recorded here.',
+        foot: { primary: { label: 'Import or export CSV', attrs: { 'data-full-table': 'svc' }, title: 'Open the full table: Export CSV and Import CSV are there' } },
+      });
+    }
   }
   $('#alloc-body').addEventListener('click', e => {
     if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }
@@ -257,7 +248,7 @@
         ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
           const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
       </tbody></table>
-      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}`;
+      <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}${root.PeelCensusView && root.PeelCensusView.permitCheckHTML ? root.PeelCensusView.permitCheckHTML() : ''}`;
   }
   // Extra model-check sections registered by other modules (Workers D and E).
   // Convention: window.ModelChecks = { key: htmlString } or { key: { title, html } }.
@@ -295,10 +286,11 @@
 
   // ---- Public contract ----
   // Units and people completed before census day (the Existing layer of js/layers.js totals): already
-  // in the 2021 Census, so "would add" leaves them out. The 'remaining' basis counts no completed
-  // units, so there is nothing to take out.
-  const preCensus = (t, basis) => (t && basis !== 'remaining' ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, ensurePumpSubTab, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  // in the 2021 Census, so "would add" leaves them out. Only the bases that count completed units take
+  // anything out: every stage ('all') and build-out ('buildout'); approved only ('committed') and left
+  // to build ('remaining') count none.
+  const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
+  const api = { preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

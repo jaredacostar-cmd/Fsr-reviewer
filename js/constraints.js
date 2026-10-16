@@ -5,7 +5,7 @@
  *  - Regulation limits (CVC, TRCA), floodplain (CVC regulatory floodlines; TRCA generalized, with
  *    TRCA's disclaimer), Greenbelt, Oak Ridges Moraine, Niagara Escarpment, PSW / ANSI, the
  *    Growth Plan Natural Heritage System, watercourses (Region of Peel, then the Ontario Hydro
- *    Network where Peel maps none), gas pipelines and hydro lines (approximate; off by default).
+ *    Network where Peel maps none). (Stage 2: the gas pipeline and hydro line layers are removed.)
  *  - Area layers draw from one coarse overview file below zoom 13 and from 0.02° tiles above it.
  *  - Click a feature: its card (name, type, owner, as-of date, source, screening note).
  * Screening only: the conservation authority or province confirms; nothing here is a determination.
@@ -21,7 +21,6 @@
   const SS = () => root.PeelSvcScope;
 
   const SCREEN = 'Screening only: the owner confirms.';
-  const isGas = lab => /(^|· )gas( |$)/.test(lab[1] || '') || /pipeline/i.test(lab[0] || '');
   const LAYERS = {
     reg: { label: 'Regulation limits', short: 'regulation limits', color: '--cx-reg', ids: ['reg-cvc', 'reg-trca'], area: true, dash: '6 4', weight: 1.6,
       note: `Conservation authority regulated areas (O. Reg. 41/24): CVC and TRCA. ${SCREEN} A feature need not be mapped to be regulated; NVCA and Conservation Halton publish no open layer.` },
@@ -34,12 +33,8 @@
     nhs: { label: 'Natural Heritage System', short: 'Natural Heritage System', color: '--cx-nhs', ids: ['nhs'], area: true, dash: '4 3', weight: 1.2, note: `The Growth Plan's Natural Heritage System (province), outside settlement areas. ${SCREEN}` },
     water: { label: 'Watercourses', short: 'watercourses', color: '--cx-water', ids: ['wc-peel', 'wc-ohn'], area: false, dash: null, weight: 2, minZoom: 12,
       note: 'Region of Peel watercourses (watershed and conservation authority), and the Ontario Hydro Network (1:10,000) where Peel maps none: small and piped watercourses may be missing.' },
-    gas: { label: 'Gas pipelines', short: 'gas', color: '--cx-gas', ids: ['utility'], keep: isGas, area: false, dash: '9 5', weight: 2.5, minZoom: 11,
-      note: 'Approximate location (Land Information Ontario); call Ontario One Call before any work. Major pipelines only: local gas mains are not published.' },
-    hydro: { label: 'Hydro lines', short: 'hydro', color: '--cx-hydro', ids: ['utility'], keep: lab => !isGas(lab), area: false, dash: null, weight: 2.5, minZoom: 11,
-      note: 'Approximate location (Land Information Ontario); call Ontario One Call before any work. Transmission lines; corridors carry easements.' },
   };
-  const ORDER = ['nhs', 'greenbelt', 'orm', 'nep', 'reg', 'flood', 'natural', 'water', 'gas', 'hydro'];
+  const ORDER = ['nhs', 'greenbelt', 'orm', 'nep', 'reg', 'flood', 'natural', 'water'];
   const TILE_ZOOM = 13, MAX_TILES = 90;
   // Constraint areas are hatched, not solid: they must not read as phase, layer or capacity colours
   // (SPEC §0 two ladders; Stage 3 colours). One small pattern per colour, ≤ 25% ink.
@@ -169,7 +164,7 @@
   const toolOn = () => !!(root.PeelMeasure && root.PeelMeasure.tool && root.PeelMeasure.tool.mode);
   const hoverOf = h => { const L0 = LAYERS[h.key]; return window.PeelUtil.hoverCard({ kind: `${L0.label} · screening`, name: h.label[0] || L0.label, sub: h.label[1] || '', open: 'its card (owner, as-of date, source)' }); };
   // Every constraint feature under a point, for the one picker (js/map-pick.js): areas are context
-  // ("Also here"), lines (watercourses, gas, hydro) are targets.
+  // ("Also here"), lines (watercourses) are targets.
   function hitsAt(latlng) {
     const out = [];
     for (let i = hits.length - 1; i >= 0; i--) {
@@ -239,12 +234,11 @@
     return [...peel, ...onePerStream(ohn, peel)].flatMap(f => (f.lines || []).map(g => ({ g, name: f.label[0] === 'Watercourse' ? '' : f.label[0] })));
   }
   const watercourseSource = () => status.water === 'ok' ? 'Region of Peel watercourses and the Ontario Hydro Network (LIO)' : 'OpenStreetMap';
-  // The legend follows the Layers groups: 'cx' (Constraints) or 'utility' (Infrastructure ›
-  // Other utilities: gas, hydro).
+  // The legend of the Constraints group.
   function legendHTML(which = 'cx') {
-    const keys = ORDER.filter(k => on[k] && ((k === 'gas' || k === 'hydro') === (which === 'utility')));
+    const keys = which === 'cx' ? ORDER.filter(k => on[k]) : [];
     if (!keys.length) return '';
-    return `<div class="lg-t">${which === 'utility' ? 'Other utilities (approximate)' : 'Constraints (screening)'}</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area hatch${BACK.has(k) ? ' back' : ''}" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
+    return `<div class="lg-t">Constraints (screening)</div><ul>${keys.map(k => { const L0 = LAYERS[k]; return `<li title="${esc(L0.note)}">${L0.area ? `<span class="lg-area hatch${BACK.has(k) ? ' back' : ''}" style="--c:var(${L0.color})"></span>` : `<span class="lg-line${L0.dash ? ' dash' : ''}" style="background:var(${L0.color})"></span>`}${esc(L0.label)}</li>`; }).join('')}</ul><p class="lg-s">${keys.map(k => esc(LAYERS[k].note)).join(' ')}</p>`;
   }
 
   if (typeof document !== 'undefined') document.addEventListener('click', e => {

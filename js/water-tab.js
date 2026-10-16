@@ -20,7 +20,7 @@
     const growth = wMax(zsum.approved + zsum.proposed, (zsum.japproved || 0) + (zsum.jproposed || 0));
     const tiles = `<div class="ov-tiles">${wTile(fmt1(boTot), 'ML/d', 'maximum day at build-out', 'all pressure zones')}`
       + `${wTile(fmt1(phTot), 'ML/d', 'peak hour at build-out')}`
-      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + proposed', 'maximum day growth')}`
+      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + in review', 'maximum day growth')}`
       + `${sorted[0] ? wTile(esc(sorted[0].r.a.name.replace('Pressure zone ', 'Zone ')), '', 'adds the most demand', `+${fmt1(Math.max(0, sorted[0].bo - wMax(sorted[0].r.l.census, 0)))} ML/d max day`) : ''}</div>`;
     const top10 = sorted.slice(0, 10), mx = Math.max(...top10.map(t => t.bo), 1e-9);
     const chart = `<div data-info="pressure-zone" role="img" aria-label="Maximum day demand by pressure zone at build-out">`
@@ -49,7 +49,7 @@
       return null;
     };
     const bo = at(ph.end), room = cap - bo;
-    return { room, roomPct: cap > 0 ? room / cap * 100 : null, c80: cross(0.8), c90: cross(0.9), c100: cross(1) };
+    return { room, roomPct: cap > 0 ? room / cap * 100 : null, c80: cross(0.8), c90: cross(0.9), c100: cross(1), at };
   };
   // Storage: the Master Plan's required-vs-available series by year. Room left at the last
   // year; the crossing years linearly interpolate when required reaches 80 / 90 / 100% of
@@ -121,20 +121,22 @@
     const stor = mp && mp.storage ? mp.storage : [], storYears = mp && mp.storageYears ? mp.storageYears : [];
     const rows = pump.map(r => {
       const rt = roomTrigger(r.rated, { today: r.v[0] + r.v[1], approved: r.v[2], proposed: r.v[3] }, ph);
-      return { name: r.name, sub: `firm ${uML(r.rated)}`, room: rt.room, roomPct: rt.roomPct, unit: 'ML/d', rt, end: ph.end };
+      return { name: r.name, sub: `firm ${uML(r.rated)}`, basis: 'design', room: rt.room, roomPct: rt.roomPct, unit: 'ML/d', rt, end: ph.end };
     });
     for (const s of stor) {
       const rt = storageRoomTrigger(storYears, s.required, s.available), av = s.available[s.available.length - 1];
-      rows.push({ name: esc(s.facility), sub: `${fmtNum(av)} ML available · 2020 Master Plan`, room: rt.room, roomPct: rt.roomPct, unit: 'ML', rt, end: storYears[storYears.length - 1] });
+      rows.push({ name: esc(s.facility), sub: `${fmtNum(av)} ML available`, basis: 'mp', room: rt.room, roomPct: rt.roomPct, unit: 'ML', rt, end: storYears[storYears.length - 1] });
     }
     rows.sort((a, b) => (a.roomPct == null ? 1e9 : a.roomPct) - (b.roomPct == null ? 1e9 : b.roomPct));
-    const tr = x => `<tr><td>${x.name}<small>${x.sub}</small></td>`
-      + `<td class="n${x.room < 0 ? ' over' : ''}">${x.room < 0 ? '−' : ''}${fmt1(Math.abs(x.room))} ${x.unit}<small>${x.roomPct == null ? '' : `${Math.round(x.roomPct)}% left`}</small></td>`
+    // One basis per row (pumping: design criteria against Master Plan firm capacity; storage: the
+    // Master Plan's own required vs available); room or over in signed words, never a bare minus.
+    const tr = x => `<tr data-basis="${x.basis}"><td>${x.name}<small>${x.sub} · ${window.PeelUtil.basisChip(x.basis)}</small></td>`
+      + `<td class="n${x.room < 0 ? ' over' : ''}">${window.PeelUtil.roomWords(x.room, x.unit)}<small>${x.roomPct == null || x.room < 0 ? '' : `${Math.round(x.roomPct)}% left`}</small></td>`
       + `<td class="n">${trigCell(x.rt.c80, x.end)}</td><td class="n">${trigCell(x.rt.c90, x.end)}</td><td class="n bo">${trigCell(x.rt.c100, x.end)}</td></tr>`;
-    const head = `<thead><tr><th>Zone / storage facility</th><th class="n">Room left<br>at build-out<br><small>ML/d pumping · ML storage</small></th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead>`;
+    const head = `<thead><tr><th>Zone / storage facility</th><th class="n">Room / over<br>at build-out<br><small>ML/d pumping · ML storage</small></th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead>`;
     const table = list => `<div class="hyd-scroll"><table class="dt svc-table" data-info="water-capacity">${head}<tbody>${list.map(tr).join('')}</tbody></table></div>`;
     const top = rows.slice(0, 5), rest = rows.slice(5);
-    return `<h3 class="svc-sub">Room left &amp; trigger years ${window.PeelUtil.basisChip('mixed', 'Mixed basis: pumping = growth at Peel criteria against 2020 Master Plan firm capacity; storage = the 2020 Master Plan required vs available (fire, equalisation and emergency storage)')} <span class="muted small">zones: % of firm pumping capacity · storage: Master Plan required vs available</span></h3>`
+    return `<h3 class="svc-sub">Room left &amp; trigger years  <span class="muted small">zones: % of firm pumping capacity · storage: Master Plan required vs available</span></h3>`
       + table(top)
       + (rest.length ? `<details class="dcn-more"><summary class="small">See all ${rows.length} zones &amp; storage facilities</summary>${table(rest)}</details>` : '')
       + `<p class="small muted">Room = capacity − demand at build-out. Trigger years phase approved growth in from ${ph.aStart} over ${ph.aYears} years and proposed from ${ph.pStart} over ${ph.pYears} years, as in the plant Horizon years; storage years interpolate the Master Plan forecast.</p>`;
@@ -178,17 +180,12 @@
     const R = App().state.reports; if (!R) return '';
     return caledonGroundwaterHTML(R);
   };
-  function waterCapHTML(M) {
+  // Pumping into each pressure zone (and the zones above it): firm capacity of the pump groups
+  // lifting into the zone against the zones' maximum day, layered (also Servicing › Capacity).
+  function pumpRows(M) {
     M = M || App().state.svcModel;
-    const R = App().state.reports; if (!M || !R || !App().state.servicing) return '';
-    if (!WT().WF.data) { WT().loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
-    const Y = M.Y, sp = R.water.southPeel, lake = MP().lakeZones().filter(id => MP().zLevel(SD().svcById.get(id).zone) <= 7);
-    const treat = [WT().waterCapRow(M, 'South Peel (A.P. Kennedy + Lorne Park)', MP().lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
-    // South Peel's totals from the one capacity function (js/capacity.js), as the Overview and the DC
-    // tab count them; the census / built split stays the model's.
-    const kSP = window.PeelCapacity && window.PeelCapacity.of('wsys:southPeel');
-    if (treat[0] && kSP) { const r = treat[0], t0 = r.v[0] + r.v[1], sc = t0 > 0 ? kSP.existing / t0 : 1; r.v = [r.v[0] * sc, r.v[1] * sc, kSP.committed - kSP.existing, kSP.buildout - kSP.committed]; }
-    for (const z of App().state.servicing.zones) { const s = MP().wellSystem[z.zone] && R.water.caledon.find(x => x.name === MP().wellSystem[z.zone]); if (s) treat.push(WT().waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
+    if (!M || !App().state.servicing || !WT().WF.data) return [];
+    const lake = MP().lakeZones().filter(id => MP().zLevel(SD().svcById.get(id).zone) <= 7);
     const pumps = WT().wfPumps();
     const pump = [];
     for (let n = 1; n <= 7; n++) {
@@ -197,6 +194,20 @@
       const r = WT().waterCapRow(M, n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, `${into.length} pump group${into.length === 1 ? '' : 's'}: ${into.map(p => p.label).join(', ')}`, 'firm');
       if (r) pump.push(r);
     }
+    return pump;
+  }
+  function waterCapHTML(M) {
+    M = M || App().state.svcModel;
+    const R = App().state.reports; if (!M || !R || !App().state.servicing) return '';
+    if (!WT().WF.data) { WT().loadWaterFacilities().then(d => { if (d) { const b = $('#wcap-box'); if (b) b.outerHTML = waterCapHTML(); } }); return '<div id="wcap-box"></div>'; }
+    const Y = M.Y, sp = R.water.southPeel;
+    const treat = [WT().waterCapRow(M, 'South Peel (A.P. Kennedy + Lorne Park)', MP().lakeZones(), sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, `2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d incl. York supply`)];
+    // South Peel's totals from the one capacity function (js/capacity.js), as the Overview and the DC
+    // tab count them; the census / built split stays the model's.
+    const kSP = window.PeelCapacity && window.PeelCapacity.of('wsys:southPeel');
+    if (treat[0] && kSP) { const r = treat[0], t0 = r.v[0] + r.v[1], sc = t0 > 0 ? kSP.existing / t0 : 1; r.v = [r.v[0] * sc, r.v[1] * sc, kSP.committed - kSP.existing, kSP.buildout - kSP.committed]; }
+    for (const z of App().state.servicing.zones) { const s = MP().wellSystem[z.zone] && R.water.caledon.find(x => x.name === MP().wellSystem[z.zone]); if (s) treat.push(WT().waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
+    const pump = pumpRows(M);
     const boPct = r => r.v.reduce((a, b) => a + b, 0) / r.rated * 100;
     const tight = [...treat, ...pump].filter(Boolean).map(r => ({ r, c: (r.v[0] + r.v[1] + r.v[2]) / r.rated, b: boPct(r) / 100 })).sort((a, b) => b.b - a.b)[0];
     const tightPump = pump.map(r => ({ r, b: boPct(r) })).sort((a, b) => b.b - a.b)[0];
@@ -209,11 +220,11 @@
     return `<section id="wcap-box" class="wcap" data-info="water-capacity">
       <div class="ov-tiles">${wTile(`${Math.round(boPct(treat[0]))}%`, 'of rated', 'South Peel treatment at build-out', `rated ${fmtNum(treat[0].rated)} ML/d`)}${tightPump ? wTile(`${Math.round(tightPump.b)}%`, 'of firm capacity', 'Tightest pumping at build-out', tightPump.r.name) : ''}${wTile(fmt1(M.wMax(dPop, dJobs)), 'ML/d', 'maximum day demand at build-out', 'all pressure zones')}${wTile(shortMl > 0 ? fmtNum(Math.round(shortMl)) : '0', 'ML', 'storage short by 2041', 'Master Plan assessment')}</div>
       ${waterDemandFlowsHTML(M)}
-      <h3 class="svc-sub">Water capacity by growth layer ${window.PeelUtil.basisChip('mixed', 'Mixed basis: existing = the 2025 measured maximum day; growth at ' + SvcTab().wMaxDayLabel() + '; treatment rated capacity from the 2025 drinking water reports; pumping firm capacity from the 2020 Master Plan')}</h3>
+      <h3 class="svc-sub">Water capacity by growth layer</h3>
       ${tight ? `<p class="small">Tightest: <strong>${tight.r.name}</strong>, ${Math.round(tight.c * 100)}% of its ${tight.r.capWord || 'rated'} capacity with existing + built + approved, ${Math.round(tight.b * 100)}% at build-out.</p>` : ''}
-      ${SP().capChartHTML(treat.filter(Boolean), Y, { title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
+      ${SP().capChartHTML(treat.filter(Boolean), Y, { basis: 'metered', title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
       <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">${SvcTab().wMaxDayLabel()} as a % of firm pumping capacity (actual firm where the 2020 Master Plan models it)</span></summary>
-      ${SP().capChartHTML(pump, Y, { title: ' ', noPop100: true, noPeople: true, legend: false })}
+      ${SP().capChartHTML(pump, Y, { basis: 'design', title: ' ', noPop100: true, noPeople: true, legend: false })}
       <p class="small muted">Each zone's total pools the west, central and east stations; a single station can still run short (the 2020 Master Plan flags West Brampton's zone 5 and 6 pumps and the Beckett Sproule transfer by 2041: see Facilities).</p></details>
       ${waterRoomTriggerHTML(pump, ph)}
       <p class="small muted">ⓘ Treatment: rated capacity (2025 drinking water reports); existing = the 2025 measured maximum day (South Peel's includes the water supplied to York Region). Pumping: firm capacity, largest pump out of service (the Region's modelled actual firm where the 2020 Master Plan gives it). Demand at ${SvcTab().wMaxDayLabel()} (${c.water.avg} L/cap/d, employment ${c.employment.water} L/emp/d). Storage: required vs available (2020 Master Plan, Vol. 3, Table 12).</p></section>`;
@@ -226,6 +237,7 @@
     flowTablesHTML,
     waterDemandFlowsHTML,
     waterRoomTriggerHTML,
+    pumpRows, roomTrigger, storageRoomTrigger,
     waterProductionHTML,
     caledonGroundwaterHTML,
     wTile,

@@ -102,7 +102,7 @@
     // Units and left to build from the one pipeline definition (as the Overview and Growth).
     const pipe = root.Growth ? root.Growth.pipelineTotals(set) : null;
     const left = pipe ? Math.round(pipe.left) : 0, unitsAll = basis === 'all' && pipe ? pipe.planned : e.totalUnits;
-    const pre = DU().preCensus(root.PeelLayers && set.length ? root.PeelLayers.totals(set) : null, basis);   // as the Overview: growth beyond the census
+    const pre = DU().preCensus(root.PeelLayers && set.length ? root.PeelLayers.totals(set, { criteria: App().state.criteria, jobsOf: App().jobsOf }) : null, basis);   // as the Overview: growth beyond the census
     const fr = DU().freshness(), asOf = (fr[0] && fr[0].date) || '–', need = fr.filter(r => r.st === 'due' || r.st === 'stale');
     const plants = App().state.svcModel ? ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => MP().cached(`plant:${pl}`, () => MP().plantCons(pl))).filter(Boolean) : [];
     const w = App().state.svcModel && App().state.reports ? MP().cached('wsys:lake', () => MP().waterPlantCons({ zone: '1' })) : null; if (w) plants.push(w);
@@ -143,7 +143,7 @@
           ${al.length ? `<p><b>After servicing allocations:</b> ${al.map(x => `${esc(SD().PLANT_SHORT[x.pl])} ${fmt1(x.after)} ML/d room (≈${fmtNum(roundPop(x.peopleAfter))} people)`).join('; ')}.</p>` : ''}
           <div class="map">${briefingMap(set)}<small>Wastewater blocks (shaded: prioritised for a block study), developments of 50+ units by phase, and the treatment plants (■).</small></div></section>
       </div>
-      ${R ? `<section><h2>DC program (2026 draft)</h2>${root.PeelUtil.pauseNote()}<div class="grid"><div><b>Screens late</b> (in service after the capacity runs out)${adv.length ? `<ul>${adv.map(r => `<li>${esc(r.name)}: online ${r.y} (${root.PeelUtil.CAPITAL_STATUS[r.cap] || 'status unknown'}), capacity runs out ${r.outY === MM().THIS_YEAR ? 'now' : `≈${r.outY}`}</li>`).join('')}</ul>` : '<p>None.</p>'}</div>
+      ${R ? `<section><h2>DC program (2026 draft)</h2>${root.PeelUtil.pauseNote()}<div class="grid"><div><b>Screens late</b> (in service after the capacity runs out)${adv.length ? `<ul>${adv.map(r => `<li>${esc(r.name)}: online ${r.y} (${root.PeelUtil.CAPITAL_STATUS[r.cap] || 'not in capital records (DC schedule)'}), capacity runs out ${r.outY === MM().THIS_YEAR ? 'now' : `≈${r.outY}`}</li>`).join('')}</ul>` : '<p>None.</p>'}</div>
         <div><b>Most growth relies on</b> (people the screen shows constrained by build-out without it)<ul>${top.map(r => `<li>${esc(r.name)} (${r.y || '–'}): ≈${fmtNum(roundPop(r.bo))} people, ≈${fmtNum(Math.round(r.units))} units${r.revRisk ? `, ≈${fmtMoney(r.revRisk)} in DCs` : ''}${r.cost && r.cost.n ? `; cost ${fmtMoney(r.cost.dc)} (2026$)` : ''}</li>`).join('')}</ul></div></div></section>` : ''}
       ${(o => o ? `<section><h2>Population outlook</h2><p>Ministry of Finance (summer 2026): Peel <b>${fmtNum(roundPop(o.mof[2025]))}</b> in 2025, ${fmtNum(roundPop(o.mof[2031]))} in 2031, <b>${fmtNum(roundPop(o.mof[2051]))}</b> in 2051, against the Region's 2051 forecast of <b>${fmtNum(roundPop(o.region))}</b>${o.region > o.mof[2051] ? ` (≈${fmtNum(roundPop(o.region - o.mof[2051]))} lower)` : ''}. Not a planning target, but a slower path would move growth-driven projects later.</p></section>` : '')(CV().outlookRows())}
       <footer><span><strong>${esc(root.PeelUtil.SCREEN_LINE)}</strong> ${esc(root.PeelUtil.CRITERIA_STAMP)}. Screening estimates at Peel design criteria (wastewater ${c.wastewater.avg} L/cap/d with Harmon peaking, I&amp;I ${c.wastewater.infiltration} L/s/ha${Sett().wetText() ? ` (${esc(Sett().wetText())})` : ''}; water ${c.water.avg} L/cap/d ×${c.water.maxDay} max day); plant capacity calibrated to ${App().state.reports ? App().state.reports.year : ''} measured flows; not a hydraulic model. People and jobs rounded; ≈ marks an estimate.${need.length ? ` Data due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : ''}</span><span>Peel Growth Pipeline (unofficial) · v${esc(appVersion())}</span></footer>
@@ -195,7 +195,7 @@
   const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Screens late', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
     <td>${esc(c.name)}<br><span class="muted">${esc(c.sub)}</span></td><td class="n">${c.room == null ? 'new' : c.room <= 0 ? (c.kind === 'plant' || c.kind === 'wplant' ? `${ST().pctRated(c, 'com')}% of rated (trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)` : `over ${Math.round((c.util.com - 1) * 100)}%`) : `${fmtNum(roundPop(c.people))} people<br><span class="muted">≈${fmtNum(Math.round(c.people / ppu))} units</span>`}</td>
     <td>${c.out === 'today' ? 'already' : c.out == null ? `after ${SP().hz.end}` : `≈${c.out}`}</td><td>${c.relief.length ? esc(c.relief.slice(0, 2).map(r => r.text).join('; ')) : '<span class="muted">none on the DC map</span>'}</td>${extra}</tr>`;
-  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room to the trigger after committed</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
+  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room to the trigger after approved</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
   function reportFooter() {
     const m = EX().reportMeta('growth');
     return `<p class="note"><strong>${esc(root.PeelUtil.SCREEN_LINE)}</strong> ${esc(root.PeelUtil.CRITERIA_STAMP)}.</p><p class="note">${esc(m.lines.slice(0, 3).join(' · '))}. ${esc(ST().scenarioText())}. Peel design criteria; a screening estimate, not a hydraulic model or a functional servicing report. 2026 DC capital maps are a draft, not approved by Council.</p>`;
@@ -213,7 +213,7 @@
       <tr><td>Wastewater${f.pl ? ` → ${esc(SD().PLANT_SHORT[f.pl] || f.pl)}` : ''}</td><td class="n">${fmt1(cb.wastewater.avg)} L/s</td><td class="n">${fmt1(cb.wastewater.peak)} L/s</td><td class="n">${fmt1(cb.wastewater.wetPeak)} L/s</td></tr></table>
       <ul>${f.path.length ? `<li>Sewer path: ${esc(f.path.slice(0, 6).map(a => a.kind === 'plant' ? SD().plantLabel(a.plant) : SD().drName(a).replace(/^[^·]+· /, '')).join(' → '))}${f.path.length > 6 ? ' …' : ''}</li>` : ''}
       ${f.sps.length ? `<li>Pumping stations: ${esc(f.sps.map(x => `${SD().drName(x.a).replace(/^[^·]+· /, '')} ${Math.round(x.wet / x.firm * 100)}% of firm at build-out`).join('; '))}</li>` : ''}
-      ${f.cap ? `<li>${esc(f.cap.name)}: uncommitted reserve ${fmt1(f.reserve)} ML/d; this development ${fmt1(f.use)} ML/d (${esc(f.useNote)})${f.reserve > 0 ? ` = ${DD().pctOf(f.use, f.reserve)} of the reserve` : ' — the screen shows the plant over rated capacity'}</li>` : ''}</ul>` : '<p class="muted">No units or jobs stated — flows not estimated.</p>';
+      ${f.cap ? `<li>${esc(f.cap.name)}: ${window.PeelUtil.reserveWords(f.reserve, f.cap.rated)}; this development ${window.PeelUtil.capTxt(f.use, f.cap.rated)} (${esc(f.useNote)})${f.reserve > 0 ? ` = ${DD().pctOf(f.use, f.reserve)} of the reserve` : ' — the screen shows the plant over rated capacity'}</li>` : ''}</ul>` : '<p class="muted">No units or jobs stated — flows not estimated.</p>';
     const ctx = [['Existing mains', domText('dev-exist')], ['Fire flow', domText('dev-fire')], ['Stormwater', domText('dev-storm')]].filter(([, t]) => t && !/^Looking up/.test(t));
     const body = `<h1>${esc(p.title)}</h1><p class="sub">${esc(p.municipality)} · ${esc(P.PHASE_BY_KEY[p.phase].label)}${files ? ` · ${esc(files)}` : ''}</p>
       <p class="meta">Servicing memo · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Growth Pipeline (unofficial)</p>
@@ -277,7 +277,8 @@
   });
 
   // ---- Public contract ----
-  const api = { appVersion, briefingPDF, comparisonPDF, devMemo, areaReport, openReport, reportFooter };
+  // (sketchSVG and briefingMap also draw the workspace pages' small maps: js/ws-pages.js)
+  const api = { appVersion, briefingPDF, comparisonPDF, devMemo, areaReport, openReport, reportFooter, sketchSVG, briefingMap };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelReports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

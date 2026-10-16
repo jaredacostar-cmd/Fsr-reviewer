@@ -1,8 +1,20 @@
 (function (root) {
   'use strict';
-  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS, PIPES_NOT_ASSESSED } = window.PeelUtil;
+  const { $, esc, fmtNum, fmt1, roundPop, unit, skel, dot, uLs, PIPE_RESULTS, capitalStatus, CAPITAL_STATUS, PIPES_NOT_ASSESSED, capTxt } = window.PeelUtil;
   // Every planned date carries its capital status after the May 2026 pause (design audit, Group 3).
-  const capTag = (y, s, id) => ` · ${CAPITAL_STATUS[capitalStatus(y, s, id)].toLowerCase()}`;
+  // Status of a planned work (Stage 1 #9): the capital records' status where the DC project matches
+  // one (data/capital.json, via PeelCapitalEA's DC index), else "not in capital records" with the
+  // schedule it comes from (and the Council procurement pause where it applies). Never "status unknown".
+  // (A match by outline overlap only (low confidence) is not trusted here, nor a "complete" status for a
+  // work scheduled after this year; a planned, untendered work keeps the Council pause note.)
+  const capTag = (y, s, id, src = 'DC schedule') => {
+    const CE = window.PeelCapitalEA, e0 = id && CE && CE.dcStatusOf ? CE.dcStatusOf(id) : null;
+    const done = e0 && /complete/.test(e0.status || '');
+    const e = e0 && e0.conf !== 'low' && !(done && y > new Date().getFullYear()) ? e0 : null;
+    const st = capitalStatus(y, s, id);
+    if (e) return ` · ${e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : CE.statusText(e.status).toLowerCase()} (capital records${e.status === 'planned' && st === 'paused' ? '; procurement paused' : ''})`;
+    return ` · not in capital records (${src}${st === 'paused' ? '; procurement paused' : ''})`;
+  };
   const D = window.PeelDemand;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
@@ -250,7 +262,7 @@
     return out;
   }
   const lineRelief = ln => ({ kind: 'line', ln, y: ln.y || null, text: `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DI().DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` ${ln.p}` : ''}${capTag(ln.y, ln.s, ln.p || ln.c)}` });
-  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}${capTag(y, '', null)}` }; };
+  const facRelief = (fc, what) => { const it = what ? fc.items.filter(i => what.test(i.what)) : fc.items; const y = constructionYear(it.length ? it : fc.items); return { kind: 'fac', fc, items: it.length ? it : fc.items, y, text: `${y || '–'} ${fc.name}${it.length ? ` · ${it.map(i => i.what).join(', ')}` : ''}${capTag(y, '', (it.length ? it : fc.items).map(i => i.proj).find(Boolean) || null)}` }; };
   // Growth (peak wet, L/s) of gp people, gj jobs on gh hectares, as in pipeFlow.
   function growthLs(gp, gj, gh) {
     const c = App().state.criteria, E = c.employment;
@@ -292,9 +304,9 @@
     const lim = PLANT_TRIGGER * cap.rated, room = lim - cap.committed;
     const fac = App().state.dcInfra && App().state.dcInfra.wastewater.facilities.find(f => f.kind === 'plant' && f.plant === pl);
     const after = runOut(q, y => PLANT_TRIGGER * ratedAt(y === 'today' ? MM().THIS_YEAR : y));
-    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${fmt1(cap.rated)} ML/d · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
+    return { id: `plant:${pl}`, sys: 'ww', kind: 'plant', pl, name: cap.name, sub: `rated ${capTxt(cap.rated, cap.rated)} · ${Math.round(PLANT_TRIGGER * 100)}% expansion trigger (2020 Master Plan) · ${SvcTab().wwFlowLabel()}`, cap: lim, unit: 'ML/d',
       util: { today: cap.existing / lim, com: cap.committed / lim, bo: cap.buildout / lim }, room, people: room * 1e6 / (cap.perPerson || 1), out: runOut(q, () => lim), outAfter: steps.length ? after : undefined,
-      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}${capTag(s.year, /council.approved/i.test(s.note || '') ? 'approved' : '', s.proj)}` })), q, rated: cap.rated };
+      relief: steps.map(s => ({ kind: 'step', y: s.year, fc: fac, step: s, text: `${s.year} ${s.mld} ML/d${s.proj ? ` (${s.proj})` : ''}${capTag(s.year, /council.approved/i.test(s.note || '') ? 'approved' : '', s.proj, /council.approved/i.test(s.note || '') ? 'council-approved February 2024' : 'DC schedule')}` })), q, rated: cap.rated };
   }
   // Water: max day of a set of zones by year (ML/d).
   function zonesMax(ids, y) {
@@ -379,7 +391,7 @@
   let sewUpgKey = '';
   // Every switch that changes a result is in the key (the diversion, counting basis and outside-area
   // rule included), so a cached result never outlives the scenario it was computed for.
-  function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}|g${App().state.svcGen || 0}${sewUpgKey}`; }
+  function scenarioKey() { const o = SvcTab().svcOpt; return `${MM().SEW.key}|${JSON.stringify(SP().hz)}|${MA().getCapYear()}|${App().state.svcModel && App().state.svcModel.Y}|${o.ww}|${o.md}|${o.div}|${o.nr}|${App().state.basis}|g${App().state.svcGen || 0}|c${window.PeelCapitalEA && window.PeelCapitalEA.data && window.PeelCapitalEA.data.loaded ? 1 : 0}${sewUpgKey}`; }
   function cached(id, fn) {
     const k = scenarioKey(); if (DCN.key !== k) { DCN.cache.clear(); DCN.key = k; }
     if (DCN.cache.has(id)) return DCN.cache.get(id);
@@ -432,7 +444,7 @@
   // % of rated capacity for plants and water treatment (never % of the 90% trigger, SPEC 1.4); % of
   // capacity (firm, full pipe) for the rest.
   const pctCap = (c, k) => (c.kind === 'plant' || c.kind === 'wplant' ? SvcTab().pctRated(c, k) : Math.round(c.util[k] * 100));
-  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${pctCap(c, 'com')}% committed → ${pctCap(c, 'bo')}% build-out${c.kind === 'plant' || c.kind === 'wplant' ? ' of rated' : ''}`}</small>`;
+  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${pctCap(c, 'com')}% with approved → ${pctCap(c, 'bo')}% at build-out${c.kind === 'plant' || c.kind === 'wplant' ? ' of rated' : ''}`}</small>`;
   function needsTable(list, ppu, opts = {}) {
     return `<table class="dt dcn-table"><thead><tr><th>${opts.first || 'Existing capacity'}</th><th>Room after approved</th><th>Runs out</th><th>DC relief (construction)</th></tr></thead><tbody>
       ${list.map(reg).map(c => `<tr class="${STATUS[c.status][0]}"><td>${c.sys === 'water' ? '💧 ' : ''}${consName(c)}</td><td data-l="Room after approved">${roomText(c, ppu)}</td><td data-l="Runs out">${outText(c)}${c.outAfter != null ? `<small>again ${c.outAfter === 'today' ? 'now' : `≈${c.outAfter}`} with the expansions</small>` : ''}<small>${esc(STATUS[c.status][1])}</small></td><td data-l="DC relief">${reliefHTML(c)}</td></tr>`).join('')}</tbody></table>`;
@@ -709,6 +721,7 @@
     set dcnFilter(v) { dcnFilter = v; },
     showDcTiming,
     showConsDevs,
+    consStatus,
     showDcBack,
     DCA,
     MP2020,

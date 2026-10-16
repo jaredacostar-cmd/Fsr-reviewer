@@ -237,11 +237,12 @@ test('new colours are tokens, distinct from phases, capacity, selection and the 
 // ---- Capital tab, DC timing status, This week, Needs attention ----------------------------------
 const dcInfra = JSON.parse(src('data/dc-infra.json'));
 
-test('DC timing: actual status where matched, "scheduled (not yet in capital records)" otherwise', () => {
+test('DC timing: actual status where matched, "not in capital records (DC schedule)" otherwise', () => {
   const idx = M.dcCapitalIndex(sample, dcInfra);
-  assert.deepEqual(idx.get('24-1192'), { status: 'under construction', percent: 60, lastUpdate: '2026-09-30', key: 'web:peelregion.ca/construction/project-90-0001' });
+  assert.deepEqual(idx.get('24-1192'), { status: 'under construction', percent: 60, lastUpdate: '2026-09-30', key: 'web:peelregion.ca/construction/project-90-0001', conf: idx.get('24-1192').conf });
+  assert.ok(['medium', 'low', 'high'].includes(idx.get('24-1192').conf));
   assert.match(M.dcActualHTML(idx.get('24-1192'), true), /60% built<\/button> as of Sep 30, 2026/);
-  assert.match(M.dcActualHTML(undefined, true), /scheduled \(not yet in capital records\)/);
+  assert.match(M.dcActualHTML(undefined, true), /not in capital records \(DC schedule\)/);
   assert.equal(M.dcActualHTML(undefined, false), '', 'nothing when capital data is not published');
   assert.match(M.dcActualHTML({ status: 'tendered', percent: null, lastUpdate: '2026-08-01', key: 'k' }, true), />Tendered</);
 });
@@ -300,15 +301,16 @@ test('Needs attention: EA periods closing in 30 days; DC-matched capital dates m
   assert.match(src('js/overview-tab.js'), /data-ce-open="\$\{esc\(it\.ce\)\}"/);
 });
 
-test('Capital tab: Construction and EAs views (public too), screening note in This week', () => {
+test('Capital tab: Projects and EAs views (public too), screening note in This week', () => {
   const html = src('index.html');
   assert.match(html, /id="ftab-dca"[^>]*>Capital</);
-  assert.match(html, /data-dcasub="build">Construction</);
+  assert.match(html, /data-dcasub="projects">Projects</);
   assert.match(html, /data-dcasub="eas">EAs</);
-  assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="build"/);
+  assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="projects"/);
   assert.match(html, /id="pane-dca-eas" data-pane="dca" data-sub="eas"/);
   assert.match(html, /id="ce-week-panel"[\s\S]{0,400}General screening results only/);
-  assert.match(src('js/analysis-tabs.js'), /dcSub !== 'timing' && dcSub !== 'build' && dcSub !== 'eas' && root\.PeelUtil/);
+  // Only Funding is held back in the public version (and behind its Labs switch).
+  assert.match(src('js/analysis-tabs.js'), /tab === 'dca' && sub === 'funding' && \(!labOn\('funding'\) \|\| isPublic\(\)\)/);
   assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);
   assert.match(src('js/dca-tab.js'), /PeelCapitalEA\.dcActualHTML\(/);
 });

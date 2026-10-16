@@ -36,7 +36,7 @@
 (function (root) {
   'use strict';
 
-  const { $, esc, fmtNum, fmt1, hlP, unit, uUnits, skel, estTag, dot } = root.PeelUtil || {};
+  const { $, esc, fmtNum, fmt1, hlP, unit, uUnits, skel, estTag, dot, capTxt, isSmallSystem } = root.PeelUtil || {};
   const App = () => root.PeelApp;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
@@ -339,7 +339,7 @@
     return ['Lakeview', 'Clarkson', 'Inglewood']
       .map(pl => (CAP && CAP.of(`plant:${pl}`)) || (c => c && { ...c, buildout: c.buildout })(M.plantCap(pl))).filter(c => c && c.rated > 0)
       .map(c => ({
-        name: c.name, rated: c.rated, capWord: 'rated',
+        name: c.name, rated: c.rated, capWord: 'rated', basis: root.PeelSvcTab && root.PeelSvcTab.wwBasis ? root.PeelSvcTab.wwBasis() : 'design',
         existing: c.existing,
         approved: Math.max(0, c.committed - c.existing),
         proposed: Math.max(0, c.buildout - c.committed),
@@ -358,9 +358,9 @@
     const k = root.PeelCapacity && root.PeelCapacity.of('wsys:southPeel');
     const treat = k ? null : WT().waterCapRow(M, 'South Peel treatment', MP().lakeZones(),
       sp.plants.reduce((t, p) => t + p.ratedMLd, 0), sp.maxDayMLd, '');
-    if (k) rows.push({ name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: k.rated, capWord: 'rated', existing: k.existing, approved: k.committed - k.existing, proposed: k.buildout - k.committed });
+    if (k) rows.push({ name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: k.rated, capWord: 'rated', basis: 'metered', existing: k.existing, approved: k.committed - k.existing, proposed: k.buildout - k.committed });
     else if (treat) rows.push({
-      name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: treat.rated, capWord: 'rated',
+      name: 'South Peel treatment (A.P. Kennedy + Lorne Park)', rated: treat.rated, capWord: 'rated', basis: 'metered',
       existing: treat.v[0] + treat.v[1], approved: treat.v[2], proposed: treat.v[3],
     });
     const pumps = WT().wfPumps();
@@ -372,7 +372,7 @@
       const r = WT().waterCapRow(M, n === 1 ? 'From the plants (zone 1 and above)' : `Into zone ${n} and above`, ids, cap, null, '', 'firm');
       if (r) rows.push({
         name: n === 1 ? 'Pumping: from the plants (zone 1 and above)' : `Pumping: into zone ${n} and above`,
-        rated: r.rated, capWord: 'firm',
+        rated: r.rated, capWord: 'firm', basis: 'design',
         existing: r.v[0] + r.v[1], approved: r.v[2], proposed: r.v[3],
       });
     }
@@ -474,7 +474,10 @@
     // Trigger-year ranges: wastewater plants, then water treatment + pressure-zone pumping.
     const trigTable = (title, facs) => {
       if (!facs || !facs.length) return '';
-      const rows = facs.map(f => {
+      // Small systems (Inglewood) after the large ones, under their own row.
+      const ord = [...facs.filter(f => !isSmallSystem(f.rated)), ...facs.filter(f => isSmallSystem(f.rated))];
+      const firstSmall = ord.find(f => isSmallSystem(f.rated));
+      const rows = ord.map(f => {
         const fb = facilityBands({ name: f.name, rated: f.rated, existing: f.existing, approved: f.approved, proposed: f.proposed, div: f.div || 0, end: fc.nowYear + FORECAST_YEARS }, cal);
         const bo = fb.buildOut.likely;
         const cell = t => {
@@ -482,7 +485,7 @@
           const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high;
           return `<td class="n">${like != null ? `<strong>${like}</strong><small>${esc(txt)}</small>` : `<span class="muted">${esc(txt)}</span>`}</td>`;
         };
-        return `<tr><td>${esc(f.name)}<small>${f.capWord} ${fmt1(f.rated)} ML/d</small></td><td class="n">${bo == null ? '–' : `${Math.round(bo)}%`}</td>${[80, 90, 100].map(cell).join('')}</tr>`;
+        return `${f === firstSmall ? '<tr class="grp"><td colspan="5">Small systems <small>capacity in m³/d</small></td></tr>' : ''}<tr data-basis="${f.basis}"><td>${esc(f.name)}<small>${f.capWord} ${capTxt(f.rated, f.rated)} · ${root.PeelUtil.basisChip(f.basis)}</small></td><td class="n">${bo == null ? '–' : `${Math.round(bo)}%`}</td>${[80, 90, 100].map(cell).join('')}</tr>`;
       }).join('');
       return `<div class="hyd-scroll"><table class="dt" data-info="timing-triggers"><caption>${title} ${estTag}</caption><thead><tr><th>Facility</th><th class="n">Load at<br>build-out</th><th class="n">Reaches<br>80%</th><th class="n">Reaches<br>90%</th><th class="n">Reaches<br>100%</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     };
@@ -495,10 +498,36 @@
         if (!wf) { wfLoading = true; WT().loadWaterFacilities().then(d => { if (d && $('#timing-body')) renderTiming(); }); }
       }
     }
-    const plantsTable = trigTable('Wastewater plants: trigger-year ranges <span class="muted">${SvcTab().wwFlowLabel()} vs rated (annual average) capacity</span>', plantFacs());
+    const plantsTable = trigTable(`Wastewater plants: trigger-year ranges <span class="muted">${SvcTab().wwFlowLabel()} vs rated (annual average) capacity</span>`, plantFacs());
     const waterTable = wf ? trigTable('Water: trigger-year ranges <span class="muted">maximum day vs rated (treatment) / firm (pumping) capacity</span>', wf)
       : wfLoading ? skel('Water facilities') : '';
 
+    // Stage 3: the standard panel; the forecast, the contributors, the calibration and the trigger-year
+    // tables below are its full table.
+    if (root.PeelPanel) {
+      const PN = root.PeelPanel, fig = (y, b) => fmtNum(Math.round(sumTo(y, b)));
+      const trig = plantFacs().map(f => { const fb = facilityBands({ name: f.name, rated: f.rated, existing: f.existing, approved: f.approved, proposed: f.proposed, div: f.div || 0, end: fc.nowYear + FORECAST_YEARS }, cal), tr = fb.triggers[90]; const like = tr.likely != null ? tr.likely : tr.low != null ? tr.low : tr.high; return { f, like, txt: triggerRangeText(tr, fb.end) }; })
+        .sort((a, b) => (a.like == null ? 1e4 : a.like) - (b.like == null ? 1e4 : b.like));
+      PN.set('growth:timing', {
+        calc: true, fullTitle: `Growth › Timing · ${App().state.muni || 'Peel'}: the forecast, the contributors, the calibration and the trigger years`,
+        head: PN.areaHead('Growth › Timing', 'When does it come?', { tone: 'stage', text: 'Screening estimate' }, `${esc(App().state.muni || 'Peel')} · data as of ${esc(asof)}`),
+        answer: head,
+        figures: [
+          { v: fig(2031, 'likely'), u: 'units', label: 'expected by 2031', ctx: `range ${fig(2031, 'low')}–${fig(2031, 'high')}` },
+          { v: fig(2041, 'likely'), u: 'units', label: 'expected by 2041', ctx: `range ${fig(2041, 'low')}–${fig(2041, 'high')}` },
+          { v: fmtNum(Math.round(unbuilt)), u: 'units', label: 'unbuilt in the pipeline', ctx: unbuilt ? `≈${Math.round(sumTo(2041, 'likely') / unbuilt * 100)}% expected by 2041` : '' },
+          { v: fmtNum(cal.nObs), u: 'events', label: 'calibration', ctx: `dated file events, cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}` },
+        ],
+        chart: items.length ? timingChartSVG(fc) : '',
+        lists: [
+          { title: 'Plants: 90% trigger year (likely)', rows: trig.map(x => PN.kv(esc(x.f.name), x.like != null ? `≈${x.like} <small>${esc(x.txt)}</small>` : esc(x.txt))), total: trig.length, seeAll: { 'data-full-table': 'growth' } },
+          { title: 'Largest contributors', rows: contrib.slice(0, 5).map(c => ({ attrs: { 'data-pnl-dev': c.item.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.item.title || c.item.key)}<small>${esc(c.item.muni)}</small></span><span class="pnl-r-fig">${fmtNum(Math.round(c.likely))}<small>units, likely</small></span></div>` })), total: contrib.length, seeAll: { 'data-full-table': 'growth' } },
+        ],
+        method: 'A statistical screening estimate of when the pipeline builds out, not a prediction for any one site: approval and completion rates and the time lags are calibrated from the dated application and permit events, by municipality and building type; low / likely / high bands. Trigger years phase each plant\u2019s approved and proposed flow in over the calibrated lags (not the plant horizon assumptions).',
+        sources: 'The dated file events of the applications and permits on the map (2016–2019 cohorts); the plants\u2019 2025 flows and rated capacity (2025 annual reports).',
+        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } } },
+      });
+    }
     body.innerHTML = `
       ${hlP(head)}
       ${tiles}

@@ -21,7 +21,9 @@
     let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
     const encode = () => {
       const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
-      if (!App().sameSet(App().state.phases, App().DEFAULT_PHASES())) set('ph', [...App().state.phases].join(','));
+      // (always written: links made before Completed was shown by default carry no ph and open with the
+      // active phases, as they did)
+      set('ph', [...App().state.phases].join(','));
       const fl = PF.encodeFlagParam(App().state.flags); if (fl) set('fl', fl);
       set('pl', App().state.plant); set('dw', App().state.dwelling);
       if (App().state.landuse !== App().DEFAULT_LANDUSE) set('lu', App().state.landuse);
@@ -33,13 +35,18 @@
       if (App().state.minUnits) set('u', App().state.minUnits); if (!App().state.newOnly) set('nn', '0');
       if (App().state.yearMode !== 'any') set('ym', App().state.yearMode);
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
-      set('t', AT().getFootPref()); if (AT().getFootPref() === 'ww') set('ws', AT().getWwSub()); if (AT().getFootPref() === 'water') set('ws', AT().getWSub());
+      // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network|alloc|checks).
+      set('t', AT().getFootPref());
+      if (AT().getFootPref() === 'svc') set('svs', AT().getSvcSub()); if (AT().getFootPref() === 'records') set('rs', AT().getRSub());
       if (AT().getFootPref() === 'growth') set('gs', AT().getGSub()); if (AT().getFootPref() === 'dca') set('dcs', AT().getDcSub());
       if (SVCT().svcOpt.ww !== 'calibrated') set('wm', SVCT().svcOpt.ww); if (SVCT().svcOpt.md !== 'design') set('md', SVCT().svcOpt.md); if (SVCT().svcOpt.div !== 'off') set('dv', SVCT().svcOpt.div); if (SVCT().svcOpt.nr !== 'on') set('nr', SVCT().svcOpt.nr);
       if (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed' || MM().mstyle.cap !== 'off') set('ms', `${MM().mstyle.color}.${MM().mstyle.size}.${MM().mstyle.cap}`);
       // Layer groups: the layers on and the groups open (js/layer-groups.js).
       if (window.PeelLayerGroups) set('lg', window.PeelLayerGroups.encodeCurrent());
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
+      // Stage 4: Home, a workspace's page or its map view (w=home | w=p:<chip> | w=<chip>); a link without
+      // w opens the full map.
+      { const W = window.PeelWorkspaces; if (W && W.mode() === 'home') set('w', W.page && W.page() !== 'home' ? `p:${W.page()}` : 'home'); else if (W && W.mode() === 'ws' && W.current()) set('w', W.current()); }
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);
@@ -55,6 +62,7 @@
       if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr') || q.get('ss')) && !App().state.servicing)) return;
       applied = true;
       if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
+      else App().state.phases = new Set(App().ACTIVE_PHASES);   // an older link: the default then (no Completed)
       if (q.has('fo')) {
         // Pre-Phase-1 focus link: migrate onto the new state (growth / none drop to the defaults).
         const mig = PF.migrateLegacyFocus(q.get('fo'));
@@ -91,11 +99,17 @@
       if (q.get('lg') && window.PeelLayerGroups) { const lg = q.get('lg'); setTimeout(() => window.PeelLayerGroups.applyEncoded(lg), 0); }
       if (q.get('t')) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
-        const m = AT().migrateTabKey(q.get('t'));
-        AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.wwSub) AT().setWwSub(m.wwSub);
-        if (q.get('ws')) { const v = q.get('ws'); if (AT().getFootPref() === 'water' && AT().TABSUBS.water.valid.includes(v)) AT().setWSub(v); else if (AT().getFootPref() === 'ww' && AT().TABSUBS.ww.valid.includes(v)) AT().setWwSub(v); }
-        if (q.get('gs') && AT().TABSUBS.growth.valid.includes(q.get('gs'))) AT().setGSub(q.get('gs'));
-        if (q.get('dcs') && AT().TABSUBS.dca.valid.includes(q.get('dcs'))) AT().setDcSub(q.get('dcs'));
+        // Stage 2: old links name the Wastewater / Water halves (t=ww|water&ws=…) and old sub-views
+        // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on.
+        const t = q.get('t'), oldSub = t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : null;
+        const m = AT().migrateTabKey(t, oldSub);
+        AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub);
+        if (q.get('svs') && AT().TABSUBS.svc.valid.includes(q.get('svs'))) AT().setSvcSub(q.get('svs'));
+        if (q.get('rs') && AT().TABSUBS.records.valid.includes(q.get('rs'))) AT().setRSub(q.get('rs'));
+        // An old link to the funding screen or the hydraulic check turns that Labs switch on, so the
+        // link still opens its view.
+        if (window.PeelLabs && (m.dcSub === 'funding' || q.get('dcs') === 'funding')) window.PeelLabs.set('funding', true);
+        if (window.PeelLabs && t === 'water' && q.get('ws') === 'hydro') window.PeelLabs.set('hydro', true);
       }
       SD().showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }

@@ -18,7 +18,6 @@
    outline for point symbols. --flow: sewer flow-direction arrows.
    --hl-find: find-highlight yellow. --swatch-ink/--swatch-paper: glyph colours
    on light/dark fills. --growth-1..5: capacity-growth sequential ramp.
-   --heat-ramp: build-out heatmap stops (theme-independent).
    --report-brand/--report-brand-deep: print-document branding (always light). */
 :root {
   color-scheme: dark;
@@ -59,7 +58,7 @@
   --mpt-start: #51cf66; --mpt-end: #f0665f;
   --mpt-1: #5b9bf5; --mpt-2: #ffa94d; --mpt-3: #c07ae0; --mpt-4: #f06595; --mpt-5: #3fb3c4; --mpt-6: #e8b93e;
   --xing-street: #b8b7ad; --xing-water: #4fc3f7;
-  --cx-gas: #ffd43b; --cx-hydro: #ff6b6b; --cx-water: #4fc3f7; --cx-reg: #38d9a9;
+  --cx-water: #4fc3f7; --cx-reg: #38d9a9;
   --cx-flood: #74c0fc; --cx-greenbelt: #69db7c; --cx-orm: #c0eb75; --cx-nep: #e599f7; --cx-natural: #faa2c1; --cx-nhs: #bac8ff;
   --dc-ww-main: #f06595;
   --dc-ww-local: #5ec46f;
@@ -86,7 +85,6 @@
   --growth-3: #b96f1f;
   --growth-4: #e08e2d;
   --growth-5: #f7b955;
-  --heat-ramp: #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c;
   --report-brand: #1c5cab;
   --report-brand-deep: #0d366b;
   --ring: #1a1a19;
@@ -132,7 +130,7 @@
     --mpt-start: #2f9e44; --mpt-end: #e03131;
     --mpt-1: #1971c2; --mpt-2: #b26a00; --mpt-3: #9c36b5; --mpt-4: #d6336c; --mpt-5: #0b7285; --mpt-6: #946c00;
     --xing-street: #6b6a62; --xing-water: #0277bd;
-    --cx-gas: #b8860b; --cx-hydro: #c92a2a; --cx-water: #0277bd; --cx-reg: #087f5b;
+    --cx-water: #0277bd; --cx-reg: #087f5b;
   --cx-flood: #1971c2; --cx-greenbelt: #2b8a3e; --cx-orm: #5c940d; --cx-nep: #862e9c; --cx-natural: #a61e4d; --cx-nhs: #364fc7;
     --cx-flood: #1971c2; --cx-greenbelt: #2b8a3e; --cx-orm: #5c940d; --cx-nep: #862e9c; --cx-natural: #a61e4d; --cx-nhs: #364fc7;
     --dc-ww-main: #d6336c;
@@ -160,7 +158,6 @@
     --growth-3: #f6a04d;
     --growth-4: #e3672a;
     --growth-5: #a83a12;
-    --heat-ramp: #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c;
     --report-brand: #1c5cab;
     --report-brand-deep: #0d366b;
     --ring: #ffffff;
@@ -207,7 +204,7 @@
   --mpt-start: #2f9e44; --mpt-end: #e03131;
   --mpt-1: #1971c2; --mpt-2: #b26a00; --mpt-3: #9c36b5; --mpt-4: #d6336c; --mpt-5: #0b7285; --mpt-6: #946c00;
   --xing-street: #6b6a62; --xing-water: #0277bd;
-  --cx-gas: #b8860b; --cx-hydro: #c92a2a; --cx-water: #0277bd; --cx-reg: #087f5b;
+  --cx-water: #0277bd; --cx-reg: #087f5b;
   --dc-ww-main: #d6336c;
   --dc-ww-local: #2b8a3e;
   --dc-ww-force: #9c36b5;
@@ -233,7 +230,6 @@
   --growth-3: #f6a04d;
   --growth-4: #e3672a;
   --growth-5: #a83a12;
-  --heat-ramp: #2b83ba, #abdda4, #ffffbf, #fdae61, #d7191c;
   --report-brand: #1c5cab;
   --report-brand-deep: #0d366b;
   --ring: #ffffff;
@@ -1571,10 +1567,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tour-btns { display: flex; justify-content: space-between; }
 .head .watch-btn.memo-btn { margin-right: var(--space-2); }
 
-/* Heatmap and ground profile */
-.heat-canvas { position: absolute; inset: 0; z-index: 450; pointer-events: none; }
-.heat-canvas[hidden] { display: none; }
-.lg-heat { height: 8px; border-radius: 4px; margin: var(--space-1) 0; background: linear-gradient(90deg, var(--ph-approved), var(--cap-room), var(--cap-tight), var(--select), var(--cap-over)); }
+/* Ground profile */
 .tp-elev { display: block; width: 100%; }
 .elev-svg { display: block; margin: var(--space-1) 0 var(--space-1); }
 .leaflet-top.leaflet-left { z-index: 1001; }   /* the Tools menu opens over the options panel */
@@ -1623,6 +1616,12 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .help-card { border-radius: var(--radius-panel); padding: var(--space-2) var(--space-3); margin: var(--space-2) 0; background: var(--surface-2); }
 .help-card > summary { cursor: pointer; display: grid; gap: var(--space-1); }
 .help-card > summary small { color: var(--text-muted); font-size: var(--fs-2); font-weight: 400; }
+/* Stage 5: What moved where (Help) and Usage (Settings). */
+.help-moved h4 { margin: var(--space-3) 0 var(--space-1); }
+.moved-t, .usage-t { width: 100%; border-collapse: collapse; }
+.moved-t th, .moved-t td, .usage-t th, .usage-t td { text-align: left; vertical-align: top; padding: var(--space-1) var(--space-2) var(--space-1) 0; border-bottom: 1px solid var(--border); }
+.moved-t td:first-child { width: 42%; color: var(--text-muted); }
+.usage-t .num { text-align: right; font-variant-numeric: tabular-nums; }
 .help-card[open] > summary { margin-bottom: var(--space-2); }
 .help-card ol { margin: 0 0 var(--space-2); padding-left: var(--space-3); font-size: var(--fs-2); line-height: 1.45; }
 .help-card li { margin: var(--space-1) 0; }
@@ -2387,7 +2386,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .analysis-panes .dt th, .analysis-panes .dt td { padding-left: 6px; padding-right: 6px; }
 /* Basis chip on a capacity figure (design / 2025 measured / Master Plan 2020 / mixed). */
 .basis-chip { display: inline-block; margin-left: var(--space-1); padding: 0 6px; border: 1px solid var(--border); border-radius: 999px; font-size: var(--fs-1); font-weight: 500; line-height: 1.5; color: var(--text-secondary); vertical-align: middle; white-space: nowrap; cursor: help; }
-.basis-chip.basis-mixed { border-style: dashed; }
+.basis-chip.basis-mp { border-style: dashed; }
 
 /* Public version (Settings › Public version, or ?public): no funding screen, no screening-result
    column, and the screening results lose their red / amber / green (design audit, Group 2). */
@@ -2574,20 +2573,34 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .topbar .tb-views { order: 3; }
   .topbar .tb-scen-wrap { order: 4; }
   .topbar .tb-search { order: 5; }
-  .tb-scen .sc-more { display: none; }
+  .tb-scen .sc-more { max-width: 100%; min-width: 0; }   /* the read-only chip (Stage 1 #6) stays: it is the only scenario line */
+  .topbar .tb-scen-wrap { flex: 1 1 100%; min-width: 0; }
+  .topbar .tb-scen-wrap .tb-scen { width: 100%; min-width: 0; overflow: hidden; }
+  #tb-scen-pop { width: auto; left: 0; right: 0; }
   .tb-scen { max-width: none; padding: 2px var(--space-1); }
 }
 .pipe-rows .done-row { grid-column: 1 / -1; }
 .inview-chip { position: absolute; left: 50%; bottom: 12px; transform: translateX(-50%); z-index: 900; white-space: nowrap; background: var(--surface-1); border: 1px solid var(--border); box-shadow: var(--shadow); }
 @media (max-width: 1199px) { .inview-chip { display: none; } }
 
-/* Five tabs at every scope (SPEC §5). Servicing: the wastewater and water views in one row. */
-.svc-subtabs .sv-g { font-size: var(--fs-1); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; align-self: center; margin: 0 2px 0 var(--space-2); }
-.svc-subtabs .sv-g:first-child { margin-left: 0; }
-/* Site scope: no placeholder sub-views; the site bar's note is the one disclaimer. */
-#analysis.site-scope [data-gsub="census2051"], #analysis.site-scope [data-gsub="timing"],
-#analysis.site-scope [data-dcasub="recommendations"], #analysis.site-scope [data-dcasub="funding"],
-#analysis.site-scope #screen-note-top { display: none; }
+/* Four tabs at every scope (Stage 2): Overview · Growth · Servicing · Capital, then Records as a
+   small trailing tab (right-aligned, muted). One chip row of sub-views per tab, never two. */
+.f-tab.f-tab-trail { margin-left: auto; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
+.f-tab.f-tab-trail[aria-selected="true"] { color: var(--text-primary); }
+.f-subtabs:not([hidden]) { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.f-subtabs .btn { white-space: nowrap; }
+.f-subtabs .lab-chip small { font-size: var(--fs-0, 10px); color: inherit; opacity: .7; margin-left: 2px; }
+/* A sub-view with nothing to show at this scope is hidden, never blank (PeelAnalysisTabs.HIDDEN).
+   At a site the site bar's note is the one disclaimer. */
+.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }
+/* Labs (Settings › Labs): each tool shows only while its switch is on (js/labs.js). */
+html:not(.lab-3d) .view3d-ctl, html:not(.lab-timebox) .tool-rail [data-tool="timebox"],
+html:not(.lab-swmm) [data-tbx="swmm"], html:not(.lab-batch) [data-ptool-act="batch"],
+html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] { display: none !important; }
+.labs-page { padding: var(--space-2) var(--space-3); max-width: 360px; }
+.labs-page h3 { margin: 0 0 var(--space-1); }
+.labs-row { display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-1) 0; cursor: pointer; }
+.labs-row small { display: block; }
 /* The development's Files & history is the Records tab; its Overview keeps About and Site. */
 #pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }
 /* Construction and EAs (js/capital-ea.js) and the tap picker (js/map-pick.js) */
@@ -2701,3 +2714,292 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .lg-cased { display: inline-block; width: 18px; height: 7px; border-radius: 4px; background: var(--cons-build); box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 70%, transparent); margin: 0 var(--space-1) 0 var(--space-1); vertical-align: middle; }
 .lg-dot.hollow { background: transparent; border: 1.5px solid var(--c); }
 .ce-lbl-ea.done span { opacity: .65; font-weight: 500; }
+/* Small systems (Stage 1 #3): plants rated under 5 ML/d in their own group, own scale, m³/d. */
+.cap-small-h, .ov-small-h { margin: var(--space-3) 0 var(--space-1); font-size: var(--fs-2); color: var(--text-secondary); font-weight: 600; }
+.dt tr.grp td { background: var(--surface-2); color: var(--text-secondary); font-weight: 600; font-size: var(--fs-1); }
+/* A failing data check, one line under a headline (Stage 1 #7). */
+.caveat { margin: 2px 0 var(--space-2); color: var(--text-secondary); border-left: 3px solid var(--cap-tight); padding-left: var(--space-2); }
+/* The scenario popover opens from the chip's right edge (the chip sits near the right of the top bar),
+   so it stays on screen; its switch rows wrap. */
+#tb-scen-pop { left: auto; right: 0; }
+#tb-scen-pop .svc-switch { flex-wrap: wrap; }
+#tb-scen-pop .ly-def { flex-basis: 100%; }
+
+/* Servicing › Capacity (Stage 2): one table, water and wastewater; the charts behind it fold under
+   "Charts and method"; the horizon years fold under each row. */
+#analysis:not(.ft-on) .svc-detail:not(.cap-detail-on) { display: none !important; }
+/* The panel is narrow (440 px; a phone): each row is a small card on a grid, every cell labelled
+   with its column (data-l). Still one table: the header is kept for screen readers. */
+.analysis-panes table.cap-all { display: block; min-width: 0; width: 100%; }
+.analysis-panes table.cap-all > thead { display: block; position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.cap-all.dt-wide td:first-child, .cap-all.dt-wide th:first-child { position: static; box-shadow: none; background: none; }
+.cap-all tbody { display: block; }
+.cap-all tr.cap-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--space-2); row-gap: 2px;
+  grid-template-areas: "fac fac fac sys" "cmp cmp cmp cmp" "com bo lim room"; align-items: start; padding: var(--space-2) 0; border-top: 1px solid var(--border); }
+.cap-all tr.cap-row > td { display: block; padding: 0; border: 0; text-align: left; min-width: 0; }
+.cap-all .c-fac { grid-area: fac; } .cap-all .c-sys { grid-area: sys; text-align: right; color: var(--text-secondary); font-size: var(--fs-1); }
+.cap-all .c-cmp { grid-area: cmp; font-size: var(--fs-1); color: var(--text-secondary); }
+.cap-all .c-com { grid-area: com; } .cap-all .c-bo { grid-area: bo; } .cap-all .c-lim { grid-area: lim; } .cap-all .c-room { grid-area: room; }
+.cap-all td[data-l]:not(.c-sys):not(.c-cmp)::before { content: attr(data-l); display: block; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
+.cap-all td.c-lim small, .cap-all td.c-room small { display: block; }
+.show-tech .cap-all tr.cap-row { grid-template-areas: "fac fac fac sys" "cmp cmp cmp cmp" "com bo lim room" "x1 x2 x3 x4"; }
+.cap-all .lybar { margin-top: 4px; }
+.cap-all td.c-bo.over strong, .cap-all td.c-room.over { color: var(--cap-over); }
+.cap-all td.c-bo.near strong { color: var(--cap-tight, inherit); }
+.cap-all tr.cap-hz { display: block; } .cap-all tr.cap-hz > td { display: block; }
+.cap-fold { border: 0; background: none; padding: 0 2px; cursor: pointer; color: var(--text-muted); font: inherit; }
+.cap-fold:hover { color: var(--text-primary); }
+.cap-hz > td { background: var(--surface-2); padding: var(--space-2) var(--space-3); }
+.cap-hz-t { margin: 0; width: auto; }
+.net-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); }
+#analysis.site-scope #pane-svc-netbar { display: none; }
+
+/* ---- The standard panel (Stage 3, js/panel.js): header, scenario chip, answer, ≤ 4 figures, one
+   chart, short lists, folded method and sources, footer. Amber tight, red over, teal room, violet
+   stage; blue only for actions; every tone also said in words. ---- */
+:root { --pnl-over: var(--cap-over); --pnl-tight: var(--cap-tight); --pnl-room: #20c997; --pnl-stage: #9775fa; }
+:root[data-theme="light"] { --pnl-room: #0b7a6a; --pnl-stage: #6741d9; }
+.pnl { display: flex; flex-direction: column; gap: var(--space-3); min-height: 100%; font-variant-numeric: tabular-nums; }
+.pnl-head { position: sticky; top: calc(-1 * var(--space-2)); z-index: 3; background: var(--surface-1); margin: calc(-1 * var(--space-2)) calc(-1 * var(--space-3)) 0; padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+.pnl-head-top { display: flex; align-items: center; gap: var(--space-2); min-height: 24px; }
+.pnl-trail { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; font-size: var(--fs-1); color: var(--text-muted); flex: 1; min-width: 0; }
+.pnl-trail .pnl-sep { margin: 0 2px; }
+.pnl-x { margin-left: auto; }
+.pnl-title { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
+.pnl-name { margin: 0; font-size: var(--fs-4, 18px); font-weight: 600; color: var(--text-primary); }
+.pnl-id { margin: 2px 0 0; }
+.pnl-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: var(--fs-1); font-weight: 600; border: 1px solid currentColor; white-space: nowrap; }
+.pnl-chip.t-over { color: var(--pnl-over); } .pnl-chip.t-tight { color: var(--pnl-tight); } .pnl-chip.t-room { color: var(--pnl-room); } .pnl-chip.t-stage { color: var(--pnl-stage); }
+.pnl-scen-chip { all: unset; cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; max-width: 100%; padding: 2px 10px; border: 1px dashed var(--border); border-radius: 999px; font-size: var(--fs-1); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; }
+.pnl-scen-chip span { overflow: hidden; text-overflow: ellipsis; }
+.pnl-scen-chip:focus-visible { outline: 2px solid var(--focus); }
+.pnl-answer { margin: 0; font-size: var(--fs-3, 15px); line-height: 1.45; }
+.pnl-figs { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+.pnl-fig { padding: var(--space-2) var(--space-3); background: var(--surface-2); border-radius: 6px; border-left: 3px solid transparent; min-width: 0; }
+.pnl-fig b { font-size: var(--fs-5, 22px); font-weight: 600; }
+.pnl-fig .pnl-u { margin-left: 4px; color: var(--text-secondary); font-size: var(--fs-1); }
+.pnl-fig .pnl-l { display: block; font-size: var(--fs-1); color: var(--text-secondary); }
+.pnl-fig small { display: block; font-size: var(--fs-1); color: var(--text-muted); }
+.pnl-fig.t-over { border-left-color: var(--pnl-over); } .pnl-fig.t-tight { border-left-color: var(--pnl-tight); } .pnl-fig.t-room { border-left-color: var(--pnl-room); } .pnl-fig.t-stage { border-left-color: var(--pnl-stage); }
+.pnl-chart-t { margin: 0 0 4px; }
+.pnl-list-h { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
+.pnl-list-h h3 { margin: 0; font-size: var(--fs-2); }
+.pnl-list ul { list-style: none; margin: var(--space-1) 0 0; padding: 0; }
+.pnl-row { min-height: 44px; padding: var(--space-2); border-top: 1px solid var(--border); border-left: 3px solid transparent; box-sizing: border-box; }
+.pnl-row[role="button"] { cursor: pointer; }
+.pnl-row[role="button"]:hover { background: var(--surface-2); }
+.pnl-row:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+.pnl-row.t-over { border-left-color: var(--pnl-over); } .pnl-row.t-tight { border-left-color: var(--pnl-tight); } .pnl-row.t-room { border-left-color: var(--pnl-room); } .pnl-row.t-stage { border-left-color: var(--pnl-stage); }
+.pnl-r-top { display: flex; align-items: baseline; gap: var(--space-2); }
+.pnl-r-name { flex: 1; min-width: 0; font-weight: 500; }
+.pnl-r-name small, .pnl-r-fig small { display: block; font-weight: 400; font-size: var(--fs-1); color: var(--text-muted); }
+.pnl-r-fig { text-align: right; font-weight: 600; }
+.pnl-r-line { display: block; color: var(--text-secondary); font-size: var(--fs-1); margin-top: 2px; }
+.pnl-row .lybar { margin-top: 4px; }
+.pnl-all { margin-top: var(--space-1); }
+.pnl-fold summary { cursor: pointer; font-size: var(--fs-2); color: var(--text-secondary); }
+.pnl-fold > div { margin-top: var(--space-1); }
+.pnl-foot { position: sticky; bottom: calc(-1 * var(--space-3)); z-index: 3; margin: auto calc(-1 * var(--space-3)) calc(-1 * var(--space-3)); padding: var(--space-2) var(--space-3); background: var(--surface-1); border-top: 1px solid var(--border); }
+.pnl-acts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.pnl-acts .pnl-primary { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.pnl-note { margin: var(--space-1) 0 0; color: var(--text-muted); }
+/* Stage 5: Report a data issue, at the foot of every panel and page. */
+.pnl-acts .pnl-report-line { margin-left: auto; align-self: center; white-space: nowrap; }
+/* The full table's own table classes (js/svc-capacity.js fullTableHTML). */
+.ft-scroll { overflow-x: auto; }
+.ft-table { width: 100%; font-variant-numeric: tabular-nums; }
+.ft-table th { position: sticky; top: 0; background: var(--surface-1); z-index: 1; }
+.ft-table td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
+.ft-table td:not(.n), .ft-table th:not(.n) { text-align: left; }
+/* At a development the panel header names it; the site bar keeps its tools (trace, FSR, watch …). */
+#site-bar.pnl-tools .site-bar-top, #site-bar.pnl-tools .site-bar-facts, #site-bar.pnl-tools .site-bar-svc, #site-bar.pnl-tools > .screen-note { display: none; }
+.ft-flows { display: flex; flex-wrap: wrap; gap: var(--space-3); margin: var(--space-3) 0; }
+/* Panel mode: the open sub-view shows its standard panel (#pnl-<tab>); its detailed panes are the
+   full table. Full mode (#analysis.ft-on): the column covers the window below the top bar and shows
+   the detailed panes, Engineering columns on. A sub-view without a panel shows its panes as before. */
+#analysis:not(.pnl-on) .pnl-host, #analysis.ft-on .pnl-host { display: none !important; }
+#analysis.pnl-on:not(.ft-on) .analysis-panes > .f-pane:not(.f-subtabs):not(.pnl-host) { display: none !important; }
+#analysis.pnl-on:not(.ft-on) #screen-note-top { display: none; }   /* the panel's footer carries the note; the Peel-wide note (#scope-note) stays */
+#analysis.ft-on { position: fixed !important; top: var(--ft-top, 56px); left: 0; right: 0; bottom: 0; width: auto !important; max-width: none !important; height: auto !important; z-index: 1150; border-left: 0; }   /* under the top bar (1200), so its menus open over the full table */
+#analysis.ft-on .analysis-resize, #analysis.ft-on .sheet-grip, #analysis.ft-on #site-bar, #analysis.ft-on .f-sum { display: none; }
+.ft-bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); background: var(--surface-2); flex: none; }
+.ft-bar[hidden] { display: none; }
+.ft-bar .ft-t { flex: 1; min-width: 0; }
+.ft-bar h2 { margin: 0; font-size: var(--fs-3, 15px); }
+.ft-bar p { margin: 0; }
+#analysis.ft-on .analysis-panes .f-pane { max-width: none; }
+@media (max-width: 600px) { .ft-bar { flex-wrap: wrap; } .ft-bar .ft-scen { order: 3; flex-basis: 100%; } }
+.pnl-r-year { font-family: var(--font-mono, ui-monospace, monospace); font-weight: 600; white-space: nowrap; }
+.pnl-r-meta { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-1); color: var(--text-secondary); margin-top: 4px; }
+.pnl-r-year.t-over, .pnl-r-meta .t-over { color: var(--pnl-over); }
+.pnl-r-year.t-tight, .pnl-r-meta .t-tight { color: var(--pnl-tight); }
+.pnl-r-year.t-room, .pnl-r-meta .t-room { color: var(--pnl-room); }
+.pnl-list-h .seg { display: inline-flex; gap: 2px; }
+.pnl-kv { display: flex; justify-content: space-between; gap: var(--space-3); }
+.pnl-kv > span:last-child { color: var(--text-secondary); text-align: right; }
+.pnl-kv .t-over { color: var(--pnl-over); } .pnl-kv .t-tight { color: var(--pnl-tight); } .pnl-kv .t-room { color: var(--pnl-room); }
+.pnl-list li.pnl-row.kv { min-height: 0; padding: var(--space-1) var(--space-2); border-left: 0; }
+.pnl-fold > div .brief { margin: 0; }
+
+/* ---- Stage 4: workspaces and Home (js/workspaces.js) ------------------------------------------ */
+/* A workspace: the map with the task chips; the left panel, its Filters button and the tool rail hide
+   ("Full map" brings them back with the same scope, filters and scenario). */
+.app.ws-mode .sidebar, .app.ws-mode .toggle-sidebar, .app.ws-mode .leaflet-control.tool-rail, html.home-on .toggle-sidebar { display: none !important; }
+/* (and the Wastewater loads box: a workspace's map has only its own layers) */
+.app.ws-mode .ww-loads { display: none !important; }
+/* Desktop: the left column closes (the analysis column is placed by the grid's flow, so it is named). */
+@media (min-width: 1200px) {
+  .app.ws-mode { grid-template-columns: 0 minmax(0, 1fr) var(--analysis-w, 440px); }
+  .app.ws-mode .analysis { grid-area: analysis; }
+}
+.ws-bar { position: absolute; top: var(--space-2); left: 56px; right: var(--space-2); z-index: 1001; display: flex; flex-direction: column; gap: var(--space-2); pointer-events: none; max-width: 760px; }
+.ws-bar[hidden] { display: none; }
+.ws-bar > * { pointer-events: auto; }
+.ws-top { display: flex; gap: var(--space-2); align-items: flex-start; }
+.ws-search { flex: 1 1 auto; min-width: 0; max-width: 420px; position: relative; }
+.ws-search .field { margin: 0; }
+.ws-search input { width: 100%; height: 36px; box-shadow: var(--shadow); }
+.ws-search .search-sug { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 1200; }
+.ws-fullbtn { box-shadow: var(--shadow); background: var(--surface-1); min-height: 36px; }
+.ws-chips { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ws-chip { min-height: 32px; border-radius: 999px; background: var(--surface-1); box-shadow: var(--shadow); }
+.ws-chip.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.ws-chip .badge-n { display: inline-block; min-width: 18px; padding: 0 6px; margin-left: 4px; border-radius: 999px; background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-1); line-height: 18px; }
+.ws-chip.on .badge-n { background: var(--on-accent); color: var(--accent); }
+/* The panel header's source line: "Getting tight · from Servicing › Capacity", Open full map. */
+.pnl-src { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-1); color: var(--text-muted); }
+.pnl-src > span { font-weight: 600; color: var(--pnl-stage, var(--text-secondary)); }
+.pnl-steps { display: block; font-weight: 400; color: var(--text-muted); }
+/* Check a site / Review an FSR: the steps as a numbered list (the current one marked). */
+.pnl-step { display: flex; align-items: baseline; gap: var(--space-2); }
+.pnl-step-n { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-1); font-weight: 600; border: 1px solid var(--border); color: var(--text-secondary); }
+.pnl-step.on .pnl-step-n { border-color: var(--pnl-stage); color: var(--pnl-stage); }
+.pnl-step strong { margin-right: 2px; }
+/* Review an FSR: the cross-check inside the Servicing panel (its fold names it, so its own heading hides). */
+.fsr-box .fsr-check > h3 { display: none; }
+.tb-home { flex: 0 0 auto; }
+/* Home: below the top bar, over the map and panels. */
+.home { position: fixed; top: var(--top-h, 0px); left: 0; right: 0; bottom: 0; z-index: 1150; background: var(--surface-0); overflow: auto; }
+.home[hidden] { display: none; }
+.home-grid { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100%; }
+.home-grid > * { min-width: 0; }
+.home-side { background: var(--surface-1); border-right: 1px solid var(--border); padding: var(--space-3); display: flex; flex-direction: column; gap: var(--space-1); }
+.home-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.home-g { font-size: var(--fs-1); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin: var(--space-3) 0 var(--space-1); }
+.home-g:first-child { margin-top: 0; }
+.home-ws { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; width: 100%; min-height: 44px; text-align: left; padding: var(--space-2); border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); background: var(--surface-1); color: var(--text-primary); cursor: pointer; }
+.home-ws:hover, .home-ws:focus-visible { border-color: var(--accent); }
+.home-ws small { color: var(--text-muted); font-size: var(--fs-1); }
+.home-ws .badge-n { display: inline-block; min-width: 18px; padding: 0 6px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: var(--fs-1); line-height: 18px; }
+.home-full { margin-top: var(--space-3); }
+.home-full strong { color: var(--accent); }
+.home-pref { display: flex; align-items: center; gap: var(--space-2); margin-top: var(--space-3); color: var(--text-muted); }
+.home-main { padding: var(--space-4, 24px) var(--space-4, 24px) var(--space-5, 32px); max-width: 1100px; display: flex; flex-direction: column; gap: var(--space-3); font-variant-numeric: tabular-nums; }
+.home-h { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.home-h p { flex-basis: 100%; margin: 0; }
+.home-h h1 { font-size: var(--fs-5, 22px); margin: 0; }
+.home-answer { font-size: var(--fs-3); margin: 0; }
+.home-caveat { margin: 0; padding: var(--space-1) var(--space-2); border-left: 3px solid var(--cap-tight); background: color-mix(in srgb, var(--cap-tight) 10%, transparent); }
+.home-main .pnl-figs { grid-template-columns: repeat(4, minmax(0, 1fr)); cursor: pointer; }
+.home-cols { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: var(--space-3); align-items: start; }
+.home-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.home-list .pnl-row { cursor: pointer; }
+.home-map-btn { display: block; width: 100%; padding: 0; border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); background: var(--surface-1); cursor: pointer; }
+.home-map-svg { display: block; width: 100%; height: auto; }
+.home-map-svg .hm-base { fill: color-mix(in srgb, var(--text-muted) 8%, transparent); stroke: var(--text-muted); stroke-width: .5; opacity: .7; }
+.home-map-svg .hm-over { fill: color-mix(in srgb, var(--cap-over) 45%, transparent); stroke: var(--cap-over); stroke-width: 1; }
+.home-map-svg .hm-tight { fill: color-mix(in srgb, var(--cap-tight) 40%, transparent); stroke: var(--cap-tight); stroke-width: 1; }
+.home-map-svg .hm-plant { fill: var(--text-secondary); stroke: var(--surface-1); stroke-width: 1.5; }
+.home-map-svg .hm-plant.hm-over { fill: var(--cap-over); } .home-map-svg .hm-plant.hm-tight { fill: var(--cap-tight); }
+.hm-key { display: inline-block; width: 10px; height: 10px; border-radius: 2px; vertical-align: -1px; margin: 0 2px 0 var(--space-2); }
+.hm-key.hm-over { background: var(--cap-over); } .hm-key.hm-tight { background: var(--cap-tight); }
+@media (max-width: 1199px) {
+  .ws-bar { left: 52px; right: var(--space-2); }
+  .home-grid { grid-template-columns: 1fr; }
+  .home-side { border-right: 0; border-bottom: 1px solid var(--border); order: 2; }
+  .home-main { order: 1; padding: var(--space-3); }
+  .home-cols { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .home-main .pnl-figs { grid-template-columns: 1fr 1fr; }
+  .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
+  .ws-chip { flex: 0 0 auto; }
+}
+
+/* ---- Stage 4b: workspace pages (js/ws-pages.js) in Home's layout -------------------------------- */
+.home-ws.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface-1)); }
+.page-eyebrow { margin: 0; color: var(--text-muted); flex-basis: 100%; }
+.page-eyebrow .pnl-steps-i { color: var(--text-secondary); }
+.page-id { flex-basis: 100%; margin: 0; }
+.page-search { max-width: 520px; position: relative; }
+.page-search .field { margin: 0; }
+.page-search input { width: 100%; height: 40px; font-size: var(--fs-3); }
+.page-search .search-sug { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 1200; }
+.page-chart { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); padding: var(--space-2) var(--space-3); }
+.page-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+.page-list .pnl-row[role="button"] { cursor: pointer; }
+.page-main > .pnl-fold { background: var(--surface-1); }
+.page-foot { display: flex; flex-direction: column; gap: var(--space-2); border-top: 1px solid var(--border); padding-top: var(--space-3); }
+.page-foot .pnl-acts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.page-fsr, .page-grid, .page-sel { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); padding: var(--space-3); }
+.page-fsr > h3, .page-grid > h3 { margin: 0 0 var(--space-2); font-size: var(--fs-3); }
+.page-fsr .fsr-check > h3 { display: none; }
+/* Old pipes grid: likelihood (rows, worst first) × consequence (columns); the worst corner darkest. */
+.pg-wrap { overflow-x: auto; }
+.pg { border-collapse: separate; border-spacing: 4px; font-variant-numeric: tabular-nums; min-width: 420px; }
+.pg th { font-size: var(--fs-1); color: var(--text-muted); font-weight: 600; text-align: left; padding: 2px 6px; }
+.pg td { border-radius: 6px; padding: 6px 10px; text-align: right; min-width: 92px; }
+.pg td b { display: block; font-size: var(--fs-4); }
+.pg td small { color: var(--text-secondary); }
+.pg .pg-s2 { background: color-mix(in srgb, var(--cap-room) 12%, transparent); }
+.pg .pg-s3 { background: color-mix(in srgb, var(--cap-room) 18%, transparent); }
+.pg .pg-s4 { background: color-mix(in srgb, var(--cap-tight) 18%, transparent); }
+.pg .pg-s5 { background: color-mix(in srgb, var(--cap-tight) 30%, transparent); }
+.pg .pg-s6 { background: color-mix(in srgb, var(--cap-over) 35%, transparent); }
+/* Study area: the map itself on the page. */
+.page-livemap { display: flex; flex-direction: column; gap: var(--space-2); }
+.page-map-slot { height: min(440px, 60vh); border: 1px solid var(--border); border-radius: var(--radius-panel, 8px); overflow: hidden; position: relative; }
+.page-map-slot #map { width: 100%; height: 100%; }
+.page-map-slot .leaflet-control.tool-rail, .page-map-slot .map-opts, .page-map-slot .ww-loads, .page-map-slot .leaflet-control-attribution { display: none !important; }
+/* The pages' small maps. */
+.home-map-svg .hm-dev { fill: color-mix(in srgb, var(--text-secondary) 55%, transparent); }
+.home-map-svg .hm-hl { fill: var(--select, var(--accent)); stroke: var(--surface-1); stroke-width: 1.2; }
+.home-map-svg .hm-dc { fill: none; stroke-width: 1.6; stroke-dasharray: 5 3; }
+.home-map-svg .hm-dc-wastewater { stroke: var(--dc-ww-main, var(--cap-tight)); }
+.home-map-svg .hm-dc-water { stroke: var(--pipe-water, var(--accent)); }
+.home-map-svg .hm-pipe { fill: none; stroke: var(--cap-tight); stroke-width: 1.4; }
+.home-map-svg .hm-pipe.risky { stroke-width: 2.6; }
+.hm-key.hm-dc-wastewater { background: var(--dc-ww-main, var(--cap-tight)); } .hm-key.hm-dc-water { background: var(--pipe-water, var(--accent)); }
+.home-map .sk { width: 100%; height: auto; display: block; border: 0; }
+.home-map-empty { display: block; padding: var(--space-5, 32px) var(--space-3); text-align: center; }
+/* Narrow screens: the workspace list is a scrollable row of buttons above the page (one tap to switch). */
+@media (max-width: 1199px) {
+  .home-side { order: 0; flex-direction: row; align-items: center; overflow-x: auto; gap: var(--space-1); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); }
+  .home-side ul { flex-direction: row; flex: 0 0 auto; }
+  .home-side .home-g, .home-side .home-ws small, .home-side .home-pref { display: none; }
+  .home-side .home-ws { width: auto; white-space: nowrap; min-height: 40px; padding: var(--space-1) var(--space-3); justify-content: center; }
+  .home-side .home-full { margin-top: 0; flex: 0 0 auto; }
+  .home-main { order: 1; }
+}
+/* Growth in an area: the pipeline by stage, one bar per stage in the order a file moves. */
+.stg { display: flex; flex-direction: column; gap: 6px; font-variant-numeric: tabular-nums; }
+.stg-h { margin: 0 0 2px; }
+.stg-row { display: grid; grid-template-columns: minmax(150px, 15rem) minmax(0, 1fr) 6rem 3rem; align-items: center; gap: var(--space-2); }
+.stg-l { font-size: var(--fs-2); }
+.stg-track { position: relative; height: 16px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.stg-fill, .stg-est { position: absolute; left: 0; top: 0; bottom: 0; }
+.stg-est { background: var(--ly-hatch); pointer-events: none; }
+.stg-approved { background: color-mix(in srgb, var(--ly-committed) 60%, var(--surface-2)); }
+.stg-permitted { background: var(--ly-committed); }
+.stg-v { text-align: right; }
+.stg-p { text-align: right; font-size: var(--fs-1); }
+.stg-foot { margin: 4px 0 0; }
+@media (max-width: 600px) { .stg-row { grid-template-columns: minmax(0, 1fr) 4.5rem 2.5rem; } .stg-l { grid-column: 1 / -1; } }
+/* Growth drill-down: the stage bars filter the area's files; the area outlined on the small map. */
+.stg-row[data-ws-stage] { cursor: pointer; border-radius: 4px; padding: 2px 4px; margin: 0 -4px; }
+.stg-row[data-ws-stage]:hover, .stg-row[data-ws-stage]:focus-visible { background: var(--surface-2); outline: none; }
+.stg-row.on { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.home-map-svg .hm-area { fill: color-mix(in srgb, var(--accent) 18%, transparent); stroke: var(--accent); stroke-width: 1.4; }
+.page-eyebrow .btn.link { padding: 0; min-height: 0; }
+.home-map-svg .hm-sub { fill: none; stroke: var(--accent); stroke-width: .8; stroke-dasharray: 3 2; opacity: .8; }
+.page-list .pnl-list-h { flex-wrap: wrap; row-gap: var(--space-1); } .page-list .pnl-list-h .seg { flex-wrap: wrap; }

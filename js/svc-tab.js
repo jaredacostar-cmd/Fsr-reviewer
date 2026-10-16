@@ -100,7 +100,7 @@
   // on the tabs, the map legend, the exports and share links.
   function scenarioText() {
     const R = App().state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
-    const basisTxt = { all: 'All units', buildout: 'Units applied for (no anticipated)', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
+    const basisTxt = { all: 'All units', buildout: 'Units applied for (no pre-application)', committed: 'Approved units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, Sett().wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, App().state.dcInfra ? `plant expansions ${SP().hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
       `counting: ${basisTxt}${window.PeelTreeCounts ? ` (${window.PeelTreeCounts.label()})` : ''}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
@@ -132,8 +132,20 @@
   }
   // Counting basis: which of each project's units the demand counts. It changes the math,
   // so it lives in the Scenario control, not the filter panel.
-  const basisSwitch = () => `<div class="svc-switch" role="group" aria-label="${esc('Counting basis')}"><span class="muted small">Counting basis</span>${[['all', 'All units'], ['buildout', 'Applied for'], ['committed', 'Committed'], ['remaining', 'Left to build']].map(([v, t]) =>
-    `<button type="button" class="btn small${App().state.basis === v ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${App().state.basis === v}">${t}</button>`).join('')}</div>`;
+  // Count (Stage 1 #6): which layers are counted, moved here from the top bar; "left to build" is a
+  // separate switch (it counts every layer, only the units with no permit yet).
+  // (The button already on keeps the basis as it is: Units › All never resets the Count, and the
+  // Count already on never turns Left to build off.)
+  const basisSwitch = () => {
+    const b = App().state.basis, cur = b === 'remaining' ? 'all' : b, LB = root.PeelLayerBar;
+    const count = `<div class="svc-switch" role="group" aria-label="Count"><span class="muted small">Count:</span>${LB.COUNT_OPTS.map(([v, t]) =>
+      `<button type="button" class="btn small${cur === v ? ' on' : ''}" data-svcopt="basis" data-v="${cur === v ? b : v}" aria-pressed="${cur === v}">${esc(t)}</button>`).join('<span class="muted" aria-hidden="true"> · </span>')}</div>`;
+    const units = `<div class="svc-switch" role="group" aria-label="Units"><span class="muted small">Units</span>${[['all', 'All'], ['remaining', 'Left to build']].map(([v, t]) =>
+      `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v === 'all' ? cur : v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
+    const A = root.PeelLayers && root.PeelLayers.NOTE;
+    const def = A ? `<p class="small muted ly-def">Approved, not yet built (committed): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}.</p>` : '';
+    return count + units + def;
+  };
   // Results for year: the year the capacity colours, pipe loads and station loads are worked
   // out for — the census year, this year through the horizon end, or build-out (null).
   const yearSelect = () => {
@@ -178,9 +190,9 @@
   function svcBar(l) {
     const t = l.census + l.built + l.approved + l.proposed, max = t || 1;
     const seg = (k, cls, label) => l[k] > 0 ? `<span class="gseg ${cls}" style="width:${(100 * l[k] / max).toFixed(2)}%" title="${label}: ${fmtNum(Math.round(l[k]))} people"></span>` : '';
-    return `<div class="svc-bar" role="img" aria-label="Build-out ${fmtNum(Math.round(t))} people">${seg('census', 'g-base', 'Census')}${seg('built', 'g-built', 'Built since')}${seg('approved', 'g-approved', 'Committed')}${seg('proposed', 'g-proposed', 'Proposed')}</div>`;
+    return `<div class="svc-bar" role="img" aria-label="Build-out ${fmtNum(Math.round(t))} people">${seg('census', 'g-base', 'Census')}${seg('built', 'g-built', 'Built since')}${seg('approved', 'g-approved', 'Approved')}${seg('proposed', 'g-proposed', 'In review')}</div>`;
   }
-  const svcLegend = Y => `<ul class="grow-legend svc-legend"><li><span class="gsw g-base"></span>${Y} Census</li><li><span class="gsw g-built"></span>Built since</li><li><span class="gsw g-approved"></span>Committed</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li class="muted">Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map</li></ul>`;
+  const svcLegend = Y => `<ul class="grow-legend svc-legend"><li><span class="gsw g-base"></span>${Y} Census</li><li><span class="gsw g-built"></span>Built since</li><li><span class="gsw g-approved"></span>Approved, not yet built</li><li><span class="gsw g-proposed"></span>In review</li><li class="muted">Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map</li></ul>`;
   // Drainage areas as a tree along the sewer flow path (data/servicing.json: downstream).
   function svcFlowTree() {
     const ids = new Set(App().state.servicing.drainage.map(d => d.id));
@@ -197,6 +209,8 @@
   // The wastewater flow compared with plant capacity, by mode. Capacity check scales every layer to
   // each plant's 2025 measured annual average (wet weather included), so it is an annual average
   // flow; design flows are average dry weather flow (ADWF) at Peel criteria.
+  // The one basis of a wastewater plant figure, by mode (Stage 1 #4): metered (calibrated) or design.
+  const wwBasis = () => (svcOpt.ww === 'calibrated' ? 'metered' : 'design');
   const wwFlowLabel = (form = 'short') => svcOpt.ww === 'calibrated'
     ? (form === 'long' ? 'annual average flow (2025 measured at each plant; growth at the plant\u2019s measured rate)' : 'annual average flow')
     : (form === 'long' ? 'average dry weather flow (ADWF, Peel design criteria)' : 'ADWF');
@@ -333,12 +347,9 @@
     // No model is better than a wrong one (SPEC 1.4).
     if (!SD().svcById.size) return;
     const p = DV().scopedDev();
-    if (!p && SP().getSavedSubs()) {
-      // Back from a scoped view: restore the sub-tab choices and the full set of panes.
-      { const _ss = SP().getSavedSubs(); AT().setWSub(_ss && _ss.wSub); AT().setWwSub(_ss && _ss.wwSub); SP().setSavedSubs(null); }
-      for (const id of ['#pane-wcap', '#pane-wfac', '#pane-alloc', '#pane-plants', '#pane-pumpstations']) { const n = $(id); if (n) n.dataset.off = ''; }
-      for (const s of document.querySelectorAll('.f-subtabs[data-pane="water"], .f-subtabs[data-pane="ww"]')) s.dataset.off = '';
-    }
+    // Back from a site: the Region-wide station list returns to Network (the area-only sub-views
+    // are hidden at a site by PeelAnalysisTabs).
+    if (!p) { const n = $('#pane-pumpstations'); if (n && n.dataset.off === '1') n.dataset.off = ''; }
     const c = App().state.criteria, E = c.employment, Y = bc.year, R = App().state.reports;
     $('#analysis').classList.toggle('show-tech', svcOpt.tech === 'on');
     svcCensusPop(bc);
@@ -369,16 +380,16 @@
     const zsum = addLayers(zr.map(r => r.l));
     // ---- Water: Zones sub-view (headline → tiles → chart → top-N table → ⓘ line). ----
     const wcapM = { Y, zones: new Map(zr.map(r => [r.a.id, r.l])), wMax, wAvg, wPH, total, jobs };
-    $('#water-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${TS().inViewBox()}</div></div>
+    $('#water-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>
       ${WTab().waterZonesHTML(zr, zsum, { wMax, wPH, total, jobs, wRow, layerHead, Y, c, E, mdR, mdE, observed, censusHowW })}`;
     // ---- Water: Capacity sub-view. The 2025 production / Caledon groundwater reports moved
     // to Sources & checks (window.ModelChecks); the hydraulic check moved to its own sub-view.
     $('#wcap-body').innerHTML = `${WTab().waterCapHTML(wcapM)}`;
     // ---- Water: Facilities sub-view (tiles → Master Plan compare → facilities table). ----
     $('#wfac-body').innerHTML = `${MP().waterFacilitiesHTML()}`;
-    // ---- Water: Hydraulic check sub-view (pane + button created by Worker A in index.html).
+    // ---- Hydraulic check (Labs).
     const hydPane = $('#hyd-box'); if (hydPane) hydPane.outerHTML = MP().hydroBoxHTML();
-    const hydBtn = document.querySelector('[data-wsub="hydro"]'); if (hydBtn) hydBtn.hidden = !(window.PeelUtil || {}).PIPE_RESULTS;   // EPANET per-main results: off for now
+    // (Its pane sits in Servicing › Checks while Settings › Labs › Hydraulic check is on.)
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · top zones by build-out maximum day`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -463,6 +474,7 @@
       rankedC.push({ d, l, bo: adwf(l, fOf(d.plant)) });
     }
     rankedC.sort((a, b) => b.bo - a.bo);
+    lastRanked = rankedC.map(x => ({ d: x.d, bo: x.bo, now: adwf({ ...x.l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 }, fOf(x.d.plant)) }));   // (Stage 3: the Network panel's blocks, as this table)
     const top8 = rankedC.slice(0, 8), top8Max = Math.max(1e-9, ...top8.map(x => x.bo));
     $('#ww-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>${calNote}
       <div class="tiles">${[
@@ -513,15 +525,16 @@
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();
     if (AT().getFootTab() === 'dca') DCAT().renderDca();
     if (AT().getFootTab() === 'overview') OV().renderOverview();
-    if (AT().getFootTab() === 'ww' && AT().getWwSub() === 'alloc') DUI().renderAlloc();
+    if (AT().getFootTab() === 'svc' && AT().getSvcSub() === 'alloc') DUI().renderAlloc();
+    if (root.PeelSvcCapacity) root.PeelSvcCapacity.renderAll();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
     if (p) SP().renderSvcScoped(p);
   }
   // Sub-tab choices stashed while a site is the scope (restored when it isn't).
   // Switches in the Water / Wastewater / Plants tabs.
-  for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#scen-bar']) $(id).addEventListener('click', e => {
+  for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#svc-capacity-body', '#svc-checks-body', '#scen-bar']) if ($(id)) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
-    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); return; } return AT().showFootTab(gt); }
+    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); return; } return AT().openTab(gt); }
     if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }
     if (e.target.closest('[data-scen-clear]')) { store.set('scenA', null); return renderScenario(); }
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return TS().filterInView(); }
@@ -544,7 +557,10 @@
     if (e.target.id === 'scen-year') setCapYear(e.target.value === 'bo' ? null : +e.target.value);
   });
 
+  let lastRanked = [];
   const api = {
+    rankedBlocks: () => lastRanked,
+    wwBasis,
     renderSvcTab, renderScenario, scenarioText, scenarioMetrics, setCapYear,
     renderScenarioCriteria, criteriaChanges, CRIT_LABEL, CRIT_KEY_LABEL, svcOpt,
     svcFlowTree, upstreamOf, svcJobs, svcBar, svcLegend, optSwitch, refLink,

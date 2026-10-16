@@ -86,6 +86,13 @@ test('build: the preferred solution is read from report text, skipping contents 
   assert.equal(E.extractDecision(report), 'The preferred solution is to twin the existing trunk sewer along Cawthra Road between Dundas Street and the Lakeview WRRF, with a new 1,500 mm pipe.');
   assert.equal(E.extractDecision('The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.'), 'The recommended alternative includes a new elevated tank of 8 ML east of Highway 50 and 2 km of 600 mm watermain.');
   assert.equal(E.extractDecision('No conclusion here. Alternatives were screened.'), null);
+  // Decimals and "No." stay inside the sentence; process sentences are not decisions.
+  assert.equal(E.extractDecision('A. The preferred design includes a six (6) lane urban cross-section with a 5.5 m median. B.'), 'The preferred design includes a six (6) lane urban cross-section with a 5.5 m median.');
+  assert.equal(E.extractDecision('A. The preferred design was developed and refined through extensive consultation with the public. B.'), null);
+  assert.equal(E.extractDecision('A. The preferred alternative was then formalized and presented at Public Information Centre No. 2 in May. B.'), null);
+  assert.equal(E.extractDecision('A. The recommended strategy is integrated with previously approved projects under design. B.'), null);
+  // A sentence naming a consultant, contractor or contact is skipped for the next one.
+  assert.equal(E.extractDecision('The preferred solution was developed with the consultant team and Smith Engineering Ltd. The preferred solution is a new 900 mm sanitary sewer along Queen Street East.'), 'The preferred solution is a new 900 mm sanitary sewer along Queen Street East.');
   assert.equal(E.extractDecision('The preferred solution is to contact jane@example.ca for the details of the study team.'), null, 'contact text never kept');
 });
 
@@ -93,11 +100,13 @@ test('build: same-system capital work inside a confident study area is linked, a
   const E = require('../scripts/ea-lib.js');
   const area = { type: 'Polygon', coordinates: [[[-79.80, 43.70], [-79.78, 43.70], [-79.78, 43.72], [-79.80, 43.72], [-79.80, 43.70]]] };
   const cap = { records: [
-    { id: 'w-in', projectNumber: '24-1', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.71], [-79.79, 43.71]] } },
-    { id: 's-in', projectNumber: '24-2', system: 'wastewater', geometry: { type: 'LineString', coordinates: [[-79.795, 43.705], [-79.79, 43.705]] } },
-    { id: 'w-out', projectNumber: '24-3', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.70, 43.71], [-79.69, 43.71]] } },
+    { id: 'w-in', projectNumber: '24-1', contract: 'C1', status: 'planned', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.71], [-79.79, 43.71]] } },
+    { id: 's-in', projectNumber: '24-2', status: 'under construction', system: 'wastewater', geometry: { type: 'LineString', coordinates: [[-79.795, 43.705], [-79.79, 43.705]] } },
+    { id: 'w-out', projectNumber: '24-3', status: 'planned', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.70, 43.71], [-79.69, 43.71]] } },
+    { id: 'w-done', projectNumber: '19-1', status: 'complete', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.712], [-79.79, 43.712]] } },
+    { id: 'w-in-2', projectNumber: '24-1', contract: 'C1', status: 'planned', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.795, 43.715], [-79.79, 43.715]] } },
   ] };
-  assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'medium', geometry: area }, cap).map(x => [x.id, x.method]), [['w-in', 'inside the study area']]);
+  assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'medium', geometry: area }, cap).map(x => [x.id, x.method]), [['w-in', 'inside the study area']], 'planned or active only, one link per contract');
   assert.deepEqual(E.linkCapitalInArea({ system: 'multi', geomConfidence: 'high', geometry: area }, cap).map(x => x.id), ['w-in', 's-in']);
   assert.deepEqual(E.linkCapitalInArea({ system: 'water', geomConfidence: 'low', geometry: area }, cap), [], 'not from a low-confidence area');
   assert.deepEqual(E.linkCapitalInArea({ system: 'roads', geomConfidence: 'high', geometry: area }, cap), [], 'not for roads EAs');
@@ -134,4 +143,21 @@ test('map: EA styles (current strong, completed faint, approximate thinner and f
   assert.equal(M.pctLabel({ percent: 45 }), '45% built');
   assert.equal(M.pctLabel({ percent: 100 }), 'finishing');
   assert.deepEqual(Object.keys(M.SYS_CASING), ['water', 'wastewater', 'roads']);
+});
+
+test('at a site: 1 km from the site boundary (not its point), "May apply" for unmapped EAs, All when nothing is current', () => {
+  // A site whose point is ≈2.4 km from the Dixie Rd route but whose boundary comes within ≈400 m of it.
+  const at = [43.61, -79.57], edge = [[43.61, -79.57], [43.61, -79.595], [43.615, -79.595]];
+  assert.deepEqual(M.easNear(EAS, ...at, 1000).map(x => x.e.id), [], 'from the point alone: nothing');
+  assert.deepEqual(M.easNear(EAS, ...at, 1000, edge).map(x => x.e.id), ['c'], 'from the boundary: the route');
+  // Unmapped EAs naming the municipality or the whole Region may apply.
+  assert.deepEqual(M.easMayApply(EAS, 'Brampton').map(e => e.id), ['d']);
+  assert.deepEqual(M.easMayApply([{ ...EAS[3], municipality: 'Caledon' }], 'Brampton'), []);
+  const near = { title: 'Site', lat: at[0], lng: at[1], m: 1000, pts: edge, muni: 'Mississauga', edge: true };
+  const html = M.eaTabHTML({ eas: EAS, f: { show: 'current' }, today: '2026-10-15', thisYear: 2026, near });
+  assert.match(html, /within 1 km of the site boundary of Site/);
+  assert.match(html, /<h3 class="sub-title">May apply <small class="muted">not on the map yet · 1<\/small><\/h3>[\s\S]*Region-wide water master plan/);
+  assert.match(html, /All EAs <small class="muted">1 shown<\/small>[\s\S]*Dixie Rd widening/, 'no current EA nearby: the list opens on All');
+  const picked = M.eaTabHTML({ eas: EAS, f: { show: 'current' }, picked: true, today: '2026-10-15', thisYear: 2026, near });
+  assert.match(picked, /All EAs <small class="muted">0 shown<\/small>/, 'a filter the user picked is kept');
 });
