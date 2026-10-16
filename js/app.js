@@ -355,7 +355,9 @@
     const vh = window.innerHeight;
     const footH = $('#footer') ? $('#footer').getBoundingClientRect().height : 0;
     if (name === 'half') return Math.round(vh * 0.5);
-    if (name === 'full') return Math.max(240, Math.round(vh - footH) - 8);
+    // Full stops at the top bar, so the sheet's tabs and the panel header stay in view.
+    const topB = $('#topbar') ? Math.max(0, $('#topbar').getBoundingClientRect().bottom) : 0;
+    if (name === 'full') return Math.max(240, Math.round(vh - footH - topB) - 8);
     return 96;
   }
   function setAnalysisSnap(name, save = true) {
@@ -443,7 +445,10 @@
   // its menus open over them; the detail drawer (Help, a selection…) starts below it.
   const topEl = document.querySelector('.topbar');
   if (topEl) {
-    const setTop = () => document.documentElement.style.setProperty('--top-h', `${Math.max(0, Math.round(topEl.getBoundingClientRect().bottom))}px`);
+    const setTop = () => {
+      document.documentElement.style.setProperty('--top-h', `${Math.max(0, Math.round(topEl.getBoundingClientRect().bottom))}px`);
+      if (analysisSnap === 'full') setAnalysisSnap('full', false);
+    };
     new ResizeObserver(setTop).observe(topEl); addEventListener('resize', setTop); setTop();
   }
 
