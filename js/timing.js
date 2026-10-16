@@ -382,29 +382,49 @@
   // ---- Browser: SVG band chart ---------------------------------------------------
   // Yearly expected completions: the low–high band as a shaded area, likely as a
   // line. Theme-aware via CSS vars (dark default, light checked by inspection).
-  function timingChartSVG(fc) {
-    const years = fc.years;
-    const W = window.PeelUtil.chartW(320, 900), H = 250, L = 46, Rr = 16, T = 12, B = 26;
-    const maxV = Math.max(1, ...years.map(r => r.high));
-    const yMax = Math.max(500, Math.ceil(maxV / 500) * 500);
+  // Bundle 5: the forecast as cumulative units built from now, against the unbuilt pipeline, with
+  // 2031 and 2041 marked and the low–high range shaded. The running sums are the ones the answer and
+  // figures quote (sumTo), so the chart and the numbers agree.
+  function cumulative(years) {
+    const run = { low: 0, likely: 0, high: 0 };
+    return years.map(r => { for (const b of BANDS) run[b] += r[b] || 0; return { year: r.year, low: run.low, likely: run.likely, high: run.high }; });
+  }
+  // Year ticks every five years and the last, dropping one that would sit within three years of the
+  // one before it (2051 and 2052 collided).
+  function yearTicks(ys) {
+    const out = [];
+    ys.forEach((y, i) => { if (i % 5 === 0 || i === ys.length - 1) { if (out.length && y - out[out.length - 1] < 3) { if (i === ys.length - 1) return; } out.push(y); } });
+    return out;
+  }
+  function timingChartSVG(fc, pipeline) {
+    const years = cumulative(fc.years), pipe = pipeline > 0 ? pipeline : 0;
+    const W = window.PeelUtil.chartW(320, 900), H = 250, L = 52, Rr = 16, T = 18, B = 26;
+    const k = v => (v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : String(Math.round(v)));
+    const maxV = Math.max(1, pipe, ...years.map(r => r.high));
+    const step = maxV > 100000 ? 50000 : maxV > 20000 ? 10000 : maxV > 5000 ? 2000 : 500;
+    const yMax = Math.ceil(maxV * 1.04 / step) * step;
     const X = i => L + (years.length > 1 ? i / (years.length - 1) : 0) * (W - L - Rr);
     const Yv = v => T + (1 - v / yMax) * (H - T - B);
     const pt = (i, v) => `${X(i).toFixed(1)},${Yv(v).toFixed(1)}`;
     const band = `M${years.map((r, i) => pt(i, r.low)).join('L')}L${years.map((r, i) => pt(i, r.high)).reverse().join('L')}Z`;
     const line = b => (years.length > 1 ? 'M' : '') + years.map((r, i) => pt(i, r[b])).join('L');
-    const yTicks = [0, 1, 2, 3, 4].map(i => yMax * i / 4);
-    const xTicks = years.filter((r, i) => i % 5 === 0 || i === years.length - 1);
-    const tip = r => `${r.year}: likely ${fmtNum(Math.round(r.likely))} units (range ${fmtNum(Math.round(r.low))}–${fmtNum(Math.round(r.high))})`;
-    return `<div class="tband-wrap" data-info="timing-forecast" role="img" aria-label="Expected completions per year, ${years[0].year} to ${years[years.length - 1].year}, with low to high range">
-      <svg class="tband" viewBox="0 0 ${W} ${H}">
-        <g class="tband-grid">${yTicks.map(v => `<line x1="${L}" x2="${W - Rr}" y1="${Yv(v)}" y2="${Yv(v)}"/>`).join('')}</g>
-        <g class="tband-ax">${yTicks.map(v => `<text x="${L - 6}" y="${Yv(v) + 4}" text-anchor="end">${v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : v}</text>`).join('')}
-          ${xTicks.map(r => `<text x="${X(years.indexOf(r))}" y="${H - 8}" text-anchor="middle">${r.year}</text>`).join('')}</g>
+    const yTicks = []; for (let v = 0; v <= yMax + 1e-6; v += step) yTicks.push(v);
+    const thin = yTicks.length > 6 ? yTicks.filter((v, i) => i % 2 === 0) : yTicks;
+    const xTicks = yearTicks(years.map(r => r.year));
+    const marks = [2031, 2041].map(y => years.findIndex(r => r.year === y)).filter(i => i >= 0);
+    const tip = r => `By ${r.year}: likely ${fmtNum(Math.round(r.likely))} units built (range ${fmtNum(Math.round(r.low))}–${fmtNum(Math.round(r.high))})`;
+    return `<div class="tband-wrap" data-info="timing-forecast">
+      <h3 class="sub-title pnl-chart-t">Homes built from ${years[0].year}, adding up, against the unbuilt pipeline <span class="pnl-chart-u">(units)</span></h3>
+      <svg class="tband" viewBox="0 0 ${W} ${H}" style="max-width:${W}px" role="img" aria-label="Units expected to be built from ${years[0].year} to ${years[years.length - 1].year}, adding up, with the low to high range, against ${fmtNum(Math.round(pipe))} unbuilt units in the pipeline">
+        <g class="tband-grid">${thin.map(v => `<line x1="${L}" x2="${W - Rr}" y1="${Yv(v).toFixed(1)}" y2="${Yv(v).toFixed(1)}"/>`).join('')}</g>
+        <g class="tband-ax">${thin.map(v => `<text x="${L - 6}" y="${(Yv(v) + 4).toFixed(1)}" text-anchor="end">${k(v)}</text>`).join('')}
+          ${xTicks.map(y => `<text x="${X(years.findIndex(r => r.year === y)).toFixed(1)}" y="${H - 8}" text-anchor="middle">${y}</text>`).join('')}</g>
         <path class="tband-band" d="${band}"><title>Low to high range</title></path>
-        ${BANDS.map(b => `<path class="tband-line tb-${b}" d="${line(b)}"><title>${b[0].toUpperCase() + b.slice(1)}: ${years.map(r => `${r.year} ${fmtNum(Math.round(r[b]))}`).join(', ')}</title></path>`).join('')}
-        ${years.map((r, i) => `<circle class="tband-pt" cx="${X(i).toFixed(1)}" cy="${Yv(r.likely).toFixed(1)}" r="2.6"><title>${esc(tip(r))}</title></circle>`).join('')}
+        ${pipe ? `<line class="tband-pipe" x1="${L}" x2="${W - Rr}" y1="${Yv(pipe).toFixed(1)}" y2="${Yv(pipe).toFixed(1)}"/><text class="tband-pipe-t" x="${L + 4}" y="${(Yv(pipe) - 5).toFixed(1)}">Unbuilt pipeline: ${fmtNum(Math.round(pipe))} units</text>` : ''}
+        <path class="tband-line tb-likely" d="${line('likely')}"><title>Likely: ${years.map(r => `${r.year} ${fmtNum(Math.round(r.likely))}`).join(', ')}</title></path>
+        ${marks.map(i => { const r = years[i], x = X(i).toFixed(1); return `<line class="tband-mark" x1="${x}" x2="${x}" y1="${Yv(r.likely).toFixed(1)}" y2="${H - B}"/><circle class="tband-pt" cx="${x}" cy="${Yv(r.likely).toFixed(1)}" r="4"><title>${esc(tip(r))}</title></circle><text class="tband-mark-t" x="${x}" y="${(Yv(r.likely) - 9).toFixed(1)}" text-anchor="middle">${r.year}: ≈${k(Math.round(r.likely / 1000) * 1000)}</text>`; }).join('')}
       </svg>
-      <ul class="grow-legend"><li><i class="gsw tband-sw-band"></i>Low–high range</li><li><i class="gsw tband-sw-likely"></i>Likely</li></ul>
+      <ul class="grow-legend"><li><i class="gsw tband-sw-likely"></i>Likely</li><li><i class="gsw tband-sw-band"></i>Low–high range</li><li><i class="gsw tband-sw-pipe"></i>Unbuilt units in the pipeline</li></ul>
       <div class="small muted">${estTag} statistical projection — not a prediction for any one site</div>
     </div>`;
   }
@@ -518,9 +538,9 @@
           { v: fig(2031, 'likely'), u: 'units', label: 'expected by 2031', ctx: `range ${fig(2031, 'low')}–${fig(2031, 'high')}` },
           { v: fig(2041, 'likely'), u: 'units', label: 'expected by 2041', ctx: `range ${fig(2041, 'low')}–${fig(2041, 'high')}` },
           { v: fmtNum(Math.round(unbuilt)), u: 'units', label: 'unbuilt in the pipeline', ctx: unbuilt ? `≈${Math.round(sumTo(2041, 'likely') / unbuilt * 100)}% expected by 2041` : '' },
-          { v: fmtNum(cal.nObs), u: 'events', label: 'calibration', ctx: `dated file events, cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}` },
+          { v: fmtNum(cal.nObs), u: 'events', label: 'the estimate learns from', ctx: `dated application and permit events, files from ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}` },
         ],
-        chart: items.length ? timingChartSVG(fc) : '',
+        chart: items.length ? timingChartSVG(fc, unbuilt) : '',
         lists: [
           // (the forecast pace; Servicing › Capacity puts every file on its own schedule, so its years can
         // differ: both are named)
@@ -535,7 +555,7 @@
     body.innerHTML = `
       ${hlP(head)}
       ${tiles}
-      ${items.length ? timingChartSVG(fc) : ''}
+      ${items.length ? timingChartSVG(fc, unbuilt) : ''}
       ${contribTable}
       ${calibTable}
       ${plantsTable}
@@ -548,7 +568,7 @@
     BANDS, COHORT_YEARS, MIN_N, FORECAST_YEARS,
     btypeOf, wilson, quantiles, calibrate, rowFor,
     projectSchedule, forecastBands, facilityBands, triggerRangeText,
-    observationsFromProjects, pipelineItems, renderTiming,
+    observationsFromProjects, pipelineItems, renderTiming, cumulative, yearTicks,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTiming = api;

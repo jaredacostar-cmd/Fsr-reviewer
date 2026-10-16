@@ -112,30 +112,60 @@
   }
   // One-line method / criteria / data-dates note, collapsed to a single line.
   const dcaInfo = body => `<details class="svc-notes"><summary>ⓘ Method, criteria &amp; data dates</summary><p class="small muted">${body}</p></details>`;
-  // Timing chart: capacity runs out vs online year for the top projects by build-out impact.
-  function dcaTimingChart(rows) {
+  // Bundle 5: a project's names. short: the plain name for a sentence or a row (no ID); pid: the DC
+  // project ID, shown on the row ("project 25-2945"), never inside a sentence; tag: the chart label,
+  // a short name and the ID ("G.E. Booth to 600 ML/d · 25-2945", "Feeder main 750 mm · 31-1199").
+  const KIND_SHORT = { primary: 'Trunk sewer', local: 'Local sewer', force: 'Force main', transmission: 'Transmission main', feeder: 'Feeder main' };
+  function projLabels(o) {
+    if (o.k) {
+      const kind = (DI && DI() && DI().DC_KIND && DI().DC_KIND[o.k] ? DI().DC_KIND[o.k][0] : KIND_SHORT[o.k]) || 'Main', mm = o.d ? ` ${o.d} mm` : '';
+      return { short: `${kind}${mm}`, pid: o.id || '', tag: `${KIND_SHORT[o.k] || kind}${mm}${o.id ? ` · ${o.id}` : ''}` };
+    }
+    if (o.plant) {
+      const pl = String(o.plant).replace(/\s+(WRRF|WWTP)\b.*$/, '');
+      return { short: `${o.plant}: expansion to ${o.mld} ML/d`, pid: o.id || '', tag: `${pl} to ${o.mld} ML/d${o.id ? ` · ${o.id}` : ''}` };
+    }
+    return { short: o.text || '', pid: '', tag: o.text || '' };
+  }
+  // A project is late when it comes online after the capacity it relieves runs out; close when it
+  // comes online in the two years before (the chart and the page lead with both).
+  const CLOSE_YEARS = 2;
+  const timingOf = r => (r.outY != null && r.y != null ? (r.outY < r.y ? 'late' : r.outY - r.y <= CLOSE_YEARS ? 'close' : 'ok') : 'ok');
+  // The chart's rows: the late projects, then the close ones (soonest run-out first), then the
+  // largest impact to fill up to n; the rest are counted ("N more on time").
+  function timingRows(list, n = 6) {
+    const rank = { late: 0, close: 1, ok: 2 }, yr = r => (r.outY == null ? 9999 : r.outY);
+    const lead = list.filter(r => timingOf(r) !== 'ok').sort((a, b) => rank[timingOf(a)] - rank[timingOf(b)] || yr(a) - yr(b) || b.bo - a.bo);
+    const rest = list.filter(r => timingOf(r) === 'ok').sort((a, b) => b.bo - a.bo);
+    const rows = [...lead, ...rest].slice(0, n);
+    return { rows, more: list.length - rows.length };
+  }
+  // Timing chart: capacity runs out vs online year, labelled by short name + ID at body size, with
+  // an "after <end>" column; drawn at its width (never scaled up).
+  function dcaTimingChart(list, n = 6) {
+    const { rows, more } = timingRows(list || [], n);
     if (!rows.length) return '';
-    const W = chartW(320, 760), L0 = Math.min(200, Math.round(W * 0.38)), R0 = 34, T0 = 20, RH = 24, B0 = 24, H = T0 + rows.length * RH + B0;
-    const x0 = MM().THIS_YEAR, x1 = SP().hz.end;
-    const x = y => L0 + (W - L0 - R0) * (Math.min(Math.max(y, x0), x1) - x0) / Math.max(1, x1 - x0);
+    const W = chartW(320, 760), L0 = Math.min(220, Math.round(W * 0.42)), R0 = 12, T0 = 12, RH = 26, B0 = 26, H = T0 + rows.length * RH + B0;
+    const x0 = MM().THIS_YEAR, x1 = SP().hz.end, AFTER = 4;
+    const x = y => L0 + (W - L0 - R0) * (Math.min(Math.max(y, x0), x1 + AFTER) - x0) / Math.max(1, x1 + AFTER - x0);
     const yOf = i => T0 + i * RH + RH / 2;
     const ticks = []; for (let y = x0; y <= x1; y += 5) ticks.push(y); if (ticks[ticks.length - 1] !== x1) ticks.push(x1);
-    const nMax = Math.max(12, Math.floor((L0 - 10) / 6.2)), short = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
-    return `<h3 class="sub-title">Project timing: capacity runs out vs online year</h3>
-    <svg class="dca-chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Capacity run-out year and online year for the top ${rows.length} DC projects by build-out impact">
-      ${ticks.map(y => `<line x1="${x(y).toFixed(1)}" x2="${x(y).toFixed(1)}" y1="${T0 - 8}" y2="${H - B0}" class="dca-grid"/><text x="${x(y).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}
+    const nMax = Math.max(14, Math.floor((L0 - 10) / 7)), cut = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
+    const col = r => (timingOf(r) === 'late' ? 'var(--cap-over)' : timingOf(r) === 'close' ? 'var(--cap-tight)' : 'var(--cap-room)');
+    const aft = x(x1 + AFTER / 2);
+    return `<h3 class="sub-title pnl-chart-t">When the capacity runs out vs when the project is in service <span class="pnl-chart-u">(year)</span></h3>
+    <svg class="dca-chart dca-tl" viewBox="0 0 ${W} ${H}" style="max-width:${W}px" role="img" aria-label="For ${rows.length} DC projects, late or close first: the year the capacity runs out and the year the project is in service">
+      ${ticks.map(y => `<line x1="${x(y).toFixed(1)}" x2="${x(y).toFixed(1)}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/><text x="${x(y).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}
+      <line x1="${x(x1 + 0.5).toFixed(1)}" x2="${x(x1 + 0.5).toFixed(1)}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid" stroke-dasharray="3 3"/><text x="${aft.toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">after ${x1}</text>
       ${rows.map((r, i) => {
-        const late = r.outY != null && r.y != null && r.outY < r.y;
-        const col = late ? 'var(--cap-over)' : 'var(--cap-room)';
-        const xo = r.outY == null ? x(x1) : x(r.outY), xn = r.y == null ? null : x(r.y), yc = yOf(i).toFixed(1);
-        return `<text x="${L0 - 8}" y="${(yOf(i) + 3).toFixed(1)}" class="dca-ax" text-anchor="end">${esc(short(r.name))}</text>`
-          + (xn == null ? '' : `<line x1="${Math.min(xo, xn).toFixed(1)}" x2="${Math.max(xo, xn).toFixed(1)}" y1="${yc}" y2="${yc}" style="stroke:${col};stroke-width:3;stroke-linecap:round;opacity:.5"/>`)
-          + `<circle cx="${xo.toFixed(1)}" cy="${yc}" r="4" style="fill:${col}"/>`
-          + (r.outY == null ? `<text x="${(xo + 8).toFixed(1)}" y="${(yOf(i) + 3).toFixed(1)}" class="dca-ax">after ${x1}</text>` : '')
-          + (xn == null ? '' : `<circle cx="${xn.toFixed(1)}" cy="${yc}" r="4.5" fill="none" style="stroke:${col};stroke-width:2"/>`);
+        const c = col(r), xo = r.outY == null ? aft : x(r.outY), xn = r.y == null ? null : x(r.y), yc = yOf(i).toFixed(1);
+        return `<text x="${L0 - 8}" y="${(yOf(i) + 4).toFixed(1)}" class="dca-lab" text-anchor="end"><title>${esc(r.name)}</title>${esc(cut(r.tag || r.name))}</text>`
+          + (xn == null ? '' : `<line x1="${Math.min(xo, xn).toFixed(1)}" x2="${Math.max(xo, xn).toFixed(1)}" y1="${yc}" y2="${yc}" style="stroke:${c};stroke-width:3;stroke-linecap:round;opacity:.5"/>`)
+          + `<circle cx="${xo.toFixed(1)}" cy="${yc}" r="4.5" style="fill:${c}"/>`
+          + (xn == null ? '' : `<circle cx="${xn.toFixed(1)}" cy="${yc}" r="5" fill="none" style="stroke:${c};stroke-width:2"/>`);
       }).join('')}
     </svg>
-    <p class="small muted">● capacity runs out ≈year · ○ online year — <span style="color:var(--cap-over)">red</span> screens late (capacity runs out before it is in service).</p>`;
+    <p class="small muted dca-key">● capacity runs out · ○ in service · <span class="t-over">red: in service after it runs out</span> · <span class="t-tight">amber: in service within ${CLOSE_YEARS} years of it</span>${more > 0 ? ` · <strong>${more} more</strong> in time` : ''}</p>`;
   }
   // Recommendations chart: growth relying on each project by the window's last year (top 10).
   function dcaRecChart(items, end) {
@@ -253,12 +283,13 @@
     const proj = (key, init) => P.get(key) || P.set(key, { key, cons: [], conn: [], ...init }).get(key);
     for (const c of cons) for (const r of c.relief) {
       const key = MP().reliefKey(r); if (!key || !r.y) continue;
-      const pr = proj(key, { r, y: r.y, sys: c.sys, name: r.ln ? `${DI().DC_KIND[r.ln.k][0]}${r.ln.d ? ` ${r.ln.d} mm` : ''} · ${r.ln.p || r.ln.c}` : r.kind === 'step' ? `${c.name}: expansion to ${r.step.mld} ML/d${r.step.proj ? ` · ${r.step.proj}` : ''}` : r.text.replace(/^\S+\s/, ''), status: r.ln ? r.ln.s : '' });
+      const pr = proj(key, { r, y: r.y, sys: c.sys, name: r.ln ? `${DI().DC_KIND[r.ln.k][0]}${r.ln.d ? ` ${r.ln.d} mm` : ''} · ${r.ln.p || r.ln.c}` : r.kind === 'step' ? `${c.name}: expansion to ${r.step.mld} ML/d${r.step.proj ? ` · ${r.step.proj}` : ''}` : r.text.replace(/^\S+\s/, ''), status: r.ln ? r.ln.s : '',
+        ...projLabels(r.ln ? { k: r.ln.k, d: r.ln.d, id: r.ln.p || r.ln.c } : r.kind === 'step' ? { plant: c.name, mld: r.step.mld, id: r.step.proj } : { text: r.text.replace(/^\S+\s/, '') }) });
       pr.y = Math.min(pr.y, r.y); if (!pr.cons.includes(c)) pr.cons.push(c);
     }
     for (const [key, rows] of conn) {
       const [, sys, id] = key.split(':'), ln = App().state.dcInfra[sys].lines.filter(x => (x.p || x.c) === id).sort((a, b) => (a.y || 9999) - (b.y || 9999))[0]; if (!ln) continue;
-      const pr = proj(key, { r: MP().lineRelief(ln), y: ln.y || null, sys: sys === 'water' ? 'water' : 'ww', name: `${DI().DC_KIND[ln.k][0]}${ln.d ? ` ${ln.d} mm` : ''} · ${id}`, status: ln.s });
+      const pr = proj(key, { r: MP().lineRelief(ln), y: ln.y || null, sys: sys === 'water' ? 'water' : 'ww', name: `${DI().DC_KIND[ln.k][0]}${ln.d ? ` ${ln.d} mm` : ''} · ${id}`, status: ln.s, ...projLabels({ k: ln.k, d: ln.d, id }) });
       pr.conn = rows;
     }
     // Base (every project as scheduled) and each project cancelled, by year and at build-out.
@@ -343,7 +374,7 @@
     DCB,
     dcaMergeRecs,
     dcaRecRow, dcaCurve,
-    dcaTimingChart,
+    dcaTimingChart, projLabels, timingOf, timingRows, CLOSE_YEARS,
     dcaRecChart,
     dcaCurveChart,
     dcaChart,

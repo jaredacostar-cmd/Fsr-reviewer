@@ -109,7 +109,7 @@
         return need.length ? `Check ${need.join(' and ')}: the screen finds a shortfall or an open question there${c}.` : `The screen finds no servicing shortfall for this site${c}.`;
       })(),
       figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water max day', 'Peel design criteria'), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater peak wet', cb.wastewater.infiltration > 0 ? esc(D.iiText(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I')],
-      chart: (() => { const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null; return k && LB() ? `<p class="small pnl-chart-t">${esc(plant)}, the plant it drains to: existing, built, committed and proposed against rated capacity</p>${LB().capacityBarHTML(k, { small: true })}` : ''; })(),
+      chart: (() => { const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null; return k && LB() ? `<p class="small pnl-chart-t">${esc(plant)}, the plant it drains to: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${LB().capacityBarHTML(k, { small: true })}` : ''; })(),
       lists: [
         { title: 'Servicing', rows, total: rows.length },
         { title: 'Timing', rows: timing, total: timing.length },
@@ -335,7 +335,7 @@
         { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: [since(e.population, pre.people, x => fmtNum(roundPop(x))), lyTiles.people || ''].filter(Boolean).join(' · ') },
         { v: fmtNum(roundPop(e.employment.jobs)), u: 'jobs', label: 'on development sites', ctx: '' },
       ],
-      chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed against rated capacity</p>${capacityBarsHTML(capList)}` : '',
+      chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${capacityBarsHTML(capList)}` : '',
       lists: [
         { title: 'Needs attention', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('limit', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: ranked.slice(0, 5).map(SC.listRow), total: ranked.length, seeAll: { 'data-at': 'svc:capacity' } },
         { title: 'This week', rows: week, total: week.length, seeAll: { 'data-full-table': 'overview' } },   // (the panel shows 5; Home and This week count them all)

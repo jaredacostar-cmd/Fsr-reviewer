@@ -224,12 +224,12 @@
     const segs = growth.map(k => ({ layer: k, value: u[k], est: Math.min(u[k], t.estimatedBy[k] || 0) }));
     const bt = Ly.byType(set), n0 = v => fmtNum(Math.round(v));
     const rows = D.UNIT_TYPES.filter(ty => growth.some(k => bt[ty.key][k] >= 0.5)).map(ty => `<tr><td>${esc(ty.label)}</td>${growth.map(k => `<td class="n">${n0(bt[ty.key][k])}</td>`).join('')}</tr>`).join('');
-    return `<h3 class="sub-title" data-info="growth-layers">By stage <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
+    return `<h3 class="sub-title pnl-chart-t" data-info="growth-layers">Homes by stage <span class="pnl-chart-u">(dwellings)</span></h3>
       ${LB.barHTML({ segments: segs })}
       ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
       ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Pre-application: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}
-      ${u.existing > 0 ? `<p class="small muted">${n0(u.existing)} more on these sites were completed before census day (in the census already, Existing).</p>` : ''}
-      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k, true)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
+      ${census ? `<p class="small muted">On ${n0(census)} dwellings on the system at the ${bc.year} census.${u.existing > 0 ? ` ${n0(u.existing)} more on these sites were completed before census day and are in it already.` : ''}</p>` : u.existing > 0 ? `<p class="small muted">${n0(u.existing)} more on these sites were completed before census day and are in the census already.</p>` : ''}
+      <details class="see-all"><summary>By dwelling type and stage</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k, true)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];

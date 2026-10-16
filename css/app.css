@@ -3223,3 +3223,14 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .gl-list dt { font-weight: 600; }
 .gl-list dd { margin: 0; color: var(--text-secondary); }
 @media (max-width: 700px) { .gl-list > div { grid-template-columns: 1fr; gap: 2px; } }
+/* Charts: a title with its unit; the DC timing chart's labels at body size */
+.pnl-chart-u { font-weight: 400; color: var(--text-muted); }
+.dca-chart .dca-lab { fill: var(--text-primary); font-size: var(--fs-2); }
+.dca-tl .dca-ax { font-size: var(--fs-2); }
+.dca-key .t-over { color: var(--cap-over); }
+.dca-key .t-tight { color: var(--cap-tight); }
+/* Growth › Forecast: cumulative against the pipeline, 2031 and 2041 marked */
+.tband-pipe { stroke: var(--text-secondary); stroke-width: 1.5; stroke-dasharray: 6 4; }
+.tband-pipe-t, .tband-mark-t { font-size: var(--fs-2); fill: var(--text-primary); }
+.tband-mark { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 3; }
+.tband-sw-pipe { background: none; border-top: 2px dashed var(--text-secondary); height: 0 !important; margin-top: 5px; }

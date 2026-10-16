@@ -274,7 +274,7 @@
         identity: `${esc(KIND_LABEL[s.kind])}${k ? ` · ${k.firm != null ? 'firm' : 'rated'} ${k.unit === 'L/s' ? `${fmtNum(Math.round(k.cap))} L/s` : capTxt(k.cap, k.cap)}` : ''} · ${fmtNum(set.length)} developments in this scope` },
       answer: h.hl || `<strong>${esc(s.title)}</strong>`,
       figures: (h.figs || []).slice(0, 4).map(f => ({ ...f, tone: null })),
-      chart: k && LB ? `<p class="small pnl-chart-t">Existing, built, committed and proposed against ${k.firm != null ? 'firm' : 'rated'} capacity</p>${LB.capacityBarHTML(k)}${LB.legendHTML([{ layer: 'existing' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over'])}` : '',
+      chart: k && LB ? `<p class="small pnl-chart-t">Existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${k.firm != null ? 'firm' : 'rated'} capacity)</span></p>${LB.capacityBarHTML(k)}${LB.legendHTML([{ layer: 'existing' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over'])}` : '',
       lists: [
         ...(relief.length ? [{ title: 'Relief', rows: relief, total: relief.length }] : []),
         { title: 'What is driving it', rows: rows.slice(0, 5).map(dev), total: rows.length, seeAll: { 'data-full-table': 'overview' } },
