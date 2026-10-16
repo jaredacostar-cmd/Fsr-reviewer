@@ -170,6 +170,19 @@ test('Review an FSR at a site: the cross-check is an open fold of the Servicing 
   assert.match(f, /function mount\(box, p\) \{[\s\S]*?if \(_last && _last\.key === p\.key && _drafts\[p\.key\]\) runCheck\(box\);/);
 });
 
+test('picking a chip closes the map\u2019s Layers panel; the full map gets it back as it was', () => {
+  const { W: B, nodes } = loadBrowser(AREA);
+  const panel = { open: true };
+  nodes['.map-opts .mo-panel'] = panel;
+  B.go('tight'); assert.equal(panel.open, false, 'closed by the chip');
+  panel.open = true; B.go('growth'); assert.equal(panel.open, false, 'each chip closes it');
+  B.setMode('full'); assert.equal(panel.open, true, 'reopened: it was open before the workspace');
+  // Closed before the workspace: it stays closed in the full map.
+  panel.open = false; B.go('pipes'); B.setMode('full'); assert.equal(panel.open, false);
+  // Home is not the full map: the panel is left as it is until the full map opens.
+  panel.open = true; B.go('tight'); B.setMode('home'); assert.equal(panel.open, false);
+});
+
 test('Check a site: Find → Result → Output in the header once the site is open', () => {
   const { W: B, window } = loadBrowser(AREA);
   B.go('site');

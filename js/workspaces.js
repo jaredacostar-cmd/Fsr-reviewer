@@ -114,7 +114,7 @@
     const home = $('#home'); if (home) home.hidden = m !== 'home';
     const bar = $('#ws-bar'); if (bar) bar.hidden = m !== 'ws';
     placeSearch();
-    if (m !== 'ws') { cur = null; pipesLayer(false); }
+    if (m !== 'ws') { cur = null; pipesLayer(false); if (m === 'full') unfoldLayers(); }
     renderChips();
     if (m === 'home') renderHome();
     if (root.PeelDataTab && root.PeelDataTab.fixMap) setTimeout(() => root.PeelDataTab.fixMap(), 50);
@@ -140,6 +140,7 @@
     }
     const MA = root.PeelMapAnalysis; if (MA && MA.setMapView && MA.currentView && MA.currentView() !== pl.view) MA.setMapView(pl.view);
     const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); }
+    foldLayers();
     pipesLayer(id === 'pipes');
     // Review an FSR at a site: the cross-check is an open fold of the Servicing panel (fsrSpec), so the
     // site bar's own copy closes (one form on screen).
@@ -151,6 +152,20 @@
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
     // A site workspace without a site: the search box is the first step.
     if (pl.scope === 'find' && !o.quiet) { const s = $('#f-search'); if (s) try { s.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
+  }
+  // The map's Layers panel closes when a chip is picked (the chip has set the layers); the full map gets
+  // it back as it was before the workspace.
+  let layersWasOpen = null;
+  const layersPanel = () => document.querySelector('.map-opts .mo-panel');
+  function foldLayers() {
+    const el = layersPanel(); if (!el) return;
+    if (layersWasOpen == null) layersWasOpen = !!el.open;
+    el.open = false;
+  }
+  function unfoldLayers() {
+    const el = layersPanel();
+    if (el && layersWasOpen) el.open = true;
+    layersWasOpen = null;
   }
   // This week's count (the chip's badge): the Peel Overview's own list.
   function weekRows() { const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
