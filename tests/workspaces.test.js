@@ -105,7 +105,7 @@ function loadBrowser(areaSpec) {
   const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
   vm.runInNewContext(src('js/workspaces.js'), ctx);
-  return { W: window.PeelWorkspaces, PN: window.PeelPanel, nodes };
+  return { W: window.PeelWorkspaces, PN: window.PeelPanel, nodes, window };
 }
 const AREA = {
   head: { identity: 'Peel · all of Peel', status: { tone: 'over', text: '9 over' } },
@@ -138,6 +138,16 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   B.go('site');
   assert.equal(B.override('overview:', 'area').head.name, 'Check a site');
   assert.equal(B.override('overview:', 'dev:x'), null);
+});
+
+test('Check a site: Find → Result → Output in the header once the site is open', () => {
+  const { W: B, window } = loadBrowser(AREA);
+  B.go('site');
+  assert.match(B.srcLine('overview:'), /^<p class="pnl-src small"><span>Check a site · from Overview<\/span><button type="button" class="btn small link" data-ws-full/);
+  window.DevScope = { current: () => ({ key: 'x' }), close() {} };
+  assert.match(B.srcLine('overview:'), /Check a site · from Overview <small class="pnl-steps">✓ Find › <b>Result<\/b> › Output: Servicing memo<\/small>/);
+  B.setMode('full');
+  assert.equal(B.srcLine('overview:'), '', 'the full map has no workspace line');
 });
 
 test('3. Home links open the matching chip', () => {

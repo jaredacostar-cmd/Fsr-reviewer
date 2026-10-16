@@ -2858,6 +2858,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 /* The panel header's source line: "Getting tight · from Servicing › Capacity", Open full map. */
 .pnl-src { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-1); color: var(--text-muted); }
 .pnl-src > span { font-weight: 600; color: var(--pnl-stage, var(--text-secondary)); }
+.pnl-steps { display: block; font-weight: 400; color: var(--text-muted); }
 .tb-home { flex: 0 0 auto; }
 /* Home: below the top bar, over the map and panels. */
 .home { position: fixed; top: var(--top-h, 0px); left: 0; right: 0; bottom: 0; z-index: 1150; background: var(--surface-0); overflow: auto; }

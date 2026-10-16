@@ -160,7 +160,10 @@
   // The header line on every panel in a workspace: its source and "Open full map".
   function srcLine(key) {
     if (!isWs() || !cur) return '';
-    return `<p class="pnl-src small"><span>${esc(sourceText(cur, key))}</span><button type="button" class="btn small link" data-ws-full title="The same scope, filters and scenario with every tool">Open full map →</button></p>`;
+    // Check a site / Review an FSR, once the site is open: the guided steps, Find done.
+    const site = (cur === 'site' || cur === 'fsr') && root.DevScope && root.DevScope.current && root.DevScope.current();
+    const steps = site ? ` <small class="pnl-steps">✓ Find › <b>Result</b> › Output: ${cur === 'fsr' ? 'the cross-check notes' : 'Servicing memo'}</small>` : '';
+    return `<p class="pnl-src small"><span>${esc(sourceText(cur, key))}${steps}</span><button type="button" class="btn small link" data-ws-full title="The same scope, filters and scenario with every tool">Open full map →</button></p>`;
   }
   // ---- A workspace's own view of a sub-view --------------------------------------------------------
   function override(key, scope) {
