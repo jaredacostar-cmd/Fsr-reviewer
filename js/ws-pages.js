@@ -292,6 +292,20 @@
   }
 
   // ---- Home --------------------------------------------------------------------------------------
+  function homeFigures(rows, ready, week) {
+    const over = rows.filter(r => r.pctBo >= 100);
+    const yr = r => (r.limit.y === 'today' ? 0 : r.limit.y);
+    const trig = rows.filter(r => r.kind === 'plant' && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y))[0];
+    const dc = specOf('dca:timing', areaScope), late = dc && (dc.figures || []).find(f => f && f.label === 'late');
+    const nW = week && week.rows ? week.rows.length : 0;
+    const go = (page, title) => ({ 'data-ws-page': page, title });
+    return [
+      ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `of ${fmtNum(rows.length)} facilities · Servicing capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing capacity') },
+      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first treatment trigger', ctx: `${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') } : null,
+      late ? { v: late.v, u: '', label: 'DC projects late', ctx: 'in service after the capacity runs out · DC projects →', tone: +late.v ? 'over' : null, attrs: go('projects', 'DC projects') } : null,
+      { v: fmtNum(nW), u: nW === 1 ? 'change' : 'changes', label: 'this week', ctx: 'files moved, new files, capital and EA dates · This week →', attrs: go('week', 'This week') },
+    ].filter(Boolean);
+  }
   function home() {
     const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('home', 'Loading the briefing…');
     // The servicing model loads after the developments: until then Needs attention keeps its place with
@@ -304,7 +318,10 @@
     // Home's rows open the matching workspace page.
     const toPage = (ws, l) => (l ? { ...l, rows: l.rows.map(r => ({ ...r, attrs: { 'data-ws-page': ws, title: (r.attrs || {}).title } })), see: { 'data-ws-page': ws } } : null);
     return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
-      figures: a.figures.map(f => ({ ...f, attrs: { 'data-ws-page': 'growth', title: 'Growth in an area' } })),
+      // Bundle 6: Home's figures are the other pages' answers, each opening its page (the pipeline's
+      // totals stay in the answer, with Growth in an area a tap away).
+      top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
+      figures: homeFigures(rows, ready, week),
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map (all tools)', attrs: { 'data-ws-full': '' } }] };

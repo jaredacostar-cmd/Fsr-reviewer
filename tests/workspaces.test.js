@@ -127,10 +127,13 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   const { W: B, PN, nodes } = loadBrowser(AREA);
   B.setMode('home');
   const h = nodes['#home'].innerHTML;
-  // The four figures are the Overview panel's own (value, unit, label, context), each opening Growth.
+  // Bundle 6: the figures are the other pages' answers, each opening its page; the Overview's pipeline
+  // totals stay in the answer (the same sentence), with Growth in an area a tap away.
   void PN;
-  for (const f of AREA.figures) assert.ok(h.includes(`<div class="pnl-fig" data-ws-page="growth" title="Growth in an area" role="button" tabindex="0"><b>${f.v}</b><span class="pnl-u">${f.u}</span><span class="pnl-l">${f.label}</span>${f.ctx ? `<small>${f.ctx}</small>` : ''}</div>`), `Home figure = Overview figure: ${f.label}`);
   assert.ok(h.includes(AREA.answer), 'the headline sentence');
+  assert.match(h, /<div class="pnl-fig" data-ws-page="week" title="This week" role="button" tabindex="0"><b>2<\/b><span class="pnl-u">changes<\/span><span class="pnl-l">this week<\/span>/, 'This week: the same rows as its page');
+  assert.match(h, /data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>/);
+  assert.match(h, /<p class="home-start small"><strong>Start here:<\/strong>/);
   assert.match(h, /9 over/);
   // This week in its workspace: the Overview's own rows, every one.
   B.go('week');
@@ -230,14 +233,15 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /<button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong>/);
   for (const w of B.WS) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
-  // Needs attention → the Servicing capacity page; This week → the This week page; the figures → Growth in
-  // an area; the map → Servicing capacity.
+  // Needs attention → the Servicing capacity page; This week → the This week page; the figures → their
+  // pages (bundle 6); the map → Servicing capacity.
   assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">G\.E\. Booth/);
   assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">West Brampton/);
   assert.match(h, /<li class="pnl-row" data-ws-page="week" tabindex="0" role="button"><small>New: 1 Main St/);
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
   assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
-  assert.match(h, /<div class="pnl-fig" data-ws-page="growth"/);
+  assert.match(h, /<div class="pnl-fig" data-ws-page="tight"/);
+  assert.match(h, /data-ws-page="growth">Growth in an area →<\/button>/);
   assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);

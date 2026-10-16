@@ -3343,3 +3343,4 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .pnl-stepper b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); font-size: 10px; margin-right: 2px; }
 .pnl-stepper .on { color: var(--text-primary); }
 .pnl-stepper .on b { background: var(--accent); border-color: var(--accent); color: var(--surface-0); }
+.home-start { margin: 0 0 var(--space-2); color: var(--text-secondary); }
