@@ -97,10 +97,21 @@
       foot: { primary: { label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } } },
     };
   }
+  // Failing checks as one caveat line each (Home, Stage 4): sources due for a refresh, permit counts
+  // off the Region's figures, data checks flagged. Each opens the Records sub-view that explains it.
+  function caveats() {
+    const out = [], fr = DU().freshness ? DU().freshness() : [], due = fr.filter(r => r.st === 'due' || r.st === 'stale');
+    if (due.length) out.push({ text: `${due.length} data source${due.length === 1 ? ' is' : 's are'} due for a refresh: ${due.map(r => r.name).join(', ')}.`, at: 'records:sources' });
+    const pc = root.PeelCensusView && root.PeelCensusView.permitCheck ? root.PeelCensusView.permitCheck() : null, pFail = pc && pc.rows ? pc.rows.filter(r => !r.pass) : [];
+    if (pFail.length) out.push({ text: `Permit counts differ from Region figures for ${pFail.map(r => r.m).join(' and ')}.`, at: 'records:checks' });
+    const a = App().state.audit, fails = a ? a.checks.filter(c => c.value) : [];
+    if (fails.length) out.push({ text: `${fails.length} data check${fails.length === 1 ? '' : 's'} flagged (${fails.map(c => c.label).join(', ')}).`, at: 'records:checks' });
+    return out;
+  }
   // A development's files: the tree, the history and the source records are the full table.
   function filesPanelSpec(p) {
     const PN = root.PeelPanel, PH = root.PeelPhases, files = (p.records || []).filter(r => r.kind === 'application'), permits = (p.records || []).filter(r => r.kind === 'permit');
-    const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' }) : '');
+    const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '');
     const sorted = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
     return {
       fullTitle: `${p.title} · files, history and source records`,
@@ -114,7 +125,7 @@
     };
   }
 
-  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML };
+  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelRecordsTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

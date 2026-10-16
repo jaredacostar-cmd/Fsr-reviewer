@@ -20,7 +20,7 @@
     const growth = wMax(zsum.approved + zsum.proposed, (zsum.japproved || 0) + (zsum.jproposed || 0));
     const tiles = `<div class="ov-tiles">${wTile(fmt1(boTot), 'ML/d', 'maximum day at build-out', 'all pressure zones')}`
       + `${wTile(fmt1(phTot), 'ML/d', 'peak hour at build-out')}`
-      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + proposed', 'maximum day growth')}`
+      + `${wTile(`+${fmt1(growth)}`, 'ML/d', 'approved + in review', 'maximum day growth')}`
       + `${sorted[0] ? wTile(esc(sorted[0].r.a.name.replace('Pressure zone ', 'Zone ')), '', 'adds the most demand', `+${fmt1(Math.max(0, sorted[0].bo - wMax(sorted[0].r.l.census, 0)))} ML/d max day`) : ''}</div>`;
     const top10 = sorted.slice(0, 10), mx = Math.max(...top10.map(t => t.bo), 1e-9);
     const chart = `<div data-info="pressure-zone" role="img" aria-label="Maximum day demand by pressure zone at build-out">`

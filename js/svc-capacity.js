@@ -39,7 +39,8 @@
     if (r.kind === 'plant' || r.kind === 'wplant') { const lim = 0.9 * r.cap, v = r.buildout - lim; return out(v, lim > 0 ? v / lim : 0, `${word(v)} the 90% trigger at build-out`); }
     if (r.kind === 'ps' || r.kind === 'pipe') { const v = r.buildout - r.cap; return out(v, r.cap > 0 ? v / r.cap : 0, `${word(v)} ${r.capWord} capacity at build-out`); }
     if (r.kind === 'storage') {
-      const when = r.reliefY ? `before relief (${r.reliefY})` : 'by build-out (no relief listed)';
+      const next = r.reliefNext !== undefined ? r.reliefNext : r.reliefY;   // (a row without reliefNext: its reliefY is the next)
+      const when = next ? `before relief (${next})` : r.reliefY ? `by build-out (relief listed for ${r.reliefY})` : 'by build-out (no relief listed)';
       if (r.shortBefore > 0) return out(r.shortBefore, r.cap > 0 ? r.shortBefore / r.cap : 0, `short of required storage ${when}`);
       const v = r.buildout - r.cap; return { ...out(v, r.cap > 0 ? v / r.cap : 0, v > 0 ? `short of required storage by build-out (relief ${r.reliefY || 'not listed'})` : 'of storage to spare at build-out'), short: false };
     }
@@ -86,6 +87,8 @@
     const cross = t => { const i = s.v.findIndex(v => v >= t); return i < 0 ? null : i === 0 ? 'today' : ys[i]; };
     return { end, at: PICK.filter(y => ys.includes(y)).map(y => [y, s.v[ys.indexOf(y)]]), c80: cross(80), c90: cross(90), c100: cross(100), exp: s.steps && s.steps.length ? s.steps.map(x => `${x.mld} ML/d (${x.year})`).join(' → ') : '' };
   }
+  // The first planned relief year of a Master Plan constraint (null: none listed).
+  const reliefYearOf = c => (c && c.relief ? c.relief.map(r => r.y).filter(Boolean).sort((a, b) => a - b)[0] || null : null);
   function collect() {
     const A = App(); if (!A || !A.state.svcModel || !MP() || !Cap()) return null;
     const rows = [], wwB = SvcTab().wwBasis(), flowW = SvcTab().wwFlowLabel();
@@ -94,7 +97,7 @@
       const k = Cap().of(`plant:${pl}`), c = MP().cached(`plant:${pl}`, () => MP().plantCons(pl)); if (!k || !c) continue;
       rows.push({ id: `plant:${pl}`, ss: `plant:${pl}`, sys: 'ww', kind: 'plant', name: (SD().PLANT_SHORT && SD().PLANT_SHORT[pl]) || k.name, sub: 'treatment plant',
         compared: `${flowW} vs rated capacity`, basis: wwB, unit: 'ML/d', cap: k.cap, capWord: 'rated', existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout,
-        limit: { y: c.out, what: '90% trigger', after: c.outAfter }, horizon: hzPlant(pl) || hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c) });
+        limit: { y: c.out, what: '90% trigger', after: c.outAfter }, horizon: hzPlant(pl) || hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
     }
     // Water treatment: South Peel (lake-based) and the Caledon well systems, maximum day against rated.
     const R = A.state.reports;
@@ -105,7 +108,7 @@
         const k = Cap().of(`wsys:${id}`), c = MP().cached(ck, () => MP().waterPlantCons(zone)); if (!k || !c) continue;
         rows.push({ id: `wsys:${id}`, ss: id === 'southPeel' ? 'wsys:lake' : null, sys: 'water', kind: 'wplant', name: id === 'southPeel' ? 'South Peel water treatment' : k.name, sub: id === 'southPeel' ? 'A.P. Kennedy + Lorne Park' : 'wells',
           compared: 'Maximum day vs rated capacity', basis: 'metered', unit: 'ML/d', cap: k.cap, capWord: 'rated', existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout,
-          limit: { y: c.out, what: '90% trigger' }, horizon: hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c) });
+          limit: { y: c.out, what: '90% trigger' }, horizon: hzFromQ(c.q, k.cap), small: U.isSmallSystem ? U.isSmallSystem(k.cap) : false, relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
       }
     }
     // Pumping into each pressure zone: maximum day against firm pumping (the water tab's rows).
@@ -128,19 +131,21 @@
       for (const s of mp.storage) {
         const rt = WTab().storageRoomTrigger(ys, s.required, s.available), av = s.available[s.available.length - 1];
         const reqNow = interp(s.required, now), reqEnd = s.required[s.required.length - 1];
-        const sc = stc.find(x => x.name === s.facility), reliefY = sc ? (sc.relief.map(x => x.y).filter(y => y && y >= now).sort((a, b) => a - b)[0] || null) : null;
-        let shortBefore = 0; for (let y = now; y <= (reliefY ? reliefY - 1 : ys[ys.length - 1]); y++) shortBefore = Math.max(shortBefore, interp(s.required, y) - interp(s.available, y));
+        // (reliefY: the first relief the Master Plan lists, as for plants and stations; the shortfall runs to
+        // the next relief still to come)
+        const sc = stc.find(x => x.name === s.facility), reliefY = sc ? reliefYearOf(sc) : null, reliefNext = sc ? (sc.relief.map(x => x.y).filter(y => y && y >= now).sort((a, b) => a - b)[0] || null) : null;
+        let shortBefore = 0; for (let y = now; y <= (reliefNext ? reliefNext - 1 : ys[ys.length - 1]); y++) shortBefore = Math.max(shortBefore, interp(s.required, y) - interp(s.available, y));
         rows.push({ id: `stor:${s.facility}`, sys: 'water', kind: 'storage', name: s.facility, sub: 'storage', compared: 'Required vs available storage', basis: 'mp', unit: 'ML', cap: av, capWord: 'available',
           existing: reqNow, built: 0, committed: reqNow, buildout: reqEnd, limit: { y: rt.c100, what: 'required > available' },
           horizon: { end: ys[ys.length - 1], at: PICK.filter(y => y <= ys[ys.length - 1]).map(y => [y, interp(s.required, y) / (interp(s.available, y) || av) * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 },
-          reliefY, shortBefore, relief: sc ? MP().consStatus(sc) : null });
+          reliefY, reliefNext, shortBefore, relief: sc ? MP().consStatus(sc) : null });
       }
     }
     // Wastewater pumping stations: peak wet weather flow against firm capacity (design criteria).
     for (const a of A.state.servicing.psAreas || []) {
       const k = Cap().of(`ps:${a.id}`), c = MP().cached(`ps:${a.id}`, () => MP().psCons(a)); if (!k || !c) continue;
-      rows.push({ id: `ps:${a.id}`, ss: `ps:${a.id}`, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
-        existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c) });
+      rows.push({ id: `ps:${a.id}`, ss: a.id, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
+        existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
     }
     // Tightest sewers: only while pipe-by-pipe results are on (off for now: left to the Region's model).
     if (U.PIPE_RESULTS && MM().SEW.data && root.PeelTightPipes) {
@@ -149,7 +154,7 @@
       for (const x of root.PeelTightPipes.topTightPipes(entries, 5)) {
         const c = MP().cached(`pipe:${x.i}`, () => MP().pipeCons(x.i)); if (!c || c.check) continue;
         rows.push({ id: `pipe:${x.i}`, sys: 'ww', kind: 'pipe', name: c.name, sub: c.sub, compared: 'Peak wet weather vs full-pipe capacity', basis: 'design', unit: 'L/s', cap: c.cap, capWord: 'full-pipe',
-          existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap), relief: MP().consStatus(c) });
+          existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
       }
     }
     return rows.map(derive);
@@ -192,9 +197,9 @@
     const hl = `<strong>${rows.length}</strong> facilities, water and wastewater together${nOver ? `: <strong>${nOver}</strong> over 100% of capacity at build-out` : ': none over 100% at build-out'}${soon && soon.limit.y != null ? `; the soonest limit is <strong>${esc(soon.name)}</strong> (${yTxt(soon.limit.y, SP().hz.end)}, ${esc(soon.limit.what)})` : ''}.`;
     return `${U.hlP ? U.hlP(hl) : `<p>${hl}</p>`}
       <div class="svc-head"><div class="svc-switches"><div class="svc-switch" role="group" aria-label="Sort"><span class="muted small">Sort</span>${sortBtn('limit', 'Limit year', 'Soonest limit year first')}${sortBtn('impact', 'Impact', 'Most loaded at build-out first (% of capacity)')}</div>${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
-      <table class="dt svc-table cap-all" data-info="servicing-capacity"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th class="n">Committed</th><th class="n">Build-out</th><th class="n">Limit year</th><th class="n">Room / over<br><small>at build-out, to 100%</small></th><th class="n xc">Capacity</th><th class="n xc">Today</th><th class="n xc">Committed</th><th class="n xc">Build-out</th></tr></thead>
+      <table class="dt svc-table cap-all" data-info="servicing-capacity"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">Limit year</th><th class="n">Room / over<br><small>at build-out, to 100%</small></th><th class="n xc">Capacity</th><th class="n xc">Today</th><th class="n xc">With approved</th><th class="n xc">Build-out</th></tr></thead>
       <tbody>${sortRows(rows, st.sort, MM().THIS_YEAR).map(rowHTML).join('')}</tbody></table>
-      ${LB() ? LB().legendHTML([{ layer: 'existing', text: 'Existing (basis on each row)' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) : ''}
+      ${LB() ? LB().legendHTML([{ layer: 'existing', text: 'On the system (basis on each row)' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) : ''}
       <p class="small muted">Committed = existing + built + committed as a % of the row's capacity (rated for treatment, firm for pumping, available for storage); build-out adds the proposed applications. The limit year is when the row reaches its limit: the 2020 Master Plan's 90% expansion trigger for treatment, 100% of firm capacity for pumping, required above available for storage. ▸ opens the horizon years under a row.${U.PIPE_RESULTS ? '' : ' Sewer pipes are not in this table: pipe-by-pipe results are left to the Region’s model.'} Charts, the plant horizon assumptions and method notes: <button type="button" class="btn small link" data-cap-detail>Charts and method</button>.</p>`;
   }
   // ---- The standard panel (Stage 3): Servicing › Capacity ------------------------------------------
@@ -202,7 +207,8 @@
   const P = () => root.PeelPanel;
   // Relief status (js/masterplan.js consStatus): relief arrives after the limit, in time, or none needed.
   const RELIEF = { gap: ['Relief after the limit', 'over'], planned: ['Relief in time', 'room'], ok: ['Room', 'room'], check: ['Check the data', 'tight'] };
-  const reliefOf = r => (r.relief && RELIEF[r.relief] ? RELIEF[r.relief] : r.pctBo >= 100 ? ['No relief listed', 'over'] : ['Room', 'room']);
+  // ('gap' covers both a relief planned after the limit and none listed: the row says which)
+  const reliefOf = r => (r.relief === 'gap' && !r.reliefY ? ['No relief listed', 'over'] : r.relief && RELIEF[r.relief] ? RELIEF[r.relief] : r.pctBo >= 100 ? ['No relief listed', 'over'] : ['Room', 'room']);
   const KIND = { plant: 'Plant', wplant: 'Water treatment', pump: 'Pumping into the zone', storage: 'Storage', ps: 'Pumping station', pipe: 'Sewer' };
   // One facility as a list row (Capacity, and the Overview's Needs attention): name and limit year, the
   // stacked bar, committed → build-out and its relief, the impact line.
@@ -211,7 +217,7 @@
     const t = P().toneOf(r.pctBo), [rel, relT] = reliefOf(r), ly = r.limit.y, lyT = ly == null ? 'room' : ly === 'today' || ly <= now + 5 ? 'over' : 'tight';
     return { tone: t, attrs: r.ss ? { 'data-ss': r.ss, title: `Open ${r.name} as a scope` } : { 'data-full-table': 'svc:capacity', title: 'Open the full table' },
       html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}</span><span class="pnl-r-year t-${lyT}">${yTxt(ly, r.horizon ? r.horizon.end : end)}</span></div>
-        ${barOf(r)}<div class="pnl-r-meta"><span>${KIND[r.kind] || r.system} · ${pctTxt(r.pctCom)} committed → ${pctTxt(r.pctBo)} build-out</span><span class="t-${relT}">${esc(rel)}</span></div>
+        ${barOf(r)}<div class="pnl-r-meta"><span>${KIND[r.kind] || r.system} · ${pctTxt(r.pctCom)} with approved → ${pctTxt(r.pctBo)} at build-out</span><span class="t-${relT}">${esc(rel)}</span></div>
         <small class="pnl-r-line">Impact: ${esc(r.impact.text)}</small>` };
   }
   function panelSpec(all) {
@@ -247,7 +253,7 @@
     const now = MM().THIS_YEAR, end = SP().hz.end, sorted = sortRows(rows, st.sort, now);
     const h = r => r.horizon || { at: [], end };
     const yc = (y, e) => (y === 'today' ? 'now' : y == null ? `after ${e}` : String(y));
-    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th>Basis</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">Committed</th><th class="n">Build-out</th><th class="n">Committed %</th><th class="n">Build-out %</th><th class="n">Limit year</th><th class="n">Room / over</th><th>Impact</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}<th class="n">Reaches 80%</th><th class="n">Reaches 90%</th><th class="n">Reaches 100%</th></tr></thead>
+    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th>Basis</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">With approved %</th><th class="n">Build-out %</th><th class="n">Limit year</th><th class="n">Room / over</th><th>Impact</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}<th class="n">Reaches 80%</th><th class="n">Reaches 90%</th><th class="n">Reaches 100%</th></tr></thead>
       <tbody>${sorted.map(r => { const t = P().toneOf(r.pctBo); return `<tr data-basis="${r.basis}" class="t-${t}"><td>${esc(r.name)}<small>${esc(r.sub)}</small></td><td>${r.system}</td><td>${esc(r.compared)}</td><td>${U.basisChip ? U.basisChip(r.basis) : esc(r.basis)}</td><td class="n">${qty(r, r.cap)} <small>${r.capWord}</small></td><td class="n">${qty(r, r.existing + r.built)}</td><td class="n">${qty(r, r.committed)}</td><td class="n">${qty(r, r.buildout)}</td><td class="n">${pctTxt(r.pctCom)}</td><td class="n"><strong>${pctTxt(r.pctBo)}</strong> ${P().chip({ tone: t })}</td><td class="n">${yTxt(r.limit.y, h(r).end)}<small>${esc(r.limit.what)}</small></td><td class="n">${roomTxt(r)}</td><td>${esc(r.impact.text)}</td>${PICK.map(y => { const a = h(r).at.find(x => x[0] === y); return `<td class="n">${a ? pctTxt(a[1]) : '–'}</td>`; }).join('')}<td class="n">${yc(h(r).c80, h(r).end)}</td><td class="n">${yc(h(r).c90, h(r).end)}</td><td class="n">${yc(h(r).c100, h(r).end)}</td></tr>`; }).join('')}</tbody></table></div>`;
   }
   function render() {
@@ -391,7 +397,7 @@
   }
   const renderAll = () => { render(); renderChecks(); renderNetBar(); };
   // Render on entering the sub-view (PeelAnalysisTabs.showFootTab).
-  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') renderNetBar(); };
+  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } };
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
     if (!e.target.closest) return;
     const s = e.target.closest('[data-cap-sort]'); if (s) { st.sort = s.dataset.capSort; if (U.store) U.store.set('capSort', st.sort); render(); return; }

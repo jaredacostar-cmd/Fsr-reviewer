@@ -65,7 +65,7 @@
     const TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
     const ls = root.PeelMapLabels && root.PeelMapLabels.latestSub ? root.PeelMapLabels.latestSub(p) : null;
     const fig = (v, u, label, ctx) => ({ v, u, label, ctx });
-    const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+    const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', ''), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt))]
       : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : ''), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '')];
     const plant = f && f.pl ? (SV().PLANT_SHORT[f.pl] || f.pl) : null;
@@ -236,12 +236,12 @@
       // One basis per row (Stage 1 #4): plants by the wastewater mode; water treatment is the 2025
       // metered maximum day plus growth (metered, calibrated).
       const bz = c.kind === 'plant' ? SvcTab().wwBasis() : 'metered';
-      return `<div class="ov-cap ${st}" data-basis="${bz}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}<button type="button" class="btn small link" data-ss="${c.kind === 'plant' ? `plant:${esc(c.pl)}` : 'wsys:lake'}" title="Open this as a scope">${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</button></span><span><b>${pc}%</b> committed → <b>${pb}%</b> build-out</span></div>
+      return `<div class="ov-cap ${st}" data-basis="${bz}"><div class="ov-cap-h"><span>${c.sys === 'water' ? '💧 ' : ''}<button type="button" class="btn small link" data-ss="${c.kind === 'plant' ? `plant:${esc(c.pl)}` : 'wsys:lake'}" title="Open this as a scope">${esc(c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment')}</button></span><span><b>${pc}%</b> with approved → <b>${pb}%</b> at build-out</span></div>
         ${k ? LB().capacityBarHTML(k) : `<div class="ov-bar" role="img" aria-label="existing + built + committed ${pc}% of rated capacity, ${pb}% at build-out"><i class="c" style="width:${(a / 1.3).toFixed(1)}%"></i><i class="b" style="width:${(Math.max(0, b - a) / 1.3).toFixed(1)}%"></i></div>`}
         <small>${root.PeelUtil.basisChip(bz)} · ${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${SP().hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>after allocations: ${root.PeelUtil.roomWords(x.after)}</strong>` : '')(c.kind === 'plant' ? DU().allocPlant(c.pl) : null)}</small></div>`; };
     // Small systems (Inglewood) in their own group under the large plants.
     const small = c => c.kind === 'plant' && isSmallSystem(c.rated);
-    return list.filter(c => !small(c)).map(bar).join('') + (list.some(small) ? `<h4 class="ov-small-h">Small systems</h4>${list.filter(small).map(bar).join('')}` : '') + LB().legendHTML([{ layer: 'existing', text: 'Existing (basis on each row)' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day).${SvcTab().wwBasis() === 'metered' ? ' 2025 metered (calibrated): the metered flow already holds what was built since the census.' : ''}</p>`;
+    return list.filter(c => !small(c)).map(bar).join('') + (list.some(small) ? `<h4 class="ov-small-h">Small systems</h4>${list.filter(small).map(bar).join('')}` : '') + LB().legendHTML([{ layer: 'existing', text: 'On the system (basis on each row)' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day).${SvcTab().wwBasis() === 'metered' ? ' 2025 metered (calibrated): the metered flow already holds what was built since the census.' : ''}</p>`;
   }
   // Plain-data input for the pure needsAttention: reuses the DCA results, the stalled flags,
   // the 90% trigger years and the weekly snapshot change log.
@@ -287,7 +287,8 @@
     const el = $('#ov-body'), host = $('#scope-body'); if (!host) return false;
     if (!rs) { host.hidden = true; if (el) el.hidden = false; return false; }
     if (el) el.hidden = true; host.hidden = false;
-    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v)) {
+    const W = root.PeelWorkspaces, wsNow = W && W.mode() === 'ws' ? String(W.current()) : '';
+    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v) || (host.dataset.ws || '') !== wsNow) {
       // Stage 3: the result as the standard panel: its header (back to Peel, ×, kind), the result's
       // headline as the answer, its body as the details, the footer with the screening note. Rendered
       // here, in the result's own host, so a tool's inputs keep their state.
@@ -297,13 +298,17 @@
         head: { trail: [{ label: 'Peel', attrs: { 'data-scope-result-close': '' } }, { label: kind.split(' · ')[0] }], close: { 'data-scope-result-close': '', 'aria-label': `Close ${rs.title}` }, name: rs.title, identity: esc(kind) },
         answer: hm ? hm[1] : `<strong>${esc(rs.title)}</strong>`, lists: [{ title: 'Details', rows: [{ kv: true, html: `<div class="pnl-result">${rest}</div>` }], total: 1 }] })
         : `<div class="scope-head"><span class="muted small">${esc(kind)}</span><button type="button" class="btn small scope-x" data-scope-result-close aria-label="Close ${esc(rs.title)}">× Close</button></div>${body}`;
-      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v);
+      // In a workspace (Study area: the drawn area's result) the header names its source, as every panel.
+      if (W && W.srcLine) host.innerHTML = host.innerHTML.replace('<header class="pnl-head" data-sec="header">', m => `${m}${W.srcLine('overview:')}`);
+      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v); host.dataset.ws = wsNow;
     }
     return true;
   }
   const SCOPE_KIND = { dcwork: 'DC work · 2026 capital map (draft)', pipe: 'Sanitary sewer', file: 'Single file', iiblock: 'Wastewater block', wfac: 'Water facility', sel: 'Selection', help: 'Help', tool: 'Tool result', cx: 'Constraint layer · screening', ea: 'Environmental assessment · screening', cap: 'Capital project · screening' };
   // ---- Stage 3: the area Overview (Peel, a municipality, a plan) as the standard panel -----------------
   let ovSort = store.get('ovSort', 'limit');
+  // The last area Overview panel (Peel or the municipality filter): Home shows its figures (Stage 4).
+  let lastArea = null;
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
     const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o;
@@ -329,7 +334,7 @@
       chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed against rated capacity</p>${capacityBarsHTML(capList)}` : '',
       lists: [
         { title: 'Needs attention', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('limit', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: ranked.slice(0, 5).map(SC.listRow), total: ranked.length, seeAll: { 'data-at': 'svc:capacity' } },
-        { title: 'This week', rows: week.slice(0, 5), total: week.length, seeAll: { 'data-full-table': 'overview' } },
+        { title: 'This week', rows: week, total: week.length, seeAll: { 'data-full-table': 'overview' } },   // (the panel shows 5; Home and This week count them all)
       ],
       method: info.replace(/^<p[^>]*>|<\/p>$/g, ''),
       sources: `${(fr || []).filter(r => r.date).slice(0, 6).map(r => `${esc(r.name)} · ${esc(r.date)}`).join('<br>')}<br><button type="button" class="btn small link" data-at="records:sources">Every source and its date (Records) →</button>`,
@@ -385,16 +390,17 @@
     const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(e.population))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(unitsAll))} units.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
-    const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'committed only (D-5-1)', remaining: 'units left to build' }[basis] || 'every stage';
+    const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'approved only (committed, D-5-1)', remaining: 'units left to build' }[basis] || 'every stage';
     const info = `<p class="small muted ov-info"><button type="button" class="btn small link" data-info="definitions">Definitions</button> · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: ${SvcTab().wwFlowLabel('long')}; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${App().state.muni ? ` · ${esc(App().state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} ${go('criteria', 'Data & checks')}</p>`;
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    if (root.PeelPanel) root.PeelPanel.set('overview:', areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue }));
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue });
+    if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [lyTiles.units, n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>${lyTiles.anticipated ? `<p class="small muted ly-def">Anticipated: ${esc(root.PeelLayers.NOTE.anticipated)}.</p>` : ''}</section>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [lyTiles.units, n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>${lyTiles.anticipated ? `<p class="small muted ly-def">Pre-application: ${esc(root.PeelLayers.NOTE.anticipated)}.</p>` : ''}</section>
         ${needs}
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('svc:capacity', 'Servicing › Capacity')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
@@ -487,7 +493,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, capacityBarsHTML };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, capacityBarsHTML, lastAreaSpec: () => lastArea };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

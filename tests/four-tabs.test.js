@@ -42,7 +42,7 @@ test('1. tabs: Overview · Growth · Servicing · Capital at every scope, then R
   // Records is right-aligned and muted; it also opens from the Settings gear.
   assert.match(src('css/app.css'), /\.f-tab\.f-tab-trail \{ margin-left: auto; font-size: var\(--fs-1\); color: var\(--text-muted\);/);
   assert.match(src('js/topbar.js'), /data-tbg="records">Records<\/button>/);
-  assert.match(src('js/topbar.js'), /else if \(k === 'records'\) \{ closeTbMenus\(\); AT\(\)\.showFootTab\('records'\);/);
+  assert.match(src('js/topbar.js'), /else if \(k === 'records'\) \{ closeTbMenus\(\); AT\(\)\.openTab\('records'\); \}/);
 });
 
 test('1. sub-views per scope match the spec (Peel / area and a development)', () => {
@@ -111,8 +111,8 @@ test('2. Servicing › Capacity: water and wastewater in ONE table, a basis on e
   assert.match(html, /<td class="c-sys" data-l="System">Wastewater<\/td>/); assert.match(html, /<td class="c-sys" data-l="System">💧 Water<\/td>/);
   const head = html.match(/<thead><tr>([\s\S]*?)<\/tr><\/thead>/)[1];
   const th = [...head.matchAll(/<th( class="[^"]*")?>([^<]+)/g)].map(m => [m[2].trim(), /xc/.test(m[1] || '')]);
-  assert.deepEqual(th.filter(x => !x[1]).map(x => x[0]), ['Facility', 'System', 'Compared', 'Committed', 'Build-out', 'Limit year', 'Room / over']);
-  assert.deepEqual(th.filter(x => x[1]).map(x => x[0]), ['Capacity', 'Today', 'Committed', 'Build-out'], 'Engineering columns');
+  assert.deepEqual(th.filter(x => !x[1]).map(x => x[0]), ['Facility', 'System', 'Compared', 'With approved', 'Build-out', 'Limit year', 'Room / over']);
+  assert.deepEqual(th.filter(x => x[1]).map(x => x[0]), ['Capacity', 'Today', 'With approved', 'Build-out'], 'Engineering columns');
   // Room / over in signed words; the limit year as a year, "now" or "after <end>".
   assert.match(html, /over by 102\.0 ML\/d/); assert.match(html, /room 600\.0 ML\/d/);
   assert.match(html, /≈2028<small>90% trigger/); assert.match(html, /after 2051<small>90% trigger/);

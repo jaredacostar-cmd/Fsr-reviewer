@@ -305,6 +305,7 @@
     if (PeelMapMarkers.mstyle.color === 'phase') PeelMapAnalysis.renderLegend();   // the phase legend lists the shown phases
     renderWatch();
     PeelTips.maybeTour();
+    if (window.PeelWorkspaces && window.PeelWorkspaces.bootRestore) window.PeelWorkspaces.bootRestore();
     PeelShare.viewLink.ready();
     PeelTopbar.renderTrail();
   }
@@ -341,9 +342,8 @@
   };
   $('#analysis').querySelector('.analysis-tabs').addEventListener('click', e => {
     const t = e.target.closest('[data-tab]'); if (!t) return;
-    // Servicing opens the half last used (wastewater by default): 'ww' or 'water'.
-    const k = t.dataset.tab === 'svc' ? (store.get('svcSys', 'ww') === 'water' ? 'water' : 'ww') : t.dataset.tab;
-    PeelAnalysisTabs.setFootPref(k); store.set('footTab4', PeelAnalysisTabs.getFootPref());
+    // (Stage 2: Servicing is one tab, 'svc'; it opens on the sub-view last picked.)
+    PeelAnalysisTabs.setFootPref(t.dataset.tab); store.set('footTab4', PeelAnalysisTabs.getFootPref());
     PeelAnalysisTabs.showFootTab(PeelAnalysisTabs.getFootPref()); PeelShare.viewLink.write();
   });
   // Bottom-sheet snaps (compact): peek shows the summary + tabs, half and full the
@@ -787,7 +787,7 @@
         const t = window.PeelAnalysisTabs.getFootPref();
         if (t === 'overview') window.PeelOverviewTab.renderOverview();
         else if (t === 'growth') window.PeelGrowthUI.renderGrowth();
-        else if (t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
+        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
         else if (t === 'dca') window.PeelDcaTab.renderDca();
       },
       isWatched: k => watch.has(k),
@@ -815,4 +815,6 @@
   PeelSvcData.loadServicing();
   window.PeelTopbar.initTopbar();
   window.PeelDataTab.initDataTab();
+  // Stage 4: the start screen (Home, the last workspace or the full map; a link opens what it names).
+  if (window.PeelWorkspaces) window.PeelWorkspaces.init();
 })();

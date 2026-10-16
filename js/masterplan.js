@@ -5,10 +5,14 @@
   // Status of a planned work (Stage 1 #9): the capital records' status where the DC project matches
   // one (data/capital.json, via PeelCapitalEA's DC index), else "not in capital records" with the
   // schedule it comes from (and the Council procurement pause where it applies). Never "status unknown".
+  // (A match by outline overlap only (low confidence) is not trusted here, nor a "complete" status for a
+  // work scheduled after this year; a planned, untendered work keeps the Council pause note.)
   const capTag = (y, s, id, src = 'DC schedule') => {
-    const CE = window.PeelCapitalEA, e = id && CE && CE.dcStatusOf ? CE.dcStatusOf(id) : null;
-    if (e) return ` · ${e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : CE.statusText(e.status).toLowerCase()} (capital records)`;
+    const CE = window.PeelCapitalEA, e0 = id && CE && CE.dcStatusOf ? CE.dcStatusOf(id) : null;
+    const done = e0 && /complete/.test(e0.status || '');
+    const e = e0 && e0.conf !== 'low' && !(done && y > new Date().getFullYear()) ? e0 : null;
     const st = capitalStatus(y, s, id);
+    if (e) return ` · ${e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : CE.statusText(e.status).toLowerCase()} (capital records${e.status === 'planned' && st === 'paused' ? '; procurement paused' : ''})`;
     return ` · not in capital records (${src}${st === 'paused' ? '; procurement paused' : ''})`;
   };
   const D = window.PeelDemand;
@@ -440,7 +444,7 @@
   // % of rated capacity for plants and water treatment (never % of the 90% trigger, SPEC 1.4); % of
   // capacity (firm, full pipe) for the rest.
   const pctCap = (c, k) => (c.kind === 'plant' || c.kind === 'wplant' ? SvcTab().pctRated(c, k) : Math.round(c.util[k] * 100));
-  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${pctCap(c, 'com')}% committed → ${pctCap(c, 'bo')}% build-out${c.kind === 'plant' || c.kind === 'wplant' ? ' of rated' : ''}`}</small>`;
+  const consName = c => `${c.kind === 'pipe' ? `<button type="button" class="btn small link" data-pipe="${c.i}">${esc(c.name)}</button>` : `<button type="button" class="btn small link" data-dcn-cons="${esc(c.id)}">${esc(c.name)}</button>`}${c.kind === 'pipe' ? ` <button type="button" class="btn small link dcn-who" data-dcn-cons="${esc(c.id)}">who relies</button>` : ''}<small>${esc(c.sub)}${c.n > 1 ? ` · ${c.n} pipes over 90%` : ''}${c.mp ? '' : ` · ${pctCap(c, 'com')}% with approved → ${pctCap(c, 'bo')}% at build-out${c.kind === 'plant' || c.kind === 'wplant' ? ' of rated' : ''}`}</small>`;
   function needsTable(list, ppu, opts = {}) {
     return `<table class="dt dcn-table"><thead><tr><th>${opts.first || 'Existing capacity'}</th><th>Room after approved</th><th>Runs out</th><th>DC relief (construction)</th></tr></thead><tbody>
       ${list.map(reg).map(c => `<tr class="${STATUS[c.status][0]}"><td>${c.sys === 'water' ? '💧 ' : ''}${consName(c)}</td><td data-l="Room after approved">${roomText(c, ppu)}</td><td data-l="Runs out">${outText(c)}${c.outAfter != null ? `<small>again ${c.outAfter === 'today' ? 'now' : `≈${c.outAfter}`} with the expansions</small>` : ''}<small>${esc(STATUS[c.status][1])}</small></td><td data-l="DC relief">${reliefHTML(c)}</td></tr>`).join('')}</tbody></table>`;

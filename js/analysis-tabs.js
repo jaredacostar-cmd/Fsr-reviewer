@@ -42,7 +42,8 @@
   // Stored sub-views from before Stage 2 (wwSub / wSub, census2051, build …) map onto the new ones.
   if (!svcSub) { const sys = store.get('svcSys', 'ww'); svcSub = (SUB_MAP[sys === 'water' ? 'water' : 'ww'] || {})[store.get(sys === 'water' ? 'wSub' : 'wwSub', '')] || 'capacity'; }
   gSub = SUB_MAP.growth[gSub] || 'pipeline'; dcSub = SUB_MAP.dca[dcSub] || 'timing';
-  { const m = migrateTabKey(footPref); footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.svcSub) svcSub = m.svcSub; }
+  // (a stored 'ww' / 'water' tab keeps the Servicing sub-view stored with it; only 'plants' names one)
+  { const old = footPref, m = migrateTabKey(footPref); footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.svcSub && old !== 'ww' && old !== 'water') svcSub = m.svcSub; }
   // Labs (Settings › Labs) can add a sub-view: Capital › Funding. Never a fifth chip elsewhere.
   const labOn = id => !!(root.PeelLabs && root.PeelLabs.on(id));
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
@@ -76,17 +77,24 @@
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
   // Old keys still reach the right tab: 'ww' / 'water' (and 'svc') are Servicing.
   const tabOf = key => (key === 'ww' || key === 'water' ? 'svc' : key);
+  const areaPick = {};
   function showFootTab(key, sub) {
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
     if (key === 'ww' || key === 'water') { if (!sub) sub = svcSub === 'capacity' || svcSub === 'network' ? svcSub : 'network'; key = 'svc'; }
-    if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
+    if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';
     const site = !!(root.DevScope && root.DevScope.current());
     const ssCur = root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current();
     const fileScope = !!(ssCur && ssCur.kind === 'result' && ssCur.rkind === 'file');
     const scopeOf = tk => (site || (tk === 'records' && fileScope) ? 'site' : 'area');
     const an = document.getElementById('analysis'); if (an) an.classList.toggle('site-scope', site);
-    for (const [tk, s] of Object.entries(TABSUBS)) { const v = subFor(tk, s.get(), null, scopeOf(tk)); if (v !== s.get()) s.set(v); }
+    // A sub-view hidden at this scope shows the first that is not; the pick it replaced comes back
+    // when the scope allows it again (closing a development returns to the sub-view picked before).
+    for (const [tk, s] of Object.entries(TABSUBS)) {
+      const back = areaPick[tk];
+      if (back != null && !hiddenAt(scopeOf(tk), tk, back)) { delete areaPick[tk]; if (back !== s.get()) s.set(back); }
+      const v = subFor(tk, s.get(), null, scopeOf(tk)); if (v !== s.get()) { if (areaPick[tk] == null) areaPick[tk] = s.get(); s.set(v); }
+    }
     footTab = key;
     for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
     for (const p of document.querySelectorAll('.f-pane')) {
@@ -114,6 +122,7 @@
     const b = e.target.closest('[data-svcsub],[data-gsub],[data-dcasub],[data-rsub]'); if (!b) return;
     const hit = Object.entries(TABSUBS).find(([, s]) => b.dataset[s.attr] != null); if (!hit) return;
     const [tab, s] = hit, v = b.dataset[s.attr];
+    delete areaPick[tab];   // a pick made here wins over the one kept from before
     s.set(v); store.set(s.store, v); showFootTab(tab); Sh().viewLink.write();
   });
   // A link to a tab and sub-view anywhere in the panel: data-at="tab" or "tab:sub-view".
@@ -125,11 +134,18 @@
   showFootTab(footPref);
 
   // Helper for other modules: set a tab's sub-view, persisting the choice.
+  // A link or button that opens a tab (and sub-view): the tab becomes the one picked (kept, and in
+  // the share link), as a click on the tab itself does.
+  function openTab(tab, sub) {
+    footPref = tabOf(tab === 'dev' || tab === 'developments' || tab === 'tool' ? 'overview' : tab); store.set('footTab4', footPref);
+    showFootTab(tab, sub);
+    if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
+  }
   // (An old sub-view name maps onto its new one: 'build' → 'projects', 'byplan' → 'areas', …)
   const setSub = (tab, sub) => { const s = TABSUBS[tab]; if (!s) return; const v = (SUB_MAP[tab] && SUB_MAP[tab][sub]) || sub; if (s.valid.includes(v)) { s.set(v); store.set(s.store, v); } };
   const api = {
     tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt,
-    getFootPref: () => footPref, setFootPref: v => { footPref = v; },
+    getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
     getFootTab: () => footTab,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },
     getGSub: () => gSub, setGSub: v => { gSub = v; },

@@ -43,6 +43,9 @@
   const CALC = /\d\s*(?:ML\/d|L\/s|ML\b|m³\/d|%|people\b)/;
   const strip = t => String(t == null ? '' : t).replace(/<[^>]*>/g, ' ');
   const calcIn = s => CALC.test([s.answer, ...(s.figures || []).map(f => f && `${strip(f.v)} ${f.u || ''} ${f.ctx || ''}`), ...(s.lists || []).flatMap(l => (l && l.rows ? l.rows.slice(0, 5) : []).map(r => r.html))].map(strip).join(' '));
+  // Stage 5: "Report a data issue" in every footer, at the end of the actions row (js/report-issue.js
+  // fills the issue on click).
+  const reportLink = (key, name, where) => (root.PeelReportIssue && root.PeelReportIssue.panelLinkHTML ? `<span class="pnl-report-line small">${root.PeelReportIssue.panelLinkHTML(key, strip(name).trim(), where)}</span>` : '');
   function html(spec) {
     const s = spec || {}, h = s.head || {};
     // The trail: shown from two levels down (at Peel it would only repeat the name).
@@ -67,7 +70,7 @@
     if (s.method) out.push(`<details class="pnl-fold" data-sec="method"><summary>Method and basis</summary><div class="small muted">${s.method}</div></details>`);
     if (s.sources) out.push(`<details class="pnl-fold" data-sec="sources"><summary>Sources</summary><div class="small muted">${s.sources}</div></details>`);
     const f = s.foot || {}, sec = (f.secondary || []).slice(0, 1);
-    out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}</div>
+    out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}${reportLink(s.key, h.name)}</div>
       <p class="pnl-note small">${NOTE}</p></footer>`);
     return `<article class="pnl" data-panel="${esc(s.key || '')}">${out.join('')}</article>`;
   }
@@ -93,7 +96,7 @@
   // number (how the municipality identifies it), the application types and the latest submission.
   function siteHead(p) {
     const ML = root.PeelMapLabels, ls = ML && ML.latestSub ? ML.latestSub(p) : null, PH = root.PeelPhases;
-    const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric' });
+    const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const types = (p.types || []).slice(0, 3).join(' / ');
     return { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
       status: { tone: 'stage', text: PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase },
@@ -105,6 +108,7 @@
   // sub-view, for the scope it was made for (a development, a servicing scope, or the area). Until a
   // sub-view has a panel for the current scope, its detailed panes show as before.
   const STORE = new Map();
+  const HEAD = '<header class="pnl-head" data-sec="header">';
   const AT = () => root.PeelAnalysisTabs;
   const scopeId = () => {
     const d = root.DevScope && root.DevScope.current && root.DevScope.current(); if (d) return `dev:${d.key}`;
@@ -114,21 +118,34 @@
   const keyNow = () => { const A = AT(); if (!A) return ''; const t = A.getFootTab(), s = A.TABSUBS[t]; return `${t}:${s ? s.get() : ''}`; };
   // onMount(host): runs each time the panel is put on screen (fills async checks into its containers).
   function set(key, spec) {
-    STORE.set(key, { html: typeof spec === 'string' ? spec : html({ key, ...spec }), scope: scopeId(), title: (spec && spec.fullTitle) || '', onMount: spec && spec.onMount });
+    STORE.set(key, { html: typeof spec === 'string' ? spec : html({ key, ...spec }), scope: scopeId(), title: (spec && spec.fullTitle) || '', onMount: spec && spec.onMount, spec: typeof spec === 'string' ? null : spec });
     if (key === keyNow()) sync();
+    // (Stage 4: Home reads the Peel Overview panel's figures from here, so they are the map's.)
+    if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('pnl:set', { detail: { key, scope: scopeId() } }));
   }
+  const get = key => STORE.get(key) || null;
   const clear = key => { STORE.delete(key); if (key === keyNow()) sync(); };
   function sync() {
     if (typeof document === 'undefined') return;
     const A = AT(), an = document.getElementById('analysis'); if (!A || !an) return;
-    const t = A.getFootTab(), key = keyNow(), e = STORE.get(key), ok = !!(e && e.scope === scopeId());
+    // (a workspace page is open over the map: it shows these panels itself, so the slots stay empty and
+    // no element id is on screen twice)
+    const Wp = root.PeelWorkspaces;
+    if (Wp && Wp.mode && Wp.mode() === 'home') { document.querySelectorAll('.pnl-host').forEach(h => { h.innerHTML = ''; h.dataset.v = ''; }); return; }
+    const t = A.getFootTab(), key = keyNow(), e0 = STORE.get(key);
+    // Stage 4: a workspace may show its own view of a sub-view (Check a site before a site is picked,
+    // Old pipes, This week) and names its source in the header ("Getting tight · from Servicing ›
+    // Capacity", with Open full map).
+    const W = root.PeelWorkspaces, ov = W && W.override ? W.override(key, scopeId()) : null;
+    const e = ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
+    const v = e ? (W && W.srcLine ? e.html.replace(HEAD, `${HEAD}${W.srcLine(key)}`) : e.html) : '';
     an.classList.toggle('pnl-on', ok);
     const host = document.getElementById(`pnl-${t}`);
     if (host) {
       if (!ok) { host.innerHTML = ''; host.dataset.v = ''; }
-      else if (host.dataset.v !== e.html) {
+      else if (host.dataset.v !== v) {
         const sc = document.getElementById('analysis-panes'), keepY = host.dataset.key === key && sc ? sc.scrollTop : null;
-        host.innerHTML = e.html; host.dataset.v = e.html; host.dataset.key = key;
+        host.innerHTML = v; host.dataset.v = v; host.dataset.key = key;
         if (keepY != null) sc.scrollTop = keepY;
         if (typeof e.onMount === 'function') try { e.onMount(host); } catch (er) { /* the panel stays without the async parts */ }
       }
@@ -147,6 +164,7 @@
   }
   function openFull() {
     const an = typeof document !== 'undefined' && document.getElementById('analysis'); if (!an) return false;
+    if (an.classList.contains('ft-on')) return true;   // already open: keep the state to restore on close
     lastFocus = document.activeElement;
     techBefore = an.classList.contains('show-tech');
     const tb = document.getElementById('topbar'); an.style.setProperty('--ft-top', `${tb ? Math.round(tb.getBoundingClientRect().bottom) : 0}px`);
@@ -185,7 +203,7 @@
       if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('pnl-row') && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
     }, true);
   }
-  const api = { SECTIONS, NOTE, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
+  const api = { SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPanel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

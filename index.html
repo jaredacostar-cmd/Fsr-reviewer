@@ -52,6 +52,7 @@
   <div class="app">
     <header class="topbar" id="topbar">
       <span class="tb-wordmark">Peel Growth Pipeline</span>
+      <button type="button" class="btn small tb-btn tb-home" id="tb-home" data-ws-home title="Home: the briefing and the workspaces">Home</button>
       <nav class="tb-trail" id="trail" aria-label="Scope"></nav>
       <div class="tb-search" id="tb-search"></div>
       <div class="tb-views" id="tb-views" role="group" aria-label="Map view"></div>
@@ -224,6 +225,11 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
+      <!-- Stage 4: a workspace's search box and task chips over the map (js/workspaces.js). -->
+      <div class="ws-bar" id="ws-bar" hidden>
+        <div class="ws-top"><button type="button" class="btn small ws-fullbtn" data-ws-backpage title="Back to this workspace's page">← Page</button><div class="ws-search" id="ws-search"></div><button type="button" class="btn small ws-fullbtn" data-ws-full title="Every layer, filter and tool, with the same scope, filters and scenario">Full map</button></div>
+        <div class="ws-chips" id="ws-chips" role="toolbar" aria-label="Tasks"></div>
+      </div>
       <div class="tool-banner" id="tool-banner" role="status" hidden></div>
       <div id="presentation-bar" hidden>
         <p class="pres-hl" id="pres-hl"></p>
@@ -348,6 +354,8 @@
 
     <!-- Phase 2 shell: the footer is a slim timeline strip only. The #scen-bar stays
          here for now; Worker 1 moves it into the topbar popover. -->
+    <!-- Stage 4: Home, the briefing and the workspaces (js/workspaces.js). -->
+    <section class="home" id="home" aria-label="Home" hidden></section>
     <footer class="footer" id="footer">
       <div class="scen-bar" id="scen-bar" data-info="scenario"><div id="scen-criteria-mount"></div></div>
       <section class="timebar" id="timebar" aria-label="Timeline">
@@ -386,6 +394,9 @@
   <script src="js/util.js?v=__BUILD__"></script>
   <script src="js/labs.js?v=__BUILD__"></script>
   <script src="js/panel.js?v=__BUILD__"></script>
+  <script src="js/ws-pages.js?v=__BUILD__"></script>
+  <script src="js/workspaces.js?v=__BUILD__"></script>
+  <script src="js/usage.js?v=__BUILD__"></script>
   <script src="js/layer-groups.js?v=__BUILD__"></script>
   <script src="js/config.js?v=__BUILD__"></script>
   <script src="js/phases.js?v=__BUILD__"></script>
