@@ -48,6 +48,8 @@
     ['Capital', ['projects']],
     ['Asset Management', ['pipes']],
   ];
+  // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
+  const REF = { approvals: { label: 'How approvals work', what: 'Ontario’s steps, the app’s stages and the file tree' } };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
@@ -100,7 +102,7 @@
   function startScreen({ hash = '', pref = 'home', last = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
     const w = q.get('w') || '';
-    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : /^p:/.test(w) && BY_ID[w.slice(2)] ? { mode: 'home', page: w.slice(2) } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
+    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : /^p:/.test(w) && (BY_ID[w.slice(2)] || REF[w.slice(2)]) ? { mode: 'home', page: w.slice(2) } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
     if (pref === 'full') return { mode: 'full' };
     if (pref === 'last') return { mode: 'home', page: BY_ID[last] ? last : 'tight' };
     return { mode: 'home', page: 'home' };
@@ -337,7 +339,7 @@
   // leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
   // their panels are worked out for the same scope.
   function openPage(id, o = {}) {
-    if (id !== 'home' && !BY_ID[id]) id = 'home';
+    if (id !== 'home' && !BY_ID[id] && !REF[id]) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
@@ -349,12 +351,13 @@
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
   let lastHTML = '', timer = null;
-  const pageName = id => (id === 'home' ? 'Home' : BY_ID[id] ? BY_ID[id].label : id);
+  const pageName = id => (id === 'home' ? 'Home' : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     const item = (id, sub) => `<li><button type="button" class="home-ws${page === id ? ' on' : ''}" data-ws-page="${id}"${page === id ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
+      <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).map(id => item(id, REF[id].what)).join('')}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map (all tools)</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
@@ -449,6 +452,6 @@
     else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderHome, renderPage, renderChips, settingsHTML, homeMapSVG, oldList, pipesSpec, init });
+  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderHome, renderPage, renderChips, settingsHTML, homeMapSVG, oldList, pipesSpec, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

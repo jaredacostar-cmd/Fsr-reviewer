@@ -3155,3 +3155,50 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .tool-rail:not(.folded) .rail-toggle { border-bottom: 1px solid var(--border); }
 .rail-cap { display: block; font: 600 8px/1 system-ui, sans-serif; color: var(--text-secondary); margin-top: 1px; }
 @media (pointer: coarse) { .leaflet-control-zoom { display: none; } }
+/* How approvals work (js/approvals-guide.js): the tree against the five stages. Wide: it scrolls
+   sideways inside its box on a narrow screen. */
+.ag-scroll { overflow-x: auto; overscroll-behavior-x: contain; padding-bottom: var(--space-1); }
+.ag-grid { min-width: 980px; display: grid; grid-template-columns: 280px repeat(5, minmax(0, 1fr)); gap: 0 var(--space-2); }
+.ag-hd { padding: var(--space-2); border-radius: 6px; font-weight: 600; font-size: var(--fs-2); text-align: center; background: var(--ph); color: var(--swatch-ink); }
+.ag-hd:nth-child(4), .ag-hd:nth-child(5) { color: var(--swatch-paper); }
+:root[data-theme="light"] .ag-hd:nth-child(n+3) { color: var(--swatch-paper); }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .ag-hd:nth-child(n+3) { color: var(--swatch-paper); } }
+.ag-st { display: none; }
+.ag-hd-l { background: none; color: var(--text-muted); text-align: left; font-weight: 500; padding-left: 0; }
+.ag-row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; border-top: 1px solid var(--border); padding: var(--space-2) 0; }
+.ag-lab { grid-column: 1; display: flex; flex-direction: column; gap: 1px; position: relative; padding-right: var(--space-2); }
+.ag-nm { font-weight: 600; }
+.ag-code { font-size: var(--fs-1); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.ag-why { font-size: var(--fs-1); color: var(--text-secondary); }
+.ag-l1 { padding-left: 22px; } .ag-l2 { padding-left: 44px; } .ag-l3 { padding-left: 66px; }
+.ag-l1::before, .ag-l2::before, .ag-l3::before { content: ''; position: absolute; top: -8px; height: 18px; width: 12px; border-left: 2px solid var(--border); border-bottom: 2px solid var(--border); border-bottom-left-radius: 6px; }
+.ag-l1::before { left: 6px; } .ag-l2::before { left: 28px; } .ag-l3::before { left: 50px; }
+.ag-steps { grid-column: 2 / -1; display: grid; grid-template-columns: subgrid; row-gap: var(--space-1); align-content: center; }
+.ag-line { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: start; }
+.ag-step { border-radius: 6px; padding: var(--space-1) var(--space-2); font-size: var(--fs-2); background: var(--surface-2); border: 1px solid var(--border); }
+.ag-step b { font-weight: 600; }
+.ag-step small { display: block; font-size: var(--fs-1); color: var(--text-muted); margin-top: 1px; }
+.ag-ok::before { content: '✓ '; font-weight: 700; }
+.ag-part { border-style: dashed; border-color: var(--text-secondary); }
+.ag-part::before { content: '≈ '; font-weight: 700; }
+.ag-no { background: none; border-style: dashed; color: var(--text-muted); }
+.ag-no::before { content: '✗ '; font-weight: 700; }
+.ag-key { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: var(--space-3) 0 0; }
+.ag-key .ag-step { display: inline-block; }
+.ag-notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-2); margin-top: var(--space-3); }
+.ag-notes > div { background: var(--surface-2); border-radius: 6px; padding: var(--space-2) var(--space-3); font-size: var(--fs-2); color: var(--text-secondary); line-height: 1.45; }
+.ag-notes strong { color: var(--text-primary); }
+.stage-how { margin: var(--space-1) 0 0; }
+@media (max-width: 700px) {
+  .ag-grid { display: block; min-width: 0; }
+  .ag-hd { display: none; }
+  .ag-row { display: block; }
+  .ag-steps { display: flex; flex-direction: column; }
+  .ag-line { display: contents; }
+  .ag-lab { padding-bottom: var(--space-1); }
+  .ag-steps .ag-step { margin: var(--space-1) 0 0 var(--space-3); }
+  .ag-st { display: inline-block; font-style: normal; font-size: var(--fs-1); font-weight: 600; padding: 0 var(--space-2); border-radius: 999px; background: var(--ph); color: var(--swatch-ink); margin-right: var(--space-2); }
+  .ag-l1::before, .ag-l2::before, .ag-l3::before { display: none; }
+  .ag-l1, .ag-l2, .ag-l3 { padding-left: 0; }
+  .ag-row { padding-left: calc(var(--lvl, 0) * 12px); }
+}

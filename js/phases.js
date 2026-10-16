@@ -1307,12 +1307,17 @@
     // A site plan approved before a newer zoning / official plan / subdivision file that is still
     // pending was for an earlier proposal: the site is back under review for the new one.
     // (On the same land: a newer draft plan elsewhere in the block is another proposal.)
+    // A draft-approved plan of subdivision (not yet registered) stays committed through a later
+    // zoning or official plan amendment on its land, which usually implements or adjusts the same
+    // plan (MECP D-5-1: draft approval commits; user decision 2026-10-16); only a newer draft plan
+    // on the same land replaces it. A registered plan keeps the rule above.
+    const replaces = (r, m) => !(fileKind(r) === 'draft' && !isRegistered(r)) || fileKind(m) === 'draft';
     const masters = live.filter(r => r.kind === 'application' && (r.stage || stageOf(r)) === 'master' && recStart(r) != null && PHASE_BY_KEY[r.phase].rank <= PHASE_BY_KEY.review.rank && fileKind(r) !== 'block');
     const sameLand = (a, b) => !(a.poly && b.poly) || landShare(a.poly, b.poly) >= 0.5 || landShare(b.poly, a.poly) >= 0.5;
     for (const r of live) {
       if (r.kind !== 'application' || r.phase !== 'approved' || (!committingApproval(r) && !isRegistered(r))) continue;
       const at = approvedDate(r);
-      r.superseded = at != null && masters.some(m => m !== r && recStart(m) > at && sameLand(r, m)) || undefined;
+      r.superseded = at != null && masters.some(m => m !== r && recStart(m) > at && sameLand(r, m) && replaces(r, m)) || undefined;
     }
     // Redevelopment: files that start after an earlier build on the site was
     // completed are a new cycle, and the site's phase is that cycle's phase.

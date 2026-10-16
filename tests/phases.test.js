@@ -172,6 +172,13 @@ test('a draft-approved or registered plan of subdivision is phase 3 (SPEC §2); 
   const bp = (id, ref, status, issued, fin) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { BP_NUMBER: ref, ADDRESS: '7 Oak St', STATUS: status, ISSUE_DATE: Date.UTC(issued, 0, 1), FINAL_DATE: fin ? Date.UTC(fin, 0, 1) : null } }, pm, permitSrc);
   assert.equal(P.buildProjects([app(1, '21T-M 21-1', 'Draft Approved')])[0].phase, 'approved', 'draft plan approved commits the land (was: under review until registration)');
   assert.equal(P.buildProjects([app(1, '21T-M 21-1', 'Registered')])[0].phase, 'approved');
+  // (user decision 2026-10-16) A later zoning amendment on its land doesn't undo a draft approval;
+  // a newer draft plan on the same land does.
+  const later = (id, ref, status) => P.normalizeRecord({ type: 'Feature', id, geometry: pt, properties: { FILE_NO: ref, STATUS: status, ADDRESS: '7 Oak St', SUBMITTED_DATE: Date.UTC(2024, 0, 1) } }, am, appSrc);
+  const am2 = P.detectFields([{ name: 'FILE_NO' }, { name: 'STATUS' }, { name: 'ADDRESS' }, { name: 'SUBMITTED_DATE', type: 'esriFieldTypeDate' }, { name: 'APPROVAL_DATE', type: 'esriFieldTypeDate' }]);
+  const da = () => P.normalizeRecord({ type: 'Feature', id: 1, geometry: pt, properties: { FILE_NO: '21T-M 21-1', STATUS: 'Draft Approved', ADDRESS: '7 Oak St', SUBMITTED_DATE: Date.UTC(2021, 0, 1), APPROVAL_DATE: Date.UTC(2022, 0, 1) } }, am2, appSrc);
+  assert.equal(P.buildProjects([da(), later(8, 'OZ 24/3', 'Under Review')])[0].phase, 'approved', 'a pending rezoning after the draft approval keeps it committed');
+  assert.equal(P.buildProjects([da(), later(9, '21T-M 24-2', 'Under Review')])[0].phase, 'review', 'a newer draft plan on the same land replaces it');
   const demo = bp(2, 'HOUSDEMO 22-1', 'Completed', 2022, 2022);
   assert.equal(P.buildProjects([app(3, 'SP 22/9', 'Under Review'), demo])[0].phase, 'review', 'a finished demolition is not the new building');
 });
