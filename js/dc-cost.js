@@ -145,14 +145,15 @@
   function dcaTimingChart(list, n = 6) {
     const { rows, more } = timingRows(list || [], n);
     if (!rows.length) return '';
-    const W = chartW(320, 760), L0 = Math.min(220, Math.round(W * 0.42)), R0 = 12, T0 = 12, RH = 26, B0 = 26, H = T0 + rows.length * RH + B0;
-    const x0 = MM().THIS_YEAR, x1 = SP().hz.end, AFTER = 4;
+    const W = chartW(320, 760), L0 = Math.min(250, Math.round(W * 0.45)), R0 = 12, T0 = 12, RH = 26, B0 = 26, H = T0 + rows.length * RH + B0;
+    const x0 = MM().THIS_YEAR, x1 = SP().hz.end, AFTER = 9;
     const x = y => L0 + (W - L0 - R0) * (Math.min(Math.max(y, x0), x1 + AFTER) - x0) / Math.max(1, x1 + AFTER - x0);
     const yOf = i => T0 + i * RH + RH / 2;
-    const ticks = []; for (let y = x0; y <= x1; y += 5) ticks.push(y); if (ticks[ticks.length - 1] !== x1) ticks.push(x1);
-    const nMax = Math.max(14, Math.floor((L0 - 10) / 7)), cut = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
+    // (every ten years when the plot is narrow, so the labels never touch)
+    const every = W - L0 < 380 ? 10 : 5, ticks = []; for (let y = x0; y <= x1; y += every) ticks.push(y); if (x1 - ticks[ticks.length - 1] >= every * 0.7) ticks.push(x1);
+    const nMax = Math.max(14, Math.floor((L0 - 10) / 6.6)), cut = s => { s = String(s || ''); return s.length > nMax ? `${s.slice(0, nMax - 1)}…` : s; };
     const col = r => (timingOf(r) === 'late' ? 'var(--cap-over)' : timingOf(r) === 'close' ? 'var(--cap-tight)' : 'var(--cap-room)');
-    const aft = x(x1 + AFTER / 2);
+    const aft = x(x1 + AFTER * 0.6);
     return `<h3 class="sub-title pnl-chart-t">When the capacity runs out vs when the project is in service <span class="pnl-chart-u">(year)</span></h3>
     <svg class="dca-chart dca-tl" viewBox="0 0 ${W} ${H}" style="max-width:${W}px" role="img" aria-label="For ${rows.length} DC projects, late or close first: the year the capacity runs out and the year the project is in service">
       ${ticks.map(y => `<line x1="${x(y).toFixed(1)}" x2="${x(y).toFixed(1)}" y1="${T0 - 4}" y2="${H - B0}" class="dca-grid"/><text x="${x(y).toFixed(1)}" y="${H - 8}" class="dca-ax" text-anchor="middle">${y}</text>`).join('')}

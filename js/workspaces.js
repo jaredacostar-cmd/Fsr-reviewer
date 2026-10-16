@@ -294,10 +294,10 @@
     const oldest = list.reduce((a, r) => (r.year && (!a || r.year < a.year) ? r : a), null);
     return {
       calc: true, fullTitle: 'Servicing › Network · Old pipes',
-      head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Network' }], name: 'Which old pipes carry the most growth?', status: list.length ? { tone: 'tight', text: `${fmtNum(runs.length)} runs` } : { tone: 'room', text: 'None' }, identity: `Sanitary sewers 300 mm+ · ${OLD.age}+ years old or rated ${OLD.risk.toLowerCase()} risk · ${OLD.minUnits}+ units at build-out` },
-      answer: list.length ? `<strong>${fmtNum(list.length)}</strong> sewer segments (${fmtNum(runs.length)} runs of one main) are ${OLD.age}+ years old or rated moderate risk and carry ${OLD.minUnits}+ planned units at build-out; <strong>${esc(`${runs[0].d} mm, ${runs[0].year || 'year not recorded'}`)}</strong> carries the most (${fmtNum(Math.round(runs[0].units))} units).` : `No sewer ${OLD.age}+ years old or rated moderate risk carries ${OLD.minUnits}+ planned units at build-out.`,
+      head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Network' }], name: 'Which old pipes carry the most growth?', status: !list.length ? { tone: 'room', text: 'None' } : risky ? { tone: 'tight', text: `${fmtNum(risky)} moderate risk` } : null, identity: `Sanitary sewers 300 mm+ · ${OLD.age}+ years old or rated ${OLD.risk.toLowerCase()} risk · ${OLD.minUnits}+ units at build-out` },
+      answer: list.length ? `<strong>${fmtNum(runs.length)}</strong> sewer runs (${fmtNum(list.length)} pipe segments) are ${OLD.age}+ years old or rated moderate risk and carry ${OLD.minUnits}+ planned units at build-out. The one carrying the most is <strong>${esc(`the ${runs[0].d} mm main${runs[0].plant ? ` to ${(root.PeelSvcData && root.PeelSvcData.PLANT_SHORT && root.PeelSvcData.PLANT_SHORT[runs[0].plant]) || runs[0].plant}` : ''}`)}</strong>, ${runs[0].year ? `laid in ${runs[0].year}` : 'year not recorded'} (${fmtNum(Math.round(runs[0].units))} units).` : `No sewer ${OLD.age}+ years old or rated moderate risk carries ${OLD.minUnits}+ planned units at build-out.`,
       figures: [
-        { v: fmtNum(runs.length), u: 'runs', label: 'on the list', ctx: `${fmtNum(list.length)} segments · ${OLD.minUnits}+ units at build-out` },
+        { v: fmtNum(runs.length), u: 'sewer runs', label: 'on the list', ctx: `${fmtNum(list.length)} pipe segments · ${OLD.minUnits}+ units at build-out` },
         { v: fmtNum(old), u: 'pipes', label: `${OLD.age}+ years old`, ctx: `installed ${now() - OLD.age} or earlier` },
         { v: fmtNum(risky), u: 'pipes', label: 'rated moderate risk', ctx: 'the Region’s highest rating in the data', tone: risky ? 'tight' : 'room' },
         oldest ? { v: oldest.year, u: '', label: 'oldest on the list', ctx: `${oldest.d} mm${oldest.mat ? ` ${esc(oldest.mat)}` : ''} · ${fmtNum(Math.round(oldest.units))} units` } : { v: fmtNum(Math.round(units)), u: 'units', label: 'most carried', ctx: '' },
@@ -326,7 +326,7 @@
     const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null, rows = weekRows();
     const muni = App() && App().state.muni;
     return {
-      head: { trail: [{ label: 'Peel' }, ...(muni ? [{ label: muni }] : []), { label: 'Overview' }], name: 'What changed this week?', status: rows.length ? { tone: 'stage', text: `${fmtNum(rows.length)} changes` } : null, identity: a && a.head ? a.head.identity : esc(muni || 'Peel') },
+      head: { trail: [{ label: 'Peel' }, ...(muni ? [{ label: muni }] : []), { label: 'Overview' }], name: 'What changed this week?', status: null, identity: a && a.head ? a.head.identity : esc(muni || 'Peel') },
       answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> change${rows.length === 1 ? '' : 's'} since the last data update: files that moved stage, new files, capital and EA dates.` : 'Nothing changed since the last data update.',
       lists: [{ title: 'This week', rows: rows.slice(0, 5), total: rows.length, seeAll: { 'data-full-table': 'overview' } }],
       method: 'Changes between the last two data updates: files whose stage moved, files listed for the first time (not those already completed), Region capital projects and EAs with a review period closing or a DC-matched date moved later.',

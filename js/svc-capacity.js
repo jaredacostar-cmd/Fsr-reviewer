@@ -194,7 +194,7 @@
   function tableHTML(rows) {
     const sortBtn = (k, t, tip) => `<button type="button" class="btn small${st.sort === k ? ' on' : ''}" data-cap-sort="${k}" aria-pressed="${st.sort === k}" title="${tip}">${t}</button>`;
     const nOver = rows.filter(r => r.pctBo >= 100).length, soon = sortRows(rows, 'limit', MM().THIS_YEAR)[0];
-    const hl = `<strong>${rows.length}</strong> facilities, water and wastewater together${nOver ? `: <strong>${nOver}</strong> over 100% of capacity at build-out` : ': none over 100% at build-out'}${soon && soon.limit.y != null ? `; the soonest limit is <strong>${esc(soon.name)}</strong> (${yTxt(soon.limit.y, SP().hz.end)}, ${esc(soon.limit.what)})` : ''}.`;
+    const hl = `<strong>${rows.length}</strong> facilities, water and wastewater together${nOver ? `: <strong>${nOver}</strong> over 100% of capacity at build-out` : ': none over 100% at build-out'}${soon && soon.limit.y != null ? `; <strong>${esc(soon.name)}</strong> is the first to reach its limit (${esc(limitWords(soon.limit.what))}: ${whenWords(soon.limit.y, SP().hz.end)})` : ''}.`;
     return `${U.hlP ? U.hlP(hl) : `<p>${hl}</p>`}
       <div class="svc-head"><div class="svc-switches"><div class="svc-switch" role="group" aria-label="Sort"><span class="muted small">Sort</span>${sortBtn('limit', 'Limit year', 'Soonest limit year first')}${sortBtn('impact', 'Impact', 'Most loaded at build-out first (% of capacity)')}</div>${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
       <table class="dt svc-table cap-all" data-info="servicing-capacity"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">Limit year</th><th class="n">Room / over<br><small>at build-out, to 100%</small></th><th class="n xc">Capacity</th><th class="n xc">Today</th><th class="n xc">With approved</th><th class="n xc">Build-out</th></tr></thead>
@@ -220,6 +220,10 @@
         ${barOf(r)}<div class="pnl-r-meta"><span>${KIND[r.kind] || r.system} · ${pctTxt(r.pctCom)} with approved → ${pctTxt(r.pctBo)} at build-out</span><span class="t-${relT}">${esc(rel)}</span></div>
         <small class="pnl-r-line">Impact: ${esc(r.impact.text)}</small>` };
   }
+  // Bundle 5: a limit in words ("reaches its firm capacity"), and when ("already", "≈2028").
+  const LIMIT_WORDS = { '100% firm': 'its firm capacity', '90% trigger': 'its 90% expansion trigger', 'required > available': 'more storage needed than it has', '100% full pipe': 'a full pipe' };
+  const limitWords = what => LIMIT_WORDS[what] || what;
+  const whenWords = (y, end) => (y === 'today' ? 'already' : y == null ? `not before ${end}` : `≈${y}`);
   function panelSpec(all) {
     const now = MM().THIS_YEAR, end = SP().hz.end;
     const rows = st.sys === 'all' ? all : all.filter(r => r.sys === st.sys), sorted = sortRows(rows, st.sort, now);
@@ -234,11 +238,11 @@
       calc: true, fullTitle: `Servicing › Capacity · Peel · ${sysWord}`,
       head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Capacity' }], name: 'Can the system take it?', status: over.length ? { tone: 'over', text: `${over.length} over` } : tight.length ? { tone: 'tight', text: `${tight.length} tight` } : { tone: 'room', text: 'Room' },
         identity: `Peel · ${sysWord}: ${[plural(n('plant'), 'plant', 'plants'), plural(n('wplant'), 'treatment system', 'treatment systems'), plural(n('pump'), 'pumping group', 'pumping groups'), plural(n('storage'), 'storage facility', 'storage facilities'), plural(n('ps'), 'pumping station', 'pumping stations')].filter(x => !/^0 /.test(x)).join(' · ')}` },
-      answer: `<strong>${over.length}</strong> of ${rows.length} facilities are over capacity at build-out${tight.length ? ` and <strong>${tight.length}</strong> more are tight (90–100%)` : ''}${soon && soon.limit.y != null ? `; the soonest limit is <strong>${esc(soon.name)}</strong> (${yTxt(soon.limit.y, end)}, ${esc(soon.limit.what)})` : ''}${big && big.impact.past > 0 ? `; the largest impact is <strong>${esc(big.name)}</strong>` : ''}.`,
+      answer: `<strong>${over.length}</strong> of ${rows.length} facilities are over capacity at build-out${tight.length ? ` and <strong>${tight.length}</strong> more are tight (90–100%)` : ''}.${soon && soon.limit.y != null ? ` <strong>${esc(soon.name)}</strong> is the first to reach its limit (${esc(limitWords(soon.limit.what))}: ${whenWords(soon.limit.y, end)})${big && big.impact.past > 0 ? big === soon ? ' and goes furthest past it at build-out' : `; <strong>${esc(big.name)}</strong> goes furthest past its limit at build-out` : ''}.` : big && big.impact.past > 0 ? ` <strong>${esc(big.name)}</strong> goes furthest past its limit at build-out.` : ''}`,
       figures: [
         { v: over.length, u: 'over', label: 'over capacity at build-out', ctx: `of ${rows.length} facilities`, tone: over.length ? 'over' : 'room' },
         { v: tight.length, u: 'tight', label: '90–100% at build-out', ctx: 'past the 90% trigger, under 100%', tone: tight.length ? 'tight' : 'room' },
-        soon ? { v: soon.limit.y === 'today' ? 'now' : soon.limit.y == null ? `after ${end}` : soon.limit.y, u: '', label: 'soonest limit', ctx: `${esc(soon.name)} · ${esc(soon.limit.what)}`, tone: soon.limit.y != null ? 'over' : 'room' } : null,
+        soon ? { v: soon.limit.y === 'today' ? 'Now' : soon.limit.y == null ? `after ${end}` : `≈${soon.limit.y}`, u: '', label: soon.limit.y === 'today' ? 'soonest limit: already reached' : 'soonest limit', ctx: `${esc(soon.name)}: ${esc(limitWords(soon.limit.what))}`, tone: soon.limit.y != null ? 'over' : 'room' } : null,
         big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo) } : null,
       ].filter(Boolean),
       chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${sorted[0].capWord} capacity)</span></p>${barOf(sorted[0])}${LB() ? LB().legendHTML([{ layer: 'existing' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) : ''}` : '',
@@ -295,9 +299,9 @@
     PN.set('svc:checks', {
       calc: true, fullTitle: 'Servicing › Model checks · the model against the 2020 Master Plan and the 2025 reports',
       head: PN.areaHead('Servicing › Model checks', 'Does the model match the reports?', null, `Peel · ${cal ? 'capacity check: calibrated to the 2025 plant flows' : 'design flows (Peel criteria)'}`),
-      answer: cal ? `The wastewater model is scaled to each plant's 2025 reported flow: ${plants.map(x => `<strong>${esc(SD().PLANT_SHORT[x.pl])}</strong> ×${x.c.f.toFixed(2)}`).join(', ')}. The factor absorbs existing employment, infiltration and flows the model does not hold.` : 'Design flows at Peel criteria: switch the Scenario to the capacity check (2025 flows) to see the calibration factors. The comparisons with the Master Plan and the 2025 reports are below.',
-      figures: [...plants.map(x => ({ v: `×${x.c.f.toFixed(2)}`, u: '', label: `${SD().PLANT_SHORT[x.pl]} calibration`, ctx: '2025 reported ÷ the model today' })),
-        ...(sp ? [{ v: fmt1(sp.maxDayMLd), u: 'ML/d', label: 'South Peel 2025 max day', ctx: `of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)` }] : [])].slice(0, 4),
+      answer: cal ? `Each plant's measured 2025 flow is compared with what the model works out for today, and the model is scaled to match: ${plants.map(x => `<strong>${esc(SD().PLANT_SHORT[x.pl])}</strong> measured ${x.c.f.toFixed(2)} times the model's flow`).join(', ')}. The difference is what the model does not hold: existing jobs, rain and groundwater getting into the sewers, and other flows.` : 'Design flows at Peel criteria: switch the Scenario to the capacity check (2025 flows) to see the calibration factors. The comparisons with the Master Plan and the 2025 reports are below.',
+      figures: [...plants.map(x => ({ v: `×${x.c.f.toFixed(2)}`, u: '', label: `${SD().PLANT_SHORT[x.pl]}: measured ÷ modelled`, ctx: 'calibration factor: 2025 measured flow ÷ the model today' })),
+        ...(sp ? [{ v: fmt1(sp.maxDayMLd), u: 'ML/d', label: 'South Peel 2025 maximum day', ctx: `of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)` }] : [])].slice(0, 4),
       lists: [{ title: 'Checks in the full table', rows: [
         check('2020 Master Plan vs this tracker', 'Wastewater plants (average day) and water (maximum day): build-out here against the Master Plan forecast, and the year the Master Plan expected that flow.'),
         check('2025 annual reports vs the model', 'Each plant: rated capacity, reported average and highest day, the model today and the calibration factor.'),
@@ -345,17 +349,17 @@
     PN.set('svc:network', {
       calc: true, fullTitle: 'Servicing › Network · Peel: blocks, pumping stations and pressure zones',
       head: PN.areaHead('Servicing › Network', 'Where does it flow?', psOver.length ? { tone: 'over', text: `${psOver.length} station${psOver.length === 1 ? '' : 's'} over` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(blocks.length)} wastewater blocks · ${fmtNum(ps.length)} pumping stations · ${fmtNum(zones.length)} pressure zones`),
-      answer: `Wastewater builds up through <strong>${fmtNum(blocks.length)}</strong> blocks to the plants${big ? `; <strong>${esc(SD().drName(big.a))}</strong> carries the most (${fmt1(big.bo)} ML/d at build-out)` : ''}. <strong>${fmtNum(psOver.length)}</strong> of ${fmtNum(ps.length)} pumping stations with a firm capacity on file are over it at build-out${zg ? `; water grows most in <strong>${esc(zg.z.name)}</strong> (+${fmt1(zg.bo - zg.now)} ML/d maximum day)` : ''}.`,
+      answer: `Sewage flows through <strong>${fmtNum(blocks.length)}</strong> wastewater blocks to the plants${big ? `; <strong>${esc(SD().drName(big.a))}</strong> carries the most (${fmt1(big.bo)} ML/d on an average dry day at build-out)` : ''}. <strong>${fmtNum(psOver.length)}</strong> of ${fmtNum(ps.length)} pumping stations with a firm capacity on file would be over it in a storm at build-out${zg ? `; water use grows most in <strong>${esc(zg.z.name)}</strong> (+${fmt1(zg.bo - zg.now)} ML/d on the highest day)` : ''}.`,
       figures: [
         { v: fmtNum(blocks.length), u: 'blocks', label: 'wastewater blocks', ctx: 'traced to the lake' },
-        { v: fmtNum(psOver.length), u: `of ${fmtNum(ps.length)}`, label: 'stations over firm', ctx: 'peak wet at build-out', tone: psOver.length ? 'over' : 'room' },
-        big ? { v: fmt1(big.bo), u: 'ML/d', label: 'largest block flow', ctx: `${esc(SD().drName(big.a))} · average dry at build-out` } : null,
+        { v: fmtNum(psOver.length), u: `of ${fmtNum(ps.length)}`, label: 'stations over firm capacity', ctx: 'peak wet-weather flow at build-out', tone: psOver.length ? 'over' : null },
+        big ? { v: fmt1(big.bo), u: 'ML/d', label: 'largest block flow', ctx: `${esc(SD().drName(big.a))} · average dry-weather flow at build-out` } : null,
         { v: fmtNum(zones.length), u: 'zones', label: 'pressure zones', ctx: zg ? `most growth: ${esc(zg.z.name)}` : '' },
       ].filter(Boolean),
       lists: [
         { title: 'Pumping stations (tightest)', rows: SC_sort(ps).slice(0, 5).map(stRow), total: ps.length, seeAll: { 'data-full-table': 'svc' } },
-        { title: 'Blocks carrying the most flow', rows: blocks.slice(0, 5).map(b => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(SD().drName(b.a))}<small>to ${esc(SD().plantLabel(b.a.plant))}</small></span><span class="pnl-r-fig">${fmt1(b.bo)} ML/d<small>+${fmt1(b.bo - b.now)} growth</small></span></div>${netActs(b.a.id, true)}` })), total: blocks.length, seeAll: { 'data-full-table': 'svc' } },
-        { title: 'Pressure zones growing most', rows: zones.slice(0, 5).map(z => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">💧 ${esc(z.z.name)}</span><span class="pnl-r-fig">${fmt1(z.bo)} ML/d<small>+${fmt1(z.bo - z.now)} max day</small></span></div>${netActs(z.z.id, false)}` })), total: zones.length, seeAll: { 'data-full-table': 'svc' } },
+        { title: 'Blocks carrying the most flow', rows: blocks.slice(0, 5).map(b => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(SD().drName(b.a))}<small>to ${esc(SD().plantLabel(b.a.plant))}</small></span><span class="pnl-r-fig">${fmt1(b.bo)} ML/d<small>+${fmt1(b.bo - b.now)} ML/d from growth</small></span></div>${netActs(b.a.id, true)}` })), total: blocks.length, seeAll: { 'data-full-table': 'svc' } },
+        { title: 'Pressure zones growing most', rows: zones.slice(0, 5).map(z => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">💧 ${esc(z.z.name)}</span><span class="pnl-r-fig">${fmt1(z.bo)} ML/d<small>+${fmt1(z.bo - z.now)} ML/d from growth, maximum day</small></span></div>${netActs(z.z.id, false)}` })), total: zones.length, seeAll: { 'data-full-table': 'svc' } },
       ],
       method: 'Each block\u2019s own flow plus everything upstream of it along the traced flow path, building up to the plant on the lake (average dry weather at design criteria, calibrated to the 2025 plant flows in Capacity check mode). Pumping stations: peak wet weather against firm capacity (2020 Master Plan). Zones: maximum day at Peel design criteria. "What loads this?" opens it as a scope with the developments loading it; "Show upstream" shows it on the map with everything that drains into it.',
       sources: 'The Region\u2019s 40 I&amp;I sewersheds (blocks) and the traced sewer network; 2020 Water and Wastewater Master Plan (firm capacity); pressure zones (Region of Peel); the applications on the map.',
@@ -379,8 +383,8 @@
       head: PN.siteHead(p),
       answer: `${f.z ? `Water from <strong>${esc(f.z.name)}</strong>${share != null ? ` (this site ${share}% of its build-out maximum day)` : ''}` : 'No pressure zone mapped'}; wastewater ${f.path.length ? `along ${fmtNum(f.path.length)} block${f.path.length === 1 ? '' : 's'}${f.sps.length ? ` and ${f.sps.length} pumping station${f.sps.length === 1 ? '' : 's'}` : ''} to <strong>${esc(plant || '–')}</strong>` : 'with no traced path'}${usePct != null ? `, using ${usePct}% of its reserve` : ''}.`,
       figures: [
-        { v: fmt1(cb.water.maxDay), u: 'L/s', label: 'water max day', ctx: share != null ? `${share}% of ${esc(f.z.name.replace('Pressure zone ', 'zone '))}` : '' },
-        { v: fmt1(cb.wastewater.wetPeak), u: 'L/s', label: 'wastewater peak wet', ctx: `peak dry ${fmt1(cb.wastewater.peak)} L/s` },
+        { v: fmt1(cb.water.maxDay), u: 'L/s', label: 'water, maximum day', ctx: share != null ? `${share}% of ${esc(f.z.name.replace('Pressure zone ', 'zone '))}` : '' },
+        { v: fmt1(cb.wastewater.wetPeak), u: 'L/s', label: 'wastewater, peak wet weather', ctx: `${fmt1(cb.wastewater.peak)} L/s on a dry day` },
         f.cap ? { v: fmt1(Math.abs(f.reserve)), u: 'ML/d', label: f.reserve < 0 ? `${esc(plant)} over 100% after committed` : `${esc(plant)} reserve`, ctx: usePct != null ? `this site ${usePct}% of it` : '', tone: f.reserve <= 0 ? 'over' : 'room' } : null,
         { v: U.PIPE_RESULTS ? '–' : 'n/a', u: '', label: 'tightest pipe on the path', ctx: U.PIPE_RESULTS ? '' : 'pipe-by-pipe capacity is left to the Region\u2019s model' },
       ].filter(Boolean),

@@ -59,7 +59,7 @@ test('scenario chip: the basis is a set of layers (Existing + Built always)', ()
   assert.doesNotMatch(h, /data-scen-layer/, 'no layer toggles in the top bar');
   assert.match(h, /Scenario \(build-out\)/);
   // Bundle 5: the chip says "Default" or "n changes"; every setting is in its title and in the control.
-  assert.match(h, /Count: \+ in review · Units: all · Results for: build-out · Wastewater flows: 2025 metered · Water maximum day: design factor · Outside mapped areas: nearest · Design criteria: Peel v2\.0 · Units per development: tree count · Plant expansions: on/);
+  assert.match(h, /Count: \+ in review · Units: all · Map results for: build-out · Wastewater flows: 2025 metered · Water maximum day: design factor · Outside mapped areas: nearest · Design criteria: Peel v2\.0 · Units per development: tree count · Plant expansions: on/);
   assert.match(h, /<span class="tb-scen-t">1 change<\/span>/, 'the count is the one change from the default');
   assert.equal(B.countLabel('committed'), 'approved only');
   assert.equal(B.countLabel('all'), '+ pre-application');

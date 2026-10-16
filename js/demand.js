@@ -427,8 +427,16 @@
     const ha = ii / rate, f1 = v => (Math.round(v * 10) / 10).toLocaleString('en-CA');
     return `I&I ${f1(ii)} L/s over ${f1(ha)} ha (${rate} L/s/ha)`;
   }
+  // Bundle 5: the same in words, for a panel figure: "includes 2.1 L/s of rain and groundwater
+  // (I&I: 8.1 ha at 0.26 L/s/ha)".
+  function iiPlain(ii, criteria = DEFAULT_CRITERIA) {
+    const rate = criteria.wastewater && criteria.wastewater.infiltration != null ? criteria.wastewater.infiltration : DEFAULT_CRITERIA.wastewater.infiltration;
+    if (!(ii > 0) || !(rate > 0)) return '';
+    const ha = ii / rate, f1 = v => (Math.round(v * 10) / 10).toLocaleString('en-CA');
+    return `includes ${f1(ii)} L/s of rain and groundwater (I&I: ${f1(ha)} ha at ${rate} L/s/ha)`;
+  }
   const api = {
-    iiText, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+    iiText, iiPlain, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);

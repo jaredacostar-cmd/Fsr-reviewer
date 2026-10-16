@@ -122,7 +122,7 @@
       expansions: App().state.dcInfra && SPl && SPl.hz ? (SPl.hz.exp ? 'on' : 'off') : null,
       outside: o.nr === 'on' ? 'nearest' : 'left out',
       md: o.md, div: R && R.wastewater && R.wastewater.diversion ? o.div : null,
-      year: MA && MA.getCapYear ? MA.getCapYear() : null,
+      year: MA && MA.getCapYear ? MA.getCapYear() : null, yearDefault: root.PeelMapMarkers ? root.PeelMapMarkers.THIS_YEAR : null,
     };
     // Bundle 5: every setting with its default (the chip's "Default" / "n changes", the control's list).
     p.settings = LB.scenarioSettings({ ...p, criteria: n, count: p.unitCount });

@@ -32,7 +32,8 @@
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
   function pageHTML(m, note) {
-    const figs = (m.figures || []).filter(Boolean).slice(0, 4);
+    // (a zero is never coloured; n/a is never a figure)
+    const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}</header>`);
     if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
@@ -444,7 +445,7 @@
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
-    return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: atPeel ? null : { tone: 'stage', text: kind(n) }, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
+    return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       figures: [
         { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` },
         { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
@@ -505,7 +506,7 @@
     const devRow = (k, html) => ({ attrs: { 'data-ws-pick': k, 'data-ws-as': 'site' }, html });
     const W0 = (a.lists.find(l => l.title === 'This week') || { rows: [] }).rows;
     const pts = [...moved, ...added].map(x => byKey.get(x.key)).filter(Boolean);
-    return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: W0.length ? { tone: 'stage', text: `${fmtNum(W0.length)} changes` } : null, identity: a.head.identity,
+    return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: null, identity: a.head.identity,
       answer: W0.length ? `<strong>${fmtNum(W0.length)}</strong> change${W0.length === 1 ? '' : 's'} since the last data update: ${[moved.length && `${fmtNum(moved.length)} file${moved.length === 1 ? '' : 's'} moved stage`, added.length && `${fmtNum(added.length)} new file${added.length === 1 ? '' : 's'}`, ce.length && `${fmtNum(ce.length)} capital or EA date${ce.length === 1 ? '' : 's'}`].filter(Boolean).join(', ')}.` : 'Nothing changed since the last data update.',
       figures: [
         { v: fmtNum(moved.length), u: 'files', label: 'moved stage', ctx: '' },
@@ -554,11 +555,11 @@
     const SD = root.PeelSvcData;
     const worst = runs.filter(r => likeOf(r) === 3 && consOf(r) === 3).length;
     return { id: 'pipes', eyebrow: eyebrow('pipes'), name: 'Which ageing sewers carry the most growth?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer,
-      figures: [s.figures[0], { v: fmt1(km), u: 'km', label: 'length on the list', ctx: `${fmtNum(runs.length)} runs` }, { v: fmtNum(worst), u: 'runs', label: 'top-right of the grid', ctx: `${LIKE[3]} (or older + moderate risk) and ${CONS[3]}`, tone: worst ? 'over' : 'room' }, s.figures[2]],
-      mid: `<section class="page-grid" data-psec="grid"><h3>Likelihood × consequence</h3>${grid}<p class="small muted">Likelihood: install age (a moderate risk rating one band up). Consequence: planned units the run carries at build-out. Condition grades from inspection are not in the open data.</p></section>`,
+      figures: [s.figures[0], { v: fmt1(km), u: 'km', label: 'length on the list', ctx: `${fmtNum(runs.length)} sewer runs` }, { v: fmtNum(worst), u: 'sewer runs', label: 'oldest and most loaded', ctx: `${LIKE[3]} (or older + moderate risk) and ${CONS[3]}: the grid’s top-right cell`, tone: worst ? 'over' : null }, s.figures[2]],
+      mid: `<section class="page-grid" data-psec="grid"><h3 class="pnl-chart-t">Old sewer runs by age (likelihood) and the homes they carry (consequence) <span class="pnl-chart-u">(sewer runs, km)</span></h3>${grid}<p class="small muted">Likelihood: install age (a moderate risk rating one band up). Consequence: planned units the run carries at build-out. Condition grades from inspection are not in the open data.</p></section>`,
       lists: [
         { ...s.lists[0], rows: s.lists[0].rows.map(r => toMap('pipes', r)), see: { 'data-ws-go': 'pipes' } },
-        { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc((SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k)}</span><span>${fmtNum(x.n)} runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
+        { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc((SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k)}</span><span>${fmtNum(x.n)} sewer runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
       ],
       map: { svg: pipesMap(list), attrs: { 'data-ws-go': 'pipes' }, label: 'Open Old pipes on the map', caption: '<span class="hm-key hm-key-pipe"></span> old pipes on the list (heavier: moderate risk)' },
       method: `${s.method} The grid counts runs (one main: segments end to end with the same size, year, material and risk) by likelihood (age 50–64 / 65–79 / 80+ years; a moderate risk rating moves a run one band up) and consequence (planned units carried: 100–1,000 / 1,000–10,000 / 10,000+).`,

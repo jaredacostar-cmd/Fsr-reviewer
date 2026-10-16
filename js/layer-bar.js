@@ -126,7 +126,7 @@
   // "Default" or "2 changes" and the Scenario control can list them in full.
   // o: { basis, flows ('2025 metered' | 'design'), md ('design' | 'observed'), div ('off' | 'on' | null
   // when there is no diversion), outside ('nearest' | 'left out'), year (null = build-out), criteria
-  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null) }.
+  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null), yearDefault }.
   function scenarioSettings(o) {
     const b = o.basis || 'all', cur = b === 'remaining' ? 'all' : b;
     const crit = typeof o.criteria === 'number' ? o.criteria : /^\d+/.test(String(o.criteria || '')) ? parseInt(o.criteria, 10) : 0;
@@ -134,7 +134,8 @@
     return [
       row('count', 'Count', countLabel(cur), countLabel('all')),
       row('units', 'Units', b === 'remaining' ? 'left to build' : 'all', 'all'),
-      row('year', 'Results for', o.year == null ? 'build-out' : String(o.year), 'build-out'),
+      // (the map's results year starts at this year: yearDefault)
+      row('year', 'Map results for', o.year == null ? 'build-out' : String(o.year), o.yearDefault == null ? 'build-out' : String(o.yearDefault)),
       row('flows', 'Wastewater flows', o.flows || '2025 metered', '2025 metered'),
       row('md', 'Water maximum day', o.md === 'observed' ? '2025 observed factor' : 'design factor', 'design factor'),
       o.div == null ? null : row('div', 'Diversion', o.div === 'on' ? 'on' : 'off', 'off'),
