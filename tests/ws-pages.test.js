@@ -189,3 +189,11 @@ test('estimated counts: a file’s units left to build not stated on it, its sha
   // The area kind sits on the detail line, not after the name (where it wrapped with a stray dot).
   assert.match(s, /<span class="pnl-r-name">\$\{esc\(c\.name\)\}<\/span>.*<small class="pnl-r-line">\$\{esc\(kind\(c\)\)\} · /);
 });
+
+test('estimated counts: a file mixing kinds is split in proportion, and the page says so', () => {
+  const s = src('js/ws-pages.js');
+  assert.match(s, /for \(const x of parts\) kinds\[x\.kind\] = \(kinds\[x\.kind\] \|\| 0\) \+ est \* x\.units \/ raw;/);
+  assert.match(s, /A file with more than one kind of estimate is split between them in proportion to their units\./);
+  assert.match(s, /\(split in proportion\)/);
+  assert.match(s, /has its estimate split between the kinds in proportion to their units/);
+});
