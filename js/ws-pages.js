@@ -296,7 +296,10 @@
     const over = rows.filter(r => r.pctBo >= 100);
     const yr = r => (r.limit.y === 'today' ? 0 : r.limit.y);
     const trig = rows.filter(r => r.kind === 'plant' && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y))[0];
-    const dc = specOf('dca:timing', areaScope), late = dc && (dc.figures || []).find(f => f && f.label === 'late');
+    // (the DC panel builds when Capital opens; until then the same analysis, cached, gives the count)
+    const dc = specOf('dca:timing', areaScope);
+    let late = dc && (dc.figures || []).find(f => f && f.label === 'late');
+    if (!late && root.PeelDcCost && root.PeelDcCost.dcAnalysis && App() && App().state.svcModel && App().state.dcInfra && MM() && MM().SEW && MM().SEW.data) { try { const R = root.PeelDcCost.dcAnalysis(); late = { v: R.list.filter(r => r.rec === 'advance').length }; } catch (e) { late = null; } }
     const nW = week && week.rows ? week.rows.length : 0;
     const go = (page, title) => ({ 'data-ws-page': page, title });
     return [

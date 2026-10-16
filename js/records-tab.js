@@ -89,7 +89,8 @@
       lists: [{ title: 'Sources', rows: fr.slice(0, 5).map(r => { const [tone, word] = ST_WORD[r.st] || ST_WORD.ref; return PN.kv(esc(r.name), `${r.date ? esc(r.date) : '–'} · ${word}`, tone); }), total: fr.length, seeAll: { 'data-full-table': 'records' } }],
       method: 'Each source with the date of the data the app holds and how often it is refreshed; due = past its refresh interval, stale = past twice that. The reports behind the design criteria and the comparisons are listed in the full table.',
       sources: 'Municipal open data (applications, permits, plans), Region of Peel open data and reports, Statistics Canada, CMHC, the Ministry of Finance.',
-      foot: { primary: { label: 'Copy share link', attrs: { 'data-share': '' } } },
+      // (bundle 6: the old Data tab's refresh and source list are in the full table)
+      foot: { primary: { label: 'Refresh and manage sources', attrs: { 'data-full-table': 'records' }, title: 'Refresh live, switch or add a source (was the Data tab)' }, secondary: [{ label: 'Copy share link', attrs: { 'data-share': '' } }] },
     };
   }
   function checksPanelSpec() {
@@ -103,7 +104,7 @@
       lists: a ? [{ title: 'Checks', rows: a.checks.slice(0, 5).map(c => PN.kv(esc(c.label), `${c.value ? '✕' : '✓'} ${fmtNum(c.value)}`, c.value ? 'tight' : 'room')), total: a.checks.length, seeAll: { 'data-full-table': 'records' } }] : [],
       method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model\u2019s checks are Servicing › Model checks.',
       sources: 'The municipal application and permit records; Region of Peel published totals and permit figures.',
-      foot: { primary: { label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } } },
+      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } }] },
     };
   }
   // Failing checks as one caveat line each (Home, Stage 4): sources due for a refresh, permit counts

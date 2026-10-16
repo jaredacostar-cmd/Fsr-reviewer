@@ -3328,7 +3328,7 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .help-page .help-card { margin: 0 0 6px; }
 /* The sidebar: the active workspace with a filled accent bar */
 .home-ws.on { box-shadow: inset 4px 0 0 var(--accent); }
-.week-link { margin: var(--space-2) 0; }
+.week-link { margin: var(--space-2) var(--space-3); }
 /* Saved views: one-tap chips at the top of Find, each with × */
 .chip-saved { display: inline-flex; align-items: center; gap: 0; margin: 0 4px 4px 0; }
 .chip-saved .chip { border-top-right-radius: 0; border-bottom-right-radius: 0; margin: 0; }

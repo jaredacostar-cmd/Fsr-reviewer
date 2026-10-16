@@ -213,7 +213,7 @@
     PeelPlanAreas.tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
-    if (!$('#tab-data').hidden) PeelDataTab.renderAudit();
+    { const c = $('#rec-data-checks'); if (c && !c.hidden) PeelDataTab.renderAudit(); }   // (the duplicate check is under Records › Data checks since bundle 6)
     state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     PeelSearchFilter.renderMuniChips();
     PeelTimeline.updateYearBounds();
