@@ -194,7 +194,7 @@
   const needRow = (c, ppu, extra = '') => `<tr><td class="${{ gap: 'gap', planned: 'ok', check: 'chk', ok: 'muted' }[c.status]}">${esc({ gap: 'Screens late', planned: 'DC in time', check: 'Check data', ok: 'Room' }[c.status])}</td>
     <td>${esc(c.name)}<br><span class="muted">${esc(c.sub)}</span></td><td class="n">${c.room == null ? 'new' : c.room <= 0 ? (c.kind === 'plant' || c.kind === 'wplant' ? `${ST().pctRated(c, 'com')}% of rated (trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)` : `over ${Math.round((c.util.com - 1) * 100)}%`) : `${fmtNum(roundPop(c.people))} people<br><span class="muted">≈${fmtNum(Math.round(c.people / ppu))} units</span>`}</td>
     <td>${c.out === 'today' ? 'already' : c.out == null ? `after ${SP().hz.end}` : `≈${c.out}`}</td><td>${c.relief.length ? esc(c.relief.slice(0, 2).map(r => r.text).join('; ')) : '<span class="muted">none on the DC map</span>'}</td>${extra}</tr>`;
-  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room to the trigger after committed</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
+  const needHead = extra => `<tr><th>Status</th><th>Existing capacity</th><th class="n">Room to the trigger after approved</th><th>Runs out</th><th>DC relief</th>${extra || ''}</tr>`;
   function reportFooter() {
     const m = EX().reportMeta('growth');
     return `<p class="note"><strong>${esc(root.PeelUtil.SCREEN_LINE)}</strong> ${esc(root.PeelUtil.CRITERIA_STAMP)}.</p><p class="note">${esc(m.lines.slice(0, 3).join(' · '))}. ${esc(ST().scenarioText())}. Peel design criteria; a screening estimate, not a hydraulic model or a functional servicing report. 2026 DC capital maps are a draft, not approved by Council.</p>`;

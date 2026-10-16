@@ -100,7 +100,7 @@
   // on the tabs, the map legend, the exports and share links.
   function scenarioText() {
     const R = App().state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
-    const basisTxt = { all: 'All units', buildout: 'Units applied for (no anticipated)', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
+    const basisTxt = { all: 'All units', buildout: 'Units applied for (no pre-application)', committed: 'Approved units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, Sett().wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, App().state.dcInfra ? `plant expansions ${SP().hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
       `counting: ${basisTxt}${window.PeelTreeCounts ? ` (${window.PeelTreeCounts.label()})` : ''}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
@@ -141,7 +141,7 @@
     const units = `<div class="svc-switch" role="group" aria-label="Units"><span class="muted small">Units</span>${[['all', 'All'], ['remaining', 'Left to build']].map(([v, t]) =>
       `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
     const A = root.PeelLayers && root.PeelLayers.NOTE;
-    const def = A ? `<p class="small muted ly-def">Committed: ${esc(A.committed)}. Proposed: ${esc(A.proposed)}. Anticipated: ${esc(A.anticipated)}.</p>` : '';
+    const def = A ? `<p class="small muted ly-def">Approved, not yet built (committed): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}.</p>` : '';
     return count + units + def;
   };
   // Results for year: the year the capacity colours, pipe loads and station loads are worked
@@ -188,9 +188,9 @@
   function svcBar(l) {
     const t = l.census + l.built + l.approved + l.proposed, max = t || 1;
     const seg = (k, cls, label) => l[k] > 0 ? `<span class="gseg ${cls}" style="width:${(100 * l[k] / max).toFixed(2)}%" title="${label}: ${fmtNum(Math.round(l[k]))} people"></span>` : '';
-    return `<div class="svc-bar" role="img" aria-label="Build-out ${fmtNum(Math.round(t))} people">${seg('census', 'g-base', 'Census')}${seg('built', 'g-built', 'Built since')}${seg('approved', 'g-approved', 'Committed')}${seg('proposed', 'g-proposed', 'Proposed')}</div>`;
+    return `<div class="svc-bar" role="img" aria-label="Build-out ${fmtNum(Math.round(t))} people">${seg('census', 'g-base', 'Census')}${seg('built', 'g-built', 'Built since')}${seg('approved', 'g-approved', 'Approved')}${seg('proposed', 'g-proposed', 'In review')}</div>`;
   }
-  const svcLegend = Y => `<ul class="grow-legend svc-legend"><li><span class="gsw g-base"></span>${Y} Census</li><li><span class="gsw g-built"></span>Built since</li><li><span class="gsw g-approved"></span>Committed</li><li><span class="gsw g-proposed"></span>Proposed (in review)</li><li class="muted">Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map</li></ul>`;
+  const svcLegend = Y => `<ul class="grow-legend svc-legend"><li><span class="gsw g-base"></span>${Y} Census</li><li><span class="gsw g-built"></span>Built since</li><li><span class="gsw g-approved"></span>Approved, not yet built</li><li><span class="gsw g-proposed"></span>In review</li><li class="muted">Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map</li></ul>`;
   // Drainage areas as a tree along the sewer flow path (data/servicing.json: downstream).
   function svcFlowTree() {
     const ids = new Set(App().state.servicing.drainage.map(d => d.id));

@@ -422,7 +422,7 @@
       for (const s of f.sps) if (s.wet >= s.firm) out.push(chip(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn'));
       if (f.cap) {
         if (f.reserve <= 0) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} screens over rated capacity`, 'warn'));
-        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% committed`, 'warn'));
+        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% with approved`, 'warn'));
       }
     }
     return out;

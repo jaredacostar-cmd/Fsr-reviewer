@@ -11,7 +11,7 @@ const widths = html => [...html.matchAll(/class="ly-seg ly-(\w+)" style="left:([
 test('segments stack in order, proportional to value', () => {
   const h = B.barHTML({ segments: [{ layer: 'existing', value: 50 }, { layer: 'committed', value: 25 }, { layer: 'proposed', value: 25 }], max: 100 });
   assert.deepEqual(widths(h), [['existing', 0, 50], ['committed', 50, 25], ['proposed', 75, 25]]);
-  assert.match(h, /role="img" aria-label="Existing 50, Committed 25, Proposed 25"/);
+  assert.match(h, /role="img" aria-label="On the system \(2021 census\) 50, Approved, not yet built \(committed\) 25, In review 25"/);
 });
 
 test('rated: grey tick at 100%, white tick at the trigger, red hatch only beyond rated', () => {
@@ -34,8 +34,8 @@ test('zero or unknown layers draw nothing; values escape in tooltips', () => {
 });
 
 test('the site badge: phase and layer together, with what is left to permit', () => {
-  assert.match(B.badgeHTML('5 · under construction', { layer: 'committed', units: 537, toPermit: 343 }), /counts as Committed · 343 left/);
-  assert.match(B.badgeHTML('2 · under review · zoning approved', { layer: 'proposed', units: 9862, toPermit: 9862 }), /counts as Proposed<\/span>/);
+  assert.match(B.badgeHTML('5 · under construction', { layer: 'committed', units: 537, toPermit: 343 }), /counts as Approved · 343 left/);
+  assert.match(B.badgeHTML('2 · under review · zoning approved', { layer: 'proposed', units: 9862, toPermit: 9862 }), /counts as In review<\/span>/);
 });
 
 test('the tokens exist in css/app.css and the bar uses them', () => {
@@ -58,10 +58,10 @@ test('scenario chip: the basis is a set of layers (Existing + Built always)', ()
   const h = B.scenarioChipHTML({ basis: 'buildout', flows: '2025 metered', criteria: 'Peel v2.0', count: 'tree', expansions: 'on', outside: 'nearest' });
   assert.doesNotMatch(h, /data-scen-layer/, 'no layer toggles in the top bar');
   assert.match(h, /Scenario \(build-out\)/);
-  assert.match(h, /Count: \+ proposed · Flows: 2025 metered · Criteria: Peel v2\.0 · Unit counting: tree · Expansions: on · Outside zones: nearest/);
-  assert.equal(B.countLabel('committed'), 'committed only');
-  assert.equal(B.countLabel('all'), '+ anticipated');
-  assert.equal(B.countLabel('remaining'), '+ anticipated, left to build');
+  assert.match(h, /Count: \+ in review · Flows: 2025 metered · Criteria: Peel v2\.0 · Unit counting: tree · Expansions: on · Outside zones: nearest/);
+  assert.equal(B.countLabel('committed'), 'approved only');
+  assert.equal(B.countLabel('all'), '+ pre-application');
+  assert.equal(B.countLabel('remaining'), '+ pre-application, left to build');
 });
 
 test('the buildout basis counts every layer applied for, without Anticipated', () => {
@@ -79,11 +79,11 @@ test('one scenario line: the chip in the top bar; no footer line, no in-tab copy
   assert.match(read('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
 });
 
-test('site badge: Bovaird → "2 · Under review · zoning approved → counts as Proposed"; Embleton → "Committed · 343 left"', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
+test('site badge: Bovaird → "2 · Under review · zoning approved → counts as In review"; Embleton → "Approved · 343 left"', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
   const H = require('./helpers/real-devs.js');
   const { byKey, projects } = H.realDevs();
   const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-  assert.equal(strip(B.siteBadgeHTML(byKey.get('Brampton|2055 BOVAIRD DR W'))), '2 · Under review · zoning approved → counts as Proposed');
+  assert.equal(strip(B.siteBadgeHTML(byKey.get('Brampton|2055 BOVAIRD DR W'))), '2 · Under review · zoning approved → counts as In review');
   const e = projects.find(p => (p.records || []).some(r => r.ref === 'C05W06.007'));
-  assert.equal(strip(B.siteBadgeHTML(e)), '5 · Under construction → counts as Committed · 343 left');
+  assert.equal(strip(B.siteBadgeHTML(e)), '5 · Under construction → counts as Approved · 343 left');
 });

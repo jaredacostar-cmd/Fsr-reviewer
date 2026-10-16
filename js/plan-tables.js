@@ -111,7 +111,7 @@
   }
   function tableHTML(r) {
     const x = (t, title) => `<th scope="col"${c('x')}${title ? ` title="${title}"` : ''}>${t}</th>`;
-    const head = `<tr><th scope="col">Area</th>${x('Developments')}<th scope="col" class="num">Units</th>${x('Committed')}${x('Proposed')}${x('Left to build')}${x('ppu', 'People per unit (people ÷ units)')}<th scope="col" class="num">People</th>${x('Jobs')}${x('In an MTSA', 'Of which in an MTSA (an overlay: never added up)')}<th scope="col" class="num" title="Parent minus the sum of the rows under it">Check</th></tr>`;
+    const head = `<tr><th scope="col">Area</th>${x('Developments')}<th scope="col" class="num">Units</th>${x('Approved')}${x('In review')}${x('Left to build')}${x('ppu', 'People per unit (people ÷ units)')}<th scope="col" class="num">People</th>${x('Jobs')}${x('In an MTSA', 'Of which in an MTSA (an overlay: never added up)')}<th scope="col" class="num" title="Parent minus the sum of the rows under it">Check</th></tr>`;
     const rows = []; bodyRows(r.root, 0, rows);
     return `<div class="tbl-scroll"><table class="dt pt-table"><thead>${head}</thead><tbody>${rows.join('')}</tbody></table></div>`;
   }
@@ -192,7 +192,7 @@
     }).join('');
     return `<section class="pt-tg"><h3 class="sub-title">Plans against their targets</h3>
       <p class="small">Each municipality against the Region's 2051 allocation of growth, and each plan against its published target, compared on <strong>units</strong>: committed (D-5-1) and all proposed. Where a target states only people, pipeline people are shown beside it (†, indicative only: targets use household persons per unit, the pipeline Peel design criteria). "unchecked" marks a figure not yet checked against its document. "total" marks a target that counts every home at build-out, existing ones included, so the pipeline (new proposals only) reads low there.</p>
-      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Committed units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Approved units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="small muted">${fmtNum(v.noTarget)} plan${v.noTarget === 1 ? '' : 's'} shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json${targets && targets.checked ? `, checked ${esc(targets.checked)}` : ''}; hover a source for its wording, ⓘ for a note. All columns adds committed units, % committed and the gap.</p></section>`;
   }
 

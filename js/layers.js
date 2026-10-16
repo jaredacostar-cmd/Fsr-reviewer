@@ -25,7 +25,7 @@
   const A = () => root.PeelAreas || req('./areas.js');
 
   const LAYERS = ['existing', 'built', 'committed', 'proposed', 'anticipated', 'to2051'];
-  const LABEL = { existing: 'Existing', built: 'Built', committed: 'Committed', proposed: 'Proposed', anticipated: 'Anticipated', to2051: 'To 2051' };
+  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const NOTE = {
     existing: 'on the system today (2021 Census)',
     built: 'completed since census day, not in the census yet',

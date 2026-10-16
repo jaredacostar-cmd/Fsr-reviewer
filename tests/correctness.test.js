@@ -107,17 +107,17 @@ test('10. pumping stations: screening note in the headline, peak wet and peak dr
 });
 
 // ---- 6. Anticipated defined; the count lives in the Scenario control ---------------------------------
-test('6. "Anticipated" carries its definition from js/layers.js wherever it appears', () => {
+test('6. Pre-application (anticipated) carries its definition from js/layers.js wherever it appears', () => {
   const Ly = require('../js/layers.js');
   assert.equal(Ly.NOTE.anticipated, 'pre-consultation, block or precinct plan: no formal file yet');
-  assert.match(src('js/overview-tab.js'), /lyTiles\.anticipated \? `<p class="small muted ly-def">Anticipated: \$\{esc\(root\.PeelLayers\.NOTE\.anticipated\)\}\.<\/p>`/);
-  assert.match(src('js/growth-ui.js'), /u\.anticipated >= 0\.5 \? `<p class="small muted ly-def">Anticipated: \$\{esc\(Ly\.NOTE\.anticipated\)\}\.<\/p>`/);
-  assert.match(src('js/svc-tab.js'), /Anticipated: \$\{esc\(A\.anticipated\)\}\./, 'and in the Scenario control beside the switch');
+  assert.match(src('js/overview-tab.js'), /lyTiles\.anticipated \? `<p class="small muted ly-def">Pre-application: \$\{esc\(root\.PeelLayers\.NOTE\.anticipated\)\}\.<\/p>`/);
+  assert.match(src('js/growth-ui.js'), /u\.anticipated >= 0\.5 \? `<p class="small muted ly-def">Pre-application: \$\{esc\(Ly\.NOTE\.anticipated\)\}\.<\/p>`/);
+  assert.match(src('js/svc-tab.js'), /Pre-application: \$\{esc\(A\.anticipated\)\}\./, 'and in the Scenario control beside the switch');
 });
 
 test('6. Count: committed only · + proposed · + anticipated, in the Scenario control; the chip shows it read-only', () => {
   const B = require('../js/layer-bar.js');
-  assert.deepEqual(B.COUNT_OPTS, [['committed', 'committed only'], ['buildout', '+ proposed'], ['all', '+ anticipated']]);
+  assert.deepEqual(B.COUNT_OPTS, [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']]);
   const st = src('js/svc-tab.js');
   assert.match(st, /<span class="muted small">Count:<\/span>\$\{LB\.COUNT_OPTS\.map/);
   assert.match(st, /\[\['all', 'All'\], \['remaining', 'Left to build'\]\]/, '"left to build" keeps its own switch');

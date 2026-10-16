@@ -192,9 +192,9 @@
     return `<h3 class="sub-title" data-info="growth-layers">By layer <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
       ${LB.barHTML({ segments: segs })}
       ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
-      ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Anticipated: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}
+      ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Pre-application: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}
       ${u.existing > 0 ? `<p class="small muted">${n0(u.existing)} more on these sites were completed before census day (in the census already, Existing).</p>` : ''}
-      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
+      <details class="see-all"><summary>By dwelling type × layer</summary><table class="dt"><thead><tr><th>Type</th>${growth.map(k => `<th class="n">${LB.nameHTML(k, true)}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></details>`;
   }
   function aggTypeRowsHTML({ bt, emp }) {
     const cols = ['planned', 'permitted', 'completed', 'left'];
