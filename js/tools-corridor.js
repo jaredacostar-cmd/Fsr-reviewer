@@ -216,7 +216,7 @@
           <div class="tile"><div class="tl">Existing sewers</div><div class="tv">${fmtInt(pipes.length)}</div></div>
           <div class="tile"><div class="tl">Planned DC works</div><div class="tv">${fmtInt(dcLines.length + dcFacs.length)}</div></div>
         </div>
-        ${devs.length ? `<table class="dt"><caption>Developments in the corridor (by units)</caption><thead><tr><th>Development</th><th>Municipality</th><th>Units</th><th>Phase</th></tr></thead><tbody>${devRows}</tbody></table>` : '<p class="muted small">No developments in the corridor.</p>'}
+        ${devs.length ? `<table class="dt"><caption>Developments in the corridor (by units)</caption><thead><tr><th>Development</th><th>Municipality</th><th>Units</th><th>Stage</th></tr></thead><tbody>${devRows}</tbody></table>` : '<p class="muted small">No developments in the corridor.</p>'}
         ${pipes.length ? `<table class="dt"><caption>Existing sanitary sewers in the corridor (by diameter)</caption><tbody>${pipeRows}</tbody></table>` : '<p class="muted small">No mapped sanitary sewers in the corridor.</p>'}
         ${(dcLines.length + dcFacs.length) ? `<table class="dt"><caption>Planned DC works in the corridor</caption><tbody>${dcRows}</tbody></table>` : '<p class="muted small">No planned DC works in the corridor.</p>'}
         <p><button type="button" class="btn small" data-corridor-export>Export CSV</button></p>`,

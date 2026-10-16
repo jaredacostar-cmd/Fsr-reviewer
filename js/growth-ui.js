@@ -7,7 +7,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, dot, hlP, unit, uUnits, store } = root.PeelUtil;
+  const { $, esc, fmtNum, dot, hlP, unit, uUnits, store, roundPop } = root.PeelUtil;
   const P = root.PeelPhases;
   const D = root.PeelDemand;
   const PD = root.PeelDesign;
@@ -38,7 +38,10 @@
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
     const fs = $('#f-sum');
-    if (fs) fs.innerHTML = `${App().state.daCtx ? `<span class="muted">Around ${esc(App().state.daCtx.title)}:</span> ` : ''}<strong>${fmtNum(set.length)}</strong> developments · <span title="Homes the applications shown propose: the largest figure across each development's files, net of homes demolished, at every stage from pre-consultation to built. Growth shows how many are permitted, built and left to build."><strong>${fmtNum(Math.round(Growth.pipelineTotals(set).planned))}</strong> homes proposed</span>${(() => { const j = set.reduce((t, p) => t + (p.phase === 'cancelled' ? 0 : App().jobsOf(p) || 0), 0); return j > 0 ? ` · <strong>${fmtNum(Math.round(j / 100) * 100)}</strong> jobs` : ''; })()}`;
+    // (at a development: the site's own units first, then its 2021 census area, named as such)
+    const daP = App().state.daCtx && App().state.daCtx.project;
+    if (fs && daP) { fs.innerHTML = `<strong>${esc(daP.title)}</strong> · <strong>${fmtNum(Math.round(Growth.pipelineTotals([daP]).planned))}</strong> homes planned <span class="muted">· its census area: ${fmtNum(set.length)} developments, ${fmtNum(Math.round(Growth.pipelineTotals(set).planned))} homes</span>`; }
+    else if (fs) fs.innerHTML = `<strong>${fmtNum(set.length)}</strong> developments · <span title="Homes the applications shown propose: the largest figure across each development's files, net of homes demolished, at every stage from pre-consultation to built. Growth shows how many are permitted, built and left to build."><strong>${fmtNum(Math.round(Growth.pipelineTotals(set).planned))}</strong> homes proposed</span>${(() => { const j = set.reduce((t, p) => t + (p.phase === 'cancelled' ? 0 : App().jobsOf(p) || 0), 0); return j > 0 ? ` · <strong>${fmtNum(Math.round(j / 100) * 100)}</strong> jobs` : ''; })()}`;
     // Keep the Overview pane's numbers in sync (as the old Demand tab did).
     if (App().state.daCtx) OV().renderOverview(); else OV().renderOverview(set, D.estimate(set, App().state.criteria, basis, App().jobsOf), basis);
   }
@@ -70,8 +73,10 @@
     // not a year of completions (design audit, Group 8: no more "2017–2027").
     const nowY = (window.PeelMapMarkers && window.PeelMapMarkers.THIS_YEAR) || new Date().getFullYear();
     const yrs = comp.years.filter(y => y.year <= nowY), yrUnits = yrs.reduce((t, y) => t + y.units, 0), yr0 = yrs.length ? yrs[0].year : null, yr1 = yrs.length ? yrs[yrs.length - 1].year : null;
+    // (completed since census day: the Built layer, as the stage chart's "Built since 2021")
+    const sinceC = set.length && root.PeelLayers ? root.PeelLayers.totals(set).units.built || 0 : 0;
     const head = set.length
-      ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
+      ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed${sinceC >= 0.5 && Math.round(sinceC) !== Math.round(t.completed) ? ` (${fmtNum(Math.round(sinceC))} since the 2021 census)` : ''}, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
       : 'No developments match the current filters.';
     // Completions per year: a compact strip; the numbers by municipality below it.
     const cmax = Math.max(1, ...yrs.map(y => y.units));
@@ -146,6 +151,36 @@
       .map(ty => PN.kv(esc(ty.label), `${fmtNum(Math.round(bt[ty.key].planned))} planned · ${fmtNum(Math.round(bt[ty.key].left))} left`));
     const muniRows = (comp.byMuni || []).slice().sort((a, b) => b.perYear - a.perYear).map(c => PN.kv(esc(c.m), `${fmtNum(Math.round(c.perYear))} completed / yr · ${fmtNum(c.projects)} devs`));
     const cmp = p ? siteCompareRows(p) : [];
+    // At a development the panel is about the site: its own units first; the developments in its 2021
+    // census area (what the tables below count) are a labelled block, never the headline.
+    if (p) {
+      const st = Growth.pipelineTotals([p]), sb = Growth.aggregateTypes([p], growthDeps().aggregate).bt;
+      const siteTypes = D.UNIT_TYPES.filter(ty => sb[ty.key] && sb[ty.key].planned >= 0.5).sort((a, b) => sb[b.key].planned - sb[a.key].planned)
+        .map(ty => PN.kv(esc(ty.label), `${fmtNum(Math.round(sb[ty.key].planned))} planned · ${fmtNum(Math.round(sb[ty.key].left))} left`));
+      const da = App().state.daCtx;
+      const areaRows = [PN.kv('Developments', fmtNum(set.length)), PN.kv('Homes planned', fmtNum(Math.round(t.planned))), PN.kv('Permitted · completed', `${fmtNum(Math.round(t.permitted))} · ${fmtNum(Math.round(t.completed))}`), PN.kv('Left to build', fmtNum(Math.round(t.left)))];
+      return {
+        calc: true, fullTitle: `Growth › Pipeline · ${p.title}: the site, and the developments in its census area`,
+        head: PN.siteHead(p),
+        answer: `<strong>${esc(p.title)}</strong> plans <strong>${fmtNum(Math.round(st.planned))}</strong> homes: ${fmtNum(Math.round(st.permitted))} permitted, ${fmtNum(Math.round(st.completed))} completed, <strong>${fmtNum(Math.round(st.left))}</strong> left to build.${da && set.length > 1 ? ` In its 2021 census area, <strong>${fmtNum(set.length)}</strong> developments propose ${fmtNum(Math.round(t.planned))} homes.` : ''}`,
+        figures: [
+          { v: fmtNum(Math.round(st.planned)), u: 'units', label: 'planned', ctx: 'this site' },
+          { v: fmtNum(Math.round(st.permitted)), u: 'units', label: 'permitted', ctx: st.planned ? `${pc(st.permitted / st.planned)} of planned` : '' },
+          { v: fmtNum(Math.round(st.completed)), u: 'units', label: 'completed', ctx: '' },
+          { v: fmtNum(Math.round(st.left)), u: 'units', label: 'left to build', ctx: st.planned ? `${pc(st.left / st.planned)} of planned` : '' },
+        ],
+        chart: layerStripHTML([p]),
+        lists: [
+          { title: 'How this site compares', rows: cmp, total: cmp.length },
+          { title: 'By dwelling type', rows: siteTypes, total: siteTypes.length },
+          ...(da && set.length > 1 ? [{ title: `In its 2021 census area (${fmtNum(set.length)} developments)`, rows: areaRows, total: areaRows.length, seeAll: { 'data-full-table': 'growth' } }] : []),
+          ...(emp.planned ? [{ title: 'Employment in its census area', rows: [PN.kv('Floor area planned', `${fmtNum(Math.round(emp.planned))} m² · ≈${fmtNum(roundPop(emp.jobs))} jobs`), PN.kv('Left to build', `${fmtNum(Math.round(emp.left))} m²`)], total: 2 }] : []),
+        ],
+        method: 'The site: its applications\u2019 planned units (net of homes demolished), with permitted and completed from its building permits. Its census area: the 2021 Census dissemination area its point falls in, and every development located in it (the full table counts these). People and jobs at Peel design criteria.',
+        sources: 'The municipal applications and building permits on the map (Records › Sources has each source and its date); Statistics Canada 2021 Census dissemination areas.',
+        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, title: 'A printable report for the developments in its census area' } },
+      };
+    }
     return {
       calc: true, fullTitle: `Growth › Pipeline · ${p ? p.title : App().state.muni || 'Peel'}: by stage, dwelling type and municipality`,
       head: p ? PN.siteHead(p) : PN.areaHead('Growth › Pipeline', 'How much is coming?', null, `${esc(App().state.muni || 'Peel')} · ${fmtNum(set.length)} developments shown`),
@@ -189,7 +224,7 @@
     const segs = growth.map(k => ({ layer: k, value: u[k], est: Math.min(u[k], t.estimatedBy[k] || 0) }));
     const bt = Ly.byType(set), n0 = v => fmtNum(Math.round(v));
     const rows = D.UNIT_TYPES.filter(ty => growth.some(k => bt[ty.key][k] >= 0.5)).map(ty => `<tr><td>${esc(ty.label)}</td>${growth.map(k => `<td class="n">${n0(bt[ty.key][k])}</td>`).join('')}</tr>`).join('');
-    return `<h3 class="sub-title" data-info="growth-layers">By layer <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
+    return `<h3 class="sub-title" data-info="growth-layers">By stage <span class="muted small">dwellings${census ? `, on ${n0(census)} census dwellings (${bc.year})` : ''}</span></h3>
       ${LB.barHTML({ segments: segs })}
       ${LB.legendHTML(growth.map(k => ({ layer: k, value: u[k] })).concat(t.estimated > 0 ? ['est'] : []))}
       ${u.anticipated >= 0.5 ? `<p class="small muted ly-def">Pre-application: ${esc(Ly.NOTE.anticipated)}.</p>` : ''}

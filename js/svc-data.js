@@ -182,7 +182,7 @@
   function devsOffReason() {
     // (a workspace switches them off on purpose: Getting tight, Projects, Old pipes)
     if (!MM().getDevsOn()) return window.PeelWorkspaces && window.PeelWorkspaces.mode() === 'ws' ? '' : 'Developments are switched off';
-    if (MM().isWW() && ['built', 'approved', 'proposed'].every(k => MM().getWwLay()[k] === false)) return 'Wastewater loads: no growth layer on';
+    if (MM().isWW() && ['built', 'approved', 'proposed'].every(k => MM().getWwLay()[k] === false)) return 'Wastewater loads: no stage selected';
     try { if (ST().getDevMode() === 'hidden' && (ST().TRACE.key || ST().WTRACE.key || ST().svcFocus.id || ST().BLK.id)) return 'Hidden while a path is shown'; } catch (e) { /* during start-up */ }
     return '';
   }

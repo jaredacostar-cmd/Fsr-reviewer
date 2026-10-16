@@ -167,7 +167,7 @@
     }
     return out;
   }
-  const TL_TYPE = { council: 'Council', phase: 'Phase', file: 'File', permit: 'Permit', permits: 'Permits' };
+  const TL_TYPE = { council: 'Council', phase: 'Stage', file: 'File', permit: 'Permit', permits: 'Permits' };
   function evHTML(x) {
     const tags = list => list.length <= 3 ? esc(list.join(', '))
       : `${esc(list.slice(0, 2).join(', '))} <details class="tl-more"><summary>+${list.length - 2} more</summary>${esc(list.slice(2).join(', '))}</details>`;

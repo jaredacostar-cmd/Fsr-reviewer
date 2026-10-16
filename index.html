@@ -127,7 +127,7 @@
           </details>
           <details class="fp-sec fp-row" id="fr-counts">
             <summary><h2 class="label" data-info="growth-layers">Counts as</h2><span class="fr-val" id="fv-counts"></span></summary>
-            <div class="chips ly-chips" id="f-layers" role="group" aria-label="Counts as (growth layer)"></div>
+            <div class="chips ly-chips" id="f-layers" role="group" aria-label="Counts as (stage)"></div>
             <p class="small muted">Capacity accounting, from each file's phase. Stage above is the process view; this is what the bars sum.</p>
           </details>
           <details class="fp-sec fp-row" id="fr-flags">
@@ -273,7 +273,7 @@
         <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Timing</button></div>
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button></div>
       <section class="f-pane pnl-host" id="pnl-growth" data-pane="growth" aria-labelledby="ftab-growth" hidden></section>
       <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
       <!-- Areas: one drill-down, Peel → municipality → plan (the plan tables), then the 2051 comparison,
@@ -286,7 +286,7 @@
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>
         <button type="button" class="btn small" data-svcsub="network">Network</button>
         <button type="button" class="btn small" data-svcsub="alloc">Allocations</button>
-        <button type="button" class="btn small" data-svcsub="checks">Checks</button>
+        <button type="button" class="btn small" data-svcsub="checks">Model checks</button>
       </div>
       <section class="f-pane pnl-host" id="pnl-svc" data-pane="svc" aria-labelledby="ftab-svc" hidden></section>
       <!-- Capacity: one table, water and wastewater (js/svc-capacity.js); the plant and water charts
@@ -334,7 +334,7 @@
         <div id="hyd-box"></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">Timing</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small lab-chip pv-hide" data-dcasub="funding">Funding <small>Labs</small></button></div>
+      <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small lab-chip pv-hide" data-dcasub="funding">Funding <small>Labs</small></button></div>
       <section class="f-pane pnl-host" id="pnl-dca" data-pane="dca" aria-labelledby="ftab-dca" hidden></section>
       <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
       <section class="f-pane" id="pane-dca-build" data-pane="dca" data-sub="projects" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-build-body"></div></section>
@@ -342,7 +342,7 @@
       <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
       <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
-      <div class="f-pane f-subtabs" data-pane="records" hidden role="group" aria-label="Records view"><button type="button" class="btn small" data-rsub="sources">Sources</button><button type="button" class="btn small" data-rsub="checks">Checks</button><button type="button" class="btn small" data-rsub="files">Files</button></div>
+      <div class="f-pane f-subtabs" data-pane="records" hidden role="group" aria-label="Records view"><button type="button" class="btn small" data-rsub="sources">Sources</button><button type="button" class="btn small" data-rsub="checks">Data checks</button><button type="button" class="btn small" data-rsub="files">Files</button></div>
       <section class="f-pane pnl-host" id="pnl-records" data-pane="records" aria-labelledby="ftab-records" hidden></section>
       <section class="f-pane" id="pane-records" data-pane="records" role="tabpanel" aria-labelledby="ftab-records" hidden><div id="records-body"></div></section>
 

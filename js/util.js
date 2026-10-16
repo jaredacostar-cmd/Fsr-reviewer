@@ -102,6 +102,11 @@
   // blocks shaped like the content, pulsing unless reduced motion is preferred.
   const skel = label => `<div class="skel-row" role="status" aria-label="${esc(label)}"><span class="skel tall" style="width:45%"></span><span class="skel"></span><span class="skel" style="width:70%"></span></div>`;
   const fmtDate = d => d ? d.toISOString().slice(0, 10) : '';
+  // A date in a sentence or a heading: one style everywhere, 'Oct 12, 2026' (UTC, so a date-only value
+  // never reads a day early). Tables keep ISO dates for sorting.
+  const dayText = d => { if (!d) return ''; const t = d instanceof Date ? d : new Date(String(d).length === 10 ? `${d}T00:00:00Z` : d); return Number.isNaN(t.getTime()) ? String(d) : t.toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }); };
+  // An estimate to three significant figures (≈141,000, not ≈141,371): the precision the method has.
+  const sig3 = v => { const a = Math.abs(v); if (!(a >= 1000)) return Math.round(v); const k = Math.pow(10, Math.floor(Math.log10(a)) - 2); return Math.round(v / k) * k; };
   const fmtNum = n => n == null ? '' : Number(n).toLocaleString('en-CA');
 
   // ---- Persistent per-viewer settings (source: app.js 27–34) --------------------
@@ -213,7 +218,7 @@
   }
   const api = {
     hoverCard,
-    $, esc, fmtNum, fmtDate, skel, estTag, store,
+    $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
     getColors,

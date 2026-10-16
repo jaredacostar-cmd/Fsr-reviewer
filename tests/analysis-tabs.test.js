@@ -116,8 +116,8 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
   assert.ok(HTML.includes('<div id="scope-body" class="scope-body" hidden aria-live="polite"></div>'), 'scope host');
 });
 
-test('index.html: growth sub-views (Pipeline · Areas · Timing)', () => {
-  assert.ok(HTML.includes('data-gsub="pipeline">Pipeline</button>') && HTML.includes('data-gsub="areas">Areas</button>') && HTML.includes('data-gsub="timing">Timing</button>'));
+test('index.html: growth sub-views (Pipeline · Areas · Forecast)', () => {
+  assert.ok(HTML.includes('data-gsub="pipeline">Pipeline</button>') && HTML.includes('data-gsub="areas">Areas</button>') && HTML.includes('data-gsub="timing">Forecast</button>'));
   assert.ok(HTML.includes('id="pane-growth-byplan" data-pane="growth" data-sub="areas"'), 'plan tables in Areas');
   assert.ok(HTML.includes('id="pane-growth-census" data-pane="growth" data-sub="areas"'), 'census & 2051 in Areas');
   assert.ok(HTML.includes('id="growth-pipeline-body"') && HTML.includes('id="growth-census-body"') && HTML.includes('id="timing-body"'), 'growth body divs missing');
@@ -125,13 +125,13 @@ test('index.html: growth sub-views (Pipeline · Areas · Timing)', () => {
 });
 
 test('index.html: Servicing sub-views, the hydraulic check behind Labs, pumping stations in Network', () => {
-  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['alloc', 'Allocations'], ['checks', 'Checks']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
+  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['alloc', 'Allocations'], ['checks', 'Model checks']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
   assert.ok(/class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="checks"/.test(HTML) && HTML.includes('id="hyd-box"'), 'hydro pane in Checks, Labs');
   assert.ok(HTML.includes('id="pane-pumpstations" data-pane="svc" data-sub="network"') && HTML.includes('id="pumpstations-body"'), 'pumping stations in Network');
 });
 
-test('index.html: Capital sub-views (Timing · Projects · EAs; Funding in Labs)', () => {
-  for (const [sub, label] of [['timing', 'Timing'], ['projects', 'Projects'], ['eas', 'EAs']]) assert.ok(HTML.includes(`data-dcasub="${sub}">${label}</button>`), `DC subtab ${sub} missing`);
+test('index.html: Capital sub-views (DC timing · Projects · EAs; Funding in Labs)', () => {
+  for (const [sub, label] of [['timing', 'DC timing'], ['projects', 'Projects'], ['eas', 'EAs']]) assert.ok(HTML.includes(`data-dcasub="${sub}">${label}</button>`), `DC subtab ${sub} missing`);
   assert.ok(HTML.includes('data-dcasub="funding">Funding <small>Labs</small></button>'), 'Funding chip (Labs)');
   assert.ok(HTML.includes('id="pane-dca-timing"') && HTML.includes('id="dca-timing-body"'), 'dca timing pane/body missing');
   assert.ok(HTML.includes('id="pane-dca-rec" data-pane="dca" data-sub="funding"') && HTML.includes('id="dca-rec-body"'), 'screening results in Funding');

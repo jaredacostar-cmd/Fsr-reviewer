@@ -80,14 +80,18 @@
 
   // ---- Group header and summary ---------------------------------------------------------------------
   // "3 on · 2 in view" (or "off"); the folded summary names what is on.
-  function headerText(g, on, inView) {
+  // (the Base map group names its background, "Grey map" or "Aerial + roads": a base map is always on)
+  const bgName = () => (typeof window !== 'undefined' && window.PeelMapCore && window.PeelMapCore.backgroundName ? window.PeelMapCore.backgroundName() : '');
+  function headerText(g, on, inView, bg = g.key === 'base' ? bgName() : '') {
     const ks = g.layers.map(l => l[0]).filter(k => on.has(k));
+    if (g.key === 'base' && bg) return ks.length ? `${bg} + ${ks.length} on` : bg;
     if (!ks.length) return 'off';
     const iv = ks.filter(k => !inView || inView.has(k)).length;
     return `${ks.length} on · ${iv} in view`;
   }
-  function summaryText(g, on) {
+  function summaryText(g, on, bg = g.key === 'base' ? bgName() : '') {
     const names = g.layers.filter(l => on.has(l[0])).map(l => l[1].replace(/ \(approximate\)$/, ''));
+    if (bg) names.unshift(bg);
     return names.length ? names.join(', ') : 'None on';
   }
   // The group switch: on if anything in it is on; switching it on turns on its primary layers.

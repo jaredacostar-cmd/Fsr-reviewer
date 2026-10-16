@@ -253,7 +253,7 @@
     const now = MM().THIS_YEAR, end = SP().hz.end, sorted = sortRows(rows, st.sort, now);
     const h = r => r.horizon || { at: [], end };
     const yc = (y, e) => (y === 'today' ? 'now' : y == null ? `after ${e}` : String(y));
-    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th>Basis</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">With approved %</th><th class="n">Build-out %</th><th class="n">Limit year</th><th class="n">Room / over</th><th>Impact</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}<th class="n">Reaches 80%</th><th class="n">Reaches 90%</th><th class="n">Reaches 100%</th></tr></thead>
+    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th>Basis</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">With approved %</th><th class="n">Build-out %</th><th class="n">Limit year</th><th class="n" title="At build-out, against 100% of the capacity">Room / over capacity</th><th title="At build-out, past the limit the Limit year uses (a plant's 90% trigger)">Impact past the limit</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}<th class="n">Reaches 80%</th><th class="n">Reaches 90%</th><th class="n">Reaches 100%</th></tr></thead>
       <tbody>${sorted.map(r => { const t = P().toneOf(r.pctBo); return `<tr data-basis="${r.basis}" class="t-${t}"><td>${esc(r.name)}<small>${esc(r.sub)}</small></td><td>${r.system}</td><td>${esc(r.compared)}</td><td>${U.basisChip ? U.basisChip(r.basis) : esc(r.basis)}</td><td class="n">${qty(r, r.cap)} <small>${r.capWord}</small></td><td class="n">${qty(r, r.existing + r.built)}</td><td class="n">${qty(r, r.committed)}</td><td class="n">${qty(r, r.buildout)}</td><td class="n">${pctTxt(r.pctCom)}</td><td class="n"><strong>${pctTxt(r.pctBo)}</strong> ${P().chip({ tone: t })}</td><td class="n">${yTxt(r.limit.y, h(r).end)}<small>${esc(r.limit.what)}</small></td><td class="n">${roomTxt(r)}</td><td>${esc(r.impact.text)}</td>${PICK.map(y => { const a = h(r).at.find(x => x[0] === y); return `<td class="n">${a ? pctTxt(a[1]) : '–'}</td>`; }).join('')}<td class="n">${yc(h(r).c80, h(r).end)}</td><td class="n">${yc(h(r).c90, h(r).end)}</td><td class="n">${yc(h(r).c100, h(r).end)}</td></tr>`; }).join('')}</tbody></table></div>`;
   }
   function render() {
@@ -293,8 +293,8 @@
     const check = (t, what) => ({ attrs: ft, html: `<div class="pnl-r-top"><span class="pnl-r-name">${t}</span></div><small class="pnl-r-line">${what}</small>` });
     const labs = root.PeelLabs && root.PeelLabs.on('hydro');
     PN.set('svc:checks', {
-      calc: true, fullTitle: 'Servicing › Checks · the model against the 2020 Master Plan and the 2025 reports',
-      head: PN.areaHead('Servicing › Checks', 'Does the model match the reports?', null, `Peel · ${cal ? 'capacity check: calibrated to the 2025 plant flows' : 'design flows (Peel criteria)'}`),
+      calc: true, fullTitle: 'Servicing › Model checks · the model against the 2020 Master Plan and the 2025 reports',
+      head: PN.areaHead('Servicing › Model checks', 'Does the model match the reports?', null, `Peel · ${cal ? 'capacity check: calibrated to the 2025 plant flows' : 'design flows (Peel criteria)'}`),
       answer: cal ? `The wastewater model is scaled to each plant's 2025 reported flow: ${plants.map(x => `<strong>${esc(SD().PLANT_SHORT[x.pl])}</strong> ×${x.c.f.toFixed(2)}`).join(', ')}. The factor absorbs existing employment, infiltration and flows the model does not hold.` : 'Design flows at Peel criteria: switch the Scenario to the capacity check (2025 flows) to see the calibration factors. The comparisons with the Master Plan and the 2025 reports are below.',
       figures: [...plants.map(x => ({ v: `×${x.c.f.toFixed(2)}`, u: '', label: `${SD().PLANT_SHORT[x.pl]} calibration`, ctx: '2025 reported ÷ the model today' })),
         ...(sp ? [{ v: fmt1(sp.maxDayMLd), u: 'ML/d', label: 'South Peel 2025 max day', ctx: `of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)` }] : [])].slice(0, 4),
@@ -305,7 +305,7 @@
         check('Existing water facilities', 'Every reservoir, tank and pumping station with its firm capacity, and the ones the Master Plan finds short by 2041.'),
         ...(labs ? [check('Hydraulic check (beta, Labs)', 'An experimental EPANET check of the large mains feeding each upper pressure zone.')] : []),
       ], total: labs ? 5 : 4, seeAll: ft }],
-      method: 'The calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs); it is applied in the capacity check mode, I&amp;I is not scaled. Data checks (freshness, duplicates, permit counts) are in Records › Checks.',
+      method: 'The calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs); it is applied in the capacity check mode, I&amp;I is not scaled. Data checks (freshness, duplicates, permit counts) are in Records › Data checks.',
       sources: 'Region of Peel 2025 annual reports (G.E. Booth, Clarkson, Inglewood; drinking water systems); 2020 Water and Wastewater Master Plan (Vol. 3 and 4); the Wastewater Collection System report (York and Toronto inflows).',
       foot: { primary: { label: 'The reports (Records)', attrs: { 'data-at': 'records:sources' }, title: 'Every report and source with its date' } },
     });

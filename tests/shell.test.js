@@ -43,17 +43,18 @@ test('left panel: the count first, Reset n filters, + Save this view', () => {
   assert.match(f, /if \(e\.target\.closest\('#f-saveview'\)\) \{ MA\(\)\.saveCurrentView\(\); return; \}/);
 });
 
-test('Stage: five toggles, then Completed (with how many since the census) and Withdrawn / refused as their own buttons', () => {
+test('Stage: one row per stage (permit and construction share one), then Built (with how many since the census) and Withdrawn / refused', () => {
   const r = src('js/render-list.js');
   assert.match(r, /const DONE = \['completed', 'cancelled'\];/);
   assert.match(r, /rows = shown\.filter\(p => !DONE\.includes\(p\.key\)\)/);
-  assert.match(r, /const DONE_LABEL = \{ completed: 'Completed', cancelled: 'Withdrawn \/ refused' \};/);
+  assert.match(r, /const DONE_LABEL = \{ completed: 'Built', cancelled: 'Withdrawn \/ refused' \};/);
   assert.match(r, /const sinceCensus = base\.filter\(p => p\.phase === 'completed' && App\(\)\.layerOf\(p\) === 'built'\)\.length;/, 'completed after census day = the Built layer');
   assert.match(r, /\$\{fmtNum\(sinceCensus\)\} since the \$\{censusYear\} census/);
   assert.match(r, /if \(next\.has\(k\)\) next\.delete\(k\); else next\.add\(k\);/, 'each one toggles on its own');
   assert.doesNotMatch(r, /Done \/ gone/);
   assert.match(src('js/app.js'), /const DEFAULT_PHASES = \(\) => new Set\(\[\.\.\.ACTIVE_PHASES, 'completed'\]\);/, 'completed shows by default; withdrawn / refused does not');
-  assert.match(src('js/search-filter.js'), /if \(b\.closest\('\.pipe-rows'\)\) \{\n      const next = new Set\(App\(\)\.state\.phases\); if \(next\.has\(b\.dataset\.phase\)\) next\.delete\(b\.dataset\.phase\); else next\.add\(b\.dataset\.phase\);/, 'rows toggle');
+  assert.match(src('js/search-filter.js'), /const ks = b\.dataset\.phase\.split\(' '\), next = new Set\(App\(\)\.state\.phases\), on = ks\.every\(k => next\.has\(k\)\);\n      for \(const k of ks\) \{ if \(on\) next\.delete\(k\); else next\.add\(k\); \}/, 'rows toggle (a merged row both its phases)');
+  assert.match(r, /\{ keys: pc\.map\(x => x\.key\), label: 'Permit \/ under construction' \}/);
 });
 
 test('Counts as: a layer filter (js/layers.js) in the filter, the chips, the reset and the link', () => {
@@ -87,9 +88,9 @@ test('bottom bar: timeline only, data date · version · change log at the right
   assert.match(src('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
 });
 
-test('map: legend names the marker unit and offers Colour sites by Phase | Layer; an In view chip', () => {
+test('map: legend names the marker unit and offers Colour sites by Stage | Counted as; an In view chip', () => {
   const m = src('js/map-analysis.js');
-  assert.match(m, /Colour sites by<\/span> \$\{b\('phase', 'Phase'\)\}\$\{b\('layer', 'Layer'\)\}/);
+  assert.match(m, /Colour sites by<\/span> \$\{b\('phase', 'Stage'\)\}\$\{b\('layer', 'Counted as'\)\}/);
   assert.match(m, /a cluster’s number is its people \+ jobs/);
   assert.match(src('js/render-list.js'), /inViewChip\.textContent = `In view · \$\{fmtNum\(n\)\} of \$\{fmtNum\(of\)\}`;/);
 });

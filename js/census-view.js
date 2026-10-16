@@ -49,7 +49,7 @@
       <div class="hyd-scroll"><table class="dt"><thead><tr><th></th><th>Starts</th><th>Completions</th><th>Absorbed</th><th>Permit units</th><th>Permit value</th></tr></thead><tbody>
         ${h.rows.map(r => `<tr${r.m === 'Peel' ? ' class="tot"' : ''}><td>${esc(r.m)}</td><td>${n(r.starts)}<small>avg ${n(r.avgStarts)}</small></td><td>${n(r.completions)}<small>avg ${n(r.avgCompl)}</small></td><td>${n(r.absorbed)}</td><td>${n(r.permits)}</td><td>${money(r.value)}</td></tr>`).join('')}
       </tbody></table></div>
-      ${pr.length ? `<p class="small muted">The check of this app's permit units against these Region figures is in ${DV().homeLine('records:checks', 'Records › Checks')}.</p>` : ''}
+      ${pr.length ? `<p class="small muted">The check of this app's permit units against these Region figures is in ${DV().homeLine('records:checks', 'Records › Data checks')}.</p>` : ''}
       <p class="small muted">Region of Peel open data: housing construction activity (CMHC Starts and Completions Survey; averages over 5 years to ${h.y}) and building permit statistics (all permits, values in current dollars). Starts and completions replace the CMHC copy year by year: one series is kept.</p></section>`;
   }
   // ---- Population outlook (data/housing.json) --------------------------------------------------
@@ -260,7 +260,7 @@
     if (root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current()) return '';
     const c = permitCheck(); if (!c || !c.failing.length) return '';
     const list = c.failing.length > 1 ? `${c.failing.slice(0, -1).join(', ')} and ${c.failing[c.failing.length - 1]}` : c.failing[0];
-    return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Checks')}</p>`;
+    return `<p class="small caveat" data-caveat="permits">Permit counts differ from Region figures for ${esc(list)}; see ${DV().homeLine('records:checks', 'Records › Data checks')}</p>`;
   }
   const api = { permitCheck, permitCheckHTML, permitCaveatHTML, outlookRows, outlookCardHTML, housingActivityRows, housingActivityHTML, renderGrowthCensus, renderGrowthChart, forecastTableHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

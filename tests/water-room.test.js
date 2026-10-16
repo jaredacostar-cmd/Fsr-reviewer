@@ -77,8 +77,9 @@ test('storageRoomTrigger: Silverthorn Reservoir (short by 2041)', () => {
   assert.equal(r.room, -3);
   assert.ok(Math.abs(r.roomPct - (-3 / 46 * 100)) < 1e-9);
   assert.equal(r.c100, 2036);  // required hits 46 ML between 2031 (44) and 2036 (46)
-  assert.equal(r.c90, 2025);   // 90% of 46 = 41.4 between 2021 (31) and 2026 (43)
-  assert.equal(r.c80, 2023);   // 80% of 46 = 36.8 between 2021 (31) and 2026 (43)
+  // (the first whole year at or past the limit, as plants and stations)
+  assert.equal(r.c90, 2026);   // 90% of 46 = 41.4 between 2021 (31) and 2026 (43): reached in 2025.3
+  assert.equal(r.c80, 2024);   // 80% of 46 = 36.8 between 2021 (31) and 2026 (43): reached in 2023.4
 });
 
 test('storageRoomTrigger: West Brampton Reservoir trigger interpolates to 2029', () => {

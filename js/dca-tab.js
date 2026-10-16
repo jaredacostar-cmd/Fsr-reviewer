@@ -70,9 +70,9 @@
       <div class="pnl-r-meta"><span>capacity runs out</span><span class="t-${r.rec === 'advance' ? 'over' : 'room'}">${r.rec === 'advance' ? 'online after it runs out' : 'online in time'}</span></div>
       <small class="pnl-r-line">Impact: ${r.bo > 0 ? `≈${pp(r.bo)} people (≈${uu(r.bo)} units) held back by build-out if cancelled` : 'none held back if cancelled'}</small>` });
     return {
-      calc: true, fullTitle: `Capital › Timing · ${App().state.muni || 'Peel'}: every DC project`,
-      head: window.PeelPanel.areaHead('Capital › Timing', 'What must be built first?', adv.length ? { tone: 'over', text: `${adv.length} screen late` } : { tone: 'room', text: 'In time' }, `Peel · ${fmtNum(R.list.length)} DC projects · 2026 DC capital maps (draft, as of ${esc(CAPITAL.asOf)})`),
-      answer: `Across <strong>${fmtNum(R.list.length)} DC projects</strong>, ${adv.length ? `<strong>${adv.length}</strong> come${adv.length === 1 ? 's' : ''} online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out` : 'every project comes online before the capacity it relieves runs out'}${big && big.bo > 0 ? `; without <strong>${esc(big.name)}</strong> the screen shows the most growth constrained (≈${pp(big.bo)} people by build-out)` : ''}.`,
+      calc: true, fullTitle: `Capital › DC timing · ${App().state.muni || 'Peel'}: every DC project`,
+      head: window.PeelPanel.areaHead('Capital › DC timing', 'What must be built first?', adv.length ? { tone: 'over', text: `${adv.length} screen late` } : { tone: 'room', text: 'In time' }, `Peel · ${fmtNum(R.list.length)} DC projects · 2026 DC capital maps (draft, as of ${esc(CAPITAL.asOf)})`),
+      answer: `Across <strong>${fmtNum(R.list.length)} DC projects</strong>, ${adv.length ? `<strong>${adv.length}</strong> come${adv.length === 1 ? 's' : ''} online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out` : 'every project comes online before the capacity it relieves runs out'}${R.baseBo > 0 ? `. With every project as scheduled, <strong>≈${pp(R.baseBo)} people</strong> are still constrained at build-out` : ''}${big && big.bo > 0 ? `; without <strong>${esc(big.name)}</strong>, ≈${pp(big.bo)} more would be, the most of any one project` : ''}.`,
       figures: [
         { v: fmtNum(R.list.length), u: 'projects', label: 'DC projects', ctx: 'relieve a constraint or serve new development' },
         { v: adv.length, u: '', label: 'screen late', ctx: 'in service after the capacity runs out', tone: adv.length ? 'over' : 'room' },

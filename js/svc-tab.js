@@ -524,7 +524,9 @@
     renderHeadlines(); MP().renderMpCompare();
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();
     if (AT().getFootTab() === 'dca') DCAT().renderDca();
-    if (AT().getFootTab() === 'overview') OV().renderOverview();
+    // (Home and the workspace pages read the Overview's figures: re-render it there too, so a page opened
+    // before the model loaded gets its capacity rows)
+    if (AT().getFootTab() === 'overview' || (root.PeelWorkspaces && root.PeelWorkspaces.mode() !== 'full')) OV().renderOverview();
     if (AT().getFootTab() === 'svc' && AT().getSvcSub() === 'alloc') DUI().renderAlloc();
     if (root.PeelSvcCapacity) root.PeelSvcCapacity.renderAll();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;

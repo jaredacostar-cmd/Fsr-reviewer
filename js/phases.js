@@ -10,13 +10,16 @@
   'use strict';
 
   // Ordered lifecycle, inception -> completion. `rank` drives "furthest phase reached".
+  // `label` is the development's STAGE, the one word set the whole app uses (design bundle 2): the same
+  // names as the counting stages (js/layers.js) and the Growth stage chart. Each file keeps the
+  // municipality's own status wording (its record's status text); "Approved" never stands alone.
   const PHASES = [
-    { key: 'inception',    rank: 0, label: 'Inception',          short: '1', desc: 'Pre-consultation or application submitted' },
-    { key: 'review',       rank: 1, label: 'Under review',       short: '2', desc: 'Circulation, public meeting, appeal; includes zoning / official plan approved (a passed zoning by-law) with no draft plan or site plan approval yet' },
-    { key: 'approved',     rank: 2, label: 'Draft / site plan approved', short: '3', desc: 'Draft plan of subdivision or site plan approved, or plan registered (building permits can follow). Zoning or official plan approval alone stays under review' },
+    { key: 'inception',    rank: 0, label: 'Pre-application',    short: '1', desc: 'Pre-consultation, or an application received with no review milestone yet (the municipalities call this inception or intake)' },
+    { key: 'review',       rank: 1, label: 'In review',          short: '2', desc: 'Circulation, public meeting, appeal; includes zoning / official plan approved (a passed zoning by-law) with no draft plan or site plan approval yet' },
+    { key: 'approved',     rank: 2, label: 'Approved, no permit yet', short: '3', desc: 'Draft plan of subdivision or site plan approved, or plan registered (building permits can follow). Zoning or official plan approval alone stays under review' },
     { key: 'permit',       rank: 3, label: 'Permit issued',      short: '4', desc: 'Building permit issued' },
     { key: 'construction', rank: 4, label: 'Under construction', short: '5', desc: 'Inspections underway' },
-    { key: 'completed',    rank: 5, label: 'Completed',          short: '✓', desc: 'Occupancy, final inspection or permit closed' },
+    { key: 'completed',    rank: 5, label: 'Built',              short: '✓', desc: 'Occupancy, final inspection or permit closed' },
   ];
   const CANCELLED = { key: 'cancelled', rank: -1, label: 'Withdrawn / refused', short: '×', desc: 'Withdrawn, refused, cancelled or expired' };
   const ALL_PHASES = PHASES.concat([CANCELLED]);
