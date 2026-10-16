@@ -49,8 +49,8 @@ test('easy to reach: Home sidebar (Reference), the Stage block, a site’s stage
   assert.match(src('index.html'), /<p class="small stage-how"><button type="button" class="btn small link" data-ws-page="approvals">How approvals map to these stages →<\/button><\/p>/);
   assert.match(src('js/devtab.js'), /data-ws-page="approvals">How approvals work →<\/button>/);
   assert.match(src('js/records-tab.js'), /secondary: \[\{ label: 'How approvals work', attrs: \{ 'data-ws-page': 'approvals' \}/);
-  assert.match(src('js/ws-pages.js'), /const BUILD = \{ [^}]*approvals \};/);
-  assert.match(src('index.html'), /<script src="js\/approvals-guide\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/ws-pages\.js/);
+  assert.match(src('js/ws-pages.js'), /const BUILD = \{ [^}]*approvals[^}]*\};/);
+  assert.match(src('index.html'), /<script src="js\/approvals-guide\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/glossary\.js\?v=__BUILD__"><\/script>\n {2}<script src="js\/ws-pages\.js/);
   assert.match(src('sw.js'), /'js\/approvals-guide\.js',/);
   // The page: Home's layout (question, answer, the diagram), nothing calculated.
   const p = G.page();

@@ -32,14 +32,17 @@
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
   function pageHTML(m, note) {
-    const figs = (m.figures || []).filter(Boolean).slice(0, 4);
+    // (a zero is never coloured; n/a is never a figure)
+    const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}</header>`);
     if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
     if (m.top) out.push(m.top);
-    out.push(`<p class="home-answer" data-psec="answer">${m.answer || ''}</p>`);
+    // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
+    const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
+    out.push(`<p class="home-answer" data-psec="answer">${gl(m.answer || '')}</p>`);
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
-    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${esc(f.label)}</span>${f.ctx ? `<small>${f.ctx}</small>` : ''}</div>`).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
@@ -149,7 +152,7 @@
   function stageChartHTML(st, census) {
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
-      <p class="stg-h small"><strong>The pipeline by stage</strong> <span class="muted">dwellings, in the order a file moves</span></p>
+      <p class="stg-h small pnl-chart-t"><strong>The pipeline by stage, in the order a file moves</strong> <span class="pnl-chart-u">(dwellings)</span></p>
       ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
       <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}</p>
     </div>`;
@@ -442,7 +445,7 @@
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
-    return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: atPeel ? null : { tone: 'stage', text: kind(n) }, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
+    return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       figures: [
         { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` },
         { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
@@ -503,7 +506,7 @@
     const devRow = (k, html) => ({ attrs: { 'data-ws-pick': k, 'data-ws-as': 'site' }, html });
     const W0 = (a.lists.find(l => l.title === 'This week') || { rows: [] }).rows;
     const pts = [...moved, ...added].map(x => byKey.get(x.key)).filter(Boolean);
-    return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: W0.length ? { tone: 'stage', text: `${fmtNum(W0.length)} changes` } : null, identity: a.head.identity,
+    return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: null, identity: a.head.identity,
       answer: W0.length ? `<strong>${fmtNum(W0.length)}</strong> change${W0.length === 1 ? '' : 's'} since the last data update: ${[moved.length && `${fmtNum(moved.length)} file${moved.length === 1 ? '' : 's'} moved stage`, added.length && `${fmtNum(added.length)} new file${added.length === 1 ? '' : 's'}`, ce.length && `${fmtNum(ce.length)} capital or EA date${ce.length === 1 ? '' : 's'}`].filter(Boolean).join(', ')}.` : 'Nothing changed since the last data update.',
       figures: [
         { v: fmtNum(moved.length), u: 'files', label: 'moved stage', ctx: '' },
@@ -552,11 +555,11 @@
     const SD = root.PeelSvcData;
     const worst = runs.filter(r => likeOf(r) === 3 && consOf(r) === 3).length;
     return { id: 'pipes', eyebrow: eyebrow('pipes'), name: 'Which ageing sewers carry the most growth?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer,
-      figures: [s.figures[0], { v: fmt1(km), u: 'km', label: 'length on the list', ctx: `${fmtNum(runs.length)} runs` }, { v: fmtNum(worst), u: 'runs', label: 'top-right of the grid', ctx: `${LIKE[3]} (or older + moderate risk) and ${CONS[3]}`, tone: worst ? 'over' : 'room' }, s.figures[2]],
-      mid: `<section class="page-grid" data-psec="grid"><h3>Likelihood × consequence</h3>${grid}<p class="small muted">Likelihood: install age (a moderate risk rating one band up). Consequence: planned units the run carries at build-out. Condition grades from inspection are not in the open data.</p></section>`,
+      figures: [s.figures[0], { v: fmt1(km), u: 'km', label: 'length on the list', ctx: `${fmtNum(runs.length)} sewer runs` }, { v: fmtNum(worst), u: 'sewer runs', label: 'oldest and most loaded', ctx: `${LIKE[3]} (or older + moderate risk) and ${CONS[3]}: the grid’s top-right cell`, tone: worst ? 'over' : null }, s.figures[2]],
+      mid: `<section class="page-grid" data-psec="grid"><h3 class="pnl-chart-t">Old sewer runs by age (likelihood) and the homes they carry (consequence) <span class="pnl-chart-u">(sewer runs, km)</span></h3>${grid}<p class="small muted">Likelihood: install age (a moderate risk rating one band up). Consequence: planned units the run carries at build-out. Condition grades from inspection are not in the open data.</p></section>`,
       lists: [
         { ...s.lists[0], rows: s.lists[0].rows.map(r => toMap('pipes', r)), see: { 'data-ws-go': 'pipes' } },
-        { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc((SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k)}</span><span>${fmtNum(x.n)} runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
+        { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc((SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k)}</span><span>${fmtNum(x.n)} sewer runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
       ],
       map: { svg: pipesMap(list), attrs: { 'data-ws-go': 'pipes' }, label: 'Open Old pipes on the map', caption: '<span class="hm-key hm-key-pipe"></span> old pipes on the list (heavier: moderate risk)' },
       method: `${s.method} The grid counts runs (one main: segments end to end with the same size, year, material and risk) by likelihood (age 50–64 / 65–79 / 80+ years; a moderate risk rating moves a run one band up) and consequence (planned units carried: 100–1,000 / 1,000–10,000 / 10,000+).`,
@@ -576,9 +579,10 @@
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'study' }, primary: !has }, has ? { label: 'Area report (PDF)', attrs: { 'data-area-report': 'sel' }, primary: true } : null] };
   }
 
-  // Reference pages (not workspaces): How approvals work (js/approvals-guide.js).
+  // Reference pages (not workspaces): How approvals work (js/approvals-guide.js), the Glossary (js/glossary.js).
   const approvals = () => (root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading('approvals', 'Loading…'));
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals };
+  const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
+  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary };
   const build = id => (BUILD[id] || home)();
   Object.assign(api, { build, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;

@@ -107,7 +107,7 @@ function loadCapacity() {
   const U = { esc: x => String(x), fmtNum: n => Math.round(n).toLocaleString('en-CA'), fmt1: n => n.toFixed(1), capTxt: v => `${Math.round(v * 1000)} m³/d`,
     roomWords: (v, u, f) => (v < 0 ? `over by ${f(-v)}` : `room ${f(v)}`), basisChip: b => `<span class="basis" data-basis="${b}">${b}</span>`, store: { get: (k, d) => d, set: () => {} } };
   const window = { PeelUtil: U, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcPlants: { hz: { end: 2051 } },
-    PeelSvcTab: { optSwitch: () => '' }, PeelLayerBar: { LABEL: {}, barHTML: o => `<div class="lb-bar" data-max="${o.max}"></div>`, legendHTML: () => '' } };
+    PeelSvcTab: { optSwitch: () => '' }, PeelLayerBar: { LABEL: {}, barHTML: o => `<div class="lb-bar" data-max="${o.max}"></div>`, legendHTML: () => '', capLegendHTML: () => '' } };
   loadPanel(window);
   const ctx = { window, module: { exports: {} } }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/svc-capacity.js'), ctx);
@@ -137,7 +137,8 @@ test('3. impact uses the same capacity function as the table: G.E. Booth at 120%
   // The same row object feeds the panel row, the panel figure and the full table's Impact column.
   const rows = ROWS();
   assert.match(C.listRow(rows[0]).html, /Impact: 155\.4 ML\/d over the 90% trigger at build-out/);
-  assert.match(C.fullTableHTML(rows), /<td>155\.4 ML\/d over the 90% trigger at build-out<\/td>/);
+  // (bundle 5: the sentence folds under its figure)
+  assert.match(C.fullTableHTML(rows), /<details class="ft-imp"><summary>155\.4 ML\/d<\/summary>155\.4 ML\/d over the 90% trigger at build-out<\/details>/);
   // Every system in its own Master Plan unit: stations L/s over firm, storage ML short before relief,
   // zone pumping ML/d against firm pumping.
   const by = Object.fromEntries(rows.map(r => [r.id, r.impact.text]));
@@ -169,7 +170,7 @@ test('4. panel figures equal full-table figures for the same scope (Servicing �
   assert.equal(`${big.v} ${big.u}`, '155.4 ML/d'); assert.match(big.ctx, /^G\.E\. Booth: over the 90% trigger at build-out$/);
   // Each panel row's with-approved → build-out % equals the table's for that facility.
   const tablePct = {};
-  for (const m of table.matchAll(/<tr data-basis="\w+" class="t-\w*"><td>([^<]+)<small>[\s\S]*?<td class="n">(\d+%|–)<\/td><td class="n"><strong>(\d+%|–)<\/strong>/g)) tablePct[m[1]] = [m[2], m[3]];
+  for (const m of table.matchAll(/<tr data-basis="\w+" class="t-\w*"><th scope="row" class="ft-pin" data-l="Facility">([^<]+)<small>[\s\S]*?<td class="n" data-l="With approved %">(\d+%|–)<\/td><td class="n" data-l="Build-out %"><strong>(\d+%|–)<\/strong>/g)) tablePct[m[1]] = [m[2], m[3]];
   const listRows = spec.lists[0].rows;
   assert.equal(listRows.length, 5);
   for (const r of listRows) {
@@ -179,7 +180,7 @@ test('4. panel figures equal full-table figures for the same scope (Servicing �
   }
   // Both are sorted the same way (Soonest by default).
   const panelOrder = listRows.map(r => r.html.match(/<span class="pnl-r-name">(?:💧 )?([^<]+)</)[1]);
-  const tableOrder = [...table.matchAll(/<tr data-basis="\w+" class="t-\w*"><td>([^<]+)<small>/g)].map(m => m[1]);
+  const tableOrder = [...table.matchAll(/<tr data-basis="\w+" class="t-\w*"><th scope="row" class="ft-pin" data-l="Facility">([^<]+)<small>/g)].map(m => m[1]);
   assert.deepEqual(panelOrder, tableOrder.slice(0, 5));
   // The answer names the same counts.
   assert.match(spec.answer, /^<strong>3<\/strong> of 6 facilities are over capacity at build-out and <strong>2<\/strong> more are tight/);

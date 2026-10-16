@@ -57,9 +57,12 @@
       ${h.identity ? `<p class="pnl-id small muted">${h.identity}</p>` : ''}${h.extra || ''}
     </header>`);
     if (s.calc || s.scenario || calcIn(s)) out.push(`<div class="pnl-scen" data-sec="scenario">${s.scenario || scenarioChip()}</div>`);
-    out.push(`<p class="pnl-answer" data-sec="answer">${s.answer || ''}</p>`);
-    const figs = (s.figures || []).slice(0, 4);
-    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${esc(f.label)}</span>${f.ctx ? `<small>${f.ctx}</small>` : ''}</div>`).join('')}</div>`);
+    // Bundle 5: the first use of each term in the answer and the figures is underlined (js/glossary.js).
+    const seen = new Set(), gl = h => (root.PeelGlossary ? root.PeelGlossary.mark(h, seen) : h);
+    out.push(`<p class="pnl-answer" data-sec="answer">${gl(s.answer || '')}</p>`);
+    // A zero is never coloured ("0 tight" in green read as good news); n/a is never a figure (bundle 5).
+    const figs = (s.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
+    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
     if (s.chart) out.push(`<div class="pnl-chart" data-sec="chart">${s.chart}</div>`);
     for (const l of (s.lists || []).filter(x => x && x.rows && x.rows.length)) {
       out.push(`<section class="pnl-list" data-sec="list">${l.title || l.tools ? `<div class="pnl-list-h">${l.title ? `<h3>${esc(l.title)}</h3>` : ''}${l.tools || ''}</div>` : ''}
@@ -83,8 +86,10 @@
   // The read-only scenario chip: the same settings as the top bar's chip; a click opens the control.
   function scenarioChip() {
     const T = root.PeelTopbar, p = T && T.scenParts ? T.scenParts() : null;
-    const txt = p ? [`Count: ${p.count}`, `Flows: ${p.flows}`, `Criteria: ${p.criteria}`].join(' · ') : 'Scenario';
-    return `<button type="button" class="pnl-scen-chip" data-pnl-scen title="The scenario these figures are worked out for: open the Scenario control to change it">Scenario <span>${esc(txt)}</span> ▾</button>`;
+    // "Default" or "n changes"; the settings in full on hover and in the Scenario control (bundle 5).
+    const LB = root.PeelLayerBar, txt = p && p.settings ? p.text : 'Default';
+    const line = p && p.settings && LB ? LB.scenarioLine(p.settings) : '';
+    return `<button type="button" class="pnl-scen-chip" data-pnl-scen title="The scenario these figures are worked out for${line ? `: ${esc(line)}` : ''}. Open the Scenario control to see or change it">Scenario <span>${esc(txt)}</span> ▾</button>`;
   }
   // ---- Shared headers -------------------------------------------------------------------------------
   // An area panel: Peel (› the municipality filter) › the tab and sub-view; named by its question.
@@ -94,10 +99,21 @@
   }
   // A development's header on every tab: Peel › municipality › the site, ×; its stage; the latest file
   // number (how the municipality identifies it), the application types and the latest submission.
+  // Bundle 5: a municipality's application type in words ("OPA ZBA Subdivision" → "official plan,
+  // zoning and subdivision"); other types in sentence case.
+  const TYPE_WORDS = [
+    [/^opa\s*zba\s*subdivision$/i, 'official plan, zoning and subdivision'], [/^pre[\s-]?consultation$/i, 'pre-consultation'],
+    [/^site\s*plan(\s*approval)?$/i, 'site plan'], [/^site\s*plan\s*express$/i, 'site plan (express)'],
+    [/^(rezoning|zoning by-law amendment|zba)$/i, 'zoning amendment'], [/^(official plan amendment|opa)$/i, 'official plan amendment'],
+    [/^(plan of subdivision|subdivision)$/i, 'subdivision'], [/^(draft plan of condo(minium)?|condominium|plan of condominium)$/i, 'condominium'],
+    [/^removal of 'h' holding symbol$/i, 'removal of the holding (H) symbol'],
+  ];
+  const typeWords = t => { const s = String(t || '').trim(), hit = TYPE_WORDS.find(([re]) => re.test(s)); return hit ? hit[1] : s === s.toUpperCase() ? s.toLowerCase() : s; };
+  const typesText = types => { const out = [...new Set((types || []).map(typeWords).filter(Boolean))].slice(0, 3).join(' · '); return out ? out[0].toUpperCase() + out.slice(1) : ''; };
   function siteHead(p) {
     const ML = root.PeelMapLabels, ls = ML && ML.latestSub ? ML.latestSub(p) : null, PH = root.PeelPhases;
     const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-    const types = (p.types || []).slice(0, 3).join(' / ');
+    const types = typesText(p.types);
     return { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
       // One status line: the development's phase, with its zoning approval where that came first (the
       // site bar no longer shows a second, contradicting chip).
@@ -205,7 +221,7 @@
       if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('pnl-row') && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
     }, true);
   }
-  const api = { SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
+  const api = { typeWords, typesText, SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPanel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

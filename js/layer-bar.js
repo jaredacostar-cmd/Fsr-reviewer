@@ -47,10 +47,11 @@
     return `<div class="lybar${o.small ? ' sm' : ''}" role="img" aria-label="${esc(aria)}">${out.join('')}</div>`;
   }
 
-  const MARK = { trigger: ['ly-tick-sw', '90% trigger'], rated: ['ly-rated-sw', '100% rated'], over: ['ly-over-sw', 'beyond rated'], est: ['ly-est-sw', 'estimated'] };
+  // (one word for the 100% mark whatever the basis: the chart's title names it, firm or rated)
+  const MARK = { trigger: ['ly-tick-sw', '90% trigger'], rated: ['ly-rated-sw', '100% capacity'], over: ['ly-over-sw', 'past capacity'], est: ['ly-est-sw', 'estimated'] };
   function legendHTML(items, o = {}) {
     const fmt = o.fmt || num;
-    return `<div class="ly-legend">${items.map(it => {
+    return `<div class="ly-legend${o.cls ? ` ${o.cls}` : ''}">${items.map(it => {
       if (typeof it === 'string') { const m = MARK[it]; return m ? `<span><span class="ly-sw ${m[0]}"></span>${m[1]}</span>` : ''; }
       if (!LABEL[it.layer]) return '';
       return `<span><span class="ly-sw ly-${it.layer}"></span>${esc(it.text || LABEL[it.layer])}${it.value != null ? ` <b>${esc(fmt(it.value))}</b>` : ''}</span>`;
@@ -99,9 +100,22 @@
     const pct = v => `${Math.round(v / k.cap * 100)}%`;
     const seg = (layer, v) => ({ layer, value: v, title: `${LABEL[layer]}: ${f(v)} ${k.unit || ''} (${pct(v)} of ${k.firm != null ? 'firm' : 'rated'})` });
     const segs = [seg('existing', k.existing), seg('built', k.built), seg('committed', Math.max(0, k.committed - k.existing - k.built)), seg('proposed', Math.max(0, k.buildout - k.committed))];
-    return barHTML({ segments: segs, rated: k.cap, trigger: k.trigger < 1 ? k.trigger * k.cap : null, max: Math.max(k.cap * 1.3, k.buildout), unit: k.unit, fmt: f, small: o.small,
+    const max = Math.max(k.cap * 1.3, k.buildout), at = v => `${(Math.min(v, max) / max * 100).toFixed(2)}%`;
+    const bar = barHTML({ segments: segs, rated: k.cap, trigger: k.trigger < 1 ? k.trigger * k.cap : null, max, unit: k.unit, fmt: f, small: o.small,
       ratedLabel: `100% ${k.firm != null ? 'firm' : 'rated'}: ${f(k.cap)} ${k.unit || ''}`, triggerLabel: `${Math.round(k.trigger * 100)}% expansion trigger`,
       label: o.label || `Existing + built + committed ${pct(k.committed)} of ${k.firm != null ? 'firm' : 'rated'} capacity, ${pct(k.buildout)} at build-out` });
+    // Bundle 5: the % on the bar (with approved, build-out; one label when they sit close) and the
+    // 90% and 100% marks labelled under it.
+    const near = Math.abs(k.buildout - k.committed) / max < 0.16;
+    const vals = near ? `<span class="cb-v" style="left:${at(k.buildout)}">${pct(k.committed)} → ${pct(k.buildout)}</span>`
+      : `<span class="cb-v" style="left:${at(k.committed)}">${pct(k.committed)}</span><span class="cb-v cb-bo" style="left:${at(k.buildout)}">${pct(k.buildout)}</span>`;
+    const trig = k.trigger < 1 && k.trigger > 0 ? `<span class="cb-t" style="left:${at(k.trigger * k.cap)}">${Math.round(k.trigger * 100)}%</span>` : '';
+    return `<div class="capbar${o.small ? ' sm' : ''}"><div class="cb-vals" aria-hidden="true">${vals}</div>${bar}<div class="cb-scale" aria-hidden="true">${trig}<span class="cb-t cb-100" style="left:${at(k.cap)}">100%</span></div></div>`;
+  }
+  // The capacity bars' legend on one line: short names (each segment's full name is on hover); the
+  // 90% and 100% marks are labelled on the bar itself.
+  function capLegendHTML() {
+    return legendHTML([{ layer: 'existing', text: 'On the system' }, { layer: 'built', text: 'Built' }, { layer: 'committed', text: 'Committed' }, { layer: 'proposed', text: 'In review' }, 'over'], { cls: 'one-line' });
   }
 
   // ---- Scenario chip (SPEC §2): the basis is a set of layers ----------------------------------
@@ -122,16 +136,45 @@
   // The count setting (Stage 1 #6), one label everywhere: the Scenario control's switch and the chip.
   const COUNT_OPTS = [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']];
   const countLabel = basis => (basis === 'remaining' ? '+ pre-application, left to build' : (COUNT_OPTS.find(([v]) => v === basis) || COUNT_OPTS[2])[1]);
-  /** o: { basis, flows, criteria, count, expansions, outside } → the chip: read-only text, the count
-   *  setting first; the Committed / Proposed / Anticipated switch lives in the Scenario control. */
+  // Bundle 5: the scenario as a list of its settings, each with its default, so the chip can say
+  // "Default" or "2 changes" and the Scenario control can list them in full.
+  // o: { basis, flows ('2025 metered' | 'design'), md ('design' | 'observed'), div ('off' | 'on' | null
+  // when there is no diversion), outside ('nearest' | 'left out'), year (null = build-out), criteria
+  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null), yearDefault }.
+  function scenarioSettings(o) {
+    const b = o.basis || 'all', cur = b === 'remaining' ? 'all' : b;
+    const crit = typeof o.criteria === 'number' ? o.criteria : /^\d+/.test(String(o.criteria || '')) ? parseInt(o.criteria, 10) : 0;
+    const row = (key, label, value, dflt) => ({ key, label, value, dflt, def: value === dflt });
+    return [
+      row('count', 'Count', countLabel(cur), countLabel('all')),
+      row('units', 'Units', b === 'remaining' ? 'left to build' : 'all', 'all'),
+      // (the map's results year starts at this year: yearDefault)
+      row('year', 'Map results for', o.year == null ? 'build-out' : String(o.year), o.yearDefault == null ? 'build-out' : String(o.yearDefault)),
+      row('flows', 'Wastewater flows', o.flows || '2025 metered', '2025 metered'),
+      row('md', 'Water maximum day', o.md === 'observed' ? '2025 observed factor' : 'design factor', 'design factor'),
+      o.div == null ? null : row('div', 'Diversion', o.div === 'on' ? 'on' : 'off', 'off'),
+      row('outside', 'Outside mapped areas', o.outside || 'nearest', 'nearest'),
+      row('criteria', 'Design criteria', crit ? `${crit} edited` : 'Peel v2.0', 'Peel v2.0'),
+      row('countMode', 'Units per development', o.count === 'previous count' ? 'previous count' : 'tree count', 'tree count'),
+      o.expansions == null ? null : row('exp', 'Plant expansions', o.expansions, 'on'),
+    ].filter(Boolean);
+  }
+  const scenarioChanges = rows => rows.filter(r => !r.def).length;
+  // The chip's word: "Default" or "n change(s)".
+  const scenarioChipText = rows => { const n = scenarioChanges(rows); return n ? `${n} change${n === 1 ? '' : 's'}` : 'Default'; };
+  const scenarioLine = rows => rows.map(r => `${r.label}: ${r.value}`).join(' · ');
+  // The Scenario control's list: every setting, its value, and the default beside a changed one.
+  const scenarioListHTML = rows => `<ul class="scen-list" aria-label="This scenario">${rows.map(r => `<li${r.def ? '' : ' class="chg"'}><span class="muted">${esc(r.label)}</span> <b>${esc(r.value)}</b>${r.def ? ' <span class="muted small">default</span>' : ` <span class="small scen-chg">changed · default ${esc(r.dflt)}</span>`}</li>`).join('')}</ul>`;
+  /** o: as scenarioSettings → the chip: read-only, "Scenario Default ▾" or "Scenario 2 changes ▾";
+   *  the full settings on hover and in the Scenario control. */
   function scenarioChipHTML(o) {
     const on = new Set(layersOf(o.basis));
     const what = on.has('anticipated') ? 'stress test' : on.has('proposed') ? 'build-out' : 'D-5-1 check';
-    const set = [`Count: ${countLabel(o.basis)}`, `Flows: ${o.flows}`, `Criteria: ${o.criteria}`, `Unit counting: ${o.count}`, o.expansions ? `Expansions: ${o.expansions}` : null, `Outside zones: ${o.outside}`].filter(Boolean).join(' · ');
-    return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(set)} — open the Scenario control to change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(set)}</span> ▾</button>`;
+    const rows = scenarioSettings(o);
+    return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(scenarioLine(rows))} — open the Scenario control to see or change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(scenarioChipText(rows))}</span> ▾</button>`;
   }
 
-  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioChipHTML };
+  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, capLegendHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioSettings, scenarioChanges, scenarioChipText, scenarioLine, scenarioListHTML, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

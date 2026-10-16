@@ -100,7 +100,7 @@ test('Review an FSR coverage: what an FSR covers and what the app can check', ()
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {
   const s = src('js/ws-pages.js'), w = src('js/workspaces.js');
-  assert.match(s, /const BUILD = \{ home, tight, site, growth, projects, week, fsr, pipes, study, approvals \};/, "every workspace, and the Reference page How approvals work");
+  assert.match(s, /const BUILD = \{ home, tight, site, growth, projects, week, fsr, pipes, study, approvals, glossary \};/, "every workspace, and the Reference pages How approvals work and the Glossary");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); openPage\(pg\.dataset\.wsPage\); return; \}/);

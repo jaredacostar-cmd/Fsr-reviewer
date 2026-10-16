@@ -40,7 +40,7 @@ test('the site badge: phase and layer together, with what is left to permit', ()
 
 test('the tokens exist in css/app.css and the bar uses them', () => {
   const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'app.css'), 'utf8');
-  for (const [k, v] of [['existing', '#3b4a5e'], ['built', '#5f7fae'], ['committed', '#9cc0fa'], ['proposed', '#cfe0fb'], ['anticipated', '#cfe0fb']]) assert.match(css, new RegExp(`--ly-${k}: ${v};`), k);
+  for (const [k, v] of [['existing', '#3b4a5e'], ['built', '#5f7fae'], ['committed', '#7fa6ee'], ['proposed', '#cfe0fb'], ['anticipated', '#cfe0fb']]) assert.match(css, new RegExp(`--ly-${k}: ${v};`), k);
   assert.match(css, /--ly-over: repeating-linear-gradient\(135deg, #f0665f 0 3px, transparent 3px 6px\)/);
   for (const k of ['existing', 'built', 'committed', 'proposed', 'anticipated']) assert.match(css, new RegExp(`\\.ly-${k} \\{ background: var\\(--ly`), k);
 });
@@ -58,7 +58,9 @@ test('scenario chip: the basis is a set of layers (Existing + Built always)', ()
   const h = B.scenarioChipHTML({ basis: 'buildout', flows: '2025 metered', criteria: 'Peel v2.0', count: 'tree', expansions: 'on', outside: 'nearest' });
   assert.doesNotMatch(h, /data-scen-layer/, 'no layer toggles in the top bar');
   assert.match(h, /Scenario \(build-out\)/);
-  assert.match(h, /Count: \+ in review · Flows: 2025 metered · Criteria: Peel v2\.0 · Unit counting: tree · Expansions: on · Outside zones: nearest/);
+  // Bundle 5: the chip says "Default" or "n changes"; every setting is in its title and in the control.
+  assert.match(h, /Count: \+ in review · Units: all · Map results for: build-out · Wastewater flows: 2025 metered · Water maximum day: design factor · Outside mapped areas: nearest · Design criteria: Peel v2\.0 · Units per development: tree count · Plant expansions: on/);
+  assert.match(h, /<span class="tb-scen-t">1 change<\/span>/, 'the count is the one change from the default');
   assert.equal(B.countLabel('committed'), 'approved only');
   assert.equal(B.countLabel('all'), '+ pre-application');
   assert.equal(B.countLabel('remaining'), '+ pre-application, left to build');

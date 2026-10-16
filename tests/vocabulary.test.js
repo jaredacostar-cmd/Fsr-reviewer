@@ -29,7 +29,7 @@ test('one stage name per development, the same words as the counting stages', ()
 
 test('the words "phase" and "layer" are not shown for a development’s stage or its counting', () => {
   assert.match(src('js/map-analysis.js'), /\$\{b\('phase', 'Stage'\)\}\$\{b\('layer', 'Counted as'\)\}/);
-  assert.match(src('js/growth-ui.js'), /data-info="growth-layers">By stage </);
+  assert.match(src('js/growth-ui.js'), /data-info="growth-layers">Homes by stage </);
   assert.match(src('js/map-markers.js'), /color: \{ phase: 'Stage', layer: 'Counted as',/);
   for (const f of ['js/overview-tab.js', 'js/tools-corridor.js', 'js/reports.js', 'js/svc-plants.js']) assert.doesNotMatch(src(f), /<th>Phase<\/th>|<th>Layer<\/th>/, f);
   assert.doesNotMatch(src('js/reports.js'), /by phase</i);

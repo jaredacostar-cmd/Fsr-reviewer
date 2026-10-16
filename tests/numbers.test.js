@@ -56,14 +56,15 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
   assert.match(t, /x\.txt !== String\(x\.like\) \? ` <small>range/);
   assert.match(t, /Servicing › Capacity puts every file on its own schedule instead/);
   // The full table names what each "over" is against.
-  assert.match(src('js/svc-capacity.js'), />Room \/ over capacity<\/th><th title="[^"]+">Impact past the limit<\/th>/);
+  assert.match(src('js/svc-capacity.js'), />Room \/ over capacity<\/th><th rowspan="2" title="[^"]+">Impact past the limit<\/th>/);
 });
 
 test('no negative room: an over is "over by", with positive people', () => {
   const d = src('js/demand-ui.js');
-  assert.match(d, /v: fmt1\(Math\.abs\(x\.after\)\), u: 'ML\/d', label: `\$\{SV\(\)\.PLANT_SHORT\[x\.pl\]\} \$\{x\.after < 0 \? 'over' : 'room'\}`/);
+  assert.match(d, /v: qAbs\(x\), u: uOf\(x\), label: `\$\{SV\(\)\.PLANT_SHORT\[x\.pl\]\} \$\{allocWord\(x\)\}`/);
   assert.match(d, /<strong>\$\{window\.PeelUtil\.roomWords\(x\.after\)\}<\/strong><small>≈\$\{fmtNum\(roundPop\(Math\.abs\(x\.peopleAfter\)\)\)\} people/);
   assert.doesNotMatch(d, /fmt1\(x\.after\)\b/);
+  assert.match(d, /const qAbs = x => \(small\(x\) \? fmtNum\(Math\.round\(Math\.abs\(x\.after\) \* 1000\)\) : fmt1\(Math\.abs\(x\.after\)\)\)/, 'a small system in m³/d, never negative');
 });
 
 test('people and jobs round the same way on every page; units stay exact', () => {

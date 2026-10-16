@@ -288,7 +288,7 @@
     // reserve says its basis (SPEC 1.5): the development's flow at the plant's measured rate
     // (calibrated) or at Peel design criteria.
     const k = pl && window.PeelCapacity ? window.PeelCapacity.of(`plant:${pl}`) : null;
-    const useNote = cap ? (M.mode === 'calibrated' && cap.f !== 1 ? `flow at the plant's measured rate, ×${cap.f.toFixed(2)} design` : 'flow at Peel design criteria') : '';
+    const useNote = cap ? (M.mode === 'calibrated' && cap.f !== 1 ? `its flow scaled to the plant's measured 2025 rate (×${cap.f.toFixed(2)} the design flow)` : 'flow at Peel design criteria') : '';
     return { M, e, cb, layer, z, zone: zo, zNear: zo && zo.reason !== 'mapped' ? p.pzNear : null, dNear: nearOf(p, 'dr'), zl, zMax, path, sps, pl, cap, devAvg, reserve: k ? k.reserve : cap ? cap.rated - cap.committed : 0, use: cap ? devAvg * cap.f : 0, useNote };
   }
   // Servicing check (inside the Servicing section): the development's flows at Peel design

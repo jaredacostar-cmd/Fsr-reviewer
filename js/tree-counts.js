@@ -7,12 +7,12 @@
   // chronology rules and data/tree-overrides.json applied), and a signature of its files. Building
   // the trees takes seconds, so the browser never builds them; it only applies the counts.
   //
-  // Settings › Counting chooses Tree (new, the default) or Previous (one release, to compare). A
+  // Settings › Counting chooses Tree (the default) or Previous (one release, to compare). A
   // development keeps its previous count, with the reason, when it has no tree entry, when its files
   // differ from the tree build (a live refresh or a source turned off), or when you entered a count
   // for one of its files.
   const STORE_KEY = 'countMode';
-  const MODES = { tree: 'Tree (new)', previous: 'Previous' };
+  const MODES = { tree: 'Each planning file once (tree)', previous: 'Previous count' };
   let data = null, loading = null;
 
   const store = () => (root.PeelUtil && root.PeelUtil.store) || null;
