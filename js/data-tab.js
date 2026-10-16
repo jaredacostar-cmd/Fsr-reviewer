@@ -56,13 +56,14 @@
 
   // Sidebar tabs.
   function showTab(name) {
+    // (bundle 6: the Data tab folded into Records; a stored or linked 'data' opens Find)
+    if (name === 'data' || !document.getElementById('tab-' + name)) name = 'explore';
     for (const b of document.querySelectorAll('.tabs [data-tab]')) {
       const on = b.dataset.tab === name;
       b.setAttribute('aria-selected', String(on));
       $('#tab-' + b.dataset.tab).hidden = !on;
     }
     store.set('tab', name);
-    if (name === 'data') renderAudit();
   }
   document.querySelector('.tabs').onclick = e => { const b = e.target.closest('[data-tab]'); if (b) showTab(b.dataset.tab); };
   // Deferred init: needs window.PeelApp, which app.js assigns after all modules load.

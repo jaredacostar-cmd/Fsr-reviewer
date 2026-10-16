@@ -245,7 +245,6 @@
     m.innerHTML =
       '<button type="button" role="menuitem" data-tbg="settings">Settings</button>' +
       // Stage 2: Records (Sources · Checks · Files) replaces the Sources & checks page here.
-      '<button type="button" role="menuitem" data-tbg="records">Records</button>' +
       '<button type="button" role="menuitem" data-tbg="labs">Labs</button>' +
       '<button type="button" role="menuitem" data-tbg="log">Change log</button>';
   }
@@ -279,7 +278,6 @@
     else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
     else if (k === 'sources') openGearPage('sources');
     // Stage 2: Records is the panel's trailing tab, also reached from here; Labs holds the extra tools.
-    else if (k === 'records') { closeTbMenus(); AT().openTab('records'); }
     else if (k === 'labs') openGearPage('labs');
   });
   function closeTbMenus() {
