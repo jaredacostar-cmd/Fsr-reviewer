@@ -2986,3 +2986,11 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .stg-p { text-align: right; font-size: var(--fs-1); }
 .stg-foot { margin: 4px 0 0; }
 @media (max-width: 600px) { .stg-row { grid-template-columns: minmax(0, 1fr) 4.5rem 2.5rem; } .stg-l { grid-column: 1 / -1; } }
+/* Growth drill-down: the stage bars filter the area's files; the area outlined on the small map. */
+.stg-row[data-ws-stage] { cursor: pointer; border-radius: 4px; padding: 2px 4px; margin: 0 -4px; }
+.stg-row[data-ws-stage]:hover, .stg-row[data-ws-stage]:focus-visible { background: var(--surface-2); outline: none; }
+.stg-row.on { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.home-map-svg .hm-area { fill: color-mix(in srgb, var(--accent) 18%, transparent); stroke: var(--accent); stroke-width: 1.4; }
+.page-eyebrow .btn.link { padding: 0; min-height: 0; }
+.home-map-svg .hm-sub { fill: none; stroke: var(--accent); stroke-width: .8; stroke-dasharray: 3 2; opacity: .8; }
+.page-list .pnl-list-h { flex-wrap: wrap; row-gap: var(--space-1); } .page-list .pnl-list-h .seg { flex-wrap: wrap; }

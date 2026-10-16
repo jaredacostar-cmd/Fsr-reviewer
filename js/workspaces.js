@@ -399,6 +399,8 @@
       if (ce && root.PeelCapitalEA) { const [k, ...rest] = ce.split(':'), CE = root.PeelCapitalEA; if (k === 'ea') CE.openEA(rest.join(':')); else if (k === 'cap') CE.openCapital(rest.join(':')); }
       if (pipe != null && SC() && MM().SEW && MM().SEW.data) { const i = +pipe, c = MM().SEW.data.pipes[i][10], map = root.PeelMapCore.map; SC().showPipeLoads(i); map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); }
       if (ft && PN() && PN().openFull) setTimeout(() => PN().openFull(), 400);
+      // An area from Growth in an area: the map and every tab filtered to it (Growth › Areas' own filter).
+      const area = g.dataset.wsArea; if (area && App()) { App().state.sp = [area]; if (root.PeelPlanAreas && root.PeelPlanAreas.renderAreaSelects) root.PeelPlanAreas.renderAreaSelects(); App().applyFilters(); }
       return; }
     if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
     if (e.target.closest('[data-ws-full]')) { setMode('full'); return; }
@@ -415,7 +417,7 @@
     const sb = e.target.closest('[data-ws-start-btn]'); if (sb) { store.set('startScreen', sb.dataset.wsStartBtn); document.querySelectorAll('[data-ws-start-btn]').forEach(b => { const on = b === sb; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
   });
   document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-ws-start]'); if (s) store.set('startScreen', s.value); });
-  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('#home [role="button"]')) { e.preventDefault(); e.target.click(); } });
+  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
   // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what
   // it shows has changed.
   document.addEventListener('pnl:set', e => {

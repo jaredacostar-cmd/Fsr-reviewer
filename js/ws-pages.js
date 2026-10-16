@@ -28,8 +28,8 @@
   const chipHTML = s => (s ? `<span class="pnl-chip t-${esc(s.tone || 'stage')}">${esc(s.text || TONE_WORD[s.tone] || '')}</span>` : '');
   function listHTML(l) {
     if (!l || !l.rows || !l.rows.length) return '';
-    return `<section class="pnl-list page-list" data-psec="list"><div class="pnl-list-h"><h3>${esc(l.title)}</h3>${l.tools || ''}${l.see && l.total > Math.min(5, l.rows.length) ? `<button type="button" class="btn small link"${attrs(l.see)}>See all (${fmtNum(l.total)}) →</button>` : ''}</div>
-      <ul>${l.rows.slice(0, 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
+    return `<section class="pnl-list page-list" data-psec="list"><div class="pnl-list-h"><h3>${esc(l.title)}</h3>${l.tools || ''}${l.see && (l.all || l.total > Math.min(5, l.rows.length)) ? `<button type="button" class="btn small link"${attrs(l.see)}>${l.all ? 'Show fewer' : `See all (${fmtNum(l.total)}) →`}</button>` : ''}</div>
+      <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
   function pageHTML(m, note) {
     const figs = (m.figures || []).filter(Boolean).slice(0, 4);
@@ -105,15 +105,23 @@
   ];
   function stageRows(devs, ofDev) {
     const u = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, est = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
-    for (const p of devs) {
+    for (const it of devs) {
+      // (an area's developments come as { p, share }: a site split between plans counts its share)
+      const p = it && it.p ? it.p : it, sh = it && it.p ? it.share : 1;
       const L = ofDev(p); if (!L || !L.layer) continue;
-      u.built += L.parts.built || 0; u.proposed += L.parts.proposed || 0; u.anticipated += L.parts.anticipated || 0;
+      u.built += (L.parts.built || 0) * sh; u.proposed += (L.parts.proposed || 0) * sh; u.anticipated += (L.parts.anticipated || 0) * sh;
       const c = L.parts.committed || 0, noPermit = Math.min(c, Math.max(0, L.toPermit || 0));
-      u.approved += noPermit; u.permitted += c - noPermit;
-      if (L.estimated > 0) { const k = L.layer === 'committed' ? (noPermit >= c - noPermit ? 'approved' : 'permitted') : L.layer; if (k in est) est[k] += Math.min(L.estimated, k === 'approved' ? noPermit : k === 'permitted' ? c - noPermit : L.parts[k] || 0); }
+      u.approved += noPermit * sh; u.permitted += (c - noPermit) * sh;
+      if (L.estimated > 0) { const k = L.layer === 'committed' ? (noPermit >= c - noPermit ? 'approved' : 'permitted') : L.layer; if (k in est) est[k] += sh * Math.min(L.estimated, k === 'approved' ? noPermit : k === 'permitted' ? c - noPermit : L.parts[k] || 0); }
     }
     const total = Object.values(u).reduce((a, b) => a + b, 0);
     return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total };
+  }
+  // A development's stage on this chart (its layer; an approved one by whether most of it is permitted).
+  function stageOf(L) {
+    if (!L || !L.layer) return null;
+    if (L.layer === 'committed') { const c = L.parts.committed || 0; return Math.min(c, L.toPermit || 0) >= c / 2 ? 'approved' : 'permitted'; }
+    return L.layer === 'existing' ? 'built' : L.layer;
   }
   // One bar per stage, labelled directly; the scale is the largest stage. census: dwellings on the
   // system (2021) for the context line.
@@ -121,7 +129,7 @@
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small"><strong>The pipeline by stage</strong> <span class="muted">dwellings, in the order a file moves</span></p>
-      ${st.rows.map(r => `<div class="stg-row" role="row" title="${esc(r.label)}: ${esc(r.note)}"><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${Math.round(r.pct)}%</span></div>`).join('')}
+      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${Math.round(r.pct)}%</span></div>`).join('')}
       <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}</p>
     </div>`;
   }
@@ -137,7 +145,7 @@
     ['Fire flow (Fire Underwriters Survey) and pressures', 'eye', 'Not modelled here'],
   ];
 
-  const api = { pageHTML, sectionsOf, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageChartHTML };
+  const api = { pageHTML, sectionsOf, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageOf, stageChartHTML };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -159,11 +167,13 @@
   const loading = (id, what) => ({ id, eyebrow: eyebrow(id), name: (W() && W().BY_ID[id] && W().BY_ID[id].question) || label(id), answer: `<span class="muted">${esc(what || 'Loading…')}</span>` });
 
   // ---- Small maps: a Peel frame from the wastewater blocks -------------------------------------------
-  function frame(Wd = 360, H = 300) {
+  // bounds: [minLng, minLat, maxLng, maxLat] to zoom to (an area), else all of Peel's sewered blocks.
+  function frame(Wd = 360, H = 300, bounds = null) {
     const sv = App() && App().state.servicing; if (!sv) return null;
     const base = (sv.drainage || []).filter(d => d.rings && !(d.served != null && d.served < 0.5));
     let mnx = 1e9, mny = 1e9, mxx = -1e9, mxy = -1e9;
-    for (const d of base) for (const r of d.rings) for (const [x, y] of r) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
+    if (bounds) [mnx, mny, mxx, mxy] = bounds;
+    else for (const d of base) for (const r of d.rings) for (const [x, y] of r) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
     if (mnx > mxx) return null;
     const kx = Math.cos((mny + mxy) / 2 * Math.PI / 180), s = Math.min((Wd - 10) / ((mxx - mnx) * kx), (H - 10) / (mxy - mny));
     const X = x => (5 + (x - mnx) * kx * s).toFixed(1), Y = y => (5 + (mxy - y) * s).toFixed(1);
@@ -300,37 +310,100 @@
       actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
 
-  // ---- Growth in an area ---------------------------------------------------------------------------
+  // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----
+  // The plan tree is Growth › Areas' own (js/plan-rollup.js through js/plan-tables.js): every row equals
+  // the sum of the rows under it. A row opens the next level; the stage bars filter the area's files.
+  let gAt = 'peel', gStage = 'all';
+  const KIND_WORD = { peel: 'Peel', municipality: 'municipality', plan: 'secondary plan', subplan: 'sub-area', precinct: 'precinct plan', none: 'not in a plan', rest: 'elsewhere in the plan' };
+  // (Mississauga calls its plans character areas)
+  const kindOf = (n, muni) => (n.kind === 'plan' && muni === 'Mississauga' ? 'character area' : KIND_WORD[n.kind] || n.kind);
+  function nodeDevs(n, out = new Map()) {
+    for (const d of n.devs) out.set(d.p, (out.get(d.p) || 0) + d.share);
+    for (const c of n.children) nodeDevs(c, out);
+    return out;
+  }
   function growth() {
-    const a = specOf('growth:areas', areaScope), pl = specOf('growth:pipeline', areaScope), tm = specOf('growth:timing', areaScope);
-    if (!a || !pl) return loading('growth', 'Loading the pipeline…');
-    const G = root.Growth, Ph = P(), set = (App() && App().state.filtered) || [];
-    const anb = G && Ph ? approvedNotBuilt(set, q => G.pipelineTotals([q]).left, q => (Ph.PHASE_BY_KEY[q.phase] ? Ph.PHASE_BY_KEY[q.phase].rank : -1)) : null;
-    const left = q => (Ph && Ph.unbuiltOf ? Ph.unbuiltOf(q) : (q.units || 0));
-    const top = set.filter(q => left(q) > 0).sort((x, y) => left(y) - left(x)).slice(0, 5);
-    const f2031 = tm && tm.figures ? tm.figures.find(f => /2031/.test(f.label)) : null;
-    const Ly = root.PeelLayers, stage = Ly && Ly.ofDev ? stageRows(set, q => Ly.ofDev(q)) : null;
-    const CAr = root.PeelCensusAreas, bc = CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
+    const PT = root.PeelPlanTables, pl = specOf('growth:pipeline', areaScope), tm = specOf('growth:timing', areaScope);
+    const r = PT && PT.compute ? (() => { try { return PT.compute(); } catch (e) { return null; } })() : null;
+    if (!r || !pl) return loading('growth', 'Loading the pipeline…');
+    let n = r.nodes.get(gAt); if (!n) { gAt = 'peel'; n = r.root; }
+    const G = root.Growth, Ph = P(), Ly = root.PeelLayers;
+    const dm = nodeDevs(n), items = [...dm].map(([p, share]) => ({ p, share: Math.min(1, share) }));
+    const atPeel = n.kind === 'peel';
+    const muniOf = x => { for (let y = x; y; y = y.parent ? r.nodes.get(y.parent) : null) if (y.kind === 'municipality') return y.name; return ''; };
+    const kind = x => kindOf(x, muniOf(x));
+    // The trail: Peel › municipality › plan › …
+    const trail = []; for (let x = n; x; x = x.parent ? r.nodes.get(x.parent) : null) trail.unshift(x);
+    const crumbs = trail.map((x, i) => (i < trail.length - 1 ? `<button type="button" class="btn small link" data-ws-drill="${esc(x.id)}">${esc(x.name)}</button>` : `<strong>${esc(x.name)}</strong>`)).join(' <span aria-hidden="true">›</span> ');
+    // The stages, for this area.
+    const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q)) : null;
+    if (stage) { stage.click = true; stage.on = gStage; }
+    const CAr = root.PeelCensusAreas, bc = atPeel && CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
     const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, {}).dwellings : 0;
-    return { id: 'growth', eyebrow: eyebrow('growth'), name: 'How much is coming, where, and how fast?', identity: a.head.identity, scen: scen(), answer: `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`,
+    // Employment: the applications' floor area and jobs (Growth's own sums; an area counts a split site's share).
+    let emp = { planned: 0, jobs: 0, permitted: 0, completed: 0, left: 0 };
+    const GU = root.PeelGrowthUI, deps = GU && GU.growthDeps ? GU.growthDeps().aggregate : null;
+    if (G && G.aggregateTypes && deps) for (const { p, share } of items) { const e = G.aggregateTypes([p], deps).emp; for (const k in emp) emp[k] += (e[k] || 0) * share; }
+    const m = n.m, n0 = v => fmtNum(Math.round(v));
+    const anb = stage ? stage.rows.filter(x => x.key === 'approved' || x.key === 'permitted').reduce((t, x) => t + x.units, 0) : 0;
+    const f2031 = atPeel && tm && tm.figures ? tm.figures.find(f => /2031/.test(f.label)) : null;
+    // The next level down (municipalities, plans, precincts and sub-areas), each opening its own level.
+    const kids = n.children.filter(c => c.m.planned >= 0.5 || c.m.jobs >= 0.5).sort((x, y) => y.m.planned - x.m.planned);
+    const kidRow = c => ({ attrs: { 'data-ws-drill': c.id, title: `Open ${c.name}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.name)}<small class="muted"> · ${esc(kind(c))}</small></span><span class="pnl-r-year">${n0(c.m.planned)} units</span></div><small class="pnl-r-line">${n0(c.m.left)} left to build · ${n0(c.m.people)} people${c.m.jobs >= 0.5 ? ` · ${n0(c.m.jobs)} jobs` : ''}${c.children.length ? ` · ${c.children.length} ${c.kind === 'municipality' ? 'plans' : 'parts'}` : ''}</small>` });
+    // At Peel, the largest plans too (straight to their level).
+    const plans = atPeel ? [...r.nodes.values()].filter(x => x.kind === 'plan' && x.m.planned >= 0.5).sort((x, y) => y.m.planned - x.m.planned) : [];
+    // The area's files, by stage (the bars filter them): pre-application to built.
+    const STG = Object.fromEntries(STAGES.map(([k, l]) => [k, l]));
+    const files = items.map(({ p, share }) => ({ p, share, st: Ly ? stageOf(Ly.ofDev(p)) : null })).filter(x => x.st && (gStage === 'all' || x.st === gStage) && (x.p.units || 0) > 0).sort((x, y) => y.p.units * y.share - x.p.units * x.share);
+    const tools = `<div class="seg" role="group" aria-label="Stage"><button type="button" class="btn small${gStage === 'all' ? ' on' : ''}" data-ws-stage="all" aria-pressed="${gStage === 'all'}">All</button>${STAGES.map(([k, l]) => `<button type="button" class="btn small${gStage === k ? ' on' : ''}" data-ws-stage="${k}" aria-pressed="${gStage === k}">${esc(l.replace(' or under construction', ' / building'))}</button>`).join('')}</div>`;
+    const fileRow = x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${esc(STG[x.st] || '')} · ${esc(Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>` });
+    const empRows = emp.planned >= 1 ? [
+      { kv: true, html: `<div class="pnl-kv"><span>Floor area planned</span><span>${n0(emp.planned)} m² · ≈${n0(emp.jobs)} jobs</span></div>` },
+      { kv: true, html: `<div class="pnl-kv"><span>Permitted</span><span>${n0(emp.permitted)} m²</span></div>` },
+      { kv: true, html: `<div class="pnl-kv"><span>Completed</span><span>${n0(emp.completed)} m²</span></div>` },
+      { kv: true, html: `<div class="pnl-kv"><span>Left to build</span><span>${n0(emp.left)} m²</span></div>` },
+    ] : [];
+    // The area on the small map: its outline (a plan or precinct), its developments.
+    const A = App().state.areas, ring = n.areaId && A ? [...(A.secondaryPlans || []), ...(A.precincts || [])].find(x => x.id === n.areaId) : null;
+    // (an area: the map zooms to its outline, with a margin)
+    let bb = null;
+    if (ring && ring.rings) { bb = [1e9, 1e9, -1e9, -1e9]; for (const rr of ring.rings) for (const [x, y] of rr) { bb[0] = Math.min(bb[0], x); bb[1] = Math.min(bb[1], y); bb[2] = Math.max(bb[2], x); bb[3] = Math.max(bb[3], y); } const px = (bb[2] - bb[0]) * 0.35 + 0.004, py = (bb[3] - bb[1]) * 0.35 + 0.003; bb = [bb[0] - px, bb[1] - py, bb[2] + px, bb[3] + py]; }
+    const f = frame(360, 300, bb), devPts = [...dm.keys()];
+    const allAreas = A ? [...(A.secondaryPlans || []), ...(A.precincts || [])] : [];
+    const subRings = n.children.map(c => (c.areaId ? allAreas.find(x => x.id === c.areaId) : null)).filter(x => x && x.rings);
+    const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => `<circle cx="${f.X(p.lng)}" cy="${f.Y(p.lat)}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
+    const answer = atPeel
+      ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`
+      : `<strong>${esc(n.name)}</strong> (${esc(kind(n))}${trail[1] && trail[1] !== n ? `, ${esc(trail[1].name)}` : ''}) holds <strong>${n0(m.planned)}</strong> planned units, ${n0(m.people)} people${m.jobs >= 0.5 ? ` and ${n0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
+    return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: atPeel ? null : { tone: 'stage', text: kind(n) }, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments · ${kind(n)}${trail.length > 2 ? ` in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       figures: [
-        pl.figures[0],
-        anb ? { v: fmtNum(Math.round(anb.units)), u: 'units', label: 'approved, not yet built', ctx: `${fmtNum(anb.n)} files past their first planning approval` } : pl.figures[1],
-        pl.figures[2],
-        f2031 ? { v: f2031.v, u: 'units', label: 'expected by 2031', ctx: f2031.ctx } : pl.figures[3],
+        { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` },
+        { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
+        { v: n0(m.people), u: 'people', label: 'at build-out', ctx: 'Peel design criteria' },
+        { v: n0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' },
       ],
       chart: stage ? stageChartHTML(stage, census) : pl.chart,
       lists: [
-        { ...(a.lists[0] || {}), see: { 'data-ws-go': 'growth' } },
-        { title: 'Largest unbuilt', rows: top.map(q => ({ attrs: { 'data-ws-pick': q.key, 'data-ws-as': 'site', title: `Check ${q.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(q.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(left(q)))} units</span></div><small class="pnl-r-line">${esc(q.municipality)} · ${esc(Ph && Ph.PHASE_BY_KEY[q.phase] ? Ph.PHASE_BY_KEY[q.phase].label : q.phase)}</small>` })), total: top.length },
-        ...(pl.lists || []).filter(l => /municipality/i.test(l.title)),
+        kids.length ? { title: atPeel ? 'By municipality' : n.kind === 'municipality' ? 'Plans (secondary plans, character areas) and the rest' : 'Precincts and sub-areas', rows: kids.map(kidRow), total: kids.length, see: kids.length > 5 ? { 'data-ws-drillall': n.id } : null, all: gAll } : null,
+        atPeel ? { title: 'Plans with the most planned units', rows: plans.map(kidRow), total: plans.length, see: { 'data-ws-go': 'growth', 'data-ws-fulltable': 'growth:areas' } } : null,
+        { title: gStage === 'all' ? `Files in ${n.name}` : `${STG[gStage]}: files in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: n.areaId ? { 'data-ws-go': 'growth', 'data-ws-area': n.areaId } : { 'data-ws-go': 'growth' } },
+        empRows.length ? { title: 'Employment', rows: empRows, total: empRows.length } : null,
+        ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
       ],
-      map: { svg: devsMap(set), attrs: { 'data-ws-go': 'growth' }, label: 'Open Growth in an area on the map', caption: 'Developments of 50+ units, sized by units' },
-      method: `${pl.method} The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Approved, not yet built: units left to build in files that are draft or site plan approved, permit issued or under construction (committed, MECP D-5-1).${tm ? ` ${tm.method}` : ''}`,
+      map: { svg: mapSvg, attrs: n.areaId ? { 'data-ws-go': 'growth', 'data-ws-area': n.areaId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `${esc(n.name)} outlined; its developments sized by units` : 'Developments sized by units' },
+      method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
-      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'growth' } }] };
+      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: n.areaId ? { 'data-ws-go': 'growth', 'data-ws-area': n.areaId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
   }
-
+  let gAll = false;
+  document.addEventListener('click', e => {
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    e.preventDefault(); e.stopPropagation();
+    if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
+    else if (t.dataset.wsStage) gStage = gStage === t.dataset.wsStage ? 'all' : t.dataset.wsStage;
+    else if (t.dataset.wsDrillall) gAll = !gAll;
+    if (W() && W().renderPage) W().renderPage(true);
+  }, true);
   // ---- Projects ------------------------------------------------------------------------------------
   function projects() {
     const t = specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');

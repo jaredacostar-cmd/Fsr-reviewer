@@ -138,3 +138,33 @@ test('the layers in plain words, across the app; capacity bars keep the most-cer
   assert.match(src('js/svc-capacity.js'), /segments: \[seg\('existing', r\.existing\), seg\('built', r\.built\), seg\('committed', [^)]+\)\), seg\('proposed',/);
   assert.match(src('js/svc-capacity.js'), /\$\{pctTxt\(r\.pctCom\)\} with approved → \$\{pctTxt\(r\.pctBo\)\} at build-out/);
 });
+
+test('Growth drill-down: Peel → municipality → plan → precinct / sub-area → its files by stage; employment', () => {
+  const s = src('js/ws-pages.js');
+  // The tree is Growth › Areas' own; a level's developments are its leaves' (a split site counts its share).
+  assert.match(s, /const r = PT && PT\.compute \?/);
+  assert.match(s, /function nodeDevs\(n, out = new Map\(\)\) \{\s*for \(const d of n\.devs\) out\.set\(d\.p, \(out\.get\(d\.p\) \|\| 0\) \+ d\.share\);\s*for \(const c of n\.children\) nodeDevs\(c, out\);/);
+  // A row opens the next level; the trail goes back up; the stage bars filter the files.
+  assert.match(s, /const kidRow = c => \(\{ attrs: \{ 'data-ws-drill': c\.id/);
+  assert.match(s, /data-ws-drill="\$\{esc\(x\.id\)\}">\$\{esc\(x\.name\)\}<\/button>/);
+  assert.match(s, /\$\{st\.click \? ` data-ws-stage="\$\{r\.key\}" tabindex="0"` : ''\}/);
+  assert.match(s, /label: '↑ Up a level', attrs: \{ 'data-ws-drill': n\.parent \|\| 'peel' \}/);
+  // Employment: a figure and its own list (floor area planned, permitted, completed, left; jobs).
+  assert.match(s, /label: 'employment', ctx: emp\.planned >= 1 \?/);
+  assert.match(s, /\{ title: 'Employment', rows: empRows/);
+  // Mississauga's plans are character areas.
+  assert.match(s, /n\.kind === 'plan' && muni === 'Mississauga' \? 'character area'/);
+  // A stage with no files still shows the list (and its stage switch).
+  assert.match(s, /No files \$\{gStage === 'all' \? 'with planned units'/);
+});
+
+test('a development’s stage on the chart: its layer; an approved one by whether most of it is permitted', () => {
+  assert.equal(WP.stageOf({ layer: 'anticipated', parts: {} }), 'anticipated');
+  assert.equal(WP.stageOf({ layer: 'committed', parts: { committed: 100 }, toPermit: 100 }), 'approved');
+  assert.equal(WP.stageOf({ layer: 'committed', parts: { committed: 100 }, toPermit: 20 }), 'permitted');
+  assert.equal(WP.stageOf({ layer: 'existing', parts: {} }), 'built');
+  assert.equal(WP.stageOf({ layer: null }), null);
+  // Shares: a site split between two plans counts its share in each.
+  const st = WP.stageRows([{ p: 'a', share: 0.25 }], () => ({ layer: 'proposed', parts: { proposed: 400 }, toPermit: 400 }));
+  assert.equal(st.rows.find(r => r.key === 'proposed').units, 100);
+});
