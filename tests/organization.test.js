@@ -121,3 +121,16 @@ test('views save in one place, beside the share link; they open (and delete) fro
   assert.match(m, /data-preset-del="\$\{i\}" aria-label="Delete the saved view/);
   assert.match(src('js/search-filter.js'), /const d = e\.target\.closest\('\[data-preset-del\]'\); if \(d\) \{ MA\(\)\.deleteSavedView\(\+d\.dataset\.presetDel\); return; \}/);
 });
+
+test('the trail owns the scope’s count; filters on show on pages; Review an FSR starts from the files with an FSR', () => {
+  assert.match(src('js/topbar.js'), /const count = scoped \? `<span class="tb-count" title="This development's planned homes">· \$\{fmtNum\(Math\.round\(devU\)\)\} home/);
+  const w = src('js/workspaces.js');
+  assert.match(w, /<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:<\/span>/);
+  assert.match(w, /if \(!REF\[page\]\) m\.filters = filterChipsHTML\(\);/);
+  assert.match(src('js/ws-pages.js'), /if \(m\.filters\) out\.push\(m\.filters\);/);
+  assert.match(src('index.html'), /<div class="ws-filters" id="ws-filters"><\/div>/);
+  const p = src('js/ws-pages.js');
+  assert.match(p, /\{ title: 'Files with an FSR posted', rows: fsrRows/);
+  assert.match(p, /top: `<div class="page-search" id="page-search"><\/div>\$\{stepper\}`/);
+  assert.doesNotMatch(p.slice(p.indexOf('  function find(id) {'), p.indexOf('  // ---- Check a site, with a site')), /title: 'Steps'/, 'the steps are one line, not a list');
+});

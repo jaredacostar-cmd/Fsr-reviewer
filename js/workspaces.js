@@ -230,9 +230,24 @@
   }
   // This week's count (the chip's badge): the Peel Overview's own list.
   function weekRows() { const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
+  // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
+  // Reset, so a filtered page never reads as the whole of Peel.
+  function filterChipsHTML() {
+    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [];
+    if (!list.length) return '';
+    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button></div>`;
+  }
+  document.addEventListener('click', e => {
+    const F = root.PeelFilterUI; if (!F || !e.target.closest) return;
+    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'); if (!r && !c) return;
+    e.preventDefault();
+    if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
+    renderChips(); if (mode === 'home') renderPage(true);
+  });
   function renderChips() {
     const el = $('#ws-chips'); if (!el) return;
     const nW = weekRows().length;
+    const fl = $('#ws-filters'); if (fl) fl.innerHTML = filterChipsHTML();
     el.innerHTML = WS.map(w => `<button type="button" class="btn small ws-chip${cur === w.id ? ' on' : ''}" data-ws-go="${w.id}" aria-pressed="${cur === w.id}" title="${esc(w.what)}">${esc(w.label)}${w.id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</button>`).join('');
   }
   // The header line on every panel in a workspace: its source and "Open full map".
@@ -366,7 +381,9 @@
   // force: rebuild even when the page HTML is unchanged (a mode switch).
   function renderPage(force) {
     const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
-    const m = WP.build(page), main = WP.pageHTML(m, PN() ? PN().NOTE : '');
+    const m = WP.build(page);
+    if (!REF[page]) m.filters = filterChipsHTML();
+    const main = WP.pageHTML(m, PN() ? PN().NOTE : '');
     const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
     if (!force && html === lastHTML) return;
     // The search box and the map live outside the page while it is rebuilt.

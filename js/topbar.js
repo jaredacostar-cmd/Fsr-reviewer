@@ -91,10 +91,14 @@
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
     if (tc) steps.push(...[].concat(tc));
-    // The trail carries its count (SPEC §4): the developments in scope and their planned units.
+    // The trail carries its count (SPEC §4), and owns it (bundle 6): at a development, that site's
+    // homes (the map's 1,956 belong to Peel, not to the site); else the developments in scope.
     const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
+    const devU = scoped && window.Growth ? window.Growth.pipelineTotals([scoped]).planned : 0;
+    const count = scoped ? `<span class="tb-count" title="This development's planned homes">· ${fmtNum(Math.round(devU))} home${Math.round(devU) === 1 ? '' : 's'} planned</span>`
+      : `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
-      + `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
+      + count;
     el._steps = steps;
     if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }

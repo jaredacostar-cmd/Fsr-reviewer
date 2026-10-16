@@ -36,6 +36,7 @@
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}</header>`);
+    if (m.filters) out.push(m.filters);
     if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
     if (m.top) out.push(m.top);
     // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
@@ -353,15 +354,24 @@
     const recent = proj.filter(p => p.phase !== 'cancelled' && p.phase !== 'completed' && (p.units || 0) > 0).map(p => [p, last(p)]).filter(x => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
     const big = proj.filter(p => p.phase === 'review' && (p.units || 0) >= 100).sort((a, b) => b.units - a.units).slice(0, 5);
     const devRow = p => ({ attrs: { 'data-ws-pick': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(Ph && Ph.PHASE_BY_KEY[p.phase] ? Ph.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units</small>` });
-    const steps = [['Find', 'Search an address or file number, or pick one below.'], ['Result', id === 'fsr' ? 'Its servicing path, with the FSR cross-check.' : 'Its servicing, timing and what to confirm.'], ['Output', id === 'fsr' ? 'The comparison, as notes for the review.' : 'The one-page servicing memo.']];
+    // Bundle 6: the steps in one line under the search (not a list beside the map); Review an FSR
+    // starts from the files that have an FSR posted (data/fsr.json), newest first.
+    const steps = [['Find', 'search or pick one below'], ['Result', id === 'fsr' ? 'its servicing path with the FSR cross-check' : 'its servicing, timing and what to confirm'], ['Output', id === 'fsr' ? 'notes for the review' : 'the one-page servicing memo']];
+    const stepper = `<p class="pnl-stepper small" aria-label="Steps">${steps.map(([t, d], i) => `<span class="${i === 0 ? 'on' : ''}"><b>${i + 1}</b> ${esc(t)}: ${esc(d)}</span>`).join('<span class="muted" aria-hidden="true"> › </span>')}</p>`;
+    const F = root.PeelFsr;
+    let fsrRows = null;
+    if (id === 'fsr' && F) {
+      if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
+      else fsrRows = proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best && x.p.phase !== 'cancelled').sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))).map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
+    }
+    const lists = id === 'fsr'
+      ? [{ title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 },
+        { title: 'Recently active', rows: recent.map(devRow), total: recent.length }]
+      : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
     return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
-      top: '<div class="page-search" id="page-search"></div>',
-      answer: 'Find the development: search an address or file number, or pick one below.',
-      lists: [
-        { title: 'Steps', rows: steps.map(([t, d], i) => ({ kv: true, html: `<div class="pnl-step${i === 0 ? ' on' : ''}"><span class="pnl-step-n" aria-hidden="true">${i + 1}</span><span><strong>${t}</strong> ${esc(d)}</span></div>` })), total: 3 },
-        { title: 'Recently active', rows: recent.map(devRow), total: recent.length },
-        { title: 'Large files under review', rows: big.map(devRow), total: big.length },
-      ],
+      top: `<div class="page-search" id="page-search"></div>${stepper}`,
+      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are behind a sign-in)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
+      lists,
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
   }
