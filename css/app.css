@@ -2972,3 +2972,17 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
   .home-side .home-full { margin-top: 0; flex: 0 0 auto; }
   .home-main { order: 1; }
 }
+/* Growth in an area: the pipeline by stage, one bar per stage in the order a file moves. */
+.stg { display: flex; flex-direction: column; gap: 6px; font-variant-numeric: tabular-nums; }
+.stg-h { margin: 0 0 2px; }
+.stg-row { display: grid; grid-template-columns: minmax(150px, 15rem) minmax(0, 1fr) 6rem 3rem; align-items: center; gap: var(--space-2); }
+.stg-l { font-size: var(--fs-2); }
+.stg-track { position: relative; height: 16px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
+.stg-fill, .stg-est { position: absolute; left: 0; top: 0; bottom: 0; }
+.stg-est { background: var(--ly-hatch); pointer-events: none; }
+.stg-approved { background: color-mix(in srgb, var(--ly-committed) 60%, var(--surface-2)); }
+.stg-permitted { background: var(--ly-committed); }
+.stg-v { text-align: right; }
+.stg-p { text-align: right; font-size: var(--fs-1); }
+.stg-foot { margin: 4px 0 0; }
+@media (max-width: 600px) { .stg-row { grid-template-columns: minmax(0, 1fr) 4.5rem 2.5rem; } .stg-l { grid-column: 1 / -1; } }

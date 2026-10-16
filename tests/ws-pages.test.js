@@ -114,3 +114,27 @@ test('every workspace has a page builder; pages open from Home, chips and the ma
   assert.match(w, /\{ id: 'tight', label: 'Servicing capacity'/);
   assert.doesNotMatch(s + w, /Getting tight/);
 });
+
+test('Growth: the pipeline by stage, in the order a file moves; approved split on its permits', () => {
+  assert.deepEqual(plain(WP.STAGES.map(s => s[1])), ['Pre-application', 'In review', 'Approved, no permit yet', 'Permit issued or under construction', 'Built since 2021']);
+  const L = { a: { layer: 'anticipated', parts: { anticipated: 100 }, toPermit: 100 }, b: { layer: 'proposed', parts: { proposed: 400 }, toPermit: 400 },
+    c: { layer: 'committed', parts: { committed: 300 }, toPermit: 120 }, d: { layer: 'committed', parts: { committed: 50 }, toPermit: 50 }, e: { layer: 'built', parts: { built: 30, existing: 10 }, toPermit: 0 }, x: { layer: null, parts: {} } };
+  const st = WP.stageRows(Object.keys(L), k => L[k]);
+  assert.deepEqual(plain(st.rows.map(r => [r.key, r.units])), [['anticipated', 100], ['proposed', 400], ['approved', 170], ['permitted', 180], ['built', 30]]);
+  assert.equal(st.total, 880, 'the census (existing) part of a site is not in the pipeline');
+  const h = WP.stageChartHTML(st, 1760);
+  assert.deepEqual([...h.matchAll(/<span class="stg-l" role="cell">([^<]+)</g)].map(m => m[1]), ['Pre-application', 'In review', 'Approved, no permit yet', 'Permit issued or under construction', 'Built since 2021']);
+  assert.match(h, /<i class="stg-fill ly-proposed" style="width:100\.0%"><\/i><\/span><b class="stg-v" role="cell">400<\/b><span class="stg-p muted" role="cell">45%<\/span>/, 'scaled to the largest stage, labelled directly');
+  assert.match(h, /880 dwellings in the pipeline would add about <strong>50%<\/strong> to the 1,760 dwellings on the system \(2021 census\)/);
+  assert.match(src('js/ws-pages.js'), /chart: stage \? stageChartHTML\(stage, census\) : pl\.chart,/);
+});
+
+test('the layers in plain words, across the app; capacity bars keep the most-certain-first order', () => {
+  const B = require('../js/layer-bar.js');
+  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
+  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
+  assert.deepEqual(plain(require('../js/layers.js').LABEL), plain(B.LABEL), 'one set of names');
+  // A capacity bar stacks from the base: on the system, built, approved, in review.
+  assert.match(src('js/svc-capacity.js'), /segments: \[seg\('existing', r\.existing\), seg\('built', r\.built\), seg\('committed', [^)]+\)\), seg\('proposed',/);
+  assert.match(src('js/svc-capacity.js'), /\$\{pctTxt\(r\.pctCom\)\} with approved → \$\{pctTxt\(r\.pctBo\)\} at build-out/);
+});

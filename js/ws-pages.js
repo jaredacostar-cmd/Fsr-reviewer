@@ -93,6 +93,38 @@
     for (const p of projects) { const k = rankOf(p); if (k >= approvedRank && k < completedRank) { const l = leftOf(p); if (l > 0) { u += l; n++; } } }
     return { units: u, n };
   }
+  // Growth in an area: the pipeline by stage, in the order a file moves (decided with the user): pre-
+  // application → in review → approved, no permit yet → permit issued or under construction → built since
+  // 2021. The approved layer (committed, D-5-1) splits on what is still to permit. ofDev: js/layers.js.
+  const STAGES = [
+    ['anticipated', 'Pre-application', 'pre-consultation, block or precinct plan: no formal file yet'],
+    ['proposed', 'In review', 'under formal review, not approved'],
+    ['approved', 'Approved, no permit yet', 'draft or site plan approved; no building permit for these units yet'],
+    ['permitted', 'Permit issued or under construction', 'approved, with building permits issued; not yet completed'],
+    ['built', 'Built since 2021', 'completed since census day, not in the census yet'],
+  ];
+  function stageRows(devs, ofDev) {
+    const u = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, est = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
+    for (const p of devs) {
+      const L = ofDev(p); if (!L || !L.layer) continue;
+      u.built += L.parts.built || 0; u.proposed += L.parts.proposed || 0; u.anticipated += L.parts.anticipated || 0;
+      const c = L.parts.committed || 0, noPermit = Math.min(c, Math.max(0, L.toPermit || 0));
+      u.approved += noPermit; u.permitted += c - noPermit;
+      if (L.estimated > 0) { const k = L.layer === 'committed' ? (noPermit >= c - noPermit ? 'approved' : 'permitted') : L.layer; if (k in est) est[k] += Math.min(L.estimated, k === 'approved' ? noPermit : k === 'permitted' ? c - noPermit : L.parts[k] || 0); }
+    }
+    const total = Object.values(u).reduce((a, b) => a + b, 0);
+    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total };
+  }
+  // One bar per stage, labelled directly; the scale is the largest stage. census: dwellings on the
+  // system (2021) for the context line.
+  function stageChartHTML(st, census) {
+    const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
+    return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
+      <p class="stg-h small"><strong>The pipeline by stage</strong> <span class="muted">dwellings, in the order a file moves</span></p>
+      ${st.rows.map(r => `<div class="stg-row" role="row" title="${esc(r.label)}: ${esc(r.note)}"><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${Math.round(r.pct)}%</span></div>`).join('')}
+      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}</p>
+    </div>`;
+  }
   // Review an FSR: what an FSR covers (Region of Peel, Functional Servicing Report Requirements, 2009)
   // and what this app can check. app = compared here; part = facilities only; eye = an engineer's review.
   const COVERAGE = [
@@ -105,7 +137,7 @@
     ['Fire flow (Fire Underwriters Survey) and pressures', 'eye', 'Not modelled here'],
   ];
 
-  const api = { pageHTML, sectionsOf, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE };
+  const api = { pageHTML, sectionsOf, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageChartHTML };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -277,6 +309,9 @@
     const left = q => (Ph && Ph.unbuiltOf ? Ph.unbuiltOf(q) : (q.units || 0));
     const top = set.filter(q => left(q) > 0).sort((x, y) => left(y) - left(x)).slice(0, 5);
     const f2031 = tm && tm.figures ? tm.figures.find(f => /2031/.test(f.label)) : null;
+    const Ly = root.PeelLayers, stage = Ly && Ly.ofDev ? stageRows(set, q => Ly.ofDev(q)) : null;
+    const CAr = root.PeelCensusAreas, bc = CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
+    const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, {}).dwellings : 0;
     return { id: 'growth', eyebrow: eyebrow('growth'), name: 'How much is coming, where, and how fast?', identity: a.head.identity, scen: scen(), answer: `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`,
       figures: [
         pl.figures[0],
@@ -284,14 +319,14 @@
         pl.figures[2],
         f2031 ? { v: f2031.v, u: 'units', label: 'expected by 2031', ctx: f2031.ctx } : pl.figures[3],
       ],
-      chart: pl.chart,
+      chart: stage ? stageChartHTML(stage, census) : pl.chart,
       lists: [
         { ...(a.lists[0] || {}), see: { 'data-ws-go': 'growth' } },
         { title: 'Largest unbuilt', rows: top.map(q => ({ attrs: { 'data-ws-pick': q.key, 'data-ws-as': 'site', title: `Check ${q.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(q.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(left(q)))} units</span></div><small class="pnl-r-line">${esc(q.municipality)} · ${esc(Ph && Ph.PHASE_BY_KEY[q.phase] ? Ph.PHASE_BY_KEY[q.phase].label : q.phase)}</small>` })), total: top.length },
         ...(pl.lists || []).filter(l => /municipality/i.test(l.title)),
       ],
       map: { svg: devsMap(set), attrs: { 'data-ws-go': 'growth' }, label: 'Open Growth in an area on the map', caption: 'Developments of 50+ units, sized by units' },
-      method: `${pl.method} Approved, not yet built: units left to build in files that are draft or site plan approved, permit issued or under construction.${tm ? ` ${tm.method}` : ''}`,
+      method: `${pl.method} The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Approved, not yet built: units left to build in files that are draft or site plan approved, permit issued or under construction (committed, MECP D-5-1).${tm ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'growth' } }] };
   }
