@@ -181,3 +181,8 @@ test('allocations: an over goes left of a zero line; a small system in m³/d; ne
   assert.match(d, /\{ tone: 'over', text: `\$\{short\.length\} past the trigger` \}/, 'no "1 short" beside "no allocations"');
   assert.match(src('js/overview-tab.js'), /c\.util\.bo >= 0\.85 \? 'near'/, 'the same 85% rule the Overview bars use');
 });
+
+test('Help works from Home and the workspace pages: it opens the full map first (its panel is hidden on a page)', () => {
+  assert.match(src('js/tips.js'), /if \(e\.target\.closest\('\[data-help-open\]'\)\) \{\n {6}if \(document\.documentElement\.classList\.contains\('home-on'\) && root\.PeelWorkspaces && root\.PeelWorkspaces\.setMode\) root\.PeelWorkspaces\.setMode\('full'\);\n {6}return showHelp\(\);/);
+  assert.match(src('index.html'), /id="tb-help" data-help-open/);
+});
