@@ -104,6 +104,8 @@
     if (key === 'svc' && svcSub === 'alloc') setTimeout(() => DUI().renderAlloc(), 0);
     if (key === 'svc' && root.PeelSvcCapacity) setTimeout(() => root.PeelSvcCapacity.renderFor(svcSub), 0);
     if (key === 'growth' && gSub === 'areas' && root.PeelPlanTables) setTimeout(() => root.PeelPlanTables.render(), 0);
+    // The standard panel of the open tab and sub-view (js/panel.js).
+    if (root.PeelPanel) root.PeelPanel.sync();
     // A narrow screen scrolls the tab strip: keep the open tab in view.
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;
     if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: Math.max(0, ft.offsetLeft - (strip.clientWidth - ft.offsetWidth) / 2), behavior: 'smooth' });

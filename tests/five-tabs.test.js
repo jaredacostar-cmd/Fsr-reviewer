@@ -27,7 +27,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
   assert.match(r, /return `\$\{DU\(\)\.freshnessHTML\(\)\}/, 'Sources: freshness first');
   assert.match(r, /possible duplicate pair/);
   assert.match(r, /body\.innerHTML = note \+ \(sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\)\);/);
-  assert.match(r, /if \(scoped\) \{ syncDevHome\('records'\); return; \}/);
+  assert.match(r, /if \(scoped\) \{ syncDevHome\('records'\); if \(root\.PeelPanel\) root\.PeelPanel\.set\('records:files', filesPanelSpec\(scoped\)\); return; \}/);
   assert.match(r, /if \(DT && DT\.setSub\) DT\.setSub\('files'\);/);
   assert.match(r, /s\.rkind === 'file' && AC\(\)\.currentFile/);
   assert.match(HTML, /<section class="f-pane" id="pane-records" data-pane="records"[^>]*><div id="records-body"><\/div><\/section>/);

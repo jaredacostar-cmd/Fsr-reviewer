@@ -250,10 +250,16 @@
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>Capital</button>
         <button type="button" role="tab" class="f-tab f-tab-trail" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records</button>
       </div>
+      <!-- Stage 3: "Open full table" widens this column to the full window and shows the open
+           sub-view's detailed tables (js/panel.js); Esc returns to the panel. -->
+      <div class="ft-bar" id="ft-bar" hidden></div>
       <div class="analysis-panes" id="analysis-panes">
       <div id="screen-note-top"></div>
       <p class="scope-note small" id="scope-note" role="note" hidden></p>
 
+      <!-- The standard panel of the open tab and sub-view (js/panel.js); the panes below it are its
+           detail, shown by "Open full table". -->
+      <section class="f-pane pnl-host" id="pnl-overview" data-pane="overview" aria-labelledby="ftab-overview"></section>
       <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
         <div id="ov-body"></div>
         <div id="scope-body" class="scope-body" hidden aria-live="polite"></div>
@@ -262,6 +268,7 @@
       </section>
 
       <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Timing</button></div>
+      <section class="f-pane pnl-host" id="pnl-growth" data-pane="growth" aria-labelledby="ftab-growth" hidden></section>
       <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
       <!-- Areas: one drill-down, Peel → municipality → plan (the plan tables), then the 2051 comparison,
            housing activity and the population outlook. -->
@@ -275,6 +282,7 @@
         <button type="button" class="btn small" data-svcsub="alloc">Allocations</button>
         <button type="button" class="btn small" data-svcsub="checks">Checks</button>
       </div>
+      <section class="f-pane pnl-host" id="pnl-svc" data-pane="svc" aria-labelledby="ftab-svc" hidden></section>
       <!-- Capacity: one table, water and wastewater (js/svc-capacity.js); the plant and water charts
            behind it fold under "Charts and method". -->
       <section class="f-pane svc-pane" id="pane-svc-capacity" data-pane="svc" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-svc" hidden>
@@ -321,6 +329,7 @@
       </section>
 
       <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">Timing</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small lab-chip pv-hide" data-dcasub="funding">Funding <small>Labs</small></button></div>
+      <section class="f-pane pnl-host" id="pnl-dca" data-pane="dca" aria-labelledby="ftab-dca" hidden></section>
       <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
       <section class="f-pane" id="pane-dca-build" data-pane="dca" data-sub="projects" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-build-body"></div></section>
       <section class="f-pane" id="pane-dca-eas" data-pane="dca" data-sub="eas" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-eas-body"></div></section>
@@ -328,6 +337,7 @@
       <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="records" hidden role="group" aria-label="Records view"><button type="button" class="btn small" data-rsub="sources">Sources</button><button type="button" class="btn small" data-rsub="checks">Checks</button><button type="button" class="btn small" data-rsub="files">Files</button></div>
+      <section class="f-pane pnl-host" id="pnl-records" data-pane="records" aria-labelledby="ftab-records" hidden></section>
       <section class="f-pane" id="pane-records" data-pane="records" role="tabpanel" aria-labelledby="ftab-records" hidden><div id="records-body"></div></section>
 
       </div>

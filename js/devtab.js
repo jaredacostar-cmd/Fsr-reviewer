@@ -367,6 +367,8 @@
     councilLoading = fetch('data/council.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
       st.council = d || { meetings: {}, files: {} };
       if (liveKey === p.key) rerenderPreserve();
+      // The Overview panel's About fold reads the same council items (Stage 3).
+      if (liveKey === p.key && root.PeelOverviewTab && root.PeelOverviewTab.renderOverview) root.PeelOverviewTab.renderOverview();
     }).catch(() => { st.council = { meetings: {}, files: {} }; });
   }
   function latestDecisionHTML(p, st) {
@@ -1043,8 +1045,26 @@
   }
   if (hasDOM() && typeof document.addEventListener === 'function') document.addEventListener('click', onClick);
 
+  // ---- Stage 3: the development's pieces in the standard panels -------------------------------
+  // About (proposal, status, latest decision, servicing report) folds into the Overview panel; the
+  // site checks there are the constraint checklist and the storm sewers and ponds; the aerial check
+  // and ground elevation sit in Servicing at the site. Same containers and fillers as the Site view.
+  function partHTML(p, part) {
+    const has = p.lat != null, row = (t, id, msg, info) => brow(t, `<div id="${id}"${info ? ` data-info="${info}"` : ''}><p class="small muted">${msg}</p></div>`);
+    if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
+    if (part === 'site') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
+    if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
+    return '';
+  }
+  function fillParts(p, parts) {
+    if (!hasDOM() || !p) return;
+    liveKey = p.key;
+    if (parts.includes('about')) ensureCouncil(p);
+    if (parts.includes('site') && p.lat != null) { fillConstraints(p); fillStormMains(p); }
+    if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
+  }
   // ---- Public contract ------------------------------------------------------------------
-  const api = { render, setSub };
+  const api = { render, setSub, partHTML, fillParts };
   if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, currentSub, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, scopeProjectForTest: () => scopeProject() };
   else root.DevTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

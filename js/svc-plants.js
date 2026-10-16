@@ -42,6 +42,7 @@
     DV().scopeBriefIds($('#water-body')); DV().scopeBriefIds($('#ww-body'));
     $('#water-note').textContent = `${p.title} · site servicing`;
     $('#ww-note').textContent = `${p.title} · site servicing`;
+    if (root.PeelSvcCapacity && root.PeelSvcCapacity.renderSiteNetwork) root.PeelSvcCapacity.renderSiteNetwork(p);   // Stage 3: the standard panel
     if (AT().getFootTab() === 'svc') AT().showFootTab('svc');
   }
   // Plants tab: a comparison of the model with each plant's 2025 annual report, then each

@@ -717,6 +717,7 @@
     set dcnFilter(v) { dcnFilter = v; },
     showDcTiming,
     showConsDevs,
+    consStatus,
     showDcBack,
     DCA,
     MP2020,

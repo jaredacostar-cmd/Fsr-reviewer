@@ -166,6 +166,7 @@
   let showAll = false;
   const link = (ref, text) => `<button type="button" class="btn small link" data-ss="${esc(ref)}">${esc(text)}</button>`;
   const tile = (v, u, l, sub = '') => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ''}</div>`;
+  const tileHTML = tile;
   // Developments loading the scope (the filtered set), each alone at Peel design criteria.
   function loadRows(s, set) {
     const c = App().state.criteria, water = s.key === 'pz', rows = [];
@@ -179,52 +180,55 @@
   }
   function headroom(s) {
     const M = App().state.svcModel, R = App().state.reports;
+    // Stage 3: each tile is also kept as a key figure for the standard panel (the same values).
+    const figs = [], out = o => ({ ...o, figs });
+    const tile = (v, u, l, sub = '') => { figs.push({ v, u, label: l, ctx: sub }); return tileHTML(v, u, l, sub); };
     if (s.kind === 'plant') {
       // One capacity function (js/capacity.js): the same % and reserve as every other tab (SPEC 1.4).
       const k = window.PeelCapacity.of(`plant:${s.pl}`), c = MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)); if (!k || !c) return { tiles: '', hl: '' };
       const reserve = k.reserve, ppl = k.perPerson > 0 ? reserve * 1e6 / k.perPerson : null, pc = window.PeelCapacity.pctTxt;
-      return {
+      return out({
         hl: `<strong>${esc(s.title)}</strong> ${SvcTab().trigText(c)}: existing + built + committed use <strong>${pc(k.pctCommitted)}</strong> of its rated ${capTxt(k.rated, k.rated)}, <strong>${pc(k.pctBuildout)}</strong> at build-out (${SvcTab().wwFlowLabel('long')}).`,
         tiles: tile(fmt1(k.rated), 'ML/d', 'rated capacity') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
           + tile(fmt1(Math.abs(reserve)), 'ML/d', reserve < 0 ? 'over 100% of rated after committed' : 'room to 100% after committed (D-5-1 reserve)', ppl != null && reserve > 0 ? `≈${fmtNum(roundPop(ppl))} people` : '')
           + tile(c.out === 'today' ? 'now' : c.out ? `≈${c.out}` : `after ${window.PeelSvcPlants.hz.end}`, '', 'reaches the 90% expansion trigger', c.relief.length ? `next: ${esc(c.relief[0].text)}` : ''),
-      };
+      });
     }
     if (s.kind === 'block') {
       const l = M.cum.get(s.a.id); if (!l) return { tiles: '', hl: '' };
       const now = M.adwf(MA().censusOnly(l)), bo = M.adwf(l);
-      return {
+      return out({
         hl: `<strong>${esc(s.title)}</strong>${s.up.length ? ` and the ${fmtNum(s.up.length)} block${s.up.length === 1 ? '' : 's'} upstream` : ''} carry ${fmt1(now)} ML/d at the census, ${fmt1(bo)} ML/d at build-out (average dry weather, design), to ${esc(SD().plantLabel(s.pl))}.`,
         tiles: tile(fmt1(now), 'ML/d', 'average dry at the census') + tile(fmt1(bo), 'ML/d', 'average dry at build-out', `+${fmt1(bo - now)} ML/d growth`)
           + tile(fmtNum(s.up.length), s.up.length === 1 ? 'block' : 'blocks', 'upstream')
           + (s.a.trunkMm ? tile(fmtNum(s.a.trunkMm), 'mm', `${pipeClass(s.a.trunkMm)} sewer at its outlet`, 'pipe capacity not assessed') : ''),
-      };
+      });
     }
     if (s.kind === 'ps') {
       const ld = MA().psLoad(s.a); if (!ld) return { tiles: '', hl: `<strong>${esc(s.title)}</strong>: no firm capacity on record for this station.` };
-      return {
+      return out({
         hl: `<strong>${esc(s.title)}</strong>: peak wet weather ≈${fmtNum(Math.round(ld.wet))} L/s at build-out, <strong>${Math.round(ld.pct)}%</strong> of its firm capacity (${fmtNum(ld.firm)} L/s), to ${esc(SD().plantLabel(s.pl))}.`,
         tiles: tile(fmtNum(ld.firm), 'L/s', 'firm capacity') + tile(fmtNum(Math.round(ld.wet)), 'L/s', 'peak wet at build-out (check)', `${Math.round(ld.pct)}% of firm`) + tile(fmtNum(Math.round(ld.dry)), 'L/s', 'peak dry at build-out (reference)'),
-      };
+      });
     }
     if (s.kind === 'zone') {
       const l = M.zones.get(s.a.id); if (!l) return { tiles: '', hl: '' };
       const now = M.wMax(l.census, 0), bo = M.wMax(M.total(l), M.jobs(l));
-      return {
+      return out({
         hl: `<strong>${esc(s.title)}</strong>: maximum day ${fmt1(now)} ML/d at the census, ${fmt1(bo)} ML/d at build-out.${s.lake ? ' Supplied from the lake (South Peel water system).' : ''}`,
         tiles: tile(fmt1(now), 'ML/d', 'max day at the census') + tile(fmt1(bo), 'ML/d', 'max day at build-out', `+${fmt1(bo - now)} ML/d growth`),
-      };
+      });
     }
     // wsys: South Peel treatment — the 2025 measured maximum day plus the lake zones' growth, from the
     // one capacity function (as the Overview, the Water tab and the DC tab).
     const sp = R && R.water && R.water.southPeel; if (!sp) return { tiles: '', hl: '' };
     const k = window.PeelCapacity.of('wsys:southPeel'); if (!k) return { tiles: '', hl: '' };
     const pc = window.PeelCapacity.pctTxt, ty = k.triggerYear === 'today' ? 'is at its 90% expansion trigger now' : k.triggerYear ? `reaches its 90% expansion trigger ≈${k.triggerYear}` : 'stays below its 90% expansion trigger';
-    return {
+    return out({
       hl: `<strong>South Peel water system</strong> ${ty}: rated ${fmt1(k.rated)} ML/d of treatment (A.P. Kennedy + Lorne Park); 2025 maximum day ${fmt1(sp.maxDayMLd)} ML/d + committed growth = <strong>${pc(k.pctCommitted)}</strong> of rated, <strong>${pc(k.pctBuildout)}</strong> at build-out.`,
       tiles: tile(fmt1(k.rated), 'ML/d', 'rated treatment') + tile(fmt1(sp.maxDayMLd), 'ML/d', '2025 maximum day (measured)') + tile(pc(k.pctCommitted), 'of rated', 'existing + built + committed', `${pc(k.pctBuildout)} at build-out`)
         + tile(fmt1(Math.abs(k.reserve)), 'ML/d', k.reserve < 0 ? 'over 100% of rated after committed' : 'room to 100% after committed (D-5-1 reserve)'),
-    };
+    });
   }
   // The ladder both ways: what the scope drains to / is fed by, and what feeds it.
   function ladder(s) {
@@ -250,6 +254,36 @@
       down.push(`<li><strong>Zones</strong> (max day at build-out): ${zs.map(x => `${link(x.a.id, x.a.name)} ${fmt1(x.bo)} ML/d`).join(' · ')}</li>`);
     }
     return up.length || down.length ? `<section class="ov-card ss-ladder"><div class="ov-h"><h3>Servicing ladder</h3></div><ul class="small ss-list">${up.join('')}${down.join('')}</ul></section>` : '';
+  }
+  // ---- Stage 3: a servicing scope's Overview as the standard panel (the one-plant board) --------------
+  // Header (the trail back to Peel, the scope, its status), the headroom sentence and tiles, its
+  // capacity bar, its relief, what is driving it (the developments loading it), the ladder folded; the
+  // card is the full table.
+  function panelSpec(s, set) {
+    const PN = window.PeelPanel, h = headroom(s), rows = loadRows(s, set), water = s.key === 'pz';
+    const k = s.kind === 'plant' ? window.PeelCapacity.of(`plant:${s.pl}`) : s.kind === 'wsys' ? window.PeelCapacity.of('wsys:southPeel') : s.kind === 'ps' ? window.PeelCapacity.of(`ps:${s.a.id}`) : null;
+    const c = s.kind === 'plant' ? MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)) : null;
+    const tone = k ? PN.toneOf(k.pctBuildout) : null;
+    const LB = window.PeelLayerBar;
+    const dev = r => ({ tone: null, attrs: { 'data-pnl-dev': r.p.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${dot(r.p.phase)} ${esc(r.p.title)}</span><span class="pnl-r-fig">${water ? uML(D.toMLd(r.peak)) : uLs(r.peak)}<small>${water ? 'max day' : 'peak wet'}</small></span></div><small class="pnl-r-line">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)} · ${fmtNum(roundPop(r.e.population + r.e.employment.jobs))} people + jobs</small>` });
+    const relief = c && c.relief.length ? c.relief.map(r => ({ html: `<div class="pnl-kv"><span>${r.text}</span></div>`, kv: true })) : [];
+    return {
+      calc: true, fullTitle: `${s.title} · every development loading it, the ladder and the planned works`,
+      head: { trail: [{ label: 'Peel', attrs: { 'data-ss-close': '' } }, { label: s.title }], close: { 'data-ss-close': '' }, name: s.title,
+        status: tone ? { tone, text: { over: 'Over', tight: 'Tight', room: 'Room' }[tone] } : null,
+        identity: `${esc(KIND_LABEL[s.kind])}${k ? ` · ${k.firm != null ? 'firm' : 'rated'} ${k.unit === 'L/s' ? `${fmtNum(Math.round(k.cap))} L/s` : capTxt(k.cap, k.cap)}` : ''} · ${fmtNum(set.length)} developments in this scope` },
+      answer: h.hl || `<strong>${esc(s.title)}</strong>`,
+      figures: (h.figs || []).slice(0, 4).map(f => ({ ...f, tone: null })),
+      chart: k && LB ? `<p class="small pnl-chart-t">Existing, built, committed and proposed against ${k.firm != null ? 'firm' : 'rated'} capacity</p>${LB.capacityBarHTML(k)}${LB.legendHTML([{ layer: 'existing' }, { layer: 'built' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over'])}` : '',
+      lists: [
+        ...(relief.length ? [{ title: 'Relief', rows: relief, total: relief.length }] : []),
+        { title: 'What is driving it', rows: rows.slice(0, 5).map(dev), total: rows.length, seeAll: { 'data-full-table': 'overview' } },
+      ],
+      folds: [{ title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') }],
+      method: `${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow. ${k ? (s.kind === 'ps' ? 'Peak wet weather against firm capacity (2020 Master Plan, Vol. 4, s. 2.3.2).' : 'Against rated capacity; the 2020 Master Plan expands a plant when 90% of rated is projected to be reached.') : ''}`,
+      sources: 'Region of Peel 2025 annual reports; 2020 Water and Wastewater Master Plan; the sewer network and blocks (data/servicing.json, data/blocks.json); the applications and permits on the map at Peel design criteria.',
+      foot: { primary: { label: 'Show on the map', attrs: { 'data-pnl-focus': s.a ? s.a.id : '' }, title: 'Zoom to it, with everything upstream' }, secondary: [{ label: 'Area report', attrs: { 'data-ss-report': '' } }] },
+    };
   }
   function cardHTML(s, set) {
     if (!App().state.svcModel) return skel('Loading the servicing model');
@@ -299,7 +333,7 @@
     if (b.hasAttribute('data-ss-report')) { const s = current(); if (s) Rep().areaReport(App().state.filtered.filter(has), `Area report – ${s.title}`, s.a && s.a.rings ? s.a.rings : []); }
   });
 
-  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
+  const api = { resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -118,7 +118,8 @@ test('2. Servicing › Capacity: water and wastewater in ONE table, a basis on e
   assert.match(html, /≈2028<small>90% trigger/); assert.match(html, /after 2051<small>90% trigger/);
   // Sort by limit year (soonest first) or by impact (most loaded at build-out first).
   assert.deepEqual(C.sortRows(rows, 'limit', 2026).map(r => r.id), ['plant:Lakeview', 'stor:x', 'wsys:southPeel', 'ps:y']);
-  assert.deepEqual(C.sortRows(rows, 'impact', 2026).map(r => r.id), ['stor:x', 'plant:Lakeview', 'wsys:southPeel', 'ps:y']);
+  // (Stage 3: impact in the Master Plan's own test, how far build-out goes past each limit.)
+  assert.deepEqual(C.sortRows(rows, 'impact', 2026).map(r => r.id), ['plant:Lakeview', 'stor:x', 'wsys:southPeel', 'ps:y']);
   // The horizon table (2031 / 2041 / 2051; reaches 80 / 90 / 100%) folds under each row.
   assert.match(s, /\$\{open \? `<tr class="cap-hz"><td colspan="11">\$\{horizonHTML\(r\)\}<\/td><\/tr>` : ''\}/);
   assert.match(s, /<th class="n">Reaches 80%<\/th><th class="n">Reaches 90%<\/th><th class="n">Reaches 100%<\/th>/);
@@ -184,8 +185,10 @@ test('removed: the heatmap and the gas / hydro layers', () => {
 });
 
 test('every panel keeps the screening note', () => {
-  // Stage 3: the Capacity panel is a standard panel, whose footer carries the note (js/panel.js).
-  assert.match(src('js/svc-capacity.js'), /el\.innerHTML = root\.PeelPanel \? root\.PeelPanel\.html\(panelSpec\(rows\)\) : `\$\{U\.SCREEN_NOTE \|\| ''\}\$\{tableHTML\(rows\)\}`;/);
+  // Stage 3: the Capacity panel is a standard panel, whose footer carries the note (js/panel.js);
+  // its full table keeps the note too.
+  assert.match(src('js/svc-capacity.js'), /el\.innerHTML = `\$\{U\.SCREEN_NOTE \|\| ''\}\$\{fullTableHTML\(rows\)\}`;/);
+  assert.match(src('js/svc-capacity.js'), /root\.PeelPanel\.set\('svc:capacity', panelSpec\(rows\)\)/);
   assert.match(src('js/panel.js'), /<p class="pnl-note small">\$\{NOTE\}<\/p><\/footer>/);
   assert.match(src('js/labs.js'), /General screening results only\. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results\./);
 });

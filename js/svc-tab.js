@@ -472,6 +472,7 @@
       rankedC.push({ d, l, bo: adwf(l, fOf(d.plant)) });
     }
     rankedC.sort((a, b) => b.bo - a.bo);
+    lastRanked = rankedC.map(x => ({ d: x.d, bo: x.bo, now: adwf({ ...x.l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 }, fOf(x.d.plant)) }));   // (Stage 3: the Network panel's blocks, as this table)
     const top8 = rankedC.slice(0, 8), top8Max = Math.max(1e-9, ...top8.map(x => x.bo));
     $('#ww-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>${calNote}
       <div class="tiles">${[
@@ -554,7 +555,9 @@
     if (e.target.id === 'scen-year') setCapYear(e.target.value === 'bo' ? null : +e.target.value);
   });
 
+  let lastRanked = [];
   const api = {
+    rankedBlocks: () => lastRanked,
     wwBasis,
     renderSvcTab, renderScenario, scenarioText, scenarioMetrics, setCapYear,
     renderScenarioCriteria, criteriaChanges, CRIT_LABEL, CRIT_KEY_LABEL, svcOpt,

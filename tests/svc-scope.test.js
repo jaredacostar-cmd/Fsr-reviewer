@@ -78,7 +78,9 @@ test('wired in: filter, trail, Overview, search, share link, reset, "What loads 
   assert.match(src('js/app.js'), /if \(state\.ss && window\.PeelSvcScope && !window\.PeelSvcScope\.has\(p\)\) return false;/);
   assert.match(src('js/topbar.js'), /steps\.push\(\.\.\.window\.PeelSvcScope\.crumbs\(\)\)/);
   assert.match(src('js/topbar.js'), /function trailGoPeel\(\) \{ if \(window\.PeelSvcScope\) window\.PeelSvcScope\.clear\(\);/);
-  assert.match(src('js/overview-tab.js'), /if \(ss\) \{ const sset = set \|\| DU\(\)\.overviewSet\(\); el\.innerHTML = root\.PeelSvcScope\.cardHTML\(ss, sset\) \+ CX_HOST; fillCxCard\(sset\); return; \}/);
+  assert.match(src('js/overview-tab.js'), /const sset = set \|\| DU\(\)\.overviewSet\(\); el\.innerHTML = root\.PeelSvcScope\.cardHTML\(ss, sset\) \+ CX_HOST; fillCxCard\(sset\);/);
+  // Stage 3: the scope's standard panel (the card is its full table).
+  assert.match(src('js/overview-tab.js'), /root\.PeelPanel\.set\('overview:', root\.PeelSvcScope\.panelSpec\(ss, sset\)\)/);
   assert.match(src('js/overview-tab.js'), /data-ss="\$\{c\.kind === 'plant' \? `plant:/, 'Peel capacity bars open the plant scope');
   const sf = src('js/search-filter.js');
   assert.match(sf, /SS\(\)\.open\(`plant:\$\{pl\}`\)/); assert.match(sf, /area\('Water pressure zone', a, \(\) => SS\(\)\.open\(a\.id\)\)/); assert.match(sf, /psAreas/);
