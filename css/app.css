@@ -280,7 +280,7 @@
 :root {
   --ly-existing: #3b4a5e;
   --ly-built: #5f7fae;
-  --ly-committed: #9cc0fa;
+  --ly-committed: #7fa6ee;
   --ly-proposed: #cfe0fb;
   --ly-anticipated: #cfe0fb;
   --ly-to2051: #cfe0fb;
@@ -291,8 +291,8 @@
   --ly-over: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px);
   --ly-hatch: repeating-linear-gradient(135deg, rgba(16, 33, 58, .55) 0 2px, transparent 2px 5px);
 }
-:root[data-theme="light"] { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; }
-@media (prefers-color-scheme: light) { :root:not([data-theme]) { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; } }
+:root[data-theme="light"] { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; --ly-committed: #5f8fe0; --ly-proposed: #c2d6f7; --ly-anticipated: #c2d6f7; }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; --ly-committed: #5f8fe0; --ly-proposed: #c2d6f7; --ly-anticipated: #c2d6f7; } }
 
 /* phase-1.5: type & spacing tokens */
 :root {
@@ -3262,3 +3262,30 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   .cap-full .reach-line { display: none; }
 }
 .cap-full .ft-u { color: var(--text-muted); }
+/* Figure cards: the label in the main text colour at 12 px; the people split as a small bar */
+.pnl-fig .pnl-l { font-size: var(--fs-2); color: var(--text-primary); }
+.pnl-fig .fig-bar { display: block; margin-top: var(--space-1); }
+.pnl-fig .fig-bar .lybar { margin: 0; }
+/* Capacity bars: % on the bar, the 90% and 100% marks labelled, a one-line legend */
+.capbar { position: relative; margin: 2px 0 4px; }
+.capbar .cb-vals, .capbar .cb-scale { position: relative; height: 14px; font-size: var(--fs-1); line-height: 14px; font-variant-numeric: tabular-nums; }
+.capbar .cb-vals span, .capbar .cb-scale span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+.capbar .cb-v { color: var(--text-secondary); }
+.capbar .cb-v.cb-bo { color: var(--text-primary); font-weight: 600; }
+.capbar .cb-t { color: var(--text-muted); }
+.capbar.sm .cb-vals { display: none; }
+.capbar .lybar { margin: 1px 0; }
+.ly-legend.one-line { flex-wrap: nowrap; overflow-x: auto; gap: var(--space-2); white-space: nowrap; scrollbar-width: none; }
+:root[data-theme="light"] .ly-proposed, :root[data-theme="light"] .ly-legend .ly-sw.ly-proposed { box-shadow: inset 0 0 0 1px var(--ly-committed); }
+@media (prefers-color-scheme: light) { :root:not([data-theme]) .ly-proposed, :root:not([data-theme]) .ly-legend .ly-sw.ly-proposed { box-shadow: inset 0 0 0 1px var(--ly-committed); } }
+/* Allocations: room after allocations from a zero line (an over goes left, in red) */
+.rb { display: grid; gap: 4px; margin: 4px 0; }
+.rb-row { display: flex; align-items: center; gap: var(--space-2); }
+.rb-name { width: 92px; flex: none; }
+.rb-track { flex: 1; position: relative; height: 10px; background: var(--surface-1); border-radius: 4px; }
+.rb-fill { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--cap-room); }
+.rb-row.t-over .rb-fill { background: var(--cap-over); }
+.rb-row.t-tight .rb-fill { background: var(--cap-tight); }
+.rb-zero { position: absolute; top: -3px; bottom: -3px; width: 1px; background: var(--text-primary); }
+.rb-v { width: 120px; flex: none; text-align: right; }
+.rb-row.t-over .rb-v { color: var(--cap-over); font-weight: 500; }

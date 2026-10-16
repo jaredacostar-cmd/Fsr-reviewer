@@ -47,10 +47,11 @@
     return `<div class="lybar${o.small ? ' sm' : ''}" role="img" aria-label="${esc(aria)}">${out.join('')}</div>`;
   }
 
-  const MARK = { trigger: ['ly-tick-sw', '90% trigger'], rated: ['ly-rated-sw', '100% rated'], over: ['ly-over-sw', 'beyond rated'], est: ['ly-est-sw', 'estimated'] };
+  // (one word for the 100% mark whatever the basis: the chart's title names it, firm or rated)
+  const MARK = { trigger: ['ly-tick-sw', '90% trigger'], rated: ['ly-rated-sw', '100% capacity'], over: ['ly-over-sw', 'past capacity'], est: ['ly-est-sw', 'estimated'] };
   function legendHTML(items, o = {}) {
     const fmt = o.fmt || num;
-    return `<div class="ly-legend">${items.map(it => {
+    return `<div class="ly-legend${o.cls ? ` ${o.cls}` : ''}">${items.map(it => {
       if (typeof it === 'string') { const m = MARK[it]; return m ? `<span><span class="ly-sw ${m[0]}"></span>${m[1]}</span>` : ''; }
       if (!LABEL[it.layer]) return '';
       return `<span><span class="ly-sw ly-${it.layer}"></span>${esc(it.text || LABEL[it.layer])}${it.value != null ? ` <b>${esc(fmt(it.value))}</b>` : ''}</span>`;
@@ -99,9 +100,21 @@
     const pct = v => `${Math.round(v / k.cap * 100)}%`;
     const seg = (layer, v) => ({ layer, value: v, title: `${LABEL[layer]}: ${f(v)} ${k.unit || ''} (${pct(v)} of ${k.firm != null ? 'firm' : 'rated'})` });
     const segs = [seg('existing', k.existing), seg('built', k.built), seg('committed', Math.max(0, k.committed - k.existing - k.built)), seg('proposed', Math.max(0, k.buildout - k.committed))];
-    return barHTML({ segments: segs, rated: k.cap, trigger: k.trigger < 1 ? k.trigger * k.cap : null, max: Math.max(k.cap * 1.3, k.buildout), unit: k.unit, fmt: f, small: o.small,
+    const max = Math.max(k.cap * 1.3, k.buildout), at = v => `${(Math.min(v, max) / max * 100).toFixed(2)}%`;
+    const bar = barHTML({ segments: segs, rated: k.cap, trigger: k.trigger < 1 ? k.trigger * k.cap : null, max, unit: k.unit, fmt: f, small: o.small,
       ratedLabel: `100% ${k.firm != null ? 'firm' : 'rated'}: ${f(k.cap)} ${k.unit || ''}`, triggerLabel: `${Math.round(k.trigger * 100)}% expansion trigger`,
       label: o.label || `Existing + built + committed ${pct(k.committed)} of ${k.firm != null ? 'firm' : 'rated'} capacity, ${pct(k.buildout)} at build-out` });
+    // Bundle 5: the % on the bar (with approved, build-out; one label when they sit close) and the
+    // 90% and 100% marks labelled under it.
+    const near = Math.abs(k.buildout - k.committed) / max < 0.16;
+    const vals = near ? `<span class="cb-v" style="left:${at(k.buildout)}">${pct(k.committed)} → ${pct(k.buildout)}</span>`
+      : `<span class="cb-v" style="left:${at(k.committed)}">${pct(k.committed)}</span><span class="cb-v cb-bo" style="left:${at(k.buildout)}">${pct(k.buildout)}</span>`;
+    const trig = k.trigger < 1 && k.trigger > 0 ? `<span class="cb-t" style="left:${at(k.trigger * k.cap)}">${Math.round(k.trigger * 100)}%</span>` : '';
+    return `<div class="capbar${o.small ? ' sm' : ''}"><div class="cb-vals" aria-hidden="true">${vals}</div>${bar}<div class="cb-scale" aria-hidden="true">${trig}<span class="cb-t cb-100" style="left:${at(k.cap)}">100%</span></div></div>`;
+  }
+  // The capacity bars' legend on one line: short names (each segment's full name is on hover).
+  function capLegendHTML() {
+    return legendHTML([{ layer: 'existing', text: 'On the system' }, { layer: 'built', text: 'Built' }, { layer: 'committed', text: 'Committed' }, { layer: 'proposed', text: 'In review' }, 'trigger', 'rated', 'over'], { cls: 'one-line' });
   }
 
   // ---- Scenario chip (SPEC §2): the basis is a set of layers ----------------------------------
@@ -160,7 +173,7 @@
     return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(scenarioLine(rows))} — open the Scenario control to see or change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(scenarioChipText(rows))}</span> ▾</button>`;
   }
 
-  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioSettings, scenarioChanges, scenarioChipText, scenarioLine, scenarioListHTML, scenarioChipHTML };
+  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, capLegendHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioSettings, scenarioChanges, scenarioChipText, scenarioLine, scenarioListHTML, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);

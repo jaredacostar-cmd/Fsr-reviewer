@@ -107,7 +107,7 @@ function loadCapacity() {
   const U = { esc: x => String(x), fmtNum: n => Math.round(n).toLocaleString('en-CA'), fmt1: n => n.toFixed(1), capTxt: v => `${Math.round(v * 1000)} m³/d`,
     roomWords: (v, u, f) => (v < 0 ? `over by ${f(-v)}` : `room ${f(v)}`), basisChip: b => `<span class="basis" data-basis="${b}">${b}</span>`, store: { get: (k, d) => d, set: () => {} } };
   const window = { PeelUtil: U, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcPlants: { hz: { end: 2051 } },
-    PeelSvcTab: { optSwitch: () => '' }, PeelLayerBar: { LABEL: {}, barHTML: o => `<div class="lb-bar" data-max="${o.max}"></div>`, legendHTML: () => '' } };
+    PeelSvcTab: { optSwitch: () => '' }, PeelLayerBar: { LABEL: {}, barHTML: o => `<div class="lb-bar" data-max="${o.max}"></div>`, legendHTML: () => '', capLegendHTML: () => '' } };
   loadPanel(window);
   const ctx = { window, module: { exports: {} } }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/svc-capacity.js'), ctx);

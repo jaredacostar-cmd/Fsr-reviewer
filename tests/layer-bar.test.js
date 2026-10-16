@@ -40,7 +40,7 @@ test('the site badge: phase and layer together, with what is left to permit', ()
 
 test('the tokens exist in css/app.css and the bar uses them', () => {
   const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'app.css'), 'utf8');
-  for (const [k, v] of [['existing', '#3b4a5e'], ['built', '#5f7fae'], ['committed', '#9cc0fa'], ['proposed', '#cfe0fb'], ['anticipated', '#cfe0fb']]) assert.match(css, new RegExp(`--ly-${k}: ${v};`), k);
+  for (const [k, v] of [['existing', '#3b4a5e'], ['built', '#5f7fae'], ['committed', '#7fa6ee'], ['proposed', '#cfe0fb'], ['anticipated', '#cfe0fb']]) assert.match(css, new RegExp(`--ly-${k}: ${v};`), k);
   assert.match(css, /--ly-over: repeating-linear-gradient\(135deg, #f0665f 0 3px, transparent 3px 6px\)/);
   for (const k of ['existing', 'built', 'committed', 'proposed', 'anticipated']) assert.match(css, new RegExp(`\\.ly-${k} \\{ background: var\\(--ly`), k);
 });

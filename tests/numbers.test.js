@@ -61,7 +61,7 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
 
 test('no negative room: an over is "over by", with positive people', () => {
   const d = src('js/demand-ui.js');
-  assert.match(d, /v: fmt1\(Math\.abs\(x\.after\)\), u: 'ML\/d', label: `\$\{SV\(\)\.PLANT_SHORT\[x\.pl\]\} \$\{x\.after < 0 \? 'over' : 'room'\}`/);
+  assert.match(d, /v: fmt1\(Math\.abs\(x\.after\)\), u: 'ML\/d', label: `\$\{SV\(\)\.PLANT_SHORT\[x\.pl\]\} \$\{allocWord\(x\)\}`/);
   assert.match(d, /<strong>\$\{window\.PeelUtil\.roomWords\(x\.after\)\}<\/strong><small>≈\$\{fmtNum\(roundPop\(Math\.abs\(x\.peopleAfter\)\)\)\} people/);
   assert.doesNotMatch(d, /fmt1\(x\.after\)\b/);
 });

@@ -75,6 +75,16 @@
     return out.sort((x, y) => String(y.a.date || '').localeCompare(String(x.a.date || '')));
   }
   // Plant room after allocations (average dry at the plant's measured rate, ML/d; at the 90% trigger).
+  // Bundle 5: room after allocations as a bar from a zero line, left (red) for an over, right for room;
+  // the tone by the Overview bars' rule: past the trigger = over, at 85%+ of rated = nearly full (amber).
+  const allocTone = x => (x.after < 0 ? 'over' : x.cap && x.cap.rated > 0 && (x.lim - x.after) / x.cap.rated >= 0.85 ? 'tight' : 'room');
+  const allocWord = x => ({ over: 'over', tight: 'nearly full', room: 'room' }[allocTone(x)]);
+  function roomBar(name, x, maxPos, maxNeg, unitTxt) {
+    const tot = Math.max(1e-9, maxPos + maxNeg), z = maxNeg / tot * 100, w = Math.abs(x.after) / tot * 100, tone = allocTone(x);
+    const left = x.after < 0 ? z - w : z;
+    return `<div class="rb-row t-${tone}"><span class="muted small rb-name">${name}</span><span class="rb-track">${maxNeg > 0 ? `<i class="rb-zero" style="left:${z.toFixed(1)}%"></i>` : ''}<i class="rb-fill" style="left:${left.toFixed(1)}%;width:${w.toFixed(1)}%"></i></span><span class="small rb-v">${x.after < 0 ? `over by ${fmt1(-x.after)} ${unitTxt}` : `${fmt1(Math.max(0, x.after))} ${unitTxt}${tone === 'tight' ? ' · nearly full' : ''}`}</span></div>`;
+  }
+  const roomBars = plants => { const maxPos = Math.max(0, ...plants.map(x => x.after)), maxNeg = Math.max(0, ...plants.map(x => -x.after)); return `<div class="rb">${plants.map(x => roomBar(esc(SV().PLANT_SHORT[x.pl]), x, maxPos, maxNeg, 'ML/d')).join('')}</div>`; };
   function allocPlant(pl) {
     const M = App().state.svcModel, cap = M && M.plantCap(pl); if (!cap) return null;
     const rows = allocRows().filter(r => r.pl === pl), ahead = rows.filter(r => r.lay === 'proposed');
@@ -103,14 +113,13 @@
     const rows = allocRows(), plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(allocPlant).filter(Boolean);
     const totU = rows.reduce((t, r) => t + r.a.units, 0), ahead = rows.filter(r => r.lay === 'proposed');
     const shown = allocSeeAll ? rows : rows.slice(0, 10);
-    const maxRoom = Math.max(1e-9, ...plants.map(x => Math.max(0, x.after)));
     el.innerHTML = `${hlP(rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${ahead.length ? `${fmtNum(ahead.length)} ${ahead.length === 1 ? 'is' : 'are'} recorded ahead of approval and counted against the reserve now.` : 'all are already approved or built, so they are in the committed flow.'}${plants.filter(x => x.ahead.length).map(x => ` <strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> room after allocations: ${fmt1(x.after)} ML/d (≈${fmtNum(roundPop(x.peopleAfter))} people).`).join('')}` : 'No servicing allocations recorded yet. Record one from a development\'s Servicing tab, or import a CSV.')}
       <div class="tiles">${[
         wwTile('Allocations recorded', fmtNum(rows.length), rows.length === 1 ? 'allocation' : 'allocations', `${fmtNum(totU)} units`, 'allocations'),
         ...plants.map(x => wwTile(`${esc(SV().PLANT_SHORT[x.pl])} ${x.after < 0 ? 'over' : 'room'}`, fmt1(Math.abs(x.after)), 'ML/d', `${x.after < 0 ? 'past the 90% trigger ' : ''}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, 'allocations')),
       ].join('')}</div>
       <h3 class="svc-sub">Room after allocations <span class="muted small">at the 90% expansion trigger · ML/d ${SvcTab().wwFlowLabel()}</span></h3>
-      <div>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}</div>
+      ${roomBars(plants)}
       <table class="dt"><caption>Plants: room at the 90% expansion trigger after existing + built + committed, and after allocations (${SvcTab().wwFlowLabel('long')})</caption>
         <thead><tr><th>Plant</th><th>Trigger (90%)</th><th>Existing + built + approved</th><th>Room to the trigger</th><th>Allocated ahead of approval</th><th>Room after allocations</th></tr></thead>
         <tbody>${plants.map(x => `<tr><td>${esc(SV().PLANT_SHORT[x.pl])}</td><td>${fmt1(x.lim)} ML/d</td><td>${fmt1(x.cap.committed)} ML/d</td><td>${window.PeelUtil.roomWords(x.room)}<small>≈${fmtNum(roundPop(Math.abs(x.cap.perPerson > 0 ? x.room * 1e6 / x.cap.perPerson : 0)))} people</small></td><td>${x.ahead.length ? `${fmt1(x.aheadMld)} ML/d<small>${fmtNum(x.ahead.reduce((t, r) => t + r.a.units, 0))} units · ${fmtNum(x.ahead.length)} development${x.ahead.length === 1 ? '' : 's'}</small>` : '<span class="muted">none</span>'}</td><td class="${x.after < 0 ? 'over' : ''}"><strong>${window.PeelUtil.roomWords(x.after)}</strong><small>≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people</small></td></tr>`).join('')}</tbody></table>
@@ -125,12 +134,12 @@
       const short = plants.filter(x => x.after < 0);
       PN.set('svc:alloc', {
         calc: true, fullTitle: 'Servicing › Allocations · Peel: the plants and every allocation recorded',
-        head: PN.areaHead('Servicing › Allocations', 'What is already allocated?', short.length ? { tone: 'over', text: `${short.length} short` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(rows.length)} allocation${rows.length === 1 ? '' : 's'} recorded in this browser`),
+        head: PN.areaHead('Servicing › Allocations', 'What is already allocated?', short.length ? { tone: 'over', text: `${short.length} past the trigger` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(rows.length)} allocation${rows.length === 1 ? '' : 's'} recorded in this browser`),
         answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${fmtNum(ahead.length)} ahead of approval.${short.length ? ` ${short.map(x => esc(SV().PLANT_SHORT[x.pl])).join(' and ')} ${short.length === 1 ? 'has' : 'have'} no room left at the 90% trigger after them.` : ''}` : `${short.length ? `${short.map(x => `<strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> is already ${fmt1(-x.after)} ML/d past its 90% trigger`).join('; ')}, before any allocation. ` : ''}No allocations recorded yet: record one from a development (its ⋯ menu, Record allocation) or import a CSV in the full table.`,
         figures: [{ v: fmtNum(rows.length), u: 'allocations', label: 'recorded', ctx: `${fmtNum(totU)} units` },
           // (an over is a positive "over by", never a negative room: one sign rule, as the bars)
-          ...plants.map(x => ({ v: fmt1(Math.abs(x.after)), u: 'ML/d', label: `${SV().PLANT_SHORT[x.pl]} ${x.after < 0 ? 'over' : 'room'}`, ctx: `${x.after < 0 ? 'past the 90% trigger ' : ''}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, tone: x.after < 0 ? 'over' : 'room' }))].slice(0, 4),
-        chart: `<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations <span class="pnl-chart-u">(ML/d)</span></p>${plants.map(x => miniBar(esc(SV().PLANT_SHORT[x.pl]), x.after, maxRoom, 'ML/d', x.after < 0)).join('')}`,
+          ...plants.map(x => ({ v: fmt1(Math.abs(x.after)), u: 'ML/d', label: `${SV().PLANT_SHORT[x.pl]} ${allocWord(x)}`, ctx: `${x.after < 0 ? 'past the 90% trigger ' : 'to the 90% trigger '}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, tone: allocTone(x) }))].slice(0, 4),
+        chart: `<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations <span class="pnl-chart-u">(ML/d)</span></p>${roomBars(plants)}`,
         lists: [{ title: 'Allocations', rows: rows.slice(0, 5).map(r => ({ attrs: r.p ? { 'data-pnl-dev': r.key } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : esc(r.key)}<small>${esc(SV().PLANT_SHORT[r.pl] || '')}${r.a.ref ? ` · ${esc(r.a.ref)}` : ''}</small></span><span class="pnl-r-fig">${fmtNum(r.a.units)}<small>units</small></span></div>` })), total: rows.length, seeAll: { 'data-full-table': 'svc' } }],
         method: `Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ${esc(SvcTab().wwFlowLabel('long'))}. Allocations are kept in this browser (export and import them as CSV in the full table).`,
         sources: 'Plant capacity and flows: Region of Peel 2025 annual reports; the 90% trigger: 2020 Master Plan (Vol. 4, s. 2.3.1); allocations: recorded here.',

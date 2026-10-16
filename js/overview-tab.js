@@ -109,7 +109,7 @@
         return need.length ? `Check ${need.join(' and ')}: the screen finds a shortfall or an open question there${c}.` : `The screen finds no servicing shortfall for this site${c}.`;
       })(),
       figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water, maximum day', 'Peel design criteria'), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater, peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiPlain(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I')],
-      chart: (() => { const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null; return k && LB() ? `<p class="small pnl-chart-t">${esc(plant)}, the plant it drains to: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${LB().capacityBarHTML(k, { small: true })}` : ''; })(),
+      chart: (() => { const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null; return k && LB() ? `<p class="small pnl-chart-t">${esc(plant)}, the plant it drains to: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${LB().capacityBarHTML(k, { small: true })}${LB().capLegendHTML()}` : ''; })(),
       lists: [
         { title: 'Servicing', rows, total: rows.length },
         { title: 'Timing', rows: timing, total: timing.length },
@@ -242,7 +242,7 @@
         <small>${root.PeelUtil.basisChip(bz)} · ${c.out === 'today' ? 'At the expansion trigger now' : c.out ? `Reaches the trigger ≈${c.out}` : `Room to ${SP().hz.end}`}${c.relief.length ? ` · next expansion ${esc(c.relief[0].text)}` : ''}${(x => x && x.ahead.length ? ` · <strong>after allocations: ${root.PeelUtil.roomWords(x.after)}</strong>` : '')(c.kind === 'plant' ? DU().allocPlant(c.pl) : null)}</small></div>`; };
     // Small systems (Inglewood) in their own group under the large plants.
     const small = c => c.kind === 'plant' && isSmallSystem(c.rated);
-    return list.filter(c => !small(c)).map(bar).join('') + (list.some(small) ? `<h4 class="ov-small-h">Small systems</h4>${list.filter(small).map(bar).join('')}` : '') + LB().legendHTML([{ layer: 'existing', text: 'On the system (basis on each row)' }, { layer: 'committed' }, { layer: 'proposed' }, 'trigger', 'rated', 'over']) + `<p class="small muted">% of rated capacity, as in Wastewater → Plants (plants: ${SvcTab().wwFlowLabel('long')}; water: max day).${SvcTab().wwBasis() === 'metered' ? ' 2025 metered (calibrated): the metered flow already holds what was built since the census.' : ''}</p>`;
+    return list.filter(c => !small(c)).map(bar).join('') + (list.some(small) ? `<h4 class="ov-small-h">Small systems</h4>${list.filter(small).map(bar).join('')}` : '') + LB().capLegendHTML() + `<p class="small muted">% of rated capacity, as in Servicing › Capacity (plants: ${SvcTab().wwFlowLabel('long')}; water: max day).${SvcTab().wwBasis() === 'metered' ? ' 2025 metered (calibrated): the metered flow already holds what was built since the census.' : ''}</p>`;
   }
   // Plain-data input for the pure needsAttention: reuses the DCA results, the stalled flags,
   // the 90% trigger years and the weekly snapshot change log.
@@ -332,7 +332,7 @@
       figures: [
         { v: fmtNum(set.length), u: 'developments', label: 'shown on the map', ctx: esc(scopeText()) },
         { v: fmtNum(Math.round(unitsAll)), u: 'units', label: 'planned', ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')].filter(Boolean).join(' · ') },
-        { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: [since(e.population, pre.people, x => fmtNum(roundPop(x))), lyTiles.people || ''].filter(Boolean).join(' · ') },
+        { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: `${since(e.population, pre.people, x => fmtNum(roundPop(x)))}${lyTiles.peopleBar || (lyTiles.people ? ` · ${lyTiles.people}` : '')}` },
         { v: fmtNum(roundPop(e.employment.jobs)), u: 'jobs', label: 'on development sites', ctx: '' },
       ],
       chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${capacityBarsHTML(capList)}` : '',
@@ -375,7 +375,10 @@
     const lyTiles = (() => {
       if (!lyT) return { units: '', people: '' };
       const t = lyT, LB = root.PeelLayerBar, ks = ['existing', 'built', 'committed', 'proposed', 'anticipated'].filter(k => t.units[k] >= 0.5);
-      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), anticipated: ks.includes('anticipated') };
+      // Bundle 5: the people card's split by stage as a small bar (each part named on hover), not a
+      // seven-part line.
+      const peopleBar = LB && LB.barHTML ? `<span class="fig-bar">${LB.barHTML({ small: true, segments: ks.map(k => ({ layer: k, value: t.people[k], title: `${LB.LABEL[k]}: ${fmtNum(roundPop(t.people[k]))} people` })) })}</span>` : '';
+      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), peopleBar, anticipated: ks.includes('anticipated') };
     })();
     // "Would add" is growth beyond the 2021 Census: units completed before census day are already in
     // it (Existing), so they are taken out of the headline.
