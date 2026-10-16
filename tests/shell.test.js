@@ -35,12 +35,11 @@ test('left panel: Find · Watch (the Data tab folded into Records, bundle 6); ro
   assert.match(HTML, /data-info="projects-list">In view <span class="muted small" id="list-count">/);
 });
 
-test('left panel: the count first, Reset n filters, + Save this view', () => {
+test('left panel: the count first, Reset n filters (views are saved from Export, bundle 6)', () => {
   const f = src('js/filter-ui.js');
   assert.match(f, /<span class="find-count"><b>\$\{fmtNum\(App\(\)\.state\.filtered\.length\)\}<\/b> developments<\/span>/);
   assert.match(f, />Reset \$\{activeList\.length\} filter\$\{activeList\.length === 1 \? '' : 's'\}<\/button>/);
-  assert.match(f, /id="f-saveview"[^>]*>\+ Save this view<\/button>/);
-  assert.match(f, /if \(e\.target\.closest\('#f-saveview'\)\) \{ MA\(\)\.saveCurrentView\(\); return; \}/);
+  assert.doesNotMatch(f, /id="f-saveview"/);
 });
 
 test('Stage: one row per stage (permit and construction share one), then Built (with how many since the census) and Withdrawn / refused', () => {

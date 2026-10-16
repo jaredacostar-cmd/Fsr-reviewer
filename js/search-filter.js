@@ -189,7 +189,7 @@
     PA().renderPlanAreas();
     App().applyFilters();
   });
-  panelClick('#saved-presets', e => { const b = e.target.closest('[data-preset]'); if (b) MA().openSavedView(+b.dataset.preset); });
+  panelClick('#saved-presets', e => { const d = e.target.closest('[data-preset-del]'); if (d) { MA().deleteSavedView(+d.dataset.presetDel); return; } const b = e.target.closest('[data-preset]'); if (b) MA().openSavedView(+b.dataset.preset); });
   // The sp / mtsa / pz / dr dropdowns live in the filter panel (#f-areas) now.
   // NOTE: the #f-areas fill (faBox.innerHTML = areaMultiHTML()) moved to js/plan-areas.js
   // top-level: PeelPlanAreas loads after this module, so it cannot run here.

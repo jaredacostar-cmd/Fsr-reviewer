@@ -3329,3 +3329,8 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 /* The sidebar: the active workspace with a filled accent bar */
 .home-ws.on { box-shadow: inset 4px 0 0 var(--accent); }
 .week-link { margin: var(--space-2) 0; }
+/* Saved views: one-tap chips at the top of Find, each with × */
+.chip-saved { display: inline-flex; align-items: center; gap: 0; margin: 0 4px 4px 0; }
+.chip-saved .chip { border-top-right-radius: 0; border-bottom-right-radius: 0; margin: 0; }
+.chip-saved .chip-x { all: unset; cursor: pointer; padding: 0 6px; border: 1px solid var(--border); border-left: 0; border-radius: 0 999px 999px 0; color: var(--text-muted); line-height: 1.6; font-size: var(--fs-2); }
+.chip-saved .chip-x:hover, .chip-saved .chip-x:focus-visible { color: var(--text-primary); }

@@ -111,3 +111,13 @@ test('the Data tab folds into Records; Records leaves the gear', () => {
   // The Watch tab: the watchlist and its alerts; what changed is on the This week page.
   assert.match(html, /<button type="button" class="btn small" data-ws-page="week">This week: what changed →<\/button>/);
 });
+
+test('views save in one place, beside the share link; they open (and delete) from the chips at the top of Find', () => {
+  const t = src('js/topbar.js');
+  assert.match(t, /'<button type="button" role="menuitem" data-share>Copy share link<\/button>' \+\n {6}'<button type="button" role="menuitem" data-tbx="saveview">Save this view…<\/button>';/);
+  assert.doesNotMatch(src('js/filter-ui.js'), /id="f-saveview"/);
+  assert.doesNotMatch(src('js/map-markers.js'), /id="opt-saved"/);
+  const m = src('js/map-analysis.js');
+  assert.match(m, /data-preset-del="\$\{i\}" aria-label="Delete the saved view/);
+  assert.match(src('js/search-filter.js'), /const d = e\.target\.closest\('\[data-preset-del\]'\); if \(d\) \{ MA\(\)\.deleteSavedView\(\+d\.dataset\.presetDel\); return; \}/);
+});
