@@ -2864,6 +2864,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .pnl-step-n { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-1); font-weight: 600; border: 1px solid var(--border); color: var(--text-secondary); }
 .pnl-step.on .pnl-step-n { border-color: var(--pnl-stage); color: var(--pnl-stage); }
 .pnl-step strong { margin-right: 2px; }
+/* Review an FSR: the cross-check inside the Servicing panel (its fold names it, so its own heading hides). */
+.fsr-box .fsr-check > h3 { display: none; }
 .tb-home { flex: 0 0 auto; }
 /* Home: below the top bar, over the map and panels. */
 .home { position: fixed; top: var(--top-h, 0px); left: 0; right: 0; bottom: 0; z-index: 1150; background: var(--surface-0); overflow: auto; }

@@ -141,7 +141,9 @@
     const MA = root.PeelMapAnalysis; if (MA && MA.setMapView && MA.currentView && MA.currentView() !== pl.view) MA.setMapView(pl.view);
     const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); }
     pipesLayer(id === 'pipes');
-    if (pl.fsr) setTimeout(() => { const b = document.querySelector('#site-bar [data-scope-fsr]'); if (b && !document.querySelector('#site-bar .fsr-check, #site-bar [data-fsr-open]')) b.click(); }, 300);
+    // Review an FSR at a site: the cross-check is an open fold of the Servicing panel (fsrSpec), so the
+    // site bar's own copy closes (one form on screen).
+    if (pl.fsr) { const box = document.getElementById('site-bar-fsr'), b = document.querySelector('#site-bar [data-scope-fsr]'); if (box && !box.hidden && b) b.click(); }
     if (pl.lasso && !o.noDraw && root.PeelAreaSelect && root.PeelAreaSelect.setLasso) root.PeelAreaSelect.setLasso(true);
     const ss = o.ss; if (ss && SS() && SS().open) SS().open(ss);
     renderChips();
@@ -170,6 +172,7 @@
     if (!isWs() || !cur || !PN()) return null;
     const pl = plan(cur, { site: scope.startsWith('dev:') });
     if ((cur === 'site' || cur === 'fsr') && pl.scope === 'find' && key === `${pl.tab}:${pl.sub}` && scope === 'area') return findSpec(cur);
+    if (cur === 'fsr' && key === 'svc:network' && scope.startsWith('dev:')) return fsrSpec(scope);
     if (cur === 'pipes' && key === 'svc:network' && scope === 'area') return pipesSpec();
     if (cur === 'week' && key === 'overview:' && scope === 'area') return weekSpec();
     return null;
@@ -189,6 +192,16 @@
       ],
       foot: { primary: { label: 'Search', attrs: { 'data-ws-focus': '' } } },
     };
+  }
+  // Review an FSR at a site: Servicing at the site as it is, with the FSR cross-check as its first fold,
+  // open (the same form and checks as the site bar's Check FSR, js/fsr-check.js).
+  function fsrSpec(scope) {
+    const e = PN().get('svc:network'), F = root.PeelFsrCheck, p = root.DevScope && root.DevScope.current && root.DevScope.current();
+    if (!e || !e.spec || e.scope !== scope || !F || !F.mount || !p) return null;
+    const s = e.spec;
+    return { ...s,
+      folds: [{ title: 'FSR cross-check: the consultant\u2019s figures vs this app\u2019s', open: true, id: 'pnl-fsr', html: '<div class="fsr-box" data-pnl-fsrbox></div>' }, ...(s.folds || [])],
+      onMount: host => { if (typeof s.onMount === 'function') s.onMount(host); const b = host.querySelector('[data-pnl-fsrbox]'); if (b) F.mount(b, p); } };
   }
   // Old pipes: Servicing › Network filtered to age / risk with the build-out load (units carried).
   function oldList() {

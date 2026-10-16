@@ -144,6 +144,32 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   assert.equal(B.override('overview:', 'dev:x'), null);
 });
 
+test('Review an FSR at a site: the cross-check is an open fold of the Servicing panel', () => {
+  const { W: B, PN, window } = loadBrowser(AREA);
+  const mounted = [];
+  window.DevScope = { current: () => ({ key: 'x', title: '0 HERITAGE RD' }), close() {} };
+  window.PeelFsrCheck = { mount: (box, p) => mounted.push(p.key) };
+  // Servicing at the site, as js/svc-capacity.js sets it (its own folds and onMount kept).
+  let own = 0;
+  PN.set('svc:network', { head: { name: '0 HERITAGE RD' }, answer: 'Water from Pressure zone 6.', lists: [{ title: 'Path', rows: [{ html: 'Block 15' }], total: 1 }], folds: [{ title: 'Ground', html: '<div class="g"></div>' }], onMount: () => { own++; } });
+  B.go('fsr');
+  const spec = B.override('svc:network', 'dev:x');
+  assert.equal(spec.answer, 'Water from Pressure zone 6.', 'the panel itself is unchanged');
+  assert.deepEqual(plain(spec.folds.map(f => [f.title, !!f.open])), [['FSR cross-check: the consultant\u2019s figures vs this app\u2019s', true], ['Ground', false]]);
+  assert.match(PN.html({ key: 'svc:network', ...spec }), /<details class="pnl-fold" data-sec="fold" open id="pnl-fsr"><summary>FSR cross-check[^<]*<\/summary><div><div class="fsr-box" data-pnl-fsrbox><\/div><\/div><\/details><details class="pnl-fold" data-sec="fold"><summary>Ground/);
+  const box = {}, host = { querySelector: s => (s === '[data-pnl-fsrbox]' ? box : null) };
+  spec.onMount(host);
+  assert.deepEqual(mounted, ['x'], 'the form mounts for the open site');
+  assert.equal(own, 1, 'the panel\u2019s own async parts still fill');
+  // Only in Review an FSR, and only at the site it was set for.
+  assert.equal(B.override('svc:network', 'dev:other'), null);
+  B.go('site'); assert.equal(B.override('svc:network', 'dev:x'), null);
+  // The form's events work in any .fsr-box (the panel's or the site bar's); mount() keeps drafts.
+  const f = src('js/fsr-check.js');
+  assert.match(f, /closest\('\.fsr-box \[data-fc-run\], \.fsr-box \[data-fc-print\], \.fsr-box \[data-fc-clear\], #site-bar-fsr/);
+  assert.match(f, /function mount\(box, p\) \{[\s\S]*?if \(_last && _last\.key === p\.key && _drafts\[p\.key\]\) runCheck\(box\);/);
+});
+
 test('Check a site: Find → Result → Output in the header once the site is open', () => {
   const { W: B, window } = loadBrowser(AREA);
   B.go('site');

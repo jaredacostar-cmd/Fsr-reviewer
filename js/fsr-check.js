@@ -372,6 +372,15 @@
   }
 
   /** Toggle the panel for the open development (wired from the site bar's Check FSR button). */
+  // Stage 4: the same form inside a panel (Review an FSR: an open fold of Servicing at the site). The
+  // consultant's figures typed so far are kept per development, and a comparison already run is re-run.
+  function mount(box, p) {
+    if (typeof document === 'undefined' || !box || !p) return;
+    renderForm(box, p);
+    box.dataset.pkey = p.key; box.dataset.built = '1';
+    _open = { key: p.key, p };
+    if (_last && _last.key === p.key && _drafts[p.key]) runCheck(box);
+  }
   function toggleFor(p, btn) {
     if (typeof document === 'undefined' || !p) return;
     const box = document.getElementById('site-bar-fsr');
@@ -389,9 +398,9 @@
 
   if (typeof document !== 'undefined') {
     document.addEventListener('click', e => {
-      const t = e.target && e.target.closest ? e.target.closest('#site-bar-fsr [data-fc-run], #site-bar-fsr [data-fc-print], #site-bar-fsr [data-fc-clear]') : null;
+      const t = e.target && e.target.closest ? e.target.closest('.fsr-box [data-fc-run], .fsr-box [data-fc-print], .fsr-box [data-fc-clear], #site-bar-fsr [data-fc-run], #site-bar-fsr [data-fc-print], #site-bar-fsr [data-fc-clear]') : null;
       if (!t) return;
-      const box = t.closest('#site-bar-fsr');
+      const box = t.closest('.fsr-box, #site-bar-fsr');
       if (!box) return;
       if (t.hasAttribute('data-fc-run')) return runCheck(box);
       if (t.hasAttribute('data-fc-print')) return printCheck();
@@ -399,9 +408,9 @@
     });
     // Keep the consultant's inputs while the panel is rebuilt (e.g. the scope refresh).
     document.addEventListener('input', e => {
-      const inp = e.target && e.target.closest ? e.target.closest('#site-bar-fsr [data-fc]') : null;
+      const inp = e.target && e.target.closest ? e.target.closest('.fsr-box [data-fc], #site-bar-fsr [data-fc]') : null;
       if (!inp || !inp.dataset.fc) return;
-      const box = inp.closest('#site-bar-fsr');
+      const box = inp.closest('.fsr-box, #site-bar-fsr');
       if (!box || !box.dataset.pkey) return;
       (_drafts[box.dataset.pkey] = _drafts[box.dataset.pkey] || {})[inp.dataset.fc] = inp.value;
     });
@@ -411,7 +420,7 @@
   const api = {
     WARN_PCT, BAD_PCT, NUM_KEYS, toNum, normCon, pctDiff, flagFor, fmtDiff,
     zoneMatch, flowRows, connRows, pipeChecks, plantCheck, dcCheck,
-    summarize, verdictOf, appValues, toggleFor, runCheck, printCheck,
+    summarize, verdictOf, appValues, toggleFor, mount, runCheck, printCheck,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelFsrCheck = api;
