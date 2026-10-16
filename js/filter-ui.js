@@ -168,7 +168,7 @@
   // Reset every filter to its default (the default years among them). Shared by the "Reset" chip and
   // the top bar's Start over. The capacity year and the scenario are not filters: they stay.
   function resetAllFilters() {
-    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, lyr: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, basis: App().DEFAULT_BASIS, yearMode: 'any' });
+    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, lyr: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, yearMode: 'any' });
     SF().syncFilterControls();
     SF().renderMuniChips();
     TL().setDefaultYears();

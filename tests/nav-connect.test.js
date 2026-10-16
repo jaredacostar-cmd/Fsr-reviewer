@@ -32,7 +32,7 @@ test('the default years are the starting view, not a filter: no chip, and Reset 
 
 test('Reset keeps the settings: the capacity year and the scenario are not filters', () => {
   const body = src('js/filter-ui.js').match(/function resetAllFilters\(\) \{[^]*?\n {2}\}/)[0];
-  assert.doesNotMatch(body, /setCapYear/);
+  assert.doesNotMatch(body, /setCapYear|basis:/);
   assert.match(body, /TL\(\)\.setDefaultYears\(\);/);
 });
 
