@@ -16,8 +16,8 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
 test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
-  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Getting tight', 'Growth in an area', 'Review an FSR', 'Study area', 'Projects', 'Old pipes', 'This week']);
-  // Home's sidebar: Planning (Getting tight with it), Capital, Asset Management; then Full map.
+  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Study area', 'Projects', 'Old pipes', 'This week']);
+  // Home's sidebar: Planning (Servicing capacity with it), Capital, Asset Management; then Full map.
   assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']], ['Capital', ['projects']], ['Asset Management', ['pipes']]]);
   const all = W.GROUPS.flatMap(g => g[1]).sort();
   assert.deepEqual(plain(all), plain(W.WS.map(w => w.id).sort()), 'every workspace listed once');
@@ -40,9 +40,9 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   assert.equal(W.plan('tight', { site: true }).closeScopes, true);
   assert.equal(W.plan('study').lasso, true);
   // The header names the source tab.
-  assert.equal(W.plan('tight').source, 'Getting tight · from Servicing › Capacity');
-  assert.equal(W.sourceText('tight', 'svc:capacity'), 'Getting tight · from Servicing › Capacity');
-  assert.equal(W.sourceText('tight', 'growth:areas'), 'Getting tight · Growth › Areas');
+  assert.equal(W.plan('tight').source, 'Servicing capacity · from Servicing › Capacity');
+  assert.equal(W.sourceText('tight', 'svc:capacity'), 'Servicing capacity · from Servicing › Capacity');
+  assert.equal(W.sourceText('tight', 'growth:areas'), 'Servicing capacity · Growth › Areas');
   assert.equal(W.sourceText('week', 'overview:'), 'This week · from Overview');
   // The browser does what the plan says (go()), and every panel in a workspace carries Open full map.
   const s = src('js/workspaces.js');
@@ -79,19 +79,21 @@ test('4. old links still open the full map; the start screen preference otherwis
   // Old share links (any hash without w): the full map, as before.
   for (const h of ['#t=ww&ws=plants', '#t=census', '#d=Brampton%7C%4043.67%2C-79.84&t=overview', '#m=43.6,-79.7,11', '#ph=review&mu=Brampton']) assert.deepEqual(plain(W.startScreen({ hash: h, pref: 'home' })), { mode: 'full' }, h);
   // New links name their mode.
-  assert.deepEqual(plain(W.startScreen({ hash: '#t=overview&w=home' })), { mode: 'home' });
-  assert.deepEqual(plain(W.startScreen({ hash: '#t=svc&svs=capacity&w=tight' })), { mode: 'ws', ws: 'tight' });
+  assert.deepEqual(plain(W.startScreen({ hash: '#t=overview&w=home' })), { mode: 'home', page: 'home' });
+  assert.deepEqual(plain(W.startScreen({ hash: '#t=svc&w=p:tight' })), { mode: 'home', page: 'tight' }, 'a workspace page');
+  assert.deepEqual(plain(W.startScreen({ hash: '#t=svc&svs=capacity&w=tight' })), { mode: 'ws', ws: 'tight' }, 'its map view');
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:nonsense' })), { mode: 'full' });
   assert.deepEqual(plain(W.startScreen({ hash: '#w=nonsense' })), { mode: 'full' });
-  // No link: Home by default; the last workspace (Getting tight the first time); or the full map.
-  assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'home' })), { mode: 'home' });
-  assert.deepEqual(plain(W.startScreen({ hash: '' })), { mode: 'home' });
-  assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'last', last: 'pipes' })), { mode: 'ws', ws: 'pipes' });
-  assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'last', last: null })), { mode: 'ws', ws: 'tight' });
+  // No link: Home by default; the last workspace's page (Servicing capacity the first time); or the full map.
+  assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'home' })), { mode: 'home', page: 'home' });
+  assert.deepEqual(plain(W.startScreen({ hash: '' })), { mode: 'home', page: 'home' });
+  assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'last', last: 'pipes' })), { mode: 'home', page: 'pipes' });
+  assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'last', last: null })), { mode: 'home', page: 'tight' });
   assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'full' })), { mode: 'full' });
   assert.equal(W.defaultWs(null), 'tight'); assert.equal(W.defaultWs('growth'), 'growth');
   // The link carries w only in Home or a workspace; old-link decoding is unchanged.
   const sh = src('js/share.js');
-  assert.match(sh, /if \(W && W\.mode\(\) === 'home'\) set\('w', 'home'\); else if \(W && W\.mode\(\) === 'ws' && W\.current\(\)\) set\('w', W\.current\(\)\);/);
+  assert.match(sh, /if \(W && W\.mode\(\) === 'home'\) set\('w', W\.page && W\.page\(\) !== 'home' \? `p:\$\{W\.page\(\)\}` : 'home'\); else if \(W && W\.mode\(\) === 'ws' && W\.current\(\)\) set\('w', W\.current\(\)\);/);
   assert.match(src('js/app.js'), /if \(window\.PeelWorkspaces\) window\.PeelWorkspaces\.init\(\);/);
 });
 
@@ -104,6 +106,7 @@ function loadBrowser(areaSpec) {
     PeelOverviewTab: { lastAreaSpec: () => areaSpec }, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcCapacity: { collect: () => [] }, PeelApp: { state: { muni: '', projects: [] } } };
   const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
+  vm.runInNewContext(src('js/ws-pages.js'), ctx);
   vm.runInNewContext(src('js/workspaces.js'), ctx);
   return { W: window.PeelWorkspaces, PN: window.PeelPanel, nodes, window };
 }
@@ -121,9 +124,9 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   const { W: B, PN, nodes } = loadBrowser(AREA);
   B.setMode('home');
   const h = nodes['#home'].innerHTML;
-  // The four figures are the Overview panel's, rendered by the same builder.
-  const figs = PN.html({ key: 'x', figures: AREA.figures }).match(/<div class="pnl-figs"[\s\S]*?<\/div><\/div>/)[0];
-  assert.ok(h.includes(figs.replace('class="pnl-figs"', 'class="pnl-figs" data-ws-go="growth" role="button" tabindex="0" title="Growth in an area"')), 'Home figures = Overview figures');
+  // The four figures are the Overview panel's own (value, unit, label, context), each opening Growth.
+  void PN;
+  for (const f of AREA.figures) assert.ok(h.includes(`<div class="pnl-fig" data-ws-page="growth" title="Growth in an area" role="button" tabindex="0"><b>${f.v}</b><span class="pnl-u">${f.u}</span><span class="pnl-l">${f.label}</span>${f.ctx ? `<small>${f.ctx}</small>` : ''}</div>`), `Home figure = Overview figure: ${f.label}`);
   assert.ok(h.includes(AREA.answer), 'the headline sentence');
   assert.match(h, /9 over/);
   // This week in its workspace: the Overview's own rows, every one.
@@ -132,7 +135,7 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   assert.deepEqual(plain(wk.lists[0].rows), plain(AREA.lists[1].rows), 'the same rows');
   assert.equal(wk.lists[0].rows[0], AREA.lists[1].rows[0], 'the same row objects');
   assert.equal(wk.lists[0].total, 2);
-  // Getting tight, Growth in an area and Projects show the tab's own panel (no override).
+  // Servicing capacity, Growth in an area and Projects show the tab's own panel (no override).
   for (const id of ['tight', 'growth', 'projects']) { B.go(id); const p = B.plan(id); assert.equal(B.override(`${p.tab}:${p.sub}`, 'area'), null, id); }
   // Check a site before a site is picked: the Find step; once a site is open, the site's own panel.
   B.go('site');
@@ -220,17 +223,19 @@ test('3. Home links open the matching chip', () => {
   B.setMode('home');
   const h = nodes['#home'].innerHTML;
   // The workspace list: one button per chip, then Full map.
-  for (const w of B.WS) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-go="${w.id}">`), w.id);
+  // Home itself first (current), then one button per workspace page, then Full map.
+  assert.match(h, /<button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong>/);
+  for (const w of B.WS) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
-  // Needs attention → Getting tight (a facility row also opens its scope); This week → This week (a
-  // change opens its development or capital item); the figures → Growth in an area; the map → Getting tight.
-  assert.match(h, /<li class="pnl-row t-over" data-ws-go="tight" data-ws-ss="plant:Lakeview" tabindex="0" role="button">/);
-  assert.match(h, /<li class="pnl-row t-over" data-ws-go="tight" tabindex="0" role="button"><span class="pnl-r-name">West Brampton/);
-  assert.match(h, /<li class="pnl-row" data-ws-go="week" data-ws-dev="k1" tabindex="0" role="button">/);
-  assert.match(h, /<li class="pnl-row" data-ws-go="week" data-ws-ce="ea:7" tabindex="0" role="button">/);
-  assert.match(h, /data-ws-go="tight">See all \(9\) →/); assert.match(h, /data-ws-go="week">See all \(2\) →/);
-  assert.match(h, /class="pnl-figs" data-ws-go="growth"/);
-  assert.match(h, /<button type="button" class="home-map-btn" data-ws-go="tight"/);
+  // Needs attention → the Servicing capacity page; This week → the This week page; the figures → Growth in
+  // an area; the map → Servicing capacity.
+  assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">G\.E\. Booth/);
+  assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">West Brampton/);
+  assert.match(h, /<li class="pnl-row" data-ws-page="week" tabindex="0" role="button"><small>New: 1 Main St/);
+  assert.match(h, /data-ws-page="tight">See all \(9\) →/);
+  assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
+  assert.match(h, /<div class="pnl-fig" data-ws-page="growth"/);
+  assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);
   assert.match(h, /General screening results only\. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results\./);
@@ -242,7 +247,7 @@ test('the page: Home, the chip bar, the Home button and the settings', () => {
   assert.match(html, /<div class="ws-chips" id="ws-chips" role="toolbar" aria-label="Tasks"><\/div>/);
   assert.match(html, /id="tb-home" data-ws-home/);
   const at = f => html.indexOf(`<script src="js/${f}?v=__BUILD__">`);
-  assert.ok(at('panel.js') > 0 && at('panel.js') < at('workspaces.js') && at('workspaces.js') < at('app.js'));
+  assert.ok(at('panel.js') > 0 && at('panel.js') < at('ws-pages.js') && at('ws-pages.js') < at('workspaces.js') && at('workspaces.js') < at('app.js'));
   assert.match(src('js/growth-ui.js'), /root\.PeelWorkspaces\.settingsHTML\(\)/);
   // A workspace hides the left panel and the tool rail; the full map keeps everything.
   assert.match(src('css/app.css'), /\.app\.ws-mode \.sidebar, \.app\.ws-mode \.toggle-sidebar, \.app\.ws-mode \.leaflet-control\.tool-rail, html\.home-on \.toggle-sidebar \{ display: none !important; \}/);

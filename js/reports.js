@@ -276,7 +276,8 @@
   });
 
   // ---- Public contract ----
-  const api = { appVersion, briefingPDF, comparisonPDF, devMemo, areaReport, openReport, reportFooter };
+  // (sketchSVG and briefingMap also draw the workspace pages' small maps: js/ws-pages.js)
+  const api = { appVersion, briefingPDF, comparisonPDF, devMemo, areaReport, openReport, reportFooter, sketchSVG, briefingMap };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelReports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -125,6 +125,10 @@
   function sync() {
     if (typeof document === 'undefined') return;
     const A = AT(), an = document.getElementById('analysis'); if (!A || !an) return;
+    // (a workspace page is open over the map: it shows these panels itself, so the slots stay empty and
+    // no element id is on screen twice)
+    const Wp = root.PeelWorkspaces;
+    if (Wp && Wp.mode && Wp.mode() === 'home') { document.querySelectorAll('.pnl-host').forEach(h => { h.innerHTML = ''; h.dataset.v = ''; }); return; }
     const t = A.getFootTab(), key = keyNow(), e0 = STORE.get(key);
     // Stage 4: a workspace may show its own view of a sub-view (Check a site before a site is picked,
     // Old pipes, This week) and names its source in the header ("Getting tight · from Servicing ›

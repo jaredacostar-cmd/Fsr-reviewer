@@ -3,7 +3,7 @@
   // ---- Workspaces and Home (Stage 4) ------------------------------------------------------------
   // A workspace is a view onto the four tabs, never a separate calculation: a task chip sets the map's
   // layer preset, the scope and the panel, and the panel header names the tab it comes from
-  // ("Getting tight · from Servicing › Capacity"). Three modes:
+  // ("Servicing capacity · from Servicing › Capacity"). Three modes:
   //   home  the briefing (headline, 4 figures, Needs attention, a small map of the problems, This week)
   //         with the workspaces listed by team, then "Full map (all tools)";
   //   ws    the map with the task chips under the search box; the left panel and the tool rail are
@@ -21,7 +21,7 @@
   // 'drawn' (the area the user draws); view: the map's layer preset (js/map-markers.js MAP_VIEWS).
   const WS = [
     { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'A development: servicing, timing and what to confirm, then the servicing memo' },
-    { id: 'tight', label: 'Getting tight', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage nearing or past their limit, soonest first' },
+    { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage nearing or past their limit, soonest first' },
     { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned units and people by municipality and plan' },
     { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A development’s servicing path with the FSR cross-check' },
     { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and the servicing it needs' },
@@ -42,7 +42,7 @@
     pipes: [],                                      // the old pipes only (drawn by this module)
     week: ['devs'],
   };
-  // Home's sidebar: by team (Getting tight with Planning), then Full map.
+  // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
     ['Planning', ['site', 'fsr', 'growth', 'study', 'tight', 'week']],
     ['Capital', ['projects']],
@@ -91,18 +91,19 @@
     list.forEach((r, k) => { const g = find(k); const x = runs.get(g) || { ...r, n: 0, lengthM: 0, pipes: [] }; x.n++; x.lengthM += data.pipes[r.i][14] || 0; x.pipes.push(r.i); if (r.units > x.units) Object.assign(x, { i: r.i, units: r.units, at: r.at }); runs.set(g, x); });
     return [...runs.values()].sort((a, b) => b.units - a.units || (b.age || 0) - (a.age || 0));
   }
-  // The start screen: a link opens what it names (w=home, w=<workspace>; without w the full map, as
-  // old links always did); otherwise the preference: Home (default), the last workspace or the full map.
+  // The start screen: a link opens what it names (w=home: Home; w=p:<workspace>: its page; w=<workspace>:
+  // its map view; without w the full map, as old links always did); otherwise the preference: Home
+  // (default), the last workspace's page or the full map.
   const START = [['home', 'Home'], ['last', 'Last workspace'], ['full', 'Full map']];
   function startScreen({ hash = '', pref = 'home', last = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
-    if ([...q.keys()].length) return q.get('w') === 'home' ? { mode: 'home' } : q.get('w') && BY_ID[q.get('w')] ? { mode: 'ws', ws: q.get('w') } : { mode: 'full' };
+    const w = q.get('w') || '';
+    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : /^p:/.test(w) && BY_ID[w.slice(2)] ? { mode: 'home', page: w.slice(2) } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
     if (pref === 'full') return { mode: 'full' };
-    if (pref === 'last') return { mode: 'ws', ws: BY_ID[last] ? last : 'tight' };
-    return { mode: 'home' };
+    if (pref === 'last') return { mode: 'home', page: BY_ID[last] ? last : 'tight' };
+    return { mode: 'home', page: 'home' };
   }
-  // A workspace picked without naming one (Home's map, "Workspaces"): Getting tight the first time,
-  // the last one after that.
+  // A workspace picked without naming one: Servicing capacity the first time, the last one after that.
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
@@ -115,31 +116,47 @@
   const App = () => root.PeelApp, AT = () => root.PeelAnalysisTabs, PN = () => root.PeelPanel, MM = () => root.PeelMapMarkers;
   const SC = () => root.PeelSewerCap, Cap = () => root.PeelSvcCapacity, OT = () => root.PeelOverviewTab, SS = () => root.PeelSvcScope;
   const now = () => (MM() && MM().THIS_YEAR) || new Date().getFullYear();
-  let mode = 'full', cur = null;
+  let mode = 'full', cur = null, page = 'home';
   const isWs = () => mode === 'ws';
 
-  function setMode(m) {
+  // home: a page is open (Home or a workspace's page, js/ws-pages.js); ws: a workspace's map view with
+  // the chips; full: the map with every tool.
+  function setMode(m, pg) {
+    if (m === 'home') page = pg || page || 'home';
+    else putMapBack();
     mode = m;
     const de = document.documentElement, app = $('.app');
     de.classList.toggle('ws-mode', m === 'ws'); de.classList.toggle('home-on', m === 'home');
     if (app) { app.classList.toggle('ws-mode', m === 'ws'); }
     const home = $('#home'); if (home) home.hidden = m !== 'home';
     const bar = $('#ws-bar'); if (bar) bar.hidden = m !== 'ws';
-    placeSearch();
     if (m !== 'ws') { cur = null; pipesLayer(false); if (m === 'full') { unfoldLayers(); restoreView(); } }
     renderChips();
-    if (m === 'home') renderHome();
+    if (m === 'home') renderPage(true); else placeSearch();
     if (root.PeelDataTab && root.PeelDataTab.fixMap) setTimeout(() => root.PeelDataTab.fixMap(), 50);
     if (PN()) PN().sync();
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
   }
-  // The one search box: in a workspace it sits above the chips on the map.
+  // The one search box: over the map in a workspace's map view, on the Find step of Check a site and
+  // Review an FSR, else in the left panel (or the top bar on wide screens).
   function placeSearch() {
-    const box = $('#search-box'), slot = $('#ws-search'); if (!box || !slot) return;
-    if (mode === 'ws') { if (box.parentElement !== slot) slot.appendChild(box); return; }
-    if (box.parentElement === slot) { const home = document.querySelector('#tab-explore .search-bar'); if (home) home.insertBefore(box, home.firstChild); }
+    const box = $('#search-box'), slot = mode === 'ws' ? $('#ws-search') : mode === 'home' ? $('#page-search') : null; if (!box) return;
+    if (slot) { if (box.parentElement !== slot) slot.appendChild(box); return; }
+    const pageSlot = $('#page-search');
+    if (box.parentElement === $('#ws-search') || (pageSlot && box.parentElement === pageSlot) || !document.body.contains(box.parentElement)) { const home = document.querySelector('#tab-explore .search-bar'); if (home) home.insertBefore(box, home.firstChild); }
     if (root.PeelTopbar && root.PeelTopbar.placeSearch) root.PeelTopbar.placeSearch();
   }
+  // Study area: the map itself moves onto its page (a small interactive map), and back after.
+  const mapWrap = () => document.querySelector('.map-wrap');
+  function putMapBack() {
+    const m = $('#map'), w = mapWrap(); if (!m || !w || m.parentElement === w) return;
+    w.insertBefore(m, w.firstChild); invalidate();
+  }
+  function placeMap() {
+    const m = $('#map'), slot = $('#page-map-slot');
+    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); } } else putMapBack();
+  }
+  const invalidate = () => { const map = root.PeelMapCore && root.PeelMapCore.map; if (map && map.invalidateSize) setTimeout(() => map.invalidateSize(), 30); };
   // ---- A chip -------------------------------------------------------------------------------------
   function go(id, o = {}) {
     const site = root.DevScope && root.DevScope.current ? root.DevScope.current() : null;
@@ -297,93 +314,109 @@
       foot: { primary: { label: 'Watch list', attrs: { 'data-ws-watch': '' }, title: 'The developments you watch (left panel, Watch)' } },
     };
   }
-  // ---- Home ---------------------------------------------------------------------------------------
-  // The small map: the wastewater blocks muted; the pumping-station catchments and pressure zones of the
-  // facilities over (red) or past the 90% trigger (amber) at build-out filled; the plants as squares.
-  function homeMapSVG(rows, W = 360, H = 300) {
-    const sv = App() && App().state.servicing; if (!sv) return '';
-    // The base: the Region's wastewater blocks (rural blocks mostly on septic left out, as the briefing map).
-    const base = (sv.drainage || []).filter(d => d.rings && !(d.served != null && d.served < 0.5));
-    let mnx = 1e9, mny = 1e9, mxx = -1e9, mxy = -1e9;
-    for (const d of base) for (const r of d.rings) for (const [x, y] of r) { mnx = Math.min(mnx, x); mny = Math.min(mny, y); mxx = Math.max(mxx, x); mxy = Math.max(mxy, y); }
-    if (mnx > mxx) return '';
-    const kx = Math.cos((mny + mxy) / 2 * Math.PI / 180), s = Math.min((W - 10) / ((mxx - mnx) * kx), (H - 10) / (mxy - mny));
-    const X = x => (5 + (x - mnx) * kx * s).toFixed(1), Y = y => (5 + (mxy - y) * s).toFixed(1);
-    const path = rings => rings.map(r => r.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x)},${Y(y)}`).join('') + 'Z').join('');
-    const tone = r => (r.pctBo >= 100 ? 'over' : r.pctBo >= 90 ? 'tight' : null);
-    const out = base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`);
-    const byId = new Map((sv.psAreas || []).map(d => [d.id, d])), zones = sv.zones || [];
-    for (const r of rows) {
-      const t = tone(r); if (!t) continue;
-      let g = null;
-      if (r.kind === 'ps') g = byId.get(r.id.slice(3));
-      else if (r.kind === 'pump' || r.kind === 'storage') { const m = String(r.name).match(/zone\s*(\w+)/i); g = m ? zones.find(z => String(z.zone) === m[1]) : null; }
-      if (g && g.rings) out.push(`<path d="${path(g.rings)}" class="hm-${t}"><title>${esc(r.name)}: ${Math.round(r.pctBo)}% at build-out</title></path>`);
+  // ---- Pages ------------------------------------------------------------------------------------
+  // A chip's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home'. Area pages
+  // leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
+  // their panels are worked out for the same scope.
+  function openPage(id, o = {}) {
+    if (id !== 'home' && !BY_ID[id]) id = 'home';
+    const w = BY_ID[id];
+    if (w && w.scope === 'area') {
+      if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
+      if (SS() && SS().current && SS().current()) SS().close();
     }
-    for (const pl of (sv.meta && sv.meta.plants) || []) {
-      if (!pl.lnglat) continue;
-      const r = rows.find(x => x.id === `plant:${pl.name}`), t = r ? tone(r) : null;
-      out.push(`<rect x="${(+X(pl.lnglat[0]) - 5).toFixed(1)}" y="${(+Y(pl.lnglat[1]) - 5).toFixed(1)}" width="10" height="10" class="hm-plant${t ? ` hm-${t}` : ''}"><title>${esc(r ? r.name : pl.name)}${r ? `: ${Math.round(r.pctBo)}% at build-out` : ''}</title></rect>`);
-    }
-    return `<svg viewBox="0 0 ${W} ${H}" class="home-map-svg" role="img" aria-label="Peel's sewersheds, with the facilities over capacity or past the 90% trigger at build-out highlighted">${out.join('')}</svg>`;
+    if (w) { store.set('lastWs', id); const A = AT(); if (A) { if (w.sub && A.setSub) A.setSub(w.tab, w.sub); A.showFootTab(w.tab); } }
+    lastHTML = '';
+    setMode('home', id);
+    if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
-  function renderHome() {
-    const el = $('#home'); if (!el || el.hidden) return;
-    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null, P = PN();
-    const rows = Cap() && Cap().collect ? Cap().collect() || [] : [];
-    const cav = root.PeelRecordsTab && root.PeelRecordsTab.caveats ? root.PeelRecordsTab.caveats() : [];
-    const needs = a && a.lists ? a.lists.find(l => l.title === 'Needs attention') : null, week = a && a.lists ? a.lists.find(l => l.title === 'This week') : null;
-    // A Home row opens its workspace (and, for a facility, its scope; for a change, the development).
-    const relink = (r, ws) => { const at = r.attrs || {}; const x = { 'data-ws-go': ws }; if (at['data-ss']) x['data-ws-ss'] = at['data-ss']; if (at['data-pnl-dev']) x['data-ws-dev'] = at['data-pnl-dev']; if (at['data-ce-open']) x['data-ws-ce'] = at['data-ce-open']; return { ...r, attrs: { ...x, title: r.attrs && r.attrs.title } }; };
-    const pref = store.get('startScreen', 'home');
-    const side = `<nav class="home-side" aria-label="Workspaces">
-      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => { const w = BY_ID[id]; return `<li><button type="button" class="home-ws" data-ws-go="${id}"><strong>${esc(w.label)}${id === 'week' && week && week.total ? ` <span class="badge-n">${fmtNum(week.total)}</span>` : ''}</strong><small>${esc(w.what)}</small></button></li>`; }).join('')}</ul>`).join('')}
+  let lastHTML = '', timer = null;
+  const pageName = id => (id === 'home' ? 'Home' : BY_ID[id] ? BY_ID[id].label : id);
+  function sideHTML() {
+    const nW = weekRows().length, pref = store.get('startScreen', 'home');
+    const item = (id, sub) => `<li><button type="button" class="home-ws${page === id ? ' on' : ''}" data-ws-page="${id}"${page === id ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
+    return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}</ul>
+      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map (all tools)</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
-    let main;
-    if (!a || !P) main = `<div class="home-main"><p class="muted">${U.skel ? U.skel('Loading the briefing') : 'Loading the briefing…'}</p></div>`;
-    else {
-      const figs = P.html({ key: 'home', figures: a.figures }).match(/<div class="pnl-figs"[\s\S]*?<\/div><\/div>/);
-      const list = (l, ws, title) => (l && l.rows.length ? `<section class="pnl-list home-list"><div class="pnl-list-h"><h3>${esc(title)}</h3><button type="button" class="btn small link" data-ws-go="${ws}">See all (${fmtNum(l.total)}) →</button></div><ul>${l.rows.slice(0, 5).map(r => relink(r, ws)).map(r => `<li class="pnl-row${r.tone ? ` t-${esc(r.tone)}` : ''}" data-ws-go="${esc(r.attrs['data-ws-go'])}"${r.attrs['data-ws-ss'] ? ` data-ws-ss="${esc(r.attrs['data-ws-ss'])}"` : ''}${r.attrs['data-ws-dev'] ? ` data-ws-dev="${esc(r.attrs['data-ws-dev'])}"` : ''}${r.attrs['data-ws-ce'] ? ` data-ws-ce="${esc(r.attrs['data-ws-ce'])}"` : ''} tabindex="0" role="button">${r.html}</li>`).join('')}</ul></section>` : '');
-      main = `<div class="home-main">
-        <header class="home-h"><p class="small muted">${a.head && a.head.identity ? a.head.identity : ''}</p><h1>${esc((App() && App().state.muni) || 'Peel')}: what needs attention</h1>${a.head && a.head.status ? P.chip(a.head.status) : ''}</header>
-        <div class="pnl-scen">${P.scenarioChip()}</div>
-        <p class="home-answer">${a.answer || ''}</p>
-        ${cav.map(c => `<p class="home-caveat small" role="note">⚠ ${esc(c.text)} <button type="button" class="btn small link" data-ws-full data-at="${c.at}">Review →</button></p>`).join('')}
-        ${figs ? figs[0].replace('class="pnl-figs"', 'class="pnl-figs" data-ws-go="growth" role="button" tabindex="0" title="Growth in an area"') : ''}
-        <div class="home-cols">
-          ${list(needs, 'tight', 'Needs attention')}
-          <section class="home-map"><div class="pnl-list-h"><h3>Where</h3><button type="button" class="btn small link" data-ws-go="tight">Open the map →</button></div><button type="button" class="home-map-btn" data-ws-go="tight" aria-label="Open Getting tight on the map">${homeMapSVG(rows)}</button>
-            <p class="small muted"><span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)</p></section>
-        </div>
-        ${list(week, 'week', 'This week')}
-        <p class="pnl-note small">${P.NOTE}</p>
-      </div>`;
-    }
-    el.innerHTML = `<div class="home-grid">${side}${main}</div>`;
   }
+  // force: rebuild even when the page HTML is unchanged (a mode switch).
+  function renderPage(force) {
+    const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
+    const m = WP.build(page), main = WP.pageHTML(m, PN() ? PN().NOTE : '');
+    const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
+    if (!force && html === lastHTML) return;
+    // The search box and the map live outside the page while it is rebuilt.
+    const box = $('#search-box'), side = document.querySelector('#tab-explore .search-bar');
+    if (box && side && el.contains(box)) side.insertBefore(box, side.firstChild);
+    putMapBack();
+    const y = el.scrollTop;
+    el.innerHTML = html; lastHTML = html;
+    if (!force) el.scrollTop = y;
+    placeSearch(); placeMap();
+    if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
+  }
+  const schedule = () => { if (mode !== 'home') return; clearTimeout(timer); timer = setTimeout(() => renderPage(false), 200); };
+  // Kept for the tests and older callers: Home is the page 'home'.
+  const renderHome = () => { if (mode === 'home') renderPage(true); };
+  const homeMapSVG = rows => (root.PeelWsPages ? root.PeelWsPages.capacityMap(rows) : '');
   // ---- Settings: the start screen ------------------------------------------------------------------
   const settingsHTML = () => { const pref = store.get('startScreen', 'home'); return `<section class="gear-sec"><h3>Start screen</h3><p class="small muted">What opens when you load the app without a link. Kept in this browser.</p><div class="seg" role="group" aria-label="Start screen">${START.map(([k, t]) => `<button type="button" class="btn small${pref === k ? ' on' : ''}" data-ws-start-btn="${k}" aria-pressed="${pref === k}">${t}</button>`).join('')}</div></section>`; };
   // ---- Wiring -------------------------------------------------------------------------------------
+  const devByKey = k => { const N = root.PeelDevNav; return N && N.projectByKey ? N.projectByKey(k) : null; };
+  function pickDev(k) { const N = root.PeelDevNav, q = devByKey(k); if (q && N) N.showDetail(q); return q; }
+  function copyText(t, btn) {
+    const done = () => { if (btn) { const l = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = l; }, 1500); } };
+    try { navigator.clipboard.writeText(t).then(done, () => {}); } catch (e) { /* no clipboard */ }
+  }
+  function pipesCSV() {
+    const list = oldList(); if (!list) return;
+    const runs = pipeRuns(list, MM().SEW.data), Ex = root.PeelExports, WP = root.PeelWsPages;
+    const cols = ['diameter_mm', 'material', 'install_year', 'age_years', 'risk', 'units_at_buildout', 'segments', 'length_m', 'plant', 'likelihood_band', 'consequence_band'];
+    const cell = v => (/[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+    const rows = runs.map(r => [r.d, r.mat, r.year || '', r.age == null ? '' : r.age, r.risk, Math.round(r.units), r.n, Math.round(r.lengthM), r.plant || '', WP ? WP.likeOf(r) : '', WP ? WP.consOf(r) : ''].map(cell).join(','));
+    if (Ex && Ex.download) Ex.download('peel-old-pipes.csv', (U.CSV_DISCLAIMER || '') + [cols.join(','), ...rows].join('\n'), 'text/csv');
+  }
   document.addEventListener('click', e => {
     if (!e.target.closest) return;
+    const pg = e.target.closest('[data-ws-page]');
+    if (pg) { e.preventDefault(); openPage(pg.dataset.wsPage); return; }
+    const pk = e.target.closest('[data-ws-pick]');
+    if (pk) { e.preventDefault(); const as = pk.dataset.wsAs; pickDev(pk.dataset.wsPick); if (as && as !== page) openPage(as, { keepScroll: true }); else schedule(); return; }
+    const un = e.target.closest('[data-ws-unpick]');
+    if (un) { if (root.DevScope && root.DevScope.current()) root.DevScope.close(); openPage(un.dataset.wsUnpick); return; }
     const g = e.target.closest('[data-ws-go]');
-    if (g) { e.preventDefault(); const dev = g.dataset.wsDev, ce = g.dataset.wsCe; go(g.dataset.wsGo, { ss: g.dataset.wsSs, quiet: !!dev });
-      if (dev) { const N = root.PeelDevNav, q = N && N.projectByKey(dev); if (q) N.showDetail(q); }
+    if (g) { e.preventDefault(); const dev = g.dataset.wsDev, ce = g.dataset.wsCe, pipe = g.dataset.wsPipe, ft = g.dataset.wsFulltable; go(g.dataset.wsGo, { ss: g.dataset.wsSs, quiet: !!dev });
+      if (dev) pickDev(dev);
       if (ce && root.PeelCapitalEA) { const [k, ...rest] = ce.split(':'), CE = root.PeelCapitalEA; if (k === 'ea') CE.openEA(rest.join(':')); else if (k === 'cap') CE.openCapital(rest.join(':')); }
+      if (pipe != null && SC() && MM().SEW && MM().SEW.data) { const i = +pipe, c = MM().SEW.data.pipes[i][10], map = root.PeelMapCore.map; SC().showPipeLoads(i); map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); }
+      if (ft && PN() && PN().openFull) setTimeout(() => PN().openFull(), 400);
       return; }
+    if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
     if (e.target.closest('[data-ws-full]')) { setMode('full'); return; }
-    if (e.target.closest('[data-ws-home]')) { setMode('home'); return; }
+    if (e.target.closest('[data-ws-home]')) { openPage('home'); return; }
     if (e.target.closest('[data-ws-focus]')) { const s = $('#f-search'); if (s) s.focus(); return; }
     if (e.target.closest('[data-ws-watch]')) { setMode('full'); const t = $('#tab-btn-week'); if (t) t.click(); return; }
+    // Study area: draw on the page's map; the page refreshes once the drawing ends.
+    if (e.target.closest('[data-ws-draw]')) { const AS = root.PeelAreaSelect; if (AS) { AS.setLasso(true); const iv = setInterval(() => { if (!AS.getLassoOn()) { clearInterval(iv); renderPage(true); } }, 300); } return; }
+    if (e.target.closest('[data-ws-clear]')) { const AS = root.PeelAreaSelect; if (AS && AS.clearSelection) AS.clearSelection(); renderPage(true); return; }
+    // Review an FSR: the comparison as text for the review, or printed.
+    const fc = e.target.closest('[data-ws-fsrcopy]'); if (fc) { const r = document.querySelector('#home [data-fc-results]'); copyText(r && !r.hidden ? r.innerText : 'Run Compare first.', fc); return; }
+    if (e.target.closest('[data-ws-fsrprint]')) { const F = root.PeelFsrCheck; if (F && F.printCheck) F.printCheck(); return; }
+    if (e.target.closest('[data-ws-pipescsv]')) { pipesCSV(); return; }
     const sb = e.target.closest('[data-ws-start-btn]'); if (sb) { store.set('startScreen', sb.dataset.wsStartBtn); document.querySelectorAll('[data-ws-start-btn]').forEach(b => { const on = b === sb; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
   });
   document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-ws-start]'); if (s) store.set('startScreen', s.value); });
-  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('#home [data-ws-go][role="button"]')) { e.preventDefault(); e.target.click(); } });
-  // Home and the chips follow the Peel Overview (its figures, This week's count).
-  document.addEventListener('pnl:set', e => { if (e.detail && e.detail.key === 'overview:' && e.detail.scope === 'area') { renderChips(); if (mode === 'home') renderHome(); } if (mode === 'ws' && cur === 'pipes' && e.detail && e.detail.key === 'svc:network') pipesLayer(true); });
-  // A site picked in Check a site / Review an FSR: on to its result (Overview, or Servicing with the cross-check).
+  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest && e.target.closest('#home [role="button"]')) { e.preventDefault(); e.target.click(); } });
+  // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what
+  // it shows has changed.
+  document.addEventListener('pnl:set', e => {
+    if (e.detail && e.detail.key === 'overview:' && e.detail.scope === 'area') renderChips();
+    if (mode === 'ws' && cur === 'pipes' && e.detail && e.detail.key === 'svc:network') pipesLayer(true);
+    schedule();
+  });
+  // A site picked in a workspace's map view (Check a site / Review an FSR): on to its result.
   let lastDev = null;
   document.addEventListener('pnl:set', e => {
     const d = e.detail && e.detail.scope; if (!isWs() || !d || !d.startsWith('dev:') || d === lastDev) { if (d && !d.startsWith('dev:')) lastDev = null; return; }
@@ -393,8 +426,9 @@
   function init() {
     const s = startScreen({ hash: location.hash, pref: store.get('startScreen', 'home'), last: store.get('lastWs', null) });
     if (s.mode === 'ws') { setMode('ws'); setTimeout(() => go(s.ws, { quiet: true, noDraw: true }), 0); }
+    else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { go, setMode, mode: () => mode, current: () => cur, override, srcLine, renderHome, renderChips, settingsHTML, homeMapSVG, oldList, init });
+  Object.assign(api, { go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderHome, renderPage, renderChips, settingsHTML, homeMapSVG, oldList, pipesSpec, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);
