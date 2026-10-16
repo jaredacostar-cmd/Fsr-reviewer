@@ -417,6 +417,8 @@
     if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
     // (zoning approved is in the header's status line; the by-law that passed it stays here)
     if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank && p.zoningApproved.bylaws.length) out.push(chip(`Zoning by-law ${esc(p.zoningApproved.bylaws[0])}`));
+    // Bundle 6: the holding (H) symbol, from an application to lift it.
+    if (p.holding) out.push(chip(p.holding.open ? `Holding (H): removal in review (${esc(p.holding.refs[0] || 'file')})` : `Holding (H) lifted (${esc(p.holding.refs[0] || 'file')})`, p.holding.open ? 'warn' : '').replace('<span class="chip', `<span title="${p.holding.open ? 'The zoning is in place but held (the H symbol) until a condition is met, often servicing: an application to lift it is in review' : 'The holding (H) symbol on its zoning was lifted'}" class="chip`));
     // Bundle 6: links in its file tree made by overlap only (low confidence): one tap to the tree.
     { const FT = root.PeelFileTree, d = FT && FT.of(p), n = d ? FT.summary(d).check : 0;
       if (n) out.push(`<button type="button" class="chip chip-link" data-tree-check title="Files linked to this development by overlap only: check them in Records › Files">${n} link${n === 1 ? '' : 's'} to check</button>`); }

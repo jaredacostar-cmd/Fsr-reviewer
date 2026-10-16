@@ -29,7 +29,7 @@
     [0, 'Official plan + zoning amendment', 'OZS-2026-0007 · OPA / ZBA', 'the root: the homes are counted here, once; an appeal to the Ontario Land Tribunal shows as a flag', [
       [2, 1, 'ok', 'Filed → under review', 'public meeting, report'],
       [2, 1, 'ok', 'By-law passed', '“In review · zoning approved”: zoning alone does not commit the land'],
-      [3, 3, 'no', 'Holding (H) symbol', 'lifted when servicing is available, often after allocation: not read yet'],
+      [3, 3, 'part', 'Holding (H) symbol', 'lifted when its condition is met, often servicing: flagged on the site when an application to lift it is filed (the H in a by-law alone is not in the open data)'],
     ]],
     [1, 'Draft plan of subdivision', '21T- / OZS · lots and blocks', 'on the zoning’s land', [
       [2, 1, 'ok', 'Filed', ''],

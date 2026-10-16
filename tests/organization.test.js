@@ -65,3 +65,14 @@ test('10 or fewer homes with zoning approved: Approved, explained where the stag
   assert.match(src('js/panel.js'), /\$\{p\.smallSite \? ' · no site plan needed' : ''\}/);
   assert.match(src('js/approvals-guide.js'), /\[3, 1, 'ok', '≤ 10 homes: zoning approved → Approved'/);
 });
+
+test('the holding (H) symbol: an application to lift it is flagged on the site (open, or lifted)', () => {
+  const P = require('../js/phases.js');
+  assert.equal(P.isHolding({ kind: 'application', ref: 'H-OZ 25-1' }), true, 'Mississauga H-OZ');
+  assert.equal(P.isHolding({ kind: 'application', ref: 'OZS-2026-0030', type: 'OPA ZBA Subdivision', description: 'Lifting of Hold — Lifting of Holding Symbol Application' }), true, 'Brampton "Lifting of Hold"');
+  assert.equal(P.isHolding({ kind: 'application', ref: 'SPA-1', description: 'Holding tank for storm water' }), false);
+  assert.equal(P.isHolding({ kind: 'permit', ref: 'H-OZ 1' }), false);
+  const s = src('js/phases.js');
+  assert.match(s, /const holding = holds\.length \? \{ refs: holds\.map\(r => r\.ref\)\.filter\(Boolean\), open: holds\.some/);
+  assert.match(src('js/dev-detail.js'), /`Holding \(H\): removal in review \(\$\{esc\(p\.holding\.refs\[0\] \|\| 'file'\)\}\)`/);
+});

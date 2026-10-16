@@ -24,12 +24,12 @@ test('the five stages as the app names them, each step in one of them', () => {
   assert.match(h, /role="table" aria-label="An Ontario development as a tree, against the app's stages"/);
 });
 
-test('it says what the app does: draft approval commits (MECP D-5-1), zoning alone does not, H not read', () => {
+test('it says what the app does: draft approval commits (MECP D-5-1), zoning alone does not, H flagged from its lifting file', () => {
   const draft = G.ROWS.find(r => r[1] === 'Draft plan of subdivision')[4];
   assert.ok(draft.some(([col, , mark, title]) => col === 3 && mark === 'ok' && /Draft approved → committed/.test(title)), 'draft approval in Approved, read as Ontario does it');
   const zoning = G.ROWS.find(r => r[1] === 'Official plan + zoning amendment')[4];
   assert.ok(zoning.some(([col, , , title, note]) => col === 2 && /By-law passed/.test(title) && /does not commit/.test(note)));
-  assert.ok(zoning.some(([, , mark, title]) => mark === 'no' && /Holding \(H\)/.test(title)));
+  assert.ok(zoning.some(([, , mark, title, note]) => mark === 'part' && /Holding \(H\)/.test(title) && /flagged on the site when an application to lift it is filed/.test(note)));
   assert.match(G.html(), /What counts as committed\.<\/strong> A draft-approved or registered plan of subdivision, or a site plan approval, through permit and construction \(MECP Procedure D-5-1\)/);
   // The app's own rule (js/demand.js) is the one described.
   assert.match(src('js/demand.js'), /Committed follows MECP Procedure D-5-1 \(confirmed\): registered or draft-approved plans of\n {2}\/\/ subdivision, plus site plan approval/);
