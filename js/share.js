@@ -21,7 +21,9 @@
     let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
     const encode = () => {
       const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
-      if (!App().sameSet(App().state.phases, App().DEFAULT_PHASES())) set('ph', [...App().state.phases].join(','));
+      // (always written: links made before Completed was shown by default carry no ph and open with the
+      // active phases, as they did)
+      set('ph', [...App().state.phases].join(','));
       const fl = PF.encodeFlagParam(App().state.flags); if (fl) set('fl', fl);
       set('pl', App().state.plant); set('dw', App().state.dwelling);
       if (App().state.landuse !== App().DEFAULT_LANDUSE) set('lu', App().state.landuse);
@@ -60,6 +62,7 @@
       if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr') || q.get('ss')) && !App().state.servicing)) return;
       applied = true;
       if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
+      else App().state.phases = new Set(App().ACTIVE_PHASES);   // an older link: the default then (no Completed)
       if (q.has('fo')) {
         // Pre-Phase-1 focus link: migrate onto the new state (growth / none drop to the defaults).
         const mig = PF.migrateLegacyFocus(q.get('fo'));

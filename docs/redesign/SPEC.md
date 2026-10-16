@@ -216,7 +216,7 @@ has no DC tab; a selected site gets 7 tabs).
 
 **Left panel = find.** Tabs *Find · Watch · Data*.
 - Result count first, active-filter chips, "Reset n filters", "Save this view".
-- Stage: stacked bar + 5 toggles; the 630 hidden completed/withdrawn are one "Done / gone" button
+- Stage: stacked bar + 5 toggles, then Completed (with how many finished since the 2021 census: the Built layer) and Withdrawn / refused as their own buttons; Completed is on by default, Withdrawn / refused hidden (was one hidden "Done / gone" button)
   (today the greyed counts read as a mismatch with the 1,485 header).
 - Where / What / When / Counts as / Flags as collapsed rows that show their current value.
   "Counts as" = layer chips (Built 471 · Committed 710 · Proposed 565 · Anticipated 210, by the
