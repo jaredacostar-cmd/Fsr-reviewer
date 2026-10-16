@@ -147,7 +147,7 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   // A row opens the next level; the trail goes back up; the stage bars filter the files.
   assert.match(s, /const kidRow = c => \(\{ attrs: \{ 'data-ws-drill': c\.id/);
   assert.match(s, /data-ws-drill="\$\{esc\(x\.id\)\}">\$\{esc\(x\.name\)\}<\/button>/);
-  assert.match(s, /\$\{st\.click \? ` data-ws-stage="\$\{r\.key\}" tabindex="0"` : ''\}/);
+  assert.match(s, /\$\{st\.click && r\.units >= 0\.5 \? ` data-ws-stage="\$\{r\.key\}" tabindex="0"` : ''\}/, 'a stage with no units is not clickable (bundle 6)');
   assert.match(s, /label: '↑ Up a level', attrs: \{ 'data-ws-drill': n\.parent \|\| 'peel' \}/);
   // Employment: a figure and its own list (floor area planned, permitted, completed, left; jobs).
   assert.match(s, /label: 'employment', ctx: emp\.planned >= 1 \?/);

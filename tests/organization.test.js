@@ -134,3 +134,10 @@ test('the trail owns the scope’s count; filters on show on pages; Review an FS
   assert.match(p, /top: `<div class="page-search" id="page-search"><\/div>\$\{stepper\}`/);
   assert.doesNotMatch(p.slice(p.indexOf('  function find(id) {'), p.indexOf('  // ---- Check a site, with a site')), /title: 'Steps'/, 'the steps are one line, not a list');
 });
+
+test('the Layers panel splits the network from the capital program; a map view opens its tab; list values read as numbers', () => {
+  const LG = require('../js/layer-groups.js');
+  assert.deepEqual(LG.GROUPS.map(g => g.label), ['Developments', 'Capacity', 'Existing network', 'Capital program', 'Constraints', 'Planning context', 'Base map']);
+  assert.match(src('js/topbar.js'), /const tab = \{ dc: 'dca', water: 'svc', wastewater: 'svc' \}\[b\.dataset\.mview\];/);
+  assert.match(src('css/app.css'), /\.pnl-r-year \{ font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; \}/);
+});

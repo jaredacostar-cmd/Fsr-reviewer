@@ -2874,7 +2874,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .ft-bar p { margin: 0; }
 #analysis.ft-on .analysis-panes .f-pane { max-width: none; }
 @media (max-width: 600px) { .ft-bar { flex-wrap: wrap; } .ft-bar .ft-scen { order: 3; flex-basis: 100%; } }
-.pnl-r-year { font-family: var(--font-mono, ui-monospace, monospace); font-weight: 600; white-space: nowrap; }
+.pnl-r-year { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }   /* (bundle 6: the body font with tabular figures, not monospace: values read as numbers, not codes) */
 .pnl-r-meta { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-1); color: var(--text-secondary); margin-top: 4px; }
 .pnl-r-year.t-over, .pnl-r-meta .t-over { color: var(--pnl-over); }
 .pnl-r-year.t-tight, .pnl-r-meta .t-tight { color: var(--pnl-tight); }

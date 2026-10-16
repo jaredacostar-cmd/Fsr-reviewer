@@ -38,6 +38,10 @@
     if (phone() && b.classList.contains('on') && !v.classList.contains('open')) { v.classList.add('open'); return; }
     v.classList.remove('open');
     MA().setMapView(b.dataset.mview);
+    // Bundle 6: a view opens its tab (picking Capital used to leave Overview open): Capital → Capital,
+    // Water and Wastewater → Servicing; Planning keeps the tab you are on.
+    const tab = { dc: 'dca', water: 'svc', wastewater: 'svc' }[b.dataset.mview];
+    if (tab && AT() && AT().openTab) AT().openTab(tab);
   });
   // Phones: Export, Present, Help and Settings in one ⋯ menu.
   const more = $('#tb-more'), acts = $('#tb-actions');
