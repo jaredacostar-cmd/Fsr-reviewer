@@ -1110,6 +1110,8 @@
   // official plan approval alone does not ("Zoning approved", still under review).
   // (A minor site plan approves its own small change; it sets the phase only where the site has
   // nothing else — the builds filter in mergeProject.)
+  // Bill 23: no site plan control for residential developments of up to 10 units.
+  const SMALL_SITE_UNITS = 10;
   const committingApproval = r => r.kind === 'application' && ['siteplan', 'draft'].includes(fileKind(r));
   function sitePhaseOf(r) {
     if (r.kind === 'application' && r.phase !== 'cancelled' && r.council && r.council.draft && fileKind(r) === 'draft' && PHASE_BY_KEY[r.phase].rank < PHASE_BY_KEY.approved.rank && !r.superseded) return 'approved';
@@ -1373,6 +1375,12 @@
     } : null;
     // A plan with units still to permit isn't finished even if every permit so far is.
     if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
+    // Bill 23 (2022): site plan control no longer applies to residential developments of 10 units or
+    // fewer, so for them an approved zoning is the last planning approval: the site is Approved, no
+    // permit yet (decided 2026-10-16). Not where a site plan was filed anyway and is still open.
+    const openSitePlan = live.some(r => r.kind === 'application' && fileKind(r) === 'siteplan' && PHASE_BY_KEY[r.phase].rank < PHASE_BY_KEY.approved.rank);
+    const smallSite = !!(zoningApproved && planned > 0 && planned <= SMALL_SITE_UNITS && PHASE_BY_KEY[phase].rank <= PHASE_BY_KEY.review.rank && !openSitePlan);
+    if (smallSite) phase = 'approved';
 
     // Milestones: earliest date at which each phase was reached, across all records.
     const milestones = {};
@@ -1431,6 +1439,8 @@
       milestones,
       planApproved,
       zoningApproved,
+      // (10 or fewer homes with zoning approved: no site plan needed, Bill 23)
+      smallSite: smallSite || undefined,
       // Each planning file with its own phase, status, units and the permits its boundary holds;
       // the separate proposals (lands) they form (SPEC 1.1).
       files: fv.files,
@@ -1520,7 +1530,7 @@
 
   const api = {
     dedupeRecords,
-    PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY,
+    PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,

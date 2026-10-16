@@ -117,7 +117,7 @@
     return { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
       // One status line: the development's phase, with its zoning approval where that came first (the
       // site bar no longer shows a second, contradicting chip).
-      status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}` },
+      status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}${p.smallSite ? ' · no site plan needed' : ''}` },
       identity: [ls && ls.ref ? `<strong class="pnl-file">${esc(ls.ref)}</strong>` : '', types ? esc(types) : '', ls && ls.date ? `latest submission ${esc(day(ls.date))}` : ''].filter(Boolean).join(' · ') || esc(p.municipality) };
   }
   // ---- Panels in the right-hand column ---------------------------------------------------------

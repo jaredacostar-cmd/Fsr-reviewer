@@ -39,7 +39,7 @@
     [2, 'Site plan (a block)', 'SPA-2026-0003', 'on a block of the draft plan', [
       [2, 1, 'ok', 'Filed → review', ''],
       [3, 1, 'ok', 'Approved → committed', 'staff-delegated since 2022 (Bill 109)'],
-      [4, 2, 'part', '≤ 10 units: no site plan needed', 'since 2022 (Bill 23) zoning goes straight to a permit; the app can leave these at “zoning approved”'],
+      [3, 1, 'ok', '≤ 10 homes: zoning approved → Approved', 'no site plan needed since 2022 (Bill 23), so its zoning approval is the last one'],
     ]],
     [2, 'Plan of condominium', 'CDM / 21CDM', 'on the site plan’s building', [
       [2, 1, 'part', 'Draft approved', 'does not move the stage: the building’s approval is its site plan'],
