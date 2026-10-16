@@ -58,9 +58,11 @@
     const base = n => String(n).replace(/\s+(Reservoir|Elevated Tank|Standpipe)\b.*$/i, '');
     for (const f of WF.data.facilities) {
       let r = null;
-      if (f.kind === 'plant' && f.groundwater) r = rows.find(x => x.kind === 'wplant' && x.id !== 'wsys:southPeel' && (x.name === f.groundwater.system || String(f.groundwater.system).includes(x.name) || String(x.name).includes(f.name)));
+      const kinds = f.kinds || [f.kind];
+      if (f.kind === 'plant' && f.groundwater) r = rows.find(x => x.kind === 'wplant' && x.id !== 'wsys:southPeel' && String(x.name).replace(/ wells$/, '') === f.groundwater.system);
       else if (f.kind === 'plant') r = rows.find(x => x.id === 'wsys:southPeel');
-      else if (['reservoir', 'elevated_tank', 'standpipe'].includes(f.kind)) r = rows.find(x => x.kind === 'storage' && base(x.name) === f.name);
+      // (a pumping station with a reservoir, Silverthorn or West Brampton, rings by its storage)
+      if (!r && kinds.some(k => ['reservoir', 'elevated_tank', 'standpipe'].includes(k))) r = rows.find(x => x.kind === 'storage' && base(x.name) === f.name);
       if (r && r.pctBo != null && isFinite(r.pctBo)) out.set(f.id, tone(r));
     }
     return out;

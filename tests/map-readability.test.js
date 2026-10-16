@@ -100,7 +100,8 @@ test('the frame: Peel and its municipalities from the 2021 census areas, names w
   const mc = src('js/map-core.js');
   assert.doesNotMatch(mc, /bboxOutline|L\.rectangle/);
   assert.match(mc, /fetch\('data\/munis\.json'/);
-  assert.match(mc, /if \(!\/\[#&\]m=\/\.test\(location\.hash\) && c\.lat === startCentre\.lat && c\.lng === startCentre\.lng\) fitPeel\(\);/);
+  assert.match(mc, /const untouched = \(\) => \{ const c = map\.getCenter\(\); return !\/\[#&\]m=\/\.test\(location\.hash\) && c\.lat === startCentre\.lat && c\.lng === startCentre\.lng; \};/);
+  assert.match(mc, /if \(map\.getSize\(\)\.x < 200\) \{ map\.once\('resize', tryFit\); return; \} fitPeel\(\);/, 'opened on Home: fits when the map is first shown');
   assert.match(mc, /const MUNI_LABEL_MAX_ZOOM = 12;/);
 });
 
@@ -152,6 +153,7 @@ test('facilities carry capacity rings above the developments (the Servicing › 
   assert.match(ma, /L\.circleMarker\(ll\(d\.outletAt\), \{ pane: 'facPane', radius: 8, weight: 4, color: bucket\(ps\.pct, CAP_PS\)/);
   assert.match(ma, /fp\.style\.zIndex = 620;/);
   const wt = src('js/water-trace.js');
+  assert.match(wt, /if \(!r && kinds\.some\(k => \['reservoir', 'elevated_tank', 'standpipe'\]\.includes\(k\)\)\) r = rows\.find\(x => x\.kind === 'storage' && base\(x\.name\) === f\.name\);/, 'Silverthorn and West Brampton (pumping + reservoir) ring by their storage');
   assert.match(wt, /const tone = r => \(r\.pctBo >= 100 \? 'over' : r\.pctBo >= 90 \? 'tight' : 'room'\);/);
   assert.match(wt, /zIndexOffset: 1000/);
   for (const t of ['over', 'tight', 'room']) assert.match(CSS, new RegExp(`\\.wf-ic\\.ring-${t}, \\.plant-mk\\.ring-${t} span \\{ box-shadow: 0 0 0 3px var\\(--cap-${t}\\)`));

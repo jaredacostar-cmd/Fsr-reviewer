@@ -218,8 +218,10 @@ const Aerial = () => root.PeelAerial;
   fetch('data/munis.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => {
     if (!d) return;
     drawMunis(d);
-    const c = map.getCenter();
-    if (!/[#&]m=/.test(location.hash) && c.lat === startCentre.lat && c.lng === startCentre.lng) fitPeel();
+    // (opened on Home, the map is hidden: it fits the first time it is shown, if nothing moved it yet)
+    const untouched = () => { const c = map.getCenter(); return !/[#&]m=/.test(location.hash) && c.lat === startCentre.lat && c.lng === startCentre.lng; };
+    const tryFit = () => { if (!untouched()) return; if (map.getSize().x < 200) { map.once('resize', tryFit); return; } fitPeel(); };
+    tryFit();
   });
 
   function setOrientation(o) {

@@ -41,13 +41,13 @@ test('all seven phase tokens are defined in both themes', () => {
   }
 });
 
-test('red/amber/green capacity tokens and orange selection token exist', () => {
+test('red/amber/green capacity tokens and the (cyan) selection token exist', () => {
   for (const th of ['dark', 'light']) {
     for (const name of ['--cap-over', '--cap-tight', '--cap-room', '--select']) {
       assert.ok(/^#[0-9a-f]{6}$/.test(tokens[th][name]), `${name} [${th}]`);
     }
   }
-  // Orange is selection-only: no phase token is orange-ish (hue check via red-dominance).
+  // No stage is orange-ish (orange reads as "tight"; hue check via red-dominance).
   for (const th of ['dark', 'light']) for (const p of C.PHASES) {
     const [r, g, b] = C.hexToRgb(tokens[th][`--ph-${p}`]);
     assert.ok(!(r > 200 && g > 90 && g < 170 && b < 80), `--ph-${p} [${th}] looks orange`);
