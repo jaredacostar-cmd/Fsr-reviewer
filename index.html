@@ -126,7 +126,9 @@
           <details class="fp-sec fp-row" id="fr-when">
             <summary><h2 class="label" data-info="filter-when">When</h2><span class="fr-val" id="fv-when"></span></summary>
             <div class="row two"><label class="field"><span class="label">Milestone</span><select id="f-milestone" autocomplete="off"><option value="any">Any milestone</option><option value="inception">Application submitted</option><option value="approved">Approved</option><option value="permit">Permit issued</option><option value="completed">Completed</option></select></label></div>
-            <div class="row two"><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
+            <!-- Bundle 6: the timeline is the year control; When names the years and keeps the milestone and shortcuts. -->
+            <p class="small muted when-years">The years are set on the timeline at the bottom of the map.</p>
+            <div class="row two" hidden><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
             <div class="row btns"><button type="button" class="btn small" id="f-when-12m">Last 12 months</button><button type="button" class="btn small" id="f-when-week">This week</button></div>
           </details>
           <details class="fp-sec fp-row" id="fr-counts">
