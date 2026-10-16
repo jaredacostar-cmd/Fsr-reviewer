@@ -3235,3 +3235,30 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .tband-mark { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 3; }
 .tband-sw-pipe { background: none; border-top: 2px dashed var(--text-secondary); height: 0 !important; margin-top: 5px; }
 .page-kind { display: inline-block; font-size: var(--fs-1); padding: 0 var(--space-2); border: 1px solid var(--border); border-radius: 999px; color: var(--text-secondary); margin-left: var(--space-1); }
+/* The capacity full table: the Facility column pinned, rows grouped by unit, Reaches as a timeline */
+.cap-full thead { position: sticky; top: 0; z-index: 2; background: var(--surface-1); }
+.cap-full thead th { position: static; }
+.cap-full .ft-g { text-align: center !important; border-bottom-color: var(--text-muted); }
+.cap-full .ft-g small { color: var(--text-muted); font-weight: 400; }
+.cap-full .ft-pin { position: sticky; left: 0; z-index: 1; background: var(--surface-1); text-align: left; color: var(--text-primary); font-weight: 600; box-shadow: 1px 0 0 var(--border); }
+.cap-full thead .ft-pin { z-index: 3; color: var(--text-muted); font-weight: 500; }
+.cap-full .ft-pin small { display: block; font-weight: 400; color: var(--text-muted); font-size: var(--fs-1); }
+.ft-imp summary { cursor: pointer; white-space: nowrap; }
+.ft-imp[open] { white-space: normal; max-width: 22em; }
+.reach-line { display: block; margin: 2px 0; }
+.reach-line line { stroke: var(--border); stroke-width: 2; }
+.reach-line circle { fill: var(--text-muted); }
+.reach-line .rl-90 { fill: var(--cap-tight); }
+.reach-line .rl-100 { fill: var(--cap-over); }
+@media (max-width: 700px) {
+  /* Each facility a card: the cell labels from data-l */
+  .cap-full, .cap-full tbody, .cap-full tr, .cap-full th, .cap-full td { display: block; width: auto; }
+  .cap-full thead { display: none; }
+  .cap-full tbody tr { border: 1px solid var(--border); border-radius: var(--radius-panel); margin: 0 0 var(--space-2); padding: var(--space-2); }
+  .cap-full .ft-pin { position: static; box-shadow: none; background: none; padding: 0 0 var(--space-1); }
+  .cap-full tbody td { display: flex; justify-content: space-between; gap: var(--space-2); text-align: right !important; border: 0; padding: 2px 0; white-space: normal; }
+  .cap-full tbody td::before { content: attr(data-l); color: var(--text-muted); text-align: left; }
+  .cap-full tbody td small { display: inline; margin-left: 4px; }
+  .cap-full .reach-line { display: none; }
+}
+.cap-full .ft-u { color: var(--text-muted); }

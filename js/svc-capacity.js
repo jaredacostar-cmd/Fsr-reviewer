@@ -253,12 +253,31 @@
     };
   }
   // The full-width Engineering table for the same scope and scenario: every row, every column.
+  // Bundle 5: the unit once per row, in its own column beside the flows (no unit in every cell; the
+  // rows keep the panel's order); the Facility column is pinned; Reaches 80 / 90 / 100% is one column, a small timeline; the
+  // Impact sentence folds under its figure; on a phone each row is a card (data-l labels the cells).
+  const numOnly = (r, v) => (r.small ? fmtNum(Math.round(v * 1000)) : r.unit === 'L/s' ? fmtNum(Math.round(v)) : fmt1(v));
+  const unitOf = r => (r.small ? 'm³/d' : r.unit);
+  // "past 80% now · 90% 2028 · 100% 2030": the thresholds already passed say so once.
+  function reachText(hz, end) {
+    const ys = [[80, hz.c80], [90, hz.c90], [100, hz.c100]], past = ys.filter(([, y]) => y === 'today');
+    const rest = ys.filter(([, y]) => y !== 'today').map(([p, y]) => `${p}% ${y == null ? `after ${end}` : y}`);
+    return [past.length ? `past ${past[past.length - 1][0]}% now` : '', ...rest].filter(Boolean).join(' · ');
+  }
+  // The same as a 120 px timeline: this year to the horizon, a tick for each threshold reached.
+  function reachLine(hz, now, end) {
+    const W = 120, x = y => 4 + (W - 8) * (Math.min(Math.max(y, now), end) - now) / Math.max(1, end - now);
+    const dots = [[80, hz.c80], [90, hz.c90], [100, hz.c100]].filter(([, y]) => y != null).map(([p, y]) => { const xv = x(y === 'today' ? now : y); return `<circle cx="${xv.toFixed(1)}" cy="7" r="${p === 100 ? 4 : 3}" class="rl-${p}"/>`; }).join('');
+    return `<svg class="reach-line" viewBox="0 0 ${W} 14" width="${W}" height="14" aria-hidden="true"><line x1="4" x2="${W - 4}" y1="7" y2="7"/>${dots}</svg>`;
+  }
   function fullTableHTML(rows) {
     const now = MM().THIS_YEAR, end = SP().hz.end, sorted = sortRows(rows, st.sort, now);
     const h = r => r.horizon || { at: [], end };
-    const yc = (y, e) => (y === 'today' ? 'now' : y == null ? `after ${e}` : String(y));
-    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th>Basis</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">With approved %</th><th class="n">Build-out %</th><th class="n">Limit year</th><th class="n" title="At build-out, against 100% of the capacity">Room / over capacity</th><th title="At build-out, past the limit the Limit year uses (a plant's 90% trigger)">Impact past the limit</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}<th class="n">Reaches 80%</th><th class="n">Reaches 90%</th><th class="n">Reaches 100%</th></tr></thead>
-      <tbody>${sorted.map(r => { const t = P().toneOf(r.pctBo); return `<tr data-basis="${r.basis}" class="t-${t}"><td>${esc(r.name)}<small>${esc(r.sub)}</small></td><td>${r.system}</td><td>${esc(r.compared)}</td><td>${U.basisChip ? U.basisChip(r.basis) : esc(r.basis)}</td><td class="n">${qty(r, r.cap)} <small>${r.capWord}</small></td><td class="n">${qty(r, r.existing + r.built)}</td><td class="n">${qty(r, r.committed)}</td><td class="n">${qty(r, r.buildout)}</td><td class="n">${pctTxt(r.pctCom)}</td><td class="n"><strong>${pctTxt(r.pctBo)}</strong> ${P().chip({ tone: t })}</td><td class="n">${yTxt(r.limit.y, h(r).end)}<small>${esc(r.limit.what)}</small></td><td class="n">${roomTxt(r)}</td><td>${esc(r.impact.text)}</td>${PICK.map(y => { const a = h(r).at.find(x => x[0] === y); return `<td class="n">${a ? pctTxt(a[1]) : '–'}</td>`; }).join('')}<td class="n">${yc(h(r).c80, h(r).end)}</td><td class="n">${yc(h(r).c90, h(r).end)}</td><td class="n">${yc(h(r).c100, h(r).end)}</td></tr>`; }).join('')}</tbody></table></div>`;
+    const rowHTML = r => { const t = P().toneOf(r.pctBo), f = r.impact && r.impact.fig; return `<tr data-basis="${r.basis}" class="t-${t}"><th scope="row" class="ft-pin" data-l="Facility">${esc(r.name)}<small>${esc(r.sub)} · ${r.system}</small></th><td data-l="Compared">${esc(r.compared)} ${U.basisChip ? U.basisChip(r.basis) : esc(r.basis)}</td><td class="ft-u" data-l="Unit">${unitOf(r)}</td><td class="n" data-l="Capacity">${numOnly(r, r.cap)} <small>${r.capWord}</small></td><td class="n" data-l="Today">${numOnly(r, r.existing + r.built)}</td><td class="n" data-l="With approved">${numOnly(r, r.committed)}</td><td class="n" data-l="Build-out">${numOnly(r, r.buildout)}</td><td class="n" data-l="With approved %">${pctTxt(r.pctCom)}</td><td class="n" data-l="Build-out %"><strong>${pctTxt(r.pctBo)}</strong> ${P().chip({ tone: t })}</td><td class="n" data-l="Limit year">${yTxt(r.limit.y, h(r).end)}<small>${esc(r.limit.what)}</small></td><td class="n" data-l="Room / over capacity">${r.room < 0 ? 'over by ' : 'room '}${numOnly(r, Math.abs(r.room))}</td><td data-l="Impact past the limit">${f ? `<details class="ft-imp"><summary>${esc(f.v)}${f.u ? ` ${esc(f.u)}` : ''}</summary>${esc(r.impact.text)}</details>` : esc(r.impact.text)}</td>${PICK.map(y => { const a = h(r).at.find(x => x[0] === y); return `<td class="n" data-l="${y}">${a ? pctTxt(a[1]) : '–'}</td>`; }).join('')}<td data-l="Reaches 80 · 90 · 100%">${reachLine(h(r), now, h(r).end)}<small>${esc(reachText(h(r), h(r).end))}</small></td></tr>`; };
+    return `<div class="ft-scroll"><table class="dt ft-table cap-full"><thead>
+      <tr class="ft-grp"><th rowspan="2" class="ft-pin">Facility</th><th rowspan="2">Compared</th><th colspan="5" class="ft-g">Flow or volume</th><th colspan="2" class="ft-g">% of capacity</th><th rowspan="2" class="n">Limit year</th><th rowspan="2" class="n" title="At build-out, against 100% of the capacity">Room / over capacity</th><th rowspan="2" title="At build-out, past the limit the Limit year uses (a plant's 90% trigger)">Impact past the limit</th><th colspan="${PICK.length}" class="ft-g">% of capacity by year</th><th rowspan="2">Reaches 80 · 90 · 100%</th></tr>
+      <tr><th>Unit</th><th class="n">Capacity</th><th class="n">Today</th><th class="n">With approved</th><th class="n">Build-out</th><th class="n">With approved</th><th class="n">Build-out</th>${PICK.map(y => `<th class="n">${y}</th>`).join('')}</tr></thead>
+      <tbody>${sorted.map(rowHTML).join('')}</tbody></table></div>`;
   }
   function render() {
     const el = $('#svc-capacity-body'); if (!el) return;
@@ -409,7 +428,7 @@
     const f = e.target.closest('[data-cap-fold]'); if (f) { const id = f.dataset.capFold; if (st.open.has(id)) st.open.delete(id); else st.open.add(id); render(); return; }
     if (e.target.closest('[data-cap-detail]')) { detail = !detail; if (U.store) U.store.set('capDetail', detail); syncDetail(); if (detail) { const p = $('#pane-plants'); if (p) p.scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
   });
-  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, tableHTML, panelSpec, fullTableHTML, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
+  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcCapacity = api;
 })(typeof window !== 'undefined' ? window : globalThis);

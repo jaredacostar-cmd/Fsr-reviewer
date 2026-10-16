@@ -56,7 +56,7 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
   assert.match(t, /x\.txt !== String\(x\.like\) \? ` <small>range/);
   assert.match(t, /Servicing › Capacity puts every file on its own schedule instead/);
   // The full table names what each "over" is against.
-  assert.match(src('js/svc-capacity.js'), />Room \/ over capacity<\/th><th title="[^"]+">Impact past the limit<\/th>/);
+  assert.match(src('js/svc-capacity.js'), />Room \/ over capacity<\/th><th rowspan="2" title="[^"]+">Impact past the limit<\/th>/);
 });
 
 test('no negative room: an over is "over by", with positive people', () => {
