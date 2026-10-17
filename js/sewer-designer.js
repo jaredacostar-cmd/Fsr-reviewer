@@ -6,7 +6,8 @@
  * Peel's Linear Wastewater Standards (js/sewer-design.js). The result: the plan on the map, the
  * profile, every reach and maintenance hole in a table, the rules checked, and a CSV.
  *
- * Pure: chainage(), bends(), csv() (tests/sewer-designer.test.js).
+ * Pure: chainage(), bends(), checks(), csv() (tests/sewer-designer.test.js). The 11×17 print sheet:
+ * js/sewer-print.js.
  */
 (function (root) {
   'use strict';
@@ -28,6 +29,27 @@
     for (let i = 1; i < pts.length; i++) if (x <= xs[i] + 1e-9) { const t = (x - xs[i - 1]) / ((xs[i] - xs[i - 1]) || 1); return { lat: pts[i - 1].lat + (pts[i].lat - pts[i - 1].lat) * t, lng: pts[i - 1].lng + (pts[i].lng - pts[i - 1].lng) * t }; }
     return pts[pts.length - 1];
   }
+  // The rules checked on a design (Linear Wastewater Standards): [{ t, pass, val }], for the panel and
+  // the print sheet.
+  function checks(d, route, conn) {
+    const f2 = v => (+v).toFixed(2), n0 = v => Math.round(v).toLocaleString('en-CA');
+    const deepest = Math.max(...d.mhs.map(m => m.depth)), vmin = Math.min(...d.reaches.map(r => r.v)), vmax = Math.max(...d.reaches.map(r => r.vFull)), qr = Math.max(...d.reaches.map(r => r.qRatio));
+    const last = d.mhs[d.mhs.length - 1], Lmax = Math.max(...d.reaches.map(r => r.L)), sp = d.dmm >= 600 ? 190 : 200;
+    const minCover = Math.min(...[...route.nodes, ...route.samples].map(pt => { const r = d.reaches.find(x => route.nodes[x.from].x <= pt.x + 1e-9 && pt.x <= route.nodes[x.to].x + 1e-9); return pt.g - (r.inv_up - r.S * (pt.x - route.nodes[r.from].x)) - d.dmm / 1000; }));
+    const c = (t, pass, val) => ({ t, pass, val });
+    return [
+      c('Pipe size (200 mm minimum, no larger than the existing sewer)', d.dmm >= 200 && d.dmm <= conn.dmm, `${d.dmm} mm into ${conn.dmm} mm`),
+      c('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${f2(vmin)} m/s at the slowest`),
+      c('Velocity flowing full (3.0 m/s or less)', vmax <= 3.0 + 1e-6, `${f2(vmax)} m/s at the fastest`),
+      c('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
+      c('The last leg, at the upstream end (1.00% or more)', d.reaches[0].S >= 0.01 - 1e-9, `${f2(d.reaches[0].S * 100)}%`),
+      c(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${f2(minCover)} m at the least`),
+      c('Trench (8.0 m or less)', deepest + 0.15 <= 8.0 + 1e-6, `${f2(deepest + 0.15)} m at the deepest`),
+      c(`Maintenance holes (${sp} m apart or less)`, Lmax <= sp, `${n0(Lmax)} m at the longest`),
+      c('Drops through the maintenance holes (0.03–0.20 m, or a drop structure from 0.9 m)', d.mhs.slice(1, -1).every(m => m.structure ? m.drop >= 0.9 - 1e-6 : m.drop >= 0.03 - 1e-6 && m.drop <= 0.2 + 1e-6), `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
+      c('Connection (the new obvert at or above the existing one)', last.inv_in + d.dmm / 1000 >= conn.invert + conn.dmm / 1000 - 1e-6, last.drop ? `${f2(last.drop)} m drop${last.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
+    ];
+  }
   // The design as CSV: the maintenance holes, then the reaches.
   function csv(d) {
     const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure'];
@@ -39,7 +61,7 @@
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, pointAt, csv };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, pointAt, checks, csv };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -91,7 +113,7 @@
       const { m, n } = best, g = m.g, glen = chainage(g.map(([lng, lat]) => ({ lat, lng }))).pop() || 1, along = n.t * glen;
       const atUp = along <= 15, atDn = glen - along <= 15, t = atUp ? 0 : atDn ? 1 : n.t;
       const gp = g.map(([lng, lat]) => ({ lat, lng })), at = atUp ? gp[0] : atDn ? gp[gp.length - 1] : pointAt(gp, chainage(gp), t * glen);
-      S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn };
+      S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn, g: m.g };
       // The drawn end moves onto the sewer.
       S.pts[S.pts.length - 1] = { lat: S.conn.lat, lng: S.conn.lng };
       await sample();
@@ -152,30 +174,18 @@
     return `<div class="sd-res">${head}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
   function designHTML(d) {
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100), vmin = Math.min(...d.reaches.map(r => r.v)), vmax = Math.max(...d.reaches.map(r => r.vFull)), qr = Math.max(...d.reaches.map(r => r.qRatio));
-    const ok = (t, pass, val) => `<li class="${pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${pass ? '✓' : '✗'}</span> ${t}: <strong>${val}</strong></li>`;
-    const last = d.mhs[d.mhs.length - 1], minCover = Math.min(...[...S.route.nodes, ...S.route.samples].map(pt => { const r = d.reaches.find(x => S.route.nodes[x.from].x <= pt.x + 1e-9 && pt.x <= S.route.nodes[x.to].x + 1e-9); return pt.g - (r.inv_up - r.S * (pt.x - S.route.nodes[r.from].x)) - d.dmm / 1000; }));
-    const checks = [
-      ok('Pipe size (200 mm minimum, no larger than the existing sewer)', d.dmm >= 200 && d.dmm <= S.conn.dmm, `${d.dmm} mm into ${S.conn.dmm} mm`),
-      ok('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${fmt2(vmin)} m/s at the slowest`),
-      ok('Velocity flowing full (3.0 m/s or less)', vmax <= 3.0 + 1e-6, `${fmt2(vmax)} m/s at the fastest`),
-      ok('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
-      ok('The last leg, at the upstream end (1.00% or more)', d.reaches[0].S >= 0.01 - 1e-9, `${fmt2(d.reaches[0].S * 100)}%`),
-      ok(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${fmt2(minCover)} m at the least`),
-      ok('Trench (8.0 m or less)', deepest + 0.15 <= 8.0 + 1e-6, `${fmt2(deepest + 0.15)} m at the deepest`),
-      ok(`Maintenance holes (${d.dmm >= 600 ? 190 : 200} m apart or less)`, Math.max(...d.reaches.map(r => r.L)) <= (d.dmm >= 600 ? 190 : 200), `${fmtNum(Math.round(Math.max(...d.reaches.map(r => r.L))))} m at the longest`),
-      ok('Drops through the maintenance holes (0.03–0.20 m, or a drop structure from 0.9 m)', d.mhs.slice(1, -1).every(m => m.structure ? m.drop >= 0.9 - 1e-6 : m.drop >= 0.03 - 1e-6 && m.drop <= 0.2 + 1e-6), `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
-      ok('Connection (the new obvert at or above the existing one)', last.inv_in + d.dmm / 1000 >= S.conn.invert + S.conn.dmm / 1000 - 1e-6, `${last.drop ? `${fmt2(last.drop)} m drop${last.structure ? ' (drop structure)' : ''}` : 'obverts matched'}`),
-    ];
+    const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100);
+    const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
+    const checkList = checks(d, S.route, S.conn).map(ok);
     const froudeHi = d.reaches.filter(r => r.froude >= 1).length;
     const mhRows = d.mhs.map((m, i) => `<tr><th scope="row">MH ${i + 1}${i === d.mhs.length - 1 ? ' <small>connection</small>' : i === 0 ? ' <small>start</small>' : ''}</th><td class="n">${fmtNum(Math.round(m.x))}</td><td class="n">${fmt2(m.g)}</td><td class="n">${m.inv_in == null ? '–' : fmt2(m.inv_in)}</td><td class="n">${m.inv_out == null ? '–' : fmt2(m.inv_out)}</td><td class="n">${fmt2(m.depth)}</td><td class="n">${m.drop ? `${fmt2(m.drop)}${m.structure ? ' <small>structure</small>' : ''}` : '–'}</td></tr>`).join('');
     const rRows = d.reaches.map(r => `<tr><th scope="row">${r.from + 1} → ${r.to + 1}</th><td class="n">${fmt1(r.L)}</td><td class="n">${(r.S * 100).toFixed(2)}</td><td class="n">${fmt1(r.qFull)}</td><td class="n">${r.qRatio.toFixed(2)}</td><td class="n">${fmt2(r.v)}</td><td class="n">${fmt2(r.vFull)}</td><td class="n">${r.froude.toFixed(2)}</td></tr>`).join('');
     return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${fmtNum(d.dmm)} mm</strong> sewer at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${S.flow && !S.flow.typed ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow.</p>
       <h4 class="sd-h">Profile</h4>${profileSVG(d)}
-      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checks.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
+      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checkList.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
       <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col" class="n">Chainage (m)</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
       <h4 class="sd-h">Reaches · ${fmtNum(d.dmm)} mm</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
-      <p><button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>`;
+      <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>`;
   }
   // The profile: the ground, the cover line, the pipe (obvert and invert), the maintenance holes,
   // the existing sewer at the connection; chainage along the bottom, elevations up the side.
@@ -207,6 +217,28 @@
     const E = root.PeelExports, text = csv(S.d);
     if (E && E.download) E.download('peel-sewer-design.csv', text, 'text/csv');
   }
+  // The 11×17 sheet: the Region's sanitary sewers around the route for the plan (the connected one
+  // alone when they can't be read), the development open in the panel or the start's coordinates.
+  async function printSheet() {
+    const P = root.PeelSewerPrint; if (!S.d || !S.d.ok || !P) return;
+    const lls = S.route.nodes.map(n => n.ll), lat = lls.reduce((t, p) => t + p.lat, 0) / lls.length, lng = lls.reduce((t, p) => t + p.lng, 0) / lls.length;
+    const r = Math.min(1500, Math.max(...lls.map(p => metres({ lat, lng }, p))) + 120);
+    let mains = [];
+    try { mains = (await MS().mainsNear(lat, lng, r)).filter(m => !m.fm).map(m => ({ g: m.g, d: m.d, id: m.id })); } catch (e) { mains = []; }
+    const key = g => g.map(c => c.join()).join(';'), ck = S.conn.g ? key(S.conn.g) : '';
+    mains.forEach(m => { if (key(m.g) === ck) m.conn = true; });
+    if (S.conn.g && !mains.some(m => m.conn)) mains.push({ g: S.conn.g, d: S.conn.dmm, id: S.conn.id, conn: true });
+    const dev = root.DevScope && root.DevScope.current && root.DevScope.current(), st = S.pts[0];
+    const RP = root.PeelReports, Ut = root.PeelUtil || {};
+    P.open({
+      d: S.d, nodes: S.route.nodes, ground: S.ground, pts: S.pts, conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
+      checks: checks(S.d, S.route, S.conn), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
+      date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
+      version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',
+      source: SW().SOURCE, note: Ut.SCREEN_LINE || 'General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.',
+    });
+  }
   function clearAll() { S.pts = []; S.conn = null; S.route = null; S.d = null; S.msg = ''; if (layer) layer.clearLayers(); }
 
   // The form and its buttons (in the result panel).
@@ -217,6 +249,7 @@
     const act = b.dataset.sdAct;
     if (act === 'design') run();
     else if (act === 'csv') downloadCSV();
+    else if (act === 'print') printSheet();
     else if (act === 'edit') { S.d = null; S.conn = null; const A = root.PeelApp && root.PeelApp.scope; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
     else if (act === 'clear') { clearAll(); T().closeResult(); }
   });
@@ -235,5 +268,5 @@
       if (act === 'sd-finish') finish();
     },
   });
-  root.PeelSewerDesigner = { state: () => S, finish, run, clearAll, chainage, bends, csv };
+  root.PeelSewerDesigner = { state: () => S, finish, run, clearAll, printSheet, chainage, bends, checks, csv };
 })(typeof window !== 'undefined' ? window : globalThis);
