@@ -1,0 +1,1796 @@
+{
+ "version": 1,
+ "source": {
+  "title": "Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems, Volume 3 (Water)",
+  "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf",
+  "published": "June 2020",
+  "basis": "2020 Master Plan basis. Peel launched a Master Plan update in 2025, so these figures may be superseded."
+ },
+ "notes": [
+  "The lake-based system has three trunk systems: West (Lorne Park WTP), Central (A.P. Kennedy WTP) and East (fed from Central via the Beckett Sproule transfer). Vol 3, p.14.",
+  "Each lake-based pressure zone is split into W, C and E sub-zones (1W, 1C, ... 7E); Bolton is 6B. The plan gives demand by sub-zone but does not publish sub-zone boundary maps (\"approximate service area boundaries\", p.34).",
+  "West and Central/East are interconnected, so water can be moved between them to optimize capacity (p.35). Treat sub-zone checks as per-system screening, not hard limits.",
+  "Actual capacity uses roughness from the calibrated hydraulic model; theoretical uses new-pipe roughness. Both at a 1 m/km head-loss gradient (pp.19, 134)."
+ ],
+ "years": [
+  2021,
+  2026,
+  2031,
+  2036,
+  2041
+ ],
+ "trunks": [
+  {
+   "id": "WT7",
+   "system": "W",
+   "route": "Alloa to West Caledon",
+   "zone": "7",
+   "kind": "transmission",
+   "demandMLd": [
+    0.0,
+    6.2,
+    9.2,
+    10.9,
+    13.3
+   ],
+   "theoreticalMLd": [
+    0.0,
+    0.0,
+    44.0,
+    44.0,
+    44.0
+   ],
+   "actualMLd": [
+    0.0,
+    0.0,
+    24.0,
+    24.0,
+    24.0
+   ],
+   "status": [
+    "ok",
+    "not ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "West Caledon 750 PZ7",
+     "ocwaId": null,
+     "inService": "2026",
+     "diameterMm": 750,
+     "theoreticalMLd": 44,
+     "actualMLd": 24,
+     "cFactor": null
+    }
+   ]
+  },
+  {
+   "id": "WT5",
+   "system": "W",
+   "route": "West Brampton to Alloa",
+   "zone": "5",
+   "kind": "transmission",
+   "demandMLd": [
+    33.0,
+    33.7,
+    41.0,
+    47.0,
+    53.3
+   ],
+   "theoreticalMLd": [
+    151.0,
+    151.0,
+    151.0,
+    151.0,
+    151.0
+   ],
+   "actualMLd": [
+    150.0,
+    150.0,
+    150.0,
+    150.0,
+    150.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "Alloa 1200 PZ5",
+     "ocwaId": "PRP-5",
+     "inService": "2018",
+     "diameterMm": 1200,
+     "theoreticalMLd": 151,
+     "actualMLd": 150,
+     "cFactor": 129
+    }
+   ]
+  },
+  {
+   "id": "WT4",
+   "system": "W",
+   "route": "Meadowvale North to West Brampton",
+   "zone": "4",
+   "kind": "transmission",
+   "demandMLd": [
+    78.3,
+    92.5,
+    119.8,
+    133.5,
+    146.7
+   ],
+   "theoreticalMLd": [
+    271.0,
+    271.0,
+    271.0,
+    271.0,
+    271.0
+   ],
+   "actualMLd": [
+    230.0,
+    230.0,
+    230.0,
+    230.0,
+    230.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "West Brampton 1500 PZ4",
+     "ocwaId": "27",
+     "inService": "2011",
+     "diameterMm": 1500,
+     "theoreticalMLd": 271,
+     "actualMLd": 230,
+     "cFactor": 110
+    },
+    {
+     "name": "West Brampton 1200 PZ4",
+     "ocwaId": null,
+     "inService": "Post-2041",
+     "diameterMm": 1200,
+     "theoreticalMLd": 151,
+     "actualMLd": 151,
+     "cFactor": null
+    }
+   ]
+  },
+  {
+   "id": "WT3",
+   "system": "W",
+   "route": "Streetsville to Meadowvale North",
+   "zone": "3",
+   "kind": "transmission",
+   "demandMLd": [
+    150.6,
+    172.9,
+    195.4,
+    211.9,
+    227.5
+   ],
+   "theoreticalMLd": [
+    222.0,
+    222.0,
+    660.0,
+    660.0,
+    660.0
+   ],
+   "actualMLd": [
+    211.0,
+    211.0,
+    648.0,
+    648.0,
+    648.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "Meadowvale North 900 PZ3",
+     "ocwaId": "11",
+     "inService": "1989",
+     "diameterMm": 900,
+     "theoreticalMLd": 71,
+     "actualMLd": 60,
+     "cFactor": 110
+    },
+    {
+     "name": "Meadowvale North 1200 PZ3",
+     "ocwaId": "17",
+     "inService": "2014",
+     "diameterMm": 1200,
+     "theoreticalMLd": 151,
+     "actualMLd": 151,
+     "cFactor": 130
+    },
+    {
+     "name": "Meadowvale North 1500 PZ3",
+     "ocwaId": null,
+     "inService": "2029",
+     "diameterMm": 1800,
+     "theoreticalMLd": 438,
+     "actualMLd": 437,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "WT2",
+   "system": "W",
+   "route": "Herridge to Streetsville",
+   "zone": "2",
+   "kind": "transmission",
+   "demandMLd": [
+    253.7,
+    282.3,
+    310.0,
+    329.9,
+    349.7
+   ],
+   "theoreticalMLd": [
+    378.0,
+    378.0,
+    1035.0,
+    1035.0,
+    1035.0
+   ],
+   "actualMLd": [
+    330.0,
+    330.0,
+    987.0,
+    987.0,
+    987.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "Streetsville 1050 PZ2",
+     "ocwaId": "4",
+     "inService": "1971",
+     "diameterMm": 1050,
+     "theoreticalMLd": 106,
+     "actualMLd": 87,
+     "cFactor": 106
+    },
+    {
+     "name": "Streetsville 1500 PZ2",
+     "ocwaId": "14",
+     "inService": "2003",
+     "diameterMm": 1500,
+     "theoreticalMLd": 271,
+     "actualMLd": 243,
+     "cFactor": 117
+    },
+    {
+     "name": "Streetsville 1500 PZ2 (new)",
+     "ocwaId": null,
+     "inService": "2028",
+     "diameterMm": 2100,
+     "theoreticalMLd": 657,
+     "actualMLd": 657,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "WT2S",
+   "system": "W",
+   "route": "Lorne Park to Herridge",
+   "zone": "2",
+   "kind": "transmission",
+   "demandMLd": [
+    180.3,
+    209.5,
+    227.3,
+    250.3,
+    274.0
+   ],
+   "theoreticalMLd": [
+    657.0,
+    657.0,
+    657.0,
+    657.0,
+    657.0
+   ],
+   "actualMLd": [
+    695.0,
+    695.0,
+    695.0,
+    695.0,
+    695.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "Streetsville 2100 PZ2",
+     "ocwaId": "19",
+     "inService": "2013",
+     "diameterMm": 2100,
+     "theoreticalMLd": 657,
+     "actualMLd": 695,
+     "cFactor": 138
+    }
+   ]
+  },
+  {
+   "id": "WT1",
+   "system": "W",
+   "route": "Lorne Park to Herridge",
+   "zone": "1",
+   "kind": "transmission",
+   "demandMLd": [
+    153.1,
+    150.3,
+    162.0,
+    162.0,
+    162.0
+   ],
+   "theoreticalMLd": [
+    271.0,
+    271.0,
+    271.0,
+    271.0,
+    271.0
+   ],
+   "actualMLd": [
+    181.0,
+    181.0,
+    181.0,
+    181.0,
+    181.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "mains": [
+    {
+     "name": "Herridge 1500 PZ1",
+     "ocwaId": "9",
+     "inService": "1978",
+     "diameterMm": 1500,
+     "theoreticalMLd": 271,
+     "actualMLd": 181,
+     "cFactor": 108
+    }
+   ]
+  },
+  {
+   "id": "CT7",
+   "system": "C",
+   "route": "North Brampton to Mayfield West",
+   "zone": "7",
+   "kind": "transmission",
+   "demandMLd": [
+    11.2,
+    27.9,
+    33.1,
+    42.2,
+    47.0
+   ],
+   "theoreticalMLd": [
+    24.0,
+    24.0,
+    24.0,
+    24.0,
+    24.0
+   ],
+   "actualMLd": [
+    26.0,
+    26.0,
+    26.0,
+    26.0,
+    26.0
+   ],
+   "status": [
+    "ok",
+    "not ok",
+    "not ok",
+    "not ok",
+    "not ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "Mayfield West 600 PZ7",
+     "ocwaId": "25",
+     "inService": "2010",
+     "diameterMm": 600,
+     "theoreticalMLd": 24,
+     "actualMLd": 26,
+     "cFactor": 138
+    }
+   ]
+  },
+  {
+   "id": "CT6",
+   "system": "C",
+   "route": "North Brampton to Victoria",
+   "zone": "6",
+   "kind": "transmission",
+   "demandMLd": [
+    25.4,
+    26.1,
+    26.8,
+    27.2,
+    27.8
+   ],
+   "theoreticalMLd": [
+    0.0,
+    71.0,
+    71.0,
+    71.0,
+    71.0
+   ],
+   "actualMLd": [
+    0.0,
+    71.0,
+    71.0,
+    71.0,
+    71.0
+   ],
+   "status": [
+    "not ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "Victoria 900 PZ6",
+     "ocwaId": null,
+     "inService": "2022",
+     "diameterMm": 900,
+     "theoreticalMLd": 71,
+     "actualMLd": 71,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "CT5",
+   "system": "C",
+   "route": "East Brampton to North Brampton",
+   "zone": "5",
+   "kind": "transmission",
+   "demandMLd": [
+    36.6,
+    20.5,
+    22.3,
+    25.0,
+    26.6
+   ],
+   "theoreticalMLd": [
+    71.0,
+    71.0,
+    71.0,
+    71.0,
+    71.0
+   ],
+   "actualMLd": [
+    60.0,
+    60.0,
+    60.0,
+    60.0,
+    60.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "North Brampton 900 PZ5",
+     "ocwaId": "10",
+     "inService": "1983",
+     "diameterMm": 900,
+     "theoreticalMLd": 71,
+     "actualMLd": 60,
+     "cFactor": 110
+    }
+   ]
+  },
+  {
+   "id": "CT4",
+   "system": "C",
+   "route": "Beckett Sproule to East Brampton",
+   "zone": "4",
+   "kind": "transmission",
+   "demandMLd": [
+    105.0,
+    113.0,
+    120.0,
+    129.0,
+    135.0
+   ],
+   "theoreticalMLd": [
+    106.0,
+    378.0,
+    378.0,
+    378.0,
+    378.0
+   ],
+   "actualMLd": [
+    89.0,
+    360.0,
+    360.0,
+    360.0,
+    360.0
+   ],
+   "status": [
+    "not ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "East Brampton 1050 PZ4",
+     "ocwaId": "8",
+     "inService": "1983",
+     "diameterMm": 1050,
+     "theoreticalMLd": 106,
+     "actualMLd": 89,
+     "cFactor": 109
+    },
+    {
+     "name": "East Brampton 1500 PZ4",
+     "ocwaId": null,
+     "inService": "2022",
+     "diameterMm": 1500,
+     "theoreticalMLd": 271,
+     "actualMLd": 271,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "CT3",
+   "system": "C",
+   "route": "Hanlan to Beckett Sproule",
+   "zone": "3",
+   "kind": "transmission",
+   "demandMLd": [
+    528.7,
+    625.0,
+    709.7,
+    738.4,
+    766.5
+   ],
+   "theoreticalMLd": [
+    1080.0,
+    1080.0,
+    1080.0,
+    1080.0,
+    1080.0
+   ],
+   "actualMLd": [
+    1069.0,
+    1069.0,
+    1069.0,
+    1069.0,
+    1069.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "Beckett Sproule 1200 PZ3",
+     "ocwaId": "6",
+     "inService": "1969",
+     "diameterMm": 1200,
+     "theoreticalMLd": 151,
+     "actualMLd": 151,
+     "cFactor": 130
+    },
+    {
+     "name": "Beckett Sproule 1500 PZ3",
+     "ocwaId": "16",
+     "inService": "1992",
+     "diameterMm": 1500,
+     "theoreticalMLd": 271,
+     "actualMLd": 261,
+     "cFactor": 125
+    },
+    {
+     "name": "Beckett Sproule 2100 PZ3",
+     "ocwaId": "26",
+     "inService": "2013",
+     "diameterMm": 2100,
+     "theoreticalMLd": 657,
+     "actualMLd": 657,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "CT2H",
+   "system": "C",
+   "route": "Arthur P. Kennedy to Hanlan",
+   "zone": "2",
+   "kind": "transmission",
+   "demandMLd": [
+    635.6,
+    703.3,
+    777.9,
+    805.6,
+    835.3
+   ],
+   "theoreticalMLd": [
+    1372.0,
+    1372.0,
+    1372.0,
+    1372.0,
+    1372.0
+   ],
+   "actualMLd": [
+    1311.0,
+    1311.0,
+    1311.0,
+    1311.0,
+    1311.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "Hanlan 2100/1800 PZ2",
+     "ocwaId": "12",
+     "inService": "1996",
+     "diameterMm": 1800,
+     "theoreticalMLd": 438,
+     "actualMLd": 378,
+     "cFactor": 112
+    },
+    {
+     "name": "Hanlan 2400 PZ2",
+     "ocwaId": "29",
+     "inService": "2018",
+     "diameterMm": 2400,
+     "theoreticalMLd": 934,
+     "actualMLd": 934,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "CT2",
+   "system": "C",
+   "route": "Silverthorn to Hanlan",
+   "zone": "2",
+   "kind": "transmission",
+   "demandMLd": [
+    4.2,
+    41.0,
+    57.7,
+    63.5,
+    67.2
+   ],
+   "theoreticalMLd": [
+    151.0,
+    151.0,
+    151.0,
+    151.0,
+    151.0
+   ],
+   "actualMLd": [
+    136.0,
+    136.0,
+    136.0,
+    136.0,
+    136.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "Hanlan 1500/1200 PZ2",
+     "ocwaId": "5",
+     "inService": "1971",
+     "diameterMm": 1200,
+     "theoreticalMLd": 151,
+     "actualMLd": 136,
+     "cFactor": 117
+    }
+   ]
+  },
+  {
+   "id": "CT1",
+   "system": "C",
+   "route": "Arthur P. Kennedy to Silverthorn",
+   "zone": "1",
+   "kind": "transmission",
+   "demandMLd": [
+    72.1,
+    91.6,
+    109.8,
+    121.1,
+    131.9
+   ],
+   "theoreticalMLd": [
+    342.0,
+    342.0,
+    342.0,
+    342.0,
+    342.0
+   ],
+   "actualMLd": [
+    279.0,
+    279.0,
+    279.0,
+    279.0,
+    279.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "mains": [
+    {
+     "name": "Silverthorn 900 PZ1",
+     "ocwaId": "1",
+     "inService": "1964",
+     "diameterMm": 900,
+     "theoreticalMLd": 71,
+     "actualMLd": 57,
+     "cFactor": 105
+    },
+    {
+     "name": "Silverthorn 1500 PZ1",
+     "ocwaId": "2",
+     "inService": "1970",
+     "diameterMm": 1500,
+     "theoreticalMLd": 271,
+     "actualMLd": 221,
+     "cFactor": 106
+    }
+   ]
+  },
+  {
+   "id": "BT6",
+   "system": "E",
+   "route": "Tullamore to Bolton",
+   "zone": "6",
+   "kind": "transmission",
+   "demandMLd": [
+    16.5,
+    17.4,
+    18.2,
+    19.4,
+    20.7
+   ],
+   "theoreticalMLd": [
+    44.0,
+    44.0,
+    44.0,
+    44.0,
+    44.0
+   ],
+   "actualMLd": [
+    40.0,
+    40.0,
+    40.0,
+    40.0,
+    40.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 136,
+   "mains": [
+    {
+     "name": "Bolton 750 PZ6",
+     "ocwaId": "24",
+     "inService": "2002",
+     "diameterMm": 750,
+     "theoreticalMLd": 44,
+     "actualMLd": 40,
+     "cFactor": 119
+    },
+    {
+     "name": "Bolton 600 PZ6",
+     "ocwaId": null,
+     "inService": "Post-2041",
+     "diameterMm": 600,
+     "theoreticalMLd": 24,
+     "actualMLd": 24,
+     "cFactor": null
+    }
+   ]
+  },
+  {
+   "id": "ECT5",
+   "system": "E",
+   "route": "Tullamore to North Brampton",
+   "zone": "5",
+   "kind": "transfer",
+   "demandMLd": [
+    0.0,
+    20.5,
+    22.3,
+    25.0,
+    26.6
+   ],
+   "theoreticalMLd": [
+    0.0,
+    71.0,
+    71.0,
+    71.0,
+    71.0
+   ],
+   "actualMLd": [
+    0.0,
+    71.0,
+    71.0,
+    71.0,
+    71.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 136,
+   "mains": [
+    {
+     "name": "North Brampton 900 PZ5 (from Tullamore)",
+     "ocwaId": null,
+     "inService": "2026",
+     "diameterMm": 900,
+     "theoreticalMLd": 71,
+     "actualMLd": 71,
+     "cFactor": 130
+    }
+   ]
+  },
+  {
+   "id": "ET4",
+   "system": "E",
+   "route": "Airport Road to Tullamore",
+   "zone": "4",
+   "kind": "transmission",
+   "demandMLd": [
+    38.6,
+    50.9,
+    60.5,
+    69.7,
+    81.7
+   ],
+   "theoreticalMLd": [
+    106.0,
+    106.0,
+    106.0,
+    106.0,
+    106.0
+   ],
+   "actualMLd": [
+    106.0,
+    106.0,
+    106.0,
+    106.0,
+    106.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 136,
+   "mains": [
+    {
+     "name": "Tullamore 1050 PZ4",
+     "ocwaId": "PRP-4",
+     "inService": "2013",
+     "diameterMm": 1050,
+     "theoreticalMLd": 106,
+     "actualMLd": 106,
+     "cFactor": 130
+    },
+    {
+     "name": "Tullamore 1200 PZ4",
+     "ocwaId": null,
+     "inService": "Post-2041",
+     "diameterMm": 1200,
+     "theoreticalMLd": 151,
+     "actualMLd": 151,
+     "cFactor": null
+    }
+   ]
+  },
+  {
+   "id": "ET5Y",
+   "system": "E",
+   "route": "Airport Road to York Region",
+   "zone": null,
+   "kind": "transfer",
+   "demandMLd": [
+    231.8,
+    276.7,
+    331.0,
+    331.0,
+    331.0
+   ],
+   "theoreticalMLd": [
+    438.0,
+    438.0,
+    438.0,
+    438.0,
+    438.0
+   ],
+   "actualMLd": [
+    421.0,
+    421.0,
+    421.0,
+    421.0,
+    421.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 136,
+   "mains": [
+    {
+     "name": "York 1800 Transfer",
+     "ocwaId": "23",
+     "inService": "2005",
+     "diameterMm": 1800,
+     "theoreticalMLd": 438,
+     "actualMLd": 421,
+     "cFactor": 125
+    }
+   ]
+  },
+  {
+   "id": "ET3A",
+   "system": "E",
+   "route": "Beckett Sproule to Airport Road",
+   "zone": null,
+   "kind": "transfer",
+   "demandMLd": [
+    325.4,
+    407.8,
+    479.2,
+    494.3,
+    510.2
+   ],
+   "theoreticalMLd": [
+    657.0,
+    657.0,
+    657.0,
+    657.0,
+    657.0
+   ],
+   "actualMLd": [
+    612.0,
+    612.0,
+    612.0,
+    612.0,
+    612.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 136,
+   "mains": [
+    {
+     "name": "Airport Road 2100 Transfer",
+     "ocwaId": "13",
+     "inService": "2004",
+     "diameterMm": 2100,
+     "theoreticalMLd": 657,
+     "actualMLd": 612,
+     "cFactor": 121
+    }
+   ]
+  }
+ ],
+ "intakes": [
+  {
+   "id": "lorne-park-intake",
+   "system": "W",
+   "route": "Lorne Park Intake",
+   "kind": "intake",
+   "demandMLd": [
+    308.4,
+    337.4,
+    367.0,
+    389.6,
+    412.4
+   ],
+   "theoreticalMLd": [
+    550.0,
+    550.0,
+    550.0,
+    550.0,
+    550.0
+   ],
+   "actualMLd": [
+    550.0,
+    550.0,
+    550.0,
+    550.0,
+    550.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 134,
+   "util90MLd": [
+    495.0,
+    495.0,
+    495.0,
+    495.0,
+    495.0
+   ]
+  },
+  {
+   "id": "arthur-p.-kennedy-intake",
+   "system": "C",
+   "route": "Arthur P. Kennedy Intake",
+   "kind": "intake",
+   "demandMLd": [
+    733.3,
+    821.3,
+    917.6,
+    959.1,
+    1001.9
+   ],
+   "theoreticalMLd": [
+    1095.0,
+    1095.0,
+    1095.0,
+    1095.0,
+    2029.0
+   ],
+   "actualMLd": [
+    1150.0,
+    1150.0,
+    1150.0,
+    1150.0,
+    2084.0
+   ],
+   "status": [
+    "ok",
+    "ok",
+    "ok",
+    "ok",
+    "ok"
+   ],
+   "sourcePage": 135,
+   "util90MLd": [
+    1035.0,
+    1035.0,
+    1035.0,
+    1035.0,
+    1876.0
+   ]
+  }
+ ],
+ "systemDemand": {
+  "source": "Vol 3, Table 8 (p.34) – maximum day demand by service area, ML/d, incl. York",
+  "years": [
+   2019,
+   2021,
+   2026,
+   2031,
+   2036,
+   2041
+  ],
+  "W": [
+   294,
+   308,
+   337,
+   367,
+   390,
+   412
+  ],
+  "C": [
+   395,
+   408,
+   434,
+   461,
+   490,
+   518
+  ],
+  "E": [
+   73,
+   78,
+   94,
+   108,
+   120,
+   133
+  ],
+  "B": [
+   16,
+   16,
+   17,
+   18,
+   19,
+   21
+  ],
+  "peelTotal": [
+   779,
+   810,
+   883,
+   954,
+   1019,
+   1084
+  ],
+  "york": [
+   211,
+   232,
+   277,
+   331,
+   331,
+   331
+  ],
+  "peelTotalInclYork": [
+   989,
+   1042,
+   1159,
+   1285,
+   1350,
+   1415
+  ]
+ },
+ "subzones2041": {
+  "source": "Vol 3, 2041 schematic (p.130) – population, employment, max day (MDD) and peak hour (PHD) demand, ML/d",
+  "rows": [
+   {
+    "id": "1W",
+    "zone": "1",
+    "system": "W",
+    "population": 33469,
+    "employment": 13615,
+    "mddMLd": 17.88,
+    "phdMLd": 34.24
+   },
+   {
+    "id": "1C",
+    "zone": "1",
+    "system": "C",
+    "population": 66055,
+    "employment": 24681,
+    "mddMLd": 34.68,
+    "phdMLd": 66.09
+   },
+   {
+    "id": "2W",
+    "zone": "2",
+    "system": "W",
+    "population": 70877,
+    "employment": 22601,
+    "mddMLd": 34.84,
+    "phdMLd": 67.15
+   },
+   {
+    "id": "2C",
+    "zone": "2",
+    "system": "C",
+    "population": 104580,
+    "employment": 32979,
+    "mddMLd": 53.13,
+    "phdMLd": 100.48
+   },
+   {
+    "id": "3W",
+    "zone": "3",
+    "system": "W",
+    "population": 79043,
+    "employment": 27048,
+    "mddMLd": 39.68,
+    "phdMLd": 76.4
+   },
+   {
+    "id": "3C",
+    "zone": "3",
+    "system": "C",
+    "population": 198387,
+    "employment": 155446,
+    "mddMLd": 127.23,
+    "phdMLd": 253.34
+   },
+   {
+    "id": "4W",
+    "zone": "4",
+    "system": "W",
+    "population": 229879,
+    "employment": 105728,
+    "mddMLd": 123.27,
+    "phdMLd": 240.67
+   },
+   {
+    "id": "4C",
+    "zone": "4",
+    "system": "C",
+    "population": 98013,
+    "employment": 189334,
+    "mddMLd": 94.0,
+    "phdMLd": 200.12
+   },
+   {
+    "id": "4E",
+    "zone": "4",
+    "system": "E",
+    "population": 58186,
+    "employment": 32005,
+    "mddMLd": 32.5,
+    "phdMLd": 64.31
+   },
+   {
+    "id": "5W",
+    "zone": "5",
+    "system": "W",
+    "population": 169568,
+    "employment": 42384,
+    "mddMLd": 83.25,
+    "phdMLd": 155.88
+   },
+   {
+    "id": "5C",
+    "zone": "5",
+    "system": "C",
+    "population": 188934,
+    "employment": 123826,
+    "mddMLd": 114.37,
+    "phdMLd": 225.19
+   },
+   {
+    "id": "5E",
+    "zone": "5",
+    "system": "E",
+    "population": 110592,
+    "employment": 55338,
+    "mddMLd": 63.96,
+    "phdMLd": 122.11
+   },
+   {
+    "id": "6W",
+    "zone": "6",
+    "system": "W",
+    "population": 205799,
+    "employment": 39192,
+    "mddMLd": 100.17,
+    "phdMLd": 183.4
+   },
+   {
+    "id": "6C",
+    "zone": "6",
+    "system": "C",
+    "population": 156188,
+    "employment": 25113,
+    "mddMLd": 69.41,
+    "phdMLd": 131.04
+   },
+   {
+    "id": "6E",
+    "zone": "6",
+    "system": "E",
+    "population": 56577,
+    "employment": 27534,
+    "mddMLd": 35.34,
+    "phdMLd": 64.77
+   },
+   {
+    "id": "6B",
+    "zone": "6",
+    "system": "B",
+    "population": 34247,
+    "employment": 22842,
+    "mddMLd": 20.73,
+    "phdMLd": 40.98
+   },
+   {
+    "id": "7W",
+    "zone": "7",
+    "system": "W",
+    "population": 25441,
+    "employment": 3925,
+    "mddMLd": 13.26,
+    "phdMLd": 23.11
+   },
+   {
+    "id": "7C",
+    "zone": "7",
+    "system": "C",
+    "population": 44802,
+    "employment": 17241,
+    "mddMLd": 25.51,
+    "phdMLd": 47.02
+   },
+   {
+    "id": "7E",
+    "zone": "7",
+    "system": "E",
+    "population": 897,
+    "employment": 2543,
+    "mddMLd": 1.21,
+    "phdMLd": 2.52
+   }
+  ]
+ },
+ "pumpingStations": {
+  "source": "Vol 3, Tables 4-6 (pp.26-28). Firm = largest pump out of service. Actual firm from model runs, with friction losses.",
+  "rows": [
+   {
+    "system": "W",
+    "facility": "Lorne Park WTP",
+    "pumps": "LL in plant",
+    "zone": null,
+    "count": 10,
+    "installedMLd": 1041,
+    "firmMLd": 900,
+    "actualFirmMLd": null
+   },
+   {
+    "system": "W",
+    "facility": "Lorne Park PS",
+    "pumps": "HLP1W",
+    "zone": "1",
+    "count": 7,
+    "installedMLd": 541,
+    "firmMLd": 450,
+    "actualFirmMLd": 336
+   },
+   {
+    "system": "W",
+    "facility": "Lorne Park PS",
+    "pumps": "HLP2W",
+    "zone": "2",
+    "count": 2,
+    "installedMLd": 300,
+    "firmMLd": 150,
+    "actualFirmMLd": 152
+   },
+   {
+    "system": "W",
+    "facility": "Herridge PS",
+    "pumps": "LLP2W",
+    "zone": "2",
+    "count": 8,
+    "installedMLd": 408,
+    "firmMLd": 340,
+    "actualFirmMLd": 309
+   },
+   {
+    "system": "W",
+    "facility": "Herridge PS",
+    "pumps": "HLP3W",
+    "zone": "3",
+    "count": 4,
+    "installedMLd": 100,
+    "firmMLd": 68,
+    "actualFirmMLd": 48
+   },
+   {
+    "system": "W",
+    "facility": "Streetsville PS",
+    "pumps": "LLP3W",
+    "zone": "3",
+    "count": 6,
+    "installedMLd": 379,
+    "firmMLd": 289,
+    "actualFirmMLd": 250
+   },
+   {
+    "system": "W",
+    "facility": "Streetsville PS",
+    "pumps": "HLP4W",
+    "zone": "4",
+    "count": 5,
+    "installedMLd": 272,
+    "firmMLd": 204,
+    "actualFirmMLd": 179
+   },
+   {
+    "system": "W",
+    "facility": "Battleford PS",
+    "pumps": "4A",
+    "zone": "4A",
+    "count": 4,
+    "installedMLd": 189,
+    "firmMLd": 142,
+    "actualFirmMLd": null
+   },
+   {
+    "system": "W",
+    "facility": "Meadowvale North PS",
+    "pumps": "LLP4W",
+    "zone": "4",
+    "count": 6,
+    "installedMLd": 346,
+    "firmMLd": 276,
+    "actualFirmMLd": 226
+   },
+   {
+    "system": "W",
+    "facility": "Meadowvale North PS",
+    "pumps": "HLP5W",
+    "zone": "5",
+    "count": 6,
+    "installedMLd": 143,
+    "firmMLd": 116,
+    "actualFirmMLd": 97
+   },
+   {
+    "system": "W",
+    "facility": "West Brampton PS",
+    "pumps": "LLP5W",
+    "zone": "5",
+    "count": 4,
+    "installedMLd": 90,
+    "firmMLd": 60,
+    "actualFirmMLd": 40
+   },
+   {
+    "system": "W",
+    "facility": "West Brampton PS",
+    "pumps": "HLP6W",
+    "zone": "6",
+    "count": 4,
+    "installedMLd": 93,
+    "firmMLd": 62,
+    "actualFirmMLd": 93
+   },
+   {
+    "system": "W",
+    "facility": "Alloa PS",
+    "pumps": "LLP6W",
+    "zone": "6",
+    "count": 3,
+    "installedMLd": 126,
+    "firmMLd": 84,
+    "actualFirmMLd": 80
+   },
+   {
+    "system": "W",
+    "facility": "Alloa PS",
+    "pumps": "HLP7W",
+    "zone": "7",
+    "count": 3,
+    "installedMLd": 45,
+    "firmMLd": 30,
+    "actualFirmMLd": 27
+   },
+   {
+    "system": "C",
+    "facility": "A.P. Kennedy WTP",
+    "pumps": "LL in plant",
+    "zone": null,
+    "count": 11,
+    "installedMLd": 1681,
+    "firmMLd": 1494,
+    "actualFirmMLd": null
+   },
+   {
+    "system": "C",
+    "facility": "A.P. Kennedy PS",
+    "pumps": "HLP1C",
+    "zone": "1",
+    "count": 5,
+    "installedMLd": 425,
+    "firmMLd": 335,
+    "actualFirmMLd": 282
+   },
+   {
+    "system": "C",
+    "facility": "A.P. Kennedy PS",
+    "pumps": "HLP2C",
+    "zone": "2",
+    "count": 7,
+    "installedMLd": 950,
+    "firmMLd": 800,
+    "actualFirmMLd": 998
+   },
+   {
+    "system": "C",
+    "facility": "Silverthorn PS",
+    "pumps": "LLP2C",
+    "zone": "2",
+    "count": 5,
+    "installedMLd": 495,
+    "firmMLd": 387,
+    "actualFirmMLd": 192
+   },
+   {
+    "system": "C",
+    "facility": "Silverthorn PS",
+    "pumps": "HLP3C",
+    "zone": "3",
+    "count": 3,
+    "installedMLd": 103,
+    "firmMLd": 58,
+    "actualFirmMLd": 58
+   },
+   {
+    "system": "C",
+    "facility": "Hanlan PS",
+    "pumps": "LLP3C",
+    "zone": "3",
+    "count": 9,
+    "installedMLd": 1150,
+    "firmMLd": 1005,
+    "actualFirmMLd": 1024
+   },
+   {
+    "system": "C",
+    "facility": "Hanlan PS",
+    "pumps": "HLP4C",
+    "zone": "4",
+    "count": 4,
+    "installedMLd": 160,
+    "firmMLd": 103,
+    "actualFirmMLd": 119
+   },
+   {
+    "system": "C",
+    "facility": "Beckett Sproule PS",
+    "pumps": "LLP4C",
+    "zone": "4",
+    "count": 6,
+    "installedMLd": 390,
+    "firmMLd": 297,
+    "actualFirmMLd": 195
+   },
+   {
+    "system": "C",
+    "facility": "Beckett Sproule PS",
+    "pumps": "HLP5C",
+    "zone": "5",
+    "count": 6,
+    "installedMLd": 255,
+    "firmMLd": 195,
+    "actualFirmMLd": 176
+   },
+   {
+    "system": "C",
+    "facility": "East Brampton PS",
+    "pumps": "LLP5C",
+    "zone": "5",
+    "count": 4,
+    "installedMLd": 177,
+    "firmMLd": 117,
+    "actualFirmMLd": 100
+   },
+   {
+    "system": "C",
+    "facility": "East Brampton PS",
+    "pumps": "HLP6C",
+    "zone": "6",
+    "count": 4,
+    "installedMLd": 205,
+    "firmMLd": 140,
+    "actualFirmMLd": 109
+   },
+   {
+    "system": "C",
+    "facility": "North Brampton PS",
+    "pumps": "LLP6C",
+    "zone": "6",
+    "count": 4,
+    "installedMLd": 126,
+    "firmMLd": 90,
+    "actualFirmMLd": 73
+   },
+   {
+    "system": "C",
+    "facility": "North Brampton PS",
+    "pumps": "HLP7C",
+    "zone": "7",
+    "count": 4,
+    "installedMLd": 36,
+    "firmMLd": 26,
+    "actualFirmMLd": 21
+   },
+   {
+    "system": "E",
+    "facility": "Airport Road PS",
+    "pumps": "York",
+    "zone": null,
+    "count": 10,
+    "installedMLd": 458,
+    "firmMLd": 402,
+    "actualFirmMLd": null
+   },
+   {
+    "system": "E",
+    "facility": "Airport Road PS",
+    "pumps": "LLP4E",
+    "zone": "4",
+    "count": 4,
+    "installedMLd": 182,
+    "firmMLd": 126,
+    "actualFirmMLd": 149
+   },
+   {
+    "system": "E",
+    "facility": "Airport Road PS",
+    "pumps": "HLP5E",
+    "zone": "5",
+    "count": 4,
+    "installedMLd": 180,
+    "firmMLd": 135,
+    "actualFirmMLd": 131
+   },
+   {
+    "system": "E",
+    "facility": "Beckett Sproule Transfer PS",
+    "pumps": "Transfer",
+    "zone": null,
+    "count": 4,
+    "installedMLd": 408,
+    "firmMLd": 306,
+    "actualFirmMLd": 2750,
+    "note": "Source table prints actual firm capacity as 2750 ML/d, far above installed (408); likely a typo for 275.0. Do not use without checking."
+   },
+   {
+    "system": "E",
+    "facility": "Tullamore PS",
+    "pumps": "LLP5E",
+    "zone": "5",
+    "count": 3,
+    "installedMLd": 90,
+    "firmMLd": 60,
+    "actualFirmMLd": 48
+   },
+   {
+    "system": "E",
+    "facility": "Tullamore PS",
+    "pumps": "HLP6E",
+    "zone": "6",
+    "count": 4,
+    "installedMLd": 160,
+    "firmMLd": 120,
+    "actualFirmMLd": 120
+   },
+   {
+    "system": "E",
+    "facility": "Bolton North Hill PS",
+    "pumps": "6B",
+    "zone": "6B",
+    "count": 3,
+    "installedMLd": 14,
+    "firmMLd": 9,
+    "actualFirmMLd": null
+   }
+  ]
+ },
+ "treatmentPlants": {
+  "source": "Vol 3, Table 9 (p.35). Plant capacity = 90% of installed.",
+  "years": [
+   2019,
+   2021,
+   2026,
+   2031,
+   2036,
+   2041
+  ],
+  "rows": [
+   {
+    "plant": "A.P. Kennedy WTP",
+    "system": "C+E",
+    "capacityMLd": 1080,
+    "demandMLd": [
+     695,
+     734,
+     822,
+     918,
+     960,
+     1003
+    ]
+   },
+   {
+    "plant": "Lorne Park WTP",
+    "system": "W",
+    "capacityMLd": 450,
+    "demandMLd": [
+     294,
+     308,
+     337,
+     367,
+     390,
+     412
+    ]
+   }
+  ]
+ },
+ "designCriteria": {
+  "source": "Vol 3, 2041 schematic notes (p.130)",
+  "residentialADD_Lcapd": 280,
+  "iciADD_Lcapd": 280,
+  "residentialMDF": 2.0,
+  "residentialPHF": 3.0,
+  "iciMDF": 1.4,
+  "iciPHF": 3.0,
+  "note": "Zone and sub-zone MDD/PHD in the plan use the Starting Point Method, not a straight application of these factors."
+ }
+}

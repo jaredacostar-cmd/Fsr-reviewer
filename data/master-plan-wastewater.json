@@ -1,0 +1,558 @@
+{
+ "version": 1,
+ "source": {
+  "title": "Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems, Volume 4 (Wastewater)",
+  "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-4.pdf",
+  "published": "June 2020",
+  "basis": "2020 Master Plan basis. Peel launched a Master Plan update in 2025, so these figures may be superseded."
+ },
+ "notes": [
+  "Three trunk systems: West (to Clarkson WWTP), East (to G.E. Booth WWTP) and McVean (Brampton/Caledon, flows to the East system). Vol 4, s.3.1.2.",
+  "Plant forecasts in Tables 8-9 assume each plant treats only its natural catchment, with no east-to-west transfer.",
+  "The East-to-West Diversion trunk (WW-T-130, 2400 mm on Derry Road from Spring Creek to Highway 401 and Creditview Road) moves flow from the G.E. Booth catchment to Clarkson.",
+  "G.E. Booth is rated 518 ML/d, but the capacity restoration project (WW-TR-182) recovers 40 ML/d to get back to 518, so effective capacity in 2020 was about 478 ML/d.",
+  "Sewage pumping stations (Vol 4, Table 6) are already in data/peel-reports.json masterPlan.sps."
+ ],
+ "designCriteria": {
+  "source": "Vol 4, Tables 1-4 (pp.7-15)",
+  "treatmentPlantADF": {
+   "residential_Lpd": 315,
+   "employment_Lpd": 315
+  },
+  "collection": {
+   "residentialADWF_Lpd": 290,
+   "employmentADWF_Lpd": 270,
+   "peaking": "Harmon",
+   "peakMin": 2,
+   "peakMax": 4,
+   "infiltration_Lsha": 0.26
+  },
+  "bodLoading": {
+   "residential_gpd": 75,
+   "employment_gpd": 37.5,
+   "highUserAnnualIncrease_kgd": 500
+  },
+  "capacityTriggers": [
+   {
+    "diameter": "> 600 mm",
+    "storm": "5-year AES 12 hr 30%",
+    "trigger": "d/D >= 0.85"
+   },
+   {
+    "diameter": "> 600 mm",
+    "storm": "25-year AES 12 hr 30%",
+    "trigger": "water depth <= 1.8 m below ground"
+   },
+   {
+    "diameter": "<= 600 mm",
+    "storm": "5-year SCS Type II",
+    "trigger": "d/D >= 0.85"
+   },
+   {
+    "diameter": "<= 600 mm",
+    "storm": "25-year SCS Type II",
+    "trigger": "water depth <= 1.8 m below ground"
+   }
+  ],
+  "flowMethod": "Starting Point: 5-year rolling average of measured per-capita flow x serviced population, plus York and Toronto agreement flows; growth added at the Table 1 rates."
+ },
+ "trunks": {
+  "source": "Vol 4, Table 5 and s.3.1.2 (pp.18-30)",
+  "rows": [
+   {
+    "id": "W18.0",
+    "system": "W",
+    "name": "Clarkson Industrial",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 825
+   },
+   {
+    "id": "W10.0",
+    "system": "W",
+    "name": "Steeles West",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 825
+   },
+   {
+    "id": "W09.0",
+    "system": "W",
+    "name": "Credit Valley",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 1500
+   },
+   {
+    "id": "W08.0",
+    "system": "W",
+    "name": "Meadowvale",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 1350
+   },
+   {
+    "id": "W07.0",
+    "system": "W",
+    "name": "Erin Mills North",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1050
+   },
+   {
+    "id": "W06.0",
+    "system": "W",
+    "name": "Sawmill Creek",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1200
+   },
+   {
+    "id": "W04.0",
+    "system": "W",
+    "name": "Orr Road",
+    "diameterMinMm": 1350,
+    "diameterMaxMm": 1350
+   },
+   {
+    "id": "W03.0",
+    "system": "W",
+    "name": "Fletchers Creek",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 1350
+   },
+   {
+    "id": "W02.0",
+    "system": "W",
+    "name": "Upper West (East Leg)",
+    "diameterMinMm": 1200,
+    "diameterMaxMm": 2250
+   },
+   {
+    "id": "W01.0",
+    "system": "W",
+    "name": "Lower West (East Leg)",
+    "diameterMinMm": 2400,
+    "diameterMaxMm": 3000,
+    "alias": "W01.1 (Table 5)"
+   },
+   {
+    "id": "E20.0",
+    "system": "E",
+    "name": "Lakefront",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 900
+   },
+   {
+    "id": "E19.0",
+    "system": "E",
+    "name": "Erindale",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1050
+   },
+   {
+    "id": "E18.0",
+    "system": "E",
+    "name": "Queensway West",
+    "diameterMinMm": 1350,
+    "diameterMaxMm": 1350
+   },
+   {
+    "id": "E17.0",
+    "system": "E",
+    "name": "Confederation",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1050
+   },
+   {
+    "id": "E16.0",
+    "system": "E",
+    "name": "Upper Cooksville Creek",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 825
+   },
+   {
+    "id": "E15.0",
+    "system": "E",
+    "name": "Lower Cooksville Creek",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 1500
+   },
+   {
+    "id": "E14.0",
+    "system": "E",
+    "name": "Little Etobicoke Creek",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1050
+   },
+   {
+    "id": "E13.0",
+    "system": "E",
+    "name": "Lakeshore East",
+    "diameterMinMm": 1650,
+    "diameterMaxMm": 1650
+   },
+   {
+    "id": "E08.0",
+    "system": "E",
+    "name": "Spring Creek",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1200
+   },
+   {
+    "id": "E07.B",
+    "system": "E",
+    "name": "Etobicoke Creek (B)",
+    "diameterMinMm": 900,
+    "diameterMaxMm": 1350
+   },
+   {
+    "id": "E07.A",
+    "system": "E",
+    "name": "Etobicoke Creek (A)",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 1500
+   },
+   {
+    "id": "E06.0",
+    "system": "E",
+    "name": "CPR",
+    "diameterMinMm": 900,
+    "diameterMaxMm": 1200
+   },
+   {
+    "id": "E03.0",
+    "system": "E",
+    "name": "Airport",
+    "diameterMinMm": 600,
+    "diameterMaxMm": 1350
+   },
+   {
+    "id": "E02B.0",
+    "system": "E",
+    "name": "East Brampton (B)",
+    "diameterMinMm": 1200,
+    "diameterMaxMm": 1800
+   },
+   {
+    "id": "E02A.0",
+    "system": "E",
+    "name": "East Brampton (A)",
+    "diameterMinMm": 1200,
+    "diameterMaxMm": 1800
+   },
+   {
+    "id": "E01B.0",
+    "system": "E",
+    "name": "East (B)",
+    "diameterMinMm": 1650,
+    "diameterMaxMm": 1950
+   },
+   {
+    "id": "E01A.0",
+    "system": "E",
+    "name": "East (A)",
+    "diameterMinMm": 1650,
+    "diameterMaxMm": 2400
+   },
+   {
+    "id": "M06.0",
+    "system": "M",
+    "name": "Albion Vaughan",
+    "diameterMinMm": 900,
+    "diameterMaxMm": 975
+   },
+   {
+    "id": "M05A.0",
+    "system": "M",
+    "name": "Coleraine (A)",
+    "diameterMinMm": 750,
+    "diameterMaxMm": 750
+   },
+   {
+    "id": "M04.0",
+    "system": "M",
+    "name": "Clarkway",
+    "diameterMinMm": 750,
+    "diameterMaxMm": 900
+   },
+   {
+    "id": "M03.0",
+    "system": "M",
+    "name": "The Gore Road",
+    "diameterMinMm": 750,
+    "diameterMaxMm": 1200
+   },
+   {
+    "id": "M02.0",
+    "system": "M",
+    "name": "McVean",
+    "diameterMinMm": 675,
+    "diameterMaxMm": 1200
+   },
+   {
+    "id": "M01B.0",
+    "system": "M",
+    "name": "Brampton-Bolton (B)",
+    "diameterMinMm": 750,
+    "diameterMaxMm": 750
+   },
+   {
+    "id": "M01A.0",
+    "system": "M",
+    "name": "Brampton-Bolton (A)",
+    "diameterMinMm": 1200,
+    "diameterMaxMm": 1200
+   }
+  ]
+ },
+ "flowForecast": {
+  "source": "Vol 4, Table 7 (p.38) – average daily flow, ML/d",
+  "years": [
+   2019,
+   2021,
+   2026,
+   2031,
+   2036,
+   2041
+  ],
+  "east": [
+   395,
+   408,
+   437,
+   463,
+   499,
+   526
+  ],
+  "york": [
+   43,
+   44,
+   49,
+   53,
+   53,
+   53
+  ],
+  "toronto": [
+   29,
+   29,
+   29,
+   29,
+   29,
+   29
+  ],
+  "eastSubtotal": [
+   467,
+   481,
+   514,
+   545,
+   581,
+   608
+  ],
+  "west": [
+   206,
+   216,
+   236,
+   257,
+   273,
+   290
+  ],
+  "westSubtotal": [
+   206,
+   216,
+   236,
+   257,
+   273,
+   290
+  ],
+  "total": [
+   673,
+   697,
+   750,
+   802,
+   854,
+   898
+  ]
+ },
+ "plantHydraulic": {
+  "source": "Vol 4, Table 8 (p.39) – ML/d, natural catchments, no transfers",
+  "years": [
+   2019,
+   2021,
+   2026,
+   2031,
+   2036,
+   2041
+  ],
+  "rows": [
+   {
+    "plant": "G.E. Booth WWTP",
+    "system": "E",
+    "ratedMLd": 518,
+    "rated90MLd": 466,
+    "demandMLd": [
+     467,
+     481,
+     514,
+     545,
+     581,
+     608
+    ],
+    "surplusMLd": [
+     -1,
+     -15,
+     -48,
+     -79,
+     -115,
+     -142
+    ]
+   },
+   {
+    "plant": "Clarkson WWTP",
+    "system": "W",
+    "ratedMLd": 350,
+    "rated90MLd": 315,
+    "demandMLd": [
+     206,
+     216,
+     236,
+     257,
+     273,
+     290
+    ],
+    "surplusMLd": [
+     109,
+     99,
+     79,
+     58,
+     42,
+     25
+    ]
+   }
+  ]
+ },
+ "plantLoading": {
+  "source": "Vol 4, Table 9 (p.41) – BOD kg/d; surplus vs existing governing capacity",
+  "years": [
+   2019,
+   2021,
+   2026,
+   2031,
+   2036,
+   2041
+  ],
+  "rows": [
+   {
+    "plant": "G.E. Booth WWTP",
+    "ratedKgd": 120694,
+    "rated90Kgd": 108625,
+    "governingKgd": 96695,
+    "governedBy": "secondary clarifiers",
+    "demandKgd": [
+     122430,
+     126013,
+     135207,
+     144042,
+     153765,
+     161501
+    ],
+    "surplusKgd": [
+     -25735,
+     -29318,
+     -38512,
+     -47347,
+     -57070,
+     -64806
+    ]
+   },
+   {
+    "plant": "Clarkson WWTP",
+    "ratedKgd": 79100,
+    "rated90Kgd": 71190,
+    "governingKgd": 58790,
+    "governedBy": "anaerobic digestion",
+    "demandKgd": [
+     45124,
+     47118,
+     51310,
+     55752,
+     59053,
+     62329
+    ],
+    "surplusKgd": [
+     13666,
+     11672,
+     7480,
+     3038,
+     -263,
+     -3539
+    ]
+   }
+  ]
+ },
+ "plannedUpgrades": {
+  "source": "Vol 4, s.5 and Table 13 capital program (year in service, $2020)",
+  "rows": [
+   {
+    "id": "WW-T-130",
+    "name": "East-to-West Diversion Sanitary Trunk Sewer",
+    "year": 2025,
+    "diameterMm": 2400,
+    "lengthM": 11550,
+    "costM": 345.0
+   },
+   {
+    "id": "WW-TR-181",
+    "name": "G.E. Booth WWTP – New Plant 1",
+    "year": 2024,
+    "costM": 175.0
+   },
+   {
+    "id": "WW-TR-182",
+    "name": "G.E. Booth WWTP – Capacity Restoration",
+    "year": 2027,
+    "adds": "recovers 40 ML/d, back to 518 ML/d",
+    "costM": 83.0
+   },
+   {
+    "id": "WW-TR-183",
+    "name": "G.E. Booth WWTP Expansion",
+    "year": 2038,
+    "fromMLd": 518,
+    "toMLd": 600,
+    "costM": 487.0
+   },
+   {
+    "id": "WW-TR-184",
+    "name": "Clarkson WWTP Expansion",
+    "year": 2027,
+    "fromMLd": 350,
+    "toMLd": 500,
+    "costM": 278.6
+   },
+   {
+    "id": "WW-TR-226",
+    "name": "Clarkson WWTP – Biosolids Expansion (three digesters)",
+    "year": 2023
+   }
+  ]
+ },
+ "interRegional": {
+  "source": "Vol 4, Table 12 (p.74)",
+  "rows": [
+   {
+    "direction": "Toronto to Peel",
+    "point": "Rakely Court and Eglinton Avenue East",
+    "receiving": "Peel East trunk → G.E. Booth WWTP"
+   },
+   {
+    "direction": "Toronto to Peel",
+    "point": "41st Street and Lakeshore Road East",
+    "receiving": "Peel East trunk → G.E. Booth WWTP"
+   },
+   {
+    "direction": "Peel to Toronto",
+    "point": "Disco Road and Highway 427",
+    "receiving": "Toronto → Humber Bay WWTP"
+   },
+   {
+    "direction": "Peel to Toronto",
+    "point": "Dundas Street East to Dundas Street West transition, east side of Etobicoke Creek",
+    "receiving": "Toronto → Humber Bay WWTP"
+   }
+  ]
+ }
+}
