@@ -94,3 +94,16 @@ test('the sheet\'s "at the deepest" is the deepest along the reaches the designe
   assert.match(html, /7\.3 m at the deepest/);
   assert.equal((html.match(/7\.3 m at the deepest/g) || []).length, 2, 'the title block and the summary');
 });
+
+test('the design flow on the sheet: the peak dry + I&I breakdown only for a single line (as the panel)', () => {
+  // single line, from population: the breakdown adds up to the design flow
+  const dq = { ...d, q: 30 }, one = SP.sheetHTML({ ...dt, d: dq, flow: { q: 30, typed: false, peak: 26, ii: 4 } }).body;
+  assert.match(one, /30\.0 L\/s \(26\.0 L\/s peak dry \+ 4\.0 L\/s I&amp;I\)/);
+  // a branch with a typed flow and the main line from population: the breakdown would be only the
+  // derived part of the 30 L/s
+  const plan = { lls: nodes.map(n => n.ll), reaches: d.reaches, labels: d.mhs.map((m, i) => `MH ${i + 1}`), start: pts[0], branches: [pts[1]] };
+  const two = SP.sheetHTML({ ...dt, d: dq, plan, flow: { q: 30, typed: false, peak: 8, ii: 2 } }).body;
+  assert.doesNotMatch(two, /peak dry/);
+  assert.match(two, /30\.0 L\/s at the connection/);
+  assert.doesNotMatch(two, /\(typed\)/);
+});

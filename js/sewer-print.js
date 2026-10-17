@@ -137,7 +137,9 @@
     // (the deepest along the reaches, not only at the maintenance holes: PeelSewerDesign.deepest())
     const deepest = dt.deepest ? dt.deepest.depth : Math.max(...d.mhs.map(m => m.depth)), sl = d.reaches.map(r => r.S * 100), sz = sizeText(d.reaches.map(r => r.dmm || d.dmm)), Ltot = d.reaches.reduce((t, r) => t + r.L, 0), nb = dt.plan ? dt.plan.branches.length : 0;
     const checks = (dt.checks || []).map(c => `<li class="${c.pass ? 'ok' : 'no'}"><b>${c.pass ? '✓' : '✗'}</b> ${e(c.t)}: ${e(c.val)}</li>`).join('');
-    const flowTxt = dt.flow && !dt.flow.typed && dt.flow.peak != null ? `${f1(d.q)} L/s (${f1(dt.flow.peak)} L/s peak dry + ${f1(dt.flow.ii)} L/s I&amp;I)` : `${f1(d.q)} L/s (typed)`;
+    // (with branches the lines' flows can be part typed, part from population, jobs and area: the total
+    // at the connection, as the designer's panel gives it)
+    const flowTxt = nb ? `${f1(d.q)} L/s at the connection` : dt.flow && !dt.flow.typed && dt.flow.peak != null ? `${f1(d.q)} L/s (${f1(dt.flow.peak)} L/s peak dry + ${f1(dt.flow.ii)} L/s I&amp;I)` : `${f1(d.q)} L/s (typed)`;
     const tb = `<div class="tb">
       <div class="tb-prelim">PRELIMINARY · NOT FOR CONSTRUCTION</div>
       <div class="tb-t">Preliminary sanitary sewer<br>Plan and profile</div>
