@@ -35,7 +35,7 @@ async function loadRecords(live) {
   countUnitsFromText(decoded);   // the browser's pass on snapshot records (js/app.js applySnapshot)
   // Every raw record whose type field is mis-mapped, before records of one file merge (the same
   // file usually comes from another layer too, with the right type, and that copy is kept).
-  const keyOf = r => `${r.municipality}|${r.kind}|${r.fileKey || P.canonRef(r.ref)}`;
+  const keyOf = r => `${r.municipality}|${r.kind}|${P.fileId(r)}`;
   const layersOf = new Map(); for (const r of decoded) { const k = keyOf(r); if (!layersOf.has(k)) layersOf.set(k, new Set()); layersOf.get(k).add(r.sourceId); }
   const misTyped = decoded.filter(r => r.kind === 'application').map(r => ({ r, c: T.classifyRole(r) })).filter(x => x.c.reclassified)
     .map(({ r, c }) => ({ ref: r.ref, sourceId: r.sourceId, typeField: r.type, stage: r.stage, role: c.role, reason: c.reclassified.reason, alsoIn: [...layersOf.get(keyOf(r))].filter(s => s !== r.sourceId) }));
@@ -140,7 +140,7 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     const m = nodes[live[0]].municipality; inc(noCount, m, k); inc(noCount, 'Peel', k);
     if (!built5 && ['count to find', 'mixed use, check', 'no description'].includes(c.growth.kind)) toFind.push({ municipality: m, kind: c.growth.kind, files: live.map(refOf), address: [...new Set(recs.map(r => r.address).filter(Boolean))].slice(0, 3), description: PV.scrubDescription([...new Set(recs.map(r => r.description).filter(Boolean))].join(' / ').slice(0, 400)), phase: recs.map(r => r.phase), lastEvent: last ? new Date(last).toISOString().slice(0, 10) : null });
   }
-  const growthNoCount = { note: 'Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.', byKind: noCount, foundOnline: nodes.filter(n => !(n.units > 0) && n.refs.some(r => (built.lookups.get(`${n.municipality}|${r}`) || {}).units > 0)).length, toFind: toFind.sort((a, b) => String(b.lastEvent).localeCompare(String(a.lastEvent))) };
+  const growthNoCount = { note: 'Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.', byKind: noCount, foundOnline: nodes.filter(n => !(n.units > 0) && (T.lookupOf(n, built.lookups) || {}).units > 0).length, toFind: toFind.sort((a, b) => String(b.lastEvent).localeCompare(String(a.lastEvent))) };
 
   // Areas around the tree: tags, not nodes (secondary plans, precinct / block plan areas, OP
   // character areas, MTSAs). Each tree is tagged by its root's boundary; primary = largest overlap.

@@ -16,7 +16,7 @@
   const unitsOf = r => (r.units > 0 ? r.units : 0);
   const sum = (arr, f) => arr.reduce((t, x) => t + f(x), 0);
   const fileKey = r => {
-    const fk = r.fileKey || P.canonRef(r.ref);
+    const fk = P.fileId(r);   // (the key records merge on: js/phases.js dedupeRecords)
     return fk ? `${r.municipality}|${r.kind}|${fk}` : null;
   };
 

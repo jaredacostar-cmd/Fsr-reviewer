@@ -19,10 +19,13 @@
   function mode() { const s = store(); const v = s ? s.get(STORE_KEY, 'tree') : 'tree'; return v === 'previous' ? 'previous' : 'tree'; }
   function setMode(v) { const s = store(); if (s) s.set(STORE_KEY, v === 'previous' ? 'previous' : 'tree'); }
 
-  // The development's planning files, as the tree build saw them: "Municipality|file key".
+  // The development's planning files, as the tree build saw them: "Municipality|file key"
+  // (js/phases.js fileId: a Caledon number with its type).
+  const phases = () => root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
   function fileKeysOf(p, canonRef) {
-    const set = new Set();
-    for (const r of p.records || []) if (r.kind === 'application') set.add(`${r.municipality}|${r.fileKey || canonRef(r.ref) || r.uid}`);
+    const set = new Set(), P = phases();
+    const id = r => (P && P.fileId ? P.fileId(r, canonRef) : r.fileKey || canonRef(r.ref));
+    for (const r of p.records || []) if (r.kind === 'application') set.add(`${r.municipality}|${id(r) || r.uid}`);
     return [...set].sort();
   }
   // A short, stable signature of those files (djb2, base 36).
@@ -59,7 +62,9 @@
       if (p.unitsPrevious === undefined) p.unitsPrevious = p.units == null ? null : p.units;
       if (p.buildoutPrevious === undefined) p.buildoutPrevious = p.buildout || null;
       if (p.siteAreaHaPrevious === undefined) p.siteAreaHaPrevious = p.siteAreaHa == null ? null : p.siteAreaHa;
+      if (p.unitsGrossPrevious === undefined) p.unitsGrossPrevious = p.unitsGross;
       p.units = p.unitsPrevious;
+      p.unitsGross = p.unitsGrossPrevious;
       p.buildout = p.buildoutPrevious;
       p.siteAreaHa = p.siteAreaHaPrevious; p.siteAreaFrom = undefined;
       p.count = { mode: 'previous', previous: p.unitsPrevious };
@@ -70,8 +75,12 @@
       const full = p.records && p.records.length;
       if (full && (p.records || []).some(r => r.unitsUser)) { p.count.why = 'you entered a count for one of its files'; kept++; continue; }
       if (full && e.s && sigOf(p, canonRef) !== e.s) { p.count.why = `its files differ from the tree build of ${(d.snapshotAt || '').slice(0, 10)}`; kept++; continue; }
-      p.units = e.u;
-      p.count = { mode: 'tree', previous: p.unitsPrevious, trees: e.t || [], with: e.with || null, parts: (e.c || []).map(([ref, units, kind, source]) => ({ ref, units, kind, source: source || null })) };
+      // Net of the dwellings the site's records demolish (js/phases.js lostHomes), as Previous counts
+      // them and as the screens say ("net of N demolished"); the tree's own count is the gross.
+      const lost = p.unitsLost > 0 ? p.unitsLost : 0;
+      p.units = lost ? Math.max(0, e.u - lost) : e.u;
+      if (lost) p.unitsGross = e.u;
+      p.count = { mode: 'tree', previous: p.unitsPrevious, trees: e.t || [], with: e.with || null, parts: (e.c || []).map(([ref, units, kind, source]) => ({ ref, units, kind, source: source || null })), gross: e.u, lost: lost || undefined };
       // SPEC 1.6: one basis on every screen — the build-out's planned figure is the tree count too;
       // permitted and completed stay what the permits say.
       const b = p.buildoutPrevious;
@@ -102,7 +111,8 @@
   function partsHTML(p) {
     const parts = p && p.count && p.count.parts; if (!parts || !parts.length) return '';
     const row = x => `${num(x.units)} ${esc(x.ref || 'permits')} <span class="muted">(${esc(PART_KIND[x.kind] || x.kind)}${x.source ? `: ${esc(x.source)}` : ''})</span>${ESTIMATED.has(x.kind) ? ' <span class="tag">estimate</span>' : ''}`;
-    return parts.length === 1 && parts[0].kind === 'stated' ? '' : `<br>${parts.map(row).join(' + ')} = <strong>${num(p.units)}</strong>`;
+    const lost = p.count.lost ? ` − ${num(p.count.lost)} demolished` : '';
+    return parts.length === 1 && parts[0].kind === 'stated' && !lost ? '' : `<br>${parts.map(row).join(' + ')}${lost} = <strong>${num(p.units)}</strong>`;
   }
   const estimatedUnits = p => ((p && p.count && p.count.parts) || []).filter(x => ESTIMATED.has(x.kind)).reduce((t, x) => t + x.units, 0);
   function noteHTML(p, max = Infinity) {

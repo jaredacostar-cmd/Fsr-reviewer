@@ -99,10 +99,11 @@
   /** A lookup from a tree node to the development's own record of that file. */
   function recLookup(p) {
     const PH = root.PeelPhases, canon = PH && PH.canonRef ? PH.canonRef : (x => x);
+    const id = r => (PH && PH.fileId ? PH.fileId(r) : r.fileKey || canon(r.ref));   // (the tree's file key: a Caledon number with its type)
     const by = new Map();
     for (const r of (p && p.records) || []) {
       if (r.kind !== 'application') continue;
-      const k = r.fileKey || canon(r.ref);
+      const k = id(r);
       if (k && !by.has(k)) by.set(k, r);
       if (r.ref && !by.has(`ref:${r.ref}`)) by.set(`ref:${r.ref}`, r);
     }

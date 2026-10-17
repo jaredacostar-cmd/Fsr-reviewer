@@ -186,7 +186,11 @@
     let s = str(addr).toUpperCase();
     if (!s) return '';
     s = s.replace(/,.*$/, '')                       // drop city / postal suffix
-         .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\s*[#\w-]+/g, '')
+         // … also without a comma (Caledon's planning files: "12 MAIN ST CALEDON ON L7C 3B7")
+         .replace(/\s+(CALEDON( EAST)?|BRAMPTON|MISSISSAUGA)\s+ON\b.*$/, '')
+         .replace(/\s+[A-Z]\d[A-Z]\s?\d[A-Z]\d\s*$/, '')
+         // a unit, suite, lot or block number — a whole word, so "STEELES", "STEWARDSHIP", "LOTUS" stay
+         .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\b\s*[#\w-]+/g, '')
          .replace(/#\s*\w+/g, '')
          .replace(/^\s*\w+\s*-\s*(?=\d)/, '')          // Canadian unit-civic "1203-55 Main St" -> "55 Main St"
          .replace(/[.']/g, '')
@@ -255,11 +259,15 @@
   // "9 units" in a retail plaza, an industrial building, a hotel or a care home aren't homes.
   const NOT_HOME_UNITS = /retail|commercial|industrial|plaza|hotel|motel|office|warehouse|storage|employment|nursing|long[- ]term care|retirement|care home|demising/i;
   const HOME_WORDS = /residential|dwelling|apartment|townho|condo|stacked|single|semi|rental|homes/i;
-  function unitsFromText(text) {
+  // (skipped, optional: a Set that collects the figures read as a density or a decimal)
+  function unitsFromText(text, skipped) {
     const s = numberWords(String(text || '').replace(/,(?=\d{3})/g, ''));
     let best = 0;
     for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+|additional\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+|purpose[- ]built\s+)*(?:dwelling\s+)?(?:units?|suites)\b/gi)) {
       const n = Number(m[1]);
+      // Not a count: the decimals of a figure ("46.50 units", "~149.5 dwelling units", "1,475") or a
+      // density ("1,475 units/net hectare", "34 units per hectare"). ("building.160 units" is a count.)
+      if (/\d[.,]$/.test(s.slice(Math.max(0, m.index - 2), m.index)) || /^\s*(?:\/|per)\s*(?:net\s+|gross\s+)?(?:ha\b|hect|acre)/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 24))) { if (skipped) skipped.add(n); continue; }
       const before = s.slice(Math.max(0, m.index - 90), m.index);
       if (NOT_HOME_UNITS.test(before) && !HOME_WORDS.test(`${before} ${m[0]}`)) continue;
       if (n > best && n < 20000) best = n;
@@ -321,6 +329,18 @@
     // Letter O typed for zero ("SP 25/O14") is the same file as "SP 25-14".
     t = t.map(x => (/^O\d+$/.test(x) ? '0' + x.slice(1) : x));
     return t.map(x => (/^\d+$/.test(x) ? String(Number(x)) : x)).join('|');
+  }
+  // One planning file's identity, wherever files are keyed (merging records, the trees, a
+  // development's files). Caledon numbers its files "YYYY-NNNN" separately for each application
+  // type: official plan amendment 2022-0006, zoning by-law amendment 2022-0006 and site plan
+  // 2022-0006 are three files on different land. A bare Caledon number carries its type, as the
+  // Town's notices and agendas write it (POPA / RZ / SPA 2022-0006, scripts/council-parse.js); a
+  // type with no such prefix carries its stage. Every other file is its canonical number.
+  const CALEDON_TYPE = { 'official plan amendment': 'POPA', 'zoning by-law amendment': 'RZ', 'site plan': 'SPA' };
+  function fileId(r, canon = canonRef) {
+    const fk = r.fileKey || canon(r.ref);
+    if (!fk || r.municipality !== 'Caledon' || r.kind !== 'application' || !/^\d{4}\|\d+$/.test(fk)) return fk;
+    return `${CALEDON_TYPE[String(r.type || '').trim().toLowerCase()] || String(r.stage || stageOf(r)).toUpperCase()}|${fk}`;
   }
 
   // Approval stage of a planning file. Files of different stages on one site describe the
@@ -402,7 +422,7 @@
       if (isDemolition(r)) {
         const t = `${r.type || ''} ${r.description || ''}`;
         const n = r.units > 0 && !NOT_HOME.test(r.description || '') ? r.units : lostHomesInText(t, false);
-        if (n > 0) { const k = r.fileKey || canonRef(r.ref) || r.uid; demo.set(k, Math.max(demo.get(k) || 0, n)); }
+        if (n > 0) { const k = fileId(r) || r.uid; demo.set(k, Math.max(demo.get(k) || 0, n)); }
         continue;
       }
       const newHouse = r.kind === 'permit' && permitAddsUnits(r) && r.units <= 2;
@@ -657,6 +677,44 @@
     return `${rec.municipality}|#${rec.uid}`;
   }
 
+  // Keys saved before (the watchlist, allocations, share links, the phase history, the weekly
+  // changes) name a development by its address as normalizeAddress read it until 2026-10-17
+  // (legacyNormalizeAddress). Where that reading differs from today's, the old key — when no
+  // development has it now — resolves to the same address read today when that is a development's
+  // key, else to the development(s) holding the records at that address, the one with the most of
+  // them first (js/tree-groups.js resolveAll).
+  function legacyNormalizeAddress(addr) {
+    let s = str(addr).toUpperCase();
+    if (!s) return '';
+    s = s.replace(/,.*$/, '')
+         .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\s*[#\w-]+/g, '')
+         .replace(/#\s*\w+/g, '')
+         .replace(/^\s*\w+\s*-\s*(?=\d)/, '')
+         .replace(/[.']/g, '')
+         .replace(/\s+/g, ' ');
+    for (const [re, rep] of STREET_ABBR) s = s.replace(re, rep);
+    return s.trim();
+  }
+  // (Only addresses the two readings can differ on: a unit / suite / lot / block word run into the
+  // next word, a town and province, a postal code.)
+  const LEGACY_DIFF = /^[^,]*?(?:\b(?:UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\w|\sON\b|[A-Z]\d[A-Z]\s?\d[A-Z]\d)/i;
+  function keyAliases(projects) {
+    const keys = new Set(projects.map(p => p.key)), by = new Map();
+    for (const p of projects) for (const r of p.records) {
+      if (!r.address || !LEGACY_DIFF.test(r.address)) continue;
+      const a = legacyNormalizeAddress(r.address), today = normalizeAddress(r.address);
+      if (!civic(a) || a === today) continue;
+      const k = `${r.municipality}|${a}`; if (keys.has(k)) continue;
+      let m = by.get(k); if (!m) by.set(k, m = new Map());
+      const same = `${r.municipality}|${today}`;
+      if (keys.has(same)) m.set(same, Infinity);
+      m.set(p.key, (m.get(p.key) || 0) + (r.kind === 'application' ? 10 : 1));   // (a planning file outweighs a permit)
+    }
+    const out = new Map();
+    for (const [k, m] of by) out.set(k, [...m].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).map(x => x[0]));
+    return out;
+  }
+
   // Every civic address named in a multi-address application:
   // "202 and 204 Burnhamthorpe Rd E", "65-71 Agnes St", "8 Ann St, 77 & 81 High St E",
   // "28 Ann St (formerly 78 Park St E and 22-28 Ann St)". Ranges give both ends.
@@ -716,6 +774,8 @@
       return;
     }
     if (t > 0) { r.units = t; r.unitsFromText = true; }
+    // A count an earlier parser read from a density or a decimal ("46.50 units per hectare" → 50) goes.
+    else if (r.unitsFromText && r.units > 0) { const skipped = new Set(); unitsFromText(r.description, skipped); if (skipped.has(r.units)) { r.units = null; r.unitsFromText = false; } }
   }
   // opts.regroup (Step B2, js/tree-groups.js): given the parts this function grouped
   // ({ key, recs, site }), returns the parts to build instead (the trees as developments).
@@ -1039,7 +1099,7 @@
       if (r.kind !== 'application' || r.phase === 'cancelled' || r.minor || !(r.units > 0)) continue;
       const stage = r.stage || stageOf(r);
       if (stage === 'precon') continue;
-      const k = `${stage}|${r.fileKey || canonRef(r.ref) || r.uid}`;
+      const k = `${stage}|${fileId(r) || r.uid}`;
       const prev = files.get(k);
       if (!prev || r.units > prev.units) files.set(k, { rec: r, stage, units: r.units });
     }
@@ -1201,7 +1261,7 @@
     const byFile = new Map();
     for (const r of recs) {
       if (r.kind !== 'application') continue;
-      const k = r.fileKey || canonRef(r.ref) || r.uid;
+      const k = fileId(r) || r.uid;
       (byFile.get(k) || byFile.set(k, []).get(k)).push(r);
     }
     const permitsOf = new Map();
@@ -1532,11 +1592,11 @@
   }
 
   // The same file can come from two layers (e.g. "all permits" and "growth" permits):
-  // merge by municipality + kind + file number, keeping the furthest phase.
+  // merge by municipality + kind + file (fileId: a Caledon number with its type), keeping the furthest phase.
   function dedupeRecords(records) {
     const byRef = new Map(); const out = [];
     for (const r of records) {
-      const fk = r.fileKey || canonRef(r.ref);
+      const fk = fileId(r);
       if (!fk) { out.push(r); continue; }
       const k = `${r.municipality}|${r.kind}|${fk}`;
       const prev = byRef.get(k);
@@ -1564,7 +1624,7 @@
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
-    canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,
+    canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

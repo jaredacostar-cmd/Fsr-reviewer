@@ -173,18 +173,22 @@
 
   // Unit counts entered by the user for files whose count is only in their attachments (cover
   // letter, planning justification report): kept in this browser, applied before grouping.
-  const unitKey = r => `${r.municipality}|${P.canonRef(r.ref) || r.ref}`;
+  // (Keyed by file: a Caledon number carries its type, js/phases.js fileId. A count saved under the
+  // bare number before that still applies, as it did.)
+  const unitKey = r => `${r.municipality}|${P.fileId(r) || r.ref}`;
+  const oldUnitKey = r => `${r.municipality}|${P.canonRef(r.ref) || r.ref}`;
   let userUnits = store.get('userUnits', {}) || {};
   function applyUserUnits(records) {
     for (const r of records) {
       if (r.kind !== 'application') continue;
       if (r._unitsOrig === undefined) r._unitsOrig = r.units ?? null;
-      const u = userUnits[unitKey(r)];
+      const u = userUnits[unitKey(r)] ?? userUnits[oldUnitKey(r)];
       if (u > 0) { r.units = u; r.unitsUser = true; } else if (r.unitsUser) { r.units = r._unitsOrig; r.unitsUser = false; }
     }
   }
   function setUserUnits(r, n) {
     const k = unitKey(r);
+    if (k !== oldUnitKey(r)) delete userUnits[oldUnitKey(r)];
     if (n > 0) userUnits[k] = Math.round(n); else delete userUnits[k];
     store.set('userUnits', userUnits);
     const key = PeelDevNav.getCurrentProject() && (PeelDevNav.getCurrentProject().parent || PeelDevNav.getCurrentProject()).key;
@@ -212,7 +216,9 @@
     state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
-    if (grouped) migrateSavedKeys();
+    // Old address keys → today's developments (js/phases.js keyAliases), worked out when first needed.
+    if (TG && TG.setAliases) { const list = state.projects; TG.setAliases(() => P.keyAliases(list)); }
+    migrateSavedKeys(grouped);
     PeelPlanAreas.tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
@@ -243,26 +249,28 @@
     return yearsOf(p, state.yearMode).some(y => y >= lo && y <= hi);
   }
 
-  // Units counted by the unit-growth filter. With "Planning applications" selected,
-  // only the units proposed on the applications themselves count.
+  // Units counted by the Size filter: the development's units, as every screen shows them (the
+  // tree count or the previous count, net of homes demolished). With "Planning applications"
+  // selected, a site with no planning application counts none (only permits behind it).
   function unitsFor(p) {
-    if (state.kind !== 'application') return p.units || 0;
-    if (p._appUnits == null) p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0));
-    return p._appUnits;
+    if (state.kind === 'application' && !p.kinds.includes('application')) return 0;
+    return p.units || 0;
   }
+  // Size: "Adds units or jobs" (1) is units or jobs; the others are at least that many units.
+  const sizeMatch = p => (state.minUnits === 1 ? unitsFor(p) > 0 || jobsOf(p) > 0 : unitsFor(p) >= state.minUnits);
 
   // Land-use filter: what the development adds. 'growth' is the old Growth focus test —
   // planning applications proposing new homes or new jobs — plus growth proposals whose unit
   // count isn't published yet (precinct and block plans, subdivisions: often "see the
-  // attached"), which would otherwise vanish.
+  // attached"), which would otherwise vanish. New homes are the units the screens show (p.units).
   const GROWTH_TEXT = /subdivision|block plan|precinct|mixed[- ]use|secondary plan|draft plan|apartment|townhouse|condominium|stacked|residential (development|community|uses|units)|dwelling units/i;
   const NOT_GROWTH = /replac|existing (dwelling|house|building)|addition to|renovat|accessory|garage|pool|deck|tenant|interior|temporary use|day ?care/i;
-  const growthUnstated = p => !(PeelFilterUI.appUnits(p) > 0) && !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
+  const growthUnstated = p => !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
     && !NOT_GROWTH.test(r.description || '') && (GROWTH_TEXT.test(`${r.description || ''} ${r.type || ''}`) || /official plan|zoning|subdivision|block plan/i.test(r.type || ''))
     && (['master', 'precon'].includes(r.stage || P.stageOf(r)) || GROWTH_TEXT.test(r.description || '')));
   const LANDUSE_TEST = {
     all: () => true,
-    growth: p => PeelFilterUI.appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0) || growthUnstated(p),
+    growth: p => (p.kinds.includes('application') && ((p.units || 0) > 0 || jobsOf(p) > 0)) || growthUnstated(p),
     residential: p => (p.units || 0) > 0 && !empOf(p),
     mixed: p => (p.units || 0) > 0 && !!empOf(p),
     employment: p => !!empOf(p),
@@ -282,7 +290,7 @@
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
-    if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
+    if (state.minUnits > 0 && !sizeMatch(p)) return false;
     if (!ignoreFlags && !flagMatch(p)) return false;
     if (state.plant && PeelMapMarkers.plantOfDev(p) !== state.plant) return false;
     if (state.dwelling && !(D.unitSplit(p)[state.dwelling] > 0)) return false;
@@ -567,7 +575,7 @@
         for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
         fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => {
           state.history = h;
-          if (state.treeGrouped && window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k)); }
+          if (window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k), { aliasesOnly: !state.treeGrouped }); }
         }).catch(() => {});
       }
       rebuild();
@@ -601,16 +609,19 @@
   }
   // Keys saved under today's developments (watchlist, allocations), the weekly changes and the
   // phase history, rewritten to the trees' keys. Nothing saved is dropped (js/tree-groups.js).
-  function migrateSavedKeys() {
+  // With the trees off (Previous), only old address keys are rewritten (js/phases.js keyAliases).
+  function migrateSavedKeys(grouped) {
     const TG = window.PeelTreeGroups; if (!TG) return;
-    const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k);
-    const w = TG.migrateKeys([...watch], exists);
-    if (w.length !== watch.size || w.some(k => !watch.has(k))) { watch.clear(); w.forEach(k => watch.add(k)); store.set('watch', w); }
+    const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k), opts = { aliasesOnly: !grouped };
+    if ([...watch].some(k => !exists(k))) {
+      const w = TG.migrateKeys([...watch], exists, opts);
+      if (w.length !== watch.size || w.some(k => !watch.has(k))) { watch.clear(); w.forEach(k => watch.add(k)); store.set('watch', w); }
+    }
     const unitsOf = k => { const p = state.projects.find(x => x.key === k); return p ? p.units : 0; };
-    const al = TG.migrateAllocations(store.get('allocations', {}) || {}, exists, unitsOf);
+    const al = TG.migrateAllocations(store.get('allocations', {}) || {}, exists, unitsOf, opts);
     if (al.moved) store.set('allocations', al.all);
-    TG.translateChanges(state.snapshot && state.snapshot.changes, exists);
-    TG.translateHistory(state.history, exists);
+    TG.translateChanges(state.snapshot && state.snapshot.changes, exists, opts);
+    TG.translateHistory(state.history, exists, opts);
   }
   async function boot() {
     loadTreeCounts();

@@ -15,6 +15,7 @@ const fs = require('fs');
 const path = require('path');
 const { audit, loadRecords } = require('./audit-tree.js');
 const D = require('../js/demand.js');
+const TR = require('../js/tree.js');
 
 const ROOT = path.join(__dirname, '..');
 const DATA = path.join(ROOT, 'data');
@@ -92,7 +93,7 @@ function review(res, overrides = new Map()) {
       // number: a large one is promoted to a block-plan root but is still a pre-consultation).
       const stating = t.nodes.filter(i => !nodes[i].cancelled && nodes[i].units > 0);
       const preconOnly = /pre-consultation/i.test(c.basis) || (c.units > 0 && stating.length > 0 && stating.every(i => nodes[i].role === 'precon' || nodes[i].refs.some(r => /^PRE[-.]?\d/i.test(r))));
-      const lookup = t.nodes.map(i => nodes[i].refs.map(r => built.lookups && built.lookups.get(`${nodes[i].municipality}|${r}`)).find(Boolean)).find(Boolean);
+      const lookup = t.nodes.map(i => TR.lookupOf(nodes[i], built.lookups)).find(Boolean);
       const key = `${root.municipality}|${refOf(rootI)}`;
       const ov = overrides.get(key);
       return {

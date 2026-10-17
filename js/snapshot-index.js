@@ -66,7 +66,7 @@ function hydrate(e, H) {
   }
   p.first = p.timeline.length ? p.timeline[0].date : null;
   // First-paint caches, mirroring what the app computes from full records:
-  // max units on the planning applications (unitsFor / appUnits),
+  // max units on the planning applications (appUnits; the Size filter reads p.units),
   // employment (jobsOf / empOf — null when the project has none, so the
   // land-use tests read exactly what the full records would give),
   // and the search haystack (title + types + the entry's record parts).

@@ -26,6 +26,8 @@
   // Ctrl-click behaviour. The old All / Active / per-phase chips are gone.)
 
   const YEAR_MS = 365.25 * 864e5;
+  // The largest count on one of its planning applications (the stalled list). The Size and Land-use
+  // filters test the development's units, as shown (js/app.js unitsFor).
   const appUnits = p => p._appUnits ?? (p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0)));
   const weekKeys = () => {
     const c = App().state.snapshot && App().state.snapshot.changes;

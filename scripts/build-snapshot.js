@@ -117,7 +117,12 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
   // A change to the app's phase rules re-reads every site: the new phase is recorded (marked
   // 'rules') but is not a change on the ground, so it is not counted as this week's moves.
   const rulesChanged = !firstRun && (hist.rules || 1) !== P.PHASE_RULES;
+  // A development whose key changed with the address fix of 2026-10-17 (js/phases.js keyAliases)
+  // carries on the history recorded under its old key: not new this week, its phases kept.
+  const carried = new Map();
+  for (const [old, to] of P.keyAliases(projects)) if (hist.projects[old] && to[0] && !carried.has(to[0])) carried.set(to[0], old);
   for (const p of projects) {
+    if (!hist.projects[p.key] && carried.has(p.key)) hist.projects[p.key] = hist.projects[carried.get(p.key)].map(x => x.slice());
     const h = hist.projects[p.key] || (hist.projects[p.key] = []);
     const last = h[h.length - 1];
     const info = { key: p.key, title: p.title, municipality: p.municipality, units: p.units || undefined };
