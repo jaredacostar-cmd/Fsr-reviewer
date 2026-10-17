@@ -244,11 +244,15 @@
   // "9 units" in a retail plaza, an industrial building, a hotel or a care home aren't homes.
   const NOT_HOME_UNITS = /retail|commercial|industrial|plaza|hotel|motel|office|warehouse|storage|employment|nursing|long[- ]term care|retirement|care home|demising/i;
   const HOME_WORDS = /residential|dwelling|apartment|townho|condo|stacked|single|semi|rental|homes/i;
-  function unitsFromText(text) {
+  // (skipped, optional: a Set that collects the figures read as a density or a decimal)
+  function unitsFromText(text, skipped) {
     const s = numberWords(String(text || '').replace(/,(?=\d{3})/g, ''));
     let best = 0;
     for (const m of s.matchAll(/(\d{1,5})\s*(?:-|\s)?\s*(?:new\s+|proposed\s+|total\s+|additional\s+)?(?:residential\s+|dwelling\s+|apartment\s+|condominium\s+|townhouse\s+|rental\s+|stacked\s+|back[- ]to[- ]back\s+|freehold\s+|purpose[- ]built\s+)*(?:dwelling\s+)?(?:units?|suites)\b/gi)) {
       const n = Number(m[1]);
+      // Not a count: the decimals of a figure ("46.50 units", "~149.5 dwelling units", "1,475") or a
+      // density ("1,475 units/net hectare", "34 units per hectare"). ("building.160 units" is a count.)
+      if (/\d[.,]$/.test(s.slice(Math.max(0, m.index - 2), m.index)) || /^\s*(?:\/|per)\s*(?:net\s+|gross\s+)?(?:ha\b|hect|acre)/i.test(s.slice(m.index + m[0].length, m.index + m[0].length + 24))) { if (skipped) skipped.add(n); continue; }
       const before = s.slice(Math.max(0, m.index - 90), m.index);
       if (NOT_HOME_UNITS.test(before) && !HOME_WORDS.test(`${before} ${m[0]}`)) continue;
       if (n > best && n < 20000) best = n;
@@ -737,6 +741,8 @@
       return;
     }
     if (t > 0) { r.units = t; r.unitsFromText = true; }
+    // A count an earlier parser read from a density or a decimal ("46.50 units per hectare" → 50) goes.
+    else if (r.unitsFromText && r.units > 0) { const skipped = new Set(); unitsFromText(r.description, skipped); if (skipped.has(r.units)) { r.units = null; r.unitsFromText = false; } }
   }
   // opts.regroup (Step B2, js/tree-groups.js): given the parts this function grouped
   // ({ key, recs, site }), returns the parts to build instead (the trees as developments).
