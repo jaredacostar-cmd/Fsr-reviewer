@@ -63,3 +63,20 @@ test('the source: the ORN Road Net Element on LIO, as probed', () => {
   assert.equal(orn.queryCors, 'https://jaredacostar-cmd.github.io');
   assert.ok(orn.fields.includes('FROM_JUNCTION_ID:Double') && orn.fields.includes('TO_JUNCTION_ID:Double'));
 });
+
+test('both taps on one road: the way round wins when the stretch between them costs more (the corridor finder\'s weights)', () => {
+  const G = RN.graph(grid());
+  // y = 0 from x 0 to 100 ten times dearer; taps at x 10 and x 90 on it
+  const dear = e => (e.pts.every(p => p[1] === 0) && e.pts.some(p => p[0] === 0) && e.pts.some(p => p[0] === 100) ? 10 : 1);
+  const r = RN.route(G, [10, 0], [90, 0], dear);
+  // was the direct cut (80 m at 10×: cost 800); round by y = 100: 10 + 100 + 100 + 100 + 10 m on the dear road
+  assert.ok(near(r.cost, 10 * 10 + 300 + 10 * 10, 1e-6), `${r.cost}`);
+  assert.ok(near(r.L, 320, 1e-6), `${r.L}`);
+  assert.ok(r.pts.some(p => p[1] === 100), JSON.stringify(r.pts));
+  // unweighted (or cheaper direct): still the part of the road between them, with its cost
+  const s = RN.route(G, [10, 0], [90, 0]);
+  assert.deepEqual(s.pts, [[10, 0], [90, 0]]);
+  assert.ok(near(s.cost, 80, 1e-9));
+  const t = RN.route(G, [10, 0], [90, 0], e => (e === G.edges[s.edges[0].e] ? 2 : 1));   // 160 < 500 round
+  assert.deepEqual(t.pts, [[10, 0], [90, 0]]);
+});

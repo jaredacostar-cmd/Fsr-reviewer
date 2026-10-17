@@ -18,6 +18,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const PV = require('../js/privacy.js');
 const { countBy, shrunkGroups } = require('./build-guards.js');
 
 const outDir = (() => { const i = process.argv.indexOf('--out'); return i > 0 ? process.argv[i + 1] : 'data'; })();
@@ -72,7 +73,8 @@ function pick(docs) {
   const withD = f.map((d, i) => ({ ...d, date: docDate(`${d.label} ${decodeURIComponent(d.url)}`), i }));
   withD.sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.i - a.i);
   const best = withD[0];
-  return { title: best.label || decodeURIComponent(best.url.split('/').pop()), url: best.url, date: best.date, count: f.length };
+  // The title without the consultant who prepared it (js/privacy.js).
+  return { title: PV.fsrTitle(best.label || decodeURIComponent(best.url.split('/').pop())), url: best.url, date: best.date, count: f.length };
 }
 
 // The page's own content: from its title (h1) on, so menus and footers don't add file numbers.

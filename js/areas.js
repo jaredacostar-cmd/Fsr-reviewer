@@ -18,8 +18,19 @@
     return list || [];
   }
   /** Ids of the areas containing the point (MTSAs can overlap). */
+  // (kept per list and point: a rebuild locates the same sites again, ~100,000 polygon tests)
+  const located = new WeakMap();
   function locate(list, lng, lat, muni) {
     if (lng == null || lat == null) return [];
+    if (!list || typeof list !== 'object') return locateIn(list, lng, lat, muni);
+    let m = located.get(list);
+    if (!m || m.n !== list.length) { m = new Map(); m.n = list.length; located.set(list, m); }
+    const k = `${lng},${lat},${muni || ''}`;
+    let hit = m.get(k);
+    if (!hit) { hit = locateIn(list, lng, lat, muni); m.set(k, hit); }
+    return hit.slice();
+  }
+  function locateIn(list, lng, lat, muni) {
     const out = [];
     for (const a of list) {
       if (muni && a.municipality !== muni) continue;
@@ -117,7 +128,7 @@
       const done = p.records.filter(r => {
         if (r.kind !== 'permit' || r.phase !== 'completed') return false;
         const c = completedAt(r);
-        if (c && c.estimated) estimated++;
+        if (c && c.estimated && c.date >= since) estimated++;   // (only the dates it counts carry the note)
         return c && c.date >= since;
       });
       const n = done.length ? P.permitUnits(done) : 0;

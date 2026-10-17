@@ -56,11 +56,26 @@
     };
     const write = () => { if (!applied) return; clearTimeout(timer); timer = setTimeout(() => { const h = encode(); history.replaceState(null, '', h ? `#${h}` : location.pathname + location.search); }, 300); };
     // Apply a link once the developments (and the areas / servicing layers it names) have loaded.
+    // (a link naming areas or servicing layers waits for them, 20 s at most: one that failed to load
+    // would otherwise leave the whole link unapplied, and the address never updated again)
+    let waitT = null, wait0 = null;
     const ready = () => {
       if (applied) { write(); return; }
       const q = pending;
-      if (!App().state.projects.length || ((q.get('sp') || q.get('mt')) && !App().state.areas) || ((q.get('pz') || q.get('dr') || q.get('ss')) && !App().state.servicing)) return;
+      if (!App().state.projects.length) return;
+      const needAreas = (q.get('sp') || q.get('mt')) && !App().state.areas, needSvc = (q.get('pz') || q.get('dr') || q.get('ss')) && !App().state.servicing;
+      if (needAreas || needSvc) {
+        if (wait0 == null) wait0 = Date.now();
+        if (Date.now() - wait0 < 20000) { if (!waitT) waitT = setTimeout(() => { waitT = null; ready(); }, 20500); return; }
+        for (const k of needAreas ? ['sp', 'mt'] : []) q.delete(k);
+        for (const k of needSvc ? ['pz', 'dr', 'ss'] : []) q.delete(k);
+      }
+      clearTimeout(waitT); waitT = null; wait0 = null;
       applied = true;
+      // A link carries its whole scenario: what it leaves out is at its default (the counting basis and
+      // the servicing switches would otherwise be whatever this browser last used).
+      App().state.basis = App().DEFAULT_BASIS;
+      for (const [k, o, d] of [['wm', 'ww', 'calibrated'], ['md', 'md', 'design'], ['dv', 'div', 'off'], ['nr', 'nr', 'on']]) SVCT().svcOpt[o] = q.get(k) || d;
       if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
       else App().state.phases = new Set(App().ACTIVE_PHASES);   // an older link: the default then (no Completed)
       if (q.has('fo')) {
@@ -92,7 +107,6 @@
       App().state.newOnly = q.get('nn') !== '0';
       if (q.get('ym') && [...$('#t-mode').options].some(o => o.value === q.get('ym'))) { App().state.yearMode = q.get('ym'); $('#t-mode').value = App().state.yearMode; }
       SF().syncFilterControls();
-      for (const [k, o] of [['wm', 'ww'], ['md', 'md'], ['dv', 'div'], ['nr', 'nr']]) if (q.get(k)) SVCT().svcOpt[o] = q.get(k);
       if (q.get('ms')) { const [color, size, cap] = q.get('ms').split('.'); for (const [k, v] of [['color', color], ['size', size], ['cap', cap]]) if (MM().MSTYLE[k][v]) MM().mstyle[k] = v; }
       // Layers (lg=…). Links from before the groups have none: their layers stay as the view sets them
       // (and ms= above), as they opened before.
@@ -116,7 +130,8 @@
       if (q.get('yf') && q.get('yt')) TL().setYears(Number(q.get('yf')), Number(q.get('yt'))); else App().applyFilters();
       AT().showFootTab(AT().getFootPref());
       const d = q.get('d') && DN().projectByKey(q.get('d'));
-      if (d) DN().showDetail(d);
+      // (opening a development shows its Overview: the link's own tab goes back on after it)
+      if (d) { DN().showDetail(d); if (q.get('t')) AT().showFootTab(AT().getFootPref()); }
       write();
     };
     map.on('moveend', write);

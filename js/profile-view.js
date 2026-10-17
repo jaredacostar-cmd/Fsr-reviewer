@@ -114,9 +114,9 @@
     return `<span class="pd-row prof-legend">${items.map(t => `<span>${t}</span>`).join('')}</span>`;
   }
   function gradesHTML(model) {
-    const g = PC.legGrades(model.prof), marks = model.marks || [];
+    const g = PC.legLabels(PC.legGrades(model.prof), model.marks || []);
     if (!g.length) return '';
-    return `<span class="pd-row prof-grades">${g.map((x, k) => `<span>${esc((marks[k] || {}).l || '')}→${esc((marks[k + 1] || {}).l || '')} <strong>${x.grade >= 0 ? '+' : ''}${(x.grade * 100).toFixed(2)}%</strong></span>`).join('')}<span class="muted">grade per leg</span></span>`;
+    return `<span class="pd-row prof-grades">${g.map(x => `<span>${esc(x.a)}→${esc(x.b)} <strong>${x.grade >= 0 ? '+' : ''}${(x.grade * 100).toFixed(2)}%</strong></span>`).join('')}<span class="muted">grade per leg</span></span>`;
   }
   function bind(el, st, s) {
     const svg = el.querySelector('svg.prof-chart'), tip = el.querySelector('.prof-tip'), cross = el.querySelector('.prof-cross');

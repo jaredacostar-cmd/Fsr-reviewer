@@ -9,6 +9,7 @@
 'use strict';
 const crypto = require('crypto');
 const C = require('./capital-lib.js');
+const PV = require('../js/privacy.js');
 
 const SYSTEMS = ['water', 'wastewater', 'roads', 'storm', 'multi'];
 const SCHEDULES = ['A+', 'B', 'C', 'master plan', 'IEA', 'unknown'];
@@ -270,6 +271,8 @@ function docLinks(html, base) {
     if (!/\.pdf(\?|$)|\/sites\/default\/files\/|\/media\/|\/document/i.test(l.url) || seen.has(l.url)) continue;
     seen.add(l.url);
     const item = { label: l.label.slice(0, 140) || 'Document', url: l.url };
+    // A contact / mailing list names people: never published (js/privacy.js).
+    if (PV.isContactList(label)) continue;
     if (/notice/i.test(label)) out.notices.push(item);
     else if (/append|appx|\bapp\.?\s?[a-z0-9]\b/i.test(label)) out.appendices.push(item);
     else if (/study area|\bmap\b|image|figure|boards?\b|presentation|video|rendering|roll plan/i.test(label)) continue;

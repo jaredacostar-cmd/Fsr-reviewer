@@ -254,7 +254,7 @@
     document.addEventListener('pointerup', e => { if (e.pointerType === 'touch') { clearTimeout(timer); pointerDown = false; startXY = null; } });
     document.addEventListener('pointercancel', e => { if (e.pointerType === 'touch') { clearTimeout(timer); pointerDown = false; startXY = null; } });
     addEventListener('scroll', hide, true);
-    addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+    addEventListener('keydown', e => { if (e.key === 'Escape') { if (card && !card.hidden) e.preventDefault(); hide(); } });
   }
   if (typeof document !== 'undefined') attach();
 

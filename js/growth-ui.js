@@ -28,13 +28,19 @@
   // change; the sub-view buttons only toggle which pane is shown.
   const growthDeps = () => ({
     aggregate: { typeBuildout: p => D.typeBuildout(p), unitTypes: D.UNIT_TYPES, empOf: App().empOf, permittedPhases: App().EMP_DONE.permitted, completedPhases: App().EMP_DONE.completed },
-    completions: { completedAt: PeelAreas.completedAt, permitUnits: rs => P.permitUnits(rs) },
+    completions: { completedAt: PeelAreas.completedAt, permitUnits: rs => P.permitUnits(rs), nowYear: (root.PeelMapMarkers && root.PeelMapMarkers.THIS_YEAR) || new Date().getFullYear() },
   });
   function renderGrowth() {
-    renderGrowthPipeline();
-    TL().renderTiming();
-    if (root.PeelPlanTables) root.PeelPlanTables.render();
-    CV().renderGrowthCensus();
+    // The Growth view in sight renders now; the others when the main thread is free (PeelUtil.later,
+    // read at once by anything that needs them), so a filter change paints what is in sight first.
+    // The servicing model first, as before: the Overview below reads it.
+    if (root.PeelSvcTab && root.PeelSvcTab.ensureSvcModel && App().state.servicing) root.PeelSvcTab.ensureSvcModel();
+    const AT = root.PeelAnalysisTabs, U = root.PeelUtil, on = AT && AT.getFootTab() === 'growth' ? AT.getGSub() : null;
+    const run = (key, sub, fn) => (on === sub || !(U && U.later) ? fn() : U.later(key, fn));
+    run('growth:pipeline', 'pipeline', renderGrowthPipeline);
+    run('growth:timing', 'timing', () => TL().renderTiming());
+    run('growth:plans', 'areas', () => { if (root.PeelPlanTables) root.PeelPlanTables.render(); });
+    run('growth:census', 'areas', () => CV().renderGrowthCensus());
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
     const fs = $('#f-sum');
@@ -169,7 +175,7 @@
           { v: fmtNum(Math.round(st.completed)), u: 'units', label: 'completed', ctx: '' },
           { v: fmtNum(Math.round(st.left)), u: 'units', label: 'left to build', ctx: st.planned ? `${pc(st.left / st.planned)} of planned` : '' },
         ],
-        chart: layerStripHTML([p]),
+        chart: layerStripHTML([p], { site: true }),
         lists: [
           { title: 'How this site compares', rows: cmp, total: cmp.length },
           { title: 'By dwelling type', rows: siteTypes, total: siteTypes.length },
@@ -216,10 +222,13 @@
     ];
   }
   // The pipeline by layer (SPEC §2.2): growth only, the census as context; and by dwelling type.
-  function layerStripHTML(set) {
+  // o.site: one development (no census context: the census is for an area, not a site).
+  function layerStripHTML(set, o = {}) {
     const Ly = root.PeelLayers, LB = root.PeelLayerBar; if (!Ly || !LB || !set.length) return '';
-    const t = Ly.totals(set), u = t.units, bc = CA().baselineCensus();
-    const census = bc ? PeelAreas.censusTotals(bc.das, {}).dwellings : null;
+    const t = Ly.totals(set), u = t.units, bc = CA().baselineCensus(), st = App().state;
+    // (the census of the area the developments are filtered to: a municipality, plan or MTSA, or the
+    // census area of a selected development; all of Peel only when nothing narrows it)
+    const census = !bc || o.site ? null : st.daCtx ? st.daCtx.dw : PeelAreas.censusTotals(bc.das, { muni: st.muni, sp: st.sp, mtsa: st.mtsa }).dwellings;
     const growth = ['built', 'committed', 'proposed', 'anticipated'];
     const segs = growth.map(k => ({ layer: k, value: u[k], est: Math.min(u[k], t.estimatedBy[k] || 0) }));
     const bt = Ly.byType(set), n0 = v => fmtNum(Math.round(v));

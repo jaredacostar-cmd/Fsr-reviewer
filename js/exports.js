@@ -45,7 +45,7 @@
       ...(e => ({ employment_uses: e ? e.uses.map(u => u.label).join('; ') : '', nonres_floor_area_m2: e && e.totalM2 ? e.totalM2 : '', est_jobs: e && e.jobs ? e.jobs : '', ...(d => ({ emp_water_avg_lps: d ? +d.water.avg.toFixed(2) : '', emp_wastewater_peak_lps: d ? +d.wastewater.peak.toFixed(2) : '' }))(e && e.jobs ? D.employmentDemand(e.jobs, App().state.criteria) : null) }))(App().empOf(p)),
       gfa: p.gfa ?? '', types: p.types.join('; '),
       files: p.records.map(r => `${r.kind}:${r.ref}${r.statusRaw ? ` (${r.statusRaw})` : ''}`).join('; '),
-      description: p.description, lat: p.lat?.toFixed(6) ?? '', lng: p.lng?.toFixed(6) ?? '',
+      description: p.description, lat: p.lat != null ? +p.lat.toFixed(6) : '', lng: p.lng != null ? +p.lng.toFixed(6) : '',
       // Step C2: its plan (the innermost, largest share) and every plan's share of its land.
       ...(x => ({ plan: x.plan, plan_shares: x.shares }))(root.PeelPlanTables ? root.PeelPlanTables.planOf(p) : { plan: '', shares: '' }),
       ...provenanceFields(p),
@@ -77,7 +77,7 @@
       ww_avg_dry_lps: r2(cb.wastewater.avg), ww_peak_dry_lps: r2(cb.wastewater.peak), ww_peak_wet_lps: r2(cb.wastewater.wetPeak),
       pressure_zone: z ? z.name : '', pressure_zone_nearest_m: zn ? Math.round(zn.m) : '',
       catchment: d ? SD().drName(d) : '', catchment_nearest_m: dn ? Math.round(dn.m) : '', catchment_via_planned_main: dn && dn.via ? `${dn.via.p || ''} (${dn.via.y || ''})` : '', plant: d ? SD().plantLabel(d.plant) : '',
-      ...(w => ({ dc_ww_main: w && w.ww ? `${w.ww.ln.y || ''} ${w.ww.ln.d || ''}mm ${w.ww.ln.p || ''}`.trim() : '', dc_water_main: w && w.wa ? `${w.wa.ln.y || ''} ${w.wa.ln.d || ''}mm ${w.wa.ln.p || ''}`.trim() : '', dc_servicing_year: w && w.needBy ? w.needBy : '', dc_timing_gap: w && w.gap ? 'yes' : '' }))(App().state.dcInfra ? DI().devWorks(p, SD().svcFacts(p)) : null),
+      ...(w => ({ dc_ww_main: w && w.ww ? `${w.ww.ln.y || ''} ${w.ww.ln.d ? `${w.ww.ln.d}mm ` : ''}${w.ww.ln.p || ''}`.trim() : '', dc_water_main: w && w.wa ? `${w.wa.ln.y || ''} ${w.wa.ln.d ? `${w.wa.ln.d}mm ` : ''}${w.wa.ln.p || ''}`.trim() : '', dc_servicing_year: w && w.needBy ? w.needBy : '', dc_timing_gap: w && w.gap ? 'yes' : '' }))(App().state.dcInfra ? DI().devWorks(p, SD().svcFacts(p)) : null),
     };
   }
   // Pressure zones and catchments as polygons with their census / build-out figures (GIS).
@@ -106,7 +106,7 @@
   function exportDevsCSV(list, name = 'peel-developments.csv') {
     const rows = exportRows(Array.isArray(list) ? list : undefined); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
-    const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+    const cell = v => window.PeelUtil.csvCell(v);
     download(name, CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   function exportDevsGeoJSON() {
@@ -199,6 +199,7 @@
   // Tables from analysis tab bodies for the workbook: a section-header row
   // naming each panel, then each visible table's rows (the tableRows helper).
   function panelTableRows(panels) {
+    if (window.PeelUtil && window.PeelUtil.flushLater) window.PeelUtil.flushLater();   // (views waiting to render out of sight)
     const out = [];
     for (const [label, sel] of panels) {
       const body = $(sel); if (!body) continue;

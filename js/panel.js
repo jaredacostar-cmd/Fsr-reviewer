@@ -160,7 +160,8 @@
     // (Stage 4: Home reads the Peel Overview panel's figures from here, so they are the map's.)
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('pnl:set', { detail: { key, scope: scopeId() } }));
   }
-  const get = key => STORE.get(key) || null;
+  // (views waiting to render out of sight render first: their panels are read here)
+  const get = key => { if (root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater(); return STORE.get(key) || null; };
   const clear = key => { STORE.delete(key); if (key === keyNow()) sync(); };
   function sync() {
     if (typeof document === 'undefined') return;
@@ -308,8 +309,8 @@
     });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && closeFull()) { e.stopPropagation(); return; }
-      // A list row is a button: Enter / Space opens it.
-      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('pnl-row') && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
+      // A list row or a figure with an action is a button: Enter / Space opens it.
+      if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && (e.target.classList.contains('pnl-row') || e.target.classList.contains('pnl-fig')) && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
     }, true);
   }
   const api = { typeWords, typesText, SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };

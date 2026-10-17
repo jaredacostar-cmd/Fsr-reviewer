@@ -161,7 +161,7 @@
   function builtShare(y) {
     if (y == null || y >= MM().THIS_YEAR) return 1;
     const bc = CA().baselineCensus(); if (!bc) return 1;
-    const k = `${bc.date}|${App().state.projects.length}`;
+    const k = `${bc.date}|${window.PeelUtil.idOf(App().state.projects)}|${App().state.projects.length}`;   // (the developments themselves: a unit edit keeps their count)
     if (builtShare.k !== k) {
       const by = new Map(); let tot = 0;
       for (const p of App().state.projects) if (MM().svcLayerOf(p) === 'built') { const u = p.units || 1, yr = new Date(+p.milestones.completed).getUTCFullYear(); by.set(yr, (by.get(yr) || 0) + u); tot += u; }
@@ -354,7 +354,10 @@
   }
   // fitLegend: the legend now lives in the Layers panel, so this is a cheap no-op-safe refresh
   // hook (kept for the existing call sites and the resize observer).
-  const fitLegend = () => requestAnimationFrame(() => { try { layoutMapBoxes(); } catch (e) { /* map not ready */ } });
+  // (one layout per frame however many observers ask: each one reads and writes the layout, a forced
+  // reflow every time, and opening a site asked a dozen times in one frame)
+  let fitF = 0;
+  const fitLegend = () => { if (fitF) return; fitF = requestAnimationFrame(() => { fitF = 0; try { layoutMapBoxes(); } catch (e) { /* map not ready */ } }); };
   if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), document.querySelector('.ww-loads'), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
   // The year the map's capacity results are worked out for now lives in the Scenario control

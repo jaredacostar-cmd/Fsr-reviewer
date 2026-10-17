@@ -90,7 +90,7 @@
     const G = root.Growth, lags = G ? G.approvalLags(App().state.projects.filter(q => q.municipality === p.municipality)) : [];
     const med = lags.length && G.median ? G.median(lags.map(x => x.months)) : null;
     const approved = P.PHASE_BY_KEY[p.phase].rank >= P.PHASE_BY_KEY.approved.rank;
-    const est = ls && ls.date && med != null && !approved && p.phase !== 'cancelled' ? new Date(+new Date(ls.date) + med * 30.44 * 864e5).getFullYear() : null;
+    const est = ls && ls.date && med != null && !approved && p.phase !== 'cancelled' ? new Date(+new Date(ls.date) + med * 30.44 * 864e5).getUTCFullYear() : null;
     const timing = [
       PN.kv('Latest submission', ls ? `${esc(fmtDay(ls.date))}${ls.ref ? ` · ${esc(ls.ref)}` : ''}` : '–'),
       ...(med != null ? [PN.kv(`Typical time to approval, ${esc(p.municipality)}`, `${Math.round(med)} months · n=${fmtNum(lags.length)}`)] : []),
@@ -278,7 +278,8 @@
     const left = p => (P.unbuiltOf ? P.unbuiltOf(p) : FI().appUnits(p));
     const top = set.filter(p => left(p) > 0).sort((a, b) => left(b) - left(a)).slice(0, 5);
     const rows = top.map(p => {
-      const pe = D.estimate([p], App().state.criteria, basis, App().jobsOf);
+      const k = left(p), part = { ...p, units: k, buildout: null, siteAreaHa: p.siteAreaHa > 0 && p.units > 0 ? p.siteAreaHa * Math.min(1, k / p.units) : null };
+      const pe = D.estimate([part], App().state.criteria, 'all', App().jobsOf);   // (people in the units left to build, beside them)
       return `<tr><td><button type="button" class="btn small link" data-ov-dev="${esc(p.key)}">${esc(p.title)}</button><small class="muted">${esc(p.municipality)}</small></td><td>${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(Math.round(left(p)))}</td><td class="n">${fmtNum(roundPop(pe.population))}</td></tr>`;
     }).join('');
     return `<section class="ov-card ov-topdevs"><div class="ov-h"><h3>Largest unbuilt</h3><button type="button" class="btn small link ov-go" data-ov-inview title="The In view list in the left panel (sort: most left to build)">See all →</button></div>
@@ -330,7 +331,7 @@
       calc: true, fullTitle: `Overview · ${muni || 'Peel'}: every card`,
       head: { trail: [{ label: 'Peel' }, ...(muni ? [{ label: muni }] : []), { label: 'Overview' }], name: 'What needs attention?', status: over ? { tone: 'over', text: `${over} over` } : tight ? { tone: 'tight', text: `${tight} tight` } : rows.length ? { tone: 'room', text: 'Room' } : null,
         identity: `${esc(muni || 'Peel')} · ${esc(scopeText())}${asOf ? ` · applications as of ${esc(root.PeelUtil.dayText ? root.PeelUtil.dayText(asOf) : asOf)}` : ''}`, extra: permitCaveat },
-      answer: hl,
+      answer: hl, stageStrip: lyTiles.strip || '',
       figures: [
         { v: fmtNum(set.length), u: 'developments', label: 'shown on the map', ctx: esc(scopeText()) },
         { v: fmtNum(Math.round(unitsAll)), u: 'units', label: 'planned', ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')].filter(Boolean).join(' · ') },
@@ -380,7 +381,11 @@
       // Bundle 5: the people card's split by stage as a small bar (each part named on hover), not a
       // seven-part line.
       const peopleBar = LB && LB.barHTML ? `<span class="fig-bar">${LB.barHTML({ small: true, segments: ks.map(k => ({ layer: k, value: t.people[k], title: `${LB.LABEL[k]}: ${fmtNum(roundPop(t.people[k]))} people` })) })}</span>` : '';
-      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), peopleBar, anticipated: ks.includes('anticipated') };
+      // Home: the units the headline adds, by stage (Built since 2021 first), as one bar with its key.
+      // (only where the headline counts every stage: Build-out leaves Pre-application out)
+      const gk = basis === 'all' || basis === 'buildout' ? ks.filter(k => k !== 'existing' && !(basis === 'buildout' && k === 'anticipated')) : [];
+      const strip = LB && LB.barHTML && gk.length ? `<div class="home-stages"><p class="small pnl-chart-t"><strong>The units it adds, by stage</strong> <span class="pnl-chart-u">(units)</span></p>${LB.barHTML({ segments: gk.map(k => ({ layer: k, value: t.units[k] })), unit: 'units' })}${LB.legendHTML(gk.map(k => ({ layer: k, value: t.units[k] })))}</div>` : '';
+      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), peopleBar, anticipated: ks.includes('anticipated'), strip, built: t.units.built || 0 };
     })();
     // "Would add" is growth beyond the 2021 Census: units completed before census day are already in
     // it (Existing), so they are taken out of the headline.
@@ -401,7 +406,7 @@
     const nd = needsAttentionData(set, capList), na = DV().needsAttention(nd), groups = DV().needsGroups(nd);
     const needs = `<section class="ov-card ov-needs"><div class="ov-h"><h3>Needs attention</h3></div>
       ${na.length ? groups.map(g => `<div class="na-g"><h4 class="na-gh">${esc(g.name)} <span class="muted">· ${fmtNum(g.count)}${g.note ? ` · ${esc(g.note)}` : ''}</span></h4>${g.items.length ? `<ul class="na-list small">${g.items.map(it => `<li class="na-it"><span class="${toneCls[it.tone]}">${esc(it.text)}</span>${it.ce ? `<button type="button" class="btn small link" data-ce-open="${esc(it.ce)}">${it.ce.startsWith('ea:') ? 'EA' : 'Project'} →</button>` : it.dev ? `<button type="button" class="btn small link" data-ov-dev="${esc(it.dev)}">Development →</button>` : it.tab ? go(it.tab, TAB_LABEL[it.tab] || it.tab) : ''}</li>`).join('')}</ul>` : '<p class="small muted">None.</p>'}</div>`).join('') : '<p class="small muted">Nothing needs attention right now.</p>'}</section>`;
-    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
+    const hl = set.length ? `The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${lyTiles.built >= 0.5 && (basis === 'all' || basis === 'buildout') ? `, <strong>${fmtNum(Math.round(lyTiles.built))}</strong> of them built since 2021` : ''}${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
     const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'approved only (committed, D-5-1)', remaining: 'units left to build' }[basis] || 'every stage';

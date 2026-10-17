@@ -55,7 +55,7 @@
     const b = e.target.closest('[data-ap]');
     if (b) { const [i, j] = b.dataset.ap.split('|').map(Number); DevTab().focusProject((App().state.audit.shown || App().state.audit.possible)[i].projects[j]); return; }
     if (e.target.closest('#audit-csv')) {
-      const cell = v => /[",\n]/.test(String(v ?? '')) ? `"${String(v).replace(/"/g, '""')}"` : String(v ?? '');
+      const cell = v => window.PeelUtil.csvCell(v);
       const { cols, rows } = DD().recordAuditRows();
       Ex().download('peel-duplicate-audit.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => r.map(cell).join(','))].join('\n'), 'text/csv');
     }
@@ -139,15 +139,18 @@
   // Resizable panels: drag a grip to resize; tap a sheet grip to step through its
   // heights. Sizes are remembered per browser. (Used by the analysis column's
   // left-edge handle, the analysis bottom sheet and the detail sheet.)
-  function dragResize(grip, { get, set, done }) {
+  // axis 'x': a handle on a column's left edge, dragged sideways (left makes it wider); the default,
+  // a sheet's top edge dragged up and down.
+  function dragResize(grip, { get, set, done, axis = 'y' }) {
     let y0 = 0, h0 = 0, moved = false;
+    const at = e => (axis === 'x' ? e.clientX : e.clientY);
     grip.addEventListener('pointerdown', e => {
       if (e.button > 0) return;
-      y0 = e.clientY; h0 = get(); moved = false; grip.setPointerCapture(e.pointerId); grip.classList.add('dragging'); e.preventDefault();
+      y0 = at(e); h0 = get(); moved = false; grip.setPointerCapture(e.pointerId); grip.classList.add('dragging'); e.preventDefault();
     });
     grip.addEventListener('pointermove', e => {
       if (!grip.hasPointerCapture(e.pointerId)) return;
-      const dy = y0 - e.clientY; if (Math.abs(dy) > 3) moved = true;
+      const dy = y0 - at(e); if (Math.abs(dy) > 3) moved = true;
       if (moved) set(h0 + dy);
     });
     const end = e => { if (!grip.hasPointerCapture(e.pointerId)) return; grip.releasePointerCapture(e.pointerId); grip.classList.remove('dragging'); done(moved); };

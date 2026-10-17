@@ -328,6 +328,8 @@
       // totals stay in the answer, with Growth in an area a tap away).
       top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
       figures: homeFigures(rows, ready, week),
+      // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
+      chart: a.stageStrip || '',
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
@@ -439,7 +441,8 @@
     const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q)) : null;
     if (stage) { stage.click = true; stage.on = gStage; }
     const CAr = root.PeelCensusAreas, bc = atPeel && CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
-    const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, {}).dwellings : 0;
+    // (the area the developments are filtered to: a municipality filter at the Peel node is not all of Peel)
+    const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, { muni: App() ? App().state.muni : '', sp: App() ? App().state.sp : [], mtsa: App() ? App().state.mtsa : [] }).dwellings : 0;
     // Employment: the applications' floor area and jobs (Growth's own sums; an area counts a split site's share).
     let emp = { planned: 0, jobs: 0, permitted: 0, completed: 0, left: 0 };
     const GU = root.PeelGrowthUI, deps = GU && GU.growthDeps ? GU.growthDeps().aggregate : null;

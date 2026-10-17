@@ -87,7 +87,7 @@
   // Employment parsed once per project (the focus chip counts call it for every project).
   // m²/job comes from the editable criteria; clearEmp() drops the cache when it changes.
   const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p, state.criteria.m2PerJob) : null));
-  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } };
+  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } state.empGen = (state.empGen || 0) + 1; };
   // Employment space moves with the project phase (no per-unit permits for it).
   const EMP_DONE = { permitted: new Set(['permit', 'construction', 'completed']), completed: new Set(['completed']) };
   const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
@@ -173,18 +173,22 @@
 
   // Unit counts entered by the user for files whose count is only in their attachments (cover
   // letter, planning justification report): kept in this browser, applied before grouping.
-  const unitKey = r => `${r.municipality}|${P.canonRef(r.ref) || r.ref}`;
+  // (Keyed by file: a Caledon number carries its type, js/phases.js fileId. A count saved under the
+  // bare number before that still applies, as it did.)
+  const unitKey = r => `${r.municipality}|${P.fileId(r) || r.ref}`;
+  const oldUnitKey = r => `${r.municipality}|${P.canonRef(r.ref) || r.ref}`;
   let userUnits = store.get('userUnits', {}) || {};
   function applyUserUnits(records) {
     for (const r of records) {
       if (r.kind !== 'application') continue;
       if (r._unitsOrig === undefined) r._unitsOrig = r.units ?? null;
-      const u = userUnits[unitKey(r)];
+      const u = userUnits[unitKey(r)] ?? userUnits[oldUnitKey(r)];
       if (u > 0) { r.units = u; r.unitsUser = true; } else if (r.unitsUser) { r.units = r._unitsOrig; r.unitsUser = false; }
     }
   }
   function setUserUnits(r, n) {
     const k = unitKey(r);
+    if (k !== oldUnitKey(r)) delete userUnits[oldUnitKey(r)];
     if (n > 0) userUnits[k] = Math.round(n); else delete userUnits[k];
     store.set('userUnits', userUnits);
     const key = PeelDevNav.getCurrentProject() && (PeelDevNav.getCurrentProject().parent || PeelDevNav.getCurrentProject()).key;
@@ -196,6 +200,9 @@
     // Phase 6: while the startup index is serving first paint, stray rebuilds
     // (e.g. a source refresh racing the full snapshot) must not wipe it.
     if (indexPainted && !fullLoaded) return;
+    // (one waiting from scheduleRebuild is this one: applySnapshot schedules one and loadFullSnapshot
+    // then rebuilds at once, which built every development twice at start-up)
+    clearTimeout(rebuildTimer);
     const raw = state.sources.filter(s => s.enabled).flatMap(s => s.records);
     applyUserUnits(raw);
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
@@ -209,7 +216,9 @@
     state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
-    if (grouped) migrateSavedKeys();
+    // Old address keys → today's developments (js/phases.js keyAliases), worked out when first needed.
+    if (TG && TG.setAliases) { const list = state.projects; TG.setAliases(() => P.keyAliases(list)); }
+    migrateSavedKeys(grouped);
     PeelPlanAreas.tagProjects();
     state.auditInput = { raw, records };
     state.audit = null;
@@ -217,18 +226,21 @@
     state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     PeelSearchFilter.renderMuniChips();
     PeelTimeline.updateYearBounds();
-    applyFilters();
+    // (the map and the list first; Growth, the Overview and the servicing model in the next task, so
+    // the page paints between the two halves of a rebuild instead of freezing for both)
+    applyFilters.deferGrowth = true;
+    try { applyFilters(); } finally { applyFilters.deferGrowth = false; }
     // The servicing model follows the developments: rebuilt with them (it used to wait for the Water /
     // Wastewater tab, so the Overview, the DC tab and the scope cards read a model of the first-paint
     // data — Inglewood 398% vs 42%, SPEC 1.4).
-    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.renderSvcTab(), 0); }
+    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.ensureSvcModel(), 0); }
   }
 
   // Years in which the project hit the selected milestone (or any milestone).
   function yearsOf(p, mode) {
     const cache = p._years || (p._years = {});
     return cache[mode] || (cache[mode] = Array.from(new Set(
-      p.timeline.filter(t => mode === 'any' || t.phase === mode).map(t => t.date.getFullYear()))));
+      p.timeline.filter(t => mode === 'any' || t.phase === mode).map(t => t.date.getUTCFullYear()))));   // (dates are UTC midnight: their year in UTC)
   }
   const timeActive = () => state.yearFrom != null || state.yearTo != null;
   function inYears(p) {
@@ -237,26 +249,28 @@
     return yearsOf(p, state.yearMode).some(y => y >= lo && y <= hi);
   }
 
-  // Units counted by the unit-growth filter. With "Planning applications" selected,
-  // only the units proposed on the applications themselves count.
+  // Units counted by the Size filter: the development's units, as every screen shows them (the
+  // tree count or the previous count, net of homes demolished). With "Planning applications"
+  // selected, a site with no planning application counts none (only permits behind it).
   function unitsFor(p) {
-    if (state.kind !== 'application') return p.units || 0;
-    if (p._appUnits == null) p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0));
-    return p._appUnits;
+    if (state.kind === 'application' && !p.kinds.includes('application')) return 0;
+    return p.units || 0;
   }
+  // Size: "Adds units or jobs" (1) is units or jobs; the others are at least that many units.
+  const sizeMatch = p => (state.minUnits === 1 ? unitsFor(p) > 0 || jobsOf(p) > 0 : unitsFor(p) >= state.minUnits);
 
   // Land-use filter: what the development adds. 'growth' is the old Growth focus test —
   // planning applications proposing new homes or new jobs — plus growth proposals whose unit
   // count isn't published yet (precinct and block plans, subdivisions: often "see the
-  // attached"), which would otherwise vanish.
+  // attached"), which would otherwise vanish. New homes are the units the screens show (p.units).
   const GROWTH_TEXT = /subdivision|block plan|precinct|mixed[- ]use|secondary plan|draft plan|apartment|townhouse|condominium|stacked|residential (development|community|uses|units)|dwelling units/i;
   const NOT_GROWTH = /replac|existing (dwelling|house|building)|addition to|renovat|accessory|garage|pool|deck|tenant|interior|temporary use|day ?care/i;
-  const growthUnstated = p => !(PeelFilterUI.appUnits(p) > 0) && !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
+  const growthUnstated = p => !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
     && !NOT_GROWTH.test(r.description || '') && (GROWTH_TEXT.test(`${r.description || ''} ${r.type || ''}`) || /official plan|zoning|subdivision|block plan/i.test(r.type || ''))
     && (['master', 'precon'].includes(r.stage || P.stageOf(r)) || GROWTH_TEXT.test(r.description || '')));
   const LANDUSE_TEST = {
     all: () => true,
-    growth: p => PeelFilterUI.appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0) || growthUnstated(p),
+    growth: p => (p.kinds.includes('application') && ((p.units || 0) > 0 || jobsOf(p) > 0)) || growthUnstated(p),
     residential: p => (p.units || 0) > 0 && !empOf(p),
     mixed: p => (p.units || 0) > 0 && !!empOf(p),
     employment: p => !!empOf(p),
@@ -276,7 +290,7 @@
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
-    if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
+    if (state.minUnits > 0 && !sizeMatch(p)) return false;
     if (!ignoreFlags && !flagMatch(p)) return false;
     if (state.plant && PeelMapMarkers.plantOfDev(p) !== state.plant) return false;
     if (state.dwelling && !(D.unitSplit(p)[state.dwelling] > 0)) return false;
@@ -300,7 +314,8 @@
     PeelRenderList.renderMarkers();
     PeelRenderList.setListPage(0); PeelRenderList.renderList();   // filters changed: back to the first page
     PeelTimeline.renderTimeline();
-    PeelGrowthUI.renderGrowth();
+    if (applyFilters.deferGrowth && window.PeelUtil && PeelUtil.later) PeelUtil.later('growth', () => PeelGrowthUI.renderGrowth());
+    else { if (window.PeelUtil && PeelUtil.cancelLater) PeelUtil.cancelLater('growth'); PeelGrowthUI.renderGrowth(); }
     PeelFilterUI.renderFilterUI();
     PeelMapMarkers.renderSiteLayer();
     if (PeelMapMarkers.mstyle.color === 'phase') PeelMapAnalysis.renderLegend();   // the phase legend lists the shown phases
@@ -321,6 +336,7 @@
   }
   if (store.get('analysisW', null)) setAnalysisW(store.get('analysisW'));
   PeelDataTab.dragResize($('#analysis-resize'), {
+    axis: 'x',   // (the column's left edge: dragged left or right, as its cursor and label say)
     get: () => analysisEl.getBoundingClientRect().width,
     set: setAnalysisW,
     done: moved => {
@@ -365,6 +381,8 @@
     if (!ANALYSIS_SNAPS.includes(name)) name = 'peek';
     analysisSnap = name;
     analysisEl.style.setProperty('--analysis-h', `${analysisSnapPx(name)}px`);
+    // (the page knows the sheet's height too: on a phone the map's way back sits just above it)
+    document.documentElement.style.setProperty('--sheet-h', `${analysisSnapPx(name)}px`);
     analysisEl.dataset.snap = name;
     if (save) store.set('analysisSnap', name);
     window.PeelDataTab && PeelDataTab.fixMap();
@@ -372,7 +390,7 @@
   setAnalysisSnap(analysisSnap, false);
   PeelDataTab.dragResize($('#analysis-grip'), {
     get: () => analysisEl.getBoundingClientRect().height,
-    set: h => analysisEl.style.setProperty('--analysis-h', `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`),
+    set: h => { const v = `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`; analysisEl.style.setProperty('--analysis-h', v); document.documentElement.style.setProperty('--sheet-h', v); },
     done: moved => {
       if (!PeelDataTab.shellNarrow()) return;
       const cur = analysisEl.getBoundingClientRect().height;
@@ -547,6 +565,7 @@
         await loadAll();
         finishFull();
       } else {
+        await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 3000))]);
         finishFull();
         applySnapshot(snap);
         if (window.PeelOffline) PeelOffline.setCachedAt(Date.now());
@@ -556,7 +575,7 @@
         for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
         fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => {
           state.history = h;
-          if (state.treeGrouped && window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k)); }
+          if (window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k), { aliasesOnly: !state.treeGrouped }); }
         }).catch(() => {});
       }
       rebuild();
@@ -569,10 +588,14 @@
   // after first paint, the developments take them and every view refreshes.
   // Step B2: the developments become the trees once the data is in; a switch in Settings ›
   // Counting regroups (Tree) or puts today's grouping back (Previous).
+  // (the full snapshot waits for both, a few seconds at most, so the developments are built once:
+  // each one arriving after it rebuilt everything again, a 4 s freeze at start-up)
+  let treeCountsLoad = Promise.resolve();
   function loadTreeCounts() {
-    if (window.PeelCouncilDecisions) PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
-    if (!window.PeelTreeCounts) return;
-    PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
+    const ps = [];
+    if (window.PeelCouncilDecisions) ps.push(PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); }));
+    if (window.PeelTreeCounts) ps.push(PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); }));
+    treeCountsLoad = Promise.all(ps.map(x => x.catch(() => {})));
   }
   function recount() {
     if (!window.PeelTreeCounts || !state.projects) return;
@@ -586,16 +609,19 @@
   }
   // Keys saved under today's developments (watchlist, allocations), the weekly changes and the
   // phase history, rewritten to the trees' keys. Nothing saved is dropped (js/tree-groups.js).
-  function migrateSavedKeys() {
+  // With the trees off (Previous), only old address keys are rewritten (js/phases.js keyAliases).
+  function migrateSavedKeys(grouped) {
     const TG = window.PeelTreeGroups; if (!TG) return;
-    const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k);
-    const w = TG.migrateKeys([...watch], exists);
-    if (w.length !== watch.size || w.some(k => !watch.has(k))) { watch.clear(); w.forEach(k => watch.add(k)); store.set('watch', w); }
+    const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k), opts = { aliasesOnly: !grouped };
+    if ([...watch].some(k => !exists(k))) {
+      const w = TG.migrateKeys([...watch], exists, opts);
+      if (w.length !== watch.size || w.some(k => !watch.has(k))) { watch.clear(); w.forEach(k => watch.add(k)); store.set('watch', w); }
+    }
     const unitsOf = k => { const p = state.projects.find(x => x.key === k); return p ? p.units : 0; };
-    const al = TG.migrateAllocations(store.get('allocations', {}) || {}, exists, unitsOf);
+    const al = TG.migrateAllocations(store.get('allocations', {}) || {}, exists, unitsOf, opts);
     if (al.moved) store.set('allocations', al.all);
-    TG.translateChanges(state.snapshot && state.snapshot.changes, exists);
-    TG.translateHistory(state.history, exists);
+    TG.translateChanges(state.snapshot && state.snapshot.changes, exists, opts);
+    TG.translateHistory(state.history, exists, opts);
   }
   async function boot() {
     loadTreeCounts();
@@ -796,7 +822,7 @@
         const t = window.PeelAnalysisTabs.getFootPref();
         if (t === 'overview') window.PeelOverviewTab.renderOverview();
         else if (t === 'growth') window.PeelGrowthUI.renderGrowth();
-        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
+        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.ensureSvcModel({ rescope: true });   // (a site swaps its bodies in; the model is rebuilt only if its inputs changed)
         else if (t === 'dca') window.PeelDcaTab.renderDca();
       },
       isWatched: k => watch.has(k),

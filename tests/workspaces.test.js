@@ -261,3 +261,22 @@ test('the page: Home, the chip bar, the Home button and the settings', () => {
   // Desktop only: below 1200 px the app is one column (the panel is a bottom sheet).
   assert.match(src('css/app.css'), /@media \(min-width: 1200px\) \{\n  \.app\.ws-mode \{ grid-template-columns: 0 minmax\(0, 1fr\) var\(--analysis-w, 440px\); \}/);
 });
+
+test('Home shows Built since 2021: the answer names it and the stage bar puts it first', () => {
+  const strip = '<div class="home-stages"><p class="small pnl-chart-t"><strong>The units it adds, by stage</strong></p><div class="lybar"></div></div>';
+  const { W: B, nodes } = loadBrowser({ ...AREA, stageStrip: strip });
+  B.setMode('home');
+  const h = nodes['#home'].innerHTML;
+  assert.ok(h.includes(`<div class="pnl-chart page-chart" data-psec="chart">${strip}</div>`), 'the stage bar, under the figures');
+  assert.ok(h.indexOf('data-psec="figures"') < h.indexOf('data-psec="chart"'));
+  // (no strip: nothing, never an empty box)
+  const { W: B2, nodes: n2 } = loadBrowser(AREA); B2.setMode('home');
+  assert.ok(!n2['#home'].innerHTML.includes('data-psec="chart"'));
+  // The Overview builds both from the layer totals: Built since 2021 in the sentence, then the bar's
+  // segments and key in stage order, only where the headline counts every stage.
+  const ov = src('js/overview-tab.js');
+  assert.match(ov, /<strong>\$\{fmtNum\(Math\.round\(lyTiles\.built\)\)\}<\/strong> of them built since 2021/);
+  assert.match(ov, /const gk = basis === 'all' \|\| basis === 'buildout' \? ks\.filter\(k => k !== 'existing'/);
+  assert.match(ov, /answer: hl, stageStrip: lyTiles\.strip \|\| ''/);
+  assert.match(src('js/reports.js'), /of them built since 2021/);
+});

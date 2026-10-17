@@ -90,16 +90,38 @@
   // ---- 2. Geometry (sampling: deterministic, a few per cent of accuracy) ----------------------------
   const bboxOf = rings => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const g of rings) for (const [x, y] of g) { if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; } return [x0, y0, x1, y1]; };
   const boxesMeet = (a, b) => a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
+  // Point in polygon, each ring's box first (an area-wide file can have a hundred rings); the same
+  // answer as P.pointInRings, kept per ring list.
+  const ringBoxes = new WeakMap();
+  function inRings(x, y, rings) {
+    let bs = ringBoxes.get(rings); if (!bs) ringBoxes.set(rings, bs = rings.map(r => bboxOf([r])));
+    for (let i = 0; i < rings.length; i++) { const q = bs[i]; if (x >= q[0] && x <= q[2] && y >= q[1] && y <= q[3] && P.pointInRings(x, y, [rings[i]])) return true; }
+    return false;
+  }
+  // Which of a polygon's N × N box samples lie inside it, kept per ring list (a file meets many others).
+  const sampleMasks = new WeakMap();
+  function samplesOf(rings, ba, N) {
+    let m = sampleMasks.get(rings); if (!m) sampleMasks.set(rings, m = new Map());
+    const key = `${N}|${ba.join(',')}`;
+    let v = m.get(key);
+    if (!v) {
+      v = new Uint8Array(N * N);
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) v[i * N + j] = inRings(ba[0] + (ba[2] - ba[0]) * (i + 0.5) / N, ba[1] + (ba[3] - ba[1]) * (j + 0.5) / N, rings) ? 1 : 0;
+      m.set(key, v);
+    }
+    return v;
+  }
   // Share of polygon a's area lying inside polygon b (0–1), on an N × N sample of a's box.
   function shareInside(a, b, N = 24) {
     const ba = a.bbox || bboxOf(a.rings), bb = b.bbox || bboxOf(b.rings);
     if (!boxesMeet(ba, bb)) return 0;
+    const mask = samplesOf(a.rings, ba, N);
     let n = 0, k = 0;
     for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      if (!mask[i * N + j]) continue;
       const x = ba[0] + (ba[2] - ba[0]) * (i + 0.5) / N, y = ba[1] + (ba[3] - ba[1]) * (j + 0.5) / N;
-      if (!P.pointInRings(x, y, a.rings)) continue;
       n++;
-      if (x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3] && P.pointInRings(x, y, b.rings)) k++;
+      if (x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3] && inRings(x, y, b.rings)) k++;
     }
     return n ? k / n : 0;
   }
@@ -131,7 +153,7 @@
     const by = new Map();
     for (const r of records) {
       if (r.kind !== 'application') continue;
-      const fk = r.fileKey || P.canonRef(r.ref);
+      const fk = P.fileId(r);
       const k = `${r.municipality}|${fk || r.uid}`;
       if (!by.has(k)) by.set(k, []);
       by.get(k).push(r);
@@ -167,7 +189,23 @@
       if (n.date0 != null) n.dateFrom = 'event';
       else if (chrono.r1) { const y = n.refs.map(yearOf).find(v => v != null); if (y != null) { n.date0 = Date.UTC(y, 6, 1); n.dateFrom = 'file number'; } }
     }
+    // Caledon files of different types that share one number (js/phases.js fileId): marked, so a
+    // count found online for the bare number isn't given to each of them (lookupOf).
+    const byNo = new Map();
+    for (const n of nodes) { const m = TYPED_NO.exec(n.id); if (m) byNo.set(`${n.municipality}|${m[2]}`, (byNo.get(`${n.municipality}|${m[2]}`) || 0) + 1); }
+    for (const n of nodes) { const m = TYPED_NO.exec(n.id); if (m && byNo.get(`${n.municipality}|${m[2]}`) > 1) n.sharedNumber = true; }
     return nodes;
+  }
+  // A file's entry in data/unit-lookups.json ("Municipality|file number"). A Caledon number carries
+  // its type ("Caledon|RZ 2021-0012", as the Town writes it); the bare number ("Caledon|2021-0012")
+  // stands for the file only when no file of another type shares that number.
+  const TYPED_NO = /^Caledon\|([A-Z]+)\|(\d{4}\|\d+)$/;
+  function lookupOf(n, lookups) {
+    if (!lookups || !lookups.size || !n) return null;
+    const m = TYPED_NO.exec(n.id || '');
+    const keys = m ? [...n.refs.map(r => `${n.municipality}|${m[1]} ${r}`), ...(n.sharedNumber ? [] : n.refs.map(r => `${n.municipality}|${r}`))] : n.refs.map(r => `${n.municipality}|${r}`);
+    for (const k of keys) { const f = lookups.get(k); if (f) return f; }
+    return null;
   }
 
   // ---- 4. Links ------------------------------------------------------------------------------------------
@@ -482,7 +520,7 @@
     // Siblings: nodes with no parent inside the tree form the top level; same-land groups share it.
     const tops = [...set].filter(i => !(parent[i] >= 0 && set.has(parent[i])));
     // A file's own count: the one it states, else one found online for it (data/unit-lookups.json).
-    const looked = n => { if (!built.lookups || !built.lookups.size) return null; for (const r of n.refs) { const f = built.lookups.get(`${n.municipality}|${r}`); if (f) return f; } return null; };
+    const looked = n => lookupOf(n, built.lookups);
     function own(i) {
       const n = nodes[i]; if (n.cancelled || n.superseded || n.role === 'condo' || n.role === 'precon') return 0;
       if (n.units > 0) return n.units;
@@ -564,10 +602,10 @@
     if (!(units > 0)) {
       // A minor file's own stated count, else its wording (Step B0: a stated count was being missed).
       const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0))));
-      const found = built.lookups && built.lookups.size ? live.map(i => nodes[i].refs.map(r => built.lookups.get(`${nodes[i].municipality}|${r}`)).find(Boolean)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
+      const found = built.lookups && built.lookups.size ? live.map(i => lookupOf(nodes[i], built.lookups)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
       const minorOf = i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0));
       if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; parts = [[argmax(live.filter(i => nodes[i].minor), minorOf), minorText, 'minor', null]]; }
-      else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; parts = [[live.find(i => nodes[i].refs.some(r => built.lookups.get(`${nodes[i].municipality}|${r}`) === found)), found.units, 'online', found.source]]; }
+      else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; parts = [[live.find(i => lookupOf(nodes[i], built.lookups) === found), found.units, 'online', found.source]]; }
       else if (found && found.units === 0) { basis = `no new homes (checked: ${found.source})`; growth = { kind: 'non-residential', units: null, why: found.note || 'checked online: no new homes', url: found.url }; }
       else {
         growth = growthKind(live.map(i => nodes[i].records.map(r => r.description || '').join(' ')));
@@ -576,9 +614,12 @@
         // Building permits (Step B0 rule): no file states a count, but the permits placed in the
         // tree carry units, so the homes are permitted or built. Never for a replacement or model
         // house, which adds no growth.
+        // Counted as the build-out counts them (js/phases.js permitUnits): only permits that add homes
+        // (not a demolition), each building once by its canonical permit number.
         if (!(units > 0) && growth.kind !== 'no new homes') {
-          const seen = new Set(); let pu = 0;
-          for (const i of live) for (const { r } of (built.permitOf && built.permitOf.get(i)) || []) { const k = r.ref || r.uid; if (r.units > 0 && !seen.has(k)) { seen.add(k); pu += r.units; } }
+          const placed = [];
+          for (const i of live) for (const { r } of (built.permitOf && built.permitOf.get(i)) || []) if (r.units > 0) placed.push(r);
+          const pu = P.permitUnits(placed);
           if (pu > 0) { units = pu; basis = `building permits: ${pu} units permitted (no file states a count)`; growth = { ...growth, kind: 'permits', units: pu }; parts = [[null, pu, 'permits', null]]; }
         }
       }
@@ -711,7 +752,7 @@
   }
   const iso = t => (t == null || !isFinite(t) ? null : new Date(t).toISOString().slice(0, 10));
 
-  const api = { ROLES, T, RANK, buildingsOf, homeKinds, replaceVerdict, CHRONO_ALL, yearOf, chronology, classifyRole, fileNodes, buildTrees, countTree, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
+  const api = { ROLES, T, RANK, buildingsOf, homeKinds, replaceVerdict, CHRONO_ALL, yearOf, chronology, classifyRole, fileNodes, buildTrees, countTree, lookupOf, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);

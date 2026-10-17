@@ -274,6 +274,8 @@
   }
   function tourKey(e) {
     if (!tourEl) return;
+    // (Enter on one of the card's own buttons is that button: Skip, Back, a role)
+    if (e.key === 'Enter' && e.target && e.target.closest && e.target.closest('.tour-card button, .tour-card a')) return;
     if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); tourGo(tourI + 1); }
     else if (e.key === 'ArrowLeft') { e.preventDefault(); e.stopPropagation(); tourGo(Math.max(0, tourI - 1)); }
     else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); endTour(); }
