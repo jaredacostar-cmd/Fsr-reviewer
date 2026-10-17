@@ -70,20 +70,23 @@
   // below the ground, the Water Design Criteria), so the clearance is checked against that; a storm
   // sewer's depth is not known at all, so its crossing is listed to check on site. Pipe walls are
   // not counted (inside diameters). reaches: [{ a: [x, y], b: [x, y] (m, local), inv_up, S, L, dmm,
-  // gUp, gDn (ground at the ends) }]; pipes: [{ kind: 'water' | 'storm', d (mm), paths: [[[x, y]…]],
-  // src }].
+  // gUp, gDn (ground at the ends), pts: [{ d, g }] (the ground samples between, as the design read
+  // them) }]; the ground at a crossing is the reach's sample nearest it. pipes: [{ kind: 'water' |
+  // 'storm', d (mm), paths: [[[x, y]…]], src }].
   const CROSS = { clearance: 0.5, wmCover: 1.7 };
   function segX(p, q, r, s) {
     const d = (q[0] - p[0]) * (s[1] - r[1]) - (q[1] - p[1]) * (s[0] - r[0]); if (Math.abs(d) < 1e-12) return null;
     const t = ((r[0] - p[0]) * (s[1] - r[1]) - (r[1] - p[1]) * (s[0] - r[0])) / d, u = ((r[0] - p[0]) * (q[1] - p[1]) - (r[1] - p[1]) * (q[0] - p[0])) / d;
     return t >= 0 && t <= 1 && u >= 0 && u <= 1 ? { t, u } : null;
   }
+  // The reach's ground sample nearest a distance along it (its ends included).
+  const groundNear = (r, along) => [{ d: 0, g: r.gUp }, ...(r.pts || []), { d: r.L, g: r.gDn }].reduce((b, p) => (Math.abs(p.d - along) < Math.abs(b.d - along) ? p : b)).g;
   function crossings(reaches, pipes, o = CROSS) {
     const out = [];
     reaches.forEach((r, ri) => {
       for (const pp of pipes) for (const path of pp.paths) for (let k = 1; k < path.length; k++) {
         const x = segX(r.a, r.b, path[k - 1], path[k]); if (!x) continue;
-        const along = x.t * r.L, inv = r.inv_up - r.S * along, D = r.dmm / 1000, g = r.gUp + (r.gDn - r.gUp) * x.t;
+        const along = x.t * r.L, inv = r.inv_up - r.S * along, D = r.dmm / 1000, g = groundNear(r, along);
         const c = { reach: ri, along, kind: pp.kind, d: pp.d || 0, src: pp.src || '', ground: g, obvert: inv + D, invert: inv };
         if (pp.kind === 'water') {
           c.otherTop = g - o.wmCover; c.otherBottom = c.otherTop - c.d / 1000;
@@ -372,7 +375,7 @@
   // Mississauga, Brampton and Region storm sewers, as the Existing network layer reads them).
   let xSeq = 0;
   async function findCrossings() {
-    const seq = ++xSeq, d = S.d, EP = root.PeelExistPipes, A = root.PeelArcGIS;
+    const seq = ++xSeq, d = S.d, NR = S.net.net.reaches, EP = root.PeelExistPipes, A = root.PeelArcGIS;
     S.xings = null; S.xingsErr = ''; S.xingsBusy = true;
     if (!EP || !A) { S.xingsBusy = false; S.xingsErr = 'the existing network is not loaded'; return; }
     const lls = d.mhs.map(m => m.ll), lat0 = lls.reduce((t, p) => t + p.lat, 0) / lls.length, lng0 = lls.reduce((t, p) => t + p.lng, 0) / lls.length;
@@ -395,7 +398,7 @@
     S.xingsBusy = false;
     if (failed === tried) { S.xingsErr = 'the watermain and storm sewer services did not answer'; }
     else {
-      const R = d.reaches.map(r => ({ a: P(d.mhs[r.from].ll.lng, d.mhs[r.from].ll.lat), b: P(d.mhs[r.to].ll.lng, d.mhs[r.to].ll.lat), inv_up: r.inv_up, S: r.S, L: r.L, dmm: r.dmm, gUp: d.mhs[r.from].g, gDn: d.mhs[r.to].g }));
+      const R = d.reaches.map((r, i) => ({ a: P(d.mhs[r.from].ll.lng, d.mhs[r.from].ll.lat), b: P(d.mhs[r.to].ll.lng, d.mhs[r.to].ll.lat), inv_up: r.inv_up, S: r.S, L: r.L, dmm: r.dmm, gUp: d.mhs[r.from].g, gDn: d.mhs[r.to].g, pts: NR[i].pts }));
       S.xings = crossings(R, pipes); S.xingsPart = failed > 0;
       S.xings.forEach(x => { const r = d.reaches[x.reach], a = d.mhs[r.from].ll, b = d.mhs[r.to].ll, t = x.along / r.L; x.ll = { lat: a.lat + (b.lat - a.lat) * t, lng: a.lng + (b.lng - a.lng) * t }; });
     }

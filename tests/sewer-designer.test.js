@@ -131,3 +131,17 @@ test('the trench at the deepest is read along every reach, not only at the maint
   assert.match(s, /const deepest = SW\(\)\.deepest\(d, S\.net\.net\)\.depth/);
   assert.match(s, /deepest: SW\(\)\.deepest\(S\.d, S\.net\.net\),/);
 });
+
+test('crossings: the ground at a crossing is the reach\'s sample nearest it, not a line between the maintenance holes', () => {
+  // ground 230 at both maintenance holes, a 2 m rise in the middle (samples every 10 m)
+  const pts = Array.from({ length: 9 }, (_, k) => ({ d: (k + 1) * 10, g: k + 1 === 5 ? 232 : k + 1 === 4 || k + 1 === 6 ? 231 : 230 }));
+  const reach = { a: [0, 0], b: [100, 0], inv_up: 225, S: 0.01, L: 100, dmm: 250, gUp: 230, gDn: 230, pts };
+  const w = SDR.crossings([reach], [{ kind: 'water', d: 300, src: 'Region of Peel', paths: [[[52, -50], [52, 50]]] }])[0];
+  // was 230.00 (between the holes): top 228.30, 3.27 m clear; now the sample at 50 m, 232.00
+  assert.equal(w.ground, 232);
+  assert.ok(near(w.otherTop, 232 - 1.7, 1e-9) && near(w.otherBottom, 230.0, 1e-9));
+  assert.ok(near(w.clear, 230.0 - (225 - 0.52 + 0.25), 1e-9), `${w.clear}`);
+  // without samples, the nearest end
+  assert.equal(SDR.crossings([{ ...reach, pts: undefined, gDn: 231 }], [{ kind: 'water', d: 300, paths: [[[70, -50], [70, 50]]] }])[0].ground, 231);
+  assert.match(src('js/sewer-designer.js'), /gUp: d\.mhs\[r\.from\]\.g, gDn: d\.mhs\[r\.to\]\.g, pts: NR\[i\]\.pts \}/);
+});
