@@ -229,3 +229,24 @@ test('follows the redesign: one hover card, hatched areas, the stated zoom thres
   assert.equal(+s.match(/water: \{[^\n]*minZoom: (\d+)/)[1], 12);
   assert.doesNotMatch(s, /\b(gas|hydro): \{ label/);
 });
+
+test('the tiles\' rings are open: the distance counts the edge from the last point back to the first', () => {
+  // A square wetland stored as the tiles store it (no repeated first point); a site 10 m west of its
+  // west side, the side that is only the closing edge.
+  const lat = 43.87, kx = 111320 * Math.cos(lat * Math.PI / 180), x0 = -80.14, y0 = lat, s = 200;
+  const open = [[x0, y0], [x0 + s / kx, y0], [x0 + s / kx, y0 + s / 111320], [x0, y0 + s / 111320]];
+  const site = [x0 - 10 / kx, y0 + 100 / 111320];
+  assert.ok(Math.abs(G.distToRings(site, [open]) - 10) < 0.1, `${G.distToRings(site, [open])}`);   // was 100.5 m (to the nearest corner)
+  // already closed: the same answer, and the first point is not added twice
+  const closed = [...open, open[0]];
+  assert.equal(G.closeRing(closed), closed);
+  assert.equal(G.closeRing(open).length, open.length + 1);
+  assert.ok(Math.abs(G.distToRings(site, [closed]) - G.distToRings(site, [open])) < 1e-9);
+  // the checklist: a wetland 10 m away is "within 10 m", not clear
+  const near = {};
+  for (const id of ['reg-cvc', 'reg-trca', 'flood-cvc', 'flood-trca', 'greenbelt', 'orm', 'nep', 'ansi', 'wc-peel', 'wc-ohn']) near[id] = { ok: true, feats: [] };
+  near.psw = { ok: true, feats: [{ label: ['PSW', ''], polys: [[open]], lines: null }] };
+  const nat = CX.evaluateSite(site, near).find(l => l.key === 'natural');
+  assert.equal(nat.status, 'flag');
+  assert.match(nat.text, /within 10 m/);
+});

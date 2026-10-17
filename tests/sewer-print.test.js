@@ -86,3 +86,37 @@ test('wired: the designer\'s print button, the report window takes the sheet\'s 
   assert.ok(html.indexOf('js/sewer-print.js') > 0 && html.indexOf('js/sewer-print.js') < html.indexOf('js/sewer-designer.js'));
   assert.match(src('sw.js'), /'js\/sewer-print\.js',/);
 });
+
+test('the sheet\'s "at the deepest" is the deepest along the reaches the designer passes in', () => {
+  const dp = SD.deepest(d, net);
+  assert.ok(dp.depth >= Math.max(...d.mhs.map(m => m.depth)) - 1e-9);
+  const html = SP.sheetHTML({ ...dt, deepest: { depth: 7.26, trench: 7.41 } }).body;
+  assert.match(html, /7\.3 m at the deepest/);
+  assert.equal((html.match(/7\.3 m at the deepest/g) || []).length, 2, 'the title block and the summary');
+});
+
+test('the design flow on the sheet: the peak dry + I&I breakdown only for a single line (as the panel)', () => {
+  // single line, from population: the breakdown adds up to the design flow
+  const dq = { ...d, q: 30 }, one = SP.sheetHTML({ ...dt, d: dq, flow: { q: 30, typed: false, peak: 26, ii: 4 } }).body;
+  assert.match(one, /30\.0 L\/s \(26\.0 L\/s peak dry \+ 4\.0 L\/s I&amp;I\)/);
+  // a branch with a typed flow and the main line from population: the breakdown would be only the
+  // derived part of the 30 L/s
+  const plan = { lls: nodes.map(n => n.ll), reaches: d.reaches, labels: d.mhs.map((m, i) => `MH ${i + 1}`), start: pts[0], branches: [pts[1]] };
+  const two = SP.sheetHTML({ ...dt, d: dq, plan, flow: { q: 30, typed: false, peak: 8, ii: 2 } }).body;
+  assert.doesNotMatch(two, /peak dry/);
+  assert.match(two, /30\.0 L\/s at the connection/);
+  assert.doesNotMatch(two, /\(typed\)/);
+});
+
+test('chainage rounds before it splits into kilometres and metres', () => {
+  assert.equal(SP.chain(999.96), '1+000.0');   // was 0+1000.0
+  assert.equal(SP.chain(999.94), '0+999.9');
+  assert.equal(SP.chain(1999.95), '2+000.0');
+  assert.equal(SP.chain(0.04), '0+000.0');
+});
+
+test('the sheet fits its page box: 17 × 11 in less the 10 mm margins', () => {
+  assert.ok(Math.abs(SP.SHEET.w - (17 * 25.4 - 20)) < 1e-9, `${SP.SHEET.w}`);   // was 412 (0.2 mm over)
+  assert.ok(Math.abs(SP.SHEET.h - (11 * 25.4 - 20)) < 1e-9, `${SP.SHEET.h}`);   // was 259 (0.4 mm short)
+  assert.match(SP.sheetHTML(dt).css, /@page\{size:17in 11in;margin:10mm\}/);
+});

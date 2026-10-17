@@ -65,13 +65,19 @@
   function route(G, a, b, weight) {
     const sa = snap(G, a), sb = snap(G, b); if (!sa || !sb) return null;
     const W = (e, fwd) => (weight ? weight(G.edges[e], fwd) : 1);
-    if (sa.e === sb.e) { const pts = cut(G.edges[sa.e].pts, sa.along, sb.along), L0 = G.edges[sa.e].L || 1; return { pts, L: len(pts), off: [sa.m, sb.m], edges: [{ e: sa.e, forward: sb.along >= sa.along, frac: Math.abs(sb.along - sa.along) / L0 }] }; }
+    // Both on one road: the part of it between them, unless the way round by other roads costs less
+    // (with weights, a dear stretch between them; Dijkstra below starts from that cost).
+    let direct = null;
+    if (sa.e === sb.e) {
+      const pts = cut(G.edges[sa.e].pts, sa.along, sb.along), L0 = G.edges[sa.e].L || 1, fwd = sb.along >= sa.along;
+      direct = { pts, L: len(pts), off: [sa.m, sb.m], edges: [{ e: sa.e, forward: fwd, frac: Math.abs(sb.along - sa.along) / L0 }], cost: Math.abs(sb.along - sa.along) * W(sa.e, fwd) };
+    }
     // Dijkstra from a's two ends of its edge to b's two ends.
     const ea = G.edges[sa.e], eb = G.edges[sb.e], dist0 = new Map(), prev = new Map(), done = new Set();
     const start = [[ea.a, sa.along * W(sa.e, false)], [ea.b, (ea.L - sa.along) * W(sa.e, true)]];
     for (const [id, c] of start) if (!dist0.has(id) || c < dist0.get(id)) { dist0.set(id, c); prev.set(id, { from: 'A' }); }
     const goal = new Map([[eb.a, sb.along * W(sb.e, true)], [eb.b, (eb.L - sb.along) * W(sb.e, false)]]);
-    let best = null;
+    let best = direct ? { c: direct.cost, direct: true } : null;
     while (true) {
       let u = null, du = Infinity;
       for (const [id, c] of dist0) if (!done.has(id) && c < du) { u = id; du = c; }
@@ -84,6 +90,7 @@
       }
     }
     if (!best) return null;
+    if (best.direct) return direct;
     // Back from b's end to a's: the edges in between, then the partial edges at each end.
     const chain = []; let n = best.end;
     while (prev.get(n).from !== 'A') { const pv = prev.get(n); chain.unshift({ e: pv.e, from: pv.from, to: n }); n = pv.from; }

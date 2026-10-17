@@ -13,6 +13,7 @@
  */
 (function (root) {
   'use strict';
+  const SWD = typeof module !== 'undefined' && module.exports ? require('./sewer-design.js') : root.PeelSewerDesign;
   const R = 6371008.8, rad = d => d * Math.PI / 180;
   const metres = (a, b) => { const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng), h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
   // Chainage (m) of each vertex along the line.
@@ -26,6 +27,19 @@
       return Math.round(Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI);
     });
   }
+  // The bend into the existing sewer at the connection (degrees, 0–180): from the last reach (from →
+  // at, {lat, lng}) to the existing pipe's direction of flow there. g: the pipe [[lng, lat]…] from its
+  // upstream end (the end its InvertUp is at, as the connection's invert reads it); t: the connection's
+  // fraction along it. null at its downstream end (t = 1): the pipe out of that maintenance hole is
+  // another pipe, not read here.
+  function connBend(from, at, g, t) {
+    if (!g || g.length < 2 || !(t >= 0) || t >= 1 - 1e-9) return null;
+    const pts = g.map(([lng, lat]) => ({ lat, lng })), xs = chainage(pts), want = t * xs[xs.length - 1];
+    let i = 1; while (i < pts.length - 1 && xs[i] <= want + 1e-9) i++;
+    const brg = (a, b) => Math.atan2((b.lng - a.lng) * Math.cos(rad(a.lat)), b.lat - a.lat) * 180 / Math.PI;
+    let dd = Math.abs(brg(from, at) - brg(pts[i - 1], pts[i])) % 360; if (dd > 180) dd = 360 - dd;
+    return Math.round(dd);
+  }
   // A point at chainage x along the line.
   function pointAt(pts, xs, x) {
     for (let i = 1; i < pts.length; i++) if (x <= xs[i] + 1e-9) { const t = (x - xs[i - 1]) / ((xs[i] - xs[i - 1]) || 1); return { lat: pts[i - 1].lat + (pts[i].lat - pts[i - 1].lat) * t, lng: pts[i - 1].lng + (pts[i].lng - pts[i - 1].lng) * t }; }
@@ -36,7 +50,7 @@
   // line); conn: the existing sewer.
   function checks(d, net, conn) {
     const f2 = v => (+v).toFixed(2), n0 = v => Math.round(v).toLocaleString('en-CA'), R = d.reaches, NR = net.reaches;
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), vmin = Math.min(...R.map(r => r.v)), vmax = Math.max(...R.map(r => r.vFull)), qr = Math.max(...R.map(r => r.qRatio));
+    const trench = SWD.deepest(d, net).trench, vmin = Math.min(...R.map(r => r.v)), vmax = Math.max(...R.map(r => r.vFull)), qr = Math.max(...R.map(r => r.qRatio));
     const dm = r => (r.dmm || d.dmm) / 1000, into = n => R.filter(r => r.to === n), first = R.filter(r => !into(r.from).length);
     const sizes = [...new Set(R.map(r => r.dmm || d.dmm))].sort((a, b) => a - b), rootIns = d.mhs[d.root].ins;
     const minCover = Math.min(...R.map((r, i) => Math.min(...[{ d: 0, g: net.nodes[r.from].g }, ...NR[i].pts, { d: NR[i].L, g: net.nodes[r.to].g }].map(p => p.g - (r.inv_up - r.S * p.d) - dm(r)))));
@@ -57,7 +71,7 @@
       c('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
       c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-9), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
       c(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${f2(minCover)} m at the least`),
-      c('Trench (8.0 m or less)', deepest + 0.15 <= 8.0 + 1e-6, `${f2(deepest + 0.15)} m at the deepest`),
+      c('Trench (8.0 m or less)', trench <= 8.0 + 1e-6, `${f2(trench)} m at the deepest`),
       c(`Maintenance holes (${sp} m apart or less)`, spOK, `${n0(Lmax)} m at the longest`),
       c('Drops through the maintenance holes (0.03–0.20 m, obverts matched where the size grows, or a drop structure from 0.9 m)', dropOK, `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
       c('Connection (the new obvert at or above the existing one)', connOK, c0.drop ? `${f2(c0.drop)} m drop${c0.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
@@ -69,20 +83,23 @@
   // below the ground, the Water Design Criteria), so the clearance is checked against that; a storm
   // sewer's depth is not known at all, so its crossing is listed to check on site. Pipe walls are
   // not counted (inside diameters). reaches: [{ a: [x, y], b: [x, y] (m, local), inv_up, S, L, dmm,
-  // gUp, gDn (ground at the ends) }]; pipes: [{ kind: 'water' | 'storm', d (mm), paths: [[[x, y]…]],
-  // src }].
+  // gUp, gDn (ground at the ends), pts: [{ d, g }] (the ground samples between, as the design read
+  // them) }]; the ground at a crossing is the reach's sample nearest it. pipes: [{ kind: 'water' |
+  // 'storm', d (mm), paths: [[[x, y]…]], src }].
   const CROSS = { clearance: 0.5, wmCover: 1.7 };
   function segX(p, q, r, s) {
     const d = (q[0] - p[0]) * (s[1] - r[1]) - (q[1] - p[1]) * (s[0] - r[0]); if (Math.abs(d) < 1e-12) return null;
     const t = ((r[0] - p[0]) * (s[1] - r[1]) - (r[1] - p[1]) * (s[0] - r[0])) / d, u = ((r[0] - p[0]) * (q[1] - p[1]) - (r[1] - p[1]) * (q[0] - p[0])) / d;
     return t >= 0 && t <= 1 && u >= 0 && u <= 1 ? { t, u } : null;
   }
+  // The reach's ground sample nearest a distance along it (its ends included).
+  const groundNear = (r, along) => [{ d: 0, g: r.gUp }, ...(r.pts || []), { d: r.L, g: r.gDn }].reduce((b, p) => (Math.abs(p.d - along) < Math.abs(b.d - along) ? p : b)).g;
   function crossings(reaches, pipes, o = CROSS) {
     const out = [];
     reaches.forEach((r, ri) => {
       for (const pp of pipes) for (const path of pp.paths) for (let k = 1; k < path.length; k++) {
         const x = segX(r.a, r.b, path[k - 1], path[k]); if (!x) continue;
-        const along = x.t * r.L, inv = r.inv_up - r.S * along, D = r.dmm / 1000, g = r.gUp + (r.gDn - r.gUp) * x.t;
+        const along = x.t * r.L, inv = r.inv_up - r.S * along, D = r.dmm / 1000, g = groundNear(r, along);
         const c = { reach: ri, along, kind: pp.kind, d: pp.d || 0, src: pp.src || '', ground: g, obvert: inv + D, invert: inv };
         if (pp.kind === 'water') {
           c.otherTop = g - o.wmCover; c.otherBottom = c.otherTop - c.d / 1000;
@@ -107,7 +124,7 @@
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, pointAt, checks, csv, crossings, CROSS };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -223,7 +240,7 @@
       const { m, n } = best, g = m.g, glen = chainage(g.map(([lng, lat]) => ({ lat, lng }))).pop() || 1, along = n.t * glen;
       const atUp = along <= 15, atDn = glen - along <= 15, t = atUp ? 0 : atDn ? 1 : n.t;
       const gp = g.map(([lng, lat]) => ({ lat, lng })), at = atUp ? gp[0] : atDn ? gp[gp.length - 1] : pointAt(gp, chainage(gp), t * glen);
-      S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn, g: m.g };
+      S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn, g: m.g, t };
       // The drawn end moves onto the sewer.
       S.pts[S.pts.length - 1] = { lat: S.conn.lat, lng: S.conn.lng };
       await sampleRun(S);
@@ -311,11 +328,15 @@
     const outOf = nodes.map(() => -1); reaches.forEach((r, i) => { outOf[r.from] = i; });
     const brg = (a, b) => Math.atan2((b.lng - a.lng) * Math.cos(a.lat * Math.PI / 180), b.lat - a.lat) * 180 / Math.PI;
     reaches.forEach(r => { const o = outOf[r.to]; if (o < 0) return; let dd = Math.abs(brg(meta[r.from].ll, meta[r.to].ll) - brg(meta[r.to].ll, meta[reaches[o].to].ll)) % 360; if (dd > 180) dd = 360 - dd; r.bend = Math.round(dd); });
+    // Into the connection: the bend to the existing pipe's direction (the velocity head rule's least
+    // drop from 375 mm), where that direction is known.
+    const rootN = nodeOn(0, S.mhX[S.mhX.length - 1]);
+    reaches.forEach(r => { if (r.to !== rootN || !S.conn) return; const b = connBend(meta[r.from].ll, meta[rootN].ll, S.conn.g, S.conn.t); if (b != null) r.bend = b; });
     // Flows: the lines upstream of a reach are its own and every branch joining at or above it.
     const flows = rs.map(run => flowOf(run === S ? S.form : run.form));
     const ups = (ri, x0) => [ri, ...rs.flatMap((b, j) => (j && b.join.to === rs[ri] && b.join.x <= x0 + 0.01 ? ups(j, Infinity) : []))];
     reaches.forEach((r, i) => { const ri = rmeta[i].run, x0 = meta[r.from].x, list = ups(ri, x0).map(j => flows[j]); r.q = flowSum(list).q; });
-    return { net: { nodes, reaches }, meta, rmeta, start, outOf, flows, root: nodeOn(0, S.mhX[S.mhX.length - 1]) };
+    return { net: { nodes, reaches }, meta, rmeta, start, outOf, flows, root: rootN };
   }
   // A line's path to the connection as a single line (its own reaches, then on down the lines it
   // joins): the profile's view, laid out like a single-line design.
@@ -371,7 +392,7 @@
   // Mississauga, Brampton and Region storm sewers, as the Existing network layer reads them).
   let xSeq = 0;
   async function findCrossings() {
-    const seq = ++xSeq, d = S.d, EP = root.PeelExistPipes, A = root.PeelArcGIS;
+    const seq = ++xSeq, d = S.d, NR = S.net.net.reaches, EP = root.PeelExistPipes, A = root.PeelArcGIS;
     S.xings = null; S.xingsErr = ''; S.xingsBusy = true;
     if (!EP || !A) { S.xingsBusy = false; S.xingsErr = 'the existing network is not loaded'; return; }
     const lls = d.mhs.map(m => m.ll), lat0 = lls.reduce((t, p) => t + p.lat, 0) / lls.length, lng0 = lls.reduce((t, p) => t + p.lng, 0) / lls.length;
@@ -394,7 +415,7 @@
     S.xingsBusy = false;
     if (failed === tried) { S.xingsErr = 'the watermain and storm sewer services did not answer'; }
     else {
-      const R = d.reaches.map(r => ({ a: P(d.mhs[r.from].ll.lng, d.mhs[r.from].ll.lat), b: P(d.mhs[r.to].ll.lng, d.mhs[r.to].ll.lat), inv_up: r.inv_up, S: r.S, L: r.L, dmm: r.dmm, gUp: d.mhs[r.from].g, gDn: d.mhs[r.to].g }));
+      const R = d.reaches.map((r, i) => ({ a: P(d.mhs[r.from].ll.lng, d.mhs[r.from].ll.lat), b: P(d.mhs[r.to].ll.lng, d.mhs[r.to].ll.lat), inv_up: r.inv_up, S: r.S, L: r.L, dmm: r.dmm, gUp: d.mhs[r.from].g, gDn: d.mhs[r.to].g, pts: NR[i].pts }));
       S.xings = crossings(R, pipes); S.xingsPart = failed > 0;
       S.xings.forEach(x => { const r = d.reaches[x.reach], a = d.mhs[r.from].ll, b = d.mhs[r.to].ll, t = x.along / r.L; x.ll = { lat: a.lat + (b.lat - a.lat) * t, lng: a.lng + (b.lng - a.lng) * t }; });
     }
@@ -460,7 +481,7 @@
     return `<div class="sd-res">${head}${S.corridor && root.PeelCorridorFinder ? corridorHTML() : ''}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn${S.roadsUsed ? ` (along the road centrelines where it follows them: ${esc(root.PeelRoadNet ? root.PeelRoadNet.SOURCE : 'Ontario Road Network')}, so the cover there is from the centreline, as s. 3.4.1.1 measures it)` : ''}, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
   function designHTML(d) {
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
+    const deepest = SW().deepest(d, S.net.net).depth, s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
     const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
     const checkList = checks(d, S.net.net, S.conn).map(ok);
     const froudeHi = d.reaches.filter(r => r.froude >= 1).length;
@@ -513,7 +534,7 @@
     const head = f.ok ? `<p><span class="pnl-chip t-room">Pumped design</span> A <strong>${f.dmm} mm forcemain</strong> (${esc(f.material)}), ${fmtNum(Math.round(f.L))} m at ${fmt2(f.v)} m/s, from a pumping station at the start to a discharge maintenance hole on the ${fmtNum(S.conn.dmm)} mm sewer. The pumps: <strong>${fmt1(f.q)} L/s at ${fmt1(f.tdh)} m</strong> total head.</p>`
       : `<p><span class="pnl-chip t-over">No pumped design</span> ${esc(f.why)}.</p>`;
     const duty = `<dl class="sd-duty small"><dt>Design flow</dt><dd>${fmt1(f.q)} L/s${S.flow && !S.flow.typed ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}</dd>
-      <dt>Static lift</dt><dd>${fmt2(f.lift)} m, from the wet well's low level ${fmt2(f.ww)} m${f.wwAssumed ? ' (the incoming sewer: 2.5 m of cover over a 200 mm pipe; the wet well\'s operating range adds to it)' : ''} to the outlet obvert ${fmt2(f.outEl)} m</dd>
+      <dt>Static lift</dt><dd>${fmt2(f.lift)} m, from the wet well's low level ${fmt2(f.ww)} m${f.wwAssumed ? ` (${esc(f.wwNote)}; the wet well's operating range adds to it)` : ''} to the outlet obvert ${fmt2(f.outEl)} m</dd>
       ${f.over ? `<dt>Over a high point</dt><dd>${fmt2(f.over.need)} m more: the pipe at ${fmtNum(Math.round(f.over.x))} m stands above the hydraulic grade line</dd>` : ''}
       <dt>Friction</dt><dd>${fmt2(f.hf)} m (Hazen-Williams, C 140: ${fmt2(f.hfPerKm)} m per km)</dd>
       <dt>Total head</dt><dd><strong>${fmt2(f.tdh)} m</strong> · water power ${fmt1(f.power)} kW (before pump and motor losses)</dd></dl>`;
@@ -587,7 +608,7 @@
     P.open({
       d: S.d, view: v, nodes: v.nodes, ground: v.ground, pts: [...S.pts, ...done().flatMap(b => b.pts)], conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
       plan: { lls, reaches: S.d.reaches, labels: S.d.mhs.map((m, i) => `MH ${i + 1}`), start: S.pts[0], branches: done().map(b => b.pts[0]) },
-      xings: S.xings || null, checks: checks(S.d, S.net.net, S.conn), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      xings: S.xings || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
       where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
       date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
       version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',

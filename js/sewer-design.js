@@ -257,55 +257,80 @@
       }
       return [lo, hi];
     };
-    const outState = nodes.map(() => null);   // node → Map(k → { cost, ins: [{ reach, b, drop, structure }] })
-    const inBest = R.map(() => null);          // reach → Map(bK → { cost, a, S })
+    const outState = nodes.map(() => null);   // node → Map(k → { cost, ins: [{ reach, b, drop, structure, st }] })
+    // reach → Map(bK → [{ cost, a, S, dr, key }]): at each inlet invert, the cheapest way in for each
+    // class of drops it allows through the next maintenance hole. From 375 mm at a bend the least drop
+    // (the velocity head rule) grows with the slope, so a dearer, flatter way in can allow an outlet a
+    // cheaper, steeper one can't; one entry per inlet invert would lose it (design() keeps every
+    // inlet's own drops). A class: the lattice outlets the drop range allows (the same for any size
+    // out), or at the connection whether the drop into the existing sewer is allowed.
+    const inBest = R.map(() => null), inWide = R.map(() => r.dropSmall[1]);
+    const bendOf = i => (R[i].bend != null ? R[i].bend : nodes[R[i].to].bend || 0);
+    const connOK = (d, dr) => !(d > dr.max + 1e-6) && !(d < dr.min - 1e-6 && d > 1e-6);
     const leafOf = n => !into[n].length;
     const doReach = i => {
       const rc = R[i], u = rc.from, first = leafOf(u), sLo = first ? Math.max(sMin[i], r.sLastLeg) : sMin[i];
       if (!outState[u]) { const m = new Map(); for (let k = hiK(u, D[i]); k >= loK(u); k--) m.set(k, { cost: 0, ins: [] }); outState[u] = m; }
-      const out = new Map(), bHi = hiK(rc.to, D[i]), bLo = loK(rc.to);
+      const out = new Map(), bHi = hiK(rc.to, D[i]), bLo = loK(rc.to), bend = bendOf(i), atConn = rc.to === root && !!conn;
+      // (the drop range is the same for every slope up to 300 mm, or without a bend)
+      const dr0 = dmm[i] > 300 && bend > 0 ? null : dropRange(dmm[i], 0, bend, r), drMemo = new Map();
+      const target = atConn ? conn.invert + conn.dmm / 1000 - D[i] : 0;
+      let wide = dr0 ? dr0.max : r.dropSmall[1];
       for (const [ak, st] of outState[u]) {
         const a = E(ak), sb = slopeBounds(i, a); if (!sb) continue;
         const s0 = Math.max(sLo - 1e-9, sb[0]), s1 = Math.min(sMax[i] + 1e-9, sb[1]); if (s0 > s1) continue;
         const top = Math.min(bHi, Math.floor((a - s0 * rc.L) / step + 1e-9)), bot = Math.max(bLo, Math.ceil((a - s1 * rc.L) / step - 1e-9));
         for (let bk = top; bk >= bot; bk--) {
           const S = (a - E(bk)) / rc.L; if (S < s0 - 1e-12 || S > s1 + 1e-12) continue;
-          const c = st.cost + GINT[i] - a * rc.L + S * rc.L * rc.L / 2, prev = out.get(bk);
-          if (!prev || c < prev.cost) out.set(bk, { cost: c, a: ak, S });
+          const c = st.cost + GINT[i] - a * rc.L + S * rc.L * rc.L / 2, b = E(bk);
+          let list = out.get(bk);
+          if (dr0) {   // one class
+            if (!list) out.set(bk, [{ cost: c, a: ak, S, dr: dr0, key: 0 }]);
+            else if (c < list[0].cost) { const e = list[0]; e.cost = c; e.a = ak; e.S = S; }
+            continue;
+          }
+          let dr = drMemo.get(ak - bk); if (!dr) { dr = dropRange(dmm[i], V(i, S), bend, r); drMemo.set(ak - bk, dr); }
+          let key;
+          if (atConn) { const d = b - target; key = d < -1e-6 || d >= r.dropStructure ? 0 : connOK(d, dr) ? 1 : 2; }
+          else key = (bk - Math.floor((b - dr.min) / step + 1e-9)) * 1024 + (bk - Math.ceil((b - dr.max) / step - 1e-9));
+          if (!list) { list = []; out.set(bk, list); }
+          let e = null; for (const x of list) if (x.key === key) { e = x; break; }
+          if (!e) { list.push({ cost: c, a: ak, S, dr, key }); if (dr.max > wide) wide = dr.max; }
+          else if (c < e.cost) { e.cost = c; e.a = ak; e.S = S; e.dr = dr; }
         }
       }
-      inBest[i] = out;
+      inBest[i] = out; inWide[i] = wide;
       return out.size > 0;
     };
     // The cheapest way for reach i into an outlet invert ok at its downstream node (pipe out size dOut,
     // or the existing sewer at the connection).
     const bestInto = (i, ok, dOut, atConn) => {
-      const m = inBest[i], bend = R[i].bend != null ? R[i].bend : nodes[R[i].to].bend || 0; let best = null;
-      const drOf = st => st.dr || (st.dr = dropRange(dmm[i], V(i, st.S), bend, r));
-      const consider = (bk, drop, structure) => { const st = m.get(bk); if (!st) return; const c = st.cost + (structure ? pen : 0); if (!best || c < best.cost) best = { cost: c, b: bk, drop, structure }; };
+      const m = inBest[i]; let best = null;
+      const consider = (st, bk, drop, structure) => { const c = st.cost + (structure ? pen : 0); if (!best || c < best.cost) best = { cost: c, b: bk, drop, structure, st }; };
       if (atConn) {
         // The connection: the new obvert at or above the existing one, and an allowed drop into it.
         const target = conn.invert + conn.dmm / 1000 - D[i];
-        for (const [bk, st] of m) {
+        for (const [bk, list] of m) {
           const b = E(bk), d = b - target; if (d < -1e-6) continue;
-          const dr = drOf(st), structure = d >= r.dropStructure;
-          if (!structure && d > dr.max + 1e-6) continue;
+          const structure = d >= r.dropStructure;
           if (structure && pen === Infinity) continue;
-          if (!structure && d < dr.min - 1e-6 && d > 1e-6) continue;
-          consider(bk, d, structure);
+          for (const st of list) if (structure || connOK(d, st.dr)) consider(st, bk, d, structure);
         }
         return best;
       }
       // Through a maintenance hole: the lattice outlets within the allowed drop (as design() takes
       // them), or a drop structure at 0.9, 1.4 or 2.4 m; only the pipes-in that can reach outlet ok.
-      const o = E(ok), grow = Math.max(0, dOut - D[i]), wide = Math.max(r.dropSmall[1], 0.5 * r.vMaxFull * r.vMaxFull / (2 * G), grow) + step;
+      const o = E(ok), grow = Math.max(0, dOut - D[i]), wide = Math.max(inWide[i], grow) + step;
       for (let bk = ok + 1; bk <= Math.ceil((o + wide) / step); bk++) {
-        const st = m.get(bk); if (!st) continue;
-        const b = E(bk), dr = drOf(st), lo = Math.max(dr.min, grow), hi = Math.max(dr.max, grow);
-        if (ok <= Math.floor((b - lo) / step + 1e-9) && ok >= Math.ceil((b - hi) / step - 1e-9)) consider(bk, b - o, false);
+        const list = m.get(bk); if (!list) continue;
+        const b = E(bk);
+        for (const st of list) {
+          const lo = Math.max(st.dr.min, grow), hi = Math.max(st.dr.max, grow);
+          if (ok <= Math.floor((b - lo) / step + 1e-9) && ok >= Math.ceil((b - hi) / step - 1e-9)) consider(st, bk, b - o, false);
+        }
       }
       if (pen < Infinity) for (const extra of [r.dropStructure, r.dropStructure + 0.5, r.dropStructure + 1.5]) {
-        for (let bk = Math.floor((o + extra) / step) - 1; bk <= Math.ceil((o + extra + step) / step) + 1; bk++) { if (!m.has(bk)) continue; const b = E(bk); if (Math.floor((b - extra) / step + 1e-9) === ok) consider(bk, b - o, true); }
+        for (let bk = Math.floor((o + extra) / step) - 1; bk <= Math.ceil((o + extra + step) / step) + 1; bk++) { const list = m.get(bk); if (!list) continue; const b = E(bk); if (Math.floor((b - extra) / step + 1e-9) === ok) for (const st of list) consider(st, bk, b - o, true); }
       }
       return best;
     };
@@ -334,7 +359,7 @@
     // Back from the connection: each reach's inverts, each maintenance hole's outlet.
     const outK = nodes.map(() => null), insOf = nodes.map(() => []), inv = R.map(() => ({}));
     insOf[root] = rootIns;
-    const walk = n => { for (const x of insOf[n]) { const st = inBest[x.reach].get(x.b), u = R[x.reach].from; inv[x.reach] = { up: E(st.a), dn: E(x.b), S: st.S }; outK[u] = st.a; insOf[u] = outState[u].get(st.a).ins; walk(u); } };
+    const walk = n => { for (const x of insOf[n]) { const st = x.st, u = R[x.reach].from; inv[x.reach] = { up: E(st.a), dn: E(x.b), S: st.S }; outK[u] = st.a; insOf[u] = outState[u].get(st.a).ins; walk(u); } };
     walk(root);
     const mhs = nodes.map((nd, n) => {
       const ins = insOf[n].map(x => ({ reach: x.reach, inv: E(x.b), drop: +x.drop.toFixed(3), structure: !!x.structure }));
@@ -363,6 +388,18 @@
     return { nodes: n.map(({ g, bend }) => ({ g, bend: bend || 0 })), reaches: n.slice(1).map((b, k) => ({ from: k, to: k + 1, L: b.x - n[k].x, q, pts: route.samples.filter(s => s.x > n[k].x && s.x < b.x).map(s => ({ d: s.x - n[k].x, g: s.g })) })) };
   }
 
+  // The deepest the pipe runs (m from the ground to its invert) at every maintenance hole and every
+  // ground sample along every reach, as the cover check reads them, and the trench there (with the
+  // 0.15 m bedding). d: design() or designNet() (ok); net: its network (lineNet(route, q) for design()).
+  function deepest(d, net, r = d.rules || RULES) {
+    let depth = Math.max(...d.mhs.map(m => m.depth));
+    d.reaches.forEach((rc, i) => {
+      const NR = net.reaches[i];
+      for (const p of [{ d: 0, g: net.nodes[rc.from].g }, ...NR.pts, { d: NR.L, g: net.nodes[rc.to].g }]) depth = Math.max(depth, p.g - (rc.inv_up - rc.S * p.d));
+    });
+    return { depth, trench: depth + r.bedding };
+  }
+
   // ---- Helpers for the tools -----------------------------------------------------------------------
   // Maintenance holes along a drawn line: at each vertex (a change of direction) and between them so
   // none is more than the spacing apart. pts: [{ x }] chainages of the vertices.
@@ -384,7 +421,7 @@
     return { q: peak + ii, avg: res + emp, peak, ii, typed: false };
   }
 
-  const api = { RULES, SIZES, SOURCE, qFull, vFull, partAt, partFor, minSlope, maxSlope, dropRange, design, designNet, lineNet, placeMHs, flowFrom };
+  const api = { RULES, SIZES, SOURCE, qFull, vFull, partAt, partFor, minSlope, maxSlope, dropRange, design, designNet, lineNet, deepest, placeMHs, flowFrom };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSewerDesign = api;
 })(typeof window !== 'undefined' ? window : globalThis);

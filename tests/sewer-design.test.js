@@ -162,3 +162,35 @@ test('a network that is not a tree, or with no connection, is refused', () => {
   assert.throws(() => SD.designNet({ ...net, reaches: [...net.reaches, { from: 2, to: 4, L: 10, q: 1, pts: [] }] }, { invert: 190, dmm: 450 }), /two pipes out/);
   assert.equal(SD.designNet({ nodes: net.nodes, reaches: [] }, { invert: 190, dmm: 450 }).ok, false);
 });
+
+test('on a single line the network design equals design() even when a flatter way in allows a drop a steeper one can\'t (375 mm and more at bends)', () => {
+  // the velocity head rule's least drop grows with the slope: keeping only the cheapest way into each
+  // inlet invert lost the dearer, flatter one design() keeps
+  const nodes = [[0, 200, 90], [56.28, 198.861, 90], [112.56, 197.721, 0], [168.84, 196.58, 45], [225.12, 195.437, 90], [281.4, 194.293, 45], [337.68, 193.147, 0], [393.96, 192.001, 90]].map(([x, g, bend]) => ({ x, g, bend }));
+  const rt = { nodes, samples: [] }, conn = { invert: 187.934, dmm: 900 }, q = 159.2;
+  const a = SD.design(rt, conn, q), b = SD.designNet(SD.lineNet(rt, q), conn);
+  assert.ok(a.ok && b.ok, `${a.why} ${b.why}`);
+  assert.equal(b.dmm, a.dmm);
+  assert.ok(Math.abs(b.cost - a.cost) < 1e-6, `designNet ${b.cost} vs design ${a.cost}`);   // was 1,194.23 vs 1,166.66
+  assert.deepEqual(b.mhs.map(m => m.inv_out), a.mhs.map(m => m.inv_out));
+  // every drop keeps its own rule
+  b.mhs.forEach((m, n) => { if (!n || n === b.root) return; const rin = b.reaches[n - 1], dr = SD.dropRange(rin.dmm, rin.v, nodes[n].bend); assert.ok(m.drop >= dr.min - 1e-6 && m.drop <= dr.max + 1e-6, `MH ${n + 1}: ${m.drop} in ${dr.min}–${dr.max}`); });
+});
+
+test('the audit\'s case: 734 m, 450 mm, bends of 30° and 60° (design() costs 2,960.83 there)', () => {
+  // the generator the case came from (seed 7, the 22nd line)
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let rt, conn, q;
+  for (let k = 0; k < 22; k++) {
+    const L = 60 + rnd() * 700, sl = (rnd() - 0.6) * 0.03, amp = rnd() * 2, w = 30 + rnd() * 100, gf = x => 200 - sl * x + amp * Math.sin(x / w), sp = 80 + rnd() * 110;
+    rt = { nodes: SD.placeMHs([0, L], sp).map(x => ({ x, g: gf(x), bend: Math.round(rnd() * 3) * 30 })), samples: Array.from({ length: Math.floor(L / 10) }, (_, i) => ({ x: i * 10 + 5, g: gf(i * 10 + 5) })) };
+    const dmm = [300, 375, 450, 600, 900][Math.floor(rnd() * 5)];
+    conn = { invert: gf(L) - 2.5 - rnd() * 5, dmm }; q = 1 + rnd() * 120;
+  }
+  const t = Date.now(), b = SD.designNet(SD.lineNet(rt, q), conn), ms = Date.now() - t;
+  assert.ok(b.ok, b.why);
+  assert.equal(b.dmm, 450);
+  // design() on this line (about 4 s, so not run here): 2,960.83; designNet was 2,962.93
+  assert.ok(Math.abs(b.cost - 2960.83) < 0.005, `${b.cost}`);
+  assert.ok(ms < 3000, `${ms} ms`);
+});
