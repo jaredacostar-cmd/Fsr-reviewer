@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generatedAt": "2026-10-15T18:42:13.901Z",
+ "generatedAt": "2026-10-17T21:45:52.803Z",
  "source": {
   "list": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments",
   "note": "EA names from the Region of Peel list; status, milestones and documents read from each project page. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26): notices go on each project's website, with no central registry."
@@ -34,6 +34,7 @@
     "date": "2026-11"
    },
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The study area for this Schedule B MCEA will be divided to three distinct packages, refer to Figure 1.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/downtown-brampton-water-wastewater-capacity-improvements",
@@ -229,7 +230,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -260,6 +261,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "As part of this effort, we’re conducting a Schedule B Municipal Class Environmental Assessment (Class EA) to explore options for building new large sewer pipes (called “sanitary trunk sewers”) in the area.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/castlemore-trunk-sewer-diversion",
@@ -444,7 +446,7 @@
      "North Hill"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -479,6 +481,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "We will present the results of the completed evaluation of construction methods and preliminary shaft locations, with opportunities to provide feedback and ask questions.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/kennedy-road-sanitary-trunk-sewer-project",
@@ -633,7 +636,7 @@
      "McLaughlin"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -663,6 +666,7 @@
     "date": "2026-10-23"
    },
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region is undertaking a Complete Corridor Study and Preliminary Design to improve Highway 50 from Queen Street East to The Gore Road.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/highway-50-queen-street-east-gore-road",
@@ -722,7 +726,7 @@
      "Gore Road"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -742,6 +746,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region is undertaking a Complete Corridor Study and Preliminary Design Improvements to Airport Road from Derry Road to Intermodal Drive within Brampton and Mississauga (the Study).",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/airport-road-complete-corridor-study-preliminary-design-improvements",
@@ -862,7 +867,7 @@
      "Intermodal Drive"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -897,6 +902,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "This planning work is being completed through a Municipal Class Environmental Assessment (EA) which is a provincially regulated process that helps identify the best solution while considering the environment, technical…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/bolton-zone-7-water-elevated-storage-transmission-mains",
@@ -1010,7 +1016,7 @@
      "North Hill"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1030,6 +1036,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region is undertaking a Complete Corridor Study to transform Charleston Sideroad from Kennedy Road to Main Street/Highway 136 within the Town of Caledon.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/charleston-sideroad-between-kennedy-main-streethighway-136",
@@ -1087,7 +1094,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1110,6 +1117,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "A Class Environmental Assessment (Class EA) study is being initiated to plan for supply capacity and redundancy increase through addition of a new municipal production well to meet the long-term water needs of the…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/inglewood-groundwater-based-drinking-water-system-additional-groundwater-supply",
@@ -1322,7 +1330,7 @@
      "Inglewood"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "groundwater-based-drinking-water-systems-master-plan",
@@ -1341,6 +1349,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Master Plan will ensure there is enough infrastructure capacity in the serviced areas of the Town of Caledon, to ensure adequate level of service and to accommodate planned growth in these areas to 2051.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/master-plan-peels-groundwater",
@@ -1370,7 +1379,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "highway-50-queensgate-columbia-way-bolton",
@@ -1391,6 +1400,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region has initiated a corridor study for Queen Street (Regional Road 50) from 300m south of Queensgate Boulevard to 300m north of Columbia Way in Bolton (see map of study area).",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/highway-50-queensgate-columbia-way-bolton",
@@ -1452,7 +1462,7 @@
      "Bolton South"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1483,6 +1493,7 @@
    ],
    "nextStep": null,
    "completedYear": 2025,
+   "completedBasis": "notice of completion",
    "purpose": "Peel Region initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study for the watermain replacement from Highway 50 to Hardwick Road, in the Town of Caledon.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/highway-50-hardwick-road-watermain-replacement",
@@ -1552,7 +1563,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1595,6 +1606,7 @@
    ],
    "nextStep": null,
    "completedYear": 2026,
+   "completedBasis": "notice of completion",
    "purpose": null,
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/bolton-water-wastewater-capacity-improvements",
@@ -1693,7 +1705,7 @@
      "Bolton"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1724,6 +1736,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "This Municipal Class Environmental Assessment (EA) will support this recommendation by developing, evaluating, and selecting a preferred storage facility and transmission main route to service the projected growth…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/west-caledon-storage-facility-transmission-main",
@@ -1804,7 +1817,7 @@
      "West Caledon"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1826,7 +1839,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2024,
+   "completedBasis": "report cover",
    "purpose": "A Class Environmental Assessment (Class EA) study is being initiated to plan for additional water supply capacity to the existing Palgrave – Caledon East Drinking Water System.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/palgrave-caledon-east-drinking-water-system-supply-capacity",
@@ -1936,7 +1950,7 @@
      "South Albion"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -1959,6 +1973,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region has identified the need for extensive upgrades of the Inglewood Wastewater Treatment Plant (WWTP) to provide reliable performance into the future.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/inglewood-wastewater-treatment-plant-upgrades",
@@ -1992,7 +2007,7 @@
      "Inglewood"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "derry-road-mclaughlin-road-to-tomken-road",
@@ -2006,6 +2021,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region has initiated a corridor study and preliminary design for Derry Road from 250 metres west of McLaughlin Road to Tomken Road in the City of Mississauga.",
    "links": {
     "page": "https://peelregion.ca/construction/derry-road-mclaughlin-road-tomken-road",
@@ -2086,7 +2102,7 @@
      "McLaughlin"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2125,6 +2141,7 @@
    ],
    "nextStep": null,
    "completedYear": 2025,
+   "completedBasis": "notice of completion",
    "purpose": "The Region has undertaken a study to evaluate all potential alternatives for the installation of the sanitary sewer within the highlighted study area.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/elia-avenue-sanitary-sewer-enhancements",
@@ -2216,7 +2233,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2243,6 +2260,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "As part of this effort, we’re conducting a Schedule C - Municipal Class Environmental Assessment to explore options for building new large water pipes (called “transmission mains”) on the west side of Mississauga.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/twinning-meadowvale-north-streetsville-transmission-mains",
@@ -2322,7 +2340,7 @@
      "Fifeshire"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2356,7 +2374,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2022,
+   "completedBasis": "report filed",
    "purpose": "The Region is doing an Environmental Assessment (EA) to study how to expand the capacity of the Central Mississauga Wastewater System.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/wastewater-capacity-improvements-central-mississauga",
@@ -2503,7 +2522,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2530,6 +2549,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "A key element of the Class EA planning process is consultation with the community.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/lower-west-sanitary-trunk-sewer-twinning",
@@ -2616,7 +2636,7 @@
      "Stonehaven Drive"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2655,6 +2675,7 @@
    ],
    "nextStep": null,
    "completedYear": 2024,
+   "completedBasis": "notice of completion",
    "purpose": "The Region has undertaken a study to evaluate potential alternatives for the installation of a new sanitary sewer to accommodate flows from proposed developments near Hurontario Street and Kirwin Avenue within the…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/kirwin-avenue-sanitary-sewer-diversion",
@@ -2776,7 +2797,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2799,6 +2820,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The study outlined conceptual wastewater infrastructure required to enhance flood resiliency, prevent sewage overflow into Sheridan creek, support additional growth, and facilitate treatment plant expansion.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/royal-windsor-sanitary-sewer-diversion",
@@ -2914,7 +2936,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -2934,6 +2956,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Region of Peel is designing the application of Low Impact Development (LID) systems at two (2) locations along Erin Mills Parkway to improve stormwater quality of road runoff.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/low-impact-development-lid-facilities-erin-mills-parkway-south-highway-403",
@@ -3006,7 +3029,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -3029,6 +3052,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Region of Peel is undertaking a Complete Corridor Study to transform Erin Mills Parkway between Britannia Road (Regional Road 3) and Highway 407 within the City of Mississauga into a “complete street” that supports…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/erin-mills-parkway-between-britannia-road-highway-407",
@@ -3151,7 +3175,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -3188,6 +3212,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Include collaboration with local municipalities to identify priority growth areas such as major transit station areas.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/2025-water-wastewater-master-plan-lake-based-systems",
@@ -3222,7 +3247,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "snow-storage-sites-analysis",
@@ -3241,6 +3266,7 @@
    ],
    "nextStep": null,
    "completedYear": 2024,
+   "completedBasis": "notice of completion",
    "purpose": "Peel Region has completed a Municipal Class Environmental Assessment (EA) to evaluate snow storage opportunities at selected Peel Region (and one Town of Caledon) owned properties.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/municipal-class-environmental-assessment-study-snow-storage-sites",
@@ -3311,7 +3337,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "airport-road-braydon-boulevard-stonecrest-drive-to-countryside-drive",
@@ -3328,6 +3354,7 @@
    ],
    "nextStep": null,
    "completedYear": 2021,
+   "completedBasis": "notice of completion",
    "purpose": "June 17, 2021 - Peel Region has completed a Class Environmental Assessment (Class EA) Study for Airport Road from Braydon Boulevard/Stonecrest Drive to Countryside Drive, in the City of Brampton.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/airport-road-braydon-boulevardstonecrest-drive-countryside-drive",
@@ -3474,7 +3501,7 @@
      "Airport Road"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -3496,7 +3523,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2022,
+   "completedBasis": "page wording",
    "purpose": "New east-west 4-lane arterial roadway between The Gore Road and Arterial A2 to provide connectivity for future development lands between Countryside Drive and Castlemore Road.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/arterial-roads-within-highway-427-industrial-secondary-plan-area-area-47",
@@ -3768,7 +3796,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -3785,7 +3813,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2013,
+   "completedBasis": "report cover",
    "purpose": "Region of Peel has completed the Schedule “C” Environmental Assessment (EA) for improvements to Bovaird Drive from Lake Louise Drive/Worthington Avenue to 1.45km west of Heritage Road.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/bovaird-drive-mississauga-road-lake-louise-driveworthington-avenue-145km-west-heritage-road",
@@ -4039,7 +4068,7 @@
      "Heritage Road"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4056,7 +4085,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2011,
+   "completedBasis": "report file name",
    "purpose": "Environmental assessment from Queen Street Drive to Mayfield Road",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/dixie-road-queen-street-drive-mayfield-road",
@@ -4234,7 +4264,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4257,6 +4287,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "A new watermain is required south of Williams Parkway to provide this additional water supply to the Downtown Brampton area.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/downtown-brampton-watermain-replacement-improvement",
@@ -4417,7 +4448,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4456,6 +4487,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Region of Peel is undertaking a Municipal Class Environmental Assessment (EA) Study to identify, develop and implement a solution to address future capacity needs and existing sanitary sewer issues in the Etobicoke…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/etobicoke-creek-trunk-sewer-improvements-upgrades",
@@ -4577,7 +4609,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4608,6 +4640,7 @@
    ],
    "nextStep": null,
    "completedYear": 2023,
+   "completedBasis": "notice of completion",
    "purpose": "This study will evaluate alternative locations for the upgraded facility, with consideration for social, environmental, regulatory, technical feasibility and costs.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/finch-stormwater-pumping-station-upgrades",
@@ -4670,7 +4703,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4693,6 +4726,7 @@
    ],
    "nextStep": null,
    "completedYear": 2022,
+   "completedBasis": "notice of completion",
    "purpose": "Peel Region has completed a Class Environmental Assessment (Class EA) Study to consider placement of a watermain outside of the existing road right-of-way on Heritage Road/Meadowvale Boulevard.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/heritage-road-watermain-construction",
@@ -4752,7 +4786,7 @@
      "Heritage Road"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4769,7 +4803,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2012,
+   "completedBasis": "report cover",
    "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) to:",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/highway-50-mayfield-road",
@@ -4878,7 +4913,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -4917,6 +4952,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study for the new offline storage facility required to alleviate capacity constraints at the Lakelands Wastewater Pumping Station…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/lakelands-wastewater-pumping-station-new-offline-storage-facility",
@@ -5030,7 +5066,7 @@
      "Lakelands"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5047,7 +5083,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2013,
+   "completedBasis": "report cover",
    "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) for the improvements to Mayfield Road from Airport Road to Coleraine Drive, in the Region of Peel at the municipal boundary to the City of…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-airport-road-coleraine-drive",
@@ -5171,7 +5208,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5188,7 +5225,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2014,
+   "completedBasis": "report cover",
    "purpose": "The Region of Peel has completed the Schedule “C” Environmental Assessment (EA) to examine the need and feasibility for widening, intersection improvements, changes to road and intersection geometrics and pavement…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-chinguacousy-road-heart-lake-road",
@@ -5395,7 +5433,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5412,7 +5450,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2016,
+   "completedBasis": "report file name",
    "purpose": "The Region of Peel has completed the Schedule “C” Environmental Assessment (EA) for improvements to Mayfield Road from Chinguacousy Road to Winston Churchill Boulevard.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-chinguacousy-road-winston-churchill-boulevard",
@@ -5534,7 +5573,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5552,6 +5591,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Regional Municipality of Peel has completed the Schedule \"C\" Environmental Assessment (EA) to examine roadway widening and improvement options on Mayfield Road (Regional Road 14) between Heart Lake Road and Airport…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mayfield-road-heart-lake-road-airport-road",
@@ -5696,7 +5736,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5723,6 +5763,7 @@
    ],
    "nextStep": null,
    "completedYear": 2023,
+   "completedBasis": "notice of completion",
    "purpose": "December 5, 2023 – Peel Region has completed a Schedule B Municipal Class Environmental Assessment (MCEA) study to upgrade and expand the capacity of the McVean Sanitary Pumping Station (SPS), in order to service…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mcvean-sanitary-pumping-station-upgrades",
@@ -5835,7 +5876,7 @@
      "McVean Drive"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5853,6 +5894,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) for improvements on Mississauga Road from Bovaird Drive to Mayfield Road in the City of Brampton.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mississauga-road-bovaird-drive-mayfield-road",
@@ -5946,7 +5988,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -5963,7 +6005,8 @@
    "status": "addendum",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2006,
+   "completedBasis": "page wording",
    "purpose": "The Region of Peel has completed the Schedule \"C\" Environmental Assessment (EA) on Mississauga Road from Queen Street West to Bovaird Drive West to examine the need, justification and feasibility for roadway widening…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mississauga-road-financial-drive-bovaird-drive-west",
@@ -6268,7 +6311,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -6286,6 +6329,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Regional Municipality of Peel has completed the Schedule “C” Class Environmental Assessment (EA) study to evaluate the need and feasibility of a widening and improvements on Steeles Avenue to address short and long…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/steeles-avenue-chinguacousy-roadmavis-road-winston-churchill-boulevard",
@@ -6392,7 +6436,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -6409,7 +6453,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2016,
+   "completedBasis": "report cover",
    "purpose": "The Region of Peel has completed the Schedule “C” Environmental Assessment (EA) for improvements to The Gore Road from Queen Street to Castlemore Road, in the City of Brampton.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/gore-road-queen-street-castlemore-road",
@@ -6496,7 +6541,7 @@
      "Castlemore"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -6519,6 +6564,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Environmental assessment from Highway 401 to Embleton Road",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/winston-churchill-boulevard",
@@ -6710,7 +6756,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -6733,6 +6779,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Environmental assessment from Mayfield Road to King Street.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/airport-road-1km-north-mayfield-road-600m-north-king-street",
@@ -6850,7 +6897,7 @@
      "Mayfield"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -6877,6 +6924,7 @@
    ],
    "nextStep": null,
    "completedYear": 2021,
+   "completedBasis": "notice of completion",
    "purpose": "Environmental Assessment from 100m north of King Street to 300m north of Huntsmill Drive, Caledon",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/airport-road-100m-north-king-street-300m-north-huntsmill-drive",
@@ -7066,7 +7114,7 @@
      "Caledon East"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -7083,7 +7131,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2020,
+   "completedBasis": "report cover",
    "purpose": "The study will examine the need and justification as well as feasibility for improvements that may include widening, intersection improvements and new infrastructure to facilitate walking and cycling.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/albion-vaughan-road-king-street-intersection",
@@ -7199,7 +7248,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -7246,7 +7295,7 @@
      "Alton"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -7281,6 +7330,7 @@
    ],
    "nextStep": null,
    "completedYear": 2024,
+   "completedBasis": "notice of completion",
    "purpose": "The Region of Peel has completed a Municipal Class Environmental Assessment (EA) Study to evaluate grade separation improvements for the CP Rail line on Coleraine Drive.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/coleraine-drive-grade-separation",
@@ -7444,7 +7494,7 @@
      "West Bolton"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -7475,6 +7525,7 @@
    ],
    "nextStep": null,
    "completedYear": 2023,
+   "completedBasis": "notice of completion",
    "purpose": "The Region of Peel has completed a Municipal Class Environmental Assessment Study for drainage improvements of Highway 50 from Mayfield Road to Healey Road, in the Town of Caledon.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/regional-road-highway-50-drainage-improvements-mayfield-road-healey-road",
@@ -7586,7 +7637,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -7616,7 +7667,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2012,
+   "completedBasis": "report file name",
    "purpose": "Environmental assessment on Mississauga Road from Old Main Street to Bush Street and Bush street from Winston Churchill Boulevard to Olde Base Line Road",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/mississauga-road-bush-street",
@@ -7787,7 +7839,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -7821,7 +7873,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2024,
+   "completedBasis": "report filed",
    "purpose": "Peel region has completed a Municipal Class Environmental Assessment Study to identify the upgrades/modifications to the existing Palgrave Well #4 Water Treatment Plant required to accommodate the proposed increase in…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/palgrave-well-4-supply-capacity-increase",
@@ -7870,7 +7923,7 @@
      "Palgrave"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "the-gore-road-patterson-sideroad-to-hwy-9",
@@ -7881,7 +7934,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2013,
+   "completedBasis": "report cover",
    "purpose": "Improvements class environmental assessment from Patterson Side Road to Highway 9",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/gore-road-patterson-side-road-highway-9",
@@ -8016,7 +8070,7 @@
      "Gore Road"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -8033,7 +8087,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2024,
+   "completedBasis": "report cover",
    "purpose": "To address the need to increase the water storage capacity, Peel has completed a Schedule ‘C’ Municipal Class Environmental Assessment (Class EA) for the planned reservoir expansion at the Arthur P. Kennedy WTP.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/arthur-p-kennedy-water-treatment-plant-reservoir-expansion",
@@ -8120,7 +8175,7 @@
      "Beach Street"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -8145,6 +8200,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Region of Peel has initiated a Schedule B Municipal Class Environmental Assessment (MCEA) study to review existing sanitary sewer infrastructure and evaluate options to divert flow from the Beach Street Sewage…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/beach-street-sewage-pumping-station-diversion",
@@ -8288,7 +8344,7 @@
      "Beechwood"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -8311,6 +8367,7 @@
    ],
    "nextStep": null,
    "completedYear": 2020,
+   "completedBasis": "notice of completion",
    "purpose": "The Region of Peel has completed a Schedule B Municipal Class Environmental Assessment (Class EA) Study for Cawthra Road from QEW to Eastgate Parkway in the City of Mississauga.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/cawthra-road-improvements",
@@ -8638,7 +8695,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -8669,6 +8726,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region has identified the need for a trunk sewer along Burnhamthorpe Road from Cawthra Road to the existing East Trunk Sanitary sewer, adjacent to Little Etobicoke Creek to improve local sanitary servicing along…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/cawthra-road-phase-3-sanitary-trunk-sewer",
@@ -8768,7 +8826,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -8785,7 +8843,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2021,
+   "completedBasis": "report cover",
    "purpose": "The Region of Peel has completed the \"Schedule B\" Environmental Assessment (EA) for the Claredale Road to Beechwood Pumping Station.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/claredale-road-beechwood-pumping-station",
@@ -8822,7 +8881,7 @@
      "Beechwood"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "clarkson-wastewater-treatment-plant",
@@ -8846,7 +8905,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2023,
+   "completedBasis": "report cover",
    "purpose": "A Schedule C Class Environmental Assessment (EA) will assess Clarkson’s long-term servicing needs.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/clarkson-wastewater-treatment-plant",
@@ -8891,7 +8951,7 @@
      "Clarkson"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "credit-valley-sanitary-trunk-sewer-relocation",
@@ -8908,6 +8968,7 @@
    ],
    "nextStep": null,
    "completedYear": 2021,
+   "completedBasis": "notice of completion",
    "purpose": "The EA study is being carried out in accordance with the planning and design process for “Schedule B” projects under the Environmental Assessment Act as outlined in the Municipal Engineers Association’s Municipal Class…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/credit-valley-sanitary-trunk-sewer-relocation",
@@ -8971,7 +9032,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "derry-road-east-and-alstep-drive-road-improvements",
@@ -9000,6 +9061,7 @@
    ],
    "nextStep": null,
    "completedYear": 2022,
+   "completedBasis": "notice of completion",
    "purpose": "July 14, 2022 - Bombardier Inc., in partnership with the City of Mississauga and the Region of Peel (The Proponents), has completed a Municipal Class Environmental Assessment (Class EA) Study to assess existing and…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/derry-road-east-alstep-drive-road-improvements",
@@ -9193,7 +9255,7 @@
     ],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -9210,7 +9272,8 @@
    "status": "complete",
    "milestones": [],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2015,
+   "completedBasis": "report cover",
    "purpose": null,
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/derry-road-argentia-road-intersection-improvements",
@@ -9317,7 +9380,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -9337,6 +9400,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Rometown Drive to Lakeshore Road Corridor Study was initiated to assess transportation and complete street improvements along the Dixie Road corridor.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/dixie-road-rometown-drive-lakeshore-road-corridor-study",
@@ -9393,7 +9457,7 @@
      "Dixie Road"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -9411,6 +9475,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region has now completed a Schedule B Municipal Class Environmental Assessment (EA) study to identify if and how the existing abandoned ETSS or a new offline storage facility could be used for storage of peak…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/east-trunk-sanitary-sewer-offline-storage-facility-notice-study-completion",
@@ -9462,7 +9527,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -9480,6 +9545,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": null,
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/erin-mills-parkway-intersection-improvements-dundas-street-burnhamthorpe-road",
@@ -9512,7 +9578,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -9551,6 +9617,7 @@
    ],
    "nextStep": null,
    "completedYear": 2019,
+   "completedBasis": "notice of completion",
    "purpose": null,
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/sanitary-sewer-improvements-on-multiple-streets-mississauga",
@@ -10311,7 +10378,7 @@
      "Victoria"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "front-street-wastewater-pumping-station-and-wastewater-diversion",
@@ -10323,6 +10390,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "In 2019, the Region of Peel completed a Schedule B Municipal Class Environmental Assessment (Class EA) Study to address wastewater flows from the Front Street Sewage Pumping Station (SPS) catchment area to align with…",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/front-street-wastewater-pumping-station-wastewater-diversion",
@@ -10359,7 +10427,7 @@
      "Front Street"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "g-e-booth-wastewater-treatment-plant",
@@ -10383,7 +10451,8 @@
     }
    ],
    "nextStep": null,
-   "completedYear": null,
+   "completedYear": 2024,
+   "completedBasis": "report cover",
    "purpose": "A Schedule C Class Environmental Assessment (EA) will assess G.E. Booth’s long-term servicing needs.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/ge-booth-wastewater-treatment-plant",
@@ -10435,7 +10504,7 @@
      "Lakeview"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "gravity-sanitary-sewer-from-indian-road-sewage-pumping-station-to-lakeshore-road",
@@ -10449,6 +10518,7 @@
    "milestones": [],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Peel Region identified the need to build a new gravity sanitary sewer to provide long term servicing for residents currently serviced by the Indian Road Sewage Pumping Station (SPS).",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/gravity-sanitary-sewer-indian-road-sewage-pumping-station-lakeshore-road-trunk-sewer",
@@ -10477,7 +10547,7 @@
      "Indian Road"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "lornewood-creek-sanitary-sewer-improvement",
@@ -10494,6 +10564,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Regional Municipality of Peel is undertaking a Class Environmental Assessment (Class EA) Study to determine the preferred alternatives for the Lornewood Creek Sanitary Sewer Improvements in the City of Mississauga.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/lornewood-creek-sanitary-sewer-improvement",
@@ -10740,7 +10811,7 @@
      "Richard's Memorial"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -10763,6 +10834,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "The Port Credit East study is being undertaken as a Schedule C Municipal Class EA and will ensure public feedback is accepted during the prescribed milestones.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/port-credit-east-wastewater-servicing-optimization-strategy-class-environmental-assessment",
@@ -10807,7 +10879,7 @@
      "Elmwood Avenue"
     ]
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   },
   {
    "id": "west-trunk-sanitary-sewer-diversion",
@@ -10824,6 +10896,7 @@
    ],
    "nextStep": null,
    "completedYear": null,
+   "completedBasis": null,
    "purpose": "Schedule B Class EA to review alternate flow diversions from Credit Valley trunk sewer to the west trunk sewer at Erin Mills Parkway.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/west-trunk-sanitary-sewer-diversion",
@@ -10986,7 +11059,7 @@
      "Streetsville"
     ]
    },
-   "lastChecked": "2026-10-15",
+   "lastChecked": "2026-10-17",
    "overridden": [
     "geometry",
     "geomType",
@@ -11011,6 +11084,7 @@
    ],
    "nextStep": null,
    "completedYear": 2020,
+   "completedBasis": "notice of completion",
    "purpose": "The study will incorporate the latest planning information, modelling tools, historical flow/demand data and servicing studies to complete a full review and update of the servicing strategies.",
    "links": {
     "page": "https://peelregion.ca/construction/environmental-assessments/2020-water-wastewater-master-plan-lake-based-systems",
@@ -11037,7 +11111,7 @@
     "capitalProjects": [],
     "facilities": []
    },
-   "lastChecked": "2026-10-15"
+   "lastChecked": "2026-10-17"
   }
  ]
 }
