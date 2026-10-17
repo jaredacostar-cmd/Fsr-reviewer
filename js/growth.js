@@ -105,6 +105,9 @@
         let yy = years.get(y);
         if (!yy) { yy = { year: y, units: 0, projects: new Set() }; years.set(y, yy); }
         yy.units += units; yy.projects.add(p.key);
+        // (by municipality only up to the data year, as the Peel row is clipped: an estimated completion
+        // date can fall after today, and its year would count as a year of completions)
+        if (deps.nowYear != null && y > deps.nowYear) { totalUnits += units; continue; }
         let m = munis.get(p.municipality);
         if (!m) { m = { units: 0, projects: new Set(), years: new Set() }; munis.set(p.municipality, m); }
         m.units += units; m.projects.add(p.key); m.years.add(y);

@@ -63,7 +63,8 @@
       bc._svcMethod = drMatch ? 'overlap' : 'overlap-zones';
     } else {
       const { zones, drainage } = App().state.servicing;
-      for (const d of bc.das) for (const id of [...Areas().locate(zones, d.lng, d.lat), ...Areas().locate(drainage, d.lng, d.lat)]) add(id, d.pop);
+      // (the blocks less the share the sewers don't serve, as in the overlap branch above)
+      for (const d of bc.das) { for (const id of Areas().locate(zones, d.lng, d.lat)) add(id, d.pop); for (const id of Areas().locate(drainage, d.lng, d.lat)) add(id, d.pop * (SD().svcById.get(id)?.served ?? 1)); }
       bc._svcMethod = 'centre';
     }
     return (bc._svcPop = pop);

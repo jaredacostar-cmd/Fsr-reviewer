@@ -138,12 +138,14 @@
     const lead = list.filter(r => timingOf(r) !== 'ok').sort((a, b) => rank[timingOf(a)] - rank[timingOf(b)] || yr(a) - yr(b) || b.bo - a.bo);
     const rest = list.filter(r => timingOf(r) === 'ok').sort((a, b) => b.bo - a.bo);
     const rows = [...lead, ...rest].slice(0, n);
-    return { rows, more: list.length - rows.length };
+    // (what is left off, split: "N more in time" counted the late and close ones that didn't fit too)
+    const moreOk = rest.length - rows.filter(r => timingOf(r) === 'ok').length;
+    return { rows, more: list.length - rows.length, moreOk, moreLate: list.length - rows.length - moreOk };
   }
   // Timing chart: capacity runs out vs online year, labelled by short name + ID at body size, with
   // an "after <end>" column; drawn at its width (never scaled up).
   function dcaTimingChart(list, n = 6) {
-    const { rows, more } = timingRows(list || [], n);
+    const { rows, moreOk, moreLate } = timingRows(list || [], n);
     if (!rows.length) return '';
     const W = chartW(320, 760), L0 = Math.min(250, Math.round(W * 0.45)), R0 = 12, T0 = 12, RH = 26, B0 = 26, H = T0 + rows.length * RH + B0;
     const x0 = MM().THIS_YEAR, x1 = SP().hz.end, AFTER = 9;
@@ -166,7 +168,7 @@
           + (xn == null ? '' : `<circle cx="${xn.toFixed(1)}" cy="${yc}" r="5" fill="none" style="stroke:${c};stroke-width:2"/>`);
       }).join('')}
     </svg>
-    <p class="small muted dca-key">● capacity runs out · ○ in service · <span class="t-over">red: in service after it runs out</span> · <span class="t-tight">amber: in service within ${CLOSE_YEARS} years of it</span>${more > 0 ? ` · <strong>${more} more</strong> in time` : ''}</p>`;
+    <p class="small muted dca-key">● capacity runs out · ○ in service · <span class="t-over">red: in service after it runs out</span> · <span class="t-tight">amber: in service within ${CLOSE_YEARS} years of it</span>${moreOk > 0 ? ` · <strong>${moreOk} more</strong> in time` : ''}${moreLate > 0 ? ` · <strong>${moreLate} more</strong> late or close (in the full table)` : ''}</p>`;
   }
   // Recommendations chart: growth relying on each project by the window's last year (top 10).
   function dcaRecChart(items, end) {
