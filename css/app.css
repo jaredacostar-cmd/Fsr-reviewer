@@ -3367,3 +3367,9 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .tour-offer p { margin: var(--space-1) 0 var(--space-2); }
 .tour-offer .tour-btns { display: flex; justify-content: space-between; gap: var(--space-2); }
 @media (max-width: 700px) { .tour-offer { left: 12px; right: 12px; width: auto; bottom: 12px; } }
+
+/* The map by keyboard (js/map-keys.js): the cursor's name for screen readers, and its card. */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.kb-card { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); z-index: var(--z-map-banner); max-width: calc(100% - 24px); background: var(--surface-1); color: var(--text-primary); border: 2px solid var(--focus); border-radius: 8px; padding: var(--space-1) var(--space-3); font-size: var(--fs-2); box-shadow: var(--shadow); pointer-events: none; }
+.kb-card[hidden] { display: none; }
+.kb-card .kb-keys { color: var(--text-muted); margin-left: var(--space-2); white-space: nowrap; }

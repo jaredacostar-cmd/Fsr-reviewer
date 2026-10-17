@@ -8,7 +8,8 @@
     "test": "node --test tests/*.test.js",
     "lint": "npx --yes eslint@10.1.0 js/",
     "snapshot": "node scripts/build-snapshot.js --out data",
-    "e2e": "node tests/e2e/capacity.e2e.js"
+    "e2e": "node tests/e2e/capacity.e2e.js",
+    "browser": "node tests/browser/run.js"
   },
   "engines": {
     "node": ">=18"
