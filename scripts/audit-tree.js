@@ -17,6 +17,7 @@ const fs = require('fs');
 const path = require('path');
 const P = require('../js/phases.js');
 const T = require('../js/tree.js');
+const PV = require('../js/privacy.js');   // no one's name, contact or staff note in a copied description
 const { decodeRecord, buildSnapshot } = require('./build-snapshot.js');
 const { countUnitsFromText } = require('./build-snapshot-index.js');
 
@@ -137,7 +138,7 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
     const built5 = recs.every(r => /approved|permit|construction|completed/.test(r.phase)) && nowMs - last > 5 * YR;
     const k = `${c.growth.kind}${built5 ? ' (approved 5+ years ago)' : ''}`;
     const m = nodes[live[0]].municipality; inc(noCount, m, k); inc(noCount, 'Peel', k);
-    if (!built5 && ['count to find', 'mixed use, check', 'no description'].includes(c.growth.kind)) toFind.push({ municipality: m, kind: c.growth.kind, files: live.map(refOf), address: [...new Set(recs.map(r => r.address).filter(Boolean))].slice(0, 3), description: [...new Set(recs.map(r => r.description).filter(Boolean))].join(' / ').slice(0, 400), phase: recs.map(r => r.phase), lastEvent: last ? new Date(last).toISOString().slice(0, 10) : null });
+    if (!built5 && ['count to find', 'mixed use, check', 'no description'].includes(c.growth.kind)) toFind.push({ municipality: m, kind: c.growth.kind, files: live.map(refOf), address: [...new Set(recs.map(r => r.address).filter(Boolean))].slice(0, 3), description: PV.scrubDescription([...new Set(recs.map(r => r.description).filter(Boolean))].join(' / ').slice(0, 400)), phase: recs.map(r => r.phase), lastEvent: last ? new Date(last).toISOString().slice(0, 10) : null });
   }
   const growthNoCount = { note: 'Developments with no stated count, by the growth their wording names. Non-residential and no-new-homes are not counted; one new house counts 1; counts found online come from data/unit-lookups.json.', byKind: noCount, foundOnline: nodes.filter(n => !(n.units > 0) && n.refs.some(r => (built.lookups.get(`${n.municipality}|${r}`) || {}).units > 0)).length, toFind: toFind.sort((a, b) => String(b.lastEvent).localeCompare(String(a.lastEvent))) };
 

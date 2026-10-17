@@ -40,6 +40,9 @@
     ['inception',    /pre[- ]?(consult|app)|pre[- ]?submission|inquiry|enquiry|intake|received|submitted|\bnew\b|applied|application filed|filed/i],
   ];
 
+  // The privacy scrub (js/privacy.js, loaded before this file in index.html).
+  const privacy = () => root.PeelPrivacy || (typeof require === 'function' ? require('./privacy.js') : null);
+
   // Building-permit statuses that mean the permit is still being applied for or reviewed.
   const PERMIT_PENDING = /registered|applied|zoning certified|ready to issue|under review|pending|pre[- ]?screen|intake|received|submitted/i;
 
@@ -549,6 +552,14 @@
     if (src.kind === 'application') {
       const poly = simplifyPolygon(feature.geometry);
       if (poly) rec.poly = poly;
+    }
+    // No one's name, contact or staff note (js/privacy.js), the same as the stored snapshot: the
+    // description once everything above has been read from it, and the raw attributes without the
+    // people / contact / note fields (the description fields are shown as the description).
+    const PV = privacy();
+    if (PV) {
+      rec.description = PV.scrubDescription(rec.description, rec);
+      rec.props = PV.safeProps(p, [fmap.description, fmap.proposal]);
     }
     return rec;
   }

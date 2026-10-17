@@ -113,6 +113,7 @@ const SHELL_ASSETS = [
   'js/overview-tab.js',
   'js/phases.js',
   'js/plan-areas.js',
+  'js/privacy.js',
   'js/provenance.js',
   'js/render-list.js',
   'js/report-issue.js',
