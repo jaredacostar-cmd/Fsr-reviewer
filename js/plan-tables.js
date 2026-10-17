@@ -113,7 +113,7 @@
     const x = (t, title) => `<th scope="col"${c('x')}${title ? ` title="${title}"` : ''}>${t}</th>`;
     const head = `<tr><th scope="col">Area</th>${x('Developments')}<th scope="col" class="num">Units</th>${x('Approved')}${x('In review')}${x('Left to build')}${x('ppu', 'People per unit (people ÷ units)')}<th scope="col" class="num">People</th>${x('Jobs')}${x('In an MTSA', 'Of which in an MTSA (an overlay: never added up)')}<th scope="col" class="num" title="Parent minus the sum of the rows under it">Check</th></tr>`;
     const rows = []; bodyRows(r.root, 0, rows);
-    return `<div class="tbl-scroll"><table class="dt pt-table"><thead>${head}</thead><tbody>${rows.join('')}</tbody></table></div>`;
+    return `<div class="tbl-scroll"><table class="dt pt-table"><caption class="sr">Developments by area</caption><thead>${head}</thead><tbody>${rows.join('')}</tbody></table></div>`;
   }
   function notesHTML(r) {
     const st = r.straddling.slice().sort((a, b) => b.p.units - a.p.units);

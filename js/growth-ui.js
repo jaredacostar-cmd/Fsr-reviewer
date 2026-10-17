@@ -194,8 +194,8 @@
       chart: layerStripHTML(set),
       lists: [
         ...(p ? [{ title: 'How this site compares', rows: cmp, total: cmp.length }] : []),
-        { title: 'By dwelling type', rows: typeRows, total: typeRows.length, seeAll: { 'data-full-table': 'growth' } },
-        ...(site ? [] : [{ title: 'Completions by municipality', rows: muniRows, total: muniRows.length, seeAll: { 'data-full-table': 'growth' } }]),
+        { title: 'By dwelling type', rows: typeRows, total: typeRows.length, seeAll: { 'data-full-table': 'growth', 'data-ft-go': 'Build-out by dwelling type' } },
+        ...(site ? [] : [{ title: 'Completions by municipality', rows: muniRows, total: muniRows.length, seeAll: { 'data-full-table': 'growth', 'data-ft-go': 'Completions and approval pace' } }]),
         ...(emp.planned ? [{ title: 'Employment', rows: [PN.kv('Floor area planned', `${fmtNum(Math.round(emp.planned))} m² · ≈${fmtNum(Math.round(emp.jobs))} jobs`), PN.kv('Left to build', `${fmtNum(Math.round(emp.left))} m²`)], total: 2 }] : []),
       ],
       method: 'Pipeline = applications with unit counts; permitted and completed come from the building permits; completions per year from dated permit events. Units are planned units net of homes demolished. People and jobs at Peel design criteria.',

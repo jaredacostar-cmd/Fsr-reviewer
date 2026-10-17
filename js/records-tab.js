@@ -104,7 +104,7 @@
       lists: a ? [{ title: 'Checks', rows: a.checks.slice(0, 5).map(c => PN.kv(esc(c.label), `${c.value ? '✕' : '✓'} ${fmtNum(c.value)}`, c.value ? 'tight' : 'room')), total: a.checks.length, seeAll: { 'data-full-table': 'records' } }] : [],
       method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model\u2019s checks are Servicing › Model checks.',
       sources: 'The municipal application and permit records; Region of Peel published totals and permit figures.',
-      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } }] },
+      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } }] },
     };
   }
   // Failing checks as one caveat line each (Home, Stage 4): sources due for a refresh, permit counts
