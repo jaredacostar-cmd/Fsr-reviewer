@@ -193,7 +193,7 @@ checked; there are few). Fail loudly if the table header moves.
 system only (`data/ww-facilities.json`). Stations outside it have none.
 
 **What it adds.** The approved capacity, with an instrument number, for the stations that decide
-answers: those over 85% of firm at build-out (Richards Memorial 110%, Silver Birch Trail 75%) and
+answers: the one over 85% of firm at build-out (Richards Memorial, 110%), the next highest (Silver Birch Trail, 75%), and
 those on the sewer path of the largest sites.
 
 **Source.** Access Environment, instrument 009-W601 and its amendments (the consolidated linear
