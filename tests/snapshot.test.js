@@ -91,3 +91,21 @@ test('weekly runs record new projects and phase changes; outages keep last week'
     global.fetch = realFetch;
   }
 });
+
+test('a development whose key changed with the address fix keeps its history and is not new this week', async () => {
+  const realFetch = global.fetch;
+  const state = { apps: [feat(1, { FILE_NO: 'SP 7', ADDRESS: '7 Steeple Rd', STATUS: 'Approved', RECEIVED_DATE: Date.UTC(2024, 0, 1), UNITS: 30 })], permits: [] };
+  global.fetch = mockServer(state);
+  try {
+    const old = `Mississauga|${P.legacyNormalizeAddress('7 Steeple Rd')}`;   // "7 RD", as the old reading had it
+    const history = { projects: { [old]: [['2026-10-05', 'review']] }, runs: ['2026-10-05'], rules: P.PHASE_RULES };
+    const w = await buildSnapshot({ cfg, history, now: new Date('2026-10-19T10:00:00Z'), log: () => {} });
+    const key = 'Mississauga|7 STEEPLE RD';
+    assert.deepEqual(w.history.projects[key], [['2026-10-05', 'review'], ['2026-10-19', 'approved']], 'carried on, then moved');
+    assert.deepEqual(w.history.projects[old], [['2026-10-05', 'review']], 'the old key is kept as it was');
+    assert.equal(w.snapshot.changes.added.length, 0, 'not new this week');
+    assert.deepEqual(w.snapshot.changes.moved.map(m => [m.key, m.from, m.to]), [[key, 'review', 'approved']]);
+  } finally {
+    global.fetch = realFetch;
+  }
+});
