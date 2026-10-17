@@ -104,6 +104,7 @@ const SHELL_ASSETS = [
   'js/view-3d.js',
   'js/timebox-core.js',
   'js/time-box.js',
+  'js/sewer-designer.js',
   'js/offline.js',
   'js/overview-tab.js',
   'js/phases.js',

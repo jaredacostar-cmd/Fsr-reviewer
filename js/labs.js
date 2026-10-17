@@ -18,6 +18,7 @@
     { id: 'swmm', label: 'SWMM export', where: 'Export', what: 'The wastewater blocks as a SWMM model (.inp).' },
     { id: 'batch', label: 'Batch test sites', where: 'Test a site', what: 'Test many sites at once from a CSV.' },
     { id: 'gravity', label: 'Gravity check', where: 'a development\u2019s Servicing tab', what: 'Can the site drain by gravity to the nearest Region sanitary sewer? A straight-line design to Peel\u2019s rules, with a profile.' },
+    { id: 'sewer', label: 'Sewer designer', where: 'the tool rail', what: 'Draw a gravity sanitary sewer to an existing sewer: the least-excavation design to Peel\u2019s Linear Wastewater Standards, with the plan, the profile, the rules checked and a CSV.' },
     { id: 'pressure', label: 'Pressure check', where: 'a development\u2019s Servicing tab', what: 'The water pressure at the site\u2019s ground from its zone\u2019s grade line, against Peel\u2019s 40–100 psi, and how many storeys keep 40 psi.' },
   ];
   const IDS = LABS.map(l => l.id);

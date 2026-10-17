@@ -2519,7 +2519,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
    At a site the site bar's note is the one disclaimer. */
 .f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }
 /* Labs (Settings › Labs): each tool shows only while its switch is on (js/labs.js). */
-html:not(.lab-3d) .view3d-ctl, html:not(.lab-timebox) .tool-rail [data-tool="timebox"],
+html:not(.lab-3d) .view3d-ctl, html:not(.lab-timebox) .tool-rail [data-tool="timebox"], html:not(.lab-sewer) .tool-rail [data-tool="sewer"],
 html:not(.lab-swmm) [data-tbx="swmm"], html:not(.lab-batch) [data-ptool-act="batch"],
 html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] { display: none !important; }
 .labs-page { padding: var(--space-2) var(--space-3); max-width: 360px; }
@@ -2763,6 +2763,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .pnl-kv > span:last-child { color: var(--text-secondary); text-align: right; }
 .pnl-kv .t-over { color: var(--cap-over-t); } .pnl-kv .t-tight { color: var(--cap-tight-t); } .pnl-kv .t-room { color: var(--pnl-room); }
 .pnl-list li.pnl-row.kv { min-height: 0; padding: var(--space-1) var(--space-2); border-left: 0; }
+/* a tool result spans the row (one child in the kv grid would sit in the auto column and grow past the panel on phones) */
+.pnl-row.kv > .pnl-result { grid-column: 1 / -1; min-width: 0; }
 .pnl-fold > div .brief { margin: 0; }
 
 /* ---- Stage 4: workspaces and Home (js/workspaces.js) ------------------------------------------ */
@@ -3382,3 +3384,26 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .lab-prof .lp-ex { fill: var(--pipe-sanitary); stroke: var(--surface-1); stroke-width: 1; }
 .lab-prof-k .lp-k { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin: 0 4px 0 var(--space-2); }
 .lab-prof-k .lp-k-g { background: var(--text-secondary); } .lab-prof-k .lp-k-p { background: var(--pipe-sanitary); height: 4px; }
+
+/* Labs: the Sewer designer (js/sewer-designer.js): the form, the profile, the checks, the plan labels. */
+.sd-form { border: 1px solid var(--border); border-radius: 8px; padding: var(--space-2) var(--space-3); margin: var(--space-2) 0; }
+.sd-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: flex-end; margin: var(--space-1) 0; }
+.sd-row .field { width: 7.5rem; } .sd-row .field input { width: 100%; }
+.sd-row .chk { display: flex; gap: var(--space-1); align-items: center; font-size: var(--fs-2); }
+.sd-h { margin: var(--space-3) 0 var(--space-1); font-size: var(--fs-3); }
+.sd-prof { display: block; width: 100%; height: auto; background: var(--surface-2); border-radius: 6px; }
+.sd-prof .sp-ground { fill: none; stroke: var(--text-secondary); stroke-width: 1.6; }
+.sd-prof .sp-cover { fill: none; stroke: var(--text-muted); stroke-width: 1; stroke-dasharray: 4 4; }
+.sd-prof .sp-pipe { fill: color-mix(in srgb, var(--pipe-sanitary) 55%, transparent); stroke: var(--pipe-sanitary); stroke-width: 1.2; }
+.sd-prof .sp-mh { stroke: var(--text-primary); stroke-width: 2; }
+.sd-prof .sp-mh.sp-drop { stroke-dasharray: 3 2; }
+.sd-prof .sp-ex { fill: none; stroke: var(--pipe-sanitary); stroke-width: 2; }
+.sd-prof .sp-grid { stroke: var(--border); stroke-width: 0.6; }
+.sd-prof .sp-ax, .sd-prof .sp-lbl { fill: var(--text-muted); font-size: 10px; }
+.sd-prof .sp-lbl { fill: var(--text-primary); font-weight: 600; }
+.sd-key .sd-k-c { border-top: 1px dashed var(--text-muted); height: 0; }
+.sd-key .sd-k-e { width: 9px; height: 9px; border: 2px solid var(--pipe-sanitary); border-radius: 50%; }
+.sd-checks { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+.sd-checks .sd-ok span { color: var(--cap-room-t); } .sd-checks .sd-no span { color: var(--cap-over-t); }
+.sd-t td.n, .sd-t th.n { text-align: right; font-variant-numeric: tabular-nums; }
+.sd-lbl span { display: inline-block; transform: translate(-50%, -50%); white-space: nowrap; font-size: var(--fs-1); font-weight: 600; color: var(--map-label); text-shadow: 0 0 3px var(--map-halo), 0 0 2px var(--map-halo); }

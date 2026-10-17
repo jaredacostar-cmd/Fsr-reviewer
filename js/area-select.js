@@ -67,6 +67,7 @@
     ['corridor', 'Corridor select', 'Select the developments along a drawn corridor', 'corridor'],
     ['unitsfit', 'How many more units fit?', 'Estimate the remaining unit capacity of an area', 'unitsfit'],
     ['timebox', 'Time Box', 'Drag a box to see its aerial imagery over the years, with the applications filed by then', 'clock'],
+    ['sewer', 'Sewer designer', 'Draw a gravity sanitary sewer from a site to an existing sewer: a preliminary design to Peel\u2019s rules, in plan and profile', 'sewer'],
   ];
   // Phase 3b: Help lives in the topbar Help button only — the map ? control is removed
   // (no tool in two places). The tool rail shows which tool is on (one tool active at a time).

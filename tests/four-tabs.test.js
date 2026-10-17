@@ -137,7 +137,7 @@ test('2. the Simple / Engineering switch is on every Servicing sub-view', () => 
 });
 
 test('3. no tab shows more than 4 sub-views, at any scope, with every Labs switch on', () => {
-  const all = ['hydro', 'funding', '3d', 'timebox', 'swmm', 'batch', 'gravity', 'pressure'];
+  const all = ['hydro', 'funding', '3d', 'timebox', 'swmm', 'batch', 'gravity', 'sewer', 'pressure'];
   for (const site of [false, true]) {
     const AT = loadTabs({ labs: all, site });
     for (const tab of Object.keys(SPEC.area)) assert.ok(AT.chipsAt(tab, site ? 'site' : 'area').length <= 4, `${tab}${site ? ' (site)' : ''}`);

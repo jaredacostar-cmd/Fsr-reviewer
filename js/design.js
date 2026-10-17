@@ -91,6 +91,7 @@
     unitsfit: '<path d="M3.5 20.5h17"/><rect x="5.5" y="12.5" width="4" height="8"/><rect x="11.5" y="8" width="4" height="12.5"/><rect x="17.5" y="4" width="3" height="16.5"/>',
     measure: '<path d="M3.5 17.5 17.5 3.5l3 3L6.5 20.5z"/><path d="M8 13l2 2M11 10l2 2M14 7l2 2"/>',
     whatif: '<path d="M12 21.5s7-7.4 7-12.3a7 7 0 0 0-14 0c0 4.9 7 12.3 7 12.3z"/><path d="M12 6.8v5.4M9.3 9.5h5.4"/>',
+    sewer: '<path d="M3 7h5l3 9h5"/><path d="M16 16h5"/><circle cx="3.5" cy="7" r="1.6"/><path d="M8 4v3M16 13v3"/>',
     tools: '<path d="M14.6 3.6a4.6 4.6 0 0 0-5.9 5.9L3.6 14.6a2 2 0 0 0 2.8 2.8l5.1-5.1a4.6 4.6 0 0 0 5.9-5.9l-2.7 2.7-2.4-.4-.4-2.4z"/><path d="M15.5 15.5l4.5 4.5"/>',
     tips: '<circle cx="12" cy="12" r="8.5"/><path d="M9.6 9.4a2.6 2.6 0 1 1 3.6 2.4c-.8.35-1.2.9-1.2 1.7v.7"/><circle cx="12" cy="16.8" r="1.1" fill="currentColor" stroke="none"/>',
     present: '<rect x="3" y="5" width="18" height="12" rx="2"/><path d="M10.5 8.7l4.5 2.8-4.5 2.8z"/><path d="M9 21h6"/>',
