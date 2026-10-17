@@ -167,6 +167,7 @@
   const movedHTML = () => `<p class="small muted">For people who used the app before the four tabs and the workspaces. Old links and saved views still open the equivalent view.</p>${MOVED.map(g => `<h4>${esc(g.h)}</h4><table class="moved-t small"><thead><tr><th>You used</th><th>Now</th></tr></thead><tbody>${g.rows.map(([a, b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`).join('')}`;
   const QUICK_TIPS = [
     'Tap an empty part of the map, press Esc, or use Clear selection to unselect.',
+    'By keyboard: Tab to the map, then the arrow keys move from one development to the next, Enter opens it and Esc clears; Shift + arrows pan, + and − zoom.',
     'Press and hold (or hover) a heading or label for what it means and where the data comes from.',
     'The north arrow switches between Peel’s road grid and north up.',
     'Search a DC project number (e.g. 25-2269) or a pumping station to jump to it.',
