@@ -155,7 +155,38 @@
     return Math.max(0, target - (u.built || 0) - (u.committed || 0) - (u.proposed || 0) - (u.anticipated || 0));
   }
 
-  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf };
+  // ---- The pipeline headline (for management) ----------------------------------------------------
+  // One total that its parts add up to: every live development (the tree total), split by whether
+  // its files have moved since 2021 (a dated event in 2021 or later; no dated event counts as not
+  // moved), and what is still to build (units not yet completed, before or after the census).
+  const MOVED_SINCE = 2021;
+  function movedSince(p, year = MOVED_SINCE) {
+    for (const t of (p && p.timeline) || []) if (t.date && t.date.getUTCFullYear() >= year) return true;
+    return false;
+  }
+  function pipeline(devs, opts = {}) {
+    const out = { total: 0, moved: 0, notMoved: 0, existing: 0, built: 0, notBuilt: 0, developments: 0, notMovedDevelopments: 0 };
+    for (const p of devs || []) {
+      const L = ofDev(p, opts); if (!L.layer || !(L.units > 0)) continue;
+      out.developments++; out.total += L.units;
+      if (movedSince(p)) out.moved += L.units; else { out.notMoved += L.units; out.notMovedDevelopments++; }
+      out.existing += L.parts.existing || 0; out.built += L.parts.built || 0;
+    }
+    out.notBuilt = Math.max(0, out.total - out.existing - out.built);
+    return out;
+  }
+  // Rounded for a headline: the nearest thousand from 10,000, the nearest hundred from 1,000.
+  const roundHeadline = v => (v >= 10000 ? Math.round(v / 1000) * 1000 : v >= 1000 ? Math.round(v / 100) * 100 : Math.round(v));
+  // "About 258,000 homes are in the planning pipeline: 242,000 have moved since 2021 and 16,000
+  // haven't moved since 2020. About 237,000 are not yet built." (where: " in Brampton", or '').
+  function headlineText(pl, where = '', fmt = v => Number(v).toLocaleString('en-CA'), strong = s => s) {
+    if (!pl || !(pl.total > 0)) return '';
+    const r = v => fmt(roundHeadline(v));
+    const split = pl.notMoved >= 0.5 ? `: ${r(pl.moved)} have moved since ${MOVED_SINCE} and ${r(pl.notMoved)} haven\u2019t moved since ${MOVED_SINCE - 1}` : '';
+    return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.`;
+  }
+
+  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);

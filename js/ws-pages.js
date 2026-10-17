@@ -111,8 +111,12 @@
     ['permitted', 'Permit issued or under construction', 'approved, with building permits issued; not yet completed'],
     ['built', 'Built since 2021', 'completed since census day, not in the census yet'],
   ];
-  function stageRows(devs, ofDev) {
-    const u = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, est = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
+  // nm: the units of developments that haven't moved since 2020 (js/layers.js movedSince), per stage;
+  // existing: units completed before the 2021 Census (in the census, so not a stage here) — the bars
+  // plus existing are the headline total.
+  function stageRows(devs, ofDev, movedOf = (root.PeelLayers && root.PeelLayers.movedSince) || (() => true)) {
+    const u = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, est = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, nm = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
+    let existing = 0, nmExisting = 0;
     for (const it of devs) {
       // (an area's developments come as { p, share }: a site split between plans counts its share)
       const p = it && it.p ? it.p : it, sh = it && it.p ? it.share : 1;
@@ -120,10 +124,16 @@
       u.built += (L.parts.built || 0) * sh; u.proposed += (L.parts.proposed || 0) * sh; u.anticipated += (L.parts.anticipated || 0) * sh;
       const c = L.parts.committed || 0, noPermit = Math.min(c, Math.max(0, L.toPermit || 0));
       u.approved += noPermit * sh; u.permitted += (c - noPermit) * sh;
+      existing += (L.parts.existing || 0) * sh;
+      if (!movedOf(p)) {
+        nm.built += (L.parts.built || 0) * sh; nm.proposed += (L.parts.proposed || 0) * sh; nm.anticipated += (L.parts.anticipated || 0) * sh;
+        nm.approved += noPermit * sh; nm.permitted += (c - noPermit) * sh; nmExisting += (L.parts.existing || 0) * sh;
+      }
       if (L.estimated > 0) { const k = L.layer === 'committed' ? (noPermit >= c - noPermit ? 'approved' : 'permitted') : L.layer; if (k in est) est[k] += sh * Math.min(L.estimated, k === 'approved' ? noPermit : k === 'permitted' ? c - noPermit : L.parts[k] || 0); }
     }
     const total = Object.values(u).reduce((a, b) => a + b, 0);
-    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total };
+    const notMoved = Object.values(nm).reduce((a, b) => a + b, 0);
+    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], nm: nm[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total, existing, notMoved, nmExisting };
   }
   // A development's stage on this chart (its layer; an approved one by whether most of it is permitted).
   function stageOf(L) {
@@ -165,8 +175,8 @@
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small pnl-chart-t"><strong>The pipeline by stage, in the order a file moves</strong> <span class="pnl-chart-u">(dwellings)</span></p>
-      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
-      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}</p>
+      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}${r.nm >= 0.5 ? `<i class="stg-nm" style="left:${(Math.max(0, r.units - r.nm) / max * 100).toFixed(1)}%;width:${(Math.min(r.nm, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.nm))} haven\u2019t moved since 2020"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
+      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
     </div>`;
   }
   // Review an FSR: what an FSR covers (Region of Peel, Functional Servicing Report Requirements, 2009)

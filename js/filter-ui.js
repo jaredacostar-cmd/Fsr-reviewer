@@ -84,7 +84,7 @@
   // The stage selector narrows the phases when the pick is neither the default active set
   // nor every phase (a chip then offers one tap back to all phases).
   const phaseFilterActive = () => App().state.phases.size < P.ALL_PHASES.length && !App().sameSet(App().state.phases, App().DEFAULT_PHASES());
-  // The years narrow the view when they are not the default span (2021–2026): the default is the
+  // The years narrow the view when they are not the default span (all years): the default is the
   // starting view, not a filter, so it has no chip and Reset leaves nothing behind.
   const yearsFilterActive = () => App().timeActive() && !TL().atDefaultYears();
   // Active-filter chips: everything that narrows the view, each removable. The counting basis
