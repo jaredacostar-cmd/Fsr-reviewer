@@ -61,9 +61,12 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const li = page.locator('#search-sug li[data-i]', { hasText: '0 HERITAGE RD' }).first();
     await li.dispatchEvent('mousedown'); await wait(2500);
     expect(await ev(() => (DevScope.current() || {}).title === '0 HERITAGE RD'), 'the picked development opens');
-    const chip = page.locator('#home [data-stage-chip].pnl-chip').first();
-    await chip.click(); await wait(800);
-    expect(await ev(() => [...document.querySelectorAll('#home [data-stage-box]')].some(b => !b.hidden && b.textContent.includes('Next:'))), 'the stage box opens');
+    // (the page settles after a pick: it re-renders once its panels are worked out)
+    await wait(1500);
+    const boxOpen = () => [...document.querySelectorAll('#home [data-stage-box]')].some(b => !b.hidden && b.textContent.includes('Next:'));
+    await page.locator('#home [data-stage-chip].pnl-chip').first().click();
+    const opened = await page.waitForFunction(boxOpen, null, { timeout: 5000 }).then(() => true, () => false);
+    expect(opened, 'the stage box opens');
   });
 
   await check('the header count opens the full table', browser, {}, async ({ page, ev }, expect) => {
