@@ -30,7 +30,7 @@ name: Probe data sources
 #  mode=capital-probe: the capital service's other layers and the line layer's text fields / project websites (counts and facility names only; log only)
 #  mode=ea-maps: download every EA page's study-area maps (images, study-area figures; PDFs as PNG) to the ea-maps branch, for tracing
 #  mode=ea-trace: trace the EA study areas listed in scripts/ea-trace.json from the ea-maps images (intersections geocoded); data/eas-overrides.json committed to this branch
-#  mode=eas: Region EA list + project pages → data/eas.json and data/eas-review.csv, committed to this branch; only=with-capital also links EAs to capital records
+#  mode=eas: Region EA list + project pages → data/eas.json and data/eas-review.csv, committed to this branch, linked to capital records from data/capital.json when it is there; only=with-capital builds the capital data first when it is not
 #  mode=constraints-build: the approved constraint layers → data/constraints/<id>/ tiles, manifest.json and the 25 m screening grid (grid.json), committed to this branch; only=<id,id> rebuilds some
 #  mode=elev-bench: the lidar sampler against Brampton benchmarks (height above grade, CGVD28 → CGVD2013 with NRCan grids) and where coverage ends (data/probe/elevation-bench.json)
 #  mode=elev-check: the lidar elevation sampler's service checks and the benchmark comparison (data/probe/elevation.json, committed to this branch)
@@ -54,11 +54,22 @@ on:
 permissions:
   contents: write   # mode=areas commits data/areas.json and data/das.json to the branch it runs on
 
+# One data commit at a time per branch, shared with the weekly snapshot job (site.yml).
+concurrency:
+  group: data-commit-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   probe:
     runs-on: ubuntu-latest
     timeout-minutes: 90
+    env:
+      # The free-text input reaches the scripts as a variable only (never pasted into a script).
+      ONLY: ${{ inputs.only }}
     steps:
+      - name: Check the inputs
+        run: |
+          if ! [[ "$ONLY" =~ ^[a-z0-9,_-]*$ ]]; then echo "::error::only: lower-case letters, digits, commas, - and _ only"; exit 1; fi
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
@@ -72,7 +83,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/areas.json data/das*.json
-          git diff --cached --quiet || { git commit -m "Areas and census baselines (2021, 2016)"; git push; }
+          git diff --cached --quiet || { git commit -m "Areas and census baselines (2021, 2016)"; bash scripts/push-data.sh; }
       - name: Lidar elevation sampler checks and benchmarks (data/probe/elevation.json committed to this branch)
         if: inputs.mode == 'elev-check'
         run: |
@@ -80,16 +91,16 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/probe/elevation.json
-          git diff --cached --quiet || { git commit -m "Elevation checks: lidar sampler, hillshade, benchmarks"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Elevation checks: lidar sampler, hillshade, benchmarks"; bash scripts/push-data.sh; }
       - name: Constraint layers (data/constraints committed to this branch)
         if: inputs.mode == 'constraints-build'
         run: |
-          if [ -n "${{ inputs.only }}" ]; then node scripts/build-constraints.js --only "${{ inputs.only }}"; else node scripts/build-constraints.js; fi
+          if [ -n "$ONLY" ]; then node scripts/build-constraints.js --only "$ONLY"; else node scripts/build-constraints.js; fi
           du -sh data/constraints; du -s data/constraints/* | sort -n | tail -20
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/constraints
-          git diff --cached --quiet || { git commit -m "Constraint layers: tiles, manifest and screening grid"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Constraint layers: tiles, manifest and screening grid"; bash scripts/push-data.sh; }
       - name: Lidar sampler against benchmarks (data/probe/elevation-bench.json committed to this branch)
         if: inputs.mode == 'elev-bench'
         run: |
@@ -98,7 +109,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/probe/elevation-bench.json
-          git diff --cached --quiet || { git commit -m "Elevation benchmarks: lidar vs Brampton benchmarks (CGVD2013)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Elevation benchmarks: lidar vs Brampton benchmarks (CGVD2013)"; bash scripts/push-data.sh; }
       - name: Elevation against Peel manholes (table and fixture committed to this branch; internal check as an artifact)
         if: inputs.mode == 'elev-validate'
         run: |
@@ -108,7 +119,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/elevation-validation.json tests/fixtures/manhole-sample.json
-          git diff --cached --quiet || { git commit -m "Elevation validation: lidar and terrain tiles against Peel manholes"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Elevation validation: lidar and terrain tiles against Peel manholes"; bash scripts/push-data.sh; }
       - name: Internal data check (artifact only, not published)
         if: inputs.mode == 'elev-validate'
         uses: actions/upload-artifact@v4
@@ -125,12 +136,12 @@ jobs:
         timeout-minutes: 80
         run: |
           npm install --no-save --silent geojson-vt@4.0.2 vt-pbf@3.1.3
-          node scripts/build-3d-tiles.js ${{ inputs.only != '' && format('--only={0}', inputs.only) || '' }}
+          if [ -n "$ONLY" ]; then node scripts/build-3d-tiles.js "--only=$ONLY"; else node scripts/build-3d-tiles.js; fi
           node --test tests/tiles-3d.test.js
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/3d/
-          git diff --cached --quiet || { git add -A data/3d/; git commit -m "3D view: lidar terrain (pilot) and OSM building tiles (Peel)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git add -A data/3d/; git commit -m "3D view: lidar terrain (pilot) and OSM building tiles (Peel)"; bash scripts/push-data.sh; }
       - name: Lidar elevation and constraint layers, source check (report only; summary committed to this branch)
         if: inputs.mode == 'constraints-lidar'
         run: |
@@ -138,7 +149,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/probe/constraints-lidar.json
-          git diff --cached --quiet || { git commit -m "Stage 0 source check: lidar elevation and constraint layers (report only)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Stage 0 source check: lidar elevation and constraint layers (report only)"; bash scripts/push-data.sh; }
       - name: Road centrelines on LIO (report only)
         if: inputs.mode == 'roads'
         run: |
@@ -146,7 +157,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/probe/roads.json
-          git diff --cached --quiet || { git commit -m "Source check: road centrelines on LIO (report only)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Source check: road centrelines on LIO (report only)"; bash scripts/push-data.sh; }
       - name: Block plan / precinct area layers (log only)
         if: inputs.mode == 'block-areas'
         run: node scripts/probe-areas.js --blocks
@@ -157,7 +168,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/areas.json
-          git diff --cached --quiet || { git commit -m "Precinct plan areas (Brampton Plan Schedule 11)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Precinct plan areas (Brampton Plan Schedule 11)"; bash scripts/push-data.sh; }
       - name: Earlier census by dissemination area
         if: inputs.mode == 'census'
         run: |
@@ -185,7 +196,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/sewers.json data/water-supply.json data/watermains.json
-          git diff --cached --quiet || { git commit -m "Sewer pipe capacity and water supply data"; git push; }
+          git diff --cached --quiet || { git commit -m "Sewer pipe capacity and water supply data"; bash scripts/push-data.sh; }
       - name: Dragonfly / Peel I&I blocks (pushed to the dragonfly-raw branch)
         if: inputs.mode == 'dragonfly'
         run: |
@@ -204,12 +215,12 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/fsr.json
-          git diff --cached --quiet || { git commit -m "Functional servicing report links"; git push; }
+          git diff --cached --quiet || { git commit -m "Functional servicing report links"; bash scripts/push-data.sh; }
       - name: External open data (pushed to the ext-raw branch)
         if: inputs.mode == 'external'
         run: |
           git fetch origin ext-raw && git checkout origin/ext-raw -- ext-raw || true
-          if [ -n "${{ inputs.only }}" ]; then node scripts/fetch-external.js --out ext-raw --only ${{ inputs.only }}; else node scripts/fetch-external.js --out ext-raw; fi
+          if [ -n "$ONLY" ]; then node scripts/fetch-external.js --out ext-raw --only "$ONLY"; else node scripts/fetch-external.js --out ext-raw; fi
           du -sh ext-raw; find ext-raw -type f | head -200
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -227,11 +238,11 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/plant-flows.json
-          git diff --cached --quiet || { git commit -m "Measured plant flow (MECP effluent data)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Measured plant flow (MECP effluent data)"; bash scripts/push-data.sh; }
       - name: Site constraint layers (gas, hydro, watercourses, regulation limits; log only)
         if: inputs.mode == 'constraints'
         timeout-minutes: 20
-        run: node scripts/probe-constraints.js ${{ inputs.only }}
+        run: node scripts/probe-constraints.js ${ONLY:+"$ONLY"}
       - name: Region of Peel open data (log; housing activity and permits committed to this branch)
         if: inputs.mode == 'peel-open'
         timeout-minutes: 30
@@ -240,7 +251,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/peel-housing.json
-          git diff --cached --quiet || { git commit -m "Region of Peel housing activity and building permits"; git push; }
+          git diff --cached --quiet || { git commit -m "Region of Peel housing activity and building permits"; bash scripts/push-data.sh; }
       - name: Application tree audit (report only; data/tree-audit.json committed to this branch)
         if: inputs.mode == 'tree-audit'
         timeout-minutes: 40
@@ -249,7 +260,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/tree-audit.json
-          git diff --cached --quiet || { git commit -m "Application tree audit (live pull)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Application tree audit (live pull)"; bash scripts/push-data.sh; }
       - name: Water pressure zones and wastewater drainage areas
         if: inputs.mode == 'servicing'
         run: node scripts/probe-servicing.js
@@ -356,13 +367,13 @@ jobs:
         timeout-minutes: 20
         run: |
           node scripts/build-capital.js --out /tmp/capital
-          if [ "${{ inputs.only }}" = "commit" ]; then
+          if [ "$ONLY" = "commit" ]; then
             cp /tmp/capital/capital.json /tmp/capital/capital-links-audit.json data/
             npm test > /tmp/test.log 2>&1 || { tail -80 /tmp/test.log; exit 1; }
             git config user.name "peel-snapshot-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add data/capital.json data/capital-links-audit.json
-            git diff --cached --quiet || { git commit -m "Capital projects and DC match audit"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+            git diff --cached --quiet || { git commit -m "Capital projects and DC match audit"; bash scripts/push-data.sh; }
           fi
       - name: Capital service layers and text fields (log only)
         if: inputs.mode == 'capital-probe'
@@ -391,7 +402,7 @@ jobs:
         if: inputs.mode == 'ea-trace'
         timeout-minutes: 55
         run: |
-          pip install -q pillow numpy
+          pip install -q pillow==10.4.0 numpy==1.26.4
           git fetch -q origin ea-maps && git checkout origin/ea-maps -- ea-maps
           # Streets and city boundaries from OpenStreetMap (the Ontario extract cut to Peel): every
           # segment of each street, so the crossings are found locally.
@@ -407,32 +418,34 @@ jobs:
           ls -la /tmp/peel-roads.geojsonseq /tmp/peel-munis.geojsonseq
           EA_ROADS=/tmp/peel-roads.geojsonseq EA_MUNIS=/tmp/peel-munis.geojsonseq EA_WATER=/tmp/peel-water.geojsonseq python3 scripts/ea_trace.py
           git reset -q ea-maps && rm -rf ea-maps
-          # Rebuild the EA list so the traced areas drive the DC / facility links too.
-          node scripts/build-eas.js --out data --capital /nonexistent > /tmp/eas.log 2>&1 || { tail -40 /tmp/eas.log; exit 1; }
+          # Rebuild the EA list so the traced areas drive the DC / facility links too (and the
+          # capital links, from data/capital.json when it is there).
+          node scripts/build-eas.js --out data > /tmp/eas.log 2>&1 || { tail -40 /tmp/eas.log; exit 1; }
           grep -E '^EAs:|geomType|geomConfidence|linked to' /tmp/eas.log || true
           npm test > /tmp/test.log 2>&1 || { tail -80 /tmp/test.log; exit 1; }
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/eas-overrides.json scripts/ea-xings.json data/eas.json data/eas-review.csv
-          git diff --cached --quiet || { git commit -m "EA study areas traced from the project page maps"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "EA study areas traced from the project page maps"; bash scripts/push-data.sh; }
       - name: Environmental assessments (committed to this branch)
         if: inputs.mode == 'eas'
         timeout-minutes: 40
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
-          if [ "${{ inputs.only }}" = "with-capital" ]; then
+          if [ "$ONLY" = "with-capital" ]; then
             # The published capital data when it is there; otherwise a fresh build (not committed).
             if [ -f data/capital.json ]; then CAP=data/capital.json; else node scripts/build-capital.js --out /tmp/capital > /tmp/capital.log; CAP=/tmp/capital/capital.json; fi
             node scripts/build-eas.js --out data --capital "$CAP"
           else
-            node scripts/build-eas.js --out data --capital /nonexistent
+            # Linked to the published capital data (data/capital.json) when it is there.
+            node scripts/build-eas.js --out data
           fi
           mkdir -p /tmp/eas-built && cp data/eas.json data/eas-review.csv /tmp/eas-built/
           npm test > /tmp/test.log 2>&1 || { grep -A40 '^not ok' /tmp/test.log | head -200; exit 1; }
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/eas.json data/eas-review.csv
-          git diff --cached --quiet || { git commit -m "Environmental assessments (list, project pages, geometry)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
+          git diff --cached --quiet || { git commit -m "Environmental assessments (list, project pages, geometry)"; bash scripts/push-data.sh; }
       - name: Upload the EA build (when its checks fail)
         if: failure() && inputs.mode == 'eas'
         uses: actions/upload-artifact@v4
@@ -448,7 +461,7 @@ jobs:
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/servicing.json data/svc-census.json
-          git diff --cached --quiet || { git commit -m "Pressure zones and drainage areas"; git push; }
+          git diff --cached --quiet || { git commit -m "Pressure zones and drainage areas"; bash scripts/push-data.sh; }
       - name: Imagery and footprints
         if: inputs.mode == 'imagery'
         run: node scripts/probe-imagery.js targeted

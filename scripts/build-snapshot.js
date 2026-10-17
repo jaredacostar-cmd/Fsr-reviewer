@@ -10,7 +10,9 @@
  *                       publish current status
  *
  * A source that fails this week keeps last week's records (marked stale), so a
- * temporary outage never wipes data. Exits non-zero only if every source fails.
+ * temporary outage never wipes data. A source that loads with fewer than half of last
+ * week's records is treated the same way (a short or broken download). Exits non-zero
+ * only if every source fails.
  *
  * Usage: node scripts/build-snapshot.js [--out data]
  */
@@ -22,6 +24,7 @@ const P = require('../js/phases.js');
 const L = require('../js/loader.js');
 const { buildIndex, countUnitsFromText } = require('./build-snapshot-index.js');
 const PV = require('../js/privacy.js');
+const { shrank } = require('./build-guards.js');
 
 const SNAPSHOT_MAX_PER_LAYER = 150000;
 const CHANGE_LIST_MAX = 500;
@@ -83,6 +86,8 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
       const res = await L.loadSource(src, { bbox: cfg.bbox, sinceYear: cfg.sinceYear, maxPerLayer: SNAPSHOT_MAX_PER_LAYER, pageSize: cfg.pageSize });
       // Applications always; permits only when they create new buildings / units.
       const kept = res.records.filter(r => r.kind === 'application' || r.newBuild);
+      const before = (prevRecords.get(src.id) || []).length;
+      if (shrank(kept.length, before, 0.5)) throw new Error(`only ${kept.length} records against ${before} last snapshot${res.truncated ? ' (truncated)' : ''}`);
       for (const r of kept) encoded.push(encodeRecord(r));
       outSources.push({ ...meta, url: res.url || meta.url, status: 'ok', updated: today, count: kept.length, loaded: res.records.length, truncated: res.truncated });
       okCount++;
@@ -161,8 +166,12 @@ async function buildSnapshot({ cfg = CFG, previous = null, history = null, now =
   return { snapshot, history: hist, index, summary: { sources: outSources.length, ok: okCount, records: encoded.length, projects: projects.length, added: added.length, moved: moved.length } };
 }
 
+// A missing file is a first run; a file that can't be parsed stops the build (a corrupt
+// history.json must not restart every project's phase history).
 function readJSON(file) {
-  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return null; }
+  let text;
+  try { text = fs.readFileSync(file, 'utf8'); } catch (e) { if (e.code === 'ENOENT') return null; throw e; }
+  try { return JSON.parse(text); } catch (e) { throw new Error(`${file}: ${e.message}`); }
 }
 
 async function main() {
@@ -183,4 +192,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { console.error(e.message); process.exit(1); });
-module.exports = { buildSnapshot, encodeRecord, decodeRecord };
+module.exports = { buildSnapshot, encodeRecord, decodeRecord, readJSON };

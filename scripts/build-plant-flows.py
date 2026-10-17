@@ -9,8 +9,9 @@ company code, which stays the same when a plant is renamed (Lakeview WPCP -> G.E
 
 Usage: python3 scripts/build-plant-flows.py <ext-raw> data/plant-flows.json [data/peel-reports.json]
 
-Standard library only (the XLSX is read as zipped XML). Refuses to write when a plant has fewer
-years than the previous file (a broken download must not replace good history).
+Standard library only (the XLSX is read as zipped XML). Refuses to write (exit 1) when a year's
+file has columns it cannot find, or when a plant has fewer years, or fewer months in a year, than
+the previous file (a broken download must not replace good history).
 """
 import calendar, glob, json, os, re, sys, zipfile
 import xml.etree.ElementTree as ET
@@ -81,6 +82,7 @@ def month_key(s):
 monthly = {p: {} for p in PLANTS.values()}
 names = {p: {} for p in PLANTS.values()}
 years_read = []
+skipped = []
 for f in sorted(glob.glob(os.path.join(raw, 'municipal-treated-wastewater-effluent', '*.xlsx'))):
     rows = xlsx_rows(f)
     head = [h.strip().lower() for h in next(rows)]
@@ -96,6 +98,7 @@ for f in sorted(glob.glob(os.path.join(raw, 'municipal-treated-wastewater-efflue
         i_par, i_val, i_unit = find('parameter'), find('reported value', 'result value'), find('unit of measure', 'unit')
     except StopIteration:
         print('SKIP (columns not found):', os.path.basename(f), head)
+        skipped.append(os.path.basename(f))
         continue
     n = 0
     for r in rows:
@@ -155,12 +158,20 @@ out = {
     'checks': checks,
 }
 
-# Guard: never replace a longer history with a shorter one.
+# Guard: every year's file must be read.
+if skipped:
+    sys.exit(f'REFUSED: columns not found in {", ".join(skipped)}; kept {out_p}')
+
+# Guard: never replace a longer history with a shorter one (years, or months in a year).
 try:
     prev = json.load(open(out_p))
     for p, d in prev.get('plants', {}).items():
         if len(plants.get(p, {}).get('annual', {})) < len(d.get('annual', {})):
             sys.exit(f'REFUSED: {p} would drop from {len(d["annual"])} to {len(plants.get(p, {}).get("annual", {}))} years; kept {out_p}')
+        for y, a in d.get('annual', {}).items():
+            n = plants.get(p, {}).get('annual', {}).get(y, {}).get('months', 0)
+            if n < a.get('months', 0):
+                sys.exit(f'REFUSED: {p} {y} would drop from {a["months"]} to {n} months; kept {out_p}')
 except (OSError, ValueError):
     pass
 

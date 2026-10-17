@@ -10,6 +10,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { addressesShort } = require('./build-guards.js');
 
 const LAYER = 'https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Address_Points/FeatureServer/0';
 const FIELDS = ['STREETNUM', 'STREETNAME', 'STREETTYPE', 'STREETDIRECTION', 'MUNICIPALITY', 'ROPADRID', 'LANDUSE', 'HOUSESTYLE', 'LATITUDE', 'LONGITUDE'];
@@ -52,8 +53,8 @@ async function getJson(url, tries = 4) {
     }
     if (++pages % 25 === 0) console.log(`  ${pages} pages, ${rows.size} addresses`);
   }
-  // Guard: a short download must not replace a full one.
-  if (rows.size < count * 0.5) { console.error(`REFUSED: only ${rows.size} addresses of ${count} points`); process.exit(1); }
+  // Guard: a short download must not replace a full one (nor one where the service gave no count).
+  if (addressesShort(rows.size, count)) { console.error(`REFUSED: only ${rows.size} addresses of ${count} points`); process.exit(1); }
   fs.mkdirSync(path.join(out, 'addresses'), { recursive: true });
   const file = path.join(out, 'addresses', 'peel.json');
   fs.writeFileSync(file, JSON.stringify({ source: LAYER, fetched: new Date().toISOString(), lastEdit: meta.editingInfo && meta.editingInfo.lastEditDate ? new Date(meta.editingInfo.lastEditDate).toISOString().slice(0, 10) : null,

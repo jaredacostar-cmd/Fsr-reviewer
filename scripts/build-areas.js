@@ -10,6 +10,9 @@
  *  - 2021 Census: population and private dwellings by dissemination area (Statistics Canada,
  *    via the Government Operations Centre layer), reduced to one point per DA.
  *
+ * A layer that keeps no areas, or comes back cut short, stops the build, as does a municipality's
+ * plan / MTSA / precinct areas falling under 80% of the previous areas.json (the old files stay).
+ *
  *   node scripts/build-areas.js --out data
  */
 'use strict';
@@ -17,6 +20,7 @@ const fs = require('fs');
 const path = require('path');
 const A = require('../js/arcgis.js');
 const P = require('../js/phases.js');
+const { countBy, shrunkGroups } = require('./build-guards.js');
 
 const LAYERS = {
   secondaryPlans: [
@@ -87,19 +91,25 @@ const CSD = { 3521005: 'Mississauga', 3521010: 'Brampton', 3521024: 'Caledon' };
 const round = v => Math.round(v * 1e5) / 1e5;
 const ringsOf = g => !g ? [] : g.type === 'Polygon' ? g.coordinates : g.type === 'MultiPolygon' ? g.coordinates.flat() : [];
 
-async function areas(defs, kind) {
+// prevList: the same kind of areas in the previous areas.json (the shrink check), or null.
+async function areas(defs, kind, prevList = null) {
   const out = [];
   for (const d of defs) {
     const info = await A.layerInfo(d.url);
-    const { features: feats } = await A.queryAll(d.url, info, { max: 5000 });
+    const { features: feats, truncated } = await A.queryAll(d.url, info, { max: 5000 });
+    if (truncated) throw new Error(`${kind}: ${d.municipality} ${d.source}: more than 5,000 features (cut short)`);
+    let kept = 0, unnamed = 0;
     for (const f of feats) {
       const name = String(d.name(f.properties || {}) || '').replace(/\s+/g, ' ').trim();
       const rings = ringsOf(f.geometry).map(r => r.map(([x, y]) => [round(x), round(y)]));
+      if (!name) unnamed++;
       if (!name || !rings.length) continue;
+      kept++;
       const extra = d.props ? Object.fromEntries(Object.entries(d.props(f.properties || {})).filter(([, v]) => v != null)) : {};
       out.push({ id: `${kind}:${d.municipality}:${name}`.toLowerCase().replace(/[^a-z0-9:]+/g, '-'), name, municipality: d.municipality, rings, ...extra });
     }
-    console.log(`${kind}: ${d.municipality} ${feats.length} from ${d.source}`);
+    console.log(`${kind}: ${d.municipality} ${feats.length} from ${d.source}${unnamed ? ` (${unnamed} without a name skipped)` : ''}`);
+    if (!kept) throw new Error(`${kind}: ${d.municipality} ${d.source}: no areas kept (${feats.length} features)`);
   }
   // Same name twice (multi-part areas published as separate features): merge rings.
   const byId = new Map();
@@ -108,6 +118,8 @@ async function areas(defs, kind) {
     if (prev) { prev.rings.push(...a.rings); if (a.areaHa) prev.areaHa = (prev.areaHa || 0) + a.areaHa; if (a.appeals && !prev.appeals) prev.appeals = a.appeals; } else byId.set(a.id, a);
   }
   for (const a of byId.values()) a.mappedHa = Math.round(ringsHa(a.rings));
+  const short = prevList ? shrunkGroups(countBy([...byId.values()], 'municipality'), countBy(prevList, 'municipality'), 0.8) : [];
+  if (short.length) throw new Error(`${kind}: ${short.map(g => `${g.key} ${g.n} areas against ${g.prev}`).join('; ')} (under 80% of the previous areas.json)`);
   return [...byId.values()].sort((a, b) => a.municipality.localeCompare(b.municipality) || a.name.localeCompare(b.name, 'en', { numeric: true }));
 }
 
@@ -261,12 +273,14 @@ async function main() {
   if (process.argv.includes('--precincts-only')) {
     const file = path.join(outDir, 'areas.json');
     const data = JSON.parse(fs.readFileSync(file, 'utf8'));
-    data.precincts = await areas(LAYERS.precincts, 'precinct');
+    data.precincts = await areas(LAYERS.precincts, 'precinct', data.precincts || null);
     data.sources.precincts = LAYERS.precincts.map(d => ({ municipality: d.municipality, source: d.source, url: d.url }));
     fs.writeFileSync(file, JSON.stringify(data));
     console.log(`precincts: ${data.precincts.length} areas written to ${file}`);
     return;
   }
+  let prev = null;
+  try { prev = JSON.parse(fs.readFileSync(path.join(outDir, 'areas.json'), 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
   const data = {
     version: 1,
     generatedAt: new Date().toISOString(),
@@ -278,20 +292,25 @@ async function main() {
       censuses: CENSUSES.map(c => ({ year: c.year, source: c.source, url: c.url })),
     },
   };
-  data.secondaryPlans = await areas(LAYERS.secondaryPlans, 'sp');
-  data.mtsas = await areas(LAYERS.mtsas, 'mtsa');
-  if (LAYERS.precincts.length) data.precincts = await areas(LAYERS.precincts, 'precinct');
+  data.secondaryPlans = await areas(LAYERS.secondaryPlans, 'sp', prev && prev.secondaryPlans);
+  data.mtsas = await areas(LAYERS.mtsas, 'mtsa', prev && prev.mtsas);
+  if (LAYERS.precincts.length) data.precincts = await areas(LAYERS.precincts, 'precinct', prev && prev.precincts);
   const areaList = [...data.secondaryPlans, ...data.mtsas];
   data.censuses = [];
   let ref = null;
+  const outlines = [];
   for (const def of CENSUSES) {
     const c = await census(def, areaList, ref);
     if (!ref) ref = c.refDas;
     data.censuses.push(c.census);
-    // Dissemination area outlines for the map layer (one file per census year).
+    outlines.push([def, c.outlines]);
+  }
+  // Dissemination area outlines for the map layer (one file per census year), written once every
+  // census has been read, so a failed year never leaves the files out of step with areas.json.
+  for (const [def, o] of outlines) {
     const daFile = path.join(outDir, def.outlines);
-    fs.writeFileSync(daFile, JSON.stringify(c.outlines));
-    console.log(`${def.outlines}: ${c.outlines.das.length} DA outlines, ${(fs.statSync(daFile).size / 1e6).toFixed(2)} MB`);
+    fs.writeFileSync(daFile, JSON.stringify(o));
+    console.log(`${def.outlines}: ${o.das.length} DA outlines, ${(fs.statSync(daFile).size / 1e6).toFixed(2)} MB`);
   }
   // Older app versions read `census` (2021).
   data.census = data.censuses[0];
