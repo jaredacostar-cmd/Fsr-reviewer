@@ -145,3 +145,37 @@ test('crossings: the ground at a crossing is the reach\'s sample nearest it, not
   assert.equal(SDR.crossings([{ ...reach, pts: undefined, gDn: 231 }], [{ kind: 'water', d: 300, paths: [[[70, -50], [70, 50]]] }])[0].ground, 231);
   assert.match(src('js/sewer-designer.js'), /gUp: d\.mhs\[r\.from\]\.g, gDn: d\.mhs\[r\.to\]\.g, pts: NR\[i\]\.pts \}/);
 });
+
+test('the bend into the existing sewer: from the last reach to the existing pipe\'s direction of flow', () => {
+  const k = 1 / (111320 * Math.cos(43.7 * Math.PI / 180));
+  // the existing pipe flows east (its upstream end first), 200 m; the connection halfway
+  const g = [[-79.7, 43.7], [-79.7 + 200 * k, 43.7]], at = { lat: 43.7, lng: -79.7 + 100 * k };
+  assert.equal(SDR.connBend({ lat: 43.7 + 50 / 111320, lng: at.lng }, at, g, 0.5), 90);   // a lateral from the north
+  assert.equal(SDR.connBend({ lat: 43.7, lng: at.lng - 50 * k }, at, g, 0.5), 0);         // straight on
+  assert.equal(SDR.connBend({ lat: 43.7 + 50 / 111320, lng: at.lng - 50 * k }, at, g, 0.5), 45);
+  assert.equal(SDR.connBend({ lat: 43.7, lng: at.lng - 50 * k }, at, g, 0), 0, 'at its upstream maintenance hole: this pipe out');
+  // a pipe that turns: the segment the connection is on
+  const bentPipe = [[-79.7, 43.7], [-79.7 + 100 * k, 43.7], [-79.7 + 100 * k, 43.7 - 100 / 111320]], at2 = { lat: 43.7 - 50 / 111320, lng: -79.7 + 100 * k };
+  assert.equal(SDR.connBend({ lat: at2.lat, lng: at2.lng - 50 * k }, at2, bentPipe, 0.75), 90);
+  // at its downstream maintenance hole the pipe out is not known: no bend counted
+  assert.equal(SDR.connBend({ lat: 43.7 + 50 / 111320, lng: at.lng }, { lat: 43.7, lng: g[1][0] }, g, 1), null);
+  // wired: the reach into the connection takes it, so the velocity head rule applies there
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /const b = connBend\(meta\[r\.from\]\.ll, meta\[rootN\]\.ll, S\.conn\.g, S\.conn\.t\); if \(b != null\) r\.bend = b;/);
+  assert.match(s, /existingMH: atUp \|\| atDn, g: m\.g, t \};/);
+});
+
+test('a 90° bend into the existing sewer: the velocity head rule\'s least drop holds at the connection (450 mm)', () => {
+  const gf = x => 200 - 0.02 * x, net = SD.lineNet({ nodes: [0, 80, 160].map(x => ({ x, g: gf(x), bend: 0 })), samples: [] }, 250), conn = { invert: gf(160) - 4, dmm: 900 };
+  const straight = SD.designNet(net, conn);
+  assert.ok(straight.ok, straight.why);
+  const hv = r => 0.5 * r.v * r.v / (2 * 9.81);
+  // no bend counted (as before): a 0.19 m drop at 2.89 m/s, under half its velocity head (0.21 m)
+  assert.equal(straight.mhs[straight.root].ins[0].drop, 0.19);
+  assert.ok(hv(straight.reaches[1]) > 0.2);
+  net.reaches[1].bend = 90;
+  const bent = SD.designNet(net, conn), x = bent.mhs[bent.root].ins[0];
+  assert.ok(bent.ok, bent.why);
+  assert.ok(x.drop >= hv(bent.reaches[1]) - 1e-6, `${x.drop} vs ${hv(bent.reaches[1])}`);
+  assert.ok(bent.cost > straight.cost);
+});

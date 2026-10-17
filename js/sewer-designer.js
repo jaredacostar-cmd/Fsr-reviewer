@@ -27,6 +27,19 @@
       return Math.round(Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI);
     });
   }
+  // The bend into the existing sewer at the connection (degrees, 0–180): from the last reach (from →
+  // at, {lat, lng}) to the existing pipe's direction of flow there. g: the pipe [[lng, lat]…] from its
+  // upstream end (the end its InvertUp is at, as the connection's invert reads it); t: the connection's
+  // fraction along it. null at its downstream end (t = 1): the pipe out of that maintenance hole is
+  // another pipe, not read here.
+  function connBend(from, at, g, t) {
+    if (!g || g.length < 2 || !(t >= 0) || t >= 1 - 1e-9) return null;
+    const pts = g.map(([lng, lat]) => ({ lat, lng })), xs = chainage(pts), want = t * xs[xs.length - 1];
+    let i = 1; while (i < pts.length - 1 && xs[i] <= want + 1e-9) i++;
+    const brg = (a, b) => Math.atan2((b.lng - a.lng) * Math.cos(rad(a.lat)), b.lat - a.lat) * 180 / Math.PI;
+    let dd = Math.abs(brg(from, at) - brg(pts[i - 1], pts[i])) % 360; if (dd > 180) dd = 360 - dd;
+    return Math.round(dd);
+  }
   // A point at chainage x along the line.
   function pointAt(pts, xs, x) {
     for (let i = 1; i < pts.length; i++) if (x <= xs[i] + 1e-9) { const t = (x - xs[i - 1]) / ((xs[i] - xs[i - 1]) || 1); return { lat: pts[i - 1].lat + (pts[i].lat - pts[i - 1].lat) * t, lng: pts[i - 1].lng + (pts[i].lng - pts[i - 1].lng) * t }; }
@@ -111,7 +124,7 @@
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, pointAt, checks, csv, crossings, CROSS };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -227,7 +240,7 @@
       const { m, n } = best, g = m.g, glen = chainage(g.map(([lng, lat]) => ({ lat, lng }))).pop() || 1, along = n.t * glen;
       const atUp = along <= 15, atDn = glen - along <= 15, t = atUp ? 0 : atDn ? 1 : n.t;
       const gp = g.map(([lng, lat]) => ({ lat, lng })), at = atUp ? gp[0] : atDn ? gp[gp.length - 1] : pointAt(gp, chainage(gp), t * glen);
-      S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn, g: m.g };
+      S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn, g: m.g, t };
       // The drawn end moves onto the sewer.
       S.pts[S.pts.length - 1] = { lat: S.conn.lat, lng: S.conn.lng };
       await sampleRun(S);
@@ -315,11 +328,15 @@
     const outOf = nodes.map(() => -1); reaches.forEach((r, i) => { outOf[r.from] = i; });
     const brg = (a, b) => Math.atan2((b.lng - a.lng) * Math.cos(a.lat * Math.PI / 180), b.lat - a.lat) * 180 / Math.PI;
     reaches.forEach(r => { const o = outOf[r.to]; if (o < 0) return; let dd = Math.abs(brg(meta[r.from].ll, meta[r.to].ll) - brg(meta[r.to].ll, meta[reaches[o].to].ll)) % 360; if (dd > 180) dd = 360 - dd; r.bend = Math.round(dd); });
+    // Into the connection: the bend to the existing pipe's direction (the velocity head rule's least
+    // drop from 375 mm), where that direction is known.
+    const rootN = nodeOn(0, S.mhX[S.mhX.length - 1]);
+    reaches.forEach(r => { if (r.to !== rootN || !S.conn) return; const b = connBend(meta[r.from].ll, meta[rootN].ll, S.conn.g, S.conn.t); if (b != null) r.bend = b; });
     // Flows: the lines upstream of a reach are its own and every branch joining at or above it.
     const flows = rs.map(run => flowOf(run === S ? S.form : run.form));
     const ups = (ri, x0) => [ri, ...rs.flatMap((b, j) => (j && b.join.to === rs[ri] && b.join.x <= x0 + 0.01 ? ups(j, Infinity) : []))];
     reaches.forEach((r, i) => { const ri = rmeta[i].run, x0 = meta[r.from].x, list = ups(ri, x0).map(j => flows[j]); r.q = flowSum(list).q; });
-    return { net: { nodes, reaches }, meta, rmeta, start, outOf, flows, root: nodeOn(0, S.mhX[S.mhX.length - 1]) };
+    return { net: { nodes, reaches }, meta, rmeta, start, outOf, flows, root: rootN };
   }
   // A line's path to the connection as a single line (its own reaches, then on down the lines it
   // joins): the profile's view, laid out like a single-line design.
