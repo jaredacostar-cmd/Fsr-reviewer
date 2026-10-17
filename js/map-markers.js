@@ -123,7 +123,6 @@
         </div>
         <details class="mo-more mo-adv"${store.get('moOpen', false) ? ' open' : ''}><summary>More settings</summary>
         <div class="mo-sec"><div class="mo-h">Developments</div>
-          <label data-info="map-color"><span>Colour</span><select id="opt-mcolor">${opts(MSTYLE.color, mstyle.color)}</select></label>
           <label data-info="map-size"><span>Size</span><select id="opt-msize">${opts(MSTYLE.size, mstyle.size)}</select></label>
           <label class="mo-range" data-info="hover-boundary"><span>Boundary reach</span><input type="range" id="opt-hovr" min="10" max="120" step="5" value="${hov.r}" aria-label="How close the pointer must be to a development to outline its site, in screen pixels"><b id="opt-hovr-v">${hov.r} px</b></label>
         </div>
@@ -154,7 +153,6 @@
         const on = k => document.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
         MA().setDcOn({ on: w || ww, sys: w && ww ? 'both' : w ? 'water' : ww ? 'wastewater' : dcOn.sys });
       }; });
-      el.querySelector('#opt-mcolor').onchange = e => MA().setMapStyle({ color: e.target.value });
       el.querySelector('#opt-msize').onchange = e => MA().setMapStyle({ size: e.target.value });
       el.querySelector('#opt-mcap').onchange = e => MA().setMapStyle({ cap: e.target.value });
       const orient = el.querySelector('#opt-orient');

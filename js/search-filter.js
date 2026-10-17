@@ -171,7 +171,7 @@
   });
   sugEl.addEventListener('mousedown', e => { const li = e.target.closest('[data-i]'); if (li) { e.preventDefault(); goSug(sugItems[+li.dataset.i]); } });
   $('#f-search').addEventListener('blur', () => setTimeout(() => { sugItems = []; renderSug(); }, 150));
-  // Record-type controls (Settings & sources tab): kind and new-build only.
+  // Record-type controls (Find › What): kind and new-build only.
   document.addEventListener('change', e => {
     if (e.target.id === 'f-kind') { App().state.kind = e.target.value; App().applyFilters(); }
     else if (e.target.id === 'f-new') { App().state.newOnly = e.target.checked; App().applyFilters(); }

@@ -103,7 +103,7 @@ test('every workspace has a page builder; pages open from Home, chips and the ma
   assert.match(s, /const BUILD = \{ home, tight, site, growth, projects, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, glossary, help \};/, "every workspace, and the Reference pages: How it works and its guides, the Glossary and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
-  assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); openPage\(pg\.dataset\.wsPage\); return; \}/);
+  assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
   assert.match(src('index.html'), /data-ws-backpage title="Back to this workspace's page">← Page<\/button>/);
   // Study area: the map itself moves onto the page and back.
   assert.match(w, /function placeMap\(\) \{\s*const m = \$\('#map'\), slot = \$\('#page-map-slot'\);/);

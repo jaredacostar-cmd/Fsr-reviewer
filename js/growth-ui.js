@@ -250,18 +250,10 @@
         <label class="field"><span>Density</span>${sel('dsp-density', density === 'comfortable' ? 'comfortable' : 'compact', [['compact', 'Compact'], ['comfortable', 'Comfortable']])}</label>
         <p class="small muted">Dark is the default; "Follow device" tracks the OS setting. Compact suits a computer, Comfortable a phone. Both stay in this browser — they are not part of share links.</p>
       </fieldset>
-      <p class="small">Design criteria (persons per unit, water and wastewater rates, employment) are edited in the <strong>Scenario</strong> control in the top bar — open it, then "Design criteria". Edited values are used everywhere and flagged as modified.</p>
-      ${SET().wetBoxHTML()}`;
+      <p class="small">Design criteria (persons per unit, water and wastewater rates, employment) and the wet weather scenario (design storm) are edited in the <strong>Scenario</strong> control in the top bar — open it, then "Change the scenario". Edited values are used everywhere and flagged as modified.</p>`;
   }
-  function recordSettingsHTML() {
-    const kindOpts = [['application', 'Planning applications + their permits'], ['', 'All records (incl. permits with no application)'], ['permit', 'Building permits'], ['both', 'Application + permits']];
-    const kcur = App().state.kind == null ? 'application' : App().state.kind;
-    return `<fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend>`
-      + `<div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind">`
-      + kindOpts.map(([v, t]) => `<option value="${v}"${String(v) === String(kcur) ? ' selected' : ''}>${t}</option>`).join('')
-      + `</select></label></div>`
-      + `<label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new"${App().state.newOnly ? ' checked' : ''}><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label></fieldset>`;
-  }
+  // Record type and New buildings only narrow the list: they are filters, in Find › What.
+  const recordSettingsHTML = () => '<fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><p class="small">Record type and New buildings only are filters: they are in <strong>Find › What</strong>.</p></fieldset>';
   function settingsPageHTML() {
     const TC = root.PeelTreeCounts;
     // Bundle 6: Display → Start screen → Counting → Usage; every counting choice lives in the Scenario

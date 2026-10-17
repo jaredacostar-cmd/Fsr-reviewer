@@ -215,7 +215,7 @@
               <button type="button" role="menuitem" class="btn small link" data-wtrace="${esc(p.key)}" title="Trace the water supply route from the plant on the map">Trace water</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-fsr aria-expanded="false" title="Cross-check the consultant's FSR figures">Check FSR</button>
               <hr>
-              <button type="button" role="menuitem" class="btn small link" data-memo title="One-page servicing memo to print or save as PDF">Memo</button>
+              <button type="button" role="menuitem" class="btn small link" data-memo title="One-page servicing memo to print or save as PDF">Servicing memo</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-alloc title="Record a servicing allocation for this development">Record allocation</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-compare title="Add this development to the comparison (Compare tool)">Compare</button>
               <button type="button" role="menuitem" class="btn small link" data-scope-export title="This development's row (phase, units, layer, demand) as a CSV">Export (CSV)</button>

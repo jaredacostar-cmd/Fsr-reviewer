@@ -79,6 +79,7 @@
     if (s.sources) out.push(`<details class="pnl-fold" data-sec="sources"><summary>Sources</summary><div class="small muted">${s.sources}</div></details>`);
     const f = s.foot || {}, sec = (f.secondary || []).slice(0, 1);
     out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}</div>
+      <div class="pnl-phone-ctx small">${scenarioChip()}${yearsChip()}</div>
       <p class="pnl-note small">${NOTE}${reportLink(s.key, h.name)}</p></footer>`);
     return `<article class="pnl" data-panel="${esc(s.key || '')}">${out.join('')}</article>`;
   }
@@ -95,6 +96,13 @@
     const LB = root.PeelLayerBar, txt = p && p.settings ? p.text : 'Default';
     const line = p && p.settings && LB ? LB.scenarioLine(p.settings) : '';
     return `<button type="button" class="pnl-scen-chip" data-pnl-scen title="The scenario these figures are worked out for${line ? `: ${esc(line)}` : ''}. Open the Scenario control to see or change it">Scenario <span>${esc(txt)}</span> ▾</button>`;
+  }
+  // The years the figures follow (the timeline): on a phone, a button in the panel opens the timeline,
+  // as the scenario chip opens the Scenario control (both are off screen there otherwise).
+  function yearsChip() {
+    const S = root.PeelApp && root.PeelApp.state; if (!S) return '';
+    const on = S.yearFrom != null || S.yearTo != null, a = S.yearFrom ?? S.yearMin, b = S.yearTo ?? S.yearMax;
+    return `<button type="button" class="pnl-scen-chip" data-pnl-years title="The years shown: set them in Find › When">Years <span>${on ? esc(a === b ? `${a}` : `${a}–${b}`) : 'all'}</span> ▾</button>`;
   }
   // ---- Shared headers -------------------------------------------------------------------------------
   // An area panel: Peel (› the municipality filter) › the tab and sub-view; named by its question.
@@ -216,6 +224,13 @@
       if (e.target.closest('[data-full-table]')) { openFull(); return; }
       if (e.target.closest('[data-full-close]')) { closeFull(); return; }
       if (e.target.closest('[data-pnl-scen]')) { const T = root.PeelTopbar; if (T && T.openScenPop) T.openScenPop(); return; }
+      // (a phone, where the timeline hides under the panel: Find › When, which has the years there)
+      if (e.target.closest('[data-pnl-years]')) {
+        const D = root.PeelDataTab, w = document.getElementById('fr-when');
+        if (D && D.toggleSidebar) D.toggleSidebar(true); if (D && D.showTab) D.showTab('explore');
+        if (w) { w.open = true; setTimeout(() => w.scrollIntoView({ block: 'start' }), 120); }
+        return;
+      }
       // A development's header: back to Peel (close the scope); its memo.
       if (e.target.closest('[data-pnl-dev-close]')) { if (root.DevScope) root.DevScope.close(); return; }
       if (e.target.closest('[data-pnl-memo]')) { const p = root.DevScope && root.DevScope.current(), R = root.PeelReports; if (p && R && R.devMemo) R.devMemo(p); return; }

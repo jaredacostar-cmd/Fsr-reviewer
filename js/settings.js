@@ -68,7 +68,8 @@
     refreshCriteria(false); MA().renderCapLayer(); MA().renderLegend();
     if (App().state.svcModel) ST().renderSvcTab();
     if (AT().getFootTab() === 'dca') DCA().renderDca(); if (AT().getFootTab() === 'overview') OT().renderOverview();
-    const f = $('#wet-box'); if (f) f.outerHTML = wetBoxHTML();
+    // (the box lives in the Scenario control: its summary names the storm too)
+    if (ST() && ST().renderScenario) ST().renderScenario(); else { const f = $('#wet-box'); if (f) f.outerHTML = wetBoxHTML(); }
   }
   function wetBoxHTML() {
     const w = App().state.wet, d = IDF.data;

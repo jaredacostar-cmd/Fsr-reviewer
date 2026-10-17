@@ -8,7 +8,7 @@
  * What counts is a person's click (or Enter on a focused control), not the app moving itself:
  *   start  how the app opened: home / ws / full (+ "-link" when it opened from a link)
  *   page   a workspace page (or Home) opened         map    a workspace's map view opened
- *   full   Full map (all tools) opened               tab    an analysis tab picked
+ *   full   Full map opened                           tab    an analysis tab picked
  *   sub    a sub-view picked (tab.sub)               side   a sidebar tab picked (Find, Watch, Data)
  *   issue  "Report a data issue" followed (by panel kind)
  *
@@ -77,7 +77,7 @@
   const SUB_ATTR = { gsub: 'growth', svcsub: 'svc', dcasub: 'dca', rsub: 'records' };
   // Labels for the CSV and Settings: the workspaces' names, the tabs', the sub-view chips' own text.
   function labels() {
-    const L = { full: 'Full map (all tools)', 'page:home': 'Home', 'map:home': 'Home', 'start:home': 'Opened on Home', 'start:ws': 'Opened on a workspace map', 'start:full': 'Opened on the full map', 'start:home-link': 'Opened on Home from a link', 'start:ws-link': 'Opened on a workspace map from a link', 'start:full-link': 'Opened on the full map from a link' };
+    const L = { full: 'Full map', 'page:home': 'Home', 'map:home': 'Home', 'start:home': 'Opened on Home', 'start:ws': 'Opened on a workspace map', 'start:full': 'Opened on the full map', 'start:home-link': 'Opened on Home from a link', 'start:ws-link': 'Opened on a workspace map from a link', 'start:full-link': 'Opened on the full map from a link' };
     const W = root.PeelWorkspaces;
     for (const w of (W && W.WS) || []) { L[`page:${w.id}`] = `${w.label} (page)`; L[`map:${w.id}`] = `${w.label} (map view)`; }
     for (const [k, t] of Object.entries(TABS)) { L[`tab:${k}`] = t; L[`side:${k}`] = `${t} (sidebar)`; L[`issue:${k}`] = `Report a data issue (${t})`; }

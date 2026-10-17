@@ -3460,3 +3460,34 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .back-bar { position: absolute; top: var(--space-2); left: 56px; z-index: 1001; display: flex; gap: 2px; align-items: center; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
 .back-bar[hidden] { display: none; }
 @media (max-width: 700px) { .back-bar { left: var(--space-2); top: auto; bottom: calc(var(--space-2) + 56px); } .back-bar .btn { min-height: 44px; } }
+
+/* Navigation 4, phone: Home's menu behind one button (grouped when open), and each page's actions in a
+   bar at the bottom of the screen; the panel carries the scenario and the years. */
+.home-menu-btn { display: none; }
+.pnl-phone-ctx { display: none; }
+.when-years-in { display: none; }
+@media (max-width: 700px) {
+  .home-side { flex-direction: column; align-items: stretch; overflow: visible; padding: var(--space-2) var(--space-3); }
+  .home-menu-btn { display: flex; align-items: center; gap: var(--space-2); width: 100%; min-height: 44px; padding: var(--space-1) var(--space-3); background: var(--surface-2); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px; font: inherit; font-weight: 600; text-align: left; }
+  .home-menu-btn .muted { font-weight: 400; margin-right: auto; }
+  .home-side:not(.open) > :not(.home-menu-btn) { display: none; }
+  .home-side.open ul { flex-direction: column; }
+  .home-side.open .home-g { display: block; margin: var(--space-2) 0 0; }
+  .home-side.open .home-ws { width: 100%; justify-content: flex-start; white-space: normal; }
+  .home-side.open .home-full { margin-top: var(--space-2); }
+  .home-main { padding-bottom: 84px; }
+  .home-main .page-foot .pnl-acts { position: fixed; left: 0; right: 0; bottom: 0; z-index: 1100; margin: 0; padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom, 0px)); background: var(--surface-1); border-top: 1px solid var(--border); box-shadow: 0 -2px 8px rgba(0,0,0,.25); display: flex; flex-wrap: nowrap; overflow-x: auto; gap: var(--space-2); }
+  .home-main .page-foot .pnl-acts .btn { flex: 0 0 auto; min-height: 44px; }
+  html:not(.home-on) .home-main .page-foot .pnl-acts { display: none; }
+  .pnl-phone-ctx { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-1); }
+  /* (the timeline hides under the panel on a phone: Find › When has the years as boxes) */
+  #fr-when .when-years-in { display: grid; }
+  #fr-when .when-years { display: none; }
+}
+/* Navigation 4: the first run. The Home tour's role picker, and the map tour offered once. */
+.tour-roles { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0; }
+.tour-roles .btn { justify-content: flex-start; text-align: left; min-height: 36px; }
+.tour-offer { position: fixed; right: var(--space-3); bottom: calc(var(--space-3) + 48px); z-index: 2000; width: min(320px, calc(100vw - 24px)); background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-3); box-shadow: var(--shadow); font-size: var(--fs-2); }
+.tour-offer p { margin: var(--space-1) 0 var(--space-2); }
+.tour-offer .tour-btns { display: flex; justify-content: space-between; gap: var(--space-2); }
+@media (max-width: 700px) { .tour-offer { left: 12px; right: 12px; width: auto; bottom: 12px; } }
