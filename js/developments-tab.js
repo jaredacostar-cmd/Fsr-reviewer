@@ -28,7 +28,7 @@
     const m = MM().markerByKey.get(p.key);
     if (m) MM().cluster.zoomToShowLayer(m, () => m.openTooltip());
     else Nav().flyToSite(p, 17);
-    if (innerWidth <= 760) DT().toggleSidebar(false);
+    if (innerWidth <= 700) DT().toggleSidebar(false);
   }
 
   function renderSources() {

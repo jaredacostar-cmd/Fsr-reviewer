@@ -144,7 +144,7 @@
     // Picking opens it: the box empties and nothing is left filtered.
     $('#f-search').value = '';
     // On a phone the search sits in the list view: switch to the map to show the place.
-    if (innerWidth <= 760 && $('#sidebar').classList.contains('open')) { DT().toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
+    if (innerWidth <= 700 && $('#sidebar').classList.contains('open')) { DT().toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
     if (x.p) { Nav().showDetail(x.p); return; }
     if (x.place) return x.place.go();
     // An address: pan and zoom there with a pin.
@@ -153,7 +153,7 @@
       .bindTooltip(`<strong>${esc(x.g.label)}</strong><br><span class="muted">Tap to remove</span>`, { className: 'pt', direction: 'top', offset: [0, -20], permanent: true })
       .on('click', () => pinLayer.clearLayers()).addTo(pinLayer);
     map.setView([x.g.lat, x.g.lng], 17);
-    if (innerWidth <= 760) AC().closeDetail();
+    if (innerWidth <= 700) AC().closeDetail();
   }
   $('#f-search').addEventListener('input', e => { clearTimeout(sugTimer); const q = e.target.value.trim(); sugTimer = setTimeout(() => updateSug(q), 300); });
   $('#f-search').addEventListener('keydown', async e => {

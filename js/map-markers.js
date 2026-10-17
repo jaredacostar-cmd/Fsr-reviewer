@@ -61,7 +61,9 @@
   // HTML and to computed values via token() for Leaflet/canvas.
   const PIPE_CLS = [[85, '--cap-room', 'under 85%: free flowing', 'Free flowing', 'under 85%'], [100, '--cap-tight', '85–100%: near full', 'Near full', '85–100%'], [Infinity, '--cap-over', 'over 100%: surcharged', 'Surcharged', 'over 100%']];
   const pipeState = r => r == null || isNaN(r) ? null : PIPE_CLS.find(([t]) => r * 100 < t) || PIPE_CLS[PIPE_CLS.length - 1];
-  const EXIST_STYLE = { water: { color: '--pipe-water', label: 'Watermain' }, sanitary: { color: '--pipe-sanitary', label: 'Sanitary sewer' }, storm: { color: '--pipe-storm', label: 'Storm sewer' } };
+  // Each kind is told apart by its line as well as its colour (colour-blind safe): storm sewers are
+  // dotted (watermains blue and sanitary sewers brown stay solid); a force main is dashed.
+  const EXIST_STYLE = { water: { color: '--pipe-water', label: 'Watermain', dash: null }, sanitary: { color: '--pipe-sanitary', label: 'Sanitary sewer', dash: null }, storm: { color: '--pipe-storm', label: 'Storm sewer', dash: '1 5' } };
   const EXIST_ZOOM = 15;
   // Map control: MC().getBasemap() + label pickers.
   // Planning area outlines on the map (secondary plans / character areas, MTSAs): tap one to filter.

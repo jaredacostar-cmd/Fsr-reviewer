@@ -165,7 +165,7 @@
       man = man || await (EL().pilotTerrain ? EL().pilotTerrain().then(p => p.man) : null);
     } catch (e) { message('The 3D library did not load. Check the connection and try again.'); return; }
     lastMassing = massing(); used = {};
-    el.querySelector('.v3-legend').open = window.innerWidth >= 600;
+    el.querySelector('.v3-legend').open = window.innerWidth > 700;
     const lm = MC().map, c = lm.getCenter();
     const buildings = !!(man && man.buildings && man.buildings.file);
     el.querySelector('input[data-v3="buildings"]').closest('label').hidden = !buildings;

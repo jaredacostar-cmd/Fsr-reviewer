@@ -22,9 +22,9 @@ test('resolveTheme: dark/light/device x prefers-light', () => {
   assert.equal(DG.resolveTheme('dark', false), 'dark');
   assert.equal(DG.resolveTheme('light', true), 'light');
   assert.equal(DG.resolveTheme('light', false), 'light');
-  // Follow device: null -> remove data-theme, the media query decides.
-  assert.equal(DG.resolveTheme('device', true), null);
-  assert.equal(DG.resolveTheme('device', false), null);
+  // Follow device: the system setting, resolved here (the stylesheet holds one copy of each theme).
+  assert.equal(DG.resolveTheme('device', true), 'light');
+  assert.equal(DG.resolveTheme('device', false), 'dark');
   // Unset or garbage -> dark is the default for everyone.
   for (const s of [null, undefined, '', 'midnight', 42]) {
     assert.equal(DG.resolveTheme(s, true), 'dark', `stored=${JSON.stringify(s)} prefersLight=true`);
@@ -111,8 +111,9 @@ test('index.html sets the theme before first paint', () => {
   assert.ok(scriptAt > 0, 'no inline theme script in <head>');
   const firstCss = head.indexOf('<link rel="stylesheet"');
   assert.ok(scriptAt < firstCss, 'theme script must run before the stylesheet links');
-  assert.ok(head.includes("removeAttribute('data-theme')") || head.includes('removeAttribute("data-theme")'),
-    'device choice should remove data-theme');
+  // (always sets data-theme: "Follow device" reads the system setting before first paint)
+  assert.match(head, /s === 'device' && window\.matchMedia && matchMedia\('\(prefers-color-scheme: light\)'\)\.matches/);
+  assert.match(head, /document\.documentElement\.dataset\.theme = light \? 'light' : 'dark';/);
   assert.ok(head.includes('css/modes.css'), 'modes.css not linked');
   assert.ok(HTML.includes('<script src="js/design.js'), 'design.js not loaded');
   assert.ok(HTML.indexOf('<script src="js/design.js') < HTML.indexOf('<script src="js/app.js'),

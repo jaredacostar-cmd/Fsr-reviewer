@@ -224,7 +224,8 @@ test('wiring: scripts, offline cache, Layers switches, year re-render, legend, t
 
 test('new colours are tokens, distinct from phases, capacity, selection and the constraint layers', () => {
   const css = src('css/app.css');
-  const blocks = [css.slice(css.indexOf(':root {'), css.indexOf('@media (prefers-color-scheme: light)')), css.slice(css.indexOf('@media (prefers-color-scheme: light)'), css.indexOf(':root[data-theme="light"]')), css.slice(css.indexOf(':root[data-theme="light"]'))];
+  // (dark, then the one light copy: "Follow device" resolves to one of them in js/design.js)
+  const blocks = [css.slice(css.indexOf(':root {'), css.indexOf(':root[data-theme="light"]')), css.slice(css.indexOf(':root[data-theme="light"]'))];
   for (const b of blocks) for (const t of ['--cons-build', '--cons-plan', '--ea-line']) assert.match(b, new RegExp(`${t}: #[0-9a-f]{6};`), t);
   const val = (b, t) => (new RegExp(`${t}: (#[0-9a-f]{6});`).exec(b) || [])[1];
   for (const b of blocks) {

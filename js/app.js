@@ -426,7 +426,7 @@
   function refreshTheme() {
     readColors(); for (const k in PeelMapMarkers.iconCache) delete PeelMapMarkers.iconCache[k]; PeelMapCore.setTiles(); PeelMapAnalysis.renderLegend(); applyFilters();
   }
-  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', refreshTheme);
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { if (store.get('theme', 'dark') === 'device' && window.PeelDesign) window.PeelDesign.applyTheme('device'); refreshTheme(); });
 
   // Keep --footer-h fresh: the slim timeline strip still offsets the detail drawer.
   new ResizeObserver(() => {

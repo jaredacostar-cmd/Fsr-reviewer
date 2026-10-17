@@ -13,7 +13,7 @@ const block = sel => { const i = css.indexOf(sel); return css.slice(i, css.index
 const tok = (blk, name) => (blk.match(new RegExp(`--${name}: (#[0-9a-f]{6})`)) || [])[1];
 
 test('text on an accent fill passes AA in both themes', () => {
-  const dark = css.slice(0, css.indexOf('@media (prefers-color-scheme: light)'));
+  const dark = css.slice(0, css.indexOf(':root[data-theme="light"]'));
   const light = block(':root[data-theme="light"] {');
   const onAccentDark = (css.match(/--on-accent: (#[0-9a-f]{6});\n/g) || []).map(x => x.match(/#[0-9a-f]{6}/)[0]);
   assert.ok(onAccentDark.includes('#0b0b0b'), 'dark theme: dark text on the light-blue accent');
@@ -24,7 +24,7 @@ test('text on an accent fill passes AA in both themes', () => {
 });
 
 test('light theme: muted and accent text pass AA on every surface', () => {
-  for (const sel of [':root[data-theme="light"] {', '  :root:not([data-theme]) {']) {
+  for (const sel of [':root[data-theme="light"] {']) {
     const b = block(sel);
     for (const s of ['surface-0', 'surface-1', 'surface-2']) {
       assert.ok(ratio(tok(b, 'text-muted'), tok(b, s)) >= 4.5, `${sel} muted on ${s}`);

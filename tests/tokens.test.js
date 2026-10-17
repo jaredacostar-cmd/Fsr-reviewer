@@ -2,8 +2,8 @@
 /* Design-token tests: the colour system in css/app.css and its use in js/.
  *
  * - Dark is the default (:root holds dark values, color-scheme: dark); light
- *   values live under :root[data-theme="light"] and under
- *   @media (prefers-color-scheme: light) for follow-device.
+ *   values live once, under :root[data-theme="light"] ("Follow device" resolves to one of the
+ *   two in js/design.js), and both themes define the same colours.
  * - Text tokens reach WCAG AA 4.5:1 on the dark surfaces; map symbol tokens
  *   (phases, capacity, selection) reach 3:1 on their theme's surface.
  * - Every pair of the 7 phase colours is distinguishable under simulated
@@ -25,14 +25,22 @@ test('dark is the default theme in :root', () => {
   assert.match(root, /--surface-0:\s*#121211/);
 });
 
-test('light theme exists as data-theme override and follow-device media query', () => {
+test('one light copy, the same colours as dark; the stylesheet never reads prefers-color-scheme', () => {
   assert.ok(/:root\[data-theme="light"\]\s*{/.test(CSS), 'missing :root[data-theme="light"]');
-  assert.ok(/@media\s*\(prefers-color-scheme:\s*light\)\s*{/.test(CSS), 'missing prefers-color-scheme: light query');
   assert.match(CSS, /:root\[data-theme="light"\]\s*{[^}]*color-scheme:\s*light/);
-  // Both light blocks carry the same values.
-  for (const [k, v] of Object.entries(tokens.light)) {
-    assert.equal(tokens.lightMedia[k], v, `light mismatch for ${k}`);
-  }
+  assert.deepEqual(C.checkParity(tokens, CSS), []);
+  // (the six constraint colours that had drifted: each now has a light value)
+  for (const k of ['--cx-flood', '--cx-greenbelt', '--cx-orm', '--cx-nep', '--cx-natural', '--cx-nhs']) assert.ok(tokens.lightMain[k], k);
+});
+
+test('state colours as text reach 4.5:1 on every surface, in both themes', () => {
+  assert.deepEqual(C.checkStateText(tokens), []);
+  // (text uses the -t variants; fills keep the base colours)
+  assert.doesNotMatch(CSS, /(?<![-\w])color:\s*var\(--cap-(over|tight|room)\)/);
+});
+
+test('capacity, constraint, pipe and timing colours stay apart under colour blindness', () => {
+  assert.deepEqual(C.checkGroups(tokens), []);
 });
 
 test('all seven phase tokens are defined in both themes', () => {
