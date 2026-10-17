@@ -13,6 +13,9 @@
  * data/constraints/grid.json: a 25 m screening grid of Peel (municipality, and cells inside a
  * regulation limit, a floodplain or a provincial plan area) for "Land under constraints".
  * Nothing about people is kept: no item owners, editors or comments; labels are names and types.
+ * A dataset that keeps fewer than 80% of the features in the previous manifest is not written (its
+ * folder and manifest entry stay; exit 1). The grid is rebuilt only when every layer feeding it was
+ * rebuilt in the run (otherwise the previous grid stays).
  *   node scripts/build-constraints.js [--only id,id]
  */
 'use strict';
@@ -20,6 +23,7 @@ const fs = require('fs');
 const path = require('path');
 const G = require('../js/constraint-geo.js');
 const { clipRing, clipEdges } = require('./build-regulation.js');
+const { shrank, gridComplete } = require('./build-guards.js');
 
 const OUT = path.join(__dirname, '..', 'data', 'constraints');
 const PEEL = { xmin: -80.16, ymin: 43.47, xmax: -79.48, ymax: 44.00 };
@@ -258,14 +262,21 @@ async function main() {
     { id: 'nvca', title: 'Nottawasaga Valley Conservation Authority regulation limit and floodplain (north Caledon)', reason: 'Not published by NVCA for Caledon (decision 3, 2026-10-15).' },
   ] };
   const polysByLayer = { reg: [], flood: [], plan: [] };
+  const rebuilt = new Set(), refused = [];
   for (const d of DATASETS) {
-    if (only && !only.has(d.id)) { const old = prev.datasets.find(x => x.id === d.id); if (old) manifest.datasets.push(old); continue; }
+    const old = prev.datasets.find(x => x.id === d.id);
+    if (only && !only.has(d.id)) { if (old) manifest.datasets.push(old); continue; }
     const info = await getJSON(d.url, { f: 'json' });
     const fieldNames = new Set((info.fields || []).map(f => f.name));
     const missing = d.fields.split(',').filter(f => !fieldNames.has(f));
     if (missing.length) console.warn(`${d.id}: fields not in the layer: ${missing.join(', ')} (have ${[...fieldNames].join(', ')})`);
     const feats = await fetchAll(d, info);
     const cut = cutTiles(d, feats, mask);
+    if (old && shrank(cut.kept, old.features, 0.8)) {
+      console.error(`${d.id}: REFUSED: ${feats.length} fetched, ${cut.kept} kept against ${old.features} in the manifest (under 80%); kept data/constraints/${d.id}/`);
+      manifest.datasets.push(old); refused.push(d.id); continue;
+    }
+    rebuilt.add(d.id);
     const w = writeDataset(d, cut);
     const ovBytes = d.kind === 'area' ? writeOverview(d, feats, cut.lab, mask) : 0;
     if (d.grid) for (const f of feats) if (f.geometry && f.geometry.rings && (!d.keep || d.keep(f.attributes || {}))) polysByLayer[d.grid].push(f.geometry.rings);
@@ -274,15 +285,20 @@ async function main() {
     manifest.datasets.push({ ...meta, filter: where || null, simplifiedM: Math.round(offset * 111320), asOf, licenceText: licText, features: cut.kept, tiles: w.tiles, bytes: w.bytes, maxTileBytes: w.maxTile, overviewBytes: ovBytes || null, path: `data/constraints/${d.id}/` });
     console.log(`${d.id}: ${feats.length} fetched, ${cut.kept} kept, ${w.tiles} tiles, ${(w.bytes / 1e6).toFixed(2)} MB (largest tile ${(w.maxTile / 1e3).toFixed(0)} kB; overview ${(ovBytes / 1e3).toFixed(0)} kB), as of ${asOf || '–'}`);
   }
-  if (!only || ['reg', 'flood', 'plan'].some(k => [...only].some(id => (DATASETS.find(d => d.id === id) || {}).grid === k))) {
-    if (only) for (const d of DATASETS) if (d.grid && !only.has(d.id)) console.warn(`grid: ${d.id} not rebuilt in this run; build the grid with all layers`);
+  // The grid needs every layer that feeds it; a partial run keeps the previous grid.
+  if (gridComplete(DATASETS, rebuilt)) {
     const grid = buildGrid(das, polysByLayer);
     const str = JSON.stringify(grid); fs.writeFileSync(path.join(OUT, 'grid.json'), str);
     manifest.grid = { path: 'data/constraints/grid.json', cellM: CELL_M, cols: grid.cols, rows: grid.rows, layers: grid.layers, bytes: str.length, from: { reg: ['reg-cvc', 'reg-trca'], flood: ['flood-cvc', 'flood-trca'], plan: ['greenbelt', 'orm', 'nep'] }, munis: 'Statistics Canada 2021 dissemination areas (data/das.json)' };
     console.log(`grid: ${grid.cols} × ${grid.rows} cells of ${CELL_M} m, ${(str.length / 1e6).toFixed(2)} MB`);
-  } else if (prev.grid) manifest.grid = prev.grid;
+  } else {
+    const missing = DATASETS.filter(d => d.grid && !rebuilt.has(d.id)).map(d => d.id);
+    if (prev.grid) manifest.grid = prev.grid;
+    console.warn(`grid: not rebuilt (${missing.join(', ')} not rebuilt in this run); ${prev.grid ? 'kept the previous grid' : 'no previous grid'}`);
+  }
   fs.writeFileSync(manPath, JSON.stringify(manifest, null, 1));
   console.log(`Wrote ${manPath}`);
+  if (refused.length) { console.error(`REFUSED: ${refused.join(', ')} kept from the previous build`); process.exit(1); }
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
 module.exports = { DATASETS, cutTiles, buildGrid, peelTiles, simplify };
