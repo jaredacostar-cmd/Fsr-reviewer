@@ -5,6 +5,8 @@
  * the ground along the line from the lidar terrain model and designs the least-excavation sewer to
  * Peel's Linear Wastewater Standards (js/sewer-design.js). The result: the plan on the map, the
  * profile, every reach and maintenance hole in a table, the rules checked, and a CSV.
+ * Pumped: where gravity can't reach, a pumping station at the start and a forcemain along the
+ * route to a discharge maintenance hole on the sewer (js/forcemain.js), with the pump duty point.
  *
  * Pure: chainage(), bends(), checks(), csv() (tests/sewer-designer.test.js). The 11×17 print sheet:
  * js/sewer-print.js.
@@ -67,9 +69,9 @@
   // ---- Browser ---------------------------------------------------------------------------------
   const U = root.PeelUtil || {}, esc = U.esc || (s => String(s)), fmtNum = U.fmtNum || (n => String(n));
   const fmt1 = n => (Math.round(n * 10) / 10).toLocaleString('en-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 }), fmt2 = n => (+n).toFixed(2);
-  const SW = () => root.PeelSewerDesign, MS = () => root.PeelMeasure, EL = () => root.PeelElevation, T = () => root.PeelTools, L = root.L;
+  const SW = () => root.PeelSewerDesign, FM = () => root.PeelForcemain, MS = () => root.PeelMeasure, EL = () => root.PeelElevation, T = () => root.PeelTools, L = root.L;
   const NOTE = () => (root.PeelPanel && root.PeelPanel.NOTE) || 'General screening results only. Peel\'s W&amp;WW Infrastructure Planning team must validate or confirm all results.';
-  const S = { pts: [], conn: null, route: null, d: null, busy: false, msg: '', form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190 } };
+  const S = { pts: [], conn: null, route: null, d: null, busy: false, msg: '', form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
   let layer = null;
   const map = () => root.PeelMapCore && root.PeelMapCore.map;
   const token = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -79,9 +81,11 @@
     const c = token('--pipe-sanitary'), ink = token('--text-primary');
     const ll = S.pts.map(p => [p.lat, p.lng]);
     if (S.conn) ll.push([S.conn.lat, S.conn.lng]);
-    L.polyline(ll, { color: c, weight: S.d && S.d.ok ? 5 : 3, dashArray: S.d && S.d.ok ? null : '6 5', interactive: false }).addTo(g);
-    S.pts.forEach((p, i) => L.circleMarker([p.lat, p.lng], { radius: 4, color: ink, weight: 2, fill: true, fillColor: c, fillOpacity: 1, interactive: false }).addTo(g).bindTooltip(i ? `${i + 1}` : 'start', { permanent: !S.d, direction: 'top', className: 'pt', offset: [0, -4] }));
+    const fmOk = S.fm && S.fm.ok;
+    L.polyline(ll, { color: c, weight: (S.d && S.d.ok) || fmOk ? 5 : 3, dashArray: S.d && S.d.ok ? null : fmOk ? '9 5' : '6 5', interactive: false }).addTo(g);
+    S.pts.forEach((p, i) => L.circleMarker([p.lat, p.lng], { radius: 4, color: ink, weight: 2, fill: true, fillColor: c, fillOpacity: 1, interactive: false }).addTo(g).bindTooltip(i ? `${i + 1}` : 'start', { permanent: !S.d && !S.fm, direction: 'top', className: 'pt', offset: [0, -4] }));
     if (S.conn) L.circleMarker([S.conn.lat, S.conn.lng], { radius: 7, color: ink, weight: 2, fill: true, fillColor: c, fillOpacity: 1, interactive: false }).addTo(g).bindTooltip(`Connection: ${S.conn.dmm} mm sewer${S.conn.id ? ` ${esc(S.conn.id)}` : ''} (${S.conn.existingMH ? 'existing maintenance hole' : 'new maintenance hole'})`, { direction: 'top', className: 'pt' });
+    if (S.fm) drawForcemain(g, c, ink);
     // The designed maintenance holes, numbered, with their reach labels.
     if (S.d && S.d.ok && S.route) {
       S.route.nodes.forEach((nd, i) => {
@@ -94,6 +98,17 @@
         L.marker([(a.lat + b.lat) / 2, (a.lng + b.lng) / 2], { interactive: false, keyboard: false, icon: L.divIcon({ className: 'sd-lbl', html: `<span>${S.d.dmm} mm @ ${(r.S * 100).toFixed(2)}%</span>`, iconSize: null }) }).addTo(g);
       });
     }
+  }
+  // The pumped option on the map: the station at the start, air valves at the high points, drains at
+  // the low points, the discharge maintenance hole, the size along the line.
+  function drawForcemain(g, c, ink) {
+    const at = x => pointAt(S.pts, S.xs, x), f = S.fm;
+    const tag = (ll, t, tip) => L.marker([ll.lat, ll.lng], { keyboard: false, icon: L.divIcon({ className: 'sd-fm', html: `<span>${t}</span>`, iconSize: null }) }).addTo(g).bindTooltip(tip, { direction: 'top', className: 'pt' });
+    tag(S.pts[0], 'PS', `<strong>Pumping station</strong><br>${f.ok ? `${fmt1(f.q)} L/s at ${fmt1(f.tdh)} m total head` : 'no pumped design'} · size it to Peel's SPS Design Standard`);
+    f.highs.forEach(h => tag(at(h.x), 'AV', `<strong>High point: air release</strong><br>${fmtNum(Math.round(h.x))} m · pipe invert ${fmt2(h.z)} m`));
+    f.lows.forEach(h => tag(at(h.x), 'DV', `<strong>Low point: drain</strong><br>${fmtNum(Math.round(h.x))} m · pipe invert ${fmt2(h.z)} m`));
+    if (S.conn) L.circleMarker([S.conn.lat, S.conn.lng], { radius: 6, color: c, weight: 3, fill: true, fillColor: token('--surface-1'), fillOpacity: 1 }).addTo(g).bindTooltip(`<strong>Discharge maintenance hole</strong><br>outlet invert ${fmt2(f.outletInv)} m, ${fmt2(f.outletInv - S.conn.invert)} m above the flow line`, { direction: 'top', className: 'pt' });
+    if (f.ok) { const m = at(S.xs[S.xs.length - 1] / 2); L.marker([m.lat, m.lng], { interactive: false, keyboard: false, icon: L.divIcon({ className: 'sd-lbl', html: `<span>${f.dmm} mm forcemain</span>`, iconSize: null }) }).addTo(g); }
   }
   const bannerHTML = () => S.busy ? '<strong>Sewer designer</strong> <span class="muted">Reading the sewer and the ground…</span>'
     : `<strong>Sewer designer</strong> <span class="muted">${S.msg ? esc(S.msg) : S.pts.length < 2 ? 'Tap from the site to an existing sanitary sewer; the last tap snaps to it' : `${S.pts.length} points · ${fmtNum(Math.round(chainage(S.pts).pop()))} m · Finish snaps the end to the sewer`}</span>`
@@ -117,7 +132,7 @@
       // The drawn end moves onto the sewer.
       S.pts[S.pts.length - 1] = { lat: S.conn.lat, lng: S.conn.lng };
       await sample();
-      S.d = null;
+      S.d = null; S.fm = null;
       openResult();
     } catch (e) { S.msg = `Couldn't read the sewer or the ground (${e && e.message ? e.message : 'no data'})`; }
     finally { S.busy = false; banner(); drawLine(); }
@@ -139,6 +154,13 @@
     const f = S.form, flow = SW().flowFrom({ q: f.q, pop: +f.pop || 0, jobs: +f.jobs || 0, ha: +f.ha || 0 });
     if (!(flow.q > 0)) { S.d = null; S.formMsg = 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
     S.formMsg = '';
+    S.flow = flow;
+    if (f.mode === 'pumped') {
+      S.d = null;
+      S.fm = FM().design(S.ground.map(({ x, g }) => ({ x, g })), S.conn, flow.q, { vfd: f.vfd, ici: f.ici, wwDepth: +f.ww || 0 });
+      openResult(); drawLine(); return;
+    }
+    S.fm = null;
     const spacing = Math.min(200, Math.max(20, +f.spacing || 190)), bnd = bends(S.pts);
     const mhX = SW().placeMHs(S.xs, spacing);
     const nodes = mhX.map(x => { const vi = S.xs.findIndex(v => Math.abs(v - x) < 0.01); return { x, g: gAt(x), bend: vi >= 0 ? bnd[vi] : 0, ll: pointAt(S.pts, S.xs, x) }; });
@@ -158,9 +180,11 @@
       <p class="small"><strong>Design flow</strong> <span class="muted">— type the peak wet weather flow, or what the sewer serves (Peel criteria: 290 L/cap/d, 270 L/job/d, Harmon 2–4, I&amp;I 0.26 L/s/ha)</span></p>
       <div class="sd-row"><label class="field"><span class="label">Flow (L/s)</span><input type="number" min="0" step="0.1" data-sd="q" value="${v('q')}"></label><span class="muted small">or</span>
       <label class="field"><span class="label">Population</span><input type="number" min="0" step="1" data-sd="pop" value="${v('pop')}"></label><label class="field"><span class="label">Jobs</span><input type="number" min="0" step="1" data-sd="jobs" value="${v('jobs')}"></label><label class="field"><span class="label">Area (ha)</span><input type="number" min="0" step="0.1" data-sd="ha" value="${v('ha')}"></label></div>
-      <div class="sd-row"><label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
+      <fieldset class="sd-mode"><legend class="label">Design</legend><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="gravity"${f.mode !== 'pumped' ? ' checked' : ''}> Gravity sewer</label><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="pumped"${f.mode === 'pumped' ? ' checked' : ''}> Pumped: a station at the start, a forcemain to the sewer</label></fieldset>
+      ${f.mode === 'pumped' ? `<div class="sd-row"><label class="field"><span class="label">Wet well low level (m below ground)</span><input type="number" min="0" step="0.1" data-sd="ww" value="${v('ww')}" placeholder="the incoming sewer"></label>
+      <label class="chk"><input type="checkbox" data-sd="vfd"${f.vfd ? ' checked' : ''}> Variable speed pumps (0.8 m/s, with 1.0 m/s flushing weekly)</label><label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label></div>` : `<div class="sd-row"><label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
       <label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label>
-      <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>
+      <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>`}
       <p><button type="button" class="btn small primary" data-sd-act="design">Design</button> <button type="button" class="btn small" data-sd-act="edit">Edit the route</button> <button type="button" class="btn small link" data-sd-act="clear">Clear</button></p>
       ${S.formMsg ? `<p class="small t-tight">${esc(S.formMsg)}</p>` : ''}</form>`;
   }
@@ -168,10 +192,11 @@
     const c = S.conn, Lt = S.xs ? S.xs[S.xs.length - 1] : 0;
     const head = `<p class="small">From the drawn start to the <strong>${fmtNum(c.dmm)} mm sanitary sewer${c.id ? ` ${esc(c.id)}` : ''}</strong> (invert ${fmt2(c.invert)} m; ${c.existingMH ? 'its existing maintenance hole' : 'a new maintenance hole on the pipe'}) · <strong>${fmtNum(Math.round(Lt))} m</strong> along the drawn route · ground ${fmt1(Math.max(...S.ground.map(s => s.g)))}–${fmt1(Math.min(...S.ground.map(s => s.g)))} m.</p>`;
     let body = '';
-    if (S.d && S.d.ok) body = designHTML(S.d);
-    else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design</span> ${esc(S.d.why)}.</p>${profileSVG(null)}`;
+    if (S.fm) body = fmHTML(S.fm);
+    else if (S.d && S.d.ok) body = designHTML(S.d);
+    else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design</span> ${esc(S.d.why)}.</p><p><button type="button" class="btn small" data-sd-act="pumped">Try a pumped option</button></p>${profileSVG(null)}`;
     else body = profileSVG(null);
-    return `<div class="sd-res">${head}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
+    return `<div class="sd-res">${head}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
   function designHTML(d) {
     const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100);
@@ -212,6 +237,64 @@
     return `<svg class="sd-prof" viewBox="0 0 ${W} ${H}" role="img" aria-label="Profile of the sewer: ground, minimum cover, the pipe and the maintenance holes, from the start (left) to the connection (right)">${axes}<path d="${ground}" class="sp-ground"/>${cover ? `<path d="${cover}" class="sp-cover"/>` : ''}${pipe}${ex}<text x="${pl}" y="${H - 4}" class="sp-ax">chainage (m) from the start · elevations (m, CGVD2013)</text></svg>
       <p class="small muted sd-key"><span class="lp-k lp-k-g"></span>ground${d ? ` <span class="lp-k sd-k-c"></span>${d.cover} m cover line <span class="lp-k lp-k-p"></span>the pipe (${d.dmm} mm) and its maintenance holes` : ''} <span class="lp-k sd-k-e"></span>the existing sewer</p>`;
   }
+  // ---- The pumped option: the forcemain, its profile and the pump duty point ------------------------
+  function fmHTML(f) {
+    const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
+    const head = f.ok ? `<p><span class="pnl-chip t-room">Pumped design</span> A <strong>${f.dmm} mm forcemain</strong> (${esc(f.material)}), ${fmtNum(Math.round(f.L))} m at ${fmt2(f.v)} m/s, from a pumping station at the start to a discharge maintenance hole on the ${fmtNum(S.conn.dmm)} mm sewer. The pumps: <strong>${fmt1(f.q)} L/s at ${fmt1(f.tdh)} m</strong> total head.</p>`
+      : `<p><span class="pnl-chip t-over">No pumped design</span> ${esc(f.why)}.</p>`;
+    const duty = `<dl class="sd-duty small"><dt>Design flow</dt><dd>${fmt1(f.q)} L/s${S.flow && !S.flow.typed ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}</dd>
+      <dt>Static lift</dt><dd>${fmt2(f.lift)} m, from the wet well's low level ${fmt2(f.ww)} m${f.wwAssumed ? ' (the incoming sewer: 2.5 m of cover over a 200 mm pipe; the wet well\'s operating range adds to it)' : ''} to the outlet obvert ${fmt2(f.outEl)} m</dd>
+      ${f.over ? `<dt>Over a high point</dt><dd>${fmt2(f.over.need)} m more: the pipe at ${fmtNum(Math.round(f.over.x))} m stands above the hydraulic grade line</dd>` : ''}
+      <dt>Friction</dt><dd>${fmt2(f.hf)} m (Hazen-Williams, C 140: ${fmt2(f.hfPerKm)} m per km)</dd>
+      <dt>Total head</dt><dd><strong>${fmt2(f.tdh)} m</strong> · water power ${fmt1(f.power)} kW (before pump and motor losses)</dd></dl>`;
+    const sizes = f.sizes.map(c => `<tr${c.dmm === f.dmm ? ' class="on"' : ''}><th scope="row">${c.dmm} mm${c.dmm === f.dmm ? ' <small>chosen</small>' : ''}</th><td class="n">${fmt2(c.v)}</td><td class="n">${fmt2(c.hf1000)}</td><td class="n">${fmt1(f.curve(1) - f.hf + c.hf1000 * f.L / 1000)}</td><td>${c.ok ? '✓' : c.v < f.vMin ? `under ${f.vMin.toFixed(1)} m/s` : 'over 3.0 m/s'}</td></tr>`).join('');
+    return `${head}
+      <h4 class="sd-h">Pump duty</h4>${duty}${curveSVG(f)}
+      <h4 class="sd-h">Profile</h4>${fmProfileSVG(f)}
+      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${f.checks.map(ok).join('')}</ul>
+      <h4 class="sd-h">Sizes at ${fmt1(f.q)} L/s</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Forcemain</th><th scope="col" class="n">Velocity (m/s)</th><th scope="col" class="n">Friction (m per km)</th><th scope="col" class="n">Total head (m)</th><th scope="col">1.0–3.0 m/s</th></tr></thead><tbody>${sizes}</tbody></table></div>
+      <div class="sd-ps small"><strong>The pumping station is not sized here.</strong> Size it to Peel's Sewage Pumping Station Design Standard: the wet well and its operating range, the number of pumps and firm capacity, standby power, and the forcemain's redundancy (twinning, s. 4.3.1). A transient analysis is mandatory for every forcemain (s. 4.3.6); fittings, valves and station pipework add head not counted here.</div>
+      <p><button type="button" class="btn small" data-sd-act="fm-csv">Download the forcemain (CSV)</button></p>`;
+  }
+  // The forcemain's profile: the ground, the cover line, the pipe, the hydraulic grade line at the
+  // design flow, air valves (▲) and drains (▼), the station at the start, the discharge at the end.
+  function fmProfileSVG(f) {
+    const W = 640, H = 260, pl = 46, pr = 10, pt = 14, pb = 30, Lt = f.L || 1;
+    const hgl0 = f.outEl + f.hf + (f.over ? f.over.need : 0);
+    const zmin = Math.floor(Math.min(f.ww, ...f.prof.map(p => p.inv), S.conn.invert) - 0.5), zmax = Math.ceil(Math.max(hgl0, ...f.prof.map(p => p.g)) + 0.5);
+    const X = x => pl + (W - pl - pr) * x / Lt, Y = z => pt + (H - pt - pb) * (zmax - z) / ((zmax - zmin) || 1);
+    const path = arr => arr.map(([x, z], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(z).toFixed(1)}`).join('');
+    const D = f.dmm / 1000;
+    const pipe = `<path d="${path(f.prof.map(p => [p.x, p.inv + D]))}${f.prof.slice().reverse().map(p => `L${X(p.x).toFixed(1)},${Y(p.inv).toFixed(1)}`).join('')}Z" class="sp-pipe"/>`;
+    const hgl = `<path d="${path([[0, hgl0], [Lt, hgl0 - f.hf]])}" class="sp-hgl"/>`;
+    const marks = [...f.highs.map(h => `<text x="${X(h.x).toFixed(1)}" y="${(Y(h.z + D) - 4).toFixed(1)}" class="sp-lbl" text-anchor="middle">▲ AV</text>`), ...f.lows.map(h => `<text x="${X(h.x).toFixed(1)}" y="${(Y(h.z) + 11).toFixed(1)}" class="sp-lbl" text-anchor="middle">▼ DV</text>`)].join('');
+    const ps = `<rect x="${(X(0) - 4).toFixed(1)}" y="${Y(f.prof[0].g).toFixed(1)}" width="8" height="${(Y(f.ww) - Y(f.prof[0].g)).toFixed(1)}" class="sp-ps"/><text x="${(X(0) + 6).toFixed(1)}" y="${(Y(f.ww) + 3).toFixed(1)}" class="sp-ax">wet well low ${fmt2(f.ww)}</text>`;
+    const ex = `<circle cx="${X(Lt).toFixed(1)}" cy="${Y(S.conn.invert + S.conn.dmm / 2000).toFixed(1)}" r="${Math.max(3, (H - pt - pb) * (S.conn.dmm / 1000) / ((zmax - zmin) || 1) / 2).toFixed(1)}" class="sp-ex"/><line x1="${X(Lt).toFixed(1)}" x2="${X(Lt).toFixed(1)}" y1="${Y(f.prof[f.prof.length - 1].g).toFixed(1)}" y2="${Y(S.conn.invert).toFixed(1)}" class="sp-mh"/>`;
+    const zs = (zmax - zmin) > 20 ? 5 : (zmax - zmin) > 8 ? 2 : 1, xsStep = Lt > 1200 ? 200 : Lt > 500 ? 100 : 50;
+    let axes = '';
+    for (let z = Math.ceil(zmin / zs) * zs; z <= zmax; z += zs) axes += `<line x1="${pl}" x2="${W - pr}" y1="${Y(z).toFixed(1)}" y2="${Y(z).toFixed(1)}" class="sp-grid"/><text x="${pl - 4}" y="${(Y(z) + 3).toFixed(1)}" class="sp-ax" text-anchor="end">${z}</text>`;
+    for (let x = 0; x <= Lt + 1e-6; x += xsStep) axes += `<text x="${X(x).toFixed(1)}" y="${H - pb + 14}" class="sp-ax" text-anchor="middle">${x}</text>`;
+    return `<svg class="sd-prof" viewBox="0 0 ${W} ${H}" role="img" aria-label="Profile of the forcemain: ground, minimum cover, the pipe, the hydraulic grade line, air valves and drains, from the pumping station (left) to the discharge maintenance hole (right)">${axes}<path d="${path(f.prof.map(p => [p.x, p.g]))}" class="sp-ground"/><path d="${path(f.prof.map(p => [p.x, p.g - f.cover]))}" class="sp-cover"/>${pipe}${hgl}${ps}${ex}${marks}<text x="${pl}" y="${H - 4}" class="sp-ax">chainage (m) from the pumping station · elevations (m, CGVD2013)</text></svg>
+      <p class="small muted sd-key"><span class="lp-k lp-k-g"></span>ground <span class="lp-k sd-k-c"></span>${f.cover} m cover line <span class="lp-k lp-k-p"></span>the forcemain (${f.dmm} mm) <span class="lp-k sd-k-h"></span>hydraulic grade line at ${fmt1(f.q)} L/s <span class="lp-k sd-k-e"></span>the existing sewer · ▲ AV air release · ▼ DV drain</p>`;
+  }
+  // The system curve (static plus friction, 0 to 1.5 × the design flow) and the duty point.
+  function curveSVG(f) {
+    const W = 640, H = 170, pl = 46, pr = 12, pt = 10, pb = 28, qmax = f.q * 1.5, hmax = Math.ceil(f.curve(1.5) * 1.1 + 1), hmin = Math.min(0, Math.floor(f.curve(0)));
+    const X = q => pl + (W - pl - pr) * q / qmax, Y = h => pt + (H - pt - pb) * (hmax - h) / ((hmax - hmin) || 1);
+    const pts = Array.from({ length: 31 }, (_, i) => i / 20).map(fr => [f.q * fr, f.curve(fr)]);
+    const hs = hmax - hmin > 40 ? 10 : hmax - hmin > 16 ? 5 : 2, qs = qmax > 300 ? 100 : qmax > 120 ? 50 : qmax > 50 ? 20 : qmax > 20 ? 10 : 5;
+    let axes = '';
+    for (let h = Math.ceil(hmin / hs) * hs; h <= hmax; h += hs) axes += `<line x1="${pl}" x2="${W - pr}" y1="${Y(h).toFixed(1)}" y2="${Y(h).toFixed(1)}" class="sp-grid"/><text x="${pl - 4}" y="${(Y(h) + 3).toFixed(1)}" class="sp-ax" text-anchor="end">${h}</text>`;
+    for (let q = 0; q <= qmax + 1e-6; q += qs) axes += `<text x="${X(q).toFixed(1)}" y="${H - pb + 13}" class="sp-ax" text-anchor="middle">${q}</text>`;
+    const dp = `<circle cx="${X(f.q).toFixed(1)}" cy="${Y(f.tdh).toFixed(1)}" r="4" class="sp-duty"/><text x="${(X(f.q) + 7).toFixed(1)}" y="${(Y(f.tdh) - 6).toFixed(1)}" class="sp-lbl">${fmt1(f.q)} L/s at ${fmt1(f.tdh)} m</text>`;
+    return `<svg class="sd-prof sd-curve" viewBox="0 0 ${W} ${H}" role="img" aria-label="System curve: total head against flow, with the duty point at ${fmt1(f.q)} L/s and ${fmt1(f.tdh)} m">${axes}<path d="${pts.map(([q, h], i) => `${i ? 'L' : 'M'}${X(q).toFixed(1)},${Y(h).toFixed(1)}`).join('')}" class="sp-sys"/>${dp}<text x="${pl}" y="${H - 4}" class="sp-ax">flow (L/s) · total head (m): the system curve, static lift plus Hazen-Williams friction</text></svg>`;
+  }
+  function downloadFmCSV() {
+    const E = root.PeelExports, f = S.fm; if (!f || !E || !E.download) return;
+    const lines = ['Chainage (m),Ground (m),Pipe invert (m),Cover (m),Point', ...f.prof.map(p => [p.x.toFixed(1), p.g.toFixed(2), p.inv.toFixed(2), (p.g - p.inv - f.dmm / 1000).toFixed(2), f.highs.some(h => h.x === p.x) ? 'high: air release' : f.lows.some(h => h.x === p.x) ? 'low: drain' : ''].join(','))];
+    lines.push('', `Forcemain (mm),${f.dmm}`, `Length (m),${f.L.toFixed(1)}`, `Design flow (L/s),${f.q.toFixed(2)}`, `Velocity (m/s),${f.v.toFixed(2)}`, `Static lift (m),${f.lift.toFixed(2)}`, `Friction (m),${f.hf.toFixed(2)}`, `Total head (m),${f.tdh.toFixed(2)}`, `Outlet invert (m),${f.outletInv.toFixed(2)}`, `Rules,"${f.source}"`, '"The pumping station is not sized: size it to Peel\'s Sewage Pumping Station Design Standard. A transient analysis is mandatory (s. 4.3.6)."', '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
+    E.download('peel-forcemain.csv', lines.join('\n'), 'text/csv');
+  }
   function downloadCSV() {
     if (!S.d || !S.d.ok) return;
     const E = root.PeelExports, text = csv(S.d);
@@ -239,18 +322,20 @@
       source: SW().SOURCE, note: Ut.SCREEN_LINE || 'General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.',
     });
   }
-  function clearAll() { S.pts = []; S.conn = null; S.route = null; S.d = null; S.msg = ''; if (layer) layer.clearLayers(); }
+  function clearAll() { S.pts = []; S.conn = null; S.route = null; S.d = null; S.fm = null; S.msg = ''; if (layer) layer.clearLayers(); }
 
   // The form and its buttons (in the result panel).
   document.addEventListener('input', e => { const i = e.target.closest && e.target.closest('[data-sd]'); if (i) S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value; });
-  document.addEventListener('change', e => { const i = e.target.closest && e.target.closest('[data-sd]'); if (i) S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value; });
+  document.addEventListener('change', e => { const i = e.target.closest && e.target.closest('[data-sd]'); if (!i) return; S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value; if (i.dataset.sd === 'mode') { S.d = null; S.fm = null; openResult(); drawLine(); } });
   document.addEventListener('click', e => {
     const b = e.target.closest && e.target.closest('[data-sd-act]'); if (!b) return;
     const act = b.dataset.sdAct;
     if (act === 'design') run();
     else if (act === 'csv') downloadCSV();
     else if (act === 'print') printSheet();
-    else if (act === 'edit') { S.d = null; S.conn = null; const A = root.PeelApp && root.PeelApp.scope; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
+    else if (act === 'pumped') { S.form.mode = 'pumped'; run(); }
+    else if (act === 'fm-csv') downloadFmCSV();
+    else if (act === 'edit') { S.d = null; S.fm = null; S.conn = null; const A = root.PeelApp && root.PeelApp.scope; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
     else if (act === 'clear') { clearAll(); T().closeResult(); }
   });
   document.addEventListener('peel:tool-closed', () => { if (T().active() !== 'sewer') clearAll(); });
@@ -259,14 +344,14 @@
   T().register('sewer', {
     title: 'Sewer designer', icon: 'sewer', hint: 'tap from the site to an existing sanitary sewer',
     bannerHTML,
-    onActivate() { if (S.d) { S.d = null; S.conn = null; } S.msg = ''; drawLine(); banner(); },
+    onActivate() { if (S.d || S.fm) { S.d = null; S.fm = null; S.conn = null; } S.msg = ''; drawLine(); banner(); },
     onDeactivate() { if (!(T().hasResult() && T().resultTitle() === 'Sewer design')) clearAll(); },
-    onClick(ll) { if (S.busy) return; if (S.conn) { S.conn = null; S.d = null; } S.pts.push({ lat: ll.lat, lng: ll.lng }); S.msg = ''; drawLine(); banner(); },
+    onClick(ll) { if (S.busy) return; if (S.conn) { S.conn = null; S.d = null; S.fm = null; } S.pts.push({ lat: ll.lat, lng: ll.lng }); S.msg = ''; drawLine(); banner(); },
     onBannerAct(act) {
-      if (act === 'sd-undo') { S.pts.pop(); S.conn = null; S.d = null; drawLine(); banner(); }
+      if (act === 'sd-undo') { S.pts.pop(); S.conn = null; S.d = null; S.fm = null; drawLine(); banner(); }
       if (act === 'sd-clear') { clearAll(); banner(); }
       if (act === 'sd-finish') finish();
     },
   });
-  root.PeelSewerDesigner = { state: () => S, finish, run, clearAll, printSheet, chainage, bends, checks, csv };
+  root.PeelSewerDesigner = { state: () => S, finish, run, clearAll, printSheet, downloadFmCSV, chainage, bends, checks, csv };
 })(typeof window !== 'undefined' ? window : globalThis);

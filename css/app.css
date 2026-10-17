@@ -3387,8 +3387,8 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .lab-prof .lp-pipe { fill: none; stroke: var(--pipe-sanitary); stroke-width: 3; stroke-linecap: round; }
 .lab-prof .lp-mh { stroke: var(--text-muted); stroke-width: 1; }
 .lab-prof .lp-ex { fill: var(--pipe-sanitary); stroke: var(--surface-1); stroke-width: 1; }
-.lab-prof-k .lp-k { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin: 0 4px 0 var(--space-2); }
-.lab-prof-k .lp-k-g { background: var(--text-secondary); } .lab-prof-k .lp-k-p { background: var(--pipe-sanitary); height: 4px; }
+.lab-prof-k .lp-k, .sd-key .lp-k { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin: 0 4px 0 var(--space-2); }
+.lab-prof-k .lp-k-g, .sd-key .lp-k-g { background: var(--text-secondary); } .lab-prof-k .lp-k-p, .sd-key .lp-k-p { background: var(--pipe-sanitary); height: 4px; }
 
 /* Labs: the Sewer designer (js/sewer-designer.js): the form, the profile, the checks, the plan labels. */
 .sd-form { border: 1px solid var(--border); border-radius: 8px; padding: var(--space-2) var(--space-3); margin: var(--space-2) 0; }
@@ -3412,3 +3412,17 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .sd-checks .sd-ok span { color: var(--cap-room-t); } .sd-checks .sd-no span { color: var(--cap-over-t); }
 .sd-t td.n, .sd-t th.n { text-align: right; font-variant-numeric: tabular-nums; }
 .sd-lbl span { display: inline-block; transform: translate(-50%, -50%); white-space: nowrap; font-size: var(--fs-1); font-weight: 600; color: var(--map-label); text-shadow: 0 0 3px var(--map-halo), 0 0 2px var(--map-halo); }
+/* The Sewer designer's pumped option: map tags (station, air valves, drains), the profile's grade
+   line and wet well, the system curve and its duty point. */
+.sd-fm span { display: inline-block; transform: translate(-50%, -50%); padding: 1px 4px; border-radius: 4px; font-size: var(--fs-1); font-weight: 700; color: var(--on-accent); background: var(--pipe-sanitary); border: 1px solid var(--text-primary); white-space: nowrap; }
+.sd-prof .sp-hgl { fill: none; stroke: var(--hue-blue); stroke-width: 1.4; stroke-dasharray: 6 3; }
+.sd-prof .sp-ps { fill: var(--surface-1); stroke: var(--text-primary); stroke-width: 1.4; }
+.sd-prof .sp-sys { fill: none; stroke: var(--pipe-sanitary); stroke-width: 2; }
+.sd-prof .sp-duty { fill: var(--surface-1); stroke: var(--text-primary); stroke-width: 2; }
+.sd-key .sd-k-h { border-top: 2px dashed var(--hue-blue); height: 0; }
+.sd-mode { border: 0; padding: 0; margin: var(--space-1) 0; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); align-items: center; }
+.sd-mode legend { float: left; margin-right: var(--space-2); }
+.sd-duty { display: grid; grid-template-columns: auto 1fr; gap: 2px var(--space-3); margin: var(--space-1) 0 var(--space-2); }
+.sd-duty dt { color: var(--text-secondary); } .sd-duty dd { margin: 0; }
+.sd-ps { border-left: 3px solid var(--cap-tight); padding: var(--space-1) var(--space-2); margin: var(--space-2) 0; background: var(--surface-2); border-radius: 4px; }
+.sd-t tr.on th, .sd-t tr.on td { font-weight: 600; }
