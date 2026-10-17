@@ -243,26 +243,28 @@
     return yearsOf(p, state.yearMode).some(y => y >= lo && y <= hi);
   }
 
-  // Units counted by the unit-growth filter. With "Planning applications" selected,
-  // only the units proposed on the applications themselves count.
+  // Units counted by the Size filter: the development's units, as every screen shows them (the
+  // tree count or the previous count, net of homes demolished). With "Planning applications"
+  // selected, a site with no planning application counts none (only permits behind it).
   function unitsFor(p) {
-    if (state.kind !== 'application') return p.units || 0;
-    if (p._appUnits == null) p._appUnits = Math.max(0, ...p.records.filter(r => r.kind === 'application').map(r => r.units || 0));
-    return p._appUnits;
+    if (state.kind === 'application' && !p.kinds.includes('application')) return 0;
+    return p.units || 0;
   }
+  // Size: "Adds units or jobs" (1) is units or jobs; the others are at least that many units.
+  const sizeMatch = p => (state.minUnits === 1 ? unitsFor(p) > 0 || jobsOf(p) > 0 : unitsFor(p) >= state.minUnits);
 
   // Land-use filter: what the development adds. 'growth' is the old Growth focus test —
   // planning applications proposing new homes or new jobs — plus growth proposals whose unit
   // count isn't published yet (precinct and block plans, subdivisions: often "see the
-  // attached"), which would otherwise vanish.
+  // attached"), which would otherwise vanish. New homes are the units the screens show (p.units).
   const GROWTH_TEXT = /subdivision|block plan|precinct|mixed[- ]use|secondary plan|draft plan|apartment|townhouse|condominium|stacked|residential (development|community|uses|units)|dwelling units/i;
   const NOT_GROWTH = /replac|existing (dwelling|house|building)|addition to|renovat|accessory|garage|pool|deck|tenant|interior|temporary use|day ?care/i;
-  const growthUnstated = p => !(PeelFilterUI.appUnits(p) > 0) && !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
+  const growthUnstated = p => !(p.units > 0) && p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled'
     && !NOT_GROWTH.test(r.description || '') && (GROWTH_TEXT.test(`${r.description || ''} ${r.type || ''}`) || /official plan|zoning|subdivision|block plan/i.test(r.type || ''))
     && (['master', 'precon'].includes(r.stage || P.stageOf(r)) || GROWTH_TEXT.test(r.description || '')));
   const LANDUSE_TEST = {
     all: () => true,
-    growth: p => PeelFilterUI.appUnits(p) > 0 || (p.kinds.includes('application') && jobsOf(p) > 0) || growthUnstated(p),
+    growth: p => (p.kinds.includes('application') && ((p.units || 0) > 0 || jobsOf(p) > 0)) || growthUnstated(p),
     residential: p => (p.units || 0) > 0 && !empOf(p),
     mixed: p => (p.units || 0) > 0 && !!empOf(p),
     employment: p => !!empOf(p),
@@ -282,7 +284,7 @@
     if (state.kind === 'both' && p.kinds.length < 2) return false;
     if ((state.kind === 'application' || state.kind === 'permit') && !p.kinds.includes(state.kind)) return false;
     if (state.newOnly && !p.newBuild) return false;
-    if (state.minUnits > 0 && !(unitsFor(p) >= state.minUnits)) return false;
+    if (state.minUnits > 0 && !sizeMatch(p)) return false;
     if (!ignoreFlags && !flagMatch(p)) return false;
     if (state.plant && PeelMapMarkers.plantOfDev(p) !== state.plant) return false;
     if (state.dwelling && !(D.unitSplit(p)[state.dwelling] > 0)) return false;
