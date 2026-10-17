@@ -3123,6 +3123,13 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .tband-pipe-t, .tband-mark-t { font-size: var(--fs-2); fill: var(--text-primary); }
 .tband-mark { stroke: var(--accent); stroke-width: 1; stroke-dasharray: 2 3; }
 .tband-sw-pipe { background: none; border-top: 2px dashed var(--text-secondary); height: 0 !important; margin-top: 5px; }
+/* Reference lines: homes the population projection needs, and the Region's 2051 forecast pace */
+.tband-ref { fill: none; stroke-width: 1.5; }
+.tband-ref.tband-ref-mof { stroke: var(--growth-4); stroke-dasharray: 2 3; }
+.tband-ref.tband-ref-reg { stroke: var(--text-primary); stroke-dasharray: 8 3 2 3; }
+.tband-sw-ref { background: none; height: 0 !important; margin-top: 5px; }
+.tband-sw-ref.tband-ref-mof { border-top: 2px dotted var(--growth-4); }
+.tband-sw-ref.tband-ref-reg { border-top: 2px dashed var(--text-primary); }
 .page-kind { display: inline-block; font-size: var(--fs-1); padding: 0 var(--space-2); border: 1px solid var(--border); border-radius: 999px; color: var(--text-secondary); margin-left: var(--space-1); }
 /* The capacity full table: the Facility column pinned, rows grouped by unit, Reaches as a timeline */
 .cap-full thead { position: sticky; top: 0; z-index: 2; background: var(--surface-1); }

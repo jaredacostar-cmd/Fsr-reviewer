@@ -27,7 +27,12 @@
  *  - Bands: LOW = slow lags (p75) with the Wilson low rate bound; LIKELY =
  *    medians with the point estimate; HIGH = fast lags (p25) with the Wilson
  *    high bound. Each project's remaining units are spread over completion
- *    years with a small kernel around the expected year.
+ *    years with a small kernel around the expected year (forecastBands).
+ *  - The Growth › Forecast view times by time in stage instead (decided
+ *    2026-10-17; stageSchedules): Kaplan–Meier curves by stage × size, the
+ *    time left for a site that has already waited, sites beyond the data paced
+ *    by the homes the Ministry of Finance population growth needs, 100+ unit
+ *    sites at about 250 units a year.
  *  - Facility trigger years reuse each facility's approved / proposed flow
  *    layers, phased in over windows derived from the calibrated lags, with the
  *    layers scaled by the calibrated rates — they are NOT the plant Horizon
@@ -235,6 +240,177 @@
     return { years, perItem, nowYear: nowY, total: { low: cl, likely: ck, high: ch } };
   }
 
+  // ---- Time in stage (decided 2026-10-17) ------------------------------------------
+  // A site's finish year from how long it has already waited in its stage: among sites of its stage
+  // and size, the ones still unfinished after that long, and how much longer they took (Kaplan–Meier,
+  // so the sites still waiting count too). Sites waiting longer than most similar sites ever have are
+  // beyond the data: they fill each year up to the homes the Ministry of Finance population growth
+  // needs (the Region's 2051 split by municipality), furthest along and oldest first. A site of 100+
+  // units finishes about 250 units a year from its first completion.
+  const CURVE_STAGES = ['inception', 'review', 'approved', 'permit', 'construction'];
+  const CURVE_FALLBACK = { review: 'inception', construction: 'permit' };   // (stages with few dated entries)
+  const MIN_CURVE_N = 30;
+  const CURVE_FROM = Date.UTC(2016, 0, 1);
+  const PHASE_UNITS = 250;
+  const QUEUE_ORDER = ['construction', 'permit', 'approved', 'review', 'inception'];
+  // The share of S(e) left when the band's finish is reached: HIGH the fast quarter, LOW the slow.
+  const BAND_Q = { high: 0.75, likely: 0.5, low: 0.25 };
+  const sizeOf = u => (u >= 100 ? 'L' : u >= 10 ? 'M' : 'S');
+  const SIZE_LABEL = { S: 'under 10 units', M: '10–99 units', L: '100+ units' };
+
+  /** Kaplan–Meier survival steps from [{ t (months), done }]: [{ t, s }], s the share still unfinished. */
+  function survival(obs) {
+    const o = (obs || []).filter(x => x && x.t >= 0).sort((a, b) => a.t - b.t);
+    let n = o.length, s = 1;
+    const steps = [{ t: 0, s: 1 }];
+    for (let i = 0; i < o.length;) {
+      const t = o[i].t; let d = 0, c = 0;
+      while (i < o.length && o[i].t === t) { if (o[i].done) d++; else c++; i++; }
+      if (d && n > 0) { s *= 1 - d / n; steps.push({ t, s }); }
+      n -= d + c;
+    }
+    return { steps, n: o.length, done: o.filter(x => x.done).length };
+  }
+  const survivalAt = (c, t) => { let s = 1; for (const st of c.steps) { if (st.t <= t) s = st.s; else break; } return s; };
+  /** Months after e until the share unfinished falls to q of what it was at e; null beyond the data. */
+  function remainingMonths(c, e, q) {
+    const target = survivalAt(c, e) * q;
+    for (const st of c.steps) if (st.t > e && st.s <= target) return st.t - e;
+    return null;
+  }
+
+  /** One observation per site and stage it entered (dated, since 2016): months to its first completion. */
+  function curveObservations(projects, now = Date.now()) {
+    const out = [];
+    for (const p of projects || []) {
+      if (!p || p.phase === 'cancelled') continue;
+      const ms = p.milestones || {}, done = +ms.completed || null;
+      if (p.phase === 'completed' && !done) continue;           // finished on a date not published
+      const size = sizeOf(p.units || 0);
+      for (const stage of CURVE_STAGES) {
+        const entry = +ms[stage] || null;
+        if (!entry || entry < CURVE_FROM || entry > now || (done && done <= entry)) continue;
+        out.push({ stage, size, t: ((done || now) - entry) / MONTH_MS, done: !!done });
+      }
+    }
+    return out;
+  }
+  /** Survival curves by stage × size, and by stage. */
+  function stageCurves(obs) {
+    const by = {};
+    for (const o of obs || []) for (const k of [`${o.stage}|${o.size}`, `${o.stage}|*`]) (by[k] || (by[k] = [])).push(o);
+    const out = {};
+    for (const [k, v] of Object.entries(by)) out[k] = survival(v);
+    return out;
+  }
+  /** The curve for a stage and size: the size's own, the stage's, then the stage it falls back to. */
+  function curveFor(curves, stage, units) {
+    const own = st => [`${st}|${sizeOf(units)}`, `${st}|*`].map(k => curves && curves[k]).find(c => c && c.n >= MIN_CURVE_N);
+    return own(stage) || (CURVE_FALLBACK[stage] ? own(CURVE_FALLBACK[stage]) : null) || null;
+  }
+
+  /**
+   * Homes needed per year from the Ministry of Finance projection for Peel (July 1 population):
+   * growth ÷ the people per new home in the Region's 2051 allocation, a municipality its share of the
+   * allocation's new homes. A year the population falls needs none. Years after the projection keep
+   * its last year's rate. Returns (muni, year) → homes, or null without the data.
+   */
+  function homesNeeded(mofPeel, allocation) {
+    const ys = Object.keys(mofPeel || {}).map(Number).filter(y => mofPeel[y] > 0).sort((a, b) => a - b);
+    const ms = Object.entries(allocation || {}).filter(([, v]) => v && v.units2051 > v.units2021 && v.pop2051 > v.pop2021);
+    if (ys.length < 2 || !ms.length) return null;
+    const dU = ms.reduce((t, [, v]) => t + v.units2051 - v.units2021, 0), dP = ms.reduce((t, [, v]) => t + v.pop2051 - v.pop2021, 0);
+    const ppu = dP / dU, share = Object.fromEntries(ms.map(([m, v]) => [m, (v.units2051 - v.units2021) / dU]));
+    const peel = {};
+    for (let i = 1; i < ys.length; i++) peel[ys[i]] = Math.max(0, mofPeel[ys[i]] - mofPeel[ys[i - 1]]) / ppu;
+    const first = ys[1], last = ys[ys.length - 1];
+    const fn = (muni, y) => (y < first ? 0 : peel[Math.min(y, last)] || 0) * (muni ? share[muni] || 0 : 1);
+    fn.ppu = ppu; fn.share = share; fn.lastYear = last;
+    return fn;
+  }
+  /** New homes a year in the Region's 2051 allocation (2021–2051): a municipality's, or Peel's. */
+  function allocationPace(allocation, muni) {
+    const ms = Object.entries(allocation || {}).filter(([m, v]) => v && (!muni || m === muni) && v.units2051 > v.units2021);
+    return ms.length ? ms.reduce((t, [, v]) => t + v.units2051 - v.units2021, 0) / 30 : null;
+  }
+
+  /**
+   * Time-in-stage schedules for every unbuilt site in `items` (all of them: the stalled ones queue for
+   * the same homes, whatever is shown): Map key → { low, likely, high } year → units, plus `after`,
+   * each band's units still queued at the end. opts: curves, homes (homesNeeded), now, nowYear, years.
+   */
+  function stageSchedules(items, cal, opts = {}) {
+    const now = opts.now || Date.now();
+    const nowY = opts.nowYear || new Date(now).getUTCFullYear();
+    const endY = nowY + (opts.years || FORECAST_YEARS) + 1;
+    const sched = new Map(), after = new Map();
+    const put = (key, b, y, v) => {
+      if (!(v > 0)) return;
+      let s = sched.get(key); if (!s) { s = { low: {}, likely: {}, high: {} }; sched.set(key, s); }
+      s[b][y] = (s[b][y] || 0) + v;
+    };
+    const live = (items || []).filter(i => i && (i.units || 0) > 0 && i.stage !== 'completed' && i.stage !== 'cancelled');
+    for (const b of BANDS) {
+      const queue = [];
+      for (const item of live) {
+        const row = rowFor(cal, item.muni, item.btype);
+        const pre = item.stage === 'inception' || item.stage === 'review';
+        const units = item.units * (pre ? ratePick(row.approval, b) : 1) * ratePick(row.completion, b);
+        if (!(units > 0)) continue;
+        // A large site finishes PHASE_UNITS of its own units a year (in expected units, the same share).
+        const perYear = item.units >= 100 ? units * PHASE_UNITS / item.units : Infinity;
+        const c = curveFor(opts.curves, item.stage, item.units);
+        const e = Math.max(0, (now - (item.stageDate || now)) / MONTH_MS);
+        const m = c ? remainingMonths(c, e, BAND_Q[b]) : null;
+        // Beyond the data: queued for the homes needed, except a site under construction, which
+        // finishes from next year whatever the population does.
+        if (m == null && item.stage !== 'construction') { queue.push({ item, left: units, perYear }); continue; }
+        let y0 = m == null ? nowY + 1 : new Date(now + m * MONTH_MS).getUTCFullYear(), left = units;
+        for (let y = y0; left > 1e-9; y++) {
+          const v = Math.min(left, perYear); left -= v;
+          for (const [dy, w] of KERNEL) put(item.key, b, Math.max(nowY, y + dy), v * w);
+        }
+      }
+      // Beyond the data: each municipality's queue fills its homes needed, year by year.
+      queue.sort((a, c) => QUEUE_ORDER.indexOf(a.item.stage) - QUEUE_ORDER.indexOf(c.item.stage) || (a.item.stageDate || 0) - (c.item.stageDate || 0));
+      const byMuni = new Map();
+      for (const q of queue) { const l = byMuni.get(q.item.muni); if (l) l.push(q); else byMuni.set(q.item.muni, [q]); }
+      if (opts.homes) for (const [muni, list] of byMuni) {
+        for (let y = nowY; y <= endY; y++) {
+          let room = opts.homes(muni, y);
+          for (const q of list) {
+            if (room <= 1e-9) break;
+            if (q.left <= 1e-9) continue;
+            const v = Math.min(q.left, q.perYear, room);
+            q.left -= v; room -= v; put(q.item.key, b, y, v);
+          }
+        }
+      }
+      for (const q of queue) if (q.left > 1e-9) {
+        let a = after.get(q.item.key); if (!a) { a = { low: 0, likely: 0, high: 0 }; after.set(q.item.key, a); }
+        a[b] += q.left;
+      }
+    }
+    return { sched, after, nowYear: nowY, endYear: endY };
+  }
+  /** Yearly bands for the sites in `items`, from stageSchedules over all sites (the forecastBands shape). */
+  function bandsFromSchedules(items, ss) {
+    const years = [];
+    for (let y = ss.nowYear; y <= ss.endYear; y++) years.push({ year: y, low: 0, likely: 0, high: 0 });
+    const byYear = new Map(years.map(r => [r.year, r]));
+    const perItem = [], after = { low: 0, likely: 0, high: 0 };
+    for (const item of items || []) {
+      const s = ss.sched.get(item.key), a = ss.after.get(item.key);
+      if (a) for (const b of BANDS) after[b] += a[b];
+      if (!s) continue;
+      for (const b of BANDS) for (const [y, v] of Object.entries(s[b])) { const r = byYear.get(+y); if (r) r[b] += v; }
+      perItem.push({ item, sched: s });
+    }
+    let cl = 0, ck = 0, ch = 0;
+    for (const r of years) { cl += r.low; ck += r.likely; ch += r.high; r.cumLow = cl; r.cumLikely = ck; r.cumHigh = ch; }
+    return { years, perItem, nowYear: ss.nowYear, total: { low: cl, likely: ck, high: ch }, after };
+  }
+
   // ---- Facility trigger-year ranges ----------------------------------------------
   // fac: { name, rated, existing, approved, proposed, div?, thresholds?, end?, capWord? }
   // flows in one consistent unit (ML/d); approved/proposed are the growth layers.
@@ -396,11 +572,13 @@
     ys.forEach((y, i) => { if (i % 5 === 0 || i === ys.length - 1) { if (out.length && y - out[out.length - 1] < 3) { if (i === ys.length - 1) return; } out.push(y); } });
     return out;
   }
-  function timingChartSVG(fc, pipeline) {
+  // refs: [{ cls, label, per: year → homes }], drawn adding up from the first year, like the forecast.
+  function timingChartSVG(fc, pipeline, refs = []) {
     const years = cumulative(fc.years), pipe = pipeline > 0 ? pipeline : 0;
+    const refRuns = refs.map(r => { let t = 0; return { ...r, run: years.map(y => (t += Math.max(0, r.per(y.year) || 0))) }; });
     const W = window.PeelUtil.chartW(320, 900), H = 250, L = 52, Rr = 16, T = 18, B = 26;
     const k = v => (v >= 1000 ? `${(v / 1000).toFixed(v % 1000 ? 1 : 0)}k` : String(Math.round(v)));
-    const maxV = Math.max(1, pipe, ...years.map(r => r.high));
+    const maxV = Math.max(1, pipe, ...years.map(r => r.high), ...refRuns.map(r => r.run[r.run.length - 1]));
     const step = maxV > 100000 ? 50000 : maxV > 20000 ? 10000 : maxV > 5000 ? 2000 : 500;
     const yMax = Math.ceil(maxV * 1.04 / step) * step;
     const X = i => L + (years.length > 1 ? i / (years.length - 1) : 0) * (W - L - Rr);
@@ -421,26 +599,45 @@
           ${xTicks.map(y => `<text x="${X(years.findIndex(r => r.year === y)).toFixed(1)}" y="${H - 8}" text-anchor="middle">${y}</text>`).join('')}</g>
         <path class="tband-band" d="${band}"><title>Low to high range</title></path>
         ${pipe ? `<line class="tband-pipe" x1="${L}" x2="${W - Rr}" y1="${Yv(pipe).toFixed(1)}" y2="${Yv(pipe).toFixed(1)}"/><text class="tband-pipe-t" x="${L + 4}" y="${(Yv(pipe) - 5).toFixed(1)}">Unbuilt pipeline: ${fmtNum(Math.round(pipe))} units</text>` : ''}
+        ${refRuns.map(r => `<path class="tband-ref ${r.cls}" d="M${r.run.map((v, i) => pt(i, v)).join('L')}"><title>${esc(r.label)}: ${fmtNum(Math.round(r.run[r.run.length - 1]))} by ${years[years.length - 1].year}</title></path>`).join('')}
         <path class="tband-line tb-likely" d="${line('likely')}"><title>Likely: ${years.map(r => `${r.year} ${fmtNum(Math.round(r.likely))}`).join(', ')}</title></path>
         ${marks.map(i => { const r = years[i], x = X(i).toFixed(1); return `<line class="tband-mark" x1="${x}" x2="${x}" y1="${Yv(r.likely).toFixed(1)}" y2="${H - B}"/><circle class="tband-pt" cx="${x}" cy="${Yv(r.likely).toFixed(1)}" r="4"><title>${esc(tip(r))}</title></circle><text class="tband-mark-t" x="${x}" y="${(Yv(r.likely) - 9).toFixed(1)}" text-anchor="middle">${r.year}: ≈${k(Math.round(r.likely / 1000) * 1000)}</text>`; }).join('')}
       </svg>
-      <ul class="grow-legend"><li><i class="gsw tband-sw-likely"></i>Likely</li><li><i class="gsw tband-sw-band"></i>Low–high range</li><li><i class="gsw tband-sw-pipe"></i>Unbuilt units in the pipeline</li></ul>
+      <ul class="grow-legend"><li><i class="gsw tband-sw-likely"></i>Likely</li><li><i class="gsw tband-sw-band"></i>Low–high range</li><li><i class="gsw tband-sw-pipe"></i>Unbuilt units in the pipeline</li>${refRuns.map(r => `<li><i class="gsw tband-sw-ref ${r.cls}"></i>${esc(r.label)}</li>`).join('')}</ul>
       <div class="small muted">${estTag} statistical projection — not a prediction for any one site</div>
     </div>`;
   }
 
   // Expected by 2031 / 2041 split by layer (SPEC §2.5): the same forecast run on each layer's
   // developments (Committed, Proposed, Anticipated), likely values, on the shared bar.
-  function paceByLayerHTML(items, cal) {
+  function paceByLayerHTML(items, ss) {
     const Ly = root.PeelLayers, LB = root.PeelLayerBar; if (!Ly || !LB || !items.length) return '';
     const ks = ['committed', 'proposed', 'anticipated'];
-    const by = Object.fromEntries(ks.map(k => [k, forecastBands(items.filter(i => Ly.layerOfPhase(i.stage) === k), cal)]));
+    const by = Object.fromEntries(ks.map(k => [k, bandsFromSchedules(items.filter(i => Ly.layerOfPhase(i.stage) === k), ss)]));
     const to = (k, y) => by[k].years.filter(r => r.year <= y).reduce((t, r) => t + r.likely, 0);
     const unb = k => items.filter(i => Ly.layerOfPhase(i.stage) === k).reduce((t, i) => t + i.units, 0);
     const max = ks.reduce((t, k) => t + unb(k), 0);
     const row = y => `<div class="pace-ly"><span class="small">By ${y}</span>${LB.barHTML({ segments: ks.map(k => ({ layer: k, value: to(k, y), title: `${LB.LABEL[k]}: ≈${fmtNum(Math.round(to(k, y)))} of ${fmtNum(Math.round(unb(k)))} unbuilt units expected by ${y} (likely)` })), max })}</div>`;
     return `<h3 class="sub-title" data-info="growth-layers">Expected by layer <span class="muted small">likely, of the unbuilt units in each layer</span></h3>${row(2031)}${row(2041)}
       ${LB.legendHTML(ks.map(k => ({ layer: k, text: `${LB.LABEL[k]} ${fmtNum(Math.round(to(k, 2031)))} → ${fmtNum(Math.round(to(k, 2041)))} of ${fmtNum(Math.round(unb(k)))}` })))}`;
+  }
+
+  // ---- Browser: the forecast over every site --------------------------------------------
+  // Time in stage over every site (the stalled ones queue for the same homes): the same for every
+  // filter, so built once per developments list, population data and day. The Forecast view shows a
+  // set's share; How the forecast is timed (js/reference.js) explains it with these figures.
+  function forecastModel() {
+    const app = App(); if (!app || !app.state || !(app.state.projects || []).length) return null;
+    const now = Date.now(), H = app.state.housing, F = app.state.reports && app.state.reports.forecast2051;
+    const key = [window.PeelUtil.idOf ? window.PeelUtil.idOf(app.state.projects) : 0, app.state.projects.reduce((t, p) => t + (p.units || 0), 0), H ? 1 : 0, F ? 1 : 0, new Date(now).toISOString().slice(0, 10)].join('|');
+    if (forecastModel.key !== key) {
+      const cal = calibrate(observationsFromProjects(app.state.projects));
+      const curves = stageCurves(curveObservations(app.state.projects, now));
+      const homes = homesNeeded(H && H.mof && H.mof.peel, F && F.municipalities);
+      const ss = stageSchedules(pipelineItems(app.state.projects), cal, { curves, homes, now });
+      forecastModel.key = key; forecastModel.m = { cal, curves, homes, ss, F, now };
+    }
+    return forecastModel.m;
   }
 
   // ---- Browser: the Growth › Timing sub-view ---------------------------------------
@@ -451,18 +648,29 @@
     if (!app.state.projects.length) { body.innerHTML = skel('Forecast'); return; }
     // Area-only content: not shown at development scope (design audit, Group 6).
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
-    const cal = calibrate(observationsFromProjects(app.state.projects));
     const set = DU().demandSet();
     const items = pipelineItems(set);
-    const fc = forecastBands(items, cal);
+    const { cal, homes, ss, F } = forecastModel();
+    const fc = bandsFromSchedules(items, ss);
+    // Homes needed and the Region's allocation pace, for the whole of Peel or a municipality only.
+    const whole = !(app.state.sp && app.state.sp.length) && !(app.state.mtsa && app.state.mtsa.length) && !app.state.daCtx;
+    const muni = app.state.muni || null, scopeName = muni || 'Peel';
+    const refs = [];
+    if (whole && homes) refs.push({ cls: 'tband-ref-mof', label: `Homes the projected population needs (Ministry of Finance), all of ${scopeName}`, per: y => homes(muni, y) });
+    const ap = whole && F ? allocationPace(F.municipalities, muni) : null;
+    if (ap) refs.push({ cls: 'tband-ref-reg', label: `Region's 2051 forecast pace, all of ${scopeName} (${fmtNum(Math.round(ap))} a year)`, per: () => ap });
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     const sumTo = (y, b) => fc.years.filter(r => r.year <= y).reduce((t, r) => t + r[b], 0);
     const unbuilt = items.reduce((t, i) => t + i.units, 0);
     // (estimates to three significant figures: the precision a statistical screening has)
     const est = v => fmtNum(root.PeelUtil.sig3 ? root.PeelUtil.sig3(v) : Math.round(v));
     const rng = () => `${est(sumTo(2031, 'low'))}–${est(sumTo(2031, 'high'))}`;
+    // Sites past what the history can time wait for the homes the population needs; what is still
+    // waiting at the end of the forecast, and the projection not loaded yet, are said.
+    const afterTxt = !homes ? ' Sites waiting longer than similar sites ever have are not timed yet: the population projection is still loading.'
+      : fc.after.likely >= 0.5 ? ` At the pace the projected population growth needs, ≈${est(fc.after.likely)} more come after ${ss.endYear}.` : '';
     const head = items.length
-      ? `A statistical <strong>screening estimate</strong> of when the pipeline builds out: <strong>≈${est(sumTo(2031, 'likely'))}</strong> units expected by 2031 (range ${rng()}), <strong>≈${est(sumTo(2041, 'likely'))}</strong> by 2041 — against <strong>${fmtNum(Math.round(unbuilt))}</strong> unbuilt units in the pipeline.`
+      ? `A statistical <strong>screening estimate</strong> of when the pipeline builds out: <strong>≈${est(sumTo(2031, 'likely'))}</strong> units expected by 2031 (range ${rng()}), <strong>≈${est(sumTo(2041, 'likely'))}</strong> by 2041 — against <strong>${fmtNum(Math.round(unbuilt))}</strong> unbuilt units in the pipeline.${afterTxt}`
       : 'No unbuilt units in the developments shown.';
     const tile = (label, v, sub, info) => `<div class="tile" data-info="${info}"><div class="tl">${label} ${estTag}</div><div class="tv">${v}<span class="tu">units</span></div>${sub ? `<div class="ts">${sub}</div>` : ''}</div>`;
     const tiles = `<div class="tiles" data-info="timing-tiles">`
@@ -470,7 +678,7 @@
       + tile('Expected by 2041', fmtNum(Math.round(sumTo(2041, 'likely'))), `range ${fmtNum(Math.round(sumTo(2041, 'low')))}–${fmtNum(Math.round(sumTo(2041, 'high')))}`, 'timing-tiles')
       + tile('Unbuilt in pipeline', fmtNum(Math.round(unbuilt)), unbuilt ? `≈${Math.round(sumTo(2041, 'likely') / unbuilt * 100)}% expected by 2041 (likely)` : '', 'timing-tiles')
       + tile('Calibration', fmtNum(cal.nObs), `dated file events, cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}`, 'timing-calibration')
-      + `</div>` + paceByLayerHTML(items, cal);
+      + `</div>` + paceByLayerHTML(items, ss);
 
     // Calibration table: approval / completion rates and lags by municipality × type.
     const munis = DU().MUNIS || ['Mississauga', 'Brampton', 'Caledon'];
@@ -540,27 +748,27 @@
           { v: fmtNum(Math.round(unbuilt)), u: 'units', label: 'unbuilt in the pipeline', ctx: unbuilt ? `≈${Math.round(sumTo(2041, 'likely') / unbuilt * 100)}% expected by 2041` : '' },
           { v: fmtNum(cal.nObs), u: 'events', label: 'the estimate learns from', ctx: `dated application and permit events, files from ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}` },
         ],
-        chart: items.length ? timingChartSVG(fc, unbuilt) : '',
+        chart: items.length ? timingChartSVG(fc, unbuilt, refs) : '',
         lists: [
           // (the forecast pace; Servicing › Capacity puts every file on its own schedule, so its years can
         // differ: both are named)
         { title: 'Plants: 90% trigger year at the forecast pace', rows: [...trig.map(x => PN.kv(esc(x.f.name), x.like != null ? `≈${x.like}${x.txt !== String(x.like) ? ` <small>range ${esc(x.txt)}</small>` : ''}` : esc(x.txt))), { kv: true, html: '<span class="small muted">Servicing › Capacity puts every file on its own schedule instead, so its years can differ by a year or two.</span>' }], total: trig.length, seeAll: { 'data-full-table': 'growth' } },
           { title: 'Largest contributors', rows: contrib.slice(0, 5).map(c => ({ attrs: { 'data-pnl-dev': c.item.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.item.title || c.item.key)}<small>${esc(c.item.muni)}</small></span><span class="pnl-r-fig">${fmtNum(Math.round(c.likely))}<small>units, likely</small></span></div>` })), total: contrib.length, seeAll: { 'data-full-table': 'growth' } },
         ],
-        method: 'A statistical screening estimate of when the pipeline builds out, not a prediction for any one site: approval and completion rates and the time lags are calibrated from the dated application and permit events, by municipality and building type; low / likely / high bands. Trigger years phase each plant\u2019s approved and proposed flow in over the calibrated lags (not the plant horizon assumptions).',
-        sources: 'The dated file events of the applications and permits on the map (2016–2019 cohorts); the plants\u2019 2025 flows and rated capacity (2025 annual reports).',
-        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } } },
+        method: `A statistical screening estimate of when the pipeline builds out, not a prediction for any one site. Each site's finish comes from how long it has already waited in its stage: among sites of the same stage and size that were still unfinished after that long, how much longer they took (likely: half had finished; high: a quarter; low: three quarters). Sites waiting longer than most similar sites ever have fill each year up to the homes the Ministry of Finance population growth needs (${homes ? `${homes.ppu.toFixed(1)} people per new home, ` : ''}split by the Region's 2051 allocation), furthest along and oldest first; one under construction finishes from next year. A site of 100+ units finishes about ${PHASE_UNITS} units a year. Approval and completion rates by municipality and building type; trigger years phase each plant\u2019s approved and proposed flow in over the calibrated lags (not the plant horizon assumptions).`,
+        sources: 'The dated file events of the applications and permits on the map (since 2016; rates from the 2016–2019 cohorts); Ontario Ministry of Finance population projections (Peel); the Region of Peel Land Needs Assessment 2051 allocation (draft, August 2024); the plants\u2019 2025 flows and rated capacity (2025 annual reports).',
+        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } }, secondary: [{ label: 'How the forecast is timed', attrs: { 'data-ws-page': 'forecast' } }] },
       });
     }
     body.innerHTML = `
       ${hlP(head)}
       ${tiles}
-      ${items.length ? timingChartSVG(fc, unbuilt) : ''}
+      ${items.length ? timingChartSVG(fc, unbuilt, refs) : ''}
       ${contribTable}
       ${calibTable}
       ${plantsTable}
       ${waterTable}
-      <p class="small muted">ⓘ Forecast — a statistical screening estimate, not a prediction for any one site. Approval and completion rates and the time lags are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}, so every project had 5+ years of follow-up; ${fmtNum(cal.nObs)} dated observations; Wilson 95% intervals; cells with fewer than ${cal.minN} observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); lags use dated events only. LOW uses the slow lags (p75) with the low rate bound, LIKELY the medians, HIGH the fast lags (p25) with the high bound. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects; the forecast covers the developments shown. Applications as of <strong>${esc(asof)}</strong>.</p>`;
+      <p class="small muted">ⓘ Forecast — a statistical screening estimate, not a prediction for any one site. Each site's finish year comes from how long it has already waited in its stage: among sites of the same stage and size (under 10, 10–99, 100+ units) that entered the stage since 2016, the time still to their first completion for those unfinished after that long (Kaplan–Meier, so sites still waiting count; LIKELY when half have finished, HIGH a quarter, LOW three quarters). Sites waiting longer than most similar sites ever have are beyond the data: they fill each year up to the homes the Ministry of Finance population projection for Peel needs (growth ÷ the people per new home in the Region's 2051 allocation; a municipality its share of that allocation; none in a year the population falls), furthest along and oldest first; one under construction finishes from next year. A site of 100+ units finishes about ${PHASE_UNITS} units a year from its first completion. Approval and completion rates are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}, so every project had 5+ years of follow-up; ${fmtNum(cal.nObs)} dated observations; Wilson 95% intervals; cells with fewer than ${cal.minN} observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); LOW uses the low rate bound, HIGH the high one. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects, and every site in Peel queues for the same homes; the forecast shows the developments shown. Applications as of <strong>${esc(asof)}</strong>.</p>`;
   }
 
   // ---- Public contract ----
@@ -568,6 +776,8 @@
     BANDS, COHORT_YEARS, MIN_N, FORECAST_YEARS,
     btypeOf, wilson, quantiles, calibrate, rowFor,
     projectSchedule, forecastBands, facilityBands, triggerRangeText,
+    survival, survivalAt, remainingMonths, curveObservations, stageCurves, curveFor, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules, forecastModel,
+    PHASE_UNITS, MIN_CURVE_N, SIZE_LABEL, QUEUE_ORDER, CURVE_STAGES,
     observationsFromProjects, pipelineItems, renderTiming, cumulative, yearTicks,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
