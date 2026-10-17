@@ -85,7 +85,7 @@
       id: 'approvals', eyebrow: 'Reference', name: 'How does a development get approved?',
       answer: 'A proposal starts as a <strong>pre-consultation</strong>, is filed as an <strong>official plan and zoning amendment</strong> (often with a draft plan of subdivision), then gets <strong>draft plan</strong> or <strong>site plan</strong> approval, <strong>building permits</strong> and <strong>occupancy</strong>. Each file sits on the land of the one before it; the app reads them as one tree and gives the site the furthest stage its live files have reached.',
       mid: html(),
-      actions: [{ label: 'Open the full map', attrs: { 'data-ws-full': '' }, primary: true }],
+      actions: [{ label: 'Full map', attrs: { 'data-ws-full': '' }, primary: true }],
     };
   }
 

@@ -448,7 +448,7 @@
     const body = $('#timing-body'); if (!body) return;
     const app = App(); if (!app || !app.state) return;
     SvcTab().renderSvcTab();  // ensure the servicing model exists (as the Census sub-view does)
-    if (!app.state.projects.length) { body.innerHTML = skel('Timing forecast'); return; }
+    if (!app.state.projects.length) { body.innerHTML = skel('Forecast'); return; }
     // Area-only content: not shown at development scope (design audit, Group 6).
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const cal = calibrate(observationsFromProjects(app.state.projects));
@@ -560,7 +560,7 @@
       ${calibTable}
       ${plantsTable}
       ${waterTable}
-      <p class="small muted">ⓘ Timing forecast — a statistical screening estimate, not a prediction for any one site. Approval and completion rates and the time lags are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}, so every project had 5+ years of follow-up; ${fmtNum(cal.nObs)} dated observations; Wilson 95% intervals; cells with fewer than ${cal.minN} observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); lags use dated events only. LOW uses the slow lags (p75) with the low rate bound, LIKELY the medians, HIGH the fast lags (p25) with the high bound. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects; the forecast covers the developments shown. Applications as of <strong>${esc(asof)}</strong>.</p>`;
+      <p class="small muted">ⓘ Forecast — a statistical screening estimate, not a prediction for any one site. Approval and completion rates and the time lags are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}, so every project had 5+ years of follow-up; ${fmtNum(cal.nObs)} dated observations; Wilson 95% intervals; cells with fewer than ${cal.minN} observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); lags use dated events only. LOW uses the slow lags (p75) with the low rate bound, LIKELY the medians, HIGH the fast lags (p25) with the high bound. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects; the forecast covers the developments shown. Applications as of <strong>${esc(asof)}</strong>.</p>`;
   }
 
   // ---- Public contract ----

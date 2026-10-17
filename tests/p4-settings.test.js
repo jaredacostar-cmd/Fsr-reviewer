@@ -149,15 +149,15 @@ test('settings gear page holds display settings, not editable criteria inputs', 
   assert.ok(s[1].includes('numberConventionsHTML()'), 'number conventions + Prepared by in Settings');
 });
 
-test('record type + new-buildings-only controls live on the Settings gear page', () => {
-  // Phase 4 coordinator: the Records controls lost their tab when Settings & sources
-  // was removed; they now render on the Settings gear page.
-  const m = /function recordSettingsHTML\(\) \{([\s\S]*?)\n  \}/.exec(APP);
-  assert.ok(m, 'recordSettingsHTML not found');
-  assert.ok(m[1].includes('id="f-kind"'), 'record type select rendered');
-  assert.ok(m[1].includes('id="f-new"'), 'new-buildings-only checkbox rendered');
-  const s = /function settingsPageHTML\(\) \{([\s\S]*?)\n  \}/.exec(APP);
-  assert.ok(s && s[1].includes('recordSettingsHTML()'), 'settings page includes Records');
+test('record type + new-buildings-only controls are filters, in Find › What (navigation review F)', () => {
+  // They narrow the list, so they sit with the other What filters; Settings points there.
+  const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
+  const what = /<details class="fp-sec fp-row" id="fr-what">([\s\S]*?)<\/details>/.exec(html);
+  assert.ok(what && what[1].includes('id="f-kind"'), 'record type select in Find › What');
+  assert.ok(what[1].includes('id="f-new"'), 'new-buildings-only switch in Find › What');
+  assert.equal((html.match(/id="f-kind"/g) || []).length, 1);
+  assert.ok(!/function recordSettingsHTML/.test(APP) || !/const recordSettingsHTML = [^\n]*id="f-kind"/.test(APP), 'not also on the Settings page');
+  assert.ok(APP.includes('Record type and New buildings only are filters: they are in <strong>Find › What</strong>'), 'Settings points to Find › What');
   assert.ok(APP.includes("e.target.id === 'f-kind'"), 'delegated wiring for record type');
   assert.ok(APP.includes("e.target.id === 'f-new'"), 'delegated wiring for new-buildings-only');
 });

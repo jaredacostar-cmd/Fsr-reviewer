@@ -262,7 +262,7 @@
       '<button type="button" role="menuitem" data-tbx="workbook">Excel workbook (.xlsx)</button>' +
       `<button type="button" role="menuitem" data-tbx="comparepdf"${cmpOk ? '' : ` disabled title="${cmpTitle}"`}>PDF \u2014 comparison</button>` +
       '<button type="button" role="menuitem" data-tbx="brief">PDF \u2014 executive briefing</button>' +
-      `<button type="button" role="menuitem" data-tbx="memo"${Nav().getCurrentProject() ? '' : ' disabled'}>PDF \u2014 development memo</button>` +
+      `<button type="button" role="menuitem" data-tbx="memo"${Nav().getCurrentProject() ? '' : ' disabled'}>PDF \u2014 servicing memo</button>` +
       '<button type="button" role="menuitem" data-area-report="shown">PDF \u2014 area report</button>' +
       '<button type="button" role="menuitem" data-tbx="print">Print map</button>' +
       '<hr>' +

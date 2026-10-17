@@ -366,10 +366,11 @@
     const el = document.getElementById('mo-legend'); if (!el) return;
     const parts = [];
     const sw = (c, t, cls = '') => `<li><span class="lg-sw${cls}" style="--mk:${c}"></span>${esc(t)}</li>`;
-    // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by Phase | Layer.
+    // SPEC §4: the legend names the marker unit for the lens, and offers Colour sites by: Stage, Counted as,
+    // Plant, Data quality and Timing (the one place to pick it; Layers › More settings no longer has it).
     {
       const c = MM().mstyle.color, b = (k, t) => `<button type="button" class="btn small${c === k ? ' on' : ''}" data-lg-color="${k}" aria-pressed="${c === k}">${t}</button>`;
-      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Stage')}${b('layer', 'Counted as')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : MM().mstyle.size === 'units' ? 'Markers sized by planned homes; a cluster’s number is its planned homes (5.1k = 5,100).' : 'One marker per development; a cluster’s number counts developments (sites).'}</p>`);
+      parts.push(`<div class="lg-color" role="group" aria-label="Colour sites by"><span class="small muted">Colour sites by</span> ${b('phase', 'Stage')}${b('layer', 'Counted as')}${b('plant', 'Plant')}${b('quality', 'Data quality')}${b('timing', 'Timing')}</div><p class="lg-s lg-unit">${MM().mstyle.size === 'pop' ? 'Markers sized by people + jobs at build-out; a cluster’s number is its people + jobs (51k = 51,000).' : MM().mstyle.size === 'units' ? 'Markers sized by planned homes; a cluster’s number is its planned homes (5.1k = 5,100).' : 'One marker per development; a cluster’s number counts developments (sites).'}</p>`);
     }
     // (Permit issued and Under construction share a colour, and a row: as in the sidebar.)
     if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Stage</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key) && !(p.key === 'construction' && App().state.phases.has('permit'))).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.key === 'permit' && App().state.phases.has('construction') ? 'Permit issued / under construction' : p.key === 'completed' ? 'Built' : p.label)}</li>`).join('')}</ul>`);

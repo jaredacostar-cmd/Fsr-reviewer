@@ -43,6 +43,8 @@
     // If any script fails (e.g. a stale cached copy), show a reload prompt instead of a page that silently ignores taps,
     // with the error and the build so a screenshot says what failed.
     window.addEventListener('error', function (e) {
+      // (a browser notice, not a failure: a layout that settles over two frames)
+      if (e && /ResizeObserver loop/.test(e.message || '')) return;
       var b = document.getElementById('error-banner'); if (!b) return; b.hidden = false;
       var d = document.getElementById('error-detail'), v = document.querySelector('meta[name="app-version"]');
       if (d && !d.textContent) d.textContent = (e && e.message ? e.message : 'script error') + (e && e.filename ? ' (' + e.filename.split('/').pop().split('?')[0] + ':' + e.lineno + ')' : '') + ' · build ' + (v ? v.content : '?');
@@ -123,13 +125,15 @@
             <summary><h2 class="label" data-info="filter-what">What</h2><span class="fr-val" id="fv-what"></span></summary>
             <div class="row two"><label class="field"><span class="label">Size</span><select id="f-size" autocomplete="off"><option value="0">Any size</option><option value="1">Adds units or jobs</option><option value="10">10+ units</option><option value="50">50+ units</option><option value="100">100+ units</option><option value="500">500+ units</option></select></label><label class="field"><span class="label">Dwelling type</span><select id="f-dwelling" autocomplete="off"><option value="">Any dwelling type</option><option value="single">Single / semi-detached</option><option value="town">Townhouse</option><option value="apartment">Apartment</option></select></label></div>
             <label class="field"><span class="label">Land use</span><select id="f-landuse" autocomplete="off"><option value="all" selected>Any land use</option><option value="growth">Adds units or jobs</option><option value="residential">Residential</option><option value="mixed">Mixed</option><option value="employment">Employment</option></select></label>
+            <div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind"><option value="application" selected>Planning applications + their permits</option><option value="">All records (incl. permits with no application)</option><option value="permit">Building permits</option><option value="both">Application + permits</option></select></label></div>
+            <label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
           </details>
           <details class="fp-sec fp-row" id="fr-when">
             <summary><h2 class="label" data-info="filter-when">When</h2><span class="fr-val" id="fv-when"></span></summary>
             <div class="row two"><label class="field"><span class="label">Milestone</span><select id="f-milestone" autocomplete="off"><option value="any">Any milestone</option><option value="inception">Application submitted</option><option value="approved">Approved</option><option value="permit">Permit issued</option><option value="completed">Completed</option></select></label></div>
             <!-- Bundle 6: the timeline is the year control; When names the years and keeps the milestone and shortcuts. -->
             <p class="small muted when-years">The years are set on the timeline at the bottom of the map.</p>
-            <div class="row two" hidden><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
+            <div class="row two when-years-in"><label class="field"><span class="label">From year</span><input type="number" id="f-yfrom" autocomplete="off"></label><label class="field"><span class="label">To year</span><input type="number" id="f-yto" autocomplete="off"></label></div>
             <div class="row btns"><button type="button" class="btn small" id="f-when-12m">Last 12 months</button><button type="button" class="btn small" id="f-when-week">This week</button></div>
           </details>
           <details class="fp-sec fp-row" id="fr-counts">

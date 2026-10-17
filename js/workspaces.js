@@ -5,9 +5,9 @@
   // layer preset, the scope and the panel, and the panel header names the tab it comes from
   // ("Servicing capacity · from Servicing › Capacity"). Three modes:
   //   home  the briefing (headline, 4 figures, Needs attention, a small map of the problems, This week)
-  //         with the workspaces listed by team, then "Full map (all tools)";
+  //         with the workspaces listed by team, then "Full map";
   //   ws    the map with the task chips under the search box; the left panel and the tool rail are
-  //         hidden; "Open full map" on every panel keeps the scope, filters and scenario;
+  //         hidden; "Full map" on every panel keeps the scope, filters and scenario;
   //   full  the map with every tool (as before Stage 4). Old share links open here.
   // The start screen (Home · last workspace · Full map) is remembered per browser.
   const U = root.PeelUtil || {};
@@ -155,6 +155,8 @@
     if (root.PeelDataTab && root.PeelDataTab.fixMap) setTimeout(() => root.PeelDataTab.fixMap(), 50);
     if (PN()) PN().sync();
     renderBack();
+    // (the first time on the full map: its tour is offered, js/tips.js)
+    if (m === 'full' && root.PeelTips && root.PeelTips.maybeMapTour) setTimeout(() => root.PeelTips.maybeMapTour(), 800);
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
   }
   // The one search box: over the map in a workspace's map view, on the Find step of Check a site and
@@ -266,13 +268,13 @@
     const fl = $('#ws-filters'); if (fl) fl.innerHTML = filterChipsHTML();
     el.innerHTML = WS.map(w => `<button type="button" class="btn small ws-chip${cur === w.id ? ' on' : ''}" data-ws-go="${w.id}" aria-pressed="${cur === w.id}" title="${esc(w.what)}">${esc(w.label)}${w.id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</button>`).join('');
   }
-  // The header line on every panel in a workspace: its source and "Open full map".
+  // The header line on every panel in a workspace: its source and "Full map".
   function srcLine(key) {
     if (!isWs() || !cur) return '';
     // Check a site / Review an FSR, once the site is open: the guided steps, Find done.
     const site = (cur === 'site' || cur === 'fsr') && root.DevScope && root.DevScope.current && root.DevScope.current();
     const steps = site ? ` <small class="pnl-steps">✓ Find › <b>Result</b> › Output: ${cur === 'fsr' ? 'the cross-check notes' : 'Servicing memo'}</small>` : '';
-    return `<p class="pnl-src small"><span>${esc(sourceText(cur, key))}${steps}</span><button type="button" class="btn small link" data-ws-full title="The same scope, filters and scenario with every tool">Open full map →</button></p>`;
+    return `<p class="pnl-src small"><span>${esc(sourceText(cur, key))}${steps}</span><button type="button" class="btn small link" data-ws-full title="The same scope, filters and scenario with every tool">Full map →</button></p>`;
   }
   // ---- A workspace's own view of a sub-view --------------------------------------------------------
   function override(key, scope) {
@@ -381,7 +383,7 @@
     setMode('home', id);
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
-  let lastHTML = '', timer = null;
+  let lastHTML = '', timer = null, menuOpen = false;
   const pageName = id => (id === 'home' ? 'Home' : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
@@ -389,10 +391,11 @@
     const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide));
     const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     // (This week covers capital and EA dates too: it sits under Home, not Planning)
-    return `<nav class="home-side" aria-label="Workspaces"><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
+    // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
+    return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
       <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).filter(id => !REF[id].guide).map(id => item(id, REF[id].what)).join('')}</ul>
-      <button type="button" class="home-ws home-full" data-ws-full><strong>Full map (all tools)</strong><small>Every layer, filter and tool</small></button>
+      <button type="button" class="home-ws home-full" data-ws-full><strong>Full map</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
   }
@@ -437,8 +440,9 @@
   }
   document.addEventListener('click', e => {
     if (!e.target.closest) return;
+    if (e.target.closest('[data-home-menu]')) { menuOpen = !menuOpen; renderPage(true); return; }
     const pg = e.target.closest('[data-ws-page]');
-    if (pg) { e.preventDefault(); openPage(pg.dataset.wsPage); return; }
+    if (pg) { e.preventDefault(); menuOpen = false; openPage(pg.dataset.wsPage); return; }
     const pk = e.target.closest('[data-ws-pick]');
     // "Its full tree →" / "show it in the tree →": the site on the full map, at Records › Files.
     if (pk && pk.dataset.wsTree) { e.preventDefault(); setMode('full'); pickDev(pk.dataset.wsPick); setTimeout(() => { const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files'); }, 300); return; }

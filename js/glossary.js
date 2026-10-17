@@ -78,7 +78,7 @@
     return {
       id: 'glossary', eyebrow: 'Reference', name: 'What do the terms mean?',
       answer: 'The words the panels use for capacity, flows, the system and planning, in plain language. In a panel, a <span class="gl-eg">dotted underline</span> marks a term: point at it or tap it for its meaning.',
-      mid, actions: [{ label: 'Open the full map', attrs: { 'data-ws-full': '' }, primary: true }],
+      mid, actions: [{ label: 'Full map', attrs: { 'data-ws-full': '' }, primary: true }],
     };
   }
 

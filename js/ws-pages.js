@@ -330,7 +330,7 @@
       figures: homeFigures(rows, ready, week),
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
-      actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map (all tools)', attrs: { 'data-ws-full': '' } }] };
+      actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
 
   // ---- Servicing capacity ------------------------------------------------------------------------
