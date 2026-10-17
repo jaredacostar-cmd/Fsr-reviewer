@@ -175,18 +175,75 @@
     out.notBuilt = Math.max(0, out.total - out.existing - out.built);
     return out;
   }
+  // ---- Infill and additional units ----------------------------------------------------------------
+  // Homes added by building permit alone since census day: permits on sites with no planning
+  // application (secondary and garden suites, new houses on existing lots, the odd small building),
+  // net of the homes the same sites demolished since then. Not in the planning pipeline above; the
+  // servicing model already counts the completed ones as built since the census (js/areas.js).
+  // Brampton's open permit data has no second-unit permits, so its suites are missing (flagged).
+  function infill(projects, opts = {}) {
+    const since = censusMs(opts), out = { units: 0, suites: 0, houses: 0, buildings: 0, completed: 0, sites: 0, byMuni: {}, brampton: false };
+    const issuedAt = r => { const d = (r.events || []).filter(e => e.phase === 'permit').map(e => +e.date); return d.length ? Math.min(...d) : null; };
+    for (const p of projects || []) {
+      if (!p || p.phase === 'cancelled' || (p.kinds || []).includes('application')) continue;
+      const recs = (p.records || []).filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && issuedAt(r) != null && issuedAt(r) >= since);
+      const adds = recs.filter(r => P().permitAddsUnits(r)); if (!adds.length) continue;
+      const suite = adds.filter(r => P().permitRole(r) === 'suite'), other = adds.filter(r => P().permitRole(r) !== 'suite');
+      const s = P().permitUnits(suite), o = P().permitUnits(other);
+      const lost = P().lostHomes ? P().lostHomes(recs) || 0 : 0;
+      const net = Math.max(0, s + o - lost); if (!(net > 0)) continue;
+      const big = other.filter(r => r.units >= 3).length ? P().permitUnits(other.filter(r => r.units >= 3)) : 0;
+      const oNet = Math.max(0, o - lost);
+      out.units += net; out.suites += Math.min(s, net); out.buildings += Math.min(big, oNet); out.houses += Math.max(0, oNet - Math.min(big, oNet)); out.sites++;
+      out.completed += Math.min(net, P().permitUnits(adds.filter(r => r.phase === 'completed')));
+      out.byMuni[p.municipality] = (out.byMuni[p.municipality] || 0) + net;
+      if (p.municipality === 'Brampton') out.brampton = true;
+    }
+    return out;
+  }
+
+  // ---- Under construction: the app against CMHC -----------------------------------------------------
+  // CMHC archived its under-construction inventory by municipality after 2022 (the tables now read
+  // "This data series is now archived"); its starts and completions still come through the Region of
+  // Peel's Housing Construction Activity layer. Rolled forward: inventory(Y) = inventory(Y − 1) +
+  // starts(Y) − completions(Y), full years only (the identity reproduces CMHC's own 2017–2022 figures).
+  function cmhcUnderConstruction(H) {
+    const uc = H && H.cmhc && H.cmhc.underConstruction, act = H && H.peel && H.peel.activity && H.peel.activity.muni;
+    if (!uc) return null;
+    const out = { byMuni: {}, base: null, year: null };
+    for (const m of Object.keys(uc)) {
+      const ys = Object.keys(uc[m]).map(Number).sort((a, b) => a - b), b = ys[ys.length - 1]; if (!isFinite(b)) continue;
+      let v = uc[m][b].all, y = b;
+      const a = act && act[m];
+      for (let n = b + 1; a && a[n] && (!a[n].quarters || a[n].quarters === 4) && a[n].starts && a[n].completions; n++) { v += a[n].starts.all - a[n].completions.all; y = n; }
+      out.byMuni[m] = v; out.base = out.base == null ? b : Math.min(out.base, b); out.year = out.year == null ? y : Math.min(out.year, y);
+    }
+    return out;
+  }
+  // The app's under construction: homes permitted and not yet completed on planning applications.
+  function permittedNotCompleted(projects) {
+    const out = {};
+    for (const p of projects || []) {
+      if (!p || p.phase === 'cancelled' || !(p.kinds || []).includes('application') || !p.buildout) continue;
+      const b = p.buildout, v = Math.max(0, Math.min(b.planned || 0, b.permitted || 0) - (b.completed || 0));
+      out[p.municipality] = (out[p.municipality] || 0) + v;
+    }
+    return out;
+  }
+
   // Rounded for a headline: the nearest thousand from 10,000, the nearest hundred from 1,000.
   const roundHeadline = v => (v >= 10000 ? Math.round(v / 1000) * 1000 : v >= 1000 ? Math.round(v / 100) * 100 : Math.round(v));
   // "About 258,000 homes are in the planning pipeline: 242,000 have moved since 2021 and 16,000
   // haven't moved since 2020. About 237,000 are not yet built." (where: " in Brampton", or '').
-  function headlineText(pl, where = '', fmt = v => Number(v).toLocaleString('en-CA'), strong = s => s) {
+  function headlineText(pl, where = '', fmt = v => Number(v).toLocaleString('en-CA'), strong = s => s, inf = null) {
     if (!pl || !(pl.total > 0)) return '';
     const r = v => fmt(roundHeadline(v));
     const split = pl.notMoved >= 0.5 ? `: ${r(pl.moved)} have moved since ${MOVED_SINCE} and ${r(pl.notMoved)} haven\u2019t moved since ${MOVED_SINCE - 1}` : '';
-    return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.`;
+    const plus = inf && inf.units >= 0.5 ? ` Plus about ${r(inf.units)} added by building permit alone since ${MOVED_SINCE} (secondary suites and new houses on existing lots)${inf.brampton ? '; Brampton\u2019s second units are not in its open data' : ''}.` : '';
+    return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.${plus}`;
   }
 
-  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText };
+  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);

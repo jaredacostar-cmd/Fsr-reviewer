@@ -211,6 +211,16 @@
       for (const m of ['Mississauga', 'Brampton', 'Caledon']) if (by[m]) out.push([`2021 Census population, ${m}`, by[m], STATCAN[m], 'people', 'Statistics Canada, 2021 Census.']);
       if (M && App().state.servicing) { let sv = 0; for (const d of App().state.servicing.drainage) { const l = M.local.get(d.id); if (l) sv += l.census; } out.push(['2021 Census people in sewered blocks', sv, t, 'people', 'Share of Peel on municipal sewers in the model; the rest (rural Caledon) is on septic.', 'share']); }
     }
+    {
+      // Under construction: homes permitted and not completed on planning applications, against CMHC's
+      // inventory rolled forward from its last published year (js/layers.js). Weekly with the data.
+      const Ly = root.PeelLayers, cu = Ly && Ly.cmhcUnderConstruction ? Ly.cmhcUnderConstruction(App().state.housing) : null;
+      if (cu && App().state.projects && App().state.projects.length) {
+        const pn = Ly.permittedNotCompleted(App().state.projects);
+        const why = { Mississauga: ' Known gap: some large Mississauga permits are signed off within two years of issue (likely partial permits; to confirm with the City), so their homes count as built.', Caledon: ' Caledon publishes no completion dates, so its permits stay open and the model is high.', Brampton: ' Brampton\u2019s apartment permits state no units: inferred from the site plan.' };
+        for (const m of ['Mississauga', 'Brampton', 'Caledon']) if (cu.byMuni[m] > 0) out.push([`Under construction, ${m}`, pn[m] || 0, cu.byMuni[m], 'units', `CMHC under-construction inventory ${cu.base} (last published), rolled forward to ${cu.year} with CMHC starts and completions (Region of Peel). Model: homes permitted and not yet completed on planning applications.${why[m] || ''}`]);
+      }
+    }
     if (M && R) {
       let built = 0; for (const z of M.zones.values()) built += z.built;
       const served = R.water.southPeel.populationServed;

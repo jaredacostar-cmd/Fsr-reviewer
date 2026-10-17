@@ -2773,3 +2773,26 @@ The app opens on **all years**, so the headline is the whole pipeline: every liv
   - The part of each stage in developments that haven't moved since 2020 is outlined.
   - The footnote adds the units completed before the 2021 Census, so the bars reconcile to the headline (253,265 + 4,382 = 257,647).
 - **Code:** `js/layers.js` (`pipeline`, `headlineText`, `roundHeadline`); tests in `tests/pipeline-headline.test.js`.
+
+## Building permits: blank counts, stale permits, infill, and the CMHC check
+
+Decided 2026-10-17, after testing against the committed snapshot.
+
+- **Permits that state no units (fix A, `js/phases.js` `inferBlankPermits`).** Brampton publishes its apartment and stacked-townhouse building permits with no unit count. Such a permit, held by a site plan or condominium file, permits that file's homes not yet on a permit that states units.
+  - **Share:** all of them, or the share of the buildings the file lists ("two apartment buildings and seven stacked blocks") that the blank permits cover. One building per permit number; Brampton's -P01/-P02 parts count as one.
+  - **Completion:** a building counts complete when every part of its permit is.
+  - **Accuracy:** tested on 69 site plans whose permits do state units, 50 are within 10% and the median ratio is 1.00.
+  - **Labelling:** the build-out shows `inferred`.
+- **Permits left open (fix D, `closeStalePermits`).** A permit with no status and no completion, first issued five or more years before the data date, is taken as completed at issue + 12 months (houses) or + 30 months (20+ units), marked estimated. These are mostly Mississauga's 2012–2015 permits.
+- **Not homes.** Permits typed Sign, Tent, temporary or sales structures, model homes, industrial or agricultural add no units unless the description names a dwelling.
+- **Scored nearby matching (tested, not adopted).** It joined 1 extra site of 300. The large permit-only buildings are 2012–2017 permits whose site plans predate the data window, and the only nearby applications are newer filings. The existing exact-count rule stays.
+- **Infill and additional units (`PeelLayers.infill`).**
+  - **What it counts:** homes on building permits issued since census day on sites with no planning application, net of the homes those sites demolished.
+  - **Size:** about 12,000 on the 2026-10-12 data, made of 8,134 suites, 3,392 houses and 361 in small buildings.
+  - **Where it shows:** beside the pipeline headline, not in it.
+  - **Brampton:** its open permit data has no second-unit permits; the headline says so.
+  - **Servicing:** the completed ones count as built since the census (as they did). Suites now use the apartment rate (2.7 people), not a house's.
+- **Under construction against CMHC** (Sources & checks › Model checks).
+  - **Why a roll-forward:** CMHC archived its under-construction inventory by municipality after 2022. The check rolls it forward with CMHC starts and completions (Region of Peel Housing Construction Activity): inventory(Y) = inventory(Y − 1) + starts(Y) − completions(Y), which reproduces CMHC's own 2017–2022 figures.
+  - **Against the app:** compared with homes permitted and not completed on planning applications, by municipality, refreshed with each weekly data update.
+  - **Known gaps:** Mississauga (large permits signed off within two years of issue, to confirm with the City) and Caledon (no completion dates).
