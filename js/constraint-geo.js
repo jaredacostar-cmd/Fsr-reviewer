@@ -56,8 +56,11 @@
     }
     return best;
   }
-  // Metres from a point to a polygon: 0 inside, else to its nearest edge.
-  const distToRings = (pt, rings) => pointInRings(pt, rings) ? 0 : Math.min(...rings.map(r => distToLine(pt, r)));
+  // A ring as a closed line: the tiles' rings are open (the build drops the repeated first point), so
+  // the edge from the last point back to the first is added unless the ring already closes.
+  const closeRing = r => (r.length > 1 && (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1]) ? [...r, r[0]] : r);
+  // Metres from a point to a polygon: 0 inside, else to its nearest edge (the closing edge included).
+  const distToRings = (pt, rings) => pointInRings(pt, rings) ? 0 : Math.min(...rings.map(r => distToLine(pt, closeRing(r))));
 
   // ---- Scanline (grid cells whose centres fall inside a ring set, even-odd) ----------------------
   // cb(row, c0, c1) for each run of columns c0 ≤ c < c1.
@@ -170,7 +173,7 @@
     return Object.fromEntries(layers.map(k => [k, inIntervals(flagIntervals(grid[k][r]), c)]));
   }
 
-  const api = { TILE, UNITS, tileKey, tileOf, decodeTile, tilesAround, pointInRings, distToLine, distToRings, scanRings, scanUnion, mergeIntervals, encodeFlags, flagIntervals, encodeValues, valueIntervals, overlap, intersect, cellOf, areaStats, flagsAt };
+  const api = { TILE, UNITS, tileKey, tileOf, decodeTile, tilesAround, pointInRings, distToLine, closeRing, distToRings, scanRings, scanUnion, mergeIntervals, encodeFlags, flagIntervals, encodeValues, valueIntervals, overlap, intersect, cellOf, areaStats, flagsAt };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelConstraintGeo = api;
 })(typeof window !== 'undefined' ? window : globalThis);
