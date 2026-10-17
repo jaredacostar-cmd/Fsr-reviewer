@@ -3345,7 +3345,8 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 /* Navigation 3: the way back from the full map to the page or workspace it was opened from. */
 .back-bar { position: absolute; top: var(--space-2); left: 56px; z-index: var(--z-map-bar); display: flex; gap: 2px; align-items: center; background: var(--surface-1); border: 1px solid var(--border); border-radius: 8px; padding: 2px; box-shadow: 0 1px 4px rgba(0,0,0,.3); }
 .back-bar[hidden] { display: none; }
-@media (max-width: 700px) { .back-bar { left: var(--space-2); top: auto; bottom: calc(var(--space-2) + 56px); } .back-bar .btn { min-height: 44px; } }
+/* (a phone: just above the bottom sheet, which covers the map's bottom; it sat under it, out of reach) */
+@media (max-width: 700px) { .back-bar { left: var(--space-2); top: auto; bottom: calc(var(--space-2) + var(--sheet-h, 56px)); } .back-bar .btn { min-height: 44px; } }
 
 /* Navigation 4, phone: Home's menu behind one button (grouped when open), and each page's actions in a
    bar at the bottom of the screen; the panel carries the scenario and the years. */
@@ -3439,3 +3440,5 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 /* The corridor finder's summary and its weights. */
 .sd-corr { border-left: 3px solid var(--accent); padding: var(--space-1) var(--space-2); margin: var(--space-2) 0; background: var(--surface-2); border-radius: 4px; }
 .sd-cw .sd-row .field { width: 9.5rem; }
+/* Home: the units the answer adds, by stage (Built since 2021 first). */
+.home-stages .lybar { margin: 4px 0 6px; }

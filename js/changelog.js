@@ -63,7 +63,7 @@
     if (!inHelpLog(e)) return;
     const k = e.target.closest('[data-log-kind]'); if (k) { LOG.kind = k.dataset.logKind; return renderChangelog(); }
     if (e.target.closest('[data-log-csv]') && LOG.data) {
-      const q = v => `"${String(v).replace(/"/g, '""')}"`;
+      const q = v => window.PeelUtil.csvCell(v, true);
       return PEX().download('peel-tracker-change-log.csv', [['Version', 'Date', 'Type', 'Change', 'Details', 'Pull request', 'Build'], ...LOG.data.releases.map(r => [r.version, r.date, LOG_KIND[r.kind][1], r.title, r.notes.join(' | '), r.url, r.sha])].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
     }
   });

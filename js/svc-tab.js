@@ -63,7 +63,8 @@
       bc._svcMethod = drMatch ? 'overlap' : 'overlap-zones';
     } else {
       const { zones, drainage } = App().state.servicing;
-      for (const d of bc.das) for (const id of [...Areas().locate(zones, d.lng, d.lat), ...Areas().locate(drainage, d.lng, d.lat)]) add(id, d.pop);
+      // (the blocks less the share the sewers don't serve, as in the overlap branch above)
+      for (const d of bc.das) { for (const id of Areas().locate(zones, d.lng, d.lat)) add(id, d.pop); for (const id of Areas().locate(drainage, d.lng, d.lat)) add(id, d.pop * (SD().svcById.get(id)?.served ?? 1)); }
       bc._svcMethod = 'centre';
     }
     return (bc._svcPop = pop);
@@ -81,8 +82,16 @@
     }
     return j;
   }
+  // The developments in each pressure zone / drainage area, indexed once per model build (it was a
+  // scan of every development for every area: about 3 million svcIds calls a render). Same order.
+  let svcIdx = null;
+  function indexSvc() {
+    const devs = App().state.projects.concat(App().state.whatifs || []).filter(p => p.phase !== 'cancelled'), idx = { pz: new Map(), dr: new Map() };
+    for (const key of ['pz', 'dr']) for (const p of devs) for (const id of new Set(SD().svcIds(p, key))) { const l = idx[key].get(id); if (l) l.push(p); else idx[key].set(id, [p]); }
+    return idx;
+  }
   function svcLayerTotals(key, a, bc) {
-    const devs = App().state.projects.concat(App().state.whatifs || []).filter(p => p.phase !== 'cancelled' && SD().svcIds(p, key).includes(a.id));
+    const devs = svcIdx ? svcIdx[key].get(a.id) || [] : App().state.projects.concat(App().state.whatifs || []).filter(p => p.phase !== 'cancelled' && SD().svcIds(p, key).includes(a.id));
     const gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria);
     return { census: svcCensusPop(bc).get(a.id) || 0, built: gr.built.population, approved: gr.approved.population, proposed: gr.proposed.population,
       ...svcJobs(devs, bc.date),
@@ -283,8 +292,11 @@
       if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') { App().state.iiBase = v; Sett().applyWet(); }
       else App().state.criteria[el.dataset.g][el.dataset.k] = v;
       Sett().saveCriteria();
-      Sett().refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
-      if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') Sett().wetChanged();
+      // (the figures follow once the typing stops, or at once on Enter / leaving the field: each
+      // recount takes a second or two, and "300" typed key by key recounted for 3, 30 and 300)
+      critPending.jobs = critPending.jobs || (el.dataset.g === 'm2PerJob' && v > 0);
+      critPending.wet = critPending.wet || (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration');
+      clearTimeout(critPending.t); critPending.t = setTimeout(applyCrit, 350);
       // Update the row's modified marker without re-rendering (keeps focus in the input).
       const tr = el.closest('tr');
       if (tr) {
@@ -296,13 +308,22 @@
       }
       TB().renderTbScen(); syncScenCrit();
     });
+    mountEl.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.g && critPending.t) applyCrit(); });
     mountEl.addEventListener('click', e => {
       if (!e.target.closest('[data-scen-crit-reset]')) return;
+      clearTimeout(critPending.t); critPending.t = null; critPending.jobs = critPending.wet = false;
       Sett().resetCriteriaToPeel();
       renderScenarioCriteria(mountEl);
       GUI().renderCriteria(); Sett().refreshCriteria(true);
       TB().renderTbScen(); syncScenCrit();
     });
+  }
+  const critPending = { t: null, jobs: false, wet: false };
+  function applyCrit() {
+    const { jobs, wet } = critPending;
+    clearTimeout(critPending.t); critPending.t = null; critPending.jobs = critPending.wet = false;
+    Sett().refreshCriteria(jobs);
+    if (wet) Sett().wetChanged();
   }
   window.renderScenarioCriteria = renderScenarioCriteria;
   // The scenario bar's one-line criteria note, kept in sync when the mount edits values.
@@ -351,6 +372,42 @@
     // rural land as sewered and tags no development — Inglewood read 398% until the next rebuild.
     // No model is better than a wrong one (SPEC 1.4).
     if (!SD().svcById.size) return;
+    renderSvcTab.key = modelKey(); wide = null;
+    { const p = DV().scopedDev(); renderSvcTab.scope = p ? p.key : ''; }
+    svcIdx = indexSvc();
+    try { buildSvcTab(bc); } finally { svcIdx = null; }
+  }
+  // What the servicing model and its tab are built from. Every development counts in it, whatever the
+  // filters ("other filters ignored"), so a filter change leaves it as it is: ensureSvcModel() rebuilds
+  // it only when one of these changes (it was rebuilt twice on every filter change, each time clearing
+  // every cache keyed on svcGen). The site in scope and the focused row are not in it: a site only
+  // replaces the Water and Wastewater bodies (renderSvcScoped), and the Peel-wide ones come back as built.
+  const idOf = (() => { const w = new WeakMap(); let n = 0; return o => (o && typeof o === 'object' ? (w.get(o) || (w.set(o, ++n), n)) : 0); })();
+  function modelKey() {
+    const st = App().state, bc = CA().baselineCensus(), TC = root.PeelTreeCounts;
+    return JSON.stringify([idOf(st.projects), st.projects.length, idOf(st.whatifs), (st.whatifs || []).map(w => w.key), st.criteria, svcOpt, idOf(bc), bc && bc.year,
+      idOf(st.servicing), idOf(st.reports), idOf(st.compliance), idOf(st.dcInfra), st.basis, st.empGen || 0, SD().svcById.size, SP() && SP().hz,
+      MM().SEW && idOf(MM().SEW.data), MA().getCapYear(), MM().getWwLay(), TC && TC.mode ? TC.mode() : '']);
+  }
+  /** The servicing model, current: rebuilt (with the tab) only when what it is built from changed. */
+  // The Peel-wide Water and Wastewater bodies of the last build, before a site replaced them.
+  const WIDE = ['#water-body', '#ww-body', '#water-note', '#ww-note'];
+  let wide = null;
+  // o.rescope: the site's bodies again even when the scope is the same (DevScope.refresh).
+  function ensureSvcModel(o = {}) {
+    if (!(App().state.svcModel && wide && renderSvcTab.key != null && renderSvcTab.key === modelKey())) { renderSvcTab(); return; }
+    const p = DV().scopedDev(), k = p ? p.key : '';
+    if (renderSvcTab.scope === k && !(o.rescope && p)) return;
+    renderSvcTab.scope = k;
+    if (p) { SP().renderSvcScoped(p); return; }
+    // Back from a site with the model unchanged: the Peel-wide bodies as built, with what follows them.
+    WIDE.forEach((sel, i) => { const n = $(sel); if (n) n.innerHTML = wide[i]; });
+    { const n = $('#pane-pumpstations'); if (n && n.dataset.off === '1') n.dataset.off = ''; }
+    for (const r of document.querySelectorAll('.svc-row')) r.classList.toggle('on', r.dataset.svc === ST().svcFocus.id);
+    TS().filterInView();
+    if (root.PeelSvcCapacity) root.PeelSvcCapacity.renderAll();
+  }
+  function buildSvcTab(bc) {
     const p = DV().scopedDev();
     // Back from a site: the Region-wide station list returns to Network (the area-only sub-views
     // are hidden at a site by PeelAnalysisTabs).
@@ -535,6 +592,7 @@
     if (AT().getFootTab() === 'svc' && AT().getSvcSub() === 'alloc') DUI().renderAlloc();
     if (root.PeelSvcCapacity) root.PeelSvcCapacity.renderAll();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
+    wide = WIDE.map(sel => { const n = $(sel); return n ? n.innerHTML : ''; });
     if (p) SP().renderSvcScoped(p);
   }
   // Sub-tab choices stashed while a site is the scope (restored when it isn't).
@@ -568,7 +626,7 @@
   const api = {
     rankedBlocks: () => lastRanked,
     wwBasis,
-    renderSvcTab, renderScenario, scenarioText, scenarioMetrics, setCapYear,
+    renderSvcTab, ensureSvcModel, renderScenario, scenarioText, scenarioMetrics, setCapYear,
     renderScenarioCriteria, criteriaChanges, CRIT_LABEL, CRIT_KEY_LABEL, svcOpt,
     svcFlowTree, upstreamOf, svcJobs, svcBar, svcLegend, optSwitch, refLink,
     pctRated, trigText, setHeadline, syncScenCrit, JOB_KEY, wwFlowLabel, wMaxDayLabel,

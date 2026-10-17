@@ -81,3 +81,31 @@ test('wired: the designer\'s pumped option, the station left to the SPS standard
   assert.ok(html.indexOf('js/forcemain.js') > 0 && html.indexOf('js/forcemain.js') < html.indexOf('js/sewer-designer.js'));
   assert.match(src('sw.js'), /'js\/forcemain\.js',/);
 });
+
+test('no size in 1.0–3.0 m/s: the closest one is shown, and why (100 mm for a small flow, 900 mm for a huge one)', () => {
+  const G = ground(500, () => 200), conn = { invert: 196, dmm: 300 };
+  // 3 L/s: every size under 1.0 m/s; was 900 mm at 0.005 m/s
+  const s = FM.design(G, conn, 3);
+  assert.equal(s.ok, false);
+  assert.equal(s.dmm, 100);
+  assert.ok(near(s.v, 0.382, 0.001));
+  assert.match(s.why, /too small for 1\.0 m\/s in the 100 mm minimum \(0\.38 m\/s\)/);
+  // 2,500 L/s: every size over 3.0 m/s; was 100 mm at 318 m/s
+  const b = FM.design(G, conn, 2500);
+  assert.equal(b.ok, false);
+  assert.equal(b.dmm, 900);
+  assert.ok(near(b.v, 3.93, 0.01));
+  assert.match(b.why, /more than 3\.0 m\/s in the largest size \(900 mm, 3\.93 m\/s\)/);
+});
+
+test('the assumed wet well level says the cover it was taken at (3.5 m industrial / commercial)', () => {
+  const G = ground(500, rising), conn = { invert: rising(500) - 3.2, dmm: 375 };
+  const res = FM.design(G, conn, 47.1), ici = FM.design(G, conn, 47.1, { ici: true });
+  assert.equal(res.wwNote, 'the incoming sewer: 2.5 m of cover over a 200 mm pipe');
+  assert.equal(ici.wwNote, 'the incoming sewer: 3.5 m of cover over a 200 mm pipe');
+  assert.ok(near(ici.ww, rising(0) - 3.7, 1e-9));
+  assert.equal(FM.design(G, conn, 47.1, { wwDepth: 5 }).wwNote, '');
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /f\.wwAssumed \? ` \(\$\{esc\(f\.wwNote\)\}/);
+  assert.doesNotMatch(s, /2\.5 m of cover over a 200 mm pipe/);
+});

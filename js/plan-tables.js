@@ -48,7 +48,10 @@
 
   function compute() {
     const set = DU().demandSet(), basis = DU().demandBasis(), crit = App().state.criteria;
-    if (cache && cache.set === set.length && cache.first === set[0] && cache.basis === basis && cache.crit === crit && cache.tree === App().state.treeGrouped && cache.areas === areas().length) return cache.r;
+    // (the developments by key and the criteria by value: an edit changes the criteria in place, and a
+    // filter can keep the count and the first development; the jobs settings and a rebuild too)
+    const key = [set.map(p => p.key).join('|'), basis, JSON.stringify(crit), App().state.empGen || 0, root.PeelUtil.idOf(App().state.projects), App().state.treeGrouped, areas().length].join('#');
+    if (cache && cache.key === key) return cache.r;
     const r = R().build(set, {
       areas: areas(), sharesOf, pointOf, inMtsa,
       // Committed / proposed from the layer function (SPEC §2): committed holds what is built (Existing
@@ -57,11 +60,11 @@
         const t = G().pipelineTotals([p]), e = D().estimate([p], crit, basis, App().jobsOf), L = root.PeelLayers.ofDev(p).parts;
         const prop = t.planned > 0 ? L.proposed + L.anticipated : 0;
         return { planned: t.planned, committed: t.planned - prop, proposed: prop, permitted: t.permitted, completed: t.completed, left: t.left, people: e.population, jobs: e.employment ? e.employment.jobs : 0,
-          built: t.planned > 0 ? L.existing + L.built : 0, anticipated: t.planned > 0 ? L.anticipated : 0 };
+          built: t.planned > 0 ? L.existing + L.built : 0, anticipated: t.planned > 0 ? L.anticipated : 0, existing: t.planned > 0 ? L.existing : 0 };
       },
     });
     r.mOf = new Map(r.placed.map(x => [x.p, x.m]));
-    cache = { set: set.length, first: set[0], basis, crit, tree: App().state.treeGrouped, areas: areas().length, r };
+    cache = { key, r };
     return r;
   }
 
@@ -239,7 +242,7 @@
   function downloadCSV() {
     const rows = csvRows(compute()); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
-    const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+    const cell = v => root.PeelUtil.csvCell(v);
     root.PeelExports.download('peel-by-plan.csv', CSV_DISCLAIMER + `# Basis: ${BASIS[DU().demandBasis()] || 'all units'}; grouping: ${App().state.treeGrouped ? 'tree' : 'previous'}\n` + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   // Workbook sheet "By plan": the same rows.

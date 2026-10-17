@@ -40,6 +40,9 @@
     ['inception',    /pre[- ]?(consult|app)|pre[- ]?submission|inquiry|enquiry|intake|received|submitted|\bnew\b|applied|application filed|filed/i],
   ];
 
+  // The privacy scrub (js/privacy.js, loaded before this file in index.html).
+  const privacy = () => root.PeelPrivacy || (typeof require === 'function' ? require('./privacy.js') : null);
+
   // Building-permit statuses that mean the permit is still being applied for or reviewed.
   const PERMIT_PENDING = /registered|applied|zoning certified|ready to issue|under review|pending|pre[- ]?screen|intake|received|submitted/i;
 
@@ -171,7 +174,15 @@
   ];
 
   /** Canonical form used to link applications and permits on the same site. */
+  // (kept per address string: every rebuild normalises the same 50,000 addresses, several times)
+  const normed = new Map();
   function normalizeAddress(addr) {
+    const key = str(addr);
+    let v = normed.get(key);
+    if (v === undefined) { v = normalizeAddressOf(key); if (normed.size > 200000) normed.clear(); normed.set(key, v); }
+    return v;
+  }
+  function normalizeAddressOf(addr) {
     let s = str(addr).toUpperCase();
     if (!s) return '';
     s = s.replace(/,.*$/, '')                       // drop city / postal suffix
@@ -570,6 +581,14 @@
       const poly = simplifyPolygon(feature.geometry);
       if (poly) rec.poly = poly;
     }
+    // No one's name, contact or staff note (js/privacy.js), the same as the stored snapshot: the
+    // description once everything above has been read from it, and the raw attributes without the
+    // people / contact / note fields (the description fields are shown as the description).
+    const PV = privacy();
+    if (PV) {
+      rec.description = PV.scrubDescription(rec.description, rec);
+      rec.props = PV.safeProps(p, [fmap.description, fmap.proposal]);
+    }
     return rec;
   }
 
@@ -601,7 +620,11 @@
     }
     return inside;
   }
-  const pointInRings = (x, y, rings) => rings.some(r => pointInRing(x, y, r));
+  // (each ring's bounding box first, kept per ring: a point outside it is outside the ring, and most
+  // tests are against lands and files nowhere near the point)
+  const ringBox = new WeakMap();
+  const boxOf = r => { let b = ringBox.get(r); if (!b) { b = ringsBBox([r]); ringBox.set(r, b); } return b; };
+  const pointInRings = (x, y, rings) => rings.some(r => { const b = boxOf(r); return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] && pointInRing(x, y, r); });
   // Area in m² (equirectangular approximation; fine at site scale).
   function ringsArea(rings) {
     let total = 0;
@@ -1585,7 +1608,7 @@
       if (prev.phase === 'cancelled' || (r.phase !== 'cancelled' && PHASE_BY_KEY[r.phase].rank > PHASE_BY_KEY[prev.phase].rank)) {
         if (r.phase !== 'cancelled' || prev.phase === 'cancelled') { prev.phase = r.phase; prev.statusRaw = r.statusRaw || prev.statusRaw; }
       }
-      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) prev[f] = r[f];
+      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) { prev[f] = r[f]; if (f === 'units') prev.unitsFromText = !!r.unitsFromText; }   // (a count read from the text stays marked as one)
       // A unit count from a data field beats one read from text.
       if (prev.unitsFromText && r.units > 0 && !r.unitsFromText) { prev.units = r.units; prev.unitsFromText = false; }
       if (prev.minor && !r.minor) prev.minor = false;

@@ -100,7 +100,7 @@
     document.addEventListener('mouseover', e => { const g = e.target.closest && e.target.closest('.gl'); if (g && g !== at) show(g); else if (!g && at && !(pop && pop.contains(e.target))) hide(); });
     document.addEventListener('focusin', e => { const g = e.target.closest && e.target.closest('.gl'); if (g) show(g); });
     document.addEventListener('click', e => { const g = e.target.closest && e.target.closest('.gl'); if (g) { e.stopPropagation(); if (g === at) hide(); else show(g); return; } if (pop && !pop.contains(e.target)) hide(); if (e.target.closest && e.target.closest('#gl-pop [data-ws-page]')) hide(); }, true);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (at) e.preventDefault(); hide(); } });
     addEventListener('scroll', hide, true);
   }
 

@@ -588,10 +588,13 @@
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="devtab-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
 
   // ---- Source records with provenance (copied from js/app.js) -----------------------
+  // No one's name, contact or note (js/privacy.js): those fields are never listed.
+  const PRIVATE_FIELD = /owner|applicant|agent|contact|contractor|builder|architect|consult|engineer|planner|phone|email|fax|note|comment|remark|name/i;
+  const privateField = k => (root.PeelPrivacy ? root.PeelPrivacy.privateKey(k) : PRIVATE_FIELD.test(k));
   function recordRows(r) {
     const props = r.props && Object.keys(r.props).length ? r.props : null;
     const rows = props
-      ? Object.entries(props).filter(([k, v]) => v != null && v !== '' && !/^(shape|globalid)/i.test(k)).map(([k, v]) =>
+      ? Object.entries(props).filter(([k, v]) => v != null && v !== '' && !/^(shape|globalid)/i.test(k) && !privateField(k)).map(([k, v]) =>
           [k, typeof v === 'number' && v > 1e11 && v < 5e12 && /date|_dt|time/i.test(k) ? fmtDate(new Date(v)) : v])
       : [['File', r.ref], ['Address', r.address], ['Type', r.type], ['Status', r.statusRaw], ['Ward', r.ward],
          ['Units', r.units != null ? fmtNum(r.units) : ''], ['Floor area', r.gfa != null ? fmtNum(r.gfa) : ''],

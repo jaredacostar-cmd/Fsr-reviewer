@@ -51,7 +51,7 @@
     for (const r of rows(data)) { const k = r.id ? `${r.kind}:${r.id}` : r.kind; t[k] = (t[k] || 0) + r.count; }
     return t;
   }
-  const cell = v => { const s = String(v == null ? '' : v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const cell = v => ((typeof window !== 'undefined' && window.PeelUtil) || require('./util.js')).csvCell(v);
   // CSV: date, kind, id, label (from labels['kind:id'] or labels[kind]), count.
   function toCSV(data, labels = {}) {
     const lines = ['date,kind,id,label,count'];

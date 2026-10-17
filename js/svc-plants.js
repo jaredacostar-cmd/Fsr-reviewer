@@ -351,12 +351,14 @@
       };
       // Each plant from the one capacity function (js/capacity.js): the same layers, reserve and %
       // as the Overview, the DC tab, the scope card and the development panel (SPEC 1.4).
-      const capRow = (name, k, note) => {
+      // (ext: the plant's external inflows and diversion, which its "100% ≈ N people" takes off rated,
+      // as its note says: the capacity record carries none)
+      const capRow = (name, k, note, ext) => {
         if (!k || !(k.rated > 0)) return;
-        rows.push({ name, rated: k.rated, v: [k.census, k.existing - k.census, k.committed - k.existing, k.buildout - k.committed].map(v => Math.max(0, v)), extMld: k.ext || 0, perPerson: k.perPerson, popToday: k.popToday, note });
+        rows.push({ name, rated: k.rated, v: [k.census, k.existing - k.census, k.committed - k.existing, k.buildout - k.committed].map(v => Math.max(0, v)), extMld: ext != null ? ext : k.ext || 0, perPerson: k.perPerson, popToday: k.popToday, note });
       };
       const caps = secs.map(x => ({ x, k: window.PeelCapacity && window.PeelCapacity.of(`plant:${x.pl}`) }));
-      for (const { x, k } of caps) if (k) capRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), k); else mkRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), x.sum, x.f, inflowsTo(x.pl) + divMld(x.pl), ratedOf(x.pl));
+      for (const { x, k } of caps) if (k) capRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), k, undefined, inflowsTo(x.pl) + divMld(x.pl)); else mkRow(esc(rep(x.pl) ? rep(x.pl).name : SD().plantLabel(x.pl)), x.sum, x.f, inflowsTo(x.pl) + divMld(x.pl), ratedOf(x.pl));
       if (secs.length > 1) mkRow('All Peel plants', peel, peelFc, inflows.reduce((t, e) => t + e.mld, 0), secs.reduce((t, x) => t + ratedOf(x.pl), 0), 'incl. the City of Toronto inflow');
       // One basis per figure (Stage 1 #4): with the metered (calibrated) basis the existing flow is
       // the 2025 meter reading, which already holds what was built since the census: one segment.
@@ -401,7 +403,7 @@
       return { name: SD().PLANT_SHORT[x.pl], pctBo: rated > 0 ? bo / rated * 100 : 0, rated };
     });
     const allRated = tileRows.reduce((t, r) => t + r.rated, 0);
-    const allBo = secs.reduce((t, x) => t + adwf(x.sum, x.f) + inflowsTo(x.pl), 0) + inflows.reduce((t, e) => t + e.mld, 0);
+    const allBo = secs.reduce((t, x) => t + adwf(x.sum, x.f) + inflowsTo(x.pl), 0) + inflows.filter(e => !e.plant).reduce((t, e) => t + e.mld, 0);   // (the plant-less inflows once: York is in its plant's)
     $('#plants-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${SvcTab().svcLegend(Y).replace(' · click a row to zoom to it on the map', '')}<div class="svc-switches">${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
       ${divOn ? `<p class="small cal-note"><strong>Diversion on:</strong> ${fmt1(dv.mld)} ML/d moved from ${esc(SD().plantLabel(dv.from))} to ${esc(SD().plantLabel(dv.to))} at every growth layer, taken off its average and its peaks alike (a fixed transfer); the Peel total is unchanged. ${esc(dv.detail)}. ${dvRefs}.</p>` : ''}
       <div class="tiles">${[
@@ -441,7 +443,7 @@
   }
 
   const api = {
-    hz, renderSvcScoped, capChartHTML, renderPumpStationsTab, renderPlantsTab,
+    hz, renderSvcScoped, capChartHTML, capHorizonHTML, renderPumpStationsTab, renderPlantsTab,
     renderRefs, refsHTML, tightestPipesHTML, plantComplianceNote,
     getSavedSubs() { return savedSubs; },
     setSavedSubs(v) { savedSubs = v; },

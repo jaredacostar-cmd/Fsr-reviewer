@@ -128,7 +128,7 @@
     const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0];
     return `<tr class="dca-row ${DC().REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
       <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
-      <td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}${window.PeelCapitalEA ? window.PeelCapitalEA.dcActualHTML(r.r && (r.r.ln ? r.r.ln.p || r.r.ln.c : r.r.step ? r.r.step.proj : null)) : ''}</td>
+      <td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}${window.PeelCapitalEA ? window.PeelCapitalEA.dcActualHTML(r.r && (r.r.ln ? r.r.ln.p || r.r.ln.c : r.r.step ? r.r.step.proj : null), r.y) : ''}</td>
       <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
       <td>${r.outY ? (r.outY === MM().THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${SP().hz.end}` : '–'}</td>
       <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>
@@ -223,9 +223,9 @@
       <p class="small"><button type="button" class="btn small" data-dca-map="${esc(r.key)}">Show on the map</button></p></div>`;
   }
   function dcaCsv() {
-    const R = DC().dcAnalysis(), q = v => `"${String(v).replace(/"/g, '""')}"`;
+    const R = DC().dcAnalysis(), q = v => root.PeelUtil.csvCell(v, true);
     const head = ['Project', 'System', `Online (draft, as of ${CAPITAL.asOf})`, 'Capital status (May 2026 pause)', 'Status', 'Relieves', 'Capacity runs out', 'Connecting developments', ...R.years.map(y => `Held back if cancelled ${y} (people)`), 'Held back if cancelled build-out (people)', 'Held back build-out (units)', 'DC revenue held back (water + wastewater, $)', 'Gross cost 2026$ (priced parts)', 'DC-recoverable cost 2026$ (priced parts)', 'Parts priced', 'DC-recoverable cost per person ($)', ...(isPublic() ? [] : ['Screening result', 'Why'])];
-    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', CAPITAL_STATUS[r.cap] || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.outY || '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), r.revRisk == null ? '' : Math.round(r.revRisk), r.cost && r.cost.n ? r.cost.gross : '', r.cost && r.cost.n ? r.cost.dc : '', r.cost ? `${r.cost.n} of ${r.cost.of}` : '', r.perP == null ? '' : Math.round(r.perP), ...(isPublic() ? [] : [DC().REC[r.rec][1], r.why])]);
+    const rows = R.list.map(r => [r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', CAPITAL_STATUS[r.cap] || '', r.status || '', r.rows.map(x => x.c.name).join('; '), r.rows.some(x => x.c.out === 'today') && r.outY === MM().THIS_YEAR ? 'already' : r.outY && r.outY < 9999 ? r.outY : '', r.conn.length, ...r.ys.map(v => Math.round(v)), Math.round(r.bo), Math.round(r.units), r.revRisk == null ? '' : Math.round(r.revRisk), r.cost && r.cost.n ? r.cost.gross : '', r.cost && r.cost.n ? r.cost.dc : '', r.cost ? `${r.cost.n} of ${r.cost.of}` : '', r.perP == null ? '' : Math.round(r.perP), ...(isPublic() ? [] : [DC().REC[r.rec][1], r.why])]);
     PE().download(`peel-dc-analysis-${MM().THIS_YEAR}.csv`, CSV_DISCLAIMER + [head, ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
   }
   // DC tab events: delegated from the document so they keep working in the Phase 4 sub-view
@@ -243,9 +243,9 @@
     if (!dcaBodyOf(e)) return;
     const bb = e.target.closest('[data-dcb]'); if (bb) { DC().DCB.budget = +bb.dataset.dcb; store.set('dcaBudget', DC().DCB.budget); return renderDca(); }
     if (e.target.closest('[data-dcb-csv]')) {
-      const B = DC().dcaBudget(DC().DCB.budget, DC().DCB.years), q = v => `"${String(v).replace(/"/g, '""')}"`;
-      const rows = DC().dcaMergeRecs(B).map(({ dec, r }) => [dec, r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', CAPITAL_STATUS[r.cap] || '', r.committed ? 'yes' : '', Math.round(r.cost), r.c ? Math.round(r.c.est * 100) : '', Math.round(r.v), Math.round(r.v / B.ppu), r.firstY || '']);
-      return PE().download(`peel-dc-funding-${(DC().DCB.budget / 1e9).toFixed(1)}B-${B.end}.csv`, CSV_DISCLAIMER + [['Screening result', 'Project', 'System', `Online (draft, as of ${CAPITAL.asOf})`, 'Capital status (May 2026 pause)', 'Committed', 'DC cost 2026$', '% estimated', `People the screen shows constrained by ${B.end} without it`, 'Units', 'Growth first held back'], ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
+      const B = DC().dcaBudget(DC().DCB.budget, DC().DCB.years), q = v => root.PeelUtil.csvCell(v, true);
+      const rows = DC().dcaMergeRecs(B).map(({ dec, r }) => [...(isPublic() ? [] : [dec === 'Keep' ? SCREEN.within : SCREEN.outside]), r.name, r.sys === 'water' ? 'Water' : 'Wastewater', r.y || '', CAPITAL_STATUS[r.cap] || '', r.committed ? 'yes' : '', Math.round(r.cost), r.c ? Math.round(r.c.est * 100) : '', Math.round(r.v), Math.round(r.v / B.ppu), r.firstY || '']);
+      return PE().download(`peel-dc-funding-${(DC().DCB.budget / 1e9).toFixed(1)}B-${B.end}.csv`, CSV_DISCLAIMER + [[...(isPublic() ? [] : ['Screening result']), 'Project', 'System', `Online (draft, as of ${CAPITAL.asOf})`, 'Capital status (May 2026 pause)', 'Committed', 'DC cost 2026$', '% estimated', `People the screen shows constrained by ${B.end} without it`, 'Units', 'Growth first held back'], ...rows].map(a => a.map(q).join(',')).join('\n'), 'text/csv');
     }
     const rf = e.target.closest('[data-dcarec-filter]'); if (rf) { MP().DCA.recFilter = rf.dataset.dcarecFilter; MP().DCA.recAll = false; return renderDca(); }
     if (e.target.closest('[data-dcarec-all]')) { MP().DCA.recAll = !MP().DCA.recAll; return renderDca(); }

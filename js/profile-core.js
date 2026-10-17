@@ -150,6 +150,10 @@
     for (const p of prof) { const l = legs.get(p.leg) || { leg: p.leg, a: p, b: p }; l.b = p; legs.set(p.leg, l); }
     return [...legs.values()].map(({ leg, a, b }) => ({ leg, from: a.d, to: b.d, rise: b.z - a.z, grade: b.d > a.d ? (b.z - a.z) / (b.d - a.d) : 0 }));
   }
+  // The grades labelled with the points each leg runs between, marks[leg] → marks[leg + 1] (marks: the
+  // measured line's points, { l }). By the leg's own index: a short leg with no sample has no grade,
+  // and the labels after it must not slip one point back.
+  const legLabels = (grades, marks = []) => grades.map(x => ({ ...x, a: (marks[x.leg] || {}).l || '', b: (marks[x.leg + 1] || {}).l || '' }));
   // Vertical exaggeration of a chart: (vertical px per m) / (horizontal px per m).
   const exaggeration = (Wpx, Hpx, lengthM, rangeM) => (Hpx / Math.max(rangeM, 1e-6)) / (Wpx / Math.max(lengthM, 1e-6));
   // Samples whose depth to invert (ground − invert) is below the threshold, as runs [{ from, to }].
@@ -218,7 +222,7 @@
   const api = {
     MIN_SPACING_M, MAX_SAMPLES, MANHOLE_MATCH_M, CORRECT_SPAN_M, DEPTH_MIN_M, DEPTH_MAX_M, SHALLOW_M, CSV_COLS,
     haversine, spacing, samplePoints, pixelPos, bilinearTaps, bilinear, tilesFor, terrarium, pixelSizeM,
-    depthOk, manholesFromMains, matchManholes, zAtD, correct, legGrades, exaggeration, shallowRuns, csvRows, toCSV,
+    depthOk, manholesFromMains, matchManholes, zAtD, correct, legGrades, legLabels, exaggeration, shallowRuns, csvRows, toCSV,
     sewerSlopes, validationStats, areaAt, accuracyLabel,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

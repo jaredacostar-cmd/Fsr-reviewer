@@ -187,21 +187,29 @@
   // that removes it. Each active filter is tried on its own against a snapshot of the state.
   let emptyBlocker = null;
   function snapshotFilterState() {
-    return { phases: new Set(App().state.phases), muni: App().state.muni, sp: [...App().state.sp], mtsa: [...App().state.mtsa], pz: [...App().state.pz], dr: [...App().state.dr], kind: App().state.kind, search: App().state.search, minUnits: App().state.minUnits, newOnly: App().state.newOnly, flags: { ...App().state.flags }, plant: App().state.plant, dwelling: App().state.dwelling, landuse: App().state.landuse, basis: App().state.basis, yearMode: App().state.yearMode, yearFrom: App().state.yearFrom, yearTo: App().state.yearTo };
+    return { phases: new Set(App().state.phases), muni: App().state.muni, sp: [...App().state.sp], mtsa: [...App().state.mtsa], pz: [...App().state.pz], dr: [...App().state.dr], kind: App().state.kind, search: App().state.search, minUnits: App().state.minUnits, newOnly: App().state.newOnly, flags: { ...App().state.flags }, plant: App().state.plant, dwelling: App().state.dwelling, landuse: App().state.landuse, basis: App().state.basis, yearMode: App().state.yearMode, yearFrom: App().state.yearFrom, yearTo: App().state.yearTo,
+      lyr: App().state.lyr ? new Set(App().state.lyr) : null, ss: App().state.ss, tf: TL().tFrom.value, tt: TL().tTo.value };
   }
   function restoreFilterState(s) {
-    Object.assign(App().state, { ...s, phases: new Set(s.phases), flags: { ...s.flags }, sp: [...s.sp], mtsa: [...s.mtsa], pz: [...s.pz], dr: [...s.dr] });
+    const { tf, tt, ...st } = s;
+    Object.assign(App().state, { ...st, phases: new Set(s.phases), flags: { ...s.flags }, sp: [...s.sp], mtsa: [...s.mtsa], pz: [...s.pz], dr: [...s.dr], lyr: s.lyr ? new Set(s.lyr) : null });
+    TL().tFrom.value = tf; TL().tTo.value = tt;
   }
+  // (each chip's clear() also resets its control: the state comes back from the snapshot, then the
+  // controls are put back in step with it once; "Counts as" is tested too, as applyFilters applies it)
   function findBlockingFilter() {
     const saved = snapshotFilterState();
+    const shows = () => App().state.projects.some(p => App().matches(p, false, false, false) && (!App().state.lyr || App().state.lyr.has(App().layerOf(p))));
+    let found = null;
     for (const f of activeList) {
       f.clear();
-      const ok = App().state.projects.some(p => App().matches(p, false, false, false));
+      const ok = shows();
       restoreFilterState(saved);
-      if (ok) { emptyBlocker = f; return f; }
+      if (ok) { found = f; break; }
     }
-    emptyBlocker = null;
-    return null;
+    SF().syncFilterControls(); PA().showArea(); SD().showSvcArea();
+    emptyBlocker = found;
+    return found;
   }
   function renderEmptyMsg() {
     const em = $('#empty-msg'); if (!em) return;

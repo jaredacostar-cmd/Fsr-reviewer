@@ -357,7 +357,7 @@
     if (!dcIdx || dcIdxFor !== `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`) { dcIdx = M.dcCapitalIndex(data.capital, dc); dcIdxFor = `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`; }
     return dcIdx;
   }
-  const dcActualHTML = proj => (proj ? M.dcActualHTML(dcIndex().get(proj), !!data.capital) : '');
+  const dcActualHTML = (proj, y) => (proj ? M.dcActualHTML(dcIndex().get(proj), !!data.capital, y) : '');
   const metres = (a, b) => Math.hypot((a[0] - b[0]) * 111320 * Math.cos(a[1] * Math.PI / 180), (a[1] - b[1]) * 110574);
   const easForDcHTML = fc => (data.eas ? M.easForDcHTML(M.easForDc(fc, data.eas.eas, metres)) : '');
   const muni = () => (App() && App().state.muni) || null;
@@ -459,7 +459,9 @@
   const filteredEAs = () => {
     const near = nearScope(), all = (data.eas && data.eas.eas) || [];
     const scoped = near ? M.easNear(all, near.lat, near.lng, near.m, near.pts).map(h => h.e) : muni() ? all.filter(e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '')) : all;
-    return M.eaSort(scoped.filter(e => M.eaMatch(e, eaTab.f)), eaTab.sort);
+    const cur = scoped.filter(e => M.EA_CURRENT.has(e.status));
+    const fx = near && !eaTab.picked && !cur.length && scoped.length ? { ...eaTab.f, show: 'all' } : eaTab.f;   // (as the list on screen: eaTabHTML)
+    return M.eaSort(scoped.filter(e => M.eaMatch(e, fx)), eaTab.sort);
   };
   if (typeof document !== 'undefined') {
     let qTimer = null;
@@ -481,7 +483,7 @@
       if (!e.target.closest('#dca-eas-body')) return;
       const stamp = today();
       if (e.target.closest('[data-eatab-csv]')) {
-        const { cols, rows } = M.eaSheetRows(filteredEAs()), q = v => `"${String(v).replace(/"/g, '""')}"`;
+        const { cols, rows } = M.eaSheetRows(filteredEAs()), q = v => U.csvCell(v, true);
         if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.csv`, (U.CSV_DISCLAIMER || '') + [cols, ...rows].map(r => r.map(q).join(',')).join('\n'), 'text/csv');
       } else if (e.target.closest('[data-eatab-geo]')) {
         if (window.PeelExports) window.PeelExports.download(`peel-environmental-assessments-${stamp}.geojson`, JSON.stringify(M.easGeoJSON(filteredEAs(), { ...exportProps(), asOf: data.eas.generatedAt })), 'application/geo+json');

@@ -342,7 +342,7 @@
     if (!inside('.tb-wrap')) closeTbMenus();
     if (!inside('.tb-scen-wrap') && !scenJustOpened) closeScenPop();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu', '#tb-scen-pop'].some(id => { const m = $(id); return m && !m.hidden; })) e.preventDefault(); closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
 
   // Present toggles the existing presentation mode; the button follows its state.
   function syncPresentBtn() {

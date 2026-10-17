@@ -32,7 +32,7 @@
     const y = Math.max(...full(A.Mississauga)); if (!isFinite(y)) return null;
     const avg = (o, f) => { const ys = full(o).filter(k => k > y - 5 && k <= y); return ys.length ? ys.reduce((t, k) => t + f(o[k]), 0) / ys.length : null; };
     // Counted the app's way: once per building (its conditional, foundation and full permits share a number).
-    const appPermits = m => P0().permitUnits(App().state.projects.filter(p => p.municipality === m).flatMap(p => p.records.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && r.events.some(e => e.phase === 'permit' && e.date.getFullYear() === y))));
+    const appPermits = m => P0().permitUnits(App().state.projects.filter(p => p.municipality === m).flatMap(p => p.records.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && r.events.some(e => e.phase === 'permit' && e.date.getUTCFullYear() === y))));
     const rows = ['Mississauga', 'Brampton', 'Caledon', 'Peel'].filter(m => A[m] && A[m][y]).map(m => ({
       m, starts: A[m][y].starts.all, completions: A[m][y].completions.all, absorbed: A[m][y].absorbed.all,
       permits: B[m] && B[m][y] ? B[m][y].units.all : null, value: B[m] && B[m][y] ? B[m][y].value.total : null,
@@ -81,7 +81,7 @@
   // by renderGrowthPipeline above.
   function renderGrowthCensus() {
     const body = $('#growth-census-body'); if (!body) return;
-    SvcTab().renderSvcTab();
+    SvcTab().ensureSvcModel();   // (built once per change of what it is built from, not on every filter change)
     // Area-only content: not shown at development scope (design audit, Group 6).
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const bc = CA().baselineCensus();
@@ -90,8 +90,10 @@
     // there is no census data, mirroring the old tab's show/hide.
     // (Stage 2: it is part of Growth › Areas, under the plan tables.)
     const gcPane = $('#pane-growth-census');
-    if (gcPane) gcPane.dataset.off = has ? '' : '1';
-    AT().showFootTab(AT().getFootPref());
+    // (the tab again only when the pane came or went: this view can render later than a tab change,
+    // e.g. closing a site, and must not send the panel back to the remembered tab)
+    const off = has ? '' : '1';
+    if (gcPane && gcPane.dataset.off !== off) { gcPane.dataset.off = off; AT().showFootTab(AT().getFootPref()); }
     CA().syncDaYear();
     if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
     const Y = bc.year;
