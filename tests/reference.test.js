@@ -15,23 +15,23 @@ const D = require('../js/demand.js');
 const strip = h => String(h).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const NOTE = /General screening|confirm the current rules and figures with the Region of Peel/;
 
-test('eight guides in reading order, How approvals work among them; How it works lists them all', () => {
-  assert.deepEqual(R.IDS, ['roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets']);
+test('nine guides in reading order, How approvals work among them; How it works lists them all', () => {
+  assert.deepEqual(R.IDS, ['roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast']);
   const ix = R.indexPage();
   assert.equal(ix.id, 'guides');
   for (const [id, label] of R.GUIDES) assert.ok(ix.mid.includes(`data-ws-page="${id}"`) && ix.mid.includes(label), id);
   assert.match(ix.mid, /data-ws-page="glossary"/);
 });
 
-test('each guide: the question as its title, n of 8, previous / All guides / next, and the screening note in its method', () => {
-  const pages = { roles: R.roles(), flows: R.flows(null), network: R.network(json('data/peel-reports.json')), capacity: R.capacity(null), fsrguide: R.fsrguide([]), capital: R.capital([], []), targets: R.targets(json('data/housing.json'), json('data/peel-reports.json').forecast2051, null) };
+test('each guide: the question as its title, n of 9, previous / All guides / next, and the screening note in its method', () => {
+  const pages = { roles: R.roles(), flows: R.flows(null), network: R.network(json('data/peel-reports.json')), capacity: R.capacity(null), fsrguide: R.fsrguide([]), capital: R.capital([], []), targets: R.targets(json('data/housing.json'), json('data/peel-reports.json').forecast2051, null), forecast: R.forecast({}) };
   for (const [id, m] of Object.entries(pages)) {
     const g = R.GUIDES.find(x => x[0] === id), i = R.IDS.indexOf(id);
     assert.equal(m.id, id); assert.equal(m.name, g[2]);
-    assert.match(m.eyebrow, new RegExp(`${i + 1} of 8`), id);
+    assert.match(m.eyebrow, new RegExp(`${i + 1} of 9`), id);
     assert.match(m.mid, /class="rf-nav"/, id);
     if (i > 0) assert.ok(m.mid.includes(`data-ws-page="${R.IDS[i - 1]}"`), `${id}: previous`);
-    if (i < 7) assert.ok(m.mid.includes(`data-ws-page="${R.IDS[i + 1]}"`), `${id}: next`);
+    if (i < 8) assert.ok(m.mid.includes(`data-ws-page="${R.IDS[i + 1]}"`), `${id}: next`);
     assert.ok(m.actions.some(a => a.attrs['data-ws-page'] === 'guides'), `${id}: All guides`);
     if (m.method) assert.match(m.method, NOTE, id);
     assert.doesNotMatch(strip(m.answer + m.mid), /\bthe Region (approves|has approved|decided)\b/, `${id}: screening wording`);
@@ -126,4 +126,38 @@ test('wired in: the sidebar shows Help, How it works and the Glossary; every gui
   assert.match(src('index.html'), /<script src="js\/reference\.js\?v=__BUILD__"><\/script>/);
   assert.match(src('sw.js'), /'js\/reference\.js',/);
   assert.match(src('css/app.css'), /\/\* How it works: the reference guides \(js\/reference\.js\) \*\//);
+});
+
+test('How the forecast is timed: the three steps, the homes needed, the completions record and the CMHC tables, from the data', () => {
+  const T = require('../js/timing.js');
+  const F = json('data/peel-reports.json').forecast2051.municipalities, H = json('data/housing.json');
+  const homes = T.homesNeeded(H.mof.peel, F);
+  const activity = json('data/peel-housing.json').activity.muni;
+  const fc = { by2031: 27197, by2041: 67491, low2031: 22401, high2031: 31787, after: 25500, endYear: 2052, perYear: [[2026, 1277], [2027, 5205], [2028, 5725], [2029, 5465]] };
+  const times = [{ stage: 'permit', size: 'S', n: 8349, median: 19, left5: 0.34 }, { stage: 'inception', size: 'L', n: 335, median: null, left5: 0.81 }];
+  const m = R.forecast({ homes, F, activity, times, fc, oldThisYear: 66381 });
+  const t = strip(m.answer + m.mid);
+  assert.equal(m.name, 'When will the pipeline be built?');
+  for (const k of ['steps', 'why', 'stage', 'beyond', 'build', 'chart', 'record', 'cmhc', 'limits']) assert.match(m.mid, new RegExp(`data-psec="${k}"`), k);
+  assert.match(t, /For every development in Peel's pipeline that is about 27,000 homes built by 2031 and 67,000 by 2041/);
+  assert.match(t, /about 66,000 homes in 2026/, 'the old method, said');
+  assert.match(t, /÷ 2\.58 people per new home/);
+  assert.match(t, /Mississauga 36%/);
+  assert.match(t, /Under construction always finishes/);
+  assert.match(t, /250 units a year/);
+  assert.match(t, /19 months/); assert.match(t, /more than half not finished yet/);
+  assert.match(t, /Mississauga 2022: 11,743 instead of 1,161/);
+  assert.match(t, /every year but 2018/);
+  assert.match(t, /not a prediction for any one site/);
+  // The record: Peel's completions by year, and its average.
+  const rec = R.completionsRecord(activity);
+  assert.equal(rec.rows[0].year, 2016);
+  assert.equal(rec.rows.find(r => r.year === 2022).peel, 1161 + 2251 + 640);
+  assert.ok(rec.avg > 4000 && rec.avg < 6000, `average ${rec.avg}`);
+  // The homes-needed table: none in a falling year.
+  assert.match(m.mid, /<th scope="row">2027<\/th><td>0<\/td>/);
+  assert.match(m.method, NOTE);
+  // Linked from the Forecast panel and How it works.
+  assert.match(src('js/timing.js'), /\{ label: 'How the forecast is timed', attrs: \{ 'data-ws-page': 'forecast' \} \}/);
+  assert.match(src('js/workspaces.js'), /\['forecast', 'How the forecast is timed'\]\]\) REF\[id\]/);
 });

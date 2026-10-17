@@ -636,10 +636,10 @@
   // Reference pages (not workspaces): How it works and its guides (js/reference.js; How approvals work
   // is js/approvals-guide.js, wrapped as a guide), the Glossary (js/glossary.js), Help (js/tips.js).
   const ref = id => () => (root.PeelReference ? root.PeelReference.page(id) : id === 'approvals' && root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading(id, 'Loading…'));
-  const [guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets'].map(ref);
+  const [guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast'].map(ref);
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
   const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, glossary, help };
+  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).

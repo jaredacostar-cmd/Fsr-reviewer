@@ -130,7 +130,7 @@ test('Growth › Forecast: homes built adding up, against the unbuilt pipeline, 
   const s = src('js/timing.js');
   assert.match(s, /Unbuilt pipeline: \$\{fmtNum\(Math\.round\(pipe\)\)\} units/);
   assert.match(s, /const marks = \[2031, 2041\]\.map/);
-  assert.match(s, /chart: items\.length \? timingChartSVG\(fc, unbuilt\) : '',/);
+  assert.match(s, /chart: items\.length \? timingChartSVG\(fc, unbuilt, refs\) : '',/);
   assert.match(s, /label: 'the estimate learns from'/, 'no bare "calibration" card');
 });
 
