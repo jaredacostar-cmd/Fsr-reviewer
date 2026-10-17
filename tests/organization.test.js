@@ -34,7 +34,7 @@ test('file tree: a block plan that states no count adds up its draft plans, and 
   assert.match(h, /<b>9,862<\/b>homes in all, on the files below/);
   assert.match(h, /<b>2,929<\/b>homes · counted here \(estimate\)/);
   assert.match(T.summaryHTML(d), /homes counted on 4 files, most on <b>OZS-2025-0034<\/b>/);
-  assert.deepEqual(T.estimateOf(d), { ref: 'OZS-2024-0051', units: 2929, kind: 'online', source: 'Brampton PDC agenda / recommendation report, 2025-10-06' });
+  assert.deepEqual(T.estimateOf(d), { ref: 'OZS-2024-0051', units: 2929, kind: 'online', source: 'Brampton PDC agenda / recommendation report, 2025-10-06 (checked 2026-10-17: the municipal notice for this file states it)' });
 });
 
 test('Records › Files: the tree, then the latest activity; Growth rows: one stage, the files line, ▸ the tree; estimate rows name their file', () => {

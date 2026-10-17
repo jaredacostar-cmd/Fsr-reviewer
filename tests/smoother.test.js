@@ -69,7 +69,7 @@ test('wired: the servicing model only when its inputs change; hidden Growth view
   assert.match(src('js/exports.js'), /function panelTableRows\(panels\) \{\n    if \(window\.PeelUtil && window\.PeelUtil\.flushLater\) window\.PeelUtil\.flushLater\(\);/, 'the workbook reads rendered views');
   const app = src('js/app.js');
   assert.match(app, /if \(indexPainted && !fullLoaded\) return;\n[\s\S]{0,260}clearTimeout\(rebuildTimer\);/, 'a rebuild cancels the one waiting');
-  assert.match(app, /await Promise\.race\(\[treeCountsLoad, new Promise\(r => setTimeout\(r, 3000\)\)\]\);\n        finishFull\(\);/);
+  assert.match(app, /await Promise\.race\(\[treeCountsLoad, new Promise\(r => setTimeout\(r, 20000\)\)\]\);\n        finishFull\(\);/);
   assert.match(app, /applyFilters\.deferGrowth = true;\n    try \{ applyFilters\(\); \} finally \{ applyFilters\.deferGrowth = false; \}/);
 });
 

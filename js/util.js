@@ -7,6 +7,23 @@
 (function (root) {
   'use strict';
 
+  // ---- Data files belong to their build ------------------------------------------
+  // Every data/*.json request carries the build (<meta name="app-version">, stamped at deploy), as
+  // the scripts and styles do. A copy cached by the previous build's service worker can then never
+  // answer the new code: the first open after a deploy used to mix an old file with new code and
+  // show different unit totals until the next reload. Locally ('__BUILD__') nothing changes.
+  const DATA_JSON = /^(?:\.\/)?data\/[^?#]+\.json$/;
+  function dataBuild() {
+    try { const m = root.document && root.document.querySelector('meta[name="app-version"]'); const v = m && m.content; return v && v !== '__BUILD__' ? v : null; } catch (e) { return null; }
+  }
+  function versionedDataURL(url, build) {
+    return typeof url === 'string' && build && DATA_JSON.test(url) ? `${url}?v=${encodeURIComponent(build)}` : url;
+  }
+  if (typeof root.fetch === 'function' && root.document) {
+    const build = dataBuild();
+    if (build) { const f = root.fetch.bind(root); root.fetch = (input, init) => f(versionedDataURL(input, build), init); }
+  }
+
   // ---- Unofficial banner (source: app.js 13–14) ---------------------------------
   const UNOFFICIAL = 'Unofficial prototype · public data only · not a Region of Peel product';
   // The screening note, in the user's wording, everywhere a result appears (design audit, Group 10).
@@ -218,12 +235,12 @@
   }
   // A short confirmation at the bottom of the screen ("Link copied"), read out by screen readers.
   let toastT = null;
-  function toast(text) {
+  function toast(text, ms = 2600) {
     if (typeof document === 'undefined') return;
     let el = document.getElementById('toast');
     if (!el) { el = document.createElement('div'); el.id = 'toast'; el.className = 'toast'; el.setAttribute('role', 'status'); el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
     el.textContent = text; el.classList.add('on');
-    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
+    clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), ms);
   }
   // Work for views out of sight: run when the main thread is free, one view per task (the page paints
   // and answers clicks in between), or at once when something reads them (flushLater: PeelPanel.get,
@@ -254,6 +271,7 @@
   function flushLater() { while (LATER.size) runOne(); }
   const cancelLater = key => LATER.delete(key);
   const api = {
+    versionedDataURL,
     hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size, idOf, csvCell,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,

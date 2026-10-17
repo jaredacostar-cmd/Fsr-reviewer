@@ -36,6 +36,7 @@ name: Probe data sources
 #  mode=elev-check: the lidar elevation sampler's service checks and the benchmark comparison (data/probe/elevation.json, committed to this branch)
 #  mode=elev-validate: ground elevation (lidar, terrain tiles) against Peel sanitary manholes in the validation areas: data/elevation-validation.json and tests/fixtures/manhole-sample.json committed to this branch; the internal data check (manholes > 5 m off, with FacilityID) as an artifact only, never committed
 #  mode=wayback: the Time Box's release check against the live Esri Wayback service (log only)
+#  mode=unit-lookups: the counts in data/unit-lookups.json against the pages they cite (log only)
 #  mode=tiles-3d: the 3D view's tiles: lidar terrain (North Brampton pilot) and OSM buildings (all of Peel) as PMTiles in data/3d/, committed to this branch
 #  mode=roads: road centrelines over Peel on LIO (the Ontario Road Network): layers, fields, CORS and a sample; data/probe/roads.json committed to this branch, report only
 #  mode=constraints-lidar: Stage 0 source check for lidar elevation and the constraint layers (endpoint, coverage, resolution, dates, licence, CORS); data/probe/constraints-lidar.json committed to this branch, report only
@@ -131,6 +132,12 @@ jobs:
         if: inputs.mode == 'wayback'
         timeout-minutes: 15
         run: node scripts/probe-wayback.js
+      - name: Unit counts found online, against their sources (log only)
+        if: inputs.mode == 'unit-lookups'
+        timeout-minutes: 20
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null
+          node scripts/probe-unit-lookups.js
       - name: 3D view pilot tiles (lidar terrain + OSM buildings, committed to this branch)
         if: inputs.mode == 'tiles-3d'
         timeout-minutes: 80

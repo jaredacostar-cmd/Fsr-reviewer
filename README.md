@@ -2739,3 +2739,25 @@ scope (SPEC §0.4). The EA lists moved here from the old "Construction & EAs" vi
     is 0% or missing.
   - Any EA or construction label that overlaps a development label, cluster or marker is hidden,
     so development labels take priority.
+
+## Counts that hold still, and counts found online checked
+
+**Loading.** The same data used to show different totals depending on how the app loaded:
+- **Slow or failed tree counts:** the tree counts (`data/tree-counts.json`) arriving after 3 s, or failing, gave the previous count, with nothing on screen saying so.
+- **First open after a deploy:** the old build's cached data could mix with the new code.
+
+Now:
+- **Build-tagged data:** every `data/*.json` request carries the build (`?v=<build>`, from `<meta name="app-version">`; `js/util.js`), as the scripts and styles do. A copy cached by the previous build never answers the new code.
+- **Tree counts:** the developments are built once the tree counts are in (a 20 s guard only for a request that never ends). If they fail, the count says "previous counts: tree counts didn't load", with a Reload button.
+- **Old links:** a link from before Completed was shown by default still opens without Completed, and now says so.
+
+**Counts found online** (`data/unit-lookups.json`, used only when no planning file states a count). Each one with a link was checked against its page on 2026-10-17 (`scripts/probe-unit-lookups.js`, `probe-sources mode=unit-lookups`; the sandbox can't reach the sites).
+- **Kept, 22 counts.** Each has `verified: { on, by }`. The development panel shows how it was confirmed.
+  - **11 `municipal`:** the municipal notice or decision for the file states it (three as the sum of the types it lists).
+  - **11 `other`:** a named page states it but not the file number (UrbanToronto, SquareYards, a forum post, the Region's page, an applicant letter, an OMB decision).
+- **Moved to `notUsed`, 12 counts (5,051 units).** Each has the reason:
+  - the notice was for a different file (OZS-2022-0046);
+  - the page states another figure (C02E05.036: 1,314, not 1,026);
+  - the page states no count;
+  - the page could not be opened.
+- **Counts with no link** are read from the file's own description.

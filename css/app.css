@@ -345,6 +345,8 @@ body {
 .tb-step:last-of-type { color: var(--text-primary); font-weight: 600; }
 .tb-count { color: var(--text-muted); font-size: var(--fs-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 @media (max-width: 1199px) { .tb-count { display: none; } }
+/* The tree counts didn't load: shown at every width, since the totals differ from the usual ones. */
+.tb-count-warn { color: var(--cap-tight-t); font-size: var(--fs-2); white-space: normal; min-width: 0; }
 .tb-step:first-child { flex: none; }   /* "Peel" never truncates; the deeper steps share the rest */
 .tb-step:not(:first-child) { min-width: 3em; flex: 0 1 auto; }
 .tb-views {
