@@ -228,6 +228,10 @@
   // Work for views out of sight: run when the main thread is free, one view per task (the page paints
   // and answers clicks in between), or at once when something reads them (flushLater: PeelPanel.get,
   // an export, opening the view). A later call with the same key replaces the waiting one.
+  // A number per object, for cache keys that must change when the object is replaced (the
+  // developments after a rebuild, the test sites after an edit) even when the count stays the same.
+  const ids = new WeakMap(); let idN = 0;
+  const idOf = o => (o && typeof o === 'object' ? (ids.get(o) || (ids.set(o, ++idN), idN)) : 0);
   const LATER = new Map();
   let laterT = null;
   function later(key, fn) {
@@ -242,7 +246,7 @@
   function flushLater() { while (LATER.size) runOne(); }
   const cancelLater = key => LATER.delete(key);
   const api = {
-    hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size,
+    hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size, idOf,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
