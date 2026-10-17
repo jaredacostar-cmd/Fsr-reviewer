@@ -2752,6 +2752,11 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .ft-bar h2 { margin: 0; font-size: var(--fs-3); }
 .ft-bar p { margin: 0; }
 #analysis.ft-on .analysis-panes .f-pane { max-width: none; }
+/* the tables in the open sub-view, each a jump (js/panel.js renderJumps) */
+.ft-bar { flex-wrap: wrap; }
+.ft-jump { order: 4; flex-basis: 100%; display: flex; align-items: baseline; gap: var(--space-1) var(--space-3); overflow-x: auto; white-space: nowrap; scrollbar-width: thin; }
+.ft-jump[hidden] { display: none; }
+.ft-jump .btn.link { padding-inline: 0; }
 @media (max-width: 700px) { .ft-bar { flex-wrap: wrap; } .ft-bar .ft-scen { order: 3; flex-basis: 100%; } }
 .pnl-r-year { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }   /* (bundle 6: the body font with tabular figures, not monospace: values read as numbers, not codes) */
 .pnl-r-meta { display: flex; justify-content: space-between; gap: var(--space-2); font-size: var(--fs-1); color: var(--text-secondary); margin-top: 4px; }
