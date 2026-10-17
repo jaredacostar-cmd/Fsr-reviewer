@@ -214,14 +214,17 @@ const Aerial = () => root.PeelAerial;
     if (best) map.setView(best.c, best.z);
   }
   const startCentre = map.getCenter();
-  fetch('data/munis.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => {
+  // (drawn and fitted once every script has run: the fit moves the map, and the map's listeners read
+  // the app's state, which js/app.js, the last script, sets up; the outlines can arrive first)
+  const afterScripts = f => (document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', f, { once: true }) : f());
+  fetch('data/munis.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => afterScripts(() => {
     if (!d) return;
     drawMunis(d);
     // (opened on Home, the map is hidden: it fits the first time it is shown, if nothing moved it yet)
     const untouched = () => { const c = map.getCenter(); return !/[#&]m=/.test(location.hash) && c.lat === startCentre.lat && c.lng === startCentre.lng; };
     const tryFit = () => { if (!untouched()) return; if (map.getSize().x < 200) { map.once('resize', tryFit); return; } fitPeel(); };
     tryFit();
-  });
+  }));
 
   function setOrientation(o) {
     if (!canRotate) return;
