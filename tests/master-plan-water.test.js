@@ -70,3 +70,27 @@ test('pumping stations: firm never exceeds installed; the suspect transfer value
   assert.deepEqual(odd.map(p => p.pumps), ['Transfer']);
   assert.ok(odd[0].note, 'transfer row carries a note');
 });
+
+// The trunk check (js/masterplan.js trunkShare) gives each trunk the plan's share of its pool's growth:
+// West trunks the West system; East trunks East (+ Bolton); Central trunks Central + East (+ Bolton),
+// less the York agreement increase on the two Central trunks that carry York (p.64).
+test('trunk growth shares stay between 0 and 100% once York is taken off the trunks that carry it', () => {
+  const S = D.systemDemand, i0 = S.years.indexOf(2021), i1 = S.years.indexOf(2041), d = k => S[k][i1] - S[k][i0];
+  const pool = t => (t.system === 'C' ? ['C', 'E'] : [t.system]).reduce((a, k) => a + d(k) + (k === 'E' ? d('B') : 0), 0);
+  assert.deepEqual(D.trunks.filter(t => t.carriesYork).map(t => t.id).sort(), ['CT2H', 'CT3']);
+  for (const t of D.trunks.filter(x => x.zone != null)) {
+    const own = t.demandMLd[4] - t.demandMLd[0] - (t.carriesYork ? d('york') : 0), k = Math.max(0, own) / pool(t);
+    assert.ok(k >= 0 && k <= 1, `${t.id} share ${k.toFixed(2)}`);
+  }
+});
+
+test('the screens use the trunk mains, not the 1.5 m/s zone-boundary estimate', () => {
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'masterplan.js'), 'utf8');
+  const body = name => { const i = src.indexOf(`function ${name}(`); return src.slice(i, src.indexOf('\n  }\n', i)); };
+  for (const f of ['devNeeds', 'allNeeds', 'dcItemCons']) assert.doesNotMatch(body(f), /supplyCons\(/, `${f} no longer calls supplyCons`);
+  assert.match(body('devNeeds'), /trunkNeeds\(/);
+  assert.match(body('allNeeds'), /trunkCons\(/);
+  const fit = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'tools-fit.js'), 'utf8');
+  assert.doesNotMatch(fit, /supplyCons\(/);
+  assert.match(fit, /trunkNeeds\(/);
+});

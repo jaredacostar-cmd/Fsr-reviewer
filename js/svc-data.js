@@ -101,7 +101,8 @@
       SvcTab().renderSvcTab();
       App().applyFilters();
       setTimeout(SC().loadSewers, 1500);
-      MP().loadWaterSupply().then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });
+      // Trunk-main checks need the Master Plan tables and the water facilities (the supply routes).
+      Promise.all([MP().loadWaterSupply(), MP().loadMpWater(), window.PeelWaterTrace && window.PeelWaterTrace.loadWaterFacilities()]).then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });
     } catch (e) { console.warn('Servicing data did not load completely:', e); }   // (was silent: a missing element stopped the model, the layers and the sewers)
   }
   // A development's pressure zone and wastewater block. Outside the mapped zones / blocks: the

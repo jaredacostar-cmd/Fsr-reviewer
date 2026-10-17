@@ -35,17 +35,23 @@
   // ---- DC needs: existing capacity against the 2026 DC works ----------------------------------
   // For each existing constraint a development relies on — sanitary sewers on its path (Manning,
   // as in the pipe screen), pumping stations (master plan firm capacity), the wastewater plant (90%
-  // trigger), the water treatment system, storage (master plan) and the large mains into its
-  // pressure zone (rough, 1.5 m/s) — the room left after existing + approved development (people and
+  // trigger), the water treatment system, storage (master plan) and the trunk mains on its
+  // supply route (master plan actual capacity) — the room left after existing + approved development (people and
   // units), the year approved and proposed growth uses it up (Horizon years phasing), and the DC
   // project that relieves it. Reverse: a DC main or facility lists the developments relying on it.
-  const DCN = { supply: null, pipeRelief: null, cache: new Map(), key: '' };
+  const DCN = { supply: null, mpw: null, pipeRelief: null, cache: new Map(), key: '' };
   const PP_HA = 1 / 150;               // hectares per added person (I&I on new land, ~50 units/ha)
   const PLANT_TRIGGER = 0.9;
   async function loadWaterSupply() {
     if (DCN.supply !== null) return DCN.supply;
     try { const r = await fetch('data/water-supply.json', { cache: 'no-cache' }); DCN.supply = r.ok ? await r.json() : false; } catch (e) { DCN.supply = false; }
     return DCN.supply;
+  }
+  // 2020 Master Plan trunk mains, demand by sub-zone and pumping (Vol. 3): data/master-plan-water.json.
+  async function loadMpWater() {
+    if (DCN.mpw !== null) return DCN.mpw;
+    try { const r = await fetch('data/master-plan-water.json', { cache: 'no-cache' }); DCN.mpw = r.ok ? await r.json() : false; } catch (e) { DCN.mpw = false; }
+    return DCN.mpw;
   }
   const zLevel = z => { const m = /^(\d+)/.exec(z || ''); return m ? +m[1] : null; };
   // ---- 2020 Master Plan assessment vs this tracker (Water → Facilities, Wastewater → Plants) ----
@@ -374,6 +380,98 @@
       util: { today: q('today') / cap, com: q('committed') / cap, bo: q(null) / cap }, room, people: room / perPersonMax(), out: runOut(q, () => cap),
       relief: [...[...byP.values()].sort((a, b) => a.y - b.y).map(lineRelief), ...pss.map(f => facRelief(f, /pumping|expansion/i))].sort((a, b) => (a.y || 9999) - (b.y || 9999)), q };
   }
+  // ---- Trunk mains (2020 Master Plan, Vol. 3, pp.134–136) -----------------------------------------
+  // The lake-based system is three trunk systems (West from Lorne Park, Central from A.P. Kennedy, East
+  // fed from Central). The plan gives each trunk main's actual capacity (calibrated model roughness)
+  // and the maximum day it carries by year. Growth reaches a trunk through parallel routes the plan
+  // splits by model, so a single traced route can't apportion it: each trunk takes the plan's own
+  // share of its system's growth (its 2021→2041 increase over the system's, Table 8), applied to the
+  // tracker's growth on that system (developments whose supply route starts at that system's plant or
+  // uses its pumps). Flow = the plan's 2021 figure + that share of built, approved and proposed growth,
+  // against the capacity of the mains in service that year. Replaces the zone-boundary estimate (every
+  // large main crossing a zone line at 1.5 m/s), which counted distribution mains and read far too high.
+  const SYS_NAME = { W: 'West', C: 'Central', E: 'East' };
+  const TRUNK_NOTE = 'Water trunk mains: actual capacity and flow from the 2020 Master Plan (Vol. 3); growth since the census on each trunk system is shared across its mains as the plan shares its own growth (York agreement flows added on the two Central mains that carry them). The West and Central/East systems are interconnected, so a short trunk is a flag, not a hard limit.';
+  const inYear = m => (/^\d{4}$/.test(m.inService) ? +m.inService : Infinity);
+  const mpTrunks = () => (DCN.mpw && DCN.mpw.trunks || []).filter(t => t.zone != null);
+  function trunkCapAt(t, y) { return t.mains.reduce((a, m) => inYear(m) <= y ? a + m.actualMLd : a, 0); }
+  // A development's trunk system from its supply route: West from Lorne Park; East when it uses the
+  // East pumps (Airport Road, Tullamore); otherwise Central.
+  function traceSystem(tr) {
+    if (!tr || tr.gw || !tr.steps.length) return null;
+    const last = tr.steps[tr.steps.length - 1].f, sys = new Set(tr.steps.map(s => s.pump && s.pump.sys).filter(Boolean));
+    if (last && last.kind === 'plant' && /Lorne/.test(last.name)) return 'W';
+    return sys.has('E') ? 'E' : sys.has('W') ? 'W' : 'C';
+  }
+  // Which developments' growth a trunk's share applies to: West trunks, the West system; East trunks,
+  // the East system; Central trunks, Central and East (East water is pumped up the Central trunks to
+  // Beckett Sproule before the transfer).
+  const trunkPool = t => (t.system === 'C' ? ['C', 'E'] : [t.system]);
+  // The plan's growth 2021→2041 (Table 8) over that pool (Bolton counted with East), and the trunk's
+  // own 2021→2041 increase less the York agreement increase on the trunks that carry York (p.64).
+  const yorkAt = y => { const S = DCN.mpw.systemDemand, Y = S.years, v = S.york; if (y <= Y[0]) return v[0]; for (let i = 1; i < Y.length; i++) if (y <= Y[i]) return v[i - 1] + (v[i] - v[i - 1]) * (y - Y[i - 1]) / (Y[i] - Y[i - 1]); return v[v.length - 1]; };
+  function trunkShare(t) {
+    const S = DCN.mpw.systemDemand, i0 = S.years.indexOf(2021), i1 = S.years.indexOf(2041), d = k => S[k][i1] - S[k][i0];
+    const pool = trunkPool(t).reduce((a, k) => a + d(k) + (k === 'E' ? d('B') : 0), 0);
+    const own = t.demandMLd[4] - t.demandMLd[0] - (t.carriesYork ? yorkAt(2041) - yorkAt(2021) : 0);
+    return pool > 0 ? Math.max(0, own) / pool : 0;
+  }
+  // Growth (ML/d, maximum day) on each trunk system, by layer, from the developments' supply routes.
+  function mpSystemGrowth() {
+    const M = App().state.svcModel, bc = CA().baselineCensus(); if (!M || !bc || !WT().WF.data || !App().state.servicing || !DCN.mpw) return null;
+    const key = scenarioKey() + App().state.projects.length;
+    if (mpSystemGrowth.key === key) return mpSystemGrowth.v;
+    const groups = { W: [], C: [], E: [] }, level = new Map();
+    for (const p of App().state.projects.concat(App().state.whatifs || [])) {
+      if (p.phase === 'cancelled' || p.lat == null || MM().svcLayerOf(p) === 'existing') continue;
+      const zid = SD().svcIds(p, 'pz')[0]; if (!zid) continue;
+      const tr = WT().waterTrace(p, zid), s = traceSystem(tr); if (!s) continue;
+      groups[s].push(p); level.set(p, zLevel(tr.z.zone) || 0);
+    }
+    const v = {};
+    for (const s of ['W', 'C', 'E']) {
+      const devs = groups[s], gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(devs, bc.date);
+      v[s] = { devs, level, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0) };
+    }
+    mpSystemGrowth.key = key; mpSystemGrowth.v = v;
+    return v;
+  }
+  function trunkCons(t) {
+    const G = mpSystemGrowth(); if (!G) return null;
+    const pool = trunkPool(t), k = trunkShare(t), Y0 = MM().THIS_YEAR, sum = f => pool.reduce((a, s) => a + f(G[s]), 0);
+    const x = { built: sum(g => g.built) * k, approved: sum(g => g.approved) * k, proposed: sum(g => g.proposed) * k };
+    // York agreement flow on the trunks that carry it, by year (2021 is already in the plan's figure).
+    const york = y => (t.carriesYork ? yorkAt(y) - yorkAt(2021) : 0);
+    const today = t.demandMLd[0] + x.built + york(Y0), com = today + x.approved, bo = com + x.proposed + york(SP().hz.end) - york(Y0);
+    const q = y => { if (y === 'today') return today; if (y === 'committed') return com; if (y == null) return bo; const { fa, fp } = MA().hzFrac(y); return t.demandMLd[0] + x.built + york(y) + x.approved * fa + x.proposed * fp; };
+    const capY = y => trunkCapAt(t, y === 'today' ? Y0 : y), cap = capY(Y0);
+    const room = cap > 0 ? cap - com : null;
+    const relief = t.mains.filter(m => inYear(m) >= Y0 && inYear(m) !== Infinity).sort((a, b) => inYear(a) - inYear(b))
+      .map(m => ({ kind: 'mp', y: inYear(m), main: m, text: `${m.inService} ${m.diameterMm} mm ${m.name.replace(/ PZ\d.*$/, '')} main, +${fmtNum(m.actualMLd)} ML/d (2020 Master Plan)` }));
+    const L = +t.zone, ids = lakeZones().filter(id => zLevel(SD().svcById.get(id).zone) >= L);
+    const devSet = new Set(pool.flatMap(s => G[s].devs.filter(p => (G[s].level.get(p) || 0) >= L)));
+    const den = v => (cap > 0 ? v / cap : 0);
+    // People: the trunk takes share k of each added person's max day on its system.
+    const pp = perPersonMax() * (k || 1);
+    return { id: `trunk:${t.id}`, sys: 'water', kind: 'trunk', trunk: t, share: k, name: `${t.route} trunk main (${t.id})`,
+      sub: `${SYS_NAME[t.system]} system · zone ${t.zone} · ${cap > 0 ? `actual ${fmtNum(cap)} ML/d` : 'not in service yet'} · 2020 Master Plan 2021 flow + ${Math.round(k * 100)}% of ${pool.map(s => SYS_NAME[s]).join(' + ')} growth (the plan's share)${t.carriesYork ? ' + York agreement' : ''}`, cap, unit: 'ML/d', zones: ids,
+      util: { today: den(today), com: den(com), bo: den(bo) }, room, people: room == null ? 0 : room / pp, out: runOut(q, cap > 0 ? () => cap : capY), relief, q, devSet };
+  }
+  // The trunks a development relies on: on its trunk system, the mains at or below its zone; the
+  // tightest one.
+  function trunkNeeds(p, zid) {
+    if (!DCN.mpw || !WT().WF.data) return [];
+    const tr = WT().waterTrace(p, zid), s = traceSystem(tr); if (!s) return [];
+    const L = zLevel(tr.z.zone) || 0, cs = [];
+    for (const t of mpTrunks()) {
+      if (!trunkPool(t).includes(s) || +t.zone > L || trunkShare(t) === 0) continue;
+      const c = cached(`trunk:${t.id}`, () => trunkCons(t)); if (c) cs.push(c);
+    }
+    if (!cs.length) return [];
+    const order = { gap: 0, planned: 1, check: 2, ok: 3 };
+    for (const c of cs) c.status = consStatus(c);
+    return [cs.sort((a, b) => order[a.status] - order[b.status] || a.people - b.people)[0]];
+  }
   // Status of a constraint: ok (lasts to build-out), planned (relief before it runs out), gap.
   function consStatus(c) {
     if (c.check) return 'check';
@@ -422,11 +520,7 @@
     if (f.z) {
       const c = cached(wellSystem[f.z.zone] ? `wsys:${f.z.zone}` : 'wsys:lake', () => waterPlantCons(f.z)); if (c) out.push(c);
       for (const s of cached('storage', storageCons)) if (s.zones.includes(f.z.id)) out.push(s);
-      const L = zLevel(f.z.zone);
-      if (DCN.supply && L != null && !wellSystem[f.z.zone]) {
-        const sup = DCN.supply.boundaries.filter(b => zLevel(b.upper) <= L).map(b => cached(`sup:${b.lower}|${b.upper}`, () => supplyCons(b)));
-        if (sup.length) out.push(sup.sort((a, b) => a.people - b.people)[0]);
-      }
+      if (zLevel(f.z.zone) != null && !wellSystem[f.z.zone]) out.push(...trunkNeeds(p, f.z.id));
     }
     const order = { gap: 0, planned: 1, check: 2, ok: 3 };
     for (const c of out) c.status = consStatus(c);
@@ -461,18 +555,19 @@
       ${main.length ? needsTable(main, ppu) : ''}
       ${rest.length ? `<details class="dcn-more"${main.length ? '' : ' open'}><summary class="small">${fmtNum(rest.length)} with room to build-out (tightest ${Math.max(...rest.map(c => pctCap(c, 'bo')))}% of capacity)</summary>${needsTable(rest, ppu)}</details>` : ''}
       <p class="small"><button type="button" class="btn small link" data-dcn-all="1">All DC timing →</button></p>
-      <p class="small muted">Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (${esc(SvcTab().scenarioText())}). ${sys === 'water' ? 'Water supply is a rough conveyance estimate: water pumping station capacities are not published.' : `Sewers: full-pipe capacity at peak wet (pipe screen); pumping stations: firm capacity; plants: ${Math.round(PLANT_TRIGGER * 100)}% of rated.${sys ? '' : ' Water supply is a rough conveyance estimate: water pumping station capacities are not published.'}`} A screen, not a hydraulic model.</p>`;
+      <p class="small muted">Room = capacity − (existing + built + approved), in people at Peel design criteria; runs out = the year approved and proposed growth reach it (${esc(SvcTab().scenarioText())}). ${sys === 'water' ? TRUNK_NOTE : `Sewers: full-pipe capacity at peak wet (pipe screen); pumping stations: firm capacity; plants: ${Math.round(PLANT_TRIGGER * 100)}% of rated.${sys ? '' : ` ${TRUNK_NOTE}`}`} A screen, not a hydraulic model.</p>`;
   }
   // Developments relying on a constraint (growth since the census: built, approved, proposed).
   function consDevs(c) {
     const rows = [], water = c.sys === 'water';
     const members = c.kind === 'pipe' ? new Set(c.members || [c.i]) : null;
-    const zones = c.zones ? new Set(c.zones) : null;
+    const zones = c.devSet ? null : c.zones ? new Set(c.zones) : null;
     if (members) SC().sewerGrowth();
     for (const p of App().state.projects.concat(App().state.whatifs || [])) {
       const lay = MM().svcLayerOf(p); if (!['built', 'approved', 'proposed'].includes(lay)) continue;
       let hit = false;
-      if (members) { const k = MM().SEW.growth.devPipe.get(p); if (k == null) continue; for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) if (members.has(i)) { hit = true; break; } }
+      if (c.devSet) hit = c.devSet.has(p);
+      else if (members) { const k = MM().SEW.growth.devPipe.get(p); if (k == null) continue; for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) if (members.has(i)) { hit = true; break; } }
       else if (zones) hit = SD().svcIds(p, 'pz').some(id => zones.has(id));
       else {
         let d = SD().svcById.get(SD().svcIds(p, 'dr')[0]); const seen = new Set();
@@ -513,7 +608,6 @@
           if (cs.length) { const ok = cs.filter(x => !x.check), c = (ok.length ? ok : cs).slice().sort((a, b) => b.util.bo - a.util.bo)[0]; out.push(reg({ ...c, id: `pipegrp:${proj}`, n: members.length, members, sub: `${c.sub} · tightest of ${members.length} existing pipes it runs along` })); }
         }
       }
-      if (ln.sys === 'water' && DCN.supply) for (const bd of DCN.supply.boundaries) { const c = cached(`sup:${bd.lower}|${bd.upper}`, () => supplyCons(bd)); if (c.relief.some(r => r.ln && (r.ln.p || r.ln.c) === proj)) out.push(reg(c)); }
     } else if (it.fc) {
       const fc = it.fc;
       if (fc.sys === 'wastewater' && fc.kind === 'plant' && fc.plant) { const c = cached(`plant:${fc.plant}`, () => plantCons(fc.plant)); if (c) out.push(reg(c)); }
@@ -522,7 +616,6 @@
         if (fc.kind === 'plant') { const c = cached('wsys:lake', () => waterPlantCons({ zone: '1' })); if (c) out.push(reg(c)); }
         for (const z of ['AV13', 'CE9']) { const zz = App().state.servicing.zones.find(x => x.zone === z); const c = zz && cached(`wsys:${z}`, () => waterPlantCons(zz)); if (c && c.relief.some(r => r.fc === fc)) out.push(reg(c)); }
         for (const s of cached('storage', storageCons)) if (s.relief.some(r => r.fc === fc)) out.push(reg(s));
-        if (DCN.supply) for (const bd of DCN.supply.boundaries) { const c = cached(`sup:${bd.lower}|${bd.upper}`, () => supplyCons(bd)); if (c.relief.some(r => r.fc === fc)) out.push(reg(c)); }
       }
     }
     for (const c of out) c.status = consStatus(c);
@@ -598,7 +691,7 @@
       { const c = cached('wsys:lake', () => waterPlantCons({ zone: '1' })); if (c) out.push(reg(c)); }
       for (const z of ['AV13', 'CE9']) { const zz = App().state.servicing.zones.find(x => x.zone === z); const c = zz && cached(`wsys:${z}`, () => waterPlantCons(zz)); if (c) out.push(reg(c)); }
       for (const s of cached('storage', storageCons)) out.push(reg(s));
-      if (DCN.supply) for (const bd of DCN.supply.boundaries) out.push(reg(cached(`sup:${bd.lower}|${bd.upper}`, () => supplyCons(bd))));
+      for (const t of mpTrunks()) { const c = cached(`trunk:${t.id}`, () => trunkCons(t)); if (c) out.push(reg(c)); }
       for (const c of out) c.status = consStatus(c);
       const order = { gap: 0, planned: 1, check: 2, ok: 3 }, yr = c => c.out === 'today' ? 0 : c.out || 9999;
       return out.sort((a, b) => order[a.status] - order[b.status] || yr(a) - yr(b) || a.people - b.people);
@@ -646,13 +739,14 @@
   // back entirely without it.
   const DCA = { key: '', res: null, open: new Set(), sort: 'impact', recFilter: 'all', recAll: false, timingAll: false, fundAll: false };
   const manningLs = (dMm, S) => { const d = dMm / 1000; return S > 0 ? 1000 * (1 / 0.013) * (Math.PI * d * d / 4) * Math.pow(d / 4, 2 / 3) * Math.sqrt(S) : 0; };
-  const reliefKey = r => r.ln ? `ln:${r.ln.sys}:${r.ln.p || r.ln.c}` : r.kind === 'step' ? `step:${r.step.proj || r.y}` : r.fc ? `fc:${r.fc.sys}:${r.fc.name}` : null;
+  const reliefKey = r => r.ln ? `ln:${r.ln.sys}:${r.ln.p || r.ln.c}` : r.kind === 'step' ? `step:${r.step.proj || r.y}` : r.kind === 'mp' && r.main ? `mp:${r.main.name}` : r.fc ? `fc:${r.fc.sys}:${r.fc.name}` : null;
   // Capacity a relief adds to a constraint (same unit as its demand), and whether it is assumed.
   function reliefAdd(c, r) {
     if (c.kind === 'pipe' && r.ln) {
       const p = MM().SEW.data.pipes[c.i], d = r.ln.d || p[0];
       return { add: manningLs(d, p[1]), assumed: !r.ln.d, how: `${d} mm${r.ln.d ? '' : ' (size not on the map: taken as a twin)'} on the existing ${(p[1] * 100).toFixed(2)}% slope` };
     }
+    if (r.kind === 'mp' && r.main) return { add: r.main.actualMLd, assumed: false, how: `${r.main.diameterMm} mm, actual capacity from the 2020 Master Plan` };
     return { add: Math.max(0, c.q(null) - c.cap) * 1.0001 + 1e-9, assumed: true, how: 'capacity not published: taken as sized for build-out' };
   }
   // Capacity of a constraint in year y with the given reliefs (keys in `off` cancelled).
@@ -692,6 +786,10 @@
     PLANT_TRIGGER,
     PP_HA,
     loadWaterSupply,
+    loadMpWater,
+    trunkCons,
+    trunkNeeds,
+    mpTrunks,
     zLevel,
     renderMpCompare,
     mpRowHTML, mpHead, mpLegend,

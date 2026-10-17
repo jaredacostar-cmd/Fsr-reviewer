@@ -29,19 +29,30 @@ Label anything built on it **"2020 Master Plan basis"**. Peel started a Master P
 - Table 6 prints the Beckett Sproule transfer's actual firm capacity as 2,750 ML/d against 408 installed.
   It's flagged in the data. Don't use it without checking.
 
-## Wiring it in (for Claude Code)
+## Wiring status
 
-1. **Replace the supply check.** `supplyCons()` in `js/masterplan.js` sums every large main that crosses a
-   zone line at 1.5 m/s (`data/water-supply.json`). That counts distribution mains and some mains more
-   than once, so it reads far too high (about 2,700 ML/d into zone 5 vs 230 + 89 + 106 in the plan).
-   Build one constraint per trunk from `trunks[].actualMLd`, with the year steps already in the data.
-2. **Split zones into W / C / E.** Tag each part of a pressure zone polygon by the nearest trunk facility
-   that serves that zone (reservoir or pumping station named in `pumpingStations`). Label the result
-   "estimated from facility locations". Check the population of each piece against `subzones2041`.
-3. **Known-answer tests.** For each sub-zone, compare the app's 2041 MDD to `subzones2041.mddMLd`.
-   Report the gap on screen rather than hiding it.
-4. **Relief dates.** Use `mains[].inService` as the relief year for the capacity runway view.
-5. Keep the South Peel plant check pooled, but show the Table 9 split by plant beside it.
+**Done (trunk supply check).** `trunkCons()` in `js/masterplan.js` replaces the zone-boundary estimate in
+DC timing, each development's needs, DC links and the "How many more units fit?" tool:
+
+- Capacity: the actual capacity of the mains in service, from `trunks[].mains`. Planned mains are relief,
+  with their year and added capacity.
+- Flow: the plan's 2021 figure + a share of the tracker's growth since the census. Each trunk's share is
+  its own 2021→2041 increase over its pool's (Table 8): West trunks share West growth, East trunks East
+  (+ Bolton), Central trunks Central + East (East water climbs the Central trunks to Beckett Sproule).
+  The two Central trunks that carry York (CT2H, CT3) add the York agreement schedule on top.
+- A development's system comes from its water trace (West from Lorne Park, East if it uses East pumps,
+  else Central). It relies on the tightest trunk in its pool at or below its zone.
+- Why shares, not traces: the trace picks one route per development, but parallel mains split the flow
+  in the plan's model. All-or-nothing tracing put 2,649 developments on a main the plan gives 4 ML/d.
+
+The old `supplyCons()` and `data/water-supply.json` remain only for the Labs EPANET skeleton.
+
+**Still to do**
+
+1. Split zones into W / C / E on the map, from facility locations or a traced line. Check each piece's
+   population against `subzones2041`.
+2. Known-answer tests: compare the app's 2041 MDD per sub-zone to `subzones2041.mddMLd` and show the gap.
+3. Keep the South Peel plant check pooled, but show the Table 9 split by plant beside it.
 
 ---
 
