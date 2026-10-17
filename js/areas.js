@@ -104,7 +104,7 @@
   const PROPOSED_PHASES = new Set(['inception', 'review']);
   function completedAt(r) {
     const done = r.events.filter(e => e.phase === 'completed').map(e => +e.date);
-    if (done.length) return { date: Math.max(...done), estimated: false };
+    if (done.length) return { date: Math.max(...done), estimated: !!r.completedEstimated };
     const issued = r.events.filter(e => e.phase === 'permit').map(e => +e.date);
     if (!issued.length) return null;
     return { date: Math.min(...issued) + ((r.units || 0) >= 20 ? 30 : 12) * MONTH, estimated: true };
@@ -131,9 +131,22 @@
         if (c && c.estimated && c.date >= since) estimated++;   // (only the dates it counts carry the note)
         return c && c.date >= since;
       });
-      const n = done.length ? P.permitUnits(done) : 0;
+      // Secondary and garden suites (and other units added to an existing house) at the apartment rate
+      // (decided 2026-10-17): a suite on a "Detached Dwelling" permit is not a house.
+      const suites = done.filter(r => P.permitRole(r) === 'suite'), homes = done.filter(r => P.permitRole(r) !== 'suite');
+      let n = homes.length ? P.permitUnits(homes) : 0;
+      const nSuite = suites.length ? P.permitUnits(suites) : 0;
+      // Homes inferred from building permits that state no units (js/phases.js inferBlankPermits), in the
+      // buildings completed since census day.
+      const inf = p.buildout && p.buildout.inferred;
+      if (inf && inf.completed > 0 && P.isBlankPermit) {
+        const blank = p.records.filter(r => P.isBlankPermit(r) && r.phase === 'completed');
+        const since0 = blank.filter(r => { const c = completedAt(r); return c && c.date >= since; });
+        if (blank.length) n += Math.round(inf.completed * since0.length / blank.length);
+      }
       const part = k => ({ ...p, units: k, buildout: null, siteAreaHa: p.siteAreaHa > 0 && p.units > 0 ? p.siteAreaHa * Math.min(1, k / p.units) : null });
       if (n > 0) { built.push(part(n)); builtUnits += n; builtProjects++; }
+      if (nSuite > 0) { built.push({ ...p, units: nSuite, buildout: null, unitMix: { apartment: 1 }, siteAreaHa: null }); builtUnits += nSuite; if (!(n > 0)) builtProjects++; }
       const c = D.unitsFor(p, 'committed');
       if (c > 0) { approved.push(part(c)); approvedUnits += c; approvedProjects++; }
       const q = PROPOSED_PHASES.has(p.phase) && !D.isCommitted(p) && p.buildout ? p.buildout.unbuilt : 0;

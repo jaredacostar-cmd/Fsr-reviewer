@@ -376,8 +376,12 @@
     // Alterations add units only when they create one (a second suite); otherwise the count is
     // the existing building's ("balcony repairs (205 units)").
     if (isAlteration(r) && !isSuite(r)) return false;
+    // A sign, tent, sales trailer, model home or industrial building is not a home, whatever its
+    // units field says (Caledon's "Sign" and "Tent" permits carried units).
+    if (NO_HOMES_TYPE.test(r.type || '') && !DWELLING.test(r.description || '')) return false;
     return r.units > 0;
   }
+  const NO_HOMES_TYPE = /\bsign\b|\btent\b|temporary|sales (office|centre|center|pavilion|trailer)|model home|industrial|agricultur/i;
   const isAlteration = r => /\d?ALT\b|^MECH\b/i.test(String(r.ref || '')) || /alteration to existing|^\s*(interior )?alteration|^\s*(replace|repair)/i.test(`${r.scope || ''} ${r.description || ''}`);
   // A second (or third) unit in an existing house: real new homes, but not a site plan's building.
   const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
@@ -780,8 +784,30 @@
   // opts.regroup (Step B2, js/tree-groups.js): given the parts this function grouped
   // ({ key, recs, site }), returns the parts to build instead (the trees as developments).
   // Without it, nothing changes.
+  // A building permit with no status and no completion, first issued five or more years before the
+  // data date, was built long ago and never closed in the source (Mississauga's 2012–2015 permits):
+  // completed at issue + 12 months (houses) or + 30 months (20+ units), marked estimated, as Brampton's
+  // and Caledon's undated completions are (js/areas.js completedAt).
+  const STALE_OPEN_YEARS = 5, MONTH_MS = 30.4375 * 864e5;
+  function closeStalePermits(records, asOf) {
+    if (asOf == null) { asOf = -Infinity; for (const r of records) for (const e of r.events || []) if (+e.date > asOf) asOf = +e.date; }
+    if (!isFinite(asOf)) return 0;
+    let n = 0;
+    for (const r of records) {
+      if (r.kind !== 'permit' || r.phase !== 'permit' || String(r.statusRaw || '').trim() || (r.events || []).some(e => e.phase === 'completed')) continue;
+      const issued = (r.events || []).filter(e => e.phase === 'permit').map(e => +e.date);
+      if (!issued.length) continue;
+      const first = Math.min(...issued);
+      if (first > asOf - STALE_OPEN_YEARS * 365.25 * 864e5) continue;
+      const at = first + ((r.units || 0) >= 20 ? 30 : 12) * MONTH_MS;
+      r.events = [...r.events, { date: new Date(at), phase: 'completed', label: 'Completed (estimated: no status for five years or more)' }];
+      r.phase = 'completed'; r.completedEstimated = true; n++;
+    }
+    return n;
+  }
   function buildProjects(records, opts = {}) {
     let groups = new Map();
+    closeStalePermits(records, opts.asOf);
     for (const r of records) readTextUnits(r);
     for (const r of records) {
       const k = projectKey(r);
@@ -1310,6 +1336,55 @@
     return { files, lands, summary };
   }
 
+  // ---- Building permits that state no units ----------------------------------------------------
+  // Brampton publishes its apartment and stacked-townhouse building permits with no unit count (and
+  // some Mississauga ones are blank too). Such a permit, held by a site plan or condominium file
+  // (r.fileOf), permits that file's homes not yet on a permit that states units: all of them, or the
+  // share of the buildings the file lists ("two apartment buildings and seven stacked blocks") that
+  // the blank permits cover (one building per permit number; Brampton's -P01/-P02 parts are one).
+  // A development with a single counted file and no boundary to hold the permit uses that file.
+  // Tested on 69 site plans whose permits do state units: 50 within 10%, median ratio 1.00.
+  const BLANK_TYPE = /apartment|condominium|stacked|town ?house|multiple|mixed|dormitor|retirement|plex|^\s*residential\s*$/i;
+  const isBlankPermit = r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside && permitRole(r) === 'res' && !permitAddsUnits(r) && BLANK_TYPE.test(r.type || '');
+  const permitBase = r => { const s = String(r.ref || '').toUpperCase(); const m = /(\d{2}[- ]?\d{3,6})/.exec(s); return m ? m[1].replace(/\s/g, '-') : s; };
+  const BLDG_WORD = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12 };
+  function buildingsListed(text) {
+    let n = 0;
+    for (const m of String(text || '').matchAll(/\b(\d{1,2}|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)\s*(?:\(\d+\)\s*)?(?:[\w-]+\s+){0,4}?(towers?|buildings?|blocks?)\b/gi)) {
+      const v = BLDG_WORD[m[1].toLowerCase()] || +m[1]; if (v > 0 && v <= 30 && !/^\S+\s*(?:\(\d+\)\s*)?-?\s*stor/i.test(m[0])) n += v;   // (not "12-storey building": that number is its height)
+    }
+    return n || null;
+  }
+  function inferBlankPermits(recs, livePermits, room) {
+    const out = { units: 0, completed: 0, files: [] };
+    const blank = livePermits.filter(isBlankPermit);
+    if (!blank.length || !(room > 0)) return out;
+    const apps = recs.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
+    const byUid = new Map(apps.map(r => [r.uid, r]));
+    const groups = new Map();
+    for (const r of blank) { const f = r.fileOf && byUid.get(r.fileOf); const k = f && ['siteplan', 'condo'].includes(fileKind(f)) && f.units > 0 ? f : null; if (k) (groups.get(k) || groups.set(k, []).get(k)).push(r); }
+    // No file holds them: a development with one counted file (and its homes) takes them.
+    if (!groups.size) {
+      const counted = apps.filter(r => r.units > 0 && !r.minor && (r.stage || stageOf(r)) !== 'precon');
+      const one = new Set(counted.map(r => fileId(r) || r.uid));
+      if (one.size === 1 && blank.every(r => !r.fileOf || byUid.get(r.fileOf) === counted[0] || one.has(fileId(byUid.get(r.fileOf)) || r.fileOf))) groups.set(counted[0], blank);
+    }
+    for (const [f, rs] of groups) {
+      const stated = livePermits.filter(r => r.fileOf === f.uid && permitAddsUnits(r));
+      const left = Math.max(0, f.units - permitUnits(stated)); if (!left) continue;
+      const bases = new Set(rs.map(permitBase)), k = bases.size, N = buildingsListed(f.description), sb = new Set(stated.map(permitBase)).size;
+      const share = N ? Math.min(1, k / Math.max(1, N - sb)) : 1;
+      const units = Math.min(Math.round(left * share), room - out.units); if (!(units > 0)) continue;
+      // A building is complete when every part of its permit is (Brampton closes an early part, the
+      // foundation, long before the building is finished).
+      const doneBases = new Set([...bases].filter(b => rs.filter(r => permitBase(r) === b).every(r => r.phase === 'completed')));
+      const completed = Math.round(units * doneBases.size / k);
+      out.units += units; out.completed += completed;
+      out.files.push({ ref: f.ref, units, completed, of: f.units, permits: k, buildings: N });
+    }
+    return out;
+  }
+
   function mergeProject(key, recs, site = {}) {
     let live = recs.filter(r => r.phase !== 'cancelled');
     // Legacy files don't set the phase while the site has current files; a site with legacy
@@ -1448,9 +1523,12 @@
     const net = v => (v > 0 && lost ? Math.max(0, v - lost) : v);
     const grossPlanned = site.planned !== undefined ? site.planned : plan.planned;
     let planned = net(grossPlanned);
-    const grossPermitted = permitUnits(livePermits);
+    // Residential building permits that state no units (Brampton's apartment and stacked-townhouse
+    // permits): the homes of the file that holds them are permitted, inferred and labelled.
+    const inf = inferBlankPermits(recs, livePermits, grossPlanned > 0 ? grossPlanned - permitUnits(livePermits) : 0);
+    const grossPermitted = permitUnits(livePermits) + inf.units;
     const permitted = net(grossPermitted);
-    const completed = net(permitUnits(livePermits.filter(r => r.phase === 'completed')));
+    const completed = net(permitUnits(livePermits.filter(r => r.phase === 'completed')) + inf.completed);
     const buildout = planned > 0 ? {
       planned,
       permitted,
@@ -1462,7 +1540,9 @@
       permits: livePermits.length,
       basis: plan.basis,
       phases: phaseBreakdown(plan.phases, livePermits, plan.basis),
+      ...(inf.units > 0 ? { inferred: inf } : {}),
     } : null;
+    if (buildout && buildout.phases && inf.units > 0) for (const o of buildout.phases) { const f = inf.files.find(x => x.ref === o.ref); if (f) { o.permitted = (o.permitted || 0) + f.units; o.completed = (o.completed || 0) + f.completed; o.inferred = f.units; } }
     // A plan with units still to permit isn't finished even if every permit so far is.
     if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
     // Bill 23 (2022): site plan control no longer applies to residential developments of 10 units or
@@ -1623,7 +1703,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
+    representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
   };
