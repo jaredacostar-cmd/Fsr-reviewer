@@ -97,8 +97,8 @@
     const line = p && p.settings && LB ? LB.scenarioLine(p.settings) : '';
     return `<button type="button" class="pnl-scen-chip" data-pnl-scen title="The scenario these figures are worked out for${line ? `: ${esc(line)}` : ''}. Open the Scenario control to see or change it">Scenario <span>${esc(txt)}</span> ▾</button>`;
   }
-  // The years the figures follow (the timeline): on a phone, a button in the panel opens the timeline,
-  // as the scenario chip opens the Scenario control (both are off screen there otherwise).
+  // The years the figures follow: on a phone (where the timeline hides under the panel) a button in the
+  // panel opens Find › When, as the scenario chip opens the Scenario control.
   function yearsChip() {
     const S = root.PeelApp && root.PeelApp.state; if (!S) return '';
     const on = S.yearFrom != null || S.yearTo != null, a = S.yearFrom ?? S.yearMin, b = S.yearTo ?? S.yearMax;
