@@ -28,6 +28,21 @@ const CACHE_PREFIX = 'peel-dev-';
 // The app shell. Relative URLs resolve against the worker's scope (site root
 // when sw.js is registered from the root, which is how js/offline.js does it).
 const SHELL_ASSETS = [
+  'js/accuracy.js',
+  'js/alerts.js',
+  'js/fsr-check.js',
+  'js/labs.js',
+  'js/panel.js',
+  'js/plan-rollup.js',
+  'js/plan-tables.js',
+  'js/snapshot-index.js',
+  'js/svc-capacity.js',
+  'js/timelapse.js',
+  'js/tree-counts.js',
+  'js/tree-groups.js',
+  'js/usage.js',
+  'js/workspaces.js',
+  'js/ws-pages.js',
   './',
   'index.html',
   'manifest.webmanifest',
@@ -238,7 +253,9 @@ async function pageFirst(request) {
 // back to index.html when the network is unreachable.
 async function shellFirst(request) {
   const cache = await caches.open(SHELL_CACHE);
-  const cached = await cache.match(request).catch(() => null);
+  // (the page asks for js/x.js?v=<build>, the install step stored js/x.js: this cache is per build,
+  // so the plain entry is the same file, and offline works from the first visit)
+  const cached = await cache.match(request).catch(() => null) || await cache.match(request, { ignoreSearch: true }).catch(() => null);
   if (cached) return cached;
   try {
     const res = await fetch(request);

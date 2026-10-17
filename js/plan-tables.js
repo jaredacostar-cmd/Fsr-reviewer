@@ -48,7 +48,10 @@
 
   function compute() {
     const set = DU().demandSet(), basis = DU().demandBasis(), crit = App().state.criteria;
-    if (cache && cache.set === set.length && cache.first === set[0] && cache.basis === basis && cache.crit === crit && cache.tree === App().state.treeGrouped && cache.areas === areas().length) return cache.r;
+    // (the developments by key and the criteria by value: an edit changes the criteria in place, and a
+    // filter can keep the count and the first development; the jobs settings and a rebuild too)
+    const key = [set.map(p => p.key).join('|'), basis, JSON.stringify(crit), App().state.empGen || 0, root.PeelUtil.idOf(App().state.projects), App().state.treeGrouped, areas().length].join('#');
+    if (cache && cache.key === key) return cache.r;
     const r = R().build(set, {
       areas: areas(), sharesOf, pointOf, inMtsa,
       // Committed / proposed from the layer function (SPEC §2): committed holds what is built (Existing
@@ -61,7 +64,7 @@
       },
     });
     r.mOf = new Map(r.placed.map(x => [x.p, x.m]));
-    cache = { set: set.length, first: set[0], basis, crit, tree: App().state.treeGrouped, areas: areas().length, r };
+    cache = { key, r };
     return r;
   }
 

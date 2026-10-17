@@ -70,3 +70,62 @@ test('inputs: a timeline drag applies when it pauses or lets go; criteria recoun
   assert.match(st, /clearTimeout\(critPending\.t\); critPending\.t = setTimeout\(applyCrit, 350\);/);
   assert.match(st, /mountEl\.addEventListener\('change', e => \{ if \(e\.target\.dataset && e\.target\.dataset\.g && critPending\.t\) applyCrit\(\); \}\);/);
 });
+
+test('offline: every script index.html loads is in the worker\'s shell, and ?v= requests find it', () => {
+  const sw = src('sw.js'), html = src('index.html');
+  const listed = new Set([...sw.matchAll(/'(js\/[^']+\.js)'/g)].map(m => m[1]));
+  const used = [...new Set([...html.matchAll(/src="(js\/[^"?]+\.js)/g)].map(m => m[1]))];
+  assert.deepEqual(used.filter(u => !listed.has(u)), [], 'scripts the page loads but the worker never caches');
+  assert.match(sw, /await cache\.match\(request\)\.catch\(\(\) => null\) \|\| await cache\.match\(request, \{ ignoreSearch: true \}\)/);
+});
+
+test('share links: a link opens its own scenario, keeps its tab with a development, never waits for ever', () => {
+  const s = src('js/share.js');
+  assert.match(s, /App\(\)\.state\.basis = App\(\)\.DEFAULT_BASIS;\n      for \(const \[k, o, d\] of \[\['wm', 'ww', 'calibrated'\], \['md', 'md', 'design'\], \['dv', 'div', 'off'\], \['nr', 'nr', 'on'\]\]\) SVCT\(\)\.svcOpt\[o\] = q\.get\(k\) \|\| d;/);
+  assert.match(s, /if \(d\) \{ DN\(\)\.showDetail\(d\); if \(q\.get\('t'\)\) AT\(\)\.showFootTab\(AT\(\)\.getFootPref\(\)\); \}/);
+  assert.match(s, /if \(Date\.now\(\) - wait0 < 20000\)/);
+  // (a plain visit is not a link: the stored settings stay)
+  assert.match(s, /let pending = location\.hash\.length > 1 \? new URLSearchParams\(location\.hash\.slice\(1\)\) : null, applied = !pending/);
+});
+
+test('keys: the map keeps its arrows off its own controls; a handled Escape is not a "clear"; tour buttons; figures', () => {
+  assert.match(src('js/map-keys.js'), /t\.closest\('input, select, textarea, button, \[contenteditable="true"\], \[role="slider"\], \.leaflet-control'\)\) return;/);
+  const as = src('js/area-select.js');
+  assert.match(as, /if \(e\.key === 'Escape' && lassoOn\) \{ pts = null; setLasso\(false\); e\.preventDefault\(\); \}/);
+  assert.match(as, /if \(e\.key === 'Escape' && !e\.defaultPrevented && !Meas\(\)\.tool\.mode/);
+  assert.match(src('js/topbar.js'), /\.some\(id => \{ const m = \$\(id\); return m && !m\.hidden; \}\)\) e\.preventDefault\(\);/);
+  assert.match(src('js/tips.js'), /if \(e\.key === 'Enter' && e\.target && e\.target\.closest && e\.target\.closest\('\.tour-card button, \.tour-card a'\)\) return;/);
+  assert.match(src('js/panel.js'), /e\.target\.classList\.contains\('pnl-row'\) \|\| e\.target\.classList\.contains\('pnl-fig'\)/);
+});
+
+test('the analysis column\'s handle follows a sideways drag', () => {
+  assert.match(src('js/data-tab.js'), /const at = e => \(axis === 'x' \? e\.clientX : e\.clientY\);/);
+  assert.match(src('js/app.js'), /dragResize\(\$\('#analysis-resize'\), \{\n    axis: 'x',/);
+});
+
+test('search: Enter uses the suggestions for what is in the box; a pick cancels a waiting update', () => {
+  const s = src('js/search-filter.js');
+  assert.match(s, /if \(sugFor !== q\) \{ clearTimeout\(sugTimer\); updateSug\(q\); \}/);
+  assert.match(s, /clearTimeout\(sugTimer\); sugSeq\+\+; sugFor = null;/);
+});
+
+test('growth: Areas recount after a criteria edit; event years read in UTC; the estimate note counts what it uses', () => {
+  assert.match(src('js/plan-tables.js'), /JSON\.stringify\(crit\), App\(\)\.state\.empGen \|\| 0, root\.PeelUtil\.idOf\(App\(\)\.state\.projects\)/);
+  assert.match(src('js/app.js'), /map\(t => t\.date\.getUTCFullYear\(\)\)/);
+  assert.match(src('js/timeline.js'), /const y = t\.date\.getUTCFullYear\(\);/);
+  assert.match(src('js/areas.js'), /if \(c && c\.estimated && c\.date >= since\) estimated\+\+;/);
+});
+
+test('the empty-list helper leaves the filters and their controls as they were', () => {
+  const f = src('js/filter-ui.js');
+  assert.match(f, /lyr: App\(\)\.state\.lyr \? new Set\(App\(\)\.state\.lyr\) : null, ss: App\(\)\.state\.ss, tf: TL\(\)\.tFrom\.value, tt: TL\(\)\.tTo\.value/);
+  assert.match(f, /SF\(\)\.syncFilterControls\(\); PA\(\)\.showArea\(\); SD\(\)\.showSvcArea\(\);/);
+  assert.match(f, /\(!App\(\)\.state\.lyr \|\| App\(\)\.state\.lyr\.has\(App\(\)\.layerOf\(p\)\)\)/);
+});
+
+test('dedupe keeps a text-read unit count marked as one', () => {
+  const P = require('../js/phases.js');
+  const base = { municipality: 'Caledon', kind: 'application', ref: 'POPA 2022-0001', fileKey: 'x', status: 'Open', phase: 'review', events: [] };
+  const out = P.dedupeRecords([{ ...base, units: null }, { ...base, units: 40, unitsFromText: true, description: 'unit count: 40' }]);
+  assert.equal(out.length, 1); assert.equal(out[0].units, 40); assert.equal(out[0].unitsFromText, true);
+});

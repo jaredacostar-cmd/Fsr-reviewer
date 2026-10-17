@@ -234,7 +234,7 @@
   function yearsOf(p, mode) {
     const cache = p._years || (p._years = {});
     return cache[mode] || (cache[mode] = Array.from(new Set(
-      p.timeline.filter(t => mode === 'any' || t.phase === mode).map(t => t.date.getFullYear()))));
+      p.timeline.filter(t => mode === 'any' || t.phase === mode).map(t => t.date.getUTCFullYear()))));   // (dates are UTC midnight: their year in UTC)
   }
   const timeActive = () => state.yearFrom != null || state.yearTo != null;
   function inYears(p) {
@@ -328,6 +328,7 @@
   }
   if (store.get('analysisW', null)) setAnalysisW(store.get('analysisW'));
   PeelDataTab.dragResize($('#analysis-resize'), {
+    axis: 'x',   // (the column's left edge: dragged left or right, as its cursor and label say)
     get: () => analysisEl.getBoundingClientRect().width,
     set: setAnalysisW,
     done: moved => {

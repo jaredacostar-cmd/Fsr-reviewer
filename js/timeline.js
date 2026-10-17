@@ -11,7 +11,7 @@
   function updateYearBounds() {
     let lo = Infinity, hi = -Infinity;
     for (const p of App().state.projects) for (const t of p.timeline) {
-      const y = t.date.getFullYear();
+      const y = t.date.getUTCFullYear();   // (UTC midnight dates: 1 January is not the year before in Toronto)
       if (y < lo) lo = y; if (y > hi) hi = y;
     }
     const now = new Date().getFullYear();

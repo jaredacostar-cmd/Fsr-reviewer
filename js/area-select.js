@@ -225,7 +225,7 @@
     Meas().openSelectionResult('Lasso selection', added);
     if (Meas().tool.mode === 'select') Meas().setSelectSub('tap'); // back to tap mode after the draw
   });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && lassoOn) { pts = null; setLasso(false); } });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && lassoOn) { pts = null; setLasso(false); e.preventDefault(); } });   // (handled: the selection stays)
 
   // Ctrl (⌘ on a Mac) + drag on the map: a box that adds the shown developments inside it to the
   // selection, like the lasso. Holding the key over the map shows a crosshair.
@@ -470,7 +470,8 @@
     const t0 = Date.now();
     setTimeout(() => { if (panelAt < t0 - 5) clearSelected(); }, 30);
   });
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !Meas().tool.mode && !lassoOn && !document.querySelector('.tour') && !(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName))) clearSelected(); });
+  // (an Escape that closed a menu, a pop-up or the lasso is not also a "clear the selection")
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !e.defaultPrevented && !Meas().tool.mode && !lassoOn && !document.querySelector('.tour') && !(e.target && /INPUT|SELECT|TEXTAREA/.test(e.target.tagName))) clearSelected(); });
 
   const api = {
     selection,

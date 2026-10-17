@@ -1537,7 +1537,7 @@
       if (prev.phase === 'cancelled' || (r.phase !== 'cancelled' && PHASE_BY_KEY[r.phase].rank > PHASE_BY_KEY[prev.phase].rank)) {
         if (r.phase !== 'cancelled' || prev.phase === 'cancelled') { prev.phase = r.phase; prev.statusRaw = r.statusRaw || prev.statusRaw; }
       }
-      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) prev[f] = r[f];
+      for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) { prev[f] = r[f]; if (f === 'units') prev.unitsFromText = !!r.unitsFromText; }   // (a count read from the text stays marked as one)
       // A unit count from a data field beats one read from text.
       if (prev.unitsFromText && r.units > 0 && !r.unitsFromText) { prev.units = r.units; prev.unitsFromText = false; }
       if (prev.minor && !r.minor) prev.minor = false;

@@ -128,7 +128,7 @@
       const done = p.records.filter(r => {
         if (r.kind !== 'permit' || r.phase !== 'completed') return false;
         const c = completedAt(r);
-        if (c && c.estimated) estimated++;
+        if (c && c.estimated && c.date >= since) estimated++;   // (only the dates it counts carry the note)
         return c && c.date >= since;
       });
       const n = done.length ? P.permitUnits(done) : 0;
