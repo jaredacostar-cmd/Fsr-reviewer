@@ -241,8 +241,11 @@
     return idx;
   }
   /** DC timing cell: actual status when matched ("Tendered", "60% built", as of), else "not in capital records (DC schedule)". */
-  function dcActualHTML(entry, hasCapital) {
+  // (as capTag elsewhere: a match by outline overlap only (low confidence) is not trusted, nor a
+  // "complete" status for a work the DC schedule puts after this year; y: that year)
+  function dcActualHTML(entry0, hasCapital, y, thisYear = new Date().getFullYear()) {
     if (!hasCapital) return '';
+    const entry = entry0 && entry0.conf !== 'low' && !(/complete/.test(entry0.status || '') && y > thisYear) ? entry0 : null;
     if (!entry) return '<small class="muted ce-dc-sched">not in capital records (DC schedule)</small>';
     const what = entry.status === 'under construction' && entry.percent != null ? `${entry.percent}% built` : statusLabel(entry.status);
     return `<small class="ce-dc-act"><button type="button" class="btn small link" data-ce-open="cap:${esc(entry.key)}">${esc(what)}</button> as of ${esc(fmtDate(entry.lastUpdate))}</small>`;

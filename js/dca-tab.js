@@ -128,7 +128,7 @@
     const t = r.rows.slice().sort((a, b) => b.bo - a.bo)[0];
     return `<tr class="dca-row ${DC().REC[r.rec][0]}" data-dca="${esc(r.key)}" tabindex="0">
       <td>${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}<small>${r.status === 'approved' ? 'approved 2026' : r.status === 'proposed' ? 'proposed' : ''}</small></td>
-      <td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}${window.PeelCapitalEA ? window.PeelCapitalEA.dcActualHTML(r.r && (r.r.ln ? r.r.ln.p || r.r.ln.c : r.r.step ? r.r.step.proj : null)) : ''}</td>
+      <td>${r.y || '–'}${r.cap ? capitalChip(r.cap) : ''}${window.PeelCapitalEA ? window.PeelCapitalEA.dcActualHTML(r.r && (r.r.ln ? r.r.ln.p || r.r.ln.c : r.r.step ? r.r.step.proj : null), r.y) : ''}</td>
       <td>${r.rows.length ? esc(t.c.name) + (r.rows.length > 1 ? ` <small>+${r.rows.length - 1} more</small>` : '') : ''}${r.conn.length ? `<small>${fmtNum(r.conn.length)} development${r.conn.length === 1 ? ' connects' : 's connect'} to it</small>` : ''}</td>
       <td>${r.outY ? (r.outY === MM().THIS_YEAR ? 'already' : `≈${r.outY}`) : r.cons.length ? `after ${SP().hz.end}` : '–'}</td>
       <td>${atY(r) > 0 ? `${pp(atY(r))} people<small>≈${uu(atY(r))} units</small>` : '<span class="muted">none</span>'}</td>

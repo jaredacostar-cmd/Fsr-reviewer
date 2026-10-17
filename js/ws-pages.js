@@ -439,7 +439,8 @@
     const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q)) : null;
     if (stage) { stage.click = true; stage.on = gStage; }
     const CAr = root.PeelCensusAreas, bc = atPeel && CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
-    const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, {}).dwellings : 0;
+    // (the area the developments are filtered to: a municipality filter at the Peel node is not all of Peel)
+    const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, { muni: App() ? App().state.muni : '', sp: App() ? App().state.sp : [], mtsa: App() ? App().state.mtsa : [] }).dwellings : 0;
     // Employment: the applications' floor area and jobs (Growth's own sums; an area counts a split site's share).
     let emp = { planned: 0, jobs: 0, permitted: 0, completed: 0, left: 0 };
     const GU = root.PeelGrowthUI, deps = GU && GU.growthDeps ? GU.growthDeps().aggregate : null;

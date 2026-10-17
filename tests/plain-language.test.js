@@ -100,7 +100,12 @@ test('DC timing chart: late and close projects first, by short name + ID, then "
   const r = timingRows(list, 3);
   assert.deepEqual(r.rows.map(x => x.k), ['c', 'b', 'a'], 'late, close, then the largest impact');
   assert.equal(r.more, 2);
-  assert.match(s, /\$\{more > 0 \? ` · <strong>\$\{more\} more<\/strong> in time` : ''\}/);
+  assert.equal(r.moreOk, 2); assert.equal(r.moreLate, 0);
+  // (late ones that don't fit are not "in time")
+  const late = Array.from({ length: 8 }, (_, i) => ({ k: `l${i}`, outY: 2028, y: 2037, bo: i }));
+  const r2 = timingRows([...late, { k: 'ok1', outY: 2045, y: 2030, bo: 1 }], 6);
+  assert.equal(r2.moreOk, 1); assert.equal(r2.moreLate, 2);
+  assert.match(s, /\$\{moreOk > 0 \? ` · <strong>\$\{moreOk\} more<\/strong> in time` : ''\}\$\{moreLate > 0 \? ` · <strong>\$\{moreLate\} more<\/strong> late or close \(in the full table\)` : ''\}/);
   assert.match(s, /class="dca-ax" text-anchor="middle">after \$\{x1\}<\/text>/, '"after 2051" on the axis');
   assert.match(s, /style="max-width:\$\{W\}px"/, 'drawn at its size, never scaled up');
   assert.match(s, /tag: `\$\{pl\} to \$\{o\.mld\} ML\/d\$\{o\.id \? ` · \$\{o\.id\}` : ''\}`/);

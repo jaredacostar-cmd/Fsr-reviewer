@@ -91,8 +91,8 @@
         ['Total', 'tot', 'demand-combined', [n(cb.water.avg), n(cb.water.maxDay), n(cb.water.peakHour)]],
       ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.water.avg))} ML/d average · residential ${c.water.avg} L/cap/d ×${c.water.maxDay} / ×${c.water.peakHour}; employment ${c.employment.water} L/emp/d ×${c.employment.maxDay} / ×${c.employment.peakHour}</p></div>`
       + '<div class="flow-card">' + flowTable('Wastewater', 'demand-wastewater', ['Avg dry', 'Peak dry', 'I&amp;I', 'Peak wet'], [
-        ['Residential', '', 'demand-wastewater', [n(e.water.avg), `${n(e.wastewater.peak)}<span class="muted m"> M ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(e.wastewater.infiltration), n(e.wastewater.wetPeak)]],
-        ['Employment', '', 'demand-employment', [n(em.water.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
+        ['Residential', '', 'demand-wastewater', [n(e.wastewater.avg), `${n(e.wastewater.peak)}<span class="muted m"> M ${e.population > 0 ? e.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(e.wastewater.infiltration), n(e.wastewater.wetPeak)]],
+        ['Employment', '', 'demand-employment', [n(em.wastewater.avg), `${n(em.wastewater.peak)}<span class="muted m"> M ${em.jobs > 0 ? em.wastewater.peakingFactor.toFixed(2) : '–'}</span>`, n(em.wastewater.infiltration), n(em.wastewater.wetPeak)]],
         ['Total', 'tot', 'demand-combined', [n(cb.wastewater.avg), n(cb.wastewater.peak), n(cb.wastewater.infiltration), n(cb.wastewater.wetPeak)]],
       ]) + `<p class="small muted flow-note">${fmt1(D.toMLd(cb.wastewater.avg))} ML/d average · I&amp;I on ${iiNote}</p></div>`;
   }

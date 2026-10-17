@@ -357,7 +357,7 @@
     if (!dcIdx || dcIdxFor !== `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`) { dcIdx = M.dcCapitalIndex(data.capital, dc); dcIdxFor = `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`; }
     return dcIdx;
   }
-  const dcActualHTML = proj => (proj ? M.dcActualHTML(dcIndex().get(proj), !!data.capital) : '');
+  const dcActualHTML = (proj, y) => (proj ? M.dcActualHTML(dcIndex().get(proj), !!data.capital, y) : '');
   const metres = (a, b) => Math.hypot((a[0] - b[0]) * 111320 * Math.cos(a[1] * Math.PI / 180), (a[1] - b[1]) * 110574);
   const easForDcHTML = fc => (data.eas ? M.easForDcHTML(M.easForDc(fc, data.eas.eas, metres)) : '');
   const muni = () => (App() && App().state.muni) || null;

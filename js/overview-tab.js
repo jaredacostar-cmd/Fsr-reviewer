@@ -278,7 +278,8 @@
     const left = p => (P.unbuiltOf ? P.unbuiltOf(p) : FI().appUnits(p));
     const top = set.filter(p => left(p) > 0).sort((a, b) => left(b) - left(a)).slice(0, 5);
     const rows = top.map(p => {
-      const pe = D.estimate([p], App().state.criteria, basis, App().jobsOf);
+      const k = left(p), part = { ...p, units: k, buildout: null, siteAreaHa: p.siteAreaHa > 0 && p.units > 0 ? p.siteAreaHa * Math.min(1, k / p.units) : null };
+      const pe = D.estimate([part], App().state.criteria, 'all', App().jobsOf);   // (people in the units left to build, beside them)
       return `<tr><td><button type="button" class="btn small link" data-ov-dev="${esc(p.key)}">${esc(p.title)}</button><small class="muted">${esc(p.municipality)}</small></td><td>${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}</td><td class="n">${fmtNum(Math.round(left(p)))}</td><td class="n">${fmtNum(roundPop(pe.population))}</td></tr>`;
     }).join('');
     return `<section class="ov-card ov-topdevs"><div class="ov-h"><h3>Largest unbuilt</h3><button type="button" class="btn small link ov-go" data-ov-inview title="The In view list in the left panel (sort: most left to build)">See all →</button></div>

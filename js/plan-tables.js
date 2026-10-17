@@ -60,7 +60,7 @@
         const t = G().pipelineTotals([p]), e = D().estimate([p], crit, basis, App().jobsOf), L = root.PeelLayers.ofDev(p).parts;
         const prop = t.planned > 0 ? L.proposed + L.anticipated : 0;
         return { planned: t.planned, committed: t.planned - prop, proposed: prop, permitted: t.permitted, completed: t.completed, left: t.left, people: e.population, jobs: e.employment ? e.employment.jobs : 0,
-          built: t.planned > 0 ? L.existing + L.built : 0, anticipated: t.planned > 0 ? L.anticipated : 0 };
+          built: t.planned > 0 ? L.existing + L.built : 0, anticipated: t.planned > 0 ? L.anticipated : 0, existing: t.planned > 0 ? L.existing : 0 };
       },
     });
     r.mOf = new Map(r.placed.map(x => [x.p, x.m]));

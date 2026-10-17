@@ -16,7 +16,7 @@
   // left to build), committed by D-5-1, people and jobs from PeelDemand.estimate at the chosen
   // basis. Each development is measured once and its shares multiply it, so Peel equals the
   // Overview.
-  const KEYS = ['planned', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated'];
+  const KEYS = ['planned', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated', 'existing'];
   const zero = () => Object.fromEntries(KEYS.map(k => [k, 0]));
   const addInto = (t, m, f) => { for (const k of KEYS) t[k] += (m[k] || 0) * f; };
 
@@ -140,14 +140,18 @@
     const byId = new Map((targets || []).map(t => [t.id, t]));
     const rows = [];
     // A target covering several plans (one figure for 48 (a) and (b)) is compared with all of them.
-    const sumOf = ids => { const m = { planned: 0, committed: 0, people: 0 }; const names = []; for (const id of ids) { const n = r.nodes.get(`a:${id}`); if (!n) continue; m.planned += n.m.planned; m.committed += n.m.committed; m.people += n.m.people; names.push(n.name); } return { m, names }; };
+    const sumOf = ids => { const m = { planned: 0, committed: 0, people: 0, existing: 0 }; const names = []; for (const id of ids) { const n = r.nodes.get(`a:${id}`); if (!n) continue; m.planned += n.m.planned; m.committed += n.m.committed; m.people += n.m.people; m.existing += n.m.existing || 0; names.push(n.name); } return { m, names }; };
     const row = (n, t, muni, cover) => {
       const m = cover ? cover.m : n.m, base = t.units > 0 ? t.units : null, pBase = !base && t.population > 0 ? t.population : null;
+      // (a target is growth after the 2021 census, as layers.toTarget counts it: homes completed before
+      // census day are in the census already, so they are not set against it)
+      // (a target that counts every home, scope total, holds the existing ones too)
+      const pre = t.scope === 'total' ? 0 : m.existing || 0, grow = m.planned - pre;
       return {
         node: n, muni, target: t, name: cover && cover.names.length > 1 ? joinNames(cover.names) : n.name,
         committed: m.committed, total: m.planned, people: m.people,
-        pctCommitted: base ? m.committed / base : null, pctTotal: base ? m.planned / base : null,
-        gap: base ? base - m.planned : null,
+        pctCommitted: base ? (m.committed - pre) / base : null, pctTotal: base ? grow / base : null,
+        gap: base ? base - grow : null,
         // People-only targets: shown side by side, indicative only (household vs design persons per unit).
         pctPeople: pBase ? m.people / pBase : null,
         compared: base ? 'units' : pBase ? 'people' : t.density ? 'density only' : 'none',
