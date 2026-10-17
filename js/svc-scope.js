@@ -279,7 +279,10 @@
         ...(relief.length ? [{ title: 'Relief', rows: relief, total: relief.length }] : []),
         { title: 'What is driving it', rows: rows.slice(0, 5).map(dev), total: rows.length, seeAll: { 'data-full-table': 'overview' } },
       ],
-      folds: [{ title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') }],
+      folds: [
+        ...(s.kind === 'plant' && window.PeelPlantFlows && window.PeelPlantFlows.chartHTML(s.pl) ? [{ title: 'Measured flow since 2008', html: window.PeelPlantFlows.chartHTML(s.pl) }] : []),
+        { title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') },
+      ],
       method: `${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow. ${k ? (s.kind === 'ps' ? 'Peak wet weather against firm capacity (2020 Master Plan, Vol. 4, s. 2.3.2).' : 'Against rated capacity; the 2020 Master Plan expands a plant when 90% of rated is projected to be reached.') : ''}`,
       sources: 'Region of Peel 2025 annual reports; 2020 Water and Wastewater Master Plan; the sewer network and blocks (data/servicing.json, data/blocks.json); the applications and permits on the map at Peel design criteria.',
       foot: { primary: { label: 'Show on the map', attrs: s.a ? { 'data-pnl-focus': s.a.id } : { 'data-ss-fit': s.ref }, title: s.a ? 'Zoom to it, with everything upstream' : 'Zoom to the area it serves' }, secondary: [{ label: 'Area report', attrs: { 'data-ss-report': '' } }] },

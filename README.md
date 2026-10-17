@@ -1277,6 +1277,12 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
 - **Effluent compliance.** `data/compliance.json` is built by `scripts/build-compliance.py` from
   MECP Environmental Compliance Reports (municipal and private sewage, 2020–2024). It lists
   exceedances at G.E. Booth, Clarkson and Inglewood, shown in **Wastewater → Plants**.
+- **Measured plant flow.** `data/plant-flows.json` is built by `scripts/build-plant-flows.py` from
+  MECP's Municipal Treated Wastewater Effluent data (monthly total flow, 2008 on) for G.E. Booth,
+  Clarkson and Inglewood. Each plant's scope panel shows the trend against rated capacity and the
+  90% trigger; Settings → Data quality checks it against the Region's annual reports (within 0.2%).
+  The March 2025 G.E. Booth → Clarkson diversion breaks either plant's trend alone, not the two
+  together. Rebuild with **Probe data sources**, mode `plant-flows` (once a year).
 - **2026 Census.** The first release is February 10, 2027. Run `scripts/build-areas.js` with
   `CENSUS_2026_CSV` (Statistics Canada's DA counts CSV, joined to the 2021 DA geometry) or
   `CENSUS_2026_URL`, plus `CENSUS_2026_PEEL` to check the total. 2026 then becomes the baseline

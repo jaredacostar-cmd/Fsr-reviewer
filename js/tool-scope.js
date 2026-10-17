@@ -93,6 +93,8 @@
       if (k) sub += ` · rated ${capTxt(k.rated, k.rated)} · existing + built + committed ${window.PeelCapacity.pctTxt(k.pctCommitted)} · ${window.PeelUtil.reserveWords(k.reserve, k.rated)}`;
       const ce = SP().plantComplianceNote(plantName);   // Phase 4: effluent exceedances live here now
       if (ce) sub += ` · ${ce}`;
+      const pf = window.PeelPlantFlows && window.PeelPlantFlows.series(plantName);
+      if (pf) { const l = pf.pts[pf.pts.length - 1]; sub += ` · measured ${l.y}: ${fmt1(l.avgMLd)} ML/d (MECP)`; }
     } else if (a && a.zone) {
       key = 'pz'; ids = new Set([a.id]); title = a.name;
       const l = M.zones.get(a.id); if (l) sub = `max day ${fmt1(M.wMax(l.census, 0))} ML/d at the census → ${fmt1(M.wMax(M.total(l), M.jobs(l)))} ML/d at build-out`;
