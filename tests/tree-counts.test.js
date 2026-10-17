@@ -43,6 +43,22 @@ test('apply: first paint (index developments carry no records) takes the tree co
   assert.match(TC.noteHTML(p), /counted in the tree of OZS-2/);
 });
 
+test('apply: the tree count is net of the homes the site demolishes, as Previous is', () => {
+  const p = { ...dev('k1', 3, [rec('SP-1')]), unitsLost: 2, unitsGross: 5 };
+  const data = { snapshotAt: '2026-10-12', projects: { k1: { u: 6, s: TC.sigOf(p, id), t: [['SP-1', 6, 'own count', '']], c: [['SP-1', 6, 'stated', null]] } } };
+  TC.apply([p], { mode: 'tree', data, canonRef: id });
+  assert.equal(p.units, 4, '6 new − 2 demolished'); assert.equal(p.unitsGross, 6); assert.equal(p.count.lost, 2);
+  assert.match(TC.partsHTML(p), /6 SP-1.* − 2 demolished = <strong>4<\/strong>/);
+  TC.apply([p], { mode: 'previous', data, canonRef: id });
+  assert.equal(p.units, 3); assert.equal(p.unitsGross, 5, 'Previous: its own gross back');
+  const one = { ...dev('k2', 0, [rec('SP-2')]), unitsLost: 1, unitsGross: 1 };
+  TC.apply([one], { mode: 'tree', data: { projects: { k2: { u: 1, s: TC.sigOf(one, id), t: [] } } }, canonRef: id });
+  assert.equal(one.units, 0, 'a tear-down rebuild adds none');
+  const none = dev('k3', 7, [rec('SP-3')]);
+  TC.apply([none], { mode: 'tree', data: { projects: { k3: { u: 9, s: TC.sigOf(none, id), t: [] } } }, canonRef: id });
+  assert.equal(none.units, 9); assert.equal(none.count.lost, undefined);
+});
+
 test('signature: order-free, and changes when a file is added', () => {
   const a = dev('k', 1, [rec('A'), rec('B')]), b = dev('k', 1, [rec('B'), rec('A'), { kind: 'permit', municipality: 'Brampton', ref: 'BP-1' }]);
   assert.equal(TC.sigOf(a, id), TC.sigOf(b, id), 'permits and order do not matter');

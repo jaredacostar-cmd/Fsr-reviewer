@@ -10,13 +10,15 @@ const TC = require('../js/tree-counts.js');
 const H = require('./helpers/real-devs.js');
 const skip = !H.available() && 'snapshot not present';
 
-test('every development: its file counts plus labelled estimates add up to its units', { skip }, () => {
+// (less the homes the site demolishes: the count is net, as Previous is and as the screens say)
+test('every development: its file counts plus labelled estimates, less homes demolished, add up to its units', { skip }, () => {
   const { projects } = H.realDevs();
   let checked = 0;
   for (const p of projects) {
     if (!p.count || p.count.mode !== 'tree' || !(p.units > 0)) continue;
     const sum = p.count.parts.reduce((t, x) => t + x.units, 0);
-    assert.equal(sum, p.units, `${p.key}: parts ${sum} ≠ units ${p.units}`);
+    assert.equal(Math.max(0, sum - (p.count.lost || 0)), p.units, `${p.key}: parts ${sum} − ${p.count.lost || 0} demolished ≠ units ${p.units}`);
+    assert.equal(sum, p.count.gross, `${p.key}: the parts are the tree's gross count`);
     for (const x of p.count.parts) assert.ok(TC.PART_KIND[x.kind], `${p.key}: part kind ${x.kind} has a label`);
     if (p.buildout) assert.equal(p.buildout.planned, p.units, `${p.key}: the build-out plans the tree count`);
     checked++;
