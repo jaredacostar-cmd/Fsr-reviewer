@@ -328,6 +328,8 @@
       // totals stay in the answer, with Growth in an area a tap away).
       top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
       figures: homeFigures(rows, ready, week),
+      // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
+      chart: a.stageStrip || '',
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
