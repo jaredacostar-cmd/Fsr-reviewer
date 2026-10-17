@@ -20,10 +20,11 @@ const nodes = mhX.map(x => ({ x, g: gf(x), bend: 0, ll: SDR.pointAt(pts, xs, x) 
 const ground = Array.from({ length: Math.ceil(Lt / 10) + 1 }, (_, i) => Math.min(Lt, i * 10)).map(x => ({ x, g: gf(x) }));
 const route = { nodes: nodes.map(({ x, g, bend }) => ({ x, g, bend })), samples: ground.filter(s => !mhX.some(x => Math.abs(x - s.x) < 0.01)) };
 const conn = { lat: pts[2].lat, lng: pts[2].lng, invert: 222.5, dmm: 450, id: 'SAN-1', existingMH: false };
-const d = SD.design(route, conn, 30);
+const net = SD.lineNet(route, 30), d = SD.designNet(net, conn);
+d.mhs.forEach((m, i) => { m.x = nodes[i].x; });
 const dt = {
   d, nodes, ground, pts, conn, mains: [{ g: [[pts[2].lng - 50 * k, pts[2].lat - 50 / 111320], [pts[2].lng + 50 * k, pts[2].lat + 50 / 111320]], d: 450, id: 'SAN-1', conn: true }],
-  flow: { q: 30, typed: true }, groundLabel: 'Ontario lidar DTM', checks: SDR.checks(d, route, conn), froudeHi: 0,
+  flow: { q: 30, typed: true }, groundLabel: 'Ontario lidar DTM', checks: SDR.checks(d, net, conn), froudeHi: 0,
   where: 'From 0 HERITAGE RD', date: 'October 17, 2026', version: 'test', unofficial: 'Unofficial prototype', source: SD.SOURCE,
   note: 'General screening results only. Peel’s W&WW Infrastructure Planning team must validate or confirm all results.',
 };
